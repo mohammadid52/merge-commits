@@ -1,6 +1,6 @@
 import filter from 'lodash/filter';
 import map from 'lodash/map';
-import React from 'react';
+import React, {Suspense} from 'react';
 import {IconContext} from 'react-icons';
 import {FaSpinner} from 'react-icons/fa';
 import {getAsset} from '../../../assets';
@@ -20,7 +20,6 @@ const WrittenContentTab = (props: ITabViewProps) => {
   const {
     viewEditMode,
     handleEditToggle,
-    handleEditUpdate,
     updateJournalContent,
     onCancel,
     mainSection,
@@ -288,8 +287,8 @@ const WrittenContentTab = (props: ITabViewProps) => {
           </div>
         </ContentCard>
       )}
-      {content.length > 0 ? (
-        content.map((contentObj: UniversalJournalData, idx: number) => {
+      {content?.length > 0 ? (
+        content?.map((contentObj: UniversalJournalData, idx: number) => {
           return (
             <EmptyViewWrapper
               key={`emptyview_${idx}`}
@@ -305,66 +304,42 @@ const WrittenContentTab = (props: ITabViewProps) => {
                   <FaSpinner />
                 </IconContext.Provider>
               }>
-              <SingleNote
-                idx={idx}
-                mainSection={mainSection}
-                subSection={subSection}
-                onCancel={onCancel}
-                viewModeView={viewModeView}
-                editModeView={editModeView}
-                viewEditMode={viewEditMode}
-                handleEditToggle={handleEditToggle}
-                contentLen={content.length}
-                contentObj={
-                  currentContentObj.id === contentObj.id ? currentContentObj : contentObj
-                }
-                allUniversalJournalData={allUniversalJournalData}
-                setAllUniversalJournalData={setAllUniversalJournalData}
-                allUniversalClassData={allUniversalClassData}
-                setAllUniversalClassData={setAllUniversalClassData}
-                allStudentData={allStudentData}
-                setAllStudentData={setAllStudentData}
-              />
+              <Suspense fallback={<p>note error</p>}>
+                <SingleNote
+                  idx={idx}
+                  mainSection={mainSection}
+                  subSection={subSection}
+                  onCancel={onCancel}
+                  viewModeView={viewModeView}
+                  editModeView={editModeView}
+                  viewEditMode={viewEditMode}
+                  handleEditToggle={handleEditToggle}
+                  contentLen={content.length}
+                  contentObj={
+                    currentContentObj.id === contentObj.id
+                      ? currentContentObj
+                      : contentObj
+                  }
+                  allUniversalJournalData={allUniversalJournalData}
+                  setAllUniversalJournalData={setAllUniversalJournalData}
+                  allUniversalClassData={allUniversalClassData}
+                  setAllUniversalClassData={setAllUniversalClassData}
+                  allStudentData={allStudentData}
+                  setAllStudentData={setAllStudentData}
+                />
+              </Suspense>
             </EmptyViewWrapper>
           );
         })
       ) : (
         <>
-          {subSection === 'Work' && allUniversalClassData.length > 0 ? (
-            <div className="work">
-              {allUniversalClassData.map((first: any) =>
-                first.pageData.map((three: any) => {
-                  return (
-                    <div
-                      dangerouslySetInnerHTML={{__html: three.input || '<p></p>'}}></div>
-                  );
-                })
-              )}
-            </div>
-          ) : (
-            subSection === 'Notes' &&
-            classNotebook.length > 0 && (
-              <div className="note">
-                {classNotebook.map((element: any) =>
-                  element.pageData.map((second: any) => {
-                    return (
-                      <div dangerouslySetInnerHTML={{__html: second.input || '<p></p>'}}>
-                        {/* {second.input ? ReactHtmlParser(second.input) : '<p></p>'} */}
-                      </div>
-                    );
-                  })
-                )}
-              </div>
-            )
-          )}
-
-          {allUniversalClassData.length === 0 && classNotebook.length === 0 && (
-            <div className="p-12 flex flex-center items-center">
-              <p className="text-center text-lg text-gray-500">
-                No content for {subSection} section
-              </p>
-            </div>
-          )}
+          <div className="p-12 flex flex-center items-center">
+            <p className="text-center text-lg text-gray-500">
+              {subSection === 'Work'
+                ? 'No writing exercises are in your notebook for your course yet.'
+                : `No content for ${subSection} section`}
+            </p>
+          </div>
         </>
       )}
     </>

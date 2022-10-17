@@ -2877,6 +2877,56 @@ export const listUniversalLessonStudentDatas = /* GraphQL */ `
   }
 `;
 
+export const listUniversalLessonWritingExcercises = /* GraphQL */ `
+  query ListUniversalLessonWritingExcercises(
+    $id: ID
+    $filter: ModelUniversalLessonWritingExcercisesFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listUniversalLessonWritingExcercises(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        syllabusLessonID
+        lessonID
+        lessonPageID
+        studentID
+        studentAuthID
+        studentEmail
+        roomID
+        currentLocation
+        lessonProgress
+        pageData {
+          domID
+          options
+          input
+          hasTakenSurvey
+        }
+        hasExerciseData
+        exerciseData {
+          id
+          feedbacks
+          shared
+          entryData {
+            domID
+            input
+          }
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+
 export const listServiceProviders = /* GraphQL */ `
   query ListInstitutions(
     $id: ID

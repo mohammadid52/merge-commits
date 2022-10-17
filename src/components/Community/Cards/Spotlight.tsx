@@ -20,7 +20,7 @@ const Spotlight = ({
   onCancel,
   onSubmit,
   editMode,
-  cardDetails,
+  cardDetails
 }: ICommunityCardProps) => {
   const [teachersList, setTeachersList] = useState([]);
   const [loadingTeachers, setLoadingTeachers] = useState(false);
@@ -51,7 +51,7 @@ const Spotlight = ({
       }
 
       setTempData({
-        image: cardDetails.cardImageLink,
+        image: cardDetails.cardImageLink
       });
 
       if (
@@ -77,7 +77,7 @@ const Spotlight = ({
   const [unsavedChanges, setUnsavedChanges] = useState(false);
   const [fields, setFields] = useState<{summary: string; summaryHtml: string}>({
     summary: editMode && !isEmpty(cardDetails) ? cardDetails?.summary : '',
-    summaryHtml: editMode && !isEmpty(cardDetails) ? cardDetails?.summaryHtml : '',
+    summaryHtml: editMode && !isEmpty(cardDetails) ? cardDetails?.summaryHtml : ''
   });
 
   const onEditorStateChange = (
@@ -96,7 +96,7 @@ const Spotlight = ({
     id: '',
     name: '',
     institute: {id: instId, name: '', value: ''},
-    teacher: {id: '', name: '', value: ''},
+    teacher: {id: '', name: '', value: ''}
   };
   const [roomData, setRoomData] = useState(initialData);
 
@@ -116,12 +116,12 @@ const Spotlight = ({
     setLoadingStudents(true);
     const response: any = await API.graphql(
       graphqlOperation(customQueries.getDashboardDataForTeachers, {
-        filter: {teacherAuthID: {eq: authId}},
+        filter: {teacherAuthID: {eq: authId}}
       })
     );
     const assignedRoomsAsCoTeacher: any = await API.graphql(
       graphqlOperation(customQueries.getDashboardDataForCoTeachers, {
-        filter: {teacherAuthID: {eq: authId}},
+        filter: {teacherAuthID: {eq: authId}}
       })
     );
     const data = [
@@ -129,8 +129,8 @@ const Spotlight = ({
       ...assignedRoomsAsCoTeacher?.data?.listRoomCoTeachers?.items?.map((item: any) => ({
         ...item,
         ...item.room,
-        teacher: item.room?.teacher,
-      })),
+        teacher: item.room?.teacher
+      }))
     ];
 
     let list: any[] = [];
@@ -144,7 +144,7 @@ const Spotlight = ({
               id: student.student.id,
               name: `${student.student.firstName} ${student.student.lastName}`,
               image: student?.student?.image,
-              value: `${student.student.firstName} ${student.student.lastName}`,
+              value: `${student.student.firstName} ${student.student.lastName}`
             });
             uniqIds.push(student.student.id);
           }
@@ -161,15 +161,15 @@ const Spotlight = ({
     try {
       const list: any = await API.graphql(
         graphqlOperation(customQueries.getInstitution, {
-          id: instId,
+          id: instId
         })
       );
       setRoomData((prevData) => ({
         ...prevData,
         institute: {
           ...prevData.institute,
-          name: list.data.getInstitution?.name,
-        },
+          name: list.data.getInstitution?.name
+        }
       }));
       const serviceProviders = list.data.getInstitution?.serviceProviders?.items;
       return serviceProviders;
@@ -193,7 +193,7 @@ const Spotlight = ({
     try {
       const list: any = await API.graphql(
         graphqlOperation(queries.listStaff, {
-          filter: {or: getFilterORArray(allInstiId, 'institutionID')},
+          filter: {or: getFilterORArray(allInstiId, 'institutionID')}
         })
       );
       const listStaffs = list.data.listStaff.items;
@@ -220,7 +220,7 @@ const Spotlight = ({
           }`,
           email: item.staffMember?.email ? item.staffMember?.email : '',
           authId: item.staffMember?.authId ? item.staffMember?.authId : '',
-          image: item.staffMember?.image,
+          image: item.staffMember?.image
         }));
         // Removed duplicates from staff list.
         const uniqIDs: string[] = [];
@@ -286,7 +286,7 @@ const Spotlight = ({
             : cardDetails?.cardImageLink
           : file?.fileKey,
         id: cardDetails?.id,
-        isEditedCard: editMode,
+        isEditedCard: editMode
       };
 
       if (!editMode) {
@@ -296,7 +296,7 @@ const Spotlight = ({
         spotlightDetails = {
           ...spotlightDetails,
           cardImageLink: null,
-          additionalLinks: [youtubeVideoLink, selectedPerson.id],
+          additionalLinks: [youtubeVideoLink, selectedPerson.id]
         };
       }
 
@@ -310,7 +310,7 @@ const Spotlight = ({
     setVideoLink: setYoutubeVideoLink,
     setError: setError,
     setFile: setFile,
-    file: file,
+    file: file
   };
 
   return (
@@ -322,6 +322,7 @@ const Spotlight = ({
         </label>
 
         <SelectorWithAvatar
+          dataCy="spotlight"
           selectedItem={selectedPerson}
           list={[...teachersList, ...studentsList]}
           imageFromS3
@@ -385,6 +386,7 @@ const Spotlight = ({
             transparent
           />
           <Buttons
+            data-cy="save-spotlight-button"
             btnClass="py-1 px-8 text-xs ml-2"
             label={'Save'}
             loading={isLoading}

@@ -676,6 +676,8 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
                   closeAction={() => setUserModalFormOpen(false)}
                   position={'fixed'}>
                   <User
+                    shouldNavigate={false}
+                    onSuccessCallback={() => setUserModalFormOpen(false)}
                     instituteId={instId}
                     userId={studentProfileID}
                     insideModalPopUp={false}

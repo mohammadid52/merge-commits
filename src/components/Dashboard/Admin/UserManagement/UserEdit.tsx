@@ -1,25 +1,19 @@
-import React, {Fragment, useContext, useEffect, useRef, useState} from 'react';
+import React, {Fragment, useEffect, useState} from 'react';
 // import { API, graphqlOperation } from 'aws-amplify';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import {Storage} from '@aws-amplify/storage';
 import moment from 'moment';
-import {AiOutlineCheckCircle} from 'react-icons/ai';
-import {BiImageAdd} from 'react-icons/bi';
 import {IoLockClosed} from 'react-icons/io5';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
-import {useHistory, useRouteMatch} from 'react-router-dom';
-import {getAsset} from '../../../../assets';
-import {GlobalContext} from '../../../../contexts/GlobalContext';
+import {useHistory} from 'react-router-dom';
+import {useGlobalContext} from '../../../../contexts/GlobalContext';
 import * as customMutations from '../../../../customGraphql/customMutations';
 import useDictionary from '../../../../customHooks/dictionary';
-import {getImageFromS3} from '../../../../utilities/services';
 import {convertArrayIntoObj} from '../../../../utilities/strings';
 import Buttons from '../../../Atoms/Buttons';
 import FormInput from '../../../Atoms/Form/FormInput';
 import MultipleSelector from '../../../Atoms/Form/MultipleSelector';
 import Selector from '../../../Atoms/Form/Selector';
 import TextArea from '../../../Atoms/Form/TextArea';
-import Loader from '../../../Atoms/Loader';
 import LessonLoading from '../../../Lesson/Loading/ComponentLoading';
 import DropdownForm from './DropdownForm';
 import {UserInfo} from './User';
@@ -37,12 +31,13 @@ interface UserInfoProps {
   questionData: any;
   checkpoints: any;
   tab: string;
+  shouldNavigate?: boolean;
   setTab: Function;
+  onSuccessCallback?: () => void;
 }
 
 const UserEdit = (props: UserInfoProps) => {
   const history = useHistory();
-  const match = useRouteMatch();
 
   const {
     instituteId,
@@ -51,14 +46,15 @@ const UserEdit = (props: UserInfoProps) => {
     getUserById,
     tab,
     setTab,
-    setStatus,
+    shouldNavigate = true,
     checkpoints,
     questionData,
+    onSuccessCallback
   } = props;
   const [superEdit, setSuperEdit] = useState<boolean>(false);
   const [updating, setUpdating] = useState<boolean>(false);
   const [editUser, setEditUser] = useState(user);
-  const {theme, state, userLanguage, clientKey} = useContext(GlobalContext);
+  const {state, userLanguage, clientKey} = useGlobalContext();
   const [inactiveDate, setInactiveDate] = useState(
     new Date().getMonth() > 9
       ? new Date().getMonth() +
@@ -79,12 +75,6 @@ const UserEdit = (props: UserInfoProps) => {
     clientKey
   );
   const [checkpointData, setCheckpointData] = useState<any>({});
-  console.log(
-    '🚀 ~ file: UserEdit.tsx ~ line 61 ~ UserEdit ~ checkpointData',
-    checkpointData
-  );
-
-  const themeColor = getAsset(clientKey, 'themeClassName');
 
   useEffect(() => {
     const superEditSwitch = (role: string) => {
@@ -119,17 +109,17 @@ const UserEdit = (props: UserInfoProps) => {
       lastName: editUser.lastName,
       preferredName: editUser.preferredName,
       ...(editUser.status === 'INACTIVE' && {
-        inactiveStatusDate: moment(inactiveDate).format('YYYY-MM-DD'),
+        inactiveStatusDate: moment(inactiveDate).format('YYYY-MM-DD')
       }),
       role: editUser.role,
       ...((editUser.status === 'INACTIVE' || editUser.status === 'SUSPENDED') && {
-        statusReason: editUser.statusReason,
+        statusReason: editUser.statusReason
       }),
       status: editUser.status,
       phone: editUser.phone,
       birthdate: editUser.birthdate,
       email: editUser.email,
-      onDemand: editUser.onDemand,
+      onDemand: editUser.onDemand
     };
 
     try {
@@ -139,11 +129,13 @@ const UserEdit = (props: UserInfoProps) => {
       setUpdating(false);
       // setStatus('loading');
 
-      history.push(
-        isSuperAdmin
-          ? `/dashboard/manage-institutions/manage-users`
-          : `/dashboard/manage-institutions/institution/${instituteId}/manage-users`
-      );
+      if (shouldNavigate) {
+        history.push(
+          isSuperAdmin
+            ? `/dashboard/manage-institutions/manage-users`
+            : `/dashboard/manage-institutions/institution/${instituteId}/manage-users`
+        );
+      }
     } catch (error) {
       console.error(error);
     }
@@ -154,7 +146,7 @@ const UserEdit = (props: UserInfoProps) => {
       [item['qid']]:
         item?.response?.length > 1
           ? [...selectedMultiOptions(item.response)]
-          : item?.response?.join(''),
+          : item?.response?.join('')
     }));
     return convertArrayIntoObj(answerArray);
   };
@@ -162,11 +154,11 @@ const UserEdit = (props: UserInfoProps) => {
   useEffect(() => {
     if (questionData?.length > 0) {
       const updatedListArray: any = questionData.map((item: any) => ({
-        [item['checkpointID']]: extractItemFromArray(item.responseObject),
+        [item['checkpointID']]: extractItemFromArray(item.responseObject)
       }));
       const updatedListObj: any = convertArrayIntoObj(updatedListArray);
       setCheckpointData({
-        ...updatedListObj,
+        ...updatedListObj
       });
     }
   }, [questionData]);
@@ -182,7 +174,7 @@ const UserEdit = (props: UserInfoProps) => {
             response: checkpointData[checkpointID][resp.qid],
             otherResponse: checkpointData[checkpointID][resp.qid]
               .toString()
-              .split(' || ')[1],
+              .split(' || ')[1]
           };
         } else {
           return {...resp};
@@ -209,7 +201,7 @@ const UserEdit = (props: UserInfoProps) => {
   ) => {
     let responseObject = {
       id: questionDataId,
-      responseObject: questions,
+      responseObject: questions
     };
     updateQuestionData(responseObject, checkpointID);
   };
@@ -232,7 +224,7 @@ const UserEdit = (props: UserInfoProps) => {
       response:
         typeof obj[item] === 'string'
           ? [obj[item]]
-          : [...obj[item].map((op: any) => op.name)],
+          : [...obj[item].map((op: any) => op.name)]
     }));
   };
 
@@ -242,7 +234,7 @@ const UserEdit = (props: UserInfoProps) => {
       checkpointID: checkpointId,
       authID: editUser.authId,
       email: editUser.email,
-      responseObject: questions,
+      responseObject: questions
     };
     createQuestionData(responseObject);
   };
@@ -251,7 +243,7 @@ const UserEdit = (props: UserInfoProps) => {
     const checkpId = Object.keys(checkpointData);
     const allCheckpoints = checkpId.map((itemID) => ({
       checkpointId: itemID,
-      questions: checkpointData ? getQuestionArray(checkpointData[itemID]) : [],
+      questions: checkpointData ? getQuestionArray(checkpointData[itemID]) : []
     }));
     if (questionData?.length === 0) {
       let checkpoints = Promise.all(
@@ -284,6 +276,7 @@ const UserEdit = (props: UserInfoProps) => {
     await saveAllCheckpointData();
     await updatePerson();
     await getUserById(editUser.id);
+    onSuccessCallback && onSuccessCallback();
   }
 
   const onSubmit = () => {
@@ -296,7 +289,7 @@ const UserEdit = (props: UserInfoProps) => {
     setEditUser(() => {
       return {
         ...editUser,
-        [id]: value,
+        [id]: value
       };
     });
   };
@@ -306,8 +299,8 @@ const UserEdit = (props: UserInfoProps) => {
       ...checkpointData,
       [checkpointID]: {
         ...checkpointData[checkpointID],
-        [questionID]: e.target.value,
-      },
+        [questionID]: e.target.value
+      }
     });
   };
 
@@ -316,8 +309,8 @@ const UserEdit = (props: UserInfoProps) => {
       ...checkpointData,
       [checkpointID]: {
         ...checkpointData[checkpointID],
-        [questionID]: `Other || ${e.target.value}`,
-      },
+        [questionID]: `Other || ${e.target.value}`
+      }
     });
   };
 
@@ -338,8 +331,8 @@ const UserEdit = (props: UserInfoProps) => {
           ...checkpointData,
           [checkpointID]: {
             ...checkpointData[checkpointID],
-            [questionID]: [],
-          },
+            [questionID]: []
+          }
         });
       }
       const selectedOption: any = selectedQuestion?.find((item: any) => item.id === id);
@@ -354,8 +347,8 @@ const UserEdit = (props: UserInfoProps) => {
         ...checkpointData,
         [checkpointID]: {
           ...checkpointData[checkpointID],
-          [questionID]: [...updatedList],
-        },
+          [questionID]: [...updatedList]
+        }
       });
     } else {
       setCheckpointData({
@@ -366,10 +359,10 @@ const UserEdit = (props: UserInfoProps) => {
             {
               id,
               name,
-              value,
-            },
-          ],
-        },
+              value
+            }
+          ]
+        }
       });
     }
   };
@@ -385,8 +378,8 @@ const UserEdit = (props: UserInfoProps) => {
       ...checkpointData,
       [checkpointID]: {
         ...checkpointData[checkpointID],
-        [questionID]: name,
-      },
+        [questionID]: name
+      }
     });
   };
 
@@ -394,7 +387,7 @@ const UserEdit = (props: UserInfoProps) => {
     setEditUser(() => {
       return {
         ...editUser,
-        status: item.code,
+        status: item.code
       };
     });
   };
@@ -403,7 +396,7 @@ const UserEdit = (props: UserInfoProps) => {
     setEditUser(() => {
       return {
         ...editUser,
-        role: item.code,
+        role: item.code
       };
     });
   };
@@ -412,7 +405,7 @@ const UserEdit = (props: UserInfoProps) => {
     setEditUser(() => {
       return {
         ...editUser,
-        onDemand: item.code,
+        onDemand: item.code
       };
     });
   };
@@ -420,20 +413,20 @@ const UserEdit = (props: UserInfoProps) => {
   const Status = [
     {
       code: 'ACTIVE',
-      name: 'Active',
+      name: 'Active'
     },
     {
       code: 'SUSPENDED',
-      name: 'Suspended',
+      name: 'Suspended'
     },
     {
       code: 'INACTIVE',
-      name: 'Inactive',
+      name: 'Inactive'
     },
     {
       code: 'TRAINING',
-      name: 'Training',
-    },
+      name: 'Training'
+    }
     // {
     //   code: 'HOLD',
     //   name: 'Hold',
@@ -443,46 +436,46 @@ const UserEdit = (props: UserInfoProps) => {
   const Role = [
     state.user.role === 'SUP' && {
       code: 'SUP',
-      name: 'Super Admin',
+      name: 'Super Admin'
     },
     {
       code: 'ADM',
-      name: 'Admin',
+      name: 'Admin'
     },
     {
       code: 'BLD',
-      name: 'Builder',
+      name: 'Builder'
     },
     {
       code: 'FLW',
-      name: 'Fellow',
+      name: 'Fellow'
     },
     {
       code: 'CRD',
-      name: 'Coordinator',
+      name: 'Coordinator'
     },
     {
       code: 'TR',
-      name: 'Teacher',
-    },
+      name: 'Teacher'
+    }
   ].filter(Boolean);
 
   const OnDemand = [
     {
       code: false,
-      name: 'No',
+      name: 'No'
     },
     {
       code: true,
-      name: 'Yes',
-    },
+      name: 'Yes'
+    }
   ];
 
   const convertToSelectorList = (options: any) => {
     const newArr: any = options.map((item: any, index: number) => ({
       id: index,
       name: item.text,
-      value: item.text,
+      value: item.text
     }));
     return newArr;
   };
@@ -490,125 +483,12 @@ const UserEdit = (props: UserInfoProps) => {
     const newArr: any = options.map((item: any, index: number) => ({
       id: index.toString(),
       name: item.text,
-      value: item.text,
+      value: item.text
     }));
     return newArr;
   };
 
   // key:31
-
-  const uploadAttachment = async (file: any, id: string, type: string) => {
-    // Upload Attachments
-    return new Promise((resolve, reject) => {
-      Storage.put(id, file, {
-        contentType: type,
-        acl: 'public-read',
-      })
-        .then((result) => {
-          resolve(result);
-        })
-        .catch((err) => {
-          console.log('Error in uploading file to s3', err);
-          reject(err);
-        });
-    });
-  };
-
-  const Attachment = ({item}: any) => {
-    const inputOther = useRef(null);
-
-    const handleFileSelection = async (e: any, cId: string, qId: string) => {
-      if (e.target.files && e.target.files.length > 0) {
-        const file = e.target.files[0];
-        setfileObject(file);
-        const id: string = `profile_attachments/${Date.now().toString()}_${file.name}`;
-        setUploading(true);
-
-        await uploadAttachment(file, id, file.type);
-        const imageUrl: any = await getImageFromS3(id);
-        if (imageUrl) addImageUrlToResponse(imageUrl, cId, qId);
-        setUploading(false);
-      }
-    };
-
-    const addImageUrlToResponse = (url: string, cId: string, qId: string) => {
-      setCheckpointData({
-        ...checkpointData,
-        [checkpointID]: {
-          ...checkpointData[checkpointID],
-          [qId]: `${url}`,
-        },
-      });
-    };
-
-    const [fileObject, setfileObject] = useState<any>({});
-
-    const [uploading, setUploading] = useState(false);
-    const openFilesExplorer = () => inputOther.current.click();
-    return (
-      <div>
-        <div className="sm:col-span-3">
-          <label
-            htmlFor="date picker"
-            className="block text-m font-medium leading-5 text-gray-700">
-            {item?.question?.question}
-          </label>
-          <span
-            role="button"
-            tabIndex={-1}
-            onClick={openFilesExplorer}
-            className={`border-0 border-gray-300 flex items-center justify-center text-sm px-4 py-2 text-gray-700 hover:text-${
-              themeColor === 'iconoclastIndigo' ? 'indigo' : 'blue'
-            }-700 hover:border-${
-              themeColor === 'iconoclastIndigo' ? 'indigo' : 'blue'
-            }-400 transition-all duration-300 rounded-md shadow-sm`}>
-            <BiImageAdd
-              className={`text-gray-700 w-auto mr-2 hover:text-${
-                themeColor === 'iconoclastIndigo' ? 'indigo' : 'blue'
-              }-700`}
-            />
-            Upload Attachments
-          </span>
-          <input
-            ref={inputOther}
-            onChange={(e: any) => handleFileSelection(e, checkpointID, item.question.id)}
-            type="file"
-            className="hidden"
-            multiple={false}
-          />
-        </div>
-        {(uploading || fileObject.name) && (
-          <div className="sm:col-span-3 flex items-center justify-between border-0 border-gray-300 rounded-md shadow-sm mt-2 p-2 px-4">
-            <p className="text-center text-gray-700 w-auto truncate">
-              {uploading ? 'Uploading' : 'Uploaded'} - {fileObject.name}
-            </p>
-
-            {uploading ? (
-              <div className=" w-auto">
-                <Loader
-                  color={`${themeColor === 'iconoclastIndigo' ? '#6366F1' : '#0081CB'}`}
-                />
-              </div>
-            ) : (
-              <AiOutlineCheckCircle className="w-auto text-green-500 text-lg" />
-            )}
-          </div>
-        )}
-        {checkpointData &&
-          checkpointData[checkpointID] &&
-          checkpointData[checkpointID][item.question.id] && (
-            <div className="mt-2 text-right">
-              <a
-                target="_blank"
-                className="text-blue-700 cursor-pointer text-sm hover:underline"
-                href={checkpointData[checkpointID][item.question.id]}>
-                View Attachment
-              </a>
-            </div>
-          )}
-      </div>
-    );
-  };
 
   // -----
 
@@ -620,32 +500,17 @@ const UserEdit = (props: UserInfoProps) => {
       const newArr: any = options?.map((option: any, index: number) => ({
         id: index.toString(),
         name: option,
-        value: option,
+        value: option
       }));
       return [...newArr];
     } else {
       return [...options];
     }
   };
-  const getColor = (theme = 'indigo') => {
-    return `hover:bg-${theme}-500 active:bg-${theme}-500 focus:bg-${theme}-500`;
-  };
-  const actionStyles = `flex ${
-    themeColor === 'iconoclastIndigo' ? getColor('indigo') : getColor('blue')
-  } items-center justify-center ml-2 h-9 w-9 rounded cursor-pointer transition-all duration-150 hover:text-white text-gray-500`;
-
-  const getCurrentTabQuestions = () => {
-    if (checkpointID) {
-      const questions = checkpoints.filter((item: any) => item.id === checkpointID)[0];
-      return questions?.questions?.items ? questions?.questions?.items : [];
-    } else return [];
-  };
 
   if (status !== 'done') {
     return <LessonLoading />;
   }
-
-  const checkpointID = tab !== 'p' && checkpoints.length > 0 && checkpoints[0].id;
 
   // Code for Other Field
 
@@ -672,24 +537,6 @@ const UserEdit = (props: UserInfoProps) => {
         : '';
     }
   };
-  const [showEmoji, setShowEmoji] = useState({show: false, cId: '', qId: ''});
-
-  const onEmojiSelect = (e: any) => {
-    const questionID = showEmoji.qId;
-    const checkpointID = showEmoji.cId;
-    let value = checkpointData[checkpointID][questionID] || '';
-
-    let responseWithEmoji = value.concat(e.emoji);
-    setCheckpointData({
-      ...checkpointData,
-      [checkpointID]: {
-        ...checkpointData[checkpointID],
-        [questionID]: responseWithEmoji,
-      },
-    });
-
-    setShowEmoji({show: false, cId: '', qId: ''});
-  };
 
   const onDateChange = (e: any) => {
     e.persist();
@@ -699,7 +546,7 @@ const UserEdit = (props: UserInfoProps) => {
       setEditUser(() => {
         return {
           ...editUser,
-          inactiveStatusDate: e.target.value,
+          inactiveStatusDate: e.target.value
         };
       });
     }
@@ -710,7 +557,7 @@ const UserEdit = (props: UserInfoProps) => {
     setEditUser(() => {
       return {
         ...editUser,
-        statusReason: e.target.value,
+        statusReason: e.target.value
       };
     });
   };
@@ -763,7 +610,7 @@ const UserEdit = (props: UserInfoProps) => {
                           : 'text-gray-400 group-hover:text-gray-500'
                       }
                       ml-2 h-5 w-5
-                    `,
+                    `
                   }}>
                   <IoLockClosed />
                 </IconContext.Provider>
@@ -837,6 +684,7 @@ const UserEdit = (props: UserInfoProps) => {
                 {superEdit && (
                   <div className="sm:col-span-3 p-2">
                     <DropdownForm
+                      dataCy="ondemand"
                       value=""
                       style={false}
                       handleChange={handleChangeOnDemand}
@@ -1090,6 +938,7 @@ const UserEdit = (props: UserInfoProps) => {
             transparent
           />
           <Buttons
+            dataCy="edit-user-save-button"
             disabled={updating}
             btnClass="py-2 w-2.5/10 px-4 text-xs ml-2"
             label={

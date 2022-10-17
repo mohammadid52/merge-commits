@@ -213,7 +213,9 @@ const UserInformation = ({
                   <dt className="text-sm leading-5 font-regular text-gray-600">
                     {UserInformationDict[userLanguage]['ondemand']}
                   </dt>
-                  <dd className="mt-2 text-base leading-5 text-gray-900">
+                  <dd
+                    data-cy="self-paced-text"
+                    className="mt-2 text-base leading-5 text-gray-900">
                     <Status status={user?.onDemand ? 'YES' : 'NO'} />
                   </dd>
                 </div>
