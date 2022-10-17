@@ -15,14 +15,14 @@ const Announcements = ({
   onCancel,
   onSubmit,
   editMode,
-  cardDetails,
+  cardDetails
 }: ICommunityCardProps) => {
   const [file, setFile] = useState<IFile>();
   const [overlayText, setOverlayText] = useState('');
   const [unsavedChanges, setUnsavedChanges] = useState(false);
   const [fields, setFields] = useState<{summary: string; summaryHtml: string}>({
     summary: editMode && !isEmpty(cardDetails) ? cardDetails?.summary : '',
-    summaryHtml: editMode && !isEmpty(cardDetails) ? cardDetails?.summaryHtml : '',
+    summaryHtml: editMode && !isEmpty(cardDetails) ? cardDetails?.summaryHtml : ''
   });
 
   const [tempData, setTempData] = useState(null);
@@ -31,7 +31,7 @@ const Announcements = ({
   useEffect(() => {
     if (editMode && !isEmpty(cardDetails)) {
       setTempData({
-        image: cardDetails?.cardImageLink,
+        image: cardDetails?.cardImageLink
       });
 
       if (cardDetails?.additionalLinks?.length > 0) {
@@ -69,7 +69,7 @@ const Announcements = ({
             : cardDetails?.cardImageLink
           : file?.fileKey,
         id: cardDetails?.id,
-        isEditedCard: editMode,
+        isEditedCard: editMode
       };
 
       if (!editMode) {
@@ -79,7 +79,7 @@ const Announcements = ({
         announcementsDetails = {
           ...announcementsDetails,
           cardImageLink: null,
-          additionalLinks: [youtubeVideoLink],
+          additionalLinks: [youtubeVideoLink]
         };
       }
 
@@ -123,7 +123,7 @@ const Announcements = ({
     setVideoLink: setYoutubeVideoLink,
     setError: setError,
     setFile: setFile,
-    file: file,
+    file: file
   };
 
   return (
@@ -154,6 +154,7 @@ const Announcements = ({
       <div className="px-3 py-4">
         <div>
           <FormInput
+            dataCy="announcement-overlay-input"
             label="Step 2: Add overlay text"
             onChange={(e) => {
               setError('');
@@ -197,6 +198,7 @@ const Announcements = ({
             transparent
           />
           <Buttons
+            dataCy="save-announcement-button"
             loading={isLoading}
             disabled={!editMode && isEmpty(file) && file?._status !== 'success'}
             btnClass="py-1 px-8 text-xs ml-2"
