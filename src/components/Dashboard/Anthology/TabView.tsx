@@ -1,29 +1,25 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext} from 'react';
 import {FaEdit} from 'react-icons/fa';
 
-import {GlobalContext} from '../../../contexts/GlobalContext';
-import useDictionary from '../../../customHooks/dictionary';
+import {GlobalContext} from '@contexts/GlobalContext';
+import useDictionary from '@customHooks/dictionary';
 
-import SectionTitleV3 from '../../Atoms/SectionTitleV3';
-import UnderlinedTabs from '../../Atoms/UnderlinedTabs';
-import Buttons from '../../Atoms/Buttons';
+import Buttons from '@atoms/Buttons';
 
+import {IoIosJournal} from 'react-icons/io';
+import {IconContext} from 'react-icons/lib';
+import {getAsset} from 'assets';
 import {
   UniversalClassData,
   UniversalJournalData,
   UniversalLessonStudentData
-} from '../../../interfaces/UniversalLessonInterfaces';
-import AnthologyUnderlinedTabs from './AnthologyUnderlinedTabs';
-import EmptyViewWrapper from './EmptyViewWrapper';
-import {stringToHslColor} from '../../../utilities/strings';
-import {IoKeyOutline} from 'react-icons/io5';
-import SentimentTab from './SentimentTab';
-import {IconContext} from 'react-icons/lib';
-import {IoIosJournal} from 'react-icons/io';
-import UploadsTab from './UploadsTab';
-import {getAsset} from '../../../assets';
-import {ViewEditMode} from './Anthology';
-import WrittenContentTab from './WrittenContentTab';
+} from '@interfaces/UniversalLessonInterfaces';
+import {stringToHslColor} from '@utilities/strings';
+import {ViewEditMode} from '@components/Dashboard/Anthology/Anthology';
+import AnthologyUnderlinedTabs from '@components/Dashboard/Anthology/AnthologyUnderlinedTabs';
+import SentimentTab from '@components/Dashboard/Anthology/SentimentTab';
+import UploadsTab from '@components/Dashboard/Anthology/UploadsTab';
+import WrittenContentTab from '@components/Dashboard/Anthology/WrittenContentTab';
 
 export interface ITabParentProps {
   handleEditToggle?: (
@@ -186,7 +182,7 @@ const TabView = ({
     //   content: WrittenContent
     // },
     {
-      index: 2,
+      index: 1,
       title: anthologyDict[userLanguage].TABS.D,
       id: 'Uploads',
       content: (

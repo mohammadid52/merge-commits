@@ -1,8 +1,8 @@
-import React, {useContext, useEffect, useState} from 'react';
+import Tooltip from '@atoms/Tooltip';
+import {useGlobalContext} from '@contexts/GlobalContext';
+import {getAsset} from 'assets';
+import React from 'react';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
-import {GlobalContext} from '../../../contexts/GlobalContext';
-import {getAsset} from '../../../assets';
-import Tooltip from '../../Atoms/Tooltip';
 
 export interface ITabElementProps {
   id?: string;
@@ -25,17 +25,13 @@ interface TabsProps {
 }
 
 const UnderlinedTabs = (props: TabsProps) => {
-  const {tabs, activeTab, hideTooltip, handleTabSelect, mainSection} = props;
-  const {theme, clientKey} = useContext(GlobalContext);
+  const {tabs, activeTab, hideTooltip, handleTabSelect} = props;
+  const {theme, clientKey} = useGlobalContext();
   const themeColor = getAsset(clientKey, 'themeClassName');
 
   const changeActiveTab = (tab: number) => {
     handleTabSelect(tab, tabs[tab].id);
   };
-
-  // useEffect(() => {
-  //   changeActiveTab(0);
-  // }, [mainSection]);
 
   const renderButtonText = (tab: any) => {
     return (

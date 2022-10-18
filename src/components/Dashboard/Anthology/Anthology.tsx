@@ -107,11 +107,6 @@ const Anthology = ({
     UniversalClassData[]
   >([]);
 
-  console.log(
-    '🚀 ~ file: Anthology.tsx ~ line 108 ~ allUniversalClassData',
-    allUniversalClassData
-  );
-
   // ##################################################################### //
   // ##################### CRUD STUDENT EXERCISE DATA #################### //
   // ##################################################################### //
@@ -763,7 +758,7 @@ const Anthology = ({
                     />
                     <p
                       onClick={() => handleForgotPasscode()}
-                      className={`cursor-pointer hover:underline hover:text-red-600 mt-4 mb-2 text-center text-xs text-red-500`}>
+                      className={`cursor-pointer hover:underline hover:iconoclast:text-500 hover:curate:text-500 mt-4 mb-2 text-center text-xs iconoclast:text-main curate:text-main`}>
                       Forgot Passcode?
                     </p>
                   </div>
