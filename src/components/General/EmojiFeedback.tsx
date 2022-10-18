@@ -51,6 +51,7 @@ const EmojiFeedback = () => {
       );
       const responseItems = res.data.listPersonSentiments?.items[0];
       setLastMoodSubmission(responseItems);
+      console.log('data saved'); // <=== data saved here
     } catch (error) {
       console.error(error);
     } finally {

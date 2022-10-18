@@ -27,15 +27,16 @@ const BottomSection = ({
   setShowComments,
   showComments,
   cardDetails,
-  chatCount
+  chatCount,
+  authId
 }: {
   cardDetails: ICommunityCard;
   showComments: boolean;
   chatCount: number;
+  authId?: string;
   setShowComments: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   let copyLikes = cardDetails.likes || [];
-  const {authId} = useAuth();
   const likeIdx = copyLikes?.findIndex((d) => d === authId);
   const isLiked = likeIdx !== -1;
 
@@ -577,6 +578,7 @@ const Card = ({
       <div className="w-auto">
         <BottomSection
           cardDetails={cardDetails}
+          authId={authId}
           chatCount={chatCount}
           showComments={showComments}
           setShowComments={setShowComments}
