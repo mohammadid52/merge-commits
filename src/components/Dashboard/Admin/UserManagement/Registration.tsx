@@ -17,8 +17,8 @@ import {GlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import {createUserUrl} from 'utilities/urls';
 
-import CheckBox from 'components/Atoms/Form/CheckBox';
-import Label from 'components/Atoms/Form/Label';
+import CheckBox from 'atoms/Form/CheckBox';
+import Label from 'atoms/Form/Label';
 import * as customMutations from 'customGraphql/customMutations';
 import * as customQueries from 'customGraphql/customQueries';
 import * as mutations from 'graphql/mutations';

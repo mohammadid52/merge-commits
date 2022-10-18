@@ -12,8 +12,8 @@ import * as customQueries from 'customGraphql/customQueries';
 
 import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
 import AttendanceList from './AttendanceFrame/AttendanceList';
-import Buttons from 'components/Atoms/Buttons';
-import Modal from 'components/Atoms/Modal';
+import Buttons from 'atoms/Buttons';
+import Modal from 'atoms/Modal';
 
 const pad = (num: any) => {
   return `0${num}`.slice(-2);

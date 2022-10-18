@@ -1,7 +1,7 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {Storage} from '@aws-amplify/storage';
-import Loader from 'components/Atoms/Loader';
-import Tooltip from 'components/Atoms/Tooltip';
+import Loader from 'atoms/Loader';
+import Tooltip from 'atoms/Tooltip';
 import ProfileCropModal from 'components/Dashboard/Profile/ProfileCropModal';
 import {GlobalContext} from 'contexts/GlobalContext';
 import * as customMutations from 'customGraphql/customMutations';
@@ -114,7 +114,7 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
           //   show: true,
           //   errorMsg: InstitutionBuilderDict[userLanguage]['messages']['uploaderr'],
           // });
-          console.log('Error in uploading file to s3', err);
+          console.error('Error in uploading file to s3', err);
           reject(err);
         });
     });

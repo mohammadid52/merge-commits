@@ -1,4 +1,4 @@
-import ModalHeader from 'components/Molecules/ModalHeader';
+import ModalHeader from 'molecules/ModalHeader';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import React, {useEffect} from 'react';
 

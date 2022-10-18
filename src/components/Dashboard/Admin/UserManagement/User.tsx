@@ -1,7 +1,7 @@
 import useUrlState from '@ahooksjs/use-url-state';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {Storage} from '@aws-amplify/storage';
-import Selector from 'components/Atoms/Form/Selector';
+import Selector from 'atoms/Form/Selector';
 import Anthology from 'components/Dashboard/Anthology/Anthology';
 import EmojiPicker from 'emoji-picker-react';
 import {find, findIndex} from 'lodash';

@@ -1,4 +1,4 @@
-import Loader from 'components/Atoms/Loader';
+import Loader from 'atoms/Loader';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useAuth from 'customHooks/useAuth';
 import useGraphqlQuery from 'customHooks/useGraphqlQuery';
@@ -216,15 +216,6 @@ const AllEmotions = () => {
       };
     })
   };
-
-  // const {mutate} = useGraphqlMutation('deleteFeelingsArchive');
-
-  // useEffect(() => {
-  //   const ids = ['qxFkuMJ7vKqWmWDE1vl5UhQa', 'FhCLQwcs4KZlJ9WjqIhRslW_'];
-  //   console.log('deleting');
-
-  //   ids.forEach((id) => mutate({input: {id}}));
-  // }, []);
 
   const _keys = Object.keys(emotionData);
 

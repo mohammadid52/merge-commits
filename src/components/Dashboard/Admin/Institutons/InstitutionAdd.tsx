@@ -171,7 +171,7 @@ const InstitutionAdd = () => {
             show: true,
             errorMsg: InstitutionAddDict[userLanguage]['messages']['uploaderr']
           });
-          console.log('Error in uploading file to s3', err);
+          console.error('Error in uploading file to s3', err);
           reject(err);
         });
     });

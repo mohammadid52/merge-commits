@@ -1,6 +1,6 @@
 import Buttons from 'atoms/Buttons';
 import Status from 'atoms/Status';
-import Modal from 'components/Atoms/Modal';
+import Modal from 'atoms/Modal';
 import {classNames} from 'components/Lesson/UniversalLessonBuilder/UI/FormElements/TextInput';
 import {GlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';

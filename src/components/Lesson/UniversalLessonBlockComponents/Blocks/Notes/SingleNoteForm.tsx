@@ -1,7 +1,7 @@
 import FormInput from 'atoms/Form/FormInput';
 import React, {useState} from 'react';
 import ColorPicker from '@UlbUI/ColorPicker/ColorPicker';
-import Selector from 'components/Atoms/Form/Selector';
+import Selector from 'atoms/Form/Selector';
 
 const SingleNote = ({
   singleNoteData,

@@ -1,5 +1,5 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import BreadcrumbsWithBanner from 'components/Atoms/BreadcrumbsWithBanner';
+import BreadcrumbsWithBanner from 'atoms/BreadcrumbsWithBanner';
 import React, {useContext, useEffect, useState} from 'react';
 import {FaPlus} from 'react-icons/fa';
 import {Route, Switch, useHistory, useRouteMatch} from 'react-router-dom';

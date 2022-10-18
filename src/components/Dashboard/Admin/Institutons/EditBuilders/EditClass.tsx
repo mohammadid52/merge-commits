@@ -18,7 +18,7 @@ import {
 } from 'utilities/strings';
 import {getAsset} from 'assets';
 
-import Modal from 'components/Atoms/Modal';
+import Modal from 'atoms/Modal';
 import Registration from 'components/Dashboard/Admin/UserManagement/Registration';
 import User from 'components/Dashboard/Admin/UserManagement/User';
 import {useGlobalContext} from 'contexts/GlobalContext';
@@ -189,7 +189,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
       setStudents(sortStudents(students));
       setLoading(false);
     } catch (err) {
-      console.log('err', err);
+      console.error('err', err);
       setLoading(false);
       setMessages({
         show: true,
@@ -329,7 +329,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
         });
       }, 2000);
     } catch (err) {
-      console.log('saveClassStudent', err);
+      console.error('saveClassStudent', err);
       setAddMessage({
         message: dictionary.messages.errorstudentadd,
         isError: true

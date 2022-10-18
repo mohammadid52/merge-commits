@@ -1,6 +1,6 @@
 import PageWrapper from 'atoms/PageWrapper';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import BreadcrumbsWithBanner from 'components/Atoms/BreadcrumbsWithBanner';
+import BreadcrumbsWithBanner from 'atoms/BreadcrumbsWithBanner';
 import {GlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
 import queryString from 'query-string';

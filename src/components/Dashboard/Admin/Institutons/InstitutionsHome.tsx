@@ -1,6 +1,6 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import BreadcrumbsWithBanner from 'components/Atoms/BreadcrumbsWithBanner';
-import PageWrapper from 'components/Atoms/PageWrapper';
+import BreadcrumbsWithBanner from 'atoms/BreadcrumbsWithBanner';
+import PageWrapper from 'atoms/PageWrapper';
 import * as customQueries from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import {getAsset} from 'assets';

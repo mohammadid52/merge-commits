@@ -1,8 +1,8 @@
 import SectionTitleV3 from 'atoms/SectionTitleV3';
-import BreadCrums from 'components/Atoms/BreadCrums';
-import ContentCard from 'components/Atoms/ContentCard';
-import Selector from 'components/Atoms/Form/Selector';
-import Loader from 'components/Atoms/Loader';
+import BreadCrums from 'atoms/BreadCrums';
+import ContentCard from 'atoms/ContentCard';
+import Selector from 'atoms/Form/Selector';
+import Loader from 'atoms/Loader';
 import Card from 'components/Community/Card';
 import CardsModal from 'components/Community/CardsModal';
 import {

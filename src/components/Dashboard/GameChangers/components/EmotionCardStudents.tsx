@@ -1,4 +1,4 @@
-import Loader from 'components/Atoms/Loader';
+import Loader from 'atoms/Loader';
 import AnimatedContainer from 'components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useInGC from 'customHooks/checkIfGameChanges';

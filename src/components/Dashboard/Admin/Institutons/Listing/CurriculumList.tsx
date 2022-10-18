@@ -7,10 +7,10 @@ import useDictionary from 'customHooks/dictionary';
 import AddButton from 'atoms/Buttons/AddButton';
 import CurriculumListRow from './CurriculumListRow';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import ModalPopUp from 'components/Molecules/ModalPopUp';
-import Loader from 'components/Atoms/Loader';
-import SearchInput from 'components/Atoms/Form/SearchInput';
-import Selector from 'components/Atoms/Form/Selector';
+import ModalPopUp from 'molecules/ModalPopUp';
+import Loader from 'atoms/Loader';
+import SearchInput from 'atoms/Form/SearchInput';
+import Selector from 'atoms/Form/Selector';
 
 interface CurriculumListProps {
   curricular?: {items: ICurricular[]};

@@ -4,7 +4,7 @@ import {useHistory} from 'react-router-dom';
 import {GlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 
-import Tabs from 'components/Atoms/Tabs';
+import Tabs from 'atoms/Tabs';
 
 const HeaderMegaMenu = () => {
   const history = useHistory();

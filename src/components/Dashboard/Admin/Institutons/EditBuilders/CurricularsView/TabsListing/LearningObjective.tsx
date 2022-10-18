@@ -96,7 +96,7 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
         console.log('seq updated');
       }
     } catch (err) {
-      console.log('err', err);
+      console.error('err', err);
     }
   };
 

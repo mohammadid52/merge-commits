@@ -1,4 +1,4 @@
-import RequiredMark from 'components/Atoms/RequiredMark';
+import RequiredMark from 'atoms/RequiredMark';
 import {GlobalContext} from 'contexts/GlobalContext';
 import useInLessonCheck from 'customHooks/checkIfInLesson';
 import useStudentDataValue from 'customHooks/studentDataValue';

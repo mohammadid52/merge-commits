@@ -1,4 +1,4 @@
-import Buttons from 'components/Atoms/Buttons';
+import Buttons from 'atoms/Buttons';
 import AllEmotions from 'components/Lesson/AllEmotions';
 import composePartContent from 'components/Lesson/UniversalLessonBlockComponents/composePartContent';
 import EditOverlayBlock from 'components/Lesson/UniversalLessonBlockComponents/UtilityBlocks/EditOverlayBlock';

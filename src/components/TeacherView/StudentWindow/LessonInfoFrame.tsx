@@ -6,11 +6,11 @@ import * as queries from 'graphql/queries';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {createFilterToFetchSpecificItemsOnly} from 'utilities/strings';
 import {keywordCapitilizer} from 'utilities/strings';
-import ButtonsRound from 'components/Atoms/ButtonsRound';
+import ButtonsRound from 'atoms/ButtonsRound';
 import {AiOutlineCloseCircle} from 'react-icons/ai';
-import Loader from 'components/Atoms/Loader';
-import Modal from 'components/Atoms/Modal';
-import Buttons from 'components/Atoms/Buttons';
+import Loader from 'atoms/Loader';
+import Modal from 'atoms/Modal';
+import Buttons from 'atoms/Buttons';
 
 interface ILessonInfoFrame {
   children?: React.ReactNode;

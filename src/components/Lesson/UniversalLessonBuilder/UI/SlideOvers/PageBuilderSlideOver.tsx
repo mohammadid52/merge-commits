@@ -1,4 +1,4 @@
-import Buttons from 'components/Atoms/Buttons';
+import Buttons from 'atoms/Buttons';
 import {SPACER} from 'components/Lesson/UniversalLessonBuilder/UI/common/constants';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import {useOverlayContext} from 'contexts/OverlayContext';

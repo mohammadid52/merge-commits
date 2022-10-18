@@ -129,7 +129,7 @@ const AddTopic = (props: AddTopicProps) => {
           setLoading(false);
         }
       }
-      console.log('Could not add topic');
+      console.error('Could not add topic');
     }
   };
 

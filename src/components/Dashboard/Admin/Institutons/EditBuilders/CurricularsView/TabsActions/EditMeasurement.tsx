@@ -99,7 +99,7 @@ const EditMeasurement = (props: EditMeasurementProps) => {
       });
       setLoading(false);
     } else {
-      console.log('wrong cr');
+      console.error('wrong cr');
       setLoading(false);
     }
   };
@@ -140,7 +140,7 @@ const EditMeasurement = (props: EditMeasurementProps) => {
       if (updatedItem) {
         history.goBack();
       } else {
-        console.log('Could not update topic');
+        console.error('Could not update topic');
       }
     }
   };
