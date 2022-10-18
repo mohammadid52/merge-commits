@@ -1,6 +1,6 @@
 import React from 'react';
 import {FaCheck, FaSortUp} from 'react-icons/fa';
-import Buttons from '../../../../Atoms/Buttons';
+import Buttons from 'atoms/Buttons';
 
 interface ColorPickerProps {
   callbackColor: (pickedColor: string) => void;
@@ -30,7 +30,7 @@ const ColorPicker = (props: ColorPickerProps) => {
     isMainPage,
     isPagePart,
     styleString,
-    customColors = null,
+    customColors = null
   } = props;
 
   const availableColors: ColorObject[] = [
@@ -41,7 +41,7 @@ const ColorPicker = (props: ColorPickerProps) => {
     {value: 'blue', label: 'Blue'},
     {value: 'indigo', label: 'Indigo'},
     {value: 'purple', label: 'Purple'},
-    {value: 'pink', label: 'Pink'},
+    {value: 'pink', label: 'Pink'}
   ];
   const colorCodes: ColorObject[] = [
     {value: 100, label: 100},
@@ -52,7 +52,7 @@ const ColorPicker = (props: ColorPickerProps) => {
     {value: 600, label: 600},
     {value: 700, label: 700},
     {value: 800, label: 800},
-    {value: 900, label: 900},
+    {value: 900, label: 900}
   ];
 
   const dynamicColors = customColors ? customColors.colors : availableColors;
@@ -99,7 +99,7 @@ const ColorPicker = (props: ColorPickerProps) => {
       : isMainPage
       ? {top: '-4px', left: '8px', color: 'white'}
       : {left: '-5px'},
-    icon: isMainPage ? '' : '-translate-y-1/2 top-1/2',
+    icon: isMainPage ? '' : '-translate-y-1/2 top-1/2'
   };
 
   return (

@@ -2,16 +2,16 @@ import React, {useContext, useEffect, useState} from 'react';
 import {useHistory} from 'react-router';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 
-import * as customQueries from '../../../../../../../customGraphql/customQueries';
-import * as customMutations from '../../../../../../../customGraphql/customMutations';
+import * as customQueries from 'customGraphql/customQueries';
+import * as customMutations from 'customGraphql/customMutations';
 
-import AddButton from '../../../../../../Atoms/Buttons/AddButton';
-import Loader from '../../../../../../Atoms/Loader';
+import AddButton from 'atoms/Buttons/AddButton';
+import Loader from 'atoms/Loader';
 
 import GroupCard from './GroupCards';
 import GroupFormComponent from './GroupFormComponent';
-import ModalPopUp from '../../../../../../Molecules/ModalPopUp';
-import {GlobalContext} from '@contexts/GlobalContext';
+import ModalPopUp from 'molecules/ModalPopUp';
+import {GlobalContext} from 'contexts/GlobalContext';
 
 interface ISubjectProficiencyProps {
   roomData: any;
@@ -21,7 +21,7 @@ const SubjectProficiency = ({roomData}: ISubjectProficiencyProps) => {
   const history = useHistory();
 
   const {
-    state: {user},
+    state: {user}
   } = useContext(GlobalContext);
   const isSuperAdmin = user.role === 'SUP';
 
@@ -34,7 +34,7 @@ const SubjectProficiency = ({roomData}: ISubjectProficiencyProps) => {
   const [warnModal, setWarnModal] = useState({
     show: false,
     message: 'It will remove students from group',
-    action: () => {},
+    action: () => {}
   });
 
   useEffect(() => {
@@ -50,8 +50,8 @@ const SubjectProficiency = ({roomData}: ISubjectProficiencyProps) => {
         graphqlOperation(customQueries.listClassroomGroupss, {
           filter: {
             classRoomID: {eq: roomData?.id},
-            groupType: {eq: 'Proficiency'},
-          },
+            groupType: {eq: 'Proficiency'}
+          }
         })
       );
       setClassRoomGroups(list?.data?.listClassroomGroups.items);
@@ -76,8 +76,8 @@ const SubjectProficiency = ({roomData}: ISubjectProficiencyProps) => {
                   ...data,
                   classroomGroupsStudents: {
                     ...group.classroomGroupsStudents,
-                    ...data.classroomGroupsStudents,
-                  },
+                    ...data.classroomGroupsStudents
+                  }
                 }
               : group
           )
@@ -96,7 +96,7 @@ const SubjectProficiency = ({roomData}: ISubjectProficiencyProps) => {
       setDeleting(true);
       const result: any = await API.graphql(
         graphqlOperation(customMutations.deleteClassroomGroups, {
-          input: {id: group?.id},
+          input: {id: group?.id}
         })
       );
       if (group.classroomGroupsStudents?.items?.length) {
@@ -105,7 +105,7 @@ const SubjectProficiency = ({roomData}: ISubjectProficiencyProps) => {
             async (student: any) =>
               await API.graphql(
                 graphqlOperation(customMutations.deleteClassroomGroupStudents, {
-                  input: {id: student.id},
+                  input: {id: student.id}
                 })
               )
           )
@@ -122,7 +122,7 @@ const SubjectProficiency = ({roomData}: ISubjectProficiencyProps) => {
     setWarnModal((prevValues) => ({
       ...prevValues,
       show: true,
-      action: onDrop,
+      action: onDrop
     }));
   };
   const closeDeleteModal = () => {

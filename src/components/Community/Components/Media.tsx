@@ -1,9 +1,9 @@
-import FormInput from '@atoms/Form/FormInput';
+import FormInput from 'atoms/Form/FormInput';
 import {Storage} from '@aws-amplify/storage';
-import Label from '@components/Atoms/Form/Label';
-import {COMMUNITY_UPLOAD_KEY, IFile} from '@components/Community/constants.community';
-import File from '@components/Community/File';
-import {REGEX} from '@components/Lesson/UniversalLessonBuilder/UI/common/constants';
+import Label from 'atoms/Form/Label';
+import {COMMUNITY_UPLOAD_KEY, IFile} from 'components/Community/constants.community';
+import File from 'components/Community/File';
+import {REGEX} from 'components/Lesson/UniversalLessonBuilder/UI/common/constants';
 import {Transition} from '@headlessui/react';
 import {getAsset} from 'assets';
 import isEmpty from 'lodash/isEmpty';
@@ -27,7 +27,7 @@ const Media = ({
   setError,
   initialImage = null,
   videoLink,
-  setVideoLink,
+  setVideoLink
 }: MediaProps) => {
   const updateProgress = (file: IFile, progress: IFile['progress']) => {
     update(file, `progress`, () => progress);
@@ -62,7 +62,7 @@ const Media = ({
           updateStatus(currentFile, 'progress');
 
           updateProgress(currentFile, progress.toFixed(0));
-        },
+        }
       })
         .then((result) => {
           console.log('File successfully uploaded to s3', result);
@@ -74,7 +74,7 @@ const Media = ({
         .catch((err) => {
           updateStatus(currentFile, 'failed');
           updateProgress(currentFile, null);
-          console.log('Error in uploading file to s3', err);
+          console.error('Error in uploading file to s3', err);
           reject(err);
         });
     });
@@ -89,7 +89,7 @@ const Media = ({
       progress: fakeInitProgress.toString(),
       file: acceptedFile,
       fileName: acceptedFile.name,
-      id,
+      id
     };
 
     setFile({...initState});
@@ -111,7 +111,7 @@ const Media = ({
 
   const {getRootProps, getInputProps, isDragActive} = useDropzone({
     onDrop: uploadFile,
-    accept: 'image/x-png,image/gif,image/jpeg',
+    accept: 'image/x-png,image/gif,image/jpeg'
   });
 
   const handleFileSelection = async (e: any) => {
@@ -208,6 +208,7 @@ const Media = ({
 
       <Label label="Upload Youtube/Vimeo link" />
       <FormInput
+        dataCy="spotlight-link-input"
         placeHolder="eg. https://www.youtube.com/watch?v=MiebCHmiszs"
         value={videoLink}
         disabled={isUploadedFromPC}

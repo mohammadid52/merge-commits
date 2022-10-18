@@ -1,10 +1,10 @@
 import React, {useEffect} from 'react';
-import useLessonControls from '@customHooks/lessonControls';
-import {getLocalStorageData, setLocalStorageData} from '@utilities/localStorage';
+import useLessonControls from 'customHooks/lessonControls';
+import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
 import {FaCompress, FaExpand} from 'react-icons/fa';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {StudentWindowTitleBarProps} from '../StudentWindowTitleBar';
-import Buttons from '@components/Atoms/Buttons';
+import Buttons from 'atoms/Buttons';
 
 interface IFullscreenToggleProps extends StudentWindowTitleBarProps {
   displayData: any;
@@ -19,7 +19,7 @@ const PresentationModeToggle = ({
   displayData,
   lessonDispatch,
   lessonData,
-  currentPage,
+  currentPage
 }: IFullscreenToggleProps) => {
   const {handleRoomUpdate, resetViewAndShare} = useLessonControls();
   const anyoneIsShared = displayData && displayData[0].studentAuthID !== '';
@@ -39,16 +39,16 @@ const PresentationModeToggle = ({
       type: 'SET_ROOM_SUBSCRIPTION_DATA',
       payload: {
         id: getRoomData.id,
-        displayData: [{isTeacher: true, studentAuthID: '0', lessonPageID: pageID}],
-      },
+        displayData: [{isTeacher: true, studentAuthID: '0', lessonPageID: pageID}]
+      }
     });
     setLocalStorageData('room_info', {
       ...getRoomData,
-      displayData: [{isTeacher: true, studentAuthID: '0', lessonPageID: pageID}],
+      displayData: [{isTeacher: true, studentAuthID: '0', lessonPageID: pageID}]
     });
     await handleRoomUpdate({
       id: roomID,
-      displayData: [{isTeacher: true, studentAuthID: '0', lessonPageID: pageID}],
+      displayData: [{isTeacher: true, studentAuthID: '0', lessonPageID: pageID}]
     });
   };
 

@@ -1,18 +1,18 @@
-import FormInput from '@atoms/Form/FormInput';
-import Info from '@components/Atoms/Alerts/Info';
-import Buttons from '@components/Atoms/Buttons';
-import Tooltip from '@components/Atoms/Tooltip';
-import {Tree} from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/TreeView/Tree';
-import {GlobalContext} from '@contexts/GlobalContext';
-import {useOverlayContext} from '@contexts/OverlayContext';
-import {useULBContext} from '@contexts/UniversalLessonBuilderContext';
-import * as customMutations from '@customGraphql/customMutations';
-import * as customQueries from '@customGraphql/customQueries';
+import FormInput from 'atoms/Form/FormInput';
+import Info from 'atoms/Alerts/Info';
+import Buttons from 'atoms/Buttons';
+import Tooltip from 'atoms/Tooltip';
+import {Tree} from 'components/Lesson/UniversalLessonBuilder/UI/UIComponents/TreeView/Tree';
+import {GlobalContext} from 'contexts/GlobalContext';
+import {useOverlayContext} from 'contexts/OverlayContext';
+import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
+import * as customMutations from 'customGraphql/customMutations';
+import * as customQueries from 'customGraphql/customQueries';
 import {Dialog, Transition} from '@headlessui/react';
 import {XIcon} from '@heroicons/react/outline';
 import {CheckCircleIcon} from '@heroicons/react/solid';
 import {UniversalLessonPage} from '@interfaces/UniversalLessonInterfaces';
-import {wait} from '@utilities/functions';
+import {wait} from 'utilities/functions';
 import {API, graphqlOperation} from 'aws-amplify';
 import map from 'lodash/map';
 import React, {Fragment, useContext, useState} from 'react';
@@ -22,7 +22,7 @@ import {useHistory} from 'react-router';
 const Slideover = ({
   open,
   setOpen,
-  children,
+  children
 }: {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -81,7 +81,7 @@ const Slideover = ({
 
 const CopyCloneSlideOver = ({
   getCopyData,
-  getCloneData,
+  getCloneData
 }: {
   getCopyData: (lessonId: string, pageId: string) => any;
   getCloneData: (lessonId: string, pageId: string) => any;
@@ -90,8 +90,8 @@ const CopyCloneSlideOver = ({
 
   const {
     state: {
-      user: {isSuperAdmin},
-    },
+      user: {isSuperAdmin}
+    }
   } = useContext(GlobalContext);
   const {setShowDataForCopyClone, showDataForCopyClone} = useOverlayContext();
   const {
@@ -99,7 +99,7 @@ const CopyCloneSlideOver = ({
     setNewLessonPlanShow,
     setEditMode,
     setUniversalLessonDetails,
-    setSelectedPageID,
+    setSelectedPageID
   } = useULBContext();
 
   const [selectedId, setSelectedId] = useState({pageId: '', lessonId: ''});
@@ -127,12 +127,12 @@ const CopyCloneSlideOver = ({
 
         const input = {
           id: universalLessonDetails.id,
-          lessonPlan: [...universalLessonDetails.lessonPlan, newPage],
+          lessonPlan: [...universalLessonDetails.lessonPlan, newPage]
         };
 
         const res: any = await API.graphql(
           graphqlOperation(customMutations.updateUniversalLesson, {
-            input,
+            input
           })
         );
 
@@ -182,10 +182,10 @@ const CopyCloneSlideOver = ({
                 type: 'page',
                 id: page.id,
                 lessonId: lesson.id,
-                children: [],
+                children: []
               }))
-            : [],
-      })),
+            : []
+      }))
     };
 
     setTreeViewData(dataForTreeView);
@@ -205,13 +205,13 @@ const CopyCloneSlideOver = ({
         const filter = {
           title: {
             contains: searchQuery,
-            beginsWith: searchQuery,
-          },
+            beginsWith: searchQuery
+          }
         };
 
         const fetchUList: any = await API.graphql(
           graphqlOperation(customQueries.listUniversalLessons, {
-            filter: filter,
+            filter: filter
           })
         );
         if (!fetchUList) {

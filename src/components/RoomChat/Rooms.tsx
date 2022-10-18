@@ -1,8 +1,8 @@
 import React, {useEffect, useState, useContext} from 'react';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import * as customQueries from '../../customGraphql/customQueries';
-import {GlobalContext} from '../../contexts/GlobalContext';
-import {getLocalStorageData} from '../../utilities/localStorage';
+import * as customQueries from 'customGraphql/customQueries';
+import {GlobalContext} from 'contexts/GlobalContext';
+import {getLocalStorageData} from 'utilities/localStorage';
 
 interface Rooms {
   chatroom?: any;
@@ -41,7 +41,7 @@ const Rooms = (props: Rooms) => {
         {msg}
       </div>
     );
-  }
+  };
 
   const listRooms = () => {
     return (

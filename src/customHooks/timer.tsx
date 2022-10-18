@@ -1,8 +1,8 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {Auth} from '@aws-amplify/auth';
-import {useGlobalContext} from '@contexts/GlobalContext';
-import * as mutations from '@graphql/mutations';
-import {getLocalStorageData} from '@utilities/localStorage';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import * as mutations from 'graphql/mutations';
+import {getLocalStorageData} from 'utilities/localStorage';
 import {useEffect, useState} from 'react';
 
 const useStudentTimer = () => {
@@ -52,6 +52,7 @@ const useStudentTimer = () => {
 
   useEffect(() => {
     if (lessonState.updated && !savePending) {
+      console.log("I'm saving");
       setSavePending(true);
 
       if (iAmViewed) {

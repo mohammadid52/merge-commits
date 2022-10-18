@@ -1,11 +1,11 @@
-import {setLocalStorageData} from '@utilities/localStorage';
+import {setLocalStorageData} from 'utilities/localStorage';
 import isEmpty from 'lodash/isEmpty';
 import React, {useContext, useEffect, useState} from 'react';
-import {getAsset} from '../../../assets';
-import {GlobalContext} from '../../../contexts/GlobalContext';
-import useDictionary from '../../../customHooks/dictionary';
-import {getImageFromS3} from '../../../utilities/services';
-import SectionTitleV3 from '../../Atoms/SectionTitleV3';
+import {getAsset} from 'assets';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import {getImageFromS3} from 'utilities/services';
+import SectionTitleV3 from 'atoms/SectionTitleV3';
 import HeroBanner from '../../Header/HeroBanner';
 import ComponentLoading from '../../Lesson/Loading/ComponentLoading';
 import {ClassroomControlProps} from '../Dashboard';

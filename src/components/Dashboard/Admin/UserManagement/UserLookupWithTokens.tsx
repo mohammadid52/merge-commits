@@ -4,21 +4,21 @@ import API, {graphqlOperation} from '@aws-amplify/api';
 import {AiOutlineUsergroupAdd, AiOutlineArrowUp} from 'react-icons/ai';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 
-import {GlobalContext} from '../../../../contexts/GlobalContext';
-import * as queries from '../../../../graphql/queries';
-import {getAsset} from '../../../../assets';
+import {GlobalContext} from 'contexts/GlobalContext';
+import * as queries from 'graphql/queries';
+import {getAsset} from 'assets';
 
 import LessonLoading from '../../../Lesson/Loading/ComponentLoading';
 import ListStudents from './ListStudents';
 import List from './List';
-import Pagination from '../../../Atoms/Pagination';
-import Buttons from '../../../Atoms/Buttons';
-import BreadCrums from '../../../Atoms/BreadCrums';
-import SectionTitle from '../../../Atoms/SectionTitle';
-import PageCountSelector from '../../../Atoms/PageCountSelector';
-import SearchInput from '../../../Atoms/Form/SearchInput';
-import Selector from '../../../Atoms/Form/Selector';
-import useDictionary from '../../../../customHooks/dictionary';
+import Pagination from 'atoms/Pagination';
+import Buttons from 'atoms/Buttons';
+import BreadCrums from 'atoms/BreadCrums';
+import SectionTitle from 'atoms/SectionTitle';
+import PageCountSelector from 'atoms/PageCountSelector';
+import SearchInput from 'atoms/Form/SearchInput';
+import Selector from 'atoms/Form/Selector';
+import useDictionary from 'customHooks/dictionary';
 
 {
   /* 
@@ -40,19 +40,19 @@ const UserLookup = () => {
   const [pageTokens, setPageTokens] = useState({
     currentPageToken: null,
     nextPageToken: null,
-    prevToken: [],
+    prevToken: []
   });
   const [userListLength, setUSerListLength] = useState(10);
   const [lastPage, setLastPage] = useState(false);
   const [firstPage, setFirstPage] = useState(false);
   const [searchInput, setSearchInput] = useState({
     value: '',
-    isActive: false,
+    isActive: false
   });
   const [sortingType, setSortingType] = useState({
     value: '',
     name: '',
-    asc: true,
+    asc: true
   });
   const {UserLookupWithTokenDict, paginationPage, BreadcrumsTitles} = useDictionary(
     clientKey
@@ -63,15 +63,15 @@ const UserLookup = () => {
     {
       title: BreadcrumsTitles[userLanguage]['PEOPLE'],
       url: '/dashboard/manage-users',
-      last: true,
-    },
+      last: true
+    }
   ];
 
   const sortByList = [
     {id: 1, name: 'Name', value: 'lastName'},
     {id: 2, name: 'Role', value: 'role'},
     {id: 3, name: 'Institution', value: 'institution'},
-    {id: 4, name: 'Status', value: 'status'},
+    {id: 4, name: 'Status', value: 'status'}
   ];
 
   async function listUsers(
@@ -83,7 +83,7 @@ const UserLookup = () => {
       const users: any = await API.graphql(
         graphqlOperation(queries.listPeople, {
           limit: userCount,
-          nextToken: currToken,
+          nextToken: currToken
         })
       );
       const listPersons: any = users.data.listPeople;
@@ -96,7 +96,7 @@ const UserLookup = () => {
           ...pageTokens,
           currentPageToken: currToken,
           nextPageToken: listPersons.nextToken,
-          prevToken: [...pageTokens.prevToken, pageTokens.currentPageToken],
+          prevToken: [...pageTokens.prevToken, pageTokens.currentPageToken]
         });
         setCurrentPage(currentPage + 1);
       } else if (!isPrev && isTokenStored) {
@@ -148,8 +148,8 @@ const UserLookup = () => {
       const users: any = await API.graphql(
         graphqlOperation(queries.listPeople, {
           filter: {
-            email: {contains: searchInput.value},
-          },
+            email: {contains: searchInput.value}
+          }
         })
       );
       const items: any = users.data.listPeople.items;
@@ -157,7 +157,7 @@ const UserLookup = () => {
       setSortingToInitial();
       setSearchInput({
         ...searchInput,
-        isActive: true,
+        isActive: true
       });
     } catch (error) {
       console.error(error);
@@ -167,7 +167,7 @@ const UserLookup = () => {
   const setSearch = (str: string) => {
     setSearchInput({
       ...searchInput,
-      value: str,
+      value: str
     });
   };
 
@@ -175,14 +175,14 @@ const UserLookup = () => {
     setSortingType({
       ...sortingType,
       value: str,
-      name: name,
+      name: name
     });
   };
 
   const toggleSortDimention = () => {
     setSortingType({
       ...sortingType,
-      asc: !sortingType.asc,
+      asc: !sortingType.asc
     });
   };
 
@@ -196,7 +196,7 @@ const UserLookup = () => {
     setSortingType({
       value: '',
       name: '',
-      asc: true,
+      asc: true
     });
   };
 
@@ -207,7 +207,7 @@ const UserLookup = () => {
     setPageTokens({
       currentPageToken: null,
       nextPageToken: null,
-      prevToken: [],
+      prevToken: []
     });
     setUSerListLength(userCount);
     setSortingToInitial();

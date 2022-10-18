@@ -1,4 +1,4 @@
-import {GlobalContext} from '@contexts/GlobalContext';
+import {GlobalContext} from 'contexts/GlobalContext';
 import React, {useContext, useEffect, useRef} from 'react';
 import {IconContext} from 'react-icons';
 import {
@@ -6,12 +6,12 @@ import {
   AiOutlineClose,
   AiOutlineHome,
   AiOutlineSave,
-  AiOutlineVideoCamera,
+  AiOutlineVideoCamera
 } from 'react-icons/ai';
 import {useHistory} from 'react-router';
 
 import {gsap} from 'gsap/all';
-import usePrevious from '@customHooks/previousProps';
+import usePrevious from 'customHooks/previousProps';
 import {getAsset} from 'assets';
 import {UniversalLessonPage} from '@interfaces/UniversalLessonInterfaces';
 import {ISideMenuProps} from '@interfaces/LessonComponentsInterfaces';
@@ -30,7 +30,7 @@ const SideMenu = ({
   setisAtEnd,
   handleRequiredNotification,
   pages,
-  canContinue,
+  canContinue
 }: ISideMenuProps) => {
   // ~~~~~~~~~~ CONTEXT SPLITTING ~~~~~~~~~~ //
   const gContext = useContext(GlobalContext);
@@ -56,7 +56,7 @@ const SideMenu = ({
       x: '0%',
       opacity: 1,
       duration: ANIMATION_DURATION,
-      ease: 'power2',
+      ease: 'power2'
     });
   };
 
@@ -66,7 +66,7 @@ const SideMenu = ({
       opacity: 0,
       duration: ANIMATION_DURATION,
       delay: ANIMATION_DURATION / 2,
-      ease: 'power2',
+      ease: 'power2'
     });
   };
 
@@ -103,7 +103,7 @@ const SideMenu = ({
         scaleY: 1,
         transformOrigin: 'center center',
         duration: ANIMATION_DURATION,
-        ease: 'elastic.out(1, 0.3)',
+        ease: 'elastic.out(1, 0.3)'
       }
     );
   };
@@ -153,7 +153,7 @@ const SideMenu = ({
                   value={{
                     size: '1.5rem',
                     style: {width: '32px'},
-                    className: `text-white`,
+                    className: `text-white`
                   }}>
                   <AiOutlineClose />
                 </IconContext.Provider>
@@ -170,7 +170,7 @@ const SideMenu = ({
                   value={{
                     size: '1.5rem',
                     style: {width: '32px'},
-                    className: `text-white`,
+                    className: `text-white`
                   }}>
                   <AiOutlineArrowLeft />
                 </IconContext.Provider>
@@ -187,7 +187,7 @@ const SideMenu = ({
                   value={{
                     size: '1.5rem',
                     style: {width: '32px'},
-                    className: `text-white`,
+                    className: `text-white`
                   }}>
                   <AiOutlineHome />
                 </IconContext.Provider>
@@ -204,7 +204,7 @@ const SideMenu = ({
                   value={{
                     size: '1.5rem',
                     style: {width: '32px'},
-                    className: `text-white`,
+                    className: `text-white`
                   }}>
                   <AiOutlineVideoCamera />
                 </IconContext.Provider>

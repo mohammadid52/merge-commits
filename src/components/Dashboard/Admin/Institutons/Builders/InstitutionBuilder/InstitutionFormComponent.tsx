@@ -6,19 +6,19 @@ import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {useHistory} from 'react-router-dom';
 import {v4 as uuidv4} from 'uuid';
 
-import {GlobalContext} from '@contexts/GlobalContext';
-import * as customMutations from '@customGraphql/customMutations';
-import useDictionary from '@customHooks/dictionary';
-import {statesList} from '@utilities/staticData';
+import {GlobalContext} from 'contexts/GlobalContext';
+import * as customMutations from 'customGraphql/customMutations';
+import useDictionary from 'customHooks/dictionary';
+import {statesList} from 'utilities/staticData';
 
-import Buttons from '@atoms/Buttons';
-import CheckBox from '@atoms/Form/CheckBox';
-import FormInput from '@atoms/Form/FormInput';
-import Selector from '@atoms/Form/Selector';
-import Loader from '@atoms/Loader';
-import DroppableMedia from '@molecules/DroppableMedia';
-import ProfileCropModal from '@components/Dashboard/Profile/ProfileCropModal';
-import {getImageFromS3} from '@utilities/services';
+import Buttons from 'atoms/Buttons';
+import CheckBox from 'atoms/Form/CheckBox';
+import FormInput from 'atoms/Form/FormInput';
+import Selector from 'atoms/Form/Selector';
+import Loader from 'atoms/Loader';
+import DroppableMedia from 'molecules/DroppableMedia';
+import ProfileCropModal from 'components/Dashboard/Profile/ProfileCropModal';
+import {getImageFromS3} from 'utilities/services';
 
 const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
   const history = useHistory();
@@ -36,8 +36,8 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
     phone: '',
     image: '',
     serviceProviders: {
-      items: [],
-    },
+      items: []
+    }
   };
   const [instituteData, setInstituteData] = useState(initialState);
   const [showCropper, setShowCropper] = useState(false);
@@ -50,46 +50,46 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
   const {InstitutionBuilderDict, BUTTONS: ButtonDict} = useDictionary(clientKey);
   const [error, setError] = useState({
     show: true,
-    errorMsg: '',
+    errorMsg: ''
   });
   const [serverMessage, setServerMessage] = useState({
     message: '',
-    isError: false,
+    isError: false
   });
 
   const institutionTypeList = [
     {
       id: 1,
       name: InstitutionBuilderDict[userLanguage]['INSTITUTION_TYPE']['SCHOOL'],
-      value: 'School',
+      value: 'School'
     },
     {
       id: 2,
       name: InstitutionBuilderDict[userLanguage]['INSTITUTION_TYPE']['AFTERSCHOOL'],
-      value: 'After School',
+      value: 'After School'
     },
     {
       id: 3,
       name: InstitutionBuilderDict[userLanguage]['INSTITUTION_TYPE']['DAYCAMP'],
-      value: 'Day Camp',
+      value: 'Day Camp'
     },
     {
       id: 4,
       name: InstitutionBuilderDict[userLanguage]['INSTITUTION_TYPE']['SUMMERCAMP'],
-      value: 'Summer Camp',
+      value: 'Summer Camp'
     },
     {
       id: 5,
       name: InstitutionBuilderDict[userLanguage]['INSTITUTION_TYPE']['C3'],
-      value: '501C3',
-    },
+      value: '501C3'
+    }
   ];
 
   const removeErrorMSg = () => {
     if (error.show) {
       setError({
         show: false,
-        errorMsg: '',
+        errorMsg: ''
       });
     }
   };
@@ -98,7 +98,7 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
     if (!instituteData.name) {
       setError({
         show: true,
-        errorMsg: InstitutionBuilderDict[userLanguage]['messages']['namerequired'],
+        errorMsg: InstitutionBuilderDict[userLanguage]['messages']['namerequired']
       });
     }
   };
@@ -107,7 +107,7 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
     removeErrorMSg();
     setInstituteData({
       ...instituteData,
-      [e.target.name]: e.target.value,
+      [e.target.name]: e.target.value
     });
   };
 
@@ -115,21 +115,21 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
     removeErrorMSg();
     setInstituteData({
       ...instituteData,
-      type: str,
+      type: str
     });
   };
   const onStateSelect = (str: string, name: string) => {
     removeErrorMSg();
     setInstituteData({
       ...instituteData,
-      state: str,
+      state: str
     });
   };
 
   const handdleCheckBox = () => {
     setInstituteData({
       ...instituteData,
-      isServiceProvider: !instituteData.isServiceProvider,
+      isServiceProvider: !instituteData.isServiceProvider
     });
   };
 
@@ -144,7 +144,7 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
       Storage.put(`instituteImages/institute_image_${id}`, file, {
         contentType: type,
         acl: 'public-read',
-        ContentEncoding: 'base64',
+        ContentEncoding: 'base64'
       })
         .then((result) => {
           console.log('File successfully uploaded to s3', result);
@@ -153,9 +153,9 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
         .catch((err) => {
           setError({
             show: true,
-            errorMsg: InstitutionBuilderDict[userLanguage]['messages']['uploaderr'],
+            errorMsg: InstitutionBuilderDict[userLanguage]['messages']['uploaderr']
           });
-          console.log('Error in uploading file to s3', err);
+          console.error('Error in uploading file to s3', err);
           reject(err);
         });
     });
@@ -166,8 +166,8 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
       ...prevData,
       serviceProviders: {
         ...prevData.serviceProviders,
-        items: [...(prevData.serviceProviders.items || []), item],
-      },
+        items: [...(prevData.serviceProviders.items || []), item]
+      }
     }));
   };
 
@@ -187,7 +187,7 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
     setImageUrl(imageUrl);
     setInstituteData({
       ...instituteData,
-      image: `instituteImages/institute_image_${instituteData.id}`,
+      image: `instituteImages/institute_image_${instituteData.id}`
     });
     toggleCropper();
     setImageLoading(false);
@@ -197,7 +197,7 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
     if (!instituteData.name) {
       setError({
         show: true,
-        errorMsg: InstitutionBuilderDict[userLanguage]['messages']['namerequired'],
+        errorMsg: InstitutionBuilderDict[userLanguage]['messages']['namerequired']
       });
     } else {
       removeErrorMSg();
@@ -217,12 +217,12 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
           zip: instituteData.zip,
           image: instituteData.image,
           phone: instituteData.phone,
-          isServiceProvider: instituteData.isServiceProvider,
+          isServiceProvider: instituteData.isServiceProvider
         };
         if (instituteData.id) {
           payload = {
             ...payload,
-            id: instituteData.id,
+            id: instituteData.id
           };
           const result: any = await API.graphql(
             graphqlOperation(customMutations.updateInstitution, {input: payload})
@@ -236,19 +236,19 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
         setSaving(false);
         setServerMessage({
           isError: false,
-          message: InstitutionBuilderDict[userLanguage]['messages']['saveMsg'],
+          message: InstitutionBuilderDict[userLanguage]['messages']['saveMsg']
         });
         setTimeout(() => {
           setServerMessage({
             isError: false,
-            message: '',
+            message: ''
           });
         }, 2000);
         // history.push(`institution?id=${instituteData.id}`);
       } catch {
         setError({
           show: true,
-          errorMsg: InstitutionBuilderDict[userLanguage]['messages']['adderr'],
+          errorMsg: InstitutionBuilderDict[userLanguage]['messages']['adderr']
         });
       }
     }
@@ -256,7 +256,7 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
   useEffect(() => {
     if (institutionInfo?.id) {
       setInstituteData({
-        ...institutionInfo,
+        ...institutionInfo
       });
     }
   }, [institutionInfo]);
@@ -283,7 +283,7 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
     state,
     zip,
     phone,
-    isServiceProvider,
+    isServiceProvider
   } = instituteData;
 
   return (

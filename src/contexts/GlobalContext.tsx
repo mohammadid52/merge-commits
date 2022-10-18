@@ -1,13 +1,13 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import React, {useContext, useEffect, useReducer, useState} from 'react';
-import * as mutations from '../graphql/mutations';
-import {globalReducer} from '../reducers/GlobalReducer';
-import {lessonControlReducer} from '../reducers/LessonControlReducer';
-import {lessonReducer} from '../reducers/LessonReducer';
-import {globalState} from '../state/GlobalState';
-import {lessonControlState} from '../state/LessonControlState';
-import {lessonState as lessonStateObject} from '../state/LessonState';
-import {getClientKey} from '../utilities/strings';
+import * as mutations from 'graphql/mutations';
+import {globalReducer} from 'reducers/GlobalReducer';
+import {lessonControlReducer} from 'reducers/LessonControlReducer';
+import {lessonReducer} from 'reducers/LessonReducer';
+import {globalState} from 'state/GlobalState';
+import {lessonControlState} from 'state/LessonControlState';
+import {lessonState as lessonStateObject} from 'state/LessonState';
+import {getClientKey} from 'utilities/strings';
 
 export const standardTheme = {
   bg: 'bg-dark-gray',

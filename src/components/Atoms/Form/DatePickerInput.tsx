@@ -4,8 +4,8 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import {IconContext} from 'react-icons';
 import {IoIosCalendar} from 'react-icons/io';
-import {getAsset} from '../../../assets';
-import {GlobalContext} from '../../../contexts/GlobalContext';
+import {getAsset} from 'assets';
+import {GlobalContext} from 'contexts/GlobalContext';
 
 const DatePickerInput = ({
   focus,
@@ -13,14 +13,14 @@ const DatePickerInput = ({
   onChange,
   placeholder,
   minDate,
-  isClearable = false,
+  isClearable = false
 }: any) => {
   const datepickerRef = useRef(null);
 
   useEffect(() => {
     if (focus) {
       const datepickerElement = datepickerRef.current;
-      datepickerElement.focus(); 
+      datepickerElement.focus();
     }
   }, [focus]);
   const {theme, clientKey} = useContext(GlobalContext);

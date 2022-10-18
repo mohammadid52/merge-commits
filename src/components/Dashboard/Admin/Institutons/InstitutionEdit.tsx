@@ -4,17 +4,17 @@ import React, {useContext, useEffect, useState} from 'react';
 import {FaPlus} from 'react-icons/fa';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {useHistory} from 'react-router-dom';
-import {GlobalContext} from '../../../../contexts/GlobalContext';
-import * as customMutations from '../../../../customGraphql/customMutations';
-import useDictionary from '../../../../customHooks/dictionary';
-import {getImageFromS3} from '../../../../utilities/services';
-import {statesList} from '../../../../utilities/staticData';
-import Buttons from '../../../Atoms/Buttons';
-import CheckBox from '../../../Atoms/Form/CheckBox';
-import FormInput from '../../../Atoms/Form/FormInput';
-import Selector from '../../../Atoms/Form/Selector';
-import Loader from '../../../Atoms/Loader';
-import DroppableMedia from '../../../Molecules/DroppableMedia';
+import {GlobalContext} from 'contexts/GlobalContext';
+import * as customMutations from 'customGraphql/customMutations';
+import useDictionary from 'customHooks/dictionary';
+import {getImageFromS3} from 'utilities/services';
+import {statesList} from 'utilities/staticData';
+import Buttons from 'atoms/Buttons';
+import CheckBox from 'atoms/Form/CheckBox';
+import FormInput from 'atoms/Form/FormInput';
+import Selector from 'atoms/Form/Selector';
+import Loader from 'atoms/Loader';
+import DroppableMedia from 'molecules/DroppableMedia';
 import ProfileCropModal from '../../Profile/ProfileCropModal';
 import InstitutionPopUp from './InstitutionPopUp';
 import ServiceProviders from './Listing/ServiceProviders';
@@ -54,15 +54,15 @@ const InstitutionEdit = (instEditProps: InstitutionEditProps) => {
   const [showModal, setShowModal] = useState({
     warnModal: false,
     infoModal: false,
-    modalMessage: '',
+    modalMessage: ''
   });
   const [error, setError] = useState({
     show: true,
-    errorMsg: '',
+    errorMsg: ''
   });
   const [serverMessage, setServerMessage] = useState({
     message: '',
-    isError: false,
+    isError: false
   });
   const history = useHistory();
 
@@ -70,28 +70,28 @@ const InstitutionEdit = (instEditProps: InstitutionEditProps) => {
     {
       id: 1,
       name: InstitutionEditDict[userLanguage]['INSTITUTION_TYPE']['SCHOOL'],
-      value: 'School',
+      value: 'School'
     },
     {
       id: 2,
       name: InstitutionEditDict[userLanguage]['INSTITUTION_TYPE']['AFTERSCHOOL'],
-      value: 'After School',
+      value: 'After School'
     },
     {
       id: 3,
       name: InstitutionEditDict[userLanguage]['INSTITUTION_TYPE']['DAYCAMP'],
-      value: 'Day Camp',
+      value: 'Day Camp'
     },
     {
       id: 4,
       name: InstitutionEditDict[userLanguage]['INSTITUTION_TYPE']['SUMMERCAMP'],
-      value: 'Summer Camp',
+      value: 'Summer Camp'
     },
     {
       id: 5,
       name: InstitutionEditDict[userLanguage]['INSTITUTION_TYPE']['C3'],
-      value: '501C3',
-    },
+      value: '501C3'
+    }
   ];
 
   const handleEditFormChange = (e: React.FormEvent /* <HTMLFormElement> */) => {
@@ -105,7 +105,7 @@ const InstitutionEdit = (instEditProps: InstitutionEditProps) => {
     if (error.show) {
       setError({
         show: false,
-        errorMsg: '',
+        errorMsg: ''
       });
     }
   };
@@ -114,7 +114,7 @@ const InstitutionEdit = (instEditProps: InstitutionEditProps) => {
     removeErrorMSg();
     setEditFormValues({
       ...editFormValues,
-      type: str,
+      type: str
     });
   };
 
@@ -122,7 +122,7 @@ const InstitutionEdit = (instEditProps: InstitutionEditProps) => {
     removeErrorMSg();
     setEditFormValues({
       ...editFormValues,
-      state: str,
+      state: str
     });
   };
 
@@ -132,12 +132,12 @@ const InstitutionEdit = (instEditProps: InstitutionEditProps) => {
     if (!editFormValues.name) {
       setError({
         show: true,
-        errorMsg: InstitutionEditDict[userLanguage]['messages']['namerequired'],
+        errorMsg: InstitutionEditDict[userLanguage]['messages']['namerequired']
       });
     } else if (!editFormValues.type) {
       setError({
         show: true,
-        errorMsg: InstitutionEditDict[userLanguage]['messages']['typerequired'],
+        errorMsg: InstitutionEditDict[userLanguage]['messages']['typerequired']
       });
     } else {
       removeErrorMSg();
@@ -155,7 +155,7 @@ const InstitutionEdit = (instEditProps: InstitutionEditProps) => {
           zip: editFormValues.zip,
           image: editFormValues.image,
           phone: editFormValues.phone,
-          isServiceProvider: editFormValues.isServiceProvider,
+          isServiceProvider: editFormValues.isServiceProvider
         };
 
         await API.graphql(
@@ -165,19 +165,19 @@ const InstitutionEdit = (instEditProps: InstitutionEditProps) => {
         instEditProps.toggleUpdateState();
         setServerMessage({
           isError: false,
-          message: InstitutionEditDict[userLanguage]['messages']['saveMsg'],
+          message: InstitutionEditDict[userLanguage]['messages']['saveMsg']
         });
         setTimeout(() => {
           setServerMessage({
             isError: false,
-            message: '',
+            message: ''
           });
         }, 2000);
         // history.goBack();
       } catch {
         setError({
           show: true,
-          errorMsg: InstitutionEditDict[userLanguage]['messages']['unabletoupdate'],
+          errorMsg: InstitutionEditDict[userLanguage]['messages']['unabletoupdate']
         });
       }
     }
@@ -186,7 +186,7 @@ const InstitutionEdit = (instEditProps: InstitutionEditProps) => {
   const saveAsServicePro = () => {
     setEditFormValues({
       ...editFormValues,
-      isServiceProvider: !editFormValues.isServiceProvider,
+      isServiceProvider: !editFormValues.isServiceProvider
     });
     togglePopUpModal();
   };
@@ -197,14 +197,14 @@ const InstitutionEdit = (instEditProps: InstitutionEditProps) => {
         infoModal: false,
         modalMessage: `The service provider status allows other institutions 
                         access to the curricula and/or teachers of this institution.
-                        Do you want to continue ?`,
+                        Do you want to continue ?`
       });
     } else {
       setShowModal({
         warnModal: false,
         infoModal: true,
         modalMessage: `You can not remove institute from service providers role. 
-                       Please contact ZOIQ for further help.`,
+                       Please contact ZOIQ for further help.`
       });
     }
   };
@@ -213,7 +213,7 @@ const InstitutionEdit = (instEditProps: InstitutionEditProps) => {
     setShowModal({
       warnModal: false,
       infoModal: false,
-      modalMessage: '',
+      modalMessage: ''
     });
   };
 
@@ -228,7 +228,7 @@ const InstitutionEdit = (instEditProps: InstitutionEditProps) => {
       Storage.put(`instituteImages/institute_image_${id}`, file, {
         contentType: type,
         acl: 'public-read',
-        ContentEncoding: 'base64',
+        ContentEncoding: 'base64'
       })
         .then((result) => {
           console.log('File successfully uploaded to s3', result);
@@ -237,9 +237,9 @@ const InstitutionEdit = (instEditProps: InstitutionEditProps) => {
         .catch((err) => {
           setError({
             show: true,
-            errorMsg: InstitutionEditDict[userLanguage]['messages']['uploderr'],
+            errorMsg: InstitutionEditDict[userLanguage]['messages']['uploderr']
           });
-          console.log('Error in uploading file to s3', err);
+          console.error('Error in uploading file to s3', err);
           reject(err);
         });
     });
@@ -255,7 +255,7 @@ const InstitutionEdit = (instEditProps: InstitutionEditProps) => {
     setImageUrl(imageUrl);
     setEditFormValues({
       ...editFormValues,
-      image: `instituteImages/institute_image_${editFormValues.id}`,
+      image: `instituteImages/institute_image_${editFormValues.id}`
     });
     toggleCropper();
     setImageLoading(false);
@@ -265,7 +265,7 @@ const InstitutionEdit = (instEditProps: InstitutionEditProps) => {
     try {
       const input = {
         id: editFormValues.id,
-        image: editFormValues.image,
+        image: editFormValues.image
       };
       const update: any = await API.graphql(
         graphqlOperation(customMutations.updateInstitution, {input: input})
@@ -274,7 +274,7 @@ const InstitutionEdit = (instEditProps: InstitutionEditProps) => {
     } catch (error) {
       setError({
         show: true,
-        errorMsg: InstitutionEditDict[userLanguage]['messages']['imgeerr'],
+        errorMsg: InstitutionEditDict[userLanguage]['messages']['imgeerr']
       });
     }
   };
@@ -310,7 +310,7 @@ const InstitutionEdit = (instEditProps: InstitutionEditProps) => {
     zip,
     phone,
     isServiceProvider,
-    serviceProviders,
+    serviceProviders
   } = editFormValues;
 
   const mediaRef = React.useRef(null);

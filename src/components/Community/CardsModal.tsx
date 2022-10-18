@@ -1,28 +1,27 @@
-import Modal from '@components/Atoms/Modal';
-import Announcements from '@components/Community/Cards/Announcement';
-import CheckItOut from '@components/Community/Cards/CheckItOut';
-import Event from '@components/Community/Cards/Event';
-import Spotlight from '@components/Community/Cards/Spotlight';
+import Modal from 'atoms/Modal';
+import Announcements from 'components/Community/Cards/Announcement';
+import CheckItOut from 'components/Community/Cards/CheckItOut';
+import Event from 'components/Community/Cards/Event';
+import Spotlight from 'components/Community/Cards/Spotlight';
 import {
   communityContent,
   communityTypes,
-  NavStateTypes,
-} from '@components/Community/constants.community';
-import {classNames} from '@components/Lesson/UniversalLessonBuilder/UI/FormElements/TextInput';
-import useAuth from '@customHooks/useAuth';
+  NavStateTypes
+} from 'components/Community/constants.community';
+import {classNames} from 'components/Lesson/UniversalLessonBuilder/UI/FormElements/TextInput';
+import useAuth from 'customHooks/useAuth';
 
 import {
-  ISpotlightInput,
   IAnnouncementInput,
   ICheckItOutInput,
-  IEventInput,
   ICommunityCard,
+  IEventInput,
+  ISpotlightInput
 } from '@interfaces/Community.interfaces';
 import {setState} from '@interfaces/index';
-import AnimatedContainer from '@uiComponents/Tabs/AnimatedContainer';
-import {isEmpty} from 'lodash';
-import React, {useEffect} from 'react';
+import React from 'react';
 import {HiOutlineArrowRight} from 'react-icons/hi';
+import AnimatedContainer from 'uiComponents/Tabs/AnimatedContainer';
 
 const getModalHeader = (navState: NavStateTypes) => {
   switch (navState) {
@@ -48,7 +47,7 @@ const getModalHeader = (navState: NavStateTypes) => {
 
 const Item = ({
   content,
-  setNavState,
+  setNavState
 }: {
   content: any;
   setNavState: React.Dispatch<React.SetStateAction<NavStateTypes>>;
@@ -57,6 +56,7 @@ const Item = ({
   const isCommunity = pathname.includes('community');
   return (
     <div
+      data-cy={content.type}
       onClick={() => setNavState(content.type)}
       className={`relative  form-button rounded-lg border-0 border-gray-300  bg-white px-6 py-5 shadow-sm flex items-center space-x-3 hover:${content.iconBackground}  transition-all focus-within:ring-2`}>
       <>
@@ -99,7 +99,7 @@ const CardsModal = ({
   navState,
   setNavState,
   editMode = false,
-  cardDetails = null,
+  cardDetails = null
 }: {
   showCardsModal: boolean;
 
@@ -138,7 +138,7 @@ const CardsModal = ({
   const commonProps = {
     onCancel,
     editMode,
-    cardDetails,
+    cardDetails
   };
 
   return (
@@ -149,7 +149,7 @@ const CardsModal = ({
           closeAction={onCancel}
           showFooter={false}
           title={getModalHeader(navState)}>
-          <div className="2xl:min-w-256 max-w-screen 2xl:max-w-256">
+          <div className="">
             {/* Showing all items in this block */}
             <AnimatedContainer show={onInit} animationType="translateY">
               {onInit && (

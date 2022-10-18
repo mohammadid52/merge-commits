@@ -1,7 +1,7 @@
 import React, {useEffect, useState, useContext, ReactNode} from 'react';
 import {GrClose} from 'react-icons/gr';
 import {IconContext} from 'react-icons';
-import ButtonsRound from '../Atoms/ButtonsRound';
+import ButtonsRound from 'atoms/ButtonsRound';
 import {IoCloseOutline} from 'react-icons/io5';
 import {AiOutlineArrowLeft} from 'react-icons/ai';
 
@@ -16,9 +16,9 @@ const MessageWrapper = (props: MessageWrapperProps) => {
   const [deleteToggle, setDeleteToggle] = useState<boolean>(false);
 
   const handleDeleteMessageCallback = () => {
-    deleteMessage()
-    setDeleteToggle(false)
-  }
+    deleteMessage();
+    setDeleteToggle(false);
+  };
 
   return (
     <div className={`flex flex-row`}>
@@ -50,11 +50,13 @@ const MessageWrapper = (props: MessageWrapperProps) => {
             ${deleteToggle ? 'flex items-center justify-center' : ''}
             ${deleteToggle ? 'shadow hover:shadow-lg' : 'shadow'}
             `}>
-
         {/* DELETE SPAN */}
         <span
-          onClick={senderIsMe && deleteToggle ? () => handleDeleteMessageCallback(): undefined}
-          className={`absolute w-auto h-auto ${ deleteToggle
+          onClick={
+            senderIsMe && deleteToggle ? () => handleDeleteMessageCallback() : undefined
+          }
+          className={`absolute w-auto h-auto ${
+            deleteToggle
               ? 'text-sm fond-semibold hover:font-bold text-red-600 cursor-pointer'
               : 'hidden opacity-0 h-0'
           }`}>

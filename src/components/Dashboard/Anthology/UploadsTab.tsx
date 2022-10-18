@@ -1,8 +1,8 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import * as queries from 'graphql/queries';
+import React, {useCallback, useEffect, useState} from 'react';
 import {IconContext} from 'react-icons';
 import {FaSpinner} from 'react-icons/fa';
-import * as queries from '../../../graphql/queries';
 import EmptyViewWrapper from './EmptyViewWrapper';
 import {ITabParentProps} from './TabView';
 import SingleUpload from './UploadsTab/UploadCard';
@@ -35,7 +35,7 @@ const UploadsTab = ({
   themeColor,
   mainSection,
   subSection,
-  onCancel,
+  onCancel
 }: IUploadCardProps) => {
   // ##################################################################### //
   // ############################ CRUD UPLOADS ########################### //
@@ -53,8 +53,8 @@ const UploadsTab = ({
         filter: {
           personEmail: {eq: personEmail},
           personAuthID: {eq: personAuthID},
-          roomID: {eq: sectionRoomID},
-        },
+          roomID: {eq: sectionRoomID}
+        }
       };
 
       const personLessonFiles: any = await API.graphql(
@@ -181,7 +181,7 @@ const UploadsTab = ({
             value={{
               size: '1.2rem',
               style: {},
-              className: `relative mr-4 animate-spin ${themeColor}`,
+              className: `relative mr-4 animate-spin ${themeColor}`
             }}>
             <FaSpinner />
           </IconContext.Provider>
@@ -202,7 +202,7 @@ const UploadsTab = ({
                             value={{
                               size: '1.2rem',
                               style: {},
-                              className: `relative mr-4 animate-spin ${themeColor}`,
+                              className: `relative mr-4 animate-spin ${themeColor}`
                             }}>
                             <FaSpinner />
                           </IconContext.Provider>

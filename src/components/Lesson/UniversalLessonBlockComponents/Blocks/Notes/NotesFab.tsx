@@ -1,12 +1,12 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {Auth} from '@aws-amplify/auth';
-import Loader from '@components/Atoms/Loader';
-import NotesBlock from '@components/Lesson/UniversalLessonBlockComponents/Blocks/Notes/NotesBlock';
-import {GlobalContext} from '@contexts/GlobalContext';
-import * as mutations from '@graphql/mutations';
-import * as queries from '@graphql/queries';
+import Loader from 'atoms/Loader';
+import NotesBlock from 'components/Lesson/UniversalLessonBlockComponents/Blocks/Notes/NotesBlock';
+import {GlobalContext} from 'contexts/GlobalContext';
+import * as mutations from 'graphql/mutations';
+import * as queries from 'graphql/queries';
 import {UniversalJournalData} from '@interfaces/UniversalLessonInterfaces';
-import {getLocalStorageData} from '@utilities/localStorage';
+import {getLocalStorageData} from 'utilities/localStorage';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import findIndex from 'lodash/findIndex';
@@ -27,14 +27,14 @@ const INITIAL_NOTESDATA: UniversalJournalData = {
     {
       domID: `1title_${nanoid(4)}`,
       type: 'header',
-      input: 'Default Title',
+      input: 'Default Title'
     },
     {
       domID: `note_${nanoid(4)}`,
       type: 'content',
-      input: '<p>Enter notes here...</p>',
-    },
-  ],
+      input: '<p>Enter notes here...</p>'
+    }
+  ]
 };
 
 const NotesContainer = ({notes}: {notes: any[]}) => {
@@ -90,16 +90,16 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
     _notesdata = map(allNotes, (note) => ({
       domID: note.id,
       type: 'content',
-      input: note.value || '',
+      input: note.value || ''
     }));
 
     const entryData = [
       {
         domID: `title_notes_form_${nanoid(4)}`,
         type: 'header',
-        input: `Sticky notes - ${lessonState?.lessonData?.title}`,
+        input: `Sticky notes - ${lessonState?.lessonData?.title}`
       },
-      ..._notesdata,
+      ..._notesdata
     ];
 
     try {
@@ -111,7 +111,7 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
         type: 'class-note',
         entryData: entryData,
         roomID: getRoomData.id,
-        syllabusLessonID: getRoomData.activeSyllabus,
+        syllabusLessonID: getRoomData.activeSyllabus
       };
 
       const newJournalData: any = await API.graphql(
@@ -137,7 +137,7 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
             pageData: [...list],
             hasExerciseData: lessonState?.exerciseData[currentIdObj.pageIdx]?.length > 0,
             exerciseData: lessonState?.exerciseData[currentIdObj.pageIdx],
-            roomID: getRoomData.id,
+            roomID: getRoomData.id
           };
 
           try {
@@ -171,7 +171,7 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
         studentEmail: notesData.studentEmail,
         entryData: [...oldEntryData],
         roomID: getRoomData.id,
-        syllabusLessonID: getRoomData.activeSyllabus,
+        syllabusLessonID: getRoomData.activeSyllabus
       };
 
       updateStudentData({domID: newNote.domID, input: ['']});
@@ -189,7 +189,7 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
         feedbacks: updatedData.feedbacks,
         entryData: input.entryData,
         roomID: getRoomData.id,
-        syllabusLessonID: getRoomData.activeSyllabus,
+        syllabusLessonID: getRoomData.activeSyllabus
       });
     } catch (e) {
       console.error('error updating journal data - ', e);
@@ -212,7 +212,7 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
         studentEmail: _notesData.studentEmail,
         entryData: _notesData.entryData,
         roomID: getRoomData.id,
-        syllabusLessonID: getRoomData.activeSyllabus,
+        syllabusLessonID: getRoomData.activeSyllabus
       };
 
       const updatedJournalData: any = await API.graphql(
@@ -223,7 +223,7 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
       if (updatedData && updatedData.entryData) {
         setNotesData((prev) => ({
           ...prev,
-          entryData: input.entryData,
+          entryData: input.entryData
         }));
       }
     } catch (error) {
@@ -239,7 +239,7 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
     const mapCustomData = newNotesArr.map((m) => ({
       domID: m.id,
       type: 'content',
-      input: m.value,
+      input: m.value
     }));
 
     try {
@@ -250,7 +250,7 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
         studentEmail: notesData.studentEmail,
         entryData: [...notesData.entryData, ...mapCustomData],
         roomID: getRoomData.id,
-        syllabusLessonID: getRoomData.activeSyllabus,
+        syllabusLessonID: getRoomData.activeSyllabus
       };
 
       const _updateJournalData: any = await API.graphql(
@@ -266,7 +266,7 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
         feedbacks: updatedData.feedbacks,
         entryData: input.entryData,
         roomID: getRoomData.id,
-        syllabusLessonID: getRoomData.activeSyllabus,
+        syllabusLessonID: getRoomData.activeSyllabus
       });
     } catch (e) {
       console.error('error updating journal data - ', e);
@@ -292,7 +292,7 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
         studentEmail: notesData.studentEmail,
         entryData: [...notesData.entryData],
         roomID: getRoomData.id,
-        syllabusLessonID: getRoomData.activeSyllabus,
+        syllabusLessonID: getRoomData.activeSyllabus
       };
 
       const _updateJournalData: any = await API.graphql(
@@ -308,7 +308,7 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
         feedbacks: updatedData.feedbacks,
         entryData: input.entryData,
         roomID: getRoomData.id,
-        syllabusLessonID: getRoomData.activeSyllabus,
+        syllabusLessonID: getRoomData.activeSyllabus
       });
     } catch (e) {
       console.error('error updating journal data - ', e);
@@ -341,7 +341,7 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
         const newModifiedList = map(newList, (note) => ({
           domID: note.id,
           type: 'content',
-          input: null,
+          input: null
         }));
 
         oldEntryData = [...other?.existingList, ...newModifiedList];
@@ -356,7 +356,7 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
         studentEmail: _notesData.studentEmail,
         entryData: [..._notesData.entryData],
         roomID: getRoomData.id,
-        syllabusLessonID: getRoomData.activeSyllabus,
+        syllabusLessonID: getRoomData.activeSyllabus
       };
 
       const _updateJournalData: any = await API.graphql(
@@ -372,7 +372,7 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
         feedbacks: updatedData.feedbacks,
         entryData: input.entryData,
         roomID: getRoomData.id,
-        syllabusLessonID: getRoomData.activeSyllabus,
+        syllabusLessonID: getRoomData.activeSyllabus
       });
     } catch (e) {
       console.error('error updating journal data - ', e);
@@ -395,13 +395,13 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
           studentAuthID: {eq: studentAuthId},
           lessonID: {eq: lessonID},
           syllabusLessonID: {eq: getRoomData.activeSyllabus},
-          roomID: {eq: getRoomData.id},
-        },
+          roomID: {eq: getRoomData.id}
+        }
       };
 
       const notesData: any = await API.graphql(
         graphqlOperation(queries.listUniversalJournalData, {
-          filter: {...listFilter.filter, type: {eq: 'class-note'}},
+          filter: {...listFilter.filter, type: {eq: 'class-note'}}
         })
       );
 
@@ -434,7 +434,7 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
           feedbacks: newJournalEntry.feedbacks,
           entryData: newJournalEntry.entryData,
           roomID: getRoomData.id,
-          syllabusLessonID: getRoomData.activeSyllabus,
+          syllabusLessonID: getRoomData.activeSyllabus
         });
       } else {
         const existJournalEntry = notesDataRows[notesFormIndex];
@@ -447,7 +447,7 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
           feedbacks: existJournalEntry.feedbacks,
           entryData: [...existJournalEntry.entryData],
           roomID: getRoomData.id,
-          syllabusLessonID: getRoomData.activeSyllabus,
+          syllabusLessonID: getRoomData.activeSyllabus
         });
         // ----- Skip this part for while -----
         if (changesInNotesLen && filterNewNotes.length > 0) {
@@ -496,7 +496,7 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
           value: strippedString(m.input.toString()),
           pagePartId: note?.pagePartId,
           partContentId: note?.partContentId,
-          custom: false,
+          custom: false
         };
       }
     });
@@ -511,7 +511,7 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
         value: strippedString(m.input.toString()),
         custom: true,
         pagePartId: note?.pagePartId,
-        partContentId: note?.partContentId,
+        partContentId: note?.partContentId
       };
     });
 

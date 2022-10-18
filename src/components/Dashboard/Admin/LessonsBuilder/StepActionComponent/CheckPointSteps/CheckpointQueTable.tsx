@@ -1,12 +1,12 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import React, {Fragment, useContext, useEffect, useState} from 'react';
-import {getAsset} from '../../../../../../assets';
-import {GlobalContext} from '../../../../../../contexts/GlobalContext';
-import * as customQueries from '../../../../../../customGraphql/customQueries';
-import useDictionary from '../../../../../../customHooks/dictionary';
-import * as queries from '../../../../../../graphql/queries';
-import {getTypeString} from '../../../../../../utilities/strings';
-import Buttons from '../../../../../Atoms/Buttons';
+import {getAsset} from 'assets';
+import {GlobalContext} from 'contexts/GlobalContext';
+import * as customQueries from 'customGraphql/customQueries';
+import useDictionary from 'customHooks/dictionary';
+import * as queries from 'graphql/queries';
+import {getTypeString} from 'utilities/strings';
+import Buttons from 'atoms/Buttons';
 
 interface CheckPointContentProps {
   changeStep?: (step?: string) => void;
@@ -22,7 +22,7 @@ const CheckpointQueTable = (props: CheckPointContentProps) => {
     checkpointId,
     showActionIcons,
     DeleteCheckpoint,
-    editCheckPoint,
+    editCheckPoint
   } = props;
 
   const {theme, clientKey, userLanguage} = useContext(GlobalContext);
@@ -38,7 +38,7 @@ const CheckpointQueTable = (props: CheckPointContentProps) => {
       setLoading(true);
       const fetchCheckpointsData: any = await API.graphql(
         graphqlOperation(customQueries.getCheckpointDetails, {
-          id: checkpointId,
+          id: checkpointId
         })
       );
       let questionSequence = fetchCheckpointsData.data?.getCheckpoint.questionSeq;

@@ -5,16 +5,16 @@ import React, {Fragment, useContext, useEffect, useState} from 'react';
 import ReactHtmlParser from 'react-html-parser';
 import {AiOutlineEdit} from 'react-icons/ai';
 import {BiChevronDown} from 'react-icons/bi';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import * as customMutations from '../../../../../customGraphql/customMutations';
-import * as customQueries from '../../../../../customGraphql/customQueries';
-import useDictionary from '../../../../../customHooks/dictionary';
-import * as mutations from '../../../../../graphql/mutations';
-import * as queries from '../../../../../graphql/queries';
-import {getTypeString} from '../../../../../utilities/strings';
-import Buttons from '../../../../Atoms/Buttons';
-import Loader from '../../../../Atoms/Loader';
-import ModalPopUp from '../../../../Molecules/ModalPopUp';
+import {GlobalContext} from 'contexts/GlobalContext';
+import * as customMutations from 'customGraphql/customMutations';
+import * as customQueries from 'customGraphql/customQueries';
+import useDictionary from 'customHooks/dictionary';
+import * as mutations from 'graphql/mutations';
+import * as queries from 'graphql/queries';
+import {getTypeString} from 'utilities/strings';
+import Buttons from 'atoms/Buttons';
+import Loader from 'atoms/Loader';
+import ModalPopUp from 'molecules/ModalPopUp';
 import EditQuestionModal from '../HelperComponents/EditQuestionModal';
 
 interface PreviewFormProps {
@@ -31,7 +31,7 @@ const PreviewForm = (props: PreviewFormProps) => {
 
   const [warnModal, setWarnModal] = useState({
     show: false,
-    message: PreviewFormDict[userLanguage]['PREVIEW_DETAILS']['WARN_MESSAGE'],
+    message: PreviewFormDict[userLanguage]['PREVIEW_DETAILS']['WARN_MESSAGE']
   });
   const [loading, setLoading] = useState(false);
   const [relatedUnitsID, setRelatedUnitsID] = useState([]);
@@ -43,13 +43,13 @@ const PreviewForm = (props: PreviewFormProps) => {
 
   const [message, setMessage] = useState({
     msg: '',
-    isError: true,
+    isError: true
   });
 
   const updateLessonPlan = async (syllabusLessonId: string, updatedLessonPlan: any) => {
     const input = {
       id: syllabusLessonId,
-      lessonPlan: updatedLessonPlan,
+      lessonPlan: updatedLessonPlan
     };
 
     const result: any = await API.graphql(
@@ -64,7 +64,7 @@ const PreviewForm = (props: PreviewFormProps) => {
       active: lessonType !== 'lesson' ? true : false,
       stage: `checkpoint?id=${item.LessonComponentID}`,
       type: 'survey',
-      displayMode: 'SELF',
+      displayMode: 'SELF'
     }));
     let updatedPlans: any = Promise.all(
       relatedUnitsID.map(async (ID: string) => updateLessonPlan(ID, updatedLessonPlan))
@@ -73,14 +73,14 @@ const PreviewForm = (props: PreviewFormProps) => {
         setMessage({
           ...message,
           isError: false,
-          msg: PreviewFormDict[userLanguage]['MESSAGES']['UPDATESUCCESS'],
+          msg: PreviewFormDict[userLanguage]['MESSAGES']['UPDATESUCCESS']
         })
       )
       .catch((err) =>
         setMessage({
           ...message,
           isError: true,
-          msg: PreviewFormDict[userLanguage]['MESSAGES']['UPDATEERR'],
+          msg: PreviewFormDict[userLanguage]['MESSAGES']['UPDATEERR']
         })
       );
     publishQuestions();
@@ -104,7 +104,7 @@ const PreviewForm = (props: PreviewFormProps) => {
     ids.forEach(async (id: any) => {
       const result: any = await API.graphql(
         graphqlOperation(mutations.updateQuestion, {
-          input: {id: id, published: true},
+          input: {id: id, published: true}
         })
       );
     });
@@ -113,7 +113,7 @@ const PreviewForm = (props: PreviewFormProps) => {
   const toggleModal = () => {
     setWarnModal({
       ...warnModal,
-      show: !warnModal.show,
+      show: !warnModal.show
     });
   };
 
@@ -126,7 +126,7 @@ const PreviewForm = (props: PreviewFormProps) => {
         setMessage({
           ...message,
           isError: true,
-          msg: 'No checkpoints added. Please add atleast one checkpoint.',
+          msg: 'No checkpoints added. Please add atleast one checkpoint.'
         });
       } else {
         toggleModal();
@@ -135,7 +135,7 @@ const PreviewForm = (props: PreviewFormProps) => {
       setMessage({
         ...message,
         isError: false,
-        msg: PreviewFormDict[userLanguage]['MESSAGES']['CONNECTERR'],
+        msg: PreviewFormDict[userLanguage]['MESSAGES']['CONNECTERR']
       });
     }
   };
@@ -145,7 +145,7 @@ const PreviewForm = (props: PreviewFormProps) => {
       try {
         const result: any = await API.graphql(
           graphqlOperation(queries.listUniversalSyllabusLessons, {
-            filter: {lessonID: {eq: lessonID}},
+            filter: {lessonID: {eq: lessonID}}
           })
         );
         const savedData = result?.data?.listUniversalSyllabusLessons?.items;
@@ -158,7 +158,7 @@ const PreviewForm = (props: PreviewFormProps) => {
         setMessage({
           ...message,
           isError: true,
-          msg: PreviewFormDict[userLanguage]['MESSAGES']['FETCHERR'],
+          msg: PreviewFormDict[userLanguage]['MESSAGES']['FETCHERR']
         });
       }
     }
@@ -169,7 +169,7 @@ const PreviewForm = (props: PreviewFormProps) => {
       setLoading(true);
       const result: any = await API.graphql(
         graphqlOperation(customQueries.getCompleteLesson, {
-          id: lessonID,
+          id: lessonID
         })
       );
       const savedData: any = result.data.getUniversalLesson;
@@ -182,7 +182,7 @@ const PreviewForm = (props: PreviewFormProps) => {
 
           let questionSequence: any = await API.graphql(
             graphqlOperation(queries.getCSequences, {
-              id: `Ch_Ques_${checkpoint.checkpointID}`,
+              id: `Ch_Ques_${checkpoint.checkpointID}`
             })
           );
           questionSequence = questionSequence?.data.getCSequences?.sequence || [];
@@ -198,7 +198,7 @@ const PreviewForm = (props: PreviewFormProps) => {
 
           return {
             ...checkpoint,
-            sequence: lessonplanSequence,
+            sequence: lessonplanSequence
           };
         })
       );
@@ -207,7 +207,7 @@ const PreviewForm = (props: PreviewFormProps) => {
       checkpointSequence.sort((a: any, b: any) => (a.sequence > b.sequence ? 1 : -1));
 
       savedData.checkpoints = {
-        items: checkpointSequence,
+        items: checkpointSequence
       };
       setLessonDetails({...savedData});
       setLoading(false);
@@ -215,7 +215,7 @@ const PreviewForm = (props: PreviewFormProps) => {
       setMessage({
         ...message,
         isError: true,
-        msg: PreviewFormDict[userLanguage]['MESSAGES']['UPDATEERR'],
+        msg: PreviewFormDict[userLanguage]['MESSAGES']['UPDATEERR']
       });
       setLoading(false);
     }
@@ -232,7 +232,7 @@ const PreviewForm = (props: PreviewFormProps) => {
         setMessage({
           ...message,
           isError: true,
-          msg: '',
+          msg: ''
         });
       }, 3000);
     }

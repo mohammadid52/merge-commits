@@ -1,4 +1,4 @@
-import {useGlobalContext} from '@contexts/GlobalContext';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import {getAsset, textEdit} from 'assets';
 import {ContentState, convertToRaw, EditorState} from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
@@ -11,7 +11,7 @@ const WritingExerciseEditor = ({
   editorState,
   setEditorState,
   onChangeCallback,
-  initialValue,
+  initialValue
 }: {
   editorState: any;
   initialValue?: string;
@@ -81,12 +81,12 @@ const WritingExerciseEditor = ({
             className: `toolItemClassName`,
             bold: {
               icon: textEdit.bold,
-              className: 'toolbarCustomIcon',
+              className: 'toolbarCustomIcon'
             },
             italic: {
               icon: textEdit.italic,
-              className: 'toolbarCustomIcon',
-            },
+              className: 'toolbarCustomIcon'
+            }
           },
 
           colorPicker: {
@@ -96,8 +96,8 @@ const WritingExerciseEditor = ({
           ${
             true ? `dark text-black` : ''
           } toolbarNestedDropdown toolItemClassName  toolbarCustomIcon`,
-            colors: ['#DC2626', '#34D399'],
-          },
+            colors: ['#DC2626', '#34D399']
+          }
         }}
       />
     </div>

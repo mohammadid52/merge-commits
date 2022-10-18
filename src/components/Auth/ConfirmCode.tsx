@@ -1,17 +1,14 @@
-import React, {useContext, useState, useEffect} from 'react';
-import {useCookies} from 'react-cookie';
-import {GlobalContext} from '../../contexts/GlobalContext';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
-import {FaKey} from 'react-icons/fa';
-import {AiOutlineEye} from 'react-icons/ai';
-import {AiOutlineEyeInvisible} from 'react-icons/ai';
-import {AiOutlineLoading3Quarters} from 'react-icons/ai';
-import {useHistory, useLocation, NavLink} from 'react-router-dom';
 import {Auth} from '@aws-amplify/auth';
-import {getAsset} from '../../assets';
-import AuthCard from './AuthCard';
-import RememberMe from './RememberMe';
-import FormInput from '@components/Atoms/Form/FormInput';
+import {getAsset} from 'assets';
+import FormInput from 'atoms/Form/FormInput';
+import AuthCard from 'components/Auth/AuthCard';
+import RememberMe from 'components/Auth/RememberMe';
+import {GlobalContext} from 'contexts/GlobalContext';
+import React, {useContext, useEffect, useState} from 'react';
+import {useCookies} from 'react-cookie';
+import {AiOutlineLoading3Quarters} from 'react-icons/ai';
+import {IconContext} from 'react-icons/lib/esm/iconContext';
+import {useHistory, useLocation} from 'react-router-dom';
 
 const ConfirmCode = () => {
   const history = useHistory();

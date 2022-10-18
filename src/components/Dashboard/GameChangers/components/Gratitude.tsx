@@ -1,10 +1,10 @@
-import Buttons from '@components/Atoms/Buttons';
-import RichTextEditor from '@components/Atoms/RichTextEditor';
-import {GRATITUDE} from '@components/Lesson/UniversalLessonBuilder/UI/common/constants';
-import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
-import useAuth from '@customHooks/useAuth';
-import useGraphqlMutation from '@customHooks/useGraphqlMutation';
-import {awsFormatDate, dateString} from '@utilities/time';
+import Buttons from 'atoms/Buttons';
+import RichTextEditor from 'atoms/RichTextEditor';
+import {GRATITUDE} from 'components/Lesson/UniversalLessonBuilder/UI/common/constants';
+import AnimatedContainer from 'components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
+import useAuth from 'customHooks/useAuth';
+import useGraphqlMutation from 'customHooks/useGraphqlMutation';
+import {awsFormatDate, dateString} from 'utilities/time';
 import {CreateGameChangerInput, CreateGameChangerLogInput} from 'API';
 import gsap from 'gsap';
 import {nanoid} from 'nanoid';
@@ -24,7 +24,7 @@ const Gratitude = () => {
     {
       onSuccess: () => {
         setIsCompleted(true);
-      },
+      }
     }
   );
 
@@ -49,8 +49,8 @@ const Gratitude = () => {
       input: {
         id: gameChangerID,
         gameChangerName: GRATITUDE,
-        objective: fields.summaryHtml,
-      },
+        objective: fields.summaryHtml
+      }
     });
 
     mutationLog.mutate({
@@ -59,8 +59,8 @@ const Gratitude = () => {
         gameChangerID,
         personAuthID: authId,
         personEmail: email,
-        startTime: awsFormatDate(dateString('-', 'WORLD')),
-      },
+        startTime: awsFormatDate(dateString('-', 'WORLD'))
+      }
     });
   };
 
@@ -71,7 +71,7 @@ const Gratitude = () => {
         delay: 1,
         height: 0,
         duration: 2,
-        opacity: 0,
+        opacity: 0
       },
       {height: 'auto', opacity: 1, delay: 1}
     );

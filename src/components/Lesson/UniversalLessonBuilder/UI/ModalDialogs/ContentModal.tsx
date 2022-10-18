@@ -1,5 +1,5 @@
-import ModalHeader from '@components/Molecules/ModalHeader';
-import {useGlobalContext} from '@contexts/GlobalContext';
+import ModalHeader from 'molecules/ModalHeader';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import React, {useEffect} from 'react';
 
 interface ModalProps {
@@ -32,7 +32,7 @@ const ModalBody = (bodyProps: {
     closeOnBackdrop,
 
     scrollHidden,
-    hidePadding,
+    hidePadding
   } = bodyProps;
 
   return (
@@ -80,7 +80,7 @@ const ContentModal: React.FC<ModalProps> = (modalProps: ModalProps) => {
     titleButton,
     hidePadding = false,
     scrollHidden = false,
-    customTitle,
+    customTitle
   } = modalProps;
   const {theme} = useGlobalContext();
 

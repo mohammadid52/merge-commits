@@ -1,16 +1,16 @@
-import React, {useContext, useEffect, useState} from 'react';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import React, {useEffect, useState} from 'react';
 import {BsFillInfoCircleFill} from 'react-icons/bs';
 import {useHistory} from 'react-router';
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 
-import {GlobalContext} from '@contexts/GlobalContext';
-import * as customQueries from '@customGraphql/customQueries';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import * as customQueries from 'customGraphql/customQueries';
 
-import {getAsset} from '../../assets';
-import InformationalWalkThrough from '@components/Dashboard/Admin/Institutons/InformationalWalkThrough/InformationalWalkThrough';
-import useDictionary from '@customHooks/dictionary';
-import {breadcrumbsRoutes} from '@utilities/breadcrumb';
-import HeroBanner from '@components/Header/HeroBanner';
+import {getAsset} from 'assets';
+import InformationalWalkThrough from 'components/Dashboard/Admin/Institutons/InformationalWalkThrough/InformationalWalkThrough';
+import HeroBanner from 'components/Header/HeroBanner';
+import useDictionary from 'customHooks/dictionary';
+import {breadcrumbsRoutes} from 'utilities/breadcrumb';
 
 interface BreadCrumbProps {
   items?: {title: string; url?: string; last: boolean; goBack?: boolean}[];
@@ -34,16 +34,16 @@ const BreadcrumbsWithBanner: React.FC<BreadCrumbProps> = (props: BreadCrumbProps
     unsavedChanges = false,
     toggleModal,
     bannerImage,
-    title,
+    title
   } = props;
   const {
     state: {
-      user: {isSuperAdmin},
+      user: {isSuperAdmin}
     },
     theme,
     userLanguage,
-    clientKey,
-  } = useContext(GlobalContext);
+    clientKey
+  } = useGlobalContext();
   const {BreadcrumsTitles, Institute_info} = useDictionary(clientKey);
   const pathname = location.pathname.replace(/\/$/, '');
   const currentPath = pathname.substring(pathname.lastIndexOf('/') + 1);
@@ -85,7 +85,7 @@ const BreadcrumbsWithBanner: React.FC<BreadCrumbProps> = (props: BreadCrumbProps
       if (splitUrl.indexOf('add') === -1) {
         const result: any = await API.graphql(
           graphqlOperation(customQueries.getUniversalLessonBasicDetails, {
-            id: splitUrl.split('/')[0],
+            id: splitUrl.split('/')[0]
           })
         );
         setLessonData(result.data?.getUniversalLesson);
@@ -103,7 +103,7 @@ const BreadcrumbsWithBanner: React.FC<BreadCrumbProps> = (props: BreadCrumbProps
       if (roomId) {
         const result: any = await API.graphql(
           graphqlOperation(customQueries.getRoomBasicDetails, {
-            id: roomId,
+            id: roomId
           })
         );
 
@@ -122,7 +122,7 @@ const BreadcrumbsWithBanner: React.FC<BreadCrumbProps> = (props: BreadCrumbProps
       if (courseId) {
         const result: any = await API.graphql(
           graphqlOperation(customQueries.getCurriculumBasicDetails, {
-            id: courseId.split('/')[0],
+            id: courseId.split('/')[0]
           })
         );
 
@@ -141,7 +141,7 @@ const BreadcrumbsWithBanner: React.FC<BreadCrumbProps> = (props: BreadCrumbProps
       if (unitId) {
         const result: any = await API.graphql(
           graphqlOperation(customQueries.getUniversalSyllabusBasicDetails, {
-            id: unitId,
+            id: unitId
           })
         );
         setUnitData(result.data?.getUniversalSyllabus);
@@ -173,8 +173,8 @@ const BreadcrumbsWithBanner: React.FC<BreadCrumbProps> = (props: BreadCrumbProps
       lessonData,
       roomData,
       courseData,
-      unitData,
-    },
+      unitData
+    }
   });
 
   const breadCrumbsList: {
@@ -195,9 +195,9 @@ const BreadcrumbsWithBanner: React.FC<BreadCrumbProps> = (props: BreadCrumbProps
         currentPath === 'edit'
           ? `${location.pathname}${location.search}`
           : `/dashboard/manage-institutions/institution/${institutionId}/edit`,
-      last: false,
+      last: false
     },
-    ...(breadcrumbPathForSection || []),
+    ...(breadcrumbPathForSection || [])
   ].filter(Boolean);
 
   return (

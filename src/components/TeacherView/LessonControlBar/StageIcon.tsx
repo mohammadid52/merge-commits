@@ -8,11 +8,11 @@ import {
   FaPenFancy,
   FaQuestion,
   FaScroll,
-  FaTrophy,
+  FaTrophy
 } from 'react-icons/fa';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {useHistory, useRouteMatch} from 'react-router-dom';
-import {LessonControlContext} from '../../../contexts/LessonControlContext';
+import {LessonControlContext} from 'contexts/LessonControlContext';
 import FooterLabels from '../../General/LabelSwitch';
 
 interface StageIconProps {

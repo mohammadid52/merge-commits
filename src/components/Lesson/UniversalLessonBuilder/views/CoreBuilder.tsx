@@ -1,27 +1,27 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import Tooltip from '@components/Atoms/Tooltip';
-import CopyCloneSlideOver from '@components/Lesson/UniversalLessonBuilder/UI/SlideOvers/CopyCloneSlideOver';
-import NewLessonPlanSO from '@components/Lesson/UniversalLessonBuilder/UI/SlideOvers/NewLessonPlanSO';
-import PageBuilderSlideOver from '@components/Lesson/UniversalLessonBuilder/UI/SlideOvers/PageBuilderSlideOver';
-import PageLoader from '@components/Lesson/UniversalLessonBuilder/views/CoreBuilder/PageLoader';
-import PageBuilderLayout from '@components/Lesson/UniversalLessonBuilder/views/PageBuilderLayout';
-import {GlobalContext} from '@contexts/GlobalContext';
-import {useOverlayContext} from '@contexts/OverlayContext';
-import {useULBContext} from '@contexts/UniversalLessonBuilderContext';
-import * as customQueries from '@customGraphql/customQueries';
-import useDictionary from '@customHooks/dictionary';
-import {useQuery} from '@customHooks/urlParam';
+import Tooltip from 'atoms/Tooltip';
+import CopyCloneSlideOver from 'components/Lesson/UniversalLessonBuilder/UI/SlideOvers/CopyCloneSlideOver';
+import NewLessonPlanSO from 'components/Lesson/UniversalLessonBuilder/UI/SlideOvers/NewLessonPlanSO';
+import PageBuilderSlideOver from 'components/Lesson/UniversalLessonBuilder/UI/SlideOvers/PageBuilderSlideOver';
+import PageLoader from 'components/Lesson/UniversalLessonBuilder/views/CoreBuilder/PageLoader';
+import PageBuilderLayout from 'components/Lesson/UniversalLessonBuilder/views/PageBuilderLayout';
+import {GlobalContext} from 'contexts/GlobalContext';
+import {useOverlayContext} from 'contexts/OverlayContext';
+import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
+import * as customQueries from 'customGraphql/customQueries';
+import useDictionary from 'customHooks/dictionary';
+import {useQuery} from 'customHooks/urlParam';
 import {ULBSelectionProps} from '@interfaces/UniversalLessonBuilderInterfaces';
 import {
   PartContent,
   UniversalLesson,
-  UniversalLessonPage,
+  UniversalLessonPage
 } from '@interfaces/UniversalLessonInterfaces';
-import {LessonPageWrapper} from '@lesson/UniversalLessonBlockComponents/LessonPageWrapper';
-import BuilderRowComposer from '@lesson/UniversalLessonBuilder/views/CoreBuilder/BuilderRowComposer';
-import ModalPopUp from '@molecules/ModalPopUp';
-import Toolbar from '@uiComponents/Toolbar';
-import {updateLessonPageToDB} from '@utilities/updateLessonPageToDB';
+import {LessonPageWrapper} from 'lesson/UniversalLessonBlockComponents/LessonPageWrapper';
+import BuilderRowComposer from 'lesson/UniversalLessonBuilder/views/CoreBuilder/BuilderRowComposer';
+import ModalPopUp from 'molecules/ModalPopUp';
+import Toolbar from 'uiComponents/Toolbar';
+import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
 import {find, findLastIndex, map, remove, isEmpty, findIndex} from 'lodash';
 import React, {useContext, useEffect, useState} from 'react';
 import {RiArrowRightSLine} from 'react-icons/ri';
@@ -73,7 +73,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
     handleModalPopToggle,
     handleTagModalOpen,
     activePageData,
-    instId,
+    instId
   } = props;
   const {
     setUniversalLessonDetails,
@@ -86,15 +86,15 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
     editMode,
 
     getCurrentPage,
-    newLessonPlanShow,
+    newLessonPlanShow
   } = useULBContext();
 
   const {
     clientKey,
     state: {
-      user: {isSuperAdmin},
+      user: {isSuperAdmin}
     },
-    userLanguage,
+    userLanguage
   } = useContext(GlobalContext);
 
   const LessonSlideover = () => {
@@ -128,7 +128,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
       lessonDispatch({type: 'SET_CURRENT_PAGE', payload: pageIdx >= 0 ? pageIdx : 0});
       lessonDispatch({
         type: 'SET_LAST_PAGE',
-        payload: universalLessonDetails.lessonPlan.length - 1 === pageIdx,
+        payload: universalLessonDetails.lessonPlan.length - 1 === pageIdx
       });
     }
   }, [universalLessonDetails, pageId]);
@@ -137,7 +137,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
     showLessonEditOverlay,
     setShowLessonEditOverlay,
     setCollapseSidebarOverlay,
-    showDataForCopyClone,
+    showDataForCopyClone
   } = useOverlayContext();
 
   useEffect(() => {
@@ -179,7 +179,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
     saveAction?: () => void;
   }>({
     show: false,
-    message: '',
+    message: ''
   });
 
   /**
@@ -189,13 +189,13 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
     setConfirmationConfig({
       message:
         'Are you sure you want to delete the this page? All of your data will be permanently removed. This action cannot be undone.',
-      show: true,
+      show: true
     });
   };
   const closeAction = () => {
     setConfirmationConfig({
       message: '',
-      show: false,
+      show: false
     });
   };
 
@@ -210,7 +210,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
     setUniversalLessonDetails({...universalLessonDetails});
     const input = {
       id: lessonId,
-      lessonPlan: [...universalLessonDetails.lessonPlan],
+      lessonPlan: [...universalLessonDetails.lessonPlan]
     };
     closeAction();
     await updateLessonPageToDB(input);
@@ -303,15 +303,15 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
                                 ptValue.options && ptValue.options.length > 0
                                   ? map(ptValue.options, (opt) => ({
                                       ...opt,
-                                      id: uuidv4(),
+                                      id: uuidv4()
                                     }))
-                                  : null,
+                                  : null
                             }))
-                          : [],
+                          : []
                     }))
-                  : [],
+                  : []
             }))
-          : [],
+          : []
     };
 
     return replaceAllExistingIds;
@@ -352,15 +352,15 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
                                   ? map(ptValue.options, (opt) => ({
                                       ...opt,
                                       text: '-',
-                                      id: uuidv4(),
+                                      id: uuidv4()
                                     }))
-                                  : null,
+                                  : null
                             }))
-                          : [],
+                          : []
                     }))
-                  : [],
+                  : []
             }))
-          : [],
+          : []
     };
 
     return replaceAllExistingIds;

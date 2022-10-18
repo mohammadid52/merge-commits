@@ -1,12 +1,12 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import useLessonControls from '@customHooks/lessonControls';
+import useLessonControls from 'customHooks/lessonControls';
 import React, {useContext, useEffect, useState} from 'react';
 import {useParams} from 'react-router-dom';
-import {GlobalContext} from '../../contexts/GlobalContext';
-import useDictionary from '../../customHooks/dictionary';
-import * as queries from '../../graphql/queries';
-import * as subscriptions from '../../graphql/subscriptions';
-import {getLocalStorageData, setLocalStorageData} from '../../utilities/localStorage';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import * as queries from 'graphql/queries';
+import * as subscriptions from 'graphql/subscriptions';
+import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
 import RosterSection from './ClassRoster/RosterSection';
 
 interface IClassRosterProps {
@@ -23,7 +23,7 @@ const ClassRoster = ({
   handlePageChange,
   handleRoomUpdate,
   rightView,
-  setRightView,
+  setRightView
 }: IClassRosterProps) => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
   const gContext = useContext(GlobalContext);
@@ -72,12 +72,12 @@ const ClassRoster = ({
 
       lessonDispatch({
         type: 'SET_ROOM_SUBSCRIPTION_DATA',
-        payload: {id: getRoomData.id, studentViewing: ''},
+        payload: {id: getRoomData.id, studentViewing: ''}
       });
       setLocalStorageData('room_info', {
         ...getRoomData,
         studentViewing: '',
-        displayData: [{isTeacher: false, studentAuthID: '', lessonPageID: ''}],
+        displayData: [{isTeacher: false, studentAuthID: '', lessonPageID: ''}]
       });
     };
   }, []);
@@ -94,7 +94,7 @@ const ClassRoster = ({
       graphqlOperation(subscriptions.onCreateUpdatePersonLocationItem, {
         syllabusLessonID: getRoomData.activeSyllabus,
         lessonID: lessonID,
-        roomID: getRoomData.id,
+        roomID: getRoomData.id
       })
       //@ts-ignore
     ).subscribe({
@@ -103,7 +103,7 @@ const ClassRoster = ({
 
         console.log('new create update location: ', updatedStudent);
         setUpdatedStudent(updatedStudent);
-      },
+      }
     });
     return personLocationSub;
   };
@@ -116,7 +116,7 @@ const ClassRoster = ({
       graphqlOperation(subscriptions.onDeletePersonLocationItem, {
         syllabusLessonID: getRoomData.activeSyllabus,
         lessonID: lessonID,
-        roomID: getRoomData.id,
+        roomID: getRoomData.id
       })
       //@ts-ignore
     ).subscribe({
@@ -125,7 +125,7 @@ const ClassRoster = ({
 
         console.log('deleted location: ', deletedStudent);
         setDeletedStudent(deletedStudent);
-      },
+      }
     });
     return personLocationDeleteSub;
   };
@@ -145,7 +145,7 @@ const ClassRoster = ({
       const classStudents: any = await API.graphql(
         graphqlOperation(queries.listClassStudents, {
           nextToken: nextToken,
-          filter: {classID: {contains: sessionClassID}},
+          filter: {classID: {contains: sessionClassID}}
         })
       );
       const classStudentList = outArray
@@ -170,12 +170,12 @@ const ClassRoster = ({
             room: '',
             createdAt: student.createdAt,
             updatedAt: student.updatedAt,
-            saveType: '',
+            saveType: ''
           };
         });
         controlDispatch({
           type: 'UPDATE_STUDENT_ROSTER',
-          payload: {students: initClassStudentList},
+          payload: {students: initClassStudentList}
         });
       }
     } catch (e) {
@@ -198,8 +198,8 @@ const ClassRoster = ({
           filter: {
             syllabusLessonID: {eq: getRoomData.activeSyllabus},
             lessonID: {eq: lessonID},
-            roomID: {eq: getRoomData.id},
-          },
+            roomID: {eq: getRoomData.id}
+          }
         })
       );
       const syllabusLessonStudentList = outArray
@@ -221,7 +221,7 @@ const ClassRoster = ({
         setPersonLocationStudents(studentsFromThisClass);
         controlDispatch({
           type: 'UPDATE_ACTIVE_ROSTER',
-          payload: {students: studentsFromThisClass},
+          payload: {students: studentsFromThisClass}
         });
         subscription = subscribeToPersonLocations();
         deleteSubscription = subscribeToDeletePersonLocations();
@@ -259,7 +259,7 @@ const ClassRoster = ({
     },
     {
       notInClass: [],
-      onDemand: [],
+      onDemand: []
     }
   );
 
@@ -286,7 +286,7 @@ const ClassRoster = ({
       setPersonLocationStudents(existRoster);
       controlDispatch({
         type: 'UPDATE_ACTIVE_ROSTER',
-        payload: {students: existRoster},
+        payload: {students: existRoster}
       });
       setUpdatedStudent({});
     } else {
@@ -325,7 +325,7 @@ const ClassRoster = ({
       setPersonLocationStudents(deleteRoster);
       controlDispatch({
         type: 'UPDATE_ACTIVE_ROSTER',
-        payload: {students: deleteRoster},
+        payload: {students: deleteRoster}
       });
       setDeletedStudent({});
     } else {
@@ -356,7 +356,7 @@ const ClassRoster = ({
     } else {
       lessonDispatch({
         type: 'SET_ROOM_SUBSCRIPTION_DATA',
-        payload: {id: getRoomData.id, studentViewing: idStr},
+        payload: {id: getRoomData.id, studentViewing: idStr}
       });
       setLocalStorageData('room_info', {...getRoomData, studentViewing: idStr});
       await handleRoomUpdate({id: getRoomData.id, studentViewing: idStr});
@@ -375,21 +375,17 @@ const ClassRoster = ({
           payload: {
             id: getRoomData.id,
             displayData: [
-              {isTeacher: false, studentAuthID: idStr, lessonPageID: pageIdStr},
-            ],
-          },
+              {isTeacher: false, studentAuthID: idStr, lessonPageID: pageIdStr}
+            ]
+          }
         });
         setLocalStorageData('room_info', {
           ...getRoomData,
-          displayData: [
-            {isTeacher: false, studentAuthID: idStr, lessonPageID: pageIdStr},
-          ],
+          displayData: [{isTeacher: false, studentAuthID: idStr, lessonPageID: pageIdStr}]
         });
         await handleRoomUpdate({
           id: getRoomData.id,
-          displayData: [
-            {isTeacher: false, studentAuthID: idStr, lessonPageID: pageIdStr},
-          ],
+          displayData: [{isTeacher: false, studentAuthID: idStr, lessonPageID: pageIdStr}]
         });
       }
     } else {

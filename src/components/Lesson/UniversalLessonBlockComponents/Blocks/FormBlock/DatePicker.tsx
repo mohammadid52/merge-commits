@@ -1,12 +1,12 @@
-import {GlobalContext} from '@contexts/GlobalContext';
+import {GlobalContext} from 'contexts/GlobalContext';
 import {noop} from 'lodash';
 import React, {useContext} from 'react';
 import {IFormBlockProps, StudentPageInput} from '@interfaces/UniversalLessonInterfaces';
 import {IoClose} from 'react-icons/io5';
-import Tooltip from '@atoms/Tooltip';
-import RequiredMark from '@atoms/RequiredMark';
-import useInLessonCheck from '@customHooks/checkIfInLesson';
-import useStudentDataValue from '@customHooks/studentDataValue';
+import Tooltip from 'atoms/Tooltip';
+import RequiredMark from 'atoms/RequiredMark';
+import useInLessonCheck from 'customHooks/checkIfInLesson';
+import useStudentDataValue from 'customHooks/studentDataValue';
 
 interface DatePickerProps {
   id: string;
@@ -31,7 +31,7 @@ const CustomDatePicker = (props: DatePickerProps) => {
     themePlaceholderColor,
     value,
     setDataValue,
-    onChange,
+    onChange
   } = props;
 
   return (
@@ -75,7 +75,7 @@ const DatePicker = (props: IFormBlockProps) => {
   const gState = gContext.state;
   const {
     user,
-    lessonPage: {theme: lessonPageTheme = 'dark', themeTextColor = ''} = {},
+    lessonPage: {theme: lessonPageTheme = 'dark', themeTextColor = ''} = {}
   } = gState;
 
   const isStudent = user.role === 'ST';

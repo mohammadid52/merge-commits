@@ -1,9 +1,9 @@
-import {GameChangerProvider} from '@components/Dashboard/GameChangers/context/GameChangersContext';
-import ErrorBoundary from '@components/Error/ErrorBoundary';
-import ActivityBlock from '@components/Lesson/UniversalLessonBlockComponents/Blocks/Activities/ActivityBlock';
-import DocsBlock from '@components/Lesson/UniversalLessonBlockComponents/Blocks/DocsBlock';
-import NotesBlock from '@components/Lesson/UniversalLessonBlockComponents/Blocks/Notes/NotesBlock';
-import NotesContainer from '@components/Lesson/UniversalLessonBlockComponents/Blocks/Notes/NotesFab';
+import {GameChangerProvider} from 'components/Dashboard/GameChangers/context/GameChangersContext';
+import ErrorBoundary from 'components/Error/ErrorBoundary';
+import ActivityBlock from 'components/Lesson/UniversalLessonBlockComponents/Blocks/Activities/ActivityBlock';
+import DocsBlock from 'components/Lesson/UniversalLessonBlockComponents/Blocks/DocsBlock';
+import NotesBlock from 'components/Lesson/UniversalLessonBlockComponents/Blocks/Notes/NotesBlock';
+import NotesContainer from 'components/Lesson/UniversalLessonBlockComponents/Blocks/Notes/NotesFab';
 import map from 'lodash/map';
 import React from 'react';
 import {
@@ -11,7 +11,7 @@ import {
   FORM_TYPES,
   GAME_CHANGERS,
   SPACER,
-  TABLE,
+  TABLE
 } from '../UniversalLessonBuilder/UI/common/constants';
 import CustomVideoBlock from './Blocks/CustomVideoBlock';
 import DividerBlock from './Blocks/DividerBlock';
@@ -50,7 +50,7 @@ const composePartContent = (
     id,
     type,
     value,
-    mode,
+    mode
   };
 
   if (type.includes('jumbotron')) {
@@ -111,7 +111,7 @@ const composePartContent = (
       pagePartId: pagePartId,
       partContentId: id,
       id: v.id,
-      value: v.value,
+      value: v.value
     }));
 
     return <NotesBlock preview grid={{cols: 4, rows: 3}} value={modifiyValues} />;

@@ -1,11 +1,11 @@
 import React, {useContext} from 'react';
 import {AiOutlineEdit} from 'react-icons/ai';
 import {BsFillTrashFill} from 'react-icons/bs';
-import {getAsset} from '../../../../assets';
-import {GlobalContext, useGlobalContext} from '../../../../contexts/GlobalContext';
+import {getAsset} from 'assets';
+import {GlobalContext, useGlobalContext} from 'contexts/GlobalContext';
 
-import {getImageFromS3Static} from '../../../../utilities/services';
-import {initials, stringToHslColor} from '../../../../utilities/strings';
+import {getImageFromS3Static} from 'utilities/services';
+import {initials, stringToHslColor} from 'utilities/strings';
 import AudioMedia from './AudioMedia';
 import ImageMedia from './ImageMedia';
 import OtherMedia from './OtherMedia';

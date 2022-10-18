@@ -4,7 +4,7 @@ import draftToHtml from 'draftjs-to-html';
 import React, {useCallback, useEffect, useState} from 'react';
 import {Editor} from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
-import {useULBContext} from '../../contexts/UniversalLessonBuilderContext';
+import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
 
 interface RichTextEditorProps {
   onChange: (html: string, text: string) => void;
@@ -39,7 +39,7 @@ const RichTextEditor = (props: RichTextEditorProps) => {
     withStyles = false,
     maxHeight,
     wrapperClass = '',
-    placeholder,
+    placeholder
   } = props;
   const editorRef = React.useRef(null);
 
@@ -60,7 +60,7 @@ const RichTextEditor = (props: RichTextEditorProps) => {
     'link',
     'emoji',
     'remove',
-    'history',
+    'history'
   ];
 
   const getEditorStateHtml = (inputState: any) => {
@@ -163,7 +163,7 @@ const RichTextEditor = (props: RichTextEditorProps) => {
         inline: {
           inDropdown: false,
           options: ['bold', 'italic', 'underline', 'superscript', 'subscript'],
-          className: `${dark ? 'dark' : ''} toolItemClassName`,
+          className: `${dark ? 'dark' : ''} toolItemClassName`
         },
         list: {inDropdown: true, className: 'dropdownClassName'},
         textAlign: {inDropdown: true, className: 'dropdownClassName'},
@@ -176,22 +176,22 @@ const RichTextEditor = (props: RichTextEditorProps) => {
             'Impact',
             'Courier',
             'Times New Roman',
-            'Helvetica',
+            'Helvetica'
           ],
-          className: 'plainText dropdownBlockClassName',
+          className: 'plainText dropdownBlockClassName'
         },
         blockType: {
-          className: 'plainText dropdownBlockClassName',
+          className: 'plainText dropdownBlockClassName'
         },
         fontSize: {
-          className: 'plainText dropdownClassName',
+          className: 'plainText dropdownClassName'
         },
         colorPicker: {
           className: ` ${
             customStyle ? `${dark ? 'dark' : ''} text-black` : ''
           }  toolItemClassName ${theme}`,
-          colors: ['#DC2626', '#D97706', '#34D399', '#3B82F6', '#fff'],
-        },
+          colors: ['#DC2626', '#D97706', '#34D399', '#3B82F6', '#fff']
+        }
       }}
     />
   );

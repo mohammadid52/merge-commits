@@ -1,6 +1,6 @@
 import React, {useContext, useEffect} from 'react';
 import {Route, Switch, useRouteMatch} from 'react-router-dom';
-import {GlobalContext} from '../../../../contexts/GlobalContext';
+import {GlobalContext} from 'contexts/GlobalContext';
 import User from './User';
 import UserLookup from './UserLookup';
 

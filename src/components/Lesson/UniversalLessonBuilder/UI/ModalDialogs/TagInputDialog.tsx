@@ -1,10 +1,10 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import {EditQuestionModalDict} from '../../../../../dictionary/dictionary.iconoclast';
+import {GlobalContext} from 'contexts/GlobalContext';
+import {EditQuestionModalDict} from 'dictionary/dictionary.iconoclast';
 import {IContentTypeComponentProps} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
-import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
-import Buttons from '../../../../Atoms/Buttons';
-import FormTagInput from '../../../../Atoms/Form/FormTagInput';
+import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
+import Buttons from 'atoms/Buttons';
+import FormTagInput from 'atoms/Form/FormTagInput';
 
 interface IVideoInput {
   url: string;
@@ -21,7 +21,7 @@ const TagInputDialog = ({
   closeAction,
   updateBlockContentULBHandler,
   askBeforeClose,
-  setUnsavedChanges,
+  setUnsavedChanges
 }: IVideoDialogProps) => {
   const {userLanguage} = useContext(GlobalContext);
   const [tags, setTags] = useState<IVideoInput['tags']>([]);
@@ -43,7 +43,7 @@ const TagInputDialog = ({
 
     const input = {
       id: list.id,
-      lessonPlan: [...list.lessonPlan],
+      lessonPlan: [...list.lessonPlan]
     };
 
     await updateLessonPageToDB(input);

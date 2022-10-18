@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Loader from '../../../Atoms/Loader';
+import Loader from 'atoms/Loader';
 import Size from './Size';
 
 const LoadingMedia = ({filename, size}: any) => {

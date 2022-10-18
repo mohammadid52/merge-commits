@@ -3,19 +3,23 @@ import {AiOutlineUser} from 'react-icons/ai';
 import {HiPencil} from 'react-icons/hi';
 import {IoLocationOutline} from 'react-icons/io5';
 import {useHistory} from 'react-router';
-import {getImageFromS3Static} from '../../../../../../../utilities/services';
-import {initials} from '../../../../../../../utilities/strings';
-import { DeleteActionBtn } from '../../../../../../Atoms/Buttons/DeleteActionBtn';
+import {getImageFromS3Static} from 'utilities/services';
+import {initials} from 'utilities/strings';
+import {DeleteActionBtn} from 'atoms/Buttons/DeleteActionBtn';
 
 interface IGroupCardProps {
   group: any;
   handleDelete: () => void;
   handleEditClick: (data: any) => void;
-  redirectToUserPage: (studentId:string) => void;
+  redirectToUserPage: (studentId: string) => void;
 }
 
-const GroupCard = ({group, handleDelete,handleEditClick,redirectToUserPage}: IGroupCardProps) => {
-
+const GroupCard = ({
+  group,
+  handleDelete,
+  handleEditClick,
+  redirectToUserPage
+}: IGroupCardProps) => {
   const stringToHslColor = (str: string) => {
     let hash = 0;
     let i;
@@ -88,7 +92,7 @@ const GroupCard = ({group, handleDelete,handleEditClick,redirectToUserPage}: IGr
                                   ' ' +
                                   student.student?.lastName
                               )}`,
-                              textShadow: '0.1rem 0.1rem 2px #423939b3',
+                              textShadow: '0.1rem 0.1rem 2px #423939b3'
                             }}>
                             {initials(
                               student.student?.preferredName

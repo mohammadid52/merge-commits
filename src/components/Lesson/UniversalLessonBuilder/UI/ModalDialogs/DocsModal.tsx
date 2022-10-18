@@ -1,12 +1,12 @@
-import UploadMedia from '@components/Molecules/UploadMedia';
+import UploadMedia from 'molecules/UploadMedia';
 import {IFile} from '@interfaces/UniversalLessonInterfaces';
 import React, {useRef, useState} from 'react';
-import {useGlobalContext} from '../../../../../contexts/GlobalContext';
-import useDictionary from '../../../../../customHooks/dictionary';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
 import {IContentTypeComponentProps} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
-import {removeExtension} from '../../../../../utilities/functions';
-import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
-import Buttons from '../../../../Atoms/Buttons';
+import {removeExtension} from 'utilities/functions';
+import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
+import Buttons from 'atoms/Buttons';
 import {FORM_TYPES} from '../common/constants';
 
 interface IDocsDialogProps extends IContentTypeComponentProps {
@@ -21,7 +21,7 @@ const DocsModal = (props: IDocsDialogProps) => {
     createNewBlockULBHandler,
     updateBlockContentULBHandler,
     askBeforeClose,
-    setUnsavedChanges,
+    setUnsavedChanges
   } = props;
 
   const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
@@ -37,7 +37,7 @@ const DocsModal = (props: IDocsDialogProps) => {
 
     const input = {
       id: list.id,
-      lessonPlan: [...list.lessonPlan],
+      lessonPlan: [...list.lessonPlan]
     };
 
     await updateLessonPageToDB(input);
@@ -48,8 +48,8 @@ const DocsModal = (props: IDocsDialogProps) => {
       {
         id: file.id,
         label: removeExtension(file.fileName) || removeExtension(file.file.name),
-        value: file.fileKey,
-      },
+        value: file.fileKey
+      }
     ];
 
     if (isEditingMode) {

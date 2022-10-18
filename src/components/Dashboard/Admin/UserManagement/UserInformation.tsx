@@ -1,11 +1,11 @@
-import Buttons from '@atoms/Buttons';
-import Status from '@atoms/Status';
-import Modal from '@components/Atoms/Modal';
-import {classNames} from '@components/Lesson/UniversalLessonBuilder/UI/FormElements/TextInput';
-import {GlobalContext} from '@contexts/GlobalContext';
-import useDictionary from '@customHooks/dictionary';
-import LessonLoading from '@lesson/Loading/ComponentLoading';
-import {requestResetPassword} from '@utilities/urls';
+import Buttons from 'atoms/Buttons';
+import Status from 'atoms/Status';
+import Modal from 'atoms/Modal';
+import {classNames} from 'components/Lesson/UniversalLessonBuilder/UI/FormElements/TextInput';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import LessonLoading from 'lesson/Loading/ComponentLoading';
+import {requestResetPassword} from 'utilities/urls';
 import {getAsset} from 'assets';
 import axios from 'axios';
 import React, {Fragment, useContext, useState} from 'react';
@@ -213,7 +213,9 @@ const UserInformation = ({
                   <dt className="text-sm leading-5 font-regular text-gray-600">
                     {UserInformationDict[userLanguage]['ondemand']}
                   </dt>
-                  <dd className="mt-2 text-base leading-5 text-gray-900">
+                  <dd
+                    data-cy="self-paced-text"
+                    className="mt-2 text-base leading-5 text-gray-900">
                     <Status status={user?.onDemand ? 'YES' : 'NO'} />
                   </dd>
                 </div>

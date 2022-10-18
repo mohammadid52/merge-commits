@@ -1,24 +1,24 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { useHistory, useParams } from 'react-router';
-import { IoArrowUndoCircleOutline } from 'react-icons/io5';
-import API, { graphqlOperation } from '@aws-amplify/api';
+import React, {useState, useEffect, useContext} from 'react';
+import {useHistory, useParams} from 'react-router';
+import {IoArrowUndoCircleOutline} from 'react-icons/io5';
+import API, {graphqlOperation} from '@aws-amplify/api';
 
-import BreadCrums from '../../../../../../Atoms/BreadCrums';
-import SectionTitle from '../../../../../../Atoms/SectionTitle';
-import Buttons from '../../../../../../Atoms/Buttons';
-import PageWrapper from '../../../../../../Atoms/PageWrapper';
-import FormInput from '../../../../../../Atoms/Form/FormInput';
-import TextArea from '../../../../../../Atoms/Form/TextArea';
-import MultipleSelector from '../../../../../../Atoms/Form/MultipleSelector';
+import BreadCrums from 'atoms/BreadCrums';
+import SectionTitle from 'atoms/SectionTitle';
+import Buttons from 'atoms/Buttons';
+import PageWrapper from 'atoms/PageWrapper';
+import FormInput from 'atoms/Form/FormInput';
+import TextArea from 'atoms/Form/TextArea';
+import MultipleSelector from 'atoms/Form/MultipleSelector';
 
-import { languageList } from '../../../../../../../utilities/staticData';
-import * as mutations from '../../../../../../../graphql/mutations';
-import * as customQueries from '../../../../../../../customGraphql/customQueries';
-import * as customMutations from '../../../../../../../customGraphql/customMutations';
-import { GlobalContext } from '../../../../../../../contexts/GlobalContext';
-import useDictionary from '../../../../../../../customHooks/dictionary';
-import { fetchDesigners } from '../../../../../../../utilities/utils';
-interface AddSyllabusProps { }
+import {languageList} from 'utilities/staticData';
+import * as mutations from 'graphql/mutations';
+import * as customQueries from 'customGraphql/customQueries';
+import * as customMutations from 'customGraphql/customMutations';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import {fetchDesigners} from 'utilities/utils';
+interface AddSyllabusProps {}
 interface InitialData {
   name: string;
   description: string;
@@ -26,11 +26,11 @@ interface InitialData {
   policies: string;
   purpose: string;
   objectives: string;
-  languages: { id: string; name: string; value: string }[];
+  languages: {id: string; name: string; value: string}[];
 }
 
 const AddSyllabus = (props: AddSyllabusProps) => {
-  const { } = props;
+  const {} = props;
   const history = useHistory();
   const urlParams: any = useParams();
   const curricularId = urlParams.curricularId;
@@ -41,7 +41,7 @@ const AddSyllabus = (props: AddSyllabusProps) => {
     policies: '',
     purpose: '',
     objectives: '',
-    languages: [{ id: '1', name: 'English', value: 'EN' }],
+    languages: [{id: '1', name: 'English', value: 'EN'}]
   };
   const [syllabusData, setSyllabusData] = useState<InitialData>(initialData);
   const [designersList, setDesignersList] = useState([]);
@@ -49,8 +49,8 @@ const AddSyllabus = (props: AddSyllabusProps) => {
   const [syllabusIds, setSyllabusIds] = useState([]);
   const [universalSyllabusSeq, setUniversalSyllabusSeq] = useState([]);
   const [loading, setIsLoading] = useState(false);
-  const { theme, clientKey, userLanguage } = useContext(GlobalContext);
-  const { AddSyllabusDict, BreadcrumsTitles } = useDictionary(clientKey);
+  const {theme, clientKey, userLanguage} = useContext(GlobalContext);
+  const {AddSyllabusDict, BreadcrumsTitles} = useDictionary(clientKey);
   const institutionId = urlParams.institutionId;
 
   const useQuery = () => {
@@ -62,43 +62,43 @@ const AddSyllabus = (props: AddSyllabusProps) => {
   const [messages, setMessages] = useState({
     show: false,
     message: '',
-    isError: false,
+    isError: false
   });
 
   const breadCrumsList = [
-    { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
+    {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
     {
       title: BreadcrumsTitles[userLanguage]['INSTITUTION_MANAGEMENT'],
       url: '/dashboard/manage-institutions',
-      last: false,
+      last: false
     },
     {
       title: BreadcrumsTitles[userLanguage]['INSTITUTION_INFO'],
       url: `/dashboard/manage-institutions/institution/${institutionId}/staff`,
-      last: false,
+      last: false
     },
     {
       title: BreadcrumsTitles[userLanguage]['CURRICULUMBUILDER'],
       url: `/dashboard/manage-institutions/${institutionId}/curricular?id=${curricularId}`,
-      last: false,
+      last: false
     },
     {
       title: BreadcrumsTitles[userLanguage]['UnitBuilder'],
       url: `/dashboard/manage-institutions/curricular/${curricularId}/syllabus/add`,
-      last: true,
-    },
+      last: true
+    }
   ];
 
   const onInputChange = (e: any) => {
     setSyllabusData({
       ...syllabusData,
-      [e.target.name]: e.target.value,
+      [e.target.name]: e.target.value
     });
     if (messages.show) {
       setMessages({
         show: false,
         message: '',
-        isError: false,
+        isError: false
       });
     }
   };
@@ -108,13 +108,13 @@ const AddSyllabus = (props: AddSyllabusProps) => {
     const currentLanguages = syllabusData.languages;
     const selectedItem = currentLanguages.find((item) => item.id === id);
     if (!selectedItem) {
-      updatedList = [...currentLanguages, { id, name, value }];
+      updatedList = [...currentLanguages, {id, name, value}];
     } else {
       updatedList = currentLanguages.filter((item) => item.id !== id);
     }
     setSyllabusData({
       ...syllabusData,
-      languages: updatedList,
+      languages: updatedList
     });
   };
 
@@ -123,7 +123,7 @@ const AddSyllabus = (props: AddSyllabusProps) => {
     const currentDesigners = selectedDesigners;
     const selectedItem = currentDesigners.find((item) => item.id === id);
     if (!selectedItem) {
-      updatedList = [...currentDesigners, { id, name, value }];
+      updatedList = [...currentDesigners, {id, name, value}];
     } else {
       updatedList = currentDesigners.filter((item) => item.id !== id);
     }
@@ -138,13 +138,17 @@ const AddSyllabus = (props: AddSyllabusProps) => {
       setMessages({
         show: true,
         message: AddSyllabusDict[userLanguage]['messages']['fetcherr'],
-        isError: true,
+        isError: true
       });
     }
   };
 
   const fetchSyllabusSequence = async () => {
-    let result: any = await API.graphql(graphqlOperation(customQueries.getCurriculumUniversalSyllabusSequence, { id: `${curricularId}` }));
+    let result: any = await API.graphql(
+      graphqlOperation(customQueries.getCurriculumUniversalSyllabusSequence, {
+        id: `${curricularId}`
+      })
+    );
     setUniversalSyllabusSeq(result?.data.getCurriculum?.universalSyllabusSeq || []);
   };
 
@@ -154,7 +158,7 @@ const AddSyllabus = (props: AddSyllabusProps) => {
       try {
         setIsLoading(true);
         const languagesCode = syllabusData.languages.map(
-          (item: { value: string }) => item.value
+          (item: {value: string}) => item.value
         );
         const designers = selectedDesigners.map((item) => item.id);
         const input: any = {
@@ -167,10 +171,10 @@ const AddSyllabus = (props: AddSyllabusProps) => {
           objectives: syllabusData.objectives,
           languages: languagesCode,
           designers: designers,
-          universalLessonsSeq: [],
+          universalLessonsSeq: []
         };
         const newSyllabus: any = await API.graphql(
-          graphqlOperation(mutations.createUniversalSyllabus, { input })
+          graphqlOperation(mutations.createUniversalSyllabus, {input})
         );
         const newItem = newSyllabus.data.createUniversalSyllabus;
         // replace this with custom mutation updateCurriculumSyllabusSequence
@@ -178,8 +182,8 @@ const AddSyllabus = (props: AddSyllabusProps) => {
           graphqlOperation(customMutations.updateCurriculumSyllabusSequence, {
             input: {
               id: curricularId,
-              universalSyllabusSeq: [...universalSyllabusSeq, newItem.id],
-            },
+              universalSyllabusSeq: [...universalSyllabusSeq, newItem.id]
+            }
           })
         );
         // if (!syllabusIds.length) {
@@ -200,7 +204,7 @@ const AddSyllabus = (props: AddSyllabusProps) => {
         setMessages({
           show: true,
           message: AddSyllabusDict[userLanguage]['messages']['unitsave'],
-          isError: false,
+          isError: false
         });
         setSyllabusData(initialData);
         setIsLoading(false);
@@ -213,7 +217,7 @@ const AddSyllabus = (props: AddSyllabusProps) => {
         setMessages({
           show: true,
           message: AddSyllabusDict[userLanguage]['messages']['unablesave'],
-          isError: true,
+          isError: true
         });
       }
     }
@@ -224,7 +228,7 @@ const AddSyllabus = (props: AddSyllabusProps) => {
       setMessages({
         show: true,
         message: AddSyllabusDict[userLanguage]['messages']['namerequired'],
-        isError: true,
+        isError: true
       });
       return false;
     }
@@ -253,7 +257,15 @@ const AddSyllabus = (props: AddSyllabusProps) => {
     fetchSyllabusSequence();
   }, []);
 
-  const { name, languages, description, purpose, objectives, methodology, policies } = syllabusData;
+  const {
+    name,
+    languages,
+    description,
+    purpose,
+    objectives,
+    methodology,
+    policies
+  } = syllabusData;
 
   return (
     <div>
@@ -265,7 +277,12 @@ const AddSyllabus = (props: AddSyllabusProps) => {
           subtitle={AddSyllabusDict[userLanguage]['subtitle']}
         />
         <div className="flex justify-end py-4 mb-4 w-5/10">
-          <Buttons label="Go Back" btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
+          <Buttons
+            label="Go Back"
+            btnClass="mr-4"
+            onClick={history.goBack}
+            Icon={IoArrowUndoCircleOutline}
+          />
         </div>
       </div>
 
@@ -382,7 +399,11 @@ const AddSyllabus = (props: AddSyllabusProps) => {
         <div className="flex my-8 justify-center">
           <Buttons
             btnClass="py-3 px-10"
-            label={loading ? AddSyllabusDict[userLanguage]['saving'] : AddSyllabusDict[userLanguage]['save']}
+            label={
+              loading
+                ? AddSyllabusDict[userLanguage]['saving']
+                : AddSyllabusDict[userLanguage]['save']
+            }
             onClick={saveSyllabusDetails}
             disabled={loading ? true : false}
           />

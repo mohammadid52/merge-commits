@@ -1,7 +1,7 @@
 import React, {useContext} from 'react';
 import {LessonCardProps} from '../../Classroom';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import {ellipsis} from '@utilities/functions';
+import {GlobalContext} from 'contexts/GlobalContext';
+import {ellipsis} from 'utilities/functions';
 
 const MainSummary = (props: LessonCardProps) => {
   const {theme} = useContext(GlobalContext);
@@ -34,7 +34,7 @@ const MainSummary = (props: LessonCardProps) => {
             __html:
               lessonProps.lesson && lessonProps.lesson?.summary
                 ? lessonProps.lesson?.summary
-                : '',
+                : ''
           }}></p>
       </div>
     </div>

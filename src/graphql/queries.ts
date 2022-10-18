@@ -7463,15 +7463,15 @@ export const usersByRole = /* GraphQL */ `
     }
   }
 `;
-export const lessonsByType = /* GraphQL */ `
-  query LessonsByType(
+export const lessonsByType2 = /* GraphQL */ `
+  query LessonsByType2(
     $lessonType: String!
     $sortDirection: ModelSortDirection
     $filter: ModelPersonLessonsDataFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    lessonsByType(
+    lessonsByType2(
       lessonType: $lessonType
       sortDirection: $sortDirection
       filter: $filter

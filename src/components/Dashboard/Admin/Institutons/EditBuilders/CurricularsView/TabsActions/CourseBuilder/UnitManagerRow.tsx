@@ -1,6 +1,6 @@
-import Popover from '@components/Atoms/Popover';
-import {GlobalContext} from '@contexts/GlobalContext';
-import useDictionary from '@customHooks/dictionary';
+import Popover from 'atoms/Popover';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
 import {UnitLookupDict} from '@dictionary/dictionary.iconoclast';
 import React, {useContext, useState} from 'react';
 import {BiDotsVerticalRounded} from 'react-icons/bi';
@@ -21,7 +21,7 @@ const UnitManagerRow = ({
   checkIfRemovable,
   handleToggleDelete,
   goToUnitBuilder,
-  courseObj,
+  courseObj
 }: IUnitManagerRowProps) => {
   // ~~~~~~~~~~ CONTEXT_SPLITTING ~~~~~~~~~~ //
   const gContext = useContext(GlobalContext);

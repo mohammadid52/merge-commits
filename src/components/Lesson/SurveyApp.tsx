@@ -1,12 +1,12 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import useTailwindBreakpoint from '@customHooks/tailwindBreakpoint';
+import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
 import {PartInput} from 'API';
 import React, {useContext, useEffect, useRef, useState} from 'react';
 import {useHistory, useParams, useRouteMatch} from 'react-router-dom';
 import {v4 as uuidV4} from 'uuid';
-import {GlobalContext} from '../../contexts/GlobalContext';
-import * as mutations from '../../graphql/mutations';
-import * as queries from '../../graphql/queries';
+import {GlobalContext} from 'contexts/GlobalContext';
+import * as mutations from 'graphql/mutations';
+import * as queries from 'graphql/queries';
 import {
   PagePart,
   PartContent,
@@ -14,7 +14,7 @@ import {
   StudentPageInput,
   UniversalLessonPage
 } from '../../interfaces/UniversalLessonInterfaces';
-import {getLocalStorageData, setLocalStorageData} from '../../utilities/localStorage';
+import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
 import ErrorBoundary from '../Error/ErrorBoundary';
 import LessonHeaderBar from '../Header/LessonHeaderBar';
 import Foot from './Foot/Foot';
@@ -205,8 +205,6 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
         {required: [], initialized: []}
       );
 
-      console.log('mappedPages - ', mappedPages);
-
       lessonDispatch({
         type: 'SET_INITIAL_STUDENT_DATA',
         payload: {
@@ -289,7 +287,6 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
       );
 
       const returnedData = newSurveyData.data.createUniversalSurveyStudentData;
-      console.log('createSurveyData', returnedData);
 
       return returnedData;
     } catch (e) {
@@ -656,7 +653,7 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
         );
       }
     } catch (error) {
-      console.log(
+      console.error(
         '🚀 ~ file: SurveyApp.tsx ~ line 652 ~ handleSurveyMutateData ~ error',
         error
       );

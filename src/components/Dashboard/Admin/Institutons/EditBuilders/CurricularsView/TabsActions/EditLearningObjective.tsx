@@ -1,19 +1,19 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { useHistory, useParams } from 'react-router';
-import { IoArrowUndoCircleOutline } from 'react-icons/io5';
-import API, { graphqlOperation } from '@aws-amplify/api';
-import BreadCrums from '../../../../../../Atoms/BreadCrums';
-import SectionTitle from '../../../../../../Atoms/SectionTitle';
-import Buttons from '../../../../../../Atoms/Buttons';
-import PageWrapper from '../../../../../../Atoms/PageWrapper';
-import FormInput from '../../../../../../Atoms/Form/FormInput';
-import TextArea from '../../../../../../Atoms/Form/TextArea';
-import Selector from '../../../../../../Atoms/Form/Selector';
+import React, {useContext, useEffect, useState} from 'react';
+import {useHistory, useParams} from 'react-router';
+import {IoArrowUndoCircleOutline} from 'react-icons/io5';
+import API, {graphqlOperation} from '@aws-amplify/api';
+import BreadCrums from 'atoms/BreadCrums';
+import SectionTitle from 'atoms/SectionTitle';
+import Buttons from 'atoms/Buttons';
+import PageWrapper from 'atoms/PageWrapper';
+import FormInput from 'atoms/Form/FormInput';
+import TextArea from 'atoms/Form/TextArea';
+import Selector from 'atoms/Form/Selector';
 
-import * as mutations from '../../../../../../../graphql/mutations';
-import * as queries from '../../../../../../../graphql/queries';
-import { GlobalContext } from '../../../../../../../contexts/GlobalContext';
-import useDictionary from '../../../../../../../customHooks/dictionary';
+import * as mutations from 'graphql/mutations';
+import * as queries from 'graphql/queries';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
 interface EditLearningObjectiveProps {}
 
 const EditLearningObjective = (props: EditLearningObjectiveProps) => {
@@ -29,65 +29,72 @@ const EditLearningObjective = (props: EditLearningObjectiveProps) => {
     id: learningId,
     name: '',
     description: '',
-    curriculumID: curricularId,
+    curriculumID: curricularId
   });
-  const [validation, setValidation] = useState({ isValid: true, msg: '' });
-  const { theme, clientKey, userLanguage } = useContext(GlobalContext);
-  const { EditLearningObjectiveDict, BreadcrumsTitles } = useDictionary(clientKey);
+  const [validation, setValidation] = useState({isValid: true, msg: ''});
+  const {theme, clientKey, userLanguage} = useContext(GlobalContext);
+  const {EditLearningObjectiveDict, BreadcrumsTitles} = useDictionary(clientKey);
 
   const breadCrumsList = [
-    { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
+    {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
     {
       title: BreadcrumsTitles[userLanguage]['CURRICULUMBUILDER'],
       url: `/dashboard/manage-institutions/${institutionId}/curricular?id=${curricularId}`,
-      last: false,
+      last: false
     },
     {
       title: BreadcrumsTitles[userLanguage]['EditLearningObj'],
       url: `/dashboard/manage-institutions/curricular/${curricularId}/learning-objective/edit/${learningId}`,
-      last: true,
-    },
+      last: true
+    }
   ];
 
   const onInputChange = (e: any) => {
     const value = e.target.value;
     if (e.target.name === 'name') {
-      setLearning({ ...learning, name: value });
-      if (!validation.isValid && value.length) setValidation({ isValid: true, msg: '' });
+      setLearning({...learning, name: value});
+      if (!validation.isValid && value.length) setValidation({isValid: true, msg: ''});
     }
-    if (e.target.name === 'description') setLearning({ ...learning, description: value });
+    if (e.target.name === 'description') setLearning({...learning, description: value});
   };
 
   const savelearning = async () => {
     if (!learning.name) {
-      setValidation({ isValid: false, msg: EditLearningObjectiveDict[userLanguage]['messages']['namerequired'] });
+      setValidation({
+        isValid: false,
+        msg: EditLearningObjectiveDict[userLanguage]['messages']['namerequired']
+      });
       return;
     }
-    if (!validation.isValid) setValidation({ isValid: true, msg: '' });
+    if (!validation.isValid) setValidation({isValid: true, msg: ''});
     const input = {
       id: learningId,
       name: learning.name,
-      description: learning.description,
+      description: learning.description
     };
-    const item: any = await API.graphql(graphqlOperation(mutations.updateLearningObjective, { input }));
+    const item: any = await API.graphql(
+      graphqlOperation(mutations.updateLearningObjective, {input})
+    );
     const updatedItem = item?.data?.updateLearningObjective;
     if (updatedItem) {
       history.goBack();
     } else {
-      console.log('Could not update learning objective');
+      console.error('Could not update learning objective');
     }
   };
 
   const fetchLearningObjective = async () => {
     console.log('In here for query');
     setLoading(true);
-    let item: any = await API.graphql(graphqlOperation(queries.getLearningObjective, { id: learningId }));
+    let item: any = await API.graphql(
+      graphqlOperation(queries.getLearningObjective, {id: learningId})
+    );
     item = item.data.getLearningObjective;
     if (item.curriculumID === curricularId) {
-      setLearning({ ...learning, name: item.name, description: item.description });
+      setLearning({...learning, name: item.name, description: item.description});
       setLoading(false);
     } else {
-      console.log('wrong cr');
+      console.error('wrong cr');
       setLoading(false);
     }
   };
@@ -105,7 +112,12 @@ const EditLearningObjective = (props: EditLearningObjectiveProps) => {
           subtitle={EditLearningObjectiveDict[userLanguage]['subtitle']}
         />
         <div className="flex justify-end py-4 mb-4 w-5/10">
-          <Buttons label="Go Back" btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
+          <Buttons
+            label="Go Back"
+            btnClass="mr-4"
+            onClick={history.goBack}
+            Icon={IoArrowUndoCircleOutline}
+          />
         </div>
       </div>
 
@@ -129,7 +141,9 @@ const EditLearningObjective = (props: EditLearningObjectiveProps) => {
                     label={EditLearningObjectiveDict[userLanguage]['learningname']}
                     isRequired
                   />
-                  {!validation.isValid ? <p className="text-red-600">{validation.msg}</p> : null}
+                  {!validation.isValid ? (
+                    <p className="text-red-600">{validation.msg}</p>
+                  ) : null}
                 </div>
                 {/* <div className="px-3 py-4">
               <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
@@ -163,7 +177,9 @@ const EditLearningObjective = (props: EditLearningObjectiveProps) => {
             </div>
           </>
         ) : (
-          <div className="py-12 my-12 m-auto text-center">{EditLearningObjectiveDict[userLanguage]['fetching']}</div>
+          <div className="py-12 my-12 m-auto text-center">
+            {EditLearningObjectiveDict[userLanguage]['fetching']}
+          </div>
         )}
       </PageWrapper>
     </div>

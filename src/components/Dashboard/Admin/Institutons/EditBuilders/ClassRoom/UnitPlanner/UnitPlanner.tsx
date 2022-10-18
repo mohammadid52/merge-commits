@@ -2,12 +2,12 @@ import React, {useEffect, useState} from 'react';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import moment, {Moment} from 'moment';
 
-import * as customQueries from '../../../../../../../customGraphql/customQueries';
+import * as customQueries from 'customGraphql/customQueries';
 
-import Buttons from '../../../../../../Atoms/Buttons';
-// import DatePickerInput from '../../../../../../Atoms/Form/DatePickerInput';
-import Loader from '../../../../../../Atoms/Loader';
-import { IImpactLog } from '../ClassRoomHolidays';
+import Buttons from 'atoms/Buttons';
+// import DatePickerInput from 'atoms/Form/DatePickerInput';
+import Loader from 'atoms/Loader';
+import {IImpactLog} from '../ClassRoomHolidays';
 
 const frequencyMapping: {[key: string]: {unit: any; step: number}} = {
   Weekly: {unit: 'week', step: 1},
@@ -18,7 +18,7 @@ const frequencyMapping: {[key: string]: {unit: any; step: number}} = {
   'M/W/F': {unit: 'day', step: 1},
   'Tu/Th': {unit: 'day', step: 1},
   'One Time': {unit: 'day', step: 1},
-  'Daily': {unit: 'day', step: 1},
+  Daily: {unit: 'day', step: 1}
 };
 
 interface IUnitPlannerProps {
@@ -38,7 +38,7 @@ const UnitPlanner = ({
   saveRoomDetails,
   saving,
   setLogsChanged,
-  isDetailsComplete,
+  isDetailsComplete
 }: IUnitPlannerProps) => {
   const [loading, setLoading] = useState(roomData.curricular?.id);
   const [syllabusList, setSyllabusList] = useState([]);
@@ -54,7 +54,7 @@ const UnitPlanner = ({
       setLoading(true);
       const list: any = await API.graphql(
         graphqlOperation(customQueries.getClassroomSyllabus, {
-          id: roomData.curricular?.id,
+          id: roomData.curricular?.id
         })
       );
       const result: any = list.data?.getCurriculum;
@@ -71,8 +71,8 @@ const UnitPlanner = ({
                   let index = result?.universalLessonsSeq?.indexOf(t.id);
                   return {...t, index};
                 })
-                .sort((a: any, b: any) => (a.index > b.index ? 1 : -1)),
-            },
+                .sort((a: any, b: any) => (a.index > b.index ? 1 : -1))
+            }
           }))
           .sort((a: any, b: any) => (a.index > b.index ? 1 : -1)) || []
       );
@@ -189,62 +189,64 @@ const UnitPlanner = ({
         startDate: lastOccupiedDate,
         lessons: {
           ...syllabus.lessons,
-          items: syllabus.lessons.items.filter((item:any) => item.lesson).map((item: any)=> {
-            if (count !== 0 && 1 - count < item.lesson.duration) {
-              lastOccupiedDate = moment(lastOccupiedDate).add(
-                frequencyMapping[roomData.frequency].step,
-                frequencyMapping[roomData.frequency].unit
-              );
-              count = 0;
-            }
-            count += item.lesson.duration;
-
-            const {startDate, estEndDate}: any = calculateAvailableStartDate(
-              moment(lastOccupiedDate),
-              frequencyMapping[roomData.frequency].unit,
-              frequencyMapping[roomData.frequency].step,
-              item.lesson.duration,
-              scheduleDates
-            );
-            console.log(startDate, estEndDate, 'startDate, estEndDate');
-
-            item.startDate = startDate;
-            item.estEndDate = estEndDate;
-
-            // item.startDate = calculateAvailableStartDate(
-            //   moment(lastOccupiedDate),
-            //   7,
-            //   item.lesson.duration,
-            //   scheduleDates
-            // );
-            // item.estEndDate = moment(item.startDate).add(
-            //   Math.ceil(count - 1),
-            //   'day'
-            // );
-            // const datesBetweenSchedules = scheduleDates.filter(
-            //   (ele) =>
-            //     new Date(new Date(ele).toDateString()).getTime() >=
-            //       new Date(item.startDate).getTime() &&
-            //     new Date(new Date(ele).toDateString()).getTime() <=
-            //       new Date(item.estEndDate).getTime()
-            // );
-
-            // if (datesBetweenSchedules.length) {
-            //   item.estEndDate = moment(item.estEndDate).add(
-            //     datesBetweenSchedules.length,
-            //     'day'
-            //   );
-            // }
-            lastOccupiedDate = Number.isInteger(count)
-              ? moment(item.estEndDate).add(
+          items: syllabus.lessons.items
+            .filter((item: any) => item.lesson)
+            .map((item: any) => {
+              if (count !== 0 && 1 - count < item.lesson.duration) {
+                lastOccupiedDate = moment(lastOccupiedDate).add(
                   frequencyMapping[roomData.frequency].step,
                   frequencyMapping[roomData.frequency].unit
-                )
-              : item.estEndDate;
-            count = count >= 1 ? 0 : count;
-            return item;
-          }),
-        },
+                );
+                count = 0;
+              }
+              count += item.lesson.duration;
+
+              const {startDate, estEndDate}: any = calculateAvailableStartDate(
+                moment(lastOccupiedDate),
+                frequencyMapping[roomData.frequency].unit,
+                frequencyMapping[roomData.frequency].step,
+                item.lesson.duration,
+                scheduleDates
+              );
+              console.log(startDate, estEndDate, 'startDate, estEndDate');
+
+              item.startDate = startDate;
+              item.estEndDate = estEndDate;
+
+              // item.startDate = calculateAvailableStartDate(
+              //   moment(lastOccupiedDate),
+              //   7,
+              //   item.lesson.duration,
+              //   scheduleDates
+              // );
+              // item.estEndDate = moment(item.startDate).add(
+              //   Math.ceil(count - 1),
+              //   'day'
+              // );
+              // const datesBetweenSchedules = scheduleDates.filter(
+              //   (ele) =>
+              //     new Date(new Date(ele).toDateString()).getTime() >=
+              //       new Date(item.startDate).getTime() &&
+              //     new Date(new Date(ele).toDateString()).getTime() <=
+              //       new Date(item.estEndDate).getTime()
+              // );
+
+              // if (datesBetweenSchedules.length) {
+              //   item.estEndDate = moment(item.estEndDate).add(
+              //     datesBetweenSchedules.length,
+              //     'day'
+              //   );
+              // }
+              lastOccupiedDate = Number.isInteger(count)
+                ? moment(item.estEndDate).add(
+                    frequencyMapping[roomData.frequency].step,
+                    frequencyMapping[roomData.frequency].unit
+                  )
+                : item.estEndDate;
+              count = count >= 1 ? 0 : count;
+              return item;
+            })
+        }
       }))
     );
     // saveRoomDetails();
@@ -385,7 +387,7 @@ const UnitPlanner = ({
           label={'Run calculations and save'}
           onClick={() => {
             calculateSchedule();
-            saveRoomDetails()
+            saveRoomDetails();
           }}
         />
       </div>

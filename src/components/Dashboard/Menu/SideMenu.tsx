@@ -1,11 +1,11 @@
-import Tooltip from '@atoms/Tooltip';
-import SignOutButton from '@components/Auth/SignOut';
-import Links from '@components/Dashboard/Menu/Links';
-import ProfileLink from '@components/Dashboard/Menu/ProfileLink';
-import {GlobalContext} from '@contexts/GlobalContext';
-import {useOverlayContext} from '@contexts/OverlayContext';
-import useDeviceDetect from '@customHooks/deviceDetect';
-import useKeyPress from '@customHooks/useKeyPress';
+import Tooltip from 'atoms/Tooltip';
+import SignOutButton from 'components/Auth/SignOut';
+import Links from 'components/Dashboard/Menu/Links';
+import ProfileLink from 'components/Dashboard/Menu/ProfileLink';
+import {GlobalContext} from 'contexts/GlobalContext';
+import {useOverlayContext} from 'contexts/OverlayContext';
+import useDeviceDetect from 'customHooks/deviceDetect';
+import useKeyPress from 'customHooks/useKeyPress';
 import {getAsset} from 'assets';
 import React, {useContext, useEffect} from 'react';
 import {IoIosMenu} from 'react-icons/io';
@@ -29,7 +29,7 @@ const SideMenu: React.FC<SideMenuProps> = ({children, ...props}: SideMenuProps) 
 
     setSyllabusLoading,
     setLessonLoading,
-    handleRoomSelection,
+    handleRoomSelection
   } = props;
   const {mobile} = useDeviceDetect();
   const {dispatch, clientKey} = useContext(GlobalContext);
@@ -79,7 +79,7 @@ const SideMenu: React.FC<SideMenuProps> = ({children, ...props}: SideMenuProps) 
       <div
         style={{
           minWidth: collapseSidebarOverlay ? '0rem' : '16rem',
-          maxWidth: collapseSidebarOverlay ? '0rem' : '16rem',
+          maxWidth: collapseSidebarOverlay ? '0rem' : '16rem'
         }}
         className={`md:flex md:flex-shrink-0 w-60 sidenav bg-charcoal ${
           collapseSidebarOverlay && 'cursor-pointer'
@@ -87,7 +87,7 @@ const SideMenu: React.FC<SideMenuProps> = ({children, ...props}: SideMenuProps) 
         {!collapseSidebarOverlay && (
           <div
             style={{
-              minWidth: '16rem',
+              minWidth: '16rem'
             }}
             className="flex flex-col">
             <div className="flex flex-col hide-scrollbar h-screen flex-1">

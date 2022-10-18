@@ -4,25 +4,21 @@ import {IconContext} from 'react-icons';
 import {BsArrowLeft} from 'react-icons/bs';
 import {IoClose} from 'react-icons/io5';
 import {useHistory, useLocation} from 'react-router-dom';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import * as customMutations from '../../../../../customGraphql/customMutations';
-import * as customQueries from '../../../../../customGraphql/customQueries';
-import useDictionary from '../../../../../customHooks/dictionary';
-import * as mutations from '../../../../../graphql/mutations';
-import * as queries from '../../../../../graphql/queries';
-import {getImageFromS3} from '../../../../../utilities/services';
-import {
-  getInitialsFromString,
-  initials,
-  stringToHslColor,
-} from '../../../../../utilities/strings';
-import BreadCrums from '../../../../Atoms/BreadCrums';
-import Buttons from '../../../../Atoms/Buttons';
-import AddButton from '../../../../Atoms/Buttons/AddButton';
-import FormInput from '../../../../Atoms/Form/FormInput';
-import SearchSelectorWithAvatar from '../../../../Atoms/Form/SearchSelectorWithAvatar';
-import PageWrapper from '../../../../Atoms/PageWrapper';
-import SectionTitle from '../../../../Atoms/SectionTitle';
+import {GlobalContext} from 'contexts/GlobalContext';
+import * as customMutations from 'customGraphql/customMutations';
+import * as customQueries from 'customGraphql/customQueries';
+import useDictionary from 'customHooks/dictionary';
+import * as mutations from 'graphql/mutations';
+import * as queries from 'graphql/queries';
+import {getImageFromS3} from 'utilities/services';
+import {getInitialsFromString, initials, stringToHslColor} from 'utilities/strings';
+import BreadCrums from 'atoms/BreadCrums';
+import Buttons from 'atoms/Buttons';
+import AddButton from 'atoms/Buttons/AddButton';
+import FormInput from 'atoms/Form/FormInput';
+import SearchSelectorWithAvatar from 'atoms/Form/SearchSelectorWithAvatar';
+import PageWrapper from 'atoms/PageWrapper';
+import SectionTitle from 'atoms/SectionTitle';
 
 interface ClassBuilderProps {
   instId: string;
@@ -37,14 +33,14 @@ const ClassBuilder = (props: ClassBuilderProps) => {
     id: '',
     name: '',
     instituteId: '',
-    instituteName: '',
+    instituteName: ''
   };
   const [classData, setClassData] = useState(initialData);
   const [newMember, setNewMember] = useState({
     name: '',
     id: '',
     value: '',
-    avatar: '',
+    avatar: ''
   });
 
   const [studentList, setStudentList] = useState([]);
@@ -59,7 +55,7 @@ const ClassBuilder = (props: ClassBuilderProps) => {
   const [messages, setMessages] = useState({
     show: false,
     message: '',
-    isError: false,
+    isError: false
   });
 
   const useQuery = () => {
@@ -70,13 +66,13 @@ const ClassBuilder = (props: ClassBuilderProps) => {
   const onChange = (e: any) => {
     setClassData({
       ...classData,
-      name: e.target.value,
+      name: e.target.value
     });
     if (messages.show) {
       setMessages({
         show: false,
         message: '',
-        isError: false,
+        isError: false
       });
     }
   };
@@ -84,12 +80,12 @@ const ClassBuilder = (props: ClassBuilderProps) => {
   const getBasicInstitutionInfo = async () => {
     const result: any = await API.graphql(
       graphqlOperation(customQueries.getInstitutionBasicInfo, {
-        id: instId,
+        id: instId
       })
     );
     setClassData((prevData) => ({
       ...prevData,
-      instituteName: result?.data?.getInstitution.name,
+      instituteName: result?.data?.getInstitution.name
     }));
   };
 
@@ -107,7 +103,7 @@ const ClassBuilder = (props: ClassBuilderProps) => {
       id: id,
       name: name,
       value: str,
-      avatar: avatar,
+      avatar: avatar
     });
   };
 
@@ -118,8 +114,8 @@ const ClassBuilder = (props: ClassBuilderProps) => {
         {
           name: newMember.name,
           id: newMember.id,
-          avatar: newMember.avatar,
-        },
+          avatar: newMember.avatar
+        }
       ]);
       setNewMember({id: '', name: '', value: '', avatar: ''});
     }
@@ -137,9 +133,9 @@ const ClassBuilder = (props: ClassBuilderProps) => {
         graphqlOperation(customQueries.fetchPersons, {
           filter: {
             role: {eq: 'ST'},
-            status: {eq: 'ACTIVE'},
+            status: {eq: 'ACTIVE'}
           },
-          limit: 300,
+          limit: 300
         })
       );
       const sortedList = list.data.listPeople.items.sort((a: any, b: any) =>
@@ -152,7 +148,7 @@ const ClassBuilder = (props: ClassBuilderProps) => {
           value: `${item.firstName || ''} ${item.lastName || ''}`,
           avatar: item.image ? await getImageURL(item.image) : '',
           email: item.email || '',
-          authId: item.authId || '',
+          authId: item.authId || ''
         }))
       );
       personsList.then((res) => {
@@ -163,7 +159,7 @@ const ClassBuilder = (props: ClassBuilderProps) => {
       setMessages({
         show: true,
         message: classBuilderdict[userLanguage]['MESSAGES']['ERROR']['FETCHSTUDENT'],
-        isError: true,
+        isError: true
       });
     }
   };
@@ -183,9 +179,9 @@ const ClassBuilder = (props: ClassBuilderProps) => {
         filter: {
           role: {eq: 'ST'},
           status: {eq: 'ACTIVE'},
-          or: [{firstName: {contains: searchQuery}}, {lastName: {contains: searchQuery}}],
+          or: [{firstName: {contains: searchQuery}}, {lastName: {contains: searchQuery}}]
         },
-        limit: 300,
+        limit: 300
       })
     );
     const students = result.data.listPeople.items;
@@ -196,7 +192,7 @@ const ClassBuilder = (props: ClassBuilderProps) => {
       avatar: item.image ? getImageFromS3(item.image) : '',
       status: item.status || 'Inactive',
       email: item.email || '',
-      authId: item.authId || '',
+      authId: item.authId || ''
     }));
     setFilteredStudents(sortStudents(mappedStudents));
     setSearching(false);
@@ -220,7 +216,7 @@ const ClassBuilder = (props: ClassBuilderProps) => {
         setMessages({
           show: true,
           message: classBuilderdict[userLanguage]['MESSAGES']['SUCCESS']['CLASSSAVE'],
-          isError: false,
+          isError: false
         });
         setSelectedStudent([]);
         setClassData({...initialData, instituteId: instId});
@@ -230,7 +226,7 @@ const ClassBuilder = (props: ClassBuilderProps) => {
         setMessages({
           show: true,
           message: classBuilderdict[userLanguage]['MESSAGES']['ERROR']['STUDENTADDERROR'],
-          isError: true,
+          isError: true
         });
       });
   };
@@ -242,7 +238,7 @@ const ClassBuilder = (props: ClassBuilderProps) => {
       try {
         const input = {
           name: classData.name,
-          institutionID: classData.instituteId,
+          institutionID: classData.instituteId
         };
         const newClass: any = await API.graphql(
           graphqlOperation(mutations.createClass, {input: input})
@@ -255,7 +251,7 @@ const ClassBuilder = (props: ClassBuilderProps) => {
         setMessages({
           show: true,
           message: classBuilderdict[userLanguage]['MESSAGES']['ERROR']['SAVECLASSERROR'],
-          isError: true,
+          isError: true
         });
       }
     }
@@ -269,7 +265,7 @@ const ClassBuilder = (props: ClassBuilderProps) => {
         classID: classId,
         studentID: id,
         studentEmail: stdEmail,
-        studentAuthID: authId,
+        studentAuthID: authId
       };
       const students: any = await API.graphql(
         graphqlOperation(customMutations.createClassStudent, {input: input})
@@ -278,7 +274,7 @@ const ClassBuilder = (props: ClassBuilderProps) => {
       setMessages({
         show: true,
         message: classBuilderdict[userLanguage]['MESSAGES']['ERROR']['STUDENTADDERROR'],
-        isError: true,
+        isError: true
       });
     }
   };
@@ -289,8 +285,8 @@ const ClassBuilder = (props: ClassBuilderProps) => {
         graphqlOperation(queries.listClasses, {
           filter: {
             institutionID: {eq: classData.instituteId},
-            name: {eq: classData.name},
-          },
+            name: {eq: classData.name}
+          }
         })
       );
       return list.data.listClasses.items.length === 0 ? true : false;
@@ -298,7 +294,7 @@ const ClassBuilder = (props: ClassBuilderProps) => {
       setMessages({
         show: true,
         message: classBuilderdict[userLanguage]['MESSAGES']['ERROR']['PROCESSINGERROR'],
-        isError: true,
+        isError: true
       });
     }
   };
@@ -308,14 +304,14 @@ const ClassBuilder = (props: ClassBuilderProps) => {
       setMessages({
         show: true,
         message: classBuilderdict[userLanguage]['MESSAGES']['VALIDATION']['NAME'],
-        isError: true,
+        isError: true
       });
       return false;
     } else if (classData.instituteId === '') {
       setMessages({
         show: true,
         message: classBuilderdict[userLanguage]['MESSAGES']['VALIDATION']['INSTITUTE'],
-        isError: true,
+        isError: true
       });
       return false;
     } else if (classData.name.trim() !== '') {
@@ -324,7 +320,7 @@ const ClassBuilder = (props: ClassBuilderProps) => {
         setMessages({
           show: true,
           message: classBuilderdict[userLanguage]['MESSAGES']['VALIDATION']['CLASSNAME'],
-          isError: true,
+          isError: true
         });
         return false;
       } else {
@@ -339,7 +335,7 @@ const ClassBuilder = (props: ClassBuilderProps) => {
     if (instId) {
       setClassData({
         ...classData,
-        instituteId: instId,
+        instituteId: instId
       });
       getStudentsList();
       getBasicInstitutionInfo();
@@ -452,7 +448,7 @@ const ClassBuilder = (props: ClassBuilderProps) => {
                                 ' ' +
                                 getInitialsFromString(item.name)[1]
                             )}`,
-                            textShadow: '0.1rem 0.1rem 2px #423939b3',
+                            textShadow: '0.1rem 0.1rem 2px #423939b3'
                           }}>
                           {item.name
                             ? initials(

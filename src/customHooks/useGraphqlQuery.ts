@@ -1,5 +1,5 @@
-import * as customQueries from '@customGraphql/customQueries';
-import * as queries from '@graphql/queries';
+import * as customQueries from 'customGraphql/customQueries';
+import * as queries from 'graphql/queries';
 import {API, graphqlOperation} from 'aws-amplify';
 import {useEffect, useState} from 'react';
 

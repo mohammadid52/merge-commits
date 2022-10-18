@@ -2,7 +2,7 @@ import React from 'react';
 import {IconType} from 'react-icons';
 import {AiOutlineCloseCircle} from 'react-icons/ai';
 import {AiOutlineSave} from 'react-icons/all';
-import ButtonsRound from '../../Atoms/ButtonsRound';
+import ButtonsRound from 'atoms/ButtonsRound';
 
 export const SideMenuSection = (props: {
   menuState?: number;
@@ -26,7 +26,7 @@ export const SideMenuSection = (props: {
     sectionTitle,
     focusSection,
 
-    saveInProgress,
+    saveInProgress
   } = props;
   const thisSectionActive = focusSection === sectionLabel;
 

@@ -1,4 +1,4 @@
-import {useULBContext} from '@contexts/UniversalLessonBuilderContext';
+import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
 import {RowWrapperProps} from '@interfaces/UniversalLessonBuilderInterfaces';
 import React from 'react';
 import {IoMdAddCircleOutline} from 'react-icons/io';

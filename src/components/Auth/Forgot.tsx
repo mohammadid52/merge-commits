@@ -1,13 +1,12 @@
 import Auth from '@aws-amplify/auth';
-import FormInput from '@components/Atoms/Form/FormInput';
+import {getAsset} from 'assets';
+import FormInput from 'atoms/Form/FormInput';
+import AuthCard from 'components/Auth/AuthCard';
+import {GlobalContext} from 'contexts/GlobalContext';
 import React, {useContext, useState} from 'react';
-import {NavLink, useHistory} from 'react-router-dom';
-import {getAsset} from '../../assets';
-import {GlobalContext} from '../../contexts/GlobalContext';
-import AuthCard from './AuthCard';
+import {NavLink} from 'react-router-dom';
 const Forgot = () => {
-  const history = useHistory();
-  const {theme, state, dispatch, clientKey} = useContext(GlobalContext);
+  const {clientKey} = useContext(GlobalContext);
   let [message, setMessage] = useState<{show: boolean; type: string; message: string}>({
     show: false,
     type: '',

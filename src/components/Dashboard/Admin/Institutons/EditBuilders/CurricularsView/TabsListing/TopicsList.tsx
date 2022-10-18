@@ -7,14 +7,14 @@ import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
 
 import MeasurementList from './MeasMntList';
 
-import {reorder} from '@utilities/strings';
+import {reorder} from 'utilities/strings';
 
-import * as mutations from '@graphql/mutations';
-import * as queries from '@graphql/queries';
-import * as customQueries from '@customGraphql/customQueries';
+import * as mutations from 'graphql/mutations';
+import * as queries from 'graphql/queries';
+import * as customQueries from 'customGraphql/customQueries';
 import {getAsset} from 'assets';
-import {GlobalContext} from '@contexts/GlobalContext';
-import useDictionary from '@customHooks/dictionary';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
 
 interface TopicsListComponentProps {
   curricularId: string;
@@ -66,7 +66,7 @@ const TopicsListComponent = (props: TopicsListComponentProps) => {
       setTopics(topicsList);
       let seqItem: any = await API.graphql(
         graphqlOperation(mutations.updateCSequences, {
-          input: {id: `t_${learningId}`, sequence: list},
+          input: {id: `t_${learningId}`, sequence: list}
         })
       );
       seqItem = seqItem.data.updateCSequences;
@@ -81,10 +81,10 @@ const TopicsListComponent = (props: TopicsListComponentProps) => {
     let [list, seq]: any = await Promise.all([
       await API.graphql(
         graphqlOperation(customQueries.listTopics, {
-          filter: {learningObjectiveID: {eq: learningId}},
+          filter: {learningObjectiveID: {eq: learningId}}
         })
       ),
-      await API.graphql(graphqlOperation(queries.getCSequences, {id: `t_${learningId}`})),
+      await API.graphql(graphqlOperation(queries.getCSequences, {id: `t_${learningId}`}))
     ]);
     list = list?.data.listTopics?.items || [];
     seq = seq?.data.getCSequences?.sequence || [];
@@ -104,7 +104,7 @@ const TopicsListComponent = (props: TopicsListComponentProps) => {
       let topicsID = list.map((item: {id: string}) => item.id);
       let seqItem: any = await API.graphql(
         graphqlOperation(mutations.createCSequences, {
-          input: {id: `t_${learningId}`, sequence: topicsID},
+          input: {id: `t_${learningId}`, sequence: topicsID}
         })
       );
       seqItem = seqItem.data.createCSequences;
@@ -169,7 +169,7 @@ const TopicsListComponent = (props: TopicsListComponentProps) => {
                                         <IconContext.Provider
                                           value={{
                                             size: '1.5rem',
-                                            color: theme.iconColor[themeColor],
+                                            color: theme.iconColor[themeColor]
                                           }}>
                                           {openRow !== item.id ? (
                                             <IoCaretDownCircleOutline />

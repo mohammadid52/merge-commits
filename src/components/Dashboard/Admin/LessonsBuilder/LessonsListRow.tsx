@@ -1,10 +1,10 @@
-import Highlighted from '@components/Atoms/Highlighted';
-import {GlobalContext} from '@contexts/GlobalContext';
-import useDictionary from '@customHooks/dictionary';
+import Highlighted from 'atoms/Highlighted';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
 import React, {useContext, useState} from 'react';
 import {BiDotsVerticalRounded} from 'react-icons/bi';
 import {useHistory, useRouteMatch} from 'react-router-dom';
-import Popover from '../../../Atoms/Popover';
+import Popover from 'atoms/Popover';
 
 interface ICloneModalProps {
   show: boolean;
@@ -65,7 +65,7 @@ const LessonsListRow = (props: LessonsListRow) => {
     createdAt,
     updatedAt,
     redirectToInstitution,
-    searchTerm,
+    searchTerm
   } = props;
 
   const [showMenu, setShowMenu] = useState(false);

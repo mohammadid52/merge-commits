@@ -7,22 +7,22 @@ import {FaCalendarDay} from 'react-icons/fa';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import moment from 'moment';
 
-import * as mutation from '../../../../../../graphql/mutations';
-import * as customQueries from '../../../../../../customGraphql/customQueries';
+import * as mutation from 'graphql/mutations';
+import * as customQueries from 'customGraphql/customQueries';
 
-import {frequencyOptions, weekdaysOption} from '../../../../../../utilities/staticData';
-import Buttons from '../../../../../Atoms/Buttons';
-import FormInput from '../../../../../Atoms/Form/FormInput';
-import Selector from '../../../../../Atoms/Form/Selector';
-import DatePickerInput from '../../../../../Atoms/Form/DatePickerInput';
-import {awsFormatDate, dateString, timeIntervals} from '../../../../../../utilities/time';
-import useDictionary from '../../../../../../customHooks/dictionary';
-import {GlobalContext} from '../../../../../../contexts/GlobalContext';
+import {frequencyOptions, weekdaysOption} from 'utilities/staticData';
+import Buttons from 'atoms/Buttons';
+import FormInput from 'atoms/Form/FormInput';
+import Selector from 'atoms/Form/Selector';
+import DatePickerInput from 'atoms/Form/DatePickerInput';
+import {awsFormatDate, dateString, timeIntervals} from 'utilities/time';
+import useDictionary from 'customHooks/dictionary';
+import {GlobalContext} from 'contexts/GlobalContext';
 
 import ClassRoomHolidays, {IImpactLog} from './ClassRoomHolidays';
 import UnitPlanner from './UnitPlanner/UnitPlanner';
 // import ScheduleAlertPopUp from './ScheduleAlertPopUp';
-import Modal from '../../../../../Atoms/Modal';
+import Modal from 'atoms/Modal';
 
 export interface ICourseScheduleProps {
   roomData: any;
@@ -55,7 +55,7 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
     startDate: '',
     endDate: '',
     startTime: '',
-    endTime: '',
+    endTime: ''
   });
   const [scheduleData, setScheduleData] = useState<ICourseScheduleFields>({
     startDate: null,
@@ -66,12 +66,12 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
     location: '',
     notes: '',
     weekDay: '',
-    conferenceCallLink: '',
+    conferenceCallLink: ''
   });
   const [unsavedChanges, setUnsavedChanges] = useState(false);
   const [serverMessage, setServerMessage] = useState({
     message: '',
-    isError: false,
+    isError: false
   });
 
   useEffect(() => {
@@ -85,7 +85,7 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
       notes,
       weekDay,
       conferenceCallLink,
-      id,
+      id
     } = roomData;
     if (id) {
       setScheduleData({
@@ -97,7 +97,7 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
         location,
         notes,
         weekDay,
-        conferenceCallLink,
+        conferenceCallLink
       });
       if (!(startDate && endDate && startTime && endTime && frequency && weekDay)) {
         setShowAlert(true);
@@ -138,14 +138,14 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
   const handleSelection = (value: string, fieldName: string) => {
     setUnsavedChanges(true);
     let valueNeedsToUpdate = {
-      [fieldName]: value,
+      [fieldName]: value
     };
     if (fieldName === 'frequency' && (value === 'M/W/F' || value === 'Tu/Th')) {
       valueNeedsToUpdate.weekDay = value === 'M/W/F' ? 'Monday' : 'Tuesday';
     }
     setScheduleData((prevData: ICourseScheduleFields) => ({
       ...prevData,
-      ...valueNeedsToUpdate,
+      ...valueNeedsToUpdate
     }));
   };
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -154,7 +154,7 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
 
     setScheduleData((prevData) => ({
       ...prevData,
-      [name]: value,
+      [name]: value
     }));
     setUnsavedChanges(true);
   };
@@ -162,7 +162,7 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
   const handleDateChange = (date: Date | null, fieldName: string) => {
     setScheduleData((prevData) => ({
       ...prevData,
-      [fieldName]: date,
+      [fieldName]: date
     }));
     setUnsavedChanges(true);
   };
@@ -208,18 +208,18 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
           frequency: scheduleData.frequency,
           // location: scheduleData.location,
           notes: scheduleData.notes,
-          weekDay: scheduleData.weekDay,
+          weekDay: scheduleData.weekDay
           // conferenceCallLink: scheduleData.conferenceCallLink,
         };
         await API.graphql(graphqlOperation(mutation.updateRoom, {input: input}));
         setServerMessage({
           message: CourseScheduleDict[userLanguage]['MESSAGES']['SUCCESS_MESSAGE'],
-          isError: false,
+          isError: false
         });
         setTimeout(() => {
           setServerMessage({
             message: '',
-            isError: false,
+            isError: false
           });
         }, 4000);
         setUnsavedChanges(false);
@@ -418,7 +418,7 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
           ...roomData,
           ...scheduleData,
           startDate: awsFormatDate(dateString('-', 'WORLD', scheduleData.startDate)),
-          endDate: awsFormatDate(dateString('-', 'WORLD', scheduleData.endDate)),
+          endDate: awsFormatDate(dateString('-', 'WORLD', scheduleData.endDate))
         }}
         saveRoomDetails={saveRoomDetails}
         saving={saving}

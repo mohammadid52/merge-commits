@@ -1,7 +1,7 @@
 import React, {useContext} from 'react';
 import {IconContext} from 'react-icons';
 import {FaEraser, FaHighlighter} from 'react-icons/fa';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
+import {GlobalContext} from 'contexts/GlobalContext';
 import ToolTip from '../../../../General/ToolTip/ToolTip';
 
 interface HighlightColorBlockProps {
@@ -12,7 +12,7 @@ interface HighlightColorBlockProps {
 const HighlightColorBlock = (props: HighlightColorBlockProps) => {
   const {setColor, color} = props;
   const {
-    state: {lessonPage: {theme: lessonPageTheme = 'dark', themeTextColor = ''} = {}},
+    state: {lessonPage: {theme: lessonPageTheme = 'dark', themeTextColor = ''} = {}}
   } = useContext(GlobalContext);
 
   const buttons = [{color: 'mustard', name: 'Yellow'}];

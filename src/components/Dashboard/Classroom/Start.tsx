@@ -1,18 +1,17 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import {getLocalStorageData} from '@utilities/localStorage';
-import {tableCleanupUrl} from '@utilities/urls';
+import Buttons from 'atoms/Buttons';
 import axios from 'axios';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import * as mutations from 'graphql/mutations';
+import * as queries from 'graphql/queries';
 import {noop} from 'lodash';
+import ModalPopUp from 'molecules/ModalPopUp';
 import React, {useContext, useEffect, useState} from 'react';
 import {useHistory} from 'react-router-dom';
-import {GlobalContext} from '../../../contexts/GlobalContext';
-import useDictionary from '../../../customHooks/dictionary';
-import * as mutations from '../../../graphql/mutations';
-import * as queries from '../../../graphql/queries';
-import {awsFormatDate, dateString} from '../../../utilities/time';
-import Buttons from '../../Atoms/Buttons';
-import ModalPopUp from '../../Molecules/ModalPopUp';
-import {Lesson} from './Classroom';
+import {getLocalStorageData} from 'utilities/localStorage';
+import {awsFormatDate, dateString} from 'utilities/time';
+import {tableCleanupUrl} from 'utilities/urls';
 
 interface StartProps {
   isTeacher?: boolean;
@@ -49,7 +48,6 @@ const Start: React.FC<StartProps> = ({
   const state = gContext.state;
 
   const user = gContext.state.user;
-  const theme = gContext.theme;
 
   const lessonDispatch = gContext.lessonDispatch;
   const clientKey = gContext.clientKey;
@@ -258,32 +256,6 @@ const Start: React.FC<StartProps> = ({
     history.push(goBackUrl);
   };
 
-  const toggleLessonSwitchAlert = () => {
-    const activeLessonsData = state.roomData.lessons
-      .filter(
-        (lessonData: Lesson) =>
-          lessonData.lesson?.type === 'lesson' &&
-          activeRoomInfo?.activeLessons?.includes(lessonData.lessonID)
-      )
-      .map((item: any) => item.lesson);
-    const lessonIds = activeLessonsData.map((lesson: any) => lesson.id);
-    if (activeLessonsData?.length) {
-      setWarnModal((prevValues) => ({
-        ...prevValues,
-        lessonID: activeLessonsData.map((lesson: any) => lesson.id),
-        message: `Do you want to mark ${activeLessonsData
-          .map((lesson: any) => lesson.title)
-          .join(', ')} as completed?`,
-        activeLessonsId: lessonIds,
-        show: true
-      }));
-    } else {
-      if (!checkIfCompletedBeforeOpen()) {
-        handleMarkAsCompleteClick(lessonIds);
-      }
-    }
-  };
-
   const handleMarkAsCompleteClick = async (lessonIds: any) => {
     setIsLoading(true);
     const payloadLessonIds = Array.isArray(lessonIds)
@@ -296,7 +268,7 @@ const Start: React.FC<StartProps> = ({
           input: {
             id: roomID,
             completedLessons: [
-              ...(state.roomData.completedLessons || []),
+              ...(state?.roomData?.completedLessons || []),
               ...payloadLessonIds?.map((lessonID: any) => ({
                 lessonID,
                 time: new Date().toISOString()

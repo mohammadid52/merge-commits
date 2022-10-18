@@ -1,17 +1,17 @@
 import {IFormBlockProps, StudentPageInput} from '@interfaces/UniversalLessonInterfaces';
 import React, {useContext, useState} from 'react';
-import RequiredMark from '@components/Atoms/RequiredMark';
-import {GlobalContext} from '@contexts/GlobalContext';
-import useInLessonCheck from '@customHooks/checkIfInLesson';
-import {FORM_TYPES} from '@components/Lesson/UniversalLessonBuilder/UI/common/constants';
-import useStudentDataValue from '@customHooks/studentDataValue';
+import RequiredMark from 'atoms/RequiredMark';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useInLessonCheck from 'customHooks/checkIfInLesson';
+import {FORM_TYPES} from 'components/Lesson/UniversalLessonBuilder/UI/common/constants';
+import useStudentDataValue from 'customHooks/studentDataValue';
 
 const SelectMany = ({
   onChange,
   getCheckValue,
 
   classString,
-  value,
+  value
 }: {
   onChange: (e: any) => void;
 
@@ -21,7 +21,7 @@ const SelectMany = ({
 }) => {
   const {
     theme,
-    state: {lessonPage: {theme: lessonPageTheme = 'dark', themeTextColor = ''} = {}},
+    state: {lessonPage: {theme: lessonPageTheme = 'dark', themeTextColor = ''} = {}}
   } = useContext(GlobalContext);
   const themePlaceholderColor = lessonPageTheme === 'light' ? 'placeholder-gray-800' : '';
 
@@ -58,7 +58,7 @@ const SelectOne = ({
   isStudent,
   classString,
   value,
-  isInLesson,
+  isInLesson
 }: {
   onChange: (e: any) => void;
   getCheckValue: (id: string) => boolean;
@@ -68,7 +68,7 @@ const SelectOne = ({
   value: any;
 }) => {
   const {
-    state: {lessonPage: {theme: lessonPageTheme = 'dark', themeTextColor = ''} = {}},
+    state: {lessonPage: {theme: lessonPageTheme = 'dark', themeTextColor = ''} = {}}
   } = useContext(GlobalContext);
   const [otherOptSel, setOtherOptSel] = useState(false);
 
@@ -139,7 +139,7 @@ const OptionBlock = (props: IOptionProps) => {
     value,
     type,
     options,
-    inputID,
+    inputID
   } = props;
 
   const gContext = useContext(GlobalContext);
@@ -148,7 +148,7 @@ const OptionBlock = (props: IOptionProps) => {
   const gState = gContext.state;
   const {
     user,
-    lessonPage: {theme: lessonPageTheme = 'dark', themeTextColor = ''} = {},
+    lessonPage: {theme: lessonPageTheme = 'dark', themeTextColor = ''} = {}
   } = gState;
 
   const isStudent = user.role === 'ST';

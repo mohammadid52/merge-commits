@@ -1,16 +1,16 @@
 import React, {useContext, useEffect, useState, useRef} from 'react';
 import {getAsset} from 'assets';
-import {GlobalContext} from '@contexts/GlobalContext';
-import useTailwindBreakpoint from '@customHooks/tailwindBreakpoint';
-import * as queries from '@graphql/queries';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
+import * as queries from 'graphql/queries';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import {createFilterToFetchSpecificItemsOnly} from '@utilities/strings';
-import {keywordCapitilizer} from '@utilities/strings';
-import ButtonsRound from '@components/Atoms/ButtonsRound';
+import {createFilterToFetchSpecificItemsOnly} from 'utilities/strings';
+import {keywordCapitilizer} from 'utilities/strings';
+import ButtonsRound from 'atoms/ButtonsRound';
 import {AiOutlineCloseCircle} from 'react-icons/ai';
-import Loader from '@components/Atoms/Loader';
-import Modal from '@components/Atoms/Modal';
-import Buttons from '@components/Atoms/Buttons';
+import Loader from 'atoms/Loader';
+import Modal from 'atoms/Modal';
+import Buttons from 'atoms/Buttons';
 
 interface ILessonInfoFrame {
   children?: React.ReactNode;
@@ -27,7 +27,7 @@ const SENTIMENT_TEMPLATE = {
   bad: 0,
   awful: 0,
   _: 0,
-  total: 0,
+  total: 0
 };
 
 const EMOJIS = getAsset('general', 'emoji');
@@ -71,8 +71,8 @@ const LessonInfoFrame = ({visible, rightView, setRightView}: ILessonInfoFrame) =
           graphqlOperation(queries.listPersonSentiments, {
             filter: {
               date: {eq: dateString},
-              ...listQuery,
-            },
+              ...listQuery
+            }
           })
         );
         return result.data.listPersonSentiments.items;
@@ -95,7 +95,7 @@ const LessonInfoFrame = ({visible, rightView, setRightView}: ILessonInfoFrame) =
     let prepare = {
       ...sentimentObjTemplate,
       _: rosterArr.length - sentimentArr.length,
-      total: rosterArr.length,
+      total: rosterArr.length
     };
     return sentimentArr.reduce((sentimentAcc: any, sentimentStr: string) => {
       if (Object.keys(sentimentObjTemplate).includes(sentimentStr)) {
@@ -168,8 +168,7 @@ const LessonInfoFrame = ({visible, rightView, setRightView}: ILessonInfoFrame) =
       <div
         ref={frameRef}
         style={{
-          width:
-            breakpoint === 'xl' || breakpoint === '2xl' ? '75%' : 'calc(100% - 36px)',
+          width: breakpoint === 'xl' || breakpoint === '2xl' ? '75%' : 'calc(100% - 36px)'
         }}
         className={`absolute mr-0 top-0 right-0 h-full flex flex-col items-center z-50`}>
         {rightView.view === 'lessonInfo' && (

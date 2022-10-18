@@ -3,17 +3,17 @@ import {useHistory} from 'react-router-dom';
 import {IoArrowUndoCircleOutline} from 'react-icons/io5';
 import API, {graphqlOperation} from '@aws-amplify/api';
 
-import * as customQueries from '../../../../customGraphql/customQueries';
-import * as mutations from '../../../../graphql/mutations';
+import * as customQueries from 'customGraphql/customQueries';
+import * as mutations from 'graphql/mutations';
 
-import Buttons from '../../../Atoms/Buttons';
-import Selector from '../../../Atoms/Form/Selector';
-import MultipleSelector from '../../../Atoms/Form/MultipleSelector';
-import FormInput from '../../../Atoms/Form/FormInput';
-import TextArea from '../../../Atoms/Form/TextArea';
-import BreadCrums from '../../../Atoms/BreadCrums';
-import SectionTitle from '../../../Atoms/SectionTitle';
-import PageWrapper from '../../../Atoms/PageWrapper';
+import Buttons from 'atoms/Buttons';
+import Selector from 'atoms/Form/Selector';
+import MultipleSelector from 'atoms/Form/MultipleSelector';
+import FormInput from 'atoms/Form/FormInput';
+import TextArea from 'atoms/Form/TextArea';
+import BreadCrums from 'atoms/BreadCrums';
+import SectionTitle from 'atoms/SectionTitle';
+import PageWrapper from 'atoms/PageWrapper';
 
 interface QuestionAddProps {}
 interface InitialState {
@@ -37,14 +37,14 @@ const QuestionAdd = (props: QuestionAddProps) => {
     notes: '',
     label: '',
     type: {id: '', name: '', value: ''},
-    language: {id: '', name: '', value: ''},
+    language: {id: '', name: '', value: ''}
   };
   const [questionData, setQuestionData] = useState<InitialState>(initialState);
   const [validation, setValidation] = useState({
     question: '',
     label: '',
     message: '',
-    isError: true,
+    isError: true
   });
   const [loading, setLoading] = useState(false);
   const [designersList, setDesignersList] = useState([]);
@@ -52,7 +52,7 @@ const QuestionAdd = (props: QuestionAddProps) => {
   const breadCrumsList = [
     {title: 'Home', url: '/dashboard', last: false},
     {title: 'Question Bank', url: '/dashboard/question-bank', last: false},
-    {title: 'Add New Question', url: '/dashboard/question-bank/question/add', last: true},
+    {title: 'Add New Question', url: '/dashboard/question-bank/question/add', last: true}
   ];
   const topicsList: any = [];
   const sourceList: any = [];
@@ -60,16 +60,16 @@ const QuestionAdd = (props: QuestionAddProps) => {
     {id: '1', name: 'Text', value: 'text'},
     {id: '2', name: 'Input', value: 'input'},
     {id: '3', name: 'Select Many', value: 'selectMany'},
-    {id: '4', name: 'Select One', value: 'selectOne'},
+    {id: '4', name: 'Select One', value: 'selectOne'}
   ];
   const languageList = [
     {id: 1, name: 'English', value: 'EN'},
-    {id: 2, name: 'Spanish', value: 'ES'},
+    {id: 2, name: 'Spanish', value: 'ES'}
   ];
   const onInputChange = (e: any) => {
     setQuestionData({
       ...questionData,
-      [e.target.name]: e.target.value,
+      [e.target.name]: e.target.value
     });
   };
 
@@ -91,8 +91,8 @@ const QuestionAdd = (props: QuestionAddProps) => {
       [field]: {
         id: id,
         name: name,
-        value: val,
-      },
+        value: val
+      }
     });
   };
 
@@ -127,7 +127,7 @@ const QuestionAdd = (props: QuestionAddProps) => {
           note: questionData.notes,
           type: questionData.type.value,
           language: questionData.language.value,
-          designers: selectedDesigners.map((item) => item.id),
+          designers: selectedDesigners.map((item) => item.id)
         };
         const results: any = await API.graphql(
           graphqlOperation(mutations.createQuestion, {input: input})
@@ -139,7 +139,7 @@ const QuestionAdd = (props: QuestionAddProps) => {
             question: '',
             label: '',
             message: 'Question details saved successfully.',
-            isError: false,
+            isError: false
           });
         }
         setQuestionData(initialState);
@@ -149,7 +149,7 @@ const QuestionAdd = (props: QuestionAddProps) => {
           question: '',
           label: '',
           message: 'Unable to save Question details, Please try again later.',
-          isError: true,
+          isError: true
         });
         setLoading(false);
       }
@@ -160,7 +160,7 @@ const QuestionAdd = (props: QuestionAddProps) => {
     try {
       const result: any = await API.graphql(
         graphqlOperation(customQueries.listPersons, {
-          filter: {or: [{role: {eq: 'TR'}}, {role: {eq: 'BLD'}}]},
+          filter: {or: [{role: {eq: 'TR'}}, {role: {eq: 'BLD'}}]}
         })
       );
       const savedData = result.data.listPeople;
@@ -168,7 +168,7 @@ const QuestionAdd = (props: QuestionAddProps) => {
         (item: {id: string; firstName: string; lastName: string}) => ({
           id: item?.id,
           name: `${item?.firstName || ''} ${item.lastName || ''}`,
-          value: `${item?.firstName || ''} ${item.lastName || ''}`,
+          value: `${item?.firstName || ''} ${item.lastName || ''}`
         })
       );
       setDesignersList(updatedList);
@@ -177,7 +177,7 @@ const QuestionAdd = (props: QuestionAddProps) => {
         question: '',
         label: '',
         message: 'Error while fetching designers list, you can add them later.',
-        isError: true,
+        isError: true
       });
     }
   };

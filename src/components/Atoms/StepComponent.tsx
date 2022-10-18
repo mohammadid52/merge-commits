@@ -1,7 +1,7 @@
 import React, {useContext} from 'react';
-import {getAsset} from '../../assets';
-import {GlobalContext} from '../../contexts/GlobalContext';
-import Tooltip from './Tooltip';
+import {getAsset} from 'assets';
+import {GlobalContext} from 'contexts/GlobalContext';
+import Tooltip from 'atoms/Tooltip';
 
 export interface IStepElementInterface {
   description?: string;

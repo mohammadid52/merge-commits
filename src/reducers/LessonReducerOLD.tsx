@@ -1,6 +1,6 @@
-import { lessonState} from '../state/LessonState';
-import { LessonStateType, PagesType } from '../state/LessonStateOLD';
-// import { useStudentTimer } from '../customHooks/timer'
+import {lessonState} from 'state/LessonState';
+import {LessonStateType, PagesType} from 'state/LessonStateOLD';
+// import { useStudentTimer } from 'customHooks/timer'
 
 export type LessonActions =
   | {
@@ -154,15 +154,18 @@ export const lessonReducerOLD = (state: LessonStateType, action: LessonActions) 
         pages: action.payload.pages,
         word_bank: action.payload.word_bank,
         displayData: action.payload.displayData,
-        subscribeFunc: action.payload.subscribeFunc,
+        subscribeFunc: action.payload.subscribeFunc
       };
     case 'UPDATE_CHECKPOINT_DATA':
       return {
         ...state,
         data: {
           ...state.data,
-          lesson: { ...state.data.lesson, checkpoints: { ...state.data.lesson.checkpoints, items: action.payload } },
-        },
+          lesson: {
+            ...state.data.lesson,
+            checkpoints: {...state.data.lesson.checkpoints, items: action.payload}
+          }
+        }
       };
     case 'SET_CURRENT_PAGE':
       return {
@@ -173,12 +176,12 @@ export const lessonReducerOLD = (state: LessonStateType, action: LessonActions) 
           if (key <= action.payload) {
             return {
               ...page,
-              active: true,
+              active: true
             };
           } else {
             return page;
           }
-        }),
+        })
       };
     case 'SET_PROGRESS':
       return {
@@ -187,57 +190,57 @@ export const lessonReducerOLD = (state: LessonStateType, action: LessonActions) 
           if (key <= action.payload) {
             return {
               ...page,
-              active: true,
+              active: true
             };
           } else {
             return page;
           }
-        }),
+        })
       };
     case 'SET_SUBSCRIPTION':
       return {
         ...state,
-        subscription: action.payload.subscription,
+        subscription: action.payload.subscription
       };
     case 'ERROR':
       return {
         ...state,
-        error: action.payload,
+        error: action.payload
       };
     case 'UPDATE_STUDENT_STATUS':
       // console.log('status', action.payload);
       return {
         ...state,
-        studentStatus: action.payload,
+        studentStatus: action.payload
       };
     case 'SET_SAVE_FUNCTION':
       return {
         ...state,
-        saveFunction: action.payload,
+        saveFunction: action.payload
       };
     case 'SET_STUDENT_INFO':
       return {
         ...state,
         studentDataID: action.payload.studentDataID,
         studentUsername: action.payload.studentUsername,
-        studentAuthID: action.payload.studentAuthID,
+        studentAuthID: action.payload.studentAuthID
       };
     case 'SET_LOADING':
       return {
         ...state,
-        status: 'loading',
+        status: 'loading'
       };
     case 'ADD_WORD':
       return {
         ...state,
         new_words: [...state.new_words, action.payload],
-        word_bank: [...state.word_bank, action.payload],
+        word_bank: [...state.word_bank, action.payload]
       };
     case 'SET_INITIAL_COMPONENT_STATE_FROM_DB':
       return {
         ...state,
         firstSave: true,
-        componentState: action.payload,
+        componentState: action.payload
       };
     case 'SET_INITIAL_COMPONENT_STATE':
       // console.log('set initial component state -->', { [action.payload.name]: action.payload.content });
@@ -245,8 +248,8 @@ export const lessonReducerOLD = (state: LessonStateType, action: LessonActions) 
         ...state,
         componentState: {
           ...state.componentState,
-          [action.payload.name]: action.payload.content,
-        },
+          [action.payload.name]: action.payload.content
+        }
       };
     case 'UPDATE_COMPONENT_STATE':
       // console.log('update component state -->', { [action.payload.inputName]: action.payload.content });
@@ -259,9 +262,9 @@ export const lessonReducerOLD = (state: LessonStateType, action: LessonActions) 
           ...state.componentState,
           [action.payload.componentName]: {
             ...state.componentState[action.payload.componentName],
-            [action.payload.inputName]: action.payload.content,
-          },
-        },
+            [action.payload.inputName]: action.payload.content
+          }
+        }
       };
     case 'UPDATE_LESSON_PLAN':
       //console.log('UPDATE_LESSON_PLAN: pages >> ', action.payload.pages)
@@ -270,32 +273,32 @@ export const lessonReducerOLD = (state: LessonStateType, action: LessonActions) 
         status: 'loaded',
         displayData: action.payload.displayData,
         pages: action.payload.pages,
-        viewing: action.payload.viewing === state.studentAuthID,
+        viewing: action.payload.viewing === state.studentAuthID
       };
     case 'INCREMENT_SAVE_COUNT':
       return {
         ...state,
-        saveCount: state.saveCount + 1,
+        saveCount: state.saveCount + 1
       };
     case 'CAN_CONTINUE':
       return {
         ...state,
-        canContinue: true,
+        canContinue: true
       };
     case 'NO_CONTINUE':
       return {
         ...state,
-        canContinue: false,
+        canContinue: false
       };
     case 'FINISH':
       return {
         ...state,
-        canContinue: false,
+        canContinue: false
       };
     case 'SAVED_CHANGES':
       return {
         ...state,
-        unsavedChanges: false,
+        unsavedChanges: false
       };
     case 'OPEN_LESSON':
       return {
@@ -306,14 +309,14 @@ export const lessonReducerOLD = (state: LessonStateType, action: LessonActions) 
           } else {
             return {
               ...page,
-              open: true,
+              open: true
             };
           }
-        }),
+        })
       };
     case 'CLEAR_QUESTION_DATA':
       let clearQuestions = {};
-      return { ...state, questionData: clearQuestions };
+      return {...state, questionData: clearQuestions};
     case 'SET_QUESTION_DATA':
       // let payloadKeys = Object.keys(action.payload.data);
       // let updatedQuestionData: any = state.questionData;
@@ -343,12 +346,12 @@ export const lessonReducerOLD = (state: LessonStateType, action: LessonActions) 
       return {
         ...state,
         studentStatus: 'ACTIVE',
-        questionData: action.payload.data,
+        questionData: action.payload.data
       };
     case 'SET_QUESTION_DATA_UPDATE':
       return {
         ...state,
-        questionDataUpdate: action.payload.data,
+        questionDataUpdate: action.payload.data
       };
     case 'ACTIVATE_LESSON':
       return {
@@ -359,10 +362,10 @@ export const lessonReducerOLD = (state: LessonStateType, action: LessonActions) 
           } else {
             return {
               ...page,
-              active: true,
+              active: true
             };
           }
-        }),
+        })
       };
     case 'ACTIVATE_CHECKPOINT':
       return {
@@ -376,16 +379,16 @@ export const lessonReducerOLD = (state: LessonStateType, action: LessonActions) 
             } else {
               return {
                 ...page,
-                active: true,
+                active: true
               };
             }
           }
-        }),
+        })
       };
     case 'SET_PAGE':
       return {
         ...state,
-        currentPage: action.payload,
+        currentPage: action.payload
       };
     case 'JUMP_PAGE':
       return {
@@ -394,28 +397,32 @@ export const lessonReducerOLD = (state: LessonStateType, action: LessonActions) 
           if (key <= action.payload) {
             return {
               ...page,
-              active: true,
+              active: true
             };
           } else {
             return page;
           }
         }),
         studentStatus: 'ACTIVE',
-        lessonProgress: state.lessonProgress >= action.payload ? state.lessonProgress : action.payload,
-        currentPage: action.payload,
+        lessonProgress:
+          state.lessonProgress >= action.payload ? state.lessonProgress : action.payload,
+        currentPage: action.payload
       };
     case 'PAGE_FORWARD':
       return {
         ...state,
         studentStatus: 'ACTIVE',
-        lessonProgress: state.lessonProgress === state.currentPage ? state.currentPage + 1 : state.lessonProgress,
-        currentPage: state.currentPage + 1,
+        lessonProgress:
+          state.lessonProgress === state.currentPage
+            ? state.currentPage + 1
+            : state.lessonProgress,
+        currentPage: state.currentPage + 1
       };
     case 'PAGE_BACK':
       return {
         ...state,
         studentStatus: 'ACTIVE',
-        currentPage: state.currentPage - 1,
+        currentPage: state.currentPage - 1
       };
     case 'CLEANUP':
       return lessonState;

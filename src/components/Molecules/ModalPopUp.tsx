@@ -1,7 +1,7 @@
 import React from 'react';
-import Modal from '../Atoms/Modal';
-import Buttons from '../Atoms/Buttons';
-import Tooltip from '../Atoms/Tooltip';
+import Modal from 'atoms/Modal';
+import Buttons from 'atoms/Buttons';
+import Tooltip from 'atoms/Tooltip';
 
 interface ModalProps {
   saveAction?: (e?: any) => void;
@@ -43,7 +43,7 @@ const ModalPopUp = (props: ModalProps) => {
     saveTooltip,
     smallText,
     titleButton,
-    className = 'w-168',
+    className = 'w-168'
   } = props;
   return (
     <Modal

@@ -1,5 +1,5 @@
 // import React from 'react';
-import {globalStateType, globalState} from '../state/GlobalState';
+import {globalStateType, globalState} from 'state/GlobalState';
 
 type globalActions =
   | {

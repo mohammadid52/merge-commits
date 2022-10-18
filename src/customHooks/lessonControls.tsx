@@ -1,8 +1,8 @@
 import {useContext} from 'react';
-import {GlobalContext} from '@contexts/GlobalContext';
-import {getLocalStorageData, setLocalStorageData} from '@utilities/localStorage';
+import {GlobalContext} from 'contexts/GlobalContext';
+import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import * as mutations from '@graphql/mutations';
+import * as mutations from 'graphql/mutations';
 
 const useLessonControls = () => {
   // ~~~~~~~~~~~~~~~ CONTEXT ~~~~~~~~~~~~~~~ //
@@ -20,7 +20,7 @@ const useLessonControls = () => {
       try {
         const updateRoom: any = await API.graphql(
           graphqlOperation(mutations.updateRoom, {
-            input: payload,
+            input: payload
           })
         );
       } catch (e) {
@@ -51,19 +51,19 @@ const useLessonControls = () => {
         payload: {
           id: getRoomData.id,
           studentViewing: '',
-          displayData: [{isTeacher: false, studentAuthID: '', lessonPageID: ''}],
-        },
+          displayData: [{isTeacher: false, studentAuthID: '', lessonPageID: ''}]
+        }
       });
 
       setLocalStorageData('room_info', {
         ...getRoomData,
         studentViewing: '',
-        displayData: [{isTeacher: false, studentAuthID: '', lessonPageID: ''}],
+        displayData: [{isTeacher: false, studentAuthID: '', lessonPageID: ''}]
       });
       await handleRoomUpdate({
         id: getRoomData.id,
         studentViewing: '',
-        displayData: [{isTeacher: false, studentAuthID: '', lessonPageID: ''}],
+        displayData: [{isTeacher: false, studentAuthID: '', lessonPageID: ''}]
       });
     }
   };
@@ -73,7 +73,7 @@ const useLessonControls = () => {
     resetViewAndShare: resetViewAndShare,
     viewedStudent,
     sharedStudent,
-    getPageID,
+    getPageID
   };
 };
 

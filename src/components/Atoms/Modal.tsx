@@ -1,8 +1,7 @@
-import ModalHeader from '@components/Molecules/ModalHeader';
+import {GlobalContext} from 'contexts/GlobalContext';
+import ModalHeader from 'molecules/ModalHeader';
 import React, {useContext, useEffect} from 'react';
-import {IconContext} from 'react-icons';
 import {IoClose} from 'react-icons/io5';
-import {GlobalContext} from '../../contexts/GlobalContext';
 // @ts-ignore
 
 interface ModalProps {
@@ -130,7 +129,7 @@ const Modal: React.FC<ModalProps> = (modalProps: ModalProps) => {
           }}
           className={`${width ? width : 'w-auto'} ${
             maxWidth ? maxWidth : 'max-w-lg'
-          } relative my-4 mx-auto sm:max-w-132 max-w-80   md:max-w-164 lg:max-w-256`}>
+          } relative my-4 mx-auto sm:max-w-132 max-w-80  max-h-9/10 md:max-w-164 lg:max-w-256`}>
           {outerCloseBtn && (
             <div style={{top: '-2rem', right: '-2rem'}} className="w-auto absolute">
               <button

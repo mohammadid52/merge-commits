@@ -1,7 +1,7 @@
-import Loader from '@components/Atoms/Loader';
-import Popover from '@components/Atoms/Popover';
+import Loader from 'atoms/Loader';
+import Popover from 'atoms/Popover';
 import {IChat} from '@interfaces/Community.interfaces';
-import {getImageFromS3Static} from '@utilities/services';
+import {getImageFromS3Static} from 'utilities/services';
 import {orderBy} from 'lodash';
 import moment from 'moment';
 import React, {useState} from 'react';
@@ -14,7 +14,7 @@ const Comment = ({
   authId,
   email,
   onEdit,
-  isLast,
+  isLast
 }: {
   chat: IChat;
   isLast: boolean;
@@ -48,7 +48,9 @@ const Comment = ({
             <span className="text-blue-700 w-auto font-base text-xs ml-2 cursor-pointer">
               {chat?.person?.role}
             </span>
-            <p className="text-sm w-auto whitespace-pre-line">{chat?.msg}</p>
+            <p data-cy="comment-text" className="text-sm w-auto whitespace-pre-line">
+              {chat?.msg}
+            </p>
             {iAmOwnerOfTheChat && (
               <div className="w-auto absolute inset-y-0 right-0 p-4">
                 <Popover
@@ -104,7 +106,7 @@ const Comments = ({
   onChatDelete,
   onEdit,
   authId,
-  email,
+  email
 }: {
   chats: IChat[];
 

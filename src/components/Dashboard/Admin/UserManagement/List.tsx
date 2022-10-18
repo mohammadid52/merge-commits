@@ -3,15 +3,15 @@ import {useHistory, useRouteMatch} from 'react-router-dom';
 import UserRole from './UserRole';
 import UserStatus from './UserStatus';
 import UserLocation from './UserLocation';
-import {getImageFromS3} from '../../../../utilities/services';
-import {getAsset} from '../../../../assets';
-import {GlobalContext} from '../../../../contexts/GlobalContext';
-import useDictionary from '../../../../customHooks/dictionary';
+import {getImageFromS3} from 'utilities/services';
+import {getAsset} from 'assets';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
 import axios from 'axios';
-import {requestResetPassword} from '../../../../utilities/urls';
-import Modal from '@components/Atoms/Modal';
+import {requestResetPassword} from 'utilities/urls';
+import Modal from 'atoms/Modal';
 import {FiAlertCircle} from 'react-icons/fi';
-import Buttons from '@components/Atoms/Buttons';
+import Buttons from 'atoms/Buttons';
 
 interface ListProps {
   item: any;

@@ -1,9 +1,9 @@
 // import {BsFillInfoCircleFill} from 'react-icons/bs';
-import SignOutButton from '@components/Auth/SignOut';
+import SignOutButton from 'components/Auth/SignOut';
 import {Menu, Transition} from '@headlessui/react';
 import {ChevronDownIcon} from '@heroicons/react/solid';
-import {getImageFromS3Static} from '@utilities/services';
-import {getUserRoleString, initials, stringToHslColor} from '@utilities/strings';
+import {getImageFromS3Static} from 'utilities/services';
+import {getUserRoleString, initials, stringToHslColor} from 'utilities/strings';
 import React, {Fragment} from 'react';
 import {FiUser} from 'react-icons/fi';
 import {VscChecklist} from 'react-icons/vsc';

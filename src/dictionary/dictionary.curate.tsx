@@ -310,7 +310,7 @@ const dashboardTestCasesDict: any = {
 
 const anthologyDict: any = {
   EN: {
-    TITLE_CONTAINER: 'Your Notebooks',
+    TITLE_CONTAINER: 'Your Notebook',
     TITLE: 'Notebooks',
     NO_SELECTED: 'No notebook selected...',
     TABS: {

@@ -1,116 +1,130 @@
-import React, { useState, useEffect, useContext } from 'react'
-import { useHistory, useParams } from 'react-router'
-import { IoArrowUndoCircleOutline } from 'react-icons/io5'
-import API, { graphqlOperation } from '@aws-amplify/api';
-import BreadCrums from '../../../../../../Atoms/BreadCrums'
-import SectionTitle from '../../../../../../Atoms/SectionTitle'
-import Buttons from '../../../../../../Atoms/Buttons'
-import PageWrapper from '../../../../../../Atoms/PageWrapper'
-import FormInput from '../../../../../../Atoms/Form/FormInput'
-import TextArea from '../../../../../../Atoms/Form/TextArea'
-import Selector from '../../../../../../Atoms/Form/Selector'
+import React, {useState, useEffect, useContext} from 'react';
+import {useHistory, useParams} from 'react-router';
+import {IoArrowUndoCircleOutline} from 'react-icons/io5';
+import API, {graphqlOperation} from '@aws-amplify/api';
+import BreadCrums from 'atoms/BreadCrums';
+import SectionTitle from 'atoms/SectionTitle';
+import Buttons from 'atoms/Buttons';
+import PageWrapper from 'atoms/PageWrapper';
+import FormInput from 'atoms/Form/FormInput';
+import TextArea from 'atoms/Form/TextArea';
+import Selector from 'atoms/Form/Selector';
 
-import * as queries from '../../../../../../../graphql/queries';
-import * as customQueries from '../../../../../../../customGraphql/customQueries';
-import * as customMutations from '../../../../../../../customGraphql/customMutations';
-import { GlobalContext } from '../../../../../../../contexts/GlobalContext';
-import useDictionary from '../../../../../../../customHooks/dictionary';
+import * as queries from 'graphql/queries';
+import * as customQueries from 'customGraphql/customQueries';
+import * as customMutations from 'customGraphql/customMutations';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
 
-interface EditMeasurementProps {
-
-}
+interface EditMeasurementProps {}
 
 const EditMeasurement = (props: EditMeasurementProps) => {
-  const { } = props;
-  const urlParams: any = useParams()
+  const {} = props;
+  const urlParams: any = useParams();
   const curricularId = urlParams.curricularId;
   const measurementId = urlParams.id;
   const history = useHistory();
   const [loading, setLoading] = useState(false);
-  const [validation, setValidation] = useState({ name: '', topic: '' })
+  const [validation, setValidation] = useState({name: '', topic: ''});
   const [topics, setTopics] = useState([]);
-  const { theme, clientKey, userLanguage } = useContext(GlobalContext);
-  const { EditMeasurementDict, BreadcrumsTitles } = useDictionary(clientKey);
+  const {theme, clientKey, userLanguage} = useContext(GlobalContext);
+  const {EditMeasurementDict, BreadcrumsTitles} = useDictionary(clientKey);
   const [measurement, setMeasurement] = useState({
-    id: measurementId, name: '', curriculumID: curricularId, topic: { id: '', name: '', value: '' },
-    criteria: '',
-  })
+    id: measurementId,
+    name: '',
+    curriculumID: curricularId,
+    topic: {id: '', name: '', value: ''},
+    criteria: ''
+  });
 
   const breadCrumsList = [
-    { title:  BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
-    { title: measurement.topic.value, url: `/dashboard/manage-institutions/:instituteID/curricular?id=${curricularId}`, last: false, goBack: true },
-    { title: BreadcrumsTitles[userLanguage]['EditMeasurement'], url: `/dashboard/curricular/${curricularId}/measurement/edit/${measurementId}'}`, last: true }
+    {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
+    {
+      title: measurement.topic.value,
+      url: `/dashboard/manage-institutions/:instituteID/curricular?id=${curricularId}`,
+      last: false,
+      goBack: true
+    },
+    {
+      title: BreadcrumsTitles[userLanguage]['EditMeasurement'],
+      url: `/dashboard/curricular/${curricularId}/measurement/edit/${measurementId}'}`,
+      last: true
+    }
   ];
 
   const onInputChange = (e: any) => {
-    const value = e.target.value
+    const value = e.target.value;
     if (e.target.name === 'name') {
-      setMeasurement({ ...measurement, name: value })
-      if (value.length && validation.name) setValidation({ ...validation, name: '' })
+      setMeasurement({...measurement, name: value});
+      if (value.length && validation.name) setValidation({...validation, name: ''});
     } else {
-      setMeasurement({ ...measurement, [e.target.name]: value })
+      setMeasurement({...measurement, [e.target.name]: value});
     }
-  }
+  };
 
   const selectTopic = (val: string, name: string, id: string) => {
     if (validation.topic) {
-      setValidation({ ...validation, topic: '' })
+      setValidation({...validation, topic: ''});
     }
-    setMeasurement({ ...measurement, topic: { ...measurement.topic, id, name, value: val } })
-  }
+    setMeasurement({...measurement, topic: {...measurement.topic, id, name, value: val}});
+  };
 
   const fetchTopics = async () => {
-    let list: any = await API.graphql(graphqlOperation(queries.listTopics, {
-      filter: { curriculumID: { eq: curricularId } },
-    }));
-    list = list.data.listTopics?.items || []
+    let list: any = await API.graphql(
+      graphqlOperation(queries.listTopics, {
+        filter: {curriculumID: {eq: curricularId}}
+      })
+    );
+    list = list.data.listTopics?.items || [];
     list = list.map((item: any) => ({
       id: item.id,
       name: item.name,
       value: item.name
     }));
-    setTopics(list)
-  }
+    setTopics(list);
+  };
 
   const fetchMeasurement = async () => {
-    setLoading(true)
-    let item: any = await API.graphql(graphqlOperation(customQueries.getRubric, { id: measurementId }));
-    item = item.data.getRubric
+    setLoading(true);
+    let item: any = await API.graphql(
+      graphqlOperation(customQueries.getRubric, {id: measurementId})
+    );
+    item = item.data.getRubric;
     if (item?.curriculumID === curricularId) {
       setMeasurement({
         ...measurement,
         name: item.name,
-        topic: { id: item.topic.id, name: item.topic.name, value: item.topic.name },
-        criteria: item.criteria,
-      })
-      setLoading(false)
+        topic: {id: item.topic.id, name: item.topic.name, value: item.topic.name},
+        criteria: item.criteria
+      });
+      setLoading(false);
     } else {
-      console.log('wrong cr')
-      setLoading(false)
+      console.error('wrong cr');
+      setLoading(false);
     }
-  }
+  };
 
   const validateForm = () => {
-    let isValid = true
+    let isValid = true;
     const msgs = validation;
     if (!measurement.name.length) {
       isValid = false;
       msgs.name = EditMeasurementDict[userLanguage]['messages']['namerequired'];
     } else {
-      msgs.name = ''
+      msgs.name = '';
     }
     if (!measurement.topic.id) {
       isValid = false;
       msgs.topic = EditMeasurementDict[userLanguage]['messages']['topicrequired'];
     } else {
-      msgs.topic = ''
+      msgs.topic = '';
     }
-    setValidation({ ...msgs });
+    setValidation({...msgs});
     return isValid;
-  }
+  };
 
   const saveMeasurementDetails = async () => {
-    const isValid = validateForm()
+    const isValid = validateForm();
     if (isValid) {
       const input = {
         id: measurement.id,
@@ -119,47 +133,64 @@ const EditMeasurement = (props: EditMeasurementProps) => {
         topicID: measurement.topic.id,
         curriculumID: curricularId
       };
-      const item: any = await API.graphql(graphqlOperation(customMutations.updateRubric, { input }));
-      const updatedItem = item.data.updateRubric
+      const item: any = await API.graphql(
+        graphqlOperation(customMutations.updateRubric, {input})
+      );
+      const updatedItem = item.data.updateRubric;
       if (updatedItem) {
-        history.goBack()
+        history.goBack();
       } else {
-        console.log('Could not update topic');
+        console.error('Could not update topic');
       }
     }
-  }
+  };
 
   useEffect(() => {
-    fetchTopics()
-    fetchMeasurement()
-  }, [])
+    fetchTopics();
+    fetchMeasurement();
+  }, []);
 
   return (
     <div className="w-8/10 h-full mt-4 p-4">
-
       {/* Section Header */}
       <BreadCrums items={breadCrumsList} />
       <div className="flex justify-between">
-        <SectionTitle title={EditMeasurementDict[userLanguage]['title']} subtitle={EditMeasurementDict[userLanguage]['subtitle']} />
+        <SectionTitle
+          title={EditMeasurementDict[userLanguage]['title']}
+          subtitle={EditMeasurementDict[userLanguage]['subtitle']}
+        />
         <div className="flex justify-end py-4 mb-4 w-5/10">
-          <Buttons label="Go Back" btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
+          <Buttons
+            label="Go Back"
+            btnClass="mr-4"
+            onClick={history.goBack}
+            Icon={IoArrowUndoCircleOutline}
+          />
         </div>
       </div>
 
       {/* Body section */}
       <PageWrapper>
         <div className="w-6/10 m-auto">
-          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">{EditMeasurementDict[userLanguage]['heading']}</h3>
+          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">
+            {EditMeasurementDict[userLanguage]['heading']}
+          </h3>
         </div>
-        {
-          !loading ?
-            <>
-              <div className="w-6/10 m-auto">
-                <div className="">
-                  <div className="px-3 py-4">
-                    <FormInput id='name' value={measurement.name} onChange={onInputChange} name='name' label={EditMeasurementDict[userLanguage]['labelmeasur']} isRequired />
-                  </div>
-                  {/* <div className="px-3 py-4">
+        {!loading ? (
+          <>
+            <div className="w-6/10 m-auto">
+              <div className="">
+                <div className="px-3 py-4">
+                  <FormInput
+                    id="name"
+                    value={measurement.name}
+                    onChange={onInputChange}
+                    name="name"
+                    label={EditMeasurementDict[userLanguage]['labelmeasur']}
+                    isRequired
+                  />
+                </div>
+                {/* <div className="px-3 py-4">
                     <div>
                     <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
                       Select Sequence
@@ -174,20 +205,40 @@ const EditMeasurement = (props: EditMeasurementProps) => {
                     </div>
                   </div> */}
 
-                  <div className="px-3 py-4">
-                    <TextArea rows={3} id='criteria' value={measurement.criteria} onChange={onInputChange} name='criteria' label={EditMeasurementDict[userLanguage]['criteria']} />
-                  </div>
+                <div className="px-3 py-4">
+                  <TextArea
+                    rows={3}
+                    id="criteria"
+                    value={measurement.criteria}
+                    onChange={onInputChange}
+                    name="criteria"
+                    label={EditMeasurementDict[userLanguage]['criteria']}
+                  />
                 </div>
               </div>
-              <div className="flex my-8 justify-center">
-                <Buttons btnClass="py-3 px-10 mr-4" label={EditMeasurementDict[userLanguage]['button']['cancel']} onClick={history.goBack} transparent />
-                <Buttons btnClass="py-3 px-10 ml-4" label={EditMeasurementDict[userLanguage]['button']['save']} onClick={saveMeasurementDetails} />
-              </div>
-            </> : <div className="py-12 my-12 m-auto text-center">{EditMeasurementDict[userLanguage]['fetching']}</div>
-        }
+            </div>
+            <div className="flex my-8 justify-center">
+              <Buttons
+                btnClass="py-3 px-10 mr-4"
+                label={EditMeasurementDict[userLanguage]['button']['cancel']}
+                onClick={history.goBack}
+                transparent
+              />
+              <Buttons
+                btnClass="py-3 px-10 ml-4"
+                label={EditMeasurementDict[userLanguage]['button']['save']}
+                onClick={saveMeasurementDetails}
+              />
+            </div>
+          </>
+        ) : (
+          <div className="py-12 my-12 m-auto text-center">
+            {EditMeasurementDict[userLanguage]['fetching']}
+          </div>
+        )}
       </PageWrapper>
-    </div >
-  )
-}
+    </div>
+  );
+};
 
-export default EditMeasurement
+export default EditMeasurement;

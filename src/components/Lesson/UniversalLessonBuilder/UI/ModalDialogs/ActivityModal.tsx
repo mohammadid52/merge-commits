@@ -1,9 +1,9 @@
-import Buttons from '@components/Atoms/Buttons';
-import FormInput from '@components/Atoms/Form/FormInput';
-import {useGlobalContext} from '@contexts/GlobalContext';
-import useDictionary from '@customHooks/dictionary';
+import Buttons from 'atoms/Buttons';
+import FormInput from 'atoms/Form/FormInput';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
 import {IContentTypeComponentProps} from '@interfaces/UniversalLessonBuilderInterfaces';
-import {updateLessonPageToDB} from '@utilities/updateLessonPageToDB';
+import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
 import {snakeCase} from 'lodash';
 import {nanoid} from 'nanoid';
 import React, {useState} from 'react';
@@ -13,7 +13,7 @@ import {
   GRATITUDE,
   SINGING_BOWL,
   SQUARE,
-  THINK_ABOUT_IT,
+  THINK_ABOUT_IT
 } from '../common/constants';
 
 interface ActivityModalProps extends IContentTypeComponentProps {
@@ -24,14 +24,14 @@ const ActivityModal = ({
   createNewBlockULBHandler,
   askBeforeClose,
   closeAction,
-  type = SQUARE,
+  type = SQUARE
 }: ActivityModalProps) => {
   const addToDB = async (list: any) => {
     closeAction();
 
     const input = {
       id: list.id,
-      lessonPlan: [...list.lessonPlan],
+      lessonPlan: [...list.lessonPlan]
     };
 
     await updateLessonPageToDB(input);
@@ -64,8 +64,8 @@ const ActivityModal = ({
       {
         id: nanoid(20),
         label: type === EMOTIONS ? emotionLabel : getLabel(),
-        value: snakeCase(getLabel()),
-      },
+        value: snakeCase(getLabel())
+      }
     ];
 
     const parentKey = 'activities';

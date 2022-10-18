@@ -1,6 +1,6 @@
 import React from 'react';
-import Buttons from '../../../Atoms/Buttons';
-import { AiOutlineEdit } from 'react-icons/ai';
+import Buttons from 'atoms/Buttons';
+import {AiOutlineEdit} from 'react-icons/ai';
 
 interface ITagBlockInterface {
   tags: string[];

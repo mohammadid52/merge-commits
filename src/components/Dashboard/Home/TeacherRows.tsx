@@ -1,6 +1,6 @@
 import React from 'react';
-import ContentCard from '../../Atoms/ContentCard';
-import ImageAlternate from '../../Atoms/ImageAlternative';
+import ContentCard from 'atoms/ContentCard';
+import ImageAlternate from 'atoms/ImageAlternative';
 
 interface Teacher {
   firstName: string;

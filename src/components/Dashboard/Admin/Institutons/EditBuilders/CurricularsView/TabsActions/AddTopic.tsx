@@ -2,18 +2,18 @@ import React, {useContext, useEffect, useState} from 'react';
 import {useHistory, useParams} from 'react-router';
 import {IoArrowUndoCircleOutline} from 'react-icons/io5';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import BreadCrums from '../../../../../../Atoms/BreadCrums';
-import SectionTitle from '../../../../../../Atoms/SectionTitle';
-import Buttons from '../../../../../../Atoms/Buttons';
-import PageWrapper from '../../../../../../Atoms/PageWrapper';
-import FormInput from '../../../../../../Atoms/Form/FormInput';
-import TextArea from '../../../../../../Atoms/Form/TextArea';
-import Selector from '../../../../../../Atoms/Form/Selector';
-import * as queries from '../../../../../../../graphql/queries';
-import * as mutations from '../../../../../../../graphql/mutations';
-import * as customMutations from '../../../../../../../customGraphql/customMutations';
-import useDictionary from '../../../../../../../customHooks/dictionary';
-import {GlobalContext} from '../../../../../../../contexts/GlobalContext';
+import BreadCrums from 'atoms/BreadCrums';
+import SectionTitle from 'atoms/SectionTitle';
+import Buttons from 'atoms/Buttons';
+import PageWrapper from 'atoms/PageWrapper';
+import FormInput from 'atoms/Form/FormInput';
+import TextArea from 'atoms/Form/TextArea';
+import Selector from 'atoms/Form/Selector';
+import * as queries from 'graphql/queries';
+import * as mutations from 'graphql/mutations';
+import * as customMutations from 'customGraphql/customMutations';
+import useDictionary from 'customHooks/dictionary';
+import {GlobalContext} from 'contexts/GlobalContext';
 interface AddTopicProps {
   curricularId: string;
   onCancel?: () => void;
@@ -43,7 +43,7 @@ const AddTopic = (props: AddTopicProps) => {
     distinguished: '',
     excelled: '',
     adequite: '',
-    basic: '',
+    basic: ''
   });
 
   useEffect(() => {
@@ -54,7 +54,7 @@ const AddTopic = (props: AddTopicProps) => {
         distinguished: topicData.distinguished,
         excelled: topicData.excelled,
         adequite: topicData.adequite,
-        basic: topicData.basic,
+        basic: topicData.basic
       });
     }
   }, [topicData?.id]);
@@ -68,7 +68,7 @@ const AddTopic = (props: AddTopicProps) => {
     else {
       setEvalution({
         ...evalution,
-        [e.target.name]: e.target.value,
+        [e.target.name]: e.target.value
       });
     }
   };
@@ -104,18 +104,18 @@ const AddTopic = (props: AddTopicProps) => {
         adequite,
         basic,
         curriculumID: curricularId,
-        learningObjectiveID: topicData.learningObjectiveID,
+        learningObjectiveID: topicData.learningObjectiveID
       };
       if (topicData?.id) {
         const item: any = await API.graphql(
           graphqlOperation(customMutations.updateTopic, {
-            input: {...input, id: topicData.id},
+            input: {...input, id: topicData.id}
           })
         );
         const updatedItem = item.data.updateTopic;
         if (updatedItem) {
           postMutation(updatedItem);
-        }else{
+        } else {
           setLoading(false);
         }
       } else {
@@ -125,11 +125,11 @@ const AddTopic = (props: AddTopicProps) => {
         const addedItem = item.data.createTopic;
         if (addedItem) {
           postMutation(addedItem);
-        }else{
+        } else {
           setLoading(false);
         }
       }
-      console.log('Could not add topic');
+      console.error('Could not add topic');
     }
   };
 

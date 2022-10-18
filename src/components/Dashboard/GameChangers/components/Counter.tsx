@@ -1,5 +1,5 @@
-import {useGameChangers} from '@components/Dashboard/GameChangers/context/GameChangersContext';
-import AnimatedContainer from '@uiComponents/Tabs/AnimatedContainer';
+import {useGameChangers} from 'components/Dashboard/GameChangers/context/GameChangersContext';
+import AnimatedContainer from 'uiComponents/Tabs/AnimatedContainer';
 import React from 'react';
 
 const Counter = () => {

@@ -3,13 +3,13 @@ import {IoIosKeypad} from 'react-icons/io';
 import {IoCaretDownCircleOutline, IoCaretUpCircleOutline} from 'react-icons/io5';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {RiArrowRightLine} from 'react-icons/ri';
-import {getAsset} from '../../../../../../assets';
-import {GlobalContext} from '../../../../../../contexts/GlobalContext';
-import useDictionary from '../../../../../../customHooks/dictionary';
-import {getLanguageString} from '../../../../../../utilities/strings';
-import Buttons from '../../../../../Atoms/Buttons';
-import CheckBox from '../../../../../Atoms/Form/CheckBox';
-import SearchInput from '../../../../../Atoms/Form/SearchInput';
+import {getAsset} from 'assets';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import {getLanguageString} from 'utilities/strings';
+import Buttons from 'atoms/Buttons';
+import CheckBox from 'atoms/Form/CheckBox';
+import SearchInput from 'atoms/Form/SearchInput';
 import CheckpointQueTable from './CheckpointQueTable';
 
 interface CheckpointLookupProps {
@@ -28,7 +28,7 @@ const CheckpointLookup = (props: CheckpointLookupProps) => {
     checkpointList,
     lessonName,
     setUnsavedChanges,
-    lessonType,
+    lessonType
   } = props;
 
   const {theme, clientKey, userLanguage} = useContext(GlobalContext);

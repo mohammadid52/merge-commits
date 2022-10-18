@@ -2,12 +2,12 @@ import {getAsset} from 'assets';
 import React, {useContext, useRef, useState} from 'react';
 import {IoMdRefresh} from 'react-icons/io';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
-import {GlobalContext} from '@contexts/GlobalContext';
-import useDictionary from '@customHooks/dictionary';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
 import RosterRow from './RosterRow';
 import RosterRowEmpty from './RosterRowEmpty';
 import gsap from 'gsap/all';
-import Buttons from '@components/Atoms/Buttons';
+import Buttons from 'atoms/Buttons';
 
 export interface IRosterSectionProps {
   hot?: boolean;
@@ -41,7 +41,7 @@ const RosterSection = ({
   sharedStudent,
   handlePageChange,
   sectionTitle,
-  emptyMessage,
+  emptyMessage
 }: IRosterSectionProps) => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
   const gContext = useContext(GlobalContext);
@@ -63,7 +63,7 @@ const RosterSection = ({
       height: '0%',
       opacity: 0,
       duration: 0.5,
-      ease: 'easeInOut',
+      ease: 'easeInOut'
     });
   };
 
@@ -73,7 +73,7 @@ const RosterSection = ({
       height: 'auto',
       opacity: 1,
       duration: 0.5,
-      ease: 'easeInOut',
+      ease: 'easeInOut'
     });
   };
 

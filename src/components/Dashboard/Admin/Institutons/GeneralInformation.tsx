@@ -1,7 +1,7 @@
 import React, {Fragment, useContext} from 'react';
-import {GlobalContext} from '@contexts/GlobalContext';
-import useDictionary from '@customHooks/dictionary';
-import {formatPhoneNumber, getHostNameFromUrl} from '@utilities/strings';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import {formatPhoneNumber, getHostNameFromUrl} from 'utilities/strings';
 
 interface IGeneralInformationProps {
   instituteInfo: any;
@@ -19,7 +19,7 @@ const GeneralInformation = ({instituteInfo}: IGeneralInformationProps) => {
     zip,
     phone,
     website,
-    isServiceProvider,
+    isServiceProvider
   } = instituteInfo;
 
   return (

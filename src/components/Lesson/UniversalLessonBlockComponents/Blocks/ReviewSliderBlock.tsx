@@ -1,5 +1,5 @@
 import React, {useContext, useState} from 'react';
-import {GlobalContext} from '../../../../contexts/GlobalContext';
+import {GlobalContext} from 'contexts/GlobalContext';
 import {FormControlProps} from './FormBlock';
 import './styles/ReviewSliderStyles.scss';
 
@@ -16,11 +16,11 @@ const genSlideStyle = (value: number | string, max: number | string) => {
 
   return {
     point: {
-      left: `calc(${updatedVal * 20}% - ${5 + 3 * updatedVal}px)`,
+      left: `calc(${updatedVal * 20}% - ${5 + 3 * updatedVal}px)`
     },
     range: {
-      width: `${updatedVal * 20}%`,
-    },
+      width: `${updatedVal * 20}%`
+    }
   };
 };
 interface ReviewSliderBlockProps extends FormControlProps {
@@ -56,7 +56,7 @@ const ReviewSliderBlock = (props: ReviewSliderBlockProps) => {
     onChange,
     inputID,
     classString = `1-5 || gray-700 || gray-800 || dark-gray || rounded-lg`,
-    label,
+    label
   } = props;
 
   const {state} = useContext(GlobalContext);
@@ -73,7 +73,7 @@ const ReviewSliderBlock = (props: ReviewSliderBlockProps) => {
       <div
         style={{
           border: !isDark ? '1px solid #ececec' : 'none',
-          boxShadow: '0 10px 20px 0 rgba(0, 0, 0, 0.05)',
+          boxShadow: '0 10px 20px 0 rgba(0, 0, 0, 0.05)'
         }}
         className={`review-slider-container p-6 w-auto  flex flex-col items-start justify-center bg-${
           values?.cardBgColor || 'gray-800'

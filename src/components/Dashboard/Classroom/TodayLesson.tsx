@@ -1,11 +1,11 @@
 import React, {Fragment, useContext, useEffect, useState} from 'react';
 import {LessonProps} from './Classroom';
 import StandardLessonCard from './LessonCards/StandardLessonCard';
-import {GlobalContext} from '../../../contexts/GlobalContext';
-import useDictionary from '../../../customHooks/dictionary';
-import {getLocalStorageData} from '../../../utilities/localStorage';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import {getLocalStorageData} from 'utilities/localStorage';
 import ClassroomLoader from './ClassroomLoader';
-import useTailwindBreakpoint from '@customHooks/tailwindBreakpoint';
+import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
 
 const groupBy = (item: any, key: string) =>
   item.reduce(
