@@ -1,19 +1,19 @@
-import FormInput from '@atoms/Form/FormInput';
-import Buttons from '@components/Atoms/Buttons';
-import Modal from '@components/Atoms/Modal';
-import Popover from '@components/Atoms/Popover';
-import Comments from '@components/Community/Components/Comments';
-import HandleMedia from '@components/Community/Components/HandleMedia';
+import FormInput from 'atoms/Form/FormInput';
+import Buttons from 'components/Atoms/Buttons';
+import Modal from 'components/Atoms/Modal';
+import Popover from 'components/Atoms/Popover';
+import Comments from 'components/Community/Components/Comments';
+import HandleMedia from 'components/Community/Components/HandleMedia';
 import {
   communityTypes,
-  COMMUNITY_UPLOAD_KEY,
-} from '@components/Community/constants.community';
-import * as customQueries from '@customGraphql/customQueries';
-import useAuth from '@customHooks/useAuth';
-import useGraphqlMutation from '@customHooks/useGraphqlMutation';
-import * as queries from '@graphql/queries';
+  COMMUNITY_UPLOAD_KEY
+} from 'components/Community/constants.community';
+import * as customQueries from 'customGraphql/customQueries';
+import useAuth from 'customHooks/useAuth';
+import useGraphqlMutation from 'customHooks/useGraphqlMutation';
+import * as queries from 'graphql/queries';
 import {IChat, ICommunityCard} from '@interfaces/Community.interfaces';
-import {getImageFromS3Static} from '@utilities/services';
+import {getImageFromS3Static} from 'utilities/services';
 import {API, graphqlOperation} from 'aws-amplify';
 
 import {orderBy, remove, update} from 'lodash';
@@ -28,14 +28,15 @@ const BottomSection = ({
   showComments,
   cardDetails,
   chatCount,
+  authId
 }: {
   cardDetails: ICommunityCard;
   showComments: boolean;
   chatCount: number;
+  authId?: string;
   setShowComments: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   let copyLikes = cardDetails.likes || [];
-  const {authId} = useAuth();
   const likeIdx = copyLikes?.findIndex((d) => d === authId);
   const isLiked = likeIdx !== -1;
 
@@ -71,6 +72,7 @@ const BottomSection = ({
         <div className="mt-3 mx-5 w-full flex justify-end">
           <div className="flex text-gray-700 font-normal w-auto text-sm rounded-md mb-2 mr-4 items-center">
             <div
+              data-cy="like-button"
               onClick={() => likeAction()}
               className={`${
                 isLiked
@@ -80,7 +82,9 @@ const BottomSection = ({
               <AiOutlineHeart className=" text-xl " />
             </div>
             Likes:{' '}
-            <div className="ml-1 text-gray-500 w-auto font-medium text-sm">
+            <div
+              data-cy="likes-count"
+              className="ml-1 text-gray-500 w-auto font-medium text-sm">
               {' '}
               {cardDetails?.likes?.length || 0}
             </div>
@@ -89,6 +93,7 @@ const BottomSection = ({
       </div>
 
       <button
+        data-cy="show-comments-button"
         onClick={() => setShowComments(!showComments)}
         className={`text-blue-500 hover:underline text-sm w-auto mx-5`}>
         {showComments ? 'hide' : 'show'} comments
@@ -103,7 +108,7 @@ const PostComment = ({
   setChats,
   setShowComments,
   chatCount,
-  setChatCount,
+  setChatCount
 }: {
   cardDetails: ICommunityCard;
   setShowComments: React.Dispatch<React.SetStateAction<boolean>>;
@@ -121,10 +126,10 @@ const PostComment = ({
     onSuccess: () => {
       let updatedCount = chatCount + 1;
       community.mutate({
-        input: {id: cardDetails.id, chatCount: updatedCount},
+        input: {id: cardDetails.id, chatCount: updatedCount}
       });
       setChatCount(updatedCount);
-    },
+    }
   });
 
   const onPost = async () => {
@@ -135,7 +140,7 @@ const PostComment = ({
       personAuthID: personAuthID,
       msg: postText,
       personEmail: personEmail,
-      person: user,
+      person: user
     };
     chats.push(chatObject);
     setChats([...chats]);
@@ -144,7 +149,7 @@ const PostComment = ({
     let payload = {...chatObject};
     delete payload.person;
     mutate({
-      input: {...payload},
+      input: {...payload}
     });
   };
 
@@ -181,6 +186,7 @@ const PostComment = ({
         </button>
       </span>
       <input
+        data-cy="comment-input"
         type="search"
         className="w-full py-2 pl-4 pr-10 text-sm border-gray-400 bg-gray-100 border border-transparent appearance-none rounded-tg placeholder-gray-400 focus:bg-white focus:outline-none focus:border-blue-500 focus:text-gray-900 focus:shadow-outline-blue rounded-full"
         placeholder="Post a comment..."
@@ -204,7 +210,7 @@ const Menu = ({
   cardId,
   fileKey,
   onCardEdit,
-  cardDetails,
+  cardDetails
 }: {
   showMenu: boolean;
   cardId: string;
@@ -235,6 +241,7 @@ const Menu = ({
             </div>
             <div className="col-span-1">
               <dt
+                data-cy="card-delete-button"
                 onClick={() => onDelete(cardId, fileKey)}
                 className={`cursor-pointer text-red-500 transition-all`}>
                 Delete
@@ -242,7 +249,9 @@ const Menu = ({
             </div>
           </dl>
         }>
-        <span className="h-6 w-6 flex items-center justify-center p-1 hover:bg-gray-200 transition-all cursor-pointer rounded-full">
+        <span
+          data-cy="popover-button"
+          className="h-6 w-6 flex items-center justify-center p-1 hover:bg-gray-200 transition-all cursor-pointer rounded-full">
           <BiDotsVerticalRounded
             title="show menu"
             className="h-full w-full text-lg text-gray-500"
@@ -294,7 +303,7 @@ const MainCard = ({cardDetails}: {cardDetails: ICommunityCard}) => {
         )}
         <div
           dangerouslySetInnerHTML={{
-            __html: cardDetails.summaryHtml ? cardDetails?.summaryHtml : '<p></p>',
+            __html: cardDetails.summaryHtml ? cardDetails?.summaryHtml : '<p></p>'
           }}
           className=" text-sm mb-2 mx-3 px-2"></div>
       </div>
@@ -320,7 +329,7 @@ const MainCard = ({cardDetails}: {cardDetails: ICommunityCard}) => {
               )}
               <div
                 dangerouslySetInnerHTML={{
-                  __html: cardDetails.summaryHtml ? cardDetails?.summaryHtml : '<p></p>',
+                  __html: cardDetails.summaryHtml ? cardDetails?.summaryHtml : '<p></p>'
                 }}
                 className=" text-base"></div>
             </div>
@@ -404,9 +413,7 @@ const MainCard = ({cardDetails}: {cardDetails: ICommunityCard}) => {
                 )}
                 <div
                   dangerouslySetInnerHTML={{
-                    __html: cardDetails.summaryHtml
-                      ? cardDetails?.summaryHtml
-                      : '<p></p>',
+                    __html: cardDetails.summaryHtml ? cardDetails?.summaryHtml : '<p></p>'
                   }}
                   className="text-gray-600 text-sm"></div>
               </div>
@@ -420,7 +427,7 @@ const MainCard = ({cardDetails}: {cardDetails: ICommunityCard}) => {
 const Card = ({
   cardDetails,
   onDelete,
-  onCardEdit,
+  onCardEdit
 }: {
   cardDetails: ICommunityCard;
   onDelete: (cardId: string, fileKey: string) => void;
@@ -451,7 +458,7 @@ const Card = ({
 
       const res: any = await API.graphql(
         graphqlOperation(queries.listCommunityChats, {
-          filter: {communityId: {eq: cardDetails.id}},
+          filter: {communityId: {eq: cardDetails.id}}
         })
       );
       const data = res.data.listCommunityChats.items;
@@ -459,19 +466,19 @@ const Card = ({
         let orderedList = orderBy(data, ['createdAt'], 'desc');
         const filterArray = orderedList.map((item) => ({
           authId: {
-            eq: item.personAuthID,
-          },
+            eq: item.personAuthID
+          }
         }));
 
         const _res: any = await API.graphql(
           graphqlOperation(customQueries.listPersons, {
-            filter: {or: filterArray},
+            filter: {or: filterArray}
           })
         );
         const persons = _res.data.listPeople.items;
         orderedList = orderedList.map((d) => ({
           ...d,
-          person: persons.find((p: any) => p.authId === d.personAuthID),
+          person: persons.find((p: any) => p.authId === d.personAuthID)
         }));
         setChats([...orderedList]);
       }
@@ -532,7 +539,7 @@ const Card = ({
         update(chats[idx], `isEditedChat`, () => true);
         setChats([...chats]);
         closeAction();
-      },
+      }
     });
 
     const disableSaveBtn =
@@ -571,6 +578,7 @@ const Card = ({
       <div className="w-auto">
         <BottomSection
           cardDetails={cardDetails}
+          authId={authId}
           chatCount={chatCount}
           showComments={showComments}
           setShowComments={setShowComments}

@@ -1,6 +1,6 @@
 import {Storage} from '@aws-amplify/storage';
-import File from '@components/Atoms/File';
-import Label from '@components/Atoms/Form/Label';
+import File from 'components/Atoms/File';
+import Label from 'components/Atoms/Form/Label';
 import {Transition} from '@headlessui/react';
 import {IFile} from '@interfaces/UniversalLessonInterfaces';
 import {getAsset} from 'assets';
@@ -17,7 +17,7 @@ const UploadMedia = ({
   uploadKey,
   customRef,
   onSuccess,
-  accept = 'image/x-png,image/gif,image/jpeg',
+  accept = 'image/x-png,image/gif,image/jpeg'
 }: {
   uploadKey?: string;
   file: IFile;
@@ -60,7 +60,7 @@ const UploadMedia = ({
           updateStatus(currentFile, 'progress');
 
           updateProgress(currentFile, progress.toFixed(0));
-        },
+        }
       })
         .then((result) => {
           console.log('File successfully uploaded to s3', result);
@@ -90,7 +90,7 @@ const UploadMedia = ({
       progress: fakeInitProgress.toString(),
       file: acceptedFile,
       fileName: acceptedFile.name,
-      id,
+      id
     };
 
     setFile({...initState});
@@ -112,7 +112,7 @@ const UploadMedia = ({
 
   const {getRootProps, getInputProps, isDragActive} = useDropzone({
     onDrop: uploadFile,
-    accept: accept,
+    accept: accept
   });
 
   const handleFileSelection = async (e: any) => {

@@ -2,7 +2,7 @@ import React, {useCallback, useMemo} from 'react';
 import {FaTasks} from 'react-icons/fa';
 import {Directory} from './Directory';
 import {Item} from './Item';
-import {useContextMenu} from '../../contexts/TreeContext';
+import {useContextMenu} from 'contexts/TreeContext';
 
 export const Tree = ({
   activeSectionId,
@@ -10,7 +10,7 @@ export const Tree = ({
   hoverClassName,
   onItemClick,
   root,
-  textClassName,
+  textClassName
 }: React.PropsWithChildren<{
   activeSectionId?: string;
   headingPrefix?: string;
@@ -29,7 +29,7 @@ export const Tree = ({
       setShow(true);
       setPosition({
         x: currentTarget.offsetTop,
-        y: currentTarget.offsetLeft + 40,
+        y: currentTarget.offsetLeft + 40
       });
     },
     [setShow, setPosition]
@@ -45,7 +45,7 @@ export const Tree = ({
       onItemClick({
         id: section.id,
         title: section.title,
-        redirectionUrl: section.redirectionUrl,
+        redirectionUrl: section.redirectionUrl
       });
     }
   };

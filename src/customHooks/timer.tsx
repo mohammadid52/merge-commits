@@ -1,8 +1,8 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {Auth} from '@aws-amplify/auth';
-import {useGlobalContext} from '@contexts/GlobalContext';
-import * as mutations from '@graphql/mutations';
-import {getLocalStorageData} from '@utilities/localStorage';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import * as mutations from 'graphql/mutations';
+import {getLocalStorageData} from 'utilities/localStorage';
 import {useEffect, useState} from 'react';
 
 const useStudentTimer = () => {
@@ -47,7 +47,7 @@ const useStudentTimer = () => {
 
   // save intervals
   const VIEWED_INTERVAL = 2000;
-  const STANDARD_INTERVAL = 3000;
+  const STANDARD_INTERVAL = 1500;
   const SURVEY_INTERVAL = 100;
 
   useEffect(() => {

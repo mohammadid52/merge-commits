@@ -1,8 +1,8 @@
 import React, {useContext, useEffect} from 'react';
 import {IconContext} from 'react-icons';
 import {IoSearchSharp, IoClose} from 'react-icons/io5';
-import {GlobalContext} from '../../../contexts/GlobalContext';
-import {getAsset} from '../../../assets';
+import {GlobalContext} from 'contexts/GlobalContext';
+import {getAsset} from 'assets';
 
 interface SearchProps {
   value?: string;

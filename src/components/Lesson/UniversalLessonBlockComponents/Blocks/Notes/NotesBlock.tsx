@@ -1,13 +1,13 @@
-import Loader from '@atoms/Loader';
-import Selector from '@components/Atoms/Form/Selector';
-import {FORM_TYPES} from '@components/Lesson/UniversalLessonBuilder/UI/common/constants';
-import ThemeModal from '@components/Molecules/ThemeModal';
-import {GlobalContext} from '@contexts/GlobalContext';
-import useInLessonCheck from '@customHooks/checkIfInLesson';
-import useStudentDataValue from '@customHooks/studentDataValue';
+import Loader from 'atoms/Loader';
+import Selector from 'components/Atoms/Form/Selector';
+import {FORM_TYPES} from 'components/Lesson/UniversalLessonBuilder/UI/common/constants';
+import ThemeModal from 'components/Molecules/ThemeModal';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useInLessonCheck from 'customHooks/checkIfInLesson';
+import useStudentDataValue from 'customHooks/studentDataValue';
 import Note from '@UlbBlocks/Notes/Note';
 import '@UlbBlocks/Notes/NoteStyles.scss';
-import {wait} from '@utilities/functions';
+import {wait} from 'utilities/functions';
 import gsap from 'gsap';
 import {Draggable} from 'gsap/Draggable';
 import {InertiaPlugin} from 'gsap/InertiaPlugin';
@@ -16,7 +16,7 @@ import React, {useContext, useEffect, useState} from 'react';
 import {BiSave} from 'react-icons/bi';
 import {FiFilePlus} from 'react-icons/fi';
 import {v4 as uuidv4} from 'uuid';
-import Tooltip from '@atoms/Tooltip';
+import Tooltip from 'atoms/Tooltip';
 const genSticky = (
   {rows, cols}: {rows?: number; cols?: number},
 
@@ -41,7 +41,7 @@ const genSticky = (
           width: gridWidth - 1,
           height: gridHeight - 1,
           top: y,
-          left: x,
+          left: x
         })
         .prependTo($container);
     }
@@ -73,8 +73,8 @@ const genSticky = (
           const landOnGrid = false;
 
           return landOnGrid ? Math.round(endValue / gridHeight) * gridHeight : endValue;
-        },
-      },
+        }
+      }
     });
 
     if (cb && typeof cb === 'function') {
@@ -118,11 +118,11 @@ const NotesBlock = ({
   grid,
   saveData,
   updateJournalData,
-  preview = false,
+  preview = false
 }: INoteBlock) => {
   const {
     state: {user},
-    lessonDispatch,
+    lessonDispatch
   } = useContext(GlobalContext);
   const isStudent = user.role === 'ST';
   const isInLesson = useInLessonCheck();
@@ -225,7 +225,7 @@ const NotesBlock = ({
       id: uuidv4(),
       class: 'yellow medium',
       value: '',
-      type: FORM_TYPES.NOTES,
+      type: FORM_TYPES.NOTES
     };
     localNotes.push(newNoteObj);
     setLocalNotes([...localNotes]);
@@ -234,7 +234,7 @@ const NotesBlock = ({
       {
         domID: newNoteObj.id,
         type: 'content-custom || yellow medium',
-        input: '',
+        input: ''
       },
       notesData
     );
@@ -243,8 +243,8 @@ const NotesBlock = ({
       type: 'ADD_NEW_INPUT',
       payload: {
         domID: newNoteObj.id,
-        input: [''],
-      },
+        input: ['']
+      }
     });
   };
 
@@ -304,12 +304,12 @@ const NotesBlock = ({
   const modalBtns = {
     delete: {
       save: onNoteDelete,
-      cancel: () => setShowDeleteModal({show: false, id: ''}),
+      cancel: () => setShowDeleteModal({show: false, id: ''})
     },
     edit: {
       save: onNoteEdit,
-      cancel: () => setShowEditModal({show: false, id: '', value: ''}),
-    },
+      cancel: () => setShowEditModal({show: false, id: '', value: ''})
+    }
   };
 
   const colorList = [
@@ -318,7 +318,7 @@ const NotesBlock = ({
     {id: 2, name: 'blue'},
     {id: 3, name: 'yellow'},
     {id: 4, name: 'indigo'},
-    {id: 5, name: 'purple'},
+    {id: 5, name: 'purple'}
   ];
 
   if (loading) {
@@ -348,6 +348,7 @@ const NotesBlock = ({
                 Cancel
               </button>
               <button
+                data-cy="delete-note-button"
                 onClick={modalBtns.delete.save}
                 type="button"
                 className="w-auto inline-flex items-center px-2.5 py-1.5 border-0 border-transparent text-xs font-medium rounded shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
@@ -403,7 +404,7 @@ const NotesBlock = ({
                 list={[
                   {id: 0, name: 'small'},
                   {id: 1, name: 'medium'},
-                  {id: 2, name: 'large'},
+                  {id: 2, name: 'large'}
                 ]}
               />
             </div>
@@ -454,6 +455,7 @@ const NotesBlock = ({
             <div className="w-auto space-y-4 flex items-center flex-col justify-center">
               <Tooltip text="Add new note">
                 <button
+                  data-cy="add-new-note-button"
                   disabled={localNotes.length === 15}
                   onClick={onAddNewNote}
                   className="w-auto text-red-600 hover:text-red-500 transition-all">
@@ -464,6 +466,7 @@ const NotesBlock = ({
               {!saveInProgress && (
                 <Tooltip text="Save to Notebook">
                   <button
+                    data-cy="save-note-button"
                     onClick={() => {
                       if (notesChanged) {
                         saveData(

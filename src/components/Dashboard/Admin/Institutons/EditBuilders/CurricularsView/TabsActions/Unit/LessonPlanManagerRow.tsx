@@ -1,6 +1,6 @@
-import {DeleteActionBtn} from '@components/Atoms/Buttons/DeleteActionBtn';
-import {GlobalContext} from '@contexts/GlobalContext';
-import useDictionary from '@customHooks/dictionary';
+import {DeleteActionBtn} from 'components/Atoms/Buttons/DeleteActionBtn';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
 import React, {useContext, useState} from 'react';
 import {BiDotsVerticalRounded} from 'react-icons/bi';
 import {HiOutlineTrash} from 'react-icons/hi';
@@ -21,7 +21,7 @@ const LessonPlanManagerRow = ({
   syllabusObject,
   checkIfRemovable,
   handleToggleDelete,
-  gotoLessonBuilder,
+  gotoLessonBuilder
 }: ILessonPlanManagerRowProps) => {
   const {clientKey, userLanguage} = useContext(GlobalContext);
   const {LessonsListDict} = useDictionary(clientKey);

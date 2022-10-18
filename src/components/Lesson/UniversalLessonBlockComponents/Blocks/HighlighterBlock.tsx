@@ -1,12 +1,12 @@
-import Buttons from '@atoms/Buttons';
+import Buttons from 'atoms/Buttons';
 import {isEmpty} from '@aws-amplify/core';
-import {GlobalContext} from '@contexts/GlobalContext';
-import {useULBContext} from '@contexts/UniversalLessonBuilderContext';
-import useInLessonCheck from '@customHooks/checkIfInLesson';
-import useStudentDataValue from '@customHooks/studentDataValue';
+import {GlobalContext} from 'contexts/GlobalContext';
+import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
+import useInLessonCheck from 'customHooks/checkIfInLesson';
+import useStudentDataValue from 'customHooks/studentDataValue';
 import {RowWrapperProps} from '@interfaces/UniversalLessonBuilderInterfaces';
 import {UniversalLessonPage} from '@interfaces/UniversalLessonInterfaces';
-import {updateLessonPageToDB} from '@utilities/updateLessonPageToDB';
+import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
 import {getAsset} from 'assets';
 import {findIndex, get} from 'lodash';
 import React, {useContext, useEffect, useState} from 'react';

@@ -1,26 +1,26 @@
-import React, { useContext, useEffect } from 'react';
-import { GlobalContext } from '../../../contexts/GlobalContext';
-import useDictionary from '../../../customHooks/dictionary';
-import SubSectionTab from '../../Atoms/SubSectionTab';
+import React, {useContext, useEffect} from 'react';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import SubSectionTab from 'atoms/SubSectionTab';
 
 interface TodayUpcomingTabs {
   isTeacher?: boolean;
-  lessonGroupCount: { today: number; upcoming: number; completed: number };
+  lessonGroupCount: {today: number; upcoming: number; completed: number};
   visibleLessonGroup: string;
   setVisibleLessonGroup: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const TodayUpcomingTabs = (props: TodayUpcomingTabs) => {
-  const { isTeacher, lessonGroupCount, visibleLessonGroup, setVisibleLessonGroup } = props;
-  const { state, theme, clientKey, userLanguage } = useContext(GlobalContext);
-  const { classRoomDict } = useDictionary(clientKey);
+  const {isTeacher, lessonGroupCount, visibleLessonGroup, setVisibleLessonGroup} = props;
+  const {state, theme, clientKey, userLanguage} = useContext(GlobalContext);
+  const {classRoomDict} = useDictionary(clientKey);
 
   useEffect(() => {
     setVisibleLessonGroup('today');
   }, []);
 
   const handleTabClick = (e: React.MouseEvent) => {
-    const { id } = e.target as HTMLElement;
+    const {id} = e.target as HTMLElement;
 
     if (id !== visibleLessonGroup) {
       if (id !== 'lessonGroupTabs') {

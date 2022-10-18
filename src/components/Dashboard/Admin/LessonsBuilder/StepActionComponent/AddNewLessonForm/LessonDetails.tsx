@@ -1,30 +1,30 @@
-import ULBFileUploader from '@components/Atoms/Form/FileUploader';
+import ULBFileUploader from 'components/Atoms/Form/FileUploader';
 import {Storage} from '@aws-amplify/storage';
-import FormInput from '@components/Atoms/Form/FormInput';
-import MultipleSelector from '@components/Atoms/Form/MultipleSelector';
-import Selector from '@components/Atoms/Form/Selector';
-import Modal from '@components/Atoms/Modal';
-import {useGlobalContext} from '@contexts/GlobalContext';
-import useDictionary from '@customHooks/dictionary';
-import {useQuery} from '@customHooks/urlParam';
+import FormInput from 'components/Atoms/Form/FormInput';
+import MultipleSelector from 'components/Atoms/Form/MultipleSelector';
+import Selector from 'components/Atoms/Form/Selector';
+import Modal from 'components/Atoms/Modal';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import {useQuery} from 'customHooks/urlParam';
 import {
   languageList,
   lessonTypeList,
   periodOptions,
-  targetAudienceForIconoclast,
-} from '@utilities/staticData';
+  targetAudienceForIconoclast
+} from 'utilities/staticData';
 import React, {useEffect, useState} from 'react';
-import ProgressBar from '@components/Lesson/UniversalLessonBuilder/UI/ProgressBar';
-import Buttons from '@components/Atoms/Buttons';
-import useGraphqlMutation from '@customHooks/useGraphqlMutation';
-import {deleteImageFromS3, getImageFromS3Static} from '@utilities/services';
-import File from '@components/Atoms/File';
+import ProgressBar from 'components/Lesson/UniversalLessonBuilder/UI/ProgressBar';
+import Buttons from 'components/Atoms/Buttons';
+import useGraphqlMutation from 'customHooks/useGraphqlMutation';
+import {deleteImageFromS3, getImageFromS3Static} from 'utilities/services';
+import File from 'components/Atoms/File';
 import {truncate} from 'lodash';
 
 const UploadLessonPlanModal = ({
   onClose,
   lessonId,
-  lessonPlanAttachment,
+  lessonPlanAttachment
 }: {
   lessonId: string;
   onClose: () => void;
@@ -61,7 +61,7 @@ const UploadLessonPlanModal = ({
         progressCallback: ({loaded, total}: any) => {
           const progress = (loaded * 100) / total;
           setUploadProgress(progress.toFixed(0));
-        },
+        }
       })
         .then((result: any) => {
           console.log('File successfully uploaded to s3', result);
@@ -80,7 +80,7 @@ const UploadLessonPlanModal = ({
   const {mutate, isLoading: uploading, isSuccess} = useGraphqlMutation(
     'updateUniversalLesson',
     {
-      custom: true,
+      custom: true
     }
   );
 
@@ -107,8 +107,8 @@ const UploadLessonPlanModal = ({
       mutate({
         input: {
           id: lessonId,
-          lessonPlanAttachment: key,
-        },
+          lessonPlanAttachment: key
+        }
       });
     } catch (error) {
       console.error(error);
@@ -134,8 +134,8 @@ const UploadLessonPlanModal = ({
     mutate({
       input: {
         id: lessonId,
-        lessonPlanAttachment: null,
-      },
+        lessonPlanAttachment: null
+      }
     });
     setIsDeleting(false);
   };
@@ -245,7 +245,7 @@ const LessonDetails = ({
   selectDesigner,
   onClose,
   showUploadModal,
-  lessonPlanAttachment,
+  lessonPlanAttachment
 }: any) => {
   const params = useQuery(location.search);
   const refName = params.get('refName');

@@ -1,12 +1,12 @@
 import React, {lazy} from 'react';
 import {Redirect, Route, Switch} from 'react-router-dom';
-import PrivateRoute from '../Auth/PrivateRoute';
+import PrivateRoute from 'components/Auth/PrivateRoute';
 
-const Dashboard = lazy(() => import('../Dashboard/Dashboard'));
-const Lesson = lazy(() => import('../Lesson/Lesson'));
-const TeacherView = lazy(() => import('../TeacherView/TeacherView'));
-const Chat = lazy(() => import('../RoomChat/Chat'));
-const Csv = lazy(() => import('../Dashboard/Csv/Csv'));
+const Dashboard = lazy(() => import('components/Dashboard/Dashboard'));
+const Lesson = lazy(() => import('components/Lesson/Lesson'));
+const TeacherView = lazy(() => import('components/TeacherView/TeacherView'));
+const Chat = lazy(() => import('components/RoomChat/Chat'));
+const Csv = lazy(() => import('components/Dashboard/Csv/Csv'));
 interface AuthRoutesProps {
   updateAuthState: Function;
 }
@@ -31,7 +31,7 @@ const AuthRoutes = ({updateAuthState}: AuthRoutesProps) => {
             <Redirect
               to={{
                 pathname: '/dashboard',
-                state: {from: location},
+                state: {from: location}
               }}
             />
           )}

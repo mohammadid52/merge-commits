@@ -1,9 +1,9 @@
 import React, {useContext} from 'react';
 import {IoArrowUndoCircleOutline} from 'react-icons/io5';
 import {useHistory} from 'react-router';
-import {getAsset} from '../../assets';
-import {GlobalContext} from '../../contexts/GlobalContext';
-import Buttons from './Buttons';
+import {getAsset} from 'assets';
+import {GlobalContext} from 'contexts/GlobalContext';
+import Buttons from 'atoms/Buttons';
 
 interface BreadCrumProps {
   items: {title: string; url?: string; last: boolean; goBack?: boolean}[];

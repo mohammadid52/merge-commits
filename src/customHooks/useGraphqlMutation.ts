@@ -1,5 +1,5 @@
-import * as customMutations from '@customGraphql/customMutations';
-import * as mutations from '@graphql/mutations';
+import * as customMutations from 'customGraphql/customMutations';
+import * as mutations from 'graphql/mutations';
 import {API, graphqlOperation} from 'aws-amplify';
 import {useState} from 'react';
 

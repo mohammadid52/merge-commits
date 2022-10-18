@@ -1,8 +1,8 @@
 import useUrlState from '@ahooksjs/use-url-state';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {Storage} from '@aws-amplify/storage';
-import Selector from '@components/Atoms/Form/Selector';
-import Anthology from '@components/Dashboard/Anthology/Anthology';
+import Selector from 'components/Atoms/Form/Selector';
+import Anthology from 'components/Dashboard/Anthology/Anthology';
 import EmojiPicker from 'emoji-picker-react';
 import {find, findIndex} from 'lodash';
 import sortBy from 'lodash/sortBy';
@@ -22,25 +22,25 @@ import {
   useParams,
   useRouteMatch
 } from 'react-router-dom';
-import {getAsset} from '../../../../assets';
-import {GlobalContext} from '../../../../contexts/GlobalContext';
-import * as customMutations from '../../../../customGraphql/customMutations';
-import * as customQueries from '../../../../customGraphql/customQueries';
-import useDictionary from '../../../../customHooks/dictionary';
-import {useQuery} from '../../../../customHooks/urlParam';
-import {AddQuestionModalDict} from '../../../../dictionary/dictionary.iconoclast';
-import * as mutations from '../../../../graphql/mutations';
-import * as queries from '../../../../graphql/queries';
-import {getImageFromS3} from '../../../../utilities/services';
-import {getUniqItems, initials, stringToHslColor} from '../../../../utilities/strings';
-import Buttons from '../../../Atoms/Buttons';
-import Loader from '../../../Atoms/Loader';
-import Modal from '../../../Atoms/Modal';
+import {getAsset} from 'assets';
+import {GlobalContext} from 'contexts/GlobalContext';
+import * as customMutations from 'customGraphql/customMutations';
+import * as customQueries from 'customGraphql/customQueries';
+import useDictionary from 'customHooks/dictionary';
+import {useQuery} from 'customHooks/urlParam';
+import {AddQuestionModalDict} from 'dictionary/dictionary.iconoclast';
+import * as mutations from 'graphql/mutations';
+import * as queries from 'graphql/queries';
+import {getImageFromS3} from 'utilities/services';
+import {getUniqItems, initials, stringToHslColor} from 'utilities/strings';
+import Buttons from 'atoms/Buttons';
+import Loader from 'atoms/Loader';
+import Modal from 'atoms/Modal';
 import LessonLoading from '../../../Lesson/Loading/ComponentLoading';
 import AnimatedContainer from '../../../Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import {useTabs} from '../../../Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/Tabs';
-import DroppableMedia from '../../../Molecules/DroppableMedia';
-import ModalPopUp from '../../../Molecules/ModalPopUp';
+import DroppableMedia from 'molecules/DroppableMedia';
+import ModalPopUp from 'molecules/ModalPopUp';
 import ProfileCropModal from '../../Profile/ProfileCropModal';
 import Attendance from './Attendance';
 import Feedback from './Feedback';
@@ -96,12 +96,14 @@ export interface AnthologyMapItem extends AnthologyContentInterface {
 
 interface IUserProps {
   instituteId?: string;
+  shouldNavigate?: boolean;
   userId?: string;
   insideModalPopUp?: boolean;
+  onSuccessCallback?: () => void;
 }
 
 const User = (props: IUserProps) => {
-  const {insideModalPopUp} = props;
+  const {insideModalPopUp, onSuccessCallback, shouldNavigate} = props;
   const history = useHistory();
   const match = useRouteMatch();
   const location = useLocation();
@@ -240,7 +242,6 @@ const User = (props: IUserProps) => {
 
       let studentClasses: any = userData.classes?.items.map((item: any) => item?.class);
       studentClasses = studentClasses.filter((d: any) => d !== null);
-      console.log('studentClasses - ', studentClasses);
 
       const studentRooms: any = studentClasses?.reduce((roomAcc: any[], item: any) => {
         if (item?.room) {
@@ -1609,7 +1610,9 @@ const User = (props: IUserProps) => {
                           instituteId={props.instituteId}
                           tab={tab}
                           setTab={setTab}
+                          onSuccessCallback={onSuccessCallback}
                           user={user}
+                          shouldNavigate={shouldNavigate}
                           status={status}
                           setStatus={setStatus}
                           getUserById={getUserProfile}

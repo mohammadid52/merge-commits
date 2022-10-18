@@ -1,21 +1,21 @@
-import Buttons from '@atoms/Buttons';
-import {DeleteActionBtn} from '@atoms/Buttons/DeleteActionBtn';
-import Modal from '@atoms/Modal';
-import PageWrapper from '@atoms/PageWrapper';
+import Buttons from 'atoms/Buttons';
+import {DeleteActionBtn} from 'atoms/Buttons/DeleteActionBtn';
+import Modal from 'atoms/Modal';
+import PageWrapper from 'atoms/PageWrapper';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import {GlobalContext} from '@contexts/GlobalContext';
-import * as customQueries from '@customGraphql/customQueries';
-import useDictionary from '@customHooks/dictionary';
-import * as mutations from '@graphql/mutations';
-import * as queries from '@graphql/queries';
-import ModalPopUp from '@molecules/ModalPopUp';
-import {stringToHslColor} from '@utilities/strings';
+import {GlobalContext} from 'contexts/GlobalContext';
+import * as customQueries from 'customGraphql/customQueries';
+import useDictionary from 'customHooks/dictionary';
+import * as mutations from 'graphql/mutations';
+import * as queries from 'graphql/queries';
+import ModalPopUp from 'molecules/ModalPopUp';
+import {stringToHslColor} from 'utilities/strings';
 import React, {Fragment, useContext, useEffect, useState} from 'react';
 import {IconContext} from 'react-icons';
 import {HiPencil} from 'react-icons/hi';
 import {IoIosAdd} from 'react-icons/io';
 import {IoAdd} from 'react-icons/io5';
-import {getAsset} from '../../../../../../../../assets';
+import {getAsset} from 'assets';
 import AddLearningObjective from '../AddLearningObjective';
 import AddMeasurement from '../AddMeasurement';
 import AddTopic from '../AddTopic';
@@ -55,7 +55,7 @@ const LearningObjective = (props: LearningObjectiveProps) => {
     show: false,
     section: '',
     id: '',
-    message: "Are you sure? This can't be undone.",
+    message: "Are you sure? This can't be undone."
   });
   const {clientKey, userLanguage, theme} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
@@ -63,7 +63,7 @@ const LearningObjective = (props: LearningObjectiveProps) => {
     AddMeasurementDict,
     AddTopicDict,
     LEARINGOBJECTIVEDICT,
-    TOPICLISTDICT,
+    TOPICLISTDICT
   } = useDictionary(clientKey);
 
   const createLearningObjective = () => {
@@ -85,12 +85,12 @@ const LearningObjective = (props: LearningObjectiveProps) => {
     let [list, seq]: any = await Promise.all([
       await API.graphql(
         graphqlOperation(queries.listLearningObjectives, {
-          filter: {curriculumID: {eq: curricularId}},
+          filter: {curriculumID: {eq: curricularId}}
         })
       ),
       await API.graphql(
         graphqlOperation(queries.getCSequences, {id: `l_${curricularId}`})
-      ),
+      )
     ]);
     seq = seq?.data?.getCSequences?.sequence || [];
     list = list?.data?.listLearningObjectives?.items || [];
@@ -102,7 +102,7 @@ const LearningObjective = (props: LearningObjectiveProps) => {
         objective.index = seq.indexOf(objective.id);
         const topicsData: any = await API.graphql(
           graphqlOperation(customQueries.listTopics, {
-            filter: {learningObjectiveID: {eq: objective.id}},
+            filter: {learningObjectiveID: {eq: objective.id}}
           })
         );
         objective.topics = await Promise.all(
@@ -113,7 +113,7 @@ const LearningObjective = (props: LearningObjectiveProps) => {
             .map(async (t: any) => {
               const measurementData: any = await API.graphql(
                 graphqlOperation(customQueries.listRubrics, {
-                  filter: {topicID: {eq: t.id}},
+                  filter: {topicID: {eq: t.id}}
                 })
               );
               t.rubrics =
@@ -132,7 +132,7 @@ const LearningObjective = (props: LearningObjectiveProps) => {
       let learningsID = list.map((item: {id: string}) => item.id);
       let seqItem: any = await API.graphql(
         graphqlOperation(mutations.createCSequences, {
-          input: {id: `l_${curricularId}`, sequence: learningsID},
+          input: {id: `l_${curricularId}`, sequence: learningsID}
         })
       );
       seqItem = seqItem.data.createCSequences;
@@ -148,7 +148,7 @@ const LearningObjective = (props: LearningObjectiveProps) => {
   const createNewTopic = (learningObjectiveID: string) => {
     setTopicModal(true);
     setSelectedTopicData({
-      learningObjectiveID,
+      learningObjectiveID
     });
     // history.push(
     //   `/dashboard/manage-institutions/curricular/${curricularId}/topic/add?lid=${learningId}`
@@ -172,7 +172,7 @@ const LearningObjective = (props: LearningObjectiveProps) => {
     setOpenMeasurementModal(true);
     setSelectedRubricData({
       topicId,
-      objectiveId,
+      objectiveId
     });
     // history.push(
     //   `/dashboard/manage-institutions/curricular/${curricularId}/measurement/add?tid=${topicID}`
@@ -184,7 +184,7 @@ const LearningObjective = (props: LearningObjectiveProps) => {
     setSelectedRubricData({
       ...rubricData,
       topicId: rubricData.topicID,
-      objectiveId,
+      objectiveId
     });
     // history.push(
     //   `/dashboard/manage-institutions/curricular/${curricularId}/measurement/edit/${id}`
@@ -209,7 +209,7 @@ const LearningObjective = (props: LearningObjectiveProps) => {
       learnings[index] = {
         ...learnings[index],
         name: data.name,
-        description: data.description,
+        description: data.description
       };
       setLearnings(learnings);
     } else {
@@ -240,11 +240,11 @@ const LearningObjective = (props: LearningObjectiveProps) => {
                     : {
                         ...rubric,
                         name: data.name,
-                        criteria: data.criteria,
+                        criteria: data.criteria
                       }
-                ),
+                )
               }
-        ),
+        )
       };
       setLearnings(temp);
     } else {
@@ -255,9 +255,9 @@ const LearningObjective = (props: LearningObjectiveProps) => {
             ? topic
             : {
                 ...topic,
-                rubrics: [...(topic.rubrics || []), data],
+                rubrics: [...(topic.rubrics || []), data]
               }
-        ),
+        )
       };
       setLearnings(temp);
     }
@@ -279,15 +279,15 @@ const LearningObjective = (props: LearningObjectiveProps) => {
             ? topic
             : {
                 ...topic,
-                ...data,
+                ...data
               }
-        ),
+        )
       };
       setLearnings(temp);
     } else {
       temp[index] = {
         ...temp[index],
-        topics: [...temp[index].topics, data],
+        topics: [...temp[index].topics, data]
       };
       setLearnings(temp);
     }
@@ -299,7 +299,7 @@ const LearningObjective = (props: LearningObjectiveProps) => {
       show: true,
       id,
       section,
-      message: `Are you sure you want to delete ${section}?. This action cannot be undone.`,
+      message: `Are you sure you want to delete ${section}?. This action cannot be undone.`
     });
   };
 
@@ -309,7 +309,7 @@ const LearningObjective = (props: LearningObjectiveProps) => {
       id: '',
       message: '',
       section: '',
-      show: false,
+      show: false
     }));
   };
 
@@ -335,15 +335,15 @@ const LearningObjective = (props: LearningObjectiveProps) => {
       setDeleting(true);
       await API.graphql(
         graphqlOperation(mutations.deleteLearningObjective, {
-          input: {id: warnModal.id},
+          input: {id: warnModal.id}
         })
       );
       await API.graphql(
         graphqlOperation(mutations.updateCSequences, {
           input: {
             id: `l_${curricularId}`,
-            sequence: learningIds.filter((item) => item !== warnModal.id),
-          },
+            sequence: learningIds.filter((item) => item !== warnModal.id)
+          }
         })
       );
       setLearnings((prevLearnings) =>
@@ -362,7 +362,7 @@ const LearningObjective = (props: LearningObjectiveProps) => {
       setDeleting(true);
       const result: any = await API.graphql(
         graphqlOperation(mutations.deleteTopic, {
-          input: {id: warnModal.id},
+          input: {id: warnModal.id}
         })
       );
       const objectiveId = result?.data.deleteTopic.learningObjectiveID;
@@ -370,7 +370,7 @@ const LearningObjective = (props: LearningObjectiveProps) => {
       const index = temp.findIndex((objective) => objective.id === objectiveId);
       temp[index] = {
         ...temp[index],
-        topics: temp[index].topics.filter((topic: any) => topic.id !== warnModal.id),
+        topics: temp[index].topics.filter((topic: any) => topic.id !== warnModal.id)
       };
       setLearnings(temp);
       setDeleting(false);
@@ -383,7 +383,7 @@ const LearningObjective = (props: LearningObjectiveProps) => {
       setDeleting(true);
       const result: any = await API.graphql(
         graphqlOperation(mutations.deleteRubric, {
-          input: {id: warnModal.id},
+          input: {id: warnModal.id}
         })
       );
       const objectiveId = result?.data.deleteRubric?.topic.learningObjectiveID;
@@ -400,11 +400,9 @@ const LearningObjective = (props: LearningObjectiveProps) => {
             ? topic
             : {
                 ...topic,
-                rubrics: topic.rubrics.filter(
-                  (rubric: any) => rubric.id !== warnModal.id
-                ),
+                rubrics: topic.rubrics.filter((rubric: any) => rubric.id !== warnModal.id)
               }
-        ),
+        )
       };
       setLearnings(temp);
       setDeleting(false);
@@ -478,7 +476,7 @@ const LearningObjective = (props: LearningObjectiveProps) => {
                                   background: `${stringToHslColor(
                                     getInitialFromObjectiveName(learning.name)
                                   )}`,
-                                  textShadow: '0.1rem 0.1rem 2px #423939b3',
+                                  textShadow: '0.1rem 0.1rem 2px #423939b3'
                                 }}>
                                 {getInitialFromObjectiveName(learning.name)}
                               </div>
@@ -557,7 +555,7 @@ const LearningObjective = (props: LearningObjectiveProps) => {
                                           <span className="w-auto flex items-center mr-1">
                                             <IconContext.Provider
                                               value={{
-                                                color: theme.iconColor[themeColor],
+                                                color: theme.iconColor[themeColor]
                                               }}>
                                               <IoAdd className="w-4 h-4" />
                                             </IconContext.Provider>
@@ -576,7 +574,7 @@ const LearningObjective = (props: LearningObjectiveProps) => {
                                             <IconContext.Provider
                                               value={{
                                                 size: '1.5rem',
-                                                color: 'darkgray',
+                                                color: 'darkgray'
                                               }}>
                                               <IoAdd />
                                             </IconContext.Provider>
@@ -593,7 +591,7 @@ const LearningObjective = (props: LearningObjectiveProps) => {
                                         <span className="w-auto flex items-center mr-1">
                                           <IconContext.Provider
                                             value={{
-                                              color: theme.iconColor[themeColor],
+                                              color: theme.iconColor[themeColor]
                                             }}>
                                             <IoAdd className="w-4 h-4" />
                                           </IconContext.Provider>
@@ -613,7 +611,7 @@ const LearningObjective = (props: LearningObjectiveProps) => {
                                     <IconContext.Provider
                                       value={{
                                         size: '1.5rem',
-                                        color: 'darkgray',
+                                        color: 'darkgray'
                                       }}>
                                       <IoAdd />
                                     </IconContext.Provider>

@@ -1,8 +1,9 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import * as customQueries from '@customGraphql/customQueries';
-import {createFilterToFetchSpecificItemsOnly} from '@utilities/strings';
+import CopyCloneSlideOver from 'components/Lesson/UniversalLessonBuilder/UI/SlideOvers/CopyCloneSlideOver';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import * as customQueries from 'customGraphql/customQueries';
 import React, {useEffect, useState} from 'react';
-import {getImageFromS3} from '../../../utilities/services';
+import {getImageFromS3} from 'utilities/services';
 import RoomViewCard from './RoomView/RoomViewCard';
 
 interface IRoomViewProps {
@@ -19,12 +20,10 @@ interface IRoomViewProps {
 }
 
 const RoomView = ({
-  roomIdList,
   mainSection,
   sectionRoomID,
   sectionTitle,
-  handleSectionSelect,
-  isTeacher
+  handleSectionSelect
 }: IRoomViewProps) => {
   // ##################################################################### //
   // ################## GET NOTEBOOK ROOMS FROM CONTEXT ################## //
@@ -34,18 +33,12 @@ const RoomView = ({
   const [loaded, setLoaded] = useState<boolean>(false);
   const [filteredRooms, setFilteredRooms] = useState<any[]>([]);
 
-  const getMultipleRooms = async (idList: string[]) => {
-    const compoundQuery = createFilterToFetchSpecificItemsOnly(idList, 'id');
+  const {state} = useGlobalContext();
 
+  const getMultipleRooms = async () => {
     try {
-      const roomsList: any = await API.graphql(
-        graphqlOperation(customQueries.listRoomsNotebook, {
-          filter: {
-            ...compoundQuery
-          }
-        })
-      );
-      const responseData = roomsList.data.listRooms.items;
+      const responseData = state?.roomData?.rooms || [];
+
       const curriculumMap = responseData.map(async (roomObj: any) => {
         const curriculumFull: any = await API.graphql(
           graphqlOperation(customQueries.getCurriculumNotebook, {
@@ -85,10 +78,15 @@ const RoomView = ({
   };
 
   useEffect(() => {
-    if (roomIdList.length > 0) {
-      getMultipleRooms(roomIdList);
+    if (
+      state &&
+      state.roomData &&
+      state?.roomData?.rooms &&
+      state?.roomData?.rooms.length > 0
+    ) {
+      getMultipleRooms();
     }
-  }, [roomIdList]);
+  }, [state?.roomData?.rooms]);
 
   const getImageURL = async (uniqKey: string) => {
     const imageUrl: any = await getImageFromS3(uniqKey);
@@ -113,19 +111,7 @@ const RoomView = ({
         : null);
       const curriculumName = curricula?.items[0]?.name;
 
-      return (
-        <RoomViewCard
-          key={`notebook-${idx}`}
-          roomID={item.id}
-          roomName={item.name}
-          mainSection={mainSection}
-          sectionRoomID={sectionRoomID}
-          curriculumName={curriculumName}
-          handleSectionSelect={handleSectionSelect}
-          bannerImage={bannerImage}
-          type={`Class Notebook`}
-        />
-      );
+      return {...item, bannerImage, curriculumName};
     });
 
     Promise.all(mapped).then((output: any) => setMappedNotebookRoomCards(output));
@@ -149,7 +135,19 @@ const RoomView = ({
             }}
             className="mt-0 max-w-lg mx-auto p-6 grid gap-4 lg:max-w-none md:grid-cols-4 grid-cols-1 2xl:grid-cols-5 sm:grid-cols-2">
             {mappedNotebookRoomCards && mappedNotebookRoomCards.length > 0
-              ? mappedNotebookRoomCards
+              ? mappedNotebookRoomCards.map((room, idx) => (
+                  <RoomViewCard
+                    key={`notebook-${idx}`}
+                    roomID={room.id}
+                    roomName={room.name}
+                    mainSection={mainSection}
+                    sectionRoomID={sectionRoomID}
+                    curriculumName={room.curriculumName}
+                    handleSectionSelect={handleSectionSelect}
+                    bannerImage={room.bannerImage}
+                    type={`Class Notebook`}
+                  />
+                ))
               : null}
 
             <RoomViewCard

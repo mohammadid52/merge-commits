@@ -2,11 +2,11 @@ import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {Auth} from '@aws-amplify/auth';
 import React, {useContext, useState} from 'react';
 import {useHistory} from 'react-router-dom';
-import {GlobalContext} from '../../../contexts/GlobalContext';
-import * as customMutations from '../../../customGraphql/customMutations';
-import useDictionary from '../../../customHooks/dictionary';
-import Buttons from '../../Atoms/Buttons';
-import FormInput from '../../Atoms/Form/FormInput';
+import {GlobalContext} from 'contexts/GlobalContext';
+import * as customMutations from 'customGraphql/customMutations';
+import useDictionary from 'customHooks/dictionary';
+import Buttons from 'atoms/Buttons';
+import FormInput from 'atoms/Form/FormInput';
 import ErrorNote from '../Admin/UserManagement/ErrorNote';
 import SuccessMessage from '../Admin/UserManagement/SuccessMessage';
 

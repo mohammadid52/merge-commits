@@ -8,9 +8,9 @@ import {HiOutlineOfficeBuilding} from 'react-icons/hi';
 import {IoIosHome, IoIosPeople, IoMdBuild, IoMdDisc} from 'react-icons/io';
 import {IoBarChart, IoBookOutline} from 'react-icons/io5';
 import {useHistory, useRouteMatch} from 'react-router-dom';
-import {getAsset} from '../../../assets';
-import {GlobalContext} from '../../../contexts/GlobalContext';
-import useDictionary from '../../../customHooks/dictionary';
+import {getAsset} from 'assets';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
 
 type LinkObject = {
   name: string;
@@ -72,32 +72,32 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
               title: sideBarLinksDict[userLanguage].REGISTRATION,
               name: sideBarLinksDict[userLanguage].REGISTRATION,
               label: 'Registration',
-              path: 'registration',
+              path: 'registration'
             },
             {
               title: sideBarLinksDict[userLanguage].PEOPLE,
               name: sideBarLinksDict[userLanguage].PEOPLE,
               label: 'People',
-              path: 'manage-users',
+              path: 'manage-users'
             },
             {
               title: sideBarLinksDict[userLanguage].CLASSROOM,
               name: sideBarLinksDict[userLanguage].CLASSROOM,
               label: 'Classroom',
-              path: 'classroom',
+              path: 'classroom'
             },
             {
               title: sideBarLinksDict[userLanguage].LESSON_PLANNER,
               name: sideBarLinksDict[userLanguage].LESSON_PLANNER,
               label: 'Lesson Planner',
-              path: 'lesson-planner',
+              path: 'lesson-planner'
             },
             {
               title: sideBarLinksDict[userLanguage].INSTITUTIONS,
               name: sideBarLinksDict[userLanguage].INSTITUTIONS,
               label: 'Institutions',
-              path: 'manage-institutions',
-            },
+              path: 'manage-institutions'
+            }
           ];
         });
       case 'ADM':
@@ -108,30 +108,28 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
               name: sideBarLinksDict[userLanguage].INSTITUTIONS,
               label: 'Institutions',
               path: 'manage-institutions',
-              subMenuItems: [{title: 'Add New', path: 'manage-institutions/add'}],
+              subMenuItems: [{title: 'Add New', path: 'manage-institutions/add'}]
             },
             {
               title: sideBarLinksDict[userLanguage].PEOPLE,
               name: sideBarLinksDict[userLanguage].PEOPLE,
               label: 'People',
               path: 'manage-users',
-              subMenuItems: [{title: 'Add New Person', path: 'registration'}],
+              subMenuItems: [{title: 'Add New Person', path: 'registration'}]
             },
             {
               title: sideBarLinksDict[userLanguage].LESSON_BUILDER,
               name: sideBarLinksDict[userLanguage].LESSON_BUILDER,
               label: 'Lesson Builder',
               path: 'lesson-builder',
-              subMenuItems: [
-                {title: 'Add New Lesson', path: 'lesson-builder/lesson/add'},
-              ],
+              subMenuItems: [{title: 'Add New Lesson', path: 'lesson-builder/lesson/add'}]
             },
             {
               title: sideBarLinksDict[userLanguage].RESEARCHANALYTICS,
               name: sideBarLinksDict[userLanguage].RESEARCHANALYTICS,
               label: 'Research & Analytics',
-              path: 'csv',
-            },
+              path: 'csv'
+            }
           ];
         });
       case 'TR':
@@ -143,13 +141,13 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
               title: sideBarLinksDict[userLanguage].DASHBOARD,
               name: sideBarLinksDict[userLanguage].DASHBOARD,
               label: 'Dashboard',
-              path: 'home',
+              path: 'home'
             },
             {
               title: sideBarLinksDict[userLanguage].INSTITUTIONS,
               name: sideBarLinksDict[userLanguage].INSTITUTIONS,
               label: 'Institutions',
-              path: 'manage-institutions',
+              path: 'manage-institutions'
             },
             role !== 'BLD'
               ? {
@@ -157,7 +155,7 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
                   name: sideBarLinksDict[userLanguage].PEOPLE,
                   label: 'People',
                   path: 'manage-users',
-                  subMenuItems: [{title: 'Add New Person', path: 'registration'}],
+                  subMenuItems: [{title: 'Add New Person', path: 'registration'}]
                 }
               : null,
             role !== 'BLD'
@@ -176,9 +174,9 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
                           state.currentPage === 'lesson-planner',
                         path: room.id,
                         onClick: (e: any) =>
-                          handleRoomSelection(room.id, room.name, i, 'lesson-planner'),
+                          handleRoomSelection(room.id, room.name, i, 'lesson-planner')
                       };
-                    }),
+                    })
                 }
               : null,
             // {
@@ -192,16 +190,14 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
               name: sideBarLinksDict[userLanguage].LESSON_BUILDER,
               label: 'Lesson Builder',
               path: 'lesson-builder',
-              subMenuItems: [
-                {title: 'Add New Lesson', path: 'lesson-builder/lesson/add'},
-              ],
+              subMenuItems: [{title: 'Add New Lesson', path: 'lesson-builder/lesson/add'}]
             },
             {
               title: sideBarLinksDict[userLanguage].RESEARCHANALYTICS,
               name: sideBarLinksDict[userLanguage].RESEARCHANALYTICS,
               label: 'Research & Analytics',
-              path: 'csv',
-            },
+              path: 'csv'
+            }
             // {
             //   title: sideBarLinksDict[userLanguage].UNIVERSAL_LESSON_BUILDER,
             //   name: sideBarLinksDict[userLanguage].UNIVERSAL_LESSON_BUILDER,
@@ -217,7 +213,7 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
               title: sideBarLinksDict[userLanguage].DASHBOARD,
               name: sideBarLinksDict[userLanguage].DASHBOARD,
               label: 'Dashboard',
-              path: 'home',
+              path: 'home'
             },
             {
               title: sideBarLinksDict[userLanguage].CLASSROOM,
@@ -233,17 +229,17 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
                       room.id === state.activeRoom && state.currentPage === 'classroom',
                     path: room.id,
                     onClick: (e: any) =>
-                      handleRoomSelection(room.id, room.name, i, 'classroom'),
+                      handleRoomSelection(room.id, room.name, i, 'classroom')
                   };
-                }),
+                })
             },
             {
               title: sideBarLinksDict[userLanguage].ANTHOLOGY,
               name: sideBarLinksDict[userLanguage].ANTHOLOGY,
               label: 'Anthology',
               path: 'anthology',
-              subMenuItems: [],
-            },
+              subMenuItems: []
+            }
           ];
         });
       default:

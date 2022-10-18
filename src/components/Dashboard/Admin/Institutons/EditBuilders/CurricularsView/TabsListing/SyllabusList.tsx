@@ -1,17 +1,17 @@
-import React, { Fragment, useEffect, useState, useContext } from 'react';
-import { useHistory } from 'react-router';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import API, { graphqlOperation } from '@aws-amplify/api';
+import React, {Fragment, useEffect, useState, useContext} from 'react';
+import {useHistory} from 'react-router';
+import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
+import API, {graphqlOperation} from '@aws-amplify/api';
 
-import PageWrapper from '../../../../../../Atoms/PageWrapper';
-import Buttons from '../../../../../../Atoms/Buttons';
-import Tooltip from '../../../../../../Atoms/Tooltip';
-import AddButton from '../../../../../../Atoms/Buttons/AddButton';
-import { reorder } from '../../../../../../../utilities/strings';
-import * as customMutations from '../../../../../../../customGraphql/customMutations';
-import { getAsset } from '../../../../../../../assets';
-import { GlobalContext } from '../../../../../../../contexts/GlobalContext';
-import useDictionary from '../../../../../../../customHooks/dictionary';
+import PageWrapper from 'atoms/PageWrapper';
+import Buttons from 'atoms/Buttons';
+import Tooltip from 'atoms/Tooltip';
+import AddButton from 'atoms/Buttons/AddButton';
+import {reorder} from 'utilities/strings';
+import * as customMutations from 'customGraphql/customMutations';
+import {getAsset} from 'assets';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
 
 interface SyllabusListProps {
   curricularId?: string;
@@ -24,8 +24,8 @@ interface SyllabusListProps {
 const SyllabusList = (props: SyllabusListProps) => {
   const history = useHistory();
 
-  const { curricularId, institutionId, loading, syllabusList, syllabusSequence } = props;
-  const { clientKey, theme, userLanguage } = useContext(GlobalContext);
+  const {curricularId, institutionId, loading, syllabusList, syllabusSequence} = props;
+  const {clientKey, theme, userLanguage} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const SyllabusDict = useDictionary(clientKey).SYLLABUS;
   const [list, setList] = useState<any>(syllabusList);
@@ -34,7 +34,7 @@ const SyllabusList = (props: SyllabusListProps) => {
     history.push(
       `/dashboard/manage-institutions/${institutionId}/curricular/${curricularId}/syllabus/add`
     );
-  }
+  };
   const editCurrentSyllabus = (id: string) => {
     history.push(
       `/dashboard/manage-institutions/${institutionId}/curricular/${curricularId}/syllabus/edit?id=${id}`
@@ -44,14 +44,14 @@ const SyllabusList = (props: SyllabusListProps) => {
   const onDragEnd = async (result: any) => {
     if (result.source.index !== result.destination.index) {
       const seq = list.map((sy: any) => sy.id);
-      console.log('seq', seq)
+      console.log('seq', seq);
       const reorderedList = reorder(seq, result.source.index, result.destination.index);
       try {
         let data = updateSyllabusListorder(syllabusList, reorderedList);
         setList(data);
         await API.graphql(
           graphqlOperation(customMutations.updateCurriculumSyllabusSequence, {
-            input: {id: curricularId, universalSyllabusSeq: reorderedList},
+            input: {id: curricularId, universalSyllabusSeq: reorderedList}
           })
         );
       } catch (err) {
@@ -61,22 +61,23 @@ const SyllabusList = (props: SyllabusListProps) => {
   };
 
   const updateSyllabusListorder = (syllabusList: any, sequence: any) => {
-    let data = syllabusList.map((t: any) => {
-      let index = sequence?.indexOf(t.id);
-      return { ...t, index };
-    })
+    let data = syllabusList
+      .map((t: any) => {
+        let index = sequence?.indexOf(t.id);
+        return {...t, index};
+      })
       .sort((a: any, b: any) => (a.index > b.index ? 1 : -1));
     return data;
-  }
+  };
 
   useEffect(() => {
     if (syllabusSequence) {
-      let data = updateSyllabusListorder(syllabusList, syllabusSequence)
-      setList(data)
+      let data = updateSyllabusListorder(syllabusList, syllabusSequence);
+      setList(data);
     } else {
-      setList(syllabusList)
+      setList(syllabusList);
     }
-  }, [syllabusList])
+  }, [syllabusList]);
 
   return (
     <div className="p-8 flex m-auto justify-center">
@@ -85,15 +86,12 @@ const SyllabusList = (props: SyllabusListProps) => {
           <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">
             {SyllabusDict[userLanguage]['TITLE']}
           </h3>
-          {
-            loading && (
-              <p className="text-center p-16"> {SyllabusDict[userLanguage]['FETCH']}</p>
-            )
-          }
-          {
-            !loading &&
+          {loading && (
+            <p className="text-center p-16"> {SyllabusDict[userLanguage]['FETCH']}</p>
+          )}
+          {!loading && (
             <Fragment>
-              {list && list.length > 0 &&
+              {list && list.length > 0 && (
                 <Fragment>
                   <div className="flex justify-end w-8/10 m-auto ">
                     <AddButton
@@ -122,7 +120,7 @@ const SyllabusList = (props: SyllabusListProps) => {
                         <Droppable droppableId="droppable">
                           {(provided, snapshot) => (
                             <div {...provided.droppableProps} ref={provided.innerRef}>
-                              {list.map((item:any, index:number) => (
+                              {list.map((item: any, index: number) => (
                                 <Draggable
                                   key={item.id}
                                   draggableId={item.id}
@@ -163,23 +161,24 @@ const SyllabusList = (props: SyllabusListProps) => {
                     </div>
                   </div>
                 </Fragment>
-              }
-              {(!list || list && list.length === 0) &&
-                (
-                  <Fragment>
-                    <div className="flex justify-center mt-8">
-                      <Buttons
-                        btnClass="mx-4"
-                        label="Add new unit"
-                        onClick={createNewSyllabus}
-                      />
-                    </div>
-                    <p className="text-center p-16"> {SyllabusDict[userLanguage]['INFO']}</p>
-                  </Fragment>
-                )
-              }
+              )}
+              {(!list || (list && list.length === 0)) && (
+                <Fragment>
+                  <div className="flex justify-center mt-8">
+                    <Buttons
+                      btnClass="mx-4"
+                      label="Add new unit"
+                      onClick={createNewSyllabus}
+                    />
+                  </div>
+                  <p className="text-center p-16">
+                    {' '}
+                    {SyllabusDict[userLanguage]['INFO']}
+                  </p>
+                </Fragment>
+              )}
             </Fragment>
-          }
+          )}
         </PageWrapper>
       </div>
     </div>

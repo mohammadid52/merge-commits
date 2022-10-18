@@ -1,5 +1,5 @@
 import {useContext} from 'react';
-import {GlobalContext} from '../contexts/GlobalContext';
+import {GlobalContext} from 'contexts/GlobalContext';
 import {StudentPageInput} from '@interfaces/UniversalLessonInterfaces';
 import useInLessonCheck from './checkIfInLesson';
 
@@ -91,9 +91,9 @@ const useStudentDataValue = () => {
             pageIdx: lessonState.currentPage,
             data: {
               domID: domID,
-              input: input,
-            },
-          },
+              input: input
+            }
+          }
         });
       } else {
         lessonDispatch({
@@ -101,9 +101,9 @@ const useStudentDataValue = () => {
           payload: {
             data: {
               domID: domID,
-              input: input,
-            },
-          },
+              input: input
+            }
+          }
         });
       }
     }
@@ -117,7 +117,7 @@ const useStudentDataValue = () => {
 
   return {
     getDataValue: getDataValue,
-    setDataValue: setDataValue,
+    setDataValue: setDataValue
   };
 };
 

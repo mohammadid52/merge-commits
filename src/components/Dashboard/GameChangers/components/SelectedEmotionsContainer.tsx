@@ -1,13 +1,13 @@
-import Popover from '@atoms/Popover';
-import Loader from '@components/Atoms/Loader';
-import Tooltip from '@components/Atoms/Tooltip';
-import ThemeModal from '@components/Molecules/ThemeModal';
-import {useGlobalContext} from '@contexts/GlobalContext';
-import {useNotifications} from '@contexts/NotificationContext';
-import useInLessonCheck from '@customHooks/checkIfInLesson';
-import useAuth from '@customHooks/useAuth';
-import useGraphqlMutation from '@customHooks/useGraphqlMutation';
-import {awsFormatDate, dateString} from '@utilities/time';
+import Popover from 'atoms/Popover';
+import Loader from 'components/Atoms/Loader';
+import Tooltip from 'components/Atoms/Tooltip';
+import ThemeModal from 'components/Molecules/ThemeModal';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import {useNotifications} from 'contexts/NotificationContext';
+import useInLessonCheck from 'customHooks/checkIfInLesson';
+import useAuth from 'customHooks/useAuth';
+import useGraphqlMutation from 'customHooks/useGraphqlMutation';
+import {awsFormatDate, dateString} from 'utilities/time';
 import {CreateFeelingsArchiveInput, CreateFeelingsArchiveMutationVariables} from 'API';
 import {remove} from 'lodash';
 import {nanoid} from 'nanoid';
@@ -19,7 +19,7 @@ import Button from './Button';
 const Emotion = ({
   selectedEmotion,
   removeEmotion,
-  idx,
+  idx
 }: {
   selectedEmotion: SelectedEmotion;
   removeEmotion: any;
@@ -54,7 +54,7 @@ const Emotion = ({
                 setReplaceIdx(idx);
                 setNotification({
                   title: `Now select another emotion`,
-                  show: true,
+                  show: true
                 });
                 setPrimaryEmotion(selectedEmotion.primary);
               }}
@@ -92,7 +92,7 @@ const SelectedEmotionsContainer = () => {
     setSecondaryEmotion,
     setPrimaryEmotion,
     setShowFinalStep,
-    showFinalStep,
+    showFinalStep
   } = useGameChangers();
 
   const removeEmotion = (emName: string) => {
@@ -121,7 +121,7 @@ const SelectedEmotionsContainer = () => {
         date: awsFormatDate(dateString('-', 'WORLD')),
         classRoomID: classId,
         lessonID: lessonId,
-        comments: lessonState.currentPage.toString(),
+        comments: lessonState.currentPage.toString()
       };
       mutate({input: payload});
       setShowFinalStep(true);

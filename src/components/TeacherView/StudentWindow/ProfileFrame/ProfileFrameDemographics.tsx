@@ -1,10 +1,10 @@
 import React, {Fragment, useEffect, useState} from 'react';
 import {graphqlOperation} from '@aws-amplify/api-graphql';
-import * as customQueries from '@customGraphql/customQueries';
-import {getUniqItems} from '@utilities/strings';
+import * as customQueries from 'customGraphql/customQueries';
+import {getUniqItems} from 'utilities/strings';
 import {API} from 'aws-amplify';
 import {sortBy} from 'lodash';
-import Loader from '@components/Atoms/Loader';
+import Loader from 'components/Atoms/Loader';
 
 interface IProfileFrameDemographicsProps {
   studentID?: any;
@@ -13,7 +13,7 @@ interface IProfileFrameDemographicsProps {
 
 const ProfileFrameDemographics = ({
   studentID,
-  currentTab,
+  currentTab
 }: IProfileFrameDemographicsProps) => {
   const [loading, setLoading] = useState(false);
 
@@ -110,8 +110,8 @@ const ProfileFrameDemographics = ({
                   } else {
                     return acc;
                   }
-                }, []),
-              },
+                }, [])
+              }
             };
           } else {
             return checkpoint;
@@ -133,8 +133,8 @@ const ProfileFrameDemographics = ({
                   } else {
                     return acc;
                   }
-                }, []),
-              },
+                }, [])
+              }
             };
           } else {
             return checkpoint;
@@ -186,8 +186,8 @@ const ProfileFrameDemographics = ({
     const checkpointIDFilter: any = checkpointIDs.map((item: any) => {
       return {
         checkpointID: {
-          eq: item,
-        },
+          eq: item
+        }
       };
     });
     const filter = {
@@ -196,9 +196,9 @@ const ProfileFrameDemographics = ({
         {authID: {eq: user.authId}},
         {syllabusLessonID: {eq: '999999'}},
         {
-          or: [...checkpointIDFilter],
-        },
-      ],
+          or: [...checkpointIDFilter]
+        }
+      ]
     };
     const results: any = await API.graphql(
       graphqlOperation(customQueries.listQuestionDatas, {filter: filter})

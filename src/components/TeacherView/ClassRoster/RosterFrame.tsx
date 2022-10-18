@@ -1,11 +1,11 @@
 import React, {useContext, useEffect, useState, useRef} from 'react';
 import {gsap} from 'gsap/all';
-import usePrevious from '@customHooks/previousProps';
+import usePrevious from 'customHooks/previousProps';
 import LessonDetails from '../TopMenu/LessonDetails';
 import LessonInfoTitleBar from '../TopMenu/LessonInfoTitleBar';
-import useTailwindBreakpoint from '@customHooks/tailwindBreakpoint';
+import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
 import {AiOutlineCloseCircle, AiOutlineMenu} from 'react-icons/ai';
-import ButtonsRound from '@components/Atoms/ButtonsRound';
+import ButtonsRound from 'components/Atoms/ButtonsRound';
 import {getAsset} from 'assets';
 
 interface IRosterFrame {
@@ -23,7 +23,7 @@ const RosterFrame = ({
   theme,
   clientKey,
   rightView,
-  setRightView,
+  setRightView
 }: IRosterFrame) => {
   const themeColor = getAsset(clientKey, 'themeClassName');
   const [miniOut, setMiniOut] = useState<boolean>(false);
@@ -99,7 +99,7 @@ const RosterFrame = ({
         className={`absolute bg-white h-full flex flex-col items-center border-r-0 border-gray-600 border-opacity-50 z-100`}
         style={{
           width: '36px',
-          display: breakpoint === 'xl' || breakpoint === '2xl' ? 'none' : 'block',
+          display: breakpoint === 'xl' || breakpoint === '2xl' ? 'none' : 'block'
         }}>
         <ButtonsRound
           Icon={miniOut ? AiOutlineCloseCircle : AiOutlineMenu}

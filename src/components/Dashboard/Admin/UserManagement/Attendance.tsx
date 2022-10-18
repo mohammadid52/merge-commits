@@ -7,13 +7,13 @@ import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import orderBy from 'lodash/orderBy';
 import moment from 'moment';
 
-import * as customQueries from '../../../../customGraphql/customQueries';
-import {GlobalContext} from '../../../../contexts/GlobalContext';
+import * as customQueries from 'customGraphql/customQueries';
+import {GlobalContext} from 'contexts/GlobalContext';
 
-import Loader from '../../../Atoms/Loader';
-import Buttons from '../../../Atoms/Buttons';
+import Loader from 'atoms/Loader';
+import Buttons from 'atoms/Buttons';
 
-import {getAsset} from '../../../../assets';
+import {getAsset} from 'assets';
 import 'react-datepicker/dist/react-datepicker.css';
 
 const pad = (num: any) => {
@@ -41,7 +41,7 @@ const Attendance = ({id, goToClassroom, selectedRoomId, role}: IAttendanceProps)
     order: boolean | 'desc' | 'asc';
   }>({
     fieldName: '',
-    order: false,
+    order: false
   });
   const [nextToken, setNextToken] = useState<string>('');
 
@@ -61,7 +61,7 @@ const Attendance = ({id, goToClassroom, selectedRoomId, role}: IAttendanceProps)
         studentID: id,
         sortDirection: 'DESC',
         date,
-        limit,
+        limit
       };
       if (nextToken) {
         payload.nextToken = nextToken;
@@ -75,7 +75,7 @@ const Attendance = ({id, goToClassroom, selectedRoomId, role}: IAttendanceProps)
         const year = date.getFullYear();
 
         payload.date = {
-          eq: `${year}-${pad(monthNumber + 1)}-${pad(dayNumber)}`,
+          eq: `${year}-${pad(monthNumber + 1)}-${pad(dayNumber)}`
         };
       }
       const list: any = await API.graphql(
@@ -85,7 +85,7 @@ const Attendance = ({id, goToClassroom, selectedRoomId, role}: IAttendanceProps)
         ...record,
         lessonName: record.lesson?.title,
         curriculumName: record.curriculum?.name,
-        roomName: record.room?.name,
+        roomName: record.room?.name
       }));
       if (fetchNewRecords) {
         setAttendanceList(temp);
@@ -111,7 +111,7 @@ const Attendance = ({id, goToClassroom, selectedRoomId, role}: IAttendanceProps)
   const handleOrderBy = (fieldName: string, order: boolean | 'desc' | 'asc') => {
     setSortConfig({
       fieldName,
-      order,
+      order
     });
     setAttendanceList(orderBy(attendanceList, [fieldName], [order]));
   };

@@ -1,12 +1,12 @@
 import React, {useContext, useState, useEffect} from 'react';
 
-import {EditQuestionModalDict} from '../../../../../dictionary/dictionary.iconoclast';
-import Buttons from '../../../../Atoms/Buttons';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
+import {EditQuestionModalDict} from 'dictionary/dictionary.iconoclast';
+import Buttons from 'atoms/Buttons';
+import {GlobalContext} from 'contexts/GlobalContext';
 import {IContentTypeComponentProps} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
-import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
+import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
 import {v4 as uuidv4} from 'uuid';
-import RichTextEditor from '../../../../Atoms/RichTextEditor';
+import RichTextEditor from 'atoms/RichTextEditor';
 import {isEmpty} from '@aws-amplify/core';
 
 interface IParaModalComponentProps extends IContentTypeComponentProps {
@@ -22,7 +22,7 @@ const ParaModalComponent = ({
   setUnsavedChanges,
   askBeforeClose,
   createNewBlockULBHandler,
-  updateBlockContentULBHandler,
+  updateBlockContentULBHandler
 }: IParaModalComponentProps) => {
   const {userLanguage} = useContext(GlobalContext);
 
@@ -31,7 +31,7 @@ const ParaModalComponent = ({
   const FIELD_ID = 'paragraph';
   const [fields, setFields] = useState<{paragraph: string; paragraphHtml: string}>({
     paragraph: !isEmpty(inputObj) ? inputObj[0].value : '',
-    paragraphHtml: !isEmpty(inputObj) ? inputObj[0].value : '',
+    paragraphHtml: !isEmpty(inputObj) ? inputObj[0].value : ''
   });
 
   useEffect(() => {
@@ -45,7 +45,7 @@ const ParaModalComponent = ({
 
     const input = {
       id: list.id,
-      lessonPlan: [...list.lessonPlan],
+      lessonPlan: [...list.lessonPlan]
     };
 
     await updateLessonPageToDB(input);
@@ -54,12 +54,12 @@ const ParaModalComponent = ({
   const onParaCreate = async () => {
     if (isEditingMode) {
       const updatedList = updateBlockContentULBHandler('', '', FIELD_ID, [
-        {id: uuidv4().toString(), value: fields['paragraphHtml']},
+        {id: uuidv4().toString(), value: fields['paragraphHtml']}
       ]);
       await addToDB(updatedList);
     } else {
       const updatedList = createNewBlockULBHandler('', '', FIELD_ID, [
-        {id: uuidv4().toString(), value: fields['paragraphHtml']},
+        {id: uuidv4().toString(), value: fields['paragraphHtml']}
       ]);
       await addToDB(updatedList);
     }

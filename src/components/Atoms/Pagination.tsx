@@ -1,8 +1,8 @@
 import React, {useState, useEffect, useContext} from 'react';
 import {IconContext} from 'react-icons';
 import {FaAngleRight, FaAngleLeft} from 'react-icons/fa';
-import {GlobalContext} from '../../contexts/GlobalContext';
-import {getAsset} from '../../assets';
+import {GlobalContext} from 'contexts/GlobalContext';
+import {getAsset} from 'assets';
 
 interface PaginationProps {
   currentPage: number;
@@ -114,7 +114,7 @@ const PageArrows: React.FC<PageArrowsProps> = (pageProps: PageArrowsProps) => {
         <IconContext.Provider
           value={{
             size: '1.5rem',
-            color: `${active ? theme.iconColor[themeColor] : 'darkgrey'}`,
+            color: `${active ? theme.iconColor[themeColor] : 'darkgrey'}`
           }}>
           {isBack ? <FaAngleLeft /> : <FaAngleRight />}
         </IconContext.Provider>

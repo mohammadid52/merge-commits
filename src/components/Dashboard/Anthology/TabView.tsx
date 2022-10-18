@@ -1,29 +1,25 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext} from 'react';
 import {FaEdit} from 'react-icons/fa';
 
-import {GlobalContext} from '../../../contexts/GlobalContext';
-import useDictionary from '../../../customHooks/dictionary';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
 
-import SectionTitleV3 from '../../Atoms/SectionTitleV3';
-import UnderlinedTabs from '../../Atoms/UnderlinedTabs';
-import Buttons from '../../Atoms/Buttons';
+import Buttons from 'atoms/Buttons';
 
+import {IoIosJournal} from 'react-icons/io';
+import {IconContext} from 'react-icons/lib';
+import {getAsset} from 'assets';
 import {
   UniversalClassData,
   UniversalJournalData,
   UniversalLessonStudentData
-} from '../../../interfaces/UniversalLessonInterfaces';
-import AnthologyUnderlinedTabs from './AnthologyUnderlinedTabs';
-import EmptyViewWrapper from './EmptyViewWrapper';
-import {stringToHslColor} from '../../../utilities/strings';
-import {IoKeyOutline} from 'react-icons/io5';
-import SentimentTab from './SentimentTab';
-import {IconContext} from 'react-icons/lib';
-import {IoIosJournal} from 'react-icons/io';
-import UploadsTab from './UploadsTab';
-import {getAsset} from '../../../assets';
-import {ViewEditMode} from './Anthology';
-import WrittenContentTab from './WrittenContentTab';
+} from '@interfaces/UniversalLessonInterfaces';
+import {stringToHslColor} from 'utilities/strings';
+import {ViewEditMode} from 'components/Dashboard/Anthology/Anthology';
+import AnthologyUnderlinedTabs from 'components/Dashboard/Anthology/AnthologyUnderlinedTabs';
+import SentimentTab from 'components/Dashboard/Anthology/SentimentTab';
+import UploadsTab from 'components/Dashboard/Anthology/UploadsTab';
+import WrittenContentTab from 'components/Dashboard/Anthology/WrittenContentTab';
 
 export interface ITabParentProps {
   handleEditToggle?: (
@@ -80,7 +76,6 @@ const TabView = ({
   allUniversalJournalData,
   setAllUniversalJournalData,
   classNotebook,
-  setClassNotebook,
   allUniversalClassData,
   setAllUniversalClassData
 }: ITabViewProps) => {
@@ -180,14 +175,14 @@ const TabView = ({
       id: 'Work',
       content: WrittenContent
     },
+    // {
+    //   index: 1,
+    //   title: anthologyDict[userLanguage].TABS.C,
+    //   id: 'Notes',
+    //   content: WrittenContent
+    // },
     {
       index: 1,
-      title: anthologyDict[userLanguage].TABS.C,
-      id: 'Notes',
-      content: WrittenContent
-    },
-    {
-      index: 2,
       title: anthologyDict[userLanguage].TABS.D,
       id: 'Uploads',
       content: (
@@ -240,47 +235,50 @@ const TabView = ({
 
   return (
     <>
-      <div
-        className={`w-full h-14 leading-6 text-gray-900 flex flex-row justify-between items-center`}>
-        <div
-          className={`border-b-0 border-gray-200 shadow px-4 w-auto bg-white rounded-t-lg h-full flex flex-row justify-start items-center`}>
-          <IconContext.Provider
-            value={{
-              className: `relative`
-            }}>
-            <IoIosJournal
-              style={{color: stringToHslColor(sectionRoomID)}}
-              className="absolute my-auto mr-2 w-auto h-auto fill-current"
-              size={24}
+      {subSection !== 'none' && (
+        <>
+          <div
+            className={`w-full h-14 leading-6 text-gray-900 flex flex-row justify-between items-center`}>
+            <div
+              className={`border-b-0 border-gray-200 shadow px-4 w-auto bg-white rounded-t-lg h-full flex flex-row justify-start items-center`}>
+              <IconContext.Provider
+                value={{
+                  className: `relative`
+                }}>
+                <IoIosJournal
+                  style={{color: stringToHslColor(sectionRoomID)}}
+                  className="absolute my-auto mr-2 w-auto h-auto fill-current"
+                  size={24}
+                />
+              </IconContext.Provider>
+
+              <h2
+                className={`text-sm md:text-lg 2xl:text-xl font-semibold leading-6 text-gray-900`}>
+                {getTitle()}
+              </h2>
+            </div>
+            {subSection === 'Journal' && tab === 1 && (
+              <Buttons
+                Icon={FaEdit}
+                customStyles={{width: '14rem'}}
+                label={anthologyDict[userLanguage].ACTIONS.CREATE}
+                onClick={() => handleEditToggle('create', '')}
+                type="button"
+              />
+            )}
+          </div>
+          <div
+            className={`w-full min-h-48 pb-4 overflow-hidden bg-white rounded-b-lg shadow mb-12`}>
+            <AnthologyUnderlinedTabs
+              hideTooltip
+              activeTab={tab}
+              mainSection={mainSection}
+              tabs={mainSection === 'Class' ? CLASS_TABS : JOURNAL_TABS}
+              handleTabSelect={handleTabSelect}
             />
-          </IconContext.Provider>
-
-          <h2
-            className={`text-sm md:text-lg 2xl:text-xl font-semibold leading-6 text-gray-900`}>
-            {getTitle()}
-          </h2>
-        </div>
-        {subSection === 'Journal' && tab === 1 && (
-          <Buttons
-            Icon={FaEdit}
-            customStyles={{width: '14rem'}}
-            label={anthologyDict[userLanguage].ACTIONS.CREATE}
-            onClick={() => handleEditToggle('create', '')}
-            type="button"
-          />
-        )}
-      </div>
-
-      <div
-        className={`w-full min-h-48 pb-4 overflow-hidden bg-white rounded-b-lg shadow mb-12`}>
-        <AnthologyUnderlinedTabs
-          hideTooltip
-          activeTab={tab}
-          mainSection={mainSection}
-          tabs={mainSection === 'Class' ? CLASS_TABS : JOURNAL_TABS}
-          handleTabSelect={handleTabSelect}
-        />
-      </div>
+          </div>
+        </>
+      )}
     </>
   );
 };

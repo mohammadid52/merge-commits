@@ -1,10 +1,10 @@
-import Loader from '@components/Atoms/Loader';
-import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
-import {useGlobalContext} from '@contexts/GlobalContext';
-import useInGC from '@customHooks/checkIfGameChanges';
-import useAuth from '@customHooks/useAuth';
-import useGraphqlMutation from '@customHooks/useGraphqlMutation';
-import useGraphqlQuery from '@customHooks/useGraphqlQuery';
+import Loader from 'components/Atoms/Loader';
+import AnimatedContainer from 'components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import useInGC from 'customHooks/checkIfGameChanges';
+import useAuth from 'customHooks/useAuth';
+import useGraphqlMutation from 'customHooks/useGraphqlMutation';
+import useGraphqlQuery from 'customHooks/useGraphqlQuery';
 import {FeelingsArchive, ListFeelingsArchivesQueryVariables} from 'API';
 import React, {useEffect, useState} from 'react';
 import {useRouteMatch} from 'react-router';
@@ -21,7 +21,7 @@ const EmotionCard = ({inLesson}: {inLesson: boolean}) => {
     setShowFinalStep,
     setPrimaryEmotion,
     setSecondaryEmotion,
-    setSelectedEmotions,
+    setSelectedEmotions
   } = useGameChangers();
   const [changesSaved, setChangesSaved] = useState(false);
 
@@ -68,8 +68,8 @@ const EmotionCard = ({inLesson}: {inLesson: boolean}) => {
       filter: {
         personAuthID: {eq: authId},
         lessonID: {eq: lessonId},
-        comments: {eq: lessonState.currentPage.toString()},
-      },
+        comments: {eq: lessonState.currentPage.toString()}
+      }
     },
     //  custom means use query from customQueries file.
     // enabled allows conditinational fetching. if it is enabled then only the query will be fetched. Default is true

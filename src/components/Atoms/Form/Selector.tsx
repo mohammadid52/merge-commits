@@ -2,9 +2,9 @@ import {ExclamationCircleIcon} from '@heroicons/react/outline';
 import React, {ReactNode, useContext, useEffect, useRef, useState} from 'react';
 import {FaSpinner, FaTimes} from 'react-icons/fa';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
-import {getAsset} from '../../../assets';
-import {GlobalContext} from '../../../contexts/GlobalContext';
-import Label from './Label';
+import {getAsset} from 'assets';
+import {GlobalContext} from 'contexts/GlobalContext';
+import Label from 'atoms/Form/Label';
 
 interface SelectorProps {
   list?: {id: number; name: string | number; popoverElement?: ReactNode}[];
@@ -206,7 +206,7 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
             role="listbox"
             aria-labelledby="listbox-label"
             aria-activedescendant="listbox-item-3"
-            className="rounded-md  max-h-60 py-1 text-base overflow-y-auto leading-6 focus:shadow-none focus:outline-none sm:text-sm sm:leading-5">
+            className="rounded-md relative  max-h-60 py-1 text-base overflow-y-auto leading-6 focus:shadow-none focus:outline-none sm:text-sm sm:leading-5">
             {list.length > 0 ? (
               list.map(
                 (item: {popoverElement?: any; name: string; id: any; value: string}) => (

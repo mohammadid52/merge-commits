@@ -1,10 +1,10 @@
 import React, {Fragment, useContext, useEffect, useState} from 'react';
 import {IoIosKeypad} from 'react-icons/io';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
-import {GlobalContext} from '../../../../../../contexts/GlobalContext';
-import useDictionary from '../../../../../../customHooks/dictionary';
-import Buttons from '../../../../../Atoms/Buttons';
-import DragableAccordion from '../../../../../Atoms/DragableAccordion';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import Buttons from 'atoms/Buttons';
+import DragableAccordion from 'atoms/DragableAccordion';
 import CheckpointQueTable from './CheckpointQueTable';
 
 interface SelectedCheckPointsListProps {
@@ -25,7 +25,7 @@ const SelectedCheckPointsList = (props: SelectedCheckPointsListProps) => {
     editCheckPoint,
     onDragEnd,
     lessonName,
-    lessonType,
+    lessonType
   } = props;
   const [savedCheckpoint, setSavedCheckpoint] = useState(activeCheckpoints);
   const {clientKey, userLanguage} = useContext(GlobalContext);
@@ -44,7 +44,7 @@ const SelectedCheckPointsList = (props: SelectedCheckPointsListProps) => {
             editCheckPoint={editCheckPoint}
             showActionIcons
           />
-        ),
+        )
       };
       return newItem;
     });

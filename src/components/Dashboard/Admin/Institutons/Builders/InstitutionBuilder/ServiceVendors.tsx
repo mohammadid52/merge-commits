@@ -1,19 +1,19 @@
 import React, {useEffect, useState, useContext} from 'react';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 
-import Selector from '@atoms/Form/Selector';
-import Tooltip from '@atoms/Tooltip';
-import AddButton from '@atoms/Buttons/AddButton';
+import Selector from 'atoms/Form/Selector';
+import Tooltip from 'atoms/Tooltip';
+import AddButton from 'atoms/Buttons/AddButton';
 
-import {GlobalContext} from '@contexts/GlobalContext';
-import useDictionary from '@customHooks/dictionary';
-import * as customQueries from '@customGraphql/customQueries';
-import * as customMutations from '@customGraphql/customMutations';
-import * as mutations from '@graphql/mutations';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import * as customQueries from 'customGraphql/customQueries';
+import * as customMutations from 'customGraphql/customMutations';
+import * as mutations from 'graphql/mutations';
 
-import {createFilterToFetchAllItemsExcept} from '@utilities/strings';
-import {statusList} from '@utilities/staticData';
-import {getAsset} from '../../../../../../assets';
+import {createFilterToFetchAllItemsExcept} from 'utilities/strings';
+import {statusList} from 'utilities/staticData';
+import {getAsset} from 'assets';
 
 interface ServiceVendorsProps {
   instId: string;
@@ -35,7 +35,7 @@ const ServiceVendors = (props: ServiceVendorsProps) => {
   const [partners, setPartners] = useState<any>([]);
   const [showModal, setShowModal] = useState<{show: boolean; item: any}>({
     show: false,
-    item: {},
+    item: {}
   });
   const [newServPro, setNewServPro] = useState({id: '', name: '', value: ''});
   const [statusEdit, setStatusEdit] = useState('');
@@ -47,7 +47,7 @@ const ServiceVendors = (props: ServiceVendorsProps) => {
         serviceProviders.items.map((item: any) => ({
           id: item.id,
           status: item.status,
-          partner: {...item.providerInstitution},
+          partner: {...item.providerInstitution}
         }))
       );
     }
@@ -57,14 +57,14 @@ const ServiceVendors = (props: ServiceVendorsProps) => {
     setNewServPro({
       id: id,
       name: name,
-      value: val,
+      value: val
     });
   };
 
   const fetchAvailableServiceProviders = async () => {
     try {
       const {
-        serviceProviders: {items},
+        serviceProviders: {items}
       } = props;
       const serviceProvidersIds = items.map((sp: any) => sp.providerID);
       // fetch list of service providers expect the self and partner institutes
@@ -72,8 +72,8 @@ const ServiceVendors = (props: ServiceVendorsProps) => {
         graphqlOperation(customQueries.listServiceProviders, {
           filter: {
             isServiceProvider: {eq: true},
-            ...createFilterToFetchAllItemsExcept([instId, ...serviceProvidersIds], 'id'),
-          },
+            ...createFilterToFetchAllItemsExcept([instId, ...serviceProvidersIds], 'id')
+          }
         })
       );
       const listItems = list.data.listInstitutions?.items || [];
@@ -82,7 +82,7 @@ const ServiceVendors = (props: ServiceVendorsProps) => {
         .map((item: any, i: any) => ({
           id: item.id,
           name: item.name || '',
-          value: item.name || '',
+          value: item.name || ''
         }))
         .sort((a: any, b: any) =>
           a.name?.toLowerCase() > b.name?.toLowerCase() ? 1 : -1
@@ -106,7 +106,7 @@ const ServiceVendors = (props: ServiceVendorsProps) => {
         const input = {
           partnerID: instId,
           providerID: newServPro.id,
-          status: 'Active',
+          status: 'Active'
         };
         const addedPartner: any = await API.graphql(
           graphqlOperation(mutations.createServiceProvider, {input: input})
@@ -115,7 +115,7 @@ const ServiceVendors = (props: ServiceVendorsProps) => {
         props.updateServiceProviders(item);
         const updatedPartners = [
           ...partners,
-          {id: item.id, status: 'Active', partner: {...item.providerInstitution}},
+          {id: item.id, status: 'Active', partner: {...item.providerInstitution}}
         ];
 
         const updatedAvailableServiceProviders = availableServiceProviders.filter(
@@ -146,7 +146,7 @@ const ServiceVendors = (props: ServiceVendorsProps) => {
       setUpdateStatus(true);
       await API.graphql(
         graphqlOperation(customMutations.updateServiceProviderStatus, {
-          input: {id, status},
+          input: {id, status}
         })
       );
       const updatedPartners = partners.map((sp: any) => {

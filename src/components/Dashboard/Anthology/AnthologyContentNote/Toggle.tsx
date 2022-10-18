@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import * as mutations from '../../../../graphql/mutations';
+import * as mutations from 'graphql/mutations';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {ITabViewProps} from '../TabView';
 
@@ -14,7 +14,7 @@ const Toggle = ({
   label,
   allUniversalJournalData,
   currentContentObj,
-  addToJournalUpdateQueue,
+  addToJournalUpdateQueue
 }: IToggleProps) => {
   const [updating, setUpdating] = useState<boolean>(false);
   const updateJournalShare = async () => {
@@ -28,8 +28,8 @@ const Toggle = ({
             id: currentContentObj.id,
             shared: currentContentObj.hasOwnProperty('shared')
               ? !currentContentObj?.shared
-              : true,
-          },
+              : true
+          }
         })
       );
     } catch (e) {

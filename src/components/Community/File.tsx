@@ -1,4 +1,4 @@
-import {IFileComponent} from '@components/Community/constants.community';
+import {IFileComponent} from 'components/Community/constants.community';
 import React from 'react';
 
 const genStatus = (_status: string) => {
@@ -36,7 +36,7 @@ const File = ({
   progress,
   fileName,
 
-  file,
+  file
 }: IFileComponent) => {
   return (
     <div

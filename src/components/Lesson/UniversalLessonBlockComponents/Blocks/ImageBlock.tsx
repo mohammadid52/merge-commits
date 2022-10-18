@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
-import {getImageFromS3Static} from '../../../../utilities/services';
+import {getImageFromS3Static} from 'utilities/services';
 
 interface ImageBlockProps extends RowWrapperProps {
   id: string;
@@ -24,14 +24,14 @@ export const ImageBlock = (props: ImageBlockProps) => {
         url: url,
         width: width,
         height: height,
-        caption: caption,
+        caption: caption
       });
     }
   }, [value]);
 
   const styleAttribute = {
     width: imageState.width === 'auto' ? 'auto' : `${imageState.width}px`,
-    height: imageState.height === 'auto' ? 'auto' : `${imageState.height}px`,
+    height: imageState.height === 'auto' ? 'auto' : `${imageState.height}px`
   };
 
   return (

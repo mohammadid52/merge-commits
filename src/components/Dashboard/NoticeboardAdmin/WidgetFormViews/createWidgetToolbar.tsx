@@ -3,8 +3,8 @@ import {AiOutlineFileZip, AiOutlinePhone} from 'react-icons/ai';
 import {GoTextSize} from 'react-icons/go';
 import {GrBlockQuote} from 'react-icons/gr';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
-import {GlobalContext} from '../../../../contexts/GlobalContext';
-import useDictionary from '../../../../customHooks/dictionary';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
 import {NoticeboardFormProps} from '../NoticeboardAdminContent';
 
 const CreateWidgetToolbar = (props: NoticeboardFormProps) => {
@@ -15,46 +15,46 @@ const CreateWidgetToolbar = (props: NoticeboardFormProps) => {
   const statusOptions = [
     {
       value: true,
-      label: noticeboardDict[userLanguage].FORM.ACTIVE,
+      label: noticeboardDict[userLanguage].FORM.ACTIVE
     },
     {
       value: false,
-      label: noticeboardDict[userLanguage].FORM.INACTIVE,
-    },
+      label: noticeboardDict[userLanguage].FORM.INACTIVE
+    }
   ];
 
   const placementOptions = [
     {
       location: 'sidebar',
-      label: noticeboardDict[userLanguage].FORM.IN_SIDEBAR,
+      label: noticeboardDict[userLanguage].FORM.IN_SIDEBAR
     },
     {
       location: 'topbar',
-      label: noticeboardDict[userLanguage].FORM.ABOVE_LESSONS,
-    },
+      label: noticeboardDict[userLanguage].FORM.ABOVE_LESSONS
+    }
   ];
 
   const widgetOptions = [
     {
       type: 'default',
       label: 'Text',
-      description: noticeboardDict[userLanguage].WIDGET_DESCRIPTION.TEXT,
+      description: noticeboardDict[userLanguage].WIDGET_DESCRIPTION.TEXT
     },
     {
       type: 'quote',
       label: 'Quotes',
-      description: noticeboardDict[userLanguage].WIDGET_DESCRIPTION.QUOTES,
+      description: noticeboardDict[userLanguage].WIDGET_DESCRIPTION.QUOTES
     },
     {
       type: 'call',
       label: 'Call',
-      description: noticeboardDict[userLanguage].WIDGET_DESCRIPTION.CALL,
+      description: noticeboardDict[userLanguage].WIDGET_DESCRIPTION.CALL
     },
     {
       type: 'file',
       label: 'Files',
-      description: noticeboardDict[userLanguage].WIDGET_DESCRIPTION.FILE,
-    },
+      description: noticeboardDict[userLanguage].WIDGET_DESCRIPTION.FILE
+    }
   ];
 
   const switchIcon = (type: string) => {

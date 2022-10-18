@@ -1,17 +1,17 @@
 import React, {useContext} from 'react';
 import {IoCamera} from 'react-icons/io5';
 import {v4 as uuidv4} from 'uuid';
-import {GlobalContext} from '../../../../../../contexts/GlobalContext';
-import useDictionary from '../../../../../../customHooks/dictionary';
-import {getLocalStorageData} from '../../../../../../utilities/localStorage';
-import FormInput from '../../../../../Atoms/Form/FormInput';
-import TextArea from '../../../../../Atoms/Form/TextArea';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import {getLocalStorageData} from 'utilities/localStorage';
+import FormInput from 'atoms/Form/FormInput';
+import TextArea from 'atoms/Form/TextArea';
 import AnimatedContainer from '../../../../../Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import {
   Tabs2,
   useTabs
 } from '../../../../../Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/Tabs';
-import DroppableMedia from '../../../../../Molecules/DroppableMedia';
+import DroppableMedia from 'molecules/DroppableMedia';
 import StandardLessonCard from '../../../../Classroom/LessonCards/StandardLessonCard';
 
 interface ILessonCard {

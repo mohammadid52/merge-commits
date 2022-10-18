@@ -2,30 +2,30 @@ import React from 'react';
 import {Page, Text, View, Document, Image, StyleSheet} from '@react-pdf/renderer';
 import Html from 'react-pdf-html';
 import {PagePart, PartContent} from '@interfaces/UniversalLessonInterfaces';
-import {GlobalContextProvider} from '@contexts/GlobalContext';
+import {GlobalContextProvider} from 'contexts/GlobalContext';
 import {getAsset} from 'assets';
 
 const SurveyPDF = ({lessonPDFData, clientKey}: any) => {
   const styles = StyleSheet.create({
     body: {
-      padding: 24,
+      padding: 24
     },
     pageView: {},
     pageTitle: {
       fontSize: 20,
       marginTop: 18,
       marginBottom: -4,
-      fontWeight: 'bold',
+      fontWeight: 'bold'
     },
     pageParagraph: {},
     pageRadioInput: {
       marginTop: 10,
-      marginBottom: 10,
+      marginBottom: 10
     },
     logo: {
       width: '100%',
       maxWidth: 140,
-      margin: '0 auto',
+      margin: '0 auto'
     },
     optionsWrap: {
       display: 'flex',
@@ -34,13 +34,13 @@ const SurveyPDF = ({lessonPDFData, clientKey}: any) => {
       marginTop: 9,
       marginBottom: 28,
       marginLeft: 12,
-      justifyContent: 'space-between',
+      justifyContent: 'space-between'
     },
     paginations: {
       marginTop: 14,
       fontSize: 14,
-      textAlign: 'right',
-    },
+      textAlign: 'right'
+    }
   });
 
   const paragraphStylesheet = {
@@ -49,8 +49,8 @@ const SurveyPDF = ({lessonPDFData, clientKey}: any) => {
       width: '100%',
       marginTop: 2,
       lineHeight: 1.5,
-      fontSize: 12,
-    },
+      fontSize: 12
+    }
   };
 
   const categoryStylesheet = {
@@ -61,15 +61,15 @@ const SurveyPDF = ({lessonPDFData, clientKey}: any) => {
       fontSize: 12,
       marginTop: 18,
       marginBottom: 10,
-      paddingBottom: 3,
-    },
+      paddingBottom: 3
+    }
   };
 
   const questionStylesheet = {
     div: {
       marginTop: 8,
-      fontSize: 16,
-    },
+      fontSize: 16
+    }
   };
 
   return (

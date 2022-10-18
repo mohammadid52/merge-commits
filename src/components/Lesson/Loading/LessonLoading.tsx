@@ -1,6 +1,6 @@
 import React, {useContext} from 'react';
-import {getAsset} from '../../../assets';
-import {GlobalContext} from '../../../contexts/GlobalContext';
+import {getAsset} from 'assets';
+import {GlobalContext} from 'contexts/GlobalContext';
 const LessonLoading = () => {
   const {clientKey} = useContext(GlobalContext);
   return (

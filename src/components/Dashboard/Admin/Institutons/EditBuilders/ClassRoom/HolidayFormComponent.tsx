@@ -1,26 +1,26 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 
-import DatePickerInput from '../../../../../Atoms/Form/DatePickerInput';
-import FormInput from '../../../../../Atoms/Form/FormInput';
-import Selector from '../../../../../Atoms/Form/Selector';
-import Buttons from '../../../../../Atoms/Buttons';
-import {GlobalContext} from '../../../../../../contexts/GlobalContext';
-import useDictionary from '../../../../../../customHooks/dictionary';
+import DatePickerInput from 'atoms/Form/DatePickerInput';
+import FormInput from 'atoms/Form/FormInput';
+import Selector from 'atoms/Form/Selector';
+import Buttons from 'atoms/Buttons';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
 
-import * as mutation from '../../../../../../graphql/mutations';
-import {awsFormatDate, dateString} from '../../../../../../utilities/time';
+import * as mutation from 'graphql/mutations';
+import {awsFormatDate, dateString} from 'utilities/time';
 
 const durationOptions = [
   {id: 1, name: '.25'},
   {id: 2, name: '.5'},
   {id: 3, name: '.75'},
-  {id: 4, name: '1'},
+  {id: 4, name: '1'}
 ];
 
 const adjustmentOptions = [
   {id: 1, name: 'Push'},
-  {id: 2, name: 'Compact'},
+  {id: 2, name: 'Compact'}
 ];
 
 interface IImpactLog {
@@ -48,7 +48,7 @@ const HolidayFormComponent = ({
   handleCancel,
   lessonImpactLogs = [],
   postMutation,
-  roomId,
+  roomId
 }: IHolidayFormComponentProps) => {
   const {clientKey, userLanguage} = useContext(GlobalContext);
   const {BUTTONS} = useDictionary(clientKey);
@@ -58,14 +58,14 @@ const HolidayFormComponent = ({
     impactDate: null,
     reasonComment: '',
     lessonImpact: '1',
-    adjustment: 'Push',
+    adjustment: 'Push'
   });
   const [serverSideLog, setServerSideLog] = useState({
     message: '',
-    isError: false,
+    isError: false
   });
   const [errors, setErrors] = useState({
-    impactDate: '',
+    impactDate: ''
   });
 
   useEffect(() => {
@@ -78,7 +78,7 @@ const HolidayFormComponent = ({
           impactDate: impactDate ? new Date(impactDate) : null,
           reasonComment,
           lessonImpact: lessonImpact?.toString(),
-          adjustment,
+          adjustment
         });
       }
     } else {
@@ -86,7 +86,7 @@ const HolidayFormComponent = ({
         impactDate: null,
         reasonComment: '',
         lessonImpact: '1',
-        adjustment: 'Push',
+        adjustment: 'Push'
       });
     }
   }, [activeIndex, lessonImpactLogs]);
@@ -94,13 +94,13 @@ const HolidayFormComponent = ({
   const handleDateChange = (date: Date | null) => {
     setFormValues((prevData) => ({
       ...prevData,
-      impactDate: date,
+      impactDate: date
     }));
   };
   const handleSelection = (value: string, fieldName: string) => {
     setFormValues((prevData) => ({
       ...prevData,
-      [fieldName]: value,
+      [fieldName]: value
     }));
   };
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -109,7 +109,7 @@ const HolidayFormComponent = ({
 
     setFormValues((prevData) => ({
       ...prevData,
-      [name]: value,
+      [name]: value
     }));
   };
 
@@ -133,7 +133,7 @@ const HolidayFormComponent = ({
           impactDate: awsFormatDate(dateString('-', 'WORLD', formValues.impactDate)),
           reasonComment: formValues.reasonComment,
           lessonImpact: Number(formValues.lessonImpact),
-          adjustment: formValues.adjustment,
+          adjustment: formValues.adjustment
         };
         const input = {
           id: roomId,
@@ -142,7 +142,7 @@ const HolidayFormComponent = ({
               ? lessonImpactLogs.map((log: any, index: number) =>
                   activeIndex === index ? payload : log
                 )
-              : [...lessonImpactLogs, payload],
+              : [...lessonImpactLogs, payload]
         };
         const result: any = await API.graphql(
           graphqlOperation(mutation.updateRoom, {input: input})
@@ -152,7 +152,7 @@ const HolidayFormComponent = ({
       } catch (error) {
         setServerSideLog({
           message: 'Error while updating logs',
-          isError: true,
+          isError: true
         });
       }
     }

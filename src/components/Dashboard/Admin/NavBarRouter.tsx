@@ -1,28 +1,28 @@
 import React from 'react';
 import {Route, Switch, useRouteMatch} from 'react-router-dom';
 
-import {UniversalLessonBuilderProvider} from '@contexts/UniversalLessonBuilderContext';
+import {UniversalLessonBuilderProvider} from 'contexts/UniversalLessonBuilderContext';
 
-import LessonsBuilderHome from './LessonsBuilder/LessonsBuilderHome';
-import User from './UserManagement/User';
-import UserLookup from './UserManagement/UserLookup';
-import InstitutionBuilder from './Institutons/Builders/InstitutionBuilder/InstitutionBuilder';
-import ClassRoomBuilder from './Institutons/EditBuilders/ClassRoom/ClassRoomBuilder';
-import CourseBuilder from './Institutons/EditBuilders/CurricularsView/TabsActions/CourseBuilder/CourseBuilder';
-import UnitBuilder from './Institutons/EditBuilders/CurricularsView/TabsActions/Unit/UnitBuilder';
-import UnitList from './Institutons/EditBuilders/CurricularsView/TabsActions/Unit/UnitList';
-import ClassList from './Institutons/Listing/ClassList';
-import CurriculumList from './Institutons/Listing/CurriculumList';
-import RoomsList from './Institutons/Listing/RoomsList';
-import StaffBuilder from './Institutons/Listing/StaffBuilder';
-import Students from './Institutons/Students';
-import Registration from './UserManagement/Registration';
+import LessonsBuilderHome from 'components/Dashboard/Admin/LessonsBuilder/LessonsBuilderHome';
+import User from 'components/Dashboard/Admin/UserManagement/User';
+import UserLookup from 'components/Dashboard/Admin/UserManagement/UserLookup';
+import InstitutionBuilder from 'components/Dashboard/Admin/Institutons/Builders/InstitutionBuilder/InstitutionBuilder';
+import ClassRoomBuilder from 'components/Dashboard/Admin/Institutons/EditBuilders/ClassRoom/ClassRoomBuilder';
+import CourseBuilder from 'components/Dashboard/Admin/Institutons/EditBuilders/CurricularsView/TabsActions/CourseBuilder/CourseBuilder';
+import UnitBuilder from 'components/Dashboard/Admin/Institutons/EditBuilders/CurricularsView/TabsActions/Unit/UnitBuilder';
+import UnitList from 'components/Dashboard/Admin/Institutons/EditBuilders/CurricularsView/TabsActions/Unit/UnitList';
+import ClassList from 'components/Dashboard/Admin/Institutons/Listing/ClassList';
+import CurriculumList from 'components/Dashboard/Admin/Institutons/Listing/CurriculumList';
+import RoomsList from 'components/Dashboard/Admin/Institutons/Listing/RoomsList';
+import StaffBuilder from 'components/Dashboard/Admin/Institutons/Listing/StaffBuilder';
+import Students from 'components/Dashboard/Admin/Institutons/Students';
+import Registration from 'components/Dashboard/Admin/UserManagement/Registration';
 import Csv from '../Csv/Csv';
 import UploadCsv from '../Csv/UploadCSV';
 import AnalyticsDashboard from '../Csv/AnalyticsDashboard';
-import AddProfileCheckpoint from './Institutons/EditBuilders/CurricularsView/TabsActions/AddProfileCheckpoint';
-import ProfileCheckpointlookup from './Institutons/EditBuilders/CurricularsView/TabsActions/ProfileCheckpointlookup';
-import EditProfileCheckpoint from './Institutons/EditBuilders/CurricularsView/TabsActions/EditProfileCheckpoint';
+import AddProfileCheckpoint from 'components/Dashboard/Admin/Institutons/EditBuilders/CurricularsView/TabsActions/AddProfileCheckpoint';
+import ProfileCheckpointlookup from 'components/Dashboard/Admin/Institutons/EditBuilders/CurricularsView/TabsActions/ProfileCheckpointlookup';
+import EditProfileCheckpoint from 'components/Dashboard/Admin/Institutons/EditBuilders/CurricularsView/TabsActions/EditProfileCheckpoint';
 
 const NavBarRouter = (instProps: any) => {
   const {institute = {}, updateCurricularList, curricular} = instProps;

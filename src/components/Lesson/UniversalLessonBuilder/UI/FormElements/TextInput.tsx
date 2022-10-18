@@ -1,13 +1,13 @@
 import {map, remove, update} from 'lodash';
 import React, {useContext} from 'react';
 import {BiCheckbox, BiCheckboxChecked} from 'react-icons/bi';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import {EditQuestionModalDict} from '../../../../../dictionary/dictionary.iconoclast';
-import Buttons from '../../../../Atoms/Buttons';
-import FormInput from '../../../../Atoms/Form/FormInput';
+import {GlobalContext} from 'contexts/GlobalContext';
+import {EditQuestionModalDict} from 'dictionary/dictionary.iconoclast';
+import Buttons from 'atoms/Buttons';
+import FormInput from 'atoms/Form/FormInput';
 import {v4 as uuidv4} from 'uuid';
 import {FORM_TYPES} from '../common/constants';
-import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
+import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
 
 const Checkbox = ({val}: {val: boolean}) => {
   return (
@@ -69,7 +69,7 @@ const TextInput = ({
   updateContent,
   setUnsavedChanges,
   askBeforeClose,
-  createNewContent,
+  createNewContent
 }: any) => {
   const {userLanguage} = useContext(GlobalContext);
 
@@ -100,7 +100,7 @@ const TextInput = ({
 
     const input = {
       id: list.id,
-      lessonPlan: [...list.lessonPlan],
+      lessonPlan: [...list.lessonPlan]
     };
 
     await updateLessonPageToDB(input);
@@ -114,7 +114,7 @@ const TextInput = ({
         id: partContentId,
         type: d.textArea ? FORM_TYPES.TEXTAREA : FORM_TYPES.TEXT,
         label: d.title,
-        value: d.placeholder,
+        value: d.placeholder
       };
     });
     const type: string = `form-${numbered ? 'numbered' : 'default'}`;

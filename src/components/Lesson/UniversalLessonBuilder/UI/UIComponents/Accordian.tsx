@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
-import Buttons from '../../../../Atoms/Buttons';
-import Tooltip from '../../../../Atoms/Tooltip';
+import Buttons from 'atoms/Buttons';
+import Tooltip from 'atoms/Tooltip';
 
 interface AccordionProps {
   title: React.ReactNode;
@@ -17,7 +17,7 @@ export const Accordion: React.FC<AccordionProps> = ({
   title,
   onResponseSelect,
   content,
-  overrideBool,
+  overrideBool
 }) => {
   const [active, setActive] = useState(false);
   const [height, setHeight] = useState('0px');

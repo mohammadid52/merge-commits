@@ -2,16 +2,16 @@ import React, {Fragment, useContext, useEffect, useState} from 'react';
 import {useHistory} from 'react-router';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 
-// import { reorder } from '../../../../../../../utilities/strings';
-import * as customQueries from '../../../../../../../customGraphql/customQueries';
-import * as customMutations from '../../../../../../../customGraphql/customMutations';
+// import { reorder } from 'utilities/strings';
+import * as customQueries from 'customGraphql/customQueries';
+import * as customMutations from 'customGraphql/customMutations';
 
-import PageWrapper from '../../../../../../Atoms/PageWrapper';
-import DragableAccordion from '../../../../../../Atoms/DragableAccordion';
-import Buttons from '../../../../../../Atoms/Buttons';
+import PageWrapper from 'atoms/PageWrapper';
+import DragableAccordion from 'atoms/DragableAccordion';
+import Buttons from 'atoms/Buttons';
 import CheckpointQueTable from '../../../../LessonsBuilder/StepActionComponent/CheckPointSteps/CheckpointQueTable';
-import {GlobalContext} from '../../../../../../../contexts/GlobalContext';
-import useDictionary from '../../../../../../../customHooks/dictionary';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
 
 interface CheckpointListProps {
   curricularId: string;
@@ -51,8 +51,8 @@ const CheckpointList = (props: CheckpointListProps) => {
       const result: any = await API.graphql(
         graphqlOperation(customMutations.deleteCommonCheckpoint, {
           input: {
-            id: commonCheckpointId,
-          },
+            id: commonCheckpointId
+          }
         })
       );
       const updatedList: any = [...checkpointList].filter(
@@ -82,7 +82,7 @@ const CheckpointList = (props: CheckpointListProps) => {
               editCheckPoint={editCheckPoint}
               showActionIcons
             />
-          ),
+          )
         };
       });
       setCheckPoints([...checkpointList]);

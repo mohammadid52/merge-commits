@@ -1,7 +1,7 @@
 import React, {useContext} from 'react';
-import {GlobalContext} from '../../../contexts/GlobalContext';
-import {getAsset} from '../../../assets';
-import useDictionary from '../../../customHooks/dictionary';
+import {GlobalContext} from 'contexts/GlobalContext';
+import {getAsset} from 'assets';
+import useDictionary from 'customHooks/dictionary';
 const ComponentLoading = () => {
   const {clientKey, userLanguage} = useContext(GlobalContext);
   const {appDict} = useDictionary(clientKey);

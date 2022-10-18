@@ -3,7 +3,7 @@ import React, {useContext} from 'react';
 import {LessonCardProps} from '../Classroom';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {AiOutlineClockCircle, AiOutlineUser} from 'react-icons/ai';
-import {GlobalContext} from '../../../../contexts/GlobalContext';
+import {GlobalContext} from 'contexts/GlobalContext';
 
 const SmallLessonCard = (props: LessonCardProps) => {
   const {
@@ -12,7 +12,7 @@ const SmallLessonCard = (props: LessonCardProps) => {
     lessonProps,
     openCards,
     setOpenCards,
-    lessonType,
+    lessonType
   } = props;
   const {theme} = useContext(GlobalContext);
 
@@ -68,7 +68,7 @@ const SmallLessonCard = (props: LessonCardProps) => {
             style={{
               background: `linear-gradient(to top, rgba(0, 0, 0, 0.52), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0))`,
               backgroundImage: `url(${lessonProps.lesson?.artist?.images})`,
-              backgroundSize: 'cover',
+              backgroundSize: 'cover'
             }}>
             <div className="text-center">
               <div

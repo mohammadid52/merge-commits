@@ -1,10 +1,10 @@
 import React, {useContext} from 'react';
-import {GlobalContext} from '../../../contexts/GlobalContext';
-import useDictionary from '../../../customHooks/dictionary';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
 import {Widget as NoticeboardWidgetMapItem} from '../../../interfaces/ClassroomComponentsInterfaces';
-import {keywordCapitilizer} from '../../../utilities/strings';
-import ContentCard from '../../Atoms/ContentCard';
-import ContentCardTitle from '../../Atoms/ContentCardTitle';
+import {keywordCapitilizer} from 'utilities/strings';
+import ContentCard from 'atoms/ContentCard';
+import ContentCardTitle from 'atoms/ContentCardTitle';
 import {ViewEditMode} from './NoticeboardAdmin';
 import CancelSaveDelete from './WidgetFormViews/cancelSaveDeleteButtons';
 import CreateNewButton from './WidgetFormViews/createNewButton';
@@ -76,7 +76,7 @@ const NoticeboardContent = (props: NoticeboardContentCardProps) => {
     initialNewWidgetData,
     newWidgetData,
     setNewWidgetData,
-    content,
+    content
   } = props;
   const {theme, userLanguage, clientKey} = useContext(GlobalContext);
   const {classRoomDict} = useDictionary(clientKey);

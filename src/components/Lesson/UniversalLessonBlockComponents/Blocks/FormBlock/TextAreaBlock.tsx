@@ -1,7 +1,7 @@
-import RequiredMark from '@components/Atoms/RequiredMark';
-import {GlobalContext} from '@contexts/GlobalContext';
-import useInLessonCheck from '@customHooks/checkIfInLesson';
-import useStudentDataValue from '@customHooks/studentDataValue';
+import RequiredMark from 'components/Atoms/RequiredMark';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useInLessonCheck from 'customHooks/checkIfInLesson';
+import useStudentDataValue from 'customHooks/studentDataValue';
 import {IFormBlockProps} from '@interfaces/UniversalLessonInterfaces';
 import React, {useContext} from 'react';
 
@@ -12,7 +12,7 @@ const TextAreaBlock = (props: IFormBlockProps) => {
   const gState = gContext.state;
   const {
     user,
-    lessonPage: {theme: lessonPageTheme = 'dark', themeTextColor = ''} = {},
+    lessonPage: {theme: lessonPageTheme = 'dark', themeTextColor = ''} = {}
   } = gState;
 
   const isStudent = user.role === 'ST';

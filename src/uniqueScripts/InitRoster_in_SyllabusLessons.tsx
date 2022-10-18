@@ -1,6 +1,6 @@
 import React from 'react';
-import * as customQueries from '../customGraphql/customQueries';
-import * as customMutations from '../customGraphql/customMutations';
+import * as customQueries from 'customGraphql/customQueries';
+import * as customMutations from 'customGraphql/customMutations';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 
 // query all syllabus lessons
@@ -41,10 +41,10 @@ const mutateSingleSyllabusLesson = async (sylID: string, content: any[]) => {
         input: {
           id: sylID,
           displayData: {
-            breakdownComponent: '',
+            breakdownComponent: ''
           },
-          roster: content,
-        },
+          roster: content
+        }
       })
     );
   } catch (e) {

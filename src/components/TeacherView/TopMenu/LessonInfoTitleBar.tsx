@@ -1,7 +1,7 @@
 import React, {useContext} from 'react';
 
-import useDictionary from '../../../customHooks/dictionary';
-import {GlobalContext} from '../../../contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import {GlobalContext} from 'contexts/GlobalContext';
 
 const LessonInfoTitleBar = () => {
   const {lessonState, clientKey, userLanguage} = useContext(GlobalContext);

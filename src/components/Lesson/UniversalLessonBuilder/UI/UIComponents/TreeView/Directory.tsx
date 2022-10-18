@@ -5,7 +5,7 @@ import {FaBook, FaGraduationCap, FaBookOpen} from 'react-icons/fa';
 import {Item} from './Item';
 import {Tree} from './Tree';
 import {RiPagesLine} from 'react-icons/ri';
-import Buttons from '../../../../../Atoms/Buttons';
+import Buttons from 'atoms/Buttons';
 
 export const Directory = ({
   item,
@@ -14,7 +14,7 @@ export const Directory = ({
   dark = false,
   customClick = false,
   onClick = () => {},
-  selPageId,
+  selPageId
 }: React.PropsWithChildren<{
   item: any;
   onContextMenu: (event: React.MouseEvent<HTMLLIElement, MouseEvent>) => void;

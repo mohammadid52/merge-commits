@@ -8,13 +8,13 @@ import {AiOutlineEye, AiOutlineEyeInvisible} from 'react-icons/ai';
 import {useHistory, NavLink} from 'react-router-dom';
 
 import ErrorNote from '../Admin/UserManagement/ErrorNote';
-import {GlobalContext} from '../../../contexts/GlobalContext';
-import useDictionary from '../../../customHooks/dictionary';
-import Buttons from '../../Atoms/Buttons';
-import ModalPopUp from '../../Molecules/ModalPopUp';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import Buttons from 'atoms/Buttons';
+import ModalPopUp from 'molecules/ModalPopUp';
 
-import * as customMutations from '../../../customGraphql/customMutations';
-import FormInput from '../../Atoms/Form/FormInput';
+import * as customMutations from 'customGraphql/customMutations';
+import FormInput from 'atoms/Form/FormInput';
 
 interface ChangePasswordProps {
   updateAuthState: Function;

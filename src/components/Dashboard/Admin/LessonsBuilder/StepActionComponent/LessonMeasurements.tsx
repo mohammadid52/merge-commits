@@ -4,16 +4,16 @@ import {API, graphqlOperation} from 'aws-amplify';
 import {IconContext} from 'react-icons/lib/cjs';
 import {FaTrash} from 'react-icons/fa';
 
-import {GeneralInformationDict} from '../../../../../dictionary/dictionary.curate';
-import useDictionary from '../../../../../customHooks/dictionary';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import * as customQueries from '../../../../../customGraphql/customQueries';
-import * as customMutations from '../../../../../customGraphql/customMutations';
+import {GeneralInformationDict} from 'dictionary/dictionary.curate';
+import useDictionary from 'customHooks/dictionary';
+import {GlobalContext} from 'contexts/GlobalContext';
+import * as customQueries from 'customGraphql/customQueries';
+import * as customMutations from 'customGraphql/customMutations';
 
-import Selector from '../../../../Atoms/Form/Selector';
-import Buttons from '../../../../Atoms/Buttons';
-import Loader from '../../../../Atoms/Loader';
-import ModalPopUp from '../../../../Molecules/ModalPopUp';
+import Selector from 'atoms/Form/Selector';
+import Buttons from 'atoms/Buttons';
+import Loader from 'atoms/Loader';
+import ModalPopUp from 'molecules/ModalPopUp';
 
 const LessonMeasurements = ({lessonId}: any) => {
   const {clientKey, userLanguage} = useContext(GlobalContext);
@@ -25,17 +25,17 @@ const LessonMeasurements = ({lessonId}: any) => {
   const [selectedMeasurement, setSelectedMeasurement] = useState({
     id: '',
     name: '',
-    value: '',
+    value: ''
   });
   const [showDeleteModal, setShowDeleteModal] = useState({
     id: '',
     state: false,
-    message: AddNewLessonFormDict[userLanguage]['MESSAGES']['REMOVE'],
+    message: AddNewLessonFormDict[userLanguage]['MESSAGES']['REMOVE']
   });
   const [messages, setMessages] = useState({
     measurementError: '',
     serverError: '',
-    addSuccess: '',
+    addSuccess: ''
   });
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -87,7 +87,7 @@ const LessonMeasurements = ({lessonId}: any) => {
       setMessages({
         measurementError: '',
         serverError: GeneralInformationDict[userLanguage]['MESSAGES']['FETCHERR'],
-        addSuccess: '',
+        addSuccess: ''
       });
       setLoading(false);
     }
@@ -117,7 +117,7 @@ const LessonMeasurements = ({lessonId}: any) => {
     try {
       const input = {
         lessonID: lessonId,
-        rubricID: selectedMeasurement.id,
+        rubricID: selectedMeasurement.id
       };
       setSaving(true);
       const results: any = await API.graphql(
@@ -132,8 +132,8 @@ const LessonMeasurements = ({lessonId}: any) => {
             rubricID: lessonRubric.rubricID,
             measurement: selectedMeasurement.name,
             topic: lessonRubric?.rubric?.topic?.name,
-            curriculumId: lessonRubric?.rubric?.curriculumID,
-          },
+            curriculumId: lessonRubric?.rubric?.curriculumID
+          }
         ]);
         setSelectedMeasurement({id: '', name: '', value: ''});
       }
@@ -142,7 +142,7 @@ const LessonMeasurements = ({lessonId}: any) => {
       setMessages({
         measurementError: '',
         serverError: GeneralInformationDict[userLanguage]['MESSAGES']['ADDERR'],
-        addSuccess: '',
+        addSuccess: ''
       });
     }
   };
@@ -151,14 +151,14 @@ const LessonMeasurements = ({lessonId}: any) => {
     setShowDeleteModal({
       ...showDeleteModal,
       id: id ? id : '',
-      state: !showDeleteModal.state,
+      state: !showDeleteModal.state
     });
   };
 
   const deleteMeasurement = async () => {
     try {
       const input = {
-        id: showDeleteModal.id,
+        id: showDeleteModal.id
       };
       const results: any = await API.graphql(
         graphqlOperation(customMutations.deleteLessonRubrics, {input: input})
@@ -174,7 +174,7 @@ const LessonMeasurements = ({lessonId}: any) => {
       setMessages({
         measurementError: '',
         serverError: GeneralInformationDict[userLanguage]['MESSAGES']['DELETEERR'],
-        addSuccess: '',
+        addSuccess: ''
       });
     }
   };
@@ -182,7 +182,7 @@ const LessonMeasurements = ({lessonId}: any) => {
     try {
       const input = {
         lessonID: lessonId,
-        rubricID: rubricsId,
+        rubricID: rubricsId
       };
       await API.graphql(
         graphqlOperation(customMutations.createLessonRubrics, {input: input})
@@ -191,13 +191,13 @@ const LessonMeasurements = ({lessonId}: any) => {
         measurementError: '',
         serverError: '',
         addSuccess:
-          AddNewLessonFormDict[userLanguage]['MESSAGES']['MEASUREMENTADDSUCCESS'],
+          AddNewLessonFormDict[userLanguage]['MESSAGES']['MEASUREMENTADDSUCCESS']
       });
     } catch {
       setMessages({
         measurementError: '',
         serverError: AddNewLessonFormDict[userLanguage]['ADDERR'],
-        addSuccess: '',
+        addSuccess: ''
       });
     }
   };

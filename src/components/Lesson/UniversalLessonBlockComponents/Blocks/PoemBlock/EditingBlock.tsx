@@ -1,4 +1,4 @@
-import useStudentDataValue from '@customHooks/studentDataValue';
+import useStudentDataValue from 'customHooks/studentDataValue';
 import React, {useEffect, useState} from 'react';
 import WritingExerciseEditor from './WritingExerciseEditor';
 import {EditorState, Modifier} from 'draft-js';

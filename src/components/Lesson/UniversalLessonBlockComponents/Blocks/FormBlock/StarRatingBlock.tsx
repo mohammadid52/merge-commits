@@ -1,9 +1,9 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {AiFillStar, AiOutlineStar} from 'react-icons/ai';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
+import {GlobalContext} from 'contexts/GlobalContext';
 import {FormControlProps} from '../FormBlock';
-import useStudentDataValue from '@customHooks/studentDataValue';
+import useStudentDataValue from 'customHooks/studentDataValue';
 
 const StarRatingBlock = ({
   id,
@@ -11,12 +11,12 @@ const StarRatingBlock = ({
   label,
   numbered,
   index,
-  required,
+  required
 }: FormControlProps) => {
   const [whichStarHovered, setWhichStarHovered] = useState<number>(0);
   const {
     state: {lessonPage: {theme: lessonPageTheme = ''} = {}},
-    lessonState,
+    lessonState
   } = useContext(GlobalContext);
 
   const {getDataValue, setDataValue} = useStudentDataValue();

@@ -1,5 +1,5 @@
-import {classNames} from '@components/Lesson/UniversalLessonBuilder/UI/FormElements/TextInput';
-import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
+import {classNames} from 'components/Lesson/UniversalLessonBuilder/UI/FormElements/TextInput';
+import AnimatedContainer from 'components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import React from 'react';
 
 interface StartButtonProps {
@@ -12,7 +12,7 @@ const StartButton = ({
   onStart,
   isActive,
 
-  onPause,
+  onPause
 }: StartButtonProps) => {
   const commonBtnClass = 'w-auto cursor-pointer  transition-all ';
 

@@ -2,14 +2,10 @@ import React, {useState, useRef, useContext} from 'react';
 import {IconContext} from 'react-icons';
 import {FaSpinner} from 'react-icons/fa';
 
-import {getAsset} from '../../../assets';
-import {GlobalContext} from '../../../contexts/GlobalContext';
-import {getImageFromS3} from '../../../utilities/services';
-import {
-  initials,
-  getInitialsFromString,
-  stringToHslColor,
-} from '../../../utilities/strings';
+import {getAsset} from 'assets';
+import {GlobalContext} from 'contexts/GlobalContext';
+import {getImageFromS3} from 'utilities/services';
+import {initials, getInitialsFromString, stringToHslColor} from 'utilities/strings';
 
 interface selectorProps {
   list?: {id: number; name: string; avatar?: string}[];
@@ -20,6 +16,7 @@ interface selectorProps {
   placeholder: string;
   imageFromS3?: boolean;
   onChange: (c: string, n: string, id: string, avatar: string) => void;
+  dataCy?: string;
 }
 
 const SelectorWithAvatar = (props: selectorProps) => {
@@ -32,6 +29,7 @@ const SelectorWithAvatar = (props: selectorProps) => {
     onChange,
     imageFromS3 = true,
     loading,
+    dataCy
   } = props;
 
   const [showList, setShowList] = useState(false);
@@ -95,6 +93,7 @@ const SelectorWithAvatar = (props: selectorProps) => {
     <div className="relative" ref={currentRef} onFocus={() => onFocus()}>
       <span className="inline-block w-full h-full rounded-md shadow-sm">
         <button
+          data-cy={`selector-${dataCy}-button`}
           type="button"
           disabled={loading}
           aria-haspopup="listbox"
@@ -131,7 +130,7 @@ const SelectorWithAvatar = (props: selectorProps) => {
               value={{
                 size: '1.2rem',
                 style: {},
-                className: `relative w-auto mr-4 animate-spin ${theme.textColor[themeColor]}`,
+                className: `relative w-auto mr-4 animate-spin ${theme.textColor[themeColor]}`
               }}>
               <FaSpinner />
             </IconContext.Provider>
@@ -152,6 +151,7 @@ const SelectorWithAvatar = (props: selectorProps) => {
                   key: number
                 ) => (
                   <li
+                    data-cy={`selector-item-${dataCy}-${key}`}
                     key={key}
                     onClick={() =>
                       updateSelectedItem(item.value, item.name, item.id, item.avatar)
@@ -174,7 +174,7 @@ const SelectorWithAvatar = (props: selectorProps) => {
                               ' ' +
                               getInitialsFromString(item.name)[1]
                           )}`,
-                          textShadow: '0.1rem 0.1rem 2px #423939b3',
+                          textShadow: '0.1rem 0.1rem 2px #423939b3'
                         }}>
                         {item.name
                           ? initials(

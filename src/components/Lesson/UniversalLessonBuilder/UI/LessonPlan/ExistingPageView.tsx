@@ -2,21 +2,21 @@ import React, {useState, useContext, useEffect} from 'react';
 import {useHistory, useRouteMatch} from 'react-router';
 import {FaCopy} from 'react-icons/fa';
 
-import Buttons from '../../../../Atoms/Buttons';
-import Tooltip from '../../../../Atoms/Tooltip';
+import Buttons from 'atoms/Buttons';
+import Tooltip from 'atoms/Tooltip';
 
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import useDictionary from '../../../../../customHooks/dictionary';
-import {useQuery} from '../../../../../customHooks/urlParam';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import {useQuery} from 'customHooks/urlParam';
 import PageTile from '../common/PageTile';
-import * as customMutations from '../../../../../customGraphql/customMutations';
-import * as customQueries from '../../../../../customGraphql/customQueries';
+import * as customMutations from 'customGraphql/customMutations';
+import * as customQueries from 'customGraphql/customQueries';
 import {graphqlOperation, API} from 'aws-amplify';
 import {ILessonPlan} from './LessonPlan';
 import {v4 as uuidV4} from 'uuid';
 import {
   UniversalLessonPage,
-  UniversalLesson,
+  UniversalLesson
 } from '../../../../../interfaces/UniversalLessonInterfaces';
 import {HiOutlineArrowRight} from 'react-icons/hi';
 import {MdTitle} from 'react-icons/md';
@@ -28,9 +28,9 @@ const ExistingPageView = ({addNewPageHandler, universalLessonDetails}: ILessonPl
   const {
     clientKey,
     state: {
-      user: {isSuperAdmin},
+      user: {isSuperAdmin}
     },
-    userLanguage,
+    userLanguage
   } = useContext(GlobalContext);
 
   const {LessonBuilderDict} = useDictionary(clientKey);
@@ -83,9 +83,9 @@ const ExistingPageView = ({addNewPageHandler, universalLessonDetails}: ILessonPl
             title: currentPage.title,
             label: currentPage.label,
             description: currentPage.description,
-            pageContent: currentPage.pageContent || [],
-          },
-        ],
+            pageContent: currentPage.pageContent || []
+          }
+        ]
       };
       const result = await API.graphql(
         graphqlOperation(customMutations.updateUniversalLesson, {input})
@@ -113,10 +113,10 @@ const ExistingPageView = ({addNewPageHandler, universalLessonDetails}: ILessonPl
                   part.partContent.filter(
                     (c: any, i: number) => c.type === content.type && i < contentIndex
                   ).length
-                }`,
-              })),
+                }`
+              }))
             }))
-          : [],
+          : []
     });
     // add to database
     addExistingPageToDB();
@@ -137,24 +137,24 @@ const ExistingPageView = ({addNewPageHandler, universalLessonDetails}: ILessonPl
     const colorList = [
       {
         iconForeground: 'text-teal-700',
-        iconBackground: 'bg-teal-100',
+        iconBackground: 'bg-teal-100'
       },
       {
         iconForeground: 'text-red-700',
-        iconBackground: 'bg-red-100',
+        iconBackground: 'bg-red-100'
       },
       {
         iconForeground: 'text-yellow-700',
-        iconBackground: 'bg-yellow-100',
+        iconBackground: 'bg-yellow-100'
       },
       {
         iconForeground: 'text-blue-700',
-        iconBackground: 'bg-blue-100',
+        iconBackground: 'bg-blue-100'
       },
       {
         iconForeground: 'text-pink-700',
-        iconBackground: 'bg-pink-100',
-      },
+        iconBackground: 'bg-pink-100'
+      }
     ];
 
     return (

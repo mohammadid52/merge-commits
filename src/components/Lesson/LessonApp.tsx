@@ -1,15 +1,15 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import '@components/Dashboard/GameChangers/styles/Flickity.scss';
-import '@components/Dashboard/GameChangers/styles/GameChanger.scss';
-import useTailwindBreakpoint from '@customHooks/tailwindBreakpoint';
+import 'components/Dashboard/GameChangers/styles/Flickity.scss';
+import 'components/Dashboard/GameChangers/styles/GameChanger.scss';
+import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
 import React, {useEffect, useRef, useState} from 'react';
 import {useHistory, useParams, useRouteMatch} from 'react-router-dom';
 import {v4 as uuidV4} from 'uuid';
-import {useGlobalContext} from '../../contexts/GlobalContext';
-import * as customQueries from '../../customGraphql/customQueries';
-import * as customSubscriptions from '../../customGraphql/customSubscriptions';
-import * as mutations from '../../graphql/mutations';
-import * as queries from '../../graphql/queries';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import * as customQueries from 'customGraphql/customQueries';
+import * as customSubscriptions from 'customGraphql/customSubscriptions';
+import * as mutations from 'graphql/mutations';
+import * as queries from 'graphql/queries';
 import {
   PagePart,
   PartContent,
@@ -19,8 +19,8 @@ import {
   UniversalJournalData,
   UniversalLessonPage,
   UniversalLessonStudentData
-} from '../../interfaces/UniversalLessonInterfaces';
-import {getLocalStorageData, setLocalStorageData} from '../../utilities/localStorage';
+} from '@interfaces/UniversalLessonInterfaces';
+import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
 import ErrorBoundary from '../Error/ErrorBoundary';
 import LessonHeaderBar from '../Header/LessonHeaderBar';
 import Foot from './Foot/Foot';
@@ -1017,10 +1017,12 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
     try {
       const getLessonRatingDetails: any = await API.graphql(
         graphqlOperation(queries.getPersonLessonsData, {
-          id: getPersonLessonsDataId()
-          // lessonID: lessonID,
-          // studentEmail: user.email,
-          // studentAuthId: user.authId
+          id: getPersonLessonsDataId(),
+          filter: {
+            lessonID: {eq: lessonID},
+            studentEmail: {eq: user.email},
+            studentAuthId: {eq: user.authId}
+          }
         })
       );
 
@@ -1044,7 +1046,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
       const personLessonData = lessonState?.misc?.personLessonData;
 
       if (personLessonData?.lessonID === lessonID && personLessonData?.data?.length > 0) {
-        existingLesson = personLessonData?.data;
+        existingLesson = {data: {listPersonLessonsData: {items: personLessonData?.data}}};
       } else {
         existingLesson = await API.graphql(
           graphqlOperation(queries.listPersonLessonsData, {

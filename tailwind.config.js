@@ -729,7 +729,8 @@ module.exports = {
         192: '48rem',
         196: '49rem',
         200: '50rem',
-        256: '64rem'
+        256: '64rem',
+        '9/10': '90%'
       },
       borderRadius: {
         xl: '1rem'

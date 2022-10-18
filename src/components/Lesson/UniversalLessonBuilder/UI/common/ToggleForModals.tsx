@@ -1,4 +1,4 @@
-import {classNames} from '@components/Lesson/UniversalLessonBuilder/UI/FormElements/TextInput';
+import {classNames} from 'components/Lesson/UniversalLessonBuilder/UI/FormElements/TextInput';
 import {Switch} from '@headlessui/react';
 import React from 'react';
 

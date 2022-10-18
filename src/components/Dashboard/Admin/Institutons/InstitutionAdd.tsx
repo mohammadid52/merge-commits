@@ -5,19 +5,19 @@ import {FaPlus} from 'react-icons/fa';
 import {IoArrowUndoCircleOutline} from 'react-icons/io5';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {useHistory} from 'react-router-dom';
-import {GlobalContext} from '../../../../contexts/GlobalContext';
-import * as customMutations from '../../../../customGraphql/customMutations';
-import useDictionary from '../../../../customHooks/dictionary';
-import {statesList} from '../../../../utilities/staticData';
-import BreadCrums from '../../../Atoms/BreadCrums';
-import Buttons from '../../../Atoms/Buttons';
-import CheckBox from '../../../Atoms/Form/CheckBox';
-import FormInput from '../../../Atoms/Form/FormInput';
-import Selector from '../../../Atoms/Form/Selector';
-import Loader from '../../../Atoms/Loader';
-import PageWrapper from '../../../Atoms/PageWrapper';
-import SectionTitle from '../../../Atoms/SectionTitle';
-import DroppableMedia from '../../../Molecules/DroppableMedia';
+import {GlobalContext} from 'contexts/GlobalContext';
+import * as customMutations from 'customGraphql/customMutations';
+import useDictionary from 'customHooks/dictionary';
+import {statesList} from 'utilities/staticData';
+import BreadCrums from 'atoms/BreadCrums';
+import Buttons from 'atoms/Buttons';
+import CheckBox from 'atoms/Form/CheckBox';
+import FormInput from 'atoms/Form/FormInput';
+import Selector from 'atoms/Form/Selector';
+import Loader from 'atoms/Loader';
+import PageWrapper from 'atoms/PageWrapper';
+import SectionTitle from 'atoms/SectionTitle';
+import DroppableMedia from 'molecules/DroppableMedia';
 import ProfileCropModal from '../../Profile/ProfileCropModal';
 import ServiceProviders from './Listing/ServiceProviders';
 
@@ -37,8 +37,8 @@ const InstitutionAdd = () => {
     phone: '',
     image: '',
     serviceProviders: {
-      items: [],
-    },
+      items: []
+    }
   };
   const [instituteData, setInstituteData] = useState(initialState);
   const [showCropper, setShowCropper] = useState(false);
@@ -53,11 +53,11 @@ const InstitutionAdd = () => {
   );
   const [error, setError] = useState({
     show: true,
-    errorMsg: '',
+    errorMsg: ''
   });
   const [serverMessage, setServerMessage] = useState({
     message: '',
-    isError: false,
+    isError: false
   });
 
   const breadCrumsList = [
@@ -65,47 +65,47 @@ const InstitutionAdd = () => {
     {
       title: BreadcrumsTitles[userLanguage]['INSTITUTION_MANAGEMENT'],
       url: '/dashboard/manage-institutions',
-      last: false,
+      last: false
     },
     {
       title: BreadcrumsTitles[userLanguage]['ADD_INSTITUTION'],
       url: `/dashboard/manage-institutions/add`,
-      last: true,
-    },
+      last: true
+    }
   ];
   const institutionTypeList = [
     {
       id: 1,
       name: InstitutionAddDict[userLanguage]['INSTITUTION_TYPE']['SCHOOL'],
-      value: 'School',
+      value: 'School'
     },
     {
       id: 2,
       name: InstitutionAddDict[userLanguage]['INSTITUTION_TYPE']['AFTERSCHOOL'],
-      value: 'After School',
+      value: 'After School'
     },
     {
       id: 3,
       name: InstitutionAddDict[userLanguage]['INSTITUTION_TYPE']['DAYCAMP'],
-      value: 'Day Camp',
+      value: 'Day Camp'
     },
     {
       id: 4,
       name: InstitutionAddDict[userLanguage]['INSTITUTION_TYPE']['SUMMERCAMP'],
-      value: 'Summer Camp',
+      value: 'Summer Camp'
     },
     {
       id: 5,
       name: InstitutionAddDict[userLanguage]['INSTITUTION_TYPE']['C3'],
-      value: '501C3',
-    },
+      value: '501C3'
+    }
   ];
 
   const removeErrorMSg = () => {
     if (error.show) {
       setError({
         show: false,
-        errorMsg: '',
+        errorMsg: ''
       });
     }
   };
@@ -114,7 +114,7 @@ const InstitutionAdd = () => {
     if (!instituteData.name) {
       setError({
         show: true,
-        errorMsg: InstitutionAddDict[userLanguage]['messages']['namerequired'],
+        errorMsg: InstitutionAddDict[userLanguage]['messages']['namerequired']
       });
     }
   };
@@ -123,7 +123,7 @@ const InstitutionAdd = () => {
     removeErrorMSg();
     setInstituteData({
       ...instituteData,
-      [e.target.name]: e.target.value,
+      [e.target.name]: e.target.value
     });
   };
 
@@ -131,21 +131,21 @@ const InstitutionAdd = () => {
     removeErrorMSg();
     setInstituteData({
       ...instituteData,
-      type: str,
+      type: str
     });
   };
   const onStateSelect = (str: string, name: string) => {
     removeErrorMSg();
     setInstituteData({
       ...instituteData,
-      state: str,
+      state: str
     });
   };
 
   const handdleCheckBox = () => {
     setInstituteData({
       ...instituteData,
-      isServiceProvider: !instituteData.isServiceProvider,
+      isServiceProvider: !instituteData.isServiceProvider
     });
   };
 
@@ -160,7 +160,7 @@ const InstitutionAdd = () => {
       Storage.put(`instituteImages/institute_image_${id}`, file, {
         contentType: type,
         acl: 'public-read',
-        ContentEncoding: 'base64',
+        ContentEncoding: 'base64'
       })
         .then((result) => {
           console.log('File successfully uploaded to s3', result);
@@ -169,7 +169,7 @@ const InstitutionAdd = () => {
         .catch((err) => {
           setError({
             show: true,
-            errorMsg: InstitutionAddDict[userLanguage]['messages']['uploaderr'],
+            errorMsg: InstitutionAddDict[userLanguage]['messages']['uploaderr']
           });
           console.log('Error in uploading file to s3', err);
           reject(err);
@@ -182,8 +182,8 @@ const InstitutionAdd = () => {
       ...prevData,
       serviceProviders: {
         ...prevData.serviceProviders,
-        items: [...(prevData.serviceProviders.items || []), item],
-      },
+        items: [...(prevData.serviceProviders.items || []), item]
+      }
     }));
   };
 
@@ -202,7 +202,7 @@ const InstitutionAdd = () => {
     setImageUrl(imageUrl);
     setInstituteData({
       ...instituteData,
-      image: `instituteImages/institute_image_${instituteData.id}`,
+      image: `instituteImages/institute_image_${instituteData.id}`
     });
     toggleCropper();
     setImageLoading(false);
@@ -212,7 +212,7 @@ const InstitutionAdd = () => {
     if (!instituteData.name) {
       setError({
         show: true,
-        errorMsg: InstitutionAddDict[userLanguage]['messages']['namerequired'],
+        errorMsg: InstitutionAddDict[userLanguage]['messages']['namerequired']
       });
     } else {
       removeErrorMSg();
@@ -228,24 +228,24 @@ const InstitutionAdd = () => {
         );
         setInstituteData((prevData: any) => ({
           ...prevData,
-          id: newInstitute.data?.createInstitution?.id,
+          id: newInstitute.data?.createInstitution?.id
         }));
         setSaving(false);
         setServerMessage({
           isError: false,
-          message: InstitutionAddDict[userLanguage]['messages']['saveMsg'],
+          message: InstitutionAddDict[userLanguage]['messages']['saveMsg']
         });
         setTimeout(() => {
           setServerMessage({
             isError: false,
-            message: '',
+            message: ''
           });
         }, 2000);
         // history.push(`institution?id=${instituteData.id}`);
       } catch {
         setError({
           show: true,
-          errorMsg: InstitutionAddDict[userLanguage]['messages']['adderr'],
+          errorMsg: InstitutionAddDict[userLanguage]['messages']['adderr']
         });
       }
     }
@@ -273,7 +273,7 @@ const InstitutionAdd = () => {
     zip,
     phone,
     isServiceProvider,
-    serviceProviders,
+    serviceProviders
   } = instituteData;
 
   console.log(id, 'id before return');

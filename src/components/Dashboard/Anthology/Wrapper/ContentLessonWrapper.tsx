@@ -1,7 +1,7 @@
-import React, {useContext, useEffect, useState} from 'react';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import * as customQueries from '@customGraphql/customQueries';
-import ContentCard from '@components/Atoms/ContentCard';
+import ContentCard from 'components/Atoms/ContentCard';
+import * as customQueries from 'customGraphql/customQueries';
+import React, {useEffect, useState} from 'react';
 
 interface IContentLessonWrapper {
   children?: React.ReactNode;
@@ -33,7 +33,9 @@ const ContentLessonWrapper = ({children, lessonID}: IContentLessonWrapper) => {
   };
 
   useEffect(() => {
-    getMinimumLessonInfo();
+    if (lessonID) {
+      getMinimumLessonInfo();
+    }
   }, [lessonID]);
 
   return (

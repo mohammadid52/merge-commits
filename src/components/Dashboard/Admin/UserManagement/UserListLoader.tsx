@@ -17,6 +17,9 @@ const UserListLoader = ({userRole}: {userRole: string}) => {
           <div className="w-16 flex h-4 bg-gray-400"></div>
         </div>
         <div className="w-2/10 flex justify-center items-center px-8 py-4 whitespace-nowrap">
+          <div className="w-16 flex h-4 bg-gray-400"></div>
+        </div>
+        <div className="w-2/10 flex justify-center items-center px-8 py-4 whitespace-nowrap">
           <div className="w-16 flex h-4 bg-gray-400" />
         </div>
         <div className="w-2/10 flex justify-center items-center px-8 py-4 whitespace-nowrap">
