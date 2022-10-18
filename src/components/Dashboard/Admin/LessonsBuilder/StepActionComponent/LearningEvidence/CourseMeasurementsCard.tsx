@@ -1,4 +1,4 @@
-import Tooltip from 'components/Atoms/Tooltip';
+import Tooltip from 'atoms/Tooltip';
 import React from 'react';
 import {FaGraduationCap} from 'react-icons/fa';
 import {HiOutlineArrowRight, HiPlus} from 'react-icons/hi';

@@ -2,7 +2,7 @@ import Buttons from 'atoms/Buttons';
 import ULBFileUploader from 'atoms/Form/FileUploader';
 import FormInput from 'atoms/Form/FormInput';
 import {Storage} from '@aws-amplify/storage';
-import Label from 'components/Atoms/Form/Label';
+import Label from 'atoms/Form/Label';
 import ToggleForModal from 'components/Lesson/UniversalLessonBuilder/UI/common/ToggleForModals';
 import DummyContent from 'components/Lesson/UniversalLessonBuilder/UI/Preview/DummyContent';
 import PreviewLayout from 'components/Lesson/UniversalLessonBuilder/UI/Preview/Layout/PreviewLayout';

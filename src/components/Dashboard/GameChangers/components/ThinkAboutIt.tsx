@@ -1,4 +1,4 @@
-import FormInput from 'components/Atoms/Form/FormInput';
+import FormInput from 'atoms/Form/FormInput';
 import {qaList} from 'components/Dashboard/GameChangers/__contstants';
 import React, {useState} from 'react';
 

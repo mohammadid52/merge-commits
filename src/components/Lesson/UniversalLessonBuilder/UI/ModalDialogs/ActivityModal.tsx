@@ -1,5 +1,5 @@
-import Buttons from 'components/Atoms/Buttons';
-import FormInput from 'components/Atoms/Form/FormInput';
+import Buttons from 'atoms/Buttons';
+import FormInput from 'atoms/Form/FormInput';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import {IContentTypeComponentProps} from '@interfaces/UniversalLessonBuilderInterfaces';

@@ -9,9 +9,9 @@ import {GlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import axios from 'axios';
 import {requestResetPassword} from 'utilities/urls';
-import Modal from 'components/Atoms/Modal';
+import Modal from 'atoms/Modal';
 import {FiAlertCircle} from 'react-icons/fi';
-import Buttons from 'components/Atoms/Buttons';
+import Buttons from 'atoms/Buttons';
 
 interface ListProps {
   item: any;

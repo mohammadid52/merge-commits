@@ -6,7 +6,7 @@ import Modal from 'atoms/Modal';
 import PageWrapper from 'atoms/PageWrapper';
 import UnitFormComponent from 'components/Dashboard/Admin/Institutons/EditBuilders/CurricularsView/TabsActions/Unit/UnitFormComponent';
 import ErrorBoundary from 'components/Error/ErrorBoundary';
-import ModalPopUp from 'components/Molecules/ModalPopUp';
+import ModalPopUp from 'molecules/ModalPopUp';
 import * as customMutations from 'customGraphql/customMutations';
 import * as customQueries from 'customGraphql/customQueries';
 import {API, graphqlOperation} from 'aws-amplify';

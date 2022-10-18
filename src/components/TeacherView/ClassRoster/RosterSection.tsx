@@ -7,7 +7,7 @@ import useDictionary from 'customHooks/dictionary';
 import RosterRow from './RosterRow';
 import RosterRowEmpty from './RosterRowEmpty';
 import gsap from 'gsap/all';
-import Buttons from 'components/Atoms/Buttons';
+import Buttons from 'atoms/Buttons';
 
 export interface IRosterSectionProps {
   hot?: boolean;

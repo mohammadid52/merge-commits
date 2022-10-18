@@ -1,5 +1,5 @@
 import ContentCard from 'atoms/ContentCard';
-import Loader from 'components/Atoms/Loader';
+import Loader from 'atoms/Loader';
 import Card from 'components/Community/Card';
 import useAuth from 'customHooks/useAuth';
 

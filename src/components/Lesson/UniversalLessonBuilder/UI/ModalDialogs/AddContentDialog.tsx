@@ -1,4 +1,4 @@
-import Buttons from 'components/Atoms/Buttons';
+import Buttons from 'atoms/Buttons';
 import {cardsList} from 'components/Dashboard/GameChangers/__contstants';
 import {useOverlayContext} from 'contexts/OverlayContext';
 import {usePageBuilderContext} from 'contexts/PageBuilderContext';

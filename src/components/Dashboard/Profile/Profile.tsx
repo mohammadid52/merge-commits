@@ -1,5 +1,5 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import BreadcrumbsWithBanner from 'components/Atoms/BreadcrumbsWithBanner';
+import BreadcrumbsWithBanner from 'atoms/BreadcrumbsWithBanner';
 import {uploadImageToS3} from 'graphql/functions';
 import React, {Fragment, useContext, useEffect, useState} from 'react';
 import {FaEdit, FaPlus} from 'react-icons/fa';

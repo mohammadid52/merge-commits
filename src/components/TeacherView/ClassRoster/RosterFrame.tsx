@@ -5,7 +5,7 @@ import LessonDetails from '../TopMenu/LessonDetails';
 import LessonInfoTitleBar from '../TopMenu/LessonInfoTitleBar';
 import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
 import {AiOutlineCloseCircle, AiOutlineMenu} from 'react-icons/ai';
-import ButtonsRound from 'components/Atoms/ButtonsRound';
+import ButtonsRound from 'atoms/ButtonsRound';
 import {getAsset} from 'assets';
 
 interface IRosterFrame {

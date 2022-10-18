@@ -1,6 +1,6 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {Storage} from '@aws-amplify/storage';
-import Buttons from 'components/Atoms/Buttons';
+import Buttons from 'atoms/Buttons';
 import useStudentDataValue from 'customHooks/studentDataValue';
 import {EditQuestionModalDict} from '@dictionary/dictionary.iconoclast';
 import {Transition} from '@headlessui/react';

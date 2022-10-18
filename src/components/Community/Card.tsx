@@ -1,7 +1,7 @@
 import FormInput from 'atoms/Form/FormInput';
-import Buttons from 'components/Atoms/Buttons';
-import Modal from 'components/Atoms/Modal';
-import Popover from 'components/Atoms/Popover';
+import Buttons from 'atoms/Buttons';
+import Modal from 'atoms/Modal';
+import Popover from 'atoms/Popover';
 import Comments from 'components/Community/Components/Comments';
 import HandleMedia from 'components/Community/Components/HandleMedia';
 import {

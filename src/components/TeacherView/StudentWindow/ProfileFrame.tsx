@@ -9,9 +9,9 @@ import useDictionary from 'customHooks/dictionary';
 import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
 import ProfileFrameInfo from './ProfileFrame/ProfileInfo';
 import ProfileFrameEdit from './ProfileFrame/ProfileFrameEdit';
-import Buttons from 'components/Atoms/Buttons';
+import Buttons from 'atoms/Buttons';
 import {FaEdit} from 'react-icons/fa';
-import Modal from 'components/Atoms/Modal';
+import Modal from 'atoms/Modal';
 import UserTabs from 'components/Dashboard/Admin/UserManagement/User/UserTabs';
 import ProfileFrameDemographics from './ProfileFrame/ProfileFrameDemographics';
 

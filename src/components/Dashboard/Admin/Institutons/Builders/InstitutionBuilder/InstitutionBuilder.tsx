@@ -14,8 +14,8 @@ import * as customQueries from 'customGraphql/customQueries';
 import InstitutionFormComponent from './InstitutionFormComponent';
 import ServiceVendors from './ServiceVendors';
 import {getAsset} from 'assets';
-import BreadcrumbsWithBanner from 'components/Atoms/BreadcrumbsWithBanner';
-import Buttons from 'components/Atoms/Buttons';
+import BreadcrumbsWithBanner from 'atoms/BreadcrumbsWithBanner';
+import Buttons from 'atoms/Buttons';
 
 interface InstitutionBuilderProps {
   institutionId?: string;

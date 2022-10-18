@@ -1,4 +1,4 @@
-import Modal from 'components/Atoms/Modal';
+import Modal from 'atoms/Modal';
 import React from 'react';
 import PositiveAlert from '../../../../General/Popup';
 

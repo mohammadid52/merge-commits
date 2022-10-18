@@ -228,8 +228,7 @@ const CurricularView = (props: CurricularViewProps) => {
         setDesignersID(savedData?.designers);
         setLoading(false);
       } catch (err) {
-        console.log(err);
-        console.log('Error while fetching curricular data.');
+        console.error('Error while fetching curricular data.', err);
         setLoading(false);
       }
     } else {

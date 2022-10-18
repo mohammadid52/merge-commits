@@ -1,4 +1,4 @@
-import {DeleteActionBtn} from 'components/Atoms/Buttons/DeleteActionBtn';
+import {DeleteActionBtn} from 'atoms/Buttons/DeleteActionBtn';
 import {GlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import React, {useContext, useState} from 'react';

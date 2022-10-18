@@ -502,6 +502,7 @@ export const lessonReducer = (state: any, action: LessonActions) => {
           personLessonData: action.payload
         }
       };
+
     default:
       return state;
   }

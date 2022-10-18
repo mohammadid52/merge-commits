@@ -394,7 +394,7 @@ const EditCurricular = (props: EditCurricularProps) => {
         }
         setPreviousName(savedData.name);
       } catch (err) {
-        console.log('err', err);
+        console.error('err', err);
         setMessages({
           show: true,
           message: EditCurriculardict[userLanguage]['messages']['fetchinger'],
@@ -492,7 +492,7 @@ const EditCurricular = (props: EditCurricularProps) => {
             show: true,
             errorMsg: 'Unable to upload image. Please try again later. '
           });
-          console.log('Error in uploading file to s3', err);
+          console.error('Error in uploading file to s3', err);
           reject(err);
         });
     });

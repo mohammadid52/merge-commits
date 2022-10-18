@@ -1,9 +1,9 @@
-import ULBFileUploader from 'components/Atoms/Form/FileUploader';
+import ULBFileUploader from 'atoms/Form/FileUploader';
 import {Storage} from '@aws-amplify/storage';
-import FormInput from 'components/Atoms/Form/FormInput';
-import MultipleSelector from 'components/Atoms/Form/MultipleSelector';
-import Selector from 'components/Atoms/Form/Selector';
-import Modal from 'components/Atoms/Modal';
+import FormInput from 'atoms/Form/FormInput';
+import MultipleSelector from 'atoms/Form/MultipleSelector';
+import Selector from 'atoms/Form/Selector';
+import Modal from 'atoms/Modal';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import {useQuery} from 'customHooks/urlParam';
@@ -15,10 +15,10 @@ import {
 } from 'utilities/staticData';
 import React, {useEffect, useState} from 'react';
 import ProgressBar from 'components/Lesson/UniversalLessonBuilder/UI/ProgressBar';
-import Buttons from 'components/Atoms/Buttons';
+import Buttons from 'atoms/Buttons';
 import useGraphqlMutation from 'customHooks/useGraphqlMutation';
 import {deleteImageFromS3, getImageFromS3Static} from 'utilities/services';
-import File from 'components/Atoms/File';
+import File from 'atoms/File';
 import {truncate} from 'lodash';
 
 const UploadLessonPlanModal = ({

@@ -2,22 +2,22 @@
 // import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {Auth} from '@aws-amplify/auth';
-import React, {Suspense, useContext, useEffect, useState} from 'react';
-import {useCookies} from 'react-cookie';
 import {getAsset} from 'assets';
+import AuthRoutes from 'components/AppRoutes/AuthRoutes';
+import UnauthRoutes from 'components/AppRoutes/UnauthRoutes';
 import MobileOops from 'components/Error/MobileOops';
-import {GlobalContext} from 'contexts/GlobalContext';
+import ComponentLoading from 'components/Lesson/Loading/ComponentLoading';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import * as customMutations from 'customGraphql/customMutations';
 import * as customQueries from 'customGraphql/customQueries';
 import useDeviceDetect from 'customHooks/deviceDetect';
 import * as queries from 'graphql/queries';
-import AuthRoutes from 'components/AppRoutes/AuthRoutes';
-import UnauthRoutes from 'components/AppRoutes/UnauthRoutes';
-import ComponentLoading from 'components/Lesson/Loading/ComponentLoading';
+import React, {Suspense, useEffect, useState} from 'react';
+import {useCookies} from 'react-cookie';
 
 const MainRouter: React.FC = () => {
   const deviceDetected = useDeviceDetect();
-  const {state, theme, clientKey, dispatch} = useContext(GlobalContext);
+  const {state, theme, clientKey, dispatch} = useGlobalContext();
   const [cookies, setCookie, removeCookie] = useCookies();
   const [authState, setAuthState] = useState('loading');
 
@@ -81,14 +81,14 @@ const MainRouter: React.FC = () => {
         if (userInfo.role !== 'ST') {
           instInfo = await API.graphql(
             graphqlOperation(customQueries.getAssignedInstitutionToStaff, {
-              filter: {staffAuthID: {eq: sub}},
+              filter: {staffAuthID: {eq: sub}}
             })
           );
         }
         updateAuthState(true);
         dispatch({
           type: 'PREV_LOG_IN',
-          payload: {email, authId: sub},
+          payload: {email, authId: sub}
         });
         // SETUP USER
         dispatch({
@@ -108,8 +108,8 @@ const MainRouter: React.FC = () => {
               instInfo?.data?.listStaff?.items.filter((item: any) => item.institution) ||
               [],
             onDemand: userInfo?.onDemand,
-            lessons: userInfo.lessons,
-          },
+            lessons: userInfo.lessons
+          }
         });
       } else {
         updateAuthState(false);
@@ -141,7 +141,7 @@ const MainRouter: React.FC = () => {
         id: state.user.id,
         authId: state.user.authId,
         email: state.user.email,
-        lastLoggedOut: new Date().toISOString(),
+        lastLoggedOut: new Date().toISOString()
       };
       API.graphql(graphqlOperation(customMutations.updatePersonLogoutTime, {input}));
       await Auth.signOut();

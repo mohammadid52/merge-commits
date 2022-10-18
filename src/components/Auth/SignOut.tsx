@@ -34,7 +34,7 @@ const SignOutButton = (props: SignOutButtonProps) => {
       removeLocalStorageData('selected_institution');
       dispatch({type: 'CLEANUP'});
     } catch (error) {
-      console.log('error signing out: ', error);
+      console.error('error signing out: ', error);
     }
   }
 

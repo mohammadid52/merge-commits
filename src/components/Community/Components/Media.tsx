@@ -1,6 +1,6 @@
 import FormInput from 'atoms/Form/FormInput';
 import {Storage} from '@aws-amplify/storage';
-import Label from 'components/Atoms/Form/Label';
+import Label from 'atoms/Form/Label';
 import {COMMUNITY_UPLOAD_KEY, IFile} from 'components/Community/constants.community';
 import File from 'components/Community/File';
 import {REGEX} from 'components/Lesson/UniversalLessonBuilder/UI/common/constants';
@@ -74,7 +74,7 @@ const Media = ({
         .catch((err) => {
           updateStatus(currentFile, 'failed');
           updateProgress(currentFile, null);
-          console.log('Error in uploading file to s3', err);
+          console.error('Error in uploading file to s3', err);
           reject(err);
         });
     });

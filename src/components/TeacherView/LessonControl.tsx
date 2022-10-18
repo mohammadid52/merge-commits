@@ -314,7 +314,7 @@ const LessonControl = () => {
         console.error('handleRoomUpdate - ', e);
       }
     } else {
-      console.log('incorrect data for handleRoomUpdate() - ', payload);
+      console.error('incorrect data for handleRoomUpdate() - ', payload);
     }
   };
 

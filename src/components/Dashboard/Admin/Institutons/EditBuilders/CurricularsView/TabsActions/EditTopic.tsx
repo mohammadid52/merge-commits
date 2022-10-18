@@ -111,7 +111,7 @@ const EditTopic = (props: EditTopicProps) => {
       if (updatedItem) {
         history.goBack();
       } else {
-        console.log('Could not update topic');
+        console.error('Could not update topic');
       }
     }
   };
@@ -146,7 +146,7 @@ const EditTopic = (props: EditTopicProps) => {
       });
       setLoading(false);
     } else {
-      console.log('wrong cr');
+      console.error('wrong cr');
       setLoading(false);
     }
   };

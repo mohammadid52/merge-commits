@@ -1,4 +1,4 @@
-import Popover from 'components/Atoms/Popover';
+import Popover from 'atoms/Popover';
 import {GlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import React, {useContext, useState} from 'react';

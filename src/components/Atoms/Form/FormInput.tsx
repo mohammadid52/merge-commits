@@ -1,4 +1,4 @@
-import Label from 'components/Atoms/Form/Label';
+import Label from 'atoms/Form/Label';
 import {Transition} from '@headlessui/react';
 import React, {useContext, Fragment, useState} from 'react';
 import {AiOutlineEye, AiOutlineEyeInvisible} from 'react-icons/ai';

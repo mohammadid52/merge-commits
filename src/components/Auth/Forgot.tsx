@@ -1,6 +1,6 @@
 import Auth from '@aws-amplify/auth';
 import {getAsset} from 'assets';
-import FormInput from 'components/Atoms/Form/FormInput';
+import FormInput from 'atoms/Form/FormInput';
 import AuthCard from 'components/Auth/AuthCard';
 import {GlobalContext} from 'contexts/GlobalContext';
 import React, {useContext, useState} from 'react';

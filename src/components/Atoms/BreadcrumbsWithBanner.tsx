@@ -1,16 +1,16 @@
-import React, {useContext, useEffect, useState} from 'react';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import React, {useEffect, useState} from 'react';
 import {BsFillInfoCircleFill} from 'react-icons/bs';
 import {useHistory} from 'react-router';
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 
-import {GlobalContext} from 'contexts/GlobalContext';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
 
 import {getAsset} from 'assets';
 import InformationalWalkThrough from 'components/Dashboard/Admin/Institutons/InformationalWalkThrough/InformationalWalkThrough';
+import HeroBanner from 'components/Header/HeroBanner';
 import useDictionary from 'customHooks/dictionary';
 import {breadcrumbsRoutes} from 'utilities/breadcrumb';
-import HeroBanner from 'components/Header/HeroBanner';
 
 interface BreadCrumbProps {
   items?: {title: string; url?: string; last: boolean; goBack?: boolean}[];
@@ -43,7 +43,7 @@ const BreadcrumbsWithBanner: React.FC<BreadCrumbProps> = (props: BreadCrumbProps
     theme,
     userLanguage,
     clientKey
-  } = useContext(GlobalContext);
+  } = useGlobalContext();
   const {BreadcrumsTitles, Institute_info} = useDictionary(clientKey);
   const pathname = location.pathname.replace(/\/$/, '');
   const currentPath = pathname.substring(pathname.lastIndexOf('/') + 1);

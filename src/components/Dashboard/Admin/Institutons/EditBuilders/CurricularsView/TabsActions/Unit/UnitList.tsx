@@ -7,12 +7,12 @@ import useDictionary from 'customHooks/dictionary';
 import {GlobalContext} from 'contexts/GlobalContext';
 
 import * as customQueries from 'customGraphql/customQueries';
-import Loader from 'components/Atoms/Loader';
+import Loader from 'atoms/Loader';
 import {getAsset} from 'assets';
 import UnitListRow from './UnitListRow';
-import ModalPopUp from 'components/Molecules/ModalPopUp';
-import SearchInput from 'components/Atoms/Form/SearchInput';
-import Selector from 'components/Atoms/Form/Selector';
+import ModalPopUp from 'molecules/ModalPopUp';
+import SearchInput from 'atoms/Form/SearchInput';
+import Selector from 'atoms/Form/Selector';
 import ErrorBoundary from 'components/Error/ErrorBoundary';
 
 export const UnitList = ({instId}: any) => {

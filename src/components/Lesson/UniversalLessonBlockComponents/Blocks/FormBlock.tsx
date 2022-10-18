@@ -1,4 +1,4 @@
-import RequiredMark from 'components/Atoms/RequiredMark';
+import RequiredMark from 'atoms/RequiredMark';
 import AttachmentBlock from 'components/Lesson/UniversalLessonBlockComponents/Blocks/FormBlock/AttachmentBlock';
 import OptionBlock from 'components/Lesson/UniversalLessonBlockComponents/Blocks/FormBlock/OptionBlock';
 import StarRatingBlock from 'components/Lesson/UniversalLessonBlockComponents/Blocks/FormBlock/StarRatingBlock';

@@ -4,7 +4,7 @@ import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
 import {FaCompress, FaExpand} from 'react-icons/fa';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {StudentWindowTitleBarProps} from '../StudentWindowTitleBar';
-import Buttons from 'components/Atoms/Buttons';
+import Buttons from 'atoms/Buttons';
 
 interface IFullscreenToggleProps extends StudentWindowTitleBarProps {
   displayData: any;

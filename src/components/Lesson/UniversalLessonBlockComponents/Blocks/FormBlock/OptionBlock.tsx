@@ -1,6 +1,6 @@
 import {IFormBlockProps, StudentPageInput} from '@interfaces/UniversalLessonInterfaces';
 import React, {useContext, useState} from 'react';
-import RequiredMark from 'components/Atoms/RequiredMark';
+import RequiredMark from 'atoms/RequiredMark';
 import {GlobalContext} from 'contexts/GlobalContext';
 import useInLessonCheck from 'customHooks/checkIfInLesson';
 import {FORM_TYPES} from 'components/Lesson/UniversalLessonBuilder/UI/common/constants';

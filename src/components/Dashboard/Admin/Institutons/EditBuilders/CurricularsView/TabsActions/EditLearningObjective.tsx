@@ -79,7 +79,7 @@ const EditLearningObjective = (props: EditLearningObjectiveProps) => {
     if (updatedItem) {
       history.goBack();
     } else {
-      console.log('Could not update learning objective');
+      console.error('Could not update learning objective');
     }
   };
 
@@ -94,7 +94,7 @@ const EditLearningObjective = (props: EditLearningObjectiveProps) => {
       setLearning({...learning, name: item.name, description: item.description});
       setLoading(false);
     } else {
-      console.log('wrong cr');
+      console.error('wrong cr');
       setLoading(false);
     }
   };

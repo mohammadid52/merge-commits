@@ -14,7 +14,7 @@ export const uploadImageToS3 = async (file: any, key: string, type: string) => {
     console.log('New profile image uploaded to s3 successfully: ', result);
     return result;
   } catch (error) {
-    console.log('Error in uploading file to s3', {file, key, type}, error);
+    console.error('Error in uploading file to s3', {file, key, type}, error);
   }
 };
 
@@ -25,6 +25,6 @@ export const deleteImageFromS3 = async (key: string) => {
     await Storage.remove(key);
     console.log('File with key: ', key, ' deleted successfully');
   } catch (error) {
-    console.log('Error in deleting file from s3', {key}, error);
+    console.error('Error in deleting file from s3', {key}, error);
   }
 };

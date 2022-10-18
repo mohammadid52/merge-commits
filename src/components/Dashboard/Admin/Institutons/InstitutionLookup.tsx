@@ -1,5 +1,5 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import BreadcrumbsWithBanner from 'components/Atoms/BreadcrumbsWithBanner';
+import BreadcrumbsWithBanner from 'atoms/BreadcrumbsWithBanner';
 import {useQuery} from 'customHooks/urlParam';
 import {XIcon} from '@heroicons/react/outline';
 import React, {Fragment, useContext, useEffect, useState} from 'react';
