@@ -1,6 +1,6 @@
-import useInLessonCheck from '@customHooks/checkIfInLesson';
-import useStudentDataValue from '@customHooks/studentDataValue';
-import {randomNumber} from '@utilities/functions';
+import useInLessonCheck from 'customHooks/checkIfInLesson';
+import useStudentDataValue from 'customHooks/studentDataValue';
+import {randomNumber} from 'utilities/functions';
 import noop from 'lodash/noop';
 import React, {useMemo} from 'react';
 import {AiOutlineEdit} from 'react-icons/ai';

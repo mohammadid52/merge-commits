@@ -1,7 +1,7 @@
 // import {PersonalizeEvents} from 'aws-sdk';
 import {getAsset} from 'assets';
 import React, {useContext, useEffect, useState} from 'react';
-import {GlobalContext} from '../../../contexts/GlobalContext';
+import {GlobalContext} from 'contexts/GlobalContext';
 import DotMenu from './RosterRow/DotMenu';
 import {IRosterSectionProps} from './RosterSection';
 
@@ -36,7 +36,7 @@ const RosterRow: React.FC<RosterRowProps> = ({
   rightView,
   setRightView,
   handleToggleRightView,
-  hot,
+  hot
 }: RosterRowProps) => {
   // ~~~~~~~~~~~~~~~ CONTEXT ~~~~~~~~~~~~~~~ //
   const gContext = useContext(GlobalContext);
@@ -258,13 +258,13 @@ const RosterRow: React.FC<RosterRowProps> = ({
                 {
                   label: 'Profile',
                   action: () =>
-                    handleToggleRightView({view: 'profile', option: personAuthID}),
+                    handleToggleRightView({view: 'profile', option: personAuthID})
                 },
                 {
                   label: 'Attendance',
                   action: () =>
-                    handleToggleRightView({view: 'attendance', option: studentID}),
-                },
+                    handleToggleRightView({view: 'attendance', option: studentID})
+                }
               ]}
             />
           </div>

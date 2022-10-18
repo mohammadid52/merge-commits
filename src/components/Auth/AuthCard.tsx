@@ -1,7 +1,7 @@
-import BrowserAlert from '@components/General/BrowserAlert';
-import {MessageProps} from '@components/Message/Message';
-import {useGlobalContext} from '@contexts/GlobalContext';
-import useDeviceDetect from '@customHooks/deviceDetect';
+import BrowserAlert from 'components/General/BrowserAlert';
+import {MessageProps} from 'components/Message/Message';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import useDeviceDetect from 'customHooks/deviceDetect';
 import {getAsset} from 'assets';
 import React, {ReactNode, useState} from 'react';
 import {NavLink} from 'react-router-dom';

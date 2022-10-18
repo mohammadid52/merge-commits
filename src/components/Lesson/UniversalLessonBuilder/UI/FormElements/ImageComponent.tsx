@@ -1,24 +1,24 @@
-import Buttons from '@atoms/Buttons';
-import ULBFileUploader from '@atoms/Form/FileUploader';
-import FormInput from '@atoms/Form/FormInput';
+import Buttons from 'atoms/Buttons';
+import ULBFileUploader from 'atoms/Form/FileUploader';
+import FormInput from 'atoms/Form/FormInput';
 import {Storage} from '@aws-amplify/storage';
-import Label from '@components/Atoms/Form/Label';
-import ToggleForModal from '@components/Lesson/UniversalLessonBuilder/UI/common/ToggleForModals';
-import DummyContent from '@components/Lesson/UniversalLessonBuilder/UI/Preview/DummyContent';
-import PreviewLayout from '@components/Lesson/UniversalLessonBuilder/UI/Preview/Layout/PreviewLayout';
-import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
+import Label from 'components/Atoms/Form/Label';
+import ToggleForModal from 'components/Lesson/UniversalLessonBuilder/UI/common/ToggleForModals';
+import DummyContent from 'components/Lesson/UniversalLessonBuilder/UI/Preview/DummyContent';
+import PreviewLayout from 'components/Lesson/UniversalLessonBuilder/UI/Preview/Layout/PreviewLayout';
+import AnimatedContainer from 'components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import {
   Tabs3,
-  useTabs,
-} from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/Tabs';
-import {GlobalContext} from '@contexts/GlobalContext';
+  useTabs
+} from 'components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/Tabs';
+import {GlobalContext} from 'contexts/GlobalContext';
 import {
   EditQuestionModalDict,
-  UniversalBuilderDict,
+  UniversalBuilderDict
 } from '@dictionary/dictionary.iconoclast';
 import {IContentTypeComponentProps} from '@interfaces/UniversalLessonBuilderInterfaces';
-import {getImageFromS3Static} from '@utilities/services';
-import {updateLessonPageToDB} from '@utilities/updateLessonPageToDB';
+import {getImageFromS3Static} from 'utilities/services';
+import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
 import React, {useCallback, useContext, useEffect, useRef, useState} from 'react';
 import ProgressBar from '../ProgressBar';
 
@@ -46,11 +46,11 @@ const ImageFormComponent = ({
   setUnsavedChanges,
   customVideo = false,
   askBeforeClose,
-  selectedImageFromGallery,
+  selectedImageFromGallery
 }: IImageFormComponentProps) => {
   const {
     userLanguage,
-    state: {user},
+    state: {user}
   } = useContext(GlobalContext);
 
   const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
@@ -59,7 +59,7 @@ const ImageFormComponent = ({
     imageData: null,
     width: 'auto',
     height: 'auto',
-    caption: '',
+    caption: ''
   });
   const imageInputsRef = useRef<IImageInput>(imageInputs);
 
@@ -67,7 +67,7 @@ const ImageFormComponent = ({
   const [errors, setErrors] = useState<IImageInput>({
     value: '',
     width: '',
-    height: '',
+    height: ''
   });
   const [loading, setIsLoading] = useState<boolean>(false);
 
@@ -86,7 +86,7 @@ const ImageFormComponent = ({
       setImageInputs((prevValues) => ({
         ...prevValues,
         value: selectedImageFromGallery,
-        imageData: null,
+        imageData: null
       }));
     }
   }, [selectedImageFromGallery]);
@@ -108,7 +108,7 @@ const ImageFormComponent = ({
 
     const input = {
       id: list.id,
-      lessonPlan: [...list.lessonPlan],
+      lessonPlan: [...list.lessonPlan]
     };
 
     await updateLessonPageToDB(input);
@@ -174,7 +174,7 @@ const ImageFormComponent = ({
 
         payload = {
           ...payload,
-          value: `ULB/${user.id}/content_image_${fileName}`,
+          value: `ULB/${user.id}/content_image_${fileName}`
         };
       }
 
@@ -219,7 +219,7 @@ const ImageFormComponent = ({
     let errorMsgs = {
       value: '',
       width: '',
-      height: '',
+      height: ''
     };
     if (!value) {
       isValid = false;
@@ -251,7 +251,7 @@ const ImageFormComponent = ({
         progressCallback: ({loaded, total}: any) => {
           const progress = (loaded * 100) / total;
           setUploadProgress(progress.toFixed(0));
-        },
+        }
       })
         .then((result: any) => {
           console.log('File successfully uploaded to s3', result);
@@ -262,7 +262,7 @@ const ImageFormComponent = ({
         .catch((err: any) => {
           setErrors((prevValues) => ({
             ...prevValues,
-            value: 'Unable to upload image. Please try again later. ',
+            value: 'Unable to upload image. Please try again later. '
           }));
           console.log('Error in uploading file to s3', err);
           reject(err);
@@ -285,7 +285,7 @@ const ImageFormComponent = ({
 
   const [selectedStyles, setSelectedStyles] = useState({
     isRounded: true,
-    isBorder: false,
+    isBorder: false
   });
   const getStyles = () => {
     let styles = '';
@@ -343,7 +343,7 @@ const ImageFormComponent = ({
                         } else {
                           setSelectedStyles({
                             ...selectedStyles,
-                            isRounded: !selectedStyles.isRounded,
+                            isRounded: !selectedStyles.isRounded
                           });
                         }
                       }}

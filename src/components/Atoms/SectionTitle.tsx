@@ -1,5 +1,5 @@
-import React, { useContext } from 'react'
-import { GlobalContext } from '../../contexts/GlobalContext';
+import React, {useContext} from 'react';
+import {GlobalContext} from 'contexts/GlobalContext';
 
 interface SectionTitleProps {
   title: string;
@@ -7,8 +7,8 @@ interface SectionTitleProps {
 }
 
 const SectionTitle: React.FC<SectionTitleProps> = (sectProps: SectionTitleProps) => {
-  const { title, subtitle } = sectProps;
-  const { theme } = useContext(GlobalContext);
+  const {title, subtitle} = sectProps;
+  const {theme} = useContext(GlobalContext);
 
   return (
     <div className="flex flex-col py-2 2xl:py-4 mb-0 md:mb-4">
@@ -20,6 +20,6 @@ const SectionTitle: React.FC<SectionTitleProps> = (sectProps: SectionTitleProps)
       </h2>
     </div>
   );
-}
+};
 
-export default SectionTitle
+export default SectionTitle;

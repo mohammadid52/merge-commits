@@ -1,7 +1,7 @@
-import { useState, useEffect, useContext } from 'react';
-import { LessonContext } from '../contexts/LessonContext';
-import { LessonControlContext } from '../contexts/LessonControlContext';
-import { useLocation, useRouteMatch } from 'react-router-dom';
+import {useState, useEffect, useContext} from 'react';
+import {LessonContext} from 'contexts/LessonContext';
+import {LessonControlContext} from 'contexts/LessonControlContext';
+import {useLocation, useRouteMatch} from 'react-router-dom';
 
 interface UsePageLabelProps {
   isTeacher?: boolean;
@@ -11,9 +11,11 @@ const usePageLabel = (props: UsePageLabelProps) => {
   /**
    * Teacher switch
    */
-  const { isTeacher } = props;
-  const switchContext = isTeacher ? useContext(LessonControlContext) : useContext(LessonContext);
-  const { state } = switchContext;
+  const {isTeacher} = props;
+  const switchContext = isTeacher
+    ? useContext(LessonControlContext)
+    : useContext(LessonContext);
+  const {state} = switchContext;
 
   const match = useRouteMatch();
 
@@ -35,7 +37,7 @@ const usePageLabel = (props: UsePageLabelProps) => {
       if (isTeacher) {
         const url = match.url;
         const splitArray = url.split('/');
-        return splitArray[splitArray.length-2];
+        return splitArray[splitArray.length - 2];
       } else {
         return state.pages[state.currentPage - 1].stage;
       }
@@ -61,7 +63,7 @@ const usePageLabel = (props: UsePageLabelProps) => {
     return () => console.log(' -> ', '');
   }, []);
 
-  return { prev: prevPageLabel, current: pageLabel };
+  return {prev: prevPageLabel, current: pageLabel};
 };
 
 export default usePageLabel;

@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import Selector from './Form/Selector';
+import Selector from 'atoms/Form/Selector';
 
 interface CountProps {
   pageSize: number;
@@ -13,7 +13,7 @@ const PageCountSelector: React.FC<CountProps> = (countProps: CountProps) => {
     {value: 10, name: 'show 10', id: 1},
     {value: 25, name: 'show 25', id: 2},
     {value: 50, name: 'show 50', id: 3},
-    {value: 100, name: 'show 100', id: 4},
+    {value: 100, name: 'show 100', id: 4}
   ];
   const [selectedItem, setSelectedItem] = useState<string>(list[0].name);
   return (

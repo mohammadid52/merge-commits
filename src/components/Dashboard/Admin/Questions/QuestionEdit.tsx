@@ -1,24 +1,24 @@
-import React, { useState, useEffect } from 'react'
-import { useHistory, useLocation } from 'react-router-dom';
-import { IoArrowUndoCircleOutline } from 'react-icons/io5';
-import API, { graphqlOperation } from '@aws-amplify/api'
+import React, {useState, useEffect} from 'react';
+import {useHistory, useLocation} from 'react-router-dom';
+import {IoArrowUndoCircleOutline} from 'react-icons/io5';
+import API, {graphqlOperation} from '@aws-amplify/api';
 
-import * as queries from '../../../../graphql/queries';
-import * as mutations from '../../../../graphql/mutations';
+import * as queries from 'graphql/queries';
+import * as mutations from 'graphql/mutations';
 
-import Buttons from '../../../Atoms/Buttons';
-import Selector from '../../../Atoms/Form/Selector';
-import MultipleSelector from '../../../Atoms/Form/MultipleSelector';
-import FormInput from '../../../Atoms/Form/FormInput';
-import TextArea from '../../../Atoms/Form/TextArea';
-import BreadCrums from '../../../Atoms/BreadCrums';
-import SectionTitle from '../../../Atoms/SectionTitle';
-import PageWrapper from '../../../Atoms/PageWrapper';
+import Buttons from 'atoms/Buttons';
+import Selector from 'atoms/Form/Selector';
+import MultipleSelector from 'atoms/Form/MultipleSelector';
+import FormInput from 'atoms/Form/FormInput';
+import TextArea from 'atoms/Form/TextArea';
+import BreadCrums from 'atoms/BreadCrums';
+import SectionTitle from 'atoms/SectionTitle';
+import PageWrapper from 'atoms/PageWrapper';
 
 interface InitialState {
-  question: string
-  notes: string
-  label: string
+  question: string;
+  notes: string;
+  label: string;
 }
 
 const QuestionEdit = () => {
@@ -29,8 +29,8 @@ const QuestionEdit = () => {
     question: '',
     notes: '',
     label: ''
-  }
-  const [questionData, setQuestionData] = useState<InitialState>(initialState)
+  };
+  const [questionData, setQuestionData] = useState<InitialState>(initialState);
   const [validation, setValidation] = useState({
     question: '',
     label: '',
@@ -43,71 +43,69 @@ const QuestionEdit = () => {
     return new URLSearchParams(location.search);
   };
   const params = useQuery();
-  const questionId = params.get('id')
+  const questionId = params.get('id');
   const breadCrumsList = [
-    { title: 'Home', url: '/dashboard', last: false },
-    { title: 'Question Bank', url: '/dashboard/question-bank', last: false },
-    { title: 'Edit Question', url: `/dashboard/question-bank/question/edit?id=${questionId}`, last: true },   //add ID in route
-  ]
+    {title: 'Home', url: '/dashboard', last: false},
+    {title: 'Question Bank', url: '/dashboard/question-bank', last: false},
+    {
+      title: 'Edit Question',
+      url: `/dashboard/question-bank/question/edit?id=${questionId}`,
+      last: true
+    } //add ID in route
+  ];
   const selectedDesigners: any = [];
   const designersList: any = [];
   const topicsList: any = [];
   const sourceList: any = [];
   const typeList: any = [];
   const languageList = [
-    { id: 1, name: 'English', value: 'EN' },
-    { id: 2, name: 'Spanish', value: 'ES' },
+    {id: 1, name: 'English', value: 'EN'},
+    {id: 2, name: 'Spanish', value: 'ES'}
   ];
   const onInputChange = (e: any) => {
     setQuestionData({
       ...questionData,
       [e.target.name]: e.target.value
-    })
-  }
+    });
+  };
 
-  const selectDesigner = () => {
-
-  }
-  const selectLanguage = () => {
-
-  }
-  const selectTopic = () => {
-
-  }
+  const selectDesigner = () => {};
+  const selectLanguage = () => {};
+  const selectTopic = () => {};
 
   const validateForm = () => {
-    let isValid = true
+    let isValid = true;
     const msgs = validation;
     if (!questionData.question?.trim().length) {
       isValid = false;
       msgs.question = 'Question is required';
     } else {
-      msgs.question = ''
+      msgs.question = '';
     }
     if (!questionData.label?.trim().length) {
       isValid = false;
       msgs.label = 'Label is required';
     } else {
-      msgs.label = ''
+      msgs.label = '';
     }
     // TODO: Add validation for repeating questions.
-    setValidation({ ...msgs });
+    setValidation({...msgs});
     return isValid;
-  }
+  };
 
   const saveQuestion = async () => {
     const isValid = validateForm();
     if (isValid) {
       try {
-        setLoading(true)
+        setLoading(true);
         const input = {
           id: questionId,
           question: questionData.question,
           label: questionData.label,
-          note: questionData.notes,
-        }
+          note: questionData.notes
+        };
         const results: any = await API.graphql(
-          graphqlOperation(mutations.updateQuestion, { input: input })
+          graphqlOperation(mutations.updateQuestion, {input: input})
         );
         const savedData = results?.data?.updateQuestion;
         if (savedData) {
@@ -116,90 +114,126 @@ const QuestionEdit = () => {
             label: '',
             message: 'Question details updated successfully.',
             isError: false
-          })
+          });
         }
         setLoading(false);
-      } catch{
+      } catch {
         setValidation({
           question: '',
           label: '',
           message: 'Unable to save Question details, Please try again later.',
           isError: true
         });
-        setLoading(false)
+        setLoading(false);
       }
     }
-  }
+  };
 
   const fetchQuestionData = async () => {
     try {
       const results: any = await API.graphql(
-        graphqlOperation(queries.getQuestion, { id: questionId })
+        graphqlOperation(queries.getQuestion, {id: questionId})
       );
       const savedData = results?.data?.getQuestion;
       setQuestionData({
         question: savedData.question,
         notes: savedData.note,
         label: savedData.label
-      })
-    } catch{
+      });
+    } catch {
       setValidation({
         question: '',
         label: '',
         message: 'Unable to fetch Question details, Please try again later.',
         isError: true
       });
-      setDisabled(true)
+      setDisabled(true);
     }
-  }
+  };
 
   useEffect(() => {
     if (questionId) {
-      fetchQuestionData()
+      fetchQuestionData();
     } else {
-      history.push('/dashboard/question-bank')
+      history.push('/dashboard/question-bank');
     }
-  }, [])
+  }, []);
 
-  const { question, notes, label } = questionData;
+  const {question, notes, label} = questionData;
   return (
     <div className="w-9/10 h-full p-4">
-
       {/* Section Header */}
       <BreadCrums items={breadCrumsList} />
       <div className="flex justify-between">
         <SectionTitle title="EDIT QUESTION" subtitle="Edit current question" />
         <div className="flex justify-end py-4 mb-4 w-5/10">
-          <Buttons label="Go Back" btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
+          <Buttons
+            label="Go Back"
+            btnClass="mr-4"
+            onClick={history.goBack}
+            Icon={IoArrowUndoCircleOutline}
+          />
         </div>
       </div>
 
       {/* Body */}
       <PageWrapper>
         <div className="m-auto">
-          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">QUESTION DETAILS</h3>
+          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">
+            QUESTION DETAILS
+          </h3>
           <div className="">
-
             <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
               <div>
-                <TextArea value={question} rows={3} id='question' onChange={onInputChange} name='question' label="Question" isRequired />
-                {validation.question && <p className="text-red-600 text-sm">{validation.question}</p>}
+                <TextArea
+                  value={question}
+                  rows={3}
+                  id="question"
+                  onChange={onInputChange}
+                  name="question"
+                  label="Question"
+                  isRequired
+                />
+                {validation.question && (
+                  <p className="text-red-600 text-sm">{validation.question}</p>
+                )}
               </div>
               <div>
-                <TextArea value={notes} rows={3} id='notes' onChange={onInputChange} name='notes' label="Notes" />
+                <TextArea
+                  value={notes}
+                  rows={3}
+                  id="notes"
+                  onChange={onInputChange}
+                  name="notes"
+                  label="Notes"
+                />
               </div>
             </div>
 
             <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
               <div>
-                <FormInput value={label} id='Label' onChange={onInputChange} name='label' label="Question Label" isRequired />
-                {validation.label && <p className="text-red-600 text-sm">{validation.label}</p>}
+                <FormInput
+                  value={label}
+                  id="Label"
+                  onChange={onInputChange}
+                  name="label"
+                  label="Question Label"
+                  isRequired
+                />
+                {validation.label && (
+                  <p className="text-red-600 text-sm">{validation.label}</p>
+                )}
               </div>
               <div>
                 <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
                   Select Topics
                 </label>
-                <Selector selectedItem={''} placeholder="Topics" list={topicsList} onChange={selectTopic} />
+                <Selector
+                  selectedItem={''}
+                  placeholder="Topics"
+                  list={topicsList}
+                  onChange={selectTopic}
+                />
               </div>
             </div>
 
@@ -208,13 +242,23 @@ const QuestionEdit = () => {
                 <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
                   Select Source
                 </label>
-                <Selector selectedItem={''} placeholder="Source" list={sourceList} onChange={selectLanguage} />
+                <Selector
+                  selectedItem={''}
+                  placeholder="Source"
+                  list={sourceList}
+                  onChange={selectLanguage}
+                />
               </div>
               <div>
                 <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
                   Select Type
                 </label>
-                <Selector selectedItem={''} placeholder="Type" list={typeList} onChange={selectLanguage} />
+                <Selector
+                  selectedItem={''}
+                  placeholder="Type"
+                  list={typeList}
+                  onChange={selectLanguage}
+                />
               </div>
             </div>
 
@@ -223,26 +267,45 @@ const QuestionEdit = () => {
                 <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
                   Select Language
                 </label>
-                <Selector selectedItem={''} placeholder="Language" list={languageList} onChange={selectLanguage} />
+                <Selector
+                  selectedItem={''}
+                  placeholder="Language"
+                  list={languageList}
+                  onChange={selectLanguage}
+                />
               </div>
               <div>
                 <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
                   Select Designers
                 </label>
-                <MultipleSelector selectedItems={selectedDesigners} placeholder="Designers" list={designersList} onChange={selectDesigner} />
+                <MultipleSelector
+                  selectedItems={selectedDesigners}
+                  placeholder="Designers"
+                  list={designersList}
+                  onChange={selectDesigner}
+                />
               </div>
             </div>
           </div>
         </div>
-        {validation.message && <div className="py-2 m-auto mt-2 text-center">
-          <p className={`${validation.isError ? 'text-red-600' : 'text-green-600'}`}>{validation.message}</p>
-        </div>}
+        {validation.message && (
+          <div className="py-2 m-auto mt-2 text-center">
+            <p className={`${validation.isError ? 'text-red-600' : 'text-green-600'}`}>
+              {validation.message}
+            </p>
+          </div>
+        )}
         <div className="flex mb-8 mt-4 justify-center">
-          <Buttons btnClass="py-3 px-10" label={loading ? 'Saving...' : 'Save'} onClick={saveQuestion} disabled={(loading || disabled) ? true : false} />
+          <Buttons
+            btnClass="py-3 px-10"
+            label={loading ? 'Saving...' : 'Save'}
+            onClick={saveQuestion}
+            disabled={loading || disabled ? true : false}
+          />
         </div>
       </PageWrapper>
     </div>
-  )
-}
+  );
+};
 
-export default QuestionEdit
+export default QuestionEdit;

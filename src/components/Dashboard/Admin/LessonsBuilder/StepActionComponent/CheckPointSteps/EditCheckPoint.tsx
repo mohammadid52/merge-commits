@@ -8,20 +8,20 @@ import {IoIosKeypad} from 'react-icons/io';
 import {IoCaretDownCircleOutline, IoCaretUpCircleOutline} from 'react-icons/io5';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {RiArrowRightLine} from 'react-icons/ri';
-import {getAsset} from '../../../../../../assets';
-import {GlobalContext} from '../../../../../../contexts/GlobalContext';
-import * as customMutations from '../../../../../../customGraphql/customMutations';
-import useDictionary from '../../../../../../customHooks/dictionary';
-import * as mutations from '../../../../../../graphql/mutations';
-import * as queries from '../../../../../../graphql/queries';
-import {getTypeString, reorder} from '../../../../../../utilities/strings';
-import Buttons from '../../../../../Atoms/Buttons';
-import CheckBox from '../../../../../Atoms/Form/CheckBox';
-import FormInput from '../../../../../Atoms/Form/FormInput';
-import MultipleSelector from '../../../../../Atoms/Form/MultipleSelector';
-import Selector from '../../../../../Atoms/Form/Selector';
-import RichTextEditor from '../../../../../Atoms/RichTextEditor';
-import ModalPopUp from '../../../../../Molecules/ModalPopUp';
+import {getAsset} from 'assets';
+import {GlobalContext} from 'contexts/GlobalContext';
+import * as customMutations from 'customGraphql/customMutations';
+import useDictionary from 'customHooks/dictionary';
+import * as mutations from 'graphql/mutations';
+import * as queries from 'graphql/queries';
+import {getTypeString, reorder} from 'utilities/strings';
+import Buttons from 'atoms/Buttons';
+import CheckBox from 'atoms/Form/CheckBox';
+import FormInput from 'atoms/Form/FormInput';
+import MultipleSelector from 'atoms/Form/MultipleSelector';
+import Selector from 'atoms/Form/Selector';
+import RichTextEditor from 'atoms/RichTextEditor';
+import ModalPopUp from 'molecules/ModalPopUp';
 import EditQuestionModal from '../../HelperComponents/EditQuestionModal';
 import {AddNewCheckPointProps} from './AddNewCheckPoint';
 
@@ -43,7 +43,7 @@ const EditCheckPoint = (props: AddNewCheckPointProps) => {
     setCheckpQuestions,
     previouslySelectedId,
     lessonName,
-    lessonType,
+    lessonType
   } = props;
 
   const {theme, clientKey, userLanguage} = useContext(GlobalContext);
@@ -59,7 +59,7 @@ const EditCheckPoint = (props: AddNewCheckPointProps) => {
     purposeHtml: '<p></p>',
     objectiveHtml: '<p></p>',
     instructionHtml: '<p></p>',
-    language: {id: '1', name: 'English', value: 'EN'},
+    language: {id: '1', name: 'English', value: 'EN'}
   };
   const [selectedBlock, setSelectedBlock] = useState('');
   const [questionSequenceId, setQuestionSequenceId] = useState([]);
@@ -70,11 +70,11 @@ const EditCheckPoint = (props: AddNewCheckPointProps) => {
     label: '',
     estTime: '',
     message: '',
-    isError: true,
+    isError: true
   });
   const languageList = [
     {id: 1, name: 'English', value: 'EN'},
-    {id: 2, name: 'Spanish', value: 'ES'},
+    {id: 2, name: 'Spanish', value: 'ES'}
   ];
 
   const accordionSteps = [
@@ -85,22 +85,22 @@ const EditCheckPoint = (props: AddNewCheckPointProps) => {
       titleValue: checkPointData.instructionsTitle,
       titleLabel: 'Checkpoint Instructions Title',
       textEditorName: 'instructionHtml',
-      textEditorValue: checkPointData.instructionHtml,
+      textEditorValue: checkPointData.instructionHtml
     },
     {
       id: '2',
       header: 'Checkpoint Purpose',
       titleLabel: 'Checkpoint Purpose',
       textEditorName: 'purposeHtml',
-      textEditorValue: checkPointData.purposeHtml,
+      textEditorValue: checkPointData.purposeHtml
     },
     {
       id: '3',
       header: 'Checkpoint Objective',
       titleLabel: 'Checkpoint Objective',
       textEditorName: 'objectiveHtml',
-      textEditorValue: checkPointData.objectiveHtml,
-    },
+      textEditorValue: checkPointData.objectiveHtml
+    }
   ];
 
   const toggleView = (id: string) => {
@@ -114,21 +114,21 @@ const EditCheckPoint = (props: AddNewCheckPointProps) => {
   const onInputChange = (e: any) => {
     setCheckPointData({
       ...checkPointData,
-      [e.target.name]: e.target.value,
+      [e.target.name]: e.target.value
     });
     if (validation.title || validation.label || validation.estTime) {
       setValidation({
         ...validation,
         title: '',
         label: '',
-        estTime: '',
+        estTime: ''
       });
     }
   };
   const setEditorContent = (html: string, text: string, fieldHtml: string) => {
     setCheckPointData({
       ...checkPointData,
-      [fieldHtml]: html,
+      [fieldHtml]: html
       // [field]: text
     });
   };
@@ -139,8 +139,8 @@ const EditCheckPoint = (props: AddNewCheckPointProps) => {
       language: {
         id,
         name,
-        value,
-      },
+        value
+      }
     });
   };
 
@@ -198,7 +198,7 @@ const EditCheckPoint = (props: AddNewCheckPointProps) => {
       const input = {
         checkpointID: checkpointID,
         questionID: quesId,
-        required: required ? required : false,
+        required: required ? required : false
       };
       const questions: any = await API.graphql(
         graphqlOperation(customMutations.createCheckpointQuestions, {input: input})
@@ -209,7 +209,7 @@ const EditCheckPoint = (props: AddNewCheckPointProps) => {
         label: '',
         estTime: '',
         message: EditCheckPointDict[userLanguage]['MESSAGES']['UNABLESAVE'],
-        isError: true,
+        isError: true
       });
     }
   };
@@ -221,7 +221,7 @@ const EditCheckPoint = (props: AddNewCheckPointProps) => {
       ?.id;
     try {
       const input = {
-        id: deletedQuesID,
+        id: deletedQuesID
       };
       const result: any = await API.graphql(
         graphqlOperation(customMutations.deleteCheckpointQuestions, {input: input})
@@ -232,7 +232,7 @@ const EditCheckPoint = (props: AddNewCheckPointProps) => {
         label: '',
         estTime: '',
         message: EditCheckPointDict[userLanguage]['MESSAGES']['UNABLESAVE'],
-        isError: true,
+        isError: true
       });
     }
   };
@@ -291,7 +291,7 @@ const EditCheckPoint = (props: AddNewCheckPointProps) => {
           objectives: checkPointData.objectiveHtml,
           designers: selectedDesigners.map((item: any) => item.id),
           language: checkPointData.language.value,
-          estTime: checkPointData.estTime ? parseInt(checkPointData.estTime) : 0,
+          estTime: checkPointData.estTime ? parseInt(checkPointData.estTime) : 0
         };
         const results: any = await API.graphql(
           graphqlOperation(customMutations.updateCheckpoint, {input: input})
@@ -309,7 +309,7 @@ const EditCheckPoint = (props: AddNewCheckPointProps) => {
           const updatedQuesSequence: any = checkpQuestions.map((item) => item.id);
           await API.graphql(
             graphqlOperation(mutations.updateCSequences, {
-              input: {id: `Ch_Ques_${newCheckpoint.id}`, sequence: updatedQuesSequence},
+              input: {id: `Ch_Ques_${newCheckpoint.id}`, sequence: updatedQuesSequence}
             })
           );
 
@@ -334,7 +334,7 @@ const EditCheckPoint = (props: AddNewCheckPointProps) => {
             label: '',
             estTime: '',
             message: EditCheckPointDict[userLanguage]['MESSAGES']['UNABLESAVE'],
-            isError: true,
+            isError: true
           });
         }
         setLoading(false);
@@ -346,7 +346,7 @@ const EditCheckPoint = (props: AddNewCheckPointProps) => {
           label: '',
           estTime: '',
           message: EditCheckPointDict[userLanguage]['MESSAGES']['UNABLESAVE'],
-          isError: true,
+          isError: true
         });
         setLoading(false);
       }
@@ -376,7 +376,7 @@ const EditCheckPoint = (props: AddNewCheckPointProps) => {
       // create sequence
       let seqItem: any = await API.graphql(
         graphqlOperation(mutations.createCSequences, {
-          input: {id: `Ch_Ques_${checkPointData.id}`, sequence: questionIds},
+          input: {id: `Ch_Ques_${checkPointData.id}`, sequence: questionIds}
         })
       );
       seqItem = seqItem.data.createCSequences;
@@ -408,7 +408,7 @@ const EditCheckPoint = (props: AddNewCheckPointProps) => {
     language,
     label,
 
-    estTime,
+    estTime
   } = checkPointData;
 
   const updateExistingData = (
@@ -494,7 +494,7 @@ const EditCheckPoint = (props: AddNewCheckPointProps) => {
                 setShowModal({
                   show: true,
                   message: `Are you sure you want to delete this question`,
-                  qId: item.id,
+                  qId: item.id
                 });
               }}
               className="hover:bg-red-400 hover:text-white transition-all duration-150 rounded text-red-400 w-auto p-1 cursor-pointer">

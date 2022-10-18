@@ -1,5 +1,5 @@
-import {useGlobalContext} from '@contexts/GlobalContext';
-import {getInitialsFromString, initials, stringToHslColor} from '@utilities/strings';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import {getInitialsFromString, initials, stringToHslColor} from 'utilities/strings';
 import React from 'react';
 
 type Role = 'ST' | 'TR' | 'BLD' | 'ADM' | 'SUP' | 'FLW';

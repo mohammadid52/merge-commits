@@ -1,9 +1,9 @@
-import React, { Fragment, useContext, useState } from 'react';
+import React, {Fragment, useContext, useState} from 'react';
 import {IoChevronDownCircleOutline, IoChevronUpCircleOutline} from 'react-icons/io5';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 
-import { getAsset } from '../../assets';
-import { GlobalContext } from '../../contexts/GlobalContext';
+import {getAsset} from 'assets';
+import {GlobalContext} from 'contexts/GlobalContext';
 
 const Accordion = ({actionOnAccordionClick, titleList}: any) => {
   const {theme, clientKey} = useContext(GlobalContext);
@@ -59,7 +59,7 @@ const Accordion = ({actionOnAccordionClick, titleList}: any) => {
                           <IconContext.Provider
                             value={{
                               size: '2rem',
-                              color: 'white',
+                              color: 'white'
                             }}>
                             {selectedItem === item.id ? (
                               <IoChevronUpCircleOutline />

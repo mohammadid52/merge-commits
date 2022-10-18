@@ -5,18 +5,18 @@ import {BiDotsVerticalRounded} from 'react-icons/bi';
 import {FaTasks} from 'react-icons/fa';
 import {useHistory} from 'react-router';
 import {getAsset} from 'assets';
-import {GlobalContext} from '@contexts/GlobalContext';
-import {useULBContext} from '@contexts/UniversalLessonBuilderContext';
-import useDictionary from '@customHooks/dictionary';
+import {GlobalContext} from 'contexts/GlobalContext';
+import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
+import useDictionary from 'customHooks/dictionary';
 import {UniversalLessonPage} from '@interfaces/UniversalLessonInterfaces';
-import {updateLessonPageToDB} from '@utilities/updateLessonPageToDB';
-import Buttons from '@atoms/Buttons';
-import Loader from '@atoms/Loader';
-import PageWrapper from '@atoms/PageWrapper';
-import Popover from '@atoms/Popover';
-import ModalPopUp from '@molecules/ModalPopUp';
-import PageBuilderLayout from '@components/Lesson/UniversalLessonBuilder/views/PageBuilderLayout';
-import NewLessonPlanSO from '@components/Lesson/UniversalLessonBuilder/UI/SlideOvers/NewLessonPlanSO';
+import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
+import Buttons from 'atoms/Buttons';
+import Loader from 'atoms/Loader';
+import PageWrapper from 'atoms/PageWrapper';
+import Popover from 'atoms/Popover';
+import ModalPopUp from 'molecules/ModalPopUp';
+import PageBuilderLayout from 'components/Lesson/UniversalLessonBuilder/views/PageBuilderLayout';
+import NewLessonPlanSO from 'components/Lesson/UniversalLessonBuilder/UI/SlideOvers/NewLessonPlanSO';
 
 interface LessonPlansListProps {
   lessonId: string;
@@ -118,7 +118,7 @@ const LessonActivities = ({
   lessonId,
   lessonName,
   loading,
-  universalLessonDetails,
+  universalLessonDetails
 }: LessonPlansListProps) => {
   const history = useHistory();
   const {clientKey, state, theme, userLanguage} = useContext(GlobalContext);
@@ -132,7 +132,7 @@ const LessonActivities = ({
     setUniversalLessonDetails,
     setEditMode,
     updateMovableList,
-    setLessonPlanFields,
+    setLessonPlanFields
   } = useULBContext();
   const [showDeleteModal, setShowDeleteModal] = useState<Boolean>(false);
   const [idToBeRemoved, setIdToBeRemoved] = useState<string>('');
@@ -155,7 +155,7 @@ const LessonActivities = ({
       interactionType: [],
       tags: [],
       estTime: '1 min',
-      classwork: true,
+      classwork: true
     });
     // history.push(
     //   `/dashboard/lesson-builder/lesson/page-builder?lessonId=${lessonId}&pageId=open-overlay`
@@ -193,7 +193,7 @@ const LessonActivities = ({
     setUniversalLessonDetails({...universalLessonDetails});
     const input = {
       id: lessonId,
-      lessonPlan: [...universalLessonDetails.lessonPlan],
+      lessonPlan: [...universalLessonDetails.lessonPlan]
     };
     toggleDeleteModal(false);
     await updateLessonPageToDB(input);

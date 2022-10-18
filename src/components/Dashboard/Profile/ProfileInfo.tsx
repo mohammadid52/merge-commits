@@ -3,10 +3,10 @@ import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {RiLock2Fill} from 'react-icons/ri';
 import {NavLink, useRouteMatch} from 'react-router-dom';
 
-import {GlobalContext} from '../../../contexts/GlobalContext';
-import useDictionary from '../../../customHooks/dictionary';
-import {getUserRoleString} from '../../../utilities/strings';
-import Tooltip from '../../Atoms/Tooltip';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import {getUserRoleString} from 'utilities/strings';
+import Tooltip from 'atoms/Tooltip';
 import LessonLoading from '../../Lesson/Loading/ComponentLoading';
 import {UserInfo} from './Profile';
 interface UserInfoProps {

@@ -1,10 +1,10 @@
 import React, {useContext} from 'react';
 import {FaEdit} from 'react-icons/fa';
 
-import {GlobalContext} from '@contexts/GlobalContext';
-import useDictionary from '@customHooks/dictionary';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
 
-import Buttons from '@atoms/Buttons';
+import Buttons from 'atoms/Buttons';
 
 import {IoIosJournal} from 'react-icons/io';
 import {IconContext} from 'react-icons/lib';
@@ -14,12 +14,12 @@ import {
   UniversalJournalData,
   UniversalLessonStudentData
 } from '@interfaces/UniversalLessonInterfaces';
-import {stringToHslColor} from '@utilities/strings';
-import {ViewEditMode} from '@components/Dashboard/Anthology/Anthology';
-import AnthologyUnderlinedTabs from '@components/Dashboard/Anthology/AnthologyUnderlinedTabs';
-import SentimentTab from '@components/Dashboard/Anthology/SentimentTab';
-import UploadsTab from '@components/Dashboard/Anthology/UploadsTab';
-import WrittenContentTab from '@components/Dashboard/Anthology/WrittenContentTab';
+import {stringToHslColor} from 'utilities/strings';
+import {ViewEditMode} from 'components/Dashboard/Anthology/Anthology';
+import AnthologyUnderlinedTabs from 'components/Dashboard/Anthology/AnthologyUnderlinedTabs';
+import SentimentTab from 'components/Dashboard/Anthology/SentimentTab';
+import UploadsTab from 'components/Dashboard/Anthology/UploadsTab';
+import WrittenContentTab from 'components/Dashboard/Anthology/WrittenContentTab';
 
 export interface ITabParentProps {
   handleEditToggle?: (

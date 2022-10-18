@@ -2,17 +2,17 @@ import {API, graphqlOperation} from 'aws-amplify';
 import React, {useContext, useEffect, useState} from 'react';
 import {useHistory} from 'react-router';
 
-import Selector from '../../../../../Atoms/Form/Selector';
-import Buttons from '../../../../../Atoms/Buttons';
-import ModalPopUp from '../../../../../Molecules/ModalPopUp';
+import Selector from 'atoms/Form/Selector';
+import Buttons from 'atoms/Buttons';
+import ModalPopUp from 'molecules/ModalPopUp';
 
-import {getAsset} from '../../../../../../assets';
-import useDictionary from '../../../../../../customHooks/dictionary';
+import {getAsset} from 'assets';
+import useDictionary from 'customHooks/dictionary';
 
-import * as mutations from '../../../../../../graphql/mutations';
-import * as customMutations from '../../../../../../customGraphql/customMutations';
+import * as mutations from 'graphql/mutations';
+import * as customMutations from 'customGraphql/customMutations';
 
-import {GlobalContext} from '../../../../../../contexts/GlobalContext';
+import {GlobalContext} from 'contexts/GlobalContext';
 
 interface IAddCourse {
   curriculumList: any[];
@@ -30,7 +30,7 @@ const AddCourse = (props: IAddCourse) => {
     lessonId,
     institutionID,
     lessonType,
-    lessonPlans,
+    lessonPlans
   } = props;
 
   const {clientKey, theme, userLanguage} = useContext(GlobalContext);
@@ -40,7 +40,7 @@ const AddCourse = (props: IAddCourse) => {
 
   const initialData: any = {
     curriculum: {name: '', value: '', id: ''},
-    unit: {name: '', value: '', id: ''},
+    unit: {name: '', value: '', id: ''}
   };
 
   const [formState, setFormState] = useState<any>(initialData);
@@ -52,16 +52,16 @@ const AddCourse = (props: IAddCourse) => {
   const [saving, setSaving] = useState(false);
   const [editState, setEditState] = useState<{id: string; action?: string}>({
     id: '',
-    action: '',
+    action: ''
   });
   const [message, setMessage] = useState({
     msg: '',
-    isError: false,
+    isError: false
   });
   const [warnModal, setWarnModal] = useState({
     show: false,
     goBack: false,
-    message: 'Do you want to save changes before moving forward?',
+    message: 'Do you want to save changes before moving forward?'
   });
 
   const gotoCurricularUnit = (syllabusId: string, curricularId: string) => {
@@ -73,7 +73,7 @@ const AddCourse = (props: IAddCourse) => {
   const onSelectorChange = (val: string, name: string, id: string, field: string) => {
     setFormState({
       ...formState,
-      [field]: {id, name, value: val},
+      [field]: {id, name, value: val}
     });
   };
   const updateStatusOnTable = (uniqId: string, status: string) => {
@@ -91,7 +91,7 @@ const AddCourse = (props: IAddCourse) => {
       setEditState({...editState, action: 'updating...'});
       const input = {
         id: uniqId,
-        status: val,
+        status: val
       };
       const result: any = await API.graphql(
         graphqlOperation(customMutations.updateSyllabusLesson, {input: input})
@@ -102,7 +102,7 @@ const AddCourse = (props: IAddCourse) => {
     } catch {
       setMessage({
         msg: 'Error while updating unit status please try later.',
-        isError: true,
+        isError: true
       });
       setEditState({id: '', action: ''});
     }
@@ -119,17 +119,17 @@ const AddCourse = (props: IAddCourse) => {
             active: lessonType !== 'lesson' ? true : false,
             stage: `checkpoint?id=${item.LessonComponentID}`,
             type: 'survey',
-            displayMode: 'SELF',
+            displayMode: 'SELF'
           };
         });
       const input = {
         syllabusID: formState.unit.id,
         lessonID: lessonId,
         displayData: {
-          breakdownComponent: lessonType,
+          breakdownComponent: lessonType
         },
         lessonPlan: lessonComponentPlan?.length > 0 ? lessonComponentPlan : [],
-        status: 'Active',
+        status: 'Active'
       };
       setSaving(true);
       const result: any = await API.graphql(
@@ -142,7 +142,7 @@ const AddCourse = (props: IAddCourse) => {
           ...newLesson,
           curricularName: formState?.curriculum?.name,
           curricularId: formState?.curriculum?.id,
-          syllabusName: formState?.unit?.name,
+          syllabusName: formState?.unit?.name
         };
         const updatedList: any = curriculaList.map((curricular: any) => {
           if (curricular?.curricularId === formState?.curriculum?.id) {
@@ -151,7 +151,7 @@ const AddCourse = (props: IAddCourse) => {
             );
             return {
               ...curricular,
-              unitList: updatedUnitList,
+              unitList: updatedUnitList
             };
           } else {
             return curricular;
@@ -162,13 +162,13 @@ const AddCourse = (props: IAddCourse) => {
         setFormState({
           ...formState,
           curriculum: {name: '', value: '', id: ''},
-          unit: {name: '', value: '', id: ''},
+          unit: {name: '', value: '', id: ''}
         });
         setUnitsList([]);
         setMessage({
           ...message,
           isError: false,
-          msg: UnitLookupDict[userLanguage]['MESSAGES']['ADDED'],
+          msg: UnitLookupDict[userLanguage]['MESSAGES']['ADDED']
         });
         setSaving(false);
       }
@@ -177,7 +177,7 @@ const AddCourse = (props: IAddCourse) => {
       setMessage({
         ...message,
         isError: true,
-        msg: UnitLookupDict[userLanguage]['MESSAGES']['ADDERR'],
+        msg: UnitLookupDict[userLanguage]['MESSAGES']['ADDERR']
       });
     }
   };
@@ -186,13 +186,15 @@ const AddCourse = (props: IAddCourse) => {
     const selectedItem = curriculaList?.find(
       (curricular: any) => curricular.curricularId === formState?.curriculum?.id
     );
-    const existingLessonSeq = selectedItem?.unitList.find((unit:any) => unit.id === formState.unit.id)?.universalLessonsSeq || [];
+    const existingLessonSeq =
+      selectedItem?.unitList.find((unit: any) => unit.id === formState.unit.id)
+        ?.universalLessonsSeq || [];
     await API.graphql(
       graphqlOperation(customMutations.updateUniversalSyllabusLessonSequence, {
         input: {
           id: formState.unit.id,
-          universalLessonsSeq: [...existingLessonSeq, lessonsID],
-        },
+          universalLessonsSeq: [...existingLessonSeq, lessonsID]
+        }
       })
     );
   };
@@ -214,7 +216,7 @@ const AddCourse = (props: IAddCourse) => {
         curricularId: item?.id,
         name: item?.name,
         value: item?.name,
-        unitList: result?.length ? [...result] : [],
+        unitList: result?.length ? [...result] : []
       };
     });
     // setSelectedUnitsList([...selectedList]);
@@ -231,13 +233,13 @@ const AddCourse = (props: IAddCourse) => {
         const syllabusList: any = selectedItem?.unitList?.map((item: any) => ({
           id: item.unitId,
           name: item.unit?.name,
-          value: item.unit?.name,
+          value: item.unit?.name
         }));
         setUnitsList([...syllabusList]);
       }
       setFormState({
         ...formState,
-        unit: {id: '', name: '', value: ''},
+        unit: {id: '', name: '', value: ''}
       });
     }
   }, [formState?.curriculum?.id]);
@@ -252,16 +254,16 @@ const AddCourse = (props: IAddCourse) => {
     setWarnModal({
       show: true,
       goBack: true,
-      message: 'Do you want to save changes before going back?',
+      message: 'Do you want to save changes before going back?'
     });
-  }
+  };
 
   const onDiscard = () => {
-    setWarnModal(prevValues => ({
+    setWarnModal((prevValues) => ({
       ...prevValues,
       show: false
     }));
-  }
+  };
 
   const {curriculum, unit} = formState;
 

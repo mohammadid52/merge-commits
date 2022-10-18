@@ -1,14 +1,14 @@
-import {setLocalStorageData} from '@utilities/localStorage';
+import {setLocalStorageData} from 'utilities/localStorage';
 import isEmpty from 'lodash/isEmpty';
 import React, {useContext, useEffect, useState} from 'react';
 import {BsFillInfoCircleFill} from 'react-icons/bs';
 
-import {getAsset} from '../../../assets';
-import {GlobalContext} from '../../../contexts/GlobalContext';
-import {getImageFromS3} from '../../../utilities/services';
-import SectionTitleV3 from '../../Atoms/SectionTitleV3';
+import {getAsset} from 'assets';
+import {GlobalContext} from 'contexts/GlobalContext';
+import {getImageFromS3} from 'utilities/services';
+import SectionTitleV3 from 'atoms/SectionTitleV3';
 import ComponentLoading from '../../Lesson/Loading/ComponentLoading';
-import InformationalWalkThrough from '@components/Dashboard/Admin/Institutons/InformationalWalkThrough/InformationalWalkThrough';
+import InformationalWalkThrough from 'components/Dashboard/Admin/Institutons/InformationalWalkThrough/InformationalWalkThrough';
 import {ClassroomControlProps} from '../Dashboard';
 import RoomTiles from './RoomTiles';
 import StudentsTiles from './StudentsTiles';

@@ -1,13 +1,13 @@
 import React, {Fragment, useContext, useState} from 'react';
 import {useHistory} from 'react-router';
 
-import PageWrapper from '../../../../Atoms/PageWrapper';
-import Buttons from '../../../../Atoms/Buttons';
-import {getAsset} from '../../../../../assets';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import useDictionary from '../../../../../customHooks/dictionary';
-import Tooltip from '../../../../Atoms/Tooltip';
-import AddButton from '../../../../Atoms/Buttons/AddButton';
+import PageWrapper from 'atoms/PageWrapper';
+import Buttons from 'atoms/Buttons';
+import {getAsset} from 'assets';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import Tooltip from 'atoms/Tooltip';
+import AddButton from 'atoms/Buttons/AddButton';
 
 interface ClassListProps {
   classes: {items: {name?: string; id: string}[]};

@@ -1,12 +1,12 @@
 import {map, remove, update} from 'lodash';
 import React, {useContext} from 'react';
 import {PartContentSub} from '../../../../../interfaces/UniversalLessonInterfaces';
-import FormInput from '../../../../Atoms/Form/FormInput';
+import FormInput from 'atoms/Form/FormInput';
 import RemoveInput from '../common/RemoveInput';
 import {v4 as uuidv4} from 'uuid';
-import Buttons from '../../../../Atoms/Buttons';
-import {EditQuestionModalDict} from '../../../../../dictionary/dictionary.iconoclast';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
+import Buttons from 'atoms/Buttons';
+import {EditQuestionModalDict} from 'dictionary/dictionary.iconoclast';
+import {GlobalContext} from 'contexts/GlobalContext';
 import {FORM_TYPES} from '../common/constants';
 
 const Link = ({
@@ -17,7 +17,7 @@ const Link = ({
   updateContent,
   list,
   setList,
-  createNewContent,
+  createNewContent
 }: any) => {
   const {userLanguage} = useContext(GlobalContext);
 
@@ -44,7 +44,7 @@ const Link = ({
         id: partContentId,
         type: FORM_TYPES.LINK,
         label: d.label,
-        value: d.value,
+        value: d.value
       };
     });
 

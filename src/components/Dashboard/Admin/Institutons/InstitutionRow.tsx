@@ -1,18 +1,18 @@
 import React, {useState, useEffect, useContext} from 'react';
 import {useHistory, useRouteMatch} from 'react-router-dom';
 
-import {getAsset} from '../../../../assets';
+import {getAsset} from 'assets';
 import {
   stringToHslColor,
   getHostNameFromUrl,
   initials,
   getInitialsFromString,
-  formatPhoneNumber,
-} from '../../../../utilities/strings';
-import {getImageFromS3} from '../../../../utilities/services';
-import {GlobalContext} from '../../../../contexts/GlobalContext';
-import Tooltip from '../../../Atoms/Tooltip';
-import {ellipsis} from '@utilities/functions';
+  formatPhoneNumber
+} from 'utilities/strings';
+import {getImageFromS3} from 'utilities/services';
+import {GlobalContext} from 'contexts/GlobalContext';
+import Tooltip from 'atoms/Tooltip';
+import {ellipsis} from 'utilities/functions';
 
 interface InstitutionRowProps {
   id?: string;
@@ -67,7 +67,7 @@ const InstitutionRow: React.FC<InstitutionRowProps> = (
                       ' ' +
                       getInitialsFromString(instRowProps.name)[1]
                   )}`,
-                  textShadow: '0.1rem 0.1rem 2px #423939b3',
+                  textShadow: '0.1rem 0.1rem 2px #423939b3'
                 }}>
                 {instRowProps.name
                   ? initials(

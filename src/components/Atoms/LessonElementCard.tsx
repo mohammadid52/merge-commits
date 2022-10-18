@@ -1,5 +1,5 @@
-import React, { useContext } from 'react';
-import { GlobalContext } from '../../contexts/GlobalContext';
+import React, {useContext} from 'react';
+import {GlobalContext} from 'contexts/GlobalContext';
 
 interface LessonElementCard {
   keyProps?: string | number;
@@ -8,10 +8,10 @@ interface LessonElementCard {
 
 const LessonElementCard = (props: LessonElementCard) => {
   const {keyProps, children} = props;
-  const { theme } = useContext(GlobalContext);
+  const {theme} = useContext(GlobalContext);
   return (
     <div key={keyProps} className={`my-4`}>
-        {children}
+      {children}
     </div>
   );
 };

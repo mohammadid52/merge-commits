@@ -1,14 +1,13 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import Community from '@components/Community/Community';
-import InstitutionsHome from '@components/Dashboard/Admin/Institutons/InstitutionsHome';
-import {GameChangerProvider} from '@components/Dashboard/GameChangers/context/GameChangersContext';
-import '@components/Dashboard/GameChangers/styles/Flickity.scss';
-import '@components/Dashboard/GameChangers/styles/GameChanger.scss';
-import useNotifications from '@customHooks/notifications';
-import useTailwindBreakpoint from '@customHooks/tailwindBreakpoint';
 import {getAsset} from 'assets';
+import Community from 'components/Community/Community';
+import InstitutionsHome from 'components/Dashboard/Admin/Institutons/InstitutionsHome';
 import QuestionBank from 'components/Dashboard/Admin/Questions/QuestionBank';
 import Csv from 'components/Dashboard/Csv/Csv';
+import DropDownMenu from 'components/Dashboard/DropDownMenu/DropDownMenu';
+import {GameChangerProvider} from 'components/Dashboard/GameChangers/context/GameChangersContext';
+import 'components/Dashboard/GameChangers/styles/Flickity.scss';
+import 'components/Dashboard/GameChangers/styles/GameChanger.scss';
 import Home from 'components/Dashboard/Home/Home';
 import HomeForTeachers from 'components/Dashboard/Home/HomeForTeachers';
 import LessonPlanHome from 'components/Dashboard/LessonPlanner/LessonPlanHome';
@@ -20,21 +19,23 @@ import ComponentLoading from 'components/Lesson/Loading/ComponentLoading';
 import Noticebar from 'components/Noticebar/Noticebar';
 import {GlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
+import useNotifications from 'customHooks/notifications';
 import * as queries from 'graphql/queries';
 import moment, {Moment} from 'moment';
 import React, {lazy, Suspense, useContext, useEffect, useState} from 'react';
 import {useCookies} from 'react-cookie';
 import {Redirect, Route, Switch, useHistory, useRouteMatch} from 'react-router-dom';
-import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
+import {setLocalStorageData} from 'utilities/localStorage';
 import {frequencyMapping} from 'utilities/staticData';
-import DropDownMenu from './DropDownMenu/DropDownMenu';
-const Classroom = lazy(() => import('./Classroom/Classroom'));
+const Classroom = lazy(() => import('components/Dashboard/Classroom/Classroom'));
 
-const GameChangers = lazy(() => import('./GameChangers/GameChangers'));
-const Anthology = lazy(() => import('./Anthology/Anthology'));
-const Profile = lazy(() => import('./Profile/Profile'));
-const TestCases = lazy(() => import('./TestCases/TestCases'));
-const Registration = lazy(() => import('./Admin/UserManagement/Registration'));
+const GameChangers = lazy(() => import('components/Dashboard/GameChangers/GameChangers'));
+const Anthology = lazy(() => import('components/Dashboard/Anthology/Anthology'));
+const Profile = lazy(() => import('components/Dashboard/Profile/Profile'));
+const TestCases = lazy(() => import('components/Dashboard/TestCases/TestCases'));
+const Registration = lazy(
+  () => import('components/Dashboard/Admin/UserManagement/Registration')
+);
 
 export const reorderSyllabus = (syllabusArray: any[], sequenceArray: any[]) => {
   let getSyllabusInSequence =

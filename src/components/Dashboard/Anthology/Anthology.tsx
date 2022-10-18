@@ -1,27 +1,27 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import * as customMutations from '@customGraphql/customMutations';
+import * as customMutations from 'customGraphql/customMutations';
 import update from 'lodash/update';
 import {nanoid} from 'nanoid';
 import React, {useEffect, useState} from 'react';
 import {FaSpinner} from 'react-icons/fa';
 import {IconContext} from 'react-icons/lib';
 import {v4 as uuidV4} from 'uuid';
-import {getAsset} from '../../../assets';
-import {useGlobalContext} from '../../../contexts/GlobalContext';
-import * as customQueries from '../../../customGraphql/customQueries';
-import useDictionary from '../../../customHooks/dictionary';
-import usePrevious from '../../../customHooks/previousProps';
-import * as mutations from '../../../graphql/mutations';
-import * as queries from '../../../graphql/queries';
+import {getAsset} from 'assets';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import * as customQueries from 'customGraphql/customQueries';
+import useDictionary from 'customHooks/dictionary';
+import usePrevious from 'customHooks/previousProps';
+import * as mutations from 'graphql/mutations';
+import * as queries from 'graphql/queries';
 import {
   UniversalClassData,
   UniversalJournalData,
   UniversalLessonStudentData
 } from '../../../interfaces/UniversalLessonInterfaces';
-import Buttons from '../../Atoms/Buttons';
-import FormInput from '../../Atoms/Form/FormInput';
-import Modal from '../../Atoms/Modal';
-import SectionTitleV3 from '../../Atoms/SectionTitleV3';
+import Buttons from 'atoms/Buttons';
+import FormInput from 'atoms/Form/FormInput';
+import Modal from 'atoms/Modal';
+import SectionTitleV3 from 'atoms/SectionTitleV3';
 import HeroBanner from '../../Header/HeroBanner';
 import HeaderTextBar from '../HeaderTextBar/HeaderTextBar';
 import ChangePasscode from '../Profile/ChangePasscode';

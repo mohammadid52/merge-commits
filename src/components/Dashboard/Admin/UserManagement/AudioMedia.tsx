@@ -1,9 +1,9 @@
 import React, {useContext} from 'react';
 import {BiCloudDownload} from 'react-icons/bi';
-import {getAsset} from '../../../../assets';
-import {GlobalContext} from '../../../../contexts/GlobalContext';
+import {getAsset} from 'assets';
+import {GlobalContext} from 'contexts/GlobalContext';
 
-import Loader from '../../../Atoms/Loader';
+import Loader from 'atoms/Loader';
 import Size from './Size';
 
 const downloadFile = (uri: string, name: string, isAudio: boolean) => {

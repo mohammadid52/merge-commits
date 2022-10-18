@@ -1,12 +1,12 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import BreadcrumbsWithBanner from '@components/Atoms/BreadcrumbsWithBanner';
-import PageWrapper from '@components/Atoms/PageWrapper';
-import * as customQueries from '@customGraphql/customQueries';
-import useDictionary from '@customHooks/dictionary';
+import BreadcrumbsWithBanner from 'components/Atoms/BreadcrumbsWithBanner';
+import PageWrapper from 'components/Atoms/PageWrapper';
+import * as customQueries from 'customGraphql/customQueries';
+import useDictionary from 'customHooks/dictionary';
 import {getAsset} from 'assets';
 import React, {useContext, useEffect, useState} from 'react';
 import {Route, Switch, useLocation, useRouteMatch} from 'react-router-dom';
-import {GlobalContext} from '../../../../contexts/GlobalContext';
+import {GlobalContext} from 'contexts/GlobalContext';
 import {DashboardProps} from '../../Dashboard';
 import NavBarRouter from '../NavBarRouter';
 import CurricularBuilder from './Builders/CurricularBuilder';
@@ -54,7 +54,7 @@ const InstitutionsHome: React.FC<DashboardProps> = (props: DashboardProps) => {
       if (splitUrl.indexOf('add') === -1) {
         const result: any = await API.graphql(
           graphqlOperation(customQueries.getUniversalLessonBasicDetails, {
-            id: splitUrl.split('/')[0],
+            id: splitUrl.split('/')[0]
           })
         );
         setLessonData(result.data?.getUniversalLesson);

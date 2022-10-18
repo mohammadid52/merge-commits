@@ -1,9 +1,9 @@
-import FormInput from '@atoms/Form/FormInput';
+import FormInput from 'atoms/Form/FormInput';
 import {Storage} from '@aws-amplify/storage';
-import Label from '@components/Atoms/Form/Label';
-import {COMMUNITY_UPLOAD_KEY, IFile} from '@components/Community/constants.community';
-import File from '@components/Community/File';
-import {REGEX} from '@components/Lesson/UniversalLessonBuilder/UI/common/constants';
+import Label from 'components/Atoms/Form/Label';
+import {COMMUNITY_UPLOAD_KEY, IFile} from 'components/Community/constants.community';
+import File from 'components/Community/File';
+import {REGEX} from 'components/Lesson/UniversalLessonBuilder/UI/common/constants';
 import {Transition} from '@headlessui/react';
 import {getAsset} from 'assets';
 import isEmpty from 'lodash/isEmpty';

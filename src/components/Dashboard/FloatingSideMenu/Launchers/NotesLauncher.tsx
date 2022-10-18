@@ -1,5 +1,5 @@
 import React from 'react';
-import ButtonsRound from '../../../Atoms/ButtonsRound';
+import ButtonsRound from 'atoms/ButtonsRound';
 import {FloatingSideMenuProps} from '../FloatingSideMenu';
 import {BsPencilSquare} from 'react-icons/bs';
 

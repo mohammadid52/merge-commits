@@ -1,28 +1,28 @@
-import React, { useContext, useState } from 'react';
-import { GlobalContext } from '../../contexts/GlobalContext';
-import { IconContext } from 'react-icons/lib/esm/iconContext';
-import { FaKey } from 'react-icons/fa';
-import { FaUnlockAlt } from 'react-icons/fa';
-import { AiOutlineEye } from 'react-icons/ai';
-import { AiOutlineEyeInvisible } from 'react-icons/ai';
-import { MdEmail } from 'react-icons/md';
-import { useHistory, Link, NavLink } from 'react-router-dom';
-import { Auth } from '@aws-amplify/auth';
-import { getAsset } from '../../assets';
+import React, {useContext, useState} from 'react';
+import {GlobalContext} from 'contexts/GlobalContext';
+import {IconContext} from 'react-icons/lib/esm/iconContext';
+import {FaKey} from 'react-icons/fa';
+import {FaUnlockAlt} from 'react-icons/fa';
+import {AiOutlineEye} from 'react-icons/ai';
+import {AiOutlineEyeInvisible} from 'react-icons/ai';
+import {MdEmail} from 'react-icons/md';
+import {useHistory, Link, NavLink} from 'react-router-dom';
+import {Auth} from '@aws-amplify/auth';
+import {getAsset} from 'assets';
 
 const Reset = () => {
   const history = useHistory();
-  const { theme, state, dispatch, clientKey } = useContext(GlobalContext);
-  const [message, setMessage] = useState<{ show: boolean; type: string; message: string }>({
+  const {theme, state, dispatch, clientKey} = useContext(GlobalContext);
+  const [message, setMessage] = useState<{show: boolean; type: string; message: string}>({
     show: false,
     type: '',
-    message: '',
+    message: ''
   });
   const [input, setInput] = useState({
     email: '',
     code: '',
     password: '',
-    match: '',
+    match: ''
   });
   const [passToggle, setPassToggle] = useState(false);
   const [newPassToggle, setNewPassToggle] = useState(false);
@@ -45,32 +45,32 @@ const Reset = () => {
               show: true,
               type: 'error',
               message:
-                'Password must be at least 8 characters, include uppercase, lowercase and numbers',
+                'Password must be at least 8 characters, include uppercase, lowercase and numbers'
             };
           case 'InvalidParameterException':
             return {
               show: true,
               type: 'error',
               message:
-                'Password must be at least 8 characters, include uppercase, lowercase and numbers',
+                'Password must be at least 8 characters, include uppercase, lowercase and numbers'
             };
           case 'UserNotFoundException':
             return {
               show: true,
               type: 'error',
-              message: 'The email you entered was not found',
+              message: 'The email you entered was not found'
             };
           case 'CodeMismatchException':
             return {
               show: true,
               type: 'error',
-              message: 'The confirmation code you provided is not correct',
+              message: 'The confirmation code you provided is not correct'
             };
           default:
             return {
               show: true,
               type: 'error',
-              message: error.message,
+              message: error.message
             };
         }
       });
@@ -89,42 +89,42 @@ const Reset = () => {
         return {
           show: true,
           type: 'error',
-          message: 'Please enter your email',
+          message: 'Please enter your email'
         };
       }
       if (!username.includes('@')) {
         return {
           show: true,
           type: 'error',
-          message: 'Your email is not in the expected email address format',
+          message: 'Your email is not in the expected email address format'
         };
       }
       if (!code) {
         return {
           show: true,
           type: 'error',
-          message: 'Please enter your confirmation code',
+          message: 'Please enter your confirmation code'
         };
       }
       if (!password) {
         return {
           show: true,
           type: 'error',
-          message: 'Please enter your new password',
+          message: 'Please enter your new password'
         };
       }
       if (!match) {
         return {
           show: true,
           type: 'error',
-          message: 'Please enter your confirmation password',
+          message: 'Please enter your confirmation password'
         };
       }
       if (password !== match) {
         return {
           show: true,
           type: 'error',
-          message: 'Your new password and confirmation password do not match',
+          message: 'Your new password and confirmation password do not match'
         };
       }
       validated = true;
@@ -134,23 +134,23 @@ const Reset = () => {
       return {
         show: false,
         type: 'success',
-        message: 'success',
+        message: 'success'
       };
     });
   };
 
-  const handleChange = (e: { target: { id: any; value: any } }) => {
-    const { id, value } = e.target;
+  const handleChange = (e: {target: {id: any; value: any}}) => {
+    const {id, value} = e.target;
     setInput((input) => {
       if (id === 'email') {
         return {
           ...input,
-          [id]: value.toLowerCase(),
+          [id]: value.toLowerCase()
         };
       } else {
         return {
           ...input,
-          [id]: value,
+          [id]: value
         };
       }
     });

@@ -1,5 +1,5 @@
 import React, {useContext, useEffect} from 'react';
-import {GlobalContext} from '../../../contexts/GlobalContext';
+import {GlobalContext} from 'contexts/GlobalContext';
 import {useHistory} from 'react-router-dom';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {AiOutlineClockCircle, AiOutlineUser} from 'react-icons/ai';

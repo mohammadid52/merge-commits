@@ -1,21 +1,21 @@
 import React, {useContext, useEffect, useState} from 'react';
 
-import useDictionary from '../../../../../customHooks/dictionary';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import {GlobalContext} from 'contexts/GlobalContext';
 
-import RichTextEditor from '../../../../Atoms/RichTextEditor';
-import FormInput from '../../../../Atoms/Form/FormInput';
-import Selector from '../../../../Atoms/Form/Selector';
-import Buttons from '../../../../Atoms/Buttons';
+import RichTextEditor from 'atoms/RichTextEditor';
+import FormInput from 'atoms/Form/FormInput';
+import Selector from 'atoms/Form/Selector';
+import Buttons from 'atoms/Buttons';
 import {graphqlOperation, API} from 'aws-amplify';
-import * as customMutations from '../../../../../customGraphql/customMutations';
+import * as customMutations from 'customGraphql/customMutations';
 
 const periodOptions = [
   {id: 1, name: '1'},
   {id: 2, name: '2'},
   {id: 3, name: '3'},
   {id: 4, name: '4'},
-  {id: 5, name: '5'},
+  {id: 5, name: '5'}
 ];
 
 interface FormDataInterface {
@@ -47,7 +47,7 @@ const LessonSummaryForm = (props: LessonSummaryFormInterface) => {
         label: formData.label,
         resources: formData.resources,
         notes: formData.notes,
-        duration: Number(formData.duration),
+        duration: Number(formData.duration)
       };
       const res: any = await API.graphql(
         graphqlOperation(customMutations.updateUniversalLesson, {input})
@@ -62,11 +62,11 @@ const LessonSummaryForm = (props: LessonSummaryFormInterface) => {
 
   const onInputChange = (e: any) => {
     const {
-      target: {name, value},
+      target: {name, value}
     } = e;
     setFormData((prevFormData) => ({
       ...prevFormData,
-      [name]: value,
+      [name]: value
     }));
     // setValidation((prevValidation) => ({
     //   ...prevValidation,
@@ -77,7 +77,7 @@ const LessonSummaryForm = (props: LessonSummaryFormInterface) => {
   const onSelectOption = (_: any, name: string) => {
     setFormData((prevFormData) => ({
       ...prevFormData,
-      duration: name,
+      duration: name
     }));
   };
 
@@ -90,7 +90,7 @@ const LessonSummaryForm = (props: LessonSummaryFormInterface) => {
     setFormData({
       ...formData,
       // [fieldHtml]: html,
-      [field]: text,
+      [field]: text
     });
   };
   const {label = '', duration = '1', resources = '', notes = ''} = formData || {};

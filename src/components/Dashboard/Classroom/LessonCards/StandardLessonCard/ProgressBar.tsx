@@ -1,4 +1,4 @@
-import useGraphqlQuery from '@customHooks/useGraphqlQuery';
+import useGraphqlQuery from 'customHooks/useGraphqlQuery';
 import {LessonsByTypeQueryVariables} from 'API';
 import React, {useEffect, useState} from 'react';
 

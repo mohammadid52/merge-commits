@@ -1,7 +1,7 @@
 // global context
-import {useNotifications} from '@contexts/NotificationContext';
-import useInGC from '@customHooks/checkIfGameChanges';
-import useInLessonCheck from '@customHooks/checkIfInLesson';
+import {useNotifications} from 'contexts/NotificationContext';
+import useInGC from 'customHooks/checkIfGameChanges';
+import useInLessonCheck from 'customHooks/checkIfInLesson';
 import gsap from 'gsap';
 import {isEmpty} from 'lodash';
 import React, {useEffect} from 'react';
@@ -15,7 +15,7 @@ const BubbleVersion = () => {
     selectedEmotions,
     setSelectedEmotions,
     replaceIdx,
-    setReplaceIdx,
+    setReplaceIdx
   } = useGameChangers();
 
   const {setNotification, clearNotification} = useNotifications();
@@ -29,9 +29,9 @@ const BubbleVersion = () => {
       duration: 0.5,
       stagger: {
         from: 'center',
-        each: 0.01,
+        each: 0.01
       },
-      transformOrigin: 'center',
+      transformOrigin: 'center'
     });
   }, [primaryEmotion]);
 
@@ -50,14 +50,14 @@ const BubbleVersion = () => {
   const onMouseEnter = (e: {target: gsap.TweenTarget}) => {
     gsap.to(circleWithPath(e), {
       ...config,
-      scale: 0.87,
+      scale: 0.87
     });
   };
 
   const onMouseLeave = (e: {target: gsap.TweenTarget}) => {
     gsap.to(circleWithPath(e), {
       ...config,
-      scale: 1,
+      scale: 1
     });
   };
 
@@ -79,19 +79,19 @@ const BubbleVersion = () => {
         setSelectedEmotions([...selectedEmotions]);
         gsap.to(circleWithPath(e), {
           ...config,
-          scale: 0.75,
+          scale: 0.75
         });
         clearNotification();
       } else if (selectedEmotions.length >= 3 && (isInLesson || inGC)) {
         setNotification({
           title: `You cannot select more than 3 emotions`,
-          show: true,
+          show: true
         });
       }
     } else if (isInLesson || inGC) {
       setNotification({
         title: `You have already selected ${emotionName}.`,
-        show: true,
+        show: true
       });
     }
   };

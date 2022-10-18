@@ -1,7 +1,7 @@
 import React, {useContext} from 'react';
-import RichTextEditor from '@atoms/RichTextEditor';
-import {FloatingSideMenuProps} from '@components/Dashboard/FloatingSideMenu/FloatingSideMenu';
-import {GlobalContext} from '@contexts/GlobalContext';
+import RichTextEditor from 'atoms/RichTextEditor';
+import {FloatingSideMenuProps} from 'components/Dashboard/FloatingSideMenu/FloatingSideMenu';
+import {GlobalContext} from 'contexts/GlobalContext';
 import {getAsset} from 'assets';
 import {useEffect} from 'react';
 
@@ -10,7 +10,7 @@ const NotesForm = ({
   notesData,
   notesInitialized,
   getOrCreateJournalData,
-  updateNotesContent,
+  updateNotesContent
 }: FloatingSideMenuProps) => {
   const {clientKey} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');

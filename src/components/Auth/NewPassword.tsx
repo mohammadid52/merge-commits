@@ -1,24 +1,24 @@
 import React, {useContext, useState} from 'react';
-import {GlobalContext} from '../../contexts/GlobalContext';
+import {GlobalContext} from 'contexts/GlobalContext';
 import {useHistory, NavLink} from 'react-router-dom';
 import Auth from '@aws-amplify/auth';
 import {useCookies} from 'react-cookie';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {FaKey} from 'react-icons/fa';
 import {AiOutlineEye, AiOutlineEyeInvisible} from 'react-icons/ai';
-import {getAsset} from '../../assets';
+import {getAsset} from 'assets';
 
 const NewPassword = () => {
   const {state, dispatch, clientKey} = useContext(GlobalContext);
   const history = useHistory();
   const [input, setInput] = useState({
     password: '',
-    match: '',
+    match: ''
   });
   const [message, setMessage] = useState<{show: boolean; type: string; message: string}>({
     show: false,
     type: '',
-    message: '',
+    message: ''
   });
   const [cookies, setCookie] = useCookies(['confirm_user']);
   const [passToggle, setPassToggle] = useState(false);
@@ -50,20 +50,20 @@ const NewPassword = () => {
                 show: true,
                 type: 'error',
                 message:
-                  'Password must be at least 8 characters, include uppercase, lowercase and numbers',
+                  'Password must be at least 8 characters, include uppercase, lowercase and numbers'
               };
             case 'InvalidParameterException':
               return {
                 show: true,
                 type: 'error',
                 message:
-                  'Password must be at least 8 characters, include uppercase, lowercase and numbers',
+                  'Password must be at least 8 characters, include uppercase, lowercase and numbers'
               };
             default:
               return {
                 show: true,
                 type: 'error',
-                message: error.message,
+                message: error.message
               };
           }
         });
@@ -79,21 +79,21 @@ const NewPassword = () => {
         return {
           show: true,
           type: 'error',
-          message: 'Please enter your new password',
+          message: 'Please enter your new password'
         };
       }
       if (!input.match) {
         return {
           show: true,
           type: 'error',
-          message: 'Please confirm your new password',
+          message: 'Please confirm your new password'
         };
       }
       if (input.password !== input.match) {
         return {
           show: true,
           type: 'error',
-          message: 'Your new password and confirmation password do not match',
+          message: 'Your new password and confirmation password do not match'
         };
       }
       validated = true;
@@ -103,7 +103,7 @@ const NewPassword = () => {
       return {
         show: false,
         type: 'success',
-        message: 'success',
+        message: 'success'
       };
     });
   };
@@ -113,7 +113,7 @@ const NewPassword = () => {
     setInput((input) => {
       return {
         ...input,
-        [id]: value,
+        [id]: value
       };
     });
   };

@@ -1,12 +1,12 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import useTailwindBreakpoint from '@customHooks/tailwindBreakpoint';
+import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
 import React, {useContext, useEffect, useState} from 'react';
 import {FaCompress, FaExpand} from 'react-icons/fa';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
-import {GlobalContext} from '../../../contexts/GlobalContext';
-import * as mutations from '../../../graphql/mutations';
+import {GlobalContext} from 'contexts/GlobalContext';
+import * as mutations from 'graphql/mutations';
 import {UniversalLessonPage} from '../../../interfaces/UniversalLessonInterfaces';
-import {getLocalStorageData, setLocalStorageData} from '../../../utilities/localStorage';
+import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
 import FullscreenToggle from './TitleBarSections/FullscreenToggle';
 import OpenClosePagesToggle from './TitleBarSections/OpenClosePagesToggle';
 import PresentationModeToggle from './TitleBarSections/PresentationModeToggle';
@@ -69,7 +69,7 @@ const StudentWindowTitleBar: React.FC<StudentWindowTitleBarProps> = (
     // ~~~~~~~~~~~~ UPDATE CONTEXT ~~~~~~~~~~~ //
     lessonDispatch({
       type: 'TOGGLE_OPEN_PAGE',
-      payload: pageNr,
+      payload: pageNr
     });
 
     // ~~~~~~~~~~~~ UPDATE SESSION ~~~~~~~~~~~ //
@@ -87,8 +87,8 @@ const StudentWindowTitleBar: React.FC<StudentWindowTitleBarProps> = (
             teacherEmail: getRoomData.teacherEmail,
             name: getRoomData.name,
             maxPersons: getRoomData.maxPersons,
-            ClosedPages: finalClosedPages,
-          },
+            ClosedPages: finalClosedPages
+          }
         })
       );
     } catch (e) {
@@ -110,13 +110,13 @@ const StudentWindowTitleBar: React.FC<StudentWindowTitleBarProps> = (
     // ~~~~~~~~~~~~ UPDATE CONTEXT ~~~~~~~~~~~ //
     lessonDispatch({
       type: 'TOGGLE_CLOSE_PAGE',
-      payload: pageNr,
+      payload: pageNr
     });
 
     // ~~~~~~~~~~~~ UPDATE SESSION ~~~~~~~~~~~ //
     setLocalStorageData('room_info', {
       ...getRoomData,
-      ClosedPages: getPagesAfter,
+      ClosedPages: getPagesAfter
     });
 
     // ~~~~~~~~~~~~~~ MUTATE DB ~~~~~~~~~~~~~~ //
@@ -131,8 +131,8 @@ const StudentWindowTitleBar: React.FC<StudentWindowTitleBarProps> = (
             teacherEmail: getRoomData.teacherEmail,
             name: getRoomData.name,
             maxPersons: getRoomData.maxPersons,
-            ClosedPages: getPagesAfter,
-          },
+            ClosedPages: getPagesAfter
+          }
         })
       );
     } catch (e) {

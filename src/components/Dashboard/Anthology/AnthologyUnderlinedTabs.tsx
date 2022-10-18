@@ -1,5 +1,5 @@
-import Tooltip from '@atoms/Tooltip';
-import {useGlobalContext} from '@contexts/GlobalContext';
+import Tooltip from 'atoms/Tooltip';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import {getAsset} from 'assets';
 import React from 'react';
 import {IconContext} from 'react-icons/lib/esm/iconContext';

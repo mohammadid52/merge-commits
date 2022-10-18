@@ -1,7 +1,7 @@
-import React, { useContext, useEffect } from 'react';
-import { GlobalContext } from '../../../contexts/GlobalContext';
-import useDictionary from '../../../customHooks/dictionary';
-import SubSectionTab from '../../Atoms/SubSectionTab';
+import React, {useContext, useEffect} from 'react';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import SubSectionTab from 'atoms/SubSectionTab';
 
 interface SubSectionTabs {
   isTeacher?: boolean;
@@ -9,12 +9,18 @@ interface SubSectionTabs {
   subSectionList: string[];
   handleTabClick: (e: React.MouseEvent<Element>) => void;
   translations?: string[];
-  widgetTypeCount?: { sidebar: number; topbar: number };
+  widgetTypeCount?: {sidebar: number; topbar: number};
 }
 
 const SubSectionTabs = (props: SubSectionTabs) => {
-  const { subSection, subSectionList, handleTabClick, widgetTypeCount, translations } = props;
-  const { theme } = useContext(GlobalContext);
+  const {
+    subSection,
+    subSectionList,
+    handleTabClick,
+    widgetTypeCount,
+    translations
+  } = props;
+  const {theme} = useContext(GlobalContext);
 
   const getLabel = (inputLabel: string, translationIndex: number) => {
     if (inputLabel.includes('Widgets')) {
@@ -38,7 +44,11 @@ const SubSectionTabs = (props: SubSectionTabs) => {
               id={listItem}
               selectedCondition={subSection === listItem}
               label={getLabel(listItem, index)}
-              counter={listItem.includes('Side') ? widgetTypeCount?.sidebar : widgetTypeCount?.topbar}
+              counter={
+                listItem.includes('Side')
+                  ? widgetTypeCount?.sidebar
+                  : widgetTypeCount?.topbar
+              }
             />
           ))}
       </div>

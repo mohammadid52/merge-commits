@@ -1,23 +1,23 @@
-import Buttons from '@atoms/Buttons';
-import FormInput from '@atoms/Form/FormInput';
-import Selector from '@atoms/Form/Selector';
+import Buttons from 'atoms/Buttons';
+import FormInput from 'atoms/Form/FormInput';
+import Selector from 'atoms/Form/Selector';
 import {
   Tabs3,
-  useTabs,
-} from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/Tabs';
-import {GlobalContext} from '@contexts/GlobalContext';
-import {useULBContext} from '@contexts/UniversalLessonBuilderContext';
+  useTabs
+} from 'components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/Tabs';
+import {GlobalContext} from 'contexts/GlobalContext';
+import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
 import {EditQuestionModalDict} from '@dictionary/dictionary.iconoclast';
 import {Switch} from '@headlessui/react';
 import {IContentTypeComponentProps} from '@interfaces/UniversalLessonBuilderInterfaces';
-import AnimatedContainer from '@uiComponents/Tabs/AnimatedContainer';
+import AnimatedContainer from 'uiComponents/Tabs/AnimatedContainer';
 import {HeaderBlock} from '@UlbBlocks/HeaderBlock';
 import ColorPicker from '@UlbUI/ColorPicker/ColorPicker';
 import {classNames} from '@UlbUI/FormElements/TextInput';
 import DummyContent from '@UlbUI/Preview/DummyContent';
 import PreviewLayout from '@UlbUI/Preview/Layout/PreviewLayout';
-import {updateLessonPageToDB} from '@utilities/updateLessonPageToDB';
-// import Tabs, {useTabs} from '@uiComponents/Tabs/Tabs';
+import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
+// import Tabs, {useTabs} from 'uiComponents/Tabs/Tabs';
 import React, {useContext, useEffect, useState} from 'react';
 import {v4 as uuidv4} from 'uuid';
 
@@ -34,7 +34,7 @@ const Toggle = ({
   onClick,
   text,
   disabled,
-  error,
+  error
 }: {
   text?: string;
   error?: string;
@@ -82,7 +82,7 @@ const HeaderModalComponent = ({
   setUnsavedChanges,
   askBeforeClose,
   createNewBlockULBHandler,
-  updateBlockContentULBHandler,
+  updateBlockContentULBHandler
 }: IHeaderModalComponentProps) => {
   const {userLanguage} = useContext(GlobalContext);
   const {blockConfig} = useULBContext();
@@ -90,7 +90,7 @@ const HeaderModalComponent = ({
   const [errors, setErrors] = useState({animation: '', title: ''});
   const [selectedValues, setSelectedValues] = useState({
     size: 'medium',
-    color: 'No Border',
+    color: 'No Border'
   });
 
   // ---------- constants -------------
@@ -103,7 +103,7 @@ const HeaderModalComponent = ({
     const {value, id} = e.target;
     setInputFields({
       ...inputFields,
-      [id]: value,
+      [id]: value
     });
   };
 
@@ -113,7 +113,7 @@ const HeaderModalComponent = ({
 
       setInputFields({
         ...inputFields,
-        animated: !inputFields.animated,
+        animated: !inputFields.animated
       });
     } else {
       setErrors({...errors, animation: 'Please select border color first.'});
@@ -127,7 +127,7 @@ const HeaderModalComponent = ({
       setInputFields((prevInputFields: any) => ({
         ...prevInputFields,
         title: inputObj[0].value,
-        animated: classString.includes('animated-border-on'),
+        animated: classString.includes('animated-border-on')
       }));
       // retrieves the result of matching a string against border color
       const matchBorderColor: any[] | null = classString.match(/border-\w\w+-\d+/);
@@ -136,7 +136,7 @@ const HeaderModalComponent = ({
         color:
           matchBorderColor && matchBorderColor.length
             ? matchBorderColor[0].split('border-')[1]
-            : '',
+            : ''
       });
       setIsEditingMode(true);
     }
@@ -190,7 +190,7 @@ const HeaderModalComponent = ({
 
     const input = {
       id: list.id,
-      lessonPlan: [...list.lessonPlan],
+      lessonPlan: [...list.lessonPlan]
     };
 
     await updateLessonPageToDB(input);
@@ -236,7 +236,7 @@ const HeaderModalComponent = ({
       setInputFields({
         ...inputFields,
         animated: false,
-        title: '',
+        title: ''
       });
     }
   };
@@ -246,7 +246,7 @@ const HeaderModalComponent = ({
     {id: 2, name: 'small'},
     {id: 3, name: 'medium'},
     {id: 4, name: 'large'},
-    {id: 5, name: 'largest'},
+    {id: 5, name: 'largest'}
   ];
 
   const [colorPickerActive, setColorPickerActive] = useState<boolean>(false);

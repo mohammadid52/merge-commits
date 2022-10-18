@@ -1,6 +1,6 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import ContentCard from '@components/Atoms/ContentCard';
-import * as customQueries from '@customGraphql/customQueries';
+import ContentCard from 'components/Atoms/ContentCard';
+import * as customQueries from 'customGraphql/customQueries';
 import React, {useEffect, useState} from 'react';
 
 interface IContentLessonWrapper {

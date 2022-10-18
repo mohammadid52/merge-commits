@@ -1,19 +1,19 @@
-import FormInput from '@atoms/Form/FormInput';
-import Buttons from '@components/Atoms/Buttons';
-import Modal from '@components/Atoms/Modal';
-import Popover from '@components/Atoms/Popover';
-import Comments from '@components/Community/Components/Comments';
-import HandleMedia from '@components/Community/Components/HandleMedia';
+import FormInput from 'atoms/Form/FormInput';
+import Buttons from 'components/Atoms/Buttons';
+import Modal from 'components/Atoms/Modal';
+import Popover from 'components/Atoms/Popover';
+import Comments from 'components/Community/Components/Comments';
+import HandleMedia from 'components/Community/Components/HandleMedia';
 import {
   communityTypes,
   COMMUNITY_UPLOAD_KEY
-} from '@components/Community/constants.community';
-import * as customQueries from '@customGraphql/customQueries';
-import useAuth from '@customHooks/useAuth';
-import useGraphqlMutation from '@customHooks/useGraphqlMutation';
-import * as queries from '@graphql/queries';
+} from 'components/Community/constants.community';
+import * as customQueries from 'customGraphql/customQueries';
+import useAuth from 'customHooks/useAuth';
+import useGraphqlMutation from 'customHooks/useGraphqlMutation';
+import * as queries from 'graphql/queries';
 import {IChat, ICommunityCard} from '@interfaces/Community.interfaces';
-import {getImageFromS3Static} from '@utilities/services';
+import {getImageFromS3Static} from 'utilities/services';
 import {API, graphqlOperation} from 'aws-amplify';
 
 import {orderBy, remove, update} from 'lodash';

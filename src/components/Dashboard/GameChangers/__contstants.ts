@@ -4,8 +4,8 @@ import {
   GRATITUDE,
   SINGING_BOWL,
   SQUARE,
-  THINK_ABOUT_IT,
-} from '@components/Lesson/UniversalLessonBuilder/UI/common/constants';
+  THINK_ABOUT_IT
+} from 'components/Lesson/UniversalLessonBuilder/UI/common/constants';
 import {nanoid} from 'nanoid';
 import {BiCheckboxChecked, BiRadioCircleMarked} from 'react-icons/bi';
 import {BsFillJournalBookmarkFill} from 'react-icons/bs';
@@ -28,7 +28,7 @@ const cardsList = [
     iconForeground: 'text-red-700',
     iconBackground: 'bg-red-100',
     desc:
-      'Ideal for a calm down breathe session at the beginning or at the end of the day to relax and clear your mind.',
+      'Ideal for a calm down breathe session at the beginning or at the end of the day to relax and clear your mind.'
   },
   {
     icon: BiCheckboxChecked,
@@ -41,7 +41,7 @@ const cardsList = [
     type: FOUR_SEVEN_EIGHT,
     title: '4-7-8 Breathing',
     desc:
-      "With this exercise, you'll get your desired focus back so you can be even more productive.",
+      "With this exercise, you'll get your desired focus back so you can be even more productive."
   },
   {
     icon: FcMindMap,
@@ -54,7 +54,7 @@ const cardsList = [
     type: THINK_ABOUT_IT,
     title: 'Think About It',
     desc:
-      'This supports us in changing our emotions and behaviors by identifying irrational beliefs and swapping them with rational ones',
+      'This supports us in changing our emotions and behaviors by identifying irrational beliefs and swapping them with rational ones'
   },
   {
     icon: RiEmotionHappyLine,
@@ -66,7 +66,7 @@ const cardsList = [
     type: EMOTIONS,
     title: 'Emotions',
     desc:
-      'This supports us in changing our emotions and behaviors by identifying irrational beliefs and swapping them with rational ones',
+      'This supports us in changing our emotions and behaviors by identifying irrational beliefs and swapping them with rational ones'
   },
   {
     id: 4,
@@ -79,7 +79,7 @@ const cardsList = [
     type: GRATITUDE,
     title: 'Gratitude',
     desc:
-      'This supports us in changing our emotions and behaviors by identifying irrational beliefs and swapping them with rational ones',
+      'This supports us in changing our emotions and behaviors by identifying irrational beliefs and swapping them with rational ones'
   },
   {
     id: 5,
@@ -91,15 +91,15 @@ const cardsList = [
     type: SINGING_BOWL,
     title: 'Singing Bowl',
     desc:
-      'This supports us in changing our emotions and behaviors by identifying irrational beliefs and swapping them with rational ones',
-  },
+      'This supports us in changing our emotions and behaviors by identifying irrational beliefs and swapping them with rational ones'
+  }
 ];
 
 const FSEBreathingHowTo = [
   'First, let your lips part. Make a whooshing sound, exhaling completely through your mouth.',
   'Next, close your lips, inhaling silently through your nose as you count to four in your head.',
   'Then, for seven seconds, hold your breath.',
-  'Make another whooshing exhale from your mouth for eight seconds.',
+  'Make another whooshing exhale from your mouth for eight seconds.'
 ];
 
 const FSEInfoText = `The 4-7-8 breathing technique is a breathing pattern developed by Dr. Andrew Weil. It's based on an ancient yogic technique called pranayama, which helps practitioners gain control over their breathing.
@@ -110,7 +110,7 @@ const sqaureBreathingHowTo = [
   'Then, gently inhale through your nose to a slow count of 4',
   'Hold at the top of the breath for a count of 4',
   'Then gently exhale through your mouth for a count of 4',
-  'At the bottom of the breath, pause and hold for the count of 4',
+  'At the bottom of the breath, pause and hold for the count of 4'
 ];
 
 const sqaureBreathingInfoText = `Square breathing is a type of breathwork that can shift your energy, connect you
@@ -125,19 +125,19 @@ const qaList = [
     id: nanoid(24),
     question: 'What just happened that made you doubt yourself?',
     placeholder: "I didn't do well in my math test today.",
-    textarea: false,
+    textarea: false
   },
   {
     id: nanoid(24),
     question: 'What are you telling yourself about the situation?',
     placeholder: "I'm useless. I can't do anything right.",
-    textarea: false,
+    textarea: false
   },
   {
     id: nanoid(24),
     question: 'What happens if you keep believing what you are thinking?',
     placeholder: 'I give up and stop studying for the exam next week.',
-    textarea: false,
+    textarea: false
   },
   {
     id: nanoid(24),
@@ -145,7 +145,7 @@ const qaList = [
       'What am I not giving myself credit for in what happened?  What am I proud of?',
     placeholder:
       "I did well in the test last week. I've been studying well, but I hadn't covered this topic yet.\n The results show me where i need to focus my attention.",
-    textarea: true,
+    textarea: true
   },
   {
     id: nanoid(24),
@@ -153,8 +153,8 @@ const qaList = [
       "What can I do where I would be proud of myself that doesn't include beating myself up or quitting?",
     placeholder:
       "I sit down with my teacher to understand where I went wrong.\n We work on parts of the test I didn't understand, and I include what i have learned in my future studying.",
-    textarea: true,
-  },
+    textarea: true
+  }
 ];
 
 const emotions = [
@@ -165,94 +165,94 @@ const emotions = [
       {
         id: 111,
         name: 'aroused',
-        connectedTo: 'playful',
+        connectedTo: 'playful'
       },
       {
         id: 112,
         connectedTo: 'playful',
-        name: 'cheeky',
+        name: 'cheeky'
       },
       {
         id: 121,
         connectedTo: 'content',
-        name: 'free',
+        name: 'free'
       },
       {
         id: 122,
         connectedTo: 'content',
-        name: 'joyful',
+        name: 'joyful'
       },
       {
         id: 131,
         connectedTo: 'interested',
-        name: 'curious',
+        name: 'curious'
       },
       {
         id: 132,
         name: 'inquisitve',
-        connectedTo: 'interested',
+        connectedTo: 'interested'
       },
       {
         id: 141,
         name: 'successful',
-        connectedTo: 'proud',
+        connectedTo: 'proud'
       },
       {
         id: 142,
         name: 'confident',
-        connectedTo: 'proud',
+        connectedTo: 'proud'
       },
       {
         id: 151,
         name: 'respected',
-        connectedTo: 'accepted',
+        connectedTo: 'accepted'
       },
       {
         id: 152,
         name: 'valued',
-        connectedTo: 'accepted',
+        connectedTo: 'accepted'
       },
       {
         id: 161,
         name: 'courageous',
-        connectedTo: 'powerful',
+        connectedTo: 'powerful'
       },
       {
         id: 162,
         name: 'creative',
-        connectedTo: 'powerful',
+        connectedTo: 'powerful'
       },
       {
         id: 171,
         name: 'loving',
-        connectedTo: 'peaceful',
+        connectedTo: 'peaceful'
       },
       {
         id: 172,
         name: 'thankful',
-        connectedTo: 'peaceful',
+        connectedTo: 'peaceful'
       },
       {
         id: 181,
         name: 'sensitive',
-        connectedTo: 'trusting',
+        connectedTo: 'trusting'
       },
       {
         id: 182,
         name: 'intimate',
-        connectedTo: 'trusting',
+        connectedTo: 'trusting'
       },
       {
         id: 191,
         name: 'hopeful',
-        connectedTo: 'optimistic',
+        connectedTo: 'optimistic'
       },
       {
         id: 192,
         connectedTo: 'optimistic',
 
-        name: 'inspired',
-      },
+        name: 'inspired'
+      }
     ],
     children: [
       {
@@ -261,13 +261,13 @@ const emotions = [
         children: [
           {
             id: 111,
-            name: 'aroused',
+            name: 'aroused'
           },
           {
             id: 112,
-            name: 'cheeky',
-          },
-        ],
+            name: 'cheeky'
+          }
+        ]
       },
       {
         id: 12,
@@ -275,13 +275,13 @@ const emotions = [
         children: [
           {
             id: 121,
-            name: 'free',
+            name: 'free'
           },
           {
             id: 122,
-            name: 'joyful',
-          },
-        ],
+            name: 'joyful'
+          }
+        ]
       },
       {
         id: 13,
@@ -289,13 +289,13 @@ const emotions = [
         children: [
           {
             id: 131,
-            name: 'curious',
+            name: 'curious'
           },
           {
             id: 132,
-            name: 'inquisitve',
-          },
-        ],
+            name: 'inquisitve'
+          }
+        ]
       },
       {
         id: 14,
@@ -303,13 +303,13 @@ const emotions = [
         children: [
           {
             id: 141,
-            name: 'successful',
+            name: 'successful'
           },
           {
             id: 142,
-            name: 'confident',
-          },
-        ],
+            name: 'confident'
+          }
+        ]
       },
       {
         id: 15,
@@ -317,13 +317,13 @@ const emotions = [
         children: [
           {
             id: 151,
-            name: 'respected',
+            name: 'respected'
           },
           {
             id: 152,
-            name: 'valued',
-          },
-        ],
+            name: 'valued'
+          }
+        ]
       },
       {
         id: 16,
@@ -331,13 +331,13 @@ const emotions = [
         children: [
           {
             id: 161,
-            name: 'courageous',
+            name: 'courageous'
           },
           {
             id: 162,
-            name: 'creative',
-          },
-        ],
+            name: 'creative'
+          }
+        ]
       },
       {
         id: 17,
@@ -345,13 +345,13 @@ const emotions = [
         children: [
           {
             id: 171,
-            name: 'loving',
+            name: 'loving'
           },
           {
             id: 172,
-            name: 'thankful',
-          },
-        ],
+            name: 'thankful'
+          }
+        ]
       },
       {
         id: 18,
@@ -359,13 +359,13 @@ const emotions = [
         children: [
           {
             id: 181,
-            name: 'sensitive',
+            name: 'sensitive'
           },
           {
             id: 182,
-            name: 'intimate',
-          },
-        ],
+            name: 'intimate'
+          }
+        ]
       },
       {
         id: 19,
@@ -373,15 +373,15 @@ const emotions = [
         children: [
           {
             id: 191,
-            name: 'hopeful',
+            name: 'hopeful'
           },
           {
             id: 192,
-            name: 'inspired',
-          },
-        ],
-      },
-    ],
+            name: 'inspired'
+          }
+        ]
+      }
+    ]
   },
   {
     id: 2,
@@ -390,43 +390,43 @@ const emotions = [
       {
         id: 111,
         name: 'shoked',
-        connectedTo: 'startled',
+        connectedTo: 'startled'
       },
       {
         id: 112,
         name: 'dismayed',
-        connectedTo: 'startled',
+        connectedTo: 'startled'
       },
       {
         id: 111,
         name: 'disillusioned',
-        connectedTo: 'confused',
+        connectedTo: 'confused'
       },
       {
         id: 112,
         name: 'perplexed',
-        connectedTo: 'confused',
+        connectedTo: 'confused'
       },
       {
         id: 111,
         name: 'astonished',
-        connectedTo: 'amazed',
+        connectedTo: 'amazed'
       },
       {
         id: 112,
         name: 'awe',
-        connectedTo: 'amazed',
+        connectedTo: 'amazed'
       },
       {
         id: 111,
         name: 'eager',
-        connectedTo: 'excited',
+        connectedTo: 'excited'
       },
       {
         id: 112,
         name: 'energetic',
-        connectedTo: 'excited',
-      },
+        connectedTo: 'excited'
+      }
     ],
     children: [
       {
@@ -435,13 +435,13 @@ const emotions = [
         children: [
           {
             id: 111,
-            name: 'shoked',
+            name: 'shoked'
           },
           {
             id: 112,
-            name: 'dismayed',
-          },
-        ],
+            name: 'dismayed'
+          }
+        ]
       },
       {
         id: 22,
@@ -449,13 +449,13 @@ const emotions = [
         children: [
           {
             id: 111,
-            name: 'disillusioned',
+            name: 'disillusioned'
           },
           {
             id: 112,
-            name: 'perplexed',
-          },
-        ],
+            name: 'perplexed'
+          }
+        ]
       },
       {
         id: 23,
@@ -463,13 +463,13 @@ const emotions = [
         children: [
           {
             id: 111,
-            name: 'astonished',
+            name: 'astonished'
           },
           {
             id: 112,
-            name: 'awe',
-          },
-        ],
+            name: 'awe'
+          }
+        ]
       },
       {
         id: 24,
@@ -477,15 +477,15 @@ const emotions = [
         children: [
           {
             id: 111,
-            name: 'eager',
+            name: 'eager'
           },
           {
             id: 112,
-            name: 'energetic',
-          },
-        ],
-      },
-    ],
+            name: 'energetic'
+          }
+        ]
+      }
+    ]
   },
   {
     id: 3,
@@ -494,43 +494,43 @@ const emotions = [
       {
         id: 111,
         name: 'indifferent',
-        connectedTo: 'bored',
+        connectedTo: 'bored'
       },
       {
         id: 112,
         name: 'apathetic',
-        connectedTo: 'bored',
+        connectedTo: 'bored'
       },
       {
         id: 111,
         name: 'pressured',
-        connectedTo: 'busy',
+        connectedTo: 'busy'
       },
       {
         id: 112,
         name: 'rushed',
-        connectedTo: 'busy',
+        connectedTo: 'busy'
       },
       {
         id: 111,
         name: 'overwhelmed',
-        connectedTo: 'stressed',
+        connectedTo: 'stressed'
       },
       {
         id: 112,
         name: 'out of control',
-        connectedTo: 'stressed',
+        connectedTo: 'stressed'
       },
       {
         id: 111,
         name: 'sleepy',
-        connectedTo: 'tired',
+        connectedTo: 'tired'
       },
       {
         id: 112,
         name: 'unfocused',
-        connectedTo: 'tired',
-      },
+        connectedTo: 'tired'
+      }
     ],
     children: [
       {
@@ -539,13 +539,13 @@ const emotions = [
         children: [
           {
             id: 111,
-            name: 'indifferent',
+            name: 'indifferent'
           },
           {
             id: 112,
-            name: 'apathetic',
-          },
-        ],
+            name: 'apathetic'
+          }
+        ]
       },
       {
         id: 32,
@@ -553,13 +553,13 @@ const emotions = [
         children: [
           {
             id: 111,
-            name: 'pressured',
+            name: 'pressured'
           },
           {
             id: 112,
-            name: 'rushed',
-          },
-        ],
+            name: 'rushed'
+          }
+        ]
       },
       {
         id: 33,
@@ -567,13 +567,13 @@ const emotions = [
         children: [
           {
             id: 111,
-            name: 'overwhelmed',
+            name: 'overwhelmed'
           },
           {
             id: 112,
-            name: 'out of control',
-          },
-        ],
+            name: 'out of control'
+          }
+        ]
       },
       {
         id: 34,
@@ -581,15 +581,15 @@ const emotions = [
         children: [
           {
             id: 111,
-            name: 'sleepy',
+            name: 'sleepy'
           },
           {
             id: 112,
-            name: 'unfocused',
-          },
-        ],
-      },
-    ],
+            name: 'unfocused'
+          }
+        ]
+      }
+    ]
   },
   {
     id: 4,
@@ -598,63 +598,63 @@ const emotions = [
       {
         id: 111,
         name: 'helpless',
-        connectedTo: 'scared',
+        connectedTo: 'scared'
       },
       {
         id: 112,
         name: 'frightened',
-        connectedTo: 'scared',
+        connectedTo: 'scared'
       },
       {
         id: 111,
         name: 'distraught',
-        connectedTo: 'anxious',
+        connectedTo: 'anxious'
       },
       {
         id: 112,
         name: 'worried',
-        connectedTo: 'anxious',
+        connectedTo: 'anxious'
       },
       {
         id: 111,
         name: 'inadequate',
-        connectedTo: 'insecure',
+        connectedTo: 'insecure'
       },
       {
         id: 112,
         name: 'inferior',
-        connectedTo: 'insecure',
+        connectedTo: 'insecure'
       },
       {
         id: 111,
         name: 'worthless',
-        connectedTo: 'weak',
+        connectedTo: 'weak'
       },
       {
         id: 112,
         name: 'insignicant',
-        connectedTo: 'weak',
+        connectedTo: 'weak'
       },
       {
         id: 111,
         name: 'excluded',
-        connectedTo: 'rejected',
+        connectedTo: 'rejected'
       },
       {
         id: 112,
         name: 'persecuted',
-        connectedTo: 'rejected',
+        connectedTo: 'rejected'
       },
       {
         id: 111,
         name: 'nervous',
-        connectedTo: 'threatened',
+        connectedTo: 'threatened'
       },
       {
         id: 112,
         name: 'exposed',
-        connectedTo: 'threatened',
-      },
+        connectedTo: 'threatened'
+      }
     ],
     children: [
       {
@@ -663,13 +663,13 @@ const emotions = [
         children: [
           {
             id: 111,
-            name: 'helpless',
+            name: 'helpless'
           },
           {
             id: 112,
-            name: 'frightened',
-          },
-        ],
+            name: 'frightened'
+          }
+        ]
       },
       {
         id: 42,
@@ -677,13 +677,13 @@ const emotions = [
         children: [
           {
             id: 111,
-            name: 'distraught',
+            name: 'distraught'
           },
           {
             id: 112,
-            name: 'worried',
-          },
-        ],
+            name: 'worried'
+          }
+        ]
       },
       {
         id: 43,
@@ -691,13 +691,13 @@ const emotions = [
         children: [
           {
             id: 111,
-            name: 'inadequate',
+            name: 'inadequate'
           },
           {
             id: 112,
-            name: 'inferior',
-          },
-        ],
+            name: 'inferior'
+          }
+        ]
       },
       {
         id: 44,
@@ -705,13 +705,13 @@ const emotions = [
         children: [
           {
             id: 111,
-            name: 'worthless',
+            name: 'worthless'
           },
           {
             id: 112,
-            name: 'insignicant',
-          },
-        ],
+            name: 'insignicant'
+          }
+        ]
       },
       {
         id: 45,
@@ -719,13 +719,13 @@ const emotions = [
         children: [
           {
             id: 111,
-            name: 'excluded',
+            name: 'excluded'
           },
           {
             id: 112,
-            name: 'persecuted',
-          },
-        ],
+            name: 'persecuted'
+          }
+        ]
       },
       {
         id: 46,
@@ -733,15 +733,15 @@ const emotions = [
         children: [
           {
             id: 111,
-            name: 'nervous',
+            name: 'nervous'
           },
           {
             id: 112,
-            name: 'exposed',
-          },
-        ],
-      },
-    ],
+            name: 'exposed'
+          }
+        ]
+      }
+    ]
   },
   {
     id: 5,
@@ -750,83 +750,83 @@ const emotions = [
       {
         id: 111,
         name: 'betrayed',
-        connectedTo: 'let down',
+        connectedTo: 'let down'
       },
       {
         id: 112,
         name: 'resentful',
-        connectedTo: 'let down',
+        connectedTo: 'let down'
       },
       {
         id: 111,
         name: 'disrespected',
-        connectedTo: 'humiliated',
+        connectedTo: 'humiliated'
       },
       {
         id: 112,
         name: 'ridiculed',
-        connectedTo: 'humiliated',
+        connectedTo: 'humiliated'
       },
       {
         id: 111,
         name: 'indignant',
-        connectedTo: 'bitter',
+        connectedTo: 'bitter'
       },
       {
         id: 112,
         name: 'violated',
-        connectedTo: 'bitter',
+        connectedTo: 'bitter'
       },
       {
         id: 111,
         name: 'furious',
-        connectedTo: 'mad',
+        connectedTo: 'mad'
       },
       {
         id: 112,
         name: 'jealous',
-        connectedTo: 'mad',
+        connectedTo: 'mad'
       },
       {
         id: 111,
         name: 'provoked',
-        connectedTo: 'aggressive',
+        connectedTo: 'aggressive'
       },
       {
         id: 112,
         name: 'hostile',
-        connectedTo: 'aggressive',
+        connectedTo: 'aggressive'
       },
       {
         id: 111,
         name: 'infuriated',
-        connectedTo: 'frustrated',
+        connectedTo: 'frustrated'
       },
       {
         id: 112,
         connectedTo: 'frustrated',
-        name: 'annoyed',
+        name: 'annoyed'
       },
       {
         id: 111,
         name: 'withdrawn',
-        connectedTo: 'distant',
+        connectedTo: 'distant'
       },
       {
         id: 112,
         name: 'numb',
-        connectedTo: 'distant',
+        connectedTo: 'distant'
       },
       {
         id: 111,
         name: 'skeptical',
-        connectedTo: 'critical',
+        connectedTo: 'critical'
       },
       {
         id: 112,
         name: 'dismissive',
-        connectedTo: 'critical',
-      },
+        connectedTo: 'critical'
+      }
     ],
     children: [
       {
@@ -835,13 +835,13 @@ const emotions = [
         children: [
           {
             id: 111,
-            name: 'betrayed',
+            name: 'betrayed'
           },
           {
             id: 112,
-            name: 'resentful',
-          },
-        ],
+            name: 'resentful'
+          }
+        ]
       },
       {
         id: 52,
@@ -849,13 +849,13 @@ const emotions = [
         children: [
           {
             id: 111,
-            name: 'disrespected',
+            name: 'disrespected'
           },
           {
             id: 112,
-            name: 'ridiculed',
-          },
-        ],
+            name: 'ridiculed'
+          }
+        ]
       },
       {
         id: 53,
@@ -863,13 +863,13 @@ const emotions = [
         children: [
           {
             id: 111,
-            name: 'indignant',
+            name: 'indignant'
           },
           {
             id: 112,
-            name: 'violated',
-          },
-        ],
+            name: 'violated'
+          }
+        ]
       },
       {
         id: 54,
@@ -877,13 +877,13 @@ const emotions = [
         children: [
           {
             id: 111,
-            name: 'furious',
+            name: 'furious'
           },
           {
             id: 112,
-            name: 'jealous',
-          },
-        ],
+            name: 'jealous'
+          }
+        ]
       },
       {
         id: 55,
@@ -891,13 +891,13 @@ const emotions = [
         children: [
           {
             id: 111,
-            name: 'provoked',
+            name: 'provoked'
           },
           {
             id: 112,
-            name: 'hostile',
-          },
-        ],
+            name: 'hostile'
+          }
+        ]
       },
       {
         id: 56,
@@ -905,13 +905,13 @@ const emotions = [
         children: [
           {
             id: 111,
-            name: 'infuriated',
+            name: 'infuriated'
           },
           {
             id: 112,
-            name: 'annoyed',
-          },
-        ],
+            name: 'annoyed'
+          }
+        ]
       },
       {
         id: 57,
@@ -919,13 +919,13 @@ const emotions = [
         children: [
           {
             id: 111,
-            name: 'withdrawn',
+            name: 'withdrawn'
           },
           {
             id: 112,
-            name: 'numb',
-          },
-        ],
+            name: 'numb'
+          }
+        ]
       },
       {
         id: 58,
@@ -933,15 +933,15 @@ const emotions = [
         children: [
           {
             id: 111,
-            name: 'skeptical',
+            name: 'skeptical'
           },
           {
             id: 112,
-            name: 'dismissive',
-          },
-        ],
-      },
-    ],
+            name: 'dismissive'
+          }
+        ]
+      }
+    ]
   },
   {
     id: 6,
@@ -950,43 +950,43 @@ const emotions = [
       {
         id: 111,
         name: 'judgemental',
-        connectedTo: 'disapproving',
+        connectedTo: 'disapproving'
       },
       {
         id: 112,
         name: 'humiliated',
-        connectedTo: 'disapproving',
+        connectedTo: 'disapproving'
       },
       {
         id: 111,
         name: 'appalled',
-        connectedTo: 'disappointed',
+        connectedTo: 'disappointed'
       },
       {
         id: 112,
         name: 'revolted',
-        connectedTo: 'disappointed',
+        connectedTo: 'disappointed'
       },
       {
         id: 111,
         name: 'nauseated',
-        connectedTo: 'awful',
+        connectedTo: 'awful'
       },
       {
         id: 112,
         name: 'detestable',
-        connectedTo: 'awful',
+        connectedTo: 'awful'
       },
       {
         id: 111,
         name: 'horrified',
-        connectedTo: 'repelled',
+        connectedTo: 'repelled'
       },
       {
         id: 112,
         name: 'hesitant',
-        connectedTo: 'repelled',
-      },
+        connectedTo: 'repelled'
+      }
     ],
     children: [
       {
@@ -995,13 +995,13 @@ const emotions = [
         children: [
           {
             id: 111,
-            name: 'judgemental',
+            name: 'judgemental'
           },
           {
             id: 112,
-            name: 'humiliated',
-          },
-        ],
+            name: 'humiliated'
+          }
+        ]
       },
       {
         id: 62,
@@ -1009,13 +1009,13 @@ const emotions = [
         children: [
           {
             id: 111,
-            name: 'appalled',
+            name: 'appalled'
           },
           {
             id: 112,
-            name: 'revolted',
-          },
-        ],
+            name: 'revolted'
+          }
+        ]
       },
       {
         id: 63,
@@ -1023,13 +1023,13 @@ const emotions = [
         children: [
           {
             id: 111,
-            name: 'nauseated',
+            name: 'nauseated'
           },
           {
             id: 112,
-            name: 'detestable',
-          },
-        ],
+            name: 'detestable'
+          }
+        ]
       },
       {
         id: 64,
@@ -1037,15 +1037,15 @@ const emotions = [
         children: [
           {
             id: 111,
-            name: 'horrified',
+            name: 'horrified'
           },
           {
             id: 112,
-            name: 'hesitant',
-          },
-        ],
-      },
-    ],
+            name: 'hesitant'
+          }
+        ]
+      }
+    ]
   },
   {
     id: 7,
@@ -1054,63 +1054,63 @@ const emotions = [
       {
         id: 111,
         name: 'isolated',
-        connectedTo: 'lonely',
+        connectedTo: 'lonely'
       },
       {
         id: 112,
         name: 'abandoned',
-        connectedTo: 'lonely',
+        connectedTo: 'lonely'
       },
       {
         id: 111,
         name: 'victimized',
-        connectedTo: 'vulnerable',
+        connectedTo: 'vulnerable'
       },
       {
         id: 112,
         name: 'fragile',
-        connectedTo: 'vulnerable',
+        connectedTo: 'vulnerable'
       },
       {
         id: 111,
         name: 'grief',
-        connectedTo: 'despair',
+        connectedTo: 'despair'
       },
       {
         id: 112,
         name: 'powerless',
-        connectedTo: 'despair',
+        connectedTo: 'despair'
       },
       {
         id: 111,
         name: 'ashamed',
-        connectedTo: 'guilty',
+        connectedTo: 'guilty'
       },
       {
         id: 112,
         name: 'remorseful',
-        connectedTo: 'guilty',
+        connectedTo: 'guilty'
       },
       {
         id: 111,
         name: 'empty',
-        connectedTo: 'depressed',
+        connectedTo: 'depressed'
       },
       {
         id: 112,
         name: 'unimportant',
-        connectedTo: 'depressed',
+        connectedTo: 'depressed'
       },
       {
         id: 111,
         name: 'disappointed',
-        connectedTo: 'hurt',
+        connectedTo: 'hurt'
       },
       {
         id: 112,
         name: 'embarrased',
-        connectedTo: 'hurt',
-      },
+        connectedTo: 'hurt'
+      }
     ],
     children: [
       {
@@ -1119,13 +1119,13 @@ const emotions = [
         children: [
           {
             id: 111,
-            name: 'isolated',
+            name: 'isolated'
           },
           {
             id: 112,
-            name: 'abandoned',
-          },
-        ],
+            name: 'abandoned'
+          }
+        ]
       },
       {
         id: 72,
@@ -1133,13 +1133,13 @@ const emotions = [
         children: [
           {
             id: 111,
-            name: 'victimized',
+            name: 'victimized'
           },
           {
             id: 112,
-            name: 'fragile',
-          },
-        ],
+            name: 'fragile'
+          }
+        ]
       },
       {
         id: 73,
@@ -1147,13 +1147,13 @@ const emotions = [
         children: [
           {
             id: 111,
-            name: 'grief',
+            name: 'grief'
           },
           {
             id: 112,
-            name: 'powerless',
-          },
-        ],
+            name: 'powerless'
+          }
+        ]
       },
       {
         id: 74,
@@ -1161,13 +1161,13 @@ const emotions = [
         children: [
           {
             id: 111,
-            name: 'ashamed',
+            name: 'ashamed'
           },
           {
             id: 112,
-            name: 'remorseful',
-          },
-        ],
+            name: 'remorseful'
+          }
+        ]
       },
       {
         id: 75,
@@ -1175,13 +1175,13 @@ const emotions = [
         children: [
           {
             id: 111,
-            name: 'empty',
+            name: 'empty'
           },
           {
             id: 112,
-            name: 'unimportant',
-          },
-        ],
+            name: 'unimportant'
+          }
+        ]
       },
       {
         id: 76,
@@ -1189,16 +1189,16 @@ const emotions = [
         children: [
           {
             id: 111,
-            name: 'disappointed',
+            name: 'disappointed'
           },
           {
             id: 112,
-            name: 'embarrased',
-          },
-        ],
-      },
-    ],
-  },
+            name: 'embarrased'
+          }
+        ]
+      }
+    ]
+  }
 ];
 
 export {
@@ -1209,5 +1209,5 @@ export {
   sqaureBreathingInfoText,
   qaList,
   successSound,
-  emotions,
+  emotions
 };

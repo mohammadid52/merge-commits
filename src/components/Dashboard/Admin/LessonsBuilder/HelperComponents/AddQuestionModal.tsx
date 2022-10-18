@@ -1,15 +1,15 @@
 import React, {useContext, useState} from 'react';
 import {IoMdAddCircleOutline, IoMdRemoveCircleOutline} from 'react-icons/io';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
-import {getAsset} from '../../../../../assets';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import useDictionary from '../../../../../customHooks/dictionary';
-import Buttons from '../../../../Atoms/Buttons';
-import CheckBox from '../../../../Atoms/Form/CheckBox';
-import FormInput from '../../../../Atoms/Form/FormInput';
-import Selector from '../../../../Atoms/Form/Selector';
-import TextArea from '../../../../Atoms/Form/TextArea';
-import Modal from '../../../../Atoms/Modal';
+import {getAsset} from 'assets';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import Buttons from 'atoms/Buttons';
+import CheckBox from 'atoms/Form/CheckBox';
+import FormInput from 'atoms/Form/FormInput';
+import Selector from 'atoms/Form/Selector';
+import TextArea from 'atoms/Form/TextArea';
+import Modal from 'atoms/Modal';
 
 interface AddQuestionModalProps {
   closeAction: () => void;
@@ -43,21 +43,21 @@ const AddQuestionModal = (props: AddQuestionModalProps) => {
     notes: '',
     label: '',
     type: {id: '', name: '', value: ''},
-    language: {id: '', name: '', value: ''},
+    language: {id: '', name: '', value: ''}
   };
   const [questionData, setQuestionData] = useState<InitialState>(initialState);
   const typeList: any = [
     {id: '1', name: 'Text', value: 'text'},
     {id: '2', name: 'Input', value: 'input'},
     {id: '3', name: 'Select Many', value: 'selectMany'},
-    {id: '4', name: 'Select One', value: 'selectOne'},
+    {id: '4', name: 'Select One', value: 'selectOne'}
   ];
   const languageList: any = [];
 
   const onInputChange = (e: any) => {
     setQuestionData({
       ...questionData,
-      [e.target.name]: e.target.value,
+      [e.target.name]: e.target.value
     });
   };
 
@@ -67,8 +67,8 @@ const AddQuestionModal = (props: AddQuestionModalProps) => {
       [field]: {
         id: id,
         name: name,
-        value: val,
-      },
+        value: val
+      }
     });
   };
 

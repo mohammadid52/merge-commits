@@ -1,17 +1,17 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import {getLocalStorageData} from '@utilities/localStorage';
-import {tableCleanupUrl} from '@utilities/urls';
+import {getLocalStorageData} from 'utilities/localStorage';
+import {tableCleanupUrl} from 'utilities/urls';
 import axios from 'axios';
 import {noop} from 'lodash';
 import React, {useContext, useEffect, useState} from 'react';
 import {useHistory} from 'react-router-dom';
-import {GlobalContext} from '../../../contexts/GlobalContext';
-import useDictionary from '../../../customHooks/dictionary';
-import * as mutations from '../../../graphql/mutations';
-import * as queries from '../../../graphql/queries';
-import {awsFormatDate, dateString} from '../../../utilities/time';
-import Buttons from '../../Atoms/Buttons';
-import ModalPopUp from '../../Molecules/ModalPopUp';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import * as mutations from 'graphql/mutations';
+import * as queries from 'graphql/queries';
+import {awsFormatDate, dateString} from 'utilities/time';
+import Buttons from 'atoms/Buttons';
+import ModalPopUp from 'molecules/ModalPopUp';
 import {Lesson} from './Classroom';
 
 interface StartProps {

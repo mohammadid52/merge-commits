@@ -1,7 +1,7 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import ModalPopUp from '@components/Molecules/ModalPopUp';
-import {useQuery} from '@customHooks/urlParam';
-import * as mutations from '@graphql/mutations';
+import ModalPopUp from 'components/Molecules/ModalPopUp';
+import {useQuery} from 'customHooks/urlParam';
+import * as mutations from 'graphql/mutations';
 import {find} from 'lodash';
 import React, {Fragment, useContext, useEffect, useState} from 'react';
 import {AiOutlineArrowDown, AiOutlineArrowUp} from 'react-icons/ai';
@@ -9,18 +9,18 @@ import {IoMdAddCircleOutline} from 'react-icons/io';
 import {IoArrowUndoCircleOutline} from 'react-icons/io5';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {useHistory, useRouteMatch} from 'react-router-dom';
-import {getAsset} from '../../../../assets';
-import {GlobalContext} from '../../../../contexts/GlobalContext';
-import * as customQueries from '../../../../customGraphql/customQueries';
-import useDictionary from '../../../../customHooks/dictionary';
-import {getLanguageString} from '../../../../utilities/strings';
-import BreadCrums from '../../../Atoms/BreadCrums';
-import Buttons from '../../../Atoms/Buttons';
-import SearchInput from '../../../Atoms/Form/SearchInput';
-import Selector from '../../../Atoms/Form/Selector';
-import PageCountSelector from '../../../Atoms/PageCountSelector';
-import Pagination from '../../../Atoms/Pagination';
-import SectionTitle from '../../../Atoms/SectionTitle';
+import {getAsset} from 'assets';
+import {GlobalContext} from 'contexts/GlobalContext';
+import * as customQueries from 'customGraphql/customQueries';
+import useDictionary from 'customHooks/dictionary';
+import {getLanguageString} from 'utilities/strings';
+import BreadCrums from 'atoms/BreadCrums';
+import Buttons from 'atoms/Buttons';
+import SearchInput from 'atoms/Form/SearchInput';
+import Selector from 'atoms/Form/Selector';
+import PageCountSelector from 'atoms/PageCountSelector';
+import Pagination from 'atoms/Pagination';
+import SectionTitle from 'atoms/SectionTitle';
 import CloneLesson from './CloneLesson';
 import LessonListLoader from './LessonListLoader';
 import LessonsListRow from './LessonsListRow';
@@ -42,7 +42,7 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
     BreadcrumsTitles,
     CommonlyUsedDict,
     LessonsListDict,
-    paginationPage,
+    paginationPage
   } = useDictionary(clientKey);
 
   const [status, setStatus] = useState('');
@@ -56,12 +56,12 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
   const [totalLessonNum, setTotalLessonNum] = useState(0);
   const [searchInput, setSearchInput] = useState({
     value: '',
-    isActive: false,
+    isActive: false
   });
   const [sortingType, setSortingType] = useState({
     value: '',
     name: '',
-    asc: true,
+    asc: true
   });
   const [institutionList, setInstitutionList] = useState<any>([]);
   const [selectedInstitution, setSelectedInstitution] = useState<any>({});
@@ -71,13 +71,13 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
     {
       title: BreadcrumsTitles[userLanguage]['LESSONS'],
       url: '/dashboard/lesson-builder',
-      last: true,
-    },
+      last: true
+    }
   ];
 
   const sortByList = [
     {id: 1, name: 'Title', value: 'title'},
-    {id: 2, name: 'Type', value: 'type'},
+    {id: 2, name: 'Type', value: 'type'}
   ];
 
   const getType = (type: string) => {
@@ -161,8 +161,8 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
       if (instId && !state.user.isSuperAdmin) {
         condition = {
           filter: {
-            institutionID: {eq: instId},
-          },
+            institutionID: {eq: instId}
+          }
         };
       }
       const fetchUList: any = await API.graphql(
@@ -202,14 +202,14 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
   const setSearch = (str: string) => {
     setSearchInput({
       ...searchInput,
-      value: str,
+      value: str
     });
   };
 
   const toggleSortDimention = () => {
     setSortingType({
       ...sortingType,
-      asc: !sortingType.asc,
+      asc: !sortingType.asc
     });
   };
   const removeSearchAction = () => {
@@ -272,7 +272,7 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
     setSortingType({
       ...sortingType,
       value: str,
-      name: name,
+      name: name
     });
   };
 
@@ -341,7 +341,7 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
   const [deleteModal, setDeleteModal] = useState<any>({
     show: false,
     message: '',
-    action: () => {},
+    action: () => {}
   });
 
   const checkIfRemovable = (lessonObj: any) => !lessonObj?.isUsed;
@@ -366,7 +366,7 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
       setDeleteModal({
         show: true,
         message: `Are you sure you want to delete the lesson "${targetString}"?`,
-        action: () => handleDelete(itemObj),
+        action: () => handleDelete(itemObj)
       });
     } else {
       setDeleteModal({show: false, message: '', action: () => {}});
@@ -379,7 +379,7 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
       console.log('deleting...');
       await API.graphql(
         graphqlOperation(mutations.deleteUniversalLesson, {
-          input: {id: item.id},
+          input: {id: item.id}
         })
       );
       updateLessonList(item);

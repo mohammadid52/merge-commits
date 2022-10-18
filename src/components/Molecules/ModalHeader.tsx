@@ -1,4 +1,4 @@
-import {GlobalContext} from '@contexts/GlobalContext';
+import {GlobalContext} from 'contexts/GlobalContext';
 import React, {useContext} from 'react';
 import {IconContext} from 'react-icons';
 import {IoClose} from 'react-icons/io5';

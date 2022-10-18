@@ -4,11 +4,11 @@ import React, {useEffect} from 'react';
 import 'react-datepicker/dist/react-datepicker.css';
 import ReactDOM from 'react-dom';
 import 'react-image-crop/lib/ReactCrop.scss';
-import awsconfig from './aws-exports';
-import App from './components/App';
-import './index.html';
-import './style/style.css';
-import './style/style.scss';
+import awsconfig from 'aws-exports';
+import App from 'components/App';
+import 'index.html';
+import 'style/style.css';
+import 'style/style.scss';
 
 // Amplify.configure(awsconfig);
 
