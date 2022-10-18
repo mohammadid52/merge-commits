@@ -28751,7 +28751,7 @@ export type UsersByRoleQuery = {
   } | null,
 };
 
-export type LessonsByTypeQueryVariables = {
+export type LessonsByType2QueryVariables = {
   lessonType: string,
   sortDirection?: ModelSortDirection | null,
   filter?: ModelPersonLessonsDataFilterInput | null,
@@ -28759,8 +28759,8 @@ export type LessonsByTypeQueryVariables = {
   nextToken?: string | null,
 };
 
-export type LessonsByTypeQuery = {
-  lessonsByType?:  {
+export type LessonsByType2Query = {
+  lessonsByType2?:  {
     __typename: "ModelPersonLessonsDataConnection",
     items:  Array< {
       __typename: "PersonLessonsData",
