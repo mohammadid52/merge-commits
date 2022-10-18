@@ -1,6 +1,6 @@
 import React, {Fragment, useContext} from 'react';
-import {GlobalContext} from '../../../../contexts/GlobalContext';
-import useDictionary from '../../../../customHooks/dictionary';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
 import {NoticeboardFormProps} from '../NoticeboardAdminContent';
 import CreateWidgetToolbar from './createWidgetToolbar';
 import {EditDefaultContent} from './EditContentViews/EditDefaultContent';
@@ -19,7 +19,7 @@ export const CreateModeView = (props: NoticeboardFormProps) => {
     newWidgetData,
     setNewWidgetData,
     setWidgetData,
-    widgetData,
+    widgetData
   } = props;
   const {theme, clientKey, userLanguage} = useContext(GlobalContext);
   const {noticeboardDict} = useDictionary(clientKey);

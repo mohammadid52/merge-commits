@@ -1,10 +1,10 @@
 import React from 'react';
-import Buttons from '@atoms/Buttons';
-import Loader from '@atoms/Loader';
+import Buttons from 'atoms/Buttons';
+import Loader from 'atoms/Loader';
 import orderBy from 'lodash/orderBy';
 import moment from 'moment';
 import DatePicker from 'react-datepicker';
-import useTailwindBreakpoint from '@customHooks/tailwindBreakpoint';
+import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
 
 interface IAttendanceListProps {
   loading: boolean;
@@ -30,7 +30,7 @@ const AttendanceList = ({
   handleDateChange,
   handleOrderBy,
   withOrderBy,
-  sortConfig,
+  sortConfig
 }: IAttendanceListProps) => {
   // ##################################################################### //
   // ############################# RESPONSIVE ############################ //

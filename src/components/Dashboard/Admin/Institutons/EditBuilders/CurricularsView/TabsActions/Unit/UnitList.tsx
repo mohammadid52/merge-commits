@@ -1,19 +1,19 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {useHistory, useRouteMatch} from 'react-router';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import * as mutations from '@graphql/mutations';
-import AddButton from '@atoms/Buttons/AddButton';
-import useDictionary from '@customHooks/dictionary';
-import {GlobalContext} from '@contexts/GlobalContext';
+import * as mutations from 'graphql/mutations';
+import AddButton from 'atoms/Buttons/AddButton';
+import useDictionary from 'customHooks/dictionary';
+import {GlobalContext} from 'contexts/GlobalContext';
 
-import * as customQueries from '@customGraphql/customQueries';
-import Loader from '@components/Atoms/Loader';
+import * as customQueries from 'customGraphql/customQueries';
+import Loader from 'components/Atoms/Loader';
 import {getAsset} from 'assets';
 import UnitListRow from './UnitListRow';
-import ModalPopUp from '@components/Molecules/ModalPopUp';
-import SearchInput from '@components/Atoms/Form/SearchInput';
-import Selector from '@components/Atoms/Form/Selector';
-import ErrorBoundary from '@components/Error/ErrorBoundary';
+import ModalPopUp from 'components/Molecules/ModalPopUp';
+import SearchInput from 'components/Atoms/Form/SearchInput';
+import Selector from 'components/Atoms/Form/Selector';
+import ErrorBoundary from 'components/Error/ErrorBoundary';
 
 export const UnitList = ({instId}: any) => {
   const history = useHistory();
@@ -21,10 +21,10 @@ export const UnitList = ({instId}: any) => {
   const {
     clientKey,
     state: {
-      user: {isSuperAdmin},
+      user: {isSuperAdmin}
     },
     theme,
-    userLanguage,
+    userLanguage
   } = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const {CommonlyUsedDict, UnitLookupDict} = useDictionary(clientKey);
@@ -56,12 +56,12 @@ export const UnitList = ({instId}: any) => {
                 if (lesson?.lesson?.id) {
                   return {
                     ...lesson,
-                    index: item?.universalLessonsSeq?.indexOf(lesson?.id),
+                    index: item?.universalLessonsSeq?.indexOf(lesson?.id)
                   };
                 }
               })
-              .sort((a: any, b: any) => (a.index > b.index ? 1 : -1)),
-          },
+              .sort((a: any, b: any) => (a.index > b.index ? 1 : -1))
+          }
         };
       });
 
@@ -75,8 +75,8 @@ export const UnitList = ({instId}: any) => {
           filter: isSuperAdmin
             ? undefined
             : {
-                institutionID: {eq: instId},
-              },
+                institutionID: {eq: instId}
+              }
         })
       );
 
@@ -105,7 +105,7 @@ export const UnitList = ({instId}: any) => {
   const [deleteModal, setDeleteModal] = useState<any>({
     show: false,
     message: '',
-    action: () => {},
+    action: () => {}
   });
 
   const checkIfRemovable = (unitObj: any) => {
@@ -125,7 +125,7 @@ export const UnitList = ({instId}: any) => {
       setDeleteModal({
         show: true,
         message: `Are you sure you want to delete the unit "${targetString}"?`,
-        action: () => handleDelete(itemObj),
+        action: () => handleDelete(itemObj)
       });
     } else {
       setDeleteModal({show: false, message: '', action: () => {}});
@@ -138,7 +138,7 @@ export const UnitList = ({instId}: any) => {
       console.log('deleting...');
       await API.graphql(
         graphqlOperation(mutations.deleteUniversalSyllabus, {
-          input: {id: item.id},
+          input: {id: item.id}
         })
       );
       updateUnitList(item);

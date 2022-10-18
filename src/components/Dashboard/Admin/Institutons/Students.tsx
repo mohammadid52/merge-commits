@@ -1,10 +1,10 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 
-import * as customQueries from '../../../../customGraphql/customQueries';
+import * as customQueries from 'customGraphql/customQueries';
 
-import StudentsTiles from '@components/Dashboard/Home/StudentsTiles';
-import {GlobalContext} from '@contexts/GlobalContext';
+import StudentsTiles from 'components/Dashboard/Home/StudentsTiles';
+import {GlobalContext} from 'contexts/GlobalContext';
 
 const Students = (props: any) => {
   const {state} = useContext(GlobalContext);
@@ -18,12 +18,12 @@ const Students = (props: any) => {
   const fetchStudentList = async () => {
     const response: any = await API.graphql(
       graphqlOperation(customQueries.getDashboardDataForTeachers, {
-        filter: {teacherAuthID: {eq: state.user.authId}},
+        filter: {teacherAuthID: {eq: state.user.authId}}
       })
     );
     const assignedRoomsAsCoTeacher: any = await API.graphql(
       graphqlOperation(customQueries.getDashboardDataForCoTeachers, {
-        filter: {teacherAuthID: {eq: state.user.authId}},
+        filter: {teacherAuthID: {eq: state.user.authId}}
       })
     );
     const data = [
@@ -31,8 +31,8 @@ const Students = (props: any) => {
       ...assignedRoomsAsCoTeacher?.data?.listRoomCoTeachers?.items?.map((item: any) => ({
         ...item,
         ...item.room,
-        teacher: item.room?.teacher,
-      })),
+        teacher: item.room?.teacher
+      }))
     ];
 
     let list: any[] = [];

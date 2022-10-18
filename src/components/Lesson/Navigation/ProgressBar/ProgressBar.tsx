@@ -1,7 +1,7 @@
-import {GlobalContext} from '@contexts/GlobalContext';
-import useLessonControls from '@customHooks/lessonControls';
-import useTailwindBreakpoint from '@customHooks/tailwindBreakpoint';
-import {getLocalStorageData} from '@utilities/localStorage';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useLessonControls from 'customHooks/lessonControls';
+import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
+import {getLocalStorageData} from 'utilities/localStorage';
 import React, {useContext, useEffect} from 'react';
 import {AiOutlineHome} from 'react-icons/ai';
 import {useRouteMatch} from 'react-router';

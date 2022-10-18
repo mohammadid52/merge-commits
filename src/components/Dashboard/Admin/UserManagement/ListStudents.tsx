@@ -1,11 +1,11 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {useHistory, useRouteMatch} from 'react-router-dom';
 import UserRole from './UserRole';
-import {getImageFromS3} from '../../../../utilities/services';
-import {getAsset} from '../../../../assets';
-import {GlobalContext} from '../../../../contexts/GlobalContext';
-import useDictionary from '../../../../customHooks/dictionary';
-import Status from '../../../Atoms/Status';
+import {getImageFromS3} from 'utilities/services';
+import {getAsset} from 'assets';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import Status from 'atoms/Status';
 
 interface ListProps {
   item: any;
@@ -69,7 +69,7 @@ const List = (props: ListProps) => {
                       background: `${stringToHslColor(
                         item.firstName + ' ' + item.lastName
                       )}`,
-                      textShadow: '0.1rem 0.1rem 2px #423939b3',
+                      textShadow: '0.1rem 0.1rem 2px #423939b3'
                     }}>
                     {initials(
                       item.preferredName ? item.preferredName : item.firstName,

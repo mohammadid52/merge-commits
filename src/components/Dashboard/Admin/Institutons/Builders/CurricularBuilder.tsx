@@ -3,22 +3,22 @@ import {Storage} from '@aws-amplify/storage';
 import React, {useContext, useEffect, useState} from 'react';
 import {IoImage} from 'react-icons/io5';
 import {useHistory, useLocation} from 'react-router-dom';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import * as customMutations from '../../../../../customGraphql/customMutations';
-import * as customQueries from '../../../../../customGraphql/customQueries';
-import useDictionary from '../../../../../customHooks/dictionary';
-import * as mutation from '../../../../../graphql/mutations';
-import * as queries from '../../../../../graphql/queries';
-import {languageList} from '../../../../../utilities/staticData';
-import BreadCrums from '../../../../Atoms/BreadCrums';
-import Buttons from '../../../../Atoms/Buttons';
-import FormInput from '../../../../Atoms/Form/FormInput';
-import MultipleSelector from '../../../../Atoms/Form/MultipleSelector';
-import Selector from '../../../../Atoms/Form/Selector';
-import TextArea from '../../../../Atoms/Form/TextArea';
-import PageWrapper from '../../../../Atoms/PageWrapper';
-import SectionTitle from '../../../../Atoms/SectionTitle';
-import DroppableMedia from '../../../../Molecules/DroppableMedia';
+import {GlobalContext} from 'contexts/GlobalContext';
+import * as customMutations from 'customGraphql/customMutations';
+import * as customQueries from 'customGraphql/customQueries';
+import useDictionary from 'customHooks/dictionary';
+import * as mutation from 'graphql/mutations';
+import * as queries from 'graphql/queries';
+import {languageList} from 'utilities/staticData';
+import BreadCrums from 'atoms/BreadCrums';
+import Buttons from 'atoms/Buttons';
+import FormInput from 'atoms/Form/FormInput';
+import MultipleSelector from 'atoms/Form/MultipleSelector';
+import Selector from 'atoms/Form/Selector';
+import TextArea from 'atoms/Form/TextArea';
+import PageWrapper from 'atoms/PageWrapper';
+import SectionTitle from 'atoms/SectionTitle';
+import DroppableMedia from 'molecules/DroppableMedia';
 import ProfileCropModal from '../../../Profile/ProfileCropModal';
 
 interface CurricularBuilderProps {}
@@ -49,8 +49,8 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
     institute: {
       id: '',
       name: '',
-      value: '',
-    },
+      value: ''
+    }
   };
   const history = useHistory();
   const location = useLocation();
@@ -67,7 +67,7 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
   const [s3Image, setS3Image] = useState(null);
   const [error, setError] = useState({
     show: true,
-    errorMsg: '',
+    errorMsg: ''
   });
   const [loading, setIsLoading] = useState(false);
   const {clientKey, userLanguage} = useContext(GlobalContext);
@@ -75,7 +75,7 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
   const [messages, setMessages] = useState({
     show: false,
     message: '',
-    isError: false,
+    isError: false
   });
   const useQuery = () => {
     return new URLSearchParams(location.search);
@@ -87,7 +87,7 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
     {
       title: BreadcrumsTitles[userLanguage]['INSTITUTION_MANAGEMENT'],
       url: '/dashboard/manage-institutions',
-      last: false,
+      last: false
     },
     {title: curricularData.institute?.name, goBack: true, last: false},
     {
@@ -95,20 +95,20 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
       url: `/dashboard/manage-institutions/institution/curricular-creation?id=${params.get(
         'id'
       )}`,
-      last: true,
-    },
+      last: true
+    }
   ];
 
   const onChange = (e: any) => {
     setCurricularData({
       ...curricularData,
-      [e.target.name]: e.target.value,
+      [e.target.name]: e.target.value
     });
     if (messages.show) {
       setMessages({
         show: false,
         message: '',
-        isError: false,
+        isError: false
       });
     }
   };
@@ -119,7 +119,7 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
     {id: 0, name: 'In-School Programming'},
     {id: 1, name: 'After-School Programming'},
     {id: 2, name: 'Summer Intensives (2 week programming)'},
-    {id: 3, name: "Writer's Retreat"},
+    {id: 3, name: "Writer's Retreat"}
   ];
   //*****//
 
@@ -134,7 +134,7 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
     }
     setCurricularData({
       ...curricularData,
-      languages: updatedList,
+      languages: updatedList
     });
   };
   const selectDesigner = (id: string, name: string, value: string) => {
@@ -167,7 +167,7 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
           objectives: [curricularData.objectives],
           languages: languagesCode,
           designers,
-          image: null as any,
+          image: null as any
         };
 
         const response: any = await API.graphql(
@@ -181,8 +181,8 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
             graphqlOperation(mutation.updateCurriculum, {
               input: {
                 id: newCurricular.id,
-                image: `instituteImages/curricular_image_${newCurricular.id}`,
-              },
+                image: `instituteImages/curricular_image_${newCurricular.id}`
+              }
             })
           );
         }
@@ -190,7 +190,7 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
         setMessages({
           show: true,
           message: CurricularBuilderdict[userLanguage]['messages']['success']['save'],
-          isError: false,
+          isError: false
         });
         setCurricularData(initialData);
         setIsLoading(false);
@@ -203,7 +203,7 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
         setMessages({
           show: true,
           message: CurricularBuilderdict[userLanguage]['messages']['error']['save'],
-          isError: true,
+          isError: true
         });
       }
     }
@@ -218,14 +218,14 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
       const InstituteList = sortedList.map((item: any, i: any) => ({
         id: item.id,
         name: `${item.name ? item.name : ''}`,
-        value: `${item.name ? item.name : ''}`,
+        value: `${item.name ? item.name : ''}`
       }));
       setInstitutionList(InstituteList);
     } catch {
       setMessages({
         show: true,
         message: CurricularBuilderdict[userLanguage]['messages']['error']['fetch'],
-        isError: true,
+        isError: true
       });
     }
   };
@@ -234,7 +234,7 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
     try {
       const result: any = await API.graphql(
         graphqlOperation(customQueries.getStaffsForInstitution, {
-          filter: {institutionID: {eq: params.get('id')}},
+          filter: {institutionID: {eq: params.get('id')}}
         })
       );
       const savedData = result.data.listStaff;
@@ -242,7 +242,7 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
         (item: {id: string; firstName: string; lastName: string}) => ({
           id: item?.id,
           name: `${item?.firstName || ''} ${item.lastName || ''}`,
-          value: `${item?.firstName || ''} ${item.lastName || ''}`,
+          value: `${item?.firstName || ''} ${item.lastName || ''}`
         })
       );
       setDesignersList(updatedList);
@@ -250,7 +250,7 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
       setMessages({
         show: true,
         message: CurricularBuilderdict[userLanguage]['messages']['error']['designerlist'],
-        isError: true,
+        isError: true
       });
     }
   };
@@ -261,8 +261,8 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
         graphqlOperation(queries.listCurricula, {
           filter: {
             institutionID: {eq: curricularData.institute.id},
-            name: {eq: curricularData.name},
-          },
+            name: {eq: curricularData.name}
+          }
         })
       );
       return list.data.listCurricula.items.length === 0 ? true : false;
@@ -270,7 +270,7 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
       setMessages({
         show: true,
         message: CurricularBuilderdict[userLanguage]['messages']['error']['process'],
-        isError: true,
+        isError: true
       });
     }
   };
@@ -280,7 +280,7 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
       setMessages({
         show: true,
         message: CurricularBuilderdict[userLanguage]['messages']['validation']['name'],
-        isError: true,
+        isError: true
       });
       return false;
     } else if (curricularData.institute.id === '') {
@@ -288,7 +288,7 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
         show: true,
         message:
           CurricularBuilderdict[userLanguage]['messages']['validation']['institute'],
-        isError: true,
+        isError: true
       });
       return false;
     } else if (curricularData.name.trim() !== '') {
@@ -298,7 +298,7 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
           show: true,
           message:
             CurricularBuilderdict[userLanguage]['messages']['validation']['curricular'],
-          isError: true,
+          isError: true
         });
         return false;
       } else {
@@ -330,7 +330,7 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
       Storage.put(`instituteImages/curricular_image_${id}`, file, {
         contentType: type,
         acl: 'public-read',
-        ContentEncoding: 'base64',
+        ContentEncoding: 'base64'
       })
         .then((result) => {
           console.log('File successfully uploaded to s3', result);
@@ -339,7 +339,7 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
         .catch((err) => {
           setError({
             show: true,
-            errorMsg: 'Unable to upload image. Please try again later. ',
+            errorMsg: 'Unable to upload image. Please try again later. '
           });
           console.log('Error in uploading file to s3', err);
           reject(err);
@@ -356,8 +356,8 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
           ...institute,
           id: instId,
           name: '',
-          value: '',
-        },
+          value: ''
+        }
       });
       getInstitutionList();
       fetchPersonsList();
@@ -378,14 +378,14 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
             ...institute,
             id: curricularData.institute.id,
             name: instName,
-            value: instName,
-          },
+            value: instName
+          }
         });
       } else {
         setMessages({
           show: true,
           message: CurricularBuilderdict[userLanguage]['messages']['error']['invalid'],
-          isError: true,
+          isError: true
         });
       }
     }
@@ -401,7 +401,7 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
     languages,
     type,
     institute,
-    summary,
+    summary
   } = curricularData;
   return (
     <div className="">

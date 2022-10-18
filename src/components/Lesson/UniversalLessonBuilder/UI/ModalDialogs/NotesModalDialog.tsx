@@ -1,15 +1,15 @@
-import Buttons from '@atoms/Buttons';
-import NotesBlock from '@components/Lesson/UniversalLessonBlockComponents/Blocks/Notes/NotesBlock';
-import {FORM_TYPES} from '@components/Lesson/UniversalLessonBuilder/UI/common/constants';
-import {GlobalContext} from '@contexts/GlobalContext';
-import useDictionary from '@customHooks/dictionary';
+import Buttons from 'atoms/Buttons';
+import NotesBlock from 'components/Lesson/UniversalLessonBlockComponents/Blocks/Notes/NotesBlock';
+import {FORM_TYPES} from 'components/Lesson/UniversalLessonBuilder/UI/common/constants';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
 import {IOnChange} from '@interfaces/index';
 import {IContentTypeComponentProps} from '@interfaces/UniversalLessonBuilderInterfaces';
-import AnimatedContainer from '@uiComponents/Tabs/AnimatedContainer';
-import {Tabs3, useTabs} from '@uiComponents/Tabs/Tabs';
+import AnimatedContainer from 'uiComponents/Tabs/AnimatedContainer';
+import {Tabs3, useTabs} from 'uiComponents/Tabs/Tabs';
 import SingleNote from '@UlbBlocks/Notes/SingleNoteForm';
 import PreviewLayout from '@UlbUI/Preview/Layout/PreviewLayout';
-import {updateLessonPageToDB} from '@utilities/updateLessonPageToDB';
+import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
 import {map, remove, update} from 'lodash';
 import React, {useContext, useEffect, useState} from 'react';
 import {v4 as uuidv4} from 'uuid';
@@ -26,7 +26,7 @@ const NotesModalDialog = (props: NoteModalProps) => {
     createNewBlockULBHandler,
     updateBlockContentULBHandler,
     askBeforeClose,
-    setUnsavedChanges,
+    setUnsavedChanges
   } = props;
 
   const {userLanguage, clientKey} = useContext(GlobalContext);
@@ -44,7 +44,7 @@ const NotesModalDialog = (props: NoteModalProps) => {
           noteText: d.value,
           bgColor: bgColor,
           size: size,
-          error: '',
+          error: ''
         };
       });
       setFields([...modifiedFields]);
@@ -56,7 +56,7 @@ const NotesModalDialog = (props: NoteModalProps) => {
     noteText: '',
     bgColor: 'yellow',
     size: 'medium',
-    error: '',
+    error: ''
   };
   const [fields, setFields] = useState([{...initialValues}]);
 
@@ -80,7 +80,7 @@ const NotesModalDialog = (props: NoteModalProps) => {
     {id: 2, name: 'blue'},
     {id: 3, name: 'yellow'},
     {id: 4, name: 'indigo'},
-    {id: 5, name: 'purple'},
+    {id: 5, name: 'purple'}
   ];
 
   const addNewNoteField = () => {
@@ -101,7 +101,7 @@ const NotesModalDialog = (props: NoteModalProps) => {
     type: FORM_TYPES.NOTES,
     value: f.noteText,
     class: `${f.bgColor} ${f.size}`,
-    id: f.id,
+    id: f.id
   }));
 
   // common stuff for adding data to db
@@ -110,7 +110,7 @@ const NotesModalDialog = (props: NoteModalProps) => {
     setUnsavedChanges(false);
     const input = {
       id: list.id,
-      lessonPlan: [...list.lessonPlan],
+      lessonPlan: [...list.lessonPlan]
     };
     await updateLessonPageToDB(input);
   };

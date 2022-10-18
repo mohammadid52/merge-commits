@@ -1,12 +1,12 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {Storage} from '@aws-amplify/storage';
-import Buttons from '@components/Atoms/Buttons';
-import useStudentDataValue from '@customHooks/studentDataValue';
+import Buttons from 'components/Atoms/Buttons';
+import useStudentDataValue from 'customHooks/studentDataValue';
 import {EditQuestionModalDict} from '@dictionary/dictionary.iconoclast';
 import {Transition} from '@headlessui/react';
 import {IFormBlockProps} from '@interfaces/UniversalLessonInterfaces';
-import {removeExtension} from '@utilities/functions';
-import {getImageFromS3Static} from '@utilities/services';
+import {removeExtension} from 'utilities/functions';
+import {getImageFromS3Static} from 'utilities/services';
 import {findIndex, map, noop, reject, remove, update} from 'lodash';
 import {nanoid} from 'nanoid';
 import React, {useCallback, useContext, useEffect, useRef, useState} from 'react';
@@ -14,12 +14,12 @@ import ClickAwayListener from 'react-click-away-listener';
 import {useDropzone} from 'react-dropzone';
 import {BiImageAdd} from 'react-icons/bi';
 import {useRouteMatch} from 'react-router';
-import {getAsset} from '../../../../../assets';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import useInLessonCheck from '../../../../../customHooks/checkIfInLesson';
-import * as mutations from '../../../../../graphql/mutations';
-import {getLocalStorageData} from '../../../../../utilities/localStorage';
-import Modal from '../../../../Atoms/Modal';
+import {getAsset} from 'assets';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useInLessonCheck from 'customHooks/checkIfInLesson';
+import * as mutations from 'graphql/mutations';
+import {getLocalStorageData} from 'utilities/localStorage';
+import Modal from 'atoms/Modal';
 import {UPLOAD_KEYS} from '../../../constants';
 
 interface IFile {
@@ -51,7 +51,7 @@ const File = ({
   file,
   updateFilename,
   id,
-  UPLOAD_KEY,
+  UPLOAD_KEY
 }: IFileComponent) => {
   const genStatus = () => {
     switch (_status) {
@@ -108,7 +108,7 @@ const File = ({
   const Btn = ({
     label,
     onClick,
-    color = 'green',
+    color = 'green'
   }: {
     label: string;
     color?: string;
@@ -252,15 +252,12 @@ const AttachmentBlock = ({
   index,
   required,
   id,
-  onSuccess,
+  onSuccess
 }: IAttachmentProps) => {
   const {
     lessonState,
     userLanguage,
-    state: {
-      user,
-      lessonPage: {theme: lessonPageTheme = 'dark', themeTextColor = ''} = {},
-    },
+    state: {user, lessonPage: {theme: lessonPageTheme = 'dark', themeTextColor = ''} = {}}
   } = useContext(GlobalContext);
 
   const lessonType = lessonState?.lessonData?.type;
@@ -331,7 +328,7 @@ const AttachmentBlock = ({
           updateStatus(currentFile, 'progress');
 
           updateProgress(currentFile, progress.toFixed(0));
-        },
+        }
       })
         .then((result) => {
           updateStatus(currentFile, 'success');
@@ -380,13 +377,13 @@ const AttachmentBlock = ({
         files: map(filesUploading, (file: any) => ({
           fileName: file.fileName,
           fileKey: file.fileKey,
-          fileSize: getSizeInBytesInt(file.file?.size),
+          fileSize: getSizeInBytesInt(file.file?.size)
         })),
         lessonPageID: roomInfo?.activeLessonId,
         lessonID: roomInfo?.activeLessonId,
         syllabusLessonID: roomInfo?.activeSyllabus,
         lessonType: lessonType,
-        roomID: roomInfo?.id,
+        roomID: roomInfo?.id
       };
 
       const result: any = await API.graphql(
@@ -414,7 +411,7 @@ const AttachmentBlock = ({
         progress: fakeInitProgress.toString(),
         file,
         fileName: file.name,
-        id,
+        id
       };
       filesUploading.push(initState);
 
@@ -458,7 +455,7 @@ const AttachmentBlock = ({
   );
 
   const {getRootProps, getInputProps, isDragActive} = useDropzone({
-    onDrop: uploadFile,
+    onDrop: uploadFile
   });
 
   const handleFileSelection = async (e: any) => {

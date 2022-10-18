@@ -1,9 +1,9 @@
 import React, {useContext, useEffect, useState} from 'react';
-import ButtonsRound from '../../../Atoms/ButtonsRound';
-import {GlobalContext} from '../../../../contexts/GlobalContext';
+import ButtonsRound from 'atoms/ButtonsRound';
+import {GlobalContext} from 'contexts/GlobalContext';
 import {FloatingSideMenuProps} from '../FloatingSideMenu';
 import {IoChatbubble} from 'react-icons/io5';
-import {getLocalStorageData} from '../../../../utilities/localStorage';
+import {getLocalStorageData} from 'utilities/localStorage';
 
 interface ChatroomListLauncherProps extends FloatingSideMenuProps {
   chatroom?: any;

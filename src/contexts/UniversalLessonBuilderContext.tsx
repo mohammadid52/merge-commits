@@ -3,7 +3,7 @@ import findIndex from 'lodash/findIndex';
 import React, {useContext, createContext, useState} from 'react';
 import {useHistory} from 'react-router';
 import {UniversalLesson} from '../interfaces/UniversalLessonInterfaces';
-import {GlobalContext} from './GlobalContext';
+import {GlobalContext} from 'contexts/GlobalContext';
 export const UniversalLessonBuilderContext = createContext(null);
 
 const initialUniversalLessonData: UniversalLesson = {
@@ -12,7 +12,7 @@ const initialUniversalLessonData: UniversalLesson = {
   designers: [''],
   teachers: [''],
   categories: [''],
-  lessonPlan: [],
+  lessonPlan: []
 };
 
 interface FieldsInterface {
@@ -35,14 +35,14 @@ const INITIAL_STATE: FieldsInterface = {
   interactionType: [],
   tags: [],
   estTime: '1 min',
-  classwork: true,
+  classwork: true
 };
 
 export const UniversalLessonBuilderProvider = ({children}: any) => {
   const {
     state: {
-      user: {isSuperAdmin},
-    },
+      user: {isSuperAdmin}
+    }
   } = useContext(GlobalContext);
   const [newBlockSeqId, setNewBlockSeqId] = useState(null);
 
@@ -100,9 +100,9 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
           active: true,
           class: '',
           displayMode: 'SELF',
-          ...content,
-        },
-      ],
+          ...content
+        }
+      ]
     }));
   };
 
@@ -116,7 +116,7 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
   }>({
     section: 'pageContent',
     position: 0,
-    targetId: '',
+    targetId: ''
   });
 
   const [activeTab, setActiveTab] = useState<number>(0);
@@ -131,7 +131,7 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
   const [selID, setSelID] = useState({pageContentID: '', partContentID: ''});
   const [selIDForHover, setSelIDForHover] = useState({
     pageContentID: '',
-    partContentID: '',
+    partContentID: ''
   });
 
   const [toolbarOnTop, setToolbarOnTop] = useState(true);
@@ -140,7 +140,7 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
     show: false,
     data: [{title: '', content: [{id: '', text: ''}]}],
     selectedResponse: [],
-    idx: 0,
+    idx: 0
   });
 
   const history = useHistory();
@@ -206,7 +206,7 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
         updateMovableList,
 
         fetchingLessonDetails,
-        setFetchingLessonDetails,
+        setFetchingLessonDetails
       }}>
       {children}
     </UniversalLessonBuilderContext.Provider>

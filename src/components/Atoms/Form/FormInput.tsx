@@ -1,10 +1,10 @@
-import Label from '@components/Atoms/Form/Label';
+import Label from 'components/Atoms/Form/Label';
 import {Transition} from '@headlessui/react';
 import React, {useContext, Fragment, useState} from 'react';
 import {AiOutlineEye, AiOutlineEyeInvisible} from 'react-icons/ai';
-import {getAsset} from '../../../assets';
-import {GlobalContext} from '../../../contexts/GlobalContext';
-import {doResize} from '../../../utilities/functions';
+import {getAsset} from 'assets';
+import {GlobalContext} from 'contexts/GlobalContext';
+import {doResize} from 'utilities/functions';
 
 interface FormInputProps {
   dataCy?: string;

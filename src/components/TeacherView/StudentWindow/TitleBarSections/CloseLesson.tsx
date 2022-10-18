@@ -1,9 +1,9 @@
-import ModalPopUp from '@components/Molecules/ModalPopUp';
-import {useGlobalContext} from '@contexts/GlobalContext';
-import useLessonControls from '@customHooks/lessonControls';
-import useAuth from '@customHooks/useAuth';
-import useGraphqlMutation from '@customHooks/useGraphqlMutation';
-import {getLocalStorageData, setLocalStorageData} from '@utilities/localStorage';
+import ModalPopUp from 'components/Molecules/ModalPopUp';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import useLessonControls from 'customHooks/lessonControls';
+import useAuth from 'customHooks/useAuth';
+import useGraphqlMutation from 'customHooks/useGraphqlMutation';
+import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
 import React, {useState} from 'react';
 import {AiOutlineCloseCircle} from 'react-icons/ai';
 import {useHistory, useRouteMatch} from 'react-router';
@@ -28,7 +28,7 @@ const CloseLesson = ({}) => {
     show: false,
     activeLessonsId: [],
     lessonID: lessonId,
-    message: MODAL_TEXT,
+    message: MODAL_TEXT
   });
 
   const onCloseModal = () => {
@@ -36,7 +36,7 @@ const CloseLesson = ({}) => {
       message: '',
       activeLessonsId: [],
       lessonID: '',
-      show: false,
+      show: false
     });
   };
 
@@ -45,7 +45,7 @@ const CloseLesson = ({}) => {
       ...prevValues,
       lessonID: lessonId,
       message: MODAL_TEXT,
-      show: true,
+      show: true
     }));
   };
 
@@ -60,21 +60,21 @@ const CloseLesson = ({}) => {
         {
           isTeacher: false,
           studentAuthID: 'closed',
-          lessonPageID: '',
-        },
+          lessonPageID: ''
+        }
       ];
       lessonDispatch({
         type: 'SET_ROOM_SUBSCRIPTION_DATA',
         payload: {
           id: getRoomData.id,
-          displayData: displayData,
-        },
+          displayData: displayData
+        }
       });
 
       setLocalStorageData('room_info', {
         ...getRoomData,
         studentViewing: 'closed',
-        displayData: displayData,
+        displayData: displayData
       });
       await handleRoomUpdate({
         id: getRoomData.id,
@@ -83,11 +83,11 @@ const CloseLesson = ({}) => {
           ...allCompletedLessons,
           {
             lessonID: lessonId,
-            time: new Date().toISOString(),
-          },
+            time: new Date().toISOString()
+          }
         ],
         activeLessons: [lessonId],
-        displayData: displayData,
+        displayData: displayData
       });
     } catch (e) {
       console.error('handleMarkAsCompleteClick() - ', e);

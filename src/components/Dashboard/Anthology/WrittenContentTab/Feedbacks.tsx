@@ -1,5 +1,5 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import {deleteImageFromS3, uploadImageToS3} from '@graphql/functions';
+import {deleteImageFromS3, uploadImageToS3} from 'graphql/functions';
 import EmojiPicker from 'emoji-picker-react';
 import {find, findIndex} from 'lodash';
 import React, {useContext, useEffect, useRef, useState} from 'react';
@@ -8,15 +8,15 @@ import {BsCameraVideoFill} from 'react-icons/bs';
 import {HiEmojiHappy} from 'react-icons/hi';
 import {IoSendSharp} from 'react-icons/io5';
 import {MdCancel, MdImage} from 'react-icons/md';
-import {getAsset} from '../../../../assets';
-import {GlobalContext} from '../../../../contexts/GlobalContext';
-import {AddQuestionModalDict} from '../../../../dictionary/dictionary.iconoclast';
-import * as mutations from '../../../../graphql/mutations';
-import {getImageFromS3} from '../../../../utilities/services';
-import Buttons from '../../../Atoms/Buttons';
-import Loader from '../../../Atoms/Loader';
-import Modal from '../../../Atoms/Modal';
-import ModalPopUp from '../../../Molecules/ModalPopUp';
+import {getAsset} from 'assets';
+import {GlobalContext} from 'contexts/GlobalContext';
+import {AddQuestionModalDict} from 'dictionary/dictionary.iconoclast';
+import * as mutations from 'graphql/mutations';
+import {getImageFromS3} from 'utilities/services';
+import Buttons from 'atoms/Buttons';
+import Loader from 'atoms/Loader';
+import Modal from 'atoms/Modal';
+import ModalPopUp from 'molecules/ModalPopUp';
 import Feedback from '../../Admin/UserManagement/Feedback';
 
 const Feedbacks = ({

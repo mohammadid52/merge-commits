@@ -1,17 +1,17 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import useDictionary from '../../../../../customHooks/dictionary';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
 import {IContentTypeComponentProps} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
-import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
-import Buttons from '../../../../Atoms/Buttons';
-import FormInput from '../../../../Atoms/Form/FormInput';
+import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
+import Buttons from 'atoms/Buttons';
+import FormInput from 'atoms/Form/FormInput';
 import {FORM_TYPES} from '../common/constants';
 import {v4 as uuidv4} from 'uuid';
-import Selector from '../../../../Atoms/Form/Selector';
+import Selector from 'atoms/Form/Selector';
 import ColorPicker from '../ColorPicker/ColorPicker';
 import {useTabs, Tabs3} from '../UIComponents/Tabs/Tabs';
 import ReviewSliderBlock, {
-  extractValuesFromClassString,
+  extractValuesFromClassString
 } from '../../../UniversalLessonBlockComponents/Blocks/ReviewSliderBlock';
 import {find, map, omit} from 'lodash';
 import AnimatedContainer from '../UIComponents/Tabs/AnimatedContainer';
@@ -28,7 +28,7 @@ const roundedCornerList = [
   {id: 1, name: 'Small', value: 'rounded-sm'},
   {id: 2, name: 'Medium', value: 'rounded'},
   {id: 3, name: 'Large', value: 'rounded-lg'},
-  {id: 4, name: 'Extra large', value: 'rounded-xl'},
+  {id: 4, name: 'Extra large', value: 'rounded-xl'}
 ];
 
 // remove value from property from list
@@ -41,7 +41,7 @@ const ReviewSliderModal = ({
   updateBlockContentULBHandler,
   askBeforeClose,
   setUnsavedChanges,
-  classString,
+  classString
 }: ReviewProps) => {
   const {userLanguage, clientKey} = useContext(GlobalContext);
   const {EditQuestionModalDict} = useDictionary(clientKey);
@@ -63,7 +63,7 @@ const ReviewSliderModal = ({
         cardBgColor,
         cardCorners: roundedParsedValue,
         bgColor,
-        fgColor,
+        fgColor
       });
     }
   }, [inputObj]);
@@ -77,7 +77,7 @@ const ReviewSliderModal = ({
     bgColor: 'gray-700',
     fgColor: 'gray-800',
     cardBgColor: 'gray-700',
-    cardCorners: roundedCornerList[3].name,
+    cardCorners: roundedCornerList[3].name
   });
 
   const [errors, setErrors] = useState({label: ''});
@@ -107,7 +107,7 @@ const ReviewSliderModal = ({
 
     const input = {
       id: list.id,
-      lessonPlan: [...list.lessonPlan],
+      lessonPlan: [...list.lessonPlan]
     };
     await updateLessonPageToDB(input);
   };
@@ -129,8 +129,8 @@ const ReviewSliderModal = ({
           type: FORM_TYPES.REVIEW_SLIDER,
           label: reviewFields.label,
           value: isEditingMode ? reviewFields.value : 1,
-          class: getClassValue(),
-        },
+          class: getClassValue()
+        }
       ];
 
       if (isEditingMode) {
@@ -162,11 +162,7 @@ const ReviewSliderModal = ({
   const handleColorPickerSelect = (pickedColor: string, type: string) => {
     setReviewFields({
       ...reviewFields,
-      [type === 'bg'
-        ? 'bgColor'
-        : type === 'fg'
-        ? 'fgColor'
-        : 'cardBgColor']: pickedColor,
+      [type === 'bg' ? 'bgColor' : type === 'fg' ? 'fgColor' : 'cardBgColor']: pickedColor
     });
   };
 
@@ -174,7 +170,7 @@ const ReviewSliderModal = ({
 
   const tabs = [
     {name: 'Component Details', current: true},
-    {name: 'Preview', current: false},
+    {name: 'Preview', current: false}
   ];
 
   const {curTab, setCurTab, helpers, goTo} = useTabs();
@@ -218,7 +214,7 @@ const ReviewSliderModal = ({
                 onChange={(_, name) => setReviewFields({...reviewFields, range: name})}
                 list={[
                   {id: 0, name: '1-5'},
-                  {id: 1, name: '1-10'},
+                  {id: 1, name: '1-10'}
                 ]}
               />
             </div>

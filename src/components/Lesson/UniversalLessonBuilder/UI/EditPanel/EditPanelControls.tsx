@@ -1,5 +1,5 @@
 import React from 'react';
-import Buttons from '../../../../Atoms/Buttons';
+import Buttons from 'atoms/Buttons';
 
 interface EditPanelControls {
   updateSelectedPageDetails: () => void;
@@ -7,7 +7,7 @@ interface EditPanelControls {
 }
 
 export const EditPanelControls = (props: EditPanelControls) => {
-  const { updateSelectedPageDetails, discardChanges } = props;
+  const {updateSelectedPageDetails, discardChanges} = props;
   return (
     <div className={`w-full flex flex-col justify-center`}>
       <div className="relative">

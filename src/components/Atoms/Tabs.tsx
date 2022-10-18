@@ -1,5 +1,5 @@
 import React, {Fragment, useContext, useRef} from 'react';
-import {GlobalContext} from '@contexts/GlobalContext';
+import {GlobalContext} from 'contexts/GlobalContext';
 import {Menu, Transition} from '@headlessui/react';
 import {ChevronDownIcon, ChevronUpIcon} from '@heroicons/react/solid';
 

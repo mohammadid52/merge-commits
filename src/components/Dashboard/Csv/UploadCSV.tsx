@@ -1,19 +1,19 @@
 import React, {useEffect, useState, useContext, useRef} from 'react';
-import {GlobalContext} from '../../../contexts/GlobalContext';
+import {GlobalContext} from 'contexts/GlobalContext';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import * as mutations from '../../../graphql/mutations';
-import * as queries from '@graphql/queries';
-import Selector from '../../Atoms/Form/Selector';
+import * as mutations from 'graphql/mutations';
+import * as queries from 'graphql/queries';
+import Selector from 'atoms/Form/Selector';
 import DateAndTime from '../DateAndTime/DateAndTime';
-import {getAsset} from '../../../assets';
-import useDictionary from '../../../customHooks/dictionary';
+import {getAsset} from 'assets';
+import useDictionary from 'customHooks/dictionary';
 import {v4 as uuidv4} from 'uuid';
 import {Storage} from 'aws-amplify';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {FaSpinner} from 'react-icons/fa';
 import Papa from 'papaparse';
-import * as customQueries from '../../../customGraphql/customQueries';
-import Label from '@components/Atoms/Form/Label';
+import * as customQueries from 'customGraphql/customQueries';
+import Label from 'components/Atoms/Form/Label';
 interface ICsvProps {
   institutionId?: string;
 }
@@ -34,7 +34,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
   }>({
     id: 0,
     name: '',
-    value: '',
+    value: ''
   });
   const [surveyData, setSurveyData] = useState<any[]>([]);
   const [newUniversalSurveyData, setNewUniversalSurveyData] = useState<string[]>([]);
@@ -51,13 +51,13 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
     {
       id: 1,
       name: 'Paper Survey',
-      value: 'paper-survey',
+      value: 'paper-survey'
     },
     {
       id: 2,
       name: 'User Update Survey',
-      value: 'user-update',
-    },
+      value: 'user-update'
+    }
   ];
 
   const isSuperAdmin = state.user.role === 'SUP';
@@ -80,7 +80,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
         },
         errorCallback: (err: any) => {
           console.error('Unexpected error while uploading', err);
-        },
+        }
       });
 
       return FileUpload;
@@ -92,7 +92,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
   const _GetUrlFromS3 = async (key: string) => {
     try {
       const getFileURL = await Storage.get(key, {
-        level: 'public',
+        level: 'public'
       });
       return getFileURL;
     } catch (error) {
@@ -107,7 +107,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
     try {
       let universalLesson: any = await API.graphql(
         graphqlOperation(customQueries.getUniversalLesson, {
-          id: lessonId,
+          id: lessonId
         })
       );
       let lessonObject = universalLesson.data.getUniversalLesson;
@@ -123,8 +123,8 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
                 id: item.questionID,
                 question: item.questionString,
                 type: item.type,
-                options: item.options,
-              },
+                options: item.options
+              }
             });
           });
         });
@@ -179,9 +179,9 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
                                 questionID: partContentSub.id,
                                 type: partContentSub.type,
                                 questionString: partContentSub.label,
-                                options: partContentSub.options,
-                              },
-                            ],
+                                options: partContentSub.options
+                              }
+                            ]
                           };
                         },
                         {pgInput: []}
@@ -190,8 +190,8 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
                       return {
                         pageInputAcc: [
                           ...partInputAcc.pageInputAcc,
-                          ...formSubInputs.pgInput,
-                        ],
+                          ...formSubInputs.pgInput
+                        ]
                       };
                     }
                     // ---- IF OTHER INPUT ---- //
@@ -203,9 +203,9 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
                             questionID: partContent.id,
                             type: partContent.type,
                             questionString: partContent.label,
-                            options: partContent.options,
-                          },
-                        ],
+                            options: partContent.options
+                          }
+                        ]
                       };
                     } else {
                       return partInputAcc;
@@ -217,8 +217,8 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
                 return {
                   pageInputAcc: [
                     ...pageInputsAcc.pageInputAcc,
-                    ...partInputs.pageInputAcc,
-                  ],
+                    ...partInputs.pageInputAcc
+                  ]
                 };
               } else {
                 return pageInputsAcc;
@@ -228,7 +228,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
           );
 
           return {
-            questionList: [...inputs.questionList, reducedPageInputs.pageInputAcc],
+            questionList: [...inputs.questionList, reducedPageInputs.pageInputAcc]
           };
         },
 
@@ -256,7 +256,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
             if (key === 'UniversalSurveyStudentID' && value !== 'Not-taken-yet') {
               const getUniversalSurveyStudent: any = await API.graphql(
                 graphqlOperation(queries.getUniversalSurveyStudentData, {
-                  id: value,
+                  id: value
                 })
               );
               const returnedData =
@@ -267,7 +267,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
                 studentEmail: '',
                 syllabusLessonID: '',
                 UniversalSurveyStudentID: '',
-                surveyData: [],
+                surveyData: []
               };
               for (let [key, value] of Object.entries(item)) {
                 const surveyDomId = key.split('-s-')[1];
@@ -295,7 +295,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
                     UniversalSurveyStudentID: returnedData.id,
                     lessonID: item.SurveyID,
                     syllabusLessonID: item.UnitID,
-                    surveyData: [...input.surveyData, updateSurveyInput],
+                    surveyData: [...input.surveyData, updateSurveyInput]
                   };
 
                   setSurveyData((prev: any) => {
@@ -309,7 +309,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
                 studentAuthID: '',
                 studentEmail: '',
                 syllabusLessonID: '',
-                surveyData: [],
+                surveyData: []
               };
               for (let [key, value] of Object.entries(item)) {
                 let surveyDomId = key.split('-s-')[1];
@@ -332,9 +332,9 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
                         input:
                           selectedOption.length > 0 ? [selectedOption[0].id] : [value],
                         options: null,
-                        hasTakenSurvey: !value ? false : true,
-                      },
-                    ],
+                        hasTakenSurvey: !value ? false : true
+                      }
+                    ]
                   };
                 }
               }
@@ -344,12 +344,12 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
             } else if (key === 'DemographicsDataID' && value !== 'No-demographics-data') {
               const getDemographicsData: any = await API.graphql(
                 graphqlOperation(queries.getQuestionData, {
-                  id: value,
+                  id: value
                 })
               );
               let input: any = {
                 questionDataId: '',
-                responseObject: [],
+                responseObject: []
               };
               const returnedData = getDemographicsData.data.getQuestionData;
               for (let [key, value] of Object.entries(item)) {
@@ -371,8 +371,8 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
                     questionDataId: returnedData.id,
                     responseObject: [
                       ...input.responseObject,
-                      updateDemographicsQuesResponse,
-                    ],
+                      updateDemographicsQuesResponse
+                    ]
                   };
 
                   setDemographicsData((prev: any) => {
@@ -385,7 +385,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
                 authId: '',
                 email: '',
                 syllabusLessonID: '',
-                responseObject: [],
+                responseObject: []
               };
               for (let [key, value] of Object.entries(item)) {
                 const demographicsQuesId = key.split('-d-')[1]?.split(' ')[0];
@@ -399,9 +399,9 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
                       {
                         qid: demographicsQuesId,
                         response: [value],
-                        demographicsUpdated: !value ? false : true,
-                      },
-                    ],
+                        demographicsUpdated: !value ? false : true
+                      }
+                    ]
                   };
                 }
               }
@@ -424,12 +424,12 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
         id: uuidv4(),
         updatedUserId: state.user.authId,
         universalSurveyId: SurveyId,
-        surveyData: surveyData,
+        surveyData: surveyData
       };
 
       const newSurveyData: any = await API.graphql(
         graphqlOperation(mutations.createTemporaryUniversalUploadSurveyData, {
-          input: value,
+          input: value
         })
       );
 
@@ -448,12 +448,12 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
         id: uuidv4(),
         updatedUserId: state.user.authId,
         questionDataID: demoTempID,
-        responseObject: responseObject,
+        responseObject: responseObject
       };
 
       const newDemographicsData: any = await API.graphql(
         graphqlOperation(mutations.createTemporaryDemographicsUploadData, {
-          input: value,
+          input: value
         })
       );
 
@@ -487,12 +487,12 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
         UploadType: selectedReason.value,
         updateType: updateType,
         ...(imgUrl && {PaperSurveyURL: imgUrl}),
-        Reason: reason,
+        Reason: reason
       };
 
       const newUploadLogs: any = await API.graphql(
         graphqlOperation(mutations.createUploadLogs, {
-          input: value,
+          input: value
         })
       );
 
@@ -520,8 +520,8 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
           graphqlOperation(mutations.updateUniversalSurveyStudentData, {
             input: {
               id: item.UniversalSurveyStudentID,
-              surveyData: item.surveyData,
-            },
+              surveyData: item.surveyData
+            }
           })
         );
         if (updateData) {
@@ -564,8 +564,8 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
               studentEmail: item.studentEmail,
               studentID: item.studentAuthID,
               syllabusLessonID: item.syllabusLessonID,
-              surveyData: item.surveyData,
-            },
+              surveyData: item.surveyData
+            }
           })
         );
         if (createData) {
@@ -607,8 +607,8 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
           graphqlOperation(mutations.updateQuestionData, {
             input: {
               id: item.questionDataId,
-              responseObject: item.responseObject,
-            },
+              responseObject: item.responseObject
+            }
           })
         );
 
@@ -649,8 +649,8 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
               label: 'IA1',
               type: 'profile',
               title: 'Profile Details',
-              stage: 'checkpoint',
-            },
+              stage: 'checkpoint'
+            }
           })
         );
         if (createCheckpointData) {
@@ -661,8 +661,8 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
                 checkpointID: createCheckpointData.data.createCheckpoint.id,
                 email: item.email,
                 responseObject: item.responseObject,
-                syllabusLessonID: '999999',
-              },
+                syllabusLessonID: '999999'
+              }
             })
           );
           if (createDemographicsQuestionData) {
@@ -700,7 +700,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
       setSelectedReason({
         id: 0,
         name: '',
-        value: '',
+        value: ''
       });
       setImgUrl([]);
       csvInputRef.current.value = '';
@@ -805,9 +805,9 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
                 size: '1.2rem',
                 style: {
                   left: '-25%',
-                  top: '-5%',
+                  top: '-5%'
                 },
-                className: `relative mr-4 animate-spin ${theme.textColor[themeColor]}`,
+                className: `relative mr-4 animate-spin ${theme.textColor[themeColor]}`
               }}>
               <FaSpinner />
             </IconContext.Provider>
@@ -846,7 +846,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
           }`}
           style={{
             /* stylelint-disable */
-            opacity: reason ? 1 : 0.5,
+            opacity: reason ? 1 : 0.5
           }}
           disabled={!reason || loading || !selectedReason.value}
           onClick={(e) => handleSubmit(e)}>

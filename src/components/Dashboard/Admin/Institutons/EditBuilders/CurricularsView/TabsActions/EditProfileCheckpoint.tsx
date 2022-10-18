@@ -4,22 +4,22 @@ import {useHistory, useParams} from 'react-router';
 import {IoArrowUndoCircleOutline, IoClose, IoOptionsOutline} from 'react-icons/io5';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 
-import {getTypeString} from '../../../../../../../utilities/strings';
-import * as customQueries from '../../../../../../../customGraphql/customQueries';
-import * as customMutations from '../../../../../../../customGraphql/customMutations';
+import {getTypeString} from 'utilities/strings';
+import * as customQueries from 'customGraphql/customQueries';
+import * as customMutations from 'customGraphql/customMutations';
 
-import MultipleSelector from '../../../../../../Atoms/Form/MultipleSelector';
-import SectionTitle from '../../../../../../Atoms/SectionTitle';
-import PageWrapper from '../../../../../../Atoms/PageWrapper';
-import BreadCrums from '../../../../../../Atoms/BreadCrums';
-import FormInput from '../../../../../../Atoms/Form/FormInput';
-import Selector from '../../../../../../Atoms/Form/Selector';
-import Buttons from '../../../../../../Atoms/Buttons';
+import MultipleSelector from 'atoms/Form/MultipleSelector';
+import SectionTitle from 'atoms/SectionTitle';
+import PageWrapper from 'atoms/PageWrapper';
+import BreadCrums from 'atoms/BreadCrums';
+import FormInput from 'atoms/Form/FormInput';
+import Selector from 'atoms/Form/Selector';
+import Buttons from 'atoms/Buttons';
 import AddQuestion from './QuestionComponents/AddQuestion';
 import SelectPreviousQuestion from './QuestionComponents/SelectPreviousQuestion';
-import {getAsset} from '../../../../../../../assets';
-import {GlobalContext} from '../../../../../../../contexts/GlobalContext';
-import useDictionary from '../../../../../../../customHooks/dictionary';
+import {getAsset} from 'assets';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
 
 interface EditProfileCheckpointProps {}
 
@@ -38,7 +38,7 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
     title: '',
     label: '',
     language: {id: '1', name: 'English', value: 'EN'},
-    scope: '',
+    scope: ''
   };
   const [checkpointData, setCheckpointData] = useState(initialData);
 
@@ -55,7 +55,7 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
     title: '',
     label: '',
     message: '',
-    isError: true,
+    isError: true
   });
 
   const breadCrumsList = [
@@ -63,30 +63,30 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
     {
       title: BreadcrumsTitles[userLanguage]['CURRICULUMBUILDER'],
       url: `/dashboard/manage-institutions/${institutionId}/curricular?id=${curricularId}`,
-      last: false,
+      last: false
     },
     {
       title: BreadcrumsTitles[userLanguage]['AddChekpoint'],
       url: `/dashboard/curricular/${curricularId}/checkpoint/addNew`,
-      last: true,
-    },
+      last: true
+    }
   ];
 
   const languageList = [
     {id: 1, name: 'English', value: 'EN'},
-    {id: 2, name: 'Spanish', value: 'ES'},
+    {id: 2, name: 'Spanish', value: 'ES'}
   ];
 
   const onInputChange = (e: any) => {
     setCheckpointData({
       ...checkpointData,
-      [e.target.name]: e.target.value,
+      [e.target.name]: e.target.value
     });
     if (validation.title || validation.label) {
       setValidation({
         ...validation,
         title: '',
-        label: '',
+        label: ''
       });
     }
   };
@@ -97,8 +97,8 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
       language: {
         id,
         name,
-        value,
-      },
+        value
+      }
     });
   };
 
@@ -158,7 +158,7 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
       const input = {
         checkpointID: checkpointID,
         questionID: quesId,
-        required: required ? required : false,
+        required: required ? required : false
       };
       const questions: any = await API.graphql(
         graphqlOperation(customMutations.createCheckpointQuestions, {input: input})
@@ -168,7 +168,7 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
         title: '',
         label: '',
         message: EditProfileCheckpointDict[userLanguage]['messages']['saveerr'],
-        isError: true,
+        isError: true
       });
     }
   };
@@ -180,7 +180,7 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
       ?.id;
     try {
       const input = {
-        id: deletedQuesID,
+        id: deletedQuesID
       };
       const result: any = await API.graphql(
         graphqlOperation(customMutations.deleteCheckpointQuestions, {input: input})
@@ -191,7 +191,7 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
         title: '',
         label: '',
         message: EditProfileCheckpointDict[userLanguage]['messages']['saveerr'],
-        isError: true,
+        isError: true
       });
     }
   };
@@ -233,7 +233,7 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
           designers: selectedDesigners.map((item: any) => item.id),
           language: checkpointData.language.value,
           scope: checkpointData.scope,
-          questionSeq: qSequence,
+          questionSeq: qSequence
         };
         const results: any = await API.graphql(
           graphqlOperation(customMutations.updateCheckpoint, {input: input})
@@ -270,7 +270,7 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
             title: '',
             label: '',
             message: EditProfileCheckpointDict[userLanguage]['messages']['saveerr'],
-            isError: true,
+            isError: true
           });
         }
         setLoading(false);
@@ -281,7 +281,7 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
           title: '',
           label: '',
           message: EditProfileCheckpointDict[userLanguage]['messages']['saveerr'],
-          isError: true,
+          isError: true
         });
         setLoading(false);
       }
@@ -293,20 +293,20 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
       const [savedCheckpointData, personsList]: any = await Promise.all([
         await API.graphql(
           graphqlOperation(customQueries.getCheckpointDetails, {
-            id: checkpointId,
+            id: checkpointId
           })
         ),
         await API.graphql(
           graphqlOperation(customQueries.listPersons, {
-            filter: {or: [{role: {eq: 'TR'}}, {role: {eq: 'BLD'}}]},
+            filter: {or: [{role: {eq: 'TR'}}, {role: {eq: 'BLD'}}]}
           })
-        ),
+        )
       ]);
       const sortedDesignersList: any = personsList?.data?.listPeople?.items?.map(
         (item: {id: string; firstName: string; lastName: string}) => ({
           id: item?.id,
           name: `${item?.firstName || ''} ${item.lastName || ''}`,
-          value: `${item?.firstName || ''} ${item.lastName || ''}`,
+          value: `${item?.firstName || ''} ${item.lastName || ''}`
         })
       );
 
@@ -324,7 +324,7 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
         const checkpointQuestions: any = results?.questions?.items;
         const checkpQuestionsId: any = checkpointQuestions.map((item: any) => ({
           id: item.id,
-          questionID: item.questionID,
+          questionID: item.questionID
         })); // Saving checkpoint question id.
         const savedQuestionsId: any = checkpointQuestions.map(
           (item: any) => item.questionID
@@ -336,7 +336,7 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
           title: results.title,
           label: results.label,
           language: selectedLanguage,
-          scope: results.scope,
+          scope: results.scope
         });
         setDesignersList([...sortedDesignersList]);
         setSelectedDesigner(designers);
@@ -350,7 +350,7 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
         title: '',
         label: '',
         message: EditProfileCheckpointDict[userLanguage]['messages']['fetcherr'],
-        isError: true,
+        isError: true
       });
       setLoading(false);
     }
@@ -362,7 +362,7 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
 
   const scopeList = [
     {id: 0, name: 'public'},
-    {id: 1, name: 'private'},
+    {id: 1, name: 'private'}
   ];
 
   const handleRemoveQuestionFromCheckpoint = (questionID: string) => {
@@ -566,7 +566,7 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
                                     <IconContext.Provider
                                       value={{
                                         size: '1.5rem',
-                                        color: theme.iconColor[themeColor],
+                                        color: theme.iconColor[themeColor]
                                       }}>
                                       <IoClose
                                         onClick={(e) => {

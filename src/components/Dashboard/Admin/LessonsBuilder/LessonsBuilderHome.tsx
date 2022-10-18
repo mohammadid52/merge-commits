@@ -1,9 +1,9 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import React, {useContext, useEffect, useState} from 'react';
 import {Route, Switch, useRouteMatch} from 'react-router-dom';
-import {GlobalContext} from '../../../../contexts/GlobalContext';
-import * as customQueries from '../../../../customGraphql/customQueries';
-import * as queries from '../../../../graphql/queries';
+import {GlobalContext} from 'contexts/GlobalContext';
+import * as customQueries from 'customGraphql/customQueries';
+import * as queries from 'graphql/queries';
 import LessonPlan from '../../../Lesson/UniversalLessonBuilder/UI/LessonPlan/LessonPlan';
 import UniversalLessonBuilder from '../../../Lesson/UniversalLessonBuilder/UniversalLessonBuilder';
 import LessonBuilder from './LessonBuilder';
@@ -29,7 +29,7 @@ const LessonsBuilderHome = ({instId}: ILessonBuilderHomeProps) => {
   const fetchPersonsList = async () => {
     const result: any = await API.graphql(
       graphqlOperation(customQueries.listPersons, {
-        filter: {or: [{role: {eq: 'TR'}}, {role: {eq: 'BLD'}}, {role: {eq: 'FLW'}}]},
+        filter: {or: [{role: {eq: 'TR'}}, {role: {eq: 'BLD'}}, {role: {eq: 'FLW'}}]}
       })
     );
     const savedData = result.data.listPeople;
@@ -37,7 +37,7 @@ const LessonsBuilderHome = ({instId}: ILessonBuilderHomeProps) => {
       (item: {id: string; firstName: string; lastName: string}) => ({
         id: item?.id,
         name: `${item?.firstName || ''} ${item.lastName || ''}`,
-        value: `${item?.firstName || ''} ${item.lastName || ''}`,
+        value: `${item?.firstName || ''} ${item.lastName || ''}`
       })
     );
     setDesignersList(updatedList);
@@ -49,7 +49,7 @@ const LessonsBuilderHome = ({instId}: ILessonBuilderHomeProps) => {
     const updatedList = savedData?.items.map((item: {id: string; name: string}) => ({
       id: item?.id,
       name: item?.name || '',
-      value: item?.name || '',
+      value: item?.name || ''
     }));
     setInstitutionList(updatedList);
   };

@@ -1,18 +1,18 @@
 import {MenuIcon} from '@heroicons/react/outline';
 import {Transition} from '@headlessui/react';
-import Loader from '../../Atoms/Loader';
-import Modal from '../../Atoms/Modal';
-import FormInput from '../../Atoms/Form/FormInput';
+import Loader from 'atoms/Loader';
+import Modal from 'atoms/Modal';
+import FormInput from 'atoms/Form/FormInput';
 import React, {useContext, useEffect, useState} from 'react';
-import Buttons from '../../Atoms/Buttons';
-import useDictionary from '../../../customHooks/dictionary';
-import * as customQueries from '../../../customGraphql/customQueries';
-import * as customMutations from '../../../customGraphql/customMutations';
-import {GlobalContext} from '../../../contexts/GlobalContext';
+import Buttons from 'atoms/Buttons';
+import useDictionary from 'customHooks/dictionary';
+import * as customQueries from 'customGraphql/customQueries';
+import * as customMutations from 'customGraphql/customMutations';
+import {GlobalContext} from 'contexts/GlobalContext';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import moment from 'moment';
 import {findIndex, update} from 'lodash';
-import {getAsset} from '../../../assets';
+import {getAsset} from 'assets';
 
 interface ISentiment {
   personAuthID: string;

@@ -1,7 +1,7 @@
-import Loader from '@components/Atoms/Loader';
-import {useGlobalContext} from '@contexts/GlobalContext';
-import useAuth from '@customHooks/useAuth';
-import useGraphqlQuery from '@customHooks/useGraphqlQuery';
+import Loader from 'components/Atoms/Loader';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import useAuth from 'customHooks/useAuth';
+import useGraphqlQuery from 'customHooks/useGraphqlQuery';
 import {FeelingsArchive, ListFeelingsArchivesQueryVariables} from 'API';
 import moment from 'moment';
 import {nanoid} from 'nanoid';
@@ -38,8 +38,8 @@ const emotionData = {
       'inspired',
       'hopeful',
       'peaceful',
-      'respected',
-    ],
+      'respected'
+    ]
   },
   angry: {
     emoji: '😡',
@@ -67,8 +67,8 @@ const emotionData = {
       'infuriated',
       'hostile',
       'violated',
-      'critical',
-    ],
+      'critical'
+    ]
   },
 
   surprised: {
@@ -85,8 +85,8 @@ const emotionData = {
       'shocked',
       'disillusioned',
       'energetic',
-      'astonished',
-    ],
+      'astonished'
+    ]
   },
   disgusted: {
     emoji: '🤢',
@@ -103,8 +103,8 @@ const emotionData = {
       'judgemental',
       'nauseated',
       'detestable',
-      'horrified',
-    ],
+      'horrified'
+    ]
   },
   sad: {
     emoji: '😔',
@@ -126,8 +126,8 @@ const emotionData = {
       'abandoned',
       'empty',
       'vitimized',
-      'remorseful',
-    ],
+      'remorseful'
+    ]
   },
   fearful: {
     emoji: '😰',
@@ -149,8 +149,8 @@ const emotionData = {
       'worried',
       'worthless',
       'exposed',
-      'weak',
-    ],
+      'weak'
+    ]
   },
 
   bad: {
@@ -167,9 +167,9 @@ const emotionData = {
       'overwhelmed',
       'unfocused',
       'out of control',
-      'sleepy',
-    ],
-  },
+      'sleepy'
+    ]
+  }
 };
 
 const AllEmotions = () => {
@@ -185,14 +185,14 @@ const AllEmotions = () => {
   >(
     'listFeelingsArchives',
     {
-      filter: {personAuthID: {eq: authId}, lessonID: {eq: lessonId}},
+      filter: {personAuthID: {eq: authId}, lessonID: {eq: lessonId}}
     },
     {custom: true}
   );
 
   const {
     state: {lessonPage: {theme: lessonPageTheme = 'dark', themeTextColor = ''} = {}},
-    lessonState,
+    lessonState
   } = useGlobalContext();
 
   const PAGES = isStudent ? lessonState?.lessonData?.lessonPlan : null;
@@ -212,9 +212,9 @@ const AllEmotions = () => {
           : 'unknown';
       return {
         id: nanoid(24),
-        text,
+        text
       };
-    }),
+    })
   };
 
   // const {mutate} = useGraphqlMutation('deleteFeelingsArchive');
@@ -246,9 +246,9 @@ const AllEmotions = () => {
     options: data.map((em) => {
       return {
         id: nanoid(24),
-        text: em.sentimentName.length > 0 ? addEmojiToName(em.sentimentName) : '',
+        text: em.sentimentName.length > 0 ? addEmojiToName(em.sentimentName) : ''
       };
-    }),
+    })
   };
 
   const timeColumn = {
@@ -256,8 +256,8 @@ const AllEmotions = () => {
     value: 'Time',
     options: data.map((em) => ({
       id: nanoid(24),
-      text: moment(em.createdAt).format('ll LT'),
-    })),
+      text: moment(em.createdAt).format('ll LT')
+    }))
   };
 
   const themePlaceholderColor =

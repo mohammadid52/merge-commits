@@ -1,8 +1,8 @@
-import useTailwindBreakpoint from '@customHooks/tailwindBreakpoint';
+import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
 import React, {useContext, useEffect, useState} from 'react';
 import {useHistory, useRouteMatch} from 'react-router-dom';
-import {GlobalContext} from '../../../../contexts/GlobalContext';
-import usePrevious from '../../../../customHooks/previousProps';
+import {GlobalContext} from 'contexts/GlobalContext';
+import usePrevious from 'customHooks/previousProps';
 import {UniversalLessonPage} from '../../../../interfaces/UniversalLessonInterfaces';
 
 interface StageIconProps extends UniversalLessonPage {
@@ -22,7 +22,7 @@ const StageIcon = ({
   label,
   clickable,
   hidden,
-  handleRequiredNotification,
+  handleRequiredNotification
 }: StageIconProps) => {
   const history = useHistory();
   const match = useRouteMatch();

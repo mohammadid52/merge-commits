@@ -3,19 +3,19 @@ import {useHistory} from 'react-router';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {DragDropContext, Draggable, Droppable} from 'react-beautiful-dnd';
 
-import {GlobalContext} from '../../../../../../../../contexts/GlobalContext';
-import useDictionary from '../../../../../../../../customHooks/dictionary';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
 
-import * as mutations from '../../../../../../../../graphql/mutations';
-import * as customQueries from '../../../../../../../../customGraphql/customQueries';
-import * as customMutations from '../../../../../../../../customGraphql/customMutations';
+import * as mutations from 'graphql/mutations';
+import * as customQueries from 'customGraphql/customQueries';
+import * as customMutations from 'customGraphql/customMutations';
 
-import {reorder} from '../../../../../../../../utilities/strings';
-import Selector from '../../../../../../../Atoms/Form/Selector';
-import AddButton from '../../../../../../../Atoms/Buttons/AddButton';
-import Loader from '../../../../../../../Atoms/Loader';
-import ModalPopUp from '../../../../../../../Molecules/ModalPopUp';
-import {getAsset} from '../../../../../../../../assets';
+import {reorder} from 'utilities/strings';
+import Selector from 'atoms/Form/Selector';
+import AddButton from 'atoms/Buttons/AddButton';
+import Loader from 'atoms/Loader';
+import ModalPopUp from 'molecules/ModalPopUp';
+import {getAsset} from 'assets';
 import UnitManagerRow from './UnitManagerRow';
 
 interface UIMessages {
@@ -32,7 +32,7 @@ const UnitManager = ({
   savedSyllabusList,
   setSavedSyllabusList,
   syllabusIds,
-  setSyllabusIds,
+  setSyllabusIds
 }: any) => {
   // console.log(
   //   '🚀 ~ file: UnitManager.tsx ~ line 37 ~ courseData',
@@ -55,25 +55,25 @@ const UnitManager = ({
   const [selectedSyllabus, setSelectedSyllabus] = useState({
     id: '',
     name: '',
-    value: '',
+    value: ''
   });
   const [unsavedChanges, setUnsavedChanges] = useState(false);
   const [warnModal, setWarnModal] = useState({
     show: false,
     lessonPlan: false,
     lessonEdit: false,
-    message: CourseBuilderDict[userLanguage]['MESSAGES']['wantsave'],
+    message: CourseBuilderDict[userLanguage]['MESSAGES']['wantsave']
   });
   const [warnModal2, setWarnModal2] = useState({
     show: false,
     message: '',
-    action: () => {},
+    action: () => {}
   });
   const [messages, setMessages] = useState<UIMessages>({
     show: false,
     message: '',
     isError: false,
-    lessonError: false,
+    lessonError: false
   });
 
   useEffect(() => {
@@ -90,7 +90,7 @@ const UnitManager = ({
         ...warnModal,
         lessonPlan: true,
         show: !warnModal.show,
-        lessonEdit: false,
+        lessonEdit: false
       });
       return;
     }
@@ -107,7 +107,7 @@ const UnitManager = ({
 
       const input = {
         unitId: selectedSyllabus.id,
-        curriculumId: courseId,
+        curriculumId: courseId
       };
 
       const result: any = await API.graphql(
@@ -130,7 +130,7 @@ const UnitManager = ({
         show: true,
         message: CourseBuilderDict[userLanguage]['MESSAGES']['UPDATE_ERROR'],
         isError: true,
-        lessonError: true,
+        lessonError: true
       });
     }
   };
@@ -141,7 +141,7 @@ const UnitManager = ({
     let filteredList = savedSyllabusIds.map((assignedSyllabus) => ({
       ...assignedSyllabus.unit,
       id: assignedSyllabus.id,
-      unitId: assignedSyllabus.unitId,
+      unitId: assignedSyllabus.unitId
     }));
     const filteredDropDownList = allSyllabusList.filter((item) =>
       filteredList.find((unit) => unit.unitId === item.id) ? false : true
@@ -159,7 +159,7 @@ const UnitManager = ({
       filteredDropDownList.map((item: {id: string; name: string}) => ({
         id: item.id,
         name: item.name,
-        value: item.name,
+        value: item.name
       }))
     );
   };
@@ -179,7 +179,7 @@ const UnitManager = ({
         const updatedList = allSyllabusList.map((item: {id: string; name: string}) => ({
           id: item.id,
           name: item.name,
-          value: item.name,
+          value: item.name
         }));
         setDropdownSyllabusList([...updatedList]);
       }
@@ -195,7 +195,7 @@ const UnitManager = ({
       setLoading(true);
       const result: any = await API.graphql(
         graphqlOperation(customQueries.listUniversalSyllabusOptions, {
-          filter: {institutionID: {eq: institutionId}},
+          filter: {institutionID: {eq: institutionId}}
         })
       );
       const savedData = result.data.listUniversalSyllabi;
@@ -210,7 +210,7 @@ const UnitManager = ({
         show: true,
         message: CourseBuilderDict[userLanguage]['MESSAGES']['fetchlist'],
         isError: true,
-        lessonError: true,
+        lessonError: true
       });
     }
   };
@@ -221,8 +221,8 @@ const UnitManager = ({
       graphqlOperation(customMutations.updateCurriculumSyllabusSequence, {
         input: {
           id: courseId,
-          universalSyllabusSeq: syllabusIDs,
-        },
+          universalSyllabusSeq: syllabusIDs
+        }
       })
     );
   };
@@ -237,7 +237,7 @@ const UnitManager = ({
   const [deleteModal, setDeleteModal] = useState<any>({
     show: false,
     message: '',
-    action: () => {},
+    action: () => {}
   });
 
   const checkIfRemovable = (unitObj: any, curriculumObj: any) => {
@@ -257,7 +257,7 @@ const UnitManager = ({
       setDeleteModal({
         show: true,
         message: `Are you sure you want to remove "${targetString}" from course?`,
-        action: () => handleDelete(itemObj),
+        action: () => handleDelete(itemObj)
       });
     } else {
       setDeleteModal({show: false, message: '', action: () => {}});
@@ -269,7 +269,7 @@ const UnitManager = ({
       setDeleting(true);
       await API.graphql(
         graphqlOperation(customMutations.deleteCurriculumUnits, {
-          input: {id: item.id},
+          input: {id: item.id}
         })
       );
       await updateSyllabusSequence(
@@ -349,7 +349,7 @@ const UnitManager = ({
         ...warnModal,
         lessonPlan: false,
         show: !warnModal.show,
-        lessonEdit: true,
+        lessonEdit: true
       });
       // setEditLesson({type, id});
     } else {

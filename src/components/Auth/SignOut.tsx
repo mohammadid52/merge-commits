@@ -1,12 +1,12 @@
 import React, {useContext} from 'react';
-import {GlobalContext} from '../../contexts/GlobalContext';
+import {GlobalContext} from 'contexts/GlobalContext';
 import {useCookies} from 'react-cookie';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {Auth} from '@aws-amplify/auth';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import * as customMutations from '../../customGraphql/customMutations';
+import * as customMutations from 'customGraphql/customMutations';
 import {FiLogOut} from 'react-icons/all';
-import {removeLocalStorageData} from '../../utilities/localStorage';
+import {removeLocalStorageData} from 'utilities/localStorage';
 
 interface SignOutButtonProps {
   updateAuthState: Function;

@@ -3,11 +3,11 @@ import {
   AiOutlineDelete,
   AiOutlineEdit,
   AiOutlineSave,
-  AiOutlineStop,
+  AiOutlineStop
 } from 'react-icons/all';
-import {GlobalContext} from '../../../../contexts/GlobalContext';
-import useDictionary from '../../../../customHooks/dictionary';
-import Buttons from '../../../Atoms/Buttons';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import Buttons from 'atoms/Buttons';
 import {NoticeboardFormProps} from '../NoticeboardAdminContent';
 
 const CancelSaveDelete = (props: NoticeboardFormProps) => {

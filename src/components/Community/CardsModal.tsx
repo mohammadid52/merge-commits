@@ -1,28 +1,27 @@
-import Modal from '@components/Atoms/Modal';
-import Announcements from '@components/Community/Cards/Announcement';
-import CheckItOut from '@components/Community/Cards/CheckItOut';
-import Event from '@components/Community/Cards/Event';
-import Spotlight from '@components/Community/Cards/Spotlight';
+import Modal from 'components/Atoms/Modal';
+import Announcements from 'components/Community/Cards/Announcement';
+import CheckItOut from 'components/Community/Cards/CheckItOut';
+import Event from 'components/Community/Cards/Event';
+import Spotlight from 'components/Community/Cards/Spotlight';
 import {
   communityContent,
   communityTypes,
   NavStateTypes
-} from '@components/Community/constants.community';
-import {classNames} from '@components/Lesson/UniversalLessonBuilder/UI/FormElements/TextInput';
-import useAuth from '@customHooks/useAuth';
+} from 'components/Community/constants.community';
+import {classNames} from 'components/Lesson/UniversalLessonBuilder/UI/FormElements/TextInput';
+import useAuth from 'customHooks/useAuth';
 
 import {
-  ISpotlightInput,
   IAnnouncementInput,
   ICheckItOutInput,
+  ICommunityCard,
   IEventInput,
-  ICommunityCard
+  ISpotlightInput
 } from '@interfaces/Community.interfaces';
 import {setState} from '@interfaces/index';
-import AnimatedContainer from '@uiComponents/Tabs/AnimatedContainer';
-import {isEmpty} from 'lodash';
-import React, {useEffect} from 'react';
+import React from 'react';
 import {HiOutlineArrowRight} from 'react-icons/hi';
+import AnimatedContainer from 'uiComponents/Tabs/AnimatedContainer';
 
 const getModalHeader = (navState: NavStateTypes) => {
   switch (navState) {

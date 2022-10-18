@@ -1,12 +1,12 @@
 import React, {useContext} from 'react';
 import {useHistory, useRouteMatch} from 'react-router';
 
-import Buttons from '../../../../Atoms/Buttons';
+import Buttons from 'atoms/Buttons';
 
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import useDictionary from '../../../../../customHooks/dictionary';
-import {getAsset} from '../../../../../assets';
-import {useQuery} from '../../../../../customHooks/urlParam';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import {getAsset} from 'assets';
+import {useQuery} from 'customHooks/urlParam';
 import PageTile from '../common/PageTile';
 
 const TemplateView = ({universalLessonDetails}: any) => {

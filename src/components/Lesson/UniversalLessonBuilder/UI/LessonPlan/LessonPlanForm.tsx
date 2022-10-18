@@ -1,17 +1,17 @@
 import React, {useState, useContext} from 'react';
 import {useHistory, useRouteMatch} from 'react-router';
-import FormInput from '../../../../Atoms/Form/FormInput';
-import Buttons from '../../../../Atoms/Buttons';
-import TextArea from '../../../../Atoms/Form/TextArea';
-import Selector from '../../../../Atoms/Form/Selector';
-import * as customMutations from '../../../../../customGraphql/customMutations';
+import FormInput from 'atoms/Form/FormInput';
+import Buttons from 'atoms/Buttons';
+import TextArea from 'atoms/Form/TextArea';
+import Selector from 'atoms/Form/Selector';
+import * as customMutations from 'customGraphql/customMutations';
 import {graphqlOperation, API} from 'aws-amplify';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import useDictionary from '../../../../../customHooks/dictionary';
-import {useQuery} from '../../../../../customHooks/urlParam';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import {useQuery} from 'customHooks/urlParam';
 import {v4 as uuidV4} from 'uuid';
-import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
-import {estimatedTimeList} from '../../../../../utilities/staticData';
+import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
+import {estimatedTimeList} from 'utilities/staticData';
 
 interface ILessonInputs {
   id: string;
@@ -31,7 +31,7 @@ const LessonPlanForm = () => {
     label: '',
     title: '',
     description: '',
-    estTime: '1 min',
+    estTime: '1 min'
   });
   const [errors, setErrors] = useState<any>({});
   const [loading, setLoading] = useState<boolean>(false);
@@ -47,11 +47,11 @@ const LessonPlanForm = () => {
     const value: string = (event.target as HTMLInputElement).value;
     setInputObj((prevInputs: ILessonInputs) => ({
       ...prevInputs,
-      [name]: value,
+      [name]: value
     }));
     setErrors((errors: any) => ({
       ...errors,
-      [name]: '',
+      [name]: ''
     }));
   };
 
@@ -70,13 +70,13 @@ const LessonPlanForm = () => {
               label: inputObj.label,
               description: inputObj.description,
               pageContent: [],
-              estTime: Number(inputObj.estTime?.split(' ')[0]),
-            },
-          ],
+              estTime: Number(inputObj.estTime?.split(' ')[0])
+            }
+          ]
         };
         const res: any = await API.graphql(
           graphqlOperation(customMutations.updateUniversalLesson, {
-            input,
+            input
           })
         );
         const data = res.data.updateUniversalLesson;
@@ -116,7 +116,7 @@ const LessonPlanForm = () => {
   const onSelectOption = (_: any, name: string) => {
     setInputObj((prevInputs: ILessonInputs) => ({
       ...prevInputs,
-      estTime: name,
+      estTime: name
     }));
   };
 

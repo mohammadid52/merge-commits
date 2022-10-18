@@ -1,5 +1,5 @@
-import Popover from '@components/Atoms/Popover';
-import {GlobalContext} from '@contexts/GlobalContext';
+import Popover from 'components/Atoms/Popover';
+import {GlobalContext} from 'contexts/GlobalContext';
 import {UnitLookupDict} from '@dictionary/dictionary.iconoclast';
 import React, {useContext, useState} from 'react';
 import {BiDotsVerticalRounded} from 'react-icons/bi';
@@ -23,7 +23,7 @@ const UnitListRow = ({
   handleToggleDelete,
   editCurrentUnit,
   redirectToInstitution,
-  redirectToLesson,
+  redirectToLesson
 }: IUnitListRowProps) => {
   // ~~~~~~~~~~ CONTEXT_SPLITTING ~~~~~~~~~~ //
   const gContext = useContext(GlobalContext);

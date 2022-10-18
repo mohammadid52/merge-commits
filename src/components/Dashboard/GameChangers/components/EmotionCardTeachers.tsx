@@ -1,4 +1,4 @@
-import useInGC from '@customHooks/checkIfGameChanges';
+import useInGC from 'customHooks/checkIfGameChanges';
 import React, {useEffect, useState} from 'react';
 import {useGameChangers} from '../context/GameChangersContext';
 import BubbleVersion from './BubbleVersion';
@@ -13,7 +13,7 @@ const EmotionCard = ({}: {inLesson: boolean}) => {
     setPrimaryEmotion,
     setSelectedEmotions,
     showFinalStep,
-    setShowFinalStep,
+    setShowFinalStep
   } = useGameChangers();
   const [changesSaved, setChangesSaved] = useState(false);
 

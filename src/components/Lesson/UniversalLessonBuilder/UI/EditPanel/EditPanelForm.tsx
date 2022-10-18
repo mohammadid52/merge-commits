@@ -2,9 +2,9 @@ import React, {useState} from 'react';
 import {
   PagePart,
   PartContent,
-  UniversalLessonPage,
+  UniversalLessonPage
 } from '../../../../../interfaces/UniversalLessonInterfaces';
-import TextArea from '../../../../Atoms/Form/TextArea';
+import TextArea from 'atoms/Form/TextArea';
 
 interface EditPanelFormProps {
   selectedPageDetails?: UniversalLessonPage;
@@ -20,7 +20,7 @@ export const EditPanelForm = (props: EditPanelFormProps) => {
     selectedPagePartDetails,
     setSelectedPagePartDetails,
     selectedPartContentDetails,
-    setSelectedPartContentDetails,
+    setSelectedPartContentDetails
   } = props;
 
   //TODO: this update function needs to do more complex stuff

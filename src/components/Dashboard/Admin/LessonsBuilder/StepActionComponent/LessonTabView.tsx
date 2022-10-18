@@ -3,18 +3,18 @@ import React, {useContext, useEffect, useState} from 'react';
 import {FaChartLine, FaEdit, FaQuestionCircle, FaUnity} from 'react-icons/fa';
 import {IoArrowUndoCircleOutline, IoCardSharp} from 'react-icons/io5';
 import {useHistory, useRouteMatch, useParams} from 'react-router-dom';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
-import * as customQueries from '../../../../../customGraphql/customQueries';
-import useDictionary from '../../../../../customHooks/dictionary';
-import {useQuery} from '../../../../../customHooks/urlParam';
-import {languageList} from '../../../../../utilities/staticData';
-import BreadCrums from '../../../../Atoms/BreadCrums';
-import Buttons from '../../../../Atoms/Buttons';
-import Loader from '../../../../Atoms/Loader';
-import SectionTitle from '../../../../Atoms/SectionTitle';
-// import Tooltip from '../../../../Atoms/Tooltip';
-import UnderlinedTabs, {ITabElementProps} from '../../../../Atoms/UnderlinedTabs';
+import {GlobalContext} from 'contexts/GlobalContext';
+import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
+import * as customQueries from 'customGraphql/customQueries';
+import useDictionary from 'customHooks/dictionary';
+import {useQuery} from 'customHooks/urlParam';
+import {languageList} from 'utilities/staticData';
+import BreadCrums from 'atoms/BreadCrums';
+import Buttons from 'atoms/Buttons';
+import Loader from 'atoms/Loader';
+import SectionTitle from 'atoms/SectionTitle';
+// import Tooltip from 'atoms/Tooltip';
+import UnderlinedTabs, {ITabElementProps} from 'atoms/UnderlinedTabs';
 import LessonMeasurements from './LessonMeasurements';
 import LessonPlansList from './LessonPlansList';
 import LessonSummaryForm from './LessonSummaryForm';
@@ -31,7 +31,7 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
     setUniversalLessonDetails,
     universalLessonDetails,
     activeTab,
-    setActiveTab,
+    setActiveTab
   } = useULBContext();
 
   const [loading, setLoading] = useState<boolean>(false);
@@ -42,7 +42,7 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
   const {BreadcrumsTitles, LessonBuilderDict, LessonEditDict} = useDictionary(clientKey);
 
   const params = useQuery(location.search);
-  const {lessonId}:any = useParams();
+  const {lessonId}: any = useParams();
   const tab = params.get('tab');
 
   const breadCrumsList = [
@@ -50,20 +50,20 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
     {
       title: BreadcrumsTitles[userLanguage]['LESSONS'],
       url: '/dashboard/lesson-builder',
-      last: false,
+      last: false
     },
     {
       title: BreadcrumsTitles[userLanguage]['LESSONPLANBUILDER'],
       url: `${match.url}?${lessonId ? `lessonId=${lessonId}}` : ``}`,
-      last: true,
-    },
+      last: true
+    }
   ];
 
   const fetchUniversalLessonDetails = async () => {
     try {
       const result: any = await API.graphql(
         graphqlOperation(customQueries.getUniversalLesson, {
-          id: lessonId,
+          id: lessonId
         })
       );
       const savedData = result.data.getUniversalLesson;
@@ -163,19 +163,19 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
       index: 0,
       title: 'Lesson Summary',
       icon: <IoCardSharp />,
-      content: currentTabComp(`${activeTab}`),
+      content: currentTabComp(`${activeTab}`)
     },
     {
       index: 1,
       title: 'Lesson Plan',
       icon: <FaQuestionCircle />,
-      content: currentTabComp(`${activeTab}`),
+      content: currentTabComp(`${activeTab}`)
     },
     {
       index: 2,
       title: 'Lesson Measurements',
       icon: <FaChartLine />,
-      content: currentTabComp(`${activeTab}`),
+      content: currentTabComp(`${activeTab}`)
     },
     {
       index: 3,
@@ -184,8 +184,8 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
       content: currentTabComp(`${activeTab}`),
       disabled: true,
       tooltipText: LessonBuilderDict[userLanguage]['MESSAGES']['PUBLISH_DISABLED_INFO'],
-      tooltipPlacement: 'left',
-    },
+      tooltipPlacement: 'left'
+    }
   ];
 
   return (

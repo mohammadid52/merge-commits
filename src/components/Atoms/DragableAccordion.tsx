@@ -3,8 +3,8 @@ import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {IoCaretDownCircleOutline, IoCaretUpCircleOutline} from 'react-icons/io5';
 import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
 
-import {GlobalContext} from '../../contexts/GlobalContext';
-import {getAsset} from '../../assets';
+import {GlobalContext} from 'contexts/GlobalContext';
+import {getAsset} from 'assets';
 
 interface DragableAccordionProps {
   titleList: {id: string; title: string; subtitle?: string; content: React.ReactNode}[];
@@ -109,7 +109,7 @@ const DragableAccordion = (props: DragableAccordionProps) => {
                                     <IconContext.Provider
                                       value={{
                                         size: '2rem',
-                                        color: theme.iconColor[themeColor],
+                                        color: theme.iconColor[themeColor]
                                       }}>
                                       {selectedItem === item.id ? (
                                         <IoCaretUpCircleOutline />

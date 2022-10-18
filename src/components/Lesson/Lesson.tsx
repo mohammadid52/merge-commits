@@ -1,11 +1,11 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import Noticebar from '@components/Noticebar/Noticebar';
-import {GlobalContext} from '@contexts/GlobalContext';
-import useNotifications from '@customHooks/notifications';
-import {setLocalStorageData} from '@utilities/localStorage';
+import Noticebar from 'components/Noticebar/Noticebar';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useNotifications from 'customHooks/notifications';
+import {setLocalStorageData} from 'utilities/localStorage';
 import React, {useContext, useEffect, useState} from 'react';
 import {useParams} from 'react-router-dom';
-import * as customQueries from '../../customGraphql/customQueries';
+import * as customQueries from 'customGraphql/customQueries';
 import LessonApp from './LessonApp';
 import SurveyApp from './SurveyApp';
 

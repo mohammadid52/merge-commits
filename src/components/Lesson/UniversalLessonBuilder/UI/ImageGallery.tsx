@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import {FaImages} from 'react-icons/fa';
-import {getImagesFromS3Folder, getImageFromS3Static} from '@utilities/services';
-import Loader from '@atoms/Loader';
+import {getImagesFromS3Folder, getImageFromS3Static} from 'utilities/services';
+import Loader from 'atoms/Loader';
 
 const limit = 10;
 

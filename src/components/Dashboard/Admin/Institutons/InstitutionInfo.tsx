@@ -1,19 +1,19 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {Storage} from '@aws-amplify/storage';
-import Loader from '@components/Atoms/Loader';
-import Tooltip from '@components/Atoms/Tooltip';
-import ProfileCropModal from '@components/Dashboard/Profile/ProfileCropModal';
-import {GlobalContext} from '@contexts/GlobalContext';
-import * as customMutations from '@customGraphql/customMutations';
-import useDictionary from '@customHooks/dictionary';
-import DroppableMedia from '@molecules/DroppableMedia';
-import {getImageFromS3} from '@utilities/services';
+import Loader from 'components/Atoms/Loader';
+import Tooltip from 'components/Atoms/Tooltip';
+import ProfileCropModal from 'components/Dashboard/Profile/ProfileCropModal';
+import {GlobalContext} from 'contexts/GlobalContext';
+import * as customMutations from 'customGraphql/customMutations';
+import useDictionary from 'customHooks/dictionary';
+import DroppableMedia from 'molecules/DroppableMedia';
+import {getImageFromS3} from 'utilities/services';
 import {
   formatPhoneNumber,
   getInitialsFromString,
   initials,
-  stringToHslColor,
-} from '@utilities/strings';
+  stringToHslColor
+} from 'utilities/strings';
 import {getAsset} from 'assets';
 import React, {Fragment, useContext, useEffect, useRef, useState} from 'react';
 import {BiCheckbox, BiCheckboxChecked} from 'react-icons/bi';
@@ -86,7 +86,7 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
     await uploadImageToS3(image ? image : fileObj, institute?.id, 'image/jpeg');
     const input = {
       id: institute?.id,
-      image: `instituteImages/institute_image_${institute?.id}`,
+      image: `instituteImages/institute_image_${institute?.id}`
     };
     await API.graphql(
       graphqlOperation(customMutations.updateInstitution, {input: input})
@@ -103,7 +103,7 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
       Storage.put(`instituteImages/institute_image_${id}`, file, {
         contentType: type,
         acl: 'public-read',
-        ContentEncoding: 'base64',
+        ContentEncoding: 'base64'
       })
         .then((result) => {
           console.log('File successfully uploaded to s3', result);
@@ -130,7 +130,7 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
     zip = '',
     phone = '',
     website = '',
-    isServiceProvider = false,
+    isServiceProvider = false
   } = instProps?.institute;
 
   // ~~~~~~~~~~~ CURRICULAR LIST ~~~~~~~~~~~ //
@@ -146,7 +146,7 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
       ...curricular,
       items: curricular.items.filter(
         (curriculumObj: any) => curriculumObj.id !== itemObj.id
-      ),
+      )
     });
   };
 
@@ -220,7 +220,7 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
                                 )
                               : null
                           }`,
-                          textShadow: '0.2rem 0.2rem 3px #423939b3',
+                          textShadow: '0.2rem 0.2rem 3px #423939b3'
                         }}>
                         {instProps?.institute?.name &&
                           initials(

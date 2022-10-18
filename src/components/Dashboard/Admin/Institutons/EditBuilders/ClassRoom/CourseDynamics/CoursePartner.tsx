@@ -2,16 +2,16 @@ import React, {useState, useEffect, useContext} from 'react';
 import {useHistory} from 'react-router';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 
-import * as customQueries from '../../../../../../../customGraphql/customQueries';
-import * as customMutations from '../../../../../../../customGraphql/customMutations';
+import * as customQueries from 'customGraphql/customQueries';
+import * as customMutations from 'customGraphql/customMutations';
 
-import AddButton from '../../../../../../Atoms/Buttons/AddButton';
-import Loader from '../../../../../../Atoms/Loader';
-import ModalPopUp from '../../../../../../Molecules/ModalPopUp';
+import AddButton from 'atoms/Buttons/AddButton';
+import Loader from 'atoms/Loader';
+import ModalPopUp from 'molecules/ModalPopUp';
 
 import GroupCard from './GroupCards';
 import GroupFormComponent from './GroupFormComponent';
-import {GlobalContext} from '@contexts/GlobalContext';
+import {GlobalContext} from 'contexts/GlobalContext';
 
 interface ICoursePartnerProps {
   roomData: any;
@@ -20,7 +20,7 @@ interface ICoursePartnerProps {
 const CoursePartner = ({roomData}: ICoursePartnerProps) => {
   const history = useHistory();
   const {
-    state: {user},
+    state: {user}
   } = useContext(GlobalContext);
   const isSuperAdmin = user.role === 'SUP';
 
@@ -33,7 +33,7 @@ const CoursePartner = ({roomData}: ICoursePartnerProps) => {
   const [warnModal, setWarnModal] = useState({
     show: false,
     message: 'It will remove students from group',
-    action: () => {},
+    action: () => {}
   });
 
   useEffect(() => {
@@ -49,8 +49,8 @@ const CoursePartner = ({roomData}: ICoursePartnerProps) => {
         graphqlOperation(customQueries.listClassroomGroupss, {
           filter: {
             classRoomID: {eq: roomData?.id},
-            groupType: {eq: 'Partner'},
-          },
+            groupType: {eq: 'Partner'}
+          }
         })
       );
       setClassRoomGroups(list?.data?.listClassroomGroups.items);
@@ -75,8 +75,8 @@ const CoursePartner = ({roomData}: ICoursePartnerProps) => {
                   ...data,
                   classroomGroupsStudents: {
                     ...group.classroomGroupsStudents,
-                    ...data.classroomGroupsStudents,
-                  },
+                    ...data.classroomGroupsStudents
+                  }
                 }
               : group
           )
@@ -95,7 +95,7 @@ const CoursePartner = ({roomData}: ICoursePartnerProps) => {
       setDeleting(true);
       const result: any = await API.graphql(
         graphqlOperation(customMutations.deleteClassroomGroups, {
-          input: {id: group?.id},
+          input: {id: group?.id}
         })
       );
       if (group.classroomGroupsStudents?.items?.length) {
@@ -104,7 +104,7 @@ const CoursePartner = ({roomData}: ICoursePartnerProps) => {
             async (student: any) =>
               await API.graphql(
                 graphqlOperation(customMutations.deleteClassroomGroupStudents, {
-                  input: {id: student.id},
+                  input: {id: student.id}
                 })
               )
           )
@@ -121,7 +121,7 @@ const CoursePartner = ({roomData}: ICoursePartnerProps) => {
     setWarnModal((prevValues) => ({
       ...prevValues,
       show: true,
-      action: onDrop,
+      action: onDrop
     }));
   };
   const closeDeleteModal = () => {

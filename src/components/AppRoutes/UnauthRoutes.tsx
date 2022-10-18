@@ -1,12 +1,12 @@
 import React, {lazy} from 'react';
-import {Switch, Route, Redirect, useHistory} from 'react-router-dom';
-import PublicRoute from '../Auth/PublicRoute';
+import {Redirect, Route, Switch} from 'react-router-dom';
+import PublicRoute from 'components/Auth/PublicRoute';
 
-const Login = lazy(() => import('../Auth/Login'));
-const Forgot = lazy(() => import('../Auth/Forgot'));
-const PrivacyPolicy = lazy(() => import('../Auth/PrivacyPolicy'));
-const Registration = lazy(() => import('../Auth/Register'));
-const ConfirmCode = lazy(() => import('../Auth/ConfirmCode'));
+const Login = lazy(() => import('components/Auth/Login'));
+const Forgot = lazy(() => import('components/Auth/Forgot'));
+const PrivacyPolicy = lazy(() => import('components/Auth/PrivacyPolicy'));
+const Registration = lazy(() => import('components/Auth/Register'));
+const ConfirmCode = lazy(() => import('components/Auth/ConfirmCode'));
 
 interface UnauthRoutesProps {
   updateAuthState: Function;

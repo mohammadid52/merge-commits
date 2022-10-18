@@ -1,22 +1,22 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-hooks/rules-of-hooks */
 import React, {useEffect} from 'react';
-import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
+import AnimatedContainer from 'components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import Flickity from 'react-flickity-component';
 
-import InfoTab from '@components/Dashboard/GameChangers/components/InfoTab';
-import SelectedCard from '@components/Dashboard/GameChangers/components/SelectedCard';
-import BottomSection from '@components/Dashboard/GameChangers/components/BottomSection';
-import Card from '@components/Dashboard/GameChangers/components/Card';
+import InfoTab from 'components/Dashboard/GameChangers/components/InfoTab';
+import SelectedCard from 'components/Dashboard/GameChangers/components/SelectedCard';
+import BottomSection from 'components/Dashboard/GameChangers/components/BottomSection';
+import Card from 'components/Dashboard/GameChangers/components/Card';
 import {
   cardsList,
   FSEBreathingHowTo,
   sqaureBreathingInfoText,
   sqaureBreathingHowTo,
   FSEInfoText
-} from '@components/Dashboard/GameChangers/__contstants';
-import {useGameChangers} from '@components/Dashboard/GameChangers/context/GameChangersContext';
-import Counter from '@components/Dashboard/GameChangers/components/Counter';
+} from 'components/Dashboard/GameChangers/__contstants';
+import {useGameChangers} from 'components/Dashboard/GameChangers/context/GameChangersContext';
+import Counter from 'components/Dashboard/GameChangers/components/Counter';
 
 const GameChangers = () => {
   const {

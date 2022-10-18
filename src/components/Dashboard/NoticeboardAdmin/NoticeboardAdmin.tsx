@@ -1,12 +1,12 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import React, {useContext, useEffect, useState} from 'react';
-import {GlobalContext} from '../../../contexts/GlobalContext';
-import useDictionary from '../../../customHooks/dictionary';
-import * as mutations from '../../../graphql/mutations';
-import * as queries from '../../../graphql/queries';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import * as mutations from 'graphql/mutations';
+import * as queries from 'graphql/queries';
 import {Widget as NoticeboardWidgetMapItem} from '../../../interfaces/ClassroomComponentsInterfaces';
-import ContentCard from '../../Atoms/ContentCard';
-import SectionTitle from '../../Atoms/SectionTitleV2';
+import ContentCard from 'atoms/ContentCard';
+import SectionTitle from 'atoms/SectionTitleV2';
 import SubSectionTabs from '../Anthology/SubSectionTabs';
 import TopWidgetBar from '../Noticebooard/TopWidgetBar';
 import NoticeboardAdminContent from './NoticeboardAdminContent';
@@ -46,7 +46,7 @@ const initialNewWidgetData = {
   content: {text: '', image: ''},
   quotes: [{}],
   links: [{}],
-  active: true,
+  active: true
 };
 
 const NoticeboardAdmin = (props: NoticeboardAdmin) => {
@@ -72,7 +72,7 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
     content: {text: '', image: ''},
     quotes: [],
     links: [],
-    active: true,
+    active: true
   });
 
   // For switching sections & knowing which field to edit
@@ -82,13 +82,13 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
     topbar: number;
   }>({
     sidebar: 0,
-    topbar: 0,
+    topbar: 0
   });
 
   // For editing specific poems/stories
   const [viewEditMode, setViewEditMode] = useState<ViewEditMode>({
     mode: '',
-    widgetID: '',
+    widgetID: ''
   });
 
   useEffect(() => {
@@ -140,7 +140,7 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
     } else {
       return {
         sidebar: 0,
-        topbar: 0,
+        topbar: 0
       };
     }
   };
@@ -192,7 +192,7 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
             } else {
               return nestedObj;
             }
-          }),
+          })
         };
         setNewWidgetData(updatedNewWidgetData);
         break;
@@ -254,8 +254,8 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
                   // @ts-ignore
                   ...newWidgetData[basekey],
                   // @ts-ignore
-                  [nestkey1]: {...newWidgetData[basekey][nestkey1], [nestkey2]: value},
-                },
+                  [nestkey1]: {...newWidgetData[basekey][nestkey1], [nestkey2]: value}
+                }
               };
               setNewWidgetData(updatedNewWidgetData);
             } else {
@@ -263,7 +263,7 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
               const updatedNewWidgetData = {
                 ...newWidgetData,
                 // @ts-ignore
-                [basekey]: {...newWidgetData[basekey], [nestkey1]: value},
+                [basekey]: {...newWidgetData[basekey], [nestkey1]: value}
               };
               setNewWidgetData(updatedNewWidgetData);
             }
@@ -305,7 +305,7 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
 
   const subSectionKey: any = {
     'Top Widgets': 'topbar',
-    'Sidebar Widgets': 'sidebar',
+    'Sidebar Widgets': 'sidebar'
   };
 
   const filterWidgetContentBySubsection = widgetData.filter(
@@ -345,7 +345,7 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
       content: newWidgetData.content,
       description: newWidgetData.description,
       title: newWidgetData.title,
-      type: newWidgetData.type,
+      type: newWidgetData.type
     };
     try {
       // const noticeboardWidgetUpdate: any = await API.graphql(
@@ -369,7 +369,7 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
           : linkArrayMap(newWidgetData.links),
       teacherAuthID: state.user.authId,
       teacherEmail: state.user.email,
-      roomID: activeRoom,
+      roomID: activeRoom
     };
     try {
       // const noticeboardWidgetCreate: any = await API.graphql(
@@ -389,7 +389,7 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
       (widgetObj: any) => widgetObj.id === viewEditMode.widgetID
     );
     const input = {
-      id: getWidgetObj.id,
+      id: getWidgetObj.id
     };
 
     try {

@@ -1,14 +1,14 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import LessonLoading from '@components/Lesson/Loading/LessonLoading';
-import {createCypressTesting} from '@graphql/mutations';
+import LessonLoading from 'components/Lesson/Loading/LessonLoading';
+import {createCypressTesting} from 'graphql/mutations';
 import {isEmpty} from 'lodash';
 import React, {useContext, useEffect, useState} from 'react';
 import {useHistory} from 'react-router-dom';
 
-import {GlobalContext} from '../../../contexts/GlobalContext';
-import * as customMutations from '../../../customGraphql/customMutations';
-import useDictionary from '../../../customHooks/dictionary';
-import Buttons from '../../Atoms/Buttons';
+import {GlobalContext} from 'contexts/GlobalContext';
+import * as customMutations from 'customGraphql/customMutations';
+import useDictionary from 'customHooks/dictionary';
+import Buttons from 'atoms/Buttons';
 import DropdownForm from '../Profile/DropdownForm';
 
 interface UserInfoProps {

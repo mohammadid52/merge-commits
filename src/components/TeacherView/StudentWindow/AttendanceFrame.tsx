@@ -7,13 +7,13 @@ import {IconContext} from 'react-icons';
 import {FaArrowDown, FaArrowUp} from 'react-icons/fa';
 import {IoIosCalendar, IoMdArrowBack} from 'react-icons/io';
 import {getAsset} from 'assets';
-import {GlobalContext} from '@contexts/GlobalContext';
-import * as customQueries from '@customGraphql/customQueries';
+import {GlobalContext} from 'contexts/GlobalContext';
+import * as customQueries from 'customGraphql/customQueries';
 
-import useTailwindBreakpoint from '@customHooks/tailwindBreakpoint';
+import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
 import AttendanceList from './AttendanceFrame/AttendanceList';
-import Buttons from '@components/Atoms/Buttons';
-import Modal from '@components/Atoms/Modal';
+import Buttons from 'components/Atoms/Buttons';
+import Modal from 'components/Atoms/Modal';
 
 const pad = (num: any) => {
   return `0${num}`.slice(-2);
@@ -38,7 +38,7 @@ const Attendance = ({
   rightView,
   setRightView,
   studentID,
-  roster,
+  roster
 }: IAttendanceProps) => {
   const {theme, clientKey} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
@@ -70,7 +70,7 @@ const Attendance = ({
     order: boolean | 'desc' | 'asc';
   }>({
     fieldName: '',
-    order: false,
+    order: false
   });
   const [nextToken, setNextToken] = useState<string>('');
 
@@ -91,7 +91,7 @@ const Attendance = ({
         roomID: selectedRoomId,
         sortDirection: 'DESC',
         date,
-        limit,
+        limit
       };
       if (nextToken) {
         payload.nextToken = nextToken;
@@ -105,7 +105,7 @@ const Attendance = ({
         const year = date.getFullYear();
 
         payload.date = {
-          eq: `${year}-${pad(monthNumber + 1)}-${pad(dayNumber)}`,
+          eq: `${year}-${pad(monthNumber + 1)}-${pad(dayNumber)}`
         };
       }
       const list: any = await API.graphql(
@@ -115,7 +115,7 @@ const Attendance = ({
         ...record,
         lessonName: record.lesson?.title,
         curriculumName: record.curriculum?.name,
-        roomName: record.room?.name,
+        roomName: record.room?.name
       }));
       if (fetchNewRecords) {
         setAttendanceList(temp);
@@ -141,7 +141,7 @@ const Attendance = ({
   const handleOrderBy = (fieldName: string, order: boolean | 'desc' | 'asc') => {
     setSortConfig({
       fieldName,
-      order,
+      order
     });
     setAttendanceList(orderBy(attendanceList, [fieldName], [order]));
   };
@@ -206,7 +206,7 @@ const Attendance = ({
     <div
       ref={frameRef}
       style={{
-        width: breakpoint === 'xl' || breakpoint === '2xl' ? '75%' : 'calc(100% - 36px)',
+        width: breakpoint === 'xl' || breakpoint === '2xl' ? '75%' : 'calc(100% - 36px)'
       }}
       className={`absolute mr-0 top-0 right-0 h-full flex flex-col items-center z-50`}>
       {visible && (

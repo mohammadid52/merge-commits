@@ -1,6 +1,6 @@
 import React, {useContext} from 'react';
-import {GlobalContext} from '../../../contexts/GlobalContext';
-import useDictionary from '../../../customHooks/dictionary';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
 import {ClassroomControlProps} from '../Dashboard';
 
 export interface Room {

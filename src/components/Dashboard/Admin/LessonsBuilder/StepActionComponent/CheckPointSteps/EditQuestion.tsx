@@ -2,13 +2,13 @@ import React, {Fragment, useContext, useEffect, useState} from 'react';
 import {IoIosKeypad, IoMdAddCircleOutline, IoMdRemoveCircleOutline} from 'react-icons/io';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {RiArrowRightLine} from 'react-icons/ri';
-import {getAsset} from '../../../../../../assets';
-import {GlobalContext} from '../../../../../../contexts/GlobalContext';
-import useDictionary from '../../../../../../customHooks/dictionary';
-import Buttons from '../../../../../Atoms/Buttons';
-import CheckBox from '../../../../../Atoms/Form/CheckBox';
-import FormInput from '../../../../../Atoms/Form/FormInput';
-import Selector from '../../../../../Atoms/Form/Selector';
+import {getAsset} from 'assets';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import Buttons from 'atoms/Buttons';
+import CheckBox from 'atoms/Form/CheckBox';
+import FormInput from 'atoms/Form/FormInput';
+import Selector from 'atoms/Form/Selector';
 
 interface EditQuestionProps {
   changeStep: (step: string) => void;
@@ -44,10 +44,10 @@ const EditQuestion = (props: EditQuestionProps) => {
     isRequired: false,
     options: [
       {label: '1', text: ''},
-      {label: '2', text: ''},
+      {label: '2', text: ''}
     ],
     otherOpt: false,
-    noneOfAbove: false,
+    noneOfAbove: false
   };
   const [questionData, setQuestionData] = useState<InitialState>(initialState);
   // const [selectedDesigners, setSelectedDesigners] = useState([]);
@@ -58,7 +58,7 @@ const EditQuestion = (props: EditQuestionProps) => {
     type: '',
     options: '',
     message: '',
-    isError: true,
+    isError: true
   });
 
   const {theme, clientKey, userLanguage} = useContext(GlobalContext);
@@ -69,43 +69,43 @@ const EditQuestion = (props: EditQuestionProps) => {
     {id: '1', name: 'Text', value: 'text'},
     {id: '2', name: 'Input', value: 'input'},
     {id: '3', name: 'Select Many', value: 'selectMany'},
-    {id: '4', name: 'Select One', value: 'selectOne'},
+    {id: '4', name: 'Select One', value: 'selectOne'}
   ];
 
   const languageList = [
     {id: 1, name: 'English', value: 'EN'},
-    {id: 2, name: 'Spanish', value: 'ES'},
+    {id: 2, name: 'Spanish', value: 'ES'}
   ];
 
   const selectOneOptions = [
     {
       label: '1',
-      text: 'Very Difficult',
+      text: 'Very Difficult'
     },
     {
       label: '2',
-      text: 'Difficult',
+      text: 'Difficult'
     },
     {
       label: '3',
-      text: 'Easy',
+      text: 'Easy'
     },
     {
       label: '4',
-      text: 'Very Easy',
-    },
+      text: 'Very Easy'
+    }
   ];
 
   const onInputChange = (e: any) => {
     setQuestionData({
       ...questionData,
-      [e.target.name]: e.target.value,
+      [e.target.name]: e.target.value
     });
   };
   const toggleCheckBoxState = (field: string, value: boolean) => {
     setQuestionData({
       ...questionData,
-      [field]: !value,
+      [field]: !value
     });
   };
   const optionInputChange = (index: number, e: any) => {
@@ -113,7 +113,7 @@ const EditQuestion = (props: EditQuestionProps) => {
     currentOptions[index].text = e.target.value;
     setQuestionData({
       ...questionData,
-      options: currentOptions,
+      options: currentOptions
     });
   };
   const onOptionAdd = (index: number) => {
@@ -131,7 +131,7 @@ const EditQuestion = (props: EditQuestionProps) => {
     });
     setQuestionData({
       ...questionData,
-      options: updatedOptions,
+      options: updatedOptions
     });
   };
   const onOptionRemove = (index: number) => {
@@ -149,7 +149,7 @@ const EditQuestion = (props: EditQuestionProps) => {
       });
       setQuestionData({
         ...questionData,
-        options: updatedOptions,
+        options: updatedOptions
       });
     }
   };
@@ -159,8 +159,8 @@ const EditQuestion = (props: EditQuestionProps) => {
       [field]: {
         id: id,
         name: name,
-        value: val,
-      },
+        value: val
+      }
     });
   };
   const filteredOptions = (options: {label: string; text: string}[]) => {
@@ -211,7 +211,7 @@ const EditQuestion = (props: EditQuestionProps) => {
           question: questionData.question,
           // designers: selectedDesigners.map(item => item.id),
           language: questionData.language.value,
-          options: filteredOptions(questionData.options),
+          options: filteredOptions(questionData.options)
         };
         // const results: any = await API.graphql(
         //   graphqlOperation(mutations.createQuestion, { input: input })
@@ -237,7 +237,7 @@ const EditQuestion = (props: EditQuestionProps) => {
           label: '',
           options: '',
           message: EditQuestionDict[userLanguage]['MESSAGES']['UNABLESAVE'],
-          isError: true,
+          isError: true
         });
         setLoading(false);
       }
@@ -248,15 +248,15 @@ const EditQuestion = (props: EditQuestionProps) => {
     if (questionData.type?.value === 'selectOne') {
       setQuestionData({
         ...questionData,
-        options: selectOneOptions,
+        options: selectOneOptions
       });
     } else if (questionData.type?.value === 'selectMany') {
       setQuestionData({
         ...questionData,
         options: [
           {label: '1', text: ''},
-          {label: '2', text: ''},
-        ],
+          {label: '2', text: ''}
+        ]
       });
     }
   }, [questionData.type]);
@@ -270,7 +270,7 @@ const EditQuestion = (props: EditQuestionProps) => {
     isRequired,
     options,
     otherOpt,
-    noneOfAbove,
+    noneOfAbove
   } = questionData;
   return (
     <Fragment>

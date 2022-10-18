@@ -1,7 +1,7 @@
 import React, {useContext, useEffect} from 'react';
 import {IconContext} from 'react-icons';
 import {IoClose} from 'react-icons/io5';
-import {GlobalContext} from '../../contexts/GlobalContext';
+import {GlobalContext} from 'contexts/GlobalContext';
 // @ts-ignore
 
 interface ModalProps {
@@ -65,7 +65,7 @@ const ModalBody = (bodyProps: {
     closeOnBackdrop,
 
     scrollHidden,
-    hidePadding,
+    hidePadding
   } = bodyProps;
 
   return (
@@ -112,7 +112,7 @@ const ModalFill: React.FC<ModalProps> = (modalProps: ModalProps) => {
     titleButton,
     hidePadding = false,
     scrollHidden = false,
-    customTitle,
+    customTitle
   } = modalProps;
   const {theme} = useContext(GlobalContext);
   useEffect(() => {

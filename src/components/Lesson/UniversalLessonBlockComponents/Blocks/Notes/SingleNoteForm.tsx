@@ -1,7 +1,7 @@
-import FormInput from '@atoms/Form/FormInput';
+import FormInput from 'atoms/Form/FormInput';
 import React, {useState} from 'react';
 import ColorPicker from '@UlbUI/ColorPicker/ColorPicker';
-import Selector from '@components/Atoms/Form/Selector';
+import Selector from 'components/Atoms/Form/Selector';
 
 const SingleNote = ({
   singleNoteData,
@@ -9,7 +9,7 @@ const SingleNote = ({
   removeItemFromList,
   onChange,
   onFieldUpdate,
-  isEditingMode,
+  isEditingMode
 }: any) => {
   const [colorPicker, setColorPicker] = useState<boolean>(false);
   return (
@@ -55,9 +55,9 @@ const SingleNote = ({
                     {label: 'Red', value: 'blue'},
                     {label: 'Red', value: 'yellow'},
                     {label: 'Red', value: 'indigo'},
-                    {label: 'Red', value: 'purple'},
+                    {label: 'Red', value: 'purple'}
                   ],
-                  values: [{label: 500, value: 500}],
+                  values: [{label: 500, value: 500}]
                 }}
                 callbackColor={(pickedColor) => {
                   setColorPicker(false);
@@ -83,7 +83,7 @@ const SingleNote = ({
               list={[
                 {id: 0, name: 'small'},
                 {id: 1, name: 'medium'},
-                {id: 2, name: 'large'},
+                {id: 2, name: 'large'}
               ]}
             />
           </div>

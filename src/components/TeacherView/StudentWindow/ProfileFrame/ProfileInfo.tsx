@@ -1,12 +1,12 @@
 import React, {useContext} from 'react';
 
-import Buttons from '@atoms/Buttons';
-import Modal from '@components/Atoms/Modal';
+import Buttons from 'atoms/Buttons';
+import Modal from 'components/Atoms/Modal';
 import {FiAlertCircle} from 'react-icons/fi';
-import Status from '@components/Atoms/Status';
-import UserRole from '@components/Dashboard/Admin/UserManagement/UserRole';
-import {GlobalContext} from '@contexts/GlobalContext';
-import useDictionary from '@customHooks/dictionary';
+import Status from 'components/Atoms/Status';
+import UserRole from 'components/Dashboard/Admin/UserManagement/UserRole';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
 import {FaEdit} from 'react-icons/fa';
 
 interface IProfileFrameInfo {
@@ -29,7 +29,7 @@ const ProfileFrameInfo = ({
   resetPasswordServerResponse,
   resetPassword,
   onAlertClose,
-  setIsEditing,
+  setIsEditing
 }: IProfileFrameInfo) => {
   // ~~~~~~~~~~~~~~~ CONTEXT ~~~~~~~~~~~~~~~ //
   const {theme, userLanguage, clientKey} = useContext(GlobalContext);

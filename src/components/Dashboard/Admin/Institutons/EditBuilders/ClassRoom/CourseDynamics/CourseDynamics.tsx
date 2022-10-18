@@ -1,8 +1,8 @@
 import React, {useContext, useEffect, useState} from 'react';
-import { useLocation } from 'react-router';
-import {GlobalContext} from '../../../../../../../contexts/GlobalContext';
-import useDictionary from '../../../../../../../customHooks/dictionary';
-import { useQuery } from '../../../../../../../customHooks/urlParam';
+import {useLocation} from 'react-router';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import {useQuery} from 'customHooks/urlParam';
 import TabComponent from '../TabComponent';
 import CoursePartner from './CoursePartner';
 import SubjectProficiency from './SubjectProficiency';
@@ -10,25 +10,25 @@ import SubjectProficiency from './SubjectProficiency';
 const CourseDynamics = ({roomData}: any) => {
   const {theme, clientKey, userLanguage} = useContext(GlobalContext);
   const {RoomDetailsDict} = useDictionary(clientKey);
-    const location = useLocation();
-    const params = useQuery(location.search);
-    const subStep = params.get('sub-step');
-  
+  const location = useLocation();
+  const params = useQuery(location.search);
+  const subStep = params.get('sub-step');
+
   const tabs = [
     {
       name: RoomDetailsDict[userLanguage].SUBJECT_PROFICIENCY,
-      section: 'subject-proficiency',
+      section: 'subject-proficiency'
     },
     {
       name: RoomDetailsDict[userLanguage].COURSE_PARTNERS,
-      section: 'course-partners',
-    },
+      section: 'course-partners'
+    }
   ];
-  
+
   const [activeTab, setActiveTab] = useState(tabs[0].section);
 
   useEffect(() => {
-    if(subStep){
+    if (subStep) {
       setActiveTab(subStep);
     }
   }, [subStep]);

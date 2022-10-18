@@ -1,5 +1,5 @@
-import AllEmotions from '@components/Lesson/AllEmotions';
-import {useGlobalContext} from '@contexts/GlobalContext';
+import AllEmotions from 'components/Lesson/AllEmotions';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import {
   PagePart,
   PartContent,

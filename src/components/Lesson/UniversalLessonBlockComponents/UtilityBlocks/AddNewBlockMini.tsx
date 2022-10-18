@@ -1,8 +1,8 @@
 import React, {useContext} from 'react';
-import {useULBContext} from '@contexts/UniversalLessonBuilderContext';
+import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
 import {RowWrapperProps} from '@interfaces/UniversalLessonBuilderInterfaces';
-import useDictionary from '@customHooks/dictionary';
-import {GlobalContext} from '@contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import {GlobalContext} from 'contexts/GlobalContext';
 import {PlusSmIcon} from '@heroicons/react/outline';
 export const AddNewBlockMini = (props: RowWrapperProps) => {
   const {idx, handleModalPopToggle} = props;

@@ -1,7 +1,7 @@
-import Buttons from '@components/Atoms/Buttons';
-import {GlobalContext} from '@contexts/GlobalContext';
-import useStudentTimer from '@customHooks/timer';
-import {getLocalStorageData} from '@utilities/localStorage';
+import Buttons from 'components/Atoms/Buttons';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useStudentTimer from 'customHooks/timer';
+import {getLocalStorageData} from 'utilities/localStorage';
 import React, {useContext, useEffect, useState} from 'react';
 import {AiOutlineSave} from 'react-icons/ai';
 import {useHistory} from 'react-router-dom';

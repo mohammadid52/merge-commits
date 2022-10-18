@@ -1,4 +1,4 @@
-import {getImageFromS3Static} from '@utilities/services';
+import {getImageFromS3Static} from 'utilities/services';
 import React from 'react';
 // @ts-ignore
 import FileViewer from 'react-file-viewer';

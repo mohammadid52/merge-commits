@@ -1,7 +1,7 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import * as queries from '@graphql/queries';
-import * as customQueries from '@customGraphql/customQueries';
-import * as mutations from '@graphql/mutations';
+import * as queries from 'graphql/queries';
+import * as customQueries from 'customGraphql/customQueries';
+import * as mutations from 'graphql/mutations';
 
 const removeDoubleSpaces = (str: string) => {
   return str.replace(/\s{2,}/g, ' ');
@@ -60,9 +60,9 @@ const getQuestionListFromLesson = async (lessonObj: any) => {
                               questionID: partContentSub.id,
                               type: partContentSub.type,
                               questionString: partContentSub.label,
-                              options: partContentSub.options,
-                            },
-                          ],
+                              options: partContentSub.options
+                            }
+                          ]
                         };
                       },
                       {pgInput: []}
@@ -71,8 +71,8 @@ const getQuestionListFromLesson = async (lessonObj: any) => {
                     return {
                       pageInputAcc: [
                         ...partInputAcc.pageInputAcc,
-                        ...formSubInputs.pgInput,
-                      ],
+                        ...formSubInputs.pgInput
+                      ]
                     };
                   }
                   // ---- IF OTHER INPUT ---- //
@@ -84,9 +84,9 @@ const getQuestionListFromLesson = async (lessonObj: any) => {
                           questionID: partContent.id,
                           type: partContent.type,
                           questionString: partContent.label,
-                          options: partContent.options,
-                        },
-                      ],
+                          options: partContent.options
+                        }
+                      ]
                     };
                   } else {
                     return partInputAcc;
@@ -96,7 +96,7 @@ const getQuestionListFromLesson = async (lessonObj: any) => {
               );
 
               return {
-                pageInputAcc: [...pageInputsAcc.pageInputAcc, ...partInputs.pageInputAcc],
+                pageInputAcc: [...pageInputsAcc.pageInputAcc, ...partInputs.pageInputAcc]
               };
             } else {
               return pageInputsAcc;
@@ -106,7 +106,7 @@ const getQuestionListFromLesson = async (lessonObj: any) => {
         );
 
         return {
-          questionList: [...inputs.questionList, reducedPageInputs.pageInputAcc],
+          questionList: [...inputs.questionList, reducedPageInputs.pageInputAcc]
         };
       },
 
@@ -152,7 +152,7 @@ const getAllData = async () => {
   return {
     SurveyQuestion,
     SurveyQuestionData,
-    studentsDetails,
+    studentsDetails
   };
 };
 
@@ -162,9 +162,9 @@ const getAllSurvey = async () => {
       graphqlOperation(queries.listUniversalLessons, {
         filter: {
           type: {
-            eq: 'survey',
-          },
-        },
+            eq: 'survey'
+          }
+        }
       })
     );
     const returnedData = surveyList.data.listUniversalLessons.items;
@@ -184,7 +184,7 @@ const listAllStudents = async (
     const result: any = await API.graphql(
       graphqlOperation(queries.listPeople, {
         filter: {role: {eq: peopleType}},
-        nextToken: nextToken,
+        nextToken: nextToken
       })
     );
 
@@ -210,7 +210,7 @@ const listQues = async (lessonId: string) => {
   try {
     let universalLesson: any = await API.graphql(
       graphqlOperation(customQueries.getUniversalLesson, {
-        id: lessonId,
+        id: lessonId
       })
     );
     let lessonObject = universalLesson.data.getUniversalLesson;
@@ -225,8 +225,8 @@ const listQues = async (lessonId: string) => {
               id: item.questionID,
               question: item.questionString,
               type: item.type,
-              options: item.options,
-            },
+              options: item.options
+            }
           });
         });
       });
@@ -248,9 +248,9 @@ const getAllStudentsSurveyQuestionsResponse = async (
       nextToken: nextToken,
       filter: {
         lessonID: {
-          eq: lessonId,
-        },
-      },
+          eq: lessonId
+        }
+      }
     })
   );
   let studentsAnswersSurveyQuestionsData =
@@ -293,7 +293,7 @@ const getCSVData = async () => {
       surveyQuestionOptions[ques.question.id] = ques.question.options;
       return {
         label: `${ques.question.question}-s-${ques.question.id}`,
-        key: `${ques.question.id}`,
+        key: `${ques.question.id}`
       };
     });
 
@@ -301,7 +301,7 @@ const getCSVData = async () => {
       {label: 'AuthId', key: 'authId'},
       {label: 'Email', key: 'email'},
       {label: 'UniversalSurveyStudentID', key: 'universalSurveyStudentID'},
-      ...surveyQuestionHeaders,
+      ...surveyQuestionHeaders
     ];
 
     let data = students.map((stu: any) => {
@@ -387,7 +387,7 @@ const getCSVData = async () => {
         last:
           (surveyAnswerDates[0] &&
             new Date(surveyAnswerDates[0]).toLocaleString('en-US')) ||
-          '-',
+          '-'
       };
     });
     surveyDates = surveyDates.sort(
@@ -396,7 +396,7 @@ const getCSVData = async () => {
     );
     return {
       SurveyHeaders: Headers,
-      SurveyData: data,
+      SurveyData: data
     };
   } catch (err) {
     console.log('error', err);
@@ -425,11 +425,11 @@ export const filterData = async () => {
             return {
               QuestionId: header.key,
               QuestionLabel: header.label,
-              QuestionResponse: csvD[header.key],
+              QuestionResponse: csvD[header.key]
             };
           }
-        }).filter((elem: any) => elem !== undefined),
-      },
+        }).filter((elem: any) => elem !== undefined)
+      }
     ];
   });
   await CreateOrUpdateData(input);
@@ -441,7 +441,7 @@ const CreateOrUpdateData = async (input: any[]) => {
       const getData: any = await API.graphql(
         graphqlOperation(queries.getArchiveSurveyDataSQL, {
           AuthId: data.AuthId,
-          Email: data.Email,
+          Email: data.Email
         })
       );
       const ArchiveData = getData.data.getArchiveSurveyDataSQL;
@@ -450,16 +450,16 @@ const CreateOrUpdateData = async (input: any[]) => {
           graphqlOperation(mutations.updateArchiveSurveyDataSQL, {
             input: {
               id: ArchiveData.id,
-              ...data,
-            },
+              ...data
+            }
           })
         );
       } else {
         await API.graphql(
           graphqlOperation(mutations.createArchiveSurveyDataSQL, {
             input: {
-              ...data,
-            },
+              ...data
+            }
           })
         );
       }

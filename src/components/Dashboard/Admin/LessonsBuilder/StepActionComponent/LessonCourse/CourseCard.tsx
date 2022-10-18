@@ -1,8 +1,8 @@
 import React, {useState} from 'react';
 import {API, graphqlOperation} from 'aws-amplify';
 
-import * as mutations from '../../../../../../graphql/mutations';
-import * as customMutations from '../../../../../../customGraphql/customMutations';
+import * as mutations from 'graphql/mutations';
+import * as customMutations from 'customGraphql/customMutations';
 import {useHistory} from 'react-router';
 import {uniqBy} from 'lodash';
 
@@ -11,20 +11,20 @@ const CourseCard = ({
   lessonId,
   loading,
   postDeletion,
-  institutionCollection,
+  institutionCollection
 }: any) => {
   const {
     assignedSyllabi,
     associatedClassRoomData,
     institution,
-    universalSyllabus,
+    universalSyllabus
   } = curriculum;
   const history = useHistory();
   const [showDeleteModal, setShowDeleteModal] = useState({
     id: '',
     syllabusId: '',
     state: false,
-    message: 'This will remove the lesson from the unit, do you want to continue?',
+    message: 'This will remove the lesson from the unit, do you want to continue?'
   });
 
   const toggleModal = (syllabus?: any) => {
@@ -38,14 +38,14 @@ const CourseCard = ({
         ? syllabus.lessons.items.find((lesson: any) => lesson.lessonID === lessonId)?.id
         : '',
       syllabusId: syllabus ? syllabus.id : '',
-      state: !showDeleteModal.state,
+      state: !showDeleteModal.state
     });
   };
 
   const deleteSyllabus = async (id: string) => {
     try {
       const input = {
-        id,
+        id
       };
       const results: any = await API.graphql(
         graphqlOperation(mutations.deleteUniversalSyllabusLesson, {input: input})
@@ -68,8 +68,8 @@ const CourseCard = ({
           id: showDeleteModal.syllabusId,
           universalLessonsSeq: selectedItem.universalLessonsSeq.filter(
             (lesson: any) => lesson !== lessonId
-          ),
-        },
+          )
+        }
       })
     );
   };

@@ -1,12 +1,12 @@
 import React, {useContext, useEffect, useState, useRef} from 'react';
 import {gsap} from 'gsap/all';
-import usePrevious from '@customHooks/previousProps';
-import useDeviceDetect from '@customHooks/deviceDetect';
+import usePrevious from 'customHooks/previousProps';
+import useDeviceDetect from 'customHooks/deviceDetect';
 import StudentWindowTitleBar from './StudentWindowTitleBar';
 import TopMenu from '../TopMenu';
 import {getAsset} from 'assets';
-import {GlobalContext} from '@contexts/GlobalContext';
-import useTailwindBreakpoint from '@customHooks/tailwindBreakpoint';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
 
 interface ILessonFrame {
   children?: React.ReactNode;
@@ -38,7 +38,7 @@ const LessonFrame = ({
   handleQuitViewing,
   handlePageChange,
   handleLeavePopup,
-  handleHomePopup,
+  handleHomePopup
 }: ILessonFrame) => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
   const gContext = useContext(GlobalContext);
@@ -68,17 +68,17 @@ const LessonFrame = ({
     borderAnimation.from(lessonWindowRef.current, {
       borderColor: 'rgba(97, 169, 237,0.5)',
       borderWidth: 4,
-      ease: 'power2',
+      ease: 'power2'
     });
     borderAnimation.to(lessonWindowRef.current, {
       borderColor: 'rgba(97, 169, 237,1)',
       borderWidth: 4,
-      ease: 'power2',
+      ease: 'power2'
     });
     borderAnimation.to(lessonWindowRef.current, {
       borderColor: 'rgba(97, 169, 237,0.5)',
       borderWidth: 4,
-      ease: 'power2',
+      ease: 'power2'
     });
 
     if (!live && borderAnimation) {
@@ -131,8 +131,7 @@ const LessonFrame = ({
       <div
         ref={frameRef}
         style={{
-          width:
-            breakpoint === 'xl' || breakpoint === '2xl' ? '75%' : 'calc(100% - 36px)',
+          width: breakpoint === 'xl' || breakpoint === '2xl' ? '75%' : 'calc(100% - 36px)'
         }}
         className={`bg-gray-200 absolute mr-0 right-0 h-full flex flex-col items-center z-50`}>
         <TopMenu

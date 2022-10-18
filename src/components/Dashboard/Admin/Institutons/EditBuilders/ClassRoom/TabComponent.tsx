@@ -1,5 +1,5 @@
 import React, {useContext} from 'react';
-import {GlobalContext} from '../../../../../../contexts/GlobalContext';
+import {GlobalContext} from 'contexts/GlobalContext';
 
 export interface ITabComponentProps {
   tabs: {name: string; section: string}[];

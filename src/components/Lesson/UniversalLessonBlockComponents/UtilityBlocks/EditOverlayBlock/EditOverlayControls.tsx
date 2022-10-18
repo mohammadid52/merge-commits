@@ -1,17 +1,17 @@
-import {GlobalContext} from '@contexts/GlobalContext';
-import {useULBContext} from '@contexts/UniversalLessonBuilderContext';
-import useDictionary from '@customHooks/dictionary';
-import {useQuery} from '@customHooks/urlParam';
+import {GlobalContext} from 'contexts/GlobalContext';
+import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
+import useDictionary from 'customHooks/dictionary';
+import {useQuery} from 'customHooks/urlParam';
 import {
   RowWrapperProps,
-  ULBSelectionProps,
+  ULBSelectionProps
 } from '@interfaces/UniversalLessonBuilderInterfaces';
 import {UniversalLessonPage} from '@interfaces/UniversalLessonInterfaces';
-import ModalPopUp from '@molecules/ModalPopUp';
+import ModalPopUp from 'molecules/ModalPopUp';
 import ColorPicker from '@UlbUI/ColorPicker/ColorPicker';
 import {FORM_TYPES} from '@UlbUI/common/constants';
-import {reorder} from '@utilities/strings';
-import {updateLessonPageToDB} from '@utilities/updateLessonPageToDB';
+import {reorder} from 'utilities/strings';
+import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
 import {find, findIndex, update} from 'lodash';
 import React, {useContext, useEffect, useState} from 'react';
 import ClickAwayListener from 'react-click-away-listener';
@@ -46,7 +46,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
     deleteFromULBHandler,
     updateFromULBHandler,
     pageContentID,
-    partContentID,
+    partContentID
   } = props;
   const [overlayVisible, setOverlayVisible] = useState<boolean>(false);
   const [colorPickerActive, setColorPickerActive] = useState<boolean>(false);
@@ -60,7 +60,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
     selID,
 
     setSelIDForHover,
-    setSelID,
+    setSelID
   } = useULBContext();
 
   const clearIds = () => setSelID({pageContentID: '', partContentID: ''});
@@ -100,7 +100,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
     BLOCK_UP: pageContentIdx === 0,
     BLOCK_DOWN: pageContentLen - 1 === pageContentIdx,
     COMPONENT_UP: partContentIdx === 0,
-    COMPONENT_DOWN: partContentLen - 1 === partContentIdx,
+    COMPONENT_DOWN: partContentLen - 1 === partContentIdx
   };
 
   const updateData = async (path: string, newValue: any) => {
@@ -111,7 +111,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
     setUniversalLessonDetails({...universalLessonDetails});
     const input = {
       id: lessonId,
-      lessonPlan: [...universalLessonDetails.lessonPlan],
+      lessonPlan: [...universalLessonDetails.lessonPlan]
     };
     await updateLessonPageToDB(input);
   };
@@ -174,9 +174,9 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
       lessonPage: {
         theme = 'dark',
         themeSecBackgroundColor = 'bg-gray-700',
-        themeTextColor = '',
-      } = {},
-    },
+        themeTextColor = ''
+      } = {}
+    }
   } = useContext(GlobalContext);
   /**
    * Here is where I should add buttons
@@ -206,7 +206,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
   const addToDB = async (list: any) => {
     const input = {
       id: list.id,
-      lessonPlan: [...list.lessonPlan],
+      lessonPlan: [...list.lessonPlan]
     };
 
     await updateLessonPageToDB(input);
@@ -223,7 +223,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
     message: '',
     type: '',
     id: '',
-    key: '',
+    key: ''
   });
 
   const onDeleteButtonClick = (
@@ -241,7 +241,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
       show: true,
       type,
       id,
-      key,
+      key
     });
   };
 
@@ -251,7 +251,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
       show: false,
       id: '',
       type: '',
-      key: '',
+      key: ''
     });
   };
 
@@ -268,7 +268,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
     text,
     onClick,
     moveDir,
-    disabled,
+    disabled
   }: {
     text: string;
     onClick: () => void;

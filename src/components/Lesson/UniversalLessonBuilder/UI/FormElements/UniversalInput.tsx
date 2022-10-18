@@ -1,19 +1,19 @@
-import ToggleForModal from '@components/Lesson/UniversalLessonBuilder/UI/common/ToggleForModals';
+import ToggleForModal from 'components/Lesson/UniversalLessonBuilder/UI/common/ToggleForModals';
 import {map, remove, update} from 'lodash';
 import React, {useContext, useEffect} from 'react';
 import {v4 as uuidv4} from 'uuid';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import {EditQuestionModalDict} from '../../../../../dictionary/dictionary.iconoclast';
-import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
-import Buttons from '../../../../Atoms/Buttons';
-import FormInput from '../../../../Atoms/Form/FormInput';
+import {GlobalContext} from 'contexts/GlobalContext';
+import {EditQuestionModalDict} from 'dictionary/dictionary.iconoclast';
+import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
+import Buttons from 'atoms/Buttons';
+import FormInput from 'atoms/Form/FormInput';
 import {
   ATTACHMENTS,
   DATE_PICKER,
   FORM_TYPES,
   INPUT,
   INPUT_WITH_EMOJI,
-  LINK,
+  LINK
 } from '../common/constants';
 
 /**
@@ -35,7 +35,7 @@ const UniversalInput = (props: any) => {
     setUnsavedChanges,
     selectedForm,
     createNewContent,
-    inputObj,
+    inputObj
   } = props;
 
   const {userLanguage} = useContext(GlobalContext);
@@ -55,7 +55,7 @@ const UniversalInput = (props: any) => {
 
     const input = {
       id: list.id,
-      lessonPlan: [...list.lessonPlan],
+      lessonPlan: [...list.lessonPlan]
     };
 
     await updateLessonPageToDB(input);
@@ -103,7 +103,7 @@ const UniversalInput = (props: any) => {
           : FORM_TYPES.TEXT,
       label: d.label,
       value: d.value,
-      isRequired: d.required,
+      isRequired: d.required
     }));
 
     const type: string = `form-${numbered ? 'numbered' : 'default'}`;

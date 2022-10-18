@@ -2,7 +2,7 @@ import React, {useContext, useState} from 'react';
 import {IoMdSettings} from 'react-icons/io';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {NavLink, useRouteMatch} from 'react-router-dom';
-import {GlobalContext} from '../../../contexts/GlobalContext';
+import {GlobalContext} from 'contexts/GlobalContext';
 
 function Dropdown() {
   const [isOpen, setIsOpen] = useState(false);

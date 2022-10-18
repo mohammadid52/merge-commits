@@ -3,14 +3,14 @@ import {Switch} from '@headlessui/react';
 import {filter, map, remove, update} from 'lodash';
 import React, {useContext, useEffect, useState} from 'react';
 import {v4 as uuidv4} from 'uuid';
-import {getAsset} from '../../../../../assets';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
-import {EditQuestionModalDict} from '../../../../../dictionary/dictionary.iconoclast';
-import {optionResponses} from '../../../../../utilities/staticData';
-import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
-import Buttons from '../../../../Atoms/Buttons';
-import FormInput from '../../../../Atoms/Form/FormInput';
+import {getAsset} from 'assets';
+import {GlobalContext} from 'contexts/GlobalContext';
+import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
+import {EditQuestionModalDict} from 'dictionary/dictionary.iconoclast';
+import {optionResponses} from 'utilities/staticData';
+import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
+import Buttons from 'atoms/Buttons';
+import FormInput from 'atoms/Form/FormInput';
 import {FORM_TYPES, SELECT_MANY, SELECT_ONE} from '../common/constants';
 import AnimatedContainer from '../UIComponents/Tabs/AnimatedContainer';
 import {useTabs, Tabs3} from '../UIComponents/Tabs/Tabs';
@@ -34,7 +34,7 @@ const InputContainer = ({
   setSuggestionModal,
   changeBool,
   changeValue,
-  removeItemFromList,
+  removeItemFromList
 }: any) => {
   const [selForm, setSelForm] = useState(selectedForm);
 
@@ -154,7 +154,7 @@ const InputContainer = ({
                       ...suggestionModal,
                       idx,
                       data: optionResponses,
-                      show: true,
+                      show: true
                     })
                   }
                 />
@@ -294,12 +294,12 @@ const UniversalOption = ({
   updateContent,
   setUnsavedChanges,
   askBeforeClose,
-  createNewContent,
+  createNewContent
 }: any) => {
   const {
     clientKey,
     userLanguage,
-    state: {lessonPage: {theme: lessonPageTheme = 'dark', themeTextColor = ''} = {}},
+    state: {lessonPage: {theme: lessonPageTheme = 'dark', themeTextColor = ''} = {}}
   } = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const {suggestionModal, setSuggestionModal} = useULBContext();
@@ -327,9 +327,9 @@ const UniversalOption = ({
         label: '',
         options: [
           {label: '1', text: '', id: uuidv4()},
-          {label: '2', text: '', id: uuidv4()},
-        ],
-      },
+          {label: '2', text: '', id: uuidv4()}
+        ]
+      }
     ]);
   };
   const addToDB = async (list: any) => {
@@ -337,7 +337,7 @@ const UniversalOption = ({
 
     const input = {
       id: list.id,
-      lessonPlan: [...list.lessonPlan],
+      lessonPlan: [...list.lessonPlan]
     };
 
     await updateLessonPageToDB(input);
@@ -353,7 +353,7 @@ const UniversalOption = ({
         options: d.options,
         class: `${
           d.inLine ? 'flex-row items-center py-2' : 'flex-col items-start space-y-4 py-4'
-        }`,
+        }`
       }));
 
       const type: string = `form-${numbered ? 'numbered' : 'default'}`;
@@ -379,16 +379,16 @@ const UniversalOption = ({
           type: selectedForm,
           options: [
             {label: '1', text: '', id: uuidv4()},
-            {label: '2', text: '', id: uuidv4()},
-          ],
-        },
+            {label: '2', text: '', id: uuidv4()}
+          ]
+        }
       ]);
 
       setSuggestionModal({
         show: false,
         data: [{title: '', content: [{id: '', text: ''}]}],
         selectedResponse: [],
-        idx: 0,
+        idx: 0
       });
     }
   };
@@ -427,7 +427,7 @@ const UniversalOption = ({
     let _options = options.map((o: any) => ({
       label: o.text,
       text: o.text,
-      id: o.id,
+      id: o.id
     }));
     update(list[idx], `options`, () => _options);
     setList([...list]);
@@ -439,7 +439,7 @@ const UniversalOption = ({
     options.push({
       label: optionName,
       text: optionValue,
-      id: `${optionName}__${uuidv4()}`,
+      id: `${optionName}__${uuidv4()}`
     });
 
     setList([...list]);
@@ -478,7 +478,7 @@ const UniversalOption = ({
   const SelectMany = ({
     item,
     checked,
-    onChange,
+    onChange
   }: {
     checked: boolean;
     onChange: (e: any) => void;
@@ -487,7 +487,7 @@ const UniversalOption = ({
     const {label, text, id} = item;
     const {
       theme,
-      state: {lessonPage: {theme: lessonPageTheme = 'dark', themeTextColor = ''} = {}},
+      state: {lessonPage: {theme: lessonPageTheme = 'dark', themeTextColor = ''} = {}}
     } = useContext(GlobalContext);
 
     const themePlaceholderColor =
@@ -514,7 +514,7 @@ const UniversalOption = ({
   const SelectOne = ({
     item,
     onChange,
-    checked,
+    checked
   }: {
     onChange: (e: any) => void;
     checked: boolean;

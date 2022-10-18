@@ -1,5 +1,5 @@
 import {API, graphqlOperation} from 'aws-amplify';
-import * as customMutations from '../customGraphql/customMutations';
+import * as customMutations from 'customGraphql/customMutations';
 
 export const updateLessonPageToDB = async (input: any) => {
   try {

@@ -1,7 +1,7 @@
 import {Link, Widget} from '../../../../interfaces/ClassroomComponentsInterfaces';
 import React, {useContext} from 'react';
-import {GlobalContext} from '../../../../contexts/GlobalContext';
-import useDictionary from '../../../../customHooks/dictionary';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {IoCallOutline} from 'react-icons/io5';
 import {responsiveClass} from '../../Noticebooard/Widgets';
@@ -16,25 +16,25 @@ export const CallWidgetsSmall = (props: {classProp?: string; widgets?: Widget[]}
       return {
         iconLabel: 'Zoom',
         iconUrl: 'https://selready.s3.us-east-2.amazonaws.com/zoom_icon.svg',
-        joinLabel: noticeboardDict[userLanguage].JOIN_CALL.ZOOM,
+        joinLabel: noticeboardDict[userLanguage].JOIN_CALL.ZOOM
       };
     } else if (url.includes('meet.google')) {
       return {
         iconLabel: 'Meet',
         iconUrl: 'https://selready.s3.us-east-2.amazonaws.com/meet_icon.svg',
-        joinLabel: noticeboardDict[userLanguage].JOIN_CALL.MEET,
+        joinLabel: noticeboardDict[userLanguage].JOIN_CALL.MEET
       };
     } else if (url.includes('teams.microsoft')) {
       return {
         iconLabel: 'Teams',
         iconUrl: 'https://selready.s3.us-east-2.amazonaws.com/teams_icon.svg',
-        joinLabel: noticeboardDict[userLanguage].JOIN_CALL.TEAMS,
+        joinLabel: noticeboardDict[userLanguage].JOIN_CALL.TEAMS
       };
     } else {
       return {
         iconLabel: 'Call',
         iconUrl: null,
-        joinLabel: noticeboardDict[userLanguage].JOIN_CALL.DEFAULT,
+        joinLabel: noticeboardDict[userLanguage].JOIN_CALL.DEFAULT
       };
     }
   };

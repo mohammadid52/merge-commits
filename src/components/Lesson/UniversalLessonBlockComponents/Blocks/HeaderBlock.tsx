@@ -1,5 +1,5 @@
 import React, {useContext} from 'react';
-import {GlobalContext} from '../../../../contexts/GlobalContext';
+import {GlobalContext} from 'contexts/GlobalContext';
 import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
 import './styles/HeaderStyles.scss';
 
@@ -13,7 +13,7 @@ export const HeaderBlock = (props: HeaderBlockProps) => {
   const {id, value, type, classString} = props;
 
   const {
-    state: {lessonPage: {themeTextColor = ''} = {}},
+    state: {lessonPage: {themeTextColor = ''} = {}}
   } = useContext(GlobalContext);
 
   const composeHeader = (inputID: string, inputValue: any, inputType: string) => {

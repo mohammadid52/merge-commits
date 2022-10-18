@@ -1,17 +1,17 @@
-import {GlobalContext} from '@contexts/GlobalContext';
-import {usePageBuilderContext} from '@contexts/PageBuilderContext';
-import {useULBContext} from '@contexts/UniversalLessonBuilderContext';
-import * as customQueries from '@customGraphql/customQueries';
-import {useQuery} from '@customHooks/urlParam';
+import {GlobalContext} from 'contexts/GlobalContext';
+import {usePageBuilderContext} from 'contexts/PageBuilderContext';
+import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
+import * as customQueries from 'customGraphql/customQueries';
+import {useQuery} from 'customHooks/urlParam';
 import {LessonPlansProps} from '@interfaces/LessonInterfaces';
 import {ULBSelectionProps} from '@interfaces/UniversalLessonBuilderInterfaces';
 import {
   PagePart,
   PartContent,
-  UniversalLessonPage,
+  UniversalLessonPage
 } from '@interfaces/UniversalLessonInterfaces';
-import {replaceTailwindClass} from '@lesson/UniversalLessonBuilder/crudFunctions/replaceInString';
-import BuilderWrapper from '@lesson/UniversalLessonBuilder/views/BuilderWrapper';
+import {replaceTailwindClass} from 'lesson/UniversalLessonBuilder/crudFunctions/replaceInString';
+import BuilderWrapper from 'lesson/UniversalLessonBuilder/views/BuilderWrapper';
 import {API, graphqlOperation} from 'aws-amplify';
 import {isEmpty} from 'lodash';
 import update from 'lodash/update';
@@ -33,7 +33,7 @@ interface UniversalLessonBuilderProps extends ULBSelectionProps {
 const initialUniversalLessonPagePartContent: PartContent = {
   id: '',
   type: '',
-  value: [],
+  value: []
 };
 
 /*******************************************
@@ -53,7 +53,7 @@ const UniversalLessonBuilder = ({instId}: UniversalLessonBuilderProps) => {
     setUniversalLessonDetails,
     selectedPageID,
     setFetchingLessonDetails,
-    setSelectedPageID,
+    setSelectedPageID
   } = useULBContext();
 
   //  INITIALIZE CURRENT PAGE LOCATION
@@ -78,7 +78,7 @@ const UniversalLessonBuilder = ({instId}: UniversalLessonBuilderProps) => {
       setFetchingLessonDetails(true);
       const result: any = await API.graphql(
         graphqlOperation(customQueries.getUniversalLesson, {
-          id: lessonId,
+          id: lessonId
         })
       );
       const savedData = result.data.getUniversalLesson;
@@ -142,8 +142,8 @@ const UniversalLessonBuilder = ({instId}: UniversalLessonBuilderProps) => {
                         [propertyToTarget]: replaceTailwindClass(
                           targetArrayObj[propertyToTarget],
                           replacementValue
-                        ),
-                      },
+                        )
+                      }
                     ];
                   case 'create':
                     return [
@@ -153,8 +153,8 @@ const UniversalLessonBuilder = ({instId}: UniversalLessonBuilderProps) => {
                         [propertyToTarget]: replaceTailwindClass(
                           targetArrayObj[propertyToTarget],
                           replacementValue
-                        ),
-                      },
+                        )
+                      }
                     ];
                   default:
                     return [
@@ -165,7 +165,7 @@ const UniversalLessonBuilder = ({instId}: UniversalLessonBuilderProps) => {
                         idToTarget,
                         propertyToTarget,
                         replacementValue
-                      ),
+                      )
                     ];
                 }
               } else {
@@ -177,12 +177,12 @@ const UniversalLessonBuilder = ({instId}: UniversalLessonBuilderProps) => {
                     idToTarget,
                     propertyToTarget,
                     replacementValue
-                  ),
+                  )
                 ];
               }
             },
             []
-          ),
+          )
         };
       } else {
         return {...acc, [`${inputObjKey}`]: inputObj[inputObjKey]};
@@ -243,7 +243,7 @@ const UniversalLessonBuilder = ({instId}: UniversalLessonBuilderProps) => {
       partContentIdx:
         selectedComponent?.partContentIdx !== undefined
           ? selectedComponent?.partContentIdx
-          : partContentIdx,
+          : partContentIdx
     };
 
     if (idxData.pageContentIdx !== undefined && idxData.pageContentIdx !== undefined) {
@@ -253,7 +253,7 @@ const UniversalLessonBuilder = ({instId}: UniversalLessonBuilderProps) => {
         ...partContent[idxData.partContentIdx],
         class: classString || partContent[idxData.partContentIdx].class,
         type: contentType,
-        value: inputObj,
+        value: inputObj
       };
 
       const updatedPage = update(
@@ -293,7 +293,7 @@ const UniversalLessonBuilder = ({instId}: UniversalLessonBuilderProps) => {
           id: `${nanoid(6)}_${contentType}_1`,
           type: contentType,
           value: inputObj,
-          class: classString || '',
+          class: classString || ''
         }
       );
 
@@ -316,10 +316,10 @@ const UniversalLessonBuilder = ({instId}: UniversalLessonBuilderProps) => {
             id: `${nanoid(6)}_${contentType}_1`,
             type: contentType,
             value: inputObj,
-            class: classString || '',
-          },
+            class: classString || ''
+          }
         ],
-        partType: 'default',
+        partType: 'default'
       });
 
       const updatedPage = update(

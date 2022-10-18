@@ -1,6 +1,6 @@
-import {useNotifications} from '@contexts/NotificationContext';
-import useAuth from '@customHooks/useAuth';
-import useMultiKeypress from '@customHooks/useMultiKeypress';
+import {useNotifications} from 'contexts/NotificationContext';
+import useAuth from 'customHooks/useAuth';
+import useMultiKeypress from 'customHooks/useMultiKeypress';
 import {textEdit} from 'assets';
 import {ContentState, convertToRaw, EditorState} from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
@@ -8,8 +8,8 @@ import htmlToDraft from 'html-to-draftjs';
 import React, {useEffect, useState} from 'react';
 import {Editor} from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
-import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
-import useInLessonCheck from '../../../../../customHooks/checkIfInLesson';
+import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
+import useInLessonCheck from 'customHooks/checkIfInLesson';
 
 // const ColorPicker = (props: {
 //   currentState?: any;
