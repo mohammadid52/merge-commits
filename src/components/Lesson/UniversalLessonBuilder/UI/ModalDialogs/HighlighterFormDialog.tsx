@@ -1,10 +1,10 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {EditQuestionModalDict} from '../../../../../dictionary/dictionary.iconoclast';
-import Buttons from '../../../../Atoms/Buttons';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
+import {EditQuestionModalDict} from 'dictionary/dictionary.iconoclast';
+import Buttons from 'atoms/Buttons';
+import {GlobalContext} from 'contexts/GlobalContext';
 import {IContentTypeComponentProps} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
-import RichTextEditor from '../../../../Atoms/RichTextEditor';
-import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
+import RichTextEditor from 'atoms/RichTextEditor';
+import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
 import {v4 as uuidv4} from 'uuid';
 interface IHighlighterFormDialogProps extends IContentTypeComponentProps {
   inputObj?: any;
@@ -17,7 +17,7 @@ const HighlighterFormDialog = ({
   createNewBlockULBHandler,
   updateBlockContentULBHandler,
   askBeforeClose,
-  setUnsavedChanges,
+  setUnsavedChanges
 }: IHighlighterFormDialogProps) => {
   const {userLanguage} = useContext(GlobalContext);
   const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
@@ -43,7 +43,7 @@ const HighlighterFormDialog = ({
 
     const input = {
       id: list.id,
-      lessonPlan: [...list.lessonPlan],
+      lessonPlan: [...list.lessonPlan]
     };
 
     await updateLessonPageToDB(input);

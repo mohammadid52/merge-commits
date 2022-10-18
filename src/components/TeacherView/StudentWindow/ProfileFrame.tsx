@@ -1,18 +1,18 @@
 import React, {useContext, useEffect, useRef, useState} from 'react';
 
 import axios from 'axios';
-import {requestResetPassword} from '@utilities/urls';
+import {requestResetPassword} from 'utilities/urls';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import * as customMutations from '@customGraphql/customMutations';
-import {GlobalContext} from '@contexts/GlobalContext';
-import useDictionary from '@customHooks/dictionary';
-import useTailwindBreakpoint from '@customHooks/tailwindBreakpoint';
+import * as customMutations from 'customGraphql/customMutations';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
 import ProfileFrameInfo from './ProfileFrame/ProfileInfo';
 import ProfileFrameEdit from './ProfileFrame/ProfileFrameEdit';
-import Buttons from '@components/Atoms/Buttons';
+import Buttons from 'components/Atoms/Buttons';
 import {FaEdit} from 'react-icons/fa';
-import Modal from '@components/Atoms/Modal';
-import UserTabs from '@components/Dashboard/Admin/UserManagement/User/UserTabs';
+import Modal from 'components/Atoms/Modal';
+import UserTabs from 'components/Dashboard/Admin/UserManagement/User/UserTabs';
 import ProfileFrameDemographics from './ProfileFrame/ProfileFrameDemographics';
 
 interface IProfileFrame {
@@ -32,7 +32,7 @@ const ProfileFrame = ({
   roster,
   visible,
   rightView,
-  setRightView,
+  setRightView
 }: IProfileFrame) => {
   // ~~~~~~~~~~~~~~~ CONTEXT ~~~~~~~~~~~~~~~ //
   const gContext = useContext(GlobalContext);
@@ -62,7 +62,7 @@ const ProfileFrame = ({
   const [loading, setLoading] = useState(false);
   const [resetPasswordServerResponse, setResetPasswordServerResponse] = useState({
     show: false,
-    message: '',
+    message: ''
   });
 
   const created = () => {
@@ -76,14 +76,14 @@ const ProfileFrame = ({
       await axios.post(requestResetPassword, {email: user && user.email});
       setResetPasswordServerResponse({
         show: true,
-        message: UserInformationDict[userLanguage]['MESSAGE']['RESET_PASSWORD_SUCCESS'],
+        message: UserInformationDict[userLanguage]['MESSAGE']['RESET_PASSWORD_SUCCESS']
       });
       setLoading(false);
     } catch (err) {
       console.log('error', err);
       setResetPasswordServerResponse({
         show: true,
-        message: UserInformationDict[userLanguage]['MESSAGE']['RESET_PASSWORD_FAILURE'],
+        message: UserInformationDict[userLanguage]['MESSAGE']['RESET_PASSWORD_FAILURE']
       });
       setLoading(false);
     }
@@ -91,7 +91,7 @@ const ProfileFrame = ({
   const onAlertClose = () => {
     setResetPasswordServerResponse({
       show: false,
-      message: '',
+      message: ''
     });
   };
 
@@ -114,7 +114,7 @@ const ProfileFrame = ({
       status: user.status,
       phone: user.phone,
       birthdate: user.birthdate,
-      email: user.email,
+      email: user.email
     };
 
     try {
@@ -138,7 +138,7 @@ const ProfileFrame = ({
     setUser(() => {
       return {
         ...user,
-        [id]: value,
+        [id]: value
       };
     });
   };
@@ -147,7 +147,7 @@ const ProfileFrame = ({
     setUser(() => {
       return {
         ...user,
-        language: lang.code,
+        language: lang.code
       };
     });
   };
@@ -155,12 +155,12 @@ const ProfileFrame = ({
   const language = [
     {
       code: 'EN',
-      name: 'English',
+      name: 'English'
     },
     {
       code: 'ES',
-      name: 'Spanish',
-    },
+      name: 'Spanish'
+    }
   ];
 
   // ⬆️ Ends here ⬆️
@@ -172,7 +172,7 @@ const ProfileFrame = ({
   const [tabs, setTabs] = useState([
     {name: 'Personal Information', current: true},
     {name: 'Demographics', current: false},
-    {name: 'Private', current: false},
+    {name: 'Private', current: false}
   ]);
 
   const openTab = tabs.find((tabObj: any) => tabObj.current);
@@ -182,12 +182,12 @@ const ProfileFrame = ({
       if (tabObj.name === tabName) {
         return {
           ...tabObj,
-          current: true,
+          current: true
         };
       } else {
         return {
           ...tabObj,
-          current: false,
+          current: false
         };
       }
     });
@@ -199,7 +199,7 @@ const ProfileFrame = ({
     stateUser.role === 'FLW' ||
     stateUser.role === 'ADM' ||
     stateUser.role === 'SUP';
-  
+
   const getTitle = (preferredName: string, editing: boolean) => {
     let part1 = preferredName ? `Profile for ${user.preferredName}` : 'Profile';
     let part2 = !editing ? (
@@ -227,7 +227,7 @@ const ProfileFrame = ({
     <div
       ref={frameRef}
       style={{
-        width: breakpoint === 'xl' || breakpoint === '2xl' ? '75%' : 'calc(100% - 36px)',
+        width: breakpoint === 'xl' || breakpoint === '2xl' ? '75%' : 'calc(100% - 36px)'
       }}
       className={`absolute mr-0 top-0 right-0 h-full flex flex-col items-center z-50`}>
       {rightView.view === 'profile' && (

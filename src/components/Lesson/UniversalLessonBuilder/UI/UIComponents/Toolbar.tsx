@@ -1,8 +1,8 @@
-import Tooltip from '@atoms/Tooltip';
-import {GlobalContext} from '@contexts/GlobalContext';
-import {useOverlayContext} from '@contexts/OverlayContext';
-import {useULBContext} from '@contexts/UniversalLessonBuilderContext';
-import useOnScreen from '@customHooks/useOnScreen';
+import Tooltip from 'atoms/Tooltip';
+import {GlobalContext} from 'contexts/GlobalContext';
+import {useOverlayContext} from 'contexts/OverlayContext';
+import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
+import useOnScreen from 'customHooks/useOnScreen';
 import {UniversalLesson} from '@interfaces/UniversalLessonInterfaces';
 import React, {useContext, useEffect, useRef} from 'react';
 import {
@@ -11,7 +11,7 @@ import {
   AiOutlineEdit,
   AiOutlineEye,
   AiOutlineEyeInvisible,
-  AiOutlineFileAdd,
+  AiOutlineFileAdd
 } from 'react-icons/ai';
 import {IconType} from 'react-icons/lib';
 
@@ -23,7 +23,7 @@ const Button = ({
   invert = false,
   color = 'text-white',
   tooltipPlacement = 'bottom',
-  top = false,
+  top = false
 }: {
   onClick?: () => void;
   icon?: IconType;
@@ -57,7 +57,7 @@ const Toolbar = ({
   setEditMode,
   setFields,
   setNewLessonPlanShow,
-  newLessonPlanShow,
+  newLessonPlanShow
 }: {
   deleteLesson: () => void;
   newLessonPlanShow: boolean;
@@ -70,11 +70,11 @@ const Toolbar = ({
     setPreviewMode,
 
     setToolbarOnTop,
-    toolbarOnTop,
+    toolbarOnTop
   } = useULBContext();
 
   const {
-    state: {lessonPage: {theme = 'dark', themeTextColor = ''} = {}},
+    state: {lessonPage: {theme = 'dark', themeTextColor = ''} = {}}
   } = useContext(GlobalContext);
   const toolbarRef = useRef();
   const isVisible = useOnScreen(toolbarRef);
@@ -147,7 +147,7 @@ const Toolbar = ({
                         interactionType: [],
                         tags: [],
                         estTime: '1 min',
-                        classwork: true,
+                        classwork: true
                       });
                     }}
                     icon={AiOutlineFileAdd}

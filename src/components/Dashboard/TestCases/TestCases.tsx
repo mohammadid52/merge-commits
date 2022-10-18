@@ -1,18 +1,18 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import BreadcrumbsWithBanner from '@components/Atoms/BreadcrumbsWithBanner';
+import BreadcrumbsWithBanner from 'components/Atoms/BreadcrumbsWithBanner';
 import React, {useContext, useEffect, useState} from 'react';
 import {FaPlus} from 'react-icons/fa';
 import {Route, Switch, useHistory, useRouteMatch} from 'react-router-dom';
-import {getAsset} from '../../../assets';
-import {GlobalContext} from '../../../contexts/GlobalContext';
-import useDictionary from '../../../customHooks/dictionary';
-import Buttons from '../../Atoms/Buttons';
-import SectionTitle from '../../Atoms/SectionTitle';
+import {getAsset} from 'assets';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import Buttons from 'atoms/Buttons';
+import SectionTitle from 'atoms/SectionTitle';
 import TestCasesInfo from './TestCasesInfo';
-import {createCypressTesting, deleteCypressTesting} from '@graphql/mutations';
-import {listCypressTestings} from '@graphql/queries';
+import {createCypressTesting, deleteCypressTesting} from 'graphql/mutations';
+import {listCypressTestings} from 'graphql/queries';
 import TestCasesAdd from './TestCasesAdd';
-import LessonLoading from '@components/Lesson/Loading/LessonLoading';
+import LessonLoading from 'components/Lesson/Loading/LessonLoading';
 
 const TestCases = () => {
   const {theme, userLanguage, clientKey} = useContext(GlobalContext);

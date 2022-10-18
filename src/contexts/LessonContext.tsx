@@ -1,14 +1,14 @@
 import React, {useEffect, useReducer, useState} from 'react';
 import {useHistory, useParams} from 'react-router-dom';
-import * as customQueries from '../customGraphql/customQueries';
-import * as customSubscriptions from '../customGraphql/customSubscriptions';
+import * as customQueries from 'customGraphql/customQueries';
+import * as customSubscriptions from 'customGraphql/customSubscriptions';
 // import { API, graphqlOperation } from 'aws-amplify';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {Auth} from '@aws-amplify/auth';
-import {lessonReducerOLD} from '../reducers/LessonReducerOLD';
-import {lessonStateOLD} from '../state/LessonStateOLD';
-import {getClientKey} from '../utilities/strings';
-import {standardTheme} from './GlobalContext';
+import {lessonReducerOLD} from 'reducers/LessonReducerOLD';
+import {lessonStateOLD} from 'state/LessonStateOLD';
+import {getClientKey} from 'utilities/strings';
+import {standardTheme} from 'contexts/GlobalContext';
 
 interface LessonProps {
   children: React.ReactNode;

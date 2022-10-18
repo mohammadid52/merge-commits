@@ -1,12 +1,12 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import useTailwindBreakpoint from '@customHooks/tailwindBreakpoint';
+import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
 import {PartInput} from 'API';
 import React, {useContext, useEffect, useRef, useState} from 'react';
 import {useHistory, useParams, useRouteMatch} from 'react-router-dom';
 import {v4 as uuidV4} from 'uuid';
-import {GlobalContext} from '../../contexts/GlobalContext';
-import * as mutations from '../../graphql/mutations';
-import * as queries from '../../graphql/queries';
+import {GlobalContext} from 'contexts/GlobalContext';
+import * as mutations from 'graphql/mutations';
+import * as queries from 'graphql/queries';
 import {
   PagePart,
   PartContent,
@@ -14,7 +14,7 @@ import {
   StudentPageInput,
   UniversalLessonPage
 } from '../../interfaces/UniversalLessonInterfaces';
-import {getLocalStorageData, setLocalStorageData} from '../../utilities/localStorage';
+import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
 import ErrorBoundary from '../Error/ErrorBoundary';
 import LessonHeaderBar from '../Header/LessonHeaderBar';
 import Foot from './Foot/Foot';

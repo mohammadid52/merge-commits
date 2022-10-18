@@ -2,17 +2,17 @@ import React, {useState, useEffect, useContext} from 'react';
 import {useHistory, useParams} from 'react-router';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 
-import Buttons from '../../../../../../../Atoms/Buttons';
-import FormInput from '../../../../../../../Atoms/Form/FormInput';
-import TextArea from '../../../../../../../Atoms/Form/TextArea';
-import MultipleSelector from '../../../../../../../Atoms/Form/MultipleSelector';
+import Buttons from 'atoms/Buttons';
+import FormInput from 'atoms/Form/FormInput';
+import TextArea from 'atoms/Form/TextArea';
+import MultipleSelector from 'atoms/Form/MultipleSelector';
 
-import {languageList} from '../../../../../../../../utilities/staticData';
-import * as mutations from '../../../../../../../../graphql/mutations';
-import * as customQueries from '../../../../../../../../customGraphql/customQueries';
-import {GlobalContext} from '../../../../../../../../contexts/GlobalContext';
-import useDictionary from '../../../../../../../../customHooks/dictionary';
-import {getAsset} from '../../../../../../../../assets';
+import {languageList} from 'utilities/staticData';
+import * as mutations from 'graphql/mutations';
+import * as customQueries from 'customGraphql/customQueries';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import {getAsset} from 'assets';
 
 interface AddSyllabusProps {
   syllabusDetails?: any;
@@ -36,7 +36,7 @@ const UnitFormComponent = ({
   postAddSyllabus,
   syllabusDetails,
   instId,
-  isInModal = false,
+  isInModal = false
 }: AddSyllabusProps) => {
   const urlParams: any = useParams();
   const curricularId = urlParams.curricularId;
@@ -47,7 +47,7 @@ const UnitFormComponent = ({
     policies: '',
     purpose: '',
     objectives: '',
-    languages: [{id: '1', name: 'English', value: 'EN'}],
+    languages: [{id: '1', name: 'English', value: 'EN'}]
   };
   const [syllabusData, setSyllabusData] = useState<InitialData>(initialData);
   const [universalSyllabusSeq, setUniversalSyllabusSeq] = useState([]);
@@ -63,7 +63,7 @@ const UnitFormComponent = ({
   const [messages, setMessages] = useState({
     show: false,
     message: '',
-    isError: false,
+    isError: false
   });
 
   useEffect(() => {
@@ -78,7 +78,7 @@ const UnitFormComponent = ({
         objectives: syllabusDetails.objectives,
         purpose: syllabusDetails.purpose,
         methodology: syllabusDetails.methodology,
-        policies: syllabusDetails.policies,
+        policies: syllabusDetails.policies
       });
     }
   }, [syllabusDetails]);
@@ -86,13 +86,13 @@ const UnitFormComponent = ({
   const onInputChange = (e: any) => {
     setSyllabusData({
       ...syllabusData,
-      [e.target.name]: e.target.value,
+      [e.target.name]: e.target.value
     });
     if (messages.show) {
       setMessages({
         show: false,
         message: '',
-        isError: false,
+        isError: false
       });
     }
   };
@@ -108,14 +108,14 @@ const UnitFormComponent = ({
     }
     setSyllabusData({
       ...syllabusData,
-      languages: updatedList,
+      languages: updatedList
     });
   };
 
   const fetchSyllabusSequence = async () => {
     let result: any = await API.graphql(
       graphqlOperation(customQueries.getCurriculumUniversalSyllabusSequence, {
-        id: `${curricularId}`,
+        id: `${curricularId}`
       })
     );
     setUniversalSyllabusSeq(result?.data.getCurriculum?.universalSyllabusSeq || []);
@@ -138,18 +138,18 @@ const UnitFormComponent = ({
           pupose: syllabusData.purpose,
           objectives: syllabusData.objectives,
           languages: languagesCode,
-          universalLessonsSeq: [],
+          universalLessonsSeq: []
         };
         if (syllabusDetails?.id) {
           await API.graphql(
             graphqlOperation(mutations.updateUniversalSyllabus, {
-              input: {...input, id: syllabusDetails?.id},
+              input: {...input, id: syllabusDetails?.id}
             })
           );
           setMessages({
             show: true,
             message: AddSyllabusDict[userLanguage]['messages']['unitupdate'],
-            isError: false,
+            isError: false
           });
           setIsLoading(false);
         } else {
@@ -176,7 +176,7 @@ const UnitFormComponent = ({
         setMessages({
           show: true,
           message: AddSyllabusDict[userLanguage]['messages']['unablesave'],
-          isError: true,
+          isError: true
         });
       }
     }
@@ -187,7 +187,7 @@ const UnitFormComponent = ({
       setMessages({
         show: true,
         message: AddSyllabusDict[userLanguage]['messages']['namerequired'],
-        isError: true,
+        isError: true
       });
       return false;
     }
@@ -223,7 +223,7 @@ const UnitFormComponent = ({
     purpose,
     objectives,
     methodology,
-    policies,
+    policies
   } = syllabusData;
 
   return (

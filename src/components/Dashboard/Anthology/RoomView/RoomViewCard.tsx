@@ -1,6 +1,6 @@
 import React from 'react';
 import {IoKeyOutline} from 'react-icons/io5';
-import {stringToHslColor} from '../../../../utilities/strings';
+import {stringToHslColor} from 'utilities/strings';
 
 interface IRoomViewCardProps {
   handleSectionSelect?: (

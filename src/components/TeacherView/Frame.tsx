@@ -1,6 +1,6 @@
 import React, {useEffect, useRef} from 'react';
 import gsap from 'gsap/all';
-import usePrevious from '@customHooks/previousProps';
+import usePrevious from 'customHooks/previousProps';
 
 interface IFrameProps {
   children?: React.ReactNode;
@@ -19,7 +19,7 @@ const Frame = ({children, visible, additionalClass}: IFrameProps) => {
         height: '100%',
         opacity: 0,
         visibility: 'hidden',
-        duration: 0.5,
+        duration: 0.5
       },
       {
         width: '100%',
@@ -27,7 +27,7 @@ const Frame = ({children, visible, additionalClass}: IFrameProps) => {
         opacity: 1,
         visibility: 'visible',
         duration: 0.5,
-        ease: 'easeInOut',
+        ease: 'easeInOut'
       }
     );
   };
@@ -39,7 +39,7 @@ const Frame = ({children, visible, additionalClass}: IFrameProps) => {
       height: '75%',
       opacity: 0,
       duration: 0.5,
-      ease: 'easeInOut',
+      ease: 'easeInOut'
     });
     tl.set(refTarget.current, {visibility: 'hidden', delay: 0.5});
   };

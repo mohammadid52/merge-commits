@@ -1,6 +1,6 @@
-import {COMMUNITY_UPLOAD_KEY} from '@components/Community/constants.community';
+import {COMMUNITY_UPLOAD_KEY} from 'components/Community/constants.community';
 import {ICommunityCard} from '@interfaces/Community.interfaces';
-import {getImageFromS3Static} from '@utilities/services';
+import {getImageFromS3Static} from 'utilities/services';
 import React from 'react';
 import ReactPlayer from 'react-player';
 
@@ -21,7 +21,6 @@ const HandleMedia = ({cardDetails}: {cardDetails: ICommunityCard}) => {
     [cardDetails?.additionalLinks]
   );
 
-  
   return media ? (
     <img style={{maxHeight: '40rem'}} className="rounded" src={media} />
   ) : (

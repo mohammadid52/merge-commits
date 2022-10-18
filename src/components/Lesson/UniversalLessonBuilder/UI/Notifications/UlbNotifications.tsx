@@ -1,8 +1,8 @@
 import {Transition} from '@headlessui/react';
 import React from 'react';
 import {AiOutlineCheck} from 'react-icons/ai';
-import Loader from '@atoms/Loader';
-import {useULBContext} from '@contexts/UniversalLessonBuilderContext';
+import Loader from 'atoms/Loader';
+import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
 
 const Notifications = () => {
   const {savingStatus} = useULBContext();

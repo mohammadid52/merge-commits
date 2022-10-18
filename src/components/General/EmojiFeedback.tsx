@@ -4,13 +4,13 @@ import {gsap} from 'gsap';
 import {Draggable} from 'gsap/Draggable';
 import {InertiaPlugin} from 'gsap/InertiaPlugin';
 import {MorphSVGPlugin} from 'gsap/MorphSVGPlugin';
-import Modal from '@atoms/Modal';
+import Modal from 'atoms/Modal';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import * as customQueries from '@customGraphql/customQueries';
-import * as customMutations from '@customGraphql/customMutations';
-import {GlobalContext} from '@contexts/GlobalContext';
-import {awsFormatDate, dateString} from '@utilities/time';
-import {wait} from '@utilities/functions';
+import * as customQueries from 'customGraphql/customQueries';
+import * as customMutations from 'customGraphql/customMutations';
+import {GlobalContext} from 'contexts/GlobalContext';
+import {awsFormatDate, dateString} from 'utilities/time';
+import {wait} from 'utilities/functions';
 import moment from 'moment';
 import {isEmpty} from 'lodash';
 
@@ -51,7 +51,6 @@ const EmojiFeedback = () => {
       );
       const responseItems = res.data.listPersonSentiments?.items[0];
       setLastMoodSubmission(responseItems);
-      console.log('data saved'); // <=== data saved here
     } catch (error) {
       console.error(error);
     } finally {
@@ -199,6 +198,7 @@ const EmojiFeedback = () => {
           input: payload
         })
       );
+      console.log('data saved'); // <=== data saved here
     } catch (error) {
       console.error(error);
     }

@@ -1,4 +1,4 @@
-import LessonLoading from '@components/Lesson/Loading/LessonLoading';
+import LessonLoading from 'components/Lesson/Loading/LessonLoading';
 import React, {useState} from 'react';
 import {BiEdit} from 'react-icons/bi';
 import {FaTrashAlt} from 'react-icons/fa';

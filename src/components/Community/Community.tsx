@@ -1,24 +1,24 @@
-import SectionTitleV3 from '@atoms/SectionTitleV3';
-import BreadCrums from '@components/Atoms/BreadCrums';
-import ContentCard from '@components/Atoms/ContentCard';
-import Selector from '@components/Atoms/Form/Selector';
-import Loader from '@components/Atoms/Loader';
-import Card from '@components/Community/Card';
-import CardsModal from '@components/Community/CardsModal';
+import SectionTitleV3 from 'atoms/SectionTitleV3';
+import BreadCrums from 'components/Atoms/BreadCrums';
+import ContentCard from 'components/Atoms/ContentCard';
+import Selector from 'components/Atoms/Form/Selector';
+import Loader from 'components/Atoms/Loader';
+import Card from 'components/Community/Card';
+import CardsModal from 'components/Community/CardsModal';
 import {
   CardType,
   COMMUNITY_UPLOAD_KEY,
   NavStateTypes
-} from '@components/Community/constants.community';
-import DashboardContainer from '@components/Dashboard/DashboardContainer';
-import HeroBanner from '@components/Header/HeroBanner';
-import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
-import {useGlobalContext} from '@contexts/GlobalContext';
-import useDictionary from '@customHooks/dictionary';
+} from 'components/Community/constants.community';
+import DashboardContainer from 'components/Dashboard/DashboardContainer';
+import HeroBanner from 'components/Header/HeroBanner';
+import AnimatedContainer from 'components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
 
-import * as mutations from '@graphql/mutations';
-import useGraphqlMutation from '@customHooks/useGraphqlMutation';
-import useGraphqlQuery from '@customHooks/useGraphqlQuery';
+import * as mutations from 'graphql/mutations';
+import useGraphqlMutation from 'customHooks/useGraphqlMutation';
+import useGraphqlQuery from 'customHooks/useGraphqlQuery';
 import {
   IAnnouncementInput,
   ICheckItOutInput,
@@ -26,8 +26,8 @@ import {
   IEventInput,
   ISpotlightInput
 } from '@interfaces/Community.interfaces';
-import {deleteImageFromS3} from '@utilities/services';
-import {awsFormatDate, dateString} from '@utilities/time';
+import {deleteImageFromS3} from 'utilities/services';
+import {awsFormatDate, dateString} from 'utilities/time';
 import {getAsset} from 'assets';
 import {API, graphqlOperation} from 'aws-amplify';
 import 'components/Community/community.scss';
@@ -39,9 +39,9 @@ import React, {useEffect, useState} from 'react';
 import {BsCardHeading} from 'react-icons/bs';
 import {useHistory, useRouteMatch} from 'react-router';
 import {v4 as uuidV4} from 'uuid';
-import useAuth from '@customHooks/useAuth';
+import useAuth from 'customHooks/useAuth';
 import {ListCommunitiesQuery} from 'API';
-import HeaderTextBar from '@components/Dashboard/HeaderTextBar/HeaderTextBar';
+import HeaderTextBar from 'components/Dashboard/HeaderTextBar/HeaderTextBar';
 
 const Community = ({}: {role: string}) => {
   const {clientKey, userLanguage} = useGlobalContext();

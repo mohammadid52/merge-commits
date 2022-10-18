@@ -1,8 +1,8 @@
 import React, {useContext} from 'react';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
-import {GlobalContext} from '../../contexts/GlobalContext';
-import {getAsset} from '../../assets';
-import Loader from '@components/Atoms/Loader';
+import {GlobalContext} from 'contexts/GlobalContext';
+import {getAsset} from 'assets';
+import Loader from 'components/Atoms/Loader';
 
 interface ButtonProps {
   type?: 'button' | 'submit' | 'reset';

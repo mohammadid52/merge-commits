@@ -1,9 +1,9 @@
 import React, {useEffect, useState, useContext} from 'react';
-import {GlobalContext} from '../../../contexts/GlobalContext';
+import {GlobalContext} from 'contexts/GlobalContext';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import * as customQueries from '../../../customGraphql/customQueries';
-import Selector from '../../Atoms/Form/Selector';
-import {createFilterToFetchSpecificItemsOnly} from '../../../utilities/strings';
+import * as customQueries from 'customGraphql/customQueries';
+import Selector from 'atoms/Form/Selector';
+import {createFilterToFetchSpecificItemsOnly} from 'utilities/strings';
 import {CSVLink} from 'react-csv';
 
 interface DownloadCSV {}
@@ -46,7 +46,7 @@ const DownloadCSV = (props: DownloadCSV) => {
       return {
         id: inst.id,
         name: inst.name,
-        value: inst.name,
+        value: inst.name
       };
     });
     setInstitutions(institutions);
@@ -101,11 +101,11 @@ const DownloadCSV = (props: DownloadCSV) => {
       )[0];
       let sClass: {id: string; name: string} = {
         id: selectedInstituteClassroom.class.id,
-        name: selectedInstituteClassroom.class.name,
+        name: selectedInstituteClassroom.class.name
       };
       let sCurriculum: {id: string; name: string} = {
         id: selectedInstituteClassroom.curriculum.id,
-        name: selectedInstituteClassroom.curriculum.name,
+        name: selectedInstituteClassroom.curriculum.name
       };
       setSelectedClass(sClass);
       setSelectedCurriculum(sCurriculum);
@@ -122,7 +122,7 @@ const DownloadCSV = (props: DownloadCSV) => {
   const fetchClassStudents = async (classId: string) => {
     let classData: any = await API.graphql(
       graphqlOperation(customQueries.fetchClassStudents, {
-        id: classId,
+        id: classId
       })
     );
     let students = classData?.data?.getClass?.students?.items || [];

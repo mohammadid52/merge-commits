@@ -1,12 +1,12 @@
 import React from 'react';
-import {dateString} from '../../../utilities/time';
+import {dateString} from 'utilities/time';
 
 const DateAndTime = () => {
   const d = new Date();
   const day = d.getDay();
 
   const daySwitch = () => {
-    switch(day){
+    switch (day) {
       case 0:
         return 'Sunday';
       case 1:
@@ -22,11 +22,9 @@ const DateAndTime = () => {
       case 6:
         return 'Saturday';
     }
-  }
+  };
 
-  return (
-    <>{`${daySwitch()} - ${dateString('/', 'US')}`}</>
-  )
-}
+  return <>{`${daySwitch()} - ${dateString('/', 'US')}`}</>;
+};
 
 export default DateAndTime;

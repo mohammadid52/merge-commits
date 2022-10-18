@@ -1,9 +1,9 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import CopyCloneSlideOver from '@components/Lesson/UniversalLessonBuilder/UI/SlideOvers/CopyCloneSlideOver';
-import {useGlobalContext} from '@contexts/GlobalContext';
-import * as customQueries from '@customGraphql/customQueries';
+import CopyCloneSlideOver from 'components/Lesson/UniversalLessonBuilder/UI/SlideOvers/CopyCloneSlideOver';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import * as customQueries from 'customGraphql/customQueries';
 import React, {useEffect, useState} from 'react';
-import {getImageFromS3} from '../../../utilities/services';
+import {getImageFromS3} from 'utilities/services';
 import RoomViewCard from './RoomView/RoomViewCard';
 
 interface IRoomViewProps {

@@ -1,8 +1,8 @@
-import PageWrapper from '@atoms/PageWrapper';
+import PageWrapper from 'atoms/PageWrapper';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import BreadcrumbsWithBanner from '@components/Atoms/BreadcrumbsWithBanner';
-import {GlobalContext} from '@contexts/GlobalContext';
-import * as customQueries from '@customGraphql/customQueries';
+import BreadcrumbsWithBanner from 'components/Atoms/BreadcrumbsWithBanner';
+import {GlobalContext} from 'contexts/GlobalContext';
+import * as customQueries from 'customGraphql/customQueries';
 import queryString from 'query-string';
 import React, {useContext, useEffect, useState} from 'react';
 import {Route, Switch, useLocation, useParams, useRouteMatch} from 'react-router-dom';
@@ -66,7 +66,7 @@ const Institution = (props: InstitutionProps) => {
     isServiceProvider: false,
     classes: {items: [{name: '', id: ''}]},
     serviceProviders: {items: [{id: '', providerID: '', status}]},
-    curricula: {items: [{name: '', id: ''}]},
+    curricula: {items: [{name: '', id: ''}]}
   });
   const [lessonData, setLessonData] = useState<{
     id?: string;
@@ -95,7 +95,7 @@ const Institution = (props: InstitutionProps) => {
   const postInfoUpdate = (data: any) => {
     setInstitutionData((prevData) => ({
       ...prevData,
-      ...data,
+      ...data
     }));
   };
 
@@ -135,7 +135,7 @@ const Institution = (props: InstitutionProps) => {
       if (splitUrl.indexOf('add') === -1) {
         const result: any = await API.graphql(
           graphqlOperation(customQueries.getUniversalLessonBasicDetails, {
-            id: splitUrl.split('/')[0],
+            id: splitUrl.split('/')[0]
           })
         );
         setLessonData(result.data?.getUniversalLesson);
@@ -153,7 +153,7 @@ const Institution = (props: InstitutionProps) => {
       if (roomId) {
         const result: any = await API.graphql(
           graphqlOperation(customQueries.getRoomBasicDetails, {
-            id: roomId,
+            id: roomId
           })
         );
 

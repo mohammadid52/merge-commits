@@ -8,21 +8,21 @@ import {
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {useHistory} from 'react-router-dom';
 
-import {getAsset} from '../../../../assets';
-import {GlobalContext} from '../../../../contexts/GlobalContext';
-import * as customQueries from '../../../../customGraphql/customQueries';
-import * as queries from '../../../../graphql/queries';
+import {getAsset} from 'assets';
+import {GlobalContext} from 'contexts/GlobalContext';
+import * as customQueries from 'customGraphql/customQueries';
+import * as queries from 'graphql/queries';
 
 // import LessonLoading from '../../../Lesson/Loading/ComponentLoading';
-import {createFilterToFetchSpecificItemsOnly} from '@utilities/strings';
-import useDictionary from '../../../../customHooks/dictionary';
-import BreadCrums from '../../../Atoms/BreadCrums';
-import Buttons from '../../../Atoms/Buttons';
-import SearchInput from '../../../Atoms/Form/SearchInput';
-import Selector from '../../../Atoms/Form/Selector';
-import PageCountSelector from '../../../Atoms/PageCountSelector';
-import Pagination from '../../../Atoms/Pagination';
-import SectionTitle from '../../../Atoms/SectionTitle';
+import {createFilterToFetchSpecificItemsOnly} from 'utilities/strings';
+import useDictionary from 'customHooks/dictionary';
+import BreadCrums from 'atoms/BreadCrums';
+import Buttons from 'atoms/Buttons';
+import SearchInput from 'atoms/Form/SearchInput';
+import Selector from 'atoms/Form/Selector';
+import PageCountSelector from 'atoms/PageCountSelector';
+import Pagination from 'atoms/Pagination';
+import SectionTitle from 'atoms/SectionTitle';
 import List from './List';
 import UserListLoader from './UserListLoader';
 

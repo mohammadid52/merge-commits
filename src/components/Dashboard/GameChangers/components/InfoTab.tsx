@@ -1,12 +1,12 @@
-import {useGameChangers} from '@components/Dashboard/GameChangers/context/GameChangersContext';
-import {classNames} from '@components/Lesson/UniversalLessonBuilder/UI/FormElements/TextInput';
+import {useGameChangers} from 'components/Dashboard/GameChangers/context/GameChangersContext';
+import {classNames} from 'components/Lesson/UniversalLessonBuilder/UI/FormElements/TextInput';
 import {map} from 'lodash';
 import React from 'react';
 
 const InfoTab = ({
   howToList,
 
-  infoText,
+  infoText
 }: {
   howToList: string[];
   infoText: string;

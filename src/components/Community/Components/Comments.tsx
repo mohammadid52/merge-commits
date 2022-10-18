@@ -1,7 +1,7 @@
-import Loader from '@components/Atoms/Loader';
-import Popover from '@components/Atoms/Popover';
+import Loader from 'components/Atoms/Loader';
+import Popover from 'components/Atoms/Popover';
 import {IChat} from '@interfaces/Community.interfaces';
-import {getImageFromS3Static} from '@utilities/services';
+import {getImageFromS3Static} from 'utilities/services';
 import {orderBy} from 'lodash';
 import moment from 'moment';
 import React, {useState} from 'react';

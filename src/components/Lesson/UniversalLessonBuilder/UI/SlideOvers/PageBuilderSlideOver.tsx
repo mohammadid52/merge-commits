@@ -1,26 +1,26 @@
-import Buttons from '@components/Atoms/Buttons';
-import {SPACER} from '@components/Lesson/UniversalLessonBuilder/UI/common/constants';
-import {useGlobalContext} from '@contexts/GlobalContext';
-import {useOverlayContext} from '@contexts/OverlayContext';
-import {usePageBuilderContext} from '@contexts/PageBuilderContext';
-import {useULBContext} from '@contexts/UniversalLessonBuilderContext';
-import useAuth from '@customHooks/useAuth';
-import useGraphqlMutation from '@customHooks/useGraphqlMutation';
-import useGraphqlQuery from '@customHooks/useGraphqlQuery';
+import Buttons from 'components/Atoms/Buttons';
+import {SPACER} from 'components/Lesson/UniversalLessonBuilder/UI/common/constants';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import {useOverlayContext} from 'contexts/OverlayContext';
+import {usePageBuilderContext} from 'contexts/PageBuilderContext';
+import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
+import useAuth from 'customHooks/useAuth';
+import useGraphqlMutation from 'customHooks/useGraphqlMutation';
+import useGraphqlQuery from 'customHooks/useGraphqlQuery';
 import {Transition} from '@headlessui/react';
 import {
   UniversalLesson,
-  UniversalLessonPage,
+  UniversalLessonPage
 } from '@interfaces/UniversalLessonInterfaces';
-import AnimatedContainer from '@uiComponents/Tabs/AnimatedContainer';
+import AnimatedContainer from 'uiComponents/Tabs/AnimatedContainer';
 import {classNames} from '@UlbUI/FormElements/TextInput';
 import AddContentDialog from '@UlbUI/ModalDialogs/AddContentDialog';
-import {reorder} from '@utilities/strings';
-import {updateLessonPageToDB} from '@utilities/updateLessonPageToDB';
+import {reorder} from 'utilities/strings';
+import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
 import {
   DeleteFeelingsArchiveInput,
   FeelingsArchive,
-  ListFeelingsArchivesQueryVariables,
+  ListFeelingsArchivesQueryVariables
 } from 'API';
 import {forEach, isEmpty, remove} from 'lodash';
 import map from 'lodash/map';
@@ -32,7 +32,7 @@ import {
   AiFillCloseCircle,
   AiOutlineArrowLeft,
   AiOutlineEdit,
-  AiOutlinePlus,
+  AiOutlinePlus
 } from 'react-icons/ai';
 import {BiTrashAlt} from 'react-icons/bi';
 import {CgSpaceBetweenV} from 'react-icons/cg';
@@ -46,7 +46,7 @@ type ActionTypes = 'edit' | 'delete' | 'init';
 const btnClass = `font-semibold hover:text-gray-600 focus:curate:border-500 focus:iconoclast:border-500 transition-all text-xs px-4 py-2 rounded-xl flex items-center justify-center w-auto`;
 
 const MESSAGES = {
-  CLICK_CIRCLE: 'Click on a circle to select position',
+  CLICK_CIRCLE: 'Click on a circle to select position'
 };
 
 const ClickOnCircle = ({message, onClose}: {message: string; onClose: () => void}) => (
@@ -67,7 +67,7 @@ const ClickOnCircle = ({message, onClose}: {message: string; onClose: () => void
 
 const BottomButtonWithMessage = ({
   btns,
-  message,
+  message
 }: {
   message?: string;
   btns: {label: string; disabled?: boolean; transparent?: boolean; onClick: () => void}[];
@@ -99,7 +99,7 @@ const BottomButtonWithMessage = ({
 const SPACE = {
   SMALL: 16,
   MEDIUM: 32,
-  LARGE: 48,
+  LARGE: 48
 };
 
 // ====================================================== //
@@ -111,7 +111,7 @@ const SpaceItems = ({
   setSelectedSpace,
   selectedSpace,
   askPos,
-  setAskPos,
+  setAskPos
 }: {
   addSpaceComponent: (componentObj: any, customPos?: boolean) => void;
   setSelectedSpace: React.Dispatch<React.SetStateAction<number>>;
@@ -128,7 +128,7 @@ const SpaceItems = ({
     setShowingPin,
     showingPin,
     selectedComponent,
-    setSelectedComponent,
+    setSelectedComponent
   } = usePageBuilderContext();
 
   const reverseSpace = (space: number) => {
@@ -150,14 +150,14 @@ const SpaceItems = ({
     id: nanoid(9),
     type: SPACER,
     class: `space-${reverseSpace(selectedSpace)}`,
-    value: [{id: nanoid(9), value: `${selectedSpace}`}],
+    value: [{id: nanoid(9), value: `${selectedSpace}`}]
   };
 
   const blankSpaceComponent = {
     id: nanoid(9),
     partType: 'component',
     class: '',
-    partContent: [partContentObj],
+    partContent: [partContentObj]
   };
 
   const onAddtoBottom = () => {
@@ -201,7 +201,7 @@ const SpaceItems = ({
         animationType="custom"
         customAnimation={{
           show: 'scale-100 opacity-100',
-          hide: 'scale-50 opacity-100',
+          hide: 'scale-50 opacity-100'
         }}
         show={askPos && !showingPin}>
         {askPos && !showingPin && (
@@ -209,9 +209,9 @@ const SpaceItems = ({
             btns={[
               {
                 label: 'Custom position',
-                onClick: onCustomPosition,
+                onClick: onCustomPosition
               },
-              {label: 'Add to Bottom', onClick: onAddtoBottom, transparent: true},
+              {label: 'Add to Bottom', onClick: onAddtoBottom, transparent: true}
             ]}
             message={'Where do you want to add space?'}
           />
@@ -234,7 +234,7 @@ const SpaceItems = ({
         animationType="custom"
         customAnimation={{
           show: 'scale-100 opacity-100',
-          hide: 'scale-50 opacity-100',
+          hide: 'scale-50 opacity-100'
         }}
         className={` my-6  w-auto`}
         show={!isEmpty(selectedComponent)}>
@@ -244,8 +244,8 @@ const SpaceItems = ({
               {
                 label: 'Add White Space',
                 onClick: onAddSpace,
-                transparent: true,
-              },
+                transparent: true
+              }
             ]}
             message={'Click on below button to add space'}
           />
@@ -283,7 +283,7 @@ const Popup = ({show, text}: {show: boolean; text: string}) => (
 const OverlayHeaderTitle = ({
   onBack,
   title,
-  showBackBtn = true,
+  showBackBtn = true
 }: {
   title?: string;
   showBackBtn?: boolean;
@@ -318,7 +318,7 @@ const Item = ({
   className = '',
   deleteBtn = false,
   selected = false,
-  RightIcon = HiOutlineArrowRight,
+  RightIcon = HiOutlineArrowRight
 }: {
   Icon?: IconType;
   RightIcon?: IconType;
@@ -376,7 +376,7 @@ const Item = ({
 const addToDB = async (list: any) => {
   const input = {
     id: list.id,
-    lessonPlan: [...list.lessonPlan],
+    lessonPlan: [...list.lessonPlan]
   };
 
   await updateLessonPageToDB(input);
@@ -387,7 +387,7 @@ const addToDB = async (list: any) => {
 // ====================================================== //
 const ActionButtons = ({
   actionMode,
-  setActionMode,
+  setActionMode
 }: {
   actionMode: ActionTypes;
   deleteFromULBHandler?: (targetID: string) => UniversalLesson;
@@ -405,7 +405,7 @@ const ActionButtons = ({
     setSelectedComponent,
     setShowingPin,
     setShowMovementBox,
-    setShowingBlockPin,
+    setShowingBlockPin
   } = usePageBuilderContext();
 
   const cleanup = () => {
@@ -450,7 +450,7 @@ const MovableButtons = () => {
     setActionMode,
     showMovementBox,
     setShowMovementBox,
-    setShowingBlockPin,
+    setShowingBlockPin
   } = usePageBuilderContext();
 
   return (
@@ -481,7 +481,7 @@ const PageBuilderSlideOver = ({
   handleModalPopToggle,
   handleEditBlockContent,
   setNewLessonPlanShow,
-  setEditMode,
+  setEditMode
 }: {
   deleteFromULBHandler?: (targetID: string) => UniversalLesson;
   open: boolean;
@@ -504,7 +504,7 @@ const PageBuilderSlideOver = ({
   const {
     selectedPageID,
     universalLessonDetails,
-    setUniversalLessonDetails,
+    setUniversalLessonDetails
   } = useULBContext();
 
   const {
@@ -523,7 +523,7 @@ const PageBuilderSlideOver = ({
     showMessage,
     setShowMessage,
     setEmotionComponentExists,
-    emotionComponentData,
+    emotionComponentData
   } = usePageBuilderContext();
 
   // Remove message after three seconds
@@ -557,7 +557,7 @@ const PageBuilderSlideOver = ({
           cleanup();
           const input = {
             id: updatedPage.id,
-            lessonPlan: [...updatedPage.lessonPlan],
+            lessonPlan: [...updatedPage.lessonPlan]
           };
 
           await updateLessonPageToDB(input);
@@ -573,7 +573,7 @@ const PageBuilderSlideOver = ({
 
         const input = {
           id: updatedPage.id,
-          lessonPlan: [...updatedPage.lessonPlan],
+          lessonPlan: [...updatedPage.lessonPlan]
         };
         await updateLessonPageToDB(input);
         setUniversalLessonDetails(updatedPage);
@@ -594,7 +594,7 @@ const PageBuilderSlideOver = ({
   const {
     setAddContentModal,
     setModalPopVisible,
-    setCurrentModalDialog,
+    setCurrentModalDialog
   } = useOverlayContext();
 
   const hideAllModals = () => {
@@ -668,9 +668,9 @@ const PageBuilderSlideOver = ({
     {
       filter: {
         personAuthID: {eq: authId},
-        lessonID: {eq: lessonId},
+        lessonID: {eq: lessonId}
         // sentimentType: {eq: lessonState.currentPage.toString()},
-      },
+      }
     },
     //  custom means use query from customQueries file.
     // enabled allows conditinational fetching. if it is enabled then only the query will be fetched. Default is true
@@ -728,7 +728,7 @@ const PageBuilderSlideOver = ({
 
     const input = {
       id: lessonId,
-      lessonPlan: [...universalLessonDetails.lessonPlan],
+      lessonPlan: [...universalLessonDetails.lessonPlan]
     };
     await updateLessonPageToDB(input);
   };
@@ -749,7 +749,7 @@ const PageBuilderSlideOver = ({
         BLOCK_UP: pageContentIdx === 0,
         BLOCK_DOWN: _pageContent.length - 1 === pageContentIdx,
         COMPONENT_UP: partContentIdx === 0,
-        COMPONENT_DOWN: partContent.length - 1 === partContentIdx,
+        COMPONENT_DOWN: partContent.length - 1 === partContentIdx
       });
     }
   }, [selectedComponent, pageContentIdx]);
@@ -758,7 +758,7 @@ const PageBuilderSlideOver = ({
     COMPONENT_UP: true,
     COMPONENT_DOWN: true,
     BLOCK_UP: true,
-    BLOCK_DOWN: true,
+    BLOCK_DOWN: true
   });
 
   const moveBlock = (dir: 'up' | 'down') => {
@@ -775,7 +775,7 @@ const PageBuilderSlideOver = ({
 
     setSelectedComponent((prev: any) => ({
       ...prev,
-      pageContentIdx: dir === 'up' ? pageContentIdx - 1 : pageContentIdx + 1,
+      pageContentIdx: dir === 'up' ? pageContentIdx - 1 : pageContentIdx + 1
     }));
   };
 
@@ -793,7 +793,7 @@ const PageBuilderSlideOver = ({
 
         setSelectedComponent((prev: any) => ({
           ...prev,
-          partContentIdx: partContentIdx - 1,
+          partContentIdx: partContentIdx - 1
         }));
       }
     }
@@ -810,7 +810,7 @@ const PageBuilderSlideOver = ({
       );
       setSelectedComponent((prev: any) => ({
         ...prev,
-        partContentIdx: partContentIdx + 1,
+        partContentIdx: partContentIdx + 1
       }));
     }
   };
@@ -863,7 +863,7 @@ const PageBuilderSlideOver = ({
               animationType="custom"
               customAnimation={{
                 show: 'scale-100 opacity-100',
-                hide: 'scale-50 opacity-100',
+                hide: 'scale-50 opacity-100'
               }}
               show={onDeleteMode}>
               {onDeleteMode && (
@@ -874,9 +874,9 @@ const PageBuilderSlideOver = ({
                       onClick: () => {
                         onCancel();
                         onActionCancel();
-                      },
+                      }
                     },
-                    {label: 'Delete', onClick: onDeleteClick, transparent: true},
+                    {label: 'Delete', onClick: onDeleteClick, transparent: true}
                   ]}
                   message={'Are you sure you want to delete?'}
                 />
@@ -899,7 +899,7 @@ const PageBuilderSlideOver = ({
               animationType="custom"
               customAnimation={{
                 show: 'scale-100 opacity-100',
-                hide: 'scale-50 opacity-100',
+                hide: 'scale-50 opacity-100'
               }}
               show={showMovementBox && !notSelected}>
               {showMovementBox && !notSelected && (
@@ -909,18 +909,18 @@ const PageBuilderSlideOver = ({
                       label: 'Move up',
                       transparent: true,
                       disabled: disableState.COMPONENT_UP,
-                      onClick: () => moveComponent('up'),
+                      onClick: () => moveComponent('up')
                     },
                     {
                       label: 'Cancel',
-                      onClick: () => onMovementCancel(),
+                      onClick: () => onMovementCancel()
                     },
                     {
                       label: 'Move Down',
                       disabled: disableState.COMPONENT_DOWN,
                       transparent: true,
-                      onClick: () => moveComponent('down'),
-                    },
+                      onClick: () => moveComponent('down')
+                    }
                   ]}
                   message={'Select direction for movement'}
                 />

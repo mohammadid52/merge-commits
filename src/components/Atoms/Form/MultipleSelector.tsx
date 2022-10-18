@@ -1,12 +1,8 @@
 import React, {useState, useRef, useContext, useEffect} from 'react';
-import {getAsset} from '../../../assets';
-import {GlobalContext} from '../../../contexts/GlobalContext';
-import {getImageFromS3} from '../../../utilities/services';
-import {
-  getInitialsFromString,
-  initials,
-  stringToHslColor,
-} from '../../../utilities/strings';
+import {getAsset} from 'assets';
+import {GlobalContext} from 'contexts/GlobalContext';
+import {getImageFromS3} from 'utilities/services';
+import {getInitialsFromString, initials, stringToHslColor} from 'utilities/strings';
 
 interface MultipleSelectorProps {
   list?: {id: string; name: string; value?: string; avatar?: string}[];
@@ -30,7 +26,7 @@ const MultipleSelector = (props: MultipleSelectorProps) => {
     arrowHidden,
     placeholder,
     onChange,
-    noOptionMessage,
+    noOptionMessage
   } = props;
   const [showList, setShowList] = useState(false);
   const currentRef: any = useRef(null);
@@ -166,7 +162,7 @@ const MultipleSelector = (props: MultipleSelectorProps) => {
                                   ' ' +
                                   getInitialsFromString(item.name)[1]
                               )}`,
-                              textShadow: '0.1rem 0.1rem 2px #423939b3',
+                              textShadow: '0.1rem 0.1rem 2px #423939b3'
                             }}>
                             {item.name
                               ? initials(

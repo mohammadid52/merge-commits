@@ -1,9 +1,9 @@
 import React, {useState, useRef, useContext, useCallback} from 'react';
 import ReactCrop from 'react-image-crop';
-import Modal from '../../Atoms/Modal';
-import {GlobalContext} from '../../../contexts/GlobalContext';
-import useDictionary from '../../../customHooks/dictionary';
-import Buttons from '../../Atoms/Buttons';
+import Modal from 'atoms/Modal';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import Buttons from 'atoms/Buttons';
 import DummyContent from '../../Lesson/UniversalLessonBuilder/UI/Preview/DummyContent';
 import AnimatedContainer from '../../Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 

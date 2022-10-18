@@ -1,10 +1,10 @@
-import Buttons from '@atoms/Buttons';
-import FormInput from '@atoms/Form/FormInput';
-import TextArea from '@atoms/Form/TextArea';
+import Buttons from 'atoms/Buttons';
+import FormInput from 'atoms/Form/FormInput';
+import TextArea from 'atoms/Form/TextArea';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import {GlobalContext} from '@contexts/GlobalContext';
-import * as customMutations from '@customGraphql/customMutations';
-import useDictionary from '@customHooks/dictionary';
+import {GlobalContext} from 'contexts/GlobalContext';
+import * as customMutations from 'customGraphql/customMutations';
+import useDictionary from 'customHooks/dictionary';
 import React, {useContext, useEffect, useState} from 'react';
 
 interface AddMeasurementProps {
@@ -80,12 +80,12 @@ const AddMeasurement = (props: AddMeasurementProps) => {
         name,
         topicID: topicId,
         criteria,
-        curriculumID: curricularId,
+        curriculumID: curricularId
       };
       if (rubricData?.id) {
         const item: any = await API.graphql(
           graphqlOperation(customMutations.updateRubric, {
-            input: {...input, id: rubricData?.id},
+            input: {...input, id: rubricData?.id}
           })
         );
         const updatedItem = item.data.updateRubric;

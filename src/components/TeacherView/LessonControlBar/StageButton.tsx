@@ -1,6 +1,6 @@
 import React, {useContext} from 'react';
 import {useHistory, useRouteMatch} from 'react-router-dom';
-import {GlobalContext} from '../../../contexts/GlobalContext';
+import {GlobalContext} from 'contexts/GlobalContext';
 import {UniversalLessonPage} from '../../../interfaces/UniversalLessonInterfaces';
 
 interface StageButtonProps {
@@ -24,7 +24,7 @@ const StageButton = (props: StageButtonProps) => {
 
     handlePageChange,
 
-    page,
+    page
   } = props;
   const {lessonState, controlDispatch} = useContext(GlobalContext);
 

@@ -1,14 +1,10 @@
-import Popover from '@components/Atoms/Popover';
-import {GlobalContext} from '@contexts/GlobalContext';
-import useDictionary from '@customHooks/dictionary';
+import Popover from 'components/Atoms/Popover';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
 import React, {useContext, useState} from 'react';
 import {BiDotsVerticalRounded} from 'react-icons/bi';
-import {
-  stringToHslColor,
-  initials,
-  getInitialsFromString,
-} from '@utilities/strings';
-import { getImageFromS3Static } from '@utilities/services';
+import {stringToHslColor, initials, getInitialsFromString} from 'utilities/strings';
+import {getImageFromS3Static} from 'utilities/services';
 
 interface ICurriculumListRowProps {
   index: number;
@@ -58,7 +54,10 @@ const CurriculumListRow = ({
         } items-center px-8 py-3 text-left text-sm leading-4 font-medium whitespace-normal`}>
         <div className="flex-shrink-0 h-10 w-10 flex items-center">
           {item.image ? (
-            <img src={getImageFromS3Static(item.image)} className="h-8 w-8 rounded-full" />
+            <img
+              src={getImageFromS3Static(item.image)}
+              className="h-8 w-8 rounded-full"
+            />
           ) : (
             <div
               className="h-8 w-8 rounded-full flex justify-center items-center text-white text-sm text-bold"
@@ -68,7 +67,7 @@ const CurriculumListRow = ({
                     ' ' +
                     getInitialsFromString(item.name)[1]
                 )}`,
-                textShadow: '0.1rem 0.1rem 2px #423939b3',
+                textShadow: '0.1rem 0.1rem 2px #423939b3'
               }}>
               {item.name
                 ? initials(
@@ -95,8 +94,19 @@ const CurriculumListRow = ({
       <div
         className={`w-3/10 items-center px-8 py-3 text-left text-sm leading-4 font-medium whitespace-normal`}>
         {item.universalSyllabus?.items?.map(
-          ({id, unit: {id: unitId, name}}: {id: string; unit: {id: string;name: string}}) => (
-            <li key={id} className="cursor-pointer" onClick={() => redirectToUnit(unitId)}>{name}</li>
+          ({
+            id,
+            unit: {id: unitId, name}
+          }: {
+            id: string;
+            unit: {id: string; name: string};
+          }) => (
+            <li
+              key={id}
+              className="cursor-pointer"
+              onClick={() => redirectToUnit(unitId)}>
+              {name}
+            </li>
           )
         )}
       </div>

@@ -3,13 +3,13 @@ import React, {Fragment, useContext, useEffect, useState} from 'react';
 import {IoIosKeypad} from 'react-icons/io';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {RiArrowRightLine} from 'react-icons/ri';
-import {GlobalContext} from '../../../../../../contexts/GlobalContext';
-import useDictionary from '../../../../../../customHooks/dictionary';
-import * as queries from '../../../../../../graphql/queries';
-import {getLanguageString, getTypeString} from '../../../../../../utilities/strings';
-import Buttons from '../../../../../Atoms/Buttons';
-import CheckBox from '../../../../../Atoms/Form/CheckBox';
-import SearchInput from '../../../../../Atoms/Form/SearchInput';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import * as queries from 'graphql/queries';
+import {getLanguageString, getTypeString} from 'utilities/strings';
+import Buttons from 'atoms/Buttons';
+import CheckBox from 'atoms/Form/CheckBox';
+import SearchInput from 'atoms/Form/SearchInput';
 
 interface QuestionLookupProps {
   changeStep: (step: string) => void;
@@ -29,7 +29,7 @@ const QuestionLookup = (props: QuestionLookupProps) => {
     setUnsavedChanges,
     goBackToPreviousStep,
     lessonName,
-    lessonType,
+    lessonType
   } = props;
   const [selectedQuestionIds, setSelectedQuestionIds] = useState([]);
   const [questionsList, setQuestionsList] = useState([]);

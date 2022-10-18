@@ -1,13 +1,13 @@
-import FormInput from '@atoms/Form/FormInput';
-import Buttons from '@components/Atoms/Buttons';
-import Label from '@components/Atoms/Form/Label';
-import RichTextEditor from '@components/Atoms/RichTextEditor';
-import Media from '@components/Community/Components/Media';
-import {COMMUNITY_UPLOAD_KEY, IFile} from '@components/Community/constants.community';
-import {REGEX} from '@components/Lesson/UniversalLessonBuilder/UI/common/constants';
+import FormInput from 'atoms/Form/FormInput';
+import Buttons from 'components/Atoms/Buttons';
+import Label from 'components/Atoms/Form/Label';
+import RichTextEditor from 'components/Atoms/RichTextEditor';
+import Media from 'components/Community/Components/Media';
+import {COMMUNITY_UPLOAD_KEY, IFile} from 'components/Community/constants.community';
+import {REGEX} from 'components/Lesson/UniversalLessonBuilder/UI/common/constants';
 import {IAnnouncementInput, ICommunityCardProps} from '@interfaces/Community.interfaces';
-import AnimatedContainer from '@uiComponents/Tabs/AnimatedContainer';
-import {getImageFromS3Static} from '@utilities/services';
+import AnimatedContainer from 'uiComponents/Tabs/AnimatedContainer';
+import {getImageFromS3Static} from 'utilities/services';
 import isEmpty from 'lodash/isEmpty';
 import React, {useEffect, useState} from 'react';
 

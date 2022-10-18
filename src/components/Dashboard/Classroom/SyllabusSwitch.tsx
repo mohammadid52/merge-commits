@@ -3,11 +3,11 @@ import {FaBook} from 'react-icons/fa';
 import {useHistory} from 'react-router';
 import {DashboardProps} from '../Dashboard';
 import {Syllabus} from './Classroom';
-import {GlobalContext, useGlobalContext} from '../../../contexts/GlobalContext';
-import useDictionary from '../../../customHooks/dictionary';
-import {getAsset} from '../../../assets';
+import {GlobalContext, useGlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import {getAsset} from 'assets';
 
-import Buttons from '../../Atoms/Buttons';
+import Buttons from 'atoms/Buttons';
 // import ProgressBar from './ProgressBar';
 
 const SyllabusSwitch = ({

@@ -2,14 +2,14 @@ import React, {Fragment, useContext} from 'react';
 import {useHistory} from 'react-router';
 import {DragDropContext, Draggable, Droppable} from 'react-beautiful-dnd';
 import {UniversalLessonPage} from '../../../../../interfaces/UniversalLessonInterfaces';
-import PageWrapper from '../../../../Atoms/PageWrapper';
-import Buttons from '../../../../Atoms/Buttons';
+import PageWrapper from 'atoms/PageWrapper';
+import Buttons from 'atoms/Buttons';
 
-import {getAsset} from '../../../../../assets';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
-import useDictionary from '../../../../../customHooks/dictionary';
-import Loader from '../../../../Atoms/Loader';
+import {getAsset} from 'assets';
+import {GlobalContext} from 'contexts/GlobalContext';
+import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
+import useDictionary from 'customHooks/dictionary';
+import Loader from 'atoms/Loader';
 
 interface LessonPlansListProps {
   lessonId: string;
@@ -23,16 +23,16 @@ interface LessonPlansListProps {
 const LessonPlansList = ({
   lessonId,
   loading,
-  universalLessonDetails,
+  universalLessonDetails
 }: LessonPlansListProps) => {
   const history = useHistory();
   const {
     clientKey,
     state: {
-      user: {isSuperAdmin},
+      user: {isSuperAdmin}
     },
     theme,
-    userLanguage,
+    userLanguage
   } = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const {BUTTONS, LessonBuilderDict} = useDictionary(clientKey);
@@ -59,10 +59,10 @@ const LessonPlansList = ({
 
   const lessonPagePreview = (id: string) => {
     setPreviewMode(true);
-    const baseUrl = isSuperAdmin ? '/dashboard/manage-institutions' : `/dashboard/manage-institutions/institution/${universalLessonDetails.institutionID}`
-    history.push(
-      `${baseUrl}/lessons/${lessonId}/page-builder?pageId=${id}`
-    );
+    const baseUrl = isSuperAdmin
+      ? '/dashboard/manage-institutions'
+      : `/dashboard/manage-institutions/institution/${universalLessonDetails.institutionID}`;
+    history.push(`${baseUrl}/lessons/${lessonId}/page-builder?pageId=${id}`);
   };
 
   const handleOnDragEnd = (result: any) => {

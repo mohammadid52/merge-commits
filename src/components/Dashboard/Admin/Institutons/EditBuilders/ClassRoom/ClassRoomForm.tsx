@@ -2,23 +2,23 @@ import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import React, {useEffect, useState} from 'react';
 import {useHistory, useLocation, useParams, useRouteMatch} from 'react-router-dom';
 
-import * as customMutations from '@customGraphql/customMutations';
-import * as customQueries from '@customGraphql/customQueries';
-import * as mutation from '@graphql/mutations';
-import * as queries from '@graphql/queries';
+import * as customMutations from 'customGraphql/customMutations';
+import * as customQueries from 'customGraphql/customQueries';
+import * as mutation from 'graphql/mutations';
+import * as queries from 'graphql/queries';
 
-import Buttons from '@atoms/Buttons';
-import FormInput from '@atoms/Form/FormInput';
-import MultipleSelector from '@atoms/Form/MultipleSelector';
-import Selector from '@atoms/Form/Selector';
-import SelectorWithAvatar from '@atoms/Form/SelectorWithAvatar';
-import PageWrapper from '@atoms/PageWrapper';
-import ModalPopUp from '@molecules/ModalPopUp';
+import Buttons from 'atoms/Buttons';
+import FormInput from 'atoms/Form/FormInput';
+import MultipleSelector from 'atoms/Form/MultipleSelector';
+import Selector from 'atoms/Form/Selector';
+import SelectorWithAvatar from 'atoms/Form/SelectorWithAvatar';
+import PageWrapper from 'atoms/PageWrapper';
+import ModalPopUp from 'molecules/ModalPopUp';
 
-import {useGlobalContext} from '@contexts/GlobalContext';
-import useDictionary from '@customHooks/dictionary';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
 import {LessonEditDict} from '@dictionary/dictionary.iconoclast';
-import {getFilterORArray} from '@utilities/strings';
+import {getFilterORArray} from 'utilities/strings';
 
 interface ClassRoomFormProps {
   instId: string;

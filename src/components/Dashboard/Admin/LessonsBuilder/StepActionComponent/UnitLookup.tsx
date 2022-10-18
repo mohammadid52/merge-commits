@@ -2,17 +2,17 @@ import React, {useEffect, useState, useContext} from 'react';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {useHistory} from 'react-router-dom';
 
-import Buttons from '../../../../Atoms/Buttons';
-import Selector from '../../../../Atoms/Form/Selector';
-import Loader from '../../../../Atoms/Loader';
+import Buttons from 'atoms/Buttons';
+import Selector from 'atoms/Form/Selector';
+import Loader from 'atoms/Loader';
 
-import * as customQueries from '../../../../../customGraphql/customQueries';
-import * as customMutations from '../../../../../customGraphql/customMutations';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import useDictionary from '../../../../../customHooks/dictionary';
-import {statusList} from '../../../../../utilities/staticData';
+import * as customQueries from 'customGraphql/customQueries';
+import * as customMutations from 'customGraphql/customMutations';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import {statusList} from 'utilities/staticData';
 
-import {getAsset} from '../../../../../assets';
+import {getAsset} from 'assets';
 
 interface UnitLookupProps {
   lessonName: string;
@@ -32,7 +32,7 @@ const UnitLookup = (props: UnitLookupProps) => {
 
   const initialData: any = {
     curriculum: {name: '', value: '', id: ''},
-    unit: {name: '', value: '', id: ''},
+    unit: {name: '', value: '', id: ''}
   };
 
   const [formState, setFormState] = useState<any>(initialData);
@@ -44,11 +44,11 @@ const UnitLookup = (props: UnitLookupProps) => {
   const [saving, setSaving] = useState(false);
   const [editState, setEditState] = useState<{id: string; action?: string}>({
     id: '',
-    action: '',
+    action: ''
   });
   const [message, setMessage] = useState({
     msg: '',
-    isError: false,
+    isError: false
   });
 
   const gotoCurricularUnit = (syllabusId: string, curricularId: string) => {
@@ -60,7 +60,7 @@ const UnitLookup = (props: UnitLookupProps) => {
   const onSelectorChange = (val: string, name: string, id: string, field: string) => {
     setFormState({
       ...formState,
-      [field]: {id, name, value: val},
+      [field]: {id, name, value: val}
     });
   };
   const editCurrentUnit = (id: string) => {
@@ -85,7 +85,7 @@ const UnitLookup = (props: UnitLookupProps) => {
       setEditState({...editState, action: 'updating...'});
       const input = {
         id: uniqId,
-        status: val,
+        status: val
       };
       const result: any = await API.graphql(
         graphqlOperation(customMutations.updateSyllabusLesson, {input: input})
@@ -96,7 +96,7 @@ const UnitLookup = (props: UnitLookupProps) => {
     } catch {
       setMessage({
         msg: 'Error while updating unit status please try later.',
-        isError: true,
+        isError: true
       });
       setEditState({id: '', action: ''});
     }
@@ -113,17 +113,17 @@ const UnitLookup = (props: UnitLookupProps) => {
             active: lessonType !== 'lesson' ? true : false,
             stage: `checkpoint?id=${item.LessonComponentID}`,
             type: 'survey',
-            displayMode: 'SELF',
+            displayMode: 'SELF'
           };
         });
       const input = {
         syllabusID: formState.unit.id,
         lessonID: lessonId,
         displayData: {
-          breakdownComponent: lessonType,
+          breakdownComponent: lessonType
         },
         lessonPlan: lessonComponentPlan?.length > 0 ? lessonComponentPlan : [],
-        status: 'Active',
+        status: 'Active'
       };
       setSaving(true);
       const result: any = await API.graphql(
@@ -135,7 +135,7 @@ const UnitLookup = (props: UnitLookupProps) => {
           ...newLesson,
           curricularName: formState?.curriculum?.name,
           curricularId: formState?.curriculum?.id,
-          syllabusName: formState?.unit?.name,
+          syllabusName: formState?.unit?.name
         };
         const updatedList: any = curriculaList.map((curricular: any) => {
           if (curricular?.curricularId === formState?.curriculum?.id) {
@@ -144,7 +144,7 @@ const UnitLookup = (props: UnitLookupProps) => {
             );
             return {
               ...curricular,
-              unitList: updatedUnitList,
+              unitList: updatedUnitList
             };
           } else {
             return curricular;
@@ -155,13 +155,13 @@ const UnitLookup = (props: UnitLookupProps) => {
         setFormState({
           ...formState,
           curriculum: {name: '', value: '', id: ''},
-          unit: {name: '', value: '', id: ''},
+          unit: {name: '', value: '', id: ''}
         });
         setUnitsList([]);
         setMessage({
           ...message,
           isError: false,
-          msg: UnitLookupDict[userLanguage]['MESSAGES']['ADDED'],
+          msg: UnitLookupDict[userLanguage]['MESSAGES']['ADDED']
         });
         setSaving(false);
       }
@@ -169,7 +169,7 @@ const UnitLookup = (props: UnitLookupProps) => {
       setMessage({
         ...message,
         isError: true,
-        msg: UnitLookupDict[userLanguage]['MESSAGES']['ADDERR'],
+        msg: UnitLookupDict[userLanguage]['MESSAGES']['ADDERR']
       });
     }
   };
@@ -179,14 +179,14 @@ const UnitLookup = (props: UnitLookupProps) => {
     Promise.all([
       await API.graphql(
         graphqlOperation(customQueries.getInstitutionCurriculars, {
-          id: institution?.id,
+          id: institution?.id
         })
       ),
       await API.graphql(
         graphqlOperation(customQueries.listFilteredSyllabusLessons, {
-          filter: {lessonID: {eq: lessonId}},
+          filter: {lessonID: {eq: lessonId}}
         })
-      ),
+      )
     ])
       .then(([res1, res2]: any) => {
         const previouslySelectedUnits: any =
@@ -212,7 +212,7 @@ const UnitLookup = (props: UnitLookupProps) => {
             ...item,
             curricularName: relatedCurricular?.name || '-',
             curricularId: relatedCurricular?.id || null,
-            syllabusName: syllabusName,
+            syllabusName: syllabusName
           };
         });
         const filteredList: any = curricularsList.map((item: any) => {
@@ -224,7 +224,7 @@ const UnitLookup = (props: UnitLookupProps) => {
             curricularId: item?.id,
             name: item?.name,
             value: item?.name,
-            unitList: result?.length ? [...result] : [],
+            unitList: result?.length ? [...result] : []
           };
         });
         setSelectedUnitsList([...selectedList]);
@@ -235,7 +235,7 @@ const UnitLookup = (props: UnitLookupProps) => {
         setMessage({
           ...message,
           isError: true,
-          msg: UnitLookupDict[userLanguage]['MESSAGES']['FETCHERR'],
+          msg: UnitLookupDict[userLanguage]['MESSAGES']['FETCHERR']
         });
         setLoading(false);
       });
@@ -250,13 +250,13 @@ const UnitLookup = (props: UnitLookupProps) => {
         const syllabusList: any = selectedItem?.unitList?.map((item: any) => ({
           id: item.id,
           name: item.name,
-          value: item.name,
+          value: item.name
         }));
         setUnitsList([...syllabusList]);
       }
       setFormState({
         ...formState,
-        unit: {id: '', name: '', value: ''},
+        unit: {id: '', name: '', value: ''}
       });
     }
   }, [formState?.curriculum?.id]);

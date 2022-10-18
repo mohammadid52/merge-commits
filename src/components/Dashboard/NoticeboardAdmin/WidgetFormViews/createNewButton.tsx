@@ -1,9 +1,9 @@
 import React, {useContext} from 'react';
 import {AiFillPlusCircle, AiOutlineSave, AiOutlineStop} from 'react-icons/all';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
-import {GlobalContext} from '../../../../contexts/GlobalContext';
-import useDictionary from '../../../../customHooks/dictionary';
-import Buttons from '../../../Atoms/Buttons';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import Buttons from 'atoms/Buttons';
 import {NoticeboardFormProps} from '../NoticeboardAdminContent';
 
 const CreateNewButton = (props: NoticeboardFormProps) => {

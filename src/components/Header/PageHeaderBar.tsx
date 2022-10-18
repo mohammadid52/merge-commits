@@ -1,22 +1,22 @@
-import React, { useContext, useEffect } from 'react';
-import { GlobalContext } from '../../contexts/GlobalContext';
-import { useCookies } from 'react-cookie';
-import { NavLink } from 'react-router-dom';
+import React, {useContext, useEffect} from 'react';
+import {GlobalContext} from 'contexts/GlobalContext';
+import {useCookies} from 'react-cookie';
+import {NavLink} from 'react-router-dom';
 
-import { LinkProps } from '../Dashboard/Menu/Links';
+import {LinkProps} from '../Dashboard/Menu/Links';
 
-import { IconContext } from 'react-icons/lib/esm/iconContext';
-import { AiOutlineLogout } from 'react-icons/ai';
+import {IconContext} from 'react-icons/lib/esm/iconContext';
+import {AiOutlineLogout} from 'react-icons/ai';
 
-import { Auth } from '@aws-amplify/auth';
-import useDictionary from '../../customHooks/dictionary';
-import API, { graphqlOperation } from '@aws-amplify/api';
-import * as customMutations from '../../customGraphql/customMutations'
+import {Auth} from '@aws-amplify/auth';
+import useDictionary from 'customHooks/dictionary';
+import API, {graphqlOperation} from '@aws-amplify/api';
+import * as customMutations from 'customGraphql/customMutations';
 
 const PageHeaderBar: React.FC<LinkProps> = (linkProps: LinkProps) => {
   const [cookies, , removeCookie] = useCookies();
-  const { theme, userLanguage, clientKey, state, dispatch } = useContext(GlobalContext);
-  const { appDict } = useDictionary(clientKey)
+  const {theme, userLanguage, clientKey, state, dispatch} = useContext(GlobalContext);
+  const {appDict} = useDictionary(clientKey);
 
   async function SignOut() {
     try {
@@ -24,14 +24,14 @@ const PageHeaderBar: React.FC<LinkProps> = (linkProps: LinkProps) => {
         id: state.user.id,
         authId: state.user.authId,
         email: state.user.email,
-        lastLoggedOut: (new Date()).toISOString()
-      }
-      API.graphql(graphqlOperation(customMutations.updatePersonLogoutTime, { input }));
+        lastLoggedOut: new Date().toISOString()
+      };
+      API.graphql(graphqlOperation(customMutations.updatePersonLogoutTime, {input}));
       await Auth.signOut();
-      linkProps.updateAuthState(false)
-      removeCookie('auth', { path: '/' });
+      linkProps.updateAuthState(false);
+      removeCookie('auth', {path: '/'});
       sessionStorage.removeItem('accessToken');
-      dispatch({ type: 'CLEANUP' });
+      dispatch({type: 'CLEANUP'});
     } catch (error) {
       console.error('error signing out: ', error);
     }
@@ -52,13 +52,13 @@ const PageHeaderBar: React.FC<LinkProps> = (linkProps: LinkProps) => {
       className={`z-40 fixed right-0 w-full h-12 min-h-12 ${theme.dashboard.bg} text-gray-200 flex justify-center md:justify-end`}>
       <div
         className={`w-full md:hidden h-full md:h-12 ${theme.dashboard.bg} flex justify-center items-center text-2xl font-bold z-50 ml-4`}>
-        <NavLink to='/dashboard' id='dashboard' onClick={handleLink}>
+        <NavLink to="/dashboard" id="dashboard" onClick={handleLink}>
           <img
-            id='dashboard'
-            className='h-6'
+            id="dashboard"
+            className="h-6"
             onClick={handleLink}
-            src='https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/logo_white.svg'
-            alt='Iconoclast Artists'
+            src="https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/logo_white.svg"
+            alt="Iconoclast Artists"
           />
         </NavLink>
       </div>
@@ -67,14 +67,19 @@ const PageHeaderBar: React.FC<LinkProps> = (linkProps: LinkProps) => {
 
       <div className={`w-full md:w-32 h-12 md:flex flex-row justify-end bg-darker-gray`}>
         {state.isAuthenticated ? (
-          <div className={`h-full text-sm flex align-center justify-center ${theme.sidemenu.bg}`} onClick={handleSignOut}>
-            <span className='relative mr-1 w-auto h-full flex items-center justify-center'>
-              <IconContext.Provider value={{ size: '1.25rem', className: 'self-center' }}>
+          <div
+            className={`h-full text-sm flex align-center justify-center ${theme.sidemenu.bg}`}
+            onClick={handleSignOut}>
+            <span className="relative mr-1 w-auto h-full flex items-center justify-center">
+              <IconContext.Provider value={{size: '1.25rem', className: 'self-center'}}>
                 <AiOutlineLogout />
               </IconContext.Provider>
             </span>
-            <span className={`relative mr-1 w-auto h-full flex items-center justify-center`}>
-              <button className="align-middle self-center mb-1">{appDict[userLanguage]['LOG_OUT']}</button>
+            <span
+              className={`relative mr-1 w-auto h-full flex items-center justify-center`}>
+              <button className="align-middle self-center mb-1">
+                {appDict[userLanguage]['LOG_OUT']}
+              </button>
             </span>
           </div>
         ) : null}

@@ -1,7 +1,7 @@
-import CheckBox from '@atoms/Form/CheckBox';
-import Loader from '@atoms/Loader';
-import {GlobalContext} from '@contexts/GlobalContext';
-import useDictionary from '@customHooks/dictionary';
+import CheckBox from 'atoms/Form/CheckBox';
+import Loader from 'atoms/Loader';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
 import React, {useContext} from 'react';
 
 interface IMeasurementList {
@@ -19,7 +19,7 @@ const MeasurementsList = ({
   handleCheckboxChange,
   learningEvidenceList,
   loading,
-  selectedMeasurements,
+  selectedMeasurements
 }: IMeasurementList) => {
   const {clientKey, userLanguage} = useContext(GlobalContext);
   const {LessonBuilderDict} = useDictionary(clientKey);

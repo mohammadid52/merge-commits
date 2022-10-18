@@ -4,16 +4,16 @@ import {HiPencil} from 'react-icons/hi';
 // import {DragDropContext, Draggable, Droppable} from 'react-beautiful-dnd';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 
-import * as mutation from '../../../../../../graphql/mutations';
-import {useQuery} from '../../../../../../customHooks/urlParam';
+import * as mutation from 'graphql/mutations';
+import {useQuery} from 'customHooks/urlParam';
 
-import Modal from '../../../../../Atoms/Modal';
-import {DeleteActionBtn} from '../../../../../Atoms/Buttons/DeleteActionBtn';
-import AddButton from '../../../../../Atoms/Buttons/AddButton';
-import Loader from '../../../../../Atoms/Loader';
+import Modal from 'atoms/Modal';
+import {DeleteActionBtn} from 'atoms/Buttons/DeleteActionBtn';
+import AddButton from 'atoms/Buttons/AddButton';
+import Loader from 'atoms/Loader';
 
 import HolidayFormComponent from './HolidayFormComponent';
-import ModalPopUp from '../../../../../Molecules/ModalPopUp';
+import ModalPopUp from 'molecules/ModalPopUp';
 import {FaArrowDown, FaArrowUp} from 'react-icons/fa';
 
 export interface IImpactLog {
@@ -36,7 +36,7 @@ const ClassRoomHolidays = ({
   logsLoading,
   setLessonImpactLogs,
   setLogsChanged,
-  sortLogsByDate,
+  sortLogsByDate
 }: IClassRoomHolidaysProps) => {
   const params = useQuery(location.search);
   const {roomId}: any = useParams();
@@ -48,7 +48,7 @@ const ClassRoomHolidays = ({
   const [warnModal, setWarnModal] = useState({
     show: false,
     message: '',
-    action: () => {},
+    action: () => {}
   });
 
   const handleEdit = (index: number) => {
@@ -77,8 +77,8 @@ const ClassRoomHolidays = ({
         graphqlOperation(mutation.updateRoom, {
           input: {
             id: roomId,
-            lessonImpactLog: dateToUpdate,
-          },
+            lessonImpactLog: dateToUpdate
+          }
         })
       );
       setLessonImpactLogs(sortLogsByDate(result?.data?.updateRoom.lessonImpactLog));
@@ -89,7 +89,7 @@ const ClassRoomHolidays = ({
     setWarnModal({
       show: true,
       message: `Are you sure you want to remove this log?`,
-      action: onDrop,
+      action: onDrop
     });
   };
 

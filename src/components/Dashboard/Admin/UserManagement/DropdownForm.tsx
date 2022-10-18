@@ -1,5 +1,5 @@
-import Label from '@components/Atoms/Form/Label';
-import {useGlobalContext} from '@contexts/GlobalContext';
+import Label from 'components/Atoms/Form/Label';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import {getAsset} from 'assets';
 import React, {useEffect, useRef, useState} from 'react';
 

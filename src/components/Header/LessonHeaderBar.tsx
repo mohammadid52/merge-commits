@@ -5,12 +5,12 @@ import PositiveAlert from '../General/Popup';
 import LessonTopMenu from '../Lesson/Navigation/LessonTopMenu';
 import SideMenu from '../Lesson/Navigation/SideMenu';
 import {LessonHeaderBarProps} from '../../interfaces/LessonComponentsInterfaces';
-import {GlobalContext} from '../../contexts/GlobalContext';
-import {getLocalStorageData} from '../../utilities/localStorage';
-import useStudentTimer from '../../customHooks/timer';
-import Modal from '@components/Atoms/Modal';
+import {GlobalContext} from 'contexts/GlobalContext';
+import {getLocalStorageData} from 'utilities/localStorage';
+import useStudentTimer from 'customHooks/timer';
+import Modal from 'components/Atoms/Modal';
 import ReactPlayer from 'react-player';
-import useTailwindBreakpoint from '@customHooks/tailwindBreakpoint';
+import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
 import VideoWidget from '../Lesson/Navigation/Widgets/VideoWidget';
 import {StudentPageInput} from '@interfaces/UniversalLessonInterfaces';
 

@@ -2,16 +2,16 @@ import React, {useEffect, useState, Fragment, useContext} from 'react';
 import {useHistory, useRouteMatch} from 'react-router';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 
-import {getAsset} from '../../../../../assets';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import * as customQueries from '../../../../../customGraphql/customQueries';
-import * as mutations from '../../../../../graphql/mutations';
-import useDictionary from '../../../../../customHooks/dictionary';
-import Loader from '../../../../Atoms/Loader';
-import Tooltip from '../../../../Atoms/Tooltip';
-import AddButton from '../../../../Atoms/Buttons/AddButton';
-import SearchInput from '@components/Atoms/Form/SearchInput';
-import Selector from '@components/Atoms/Form/Selector';
+import {getAsset} from 'assets';
+import {GlobalContext} from 'contexts/GlobalContext';
+import * as customQueries from 'customGraphql/customQueries';
+import * as mutations from 'graphql/mutations';
+import useDictionary from 'customHooks/dictionary';
+import Loader from 'atoms/Loader';
+import Tooltip from 'atoms/Tooltip';
+import AddButton from 'atoms/Buttons/AddButton';
+import SearchInput from 'components/Atoms/Form/SearchInput';
+import Selector from 'components/Atoms/Form/Selector';
 
 interface RoomListProps {
   instId: string;

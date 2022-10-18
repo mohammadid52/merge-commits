@@ -7,19 +7,19 @@ import {HiOutlineRefresh} from 'react-icons/hi';
 import {IoIosCheckmarkCircle} from 'react-icons/io';
 import {useHistory} from 'react-router';
 
-import * as customQueries from '../../../../../customGraphql/customQueries';
-import * as queries from '../../../../../graphql/queries';
+import * as customQueries from 'customGraphql/customQueries';
+import * as queries from 'graphql/queries';
 
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import {ContextMenuProvider} from '../../../../../contexts/TreeContext';
+import {GlobalContext} from 'contexts/GlobalContext';
+import {ContextMenuProvider} from 'contexts/TreeContext';
 import {
   getLocalStorageData,
   removeLocalStorageData,
   setLocalStorageData
-} from '../../../../../utilities/localStorage';
+} from 'utilities/localStorage';
 
-import Selector from '../../../../Atoms/Form/Selector';
-import Loader from '../../../../Atoms/Loader';
+import Selector from 'atoms/Form/Selector';
+import Loader from 'atoms/Loader';
 
 import {Tree} from '../../../../TreeView/Tree';
 

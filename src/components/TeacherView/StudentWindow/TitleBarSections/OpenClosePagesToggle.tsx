@@ -2,10 +2,10 @@ import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import React, {useContext, useEffect, useState} from 'react';
 import {FaCompress, FaExpand} from 'react-icons/fa';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
-import {GlobalContext} from '@contexts/GlobalContext';
-import * as mutations from '@graphql/mutations';
+import {GlobalContext} from 'contexts/GlobalContext';
+import * as mutations from 'graphql/mutations';
 import {UniversalLessonPage} from '@interfaces/UniversalLessonInterfaces';
-import {getLocalStorageData, setLocalStorageData} from '@utilities/localStorage';
+import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
 import {StudentWindowTitleBarProps} from '../StudentWindowTitleBar';
 
 interface IOpenClosePagesToggle extends StudentWindowTitleBarProps {
@@ -21,7 +21,7 @@ const OpenClosePagesToggle = ({
   currentPage,
   activePageData,
   handleOpenComponent,
-  handleCloseComponent,
+  handleCloseComponent
 }: IOpenClosePagesToggle) => {
   return (
     <div className="w-1/3 flex justify-start h-8 align-middle leading-8 ">

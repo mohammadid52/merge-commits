@@ -3,15 +3,15 @@ import {IoMdAddCircleOutline, IoMdRemoveCircleOutline} from 'react-icons/io';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 
-import CheckBox from '../../../../../../../Atoms/Form/CheckBox';
-import FormInput from '../../../../../../../Atoms/Form/FormInput';
-import Selector from '../../../../../../../Atoms/Form/Selector';
-import Buttons from '../../../../../../../Atoms/Buttons';
+import CheckBox from 'atoms/Form/CheckBox';
+import FormInput from 'atoms/Form/FormInput';
+import Selector from 'atoms/Form/Selector';
+import Buttons from 'atoms/Buttons';
 
-import * as mutations from '../../../../../../../../graphql/mutations';
-import {GlobalContext} from '../../../../../../../../contexts/GlobalContext';
-import {getAsset} from '../../../../../../../../assets';
-import useDictionary from '../../../../../../../../customHooks/dictionary';
+import * as mutations from 'graphql/mutations';
+import {GlobalContext} from 'contexts/GlobalContext';
+import {getAsset} from 'assets';
+import useDictionary from 'customHooks/dictionary';
 
 interface AddQuestionProps {
   goBackToPreviousStep: () => void;
@@ -51,10 +51,10 @@ const AddQuestion = (props: AddQuestionProps) => {
     isRequired: false,
     options: [
       {label: '1', text: ''},
-      {label: '2', text: ''},
+      {label: '2', text: ''}
     ],
     otherOpt: false,
-    noneOfAbove: false,
+    noneOfAbove: false
   };
   const [questionData, setQuestionData] = useState<InitialState>(initialState);
   // const [selectedDesigners, setSelectedDesigners] = useState([]);
@@ -65,7 +65,7 @@ const AddQuestion = (props: AddQuestionProps) => {
     type: '',
     options: '',
     message: '',
-    isError: true,
+    isError: true
   });
   const typeList: any = [
     {id: '1', name: 'Text', value: 'text'},
@@ -75,43 +75,43 @@ const AddQuestion = (props: AddQuestionProps) => {
     {id: '5', name: 'Date Picker', value: 'datePicker'},
     {id: '6', name: 'Emoji', value: 'emoji'},
     {id: '7', name: 'Attachments', value: 'attachments'},
-    {id: '8', name: 'Link', value: 'link'},
+    {id: '8', name: 'Link', value: 'link'}
   ];
 
   const languageList = [
     {id: 1, name: 'English', value: 'EN'},
-    {id: 2, name: 'Spanish', value: 'ES'},
+    {id: 2, name: 'Spanish', value: 'ES'}
   ];
 
   const selectOneOptions = [
     {
       label: '1',
-      text: 'Very Difficult',
+      text: 'Very Difficult'
     },
     {
       label: '2',
-      text: 'Difficult',
+      text: 'Difficult'
     },
     {
       label: '3',
-      text: 'Easy',
+      text: 'Easy'
     },
     {
       label: '4',
-      text: 'Very Easy',
-    },
+      text: 'Very Easy'
+    }
   ];
 
   const onInputChange = (e: any) => {
     setQuestionData({
       ...questionData,
-      [e.target.name]: e.target.value,
+      [e.target.name]: e.target.value
     });
   };
   const toggleCheckBoxState = (field: string, value: boolean) => {
     setQuestionData({
       ...questionData,
-      [field]: !value,
+      [field]: !value
     });
   };
   const optionInputChange = (index: number, e: any) => {
@@ -119,7 +119,7 @@ const AddQuestion = (props: AddQuestionProps) => {
     currentOptions[index].text = e.target.value;
     setQuestionData({
       ...questionData,
-      options: currentOptions,
+      options: currentOptions
     });
   };
   const onOptionAdd = (index: number) => {
@@ -137,7 +137,7 @@ const AddQuestion = (props: AddQuestionProps) => {
     });
     setQuestionData({
       ...questionData,
-      options: updatedOptions,
+      options: updatedOptions
     });
   };
   const onOptionRemove = (index: number) => {
@@ -155,7 +155,7 @@ const AddQuestion = (props: AddQuestionProps) => {
       });
       setQuestionData({
         ...questionData,
-        options: updatedOptions,
+        options: updatedOptions
       });
     }
   };
@@ -165,8 +165,8 @@ const AddQuestion = (props: AddQuestionProps) => {
       [field]: {
         id: id,
         name: name,
-        value: val,
-      },
+        value: val
+      }
     });
   };
   const filteredOptions = (options: {label: string; text: string}[]) => {
@@ -217,7 +217,7 @@ const AddQuestion = (props: AddQuestionProps) => {
           question: questionData.question,
           // designers: selectedDesigners.map(item => item.id),
           language: questionData.language.value,
-          options: filteredOptions(questionData.options),
+          options: filteredOptions(questionData.options)
         };
         const results: any = await API.graphql(
           graphqlOperation(mutations.createQuestion, {input: input})
@@ -231,7 +231,7 @@ const AddQuestion = (props: AddQuestionProps) => {
             label: '',
             options: '',
             message: addQuestionDict[userLanguage]['messages']['qdetailsave'],
-            isError: false,
+            isError: false
           });
           addNewQuestion(newQuestion);
           goBackToPreviousStep();
@@ -244,7 +244,7 @@ const AddQuestion = (props: AddQuestionProps) => {
           label: '',
           options: '',
           message: addQuestionDict[userLanguage]['messages']['unabletosave'],
-          isError: true,
+          isError: true
         });
         setLoading(false);
       }
@@ -255,15 +255,15 @@ const AddQuestion = (props: AddQuestionProps) => {
     if (questionData.type?.value === 'selectOne') {
       setQuestionData({
         ...questionData,
-        options: selectOneOptions,
+        options: selectOneOptions
       });
     } else if (questionData.type?.value === 'selectMany') {
       setQuestionData({
         ...questionData,
         options: [
           {label: '1', text: ''},
-          {label: '2', text: ''},
-        ],
+          {label: '2', text: ''}
+        ]
       });
     }
   }, [questionData.type]);

@@ -1,5 +1,5 @@
-import Popover from '@components/Atoms/Popover';
-import {GlobalContext} from '@contexts/GlobalContext';
+import Popover from 'components/Atoms/Popover';
+import {GlobalContext} from 'contexts/GlobalContext';
 import {getAsset} from 'assets';
 import React, {useContext, useState} from 'react';
 import {BiDotsVerticalRounded} from 'react-icons/bi';

@@ -1,8 +1,8 @@
-import {UPLOAD_KEYS} from '@components/Lesson/constants';
+import {UPLOAD_KEYS} from 'components/Lesson/constants';
 import React, {useCallback, useEffect, useState} from 'react';
 import {IconContext} from 'react-icons';
 import {AiOutlineFile} from 'react-icons/ai';
-import {getImageFromS3} from '../../../../utilities/services';
+import {getImageFromS3} from 'utilities/services';
 
 interface IFileListItem {
   fileIdx: number;
@@ -25,7 +25,7 @@ const FileListItem = ({
   handleToggleDelete,
   handleConfirmDelete,
   deleting,
-  uploadKey,
+  uploadKey
 }: IFileListItem) => {
   // ##################################################################### //
   // ######################## HANDLE IMAGE LOADING ####################### //

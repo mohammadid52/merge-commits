@@ -1,10 +1,10 @@
-import {getImageFromS3Static} from '@utilities/services';
+import {getImageFromS3Static} from 'utilities/services';
 import React, {useCallback, useContext} from 'react';
 import {useDropzone} from 'react-dropzone';
 import {FaCloudUploadAlt} from 'react-icons/fa';
-import {GlobalContext} from '../../../contexts/GlobalContext';
-import {UniversalBuilderDict} from '../../../dictionary/dictionary.iconoclast';
-import {replaceAll} from '../../../utilities/strings';
+import {GlobalContext} from 'contexts/GlobalContext';
+import {UniversalBuilderDict} from 'dictionary/dictionary.iconoclast';
+import {replaceAll} from 'utilities/strings';
 
 interface IULBFileUploader {
   acceptedFilesFormat?: string;
@@ -27,7 +27,7 @@ const ULBFileUploader = ({
   showPreview = true,
   updateFileUrl,
   customVideo = false,
-  isEditingMode = false,
+  isEditingMode = false
 }: IULBFileUploader) => {
   const {userLanguage} = useContext(GlobalContext);
   const otherProps: any = {};
@@ -50,7 +50,7 @@ const ULBFileUploader = ({
   const {getRootProps, getInputProps, fileRejections} = useDropzone({
     onDrop,
     multiple,
-    ...otherProps,
+    ...otherProps
   });
   const label: string = multiple ? 'some files' : 'file';
 

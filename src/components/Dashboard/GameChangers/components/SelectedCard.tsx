@@ -1,23 +1,23 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import AnimatedFlower from '@components/Dashboard/GameChangers/components/AnimatedFlower';
-import AnimatedMind from '@components/Dashboard/GameChangers/components/AnimatedMind';
-import AnimatedSquare from '@components/Dashboard/GameChangers/components/AnimatedSquare';
-import EmotionCardStudents from '@components/Dashboard/GameChangers/components/EmotionCardStudents';
-import EmotionCardTeachers from '@components/Dashboard/GameChangers/components/EmotionCardTeachers';
-import FocusIcon from '@components/Dashboard/GameChangers/components/FocusIcon';
-import NextButton from '@components/Dashboard/GameChangers/components/NextButton';
-import ThinkAboutItCard from '@components/Dashboard/GameChangers/components/ThinkAboutIt';
-import {useGameChangers} from '@components/Dashboard/GameChangers/context/GameChangersContext';
-import {cardsList, successSound} from '@components/Dashboard/GameChangers/__contstants';
+import AnimatedFlower from 'components/Dashboard/GameChangers/components/AnimatedFlower';
+import AnimatedMind from 'components/Dashboard/GameChangers/components/AnimatedMind';
+import AnimatedSquare from 'components/Dashboard/GameChangers/components/AnimatedSquare';
+import EmotionCardStudents from 'components/Dashboard/GameChangers/components/EmotionCardStudents';
+import EmotionCardTeachers from 'components/Dashboard/GameChangers/components/EmotionCardTeachers';
+import FocusIcon from 'components/Dashboard/GameChangers/components/FocusIcon';
+import NextButton from 'components/Dashboard/GameChangers/components/NextButton';
+import ThinkAboutItCard from 'components/Dashboard/GameChangers/components/ThinkAboutIt';
+import {useGameChangers} from 'components/Dashboard/GameChangers/context/GameChangersContext';
+import {cardsList, successSound} from 'components/Dashboard/GameChangers/__contstants';
 import {
   EMOTIONS,
   GRATITUDE,
   SINGING_BOWL,
   THINK_ABOUT_IT
-} from '@components/Lesson/UniversalLessonBuilder/UI/common/constants';
-import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
-import useAuth from '@customHooks/useAuth';
-import useGraphqlMutation from '@customHooks/useGraphqlMutation';
+} from 'components/Lesson/UniversalLessonBuilder/UI/common/constants';
+import AnimatedContainer from 'components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
+import useAuth from 'customHooks/useAuth';
+import useGraphqlMutation from 'customHooks/useGraphqlMutation';
 import {CreateGameChangerLogInput} from 'API';
 import gsap from 'gsap';
 import {Linear} from 'gsap/all';

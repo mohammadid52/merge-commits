@@ -7,25 +7,25 @@ import {MdSpeakerNotes} from 'react-icons/md';
 import {HiPencil} from 'react-icons/hi';
 import {FiUserCheck} from 'react-icons/fi';
 
-import * as customQueries from '../../../../../../customGraphql/customQueries';
+import * as customQueries from 'customGraphql/customQueries';
 
-import {languageList} from '../../../../../../utilities/staticData';
-import {createFilterToFetchSpecificItemsOnly} from '../../../../../../utilities/strings';
+import {languageList} from 'utilities/staticData';
+import {createFilterToFetchSpecificItemsOnly} from 'utilities/strings';
 
-import BreadCrums from '../../../../../Atoms/BreadCrums';
-import SectionTitle from '../../../../../Atoms/SectionTitle';
-import Modal from '../../../../../Atoms/Modal';
-import PageWrapper from '../../../../../Atoms/PageWrapper';
-import Tooltip from '../../../../../Atoms/Tooltip';
-import UnderlinedTabs from '../../../../../Atoms/UnderlinedTabs';
+import BreadCrums from 'atoms/BreadCrums';
+import SectionTitle from 'atoms/SectionTitle';
+import Modal from 'atoms/Modal';
+import PageWrapper from 'atoms/PageWrapper';
+import Tooltip from 'atoms/Tooltip';
+import UnderlinedTabs from 'atoms/UnderlinedTabs';
 
 import SyllabusList from './TabsListing/SyllabusList';
 import LearningObjective from './TabsListing/LearningObjective';
 import CheckpointList from './TabsListing/CheckpointList';
-import {GlobalContext} from '../../../../../../contexts/GlobalContext';
-import useDictionary from '../../../../../../customHooks/dictionary';
-import {goBackBreadCrumb} from '../../../../../../utilities/functions';
-import {getAsset} from '../../../../../../assets';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import {goBackBreadCrumb} from 'utilities/functions';
+import {getAsset} from 'assets';
 import EditCurricular from '../EditCurricular';
 
 interface CurricularViewProps {
@@ -73,7 +73,7 @@ const CurricularView = (props: CurricularViewProps) => {
     institute: {
       id: '',
       name: '',
-      value: '',
+      value: ''
     },
     syllabusList: [] as any,
     syllabusSequence: [] as any,
@@ -82,7 +82,7 @@ const CurricularView = (props: CurricularViewProps) => {
     languages: [{id: '1', name: 'English', value: 'EN'}],
     objectives: '',
     type: '',
-    designers: [] as any,
+    designers: [] as any
   };
 
   const [curricularModal, setCurricularModal] = useState(false);
@@ -101,25 +101,25 @@ const CurricularView = (props: CurricularViewProps) => {
     {
       title: BreadcrumsTitles[userLanguage]['INSTITUTION_MANAGEMENT'],
       url: '/dashboard/manage-institutions',
-      last: false,
+      last: false
     },
     {
       title: curricularData.institute?.name,
       url: `/dashboard/manage-institutions/institution/${institutionId}`,
-      last: false,
+      last: false
     },
     {
       title: BreadcrumsTitles[userLanguage]['CURRICULUM'],
       url: `/dashboard/manage-institutions/institution/${institutionId}/course`,
-      last: false,
+      last: false
     },
     {
       title: curricularData?.name,
       url: `/dashboard/manage-institutions/${institutionId}/curricular?id=${params.get(
         'id'
       )}`,
-      last: true,
-    },
+      last: true
+    }
   ];
   const tabs = [
     {
@@ -127,7 +127,7 @@ const CurricularView = (props: CurricularViewProps) => {
       title: curricularviewdict[userLanguage]['TAB']['LEARINGOBJECTIVE'],
       icon: <MdSpeakerNotes />,
       active: true,
-      content: <LearningObjective curricularId={currID} institutionId={institutionId} />,
+      content: <LearningObjective curricularId={currID} institutionId={institutionId} />
     },
     {
       index: 1,
@@ -142,15 +142,15 @@ const CurricularView = (props: CurricularViewProps) => {
           syllabusList={curricularData.syllabusList}
           syllabusSequence={curricularData.syllabusSequence}
         />
-      ),
+      )
     },
     {
       index: 2,
       title: curricularviewdict[userLanguage]['TAB']['INFORMATION'],
       icon: <FiUserCheck />,
       active: false,
-      content: <CheckpointList curricularId={currID} institutionId={institutionId} />,
-    },
+      content: <CheckpointList curricularId={currID} institutionId={institutionId} />
+    }
   ];
 
   useEffect(() => {
@@ -177,7 +177,7 @@ const CurricularView = (props: CurricularViewProps) => {
       institute: {
         id: data.institution.id,
         name: data.institution.name,
-        value: data.institution.name,
+        value: data.institution.name
       },
       description: data.description,
       designers: data.designers,
@@ -187,7 +187,7 @@ const CurricularView = (props: CurricularViewProps) => {
       syllabusList: data.universalSyllabus?.items,
       syllabusSequence: data.universalSyllabusSeq,
       type: data.type,
-      languages: savedLanguages ? savedLanguages : [],
+      languages: savedLanguages ? savedLanguages : []
     });
     setDesignersID(data?.designers);
     setCurricularModal(false);
@@ -213,7 +213,7 @@ const CurricularView = (props: CurricularViewProps) => {
           institute: {
             id: savedData.institution.id,
             name: savedData.institution.name,
-            value: savedData.institution.name,
+            value: savedData.institution.name
           },
           description: savedData.description,
           designers: savedData.designers,
@@ -223,7 +223,7 @@ const CurricularView = (props: CurricularViewProps) => {
           syllabusList: savedData.universalSyllabus?.items,
           syllabusSequence: savedData.universalSyllabusSeq,
           type: savedData.type,
-          languages: savedLanguages ? savedLanguages : [],
+          languages: savedLanguages ? savedLanguages : []
         });
         setDesignersID(savedData?.designers);
         setLoading(false);
@@ -239,7 +239,7 @@ const CurricularView = (props: CurricularViewProps) => {
   const fetchPersonsData = async () => {
     const result: any = await API.graphql(
       graphqlOperation(customQueries.listPersons, {
-        filter: {...createFilterToFetchSpecificItemsOnly(designersId, 'id')},
+        filter: {...createFilterToFetchSpecificItemsOnly(designersId, 'id')}
       })
     );
     const personsData = result.data.listPeople.items.map((person: any) => {

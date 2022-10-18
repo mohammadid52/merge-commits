@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import ModalPopUp from '../../../Molecules/ModalPopUp';
+import ModalPopUp from 'molecules/ModalPopUp';
 
 const useUnsavedChanges = (closeAction: () => void) => {
   const [warnModal, setWarnModal] = useState(false);

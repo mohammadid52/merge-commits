@@ -5,17 +5,17 @@ import {BsCameraVideoFill} from 'react-icons/bs';
 import {IoSendSharp} from 'react-icons/io5';
 import {MdCancel, MdImage} from 'react-icons/md';
 import {Storage} from '@aws-amplify/storage';
-import * as mutations from '../../../../graphql/mutations';
+import * as mutations from 'graphql/mutations';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import {GlobalContext} from '../../../../contexts/GlobalContext';
-import {AddQuestionModalDict} from '../../../../dictionary/dictionary.iconoclast';
-import {getImageFromS3} from '../../../../utilities/services';
-import Buttons from '../../../Atoms/Buttons';
-import Loader from '../../../Atoms/Loader';
-import ModalPopUp from '../../../Molecules/ModalPopUp';
+import {GlobalContext} from 'contexts/GlobalContext';
+import {AddQuestionModalDict} from 'dictionary/dictionary.iconoclast';
+import {getImageFromS3} from 'utilities/services';
+import Buttons from 'atoms/Buttons';
+import Loader from 'atoms/Loader';
+import ModalPopUp from 'molecules/ModalPopUp';
 import Feedback from '../../Admin/UserManagement/Feedback';
-import Modal from '../../../Atoms/Modal';
-import {getAsset} from '../../../../assets';
+import Modal from 'atoms/Modal';
+import {getAsset} from 'assets';
 import {HiEmojiHappy} from 'react-icons/hi';
 import EmojiPicker from 'emoji-picker-react';
 
@@ -30,7 +30,7 @@ const FeedbacksUploads = ({
   fileObject,
   setFileObject,
   personEmail,
-  personAuthID,
+  personAuthID
 }: any) => {
   const {state, clientKey, userLanguage} = useContext(GlobalContext);
 
@@ -75,10 +75,10 @@ const FeedbacksUploads = ({
         firstName: state?.user?.preferredName,
         preferredName: state?.user?.firstName,
         lastName: state.user.lastName,
-        role: state.user.role,
+        role: state.user.role
       },
       createdAt: new Date(),
-      id: Date.now().toString(), // this is just for local state, After refreshing it will be replaced with real ID
+      id: Date.now().toString() // this is just for local state, After refreshing it will be replaced with real ID
     };
     const finalInput =
       attachments && attachments.type
@@ -89,9 +89,9 @@ const FeedbacksUploads = ({
                 url: attachments.url,
                 filename: attachments.filename,
                 size: attachments.size,
-                type: attachments.type,
-              },
-            ],
+                type: attachments.type
+              }
+            ]
           }
         : localObj;
 
@@ -150,8 +150,8 @@ const FeedbacksUploads = ({
             id: contentObj.id,
             personEmail: personEmail,
             personAuthID: personAuthID,
-            feedbacks: newFeedBackIds,
-          },
+            feedbacks: newFeedBackIds
+          }
         })
       );
 
@@ -173,8 +173,8 @@ const FeedbacksUploads = ({
           input: {
             id: commentObj.id,
             text: commentObj.comment,
-            edited: true,
-          },
+            edited: true
+          }
         })
       );
     } catch (error) {
@@ -191,7 +191,7 @@ const FeedbacksUploads = ({
       let input = {
         email: state.user.email,
         authID: state.user.authId,
-        text,
+        text
       };
 
       const finalInput =
@@ -202,8 +202,8 @@ const FeedbacksUploads = ({
                 type: attachments.type,
                 url: attachments.url,
                 filename: attachments.filename,
-                size: attachments.size,
-              },
+                size: attachments.size
+              }
             }
           : input;
       const results: any = await API.graphql(
@@ -256,7 +256,7 @@ const FeedbacksUploads = ({
         url: 'loading',
         type,
         filename: _fileObject.name,
-        size: _fileObject.size,
+        size: _fileObject.size
       });
 
       await uploadAttachment(_fileObject, id, type);
@@ -267,13 +267,13 @@ const FeedbacksUploads = ({
         url: imageUrl,
         type,
         filename: _fileObject.name,
-        size: _fileObject.size,
+        size: _fileObject.size
       });
       pushCommentToLocalState(_comment, {
         url: imageUrl,
         type,
         filename: _fileObject.name,
-        size: _fileObject.size,
+        size: _fileObject.size
       });
       setUploadingAttachment(false);
     } else {
@@ -311,7 +311,7 @@ const FeedbacksUploads = ({
         acl: 'public-read',
         progressCallback: ({loaded, total}: any) => {
           console.log((loaded * 100) / total);
-        },
+        }
       })
         .then((result) => {
           resolve(result);
@@ -518,7 +518,7 @@ const FeedbacksUploads = ({
                         className="picker-wrapper absolute bottom-1 left-5">
                         <EmojiPicker
                           groupVisibility={{
-                            recently_used: false,
+                            recently_used: false
                           }}
                           onEmojiClick={(e: any, emoji: any) =>
                             onEmojiSelect(emoji, true)
@@ -702,7 +702,7 @@ const FeedbacksUploads = ({
                       className="picker-wrapper absolute bottom-5 left-5">
                       <EmojiPicker
                         groupVisibility={{
-                          recently_used: false,
+                          recently_used: false
                         }}
                         onEmojiClick={(e: any, emoji: any) => onEmojiSelect(emoji, false)}
                       />

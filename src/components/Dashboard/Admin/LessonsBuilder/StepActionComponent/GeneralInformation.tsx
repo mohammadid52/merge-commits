@@ -6,18 +6,18 @@ import {useHistory} from 'react-router';
 
 import {InitialData, InputValueObject} from '../LessonBuilder';
 
-import * as customMutations from '../../../../../customGraphql/customMutations';
-import * as customQueries from '../../../../../customGraphql/customQueries';
+import * as customMutations from 'customGraphql/customMutations';
+import * as customQueries from 'customGraphql/customQueries';
 
-import Selector from '../../../../Atoms/Form/Selector';
-import MultipleSelector from '../../../../Atoms/Form/MultipleSelector';
-import FormInput from '../../../../Atoms/Form/FormInput';
-import Buttons from '../../../../Atoms/Buttons';
-import RichTextEditor from '../../../../Atoms/RichTextEditor';
-import ModalPopUp from '../../../../Molecules/ModalPopUp';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import useDictionary from '../../../../../customHooks/dictionary';
-import {languageList} from '../../../../../utilities/staticData';
+import Selector from 'atoms/Form/Selector';
+import MultipleSelector from 'atoms/Form/MultipleSelector';
+import FormInput from 'atoms/Form/FormInput';
+import Buttons from 'atoms/Buttons';
+import RichTextEditor from 'atoms/RichTextEditor';
+import ModalPopUp from 'molecules/ModalPopUp';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import {languageList} from 'utilities/staticData';
 
 interface GeneralInformationProps {
   formData: InitialData;
@@ -42,13 +42,13 @@ const GeneralInformation = (props: GeneralInformationProps) => {
     allMeasurement,
     lessonMeasurements,
     setLessonMeasurements,
-    setUnsavedChanges,
+    setUnsavedChanges
   } = props;
 
   const typeList: any = [
     {id: '1', name: 'Lecture', value: 'lesson'},
     {id: '2', name: 'Assessment', value: 'assessment'},
-    {id: '3', name: 'Survey', value: 'survey'},
+    {id: '3', name: 'Survey', value: 'survey'}
   ];
 
   const history = useHistory();
@@ -60,25 +60,25 @@ const GeneralInformation = (props: GeneralInformationProps) => {
   const [showDeleteModal, setShowDeleteModal] = useState({
     id: '',
     state: false,
-    message: GeneralInformationDict[userLanguage]['MESSAGES']['REMOVE'],
+    message: GeneralInformationDict[userLanguage]['MESSAGES']['REMOVE']
   });
   const [validation, setValidation] = useState({
     name: '',
     type: '',
     message: '',
-    isError: true,
+    isError: true
   });
 
   const onInputChange = (e: any) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [e.target.name]: e.target.value
     });
     setUnsavedChanges(true);
     if (validation.name) {
       setValidation({
         ...validation,
-        name: '',
+        name: ''
       });
     }
   };
@@ -91,7 +91,7 @@ const GeneralInformation = (props: GeneralInformationProps) => {
     setFormData({
       ...formData,
       [fieldHtml]: html,
-      [field]: text,
+      [field]: text
     });
     setUnsavedChanges(true);
   };
@@ -107,7 +107,7 @@ const GeneralInformation = (props: GeneralInformationProps) => {
     setUnsavedChanges(true);
     setFormData({
       ...formData,
-      languages: updatedList,
+      languages: updatedList
     });
   };
 
@@ -118,7 +118,7 @@ const GeneralInformation = (props: GeneralInformationProps) => {
     setShowDeleteModal({
       ...showDeleteModal,
       id: id ? id : '',
-      state: !showDeleteModal.state,
+      state: !showDeleteModal.state
     });
   };
   const goToMeasmntDetails = (curriculumId: string, measurementId: string) => {
@@ -129,7 +129,7 @@ const GeneralInformation = (props: GeneralInformationProps) => {
   const deleteMeasurement = async () => {
     try {
       const input = {
-        id: showDeleteModal.id,
+        id: showDeleteModal.id
       };
       const results: any = await API.graphql(
         graphqlOperation(customMutations.deleteLessonRubrics, {input: input})
@@ -147,7 +147,7 @@ const GeneralInformation = (props: GeneralInformationProps) => {
         name: '',
         type: '',
         message: GeneralInformationDict[userLanguage]['MESSAGES']['DELETEERR'],
-        isError: true,
+        isError: true
       });
     }
   };
@@ -156,7 +156,7 @@ const GeneralInformation = (props: GeneralInformationProps) => {
     try {
       const input = {
         lessonID: lessonId,
-        rubricID: selectedMeasu.id,
+        rubricID: selectedMeasu.id
       };
       const results: any = await API.graphql(
         graphqlOperation(customMutations.createLessonRubrics, {input: input})
@@ -170,8 +170,8 @@ const GeneralInformation = (props: GeneralInformationProps) => {
             rubricID: lessonRubric.rubricID,
             measurement: selectedMeasu.name,
             topic: lessonRubric?.rubric?.topic?.name,
-            curriculumId: lessonRubric?.rubric?.curriculumID,
-          },
+            curriculumId: lessonRubric?.rubric?.curriculumID
+          }
         ]);
         setSelectedMeasu({id: '', name: '', value: ''});
       }
@@ -180,7 +180,7 @@ const GeneralInformation = (props: GeneralInformationProps) => {
         name: '',
         type: '',
         message: GeneralInformationDict[userLanguage]['MESSAGES']['ADDERR'],
-        isError: true,
+        isError: true
       });
     }
   };
@@ -241,7 +241,7 @@ const GeneralInformation = (props: GeneralInformationProps) => {
         name: '',
         type: '',
         message: GeneralInformationDict[userLanguage]['MESSAGES']['FETCHERR'],
-        isError: true,
+        isError: true
       });
     }
   };
@@ -257,7 +257,7 @@ const GeneralInformation = (props: GeneralInformationProps) => {
           purpose: formData.purposeHtml,
           objectives: [formData.objectiveHtml],
           designers: selectedDesigners.map((item) => item.id),
-          language: formData.languages.map((item) => item.value),
+          language: formData.languages.map((item) => item.value)
         };
         const results: any = await API.graphql(
           graphqlOperation(customMutations.updateLesson, {input: input})
@@ -286,7 +286,7 @@ const GeneralInformation = (props: GeneralInformationProps) => {
             name: '',
             type: '',
             message: GeneralInformationDict[userLanguage]['UPDATESUCCESS'],
-            isError: false,
+            isError: false
           });
         }
       } catch {
@@ -294,7 +294,7 @@ const GeneralInformation = (props: GeneralInformationProps) => {
           name: '',
           type: '',
           message: GeneralInformationDict[userLanguage]['UPDATEERR'],
-          isError: true,
+          isError: true
         });
         setLoading(false);
       }

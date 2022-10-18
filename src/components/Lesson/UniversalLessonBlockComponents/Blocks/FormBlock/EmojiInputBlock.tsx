@@ -1,7 +1,7 @@
 // ~~~~~~~~~~~~~~ EMOJI FORM ~~~~~~~~~~~~~ //
-import {GlobalContext} from '@contexts/GlobalContext';
-import useInLessonCheck from '@customHooks/checkIfInLesson';
-import useStudentDataValue from '@customHooks/studentDataValue';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useInLessonCheck from 'customHooks/checkIfInLesson';
+import useStudentDataValue from 'customHooks/studentDataValue';
 import {IFormBlockProps, StudentPageInput} from '@interfaces/UniversalLessonInterfaces';
 import EmojiPicker from 'emoji-picker-react';
 import noop from 'lodash/noop';
@@ -17,13 +17,13 @@ const EmojiInput = ({
   numbered,
   index,
 
-  required,
+  required
 }: IFormBlockProps) => {
   const gContext = useContext(GlobalContext);
   const gState = gContext.state;
   const {
     user,
-    lessonPage: {theme: lessonPageTheme = 'dark', themeTextColor = ''} = {},
+    lessonPage: {theme: lessonPageTheme = 'dark', themeTextColor = ''} = {}
   } = gState;
 
   const {getDataValue, setDataValue} = useStudentDataValue();
@@ -98,7 +98,7 @@ const EmojiInput = ({
               className="picker-wrapper absolute top-1 right-2 w-auto z-100">
               <EmojiPicker
                 groupVisibility={{
-                  recently_used: false,
+                  recently_used: false
                 }}
                 onEmojiClick={(e: any, emoji: any) => onEmojiSelect(emoji)}
               />

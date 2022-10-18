@@ -1,12 +1,12 @@
 import {map, remove, update} from 'lodash';
 import React, {useContext} from 'react';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import FormInput from '../../../../Atoms/Form/FormInput';
+import {GlobalContext} from 'contexts/GlobalContext';
+import FormInput from 'atoms/Form/FormInput';
 import RemoveInput from '../common/RemoveInput';
 import {v4 as uuidv4} from 'uuid';
-import {EditQuestionModalDict} from '../../../../../dictionary/dictionary.iconoclast';
-import Buttons from '../../../../Atoms/Buttons';
-import {getAsset} from '../../../../../assets';
+import {EditQuestionModalDict} from 'dictionary/dictionary.iconoclast';
+import Buttons from 'atoms/Buttons';
+import {getAsset} from 'assets';
 import {FORM_TYPES} from '../common/constants';
 
 const SelectOne = ({
@@ -17,7 +17,7 @@ const SelectOne = ({
   list,
   setList,
   updateContent,
-  createNewContent,
+  createNewContent
 }: any) => {
   const {userLanguage, clientKey} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
@@ -41,9 +41,9 @@ const SelectOne = ({
         label: '',
         options: [
           {label: '1', text: '', id: uuidv4()},
-          {label: '2', text: '', id: uuidv4()},
-        ],
-      },
+          {label: '2', text: '', id: uuidv4()}
+        ]
+      }
     ]);
   };
 
@@ -54,7 +54,7 @@ const SelectOne = ({
     const modifiedOptions = (opt: any) =>
       map(opt, (o) => ({
         label: o.label,
-        text: o.text,
+        text: o.text
       }));
 
     const inputObjArray = map(list, (d: any) => {
@@ -62,7 +62,7 @@ const SelectOne = ({
         id: partContentId,
         type: FORM_TYPES.RADIO,
         label: d.label,
-        value: modifiedOptions(d.options),
+        value: modifiedOptions(d.options)
       };
     });
     const type: string = `form-${numbered ? 'numbered' : 'default'}`;

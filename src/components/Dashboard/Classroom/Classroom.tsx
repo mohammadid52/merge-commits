@@ -2,20 +2,20 @@ import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import isEmpty from 'lodash/isEmpty';
 import React, {useContext, useEffect, useState} from 'react';
 import {useRouteMatch} from 'react-router';
-import {getAsset} from '../../../assets';
-import {GlobalContext} from '../../../contexts/GlobalContext';
-import useDictionary from '../../../customHooks/dictionary';
-import * as mutations from '../../../graphql/mutations';
-import * as queries from '../../../graphql/queries';
+import {getAsset} from 'assets';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import * as mutations from 'graphql/mutations';
+import * as queries from 'graphql/queries';
 import {v4 as uuidV4} from 'uuid';
-import BreadCrums from '../../Atoms/BreadCrums';
-import SectionTitleV3 from '../../Atoms/SectionTitleV3';
+import BreadCrums from 'atoms/BreadCrums';
+import SectionTitleV3 from 'atoms/SectionTitleV3';
 import {DashboardProps} from '../Dashboard';
 import DashboardContainer from '../DashboardContainer';
 import DateAndTime from '../DateAndTime/DateAndTime';
 import SyllabusSwitch from './SyllabusSwitch';
 import Today from './TodayLesson';
-import useAuth from '@customHooks/useAuth';
+import useAuth from 'customHooks/useAuth';
 
 interface Artist {
   id: string;

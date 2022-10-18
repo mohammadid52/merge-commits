@@ -1,8 +1,8 @@
-import useTailwindBreakpoint from '@customHooks/tailwindBreakpoint';
+import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
 import React, {useContext} from 'react';
-import {GlobalContext} from '../../contexts/GlobalContext';
-import useDictionary from '../../customHooks/dictionary';
-import {getLocalStorageData} from '../../utilities/localStorage';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import {getLocalStorageData} from 'utilities/localStorage';
 import LessonControlBar from './LessonControlBar/LessonControlBar';
 import StudentWindowTitleBar from './StudentWindow/StudentWindowTitleBar';
 import CloseLesson from './StudentWindow/TitleBarSections/CloseLesson';
@@ -30,7 +30,7 @@ const TopMenuControl: React.FC<TopMenuControlProps> = ({
   handleHomePopup,
   handlePageChange,
   fullscreen,
-  handleFullscreen,
+  handleFullscreen
 }: TopMenuControlProps) => {
   const gContext = useContext(GlobalContext);
   const clientKey = gContext.clientKey;

@@ -4,25 +4,25 @@ import {useHistory, useParams} from 'react-router';
 import {
   IoArrowUndoCircleOutline,
   IoCaretDownCircleOutline,
-  IoCaretUpCircleOutline,
+  IoCaretUpCircleOutline
 } from 'react-icons/io5';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 
-import SectionTitle from '../../../../../../Atoms/SectionTitle';
-import PageWrapper from '../../../../../../Atoms/PageWrapper';
-import BreadCrums from '../../../../../../Atoms/BreadCrums';
-import Buttons from '../../../../../../Atoms/Buttons';
-import SearchInput from '../../../../../../Atoms/Form/SearchInput';
-import CheckBox from '../../../../../../Atoms/Form/CheckBox';
+import SectionTitle from 'atoms/SectionTitle';
+import PageWrapper from 'atoms/PageWrapper';
+import BreadCrums from 'atoms/BreadCrums';
+import Buttons from 'atoms/Buttons';
+import SearchInput from 'atoms/Form/SearchInput';
+import CheckBox from 'atoms/Form/CheckBox';
 
-import * as customQueries from '../../../../../../../customGraphql/customQueries';
-import * as customMutations from '../../../../../../../customGraphql/customMutations';
-import {getLanguageString} from '../../../../../../../utilities/strings';
+import * as customQueries from 'customGraphql/customQueries';
+import * as customMutations from 'customGraphql/customMutations';
+import {getLanguageString} from 'utilities/strings';
 import CheckpointQueTable from '../../../../LessonsBuilder/StepActionComponent/CheckPointSteps/CheckpointQueTable';
-import {GlobalContext} from '../../../../../../../contexts/GlobalContext';
-import {getAsset} from '../../../../../../../assets';
-import useDictionary from '../../../../../../../customHooks/dictionary';
-import {goBackBreadCrumb} from '../../../../../../../utilities/functions';
+import {GlobalContext} from 'contexts/GlobalContext';
+import {getAsset} from 'assets';
+import useDictionary from 'customHooks/dictionary';
+import {goBackBreadCrumb} from 'utilities/functions';
 import {BsArrowLeft} from 'react-icons/bs';
 import {v4 as uuidv4} from 'uuid';
 
@@ -52,23 +52,23 @@ const ProfileCheckpointlookup = (props: ProfileCheckpointlookupProps) => {
     {
       title: BreadcrumsTitles[userLanguage]['INSTITUTION_MANAGEMENT'],
       url: '/dashboard/manage-institutions',
-      last: false,
+      last: false
     },
     {
       title: BreadcrumsTitles[userLanguage]['INSTITUTION_INFO'],
       url: `/dashboard/manage-institutions/institution/${institutionId}/staff`,
-      last: false,
+      last: false
     },
     {
       title: BreadcrumsTitles[userLanguage]['CURRICULUMBUILDER'],
       url: `/dashboard/manage-institutions/${institutionId}/curricular?id=${courseId}`,
-      last: false,
+      last: false
     },
     {
       title: BreadcrumsTitles[userLanguage]['AddExistingCheckpoint'],
       url: `/dashboard/curricular/${courseId}/checkpoint/addNew`,
-      last: true,
-    },
+      last: true
+    }
   ];
 
   const selectItem = (checkpointId: string) => {
@@ -108,12 +108,12 @@ const ProfileCheckpointlookup = (props: ProfileCheckpointlookupProps) => {
       id: uuidv4(),
       type: 'curricular',
       typeID: courseId,
-      checkpointID: checkpointID,
+      checkpointID: checkpointID
     };
 
     await API.graphql(
       graphqlOperation(customMutations.createCommonCheckpoint, {
-        input: profileCheckpointInput,
+        input: profileCheckpointInput
       })
     );
   };
@@ -135,14 +135,14 @@ const ProfileCheckpointlookup = (props: ProfileCheckpointlookupProps) => {
       const [allCheckpointList, curricularCheckp]: any = await Promise.all([
         await API.graphql(
           graphqlOperation(customQueries.listCheckpoints, {
-            filter: {type: {eq: 'profile'}},
+            filter: {type: {eq: 'profile'}}
           })
         ),
         await API.graphql(
           graphqlOperation(customQueries.getCurriculumCheckpoints, {
-            id: courseId,
+            id: courseId
           })
-        ),
+        )
       ]);
       if (!allCheckpointList) {
         throw new Error('fail!');
@@ -291,7 +291,7 @@ const ProfileCheckpointlookup = (props: ProfileCheckpointlookupProps) => {
                                 <IconContext.Provider
                                   value={{
                                     size: '1.5rem',
-                                    color: theme.iconColor[themeColor],
+                                    color: theme.iconColor[themeColor]
                                   }}>
                                   {expandId === item.id ? (
                                     <IoCaretUpCircleOutline />

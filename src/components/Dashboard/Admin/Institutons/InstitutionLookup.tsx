@@ -1,21 +1,21 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import BreadcrumbsWithBanner from '@components/Atoms/BreadcrumbsWithBanner';
-import {useQuery} from '@customHooks/urlParam';
+import BreadcrumbsWithBanner from 'components/Atoms/BreadcrumbsWithBanner';
+import {useQuery} from 'customHooks/urlParam';
 import {XIcon} from '@heroicons/react/outline';
 import React, {Fragment, useContext, useEffect, useState} from 'react';
 import {AiOutlineArrowDown, AiOutlineArrowUp} from 'react-icons/ai';
 import {IoBusinessSharp} from 'react-icons/io5';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {useHistory, useRouteMatch} from 'react-router-dom';
-import {getAsset} from '../../../../assets';
-import {GlobalContext} from '../../../../contexts/GlobalContext';
-import * as customQueries from '../../../../customGraphql/customQueries';
-import useDictionary from '../../../../customHooks/dictionary';
-import Buttons from '../../../Atoms/Buttons';
-import SearchInput from '../../../Atoms/Form/SearchInput';
-import Selector from '../../../Atoms/Form/Selector';
-import PageCountSelector from '../../../Atoms/PageCountSelector';
-import Pagination from '../../../Atoms/Pagination';
+import {getAsset} from 'assets';
+import {GlobalContext} from 'contexts/GlobalContext';
+import * as customQueries from 'customGraphql/customQueries';
+import useDictionary from 'customHooks/dictionary';
+import Buttons from 'atoms/Buttons';
+import SearchInput from 'atoms/Form/SearchInput';
+import Selector from 'atoms/Form/Selector';
+import PageCountSelector from 'atoms/PageCountSelector';
+import Pagination from 'atoms/Pagination';
 import InstitutionRow from './InstitutionRow';
 import InstitutionRowLoader from './InstitutionRowLoader';
 
@@ -48,12 +48,12 @@ const InstitutionLookup: React.FC = () => {
 
   const [searchInput, setSearchInput] = useState({
     value: '',
-    isActive: false,
+    isActive: false
   });
   const [sortingType, setSortingType] = useState({
     value: '',
     name: '',
-    asc: true,
+    asc: true
   });
 
   const breadCrumbsList = [
@@ -61,8 +61,8 @@ const InstitutionLookup: React.FC = () => {
     {
       title: BreadcrumsTitles[userLanguage]['INSTITUTION_MANAGEMENT'],
       url: `${match.url}`,
-      last: true,
-    },
+      last: true
+    }
   ];
 
   const sortByList = [
@@ -71,9 +71,9 @@ const InstitutionLookup: React.FC = () => {
     {
       id: 3,
       name: `${InstitutionDict[userLanguage]['TABLE']['WEBSITE']}`,
-      value: 'website',
+      value: 'website'
     },
-    {id: 4, name: `${InstitutionDict[userLanguage]['TABLE']['CONTACT']}`, value: 'phone'},
+    {id: 4, name: `${InstitutionDict[userLanguage]['TABLE']['CONTACT']}`, value: 'phone'}
   ];
 
   const goNextPage = () => {
@@ -135,8 +135,8 @@ const InstitutionLookup: React.FC = () => {
         filter: {
           staffAuthID: {eq: state.user.authId},
           staffEmail: {eq: state.user.email},
-          status: {eq: 'Active'},
-        },
+          status: {eq: 'Active'}
+        }
       })
     );
     let userInstitutes: any = fetchInstitutionData.data?.listStaff?.items;
@@ -170,7 +170,7 @@ const InstitutionLookup: React.FC = () => {
   const setSearch = (str: string) => {
     setSearchInput({
       ...searchInput,
-      value: str,
+      value: str
     });
   };
 
@@ -183,7 +183,7 @@ const InstitutionLookup: React.FC = () => {
       });
       setSearchInput({
         ...searchInput,
-        isActive: true,
+        isActive: true
       });
       setCurrentList(newList);
     } else {
@@ -194,7 +194,7 @@ const InstitutionLookup: React.FC = () => {
   const toggleSortDimension = () => {
     setSortingType({
       ...sortingType,
-      asc: !sortingType.asc,
+      asc: !sortingType.asc
     });
   };
 
@@ -217,7 +217,7 @@ const InstitutionLookup: React.FC = () => {
     setSortingType({
       ...sortingType,
       value: str,
-      name: name,
+      name: name
     });
   };
 

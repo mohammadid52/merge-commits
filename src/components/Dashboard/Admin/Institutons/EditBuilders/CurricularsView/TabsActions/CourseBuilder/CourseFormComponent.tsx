@@ -1,20 +1,20 @@
-import Buttons from '@atoms/Buttons';
-import FormInput from '@atoms/Form/FormInput';
-import MultipleSelector from '@atoms/Form/MultipleSelector';
-import Selector from '@atoms/Form/Selector';
-import TextArea from '@atoms/Form/TextArea';
+import Buttons from 'atoms/Buttons';
+import FormInput from 'atoms/Form/FormInput';
+import MultipleSelector from 'atoms/Form/MultipleSelector';
+import Selector from 'atoms/Form/Selector';
+import TextArea from 'atoms/Form/TextArea';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {Storage} from '@aws-amplify/storage';
-import ProfileCropModal from '@components/Dashboard/Profile/ProfileCropModal';
-import {GlobalContext} from '@contexts/GlobalContext';
-import * as customMutations from '@customGraphql/customMutations';
-import * as customQueries from '@customGraphql/customQueries';
-import useDictionary from '@customHooks/dictionary';
-import * as mutation from '@graphql/mutations';
-import * as queries from '@graphql/queries';
-import DroppableMedia from '@molecules/DroppableMedia';
-import {getImageFromS3} from '@utilities/services';
-import {languageList} from '@utilities/staticData';
+import ProfileCropModal from 'components/Dashboard/Profile/ProfileCropModal';
+import {GlobalContext} from 'contexts/GlobalContext';
+import * as customMutations from 'customGraphql/customMutations';
+import * as customQueries from 'customGraphql/customQueries';
+import useDictionary from 'customHooks/dictionary';
+import * as mutation from 'graphql/mutations';
+import * as queries from 'graphql/queries';
+import DroppableMedia from 'molecules/DroppableMedia';
+import {getImageFromS3} from 'utilities/services';
+import {languageList} from 'utilities/staticData';
 import React, {useContext, useEffect, useState} from 'react';
 import {IoImage} from 'react-icons/io5';
 import {useHistory, useRouteMatch} from 'react-router-dom';
@@ -44,8 +44,8 @@ const CourseFormComponent = ({courseId, courseData}: CourseBuilderProps) => {
     type: '',
     languages: [{id: '1', name: 'English', value: 'EN'}],
     institute: {
-      id: '',
-    },
+      id: ''
+    }
   };
   const history = useHistory();
 
@@ -63,7 +63,7 @@ const CourseFormComponent = ({courseId, courseData}: CourseBuilderProps) => {
   const [s3Image, setS3Image] = useState(null);
   const [error, setError] = useState({
     show: true,
-    errorMsg: '',
+    errorMsg: ''
   });
   const [loading, setIsLoading] = useState(false);
   const {clientKey, userLanguage} = useContext(GlobalContext);
@@ -71,19 +71,19 @@ const CourseFormComponent = ({courseId, courseData}: CourseBuilderProps) => {
   const [messages, setMessages] = useState({
     show: false,
     message: '',
-    isError: false,
+    isError: false
   });
 
   const onChange = (e: any) => {
     setCurricularData({
       ...curricularData,
-      [e.target.name]: e.target.value,
+      [e.target.name]: e.target.value
     });
     if (messages.show) {
       setMessages({
         show: false,
         message: '',
-        isError: false,
+        isError: false
       });
     }
   };
@@ -94,7 +94,7 @@ const CourseFormComponent = ({courseId, courseData}: CourseBuilderProps) => {
     {id: 0, name: 'In-School Programming'},
     {id: 1, name: 'After-School Programming'},
     {id: 2, name: 'Summer Intensives (2 week programming)'},
-    {id: 3, name: "Writer's Retreat"},
+    {id: 3, name: "Writer's Retreat"}
   ];
   //*****//
 
@@ -109,7 +109,7 @@ const CourseFormComponent = ({courseId, courseData}: CourseBuilderProps) => {
     }
     setCurricularData({
       ...curricularData,
-      languages: updatedList,
+      languages: updatedList
     });
   };
   const selectDesigner = (id: string, name: string, value: string) => {
@@ -142,7 +142,7 @@ const CourseFormComponent = ({courseId, courseData}: CourseBuilderProps) => {
           objectives: [curricularData.objectives],
           languages: languagesCode,
           designers,
-          image: null as any,
+          image: null as any
         };
         if (courseId) {
           input.id = courseId;
@@ -151,7 +151,7 @@ const CourseFormComponent = ({courseId, courseData}: CourseBuilderProps) => {
             await uploadImageToS3(s3Image, courseId, 'image/jpeg');
             input = {
               ...input,
-              image: `instituteImages/curricular_image_${courseId}`,
+              image: `instituteImages/curricular_image_${courseId}`
             };
           }
           console.log(input, 'inputinput');
@@ -172,8 +172,8 @@ const CourseFormComponent = ({courseId, courseData}: CourseBuilderProps) => {
               graphqlOperation(mutation.updateCurriculum, {
                 input: {
                   id: newCourse.id,
-                  image: `instituteImages/curricular_image_${newCourse.id}`,
-                },
+                  image: `instituteImages/curricular_image_${newCourse.id}`
+                }
               })
             );
           }
@@ -214,7 +214,7 @@ const CourseFormComponent = ({courseId, courseData}: CourseBuilderProps) => {
         setMessages({
           show: true,
           message: CurricularBuilderdict[userLanguage]['messages']['error']['save'],
-          isError: true,
+          isError: true
         });
       }
     }
@@ -224,7 +224,7 @@ const CourseFormComponent = ({courseId, courseData}: CourseBuilderProps) => {
     try {
       const result: any = await API.graphql(
         graphqlOperation(customQueries.listPersons, {
-          filter: {or: [{role: {eq: 'TR'}}, {role: {eq: 'BLD'}}]},
+          filter: {or: [{role: {eq: 'TR'}}, {role: {eq: 'BLD'}}]}
         })
       );
       const savedData = result.data.listPeople;
@@ -232,7 +232,7 @@ const CourseFormComponent = ({courseId, courseData}: CourseBuilderProps) => {
         (item: {id: string; firstName: string; lastName: string}) => ({
           id: item?.id,
           name: `${item?.firstName || ''} ${item.lastName || ''}`,
-          value: `${item?.firstName || ''} ${item.lastName || ''}`,
+          value: `${item?.firstName || ''} ${item.lastName || ''}`
         })
       );
       setDesignersList(updatedList);
@@ -240,7 +240,7 @@ const CourseFormComponent = ({courseId, courseData}: CourseBuilderProps) => {
       setMessages({
         show: true,
         message: CurricularBuilderdict[userLanguage]['messages']['error']['designerlist'],
-        isError: true,
+        isError: true
       });
     }
   };
@@ -251,8 +251,8 @@ const CourseFormComponent = ({courseId, courseData}: CourseBuilderProps) => {
         graphqlOperation(queries.listCurricula, {
           filter: {
             institutionID: {eq: curricularData.institute.id},
-            name: {eq: curricularData.name},
-          },
+            name: {eq: curricularData.name}
+          }
         })
       );
       return list.data.listCurricula.items.length === 0 ? true : false;
@@ -260,7 +260,7 @@ const CourseFormComponent = ({courseId, courseData}: CourseBuilderProps) => {
       setMessages({
         show: true,
         message: CurricularBuilderdict[userLanguage]['messages']['error']['process'],
-        isError: true,
+        isError: true
       });
     }
   };
@@ -270,7 +270,7 @@ const CourseFormComponent = ({courseId, courseData}: CourseBuilderProps) => {
       setMessages({
         show: true,
         message: CurricularBuilderdict[userLanguage]['messages']['validation']['name'],
-        isError: true,
+        isError: true
       });
       return false;
     } else if (curricularData.institute.id === '') {
@@ -278,7 +278,7 @@ const CourseFormComponent = ({courseId, courseData}: CourseBuilderProps) => {
         show: true,
         message:
           CurricularBuilderdict[userLanguage]['messages']['validation']['institute'],
-        isError: true,
+        isError: true
       });
       return false;
     } else if (
@@ -291,7 +291,7 @@ const CourseFormComponent = ({courseId, courseData}: CourseBuilderProps) => {
           show: true,
           message:
             CurricularBuilderdict[userLanguage]['messages']['validation']['curricular'],
-          isError: true,
+          isError: true
         });
         return false;
       } else {
@@ -323,7 +323,7 @@ const CourseFormComponent = ({courseId, courseData}: CourseBuilderProps) => {
       Storage.put(`instituteImages/curricular_image_${id}`, file, {
         contentType: type,
         acl: 'public-read',
-        ContentEncoding: 'base64',
+        ContentEncoding: 'base64'
       })
         .then((result) => {
           console.log('File successfully uploaded to s3', result);
@@ -332,7 +332,7 @@ const CourseFormComponent = ({courseId, courseData}: CourseBuilderProps) => {
         .catch((err) => {
           setError({
             show: true,
-            errorMsg: 'Unable to upload image. Please try again later. ',
+            errorMsg: 'Unable to upload image. Please try again later. '
           });
           console.log('Error in uploading file to s3', err);
           reject(err);
@@ -351,7 +351,7 @@ const CourseFormComponent = ({courseId, courseData}: CourseBuilderProps) => {
         const personObj = {
           id: personData?.id,
           name: personData?.name,
-          value: personData?.name,
+          value: personData?.name
         };
         return personObj;
       });
@@ -369,18 +369,18 @@ const CourseFormComponent = ({courseId, courseData}: CourseBuilderProps) => {
           description: courseData.description,
           objectives: courseData.objectives[0],
           institute: {
-            id: courseData.institution.id,
+            id: courseData.institution.id
           },
           languages: languageList.filter((item) =>
             courseData.languages.includes(item.value)
-          ),
+          )
         });
       } else {
         setCurricularData((prevData) => ({
           ...prevData,
           institute: {
-            id: courseData.institution.id,
-          },
+            id: courseData.institution.id
+          }
         }));
       }
       const imageUrl: any = courseData.image
@@ -401,7 +401,7 @@ const CourseFormComponent = ({courseId, courseData}: CourseBuilderProps) => {
     languages,
     type,
     institute,
-    summary,
+    summary
   } = curricularData;
   return (
     <div className="">

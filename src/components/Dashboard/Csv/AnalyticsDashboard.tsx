@@ -1,11 +1,11 @@
-import Loader from '@atoms/Loader';
+import Loader from 'atoms/Loader';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import * as queries from '@graphql/queries';
+import * as queries from 'graphql/queries';
 import React, {useContext, useEffect, useState} from 'react';
-import {GlobalContext} from '../../../contexts/GlobalContext';
-import * as customQueries from '../../../customGraphql/customQueries';
-import useDictionary from '../../../customHooks/dictionary';
-import * as mutations from '../../../graphql/mutations';
+import {GlobalContext} from 'contexts/GlobalContext';
+import * as customQueries from 'customGraphql/customQueries';
+import useDictionary from 'customHooks/dictionary';
+import * as mutations from 'graphql/mutations';
 import DateAndTime from '../DateAndTime/DateAndTime';
 
 interface ICsvProps {

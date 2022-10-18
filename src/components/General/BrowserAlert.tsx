@@ -1,4 +1,4 @@
-import Tooltip from '@atoms/Tooltip';
+import Tooltip from 'atoms/Tooltip';
 import {useOutsideAlerter} from 'components/General/hooks/outsideAlerter';
 import React from 'react';
 import {FaCopy} from 'react-icons/fa';
