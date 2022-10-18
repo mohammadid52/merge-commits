@@ -68,7 +68,6 @@ type Person @model @auth(rules: [{allow: public}]) {
 
 
 
-
 type PersonLessonsData @model @auth(rules: [{allow: public}]) {
   id: ID!@primaryKey
   studentAuthID: String! @index(name: "byStudentAuthID")
