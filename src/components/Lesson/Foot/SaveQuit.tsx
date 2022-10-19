@@ -53,8 +53,6 @@ const SaveQuit = ({createJournalData}: SaveQuitProps) => {
       }
       setWaiting(false);
       setSafeToLeave(true);
-
-      history.push(`/dashboard/classroom/${getRoomData.id}`);
     }
   };
 
