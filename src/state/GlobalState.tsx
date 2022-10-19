@@ -39,6 +39,8 @@ export interface globalStateType {
   };
 }
 
+// test comment
+
 export const globalState: globalStateType = {
   sidebar: {
     upcomingLessons: [],
