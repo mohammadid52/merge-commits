@@ -7264,55 +7264,6 @@ export const listCommunityChats = /* GraphQL */ `
     }
   }
 `;
-export const getCypressTesting = /* GraphQL */ `
-  query GetCypressTesting($id: ID!) {
-    getCypressTesting(id: $id) {
-      id
-      testID
-      testName
-      testType
-      testSteps
-      testData
-      testExpResults
-      edgeCases
-      lastUpdate
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listCypressTestings = /* GraphQL */ `
-  query ListCypressTestings(
-    $id: ID
-    $filter: ModelCypressTestingFilterInput
-    $limit: Int
-    $nextToken: String
-    $sortDirection: ModelSortDirection
-  ) {
-    listCypressTestings(
-      id: $id
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      sortDirection: $sortDirection
-    ) {
-      items {
-        id
-        testID
-        testName
-        testType
-        testSteps
-        testData
-        testExpResults
-        edgeCases
-        lastUpdate
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
 export const userById = /* GraphQL */ `
   query UserById(
     $id: ID!

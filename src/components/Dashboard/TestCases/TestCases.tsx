@@ -9,8 +9,8 @@ import useDictionary from 'customHooks/dictionary';
 import Buttons from 'atoms/Buttons';
 import SectionTitle from 'atoms/SectionTitle';
 import TestCasesInfo from './TestCasesInfo';
-import {createCypressTesting, deleteCypressTesting} from 'graphql/mutations';
-import {listCypressTestings} from 'graphql/queries';
+
+// import {listCypressTestings} from 'graphql/queries';
 import TestCasesAdd from './TestCasesAdd';
 import LessonLoading from 'components/Lesson/Loading/LessonLoading';
 
@@ -37,12 +37,12 @@ const TestCases = () => {
 
   async function getTestCases() {
     try {
-      const results: any = await API.graphql(
-        graphqlOperation(listCypressTestings, {filter: {}})
-      );
-      const data = results.data.listCypressTestings.items;
-      console.log(data);
-      setTableData(data);
+      // const results: any = await API.graphql(
+      //   graphqlOperation(listCypressTestings, {filter: {}})
+      // );
+      // const data = results.data.listCypressTestings.items;
+      // console.log(data);
+      // setTableData(data);
       setStatus('done');
     } catch (error) {
       console.error(error);
@@ -52,9 +52,9 @@ const TestCases = () => {
   async function deleteTestCase(id: string) {
     const input = {id};
     try {
-      const results: any = await API.graphql(
-        graphqlOperation(deleteCypressTesting, {input: input})
-      );
+      // const results: any = await API.graphql(
+      //   graphqlOperation(deleteCypressTesting, {input: input})
+      // );
 
       getTestCases();
     } catch (error) {
