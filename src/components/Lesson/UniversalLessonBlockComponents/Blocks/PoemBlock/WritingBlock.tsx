@@ -6,7 +6,7 @@ import {
   Options,
   PartContentSub,
   StudentPageInput
-} from '../../../../../interfaces/UniversalLessonInterfaces';
+} from 'interfaces/UniversalLessonInterfaces';
 
 interface WritingBlockProps {
   id?: string;

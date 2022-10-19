@@ -3,7 +3,7 @@ import {GlobalContext} from 'contexts/GlobalContext';
 import {useOverlayContext} from 'contexts/OverlayContext';
 import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
 import useOnScreen from 'customHooks/useOnScreen';
-import {UniversalLesson} from '@interfaces/UniversalLessonInterfaces';
+import {UniversalLesson} from 'interfaces/UniversalLessonInterfaces';
 import React, {useContext, useEffect, useRef} from 'react';
 import {
   AiOutlineCopy,

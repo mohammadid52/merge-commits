@@ -14,10 +14,7 @@ import * as customQueries from 'customGraphql/customQueries';
 import {graphqlOperation, API} from 'aws-amplify';
 import {ILessonPlan} from './LessonPlan';
 import {v4 as uuidV4} from 'uuid';
-import {
-  UniversalLessonPage,
-  UniversalLesson
-} from '../../../../../interfaces/UniversalLessonInterfaces';
+import {UniversalLessonPage, UniversalLesson} from 'interfaces/UniversalLessonInterfaces';
 import {HiOutlineArrowRight} from 'react-icons/hi';
 import {MdTitle} from 'react-icons/md';
 import {ImFileEmpty} from 'react-icons/im';

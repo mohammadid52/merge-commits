@@ -5,7 +5,7 @@ import {FaCompress, FaExpand} from 'react-icons/fa';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {GlobalContext} from 'contexts/GlobalContext';
 import * as mutations from 'graphql/mutations';
-import {UniversalLessonPage} from '../../../interfaces/UniversalLessonInterfaces';
+import {UniversalLessonPage} from 'interfaces/UniversalLessonInterfaces';
 import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
 import FullscreenToggle from './TitleBarSections/FullscreenToggle';
 import OpenClosePagesToggle from './TitleBarSections/OpenClosePagesToggle';

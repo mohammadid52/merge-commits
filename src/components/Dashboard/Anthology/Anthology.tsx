@@ -17,7 +17,7 @@ import {
   UniversalClassData,
   UniversalJournalData,
   UniversalLessonStudentData
-} from '../../../interfaces/UniversalLessonInterfaces';
+} from 'interfaces/UniversalLessonInterfaces';
 import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
 import Modal from 'atoms/Modal';

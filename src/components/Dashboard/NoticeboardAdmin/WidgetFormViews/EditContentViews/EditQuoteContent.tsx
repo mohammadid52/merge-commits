@@ -3,7 +3,7 @@ import {AiOutlineDelete} from 'react-icons/all';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {GlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
-import {Quote} from '../../../../../interfaces/ClassroomComponentsInterfaces';
+import {Quote} from 'interfaces/ClassroomComponentsInterfaces';
 import {NoticeboardFormProps} from '../../NoticeboardAdminContent';
 import AddRemoveButton from '../addRemoveButton';
 

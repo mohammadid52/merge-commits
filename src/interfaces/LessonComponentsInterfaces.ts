@@ -1,4 +1,4 @@
-import {UniversalLessonPage} from '@interfaces/UniversalLessonInterfaces';
+import {UniversalLessonPage} from 'interfaces/UniversalLessonInterfaces';
 import React, {SetStateAction} from 'react';
 
 export interface LessonComponentsInterface {

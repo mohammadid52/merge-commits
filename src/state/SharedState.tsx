@@ -1,8 +1,8 @@
 import {
   UniversalLessonPage,
   UniversalLessonPlanStage,
-  UniversalLessonStudentData,
-} from '../interfaces/UniversalLessonInterfaces';
+  UniversalLessonStudentData
+} from 'interfaces/UniversalLessonInterfaces';
 
 interface QuestionData {
   [key: string]: string | null;
@@ -66,10 +66,9 @@ interface StudentTeacherStateInterface {
   subscribeFunc?: () => any;
 }
 
-
 /**************************************
  * THE CONTEXT FOR TEACHER & STUDENT  *
  **************************************/
 export const sharedState: StudentTeacherStateInterface = {
   //
-}
+};

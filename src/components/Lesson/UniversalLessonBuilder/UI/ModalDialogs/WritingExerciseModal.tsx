@@ -2,11 +2,8 @@ import {remove} from 'lodash';
 import React, {useContext, useEffect, useState} from 'react';
 import {GlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
-import {IContentTypeComponentProps} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
-import {
-  Options,
-  PartContentSub
-} from '../../../../../interfaces/UniversalLessonInterfaces';
+import {IContentTypeComponentProps} from 'interfaces/UniversalLessonBuilderInterfaces';
+import {Options, PartContentSub} from 'interfaces/UniversalLessonInterfaces';
 import Info from 'atoms/Alerts/Info';
 import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';

@@ -4,7 +4,7 @@ import Card from 'components/Community/Card';
 import useAuth from 'customHooks/useAuth';
 
 import * as queries from 'graphql/queries';
-import {ICommunityCard} from '@interfaces/Community.interfaces';
+import {ICommunityCard} from 'interfaces/Community.interfaces';
 import AnimatedContainer from 'uiComponents/Tabs/AnimatedContainer';
 import {API, graphqlOperation} from 'aws-amplify';
 import orderBy from 'lodash/orderBy';

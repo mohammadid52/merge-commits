@@ -5,7 +5,7 @@ import {getLocalStorageData} from 'utilities/localStorage';
 import React, {useContext, useEffect} from 'react';
 import {AiOutlineHome} from 'react-icons/ai';
 import {useRouteMatch} from 'react-router';
-import {UniversalLessonPage} from '../../../../interfaces/UniversalLessonInterfaces';
+import {UniversalLessonPage} from 'interfaces/UniversalLessonInterfaces';
 import StageIcon from './StageIcon';
 
 interface IProgressBarProps {
@@ -20,7 +20,7 @@ interface IProgressBarProps {
 const Disabled = ({text}: {text: string}) => {
   return (
     <div className="absolute inset-0 flex items-center justify-center bg-gray-800 bg-opacity-70 disabled z-50">
-      <p className="text-center font-bold text-sm">text</p>
+      <p className="text-center font-bold text-sm">{text}</p>
     </div>
   );
 };
@@ -149,6 +149,16 @@ const ProgressBar = ({
       reset();
     }
   }, [isClosed, isClosedLocalStorage]);
+
+  const lessonProgress = lessonState?.lessonProgress;
+
+  // useEffect(() => {
+  //   const element = $('#lesson-progress-bar');
+  //   if (element) {
+  //   }
+
+  //   return () => {};
+  // }, [lessonProgress]);
 
   return (
     <nav

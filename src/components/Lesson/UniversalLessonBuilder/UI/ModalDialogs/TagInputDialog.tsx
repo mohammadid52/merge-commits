@@ -1,7 +1,7 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {GlobalContext} from 'contexts/GlobalContext';
 import {EditQuestionModalDict} from 'dictionary/dictionary.iconoclast';
-import {IContentTypeComponentProps} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
+import {IContentTypeComponentProps} from 'interfaces/UniversalLessonBuilderInterfaces';
 import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
 import Buttons from 'atoms/Buttons';
 import FormTagInput from 'atoms/Form/FormTagInput';

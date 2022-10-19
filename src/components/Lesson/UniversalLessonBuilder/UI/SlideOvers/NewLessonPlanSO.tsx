@@ -11,7 +11,7 @@ import * as customMutations from 'customGraphql/customMutations';
 import useDictionary from 'customHooks/dictionary';
 import {useQuery} from 'customHooks/urlParam';
 import {XIcon} from '@heroicons/react/outline';
-import {IFile} from '@interfaces/UniversalLessonInterfaces';
+import {IFile} from 'interfaces/UniversalLessonInterfaces';
 import ModalPopUp from 'molecules/ModalPopUp';
 import UploadMedia from 'molecules/UploadMedia';
 import '@pathofdev/react-tag-input/build/index.css';

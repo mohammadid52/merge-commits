@@ -9,7 +9,7 @@ import {GlobalContext} from 'contexts/GlobalContext';
 import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
 import {EditQuestionModalDict} from '@dictionary/dictionary.iconoclast';
 import {Switch} from '@headlessui/react';
-import {IContentTypeComponentProps} from '@interfaces/UniversalLessonBuilderInterfaces';
+import {IContentTypeComponentProps} from 'interfaces/UniversalLessonBuilderInterfaces';
 import AnimatedContainer from 'uiComponents/Tabs/AnimatedContainer';
 import {HeaderBlock} from '@UlbBlocks/HeaderBlock';
 import ColorPicker from '@UlbUI/ColorPicker/ColorPicker';

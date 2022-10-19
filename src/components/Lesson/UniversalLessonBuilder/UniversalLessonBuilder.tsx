@@ -3,13 +3,13 @@ import {usePageBuilderContext} from 'contexts/PageBuilderContext';
 import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
 import * as customQueries from 'customGraphql/customQueries';
 import {useQuery} from 'customHooks/urlParam';
-import {LessonPlansProps} from '@interfaces/LessonInterfaces';
-import {ULBSelectionProps} from '@interfaces/UniversalLessonBuilderInterfaces';
+import {LessonPlansProps} from 'interfaces/LessonInterfaces';
+import {ULBSelectionProps} from 'interfaces/UniversalLessonBuilderInterfaces';
 import {
   PagePart,
   PartContent,
   UniversalLessonPage
-} from '@interfaces/UniversalLessonInterfaces';
+} from 'interfaces/UniversalLessonInterfaces';
 import {replaceTailwindClass} from 'lesson/UniversalLessonBuilder/crudFunctions/replaceInString';
 import BuilderWrapper from 'lesson/UniversalLessonBuilder/views/BuilderWrapper';
 import {API, graphqlOperation} from 'aws-amplify';

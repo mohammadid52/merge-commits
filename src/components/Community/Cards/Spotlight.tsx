@@ -9,7 +9,7 @@ import AnimatedContainer from 'components/Lesson/UniversalLessonBuilder/UI/UICom
 import * as customQueries from 'customGraphql/customQueries';
 import useAuth from 'customHooks/useAuth';
 import * as queries from 'graphql/queries';
-import {ICommunityCardProps, ISpotlightInput} from '@interfaces/Community.interfaces';
+import {ICommunityCardProps, ISpotlightInput} from 'interfaces/Community.interfaces';
 import {getImageFromS3Static} from 'utilities/services';
 import {getFilterORArray} from 'utilities/strings';
 import isEmpty from 'lodash/isEmpty';

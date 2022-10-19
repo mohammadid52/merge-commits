@@ -7,14 +7,14 @@ import ReviewSliderBlock from 'components/Lesson/UniversalLessonBlockComponents/
 import {GlobalContext} from 'contexts/GlobalContext';
 import useInLessonCheck from 'customHooks/checkIfInLesson';
 import useStudentDataValue from 'customHooks/studentDataValue';
-import {UniversalLessonPage} from '@interfaces/UniversalLessonInterfaces';
+import {UniversalLessonPage} from 'interfaces/UniversalLessonInterfaces';
 import DatePicker from '@UlbBlocks/FormBlock/DatePicker';
 import TextAreaBlock from '@UlbBlocks/FormBlock/TextAreaBlock';
 import TextBlock from '@UlbBlocks/FormBlock/TextBlock';
 import NotesBlock from '@UlbBlocks/Notes/NotesBlock';
 import {filter, map, noop} from 'lodash';
 import React, {useContext, useEffect, useState} from 'react';
-import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
+import {RowWrapperProps} from 'interfaces/UniversalLessonBuilderInterfaces';
 import {FORM_TYPES} from '../../UniversalLessonBuilder/UI/common/constants';
 import EmojiInput from './FormBlock/EmojiInputBlock';
 

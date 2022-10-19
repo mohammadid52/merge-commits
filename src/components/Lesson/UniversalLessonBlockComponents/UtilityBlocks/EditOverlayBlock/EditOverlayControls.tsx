@@ -5,8 +5,8 @@ import {useQuery} from 'customHooks/urlParam';
 import {
   RowWrapperProps,
   ULBSelectionProps
-} from '@interfaces/UniversalLessonBuilderInterfaces';
-import {UniversalLessonPage} from '@interfaces/UniversalLessonInterfaces';
+} from 'interfaces/UniversalLessonBuilderInterfaces';
+import {UniversalLessonPage} from 'interfaces/UniversalLessonInterfaces';
 import ModalPopUp from 'molecules/ModalPopUp';
 import ColorPicker from '@UlbUI/ColorPicker/ColorPicker';
 import {FORM_TYPES} from '@UlbUI/common/constants';

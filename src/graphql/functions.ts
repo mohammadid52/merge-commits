@@ -1,6 +1,25 @@
 import {Storage} from '@aws-amplify/storage';
 
-export const uploadImageToS3 = async (file: any, key: string, type: string) => {
+interface S3UploadOptions {
+  onSuccess?: (result: Object) => void;
+  onError?: (error: Error) => void;
+  progressCallback?: ({
+    loaded,
+    total,
+    progress
+  }: {
+    loaded: number;
+    total: number;
+    progress: number;
+  }) => void;
+}
+
+export const uploadImageToS3 = async (
+  file: any,
+  key: string,
+  type: string,
+  options?: S3UploadOptions
+) => {
   // Upload file to s3 bucket
 
   try {
@@ -8,13 +27,21 @@ export const uploadImageToS3 = async (file: any, key: string, type: string) => {
       contentType: type,
       acl: 'public-read',
       ContentEncoding: 'base64',
-      progressCallback: ({loaded, total}: any) => {}
+      progressCallback: options?.progressCallback
     });
 
-    console.log('New profile image uploaded to s3 successfully: ', result);
+    if (options && options?.onSuccess && typeof options?.onSuccess === 'function') {
+      options.onSuccess(result);
+    }
     return result;
   } catch (error) {
-    console.error('Error in uploading file to s3', {file, key, type}, error);
+    if (options && options?.onError && typeof options?.onError === 'function') {
+      // if there is a error callback, call the onError function
+      options.onError(error);
+    } else {
+      // otherwise throw the error to console
+      console.error(error);
+    }
   }
 };
 

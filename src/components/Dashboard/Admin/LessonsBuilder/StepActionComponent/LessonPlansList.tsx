@@ -1,7 +1,7 @@
 import React, {Fragment, useContext} from 'react';
 import {useHistory} from 'react-router';
 import {DragDropContext, Draggable, Droppable} from 'react-beautiful-dnd';
-import {UniversalLessonPage} from '../../../../../interfaces/UniversalLessonInterfaces';
+import {UniversalLessonPage} from 'interfaces/UniversalLessonInterfaces';
 import PageWrapper from 'atoms/PageWrapper';
 import Buttons from 'atoms/Buttons';
 

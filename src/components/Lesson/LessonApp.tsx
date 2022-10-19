@@ -19,7 +19,7 @@ import {
   UniversalJournalData,
   UniversalLessonPage,
   UniversalLessonStudentData
-} from '@interfaces/UniversalLessonInterfaces';
+} from 'interfaces/UniversalLessonInterfaces';
 import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
 import ErrorBoundary from '../Error/ErrorBoundary';
 import LessonHeaderBar from '../Header/LessonHeaderBar';

@@ -1,5 +1,5 @@
 import React, {useContext, useState, useEffect} from 'react';
-import {IContentTypeComponentProps} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
+import {IContentTypeComponentProps} from 'interfaces/UniversalLessonBuilderInterfaces';
 import FormInput from 'atoms/Form/FormInput';
 import {v4 as uuidv4} from 'uuid';
 import {DIVIDER} from '../common/constants';

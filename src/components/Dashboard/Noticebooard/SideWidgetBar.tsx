@@ -4,7 +4,7 @@ import {DashboardProps} from '../Dashboard';
 import {CallLinkWidget, DefaultTextWidget, LogoWidget} from './Widgets';
 import {GlobalContext} from 'contexts/GlobalContext';
 import {getAsset} from 'assets';
-import {Widget} from '../../../interfaces/ClassroomComponentsInterfaces';
+import {Widget} from 'interfaces/ClassroomComponentsInterfaces';
 import {QuoteWidget} from './TopWidgets';
 import {FileLinkWidget} from './Widgets/FilesWidget';
 

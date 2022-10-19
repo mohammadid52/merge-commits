@@ -1,7 +1,7 @@
 import {Transition} from '@headlessui/react';
 import React from 'react';
 import ClickAwayListener from 'react-click-away-listener';
-import {children, setState} from '../../interfaces';
+import {children, setState} from 'interfaces';
 
 interface IPopOver {
   show: boolean;
@@ -42,10 +42,10 @@ const Popover = ({
   dir = 'bottom',
   className,
   content,
-  rounded = 'xl',
+  rounded = 'xl'
 }: IPopOver) => {
   const dynamicDir = {
-    [dir]: `${bottom}rem`,
+    [dir]: `${bottom}rem`
   };
 
   return (

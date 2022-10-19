@@ -9,7 +9,7 @@ import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
 import Selector from 'atoms/Form/Selector';
 import SectionTitle from 'atoms/SectionTitle';
-import SuccessNote from '../../../../standard/Alert/SuccessNote';
+import SuccessNote from 'standard/Alert/SuccessNote';
 import DropdownForm from './DropdownForm';
 import ErrorNote from './ErrorNote';
 

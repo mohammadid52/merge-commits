@@ -1,10 +1,8 @@
-import React, {useEffect} from 'react';
-import useLessonControls from 'customHooks/lessonControls';
-import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
-import {FaCompress, FaExpand} from 'react-icons/fa';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
-import {StudentWindowTitleBarProps} from '../StudentWindowTitleBar';
 import Buttons from 'atoms/Buttons';
+import useLessonControls from 'customHooks/lessonControls';
+import React, {useEffect} from 'react';
+import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
+import {StudentWindowTitleBarProps} from '../StudentWindowTitleBar';
 
 interface IFullscreenToggleProps extends StudentWindowTitleBarProps {
   displayData: any;
@@ -25,6 +23,7 @@ const PresentationModeToggle = ({
   const anyoneIsShared = displayData && displayData[0].studentAuthID !== '';
   const currentSharedPage = displayData && displayData[0].lessonPageID;
   const isPresenting = displayData && displayData[0].isTeacher === true;
+
   const getRoomData = getLocalStorageData('room_info');
 
   //TODO: to refactor this to lessonControls hook
@@ -76,13 +75,6 @@ const PresentationModeToggle = ({
 
   return (
     <div className="w-1/3 flex justify-center h-8 align-middle leading-8 ">
-      {/* <span
-        onClick={() => handlePresentationToggle(isPresenting, anyoneIsShared)}
-        className={`${
-          isPresenting ? 'text-red-500' : theme.textColor[themeColor]
-        } w-auto h-6 my-auto text-sm underline leading-4 transform hover:scale-110 transition-transform duration-150 p-1 cursor-pointer`}>
-        {isPresenting ? 'Stop Presenting' : 'Start Presenting'}
-      </span> */}
       <Buttons
         overrideClass
         btnClass={`${

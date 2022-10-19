@@ -1,6 +1,6 @@
 import React, {useContext} from 'react';
 import {QuoteWidget} from './TopWidgets';
-import {Widget} from '../../../interfaces/ClassroomComponentsInterfaces';
+import {Widget} from 'interfaces/ClassroomComponentsInterfaces';
 import {GlobalContext} from 'contexts/GlobalContext';
 import {CallLinkWidget, DefaultTextWidget} from './Widgets';
 import {FileLinkWidget} from './Widgets/FilesWidget';

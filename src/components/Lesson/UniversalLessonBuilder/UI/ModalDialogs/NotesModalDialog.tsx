@@ -3,8 +3,8 @@ import NotesBlock from 'components/Lesson/UniversalLessonBlockComponents/Blocks/
 import {FORM_TYPES} from 'components/Lesson/UniversalLessonBuilder/UI/common/constants';
 import {GlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
-import {IOnChange} from '@interfaces/index';
-import {IContentTypeComponentProps} from '@interfaces/UniversalLessonBuilderInterfaces';
+import {IOnChange} from 'interfaces/index';
+import {IContentTypeComponentProps} from 'interfaces/UniversalLessonBuilderInterfaces';
 import AnimatedContainer from 'uiComponents/Tabs/AnimatedContainer';
 import {Tabs3, useTabs} from 'uiComponents/Tabs/Tabs';
 import SingleNote from '@UlbBlocks/Notes/SingleNoteForm';

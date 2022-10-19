@@ -11,12 +11,12 @@ import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
 import * as customQueries from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import {useQuery} from 'customHooks/urlParam';
-import {ULBSelectionProps} from '@interfaces/UniversalLessonBuilderInterfaces';
+import {ULBSelectionProps} from 'interfaces/UniversalLessonBuilderInterfaces';
 import {
   PartContent,
   UniversalLesson,
   UniversalLessonPage
-} from '@interfaces/UniversalLessonInterfaces';
+} from 'interfaces/UniversalLessonInterfaces';
 import {LessonPageWrapper} from 'lesson/UniversalLessonBlockComponents/LessonPageWrapper';
 import BuilderRowComposer from 'lesson/UniversalLessonBuilder/views/CoreBuilder/BuilderRowComposer';
 import ModalPopUp from 'molecules/ModalPopUp';

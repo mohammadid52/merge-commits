@@ -10,7 +10,7 @@ import * as customQueries from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import {useQuery} from 'customHooks/urlParam';
 import * as mutations from 'graphql/mutations';
-import {LessonPlansProps, SavedLessonDetailsProps} from '@interfaces/LessonInterfaces';
+import {LessonPlansProps, SavedLessonDetailsProps} from 'interfaces/LessonInterfaces';
 import {getImageFromS3Static} from 'utilities/services';
 import {languageList, lessonTypeList} from 'utilities/staticData';
 import Loader from 'atoms/Loader';

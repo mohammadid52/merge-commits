@@ -43,6 +43,7 @@ const Start: React.FC<StartProps> = ({
   roomID,
   preview
 }: StartProps) => {
+  console.log({isCompleted, open, isActive});
   // ~~~~~~~~~~ CONTEXT SPLITTING ~~~~~~~~~~ //
   const gContext = useContext(GlobalContext);
   const state = gContext.state;

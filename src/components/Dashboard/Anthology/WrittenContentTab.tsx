@@ -6,7 +6,7 @@ import {FaSpinner} from 'react-icons/fa';
 import {getAsset} from 'assets';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
-import {UniversalJournalData} from '../../../interfaces/UniversalLessonInterfaces';
+import {UniversalJournalData} from 'interfaces/UniversalLessonInterfaces';
 import {dateFromServer} from 'utilities/time';
 import Buttons from 'atoms/Buttons';
 import ContentCard from 'atoms/ContentCard';

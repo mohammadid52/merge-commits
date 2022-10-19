@@ -1,4 +1,4 @@
-import {IFormBlockProps, StudentPageInput} from '@interfaces/UniversalLessonInterfaces';
+import {IFormBlockProps, StudentPageInput} from 'interfaces/UniversalLessonInterfaces';
 import React, {useContext, useState} from 'react';
 import RequiredMark from 'atoms/RequiredMark';
 import {GlobalContext} from 'contexts/GlobalContext';

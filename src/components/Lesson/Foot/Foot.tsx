@@ -3,11 +3,11 @@ import {NavLink, useHistory, useRouteMatch} from 'react-router-dom';
 import {LessonContext} from 'contexts/LessonContext';
 import {GlobalContext} from 'contexts/GlobalContext';
 import {getAsset} from 'assets';
-import {LessonHeaderBarProps} from '../../../interfaces/LessonComponentsInterfaces';
+import {LessonHeaderBarProps} from 'interfaces/LessonComponentsInterfaces';
 import PositiveAlert from '../../General/Popup';
 import {useOutsideAlerter} from '../../General/hooks/outsideAlerter';
 import {getLocalStorageData} from 'utilities/localStorage';
-import {StudentPageInput} from '../../../interfaces/UniversalLessonInterfaces';
+import {StudentPageInput} from 'interfaces/UniversalLessonInterfaces';
 
 const Foot = ({
   isAtEnd,

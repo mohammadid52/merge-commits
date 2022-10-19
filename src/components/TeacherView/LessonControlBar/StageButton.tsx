@@ -1,7 +1,7 @@
 import React, {useContext} from 'react';
 import {useHistory, useRouteMatch} from 'react-router-dom';
 import {GlobalContext} from 'contexts/GlobalContext';
-import {UniversalLessonPage} from '../../../interfaces/UniversalLessonInterfaces';
+import {UniversalLessonPage} from 'interfaces/UniversalLessonInterfaces';
 
 interface StageButtonProps {
   iconID?: number;
