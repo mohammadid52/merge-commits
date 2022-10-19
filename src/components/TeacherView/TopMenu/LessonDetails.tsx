@@ -1,5 +1,5 @@
 import {Storage} from '@aws-amplify/storage';
-import Buttons from 'components/Atoms/Buttons';
+import Buttons from 'atoms/Buttons';
 import {downloadBlob} from 'components/Lesson/UniversalLessonBuilder/UI/UIComponents/Downloadables';
 import {GlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';

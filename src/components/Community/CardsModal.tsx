@@ -1,4 +1,4 @@
-import Modal from 'components/Atoms/Modal';
+import Modal from 'atoms/Modal';
 import Announcements from 'components/Community/Cards/Announcement';
 import CheckItOut from 'components/Community/Cards/CheckItOut';
 import Event from 'components/Community/Cards/Event';

@@ -169,7 +169,7 @@ const UnitFormComponent = ({
           if (newItem) {
             postAddSyllabus(newItem.id);
           } else {
-            console.log('Could not add unit');
+            console.error('Could not add unit');
           }
         }
       } catch {

@@ -564,6 +564,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
       }
 
       lessonDispatch({type: 'LESSON_LOADED', payload: true});
+
       // console.log('no more - ', combined);
       setLessonDataLoaded(true);
       return combined;
@@ -644,7 +645,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
             filteredData.exerciseData,
             lessonState.exerciseData
           );
-          // console.log('merged data', finalData);
+
           lessonDispatch({
             type: 'LOAD_STUDENT_DATA',
             payload: {
@@ -986,6 +987,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
             input
           })
         );
+        console.info('\x1b[33m *Moving lesson data to writing exercise table... \x1b[0m');
         returnedData = newStudentData.data.createUniversalLessonWritingExcercises;
       } else {
         newStudentData = await API.graphql(
@@ -993,6 +995,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
             input
           })
         );
+        console.info('\x1b[33m *Archiving rest of the pages... \x1b[0m');
         returnedData = newStudentData.data.createUniversalArchiveData;
       }
       return returnedData;
@@ -1005,7 +1008,10 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
       const result = await loopCreateStudentArchiveAndExcerciseData(lessonID);
       return result;
     } catch (e) {
-      console.error('error creating journal data - ', e);
+      console.error(
+        'error @createStudentArchiveData in LessonApp.tsx creating journal data - ',
+        e
+      );
     }
   };
 
@@ -1170,7 +1176,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
             <ErrorBoundary fallback={<h1>Error in the Lesson App</h1>}>
               {/* ADD LESSONWRAPPER HERE */}
               <div className="mt-4 mb-8 lesson-page-container">
-                <CoreUniversalLesson />
+                <CoreUniversalLesson createJournalData={createStudentArchiveData} />
               </div>
             </ErrorBoundary>
           )}

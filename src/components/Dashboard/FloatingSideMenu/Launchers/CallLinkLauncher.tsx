@@ -2,7 +2,7 @@ import React, {useContext, useEffect, useState} from 'react';
 import ButtonsRound from 'atoms/ButtonsRound';
 import {ImPhone} from 'react-icons/im';
 import {GlobalContext} from 'contexts/GlobalContext';
-import {Widget} from '../../../../interfaces/ClassroomComponentsInterfaces';
+import {Widget} from 'interfaces/ClassroomComponentsInterfaces';
 import {FloatingSideMenuProps} from '../FloatingSideMenu';
 
 interface CallLinkLauncherProps extends FloatingSideMenuProps {

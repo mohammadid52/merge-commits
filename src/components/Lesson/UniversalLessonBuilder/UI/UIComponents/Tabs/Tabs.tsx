@@ -1,9 +1,9 @@
 import React, {useState} from 'react';
-import {setState} from '../../../../../../interfaces';
+import {setState} from 'interfaces';
 import {classNames} from '../../FormElements/UniversalInput';
 const _tabs = [
   {name: 'Component Details', current: true},
-  {name: 'Preview', current: false},
+  {name: 'Preview', current: false}
 ];
 interface ITab {
   name: string;
@@ -25,7 +25,7 @@ export const useTabs = (tabs: ITab[] = _tabs) => {
 export const Tabs2 = ({
   tabs = _tabs,
   curTab,
-  setCurTab,
+  setCurTab
 }: {
   tabs?: {name: string; current: boolean}[];
   curTab: string;
@@ -81,7 +81,7 @@ export const Tabs2 = ({
 const Tabs = ({
   tabs = _tabs,
   curTab,
-  setCurTab,
+  setCurTab
 }: {
   tabs?: {name: string; current: boolean}[];
   curTab: string;
@@ -144,7 +144,7 @@ export const Tabs3 = ({
   curTab,
   setCurTab,
   config = {fullColor: false},
-  numbered = false,
+  numbered = false
 }: {
   tabs?: ITab[];
   curTab: string;

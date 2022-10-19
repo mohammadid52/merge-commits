@@ -1,5 +1,5 @@
-import Buttons from 'components/Atoms/Buttons';
-import RichTextEditor from 'components/Atoms/RichTextEditor';
+import Buttons from 'atoms/Buttons';
+import RichTextEditor from 'atoms/RichTextEditor';
 import {GRATITUDE} from 'components/Lesson/UniversalLessonBuilder/UI/common/constants';
 import AnimatedContainer from 'components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import useAuth from 'customHooks/useAuth';

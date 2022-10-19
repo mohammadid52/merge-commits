@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {GlobalContext} from 'contexts/GlobalContext';
-import {Widget} from '../../../interfaces/ClassroomComponentsInterfaces';
+import {Widget} from 'interfaces/ClassroomComponentsInterfaces';
 import {SideMenuSection} from './SideMenuSection';
 import Rooms from '../../RoomChat/Rooms';
 import {CallWidgetsSmall} from './SectionContent/CallWidgetsSmall';

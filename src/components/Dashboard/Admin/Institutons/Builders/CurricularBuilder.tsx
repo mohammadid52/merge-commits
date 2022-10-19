@@ -341,7 +341,7 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
             show: true,
             errorMsg: 'Unable to upload image. Please try again later. '
           });
-          console.log('Error in uploading file to s3', err);
+          console.error('Error in uploading file to s3', err);
           reject(err);
         });
     });

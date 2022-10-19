@@ -142,7 +142,7 @@ const UnitBuilder = ({instId}: any) => {
         setSavedLessonsList(sortedLessonsList);
         setFetchingDetails(false);
       } catch (err) {
-        console.log('err', err);
+        console.error('err', err);
         setMessages({
           show: true,
           message: SyllabusDict[userLanguage]['MESSAGES']['fetcher'],

@@ -10,8 +10,8 @@ import useDictionary from 'customHooks/dictionary';
 import Loader from 'atoms/Loader';
 import Tooltip from 'atoms/Tooltip';
 import AddButton from 'atoms/Buttons/AddButton';
-import SearchInput from 'components/Atoms/Form/SearchInput';
-import Selector from 'components/Atoms/Form/Selector';
+import SearchInput from 'atoms/Form/SearchInput';
+import Selector from 'atoms/Form/Selector';
 
 interface RoomListProps {
   instId: string;

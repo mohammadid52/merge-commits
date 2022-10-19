@@ -5,7 +5,7 @@ import {getLocalStorageData} from 'utilities/localStorage';
 import React, {useContext, useEffect} from 'react';
 import {AiOutlineHome} from 'react-icons/ai';
 import {useRouteMatch} from 'react-router';
-import {UniversalLessonPage} from '../../../../interfaces/UniversalLessonInterfaces';
+import {UniversalLessonPage} from 'interfaces/UniversalLessonInterfaces';
 import StageIcon from './StageIcon';
 
 interface IProgressBarProps {

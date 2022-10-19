@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {NotificationListItem} from '../../interfaces/GlobalInfoComponentsInterfaces';
+import {NotificationListItem} from 'interfaces/GlobalInfoComponentsInterfaces';
 
 interface INoticebarProps {
   notifications: any[];

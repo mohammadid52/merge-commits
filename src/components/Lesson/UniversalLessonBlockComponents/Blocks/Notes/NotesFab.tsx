@@ -1,6 +1,6 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {Auth} from '@aws-amplify/auth';
-import Loader from 'components/Atoms/Loader';
+import Loader from 'atoms/Loader';
 import NotesBlock from 'components/Lesson/UniversalLessonBlockComponents/Blocks/Notes/NotesBlock';
 import {GlobalContext} from 'contexts/GlobalContext';
 import * as mutations from 'graphql/mutations';

@@ -1,4 +1,4 @@
-import {UniversalLessonStudentData} from '../../../../interfaces/UniversalLessonInterfaces';
+import {UniversalLessonStudentData} from 'interfaces/UniversalLessonInterfaces';
 
 /**
  *
@@ -24,28 +24,28 @@ export const exampleStudentDataMutation: UniversalLessonStudentData = {
     {
       domID: 'title',
       input: ['My story title'],
-      comments: [{commentBy: 'xxx', comment: 'abc'}],
+      comments: [{commentBy: 'xxx', comment: 'abc'}]
     },
     {
       domID: 'story',
       input: ['My story content'],
-      comments: [{commentBy: 'xxx', comment: 'abc'}],
+      comments: [{commentBy: 'xxx', comment: 'abc'}]
     },
 
     {
       domID: 'culture',
       input: ['Dutch'],
-      comments: [{commentBy: 'xxx', comment: 'abc'}],
+      comments: [{commentBy: 'xxx', comment: 'abc'}]
     },
     {
       domID: 'storyteller',
       input: ['Grandmother'],
-      comments: [{commentBy: 'xxx', comment: 'abc'}],
+      comments: [{commentBy: 'xxx', comment: 'abc'}]
     },
     {
       domID: 'lessons',
       input: ['Perseverance'],
-      comments: [{commentBy: 'xxx', comment: 'abc'}],
-    },
-  ],
+      comments: [{commentBy: 'xxx', comment: 'abc'}]
+    }
+  ]
 };

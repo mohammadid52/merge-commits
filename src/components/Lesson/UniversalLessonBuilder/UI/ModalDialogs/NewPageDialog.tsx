@@ -8,7 +8,7 @@ import FormInput from 'atoms/Form/FormInput';
 import {EditQuestionModalDict} from 'dictionary/dictionary.iconoclast';
 import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
 import Tooltip from 'atoms/Tooltip';
-import {UniversalLesson} from '../../../../../interfaces/UniversalLessonInterfaces';
+import {UniversalLesson} from 'interfaces/UniversalLessonInterfaces';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import * as customMutations from 'customGraphql/customMutations';
 interface ILessonInputs {

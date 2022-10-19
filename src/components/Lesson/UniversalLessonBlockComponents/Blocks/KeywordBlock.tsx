@@ -2,7 +2,7 @@ import React, {useContext, useState, useEffect} from 'react';
 
 import {GlobalContext} from 'contexts/GlobalContext';
 
-import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
+import {RowWrapperProps} from 'interfaces/UniversalLessonBuilderInterfaces';
 
 interface KeywordBlockProps extends RowWrapperProps {
   id?: string;

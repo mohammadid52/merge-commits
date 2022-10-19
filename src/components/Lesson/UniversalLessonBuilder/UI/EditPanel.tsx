@@ -1,8 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { PagePart, PartContent, UniversalLessonPage } from '../../../../interfaces/UniversalLessonInterfaces';
-import { Transition } from '@headlessui/react';
-import { EditPanelForm } from './EditPanel/EditPanelForm';
-import { EditPanelControls } from './EditPanel/EditPanelControls';
+import React, {useEffect, useState} from 'react';
+import {
+  PagePart,
+  PartContent,
+  UniversalLessonPage
+} from 'interfaces/UniversalLessonInterfaces';
+import {Transition} from '@headlessui/react';
+import {EditPanelForm} from './EditPanel/EditPanelForm';
+import {EditPanelControls} from './EditPanel/EditPanelControls';
 
 interface EditPanelProps {
   mode?: 'building' | 'viewing';
@@ -23,7 +27,7 @@ export const EditPanel = (props: EditPanelProps) => {
     setSelectedPagePartDetails,
     selectedPartContentDetails,
     setSelectedPartContentDetails,
-    initialUniversalLessonPagePartContent,
+    initialUniversalLessonPagePartContent
   } = props;
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
@@ -51,7 +55,7 @@ export const EditPanel = (props: EditPanelProps) => {
         } else {
           return partContent;
         }
-      }),
+      })
     };
     const newPageDetails = {
       ...selectedPageDetails,
@@ -61,7 +65,7 @@ export const EditPanel = (props: EditPanelProps) => {
         } else {
           return pageContent;
         }
-      }),
+      })
     };
 
     setSelectedPageDetails(newPageDetails);
@@ -85,7 +89,10 @@ export const EditPanel = (props: EditPanelProps) => {
               selectedPartContentDetails={selectedPartContentDetails}
               setSelectedPartContentDetails={setSelectedPartContentDetails}
             />
-            <EditPanelControls updateSelectedPageDetails={updateSelectedPageDetails} discardChanges={discardChanges} />
+            <EditPanelControls
+              updateSelectedPageDetails={updateSelectedPageDetails}
+              discardChanges={discardChanges}
+            />
           </div>
         </div>
       </Transition>

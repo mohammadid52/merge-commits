@@ -15,7 +15,7 @@ import * as subscriptions from 'graphql/subscriptions';
 import {
   StudentPageInput,
   UniversalLessonStudentData
-} from '../../interfaces/UniversalLessonInterfaces';
+} from 'interfaces/UniversalLessonInterfaces';
 import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
 import ErrorBoundary from '../Error/ErrorBoundary';
 import PositiveAlert from '../General/Popup';
@@ -314,7 +314,7 @@ const LessonControl = () => {
         console.error('handleRoomUpdate - ', e);
       }
     } else {
-      console.log('incorrect data for handleRoomUpdate() - ', payload);
+      console.error('incorrect data for handleRoomUpdate() - ', payload);
     }
   };
 

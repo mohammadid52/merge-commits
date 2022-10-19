@@ -1,7 +1,7 @@
 import API, {graphqlOperation} from '@aws-amplify/api';
-import Buttons from 'components/Atoms/Buttons';
-import SelectorWithAvatar from 'components/Atoms/Form/SelectorWithAvatar';
-import RichTextEditor from 'components/Atoms/RichTextEditor';
+import Buttons from 'atoms/Buttons';
+import SelectorWithAvatar from 'atoms/Form/SelectorWithAvatar';
+import RichTextEditor from 'atoms/RichTextEditor';
 import Media from 'components/Community/Components/Media';
 import {COMMUNITY_UPLOAD_KEY, IFile} from 'components/Community/constants.community';
 import {REGEX} from 'components/Lesson/UniversalLessonBuilder/UI/common/constants';

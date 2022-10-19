@@ -1,8 +1,8 @@
 exports.handler = (event, context, callback) => {
-    try {
-        const email = event.request.userAttributes.email;
-        let url = `https://demo.edgesfirst.io/confirm-code?email=${email}&&code=${event.request.codeParameter}`
-        const signUpMessage = `
+  try {
+    const email = event.request.userAttributes.email;
+    let url = `https://demo.edgesfirst.io/confirm-code?email=${email}&&code=${event.request.codeParameter}`;
+    const signUpMessage = `
         <!DOCTYPE html>
         <html>
             <head>
@@ -135,8 +135,8 @@ exports.handler = (event, context, callback) => {
             </head>
         </html>
         `;
-    
-        const resetPasswordMsg = `
+
+    const resetPasswordMsg = `
         <!DOCTYPE html>
         <html>
             <head>
@@ -269,16 +269,15 @@ exports.handler = (event, context, callback) => {
             </head>
         </html>
         `;
-    
-        if (event.triggerSource === "CustomMessage_SignUp") {
-            event.response.emailMessage = signUpMessage;
-        }
-        if (event.triggerSource === "CustomMessage_ForgotPassword") {
-            event.response.emailMessage = resetPasswordMsg;
-        }
-        callback(null, event);
+
+    if (event.triggerSource === 'CustomMessage_SignUp') {
+      event.response.emailMessage = signUpMessage;
     }
-    catch (err) {
-        console.log('ERROR:', err);
+    if (event.triggerSource === 'CustomMessage_ForgotPassword') {
+      event.response.emailMessage = resetPasswordMsg;
     }
+    callback(null, event);
+  } catch (err) {
+    console.error('ERROR:', err);
+  }
 };

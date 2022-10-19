@@ -7,6 +7,7 @@ import useDictionary from 'customHooks/dictionary';
 import React, {useContext, useEffect, useState} from 'react';
 import {IoImage} from 'react-icons/io5';
 import {ModifiedListProps} from 'components/Dashboard/Home/Home';
+import {fallbackUrls} from 'assets';
 
 const limitDesc = (str: string, len: number = 250): string => {
   if (str) {
@@ -50,7 +51,7 @@ const SingleRoomCard = ({
       key={`homepage__classrooms-${idx}`}
       className="flex shadow flex-col rounded-lg overflow-hidden ">
       <div className="flex-shrink-0">
-        {bannerImage ? (
+        {/* {bannerImage ? (
           <img
             className="cursor-pointer h-48 w-full object-cover hover:scale-105 transform transition-transform duration-500"
             src={bannerImage}
@@ -61,7 +62,13 @@ const SingleRoomCard = ({
             className={`profile justify-center items-center content-center h-48 w-full bg-gray-100 flex border-gray-400`}>
             <IoImage className="fill-current text-gray-80" size={32} />
           </div>
-        )}
+        )} */}
+
+        <img
+          className="cursor-pointer h-48 w-full object-cover hover:scale-105 transform transition-transform duration-500"
+          src={bannerImage || fallbackUrls.room}
+          alt={`${roomName || ''} banner image`}
+        />
       </div>
       <div className="flex-1 bg-white p-6 flex flex-col justify-between">
         <div className="flex-1">

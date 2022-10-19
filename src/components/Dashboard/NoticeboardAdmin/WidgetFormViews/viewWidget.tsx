@@ -1,6 +1,6 @@
 import React, {useContext} from 'react';
 import {GlobalContext} from 'contexts/GlobalContext';
-import {Widget as NoticeboardWidgetMapItem} from '../../../../interfaces/ClassroomComponentsInterfaces';
+import {Widget as NoticeboardWidgetMapItem} from 'interfaces/ClassroomComponentsInterfaces';
 import useDictionary from 'customHooks/dictionary';
 
 // Standard widget card view

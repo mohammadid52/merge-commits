@@ -1,7 +1,7 @@
 import React, {useEffect, useRef} from 'react';
-import {LessonHeaderBarProps} from '../../../../interfaces/LessonComponentsInterfaces';
+import {LessonHeaderBarProps} from 'interfaces/LessonComponentsInterfaces';
 import {AiOutlineVideoCamera} from 'react-icons/ai';
-import ButtonsRound from 'components/Atoms/ButtonsRound';
+import ButtonsRound from 'atoms/ButtonsRound';
 import {gsap} from 'gsap/all';
 
 const VideoWidget = ({

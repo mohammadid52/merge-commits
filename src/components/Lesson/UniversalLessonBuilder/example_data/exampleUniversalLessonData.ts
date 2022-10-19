@@ -1,4 +1,4 @@
-import {UniversalLesson} from '../../../../interfaces/UniversalLessonInterfaces';
+import {UniversalLesson} from 'interfaces/UniversalLessonInterfaces';
 import {FORM_TYPES} from '../UI/common/constants';
 
 /**
@@ -44,27 +44,27 @@ export const exampleUniversalLesson: UniversalLesson = {
                   type: 'background',
                   label: 'Background',
                   value:
-                    'https://images.freeimages.com/images/large-previews/d5d/powerlines-5-1389930.jpg',
+                    'https://images.freeimages.com/images/large-previews/d5d/powerlines-5-1389930.jpg'
                 },
                 {
                   id: 'title',
                   type: 'title',
                   label: 'Title',
-                  value: 'Jumbo Title',
+                  value: 'Jumbo Title'
                 },
                 {
                   id: 'subtitle',
                   type: 'subtitle',
                   label: 'Subtitle',
-                  value: 'This is the placeholder',
+                  value: 'This is the placeholder'
                 },
                 {
                   id: 'description',
                   type: 'description',
                   label: 'Description',
-                  value: 'This is the description text',
-                },
-              ],
+                  value: 'This is the description text'
+                }
+              ]
             },
             {
               id: 'page_1_part_1_keywords-0',
@@ -74,27 +74,27 @@ export const exampleUniversalLesson: UniversalLesson = {
                   id: '',
                   type: '',
                   label: 'Keyword Title',
-                  value: 'Keyword description',
+                  value: 'Keyword description'
                 },
                 {
                   id: '',
                   type: '',
                   label: 'Keyword Title',
-                  value: 'Keyword description',
+                  value: 'Keyword description'
                 },
                 {
                   id: '',
                   type: '',
                   label: 'Keyword Title',
-                  value: 'Keyword description',
+                  value: 'Keyword description'
                 },
                 {
                   id: '',
                   type: '',
                   label: 'Keyword Title',
-                  value: 'Keyword description',
-                },
-              ],
+                  value: 'Keyword description'
+                }
+              ]
             },
             {
               id: 'page_2_part_1_questionGroup-1',
@@ -104,15 +104,15 @@ export const exampleUniversalLesson: UniversalLesson = {
                   id: 'title',
                   type: 'emoji-input',
                   label: 'Title',
-                  value: 'This is the placeholder',
+                  value: 'This is the placeholder'
                 },
                 {
                   id: 'story',
                   type: 'emoji-input',
                   label: 'Title2',
-                  value: 'This is the placeholder',
-                },
-              ],
+                  value: 'This is the placeholder'
+                }
+              ]
             },
             {
               id: 'page_2_part_1_questionGroup-2',
@@ -127,14 +127,14 @@ export const exampleUniversalLesson: UniversalLesson = {
                     {
                       label: '1',
                       text: 'Option1',
-                      id: 'page_2_part_1_questionGroup-radio-input-1',
+                      id: 'page_2_part_1_questionGroup-radio-input-1'
                     },
                     {
                       label: '2',
                       text: 'Option2',
-                      id: 'page_2_part_1_questionGroup-radio-input-2',
-                    },
-                  ],
+                      id: 'page_2_part_1_questionGroup-radio-input-2'
+                    }
+                  ]
                 },
                 {
                   id: 'test_radio123',
@@ -145,16 +145,16 @@ export const exampleUniversalLesson: UniversalLesson = {
                     {
                       label: '1',
                       text: 'Option1',
-                      id: 'page_2_part_1_questionGroup-multiple-input-1',
+                      id: 'page_2_part_1_questionGroup-multiple-input-1'
                     },
                     {
                       label: '2',
                       text: 'Option2',
-                      id: 'page_2_part_1_questionGroup-multiple-input-2',
-                    },
-                  ],
-                },
-              ],
+                      id: 'page_2_part_1_questionGroup-multiple-input-2'
+                    }
+                  ]
+                }
+              ]
             },
             {
               id: 'page_2_part_1_questionGroup-2',
@@ -164,13 +164,13 @@ export const exampleUniversalLesson: UniversalLesson = {
                   id: 'test_checkbox456',
                   type: FORM_TYPES.ATTACHMENTS,
                   label: 'Test Attachments',
-                  value: 'test placeholder',
+                  value: 'test placeholder'
                 },
                 {
                   id: 'test_datepicker356',
                   type: FORM_TYPES.DATE_PICKER,
                   label: 'Test Attachments',
-                  value: 'test placeholder',
+                  value: 'test placeholder'
                 },
                 {
                   id: 'test_radio123',
@@ -181,31 +181,31 @@ export const exampleUniversalLesson: UniversalLesson = {
                     {
                       label: '1',
                       text: 'Option1',
-                      id: 'page_2_part_1_questionGroup-multiple-input-1',
+                      id: 'page_2_part_1_questionGroup-multiple-input-1'
                     },
                     {
                       label: '2',
                       text: 'Option2',
-                      id: 'page_2_part_1_questionGroup-multiple-input-2',
-                    },
-                  ],
-                },
-              ],
+                      id: 'page_2_part_1_questionGroup-multiple-input-2'
+                    }
+                  ]
+                }
+              ]
             },
             {
               id: 'page_1_part_0_header-0',
               type: 'header',
-              value: [{id: 'header_323', value: 'Introduction'}],
+              value: [{id: 'header_323', value: 'Introduction'}]
             },
             {
               id: 'page_1_part_0_text-0',
               type: 'paragraph',
 
-              value: [{id: 'paragraph_454323', value: 'Just some instruction text'}],
-            },
-          ],
-        },
-      ],
+              value: [{id: 'paragraph_454323', value: 'Just some instruction text'}]
+            }
+          ]
+        }
+      ]
     },
     {
       enabled: true,
@@ -228,7 +228,7 @@ export const exampleUniversalLesson: UniversalLesson = {
               id: 'page_2_part_0_header-0',
               type: 'header',
 
-              value: [{id: 'header_454323', value: 'Instructions'}],
+              value: [{id: 'header_454323', value: 'Instructions'}]
             },
             {
               id: 'page_2_part_0_text-0',
@@ -239,11 +239,11 @@ export const exampleUniversalLesson: UniversalLesson = {
                   value:
                     "Try to think of a story, supersition, or urban myth you've been told by a family member, friend, or loved one. Think about who told it to you, where the story comes from, and why the story is told.\n" +
                     '\n' +
-                    'Then, fill in the spaces below describing this story, and, in the large space, write a few sentences summarizing the story.',
-                },
-              ],
-            },
-          ],
+                    'Then, fill in the spaces below describing this story, and, in the large space, write a few sentences summarizing the story.'
+                }
+              ]
+            }
+          ]
         },
 
         {
@@ -256,7 +256,7 @@ export const exampleUniversalLesson: UniversalLesson = {
               type: 'header',
               class: 'border-b-4 border-green-500',
 
-              value: [{id: 'header_eq4543', value: 'Myths Story Warmup'}],
+              value: [{id: 'header_eq4543', value: 'Myths Story Warmup'}]
             },
             {
               id: 'page_2_part_1_questionGroup-1',
@@ -266,17 +266,17 @@ export const exampleUniversalLesson: UniversalLesson = {
                   id: 'title',
                   type: 'text-input',
                   label: 'Title',
-                  value: 'This is the placeholder',
+                  value: 'This is the placeholder'
                 },
                 {
                   id: 'story',
                   type: 'text-area',
                   label: '',
-                  value: 'This is the placeholder',
-                },
-              ],
-            },
-          ],
+                  value: 'This is the placeholder'
+                }
+              ]
+            }
+          ]
         },
         {
           id: 'page_2_part_2',
@@ -287,7 +287,7 @@ export const exampleUniversalLesson: UniversalLesson = {
               id: 'page_2_part_2_header-2',
               type: 'header',
               class: 'border-b-4 border-green-500',
-              value: [{id: 'header_4543', value: 'Focus Questions'}],
+              value: [{id: 'header_4543', value: 'Focus Questions'}]
             },
             {
               id: 'page_2_part_2_questionGroup-2',
@@ -297,25 +297,25 @@ export const exampleUniversalLesson: UniversalLesson = {
                   id: 'culture',
                   type: 'text-input',
                   label: 'What culture does this story come from?',
-                  value: 'Mexican etc.',
+                  value: 'Mexican etc.'
                 },
                 {
                   id: 'storyteller',
                   type: 'text-input',
                   label: 'Who is the storyteller in your life?',
-                  value: 'Grandma etc.',
+                  value: 'Grandma etc.'
                 },
                 {
                   id: 'lessons',
                   type: 'text-input',
                   label: 'What lessons does this story teach us?',
-                  value: 'Perseverance etc.',
-                },
-              ],
-            },
-          ],
-        },
-      ],
+                  value: 'Perseverance etc.'
+                }
+              ]
+            }
+          ]
+        }
+      ]
     },
     {
       enabled: true,
@@ -342,29 +342,29 @@ export const exampleUniversalLesson: UniversalLesson = {
                   id: 'line_1',
                   type: '',
                   label: '',
-                  value: 'Poem line starter one',
+                  value: 'Poem line starter one'
                 },
                 {
                   id: 'line_2',
                   type: '',
                   label: '',
-                  value: 'Poem line starter two',
+                  value: 'Poem line starter two'
                 },
                 {
                   id: 'line_3',
                   type: '',
                   label: '',
-                  value: 'Poem line starter three',
+                  value: 'Poem line starter three'
                 },
                 {
                   id: 'line_4',
                   type: '',
                   label: '',
-                  value: 'Poem line starter four',
-                },
-              ],
-            },
-          ],
+                  value: 'Poem line starter four'
+                }
+              ]
+            }
+          ]
         },
         {
           id: 'page_3_part_1',
@@ -379,11 +379,11 @@ export const exampleUniversalLesson: UniversalLesson = {
                 {
                   id: 'highlighter_433374',
                   value:
-                    '<p>No man is an island,</p>\\n<p>Entire of itself,</p>\\n<p>Every man is a piece of the continent,</p>\\n<p>A part of the main.</p>\\n<p>If a clod be washed away by the sea,</p>\\n<p>Europe is the less.</p>\\n<p>As well as if a promontory were.</p>\\n<p>As well as if a manor of thy friend’s</p>\\n<p>Or of thine own were:</p>\\n<p>Any man’s death diminishes me,</p>\\n<p>Because I am involved in mankind,</p>\\n<p>And therefore never send to know for whom the bell tolls;</p>\\n<p>It tolls for thee.</p>\\n',
-                },
-              ],
-            },
-          ],
+                    '<p>No man is an island,</p>\\n<p>Entire of itself,</p>\\n<p>Every man is a piece of the continent,</p>\\n<p>A part of the main.</p>\\n<p>If a clod be washed away by the sea,</p>\\n<p>Europe is the less.</p>\\n<p>As well as if a promontory were.</p>\\n<p>As well as if a manor of thy friend’s</p>\\n<p>Or of thine own were:</p>\\n<p>Any man’s death diminishes me,</p>\\n<p>Because I am involved in mankind,</p>\\n<p>And therefore never send to know for whom the bell tolls;</p>\\n<p>It tolls for thee.</p>\\n'
+                }
+              ]
+            }
+          ]
         },
         {
           id: 'page_3_part_2',
@@ -399,9 +399,9 @@ export const exampleUniversalLesson: UniversalLesson = {
                   id: '',
                   type: 'rating-star',
                   label: 'What did you think of this test lesson?',
-                  value: '',
-                },
-              ],
+                  value: ''
+                }
+              ]
             },
             {
               id: 'page_3_part_0_links-0',
@@ -411,19 +411,19 @@ export const exampleUniversalLesson: UniversalLesson = {
                   id: 'link1',
                   type: '',
                   label: 'Link to Page',
-                  value: 'https://www.google.com',
+                  value: 'https://www.google.com'
                 },
                 {
                   id: 'link2',
                   type: '',
                   label: 'Link to Page',
-                  value: 'https://www.google.com',
-                },
-              ],
-            },
-          ],
-        },
-      ],
-    },
-  ],
+                  value: 'https://www.google.com'
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
 };

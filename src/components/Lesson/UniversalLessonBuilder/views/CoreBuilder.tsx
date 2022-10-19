@@ -1,5 +1,5 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import Tooltip from 'components/Atoms/Tooltip';
+import Tooltip from 'atoms/Tooltip';
 import CopyCloneSlideOver from 'components/Lesson/UniversalLessonBuilder/UI/SlideOvers/CopyCloneSlideOver';
 import NewLessonPlanSO from 'components/Lesson/UniversalLessonBuilder/UI/SlideOvers/NewLessonPlanSO';
 import PageBuilderSlideOver from 'components/Lesson/UniversalLessonBuilder/UI/SlideOvers/PageBuilderSlideOver';

@@ -13,7 +13,7 @@ import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {FaSpinner} from 'react-icons/fa';
 import Papa from 'papaparse';
 import * as customQueries from 'customGraphql/customQueries';
-import Label from 'components/Atoms/Form/Label';
+import Label from 'atoms/Form/Label';
 interface ICsvProps {
   institutionId?: string;
 }

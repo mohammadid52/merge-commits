@@ -89,7 +89,7 @@ const ServiceVendors = (props: ServiceVendorsProps) => {
         );
       setAvailableServiceProviders(servProList);
     } catch (err) {
-      console.log('Error while fetching service providers lists', err);
+      console.error('Error while fetching service providers lists', err);
     }
   };
 

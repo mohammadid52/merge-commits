@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import useOnScreen from 'customHooks/useOnScreen';
-import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
+import {RowWrapperProps} from 'interfaces/UniversalLessonBuilderInterfaces';
 import {getImageFromS3Static} from 'utilities/services';
 
 interface ImageBlockProps extends RowWrapperProps {

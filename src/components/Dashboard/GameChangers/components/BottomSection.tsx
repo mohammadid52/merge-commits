@@ -1,4 +1,4 @@
-import Tooltip from 'components/Atoms/Tooltip';
+import Tooltip from 'atoms/Tooltip';
 import {useGameChangers} from 'components/Dashboard/GameChangers/context/GameChangersContext';
 import {classNames} from 'components/Lesson/UniversalLessonBuilder/UI/FormElements/TextInput';
 import AnimatedContainer from 'components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';

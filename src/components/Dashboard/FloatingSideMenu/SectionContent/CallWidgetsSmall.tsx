@@ -1,4 +1,4 @@
-import {Link, Widget} from '../../../../interfaces/ClassroomComponentsInterfaces';
+import {Link, Widget} from 'interfaces/ClassroomComponentsInterfaces';
 import React, {useContext} from 'react';
 import {GlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';

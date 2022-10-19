@@ -187,7 +187,7 @@ const QuickRegister = (props: QuickRegisterProps) => {
       });
       return userData;
     } catch (er) {
-      console.log('error signing up:', er.response.data);
+      console.error('error signing up:', er.response.data);
       const error = er.response.data;
       setMessage(() => {
         switch (error.code) {

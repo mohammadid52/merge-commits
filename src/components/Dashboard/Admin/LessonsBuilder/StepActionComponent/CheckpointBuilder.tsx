@@ -3,7 +3,7 @@ import React, {useEffect, useState} from 'react';
 import * as customMutations from 'customGraphql/customMutations';
 import * as customQueries from 'customGraphql/customQueries';
 import * as queries from 'graphql/queries';
-import {LessonPlansProps} from '../../../../../interfaces/LessonInterfaces';
+import {LessonPlansProps} from 'interfaces/LessonInterfaces';
 import {createFilterToFetchSpecificItemsOnly, reorder} from 'utilities/strings';
 import AddNewCheckPoint, {InitialData} from './CheckPointSteps/AddNewCheckPoint';
 import AddNewQuestion from './CheckPointSteps/AddNewQuestion';

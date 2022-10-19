@@ -2,7 +2,7 @@ import update from 'lodash/update';
 import findIndex from 'lodash/findIndex';
 import React, {useContext, createContext, useState} from 'react';
 import {useHistory} from 'react-router';
-import {UniversalLesson} from '../interfaces/UniversalLessonInterfaces';
+import {UniversalLesson} from 'interfaces/UniversalLessonInterfaces';
 import {GlobalContext} from 'contexts/GlobalContext';
 export const UniversalLessonBuilderContext = createContext(null);
 

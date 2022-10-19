@@ -1,4 +1,4 @@
-import Highlighted from 'components/Atoms/Highlighted';
+import Highlighted from 'atoms/Highlighted';
 import {GlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import React, {useContext, useState} from 'react';

@@ -1,7 +1,7 @@
 import FormInput from 'atoms/Form/FormInput';
-import Buttons from 'components/Atoms/Buttons';
-import Label from 'components/Atoms/Form/Label';
-import RichTextEditor from 'components/Atoms/RichTextEditor';
+import Buttons from 'atoms/Buttons';
+import Label from 'atoms/Form/Label';
+import RichTextEditor from 'atoms/RichTextEditor';
 import Media from 'components/Community/Components/Media';
 import {COMMUNITY_UPLOAD_KEY, IFile} from 'components/Community/constants.community';
 import {REGEX} from 'components/Lesson/UniversalLessonBuilder/UI/common/constants';

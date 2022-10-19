@@ -1,6 +1,6 @@
 import {map, remove, update} from 'lodash';
 import React, {useContext} from 'react';
-import {PartContentSub} from '../../../../../interfaces/UniversalLessonInterfaces';
+import {PartContentSub} from 'interfaces/UniversalLessonInterfaces';
 import FormInput from 'atoms/Form/FormInput';
 import RemoveInput from '../common/RemoveInput';
 import {v4 as uuidv4} from 'uuid';

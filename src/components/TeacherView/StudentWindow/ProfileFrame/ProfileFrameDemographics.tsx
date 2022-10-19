@@ -4,7 +4,7 @@ import * as customQueries from 'customGraphql/customQueries';
 import {getUniqItems} from 'utilities/strings';
 import {API} from 'aws-amplify';
 import {sortBy} from 'lodash';
-import Loader from 'components/Atoms/Loader';
+import Loader from 'atoms/Loader';
 
 interface IProfileFrameDemographicsProps {
   studentID?: any;

@@ -237,7 +237,7 @@ const EditSyllabus = (props: EditSyllabusProps) => {
         setSavedLessonsList(sortedLessonsList);
         setFetchingDetails(false);
       } catch (err) {
-        console.log('err', err);
+        console.error('err', err);
         setMessages({
           show: true,
           message: EditSyllabusDict[userLanguage]['messages']['fetcher'],
@@ -246,7 +246,7 @@ const EditSyllabus = (props: EditSyllabusProps) => {
         setFetchingDetails(false);
       }
     } else {
-      console.log('can not find unit id');
+      console.error('can not find unit id');
       history.push('/dashboard/manage-institutions');
     }
   };

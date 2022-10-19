@@ -48,7 +48,7 @@ const mutateSingleSyllabusLesson = async (sylID: string, content: any[]) => {
       })
     );
   } catch (e) {
-    console.log('mutateSingleSyllabusLesson: ', e);
+    console.error('mutateSingleSyllabusLesson: ', e);
   } finally {
     console.log('mutateSingleSyllabusLesson: ', 'end');
   }

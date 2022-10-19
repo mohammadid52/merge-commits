@@ -13,7 +13,7 @@ import {
   PartContentSub,
   StudentPageInput,
   UniversalLessonPage
-} from '../../interfaces/UniversalLessonInterfaces';
+} from 'interfaces/UniversalLessonInterfaces';
 import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
 import ErrorBoundary from '../Error/ErrorBoundary';
 import LessonHeaderBar from '../Header/LessonHeaderBar';
@@ -205,8 +205,6 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
         {required: [], initialized: []}
       );
 
-      console.log('mappedPages - ', mappedPages);
-
       lessonDispatch({
         type: 'SET_INITIAL_STUDENT_DATA',
         payload: {
@@ -289,7 +287,6 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
       );
 
       const returnedData = newSurveyData.data.createUniversalSurveyStudentData;
-      console.log('createSurveyData', returnedData);
 
       return returnedData;
     } catch (e) {
@@ -656,7 +653,7 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
         );
       }
     } catch (error) {
-      console.log(
+      console.error(
         '🚀 ~ file: SurveyApp.tsx ~ line 652 ~ handleSurveyMutateData ~ error',
         error
       );

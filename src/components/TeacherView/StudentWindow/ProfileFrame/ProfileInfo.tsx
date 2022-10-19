@@ -1,9 +1,9 @@
 import React, {useContext} from 'react';
 
 import Buttons from 'atoms/Buttons';
-import Modal from 'components/Atoms/Modal';
+import Modal from 'atoms/Modal';
 import {FiAlertCircle} from 'react-icons/fi';
-import Status from 'components/Atoms/Status';
+import Status from 'atoms/Status';
 import UserRole from 'components/Dashboard/Admin/UserManagement/UserRole';
 import {GlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';

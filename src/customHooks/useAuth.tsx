@@ -12,6 +12,7 @@ type User = {
   lastName: string;
   image: string;
   associateInstitute: any[];
+  onDemand?: boolean;
 };
 
 const useAuth = (): {
@@ -30,12 +31,13 @@ const useAuth = (): {
   instId: string;
   user: any;
   Placeholder: any;
+  onDemand?: boolean;
 } => {
   const context = useGlobalContext();
 
   const user: User = context.state.user;
 
-  const {authId, role, email, firstName, lastName, image} = user;
+  const {authId, role, email, firstName, lastName, image, onDemand} = user;
 
   const isStudent = role === 'ST';
   const isTeacher = role === 'TR';
@@ -90,7 +92,8 @@ const useAuth = (): {
     instId,
     isSuperAdmin,
     user,
-    Placeholder
+    Placeholder,
+    onDemand
   };
 };
 

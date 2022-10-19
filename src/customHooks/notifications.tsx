@@ -2,7 +2,7 @@ import {useContext, useEffect, useState} from 'react';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import * as mutations from 'graphql/mutations';
 import {GlobalContext} from 'contexts/GlobalContext';
-import {NotificationListItem} from '../interfaces/GlobalInfoComponentsInterfaces';
+import {NotificationListItem} from 'interfaces/GlobalInfoComponentsInterfaces';
 import {useHistory, useRouteMatch} from 'react-router-dom';
 import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
 import {

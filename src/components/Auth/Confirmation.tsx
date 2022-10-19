@@ -32,7 +32,7 @@ const Registration = () => {
       // console.log(res);
       history.push('/new-password');
     } catch (error) {
-      console.log('error confirming sign up', error);
+      console.error('error confirming sign up', error);
       /////change the error code
       setMessage(() => {
         if (!username) {

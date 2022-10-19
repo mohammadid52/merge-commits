@@ -4,7 +4,7 @@ import {getAsset} from 'assets';
 import {GlobalContext} from 'contexts/GlobalContext';
 import * as customMutations from 'customGraphql/customMutations';
 import useDictionary from 'customHooks/dictionary';
-import {InstructionInitialState} from '../../../../../interfaces/LessonInterfaces';
+import {InstructionInitialState} from 'interfaces/LessonInterfaces';
 import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
 import RichTextEditor from 'atoms/RichTextEditor';

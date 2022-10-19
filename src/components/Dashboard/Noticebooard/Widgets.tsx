@@ -1,5 +1,5 @@
 import React, {useContext} from 'react';
-import {Link, Widget} from '../../../interfaces/ClassroomComponentsInterfaces';
+import {Link, Widget} from 'interfaces/ClassroomComponentsInterfaces';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {IoCallOutline} from 'react-icons/io5';
 import {GlobalContext} from 'contexts/GlobalContext';

@@ -170,7 +170,7 @@ const getAllSurvey = async () => {
     const returnedData = surveyList.data.listUniversalLessons.items;
     return returnedData;
   } catch (err) {
-    console.log('getAllSurvey error', err);
+    console.error('getAllSurvey error', err);
   }
 };
 
@@ -234,7 +234,7 @@ const listQues = async (lessonId: string) => {
 
     return questions;
   } catch (err) {
-    console.log('list questions error', err);
+    console.error('list questions error', err);
   }
 };
 
@@ -399,7 +399,7 @@ const getCSVData = async () => {
       SurveyData: data
     };
   } catch (err) {
-    console.log('error', err);
+    console.error('error', err);
   }
 };
 

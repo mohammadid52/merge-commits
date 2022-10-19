@@ -1,4 +1,4 @@
-import {Link, Widget} from '../../../../interfaces/ClassroomComponentsInterfaces';
+import {Link, Widget} from 'interfaces/ClassroomComponentsInterfaces';
 import {
   AiOutlineDropbox,
   AiOutlineFile,

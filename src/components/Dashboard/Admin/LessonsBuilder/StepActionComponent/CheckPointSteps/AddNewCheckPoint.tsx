@@ -17,7 +17,7 @@ import {GlobalContext} from 'contexts/GlobalContext';
 import * as customMutations from 'customGraphql/customMutations';
 import useDictionary from 'customHooks/dictionary';
 import * as mutations from 'graphql/mutations';
-import {LessonPlansProps} from '../../../../../../interfaces/LessonInterfaces';
+import {LessonPlansProps} from 'interfaces/LessonInterfaces';
 import {getTypeString, reorder} from 'utilities/strings';
 import Buttons from 'atoms/Buttons';
 import CheckBox from 'atoms/Form/CheckBox';

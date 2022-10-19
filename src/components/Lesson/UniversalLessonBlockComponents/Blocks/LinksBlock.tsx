@@ -1,5 +1,5 @@
 import React, {useContext} from 'react';
-import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
+import {RowWrapperProps} from 'interfaces/UniversalLessonBuilderInterfaces';
 import {GlobalContext} from 'contexts/GlobalContext';
 import {LinkPreview} from '@dhaiwat10/react-link-preview';
 import {useEffect} from 'react';

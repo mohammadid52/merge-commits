@@ -1,4 +1,4 @@
-import Loader from 'components/Atoms/Loader';
+import Loader from 'atoms/Loader';
 import React from 'react';
 import {useOutsideAlerter} from './hooks/outsideAlerter';
 
