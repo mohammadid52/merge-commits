@@ -1,6 +1,6 @@
 import React, {useContext} from 'react';
-import useDictionary from '@customHooks/dictionary';
-import {GlobalContext} from '@contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import {GlobalContext} from 'contexts/GlobalContext';
 
 // type Role = 'ADM' | 'BLD' | 'FLW' | 'CRD' | 'TR' | 'ST';
 

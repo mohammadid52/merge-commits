@@ -1,15 +1,15 @@
 import {useContext, useEffect, useState} from 'react';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import * as mutations from '@graphql/mutations';
-import {GlobalContext} from '../contexts/GlobalContext';
-import {NotificationListItem} from '../interfaces/GlobalInfoComponentsInterfaces';
+import * as mutations from 'graphql/mutations';
+import {GlobalContext} from 'contexts/GlobalContext';
+import {NotificationListItem} from 'interfaces/GlobalInfoComponentsInterfaces';
 import {useHistory, useRouteMatch} from 'react-router-dom';
-import {getLocalStorageData, setLocalStorageData} from '@utilities/localStorage';
+import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
 import {
   getSessionStorageData,
   removeSessionStorageData,
-  setSessionStorageData,
-} from '@utilities/sessionStorage';
+  setSessionStorageData
+} from 'utilities/sessionStorage';
 import useLessonControls from './lessonControls';
 
 // ##################################################################### //
@@ -31,7 +31,7 @@ const useGlobalNotifications = () => {
         label: 'Avatar not set',
         message: 'Please set up your avatar to complete your profile!',
         type: 'alert',
-        cta: 'Change Now',
+        cta: 'Change Now'
       },
       action: () => {
         history.push('/dashboard/profile');
@@ -39,8 +39,8 @@ const useGlobalNotifications = () => {
       },
       cancel: () => {
         //
-      },
-    },
+      }
+    }
   ];
 
   const collectNotifications = (list: NotificationListItem[]) => {
@@ -54,7 +54,7 @@ const useGlobalNotifications = () => {
   };
 
   return {
-    globalNotifications: collectNotifications(watchList),
+    globalNotifications: collectNotifications(watchList)
   };
 };
 
@@ -127,14 +127,14 @@ const useLessonControlNotifications = () => {
         label: 'Viewing student data',
         message: ` "${getSharedStudenName(lessonState.studentViewing)}"`,
         type: 'info',
-        cta: 'Quit Viewing',
+        cta: 'Quit Viewing'
       },
       action: () => {
         resetViewAndShare();
       },
       cancel: () => {
         //
-      },
+      }
     },
     {
       check: isLessonClosed,
@@ -142,14 +142,14 @@ const useLessonControlNotifications = () => {
         label: 'This lesson/survey is closed',
         message: ``,
         type: 'info',
-        cta: 'Go to dashboard',
+        cta: 'Go to dashboard'
       },
       action: () => {
         goToDashboard();
       },
       cancel: () => {
         //
-      },
+      }
     },
     {
       check: studentIsShared,
@@ -159,14 +159,14 @@ const useLessonControlNotifications = () => {
           lessonState.displayData[0].lessonPageID
         )}" by "${getSharedStudenName(lessonState.displayData[0].studentAuthID)}"`,
         type: 'alert',
-        cta: 'Quit Sharing',
+        cta: 'Quit Sharing'
       },
       action: () => {
         resetViewAndShare();
       },
       cancel: () => {
         //
-      },
+      }
     },
     {
       check: isPresenting,
@@ -174,13 +174,13 @@ const useLessonControlNotifications = () => {
         label: 'You are now presenting a page',
         message: null,
         type: 'info',
-        cta: 'Stop Presenting',
+        cta: 'Stop Presenting'
       },
       action: () => {
         resetViewAndShare();
       },
-      cancel: () => {},
-    },
+      cancel: () => {}
+    }
   ];
 
   const collectNotifications = (list: NotificationListItem[]) => {
@@ -226,12 +226,12 @@ const useLessonNotifications = () => {
   const navigateAway = () => {
     setSessionStorageData('navigation_state', {
       fromIdx: lessonState?.currentPage,
-      fromUrl: `${match.url}/${lessonState.currentPage}`,
+      fromUrl: `${match.url}/${lessonState.currentPage}`
     });
     history.push(`${match.url}/${getPageIdx(lessonState.displayData[0].lessonPageID)}`);
     lessonDispatch({
       type: 'SET_CURRENT_PAGE',
-      payload: getPageIdx(lessonState.displayData[0].lessonPageID),
+      payload: getPageIdx(lessonState.displayData[0].lessonPageID)
     });
   };
 
@@ -239,7 +239,7 @@ const useLessonNotifications = () => {
     history.push(getNavigationState?.fromUrl);
     lessonDispatch({
       type: 'SET_CURRENT_PAGE',
-      payload: getNavigationState.fromIdx,
+      payload: getNavigationState.fromIdx
     });
     removeSessionStorageData('navigation_state');
   };
@@ -313,14 +313,14 @@ const useLessonNotifications = () => {
         label: 'Teacher is viewing you',
         message: null,
         type: 'positive',
-        cta: '',
+        cta: ''
       },
       action: () => {
         //
       },
       cancel: () => {
         //
-      },
+      }
     },
     {
       check: isClosed,
@@ -329,14 +329,14 @@ const useLessonNotifications = () => {
         message: null,
         type: 'alert',
 
-        cta: 'Go to Notebook',
+        cta: 'Go to Notebook'
       },
       action: () => {
         goToDashboard();
       },
       cancel: () => {
         //
-      },
+      }
     },
     {
       check: anyPageIsShared && !iAmShared && !thisPageIsShared,
@@ -344,11 +344,11 @@ const useLessonNotifications = () => {
         label: 'Teacher is sharing a page',
         message: ` by "${getSharedStudenName(lessonState.displayData[0].studentAuthID)}"`,
         type: 'alert',
-        cta: 'Go There Now',
+        cta: 'Go There Now'
       },
       action: () => {
         navigateAway();
-      },
+      }
     },
     {
       check: iAmShared && !thisPageIsShared,
@@ -356,14 +356,14 @@ const useLessonNotifications = () => {
         label: 'Teacher is sharing your page',
         message: `"${getPageLabel(lessonState.displayData[0].lessonPageID)}"`,
         type: 'alert',
-        cta: 'Go There Now',
+        cta: 'Go There Now'
       },
       action: () => {
         navigateAway();
       },
       cancel: () => {
         //
-      },
+      }
     },
     {
       check: canNavigateBack,
@@ -371,14 +371,14 @@ const useLessonNotifications = () => {
         label: 'Return to the previous page?',
         message: ``,
         type: 'alert',
-        cta: 'Go Back',
+        cta: 'Go Back'
       },
       action: () => {
         navigateBack();
       },
       cancel: () => {
         navigateCancel();
-      },
+      }
     },
     {
       check: thisPageIsShared && iAmShared,
@@ -386,14 +386,14 @@ const useLessonNotifications = () => {
         label: 'Teacher is sharing your data for this page',
         message: null,
         type: 'info',
-        cta: '',
+        cta: ''
       },
       action: () => {
         //
       },
       cancel: () => {
         //
-      },
+      }
     },
     {
       check: thisPageIsShared && !iAmShared && !teacherIsPresenting,
@@ -401,14 +401,14 @@ const useLessonNotifications = () => {
         label: 'You are viewing this page',
         message: `by "${getSharedStudenName(lessonState.displayData[0].studentAuthID)}"`,
         type: 'info',
-        cta: '',
+        cta: ''
       },
       action: () => {
         //
       },
       cancel: () => {
         //
-      },
+      }
     },
     {
       check: teacherIsPresenting,
@@ -416,15 +416,15 @@ const useLessonNotifications = () => {
         label: 'The teacher is controlling the lesson',
         message: null,
         type: 'alert',
-        cta: '',
+        cta: ''
       },
       action: () => {
         //
       },
       cancel: () => {
         //
-      },
-    },
+      }
+    }
   ];
 
   const collectNotifications = (list: NotificationListItem[]) => {

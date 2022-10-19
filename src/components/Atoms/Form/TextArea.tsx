@@ -1,5 +1,5 @@
-import React, { useContext, Fragment } from 'react'
-import { GlobalContext } from '../../../contexts/GlobalContext';
+import React, {useContext, Fragment} from 'react';
+import {GlobalContext} from 'contexts/GlobalContext';
 
 interface TextAreaProps {
   error?: string;
@@ -27,9 +27,9 @@ const TextArea = (props: TextAreaProps) => {
     value,
     maxLength,
     placeHolder,
-    showCharacterUsage,
+    showCharacterUsage
   } = props;
-  const { theme } = useContext(GlobalContext);
+  const {theme} = useContext(GlobalContext);
   const otherInputProps: any = {};
   if (maxLength) {
     otherInputProps.maxLength = maxLength;
@@ -59,6 +59,6 @@ const TextArea = (props: TextAreaProps) => {
       </div>
     </Fragment>
   );
-}
+};
 
-export default TextArea
+export default TextArea;

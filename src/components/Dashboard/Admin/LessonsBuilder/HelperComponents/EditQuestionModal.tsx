@@ -3,16 +3,16 @@ import {find, isEmpty} from 'lodash';
 import React, {useContext, useEffect, useState} from 'react';
 import {IoMdAddCircleOutline, IoMdRemoveCircleOutline} from 'react-icons/io';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
-import {getAsset} from '../../../../../assets';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import useDictionary from '../../../../../customHooks/dictionary';
-import * as mutations from '../../../../../graphql/mutations';
-import Buttons from '../../../../Atoms/Buttons';
-import CheckBox from '../../../../Atoms/Form/CheckBox';
-import FormInput from '../../../../Atoms/Form/FormInput';
-import Selector from '../../../../Atoms/Form/Selector';
-import TextArea from '../../../../Atoms/Form/TextArea';
-import Modal from '../../../../Atoms/Modal';
+import {getAsset} from 'assets';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import * as mutations from 'graphql/mutations';
+import Buttons from 'atoms/Buttons';
+import CheckBox from 'atoms/Form/CheckBox';
+import FormInput from 'atoms/Form/FormInput';
+import Selector from 'atoms/Form/Selector';
+import TextArea from 'atoms/Form/TextArea';
+import Modal from 'atoms/Modal';
 
 interface EditQuestionModalProps {
   closeAction?: () => void;
@@ -53,10 +53,10 @@ const EditQuestionModal = (props: EditQuestionModalProps) => {
     language: {id: '1', name: 'English', value: 'EN'},
     options: [
       {label: '1', text: ''},
-      {label: '2', text: ''},
+      {label: '2', text: ''}
     ],
     otherOpt: false,
-    noneOfAbove: false,
+    noneOfAbove: false
   };
 
   const typeList: any = [
@@ -67,12 +67,12 @@ const EditQuestionModal = (props: EditQuestionModalProps) => {
     {id: '5', name: 'Date Picker', value: 'datePicker'},
     {id: '6', name: 'Emoji', value: 'emoji'},
     {id: '7', name: 'Attachments', value: 'attachments'},
-    {id: '8', name: 'Link', value: 'link'},
+    {id: '8', name: 'Link', value: 'link'}
   ];
 
   const languageList: any = [
     {id: 1, name: 'English', value: 'EN'},
-    {id: 2, name: 'Spanish', value: 'ES'},
+    {id: 2, name: 'Spanish', value: 'ES'}
   ];
 
   const [required, setRequired] = useState(checkpItem.required || false);
@@ -82,7 +82,7 @@ const EditQuestionModal = (props: EditQuestionModalProps) => {
     try {
       const results: any = await API.graphql(
         graphqlOperation(mutations.updateCheckpointQuestions, {
-          input: {id: checkpItem.id, required},
+          input: {id: checkpItem.id, required}
         })
       );
       const savedData = results?.data?.updateCheckpointQuestions;
@@ -93,7 +93,7 @@ const EditQuestionModal = (props: EditQuestionModalProps) => {
   const toggleCheckBoxState = (field: string, value: boolean) => {
     setQuestionData({
       ...questionData,
-      [field]: !value,
+      [field]: !value
     });
   };
 
@@ -112,7 +112,7 @@ const EditQuestionModal = (props: EditQuestionModalProps) => {
     });
     setQuestionData({
       ...questionData,
-      options: updatedOptions,
+      options: updatedOptions
     });
   };
   const onOptionRemove = (index: number) => {
@@ -130,7 +130,7 @@ const EditQuestionModal = (props: EditQuestionModalProps) => {
       });
       setQuestionData({
         ...questionData,
-        options: updatedOptions,
+        options: updatedOptions
       });
     }
   };
@@ -159,18 +159,18 @@ const EditQuestionModal = (props: EditQuestionModalProps) => {
           type: questionData.type.value,
           language: questionData.language.value,
           question: questionData.question,
-          note: questionData.note,
+          note: questionData.note
         };
 
         let input = {};
         if (type.id === '3' || type.id === '4') {
           input = {
             ...tempInput,
-            options: filteredOptions(questionData.options),
+            options: filteredOptions(questionData.options)
           };
         } else {
           input = {
-            ...tempInput,
+            ...tempInput
           };
         }
 
@@ -205,7 +205,7 @@ const EditQuestionModal = (props: EditQuestionModalProps) => {
         label: questionItems.label,
         options: questionItems.options,
         otherOpt: hasOther ? true : false,
-        noneOfAbove: hasNone ? true : false,
+        noneOfAbove: hasNone ? true : false
       };
 
       setQuestionData(updatedQuestionItems);
@@ -217,7 +217,7 @@ const EditQuestionModal = (props: EditQuestionModalProps) => {
   const onInputChange = (e: any) => {
     setQuestionData({
       ...questionData,
-      [e.target.name]: e.target.value,
+      [e.target.name]: e.target.value
     });
   };
 
@@ -227,14 +227,14 @@ const EditQuestionModal = (props: EditQuestionModalProps) => {
       [field]: {
         id: id,
         name: name,
-        value: val,
-      },
+        value: val
+      }
     });
   };
 
   const [message, setMessage] = useState({
     msg: '',
-    isError: true,
+    isError: true
   });
 
   const validateForm = () => {
@@ -267,7 +267,7 @@ const EditQuestionModal = (props: EditQuestionModalProps) => {
     currentOptions[index].text = e.target.value;
     setQuestionData({
       ...questionData,
-      options: currentOptions,
+      options: currentOptions
     });
   };
 
@@ -283,7 +283,7 @@ const EditQuestionModal = (props: EditQuestionModalProps) => {
     language,
     options,
     otherOpt,
-    noneOfAbove,
+    noneOfAbove
   } = questionData;
 
   return (

@@ -1,14 +1,14 @@
-import React, {useState, useContext} from 'react';
+import React, {useContext, useState} from 'react';
 // import { Auth } from 'aws-amplify';
 import Auth from '@aws-amplify/auth';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
-import {FaUnlockAlt} from 'react-icons/fa';
-import {MdEmail} from 'react-icons/md';
-import {useHistory, NavLink} from 'react-router-dom';
+import {getAsset} from 'assets';
+import AuthCard from 'components/Auth/AuthCard';
+import {GlobalContext} from 'contexts/GlobalContext';
 import {useCookies} from 'react-cookie';
-import {GlobalContext} from '../../contexts/GlobalContext';
-import {getAsset} from '../../assets';
-import AuthCard from './AuthCard';
+import {FaUnlockAlt} from 'react-icons/fa';
+import {IconContext} from 'react-icons/lib/esm/iconContext';
+import {MdEmail} from 'react-icons/md';
+import {NavLink, useHistory} from 'react-router-dom';
 const Registration = () => {
   const history = useHistory();
   const [cookies, setCookie] = useCookies(['confirm_user']);
@@ -32,7 +32,7 @@ const Registration = () => {
       // console.log(res);
       history.push('/new-password');
     } catch (error) {
-      console.log('error confirming sign up', error);
+      console.error('error confirming sign up', error);
       /////change the error code
       setMessage(() => {
         if (!username) {

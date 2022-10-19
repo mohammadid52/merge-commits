@@ -1,9 +1,9 @@
-import FormInput from '@atoms/Form/FormInput';
+import FormInput from 'atoms/Form/FormInput';
 import {Storage} from '@aws-amplify/storage';
-import Label from '@components/Atoms/Form/Label';
-import {COMMUNITY_UPLOAD_KEY, IFile} from '@components/Community/constants.community';
-import File from '@components/Community/File';
-import {REGEX} from '@components/Lesson/UniversalLessonBuilder/UI/common/constants';
+import Label from 'atoms/Form/Label';
+import {COMMUNITY_UPLOAD_KEY, IFile} from 'components/Community/constants.community';
+import File from 'components/Community/File';
+import {REGEX} from 'components/Lesson/UniversalLessonBuilder/UI/common/constants';
 import {Transition} from '@headlessui/react';
 import {getAsset} from 'assets';
 import isEmpty from 'lodash/isEmpty';
@@ -11,6 +11,7 @@ import update from 'lodash/update';
 import {nanoid} from 'nanoid';
 import React, {useCallback, useRef, useState} from 'react';
 import {useDropzone} from 'react-dropzone';
+import {uploadImageToS3} from '@graphql/functions';
 
 interface MediaProps {
   file: IFile;
@@ -50,33 +51,24 @@ const Media = ({
     type: string,
     currentFile: any
   ) => {
-    // Upload file to s3 bucket
-    return new Promise((resolve, reject) => {
-      Storage.put(`${COMMUNITY_UPLOAD_KEY}${id}`, file, {
-        contentType: type,
-        acl: 'public-read',
-        ContentEncoding: 'base64',
-        progressCallback: ({loaded, total}: any) => {
-          const progress = (loaded * 100) / total;
+    uploadImageToS3(file, `${COMMUNITY_UPLOAD_KEY}${id}`, type, {
+      onSuccess: (result: any) => {
+        console.log('File successfully uploaded to s3', result);
+        updateStatus(currentFile, 'success');
+        updateProgress(currentFile, null);
+        setError('');
+      },
 
-          updateStatus(currentFile, 'progress');
+      onError: (error: any) => {
+        updateStatus(currentFile, 'failed');
+        updateProgress(currentFile, null);
+        console.error('Error in uploading file to s3', error);
+      },
+      progressCallback: ({progress}: {progress: number}): void => {
+        updateStatus(currentFile, 'progress');
 
-          updateProgress(currentFile, progress.toFixed(0));
-        }
-      })
-        .then((result) => {
-          console.log('File successfully uploaded to s3', result);
-          updateStatus(currentFile, 'success');
-          updateProgress(currentFile, null);
-          setError('');
-          resolve(true);
-        })
-        .catch((err) => {
-          updateStatus(currentFile, 'failed');
-          updateProgress(currentFile, null);
-          console.log('Error in uploading file to s3', err);
-          reject(err);
-        });
+        updateProgress(currentFile, progress.toFixed(0));
+      }
     });
   };
 

@@ -1,16 +1,16 @@
 import React, {useState, useEffect, useContext} from 'react';
 
-import FormInput from '../../../../Atoms/Form/FormInput';
-import Selector from '../../../../Atoms/Form/Selector';
-import Buttons from '../../../../Atoms/Buttons';
+import FormInput from 'atoms/Form/FormInput';
+import Selector from 'atoms/Form/Selector';
+import Buttons from 'atoms/Buttons';
 
 import {
   UniversalBuilderDict,
-  EditQuestionModalDict,
-} from '../../../../../dictionary/dictionary.iconoclast';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import {IContentTypeComponentProps} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
-import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
+  EditQuestionModalDict
+} from 'dictionary/dictionary.iconoclast';
+import {GlobalContext} from 'contexts/GlobalContext';
+import {IContentTypeComponentProps} from 'interfaces/UniversalLessonBuilderInterfaces';
+import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
 import {v4 as uuidv4} from 'uuid';
 const youTubeVideoRegex = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|\?v=)([^#\&\?]*).*/;
 
@@ -18,7 +18,7 @@ const videoSizeOptions = [
   {id: 1, name: '560 x 315'},
   {id: 2, name: '640 x 360'},
   {id: 3, name: '835 x 480'},
-  {id: 4, name: '1280 x 720'},
+  {id: 4, name: '1280 x 720'}
 ];
 
 interface IVideoInput {
@@ -37,14 +37,14 @@ const YouTubeMediaDialog = ({
   setUnsavedChanges,
   askBeforeClose,
   createNewBlockULBHandler,
-  updateBlockContentULBHandler,
+  updateBlockContentULBHandler
 }: IVideoDialogProps) => {
   const {userLanguage} = useContext(GlobalContext);
   const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
   const [videoInputs, setVideoInputs] = useState<IVideoInput>({
     value: '',
     width: '560',
-    height: '315',
+    height: '315'
   });
   const [error, setError] = useState<string>('');
 
@@ -71,7 +71,7 @@ const YouTubeMediaDialog = ({
 
     const input = {
       id: list.id,
-      lessonPlan: [...list.lessonPlan],
+      lessonPlan: [...list.lessonPlan]
     };
 
     await updateLessonPageToDB(input);

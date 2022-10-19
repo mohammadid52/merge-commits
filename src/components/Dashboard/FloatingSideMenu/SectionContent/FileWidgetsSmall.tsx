@@ -1,7 +1,7 @@
-import {Link, Widget} from '../../../../interfaces/ClassroomComponentsInterfaces';
+import {Link, Widget} from 'interfaces/ClassroomComponentsInterfaces';
 import React, {useContext} from 'react';
-import {GlobalContext} from '../../../../contexts/GlobalContext';
-import useDictionary from '../../../../customHooks/dictionary';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {IoCallOutline} from 'react-icons/io5';
 import {
@@ -9,7 +9,7 @@ import {
   AiOutlineFile,
   AiOutlineFileExcel,
   AiOutlineFileWord,
-  AiOutlineFileZip,
+  AiOutlineFileZip
 } from 'react-icons/ai';
 import {FaRegFilePowerpoint, ImOnedrive} from 'react-icons/all';
 
@@ -23,43 +23,43 @@ export const FileWidgetsSmall = (props: {classProp?: string; widgets?: Widget[]}
       return {
         iconLabel: 'Document',
         icon: <AiOutlineFileWord size={24} />,
-        downloadLabel: noticeboardDict[userLanguage].DOWNLOAD,
+        downloadLabel: noticeboardDict[userLanguage].DOWNLOAD
       };
     } else if (url.includes('spreadsheet') || url.includes('excel')) {
       return {
         iconLabel: 'Spreadsheet',
         icon: <AiOutlineFileExcel size={24} />,
-        downloadLabel: noticeboardDict[userLanguage].DOWNLOAD,
+        downloadLabel: noticeboardDict[userLanguage].DOWNLOAD
       };
     } else if (url.includes('powerpoint') || url.includes('presentation')) {
       return {
         iconLabel: 'Spreadsheet',
         icon: <FaRegFilePowerpoint size={24} />,
-        downloadLabel: noticeboardDict[userLanguage].DOWNLOAD,
+        downloadLabel: noticeboardDict[userLanguage].DOWNLOAD
       };
     } else if (url.includes('.zip')) {
       return {
         iconLabel: 'Archive',
         icon: <AiOutlineFileZip size={24} />,
-        downloadLabel: noticeboardDict[userLanguage].DOWNLOAD,
+        downloadLabel: noticeboardDict[userLanguage].DOWNLOAD
       };
     } else if (url.includes('1drv') || url.includes('onedrive')) {
       return {
         iconLabel: 'Onedrive',
         icon: <ImOnedrive size={24} />,
-        downloadLabel: noticeboardDict[userLanguage].DOWNLOAD,
+        downloadLabel: noticeboardDict[userLanguage].DOWNLOAD
       };
     } else if (url.includes('dropbox')) {
       return {
         iconLabel: 'Dropbox',
         icon: <AiOutlineDropbox size={24} />,
-        downloadLabel: noticeboardDict[userLanguage].DOWNLOAD,
+        downloadLabel: noticeboardDict[userLanguage].DOWNLOAD
       };
     } else {
       return {
         iconLabel: 'File',
         icon: <AiOutlineFile size={24} />,
-        downloadLabel: noticeboardDict[userLanguage].DOWNLOAD,
+        downloadLabel: noticeboardDict[userLanguage].DOWNLOAD
       };
     }
   };

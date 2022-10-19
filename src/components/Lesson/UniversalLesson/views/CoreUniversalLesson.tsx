@@ -1,13 +1,13 @@
-import SaveQuit from '@components/Lesson/Foot/SaveQuit';
-import {useGlobalContext} from '@contexts/GlobalContext';
-import {getLocalStorageData} from '@utilities/localStorage';
+import SaveQuit from 'components/Lesson/Foot/SaveQuit';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import {getLocalStorageData} from 'utilities/localStorage';
 import React from 'react';
-import useInLessonCheck from '../../../../customHooks/checkIfInLesson';
+import useInLessonCheck from 'customHooks/checkIfInLesson';
 import ErrorBoundary from '../../../Error/ErrorBoundary';
 import {LessonPageWrapper} from '../../UniversalLessonBlockComponents/LessonPageWrapper';
 import LessonRowComposer from './CoreUniversalLesson/LessonRowComposer';
 
-const CoreUniversalLesson = () => {
+const CoreUniversalLesson = ({createJournalData}: {createJournalData?: () => void}) => {
   const isInLesson = useInLessonCheck();
   const gContext = useGlobalContext();
   const lessonState = gContext.lessonState;
@@ -27,7 +27,9 @@ const CoreUniversalLesson = () => {
         <LessonPageWrapper>
           <ErrorBoundary fallback={<h1>Error in the LessonRowComposer</h1>}>
             <LessonRowComposer />
-            {userAtEnd() ? <SaveQuit roomID={getRoomData?.id} /> : null}
+            {userAtEnd() ? (
+              <SaveQuit createJournalData={createJournalData} roomID={getRoomData?.id} />
+            ) : null}
           </ErrorBoundary>
         </LessonPageWrapper>
       </div>

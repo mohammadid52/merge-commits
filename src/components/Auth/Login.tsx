@@ -1,19 +1,19 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {Auth} from '@aws-amplify/auth';
-import {useGlobalContext} from '@contexts/GlobalContext';
 import axios from 'axios';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import * as customMutations from 'customGraphql/customMutations';
+import * as customQueries from 'customGraphql/customQueries';
+import * as queries from 'graphql/queries';
 import React, {useEffect, useState} from 'react';
 import {useCookies} from 'react-cookie';
 import {setLocalStorageData} from 'utilities/localStorage';
-import * as customMutations from '../../customGraphql/customMutations';
-import * as customQueries from '../../customGraphql/customQueries';
-import * as queries from '../../graphql/queries';
-import {createUserUrl} from '../../utilities/urls';
+import {createUserUrl} from 'utilities/urls';
 
-import Buttons from '@components/Atoms/Buttons';
-import FormInput from '@components/Atoms/Form/FormInput';
-import AuthCard from './AuthCard';
-import RememberMe from './RememberMe';
+import Buttons from 'atoms/Buttons';
+import FormInput from 'atoms/Form/FormInput';
+import AuthCard from 'components/Auth/AuthCard';
+import RememberMe from 'components/Auth/RememberMe';
 
 interface LoginProps {
   updateAuthState: Function;

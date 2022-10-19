@@ -1,5 +1,5 @@
-import useGraphqlQuery from '@customHooks/useGraphqlQuery';
-import {LessonsByTypeQueryVariables} from 'API';
+import {LessonsByType2Query, LessonsByType2QueryVariables} from 'API';
+import useGraphqlQuery from 'customHooks/useGraphqlQuery';
 import React, {useEffect, useState} from 'react';
 
 interface ProgressBarProps {
@@ -14,20 +14,26 @@ interface ProgressBarProps {
 const ProgressBar = ({lessonProps}: ProgressBarProps) => {
   const [progressValue, setProgressValue] = useState<any>(0);
 
-  const shouldShowProgress = Boolean(lessonProps.lesson.type);
+  const lesson = lessonProps.lesson;
 
-  const {data, isFetched} = useGraphqlQuery<LessonsByTypeQueryVariables, any>(
-    'lessonsByType',
+  const shouldShowProgress = Boolean(lesson.type);
+  const [progressLoaded, setProgressLoaded] = useState(false);
+
+  const {data, isFetched} = useGraphqlQuery<
+    LessonsByType2QueryVariables,
+    LessonsByType2Query['lessonsByType2']['items']
+  >(
+    'lessonsByType2',
     {
-      lessonType: lessonProps.lesson.type,
-      filter: {lessonID: {eq: lessonProps.lesson.id}}
+      lessonType: lesson.type,
+      filter: {lessonID: {eq: lesson.id}}
     },
-    {enabled: shouldShowProgress}
+    {enabled: shouldShowProgress && !progressLoaded}
   );
 
   const generateLessonProgress = async () => {
     try {
-      const pageNumber = data && data.length > 0 ? data[0].pages : 0;
+      const pageNumber = data && data.length > 0 ? data[0].pages : '';
 
       const currentPage = JSON.parse(pageNumber).currentPage;
 
@@ -39,6 +45,7 @@ const ProgressBar = ({lessonProps}: ProgressBarProps) => {
       setProgressValue(
         Math.round(percentCorrect) < 100 ? Math.round(percentCorrect) : 100
       );
+      setProgressLoaded(true);
       return {
         lessonProgress,
         currentPage,
@@ -46,7 +53,7 @@ const ProgressBar = ({lessonProps}: ProgressBarProps) => {
       };
     } catch (error) {
       console.error(
-        `lessondID:${lessonProps.lesson.id} error @getLessonByType Classroom.tsx `,
+        `lessondID:${lesson.id} error @getLessonByType Classroom.tsx `,
         error
       );
     }

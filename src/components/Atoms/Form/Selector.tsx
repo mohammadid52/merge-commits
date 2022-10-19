@@ -2,9 +2,9 @@ import {ExclamationCircleIcon} from '@heroicons/react/outline';
 import React, {ReactNode, useContext, useEffect, useRef, useState} from 'react';
 import {FaSpinner, FaTimes} from 'react-icons/fa';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
-import {getAsset} from '../../../assets';
-import {GlobalContext} from '../../../contexts/GlobalContext';
-import Label from './Label';
+import {getAsset} from 'assets';
+import {GlobalContext} from 'contexts/GlobalContext';
+import Label from 'atoms/Form/Label';
 
 interface SelectorProps {
   list?: {id: number; name: string | number; popoverElement?: ReactNode}[];

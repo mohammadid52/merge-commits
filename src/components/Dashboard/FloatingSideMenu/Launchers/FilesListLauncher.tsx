@@ -1,9 +1,9 @@
-import React, { useContext, useEffect, useState } from 'react';
-import ButtonsRound from '../../../Atoms/ButtonsRound';
-import { GlobalContext } from '../../../../contexts/GlobalContext';
-import { Widget } from '../../../../interfaces/ClassroomComponentsInterfaces';
-import { FloatingSideMenuProps } from '../FloatingSideMenu';
-import { IoDocument } from 'react-icons/io5';
+import React, {useContext, useEffect, useState} from 'react';
+import ButtonsRound from 'atoms/ButtonsRound';
+import {GlobalContext} from 'contexts/GlobalContext';
+import {Widget} from 'interfaces/ClassroomComponentsInterfaces';
+import {FloatingSideMenuProps} from '../FloatingSideMenu';
+import {IoDocument} from 'react-icons/io5';
 
 interface FilesListLauncherProps extends FloatingSideMenuProps {
   chatroom?: any;

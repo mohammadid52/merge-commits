@@ -3,19 +3,19 @@ import {useHistory} from 'react-router';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {DragDropContext, Draggable, Droppable} from 'react-beautiful-dnd';
 
-import {GlobalContext} from '../../../../../../../../contexts/GlobalContext';
-import useDictionary from '../../../../../../../../customHooks/dictionary';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
 
-import * as mutations from '../../../../../../../../graphql/mutations';
-import * as customQueries from '../../../../../../../../customGraphql/customQueries';
-import * as customMutations from '../../../../../../../../customGraphql/customMutations';
+import * as mutations from 'graphql/mutations';
+import * as customQueries from 'customGraphql/customQueries';
+import * as customMutations from 'customGraphql/customMutations';
 
-import {getLessonType, reorder} from '../../../../../../../../utilities/strings';
-import Selector from '../../../../../../../Atoms/Form/Selector';
-import AddButton from '../../../../../../../Atoms/Buttons/AddButton';
-import Loader from '../../../../../../../Atoms/Loader';
-import ModalPopUp from '../../../../../../../Molecules/ModalPopUp';
-import {getAsset} from '../../../../../../../../assets';
+import {getLessonType, reorder} from 'utilities/strings';
+import Selector from 'atoms/Form/Selector';
+import AddButton from 'atoms/Buttons/AddButton';
+import Loader from 'atoms/Loader';
+import ModalPopUp from 'molecules/ModalPopUp';
+import {getAsset} from 'assets';
 import LessonPlanManagerRow from './LessonPlanManagerRow';
 
 interface UIMessages {
@@ -32,17 +32,17 @@ const LessonPlanManager = ({
   savedLessonsList,
   setSavedLessonsList,
   lessonsIds,
-  setLessonsIds,
+  setLessonsIds
 }: any) => {
   const history = useHistory();
 
   const {
     state: {
-      user: {isSuperAdmin},
+      user: {isSuperAdmin}
     },
     theme,
     clientKey,
-    userLanguage,
+    userLanguage
   } = useContext(GlobalContext);
   const {SyllabusDict} = useDictionary(clientKey);
   const themeColor = getAsset(clientKey, 'themeClassName');
@@ -56,25 +56,25 @@ const LessonPlanManager = ({
   const [selecetedLesson, setSelectedLesson] = useState({
     id: '',
     name: '',
-    value: '',
+    value: ''
   });
   const [unsavedChanges, setUnsavedChanges] = useState(false);
   const [warnModal, setWarnModal] = useState({
     show: false,
     lessonPlan: false,
     lessonEdit: false,
-    message: SyllabusDict[userLanguage]['MESSAGES']['wantsave'],
+    message: SyllabusDict[userLanguage]['MESSAGES']['wantsave']
   });
   const [warnModal2, setWarnModal2] = useState({
     show: false,
     message: '',
-    action: () => {},
+    action: () => {}
   });
   const [messages, setMessages] = useState<UIMessages>({
     show: false,
     message: '',
     isError: false,
-    lessonError: false,
+    lessonError: false
   });
 
   // ##################################################################### //
@@ -91,7 +91,7 @@ const LessonPlanManager = ({
       setLoading(true);
       const result: any = await API.graphql(
         graphqlOperation(customQueries.listUniversalLessonsOptions, {
-          filter: {institutionID: {eq: institutionId}},
+          filter: {institutionID: {eq: institutionId}}
         })
       );
       const savedData = result.data.listUniversalLessons;
@@ -104,7 +104,7 @@ const LessonPlanManager = ({
         .map((item: {id: string; title: string; type: string}) => ({
           id: item.id,
           name: `${item.title} - ${item.type && getLessonType(item.type)}`,
-          value: item.title,
+          value: item.title
         }));
       // setDropdownLessonsList([...updatedList]);
       setAllLessonsList([...sortedList]);
@@ -114,7 +114,7 @@ const LessonPlanManager = ({
         show: true,
         message: SyllabusDict[userLanguage]['MESSAGES']['fetchlist'],
         isError: true,
-        lessonError: true,
+        lessonError: true
       });
     }
   };
@@ -133,7 +133,7 @@ const LessonPlanManager = ({
         ...warnModal,
         lessonPlan: true,
         show: !warnModal.show,
-        lessonEdit: false,
+        lessonEdit: false
       });
       return;
     }
@@ -166,7 +166,7 @@ const LessonPlanManager = ({
             active: selectedLesson.type !== 'lesson' ? true : false,
             stage: `checkpoint?id=${item.LessonComponentID}`,
             type: 'survey',
-            displayMode: 'SELF',
+            displayMode: 'SELF'
           };
         });
       const input = {
@@ -174,7 +174,7 @@ const LessonPlanManager = ({
         lessonID: selecetedLesson.id,
         displayData: {breakdownComponent: selectedLesson?.type},
         lessonPlan: lessonComponentPlan?.length > 0 ? lessonComponentPlan : [],
-        status: 'Active',
+        status: 'Active'
       };
 
       const result: any = await API.graphql(
@@ -185,13 +185,13 @@ const LessonPlanManager = ({
       if (!lessonsIds.length) {
         const associatedRooms: any = await API.graphql(
           graphqlOperation(customQueries.listRoomsByActiveSyllabusId, {
-            filter: {activeSyllabus: {eq: syllabusId}},
+            filter: {activeSyllabus: {eq: syllabusId}}
           })
         );
         associatedRooms?.data.listRooms.items?.map(async (room: any) => {
           const updatedRoomResult: any = await API.graphql(
             graphqlOperation(mutations.updateRoom, {
-              input: {id: room.id, activeLessons: [selecetedLesson.id]},
+              input: {id: room.id, activeLessons: [selecetedLesson.id]}
             })
           );
         });
@@ -208,7 +208,7 @@ const LessonPlanManager = ({
         show: true,
         message: SyllabusDict[userLanguage]['MESSAGES']['UPDATE_ERROR'],
         isError: true,
-        lessonError: true,
+        lessonError: true
       });
     }
   };
@@ -227,7 +227,7 @@ const LessonPlanManager = ({
         ...item,
         status: selectedLesson?.status || '',
         uniqlessonId: selectedLesson?.id,
-        measurements: selectedLesson?.measurements,
+        measurements: selectedLesson?.measurements
       };
       return tableList;
     });
@@ -240,7 +240,7 @@ const LessonPlanManager = ({
         id: item.id,
         // name: `${item.title} - ${item.type && getLessonType(item.type)}`,
         name: `${item.title} - ${item.targetAudience || 'All'}`,
-        value: item.title,
+        value: item.title
       }));
 
     updatedTableList = updatedTableList
@@ -271,7 +271,7 @@ const LessonPlanManager = ({
           .map((item: {id: string; title: string; type: string}) => ({
             id: item.id,
             name: `${item.title} - ${item.type && getLessonType(item.type)}`,
-            value: item.title,
+            value: item.title
           }));
         setDropdownLessonsList([...updatedList]);
       }
@@ -282,7 +282,7 @@ const LessonPlanManager = ({
     setLessonsIds(lessonsIDs);
     await API.graphql(
       graphqlOperation(customMutations.updateUniversalSyllabusLessonSequence, {
-        input: {id: syllabusId, universalLessonsSeq: lessonsIDs},
+        input: {id: syllabusId, universalLessonsSeq: lessonsIDs}
       })
     );
   };
@@ -317,7 +317,7 @@ const LessonPlanManager = ({
   const [deleteModal, setDeleteModal] = useState<any>({
     show: false,
     message: '',
-    action: () => {},
+    action: () => {}
   });
 
   const checkIfRemovable = (lessonObj: any, unitObj: any) => {
@@ -337,7 +337,7 @@ const LessonPlanManager = ({
       setDeleteModal({
         show: true,
         message: `Are you sure you want to remove "${targetString}" from unit?`,
-        action: () => handleDelete(lessonObj),
+        action: () => handleDelete(lessonObj)
       });
     } else {
       setDeleteModal({show: false, message: '', action: () => {}});
@@ -350,7 +350,7 @@ const LessonPlanManager = ({
       console.log('deleting...', lesson);
       await API.graphql(
         graphqlOperation(mutations.deleteUniversalSyllabusLesson, {
-          input: {id: lesson.uniqlessonId},
+          input: {id: lesson.uniqlessonId}
         })
       );
       await updateLessonSequence(
@@ -384,7 +384,7 @@ const LessonPlanManager = ({
       setDeleting(true);
       const result: any = await API.graphql(
         graphqlOperation(mutations.deleteUniversalSyllabusLesson, {
-          input: {id: item.uniqlessonId},
+          input: {id: item.uniqlessonId}
         })
       );
       await updateLessonSequence(
@@ -402,7 +402,7 @@ const LessonPlanManager = ({
     setWarnModal2({
       show: true,
       message: `Are you sure you want to delete (${item.title})?`,
-      action: onDrop,
+      action: onDrop
     });
   };
 
@@ -412,7 +412,7 @@ const LessonPlanManager = ({
         ...warnModal,
         lessonPlan: false,
         show: !warnModal.show,
-        lessonEdit: true,
+        lessonEdit: true
       });
       // setEditLesson({type, id});
     } else {

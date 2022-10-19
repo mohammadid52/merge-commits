@@ -1,10 +1,10 @@
 import React, {useState, useContext, useEffect} from 'react';
-import {GlobalContext} from '../../contexts/GlobalContext';
+import {GlobalContext} from 'contexts/GlobalContext';
 import {useHistory, Link} from 'react-router-dom';
 // import { API, graphqlOperation } from 'aws-amplify';
 import {Auth} from '@aws-amplify/auth';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import * as mutations from '../../graphql/mutations';
+import * as mutations from 'graphql/mutations';
 
 const Registration = () => {
   const history = useHistory();
@@ -17,7 +17,7 @@ const Registration = () => {
     lastName: '',
     phone: '',
     dob: '',
-    test: '',
+    test: ''
   });
 
   useEffect(() => {
@@ -37,7 +37,7 @@ const Registration = () => {
       // insitution: '1',
       phone: input.phone,
       // birthdate: input.dob,
-      language: 'EN',
+      language: 'EN'
     };
 
     try {
@@ -57,13 +57,13 @@ const Registration = () => {
     try {
       const user = await Auth.signUp({
         username,
-        password,
+        password
       });
       console.log(user.userSub);
       setInput((input) => {
         return {
           ...input,
-          id: user.userSub,
+          id: user.userSub
         };
       });
 
@@ -79,12 +79,12 @@ const Registration = () => {
       if (id === 'email') {
         return {
           ...input,
-          [id]: value.toLowerCase(),
+          [id]: value.toLowerCase()
         };
       } else {
         return {
           ...input,
-          [id]: value,
+          [id]: value
         };
       }
     });

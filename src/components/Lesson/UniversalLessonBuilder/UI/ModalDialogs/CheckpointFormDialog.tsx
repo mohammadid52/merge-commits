@@ -4,23 +4,23 @@ import React, {Fragment, useCallback, useContext, useEffect, useState} from 'rea
 import {DragDropContext, Draggable, Droppable} from 'react-beautiful-dnd';
 import {IconContext} from 'react-icons';
 import {IoMdAddCircleOutline, IoMdRemoveCircleOutline} from 'react-icons/io';
-import {getAsset} from '../../../../../assets';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import useDictionary from '../../../../../customHooks/dictionary';
-import {IContentTypeComponentProps} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
-import {getTypeString, getLanguageString} from '../../../../../utilities/strings';
-import Buttons from '../../../../Atoms/Buttons';
-import CheckBox from '../../../../Atoms/Form/CheckBox';
-import FormInput from '../../../../Atoms/Form/FormInput';
-import Selector from '../../../../Atoms/Form/Selector';
-import * as mutations from '../../../../../graphql/mutations';
-import * as queries from '../../../../../graphql/queries';
+import {getAsset} from 'assets';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import {IContentTypeComponentProps} from 'interfaces/UniversalLessonBuilderInterfaces';
+import {getTypeString, getLanguageString} from 'utilities/strings';
+import Buttons from 'atoms/Buttons';
+import CheckBox from 'atoms/Form/CheckBox';
+import FormInput from 'atoms/Form/FormInput';
+import Selector from 'atoms/Form/Selector';
+import * as mutations from 'graphql/mutations';
+import * as queries from 'graphql/queries';
 import {isObject, map} from 'lodash';
-import SearchInput from '../../../../Atoms/Form/SearchInput';
-import Loader from '../../../../Atoms/Loader';
+import SearchInput from 'atoms/Form/SearchInput';
+import Loader from 'atoms/Loader';
 import RemoveInput from '../common/RemoveInput';
 import {FORM_TYPES} from '../common/constants';
-import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
+import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
 
 interface InitialState {
   question: string;
@@ -50,7 +50,7 @@ const CreateQuestion = ({
   setCheckpQuestions,
   setUnsavedChanges,
   checkpQuestions,
-  changeStep,
+  changeStep
 }: any) => {
   const {clientKey, userLanguage, theme} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
@@ -74,18 +74,18 @@ const CreateQuestion = ({
     type: '',
     options: '',
     message: '',
-    isError: true,
+    isError: true
   });
 
   const [message, setMessage] = useState({
     msg: '',
-    isError: false,
+    isError: false
   });
 
   const clearErrors = () => {
     setMessage({
       isError: false,
-      msg: '',
+      msg: ''
     });
   };
 
@@ -99,14 +99,14 @@ const CreateQuestion = ({
 
       setMessage({
         isError: true,
-        msg: AddNewQuestionDict[userLanguage]['VALIDATION']['LABEL'],
+        msg: AddNewQuestionDict[userLanguage]['VALIDATION']['LABEL']
       });
     } else if (!questionData.type.name?.trim().length) {
       isValid = false;
 
       setMessage({
         isError: true,
-        msg: AddNewQuestionDict[userLanguage]['VALIDATION']['TYPE'],
+        msg: AddNewQuestionDict[userLanguage]['VALIDATION']['TYPE']
       });
     } else {
       clearErrors();
@@ -124,7 +124,7 @@ const CreateQuestion = ({
             type: item.type.value,
             question: item.question,
             language: item.language.value,
-            options: filteredOptions(item.options),
+            options: filteredOptions(item.options)
           };
           const question: any = await API.graphql(
             graphqlOperation(mutations.createQuestion, {input})
@@ -137,7 +137,7 @@ const CreateQuestion = ({
         label: '',
         options: '',
         message: AddNewQuestionDict[userLanguage]['MESSAGES']['QUESTIONSAVE'],
-        isError: false,
+        isError: false
       });
     } catch {
       setValidation({
@@ -146,7 +146,7 @@ const CreateQuestion = ({
         label: '',
         options: '',
         message: AddNewQuestionDict[userLanguage]['MESSAGES']['UNABLESAVE'],
-        isError: true,
+        isError: true
       });
     } finally {
       setLoading(false);
@@ -161,12 +161,12 @@ const CreateQuestion = ({
     {id: '5', name: 'Date Picker', value: 'datePicker'},
     {id: '6', name: 'Emoji', value: 'emoji'},
     {id: '7', name: 'Attachments', value: 'attachments'},
-    {id: '8', name: 'Link', value: 'link'},
+    {id: '8', name: 'Link', value: 'link'}
   ];
 
   const languageList = [
     {id: 1, name: 'English', value: 'EN'},
-    {id: 2, name: 'Spanish', value: 'ES'},
+    {id: 2, name: 'Spanish', value: 'ES'}
   ];
 
   const initialState = {
@@ -179,10 +179,10 @@ const CreateQuestion = ({
 
     options: [
       {label: '1', text: ''},
-      {label: '2', text: ''},
+      {label: '2', text: ''}
     ],
     otherOpt: false,
-    noneOfAbove: false,
+    noneOfAbove: false
   };
   const [questionData, setQuestionData] = useState<InitialState>(initialState);
   const {
@@ -193,20 +193,20 @@ const CreateQuestion = ({
     language,
 
     otherOpt,
-    noneOfAbove,
+    noneOfAbove
   } = questionData;
   const onInputChange = (e: any) => {
     setUnsavedChanges(true);
     clearErrors();
     setQuestionData({
       ...questionData,
-      [e.target.name]: e.target.value,
+      [e.target.name]: e.target.value
     });
   };
   const toggleCheckBoxState = (field: string, value: boolean) => {
     setQuestionData({
       ...questionData,
-      [field]: !value,
+      [field]: !value
     });
   };
   const onSelectOption = (val: string, name: string, id: string, field: string) => {
@@ -217,8 +217,8 @@ const CreateQuestion = ({
       [field]: {
         id: id,
         name: name,
-        value: val,
-      },
+        value: val
+      }
     });
   };
 
@@ -242,7 +242,7 @@ const CreateQuestion = ({
     currentOptions[index].text = e.target.value;
     setQuestionData({
       ...questionData,
-      options: currentOptions,
+      options: currentOptions
     });
   };
   const onOptionAdd = (index: number) => {
@@ -260,7 +260,7 @@ const CreateQuestion = ({
     });
     setQuestionData({
       ...questionData,
-      options: updatedOptions,
+      options: updatedOptions
     });
   };
   const onOptionRemove = (index: number) => {
@@ -278,7 +278,7 @@ const CreateQuestion = ({
       });
       setQuestionData({
         ...questionData,
-        options: updatedOptions,
+        options: updatedOptions
       });
     }
   };
@@ -450,7 +450,7 @@ const ExistingQuestionList = ({
   checkpQuestions,
   setUnsavedChanges,
   changeStep,
-  setCheckpQuestions,
+  setCheckpQuestions
 }: any) => {
   const [selectedQuestionIds, setSelectedQuestionIds] = useState([]);
   const [questionsList, setQuestionsList] = useState([]);
@@ -674,7 +674,7 @@ const QuestionLookup = ({
   setCheckpQuestions,
   updateBlockContentULBHandler,
   createNewBlockULBHandler,
-  askBeforeClose,
+  askBeforeClose
 }: {
   checkpQuestions: InitialState[];
   changeStep: (step: string) => void;
@@ -705,7 +705,7 @@ const QuestionLookup = ({
         options:
           type === FORM_TYPES.RADIO || type === FORM_TYPES.MULTIPLE
             ? question.options
-            : null,
+            : null
       };
     });
     return dataToSend;
@@ -715,7 +715,7 @@ const QuestionLookup = ({
 
     const input = {
       id: list.id,
-      lessonPlan: [...list.lessonPlan],
+      lessonPlan: [...list.lessonPlan]
     };
 
     await updateLessonPageToDB(input);
@@ -864,7 +864,7 @@ const CheckpointFormDialog = ({
   updateBlockContentULBHandler,
   createNewBlockULBHandler,
   setUnsavedChanges,
-  askBeforeClose,
+  askBeforeClose
 }: IHeaderModalComponentProps) => {
   const [checkpQuestions, setCheckpQuestions] = useState([]);
 

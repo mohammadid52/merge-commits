@@ -1,6 +1,6 @@
-import {GlobalContext} from '@contexts/GlobalContext';
-import {useULBContext} from '@contexts/UniversalLessonBuilderContext';
-import {RowWrapperProps} from '@interfaces/UniversalLessonBuilderInterfaces';
+import {GlobalContext} from 'contexts/GlobalContext';
+import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
+import {RowWrapperProps} from 'interfaces/UniversalLessonBuilderInterfaces';
 import {getAsset} from 'assets';
 import React, {useContext} from 'react';
 
@@ -13,7 +13,7 @@ export const BuilderRowWrapper = (props: RowWrapperProps) => {
 
   const {
     clientKey,
-    state: {lessonPage: {theme = 'dark'} = {}},
+    state: {lessonPage: {theme = 'dark'} = {}}
   } = useContext(GlobalContext);
 
   const themeColor = getAsset(clientKey, 'themeClassName');

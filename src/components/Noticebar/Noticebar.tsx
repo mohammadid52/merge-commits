@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {NotificationListItem} from '../../interfaces/GlobalInfoComponentsInterfaces';
+import {NotificationListItem} from 'interfaces/GlobalInfoComponentsInterfaces';
 
 interface INoticebarProps {
   notifications: any[];
@@ -52,7 +52,7 @@ const Noticebar = ({notifications}: INoticebarProps) => {
     const notificationType = noticeList[currentNr].notification.type;
     switch (notificationType) {
       case 'info':
-        return 'bg-indigo-400';
+        return 'iconoclast:bg-main curate:bg-main';
       case 'positive':
         return 'bg-green-400';
       case 'alert':
@@ -65,12 +65,12 @@ const Noticebar = ({notifications}: INoticebarProps) => {
   };
 
   const basicStyle = `font-semibold text-sm text-white justify-center`;
-  const linkColor = `font-bold cursor-pointer underline text-blue-600 hover:text-blue-800 visited:text-purple-600`;
+  const linkColor = `iconoclast:bg-300 curate:bg-300 hover:iconoclast:bg-400 hover:curate:bg-400 iconoclast:text-500 curate:text-500 cursor-pointer`;
 
   return (
     <>
       {notifications && notifications.length > 0 && noticeIndex !== null && (
-        <div className={`w-full h-8 p-2 ${bgStyle(noticeIndex, notifications)}`}>
+        <div className={`w-full h-10 p-2 ${bgStyle(noticeIndex, notifications)}`}>
           <div className={`h-full flex flex-row items-center content-center`}>
             <div className={`px-2 flex flex-row ${basicStyle}`}>
               <span className={`w-auto`}>

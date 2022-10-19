@@ -1,15 +1,15 @@
-import React, { useContext } from 'react';
-import { DashboardProps } from '../Dashboard';
+import React, {useContext} from 'react';
+import {DashboardProps} from '../Dashboard';
 
-import { CallLinkWidget, DefaultTextWidget, LogoWidget } from './Widgets';
-import { GlobalContext } from '../../../contexts/GlobalContext';
-import { getAsset } from '../../../assets';
-import { Widget } from '../../../interfaces/ClassroomComponentsInterfaces';
-import { QuoteWidget } from './TopWidgets';
-import { FileLinkWidget } from './Widgets/FilesWidget';
+import {CallLinkWidget, DefaultTextWidget, LogoWidget} from './Widgets';
+import {GlobalContext} from 'contexts/GlobalContext';
+import {getAsset} from 'assets';
+import {Widget} from 'interfaces/ClassroomComponentsInterfaces';
+import {QuoteWidget} from './TopWidgets';
+import {FileLinkWidget} from './Widgets/FilesWidget';
 
 const SideWidgetBar = (props: DashboardProps) => {
-  const { state, clientKey } = useContext(GlobalContext);
+  const {state, clientKey} = useContext(GlobalContext);
 
   const getSideWidgets = () => {
     const thereAreWidgets = state.roomData.widgets.length > 0;
@@ -27,10 +27,21 @@ const SideWidgetBar = (props: DashboardProps) => {
     switch (widgetType) {
       case 'default':
         return (
-          <DefaultTextWidget key={`sidebar_widget_${idx}`} title={widgetObj.title} content={widgetObj.content.text} />
+          <DefaultTextWidget
+            key={`sidebar_widget_${idx}`}
+            title={widgetObj.title}
+            content={widgetObj.content.text}
+          />
         );
       case 'quote':
-        return <QuoteWidget placement="sidebar" key={`sidebar_widget_${idx}`} card={true} quotes={widgetObj.quotes} />;
+        return (
+          <QuoteWidget
+            placement="sidebar"
+            key={`sidebar_widget_${idx}`}
+            card={true}
+            quotes={widgetObj.quotes}
+          />
+        );
       case 'call':
         return (
           <CallLinkWidget
@@ -65,12 +76,18 @@ const SideWidgetBar = (props: DashboardProps) => {
       {/**
        * FULL SIZE
        */}
-      <div id={`sideWidgetBar`} className={`${barClass} ${responsiveBarClass} ${responsiveBarScalingAnimation}`}>
+      <div
+        id={`sideWidgetBar`}
+        className={`${barClass} ${responsiveBarClass} ${responsiveBarScalingAnimation}`}>
         {/**
          * STATIC INSTITUTE LOGO
          */}
         {state.roomData && state.roomData.widgets.length > 0 && (
-          <LogoWidget source={getAsset(clientKey, 'logo_symbol')} altdesc={`school-logo`} card={false} />
+          <LogoWidget
+            source={getAsset(clientKey, 'logo_symbol')}
+            altdesc={`school-logo`}
+            card={false}
+          />
         )}
 
         {/**

@@ -1,12 +1,12 @@
-import FormInput from '@atoms/Form/FormInput';
-import Label from '@atoms/Form/Label';
-import Buttons from '@components/Atoms/Buttons';
-import RichTextEditor from '@components/Atoms/RichTextEditor';
-import Media from '@components/Community/Components/Media';
-import {COMMUNITY_UPLOAD_KEY, IFile} from '@components/Community/constants.community';
-import {ICommunityCardProps, IEventInput} from '@interfaces/Community.interfaces';
-import AnimatedContainer from '@uiComponents/Tabs/AnimatedContainer';
-import {getImageFromS3Static} from '@utilities/services';
+import FormInput from 'atoms/Form/FormInput';
+import Label from 'atoms/Form/Label';
+import Buttons from 'atoms/Buttons';
+import RichTextEditor from 'atoms/RichTextEditor';
+import Media from 'components/Community/Components/Media';
+import {COMMUNITY_UPLOAD_KEY, IFile} from 'components/Community/constants.community';
+import {ICommunityCardProps, IEventInput} from 'interfaces/Community.interfaces';
+import AnimatedContainer from 'uiComponents/Tabs/AnimatedContainer';
+import {getImageFromS3Static} from 'utilities/services';
 import isEmpty from 'lodash/isEmpty';
 import React, {useEffect, useState} from 'react';
 import DatePicker from 'react-datepicker';
@@ -20,14 +20,14 @@ const Event = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardProps)
     startTime: null,
     endTime: null,
     date: null,
-    address: '',
+    address: ''
   });
 
   const [error, setError] = useState('');
 
   const [fields, setFields] = useState<{summary: string; summaryHtml: string}>({
     summary: editMode && !isEmpty(cardDetails) ? cardDetails?.summary : '',
-    summaryHtml: editMode && !isEmpty(cardDetails) ? cardDetails?.summaryHtml : '',
+    summaryHtml: editMode && !isEmpty(cardDetails) ? cardDetails?.summaryHtml : ''
   });
 
   const onEditorStateChange = (
@@ -46,7 +46,7 @@ const Event = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardProps)
   useEffect(() => {
     if (editMode && !isEmpty(cardDetails)) {
       setTempData({
-        image: cardDetails.cardImageLink,
+        image: cardDetails.cardImageLink
       });
 
       setOverlayText(cardDetails?.cardName);
@@ -58,7 +58,7 @@ const Event = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardProps)
         startTime: new Date(cardDetails?.startTime),
         endTime: new Date(cardDetails?.endTime),
         date: new Date(date),
-        address: address,
+        address: address
       });
     }
   }, [editMode, cardDetails]);
@@ -82,7 +82,7 @@ const Event = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardProps)
         endTime: details.endTime,
         additionalInfo: `${details.date} || ${details.address}`,
         id: cardDetails?.id,
-        isEditedCard: editMode,
+        isEditedCard: editMode
       };
       if (!editMode) {
         delete eventDetails.id;

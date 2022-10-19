@@ -1,9 +1,9 @@
-import Counter from '@components/Dashboard/GameChangers/components/Counter';
-import SelectedCard from '@components/Dashboard/GameChangers/components/SelectedCard';
-import {useGameChangers} from '@components/Dashboard/GameChangers/context/GameChangersContext';
-import {cardsList} from '@components/Dashboard/GameChangers/__contstants';
-import {useGlobalContext} from '@contexts/GlobalContext';
-import AnimatedContainer from '@uiComponents/Tabs/AnimatedContainer';
+import Counter from 'components/Dashboard/GameChangers/components/Counter';
+import SelectedCard from 'components/Dashboard/GameChangers/components/SelectedCard';
+import {useGameChangers} from 'components/Dashboard/GameChangers/context/GameChangersContext';
+import {cardsList} from 'components/Dashboard/GameChangers/__contstants';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import AnimatedContainer from 'uiComponents/Tabs/AnimatedContainer';
 import React, {useEffect, useState} from 'react';
 
 const ActivityBlock = ({value}: {value: any}) => {
@@ -23,7 +23,7 @@ const ActivityBlock = ({value}: {value: any}) => {
 
   const onClick = (id: number) => {};
   const {
-    state: {lessonPage: {themeTextColor = ''} = {}},
+    state: {lessonPage: {themeTextColor = ''} = {}}
   } = useGlobalContext();
 
   if (selectedCard === null) {

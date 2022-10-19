@@ -1,13 +1,13 @@
-import Buttons from '@atoms/Buttons';
-import FormInput from '@atoms/Form/FormInput';
-import Label from '@atoms/Form/Label';
-import RichTextEditor from '@atoms/RichTextEditor';
-import Media from '@components/Community/Components/Media';
-import {COMMUNITY_UPLOAD_KEY, IFile} from '@components/Community/constants.community';
-import {REGEX} from '@components/Lesson/UniversalLessonBuilder/UI/common/constants';
-import {ICheckItOutInput, ICommunityCardProps} from '@interfaces/Community.interfaces';
-import AnimatedContainer from '@uiComponents/Tabs/AnimatedContainer';
-import {getImageFromS3Static} from '@utilities/services';
+import Buttons from 'atoms/Buttons';
+import FormInput from 'atoms/Form/FormInput';
+import Label from 'atoms/Form/Label';
+import RichTextEditor from 'atoms/RichTextEditor';
+import Media from 'components/Community/Components/Media';
+import {COMMUNITY_UPLOAD_KEY, IFile} from 'components/Community/constants.community';
+import {REGEX} from 'components/Lesson/UniversalLessonBuilder/UI/common/constants';
+import {ICheckItOutInput, ICommunityCardProps} from 'interfaces/Community.interfaces';
+import AnimatedContainer from 'uiComponents/Tabs/AnimatedContainer';
+import {getImageFromS3Static} from 'utilities/services';
 import isEmpty from 'lodash/isEmpty';
 import React, {useEffect, useState} from 'react';
 
@@ -20,7 +20,7 @@ const CheckItOut = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardP
 
   const [fields, setFields] = useState<{summary: string; summaryHtml: string}>({
     summary: editMode && !isEmpty(cardDetails) ? cardDetails?.summary : '',
-    summaryHtml: editMode && !isEmpty(cardDetails) ? cardDetails?.summaryHtml : '',
+    summaryHtml: editMode && !isEmpty(cardDetails) ? cardDetails?.summaryHtml : ''
   });
 
   const onEditorStateChange = (
@@ -50,7 +50,7 @@ const CheckItOut = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardP
         id: cardDetails?.id,
         isEditedCard: editMode,
         summaryHtml: fields.summaryHtml,
-        cardName: overlayText,
+        cardName: overlayText
       };
       if (!editMode) {
         delete checkItOutDetails.id;
@@ -59,7 +59,7 @@ const CheckItOut = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardP
         checkItOutDetails = {
           ...checkItOutDetails,
           cardImageLink: null,
-          additionalLinks: [youtubeVideoLink],
+          additionalLinks: [youtubeVideoLink]
         };
       }
       onSubmit(checkItOutDetails, () => setIsLoading(false));
@@ -113,7 +113,7 @@ const CheckItOut = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardP
   useEffect(() => {
     if (editMode && !isEmpty(cardDetails)) {
       setTempData({
-        image: cardDetails.cardImageLink,
+        image: cardDetails.cardImageLink
       });
 
       if (cardDetails?.additionalLinks?.length > 0) {
@@ -131,7 +131,7 @@ const CheckItOut = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardP
     setVideoLink: setYoutubeVideoLink,
     setError: setError,
     setFile: setFile,
-    file: file,
+    file: file
   };
 
   return (

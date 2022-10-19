@@ -1,11 +1,11 @@
-import {useContext} from 'react';
-import {GlobalContext} from '../contexts/GlobalContext';
-import {StudentPageInput} from '@interfaces/UniversalLessonInterfaces';
+import {StudentPageInput} from 'interfaces/UniversalLessonInterfaces';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import useInLessonCheck from './checkIfInLesson';
+import useAuth from './useAuth';
 
 const useStudentDataValue = () => {
   // ~~~~~~~~~~~~~~~ CONTEXT ~~~~~~~~~~~~~~~ //
-  const gContext = useContext(GlobalContext);
+  const gContext = useGlobalContext();
   const user = gContext.state.user;
   const lessonState = gContext.lessonState;
   const lessonDispatch = gContext.lessonDispatch;
@@ -15,8 +15,8 @@ const useStudentDataValue = () => {
   const CURRENT_PAGE = lessonState?.currentPage;
 
   // ~~~~~~~~~~~~~~ USER ROLES ~~~~~~~~~~~~~ //
-  const isStudent = user.role === 'ST';
-  const isTeacher = user.role === 'TR' || user.role === 'FLW';
+  const {isStudent, isTeacher, isFellow} = useAuth();
+
   const isInLesson = isStudent ? useInLessonCheck() : false;
 
   // ~~~~~~~~~~~ CHECK IF SURVEY ~~~~~~~~~~~ //
@@ -71,7 +71,7 @@ const useStudentDataValue = () => {
     if (sharedDataFromSamePage /** */) {
       if (isStudent && isOtherStudent) {
         return getDisplayDataStudentValue(domID);
-      } else if (isTeacher || !isOtherStudent) {
+      } else if (isTeacher || isFellow || !isOtherStudent) {
         return getStudentDataValue(domID);
       }
     } else {
@@ -91,9 +91,9 @@ const useStudentDataValue = () => {
             pageIdx: lessonState.currentPage,
             data: {
               domID: domID,
-              input: input,
-            },
-          },
+              input: input
+            }
+          }
         });
       } else {
         lessonDispatch({
@@ -101,9 +101,9 @@ const useStudentDataValue = () => {
           payload: {
             data: {
               domID: domID,
-              input: input,
-            },
-          },
+              input: input
+            }
+          }
         });
       }
     }
@@ -117,7 +117,7 @@ const useStudentDataValue = () => {
 
   return {
     getDataValue: getDataValue,
-    setDataValue: setDataValue,
+    setDataValue: setDataValue
   };
 };
 

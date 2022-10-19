@@ -1,6 +1,6 @@
-import useAuth from '@customHooks/useAuth';
-import useGraphqlMutation from '@customHooks/useGraphqlMutation';
-import {awsFormatDate, dateString} from '@utilities/time';
+import useAuth from 'customHooks/useAuth';
+import useGraphqlMutation from 'customHooks/useGraphqlMutation';
+import {awsFormatDate, dateString} from 'utilities/time';
 import {CreateGameChangerLogInput} from 'API';
 import {nanoid} from 'nanoid';
 import React, {useEffect, useState} from 'react';
@@ -17,7 +17,7 @@ const BowlSvg = ({animate}: {animate: boolean}) => {
     '#FF8C00',
     '#CD853F',
     '#D2691E',
-    '#8B4513',
+    '#8B4513'
   ];
 
   const [color, setColor] = useState(null);
@@ -138,8 +138,8 @@ const SingingBowl = () => {
           gameChangerID,
           personAuthID: authId,
           personEmail: email,
-          startTime: awsFormatDate(dateString('-', 'WORLD')),
-        },
+          startTime: awsFormatDate(dateString('-', 'WORLD'))
+        }
       });
     }
   };

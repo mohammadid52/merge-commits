@@ -1,16 +1,16 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {Transition} from '@headlessui/react';
-import {UniversalLesson} from '@interfaces/UniversalLessonInterfaces';
+import {UniversalLesson} from 'interfaces/UniversalLessonInterfaces';
 import map from 'lodash/map';
 import React, {useState} from 'react';
 import {AiFillCheckCircle} from 'react-icons/ai';
-import * as customQueries from '../../../../../customGraphql/customQueries';
-import useUpdateEffect from '../../../../../customHooks/useUpdateEffect';
-import * as queries from '../../../../../graphql/queries';
-import {getLocalStorageData} from '../../../../../utilities/localStorage';
-import Loader from '../../../../Atoms/Loader';
-import Table from '../../../../Molecules/Table';
-import ThemeModal from '../../../../Molecules/ThemeModal';
+import * as customQueries from 'customGraphql/customQueries';
+import useUpdateEffect from 'customHooks/useUpdateEffect';
+import * as queries from 'graphql/queries';
+import {getLocalStorageData} from 'utilities/localStorage';
+import Loader from 'atoms/Loader';
+import Table from 'molecules/Table';
+import ThemeModal from 'molecules/ThemeModal';
 import AnimatedContainer from '../../../UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import {Tabs3, useTabs} from '../../../UniversalLessonBuilder/UI/UIComponents/Tabs/Tabs';
 
@@ -22,7 +22,7 @@ const EvidenceTab = ({
   setCheckedEvidence,
   checkedEvidence,
   setSelectedCurriculumList,
-  selectedCurriculumList,
+  selectedCurriculumList
 }: any) => {
   const [evidenceListLoading, setEvidenceListLoading] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -62,8 +62,8 @@ const EvidenceTab = ({
     let rubricList: any = await API.graphql(
       graphqlOperation(customQueries.listRubrics, {
         filter: {
-          curriculumID: {eq: curricularId},
-        },
+          curriculumID: {eq: curricularId}
+        }
       })
     );
     rubricList = rubricList.data.listRubrics?.items || [];
@@ -72,8 +72,8 @@ const EvidenceTab = ({
       await API.graphql(
         graphqlOperation(queries.listLearningObjectives, {
           filter: {
-            curriculumID: {eq: curricularId},
-          },
+            curriculumID: {eq: curricularId}
+          }
         })
       ),
       await API.graphql(
@@ -82,10 +82,10 @@ const EvidenceTab = ({
       await API.graphql(
         graphqlOperation(customQueries.listTopics, {
           filter: {
-            curriculumID: {eq: curricularId},
-          },
+            curriculumID: {eq: curricularId}
+          }
         })
-      ),
+      )
     ]);
 
     const topicsList = topics.data?.listTopics?.items;
@@ -107,7 +107,7 @@ const EvidenceTab = ({
               learningObjectiveName: objective.name,
               topicName: topic.name,
               measurementName: rubric.name,
-              rubricId: rubric.id,
+              rubricId: rubric.id
             });
           });
           return topic;
@@ -120,7 +120,7 @@ const EvidenceTab = ({
       learningObjectiveData,
       learningEvidenceList: learningEvidenceList.sort((a: any, b: any) =>
         a.index > b.index ? 1 : -1
-      ),
+      )
     };
   };
 
@@ -130,8 +130,8 @@ const EvidenceTab = ({
       const list: any = await API.graphql(
         graphqlOperation(customQueries.listCurriculumsForLessons, {
           filter: {
-            institutionID: {eq: currentLesson.institutionID},
-          },
+            institutionID: {eq: currentLesson.institutionID}
+          }
         })
       );
       const curriculums = list.data?.listCurriculums?.items;
@@ -148,7 +148,7 @@ const EvidenceTab = ({
           selectedCurriculums.push({
             ...curriculum,
             assignedSyllabi: assignedSyllabi.map((syllabus: any) => syllabus.name),
-            assignedSyllabusId: assignedSyllabi.map((syllabus: any) => syllabus.id),
+            assignedSyllabusId: assignedSyllabi.map((syllabus: any) => syllabus.id)
           });
         }
       });
@@ -253,7 +253,7 @@ const LessonModule = ({currentLesson}: {currentLesson: UniversalLesson}) => {
   const tabs = [
     {name: 'Objectives', current: true},
     {name: 'Resources', current: false},
-    {name: 'Evidences', current: false},
+    {name: 'Evidences', current: false}
   ];
   const [selectedMeasurements, setSelectedMeasurements] = useState([]);
   const [checkedEvidence, setCheckedEvidence] = useState([]);
@@ -265,7 +265,7 @@ const LessonModule = ({currentLesson}: {currentLesson: UniversalLesson}) => {
   const dataList = map(currentLesson?.lessonPlan, (lesson) => ({
     name: lesson?.title,
     time: `${lesson?.estTime} min`,
-    instructions: lesson?.description || '--',
+    instructions: lesson?.description || '--'
   }));
 
   const lessonPlanTableConfig = {
@@ -276,9 +276,9 @@ const LessonModule = ({currentLesson}: {currentLesson: UniversalLesson}) => {
       headers: {textColor: 'text-white'},
       dataList: {
         pattern: 'striped',
-        patternConfig: {firstColor: 'bg-gray-800', secondColor: 'bg-gray-700'},
-      },
-    },
+        patternConfig: {firstColor: 'bg-gray-800', secondColor: 'bg-gray-700'}
+      }
+    }
   };
 
   return (
@@ -331,7 +331,7 @@ const LessonModule = ({currentLesson}: {currentLesson: UniversalLesson}) => {
                           className="text-gray-400 remove-draft-styles font-medium text-lg leading-7"
                           dangerouslySetInnerHTML={{
                             // @ts-ignore
-                            __html: currentLesson?.studentMaterials,
+                            __html: currentLesson?.studentMaterials
                           }}></p>
                       </div>
                     ) : (

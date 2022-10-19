@@ -3,15 +3,15 @@ import {Dialog} from '@headlessui/react';
 import {XIcon} from '@heroicons/react/outline';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 
-import * as customQueries from '../../../../../../../customGraphql/customQueries';
-import * as customMutations from '../../../../../../../customGraphql/customMutations';
-import {GlobalContext} from '../../../../../../../contexts/GlobalContext';
-import {getAsset} from '../../../../../../../assets';
-import useDictionary from '../../../../../../../customHooks/dictionary';
+import * as customQueries from 'customGraphql/customQueries';
+import * as customMutations from 'customGraphql/customMutations';
+import {GlobalContext} from 'contexts/GlobalContext';
+import {getAsset} from 'assets';
+import useDictionary from 'customHooks/dictionary';
 
-import FormInput from '../../../../../../Atoms/Form/FormInput';
-import Selector from '../../../../../../Atoms/Form/Selector';
-import CheckBox from '../../../../../../Atoms/Form/CheckBox';
+import FormInput from 'atoms/Form/FormInput';
+import Selector from 'atoms/Form/Selector';
+import CheckBox from 'atoms/Form/CheckBox';
 
 interface IClassroomStudents {
   id?: string;
@@ -45,7 +45,7 @@ const GroupFormComponent = ({
   onCancel,
   open,
   postMutation,
-  roomData,
+  roomData
 }: IGroupFormProps) => {
   const [isMounted, setIsMounted] = useState(false);
 
@@ -61,11 +61,11 @@ const GroupFormComponent = ({
     groupName: '',
     groupAdvisor: {id: '', name: ''},
     groupLocation: '',
-    classroomGroupsStudents: [],
+    classroomGroupsStudents: []
   });
   const [errors, setErrors] = useState({
     groupName: '',
-    groupAdvisor: '',
+    groupAdvisor: ''
   });
   const [classStudents, setClassStudents] = useState<any>([]);
 
@@ -86,7 +86,7 @@ const GroupFormComponent = ({
         groupName: groupData.groupName,
         groupAdvisor: {
           id: groupData.groupAdvisor?.id,
-          name: `${groupData.groupAdvisor?.firstName} ${groupData.groupAdvisor?.lastName}`,
+          name: `${groupData.groupAdvisor?.firstName} ${groupData.groupAdvisor?.lastName}`
         },
         groupLocation: groupData.groupLocation,
         classroomGroupsStudents: groupData?.classroomGroupsStudents.items?.map(
@@ -94,16 +94,16 @@ const GroupFormComponent = ({
             id: student.id,
             checked: true,
             studentAuthId: student.studentAuthId,
-            studentEmail: student.studentEmail,
+            studentEmail: student.studentEmail
           })
-        ),
+        )
       });
     } else {
       setFormValues({
         groupName: '',
         groupAdvisor: {id: '', name: ''},
         groupLocation: '',
-        classroomGroupsStudents: [],
+        classroomGroupsStudents: []
       });
     }
   }, [groupData]);
@@ -124,14 +124,14 @@ const GroupFormComponent = ({
 
     setFormValues((prevValues) => ({
       ...prevValues,
-      [name]: value,
+      [name]: value
     }));
   };
 
   const handleAdvisorChange = (_: string, name: string, id: string) => {
     setFormValues((prevValues) => ({
       ...prevValues,
-      groupAdvisor: {name, id},
+      groupAdvisor: {name, id}
     }));
   };
 
@@ -146,7 +146,7 @@ const GroupFormComponent = ({
         ? [...prevValues.classroomGroupsStudents, {...data, checked}]
         : prevValues.classroomGroupsStudents.map((student) =>
             student.studentAuthId === data.studentAuthId ? {...student, checked} : student
-          ),
+          )
     }));
   };
 
@@ -184,14 +184,14 @@ const GroupFormComponent = ({
                 groupType,
                 advisorEmail: advisorData?.email,
                 advisorAuthId: advisorData?.authId,
-                groupLocation: formValues.groupLocation,
-              },
+                groupLocation: formValues.groupLocation
+              }
             })
           );
           const classRoomGroupStudents = await updateGroupStudents(formValues.groupId);
           postMutation({
             ...result.data?.updateClassroomGroups,
-            classroomGroupsStudents: classRoomGroupStudents,
+            classroomGroupsStudents: classRoomGroupStudents
           });
         } else {
           const result: any = await API.graphql(
@@ -202,8 +202,8 @@ const GroupFormComponent = ({
                 groupType,
                 advisorEmail: advisorData?.email,
                 advisorAuthId: advisorData?.authId,
-                groupLocation: formValues.groupLocation,
-              },
+                groupLocation: formValues.groupLocation
+              }
             })
           );
           const classRoomGroupStudents = await updateGroupStudents(
@@ -211,7 +211,7 @@ const GroupFormComponent = ({
           );
           postMutation({
             ...result.data?.createClassroomGroups,
-            classroomGroupsStudents: classRoomGroupStudents,
+            classroomGroupsStudents: classRoomGroupStudents
           });
         }
         setSaving(false);
@@ -233,10 +233,10 @@ const GroupFormComponent = ({
                   input: {
                     classRoomGroupID: groupId,
                     studentEmail: student.studentEmail,
-                    studentAuthId: student.studentAuthId,
+                    studentAuthId: student.studentAuthId
                     // studentType: string | null,
                     // studentNote: string | null,
-                  },
+                  }
                 })
               );
               classRoomGroupStudents =
@@ -247,8 +247,8 @@ const GroupFormComponent = ({
             const result: any = await API.graphql(
               graphqlOperation(customMutations.deleteClassroomGroupStudents, {
                 input: {
-                  id: student.id, // Database generated unique id
-                },
+                  id: student.id // Database generated unique id
+                }
               })
             );
             classRoomGroupStudents =
@@ -417,7 +417,7 @@ const GroupFormComponent = ({
                                     onChange={(event) =>
                                       handleStudentSelectionDeselection(event, {
                                         studentAuthId: student.studentAuthID,
-                                        studentEmail: student.studentEmail,
+                                        studentEmail: student.studentEmail
                                       })
                                     }
                                     name="studentId"

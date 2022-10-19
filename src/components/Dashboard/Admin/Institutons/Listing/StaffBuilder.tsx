@@ -3,35 +3,35 @@ import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {useHistory, useRouteMatch} from 'react-router';
 import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
 
-import SelectorWithAvatar from '../../../../Atoms/Form/SelectorWithAvatar';
-import Selector from '../../../../Atoms/Form/Selector';
-import Buttons from '../../../../Atoms/Buttons';
-import {reorder} from '../../../../../utilities/strings';
+import SelectorWithAvatar from 'atoms/Form/SelectorWithAvatar';
+import Selector from 'atoms/Form/Selector';
+import Buttons from 'atoms/Buttons';
+import {reorder} from 'utilities/strings';
 
 import {
   getInitialsFromString,
   initials,
   stringToHslColor,
-  createFilterToFetchSpecificItemsOnly,
-} from '../../../../../utilities/strings';
-import {getImageFromS3} from '../../../../../utilities/services';
-import {statusList} from '../../../../../utilities/staticData';
-import {getAsset} from '../../../../../assets';
+  createFilterToFetchSpecificItemsOnly
+} from 'utilities/strings';
+import {getImageFromS3} from 'utilities/services';
+import {statusList} from 'utilities/staticData';
+import {getAsset} from 'assets';
 
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import useDictionary from '../../../../../customHooks/dictionary';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
 
-import * as customQueries from '../../../../../customGraphql/customQueries';
-import * as customMutations from '../../../../../customGraphql/customMutations';
-import * as queries from '../../../../../graphql/queries';
-import * as mutations from '../../../../../graphql/mutations';
+import * as customQueries from 'customGraphql/customQueries';
+import * as customMutations from 'customGraphql/customMutations';
+import * as queries from 'graphql/queries';
+import * as mutations from 'graphql/mutations';
 
-import Loader from '@atoms/Loader';
-import Tooltip from '@atoms/Tooltip';
-import Status from '@atoms/Status';
-import AddButton from '@atoms/Buttons/AddButton';
-import Modal from '@atoms/Modal';
-import Registration from '@components/Dashboard/Admin/UserManagement/Registration';
+import Loader from 'atoms/Loader';
+import Tooltip from 'atoms/Tooltip';
+import Status from 'atoms/Status';
+import AddButton from 'atoms/Buttons/AddButton';
+import Modal from 'atoms/Modal';
+import Registration from 'components/Dashboard/Admin/UserManagement/Registration';
 
 interface StaffBuilderProps {
   instituteId: String;
@@ -122,7 +122,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
             : user.role === 'SUP'
             ? {role: {eq: 'SUP'}}
             : {and: [{role: {ne: 'ADM'}}, {role: {ne: 'SUP'}}, {role: {ne: 'ST'}}]},
-          limit: 500,
+          limit: 500
         })
       );
       let data = list.data.listPeople.items;
@@ -135,7 +135,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
         value: `${item.firstName || ''} ${item.lastName || ''}`,
         authId: item.authId,
         email: item.email,
-        avatar: item.image ? getImageFromS3(item.image) : '',
+        avatar: item.image ? getImageFromS3(item.image) : ''
       }));
       return personsList;
     } catch (err) {
@@ -153,7 +153,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
   const updateStaffSequence = async (newList: any) => {
     let seqItem: any = await API.graphql(
       graphqlOperation(mutations.updateCSequences, {
-        input: {id: `staff_${instituteId}`, sequence: newList},
+        input: {id: `staff_${instituteId}`, sequence: newList}
       })
     );
   };
@@ -161,7 +161,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
   const createStaffSequence = async (newList: any) => {
     let seqItem: any = await API.graphql(
       graphqlOperation(mutations.createCSequences, {
-        input: {id: `staff_${instituteId}`, sequence: [...newList]},
+        input: {id: `staff_${instituteId}`, sequence: [...newList]}
       })
     );
   };
@@ -186,9 +186,9 @@ const StaffBuilder = (props: StaffBuilderProps) => {
         graphqlOperation(queries.listStaff, {
           filter: institutions.length
             ? {
-                ...createFilterToFetchSpecificItemsOnly(institutions, 'institutionID'),
+                ...createFilterToFetchSpecificItemsOnly(institutions, 'institutionID')
               }
-            : {},
+            : {}
         })
       );
 
@@ -232,7 +232,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
           staffAuthID: member.authId,
           staffEmail: member.email,
           status: 'Active',
-          statusChangeDate: new Date().toISOString().split('T')[0],
+          statusChangeDate: new Date().toISOString().split('T')[0]
         };
         const staff: any = await API.graphql(
           graphqlOperation(mutations.createStaff, {input: input})
@@ -287,7 +287,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
     // const staffMembers = await getStaff()
     let [staffLists, sequenceData]: any = await Promise.all([
       await getStaff(),
-      await getStaffSequence(),
+      await getStaffSequence()
     ]);
     let staffSequence = sequenceData?.sequence || [];
     const staffMembersIds = staffLists?.map((item: any) => item.userId);
@@ -474,7 +474,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
                                                   ' ' +
                                                   getInitialsFromString(item.name)[1]
                                               )}`,
-                                              textShadow: '0.1rem 0.1rem 2px #423939b3',
+                                              textShadow: '0.1rem 0.1rem 2px #423939b3'
                                             }}>
                                             {item.name
                                               ? initials(

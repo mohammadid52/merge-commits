@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
-import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
+import {RowWrapperProps} from 'interfaces/UniversalLessonBuilderInterfaces';
 import QuoteBlock from './JumbotronBlock/QuoteBlock';
-import {PartContentSub} from '../../../../interfaces/UniversalLessonInterfaces';
-import {getImageFromS3Static} from '../../../../utilities/services';
+import {PartContentSub} from 'interfaces/UniversalLessonInterfaces';
+import {getImageFromS3Static} from 'utilities/services';
 import CustomizedQuoteBlock from './JumbotronBlock/CustomizeQuoteBlock';
 
 interface JumbotronBlockProps extends RowWrapperProps {
@@ -24,7 +24,7 @@ export const JumbotronBlock = (props: JumbotronBlockProps) => {
     src: '',
     title: '',
     subtitle: '',
-    description: '',
+    description: ''
   });
 
   useEffect(() => {
@@ -66,7 +66,7 @@ export const JumbotronBlock = (props: JumbotronBlockProps) => {
       id={id}
       className={`${animationClass} h-96 flex flex-col mb-4 justify-between z-10 items-center bg-cover bg-center rounded-lg`}
       style={{
-        backgroundImage: ` url(${jumbotronInfo.src})`,
+        backgroundImage: ` url(${jumbotronInfo.src})`
       }}>
       <CustomizedQuoteBlock
         bgClass={bgClass}

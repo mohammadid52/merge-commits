@@ -1,9 +1,9 @@
-import Tooltip from '@components/Atoms/Tooltip';
+import Tooltip from 'atoms/Tooltip';
 import React from 'react';
 import {FaGraduationCap} from 'react-icons/fa';
 import {HiOutlineArrowRight, HiPlus} from 'react-icons/hi';
-import {getImageFromS3Static} from '@utilities/services';
-import CheckBox from '@atoms/Form/CheckBox';
+import {getImageFromS3Static} from 'utilities/services';
+import CheckBox from 'atoms/Form/CheckBox';
 
 interface ICourseMeasurementsProps {
   curriculum: any;
@@ -43,7 +43,7 @@ const CourseMeasurementsCard = ({
   selectedMeasurements,
   editCurrentMeasurement,
   editCurrentTopic,
-  curIdx,
+  curIdx
 }: ICourseMeasurementsProps) => {
   return (
     <div

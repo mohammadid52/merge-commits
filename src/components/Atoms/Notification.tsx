@@ -1,9 +1,9 @@
 /* This example requires Tailwind CSS v2.0+ */
 import {Transition} from '@headlessui/react';
 import {XIcon} from '@heroicons/react/solid';
-import {useNotifications} from '@contexts/NotificationContext';
+import {useNotifications} from 'contexts/NotificationContext';
 import React, {Fragment, useEffect} from 'react';
-import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
+import AnimatedContainer from 'components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 
 export default function Notification() {
   const {notification, clearNotification} = useNotifications();

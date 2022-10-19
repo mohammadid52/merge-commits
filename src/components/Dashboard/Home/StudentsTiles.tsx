@@ -1,13 +1,13 @@
-import {GlobalContext} from '@contexts/GlobalContext';
-import useDictionary from '@customHooks/dictionary';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
 import React, {useContext, useEffect, useState} from 'react';
 import {useHistory} from 'react-router-dom';
-import Buttons from '../../Atoms/Buttons';
-import ContentCard from '../../Atoms/ContentCard';
-import SearchInput from '../../Atoms/Form/SearchInputToggle';
-import ImageAlternate from '../../Atoms/ImageAlternative';
-import SectionTitleV3 from '../../Atoms/SectionTitleV3';
-import Loader from '../../Atoms/Loader';
+import Buttons from 'atoms/Buttons';
+import ContentCard from 'atoms/ContentCard';
+import SearchInput from 'atoms/Form/SearchInputToggle';
+import ImageAlternate from 'atoms/ImageAlternative';
+import SectionTitleV3 from 'atoms/SectionTitleV3';
+import Loader from 'atoms/Loader';
 
 const StudentsTiles = (props: {
   studentsList: any;

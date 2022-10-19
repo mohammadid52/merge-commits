@@ -1,6 +1,6 @@
 import React from 'react';
 import {AiOutlineClockCircle, AiOutlineUser} from 'react-icons/ai';
-import {MinutesToHHMM} from '../../../../../utilities/time';
+import {MinutesToHHMM} from 'utilities/time';
 import {LessonCardProps} from '../../Classroom';
 import Start from '../../Start';
 

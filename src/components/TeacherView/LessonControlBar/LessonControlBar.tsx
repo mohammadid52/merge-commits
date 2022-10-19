@@ -1,7 +1,7 @@
 import React, {useContext, useState} from 'react';
 import {BiBook} from 'react-icons/bi';
-import {GlobalContext} from '../../../contexts/GlobalContext';
-import {UniversalLessonPage} from '../../../interfaces/UniversalLessonInterfaces';
+import {GlobalContext} from 'contexts/GlobalContext';
+import {UniversalLessonPage} from 'interfaces/UniversalLessonInterfaces';
 import StageButton from './StageButton';
 
 interface LessonControlBarProps {
@@ -10,7 +10,7 @@ interface LessonControlBarProps {
 }
 
 const LessonControlBar: React.FC<LessonControlBarProps> = ({
-  handlePageChange,
+  handlePageChange
 }: LessonControlBarProps) => {
   // ~~~~~~~~~~ CONTEXT SPLITTING ~~~~~~~~~~ //
   const gContext = useContext(GlobalContext);

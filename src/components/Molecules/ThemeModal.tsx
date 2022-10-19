@@ -1,7 +1,7 @@
 import {Dialog, Transition} from '@headlessui/react';
 import {XIcon} from '@heroicons/react/outline';
 import React, {Fragment} from 'react';
-import {children, setState} from '../../interfaces';
+import {children, setState} from 'interfaces';
 
 interface IModal {
   open: boolean;
@@ -22,7 +22,7 @@ const ThemeModal = ({
   header,
   dark = true,
   overflowClass = 'overflow-y-auto overflow-x-hidden',
-  max = {w: 256, h: 256},
+  max = {w: 256, h: 256}
 }: IModal) => {
   return (
     <Transition.Root show={open} as={Fragment}>

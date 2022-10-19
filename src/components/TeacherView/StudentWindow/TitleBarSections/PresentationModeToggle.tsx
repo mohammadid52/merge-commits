@@ -1,10 +1,8 @@
+import Buttons from 'atoms/Buttons';
+import useLessonControls from 'customHooks/lessonControls';
 import React, {useEffect} from 'react';
-import useLessonControls from '@customHooks/lessonControls';
-import {getLocalStorageData, setLocalStorageData} from '@utilities/localStorage';
-import {FaCompress, FaExpand} from 'react-icons/fa';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
+import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
 import {StudentWindowTitleBarProps} from '../StudentWindowTitleBar';
-import Buttons from '@components/Atoms/Buttons';
 
 interface IFullscreenToggleProps extends StudentWindowTitleBarProps {
   displayData: any;
@@ -19,12 +17,13 @@ const PresentationModeToggle = ({
   displayData,
   lessonDispatch,
   lessonData,
-  currentPage,
+  currentPage
 }: IFullscreenToggleProps) => {
   const {handleRoomUpdate, resetViewAndShare} = useLessonControls();
   const anyoneIsShared = displayData && displayData[0].studentAuthID !== '';
   const currentSharedPage = displayData && displayData[0].lessonPageID;
   const isPresenting = displayData && displayData[0].isTeacher === true;
+
   const getRoomData = getLocalStorageData('room_info');
 
   //TODO: to refactor this to lessonControls hook
@@ -39,16 +38,16 @@ const PresentationModeToggle = ({
       type: 'SET_ROOM_SUBSCRIPTION_DATA',
       payload: {
         id: getRoomData.id,
-        displayData: [{isTeacher: true, studentAuthID: '0', lessonPageID: pageID}],
-      },
+        displayData: [{isTeacher: true, studentAuthID: '0', lessonPageID: pageID}]
+      }
     });
     setLocalStorageData('room_info', {
       ...getRoomData,
-      displayData: [{isTeacher: true, studentAuthID: '0', lessonPageID: pageID}],
+      displayData: [{isTeacher: true, studentAuthID: '0', lessonPageID: pageID}]
     });
     await handleRoomUpdate({
       id: roomID,
-      displayData: [{isTeacher: true, studentAuthID: '0', lessonPageID: pageID}],
+      displayData: [{isTeacher: true, studentAuthID: '0', lessonPageID: pageID}]
     });
   };
 
@@ -76,13 +75,6 @@ const PresentationModeToggle = ({
 
   return (
     <div className="w-1/3 flex justify-center h-8 align-middle leading-8 ">
-      {/* <span
-        onClick={() => handlePresentationToggle(isPresenting, anyoneIsShared)}
-        className={`${
-          isPresenting ? 'text-red-500' : theme.textColor[themeColor]
-        } w-auto h-6 my-auto text-sm underline leading-4 transform hover:scale-110 transition-transform duration-150 p-1 cursor-pointer`}>
-        {isPresenting ? 'Stop Presenting' : 'Start Presenting'}
-      </span> */}
       <Buttons
         overrideClass
         btnClass={`${

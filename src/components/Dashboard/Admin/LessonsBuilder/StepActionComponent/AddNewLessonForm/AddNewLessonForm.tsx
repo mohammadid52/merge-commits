@@ -1,12 +1,12 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {Storage} from '@aws-amplify/storage';
 import React, {useContext, useState} from 'react';
-import {GlobalContext} from '../../../../../../contexts/GlobalContext';
-import * as customMutations from '../../../../../../customGraphql/customMutations';
-import useDictionary from '../../../../../../customHooks/dictionary';
-import * as mutations from '../../../../../../graphql/mutations';
-import Buttons from '../../../../../Atoms/Buttons';
-import RichTextEditor from '../../../../../Atoms/RichTextEditor';
+import {GlobalContext} from 'contexts/GlobalContext';
+import * as customMutations from 'customGraphql/customMutations';
+import useDictionary from 'customHooks/dictionary';
+import * as mutations from 'graphql/mutations';
+import Buttons from 'atoms/Buttons';
+import RichTextEditor from 'atoms/RichTextEditor';
 import ProfileCropModal from '../../../../Profile/ProfileCropModal';
 import {InitialData, InputValueObject} from '../../LessonBuilder';
 import LessonCard from './LessonCard';
@@ -34,7 +34,7 @@ const Card = ({
   cardTitle,
   className = '',
   children,
-  rightSide,
+  rightSide
 }: {
   cardTitle: string;
   className?: string;
@@ -71,7 +71,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
 
     lessonId,
     lessonPlanAttachment,
-    institutionList,
+    institutionList
   } = props;
 
   const {clientKey, userLanguage} = useContext(GlobalContext);
@@ -87,7 +87,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
     image: '',
     studentSummary: '',
     imageCaption: '',
-    isError: true,
+    isError: true
   });
   const [showCropper, setShowCropper] = useState(false);
   const [imageData, setImageData] = useState(null);
@@ -96,12 +96,12 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
     const {name, value} = e.target;
     setFormData({
       ...formData,
-      [name]: value,
+      [name]: value
     });
     setUnsavedChanges(true);
     setValidation({
       ...validation,
-      [name === 'imageCaption' ? 'image' : name]: '',
+      [name === 'imageCaption' ? 'image' : name]: ''
     });
   };
 
@@ -111,14 +111,14 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
       [field]: {
         id: id,
         name: name,
-        value: val,
-      },
+        value: val
+      }
     }));
     setUnsavedChanges(true);
 
     setValidation({
       ...validation,
-      [field]: '',
+      [field]: ''
     });
     if (field === 'institution') {
       fetchStaffByInstitution(id);
@@ -128,7 +128,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
   const onSelectTargetAudience = (val: string, name: string, id: string) => {
     setFormData((prevData: InitialData) => ({
       ...prevData,
-      targetAudience: name,
+      targetAudience: name
     }));
   };
 
@@ -151,11 +151,11 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
     }
     setFormData({
       ...formData,
-      languages: updatedList,
+      languages: updatedList
     });
     setValidation({
       ...validation,
-      languages: '',
+      languages: ''
     });
     setUnsavedChanges(true);
   };
@@ -181,7 +181,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
     setFormData({
       ...formData,
       [fieldHtml]: html,
-      [field]: text,
+      [field]: text
     });
     setUnsavedChanges(true);
   };
@@ -198,7 +198,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
     const imageUrl = URL.createObjectURL(image ? image : fileObj);
     setFormData({
       ...formData,
-      imagePreviewUrl: imageUrl,
+      imagePreviewUrl: imageUrl
     });
     // setImagePreviewUrl(imageUrl);
     toggleCropper();
@@ -207,7 +207,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
   const onDurationSelect = (_: any, name: string) => {
     setFormData({
       ...formData,
-      duration: name,
+      duration: name
     });
   };
 
@@ -218,7 +218,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
       Storage.put(`${fileName}`, file, {
         contentType: type,
         acl: 'public-read',
-        ContentEncoding: 'base64',
+        ContentEncoding: 'base64'
       })
         .then((result: any) => {
           console.log('File successfully uploaded to s3', result);
@@ -228,7 +228,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
           setValidation((prevValidation) => ({
             ...prevValidation,
             isError: true,
-            image: 'Unable to upload image. Please try again later. ',
+            image: 'Unable to upload image. Please try again later. '
           }));
           console.log('Error in uploading file to s3', err);
           reject(err);
@@ -318,7 +318,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
             duration: Number(formData.duration),
             resources: '',
             darkMode: true,
-            label: '',
+            label: ''
           };
 
           const result: any = await API.graphql(
@@ -349,7 +349,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
             studentMaterials: formData.studentMaterials,
             cardCaption: formData.imageCaption,
             duration: Number(formData.duration),
-            targetAudience: formData.targetAudience || null,
+            targetAudience: formData.targetAudience || null
           };
           const results: any = await API.graphql(
             graphqlOperation(customMutations.updateUniversalLesson, {input: input})
@@ -367,7 +367,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
               imageCaption: '',
               institution: '',
               languages: '',
-              studentSummary: '',
+              studentSummary: ''
             });
             postLessonCreation(lessonsData?.id, 'update');
           }
@@ -382,7 +382,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
             image: '',
             imageCaption: '',
             languages: '',
-            studentSummary: '',
+            studentSummary: ''
           });
         }
       }
@@ -401,7 +401,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
     imageCaption,
     imagePreviewUrl = '',
     studentSummary = '',
-    targetAudience,
+    targetAudience
   } = formData;
 
   const [showUploadModal, setShowUploadModal] = useState(false);

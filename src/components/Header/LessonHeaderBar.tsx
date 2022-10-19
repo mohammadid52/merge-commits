@@ -1,18 +1,16 @@
-import React, {useContext, useEffect, useState} from 'react';
-import {match, useHistory, useRouteMatch} from 'react-router-dom';
-import {useOutsideAlerter} from '../General/hooks/outsideAlerter';
+import {StudentPageInput} from 'interfaces/UniversalLessonInterfaces';
+import Modal from 'atoms/Modal';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
+import React, {useEffect, useState} from 'react';
+import ReactPlayer from 'react-player';
+import {useHistory, useRouteMatch} from 'react-router-dom';
+import {getLocalStorageData} from 'utilities/localStorage';
+import {LessonHeaderBarProps} from 'interfaces/LessonComponentsInterfaces';
 import PositiveAlert from '../General/Popup';
 import LessonTopMenu from '../Lesson/Navigation/LessonTopMenu';
 import SideMenu from '../Lesson/Navigation/SideMenu';
-import {LessonHeaderBarProps} from '../../interfaces/LessonComponentsInterfaces';
-import {GlobalContext} from '../../contexts/GlobalContext';
-import {getLocalStorageData} from '../../utilities/localStorage';
-import useStudentTimer from '../../customHooks/timer';
-import Modal from '@components/Atoms/Modal';
-import ReactPlayer from 'react-player';
-import useTailwindBreakpoint from '@customHooks/tailwindBreakpoint';
 import VideoWidget from '../Lesson/Navigation/Widgets/VideoWidget';
-import {StudentPageInput} from '@interfaces/UniversalLessonInterfaces';
 
 const LessonHeaderBar = ({
   overlay,
@@ -25,7 +23,7 @@ const LessonHeaderBar = ({
   getLessonCompletedValue
 }: LessonHeaderBarProps) => {
   // ~~~~~~~~~~ CONTEXT SPLITTING ~~~~~~~~~~ //
-  const gContext = useContext(GlobalContext);
+  const gContext = useGlobalContext();
   const user = gContext.state.user;
   const lessonState = gContext.lessonState;
   const lessonDispatch = gContext.lessonDispatch;
@@ -33,11 +31,6 @@ const LessonHeaderBar = ({
 
   const history = useHistory();
   const match = useRouteMatch();
-
-  const initializeTimer = useStudentTimer();
-
-  if (initializeTimer) {
-  }
 
   // ##################################################################### //
   // ################## LOGIC FOR RETURNING TO CLASSROOM ################# //
@@ -58,6 +51,9 @@ const LessonHeaderBar = ({
       setWaiting(false);
       setSafeToLeave(true);
     }
+    setTimeout(() => {
+      history.push(`/dashboard/classroom/${getRoomData.id}`);
+    }, 1500);
   };
 
   const handleNotebookSave = () => {
@@ -159,7 +155,6 @@ const LessonHeaderBar = ({
     : '';
   useEffect(() => {
     if (typeof thisPageVideoLink === 'string' && thisPageVideoLink.length > 0) {
-      console.log('I am running...');
       setVideoLink(thisPageVideoLink);
 
       if (lessonState.lessonProgress === lessonState.currentPage && !leaveModalVisible) {
@@ -231,6 +226,7 @@ const LessonHeaderBar = ({
   // ~~~~~~~~ TEACHER IS PRESENTING ~~~~~~~~ //
   const teacherIsPresenting = lessonState.displayData[0].isTeacher === true;
   const presentedPageID = lessonState.displayData[0].lessonPageID;
+
   useEffect(() => {
     // console.log(getPageIndex(presentedPageID, lessonState.lessonData.lessonPlan));
     if (teacherIsPresenting && presentedPageID) {

@@ -1,19 +1,16 @@
 import {remove} from 'lodash';
 import React, {useContext, useEffect, useState} from 'react';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import useDictionary from '../../../../../customHooks/dictionary';
-import {IContentTypeComponentProps} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
-import {
-  Options,
-  PartContentSub,
-} from '../../../../../interfaces/UniversalLessonInterfaces';
-import Info from '../../../../Atoms/Alerts/Info';
-import Buttons from '../../../../Atoms/Buttons';
-import FormInput from '../../../../Atoms/Form/FormInput';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import {IContentTypeComponentProps} from 'interfaces/UniversalLessonBuilderInterfaces';
+import {Options, PartContentSub} from 'interfaces/UniversalLessonInterfaces';
+import Info from 'atoms/Alerts/Info';
+import Buttons from 'atoms/Buttons';
+import FormInput from 'atoms/Form/FormInput';
 import Toggle from '../Toggle';
 import {v4 as uuidv4} from 'uuid';
 import {FaTrashAlt} from 'react-icons/fa';
-import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
+import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
 import DividerBlock from '../../../UniversalLessonBlockComponents/Blocks/DividerBlock';
 import {FORM_TYPES} from '../common/constants';
 import {nanoid} from 'nanoid';
@@ -29,33 +26,33 @@ const initialInputFieldsState = [
     id: 'line_1',
 
     label: '',
-    text: 'Poem line starter one',
+    text: 'Poem line starter one'
   },
   {
     id: 'line_2',
 
     label: '',
-    text: 'Poem line starter two',
+    text: 'Poem line starter two'
   },
   {
     id: 'line_3',
 
     label: '',
-    text: 'Poem line starter three',
+    text: 'Poem line starter three'
   },
   {
     id: 'line_4',
 
     label: '',
-    text: 'Poem line starter four',
-  },
+    text: 'Poem line starter four'
+  }
 ];
 
 const newLinestarterObj: Options = {
   id: 'line_',
 
   label: '',
-  text: 'New linestarter...',
+  text: 'New linestarter...'
 };
 
 const WritingExerciseModal = (props: WEProps) => {
@@ -65,14 +62,14 @@ const WritingExerciseModal = (props: WEProps) => {
     createNewBlockULBHandler,
     updateBlockContentULBHandler,
     askBeforeClose,
-    setUnsavedChanges,
+    setUnsavedChanges
   } = props;
   const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
 
   // states here
   const [enable, setEnable] = useState<{title: boolean; lineStarter: boolean}>({
     title: true,
-    lineStarter: false,
+    lineStarter: false
   });
 
   useEffect(() => {
@@ -136,7 +133,7 @@ const WritingExerciseModal = (props: WEProps) => {
   const handleAddNewLinestarter = () => {
     const longerInputFieldsArray: Options[] = [
       ...inputFieldsArray,
-      {...newLinestarterObj, id: `${newLinestarterObj.id}${uuidv4()}`},
+      {...newLinestarterObj, id: `${newLinestarterObj.id}${uuidv4()}`}
     ];
     setInputFieldsArray(longerInputFieldsArray);
   };
@@ -151,7 +148,7 @@ const WritingExerciseModal = (props: WEProps) => {
 
     const input = {
       id: list.id,
-      lessonPlan: [...list.lessonPlan],
+      lessonPlan: [...list.lessonPlan]
     };
 
     await updateLessonPageToDB(input);
@@ -162,14 +159,14 @@ const WritingExerciseModal = (props: WEProps) => {
       id: `writing-exercise-title-${uniqKey}`,
       type: FORM_TYPES.WRITING_EXERCISE,
       label: enable.title ? fields.title : null,
-      value: enable.title ? '' : null,
+      value: enable.title ? '' : null
     };
 
     const lineStarterObject = {
       id: `${FORM_TYPES.WRITING_EXERCISE}-content-${uniqKey}`,
       type: `${FORM_TYPES.WRITING_EXERCISE}-content`,
       options: enable.lineStarter ? inputFieldsArray : null,
-      value: '',
+      value: ''
     };
 
     if (isEditingMode) {

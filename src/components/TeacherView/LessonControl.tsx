@@ -1,22 +1,22 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import UserInformation from '@components/Dashboard/Admin/UserManagement/UserInformation';
-import {useNotifications} from '@contexts/NotificationContext';
-import useLessonControls from '@customHooks/lessonControls';
-import useTailwindBreakpoint from '@customHooks/tailwindBreakpoint';
-import useAuth from '@customHooks/useAuth';
+import UserInformation from 'components/Dashboard/Admin/UserManagement/UserInformation';
+import {useNotifications} from 'contexts/NotificationContext';
+import useLessonControls from 'customHooks/lessonControls';
+import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
+import useAuth from 'customHooks/useAuth';
 import React, {Suspense, useContext, useEffect, useState} from 'react';
 import {useParams} from 'react-router';
 import {useHistory, useRouteMatch} from 'react-router-dom';
-import {GlobalContext} from '../../contexts/GlobalContext';
-import * as customQueries from '../../customGraphql/customQueries';
-import * as mutations from '../../graphql/mutations';
-import * as queries from '../../graphql/queries';
-import * as subscriptions from '../../graphql/subscriptions';
+import {GlobalContext} from 'contexts/GlobalContext';
+import * as customQueries from 'customGraphql/customQueries';
+import * as mutations from 'graphql/mutations';
+import * as queries from 'graphql/queries';
+import * as subscriptions from 'graphql/subscriptions';
 import {
   StudentPageInput,
   UniversalLessonStudentData
-} from '../../interfaces/UniversalLessonInterfaces';
-import {getLocalStorageData, setLocalStorageData} from '../../utilities/localStorage';
+} from 'interfaces/UniversalLessonInterfaces';
+import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
 import ErrorBoundary from '../Error/ErrorBoundary';
 import PositiveAlert from '../General/Popup';
 import ComponentLoading from '../Lesson/Loading/ComponentLoading';
@@ -314,7 +314,7 @@ const LessonControl = () => {
         console.error('handleRoomUpdate - ', e);
       }
     } else {
-      console.log('incorrect data for handleRoomUpdate() - ', payload);
+      console.error('incorrect data for handleRoomUpdate() - ', payload);
     }
   };
 

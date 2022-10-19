@@ -4,12 +4,12 @@ import {findIndex} from 'lodash';
 import {nanoid} from 'nanoid';
 import React, {SetStateAction, useContext, useState} from 'react';
 import {useParams} from 'react-router-dom';
-import {GlobalContext} from '../../../contexts/GlobalContext';
-import useDeviceDetect from '../../../customHooks/deviceDetect';
-import * as mutations from '../../../graphql/mutations';
-import * as queries from '../../../graphql/queries';
-import {UniversalJournalData} from '../../../interfaces/UniversalLessonInterfaces';
-import {getLocalStorageData} from '../../../utilities/localStorage';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDeviceDetect from 'customHooks/deviceDetect';
+import * as mutations from 'graphql/mutations';
+import * as queries from 'graphql/queries';
+import {UniversalJournalData} from 'interfaces/UniversalLessonInterfaces';
+import {getLocalStorageData} from 'utilities/localStorage';
 import ExpandedMenu from './ExpandedMenu';
 import {FloatingBar} from './FloatingBar';
 
@@ -44,14 +44,14 @@ const INITIAL_NOTESDATA: UniversalJournalData = {
     {
       domID: `title_${nanoid(4)}`,
       type: 'header',
-      input: 'Default Title',
+      input: 'Default Title'
     },
     {
       domID: `note_${nanoid(4)}`,
       type: 'content',
-      input: '<p>Enter notes here...</p>',
-    },
-  ],
+      input: '<p>Enter notes here...</p>'
+    }
+  ]
 };
 
 const FloatingSideMenu = () => {
@@ -147,8 +147,8 @@ const FloatingSideMenu = () => {
         filter: {
           studentAuthID: {eq: studentAuthId},
           lessonID: {eq: lessonID},
-          type: {eq: 'class-note'},
-        },
+          type: {eq: 'class-note'}
+        }
       };
 
       const notesData: any = await API.graphql(
@@ -174,7 +174,7 @@ const FloatingSideMenu = () => {
           feedbacks: newJournalEntry.feedbacks,
           entryData: newJournalEntry.entryData,
           roomID: getRoomData.id,
-          syllabusLessonID: getRoomData.activeSyllabus,
+          syllabusLessonID: getRoomData.activeSyllabus
         });
       } else {
         const existJournalEntry = notesDataRows[0];
@@ -187,7 +187,7 @@ const FloatingSideMenu = () => {
           feedbacks: existJournalEntry.feedbacks,
           entryData: existJournalEntry.entryData,
           roomID: getRoomData.id,
-          syllabusLessonID: getRoomData.activeSyllabus,
+          syllabusLessonID: getRoomData.activeSyllabus
         });
       }
     } catch (e) {
@@ -218,7 +218,7 @@ const FloatingSideMenu = () => {
           }
         }),
         roomID: getRoomData.id,
-        syllabusLessonID: getRoomData.activeSyllabus,
+        syllabusLessonID: getRoomData.activeSyllabus
       };
 
       const newJournalData: any = await API.graphql(
@@ -243,7 +243,7 @@ const FloatingSideMenu = () => {
         studentEmail: notesData.studentEmail,
         entryData: notesData.entryData,
         roomID: getRoomData.id,
-        syllabusLessonID: getRoomData.activeSyllabus,
+        syllabusLessonID: getRoomData.activeSyllabus
       };
       const updateJournalData: any = await API.graphql(
         graphqlOperation(mutations.updateUniversalJournalData, {input})
@@ -267,7 +267,7 @@ const FloatingSideMenu = () => {
         } else {
           return entryObj;
         }
-      }),
+      })
     };
     // console.log('updatedContent - ', updatedNotesData);
     setNotesData(updatedNotesData);

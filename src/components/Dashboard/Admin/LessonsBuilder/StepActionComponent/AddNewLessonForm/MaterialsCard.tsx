@@ -1,15 +1,15 @@
 import React from 'react';
-import RichTextEditor from '../../../../../Atoms/RichTextEditor';
+import RichTextEditor from 'atoms/RichTextEditor';
 import AnimatedContainer from '../../../../../Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import {
   Tabs2,
-  useTabs,
+  useTabs
 } from '../../../../../Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/Tabs';
 
 const MaterialsCard = ({purposeHtml, studentMaterials, setEditorContent}: any) => {
   const tabs = [
     {name: 'Teacher', current: true},
-    {name: 'Student', current: false},
+    {name: 'Student', current: false}
   ];
 
   const {curTab, setCurTab, helpers} = useTabs(tabs);

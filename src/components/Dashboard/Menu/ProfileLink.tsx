@@ -1,8 +1,8 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {useHistory, useRouteMatch} from 'react-router-dom';
-import {GlobalContext} from '../../../contexts/GlobalContext';
-import {getImageFromS3} from '../../../utilities/services';
-import {getUserRoleString, stringToHslColor} from '../../../utilities/strings';
+import {GlobalContext} from 'contexts/GlobalContext';
+import {getImageFromS3} from 'utilities/services';
+import {getUserRoleString, stringToHslColor} from 'utilities/strings';
 import {LinkProps} from './Links';
 
 const ProfileLink: React.FC<LinkProps> = (linkProps: LinkProps) => {
@@ -61,7 +61,7 @@ const ProfileLink: React.FC<LinkProps> = (linkProps: LinkProps) => {
                       ? stringToHslColor(state.user.firstName + ' ' + state.user.lastName)
                       : '#272730'
                   }`,
-                  textShadow: '0.1rem 0.1rem 2px #423939b3',
+                  textShadow: '0.1rem 0.1rem 2px #423939b3'
                 }}
                 className="rounded flex justify-center items-center text-xs text-white h-full font-sans">
                 {`${initials(state.user.firstName, state.user.lastName)}`}

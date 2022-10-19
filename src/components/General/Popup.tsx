@@ -1,4 +1,4 @@
-import Loader from '@components/Atoms/Loader';
+import Loader from 'atoms/Loader';
 import React from 'react';
 import {useOutsideAlerter} from './hooks/outsideAlerter';
 
@@ -40,7 +40,7 @@ const PosAlert = (props: WritingAlertProps) => {
     theme,
     fill,
     disableButton,
-    id,
+    id
   } = props;
   const {visible, setVisible, ref} = useOutsideAlerter(false);
 
@@ -54,20 +54,20 @@ const PosAlert = (props: WritingAlertProps) => {
         return {
           bg: 'bg-dark-gray',
           font: 'text-white',
-          icon: '#fff',
+          icon: '#fff'
         };
         break;
       case 'light':
         return {
           bg: 'bg-white',
           font: 'text-black',
-          icon: '#32323e',
+          icon: '#32323e'
         };
       default:
         return {
           bg: 'bg-dark-gray',
           font: 'text-white',
-          icon: '#fff',
+          icon: '#fff'
         };
     }
   })();

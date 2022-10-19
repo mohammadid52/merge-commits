@@ -1,13 +1,9 @@
 import React, {useState, useRef, useContext, useEffect} from 'react';
 import {IoIosAdd} from 'react-icons/io';
-import {getAsset} from '../../../assets';
-import {GlobalContext} from '../../../contexts/GlobalContext';
-import {getImageFromS3} from '../../../utilities/services';
-import {
-  initials,
-  getInitialsFromString,
-  stringToHslColor
-} from '../../../utilities/strings';
+import {getAsset} from 'assets';
+import {GlobalContext} from 'contexts/GlobalContext';
+import {getImageFromS3} from 'utilities/services';
+import {initials, getInitialsFromString, stringToHslColor} from 'utilities/strings';
 
 interface selectorProps {
   list?: {id: number; name: string; avatar?: string}[];

@@ -1,14 +1,14 @@
 // import {PersonalizeEvents} from 'aws-sdk';
 import {getAsset} from 'assets';
 import React, {useContext, useEffect, useState} from 'react';
-import {GlobalContext} from '../../../contexts/GlobalContext';
+import {GlobalContext} from 'contexts/GlobalContext';
 
 interface RosterRowEmptyProps {
   message?: string;
 }
 
 const RosterRowEmpty: React.FC<RosterRowEmptyProps> = ({
-  message,
+  message
 }: RosterRowEmptyProps) => {
   // ~~~~~~~~~~~~~~~ CONTEXT ~~~~~~~~~~~~~~~ //
 

@@ -1,16 +1,16 @@
-import React, { useContext } from 'react';
-import { GlobalContext } from '../../contexts/GlobalContext';
+import React, {useContext} from 'react';
+import {GlobalContext} from 'contexts/GlobalContext';
 
 interface SubSectionTab {
   id: string;
   selectedCondition: boolean;
-  label: string
+  label: string;
   counter?: number;
 }
 
 const SubSectionTab = (props: SubSectionTab) => {
   const {id, selectedCondition, label, counter} = props;
-  const { theme } = useContext(GlobalContext);
+  const {theme} = useContext(GlobalContext);
   return (
     <div className={`w-auto flex flex-row`}>
       <h2
@@ -20,14 +20,12 @@ const SubSectionTab = (props: SubSectionTab) => {
         }`}>
         {label}
       </h2>
-      {
-        typeof counter !== 'undefined' ? (
-          <div className={`w-5 h-5 p-1 mt-4 ml-2 bg-ketchup rounded-full flex justify-center align-center items-center content-center`}>
-            <span className={`w-auto h-auto text-xs text-white font-bold`}>{counter}</span>
-          </div>
-        ) : null
-      }
-
+      {typeof counter !== 'undefined' ? (
+        <div
+          className={`w-5 h-5 p-1 mt-4 ml-2 bg-ketchup rounded-full flex justify-center align-center items-center content-center`}>
+          <span className={`w-auto h-auto text-xs text-white font-bold`}>{counter}</span>
+        </div>
+      ) : null}
     </div>
   );
 };

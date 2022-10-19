@@ -1,18 +1,18 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {Storage} from '@aws-amplify/storage';
-import Buttons from '@components/Atoms/Buttons';
-import {GlobalContext} from '@contexts/GlobalContext';
+import Buttons from 'atoms/Buttons';
+import {GlobalContext} from 'contexts/GlobalContext';
 import {EditQuestionModalDict} from '@dictionary/dictionary.iconoclast';
 import {Transition} from '@headlessui/react';
-import {removeExtension} from '@utilities/functions';
-import {getImageFromS3Static} from '@utilities/services';
+import {removeExtension} from 'utilities/functions';
+import {getImageFromS3Static} from 'utilities/services';
 import {findIndex, map, noop, reject, remove, update} from 'lodash';
 import {nanoid} from 'nanoid';
 import React, {useCallback, useContext, useRef, useState} from 'react';
 import ClickAwayListener from 'react-click-away-listener';
 import {useDropzone} from 'react-dropzone';
-import {getAsset} from '../../../../assets';
-import * as mutations from '../../../../graphql/mutations';
+import {getAsset} from 'assets';
+import * as mutations from 'graphql/mutations';
 import {UPLOAD_KEYS} from '../../../Lesson/constants';
 
 // ##################################################################### //
@@ -46,7 +46,7 @@ const File = ({
   file,
   updateFilename,
   id,
-  UPLOAD_KEY,
+  UPLOAD_KEY
 }: IFileComponent) => {
   const genStatus = () => {
     switch (_status) {
@@ -103,7 +103,7 @@ const File = ({
   const Btn = ({
     label,
     onClick,
-    color = 'green',
+    color = 'green'
   }: {
     label: string;
     color?: string;
@@ -255,7 +255,7 @@ const UploadAttachment = ({
   lessonID,
   syllabusLessonID,
   roomID,
-  toggleDialog,
+  toggleDialog
 }: IUploadAttachmentProps) => {
   const gContext = useContext(GlobalContext);
   const state = gContext.state;
@@ -322,7 +322,7 @@ const UploadAttachment = ({
           updateStatus(currentFile, 'progress');
 
           updateProgress(currentFile, progress.toFixed(0));
-        },
+        }
       })
         .then((result) => {
           updateStatus(currentFile, 'success');
@@ -370,12 +370,12 @@ const UploadAttachment = ({
           ...map(filesUploading, (file: any) => ({
             fileName: file.fileName,
             fileKey: file.fileKey,
-            fileSize: getSizeInBytesInt(file.file?.size),
-          })),
+            fileSize: getSizeInBytesInt(file.file?.size)
+          }))
         ],
         lessonPageID: lessonPageID,
         lessonID: lessonID,
-        syllabusLessonID: syllabusLessonID,
+        syllabusLessonID: syllabusLessonID
       };
 
       const result: any = await API.graphql(
@@ -402,7 +402,7 @@ const UploadAttachment = ({
         progress: fakeInitProgress.toString(),
         file,
         fileName: file.name,
-        id,
+        id
       };
       filesUploading.push(initState);
 
@@ -446,7 +446,7 @@ const UploadAttachment = ({
   );
 
   const {getRootProps, getInputProps, isDragActive} = useDropzone({
-    onDrop: uploadFile,
+    onDrop: uploadFile
   });
 
   const handleFileSelection = async (e: any) => {

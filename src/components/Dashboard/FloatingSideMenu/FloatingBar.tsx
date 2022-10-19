@@ -4,7 +4,7 @@ import {FloatingSideMenuProps} from './FloatingSideMenu';
 import {NotesLauncher} from './Launchers/NotesLauncher';
 import {ChatroomListLauncher} from './Launchers/ChatroomListLauncher';
 // import {FilesListLauncher} from './Launchers/FilesListLauncher';
-import {GlobalContext} from '../../../contexts/GlobalContext';
+import {GlobalContext} from 'contexts/GlobalContext';
 
 export const FloatingBar = (props: FloatingSideMenuProps) => {
   const {lessonState} = useContext(GlobalContext);

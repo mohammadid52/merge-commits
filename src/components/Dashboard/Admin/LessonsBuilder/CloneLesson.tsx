@@ -1,15 +1,15 @@
-import Buttons from '@atoms/Buttons';
-import Modal from '@atoms/Modal';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import {GlobalContext} from '@contexts/GlobalContext';
-import useDictionary from '@customHooks/dictionary';
-import * as mutations from '@graphql/mutations';
-import {UniversalLesson} from '@interfaces/UniversalLessonInterfaces';
-import {wait} from '@utilities/functions';
+import {UniversalLesson} from 'interfaces/UniversalLessonInterfaces';
 import {getAsset} from 'assets';
+import Buttons from 'atoms/Buttons';
+import Modal from 'atoms/Modal';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import * as mutations from 'graphql/mutations';
 import {map} from 'lodash';
 import React, {useContext, useState} from 'react';
 import {useHistory, useRouteMatch} from 'react-router';
+import {wait} from 'utilities/functions';
 import {v4 as uuidv4} from 'uuid';
 
 interface Props {
@@ -67,16 +67,16 @@ const CloneLesson = ({setShowCloneModal, getCloneLessonDetails}: Props) => {
                                   ptValue.options && ptValue.options.length > 0
                                     ? map(ptValue.options, (opt) => ({
                                         ...opt,
-                                        id: uuidv4(),
+                                        id: uuidv4()
                                       }))
-                                    : null,
+                                    : null
                               }))
-                            : [],
+                            : []
                       }))
-                    : [],
+                    : []
               }))
-            : [],
-      })),
+            : []
+      }))
     };
 
     return replaceAllExistingIds;

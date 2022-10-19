@@ -1,14 +1,14 @@
-import React, { useContext, useState } from 'react';
-import { GlobalContext } from '../../../contexts/GlobalContext';
-import useDictionary from '../../../customHooks/dictionary';
-import { LessonProps } from './Classroom';
+import React, {useContext, useState} from 'react';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import {LessonProps} from './Classroom';
 import SmallLessonCard from './LessonCards/SmallLessonCard';
 
 const UpcomingLessons: React.FC<LessonProps> = (props: LessonProps) => {
-  const { lessons, activeRoomInfo } = props;
-  const { theme, clientKey, userLanguage } = useContext(GlobalContext);
+  const {lessons, activeRoomInfo} = props;
+  const {theme, clientKey, userLanguage} = useContext(GlobalContext);
   const [openCards, setOpenCards] = useState<string>('');
-  const { classRoomDict } = useDictionary(clientKey);
+  const {classRoomDict} = useDictionary(clientKey);
 
   return (
     <div className={`relative flex flex-wrap justify-start`}>

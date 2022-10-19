@@ -3,21 +3,21 @@ import {useRouteMatch, useHistory} from 'react-router-dom';
 import {FaThList, FaFileAlt, FaFileMedical} from 'react-icons/fa';
 import {IoArrowUndoCircleOutline} from 'react-icons/io5';
 
-import Buttons from '../../../../Atoms/Buttons';
-import BreadCrums from '../../../../Atoms/BreadCrums';
-import SectionTitle from '../../../../Atoms/SectionTitle';
-import UnderlinedTabs from '../../../../Atoms/UnderlinedTabs';
+import Buttons from 'atoms/Buttons';
+import BreadCrums from 'atoms/BreadCrums';
+import SectionTitle from 'atoms/SectionTitle';
+import UnderlinedTabs from 'atoms/UnderlinedTabs';
 
-import useDictionary from '../../../../../customHooks/dictionary';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import {useQuery} from '../../../../../customHooks/urlParam';
-import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
+import useDictionary from 'customHooks/dictionary';
+import {GlobalContext} from 'contexts/GlobalContext';
+import {useQuery} from 'customHooks/urlParam';
+import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
 import LessonPlanForm from './LessonPlanForm';
 import ExistingPageView from './ExistingPageView';
 import TemplateView from './TemplateView';
-import {UniversalLesson} from '../../../../../interfaces/UniversalLessonInterfaces';
+import {UniversalLesson} from 'interfaces/UniversalLessonInterfaces';
 import {graphqlOperation, API} from 'aws-amplify';
-import * as customQueries from '../../../../../customGraphql/customQueries';
+import * as customQueries from 'customGraphql/customQueries';
 
 export interface ILessonPlan {
   addNewPageHandler: (content: any) => void;
@@ -37,7 +37,7 @@ const LessonPlan = () => {
   const {
     addNewPageHandler,
     universalLessonDetails,
-    setUniversalLessonDetails,
+    setUniversalLessonDetails
   } = useULBContext();
 
   const params = useQuery(location.search);
@@ -51,25 +51,25 @@ const LessonPlan = () => {
     {
       title: BreadcrumsTitles[userLanguage]['LESSONS'],
       url: '/dashboard/lesson-builder',
-      last: false,
+      last: false
     },
     {
       title: BreadcrumsTitles[userLanguage]['LESSONPLANBUILDER'],
       url: `${match.url}?${lessonId ? `lessonId=${lessonId}}` : ``}`,
-      last: false,
+      last: false
     },
     {
       title: BreadcrumsTitles[userLanguage]['ADD_NEW_LESSON_PLAN'],
       url: `${match.url}/lesson/add/lesson-plan?lessonId=${lessonId}`,
-      last: true,
-    },
+      last: true
+    }
   ];
 
   const fetchUniversalLessonDetails = async () => {
     try {
       const result: any = await API.graphql(
         graphqlOperation(customQueries.getUniversalLesson, {
-          id: lessonId,
+          id: lessonId
         })
       );
       const savedData = result.data.getUniversalLesson;
@@ -115,20 +115,20 @@ const LessonPlan = () => {
       index: 0,
       title: 'New plan from scratch',
       icon: <FaFileMedical />,
-      content: currentTabComp(`${activeTab}`),
+      content: currentTabComp(`${activeTab}`)
     },
     {
       index: 1,
       title: 'Use Existing Page',
       icon: <FaThList />,
-      content: currentTabComp(`${activeTab}`),
+      content: currentTabComp(`${activeTab}`)
     },
     {
       index: 2,
       title: 'Page from Template',
       icon: <FaFileAlt />,
-      content: currentTabComp(`${activeTab}`),
-    },
+      content: currentTabComp(`${activeTab}`)
+    }
   ];
 
   const updateTab = (tab: number) => {

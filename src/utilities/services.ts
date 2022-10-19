@@ -88,7 +88,7 @@ export const getImageFromS3 = (key: string, isPrivate?: boolean) => {
           resolve(result);
         })
         .catch((err) => {
-          console.log('Error in fetching file to s3', err);
+          console.error('Error in fetching file to s3', err);
           reject(err);
         });
     });

@@ -1,6 +1,7 @@
+import {fallbackUrls} from 'assets';
 import React from 'react';
 import {IoKeyOutline} from 'react-icons/io5';
-import {stringToHslColor} from '../../../../utilities/strings';
+import {stringToHslColor} from 'utilities/strings';
 
 interface IRoomViewCardProps {
   handleSectionSelect?: (
@@ -88,10 +89,7 @@ const RoomViewCard = ({
             {roomID !== 'private' ? (
               <img
                 className="h-full w-full object-cover hover:scale-105 transform transition-transform duration-500 z-40"
-                src={
-                  bannerImage ||
-                  'https://selready.s3.us-east-2.amazonaws.com/card_texture.jpg'
-                }
+                src={bannerImage || fallbackUrls.room}
                 alt={bannerImage ? 'notebook cover' : 'default notebook cover'}
               />
             ) : (

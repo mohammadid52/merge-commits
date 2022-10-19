@@ -3,13 +3,13 @@ import React, {useContext, useEffect, useState} from 'react';
 import {remove} from 'lodash';
 import {nanoid} from 'nanoid';
 import {FaTrashAlt} from 'react-icons/fa';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import {EditQuestionModalDict} from '../../../../../dictionary/dictionary.iconoclast';
-import {IContentTypeComponentProps} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
-import {PartContentSub} from '../../../../../interfaces/UniversalLessonInterfaces';
-import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
-import Buttons from '../../../../Atoms/Buttons';
-import FormInput from '../../../../Atoms/Form/FormInput';
+import {GlobalContext} from 'contexts/GlobalContext';
+import {EditQuestionModalDict} from 'dictionary/dictionary.iconoclast';
+import {IContentTypeComponentProps} from 'interfaces/UniversalLessonBuilderInterfaces';
+import {PartContentSub} from 'interfaces/UniversalLessonInterfaces';
+import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
+import Buttons from 'atoms/Buttons';
+import FormInput from 'atoms/Form/FormInput';
 
 interface KeywordModalDialog extends IContentTypeComponentProps {
   inputObj?: any;
@@ -21,15 +21,15 @@ const initialInputFieldsState = [
     id: 'keyword_1',
     type: '',
     label: 'Keyword Title',
-    value: 'Keyword description',
-  },
+    value: 'Keyword description'
+  }
 ];
 
 const newKeywordObj: PartContentSub = {
   id: 'keyword_',
   type: '',
   label: 'Keyword Title',
-  value: 'Keyword description',
+  value: 'Keyword description'
 };
 
 const KeywordModalDialog = ({
@@ -38,7 +38,7 @@ const KeywordModalDialog = ({
   createNewBlockULBHandler,
   askBeforeClose,
   setUnsavedChanges,
-  updateBlockContentULBHandler,
+  updateBlockContentULBHandler
 }: KeywordModalDialog) => {
   const {userLanguage} = useContext(GlobalContext);
   const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
@@ -61,7 +61,7 @@ const KeywordModalDialog = ({
 
     const input = {
       id: list.id,
-      lessonPlan: [...list.lessonPlan],
+      lessonPlan: [...list.lessonPlan]
     };
 
     await updateLessonPageToDB(input);
@@ -86,7 +86,7 @@ const KeywordModalDialog = ({
   const handleAddNewKeyword = () => {
     const longerInputFieldsArray: PartContentSub[] = [
       ...inputFieldsArray,
-      {...newKeywordObj, id: `${newKeywordObj.id}${nanoid(4)}`},
+      {...newKeywordObj, id: `${newKeywordObj.id}${nanoid(4)}`}
     ];
     setInputFieldsArray(longerInputFieldsArray);
   };

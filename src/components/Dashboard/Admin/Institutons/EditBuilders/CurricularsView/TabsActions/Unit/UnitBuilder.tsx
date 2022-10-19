@@ -2,16 +2,14 @@ import React, {useContext, useEffect, useState} from 'react';
 import {useHistory, useParams, useRouteMatch} from 'react-router';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 
-import {GlobalContext} from '../../../../../../../../contexts/GlobalContext';
-import useDictionary from '../../../../../../../../customHooks/dictionary';
-import {useQuery} from '../../../../../../../../customHooks/urlParam';
-import * as customQueries from '../../../../../../../../customGraphql/customQueries';
-import {languageList} from '../../../../../../../../utilities/staticData';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import {useQuery} from 'customHooks/urlParam';
+import * as customQueries from 'customGraphql/customQueries';
+import {languageList} from 'utilities/staticData';
 
-import StepComponent, {
-  IStepElementInterface,
-} from '../../../../../../../Atoms/StepComponent';
-import Loader from '../../../../../../../Atoms/Loader';
+import StepComponent, {IStepElementInterface} from 'atoms/StepComponent';
+import Loader from 'atoms/Loader';
 
 import LessonPlanManager from './LessonPlanManager';
 import UnitFormComponent from './UnitFormComponent';
@@ -47,9 +45,9 @@ const UnitBuilder = ({instId}: any) => {
   const {
     clientKey,
     state: {
-      user: {isSuperAdmin},
+      user: {isSuperAdmin}
     },
-    userLanguage,
+    userLanguage
   } = useContext(GlobalContext);
   const {CommonlyUsedDict, SyllabusDict} = useDictionary(clientKey);
   const [activeStep, setActiveStep] = useState('overview');
@@ -60,7 +58,7 @@ const UnitBuilder = ({instId}: any) => {
     show: false,
     message: '',
     isError: false,
-    lessonError: false,
+    lessonError: false
   });
 
   const initialData: IUnitData = {
@@ -72,7 +70,7 @@ const UnitBuilder = ({instId}: any) => {
     purpose: '',
     objectives: '',
     languages: [{id: '1', name: 'English', value: 'EN'}],
-    lessonHistory: undefined,
+    lessonHistory: undefined
   };
   const [syllabusData, setSyllabusData] = useState<IUnitData>(initialData);
 
@@ -102,7 +100,7 @@ const UnitBuilder = ({instId}: any) => {
       try {
         const result: any = await API.graphql(
           graphqlOperation(customQueries.getUniversalSyllabus, {
-            id: unitId,
+            id: unitId
           })
         );
         const savedData = result.data.getUniversalSyllabus;
@@ -119,7 +117,7 @@ const UnitBuilder = ({instId}: any) => {
           purpose: savedData.pupose,
           methodology: savedData.methodology,
           policies: savedData.policies,
-          lessonHistory: savedData.lessonHistory,
+          lessonHistory: savedData.lessonHistory
         });
         setLessonsIds(savedData.universalLessonsSeq || []);
         const associatedLessons = savedData.lessons?.items;
@@ -144,11 +142,11 @@ const UnitBuilder = ({instId}: any) => {
         setSavedLessonsList(sortedLessonsList);
         setFetchingDetails(false);
       } catch (err) {
-        console.log('err', err);
+        console.error('err', err);
         setMessages({
           show: true,
           message: SyllabusDict[userLanguage]['MESSAGES']['fetcher'],
-          isError: true,
+          isError: true
         });
         setFetchingDetails(false);
       }
@@ -160,7 +158,7 @@ const UnitBuilder = ({instId}: any) => {
       title: 'General Information',
       description: 'Capture core details of your Unit',
       stepValue: 'overview',
-      isComplete: true,
+      isComplete: true
     },
     {
       title: 'Lesson Plan manager',
@@ -168,8 +166,8 @@ const UnitBuilder = ({instId}: any) => {
       stepValue: 'lessons',
       disabled: !Boolean(unitId),
       isComplete: false,
-      tooltipText: 'Add overview details in step 1 to continue',
-    },
+      tooltipText: 'Add overview details in step 1 to continue'
+    }
   ];
   const currentStepComp = (currentStep: string) => {
     switch (currentStep) {

@@ -5,7 +5,7 @@ import {
   EMOTIONS,
   SINGING_BOWL,
   GRATITUDE
-} from '@components/Lesson/UniversalLessonBuilder/UI/common/constants';
+} from 'components/Lesson/UniversalLessonBuilder/UI/common/constants';
 import React, {useEffect} from 'react';
 import Button from './Button';
 
@@ -16,8 +16,8 @@ import {
   FSEBreathingSvg,
   EmotionSvg,
   GratitudeSvg
-} from '@components/Dashboard/GameChangers/svg';
-import useInLessonCheck from '@customHooks/checkIfInLesson';
+} from 'components/Dashboard/GameChangers/svg';
+import useInLessonCheck from 'customHooks/checkIfInLesson';
 
 const getSVG = (type: string) => {
   switch (type) {

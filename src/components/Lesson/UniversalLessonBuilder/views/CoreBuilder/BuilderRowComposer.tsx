@@ -1,16 +1,16 @@
-import Buttons from '@components/Atoms/Buttons';
-import AllEmotions from '@components/Lesson/AllEmotions';
-import composePartContent from '@components/Lesson/UniversalLessonBlockComponents/composePartContent';
-import EditOverlayBlock from '@components/Lesson/UniversalLessonBlockComponents/UtilityBlocks/EditOverlayBlock';
-import {GlobalContext, useGlobalContext} from '@contexts/GlobalContext';
-import {usePageBuilderContext} from '@contexts/PageBuilderContext';
-import {useULBContext} from '@contexts/UniversalLessonBuilderContext';
-import {RowComposerProps} from '@interfaces/UniversalLessonBuilderInterfaces';
+import Buttons from 'atoms/Buttons';
+import AllEmotions from 'components/Lesson/AllEmotions';
+import composePartContent from 'components/Lesson/UniversalLessonBlockComponents/composePartContent';
+import EditOverlayBlock from 'components/Lesson/UniversalLessonBlockComponents/UtilityBlocks/EditOverlayBlock';
+import {GlobalContext, useGlobalContext} from 'contexts/GlobalContext';
+import {usePageBuilderContext} from 'contexts/PageBuilderContext';
+import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
+import {RowComposerProps} from 'interfaces/UniversalLessonBuilderInterfaces';
 import {
   PagePart,
   PartContent,
-  UniversalLessonPage,
-} from '@interfaces/UniversalLessonInterfaces';
+  UniversalLessonPage
+} from 'interfaces/UniversalLessonInterfaces';
 import {FORM_TYPES} from '@UlbUI/common/constants';
 import React, {useContext, useState} from 'react';
 import {BuilderRowWrapper} from './BuilderRowWrapper';
@@ -23,7 +23,7 @@ const BuilderRowComposer = (props: RowComposerProps) => {
     deleteFromULBHandler,
     updateFromULBHandler,
     handleEditBlockContent,
-    handleModalPopToggle,
+    handleModalPopToggle
   } = props;
 
   const {selectedComponent, setNavState, navState} = usePageBuilderContext();
@@ -31,7 +31,7 @@ const BuilderRowComposer = (props: RowComposerProps) => {
 
   const [editedID, setEditedID] = useState<string>('');
   const {
-    state: {userlessonPage: {themeTextColor = ''} = {}},
+    state: {userlessonPage: {themeTextColor = ''} = {}}
   } = useContext(GlobalContext);
 
   const handleEditBlockToggle = (dataID: string) => {
@@ -191,7 +191,7 @@ const BuilderRowComposer = (props: RowComposerProps) => {
                 <AllEmotions lessonId={universalLessonDetails?.id} />
               )} */}
             </div>
-          )),
+          ))
         ]
       ) : (
         <div className="flex flex-col items-center justify-center w-auto">

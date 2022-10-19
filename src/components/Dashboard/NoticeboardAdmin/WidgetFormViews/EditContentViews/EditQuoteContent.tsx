@@ -1,9 +1,9 @@
 import React, {useContext} from 'react';
 import {AiOutlineDelete} from 'react-icons/all';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import useDictionary from '../../../../../customHooks/dictionary';
-import {Quote} from '../../../../../interfaces/ClassroomComponentsInterfaces';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import {Quote} from 'interfaces/ClassroomComponentsInterfaces';
 import {NoticeboardFormProps} from '../../NoticeboardAdminContent';
 import AddRemoveButton from '../addRemoveButton';
 
@@ -35,7 +35,7 @@ export const EditQuoteContent = (props: NoticeboardFormProps) => {
           expander: quoteItem,
           label: 'Author',
           label2: 'Quote',
-          label3: 'Text',
+          label3: 'Text'
         };
       case 'call':
         return {
@@ -45,7 +45,7 @@ export const EditQuoteContent = (props: NoticeboardFormProps) => {
           expander: callItem,
           label: 'Link Text',
           label2: 'Url',
-          label3: 'Call Link',
+          label3: 'Call Link'
         };
       case 'file':
         return {
@@ -55,7 +55,7 @@ export const EditQuoteContent = (props: NoticeboardFormProps) => {
           expander: fileItem,
           label: 'Label',
           label2: 'File Link',
-          label3: 'File Link',
+          label3: 'File Link'
         };
       default:
         return null;
@@ -68,7 +68,7 @@ export const EditQuoteContent = (props: NoticeboardFormProps) => {
       // @ts-ignore
       setNewWidgetData({
         ...widgetObj,
-        [switchKey().key]: [...widgetObj[switchKey().key], switchKey().expander],
+        [switchKey().key]: [...widgetObj[switchKey().key], switchKey().expander]
       });
     }
   };
@@ -80,7 +80,7 @@ export const EditQuoteContent = (props: NoticeboardFormProps) => {
       });
       setNewWidgetData({
         ...widgetObj,
-        [switchKey().key]: filtered,
+        [switchKey().key]: filtered
       });
     }
   };

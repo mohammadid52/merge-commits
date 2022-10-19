@@ -1,9 +1,9 @@
 import React, {useEffect, useState, useContext, useRef} from 'react';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import * as customQueries from '../../customGraphql/customQueries';
-import * as customMutations from '../../customGraphql/customMutations';
-import * as customSubscriptions from '../../customGraphql/customSubscriptions';
-import {GlobalContext} from '../../contexts/GlobalContext';
+import * as customQueries from 'customGraphql/customQueries';
+import * as customMutations from 'customGraphql/customMutations';
+import * as customSubscriptions from 'customGraphql/customSubscriptions';
+import {GlobalContext} from 'contexts/GlobalContext';
 import {IconContext} from 'react-icons';
 import {AiOutlineSend, GrClose} from 'react-icons/all';
 import isEmpty from 'lodash/isEmpty';
@@ -38,7 +38,7 @@ const RoomChat = (props: RoomChatProps) => {
       graphqlOperation(customQueries.messagesByRoomId, {
         nextToken: nextToken,
         roomID: roomObj.id,
-        createdAt: {gt: lastWeek.toISOString()},
+        createdAt: {gt: lastWeek.toISOString()}
       })
     );
     let outputData = outArray
@@ -185,7 +185,7 @@ const RoomChat = (props: RoomChatProps) => {
             shadow hover:shadow-lg`}>
             <IconContext.Provider
               value={{
-                className: 'w-auto h-auto mx-auto my-auto text-white pointer-events-none',
+                className: 'w-auto h-auto mx-auto my-auto text-white pointer-events-none'
               }}>
               <AiOutlineSend size={24} />
             </IconContext.Provider>
@@ -222,7 +222,7 @@ const RoomChat = (props: RoomChatProps) => {
         senderAuthID: state.user.authId,
         senderEmail: state.user.email,
         body: msg,
-        createdAt: msgDate,
+        createdAt: msgDate
       };
       let key = msgs.length;
       let chatMsgs = [
@@ -232,8 +232,8 @@ const RoomChat = (props: RoomChatProps) => {
           body: msg,
           sender: {...state.user},
           createdAt: msgDate,
-          updatedAt: msgDate,
-        },
+          updatedAt: msgDate
+        }
       ];
       setMsgs(chatMsgs);
       setMsg('');
@@ -292,7 +292,7 @@ const RoomChat = (props: RoomChatProps) => {
       ).subscribe({
         next: (event: any) => {
           setMsgs([...msgs, event.value.data.onCreateRoomMsgs]);
-        },
+        }
       });
       const deleteMsgsubscription = API.graphql(
         graphqlOperation(customSubscriptions.onDeleteRoomMsgs, {roomID: selectedRoom.id})
@@ -302,7 +302,7 @@ const RoomChat = (props: RoomChatProps) => {
           let msgId = event.value.data.onDeleteRoomMsgs.id;
           let messages = msgs.filter((m: any) => m.id !== msgId);
           setMsgs([...messages]);
-        },
+        }
       });
       const editMsgSubscription = API.graphql(
         graphqlOperation(customSubscriptions.onUpdateRoomMsgs, {roomID: selectedRoom.id})
@@ -317,7 +317,7 @@ const RoomChat = (props: RoomChatProps) => {
             return m;
           });
           setMsgs([...messages]);
-        },
+        }
       });
       return () => {
         newMsgsubscription.unsubscribe();

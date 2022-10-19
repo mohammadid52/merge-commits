@@ -1,6 +1,6 @@
 import React, {useContext} from 'react';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import {getImageFromS3Static} from '../../../../../utilities/services';
+import {GlobalContext} from 'contexts/GlobalContext';
+import {getImageFromS3Static} from 'utilities/services';
 import {LessonCardProps} from '../../Classroom';
 
 const SideImage = (props: LessonCardProps) => {

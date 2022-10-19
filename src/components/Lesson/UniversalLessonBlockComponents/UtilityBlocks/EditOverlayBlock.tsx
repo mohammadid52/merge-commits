@@ -1,13 +1,13 @@
 import {
   GAME_CHANGERS,
-  SPACER,
-} from '@components/Lesson/UniversalLessonBuilder/UI/common/constants';
-import {useGlobalContext} from '@contexts/GlobalContext';
-import {useOverlayContext} from '@contexts/OverlayContext';
-import {usePageBuilderContext} from '@contexts/PageBuilderContext';
-import {useULBContext} from '@contexts/UniversalLessonBuilderContext';
-import {RowWrapperProps} from '@interfaces/UniversalLessonBuilderInterfaces';
-import {PartContentSub, UniversalLessonPage} from '@interfaces/UniversalLessonInterfaces';
+  SPACER
+} from 'components/Lesson/UniversalLessonBuilder/UI/common/constants';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import {useOverlayContext} from 'contexts/OverlayContext';
+import {usePageBuilderContext} from 'contexts/PageBuilderContext';
+import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
+import {RowWrapperProps} from 'interfaces/UniversalLessonBuilderInterfaces';
+import {PartContentSub, UniversalLessonPage} from 'interfaces/UniversalLessonInterfaces';
 import findIndex from 'lodash/findIndex';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
@@ -36,7 +36,7 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
     contentValue,
     contentType,
     handleModalPopToggle,
-    handleEditBlockContent,
+    handleEditBlockContent
   } = props;
 
   const {previewMode, universalLessonDetails, selectedPageID} = useULBContext();
@@ -47,7 +47,7 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
     actionMode,
     navState,
     selectedType,
-    showingBlockPin,
+    showingBlockPin
   } = usePageBuilderContext();
 
   const {setAddContentModal} = useOverlayContext();
@@ -55,7 +55,7 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
   const deleteMode = actionMode === 'delete';
 
   const {
-    lessonState: {currentPage: pageIdx},
+    lessonState: {currentPage: pageIdx}
   } = useGlobalContext();
 
   const currentPage: UniversalLessonPage = get(
@@ -120,10 +120,10 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
         componentData: {
           type: contentType,
           class: classString,
-          value: contentValue,
+          value: contentValue
         },
         isEmotionComponentSelected:
-          contentType === GAME_CHANGERS && contentValue[0].value === 'emotion',
+          contentType === GAME_CHANGERS && contentValue[0].value === 'emotion'
       };
 
       if (deleteMode) {
@@ -137,7 +137,7 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
             pageContentIdx,
             partContentIdx,
             pageContentID,
-            partContentID,
+            partContentID
           });
         } else {
           extras.splice(exists, 1);

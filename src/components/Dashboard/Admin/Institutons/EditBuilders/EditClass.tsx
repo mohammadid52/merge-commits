@@ -4,30 +4,30 @@ import {FaSpinner, FaTimes} from 'react-icons/fa';
 import {HiPencil} from 'react-icons/hi';
 import {useHistory} from 'react-router-dom';
 
-import AddButton from '@atoms/Buttons/AddButton';
-import {DeleteActionBtn} from '@atoms/Buttons/DeleteActionBtn';
-import SearchSelectorWithAvatar from '@atoms/Form/SearchSelectorWithAvatar';
-import Loader from '@atoms/Loader';
+import AddButton from 'atoms/Buttons/AddButton';
+import {DeleteActionBtn} from 'atoms/Buttons/DeleteActionBtn';
+import SearchSelectorWithAvatar from 'atoms/Form/SearchSelectorWithAvatar';
+import Loader from 'atoms/Loader';
 
-import {getImageFromS3} from '@utilities/services';
+import {getImageFromS3} from 'utilities/services';
 import {
   createFilterToFetchAllItemsExcept,
   getInitialsFromString,
   initials,
   stringToHslColor
-} from '@utilities/strings';
+} from 'utilities/strings';
 import {getAsset} from 'assets';
 
-import Modal from '@components/Atoms/Modal';
-import Registration from '@components/Dashboard/Admin/UserManagement/Registration';
-import User from '@components/Dashboard/Admin/UserManagement/User';
-import {useGlobalContext} from '@contexts/GlobalContext';
-import * as customMutations from '@customGraphql/customMutations';
-import * as customQueries from '@customGraphql/customQueries';
-import useDictionary from '@customHooks/dictionary';
-import useAuth from '@customHooks/useAuth';
-import * as mutations from '@graphql/mutations';
-import ModalPopUp from '@molecules/ModalPopUp';
+import Modal from 'atoms/Modal';
+import Registration from 'components/Dashboard/Admin/UserManagement/Registration';
+import User from 'components/Dashboard/Admin/UserManagement/User';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import * as customMutations from 'customGraphql/customMutations';
+import * as customQueries from 'customGraphql/customQueries';
+import useDictionary from 'customHooks/dictionary';
+import useAuth from 'customHooks/useAuth';
+import * as mutations from 'graphql/mutations';
+import ModalPopUp from 'molecules/ModalPopUp';
 import LocationBadge from './LocationBadge';
 
 interface EditClassProps {
@@ -189,7 +189,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
       setStudents(sortStudents(students));
       setLoading(false);
     } catch (err) {
-      console.log('err', err);
+      console.error('err', err);
       setLoading(false);
       setMessages({
         show: true,
@@ -329,7 +329,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
         });
       }, 2000);
     } catch (err) {
-      console.log('saveClassStudent', err);
+      console.error('saveClassStudent', err);
       setAddMessage({
         message: dictionary.messages.errorstudentadd,
         isError: true

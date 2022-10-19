@@ -3,13 +3,13 @@ import {Switch, Route, useHistory, useParams, useRouteMatch} from 'react-router'
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {BsArrowLeft} from 'react-icons/bs';
 
-import {GlobalContext} from '@contexts/GlobalContext';
-import useDictionary from '@customHooks/dictionary';
-import {useQuery} from '@customHooks/urlParam';
-import * as customQueries from '@customGraphql/customQueries';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import {useQuery} from 'customHooks/urlParam';
+import * as customQueries from 'customGraphql/customQueries';
 
-import StepComponent, {IStepElementInterface} from '@atoms/StepComponent';
-import Loader from '@atoms/Loader';
+import StepComponent, {IStepElementInterface} from 'atoms/StepComponent';
+import Loader from 'atoms/Loader';
 
 import CourseFormComponent from './CourseFormComponent';
 import UnitManager from './UnitManager';
@@ -51,13 +51,13 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
     show: false,
     message: '',
     isError: false,
-    lessonError: false,
+    lessonError: false
   });
   const [courseData, setCourseData] = useState<any>({
     institution: {
       id: instId,
-      name: '',
-    },
+      name: ''
+    }
   });
 
   useEffect(() => {
@@ -91,9 +91,9 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
           ),
           await API.graphql(
             graphqlOperation(customQueries.listCurriculumUnitss, {
-              filter: {curriculumId: {eq: courseId}},
+              filter: {curriculumId: {eq: courseId}}
             })
-          ),
+          )
         ]);
         const savedData = curriculumResult.data.getCurriculum;
         const sortedSyllabusList = [...curriculumUnits?.data.listCurriculumUnits?.items]
@@ -110,7 +110,7 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
         setMessages({
           show: true,
           message: CourseBuilderDict[userLanguage]['MESSAGES']['FETCH_COURSE_ERR'],
-          isError: true,
+          isError: true
         });
         setFetchingDetails(false);
       }
@@ -120,15 +120,15 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
   const getBasicInstitutionInfo = async (instituteId: any) => {
     const result: any = await API.graphql(
       graphqlOperation(customQueries.getInstitutionBasicInfo, {
-        id: instituteId,
+        id: instituteId
       })
     );
     setCourseData((prevData: any) => ({
       ...prevData,
       institution: {
         ...prevData.institution,
-        name: result?.data?.getInstitution.name,
-      },
+        name: result?.data?.getInstitution.name
+      }
     }));
   };
 
@@ -137,7 +137,7 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
       title: 'General Information',
       description: 'Capture core details of your Unit',
       stepValue: 'overview',
-      isComplete: true,
+      isComplete: true
     },
     {
       title: 'Unit manager',
@@ -145,7 +145,7 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
       stepValue: 'unit_manager',
       disabled: !Boolean(courseId),
       isComplete: false,
-      tooltipText: 'Add overview details in step 1 to continue',
+      tooltipText: 'Add overview details in step 1 to continue'
     },
     {
       title: 'Learning Objectives',
@@ -153,7 +153,7 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
       stepValue: 'learning_objectives',
       disabled: !Boolean(courseId),
       isComplete: false,
-      tooltipText: 'Add overview details in step 1 to continue',
+      tooltipText: 'Add overview details in step 1 to continue'
     },
     {
       title: 'Demographics & information(Optional)',
@@ -161,8 +161,8 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
       stepValue: 'demographics',
       disabled: !Boolean(courseId),
       isComplete: false,
-      tooltipText: 'Add overview details in step 1 to continue',
-    },
+      tooltipText: 'Add overview details in step 1 to continue'
+    }
   ];
   const currentStepComp = (currentStep: string) => {
     switch (currentStep) {

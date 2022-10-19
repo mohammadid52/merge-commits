@@ -1,19 +1,19 @@
-import Buttons from '@atoms/Buttons';
-import {DeleteActionBtn} from '@atoms/Buttons/DeleteActionBtn';
-import Selector from '@atoms/Form/Selector';
-import Loader from '@atoms/Loader';
-import Modal from '@atoms/Modal';
-import PageWrapper from '@atoms/PageWrapper';
-import UnitFormComponent from '@components/Dashboard/Admin/Institutons/EditBuilders/CurricularsView/TabsActions/Unit/UnitFormComponent';
-import ErrorBoundary from '@components/Error/ErrorBoundary';
-import ModalPopUp from '@components/Molecules/ModalPopUp';
-import * as customMutations from '@customGraphql/customMutations';
-import * as customQueries from '@customGraphql/customQueries';
+import Buttons from 'atoms/Buttons';
+import {DeleteActionBtn} from 'atoms/Buttons/DeleteActionBtn';
+import Selector from 'atoms/Form/Selector';
+import Loader from 'atoms/Loader';
+import Modal from 'atoms/Modal';
+import PageWrapper from 'atoms/PageWrapper';
+import UnitFormComponent from 'components/Dashboard/Admin/Institutons/EditBuilders/CurricularsView/TabsActions/Unit/UnitFormComponent';
+import ErrorBoundary from 'components/Error/ErrorBoundary';
+import ModalPopUp from 'molecules/ModalPopUp';
+import * as customMutations from 'customGraphql/customMutations';
+import * as customQueries from 'customGraphql/customQueries';
 import {API, graphqlOperation} from 'aws-amplify';
 import React, {useContext, useEffect, useState} from 'react';
 import {useHistory, useRouteMatch} from 'react-router';
-import {GlobalContext} from '../../../../../../contexts/GlobalContext';
-import useDictionary from '../../../../../../customHooks/dictionary';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
 import DetailTable from './DetailTable';
 
 interface ILessonCourseProps {
@@ -43,16 +43,16 @@ const LessonCourse = ({
   selectedCurriculums,
   institutionCollection,
   addedSyllabus,
-  setAddedSyllabus,
+  setAddedSyllabus
 }: ILessonCourseProps) => {
   const history = useHistory();
   const match = useRouteMatch();
   const {
     clientKey,
     state: {
-      user: {isSuperAdmin},
+      user: {isSuperAdmin}
     },
-    userLanguage,
+    userLanguage
   } = useContext(GlobalContext);
   const {BUTTONS: ButtonDict, UnitLookupDict} = useDictionary(clientKey);
   const [saving, setSaving] = useState(false);
@@ -70,7 +70,7 @@ const LessonCourse = ({
   const [deleteModal, setDeleteModal] = useState<any>({
     show: false,
     message: '',
-    action: () => {},
+    action: () => {}
   });
 
   useEffect(() => {
@@ -93,8 +93,8 @@ const LessonCourse = ({
           filter: isSuperAdmin
             ? undefined
             : {
-                institutionID: {eq: institution?.id},
-              },
+                institutionID: {eq: institution?.id}
+              }
         })
       );
       let selectedSyllabus: any = [];
@@ -104,7 +104,7 @@ const LessonCourse = ({
             (unit: any) => item?.syllabusID === unit?.id
           ),
           id: item?.id,
-          syllabusId: item?.syllabusID,
+          syllabusId: item?.syllabusID
         });
       });
       const addedSyllabusIds = addedSyllabus.map((item) => item.syllabusID);
@@ -129,12 +129,12 @@ const LessonCourse = ({
 
                     return {
                       ...lesson,
-                      index: idx,
+                      index: idx
                     };
                   }
                 })
-                .sort((a: any, b: any) => (a.index > b.index ? 1 : -1)),
-            },
+                .sort((a: any, b: any) => (a.index > b.index ? 1 : -1))
+            }
           };
         });
 
@@ -179,7 +179,7 @@ const LessonCourse = ({
       setDeleteModal({
         show: true,
         message: `Are you sure you want to remove "${lessonName}" from "${targetString}"`,
-        action: () => deleteUniversalSyllabusLesson(uniqueId),
+        action: () => deleteUniversalSyllabusLesson(uniqueId)
       });
     } else {
       setDeleteModal({show: false, message: '', action: () => {}});
@@ -190,7 +190,7 @@ const LessonCourse = ({
     try {
       setDeleting(true);
       const input = {
-        id,
+        id
       };
       const result: any = await API.graphql(
         graphqlOperation(customMutations.deleteUniversalSyllabusLesson, {input: input})
@@ -204,8 +204,8 @@ const LessonCourse = ({
             id: result.data.deleteUniversalSyllabusLesson?.syllabusID,
             universalLessonsSeq: selectedItem?.universalLessonsSeq.filter(
               (item: any) => item !== lessonId
-            ),
-          },
+            )
+          }
         })
       );
       setAssignedUnits((prevList: any) =>
@@ -249,17 +249,17 @@ const LessonCourse = ({
             active: lessonType !== 'lesson' ? true : false,
             stage: `checkpoint?id=${item.LessonComponentID}`,
             type: 'survey',
-            displayMode: 'SELF',
+            displayMode: 'SELF'
           };
         });
       const input = {
         syllabusID: unitId,
         lessonID: lessonId,
         displayData: {
-          breakdownComponent: lessonType,
+          breakdownComponent: lessonType
         },
         lessonPlan: lessonComponentPlan?.length > 0 ? lessonComponentPlan : [],
-        status: 'Active',
+        status: 'Active'
       };
       setSaving(true);
       const result: any = await API.graphql(
@@ -273,8 +273,8 @@ const LessonCourse = ({
           {
             id: newLesson.id,
             syllabusID: input.syllabusID,
-            lessonID: lessonId,
-          },
+            lessonID: lessonId
+          }
         ]);
         setUnits((prevUnits: any) =>
           prevUnits.filter((unit: any) => unit?.id !== input.syllabusID)
@@ -292,11 +292,11 @@ const LessonCourse = ({
                 ...(selectedUnitData.lessons.items || []),
                 {
                   id: newLesson.id,
-                  lesson: newLesson.lesson,
-                },
-              ],
-            },
-          },
+                  lesson: newLesson.lesson
+                }
+              ]
+            }
+          }
         ]);
         // const newItem: any = {
         //   ...newLesson,
@@ -321,7 +321,7 @@ const LessonCourse = ({
         // setSelectedUnitsList([...selectedUnitsList, newItem]);
         setUnitInput({
           id: '',
-          name: '',
+          name: ''
         });
         // setUnitsList([]);
         // setMessage({
@@ -349,8 +349,8 @@ const LessonCourse = ({
       graphqlOperation(customMutations.updateUniversalSyllabusLessonSequence, {
         input: {
           id: unitId,
-          universalLessonsSeq: [...existingLessonSeq, lessonId],
-        },
+          universalLessonsSeq: [...existingLessonSeq, lessonId]
+        }
       })
     );
   };
@@ -382,7 +382,7 @@ const LessonCourse = ({
     id: index,
     title: curriculum.name,
     content: renderTableView(curriculum),
-    uniqueId: curriculum.id,
+    uniqueId: curriculum.id
   }));
 
   return (
@@ -479,7 +479,7 @@ const LessonCourse = ({
                               ?.map(
                                 ({
                                   id,
-                                  lesson,
+                                  lesson
                                 }: {
                                   id: string;
                                   lesson: {id: string; title: string};
@@ -576,7 +576,7 @@ const LessonCourse = ({
               <div
                 className="min-w-180 lg:min-w-256"
                 style={{
-                  height: 'calc(100vh - 150px)',
+                  height: 'calc(100vh - 150px)'
                 }}>
                 <UnitFormComponent
                   isInModal={true}

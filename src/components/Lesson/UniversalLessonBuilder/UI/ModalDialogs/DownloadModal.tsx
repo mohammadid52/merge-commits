@@ -1,18 +1,18 @@
 import {Storage} from '@aws-amplify/storage';
-import {GlobalContext} from '@contexts/GlobalContext';
-import useDictionary from '@customHooks/dictionary';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
 import {Transition} from '@headlessui/react';
-import {IContentTypeComponentProps} from '@interfaces/UniversalLessonBuilderInterfaces';
-import {removeExtension} from '@utilities/functions';
-import {getImageFromS3Static} from '@utilities/services';
-import {updateLessonPageToDB} from '@utilities/updateLessonPageToDB';
+import {IContentTypeComponentProps} from 'interfaces/UniversalLessonBuilderInterfaces';
+import {removeExtension} from 'utilities/functions';
+import {getImageFromS3Static} from 'utilities/services';
+import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
 import {getAsset} from 'assets';
 import {findIndex, map, reject, remove, update} from 'lodash';
 import {nanoid} from 'nanoid';
 import React, {useCallback, useContext, useEffect, useRef, useState} from 'react';
 import ClickAwayListener from 'react-click-away-listener';
 import {useDropzone} from 'react-dropzone';
-import Buttons from '../../../../Atoms/Buttons';
+import Buttons from 'atoms/Buttons';
 import {UPLOAD_KEYS} from '../../../constants';
 import {FORM_TYPES} from '../common/constants';
 
@@ -65,7 +65,7 @@ const File = ({
   fileKey,
   file,
   updateFilename,
-  id,
+  id
 }: IFileComponent) => {
   const genStatus = () => {
     switch (_status) {
@@ -121,7 +121,7 @@ const File = ({
   const Btn = ({
     label,
     onClick,
-    color = 'green',
+    color = 'green'
   }: {
     label: string;
     color?: string;
@@ -264,7 +264,7 @@ const DownloadModal = (props: IDownloadDialogProps) => {
     createNewBlockULBHandler,
     updateBlockContentULBHandler,
     askBeforeClose,
-    setUnsavedChanges,
+    setUnsavedChanges
   } = props;
 
   const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
@@ -281,7 +281,7 @@ const DownloadModal = (props: IDownloadDialogProps) => {
           fileName: d.label,
           _status: 'other',
           progress: null,
-          file: null,
+          file: null
         };
       });
       setFilesUploading(f);
@@ -298,7 +298,7 @@ const DownloadModal = (props: IDownloadDialogProps) => {
         progress: fakeInitProgress.toString(),
         file,
         fileName: file.name,
-        id,
+        id
       };
       filesUploading.push(initState);
 
@@ -336,7 +336,7 @@ const DownloadModal = (props: IDownloadDialogProps) => {
   );
 
   const {getRootProps, getInputProps, isDragActive} = useDropzone({
-    onDrop: uploadFile,
+    onDrop: uploadFile
   });
 
   const {userLanguage, clientKey} = useContext(GlobalContext);
@@ -377,7 +377,7 @@ const DownloadModal = (props: IDownloadDialogProps) => {
           updateStatus(currentFile, 'progress');
 
           updateProgress(currentFile, progress.toFixed(0));
-        },
+        }
       })
         .then((result) => {
           updateStatus(currentFile, 'success');
@@ -430,7 +430,7 @@ const DownloadModal = (props: IDownloadDialogProps) => {
 
     const input = {
       id: list.id,
-      lessonPlan: [...list.lessonPlan],
+      lessonPlan: [...list.lessonPlan]
     };
 
     await updateLessonPageToDB(input);
@@ -441,7 +441,7 @@ const DownloadModal = (props: IDownloadDialogProps) => {
       return {
         id: f.id,
         label: removeExtension(f.fileName) || removeExtension(f.file.name),
-        value: f.fileKey,
+        value: f.fileKey
       };
     });
 

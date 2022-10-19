@@ -1,13 +1,13 @@
-import ComponentLoading from '@components/Lesson/Loading/ComponentLoading';
-import useGraphqlQuery from '@customHooks/useGraphqlQuery';
+import ComponentLoading from 'components/Lesson/Loading/ComponentLoading';
+import useGraphqlQuery from 'customHooks/useGraphqlQuery';
 import {ListAnthologyCommentsQuery, ListAnthologyCommentsQueryVariables} from 'API';
 import {sortBy} from 'lodash';
 import React, {Suspense, useEffect, useState} from 'react';
-import {getAsset} from '../../../../assets';
-import {useGlobalContext} from '../../../../contexts/GlobalContext';
-import {anthologyDict} from '../../../../dictionary/dictionary.iconoclast';
-import Buttons from '../../../Atoms/Buttons';
-import ContentCard from '../../../Atoms/ContentCard';
+import {getAsset} from 'assets';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import {anthologyDict} from 'dictionary/dictionary.iconoclast';
+import Buttons from 'atoms/Buttons';
+import ContentCard from 'atoms/ContentCard';
 import Toggle from './../AnthologyContentNote/Toggle';
 import Feedbacks from './Feedbacks';
 

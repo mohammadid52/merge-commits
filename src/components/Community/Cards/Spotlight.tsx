@@ -1,17 +1,17 @@
 import API, {graphqlOperation} from '@aws-amplify/api';
-import Buttons from '@components/Atoms/Buttons';
-import SelectorWithAvatar from '@components/Atoms/Form/SelectorWithAvatar';
-import RichTextEditor from '@components/Atoms/RichTextEditor';
-import Media from '@components/Community/Components/Media';
-import {COMMUNITY_UPLOAD_KEY, IFile} from '@components/Community/constants.community';
-import {REGEX} from '@components/Lesson/UniversalLessonBuilder/UI/common/constants';
-import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
-import * as customQueries from '@customGraphql/customQueries';
-import useAuth from '@customHooks/useAuth';
-import * as queries from '@graphql/queries';
-import {ICommunityCardProps, ISpotlightInput} from '@interfaces/Community.interfaces';
-import {getImageFromS3Static} from '@utilities/services';
-import {getFilterORArray} from '@utilities/strings';
+import Buttons from 'atoms/Buttons';
+import SelectorWithAvatar from 'atoms/Form/SelectorWithAvatar';
+import RichTextEditor from 'atoms/RichTextEditor';
+import Media from 'components/Community/Components/Media';
+import {COMMUNITY_UPLOAD_KEY, IFile} from 'components/Community/constants.community';
+import {REGEX} from 'components/Lesson/UniversalLessonBuilder/UI/common/constants';
+import AnimatedContainer from 'components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
+import * as customQueries from 'customGraphql/customQueries';
+import useAuth from 'customHooks/useAuth';
+import * as queries from 'graphql/queries';
+import {ICommunityCardProps, ISpotlightInput} from 'interfaces/Community.interfaces';
+import {getImageFromS3Static} from 'utilities/services';
+import {getFilterORArray} from 'utilities/strings';
 import isEmpty from 'lodash/isEmpty';
 import React, {useEffect, useState} from 'react';
 
@@ -386,8 +386,8 @@ const Spotlight = ({
             transparent
           />
           <Buttons
-            data-cy="save-spotlight-button"
             btnClass="py-1 px-8 text-xs ml-2"
+            dataCy="save-spotlight-button"
             label={'Save'}
             loading={isLoading}
             // disabled={

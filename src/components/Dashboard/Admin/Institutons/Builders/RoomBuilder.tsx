@@ -1,23 +1,23 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import React, {useContext, useEffect, useState} from 'react';
 import {useHistory, useLocation, useRouteMatch} from 'react-router-dom';
-import {getAsset} from '../../../../../assets';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import * as customMutation from '../../../../../customGraphql/customMutations';
-import * as customQueries from '../../../../../customGraphql/customQueries';
-import useDictionary from '../../../../../customHooks/dictionary';
-import * as mutation from '../../../../../graphql/mutations';
-import * as queries from '../../../../../graphql/queries';
-import {getImageFromS3} from '../../../../../utilities/services';
-import {getFilterORArray} from '../../../../../utilities/strings';
-import BreadCrums from '../../../../Atoms/BreadCrums';
-import Buttons from '../../../../Atoms/Buttons';
-import FormInput from '../../../../Atoms/Form/FormInput';
-import MultipleSelector from '../../../../Atoms/Form/MultipleSelector';
-import Selector from '../../../../Atoms/Form/Selector';
-import SelectorWithAvatar from '../../../../Atoms/Form/SelectorWithAvatar';
-import PageWrapper from '../../../../Atoms/PageWrapper';
-import SectionTitle from '../../../../Atoms/SectionTitle';
+import {getAsset} from 'assets';
+import {GlobalContext} from 'contexts/GlobalContext';
+import * as customMutation from 'customGraphql/customMutations';
+import * as customQueries from 'customGraphql/customQueries';
+import useDictionary from 'customHooks/dictionary';
+import * as mutation from 'graphql/mutations';
+import * as queries from 'graphql/queries';
+import {getImageFromS3} from 'utilities/services';
+import {getFilterORArray} from 'utilities/strings';
+import BreadCrums from 'atoms/BreadCrums';
+import Buttons from 'atoms/Buttons';
+import FormInput from 'atoms/Form/FormInput';
+import MultipleSelector from 'atoms/Form/MultipleSelector';
+import Selector from 'atoms/Form/Selector';
+import SelectorWithAvatar from 'atoms/Form/SelectorWithAvatar';
+import PageWrapper from 'atoms/PageWrapper';
+import SectionTitle from 'atoms/SectionTitle';
 
 interface RoomBuilderProps {}
 
@@ -33,7 +33,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
     teacher: {id: '', name: '', value: ''},
     classRoom: {id: '', name: '', value: ''},
     curricular: {id: '', name: '', value: ''},
-    maxPersons: '',
+    maxPersons: ''
   };
   const {theme, clientKey, userLanguage} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
@@ -51,7 +51,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
   const [messages, setMessages] = useState({
     show: false,
     message: '',
-    isError: false,
+    isError: false
   });
   const [loading, setLoading] = useState(false);
   const useQuery = () => {
@@ -63,19 +63,19 @@ const RoomBuilder = (props: RoomBuilderProps) => {
     {
       title: BreadcrumsTitles[userLanguage]['INSTITUTION_MANAGEMENT'],
       url: '/dashboard/manage-institutions',
-      last: false,
+      last: false
     },
     {title: roomData?.institute?.name, goBack: true, last: false},
     {
       title: BreadcrumsTitles[userLanguage]['CLASSROOMS'],
       url: `/dashboard/manage-institutions/institution/${roomData.institute?.id}/class-rooms`,
-      last: false,
+      last: false
     },
     {
       title: BreadcrumsTitles[userLanguage]['CLASSROOM_CREATION'],
       url: `${match.url}`,
-      last: true,
-    },
+      last: true
+    }
   ];
 
   const createNewEntry = (field: string) => {
@@ -97,8 +97,8 @@ const RoomBuilder = (props: RoomBuilderProps) => {
       teacher: {
         id: id,
         name: name,
-        value: val,
-      },
+        value: val
+      }
     });
     const filteredDefaultTeacher: object[] = teachersList.filter(
       (coTeacher: any) => coTeacher.id !== id
@@ -125,7 +125,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
   const editInputField = (e: any) => {
     setRoomData({
       ...roomData,
-      [e.target.name]: e.target.value,
+      [e.target.name]: e.target.value
     });
     removeErrorMsg();
   };
@@ -137,11 +137,11 @@ const RoomBuilder = (props: RoomBuilderProps) => {
         institute: {
           id: id,
           name: name,
-          value: val,
+          value: val
         },
         teacher: {id: '', name: '', value: ''},
         classRoom: {id: '', name: '', value: ''},
-        curricular: {id: '', name: '', value: ''},
+        curricular: {id: '', name: '', value: ''}
       });
     }
     removeErrorMsg();
@@ -153,8 +153,8 @@ const RoomBuilder = (props: RoomBuilderProps) => {
       classRoom: {
         id: id,
         name: name,
-        value: val,
-      },
+        value: val
+      }
     });
     removeErrorMsg();
   };
@@ -164,8 +164,8 @@ const RoomBuilder = (props: RoomBuilderProps) => {
       curricular: {
         id: id,
         name: name,
-        value: val,
-      },
+        value: val
+      }
     });
     removeErrorMsg();
   };
@@ -174,7 +174,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
     if (curriculumID) {
       const syllabusCSequenceFetch: any = await API.graphql(
         graphqlOperation(customQueries.getCurriculumUniversalSyllabusSequence, {
-          id: `${curriculumID}`,
+          id: `${curriculumID}`
         })
       );
 
@@ -194,7 +194,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
       setMessages({
         show: false,
         message: '',
-        isError: false,
+        isError: false
       });
     }
   };
@@ -218,21 +218,21 @@ const RoomBuilder = (props: RoomBuilderProps) => {
       const InstituteList = sortedList.map((item: any, i: any) => ({
         id: item.id,
         name: `${item.name ? item.name : ''}`,
-        value: `${item.name ? item.name : ''}`,
+        value: `${item.name ? item.name : ''}`
       }));
       setInstitutionList(InstituteList);
       if (InstituteList.length === 0) {
         setMessages({
           show: true,
           message: RoomBuilderdict[userLanguage]['messages']['error']['institutebefor'],
-          isError: true,
+          isError: true
         });
       }
     } catch {
       setMessages({
         show: true,
         message: RoomBuilderdict[userLanguage]['messages']['error']['institutelist'],
-        isError: true,
+        isError: true
       });
     }
   };
@@ -241,7 +241,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
     try {
       const list: any = await API.graphql(
         graphqlOperation(customQueries.getInstitution, {
-          id: instId,
+          id: instId
         })
       );
       const serviceProviders = list.data.getInstitution?.serviceProviders?.items;
@@ -250,7 +250,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
       setMessages({
         show: true,
         message: RoomBuilderdict[userLanguage]['messages']['error']['institutelist'],
-        isError: true,
+        isError: true
       });
     }
   };
@@ -259,7 +259,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
     try {
       const list: any = await API.graphql(
         graphqlOperation(queries.listStaff, {
-          filter: {or: getFilterORArray(allInstiId, 'institutionID')},
+          filter: {or: getFilterORArray(allInstiId, 'institutionID')}
         })
       );
       const listStaffs = list.data.listStaff.items;
@@ -267,7 +267,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
         setMessages({
           show: true,
           message: RoomBuilderdict[userLanguage]['messages']['error']['staffmember'],
-          isError: true,
+          isError: true
         });
       } else {
         const sortedList = listStaffs.sort((a: any, b: any) =>
@@ -292,7 +292,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
             }`,
             email: item.staffMember?.email ? item.staffMember?.email : '',
             image: item.staffMember?.image,
-            authId: item.staffMember?.authId ? item.staffMember?.authId : '',
+            authId: item.staffMember?.authId ? item.staffMember?.authId : ''
           }));
 
         // Filter duplicate results.
@@ -312,7 +312,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
       setMessages({
         show: true,
         message: RoomBuilderdict[userLanguage]['messages']['error']['teacherlist'],
-        isError: true,
+        isError: true
       });
     }
   };
@@ -323,7 +323,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
     try {
       const list: any = await API.graphql(
         graphqlOperation(queries.listClasses, {
-          filter: {or: getFilterORArray(allInstiId, 'institutionID')},
+          filter: {or: getFilterORArray(allInstiId, 'institutionID')}
         })
       );
       const listClass = list.data.listClasses?.items;
@@ -331,7 +331,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
         setMessages({
           show: true,
           message: RoomBuilderdict[userLanguage]['messages']['error']['createclass'],
-          isError: true,
+          isError: true
         });
       } else {
         const sortedList = listClass.sort((a: any, b: any) =>
@@ -348,7 +348,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
         const classList = filteredClassList.map((item: any, i: any) => ({
           id: item.id,
           name: `${item.name ? item.name : ''}`,
-          value: `${item.name ? item.name : ''}`,
+          value: `${item.name ? item.name : ''}`
         }));
         setClassList(classList);
       }
@@ -356,7 +356,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
       setMessages({
         show: true,
         message: RoomBuilderdict[userLanguage]['messages']['error']['classlist'],
-        isError: true,
+        isError: true
       });
     }
   };
@@ -365,7 +365,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
     try {
       const list: any = await API.graphql(
         graphqlOperation(queries.listCurricula, {
-          filter: {or: getFilterORArray(allInstiId, 'institutionID')},
+          filter: {or: getFilterORArray(allInstiId, 'institutionID')}
         })
       );
       const sortedList = list.data.listCurricula?.items.sort((a: any, b: any) =>
@@ -374,14 +374,14 @@ const RoomBuilder = (props: RoomBuilderProps) => {
       const curricularList = sortedList.map((item: any, i: any) => ({
         id: item.id,
         name: `${item.name ? item.name : ''}`,
-        value: `${item.name ? item.name : ''}`,
+        value: `${item.name ? item.name : ''}`
       }));
       setCurricularList(curricularList);
     } catch {
       setMessages({
         show: true,
         message: RoomBuilderdict[userLanguage]['messages']['error']['curricular'],
-        isError: true,
+        isError: true
       });
     }
   };
@@ -392,8 +392,8 @@ const RoomBuilder = (props: RoomBuilderProps) => {
         graphqlOperation(queries.listRooms, {
           filter: {
             institutionID: {eq: roomData.institute.id},
-            name: {eq: roomData.name},
-          },
+            name: {eq: roomData.name}
+          }
         })
       );
       return list.data.listRooms.items.length === 0 ? true : false;
@@ -401,7 +401,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
       setMessages({
         show: true,
         message: RoomBuilderdict[userLanguage]['messages']['error']['process'],
-        isError: true,
+        isError: true
       });
     }
   };
@@ -411,35 +411,35 @@ const RoomBuilder = (props: RoomBuilderProps) => {
       setMessages({
         show: true,
         message: RoomBuilderdict[userLanguage]['messages']['validation']['classroomname'],
-        isError: true,
+        isError: true
       });
       return false;
     } else if (roomData.institute.id === '') {
       setMessages({
         show: true,
         message: RoomBuilderdict[userLanguage]['messages']['validation']['institute'],
-        isError: true,
+        isError: true
       });
       return false;
     } else if (roomData.teacher.id === '') {
       setMessages({
         show: true,
         message: RoomBuilderdict[userLanguage]['messages']['validation']['teacher'],
-        isError: true,
+        isError: true
       });
       return false;
     } else if (roomData.classRoom.id === '') {
       setMessages({
         show: true,
         message: RoomBuilderdict[userLanguage]['messages']['validation']['class'],
-        isError: true,
+        isError: true
       });
       return false;
     } else if (roomData.maxPersons == '') {
       setMessages({
         show: true,
         message: RoomBuilderdict[userLanguage]['messages']['validation']['maxstudent'],
-        isError: true,
+        isError: true
       });
       return false;
     }
@@ -458,7 +458,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
           show: true,
           message:
             RoomBuilderdict[userLanguage]['messages']['validation']['classroomexist'],
-          isError: true,
+          isError: true
         });
         return false;
       } else {
@@ -474,7 +474,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
       try {
         const curricularInput = {
           roomID: roomId,
-          curriculumID: currId,
+          curriculumID: currId
         };
 
         const addCurricular: any = await API.graphql(
@@ -484,7 +484,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
           show: true,
           message:
             RoomBuilderdict[userLanguage]['messages']['success']['classroomdetail'],
-          isError: false,
+          isError: false
         });
         setRoomData(initialData);
         setLoading(false);
@@ -492,7 +492,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
         setMessages({
           show: true,
           message: RoomBuilderdict[userLanguage]['messages']['error']['classroomadd'],
-          isError: true,
+          isError: true
         });
         setLoading(false);
       }
@@ -500,7 +500,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
       setMessages({
         show: true,
         message: RoomBuilderdict[userLanguage]['messages']['error']['classroomadd'],
-        isError: true,
+        isError: true
       });
       setLoading(false);
     }
@@ -516,7 +516,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
         roomID,
         teacherID: d.id,
         teacherEmail: d.email,
-        teacherAuthID: d.authId,
+        teacherAuthID: d.authId
       };
       newItems.push(input);
     });
@@ -549,7 +549,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
           teacherEmail: teachersList.find((item: any) => item.id === roomData.teacher.id)
             .email,
           name: roomData.name,
-          maxPersons: roomData.maxPersons,
+          maxPersons: roomData.maxPersons
         };
 
         const newRoom: any = await API.graphql(
@@ -563,7 +563,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
           setMessages({
             show: true,
             message: RoomBuilderdict[userLanguage]['messages']['success']['newclassroom'],
-            isError: false,
+            isError: false
           });
           setRoomData(initialData);
           setSelectedCoTeachers([]);
@@ -573,7 +573,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
         setMessages({
           show: true,
           message: RoomBuilderdict[userLanguage]['messages']['error']['ecreateclass'],
-          isError: true,
+          isError: true
         });
         setLoading(false);
       }
@@ -602,8 +602,8 @@ const RoomBuilder = (props: RoomBuilderProps) => {
         institute: {
           id: instId,
           name: '',
-          value: '',
-        },
+          value: ''
+        }
       });
       getInstitutionList();
     } else {
@@ -622,14 +622,14 @@ const RoomBuilder = (props: RoomBuilderProps) => {
           institute: {
             id: roomData.institute.id,
             name: instName,
-            value: instName,
-          },
+            value: instName
+          }
         });
       } else {
         setMessages({
           show: true,
           message: RoomBuilderdict[userLanguage]['messages']['error']['invalid'],
-          isError: true,
+          isError: true
         });
       }
     }

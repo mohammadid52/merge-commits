@@ -1,10 +1,10 @@
-import AllEmotions from '@components/Lesson/AllEmotions';
-import {useGlobalContext} from '@contexts/GlobalContext';
+import AllEmotions from 'components/Lesson/AllEmotions';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import {
   PagePart,
   PartContent,
   UniversalLessonPage
-} from '@interfaces/UniversalLessonInterfaces';
+} from 'interfaces/UniversalLessonInterfaces';
 import {filter} from 'lodash';
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import composePartContent from '../../../UniversalLessonBlockComponents/composePartContent';

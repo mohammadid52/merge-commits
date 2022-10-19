@@ -2,15 +2,15 @@ import React, {useContext, useState} from 'react';
 import {VscNewFile} from 'react-icons/vsc';
 import {FaCopy} from 'react-icons/fa';
 import PageTile from '../common/PageTile';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import Buttons from '../../../../Atoms/Buttons';
-import FormInput from '../../../../Atoms/Form/FormInput';
-import {EditQuestionModalDict} from '../../../../../dictionary/dictionary.iconoclast';
-import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
-import Tooltip from '../../../../Atoms/Tooltip';
-import {UniversalLesson} from '../../../../../interfaces/UniversalLessonInterfaces';
+import {GlobalContext} from 'contexts/GlobalContext';
+import Buttons from 'atoms/Buttons';
+import FormInput from 'atoms/Form/FormInput';
+import {EditQuestionModalDict} from 'dictionary/dictionary.iconoclast';
+import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
+import Tooltip from 'atoms/Tooltip';
+import {UniversalLesson} from 'interfaces/UniversalLessonInterfaces';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import * as customMutations from '../../../../../customGraphql/customMutations';
+import * as customMutations from 'customGraphql/customMutations';
 interface ILessonInputs {
   id: string;
   label: string;
@@ -35,7 +35,7 @@ const NewPageDialog = ({universalLessonDetails, closeAction}: INewPageDialog) =>
     id: '',
     label: '',
     title: '',
-    description: '',
+    description: ''
   });
   const [errors, setErrors] = useState<any>({});
   const [copiedPageIndex, setCopiedPageIndex] = useState<number>(-1);
@@ -55,11 +55,11 @@ const NewPageDialog = ({universalLessonDetails, closeAction}: INewPageDialog) =>
     const value: string = (event.target as HTMLInputElement).value;
     setInputObj((prevInputs: ILessonInputs) => ({
       ...prevInputs,
-      [name]: value,
+      [name]: value
     }));
     setErrors((errors: any) => ({
       ...errors,
-      [name]: '',
+      [name]: ''
     }));
   };
 
@@ -71,9 +71,9 @@ const NewPageDialog = ({universalLessonDetails, closeAction}: INewPageDialog) =>
           ...universalLessonDetails.lessonPlan,
           {
             ...inputObj,
-            pageContent: [],
-          },
-        ],
+            pageContent: []
+          }
+        ]
       };
       const result = await API.graphql(
         graphqlOperation(customMutations.updateUniversalLesson, {input})
@@ -88,7 +88,7 @@ const NewPageDialog = ({universalLessonDetails, closeAction}: INewPageDialog) =>
     if (isValid) {
       addNewPageHandler({
         ...inputObj,
-        pageContent: [],
+        pageContent: []
       });
 
       // if (selectedLessonID) {
@@ -117,10 +117,10 @@ const NewPageDialog = ({universalLessonDetails, closeAction}: INewPageDialog) =>
                   part.partContent.filter(
                     (c: any, i: number) => c.type === content.type && i < contentIndex
                   ).length
-                }`,
-              })),
+                }`
+              }))
             }))
-          : [],
+          : []
     });
     closeAction();
   };

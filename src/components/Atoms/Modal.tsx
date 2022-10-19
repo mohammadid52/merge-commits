@@ -1,8 +1,7 @@
-import ModalHeader from '@components/Molecules/ModalHeader';
+import {GlobalContext} from 'contexts/GlobalContext';
+import ModalHeader from 'molecules/ModalHeader';
 import React, {useContext, useEffect} from 'react';
-import {IconContext} from 'react-icons';
 import {IoClose} from 'react-icons/io5';
-import {GlobalContext} from '../../contexts/GlobalContext';
 // @ts-ignore
 
 interface ModalProps {

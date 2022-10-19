@@ -1,13 +1,13 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import React, {Fragment, useContext, useEffect, useState} from 'react';
-import {getAsset} from '../../../../../assets';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import * as customMutations from '../../../../../customGraphql/customMutations';
-import useDictionary from '../../../../../customHooks/dictionary';
-import {InstructionInitialState} from '../../../../../interfaces/LessonInterfaces';
-import Buttons from '../../../../Atoms/Buttons';
-import FormInput from '../../../../Atoms/Form/FormInput';
-import RichTextEditor from '../../../../Atoms/RichTextEditor';
+import {getAsset} from 'assets';
+import {GlobalContext} from 'contexts/GlobalContext';
+import * as customMutations from 'customGraphql/customMutations';
+import useDictionary from 'customHooks/dictionary';
+import {InstructionInitialState} from 'interfaces/LessonInterfaces';
+import Buttons from 'atoms/Buttons';
+import FormInput from 'atoms/Form/FormInput';
+import RichTextEditor from 'atoms/RichTextEditor';
 
 interface AssessmentInstuctionsProps {
   savedInstructions?: InstructionInitialState;
@@ -25,7 +25,7 @@ const AssessmentInstuctions = (props: AssessmentInstuctionsProps) => {
     updateParentState,
     lessonType,
     lessonName,
-    setUnsavedChanges,
+    setUnsavedChanges
   } = props;
   const {theme, clientKey, userLanguage} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
@@ -35,7 +35,7 @@ const AssessmentInstuctions = (props: AssessmentInstuctionsProps) => {
   const [selectedBlock, setSelectedBlock] = useState('1');
   const [validation, setValidation] = useState({
     message: '',
-    isError: true,
+    isError: true
   });
   const accordionSteps = [
     {
@@ -46,7 +46,7 @@ const AssessmentInstuctions = (props: AssessmentInstuctionsProps) => {
       titleValue: formData.introductionTitle,
       titleLabel: 'Welcome Message Title',
       textEditorName: 'introduction',
-      textEditorValue: formData.introduction,
+      textEditorValue: formData.introduction
     },
     {
       id: '2',
@@ -61,7 +61,7 @@ const AssessmentInstuctions = (props: AssessmentInstuctionsProps) => {
       textEditorValue:
         typeof formData.instructions === 'object' && formData.instructions
           ? formData.instructions[0]
-          : formData.instructions,
+          : formData.instructions
     },
     {
       id: '3',
@@ -71,21 +71,21 @@ const AssessmentInstuctions = (props: AssessmentInstuctionsProps) => {
       titleValue: formData.summaryTitle,
       titleLabel: 'Closing Message title',
       textEditorName: 'summary',
-      textEditorValue: formData.summary,
-    },
+      textEditorValue: formData.summary
+    }
   ];
 
   const onInputChange = (e: any) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [e.target.name]: e.target.value
     });
     setUnsavedChanges(true);
     if (validation.message) {
       setValidation({
         ...validation,
         message: '',
-        isError: true,
+        isError: true
       });
     }
   };
@@ -93,14 +93,14 @@ const AssessmentInstuctions = (props: AssessmentInstuctionsProps) => {
   const setEditorContent = (html: string, text: string, fieldHtml: string) => {
     setFormData({
       ...formData,
-      [fieldHtml]: html,
+      [fieldHtml]: html
     });
     setUnsavedChanges(true);
     if (validation.message) {
       setValidation({
         ...validation,
         message: '',
-        isError: true,
+        isError: true
       });
     }
   };
@@ -115,7 +115,7 @@ const AssessmentInstuctions = (props: AssessmentInstuctionsProps) => {
         summaryTitle: formData.summaryTitle,
         introduction: formData.introduction,
         instructions: formData.instructions,
-        summary: formData.summary,
+        summary: formData.summary
       };
       const results: any = await API.graphql(
         graphqlOperation(customMutations.updateLesson, {input: input})
@@ -124,7 +124,7 @@ const AssessmentInstuctions = (props: AssessmentInstuctionsProps) => {
       setValidation({
         ...validation,
         message: AssessmentInstuctionsDict[userLanguage]['MESSAGES']['INSTRUCTIONSAVE'],
-        isError: false,
+        isError: false
       });
       updateParentState(formData);
       setUnsavedChanges(false);
@@ -133,7 +133,7 @@ const AssessmentInstuctions = (props: AssessmentInstuctionsProps) => {
       setValidation({
         ...validation,
         message: AssessmentInstuctionsDict[userLanguage]['MESSAGES']['UPDATEERR'],
-        isError: true,
+        isError: true
       });
       setLoading(false);
     }

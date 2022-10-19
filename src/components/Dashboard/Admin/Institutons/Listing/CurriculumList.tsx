@@ -1,16 +1,16 @@
 import React, {Fragment, useContext, useEffect, useState} from 'react';
 import {useHistory, useRouteMatch} from 'react-router';
-import * as customQueries from '@customGraphql/customQueries';
-import * as mutations from '@graphql/mutations';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import useDictionary from '../../../../../customHooks/dictionary';
-import AddButton from '../../../../Atoms/Buttons/AddButton';
+import * as customQueries from 'customGraphql/customQueries';
+import * as mutations from 'graphql/mutations';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import AddButton from 'atoms/Buttons/AddButton';
 import CurriculumListRow from './CurriculumListRow';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import ModalPopUp from '@components/Molecules/ModalPopUp';
-import Loader from '@components/Atoms/Loader';
-import SearchInput from '@components/Atoms/Form/SearchInput';
-import Selector from '@components/Atoms/Form/Selector';
+import ModalPopUp from 'molecules/ModalPopUp';
+import Loader from 'atoms/Loader';
+import SearchInput from 'atoms/Form/SearchInput';
+import Selector from 'atoms/Form/Selector';
 
 interface CurriculumListProps {
   curricular?: {items: ICurricular[]};
@@ -31,7 +31,7 @@ interface ICurricular {
 const CurriculumList = ({
   curricular,
   updateCurricularList,
-  instId,
+  instId
 }: CurriculumListProps) => {
   const match = useRouteMatch();
   const history = useHistory();
@@ -59,7 +59,7 @@ const CurriculumList = ({
   const [deleteModal, setDeleteModal] = useState<any>({
     show: false,
     message: '',
-    action: () => {},
+    action: () => {}
   });
 
   useEffect(() => {
@@ -83,10 +83,10 @@ const CurriculumList = ({
           items: item.universalSyllabus?.items
             ?.map((syllabus) => ({
               ...syllabus,
-              index: item?.universalSyllabusSeq?.indexOf(syllabus.unit.id),
+              index: item?.universalSyllabusSeq?.indexOf(syllabus.unit.id)
             }))
-            .sort((a: any, b: any) => (a.index > b.index ? 1 : -1)),
-        },
+            .sort((a: any, b: any) => (a.index > b.index ? 1 : -1))
+        }
       }));
       setCourseList(updatedList);
       setAllCourses(updatedList);
@@ -106,10 +106,10 @@ const CurriculumList = ({
             items: item.universalSyllabus?.items
               ?.map((syllabus) => ({
                 ...syllabus,
-                index: item?.universalSyllabusSeq?.indexOf(syllabus.unit.id),
+                index: item?.universalSyllabusSeq?.indexOf(syllabus.unit.id)
               }))
-              .sort((a: any, b: any) => (a.index > b.index ? 1 : -1)),
-          },
+              .sort((a: any, b: any) => (a.index > b.index ? 1 : -1))
+          }
         })
       );
       setCourseList(updatedList);
@@ -188,7 +188,7 @@ const CurriculumList = ({
       setDeleteModal({
         show: true,
         message: `Are you sure you want to delete the course "${targetString}"?`,
-        action: () => handleDelete(itemObj),
+        action: () => handleDelete(itemObj)
       });
     } else {
       setDeleteModal({show: false, message: '', action: () => {}});
@@ -201,7 +201,7 @@ const CurriculumList = ({
       console.log('deleting...');
       await API.graphql(
         graphqlOperation(mutations.deleteCurriculum, {
-          input: {id: item.id},
+          input: {id: item.id}
         })
       );
       updateCurricularList(item);

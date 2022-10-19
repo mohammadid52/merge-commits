@@ -1,11 +1,11 @@
 import React, {useState, useEffect} from 'react';
 import {Auth} from '@aws-amplify/auth';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import * as mutations from '../../graphql/mutations';
-import * as customMutations from '../../customGraphql/customMutations';
+import * as mutations from 'graphql/mutations';
+import * as customMutations from 'customGraphql/customMutations';
 import {useCookies} from 'react-cookie';
 import axios from 'axios';
-import { createUserUrl } from '../../utilities/urls';
+import {createUserUrl} from 'utilities/urls';
 
 interface newUserInput {
   key: number;
@@ -41,8 +41,8 @@ const initialState: newUserInput = {
   message: {
     show: false,
     text: '',
-    type: '',
-  },
+    type: ''
+  }
 };
 
 interface QuickRegisterProps {
@@ -67,7 +67,7 @@ const QuickRegister = (props: QuickRegisterProps) => {
     show: false,
     type: '',
     message: '',
-    field: '',
+    field: ''
   });
 
   const handleMessage = (type: string, text: string) => {
@@ -77,8 +77,8 @@ const QuickRegister = (props: QuickRegisterProps) => {
         message: {
           show: true,
           text: text,
-          type: type,
-        },
+          type: type
+        }
       };
     });
   };
@@ -89,12 +89,12 @@ const QuickRegister = (props: QuickRegisterProps) => {
       if (id === 'email') {
         return {
           ...newUserInputs,
-          [id]: value.toLowerCase(),
+          [id]: value.toLowerCase()
         };
       } else {
         return {
           ...newUserInputs,
-          [id]: value,
+          [id]: value
         };
       }
     });
@@ -119,7 +119,7 @@ const QuickRegister = (props: QuickRegisterProps) => {
       studentID: user.id,
       studentAuthID: user.authId,
       studentEmail: user.email,
-      status: 'Active',
+      status: 'Active'
     };
     let newStudent: any = await API.graphql(
       graphqlOperation(customMutations.createClassStudent, {input})
@@ -140,7 +140,7 @@ const QuickRegister = (props: QuickRegisterProps) => {
       // birthdate: userData.birthdate,
       externalId: userData.externalId,
       grade: userData.grade,
-      language: 'EN',
+      language: 'EN'
     };
     try {
       let createdPerson: any = await API.graphql(
@@ -160,7 +160,7 @@ const QuickRegister = (props: QuickRegisterProps) => {
           birthdate: '',
           grade: '',
           role: '',
-          externalId: '',
+          externalId: ''
         };
       });
       return createdPerson.data.createPerson;
@@ -175,11 +175,11 @@ const QuickRegister = (props: QuickRegisterProps) => {
 
   const cognitoSignUp = async () => {
     let username = newUserInputs.email;
-    username = username.toLowerCase()
+    username = username.toLowerCase();
     try {
       const response = await axios.post(createUserUrl, {
         email: username
-      })
+      });
       const user = response.data.User;
       let userData = {...newUserInputs, authId: user.Username};
       setNewUserInputs(() => {
@@ -187,8 +187,8 @@ const QuickRegister = (props: QuickRegisterProps) => {
       });
       return userData;
     } catch (er) {
-      console.log('error signing up:', er.response.data);
-      const error = er.response.data
+      console.error('error signing up:', er.response.data);
+      const error = er.response.data;
       setMessage(() => {
         switch (error.code) {
           case 'InvalidParameterException':
@@ -196,21 +196,21 @@ const QuickRegister = (props: QuickRegisterProps) => {
               show: true,
               type: 'success',
               message: "Please make sure the user's email is correct",
-              field: 'email',
+              field: 'email'
             };
           case 'UsernameExistsException':
             return {
               show: true,
               type: 'error',
               message: 'An account with this email exists',
-              field: 'email',
+              field: 'email'
             };
           default:
             return {
               show: true,
               type: 'error',
               message: error.message,
-              field: 'email',
+              field: 'email'
             };
         }
       });

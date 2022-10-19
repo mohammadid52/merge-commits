@@ -2,13 +2,13 @@ import React, {useContext, useState} from 'react';
 import {IoIosClose} from 'react-icons/io';
 import {API, graphqlOperation} from 'aws-amplify';
 
-import {GlobalContext} from '../../../../../../contexts/GlobalContext';
-import useDictionary from '../../../../../../customHooks/dictionary';
-import * as mutations from '../../../../../../graphql/mutations';
-import * as customMutations from '../../../../../../customGraphql/customMutations';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import * as mutations from 'graphql/mutations';
+import * as customMutations from 'customGraphql/customMutations';
 
-import Loader from '../../../../../Atoms/Loader';
-import ModalPopUp from '../../../../../Molecules/ModalPopUp';
+import Loader from 'atoms/Loader';
+import ModalPopUp from 'molecules/ModalPopUp';
 
 interface IDetailTableProps {
   curriculum: any;
@@ -21,7 +21,7 @@ const DetailTable = ({
   curriculum,
   lessonId,
   loading,
-  postDeletion,
+  postDeletion
 }: IDetailTableProps) => {
   const {clientKey, userLanguage} = useContext(GlobalContext);
   const {LessonBuilderDict} = useDictionary(clientKey);
@@ -29,14 +29,14 @@ const DetailTable = ({
     assignedSyllabi,
     associatedClassRoomData,
     institution,
-    universalSyllabus,
+    universalSyllabus
   } = curriculum;
 
   const [showDeleteModal, setShowDeleteModal] = useState({
     id: '',
     syllabusId: '',
     state: false,
-    message: 'This will remove the lesson from the unit, do you want to continue?',
+    message: 'This will remove the lesson from the unit, do you want to continue?'
   });
 
   const toggleModal = (syllabus?: any) => {
@@ -50,14 +50,14 @@ const DetailTable = ({
         ? syllabus.lessons.items.find((lesson: any) => lesson.lessonID === lessonId)?.id
         : '',
       syllabusId: syllabus ? syllabus.id : '',
-      state: !showDeleteModal.state,
+      state: !showDeleteModal.state
     });
   };
 
   const deleteSyllabus = async (id: string) => {
     try {
       const input = {
-        id,
+        id
       };
       const results: any = await API.graphql(
         graphqlOperation(mutations.deleteUniversalSyllabusLesson, {input: input})
@@ -70,21 +70,21 @@ const DetailTable = ({
     }
   };
 
-    const updateLessonSequence = async () => {
-      const selectedItem = universalSyllabus?.items?.find(
-        (unit: any) => unit.id === showDeleteModal.syllabusId
-      );
-      await API.graphql(
-        graphqlOperation(customMutations.updateUniversalSyllabusLessonSequence, {
-          input: {
-            id: showDeleteModal.syllabusId,
-            universalLessonsSeq: selectedItem.universalLessonsSeq.filter(
-              (lesson: any) => lesson !== lessonId
-            ),
-          },
-        })
-      );
-    };
+  const updateLessonSequence = async () => {
+    const selectedItem = universalSyllabus?.items?.find(
+      (unit: any) => unit.id === showDeleteModal.syllabusId
+    );
+    await API.graphql(
+      graphqlOperation(customMutations.updateUniversalSyllabusLessonSequence, {
+        input: {
+          id: showDeleteModal.syllabusId,
+          universalLessonsSeq: selectedItem.universalLessonsSeq.filter(
+            (lesson: any) => lesson !== lessonId
+          )
+        }
+      })
+    );
+  };
 
   return (
     <>

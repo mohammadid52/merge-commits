@@ -2,16 +2,13 @@ import {remove} from 'lodash';
 import {nanoid} from 'nanoid';
 import React, {useContext, useEffect, useState} from 'react';
 import {FaTrashAlt} from 'react-icons/fa';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import {EditQuestionModalDict} from '../../../../../dictionary/dictionary.iconoclast';
-import {IContentTypeComponentProps} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
-import {
-  Options,
-  PartContentSub,
-} from '../../../../../interfaces/UniversalLessonInterfaces';
-import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
-import Buttons from '../../../../Atoms/Buttons';
-import FormInput from '../../../../Atoms/Form/FormInput';
+import {GlobalContext} from 'contexts/GlobalContext';
+import {EditQuestionModalDict} from 'dictionary/dictionary.iconoclast';
+import {IContentTypeComponentProps} from 'interfaces/UniversalLessonBuilderInterfaces';
+import {Options, PartContentSub} from 'interfaces/UniversalLessonInterfaces';
+import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
+import Buttons from 'atoms/Buttons';
+import FormInput from 'atoms/Form/FormInput';
 import {FORM_TYPES} from '../common/constants';
 
 interface ILinestarterModalDialogProps extends IContentTypeComponentProps {
@@ -25,33 +22,33 @@ const initialInputFieldsState = [
     id: 'line_1',
 
     label: '',
-    text: 'Poem line starter one',
+    text: 'Poem line starter one'
   },
   {
     id: 'line_2',
 
     label: '',
-    text: 'Poem line starter two',
+    text: 'Poem line starter two'
   },
   {
     id: 'line_3',
 
     label: '',
-    text: 'Poem line starter three',
+    text: 'Poem line starter three'
   },
   {
     id: 'line_4',
 
     label: '',
-    text: 'Poem line starter four',
-  },
+    text: 'Poem line starter four'
+  }
 ];
 
 const newLinestarterObj: Options = {
   id: 'line_',
 
   label: '',
-  text: 'New linestarter...',
+  text: 'New linestarter...'
 };
 
 const LinestarterModalDialog = ({
@@ -60,7 +57,7 @@ const LinestarterModalDialog = ({
   createNewBlockULBHandler,
   updateBlockContentULBHandler,
   askBeforeClose,
-  setUnsavedChanges,
+  setUnsavedChanges
 }: ILinestarterModalDialogProps) => {
   const {userLanguage} = useContext(GlobalContext);
   const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
@@ -99,7 +96,7 @@ const LinestarterModalDialog = ({
   const handleAddNewLinestarter = () => {
     const longerInputFieldsArray: PartContentSub[] = [
       ...inputFieldsArray,
-      {...newLinestarterObj, id: `${newLinestarterObj.id}${nanoid(4)}`},
+      {...newLinestarterObj, id: `${newLinestarterObj.id}${nanoid(4)}`}
     ];
     setInputFieldsArray(longerInputFieldsArray);
   };
@@ -118,7 +115,7 @@ const LinestarterModalDialog = ({
 
     const input = {
       id: list.id,
-      lessonPlan: [...list.lessonPlan],
+      lessonPlan: [...list.lessonPlan]
     };
 
     await updateLessonPageToDB(input);
@@ -156,7 +153,7 @@ const LinestarterModalDialog = ({
       id: `${FORM_TYPES.POEM}-content-${nanoid(6)}`,
       type: `${FORM_TYPES.POEM}-content`,
       options: inputFieldsArray,
-      value: '',
+      value: ''
     };
 
     if (isEditingMode) {

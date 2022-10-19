@@ -2,13 +2,13 @@
 // import { useCookies } from 'react-cookie';
 
 // import { ClassroomControlProps } from '../Dashboard';
-// import { GlobalContext } from '../../../contexts/GlobalContext';
+// import { GlobalContext } from 'contexts/GlobalContext';
 // import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-// import * as customQueries from '../../../customGraphql/customQueries';
-// import { getArrayOfUniqueValueByProperty } from '../../../utilities/arrays';
-// import { createFilterToFetchSpecificItemsOnly } from '../../../utilities/strings';
-// import useDictionary from '../../../customHooks/dictionary';
-// import * as queries from '../../../graphql/queries';
+// import * as customQueries from 'customGraphql/customQueries';
+// import { getArrayOfUniqueValueByProperty } from 'utilities/arrays';
+// import { createFilterToFetchSpecificItemsOnly } from 'utilities/strings';
+// import useDictionary from 'customHooks/dictionary';
+// import * as queries from 'graphql/queries';
 // import Home from '../Home/Home';
 // import SideRoomSelector from '../Menu/SideRoomSelector';
 // import { useHistory } from 'react-router';

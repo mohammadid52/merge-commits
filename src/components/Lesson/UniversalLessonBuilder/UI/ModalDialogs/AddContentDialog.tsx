@@ -1,9 +1,9 @@
-import Buttons from '@components/Atoms/Buttons';
-import {cardsList} from '@components/Dashboard/GameChangers/__contstants';
-import {useOverlayContext} from '@contexts/OverlayContext';
-import {usePageBuilderContext} from '@contexts/PageBuilderContext';
-import AnimatedContainer from '@uiComponents/Tabs/AnimatedContainer';
-import Tabs, {useTabs} from '@uiComponents/Tabs/Tabs';
+import Buttons from 'atoms/Buttons';
+import {cardsList} from 'components/Dashboard/GameChangers/__contstants';
+import {useOverlayContext} from 'contexts/OverlayContext';
+import {usePageBuilderContext} from 'contexts/PageBuilderContext';
+import AnimatedContainer from 'uiComponents/Tabs/AnimatedContainer';
+import Tabs, {useTabs} from 'uiComponents/Tabs/Tabs';
 import {DIVIDER, EMOTIONS, FORM_TYPES, TABLE} from '@UlbUI/common/constants';
 import {classNames} from '@UlbUI/FormElements/TextInput';
 import gsap from 'gsap';
@@ -18,7 +18,7 @@ import {
   AiOutlineMinus,
   AiOutlineQuestionCircle,
   AiOutlineVideoCameraAdd,
-  AiOutlineYoutube,
+  AiOutlineYoutube
 } from 'react-icons/ai';
 import {BiCheckboxChecked, BiRadioCircleMarked, BiSlider} from 'react-icons/bi';
 import {BsCloudDownload, BsImages, BsNewspaper} from 'react-icons/bs';
@@ -38,13 +38,13 @@ interface AddContentDialog {
 const AddContentDialog = ({
   onItemClick,
   isSurvey = false,
-  setCurrentHelpStep,
+  setCurrentHelpStep
 }: AddContentDialog) => {
   const tabs = [
     {name: 'Text Content', current: true},
     {name: 'Media', current: false},
     {name: 'User Interaction', current: false},
-    {name: 'Game Changers', current: false},
+    {name: 'Game Changers', current: false}
   ];
 
   const {
@@ -54,7 +54,7 @@ const AddContentDialog = ({
     setActiveContentItem,
     showingPin,
     setSelectedType,
-    emotionComponentExists,
+    emotionComponentExists
   } = usePageBuilderContext();
 
   const {addContentModal} = useOverlayContext();
@@ -66,7 +66,7 @@ const AddContentDialog = ({
       subtitle: 'Add title',
       icon: MdTitle,
       iconForeground: 'text-teal-700',
-      iconBackground: 'bg-teal-100',
+      iconBackground: 'bg-teal-100'
     },
     {
       name: 'Paragraph',
@@ -74,7 +74,7 @@ const AddContentDialog = ({
       type: 'paragraph',
       icon: VscSymbolParameter,
       iconForeground: 'text-red-700',
-      iconBackground: 'bg-red-100',
+      iconBackground: 'bg-red-100'
     },
     {
       name: 'Jumbotron',
@@ -82,7 +82,7 @@ const AddContentDialog = ({
       subtitle: 'Add image with details',
       icon: BsImages,
       iconForeground: 'text-yellow-700',
-      iconBackground: 'bg-yellow-100',
+      iconBackground: 'bg-yellow-100'
     },
     !isSurvey && {
       name: 'Word Tiles',
@@ -90,7 +90,7 @@ const AddContentDialog = ({
       type: FORM_TYPES.KEYWORDS,
       icon: VscSymbolKeyword,
       iconForeground: 'text-blue-700',
-      iconBackground: 'bg-blue-100',
+      iconBackground: 'bg-blue-100'
     },
     !isSurvey && {
       name: 'Links',
@@ -99,7 +99,7 @@ const AddContentDialog = ({
 
       icon: AiOutlineLink,
       iconForeground: 'text-pink-700',
-      iconBackground: 'bg-pink-100',
+      iconBackground: 'bg-pink-100'
     },
     {
       name: 'Divider',
@@ -107,7 +107,7 @@ const AddContentDialog = ({
       type: DIVIDER,
       icon: AiOutlineMinus,
       iconForeground: 'text-purple-700',
-      iconBackground: 'bg-purple-100',
+      iconBackground: 'bg-purple-100'
     },
     !isSurvey && {
       name: 'Table',
@@ -115,8 +115,8 @@ const AddContentDialog = ({
       type: TABLE,
       icon: AiOutlineBorderlessTable,
       iconForeground: 'text-purple-700',
-      iconBackground: 'bg-purple-100',
-    },
+      iconBackground: 'bg-purple-100'
+    }
   ].filter(Boolean);
 
   const mediaContent = [
@@ -126,7 +126,7 @@ const AddContentDialog = ({
       type: FORM_TYPES.DOCS,
       icon: IoDocumentTextOutline,
       iconForeground: 'text-green-700',
-      iconBackground: 'bg-green-100',
+      iconBackground: 'bg-green-100'
     },
     {
       subtitle: 'Add image',
@@ -134,7 +134,7 @@ const AddContentDialog = ({
       type: 'image',
       icon: AiOutlineFileImage,
       iconForeground: 'text-teal-700',
-      iconBackground: 'bg-teal-100',
+      iconBackground: 'bg-teal-100'
     },
     {
       subtitle: 'Add Video',
@@ -142,7 +142,7 @@ const AddContentDialog = ({
       type: FORM_TYPES.CUSTOM_VIDEO,
       icon: AiOutlineVideoCameraAdd,
       iconForeground: 'text-pink-700',
-      iconBackground: 'bg-pink-100',
+      iconBackground: 'bg-pink-100'
     },
     {
       name: 'Youtube Video',
@@ -151,7 +151,7 @@ const AddContentDialog = ({
 
       icon: AiOutlineYoutube,
       iconForeground: 'text-red-700',
-      iconBackground: 'bg-red-100',
+      iconBackground: 'bg-red-100'
     },
     !isSurvey && {
       name: 'Attachments',
@@ -159,7 +159,7 @@ const AddContentDialog = ({
       subtitle: 'Students can upload',
       icon: IoDocumentAttachOutline,
       iconForeground: 'text-yellow-700',
-      iconBackground: 'bg-yellow-100',
+      iconBackground: 'bg-yellow-100'
     },
     {
       name: 'Download',
@@ -167,7 +167,7 @@ const AddContentDialog = ({
       subtitle: 'Students can download',
       icon: BsCloudDownload,
       iconForeground: 'text-purple-700',
-      iconBackground: 'bg-purple-100',
+      iconBackground: 'bg-purple-100'
     },
     {
       name: 'Link',
@@ -175,8 +175,8 @@ const AddContentDialog = ({
       type: FORM_TYPES.LINK,
       icon: HiOutlineExternalLink,
       iconForeground: 'text-blue-700',
-      iconBackground: 'bg-blue-100',
-    },
+      iconBackground: 'bg-blue-100'
+    }
   ].filter(Boolean);
 
   const userInterfaceContent = [
@@ -186,7 +186,7 @@ const AddContentDialog = ({
       subtitle: 'Interactive notes for students',
       icon: CgNotes,
       iconForeground: 'text-blue-700',
-      iconBackground: 'bg-blue-100',
+      iconBackground: 'bg-blue-100'
     },
     {
       name: 'Review slider',
@@ -194,7 +194,7 @@ const AddContentDialog = ({
       subtitle: 'Add review slider',
       icon: BiSlider,
       iconForeground: 'text-teal-700',
-      iconBackground: 'bg-teal-100',
+      iconBackground: 'bg-teal-100'
     },
     !isSurvey && {
       name: 'Highlighter',
@@ -202,7 +202,7 @@ const AddContentDialog = ({
       subtitle: 'Add highlighter',
       icon: AiOutlineHighlight,
       iconForeground: 'text-yellow-700',
-      iconBackground: 'bg-yellow-100',
+      iconBackground: 'bg-yellow-100'
     },
     // {
     //   name: 'Linestarter',
@@ -218,7 +218,7 @@ const AddContentDialog = ({
       type: FORM_TYPES.WRITING_EXERCISE,
       icon: BsNewspaper,
       iconForeground: 'text-red-700',
-      iconBackground: 'bg-red-100',
+      iconBackground: 'bg-red-100'
     },
 
     {
@@ -227,7 +227,7 @@ const AddContentDialog = ({
       type: FORM_TYPES.RADIO,
       icon: BiRadioCircleMarked,
       iconForeground: 'text-purple-700',
-      iconBackground: 'bg-purple-100',
+      iconBackground: 'bg-purple-100'
     },
     {
       name: 'Text Responses',
@@ -235,7 +235,7 @@ const AddContentDialog = ({
       type: FORM_TYPES.TEXT,
       icon: AiOutlineQuestionCircle,
       iconForeground: 'text-pink-700',
-      iconBackground: 'bg-pink-100',
+      iconBackground: 'bg-pink-100'
     },
     {
       name: 'Checkbox',
@@ -243,8 +243,8 @@ const AddContentDialog = ({
       type: FORM_TYPES.MULTIPLE,
       icon: BiCheckboxChecked,
       iconForeground: 'text-green-700',
-      iconBackground: 'bg-green-100',
-    },
+      iconBackground: 'bg-green-100'
+    }
   ].filter(Boolean);
 
   const {curTab, setCurTab, helpers} = useTabs(tabs);

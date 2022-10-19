@@ -1,9 +1,9 @@
 import React, {useState} from 'react';
 import {BsFillInfoCircleFill} from 'react-icons/bs';
-import {getAsset} from '../../assets';
+import {getAsset} from 'assets';
 import HeroBanner from '../Header/HeroBanner';
-import InformationalWalkThrough from './Admin/Institutons/InformationalWalkThrough/InformationalWalkThrough';
-import HeaderTextBar from './HeaderTextBar/HeaderTextBar';
+import InformationalWalkThrough from 'components/Dashboard/Admin/Institutons/InformationalWalkThrough/InformationalWalkThrough';
+import HeaderTextBar from 'components/Dashboard/HeaderTextBar/HeaderTextBar';
 
 interface DashboardContainerProps {
   user?: any;

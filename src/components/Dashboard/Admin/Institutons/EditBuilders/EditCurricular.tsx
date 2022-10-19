@@ -4,28 +4,28 @@ import {IoArrowUndoCircleOutline, IoImage} from 'react-icons/io5';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {Storage} from '@aws-amplify/storage';
 
-import * as customMutations from '../../../../../customGraphql/customMutations';
-import * as customQueries from '../../../../../customGraphql/customQueries';
-import * as mutation from '../../../../../graphql/mutations';
-import * as queries from '../../../../../graphql/queries';
+import * as customMutations from 'customGraphql/customMutations';
+import * as customQueries from 'customGraphql/customQueries';
+import * as mutation from 'graphql/mutations';
+import * as queries from 'graphql/queries';
 import ProfileCropModal from '../../../Profile/ProfileCropModal';
 
-import {languageList} from '../../../../../utilities/staticData';
-import SectionTitle from '../../../../Atoms/SectionTitle';
-import PageWrapper from '../../../../Atoms/PageWrapper';
-import BreadCrums from '../../../../Atoms/BreadCrums';
-import Buttons from '../../../../Atoms/Buttons';
-import FormInput from '../../../../Atoms/Form/FormInput';
-import Selector from '../../../../Atoms/Form/Selector';
-import MultipleSelector from '../../../../Atoms/Form/MultipleSelector';
-import TextArea from '../../../../Atoms/Form/TextArea';
-import {getImageFromS3} from '../../../../../utilities/services';
-import useDictionary from '../../../../../customHooks/dictionary';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import {LessonEditDict} from '../../../../../dictionary/dictionary.iconoclast';
-import ModalPopUp from '../../../../Molecules/ModalPopUp';
-import {goBackBreadCrumb} from '../../../../../utilities/functions';
-import DroppableMedia from '../../../../Molecules/DroppableMedia';
+import {languageList} from 'utilities/staticData';
+import SectionTitle from 'atoms/SectionTitle';
+import PageWrapper from 'atoms/PageWrapper';
+import BreadCrums from 'atoms/BreadCrums';
+import Buttons from 'atoms/Buttons';
+import FormInput from 'atoms/Form/FormInput';
+import Selector from 'atoms/Form/Selector';
+import MultipleSelector from 'atoms/Form/MultipleSelector';
+import TextArea from 'atoms/Form/TextArea';
+import {getImageFromS3} from 'utilities/services';
+import useDictionary from 'customHooks/dictionary';
+import {GlobalContext} from 'contexts/GlobalContext';
+import {LessonEditDict} from 'dictionary/dictionary.iconoclast';
+import ModalPopUp from 'molecules/ModalPopUp';
+import {goBackBreadCrumb} from 'utilities/functions';
+import DroppableMedia from 'molecules/DroppableMedia';
 
 interface EditCurricularProps {
   closeAction: () => void;
@@ -46,8 +46,8 @@ const EditCurricular = (props: EditCurricularProps) => {
     institute: {
       id: '',
       name: '',
-      value: '',
-    },
+      value: ''
+    }
   };
   const history = useHistory();
   const location = useLocation();
@@ -60,7 +60,7 @@ const EditCurricular = (props: EditCurricularProps) => {
   const [messages, setMessages] = useState({
     show: false,
     message: '',
-    isError: false,
+    isError: false
   });
   const [showCropper, setShowCropper] = useState(false);
   const [upImage, setUpImage] = useState(null);
@@ -71,7 +71,7 @@ const EditCurricular = (props: EditCurricularProps) => {
 
   const [error, setError] = useState({
     show: true,
-    errorMsg: '',
+    errorMsg: ''
   });
 
   const [saving, setSaving] = useState(false);
@@ -88,7 +88,7 @@ const EditCurricular = (props: EditCurricularProps) => {
   const [unsavedChanges, setUnsavedChanges] = useState(false);
   const [warnModal, setWarnModal] = useState({
     show: false,
-    message: LessonEditDict[userLanguage]['MESSAGES']['UNSAVE'],
+    message: LessonEditDict[userLanguage]['MESSAGES']['UNSAVE']
   });
 
   const breadCrumsList = [
@@ -96,23 +96,23 @@ const EditCurricular = (props: EditCurricularProps) => {
     {
       title: BreadcrumsTitles[userLanguage]['INSTITUTION_MANAGEMENT'],
       url: '/dashboard/manage-institutions',
-      last: false,
+      last: false
     },
     {
       title: curricularData.institute?.name,
       url: `/dashboard/manage-institutions/institution/${param.institutionId}/staff`,
-      last: false,
+      last: false
     },
     {
       title: BreadcrumsTitles[userLanguage]['CURRICULUMBUILDER'],
       goBack: true,
-      last: false,
+      last: false
     },
     {
       title: BreadcrumsTitles[userLanguage]['EDITCURRICULUM'],
       url: `/dashboard/manage-institutions/curricular/edit?id=${params.get('id')}`,
-      last: true,
-    },
+      last: true
+    }
   ];
 
   const onModalSave = () => {
@@ -123,7 +123,7 @@ const EditCurricular = (props: EditCurricularProps) => {
   const toggleModal = () => {
     setWarnModal({
       ...warnModal,
-      show: !warnModal.show,
+      show: !warnModal.show
     });
   };
 
@@ -138,14 +138,14 @@ const EditCurricular = (props: EditCurricularProps) => {
   const onChange = (e: any) => {
     setCurricularData({
       ...curricularData,
-      [e.target.name]: e.target.value,
+      [e.target.name]: e.target.value
     });
     setUnsavedChanges(true);
     if (messages.show) {
       setMessages({
         show: false,
         message: '',
-        isError: false,
+        isError: false
       });
     }
   };
@@ -162,7 +162,7 @@ const EditCurricular = (props: EditCurricularProps) => {
 
     setCurricularData({
       ...curricularData,
-      languages: updatedList,
+      languages: updatedList
     });
   };
 
@@ -172,8 +172,8 @@ const EditCurricular = (props: EditCurricularProps) => {
       institute: {
         id: id,
         name: name,
-        value: val,
-      },
+        value: val
+      }
     });
     setUnsavedChanges(true);
 
@@ -181,7 +181,7 @@ const EditCurricular = (props: EditCurricularProps) => {
       setMessages({
         show: false,
         message: '',
-        isError: false,
+        isError: false
       });
     }
   };
@@ -204,7 +204,7 @@ const EditCurricular = (props: EditCurricularProps) => {
     try {
       const result: any = await API.graphql(
         graphqlOperation(customQueries.listPersons, {
-          filter: {or: [{role: {eq: 'TR'}}, {role: {eq: 'BLD'}}]},
+          filter: {or: [{role: {eq: 'TR'}}, {role: {eq: 'BLD'}}]}
         })
       );
       const savedData = result.data.listPeople;
@@ -212,7 +212,7 @@ const EditCurricular = (props: EditCurricularProps) => {
         (item: {id: string; firstName: string; lastName: string}) => ({
           id: item?.id,
           name: `${item?.firstName || ''} ${item.lastName || ''}`,
-          value: `${item?.firstName || ''} ${item.lastName || ''}`,
+          value: `${item?.firstName || ''} ${item.lastName || ''}`
         })
       );
       setDesignersList(updatedList);
@@ -220,7 +220,7 @@ const EditCurricular = (props: EditCurricularProps) => {
       setMessages({
         show: true,
         message: EditCurriculardict[userLanguage]['messages']['fetcherr'],
-        isError: true,
+        isError: true
       });
     }
   };
@@ -243,14 +243,14 @@ const EditCurricular = (props: EditCurricularProps) => {
           objectives: [curricularData.objectives],
           languages: languagesCode,
           designers: designers,
-          image: curricularDetails.image,
+          image: curricularDetails.image
         };
 
         if (s3Image) {
           await uploadImageToS3(s3Image, curricularData.id, 'image/jpeg');
           input = {
             ...input,
-            image: `instituteImages/curricular_image_${curricularData.id}`,
+            image: `instituteImages/curricular_image_${curricularData.id}`
           };
         }
 
@@ -261,7 +261,7 @@ const EditCurricular = (props: EditCurricularProps) => {
         setMessages({
           show: true,
           message: EditCurriculardict[userLanguage]['messages']['curricularchange'],
-          isError: false,
+          isError: false
         });
         setSaving(false);
         setUnsavedChanges(false);
@@ -271,7 +271,7 @@ const EditCurricular = (props: EditCurricularProps) => {
         setMessages({
           show: true,
           message: EditCurriculardict[userLanguage]['messages']['updateerror'],
-          isError: true,
+          isError: true
         });
       }
     }
@@ -286,14 +286,14 @@ const EditCurricular = (props: EditCurricularProps) => {
       const InstituteList = sortedList.map((item: any, i: any) => ({
         id: item.id,
         name: `${item.name || ''}`,
-        value: `${item.name || ''}`,
+        value: `${item.name || ''}`
       }));
       setInstitutionList(InstituteList);
     } catch {
       setMessages({
         show: true,
         message: EditCurriculardict[userLanguage]['messages']['unablefetch'],
-        isError: true,
+        isError: true
       });
     }
   };
@@ -304,8 +304,8 @@ const EditCurricular = (props: EditCurricularProps) => {
         graphqlOperation(queries.listCurricula, {
           filter: {
             institutionID: {eq: curricularData.institute.id},
-            name: {eq: curricularData.name},
-          },
+            name: {eq: curricularData.name}
+          }
         })
       );
       return list.data.listCurricula.items.length === 0 ? true : false;
@@ -313,7 +313,7 @@ const EditCurricular = (props: EditCurricularProps) => {
       setMessages({
         show: true,
         message: EditCurriculardict[userLanguage]['messages']['processerr'],
-        isError: true,
+        isError: true
       });
     }
   };
@@ -323,14 +323,14 @@ const EditCurricular = (props: EditCurricularProps) => {
       setMessages({
         show: true,
         message: EditCurriculardict[userLanguage]['messages']['namerequired'],
-        isError: true,
+        isError: true
       });
       return false;
     } else if (curricularData.institute.id === '') {
       setMessages({
         show: true,
         message: EditCurriculardict[userLanguage]['messages']['selectinstitute'],
-        isError: true,
+        isError: true
       });
       return false;
     } else if (
@@ -342,7 +342,7 @@ const EditCurricular = (props: EditCurricularProps) => {
         setMessages({
           show: true,
           message: EditCurriculardict[userLanguage]['messages']['nameexist'],
-          isError: true,
+          isError: true
         });
         return false;
       } else {
@@ -375,13 +375,13 @@ const EditCurricular = (props: EditCurricularProps) => {
           institute: {
             id: savedData.institution.id,
             name: savedData.institution.name,
-            value: savedData.institution.name,
+            value: savedData.institution.name
           },
           description: savedData.description,
           objectives: savedData.objectives[0],
           languages: languageList.filter((item) =>
             savedData.languages.includes(item.value)
-          ),
+          )
         });
         // Load from response value
         const imageUrl: any = savedData.image
@@ -394,11 +394,11 @@ const EditCurricular = (props: EditCurricularProps) => {
         }
         setPreviousName(savedData.name);
       } catch (err) {
-        console.log('err', err);
+        console.error('err', err);
         setMessages({
           show: true,
           message: EditCurriculardict[userLanguage]['messages']['fetchinger'],
-          isError: true,
+          isError: true
         });
       }
     } else {
@@ -425,7 +425,7 @@ const EditCurricular = (props: EditCurricularProps) => {
         institute: curricularDetails.institute,
         description: curricularDetails.description,
         objectives: curricularDetails.objectives[0],
-        languages: curricularDetails.languages,
+        languages: curricularDetails.languages
       });
       // Load from response value
       const imageUrl: any = curricularDetails.image
@@ -452,7 +452,7 @@ const EditCurricular = (props: EditCurricularProps) => {
         const personObj = {
           id: personData?.id,
           name: personData?.name,
-          value: personData?.name,
+          value: personData?.name
         };
         return personObj;
       });
@@ -481,7 +481,7 @@ const EditCurricular = (props: EditCurricularProps) => {
       Storage.put(`instituteImages/curricular_image_${id}`, file, {
         contentType: type,
         acl: 'public-read',
-        ContentEncoding: 'base64',
+        ContentEncoding: 'base64'
       })
         .then((result) => {
           console.log('File successfully uploaded to s3', result);
@@ -490,9 +490,9 @@ const EditCurricular = (props: EditCurricularProps) => {
         .catch((err) => {
           setError({
             show: true,
-            errorMsg: 'Unable to upload image. Please try again later. ',
+            errorMsg: 'Unable to upload image. Please try again later. '
           });
-          console.log('Error in uploading file to s3', err);
+          console.error('Error in uploading file to s3', err);
           reject(err);
         });
     });
@@ -507,7 +507,7 @@ const EditCurricular = (props: EditCurricularProps) => {
     {id: 0, name: 'In-School Programming'},
     {id: 1, name: 'After-School Programming'},
     {id: 2, name: 'Summer Intensives (2 week programming)'},
-    {id: 3, name: "Writer's Retreat"},
+    {id: 3, name: "Writer's Retreat"}
   ];
   //*****//
 
@@ -518,7 +518,7 @@ const EditCurricular = (props: EditCurricularProps) => {
     type,
     languages,
     summary,
-    institute,
+    institute
   } = curricularData;
   return (
     <div className="min-w-256">

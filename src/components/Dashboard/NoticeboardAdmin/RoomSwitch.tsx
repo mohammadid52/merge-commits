@@ -1,7 +1,7 @@
 import React, {useContext} from 'react';
-import {GlobalContext} from '../../../contexts/GlobalContext';
-import useDictionary from '../../../customHooks/dictionary';
-import useLoadRooms from '../../../customHooks/loadRooms';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import useLoadRooms from 'customHooks/loadRooms';
 import {DashboardProps} from '../Dashboard';
 import {Room} from '../Menu/SideRoomSelector';
 

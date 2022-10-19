@@ -4,23 +4,23 @@ import {IoArrowUndoCircleOutline, IoOptionsOutline} from 'react-icons/io5';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 
-import {getTypeString} from '../../../../../../../utilities/strings';
-import * as customQueries from '../../../../../../../customGraphql/customQueries';
-import * as customMutations from '../../../../../../../customGraphql/customMutations';
-import {getAsset} from '../../../../../../../assets';
-import {GlobalContext} from '../../../../../../../contexts/GlobalContext';
+import {getTypeString} from 'utilities/strings';
+import * as customQueries from 'customGraphql/customQueries';
+import * as customMutations from 'customGraphql/customMutations';
+import {getAsset} from 'assets';
+import {GlobalContext} from 'contexts/GlobalContext';
 
-import MultipleSelector from '../../../../../../Atoms/Form/MultipleSelector';
-import SectionTitle from '../../../../../../Atoms/SectionTitle';
-import PageWrapper from '../../../../../../Atoms/PageWrapper';
-import BreadCrums from '../../../../../../Atoms/BreadCrums';
-import FormInput from '../../../../../../Atoms/Form/FormInput';
-import Selector from '../../../../../../Atoms/Form/Selector';
-import Buttons from '../../../../../../Atoms/Buttons';
+import MultipleSelector from 'atoms/Form/MultipleSelector';
+import SectionTitle from 'atoms/SectionTitle';
+import PageWrapper from 'atoms/PageWrapper';
+import BreadCrums from 'atoms/BreadCrums';
+import FormInput from 'atoms/Form/FormInput';
+import Selector from 'atoms/Form/Selector';
+import Buttons from 'atoms/Buttons';
 import AddQuestion from './QuestionComponents/AddQuestion';
 import SelectPreviousQuestion from './QuestionComponents/SelectPreviousQuestion';
-import useDictionary from '../../../../../../../customHooks/dictionary';
-import {goBackBreadCrumb} from '../../../../../../../utilities/functions';
+import useDictionary from 'customHooks/dictionary';
+import {goBackBreadCrumb} from 'utilities/functions';
 import {v4 as uuidv4} from 'uuid';
 
 interface AddProfileCheckpointProps {}
@@ -40,7 +40,7 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
     title: '',
     label: '',
     scope: 'public',
-    language: {id: '1', name: 'English', value: 'EN'},
+    language: {id: '1', name: 'English', value: 'EN'}
   };
   const [checkpointData, setCheckpointData] = useState(initialData);
   const [designersList, setDesignersList] = useState([]);
@@ -53,7 +53,7 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
     title: '',
     label: '',
     message: '',
-    isError: true,
+    isError: true
   });
 
   const breadCrumsList = [
@@ -61,45 +61,45 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
     {
       title: BreadcrumsTitles[userLanguage]['INSTITUTION_MANAGEMENT'],
       url: '/dashboard/manage-institutions',
-      last: false,
+      last: false
     },
     {
       title: BreadcrumsTitles[userLanguage]['INSTITUTION_INFO'],
       url: `/dashboard/manage-institutions/institution/${institutionId}/staff`,
-      last: false,
+      last: false
     },
     {
       title: BreadcrumsTitles[userLanguage]['CURRICULUMBUILDER'],
       url: `/dashboard/manage-institutions/${institutionId}/curricular?id=${courseId}`,
-      last: false,
+      last: false
     },
     {
       title: BreadcrumsTitles[userLanguage]['AddCheckpint'],
       url: `/dashboard/manage-institutions/curricular/${courseId}/checkpoint/addNew`,
-      last: true,
-    },
+      last: true
+    }
   ];
 
   const languageList = [
     {id: 1, name: 'English', value: 'EN'},
-    {id: 2, name: 'Spanish', value: 'ES'},
+    {id: 2, name: 'Spanish', value: 'ES'}
   ];
 
   const scopeList = [
     {id: 0, name: 'public'},
-    {id: 1, name: 'private'},
+    {id: 1, name: 'private'}
   ];
 
   const onInputChange = (e: any) => {
     setCheckpointData({
       ...checkpointData,
-      [e.target.name]: e.target.value,
+      [e.target.name]: e.target.value
     });
     if (validation.title || validation.label) {
       setValidation({
         ...validation,
         title: '',
-        label: '',
+        label: ''
       });
     }
   };
@@ -110,8 +110,8 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
       language: {
         id,
         name,
-        value,
-      },
+        value
+      }
     });
   };
 
@@ -148,7 +148,7 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
       const input = {
         checkpointID: checkpointID,
         questionID: quesId,
-        required: false,
+        required: false
       };
       const questions: any = await API.graphql(
         graphqlOperation(customMutations.createCheckpointQuestions, {input: input})
@@ -158,7 +158,7 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
         title: '',
         label: '',
         message: AddProfileCheckpointDict[userLanguage]['messages']['unsave'],
-        isError: true,
+        isError: true
       });
     }
   };
@@ -200,7 +200,7 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
           scope: checkpointData.scope,
           title: checkpointData.title,
           designers: selectedDesigners.map((item: any) => item.id),
-          language: checkpointData.language.value,
+          language: checkpointData.language.value
         };
         const results: any = await API.graphql(
           graphqlOperation(customMutations.createCheckpoint, {input: input})
@@ -211,11 +211,11 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
             id: uuidv4(),
             type: 'curricular',
             typeID: courseId,
-            checkpointID: newCheckpoint.id,
+            checkpointID: newCheckpoint.id
           };
           await API.graphql(
             graphqlOperation(customMutations.createCommonCheckpoint, {
-              input: profileCheckpointInput,
+              input: profileCheckpointInput
             })
           );
 
@@ -230,7 +230,7 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
             title: '',
             label: '',
             message: AddProfileCheckpointDict[userLanguage]['messages']['unsave'],
-            isError: true,
+            isError: true
           });
         }
         setLoading(false);
@@ -241,7 +241,7 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
           title: '',
           label: '',
           message: AddProfileCheckpointDict[userLanguage]['messages']['unsave'],
-          isError: true,
+          isError: true
         });
         setLoading(false);
       }
@@ -256,7 +256,7 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
   const fetchPersonsList = async () => {
     const result: any = await API.graphql(
       graphqlOperation(customQueries.listPersons, {
-        filter: {or: [{role: {eq: 'TR'}}, {role: {eq: 'BLD'}}]},
+        filter: {or: [{role: {eq: 'TR'}}, {role: {eq: 'BLD'}}]}
       })
     );
     const savedData = result.data.listPeople;
@@ -264,7 +264,7 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
       (item: {id: string; firstName: string; lastName: string}) => ({
         id: item?.id,
         name: `${item?.firstName || ''} ${item.lastName || ''}`,
-        value: `${item?.firstName || ''} ${item.lastName || ''}`,
+        value: `${item?.firstName || ''} ${item.lastName || ''}`
       })
     );
     setDesignersList(updatedList);
@@ -374,7 +374,7 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
                       onChange={(c, name) =>
                         setCheckpointData({
                           ...checkpointData,
-                          scope: name,
+                          scope: name
                         })
                       }
                     />
@@ -478,7 +478,7 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
                                         <IconContext.Provider
                                           value={{
                                             size: '1.5rem',
-                                            color: theme.iconColor[themeColor],
+                                            color: theme.iconColor[themeColor]
                                           }}>
                                           <IoOptionsOutline />
                                         </IconContext.Provider>

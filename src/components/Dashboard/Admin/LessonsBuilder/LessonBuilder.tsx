@@ -3,19 +3,19 @@ import React, {useContext, useEffect, useState} from 'react';
 import {FaQuestionCircle, FaRegEye} from 'react-icons/fa';
 import {IoCardSharp, IoDocumentText} from 'react-icons/io5';
 import {useHistory, useParams, useRouteMatch} from 'react-router-dom';
-import {GlobalContext} from '@contexts/GlobalContext';
-import {useULBContext} from '@contexts/UniversalLessonBuilderContext';
-import * as customMutations from '@customGraphql/customMutations';
-import * as customQueries from '@customGraphql/customQueries';
-import useDictionary from '@customHooks/dictionary';
-import {useQuery} from '@customHooks/urlParam';
-import * as mutations from '@graphql/mutations';
-import {LessonPlansProps, SavedLessonDetailsProps} from '@interfaces/LessonInterfaces';
-import {getImageFromS3Static} from '@utilities/services';
-import {languageList, lessonTypeList} from '@utilities/staticData';
-import Loader from '@atoms/Loader';
-import StepComponent, {IStepElementInterface} from '@atoms/StepComponent';
-import ModalPopUp from '@molecules/ModalPopUp';
+import {GlobalContext} from 'contexts/GlobalContext';
+import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
+import * as customMutations from 'customGraphql/customMutations';
+import * as customQueries from 'customGraphql/customQueries';
+import useDictionary from 'customHooks/dictionary';
+import {useQuery} from 'customHooks/urlParam';
+import * as mutations from 'graphql/mutations';
+import {LessonPlansProps, SavedLessonDetailsProps} from 'interfaces/LessonInterfaces';
+import {getImageFromS3Static} from 'utilities/services';
+import {languageList, lessonTypeList} from 'utilities/staticData';
+import Loader from 'atoms/Loader';
+import StepComponent, {IStepElementInterface} from 'atoms/StepComponent';
+import ModalPopUp from 'molecules/ModalPopUp';
 import AddNewLessonForm from './StepActionComponent/AddNewLessonForm/AddNewLessonForm';
 import LearningEvidence from './StepActionComponent/LearningEvidence/LearningEvidence';
 import LessonActivities from './StepActionComponent/LessonActivities';
@@ -82,7 +82,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     imageCaption: '',
     studentSummary: '',
     lessonPlan: [{}],
-    targetAudience: '',
+    targetAudience: ''
   };
   const instructionInitialState = {
     introductionTitle: '',
@@ -90,18 +90,18 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     summaryTitle: '',
     introduction: '',
     instructions: '',
-    summary: '',
+    summary: ''
   };
 
   const assessmentScrollerStep = [
     {name: 'Overview', icon: <IoCardSharp />},
     {name: 'Instructions', icon: <IoDocumentText />, isDisabled: true},
     {name: 'Builder', icon: <FaQuestionCircle />, isDisabled: true},
-    {name: 'Preview Details', icon: <FaRegEye />, isDisabled: true},
+    {name: 'Preview Details', icon: <FaRegEye />, isDisabled: true}
   ];
   const lessonScrollerStep = [
     {name: 'Overview', icon: <IoCardSharp />},
-    {name: 'Preview Details', icon: <FaRegEye />, isDisabled: true},
+    {name: 'Preview Details', icon: <FaRegEye />, isDisabled: true}
   ];
 
   const [designersList, setDesignersList] = useState([]);
@@ -114,7 +114,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
   const [selectedMeasurements, setSelectedMeasurements] = useState([]);
   const [savedLessonDetails, setSavedLessonDetails] = useState<SavedLessonDetailsProps>({
     lessonPlans: null,
-    lessonInstructions: instructionInitialState,
+    lessonInstructions: instructionInitialState
   });
   const [selectedDesigners, setSelectedDesigners] = useState([]);
   const [curriculumList, setCurriculumList] = useState([]);
@@ -128,17 +128,17 @@ const LessonBuilder = (props: LessonBuilderProps) => {
   const [warnModal, setWarnModal] = useState({
     show: false,
     message: LessonBuilderDict[userLanguage]['MESSAGES']['UNSAVE'],
-    url: '',
+    url: ''
   });
   const [serverMessage, setServerMessage] = useState({
     isError: false,
-    message: '',
+    message: ''
   });
 
   const [checkpointSaveModal, setCheckpointSaveModal] = useState({
     show: false,
     stepOnHold: '',
-    message: '',
+    message: ''
   });
 
   const fetchStaffByInstitution = async (institutionID: string) => {
@@ -147,16 +147,14 @@ const LessonBuilder = (props: LessonBuilderProps) => {
       setDesignersListLoading(true);
       const staffList: any = await API.graphql(
         graphqlOperation(customQueries.getStaffsForInstitution, {
-          filter: {institutionID: {eq: institutionID}},
+          filter: {institutionID: {eq: institutionID}}
         })
       );
       const listStaffs = staffList.data.listStaff;
       const updatedList = listStaffs?.items.map((item: any) => ({
         id: item?.id,
         name: `${item?.staffMember?.firstName || ''} ${item?.staffMember.lastName || ''}`,
-        value: `${item?.staffMember?.firstName || ''} ${
-          item?.staffMember.lastName || ''
-        }`,
+        value: `${item?.staffMember?.firstName || ''} ${item?.staffMember.lastName || ''}`
       }));
       setDesignersList(updatedList);
       setDesignersListLoading(false);
@@ -175,7 +173,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
   const [warnModal2, setWarnModal2] = useState({
     stepOnHold: '',
     show: false,
-    message: '',
+    message: ''
   });
 
   const [unSavedCheckPData, setUnsavedCheckPData] = useState<any>({});
@@ -201,7 +199,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     try {
       const result: any = await API.graphql(
         graphqlOperation(customQueries.getUniversalLesson, {
-          id: lessonId,
+          id: lessonId
         })
       );
       const savedData = result.data.getUniversalLesson;
@@ -236,8 +234,8 @@ const LessonBuilder = (props: LessonBuilderProps) => {
           institution: {
             id: institution?.id,
             name: institution?.name,
-            value: institution?.name,
-          },
+            value: institution?.name
+          }
         });
         fetchStaffByInstitution(savedData.institutionID);
       }
@@ -257,8 +255,8 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     const result: any = await API.graphql(
       graphqlOperation(customQueries.listUniversalSyllabusLessons, {
         filter: {
-          lessonID: {eq: lessonId},
-        },
+          lessonID: {eq: lessonId}
+        }
       })
     );
     const assignedSyllabus = result?.data?.listUniversalSyllabusLessons.items;
@@ -285,7 +283,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
         designers: [''],
         teachers: [''],
         categories: [''],
-        lessonPlan: [],
+        lessonPlan: []
       });
     }
   }, [lessonId]);
@@ -315,7 +313,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
       const input = {
         checkpointID: checkpointID,
         questionID: quesId,
-        required: required ? required : false,
+        required: required ? required : false
       };
       const questions: any = await API.graphql(
         graphqlOperation(customMutations.createCheckpointQuestions, {input: input})
@@ -346,7 +344,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
         objectives: unSavedCheckPData.objectiveHtml,
         designers: selDesigners.map((item: any) => item.id),
         language: unSavedCheckPData.language.value,
-        estTime: unSavedCheckPData.estTime ? parseInt(unSavedCheckPData.estTime) : 0,
+        estTime: unSavedCheckPData.estTime ? parseInt(unSavedCheckPData.estTime) : 0
       };
       const results: any = await API.graphql(
         graphqlOperation(customMutations.createCheckpoint, {input: input})
@@ -356,7 +354,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
         let lessonCheckpointInput = {
           lessonID: lessonId,
           checkpointID: newCheckpoint.id,
-          position: 0,
+          position: 0
         };
         let lessonPlansInput = !savedLessonDetails.lessonPlans?.length
           ? [
@@ -364,8 +362,8 @@ const LessonBuilder = (props: LessonBuilderProps) => {
                 type: 'checkpoint',
                 LessonComponentID: newCheckpoint.id,
                 sequence: 0,
-                stage: 'checkpoint',
-              },
+                stage: 'checkpoint'
+              }
             ]
           : [
               ...savedLessonDetails.lessonPlans,
@@ -373,23 +371,23 @@ const LessonBuilder = (props: LessonBuilderProps) => {
                 type: 'checkpoint',
                 LessonComponentID: newCheckpoint.id,
                 sequence: savedLessonDetails.lessonPlans.length,
-                stage: 'checkpoint',
-              },
+                stage: 'checkpoint'
+              }
             ];
         let [lessonCheckpoint, lesson]: any = await Promise.all([
           await API.graphql(
             graphqlOperation(customMutations.createLessonCheckpoint, {
-              input: lessonCheckpointInput,
+              input: lessonCheckpointInput
             })
           ),
           await API.graphql(
             graphqlOperation(customMutations.updateLesson, {
               input: {
                 id: lessonId,
-                lessonPlan: lessonPlansInput,
-              },
+                lessonPlan: lessonPlansInput
+              }
             })
-          ),
+          )
         ]);
         let questions = Promise.all(
           checkpQuestions.map(async (item: any) =>
@@ -399,7 +397,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
         let checkpQuestionsIds = checkpQuestions.map((item: any) => item.id);
         let seqItem: any = await API.graphql(
           graphqlOperation(mutations.createCSequences, {
-            input: {id: `Ch_Ques_${newCheckpoint.id}`, sequence: checkpQuestionsIds},
+            input: {id: `Ch_Ques_${newCheckpoint.id}`, sequence: checkpQuestionsIds}
           })
         );
 
@@ -422,7 +420,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
 
       setWarnModal2({
         ...warnModal2,
-        show: false,
+        show: false
       });
     } else {
       // clicked on no button
@@ -432,7 +430,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
       setWarnModal2({
         stepOnHold: '',
         show: false,
-        message: '',
+        message: ''
       });
       setShowModal(false);
       setUnsavedChanges(false);
@@ -447,8 +445,8 @@ const LessonBuilder = (props: LessonBuilderProps) => {
       const list: any = await API.graphql(
         graphqlOperation(customQueries.listCurriculumsForLessons, {
           filter: {
-            institutionID: {eq: formData?.institution?.id},
-          },
+            institutionID: {eq: formData?.institution?.id}
+          }
         })
       );
       const institutionRooms: any = await API.graphql(
@@ -467,7 +465,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
               curriculumId: item3?.curriculum?.id,
               curriculumName: item3?.curriculum?.name,
               roomName: item2.name,
-              roomId: item2.id,
+              roomId: item2.id
             });
           });
         });
@@ -489,7 +487,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
             ...curriculum,
             assignedSyllabi,
             // : assignedSyllabi.map((syllabus: any) => syllabus.name),
-            assignedSyllabusId: assignedSyllabi.map((syllabus: any) => syllabus.unitId),
+            assignedSyllabusId: assignedSyllabi.map((syllabus: any) => syllabus.unitId)
           });
         }
       });
@@ -504,13 +502,13 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     const redirectionUrl = `${match.url}?lessonId=${lessonId}&step=${step}`;
     setServerMessage({
       isError: false,
-      message: '',
+      message: ''
     });
     if (unsavedChanges) {
       setWarnModal({
         show: true,
         message: 'Do you want to save changes before going?',
-        url: redirectionUrl,
+        url: redirectionUrl
       });
     } else {
       setUnsavedChanges(false);
@@ -545,7 +543,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
       // }
       setServerMessage({
         isError: false,
-        message: AddNewLessonFormDict[userLanguage]['MESSAGES']['MEASUREMENTADDSUCCESS'],
+        message: AddNewLessonFormDict[userLanguage]['MESSAGES']['MEASUREMENTADDSUCCESS']
       });
       setUnsavedChanges(false);
       setUpdating(false);
@@ -557,7 +555,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
       setUpdating(false);
       setServerMessage({
         isError: true,
-        message: AddNewLessonFormDict[userLanguage]['MESSAGES']['UPDATEERR'],
+        message: AddNewLessonFormDict[userLanguage]['MESSAGES']['UPDATEERR']
       });
     }
   };
@@ -631,13 +629,13 @@ const LessonBuilder = (props: LessonBuilderProps) => {
       await updateMeasurementList(selectedMeasurements);
       setServerMessage({
         isError: false,
-        message: '',
+        message: ''
       });
       discardChanges();
     } else {
       setWarnModal({
         ...warnModal,
-        show: !warnModal.show,
+        show: !warnModal.show
       });
     }
   };
@@ -647,7 +645,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
       ...warnModal,
       message: 'Do you want to save changes before going?',
       show: !warnModal.show,
-      url,
+      url
     });
   };
 
@@ -655,7 +653,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     history.push(warnModal.url);
     setWarnModal({
       ...warnModal,
-      show: !warnModal.show,
+      show: !warnModal.show
     });
     setUnsavedChanges(false);
   };
@@ -696,7 +694,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
   const updateLessonPlan = (lessonPlan: LessonPlansProps[]) => {
     setSavedLessonDetails({
       ...savedLessonDetails,
-      lessonPlans: lessonPlan,
+      lessonPlans: lessonPlan
     });
   };
   useEffect(() => {
@@ -717,7 +715,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
       description: LessonBuilderDict[userLanguage]['OVERVIEW_DESCRIPTION'],
       stepValue: 'overview',
       icon: <IoCardSharp />,
-      isComplete: true,
+      isComplete: true
     },
     {
       title: LessonBuilderDict[userLanguage]['ACTIVITY_TITLE'],
@@ -726,7 +724,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
       icon: <FaQuestionCircle />,
       disabled: !Boolean(lessonId),
       isComplete: false,
-      tooltipText: LessonBuilderDict[userLanguage]['ACTIVITY_TOOLTIP'],
+      tooltipText: LessonBuilderDict[userLanguage]['ACTIVITY_TOOLTIP']
     },
     {
       title: LessonBuilderDict[userLanguage]['UNIT_MANAGER_TITLE'],
@@ -735,7 +733,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
       icon: <FaQuestionCircle />,
       disabled: !(universalLessonDetails && universalLessonDetails.lessonPlan?.length),
       isComplete: false,
-      tooltipText: LessonBuilderDict[userLanguage]['UNIT_MANAGER_TOOLTIP'],
+      tooltipText: LessonBuilderDict[userLanguage]['UNIT_MANAGER_TOOLTIP']
     },
     {
       title:
@@ -747,8 +745,8 @@ const LessonBuilder = (props: LessonBuilderProps) => {
       icon: <FaQuestionCircle />,
       disabled: !(Boolean(selectedMeasurements?.length) || Boolean(addedSyllabus.length)),
       isComplete: false,
-      tooltipText: LessonBuilderDict[userLanguage]['LEARNING_EVIDENCE_TOOLTIP'],
-    },
+      tooltipText: LessonBuilderDict[userLanguage]['LEARNING_EVIDENCE_TOOLTIP']
+    }
   ];
 
   const animationProps = {animationType: 'translateY', duration: '500'};

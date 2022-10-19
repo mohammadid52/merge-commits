@@ -1,13 +1,13 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {GlobalContext} from '../../../contexts/GlobalContext';
-import {Widget} from '../../../interfaces/ClassroomComponentsInterfaces';
+import {GlobalContext} from 'contexts/GlobalContext';
+import {Widget} from 'interfaces/ClassroomComponentsInterfaces';
 import {SideMenuSection} from './SideMenuSection';
 import Rooms from '../../RoomChat/Rooms';
 import {CallWidgetsSmall} from './SectionContent/CallWidgetsSmall';
 import {FileWidgetsSmall} from './SectionContent/FileWidgetsSmall';
 import RoomChat from '../../RoomChat/RoomChat';
-import NotesForm from '@components/Lesson/Notes/NotesForm';
-import useDictionary from '../../../customHooks/dictionary';
+import NotesForm from 'components/Lesson/Notes/NotesForm';
+import useDictionary from 'customHooks/dictionary';
 import {FloatingSideMenuProps} from './FloatingSideMenu';
 
 // GET ALL THE RELEVANT WIDGETS HERE
@@ -24,7 +24,7 @@ const ExpandedMenu = ({
   setNotesInitialized,
   getOrCreateJournalData,
   updateNotesContent,
-  saveInProgress,
+  saveInProgress
 }: FloatingSideMenuProps) => {
   const {state, clientKey, userLanguage} = useContext(GlobalContext);
   const {lessonDict} = useDictionary(clientKey);

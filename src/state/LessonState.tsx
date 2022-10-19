@@ -1,7 +1,7 @@
 import {
   StudentExerciseData,
   StudentPageInput
-} from '../interfaces/UniversalLessonInterfaces';
+} from 'interfaces/UniversalLessonInterfaces';
 
 export interface lessonStateType {
   loaded?: boolean;

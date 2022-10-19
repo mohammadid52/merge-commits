@@ -1,8 +1,8 @@
 import React, {useEffect, useReducer, useState} from 'react';
-import {lessonControlReducer} from '../reducers/LessonControlReducer';
-import {lessonControlState} from '../state/LessonControlState';
-import {getClientKey} from '../utilities/strings';
-import {standardTheme} from './GlobalContext';
+import {lessonControlReducer} from 'reducers/LessonControlReducer';
+import {lessonControlState} from 'state/LessonControlState';
+import {getClientKey} from 'utilities/strings';
+import {standardTheme} from 'contexts/GlobalContext';
 
 interface LessonControlProps {
   children: React.ReactNode;

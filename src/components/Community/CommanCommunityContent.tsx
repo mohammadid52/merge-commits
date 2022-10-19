@@ -1,11 +1,11 @@
-import ContentCard from '@atoms/ContentCard';
-import Loader from '@components/Atoms/Loader';
-import Card from '@components/Community/Card';
-import useAuth from '@customHooks/useAuth';
+import ContentCard from 'atoms/ContentCard';
+import Loader from 'atoms/Loader';
+import Card from 'components/Community/Card';
+import useAuth from 'customHooks/useAuth';
 
-import * as queries from '@graphql/queries';
-import {ICommunityCard} from '@interfaces/Community.interfaces';
-import AnimatedContainer from '@uiComponents/Tabs/AnimatedContainer';
+import * as queries from 'graphql/queries';
+import {ICommunityCard} from 'interfaces/Community.interfaces';
+import AnimatedContainer from 'uiComponents/Tabs/AnimatedContainer';
 import {API, graphqlOperation} from 'aws-amplify';
 import orderBy from 'lodash/orderBy';
 import React, {useEffect, useState} from 'react';
@@ -14,7 +14,7 @@ const CommanCommunityContent = ({
   customContent,
   list,
   setList,
-  onDelete,
+  onDelete
 }: {
   customContent?: React.ReactNode;
   list?: ICommunityCard[];
@@ -41,7 +41,7 @@ const CommanCommunityContent = ({
       setIsLoading(true);
       let payload: any = {
         institutionID: instId,
-        limit: 12,
+        limit: 12
       };
       const res: any = await API.graphql(
         graphqlOperation(queries.listCommunities, payload)

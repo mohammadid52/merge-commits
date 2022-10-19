@@ -3,8 +3,8 @@ import {
   StudentPageInput,
   UniversalLesson,
   UniversalLessonPage
-} from '../interfaces/UniversalLessonInterfaces';
-import {lessonState as initialLessonState} from '../state/LessonState';
+} from 'interfaces/UniversalLessonInterfaces';
+import {lessonState as initialLessonState} from 'state/LessonState';
 
 const LESSON_REDUCER_TYPES = {
   TEST: 'TEST',
@@ -502,6 +502,7 @@ export const lessonReducer = (state: any, action: LessonActions) => {
           personLessonData: action.payload
         }
       };
+
     default:
       return state;
   }

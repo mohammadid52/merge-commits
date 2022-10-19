@@ -1,18 +1,18 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {NavLink, useHistory, useRouteMatch} from 'react-router-dom';
-import {LessonContext} from '../../../contexts/LessonContext';
-import {GlobalContext} from '../../../contexts/GlobalContext';
-import {getAsset} from '../../../assets';
-import {LessonHeaderBarProps} from '../../../interfaces/LessonComponentsInterfaces';
+import {LessonContext} from 'contexts/LessonContext';
+import {GlobalContext} from 'contexts/GlobalContext';
+import {getAsset} from 'assets';
+import {LessonHeaderBarProps} from 'interfaces/LessonComponentsInterfaces';
 import PositiveAlert from '../../General/Popup';
 import {useOutsideAlerter} from '../../General/hooks/outsideAlerter';
-import {getLocalStorageData} from '../../../utilities/localStorage';
-import {StudentPageInput} from '../../../interfaces/UniversalLessonInterfaces';
+import {getLocalStorageData} from 'utilities/localStorage';
+import {StudentPageInput} from 'interfaces/UniversalLessonInterfaces';
 
 const Foot = ({
   isAtEnd,
   setisAtEnd,
-  handleRequiredNotification,
+  handleRequiredNotification
 }: LessonHeaderBarProps) => {
   const {state, dispatch, lessonState, lessonDispatch, clientKey, theme} = useContext(
     GlobalContext
@@ -73,7 +73,7 @@ const Foot = ({
         history.push(`${match.url}/${lessonState.currentPage + 1}`);
         lessonDispatch({
           type: 'SET_CURRENT_PAGE',
-          payload: lessonState.currentPage + 1,
+          payload: lessonState.currentPage + 1
         });
       } else {
         handleRequiredNotification();
@@ -93,14 +93,14 @@ const Foot = ({
       history.push(`${match.url}/${lessonState.currentPage - 1}`);
       lessonDispatch({
         type: 'SET_CURRENT_PAGE',
-        payload: lessonState.currentPage - 1,
+        payload: lessonState.currentPage - 1
       });
     } else if (!userAtEnd() && lessonState.currentPage > 0) {
       if (isAtEnd) setisAtEnd(false);
       history.push(`${match.url}/${lessonState.currentPage - 1}`);
       lessonDispatch({
         type: 'SET_CURRENT_PAGE',
-        payload: lessonState.currentPage - 1,
+        payload: lessonState.currentPage - 1
       });
     }
   };

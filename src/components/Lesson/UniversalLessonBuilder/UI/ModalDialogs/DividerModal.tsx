@@ -1,12 +1,12 @@
 import React, {useContext, useState, useEffect} from 'react';
-import {IContentTypeComponentProps} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
-import FormInput from '../../../../Atoms/Form/FormInput';
+import {IContentTypeComponentProps} from 'interfaces/UniversalLessonBuilderInterfaces';
+import FormInput from 'atoms/Form/FormInput';
 import {v4 as uuidv4} from 'uuid';
 import {DIVIDER} from '../common/constants';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import useDictionary from '../../../../../customHooks/dictionary';
-import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
-import Buttons from '../../../../Atoms/Buttons';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
+import Buttons from 'atoms/Buttons';
 
 interface Divider extends IContentTypeComponentProps {
   inputObj?: any;
@@ -20,7 +20,7 @@ const DividerModal = (props: Divider) => {
     createNewBlockULBHandler,
     updateBlockContentULBHandler,
     askBeforeClose,
-    setUnsavedChanges,
+    setUnsavedChanges
   } = props;
   const {userLanguage, clientKey} = useContext(GlobalContext);
   const {EditQuestionModalDict} = useDictionary(clientKey);
@@ -46,7 +46,7 @@ const DividerModal = (props: Divider) => {
 
     const input = {
       id: list.id,
-      lessonPlan: [...list.lessonPlan],
+      lessonPlan: [...list.lessonPlan]
     };
     await updateLessonPageToDB(input);
   };
@@ -57,8 +57,8 @@ const DividerModal = (props: Divider) => {
         id: uuidv4().toString(),
         type: DIVIDER,
         label: '',
-        value: dividerText,
-      },
+        value: dividerText
+      }
     ];
 
     if (isEditingMode) {

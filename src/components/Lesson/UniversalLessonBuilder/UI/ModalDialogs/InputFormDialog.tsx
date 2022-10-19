@@ -3,7 +3,7 @@ import React, {useState, useEffect} from 'react';
 import {map} from 'lodash';
 
 import {v4 as uuidv4} from 'uuid';
-import {IContentTypeComponentProps} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
+import {IContentTypeComponentProps} from 'interfaces/UniversalLessonBuilderInterfaces';
 import {
   FORM_TYPES,
   INPUT,
@@ -12,7 +12,7 @@ import {
   LINK,
   SELECT_MANY,
   DATE_PICKER,
-  ATTACHMENTS,
+  ATTACHMENTS
 } from '../common/constants';
 import TextInput from '../FormElements/TextInput';
 import UniversalOption from '../FormElements/UniversalOption';
@@ -31,7 +31,7 @@ const InputModalComponent = ({
   createNewBlockULBHandler,
   updateBlockContentULBHandler,
   setUnsavedChanges,
-  askBeforeClose,
+  askBeforeClose
 }: InputModalComponentProps) => {
   const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
 
@@ -47,7 +47,7 @@ const InputModalComponent = ({
             label: input.label,
             required: input.isRequired,
             inLine: inLine,
-            type: input.type === FORM_TYPES.RADIO ? SELECT_ONE : SELECT_MANY,
+            type: input.type === FORM_TYPES.RADIO ? SELECT_ONE : SELECT_MANY
           }))
         );
         setSelectedFormType(SELECT_ONE);
@@ -61,7 +61,7 @@ const InputModalComponent = ({
               label: input.label,
               inLine: inLine,
               required: input.isRequired,
-              type: input.type === FORM_TYPES.RADIO ? SELECT_ONE : SELECT_MANY,
+              type: input.type === FORM_TYPES.RADIO ? SELECT_ONE : SELECT_MANY
             };
           })
         );
@@ -72,7 +72,7 @@ const InputModalComponent = ({
             ...input,
             title: input.label,
             placeholder: input.value,
-            required: input.isRequired,
+            required: input.isRequired
           }))
         );
         setSelectedFormType(INPUT_WITH_EMOJI);
@@ -82,7 +82,7 @@ const InputModalComponent = ({
             ...input,
             title: input.label,
             placeholder: input.value,
-            required: input.isRequired,
+            required: input.isRequired
           }))
         );
         setSelectedFormType(LINK);
@@ -93,7 +93,7 @@ const InputModalComponent = ({
             textArea: input.type.includes('area'),
             title: input.label,
             placeholder: input.value,
-            required: input.isRequired,
+            required: input.isRequired
           }))
         );
         setSelectedFormType(INPUT);
@@ -104,10 +104,10 @@ const InputModalComponent = ({
 
   //  <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<INPUT LIST STARTS HERE>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
   const [inputList, setInputList] = useState([
-    {id: uuidv4(), textArea: false, label: '', value: '', required: false},
+    {id: uuidv4(), textArea: false, label: '', value: '', required: false}
   ]);
   const [emojiInputList, setEmojiInputList] = useState([
-    {id: uuidv4(), label: '', value: '', required: false},
+    {id: uuidv4(), label: '', value: '', required: false}
   ]);
   const [manyOptionList, setManyOptionList] = useState([
     {
@@ -118,9 +118,9 @@ const InputModalComponent = ({
       type: FORM_TYPES.MULTIPLE,
       options: [
         {label: '1', text: '', id: uuidv4()},
-        {label: '2', text: '', id: uuidv4()},
-      ],
-    },
+        {label: '2', text: '', id: uuidv4()}
+      ]
+    }
   ]);
 
   const [radioList, setRadioList] = useState([
@@ -132,19 +132,19 @@ const InputModalComponent = ({
       inLine: true,
       options: [
         {label: '1', text: '', id: uuidv4()},
-        {label: '2', text: '', id: uuidv4()},
-      ],
-    },
+        {label: '2', text: '', id: uuidv4()}
+      ]
+    }
   ]);
 
   const [linkList, setLinkList] = useState([
-    {id: uuidv4(), require: false, label: '', value: ''},
+    {id: uuidv4(), require: false, label: '', value: ''}
   ]);
   const [attachmentList, setAttachmentList] = useState([
-    {id: uuidv4(), require: false, label: '', value: ''},
+    {id: uuidv4(), require: false, label: '', value: ''}
   ]);
   const [datePickerList, setDatePickerList] = useState([
-    {id: uuidv4(), require: false, label: '', value: ''},
+    {id: uuidv4(), require: false, label: '', value: ''}
   ]);
 
   //  <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<INPUT LIST ENDS HERE>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -156,7 +156,7 @@ const InputModalComponent = ({
     {label: LINK, type: FORM_TYPES.LINK},
     {label: INPUT_WITH_EMOJI, type: FORM_TYPES.EMOJI},
     {label: ATTACHMENTS, type: FORM_TYPES.ATTACHMENTS},
-    {label: DATE_PICKER, type: FORM_TYPES.DATE_PICKER},
+    {label: DATE_PICKER, type: FORM_TYPES.DATE_PICKER}
   ];
   const DEFAULT_FORM_TYPE = formTypes[0].label;
 
@@ -172,7 +172,7 @@ const InputModalComponent = ({
     setNumbered,
     closeAction,
     askBeforeClose,
-    setUnsavedChanges,
+    setUnsavedChanges
   };
 
   const getForm = (type: string) => {

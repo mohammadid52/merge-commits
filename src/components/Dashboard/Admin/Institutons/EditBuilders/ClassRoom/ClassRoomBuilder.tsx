@@ -2,16 +2,16 @@ import React, {useState, useEffect, useContext} from 'react';
 import {useHistory, useLocation, useParams, useRouteMatch} from 'react-router-dom';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 
-import * as customQueries from '../../../../../../customGraphql/customQueries';
-import {useQuery} from '../../../../../../customHooks/urlParam';
+import * as customQueries from 'customGraphql/customQueries';
+import {useQuery} from 'customHooks/urlParam';
 
-import * as queries from '../../../../../../graphql/queries';
-import {getFilterORArray} from '../../../../../../utilities/strings';
-import {GlobalContext} from '../../../../../../contexts/GlobalContext';
-import useDictionary from '../../../../../../customHooks/dictionary';
-import {LessonEditDict} from '../../../../../../dictionary/dictionary.iconoclast';
-import ModalPopUp from '../../../../../Molecules/ModalPopUp';
-import StepComponent, {IStepElementInterface} from '../../../../../Atoms/StepComponent';
+import * as queries from 'graphql/queries';
+import {getFilterORArray} from 'utilities/strings';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import {LessonEditDict} from 'dictionary/dictionary.iconoclast';
+import ModalPopUp from 'molecules/ModalPopUp';
+import StepComponent, {IStepElementInterface} from 'atoms/StepComponent';
 import CourseDynamics from './CourseDynamics/CourseDynamics';
 import ClassRoomForm from './ClassRoomForm';
 import CourseSchedule from './CourseSchedule';
@@ -41,14 +41,14 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
   const [messages, setMessages] = useState({
     show: false,
     message: '',
-    isError: false,
+    isError: false
   });
 
   const {CommonlyUsedDict, RoomEDITdict} = useDictionary(clientKey);
 
   const [warnModal, setWarnModal] = useState({
     show: false,
-    message: LessonEditDict[userLanguage]['MESSAGES']['UNSAVE'],
+    message: LessonEditDict[userLanguage]['MESSAGES']['UNSAVE']
   });
 
   const onModalSave = () => {
@@ -59,7 +59,7 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
   const toggleModal = () => {
     setWarnModal({
       ...warnModal,
-      show: !warnModal.show,
+      show: !warnModal.show
     });
   };
 
@@ -67,15 +67,15 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
     try {
       const list: any = await API.graphql(
         graphqlOperation(customQueries.getInstitution, {
-          id: instId,
+          id: instId
         })
       );
       setRoomData((prevData: any) => ({
         ...prevData,
         institute: {
           ...prevData.institute,
-          name: list.data.getInstitution?.name,
-        },
+          name: list.data.getInstitution?.name
+        }
       }));
       const serviceProviders = list.data.getInstitution?.serviceProviders?.items;
       return serviceProviders;
@@ -83,7 +83,7 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
       setMessages({
         show: true,
         message: RoomEDITdict[userLanguage]['messages']['unabletofetch'],
-        isError: true,
+        isError: true
       });
     }
   };
@@ -92,7 +92,7 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
     try {
       const list: any = await API.graphql(
         graphqlOperation(queries.listStaff, {
-          filter: {or: getFilterORArray(allInstiId, 'institutionID')},
+          filter: {or: getFilterORArray(allInstiId, 'institutionID')}
         })
       );
       const listStaffs = list.data.listStaff.items;
@@ -100,7 +100,7 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
         setMessages({
           show: true,
           message: RoomEDITdict[userLanguage]['messages']['addstaffirst'],
-          isError: true,
+          isError: true
         });
       } else {
         const sortedList = listStaffs.sort((a: any, b: any) =>
@@ -123,7 +123,7 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
           }`,
           email: item.staffMember?.email ? item.staffMember?.email : '',
           authId: item.staffMember?.authId ? item.staffMember?.authId : '',
-          image: item.staffMember?.image,
+          image: item.staffMember?.image
         }));
 
         // Removed duplicates from staff list.
@@ -138,7 +138,7 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
       setMessages({
         show: true,
         message: RoomEDITdict[userLanguage]['messages']['unableteacher'],
-        isError: true,
+        isError: true
       });
     }
   };
@@ -147,7 +147,7 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
     try {
       const list: any = await API.graphql(
         graphqlOperation(queries.listCurricula, {
-          filter: {or: getFilterORArray(allInstiId, 'institutionID')},
+          filter: {or: getFilterORArray(allInstiId, 'institutionID')}
         })
       );
       const sortedList = list.data.listCurricula?.items.sort((a: any, b: any) =>
@@ -156,14 +156,14 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
       const curricularList = sortedList.map((item: any, i: any) => ({
         id: item.id,
         name: `${item.name ? item.name : ''}`,
-        value: `${item.name ? item.name : ''}`,
+        value: `${item.name ? item.name : ''}`
       }));
       setCurricularList(curricularList);
     } catch {
       setMessages({
         show: true,
         message: RoomEDITdict[userLanguage]['messages']['unablecurricular'],
-        isError: true,
+        isError: true
       });
     }
   };
@@ -174,8 +174,8 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
         graphqlOperation(queries.listRooms, {
           filter: {
             institutionID: {eq: roomData?.institute?.id},
-            name: {eq: roomData.name},
-          },
+            name: {eq: roomData.name}
+          }
         })
       );
       return list.data.listRooms.items.length === 0 ? true : false;
@@ -183,7 +183,7 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
       setMessages({
         show: true,
         message: RoomEDITdict[userLanguage]['messages']['errorprocess'],
-        isError: true,
+        isError: true
       });
     }
   };
@@ -196,8 +196,8 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
       curricular: {
         id: selectedCurr?.id,
         name: selectedCurr?.name,
-        value: selectedCurr?.value,
-      },
+        value: selectedCurr?.value
+      }
     });
   };
 
@@ -220,24 +220,24 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
             institute: {
               id: savedData.institution?.id,
               name: savedData.institution?.name,
-              value: savedData.institution?.name,
+              value: savedData.institution?.name
             },
             advisorOptions: [
               ...coTeachers.map((teacher: any) => ({
                 id: teacher.teacherID,
                 name: `${teacher.teacher.firstName} ${teacher.teacher.lastName}`,
                 authId: teacher.teacherAuthID,
-                email: teacher.teacherEmail,
+                email: teacher.teacherEmail
               })),
               savedData.teacher
                 ? {
                     id: savedData.teacher.id,
                     name: `${savedData.teacher.firstName} ${savedData.teacher.lastName}`,
                     authId: savedData.teacher.authId,
-                    email: savedData.teacher.email,
+                    email: savedData.teacher.email
                   }
-                : null,
-            ].filter(Boolean),
+                : null
+            ].filter(Boolean)
           });
           setPrevName(savedData.name);
           setSelectedCurrID(curricularId);
@@ -245,7 +245,7 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
           setMessages({
             show: true,
             message: RoomEDITdict[userLanguage]['messages']['errfetch'],
-            isError: true,
+            isError: true
           });
         }
       } else {
@@ -257,8 +257,8 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
         institute: {
           id: instId,
           name: '',
-          value: '',
-        },
+          value: ''
+        }
       });
     }
   };
@@ -304,29 +304,29 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
     {
       title: RoomEDITdict[userLanguage].CLASS_DETAILS_TAB_HEADING,
       description: RoomEDITdict[userLanguage].CLASS_DETAILS_TAB_DESCRIPTION,
-      stepValue: 'overview',
+      stepValue: 'overview'
     },
     {
       title: RoomEDITdict[userLanguage].CLASS_STUDENT_TAB_HEADING,
       description: RoomEDITdict[userLanguage].CLASS_STUDENT_TAB_DESCRIPTION,
       stepValue: 'students',
       disabled: !roomId,
-      tooltipText: RoomEDITdict[userLanguage].TAB_DISABLED_TOOLTIP_TEXT,
+      tooltipText: RoomEDITdict[userLanguage].TAB_DISABLED_TOOLTIP_TEXT
     },
     {
       title: RoomEDITdict[userLanguage].CLASS_UNIT_PLANNER_TAB_HEADING,
       description: RoomEDITdict[userLanguage].CLASS_UNIT_PLANNER_TAB_DESCRIPTION,
       stepValue: 'unit-planner',
       disabled: !roomId,
-      tooltipText: RoomEDITdict[userLanguage].TAB_DISABLED_TOOLTIP_TEXT,
+      tooltipText: RoomEDITdict[userLanguage].TAB_DISABLED_TOOLTIP_TEXT
     },
     {
       title: RoomEDITdict[userLanguage].CLASS_DYNAMICS_TAB_HEADING,
       description: RoomEDITdict[userLanguage].CLASS_DYNAMICS_TAB_DESCRIPTION,
       stepValue: 'class-dynamics',
       disabled: !roomId,
-      tooltipText: RoomEDITdict[userLanguage].TAB_DISABLED_TOOLTIP_TEXT,
-    },
+      tooltipText: RoomEDITdict[userLanguage].TAB_DISABLED_TOOLTIP_TEXT
+    }
   ];
 
   const currentStepComp = (currentStep: string) => {

@@ -1,9 +1,9 @@
-import React, {useContext} from 'react';
+import {getAsset} from 'assets';
+import Buttons from 'atoms/Buttons';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import React from 'react';
 import {IoArrowUndoCircleOutline} from 'react-icons/io5';
 import {useHistory} from 'react-router';
-import {getAsset} from '../../assets';
-import {GlobalContext} from '../../contexts/GlobalContext';
-import Buttons from './Buttons';
 
 interface BreadCrumProps {
   items: {title: string; url?: string; last: boolean; goBack?: boolean}[];
@@ -14,7 +14,7 @@ interface BreadCrumProps {
 
 const BreadCrums: React.FC<BreadCrumProps> = (brdPrps: BreadCrumProps) => {
   const {items, separateGoBackButton = '', unsavedChanges = false, toggleModal} = brdPrps;
-  const {theme, clientKey} = useContext(GlobalContext);
+  const {theme, clientKey} = useGlobalContext();
   const themeColor = getAsset(clientKey, 'themeClassName');
   const history = useHistory();
 

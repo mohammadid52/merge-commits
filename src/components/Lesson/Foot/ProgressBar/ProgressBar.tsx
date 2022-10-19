@@ -1,5 +1,5 @@
 import React, {useContext} from 'react';
-import {LessonContext} from '../../../../contexts/LessonContext';
+import {LessonContext} from 'contexts/LessonContext';
 import StageIcon from './StageIcon';
 
 const ProgressBar = () => {

@@ -1,15 +1,15 @@
 import React, {useContext, useEffect, useState} from 'react';
 
-import FormInput from '../../../../Atoms/Form/FormInput';
-import {EditQuestionModalDict} from '../../../../../dictionary/dictionary.iconoclast';
-import Buttons from '../../../../Atoms/Buttons';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import {IContentTypeComponentProps} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
-import {PartContentSub} from '../../../../../interfaces/UniversalLessonInterfaces';
+import FormInput from 'atoms/Form/FormInput';
+import {EditQuestionModalDict} from 'dictionary/dictionary.iconoclast';
+import Buttons from 'atoms/Buttons';
+import {GlobalContext} from 'contexts/GlobalContext';
+import {IContentTypeComponentProps} from 'interfaces/UniversalLessonBuilderInterfaces';
+import {PartContentSub} from 'interfaces/UniversalLessonInterfaces';
 import {nanoid} from 'nanoid';
 import RemoveInput from '../common/RemoveInput';
 import {remove} from 'lodash';
-import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
+import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
 
 interface Links extends IContentTypeComponentProps {
   inputObj?: any;
@@ -21,21 +21,21 @@ const initialInputFieldsState = [
     id: 'link_1',
     type: '',
     label: 'Link to Page',
-    value: 'https://www.google.com',
+    value: 'https://www.google.com'
   },
   {
     id: 'link_2',
     type: '',
     label: 'Link to Page',
-    value: 'https://www.google.com',
-  },
+    value: 'https://www.google.com'
+  }
 ];
 
 const newLinkObj: PartContentSub = {
   id: 'link_',
   type: '',
   label: 'Link Label',
-  value: 'Link URL',
+  value: 'Link URL'
 };
 
 const LinksModalDialog = ({
@@ -44,7 +44,7 @@ const LinksModalDialog = ({
   createNewBlockULBHandler,
   updateBlockContentULBHandler,
   askBeforeClose,
-  setUnsavedChanges,
+  setUnsavedChanges
 }: Links) => {
   const {userLanguage} = useContext(GlobalContext);
   const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
@@ -81,7 +81,7 @@ const LinksModalDialog = ({
   const handleAddNewLink = () => {
     const longerInputFieldsArray: PartContentSub[] = [
       ...inputFieldsArray,
-      {...newLinkObj, id: `${newLinkObj.id}${nanoid(4)}`},
+      {...newLinkObj, id: `${newLinkObj.id}${nanoid(4)}`}
     ];
     setInputFieldsArray(longerInputFieldsArray);
   };
@@ -118,7 +118,7 @@ const LinksModalDialog = ({
 
     const input = {
       id: list.id,
-      lessonPlan: [...list.lessonPlan],
+      lessonPlan: [...list.lessonPlan]
     };
     await updateLessonPageToDB(input);
   };

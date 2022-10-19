@@ -1,12 +1,12 @@
 import {filter, map, omit, remove, update} from 'lodash';
 import React, {useContext, useEffect, useState} from 'react';
 import {v4 as uuidv4} from 'uuid';
-import {GlobalContext} from '@contexts/GlobalContext';
-import useDictionary from '@customHooks/dictionary';
-import {IContentTypeComponentProps} from '@interfaces/UniversalLessonBuilderInterfaces';
-import {updateLessonPageToDB} from '@utilities/updateLessonPageToDB';
-import Buttons from '@atoms/Buttons';
-import FormInput from '@atoms/Form/FormInput';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import {IContentTypeComponentProps} from 'interfaces/UniversalLessonBuilderInterfaces';
+import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
+import Buttons from 'atoms/Buttons';
+import FormInput from 'atoms/Form/FormInput';
 import ColorPicker from '../ColorPicker/ColorPicker';
 import {TABLE} from '../common/constants';
 import Toggle from '../Toggle';
@@ -28,7 +28,7 @@ const TableModal = (props: TableProps) => {
     updateBlockContentULBHandler,
     askBeforeClose,
     setUnsavedChanges,
-    classString = 'green-400 || white || light',
+    classString = 'green-400 || white || light'
   } = props;
   const {userLanguage, clientKey} = useContext(GlobalContext);
   const {EditQuestionModalDict} = useDictionary(clientKey);
@@ -40,7 +40,7 @@ const TableModal = (props: TableProps) => {
 
       const modifyRowList = map(inputObj, (row: any) => ({
         ...row,
-        col: row.options,
+        col: row.options
       }));
 
       const tableBg = classString.split(' || ')[0];
@@ -59,19 +59,19 @@ const TableModal = (props: TableProps) => {
     {
       id: uuidv4().toString(),
       value: '',
-      col: [{id: uuidv4().toString(), text: ''}],
+      col: [{id: uuidv4().toString(), text: ''}]
     },
     {
       id: uuidv4().toString(),
       value: '',
-      col: [{id: uuidv4().toString(), text: ''}],
+      col: [{id: uuidv4().toString(), text: ''}]
     },
     {
       id: uuidv4().toString(),
       value: '',
-      col: [{id: uuidv4().toString(), text: ''}],
+      col: [{id: uuidv4().toString(), text: ''}]
     },
-    {id: uuidv4().toString(), value: '', col: [{id: uuidv4().toString(), text: ''}]},
+    {id: uuidv4().toString(), value: '', col: [{id: uuidv4().toString(), text: ''}]}
   ];
 
   const onRowChange = (e: any, rowIndex: number) => {
@@ -103,7 +103,7 @@ const TableModal = (props: TableProps) => {
     rowList.push({
       id: uuidv4().toString(),
       value: '',
-      col: getCols(rowList[0].col.length),
+      col: getCols(rowList[0].col.length)
     });
 
     setRowList([...rowList]);
@@ -145,7 +145,7 @@ const TableModal = (props: TableProps) => {
   const [colors, setColors] = useState({
     tableHeader: 'green-500',
     tableText: 'white',
-    dark: false,
+    dark: false
   });
   // Filter blank row headers for preview
   const filteredList = filter(rowList, (row: any) => row.value.length > 0);
@@ -156,7 +156,7 @@ const TableModal = (props: TableProps) => {
 
     const input = {
       id: list.id,
-      lessonPlan: [...list.lessonPlan],
+      lessonPlan: [...list.lessonPlan]
     };
     await updateLessonPageToDB(input);
   };
@@ -167,7 +167,7 @@ const TableModal = (props: TableProps) => {
   const onSubmit = async () => {
     const finalArray = map(rowList, (row: any) => ({
       ...row,
-      options: [...row.col],
+      options: [...row.col]
     }));
 
     const removeCol = map(finalArray, (row: any) => omit(row, ['col']));
@@ -199,7 +199,7 @@ const TableModal = (props: TableProps) => {
   const handleColorPickerSelect = (pickedColor: string, type: string) => {
     setColors({
       ...colors,
-      [type === 'bg' ? 'tableHeader' : 'tableText']: pickedColor,
+      [type === 'bg' ? 'tableHeader' : 'tableText']: pickedColor
     });
   };
 

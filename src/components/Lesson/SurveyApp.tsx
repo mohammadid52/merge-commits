@@ -1,20 +1,20 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import useTailwindBreakpoint from '@customHooks/tailwindBreakpoint';
+import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
 import {PartInput} from 'API';
 import React, {useContext, useEffect, useRef, useState} from 'react';
 import {useHistory, useParams, useRouteMatch} from 'react-router-dom';
 import {v4 as uuidV4} from 'uuid';
-import {GlobalContext} from '../../contexts/GlobalContext';
-import * as mutations from '../../graphql/mutations';
-import * as queries from '../../graphql/queries';
+import {GlobalContext} from 'contexts/GlobalContext';
+import * as mutations from 'graphql/mutations';
+import * as queries from 'graphql/queries';
 import {
   PagePart,
   PartContent,
   PartContentSub,
   StudentPageInput,
   UniversalLessonPage
-} from '../../interfaces/UniversalLessonInterfaces';
-import {getLocalStorageData, setLocalStorageData} from '../../utilities/localStorage';
+} from 'interfaces/UniversalLessonInterfaces';
+import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
 import ErrorBoundary from '../Error/ErrorBoundary';
 import LessonHeaderBar from '../Header/LessonHeaderBar';
 import Foot from './Foot/Foot';
@@ -205,8 +205,6 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
         {required: [], initialized: []}
       );
 
-      console.log('mappedPages - ', mappedPages);
-
       lessonDispatch({
         type: 'SET_INITIAL_STUDENT_DATA',
         payload: {
@@ -289,7 +287,6 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
       );
 
       const returnedData = newSurveyData.data.createUniversalSurveyStudentData;
-      console.log('createSurveyData', returnedData);
 
       return returnedData;
     } catch (e) {
@@ -593,7 +590,10 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
       let existingLesson: any;
 
       const personLessonData = lessonState?.misc?.personLessonData;
-      if (personLessonData?.lessonID === lessonID && personLessonData?.data?.length > 0) {
+      const isSameAndDataExists =
+        personLessonData?.lessonID === lessonID && personLessonData?.data?.length > 0;
+
+      if (isSameAndDataExists) {
         existingLesson = personLessonData?.data;
       } else {
         existingLesson = await API.graphql(
@@ -614,7 +614,9 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
         });
       }
 
-      const items = existingLesson?.data?.listPersonLessonsData?.items || [];
+      const items = isSameAndDataExists
+        ? existingLesson
+        : existingLesson?.data?.listPersonLessonsData?.items || [];
 
       if (!items.length) {
         payload = {
@@ -656,7 +658,7 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
         );
       }
     } catch (error) {
-      console.log(
+      console.error(
         '🚀 ~ file: SurveyApp.tsx ~ line 652 ~ handleSurveyMutateData ~ error',
         error
       );

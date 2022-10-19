@@ -1,12 +1,12 @@
-import useStudentDataValue from '@customHooks/studentDataValue';
+import useStudentDataValue from 'customHooks/studentDataValue';
 import React, {useContext, useState} from 'react';
 import {AiOutlinePlus} from 'react-icons/ai';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
+import {GlobalContext} from 'contexts/GlobalContext';
 import {
   Options,
   PartContentSub,
-  StudentPageInput,
-} from '../../../../../interfaces/UniversalLessonInterfaces';
+  StudentPageInput
+} from 'interfaces/UniversalLessonInterfaces';
 
 interface WritingBlockProps {
   id?: string;
@@ -25,7 +25,7 @@ const WritingBlock = (props: WritingBlockProps) => {
   const {id, linestarters, sendTextToEditor} = props;
 
   const {
-    state: {lessonPage: {themeTextColor = ''} = {}},
+    state: {lessonPage: {themeTextColor = ''} = {}}
   } = useContext(GlobalContext);
 
   const {setDataValue} = useStudentDataValue();
@@ -35,7 +35,7 @@ const WritingBlock = (props: WritingBlockProps) => {
   };
 
   const [selectedLS, setSelectedLS] = useState({
-    text: '',
+    text: ''
   });
 
   const onLineSelect = (e: any) => {

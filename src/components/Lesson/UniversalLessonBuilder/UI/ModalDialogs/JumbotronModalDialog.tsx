@@ -1,22 +1,22 @@
-import Buttons from '@atoms/Buttons';
-import ULBFileUploader from '@atoms/Form/FileUploader';
-import FormInput from '@atoms/Form/FormInput';
-import Selector from '@atoms/Form/Selector';
-import Loader from '@atoms/Loader';
+import Buttons from 'atoms/Buttons';
+import ULBFileUploader from 'atoms/Form/FileUploader';
+import FormInput from 'atoms/Form/FormInput';
+import Selector from 'atoms/Form/Selector';
+import Loader from 'atoms/Loader';
 import {Storage} from '@aws-amplify/storage';
-import {GlobalContext} from '@contexts/GlobalContext';
+import {GlobalContext} from 'contexts/GlobalContext';
 import {
   EditQuestionModalDict,
-  UniversalBuilderDict,
+  UniversalBuilderDict
 } from '@dictionary/dictionary.iconoclast';
 import {Switch} from '@headlessui/react';
-import {IContentTypeComponentProps} from '@interfaces/UniversalLessonBuilderInterfaces';
-import {PartContentSub} from '@interfaces/UniversalLessonInterfaces';
-import AnimatedContainer from '@uiComponents/Tabs/AnimatedContainer';
-import {Tabs3, useTabs} from '@uiComponents/Tabs/Tabs';
-import {getImageFromS3Static} from '@utilities/services';
-import {blur, tinting} from '@utilities/staticData';
-import {updateLessonPageToDB} from '@utilities/updateLessonPageToDB';
+import {IContentTypeComponentProps} from 'interfaces/UniversalLessonBuilderInterfaces';
+import {PartContentSub} from 'interfaces/UniversalLessonInterfaces';
+import AnimatedContainer from 'uiComponents/Tabs/AnimatedContainer';
+import {Tabs3, useTabs} from 'uiComponents/Tabs/Tabs';
+import {getImageFromS3Static} from 'utilities/services';
+import {blur, tinting} from 'utilities/staticData';
+import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
 import React, {useContext, useEffect, useState} from 'react';
 import CustomizedQuoteBlock from '../../../UniversalLessonBlockComponents/Blocks/JumbotronBlock/CustomizeQuoteBlock';
 import ColorPicker from '../ColorPicker/ColorPicker';
@@ -27,7 +27,7 @@ const Toggle = ({
   checked,
   onClick,
   text,
-  disabled,
+  disabled
 }: {
   text?: string;
 
@@ -80,29 +80,29 @@ const initialInputFieldsState: PartContentSub[] = [
     type: 'background',
     label: 'Background',
     value:
-      'https://images.freeimages.com/images/large-previews/d5d/powerlines-5-1389930.jpg',
+      'https://images.freeimages.com/images/large-previews/d5d/powerlines-5-1389930.jpg'
   },
   {
     id: 'title',
     type: 'title',
     label: 'Title',
-    value: 'Jumbo Title placeholder',
+    value: 'Jumbo Title placeholder'
     // placeholderText: 'Jumbo Title placeholder',
   },
   {
     id: 'subtitle',
     type: 'subtitle',
     label: 'Subtitle',
-    value: 'This is the subtitle placeholder',
+    value: 'This is the subtitle placeholder'
     // placeholderText: 'This is the subtitle placeholder',
   },
   {
     id: 'description',
     type: 'description',
     label: 'Description',
-    value: '',
+    value: ''
     // placeholderText: 'This is the description text placeholder',
-  },
+  }
 ];
 
 const JumbotronModalDialog = ({
@@ -113,7 +113,7 @@ const JumbotronModalDialog = ({
   createNewBlockULBHandler,
   askBeforeClose,
   setUnsavedChanges,
-  updateBlockContentULBHandler,
+  updateBlockContentULBHandler
 }: IJumbotronModalComponentProps) => {
   const {userLanguage} = useContext(GlobalContext);
 
@@ -129,7 +129,7 @@ const JumbotronModalDialog = ({
   const initialStyles = {
     tinting: 'Light',
     bgColor: 'bg-black',
-    blur: 'Medium',
+    blur: 'Medium'
   };
   const [uploadProgress, setUploadProgress] = useState<string | number>(0);
 
@@ -142,7 +142,7 @@ const JumbotronModalDialog = ({
       setInputFieldsArray(inputObj);
       setImageInputs((prevValues) => ({
         ...prevValues,
-        url: imageUrl || '',
+        url: imageUrl || ''
       }));
       if (classString.length > 0) {
         const tint = classString?.split(' || ')[0].split(' ')[0] || '';
@@ -152,7 +152,7 @@ const JumbotronModalDialog = ({
         setSelectedStyles({
           tinting: getReversedTint(tint),
           bgColor: bgColor,
-          blur: generateReverseBlur(blurClass),
+          blur: generateReverseBlur(blurClass)
         });
         setIsAnimationOn(isAnimationEnabled);
       }
@@ -166,7 +166,7 @@ const JumbotronModalDialog = ({
     imageData: null,
     width: 'auto',
     height: 'auto',
-    caption: '',
+    caption: ''
   });
 
   useEffect(() => {
@@ -211,7 +211,7 @@ const JumbotronModalDialog = ({
   const [errors, setErrors] = useState<IImageInput>({
     url: '',
     width: '',
-    height: '',
+    height: ''
   });
   const [loading, setIsLoading] = useState<boolean>(false);
 
@@ -226,7 +226,7 @@ const JumbotronModalDialog = ({
 
     const input = {
       id: list.id,
-      lessonPlan: [...list.lessonPlan],
+      lessonPlan: [...list.lessonPlan]
     };
 
     await updateLessonPageToDB(input);
@@ -326,7 +326,7 @@ const JumbotronModalDialog = ({
         value: image,
         height: imageInputs.height,
         width: imageInputs.width,
-        caption: imageInputs.caption,
+        caption: imageInputs.caption
       };
       const updatedData = inputFieldsArray.map((item) =>
         item.type === 'background' ? {...item, ...input} : item
@@ -361,7 +361,7 @@ const JumbotronModalDialog = ({
     let errorMsgs = {
       url: '',
       width: '',
-      height: '',
+      height: ''
     };
     if (!url) {
       isValid = false;
@@ -393,7 +393,7 @@ const JumbotronModalDialog = ({
         progressCallback: ({loaded, total}: any) => {
           const progress = (loaded * 100) / total;
           setUploadProgress(progress.toFixed(0));
-        },
+        }
       })
         .then((result: any) => {
           console.log('File successfully uploaded to s3', result);
@@ -404,7 +404,7 @@ const JumbotronModalDialog = ({
         .catch((err: any) => {
           setErrors((prevValues) => ({
             ...prevValues,
-            url: 'Unable to upload image. Please try again later. ',
+            url: 'Unable to upload image. Please try again later. '
           }));
           console.log('Error in uploading file to s3', err);
           reject(err);

@@ -1,13 +1,10 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import React, {useEffect, useState} from 'react';
-import * as customMutations from '../../../../../customGraphql/customMutations';
-import * as customQueries from '../../../../../customGraphql/customQueries';
-import * as queries from '../../../../../graphql/queries';
-import {LessonPlansProps} from '../../../../../interfaces/LessonInterfaces';
-import {
-  createFilterToFetchSpecificItemsOnly,
-  reorder,
-} from '../../../../../utilities/strings';
+import * as customMutations from 'customGraphql/customMutations';
+import * as customQueries from 'customGraphql/customQueries';
+import * as queries from 'graphql/queries';
+import {LessonPlansProps} from 'interfaces/LessonInterfaces';
+import {createFilterToFetchSpecificItemsOnly, reorder} from 'utilities/strings';
 import AddNewCheckPoint, {InitialData} from './CheckPointSteps/AddNewCheckPoint';
 import AddNewQuestion from './CheckPointSteps/AddNewQuestion';
 import CheckpointLookup from './CheckPointSteps/CheckpointLookup';
@@ -50,7 +47,7 @@ const CheckpointBuilder = (props: CheckpointBuilderProps) => {
     activeStep,
     lessonName,
     lessonType,
-    hasUnsavedCheckpoint,
+    hasUnsavedCheckpoint
   } = props;
 
   const initialCheckpData = {
@@ -62,7 +59,7 @@ const CheckpointBuilder = (props: CheckpointBuilderProps) => {
     purposeHtml: '<p></p>',
     objectiveHtml: '<p></p>',
     instructionHtml: '<p></p>',
-    language: {id: '1', name: 'English', value: 'EN'},
+    language: {id: '1', name: 'English', value: 'EN'}
   };
 
   const [builderStep, setBuilderStep] = useState('SelectedCheckPointsList');
@@ -103,7 +100,7 @@ const CheckpointBuilder = (props: CheckpointBuilderProps) => {
       title,
       label,
       estTime,
-      checkpQuestions.length <= 0 ? '' : 'questions',
+      checkpQuestions.length <= 0 ? '' : 'questions'
     ];
     let len: any[] = [];
     fields.forEach((field) => {
@@ -140,7 +137,7 @@ const CheckpointBuilder = (props: CheckpointBuilderProps) => {
     checkpointDetails.title,
     checkpointDetails.label,
     checkpQuestions.length,
-    checkpointDetails.estTime,
+    checkpointDetails.estTime
   ]);
 
   const [selectedDesigners, setSelectedDesigners] = useState([]);
@@ -150,7 +147,7 @@ const CheckpointBuilder = (props: CheckpointBuilderProps) => {
 
   const languageList = [
     {id: 1, name: 'English', value: 'EN'},
-    {id: 2, name: 'Spanish', value: 'ES'},
+    {id: 2, name: 'Spanish', value: 'ES'}
   ];
 
   // Funtion to render diffrent components based on states.
@@ -299,7 +296,7 @@ const CheckpointBuilder = (props: CheckpointBuilderProps) => {
       setLoading(true);
       const fetchCheckpointsData: any = await API.graphql(
         graphqlOperation(queries.getCheckpoint, {
-          id: checkpId,
+          id: checkpId
         })
       );
       if (!fetchCheckpointsData) {
@@ -324,7 +321,7 @@ const CheckpointBuilder = (props: CheckpointBuilderProps) => {
           instructionHtml: results.instructions,
           language: selectedLanguage,
           checkpQuestions: results?.questions?.items,
-          estTime: results?.estTime?.toString(),
+          estTime: results?.estTime?.toString()
         });
         setSelectedDesigners(designers);
         const checkpointQuestions = results?.questions?.items;
@@ -334,7 +331,7 @@ const CheckpointBuilder = (props: CheckpointBuilderProps) => {
         if (quesionsListIds?.length > 0) {
           const results: any = await API.graphql(
             graphqlOperation(queries.listQuestions, {
-              filter: {...createFilterToFetchSpecificItemsOnly(quesionsListIds, 'id')},
+              filter: {...createFilterToFetchSpecificItemsOnly(quesionsListIds, 'id')}
             })
           );
           const questionsList: any = results.data.listQuestions.items;
@@ -343,7 +340,7 @@ const CheckpointBuilder = (props: CheckpointBuilderProps) => {
               ...item,
               required:
                 checkpointQuestions.find((que: any) => que.questionID === item.id)
-                  ?.required || false,
+                  ?.required || false
             };
           });
           setCheckpQuestions(questionsWithState);
@@ -377,8 +374,8 @@ const CheckpointBuilder = (props: CheckpointBuilderProps) => {
         graphqlOperation(customMutations.updateLesson, {
           input: {
             id: lessonID,
-            lessonPlan: lessonPlansInput,
-          },
+            lessonPlan: lessonPlansInput
+          }
         })
       );
       const deletedlessonCheckp = result?.data?.updateLesson?.checkpoints;
@@ -389,8 +386,8 @@ const CheckpointBuilder = (props: CheckpointBuilderProps) => {
         const result: any = await API.graphql(
           graphqlOperation(customMutations.deleteLessonCheckpoint, {
             input: {
-              id: deletedlessonCheckpId,
-            },
+              id: deletedlessonCheckpId
+            }
           })
         );
       }
@@ -402,7 +399,7 @@ const CheckpointBuilder = (props: CheckpointBuilderProps) => {
           );
           return {
             ...item,
-            ...checkpointDetails,
+            ...checkpointDetails
           };
         });
 
@@ -434,7 +431,7 @@ const CheckpointBuilder = (props: CheckpointBuilderProps) => {
         );
         return {
           ...item,
-          ...checkpointDetails,
+          ...checkpointDetails
         };
       });
       // setSavedCheckpoints(updatedList);
@@ -450,8 +447,8 @@ const CheckpointBuilder = (props: CheckpointBuilderProps) => {
           graphqlOperation(customMutations.updateLesson, {
             input: {
               id: lessonID,
-              lessonPlan: updatedPlan,
-            },
+              lessonPlan: updatedPlan
+            }
           })
         );
       } catch {
@@ -471,7 +468,7 @@ const CheckpointBuilder = (props: CheckpointBuilderProps) => {
         type: item.type,
         LessonComponentID: item.LessonComponentID,
         sequence: item.sequence,
-        stage: item.stage,
+        stage: item.stage
       })
     );
     try {
@@ -479,8 +476,8 @@ const CheckpointBuilder = (props: CheckpointBuilderProps) => {
         graphqlOperation(customMutations.updateLesson, {
           input: {
             id: lessonID,
-            lessonPlan: lessonPlansInput,
-          },
+            lessonPlan: lessonPlansInput
+          }
         })
       );
       const updatedPlan = result?.data?.updateLesson?.lessonPlan;
@@ -501,11 +498,11 @@ const CheckpointBuilder = (props: CheckpointBuilderProps) => {
       let lessonCheckpointInput = {
         lessonID: lessonID,
         checkpointID: checkpointID,
-        position: 0,
+        position: 0
       };
       await API.graphql(
         graphqlOperation(customMutations.createLessonCheckpoint, {
-          input: lessonCheckpointInput,
+          input: lessonCheckpointInput
         })
       );
     } catch {
@@ -527,7 +524,7 @@ const CheckpointBuilder = (props: CheckpointBuilderProps) => {
           sequence: (parentLessonPlans?.length || 0) + index,
           LessonComponentID: item.id,
           type: 'checkpoint',
-          stage: 'checkpoint',
+          stage: 'checkpoint'
         };
       });
       const lessonComponentPlans = [...savedCheckPoints, ...newCkeckpoints];
@@ -550,7 +547,7 @@ const CheckpointBuilder = (props: CheckpointBuilderProps) => {
           );
           return {
             ...item,
-            ...checkpointDetails,
+            ...checkpointDetails
           };
         });
         const remainingCheckps = allCheckPointsList.filter(
@@ -569,7 +566,7 @@ const CheckpointBuilder = (props: CheckpointBuilderProps) => {
       setLoading(true);
       const fetchCheckpointsData: any = await API.graphql(
         graphqlOperation(customQueries.listCheckpoints, {
-          filter: {type: {ne: 'profile'}},
+          filter: {type: {ne: 'profile'}}
         })
       );
       if (!fetchCheckpointsData) {

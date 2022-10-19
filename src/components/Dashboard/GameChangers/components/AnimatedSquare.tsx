@@ -2,8 +2,8 @@
 import React from 'react';
 import {map} from 'lodash';
 import {useEffect, useState} from 'react';
-import FocusIcon from '@components/Dashboard/GameChangers/components/FocusIcon';
-import {useGameChangers} from '@components/Dashboard/GameChangers/context/GameChangersContext';
+import FocusIcon from 'components/Dashboard/GameChangers/components/FocusIcon';
+import {useGameChangers} from 'components/Dashboard/GameChangers/context/GameChangersContext';
 
 const t = [
   'Breathe In',
@@ -27,7 +27,7 @@ const t = [
   '5',
   '6',
   '7',
-  '8',
+  '8'
 ];
 
 const AnimatedSquare = ({
@@ -35,7 +35,7 @@ const AnimatedSquare = ({
 
   exerciseType = 'square',
   onStart,
-  onComplete,
+  onComplete
 }: {
   isActive: boolean;
 
@@ -93,7 +93,7 @@ const AnimatedSquare = ({
             style={{
               top: '50%',
               left: '50%',
-              transform: 'translate(-50%,-50%)',
+              transform: 'translate(-50%,-50%)'
             }}>
             <ul className="fse-text-helper-list">
               {map(t, (item, i) => (
@@ -114,7 +114,7 @@ const AnimatedSquare = ({
                 isActive && !isNaN(Number(t[currentIteration]))
                   ? `scale(250)`
                   : 'scale(0)',
-              zIndex: 4,
+              zIndex: 4
             }}
             className={`transition-all  ease-in-out ripple`}></div>
         </div>

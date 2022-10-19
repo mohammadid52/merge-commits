@@ -1,13 +1,13 @@
-import React, { useContext } from 'react';
-import { QuoteWidget } from './TopWidgets';
-import { Widget } from '../../../interfaces/ClassroomComponentsInterfaces';
-import { GlobalContext } from '../../../contexts/GlobalContext';
-import { CallLinkWidget, DefaultTextWidget } from './Widgets';
-import { FileLinkWidget } from './Widgets/FilesWidget';
-import ContentCard from '../../Atoms/ContentCard';
+import React, {useContext} from 'react';
+import {QuoteWidget} from './TopWidgets';
+import {Widget} from 'interfaces/ClassroomComponentsInterfaces';
+import {GlobalContext} from 'contexts/GlobalContext';
+import {CallLinkWidget, DefaultTextWidget} from './Widgets';
+import {FileLinkWidget} from './Widgets/FilesWidget';
+import ContentCard from 'atoms/ContentCard';
 
 const TopWidgetBar = () => {
-  const { state } = useContext(GlobalContext);
+  const {state} = useContext(GlobalContext);
 
   const getTopWidgets = (): any[] => {
     const thereAreWidgets = state.roomData.widgets.length > 0;
@@ -25,10 +25,20 @@ const TopWidgetBar = () => {
     switch (widgetType) {
       case 'default':
         return (
-          <DefaultTextWidget key={`topbar_widget_${idx}`} title={widgetObj.title} content={widgetObj.content.text} />
+          <DefaultTextWidget
+            key={`topbar_widget_${idx}`}
+            title={widgetObj.title}
+            content={widgetObj.content.text}
+          />
         );
       case 'quote':
-        return <QuoteWidget placement={widgetObj.placement} key={`topbar_widget_${idx}`} quotes={widgetObj.quotes} />;
+        return (
+          <QuoteWidget
+            placement={widgetObj.placement}
+            key={`topbar_widget_${idx}`}
+            quotes={widgetObj.quotes}
+          />
+        );
       case 'call':
         return (
           <CallLinkWidget

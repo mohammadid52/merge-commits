@@ -1,13 +1,13 @@
-import Loader from '@atoms/Loader';
-import Selector from '@components/Atoms/Form/Selector';
-import {FORM_TYPES} from '@components/Lesson/UniversalLessonBuilder/UI/common/constants';
-import ThemeModal from '@components/Molecules/ThemeModal';
-import {GlobalContext} from '@contexts/GlobalContext';
-import useInLessonCheck from '@customHooks/checkIfInLesson';
-import useStudentDataValue from '@customHooks/studentDataValue';
+import Loader from 'atoms/Loader';
+import Selector from 'atoms/Form/Selector';
+import {FORM_TYPES} from 'components/Lesson/UniversalLessonBuilder/UI/common/constants';
+import ThemeModal from 'molecules/ThemeModal';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useInLessonCheck from 'customHooks/checkIfInLesson';
+import useStudentDataValue from 'customHooks/studentDataValue';
 import Note from '@UlbBlocks/Notes/Note';
 import '@UlbBlocks/Notes/NoteStyles.scss';
-import {wait} from '@utilities/functions';
+import {wait} from 'utilities/functions';
 import gsap from 'gsap';
 import {Draggable} from 'gsap/Draggable';
 import {InertiaPlugin} from 'gsap/InertiaPlugin';
@@ -16,7 +16,7 @@ import React, {useContext, useEffect, useState} from 'react';
 import {BiSave} from 'react-icons/bi';
 import {FiFilePlus} from 'react-icons/fi';
 import {v4 as uuidv4} from 'uuid';
-import Tooltip from '@atoms/Tooltip';
+import Tooltip from 'atoms/Tooltip';
 const genSticky = (
   {rows, cols}: {rows?: number; cols?: number},
 

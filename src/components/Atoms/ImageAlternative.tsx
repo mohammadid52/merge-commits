@@ -1,7 +1,7 @@
 import React from 'react';
-import { initials, stringToHslColor } from '../../utilities/strings';
+import {initials, stringToHslColor} from 'utilities/strings';
 
-const ImageAlternate = ({ user, textSize, styleClass, rounded = true }: any) => {
+const ImageAlternate = ({user, textSize, styleClass, rounded = true}: any) => {
   return (
     <div
       className={`${styleClass} flex justify-center items-center border-0 border-gray-400 `}>
@@ -11,7 +11,7 @@ const ImageAlternate = ({ user, textSize, styleClass, rounded = true }: any) => 
         }`}
         style={{
           background: `${stringToHslColor(user.firstName + ' ' + user.lastName)}`,
-          textShadow: '0.2rem 0.2rem 3px #423939b3',
+          textShadow: '0.2rem 0.2rem 3px #423939b3'
         }}>
         {initials(
           user.preferredName

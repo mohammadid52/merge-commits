@@ -1,8 +1,8 @@
 import React, {useContext, useState, useEffect} from 'react';
 
-import {GlobalContext} from '../../../../contexts/GlobalContext';
+import {GlobalContext} from 'contexts/GlobalContext';
 
-import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
+import {RowWrapperProps} from 'interfaces/UniversalLessonBuilderInterfaces';
 
 interface KeywordBlockProps extends RowWrapperProps {
   id?: string;
@@ -12,7 +12,7 @@ interface KeywordBlockProps extends RowWrapperProps {
 
 const KeywordBlock = (props: KeywordBlockProps) => {
   const {
-    state: {lessonPage: {theme: lessonPageTheme = '', themeTextColor = ''} = {}},
+    state: {lessonPage: {theme: lessonPageTheme = '', themeTextColor = ''} = {}}
   } = useContext(GlobalContext);
   const {id, value} = props;
   const keywords: any = [];
