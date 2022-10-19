@@ -1,5 +1,5 @@
 import useGraphqlQuery from 'customHooks/useGraphqlQuery';
-import {LessonsByTypeQueryVariables} from 'API';
+import {LessonsByType2QueryVariables} from 'API';
 import React, {useEffect, useState} from 'react';
 
 interface ProgressBarProps {
@@ -16,7 +16,7 @@ const ProgressBar = ({lessonProps}: ProgressBarProps) => {
 
   const shouldShowProgress = Boolean(lessonProps.lesson.type);
 
-  const {data, isFetched} = useGraphqlQuery<LessonsByTypeQueryVariables, any>(
+  const {data, isFetched} = useGraphqlQuery<LessonsByType2QueryVariables, any>(
     'lessonsByType',
     {
       lessonType: lessonProps.lesson.type,
