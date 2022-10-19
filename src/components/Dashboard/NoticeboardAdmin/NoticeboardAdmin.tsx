@@ -4,7 +4,7 @@ import {GlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import * as mutations from 'graphql/mutations';
 import * as queries from 'graphql/queries';
-import {Widget as NoticeboardWidgetMapItem} from '../../../interfaces/ClassroomComponentsInterfaces';
+import {Widget as NoticeboardWidgetMapItem} from 'interfaces/ClassroomComponentsInterfaces';
 import ContentCard from 'atoms/ContentCard';
 import SectionTitle from 'atoms/SectionTitleV2';
 import SubSectionTabs from '../Anthology/SubSectionTabs';

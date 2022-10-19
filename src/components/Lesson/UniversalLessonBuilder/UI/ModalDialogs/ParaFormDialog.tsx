@@ -3,7 +3,7 @@ import React, {useContext, useState, useEffect} from 'react';
 import {EditQuestionModalDict} from 'dictionary/dictionary.iconoclast';
 import Buttons from 'atoms/Buttons';
 import {GlobalContext} from 'contexts/GlobalContext';
-import {IContentTypeComponentProps} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
+import {IContentTypeComponentProps} from 'interfaces/UniversalLessonBuilderInterfaces';
 import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
 import {v4 as uuidv4} from 'uuid';
 import RichTextEditor from 'atoms/RichTextEditor';

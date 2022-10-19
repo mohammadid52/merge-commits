@@ -6,7 +6,7 @@ import React, {useEffect, useState} from 'react';
 import ReactPlayer from 'react-player';
 import {useHistory, useRouteMatch} from 'react-router-dom';
 import {getLocalStorageData} from 'utilities/localStorage';
-import {LessonHeaderBarProps} from '../../interfaces/LessonComponentsInterfaces';
+import {LessonHeaderBarProps} from 'interfaces/LessonComponentsInterfaces';
 import PositiveAlert from '../General/Popup';
 import LessonTopMenu from '../Lesson/Navigation/LessonTopMenu';
 import SideMenu from '../Lesson/Navigation/SideMenu';

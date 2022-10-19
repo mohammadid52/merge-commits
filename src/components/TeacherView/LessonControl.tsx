@@ -15,7 +15,7 @@ import * as subscriptions from 'graphql/subscriptions';
 import {
   StudentPageInput,
   UniversalLessonStudentData
-} from '../../interfaces/UniversalLessonInterfaces';
+} from 'interfaces/UniversalLessonInterfaces';
 import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
 import ErrorBoundary from '../Error/ErrorBoundary';
 import PositiveAlert from '../General/Popup';

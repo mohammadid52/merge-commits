@@ -3,7 +3,7 @@ import {IFile} from '@interfaces/UniversalLessonInterfaces';
 import React, {useRef, useState} from 'react';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
-import {IContentTypeComponentProps} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
+import {IContentTypeComponentProps} from 'interfaces/UniversalLessonBuilderInterfaces';
 import {removeExtension} from 'utilities/functions';
 import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
 import Buttons from 'atoms/Buttons';

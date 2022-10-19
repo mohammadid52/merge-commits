@@ -1,7 +1,7 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {GlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
-import {IContentTypeComponentProps} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
+import {IContentTypeComponentProps} from 'interfaces/UniversalLessonBuilderInterfaces';
 import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
 import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';

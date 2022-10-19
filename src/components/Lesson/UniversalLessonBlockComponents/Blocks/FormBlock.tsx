@@ -14,7 +14,7 @@ import TextBlock from '@UlbBlocks/FormBlock/TextBlock';
 import NotesBlock from '@UlbBlocks/Notes/NotesBlock';
 import {filter, map, noop} from 'lodash';
 import React, {useContext, useEffect, useState} from 'react';
-import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
+import {RowWrapperProps} from 'interfaces/UniversalLessonBuilderInterfaces';
 import {FORM_TYPES} from '../../UniversalLessonBuilder/UI/common/constants';
 import EmojiInput from './FormBlock/EmojiInputBlock';
 

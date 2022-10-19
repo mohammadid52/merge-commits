@@ -5,7 +5,7 @@ import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
 import {IconContext} from 'react-icons';
 import {AiOutlineArrowLeft, AiOutlineArrowRight, AiOutlineMenu} from 'react-icons/ai';
 import {useGlobalContext} from 'contexts/GlobalContext';
-import {LessonHeaderBarProps} from '../../../interfaces/LessonComponentsInterfaces';
+import {LessonHeaderBarProps} from 'interfaces/LessonComponentsInterfaces';
 
 const LessonTopMenu = ({
   setOverlay,

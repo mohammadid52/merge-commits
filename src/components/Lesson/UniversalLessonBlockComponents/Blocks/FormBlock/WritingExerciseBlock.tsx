@@ -1,5 +1,5 @@
 import React from 'react';
-import {Options} from '../../../../../interfaces/UniversalLessonInterfaces';
+import {Options} from 'interfaces/UniversalLessonInterfaces';
 import {FormControlProps} from '../FormBlock';
 import EditingBlock from '../PoemBlock/EditingBlock';
 
@@ -18,7 +18,7 @@ const WritingExerciseBlock = ({
   onChange,
   title,
   value,
-  disabled,
+  disabled
 }: WritingExerciseProps) => {
   // useEffect(() => {
   //   $('.wrapperClassName.dark').css('background', '#1B191D ');

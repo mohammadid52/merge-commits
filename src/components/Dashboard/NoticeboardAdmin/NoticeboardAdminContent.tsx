@@ -1,7 +1,7 @@
 import React, {useContext} from 'react';
 import {GlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
-import {Widget as NoticeboardWidgetMapItem} from '../../../interfaces/ClassroomComponentsInterfaces';
+import {Widget as NoticeboardWidgetMapItem} from 'interfaces/ClassroomComponentsInterfaces';
 import {keywordCapitilizer} from 'utilities/strings';
 import ContentCard from 'atoms/ContentCard';
 import ContentCardTitle from 'atoms/ContentCardTitle';

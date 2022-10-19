@@ -3,7 +3,7 @@ import {
   PagePart,
   PartContent,
   UniversalLessonPage
-} from '../../../../../interfaces/UniversalLessonInterfaces';
+} from 'interfaces/UniversalLessonInterfaces';
 import TextArea from 'atoms/Form/TextArea';
 
 interface EditPanelFormProps {

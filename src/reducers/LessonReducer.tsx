@@ -3,7 +3,7 @@ import {
   StudentPageInput,
   UniversalLesson,
   UniversalLessonPage
-} from '../interfaces/UniversalLessonInterfaces';
+} from 'interfaces/UniversalLessonInterfaces';
 import {lessonState as initialLessonState} from 'state/LessonState';
 
 const LESSON_REDUCER_TYPES = {

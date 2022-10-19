@@ -7,7 +7,7 @@ import {IoMdAddCircleOutline, IoMdRemoveCircleOutline} from 'react-icons/io';
 import {getAsset} from 'assets';
 import {GlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
-import {IContentTypeComponentProps} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
+import {IContentTypeComponentProps} from 'interfaces/UniversalLessonBuilderInterfaces';
 import {getTypeString, getLanguageString} from 'utilities/strings';
 import Buttons from 'atoms/Buttons';
 import CheckBox from 'atoms/Form/CheckBox';

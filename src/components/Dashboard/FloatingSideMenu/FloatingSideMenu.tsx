@@ -8,7 +8,7 @@ import {GlobalContext} from 'contexts/GlobalContext';
 import useDeviceDetect from 'customHooks/deviceDetect';
 import * as mutations from 'graphql/mutations';
 import * as queries from 'graphql/queries';
-import {UniversalJournalData} from '../../../interfaces/UniversalLessonInterfaces';
+import {UniversalJournalData} from 'interfaces/UniversalLessonInterfaces';
 import {getLocalStorageData} from 'utilities/localStorage';
 import ExpandedMenu from './ExpandedMenu';
 import {FloatingBar} from './FloatingBar';

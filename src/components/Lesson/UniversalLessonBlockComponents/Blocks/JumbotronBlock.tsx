@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
-import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
+import {RowWrapperProps} from 'interfaces/UniversalLessonBuilderInterfaces';
 import QuoteBlock from './JumbotronBlock/QuoteBlock';
-import {PartContentSub} from '../../../../interfaces/UniversalLessonInterfaces';
+import {PartContentSub} from 'interfaces/UniversalLessonInterfaces';
 import {getImageFromS3Static} from 'utilities/services';
 import CustomizedQuoteBlock from './JumbotronBlock/CustomizeQuoteBlock';
 

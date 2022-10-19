@@ -1,5 +1,5 @@
 import React from 'react';
-import { Widget } from '../../interfaces/ClassroomComponentsInterfaces';
+import { Widget } from 'interfaces/ClassroomComponentsInterfaces';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { AiOutlineFileZip, AiOutlinePhone } from 'react-icons/ai';
 import { GrBlockQuote } from 'react-icons/gr';

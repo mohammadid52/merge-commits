@@ -8,7 +8,7 @@ import {useHistory, useRouteMatch} from 'react-router';
 import {GlobalContext, useGlobalContext} from 'contexts/GlobalContext';
 import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
 import {useQuery} from 'customHooks/urlParam';
-import {UniversalLesson} from '../../../../interfaces/UniversalLessonInterfaces';
+import {UniversalLesson} from 'interfaces/UniversalLessonInterfaces';
 import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
 import Tooltip from 'atoms/Tooltip';
 import {EMOTIONS, GAME_CHANGERS} from './common/constants';

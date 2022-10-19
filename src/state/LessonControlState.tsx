@@ -1,4 +1,4 @@
-import {UniversalLessonStudentData} from '../interfaces/UniversalLessonInterfaces';
+import {UniversalLessonStudentData} from 'interfaces/UniversalLessonInterfaces';
 
 export type studentObject = {
   personAuthID: string;
@@ -41,5 +41,5 @@ export const lessonControlState: lessonControlStateType = {
   rosterOnDemand: [],
   studentDataUpdated: true,
   sharing: false,
-  studentViewing: '', // student email
+  studentViewing: '' // student email
 };

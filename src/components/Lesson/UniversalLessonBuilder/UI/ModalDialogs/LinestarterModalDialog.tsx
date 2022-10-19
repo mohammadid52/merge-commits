@@ -4,11 +4,8 @@ import React, {useContext, useEffect, useState} from 'react';
 import {FaTrashAlt} from 'react-icons/fa';
 import {GlobalContext} from 'contexts/GlobalContext';
 import {EditQuestionModalDict} from 'dictionary/dictionary.iconoclast';
-import {IContentTypeComponentProps} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
-import {
-  Options,
-  PartContentSub
-} from '../../../../../interfaces/UniversalLessonInterfaces';
+import {IContentTypeComponentProps} from 'interfaces/UniversalLessonBuilderInterfaces';
+import {Options, PartContentSub} from 'interfaces/UniversalLessonInterfaces';
 import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
 import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';

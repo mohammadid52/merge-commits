@@ -15,7 +15,7 @@ import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
 import LessonPlanForm from './LessonPlanForm';
 import ExistingPageView from './ExistingPageView';
 import TemplateView from './TemplateView';
-import {UniversalLesson} from '../../../../../interfaces/UniversalLessonInterfaces';
+import {UniversalLesson} from 'interfaces/UniversalLessonInterfaces';
 import {graphqlOperation, API} from 'aws-amplify';
 import * as customQueries from 'customGraphql/customQueries';
 

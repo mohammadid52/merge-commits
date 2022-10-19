@@ -1,7 +1,7 @@
 import React, {useContext, useState} from 'react';
 import {BiBook} from 'react-icons/bi';
 import {GlobalContext} from 'contexts/GlobalContext';
-import {UniversalLessonPage} from '../../../interfaces/UniversalLessonInterfaces';
+import {UniversalLessonPage} from 'interfaces/UniversalLessonInterfaces';
 import StageButton from './StageButton';
 
 interface LessonControlBarProps {
