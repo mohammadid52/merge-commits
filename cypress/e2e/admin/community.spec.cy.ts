@@ -20,6 +20,10 @@ const eventStartTime = '6:30 PM';
 const eventEndTime = '7:00 PM';
 const eventDate = '30/03/2023';
 
+// Check it out
+const checkItOutOverlayText = 'Cypress Test Check It Out Overlay';
+const descriptionCheckItOutText = 'Cypress Test Check It Out';
+
 describe('Community Should Work', () => {
   it('Spotlight test', {defaultCommandTimeout: 20000}, function () {
     cy.login(loginConfig.admin.username, loginConfig.admin.password);
@@ -58,8 +62,13 @@ describe('Community Should Work', () => {
     cy.wait(10000);
     cy.url().should('contain', urlConfig.dashboardURL);
     cy.visit(communityUrl);
-
     cy.wait(10000);
+
+    cy.get('body').then((body) => {
+      if (body.find('[data-cy="emoji-feedback-button"]').length > 0) {
+        cy.dataCy('emoji-feedback-button').click(); // If emoji feedback popup is open click on save button
+      }
+    });
     cy.get('p')
       .invoke('text')
       .then((text) => {
@@ -159,8 +168,13 @@ describe('Community Should Work', () => {
     cy.wait(10000);
     cy.url().should('contain', urlConfig.dashboardURL);
     cy.visit(communityUrl);
-
     cy.wait(20000);
+
+    cy.get('body').then((body) => {
+      if (body.find('[data-cy="emoji-feedback-button"]').length > 0) {
+        cy.dataCy('emoji-feedback-button').click(); // If emoji feedback popup is open click on save button
+      }
+    });
     cy.get('h1')
       .invoke('text')
       .then((text) => {
@@ -341,6 +355,120 @@ describe('Community Should Work', () => {
       .invoke('text')
       .then((text) => {
         expect(text).not.includes(descriptionEventText);
+      });
+  });
+
+  it('Check It Out test', {defaultCommandTimeout: 20000}, function () {
+    cy.login(loginConfig.admin.username, loginConfig.admin.password);
+    cy.wait(10000);
+    cy.url().should('contain', urlConfig.dashboardURL);
+    cy.visit(communityUrl);
+    cy.wait(10000);
+    cy.dataCy('open-builder-button').click({force: true});
+    cy.dataCy(communityTypes.CHECK_IT_OUT).click({force: true});
+    cy.get('h3:contains("Check It Out Card")').should('exist');
+    cy.dataCy('spotlight-link-input').clear().type(demoYoutubeLink);
+    cy.dataCy('checkItOut-overlay-input').clear().type(checkItOutOverlayText);
+    cy.get('.DraftEditor-root').clear().type(descriptionCheckItOutText);
+    cy.dataCy('save-checkItOut-button').click();
+
+    cy.wait(10000);
+    cy.get('h1')
+      .invoke('text')
+      .then((text) => {
+        expect(text).includes(checkItOutOverlayText);
+      });
+    cy.get('p')
+      .invoke('text')
+      .then((text) => {
+        expect(text).includes(descriptionCheckItOutText);
+      });
+    cy.dataCy('comment-input').first().clear().type(`${adminCommentText}{enter}`);
+    cy.dataCy('like-button').first().click();
+    cy.dataCy('likes-count')
+      .first()
+      .invoke('text')
+      .then((text) => {
+        expect(text).equals(' 1');
+      });
+    cy.dataCy('dropdown-button').click(); // Click on profile dropdown
+    cy.dataCy('logout-button').click(); // Logout
+
+    // Student Check
+    cy.login(loginConfig.student.username, loginConfig.student.password);
+    cy.wait(10000);
+    cy.url().should('contain', urlConfig.dashboardURL);
+    cy.visit(communityUrl);
+    cy.wait(20000);
+
+    cy.get('body').then((body) => {
+      if (body.find('[data-cy="emoji-feedback-button"]').length > 0) {
+        cy.dataCy('emoji-feedback-button').click(); // If emoji feedback popup is open click on save button
+      }
+    });
+    cy.get('h1')
+      .invoke('text')
+      .then((text) => {
+        expect(text).includes(checkItOutOverlayText);
+      });
+    cy.get('p')
+      .invoke('text')
+      .then((text) => {
+        expect(text).includes(descriptionCheckItOutText);
+      });
+    cy.wait(10000);
+    cy.dataCy('show-comments-button').first().scrollIntoView();
+    cy.dataCy('show-comments-button').first().click({force: true});
+    cy.wait(10000);
+    cy.dataCy('comment-text')
+      .first()
+      .invoke('text')
+      .then((text) => {
+        expect(text).includes(adminCommentText);
+      });
+    cy.dataCy('comment-input')
+      .first()
+      .clear()
+      .type(`${studentCommentText}{enter}`, {force: true});
+    cy.dataCy('like-button').first().click();
+    cy.dataCy('likes-count')
+      .first()
+      .invoke('text')
+      .then((text) => {
+        expect(text).equals(' 2');
+      });
+
+    cy.dataCy('dropdown-button').click(); // Click on profile dropdown
+    cy.dataCy('logout-button').click(); // Logout
+
+    cy.login(loginConfig.admin.username, loginConfig.admin.password);
+    cy.wait(10000);
+    cy.url().should('contain', urlConfig.dashboardURL);
+    cy.visit(communityUrl);
+    cy.wait(10000);
+
+    cy.dataCy('show-comments-button').first().scrollIntoView(); // Scroll the window 500px down
+    cy.dataCy('show-comments-button').first().click({force: true});
+    cy.wait(10000);
+    cy.dataCy('comment-text')
+      .eq(0)
+      .invoke('text')
+      .then((text) => {
+        expect(text).includes(studentCommentText);
+      });
+    cy.dataCy('likes-count')
+      .first()
+      .invoke('text')
+      .then((text) => {
+        expect(text).equals(' 2');
+      });
+
+    cy.dataCy('popover-button').first().click();
+    cy.dataCy('card-delete-button').first().click();
+    cy.get('p')
+      .invoke('text')
+      .then((text) => {
+        expect(text).not.includes(descriptionCheckItOutText);
       });
   });
 });

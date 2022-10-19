@@ -162,6 +162,7 @@ const CheckItOut = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardP
       <div className="px-3 py-4">
         <div>
           <FormInput
+            dataCy="checkItOut-overlay-input"
             label="Step 2: Add overlay text"
             placeHolder="Overlay text"
             onChange={(e) => {
@@ -204,6 +205,7 @@ const CheckItOut = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardP
             transparent
           />
           <Buttons
+            dataCy="save-checkItOut-button"
             loading={isLoading}
             btnClass="py-1 px-8 text-xs ml-2"
             label={'Save'}
