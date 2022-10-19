@@ -1,14 +1,9 @@
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import LessonLoading from 'components/Lesson/Loading/LessonLoading';
-import {createCypressTesting} from 'graphql/mutations';
-import {isEmpty} from 'lodash';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {useHistory} from 'react-router-dom';
 
-import {GlobalContext} from 'contexts/GlobalContext';
-import * as customMutations from 'customGraphql/customMutations';
-import useDictionary from 'customHooks/dictionary';
 import Buttons from 'atoms/Buttons';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
 import DropdownForm from '../Profile/DropdownForm';
 
 interface UserInfoProps {
@@ -44,12 +39,12 @@ const TestCasesAdd = (props: UserInfoProps) => {
         // testEdgeCases: test.edgeCases
       };
 
-      const results: any = await API.graphql(
-        graphqlOperation(createCypressTesting, {input: input})
-      );
+      // const results: any = await API.graphql(
+      //   graphqlOperation(createCypressTesting, {input: input})
+      // );
 
       history.push(`/dashboard/test-cases`);
-      console.log({results});
+      // console.log({results});
     } catch (error) {
       console.error(error);
     }
