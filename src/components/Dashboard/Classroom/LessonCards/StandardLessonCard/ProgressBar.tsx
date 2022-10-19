@@ -1,5 +1,5 @@
+import {LessonsByType2Query, LessonsByType2QueryVariables} from 'API';
 import useGraphqlQuery from 'customHooks/useGraphqlQuery';
-import {LessonsByType2QueryVariables} from 'API';
 import React, {useEffect, useState} from 'react';
 
 interface ProgressBarProps {
@@ -14,20 +14,25 @@ interface ProgressBarProps {
 const ProgressBar = ({lessonProps}: ProgressBarProps) => {
   const [progressValue, setProgressValue] = useState<any>(0);
 
-  const shouldShowProgress = Boolean(lessonProps.lesson.type);
+  const lesson = lessonProps.lesson;
 
-  const {data, isFetched} = useGraphqlQuery<LessonsByType2QueryVariables, any>(
-    'lessonsByType',
+  const shouldShowProgress = Boolean(lesson.type);
+
+  const {data, isFetched} = useGraphqlQuery<
+    LessonsByType2QueryVariables,
+    LessonsByType2Query['lessonsByType2']['items']
+  >(
+    'lessonsByType2',
     {
-      lessonType: lessonProps.lesson.type,
-      filter: {lessonID: {eq: lessonProps.lesson.id}}
+      lessonType: lesson.type,
+      filter: {lessonID: {eq: lesson.id}}
     },
     {enabled: shouldShowProgress}
   );
 
   const generateLessonProgress = async () => {
     try {
-      const pageNumber = data && data.length > 0 ? data[0].pages : 0;
+      const pageNumber = data && data.length > 0 ? data[0].pages : '';
 
       const currentPage = JSON.parse(pageNumber).currentPage;
 
@@ -46,7 +51,7 @@ const ProgressBar = ({lessonProps}: ProgressBarProps) => {
       };
     } catch (error) {
       console.error(
-        `lessondID:${lessonProps.lesson.id} error @getLessonByType Classroom.tsx `,
+        `lessondID:${lesson.id} error @getLessonByType Classroom.tsx `,
         error
       );
     }
