@@ -48,13 +48,13 @@ const SaveQuit = ({createJournalData}: SaveQuitProps) => {
           updateStudentLessonData();
           handleNotebookSave();
         }
-
-        history.push(`/dashboard/classroom/${getRoomData.id}`);
       } catch (error) {
         console.error('error @ handleManualSave in SaveQuit.tsx', error);
       }
       setWaiting(false);
       setSafeToLeave(true);
+
+      history.push(`/dashboard/classroom/${getRoomData.id}`);
     }
   };
 

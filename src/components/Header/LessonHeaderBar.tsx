@@ -51,6 +51,9 @@ const LessonHeaderBar = ({
       setWaiting(false);
       setSafeToLeave(true);
     }
+    setTimeout(() => {
+      history.push(`/dashboard/classroom/${getRoomData.id}`);
+    }, 1500);
   };
 
   const handleNotebookSave = () => {
