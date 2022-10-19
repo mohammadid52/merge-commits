@@ -7,7 +7,7 @@ import ReviewSliderBlock from 'components/Lesson/UniversalLessonBlockComponents/
 import {GlobalContext} from 'contexts/GlobalContext';
 import useInLessonCheck from 'customHooks/checkIfInLesson';
 import useStudentDataValue from 'customHooks/studentDataValue';
-import {UniversalLessonPage} from '@interfaces/UniversalLessonInterfaces';
+import {UniversalLessonPage} from 'interfaces/UniversalLessonInterfaces';
 import DatePicker from '@UlbBlocks/FormBlock/DatePicker';
 import TextAreaBlock from '@UlbBlocks/FormBlock/TextAreaBlock';
 import TextBlock from '@UlbBlocks/FormBlock/TextBlock';

@@ -151,6 +151,7 @@ const ClassRoster = ({
       const classStudentList = outArray
         ? [...classStudents.data.listClassStudents.items, ...outArray]
         : classStudents.data.listClassStudents?.items;
+
       const theNextToken = classStudents.data.listClassStudents?.nextToken;
 
       if (theNextToken) {

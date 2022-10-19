@@ -5,12 +5,12 @@ import EditOverlayBlock from 'components/Lesson/UniversalLessonBlockComponents/U
 import {GlobalContext, useGlobalContext} from 'contexts/GlobalContext';
 import {usePageBuilderContext} from 'contexts/PageBuilderContext';
 import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
-import {RowComposerProps} from '@interfaces/UniversalLessonBuilderInterfaces';
+import {RowComposerProps} from 'interfaces/UniversalLessonBuilderInterfaces';
 import {
   PagePart,
   PartContent,
   UniversalLessonPage
-} from '@interfaces/UniversalLessonInterfaces';
+} from 'interfaces/UniversalLessonInterfaces';
 import {FORM_TYPES} from '@UlbUI/common/constants';
 import React, {useContext, useState} from 'react';
 import {BuilderRowWrapper} from './BuilderRowWrapper';

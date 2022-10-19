@@ -11,7 +11,7 @@ import * as customQueries from 'customGraphql/customQueries';
 import {Dialog, Transition} from '@headlessui/react';
 import {XIcon} from '@heroicons/react/outline';
 import {CheckCircleIcon} from '@heroicons/react/solid';
-import {UniversalLessonPage} from '@interfaces/UniversalLessonInterfaces';
+import {UniversalLessonPage} from 'interfaces/UniversalLessonInterfaces';
 import {wait} from 'utilities/functions';
 import {API, graphqlOperation} from 'aws-amplify';
 import map from 'lodash/map';

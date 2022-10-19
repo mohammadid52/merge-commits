@@ -1,6 +1,6 @@
 import Loader from 'atoms/Loader';
 import Popover from 'atoms/Popover';
-import {IChat} from '@interfaces/Community.interfaces';
+import {IChat} from 'interfaces/Community.interfaces';
 import {getImageFromS3Static} from 'utilities/services';
 import {orderBy} from 'lodash';
 import moment from 'moment';

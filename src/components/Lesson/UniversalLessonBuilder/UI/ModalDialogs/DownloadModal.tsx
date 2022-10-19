@@ -2,7 +2,7 @@ import {Storage} from '@aws-amplify/storage';
 import {GlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import {Transition} from '@headlessui/react';
-import {IContentTypeComponentProps} from '@interfaces/UniversalLessonBuilderInterfaces';
+import {IContentTypeComponentProps} from 'interfaces/UniversalLessonBuilderInterfaces';
 import {removeExtension} from 'utilities/functions';
 import {getImageFromS3Static} from 'utilities/services';
 import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';

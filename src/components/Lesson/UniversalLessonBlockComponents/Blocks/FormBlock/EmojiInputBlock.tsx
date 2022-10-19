@@ -2,7 +2,7 @@
 import {GlobalContext} from 'contexts/GlobalContext';
 import useInLessonCheck from 'customHooks/checkIfInLesson';
 import useStudentDataValue from 'customHooks/studentDataValue';
-import {IFormBlockProps, StudentPageInput} from '@interfaces/UniversalLessonInterfaces';
+import {IFormBlockProps, StudentPageInput} from 'interfaces/UniversalLessonInterfaces';
 import EmojiPicker from 'emoji-picker-react';
 import noop from 'lodash/noop';
 import React, {useContext, useState} from 'react';

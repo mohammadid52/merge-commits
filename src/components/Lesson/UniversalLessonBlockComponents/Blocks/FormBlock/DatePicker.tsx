@@ -1,7 +1,7 @@
 import {GlobalContext} from 'contexts/GlobalContext';
 import {noop} from 'lodash';
 import React, {useContext} from 'react';
-import {IFormBlockProps, StudentPageInput} from '@interfaces/UniversalLessonInterfaces';
+import {IFormBlockProps, StudentPageInput} from 'interfaces/UniversalLessonInterfaces';
 import {IoClose} from 'react-icons/io5';
 import Tooltip from 'atoms/Tooltip';
 import RequiredMark from 'atoms/RequiredMark';

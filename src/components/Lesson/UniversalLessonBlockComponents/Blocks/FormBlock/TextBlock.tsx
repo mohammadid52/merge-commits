@@ -2,7 +2,7 @@ import RequiredMark from 'atoms/RequiredMark';
 import {GlobalContext} from 'contexts/GlobalContext';
 import useInLessonCheck from 'customHooks/checkIfInLesson';
 import useStudentDataValue from 'customHooks/studentDataValue';
-import {IFormBlockProps} from '@interfaces/UniversalLessonInterfaces';
+import {IFormBlockProps} from 'interfaces/UniversalLessonInterfaces';
 import {noop} from 'lodash';
 import React, {useContext} from 'react';
 

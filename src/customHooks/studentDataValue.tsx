@@ -1,4 +1,4 @@
-import {StudentPageInput} from '@interfaces/UniversalLessonInterfaces';
+import {StudentPageInput} from 'interfaces/UniversalLessonInterfaces';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useInLessonCheck from './checkIfInLesson';
 import useAuth from './useAuth';

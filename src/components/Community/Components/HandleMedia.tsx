@@ -1,5 +1,5 @@
 import {COMMUNITY_UPLOAD_KEY} from 'components/Community/constants.community';
-import {ICommunityCard} from '@interfaces/Community.interfaces';
+import {ICommunityCard} from 'interfaces/Community.interfaces';
 import {getImageFromS3Static} from 'utilities/services';
 import React from 'react';
 import ReactPlayer from 'react-player';

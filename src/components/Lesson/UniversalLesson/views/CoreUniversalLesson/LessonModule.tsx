@@ -1,6 +1,6 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {Transition} from '@headlessui/react';
-import {UniversalLesson} from '@interfaces/UniversalLessonInterfaces';
+import {UniversalLesson} from 'interfaces/UniversalLessonInterfaces';
 import map from 'lodash/map';
 import React, {useState} from 'react';
 import {AiFillCheckCircle} from 'react-icons/ai';

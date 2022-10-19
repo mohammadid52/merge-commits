@@ -12,7 +12,7 @@ import * as customQueries from 'customGraphql/customQueries';
 import useAuth from 'customHooks/useAuth';
 import useGraphqlMutation from 'customHooks/useGraphqlMutation';
 import * as queries from 'graphql/queries';
-import {IChat, ICommunityCard} from '@interfaces/Community.interfaces';
+import {IChat, ICommunityCard} from 'interfaces/Community.interfaces';
 import {getImageFromS3Static} from 'utilities/services';
 import {API, graphqlOperation} from 'aws-amplify';
 

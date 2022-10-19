@@ -1,4 +1,4 @@
-import {IFileComponent} from '@interfaces/UniversalLessonInterfaces';
+import {IFileComponent} from 'interfaces/UniversalLessonInterfaces';
 import React from 'react';
 
 const genStatus = (_status: string) => {
@@ -36,7 +36,7 @@ const File = ({
   progress,
   fileName,
 
-  file,
+  file
 }: IFileComponent) => {
   return (
     <div

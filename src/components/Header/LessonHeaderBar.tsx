@@ -1,4 +1,4 @@
-import {StudentPageInput} from '@interfaces/UniversalLessonInterfaces';
+import {StudentPageInput} from 'interfaces/UniversalLessonInterfaces';
 import Modal from 'atoms/Modal';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
@@ -51,6 +51,9 @@ const LessonHeaderBar = ({
       setWaiting(false);
       setSafeToLeave(true);
     }
+    setTimeout(() => {
+      history.push(`/dashboard/classroom/${getRoomData.id}`);
+    }, 1500);
   };
 
   const handleNotebookSave = () => {
@@ -152,7 +155,6 @@ const LessonHeaderBar = ({
     : '';
   useEffect(() => {
     if (typeof thisPageVideoLink === 'string' && thisPageVideoLink.length > 0) {
-      console.log('I am running...');
       setVideoLink(thisPageVideoLink);
 
       if (lessonState.lessonProgress === lessonState.currentPage && !leaveModalVisible) {
@@ -224,6 +226,7 @@ const LessonHeaderBar = ({
   // ~~~~~~~~ TEACHER IS PRESENTING ~~~~~~~~ //
   const teacherIsPresenting = lessonState.displayData[0].isTeacher === true;
   const presentedPageID = lessonState.displayData[0].lessonPageID;
+
   useEffect(() => {
     // console.log(getPageIndex(presentedPageID, lessonState.lessonData.lessonPlan));
     if (teacherIsPresenting && presentedPageID) {

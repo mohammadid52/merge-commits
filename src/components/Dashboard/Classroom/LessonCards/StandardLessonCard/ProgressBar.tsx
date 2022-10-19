@@ -17,6 +17,7 @@ const ProgressBar = ({lessonProps}: ProgressBarProps) => {
   const lesson = lessonProps.lesson;
 
   const shouldShowProgress = Boolean(lesson.type);
+  const [progressLoaded, setProgressLoaded] = useState(false);
 
   const {data, isFetched} = useGraphqlQuery<
     LessonsByType2QueryVariables,
@@ -27,7 +28,7 @@ const ProgressBar = ({lessonProps}: ProgressBarProps) => {
       lessonType: lesson.type,
       filter: {lessonID: {eq: lesson.id}}
     },
-    {enabled: shouldShowProgress}
+    {enabled: shouldShowProgress && !progressLoaded}
   );
 
   const generateLessonProgress = async () => {
@@ -44,6 +45,7 @@ const ProgressBar = ({lessonProps}: ProgressBarProps) => {
       setProgressValue(
         Math.round(percentCorrect) < 100 ? Math.round(percentCorrect) : 100
       );
+      setProgressLoaded(true);
       return {
         lessonProgress,
         currentPage,

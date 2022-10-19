@@ -4,7 +4,7 @@ import Buttons from 'atoms/Buttons';
 import useStudentDataValue from 'customHooks/studentDataValue';
 import {EditQuestionModalDict} from '@dictionary/dictionary.iconoclast';
 import {Transition} from '@headlessui/react';
-import {IFormBlockProps} from '@interfaces/UniversalLessonInterfaces';
+import {IFormBlockProps} from 'interfaces/UniversalLessonInterfaces';
 import {removeExtension} from 'utilities/functions';
 import {getImageFromS3Static} from 'utilities/services';
 import {findIndex, map, noop, reject, remove, update} from 'lodash';

@@ -8,7 +8,7 @@ import {getAsset} from 'assets';
 import {GlobalContext} from 'contexts/GlobalContext';
 import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
 import useDictionary from 'customHooks/dictionary';
-import {UniversalLessonPage} from '@interfaces/UniversalLessonInterfaces';
+import {UniversalLessonPage} from 'interfaces/UniversalLessonInterfaces';
 import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
 import Buttons from 'atoms/Buttons';
 import Loader from 'atoms/Loader';

@@ -1,10 +1,10 @@
 import React from 'react';
-import {children} from '@interfaces/index';
+import {children} from 'interfaces/index';
 
 const PreviewLayout = ({
   children,
   notAvailable,
-  overflow = 'overflow-y-auto',
+  overflow = 'overflow-y-auto'
 }: {
   children: children;
   overflow?: string;

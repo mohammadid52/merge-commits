@@ -1,5 +1,5 @@
 import UploadMedia from 'molecules/UploadMedia';
-import {IFile} from '@interfaces/UniversalLessonInterfaces';
+import {IFile} from 'interfaces/UniversalLessonInterfaces';
 import React, {useRef, useState} from 'react';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
