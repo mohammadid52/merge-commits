@@ -590,7 +590,10 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
       let existingLesson: any;
 
       const personLessonData = lessonState?.misc?.personLessonData;
-      if (personLessonData?.lessonID === lessonID && personLessonData?.data?.length > 0) {
+      const isSameAndDataExists =
+        personLessonData?.lessonID === lessonID && personLessonData?.data?.length > 0;
+
+      if (isSameAndDataExists) {
         existingLesson = personLessonData?.data;
       } else {
         existingLesson = await API.graphql(
@@ -611,7 +614,9 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
         });
       }
 
-      const items = existingLesson?.data?.listPersonLessonsData?.items || [];
+      const items = isSameAndDataExists
+        ? existingLesson
+        : existingLesson?.data?.listPersonLessonsData?.items || [];
 
       if (!items.length) {
         payload = {

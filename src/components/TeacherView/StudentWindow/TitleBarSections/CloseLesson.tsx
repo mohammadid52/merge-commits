@@ -46,11 +46,10 @@ const CloseLesson = ({}) => {
       show: true
     }));
   };
-  const studentList = controlState.roster;
-  console.log(
-    '🚀 ~ file: CloseLesson.tsx ~ line 54 ~ handleMarkAsCompleteClick ~ studentList',
-    studentList
+  const studentList = controlState?.roster?.filter(
+    (_s: {person: {onDemand: any}}) => !_s?.person?.onDemand
   );
+
   const handleMarkAsCompleteClick = async () => {
     // UPDATE ROOM MUTATION
     try {
@@ -88,6 +87,21 @@ const CloseLesson = ({}) => {
         activeLessons: [lessonId],
         displayData: displayData
       });
+      studentList &&
+        studentList.length > 0 &&
+        studentList.forEach((student: any) => {
+          const {id} = student;
+          // lessonDispatch({
+          //   type: 'SET_ROOM_SUBSCRIPTION_DATA',
+          //   payload: {
+          //     id: getRoomData.id,
+          //     studentViewing: '',
+          //     displayData: [{isTeacher: false, studentAuthID: '', lessonPageID: ''}]
+          //   }
+          // });
+
+          // give signal to all students that lesson is closed. This will trigger the student to move to the next lesson
+        });
     } catch (e) {
       console.error('handleMarkAsCompleteClick() - ', e);
     } finally {
@@ -96,7 +110,6 @@ const CloseLesson = ({}) => {
   };
 
   const noButtonAction = () => {
-    // http://localhost:8085/dashboard/classroom/:roomId
     history.push(`/dashboard/classroom/${getRoomData.id}`);
     onCloseModal();
   };
