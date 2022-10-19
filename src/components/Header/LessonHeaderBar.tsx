@@ -1,4 +1,4 @@
-import {StudentPageInput} from '@interfaces/UniversalLessonInterfaces';
+import {StudentPageInput} from 'interfaces/UniversalLessonInterfaces';
 import Modal from 'atoms/Modal';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';

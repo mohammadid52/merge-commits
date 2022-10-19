@@ -1,7 +1,7 @@
 import React from 'react';
 import {Page, Text, View, Document, Image, StyleSheet} from '@react-pdf/renderer';
 import Html from 'react-pdf-html';
-import {PagePart, PartContent} from '@interfaces/UniversalLessonInterfaces';
+import {PagePart, PartContent} from 'interfaces/UniversalLessonInterfaces';
 import {GlobalContextProvider} from 'contexts/GlobalContext';
 import {getAsset} from 'assets';
 

@@ -17,8 +17,8 @@ import {
   ICommunityCard,
   IEventInput,
   ISpotlightInput
-} from '@interfaces/Community.interfaces';
-import {setState} from '@interfaces/index';
+} from 'interfaces/Community.interfaces';
+import {setState} from 'interfaces/index';
 import React from 'react';
 import {HiOutlineArrowRight} from 'react-icons/hi';
 import AnimatedContainer from 'uiComponents/Tabs/AnimatedContainer';

@@ -1,6 +1,6 @@
 import {GlobalContext} from 'contexts/GlobalContext';
 import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
-import {RowWrapperProps} from '@interfaces/UniversalLessonBuilderInterfaces';
+import {RowWrapperProps} from 'interfaces/UniversalLessonBuilderInterfaces';
 import {getAsset} from 'assets';
 import React, {useContext} from 'react';
 

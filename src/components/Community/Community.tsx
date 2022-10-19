@@ -22,7 +22,7 @@ import {
   ICommunityCard,
   IEventInput,
   ISpotlightInput
-} from '@interfaces/Community.interfaces';
+} from 'interfaces/Community.interfaces';
 import {getAsset} from 'assets';
 import {API, graphqlOperation} from 'aws-amplify';
 import 'components/Community/community.scss';

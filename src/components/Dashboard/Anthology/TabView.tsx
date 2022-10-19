@@ -13,7 +13,7 @@ import {
   UniversalClassData,
   UniversalJournalData,
   UniversalLessonStudentData
-} from '@interfaces/UniversalLessonInterfaces';
+} from 'interfaces/UniversalLessonInterfaces';
 import {stringToHslColor} from 'utilities/strings';
 import {ViewEditMode} from 'components/Dashboard/Anthology/Anthology';
 import AnthologyUnderlinedTabs from 'components/Dashboard/Anthology/AnthologyUnderlinedTabs';

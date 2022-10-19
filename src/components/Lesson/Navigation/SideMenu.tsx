@@ -13,8 +13,8 @@ import {useHistory} from 'react-router';
 import {gsap} from 'gsap/all';
 import usePrevious from 'customHooks/previousProps';
 import {getAsset} from 'assets';
-import {UniversalLessonPage} from '@interfaces/UniversalLessonInterfaces';
-import {ISideMenuProps} from '@interfaces/LessonComponentsInterfaces';
+import {UniversalLessonPage} from 'interfaces/UniversalLessonInterfaces';
+import {ISideMenuProps} from 'interfaces/LessonComponentsInterfaces';
 
 const SideMenu = ({
   isOpen,

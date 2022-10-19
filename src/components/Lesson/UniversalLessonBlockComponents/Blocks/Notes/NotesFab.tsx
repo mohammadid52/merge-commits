@@ -5,7 +5,7 @@ import NotesBlock from 'components/Lesson/UniversalLessonBlockComponents/Blocks/
 import {GlobalContext} from 'contexts/GlobalContext';
 import * as mutations from 'graphql/mutations';
 import * as queries from 'graphql/queries';
-import {UniversalJournalData} from '@interfaces/UniversalLessonInterfaces';
+import {UniversalJournalData} from 'interfaces/UniversalLessonInterfaces';
 import {getLocalStorageData} from 'utilities/localStorage';
 import filter from 'lodash/filter';
 import find from 'lodash/find';

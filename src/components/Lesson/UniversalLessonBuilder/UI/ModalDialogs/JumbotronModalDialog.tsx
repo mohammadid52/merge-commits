@@ -10,8 +10,8 @@ import {
   UniversalBuilderDict
 } from '@dictionary/dictionary.iconoclast';
 import {Switch} from '@headlessui/react';
-import {IContentTypeComponentProps} from '@interfaces/UniversalLessonBuilderInterfaces';
-import {PartContentSub} from '@interfaces/UniversalLessonInterfaces';
+import {IContentTypeComponentProps} from 'interfaces/UniversalLessonBuilderInterfaces';
+import {PartContentSub} from 'interfaces/UniversalLessonInterfaces';
 import AnimatedContainer from 'uiComponents/Tabs/AnimatedContainer';
 import {Tabs3, useTabs} from 'uiComponents/Tabs/Tabs';
 import {getImageFromS3Static} from 'utilities/services';

@@ -1,15 +1,15 @@
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import {UniversalLesson} from 'interfaces/UniversalLessonInterfaces';
+import {getAsset} from 'assets';
 import Buttons from 'atoms/Buttons';
 import Modal from 'atoms/Modal';
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {GlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import * as mutations from 'graphql/mutations';
-import {UniversalLesson} from '@interfaces/UniversalLessonInterfaces';
-import {wait} from 'utilities/functions';
-import {getAsset} from 'assets';
 import {map} from 'lodash';
 import React, {useContext, useState} from 'react';
 import {useHistory, useRouteMatch} from 'react-router';
+import {wait} from 'utilities/functions';
 import {v4 as uuidv4} from 'uuid';
 
 interface Props {

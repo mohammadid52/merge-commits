@@ -8,10 +8,7 @@ import useAuth from 'customHooks/useAuth';
 import useGraphqlMutation from 'customHooks/useGraphqlMutation';
 import useGraphqlQuery from 'customHooks/useGraphqlQuery';
 import {Transition} from '@headlessui/react';
-import {
-  UniversalLesson,
-  UniversalLessonPage
-} from '@interfaces/UniversalLessonInterfaces';
+import {UniversalLesson, UniversalLessonPage} from 'interfaces/UniversalLessonInterfaces';
 import AnimatedContainer from 'uiComponents/Tabs/AnimatedContainer';
 import {classNames} from '@UlbUI/FormElements/TextInput';
 import AddContentDialog from '@UlbUI/ModalDialogs/AddContentDialog';

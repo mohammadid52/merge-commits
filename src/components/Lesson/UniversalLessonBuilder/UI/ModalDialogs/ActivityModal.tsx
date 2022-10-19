@@ -2,7 +2,7 @@ import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
-import {IContentTypeComponentProps} from '@interfaces/UniversalLessonBuilderInterfaces';
+import {IContentTypeComponentProps} from 'interfaces/UniversalLessonBuilderInterfaces';
 import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
 import {snakeCase} from 'lodash';
 import {nanoid} from 'nanoid';

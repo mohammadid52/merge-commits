@@ -2,7 +2,7 @@ import {Storage} from '@aws-amplify/storage';
 import File from 'atoms/File';
 import Label from 'atoms/Form/Label';
 import {Transition} from '@headlessui/react';
-import {IFile} from '@interfaces/UniversalLessonInterfaces';
+import {IFile} from 'interfaces/UniversalLessonInterfaces';
 import {getAsset} from 'assets';
 import isEmpty from 'lodash/isEmpty';
 import update from 'lodash/update';

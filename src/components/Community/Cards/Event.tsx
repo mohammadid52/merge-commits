@@ -4,7 +4,7 @@ import Buttons from 'atoms/Buttons';
 import RichTextEditor from 'atoms/RichTextEditor';
 import Media from 'components/Community/Components/Media';
 import {COMMUNITY_UPLOAD_KEY, IFile} from 'components/Community/constants.community';
-import {ICommunityCardProps, IEventInput} from '@interfaces/Community.interfaces';
+import {ICommunityCardProps, IEventInput} from 'interfaces/Community.interfaces';
 import AnimatedContainer from 'uiComponents/Tabs/AnimatedContainer';
 import {getImageFromS3Static} from 'utilities/services';
 import isEmpty from 'lodash/isEmpty';

@@ -16,7 +16,7 @@ import {
   EditQuestionModalDict,
   UniversalBuilderDict
 } from '@dictionary/dictionary.iconoclast';
-import {IContentTypeComponentProps} from '@interfaces/UniversalLessonBuilderInterfaces';
+import {IContentTypeComponentProps} from 'interfaces/UniversalLessonBuilderInterfaces';
 import {getImageFromS3Static} from 'utilities/services';
 import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
 import React, {useCallback, useContext, useEffect, useRef, useState} from 'react';
