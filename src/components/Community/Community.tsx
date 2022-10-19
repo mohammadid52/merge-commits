@@ -1,8 +1,8 @@
-import SectionTitleV3 from 'atoms/SectionTitleV3';
 import BreadCrums from 'atoms/BreadCrums';
 import ContentCard from 'atoms/ContentCard';
 import Selector from 'atoms/Form/Selector';
 import Loader from 'atoms/Loader';
+import SectionTitleV3 from 'atoms/SectionTitleV3';
 import Card from 'components/Community/Card';
 import CardsModal from 'components/Community/CardsModal';
 import {
@@ -16,9 +16,6 @@ import AnimatedContainer from 'components/Lesson/UniversalLessonBuilder/UI/UICom
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 
-import * as mutations from 'graphql/mutations';
-import useGraphqlMutation from 'customHooks/useGraphqlMutation';
-import useGraphqlQuery from 'customHooks/useGraphqlQuery';
 import {
   IAnnouncementInput,
   ICheckItOutInput,
@@ -26,22 +23,24 @@ import {
   IEventInput,
   ISpotlightInput
 } from '@interfaces/Community.interfaces';
-import {deleteImageFromS3} from 'utilities/services';
-import {awsFormatDate, dateString} from 'utilities/time';
 import {getAsset} from 'assets';
 import {API, graphqlOperation} from 'aws-amplify';
 import 'components/Community/community.scss';
-import {findIndex, isEmpty, update} from 'lodash';
+import HeaderTextBar from 'components/Dashboard/HeaderTextBar/HeaderTextBar';
+import useAuth from 'customHooks/useAuth';
+import useGraphqlMutation from 'customHooks/useGraphqlMutation';
+import useGraphqlQuery from 'customHooks/useGraphqlQuery';
+import * as mutations from 'graphql/mutations';
+import {findIndex, isEmpty} from 'lodash';
 import filter from 'lodash/filter';
 import orderBy from 'lodash/orderBy';
 import remove from 'lodash/remove';
 import React, {useEffect, useState} from 'react';
 import {BsCardHeading} from 'react-icons/bs';
 import {useHistory, useRouteMatch} from 'react-router';
+import {deleteImageFromS3} from 'utilities/services';
+import {awsFormatDate, dateString} from 'utilities/time';
 import {v4 as uuidV4} from 'uuid';
-import useAuth from 'customHooks/useAuth';
-import {ListCommunitiesQuery} from 'API';
-import HeaderTextBar from 'components/Dashboard/HeaderTextBar/HeaderTextBar';
 
 const Community = ({}: {role: string}) => {
   const {clientKey, userLanguage} = useGlobalContext();
@@ -311,7 +310,7 @@ const Community = ({}: {role: string}) => {
 
   const TitleBar = () => (
     <SectionTitleV3
-      extraContainerClass="lg:max-w-192 md:max-w-none max-w-88 2xl:max-w-256 my-8 px-6 sticky top-0 z-1000"
+      extraContainerClass="mx-auto md:max-w-none lg:max-w-192 2xl:max-w-256 my-8 px-6 sticky top-0 z-1000"
       title={'Community'}
       fontSize="xl"
       fontStyle="semibold"
@@ -339,20 +338,22 @@ const Community = ({}: {role: string}) => {
         </div>
 
         <HeaderTextBar>Here is what is happening today</HeaderTextBar>
-        <TitleBar />
-        <CardsModal
-          navState={navState}
-          editMode={isCardEditMode}
-          setNavState={setNavState}
-          functions={{
-            onCheckItOutSubmit
-          }}
-          instId={instId}
-          showCardsModal={showCardsModal}
-          setShowCardsModal={setShowCardsModal}
-        />
+        <div className="px-10">
+          <TitleBar />
+          <CardsModal
+            navState={navState}
+            editMode={isCardEditMode}
+            setNavState={setNavState}
+            functions={{
+              onCheckItOutSubmit
+            }}
+            instId={instId}
+            showCardsModal={showCardsModal}
+            setShowCardsModal={setShowCardsModal}
+          />
 
-        <CommonList />
+          <CommonList />
+        </div>
       </div>
     );
   }
@@ -384,7 +385,8 @@ const Community = ({}: {role: string}) => {
           <BreadCrums items={breadCrumsList} />
         </div>
       </div>
-      <div className="mx-auto md:max-w-none lg:max-w-192 2xl:max-w-256 max-w-88">
+
+      <div className="px-10">
         <TitleBar />
 
         <CommonList />
