@@ -7300,55 +7300,6 @@ export const listCommunityChats = /* GraphQL */ `
     }
   }
 `;
-export const getCypressTesting = /* GraphQL */ `
-  query GetCypressTesting($id: ID!) {
-    getCypressTesting(id: $id) {
-      id
-      testID
-      testName
-      testType
-      testSteps
-      testData
-      testExpResults
-      edgeCases
-      lastUpdate
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listCypressTestings = /* GraphQL */ `
-  query ListCypressTestings(
-    $id: ID
-    $filter: ModelCypressTestingFilterInput
-    $limit: Int
-    $nextToken: String
-    $sortDirection: ModelSortDirection
-  ) {
-    listCypressTestings(
-      id: $id
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      sortDirection: $sortDirection
-    ) {
-      items {
-        id
-        testID
-        testName
-        testType
-        testSteps
-        testData
-        testExpResults
-        edgeCases
-        lastUpdate
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
 export const userById = /* GraphQL */ `
   query UserById(
     $id: ID!
@@ -7463,15 +7414,15 @@ export const usersByRole = /* GraphQL */ `
     }
   }
 `;
-export const lessonsByType = /* GraphQL */ `
-  query LessonsByType(
+export const lessonsByType2 = /* GraphQL */ `
+  query LessonsByType2(
     $lessonType: String!
     $sortDirection: ModelSortDirection
     $filter: ModelPersonLessonsDataFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    lessonsByType(
+    lessonsByType2(
       lessonType: $lessonType
       sortDirection: $sortDirection
       filter: $filter

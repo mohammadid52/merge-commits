@@ -3831,63 +3831,6 @@ export type DeleteCommunityChatInput = {
   id: string,
 };
 
-export type CreateCypressTestingInput = {
-  id?: string | null,
-  testID: string,
-  testName: string,
-  testType: string,
-  testSteps: string,
-  testData: string,
-  testExpResults: string,
-  edgeCases?: string | null,
-  lastUpdate?: string | null,
-};
-
-export type ModelCypressTestingConditionInput = {
-  testID?: ModelStringInput | null,
-  testName?: ModelStringInput | null,
-  testType?: ModelStringInput | null,
-  testSteps?: ModelStringInput | null,
-  testData?: ModelStringInput | null,
-  testExpResults?: ModelStringInput | null,
-  edgeCases?: ModelStringInput | null,
-  lastUpdate?: ModelStringInput | null,
-  and?: Array< ModelCypressTestingConditionInput | null > | null,
-  or?: Array< ModelCypressTestingConditionInput | null > | null,
-  not?: ModelCypressTestingConditionInput | null,
-};
-
-export type CypressTesting = {
-  __typename: "CypressTesting",
-  id: string,
-  testID: string,
-  testName: string,
-  testType: string,
-  testSteps: string,
-  testData: string,
-  testExpResults: string,
-  edgeCases?: string | null,
-  lastUpdate?: string | null,
-  createdAt: string,
-  updatedAt: string,
-};
-
-export type UpdateCypressTestingInput = {
-  id: string,
-  testID?: string | null,
-  testName?: string | null,
-  testType?: string | null,
-  testSteps?: string | null,
-  testData?: string | null,
-  testExpResults?: string | null,
-  edgeCases?: string | null,
-  lastUpdate?: string | null,
-};
-
-export type DeleteCypressTestingInput = {
-  id: string,
-};
-
 export type ModelStringKeyConditionInput = {
   eq?: string | null,
   le?: string | null,
@@ -4892,27 +4835,6 @@ export type ModelCommunityChatFilterInput = {
   and?: Array< ModelCommunityChatFilterInput | null > | null,
   or?: Array< ModelCommunityChatFilterInput | null > | null,
   not?: ModelCommunityChatFilterInput | null,
-};
-
-export type ModelCypressTestingFilterInput = {
-  id?: ModelIDInput | null,
-  testID?: ModelStringInput | null,
-  testName?: ModelStringInput | null,
-  testType?: ModelStringInput | null,
-  testSteps?: ModelStringInput | null,
-  testData?: ModelStringInput | null,
-  testExpResults?: ModelStringInput | null,
-  edgeCases?: ModelStringInput | null,
-  lastUpdate?: ModelStringInput | null,
-  and?: Array< ModelCypressTestingFilterInput | null > | null,
-  or?: Array< ModelCypressTestingFilterInput | null > | null,
-  not?: ModelCypressTestingFilterInput | null,
-};
-
-export type ModelCypressTestingConnection = {
-  __typename: "ModelCypressTestingConnection",
-  items:  Array<CypressTesting | null >,
-  nextToken?: string | null,
 };
 
 export type BatchAddClassStudentMutationVariables = {
@@ -20627,72 +20549,6 @@ export type DeleteCommunityChatMutation = {
   } | null,
 };
 
-export type CreateCypressTestingMutationVariables = {
-  input: CreateCypressTestingInput,
-  condition?: ModelCypressTestingConditionInput | null,
-};
-
-export type CreateCypressTestingMutation = {
-  createCypressTesting?:  {
-    __typename: "CypressTesting",
-    id: string,
-    testID: string,
-    testName: string,
-    testType: string,
-    testSteps: string,
-    testData: string,
-    testExpResults: string,
-    edgeCases?: string | null,
-    lastUpdate?: string | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type UpdateCypressTestingMutationVariables = {
-  input: UpdateCypressTestingInput,
-  condition?: ModelCypressTestingConditionInput | null,
-};
-
-export type UpdateCypressTestingMutation = {
-  updateCypressTesting?:  {
-    __typename: "CypressTesting",
-    id: string,
-    testID: string,
-    testName: string,
-    testType: string,
-    testSteps: string,
-    testData: string,
-    testExpResults: string,
-    edgeCases?: string | null,
-    lastUpdate?: string | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type DeleteCypressTestingMutationVariables = {
-  input: DeleteCypressTestingInput,
-  condition?: ModelCypressTestingConditionInput | null,
-};
-
-export type DeleteCypressTestingMutation = {
-  deleteCypressTesting?:  {
-    __typename: "CypressTesting",
-    id: string,
-    testID: string,
-    testName: string,
-    testType: string,
-    testSteps: string,
-    testData: string,
-    testExpResults: string,
-    edgeCases?: string | null,
-    lastUpdate?: string | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
 export type GetPersonQueryVariables = {
   email: string,
   authId: string,
@@ -28589,56 +28445,6 @@ export type ListCommunityChatsQuery = {
   } | null,
 };
 
-export type GetCypressTestingQueryVariables = {
-  id: string,
-};
-
-export type GetCypressTestingQuery = {
-  getCypressTesting?:  {
-    __typename: "CypressTesting",
-    id: string,
-    testID: string,
-    testName: string,
-    testType: string,
-    testSteps: string,
-    testData: string,
-    testExpResults: string,
-    edgeCases?: string | null,
-    lastUpdate?: string | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type ListCypressTestingsQueryVariables = {
-  id?: string | null,
-  filter?: ModelCypressTestingFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-  sortDirection?: ModelSortDirection | null,
-};
-
-export type ListCypressTestingsQuery = {
-  listCypressTestings?:  {
-    __typename: "ModelCypressTestingConnection",
-    items:  Array< {
-      __typename: "CypressTesting",
-      id: string,
-      testID: string,
-      testName: string,
-      testType: string,
-      testSteps: string,
-      testData: string,
-      testExpResults: string,
-      edgeCases?: string | null,
-      lastUpdate?: string | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null >,
-    nextToken?: string | null,
-  } | null,
-};
-
 export type UserByIdQueryVariables = {
   id: string,
   sortDirection?: ModelSortDirection | null,
@@ -28751,7 +28557,7 @@ export type UsersByRoleQuery = {
   } | null,
 };
 
-export type LessonsByTypeQueryVariables = {
+export type LessonsByType2QueryVariables = {
   lessonType: string,
   sortDirection?: ModelSortDirection | null,
   filter?: ModelPersonLessonsDataFilterInput | null,
@@ -28759,8 +28565,8 @@ export type LessonsByTypeQueryVariables = {
   nextToken?: string | null,
 };
 
-export type LessonsByTypeQuery = {
-  lessonsByType?:  {
+export type LessonsByType2Query = {
+  lessonsByType2?:  {
     __typename: "ModelPersonLessonsDataConnection",
     items:  Array< {
       __typename: "PersonLessonsData",
@@ -44320,57 +44126,6 @@ export type OnDeleteCommunityChatSubscription = {
     msg?: string | null,
     createdAt?: string | null,
     isEditedChat?: boolean | null,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnCreateCypressTestingSubscription = {
-  onCreateCypressTesting?:  {
-    __typename: "CypressTesting",
-    id: string,
-    testID: string,
-    testName: string,
-    testType: string,
-    testSteps: string,
-    testData: string,
-    testExpResults: string,
-    edgeCases?: string | null,
-    lastUpdate?: string | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnUpdateCypressTestingSubscription = {
-  onUpdateCypressTesting?:  {
-    __typename: "CypressTesting",
-    id: string,
-    testID: string,
-    testName: string,
-    testType: string,
-    testSteps: string,
-    testData: string,
-    testExpResults: string,
-    edgeCases?: string | null,
-    lastUpdate?: string | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnDeleteCypressTestingSubscription = {
-  onDeleteCypressTesting?:  {
-    __typename: "CypressTesting",
-    id: string,
-    testID: string,
-    testName: string,
-    testType: string,
-    testSteps: string,
-    testData: string,
-    testExpResults: string,
-    edgeCases?: string | null,
-    lastUpdate?: string | null,
-    createdAt: string,
     updatedAt: string,
   } | null,
 };
