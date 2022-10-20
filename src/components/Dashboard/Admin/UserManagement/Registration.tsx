@@ -1,6 +1,6 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import axios from 'axios';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {IoArrowUndoCircleOutline} from 'react-icons/io5';
 import {useHistory} from 'react-router-dom';
 
@@ -13,7 +13,7 @@ import SuccessNote from 'standard/Alert/SuccessNote';
 import DropdownForm from './DropdownForm';
 import ErrorNote from './ErrorNote';
 
-import {GlobalContext} from 'contexts/GlobalContext';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import {createUserUrl} from 'utilities/urls';
 
@@ -22,6 +22,17 @@ import Label from 'atoms/Form/Label';
 import * as customMutations from 'customGraphql/customMutations';
 import * as customQueries from 'customGraphql/customQueries';
 import * as mutations from 'graphql/mutations';
+import useGraphqlMutation from '@customHooks/useGraphqlMutation';
+import {
+  CreateClassroomGroupStudentsInput,
+  CreateClassStudentInput,
+  CreatePersonInput,
+  CreatePersonMutation,
+  CreateStaffInput,
+  Language,
+  PersonStatus,
+  Role
+} from 'API';
 
 interface newUserInput {
   key: number;
@@ -33,8 +44,8 @@ interface newUserInput {
   phone: string;
   birthdate: string;
   grade: string;
-  role: string;
-  status: {name: string; value: string};
+  role: CreatePersonInput['role'] | '';
+  status: {name: string; value: PersonStatus};
   externalId: string;
   group: {
     id: string;
@@ -67,7 +78,7 @@ const initialState: newUserInput = {
   firstName: '',
   lastName: '',
   phone: '',
-  status: {name: 'Active', value: 'ACTIVE'},
+  status: {name: 'Active', value: PersonStatus.ACTIVE},
   birthdate: '',
   grade: '',
   role: '',
@@ -103,25 +114,25 @@ const Registration = ({
     message: ''
   });
 
-  const {state, clientKey, userLanguage} = useContext(GlobalContext);
-  const {RegistrationDict, BreadcrumsTitles} = useDictionary(clientKey);
+  const {state, userLanguage} = useGlobalContext();
+  const {RegistrationDict, BreadcrumsTitles} = useDictionary();
 
   const Roles = [
-    state.user.role === 'SUP' && {
-      code: 'SUP',
+    state.user.role === Role.SUP && {
+      code: Role.SUP,
       name: RegistrationDict[userLanguage]['roles']['sup']
     },
-    (state.user.role === 'SUP' || state.user.role === 'ADM') && {
-      code: 'ADM',
+    (state.user.role === Role.SUP || state.user.role === Role.ADM) && {
+      code: Role.ADM,
       name: RegistrationDict[userLanguage]['roles']['adm']
     },
-    {code: 'BLD', name: RegistrationDict[userLanguage]['roles']['bld']},
-    {code: 'FLW', name: RegistrationDict[userLanguage]['roles']['flw']},
-    {code: 'CRD', name: RegistrationDict[userLanguage]['roles']['crd']},
-    {code: 'TR', name: RegistrationDict[userLanguage]['roles']['tr']},
+    {code: Role.BLD, name: RegistrationDict[userLanguage]['roles']['bld']},
+    {code: Role.FLW, name: RegistrationDict[userLanguage]['roles']['flw']},
+    {code: Role.CRD, name: RegistrationDict[userLanguage]['roles']['crd']},
+    {code: Role.TR, name: RegistrationDict[userLanguage]['roles']['tr']},
     (!isInModalPopup || (isInModalPopup && classId)) &&
-      state.user.role !== 'BLD' && {
-        code: 'ST',
+      state.user.role !== Role.BLD && {
+        code: Role.ST,
         name: RegistrationDict[userLanguage]['roles']['st']
       }
   ].filter(Boolean);
@@ -144,7 +155,7 @@ const Registration = ({
     if (classId) {
       setNewUserInputs((prevValues) => ({
         ...prevValues,
-        role: 'ST',
+        role: Role.ST,
         class: {
           id: classId,
           name: classData.name,
@@ -203,11 +214,34 @@ const Registration = ({
     }
   };
 
+  // mutation for creating a new user
+  const createPersonMutation = useGraphqlMutation<
+    {input: CreatePersonInput},
+    CreatePersonMutation['createPerson']
+  >('createPerson');
+
+  // mutation for creating a new staff user
+  const createStaffMutation = useGraphqlMutation<{input: CreateStaffInput}, any>(
+    'createStaff'
+  );
+
+  // mutation for creating a new class student
+  const createClassStudentMutation = useGraphqlMutation<
+    {input: CreateClassStudentInput},
+    any
+  >('createClassStudent');
+
+  // mutation for creating a new class student
+  const createClassroomGroupStudentsMutation = useGraphqlMutation<
+    {input: CreateClassroomGroupStudentsInput},
+    any
+  >('createClassroomGroupStudents');
+
   async function registerUser(authId: string) {
-    let userData = {
+    let userData: CreatePersonInput = {
       authId: authId,
       status: newUserInputs.status.value,
-      role: newUserInputs.role,
+      role: newUserInputs.role as Role,
       email: newUserInputs.email,
       firstName: newUserInputs.firstName,
       lastName: newUserInputs.lastName,
@@ -215,75 +249,61 @@ const Registration = ({
       birthdate: '1960-01-01',
       externalId: newUserInputs.externalId,
       grade: newUserInputs.grade,
-      language: 'EN',
-      onDemand: !newUserInputs.isSelfPaced,
+      language: Language.EN,
+      onDemand: newUserInputs.isSelfPaced,
       addedby: state.user.authId
     };
 
     try {
-      const newPerson: any = await API.graphql(
-        graphqlOperation(mutations.createPerson, {input: userData})
-      );
-      let person = newPerson.data.createPerson;
-      if (newUserInputs.role !== 'ST') {
-        const input = {
+      const person = await createPersonMutation.mutate({input: userData});
+
+      if (newUserInputs.role !== Role.ST) {
+        const input: CreateStaffInput = {
           institutionID: newUserInputs.institution.id,
           staffAuthID: authId,
           staffEmail: newUserInputs.email,
-          status: 'ACTIVE',
+          status: PersonStatus.ACTIVE,
           statusChangeDate: new Date().toISOString().split('T')[0]
         };
-        const staff: any = await API.graphql(
-          graphqlOperation(mutations.createStaff, {input: input})
-        );
+
+        createStaffMutation.mutate({input});
       } else {
         if (newUserInputs.class.id) {
           // add the student in the class
           // need to get the user id from new person object
-          const input = {
+          const input: CreateClassStudentInput = {
             classID: newUserInputs.class.id,
             studentID: person.id,
             studentAuthID: authId,
             studentEmail: newUserInputs.email,
-            status: newUserInputs.status
+            status: newUserInputs.status.value
           };
-          await API.graphql(
-            graphqlOperation(customMutations.createClassStudent, {input})
-          );
+
+          createClassStudentMutation.mutate({input});
           if (newUserInputs.group?.id) {
-            await API.graphql(
-              graphqlOperation(customMutations.createClassroomGroupStudents, {
-                input: {
-                  classRoomGroupID: newUserInputs.group.id,
-                  studentEmail: newUserInputs.email,
-                  studentAuthId: authId
-                }
-              })
-            );
+            const input: CreateClassroomGroupStudentsInput = {
+              classRoomGroupID: newUserInputs.group.id,
+              studentEmail: newUserInputs.email,
+              studentAuthId: authId
+            };
+            createClassroomGroupStudentsMutation.mutate({input});
           }
         }
       }
-      handleMessage('success', 'User registered successfully');
+
+      const isAllGood =
+        !createPersonMutation.isError &&
+        !createClassStudentMutation.isError &&
+        !createStaffMutation.isError &&
+        !createClassroomGroupStudentsMutation.isError;
+      if (isAllGood) {
+        handleMessage('success', 'User registered successfully');
+      }
+
       if (isInModalPopup) {
         postMutation();
       }
-      setNewUserInputs((prev) => {
-        return {
-          ...prev,
-          key: 0,
-          authId: '',
-          email: '',
-          password: 'xIconoclast.5x',
-          firstName: '',
-          lastName: '',
-          phone: '00',
-          birthdate: '10-10-2020',
-          grade: '1',
-          class: {id: '', name: '', roomId: ''},
-          role: '',
-          externalId: '3'
-        };
-      });
+      setNewUserInputs(initialState);
     } catch (error) {
       console.error('error registering user:', error);
       handleMessage('error', error.message);
@@ -411,7 +431,7 @@ const Registration = ({
     });
   };
 
-  const handleChangeRole = (item: {name: string; code: string}) => {
+  const handleChangeRole = (item: {name: string; code: Role}) => {
     setNewUserInputs(() => {
       return {
         ...newUserInputs,
@@ -533,7 +553,7 @@ const Registration = ({
     {id: 3, name: 'Training', value: 'TRAINING'}
   ];
 
-  const onStatusChange = (value: string, name: string) => {
+  const onStatusChange = (value: PersonStatus, name: string) => {
     setNewUserInputs({...newUserInputs, status: {value, name}});
   };
   return (
@@ -661,7 +681,7 @@ const Registration = ({
                       />
                     </div> */}
                     {newUserInputs.role &&
-                      newUserInputs.role === 'ST' &&
+                      newUserInputs.role === Role.ST &&
                       newUserInputs.institution.id && (
                         <>
                           {!classId && (
@@ -673,7 +693,6 @@ const Registration = ({
                                 userInfo={`${newUserInputs.class.name}`}
                                 label={RegistrationDict[userLanguage]['class']}
                                 id="class"
-                                isRequired
                                 items={instClasses}
                                 value={`${newUserInputs.class.id}`}
                               />
