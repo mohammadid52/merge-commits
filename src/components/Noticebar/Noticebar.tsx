@@ -65,7 +65,7 @@ const Noticebar = ({notifications}: INoticebarProps) => {
   };
 
   const basicStyle = `font-semibold text-sm text-white justify-center`;
-  const linkColor = `iconoclast:bg-300 curate:bg-300 hover:iconoclast:bg-400 hover:curate:bg-400 iconoclast:text-500 curate:text-500 cursor-pointer`;
+  const linkColor = `font-bold cursor-pointer underline text-blue-600 hover:text-blue-800 visited:text-purple-600`;
 
   return (
     <>

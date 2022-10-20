@@ -1,7 +1,7 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import Buttons from 'atoms/Buttons';
 import axios from 'axios';
-import {GlobalContext} from 'contexts/GlobalContext';
+import {GlobalContext, useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import * as mutations from 'graphql/mutations';
 import * as queries from 'graphql/queries';
@@ -44,20 +44,19 @@ const Start: React.FC<StartProps> = ({
   preview
 }: StartProps) => {
   // ~~~~~~~~~~ CONTEXT SPLITTING ~~~~~~~~~~ //
-  const gContext = useContext(GlobalContext);
+  const gContext = useGlobalContext();
   const state = gContext.state;
 
   const user = gContext.state.user;
 
   const lessonDispatch = gContext.lessonDispatch;
-  const clientKey = gContext.clientKey;
   const userLanguage = gContext.userLanguage;
   const getRoomData = getLocalStorageData('room_info');
 
   const [isMounted, setIsMounted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const {classRoomDict} = useDictionary(clientKey);
+  const {classRoomDict} = useDictionary();
   const history = useHistory();
   const [loading, setLoading] = useState<boolean>(false);
   const [attendanceRecorded, setAttendanceRecorded] = useState<boolean>(false);
@@ -330,6 +329,9 @@ const Start: React.FC<StartProps> = ({
       if (type === 'survey' || type === 'assessment') {
         return classRoomDict[userLanguage]['BOTTOM_BAR']['SURVEY'];
       } else {
+        if (isCompleted) {
+          return 'Lesson';
+        }
         return classRoomDict[userLanguage]['BOTTOM_BAR']['START'];
       }
     }
@@ -339,7 +341,9 @@ const Start: React.FC<StartProps> = ({
     if (typeof type !== 'undefined') {
       switch (type) {
         case 'lesson':
-          return isCompleted && !isOnDemand
+          return isCompleted && isOnDemand
+            ? 'Completed'
+            : isCompleted && !isOnDemand
             ? ''
             : classRoomDict[userLanguage]['LESSON'].toUpperCase();
         case 'assessment':
@@ -393,12 +397,12 @@ const Start: React.FC<StartProps> = ({
         }
         disabled={
           loading ||
-          (isCompleted && !isOnDemand) ||
+          isCompleted ||
           (!open && !isTeacher && !isOnDemand) ||
           (!isActive && !isTeacher && !isOnDemand)
         }
         btnClass={`rounded-t-none md:rounded h-full w-full text-xs focus:outline-none ${
-          !open ? 'opacity-80' : 'opacity-100'
+          !open || isCompleted ? 'opacity-80' : 'opacity-100'
         } `}
       />
       {warnModal.show && (

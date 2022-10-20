@@ -8,7 +8,11 @@ import useInLessonCheck from 'customHooks/checkIfInLesson';
 import useAuth from 'customHooks/useAuth';
 import useGraphqlMutation from 'customHooks/useGraphqlMutation';
 import {awsFormatDate, dateString} from 'utilities/time';
-import {CreateFeelingsArchiveInput, CreateFeelingsArchiveMutationVariables} from 'API';
+import {
+  CreateFeelingsArchiveInput,
+  CreateFeelingsArchiveMutationVariables,
+  FeelingsArchive
+} from 'API';
 import {remove} from 'lodash';
 import {nanoid} from 'nanoid';
 import React, {useState} from 'react';
@@ -104,9 +108,10 @@ const SelectedEmotionsContainer = () => {
 
   const {authId, email, isStudent} = useAuth();
 
-  const {mutate, isLoading} = useGraphqlMutation<CreateFeelingsArchiveMutationVariables>(
-    'createFeelingsArchive'
-  );
+  const {mutate, isLoading} = useGraphqlMutation<
+    CreateFeelingsArchiveMutationVariables,
+    FeelingsArchive
+  >('createFeelingsArchive');
 
   const onSave = () => {
     try {

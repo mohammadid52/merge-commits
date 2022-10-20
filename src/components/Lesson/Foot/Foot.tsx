@@ -136,7 +136,6 @@ const Foot = ({
   }, [lessonState.updated]);
 
   useEffect(() => {
-    console.log('safeToLeave State - ', safeToLeave);
     if (safeToLeave === true) {
       handlePopup();
       history.push(`/dashboard/classroom/${getRoomData.id}`);

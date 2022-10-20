@@ -1,7 +1,7 @@
 import useAuth from 'customHooks/useAuth';
 import useGraphqlMutation from 'customHooks/useGraphqlMutation';
 import {awsFormatDate, dateString} from 'utilities/time';
-import {CreateGameChangerLogInput} from 'API';
+import {CreateGameChangerLogInput, GameChangerLog} from 'API';
 import {nanoid} from 'nanoid';
 import React, {useEffect, useState} from 'react';
 import Button from './Button';
@@ -122,10 +122,10 @@ const SingingBowl = () => {
     };
   }, [isPlaying]);
 
-  const mutationLog = useGraphqlMutation<{input: CreateGameChangerLogInput}>(
-    'createGameChangerLog',
-    {}
-  );
+  const mutationLog = useGraphqlMutation<
+    {input: CreateGameChangerLogInput},
+    GameChangerLog
+  >('createGameChangerLog');
   const {email, authId} = useAuth();
 
   const start = () => {
