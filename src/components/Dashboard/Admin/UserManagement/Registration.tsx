@@ -17,11 +17,6 @@ import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import {createUserUrl} from 'utilities/urls';
 
-import CheckBox from 'atoms/Form/CheckBox';
-import Label from 'atoms/Form/Label';
-import * as customMutations from 'customGraphql/customMutations';
-import * as customQueries from 'customGraphql/customQueries';
-import * as mutations from 'graphql/mutations';
 import useGraphqlMutation from '@customHooks/useGraphqlMutation';
 import {
   CreateClassroomGroupStudentsInput,
@@ -33,6 +28,9 @@ import {
   PersonStatus,
   Role
 } from 'API';
+import CheckBox from 'atoms/Form/CheckBox';
+import Label from 'atoms/Form/Label';
+import * as customQueries from 'customGraphql/customQueries';
 
 interface newUserInput {
   key: number;
@@ -291,14 +289,7 @@ const Registration = ({
         }
       }
 
-      const isAllGood =
-        !createPersonMutation.isError &&
-        !createClassStudentMutation.isError &&
-        !createStaffMutation.isError &&
-        !createClassroomGroupStudentsMutation.isError;
-      if (isAllGood) {
-        handleMessage('success', 'User registered successfully');
-      }
+      handleMessage('success', 'User registered successfully');
 
       if (isInModalPopup) {
         postMutation();
