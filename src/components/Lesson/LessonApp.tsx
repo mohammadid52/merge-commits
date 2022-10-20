@@ -982,22 +982,21 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
       let newStudentData: any;
       let returnedData: any;
       if (item.hasExerciseData) {
-        newStudentData = await API.graphql(
+        console.info('\x1b[33m *Moving lesson data to writing exercise table... \x1b[0m');
+        await API.graphql(
           graphqlOperation(mutations.createUniversalLessonWritingExcercises, {
             input
           })
         );
-        console.info('\x1b[33m *Moving lesson data to writing exercise table... \x1b[0m');
-        returnedData = newStudentData.data.createUniversalLessonWritingExcercises;
-      } else {
-        newStudentData = await API.graphql(
-          graphqlOperation(mutations.createUniversalArchiveData, {
-            input
-          })
-        );
-        console.info('\x1b[33m *Archiving rest of the pages... \x1b[0m');
-        returnedData = newStudentData.data.createUniversalArchiveData;
       }
+      newStudentData = await API.graphql(
+        graphqlOperation(mutations.createUniversalArchiveData, {
+          input
+        })
+      );
+      console.info('\x1b[33m *Archiving rest of the pages... \x1b[0m');
+      returnedData = newStudentData.data.createUniversalArchiveData;
+
       return returnedData;
     });
     return result;

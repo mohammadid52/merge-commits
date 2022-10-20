@@ -356,7 +356,6 @@ export const lessonReducer = (state: any, action: LessonActions) => {
         loaded: action.payload
       };
     case LESSON_REDUCER_TYPES.UPDATE_STUDENT_DATA:
-      console.log('UPDATE_STUDENT_DATA');
       const pageIdx = action.payload.pageIdx;
       const domID = action.payload.data.domID;
       const newInput = action.payload.data.input;
@@ -411,6 +410,7 @@ export const lessonReducer = (state: any, action: LessonActions) => {
             })
           };
         }) || [];
+
       const mappedExerciseData = state?.exerciseData.map(
         (pageExerciseArray: any[], exerciseIdx: number) => {
           if (exerciseIdx === pageIdx) {
