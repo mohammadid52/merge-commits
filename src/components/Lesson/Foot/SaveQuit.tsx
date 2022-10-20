@@ -2,7 +2,8 @@ import useAuth from '@customHooks/useAuth';
 import useGraphqlMutation from '@customHooks/useGraphqlMutation';
 import {
   DeleteUniversalLessonStudentDataInput,
-  ModelUniversalLessonStudentDataConditionInput
+  ModelUniversalLessonStudentDataConditionInput,
+  UniversalLessonStudentData
 } from 'API';
 import Buttons from 'atoms/Buttons';
 import {useGlobalContext} from 'contexts/GlobalContext';
@@ -58,10 +59,13 @@ const SaveQuit = ({createJournalData}: SaveQuitProps) => {
 
   const {onDemand} = useAuth();
 
-  const {mutate} = useGraphqlMutation<{
-    input: DeleteUniversalLessonStudentDataInput;
-    condition?: ModelUniversalLessonStudentDataConditionInput;
-  }>('deleteUniversalLessonStudentData');
+  const {mutate} = useGraphqlMutation<
+    {
+      input: DeleteUniversalLessonStudentDataInput;
+      condition?: ModelUniversalLessonStudentDataConditionInput;
+    },
+    UniversalLessonStudentData
+  >('deleteUniversalLessonStudentData');
 
   const handleNotebookSave = () => {
     console.log('\x1b[33m *Saving notebook... \x1b[0m');

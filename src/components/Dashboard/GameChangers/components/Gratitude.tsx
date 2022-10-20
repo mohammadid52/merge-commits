@@ -5,7 +5,7 @@ import AnimatedContainer from 'components/Lesson/UniversalLessonBuilder/UI/UICom
 import useAuth from 'customHooks/useAuth';
 import useGraphqlMutation from 'customHooks/useGraphqlMutation';
 import {awsFormatDate, dateString} from 'utilities/time';
-import {CreateGameChangerInput, CreateGameChangerLogInput} from 'API';
+import {CreateGameChangerInput, CreateGameChangerLogInput, GameChangerLog} from 'API';
 import gsap from 'gsap';
 import {nanoid} from 'nanoid';
 import React, {useEffect, useState} from 'react';
@@ -19,16 +19,16 @@ const Gratitude = () => {
   const {setIsCompleted, isCompleted} = useGameChangers();
   const [fields, setFields] = useState({summary: '1. \n\n2. \n\n3. \n', summaryHtml: ''});
 
-  const mutationLog = useGraphqlMutation<{input: CreateGameChangerLogInput}>(
-    'createGameChangerLog',
-    {
-      onSuccess: () => {
-        setIsCompleted(true);
-      }
+  const mutationLog = useGraphqlMutation<
+    {input: CreateGameChangerLogInput},
+    GameChangerLog
+  >('createGameChangerLog', {
+    onSuccess: () => {
+      setIsCompleted(true);
     }
-  );
+  });
 
-  const mutation = useGraphqlMutation<{input: CreateGameChangerInput}>(
+  const mutation = useGraphqlMutation<{input: CreateGameChangerInput}, GameChangerLog>(
     'createGameChanger'
   );
 
