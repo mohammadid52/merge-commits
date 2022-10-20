@@ -962,6 +962,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
       }
     };
     const studentDataRows = await loopFetchStudentData(listFilter, undefined, []);
+
     const currentPageLocation = await getLessonCurrentPage();
 
     const result = studentDataRows.map(async (item: any) => {
@@ -981,20 +982,22 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
       };
       let newStudentData: any;
       let returnedData: any;
+
       if (item.hasExerciseData) {
         console.info('\x1b[33m *Moving lesson data to writing exercise table... \x1b[0m');
-        await API.graphql(
+        newStudentData = await API.graphql(
           graphqlOperation(mutations.createUniversalLessonWritingExcercises, {
             input
           })
         );
+      } else {
+        newStudentData = await API.graphql(
+          graphqlOperation(mutations.createUniversalArchiveData, {
+            input
+          })
+        );
+        console.info('\x1b[33m *Archiving rest of the pages... \x1b[0m');
       }
-      newStudentData = await API.graphql(
-        graphqlOperation(mutations.createUniversalArchiveData, {
-          input
-        })
-      );
-      console.info('\x1b[33m *Archiving rest of the pages... \x1b[0m');
       returnedData = newStudentData.data.createUniversalArchiveData;
 
       return returnedData;

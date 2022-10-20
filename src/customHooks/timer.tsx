@@ -8,8 +8,6 @@ import {useEffect, useState} from 'react';
 const useStudentTimer = () => {
   const {state, lessonState, lessonDispatch} = useGlobalContext();
 
-  console.log('TIMER LOADED');
-
   const getRoomData = getLocalStorageData('room_info');
 
   // ##################################################################### //

@@ -329,6 +329,9 @@ const Start: React.FC<StartProps> = ({
       if (type === 'survey' || type === 'assessment') {
         return classRoomDict[userLanguage]['BOTTOM_BAR']['SURVEY'];
       } else {
+        if (isCompleted) {
+          return 'Lesson';
+        }
         return classRoomDict[userLanguage]['BOTTOM_BAR']['START'];
       }
     }
@@ -338,7 +341,9 @@ const Start: React.FC<StartProps> = ({
     if (typeof type !== 'undefined') {
       switch (type) {
         case 'lesson':
-          return isCompleted && !isOnDemand
+          return isCompleted && isOnDemand
+            ? 'Completed'
+            : isCompleted && !isOnDemand
             ? ''
             : classRoomDict[userLanguage]['LESSON'].toUpperCase();
         case 'assessment':

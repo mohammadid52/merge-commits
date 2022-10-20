@@ -50,7 +50,9 @@ const ProgressBar = ({lessonProps, user}: ProgressBarProps) => {
       const percentCorrect = (lessonProgress * 100) / totalPages;
       const finalPercent =
         Math.round(percentCorrect) < 100 ? Math.round(percentCorrect) : 100;
-      setProgressValue(finalPercent === 100 ? finalPercent + roundOff : finalPercent);
+      setProgressValue(
+        isCompleted ? 100 : finalPercent === 100 ? finalPercent + roundOff : finalPercent
+      );
       setProgressLoaded(true);
       return {
         lessonProgress,

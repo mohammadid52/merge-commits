@@ -231,7 +231,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
           institutionID: props.instituteId,
           staffAuthID: member.authId,
           staffEmail: member.email,
-          status: 'Active',
+          status: 'ACTIVE',
           statusChangeDate: new Date().toISOString().split('T')[0]
         };
         const staff: any = await API.graphql(
