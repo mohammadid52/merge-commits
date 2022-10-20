@@ -17,6 +17,7 @@ describe('Student Check In', () => {
 
   it('Should check in and out sucessfully', {defaultCommandTimeout: 20000}, function () {
     cy.url().should('contain', urlConfig.dashboardURL); // Check if it is on the dashboard
+    cy.wait(5000); // wait for page to load
     cy.get('body').then((body) => {
       if (body.find('[data-cy="emoji-feedback-button"]').length > 0) {
         cy.dataCy('emoji-feedback-button').click(); // If emoji feedback popup is open click on save button
@@ -25,7 +26,7 @@ describe('Student Check In', () => {
     cy.get(`button:contains(${notebookLink})`).click(); // Click on Notebook button in header
     cy.wait(3000); // Wait for notebooks to load
     // cy.closeCheckInModal(); // Close the modal
-    cy.dataCy('room-view-card').first().click(); // Select the first notebook
+    cy.dataCy('room-view-card').eq(1).click(); // Select the first notebook
     cy.dataCy('notebook-passcode-input').clear().type(notebookPasscode); // Enter passcode
     cy.dataCy('notebook-passcode-submit').click(); // Submit passcode
     cy.dataCy('sentiment-emoji').first().click(); // Click on first Sentiment emoji
