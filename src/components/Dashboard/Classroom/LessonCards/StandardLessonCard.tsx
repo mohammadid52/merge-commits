@@ -40,7 +40,7 @@ const StandardLessonCard = (props: LessonCardProps) => {
       if (typeof value === 'undefined') setexistsOrNot(true);
 
       if (value) {
-        if (value.lessonProgress === value.totalPages) setIsCompleted(true);
+        if (value.isCompleted) setIsCompleted(true);
       }
       return;
     } catch (error) {}
@@ -86,6 +86,7 @@ const StandardLessonCard = (props: LessonCardProps) => {
           accessible={accessible}
           roomID={roomID}
           lessonProps={lessonProps}
+          isCompleted={isCompleted}
           syllabusProps={syllabusProps}
           lessonType={lessonType}
         />

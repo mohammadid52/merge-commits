@@ -3,7 +3,8 @@ import useGraphqlMutation from '@customHooks/useGraphqlMutation';
 import {
   DeleteUniversalLessonStudentDataInput,
   ModelUniversalLessonStudentDataConditionInput,
-  UniversalLessonStudentData
+  UniversalLessonStudentData,
+  UpdatePersonLessonsDataInput
 } from 'API';
 import Buttons from 'atoms/Buttons';
 import {useGlobalContext} from 'contexts/GlobalContext';
@@ -42,6 +43,9 @@ const SaveQuit = ({createJournalData}: SaveQuitProps) => {
       setWaiting(true);
       setSafeToLeave(false);
     } else {
+      setWaiting(false);
+      setSafeToLeave(true);
+
       try {
         if (lessonState?.lessonData?.type === 'survey') {
           updateSurveyData();
@@ -49,11 +53,24 @@ const SaveQuit = ({createJournalData}: SaveQuitProps) => {
           updateStudentLessonData();
           handleNotebookSave();
         }
+
+        const id =
+          lessonState.misc?.personLessonData?.data?.find(
+            (_d: any) => _d.lessonID === lessonState?.lessonData?.id
+          )?.id || '';
+
+        updatePersonLessonsDataMutation
+          .mutate({input: {id, isCompleted: true}})
+          .then(() => {
+            history.push(`/dashboard/classroom/${getRoomData.id}`);
+            console.log('Successfully completed ' + lessonState?.lessonData?.type);
+          })
+          .catch((err) => {
+            console.error('Error updating current lesson/survey complete status', err);
+          });
       } catch (error) {
         console.error('error @ handleManualSave in SaveQuit.tsx', error);
       }
-      setWaiting(false);
-      setSafeToLeave(true);
     }
   };
 
@@ -67,9 +84,16 @@ const SaveQuit = ({createJournalData}: SaveQuitProps) => {
     UniversalLessonStudentData
   >('deleteUniversalLessonStudentData');
 
+  const updatePersonLessonsDataMutation = useGraphqlMutation<
+    {
+      input: UpdatePersonLessonsDataInput;
+    },
+    UniversalLessonStudentData
+  >('updatePersonLessonsData');
+
   const handleNotebookSave = () => {
-    console.log('\x1b[33m *Saving notebook... \x1b[0m');
     createJournalData && createJournalData();
+    console.log('\x1b[33m *Saving notebook... \x1b[0m');
 
     // delete lessonData from record from graphql if student is self paced
     const lessonID = lessonState?.lessonData?.id;

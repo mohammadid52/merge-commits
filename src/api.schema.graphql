@@ -66,17 +66,15 @@ type Person @model @auth(rules: [{allow: public}]) {
   addedby: String
 }
 
-
-
-
 type PersonLessonsData @model @auth(rules: [{allow: public}]) {
-  id: ID!@primaryKey
+  id: ID! @primaryKey
   studentAuthID: String! @index(name: "byStudentAuthID")
   studentEmail: String!
-  lessonID: String! 
+  lessonID: String!
   lessonType: String @index(name: "byLessonType", queryField: "lessonsByType2")
   pages: AWSJSON
   ratings: Int @default(value: "0")
+  isCompleted: Boolean @default(value: "false")
 }
 
 type Institution @model @auth(rules: [{allow: public}]) {
@@ -1058,4 +1056,15 @@ type Mutation {
   batchAddClassStudent(classStudents: [CreateClassStudentInput]): [ClassStudent]
 }
 
-# asdfasdfsd12
+type CypressTesting @model @auth(rules: [{allow: public}]) {
+  id: ID! @primaryKey
+  testID: String!
+  testName: String!
+  testType: String!
+  testSteps: String!
+  testData: String!
+  testExpResults: String!
+  edgeCases: String
+  lastUpdate: AWSDate
+}
+# asdfasdfsd10

@@ -392,12 +392,12 @@ const Start: React.FC<StartProps> = ({
         }
         disabled={
           loading ||
-          (isCompleted && !isOnDemand) ||
+          isCompleted ||
           (!open && !isTeacher && !isOnDemand) ||
           (!isActive && !isTeacher && !isOnDemand)
         }
         btnClass={`rounded-t-none md:rounded h-full w-full text-xs focus:outline-none ${
-          !open ? 'opacity-80' : 'opacity-100'
+          !open || isCompleted ? 'opacity-80' : 'opacity-100'
         } `}
       />
       {warnModal.show && (
