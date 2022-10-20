@@ -52,6 +52,7 @@ export const getPerson = /* GraphQL */ `
           lessonType
           pages
           ratings
+          isCompleted
           createdAt
           updatedAt
         }
@@ -135,6 +136,7 @@ export const getPersonLessonsData = /* GraphQL */ `
       lessonType
       pages
       ratings
+      isCompleted
       createdAt
       updatedAt
     }
@@ -163,6 +165,7 @@ export const listPersonLessonsData = /* GraphQL */ `
         lessonType
         pages
         ratings
+        isCompleted
         createdAt
         updatedAt
       }
@@ -440,7 +443,11 @@ export const getStaff = /* GraphQL */ `
   }
 `;
 export const listStaff = /* GraphQL */ `
-  query ListStaff($filter: ModelStaffFilterInput, $limit: Int, $nextToken: String) {
+  query ListStaff(
+    $filter: ModelStaffFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
     listStaff(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
@@ -733,7 +740,11 @@ export const getRoom = /* GraphQL */ `
   }
 `;
 export const listRooms = /* GraphQL */ `
-  query ListRooms($filter: ModelRoomFilterInput, $limit: Int, $nextToken: String) {
+  query ListRooms(
+    $filter: ModelRoomFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
     listRooms(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
@@ -1042,7 +1053,11 @@ export const listClassroomGroupStudents = /* GraphQL */ `
     $limit: Int
     $nextToken: String
   ) {
-    listClassroomGroupStudents(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    listClassroomGroupStudents(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
       items {
         id
         classRoomGroupID
@@ -1803,7 +1818,11 @@ export const getClass = /* GraphQL */ `
   }
 `;
 export const listClasses = /* GraphQL */ `
-  query ListClasses($filter: ModelClassFilterInput, $limit: Int, $nextToken: String) {
+  query ListClasses(
+    $filter: ModelClassFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
     listClasses(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
@@ -2788,7 +2807,11 @@ export const getRoomMsgs = /* GraphQL */ `
   }
 `;
 export const listRoomMsgs = /* GraphQL */ `
-  query ListRoomMsgs($filter: ModelRoomMsgsFilterInput, $limit: Int, $nextToken: String) {
+  query ListRoomMsgs(
+    $filter: ModelRoomMsgsFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
     listRoomMsgs(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
@@ -3065,7 +3088,11 @@ export const listAnthologyComments = /* GraphQL */ `
     $limit: Int
     $nextToken: String
   ) {
-    listAnthologyComments(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    listAnthologyComments(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
       items {
         id
         text
@@ -5224,7 +5251,11 @@ export const listUniversalSyllabusLessons = /* GraphQL */ `
     $limit: Int
     $nextToken: String
   ) {
-    listUniversalSyllabusLessons(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    listUniversalSyllabusLessons(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
       items {
         id
         syllabusID
@@ -5377,7 +5408,11 @@ export const listUniversalLessonFeedbacks = /* GraphQL */ `
     $limit: Int
     $nextToken: String
   ) {
-    listUniversalLessonFeedbacks(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    listUniversalLessonFeedbacks(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
       items {
         id
         syllabusLessonID
@@ -5501,7 +5536,11 @@ export const listStudentConnections = /* GraphQL */ `
     $limit: Int
     $nextToken: String
   ) {
-    listStudentConnections(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    listStudentConnections(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
       items {
         fromEmail
         fromAuthID
@@ -7264,6 +7303,55 @@ export const listCommunityChats = /* GraphQL */ `
     }
   }
 `;
+export const getCypressTesting = /* GraphQL */ `
+  query GetCypressTesting($id: ID!) {
+    getCypressTesting(id: $id) {
+      id
+      testID
+      testName
+      testType
+      testSteps
+      testData
+      testExpResults
+      edgeCases
+      lastUpdate
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listCypressTestings = /* GraphQL */ `
+  query ListCypressTestings(
+    $id: ID
+    $filter: ModelCypressTestingFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listCypressTestings(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        testID
+        testName
+        testType
+        testSteps
+        testData
+        testExpResults
+        edgeCases
+        lastUpdate
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const userById = /* GraphQL */ `
   query UserById(
     $id: ID!
@@ -7401,6 +7489,7 @@ export const lessonsByType2 = /* GraphQL */ `
         lessonType
         pages
         ratings
+        isCompleted
         createdAt
         updatedAt
       }
