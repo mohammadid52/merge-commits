@@ -202,7 +202,7 @@ const Csv = ({institutionId}: ICsvProps) => {
     let instCRs: any = [];
 
     const variablesForTR_FR = {filter: {teacherAuthID: {eq: authId}}};
-    const variablesForBLD_ADM = {filter: {}};
+    const variablesForBLD_ADM = {};
 
     let classrooms: any = await API.graphql(
       graphqlOperation(

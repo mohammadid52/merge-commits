@@ -52,6 +52,7 @@ export const getPerson = /* GraphQL */ `
           lessonType
           pages
           ratings
+          isCompleted
           createdAt
           updatedAt
         }
@@ -135,6 +136,7 @@ export const getPersonLessonsData = /* GraphQL */ `
       lessonType
       pages
       ratings
+      isCompleted
       createdAt
       updatedAt
     }
@@ -163,6 +165,7 @@ export const listPersonLessonsData = /* GraphQL */ `
         lessonType
         pages
         ratings
+        isCompleted
         createdAt
         updatedAt
       }
@@ -7486,6 +7489,7 @@ export const lessonsByType2 = /* GraphQL */ `
         lessonType
         pages
         ratings
+        isCompleted
         createdAt
         updatedAt
       }

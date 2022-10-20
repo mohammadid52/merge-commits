@@ -11,12 +11,12 @@ interface ProgressBarProps {
   getLessonByType?: (type: string, lessonID: string) => any;
 }
 
-const ProgressBar = ({lessonProps}: ProgressBarProps) => {
+const ProgressBar = ({lessonProps, user}: ProgressBarProps) => {
   const [progressValue, setProgressValue] = useState<any>(0);
 
   const lesson = lessonProps.lesson;
 
-  const shouldShowProgress = Boolean(lesson.type);
+  const shouldShowProgress = Boolean(lesson) && Boolean(user);
   const [progressLoaded, setProgressLoaded] = useState(false);
 
   const {data, isFetched} = useGraphqlQuery<
@@ -26,13 +26,18 @@ const ProgressBar = ({lessonProps}: ProgressBarProps) => {
     'lessonsByType2',
     {
       lessonType: lesson.type,
-      filter: {lessonID: {eq: lesson.id}}
+      filter: {
+        lessonID: {eq: lesson.id},
+        studentAuthID: {eq: user.authId},
+        studentEmail: {eq: user.email}
+      }
     },
     {enabled: shouldShowProgress && !progressLoaded}
   );
 
   const generateLessonProgress = async () => {
     try {
+      const isCompleted = data && data.length > 0 ? data[0]?.isCompleted : false;
       const pageNumber = data && data.length > 0 ? data[0].pages : '';
 
       const currentPage = JSON.parse(pageNumber).currentPage;
@@ -41,10 +46,11 @@ const ProgressBar = ({lessonProps}: ProgressBarProps) => {
 
       const lessonProgress = JSON.parse(pageNumber).lessonProgress + 1;
 
+      const roundOff = isCompleted ? 0 : -1;
       const percentCorrect = (lessonProgress * 100) / totalPages;
-      setProgressValue(
-        Math.round(percentCorrect) < 100 ? Math.round(percentCorrect) : 100
-      );
+      const finalPercent =
+        Math.round(percentCorrect) < 100 ? Math.round(percentCorrect) : 100;
+      setProgressValue(finalPercent === 100 ? finalPercent + roundOff : finalPercent);
       setProgressLoaded(true);
       return {
         lessonProgress,
@@ -67,11 +73,14 @@ const ProgressBar = ({lessonProps}: ProgressBarProps) => {
 
   if (!shouldShowProgress) return null;
 
+  const infoWhenNinetyNine = '';
+
   return (
     <div className="flex justify-end px-4 flex-wrap mb-3">
       <div className="flex items-center justify-between my-2">
         <p className="text-gray-500 text-sm">
-          {progressValue > 0 ? progressValue : 0}% complete
+          {progressValue > 0 ? progressValue : 0}% complete{' '}
+          <span className="italic">{progressValue === 99 ? infoWhenNinetyNine : ''}</span>
         </p>
       </div>
       <div className="w-full h-2 iconoclast:bg-200 curate:bg-200 rounded-full">

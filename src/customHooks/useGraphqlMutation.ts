@@ -1,7 +1,7 @@
 import * as customMutations from 'customGraphql/customMutations';
 import * as mutations from 'graphql/mutations';
 import {API, graphqlOperation} from 'aws-amplify';
-import {useState} from 'react';
+import {useCallback, useState} from 'react';
 
 interface Options {
   custom?: boolean;
@@ -9,11 +9,15 @@ interface Options {
   onSuccess?: (data: any) => void;
 }
 
-const useGraphqlMutation = <VariablesType>(
-  mutationName: string,
+const allMutationNames = [...Object.keys(mutations), ...Object.keys(customMutations)];
+
+type MutationType = typeof allMutationNames[number];
+
+const useGraphqlMutation = <VariablesType, ReturnType>(
+  mutationName: MutationType,
   options?: Options
 ): {
-  mutate: (variables: VariablesType, successCallback?: () => void) => Promise<void>;
+  mutate: (variables: VariablesType, successCallback?: () => void) => Promise<ReturnType>;
   isLoading: boolean;
   isError: boolean;
   isSuccess: boolean;
@@ -27,35 +31,48 @@ const useGraphqlMutation = <VariablesType>(
 
   const action = custom ? customMutations : mutations;
 
-  const mutate = async (variables: VariablesType, successCallback?: () => void) => {
-    setIsLoading(true);
-    try {
-      const res: any = await API.graphql(
-        //   @ts-ignore
-        graphqlOperation(action[mutationName], variables)
-      );
+  if (!allMutationNames.includes(mutationName)) {
+    console.error(
+      `Mutation ${mutationName} does not exist. Please check the spelling and try again.`
+    );
+  }
 
-      const data = res.data[mutationName];
-      if (onSuccess && typeof onSuccess === 'function') {
-        onSuccess(data);
-        setIsSuccess(true);
-        if (successCallback && typeof successCallback === 'function') {
-          successCallback();
+  const mutate = useCallback(
+    async (
+      variables: VariablesType,
+      successCallback?: () => void
+    ): Promise<ReturnType> => {
+      setIsLoading(true);
+      try {
+        const res: any = await API.graphql(
+          //   @ts-ignore
+          graphqlOperation(action[mutationName], variables)
+        );
+
+        const data: ReturnType = res.data[mutationName];
+        if (onSuccess && typeof onSuccess === 'function') {
+          onSuccess(data);
+          setIsSuccess(true);
+          if (successCallback && typeof successCallback === 'function') {
+            successCallback();
+          }
         }
-      }
-    } catch (error) {
-      setIsError(true);
-      setIsSuccess(false);
-      setError(error.message);
-      console.error(error);
-    } finally {
-      if (onCancel && typeof onCancel === 'function') {
-        onCancel();
-      }
+        return data;
+      } catch (error) {
+        setIsError(true);
+        setIsSuccess(false);
+        setError(error.message);
+        console.error(error);
+      } finally {
+        if (onCancel && typeof onCancel === 'function') {
+          onCancel();
+        }
 
-      setIsLoading(false);
-    }
-  };
+        setIsLoading(false);
+      }
+    },
+    []
+  );
 
   return {mutate, isLoading, isError, error, isSuccess};
 };

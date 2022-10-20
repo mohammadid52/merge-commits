@@ -1,6 +1,5 @@
 /* tslint:disable */
 /* eslint-disable */
-// test
 // this is an auto generated file. This will be overwritten
 
 export const batchAddClassStudent = /* GraphQL */ `
@@ -172,6 +171,7 @@ export const createPerson = /* GraphQL */ `
           lessonType
           pages
           ratings
+          isCompleted
           createdAt
           updatedAt
         }
@@ -239,6 +239,7 @@ export const updatePerson = /* GraphQL */ `
           lessonType
           pages
           ratings
+          isCompleted
           createdAt
           updatedAt
         }
@@ -306,6 +307,7 @@ export const deletePerson = /* GraphQL */ `
           lessonType
           pages
           ratings
+          isCompleted
           createdAt
           updatedAt
         }
@@ -333,6 +335,7 @@ export const createPersonLessonsData = /* GraphQL */ `
       lessonType
       pages
       ratings
+      isCompleted
       createdAt
       updatedAt
     }
@@ -351,6 +354,7 @@ export const updatePersonLessonsData = /* GraphQL */ `
       lessonType
       pages
       ratings
+      isCompleted
       createdAt
       updatedAt
     }
@@ -369,6 +373,7 @@ export const deletePersonLessonsData = /* GraphQL */ `
       lessonType
       pages
       ratings
+      isCompleted
       createdAt
       updatedAt
     }

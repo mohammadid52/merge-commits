@@ -37,9 +37,7 @@ const TestCases = () => {
 
   async function getTestCases() {
     try {
-      const results: any = await API.graphql(
-        graphqlOperation(listCypressTestings, {filter: {}})
-      );
+      const results: any = await API.graphql(graphqlOperation(listCypressTestings));
       const data = results.data.listCypressTestings.items;
       console.log(data);
       setTableData(data);

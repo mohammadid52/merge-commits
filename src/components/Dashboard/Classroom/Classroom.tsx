@@ -78,6 +78,7 @@ export interface LessonProps extends DashboardProps {
 }
 
 export interface LessonCardProps {
+  isCompleted?: boolean;
   isTeacher?: boolean;
   keyProps?: string;
   activeRoomInfo?: any;
@@ -393,8 +394,10 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
             })
           );
 
-          const ratingValue = getLessonRatingDetails.data.getPersonLessonsData.ratings;
-          const pageNumber = getLessonRatingDetails.data.getPersonLessonsData.pages;
+          const data = getLessonRatingDetails.data.getPersonLessonsData;
+
+          const ratingValue = data.ratings;
+          const pageNumber = data.pages;
           const currentPage = JSON.parse(pageNumber).currentPage;
           const lessonProgress = JSON.parse(pageNumber).lessonProgress;
           const totalPages = JSON.parse(pageNumber).totalPages;
@@ -402,7 +405,8 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
             ratingValue,
             currentPage,
             lessonProgress,
-            totalPages
+            totalPages,
+            isCompleted: data?.isCompleted || false
           };
         }
       } catch (error) {}

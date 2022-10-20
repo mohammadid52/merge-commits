@@ -11,6 +11,7 @@ import PositiveAlert from '../General/Popup';
 import LessonTopMenu from '../Lesson/Navigation/LessonTopMenu';
 import SideMenu from '../Lesson/Navigation/SideMenu';
 import VideoWidget from '../Lesson/Navigation/Widgets/VideoWidget';
+import useStudentTimer from '@customHooks/timer';
 
 const LessonHeaderBar = ({
   overlay,
@@ -31,6 +32,9 @@ const LessonHeaderBar = ({
 
   const history = useHistory();
   const match = useRouteMatch();
+
+  // don't remove this line
+  const initializeTimer = useStudentTimer();
 
   // ##################################################################### //
   // ################## LOGIC FOR RETURNING TO CLASSROOM ################# //

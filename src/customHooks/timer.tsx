@@ -8,6 +8,8 @@ import {useEffect, useState} from 'react';
 const useStudentTimer = () => {
   const {state, lessonState, lessonDispatch} = useGlobalContext();
 
+  console.log('TIMER LOADED');
+
   const getRoomData = getLocalStorageData('room_info');
 
   // ##################################################################### //
@@ -52,7 +54,6 @@ const useStudentTimer = () => {
 
   useEffect(() => {
     if (lessonState.updated && !savePending) {
-      console.log("I'm saving");
       setSavePending(true);
 
       if (iAmViewed) {
