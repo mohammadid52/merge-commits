@@ -1,7 +1,7 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import Buttons from 'atoms/Buttons';
 import axios from 'axios';
-import {GlobalContext} from 'contexts/GlobalContext';
+import {GlobalContext, useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import * as mutations from 'graphql/mutations';
 import * as queries from 'graphql/queries';
@@ -43,22 +43,20 @@ const Start: React.FC<StartProps> = ({
   roomID,
   preview
 }: StartProps) => {
-  console.log({isCompleted, open, isActive});
   // ~~~~~~~~~~ CONTEXT SPLITTING ~~~~~~~~~~ //
-  const gContext = useContext(GlobalContext);
+  const gContext = useGlobalContext();
   const state = gContext.state;
 
   const user = gContext.state.user;
 
   const lessonDispatch = gContext.lessonDispatch;
-  const clientKey = gContext.clientKey;
   const userLanguage = gContext.userLanguage;
   const getRoomData = getLocalStorageData('room_info');
 
   const [isMounted, setIsMounted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const {classRoomDict} = useDictionary(clientKey);
+  const {classRoomDict} = useDictionary();
   const history = useHistory();
   const [loading, setLoading] = useState<boolean>(false);
   const [attendanceRecorded, setAttendanceRecorded] = useState<boolean>(false);

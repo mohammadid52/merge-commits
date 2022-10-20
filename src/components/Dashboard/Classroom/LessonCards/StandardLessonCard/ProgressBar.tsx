@@ -11,12 +11,12 @@ interface ProgressBarProps {
   getLessonByType?: (type: string, lessonID: string) => any;
 }
 
-const ProgressBar = ({lessonProps}: ProgressBarProps) => {
+const ProgressBar = ({lessonProps, user}: ProgressBarProps) => {
   const [progressValue, setProgressValue] = useState<any>(0);
 
   const lesson = lessonProps.lesson;
 
-  const shouldShowProgress = Boolean(lesson.type);
+  const shouldShowProgress = Boolean(lesson) && Boolean(user);
   const [progressLoaded, setProgressLoaded] = useState(false);
 
   const {data, isFetched} = useGraphqlQuery<
@@ -26,7 +26,11 @@ const ProgressBar = ({lessonProps}: ProgressBarProps) => {
     'lessonsByType2',
     {
       lessonType: lesson.type,
-      filter: {lessonID: {eq: lesson.id}}
+      filter: {
+        lessonID: {eq: lesson.id},
+        studentAuthID: {eq: user.authId},
+        studentEmail: {eq: user.email}
+      }
     },
     {enabled: shouldShowProgress && !progressLoaded}
   );
