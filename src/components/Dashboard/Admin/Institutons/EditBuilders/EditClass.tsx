@@ -230,8 +230,6 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
     }
   };
 
-  const [searchTerm, setSearchTerm] = useState('');
-
   const fetchStudentList = async (searchQuery: string) => {
     // const result: any = await API.graphql(
     //   graphqlOperation(customQueries.listPersons, {
@@ -255,7 +253,6 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
 
     // filter allStudents by searchQuery
 
-    setSearchTerm(searchQuery);
     const filteredStudents = allStudents.filter((student: any) => {
       const {firstName, lastName, name} = student;
 
@@ -533,7 +530,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
                 <div className="flex items-center justify-between">
                   <SearchSelectorWithAvatar
                     selectedItem={newMember}
-                    list={searchTerm !== '' ? filteredStudents : allStudents}
+                    list={filteredStudents.length > 0 ? filteredStudents : allStudents}
                     placeholder={dictionary.ADD_STUDENT_PLACEHOLDER}
                     onChange={onStudentSelect}
                     fetchStudentList={fetchStudentList}
