@@ -303,7 +303,11 @@ const Community = ({}: {role: string}) => {
 
         {/* Error--1213 */}
         <AnimatedContainer show={Boolean(error)}>
-          {error && <p className="text-red-500 text-xs">{error}</p>}
+          {error && (
+            <div className="flex items-center justify-center">
+              <p className="text-red-500 text-xs">{error}</p>
+            </div>
+          )}
         </AnimatedContainer>
 
         {/* Other Cards here */}
@@ -333,9 +337,11 @@ const Community = ({}: {role: string}) => {
 
         <AnimatedContainer show={data.length === 0 && isFetched}>
           {data.length === 0 && isFetched && (
-            <p className="text-red-500 text-xs">
-              No community posts... Be the first to start the conversation
-            </p>
+            <div className="flex items-center justify-center">
+              <p className="text-gray-500 text-sm">
+                No community posts... Be the first to start the conversation
+              </p>
+            </div>
           )}
         </AnimatedContainer>
       </ContentCard>
