@@ -93,6 +93,7 @@ export type LessonActions =
   | {
       type: 'LOAD_STUDENT_DATA';
       payload: {
+        studentDataRows?: any[];
         dataIdReferences: {
           id: string;
           pageIdx: number;

@@ -544,6 +544,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
     let combined;
     setLessonDataLoaded(false);
     try {
+      console.count('loopFetchStudentData');
       let studentData: any = await API.graphql(
         graphqlOperation(customQueries.listUniversalLessonStudentDatas, {
           ...filterObj,
@@ -560,7 +561,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
       combined = [...outArray, ...studentDataRows];
 
       if (theNextToken) {
-        // combined = await loopFetchStudentData(filterObj, theNextToken, combined);
+        combined = await loopFetchStudentData(filterObj, theNextToken, combined);
       }
 
       lessonDispatch({type: 'LESSON_LOADED', payload: true});
@@ -573,6 +574,41 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
       return [];
     }
   };
+
+  // const loopFetchStudentData = async (
+  //   filterObj: any,
+  //   nextToken: string,
+  //   outArray: any[]
+  // ): Promise<any> => {
+  //   setLessonDataLoaded(false);
+  //   try {
+  //     // count
+  //     console.count('loopFetchStudentData');
+  //     const lessonPlan: UniversalLessonPage[] = PAGES || [];
+  //     let combined: any[] = [];
+  //     lessonPlan.forEach(async (page) => {
+  //       let studentData: any = await API.graphql(
+  //         graphqlOperation(customQueries.listUniversalLessonStudentDatas, {
+  //           filter: {
+  //             ...filterObj.filter,
+  //             lessonPageID:{eq: page.id}
+  //           },
+  //           nextToken: nextToken
+  //         })
+  //       );
+  //       let studentDataRows =
+  //         studentData?.data?.listUniversalLessonStudentData?.items || [];
+  //       combined = [...combined, ...studentDataRows];
+  //     });
+
+  //     console.log('combined - ', combined);
+
+  //     lessonDispatch({type: 'LESSON_LOADED', payload: true});
+  //     setLessonDataLoaded(true);
+  //   } catch (error) {
+  //     console.error('loopFetchStudentData - ', error);
+  //   }
+  // };
 
   const getOrCreateStudentData = async () => {
     // const syllabusID = getRoomData.activeSyllabus;
@@ -594,7 +630,8 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
       // );
 
       // existing student rowss
-      const studentDataRows = await loopFetchStudentData(listFilter, undefined, []);
+      // const studentDataRows = await loopFetchStudentData(listFilter, undefined, []);
+      const studentDataRows: any[] = [];
 
       /**
        * NEW RECORD CREATION LOGIC:
@@ -615,6 +652,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
         lessonDispatch({
           type: 'LOAD_STUDENT_DATA',
           payload: {
+            studentDataRows,
             dataIdReferences: studentDataIdArray(newRecords)
           }
         });
@@ -954,6 +992,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
 
   const loopCreateStudentArchiveAndExcerciseData = async (lessonID: string) => {
     const listFilter = {
+      limit: 100,
       filter: {
         studentAuthID: {eq: user.authId},
         lessonID: {eq: lessonID},
@@ -961,6 +1000,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
         roomID: {eq: getRoomData.id}
       }
     };
+
     const studentDataRows = await loopFetchStudentData(listFilter, undefined, []);
 
     const currentPageLocation = await getLessonCurrentPage();

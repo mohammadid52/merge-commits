@@ -38,13 +38,13 @@ const ProgressBar = ({lessonProps, user}: ProgressBarProps) => {
   const generateLessonProgress = async () => {
     try {
       const isCompleted = data && data.length > 0 ? data[0]?.isCompleted : false;
-      const pageNumber = data && data.length > 0 ? data[0].pages : '';
+      const pageNumber = data && data.length > 0 ? data[0].pages : '{}';
 
-      const currentPage = JSON.parse(pageNumber).currentPage;
+      const currentPage = JSON.parse(pageNumber).currentPage || 0;
 
-      const totalPages = JSON.parse(pageNumber).totalPages;
+      const totalPages = JSON.parse(pageNumber).totalPages || 0;
 
-      const lessonProgress = JSON.parse(pageNumber).lessonProgress + 1;
+      const lessonProgress = JSON.parse(pageNumber).lessonProgress + 1 || 0;
 
       const roundOff = isCompleted ? 0 : -1;
       const percentCorrect = (lessonProgress * 100) / totalPages;

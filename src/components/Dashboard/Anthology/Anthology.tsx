@@ -1,13 +1,11 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import * as customMutations from 'customGraphql/customMutations';
-import update from 'lodash/update';
-import {nanoid} from 'nanoid';
-import React, {useEffect, useState} from 'react';
-import {FaSpinner} from 'react-icons/fa';
-import {IconContext} from 'react-icons/lib';
-import {v4 as uuidV4} from 'uuid';
 import {getAsset} from 'assets';
+import Buttons from 'atoms/Buttons';
+import FormInput from 'atoms/Form/FormInput';
+import Modal from 'atoms/Modal';
+import SectionTitleV3 from 'atoms/SectionTitleV3';
 import {useGlobalContext} from 'contexts/GlobalContext';
+import * as customMutations from 'customGraphql/customMutations';
 import * as customQueries from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import usePrevious from 'customHooks/previousProps';
@@ -18,10 +16,12 @@ import {
   UniversalJournalData,
   UniversalLessonStudentData
 } from 'interfaces/UniversalLessonInterfaces';
-import Buttons from 'atoms/Buttons';
-import FormInput from 'atoms/Form/FormInput';
-import Modal from 'atoms/Modal';
-import SectionTitleV3 from 'atoms/SectionTitleV3';
+import update from 'lodash/update';
+import {nanoid} from 'nanoid';
+import React, {useEffect, useState} from 'react';
+import {FaSpinner} from 'react-icons/fa';
+import {IconContext} from 'react-icons/lib';
+import {v4 as uuidV4} from 'uuid';
 import HeroBanner from '../../Header/HeroBanner';
 import HeaderTextBar from '../HeaderTextBar/HeaderTextBar';
 import ChangePasscode from '../Profile/ChangePasscode';
@@ -548,7 +548,7 @@ const Anthology = ({
 
   const getUniversalLessonWritingExercises = async () => {
     try {
-      const allUniversalClassData: any = await API.graphql(
+      const _allUniversalClassData: any = await API.graphql(
         graphqlOperation(customQueries.listUniversalLessonWritingExcercises, {
           filter: {
             studentID: {
@@ -557,8 +557,9 @@ const Anthology = ({
           }
         })
       );
+
       setAllUniversalClassData(
-        allUniversalClassData?.data?.listUniversalLessonWritingExcercises?.items || []
+        _allUniversalClassData?.data?.listUniversalLessonWritingExcercises?.items || []
       );
     } catch (error) {
       console.error(
