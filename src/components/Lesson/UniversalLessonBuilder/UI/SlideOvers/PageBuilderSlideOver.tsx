@@ -648,9 +648,10 @@ const PageBuilderSlideOver = ({
 
   const onDeleteMode = actionMode === 'delete' && !notSelected;
 
-  const deleteMutation = useGraphqlMutation<{input: DeleteFeelingsArchiveInput}>(
-    'deleteFeelingsArchive'
-  );
+  const deleteMutation = useGraphqlMutation<
+    {input: DeleteFeelingsArchiveInput},
+    DeleteFeelingsArchiveInput
+  >('deleteFeelingsArchive');
 
   const {authId} = useAuth();
   const route: any = useRouteMatch();

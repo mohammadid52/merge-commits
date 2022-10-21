@@ -765,6 +765,7 @@ export const onCreatePerson = /* GraphQL */ `
           lessonType
           pages
           ratings
+          isCompleted
           createdAt
           updatedAt
         }
@@ -829,6 +830,7 @@ export const onUpdatePerson = /* GraphQL */ `
           lessonType
           pages
           ratings
+          isCompleted
           createdAt
           updatedAt
         }
@@ -893,6 +895,7 @@ export const onDeletePerson = /* GraphQL */ `
           lessonType
           pages
           ratings
+          isCompleted
           createdAt
           updatedAt
         }
@@ -917,6 +920,7 @@ export const onCreatePersonLessonsData = /* GraphQL */ `
       lessonType
       pages
       ratings
+      isCompleted
       createdAt
       updatedAt
     }
@@ -932,6 +936,7 @@ export const onUpdatePersonLessonsData = /* GraphQL */ `
       lessonType
       pages
       ratings
+      isCompleted
       createdAt
       updatedAt
     }
@@ -947,6 +952,7 @@ export const onDeletePersonLessonsData = /* GraphQL */ `
       lessonType
       pages
       ratings
+      isCompleted
       createdAt
       updatedAt
     }

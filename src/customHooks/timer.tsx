@@ -52,7 +52,6 @@ const useStudentTimer = () => {
 
   useEffect(() => {
     if (lessonState.updated && !savePending) {
-      console.log("I'm saving");
       setSavePending(true);
 
       if (iAmViewed) {
