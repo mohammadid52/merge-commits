@@ -567,7 +567,7 @@ const Feedbacks = ({
             <div className="py-2 my-4 text-center mx-auto flex justify-center items-center w-full">
               <div className="">
                 <Loader color="rgba(107, 114, 128, 1)" />
-                <p className="mt-2 text-center text-lg text-gray-500">
+                <p className="my-2 text-center text-lg text-gray-500">
                   Loading Comments...
                   {/* @Mohammad: Add this to dict */}
                 </p>

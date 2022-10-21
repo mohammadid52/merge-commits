@@ -1,8 +1,7 @@
 import {useGlobalContext} from 'contexts/GlobalContext';
 import {getInitialsFromString, initials, stringToHslColor} from 'utilities/strings';
 import React from 'react';
-
-type Role = 'ST' | 'TR' | 'BLD' | 'ADM' | 'SUP' | 'FLW';
+import {Role} from 'API';
 
 type User = {
   authId: string;
@@ -23,13 +22,13 @@ const useAuth = (): {
   isSuperAdmin: boolean;
   isAdmin: boolean;
   isFellow: boolean;
-  authId: any;
-  email: any;
-  firstName: any;
-  lastName: any;
-  image: any;
+  authId: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  image: string;
   instId: string;
-  user: any;
+  user: User;
   Placeholder: any;
   onDemand?: boolean;
 } => {

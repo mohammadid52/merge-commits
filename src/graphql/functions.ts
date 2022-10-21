@@ -27,7 +27,10 @@ export const uploadImageToS3 = async (
       contentType: type,
       acl: 'public-read',
       ContentEncoding: 'base64',
-      progressCallback: options?.progressCallback
+      progressCallback: ({loaded, total}: any) => {
+        const progress = (loaded * 100) / total;
+        options?.progressCallback({progress, loaded, total});
+      }
     });
 
     if (options && options?.onSuccess && typeof options?.onSuccess === 'function') {
