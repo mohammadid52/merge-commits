@@ -137,8 +137,6 @@ const CustomRichTextEditor = (props: RichTextEditorProps) => {
   };
 
   const onInit = (value: any) => {
-    console.log(value);
-
     const html = value ? value : '<p></p>';
     const contentBlock = htmlToDraft(html);
 

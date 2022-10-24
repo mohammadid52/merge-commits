@@ -45,20 +45,17 @@ const SaveQuit = ({createJournalData}: SaveQuitProps) => {
   }, [lessonState.updated]);
 
   const handleManualSave = async () => {
-    if (!isUpdated) {
+    if (isUpdated) {
       setWaiting(true);
       setSafeToLeave(false);
-      console.log('test-1');
     } else {
       setWaiting(false);
       setSafeToLeave(true);
-      console.log('test-2');
 
       try {
         if (lessonState?.lessonData?.type === 'survey') {
           updateSurveyData();
         } else if (lessonState?.lessonData?.type === 'lesson') {
-          console.log('runnig two functions ----');
           await updateStudentLessonData();
           await handleNotebookSave();
         }

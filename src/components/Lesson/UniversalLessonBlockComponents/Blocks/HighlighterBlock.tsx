@@ -168,7 +168,6 @@ const HighlighterBlock = (props: HighlighterBlockProps) => {
   // insert prop value to editor
 
   const userValue = getDataValue(id)[0] || value[0].value;
-  console.log({value1: getDataValue(id)[0], value2: editorState});
 
   useEffect(() => {
     if (!isEmpty(userValue) && isStudent) {
