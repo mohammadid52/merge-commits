@@ -306,7 +306,7 @@ const LessonHeaderBar = ({
     <div
       style={{zIndex: 3000}}
       className={` relative center w-full 
-        h-.7/10 text-gray-200 shadow-2xl
+        h-.7/10 text-gray-200 shadow-2xl  
         ${theme.toolbar.bg} `}>
       {/* LEAVE POPUP */}
       <div className={`${leaveModalVisible ? 'absolute z-100' : 'hidden'}`}>
@@ -315,7 +315,7 @@ const LessonHeaderBar = ({
           alert={leaveModalVisible}
           setAlert={setLeaveModalVisible}
           button1Color={
-            'iconoclast:border-main curate:border-main hover:iconoclast:bg-main hover:curate:bg-main iconoclast:text-main white-text-on-hover curate:text-main border-2'
+            'border-sea-green hover:bg-sea-green text-sea-green white-text-on-hover border-2'
           }
           header={
             leaveAfterCompletion
