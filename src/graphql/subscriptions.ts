@@ -485,6 +485,7 @@ export const onChangeUniversalLessonStudentData = /* GraphQL */ `
         feedbacks
         shared
       }
+      date
       createdAt
       updatedAt
     }
@@ -766,6 +767,7 @@ export const onCreatePerson = /* GraphQL */ `
           pages
           ratings
           isCompleted
+          roomId
           createdAt
           updatedAt
         }
@@ -831,6 +833,7 @@ export const onUpdatePerson = /* GraphQL */ `
           pages
           ratings
           isCompleted
+          roomId
           createdAt
           updatedAt
         }
@@ -896,6 +899,7 @@ export const onDeletePerson = /* GraphQL */ `
           pages
           ratings
           isCompleted
+          roomId
           createdAt
           updatedAt
         }
@@ -921,6 +925,7 @@ export const onCreatePersonLessonsData = /* GraphQL */ `
       pages
       ratings
       isCompleted
+      roomId
       createdAt
       updatedAt
     }
@@ -937,6 +942,7 @@ export const onUpdatePersonLessonsData = /* GraphQL */ `
       pages
       ratings
       isCompleted
+      roomId
       createdAt
       updatedAt
     }
@@ -953,6 +959,7 @@ export const onDeletePersonLessonsData = /* GraphQL */ `
       pages
       ratings
       isCompleted
+      roomId
       createdAt
       updatedAt
     }
@@ -8897,6 +8904,7 @@ export const onCreateUniversalLessonStudentData = /* GraphQL */ `
         feedbacks
         shared
       }
+      date
       createdAt
       updatedAt
     }
@@ -8936,6 +8944,7 @@ export const onUpdateUniversalLessonStudentData = /* GraphQL */ `
         feedbacks
         shared
       }
+      date
       createdAt
       updatedAt
     }
@@ -8975,6 +8984,7 @@ export const onDeleteUniversalLessonStudentData = /* GraphQL */ `
         feedbacks
         shared
       }
+      date
       createdAt
       updatedAt
     }
@@ -8987,6 +8997,7 @@ export const onCreateUniversalLessonWritingExcercises = /* GraphQL */ `
       syllabusLessonID
       lessonID
       lessonPageID
+      lessonName
       studentID
       studentAuthID
       studentEmail
@@ -9026,6 +9037,7 @@ export const onUpdateUniversalLessonWritingExcercises = /* GraphQL */ `
       syllabusLessonID
       lessonID
       lessonPageID
+      lessonName
       studentID
       studentAuthID
       studentEmail
@@ -9065,6 +9077,7 @@ export const onDeleteUniversalLessonWritingExcercises = /* GraphQL */ `
       syllabusLessonID
       lessonID
       lessonPageID
+      lessonName
       studentID
       studentAuthID
       studentEmail

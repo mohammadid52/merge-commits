@@ -366,6 +366,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
       const lessonPersonData: any = await API.graphql(
         graphqlOperation(queries.listPersonLessonsData, {
           filter: {
+            roomId: {eq: roomId},
             studentAuthID: {eq: authId},
             studentEmail: {eq: email}
           }

@@ -137,6 +137,8 @@ const CustomRichTextEditor = (props: RichTextEditorProps) => {
   };
 
   const onInit = (value: any) => {
+    console.log(value);
+
     const html = value ? value : '<p></p>';
     const contentBlock = htmlToDraft(html);
 
@@ -156,12 +158,16 @@ const CustomRichTextEditor = (props: RichTextEditorProps) => {
 
   const {isStudent} = useAuth();
 
-  const deps = !isStudent ? [initialValue] : [];
+  const deps = !isStudent ? [initialValue] : [initialValue];
 
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    if (initialValue && !loaded) {
+    if (
+      initialValue &&
+      !loaded &&
+      editorState.getCurrentContent().getPlainText() !== initialValue
+    ) {
       onInit(initialValue);
       setLoaded(true);
     }

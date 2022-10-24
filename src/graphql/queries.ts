@@ -53,6 +53,7 @@ export const getPerson = /* GraphQL */ `
           pages
           ratings
           isCompleted
+          roomId
           createdAt
           updatedAt
         }
@@ -137,6 +138,7 @@ export const getPersonLessonsData = /* GraphQL */ `
       pages
       ratings
       isCompleted
+      roomId
       createdAt
       updatedAt
     }
@@ -166,6 +168,7 @@ export const listPersonLessonsData = /* GraphQL */ `
         pages
         ratings
         isCompleted
+        roomId
         createdAt
         updatedAt
       }
@@ -4220,6 +4223,7 @@ export const getUniversalLessonStudentData = /* GraphQL */ `
         feedbacks
         shared
       }
+      date
       createdAt
       updatedAt
     }
@@ -4263,6 +4267,7 @@ export const listUniversalLessonStudentData = /* GraphQL */ `
           feedbacks
           shared
         }
+        date
         createdAt
         updatedAt
       }
@@ -4277,6 +4282,7 @@ export const getUniversalLessonWritingExcercises = /* GraphQL */ `
       syllabusLessonID
       lessonID
       lessonPageID
+      lessonName
       studentID
       studentAuthID
       studentEmail
@@ -4329,6 +4335,7 @@ export const listUniversalLessonWritingExcercises = /* GraphQL */ `
         syllabusLessonID
         lessonID
         lessonPageID
+        lessonName
         studentID
         studentAuthID
         studentEmail
@@ -7490,6 +7497,7 @@ export const lessonsByType2 = /* GraphQL */ `
         pages
         ratings
         isCompleted
+        roomId
         createdAt
         updatedAt
       }

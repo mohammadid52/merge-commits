@@ -1,13 +1,10 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import 'components/Dashboard/GameChangers/styles/Flickity.scss';
 import 'components/Dashboard/GameChangers/styles/GameChanger.scss';
-import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
-import React, {useEffect, useRef, useState} from 'react';
-import {useHistory, useParams, useRouteMatch} from 'react-router-dom';
-import {v4 as uuidV4} from 'uuid';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
 import * as customSubscriptions from 'customGraphql/customSubscriptions';
+import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
 import * as mutations from 'graphql/mutations';
 import * as queries from 'graphql/queries';
 import {
@@ -20,14 +17,17 @@ import {
   UniversalLessonPage,
   UniversalLessonStudentData
 } from 'interfaces/UniversalLessonInterfaces';
+import React, {useEffect, useRef, useState} from 'react';
+import {useHistory, useParams, useRouteMatch} from 'react-router-dom';
 import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
+import {v4 as uuidV4} from 'uuid';
 import ErrorBoundary from '../Error/ErrorBoundary';
 import LessonHeaderBar from '../Header/LessonHeaderBar';
 import Foot from './Foot/Foot';
 import {ILessonSurveyApp} from './Lesson';
 import LessonPageLoader from './LessonPageLoader';
 import CoreUniversalLesson from './UniversalLesson/views/CoreUniversalLesson';
-
+import {UniversalLessonStudentData as UniversalLessonStudentDataFromAPI} from 'API';
 const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
 
@@ -249,7 +249,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
 
                       const exerciseObj = {
                         id: partContent.id,
-                        entryData: formSubInputs.pgInput
+                        entryData: formSubInputs?.pgInput || []
                       };
 
                       return {
@@ -505,6 +505,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
         (lessonPlanPage: UniversalLessonPage) => lessonPlanPage.id === lessonPage.id
       );
       const input = {
+        id: `${authId}-${getRoomData.id}-${lessonID}-${lessonPage.id}`,
         syllabusLessonID: getRoomData.activeSyllabus,
         lessonID: lessonID,
         lessonPageID: lessonPage.id,
@@ -516,7 +517,8 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
         lessonProgress: '0',
         pageData: lessonState.studentData[indexOfPage],
         hasExerciseData: lessonState.exerciseData[indexOfPage]?.length > 0,
-        exerciseData: lessonState.exerciseData[indexOfPage]
+        exerciseData: lessonState.exerciseData[indexOfPage],
+        date: new Date().toISOString()
       };
 
       const newStudentData: any = await API.graphql(
@@ -536,79 +538,43 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
    * IF THERE IS ANY, AND SETS IT IN STATE  *
    ******************************************/
 
-  const loopFetchStudentData = async (
-    filterObj: any,
-    nextToken: string,
-    outArray: any[]
-  ): Promise<any> => {
-    let combined;
-    setLessonDataLoaded(false);
-    try {
-      console.count('loopFetchStudentData');
-      let studentData: any = await API.graphql(
-        graphqlOperation(customQueries.listUniversalLessonStudentDatas, {
-          ...filterObj,
-          nextToken: nextToken
-        })
-      );
-      let studentDataRows = studentData.data.listUniversalLessonStudentData.items;
-      let theNextToken = studentData.data.listUniversalLessonStudentData?.nextToken;
+  const _loopFetchStudentData = async (): Promise<UniversalLessonStudentDataFromAPI[]> =>
+    new Promise(async (resolve) => {
+      try {
+        setLessonDataLoaded(false);
+        // fetch by pages
 
-      /**
-       * combination of last fetch results
-       * && current fetch results
-       */
-      combined = [...outArray, ...studentDataRows];
+        let result: any = [];
 
-      if (theNextToken) {
-        combined = await loopFetchStudentData(filterObj, theNextToken, combined);
+        await Promise.all(
+          PAGES.map(async (page: any, idx: number) => {
+            let studentData: any = await API.graphql(
+              graphqlOperation(queries.getUniversalLessonStudentData, {
+                id: `${user.authId}-${getRoomData.id}-${lessonID}-${page.id}`
+                // filter: {...filterObj.filter, lessonPageID: {eq: page.id}}
+              })
+            );
+
+            let studentDataObject = studentData.data.getUniversalLessonStudentData;
+            result.push(studentDataObject);
+          })
+        );
+
+        /**
+         * combination of last fetch results
+         * && current fetch results
+         */
+
+        lessonDispatch({type: 'LESSON_LOADED', payload: true});
+
+        // console.log('no more - ', combined);
+        setLessonDataLoaded(true);
+        resolve(result);
+      } catch (e) {
+        console.error('loopFetchStudentData - ', e);
+        return [];
       }
-
-      lessonDispatch({type: 'LESSON_LOADED', payload: true});
-
-      // console.log('no more - ', combined);
-      setLessonDataLoaded(true);
-      return combined;
-    } catch (e) {
-      console.error('loopFetchStudentData - ', e);
-      return [];
-    }
-  };
-
-  // const loopFetchStudentData = async (
-  //   filterObj: any,
-  //   nextToken: string,
-  //   outArray: any[]
-  // ): Promise<any> => {
-  //   setLessonDataLoaded(false);
-  //   try {
-  //     // count
-  //     console.count('loopFetchStudentData');
-  //     const lessonPlan: UniversalLessonPage[] = PAGES || [];
-  //     let combined: any[] = [];
-  //     lessonPlan.forEach(async (page) => {
-  //       let studentData: any = await API.graphql(
-  //         graphqlOperation(customQueries.listUniversalLessonStudentDatas, {
-  //           filter: {
-  //             ...filterObj.filter,
-  //             lessonPageID:{eq: page.id}
-  //           },
-  //           nextToken: nextToken
-  //         })
-  //       );
-  //       let studentDataRows =
-  //         studentData?.data?.listUniversalLessonStudentData?.items || [];
-  //       combined = [...combined, ...studentDataRows];
-  //     });
-
-  //     console.log('combined - ', combined);
-
-  //     lessonDispatch({type: 'LESSON_LOADED', payload: true});
-  //     setLessonDataLoaded(true);
-  //   } catch (error) {
-  //     console.error('loopFetchStudentData - ', error);
-  //   }
-  // };
+    });
 
   const getOrCreateStudentData = async () => {
     // const syllabusID = getRoomData.activeSyllabus;
@@ -616,22 +582,14 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
     // console.log('getOrCreateData - user - ', user);
 
     try {
-      const listFilter = {
-        filter: {
-          studentAuthID: {eq: user.authId},
-          lessonID: {eq: lessonID},
-          syllabusLessonID: {eq: getRoomData.activeSyllabus},
-          roomID: {eq: getRoomData.id}
-        }
-      };
-
       // const studentData: any = await API.graphql(
       //   graphqlOperation(customQueries.listUniversalLessonStudentDatas, listFilter)
       // );
 
       // existing student rowss
-      // const studentDataRows = await loopFetchStudentData(listFilter, undefined, []);
-      const studentDataRows: any[] = [];
+      const studentDataRows: UniversalLessonStudentDataFromAPI[] = await (
+        await _loopFetchStudentData()
+      ).filter(Boolean);
 
       /**
        * NEW RECORD CREATION LOGIC:
@@ -991,17 +949,11 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
   };
 
   const loopCreateStudentArchiveAndExcerciseData = async (lessonID: string) => {
-    const listFilter = {
-      limit: 100,
-      filter: {
-        studentAuthID: {eq: user.authId},
-        lessonID: {eq: lessonID},
-        syllabusLessonID: {eq: getRoomData.activeSyllabus},
-        roomID: {eq: getRoomData.id}
-      }
-    };
-
-    const studentDataRows = await loopFetchStudentData(listFilter, undefined, []);
+    const studentDataRows: UniversalLessonStudentDataFromAPI[] = await _loopFetchStudentData();
+    console.log(
+      '🚀 ~ file: LessonApp.tsx ~ line 953 ~ loopCreateStudentArchiveAndExcerciseData ~ studentDataRows',
+      studentDataRows
+    );
 
     const currentPageLocation = await getLessonCurrentPage();
 
@@ -1018,7 +970,8 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
         lessonProgress: item.lessonProgress,
         pageData: item.pageData,
         hasExerciseData: item.hasExerciseData,
-        exerciseData: item.exerciseData
+        exerciseData: item.exerciseData,
+        lessonName: lessonState?.lessonData?.title || ''
       };
       let newStudentData: any;
       let returnedData: any;
@@ -1031,6 +984,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
           })
         );
       } else {
+        delete input.lessonName;
         newStudentData = await API.graphql(
           graphqlOperation(mutations.createUniversalArchiveData, {
             input
@@ -1099,6 +1053,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
         existingLesson = await API.graphql(
           graphqlOperation(queries.listPersonLessonsData, {
             filter: {
+              roomId: {eq: getRoomData.id},
               lessonID: {eq: lessonID},
               studentAuthID: {eq: user.authId},
               studentEmail: {eq: user.email}
@@ -1120,6 +1075,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
         payload = {
           id: uuidV4(),
           studentAuthID: user.authId,
+          roomId: getRoomData.id,
           studentEmail: user.email,
           lessonID: lessonID,
           lessonType: lessonState.lessonData?.type,
@@ -1141,10 +1097,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
         setListPersonLessonsData(items);
         payload = {
           id: items?.find((_d: any) => _d.lessonID === lessonID)?.id,
-          studentAuthID: user.authId,
-          studentEmail: user.email,
-          lessonID: lessonID,
-          lessonType: lessonState.lessonData?.type,
+
           pages: `{
             "currentPage":${JSON.stringify(lessonState.currentPage)},
             "totalPages":${JSON.stringify(

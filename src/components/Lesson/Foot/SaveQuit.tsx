@@ -38,20 +38,29 @@ const SaveQuit = ({createJournalData}: SaveQuitProps) => {
 
   const {updateSurveyData, updateStudentLessonData} = useStudentTimer();
 
-  const handleManualSave = () => {
-    if (lessonState.updated) {
+  const [isUpdated, setIsUpdated] = useState(false);
+
+  useEffect(() => {
+    setIsUpdated(lessonState.updated);
+  }, [lessonState.updated]);
+
+  const handleManualSave = async () => {
+    if (!isUpdated) {
       setWaiting(true);
       setSafeToLeave(false);
+      console.log('test-1');
     } else {
       setWaiting(false);
       setSafeToLeave(true);
+      console.log('test-2');
 
       try {
         if (lessonState?.lessonData?.type === 'survey') {
           updateSurveyData();
         } else if (lessonState?.lessonData?.type === 'lesson') {
-          updateStudentLessonData();
-          handleNotebookSave();
+          console.log('runnig two functions ----');
+          await updateStudentLessonData();
+          await handleNotebookSave();
         }
 
         const id =
@@ -98,20 +107,20 @@ const SaveQuit = ({createJournalData}: SaveQuitProps) => {
     // delete lessonData from record from graphql if student is self paced
     const lessonID = lessonState?.lessonData?.id;
 
-    if (onDemand && lessonID) {
-      console.log("removing lesson from student's record");
-      lessonState?.universalStudentDataID.forEach((_d: {id: string}) => {
-        mutate({input: {id: _d.id}, condition: {lessonID: {eq: lessonID}}})
-          .then((res) => {
-            console.log("successfully removed lesson from student's record");
-          })
-          .catch((err) => {
-            console.error("error removing lesson from student's record", err);
-          });
-      });
+    // if (onDemand && lessonID) {
+    //   console.log("removing lesson from student's record");
+    //   lessonState?.universalStudentDataID.forEach((_d: {id: string}) => {
+    //     mutate({input: {id: _d.id}, condition: {lessonID: {eq: lessonID}}})
+    //       .then((res) => {
+    //         console.log("successfully removed lesson from student's record");
+    //       })
+    //       .catch((err) => {
+    //         console.error("error removing lesson from student's record", err);
+    //       });
+    //   });
 
-      console.log('\x1b[33m *Removed lesson record... \x1b[0m');
-    }
+    //   console.log('\x1b[33m *Removed lesson record... \x1b[0m');
+    // }
   };
 
   useEffect(() => {
@@ -126,12 +135,12 @@ const SaveQuit = ({createJournalData}: SaveQuitProps) => {
     }
   }, [lessonState.updated]);
 
-  useEffect(() => {
-    // console.log('safeToLeave State - ', safeToLeave);
-    if (safeToLeave === true && getRoomData && getRoomData.id) {
-      history.push(`/dashboard/classroom/${getRoomData.id}`);
-    }
-  }, [safeToLeave]);
+  // useEffect(() => {
+  //   // console.log('safeToLeave State - ', safeToLeave);
+  //   if (safeToLeave === true && getRoomData && getRoomData.id) {
+  //     history.push(`/dashboard/classroom/${getRoomData.id}`);
+  //   }
+  // }, [safeToLeave]);
 
   return (
     <>

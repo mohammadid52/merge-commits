@@ -15,6 +15,7 @@ import RichTextEditor from 'atoms/RichTextEditor';
 import EmptyViewWrapper from './EmptyViewWrapper';
 import {ITabViewProps} from './TabView';
 import SingleNote from './WrittenContentTab/SingleNote';
+import {isEmpty} from 'lodash';
 
 const WrittenContentTab = (props: ITabViewProps) => {
   const {
@@ -40,22 +41,22 @@ const WrittenContentTab = (props: ITabViewProps) => {
   const {anthologyDict} = useDictionary(clientKey);
   const themeColor = getAsset(clientKey, 'themeClassName');
 
-  const handleInputFieldUpdate = (e: any) => {
+  const handleInputFieldUpdate = (e: any, domID?: string) => {
     const {value} = e.target;
-    updateJournalContent(value, 'header');
+    updateJournalContent(value, 'header', undefined, domID);
   };
 
   // ##################################################################### //
   // ############################### VIEWS ############################### //
   // ##################################################################### //
   const viewModeView = (contentObj: UniversalJournalData) => {
-    const notesExist = contentObj.entryData[0].domID.includes('notes_form');
+    const notesExist = contentObj?.entryData[0]?.domID.includes('notes_form');
     const filtered = filter(
       contentObj?.entryData,
       (ed) => ed && ed.type.includes('content')
     );
 
-    const organized = contentObj.entryData.reduce(
+    const organized = contentObj?.entryData?.reduce(
       (acc: {header: any; content: any}, entry: any) => {
         if (entry.type === 'header') {
           return {...acc, header: entry};
@@ -73,8 +74,12 @@ const WrittenContentTab = (props: ITabViewProps) => {
 
     return (
       <>
-        <div className={`flex justify-end px-4`}>
-          <p className={`w-auto text-right italic ${theme.lessonCard.subtitle}`}>
+        <div className={`flex mb-2 justify-between items-center`}>
+          <p className={`w-auto text-right text-xs text-gray-500`}>
+            {/* @ts-ignore */}
+            Lesson Name: {contentObj?.lessonName || 'not available'}
+          </p>
+          <p className={`w-auto text-right text-xs text-gray-500`}>
             Updated: {dateFromServer(contentObj?.updatedAt)}
           </p>
         </div>
@@ -123,7 +128,7 @@ const WrittenContentTab = (props: ITabViewProps) => {
   };
 
   const createModeView = (contentObj: UniversalJournalData) => {
-    const organized = contentObj.entryData.reduce(
+    const organized = contentObj?.entryData?.reduce(
       (acc: {header: any; content: any}, entry: any) => {
         if (entry.type === 'header') {
           return {...acc, header: entry};
@@ -179,13 +184,14 @@ const WrittenContentTab = (props: ITabViewProps) => {
   };
 
   const editModeView = (contentObj: UniversalJournalData) => {
-    const notesExist = contentObj.entryData[0].domID.includes('notes_form');
+    const notesExist = contentObj?.entryData[0]?.domID?.includes('notes_form');
+
     const filtered = filter(
       contentObj?.entryData,
       (ed) => ed && ed.type.includes('content')
     );
 
-    const organized = contentObj.entryData.reduce(
+    const organized = contentObj?.entryData?.reduce(
       (acc: {header: any; content: any}, entry: any) => {
         if (entry.type === 'header') {
           return {...acc, header: entry};
@@ -201,6 +207,10 @@ const WrittenContentTab = (props: ITabViewProps) => {
       }
     );
 
+    if (isEmpty(contentObj?.entryData)) {
+      return null;
+    }
+
     return (
       <>
         <div className={`flex px-4`}>
@@ -211,13 +221,13 @@ const WrittenContentTab = (props: ITabViewProps) => {
         <div className={`mb-2`}>
           {notesExist ? (
             <FormInput
-              id={contentObj.entryData[0].domID}
+              id={contentObj?.entryData[0]?.domID}
               label={`Title`}
               onChange={handleInputFieldUpdate}
-              value={contentObj.entryData[0].input}
+              value={contentObj?.entryData[0]?.input}
               placeHolder={
-                contentObj.entryData[0].input
-                  ? contentObj.entryData[0].input
+                contentObj?.entryData[0]?.input
+                  ? contentObj?.entryData[0]?.input
                   : `Please add title...`
               }
             />
@@ -225,7 +235,7 @@ const WrittenContentTab = (props: ITabViewProps) => {
             <FormInput
               id={organized.header.domID}
               label={`Title`}
-              onChange={handleInputFieldUpdate}
+              onChange={(e) => handleInputFieldUpdate(e, organized.header.domID)}
               value={organized.header.input}
               placeHolder={
                 organized.header.input ? organized.header.input : `Please add title...`
@@ -288,7 +298,7 @@ const WrittenContentTab = (props: ITabViewProps) => {
         </ContentCard>
       )}
       {content?.length > 0 ? (
-        content?.map((contentObj: UniversalJournalData, idx: number) => {
+        content?.map((contentObj: any, idx: number) => {
           return (
             <EmptyViewWrapper
               key={`emptyview_${idx}`}

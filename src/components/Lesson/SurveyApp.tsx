@@ -601,7 +601,8 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
             filter: {
               lessonID: {eq: lessonID},
               studentAuthID: {eq: user.authId},
-              studentEmail: {eq: user.email}
+              studentEmail: {eq: user.email},
+              roomId: {eq: getRoomData.id}
             }
           })
         );

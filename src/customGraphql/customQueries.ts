@@ -2903,6 +2903,7 @@ export const listUniversalLessonWritingExcercises = /* GraphQL */ `
         roomID
         currentLocation
         lessonProgress
+        lessonName
         pageData {
           domID
           options
