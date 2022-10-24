@@ -64,18 +64,10 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
 
   const [notesInitialized, setNotesInitialized] = useState<boolean>(false);
 
-  const deleteUJD = async (id: string) => {
-    await API.graphql(
-      graphqlOperation(mutations.deleteUniversalJournalData, {input: {id}})
-    );
-  };
-
   useEffect(() => {
     if (!notesInitialized && allNotes && allNotes.length > 0) {
       getOrCreateJournalData();
     }
-    // const id = '6641f563-3940-4bd3-a9a4-7838355dc320';
-    // deleteUJD(id);
   }, [notesInitialized]);
 
   const [notesData, setNotesData] = useState<UniversalJournalData>(INITIAL_NOTESDATA);
@@ -174,7 +166,7 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
         syllabusLessonID: getRoomData.activeSyllabus
       };
 
-      updateStudentData({domID: newNote.domID, input: ['']});
+      updateStudentData({domID: `post-it_${newNote.domID}`, input: ['']});
       const updateJournalData: any = await API.graphql(
         graphqlOperation(mutations.updateUniversalJournalData, {input})
       );

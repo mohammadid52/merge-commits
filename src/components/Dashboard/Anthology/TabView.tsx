@@ -124,7 +124,7 @@ const TabView = ({
       if (subSection == 'Work') {
         return filteredClassContent;
       } else {
-        return allExerciseData;
+        return filteredJournalContent;
       }
     } else if (mainSection === 'Private') {
       return filteredJournalContent;

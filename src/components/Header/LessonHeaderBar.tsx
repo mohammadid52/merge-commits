@@ -324,7 +324,7 @@ const LessonHeaderBar = ({
           }
           button1={`${
             !waiting && leaveAfterCompletion
-              ? 'Move to notebook'
+              ? 'Mark lesson as complete and move your work to your notebook'
               : !waiting
               ? 'Go to the dashboard'
               : 'Saving your data...'
