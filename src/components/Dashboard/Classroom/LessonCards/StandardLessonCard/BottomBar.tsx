@@ -28,7 +28,7 @@ const BottomBar = (props: LessonCardProps) => {
       activeRoomInfo?.completedLessons?.findIndex(
         (item: {lessonID?: string | null; time?: string | null}) =>
           item.lessonID === lessonProps.lessonID
-      ) > -1 || isCompleted,
+      ) > -1,
     accessible: accessible,
     type: lessonProps.lesson.type,
     activeRoomInfo: activeRoomInfo,

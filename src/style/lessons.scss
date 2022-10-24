@@ -153,3 +153,8 @@
     min-height: calc(100% - 110px);
   }
 }
+.white-text-on-hover {
+  &:hover {
+    color: #fff !important;
+  }
+}

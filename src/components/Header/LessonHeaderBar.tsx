@@ -47,6 +47,8 @@ const LessonHeaderBar = ({
   // To track user clicks on home button or click next on last page
   const [leaveAfterCompletion, setLeaveAfterCompletion] = useState<boolean>(false);
 
+  const goToClassRoom = () => history.push(`/dashboard/classroom/${getRoomData.id}`);
+
   const handleManualSave = () => {
     if (lessonState.updated) {
       setWaiting(true);
@@ -56,7 +58,7 @@ const LessonHeaderBar = ({
       setSafeToLeave(true);
     }
     setTimeout(() => {
-      history.push(`/dashboard/classroom/${getRoomData.id}`);
+      goToClassRoom();
     }, 1500);
   };
 
@@ -65,7 +67,7 @@ const LessonHeaderBar = ({
       console.log('\x1b[33m Saving notebook... \x1b[0m');
       createJournalData();
       setTimeout(() => {
-        history.push(`/dashboard/classroom/${getRoomData.id}`);
+        goToClassRoom();
       }, 1500);
     }
   };
@@ -104,7 +106,7 @@ const LessonHeaderBar = ({
     // console.log('safeToLeave State - ', safeToLeave);
     if (safeToLeave === true) {
       handleLeavePopup();
-      history.push(`/dashboard/classroom/${getRoomData.id}`);
+      goToClassRoom();
     }
   }, [safeToLeave]);
 
@@ -121,15 +123,12 @@ const LessonHeaderBar = ({
 
   // ~~~~ HANDLE USER LEAVING THE LESSON ~~~ //
   const handleLeavePopup = (isLeavingAfterCompletion: boolean = true) => {
+    console.log('working');
     if (videoLinkModalVisible) {
       setVideoLinkModalVisible(false);
     }
 
-    if (leaveModalVisible) {
-      setLeaveModalVisible(false);
-    } else {
-      setLeaveModalVisible(true);
-    }
+    setLeaveModalVisible(!leaveModalVisible);
     // setLeaveAfterCompletion(isLeavingAfterCompletion);
   };
 
@@ -312,8 +311,12 @@ const LessonHeaderBar = ({
       {/* LEAVE POPUP */}
       <div className={`${leaveModalVisible ? 'absolute z-100' : 'hidden'}`}>
         <PositiveAlert
+          closeAction={handleLeavePopup}
           alert={leaveModalVisible}
           setAlert={setLeaveModalVisible}
+          button1Color={
+            'iconoclast:border-main curate:border-main hover:iconoclast:bg-main hover:curate:bg-main iconoclast:text-main white-text-on-hover curate:text-main border-2'
+          }
           header={
             leaveAfterCompletion
               ? `Congratulations, you have completed the lesson ${lessonState.lessonData.title}, Did you want to keep your writing excercies in the classroom or move them to your notebook`
@@ -326,10 +329,10 @@ const LessonHeaderBar = ({
               ? 'Go to the dashboard'
               : 'Saving your data...'
           }`}
-          button2="Stay on lesson"
+          button2="Leave in classroom"
           svg="question"
           handleButton1={leaveAfterCompletion ? handleNotebookSave : handleManualSave}
-          handleButton2={handleLeavePopup}
+          handleButton2={goToClassRoom}
           theme="dark"
           fill="screen"
         />
