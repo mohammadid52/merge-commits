@@ -434,6 +434,21 @@ const Anthology = ({
         exerciseData: newExerciseData.exerciseData
       };
       try {
+        const classDataIdx = allUniversalClassData.findIndex(
+          (d) => d.id === journalEntryData.recordID
+        );
+        const exerciseIdx = allUniversalClassData[classDataIdx].exerciseData.findIndex(
+          (d) => d.id === journalEntryData.id
+        );
+        const updated = update(
+          allUniversalClassData[classDataIdx],
+          `exerciseData[${exerciseIdx}].entryData`,
+          () => journalEntryData.entryData
+        );
+        allUniversalClassData.splice(classDataIdx, 1, updated);
+
+        setAllUniversalClassData(allUniversalClassData);
+
         const res: any = await API.graphql(
           graphqlOperation(mutations.updateUniversalLessonWritingExcercises, {
             input
