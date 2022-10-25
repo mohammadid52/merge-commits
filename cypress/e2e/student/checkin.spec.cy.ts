@@ -26,7 +26,7 @@ describe('Student Check In', () => {
     cy.get(`button:contains(${notebookLink})`).click(); // Click on Notebook button in header
     cy.wait(3000); // Wait for notebooks to load
     // cy.closeCheckInModal(); // Close the modal
-    cy.dataCy('room-view-card').eq(1).click(); // Select the first notebook
+    cy.dataCy('room-view-card').last().click(); // Select the first notebook
     cy.dataCy('notebook-passcode-input').clear().type(notebookPasscode); // Enter passcode
     cy.dataCy('notebook-passcode-submit').click(); // Submit passcode
     cy.dataCy('sentiment-emoji').first().click(); // Click on first Sentiment emoji
