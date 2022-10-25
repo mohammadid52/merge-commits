@@ -27,7 +27,8 @@ const Toggle = ({
           input: {
             id: currentContentObj.id,
             shared: currentContentObj.hasOwnProperty('shared')
-              ? !currentContentObj?.shared
+              ? // @ts-ignore
+                !currentContentObj?.shared
               : true
           }
         })

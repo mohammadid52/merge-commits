@@ -56,8 +56,8 @@ const Buttons: React.FC<ButtonProps> = (btnProps: ButtonProps) => {
           : `${
               transparent
                 ? 'iconoclast:border-main  curate:border-main iconoclast:text-main curate:text-main hover-text-white'
-                : 'iconoclast:bg-main curate:bg-main'
-            } font-bold transition duration-150 text-white ease-in-out md:py-2 sm:py-auto  hover:iconoclast:bg-500  hover:curate:bg-500 uppercase text-xs px-4 py-2 rounded-lg flex items-center justify-center w-auto`
+                : 'iconoclast:bg-500 curate:bg-500'
+            } font-bold transition duration-150 text-white ease-in-out md:py-2 sm:py-auto  hover:iconoclast:bg-600  hover:curate:bg-600 uppercase text-xs px-4 py-2 rounded-lg flex items-center justify-center w-auto`
       }
       ${btnClass ? btnClass : ''} 
       ${theme.outlineNone} 

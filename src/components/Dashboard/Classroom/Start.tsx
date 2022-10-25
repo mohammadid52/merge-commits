@@ -1,13 +1,13 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import Buttons from 'atoms/Buttons';
 import axios from 'axios';
-import {GlobalContext, useGlobalContext} from 'contexts/GlobalContext';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import * as mutations from 'graphql/mutations';
 import * as queries from 'graphql/queries';
 import {noop} from 'lodash';
 import ModalPopUp from 'molecules/ModalPopUp';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useHistory} from 'react-router-dom';
 import {getLocalStorageData} from 'utilities/localStorage';
 import {awsFormatDate, dateString} from 'utilities/time';
@@ -27,6 +27,7 @@ interface StartProps {
   preview?: boolean;
   activeRoomInfo?: any;
   isUsed?: boolean;
+  lessonProgress?: number;
   pageNumber?: number;
 }
 
@@ -41,6 +42,7 @@ const Start: React.FC<StartProps> = ({
   accessible,
   type,
   roomID,
+  lessonProgress,
   preview
 }: StartProps) => {
   // ~~~~~~~~~~ CONTEXT SPLITTING ~~~~~~~~~~ //
@@ -212,8 +214,9 @@ const Start: React.FC<StartProps> = ({
           await recordAttendance(lessonProps);
         }
         // await getLessonCurrentPage(lessonKey, user.email, user.authId);
-        history.push(`/lesson/${lessonKey}/${lessonProps?.currentPage}`);
-        // history.push(`/lesson/${lessonKey}/0`);
+        const url = `/lesson/${lessonKey}/${lessonProgress}`;
+        console.log('🚀 ~ file: Start.tsx ~ line 218 ~ handleLink ~ url', url);
+        history.push(url);
       } catch (error) {
         setLoading(false);
       }

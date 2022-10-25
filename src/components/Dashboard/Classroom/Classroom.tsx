@@ -86,6 +86,7 @@ export interface LessonCardProps {
   syllabusProps?: any;
   accessible?: boolean;
   openCards?: string;
+  lessonProgress?: number;
   setOpenCards?: React.Dispatch<React.SetStateAction<string>>;
   lessonType?: string;
   pageNumber?: number;
@@ -366,6 +367,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
       const lessonPersonData: any = await API.graphql(
         graphqlOperation(queries.listPersonLessonsData, {
           filter: {
+            roomId: {eq: roomId},
             studentAuthID: {eq: authId},
             studentEmail: {eq: email}
           }

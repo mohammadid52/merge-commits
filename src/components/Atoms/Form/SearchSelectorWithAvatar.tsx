@@ -39,6 +39,7 @@ const SearchSelectorWithAvatar = (props: selectorProps) => {
     creatableLabel,
     onCreate
   } = props;
+
   const countdownTimer = 200;
   const [countdownEnabled, setCountdownEnabled] = useState(undefined);
   const [searchTerm, setSearchTerm] = useState<string>(undefined);
@@ -48,8 +49,6 @@ const SearchSelectorWithAvatar = (props: selectorProps) => {
   const [teacherList, setTeacherList] = useState([]);
   const {theme, clientKey} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
-
-  useEffect(() => {}, [searchTerm]);
 
   const updateSelectedItem = (str: string, name: string, id: string, avatar: string) => {
     setShowList(!showList);
@@ -123,20 +122,20 @@ const SearchSelectorWithAvatar = (props: selectorProps) => {
     return list.filter((nameObj: any) => nameObj.name.includes(nameSearch));
   };
 
-  React.useEffect(() => {
-    if (list && list.length > 0) {
-      const filteredList =
-        searchTerm && searchTerm.length > 2
-          ? filterListBySearchQuery(searchTerm, list)
-          : list;
-      if (imageFromS3) {
-        const modifiedlist = getList(filteredList);
-        setTeacherList(modifiedlist);
-      } else {
-        setTeacherList(filteredList);
-      }
-    }
-  }, [list, searchTerm, imageFromS3]);
+  // React.useEffect(() => {
+  //   if (list && list.length > 0) {
+  //     const filteredList =
+  //       searchTerm && searchTerm.length > 2
+  //         ? filterListBySearchQuery(searchTerm, list)
+  //         : list;
+  //     if (imageFromS3) {
+  //       const modifiedlist = getList(filteredList);
+  //       setTeacherList(modifiedlist);
+  //     } else {
+  //       setTeacherList(filteredList);
+  //     }
+  //   }
+  // }, [list, searchTerm, imageFromS3]);
 
   return (
     <div className="relative" ref={currentRef} onFocus={() => onFocus()}>
@@ -196,7 +195,9 @@ const SearchSelectorWithAvatar = (props: selectorProps) => {
             className="max-h-60 rounded-md py-1 text-base leading-6 ring-1 ring-black ring-opacity-10 overflow-auto focus:outline-none sm:text-sm sm:leading-5">
             {searchStatus ? (
               <li className="flex justify-center relative py-2 px-4">
-                <span className="font-normal">Searching...</span>
+                <span className="font-normal">
+                  {searchTerm.length > 2 ? 'Searching...' : 'type atleast 2 letters'}{' '}
+                </span>
               </li>
             ) : (
               <>
@@ -214,8 +215,8 @@ const SearchSelectorWithAvatar = (props: selectorProps) => {
                     </span>
                   </li>
                 )}
-                {teacherList.length ? (
-                  teacherList.map(
+                {list.length ? (
+                  list.map(
                     (
                       item: {name: string; id: any; value: string; avatar?: string},
                       key: number

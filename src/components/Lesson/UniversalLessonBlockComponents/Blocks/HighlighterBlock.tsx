@@ -100,47 +100,47 @@ const HighlighterBlock = (props: HighlighterBlockProps) => {
 
   const [staticText, setStaticText] = useState('');
 
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   // ~~~~~~~~~~ INIT DEFAULT STATE ~~~~~~~~~ //
-  useEffect(() => {
-    if (!isEmpty(value)) {
-      setLoading(true);
-      setTimeout(() => {
-        setDataValue(id, [value[0].value]);
-        setEditorState(value[0].value);
-        setStaticText(value[0].value);
-      }, 300);
-      setLoading(false);
-    }
-  }, [value]);
+  // useEffect(() => {
+  //   if (!isEmpty(value)) {
+  //     setLoading(true);
+  //     setTimeout(() => {
+  //       setDataValue(id, [value[0].value]);
+  //       setEditorState(value[0].value);
+  //       setStaticText(value[0].value);
+  //     }, 300);
+  //     setLoading(false);
+  //   }
+  // }, [value]);
 
   // ~~ INIT STUDENT DATA HIGHLIGHTED TEXT ~ //
-  useEffect(() => {
-    if (editorState !== '') {
-      if (getDataValue(id)[0] === '' && isStudent) {
-        setLoading(true);
-        setDataValue(id, [editorState]);
-        setLoading(false);
-      }
-    }
-  }, [editorState]);
+  // useEffect(() => {
+  //   if (editorState !== '') {
+  //     if (getDataValue(id)[0] === '' && isStudent) {
+  //       setLoading(true);
+  //       setDataValue(id, [editorState]);
+  //       setLoading(false);
+  //     }
+  //   }
+  // }, [editorState]);
 
   //  LOAD & UNLOAD STUDENT DATA INTO EDITOR  //
-  useEffect(() => {
-    setTimeout(() => {
-      if (isInLesson && !isStudent) {
-        setLoading(true);
-        const incomingStudentVal = getDataValue(id)[0];
-        if (incomingStudentVal !== '') {
-          setEditorState(incomingStudentVal);
-        } else {
-          setEditorState(value[0].value);
-        }
-        setLoading(false);
-      }
-    }, 300);
-  }, [lessonState.studentData]);
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     if (isInLesson && !isStudent) {
+  //       setLoading(true);
+  //       const incomingStudentVal = getDataValue(id)[0];
+  //       if (incomingStudentVal !== '') {
+  //         setEditorState(incomingStudentVal);
+  //       } else {
+  //         setEditorState(value[0].value);
+  //       }
+  //       setLoading(false);
+  //     }
+  //   }, 300);
+  // }, [lessonState.studentData]);
 
   const features: string[] = ['colorPicker', 'inline'];
 
@@ -165,14 +165,17 @@ const HighlighterBlock = (props: HighlighterBlockProps) => {
     return value;
   };
 
-  const initialValue =
-    isInLesson && isStudent ? editorState || getDataValue(id)[0] : editorState;
+  // insert prop value to editor
+
+  const userValue = getDataValue(id)[0] || value[0].value;
 
   useEffect(() => {
-    if (initialValue) {
-      setDataValue(id, [initialValue]);
+    if (!isEmpty(userValue) && isStudent) {
+      setEditorState(userValue);
     }
-  }, [initialValue]);
+  }, [userValue]);
+
+  const initialValue = isInLesson && isStudent ? userValue : editorState;
 
   return (
     <div className={` py-4 `}>
@@ -190,7 +193,10 @@ const HighlighterBlock = (props: HighlighterBlockProps) => {
           onChange={
             isInLesson && isStudent
               ? (html) => setDataValue(id, [html])
-              : (html) => setStaticText(html)
+              : (html) => {
+                  setStaticText(html);
+                  setEditorState(html);
+                }
           }
         />
       ) : null}

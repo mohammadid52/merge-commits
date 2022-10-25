@@ -31,7 +31,7 @@ const loadActiveRoomData = () => {
   // go to classroom page to load activeRoomData.. without this survey won't save data
   cy.get('h2').should('contain', 'Your Classrooms');
   cy.dataCy('classroom-cards').first().click();
-  cy.dataCy('survey-button').first().click(); // <== here check if the button label is "GO TO SURVEY"
+  cy.dataCy('survey-button').eq(2).click(); // <== here check if the button label is "GO TO SURVEY"
 };
 
 describe('Survey should work', () => {

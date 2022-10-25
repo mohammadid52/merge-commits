@@ -314,10 +314,7 @@ const getCSVData = async () => {
         if (answerArray.studentID === stu.authId) {
           hasTakenSurvey = true;
           universalSurveyStudentID = answerArray.id;
-          console.log(
-            '🚀 ~ file: Csv.tsx ~ line 826 ~ surveyData.map ~ universalSurveyStudentID',
-            universalSurveyStudentID
-          );
+
           answerArray.surveyData.map((singleAnswer: any) => {
             if (qids.indexOf(singleAnswer.domID) >= 0) {
               surveyAnswerDates.push(answerArray.updatedAt);

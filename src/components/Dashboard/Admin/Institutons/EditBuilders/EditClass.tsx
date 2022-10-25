@@ -29,6 +29,7 @@ import useAuth from 'customHooks/useAuth';
 import * as mutations from 'graphql/mutations';
 import ModalPopUp from 'molecules/ModalPopUp';
 import LocationBadge from './LocationBadge';
+import {PersonStatus} from 'API';
 
 interface EditClassProps {
   instId: string;
@@ -53,11 +54,15 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
   const [messages, setMessages] = useState({show: false, message: '', isError: false});
   const [addMessage, setAddMessage] = useState({message: '', isError: false});
   const [classStudents, setClassStudents] = useState([]);
-  const [students, setStudents] = useState([]);
+  const [allStudents, setAllStudents] = useState([]);
 
   const [searching, setSearching] = useState<boolean>(false);
   const [userModalOpen, setUserModalFormOpen] = useState<boolean>(false);
   const [filteredStudents, setFilteredStudents] = useState([]);
+  console.log(
+    '🚀 ~ file: EditClass.tsx ~ line 62 ~ EditClass ~ filteredStudents',
+    filteredStudents
+  );
   const [studentProfileID, setStudentProfileID] = useState('');
   const [newMember, setNewMember] = useState(defaultNewMember);
   const [studentIdToEdit, setStudentIdToEdit] = useState<string>('');
@@ -134,6 +139,40 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
     }
   };
 
+  const recursiveFetchAllStudents = async (
+    neqList: any[],
+    outArray: any[],
+    nextToken: string | null
+  ) => {
+    try {
+      let combined: any[] = [];
+      let studentsFromAPI: any = await API.graphql(
+        graphqlOperation(customQueries.fetchPersons, {
+          filter: {
+            role: {eq: 'ST'},
+            or: [
+              {status: {eq: PersonStatus.ACTIVE}},
+              {status: {eq: PersonStatus.TRAINING}}
+            ],
+            ...createFilterToFetchAllItemsExcept(neqList, 'id')
+          },
+          nextToken
+        })
+      );
+
+      let studentsData = studentsFromAPI.data.listPeople.items;
+      let NextToken: string = studentsFromAPI.data.listPeople.nextToken;
+
+      combined = [...studentsData, ...outArray];
+      if (NextToken) {
+        combined = await recursiveFetchAllStudents(neqList, combined, NextToken);
+      }
+      return combined;
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const fetchClassData = async (classId: string) => {
     try {
       const classFilter = {
@@ -164,17 +203,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
         };
       });
 
-      let students: any = await API.graphql(
-        graphqlOperation(customQueries.fetchPersons, {
-          filter: {
-            role: {eq: 'ST'},
-            status: {eq: 'ACTIVE'},
-            ...createFilterToFetchAllItemsExcept(selectedStudentsIds, 'id')
-          },
-          limit: 500
-        })
-      );
-      students = students.data.listPeople.items;
+      let students: any = await recursiveFetchAllStudents(selectedStudentsIds, [], null);
       students = students.map((item: any, i: any) => ({
         id: item.id,
         name: `${item.firstName || ''} ${item.lastName || ''}`,
@@ -182,11 +211,13 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
         avatar: item.image ? getImageFromS3(item.image) : '',
         status: item.status || 'Inactive',
         email: item.email || '',
-        authId: item.authId || ''
+        authId: item.authId || '',
+        firstName: item.firstName || '',
+        lastName: item.lastName || ''
       }));
       await getClassRoomGroups(roomData.id);
       setClassStudents(selectedStudents);
-      setStudents(sortStudents(students));
+      setAllStudents(sortStudents(students));
       setLoading(false);
     } catch (err) {
       console.error('err', err);
@@ -200,25 +231,41 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
   };
 
   const fetchStudentList = async (searchQuery: string) => {
-    const result: any = await API.graphql(
-      graphqlOperation(customQueries.listPersons, {
-        filter: {
-          role: {eq: 'ST'},
-          or: [{firstName: {contains: searchQuery}}, {lastName: {contains: searchQuery}}]
-        }
-      })
-    );
-    const students = result.data.listPeople.items;
-    const mappedStudents = students.map((item: any, i: any) => ({
-      id: item.id,
-      name: `${item.firstName || ''} ${item.lastName || ''}`,
-      value: `${item.firstName || ''} ${item.lastName || ''}`,
-      avatar: item.image ? getImageFromS3(item.image) : '',
-      status: item.status || 'Inactive',
-      email: item.email || '',
-      authId: item.authId || ''
-    }));
-    setFilteredStudents(sortStudents(mappedStudents));
+    // const result: any = await API.graphql(
+    //   graphqlOperation(customQueries.listPersons, {
+    //     filter: {
+    //       role: {eq: 'ST'},
+    //       or: [{firstName: {contains: searchQuery}}, {lastName: {contains: searchQuery}}]
+    //     }
+    //   })
+    // );
+    // const students = result.data.listPeople.items;
+
+    // const mappedStudents = students.map((item: any, i: any) => ({
+    //   id: item.id,
+    //   name: `${item.firstName || ''} ${item.lastName || ''}`,
+    //   value: `${item.firstName || ''} ${item.lastName || ''}`,
+    //   avatar: item.image ? getImageFromS3(item.image) : '',
+    //   status: item.status || 'Inactive',
+    //   email: item.email || '',
+    //   authId: item.authId || ''
+    // }));
+
+    // filter allStudents by searchQuery
+
+    const filteredStudents = allStudents.filter((student: any) => {
+      const {firstName, lastName, name} = student;
+
+      const searchValue = searchQuery.toLowerCase();
+
+      return (
+        firstName?.toLowerCase().includes(searchValue) ||
+        lastName?.toLowerCase().includes(searchValue) ||
+        name?.toLowerCase().includes(searchValue)
+      );
+    });
+
+    setFilteredStudents(sortStudents(filteredStudents));
     setSearching(false);
   };
 
@@ -279,7 +326,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
   const saveClassStudent = async (id: string) => {
     try {
       setAdding(true);
-      const selected = students.find((item: any) => item.id === id);
+      const selected = allStudents.find((item: any) => item.id === id);
       const input = {
         classID: classId,
         group: newMember.group,
@@ -313,7 +360,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
           student: {...selected}
         }
       ]);
-      setStudents((prevStudents) =>
+      setAllStudents((prevStudents) =>
         prevStudents.filter((student) => student.id !== newMember.id)
       );
 
@@ -346,7 +393,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
         })
       );
       const deletedStudentData = classStudents.find((item) => item.id === id);
-      setStudents((prevStudent) => [
+      setAllStudents((prevStudent) => [
         ...prevStudent,
         {
           id: deletedStudentData.id,
@@ -483,7 +530,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
                 <div className="flex items-center justify-between">
                   <SearchSelectorWithAvatar
                     selectedItem={newMember}
-                    list={searching ? filteredStudents : students}
+                    list={filteredStudents.length > 0 ? filteredStudents : allStudents}
                     placeholder={dictionary.ADD_STUDENT_PLACEHOLDER}
                     onChange={onStudentSelect}
                     fetchStudentList={fetchStudentList}

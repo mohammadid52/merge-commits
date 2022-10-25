@@ -32,6 +32,8 @@ const SingleNote = (props: any) => {
   const {theme, clientKey, userLanguage} = useGlobalContext();
   const themeColor = getAsset(clientKey, 'themeClassName');
 
+  const isPrivate = mainSection.toLowerCase() === 'private';
+
   // ##################################################################### //
   // ########################### FEEDBACK-LOGIC ########################## //
   // ##################################################################### //

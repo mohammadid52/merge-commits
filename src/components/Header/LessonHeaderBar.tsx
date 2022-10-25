@@ -12,11 +12,14 @@ import LessonTopMenu from '../Lesson/Navigation/LessonTopMenu';
 import SideMenu from '../Lesson/Navigation/SideMenu';
 import VideoWidget from '../Lesson/Navigation/Widgets/VideoWidget';
 import useStudentTimer from '@customHooks/timer';
+import useGraphqlMutation from '@customHooks/useGraphqlMutation';
+import {UniversalLessonStudentData, UpdatePersonLessonsDataInput} from 'API';
+import {useNotifications} from '@contexts/NotificationContext';
 
 const LessonHeaderBar = ({
   overlay,
   setOverlay,
-
+  pageStateUpdated,
   isAtEnd,
   setisAtEnd,
   createJournalData,
@@ -33,7 +36,7 @@ const LessonHeaderBar = ({
   const history = useHistory();
   const match = useRouteMatch();
 
-  // don't remove this line
+  // don't remove this line or we are screwed
   const initializeTimer = useStudentTimer();
 
   // ##################################################################### //
@@ -47,6 +50,8 @@ const LessonHeaderBar = ({
   // To track user clicks on home button or click next on last page
   const [leaveAfterCompletion, setLeaveAfterCompletion] = useState<boolean>(false);
 
+  const goToClassRoom = () => history.push(`/dashboard/classroom/${getRoomData.id}`);
+
   const handleManualSave = () => {
     if (lessonState.updated) {
       setWaiting(true);
@@ -56,17 +61,46 @@ const LessonHeaderBar = ({
       setSafeToLeave(true);
     }
     setTimeout(() => {
-      history.push(`/dashboard/classroom/${getRoomData.id}`);
+      goToClassRoom();
     }, 1500);
   };
+
+  const updatePersonLessonsDataMutation = useGraphqlMutation<
+    {
+      input: UpdatePersonLessonsDataInput;
+    },
+    UniversalLessonStudentData
+  >('updatePersonLessonsData');
+
+  const {setNotification} = useNotifications();
 
   const handleNotebookSave = () => {
     if (leaveAfterCompletion) {
       console.log('\x1b[33m Saving notebook... \x1b[0m');
-      createJournalData();
-      setTimeout(() => {
-        history.push(`/dashboard/classroom/${getRoomData.id}`);
-      }, 1500);
+      createJournalData(() => {
+        setNotification({
+          title: 'Your notebook has been saved',
+          dark: false,
+          show: true,
+          buttonText: 'See notebook',
+          buttonUrl: '/anthology'
+        });
+      });
+
+      const id =
+        lessonState.misc?.personLessonData?.data?.find(
+          (_d: any) => _d.lessonID === lessonState?.lessonData?.id
+        )?.id || '';
+
+      updatePersonLessonsDataMutation
+        .mutate({input: {id, isCompleted: true}})
+        .then(() => {
+          goToClassRoom();
+          console.log('Successfully completed ' + lessonState?.lessonData?.type);
+        })
+        .catch((err) => {
+          console.error('Error updating current lesson/survey complete status', err);
+        });
     }
   };
 
@@ -104,7 +138,7 @@ const LessonHeaderBar = ({
     // console.log('safeToLeave State - ', safeToLeave);
     if (safeToLeave === true) {
       handleLeavePopup();
-      history.push(`/dashboard/classroom/${getRoomData.id}`);
+      goToClassRoom();
     }
   }, [safeToLeave]);
 
@@ -113,7 +147,12 @@ const LessonHeaderBar = ({
   // ##################################################################### //
 
   // ~~~~~~~ LEAVE VERIFICATION POPUP ~~~~~~ //
-  const [leaveModalVisible, setLeaveModalVisible] = useState<boolean>(false);
+
+  const setLeaveModalVisible = (updatedState: boolean) => {
+    lessonDispatch({type: 'SET_LEAVE_MODAL_VISIBLE_STATE', payload: updatedState});
+  };
+
+  const leaveModalVisible = Boolean(lessonState?.misc?.leaveModalVisible);
 
   // ~~ VIDEOLINK WHICH IS SHOWN TO USERS ~~ //
   const [videoLink, setVideoLink] = useState<string>('');
@@ -125,12 +164,10 @@ const LessonHeaderBar = ({
       setVideoLinkModalVisible(false);
     }
 
-    if (leaveModalVisible) {
-      setLeaveModalVisible(false);
-    } else {
-      setLeaveModalVisible(true);
-    }
-    // setLeaveAfterCompletion(isLeavingAfterCompletion);
+    // setLeaveModalVisible(!leaveModalVisible);
+    setLeaveAfterCompletion(isLeavingAfterCompletion);
+
+    goToClassRoom();
   };
 
   // ~~~~ POPUP IF A VIDEO IS AVAILABLE ~~~~ //
@@ -307,13 +344,17 @@ const LessonHeaderBar = ({
     <div
       style={{zIndex: 3000}}
       className={` relative center w-full 
-        h-.7/10 text-gray-200 shadow-2xl
+        h-.7/10 text-gray-200 shadow-2xl  
         ${theme.toolbar.bg} `}>
       {/* LEAVE POPUP */}
       <div className={`${leaveModalVisible ? 'absolute z-100' : 'hidden'}`}>
         <PositiveAlert
+          closeAction={() => setLeaveModalVisible(false)}
           alert={leaveModalVisible}
           setAlert={setLeaveModalVisible}
+          button1Color={
+            'border-sea-green hover:bg-sea-green text-sea-green white-text-on-hover border-2'
+          }
           header={
             leaveAfterCompletion
               ? `Congratulations, you have completed the lesson ${lessonState.lessonData.title}, Did you want to keep your writing excercies in the classroom or move them to your notebook`
@@ -321,15 +362,15 @@ const LessonHeaderBar = ({
           }
           button1={`${
             !waiting && leaveAfterCompletion
-              ? 'Move to notebook'
+              ? 'Mark lesson as complete and move your work to your notebook'
               : !waiting
               ? 'Go to the dashboard'
               : 'Saving your data...'
           }`}
-          button2="Stay on lesson"
+          button2="Leave in classroom"
           svg="question"
           handleButton1={leaveAfterCompletion ? handleNotebookSave : handleManualSave}
-          handleButton2={handleLeavePopup}
+          handleButton2={goToClassRoom}
           theme="dark"
           fill="screen"
         />
@@ -357,6 +398,7 @@ const LessonHeaderBar = ({
 
       <LessonTopMenu
         overlay={overlay}
+        pageStateUpdated={pageStateUpdated}
         setOverlay={setOverlay}
         handlePopup={handleLeavePopup}
         isAtEnd={isAtEnd}

@@ -33,33 +33,33 @@
   @each $themeName, $themeValue in $iconoclastColors {
     .iconoclast .iconoclast\:#{$util}-#{$themeName} {
       @if $util == 'bg' {
-        background-color: $themeValue;
+        background-color: $themeValue !important;
       }
 
       @if $util == 'border' {
-        border-color: $themeValue;
+        border-color: $themeValue !important;
       }
 
       @if $util == 'text' {
-        color: $themeValue;
+        color: $themeValue !important;
       }
     }
     .iconoclast .hover\:iconoclast\:#{$util}-#{$themeName} {
       @if $util == 'bg' {
         &:hover {
-          background-color: $themeValue;
+          background-color: $themeValue !important;
         }
       }
 
       @if $util == 'border' {
         &:hover {
-          border-color: $themeValue;
+          border-color: $themeValue !important;
         }
       }
 
       @if $util == 'text' {
         &:hover {
-          color: $themeValue;
+          color: $themeValue !important;
         }
       }
     }
@@ -67,38 +67,38 @@
     .iconoclast .group:hover .group-hover\:iconoclast\:#{$util}-#{$themeName} {
       @if $util == 'bg' {
         & {
-          background-color: $themeValue;
+          background-color: $themeValue !important;
         }
       }
 
       @if $util == 'border' {
         & {
-          border-color: $themeValue;
+          border-color: $themeValue !important;
         }
       }
 
       @if $util == 'text' {
         & {
-          color: $themeValue;
+          color: $themeValue !important;
         }
       }
     }
     .iconoclast .focus\:iconoclast\:#{$util}-#{$themeName} {
       @if $util == 'bg' {
         &:focus {
-          background-color: $themeValue;
+          background-color: $themeValue !important;
         }
       }
 
       @if $util == 'border' {
         &:focus {
-          border-color: $themeValue;
+          border-color: $themeValue !important;
         }
       }
 
       @if $util == 'text' {
         &:focus {
-          color: $themeValue;
+          color: $themeValue !important;
         }
       }
     }
@@ -109,33 +109,33 @@
   @each $themeName, $themeValue in $curateColors {
     .curate .curate\:#{$util}-#{$themeName} {
       @if $util == 'bg' {
-        background-color: $themeValue;
+        background-color: $themeValue !important;
       }
 
       @if $util == 'border' {
-        border-color: $themeValue;
+        border-color: $themeValue !important;
       }
 
       @if $util == 'text' {
-        color: $themeValue;
+        color: $themeValue !important;
       }
     }
     .curate .hover\:curate\:#{$util}-#{$themeName} {
       @if $util == 'bg' {
         &:hover {
-          background-color: $themeValue;
+          background-color: $themeValue !important;
         }
       }
 
       @if $util == 'border' {
         &:hover {
-          border-color: $themeValue;
+          border-color: $themeValue !important;
         }
       }
 
       @if $util == 'text' {
         &:hover {
-          color: $themeValue;
+          color: $themeValue !important;
         }
       }
     }
@@ -143,19 +143,19 @@
     .curate .group:hover .group-hover\:curate\:#{$util}-#{$themeName} {
       @if $util == 'bg' {
         & {
-          background-color: $themeValue;
+          background-color: $themeValue !important;
         }
       }
 
       @if $util == 'border' {
         & {
-          border-color: $themeValue;
+          border-color: $themeValue !important;
         }
       }
 
       @if $util == 'text' {
         & {
-          color: $themeValue;
+          color: $themeValue !important;
         }
       }
     }
@@ -163,19 +163,19 @@
     .curate .focus\:curate\:#{$util}-#{$themeName} {
       @if $util == 'bg' {
         &:focus {
-          background-color: $themeValue;
+          background-color: $themeValue !important;
         }
       }
 
       @if $util == 'border' {
         &:focus {
-          border-color: $themeValue;
+          border-color: $themeValue !important;
         }
       }
 
       @if $util == 'text' {
         &:focus {
-          color: $themeValue;
+          color: $themeValue !important;
         }
       }
     }
@@ -184,21 +184,46 @@
 
 // -----------BACKGROUND------------- //
 .iconoclast .iconoclast\:bg-main {
-  background-color: $iconoclast;
+  background-color: $iconoclast !important;
 }
 
 .curate .curate\:bg-main {
-  background-color: $curate;
+  background-color: $curate !important;
+}
+// -----------BACKGROUND HOVER------------- //
+.iconoclast .hover\:iconoclast\:bg-main {
+  &:hover {
+    background-color: $iconoclast !important;
+  }
+}
+
+.curate .hover\:curate\:bg-main {
+  &:hover {
+    background-color: $curate !important;
+  }
 }
 
 // -----------BORDER------------- //
 
 .iconoclast .iconoclast\:border-main {
-  border-color: $iconoclast;
+  border-color: $iconoclast !important;
 }
 
 .curate .curate\:border-main {
-  border-color: $curate;
+  border-color: $curate !important;
+}
+// -----------BORDER HOVER------------- //
+
+.iconoclast .hover\:iconoclast\:border-main {
+  &:hover {
+    border-color: $iconoclast !important;
+  }
+}
+
+.curate .hover\:curate\:border-main {
+  &:hover {
+    border-color: $curate !important;
+  }
 }
 
 // -----------TEXT------------- //
@@ -209,6 +234,19 @@
 
 .curate .curate\:text-main {
   color: $curate;
+}
+// -----------TEXT HOVER------------- //
+
+.iconoclast .hover\:iconoclast\:text-main {
+  &:hover {
+    color: $iconoclast;
+  }
+}
+
+.curate .hover\:curate\:text-main {
+  &:hover {
+    color: $curate;
+  }
 }
 
 @include iconoclast('bg');

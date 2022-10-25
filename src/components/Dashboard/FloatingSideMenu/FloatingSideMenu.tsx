@@ -1,14 +1,14 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {Auth} from '@aws-amplify/auth';
-import {findIndex} from 'lodash';
-import {nanoid} from 'nanoid';
-import React, {SetStateAction, useContext, useState} from 'react';
-import {useParams} from 'react-router-dom';
 import {GlobalContext} from 'contexts/GlobalContext';
 import useDeviceDetect from 'customHooks/deviceDetect';
 import * as mutations from 'graphql/mutations';
 import * as queries from 'graphql/queries';
 import {UniversalJournalData} from 'interfaces/UniversalLessonInterfaces';
+import {findIndex} from 'lodash';
+import {nanoid} from 'nanoid';
+import React, {SetStateAction, useContext, useState} from 'react';
+import {useParams} from 'react-router-dom';
 import {getLocalStorageData} from 'utilities/localStorage';
 import ExpandedMenu from './ExpandedMenu';
 import {FloatingBar} from './FloatingBar';
@@ -233,8 +233,6 @@ const FloatingSideMenu = () => {
   };
 
   const updateJournalData = async () => {
-    const user = await Auth.currentAuthenticatedUser();
-
     try {
       const input = {
         id: notesData.id,

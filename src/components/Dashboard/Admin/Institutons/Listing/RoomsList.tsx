@@ -125,7 +125,7 @@ const RoomsList = (props: RoomListProps) => {
   };
 
   useEffect(() => {
-    if (instId === associateInstitute[0].institution.id) {
+    if (instId === associateInstitute[0]?.institution?.id) {
       fetchRoomList();
       fetchStaffOptions();
     }

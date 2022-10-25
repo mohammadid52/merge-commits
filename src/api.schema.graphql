@@ -75,6 +75,7 @@ type PersonLessonsData @model @auth(rules: [{allow: public}]) {
   pages: AWSJSON
   ratings: Int @default(value: "0")
   isCompleted: Boolean @default(value: "false")
+  roomId: String
 }
 
 type Institution @model @auth(rules: [{allow: public}]) {
@@ -663,6 +664,7 @@ type UniversalLessonStudentData @model @auth(rules: [{allow: public}]) {
   pageData: [PartInput]
   hasExerciseData: Boolean
   exerciseData: [ExerciseData]
+  date: AWSDateTime
 }
 
 type UniversalLessonWritingExcercises @model @auth(rules: [{allow: public}]) {
@@ -671,6 +673,7 @@ type UniversalLessonWritingExcercises @model @auth(rules: [{allow: public}]) {
     @index(name: "bySyllabusLessonAndStudent", sortKeyFields: ["studentID"])
   lessonID: ID!
   lessonPageID: ID!
+  lessonName: String
   studentID: ID!
   studentAuthID: ID!
   studentEmail: String!
@@ -765,6 +768,7 @@ type UniversalJournalData @model @auth(rules: [{allow: public}]) {
   studentAuthID: ID!
   studentEmail: String!
   type: String!
+
   entryData: [JournalEntryData]
   feedbacks: [String]
   shared: Boolean

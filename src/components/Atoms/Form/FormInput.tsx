@@ -66,11 +66,13 @@ const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
   }
 
   const [passToggle, setPassToggle] = useState(false);
+  const disabledClass = disabled ? 'cursor-not-allowed bg-gray-200' : '';
 
   return (
     <Fragment>
-      {label && <Label dark={dark} label={label} isRequired={isRequired} />}
-
+      {label && (
+        <Label disabled={disabled} dark={dark} label={label} isRequired={isRequired} />
+      )}
       {textarea ? (
         <textarea
           data-cy={dataCy}
@@ -78,13 +80,13 @@ const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
           cols={cols}
           id={id}
           value={value}
-          className={`mt-1  ${
+          className={`mt-1   ${
             dark ? 'border-gray-700  text-white bg-gray-800' : ''
           } max-w-256 block w-full sm:text-sm sm:leading-5 focus:outline-none focus:ring-2 focus:ring-${
             themeColor === 'iconoclastIndigo' ? 'indigo' : 'blue'
           }-600 focus:border-transparent border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm ${
             theme.outlineNone
-          } ${className}`}
+          } ${className} ${disabledClass}`}
           disabled={disabled}
           maxLength={maxLength}
           name={name}
@@ -115,7 +117,7 @@ const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
               themeColor === 'iconoclastIndigo' ? 'indigo' : 'blue'
             }-600 focus:border-transparent border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm ${
               theme.outlineNone
-            } ${className}`}
+            } ${className} ${disabledClass}`}
             value={value ? value : ''}
             placeholder={placeHolder}
             onKeyDown={onKeyDown}
@@ -137,6 +139,7 @@ const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
           )}
         </div>
       )}
+
       <div className="flex">
         <Transition
           show={error.length > 0}

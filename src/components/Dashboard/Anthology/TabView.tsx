@@ -1,25 +1,26 @@
-import React, {useContext} from 'react';
+import React from 'react';
 import {FaEdit} from 'react-icons/fa';
 
-import {GlobalContext} from 'contexts/GlobalContext';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 
 import Buttons from 'atoms/Buttons';
 
-import {IoIosJournal} from 'react-icons/io';
-import {IconContext} from 'react-icons/lib';
 import {getAsset} from 'assets';
-import {
-  UniversalClassData,
-  UniversalJournalData,
-  UniversalLessonStudentData
-} from 'interfaces/UniversalLessonInterfaces';
-import {stringToHslColor} from 'utilities/strings';
 import {ViewEditMode} from 'components/Dashboard/Anthology/Anthology';
 import AnthologyUnderlinedTabs from 'components/Dashboard/Anthology/AnthologyUnderlinedTabs';
 import SentimentTab from 'components/Dashboard/Anthology/SentimentTab';
 import UploadsTab from 'components/Dashboard/Anthology/UploadsTab';
 import WrittenContentTab from 'components/Dashboard/Anthology/WrittenContentTab';
+import {
+  UniversalClassData,
+  UniversalJournalData,
+  UniversalLessonStudentData
+} from 'interfaces/UniversalLessonInterfaces';
+import {IoIosJournal} from 'react-icons/io';
+import {IconContext} from 'react-icons/lib';
+import {stringToHslColor} from 'utilities/strings';
+import {filter} from 'lodash';
 
 export interface ITabParentProps {
   handleEditToggle?: (
@@ -42,7 +43,12 @@ export interface ITabParentProps {
 
 export interface ITabViewProps extends ITabParentProps {
   handleEditUpdate?: (e: any) => void;
-  updateJournalContent?: (html: string, targetType: string, idx?: number) => void;
+  updateJournalContent?: (
+    html: string,
+    targetType: string,
+    idx?: number,
+    domID?: string
+  ) => void;
   createTemplate?: any;
   currentContentObj?: UniversalJournalData | UniversalClassData;
   content?: UniversalJournalData[] | UniversalClassData[];
@@ -80,14 +86,14 @@ const TabView = ({
   setAllUniversalClassData
 }: ITabViewProps) => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
-  const gContext = useContext(GlobalContext);
+  const gContext = useGlobalContext();
   const state = gContext.state;
   const userLanguage = gContext.userLanguage;
   const theme = gContext.theme;
   const clientKey = gContext.clientKey;
 
   const themeColor = getAsset(clientKey, 'themeClassName');
-  const {anthologyDict} = useDictionary(clientKey);
+  const {anthologyDict} = useDictionary();
 
   // ~~~~~~~~~~~~~~~ CONTENT ~~~~~~~~~~~~~~~ //
 
@@ -111,32 +117,14 @@ const TabView = ({
         )
       : [];
 
-  const filteredClassContent =
-    allUniversalClassData?.length > 0
-      ? allUniversalClassData.reduce(
-          (acc: UniversalClassData[], data: UniversalClassData) => {
-            if (subSection === 'work') {
-              return [...acc, data];
-            } else if (
-              subSection === ' Note' &&
-              data.type === 'Class Note' &&
-              data.roomID === sectionRoomID
-            ) {
-              return [...acc, data];
-            } else {
-              return acc;
-            }
-          },
-          []
-        )
-      : [];
+  const filteredClassContent = filter(allExerciseData, ['roomID', sectionRoomID]);
 
   const pickClassContent = () => {
     if (mainSection === 'Class' && sectionRoomID !== '') {
-      if (subSection == 'class Work') {
+      if (subSection == 'Work') {
         return filteredClassContent;
       } else {
-        return allExerciseData;
+        return filteredJournalContent;
       }
     } else if (mainSection === 'Private') {
       return filteredJournalContent;
@@ -175,14 +163,14 @@ const TabView = ({
       id: 'Work',
       content: WrittenContent
     },
-    // {
-    //   index: 1,
-    //   title: anthologyDict[userLanguage].TABS.C,
-    //   id: 'Notes',
-    //   content: WrittenContent
-    // },
     {
       index: 1,
+      title: anthologyDict[userLanguage].TABS.C,
+      id: 'Notes',
+      content: WrittenContent
+    },
+    {
+      index: 2,
       title: anthologyDict[userLanguage].TABS.D,
       id: 'Uploads',
       content: (

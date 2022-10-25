@@ -1,6 +1,6 @@
 projects:
   demoselready:
-    schemaPath: src/graphql/schema.json
+    schemaPath: amplify/backend/api/demoselready/build/schema.graphql
     includes:
       - src/graphql/**/*.ts
     excludes:

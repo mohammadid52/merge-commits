@@ -36,7 +36,8 @@ const LESSON_REDUCER_TYPES = {
   CLEANUP: 'CLEANUP',
   ADD_NEW_INPUT: 'ADD_NEW_INPUT',
   SET_LESSON_PAYLOAD: 'SET_LESSON_PAYLOAD',
-  SET_PERSON_LESSON_DATA: 'SET_PERSON_LESSON_DATA'
+  SET_PERSON_LESSON_DATA: 'SET_PERSON_LESSON_DATA',
+  SET_LEAVE_MODAL_VISIBLE_STATE: 'SET_LEAVE_MODAL_VISIBLE_STATE'
 };
 
 export type LessonActions =
@@ -93,6 +94,7 @@ export type LessonActions =
   | {
       type: 'LOAD_STUDENT_DATA';
       payload: {
+        studentDataRows?: any[];
         dataIdReferences: {
           id: string;
           pageIdx: number;
@@ -229,7 +231,6 @@ export const lessonReducer = (state: any, action: LessonActions) => {
         subscription: action.payload.subscription
       };
     case LESSON_REDUCER_TYPES.SET_ROOM_SUBSCRIPTION_DATA:
-      console.log('SET_ROOM_SUBSCRIPTION_DATA - ', action.payload);
       const havePagesChanged = Object.keys(action.payload).includes('ClosedPages');
       const mappedClosedPages = havePagesChanged
         ? state.lessonData.lessonPlan.map((page: UniversalLessonPage, idx: number) => {
@@ -285,7 +286,6 @@ export const lessonReducer = (state: any, action: LessonActions) => {
         studentData: oldStudentData
       };
     case LESSON_REDUCER_TYPES.LOAD_STUDENT_DATA:
-      console.log('LOAD_STUDENT_DATA', {payload: action.payload});
       return {
         ...state,
         loaded: true,
@@ -338,7 +338,6 @@ export const lessonReducer = (state: any, action: LessonActions) => {
         personLocationObj: action.payload
       };
     case LESSON_REDUCER_TYPES.UNLOAD_STUDENT_DATA:
-      console.log('unloading student data');
       return {
         ...state,
         loaded: false,
@@ -398,16 +397,17 @@ export const lessonReducer = (state: any, action: LessonActions) => {
         state?.exerciseData[pageIdx].map((exercise: any) => {
           return {
             ...exercise,
-            entryData: exercise.entryData.map((entry: any) => {
-              if (entry.domID === domID) {
-                return {
-                  ...entry,
-                  input: newInput[0]
-                };
-              } else {
-                return entry;
-              }
-            })
+            entryData:
+              exercise?.entryData.map((entry: any) => {
+                if (entry.domID === domID) {
+                  return {
+                    ...entry,
+                    input: newInput[0]
+                  };
+                } else {
+                  return entry;
+                }
+              }) || []
           };
         }) || [];
 
@@ -446,7 +446,6 @@ export const lessonReducer = (state: any, action: LessonActions) => {
       };
 
     case LESSON_REDUCER_TYPES.COMPLETE_STUDENT_UPDATE:
-      console.log('COMPLETE_STUDENT_UPDATE', state.universalStudentDataID);
       const resetDataIdArray = state.universalStudentDataID.map((obj: any) => {
         return {...obj, update: false};
       });
@@ -487,7 +486,6 @@ export const lessonReducer = (state: any, action: LessonActions) => {
     case LESSON_REDUCER_TYPES.INCREMENT_SAVE_COUNT:
       return {...state, saveCount: state.saveCount + 1};
     case LESSON_REDUCER_TYPES.CLEANUP:
-      console.log('cleanup...');
       return initialLessonState;
     case LESSON_REDUCER_TYPES.SET_LESSON_PAYLOAD:
       return {
@@ -500,6 +498,14 @@ export const lessonReducer = (state: any, action: LessonActions) => {
         misc: {
           ...state.misc,
           personLessonData: action.payload
+        }
+      };
+    case LESSON_REDUCER_TYPES.SET_LEAVE_MODAL_VISIBLE_STATE:
+      return {
+        ...state,
+        misc: {
+          ...state.misc,
+          leaveModalVisible: action.payload
         }
       };
 
