@@ -36,7 +36,8 @@ const LESSON_REDUCER_TYPES = {
   CLEANUP: 'CLEANUP',
   ADD_NEW_INPUT: 'ADD_NEW_INPUT',
   SET_LESSON_PAYLOAD: 'SET_LESSON_PAYLOAD',
-  SET_PERSON_LESSON_DATA: 'SET_PERSON_LESSON_DATA'
+  SET_PERSON_LESSON_DATA: 'SET_PERSON_LESSON_DATA',
+  SET_LEAVE_MODAL_VISIBLE_STATE: 'SET_LEAVE_MODAL_VISIBLE_STATE'
 };
 
 export type LessonActions =
@@ -497,6 +498,14 @@ export const lessonReducer = (state: any, action: LessonActions) => {
         misc: {
           ...state.misc,
           personLessonData: action.payload
+        }
+      };
+    case LESSON_REDUCER_TYPES.SET_LEAVE_MODAL_VISIBLE_STATE:
+      return {
+        ...state,
+        misc: {
+          ...state.misc,
+          leaveModalVisible: action.payload
         }
       };
 

@@ -70,7 +70,7 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
   // ~~~~~~~~~~~~~ LESSON SETUP ~~~~~~~~~~~~ //
 
   const [lessonDataLoaded, setLessonDataLoaded] = useState<boolean>(false);
-
+  const [pageStateUpdated, setPageStateUpdated] = useState(false);
   const {lessonData, misc} = lessonState;
   useEffect(() => {
     if (
@@ -85,6 +85,7 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
 
       lessonDispatch({type: 'SET_CURRENT_PAGE', payload: lessonProgress});
       setLessonDataLoaded(true);
+      setPageStateUpdated(true);
       history.push(`${match.url}/${lessonProgress}`);
     }
   }, [lessonData.id, misc?.personLessonData]);
@@ -339,34 +340,6 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
       return [];
     }
   };
-
-  const _fetchSurveyDataRow = async (): Promise<any> =>
-    new Promise(async (resolve, reject) => {
-      setLessonDataLoaded(false);
-      let result: any = [];
-
-      try {
-        await Promise.all(
-          PAGES.map(async (page: any, idx: number) => {
-            let studentData: any = await API.graphql(
-              graphqlOperation(queries.getUniversalSurveyStudentData, {
-                id: `${user.authId}-${getRoomData.id}-${lessonID}-${page.id}`
-              })
-            );
-
-            let studentDataObject = studentData.data.getUniversalSurveyStudentData;
-            result.push(studentDataObject);
-          })
-        );
-
-        setLessonDataLoaded(true);
-        resolve(result);
-      } catch (e) {
-        reject(e);
-        console.error('loopFetchStudentData - ', e);
-        return [];
-      }
-    });
 
   const getOrCreateSurveyData = async () => {
     // TRY TRY TRY
@@ -735,6 +708,7 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
           <LessonHeaderBar
             lessonDataLoaded={lessonDataLoaded}
             overlay={overlay}
+            pageStateUpdated={pageStateUpdated}
             setOverlay={setOverlay}
             isAtEnd={isAtEnd}
             setisAtEnd={setisAtEnd}

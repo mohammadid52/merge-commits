@@ -15,8 +15,9 @@ const NotificationContextProvider = ({children}: {children: React.ReactNode}) =>
     title: '',
     buttonText: '',
     buttonUrl: '',
-    dark: true,
+    dark: true
   });
+
   const clearNotification = () => {
     setNotification({title: '', buttonText: '', buttonUrl: '', show: false});
   };
@@ -27,7 +28,7 @@ const NotificationContextProvider = ({children}: {children: React.ReactNode}) =>
       value={{
         notification,
         setNotification,
-        clearNotification,
+        clearNotification
       }}>
       {children}
     </NotificationContext.Provider>

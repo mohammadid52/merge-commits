@@ -13,6 +13,7 @@ export interface LessonHeaderBarProps extends LessonComponentsInterface {
   videoLink?: string;
   lessonDataLoaded?: boolean;
   checkpointsLoaded?: boolean;
+  pageStateUpdated?: boolean;
   handlePopup?: (isLeavingAfterCompletion?: boolean) => void;
   videoLinkModalVisible?: boolean;
   handleVideoLinkPopup?: (url?: string) => void;
@@ -26,7 +27,7 @@ export interface LessonHeaderBarProps extends LessonComponentsInterface {
 
   handleForward?: (back?: boolean) => void;
   getLessonCompletedValue?: () => any;
-  createJournalData?: () => any;
+  createJournalData?: (onSuccess?: () => void) => any;
 }
 
 export interface ISideMenuProps {

@@ -9,9 +9,8 @@ import {
 import Buttons from 'atoms/Buttons';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useStudentTimer from 'customHooks/timer';
-import _ from 'lodash';
 import React, {useEffect, useState} from 'react';
-import {AiOutlineSave} from 'react-icons/ai';
+import {BiSave} from 'react-icons/bi';
 import {useHistory} from 'react-router-dom';
 import {getLocalStorageData} from 'utilities/localStorage';
 
@@ -26,7 +25,7 @@ interface SaveQuitProps {
 }
 
 const SaveQuit = ({createJournalData}: SaveQuitProps) => {
-  const {lessonState} = useGlobalContext();
+  const {lessonState, lessonDispatch} = useGlobalContext();
   const history = useHistory();
 
   // ##################################################################### //
@@ -52,31 +51,9 @@ const SaveQuit = ({createJournalData}: SaveQuitProps) => {
       setWaiting(false);
       setSafeToLeave(true);
 
-      try {
-        if (lessonState?.lessonData?.type === 'survey') {
-          updateSurveyData();
-        } else if (lessonState?.lessonData?.type === 'lesson') {
-          await updateStudentLessonData();
-          await handleNotebookSave();
-        }
-
-        const id =
-          lessonState.misc?.personLessonData?.data?.find(
-            (_d: any) => _d.lessonID === lessonState?.lessonData?.id
-          )?.id || '';
-
-        updatePersonLessonsDataMutation
-          .mutate({input: {id, isCompleted: true}})
-          .then(() => {
-            history.push(`/dashboard/classroom/${getRoomData.id}`);
-            console.log('Successfully completed ' + lessonState?.lessonData?.type);
-          })
-          .catch((err) => {
-            console.error('Error updating current lesson/survey complete status', err);
-          });
-      } catch (error) {
-        console.error('error @ handleManualSave in SaveQuit.tsx', error);
-      }
+      setLeaveModalVisible(true);
+      // ---- IMPORTANT ---- //
+      // JSX of modal is on LessonHeaderBar.tsx file
     }
   };
 
@@ -120,6 +97,10 @@ const SaveQuit = ({createJournalData}: SaveQuitProps) => {
     // }
   };
 
+  const setLeaveModalVisible = (updatedState: boolean) => {
+    lessonDispatch({type: 'SET_LEAVE_MODAL_VISIBLE_STATE', payload: updatedState});
+  };
+
   useEffect(() => {
     if (!lessonState.updated) {
       if (waiting === true && safeToLeave === false) {
@@ -132,21 +113,15 @@ const SaveQuit = ({createJournalData}: SaveQuitProps) => {
     }
   }, [lessonState.updated]);
 
-  // useEffect(() => {
-  //   // console.log('safeToLeave State - ', safeToLeave);
-  //   if (safeToLeave === true && getRoomData && getRoomData.id) {
-  //     history.push(`/dashboard/classroom/${getRoomData.id}`);
-  //   }
-  // }, [safeToLeave]);
-
   return (
     <>
       <div className={''}>
         <Buttons
           dataCy="save-lesson"
           label={waiting ? 'Saving your data...' : 'Save and Go to Classroom'}
-          Icon={AiOutlineSave}
+          Icon={BiSave}
           btnClass="w-full"
+          iconBeforeLabel
           onClick={handleManualSave}></Buttons>
       </div>
     </>

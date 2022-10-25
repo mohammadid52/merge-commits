@@ -160,6 +160,8 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
   const [lessonDataLoaded, setLessonDataLoaded] = useState<boolean>(false);
   const {lessonData, misc} = lessonState;
 
+  const [pageStateUpdated, setPageStateUpdated] = useState(false);
+
   useEffect(() => {
     if (
       misc?.personLessonData &&
@@ -173,6 +175,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
 
       lessonDispatch({type: 'SET_CURRENT_PAGE', payload: lessonProgress});
       setLessonDataLoaded(true);
+      setPageStateUpdated(true);
       history.push(`${match.url}/${lessonProgress}`);
     }
   }, [lessonData.id, misc?.personLessonData]);
@@ -1219,6 +1222,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
             lessonDataLoaded={lessonDataLoaded}
             overlay={overlay}
             setOverlay={setOverlay}
+            pageStateUpdated={pageStateUpdated}
             getLessonCompletedValue={
               listPersonLessonsData.length > 0 && getLessonCompletedValue
             }

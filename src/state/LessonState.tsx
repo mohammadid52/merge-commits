@@ -28,6 +28,7 @@ export interface lessonStateType {
   studentViewing?: string;
   isLastPage?: boolean;
   misc?: {
+    leaveModalVisible?: boolean;
     personLessonData?: {
       lessonID: string;
       data: any[];
@@ -60,6 +61,7 @@ export const lessonState: lessonStateType = {
   subscribeFunc: () => {},
   studentViewing: '',
   misc: {
+    leaveModalVisible: false,
     personLessonData: {
       lessonID: '',
       data: []
