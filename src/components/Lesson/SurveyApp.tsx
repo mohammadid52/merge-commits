@@ -80,7 +80,7 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
     ) {
       const data = misc?.personLessonData?.data[0];
 
-      const pages = data?.pages;
+      const pages = data?.pages || '{}';
       const lessonProgress = JSON.parse(pages).lessonProgress || 0;
 
       lessonDispatch({type: 'SET_CURRENT_PAGE', payload: lessonProgress});

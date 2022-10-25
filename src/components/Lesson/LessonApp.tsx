@@ -168,8 +168,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
     ) {
       const data = misc?.personLessonData?.data[0];
 
-      const pages = data?.pages;
-      console.log('🚀 ~ file: LessonApp.tsx ~ line 172 ~ useEffect ~ pages', pages);
+      const pages = data?.pages || '{}';
       const lessonProgress = JSON.parse(pages).lessonProgress || 0;
 
       lessonDispatch({type: 'SET_CURRENT_PAGE', payload: lessonProgress});
