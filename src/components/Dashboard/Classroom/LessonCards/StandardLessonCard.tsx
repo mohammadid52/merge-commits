@@ -26,24 +26,34 @@ const StandardLessonCard = (props: LessonCardProps) => {
     preview = false
   } = props;
 
-  const {theme} = useContext(GlobalContext);
+  const {theme, lessonDispatch} = useContext(GlobalContext);
   const [existsOrNot, setexistsOrNot] = useState<boolean>(false);
   const [isCompleted, setIsCompleted] = useState<boolean>(false);
+  const [isFetched, setIsFetched] = useState(false);
 
   useEffect(() => {
-    checkValueOrNull();
-  }, []);
+    if (!isFetched) {
+      checkValueOrNull();
+    }
+  }, [isFetched]);
 
+  const [lessonProgress, setLessonProgress] = useState(0);
   const checkValueOrNull = async () => {
     try {
       const value = await getLessonRating(lessonProps.lesson.id, user.email, user.authId);
+
       if (typeof value === 'undefined') setexistsOrNot(true);
 
       if (value) {
         if (value.isCompleted) setIsCompleted(true);
+        setLessonProgress(value.lessonProgress);
+        lessonDispatch({type: 'SET_CURRENT_PAGE', payload: value.lessonProgress});
       }
       return;
-    } catch (error) {}
+    } catch (error) {
+    } finally {
+      setIsFetched(true);
+    }
   };
 
   return (
@@ -84,6 +94,7 @@ const StandardLessonCard = (props: LessonCardProps) => {
           activeRoomInfo={activeRoomInfo}
           preview={preview}
           accessible={accessible}
+          lessonProgress={lessonProgress}
           roomID={roomID}
           lessonProps={lessonProps}
           isCompleted={isCompleted}

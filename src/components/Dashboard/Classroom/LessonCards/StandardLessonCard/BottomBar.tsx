@@ -14,7 +14,8 @@ const BottomBar = (props: LessonCardProps) => {
     syllabusProps,
     accessible,
     lessonType,
-    isCompleted
+    isCompleted,
+    lessonProgress = 0
   } = props;
 
   const startButtonProps = {
@@ -34,7 +35,8 @@ const BottomBar = (props: LessonCardProps) => {
     activeRoomInfo: activeRoomInfo,
     lessonProps: lessonProps?.lesson,
     syllabusProps: syllabusProps,
-    isUsed: lessonProps?.lesson?.isUsed
+    isUsed: lessonProps?.lesson?.isUsed,
+    lessonProgress
   };
 
   return (

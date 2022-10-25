@@ -57,7 +57,11 @@ const StageIcon = ({
     lessonDispatch({type: 'SET_CURRENT_PAGE', payload: pageNr});
   };
 
-  const clickedLesson = lessonProgress > pageNr ? 'text-gray-700' : '';
+  const clickedLesson = active
+    ? 'font-bold border-b-0 border-indigo-400 text-indigo-200 hover:text-indigo-300'
+    : lessonProgress >= pageNr
+    ? 'text-gray-700'
+    : '';
 
   const stageButtonChoice = () => {
     if (pageNr === 0) {
@@ -70,11 +74,7 @@ const StageIcon = ({
           <a
             className={`
             ${clickedLesson}
-            ${
-              active
-                ? 'font-bold border-b-0 border-indigo-400 text-green-500 hover:text-green-400'
-                : null
-            }
+          
             xs:ml-0 sm:ml-0 ml-4 cursor-pointer w-auto  text-sm font-medium transform hover:scale-110 transition-transform duration-150
             flex flex-row`}>
             <p className="flex-shrink-0">{label}</p>
@@ -86,12 +86,12 @@ const StageIcon = ({
         <div
           onClick={clickable ? () => handleLink() : () => handleRequiredNotification()}
           className={`${recentOpened ? 'animate-activation' : ''} 
-          ${clickedLesson}
+          
           ${clickable ? 'cursor-pointer' : 'cursor-default'}
           flex items-center w-auto group`}>
           {breakpoint !== 'xs' && breakpoint !== 'sm' && (
             <svg
-              className={`flex-shrink-0 w-6 h-full text-gray-200 group-hover:text-gray-300 transition-all duration-150    ${clickedLesson} `}
+              className={`flex-shrink-0 w-6 h-full text-gray-200 group-hover:text-gray-300 transition-all duration-150    `}
               viewBox="0 0 24 44"
               preserveAspectRatio="none"
               fill="currentColor"
@@ -108,11 +108,7 @@ const StageIcon = ({
               !enabled || !open ? 'line-through text-gray-500 hover:underline' : null
             }            
             ${!active ? 'text-gray-500 ' : null}
-            ${
-              active
-                ? 'font-bold border-b-0 border-indigo-400 text-indigo-200 hover:text-indigo-300'
-                : null
-            }
+         
             ${
               breakpoint !== 'xs' && breakpoint !== 'sm' ? 'ml-4' : ''
             } cursor-pointer w-auto  text-sm font-medium transform hover:scale-110 transition-transform duration-150
@@ -126,7 +122,7 @@ const StageIcon = ({
         <div
           onClick={clickable ? () => handleLink() : () => handleRequiredNotification()}
           className={`${recentOpened ? 'animate-activation' : ''} 
-          ${clickedLesson}
+          
           ${clickable ? 'cursor-pointer' : 'cursor-default'}
           flex items-center w-auto group`}>
           {breakpoint !== 'xs' && breakpoint !== 'sm' && (
@@ -148,11 +144,7 @@ const StageIcon = ({
             ${clickedLesson}
             ${!enabled || !open ? 'line-through text-gray-500 hover:underline' : null}
             ${!active ? 'text-gray-500 ' : null}
-            ${
-              active
-                ? 'font-bold border-b-0 border-indigo-400 text-indigo-200 hover:text-indigo-300'
-                : null
-            }
+          
             ${
               breakpoint !== 'xs' && breakpoint !== 'sm' ? 'ml-4' : ''
             } cursor-pointer w-auto  text-sm font-medium transform hover:scale-110 transition-transform duration-150

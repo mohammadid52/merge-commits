@@ -86,6 +86,7 @@ export interface LessonCardProps {
   syllabusProps?: any;
   accessible?: boolean;
   openCards?: string;
+  lessonProgress?: number;
   setOpenCards?: React.Dispatch<React.SetStateAction<string>>;
   lessonType?: string;
   pageNumber?: number;

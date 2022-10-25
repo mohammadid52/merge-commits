@@ -158,17 +158,29 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
   // ~~~~~~~~~~~~~ LESSON SETUP ~~~~~~~~~~~~ //
 
   const [lessonDataLoaded, setLessonDataLoaded] = useState<boolean>(false);
+  const {lessonData, misc} = lessonState;
+
+  useEffect(() => {
+    if (
+      misc?.personLessonData &&
+      misc?.personLessonData?.lessonID &&
+      misc?.personLessonData?.lessonID === lessonData?.id
+    ) {
+      const data = misc?.personLessonData?.data[0];
+
+      const pages = data?.pages;
+      console.log('🚀 ~ file: LessonApp.tsx ~ line 172 ~ useEffect ~ pages', pages);
+      const lessonProgress = JSON.parse(pages).lessonProgress || 0;
+
+      lessonDispatch({type: 'SET_CURRENT_PAGE', payload: lessonProgress});
+      setLessonDataLoaded(true);
+      history.push(`${match.url}/${lessonProgress}`);
+    }
+  }, [lessonData.id, misc?.personLessonData]);
 
   useEffect(() => {
     if (lessonState.lessonData && lessonState.lessonData.id) {
       setLessonDataLoaded(true);
-      if (CURRENT_PAGE !== '' && CURRENT_PAGE !== undefined) {
-        lessonDispatch({type: 'SET_CURRENT_PAGE', payload: CURRENT_PAGE});
-        history.push(`${match.url}/${CURRENT_PAGE}`);
-      } else {
-        lessonDispatch({type: 'SET_CURRENT_PAGE', payload: 0});
-        history.push(`${match.url}/${0}`);
-      }
 
       // Initialize closed pages based on room-configuration
 
@@ -1100,9 +1112,11 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
       let existingLesson: any;
 
       const personLessonData = lessonState?.misc?.personLessonData;
+      const isSameAndDataExists =
+        personLessonData?.lessonID === lessonID && personLessonData?.data?.length > 0;
 
-      if (personLessonData?.lessonID === lessonID && personLessonData?.data?.length > 0) {
-        existingLesson = {data: {listPersonLessonsData: {items: personLessonData?.data}}};
+      if (isSameAndDataExists) {
+        existingLesson = personLessonData?.data;
       } else {
         existingLesson = await API.graphql(
           graphqlOperation(queries.listPersonLessonsData, {
@@ -1123,7 +1137,9 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
         });
       }
 
-      const items = existingLesson?.data?.listPersonLessonsData?.items || [];
+      const items = isSameAndDataExists
+        ? existingLesson
+        : existingLesson?.data?.listPersonLessonsData?.items || [];
 
       if (!items?.length) {
         payload = {
@@ -1137,7 +1153,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
           pages: `{
             "currentPage":${JSON.stringify(lessonState.currentPage)},
             "totalPages":${JSON.stringify(lessonState.lessonData?.lessonPlan?.length - 1)},
-            "lessonProgress":${JSON.stringify(lessonState.lessonProgress)}
+            "lessonProgress":${JSON.stringify(lessonState.currentPage)}
             }`.replace(/(\s\s+|[\t\n])/g, ' ').trim(),
           ratings: 0
         };
@@ -1157,7 +1173,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
             "totalPages":${JSON.stringify(
               lessonState.lessonData?.lessonPlan?.length - 1
             )},
-            "lessonProgress":${JSON.stringify(lessonState.lessonProgress)}
+            "lessonProgress":${JSON.stringify(lessonState.currentPage)}
             }`
             .replace(/(\s\s+|[\t\n])/g, ' ')
             .trim()
