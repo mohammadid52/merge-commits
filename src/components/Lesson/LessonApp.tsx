@@ -1204,6 +1204,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
       */}
       {/* <FloatingSideMenu /> */}
       <div
+        id="lesson-app-container"
         className={`${theme.bg} w-full h-full flex flex-col items-start dark-scroll overflow-y-auto`}
         ref={topLessonRef}>
         <div

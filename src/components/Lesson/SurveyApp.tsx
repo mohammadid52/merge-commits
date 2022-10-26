@@ -691,6 +691,7 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
       */}
       {/* <FloatingSideMenu /> */}
       <div
+        id="survey-app-container"
         className={`${theme.bg} w-full h-full flex flex-col items-start dark-scroll overflow-y-auto`}
         ref={topLessonRef}>
         <div
