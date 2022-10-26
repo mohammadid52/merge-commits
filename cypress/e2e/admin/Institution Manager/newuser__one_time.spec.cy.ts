@@ -77,7 +77,7 @@ describe('Student flow', () => {
     cy.get(`label:contains(${newUserFields.pace})`).should('exist');
   });
 
-  it('should fill up fields (student)', {defaultCommandTimeout: 20000}, function () {
+  it('should create new user (student)', {defaultCommandTimeout: 20000}, function () {
     cy.url().should('contain', urlConfig.dashboardURL);
     cy.visit(urlConfig.registerURL);
     cy.wait(3000);
@@ -98,8 +98,9 @@ describe('Student flow', () => {
     cy.get(`button:contains(${newUserCreateFields.statusButton})`).click();
     cy.get(`li:contains(${newUserCreateFields.statusItem})`).click();
     cy.get(`input[name=${newUserCreateFields.paceItem}]`).click();
-    // cy.get(`button:contains(${newUserCreateFields.submitButton})`).click();
-    // cy.get(`p:contains(${newUserCreateFields.successMessage})`).should('exist');
+    cy.get(`button:contains(${newUserCreateFields.submitButton})`).click();
+    cy.wait(10000);
+    cy.get(`p:contains(${newUserCreateFields.successMessage})`).should('exist');
   });
 
   // it('should register new user (builder)', {defaultCommandTimeout: 20000}, function () {
