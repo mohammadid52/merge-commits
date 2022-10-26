@@ -7,6 +7,7 @@ import BottomBar from './StandardLessonCard/BottomBar';
 import MainSummary from './StandardLessonCard/MainSummary';
 import Rating from './StandardLessonCard/Rating';
 import ProgressBar from './StandardLessonCard/ProgressBar';
+import useAuth from '@customHooks/useAuth';
 
 const StandardLessonCard = (props: LessonCardProps) => {
   const {
@@ -31,6 +32,7 @@ const StandardLessonCard = (props: LessonCardProps) => {
   const [isCompleted, setIsCompleted] = useState<boolean>(false);
   const [isFetched, setIsFetched] = useState(false);
 
+  const {isStudent} = useAuth();
   useEffect(() => {
     if (!isFetched) {
       checkValueOrNull();
@@ -69,16 +71,18 @@ const StandardLessonCard = (props: LessonCardProps) => {
        */}
       <div className={`w-full md:w-7.5/10 flex flex-col rounded-b`}>
         <MainSummary lessonType={lessonType} lessonProps={lessonProps} />
-        <ProgressBar
-          lessonProps={{
-            ...lessonProps,
-            lesson: {...lessonProps.lesson, type: lessonProps.lesson.type}
-          }}
-          user={user}
-          value=""
-          max="100"
-          getLessonByType={getLessonByType}
-        />
+        {isStudent && (
+          <ProgressBar
+            lessonProps={{
+              ...lessonProps,
+              lesson: {...lessonProps.lesson, type: lessonProps.lesson.type}
+            }}
+            user={user}
+            value=""
+            max="100"
+            getLessonByType={getLessonByType}
+          />
+        )}
         {lessonProps.lesson.type !== 'survey' && !existsOrNot && isCompleted ? (
           <Rating
             user={user}
