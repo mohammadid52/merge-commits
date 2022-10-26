@@ -44,7 +44,11 @@ const useAuth = (): {
   const isAdmin = role === 'ADM';
   const isSuperAdmin = role === 'SUP';
   const isFellow = role === 'FLW';
-  const instId = user?.associateInstitute[0]?.institution?.id || '';
+  const instId =
+    (user &&
+      user?.associateInstitute?.length > 0 &&
+      user?.associateInstitute[0]?.institution?.id) ||
+    '';
 
   const Placeholder = ({
     name,

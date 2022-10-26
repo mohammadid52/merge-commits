@@ -12,11 +12,14 @@ import LessonTopMenu from '../Lesson/Navigation/LessonTopMenu';
 import SideMenu from '../Lesson/Navigation/SideMenu';
 import VideoWidget from '../Lesson/Navigation/Widgets/VideoWidget';
 import useStudentTimer from '@customHooks/timer';
+import useGraphqlMutation from '@customHooks/useGraphqlMutation';
+import {UniversalLessonStudentData, UpdatePersonLessonsDataInput} from 'API';
+import {useNotifications} from '@contexts/NotificationContext';
 
 const LessonHeaderBar = ({
   overlay,
   setOverlay,
-
+  pageStateUpdated,
   isAtEnd,
   setisAtEnd,
   createJournalData,
@@ -33,7 +36,7 @@ const LessonHeaderBar = ({
   const history = useHistory();
   const match = useRouteMatch();
 
-  // don't remove this line
+  // don't remove this line or we are screwed
   const initializeTimer = useStudentTimer();
 
   // ##################################################################### //
@@ -62,13 +65,42 @@ const LessonHeaderBar = ({
     }, 1500);
   };
 
+  const updatePersonLessonsDataMutation = useGraphqlMutation<
+    {
+      input: UpdatePersonLessonsDataInput;
+    },
+    UniversalLessonStudentData
+  >('updatePersonLessonsData');
+
+  const {setNotification} = useNotifications();
+
   const handleNotebookSave = () => {
     if (leaveAfterCompletion) {
       console.log('\x1b[33m Saving notebook... \x1b[0m');
-      createJournalData();
-      setTimeout(() => {
-        goToClassRoom();
-      }, 1500);
+      createJournalData(() => {
+        setNotification({
+          title: 'Your notebook has been saved',
+          dark: false,
+          show: true,
+          buttonText: 'See notebook',
+          buttonUrl: '/anthology'
+        });
+      });
+
+      const id =
+        lessonState.misc?.personLessonData?.data?.find(
+          (_d: any) => _d.lessonID === lessonState?.lessonData?.id
+        )?.id || '';
+
+      updatePersonLessonsDataMutation
+        .mutate({input: {id, isCompleted: true}})
+        .then(() => {
+          goToClassRoom();
+          console.log('Successfully completed ' + lessonState?.lessonData?.type);
+        })
+        .catch((err) => {
+          console.error('Error updating current lesson/survey complete status', err);
+        });
     }
   };
 
@@ -115,7 +147,12 @@ const LessonHeaderBar = ({
   // ##################################################################### //
 
   // ~~~~~~~ LEAVE VERIFICATION POPUP ~~~~~~ //
-  const [leaveModalVisible, setLeaveModalVisible] = useState<boolean>(false);
+
+  const setLeaveModalVisible = (updatedState: boolean) => {
+    lessonDispatch({type: 'SET_LEAVE_MODAL_VISIBLE_STATE', payload: updatedState});
+  };
+
+  const leaveModalVisible = Boolean(lessonState?.misc?.leaveModalVisible);
 
   // ~~ VIDEOLINK WHICH IS SHOWN TO USERS ~~ //
   const [videoLink, setVideoLink] = useState<string>('');
@@ -123,13 +160,14 @@ const LessonHeaderBar = ({
 
   // ~~~~ HANDLE USER LEAVING THE LESSON ~~~ //
   const handleLeavePopup = (isLeavingAfterCompletion: boolean = true) => {
-    console.log('working');
     if (videoLinkModalVisible) {
       setVideoLinkModalVisible(false);
     }
 
-    setLeaveModalVisible(!leaveModalVisible);
-    // setLeaveAfterCompletion(isLeavingAfterCompletion);
+    // setLeaveModalVisible(!leaveModalVisible);
+    setLeaveAfterCompletion(isLeavingAfterCompletion);
+
+    goToClassRoom();
   };
 
   // ~~~~ POPUP IF A VIDEO IS AVAILABLE ~~~~ //
@@ -311,7 +349,7 @@ const LessonHeaderBar = ({
       {/* LEAVE POPUP */}
       <div className={`${leaveModalVisible ? 'absolute z-100' : 'hidden'}`}>
         <PositiveAlert
-          closeAction={handleLeavePopup}
+          closeAction={() => setLeaveModalVisible(false)}
           alert={leaveModalVisible}
           setAlert={setLeaveModalVisible}
           button1Color={
@@ -360,6 +398,7 @@ const LessonHeaderBar = ({
 
       <LessonTopMenu
         overlay={overlay}
+        pageStateUpdated={pageStateUpdated}
         setOverlay={setOverlay}
         handlePopup={handleLeavePopup}
         isAtEnd={isAtEnd}

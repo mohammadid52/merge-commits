@@ -35,6 +35,7 @@ const ProgressBar = ({
 }: IProgressBarProps) => {
   const gContext = useContext(GlobalContext);
   const lessonState = gContext.lessonState;
+  const lessonDispatch = gContext.lessonDispatch;
   const user = gContext.state.user;
 
   const getRoomData = getLocalStorageData('room_info');
@@ -149,16 +150,6 @@ const ProgressBar = ({
       reset();
     }
   }, [isClosed, isClosedLocalStorage]);
-
-  const lessonProgress = lessonState?.lessonProgress;
-
-  // useEffect(() => {
-  //   const element = $('#lesson-progress-bar');
-  //   if (element) {
-  //   }
-
-  //   return () => {};
-  // }, [lessonProgress]);
 
   return (
     <nav
