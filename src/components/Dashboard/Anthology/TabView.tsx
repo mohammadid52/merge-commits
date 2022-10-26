@@ -118,16 +118,25 @@ const TabView = ({
       : [];
 
   const filteredClassContent = filter(allExerciseData, ['roomID', sectionRoomID]);
+  const removeDuplicates = (arr: any) => {
+    let result: any[] = [];
+    arr.forEach((item: any) => {
+      if (!result.find((i: any) => i.id === item.id)) {
+        result.push(item);
+      }
+    });
+    return result;
+  };
 
   const pickClassContent = () => {
     if (mainSection === 'Class' && sectionRoomID !== '') {
       if (subSection == 'Work') {
-        return filteredClassContent;
+        return removeDuplicates(filteredClassContent);
       } else {
-        return filteredJournalContent;
+        return removeDuplicates(filteredJournalContent);
       }
     } else if (mainSection === 'Private') {
-      return filteredJournalContent;
+      return removeDuplicates(filteredJournalContent);
     } else {
       return [];
     }

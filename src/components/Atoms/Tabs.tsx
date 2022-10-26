@@ -108,8 +108,10 @@ const DropDownMenu = ({index, menu, onClick}: any) => {
 
 const Tabs = ({tabsData, updateTab, currentTab}: ITabsProps) => {
   const {theme} = useContext(GlobalContext);
+  const isGameChangers = window.location.href.includes('game-changers');
+
   return (
-    <div className="w-full bg-white rounded-lg p-2">
+    <div className={`w-full ${isGameChangers ? 'bg-black' : 'bg-white'} rounded-lg p-2`}>
       <div className="sm:hidden">
         <label htmlFor="tabs" className="sr-only">
           Select a tab
@@ -144,7 +146,9 @@ const Tabs = ({tabsData, updateTab, currentTab}: ITabsProps) => {
                 }}
                 className={`${
                   menu.active ? 'bg-indigo-300 text-indigo-700' : ''
-                }  hover:bg-gray-400 hover:text-gray-700 inline-flex justify-center w-full px-1 xl:px-2 2xl:px-4 py-2 text-xs 2xl:text-base font-medium ${
+                }  hover:bg-gray-400 ${
+                  !isGameChangers ? 'hover:text-gray-700' : 'hover-text-white'
+                }  inline-flex justify-center w-full px-1 xl:px-2 2xl:px-4 py-2 text-xs 2xl:text-base font-medium ${
                   theme === 'iconoclastIndigo' ? 'iconoclastIndigo' : 'curateBlue'
                 } rounded-md bg-opacity-20 hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 transition duration-150 ease-in-out transform hover:scale-105 text-gray-700 font-bold`}>
                 {menu.title}

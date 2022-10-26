@@ -75,7 +75,7 @@ const LessonHeaderBar = ({
   const {setNotification} = useNotifications();
 
   const handleNotebookSave = () => {
-    if (leaveAfterCompletion) {
+    if (lessonState.lessonData.type === 'lesson') {
       console.log('\x1b[33m Saving notebook... \x1b[0m');
       createJournalData(() => {
         setNotification({
@@ -86,22 +86,21 @@ const LessonHeaderBar = ({
           buttonUrl: '/anthology'
         });
       });
-
-      const id =
-        lessonState.misc?.personLessonData?.data?.find(
-          (_d: any) => _d.lessonID === lessonState?.lessonData?.id
-        )?.id || '';
-
-      updatePersonLessonsDataMutation
-        .mutate({input: {id, isCompleted: true}})
-        .then(() => {
-          goToClassRoom();
-          console.log('Successfully completed ' + lessonState?.lessonData?.type);
-        })
-        .catch((err) => {
-          console.error('Error updating current lesson/survey complete status', err);
-        });
     }
+    const id =
+      lessonState.misc?.personLessonData?.data?.find(
+        (_d: any) => _d.lessonID === lessonState?.lessonData?.id
+      )?.id || '';
+
+    updatePersonLessonsDataMutation
+      .mutate({input: {id, isCompleted: true}})
+      .then(() => {
+        goToClassRoom();
+        console.log('Successfully completed ' + lessonState?.lessonData?.type);
+      })
+      .catch((err) => {
+        console.error('Error updating current lesson/survey complete status', err);
+      });
   };
 
   let timer: any;
@@ -109,6 +108,7 @@ const LessonHeaderBar = ({
     timer = setTimeout(() => {
       getLessonCompletedValue &&
         getLessonCompletedValue().then((value: any) => {
+          console.log(value);
           if (value?.lessonProgress === value?.totalPages) {
             setLeaveAfterCompletion(true);
           } else {
@@ -361,7 +361,7 @@ const LessonHeaderBar = ({
               : 'This will take you out of the lesson.  Did you want to continue?'
           }
           button1={`${
-            !waiting && leaveAfterCompletion
+            !waiting && leaveAfterCompletion && lessonState.lessonData.type === 'lesson'
               ? 'Mark lesson as complete and move your work to your notebook'
               : !waiting
               ? 'Go to the dashboard'

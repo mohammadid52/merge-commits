@@ -94,7 +94,7 @@ const BottomBar = (props: LessonCardProps) => {
         )}
 
         {/* START */}
-        <div className="w-3.3/10 hidden sm:block">
+        <div className="w-4/10 hidden sm:block">
           <Start {...startButtonProps} />
         </div>
       </div>

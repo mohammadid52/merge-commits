@@ -51,12 +51,12 @@ const GameChangers = () => {
     $('#top-menu').show();
   };
 
-  useEffect(() => {
-    turnOnImmersiveMode();
-    return () => {
-      turnOffImmersiveMode();
-    };
-  }, []);
+  // useEffect(() => {
+  //   turnOnImmersiveMode();
+  //   return () => {
+  //     turnOffImmersiveMode();
+  //   };
+  // }, []);
 
   return (
     <div className="bg-black h-screen w-screen overflow-y-auto">

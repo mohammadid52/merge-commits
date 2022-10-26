@@ -21,6 +21,7 @@ import Foot from './Foot/Foot';
 import LessonPageLoader from './LessonPageLoader';
 import StudentNavigationForMobile from './StudentNavigationForMobile/StudentNavigationForMobile';
 import CoreUniversalLesson from './UniversalLesson/views/CoreUniversalLesson';
+import useLessonFunctions from './useLessonFunctions';
 
 const SurveyApp = ({getSyllabusLesson}: any) => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
@@ -594,6 +595,8 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
   }, [lessonState.currentPage]);
 
   const [listPersonLessonsData, setListPersonLessonsData] = useState([]);
+  const getPersonLessonsDataId = (): string =>
+    listPersonLessonsData?.find((_d: any) => _d.lessonID === lessonID)?.id || '';
 
   const handleSurveyMutateData = async () => {
     try {
@@ -684,6 +687,17 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
   // ~~~~~~~~~~~ RESPONSIVE CHECK ~~~~~~~~~~ //
   const {breakpoint} = useTailwindBreakpoint();
 
+  const {getLessonCompletedValue} = useLessonFunctions();
+  const _getLessonCompletedValue = async () =>
+    await getLessonCompletedValue({
+      id: getPersonLessonsDataId(),
+      filter: {
+        lessonID: {eq: lessonID},
+        studentEmail: {eq: user.email},
+        studentAuthId: {eq: user.authId}
+      }
+    });
+
   return (
     <>
       {/* 
@@ -710,6 +724,7 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
             lessonDataLoaded={lessonDataLoaded}
             overlay={overlay}
             pageStateUpdated={pageStateUpdated}
+            getLessonCompletedValue={_getLessonCompletedValue}
             setOverlay={setOverlay}
             isAtEnd={isAtEnd}
             setisAtEnd={setisAtEnd}

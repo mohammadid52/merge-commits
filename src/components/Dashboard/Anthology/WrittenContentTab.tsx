@@ -93,7 +93,11 @@ const WrittenContentTab = (props: ITabViewProps) => {
             )}
           <div className="border-gray-200">
             <h4 className={`mb-2 w-auto font-medium ${theme.lessonCard.title}`}>
-              {organized.header?.input ? organized.header.input : `No title`}
+              {organized.header?.input
+                ? organized.header.input === '[]'
+                  ? 'No title...'
+                  : organized.header.input
+                : `No title`}
             </h4>
             <div className={`overflow-ellipsis overflow-hidden ellipsis`}>
               {notesExist ? (
@@ -113,7 +117,9 @@ const WrittenContentTab = (props: ITabViewProps) => {
                   className="font-normal"
                   dangerouslySetInnerHTML={{
                     __html: organized.content?.input
-                      ? organized.content.input
+                      ? organized.content.input === '[]'
+                        ? 'No content...'
+                        : organized.content.input
                       : 'No content...'
                   }}
                 />
