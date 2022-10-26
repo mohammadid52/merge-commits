@@ -383,8 +383,8 @@ const LessonControl = () => {
     const isCompleted = checkIfLessonIsCompleted(getRoomData, lessonID);
     if (!isCompleted || !isTeacher) {
       if (lessonState.lessonData) {
-        lessonDispatch({type: 'SET_CURRENT_PAGE', payload: 0});
-        history.push(`${match.url}/${0}`);
+        // lessonDispatch({type: 'SET_CURRENT_PAGE', payload: 0});
+        // history.push(`${match.url}/${0}`);
 
         const getRoomData = getLocalStorageData('room_info');
         setLocalStorageData('room_info', {...getRoomData, studentViewing: ''});

@@ -14,7 +14,8 @@ const LessonTopMenu = ({
   handleRequiredNotification,
   pages,
   canContinue,
-  handleForward
+  handleForward,
+  pageStateUpdated
 }: LessonHeaderBarProps) => {
   const gContext = useGlobalContext();
   const lessonState = gContext.lessonState;
@@ -72,14 +73,16 @@ const LessonTopMenu = ({
 
             {/* PROGRESS BAR */}
 
-            <ProgressBar
-              handleHome={() => handlePopup(false)}
-              handleRequiredNotification={handleRequiredNotification}
-              pages={pages}
-              currentPage={lessonState?.currentPage}
-              studentData={lessonState?.studentData}
-              requiredInputs={lessonState?.requiredInputs}
-            />
+            {pageStateUpdated && (
+              <ProgressBar
+                handleHome={() => handlePopup(false)}
+                handleRequiredNotification={handleRequiredNotification}
+                pages={pages}
+                currentPage={lessonState?.currentPage}
+                studentData={lessonState?.studentData}
+                requiredInputs={lessonState?.requiredInputs}
+              />
+            )}
 
             {/* FORWARD BUTTON */}
 

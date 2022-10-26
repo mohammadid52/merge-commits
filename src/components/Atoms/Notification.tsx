@@ -8,7 +8,7 @@ import AnimatedContainer from 'components/Lesson/UniversalLessonBuilder/UI/UICom
 export default function Notification() {
   const {notification, clearNotification} = useNotifications();
 
-  const {show, title, buttonUrl, buttonText, dark = true} = notification;
+  const {title, show, buttonUrl, buttonText, dark = true} = notification;
 
   useEffect(() => {
     if (show) {
