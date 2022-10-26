@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-import {loginConfig, urlConfig} from '../config';
+import {loginConfig, urlConfig} from '../../config';
 
 const instituteId = 'f3aef681-6fff-4795-8fde-67cb159bd275';
 const lessonId = '4e970227-3c10-4653-9cf5-e5278861914e';

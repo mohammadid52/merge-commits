@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-import {ids, loginConfig, urlConfig} from '../config';
+import {ids, loginConfig, urlConfig} from '../../config';
 
 const surveyConfig = {
   domIds: [

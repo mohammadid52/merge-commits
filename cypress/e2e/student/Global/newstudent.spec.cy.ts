@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-import {loginConfig, urlConfig} from '../config';
+import {loginConfig, urlConfig} from '../../config';
 
 const userName = 'cypressselfpaced';
 const userId = 'fe25529f-9ad7-4371-b43e-8cc1bb4c39bf';

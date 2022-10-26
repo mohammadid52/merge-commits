@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-import {loginConfig, urlConfig} from '../config';
+import {loginConfig, urlConfig} from '../../config';
 
 const filePath = 'cypress/fixtures/images/avatar1.png';
 

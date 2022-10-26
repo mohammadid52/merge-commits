@@ -1,7 +1,7 @@
 /// <reference types="cypress" />
 
-import {getClientKey, getDictionary} from '../../support/e2e';
-import {loginConfig, urlConfig} from '../config';
+import {getClientKey, getDictionary} from '../../../support/e2e';
+import {loginConfig, urlConfig} from '../../config';
 
 const userLanguage = 'EN';
 // @ts-ignore

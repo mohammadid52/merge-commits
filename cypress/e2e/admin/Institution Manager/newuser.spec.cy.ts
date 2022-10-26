@@ -1,8 +1,8 @@
 // This test is to ensure that all required fields are on the registration form and the cognito connection is active.
 
-import {loginConfig, urlConfig} from '../config';
+import {loginConfig, urlConfig} from '../../config';
 // import {RegistrationDict} from '../../../src/dictionary/dictionary.demo';
-import {getClientKey, getDictionary} from '../../support/e2e';
+import {getClientKey, getDictionary} from '../../../support/e2e';
 
 const uniqueId = Date.now().toString();
 // @ts-ignore

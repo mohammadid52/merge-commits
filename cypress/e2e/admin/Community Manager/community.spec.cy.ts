@@ -1,7 +1,7 @@
 /// <reference types="cypress" />
 
-import {loginConfig, urlConfig} from '../config';
-import {communityTypes} from '../../../src/components/Community/constants.community';
+import {loginConfig, urlConfig} from '../../config';
+import {communityTypes} from '../../../../src/components/Community/constants.community';
 
 const communityUrl = 'http://localhost:8085/dashboard/community/front';
 const demoYoutubeLink = 'https://www.youtube.com/watch?v=MiebCHmiszs';
