@@ -30,10 +30,10 @@ const ProgressBar = ({lessonProps, user}: ProgressBarProps) => {
     {
       lessonType: lesson.type,
       filter: {
-        lessonID: {eq: lesson.id},
-        studentAuthID: {eq: user.authId},
-        studentEmail: {eq: user.email},
-        roomId: {eq: getRoomData.id}
+        lessonID: {eq: lesson?.id},
+        studentAuthID: {eq: user?.authId},
+        studentEmail: {eq: user?.email},
+        roomId: {eq: getRoomData?.id}
       }
     },
     {enabled: shouldShowProgress && !progressLoaded}
@@ -69,7 +69,7 @@ const ProgressBar = ({lessonProps, user}: ProgressBarProps) => {
       };
     } catch (error) {
       console.error(
-        `lessondID:${lesson.id} error @getLessonByType Classroom.tsx `,
+        `lessondID:${lesson?.id} error @getLessonByType Classroom.tsx `,
         error
       );
     }

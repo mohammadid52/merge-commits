@@ -36,7 +36,11 @@ const StandardLessonCard = (props: LessonCardProps) => {
 
   const checkValueOrNull = async () => {
     try {
-      const value = await getLessonRating(lessonProps.lesson.id, user.email, user.authId);
+      const value = await getLessonRating(
+        lessonProps.lesson.id,
+        user?.email,
+        user?.authId
+      );
       if (typeof value === 'undefined') setexistsOrNot(true);
 
       if (value) {
