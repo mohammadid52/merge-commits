@@ -4836,6 +4836,7 @@ export const getUniversalJournalData = /* GraphQL */ `
       studentAuthID
       studentEmail
       type
+      lessonName
       entryData {
         domID
         type
@@ -4873,6 +4874,7 @@ export const listUniversalJournalData = /* GraphQL */ `
         studentAuthID
         studentEmail
         type
+        lessonName
         entryData {
           domID
           type

@@ -1,4 +1,4 @@
-import React, {useEffect, useReducer, useState} from 'react';
+import React, {useEffect, useReducer, useRef, useState} from 'react';
 import {useHistory, useParams} from 'react-router-dom';
 import * as customQueries from 'customGraphql/customQueries';
 import * as customSubscriptions from 'customGraphql/customSubscriptions';
@@ -28,7 +28,7 @@ export const LessonContextProvider: React.FC = ({children}: LessonProps) => {
   const [state, dispatch] = useReducer(lessonReducerOLD, lessonStateOLD);
   const theme = standardTheme;
   // const location = useLocation();
-  const history = useHistory();
+
   const urlParams: any = useParams();
 
   // Subscription for teacher/syllabusLesson changes
@@ -254,6 +254,8 @@ export const LessonContextProvider: React.FC = ({children}: LessonProps) => {
     });
   };
 
+  const saveJournalData = useRef();
+
   useEffect(() => {
     if (subscriptionData) {
       updateOnIncomingSubscriptionData(subscriptionData);
@@ -272,6 +274,7 @@ export const LessonContextProvider: React.FC = ({children}: LessonProps) => {
         pageList,
         theme,
         lesson,
+        saveJournalData,
         setLesson,
         subscription,
         subscribeToSyllabusLesson,
@@ -283,3 +286,4 @@ export const LessonContextProvider: React.FC = ({children}: LessonProps) => {
     </LessonContext.Provider>
   );
 };
+export const useLessonContext = () => React.useContext(LessonContext);

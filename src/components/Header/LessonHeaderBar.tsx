@@ -15,6 +15,7 @@ import useStudentTimer from '@customHooks/timer';
 import useGraphqlMutation from '@customHooks/useGraphqlMutation';
 import {UniversalLessonStudentData, UpdatePersonLessonsDataInput} from 'API';
 import {useNotifications} from '@contexts/NotificationContext';
+import {useLessonContext} from '@contexts/LessonContext';
 
 const LessonHeaderBar = ({
   overlay,
@@ -29,6 +30,7 @@ const LessonHeaderBar = ({
   // ~~~~~~~~~~ CONTEXT SPLITTING ~~~~~~~~~~ //
   const gContext = useGlobalContext();
   const user = gContext.state.user;
+  const saveJournalData = gContext.saveJournalData;
   const lessonState = gContext.lessonState;
   const lessonDispatch = gContext.lessonDispatch;
   const theme = gContext.theme;
@@ -86,6 +88,11 @@ const LessonHeaderBar = ({
           buttonUrl: '/anthology'
         });
       });
+      console.log(saveJournalData);
+
+      if (saveJournalData?.current) {
+        saveJournalData?.current();
+      }
     }
     const id =
       lessonState.misc?.personLessonData?.data?.find(

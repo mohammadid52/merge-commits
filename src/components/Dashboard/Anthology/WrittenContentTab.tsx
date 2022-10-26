@@ -51,6 +51,10 @@ const WrittenContentTab = (props: ITabViewProps) => {
   // ##################################################################### //
   const viewModeView = (contentObj: UniversalJournalData) => {
     const notesExist = contentObj?.entryData[0]?.domID.includes('notes_form');
+    console.log(
+      '🚀 ~ file: WrittenContentTab.tsx ~ line 54 ~ viewModeView ~ notesExist',
+      notesExist
+    );
     const filtered = filter(
       contentObj?.entryData,
       (ed) => ed && ed.type.includes('content')
@@ -101,15 +105,20 @@ const WrittenContentTab = (props: ITabViewProps) => {
             </h4>
             <div className={`overflow-ellipsis overflow-hidden ellipsis`}>
               {notesExist ? (
-                <div className="space-y-4">
-                  {map(filtered, (note) => (
-                    <div
-                      key={note.domID}
-                      className="font-normal "
-                      dangerouslySetInnerHTML={{
-                        __html: note?.input ? note.input : 'No content...'
-                      }}
-                    />
+                <div className="">
+                  {map(filtered, (note, idx) => (
+                    <div className="mb-4">
+                      {idx !== 0 && (
+                        <div className="my-4 border-b-0 border-gray-300 border-dashed" />
+                      )}
+                      <div
+                        key={note.domID}
+                        className="font-normal "
+                        dangerouslySetInnerHTML={{
+                          __html: note?.input ? note.input : 'No content...'
+                        }}
+                      />
+                    </div>
                   ))}
                 </div>
               ) : contentObj ? (

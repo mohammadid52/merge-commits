@@ -9891,6 +9891,7 @@ export const createUniversalJournalData = /* GraphQL */ `
       studentAuthID
       studentEmail
       type
+      lessonName
       entryData {
         domID
         type
@@ -9918,6 +9919,7 @@ export const updateUniversalJournalData = /* GraphQL */ `
       studentAuthID
       studentEmail
       type
+      lessonName
       entryData {
         domID
         type
@@ -9945,6 +9947,7 @@ export const deleteUniversalJournalData = /* GraphQL */ `
       studentAuthID
       studentEmail
       type
+      lessonName
       entryData {
         domID
         type
