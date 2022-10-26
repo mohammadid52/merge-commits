@@ -95,7 +95,8 @@ const LessonHeaderBar = ({
     updatePersonLessonsDataMutation
       .mutate({input: {id, isCompleted: true}})
       .then(() => {
-        goToClassRoom();
+        // goToClassRoom();
+        history.push(`/dashboard/anthology?roomId=${getRoomData.id}`);
         console.log('Successfully completed ' + lessonState?.lessonData?.type);
       })
       .catch((err) => {
@@ -108,7 +109,6 @@ const LessonHeaderBar = ({
     timer = setTimeout(() => {
       getLessonCompletedValue &&
         getLessonCompletedValue().then((value: any) => {
-          console.log(value);
           if (value?.lessonProgress === value?.totalPages) {
             setLeaveAfterCompletion(true);
           } else {

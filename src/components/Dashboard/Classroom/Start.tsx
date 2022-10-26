@@ -184,7 +184,7 @@ const Start: React.FC<StartProps> = ({
           setLoading(false);
         }
       } else {
-        history.push(`/dashboard/anthology/${getRoomData.id}`);
+        history.push(`/dashboard/anthology?roomId=${getRoomData.id}`);
       }
     } else if (isTeacher) {
       if (isActive) {

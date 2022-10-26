@@ -18,6 +18,7 @@ import Selector from 'atoms/Form/Selector';
 import SelectorWithAvatar from 'atoms/Form/SelectorWithAvatar';
 import PageWrapper from 'atoms/PageWrapper';
 import SectionTitle from 'atoms/SectionTitle';
+import {useQuery} from '@utilities/functions';
 
 interface RoomBuilderProps {}
 
@@ -54,9 +55,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
     isError: false
   });
   const [loading, setLoading] = useState(false);
-  const useQuery = () => {
-    return new URLSearchParams(location.search);
-  };
+
   const params = useQuery();
   const breadCrumsList = [
     {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},

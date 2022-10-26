@@ -927,7 +927,7 @@ const Dashboard = (props: DashboardProps) => {
                 )}
               />
               <Route
-                path={`${match.url}/anthology/:roomId`}
+                path={`${match.url}/anthology`}
                 render={() => (
                   <Anthology
                     studentAuthID={stateUser?.authId}

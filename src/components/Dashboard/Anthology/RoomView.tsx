@@ -1,8 +1,11 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import {useQuery} from '@customHooks/urlParam';
+
 import {useGlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
 import React, {useEffect, useState} from 'react';
 import {useParams} from 'react-router';
+
 import {getImageFromS3} from 'utilities/services';
 import RoomViewCard from './RoomView/RoomViewCard';
 
@@ -119,9 +122,10 @@ const RoomView = ({
       onSuccess(output);
     });
   };
-  const urlParams: any = useParams();
+  const params = useQuery(location.search);
 
-  const {roomId = ''} = urlParams;
+  const roomId = params.get('roomId');
+
   useEffect(() => {
     if (loaded && filteredRooms.length > 0) {
       mapNotebookRoomCards((output: any[]) => {
