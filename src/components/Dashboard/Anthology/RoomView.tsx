@@ -1,8 +1,11 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import CopyCloneSlideOver from 'components/Lesson/UniversalLessonBuilder/UI/SlideOvers/CopyCloneSlideOver';
+import {useQuery} from '@customHooks/urlParam';
+
 import {useGlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
 import React, {useEffect, useState} from 'react';
+import {useParams} from 'react-router';
+
 import {getImageFromS3} from 'utilities/services';
 import RoomViewCard from './RoomView/RoomViewCard';
 
@@ -103,7 +106,7 @@ const RoomView = ({
 
   const [mappedNotebookRoomCards, setMappedNotebookRoomCards] = useState<any[]>([]);
 
-  const mapNotebookRoomCards = () => {
+  const mapNotebookRoomCards = (onSuccess?: (output?: any[]) => void) => {
     const mapped = filteredRooms.map(async (item, idx: number) => {
       const {curricula} = item;
       const bannerImage = await (curricula?.items[0]?.image
@@ -114,12 +117,24 @@ const RoomView = ({
       return {...item, bannerImage, curriculumName};
     });
 
-    Promise.all(mapped).then((output: any) => setMappedNotebookRoomCards(output));
+    Promise.all(mapped).then((output: any) => {
+      setMappedNotebookRoomCards(output);
+      onSuccess(output);
+    });
   };
+  const params = useQuery(location.search);
+
+  const roomId = params.get('roomId');
 
   useEffect(() => {
     if (loaded && filteredRooms.length > 0) {
-      mapNotebookRoomCards();
+      mapNotebookRoomCards((output: any[]) => {
+        if (roomId && loaded && output.length > 0) {
+          const roomObj = output.find((room: any) => room.id === roomId);
+
+          roomObj && handleSectionSelect('Class Notebook', roomObj.id, roomObj.name);
+        }
+      });
     }
   }, [filteredRooms, loaded]);
 

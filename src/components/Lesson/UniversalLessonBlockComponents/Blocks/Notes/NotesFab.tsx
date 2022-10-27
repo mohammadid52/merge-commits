@@ -2,7 +2,7 @@ import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {Auth} from '@aws-amplify/auth';
 import Loader from 'atoms/Loader';
 import NotesBlock from 'components/Lesson/UniversalLessonBlockComponents/Blocks/Notes/NotesBlock';
-import {GlobalContext} from 'contexts/GlobalContext';
+import {GlobalContext, useGlobalContext} from 'contexts/GlobalContext';
 import * as mutations from 'graphql/mutations';
 import * as queries from 'graphql/queries';
 import {UniversalJournalData} from 'interfaces/UniversalLessonInterfaces';
@@ -54,8 +54,10 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
     return res;
   };
 
-  const gContext = useContext(GlobalContext);
+  const gContext = useGlobalContext();
+
   const lessonState = gContext.lessonState;
+  const saveJournalData = gContext.saveJournalData;
 
   const allNotes = mapNotesTogether();
 
@@ -204,6 +206,7 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
         studentEmail: _notesData.studentEmail,
         entryData: _notesData.entryData,
         roomID: getRoomData.id,
+        lessonName: lessonState?.lessonData?.title || '',
         syllabusLessonID: getRoomData.activeSyllabus
       };
 
@@ -225,6 +228,10 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
         cb2();
       }
     }
+  };
+
+  saveJournalData.current = () => {
+    saveData(notesData);
   };
 
   const updateNotesJournalChange = async (newNotesArr: any[], notesData?: any) => {

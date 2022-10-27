@@ -52,7 +52,20 @@ const StageIcon = ({
     }
   }, [open]);
 
+  const scrollUp = () => {
+    const domID = {
+      lesson: 'lesson-app-container',
+      survey: 'survey-app-container'
+    } as any;
+    const container = document.getElementById(domID[lessonState.lessonData.type]);
+
+    if (container) {
+      container.scrollTo({top: 0, behavior: 'smooth'});
+    }
+  };
+
   const handleLink = () => {
+    scrollUp();
     history.push(`${match.url}/${pageNr}`);
     lessonDispatch({type: 'SET_CURRENT_PAGE', payload: pageNr});
   };

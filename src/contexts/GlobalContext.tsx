@@ -1,5 +1,5 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import React, {useContext, useEffect, useReducer, useState} from 'react';
+import React, {useContext, useEffect, useReducer, useRef, useState} from 'react';
 import * as mutations from 'graphql/mutations';
 import {globalReducer} from 'reducers/GlobalReducer';
 import {lessonControlReducer} from 'reducers/LessonControlReducer';
@@ -164,7 +164,7 @@ export const GlobalContextProvider = ({children}: GlobalProps) => {
   const uLang = userLanguage;
   const clientKey = getClientKey();
 
-  const [closedLessons, setClosedLessons] = useState([]);
+  const saveJournalData = useRef();
 
   useEffect(() => {
     if (state.user && state.user.location && state.user.location.length > 0) {
@@ -201,6 +201,7 @@ export const GlobalContextProvider = ({children}: GlobalProps) => {
         dispatch,
         lessonState,
         lessonDispatch,
+        saveJournalData,
         controlState,
         controlDispatch,
         globalStateAccess,

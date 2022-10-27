@@ -19,6 +19,7 @@ interface ButtonProps {
   loading?: boolean;
   loadingText?: string;
   insideElement?: React.ReactNode;
+  title?: string;
   dataCy?: string;
 }
 
@@ -26,6 +27,7 @@ const Buttons: React.FC<ButtonProps> = (btnProps: ButtonProps) => {
   const {
     label,
     Icon,
+    title,
     iconBeforeLabel,
     transparent,
     type,
@@ -46,6 +48,7 @@ const Buttons: React.FC<ButtonProps> = (btnProps: ButtonProps) => {
   return (
     <button
       data-cy={dataCy}
+      title={title}
       disabled={disabled || loading}
       type={type ? type : 'button'}
       style={customStyles}

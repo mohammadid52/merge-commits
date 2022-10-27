@@ -768,7 +768,7 @@ type UniversalJournalData @model @auth(rules: [{allow: public}]) {
   studentAuthID: ID!
   studentEmail: String!
   type: String!
-
+  lessonName: String
   entryData: [JournalEntryData]
   feedbacks: [String]
   shared: Boolean
