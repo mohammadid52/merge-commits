@@ -51,20 +51,8 @@ const SingleRoomCard = ({
       key={`homepage__classrooms-${idx}`}
       className="flex shadow flex-col rounded-lg overflow-hidden ">
       <div className="flex-shrink-0">
-        {/* {bannerImage ? (
-          <img
-            className="cursor-pointer h-48 w-full object-cover hover:scale-105 transform transition-transform duration-500"
-            src={bannerImage}
-            alt=""
-          />
-        ) : (
-          <div
-            className={`profile justify-center items-center content-center h-48 w-full bg-gray-100 flex border-gray-400`}>
-            <IoImage className="fill-current text-gray-80" size={32} />
-          </div>
-        )} */}
-
         <img
+          loading="lazy"
           className="cursor-pointer h-48 w-full object-cover hover:scale-105 transform transition-transform duration-500"
           src={bannerImage || fallbackUrls.room}
           alt={`${roomName || ''} banner image`}

@@ -82,12 +82,13 @@ const LessonHeaderBar = ({
       createJournalData(() => {
         setNotification({
           title: 'Your notebook has been saved',
-          dark: false,
           show: true,
+          type: 'success',
           buttonText: 'See notebook',
-          buttonUrl: '/anthology'
+          buttonUrl: '/anthology?roomId=' + getRoomData.id
         });
       });
+
       console.log(saveJournalData);
 
       if (saveJournalData?.current) {

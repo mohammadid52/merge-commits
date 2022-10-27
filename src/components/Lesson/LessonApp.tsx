@@ -1068,9 +1068,12 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
     return result;
   };
 
-  const createStudentArchiveData = async () => {
+  const createStudentArchiveData = async (onSuccessCallback?: () => void) => {
     try {
       const result = await loopCreateStudentArchiveAndExcerciseData(lessonID);
+      if (onSuccessCallback && typeof onSuccessCallback === 'function') {
+        onSuccessCallback();
+      }
       return result;
     } catch (e) {
       console.error(

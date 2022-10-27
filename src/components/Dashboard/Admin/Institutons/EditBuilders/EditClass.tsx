@@ -30,6 +30,7 @@ import * as mutations from 'graphql/mutations';
 import ModalPopUp from 'molecules/ModalPopUp';
 import LocationBadge from './LocationBadge';
 import {PersonStatus} from 'API';
+import {useNotifications} from '@contexts/NotificationContext';
 
 interface EditClassProps {
   instId: string;
@@ -72,7 +73,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
   const [deleting, setDeleting] = useState(false);
   const [loading, setLoading] = useState(true);
   const [adding, setAdding] = useState(false);
-  const [unsavedChanges, setUnsavedChanges] = useState(false);
+
   const [warnModal, setWarnModal] = useState({
     show: false,
     profile: false,
@@ -323,6 +324,8 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
     setFilteredStudents([]);
   };
 
+  const {setNotification} = useNotifications();
+
   const saveClassStudent = async (id: string) => {
     try {
       setAdding(true);
@@ -365,18 +368,15 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
       );
 
       setAdding(false);
-      setAddMessage({
-        message: 'Student added successfully',
-        isError: false
+
+      setNotification({
+        title: `Student added successfully - ${newStudent.studentEmail}`,
+        show: true,
+        type: 'success'
       });
-      setTimeout(() => {
-        setAddMessage({
-          message: '',
-          isError: false
-        });
-      }, 2000);
     } catch (err) {
       console.error('saveClassStudent', err);
+      setNotification({title: `Something went wrong`, type: 'error', show: true});
       setAddMessage({
         message: dictionary.messages.errorstudentadd,
         isError: true
@@ -414,6 +414,11 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
       setClassStudents((prevStudents) => prevStudents.filter((item) => item.id !== id));
       closeDeleteModal();
       setDeleting(false);
+      setNotification({
+        title: `Student removed from classroom - ${deletedStudentData.student?.email}`,
+        type: 'success',
+        show: true
+      });
     };
     setWarnModal2({
       show: true,

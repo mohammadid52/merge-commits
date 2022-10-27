@@ -7,6 +7,9 @@ type INotification = {
   title: string;
   buttonText?: string;
   buttonUrl?: string;
+  timeout?: number;
+
+  type?: 'success' | 'error' | 'info';
 };
 
 const NotificationContextProvider = ({children}: {children: React.ReactNode}) => {
@@ -15,7 +18,9 @@ const NotificationContextProvider = ({children}: {children: React.ReactNode}) =>
     title: '',
     buttonText: '',
     buttonUrl: '',
-    dark: true
+    dark: false,
+    timeout: 5000,
+    type: 'info'
   });
 
   const clearNotification = () => {
