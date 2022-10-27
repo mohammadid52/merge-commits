@@ -2,6 +2,13 @@
   width: 47%;
 }
 
+.green-btn {
+  background-color: rgba(72, 187, 120) !important;
+  &:hover {
+    background-color: rgba(56, 161, 105) !important;
+  }
+}
+
 // .first {
 //     p::first-letter {
 //         color: red;

@@ -233,7 +233,7 @@ const TabView = ({
   return (
     <>
       {subSection !== 'none' && (
-        <>
+        <div className="w-auto" id="anthology_tabs">
           <div
             className={`w-full h-14 leading-6 text-gray-900 flex flex-row justify-between items-center`}>
             <div
@@ -274,7 +274,7 @@ const TabView = ({
               handleTabSelect={handleTabSelect}
             />
           </div>
-        </>
+        </div>
       )}
     </>
   );

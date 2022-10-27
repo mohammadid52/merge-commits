@@ -1,4 +1,5 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import {useQuery} from '@customHooks/urlParam';
 import {
   UniversalLessonWritingExcercises,
   UpdateUniversalLessonWritingExcercisesInput
@@ -859,7 +860,15 @@ const Anthology = ({
       setPasscodeInput('');
       setAccessMessage({message: '', textClass: ''});
     }
+
+    const el = document.getElementById('anthology_tabs');
+    if (el) {
+      el.scrollIntoView({behavior: 'smooth', block: 'start'});
+    }
   };
+  const params = useQuery(location.search);
+
+  const roomId = params.get('roomId');
 
   return (
     <React.Fragment>
@@ -938,6 +947,17 @@ const Anthology = ({
                   : studentName + "'s " + anthologyDict[userLanguage]['TITLE']
               }
               fontSize="xl"
+              withButton={
+                roomId ? (
+                  <div className="flex items-end justify-end">
+                    <a
+                      className="w-auto hover:underline iconoclast:text-main curate:text-main"
+                      href={`/dashboard/classroom/${roomId}`}>
+                      Go back to classroom
+                    </a>
+                  </div>
+                ) : null
+              }
               fontStyle="semibold"
               extraContainerClass="px-6"
               borderBottom

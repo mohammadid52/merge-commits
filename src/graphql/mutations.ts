@@ -1528,7 +1528,6 @@ export const updateRoom = /* GraphQL */ `
         institutionID
         type
         name
-
         institution {
           id
           name

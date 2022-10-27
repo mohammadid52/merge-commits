@@ -439,14 +439,17 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
     }
   }, []);
 
+  const courseName = state?.roomData?.curriculum?.name || '';
+
   return (
     <>
       <DashboardContainer
         user={stateUser}
         theme={theme}
+        courseName={courseName}
         clientKey={clientKey}
         bannerImg={bannerImg}
-        bannerTitle={classRoomDict[userLanguage]['TITLE']}>
+        bannerTitle={`${classRoomDict[userLanguage]['TITLE']}`}>
         <div className="px-5 2xl:px-0 lg:mx-auto lg:max-w-192 md:max-w-none 2xl:max-w-256">
           <div className="flex flex-row my-0 w-full py-0 mb-4 justify-between items-center">
             <BreadCrums items={breadCrumsList} />
