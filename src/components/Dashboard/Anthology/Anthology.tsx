@@ -1,5 +1,6 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {useQuery} from '@customHooks/urlParam';
+import useAuth from '@customHooks/useAuth';
 import {
   UniversalLessonWritingExcercises,
   UpdateUniversalLessonWritingExcercisesInput
@@ -224,47 +225,47 @@ const Anthology = ({
     }
   };
 
-  const updateStudentDataForClassWork = async () => {
-    const selectStudentDataRecord = allUniversalClassData.find(
-      (record: any) => record.id === journalEntryData.recordID
-    );
+  // const updateStudentDataForClassWork = async () => {
+  //   const selectStudentDataRecord = allUniversalClassData.find(
+  //     (record: any) => record.id === journalEntryData.recordID
+  //   );
 
-    if (!isEmpty(selectStudentDataRecord)) {
-      const newExerciseData = {
-        exerciseData: selectStudentDataRecord.exerciseData.map((exercise: any) => {
-          if (exercise.id === journalEntryData.id) {
-            return {...exercise, entryData: journalEntryData.entryData};
-          } else {
-            return exercise;
-          }
-        })
-      };
+  //   if (!isEmpty(selectStudentDataRecord)) {
+  //     const newExerciseData = {
+  //       exerciseData: selectStudentDataRecord.exerciseData.map((exercise: any) => {
+  //         if (exercise.id === journalEntryData.id) {
+  //           return {...exercise, entryData: journalEntryData.entryData};
+  //         } else {
+  //           return exercise;
+  //         }
+  //       })
+  //     };
 
-      const mergedStudentData = allUniversalClassData.map((dataRecord: any) => {
-        if (dataRecord.id === selectStudentDataRecord.id) {
-          return {...dataRecord, exerciseData: newExerciseData.exerciseData};
-        } else {
-          return dataRecord;
-        }
-      });
+  //     const mergedStudentData = allUniversalClassData.map((dataRecord: any) => {
+  //       if (dataRecord.id === selectStudentDataRecord.id) {
+  //         return {...dataRecord, exerciseData: newExerciseData.exerciseData};
+  //       } else {
+  //         return dataRecord;
+  //       }
+  //     });
 
-      try {
-        let updatedStudentData: any = await API.graphql(
-          graphqlOperation(mutations.updateUniversalLessonStudentData, {
-            input: {
-              id: selectStudentDataRecord.id,
-              exerciseData: newExerciseData.exerciseData
-            }
-          })
-        );
-        setAllUniversalClassData(mergedStudentData);
-      } catch (e) {
-        console.error('error updating writing exercise - ', e);
-      } finally {
-        //
-      }
-    }
-  };
+  //     try {
+  //       let updatedStudentData: any = await API.graphql(
+  //         graphqlOperation(mutations.updateUniversalLessonStudentData, {
+  //           input: {
+  //             id: selectStudentDataRecord.id,
+  //             exerciseData: newExerciseData.exerciseData
+  //           }
+  //         })
+  //       );
+  //       setAllUniversalClassData(mergedStudentData);
+  //     } catch (e) {
+  //       console.error('error updating writing exercise - ', e);
+  //     } finally {
+  //       //
+  //     }
+  //   }
+  // };
 
   // ##################################################################### //
   // ##################### CRUD JOURNAL & CLASS NOTES #################### //
@@ -666,13 +667,15 @@ const Anthology = ({
     }
   }, [allUniversalClassData, sectionRoomID]);
 
+  const {isStudent} = useAuth();
+  const dynamicAuthID = isStudent ? state.user.authId : studentAuthID;
   const getUniversalArchiveData = async () => {
     try {
       const archiveData: any = await API.graphql(
         graphqlOperation(queries.listUniversalArchiveData, {
           filter: {
             studentID: {
-              eq: state.user.authId
+              eq: dynamicAuthID
             }
           }
         })
@@ -692,7 +695,7 @@ const Anthology = ({
         graphqlOperation(customQueries.listUniversalLessonWritingExcercises, {
           filter: {
             studentID: {
-              eq: state.user.authId
+              eq: dynamicAuthID
             }
           }
         })
@@ -839,31 +842,36 @@ const Anthology = ({
     roomIdString: string,
     roomName?: string
   ) => {
-    if (section === 'Class Notebook') {
-      setMainSection('Class');
-      setSectionRoomID(roomIdString);
-      setSectionTitle(roomName);
-      setSubSection('Work');
-      setTab(0);
-      setShowPasscodeEntry(false);
-      setPasscodeInput('');
-      setAccessMessage('');
-    } else if (section === 'Private Notebook' && !isTeacher) {
-      setShowPasscodeEntry(true);
-    } else if (section === 'Private Notebook' && isTeacher) {
-      setMainSection('Private');
-      setSectionRoomID('private');
-      setSectionTitle(`Private Notebook`);
-      setSubSection('Journal');
-      setTab(0);
-      setShowPasscodeEntry(false);
-      setPasscodeInput('');
-      setAccessMessage({message: '', textClass: ''});
-    }
+    if (roomIdString !== sectionRoomID) {
+      if (section === 'Class Notebook') {
+        setMainSection('Class');
+        setSectionRoomID(roomIdString);
+        setSectionTitle(roomName);
+        setSubSection('Work');
+        setTab(0);
+        setShowPasscodeEntry(false);
+        setPasscodeInput('');
+        setAccessMessage('');
+      } else if (section === 'Private Notebook' && !isTeacher) {
+        setShowPasscodeEntry(true);
+      } else if (section === 'Private Notebook' && isTeacher) {
+        setMainSection('Private');
+        setSectionRoomID('private');
+        setSectionTitle(`Private Notebook`);
+        setSubSection('Journal');
+        setTab(0);
+        setShowPasscodeEntry(false);
+        setPasscodeInput('');
+        setAccessMessage({message: '', textClass: ''});
+      }
 
-    const el = document.getElementById('anthology_tabs');
-    if (el) {
-      el.scrollIntoView({behavior: 'smooth', block: 'start'});
+      const el = document.getElementById('anthology_tabs');
+      if (el) {
+        el.scrollIntoView({behavior: 'smooth', block: 'start'});
+      }
+    } else {
+      setSectionRoomID('');
+      setSectionTitle('');
     }
   };
   const params = useQuery(location.search);

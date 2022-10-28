@@ -1,5 +1,9 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import Loader from '@components/Atoms/Loader';
+import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import {useQuery} from '@customHooks/urlParam';
+import useAuth from '@customHooks/useAuth';
+import {createFilterToFetchSpecificItemsOnly} from '@utilities/strings';
 
 import {useGlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
@@ -26,7 +30,8 @@ const RoomView = ({
   mainSection,
   sectionRoomID,
   sectionTitle,
-  handleSectionSelect
+  handleSectionSelect,
+  roomIdList
 }: IRoomViewProps) => {
   // ##################################################################### //
   // ################## GET NOTEBOOK ROOMS FROM CONTEXT ################## //
@@ -38,7 +43,7 @@ const RoomView = ({
 
   const {state} = useGlobalContext();
 
-  const getMultipleRooms = async () => {
+  const getMultipleRoomsAsAStudent = async () => {
     try {
       const responseData = state?.roomData?.rooms || [];
 
@@ -79,17 +84,75 @@ const RoomView = ({
       console.error('getMultipleRooms - ', e);
     }
   };
+  const getMultipleRoomsAsATeacher = async (idList: any[]) => {
+    try {
+      const compoundQuery = createFilterToFetchSpecificItemsOnly(idList, 'id');
+
+      const roomsList: any = await API.graphql(
+        graphqlOperation(customQueries.listRoomsNotebook, {
+          filter: {
+            ...compoundQuery
+          }
+        })
+      );
+      const responseData = roomsList.data.listRooms.items;
+
+      const curriculumMap = responseData.map(async (roomObj: any) => {
+        const curriculumFull: any = await API.graphql(
+          graphqlOperation(customQueries.getCurriculumNotebook, {
+            id: roomObj.curricula?.items[0]?.curriculumID
+          })
+        );
+        const curriculumData = curriculumFull.data.getCurriculum;
+
+        return {
+          ...roomObj,
+          curricula: {
+            ...roomObj.curricula,
+            items: [
+              {
+                ...roomObj.curricula?.items[0],
+                name: curriculumData?.name,
+                image: curriculumData?.image,
+                summary: curriculumData?.summary,
+                description: curriculumData?.description
+              }
+            ]
+          }
+        };
+      });
+      Promise.all(curriculumMap)
+        .then((responseArray: any[]) => {
+          // console.log('curriculum first - ', responseData[0].curricula.items[0]);
+          // console.log('curriculum after - ', responseArray[0].curricula.items[0]);
+          setFilteredRooms(responseArray);
+        })
+        .then((_: void) => {
+          setLoaded(true);
+        });
+    } catch (e) {
+      console.error('getMultipleRooms - ', e);
+    }
+  };
+
+  const {isStudent} = useAuth();
 
   useEffect(() => {
-    if (
-      state &&
-      state.roomData &&
-      state?.roomData?.rooms &&
-      state?.roomData?.rooms.length > 0
-    ) {
-      getMultipleRooms();
+    if (isStudent) {
+      if (
+        state &&
+        state.roomData &&
+        state?.roomData?.rooms &&
+        state?.roomData?.rooms.length > 0
+      ) {
+        getMultipleRoomsAsAStudent();
+      }
+    } else {
+      if (roomIdList.length > 0) {
+        getMultipleRoomsAsATeacher(roomIdList);
+      }
     }
-  }, [state?.roomData?.rooms]);
+  }, [state?.roomData?.rooms, roomIdList, isStudent]);
 
   const getImageURL = async (uniqKey: string) => {
     const imageUrl: any = await getImageFromS3(uniqKey);
@@ -142,38 +205,45 @@ const RoomView = ({
     <>
       <div className="relative pb-4 overflow-hidden bg-white rounded-b-lg shadow mb-4">
         <div className="relative mx-auto">
-          <div
-            // #ts-ignores
-            style={{
-              transition: 'width 2s',
-              transitionTimingFunction: 'cubic-bezier(0.1, 0.7, 1, 0.1)'
-            }}
-            className="mt-0 max-w-lg mx-auto p-6 grid gap-4 lg:max-w-none md:grid-cols-4 grid-cols-1 2xl:grid-cols-5 sm:grid-cols-2">
-            {mappedNotebookRoomCards && mappedNotebookRoomCards.length > 0
-              ? mappedNotebookRoomCards.map((room, idx) => (
-                  <RoomViewCard
-                    key={`notebook-${idx}`}
-                    roomID={room.id}
-                    roomName={room.name}
-                    mainSection={mainSection}
-                    sectionRoomID={sectionRoomID}
-                    curriculumName={room.curriculumName}
-                    handleSectionSelect={handleSectionSelect}
-                    bannerImage={room.bannerImage}
-                    type={`Class Notebook`}
-                  />
-                ))
-              : null}
+          {!loaded && (
+            <div className="my-4">
+              <Loader color="rgba(160, 174, 192, 1)" />
+            </div>
+          )}
+          {loaded && (
+            <div
+              // #ts-ignores
+              style={{
+                transition: 'width 2s',
+                transitionTimingFunction: 'cubic-bezier(0.1, 0.7, 1, 0.1)'
+              }}
+              className="mt-0 max-w-lg mx-auto p-6 grid gap-4 lg:max-w-none md:grid-cols-4 grid-cols-1 2xl:grid-cols-5 sm:grid-cols-2">
+              {mappedNotebookRoomCards && mappedNotebookRoomCards.length > 0
+                ? mappedNotebookRoomCards.map((room, idx) => (
+                    <RoomViewCard
+                      key={`notebook-${idx}`}
+                      roomID={room.id}
+                      roomName={room.name}
+                      mainSection={mainSection}
+                      sectionRoomID={sectionRoomID}
+                      curriculumName={room.curriculumName}
+                      handleSectionSelect={handleSectionSelect}
+                      bannerImage={room.bannerImage}
+                      type={`Class Notebook`}
+                    />
+                  ))
+                : null}
 
-            <RoomViewCard
-              roomID={'private'}
-              mainSection={mainSection}
-              sectionRoomID={sectionRoomID}
-              sectionTitle={sectionTitle}
-              handleSectionSelect={handleSectionSelect}
-              type={'Private Notebook'}
-            />
-          </div>
+              <RoomViewCard
+                roomID={'private'}
+                mainSection={mainSection}
+                sectionRoomID={sectionRoomID}
+                sectionTitle={sectionTitle}
+                handleSectionSelect={handleSectionSelect}
+                type={'Private Notebook'}
+              />
+            </div>
+          )}
         </div>
       </div>
     </>

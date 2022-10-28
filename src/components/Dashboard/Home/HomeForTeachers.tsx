@@ -244,7 +244,7 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
                 </span>
                 . What do you want to teach today?
               </h2>
-              <div className="absolute z-100 w-6 right-1">
+              <div className="absolute z-100 w-6 top-0 right-1">
                 <span
                   className="w-auto cursor-pointer"
                   onClick={() => setOpenWalkThroughModal(true)}>
