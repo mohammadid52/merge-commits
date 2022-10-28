@@ -139,7 +139,8 @@ const RoomView = ({
     }
   };
 
-  const ifNothingWorksCallThis = () => {
+  // if nothing works call this
+  const lastResort = () => {
     if (studentAuthId && studentEmail) {
       getDashboardData(studentAuthId, studentEmail);
     }
@@ -161,7 +162,7 @@ const RoomView = ({
       if (roomIdList.length > 0) {
         getMultipleRoomsAsATeacher(roomIdList);
       } else {
-        ifNothingWorksCallThis();
+        lastResort();
       }
     }
   }, [state?.roomData?.rooms, roomIdList, isStudent]);
