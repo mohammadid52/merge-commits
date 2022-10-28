@@ -38,48 +38,51 @@ const RoomView = ({
   // ##################################################################### //
 
   // TODO: fetch list of rooms
-  const [loaded, setLoaded] = useState<boolean>(false);
+  const [loaded, setLoaded] = useState<boolean>(roomIdList.length === 0);
   const [filteredRooms, setFilteredRooms] = useState<any[]>([]);
 
   const {state} = useGlobalContext();
 
+  const mapData = (responseData: any[]) => {
+    const curriculumMap = responseData.map(async (roomObj: any) => {
+      const curriculumFull: any = await API.graphql(
+        graphqlOperation(customQueries.getCurriculumNotebook, {
+          id: roomObj.curricula?.items[0]?.curriculumID
+        })
+      );
+      const curriculumData = curriculumFull.data.getCurriculum;
+
+      return {
+        ...roomObj,
+        curricula: {
+          ...roomObj.curricula,
+          items: [
+            {
+              ...roomObj.curricula?.items[0],
+              name: curriculumData?.name,
+              image: curriculumData?.image,
+              summary: curriculumData?.summary,
+              description: curriculumData?.description
+            }
+          ]
+        }
+      };
+    });
+    Promise.all(curriculumMap)
+      .then((responseArray: any[]) => {
+        // console.log('curriculum first - ', responseData[0].curricula.items[0]);
+        // console.log('curriculum after - ', responseArray[0].curricula.items[0]);
+        setFilteredRooms(responseArray);
+      })
+      .finally(() => {
+        setLoaded(true);
+      });
+  };
+
   const getMultipleRoomsAsAStudent = async () => {
     try {
       const responseData = state?.roomData?.rooms || [];
-
-      const curriculumMap = responseData.map(async (roomObj: any) => {
-        const curriculumFull: any = await API.graphql(
-          graphqlOperation(customQueries.getCurriculumNotebook, {
-            id: roomObj.curricula?.items[0]?.curriculumID
-          })
-        );
-        const curriculumData = curriculumFull.data.getCurriculum;
-
-        return {
-          ...roomObj,
-          curricula: {
-            ...roomObj.curricula,
-            items: [
-              {
-                ...roomObj.curricula?.items[0],
-                name: curriculumData?.name,
-                image: curriculumData?.image,
-                summary: curriculumData?.summary,
-                description: curriculumData?.description
-              }
-            ]
-          }
-        };
-      });
-      Promise.all(curriculumMap)
-        .then((responseArray: any[]) => {
-          // console.log('curriculum first - ', responseData[0].curricula.items[0]);
-          // console.log('curriculum after - ', responseArray[0].curricula.items[0]);
-          setFilteredRooms(responseArray);
-        })
-        .then((_: void) => {
-          setLoaded(true);
-        });
+      mapData(responseData);
     } catch (e) {
       console.error('getMultipleRooms - ', e);
     }
@@ -96,40 +99,7 @@ const RoomView = ({
         })
       );
       const responseData = roomsList.data.listRooms.items;
-
-      const curriculumMap = responseData.map(async (roomObj: any) => {
-        const curriculumFull: any = await API.graphql(
-          graphqlOperation(customQueries.getCurriculumNotebook, {
-            id: roomObj.curricula?.items[0]?.curriculumID
-          })
-        );
-        const curriculumData = curriculumFull.data.getCurriculum;
-
-        return {
-          ...roomObj,
-          curricula: {
-            ...roomObj.curricula,
-            items: [
-              {
-                ...roomObj.curricula?.items[0],
-                name: curriculumData?.name,
-                image: curriculumData?.image,
-                summary: curriculumData?.summary,
-                description: curriculumData?.description
-              }
-            ]
-          }
-        };
-      });
-      Promise.all(curriculumMap)
-        .then((responseArray: any[]) => {
-          // console.log('curriculum first - ', responseData[0].curricula.items[0]);
-          // console.log('curriculum after - ', responseArray[0].curricula.items[0]);
-          setFilteredRooms(responseArray);
-        })
-        .then((_: void) => {
-          setLoaded(true);
-        });
+      mapData(responseData);
     } catch (e) {
       console.error('getMultipleRooms - ', e);
     }
