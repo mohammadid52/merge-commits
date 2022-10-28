@@ -49,6 +49,7 @@ const RoomView = ({
 
   const getDashboardData = async (authId: string, email: string) => {
     try {
+      setLoaded(false);
       const queryObj = {
         name: 'customQueries.getDashboardData',
         valueObj: {
@@ -73,7 +74,7 @@ const RoomView = ({
     } catch (e) {
       console.error('getDashbaordData -> ', e);
     } finally {
-      // need to do some cleanup
+      setLoaded(true);
     }
   };
 
