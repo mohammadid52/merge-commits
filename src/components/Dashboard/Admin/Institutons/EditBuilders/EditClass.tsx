@@ -60,10 +60,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
   const [searching, setSearching] = useState<boolean>(false);
   const [userModalOpen, setUserModalFormOpen] = useState<boolean>(false);
   const [filteredStudents, setFilteredStudents] = useState([]);
-  console.log(
-    '🚀 ~ file: EditClass.tsx ~ line 62 ~ EditClass ~ filteredStudents',
-    filteredStudents
-  );
+
   const [studentProfileID, setStudentProfileID] = useState('');
   const [newMember, setNewMember] = useState(defaultNewMember);
   const [studentIdToEdit, setStudentIdToEdit] = useState<string>('');
@@ -336,7 +333,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
         studentID: id,
         studentAuthID: selected.authId,
         studentEmail: selected.email,
-        status: 'Active'
+        status: PersonStatus.ACTIVE
       };
       let newStudent: any = await API.graphql(
         graphqlOperation(customMutations.createClassStudent, {input: input})
@@ -360,7 +357,8 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
           createAt: newStudent.createdAt,
           group: newStudent.group,
           status: newStudent.status,
-          student: {...selected}
+
+          student: {...selected, onDemand: newStudent?.onDemand}
         }
       ]);
       setAllStudents((prevStudents) =>

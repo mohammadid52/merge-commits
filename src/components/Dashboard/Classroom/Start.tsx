@@ -1,4 +1,5 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import useAuth from '@customHooks/useAuth';
 import Buttons from 'atoms/Buttons';
 import axios from 'axios';
 import {useGlobalContext} from 'contexts/GlobalContext';
@@ -358,7 +359,8 @@ const Start: React.FC<StartProps> = ({
     }
   };
 
-  const showNotebookBtn = isCompleted && type === 'lesson';
+  const {isStudent} = useAuth();
+  const showNotebookBtn = isStudent && isCompleted && type === 'lesson';
 
   return (
     <div data-cy="survey-button">
@@ -377,7 +379,8 @@ const Start: React.FC<StartProps> = ({
         }
         btnClass={`rounded-t-none md:rounded h-full w-full text-xs focus:outline-none ${
           !open || (isCompleted && type === 'survey') ? 'opacity-80' : 'opacity-100'
-        } ${showNotebookBtn ? 'bg-sea-green' : ''}`}
+        }`}
+        greenBtn={showNotebookBtn}
       />
       {warnModal.show && (
         <ModalPopUp

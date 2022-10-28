@@ -11,6 +11,7 @@ import InformationalWalkThrough from 'components/Dashboard/Admin/Institutons/Inf
 import HeroBanner from 'components/Header/HeroBanner';
 import useDictionary from 'customHooks/dictionary';
 import {breadcrumbsRoutes} from 'utilities/breadcrumb';
+import {useQuery} from '@customHooks/urlParam';
 
 interface BreadCrumbProps {
   items?: {title: string; url?: string; last: boolean; goBack?: boolean}[];
@@ -44,6 +45,7 @@ const BreadcrumbsWithBanner: React.FC<BreadCrumbProps> = (props: BreadCrumbProps
     userLanguage,
     clientKey
   } = useGlobalContext();
+
   const {BreadcrumsTitles, Institute_info} = useDictionary(clientKey);
   const pathname = location.pathname.replace(/\/$/, '');
   const currentPath = pathname.substring(pathname.lastIndexOf('/') + 1);

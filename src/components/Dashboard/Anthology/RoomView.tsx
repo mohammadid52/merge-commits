@@ -1,5 +1,9 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import Loader from '@components/Atoms/Loader';
+import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import {useQuery} from '@customHooks/urlParam';
+import useAuth from '@customHooks/useAuth';
+import {createFilterToFetchSpecificItemsOnly} from '@utilities/strings';
 
 import {useGlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
@@ -26,70 +30,99 @@ const RoomView = ({
   mainSection,
   sectionRoomID,
   sectionTitle,
-  handleSectionSelect
+  handleSectionSelect,
+  roomIdList
 }: IRoomViewProps) => {
   // ##################################################################### //
   // ################## GET NOTEBOOK ROOMS FROM CONTEXT ################## //
   // ##################################################################### //
 
   // TODO: fetch list of rooms
-  const [loaded, setLoaded] = useState<boolean>(false);
+  const [loaded, setLoaded] = useState<boolean>(roomIdList.length === 0);
   const [filteredRooms, setFilteredRooms] = useState<any[]>([]);
 
   const {state} = useGlobalContext();
 
-  const getMultipleRooms = async () => {
+  const mapData = (responseData: any[]) => {
+    const curriculumMap = responseData.map(async (roomObj: any) => {
+      const curriculumFull: any = await API.graphql(
+        graphqlOperation(customQueries.getCurriculumNotebook, {
+          id: roomObj.curricula?.items[0]?.curriculumID
+        })
+      );
+      const curriculumData = curriculumFull.data.getCurriculum;
+
+      return {
+        ...roomObj,
+        curricula: {
+          ...roomObj.curricula,
+          items: [
+            {
+              ...roomObj.curricula?.items[0],
+              name: curriculumData?.name,
+              image: curriculumData?.image,
+              summary: curriculumData?.summary,
+              description: curriculumData?.description
+            }
+          ]
+        }
+      };
+    });
+    Promise.all(curriculumMap)
+      .then((responseArray: any[]) => {
+        // console.log('curriculum first - ', responseData[0].curricula.items[0]);
+        // console.log('curriculum after - ', responseArray[0].curricula.items[0]);
+        setFilteredRooms(responseArray);
+      })
+      .finally(() => {
+        setLoaded(true);
+      });
+  };
+
+  const getMultipleRoomsAsAStudent = async () => {
     try {
       const responseData = state?.roomData?.rooms || [];
+      mapData(responseData);
+    } catch (e) {
+      console.error('getMultipleRooms - ', e);
+    }
+  };
+  const getMultipleRoomsAsATeacher = async (idList: any[]) => {
+    try {
+      const compoundQuery = createFilterToFetchSpecificItemsOnly(idList, 'id');
 
-      const curriculumMap = responseData.map(async (roomObj: any) => {
-        const curriculumFull: any = await API.graphql(
-          graphqlOperation(customQueries.getCurriculumNotebook, {
-            id: roomObj.curricula?.items[0]?.curriculumID
-          })
-        );
-        const curriculumData = curriculumFull.data.getCurriculum;
-
-        return {
-          ...roomObj,
-          curricula: {
-            ...roomObj.curricula,
-            items: [
-              {
-                ...roomObj.curricula?.items[0],
-                name: curriculumData?.name,
-                image: curriculumData?.image,
-                summary: curriculumData?.summary,
-                description: curriculumData?.description
-              }
-            ]
+      const roomsList: any = await API.graphql(
+        graphqlOperation(customQueries.listRoomsNotebook, {
+          filter: {
+            ...compoundQuery
           }
-        };
-      });
-      Promise.all(curriculumMap)
-        .then((responseArray: any[]) => {
-          // console.log('curriculum first - ', responseData[0].curricula.items[0]);
-          // console.log('curriculum after - ', responseArray[0].curricula.items[0]);
-          setFilteredRooms(responseArray);
         })
-        .then((_: void) => {
-          setLoaded(true);
-        });
+      );
+      const responseData = roomsList.data.listRooms.items;
+      mapData(responseData);
     } catch (e) {
       console.error('getMultipleRooms - ', e);
     }
   };
 
+  const {isStudent} = useAuth();
+
   useEffect(() => {
-    if (
-      state &&
-      state.roomData &&
-      state?.roomData?.rooms &&
-      state?.roomData?.rooms.length > 0
-    ) {
-      getMultipleRooms();
+    if (isStudent) {
+      if (
+        state &&
+        state.roomData &&
+        state?.roomData?.rooms &&
+        state?.roomData?.rooms.length > 0
+      ) {
+        getMultipleRoomsAsAStudent();
+      }
+    } else {
+      if (roomIdList.length > 0) {
+        getMultipleRoomsAsATeacher(roomIdList);
+      }
     }
-  }, [state?.roomData?.rooms]);
+  }, [state?.roomData?.rooms, roomIdList, isStudent]);
 
   const getImageURL = async (uniqKey: string) => {
     const imageUrl: any = await getImageFromS3(uniqKey);
@@ -142,6 +175,12 @@ const RoomView = ({
     <>
       <div className="relative pb-4 overflow-hidden bg-white rounded-b-lg shadow mb-4">
         <div className="relative mx-auto">
+          {!loaded && (
+            <div className="my-4">
+              <Loader color="rgba(160, 174, 192, 1)" />
+            </div>
+          )}
+
           <div
             // #ts-ignores
             style={{

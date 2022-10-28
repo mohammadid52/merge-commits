@@ -15,6 +15,7 @@ interface ButtonProps {
   labelClass?: string;
   iconBeforeLabel?: boolean;
   disabled?: boolean;
+  greenBtn?: boolean;
   customStyles?: object;
   loading?: boolean;
   loadingText?: string;
@@ -28,6 +29,7 @@ const Buttons: React.FC<ButtonProps> = (btnProps: ButtonProps) => {
     label,
     Icon,
     title,
+    greenBtn,
     iconBeforeLabel,
     transparent,
     type,
@@ -58,9 +60,15 @@ const Buttons: React.FC<ButtonProps> = (btnProps: ButtonProps) => {
           ? ''
           : `${
               transparent
-                ? 'iconoclast:border-main  curate:border-main iconoclast:text-main curate:text-main hover-text-white'
-                : 'iconoclast:bg-500 curate:bg-500'
-            } font-bold transition duration-150 text-white ease-in-out md:py-2 sm:py-auto  hover:iconoclast:bg-600  hover:curate:bg-600 uppercase text-xs px-4 py-2 rounded-lg flex items-center justify-center w-auto`
+                ? `${
+                    greenBtn
+                      ? ''
+                      : 'iconoclast:border-main  curate:border-main iconoclast:text-main curate:text-main hover-text-white'
+                  }`
+                : `${greenBtn ? '' : 'iconoclast:bg-500 curate:bg-500'}`
+            } font-bold transition duration-150 text-white ease-in-out md:py-2 sm:py-auto  ${
+              greenBtn ? '' : 'hover:iconoclast:bg-600  hover:curate:bg-600'
+            } uppercase text-xs px-4 py-2 rounded-lg flex items-center justify-center w-auto `
       }
       ${btnClass ? btnClass : ''} 
       ${theme.outlineNone} 
@@ -71,7 +79,9 @@ const Buttons: React.FC<ButtonProps> = (btnProps: ButtonProps) => {
           ? `${disabled ? 'bg-gray-400 text-gray-200' : theme.btn[themeColor]}`
           : ''
       } 
-      ${disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'} `}
+      ${disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'} 
+      ${greenBtn ? 'green-btn' : ''}
+      `}
       onClick={onClick}>
       {loading ? (
         <Loader withText={loadingText} className="w-auto text-gray-400" />
