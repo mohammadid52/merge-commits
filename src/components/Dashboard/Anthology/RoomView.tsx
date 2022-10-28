@@ -16,6 +16,8 @@ import RoomViewCard from './RoomView/RoomViewCard';
 interface IRoomViewProps {
   roomIdList: string[];
   mainSection?: string;
+  studentAuthId?: string;
+  studentEmail?: string;
   sectionRoomID?: string;
   sectionTitle?: string;
   handleSectionSelect?: (
@@ -31,7 +33,9 @@ const RoomView = ({
   sectionRoomID,
   sectionTitle,
   handleSectionSelect,
-  roomIdList
+  roomIdList,
+  studentAuthId,
+  studentEmail
 }: IRoomViewProps) => {
   // ##################################################################### //
   // ################## GET NOTEBOOK ROOMS FROM CONTEXT ################## //
@@ -42,6 +46,36 @@ const RoomView = ({
   const [filteredRooms, setFilteredRooms] = useState<any[]>([]);
 
   const {state} = useGlobalContext();
+
+  const getDashboardData = async (authId: string, email: string) => {
+    try {
+      const queryObj = {
+        name: 'customQueries.getDashboardData',
+        valueObj: {
+          authId: authId,
+          email: email
+        }
+      };
+      const dashboardDataFetch = await API.graphql(
+        graphqlOperation(customQueries.getDashboardData, queryObj.valueObj)
+      );
+
+      // @ts-ignore
+      let arrayOfResponseObjects = await dashboardDataFetch?.data?.getPerson?.classes
+        ?.items;
+
+      arrayOfResponseObjects =
+        arrayOfResponseObjects
+          ?.filter((item: any) => item.class !== null)
+          ?.map((item: any) => item?.class?.room) || [];
+
+      mapData(arrayOfResponseObjects);
+    } catch (e) {
+      console.error('getDashbaordData -> ', e);
+    } finally {
+      // need to do some cleanup
+    }
+  };
 
   const mapData = (responseData: any[]) => {
     const curriculumMap = responseData.map(async (roomObj: any) => {
@@ -98,10 +132,16 @@ const RoomView = ({
           }
         })
       );
-      const responseData = roomsList.data.listRooms.items;
+      const responseData = roomsList?.data?.listRooms?.items || [];
       mapData(responseData);
     } catch (e) {
       console.error('getMultipleRooms - ', e);
+    }
+  };
+
+  const ifNothingWorksCallThis = () => {
+    if (studentAuthId && studentEmail) {
+      getDashboardData(studentAuthId, studentEmail);
     }
   };
 
@@ -120,6 +160,8 @@ const RoomView = ({
     } else {
       if (roomIdList.length > 0) {
         getMultipleRoomsAsATeacher(roomIdList);
+      } else {
+        ifNothingWorksCallThis();
       }
     }
   }, [state?.roomData?.rooms, roomIdList, isStudent]);

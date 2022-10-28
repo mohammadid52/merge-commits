@@ -669,6 +669,8 @@ const Anthology = ({
 
   const {isStudent} = useAuth();
   const dynamicAuthID = isStudent ? state.user.authId : studentAuthID;
+  const dynamicEmail = isStudent ? state.user.email : studentEmail;
+
   const getUniversalArchiveData = async () => {
     try {
       const archiveData: any = await API.graphql(
@@ -696,6 +698,9 @@ const Anthology = ({
           filter: {
             studentID: {
               eq: dynamicAuthID
+            },
+            studentEmail: {
+              eq: dynamicEmail
             }
           }
         })
@@ -985,6 +990,8 @@ const Anthology = ({
                 </IconContext.Provider>
               }>
               <RoomView
+                studentAuthId={studentAuthID}
+                studentEmail={studentEmail}
                 roomIdList={roomCardIds}
                 mainSection={mainSection}
                 sectionRoomID={sectionRoomID}
