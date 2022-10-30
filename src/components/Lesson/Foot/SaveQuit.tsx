@@ -26,16 +26,13 @@ interface SaveQuitProps {
 
 const SaveQuit = ({createJournalData}: SaveQuitProps) => {
   const {lessonState, lessonDispatch} = useGlobalContext();
-  const history = useHistory();
 
   // ##################################################################### //
   // ################## LOGIC FOR RETURNING TO CLASSROOM ################# //
   // ##################################################################### //
-  const getRoomData = getLocalStorageData('room_info');
+
   const [waiting, setWaiting] = useState<boolean>(null);
   const [safeToLeave, setSafeToLeave] = useState<any>(null);
-
-  const {updateSurveyData, updateStudentLessonData} = useStudentTimer();
 
   const [isUpdated, setIsUpdated] = useState(false);
 
@@ -50,51 +47,10 @@ const SaveQuit = ({createJournalData}: SaveQuitProps) => {
     } else {
       setWaiting(false);
       setSafeToLeave(true);
-
       setLeaveModalVisible(true);
       // ---- IMPORTANT ---- //
       // JSX of modal is on LessonHeaderBar.tsx file
     }
-  };
-
-  const {onDemand} = useAuth();
-
-  const {mutate} = useGraphqlMutation<
-    {
-      input: DeleteUniversalLessonStudentDataInput;
-      condition?: ModelUniversalLessonStudentDataConditionInput;
-    },
-    UniversalLessonStudentData
-  >('deleteUniversalLessonStudentData');
-
-  const updatePersonLessonsDataMutation = useGraphqlMutation<
-    {
-      input: UpdatePersonLessonsDataInput;
-    },
-    UniversalLessonStudentData
-  >('updatePersonLessonsData');
-
-  const handleNotebookSave = () => {
-    createJournalData && createJournalData();
-    console.log('\x1b[33m *Saving notebook... \x1b[0m');
-
-    // delete lessonData from record from graphql if student is self paced
-    const lessonID = lessonState?.lessonData?.id;
-
-    // if (onDemand && lessonID) {
-    //   console.log("removing lesson from student's record");
-    //   lessonState?.universalStudentDataID.forEach((_d: {id: string}) => {
-    //     mutate({input: {id: _d.id}, condition: {lessonID: {eq: lessonID}}})
-    //       .then((res) => {
-    //         console.log("successfully removed lesson from student's record");
-    //       })
-    //       .catch((err) => {
-    //         console.error("error removing lesson from student's record", err);
-    //       });
-    //   });
-
-    //   console.log('\x1b[33m *Removed lesson record... \x1b[0m');
-    // }
   };
 
   const setLeaveModalVisible = (updatedState: boolean) => {

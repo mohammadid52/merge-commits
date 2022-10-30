@@ -2948,6 +2948,7 @@ export type CreateUniversalJournalDataInput = {
   studentAuthID: string,
   studentEmail: string,
   type: string,
+  lessonName?: string | null,
   entryData?: Array< JournalEntryDataInput | null > | null,
   feedbacks?: Array< string | null > | null,
   shared?: boolean | null,
@@ -2962,6 +2963,7 @@ export type ModelUniversalJournalDataConditionInput = {
   studentAuthID?: ModelIDInput | null,
   studentEmail?: ModelStringInput | null,
   type?: ModelStringInput | null,
+  lessonName?: ModelStringInput | null,
   feedbacks?: ModelStringInput | null,
   shared?: ModelBooleanInput | null,
   lessonID?: ModelIDInput | null,
@@ -2980,6 +2982,7 @@ export type UniversalJournalData = {
   studentAuthID: string,
   studentEmail: string,
   type: string,
+  lessonName?: string | null,
   entryData?:  Array<JournalEntryData | null > | null,
   feedbacks?: Array< string | null > | null,
   shared?: boolean | null,
@@ -2997,6 +3000,7 @@ export type UpdateUniversalJournalDataInput = {
   studentAuthID?: string | null,
   studentEmail?: string | null,
   type?: string | null,
+  lessonName?: string | null,
   entryData?: Array< JournalEntryDataInput | null > | null,
   feedbacks?: Array< string | null > | null,
   shared?: boolean | null,
@@ -4615,6 +4619,7 @@ export type ModelUniversalJournalDataFilterInput = {
   studentAuthID?: ModelIDInput | null,
   studentEmail?: ModelStringInput | null,
   type?: ModelStringInput | null,
+  lessonName?: ModelStringInput | null,
   feedbacks?: ModelStringInput | null,
   shared?: ModelBooleanInput | null,
   lessonID?: ModelIDInput | null,
@@ -15806,6 +15811,7 @@ export type CreateUniversalJournalDataMutation = {
     studentAuthID: string,
     studentEmail: string,
     type: string,
+    lessonName?: string | null,
     entryData?:  Array< {
       __typename: "JournalEntryData",
       domID?: string | null,
@@ -15836,6 +15842,7 @@ export type UpdateUniversalJournalDataMutation = {
     studentAuthID: string,
     studentEmail: string,
     type: string,
+    lessonName?: string | null,
     entryData?:  Array< {
       __typename: "JournalEntryData",
       domID?: string | null,
@@ -15866,6 +15873,7 @@ export type DeleteUniversalJournalDataMutation = {
     studentAuthID: string,
     studentEmail: string,
     type: string,
+    lessonName?: string | null,
     entryData?:  Array< {
       __typename: "JournalEntryData",
       domID?: string | null,
@@ -25993,6 +26001,7 @@ export type GetUniversalJournalDataQuery = {
     studentAuthID: string,
     studentEmail: string,
     type: string,
+    lessonName?: string | null,
     entryData?:  Array< {
       __typename: "JournalEntryData",
       domID?: string | null,
@@ -26028,6 +26037,7 @@ export type ListUniversalJournalDataQuery = {
       studentAuthID: string,
       studentEmail: string,
       type: string,
+      lessonName?: string | null,
       entryData?:  Array< {
         __typename: "JournalEntryData",
         domID?: string | null,
@@ -39769,6 +39779,7 @@ export type OnCreateUniversalJournalDataSubscription = {
     studentAuthID: string,
     studentEmail: string,
     type: string,
+    lessonName?: string | null,
     entryData?:  Array< {
       __typename: "JournalEntryData",
       domID?: string | null,
@@ -39794,6 +39805,7 @@ export type OnUpdateUniversalJournalDataSubscription = {
     studentAuthID: string,
     studentEmail: string,
     type: string,
+    lessonName?: string | null,
     entryData?:  Array< {
       __typename: "JournalEntryData",
       domID?: string | null,
@@ -39819,6 +39831,7 @@ export type OnDeleteUniversalJournalDataSubscription = {
     studentAuthID: string,
     studentEmail: string,
     type: string,
+    lessonName?: string | null,
     entryData?:  Array< {
       __typename: "JournalEntryData",
       domID?: string | null,

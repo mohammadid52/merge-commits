@@ -1,12 +1,11 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import {getAsset} from 'assets';
 import BreadcrumbsWithBanner from 'atoms/BreadcrumbsWithBanner';
 import PageWrapper from 'atoms/PageWrapper';
+import {GlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
-import useDictionary from 'customHooks/dictionary';
-import {getAsset} from 'assets';
 import React, {useContext, useEffect, useState} from 'react';
 import {Route, Switch, useLocation, useRouteMatch} from 'react-router-dom';
-import {GlobalContext} from 'contexts/GlobalContext';
 import {DashboardProps} from '../../Dashboard';
 import NavBarRouter from '../NavBarRouter';
 import CurricularBuilder from './Builders/CurricularBuilder';

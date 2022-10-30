@@ -19,6 +19,7 @@ import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import {LessonEditDict} from '@dictionary/dictionary.iconoclast';
 import {getFilterORArray} from 'utilities/strings';
+import {useNotifications} from '@contexts/NotificationContext';
 
 interface ClassRoomFormProps {
   instId: string;
@@ -134,7 +135,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
     return new URLSearchParams(location.search);
   };
 
-  const {RoomBuilderdict, RoomEDITdict} = useDictionary('curate');
+  const {RoomBuilderdict, RoomEDITdict} = useDictionary();
 
   const params = useQuery();
 
@@ -619,6 +620,8 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
       return firstSyllabusID;
     }
   };
+
+  const {setNotification} = useNotifications();
   const saveRoomDetails = async () => {
     const isValid = await validateForm();
     if (isValid) {
@@ -653,11 +656,16 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
             await createRoomCurricular(roomId, roomData.curricular.id);
           }
           setUnsavedChanges(false);
-          setMessages({
+          setNotification({
             show: true,
-            message: RoomEDITdict[userLanguage]['messages']['classupdate'],
-            isError: false
+            type: 'success',
+            title: 'class updated successfully'
           });
+          // setMessages({
+          //   show: true,
+          //   message: RoomEDITdict[userLanguage]['messages']['classupdate'],
+          //   isError: false
+          // });
           // history.push(
           //   `/dashboard/manage-institutions/institution?id=${roomData.institute?.id}&tab=4`
           // );
@@ -703,12 +711,18 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
             await createRoomCurricular(roomId, roomData.curricular.id);
             await saveRoomTeachers(roomId);
           } else {
-            setMessages({
+            // setMessages({
+            //   show: true,
+            //   message:
+            //     RoomBuilderdict[userLanguage]['messages']['success']['newclassroom'],
+            //   isError: false
+            // });
+            setNotification({
               show: true,
-              message:
-                RoomBuilderdict[userLanguage]['messages']['success']['newclassroom'],
-              isError: false
+              type: 'success',
+              title: RoomBuilderdict[userLanguage]['messages']['success']['newclassroom']
             });
+
             setRoomData(initialData);
             setSelectedCoTeachers([]);
             setLoading(false);
@@ -720,10 +734,16 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
       } catch (err) {
         console.error(err, 'err inside catch');
         setLoading(false);
-        setMessages({
+        // setMessages({
+        //   show: true,
+        //   message: RoomEDITdict[userLanguage]['messages']['errupdatingclass'],
+        //   isError: true
+        // });
+
+        setNotification({
           show: true,
-          message: RoomEDITdict[userLanguage]['messages']['errupdatingclass'],
-          isError: true
+          type: 'error',
+          title: RoomBuilderdict[userLanguage]['messages']['errupdatingclass']
         });
       }
     }

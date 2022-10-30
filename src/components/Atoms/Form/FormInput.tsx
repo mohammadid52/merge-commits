@@ -68,6 +68,7 @@ const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
   const [passToggle, setPassToggle] = useState(false);
   const disabledClass = disabled ? 'cursor-not-allowed bg-gray-200' : '';
 
+  const transition = 'all 300ms ease-in-out';
   return (
     <Fragment>
       {label && (
@@ -79,6 +80,7 @@ const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
           rows={rows}
           cols={cols}
           id={id}
+          style={{transition}}
           value={value}
           className={`mt-1   ${
             dark ? 'border-gray-700  text-white bg-gray-800' : ''
@@ -102,6 +104,7 @@ const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
         <div className="relative">
           <input
             data-cy={dataCy}
+            style={{transition}}
             disabled={disabled}
             type={type === 'password' ? (passToggle ? 'text' : 'password') : type}
             min={type === 'number' ? min : undefined}

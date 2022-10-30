@@ -791,9 +791,12 @@ const Dashboard = (props: DashboardProps) => {
       />
     );
 
+  // check if url contains game-changers
+  const isGameChangers = window.location.href.includes('game-changers');
+
   return (
     <>
-      <div id="top-menu" className="w-full bg-white">
+      <div id="top-menu" className={`w-full ${isGameChangers ? 'bg-black' : 'bg-white'}`}>
         <div className="flex justify-between items-center">
           <div className="w-auto mx-5">
             <img

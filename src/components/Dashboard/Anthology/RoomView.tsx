@@ -1,14 +1,23 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import CopyCloneSlideOver from 'components/Lesson/UniversalLessonBuilder/UI/SlideOvers/CopyCloneSlideOver';
+import Loader from '@components/Atoms/Loader';
+import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
+import {useQuery} from '@customHooks/urlParam';
+import useAuth from '@customHooks/useAuth';
+import {createFilterToFetchSpecificItemsOnly} from '@utilities/strings';
+
 import {useGlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
 import React, {useEffect, useState} from 'react';
+import {useParams} from 'react-router';
+
 import {getImageFromS3} from 'utilities/services';
 import RoomViewCard from './RoomView/RoomViewCard';
 
 interface IRoomViewProps {
   roomIdList: string[];
   mainSection?: string;
+  studentAuthId?: string;
+  studentEmail?: string;
   sectionRoomID?: string;
   sectionTitle?: string;
   handleSectionSelect?: (
@@ -23,70 +32,141 @@ const RoomView = ({
   mainSection,
   sectionRoomID,
   sectionTitle,
-  handleSectionSelect
+  handleSectionSelect,
+  roomIdList,
+  studentAuthId,
+  studentEmail
 }: IRoomViewProps) => {
   // ##################################################################### //
   // ################## GET NOTEBOOK ROOMS FROM CONTEXT ################## //
   // ##################################################################### //
 
   // TODO: fetch list of rooms
-  const [loaded, setLoaded] = useState<boolean>(false);
+  const [loaded, setLoaded] = useState<boolean>(roomIdList.length === 0);
   const [filteredRooms, setFilteredRooms] = useState<any[]>([]);
 
   const {state} = useGlobalContext();
 
-  const getMultipleRooms = async () => {
+  const getDashboardData = async (authId: string, email: string) => {
+    try {
+      setLoaded(false);
+      const queryObj = {
+        name: 'customQueries.getDashboardData',
+        valueObj: {
+          authId: authId,
+          email: email
+        }
+      };
+      const dashboardDataFetch = await API.graphql(
+        graphqlOperation(customQueries.getDashboardData, queryObj.valueObj)
+      );
+
+      // @ts-ignore
+      let arrayOfResponseObjects = await dashboardDataFetch?.data?.getPerson?.classes
+        ?.items;
+
+      arrayOfResponseObjects =
+        arrayOfResponseObjects
+          ?.filter((item: any) => item.class !== null)
+          ?.map((item: any) => item?.class?.room) || [];
+
+      mapData(arrayOfResponseObjects);
+    } catch (e) {
+      console.error('getDashbaordData -> ', e);
+    } finally {
+      setLoaded(true);
+    }
+  };
+
+  const mapData = (responseData: any[]) => {
+    const curriculumMap = responseData.map(async (roomObj: any) => {
+      const curriculumFull: any = await API.graphql(
+        graphqlOperation(customQueries.getCurriculumNotebook, {
+          id: roomObj.curricula?.items[0]?.curriculumID
+        })
+      );
+      const curriculumData = curriculumFull.data.getCurriculum;
+
+      return {
+        ...roomObj,
+        curricula: {
+          ...roomObj.curricula,
+          items: [
+            {
+              ...roomObj.curricula?.items[0],
+              name: curriculumData?.name,
+              image: curriculumData?.image,
+              summary: curriculumData?.summary,
+              description: curriculumData?.description
+            }
+          ]
+        }
+      };
+    });
+    Promise.all(curriculumMap)
+      .then((responseArray: any[]) => {
+        // console.log('curriculum first - ', responseData[0].curricula.items[0]);
+        // console.log('curriculum after - ', responseArray[0].curricula.items[0]);
+        setFilteredRooms(responseArray);
+      })
+      .finally(() => {
+        setLoaded(true);
+      });
+  };
+
+  const getMultipleRoomsAsAStudent = async () => {
     try {
       const responseData = state?.roomData?.rooms || [];
+      mapData(responseData);
+    } catch (e) {
+      console.error('getMultipleRooms - ', e);
+    }
+  };
+  const getMultipleRoomsAsATeacher = async (idList: any[]) => {
+    try {
+      const compoundQuery = createFilterToFetchSpecificItemsOnly(idList, 'id');
 
-      const curriculumMap = responseData.map(async (roomObj: any) => {
-        const curriculumFull: any = await API.graphql(
-          graphqlOperation(customQueries.getCurriculumNotebook, {
-            id: roomObj.curricula?.items[0]?.curriculumID
-          })
-        );
-        const curriculumData = curriculumFull.data.getCurriculum;
-
-        return {
-          ...roomObj,
-          curricula: {
-            ...roomObj.curricula,
-            items: [
-              {
-                ...roomObj.curricula?.items[0],
-                name: curriculumData?.name,
-                image: curriculumData?.image,
-                summary: curriculumData?.summary,
-                description: curriculumData?.description
-              }
-            ]
+      const roomsList: any = await API.graphql(
+        graphqlOperation(customQueries.listRoomsNotebook, {
+          filter: {
+            ...compoundQuery
           }
-        };
-      });
-      Promise.all(curriculumMap)
-        .then((responseArray: any[]) => {
-          // console.log('curriculum first - ', responseData[0].curricula.items[0]);
-          // console.log('curriculum after - ', responseArray[0].curricula.items[0]);
-          setFilteredRooms(responseArray);
         })
-        .then((_: void) => {
-          setLoaded(true);
-        });
+      );
+      const responseData = roomsList?.data?.listRooms?.items || [];
+      mapData(responseData);
     } catch (e) {
       console.error('getMultipleRooms - ', e);
     }
   };
 
-  useEffect(() => {
-    if (
-      state &&
-      state.roomData &&
-      state?.roomData?.rooms &&
-      state?.roomData?.rooms.length > 0
-    ) {
-      getMultipleRooms();
+  // if nothing works call this
+  const lastResort = () => {
+    if (studentAuthId && studentEmail) {
+      getDashboardData(studentAuthId, studentEmail);
     }
-  }, [state?.roomData?.rooms]);
+  };
+
+  const {isStudent} = useAuth();
+
+  useEffect(() => {
+    if (isStudent) {
+      if (
+        state &&
+        state.roomData &&
+        state?.roomData?.rooms &&
+        state?.roomData?.rooms.length > 0
+      ) {
+        getMultipleRoomsAsAStudent();
+      }
+    } else {
+      if (roomIdList.length > 0) {
+        getMultipleRoomsAsATeacher(roomIdList);
+      } else {
+        lastResort();
+      }
+    }
+  }, [state?.roomData?.rooms, roomIdList, isStudent]);
 
   const getImageURL = async (uniqKey: string) => {
     const imageUrl: any = await getImageFromS3(uniqKey);
@@ -103,7 +183,7 @@ const RoomView = ({
 
   const [mappedNotebookRoomCards, setMappedNotebookRoomCards] = useState<any[]>([]);
 
-  const mapNotebookRoomCards = () => {
+  const mapNotebookRoomCards = (onSuccess?: (output?: any[]) => void) => {
     const mapped = filteredRooms.map(async (item, idx: number) => {
       const {curricula} = item;
       const bannerImage = await (curricula?.items[0]?.image
@@ -114,12 +194,24 @@ const RoomView = ({
       return {...item, bannerImage, curriculumName};
     });
 
-    Promise.all(mapped).then((output: any) => setMappedNotebookRoomCards(output));
+    Promise.all(mapped).then((output: any) => {
+      setMappedNotebookRoomCards(output);
+      onSuccess(output);
+    });
   };
+  const params = useQuery(location.search);
+
+  const roomId = params.get('roomId');
 
   useEffect(() => {
     if (loaded && filteredRooms.length > 0) {
-      mapNotebookRoomCards();
+      mapNotebookRoomCards((output: any[]) => {
+        if (roomId && loaded && output.length > 0) {
+          const roomObj = output.find((room: any) => room.id === roomId);
+
+          roomObj && handleSectionSelect('Class Notebook', roomObj.id, roomObj.name);
+        }
+      });
     }
   }, [filteredRooms, loaded]);
 
@@ -127,6 +219,12 @@ const RoomView = ({
     <>
       <div className="relative pb-4 overflow-hidden bg-white rounded-b-lg shadow mb-4">
         <div className="relative mx-auto">
+          {!loaded && (
+            <div className="my-4">
+              <Loader color="rgba(160, 174, 192, 1)" />
+            </div>
+          )}
+
           <div
             // #ts-ignores
             style={{

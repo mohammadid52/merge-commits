@@ -15,6 +15,7 @@ import useStudentTimer from '@customHooks/timer';
 import useGraphqlMutation from '@customHooks/useGraphqlMutation';
 import {UniversalLessonStudentData, UpdatePersonLessonsDataInput} from 'API';
 import {useNotifications} from '@contexts/NotificationContext';
+import {useLessonContext} from '@contexts/LessonContext';
 
 const LessonHeaderBar = ({
   overlay,
@@ -29,6 +30,7 @@ const LessonHeaderBar = ({
   // ~~~~~~~~~~ CONTEXT SPLITTING ~~~~~~~~~~ //
   const gContext = useGlobalContext();
   const user = gContext.state.user;
+  const saveJournalData = gContext.saveJournalData;
   const lessonState = gContext.lessonState;
   const lessonDispatch = gContext.lessonDispatch;
   const theme = gContext.theme;
@@ -75,33 +77,39 @@ const LessonHeaderBar = ({
   const {setNotification} = useNotifications();
 
   const handleNotebookSave = () => {
-    if (leaveAfterCompletion) {
+    if (lessonState.lessonData.type === 'lesson') {
       console.log('\x1b[33m Saving notebook... \x1b[0m');
       createJournalData(() => {
         setNotification({
           title: 'Your notebook has been saved',
-          dark: false,
           show: true,
+          type: 'success',
           buttonText: 'See notebook',
-          buttonUrl: '/anthology'
+          buttonUrl: '/anthology?roomId=' + getRoomData.id
         });
       });
 
-      const id =
-        lessonState.misc?.personLessonData?.data?.find(
-          (_d: any) => _d.lessonID === lessonState?.lessonData?.id
-        )?.id || '';
+      console.log(saveJournalData);
 
-      updatePersonLessonsDataMutation
-        .mutate({input: {id, isCompleted: true}})
-        .then(() => {
-          goToClassRoom();
-          console.log('Successfully completed ' + lessonState?.lessonData?.type);
-        })
-        .catch((err) => {
-          console.error('Error updating current lesson/survey complete status', err);
-        });
+      if (saveJournalData?.current) {
+        saveJournalData?.current();
+      }
     }
+    const id =
+      lessonState.misc?.personLessonData?.data?.find(
+        (_d: any) => _d.lessonID === lessonState?.lessonData?.id
+      )?.id || '';
+
+    updatePersonLessonsDataMutation
+      .mutate({input: {id, isCompleted: true}})
+      .then(() => {
+        // goToClassRoom();
+        history.push(`/dashboard/anthology?roomId=${getRoomData.id}`);
+        console.log('Successfully completed ' + lessonState?.lessonData?.type);
+      })
+      .catch((err) => {
+        console.error('Error updating current lesson/survey complete status', err);
+      });
   };
 
   let timer: any;
@@ -361,7 +369,7 @@ const LessonHeaderBar = ({
               : 'This will take you out of the lesson.  Did you want to continue?'
           }
           button1={`${
-            !waiting && leaveAfterCompletion
+            !waiting && leaveAfterCompletion && lessonState.lessonData.type === 'lesson'
               ? 'Mark lesson as complete and move your work to your notebook'
               : !waiting
               ? 'Go to the dashboard'

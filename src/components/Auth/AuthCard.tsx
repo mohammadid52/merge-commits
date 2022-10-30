@@ -22,9 +22,15 @@ const AuthCard = ({children, title, message}: AuthCardProps) => {
 
   return (
     <div className="w-full h-screen flex flex-row items-center justify-center bg-opacity-10 text-sm md:bg-none sm:bg-cover sm:bg-center">
-      <div className="w-full md:max-w-160 max-w-9/10 sm:max-w-100 h-full max-h-160 flex flex-row rounded-xl shadow-2xl overflow-hidden">
-        <div className="min-w-sm max-w-sm bg-white md:rounded-l-xl sm:rounded-xl">
-          <div className="relative h-full flex flex-col items-center p-8 pt-12">
+      <div className="w-full m-8 md:max-w-256  max-w-9/10 sm:max-w-100 h-full max-h-160 flex flex-row  customShadow overflow-hidden">
+        <div
+          style={{borderRadius: 'inherit'}}
+          className={` hidden  md:block min-w-sm max-w-sm bg-gray-200  pr-0 ${getAsset(
+            clientKey,
+            'authBackground'
+          )} bg-cover bg-center`}></div>
+        <div className=" bg-white   flex items-center justify-center">
+          <div className="relative h-full flex flex-col justify-center items-center p-8 w-8/10">
             <div
               className={`absolute bottom-0 text-center mb-4 leading-5 text-xs text-gray-600`}>
               <p>© Copyright {new Date().getFullYear()}</p>
@@ -63,11 +69,6 @@ const AuthCard = ({children, title, message}: AuthCardProps) => {
             )}
           </div>
         </div>
-        <div
-          className={` hidden md:block min-w-sm max-w-sm bg-gray-200 rounded-r-xl pr-0 ${getAsset(
-            clientKey,
-            'authBackground'
-          )} bg-cover bg-center`}></div>
       </div>
       {openAlertBrowser && (
         <BrowserAlert

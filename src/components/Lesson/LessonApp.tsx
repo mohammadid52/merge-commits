@@ -32,6 +32,7 @@ import {
   UpdateUniversalJournalDataInput
 } from 'API';
 import useAuth from '@customHooks/useAuth';
+import useLessonFunctions from './useLessonFunctions';
 const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
 
@@ -1067,9 +1068,12 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
     return result;
   };
 
-  const createStudentArchiveData = async () => {
+  const createStudentArchiveData = async (onSuccessCallback?: () => void) => {
     try {
       const result = await loopCreateStudentArchiveAndExcerciseData(lessonID);
+      if (onSuccessCallback && typeof onSuccessCallback === 'function') {
+        onSuccessCallback();
+      }
       return result;
     } catch (e) {
       console.error(
@@ -1083,28 +1087,17 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
     handleLessonMutateData();
   }, [lessonState.currentPage]);
 
-  const getLessonCompletedValue = async () => {
-    try {
-      const getLessonRatingDetails: any = await API.graphql(
-        graphqlOperation(queries.getPersonLessonsData, {
-          id: getPersonLessonsDataId(),
-          filter: {
-            lessonID: {eq: lessonID},
-            studentEmail: {eq: user.email},
-            studentAuthId: {eq: user.authId}
-          }
-        })
-      );
+  const {getLessonCompletedValue} = useLessonFunctions();
 
-      const pageNumber = getLessonRatingDetails.data.getPersonLessonsData.pages;
-      const lessonProgress = JSON.parse(pageNumber).lessonProgress;
-      const totalPages = JSON.parse(pageNumber).totalPages;
-      return {
-        lessonProgress,
-        totalPages
-      };
-    } catch (error) {}
-  };
+  const _getLessonCompletedValue = async () =>
+    await getLessonCompletedValue({
+      id: getPersonLessonsDataId(),
+      filter: {
+        lessonID: {eq: lessonID},
+        studentEmail: {eq: user.email},
+        studentAuthId: {eq: user.authId}
+      }
+    });
 
   const [listPersonLessonsData, setListPersonLessonsData] = useState([]);
 
@@ -1204,6 +1197,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
       */}
       {/* <FloatingSideMenu /> */}
       <div
+        id="lesson-app-container"
         className={`${theme.bg} w-full h-full flex flex-col items-start dark-scroll overflow-y-auto`}
         ref={topLessonRef}>
         <div
@@ -1224,7 +1218,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
             setOverlay={setOverlay}
             pageStateUpdated={pageStateUpdated}
             getLessonCompletedValue={
-              listPersonLessonsData.length > 0 && getLessonCompletedValue
+              listPersonLessonsData.length > 0 && _getLessonCompletedValue
             }
             createJournalData={createStudentArchiveData}
             isAtEnd={isAtEnd}

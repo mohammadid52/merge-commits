@@ -30,6 +30,7 @@ import * as mutations from 'graphql/mutations';
 import ModalPopUp from 'molecules/ModalPopUp';
 import LocationBadge from './LocationBadge';
 import {PersonStatus} from 'API';
+import {useNotifications} from '@contexts/NotificationContext';
 
 interface EditClassProps {
   instId: string;
@@ -59,10 +60,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
   const [searching, setSearching] = useState<boolean>(false);
   const [userModalOpen, setUserModalFormOpen] = useState<boolean>(false);
   const [filteredStudents, setFilteredStudents] = useState([]);
-  console.log(
-    '🚀 ~ file: EditClass.tsx ~ line 62 ~ EditClass ~ filteredStudents',
-    filteredStudents
-  );
+
   const [studentProfileID, setStudentProfileID] = useState('');
   const [newMember, setNewMember] = useState(defaultNewMember);
   const [studentIdToEdit, setStudentIdToEdit] = useState<string>('');
@@ -72,7 +70,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
   const [deleting, setDeleting] = useState(false);
   const [loading, setLoading] = useState(true);
   const [adding, setAdding] = useState(false);
-  const [unsavedChanges, setUnsavedChanges] = useState(false);
+
   const [warnModal, setWarnModal] = useState({
     show: false,
     profile: false,
@@ -323,6 +321,8 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
     setFilteredStudents([]);
   };
 
+  const {setNotification} = useNotifications();
+
   const saveClassStudent = async (id: string) => {
     try {
       setAdding(true);
@@ -333,7 +333,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
         studentID: id,
         studentAuthID: selected.authId,
         studentEmail: selected.email,
-        status: 'Active'
+        status: PersonStatus.ACTIVE
       };
       let newStudent: any = await API.graphql(
         graphqlOperation(customMutations.createClassStudent, {input: input})
@@ -357,7 +357,8 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
           createAt: newStudent.createdAt,
           group: newStudent.group,
           status: newStudent.status,
-          student: {...selected}
+
+          student: {...selected, onDemand: newStudent?.onDemand}
         }
       ]);
       setAllStudents((prevStudents) =>
@@ -365,18 +366,15 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
       );
 
       setAdding(false);
-      setAddMessage({
-        message: 'Student added successfully',
-        isError: false
+
+      setNotification({
+        title: `Student added successfully - ${newStudent.studentEmail}`,
+        show: true,
+        type: 'success'
       });
-      setTimeout(() => {
-        setAddMessage({
-          message: '',
-          isError: false
-        });
-      }, 2000);
     } catch (err) {
       console.error('saveClassStudent', err);
+      setNotification({title: `Something went wrong`, type: 'error', show: true});
       setAddMessage({
         message: dictionary.messages.errorstudentadd,
         isError: true
@@ -414,6 +412,11 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
       setClassStudents((prevStudents) => prevStudents.filter((item) => item.id !== id));
       closeDeleteModal();
       setDeleting(false);
+      setNotification({
+        title: `Student removed from classroom - ${deletedStudentData.student?.email}`,
+        type: 'success',
+        show: true
+      });
     };
     setWarnModal2({
       show: true,
