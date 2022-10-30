@@ -532,6 +532,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
                 </label>
                 <div className="flex items-center justify-between">
                   <SearchSelectorWithAvatar
+                    dataCy="edit-class"
                     selectedItem={newMember}
                     list={filteredStudents.length > 0 ? filteredStudents : allStudents}
                     placeholder={dictionary.ADD_STUDENT_PLACEHOLDER}
@@ -549,6 +550,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
               </div>
 
               <AddButton
+                dataCy={`edit-class-add-button`}
                 className="mx-2 2xl:ml-5 2xl:mr-10 py-1 px-5 mt-auto"
                 label={dictionary.ADD_STUDENT_BUTTON}
                 onClick={addStudentInClass}
@@ -647,7 +649,10 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
                           </div>
 
                           <div className="w-1/10 px-3 flex justify-center cursor-pointer">
-                            <DeleteActionBtn handleClick={() => onDelete(item.id)} />
+                            <DeleteActionBtn
+                              dataCy={`delete-user-${index}-button`}
+                              handleClick={() => onDelete(item.id)}
+                            />
                             {studentIdToEdit === item.id ? (
                               <span
                                 className={`ml-2 w-4 h-4 flex items-center cursor-pointer ${
@@ -693,6 +698,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
               )}
               {warnModal2.show && (
                 <ModalPopUp
+                  dataCy="edit-class-delete-student-modal"
                   closeAction={closeDeleteModal}
                   saveAction={warnModal2.action}
                   saveLabel="Yes"

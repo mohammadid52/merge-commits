@@ -358,6 +358,7 @@ const RoomsList = (props: RoomListProps) => {
                         </div>
                       </td>
                       <td
+                        data-cy="edit-classroom"
                         className={`text-indigo-600 text-s leading-4 font-medium whitespace-normal break-normal h-6 flex px-4 items-center cursor-pointer text-left py-2 ${theme.textColor[themeColor]}`}
                         onClick={() => editCurrentRoom(item.id, item.institutionID)}>
                         <Tooltip

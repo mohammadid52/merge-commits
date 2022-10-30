@@ -7,6 +7,7 @@ interface IAddButtonActionInterface {
   onClick?: () => void;
   label: string;
   disabled?: boolean;
+  dataCy?: string;
 }
 
 const AddButton = ({
@@ -14,9 +15,11 @@ const AddButton = ({
   disabled = false,
   onClick,
   label,
+  dataCy
 }: IAddButtonActionInterface) => {
   return (
     <BUTTONS
+      dataCy={dataCy}
       btnClass={className}
       disabled={disabled}
       label={label}

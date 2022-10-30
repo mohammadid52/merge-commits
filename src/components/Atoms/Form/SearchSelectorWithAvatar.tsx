@@ -20,6 +20,7 @@ interface selectorProps {
   creatable?: boolean;
   creatableLabel?: string;
   onCreate?: () => void;
+  dataCy?: string;
 }
 
 const SearchSelectorWithAvatar = (props: selectorProps) => {
@@ -37,7 +38,8 @@ const SearchSelectorWithAvatar = (props: selectorProps) => {
     searchCallback,
     creatable,
     creatableLabel,
-    onCreate
+    onCreate,
+    dataCy
   } = props;
 
   const countdownTimer = 200;
@@ -141,6 +143,7 @@ const SearchSelectorWithAvatar = (props: selectorProps) => {
     <div className="relative" ref={currentRef} onFocus={() => onFocus()}>
       <span className="inline-block w-full h-full rounded-md shadow-sm">
         <button
+          data-cy={`${dataCy}-button`}
           type="button"
           aria-haspopup="listbox"
           aria-expanded="true"
@@ -151,6 +154,7 @@ const SearchSelectorWithAvatar = (props: selectorProps) => {
           {/* TOGGLE SEARCH FIELD */}
           {showList ? (
             <input
+              data-cy={`${dataCy}-input`}
               autoFocus
               className="p-0 border-none focus:border-transparent focus:outline-none"
               onChange={handleSearchChange}
@@ -222,6 +226,7 @@ const SearchSelectorWithAvatar = (props: selectorProps) => {
                       key: number
                     ) => (
                       <li
+                        data-cy={`${dataCy}-item-${key}`}
                         key={key}
                         onClick={() =>
                           updateSelectedItem(item.value, item.name, item.id, item.avatar)

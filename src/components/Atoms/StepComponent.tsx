@@ -18,9 +18,15 @@ export interface IStepComponentInterface {
   steps: IStepElementInterface[];
   activeStep: string;
   handleTabSwitch: (step: string) => void;
+  dataCy?: string;
 }
 
-const StepComponent = ({activeStep, handleTabSwitch, steps}: IStepComponentInterface) => {
+const StepComponent = ({
+  activeStep,
+  handleTabSwitch,
+  steps,
+  dataCy
+}: IStepComponentInterface) => {
   const context = useContext(GlobalContext);
   const {clientKey, theme} = context || {};
   const themeColor = getAsset(clientKey, 'themeClassName');
@@ -109,6 +115,7 @@ const StepComponent = ({activeStep, handleTabSwitch, steps}: IStepComponentInter
         <ol className="rounded-md lg:flex lg:border-l lg:border-r lg:border-gray-200 lg:rounded-none">
           {steps.map((step: any, index: number) => (
             <li
+              data-cy={`${dataCy}-step-${index}`}
               className={`relative lg:flex-1 ${
                 step.disabled ? 'bg-gray-300 cursor-not-allowed' : 'cursor-pointer'
               }`}

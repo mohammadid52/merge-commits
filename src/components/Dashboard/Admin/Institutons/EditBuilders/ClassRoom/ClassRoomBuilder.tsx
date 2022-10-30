@@ -390,6 +390,7 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
       <div className="">
         <div className="w-full m-auto">
           <StepComponent
+            dataCy="classroom-builder"
             steps={steps}
             activeStep={activeStep}
             handleTabSwitch={handleTabSwitch}
