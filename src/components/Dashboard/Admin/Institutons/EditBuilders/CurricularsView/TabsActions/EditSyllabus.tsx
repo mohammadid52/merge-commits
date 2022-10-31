@@ -1,35 +1,32 @@
-import React, {useState, useEffect, useContext} from 'react';
-import {useHistory, useLocation, useParams} from 'react-router';
-import {IoArrowUndoCircleOutline} from 'react-icons/io5';
-import {FaTrash} from 'react-icons/fa';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
+import React, {useContext, useEffect, useState} from 'react';
+import {DragDropContext, Draggable, Droppable} from 'react-beautiful-dnd';
+import {IoArrowUndoCircleOutline} from 'react-icons/io5';
+import {useHistory, useLocation, useParams} from 'react-router';
 
 import BreadCrums from 'atoms/BreadCrums';
-import SectionTitle from 'atoms/SectionTitle';
 import Buttons from 'atoms/Buttons';
-import PageWrapper from 'atoms/PageWrapper';
 import FormInput from 'atoms/Form/FormInput';
-import TextArea from 'atoms/Form/TextArea';
-import Selector from 'atoms/Form/Selector';
 import MultipleSelector from 'atoms/Form/MultipleSelector';
-import Tooltip from 'atoms/Tooltip';
+import Selector from 'atoms/Form/Selector';
+import TextArea from 'atoms/Form/TextArea';
 import Loader from 'atoms/Loader';
+import PageWrapper from 'atoms/PageWrapper';
+import SectionTitle from 'atoms/SectionTitle';
 
-import {languageList, statusList} from 'utilities/staticData';
-import {reorder, getLessonType} from 'utilities/strings';
+import {languageList} from 'utilities/staticData';
+import {getLessonType, reorder} from 'utilities/strings';
 
 // TODO: Check wether mutations and queries are needed for fetching all the data or not.
-import * as mutations from 'graphql/mutations';
-import * as queries from 'graphql/queries';
-import * as customQueries from 'customGraphql/customQueries';
-import * as customMutations from 'customGraphql/customMutations';
 import {getAsset} from 'assets';
-import {GlobalContext} from 'contexts/GlobalContext';
-import ModalPopUp from 'molecules/ModalPopUp';
-import useDictionary from 'customHooks/dictionary';
-import {fetchDesigners} from 'utilities/utils';
 import {DeleteActionBtn} from 'atoms/Buttons/DeleteActionBtn';
+import {GlobalContext} from 'contexts/GlobalContext';
+import * as customMutations from 'customGraphql/customMutations';
+import * as customQueries from 'customGraphql/customQueries';
+import useDictionary from 'customHooks/dictionary';
+import * as mutations from 'graphql/mutations';
+import ModalPopUp from 'molecules/ModalPopUp';
+import {fetchDesigners} from 'utilities/utils';
 
 interface EditSyllabusProps {}
 interface InitialData {

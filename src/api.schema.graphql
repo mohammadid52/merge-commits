@@ -76,6 +76,7 @@ type PersonLessonsData @model @auth(rules: [{allow: public}]) {
   ratings: Int @default(value: "0")
   isCompleted: Boolean @default(value: "false")
   roomId: String
+  lesson: UniversalLesson @hasOne(fields: ["lessonID"])
 }
 
 type Institution @model @auth(rules: [{allow: public}]) {

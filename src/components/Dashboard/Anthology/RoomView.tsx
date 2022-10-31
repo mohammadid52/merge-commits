@@ -45,38 +45,7 @@ const RoomView = ({
   const [loaded, setLoaded] = useState<boolean>(roomIdList.length === 0);
   const [filteredRooms, setFilteredRooms] = useState<any[]>([]);
 
-  const {state} = useGlobalContext();
-
-  const getDashboardData = async (authId: string, email: string) => {
-    try {
-      setLoaded(false);
-      const queryObj = {
-        name: 'customQueries.getDashboardData',
-        valueObj: {
-          authId: authId,
-          email: email
-        }
-      };
-      const dashboardDataFetch = await API.graphql(
-        graphqlOperation(customQueries.getDashboardData, queryObj.valueObj)
-      );
-
-      // @ts-ignore
-      let arrayOfResponseObjects = await dashboardDataFetch?.data?.getPerson?.classes
-        ?.items;
-
-      arrayOfResponseObjects =
-        arrayOfResponseObjects
-          ?.filter((item: any) => item.class !== null)
-          ?.map((item: any) => item?.class?.room) || [];
-
-      mapData(arrayOfResponseObjects);
-    } catch (e) {
-      console.error('getDashbaordData -> ', e);
-    } finally {
-      setLoaded(true);
-    }
-  };
+  const {state, dispatch} = useGlobalContext();
 
   const mapData = (responseData: any[]) => {
     const curriculumMap = responseData.map(async (roomObj: any) => {
@@ -141,9 +110,16 @@ const RoomView = ({
   };
 
   // if nothing works call this
-  const lastResort = () => {
-    if (studentAuthId && studentEmail) {
-      getDashboardData(studentAuthId, studentEmail);
+  const checkFromState = () => {
+    // if (studentAuthId && studentEmail) {
+    //   getDashboardData(studentAuthId, studentEmail);
+    // }
+    if (state?.temp?.roomData) {
+      mapData(state?.temp?.roomData);
+    } else {
+      if (roomIdList.length > 0) {
+        getMultipleRoomsAsATeacher(roomIdList);
+      }
     }
   };
 
@@ -160,11 +136,7 @@ const RoomView = ({
         getMultipleRoomsAsAStudent();
       }
     } else {
-      if (roomIdList.length > 0) {
-        getMultipleRoomsAsATeacher(roomIdList);
-      } else {
-        lastResort();
-      }
+      checkFromState();
     }
   }, [state?.roomData?.rooms, roomIdList, isStudent]);
 

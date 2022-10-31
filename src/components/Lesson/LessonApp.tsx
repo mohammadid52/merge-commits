@@ -33,7 +33,7 @@ import {
 } from 'API';
 import useAuth from '@customHooks/useAuth';
 import useLessonFunctions from './useLessonFunctions';
-const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
+const LessonApp = ({}: ILessonSurveyApp) => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
 
   const gContext = useGlobalContext();

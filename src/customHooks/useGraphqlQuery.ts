@@ -29,7 +29,7 @@ interface Options {
  * @returns
  */
 
-const useGraphqlQuery = <VariablesType, ReturnType>(
+const useGraphqlQuery = <VariablesType, ReturnType = any[]>(
   queryName: string,
   variables: VariablesType,
   options?: Options

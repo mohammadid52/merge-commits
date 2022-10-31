@@ -1,10 +1,8 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
+import useAuth from '@customHooks/useAuth';
 import {PartInput} from 'API';
-import React, {useContext, useEffect, useRef, useState} from 'react';
-import {useHistory, useParams, useRouteMatch} from 'react-router-dom';
-import {v4 as uuidV4} from 'uuid';
 import {GlobalContext} from 'contexts/GlobalContext';
+import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
 import * as mutations from 'graphql/mutations';
 import * as queries from 'graphql/queries';
 import {
@@ -14,16 +12,18 @@ import {
   StudentPageInput,
   UniversalLessonPage
 } from 'interfaces/UniversalLessonInterfaces';
+import React, {useContext, useEffect, useRef, useState} from 'react';
+import {useHistory, useParams, useRouteMatch} from 'react-router-dom';
 import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
+import {v4 as uuidV4} from 'uuid';
 import ErrorBoundary from '../Error/ErrorBoundary';
 import LessonHeaderBar from '../Header/LessonHeaderBar';
 import Foot from './Foot/Foot';
 import LessonPageLoader from './LessonPageLoader';
-import StudentNavigationForMobile from './StudentNavigationForMobile/StudentNavigationForMobile';
 import CoreUniversalLesson from './UniversalLesson/views/CoreUniversalLesson';
 import useLessonFunctions from './useLessonFunctions';
 
-const SurveyApp = ({getSyllabusLesson}: any) => {
+const SurveyApp = () => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
 
   const gContext = useContext(GlobalContext);
@@ -342,6 +342,7 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
     }
   };
 
+  const {isStudent} = useAuth();
   const getOrCreateSurveyData = async () => {
     // TRY TRY TRY
     try {
@@ -366,19 +367,21 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
         surveyDataResponses
       ); //  flat 1D - array
       if (surveyDataRow === undefined || (surveyDataRow && surveyDataRow?.length === 0)) {
-        const createNewRecords = await createSurveyData(
-          lessonState?.studentData,
-          lessonID,
-          user.authId,
-          user.email
-        );
-        if (createNewRecords?.surveyData?.length > 0) {
-          lessonDispatch({
-            type: 'LOAD_SURVEY_DATA',
-            payload: {
-              dataIdReferences: surveyDataId(createNewRecords)
-            }
-          });
+        if (isStudent) {
+          const createNewRecords = await createSurveyData(
+            lessonState?.studentData,
+            lessonID,
+            user.authId,
+            user.email
+          );
+          if (createNewRecords?.surveyData?.length > 0) {
+            lessonDispatch({
+              type: 'LOAD_SURVEY_DATA',
+              payload: {
+                dataIdReferences: surveyDataId(createNewRecords)
+              }
+            });
+          }
         }
       } else {
         const finalData = [...surveyDataResponses, ...extraQuestions];
@@ -445,15 +448,15 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
   // ~~~~~~~~~~~~~~~~ 1 INIT ~~~~~~~~~~~~~~~ //
 
   useEffect(() => {
-    if (!isOnDemand && personLocationObj.id === '') {
+    if (!isOnDemand && personLocationObj.id === '' && isStudent) {
       initializeLocation();
     }
-  }, [lessonState.lessonData.id]);
+  }, [lessonState.lessonData.id, isStudent]);
 
   // ~~~~~~~~~~~~ 2 PAGE CHANGE ~~~~~~~~~~~~ //
 
   useEffect(() => {
-    if (!isOnDemand && created && lessonState.currentPage >= 0) {
+    if (!isOnDemand && created && lessonState.currentPage >= 0 && isStudent) {
       const pageChangeLocation = {
         ...getLocationData,
         currentLocation: lessonState.currentPage,
@@ -465,7 +468,7 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
       //@ts-ignore
       topLessonRef?.current?.scrollIntoView();
     }
-  }, [created, lessonState.currentPage]);
+  }, [created, lessonState.currentPage, isStudent]);
 
   const initializeLocation = async () => {
     if (!getted) {
@@ -594,9 +597,9 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
     handleSurveyMutateData();
   }, [lessonState.currentPage]);
 
-  const [listPersonLessonsData, setListPersonLessonsData] = useState([]);
   const getPersonLessonsDataId = (): string =>
-    listPersonLessonsData?.find((_d: any) => _d.lessonID === lessonID)?.id || '';
+    lessonState?.misc?.personLessonData?.data?.find((_d: any) => _d.lessonID === lessonID)
+      ?.id || '';
 
   const handleSurveyMutateData = async () => {
     try {
@@ -650,12 +653,12 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
           ratings: 0
         };
 
-        await API.graphql(
-          graphqlOperation(mutations.createPersonLessonsData, {input: payload})
-        );
+        if (isStudent) {
+          await API.graphql(
+            graphqlOperation(mutations.createPersonLessonsData, {input: payload})
+          );
+        }
       } else {
-        setListPersonLessonsData(items);
-
         payload = {
           id: items?.find((_d: any) => _d.lessonID === lessonID)?.id,
 
@@ -670,11 +673,13 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
             .trim()
         };
 
-        await API.graphql(
-          graphqlOperation(mutations.updatePersonLessonsData, {
-            input: payload
-          })
-        );
+        if (isStudent) {
+          await API.graphql(
+            graphqlOperation(mutations.updatePersonLessonsData, {
+              input: payload
+            })
+          );
+        }
       }
     } catch (error) {
       console.error(
@@ -724,7 +729,9 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
             lessonDataLoaded={lessonDataLoaded}
             overlay={overlay}
             pageStateUpdated={pageStateUpdated}
-            getLessonCompletedValue={_getLessonCompletedValue}
+            getLessonCompletedValue={
+              lessonState?.misc?.personLessonData?.lessonID && _getLessonCompletedValue
+            }
             setOverlay={setOverlay}
             isAtEnd={isAtEnd}
             setisAtEnd={setisAtEnd}
