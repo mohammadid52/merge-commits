@@ -10,6 +10,8 @@ import AudioMedia from './AudioMedia';
 import ImageMedia from './ImageMedia';
 import OtherMedia from './OtherMedia';
 import VideoMedia from './VideoMedia';
+import moment from 'moment';
+import {data} from 'cypress/types/jquery';
 const getRole = (role: string) => {
   switch (role) {
     case 'CRD':
@@ -28,10 +30,9 @@ const getRole = (role: string) => {
 };
 
 const getFormattedDate = (todayTime: any) => {
-  const date = new Date(todayTime);
-  var hours = date.getHours();
-  var min = date.getMinutes();
-  return `${hours > 9 ? hours : `0${hours}`}:${min > 9 ? min : `0${min}`}`;
+  const date = moment(todayTime).format('lll');
+
+  return date;
 };
 
 interface FeedbackProps {

@@ -16,6 +16,7 @@ import useGraphqlMutation from '@customHooks/useGraphqlMutation';
 import {UniversalLessonStudentData, UpdatePersonLessonsDataInput} from 'API';
 import {useNotifications} from '@contexts/NotificationContext';
 import {useLessonContext} from '@contexts/LessonContext';
+import useAuth from '@customHooks/useAuth';
 
 const LessonHeaderBar = ({
   overlay,
@@ -52,7 +53,13 @@ const LessonHeaderBar = ({
   // To track user clicks on home button or click next on last page
   const [leaveAfterCompletion, setLeaveAfterCompletion] = useState<boolean>(false);
 
-  const goToClassRoom = () => history.push(`/dashboard/classroom/${getRoomData.id}`);
+  const getUrl = () => getLocalStorageData('survey_redirect');
+
+  const {isStudent} = useAuth();
+  const goToClassRoom = () =>
+    isStudent
+      ? history.push(`/dashboard/classroom/${getRoomData.id}`)
+      : history.push(getUrl() || '/dashboard');
 
   const handleManualSave = () => {
     if (lessonState.updated) {

@@ -9,9 +9,7 @@ import * as customQueries from 'customGraphql/customQueries';
 import LessonApp from './LessonApp';
 import SurveyApp from './SurveyApp';
 
-export interface ILessonSurveyApp {
-  getSyllabusLesson: (lessonID?: string) => Promise<void>;
-}
+export interface ILessonSurveyApp {}
 
 const Lesson = () => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
@@ -71,13 +69,7 @@ const Lesson = () => {
   return (
     <>
       <Noticebar notifications={notifications} />
-      {loaded ? (
-        isSurvey ? (
-          <SurveyApp getSyllabusLesson={getSyllabusLesson} />
-        ) : (
-          <LessonApp getSyllabusLesson={getSyllabusLesson} />
-        )
-      ) : null}
+      {loaded ? isSurvey ? <SurveyApp /> : <LessonApp /> : null}
     </>
   );
 };

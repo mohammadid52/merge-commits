@@ -877,6 +877,7 @@ const Anthology = ({
     } else {
       setSectionRoomID('');
       setSectionTitle('');
+      setSubSection('none');
     }
   };
   const params = useQuery(location.search);

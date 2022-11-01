@@ -1556,3 +1556,32 @@
     color: #2b2e40;
   }
 }
+
+.room_card:hover .room_card-body {
+  transition: all 0.3s ease-in-out;
+  .room-name,
+  .room-teacher-name {
+    color: white;
+  }
+}
+
+.iconoclast .room_card:hover .room_card-body {
+  background-color: $indigo-600;
+  .room-type,
+  .room-desc {
+    color: $indigo-200;
+  }
+  .room-summary {
+    color: $indigo-300;
+  }
+}
+.curate .room_card:hover .room_card-body {
+  background-color: $blue-600;
+  .room-type,
+  .room-desc {
+    color: $blue-200;
+  }
+  .room-summary {
+    color: $blue-300;
+  }
+}
