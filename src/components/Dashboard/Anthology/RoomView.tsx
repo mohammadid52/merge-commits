@@ -1,6 +1,5 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import Loader from '@components/Atoms/Loader';
-import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import {useQuery} from '@customHooks/urlParam';
 import useAuth from '@customHooks/useAuth';
 import {createFilterToFetchSpecificItemsOnly} from '@utilities/strings';
@@ -8,7 +7,6 @@ import {createFilterToFetchSpecificItemsOnly} from '@utilities/strings';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
 import React, {useEffect, useState} from 'react';
-import {useParams} from 'react-router';
 
 import {getImageFromS3} from 'utilities/services';
 import RoomViewCard from './RoomView/RoomViewCard';
