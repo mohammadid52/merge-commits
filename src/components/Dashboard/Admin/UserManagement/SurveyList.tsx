@@ -81,7 +81,7 @@ const SurveyList = ({
           <p className="text-red-500 text-sm text-center">{error}</p>
         )}
 
-        {!haveData && (
+        {!isLoading && isFetched && isSuccess && data.length === 0 && (
           <p className="text-gray-500 text-sm text-center">No completed surveys found</p>
         )}
         {haveData && (

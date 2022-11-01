@@ -314,7 +314,7 @@ const Anthology = ({
       const listFilterIfTeacher = {
         filter: {
           studentAuthID: {eq: studentAuthID},
-          shared: {eq: 'true'}
+          shared: {eq: true}
         }
       };
 

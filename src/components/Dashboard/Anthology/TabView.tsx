@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import {FaEdit} from 'react-icons/fa';
 
 import {useGlobalContext} from 'contexts/GlobalContext';
@@ -128,7 +128,7 @@ const TabView = ({
     return result;
   };
 
-  const pickClassContent = () => {
+  const pickClassContent = useCallback(() => {
     if (mainSection === 'Class' && sectionRoomID !== '') {
       if (subSection == 'Work') {
         return removeDuplicates(filteredClassContent);
@@ -140,7 +140,7 @@ const TabView = ({
     } else {
       return [];
     }
-  };
+  }, [mainSection, sectionRoomID]);
 
   const WrittenContent = (
     <WrittenContentTab

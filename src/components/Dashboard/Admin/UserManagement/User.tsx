@@ -1491,7 +1491,7 @@ const User = (props: IUserProps) => {
     return (
       <>
         <div
-          className={`pl-0 lg:pl-12 max-w-256 ${insideModalPopUp ? 'min-w-256' : ''}`}
+          className={`pl-0 lg:pl-12 ${insideModalPopUp ? 'min-w-256' : ''}`}
           style={insideModalPopUp ? {maxHeight: 'calc(100vh - 150px)'} : {}}>
           {/* <BreadCrums items={breadCrumsList} /> */}
           {params.get('from') && (
