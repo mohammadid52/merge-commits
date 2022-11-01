@@ -847,37 +847,31 @@ const Anthology = ({
     roomIdString: string,
     roomName?: string
   ) => {
-    if (roomIdString !== sectionRoomID) {
-      if (section === 'Class Notebook') {
-        setMainSection('Class');
-        setSectionRoomID(roomIdString);
-        setSectionTitle(roomName);
-        setSubSection('Work');
-        setTab(0);
-        setShowPasscodeEntry(false);
-        setPasscodeInput('');
-        setAccessMessage('');
-      } else if (section === 'Private Notebook' && !isTeacher) {
-        setShowPasscodeEntry(true);
-      } else if (section === 'Private Notebook' && isTeacher) {
-        setMainSection('Private');
-        setSectionRoomID('private');
-        setSectionTitle(`Private Notebook`);
-        setSubSection('Journal');
-        setTab(0);
-        setShowPasscodeEntry(false);
-        setPasscodeInput('');
-        setAccessMessage({message: '', textClass: ''});
-      }
+    if (section === 'Class Notebook') {
+      setMainSection('Class');
+      setSectionRoomID(roomIdString);
+      setSectionTitle(roomName);
+      setSubSection('Work');
+      setTab(0);
+      setShowPasscodeEntry(false);
+      setPasscodeInput('');
+      setAccessMessage('');
+    } else if (section === 'Private Notebook' && !isTeacher) {
+      setShowPasscodeEntry(true);
+    } else if (section === 'Private Notebook' && isTeacher) {
+      setMainSection('Private');
+      setSectionRoomID('private');
+      setSectionTitle(`Private Notebook`);
+      setSubSection('Journal');
+      setTab(0);
+      setShowPasscodeEntry(false);
+      setPasscodeInput('');
+      setAccessMessage({message: '', textClass: ''});
+    }
 
-      const el = document.getElementById('anthology_tabs');
-      if (el) {
-        el.scrollIntoView({behavior: 'smooth', block: 'start'});
-      }
-    } else {
-      setSectionRoomID('');
-      setSectionTitle('');
-      setSubSection('none');
+    const el = document.getElementById('anthology_tabs');
+    if (el) {
+      el.scrollIntoView({behavior: 'smooth', block: 'start'});
     }
   };
   const params = useQuery(location.search);
