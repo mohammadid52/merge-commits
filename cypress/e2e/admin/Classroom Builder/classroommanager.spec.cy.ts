@@ -42,9 +42,9 @@ describe('Classroom Manager', {defaultCommandTimeout: 20000}, () => {
     cy.dataCy('edit-class-button').click();
     cy.dataCy('edit-class-input').clear().type(studentName);
     cy.dataCy('edit-class-item-0').click();
-    cy.wait(3000);
+    cy.wait(1000);
     cy.dataCy('edit-class-add-button').click();
-    cy.wait(2000);
+    cy.wait(1000);
     cy.get('p')
       .invoke('text')
       .then((text) => {
@@ -74,8 +74,8 @@ describe('Classroom Manager', {defaultCommandTimeout: 20000}, () => {
       });
     logout();
     loadClassroomPage();
-    // cy.wait(5000);
-    // cy.dataCy('delete-user-5-button').click();
+    cy.wait(5000);
+    // cy.dataCy('delete-user-7-button').click();
     // cy.dataCy('edit-class-delete-student-modal').click();
     // cy.get('p')
     //   .invoke('text')
