@@ -11,6 +11,23 @@
 /* MAIN PARTS */
 @import 'lessons';
 
+$theme-500: $indigo-500;
+
+.curate {
+  $theme-500: $blue-500;
+}
+
+$polka-dot-size: 0.8px;
+
+.polka-pattern {
+  background-color: $background;
+  opacity: 0.8;
+  background-image: radial-gradient($theme-500 $polka-dot-size, transparent 0.5px),
+    radial-gradient($theme-500 $polka-dot-size, $background 0.5px);
+  background-size: 20px 20px;
+  background-position: 0 0, 10px 10px;
+}
+
 .sentiment-table-view {
   & thead tr th:first-child,
   & tbody tr td:first-child {
@@ -1020,6 +1037,11 @@
 .customShadow {
   box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.05);
 }
+
+.loading-card-shadow {
+  box-shadow: 0 10px 20px 10px rgb(129, 131, 244, 0.1);
+}
+
 .questionItemChild:first-child {
   margin-top: 1.5rem;
 }
@@ -1557,16 +1579,24 @@
   }
 }
 
-.room_card:hover .room_card-body {
-  transition: all 0.3s ease-in-out;
-  .room-name,
-  .room-teacher-name {
-    color: white;
+.room_card:hover {
+  transition: all 300ms ease;
+
+  .room_card-body {
+    transition: all 300ms ease;
+
+    .room-name,
+    .room-teacher-name {
+      color: white;
+    }
   }
 }
 
-.iconoclast .room_card:hover .room_card-body {
+.iconoclast .room_card:hover {
   background-color: $indigo-600;
+  .room_card-body {
+    background-color: $indigo-600;
+  }
   .room-type,
   .room-desc {
     color: $indigo-200;
@@ -1575,8 +1605,11 @@
     color: $indigo-300;
   }
 }
-.curate .room_card:hover .room_card-body {
+.curate .room_card:hover {
   background-color: $blue-600;
+  .room_card-body {
+    background-color: $blue-600;
+  }
   .room-type,
   .room-desc {
     color: $blue-200;

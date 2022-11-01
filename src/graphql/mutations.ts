@@ -9082,6 +9082,92 @@ export const createUniversalLessonStudentData = /* GraphQL */ `
       id
       syllabusLessonID
       lessonID
+      lesson {
+        id
+        type
+        label
+        title
+        institutionID
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          setupComplete
+          createdAt
+          updatedAt
+        }
+        language
+        designers
+        objectives
+        lessonPlanAttachment
+        purpose
+        introduction
+        introductionTitle
+        instructions
+        instructionsTitle
+        summary
+        summaryTitle
+        duration
+        resources
+        notes
+        cardImage
+        cardCaption
+        lessonPlan {
+          id
+          title
+          label
+          description
+          class
+          active
+          disabled
+          displayMode
+          open
+          estTime
+          activityType
+          interactionType
+          tags
+          videoLink
+        }
+        homework {
+          id
+          title
+          label
+          description
+          class
+          active
+          disabled
+          displayMode
+          open
+          estTime
+          activityType
+          interactionType
+          tags
+          videoLink
+        }
+        darkMode
+        rubrics
+        smallGroup
+        groupSize
+        groupType
+        smallGroupSize
+        smallGroupOption
+        studentMaterials
+        targetAudience
+        isUsed
+        createdAt
+        updatedAt
+      }
       lessonPageID
       studentID
       studentAuthID
@@ -9125,6 +9211,92 @@ export const updateUniversalLessonStudentData = /* GraphQL */ `
       id
       syllabusLessonID
       lessonID
+      lesson {
+        id
+        type
+        label
+        title
+        institutionID
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          setupComplete
+          createdAt
+          updatedAt
+        }
+        language
+        designers
+        objectives
+        lessonPlanAttachment
+        purpose
+        introduction
+        introductionTitle
+        instructions
+        instructionsTitle
+        summary
+        summaryTitle
+        duration
+        resources
+        notes
+        cardImage
+        cardCaption
+        lessonPlan {
+          id
+          title
+          label
+          description
+          class
+          active
+          disabled
+          displayMode
+          open
+          estTime
+          activityType
+          interactionType
+          tags
+          videoLink
+        }
+        homework {
+          id
+          title
+          label
+          description
+          class
+          active
+          disabled
+          displayMode
+          open
+          estTime
+          activityType
+          interactionType
+          tags
+          videoLink
+        }
+        darkMode
+        rubrics
+        smallGroup
+        groupSize
+        groupType
+        smallGroupSize
+        smallGroupOption
+        studentMaterials
+        targetAudience
+        isUsed
+        createdAt
+        updatedAt
+      }
       lessonPageID
       studentID
       studentAuthID
@@ -9168,6 +9340,92 @@ export const deleteUniversalLessonStudentData = /* GraphQL */ `
       id
       syllabusLessonID
       lessonID
+      lesson {
+        id
+        type
+        label
+        title
+        institutionID
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          setupComplete
+          createdAt
+          updatedAt
+        }
+        language
+        designers
+        objectives
+        lessonPlanAttachment
+        purpose
+        introduction
+        introductionTitle
+        instructions
+        instructionsTitle
+        summary
+        summaryTitle
+        duration
+        resources
+        notes
+        cardImage
+        cardCaption
+        lessonPlan {
+          id
+          title
+          label
+          description
+          class
+          active
+          disabled
+          displayMode
+          open
+          estTime
+          activityType
+          interactionType
+          tags
+          videoLink
+        }
+        homework {
+          id
+          title
+          label
+          description
+          class
+          active
+          disabled
+          displayMode
+          open
+          estTime
+          activityType
+          interactionType
+          tags
+          videoLink
+        }
+        darkMode
+        rubrics
+        smallGroup
+        groupSize
+        groupType
+        smallGroupSize
+        smallGroupOption
+        studentMaterials
+        targetAudience
+        isUsed
+        createdAt
+        updatedAt
+      }
       lessonPageID
       studentID
       studentAuthID
@@ -9214,6 +9472,92 @@ export const createUniversalLessonWritingExcercises = /* GraphQL */ `
       id
       syllabusLessonID
       lessonID
+      lesson {
+        id
+        type
+        label
+        title
+        institutionID
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          setupComplete
+          createdAt
+          updatedAt
+        }
+        language
+        designers
+        objectives
+        lessonPlanAttachment
+        purpose
+        introduction
+        introductionTitle
+        instructions
+        instructionsTitle
+        summary
+        summaryTitle
+        duration
+        resources
+        notes
+        cardImage
+        cardCaption
+        lessonPlan {
+          id
+          title
+          label
+          description
+          class
+          active
+          disabled
+          displayMode
+          open
+          estTime
+          activityType
+          interactionType
+          tags
+          videoLink
+        }
+        homework {
+          id
+          title
+          label
+          description
+          class
+          active
+          disabled
+          displayMode
+          open
+          estTime
+          activityType
+          interactionType
+          tags
+          videoLink
+        }
+        darkMode
+        rubrics
+        smallGroup
+        groupSize
+        groupType
+        smallGroupSize
+        smallGroupOption
+        studentMaterials
+        targetAudience
+        isUsed
+        createdAt
+        updatedAt
+      }
       lessonPageID
       lessonName
       studentID
@@ -9260,6 +9604,92 @@ export const updateUniversalLessonWritingExcercises = /* GraphQL */ `
       id
       syllabusLessonID
       lessonID
+      lesson {
+        id
+        type
+        label
+        title
+        institutionID
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          setupComplete
+          createdAt
+          updatedAt
+        }
+        language
+        designers
+        objectives
+        lessonPlanAttachment
+        purpose
+        introduction
+        introductionTitle
+        instructions
+        instructionsTitle
+        summary
+        summaryTitle
+        duration
+        resources
+        notes
+        cardImage
+        cardCaption
+        lessonPlan {
+          id
+          title
+          label
+          description
+          class
+          active
+          disabled
+          displayMode
+          open
+          estTime
+          activityType
+          interactionType
+          tags
+          videoLink
+        }
+        homework {
+          id
+          title
+          label
+          description
+          class
+          active
+          disabled
+          displayMode
+          open
+          estTime
+          activityType
+          interactionType
+          tags
+          videoLink
+        }
+        darkMode
+        rubrics
+        smallGroup
+        groupSize
+        groupType
+        smallGroupSize
+        smallGroupOption
+        studentMaterials
+        targetAudience
+        isUsed
+        createdAt
+        updatedAt
+      }
       lessonPageID
       lessonName
       studentID
@@ -9306,6 +9736,92 @@ export const deleteUniversalLessonWritingExcercises = /* GraphQL */ `
       id
       syllabusLessonID
       lessonID
+      lesson {
+        id
+        type
+        label
+        title
+        institutionID
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          setupComplete
+          createdAt
+          updatedAt
+        }
+        language
+        designers
+        objectives
+        lessonPlanAttachment
+        purpose
+        introduction
+        introductionTitle
+        instructions
+        instructionsTitle
+        summary
+        summaryTitle
+        duration
+        resources
+        notes
+        cardImage
+        cardCaption
+        lessonPlan {
+          id
+          title
+          label
+          description
+          class
+          active
+          disabled
+          displayMode
+          open
+          estTime
+          activityType
+          interactionType
+          tags
+          videoLink
+        }
+        homework {
+          id
+          title
+          label
+          description
+          class
+          active
+          disabled
+          displayMode
+          open
+          estTime
+          activityType
+          interactionType
+          tags
+          videoLink
+        }
+        darkMode
+        rubrics
+        smallGroup
+        groupSize
+        groupType
+        smallGroupSize
+        smallGroupOption
+        studentMaterials
+        targetAudience
+        isUsed
+        createdAt
+        updatedAt
+      }
       lessonPageID
       lessonName
       studentID
@@ -10158,6 +10674,92 @@ export const createUniversalJournalData = /* GraphQL */ `
       feedbacks
       shared
       lessonID
+      lesson {
+        id
+        type
+        label
+        title
+        institutionID
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          setupComplete
+          createdAt
+          updatedAt
+        }
+        language
+        designers
+        objectives
+        lessonPlanAttachment
+        purpose
+        introduction
+        introductionTitle
+        instructions
+        instructionsTitle
+        summary
+        summaryTitle
+        duration
+        resources
+        notes
+        cardImage
+        cardCaption
+        lessonPlan {
+          id
+          title
+          label
+          description
+          class
+          active
+          disabled
+          displayMode
+          open
+          estTime
+          activityType
+          interactionType
+          tags
+          videoLink
+        }
+        homework {
+          id
+          title
+          label
+          description
+          class
+          active
+          disabled
+          displayMode
+          open
+          estTime
+          activityType
+          interactionType
+          tags
+          videoLink
+        }
+        darkMode
+        rubrics
+        smallGroup
+        groupSize
+        groupType
+        smallGroupSize
+        smallGroupOption
+        studentMaterials
+        targetAudience
+        isUsed
+        createdAt
+        updatedAt
+      }
       syllabusLessonID
       lessonType
       roomID
@@ -10186,6 +10788,92 @@ export const updateUniversalJournalData = /* GraphQL */ `
       feedbacks
       shared
       lessonID
+      lesson {
+        id
+        type
+        label
+        title
+        institutionID
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          setupComplete
+          createdAt
+          updatedAt
+        }
+        language
+        designers
+        objectives
+        lessonPlanAttachment
+        purpose
+        introduction
+        introductionTitle
+        instructions
+        instructionsTitle
+        summary
+        summaryTitle
+        duration
+        resources
+        notes
+        cardImage
+        cardCaption
+        lessonPlan {
+          id
+          title
+          label
+          description
+          class
+          active
+          disabled
+          displayMode
+          open
+          estTime
+          activityType
+          interactionType
+          tags
+          videoLink
+        }
+        homework {
+          id
+          title
+          label
+          description
+          class
+          active
+          disabled
+          displayMode
+          open
+          estTime
+          activityType
+          interactionType
+          tags
+          videoLink
+        }
+        darkMode
+        rubrics
+        smallGroup
+        groupSize
+        groupType
+        smallGroupSize
+        smallGroupOption
+        studentMaterials
+        targetAudience
+        isUsed
+        createdAt
+        updatedAt
+      }
       syllabusLessonID
       lessonType
       roomID
@@ -10214,6 +10902,92 @@ export const deleteUniversalJournalData = /* GraphQL */ `
       feedbacks
       shared
       lessonID
+      lesson {
+        id
+        type
+        label
+        title
+        institutionID
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          setupComplete
+          createdAt
+          updatedAt
+        }
+        language
+        designers
+        objectives
+        lessonPlanAttachment
+        purpose
+        introduction
+        introductionTitle
+        instructions
+        instructionsTitle
+        summary
+        summaryTitle
+        duration
+        resources
+        notes
+        cardImage
+        cardCaption
+        lessonPlan {
+          id
+          title
+          label
+          description
+          class
+          active
+          disabled
+          displayMode
+          open
+          estTime
+          activityType
+          interactionType
+          tags
+          videoLink
+        }
+        homework {
+          id
+          title
+          label
+          description
+          class
+          active
+          disabled
+          displayMode
+          open
+          estTime
+          activityType
+          interactionType
+          tags
+          videoLink
+        }
+        darkMode
+        rubrics
+        smallGroup
+        groupSize
+        groupType
+        smallGroupSize
+        smallGroupOption
+        studentMaterials
+        targetAudience
+        isUsed
+        createdAt
+        updatedAt
+      }
       syllabusLessonID
       lessonType
       roomID

@@ -49,10 +49,10 @@ const SingleRoomCard = ({
       }
       key={`homepage__classrooms-${idx}`}
       className="flex customShadow  transition-all room_card flex-col cursor-pointer rounded-lg overflow-hidden ">
-      <div className="flex-shrink-0">
+      <div className="flex-shrink-0 bg-gray-500">
         <img
           loading="lazy"
-          className=" h-48 w-full object-cover hover:scale-105 transform transition-transform duration-300"
+          className="room-image h-48 w-full object-cover hover:scale-105 transform transition-transform duration-300"
           src={bannerImage || fallbackUrls.room}
           alt={`${roomName || ''} banner image`}
         />
