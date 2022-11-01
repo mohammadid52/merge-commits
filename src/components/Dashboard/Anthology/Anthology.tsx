@@ -319,10 +319,7 @@ const Anthology = ({
       };
 
       const journalEntryData: any = await API.graphql(
-        graphqlOperation(
-          queries.listUniversalJournalData,
-          isTeacher ? listFilterIfTeacher : listFilter
-        )
+        graphqlOperation(queries.listUniversalJournalData, listFilter)
       );
       const journalEntryDataRows =
         journalEntryData?.data?.listUniversalJournalData?.items || [];

@@ -128,7 +128,7 @@ const TabView = ({
     return result;
   };
 
-  const pickClassContent = useCallback(() => {
+  const pickClassContent = () => {
     if (mainSection === 'Class' && sectionRoomID !== '') {
       if (subSection == 'Work') {
         return removeDuplicates(filteredClassContent);
@@ -136,11 +136,11 @@ const TabView = ({
         return removeDuplicates(filteredJournalContent);
       }
     } else if (mainSection === 'Private') {
-      return removeDuplicates(filteredJournalContent);
+      return removeDuplicates(filteredJournalContent).filter((t) => t.shared);
     } else {
       return [];
     }
-  }, [mainSection, sectionRoomID]);
+  };
 
   const WrittenContent = (
     <WrittenContentTab
