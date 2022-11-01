@@ -3,7 +3,8 @@ export const breadcrumbsRoutes = ({
   instituteTabTitles,
   pathname,
   baseUrl,
-  otherValues
+  otherValues,
+  user
 }: any) => {
   const {courseData = {}, lessonData = {}, roomData = {}, unitData = {}} =
     otherValues || {};
@@ -42,7 +43,12 @@ export const breadcrumbsRoutes = ({
       {
         title: heroSectionTitle,
         url: `${baseUrl}/manage-users`,
-        last: true
+        last: !Boolean(otherValues.user)
+      },
+      otherValues?.user && {
+        title: otherValues.user.name,
+        url: `${baseUrl}/manage-users/${otherValues.user.id}`,
+        last: Boolean(otherValues.user)
       }
     ];
   } else if (pathname.indexOf('course') > -1) {

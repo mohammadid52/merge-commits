@@ -4763,10 +4763,7 @@ export const listUniversalArchiveData = /* GraphQL */ `
         studentAuthID
         studentEmail
         roomID
-        lesson {
-          title
-          id
-        }
+
         currentLocation
         lessonProgress
         pageData {

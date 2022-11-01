@@ -1,6 +1,6 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import useAuth from '@customHooks/useAuth';
-import {PartInput} from 'API';
+import {PartInput, UniversalSurveyStudentData} from 'API';
 import {GlobalContext} from 'contexts/GlobalContext';
 import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
 import * as mutations from 'graphql/mutations';
@@ -85,11 +85,10 @@ const SurveyApp = () => {
       const lessonProgress = JSON.parse(pages).lessonProgress || 0;
 
       lessonDispatch({type: 'SET_CURRENT_PAGE', payload: lessonProgress});
-      setLessonDataLoaded(true);
       setPageStateUpdated(true);
       history.push(`${match.url}/${lessonProgress}`);
     }
-  }, [lessonData.id, misc?.personLessonData]);
+  }, [lessonData.id, misc?.personLessonData?.lessonID]);
 
   // ##################################################################### //
   // ###################### INITIALIZE STUDENT DATA ###################### //
@@ -269,7 +268,7 @@ const SurveyApp = () => {
   // ~~~~~~~ RECORD CREATION FUNTION ~~~~~~~ //
 
   const createSurveyData = async (
-    initialDataFlattened: any[],
+    initialDataFlattened: any[] = [],
     lessonID: string,
     authId: string,
     email: string
@@ -285,7 +284,7 @@ const SurveyApp = () => {
         roomID: getRoomData.id,
         currentLocation: '0',
         lessonProgress: '0',
-        surveyData: initialDataFlattened
+        surveyData: initialDataFlattened.flat()
       };
 
       const newSurveyData: any = await API.graphql(
@@ -309,56 +308,85 @@ const SurveyApp = () => {
    * IF THERE IS ANY, AND SETS IT IN STATE  *
    ******************************************/
 
-  const fetchSurveyDataRow = async (
-    filterObj: any,
-    nextToken: string,
-    outArray: any[]
-  ): Promise<any> => {
-    let combined;
-    setLessonDataLoaded(false);
-    try {
-      let surveyData: any = await API.graphql(
-        graphqlOperation(queries.listUniversalSurveyStudentData, {
-          ...filterObj,
-          nextToken: nextToken
-        })
-      );
+  // const fetchSurveyDataRow = async (
+  //   filterObj: any,
+  //   nextToken: string,
+  //   outArray: any[]
+  // ): Promise<any> => {
+  //   let combined;
+  //   setLessonDataLoaded(false);
+  //   try {
+  //     let surveyData: any = await API.graphql(
+  //       graphqlOperation(queries.listUniversalSurveyStudentData, {
+  //         ...filterObj,
+  //         nextToken: nextToken
+  //       })
+  //     );
 
-      let surveyDataRow = surveyData.data.listUniversalSurveyStudentData.items;
+  //     let surveyDataRow = surveyData.data.listUniversalSurveyStudentData.items;
 
-      let theNextToken = surveyData.data.listUniversalSurveyStudentData?.nextToken;
+  //     let theNextToken = surveyData.data.listUniversalSurveyStudentData?.nextToken;
 
-      combined = [...outArray, ...surveyDataRow];
+  //     combined = [...outArray, ...surveyDataRow];
 
-      if (theNextToken) {
-        // console.log('nextToken fetching more - ', nextToken);
-        combined = await fetchSurveyDataRow(filterObj, theNextToken, combined);
+  //     if (theNextToken) {
+  //       // console.log('nextToken fetching more - ', nextToken);
+  //       combined = await fetchSurveyDataRow(filterObj, theNextToken, combined);
+  //     }
+  //     setLessonDataLoaded(true);
+  //     return combined;
+  //   } catch (e) {
+  //     console.error('loopFetchStudentData - ', e);
+  //     return [];
+  //   }
+  // };
+
+  const fetchSurveyDataRow = async (): Promise<UniversalSurveyStudentData[]> =>
+    new Promise(async (resolve) => {
+      try {
+        setLessonDataLoaded(false);
+        // fetch by pages
+
+        let result: any = [];
+
+        await Promise.all(
+          PAGES.map(async (page: any, idx: number) => {
+            let studentData: any = await API.graphql(
+              graphqlOperation(queries.getUniversalLessonStudentData, {
+                id: `${user.authId}-${getRoomData.id}-${lessonID}-${page.id}`
+                // filter: {...filterObj.filter, lessonPageID: {eq: page.id}}
+              })
+            );
+
+            let studentDataObject = studentData.data.getUniversalLessonStudentData;
+            result.push(studentDataObject);
+          })
+        );
+
+        /**
+         * combination of last fetch results
+         * && current fetch results
+         */
+
+        lessonDispatch({type: 'LESSON_LOADED', payload: true});
+
+        // console.log('no more - ', combined);
+        setLessonDataLoaded(true);
+        resolve(result);
+      } catch (e) {
+        console.error('loopFetchStudentData - ', e);
+        return [];
       }
-      setLessonDataLoaded(true);
-      return combined;
-    } catch (e) {
-      console.error('loopFetchStudentData - ', e);
-      return [];
-    }
-  };
+    });
 
   const {isStudent} = useAuth();
   const getOrCreateSurveyData = async () => {
     // TRY TRY TRY
     try {
       // existing student rows
-      // const surveyDataRow = await (await _fetchSurveyDataRow()).filter(Boolean); // table object
-      const listFilter = {
-        filter: {
-          studentAuthID: {eq: user.authId},
-          lessonID: {eq: lessonID},
-          syllabusLessonID: {eq: getRoomData.activeSyllabus},
-          roomID: {eq: getRoomData.id}
-        }
-      };
 
       // existing student rows
-      const surveyDataRow = await fetchSurveyDataRow(listFilter, undefined, []); // table object
+      const surveyDataRow = await (await fetchSurveyDataRow()).filter(Boolean); // table object
       const surveyDataResponses = surveyDataRow[0]?.surveyData
         ? surveyDataRow[0].surveyData
         : []; // flat 1D - array

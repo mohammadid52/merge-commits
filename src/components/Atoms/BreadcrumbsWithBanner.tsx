@@ -11,7 +11,7 @@ import InformationalWalkThrough from 'components/Dashboard/Admin/Institutons/Inf
 import HeroBanner from 'components/Header/HeroBanner';
 import useDictionary from 'customHooks/dictionary';
 import {breadcrumbsRoutes} from 'utilities/breadcrumb';
-import {useQuery} from '@customHooks/urlParam';
+import useAuth from '@customHooks/useAuth';
 
 interface BreadCrumbProps {
   items?: {title: string; url?: string; last: boolean; goBack?: boolean}[];
@@ -37,14 +37,9 @@ const BreadcrumbsWithBanner: React.FC<BreadCrumbProps> = (props: BreadCrumbProps
     bannerImage,
     title
   } = props;
-  const {
-    state: {
-      user: {isSuperAdmin}
-    },
-    theme,
-    userLanguage,
-    clientKey
-  } = useGlobalContext();
+  const {state, theme, userLanguage, clientKey} = useGlobalContext();
+
+  const user = state.temp.user;
 
   const {BreadcrumsTitles, Institute_info} = useDictionary(clientKey);
   const pathname = location.pathname.replace(/\/$/, '');
@@ -163,6 +158,7 @@ const BreadcrumbsWithBanner: React.FC<BreadCrumbProps> = (props: BreadCrumbProps
     }
   }, [pathname]);
 
+  const {isSuperAdmin} = useAuth();
   const baseUrl = isSuperAdmin
     ? `/dashboard/manage-institutions`
     : `/dashboard/manage-institutions/institution/${institutionId}`;
@@ -175,7 +171,8 @@ const BreadcrumbsWithBanner: React.FC<BreadCrumbProps> = (props: BreadCrumbProps
       lessonData,
       roomData,
       courseData,
-      unitData
+      unitData,
+      user
     }
   });
 

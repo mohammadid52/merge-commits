@@ -314,15 +314,12 @@ const Anthology = ({
       const listFilterIfTeacher = {
         filter: {
           studentAuthID: {eq: studentAuthID},
-          shared: {eq: 'true'}
+          shared: {eq: true}
         }
       };
 
       const journalEntryData: any = await API.graphql(
-        graphqlOperation(
-          queries.listUniversalJournalData,
-          isTeacher ? listFilterIfTeacher : listFilter
-        )
+        graphqlOperation(queries.listUniversalJournalData, listFilter)
       );
       const journalEntryDataRows =
         journalEntryData?.data?.listUniversalJournalData?.items || [];

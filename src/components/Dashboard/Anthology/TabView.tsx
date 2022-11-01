@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import {FaEdit} from 'react-icons/fa';
 
 import {useGlobalContext} from 'contexts/GlobalContext';
@@ -136,7 +136,7 @@ const TabView = ({
         return removeDuplicates(filteredJournalContent);
       }
     } else if (mainSection === 'Private') {
-      return removeDuplicates(filteredJournalContent);
+      return removeDuplicates(filteredJournalContent).filter((t) => t.shared);
     } else {
       return [];
     }

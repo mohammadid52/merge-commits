@@ -355,6 +355,8 @@ const LessonHeaderBar = ({
   // ##################################################################### //
   // ############################### OUTPUT ############################## //
   // ##################################################################### //
+  const isLesson = lessonState?.lessonData.type === 'lesson';
+
   return (
     <div
       style={{zIndex: 3000}}
@@ -371,8 +373,8 @@ const LessonHeaderBar = ({
             'border-sea-green hover:bg-sea-green text-sea-green white-text-on-hover border-2'
           }
           header={
-            leaveAfterCompletion
-              ? `Congratulations, you have completed the lesson ${lessonState.lessonData.title}. Did you want to keep your writing exercises in the classroom or move them to your notebook?`
+            leaveAfterCompletion && isLesson
+              ? `Congratulations, you have completed the lesson ${lessonState.lessonData.title}, Did you want to keep your writing excercies in the classroom or move them to your notebook`
               : 'This will take you out of the lesson.  Did you want to continue?'
           }
           button1={`${
@@ -382,10 +384,10 @@ const LessonHeaderBar = ({
               ? 'Go to the dashboard'
               : 'Saving your data...'
           }`}
-          button2="Leave in classroom"
+          button2={isLesson ? 'Leave in classroom' : 'Stay on survey'}
           svg="question"
           handleButton1={leaveAfterCompletion ? handleNotebookSave : handleManualSave}
-          handleButton2={goToClassRoom}
+          handleButton2={isLesson ? goToClassRoom : () => setLeaveModalVisible(false)}
           theme="dark"
           fill="screen"
         />
