@@ -175,11 +175,10 @@ const LessonApp = ({}: ILessonSurveyApp) => {
       const lessonProgress = JSON.parse(pages).lessonProgress || 0;
 
       lessonDispatch({type: 'SET_CURRENT_PAGE', payload: lessonProgress});
-      setLessonDataLoaded(true);
       setPageStateUpdated(true);
       history.push(`${match.url}/${lessonProgress}`);
     }
-  }, [lessonData.id, misc?.personLessonData]);
+  }, [lessonData.id, misc?.personLessonData?.lessonID]);
 
   useEffect(() => {
     if (lessonState.lessonData && lessonState.lessonData.id) {
