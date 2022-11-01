@@ -27,7 +27,7 @@ import List from './List';
 import UserListLoader from './UserListLoader';
 
 const UserLookup = ({isInInstitute, instituteId}: any) => {
-  const {state, theme, userLanguage, clientKey} = useContext(GlobalContext);
+  const {state, theme, dispatch, userLanguage, clientKey} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const history = useHistory();
   const [status, setStatus] = useState('');
@@ -120,6 +120,13 @@ const UserLookup = ({isInInstitute, instituteId}: any) => {
       removeSearchAction();
     }
   };
+
+  useEffect(() => {
+    dispatch({
+      type: 'UPDATE_TEMP_USER',
+      payload: {user: null}
+    });
+  }, []);
 
   const setSearch = (str: string) => {
     setSearchInput({

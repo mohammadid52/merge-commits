@@ -154,6 +154,7 @@ const User = (props: IUserProps) => {
         type: 'UPDATE_TEMP',
         payload: {roomData: arrayOfResponseObjects, authId}
       });
+
       // mapData(arrayOfResponseObjects);
       return arrayOfResponseObjects;
     } catch (e) {
@@ -279,6 +280,13 @@ const User = (props: IUserProps) => {
         graphqlOperation(customQueries.getUserProfile, {id: id})
       );
       const userData = result.data.userById.items.pop();
+
+      dispatch({
+        type: 'UPDATE_TEMP_USER',
+        payload: {
+          user: {id: userData.id, name: `${userData.firstName} ${userData.lastName}`}
+        }
+      });
 
       let studentClasses: any = userData.classes?.items.map((item: any) => item?.class);
       studentClasses = studentClasses.filter((d: any) => d !== null);
