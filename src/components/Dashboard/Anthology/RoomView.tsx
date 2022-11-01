@@ -1,6 +1,5 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import Loader from '@components/Atoms/Loader';
-import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import {useQuery} from '@customHooks/urlParam';
 import useAuth from '@customHooks/useAuth';
 import {createFilterToFetchSpecificItemsOnly} from '@utilities/strings';
@@ -8,7 +7,6 @@ import {createFilterToFetchSpecificItemsOnly} from '@utilities/strings';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
 import React, {useEffect, useState} from 'react';
-import {useParams} from 'react-router';
 
 import {getImageFromS3} from 'utilities/services';
 import RoomViewCard from './RoomView/RoomViewCard';
@@ -16,6 +14,8 @@ import RoomViewCard from './RoomView/RoomViewCard';
 interface IRoomViewProps {
   roomIdList: string[];
   mainSection?: string;
+  studentAuthId?: string;
+  studentEmail?: string;
   sectionRoomID?: string;
   sectionTitle?: string;
   handleSectionSelect?: (
@@ -31,7 +31,9 @@ const RoomView = ({
   sectionRoomID,
   sectionTitle,
   handleSectionSelect,
-  roomIdList
+  roomIdList,
+  studentAuthId,
+  studentEmail
 }: IRoomViewProps) => {
   // ##################################################################### //
   // ################## GET NOTEBOOK ROOMS FROM CONTEXT ################## //
@@ -41,7 +43,7 @@ const RoomView = ({
   const [loaded, setLoaded] = useState<boolean>(roomIdList.length === 0);
   const [filteredRooms, setFilteredRooms] = useState<any[]>([]);
 
-  const {state} = useGlobalContext();
+  const {state, dispatch} = useGlobalContext();
 
   const mapData = (responseData: any[]) => {
     const curriculumMap = responseData.map(async (roomObj: any) => {
@@ -98,10 +100,24 @@ const RoomView = ({
           }
         })
       );
-      const responseData = roomsList.data.listRooms.items;
+      const responseData = roomsList?.data?.listRooms?.items || [];
       mapData(responseData);
     } catch (e) {
       console.error('getMultipleRooms - ', e);
+    }
+  };
+
+  // if nothing works call this
+  const checkFromState = () => {
+    // if (studentAuthId && studentEmail) {
+    //   getDashboardData(studentAuthId, studentEmail);
+    // }
+    if (state?.temp?.roomData) {
+      mapData(state?.temp?.roomData);
+    } else {
+      if (roomIdList.length > 0) {
+        getMultipleRoomsAsATeacher(roomIdList);
+      }
     }
   };
 
@@ -118,9 +134,7 @@ const RoomView = ({
         getMultipleRoomsAsAStudent();
       }
     } else {
-      if (roomIdList.length > 0) {
-        getMultipleRoomsAsATeacher(roomIdList);
-      }
+      checkFromState();
     }
   }, [state?.roomData?.rooms, roomIdList, isStudent]);
 

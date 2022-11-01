@@ -2854,6 +2854,10 @@ export const listUniversalLessonStudentDatas = /* GraphQL */ `
         studentID
         studentAuthID
         studentEmail
+        lesson {
+          title
+          id
+        }
         currentLocation
         lessonProgress
         pageData {
@@ -2904,6 +2908,10 @@ export const listUniversalLessonWritingExcercises = /* GraphQL */ `
         currentLocation
         lessonProgress
         lessonName
+        lesson {
+          title
+          id
+        }
         pageData {
           domID
           options

@@ -76,6 +76,7 @@ type PersonLessonsData @model @auth(rules: [{allow: public}]) {
   ratings: Int @default(value: "0")
   isCompleted: Boolean @default(value: "false")
   roomId: String
+  lesson: UniversalLesson @hasOne(fields: ["lessonID"])
 }
 
 type Institution @model @auth(rules: [{allow: public}]) {
@@ -654,6 +655,7 @@ type UniversalLessonStudentData @model @auth(rules: [{allow: public}]) {
   syllabusLessonID: ID!
     @index(name: "bySyllabusLessonAndStudent", sortKeyFields: ["studentID"])
   lessonID: ID!
+  lesson: UniversalLesson @hasOne(fields: ["lessonID"])
   lessonPageID: ID!
   studentID: ID!
   studentAuthID: ID!
@@ -672,6 +674,7 @@ type UniversalLessonWritingExcercises @model @auth(rules: [{allow: public}]) {
   syllabusLessonID: ID!
     @index(name: "bySyllabusLessonAndStudent", sortKeyFields: ["studentID"])
   lessonID: ID!
+  lesson: UniversalLesson @hasOne(fields: ["lessonID"])
   lessonPageID: ID!
   lessonName: String
   studentID: ID!
@@ -773,6 +776,7 @@ type UniversalJournalData @model @auth(rules: [{allow: public}]) {
   feedbacks: [String]
   shared: Boolean
   lessonID: ID
+  lesson: UniversalLesson @hasOne(fields: ["lessonID"])
   syllabusLessonID: String
   lessonType: String
   roomID: String

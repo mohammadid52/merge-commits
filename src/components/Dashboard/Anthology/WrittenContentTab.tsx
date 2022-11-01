@@ -51,10 +51,7 @@ const WrittenContentTab = (props: ITabViewProps) => {
   // ##################################################################### //
   const viewModeView = (contentObj: UniversalJournalData) => {
     const notesExist = contentObj?.entryData[0]?.domID.includes('notes_form');
-    console.log(
-      '🚀 ~ file: WrittenContentTab.tsx ~ line 54 ~ viewModeView ~ notesExist',
-      notesExist
-    );
+
     const filtered = filter(
       contentObj?.entryData,
       (ed) => ed && ed.type.includes('content')
@@ -80,8 +77,8 @@ const WrittenContentTab = (props: ITabViewProps) => {
       <>
         <div className={`flex mb-2 justify-between items-center`}>
           <p className={`w-auto text-right text-xs text-gray-500`}>
-            {/* @ts-ignore */}
-            Lesson Name: {contentObj?.lessonName || 'not available'}
+            Lesson Name: {/* @ts-ignore */}
+            {contentObj?.lessonName || contentObj?.lesson?.title || 'not available'}
           </p>
           <p className={`w-auto text-right text-xs text-gray-500`}>
             Updated: {dateFromServer(contentObj?.updatedAt)}

@@ -16,6 +16,7 @@ import useGraphqlMutation from '@customHooks/useGraphqlMutation';
 import {UniversalLessonStudentData, UpdatePersonLessonsDataInput} from 'API';
 import {useNotifications} from '@contexts/NotificationContext';
 import {useLessonContext} from '@contexts/LessonContext';
+import useAuth from '@customHooks/useAuth';
 
 const LessonHeaderBar = ({
   overlay,
@@ -52,7 +53,13 @@ const LessonHeaderBar = ({
   // To track user clicks on home button or click next on last page
   const [leaveAfterCompletion, setLeaveAfterCompletion] = useState<boolean>(false);
 
-  const goToClassRoom = () => history.push(`/dashboard/classroom/${getRoomData.id}`);
+  const getUrl = () => getLocalStorageData('survey_redirect');
+
+  const {isStudent} = useAuth();
+  const goToClassRoom = () =>
+    isStudent
+      ? history.push(`/dashboard/classroom/${getRoomData.id}`)
+      : history.push(getUrl() || '/dashboard');
 
   const handleManualSave = () => {
     if (lessonState.updated) {
@@ -348,6 +355,8 @@ const LessonHeaderBar = ({
   // ##################################################################### //
   // ############################### OUTPUT ############################## //
   // ##################################################################### //
+  const isLesson = lessonState?.lessonData.type === 'lesson';
+
   return (
     <div
       style={{zIndex: 3000}}
@@ -364,21 +373,21 @@ const LessonHeaderBar = ({
             'border-sea-green hover:bg-sea-green text-sea-green white-text-on-hover border-2'
           }
           header={
-            leaveAfterCompletion
+            leaveAfterCompletion && isLesson
               ? `Congratulations, you have completed the lesson ${lessonState.lessonData.title}, Did you want to keep your writing excercies in the classroom or move them to your notebook`
               : 'This will take you out of the lesson.  Did you want to continue?'
           }
           button1={`${
             !waiting && leaveAfterCompletion && lessonState.lessonData.type === 'lesson'
-              ? 'Mark lesson as complete and move your work to your notebook'
+              ? 'I completed this lesson. \n Move my work to my notebook.'
               : !waiting
               ? 'Go to the dashboard'
               : 'Saving your data...'
           }`}
-          button2="Leave in classroom"
+          button2={isLesson ? 'Leave in classroom' : 'Stay on survey'}
           svg="question"
           handleButton1={leaveAfterCompletion ? handleNotebookSave : handleManualSave}
-          handleButton2={goToClassRoom}
+          handleButton2={isLesson ? goToClassRoom : () => setLeaveModalVisible(false)}
           theme="dark"
           fill="screen"
         />

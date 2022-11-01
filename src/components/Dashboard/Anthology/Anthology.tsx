@@ -314,15 +314,12 @@ const Anthology = ({
       const listFilterIfTeacher = {
         filter: {
           studentAuthID: {eq: studentAuthID},
-          shared: {eq: 'true'}
+          shared: {eq: true}
         }
       };
 
       const journalEntryData: any = await API.graphql(
-        graphqlOperation(
-          queries.listUniversalJournalData,
-          isTeacher ? listFilterIfTeacher : listFilter
-        )
+        graphqlOperation(queries.listUniversalJournalData, listFilter)
       );
       const journalEntryDataRows =
         journalEntryData?.data?.listUniversalJournalData?.items || [];
@@ -669,6 +666,8 @@ const Anthology = ({
 
   const {isStudent} = useAuth();
   const dynamicAuthID = isStudent ? state.user.authId : studentAuthID;
+  const dynamicEmail = isStudent ? state.user.email : studentEmail;
+
   const getUniversalArchiveData = async () => {
     try {
       const archiveData: any = await API.graphql(
@@ -696,6 +695,9 @@ const Anthology = ({
           filter: {
             studentID: {
               eq: dynamicAuthID
+            },
+            studentEmail: {
+              eq: dynamicEmail
             }
           }
         })
@@ -842,36 +844,31 @@ const Anthology = ({
     roomIdString: string,
     roomName?: string
   ) => {
-    if (roomIdString !== sectionRoomID) {
-      if (section === 'Class Notebook') {
-        setMainSection('Class');
-        setSectionRoomID(roomIdString);
-        setSectionTitle(roomName);
-        setSubSection('Work');
-        setTab(0);
-        setShowPasscodeEntry(false);
-        setPasscodeInput('');
-        setAccessMessage('');
-      } else if (section === 'Private Notebook' && !isTeacher) {
-        setShowPasscodeEntry(true);
-      } else if (section === 'Private Notebook' && isTeacher) {
-        setMainSection('Private');
-        setSectionRoomID('private');
-        setSectionTitle(`Private Notebook`);
-        setSubSection('Journal');
-        setTab(0);
-        setShowPasscodeEntry(false);
-        setPasscodeInput('');
-        setAccessMessage({message: '', textClass: ''});
-      }
+    if (section === 'Class Notebook') {
+      setMainSection('Class');
+      setSectionRoomID(roomIdString);
+      setSectionTitle(roomName);
+      setSubSection('Work');
+      setTab(0);
+      setShowPasscodeEntry(false);
+      setPasscodeInput('');
+      setAccessMessage('');
+    } else if (section === 'Private Notebook' && !isTeacher) {
+      setShowPasscodeEntry(true);
+    } else if (section === 'Private Notebook' && isTeacher) {
+      setMainSection('Private');
+      setSectionRoomID('private');
+      setSectionTitle(`Private Notebook`);
+      setSubSection('Journal');
+      setTab(0);
+      setShowPasscodeEntry(false);
+      setPasscodeInput('');
+      setAccessMessage({message: '', textClass: ''});
+    }
 
-      const el = document.getElementById('anthology_tabs');
-      if (el) {
-        el.scrollIntoView({behavior: 'smooth', block: 'start'});
-      }
-    } else {
-      setSectionRoomID('');
-      setSectionTitle('');
+    const el = document.getElementById('anthology_tabs');
+    if (el) {
+      el.scrollIntoView({behavior: 'smooth', block: 'start'});
     }
   };
   const params = useQuery(location.search);
@@ -985,6 +982,8 @@ const Anthology = ({
                 </IconContext.Provider>
               }>
               <RoomView
+                studentAuthId={studentAuthID}
+                studentEmail={studentEmail}
                 roomIdList={roomCardIds}
                 mainSection={mainSection}
                 sectionRoomID={sectionRoomID}

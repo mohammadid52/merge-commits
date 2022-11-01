@@ -53,10 +53,12 @@ const useAuth = (): {
   const Placeholder = ({
     name,
     size = 'w-10 h-10 md:w-12 md:h-12',
-    textSize = 'text-2xl'
+    textSize = '2xl:text-2xl',
+    className
   }: {
     name?: string;
     textSize?: string;
+    className?: string;
     size?: string;
   }) => {
     const [firstName, lastName] = getInitialsFromString(
@@ -64,7 +66,7 @@ const useAuth = (): {
     );
     return (
       <div
-        className={`${size} flex flex-shrink-0 justify-center items-center rounded-full  border-0 border-gray-400 shadow-elem-light cursor-pointer`}>
+        className={`${size} flex flex-shrink-0 justify-center items-center rounded-full  border-0 border-gray-400 shadow-elem-light cursor-pointer ${className}`}>
         <div
           className={`h-full w-full flex justify-center items-center ${textSize} text-extrabold text-white rounded-full`}
           style={{

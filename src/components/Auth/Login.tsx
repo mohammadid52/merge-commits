@@ -43,6 +43,8 @@ const Login = ({updateAuthState}: LoginProps) => {
     setIsToggled(state);
   };
 
+  const [isLoginSuccess, setIsLoginSuccess] = useState(false);
+
   async function SignIn() {
     let username = input.email;
     let password = input.password;
@@ -65,6 +67,7 @@ const Login = ({updateAuthState}: LoginProps) => {
           user.signInUserSession.accessToken.jwtToken
         );
         if (user) {
+          setIsLoginSuccess(true);
           let userInfo: any = await API.graphql(
             graphqlOperation(queries.getPerson, {email: username, authId: user.username})
           );
@@ -329,7 +332,10 @@ const Login = ({updateAuthState}: LoginProps) => {
   }, []);
 
   return (
-    <AuthCard message={message} title={createPassword ? 'Create your password' : 'Login'}>
+    <AuthCard
+      isSuccess={isLoginSuccess}
+      message={message}
+      title={createPassword ? 'Create your password' : 'Login'}>
       {!createPassword ? (
         <>
           <div className="h-auto flex-grow flex flex-col justify-center">

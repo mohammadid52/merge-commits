@@ -6,6 +6,7 @@ import useInLessonCheck from 'customHooks/checkIfInLesson';
 import ErrorBoundary from '../../../Error/ErrorBoundary';
 import {LessonPageWrapper} from '../../UniversalLessonBlockComponents/LessonPageWrapper';
 import LessonRowComposer from './CoreUniversalLesson/LessonRowComposer';
+import useAuth from '@customHooks/useAuth';
 
 const CoreUniversalLesson = ({createJournalData}: {createJournalData?: () => void}) => {
   const isInLesson = useInLessonCheck();
@@ -16,6 +17,7 @@ const CoreUniversalLesson = ({createJournalData}: {createJournalData?: () => voi
     return lessonState.currentPage === lessonState.lessonData?.lessonPlan?.length - 1;
   };
 
+  const {isStudent} = useAuth();
   const getRoomData = getLocalStorageData('room_info');
 
   return (
@@ -27,7 +29,7 @@ const CoreUniversalLesson = ({createJournalData}: {createJournalData?: () => voi
         <LessonPageWrapper>
           <ErrorBoundary fallback={<h1>Error in the LessonRowComposer</h1>}>
             <LessonRowComposer />
-            {userAtEnd() ? (
+            {userAtEnd() && isStudent ? (
               <SaveQuit createJournalData={createJournalData} roomID={getRoomData?.id} />
             ) : null}
           </ErrorBoundary>

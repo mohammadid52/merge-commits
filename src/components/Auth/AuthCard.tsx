@@ -3,16 +3,18 @@ import {MessageProps} from 'components/Message/Message';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDeviceDetect from 'customHooks/deviceDetect';
 import {getAsset} from 'assets';
-import React, {ReactNode, useState} from 'react';
+import React, {ReactNode, useEffect, useState} from 'react';
 import {NavLink} from 'react-router-dom';
+import gsap from 'gsap';
 
 interface AuthCardProps {
   children: ReactNode;
   title?: string;
   message?: MessageProps;
+  isSuccess?: boolean;
 }
 
-const AuthCard = ({children, title, message}: AuthCardProps) => {
+const AuthCard = ({children, title, message, isSuccess}: AuthCardProps) => {
   const {browser: detectedBrowser} = useDeviceDetect();
   const [openAlertBrowser, setOpenAlertBrowser] = useState<boolean>(
     detectedBrowser === 'Safari'
@@ -20,9 +22,26 @@ const AuthCard = ({children, title, message}: AuthCardProps) => {
 
   const {clientKey} = useGlobalContext();
 
+  useEffect(() => {
+    if (isSuccess) {
+      // setTimeout(() => {
+      const el = document.getElementsByClassName('auth-card')[0];
+      if (el) {
+        gsap.to(el, {
+          delay: 1,
+          duration: 1,
+          y: '-200%',
+          scale: 0.5,
+          opacity: 0
+        });
+      }
+      // }, 4000);
+    }
+  }, [isSuccess]);
+
   return (
     <div className="w-full h-screen flex flex-row items-center justify-center bg-opacity-10 text-sm md:bg-none sm:bg-cover sm:bg-center">
-      <div className="w-full m-8 md:max-w-256  max-w-9/10 sm:max-w-100 h-full max-h-160 flex flex-row  customShadow overflow-hidden">
+      <div className="w-full auth-card m-8 md:max-w-256  max-w-9/10 sm:max-w-100 h-full max-h-160 flex flex-row  customShadow overflow-hidden">
         <div
           style={{borderRadius: 'inherit'}}
           className={` hidden  md:block min-w-sm max-w-sm bg-gray-200  pr-0 ${getAsset(

@@ -37,18 +37,19 @@ export interface globalStateType {
   lessonsPayload: {
     lessonsData: any[];
   };
+  temp: any;
 }
 
 export const globalState: globalStateType = {
   sidebar: {
-    upcomingLessons: [],
+    upcomingLessons: []
   },
   roomData: {
     curriculum: {},
     rooms: [],
     syllabus: [],
     activeSyllabus: '',
-    lessons: [],
+    lessons: []
   },
   currentPage: '',
   activeRoom: '',
@@ -60,7 +61,7 @@ export const globalState: globalStateType = {
     theme: 'dark',
     themeTextColor: 'text-white',
     themeBackgroundColor: 'bg-dark-gray',
-    themeSecBackgroundColor: 'bg-gray-700',
+    themeSecBackgroundColor: 'bg-gray-700'
   },
   user: {
     id: '',
@@ -72,9 +73,12 @@ export const globalState: globalStateType = {
     role: '',
     location: [],
     lastLoggedIn: '',
-    lastLoggedOut: '',
+    lastLoggedOut: ''
   },
+
+  temp: {},
+
   lessonsPayload: {
-    lessonsData: [],
-  },
+    lessonsData: []
+  }
 };

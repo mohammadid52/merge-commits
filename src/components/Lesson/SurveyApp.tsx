@@ -1,10 +1,8 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
-import {PartInput} from 'API';
-import React, {useContext, useEffect, useRef, useState} from 'react';
-import {useHistory, useParams, useRouteMatch} from 'react-router-dom';
-import {v4 as uuidV4} from 'uuid';
+import useAuth from '@customHooks/useAuth';
+import {PartInput, UniversalSurveyStudentData} from 'API';
 import {GlobalContext} from 'contexts/GlobalContext';
+import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
 import * as mutations from 'graphql/mutations';
 import * as queries from 'graphql/queries';
 import {
@@ -14,16 +12,18 @@ import {
   StudentPageInput,
   UniversalLessonPage
 } from 'interfaces/UniversalLessonInterfaces';
+import React, {useContext, useEffect, useRef, useState} from 'react';
+import {useHistory, useParams, useRouteMatch} from 'react-router-dom';
 import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
+import {v4 as uuidV4} from 'uuid';
 import ErrorBoundary from '../Error/ErrorBoundary';
 import LessonHeaderBar from '../Header/LessonHeaderBar';
 import Foot from './Foot/Foot';
 import LessonPageLoader from './LessonPageLoader';
-import StudentNavigationForMobile from './StudentNavigationForMobile/StudentNavigationForMobile';
 import CoreUniversalLesson from './UniversalLesson/views/CoreUniversalLesson';
 import useLessonFunctions from './useLessonFunctions';
 
-const SurveyApp = ({getSyllabusLesson}: any) => {
+const SurveyApp = () => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
 
   const gContext = useContext(GlobalContext);
@@ -85,11 +85,10 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
       const lessonProgress = JSON.parse(pages).lessonProgress || 0;
 
       lessonDispatch({type: 'SET_CURRENT_PAGE', payload: lessonProgress});
-      setLessonDataLoaded(true);
       setPageStateUpdated(true);
       history.push(`${match.url}/${lessonProgress}`);
     }
-  }, [lessonData.id, misc?.personLessonData]);
+  }, [lessonData.id, misc?.personLessonData?.lessonID]);
 
   // ##################################################################### //
   // ###################### INITIALIZE STUDENT DATA ###################### //
@@ -269,7 +268,7 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
   // ~~~~~~~ RECORD CREATION FUNTION ~~~~~~~ //
 
   const createSurveyData = async (
-    initialDataFlattened: any[],
+    initialDataFlattened: any[] = [],
     lessonID: string,
     authId: string,
     email: string
@@ -285,7 +284,7 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
         roomID: getRoomData.id,
         currentLocation: '0',
         lessonProgress: '0',
-        surveyData: initialDataFlattened
+        surveyData: initialDataFlattened.flat()
       };
 
       const newSurveyData: any = await API.graphql(
@@ -309,55 +308,85 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
    * IF THERE IS ANY, AND SETS IT IN STATE  *
    ******************************************/
 
-  const fetchSurveyDataRow = async (
-    filterObj: any,
-    nextToken: string,
-    outArray: any[]
-  ): Promise<any> => {
-    let combined;
-    setLessonDataLoaded(false);
-    try {
-      let surveyData: any = await API.graphql(
-        graphqlOperation(queries.listUniversalSurveyStudentData, {
-          ...filterObj,
-          nextToken: nextToken
-        })
-      );
+  // const fetchSurveyDataRow = async (
+  //   filterObj: any,
+  //   nextToken: string,
+  //   outArray: any[]
+  // ): Promise<any> => {
+  //   let combined;
+  //   setLessonDataLoaded(false);
+  //   try {
+  //     let surveyData: any = await API.graphql(
+  //       graphqlOperation(queries.listUniversalSurveyStudentData, {
+  //         ...filterObj,
+  //         nextToken: nextToken
+  //       })
+  //     );
 
-      let surveyDataRow = surveyData.data.listUniversalSurveyStudentData.items;
+  //     let surveyDataRow = surveyData.data.listUniversalSurveyStudentData.items;
 
-      let theNextToken = surveyData.data.listUniversalSurveyStudentData?.nextToken;
+  //     let theNextToken = surveyData.data.listUniversalSurveyStudentData?.nextToken;
 
-      combined = [...outArray, ...surveyDataRow];
+  //     combined = [...outArray, ...surveyDataRow];
 
-      if (theNextToken) {
-        // console.log('nextToken fetching more - ', nextToken);
-        combined = await fetchSurveyDataRow(filterObj, theNextToken, combined);
+  //     if (theNextToken) {
+  //       // console.log('nextToken fetching more - ', nextToken);
+  //       combined = await fetchSurveyDataRow(filterObj, theNextToken, combined);
+  //     }
+  //     setLessonDataLoaded(true);
+  //     return combined;
+  //   } catch (e) {
+  //     console.error('loopFetchStudentData - ', e);
+  //     return [];
+  //   }
+  // };
+
+  const fetchSurveyDataRow = async (): Promise<UniversalSurveyStudentData[]> =>
+    new Promise(async (resolve) => {
+      try {
+        setLessonDataLoaded(false);
+        // fetch by pages
+
+        let result: any = [];
+
+        await Promise.all(
+          PAGES.map(async (page: any, idx: number) => {
+            let studentData: any = await API.graphql(
+              graphqlOperation(queries.getUniversalLessonStudentData, {
+                id: `${user.authId}-${getRoomData.id}-${lessonID}-${page.id}`
+                // filter: {...filterObj.filter, lessonPageID: {eq: page.id}}
+              })
+            );
+
+            let studentDataObject = studentData.data.getUniversalLessonStudentData;
+            result.push(studentDataObject);
+          })
+        );
+
+        /**
+         * combination of last fetch results
+         * && current fetch results
+         */
+
+        lessonDispatch({type: 'LESSON_LOADED', payload: true});
+
+        // console.log('no more - ', combined);
+        setLessonDataLoaded(true);
+        resolve(result);
+      } catch (e) {
+        console.error('loopFetchStudentData - ', e);
+        return [];
       }
-      setLessonDataLoaded(true);
-      return combined;
-    } catch (e) {
-      console.error('loopFetchStudentData - ', e);
-      return [];
-    }
-  };
+    });
 
+  const {isStudent} = useAuth();
   const getOrCreateSurveyData = async () => {
     // TRY TRY TRY
     try {
       // existing student rows
-      // const surveyDataRow = await (await _fetchSurveyDataRow()).filter(Boolean); // table object
-      const listFilter = {
-        filter: {
-          studentAuthID: {eq: user.authId},
-          lessonID: {eq: lessonID},
-          syllabusLessonID: {eq: getRoomData.activeSyllabus},
-          roomID: {eq: getRoomData.id}
-        }
-      };
 
       // existing student rows
-      const surveyDataRow = await fetchSurveyDataRow(listFilter, undefined, []); // table object
+      const surveyDataRow = await (await fetchSurveyDataRow()).filter(Boolean); // table object
       const surveyDataResponses = surveyDataRow[0]?.surveyData
         ? surveyDataRow[0].surveyData
         : []; // flat 1D - array
@@ -366,19 +395,21 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
         surveyDataResponses
       ); //  flat 1D - array
       if (surveyDataRow === undefined || (surveyDataRow && surveyDataRow?.length === 0)) {
-        const createNewRecords = await createSurveyData(
-          lessonState?.studentData,
-          lessonID,
-          user.authId,
-          user.email
-        );
-        if (createNewRecords?.surveyData?.length > 0) {
-          lessonDispatch({
-            type: 'LOAD_SURVEY_DATA',
-            payload: {
-              dataIdReferences: surveyDataId(createNewRecords)
-            }
-          });
+        if (isStudent) {
+          const createNewRecords = await createSurveyData(
+            lessonState?.studentData,
+            lessonID,
+            user.authId,
+            user.email
+          );
+          if (createNewRecords?.surveyData?.length > 0) {
+            lessonDispatch({
+              type: 'LOAD_SURVEY_DATA',
+              payload: {
+                dataIdReferences: surveyDataId(createNewRecords)
+              }
+            });
+          }
         }
       } else {
         const finalData = [...surveyDataResponses, ...extraQuestions];
@@ -445,15 +476,15 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
   // ~~~~~~~~~~~~~~~~ 1 INIT ~~~~~~~~~~~~~~~ //
 
   useEffect(() => {
-    if (!isOnDemand && personLocationObj.id === '') {
+    if (!isOnDemand && personLocationObj.id === '' && isStudent) {
       initializeLocation();
     }
-  }, [lessonState.lessonData.id]);
+  }, [lessonState.lessonData.id, isStudent]);
 
   // ~~~~~~~~~~~~ 2 PAGE CHANGE ~~~~~~~~~~~~ //
 
   useEffect(() => {
-    if (!isOnDemand && created && lessonState.currentPage >= 0) {
+    if (!isOnDemand && created && lessonState.currentPage >= 0 && isStudent) {
       const pageChangeLocation = {
         ...getLocationData,
         currentLocation: lessonState.currentPage,
@@ -465,7 +496,7 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
       //@ts-ignore
       topLessonRef?.current?.scrollIntoView();
     }
-  }, [created, lessonState.currentPage]);
+  }, [created, lessonState.currentPage, isStudent]);
 
   const initializeLocation = async () => {
     if (!getted) {
@@ -594,9 +625,9 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
     handleSurveyMutateData();
   }, [lessonState.currentPage]);
 
-  const [listPersonLessonsData, setListPersonLessonsData] = useState([]);
   const getPersonLessonsDataId = (): string =>
-    listPersonLessonsData?.find((_d: any) => _d.lessonID === lessonID)?.id || '';
+    lessonState?.misc?.personLessonData?.data?.find((_d: any) => _d.lessonID === lessonID)
+      ?.id || '';
 
   const handleSurveyMutateData = async () => {
     try {
@@ -650,12 +681,12 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
           ratings: 0
         };
 
-        await API.graphql(
-          graphqlOperation(mutations.createPersonLessonsData, {input: payload})
-        );
+        if (isStudent) {
+          await API.graphql(
+            graphqlOperation(mutations.createPersonLessonsData, {input: payload})
+          );
+        }
       } else {
-        setListPersonLessonsData(items);
-
         payload = {
           id: items?.find((_d: any) => _d.lessonID === lessonID)?.id,
 
@@ -670,11 +701,13 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
             .trim()
         };
 
-        await API.graphql(
-          graphqlOperation(mutations.updatePersonLessonsData, {
-            input: payload
-          })
-        );
+        if (isStudent) {
+          await API.graphql(
+            graphqlOperation(mutations.updatePersonLessonsData, {
+              input: payload
+            })
+          );
+        }
       }
     } catch (error) {
       console.error(
@@ -724,7 +757,9 @@ const SurveyApp = ({getSyllabusLesson}: any) => {
             lessonDataLoaded={lessonDataLoaded}
             overlay={overlay}
             pageStateUpdated={pageStateUpdated}
-            getLessonCompletedValue={_getLessonCompletedValue}
+            getLessonCompletedValue={
+              lessonState?.misc?.personLessonData?.lessonID && _getLessonCompletedValue
+            }
             setOverlay={setOverlay}
             isAtEnd={isAtEnd}
             setisAtEnd={setisAtEnd}
