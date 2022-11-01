@@ -372,7 +372,7 @@ const LessonHeaderBar = ({
           }
           header={
             leaveAfterCompletion
-              ? `Congratulations, you have completed the lesson ${lessonState.lessonData.title}, Did you want to keep your writing excercies in the classroom or move them to your notebook`
+              ? `Congratulations, you have completed the lesson ${lessonState.lessonData.title}. Did you want to keep your writing exercises in the classroom or move them to your notebook?`
               : 'This will take you out of the lesson.  Did you want to continue?'
           }
           button1={`${
