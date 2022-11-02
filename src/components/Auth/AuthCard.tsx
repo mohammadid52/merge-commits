@@ -41,8 +41,8 @@ const AuthCard = ({children, title, message, isSuccess, subtitle}: AuthCardProps
   }, [isSuccess]);
 
   return (
-    <div className="w-full h-screen flex flex-row items-center justify-center bg-opacity-10 text-sm md:bg-none sm:bg-cover sm:bg-center">
-      <div className="w-full auth-card m-8 md:max-w-256  max-w-9/10 sm:max-w-100 h-full max-h-160 flex flex-row  customShadow rounded-xl overflow-hidden">
+    <div className="w-full  h-screen flex flex-row items-center justify-center text-sm md:bg-none sm:bg-cover sm:bg-center">
+      <div className="w-full z-100 auth-card m-8 md:max-w-256  max-w-9/10 sm:max-w-100 h-full max-h-160 flex flex-row  customShadow rounded-xl overflow-hidden">
         {/* Left image starts here */}
         <div
           className={` hidden  md:block min-w-sm max-w-sm bg-gray-200  pr-0 ${getAsset(

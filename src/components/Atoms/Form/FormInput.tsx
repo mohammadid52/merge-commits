@@ -30,6 +30,7 @@ interface FormInputProps {
   updateHeight?: boolean;
   inputRef?: any;
   className?: string;
+  Icon?: any;
 }
 
 const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
@@ -56,7 +57,8 @@ const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
     max,
     inputRef,
     onKeyDown,
-    dataCy
+    dataCy,
+    Icon
   } = inputProps;
   const {theme, clientKey} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
@@ -101,7 +103,12 @@ const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
           placeholder={placeHolder}
         />
       ) : (
-        <div className="relative">
+        <div className={`relative mt-1 ${className}`}>
+          {Icon && (
+            <div className="absolute  w-auto top-0 left-1 h-full flex items-center">
+              <Icon className="w-auto text-gray-500" size={20} />
+            </div>
+          )}
           <input
             data-cy={dataCy}
             style={{transition}}
@@ -114,13 +121,13 @@ const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
             maxLength={maxLength}
             name={name}
             onChange={onChange}
-            className={`mt-1 ${
+            className={`${
               dark ? 'border-gray-700  text-white bg-gray-800' : ''
             } block w-full sm:text-sm sm:leading-5 focus:outline-none focus:ring-2 focus:ring-${
               themeColor === 'iconoclastIndigo' ? 'indigo' : 'blue'
             }-600 focus:border-transparent border-0 border-gray-300 py-2 px-3 rounded-full shadow-sm ${
               theme.outlineNone
-            } ${className} ${disabledClass}`}
+            }  ${disabledClass} ${Icon ? 'pl-10' : ''}`}
             value={value ? value : ''}
             placeholder={placeHolder}
             onKeyDown={onKeyDown}
