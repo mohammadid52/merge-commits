@@ -359,10 +359,6 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
 
         student: {...selected, onDemand: Boolean(newStudent?.student?.onDemand)}
       };
-      console.log(
-        '🚀 ~ file: EditClass.tsx ~ line 362 ~ saveClassStudent ~ updatedStudent',
-        updatedStudent
-      );
 
       classStudents.push(updatedStudent);
 
