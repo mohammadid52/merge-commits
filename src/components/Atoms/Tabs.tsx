@@ -83,10 +83,10 @@ const DropDownMenu = ({index, menu, onClick}: any) => {
             leaveFrom="transform opacity-100 scale-100"
             leaveTo="transform opacity-0 scale-95">
             <Menu.Items
-              className="absolute left-0 w-60 my-2 origin-top-right bg-white divide-y divide-gray-100 rounded-md customShadow focus:outline-none cursor-pointer z-100"
+              className="absolute left-0 w-60 my-2 mb-4 origin-top-right bg-white divide-y divide-gray-100 rounded-md customShadow focus:outline-none cursor-pointer z-100"
               static>
               <div
-                className="px-2 py-1 shadow-lg"
+                className="p-2 customShadow"
                 ref={dropdownRef}
                 onMouseEnter={() => onMouseEnter()}
                 onMouseLeave={() => onMouseLeave(open)}>
