@@ -95,7 +95,7 @@ const Today: React.FC<LessonProps> = ({
           <Fragment key={index}>
             <div className="relative mb-2">
               <div className="absolute inset-0 flex items-center" aria-hidden="true">
-                <div className="w-full border-t-0 border-gray-600"></div>
+                <div className="w-full border-t-0 border-gray-400"></div>
               </div>
               <div className="relative flex justify-center">
                 <span
@@ -121,7 +121,6 @@ const Today: React.FC<LessonProps> = ({
                       lessonProps={lesson}
                       syllabusProps={syllabus}
                       accessible={accessible}
-                      lessonType={lesson.type}
                       user={state.user}
                       handleLessonMutationRating={handleLessonMutationRating}
                       getLessonRating={getLessonRating}

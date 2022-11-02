@@ -43,8 +43,8 @@ const DropDownMenu = ({
                   open ? 'bg-indigo-300 text-indigo-700' : ''
                 } hover:bg-gray-400 hover:text-gray-700 inline-flex justify-center w-full px-4 py-2 text-sm font-medium ${
                   theme === 'iconoclastIndigo' ? 'iconoclastIndigo' : 'curateBlue'
-                } rounded-md bg-opacity-20 hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 transition duration-150 ease-in-out transform hover:scale-105 text-gray-700`}>
-                <div className="w-auto inline-flex items-center">
+                } rounded-full hover:iconoclast:bg-main hover:curate:bg-main focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 transition duration-150 drop-down-group ease-in-out transform  text-gray-700`}>
+                <div className="w-auto  inline-flex items-center">
                   <div className="w-8 h-8 2xl:w-12 2xl:h-12">
                     {image ? (
                       <img
@@ -72,7 +72,7 @@ const DropDownMenu = ({
 
                   {/* <span>{[firstName, lastName].join(' ')}</span> */}
                   <ChevronDownIcon
-                    className="w-6 h-6 2xl:w-8 2xl:h-8 ml-2 -mr-1 text-violet-200 hover:text-violet-100"
+                    className="w-6 dropdown-arrow h-6 2xl:w-8 2xl:h-8 ml-2 -mr-1 text-violet-200 hover:text-violet-100"
                     aria-hidden="true"
                   />
                 </div>
@@ -86,8 +86,8 @@ const DropDownMenu = ({
               leave="transition ease-in duration-75"
               leaveFrom="transform opacity-100 scale-100"
               leaveTo="transform opacity-0 scale-95">
-              <Menu.Items className="absolute right-1 w-52 mt-1 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg focus:outline-none cursor-pointer z-max">
-                <div className="px-1 py-1 shadow-lg">
+              <Menu.Items className="absolute right-1 w-52 mt-1 origin-top-right bg-white divide-y divide-gray-100 rounded-md customShadow focus:outline-none cursor-pointer z-max">
+                <div className="px-2 py-1 shadow-lg">
                   <Menu.Item key={'role'}>
                     <div className="p-4 border-b-0 border-gray-400">
                       <span>
@@ -98,7 +98,7 @@ const DropDownMenu = ({
                   <Menu.Item data-cy="dropdown-item-profile" key={'profile-1'}>
                     <div
                       onClick={() => history.push('/dashboard/profile')}
-                      className="flex-shrink-0 flex border-t p-4 hover:bg-indigo-200 rounded-md">
+                      className="mt-2 flex-shrink-0  flex border-t p-2 px-4 hover:iconoclast:bg-400 hover:curate:bg-400 hover:text-white rounded-full">
                       <div className="flex-shrink-0 group block">
                         <div className="flex items-center">
                           <IconContext.Provider
@@ -116,7 +116,7 @@ const DropDownMenu = ({
                   <Menu.Item key={'profile-2'}>
                     <div
                       onClick={() => history.push('/dashboard/test-cases')}
-                      className="flex-shrink-0 flex border-t p-4 hover:bg-indigo-200 rounded-md">
+                      className="flex-shrink-0 mt-2 flex border-t p-2 px-4 hover:iconoclast:bg-400 hover:curate:bg-400 hover:text-white rounded-full">
                       <div className="flex-shrink-0 group block">
                         <div className="flex items-center">
                           <IconContext.Provider

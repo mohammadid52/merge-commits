@@ -52,7 +52,7 @@ const SearchInput: React.FC<SearchProps> = (searchProps: SearchProps) => {
   };
   return (
     <div
-      className={`flex w-auto py-3 px-4 rounded  ${theme.formSelect} ${
+      className={`flex w-auto py-3 px-4 rounded-full  ${theme.formSelect} ${
         theme.outlineNone
       } ${style ? style : ''}`}>
       <span className="w-6 mr-4 cursor-pointer" onClick={onKeyDown}>

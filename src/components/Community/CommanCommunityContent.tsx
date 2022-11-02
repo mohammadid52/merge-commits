@@ -67,9 +67,7 @@ const CommanCommunityContent = ({
   }, [isFetched]);
 
   return (
-    <ContentCard
-      hasBackground={false}
-      additionalClass="shadow bg-white space-y-12 p-6 rounded-b-lg">
+    <ContentCard hasBackground={false} additionalClass="space-y-12 p-6 ">
       {customContent}
 
       {!Boolean(error) && isLoading && !isFetched && (

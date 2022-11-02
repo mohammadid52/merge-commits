@@ -15,7 +15,7 @@ const TeacherRows = (props: {coTeachersList: Teacher[]; teachersList: Teacher[]}
   const allTeachers = [...teachersList, ...coTeachersList];
   return (
     <ContentCard hasBackground={false}>
-      <div className="bg-white shadow overflow-hidden rounded-b-lg">
+      <div className="overflow-hidden">
         {
           allTeachers && allTeachers.length > 0 ? (
             <ul className="">

@@ -193,6 +193,7 @@ export const globalReducer = (state: globalStateType, action: globalActions) => 
       return {
         ...state,
         temp: {
+          ...state.temp,
           authId: action.payload.authId,
           redirectUrlToUserSurveysTab: action.payload.redirectUrlToUserSurveysTab,
           roomData: action?.payload?.roomData || state.temp.roomData

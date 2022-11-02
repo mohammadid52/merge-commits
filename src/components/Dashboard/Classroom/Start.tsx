@@ -377,7 +377,7 @@ const Start: React.FC<StartProps> = ({
           (!isActive && !isTeacher && !isOnDemand) ||
           (isCompleted && type === 'survey')
         }
-        btnClass={`rounded-t-none md:rounded h-full w-full text-xs focus:outline-none ${
+        btnClass={` h-full w-full text-xs focus:outline-none ${
           !open || (isCompleted && type === 'survey') ? 'opacity-80' : 'opacity-100'
         }`}
         greenBtn={showNotebookBtn}

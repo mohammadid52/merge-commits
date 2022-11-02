@@ -51,7 +51,7 @@ const BottomBar = (props: LessonCardProps) => {
             <AiOutlineClockCircle className="w-4 h-4 sm:w-6 sm:h-6" />
           </div>
           <div
-            className={`w-auto mx-1 sm:mx-4 text-sm whitespace-pre 2xl:text-base text-gray-500`}>
+            className={`w-auto mx-1 sm:mx-2 text-sm whitespace-pre 2xl:text-base text-gray-500`}>
             {MinutesToHHMM(lessonProps.lesson?.totalEstTime)}
           </div>
         </div>
@@ -59,39 +59,18 @@ const BottomBar = (props: LessonCardProps) => {
         {/* TEACHER */}
         <div className={`flex justify-center items-center md:w-5/10 w-auto md:mr-2`}>
           <div className="w-auto text-gray-500">
-            {lessonType !== 'survey' && (
-              <AiOutlineUser className="w-4 h-4 sm:w-6 sm:h-6" />
-            )}
-            {lessonType === 'survey' && (
-              <p className="overflow-ellipsis overflow-hidden text-base text-left">
-                Status:
-                {accessible ? (
-                  <span className="ml-2 text-base font-semibold text-green-400">
-                    Open
-                  </span>
-                ) : (
-                  <span className="ml-2 text-base font-semibold text-red-600">
-                    Closed
-                  </span>
-                )}
-              </p>
-            )}
+            <AiOutlineUser className="w-4 h-4 sm:w-6 sm:h-6" />
           </div>
           {/*
            * SHOW TEACHER NAME
            */}
-          <div className={`w-auto mx-1 sm:mx-4 text-sm sm:text-base text-gray-500`}>
-            {lessonType !== 'survey' && typeof activeRoomInfo !== 'undefined'
-              ? `${activeRoomInfo?.teacher?.firstName} ${activeRoomInfo?.teacher?.lastName}`
-              : null}
-          </div>
+          {typeof activeRoomInfo !== 'undefined' ? (
+            <div
+              className={`w-auto mx-1 sm:mx-2 text-sm whitespace-pre 2xl:text-base text-gray-500`}>
+              {activeRoomInfo?.teacher?.firstName} {activeRoomInfo?.teacher?.lastName}
+            </div>
+          ) : null}
         </div>
-        {/* FILLER */}
-        {lessonType === 'survey' && (
-          <div
-            className={`flex justify-center items-center my-2 sm:w-3/10 w-3.3/10 text-gray-300`}
-          />
-        )}
 
         {/* START */}
         <div className="w-4/10 hidden sm:block">

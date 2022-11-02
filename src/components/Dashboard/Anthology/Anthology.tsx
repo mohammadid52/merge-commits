@@ -283,14 +283,14 @@ const Anthology = ({
     shared: false,
     entryData: [
       {
-        domID: `title_${nanoid(4)}`,
+        domID: `title_${nanoid(12)}`,
         type: 'header',
-        input: 'Default Title'
+        input: ''
       },
       {
-        domID: `note_${nanoid(4)}`,
+        domID: `note_${nanoid(12)}`,
         type: 'content',
-        input: '<p>Enter notes here...</p>'
+        input: ''
       }
     ]
   };
@@ -558,30 +558,17 @@ const Anthology = ({
       option: option || 0,
       recordID: recordID || ''
     });
+
+    if (editMode === 'create') {
+      const el = document.getElementById('anthology_Journal_create');
+      if (el) {
+        el.scrollIntoView({behavior: 'smooth', block: 'start'});
+      }
+    }
   };
 
   const handleResetJournalEntry = async () => {
-    setJournalEntryData({
-      id: '',
-      studentID: state.user.authId,
-      studentAuthID: state.user.authId,
-      studentEmail: state.user.email,
-      type: 'journal-entry',
-      shared: false,
-      feedbacks: [''],
-      entryData: [
-        {
-          domID: `title_${nanoid(4)}`,
-          type: 'header',
-          input: 'Default Title'
-        },
-        {
-          domID: `note_${nanoid(4)}`,
-          type: 'content',
-          input: '<p>Enter notes here...</p>'
-        }
-      ]
-    });
+    setJournalEntryData(DEFAULT_JOURNAL_ENTRY);
   };
   const [mainSection, setMainSection] = useState<string>('');
 

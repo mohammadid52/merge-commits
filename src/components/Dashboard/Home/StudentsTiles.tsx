@@ -117,7 +117,7 @@ const StudentsTiles = (props: {
           </div>
         }
       />
-      <ContentCard hasBackground={false} additionalClass="shadow bg-white  rounded-b-lg">
+      <ContentCard hasBackground={false}>
         <div className="py-12 px-4 text-center sm:px-6 lg:px-8">
           <div className="space-y-8 sm:space-y-12">
             {loading ? (

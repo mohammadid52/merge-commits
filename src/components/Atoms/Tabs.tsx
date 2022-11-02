@@ -55,11 +55,11 @@ const DropDownMenu = ({index, menu, onClick}: any) => {
               ref={buttonRef}
               className={`${
                 open || menu.children.filter((item: any) => item.active).length
-                  ? 'bg-indigo-300 text-indigo-700'
+                  ? ' iconoclast:bg-200 curate:bg-200 iconoclast:text-600 curate:text-600'
                   : ''
               } hover:bg-gray-400 hover:text-gray-700 inline-flex justify-center w-full px-1 xl:px-2 2xl:px-4 py-2 text-xs 2xl:text-base font-medium ${
                 theme === 'iconoclastIndigo' ? 'iconoclastIndigo' : 'curateBlue'
-              } rounded-md bg-opacity-20 hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 transition duration-150 ease-in-out transform hover:scale-105 text-gray-700 font-bold`}>
+              } rounded-full bg-opacity-20 hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 transition duration-150 ease-in-out transform  text-gray-700 font-bold`}>
               {menu.title}
               {open ? (
                 <ChevronUpIcon
@@ -83,16 +83,16 @@ const DropDownMenu = ({index, menu, onClick}: any) => {
             leaveFrom="transform opacity-100 scale-100"
             leaveTo="transform opacity-0 scale-95">
             <Menu.Items
-              className="absolute left-0 w-60 mt-2 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg focus:outline-none cursor-pointer z-100"
+              className="absolute left-0 w-60 my-2 mb-4 origin-top-right bg-white divide-y divide-gray-100 rounded-md customShadow focus:outline-none cursor-pointer z-100"
               static>
               <div
-                className="px-1 py-1 shadow-lg"
+                className="p-2 customShadow"
                 ref={dropdownRef}
                 onMouseEnter={() => onMouseEnter()}
                 onMouseLeave={() => onMouseLeave(open)}>
                 {menu.children.map((item: any, menuIndex: number) => (
                   <Menu.Item key={`${index}_${menuIndex}`} onClick={() => onClick(item)}>
-                    <div className="opacity-75 hover:bg-indigo-200 rounded-md px-2 py-2 text-xs 2xl:text-base">
+                    <div className="hover:iconoclast:bg-400 hover:curate:bg-400 hover:text-white rounded-full p-2 px-4 text-xs 2xl:text-base">
                       {item.title}
                     </div>
                   </Menu.Item>
@@ -124,7 +124,7 @@ const Tabs = ({tabsData, updateTab, currentTab}: ITabsProps) => {
             const tab = tabsData.find((_d) => _d.title === e.target.value);
             updateTab(tab);
           }}
-          className="block w-full text-xs md:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md"
+          className="block w-full text-xs md:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-full"
           defaultValue={currentTab}>
           {tabsData.map((tab: ITabElements, index: number) => (
             <option value={tab.title} className="transition-all" key={index}>
@@ -150,7 +150,7 @@ const Tabs = ({tabsData, updateTab, currentTab}: ITabsProps) => {
                   !isGameChangers ? 'hover:text-gray-700' : 'hover-text-white'
                 }  inline-flex justify-center w-full px-1 xl:px-2 2xl:px-4 py-2 text-xs 2xl:text-base font-medium ${
                   theme === 'iconoclastIndigo' ? 'iconoclastIndigo' : 'curateBlue'
-                } rounded-md bg-opacity-20 hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 transition duration-150 ease-in-out transform hover:scale-105 text-gray-700 font-bold`}>
+                } rounded-full bg-opacity-20 hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 transition duration-150 ease-in-out transform text-gray-700 font-bold`}>
                 {menu.title}
               </button>
             )

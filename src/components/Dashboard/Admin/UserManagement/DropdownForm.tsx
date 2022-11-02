@@ -97,7 +97,7 @@ const DropdownForm = (props: DropdownProps) => {
     <div ref={componentRef} className="space-y-1">
       <Label label={label} isRequired={isRequired} />
       <div className="relative">
-        <span className="inline-block w-full rounded-md shadow-sm">
+        <span className="inline-block w-full rounded-full shadow-sm">
           <button
             data-cy={`dropdown-${dataCy}`}
             onClick={() => setShowItems(!showItems)}
@@ -105,7 +105,7 @@ const DropdownForm = (props: DropdownProps) => {
             aria-haspopup="listbox"
             aria-expanded="true"
             aria-labelledby="listbox-label"
-            className={`flex cursor-pointer relative w-full rounded-md  border-0 border-gray-300 bg-white pl-3 py-2 text-left focus:outline-none focus:ring-2 focus:ring-${
+            className={`flex cursor-pointer relative w-full rounded-full  border-0 border-gray-300 bg-white pl-3 py-2 text-left focus:outline-none focus:ring-2 focus:ring-${
               themeColor === 'iconoclastIndigo' ? 'indigo' : 'blue'
             }-600 focus:border-transparent transition ease-in-out duration-150 sm:text-sm sm:leading-5`}>
             <span className="block truncate">{OPTIONS}</span>
@@ -126,12 +126,12 @@ const DropdownForm = (props: DropdownProps) => {
           </button>
         </span>
         {showItems && (
-          <div className="z-50 absolute mt-1 w-full rounded-md bg-white shadow-lg">
+          <div className="z-50 absolute mt-1 w-full rounded-xl bg-white customShadow">
             <ul
               role="listbox"
               aria-labelledby="listbox-label"
               aria-activedescendant="listbox-item-3"
-              className={`max-h-30 ${listClassName} rounded-md py-1 text-base leading-6 ring-1 ring-black ring-opacity-10 overflow-auto focus:outline-none sm:text-sm sm:leading-5`}>
+              className={`max-h-30 ${listClassName} rounded-xl py-1 text-base leading-6 ring-1 ring-black ring-opacity-10 overflow-auto focus:outline-none sm:text-sm sm:leading-5`}>
               {items.length ? (
                 items.map((item: {code: string; name: string}, key: number) => (
                   <li

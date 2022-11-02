@@ -18,7 +18,6 @@ const StandardLessonCard = (props: LessonCardProps) => {
     lessonProps,
     syllabusProps,
     accessible,
-    lessonType,
     user,
     handleLessonMutationRating,
     getLessonRating,
@@ -61,7 +60,7 @@ const StandardLessonCard = (props: LessonCardProps) => {
   return (
     <div
       key={keyProps}
-      className={`relative overflow-hidden bg-white shadow rounded-xl flex flex-col md:flex-row mb-8 ${theme.elem.textDark} `}>
+      className={`relative overflow-hidden bg-white theme-card-shadow rounded-xl flex flex-row  mb-8 ${theme.elem.textDark} `}>
       {/**
        *  LEFT SECTION IMAGE
        */}
@@ -69,8 +68,8 @@ const StandardLessonCard = (props: LessonCardProps) => {
       {/**
        *  RIGHT SECTION
        */}
-      <div className={`w-full md:w-7.5/10 flex flex-col rounded-b`}>
-        <MainSummary lessonType={lessonType} lessonProps={lessonProps} />
+      <div className={`w-7.5/10 flex flex-col rounded-b`}>
+        <MainSummary lessonProps={lessonProps} />
         {isStudent && (
           <ProgressBar
             lessonProps={{
@@ -103,7 +102,7 @@ const StandardLessonCard = (props: LessonCardProps) => {
           lessonProps={lessonProps}
           isCompleted={isCompleted}
           syllabusProps={syllabusProps}
-          lessonType={lessonType}
+          lessonType={lessonProps.lesson.type}
         />
       </div>
     </div>
