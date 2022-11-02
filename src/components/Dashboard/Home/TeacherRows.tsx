@@ -22,7 +22,10 @@ const TeacherRows = (props: {coTeachersList: Teacher[]; teachersList: Teacher[]}
               {allTeachers.map((teacher, idx: number) => {
                 return (
                   <li key={`home__teacher-${idx}`} className="border-b-0">
-                    <a href="#" className="block hover:bg-gray-100">
+                    <a
+                      href="#"
+                      className="block hover:bg-gray-100 "
+                      style={{borderRadius: 'inherit'}}>
                       <div className="flex items-center px-4 py-4 sm:px-6">
                         <div className="min-w-0 flex-1 flex items-center">
                           {teacher.image ? (

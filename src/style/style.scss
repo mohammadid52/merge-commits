@@ -1572,3 +1572,14 @@ $polka-dot-size: 0.8px;
     color: white;
   }
 }
+
+.dynamicShadow {
+  transform: scale(0.9) skewY(6deg);
+  top: 5px;
+  filter: blur(20px);
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  z-index: -1;
+}

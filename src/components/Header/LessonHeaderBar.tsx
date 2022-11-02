@@ -41,6 +41,7 @@ const LessonHeaderBar = ({
 
   // don't remove this line or we are screwed
   const initializeTimer = useStudentTimer();
+  const isLesson = lessonState?.lessonData.type === 'lesson';
 
   // ##################################################################### //
   // ################## LOGIC FOR RETURNING TO CLASSROOM ################# //
@@ -84,7 +85,7 @@ const LessonHeaderBar = ({
   const {setNotification} = useNotifications();
 
   const handleNotebookSave = () => {
-    if (lessonState.lessonData.type === 'lesson') {
+    if (isLesson) {
       console.log('\x1b[33m Saving notebook... \x1b[0m');
       createJournalData(() => {
         setNotification({
@@ -111,7 +112,9 @@ const LessonHeaderBar = ({
       .mutate({input: {id, isCompleted: true}})
       .then(() => {
         // goToClassRoom();
-        history.push(`/dashboard/anthology?roomId=${getRoomData.id}`);
+        isLesson
+          ? history.push(`/dashboard/anthology?roomId=${getRoomData.id}`)
+          : goToClassRoom();
         console.log('Successfully completed ' + lessonState?.lessonData?.type);
       })
       .catch((err) => {
@@ -355,7 +358,6 @@ const LessonHeaderBar = ({
   // ##################################################################### //
   // ############################### OUTPUT ############################## //
   // ##################################################################### //
-  const isLesson = lessonState?.lessonData.type === 'lesson';
 
   return (
     <div

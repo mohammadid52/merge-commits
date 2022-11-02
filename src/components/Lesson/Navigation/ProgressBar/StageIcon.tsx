@@ -4,6 +4,7 @@ import {useHistory, useRouteMatch} from 'react-router-dom';
 import {GlobalContext} from 'contexts/GlobalContext';
 import usePrevious from 'customHooks/previousProps';
 import {UniversalLessonPage} from 'interfaces/UniversalLessonInterfaces';
+import {useQuery} from '@customHooks/urlParam';
 
 interface StageIconProps extends UniversalLessonPage {
   pageNr?: number;
@@ -64,9 +65,15 @@ const StageIcon = ({
     }
   };
 
+  const params = useQuery(location.search);
+
   const handleLink = () => {
     scrollUp();
-    history.push(`${match.url}/${pageNr}`);
+    const sId = params.get('sId');
+    const sEmail = params.get('sId');
+
+    const dynamicQuery = sId && sEmail ? `?sId=${sId}&sEmail=${sEmail}` : '';
+    history.push(`${match.url}/${pageNr}${dynamicQuery}`);
     lessonDispatch({type: 'SET_CURRENT_PAGE', payload: pageNr});
   };
 

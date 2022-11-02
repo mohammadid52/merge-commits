@@ -44,12 +44,12 @@ const RoomViewCard = ({
       {/* FRONT PAGE */}
       <div
         data-cy="room-view-card"
-        className={`relative z-50 md:h-56 lg:h-60 md:w-32 lg:w-40 flex flex-row rounded-r-lg transition-all transform origin-left ease-in-out duration-250 sm:h-full
+        className={`relative z-50 md:h-56 lg:h-60 lg:w-40 flex flex-row rounded-r-lg transition-all transform origin-left ease-in-out duration-250 sm:h-full
       ${
         noneSelected
-          ? 'shadow-lg scale-90'
+          ? 'customShadow scale-90'
           : roomID !== '' && sectionRoomID !== '' && roomID === sectionRoomID
-          ? 'scale-90 -skew-y-6 shadow-xl'
+          ? 'scale-90 -skew-y-6 theme-card-shadow'
           : 'shadow-lg  scale-90'
       }
       `}>
@@ -62,7 +62,7 @@ const RoomViewCard = ({
         <div
           data-cy={roomID}
           onClick={() => handleSectionSelect(type, roomID, curriculumName)}
-          className={`flex flex-col rounded-r-lg cursor-pointer md:h-56 lg:h-60 md:w-32 lg:w-40 overflow-hidden`}>
+          className={`flex flex-col rounded-r-lg cursor-pointer md:h-56 lg:h-60  lg:w-40 overflow-hidden`}>
           {/* START - IMAGE AND LABEL */}
 
           <div className="flex h-full w-full items-center align-center flex-shrink-0 relative">
@@ -108,14 +108,19 @@ const RoomViewCard = ({
         </div>
       </div>
 
+      {roomID !== '' && sectionRoomID !== '' && roomID === sectionRoomID && (
+        <div
+          className="dynamicShadow"
+          style={{backgroundImage: `url('${bannerImage || fallbackUrls.room}')`}}></div>
+      )}
       {/* BACK PAGE */}
       <div
-        className={`absolute h-72  z-40 top-0 md:h-56 lg:h-60 md:w-32 lg:w-40 flex flex-row rounded-r-lg bg-gray-200 transition-all transform origin-left ease-in-out duration-250 
+        className={`absolute h-72  z-40 top-0 md:h-56 lg:h-60  lg:w-40 flex flex-row rounded-r-lg bg-gray-200 transition-all transform origin-left ease-in-out duration-250 
       ${
         noneSelected
           ? 'shadow-lg scale-90'
           : roomID !== '' && sectionRoomID !== '' && roomID === sectionRoomID
-          ? ' scale-90 skew-y-6 shadow-xl'
+          ? ' scale-90 skew-y-6 shadow-lg'
           : 'shadow-lg scale-90'
       }
       `}></div>

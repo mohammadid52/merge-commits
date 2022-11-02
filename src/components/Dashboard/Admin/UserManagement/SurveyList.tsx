@@ -34,7 +34,11 @@ const SurveyList = ({
         isCompleted: {eq: true}
       }
     },
-    {enabled: roomData?.length > 0, onSuccess: (data) => setSurveyList(data)}
+    {
+      enabled: roomData?.length > 0,
+      custom: true,
+      onSuccess: (data) => setSurveyList(data)
+    }
   );
 
   const updateUrlForRedirect = () => {
@@ -101,8 +105,13 @@ const SurveyList = ({
                   <th
                     scope="col"
                     className="px-6 py-3 w-auto text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                    Name
+                    Survey Name
                   </th>
+                  {/* <th
+                    scope="col"
+                    className="px-6 py-3 w-auto text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                    Institution
+                  </th> */}
                   <th
                     scope="col"
                     className="px-6 py-3 w-auto text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
@@ -130,7 +139,7 @@ const SurveyList = ({
                         </td>
                         <td className="px-6 py-4 w-auto whitespace-nowrap text-sm text-gray-500">
                           <a
-                            href={`/lesson/${survey.lessonID}/0`}
+                            href={`/lesson/${survey.lessonID}/0?sId=${studentAuthID}&sEmail=${studentEmail}`}
                             className="iconoclast:text-main curate:text-main hover:underline">
                             View survey
                           </a>
