@@ -65,7 +65,9 @@ const AuthCard = ({children, title, message, isSuccess, subtitle}: AuthCardProps
                 {title}
               </h3>
             )}
-            {subtitle && <h6 className="mb-4 text-sm  text-gray-500">{subtitle}</h6>}
+            {subtitle && (
+              <h6 className="mb-4 text-sm text-center text-gray-500">{subtitle}</h6>
+            )}
             <div>{children}</div>
             {message && (
               <p

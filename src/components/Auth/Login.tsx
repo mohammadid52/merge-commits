@@ -335,7 +335,7 @@ const Login = ({updateAuthState}: LoginProps) => {
     <AuthCard
       isSuccess={isLoginSuccess}
       message={message}
-      title={createPassword ? 'Create your password' : 'Login'}
+      // title={createPassword ? 'Create your password' : 'Login'}
       subtitle={createPassword ? '' : 'Welcome back!'}>
       {!createPassword ? (
         <>
@@ -380,7 +380,7 @@ const Login = ({updateAuthState}: LoginProps) => {
                 onClick={handleSubmit}
                 btnClass="w-full py-3"
                 loading={isToggled}
-                label={showPasswordField ? 'Login' : 'Enter'}
+                label={'Login'}
               />
             </div>
           </div>
