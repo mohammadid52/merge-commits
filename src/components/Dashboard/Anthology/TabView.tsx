@@ -21,6 +21,7 @@ import {IoIosJournal} from 'react-icons/io';
 import {IconContext} from 'react-icons/lib';
 import {stringToHslColor} from 'utilities/strings';
 import {filter} from 'lodash';
+import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 
 export interface ITabParentProps {
   handleEditToggle?: (
@@ -254,15 +255,19 @@ const TabView = ({
                 {getTitle()}
               </h2>
             </div>
-            {subSection === 'Journal' && tab === 1 && (
-              <Buttons
-                Icon={FaEdit}
-                customStyles={{width: '14rem'}}
-                label={anthologyDict[userLanguage].ACTIONS.CREATE}
-                onClick={() => handleEditToggle('create', '')}
-                type="button"
-              />
-            )}
+            <AnimatedContainer
+              className="w-auto"
+              show={subSection === 'Journal' && tab === 1}>
+              {subSection === 'Journal' && tab === 1 && (
+                <Buttons
+                  Icon={FaEdit}
+                  btnClass="mb-2 px-8"
+                  label={anthologyDict[userLanguage].ACTIONS.CREATE}
+                  onClick={() => handleEditToggle('create', '')}
+                  type="button"
+                />
+              )}
+            </AnimatedContainer>
           </div>
           <div
             className={`w-full min-h-48 pb-4 overflow-hidden bg-white rounded-b-lg shadow mb-12`}>
