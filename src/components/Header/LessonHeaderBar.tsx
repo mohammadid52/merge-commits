@@ -378,8 +378,8 @@ const LessonHeaderBar = ({
               : 'This will take you out of the lesson.  Did you want to continue?'
           }
           button1={`${
-            !waiting && leaveAfterCompletion && isLesson
-              ? 'Mark lesson as complete and move your work to your notebook'
+            !waiting && leaveAfterCompletion && lessonState.lessonData.type === 'lesson'
+              ? 'I completed this lesson. \n Move my work to my notebook.'
               : !waiting
               ? 'Go to the dashboard'
               : 'Saving your data...'
