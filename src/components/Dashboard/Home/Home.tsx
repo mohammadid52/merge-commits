@@ -13,6 +13,7 @@ import HeaderTextBar from '../HeaderTextBar/HeaderTextBar';
 import RoomTiles from './RoomTiles';
 import StudentsTiles from './StudentsTiles';
 import TeacherRows from './TeacherRows';
+import Loader from '@components/Atoms/Loader';
 
 export interface ModifiedListProps {
   id: any;
@@ -276,7 +277,7 @@ const Home = (props: ClassroomControlProps) => {
           </div>
         </>
       ) : (
-        <ComponentLoading />
+        <Loader withText={'Loading'} className="w-auto text-gray-400" />
       )}
     </>
   );

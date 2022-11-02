@@ -10,6 +10,7 @@ import Buttons from 'atoms/Buttons';
 import ContentCard from 'atoms/ContentCard';
 import Toggle from './../AnthologyContentNote/Toggle';
 import Feedbacks from './Feedbacks';
+import Loader from '@components/Atoms/Loader';
 
 const SingleNote = (props: any) => {
   const {
@@ -116,7 +117,7 @@ const SingleNote = (props: any) => {
     <Suspense
       fallback={
         <div className="min-h-56 w-full flex flex-col justify-center items-center">
-          <ComponentLoading />
+          <Loader withText={'Loading note...'} className="w-auto text-gray-400" />
         </div>
       }>
       <ContentCard hasBackground={false} key={`anthology_${subSection}${idx}`}>

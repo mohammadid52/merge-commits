@@ -12,11 +12,13 @@ const ContentCard = (props: ContentCardProps) => {
   const {keyProps, children, hasBackground, additionalClass} = props;
   const {theme} = useContext(GlobalContext);
   return (
-    <div key={keyProps} className={`${theme.section} text-xl h-auto`}>
+    <div
+      key={keyProps}
+      className={`${theme.section} rounded-b-xl bg-white customShadow text-xl h-auto`}>
       <div
-        className={`${hasBackground === false ? null : theme.dashboard.card} ${
+        className={`${hasBackground ? theme.dashboard.card : ''} ${
           theme.elem.textDark
-        } ${additionalClass}`}>
+        } ${additionalClass} rounded-b-xl`}>
         {children}
       </div>
     </div>

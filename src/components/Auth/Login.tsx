@@ -335,7 +335,8 @@ const Login = ({updateAuthState}: LoginProps) => {
     <AuthCard
       isSuccess={isLoginSuccess}
       message={message}
-      title={createPassword ? 'Create your password' : 'Login'}>
+      title={createPassword ? 'Create your password' : 'Login'}
+      subtitle={createPassword ? '' : 'Welcome back!'}>
       {!createPassword ? (
         <>
           <div className="h-auto flex-grow flex flex-col justify-center">

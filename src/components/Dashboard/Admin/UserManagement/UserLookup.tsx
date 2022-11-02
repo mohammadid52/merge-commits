@@ -122,11 +122,12 @@ const UserLookup = ({isInInstitute, instituteId}: any) => {
   };
 
   useEffect(() => {
-    dispatch({
-      type: 'UPDATE_TEMP_USER',
-      payload: {user: null}
-    });
-  }, []);
+    if (state?.temp?.user?.id)
+      dispatch({
+        type: 'UPDATE_TEMP_USER',
+        payload: {user: null}
+      });
+  }, [state?.temp?.user]);
 
   const setSearch = (str: string) => {
     setSearchInput({

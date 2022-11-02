@@ -29,7 +29,7 @@ const ComponentLoading = () => {
       id="component-loading"
       className="min-h-screen h-screen w-full text-gray-200  font-light flex flex-col justify-center items-center">
       <div className="w-auto">
-        <div className=" loading-card-shadow rounded-lg">
+        <div className=" theme-card-shadow rounded-lg">
           <div
             className={`p-8 text-lg text-center text-blue-100 flex flex-col justify-center items-center font-light bg-white rounded-t-lg`}>
             <img src={getAsset(clientKey, 'loading_logo')} alt={`${clientKey} Logo`} />

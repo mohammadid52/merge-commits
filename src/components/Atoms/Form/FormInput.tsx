@@ -118,7 +118,7 @@ const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
               dark ? 'border-gray-700  text-white bg-gray-800' : ''
             } block w-full sm:text-sm sm:leading-5 focus:outline-none focus:ring-2 focus:ring-${
               themeColor === 'iconoclastIndigo' ? 'indigo' : 'blue'
-            }-600 focus:border-transparent border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm ${
+            }-600 focus:border-transparent border-0 border-gray-300 py-2 px-3 rounded-full shadow-sm ${
               theme.outlineNone
             } ${className} ${disabledClass}`}
             value={value ? value : ''}

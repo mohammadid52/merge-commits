@@ -5,7 +5,7 @@ import {ellipsis} from 'utilities/functions';
 
 const MainSummary = (props: LessonCardProps) => {
   const {theme} = useContext(GlobalContext);
-  const {lessonType, lessonProps} = props;
+  const {lessonProps} = props;
 
   const reverseDateString = () => {
     if (lessonProps.hasOwnProperty('endDate')) {

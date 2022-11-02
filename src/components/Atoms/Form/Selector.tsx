@@ -136,7 +136,7 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
   return (
     <div className={`relative space-y-1 ${additionalClass}`} ref={currentRef}>
       <Label label={label} isRequired={isRequired} />
-      <span className="inline-block w-full h-full rounded-md shadow-sm">
+      <span className="inline-block w-full h-full rounded-full shadow-sm">
         <button
           disabled={disabled || loading}
           onClick={() => setShowList(!showList)}
@@ -148,7 +148,7 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
             disabled || loading ? 'bg-gray-100' : ''
           } flex focus:outline-none focus:ring-2 focus:ring-${
             themeColor === 'iconoclastIndigo' ? 'indigo' : 'blue'
-          }-600 focus:border-transparent  relative items-center cursor-pointer ${width} h-full rounded-md ${
+          }-600 focus:border-transparent  relative items-center cursor-pointer ${width} h-full rounded-full ${
             error.length === 0 ? 'border-gray-300' : 'border-red-300'
           }  border-0 bg-white pl-3 py-2 text-left transition ease-in-out duration-150 sm:text-sm sm:leading-5 ${
             btnClass ? btnClass : ''
@@ -201,12 +201,12 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
         </button>
       </span>
       {showList && (
-        <div className="z-50 absolute mt-1 w-full rounded-md bg-white shadow-lg">
+        <div className="z-50 absolute mt-1 w-full rounded-xl bg-white customShadow ">
           <ul
             role="listbox"
             aria-labelledby="listbox-label"
             aria-activedescendant="listbox-item-3"
-            className="rounded-md relative  max-h-60 py-1 text-base overflow-y-auto leading-6 focus:shadow-none focus:outline-none sm:text-sm sm:leading-5">
+            className="rounded-xl customShadow relative  max-h-60 py-1 text-base overflow-y-auto leading-6 focus:shadow-none focus:outline-none sm:text-sm sm:leading-5">
             {list.length > 0 ? (
               list.map(
                 (item: {popoverElement?: any; name: string; id: any; value: string}) => (

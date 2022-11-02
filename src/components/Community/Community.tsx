@@ -296,9 +296,7 @@ const Community = ({}: {role: string}) => {
         ? list
         : filteredList;
     return (
-      <ContentCard
-        hasBackground={false}
-        additionalClass="shadow bg-white space-y-12 p-6 rounded-b-lg">
+      <ContentCard hasBackground={false} additionalClass=" space-y-12 p-6">
         <div> {<FAB />}</div>
 
         {/* Error--1213 */}
@@ -377,6 +375,7 @@ const Community = ({}: {role: string}) => {
       fontStyle="semibold"
       extraClass="leading-6 text-gray-900"
       borderBottom
+      shadowOff
       withButton={
         <div className="w-auto">
           <Selector

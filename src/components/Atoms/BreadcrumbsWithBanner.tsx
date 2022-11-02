@@ -222,14 +222,14 @@ const BreadcrumbsWithBanner: React.FC<BreadCrumbProps> = (props: BreadCrumbProps
                       {!item.goBack ? (
                         <div onClick={() => goToUrl(item.url)}>
                           <span
-                            className={`mr-1 md:mr-2 cursor-pointer text-sm 2xl:text-base ${'text-white'}`}>
+                            className={`mr-1 md:mr-2 cursor-pointer text-sm 2xl:text-base hover:iconoclast:bg-400 hover:curate:bg-400 rounded-xl px-2 text-white`}>
                             {item.title}
                             {/* {i === 0 ? item.title.toUpperCase() : item.title} */}
                           </span>
                         </div>
                       ) : (
                         <span
-                          className={`mr-1 md:mr-2 cursor-pointer text-sm 2xl:text-base ${'text-white'}`}
+                          className={`mr-1 md:mr-2 cursor-pointer text-sm 2xl:text-base text-white hover:iconoclast:bg-400 hover:curate:bg-400 rounded-xl px-2`}
                           onClick={() =>
                             unsavedChanges ? toggleModal() : history.goBack()
                           }>
