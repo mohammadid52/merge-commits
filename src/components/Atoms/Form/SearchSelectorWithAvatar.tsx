@@ -94,7 +94,6 @@ const SearchSelectorWithAvatar = (props: selectorProps) => {
     } else {
       setCountdownEnabled(
         setTimeout(() => {
-          console.log('doing search');
           fetchStudentList(searchTerm);
           clearTimeout(countdownEnabled);
         }, countdownTimer)

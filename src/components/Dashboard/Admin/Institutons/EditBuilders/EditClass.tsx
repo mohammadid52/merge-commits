@@ -350,17 +350,19 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
           })
         );
       }
-      setClassStudents([
-        ...classStudents,
-        {
-          id: newStudent.id,
-          createAt: newStudent.createdAt,
-          group: newStudent.group,
-          status: newStudent.status,
 
-          student: {...selected, onDemand: newStudent?.onDemand}
-        }
-      ]);
+      const updatedStudent = {
+        id: newStudent.id,
+        createAt: newStudent.createdAt,
+        group: newStudent.group,
+        status: newStudent.status,
+
+        student: {...selected, onDemand: Boolean(newStudent?.student?.onDemand)}
+      };
+
+      classStudents.push(updatedStudent);
+
+      setClassStudents([...classStudents]);
       setAllStudents((prevStudents) =>
         prevStudents.filter((student) => student.id !== newMember.id)
       );

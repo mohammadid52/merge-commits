@@ -126,7 +126,7 @@ const User = (props: IUserProps) => {
     {name: 'User Information', current: true},
     {name: 'Coursework & Attendance', current: false},
     {name: 'Notebook', current: false},
-    {name: 'Surveys', current: false}
+    {name: 'Completed Surveys', current: false}
   ];
 
   const getDashboardData = async (authId: string, email: string) => {

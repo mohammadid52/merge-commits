@@ -1,4 +1,5 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import {UniversalLessonStudentData as UniversalLessonStudentDataFromAPI} from 'API';
 import 'components/Dashboard/GameChangers/styles/Flickity.scss';
 import 'components/Dashboard/GameChangers/styles/GameChanger.scss';
 import {useGlobalContext} from 'contexts/GlobalContext';
@@ -27,11 +28,6 @@ import Foot from './Foot/Foot';
 import {ILessonSurveyApp} from './Lesson';
 import LessonPageLoader from './LessonPageLoader';
 import CoreUniversalLesson from './UniversalLesson/views/CoreUniversalLesson';
-import {
-  UniversalLessonStudentData as UniversalLessonStudentDataFromAPI,
-  UpdateUniversalJournalDataInput
-} from 'API';
-import useAuth from '@customHooks/useAuth';
 import useLessonFunctions from './useLessonFunctions';
 const LessonApp = ({}: ILessonSurveyApp) => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
@@ -963,59 +959,6 @@ const LessonApp = ({}: ILessonSurveyApp) => {
       setTimeout(() => {
         setShowRequiredNotification(false);
       }, 1250);
-    }
-  };
-
-  const {authId} = useAuth();
-  const updateJournalData = async (
-    studentDataRows: UniversalLessonStudentDataFromAPI[]
-  ) => {
-    try {
-      const listFilter = {
-        filter: {
-          studentAuthID: {eq: authId},
-          lessonID: {eq: lessonID},
-          type: {eq: 'class-note'}
-        }
-      };
-      const journalData: any = await API.graphql(
-        graphqlOperation(queries.listUniversalJournalData, listFilter)
-      );
-
-      const items = journalData.data.listUniversalJournalData?.items || [];
-
-      let res: any[] = [];
-      items.forEach((item: any) => {
-        res.push(
-          ...item.entryData.filter((entry: any) => entry.type.includes('content-custom'))
-        );
-      });
-
-      let newArray: any = studentDataRows.map((item) => {
-        // const value = res.find((r) => r.domID === item.domID);
-        return item.pageData.filter((element) =>
-          res.find((r) => r.domID === element.domID)
-        );
-      });
-      newArray = newArray.filter((item: any) => item.length > 0)[0];
-      newArray = newArray.map((item: any) => ({
-        domID: item.domID,
-        input: item.input[0],
-        type: 'content-custom'
-      }));
-
-      const input = {
-        id: items[0].id,
-        entryData: newArray
-      };
-
-      const updateJournalData: any = await API.graphql(
-        graphqlOperation(mutations.updateUniversalJournalData, {input})
-      );
-    } catch (e) {
-      console.error('error updating journal data - ', e);
-    } finally {
-      console.log('updated journal data...');
     }
   };
 

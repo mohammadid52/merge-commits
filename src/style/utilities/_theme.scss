@@ -255,3 +255,14 @@
 @include curate('bg'); // with demo
 @include curate('border'); // with demo
 @include curate('text'); // with demo
+
+.iconoclast {
+  .theme-text {
+    color: $iconoclast !important;
+  }
+}
+.iconoclast {
+  .theme-text {
+    color: $curate !important;
+  }
+}

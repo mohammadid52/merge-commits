@@ -1,4 +1,5 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import {useQuery} from '@customHooks/urlParam';
 import useAuth from '@customHooks/useAuth';
 import {PartInput, UniversalSurveyStudentData} from 'API';
 import {GlobalContext} from 'contexts/GlobalContext';
@@ -86,7 +87,12 @@ const SurveyApp = () => {
 
       lessonDispatch({type: 'SET_CURRENT_PAGE', payload: lessonProgress});
       setPageStateUpdated(true);
-      history.push(`${match.url}/${lessonProgress}`);
+
+      const sId = params.get('sId');
+      const sEmail = params.get('sId');
+
+      const dynamicQuery = sId && sEmail ? `?sId=${sId}&sEmail=${sEmail}` : '';
+      history.push(`${match.url}/${lessonProgress}${dynamicQuery}`);
     }
   }, [lessonData.id, misc?.personLessonData?.lessonID]);
 
@@ -268,7 +274,7 @@ const SurveyApp = () => {
   // ~~~~~~~ RECORD CREATION FUNTION ~~~~~~~ //
 
   const createSurveyData = async (
-    initialDataFlattened: any[] = [],
+    initialDataFlattened: any[],
     lessonID: string,
     authId: string,
     email: string
@@ -284,7 +290,7 @@ const SurveyApp = () => {
         roomID: getRoomData.id,
         currentLocation: '0',
         lessonProgress: '0',
-        surveyData: initialDataFlattened.flat()
+        surveyData: initialDataFlattened
       };
 
       const newSurveyData: any = await API.graphql(
@@ -341,52 +347,63 @@ const SurveyApp = () => {
   //   }
   // };
 
-  const fetchSurveyDataRow = async (): Promise<UniversalSurveyStudentData[]> =>
-    new Promise(async (resolve) => {
-      try {
-        setLessonDataLoaded(false);
-        // fetch by pages
+  const fetchSurveyDataRow = async (
+    filterObj: any,
+    nextToken: string,
+    outArray: any[]
+  ): Promise<any> => {
+    let combined;
+    setLessonDataLoaded(false);
+    try {
+      let surveyData: any = await API.graphql(
+        graphqlOperation(queries.listUniversalSurveyStudentData, {
+          ...filterObj,
+          nextToken: nextToken
+        })
+      );
 
-        let result: any = [];
+      let surveyDataRow = surveyData.data.listUniversalSurveyStudentData.items;
 
-        await Promise.all(
-          PAGES.map(async (page: any, idx: number) => {
-            let studentData: any = await API.graphql(
-              graphqlOperation(queries.getUniversalLessonStudentData, {
-                id: `${user.authId}-${getRoomData.id}-${lessonID}-${page.id}`
-                // filter: {...filterObj.filter, lessonPageID: {eq: page.id}}
-              })
-            );
+      let theNextToken = surveyData.data.listUniversalSurveyStudentData?.nextToken;
 
-            let studentDataObject = studentData.data.getUniversalLessonStudentData;
-            result.push(studentDataObject);
-          })
-        );
+      combined = [...outArray, ...surveyDataRow];
 
-        /**
-         * combination of last fetch results
-         * && current fetch results
-         */
-
-        lessonDispatch({type: 'LESSON_LOADED', payload: true});
-
-        // console.log('no more - ', combined);
-        setLessonDataLoaded(true);
-        resolve(result);
-      } catch (e) {
-        console.error('loopFetchStudentData - ', e);
-        return [];
+      if (theNextToken) {
+        // console.log('nextToken fetching more - ', nextToken);
+        combined = await fetchSurveyDataRow(filterObj, theNextToken, combined);
       }
-    });
+      setLessonDataLoaded(true);
+      return combined;
+    } catch (e) {
+      console.error('loopFetchStudentData - ', e);
+      return [];
+    }
+  };
 
   const {isStudent} = useAuth();
+
+  const params = useQuery(location.search);
+
   const getOrCreateSurveyData = async () => {
     // TRY TRY TRY
     try {
       // existing student rows
 
       // existing student rows
-      const surveyDataRow = await (await fetchSurveyDataRow()).filter(Boolean); // table object
+
+      const dynamicUser = isStudent ? user : {authId: params.get('sId')};
+
+      const listFilter = {
+        filter: {
+          studentAuthID: {eq: dynamicUser.authId},
+          lessonID: {eq: lessonID},
+          syllabusLessonID: {eq: getRoomData.activeSyllabus},
+          roomID: {eq: getRoomData.id}
+        }
+      };
+
+      // existing student rows
+      const surveyDataRow = await fetchSurveyDataRow(listFilter, undefined, []); // table object
       const surveyDataResponses = surveyDataRow[0]?.surveyData
         ? surveyDataRow[0].surveyData
         : []; // flat 1D - array
@@ -402,11 +419,13 @@ const SurveyApp = () => {
             user.authId,
             user.email
           );
-          if (createNewRecords?.surveyData?.length > 0) {
+          const newRecords = await Promise.all(createNewRecords);
+
+          if (newRecords?.length > 0) {
             lessonDispatch({
               type: 'LOAD_SURVEY_DATA',
               payload: {
-                dataIdReferences: surveyDataId(createNewRecords)
+                dataIdReferences: surveyDataId(newRecords)
               }
             });
           }
@@ -625,9 +644,12 @@ const SurveyApp = () => {
     handleSurveyMutateData();
   }, [lessonState.currentPage]);
 
-  const getPersonLessonsDataId = (): string =>
-    lessonState?.misc?.personLessonData?.data?.find((_d: any) => _d.lessonID === lessonID)
-      ?.id || '';
+  const [personLessonData, setPersonLessonData] = useState([]);
+
+  const getPersonLessonsDataId = (): string => {
+    const array = personLessonData || lessonState?.misc?.personLessonData?.data || [];
+    return array?.find((_d: any) => _d.lessonID === lessonID)?.id || '';
+  };
 
   const handleSurveyMutateData = async () => {
     try {
@@ -645,12 +667,13 @@ const SurveyApp = () => {
           graphqlOperation(queries.listPersonLessonsData, {
             filter: {
               lessonID: {eq: lessonID},
-              studentAuthID: {eq: user.authId},
-              studentEmail: {eq: user.email},
+              studentAuthID: {eq: isStudent ? user.authId : params.get('sId')},
+              studentEmail: {eq: isStudent ? user.email : params.get('sEmail')},
               roomId: {eq: getRoomData.id}
             }
           })
         );
+
         lessonDispatch({
           type: 'SET_PERSON_LESSON_DATA',
           payload: {
@@ -663,7 +686,7 @@ const SurveyApp = () => {
       const items = isSameAndDataExists
         ? existingLesson
         : existingLesson?.data?.listPersonLessonsData?.items || [];
-
+      setPersonLessonData(items);
       if (!items.length) {
         payload = {
           id: uuidV4(),
