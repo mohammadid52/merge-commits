@@ -41,9 +41,9 @@ const List = (props: ListProps) => {
     return firstInitial + lastInitial;
   };
 
-  const handleLink = (e: any) => {
-    const {id} = e.target;
-    history.push(`${match.url}/${id}`);
+  const handleLink = (id: string) => {
+    const url = match.url.endsWith('/') ? match.url : match.url + '/';
+    history.push(`${url}${id}`);
   };
 
   const resetPassword = async (user: any) => {
@@ -117,8 +117,6 @@ const List = (props: ListProps) => {
     });
   };
 
-  const params = useQuery(location.search);
-
   return (
     ///change INFO, MARGIN and WIDTH if needed
     <>
@@ -153,7 +151,7 @@ const List = (props: ListProps) => {
                 }`}
                 id={item.id}
                 className="hover:text-gray-600 cursor-pointer text-sm leading-5 font-medium text-gray-900"
-                onClick={handleLink}>
+                onClick={() => handleLink(item.id)}>
                 <Highlighted text={item.name} highlight={searchTerm} />
               </div>
               <div id={item.id} className="text-sm leading-5 text-gray-500 break-all">
@@ -179,7 +177,7 @@ const List = (props: ListProps) => {
         </div>
         <div
           className="w-2/10 flex justify-center items-center pr-4 py-4 cursor-pointer whitespace-nowrap text-right text-sm leading-5 font-medium"
-          onClick={handleLink}>
+          onClick={() => handleLink(item.id)}>
           <div
             id={item.id}
             className={`flex justify-center ${theme.textColor[themeColor]}`}>
