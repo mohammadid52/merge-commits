@@ -93,7 +93,8 @@ const SurveyApp = () => {
       const sId = params.get('sId');
       const sEmail = params.get('sId');
 
-      const dynamicQuery = sId && sEmail ? `?sId=${sId}&sEmail=${sEmail}` : '';
+      const dynamicQuery =
+        sId && sEmail ? `?sId=${sId}&sEmail=${sEmail}&tab=Completed%20Surveys` : '';
       history.push(`${match.url}/${lessonProgress}${dynamicQuery}`);
     }
   }, [lessonData.id, misc?.personLessonData?.lessonID]);

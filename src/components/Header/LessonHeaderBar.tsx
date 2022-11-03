@@ -62,7 +62,7 @@ const LessonHeaderBar = ({
   const goToClassRoom = () =>
     isStudent
       ? history.push(`/dashboard/classroom/${getRoomData.id}`)
-      : history.push(getUrl() || '/dashboard');
+      : history.push(`${getUrl()}?tab=Completed%20Surveys` || '/dashboard');
 
   const handleManualSave = () => {
     if (lessonState.updated) {

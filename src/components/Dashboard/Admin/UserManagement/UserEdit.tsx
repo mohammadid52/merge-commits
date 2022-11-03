@@ -681,7 +681,7 @@ const UserEdit = (props: UserInfoProps) => {
                   />
                 </div>
 
-                {superEdit && (
+                {superEdit && user.role === 'ST' && (
                   <div className="sm:col-span-3 p-2">
                     <DropdownForm
                       dataCy="ondemand"

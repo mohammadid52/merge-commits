@@ -190,18 +190,6 @@ const User = (props: IUserProps) => {
     rooms: []
   });
 
-  let tabs = [
-    {name: 'User Information', current: true},
-    {name: 'Coursework & Attendance', current: false},
-    user.role !== 'ST' && {name: 'Notebook', current: false},
-    user.role !== 'ST' && {name: 'Completed Surveys', current: false}
-  ];
-
-  tabs = tabs.filter(Boolean);
-  const {curTab, setCurTab, helpers} = useTabs(tabs);
-
-  const [onUserInformationTab, onCATab, onNotebookTab, onSurveyTab] = helpers;
-
   useEffect(() => {
     if (state?.temp?.authId !== user.authId && user.authId && user.email) {
       getDashboardData(user.authId, user.email);
@@ -422,6 +410,18 @@ const User = (props: IUserProps) => {
       console.error(error);
     }
   }
+
+  let tabs = [
+    {name: 'User Information', current: true},
+    {name: 'Coursework & Attendance', current: false},
+    user.role === 'ST' && {name: 'Notebook', current: false},
+    user.role === 'ST' && {name: 'Completed Surveys', current: false}
+  ];
+  tabs = tabs.filter(Boolean);
+
+  const {curTab, setCurTab, helpers} = useTabs(tabs);
+
+  const [onUserInformationTab, onCATab, onNotebookTab, onSurveyTab] = helpers;
 
   // ##################################################################### //
   // ########################### PROFILE IMAGE ########################### //
