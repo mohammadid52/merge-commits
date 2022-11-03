@@ -37,7 +37,7 @@ const StageIcon = ({
   const lessonDispatch = gContext.lessonDispatch; //
   const previousProps = usePrevious(open);
   const PAGES = lessonState.lessonData.lessonPlan;
-
+  const lessonProgress = lessonState.lessonProgress;
   // ~~~~~~~~~~~~~~ STATE ETC ~~~~~~~~~~~~~~ //
   const [recentOpened, setRecentOpened] = useState<boolean>(false);
 
@@ -77,6 +77,12 @@ const StageIcon = ({
     lessonDispatch({type: 'SET_CURRENT_PAGE', payload: pageNr});
   };
 
+  const clickedLesson = active
+    ? 'font-bold border-b-0 border-indigo-400 text-indigo-200 hover:text-indigo-300'
+    : lessonProgress >= pageNr
+    ? 'text-gray-700'
+    : '';
+
   const stageButtonChoice = () => {
     if (pageNr === 0) {
       return (
@@ -84,24 +90,11 @@ const StageIcon = ({
           onClick={clickable ? () => handleLink() : () => {}}
           className={`${recentOpened ? 'animate-activation' : ''} 
           ${clickable ? 'cursor-pointer' : 'cursor-default'}
-          flex items-center w-auto group`}>
-          {/* <svg
-            className="flex-shrink-0 w-6 h-full text-gray-200 group-hover:text-gray-300 transition-all duration-150 "
-            viewBox="0 0 24 44"
-            preserveAspectRatio="none"
-            fill="currentColor"
-            xmlns="http://www.w3.org/2000/svg"
-            aria-hidden="true">
-            <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
-          </svg> */}
-
+          flex items-center w-auto group `}>
           <a
             className={`
-            ${
-              active
-                ? 'font-bold border-b-0 border-indigo-400 text-green-500 hover:text-green-400'
-                : null
-            }
+            ${clickedLesson}
+          
             xs:ml-0 sm:ml-0 ml-4 cursor-pointer w-auto  text-sm font-medium transform hover:scale-110 transition-transform duration-150
             flex flex-row`}>
             <p className="flex-shrink-0">{label}</p>
@@ -113,11 +106,12 @@ const StageIcon = ({
         <div
           onClick={clickable ? () => handleLink() : () => handleRequiredNotification()}
           className={`${recentOpened ? 'animate-activation' : ''} 
+          
           ${clickable ? 'cursor-pointer' : 'cursor-default'}
           flex items-center w-auto group`}>
           {breakpoint !== 'xs' && breakpoint !== 'sm' && (
             <svg
-              className="flex-shrink-0 w-6 h-full text-gray-200 group-hover:text-gray-300 transition-all duration-150 "
+              className={`flex-shrink-0 w-6 h-full text-gray-200 group-hover:text-gray-300 transition-all duration-150    `}
               viewBox="0 0 24 44"
               preserveAspectRatio="none"
               fill="currentColor"
@@ -128,7 +122,9 @@ const StageIcon = ({
           )}
 
           <a
-            className={`${
+            className={`
+            ${clickedLesson}
+            ${
               !enabled || !open ? 'line-through text-gray-500 hover:underline' : null
             }            
             ${!active ? 'text-gray-500 ' : null}
@@ -146,11 +142,14 @@ const StageIcon = ({
         <div
           onClick={clickable ? () => handleLink() : () => handleRequiredNotification()}
           className={`${recentOpened ? 'animate-activation' : ''} 
+          
           ${clickable ? 'cursor-pointer' : 'cursor-default'}
           flex items-center w-auto group`}>
           {breakpoint !== 'xs' && breakpoint !== 'sm' && (
             <svg
-              className="flex-shrink-0 w-6 h-full text-gray-200 group-hover:text-gray-300 transition-all duration-150 "
+              className={`flex-shrink-0 w-6 h-full text-gray-200 group-hover:text-gray-300 transition-all duration-150    ${
+                lessonProgress > pageNr ? 'text-gray-700' : ''
+              } `}
               viewBox="0 0 24 44"
               preserveAspectRatio="none"
               fill="currentColor"
@@ -161,9 +160,9 @@ const StageIcon = ({
           )}
 
           <a
-            className={`${
-              !enabled || !open ? 'line-through text-gray-500 hover:underline' : null
-            }
+            className={`
+            ${clickedLesson}
+            ${!enabled || !open ? 'line-through text-gray-500 hover:underline' : null}
             ${!active ? 'text-gray-500 ' : null}
           
             ${
