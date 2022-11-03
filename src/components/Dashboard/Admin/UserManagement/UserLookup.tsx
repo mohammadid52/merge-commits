@@ -14,8 +14,7 @@ import * as customQueries from 'customGraphql/customQueries';
 import * as queries from 'graphql/queries';
 
 // import LessonLoading from '../../../Lesson/Loading/ComponentLoading';
-import {createFilterToFetchSpecificItemsOnly} from 'utilities/strings';
-import useDictionary from 'customHooks/dictionary';
+import useSearch from '@customHooks/useSearch';
 import BreadCrums from 'atoms/BreadCrums';
 import Buttons from 'atoms/Buttons';
 import SearchInput from 'atoms/Form/SearchInput';
@@ -23,6 +22,8 @@ import Selector from 'atoms/Form/Selector';
 import PageCountSelector from 'atoms/PageCountSelector';
 import Pagination from 'atoms/Pagination';
 import SectionTitle from 'atoms/SectionTitle';
+import useDictionary from 'customHooks/dictionary';
+import {createFilterToFetchSpecificItemsOnly} from 'utilities/strings';
 import List from './List';
 import UserListLoader from './UserListLoader';
 
@@ -38,10 +39,7 @@ const UserLookup = ({isInInstitute, instituteId}: any) => {
   const [lastPage, setLastPage] = useState(false);
   const [firstPage, setFirstPage] = useState(false);
   const {UserLookupDict, paginationPage, BreadcrumsTitles} = useDictionary(clientKey);
-  const [searchInput, setSearchInput] = useState({
-    value: '',
-    isActive: false
-  });
+
   const [sortingType, setSortingType] = useState({
     value: '',
     name: '',
@@ -98,26 +96,26 @@ const UserLookup = ({isInInstitute, instituteId}: any) => {
     );
   };
 
-  const searchUserFromList = async () => {
-    if (searchInput.value) {
-      let searchVal = searchInput.value.toLowerCase();
-      const currentUsersList = [...totalUserList];
-      const newList = currentUsersList.filter((item) => {
-        // Search on firstName, lastName, email, and prefferred name for match.
-        return (
-          item.firstName?.toLowerCase().includes(searchVal) ||
-          item.email?.toLowerCase().includes(searchVal) ||
-          item.preferredName?.toLowerCase().includes(searchVal) ||
-          item.lastName?.toLowerCase().includes(searchVal)
-        );
-      });
-      setSearchInput({
-        ...searchInput,
-        isActive: true
-      });
-      setUserList(newList);
+  // add this function to useEffect
+  useEffect(() => {
+    if (!loading && userList.length > 0) {
+      const query = checkSearchQueryFromUrl();
+      if (query) {
+        const items = filterBySearchQuery(query);
+        if (Boolean(items)) {
+          setUserList(items);
+        }
+      }
+    }
+  }, [loading]);
+
+  const searchUserFromList = () => {
+    const searched = searchAndFilter(searchInput.value);
+
+    if (Boolean(searched)) {
+      setUserList(searched);
     } else {
-      removeSearchAction();
+      _removeSearchAction();
     }
   };
 
@@ -128,13 +126,6 @@ const UserLookup = ({isInInstitute, instituteId}: any) => {
         payload: {user: null}
       });
   }, [state?.temp?.user]);
-
-  const setSearch = (str: string) => {
-    setSearchInput({
-      ...searchInput,
-      value: str
-    });
-  };
 
   const setSortingValue = (str: string, name: string) => {
     setSortingType({
@@ -161,10 +152,20 @@ const UserLookup = ({isInInstitute, instituteId}: any) => {
     });
   };
 
-  const removeSearchAction = () => {
+  const _removeSearchAction = () => {
     backToInitials();
-    setSearchInput({value: '', isActive: false});
+    removeSearchAction();
   };
+
+  const {
+    filterBySearchQuery,
+    searchInput,
+    checkSearchQueryFromUrl,
+    removeSearchAction,
+    setSearch,
+    searchAndFilter,
+    findRelatedSearch
+  } = useSearch(totalUserList, ['name', 'email'], 'firstName');
 
   const fetchSortedList = () => {
     const newUserList = [...totalUserList].sort((a, b) =>
@@ -236,10 +237,11 @@ const UserLookup = ({isInInstitute, instituteId}: any) => {
       : [];
   };
 
-  const fetchAllPerson = async () => {
+  const fetchAllPerson = async (filter?: any) => {
     let resp: any = await API.graphql(
       graphqlOperation(queries.listPeople, {
-        limit: 500
+        limit: 500,
+        filter
       })
     );
     const users = resp?.data?.listPeople?.items;
@@ -306,19 +308,15 @@ const UserLookup = ({isInInstitute, instituteId}: any) => {
       if ((authIdFilter.length && (isTeacher || isBuilder || isAdmin)) || !isTeacher) {
         let users: any;
         let response: any;
-        if (isTeacher || isBuilder) {
-          users = await API.graphql(
-            graphqlOperation(queries.listPeople, {
-              filter: {
+
+        const dynamicFilter =
+          isTeacher || isBuilder
+            ? {
                 or: [...authIdFilter]
               }
-            })
-          );
-          response = users?.data?.listPeople?.items;
-        } else {
-          users = await fetchAllPerson();
-          response = users;
-        }
+            : {};
+        users = await fetchAllPerson(dynamicFilter);
+        response = users;
         const usersList =
           state.user.role === 'FLW'
             ? response.filter((user: any) => user.role === 'ST' || user.role === 'TR')
@@ -331,7 +329,14 @@ const UserLookup = ({isInInstitute, instituteId}: any) => {
           setTotalPages(totalListPages + 1);
         }
 
-        setTotalUserList(usersList);
+        setTotalUserList(
+          usersList.map((user: any) => ({
+            ...user,
+            name: `${user.firstName}, ${
+              user.preferredName ? user.preferredName : user.lastName
+            }`
+          }))
+        );
         setTotalUserNum(usersList.length);
       }
       setLoading(false);
@@ -404,8 +409,9 @@ const UserLookup = ({isInInstitute, instituteId}: any) => {
             dataCy="user-loookup-search"
             value={searchInput.value}
             onChange={setSearch}
+            disabled={loading}
             onKeyDown={searchUserFromList}
-            closeAction={removeSearchAction}
+            closeAction={_removeSearchAction}
             style={`mr-4 ${isInInstitute ? 'w-auto' : 'w-full'}`}
           />
           {!isInInstitute && (
@@ -415,6 +421,7 @@ const UserLookup = ({isInInstitute, instituteId}: any) => {
                 list={sortByList}
                 selectedItem={sortingType.name}
                 onChange={setSortingValue}
+                disabled={loading}
                 btnClass="rounded-r-none  border-r-none "
                 arrowHidden={true}
               />
@@ -484,20 +491,32 @@ const UserLookup = ({isInInstitute, instituteId}: any) => {
                   ))
               ) : userList.length > 0 ? (
                 userList.map((item: any, key: number) => (
-                  // <div key={key}>
-                  //   {state.user.role === 'FLW' ? (
-                  //     <ListStudents item={item} />
-                  //   ) : (
-                  //     <List item={item} key={key} />
-                  //   )}
-                  // </div>
                   <div key={key}>
-                    <List item={item} key={key} />
+                    <List searchTerm={searchInput.value} item={item} key={key} />
                   </div>
                 ))
               ) : (
-                <div className="flex p-12 mx-auto justify-center">
-                  {UserLookupDict[userLanguage]['noresult']}
+                <div className="text-center p-16">
+                  <p className="text-gray-500">
+                    {searchInput.isActive && !searchInput.typing
+                      ? ''
+                      : searchInput.isActive && searchInput.typing
+                      ? `Hit enter to search for ${searchInput.value}`
+                      : UserLookupDict[userLanguage]['noresult']}
+                    {searchInput.isActive && !searchInput.typing && (
+                      <span>
+                        No user found - <b>{searchInput.value}</b>. Try searching for "
+                        <span
+                          className="hover:underline theme-text cursor-pointer"
+                          onClick={() => {
+                            setSearch(findRelatedSearch(searchInput.value).firstName);
+                          }}>
+                          {findRelatedSearch(searchInput.value).firstName}
+                        </span>
+                        "
+                      </span>
+                    )}
+                  </p>
                 </div>
               )}
             </div>
