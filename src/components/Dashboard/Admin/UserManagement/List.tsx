@@ -46,6 +46,7 @@ const List = (props: ListProps) => {
     history.push(`${url}${id}`);
   };
 
+  // test
   const resetPassword = async (user: any) => {
     try {
       setLoading(true);
