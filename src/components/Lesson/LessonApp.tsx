@@ -1,13 +1,11 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import {UniversalLessonStudentData as UniversalLessonStudentDataFromAPI} from 'API';
 import 'components/Dashboard/GameChangers/styles/Flickity.scss';
 import 'components/Dashboard/GameChangers/styles/GameChanger.scss';
-import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
-import React, {useEffect, useRef, useState} from 'react';
-import {useHistory, useParams, useRouteMatch} from 'react-router-dom';
-import {v4 as uuidV4} from 'uuid';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
 import * as customSubscriptions from 'customGraphql/customSubscriptions';
+import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
 import * as mutations from 'graphql/mutations';
 import * as queries from 'graphql/queries';
 import {
@@ -20,15 +18,18 @@ import {
   UniversalLessonPage,
   UniversalLessonStudentData
 } from 'interfaces/UniversalLessonInterfaces';
+import React, {useEffect, useRef, useState} from 'react';
+import {useHistory, useParams, useRouteMatch} from 'react-router-dom';
 import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
+import {v4 as uuidV4} from 'uuid';
 import ErrorBoundary from '../Error/ErrorBoundary';
 import LessonHeaderBar from '../Header/LessonHeaderBar';
 import Foot from './Foot/Foot';
 import {ILessonSurveyApp} from './Lesson';
 import LessonPageLoader from './LessonPageLoader';
 import CoreUniversalLesson from './UniversalLesson/views/CoreUniversalLesson';
-
-const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
+import useLessonFunctions from './useLessonFunctions';
+const LessonApp = ({}: ILessonSurveyApp) => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
 
   const gContext = useGlobalContext();
@@ -154,17 +155,30 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
   // ~~~~~~~~~~~~~ LESSON SETUP ~~~~~~~~~~~~ //
 
   const [lessonDataLoaded, setLessonDataLoaded] = useState<boolean>(false);
+  const {lessonData, misc} = lessonState;
+
+  const [pageStateUpdated, setPageStateUpdated] = useState(false);
+
+  useEffect(() => {
+    if (
+      misc?.personLessonData &&
+      misc?.personLessonData?.lessonID &&
+      misc?.personLessonData?.lessonID === lessonData?.id
+    ) {
+      const data = misc?.personLessonData?.data[0];
+
+      const pages = data?.pages || '{}';
+      const lessonProgress = JSON.parse(pages).lessonProgress || 0;
+
+      lessonDispatch({type: 'SET_CURRENT_PAGE', payload: lessonProgress});
+      setPageStateUpdated(true);
+      history.push(`${match.url}/${lessonProgress}`);
+    }
+  }, [lessonData.id, misc?.personLessonData?.lessonID]);
 
   useEffect(() => {
     if (lessonState.lessonData && lessonState.lessonData.id) {
       setLessonDataLoaded(true);
-      if (CURRENT_PAGE !== '' && CURRENT_PAGE !== undefined) {
-        lessonDispatch({type: 'SET_CURRENT_PAGE', payload: CURRENT_PAGE});
-        history.push(`${match.url}/${CURRENT_PAGE}`);
-      } else {
-        lessonDispatch({type: 'SET_CURRENT_PAGE', payload: 0});
-        history.push(`${match.url}/${0}`);
-      }
 
       // Initialize closed pages based on room-configuration
 
@@ -249,7 +263,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
 
                       const exerciseObj = {
                         id: partContent.id,
-                        entryData: formSubInputs.pgInput
+                        entryData: formSubInputs?.pgInput || []
                       };
 
                       return {
@@ -505,6 +519,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
         (lessonPlanPage: UniversalLessonPage) => lessonPlanPage.id === lessonPage.id
       );
       const input = {
+        id: `${authId}-${getRoomData.id}-${lessonID}-${lessonPage.id}`,
         syllabusLessonID: getRoomData.activeSyllabus,
         lessonID: lessonID,
         lessonPageID: lessonPage.id,
@@ -516,7 +531,8 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
         lessonProgress: '0',
         pageData: lessonState.studentData[indexOfPage],
         hasExerciseData: lessonState.exerciseData[indexOfPage]?.length > 0,
-        exerciseData: lessonState.exerciseData[indexOfPage]
+        exerciseData: lessonState.exerciseData[indexOfPage],
+        date: new Date().toISOString()
       };
 
       const newStudentData: any = await API.graphql(
@@ -536,43 +552,43 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
    * IF THERE IS ANY, AND SETS IT IN STATE  *
    ******************************************/
 
-  const loopFetchStudentData = async (
-    filterObj: any,
-    nextToken: string,
-    outArray: any[]
-  ): Promise<any> => {
-    let combined;
-    setLessonDataLoaded(false);
-    try {
-      let studentData: any = await API.graphql(
-        graphqlOperation(customQueries.listUniversalLessonStudentDatas, {
-          ...filterObj,
-          nextToken: nextToken
-        })
-      );
-      let studentDataRows = studentData.data.listUniversalLessonStudentData.items;
-      let theNextToken = studentData.data.listUniversalLessonStudentData?.nextToken;
+  const _loopFetchStudentData = async (): Promise<UniversalLessonStudentDataFromAPI[]> =>
+    new Promise(async (resolve) => {
+      try {
+        setLessonDataLoaded(false);
+        // fetch by pages
 
-      /**
-       * combination of last fetch results
-       * && current fetch results
-       */
-      combined = [...outArray, ...studentDataRows];
+        let result: any = [];
 
-      if (theNextToken) {
-        // combined = await loopFetchStudentData(filterObj, theNextToken, combined);
+        await Promise.all(
+          PAGES.map(async (page: any, idx: number) => {
+            let studentData: any = await API.graphql(
+              graphqlOperation(queries.getUniversalLessonStudentData, {
+                id: `${user.authId}-${getRoomData.id}-${lessonID}-${page.id}`
+                // filter: {...filterObj.filter, lessonPageID: {eq: page.id}}
+              })
+            );
+
+            let studentDataObject = studentData.data.getUniversalLessonStudentData;
+            result.push(studentDataObject);
+          })
+        );
+
+        /**
+         * combination of last fetch results
+         * && current fetch results
+         */
+
+        lessonDispatch({type: 'LESSON_LOADED', payload: true});
+
+        // console.log('no more - ', combined);
+        setLessonDataLoaded(true);
+        resolve(result);
+      } catch (e) {
+        console.error('loopFetchStudentData - ', e);
+        return [];
       }
-
-      lessonDispatch({type: 'LESSON_LOADED', payload: true});
-
-      // console.log('no more - ', combined);
-      setLessonDataLoaded(true);
-      return combined;
-    } catch (e) {
-      console.error('loopFetchStudentData - ', e);
-      return [];
-    }
-  };
+    });
 
   const getOrCreateStudentData = async () => {
     // const syllabusID = getRoomData.activeSyllabus;
@@ -580,21 +596,14 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
     // console.log('getOrCreateData - user - ', user);
 
     try {
-      const listFilter = {
-        filter: {
-          studentAuthID: {eq: user.authId},
-          lessonID: {eq: lessonID},
-          syllabusLessonID: {eq: getRoomData.activeSyllabus},
-          roomID: {eq: getRoomData.id}
-        }
-      };
-
       // const studentData: any = await API.graphql(
       //   graphqlOperation(customQueries.listUniversalLessonStudentDatas, listFilter)
       // );
 
       // existing student rowss
-      const studentDataRows = await loopFetchStudentData(listFilter, undefined, []);
+      const studentDataRows: UniversalLessonStudentDataFromAPI[] = await (
+        await _loopFetchStudentData()
+      ).filter(Boolean);
 
       /**
        * NEW RECORD CREATION LOGIC:
@@ -615,6 +624,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
         lessonDispatch({
           type: 'LOAD_STUDENT_DATA',
           payload: {
+            studentDataRows,
             dataIdReferences: studentDataIdArray(newRecords)
           }
         });
@@ -953,16 +963,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
   };
 
   const loopCreateStudentArchiveAndExcerciseData = async (lessonID: string) => {
-    const listFilter = {
-      filter: {
-        studentAuthID: {eq: user.authId},
-        lessonID: {eq: lessonID},
-        syllabusLessonID: {eq: getRoomData.activeSyllabus},
-        roomID: {eq: getRoomData.id}
-      }
-    };
-    const studentDataRows = await loopFetchStudentData(listFilter, undefined, []);
-
+    const studentDataRows: UniversalLessonStudentDataFromAPI[] = await _loopFetchStudentData();
     const currentPageLocation = await getLessonCurrentPage();
 
     const result = studentDataRows.map(async (item: any) => {
@@ -978,7 +979,8 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
         lessonProgress: item.lessonProgress,
         pageData: item.pageData,
         hasExerciseData: item.hasExerciseData,
-        exerciseData: item.exerciseData
+        exerciseData: item.exerciseData,
+        lessonName: lessonState?.lessonData?.title || ''
       };
       let newStudentData: any;
       let returnedData: any;
@@ -991,6 +993,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
           })
         );
       } else {
+        delete input.lessonName;
         newStudentData = await API.graphql(
           graphqlOperation(mutations.createUniversalArchiveData, {
             input
@@ -1002,12 +1005,17 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
 
       return returnedData;
     });
+
+    // updateJournalData(studentDataRows);
     return result;
   };
 
-  const createStudentArchiveData = async () => {
+  const createStudentArchiveData = async (onSuccessCallback?: () => void) => {
     try {
       const result = await loopCreateStudentArchiveAndExcerciseData(lessonID);
+      if (onSuccessCallback && typeof onSuccessCallback === 'function') {
+        onSuccessCallback();
+      }
       return result;
     } catch (e) {
       console.error(
@@ -1021,28 +1029,17 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
     handleLessonMutateData();
   }, [lessonState.currentPage]);
 
-  const getLessonCompletedValue = async () => {
-    try {
-      const getLessonRatingDetails: any = await API.graphql(
-        graphqlOperation(queries.getPersonLessonsData, {
-          id: getPersonLessonsDataId(),
-          filter: {
-            lessonID: {eq: lessonID},
-            studentEmail: {eq: user.email},
-            studentAuthId: {eq: user.authId}
-          }
-        })
-      );
+  const {getLessonCompletedValue} = useLessonFunctions();
 
-      const pageNumber = getLessonRatingDetails.data.getPersonLessonsData.pages;
-      const lessonProgress = JSON.parse(pageNumber).lessonProgress;
-      const totalPages = JSON.parse(pageNumber).totalPages;
-      return {
-        lessonProgress,
-        totalPages
-      };
-    } catch (error) {}
-  };
+  const _getLessonCompletedValue = async () =>
+    await getLessonCompletedValue({
+      id: getPersonLessonsDataId(),
+      filter: {
+        lessonID: {eq: lessonID},
+        studentEmail: {eq: user.email},
+        studentAuthId: {eq: user.authId}
+      }
+    });
 
   const [listPersonLessonsData, setListPersonLessonsData] = useState([]);
 
@@ -1052,13 +1049,16 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
       let existingLesson: any;
 
       const personLessonData = lessonState?.misc?.personLessonData;
+      const isSameAndDataExists =
+        personLessonData?.lessonID === lessonID && personLessonData?.data?.length > 0;
 
-      if (personLessonData?.lessonID === lessonID && personLessonData?.data?.length > 0) {
-        existingLesson = {data: {listPersonLessonsData: {items: personLessonData?.data}}};
+      if (isSameAndDataExists) {
+        existingLesson = personLessonData?.data;
       } else {
         existingLesson = await API.graphql(
           graphqlOperation(queries.listPersonLessonsData, {
             filter: {
+              roomId: {eq: getRoomData.id},
               lessonID: {eq: lessonID},
               studentAuthID: {eq: user.authId},
               studentEmail: {eq: user.email}
@@ -1074,12 +1074,15 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
         });
       }
 
-      const items = existingLesson?.data?.listPersonLessonsData?.items || [];
+      const items = isSameAndDataExists
+        ? existingLesson
+        : existingLesson?.data?.listPersonLessonsData?.items || [];
 
       if (!items?.length) {
         payload = {
           id: uuidV4(),
           studentAuthID: user.authId,
+          roomId: getRoomData.id,
           studentEmail: user.email,
           lessonID: lessonID,
           lessonType: lessonState.lessonData?.type,
@@ -1087,7 +1090,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
           pages: `{
             "currentPage":${JSON.stringify(lessonState.currentPage)},
             "totalPages":${JSON.stringify(lessonState.lessonData?.lessonPlan?.length - 1)},
-            "lessonProgress":${JSON.stringify(lessonState.lessonProgress)}
+            "lessonProgress":${JSON.stringify(lessonState.currentPage)}
             }`.replace(/(\s\s+|[\t\n])/g, ' ').trim(),
           ratings: 0
         };
@@ -1101,16 +1104,13 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
         setListPersonLessonsData(items);
         payload = {
           id: items?.find((_d: any) => _d.lessonID === lessonID)?.id,
-          studentAuthID: user.authId,
-          studentEmail: user.email,
-          lessonID: lessonID,
-          lessonType: lessonState.lessonData?.type,
+
           pages: `{
             "currentPage":${JSON.stringify(lessonState.currentPage)},
             "totalPages":${JSON.stringify(
               lessonState.lessonData?.lessonPlan?.length - 1
             )},
-            "lessonProgress":${JSON.stringify(lessonState.lessonProgress)}
+            "lessonProgress":${JSON.stringify(lessonState.currentPage)}
             }`
             .replace(/(\s\s+|[\t\n])/g, ' ')
             .trim()
@@ -1139,6 +1139,7 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
       */}
       {/* <FloatingSideMenu /> */}
       <div
+        id="lesson-app-container"
         className={`${theme.bg} w-full h-full flex flex-col items-start dark-scroll overflow-y-auto`}
         ref={topLessonRef}>
         <div
@@ -1157,8 +1158,9 @@ const LessonApp = ({getSyllabusLesson}: ILessonSurveyApp) => {
             lessonDataLoaded={lessonDataLoaded}
             overlay={overlay}
             setOverlay={setOverlay}
+            pageStateUpdated={pageStateUpdated}
             getLessonCompletedValue={
-              listPersonLessonsData.length > 0 && getLessonCompletedValue
+              listPersonLessonsData.length > 0 && _getLessonCompletedValue
             }
             createJournalData={createStudentArchiveData}
             isAtEnd={isAtEnd}

@@ -1,13 +1,12 @@
+import {fallbackUrls} from 'assets';
 import Buttons from 'atoms/Buttons';
 import ContentCard from 'atoms/ContentCard';
 import ImageAlternate from 'atoms/ImageAlternative';
 import SectionTitleV3 from 'atoms/SectionTitleV3';
-import {GlobalContext} from 'contexts/GlobalContext';
+import {ModifiedListProps} from 'components/Dashboard/Home/Home';
+import {GlobalContext, useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import React, {useContext, useEffect, useState} from 'react';
-import {IoImage} from 'react-icons/io5';
-import {ModifiedListProps} from 'components/Dashboard/Home/Home';
-import {fallbackUrls} from 'assets';
 
 const limitDesc = (str: string, len: number = 250): string => {
   if (str) {
@@ -49,70 +48,51 @@ const SingleRoomCard = ({
         )
       }
       key={`homepage__classrooms-${idx}`}
-      className="flex shadow flex-col rounded-lg overflow-hidden ">
-      <div className="flex-shrink-0">
-        {/* {bannerImage ? (
-          <img
-            className="cursor-pointer h-48 w-full object-cover hover:scale-105 transform transition-transform duration-500"
-            src={bannerImage}
-            alt=""
-          />
-        ) : (
-          <div
-            className={`profile justify-center items-center content-center h-48 w-full bg-gray-100 flex border-gray-400`}>
-            <IoImage className="fill-current text-gray-80" size={32} />
-          </div>
-        )} */}
-
+      className="flex customShadow  transition-all room_card flex-col cursor-pointer rounded-lg overflow-hidden ">
+      <div className="flex-shrink-0 bg-gray-500">
         <img
-          className="cursor-pointer h-48 w-full object-cover hover:scale-105 transform transition-transform duration-500"
+          loading="lazy"
+          className="room-image h-48 w-full object-cover hover:scale-105 transform transition-transform duration-300"
           src={bannerImage || fallbackUrls.room}
           alt={`${roomName || ''} banner image`}
         />
       </div>
-      <div className="flex-1 bg-white p-6 flex flex-col justify-between">
+      <div className="flex-1 bg-white room_card-body p-6 flex flex-col justify-between">
         <div className="flex-1">
-          <p className="text-sm font-medium text-indigo-600">
-            <a className="hover:underline">{type}</a>
+          <p className="room-type  text-xs tracking-wide uppercase font-medium text-gray-500">
+            {type}
           </p>
-          <a data-cy="classroom-cards" href="#" className="block mt-2">
-            <p className="text-base 2xl:text-lg text-gray-900">
-              <span className="font-semibold">{name}</span>{' '}
-              {/* <span className="text-base 2xl:text-lg text-semibold text-gray-900">
-          {isTeacher && `${roomName}`}
-        </span> */}
+          <div data-cy="classroom-cards" className="block mt-2">
+            <p className="text-base room-name tracking-wider font-medium 2xl:text-lg text-gray-900">
+              {name}
             </p>
-            <p className="mt-2 text-xs 2xl:text-sm text-gray-800">
-              {limitDesc(summary, 250)}
+            <p className="mt-2 room-summary text-xs 2xl:text-sm text-gray-800">
+              {limitDesc(summary, 50)}
             </p>
-          </a>
+          </div>
         </div>
         <div className="mt-6 flex items-center">
           <div className="flex-shrink-0 w-auto">
-            <a>
-              <span className="sr-only">
-                {(preferredName || firstName) + ' ' + lastName}
-              </span>
-              {teacherProfileImg ? (
-                <img className="h-10 w-10 rounded-full" src={teacherProfileImg} alt="" />
-              ) : (
-                <ImageAlternate
-                  user={{firstName, lastName}}
-                  styleClass="h-10 w-10 rounded-full"
-                />
-              )}
-            </a>
+            <span className="sr-only">
+              {(preferredName || firstName) + ' ' + lastName}
+            </span>
+            {teacherProfileImg ? (
+              <img className="h-8 w-8 rounded-full" src={teacherProfileImg} alt="" />
+            ) : (
+              <ImageAlternate
+                user={{firstName, lastName}}
+                styleClass="h-8 w-8 rounded-full"
+              />
+            )}
           </div>
           <div className="ml-3 w-auto">
-            <p className="text-xs 2xl:text-sm font-medium text-gray-900">
-              <a className="hover:underline">
-                {(preferredName || firstName) + ' ' + lastName}
-              </a>
+            <p className="text-xs room-teacher-name 2xl:text-sm font-medium text-gray-900">
+              {(preferredName || firstName) + ' ' + lastName}
             </p>
             <p
-              style={{maxWidth: '99%'}}
-              className="overflow-hidden pr-2 overflow-ellipsis space-x-1 text-xs 2xl:text-sm text-gray-500">
-              {roomName}
+              title={roomName}
+              className="overflow-hidden room-desc pr-2 overflow-ellipsis space-x-1 text-xs 2xl:text-sm text-gray-500">
+              {limitDesc(roomName, 30)}
             </p>
           </div>
         </div>
@@ -127,12 +107,20 @@ const RoomTiles = (props: {
   classList: ModifiedListProps[];
 }) => {
   const {classList: classes, isTeacher, handleRoomSelection} = props;
-  const {userLanguage, clientKey} = useContext(GlobalContext);
-  const {DashboardDict} = useDictionary(clientKey);
+  const {userLanguage} = useGlobalContext();
+  const {DashboardDict} = useDictionary();
 
   const [showMore, setShowMore] = useState(false);
 
   const [classList, setClassList] = useState([]);
+
+  const animateOnShowMore = () => {
+    if (showMore) {
+      setShowMore(false);
+    } else {
+      setShowMore(true);
+    }
+  };
 
   useEffect(() => {
     if (classes.length > 0) {
@@ -151,7 +139,7 @@ const RoomTiles = (props: {
             <div className="flex justify-end">
               <Buttons
                 label={!showMore ? 'Show All' : 'Show Few'}
-                onClick={() => setShowMore(!showMore)}
+                onClick={animateOnShowMore}
                 type="button"
               />
             </div>
@@ -162,7 +150,7 @@ const RoomTiles = (props: {
         extraClass="leading-6 text-gray-900"
         borderBottom
       />
-      <ContentCard hasBackground={false} additionalClass="shadow bg-white rounded-b-lg">
+      <ContentCard hasBackground={false}>
         {classList.length > 0 ? (
           <div className="relative">
             <div className="relative max-w-7xl mx-auto">

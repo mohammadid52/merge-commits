@@ -1,21 +1,19 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import UserInformation from 'components/Dashboard/Admin/UserManagement/UserInformation';
+import {GlobalContext} from 'contexts/GlobalContext';
 import {useNotifications} from 'contexts/NotificationContext';
+import * as customQueries from 'customGraphql/customQueries';
 import useLessonControls from 'customHooks/lessonControls';
 import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
 import useAuth from 'customHooks/useAuth';
-import React, {Suspense, useContext, useEffect, useState} from 'react';
-import {useParams} from 'react-router';
-import {useHistory, useRouteMatch} from 'react-router-dom';
-import {GlobalContext} from 'contexts/GlobalContext';
-import * as customQueries from 'customGraphql/customQueries';
 import * as mutations from 'graphql/mutations';
-import * as queries from 'graphql/queries';
 import * as subscriptions from 'graphql/subscriptions';
 import {
   StudentPageInput,
   UniversalLessonStudentData
 } from 'interfaces/UniversalLessonInterfaces';
+import React, {Suspense, useContext, useEffect, useState} from 'react';
+import {useParams} from 'react-router';
+import {useHistory, useRouteMatch} from 'react-router-dom';
 import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
 import ErrorBoundary from '../Error/ErrorBoundary';
 import PositiveAlert from '../General/Popup';
@@ -383,8 +381,8 @@ const LessonControl = () => {
     const isCompleted = checkIfLessonIsCompleted(getRoomData, lessonID);
     if (!isCompleted || !isTeacher) {
       if (lessonState.lessonData) {
-        lessonDispatch({type: 'SET_CURRENT_PAGE', payload: 0});
-        history.push(`${match.url}/${0}`);
+        // lessonDispatch({type: 'SET_CURRENT_PAGE', payload: 0});
+        // history.push(`${match.url}/${0}`);
 
         const getRoomData = getLocalStorageData('room_info');
         setLocalStorageData('room_info', {...getRoomData, studentViewing: ''});

@@ -230,9 +230,11 @@ const NotesBlock = ({
     localNotes.push(newNoteObj);
     setLocalNotes([...localNotes]);
 
+    const domID = `post-it_${newNoteObj.id}`;
+
     addNew(
       {
-        domID: newNoteObj.id,
+        domID,
         type: 'content-custom || yellow medium',
         input: ''
       },
@@ -242,7 +244,7 @@ const NotesBlock = ({
     lessonDispatch({
       type: 'ADD_NEW_INPUT',
       payload: {
-        domID: newNoteObj.id,
+        domID,
         input: ['']
       }
     });

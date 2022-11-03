@@ -45,7 +45,7 @@ const BreadCrums: React.FC<BreadCrumProps> = (brdPrps: BreadCrumProps) => {
                 {!item.goBack ? (
                   <div onClick={() => goToUrl(item.url)}>
                     <span
-                      className={`mr-1 md:mr-2 cursor-pointer text-sm md:text-base ${
+                      className={`mr-1 md:mr-2 cursor-pointer text-sm hover:iconoclast:bg-400 hover:curate:bg-400 rounded-xl px-2 md:text-base ${
                         item.last ? theme.text.secondary : theme.text.default
                       }`}>
                       {item.title}
@@ -54,7 +54,7 @@ const BreadCrums: React.FC<BreadCrumProps> = (brdPrps: BreadCrumProps) => {
                   </div>
                 ) : (
                   <span
-                    className={`mr-1 md:mr-2 cursor-pointer text-sm md:text-base ${
+                    className={`mr-1 md:mr-2 cursor-pointer text-sm hover:iconoclast:bg-400 hover:curate:bg-400 rounded-xl px-2 md:text-base ${
                       item.last ? theme.text.secondary : theme.text.default
                     }`}
                     onClick={() => (unsavedChanges ? toggleModal() : history.goBack())}>

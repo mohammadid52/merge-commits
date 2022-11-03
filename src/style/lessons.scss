@@ -2,6 +2,13 @@
   width: 47%;
 }
 
+.green-btn {
+  background-color: rgba(72, 187, 120) !important;
+  &:hover {
+    background-color: rgba(56, 161, 105) !important;
+  }
+}
+
 // .first {
 //     p::first-letter {
 //         color: red;
@@ -151,5 +158,10 @@
   min-height: calc(100vh - 98px);
   .lesson-page-container {
     min-height: calc(100% - 110px);
+  }
+}
+.white-text-on-hover {
+  &:hover {
+    color: #fff !important;
   }
 }

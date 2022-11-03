@@ -1,21 +1,20 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import {getAsset} from 'assets';
+import BreadCrums from 'atoms/BreadCrums';
+import SectionTitleV3 from 'atoms/SectionTitleV3';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import useAuth from 'customHooks/useAuth';
+import * as mutations from 'graphql/mutations';
+import * as queries from 'graphql/queries';
 import isEmpty from 'lodash/isEmpty';
 import React, {useContext, useEffect, useState} from 'react';
 import {useRouteMatch} from 'react-router';
-import {getAsset} from 'assets';
-import {GlobalContext} from 'contexts/GlobalContext';
-import useDictionary from 'customHooks/dictionary';
-import * as mutations from 'graphql/mutations';
-import * as queries from 'graphql/queries';
-import {v4 as uuidV4} from 'uuid';
-import BreadCrums from 'atoms/BreadCrums';
-import SectionTitleV3 from 'atoms/SectionTitleV3';
 import {DashboardProps} from '../Dashboard';
 import DashboardContainer from '../DashboardContainer';
 import DateAndTime from '../DateAndTime/DateAndTime';
 import SyllabusSwitch from './SyllabusSwitch';
 import Today from './TodayLesson';
-import useAuth from 'customHooks/useAuth';
 
 interface Artist {
   id: string;
@@ -86,6 +85,7 @@ export interface LessonCardProps {
   syllabusProps?: any;
   accessible?: boolean;
   openCards?: string;
+  lessonProgress?: number;
   setOpenCards?: React.Dispatch<React.SetStateAction<string>>;
   lessonType?: string;
   pageNumber?: number;
@@ -366,6 +366,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
       const lessonPersonData: any = await API.graphql(
         graphqlOperation(queries.listPersonLessonsData, {
           filter: {
+            roomId: {eq: roomId},
             studentAuthID: {eq: authId},
             studentEmail: {eq: email}
           }
@@ -437,14 +438,17 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
     }
   }, []);
 
+  const courseName = state?.roomData?.curriculum?.name || '';
+
   return (
     <>
       <DashboardContainer
         user={stateUser}
         theme={theme}
+        courseName={courseName}
         clientKey={clientKey}
         bannerImg={bannerImg}
-        bannerTitle={classRoomDict[userLanguage]['TITLE']}>
+        bannerTitle={`${classRoomDict[userLanguage]['TITLE']}`}>
         <div className="px-5 2xl:px-0 lg:mx-auto lg:max-w-192 md:max-w-none 2xl:max-w-256">
           <div className="flex flex-row my-0 w-full py-0 mb-4 justify-between items-center">
             <BreadCrums items={breadCrumsList} />
@@ -491,7 +495,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
               </>
             )}
 
-            {Boolean(activeRoomInfo?.activeSyllabus) && (
+            {Boolean(activeRoomInfo?.activeSyllabus) ? (
               <>
                 <SectionTitleV3
                   fontSize="2xl"
@@ -527,6 +531,12 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
                   </div>
                 </div>
               </>
+            ) : (
+              <div className="text-center">
+                <p className="w-auto text-center text-gray-500 font-medium">
+                  No active unit for this room
+                </p>
+              </div>
             )}
           </div>
         </div>

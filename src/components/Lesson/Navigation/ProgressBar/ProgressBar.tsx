@@ -35,6 +35,7 @@ const ProgressBar = ({
 }: IProgressBarProps) => {
   const gContext = useContext(GlobalContext);
   const lessonState = gContext.lessonState;
+  const lessonDispatch = gContext.lessonDispatch;
   const user = gContext.state.user;
 
   const getRoomData = getLocalStorageData('room_info');

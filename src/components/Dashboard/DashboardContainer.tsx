@@ -14,6 +14,7 @@ interface DashboardContainerProps {
   bannerImg: string;
   children: any;
   label?: string;
+  courseName?: string;
 }
 
 const DashboardContainer = ({
@@ -24,7 +25,8 @@ const DashboardContainer = ({
   bannerImg,
   children,
   label,
-  showTitleBanner = true
+  showTitleBanner = true,
+  courseName = ''
 }: DashboardContainerProps) => {
   const isTeacher = user?.role === 'TR' || user?.role === 'FLW';
   const isOnDemandStudent = user?.onDemand;
@@ -68,7 +70,7 @@ const DashboardContainer = ({
                       {'Classroom Lessons Self-Paced'}
                     </span>
                   ) : (
-                    <span className="font-semibold">{'Classroom Lessons'}</span>
+                    <span className="font-semibold">{`Classroom Lessons - ${courseName}`}</span>
                   )}
                 </h2>
                 {isTeacher && (

@@ -1,13 +1,17 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import * as customMutations from 'customGraphql/customMutations';
-import update from 'lodash/update';
-import {nanoid} from 'nanoid';
-import React, {useEffect, useState} from 'react';
-import {FaSpinner} from 'react-icons/fa';
-import {IconContext} from 'react-icons/lib';
-import {v4 as uuidV4} from 'uuid';
+import {useQuery} from '@customHooks/urlParam';
+import useAuth from '@customHooks/useAuth';
+import {
+  UniversalLessonWritingExcercises,
+  UpdateUniversalLessonWritingExcercisesInput
+} from 'API';
 import {getAsset} from 'assets';
+import Buttons from 'atoms/Buttons';
+import FormInput from 'atoms/Form/FormInput';
+import Modal from 'atoms/Modal';
+import SectionTitleV3 from 'atoms/SectionTitleV3';
 import {useGlobalContext} from 'contexts/GlobalContext';
+import * as customMutations from 'customGraphql/customMutations';
 import * as customQueries from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import usePrevious from 'customHooks/previousProps';
@@ -18,10 +22,13 @@ import {
   UniversalJournalData,
   UniversalLessonStudentData
 } from 'interfaces/UniversalLessonInterfaces';
-import Buttons from 'atoms/Buttons';
-import FormInput from 'atoms/Form/FormInput';
-import Modal from 'atoms/Modal';
-import SectionTitleV3 from 'atoms/SectionTitleV3';
+import {isEmpty} from 'lodash';
+import update from 'lodash/update';
+import {nanoid} from 'nanoid';
+import React, {useEffect, useState} from 'react';
+import {FaSpinner} from 'react-icons/fa';
+import {IconContext} from 'react-icons/lib';
+import {v4 as uuidV4} from 'uuid';
 import HeroBanner from '../../Header/HeroBanner';
 import HeaderTextBar from '../HeaderTextBar/HeaderTextBar';
 import ChangePasscode from '../Profile/ChangePasscode';
@@ -96,7 +103,9 @@ const Anthology = ({
   // ##################################################################### //
 
   const [allStudentData, setAllStudentData] = useState<UniversalLessonStudentData[]>([]);
-  const [allExerciseData, setAllExerciseData] = useState<UniversalJournalData[]>([]);
+  const [allExerciseData, setAllExerciseData] = useState<
+    UniversalLessonWritingExcercises[]
+  >([]);
   const [classNotebook, setClassNotebook] = useState<any[]>([]);
 
   const [allUniversalJournalData, setAllUniversalJournalData] = useState<
@@ -140,25 +149,31 @@ const Anthology = ({
   };
 
   const reduceRoomExerciseData = (roomID: string) => {
-    const allExerciseEntryData = allUniversalClassData.reduce((acc: any[], val: any) => {
+    const allExerciseEntryData = allUniversalClassData.reduce((acc: any[], val) => {
       if (val.roomID === roomID) {
         const adaptedExerciseEntries = val.exerciseData.map((exercise: any) => {
-          return {
-            id: exercise.id,
-            studentID: val.studentID,
-            studentAuthID: val.studentAuthID,
-            studentEmail: val.studentEmail,
-            feedbacks: exercise.feedbacks || [],
-            shared: exercise?.shared || false,
-            entryData: exercise.entryData.map((entry: any) => {
-              return {
-                ...entry,
-                type: entry.domID.includes('title') ? 'header' : 'content'
-              };
-            }),
-            recordID: val.id,
-            updatedAt: val?.updatedAt
-          };
+          if (!isEmpty(exercise?.entryData)) {
+            return {
+              id: exercise.id,
+
+              studentID: val.studentID,
+              studentAuthID: val.studentAuthID,
+              studentEmail: val.studentEmail,
+              feedbacks: exercise.feedbacks || [],
+              shared: exercise?.shared || false,
+              entryData:
+                exercise?.entryData?.map((entry: any) => {
+                  return {
+                    ...entry,
+                    type: entry.domID.includes('title') ? 'header' : 'content'
+                  };
+                }) || [],
+              recordID: val.id,
+              updatedAt: val?.updatedAt,
+              roomID,
+              lessonName: val.lessonName
+            };
+          }
         });
         return [...acc, ...adaptedExerciseEntries];
       } else {
@@ -173,47 +188,92 @@ const Anthology = ({
       (record: any) => record.id === journalEntryData.recordID
     );
 
-    const newExerciseData = {
-      exerciseData: selectStudentDataRecord.exerciseData.map((exercise: any) => {
-        if (exercise.id === journalEntryData.id) {
-          return {...exercise, entryData: journalEntryData.entryData};
-        } else {
-          return exercise;
-        }
-      })
-    };
-
-    const mergedStudentData = allStudentData.map((dataRecord: any) => {
-      if (dataRecord.id === selectStudentDataRecord.id) {
-        return {...dataRecord, exerciseData: newExerciseData.exerciseData};
-      } else {
-        return dataRecord;
-      }
-    });
-
-    try {
-      let updatedStudentData: any = await API.graphql(
-        graphqlOperation(mutations.updateUniversalLessonStudentData, {
-          input: {
-            id: selectStudentDataRecord.id,
-            exerciseData: newExerciseData.exerciseData
+    if (!isEmpty(selectStudentDataRecord)) {
+      const newExerciseData = {
+        exerciseData: selectStudentDataRecord.exerciseData.map((exercise: any) => {
+          if (exercise.id === journalEntryData.id) {
+            return {...exercise, entryData: journalEntryData.entryData};
+          } else {
+            return exercise;
           }
         })
-      );
-      setAllStudentData(mergedStudentData);
-    } catch (e) {
-      console.error('error updating writing exercise - ', e);
-    } finally {
-      //
+      };
+
+      const mergedStudentData = allStudentData.map((dataRecord: any) => {
+        if (dataRecord.id === selectStudentDataRecord.id) {
+          return {...dataRecord, exerciseData: newExerciseData.exerciseData};
+        } else {
+          return dataRecord;
+        }
+      });
+
+      try {
+        let updatedStudentData: any = await API.graphql(
+          graphqlOperation(mutations.updateUniversalLessonStudentData, {
+            input: {
+              id: selectStudentDataRecord.id,
+              exerciseData: newExerciseData.exerciseData
+            }
+          })
+        );
+        setAllStudentData(mergedStudentData);
+      } catch (e) {
+        console.error('error updating writing exercise - ', e);
+      } finally {
+        //
+      }
     }
   };
+
+  // const updateStudentDataForClassWork = async () => {
+  //   const selectStudentDataRecord = allUniversalClassData.find(
+  //     (record: any) => record.id === journalEntryData.recordID
+  //   );
+
+  //   if (!isEmpty(selectStudentDataRecord)) {
+  //     const newExerciseData = {
+  //       exerciseData: selectStudentDataRecord.exerciseData.map((exercise: any) => {
+  //         if (exercise.id === journalEntryData.id) {
+  //           return {...exercise, entryData: journalEntryData.entryData};
+  //         } else {
+  //           return exercise;
+  //         }
+  //       })
+  //     };
+
+  //     const mergedStudentData = allUniversalClassData.map((dataRecord: any) => {
+  //       if (dataRecord.id === selectStudentDataRecord.id) {
+  //         return {...dataRecord, exerciseData: newExerciseData.exerciseData};
+  //       } else {
+  //         return dataRecord;
+  //       }
+  //     });
+
+  //     try {
+  //       let updatedStudentData: any = await API.graphql(
+  //         graphqlOperation(mutations.updateUniversalLessonStudentData, {
+  //           input: {
+  //             id: selectStudentDataRecord.id,
+  //             exerciseData: newExerciseData.exerciseData
+  //           }
+  //         })
+  //       );
+  //       setAllUniversalClassData(mergedStudentData);
+  //     } catch (e) {
+  //       console.error('error updating writing exercise - ', e);
+  //     } finally {
+  //       //
+  //     }
+  //   }
+  // };
 
   // ##################################################################### //
   // ##################### CRUD JOURNAL & CLASS NOTES #################### //
   // ##################################################################### //
 
   // ~~~~~~~~ LIVE JOURNAL EDIT DATA ~~~~~~~ //
-  const [journalEntryData, setJournalEntryData] = useState<UniversalJournalData>({
+
+  const DEFAULT_JOURNAL_ENTRY: UniversalJournalData = {
     id: '',
     studentID: studentAuthID,
     studentAuthID: studentAuthID,
@@ -223,17 +283,21 @@ const Anthology = ({
     shared: false,
     entryData: [
       {
-        domID: `title_${nanoid(4)}`,
+        domID: `title_${nanoid(12)}`,
         type: 'header',
-        input: 'Default Title'
+        input: ''
       },
       {
-        domID: `note_${nanoid(4)}`,
+        domID: `note_${nanoid(12)}`,
         type: 'content',
-        input: '<p>Enter notes here...</p>'
+        input: ''
       }
     ]
-  });
+  };
+
+  const [journalEntryData, setJournalEntryData] = useState<UniversalJournalData>(
+    DEFAULT_JOURNAL_ENTRY
+  );
 
   // ~~~~~~~~~~~~ GET OR CREATE ~~~~~~~~~~~~ //
   const [universalJournalDataLoaded, setUniversalJournalDataLoaded] = useState<boolean>(
@@ -250,15 +314,12 @@ const Anthology = ({
       const listFilterIfTeacher = {
         filter: {
           studentAuthID: {eq: studentAuthID},
-          shared: {eq: 'true'}
+          shared: {eq: true}
         }
       };
 
       const journalEntryData: any = await API.graphql(
-        graphqlOperation(
-          queries.listUniversalJournalData,
-          isTeacher ? listFilterIfTeacher : listFilter
-        )
+        graphqlOperation(queries.listUniversalJournalData, listFilter)
       );
       const journalEntryDataRows =
         journalEntryData?.data?.listUniversalJournalData?.items || [];
@@ -338,6 +399,72 @@ const Anthology = ({
       //
     }
   };
+  const updateJournalDataForClassWork = async () => {
+    const selectStudentDataRecord = allUniversalClassData.find(
+      (record: any) => record.id === journalEntryData.recordID
+    );
+
+    const newExerciseData = {
+      exerciseData: selectStudentDataRecord.exerciseData.map((exercise: any) => {
+        if (exercise.id === journalEntryData.id) {
+          return {...exercise, entryData: journalEntryData.entryData};
+        } else {
+          return exercise;
+        }
+      })
+    };
+
+    const updatedExerciseData = allExerciseData.filter(Boolean).map((exercise: any) => {
+      if (exercise.id === journalEntryData.id) {
+        return {...exercise, entryData: journalEntryData.entryData};
+      } else {
+        return exercise;
+      }
+    });
+
+    // here we are getting error because of bad data.
+    // let's add some edge cases to handle this.
+    // updateUniversalJournalData mutation is giving error. because its origin data is missing.
+    // so if we are getting that error. let's create a new data object
+
+    try {
+      const input: UpdateUniversalLessonWritingExcercisesInput = {
+        id: journalEntryData.recordID,
+        exerciseData: newExerciseData.exerciseData
+      };
+      try {
+        const classDataIdx = allUniversalClassData.findIndex(
+          (d) => d.id === journalEntryData.recordID
+        );
+        const exerciseIdx = allUniversalClassData[classDataIdx].exerciseData.findIndex(
+          (d) => d.id === journalEntryData.id
+        );
+        const updated = update(
+          allUniversalClassData[classDataIdx],
+          `exerciseData[${exerciseIdx}].entryData`,
+          () => journalEntryData.entryData
+        );
+        allUniversalClassData.splice(classDataIdx, 1, updated);
+
+        setAllUniversalClassData(allUniversalClassData);
+
+        const res: any = await API.graphql(
+          graphqlOperation(mutations.updateUniversalLessonWritingExcercises, {
+            input
+          })
+        );
+      } catch (error) {
+        // if we are getting null. it means that data is missing. so we need to create a new data object
+        // const newJournalData = await createJournalData();
+      }
+
+      setAllExerciseData(updatedExerciseData);
+    } catch (e) {
+      console.error('error updating journal data - ', e);
+    } finally {
+      //
+    }
+  };
 
   const deleteJournalData = async () => {
     const deletedJournalData = allUniversalJournalData.reduce(
@@ -367,16 +494,21 @@ const Anthology = ({
   const selectJournalData = async () => {
     const selectSource =
       subSection !== 'Work' ? allUniversalJournalData : allExerciseData;
-    const selectExisting = selectSource.find(
-      (journalObj: any) => journalObj.id === viewEditMode.dataID
-    );
+
+    const selectExisting =
+      selectSource
+        // @ts-ignore
+        .filter(Boolean)
+        .find((journalObj: any) => journalObj.id === viewEditMode.dataID) ||
+      DEFAULT_JOURNAL_ENTRY;
+
     setJournalEntryData({
       id: selectExisting.id,
       studentID: selectExisting.studentID,
       studentAuthID: selectExisting.studentAuthID,
       studentEmail: selectExisting.studentEmail,
-      shared: selectExisting?.shared,
-      feedbacks: selectExisting.feedbacks,
+      shared: selectExisting?.shared || false,
+      feedbacks: selectExisting.feedbacks || [],
       entryData: selectExisting.entryData,
       recordID: selectExisting?.recordID,
       updatedAt: selectExisting?.updatedAt
@@ -398,6 +530,7 @@ const Anthology = ({
           }
         })
       };
+
       // console.log('input - ', html);
       setJournalEntryData(updatedNotesData);
     }
@@ -425,34 +558,22 @@ const Anthology = ({
       option: option || 0,
       recordID: recordID || ''
     });
+
+    if (editMode === 'create') {
+      const el = document.getElementById('anthology_Journal_create');
+      if (el) {
+        el.scrollIntoView({behavior: 'smooth', block: 'start'});
+      }
+    }
   };
 
   const handleResetJournalEntry = async () => {
-    setJournalEntryData({
-      id: '',
-      studentID: state.user.authId,
-      studentAuthID: state.user.authId,
-      studentEmail: state.user.email,
-      type: 'journal-entry',
-      shared: false,
-      feedbacks: [''],
-      entryData: [
-        {
-          domID: `title_${nanoid(4)}`,
-          type: 'header',
-          input: 'Default Title'
-        },
-        {
-          domID: `note_${nanoid(4)}`,
-          type: 'content',
-          input: '<p>Enter notes here...</p>'
-        }
-      ]
-    });
+    setJournalEntryData(DEFAULT_JOURNAL_ENTRY);
   };
+  const [mainSection, setMainSection] = useState<string>('');
 
   // UseEffect for monitoring save/create new changes and calling functions
-
+  const isPrivate = mainSection.toLowerCase() === 'private';
   // TODO: functions need renaming so that
   useEffect(() => {
     const manageSaveAndCreate = async () => {
@@ -478,8 +599,13 @@ const Anthology = ({
           await selectJournalData();
         } else if (viewEditMode.mode === 'save') {
           await handleResetJournalEntry();
-          await updateStudentData();
-          await updateJournalData();
+          if (isPrivate) {
+            await updateStudentData();
+            await updateJournalData();
+          } else {
+            // await updateStudentDataForClassWork();
+            await updateJournalDataForClassWork();
+          }
         } else if (viewEditMode.mode === '') {
           await handleResetJournalEntry();
         }
@@ -494,7 +620,6 @@ const Anthology = ({
   // ##################################################################### //
 
   const [switchReady, setSwitchReady] = useState<boolean>(true);
-  const [mainSection, setMainSection] = useState<string>('');
   const [sectionRoomID, setSectionRoomID] = useState<string>('');
 
   const [sectionTitle, setSectionTitle] = useState<string>('');
@@ -526,13 +651,17 @@ const Anthology = ({
     }
   }, [allUniversalClassData, sectionRoomID]);
 
+  const {isStudent} = useAuth();
+  const dynamicAuthID = isStudent ? state.user.authId : studentAuthID;
+  const dynamicEmail = isStudent ? state.user.email : studentEmail;
+
   const getUniversalArchiveData = async () => {
     try {
       const archiveData: any = await API.graphql(
         graphqlOperation(queries.listUniversalArchiveData, {
           filter: {
             studentID: {
-              eq: state.user.authId
+              eq: dynamicAuthID
             }
           }
         })
@@ -548,18 +677,38 @@ const Anthology = ({
 
   const getUniversalLessonWritingExercises = async () => {
     try {
-      const allUniversalClassData: any = await API.graphql(
+      const _allUniversalClassData: any = await API.graphql(
         graphqlOperation(customQueries.listUniversalLessonWritingExcercises, {
           filter: {
             studentID: {
-              eq: state.user.authId
+              eq: dynamicAuthID
+            },
+            studentEmail: {
+              eq: dynamicEmail
             }
           }
         })
       );
-      setAllUniversalClassData(
-        allUniversalClassData?.data?.listUniversalLessonWritingExcercises?.items || []
-      );
+
+      const items =
+        _allUniversalClassData?.data?.listUniversalLessonWritingExcercises?.items.filter(
+          Boolean
+        ) || [];
+
+      const mappedItems: UniversalClassData[] = items.map((item: UniversalClassData) => {
+        return {
+          ...item,
+          entryData:
+            item?.exerciseData[0]?.entryData?.map((entryObj: any) => {
+              return {
+                ...entryObj,
+                type: entryObj.domID.includes('title') ? 'header' : 'content'
+              };
+            }) || []
+        };
+      });
+
+      setAllUniversalClassData(mappedItems);
     } catch (error) {
       console.error(
         '🚀 ~ file: Anthology.tsx ~ line 548 ~ getUniversalLessonWritingExcercises ~ error',
@@ -703,7 +852,15 @@ const Anthology = ({
       setPasscodeInput('');
       setAccessMessage({message: '', textClass: ''});
     }
+
+    const el = document.getElementById('anthology_tabs');
+    if (el) {
+      el.scrollIntoView({behavior: 'smooth', block: 'start'});
+    }
   };
+  const params = useQuery(location.search);
+
+  const roomId = params.get('roomId');
 
   return (
     <React.Fragment>
@@ -782,6 +939,17 @@ const Anthology = ({
                   : studentName + "'s " + anthologyDict[userLanguage]['TITLE']
               }
               fontSize="xl"
+              withButton={
+                roomId ? (
+                  <div className="flex items-end justify-end">
+                    <a
+                      className="w-auto hover:underline iconoclast:text-main curate:text-main"
+                      href={`/dashboard/classroom/${roomId}`}>
+                      Go back to classroom
+                    </a>
+                  </div>
+                ) : null
+              }
               fontStyle="semibold"
               extraContainerClass="px-6"
               borderBottom
@@ -801,6 +969,8 @@ const Anthology = ({
                 </IconContext.Provider>
               }>
               <RoomView
+                studentAuthId={studentAuthID}
+                studentEmail={studentEmail}
                 roomIdList={roomCardIds}
                 mainSection={mainSection}
                 sectionRoomID={sectionRoomID}
@@ -834,7 +1004,7 @@ const Anthology = ({
               currentContentObj={journalEntryData}
               allStudentData={allStudentData}
               setAllStudentData={setAllStudentData}
-              allExerciseData={allExerciseData}
+              allExerciseData={allExerciseData.filter(Boolean)}
               classNotebook={classNotebook}
               setClassNotebook={setClassNotebook}
               allUniversalClassData={allUniversalClassData}

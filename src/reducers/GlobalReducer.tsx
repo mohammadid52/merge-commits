@@ -100,6 +100,18 @@ type globalActions =
     }
   | {
       type: 'CLEANUP';
+    }
+  | {
+      type: 'UPDATE_TEMP';
+      payload: {
+        [key: string]: any;
+      };
+    }
+  | {
+      type: 'UPDATE_TEMP_USER';
+      payload: {
+        [key: string]: any;
+      };
     };
 
 export const globalReducer = (state: globalStateType, action: globalActions) => {
@@ -175,6 +187,24 @@ export const globalReducer = (state: globalStateType, action: globalActions) => 
         roomData: {
           ...state.roomData,
           [action.payload.property]: action.payload.data
+        }
+      };
+    case 'UPDATE_TEMP':
+      return {
+        ...state,
+        temp: {
+          ...state.temp,
+          authId: action.payload.authId,
+          redirectUrlToUserSurveysTab: action.payload.redirectUrlToUserSurveysTab,
+          roomData: action?.payload?.roomData || state.temp.roomData
+        }
+      };
+    case 'UPDATE_TEMP_USER':
+      return {
+        ...state,
+        temp: {
+          ...state.temp,
+          user: action.payload.user
         }
       };
     case 'UPDATE_LESSON_PAGE_THEME':

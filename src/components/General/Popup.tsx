@@ -1,5 +1,6 @@
 import Loader from 'atoms/Loader';
 import React from 'react';
+import {IoClose} from 'react-icons/io5';
 import {useOutsideAlerter} from './hooks/outsideAlerter';
 
 export interface WritingAlertProps {
@@ -9,6 +10,7 @@ export interface WritingAlertProps {
   setAlert?: React.Dispatch<React.SetStateAction<boolean>>;
   handleButton1?: () => void;
   handleButton2?: () => void;
+  closeAction?: () => void;
   header?: string;
   content?: string;
   button1?: string;
@@ -40,7 +42,8 @@ const PosAlert = (props: WritingAlertProps) => {
     theme,
     fill,
     disableButton,
-    id
+    id,
+    closeAction
   } = props;
   const {visible, setVisible, ref} = useOutsideAlerter(false);
 
@@ -187,23 +190,25 @@ const PosAlert = (props: WritingAlertProps) => {
           role="dialog"
           aria-modal="true"
           aria-labelledby="modal-headline">
-          <div className="px-2 pt-2">
-            <div
-              className="absolute w-auto cursor-pointer p-2 hover:text-gray-300"
-              style={{top: 0, right: 0, color: '#828282'}}
-              onClick={handleClick}>
-              <svg
-                className="h-5 w-5"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 20 20"
-                fill="currentColor">
-                <path
-                  fillRule="evenodd"
-                  d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            </div>
+          <div className="px-2 pt-2 relative">
+            {closeAction && (
+              <div
+                className="absolute w-auto cursor-pointer p-2 hover:text-gray-300"
+                style={{top: 0, right: 0, color: '#828282'}}
+                onClick={closeAction}>
+                <svg
+                  className="h-5 w-5"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                  fill="currentColor">
+                  <path
+                    fillRule="evenodd"
+                    d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </div>
+            )}
 
             <div>
               <div className="mx-auto flex items-center justify-center h-14 w-20 rounded-full">
@@ -228,11 +233,11 @@ const PosAlert = (props: WritingAlertProps) => {
                 <button
                   type="button"
                   disabled={disableButton}
-                  className={`${
+                  className={` inline-flex justify-center w-full rounded-md  border-0 border-transparent px-4 py-2 text-base leading-6 font-medium shadow-sm focus:outline-none transition ease-in-out duration-150 sm:text-sm sm:leading-5 ${
                     button1Color
-                      ? {button1Color}
+                      ? button1Color
                       : 'bg-sea-green hover:bg-green-500 text-white focus:border-green-100 focus:ring-indigo'
-                  } inline-flex justify-center w-full rounded-md  border-0 border-transparent px-4 py-2 text-base leading-6 font-medium shadow-sm focus:outline-none transition ease-in-out duration-150 sm:text-sm sm:leading-5`}
+                  }`}
                   onClick={handleButton1}>
                   {disableButton ? <Loader color="#fff" /> : button1}
                 </button>

@@ -1,14 +1,16 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import useAuth from '@customHooks/useAuth';
 import Buttons from 'atoms/Buttons';
 import axios from 'axios';
-import {GlobalContext, useGlobalContext} from 'contexts/GlobalContext';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import * as mutations from 'graphql/mutations';
 import * as queries from 'graphql/queries';
 import {noop} from 'lodash';
 import ModalPopUp from 'molecules/ModalPopUp';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useHistory} from 'react-router-dom';
+import {lessonState} from 'state/LessonState';
 import {getLocalStorageData} from 'utilities/localStorage';
 import {awsFormatDate, dateString} from 'utilities/time';
 import {tableCleanupUrl} from 'utilities/urls';
@@ -27,6 +29,7 @@ interface StartProps {
   preview?: boolean;
   activeRoomInfo?: any;
   isUsed?: boolean;
+  lessonProgress?: number;
   pageNumber?: number;
 }
 
@@ -41,6 +44,7 @@ const Start: React.FC<StartProps> = ({
   accessible,
   type,
   roomID,
+  lessonProgress,
   preview
 }: StartProps) => {
   // ~~~~~~~~~~ CONTEXT SPLITTING ~~~~~~~~~~ //
@@ -49,7 +53,6 @@ const Start: React.FC<StartProps> = ({
 
   const user = gContext.state.user;
 
-  const lessonDispatch = gContext.lessonDispatch;
   const userLanguage = gContext.userLanguage;
   const getRoomData = getLocalStorageData('room_info');
 
@@ -60,7 +63,6 @@ const Start: React.FC<StartProps> = ({
   const history = useHistory();
   const [loading, setLoading] = useState<boolean>(false);
   const [attendanceRecorded, setAttendanceRecorded] = useState<boolean>(false);
-  const [pageNumber, setPageNumber] = useState<number>(0);
   const [warnModal, setWarnModal] = useState({
     show: false,
     activeLessonsId: [],
@@ -80,33 +82,6 @@ const Start: React.FC<StartProps> = ({
       fetchAttendance();
     }
   }, [state.roomData.syllabus]);
-
-  const getLessonCurrentPage = async (
-    lessonId: string,
-    userEmail: string,
-    userAuthId: string
-  ) => {
-    try {
-      const getLessonRatingDetails: any = await API.graphql(
-        graphqlOperation(queries.getPersonLessonsData, {
-          lessonID: lessonId,
-          studentEmail: userEmail,
-          studentAuthId: userAuthId
-        })
-      );
-
-      const pageNumber = getLessonRatingDetails.data.getPersonLessonsData.pages;
-      const currentPage = JSON.parse(pageNumber).currentPage;
-
-      lessonDispatch({
-        type: 'SET_CURRENT_PAGE',
-        payload: currentPage
-      });
-
-      setPageNumber(currentPage);
-      return;
-    } catch (error) {}
-  };
 
   // ~~~~~~~~~~~~~~ ATTENDANCE ~~~~~~~~~~~~~ //
 
@@ -196,26 +171,21 @@ const Start: React.FC<StartProps> = ({
 
   const goBackUrl = `/lesson-control/${lessonKey}`;
 
-  const checkIfCompletedBeforeOpen = () => {
-    return (
-      activeRoomInfo?.completedLessons?.findIndex(
-        (item: {lessonID?: string | null; time?: string | null}) =>
-          item.lessonID === lessonProps.lessonID
-      ) > -1
-    );
-  };
-
   const handleLink = async () => {
     if (!isTeacher && accessible && open) {
-      try {
-        if (!attendanceRecorded) {
-          await recordAttendance(lessonProps);
+      if (!isCompleted) {
+        try {
+          if (!attendanceRecorded) {
+            await recordAttendance(lessonProps);
+          }
+          // await getLessonCurrentPage(lessonKey, user.email, user.authId);
+          const url = `/lesson/${lessonKey}/${lessonProgress}`;
+          history.push(url);
+        } catch (error) {
+          setLoading(false);
         }
-        // await getLessonCurrentPage(lessonKey, user.email, user.authId);
-        history.push(`/lesson/${lessonKey}/${lessonProps?.currentPage}`);
-        // history.push(`/lesson/${lessonKey}/0`);
-      } catch (error) {
-        setLoading(false);
+      } else {
+        history.push(`/dashboard/anthology?roomId=${getRoomData.id}`);
       }
     } else if (isTeacher) {
       if (isActive) {
@@ -381,15 +351,21 @@ const Start: React.FC<StartProps> = ({
         return 'GO TO SURVEY';
       case 'START LESSON':
         return 'GO TO LESSON';
+      case 'Lesson Completed':
+        return 'GO TO NOTEBOOK';
 
       default:
         return buttonText;
     }
   };
 
+  const {isStudent} = useAuth();
+  const showNotebookBtn = isStudent && isCompleted && type === 'lesson';
+
   return (
     <div data-cy="survey-button">
       <Buttons
+        title={showNotebookBtn ? `See your notebook` : updateBtnText()}
         type="submit"
         onClick={!preview ? handleLink : noop}
         label={
@@ -397,13 +373,14 @@ const Start: React.FC<StartProps> = ({
         }
         disabled={
           loading ||
-          isCompleted ||
           (!open && !isTeacher && !isOnDemand) ||
-          (!isActive && !isTeacher && !isOnDemand)
+          (!isActive && !isTeacher && !isOnDemand) ||
+          (isCompleted && type === 'survey')
         }
-        btnClass={`rounded-t-none md:rounded h-full w-full text-xs focus:outline-none ${
-          !open || isCompleted ? 'opacity-80' : 'opacity-100'
-        } `}
+        btnClass={` h-full w-full text-xs focus:outline-none ${
+          !open || (isCompleted && type === 'survey') ? 'opacity-80' : 'opacity-100'
+        }`}
+        greenBtn={showNotebookBtn}
       />
       {warnModal.show && (
         <ModalPopUp

@@ -41,6 +41,7 @@ import {useHistory, useRouteMatch} from 'react-router';
 import {deleteImageFromS3} from 'utilities/services';
 import {awsFormatDate, dateString} from 'utilities/time';
 import {v4 as uuidV4} from 'uuid';
+import {ListCommunitiesQuery, ListCommunitiesQueryVariables} from 'API';
 
 const Community = ({}: {role: string}) => {
   const {clientKey, userLanguage} = useGlobalContext();
@@ -81,15 +82,23 @@ const Community = ({}: {role: string}) => {
   ];
   const payloadForCommunities = {};
 
-  const {data: list, setData: setList, error, isFetched, isLoading} = useGraphqlQuery<
-    any,
-    any
-  >('listCommunities', payloadForCommunities, {
-    onSuccess: (data, cb) => {
-      const orderedList = orderBy(data, ['createdAt'], 'desc');
-      cb(orderedList);
+  const {
+    data: list,
+    setData: setList,
+    refetch,
+    error,
+    isFetched,
+    isLoading
+  } = useGraphqlQuery<ListCommunitiesQueryVariables, any[]>(
+    'listCommunities',
+    payloadForCommunities,
+    {
+      onSuccess: (data, cb) => {
+        const orderedList = orderBy(data, ['createdAt'], 'desc');
+        cb(orderedList);
+      }
     }
-  });
+  );
 
   const [navState, setNavState] = useState<NavStateTypes>('init');
   const [filteredList, setFilteredList] = useState([]);
@@ -131,9 +140,12 @@ const Community = ({}: {role: string}) => {
 
   const createCommunity = useGraphqlMutation('createCommunity', {
     onCancel,
-    onSuccess: (data) => {
-      list.unshift({...data});
-      setList([...list]);
+    onSuccess: (data: any) => {
+      if (data) {
+        // @ts-ignore
+        list.unshift({...data});
+        setList([...list]);
+      }
     }
   });
   const updateCommunity = useGraphqlMutation('updateCommunity', {
@@ -163,6 +175,13 @@ const Community = ({}: {role: string}) => {
     } else {
       createCommunity.mutate({input}, successCallback);
     }
+
+    try {
+      await refetch();
+      console.log('Community list updated');
+    } catch (error) {
+      console.error('Error while updating community list', error);
+    }
   };
 
   const onAnnouncementSubmit = async (
@@ -180,6 +199,13 @@ const Community = ({}: {role: string}) => {
       updateCommunity.mutate({input: {...input, id: cardForEdit.id}}, successCallback);
     } else {
       createCommunity.mutate({input}, successCallback);
+    }
+
+    try {
+      await refetch();
+      console.log('Community list updated');
+    } catch (error) {
+      console.error('Error while updating community list', error);
     }
   };
 
@@ -199,6 +225,13 @@ const Community = ({}: {role: string}) => {
     } else {
       createCommunity.mutate({input}, successCallback);
     }
+
+    try {
+      await refetch();
+      console.log('Community list updated');
+    } catch (error) {
+      console.error('Error while updating community list', error);
+    }
   };
 
   const onCheckItOutSubmit = async (
@@ -216,6 +249,13 @@ const Community = ({}: {role: string}) => {
       updateCommunity.mutate({input: {...input, id: cardForEdit.id}}, successCallback);
     } else {
       createCommunity.mutate({input}, successCallback);
+    }
+
+    try {
+      await refetch();
+      console.log('Community list updated');
+    } catch (error) {
+      console.error('Error while updating community list', error);
     }
   };
 
@@ -256,22 +296,31 @@ const Community = ({}: {role: string}) => {
         ? list
         : filteredList;
     return (
-      <ContentCard
-        hasBackground={false}
-        additionalClass="shadow bg-white space-y-12 p-6 rounded-b-lg">
+      <ContentCard hasBackground={false} additionalClass=" space-y-12 p-6">
         <div> {<FAB />}</div>
-
-        {!Boolean(error) && isLoading && !isFetched && (
-          <Loader withText="Loading cards..." className="w-auto text-gray-400" />
-        )}
 
         {/* Error--1213 */}
         <AnimatedContainer show={Boolean(error)}>
-          {error && <p className="text-red-500 text-xs">{error}</p>}
+          {error && (
+            <div className="flex items-center justify-center">
+              <p className="text-red-500 text-xs">{error}</p>
+            </div>
+          )}
         </AnimatedContainer>
 
         {/* Other Cards here */}
-        {!isLoading &&
+
+        {!Boolean(error) && isLoading && !isFetched && (
+          <div className="flex items-center justify-center">
+            <Loader
+              withText="Loading cards..."
+              className="w-auto iconoclast:text-main curate:text-main"
+            />
+          </div>
+        )}
+
+        {!Boolean(error) &&
+          !isLoading &&
           isFetched &&
           data &&
           data.length > 0 &&
@@ -283,6 +332,16 @@ const Community = ({}: {role: string}) => {
               cardDetails={card}
             />
           ))}
+
+        <AnimatedContainer show={data.length === 0 && isFetched}>
+          {data.length === 0 && isFetched && (
+            <div className="flex items-center justify-center">
+              <p className="text-gray-500 text-sm">
+                No community posts... Be the first to start the conversation
+              </p>
+            </div>
+          )}
+        </AnimatedContainer>
       </ContentCard>
     );
   };
@@ -316,6 +375,7 @@ const Community = ({}: {role: string}) => {
       fontStyle="semibold"
       extraClass="leading-6 text-gray-900"
       borderBottom
+      shadowOff
       withButton={
         <div className="w-auto">
           <Selector

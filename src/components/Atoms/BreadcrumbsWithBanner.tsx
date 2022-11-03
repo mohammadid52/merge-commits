@@ -11,6 +11,7 @@ import InformationalWalkThrough from 'components/Dashboard/Admin/Institutons/Inf
 import HeroBanner from 'components/Header/HeroBanner';
 import useDictionary from 'customHooks/dictionary';
 import {breadcrumbsRoutes} from 'utilities/breadcrumb';
+import useAuth from '@customHooks/useAuth';
 
 interface BreadCrumbProps {
   items?: {title: string; url?: string; last: boolean; goBack?: boolean}[];
@@ -36,14 +37,10 @@ const BreadcrumbsWithBanner: React.FC<BreadCrumbProps> = (props: BreadCrumbProps
     bannerImage,
     title
   } = props;
-  const {
-    state: {
-      user: {isSuperAdmin}
-    },
-    theme,
-    userLanguage,
-    clientKey
-  } = useGlobalContext();
+  const {state, theme, userLanguage, clientKey} = useGlobalContext();
+
+  const user = state.temp.user;
+
   const {BreadcrumsTitles, Institute_info} = useDictionary(clientKey);
   const pathname = location.pathname.replace(/\/$/, '');
   const currentPath = pathname.substring(pathname.lastIndexOf('/') + 1);
@@ -161,6 +158,7 @@ const BreadcrumbsWithBanner: React.FC<BreadCrumbProps> = (props: BreadCrumbProps
     }
   }, [pathname]);
 
+  const {isSuperAdmin} = useAuth();
   const baseUrl = isSuperAdmin
     ? `/dashboard/manage-institutions`
     : `/dashboard/manage-institutions/institution/${institutionId}`;
@@ -173,7 +171,8 @@ const BreadcrumbsWithBanner: React.FC<BreadCrumbProps> = (props: BreadCrumbProps
       lessonData,
       roomData,
       courseData,
-      unitData
+      unitData,
+      user
     }
   });
 
@@ -223,14 +222,14 @@ const BreadcrumbsWithBanner: React.FC<BreadCrumbProps> = (props: BreadCrumbProps
                       {!item.goBack ? (
                         <div onClick={() => goToUrl(item.url)}>
                           <span
-                            className={`mr-1 md:mr-2 cursor-pointer text-sm 2xl:text-base ${'text-white'}`}>
+                            className={`mr-1 md:mr-2 cursor-pointer text-sm 2xl:text-base hover:iconoclast:bg-400 hover:curate:bg-400 rounded-xl px-2 text-white`}>
                             {item.title}
                             {/* {i === 0 ? item.title.toUpperCase() : item.title} */}
                           </span>
                         </div>
                       ) : (
                         <span
-                          className={`mr-1 md:mr-2 cursor-pointer text-sm 2xl:text-base ${'text-white'}`}
+                          className={`mr-1 md:mr-2 cursor-pointer text-sm 2xl:text-base text-white hover:iconoclast:bg-400 hover:curate:bg-400 rounded-xl px-2`}
                           onClick={() =>
                             unsavedChanges ? toggleModal() : history.goBack()
                           }>

@@ -14,7 +14,8 @@ const LessonTopMenu = ({
   handleRequiredNotification,
   pages,
   canContinue,
-  handleForward
+  handleForward,
+  pageStateUpdated
 }: LessonHeaderBarProps) => {
   const gContext = useGlobalContext();
   const lessonState = gContext.lessonState;
@@ -48,9 +49,7 @@ const LessonTopMenu = ({
   return (
     <>
       <div
-        className={`${theme.toolbar.bg} ${
-          !lessonState.loaded ? 'pointer-events-none' : ''
-        } shadow-1 w-full flex justify-center items-center content-center py-2 px-6`}>
+        className={`${theme.toolbar.bg}  shadow-1 w-full flex justify-center items-center content-center py-2 px-6`}>
         <div className="w-full flex flex-row items-center justify-between">
           <div className="flex flex-row justify-center">
             {/* BACK BUTTON */}
@@ -72,14 +71,16 @@ const LessonTopMenu = ({
 
             {/* PROGRESS BAR */}
 
-            <ProgressBar
-              handleHome={() => handlePopup(false)}
-              handleRequiredNotification={handleRequiredNotification}
-              pages={pages}
-              currentPage={lessonState?.currentPage}
-              studentData={lessonState?.studentData}
-              requiredInputs={lessonState?.requiredInputs}
-            />
+            {pageStateUpdated && (
+              <ProgressBar
+                handleHome={() => handlePopup(false)}
+                handleRequiredNotification={handleRequiredNotification}
+                pages={pages}
+                currentPage={lessonState?.currentPage}
+                studentData={lessonState?.studentData}
+                requiredInputs={lessonState?.requiredInputs}
+              />
+            )}
 
             {/* FORWARD BUTTON */}
 

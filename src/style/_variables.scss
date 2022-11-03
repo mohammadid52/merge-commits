@@ -9,6 +9,8 @@ $gray-700: #374151;
 $gray-800: #1f2937;
 $gray-900: #111827;
 
+$background: #fafafa;
+
 $dark-component-bg: rgb(27, 25, 29);
 
 $indigo-50: #eef2ff;
@@ -39,7 +41,16 @@ $blue-900: #1e3a8a;
 
 $green: rgb(56, 178, 172);
 
+$theme-500: $indigo-500;
+$theme-box-shadow: rgb(129, 131, 244, 0.1);
+
+.curate {
+  $theme-500: $blue-500;
+  $theme-box-shadow: rgb(65, 132, 242, 0.1);
+}
+
 $iconoclastColors: (
+  '50': #f3f6ff,
   '100': #e0e7ff,
   '200': #c7d2fe,
   '300': #a5b4fc,
@@ -48,9 +59,10 @@ $iconoclastColors: (
   '600': #4f46e5,
   '700': #4338ca,
   '800': #3730a3,
-  '900': #312e81,
+  '900': #312e81
 );
 $curateColors: (
+  '50': #e3ecf8,
   '100': #dbeafe,
   '200': #bfdbfe,
   '300': #93c5fd,
@@ -59,5 +71,5 @@ $curateColors: (
   '600': #2563eb,
   '700': #1d4ed8,
   '800': #1e40af,
-  '900': #1e3a8a,
+  '900': #1e3a8a
 );

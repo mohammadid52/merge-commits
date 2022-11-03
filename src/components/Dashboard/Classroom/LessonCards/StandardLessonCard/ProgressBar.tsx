@@ -1,3 +1,4 @@
+import {getLocalStorageData} from '@utilities/localStorage';
 import {LessonsByType2Query, LessonsByType2QueryVariables} from 'API';
 import useGraphqlQuery from 'customHooks/useGraphqlQuery';
 import React, {useEffect, useState} from 'react';
@@ -14,6 +15,8 @@ interface ProgressBarProps {
 const ProgressBar = ({lessonProps, user}: ProgressBarProps) => {
   const [progressValue, setProgressValue] = useState<any>(0);
 
+  const getRoomData = getLocalStorageData('room_info');
+
   const lesson = lessonProps.lesson;
 
   const shouldShowProgress = Boolean(lesson) && Boolean(user);
@@ -29,7 +32,8 @@ const ProgressBar = ({lessonProps, user}: ProgressBarProps) => {
       filter: {
         lessonID: {eq: lesson.id},
         studentAuthID: {eq: user.authId},
-        studentEmail: {eq: user.email}
+        studentEmail: {eq: user.email},
+        roomId: {eq: getRoomData.id}
       }
     },
     {enabled: shouldShowProgress && !progressLoaded}
@@ -38,18 +42,22 @@ const ProgressBar = ({lessonProps, user}: ProgressBarProps) => {
   const generateLessonProgress = async () => {
     try {
       const isCompleted = data && data.length > 0 ? data[0]?.isCompleted : false;
-      const pageNumber = data && data.length > 0 ? data[0].pages : '';
+      const pageNumber = data && data.length > 0 ? data[0].pages : '{}';
 
       const currentPage = JSON.parse(pageNumber).currentPage;
 
-      const totalPages = JSON.parse(pageNumber).totalPages;
+      const totalPages = JSON.parse(pageNumber).totalPages || 0;
 
-      const lessonProgress = JSON.parse(pageNumber).lessonProgress + 1;
+      const lessonProgressNum = JSON.parse(pageNumber)?.lessonProgress || NaN;
+      const lessonProgress = !Number.isNaN(lessonProgressNum) ? lessonProgressNum : 0;
 
       const roundOff = isCompleted ? 0 : -1;
       const percentCorrect = (lessonProgress * 100) / totalPages;
-      const finalPercent =
-        Math.round(percentCorrect) < 100 ? Math.round(percentCorrect) : 100;
+
+      const progress = Number.isNaN(percentCorrect) ? 0 : percentCorrect;
+
+      const finalPercent = Math.round(progress) < 100 ? Math.round(progress) : 100;
+
       setProgressValue(
         isCompleted ? 100 : finalPercent === 100 ? finalPercent + roundOff : finalPercent
       );

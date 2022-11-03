@@ -12,13 +12,16 @@ import {requestResetPassword} from 'utilities/urls';
 import Modal from 'atoms/Modal';
 import {FiAlertCircle} from 'react-icons/fi';
 import Buttons from 'atoms/Buttons';
+import Highlighted from '@components/Atoms/Highlighted';
+import {useQuery} from '@customHooks/urlParam';
 
 interface ListProps {
   item: any;
+  searchTerm?: string;
 }
 
 const List = (props: ListProps) => {
-  const {item} = props;
+  const {item, searchTerm} = props;
 
   const match = useRouteMatch();
   const history = useHistory();
@@ -114,6 +117,8 @@ const List = (props: ListProps) => {
     });
   };
 
+  const params = useQuery(location.search);
+
   return (
     ///change INFO, MARGIN and WIDTH if needed
     <>
@@ -149,9 +154,7 @@ const List = (props: ListProps) => {
                 id={item.id}
                 className="hover:text-gray-600 cursor-pointer text-sm leading-5 font-medium text-gray-900"
                 onClick={handleLink}>
-                {`${item.lastName}, ${
-                  item.preferredName ? item.preferredName : item.firstName
-                }`}
+                <Highlighted text={item.name} highlight={searchTerm} />
               </div>
               <div id={item.id} className="text-sm leading-5 text-gray-500 break-all">
                 {item.email}

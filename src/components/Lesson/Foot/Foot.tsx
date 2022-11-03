@@ -1,109 +1,19 @@
-import React, {useContext, useEffect, useState} from 'react';
-import {NavLink, useHistory, useRouteMatch} from 'react-router-dom';
-import {LessonContext} from 'contexts/LessonContext';
-import {GlobalContext} from 'contexts/GlobalContext';
 import {getAsset} from 'assets';
+import {GlobalContext} from 'contexts/GlobalContext';
 import {LessonHeaderBarProps} from 'interfaces/LessonComponentsInterfaces';
-import PositiveAlert from '../../General/Popup';
-import {useOutsideAlerter} from '../../General/hooks/outsideAlerter';
+import React, {useContext, useEffect, useState} from 'react';
+import {useHistory} from 'react-router-dom';
 import {getLocalStorageData} from 'utilities/localStorage';
-import {StudentPageInput} from 'interfaces/UniversalLessonInterfaces';
+import {useOutsideAlerter} from '../../General/hooks/outsideAlerter';
+import PositiveAlert from '../../General/Popup';
 
-const Foot = ({
-  isAtEnd,
-  setisAtEnd,
-  handleRequiredNotification
-}: LessonHeaderBarProps) => {
-  const {state, dispatch, lessonState, lessonDispatch, clientKey, theme} = useContext(
-    GlobalContext
-  );
+const Foot = ({}: LessonHeaderBarProps) => {
+  const {lessonState, clientKey} = useContext(GlobalContext);
   const history = useHistory();
-  const match = useRouteMatch();
-
-  const PAGES = lessonState.lessonData.lessonPlan;
-
-  // ~~~~~~~~~ SIMPLE LOGIC CHECKS ~~~~~~~~~ //
-  const validateRequired = (pageIdx: number) => {
-    if (PAGES) {
-      const thisPageData = lessonState?.studentData[pageIdx];
-      const thisPageRequired = lessonState?.requiredInputs[pageIdx];
-      if (thisPageData && thisPageData.length > 0) {
-        const areAnyEmpty = thisPageData.filter((input: StudentPageInput) => {
-          if (thisPageRequired.includes(input.domID) && input.input[0] === '') {
-            return input;
-          }
-        });
-        // console.log('validate areAnyEmpty - ', areAnyEmpty);
-        if (areAnyEmpty.length > 0) {
-          return false;
-        } else {
-          return true;
-        }
-      } else {
-        return true;
-      }
-    } else {
-      return false;
-    }
-  };
-
-  const canContinue = () => {
-    if (PAGES) {
-      return (
-        validateRequired(lessonState.currentPage) &&
-        lessonState.currentPage < PAGES.length - 1 &&
-        PAGES[lessonState.currentPage + 1]?.open !== false
-      );
-    } else {
-      return false;
-    }
-  };
-
-  const userAtEnd = () => {
-    return lessonState.currentPage === PAGES.length - 1;
-  };
 
   // ##################################################################### //
   // ############################# NAVIGATION ############################ //
   // ##################################################################### //
-  const handleForward = () => {
-    if (!userAtEnd()) {
-      if (isAtEnd) setisAtEnd(false);
-      if (canContinue()) {
-        history.push(`${match.url}/${lessonState.currentPage + 1}`);
-        lessonDispatch({
-          type: 'SET_CURRENT_PAGE',
-          payload: lessonState.currentPage + 1
-        });
-      } else {
-        handleRequiredNotification();
-      }
-    } else if (userAtEnd()) {
-      if (validateRequired(lessonState.currentPage)) {
-        handlePopup();
-      } else {
-        handleRequiredNotification();
-      }
-    }
-  };
-
-  const handleBack = () => {
-    if (userAtEnd()) {
-      if (isAtEnd) setisAtEnd(false);
-      history.push(`${match.url}/${lessonState.currentPage - 1}`);
-      lessonDispatch({
-        type: 'SET_CURRENT_PAGE',
-        payload: lessonState.currentPage - 1
-      });
-    } else if (!userAtEnd() && lessonState.currentPage > 0) {
-      if (isAtEnd) setisAtEnd(false);
-      history.push(`${match.url}/${lessonState.currentPage - 1}`);
-      lessonDispatch({
-        type: 'SET_CURRENT_PAGE',
-        payload: lessonState.currentPage - 1
-      });
-    }
-  };
 
   // ##################################################################### //
   // ################## LOGIC FOR RETURNING TO CLASSROOM ################# //

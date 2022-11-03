@@ -7,6 +7,7 @@ import BottomBar from './StandardLessonCard/BottomBar';
 import MainSummary from './StandardLessonCard/MainSummary';
 import Rating from './StandardLessonCard/Rating';
 import ProgressBar from './StandardLessonCard/ProgressBar';
+import useAuth from '@customHooks/useAuth';
 
 const StandardLessonCard = (props: LessonCardProps) => {
   const {
@@ -17,7 +18,6 @@ const StandardLessonCard = (props: LessonCardProps) => {
     lessonProps,
     syllabusProps,
     accessible,
-    lessonType,
     user,
     handleLessonMutationRating,
     getLessonRating,
@@ -26,30 +26,41 @@ const StandardLessonCard = (props: LessonCardProps) => {
     preview = false
   } = props;
 
-  const {theme} = useContext(GlobalContext);
+  const {theme, lessonDispatch} = useContext(GlobalContext);
   const [existsOrNot, setexistsOrNot] = useState<boolean>(false);
   const [isCompleted, setIsCompleted] = useState<boolean>(false);
+  const [isFetched, setIsFetched] = useState(false);
 
+  const {isStudent} = useAuth();
   useEffect(() => {
-    checkValueOrNull();
-  }, []);
+    if (!isFetched) {
+      checkValueOrNull();
+    }
+  }, [isFetched]);
 
+  const [lessonProgress, setLessonProgress] = useState(0);
   const checkValueOrNull = async () => {
     try {
       const value = await getLessonRating(lessonProps.lesson.id, user.email, user.authId);
+
       if (typeof value === 'undefined') setexistsOrNot(true);
 
       if (value) {
         if (value.isCompleted) setIsCompleted(true);
+        setLessonProgress(value.lessonProgress);
+        lessonDispatch({type: 'SET_CURRENT_PAGE', payload: value.lessonProgress});
       }
       return;
-    } catch (error) {}
+    } catch (error) {
+    } finally {
+      setIsFetched(true);
+    }
   };
 
   return (
     <div
       key={keyProps}
-      className={`relative overflow-hidden bg-white shadow rounded-xl flex flex-col md:flex-row mb-8 ${theme.elem.textDark} `}>
+      className={`relative overflow-hidden bg-white theme-card-shadow rounded-xl flex flex-row  mb-8 ${theme.elem.textDark} `}>
       {/**
        *  LEFT SECTION IMAGE
        */}
@@ -57,18 +68,20 @@ const StandardLessonCard = (props: LessonCardProps) => {
       {/**
        *  RIGHT SECTION
        */}
-      <div className={`w-full md:w-7.5/10 flex flex-col rounded-b`}>
-        <MainSummary lessonType={lessonType} lessonProps={lessonProps} />
-        <ProgressBar
-          lessonProps={{
-            ...lessonProps,
-            lesson: {...lessonProps.lesson, type: lessonProps.lesson.type}
-          }}
-          user={user}
-          value=""
-          max="100"
-          getLessonByType={getLessonByType}
-        />
+      <div className={`w-7.5/10 flex flex-col rounded-b`}>
+        <MainSummary lessonProps={lessonProps} />
+        {isStudent && (
+          <ProgressBar
+            lessonProps={{
+              ...lessonProps,
+              lesson: {...lessonProps.lesson, type: lessonProps.lesson.type}
+            }}
+            user={user}
+            value=""
+            max="100"
+            getLessonByType={getLessonByType}
+          />
+        )}
         {lessonProps.lesson.type !== 'survey' && !existsOrNot && isCompleted ? (
           <Rating
             user={user}
@@ -84,11 +97,12 @@ const StandardLessonCard = (props: LessonCardProps) => {
           activeRoomInfo={activeRoomInfo}
           preview={preview}
           accessible={accessible}
+          lessonProgress={lessonProgress}
           roomID={roomID}
           lessonProps={lessonProps}
           isCompleted={isCompleted}
           syllabusProps={syllabusProps}
-          lessonType={lessonType}
+          lessonType={lessonProps.lesson.type}
         />
       </div>
     </div>

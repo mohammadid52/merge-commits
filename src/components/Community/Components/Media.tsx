@@ -45,7 +45,7 @@ const Media = ({
     setFile({...file});
   };
 
-  const uploadImageToS3 = async (
+  const _uploadImageToS3 = async (
     file: any,
     id: string,
     type: string,
@@ -65,9 +65,11 @@ const Media = ({
         console.error('Error in uploading file to s3', error);
       },
       progressCallback: ({progress}: {progress: number}): void => {
-        updateStatus(currentFile, 'progress');
+        if (progress) {
+          updateStatus(currentFile, 'progress');
 
-        updateProgress(currentFile, progress.toFixed(0));
+          updateProgress(currentFile, progress?.toFixed(0));
+        }
       }
     });
   };
@@ -91,7 +93,7 @@ const Media = ({
       .join(' ')
       .replace(new RegExp(/[ +!@#$%^&*().]/g), '_')}.${extension}`;
     updateImgId(initState, fileName);
-    await uploadImageToS3(initState.file, fileName, initState.file.type, initState);
+    await _uploadImageToS3(initState.file, fileName, initState.file.type, initState);
   };
 
   const uploadFile = useCallback(

@@ -53,6 +53,7 @@ export const getPerson = /* GraphQL */ `
           pages
           ratings
           isCompleted
+          roomId
           createdAt
           updatedAt
         }
@@ -137,6 +138,93 @@ export const getPersonLessonsData = /* GraphQL */ `
       pages
       ratings
       isCompleted
+      roomId
+      lesson {
+        id
+        type
+        label
+        title
+        institutionID
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          setupComplete
+          createdAt
+          updatedAt
+        }
+        language
+        designers
+        objectives
+        lessonPlanAttachment
+        purpose
+        introduction
+        introductionTitle
+        instructions
+        instructionsTitle
+        summary
+        summaryTitle
+        duration
+        resources
+        notes
+        cardImage
+        cardCaption
+        lessonPlan {
+          id
+          title
+          label
+          description
+          class
+          active
+          disabled
+          displayMode
+          open
+          estTime
+          activityType
+          interactionType
+          tags
+          videoLink
+        }
+        homework {
+          id
+          title
+          label
+          description
+          class
+          active
+          disabled
+          displayMode
+          open
+          estTime
+          activityType
+          interactionType
+          tags
+          videoLink
+        }
+        darkMode
+        rubrics
+        smallGroup
+        groupSize
+        groupType
+        smallGroupSize
+        smallGroupOption
+        studentMaterials
+        targetAudience
+        isUsed
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
     }
@@ -166,6 +254,42 @@ export const listPersonLessonsData = /* GraphQL */ `
         pages
         ratings
         isCompleted
+        roomId
+        lesson {
+          id
+          type
+          label
+          title
+          institutionID
+          language
+          designers
+          objectives
+          lessonPlanAttachment
+          purpose
+          introduction
+          introductionTitle
+          instructions
+          instructionsTitle
+          summary
+          summaryTitle
+          duration
+          resources
+          notes
+          cardImage
+          cardCaption
+          darkMode
+          rubrics
+          smallGroup
+          groupSize
+          groupType
+          smallGroupSize
+          smallGroupOption
+          studentMaterials
+          targetAudience
+          isUsed
+          createdAt
+          updatedAt
+        }
         createdAt
         updatedAt
       }
@@ -443,11 +567,7 @@ export const getStaff = /* GraphQL */ `
   }
 `;
 export const listStaff = /* GraphQL */ `
-  query ListStaff(
-    $filter: ModelStaffFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
+  query ListStaff($filter: ModelStaffFilterInput, $limit: Int, $nextToken: String) {
     listStaff(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
@@ -740,11 +860,7 @@ export const getRoom = /* GraphQL */ `
   }
 `;
 export const listRooms = /* GraphQL */ `
-  query ListRooms(
-    $filter: ModelRoomFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
+  query ListRooms($filter: ModelRoomFilterInput, $limit: Int, $nextToken: String) {
     listRooms(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
@@ -1053,11 +1169,7 @@ export const listClassroomGroupStudents = /* GraphQL */ `
     $limit: Int
     $nextToken: String
   ) {
-    listClassroomGroupStudents(
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
+    listClassroomGroupStudents(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
         classRoomGroupID
@@ -1818,11 +1930,7 @@ export const getClass = /* GraphQL */ `
   }
 `;
 export const listClasses = /* GraphQL */ `
-  query ListClasses(
-    $filter: ModelClassFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
+  query ListClasses($filter: ModelClassFilterInput, $limit: Int, $nextToken: String) {
     listClasses(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
@@ -2807,11 +2915,7 @@ export const getRoomMsgs = /* GraphQL */ `
   }
 `;
 export const listRoomMsgs = /* GraphQL */ `
-  query ListRoomMsgs(
-    $filter: ModelRoomMsgsFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
+  query ListRoomMsgs($filter: ModelRoomMsgsFilterInput, $limit: Int, $nextToken: String) {
     listRoomMsgs(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
@@ -3088,11 +3192,7 @@ export const listAnthologyComments = /* GraphQL */ `
     $limit: Int
     $nextToken: String
   ) {
-    listAnthologyComments(
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
+    listAnthologyComments(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
         text
@@ -4192,6 +4292,92 @@ export const getUniversalLessonStudentData = /* GraphQL */ `
       id
       syllabusLessonID
       lessonID
+      lesson {
+        id
+        type
+        label
+        title
+        institutionID
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          setupComplete
+          createdAt
+          updatedAt
+        }
+        language
+        designers
+        objectives
+        lessonPlanAttachment
+        purpose
+        introduction
+        introductionTitle
+        instructions
+        instructionsTitle
+        summary
+        summaryTitle
+        duration
+        resources
+        notes
+        cardImage
+        cardCaption
+        lessonPlan {
+          id
+          title
+          label
+          description
+          class
+          active
+          disabled
+          displayMode
+          open
+          estTime
+          activityType
+          interactionType
+          tags
+          videoLink
+        }
+        homework {
+          id
+          title
+          label
+          description
+          class
+          active
+          disabled
+          displayMode
+          open
+          estTime
+          activityType
+          interactionType
+          tags
+          videoLink
+        }
+        darkMode
+        rubrics
+        smallGroup
+        groupSize
+        groupType
+        smallGroupSize
+        smallGroupOption
+        studentMaterials
+        targetAudience
+        isUsed
+        createdAt
+        updatedAt
+      }
       lessonPageID
       studentID
       studentAuthID
@@ -4220,6 +4406,7 @@ export const getUniversalLessonStudentData = /* GraphQL */ `
         feedbacks
         shared
       }
+      date
       createdAt
       updatedAt
     }
@@ -4244,6 +4431,41 @@ export const listUniversalLessonStudentData = /* GraphQL */ `
         id
         syllabusLessonID
         lessonID
+        lesson {
+          id
+          type
+          label
+          title
+          institutionID
+          language
+          designers
+          objectives
+          lessonPlanAttachment
+          purpose
+          introduction
+          introductionTitle
+          instructions
+          instructionsTitle
+          summary
+          summaryTitle
+          duration
+          resources
+          notes
+          cardImage
+          cardCaption
+          darkMode
+          rubrics
+          smallGroup
+          groupSize
+          groupType
+          smallGroupSize
+          smallGroupOption
+          studentMaterials
+          targetAudience
+          isUsed
+          createdAt
+          updatedAt
+        }
         lessonPageID
         studentID
         studentAuthID
@@ -4263,6 +4485,7 @@ export const listUniversalLessonStudentData = /* GraphQL */ `
           feedbacks
           shared
         }
+        date
         createdAt
         updatedAt
       }
@@ -4276,7 +4499,94 @@ export const getUniversalLessonWritingExcercises = /* GraphQL */ `
       id
       syllabusLessonID
       lessonID
+      lesson {
+        id
+        type
+        label
+        title
+        institutionID
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          setupComplete
+          createdAt
+          updatedAt
+        }
+        language
+        designers
+        objectives
+        lessonPlanAttachment
+        purpose
+        introduction
+        introductionTitle
+        instructions
+        instructionsTitle
+        summary
+        summaryTitle
+        duration
+        resources
+        notes
+        cardImage
+        cardCaption
+        lessonPlan {
+          id
+          title
+          label
+          description
+          class
+          active
+          disabled
+          displayMode
+          open
+          estTime
+          activityType
+          interactionType
+          tags
+          videoLink
+        }
+        homework {
+          id
+          title
+          label
+          description
+          class
+          active
+          disabled
+          displayMode
+          open
+          estTime
+          activityType
+          interactionType
+          tags
+          videoLink
+        }
+        darkMode
+        rubrics
+        smallGroup
+        groupSize
+        groupType
+        smallGroupSize
+        smallGroupOption
+        studentMaterials
+        targetAudience
+        isUsed
+        createdAt
+        updatedAt
+      }
       lessonPageID
+      lessonName
       studentID
       studentAuthID
       studentEmail
@@ -4328,7 +4638,43 @@ export const listUniversalLessonWritingExcercises = /* GraphQL */ `
         id
         syllabusLessonID
         lessonID
+        lesson {
+          id
+          type
+          label
+          title
+          institutionID
+          language
+          designers
+          objectives
+          lessonPlanAttachment
+          purpose
+          introduction
+          introductionTitle
+          instructions
+          instructionsTitle
+          summary
+          summaryTitle
+          duration
+          resources
+          notes
+          cardImage
+          cardCaption
+          darkMode
+          rubrics
+          smallGroup
+          groupSize
+          groupType
+          smallGroupSize
+          smallGroupOption
+          studentMaterials
+          targetAudience
+          isUsed
+          createdAt
+          updatedAt
+        }
         lessonPageID
+        lessonName
         studentID
         studentAuthID
         studentEmail
@@ -4417,6 +4763,7 @@ export const listUniversalArchiveData = /* GraphQL */ `
         studentAuthID
         studentEmail
         roomID
+
         currentLocation
         lessonProgress
         pageData {
@@ -4829,6 +5176,7 @@ export const getUniversalJournalData = /* GraphQL */ `
       studentAuthID
       studentEmail
       type
+      lessonName
       entryData {
         domID
         type
@@ -4837,6 +5185,92 @@ export const getUniversalJournalData = /* GraphQL */ `
       feedbacks
       shared
       lessonID
+      lesson {
+        id
+        type
+        label
+        title
+        institutionID
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          setupComplete
+          createdAt
+          updatedAt
+        }
+        language
+        designers
+        objectives
+        lessonPlanAttachment
+        purpose
+        introduction
+        introductionTitle
+        instructions
+        instructionsTitle
+        summary
+        summaryTitle
+        duration
+        resources
+        notes
+        cardImage
+        cardCaption
+        lessonPlan {
+          id
+          title
+          label
+          description
+          class
+          active
+          disabled
+          displayMode
+          open
+          estTime
+          activityType
+          interactionType
+          tags
+          videoLink
+        }
+        homework {
+          id
+          title
+          label
+          description
+          class
+          active
+          disabled
+          displayMode
+          open
+          estTime
+          activityType
+          interactionType
+          tags
+          videoLink
+        }
+        darkMode
+        rubrics
+        smallGroup
+        groupSize
+        groupType
+        smallGroupSize
+        smallGroupOption
+        studentMaterials
+        targetAudience
+        isUsed
+        createdAt
+        updatedAt
+      }
       syllabusLessonID
       lessonType
       roomID
@@ -4866,6 +5300,7 @@ export const listUniversalJournalData = /* GraphQL */ `
         studentAuthID
         studentEmail
         type
+        lessonName
         entryData {
           domID
           type
@@ -4874,6 +5309,41 @@ export const listUniversalJournalData = /* GraphQL */ `
         feedbacks
         shared
         lessonID
+        lesson {
+          id
+          type
+          label
+          title
+          institutionID
+          language
+          designers
+          objectives
+          lessonPlanAttachment
+          purpose
+          introduction
+          introductionTitle
+          instructions
+          instructionsTitle
+          summary
+          summaryTitle
+          duration
+          resources
+          notes
+          cardImage
+          cardCaption
+          darkMode
+          rubrics
+          smallGroup
+          groupSize
+          groupType
+          smallGroupSize
+          smallGroupOption
+          studentMaterials
+          targetAudience
+          isUsed
+          createdAt
+          updatedAt
+        }
         syllabusLessonID
         lessonType
         roomID
@@ -5251,11 +5721,7 @@ export const listUniversalSyllabusLessons = /* GraphQL */ `
     $limit: Int
     $nextToken: String
   ) {
-    listUniversalSyllabusLessons(
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
+    listUniversalSyllabusLessons(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
         syllabusID
@@ -5408,11 +5874,7 @@ export const listUniversalLessonFeedbacks = /* GraphQL */ `
     $limit: Int
     $nextToken: String
   ) {
-    listUniversalLessonFeedbacks(
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
+    listUniversalLessonFeedbacks(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
         syllabusLessonID
@@ -5536,11 +5998,7 @@ export const listStudentConnections = /* GraphQL */ `
     $limit: Int
     $nextToken: String
   ) {
-    listStudentConnections(
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
+    listStudentConnections(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         fromEmail
         fromAuthID
@@ -7490,6 +7948,42 @@ export const lessonsByType2 = /* GraphQL */ `
         pages
         ratings
         isCompleted
+        roomId
+        lesson {
+          id
+          type
+          label
+          title
+          institutionID
+          language
+          designers
+          objectives
+          lessonPlanAttachment
+          purpose
+          introduction
+          introductionTitle
+          instructions
+          instructionsTitle
+          summary
+          summaryTitle
+          duration
+          resources
+          notes
+          cardImage
+          cardCaption
+          darkMode
+          rubrics
+          smallGroup
+          groupSize
+          groupType
+          smallGroupSize
+          smallGroupOption
+          studentMaterials
+          targetAudience
+          isUsed
+          createdAt
+          updatedAt
+        }
         createdAt
         updatedAt
       }

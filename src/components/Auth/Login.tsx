@@ -14,6 +14,7 @@ import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
 import AuthCard from 'components/Auth/AuthCard';
 import RememberMe from 'components/Auth/RememberMe';
+import {AiOutlineLock, AiOutlineUser} from 'react-icons/ai';
 
 interface LoginProps {
   updateAuthState: Function;
@@ -43,6 +44,8 @@ const Login = ({updateAuthState}: LoginProps) => {
     setIsToggled(state);
   };
 
+  const [isLoginSuccess, setIsLoginSuccess] = useState(false);
+
   async function SignIn() {
     let username = input.email;
     let password = input.password;
@@ -65,6 +68,7 @@ const Login = ({updateAuthState}: LoginProps) => {
           user.signInUserSession.accessToken.jwtToken
         );
         if (user) {
+          setIsLoginSuccess(true);
           let userInfo: any = await API.graphql(
             graphqlOperation(queries.getPerson, {email: username, authId: user.username})
           );
@@ -329,13 +333,18 @@ const Login = ({updateAuthState}: LoginProps) => {
   }, []);
 
   return (
-    <AuthCard message={message} title={createPassword ? 'Create your password' : 'Login'}>
+    <AuthCard
+      isSuccess={isLoginSuccess}
+      message={message}
+      // title={createPassword ? 'Create your password' : 'Login'}
+      subtitle={createPassword ? '' : 'Welcome back!'}>
       {!createPassword ? (
         <>
           <div className="h-auto flex-grow flex flex-col justify-center">
             <FormInput
               dataCy="email"
-              label="Email"
+              Icon={AiOutlineUser}
+              // label="Email"
               className="mb-4"
               placeHolder="Enter your email"
               type="email"
@@ -349,7 +358,8 @@ const Login = ({updateAuthState}: LoginProps) => {
               <>
                 <FormInput
                   dataCy="password"
-                  label="Password"
+                  // label="Password"
+                  Icon={AiOutlineLock}
                   placeHolder="Enter your password"
                   type="password"
                   id="password"
@@ -373,7 +383,7 @@ const Login = ({updateAuthState}: LoginProps) => {
                 onClick={handleSubmit}
                 btnClass="w-full py-3"
                 loading={isToggled}
-                label={showPasswordField ? 'Login' : 'Enter'}
+                label={'Login'}
               />
             </div>
           </div>
@@ -383,7 +393,7 @@ const Login = ({updateAuthState}: LoginProps) => {
           <div className="">
             <FormInput
               dataCy="password"
-              label="Password"
+              Icon={AiOutlineLock}
               className="mb-4"
               placeHolder="Enter new password"
               type="password"

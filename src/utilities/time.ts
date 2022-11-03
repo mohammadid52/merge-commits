@@ -48,7 +48,11 @@ export const awsFormatDate = (date: string) => {
     .join('-');
 };
 
-export const dateString = (separator: string, locale: 'US' | 'WORLD', date?: Date): string => {
+export const dateString = (
+  separator: string,
+  locale: 'US' | 'WORLD',
+  date?: Date
+): string => {
   const d = date ? new Date(date) : new Date();
   const dayNumber = d.getDate();
   const monthNumber = d.getMonth();
@@ -65,7 +69,7 @@ export const dateString = (separator: string, locale: 'US' | 'WORLD', date?: Dat
 export const dateFromServer = (date: string) => {
   const dateObj = new Date(date);
   const year = dateObj.getFullYear();
-  const month = dateObj.getUTCMonth();
+  const month = dateObj.getUTCMonth() + 1;
   const day = dateObj.getUTCDate();
   return `${month}/${day}/${year}`;
 };
@@ -85,23 +89,23 @@ export const MinutesToHHMM = (minutes: number, separator?: string) => {
  * using moment
  */
 export function timeIntervals(): any[] {
-	let items: any[] = [];
-	new Array(24).fill(undefined).forEach((acc: any, index: number) => {
-		items = [
-			...items,
-			{
-				name: moment({ hour: index }).format('h:mm A'),
-				value: moment({ hour: index }).format('h:mm A'),
-			},
-		];
-		items = [
-			...items,
-			{
-				name: moment({ hour: index, minute: 30 }).format('h:mm A'),
-				value: moment({ hour: index, minute: 30 }).format('h:mm A'),
-			},
-		];
-	});
+  let items: any[] = [];
+  new Array(24).fill(undefined).forEach((acc: any, index: number) => {
+    items = [
+      ...items,
+      {
+        name: moment({hour: index}).format('h:mm A'),
+        value: moment({hour: index}).format('h:mm A')
+      }
+    ];
+    items = [
+      ...items,
+      {
+        name: moment({hour: index, minute: 30}).format('h:mm A'),
+        value: moment({hour: index, minute: 30}).format('h:mm A')
+      }
+    ];
+  });
 
-	return items;
+  return items;
 }

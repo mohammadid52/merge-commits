@@ -14,6 +14,7 @@ import RoomTiles from './RoomTiles';
 import StudentsTiles from './StudentsTiles';
 import TeacherRows from './TeacherRows';
 import HeaderTextBar from '../HeaderTextBar/HeaderTextBar';
+import Loader from '@components/Atoms/Loader';
 
 export interface ModifiedListProps {
   id: any;
@@ -244,7 +245,7 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
                 </span>
                 . What do you want to teach today?
               </h2>
-              <div className="absolute z-100 w-6 right-1">
+              <div className="absolute z-100 w-6 top-0 right-1">
                 <span
                   className="w-auto cursor-pointer"
                   onClick={() => setOpenWalkThroughModal(true)}>
@@ -288,7 +289,7 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
           </div>
         </>
       ) : (
-        <ComponentLoading />
+        <Loader withText={'Loading'} className="w-auto text-gray-400" />
       )}
       <InformationalWalkThrough
         open={openWalkThroughModal}

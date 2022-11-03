@@ -8,6 +8,7 @@ function useDictionary(_clientKey?: string) {
   const key = _clientKey || clientKey;
 
   if (key === 'iconoclast') {
+    ``;
     return iconoclastDict;
   } else if (key === 'curate') {
     return curateDict;

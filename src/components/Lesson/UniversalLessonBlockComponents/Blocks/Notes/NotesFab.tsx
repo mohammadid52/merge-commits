@@ -2,7 +2,7 @@ import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {Auth} from '@aws-amplify/auth';
 import Loader from 'atoms/Loader';
 import NotesBlock from 'components/Lesson/UniversalLessonBlockComponents/Blocks/Notes/NotesBlock';
-import {GlobalContext} from 'contexts/GlobalContext';
+import {GlobalContext, useGlobalContext} from 'contexts/GlobalContext';
 import * as mutations from 'graphql/mutations';
 import * as queries from 'graphql/queries';
 import {UniversalJournalData} from 'interfaces/UniversalLessonInterfaces';
@@ -54,8 +54,10 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
     return res;
   };
 
-  const gContext = useContext(GlobalContext);
+  const gContext = useGlobalContext();
+
   const lessonState = gContext.lessonState;
+  const saveJournalData = gContext.saveJournalData;
 
   const allNotes = mapNotesTogether();
 
@@ -64,18 +66,10 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
 
   const [notesInitialized, setNotesInitialized] = useState<boolean>(false);
 
-  const deleteUJD = async (id: string) => {
-    await API.graphql(
-      graphqlOperation(mutations.deleteUniversalJournalData, {input: {id}})
-    );
-  };
-
   useEffect(() => {
     if (!notesInitialized && allNotes && allNotes.length > 0) {
       getOrCreateJournalData();
     }
-    // const id = '6641f563-3940-4bd3-a9a4-7838355dc320';
-    // deleteUJD(id);
   }, [notesInitialized]);
 
   const [notesData, setNotesData] = useState<UniversalJournalData>(INITIAL_NOTESDATA);
@@ -174,7 +168,7 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
         syllabusLessonID: getRoomData.activeSyllabus
       };
 
-      updateStudentData({domID: newNote.domID, input: ['']});
+      updateStudentData({domID: `post-it_${newNote.domID}`, input: ['']});
       const updateJournalData: any = await API.graphql(
         graphqlOperation(mutations.updateUniversalJournalData, {input})
       );
@@ -212,6 +206,7 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
         studentEmail: _notesData.studentEmail,
         entryData: _notesData.entryData,
         roomID: getRoomData.id,
+        lessonName: lessonState?.lessonData?.title || '',
         syllabusLessonID: getRoomData.activeSyllabus
       };
 
@@ -233,6 +228,10 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
         cb2();
       }
     }
+  };
+
+  saveJournalData.current = () => {
+    saveData(notesData);
   };
 
   const updateNotesJournalChange = async (newNotesArr: any[], notesData?: any) => {

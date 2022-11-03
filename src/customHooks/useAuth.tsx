@@ -1,8 +1,7 @@
 import {useGlobalContext} from 'contexts/GlobalContext';
 import {getInitialsFromString, initials, stringToHslColor} from 'utilities/strings';
 import React from 'react';
-
-type Role = 'ST' | 'TR' | 'BLD' | 'ADM' | 'SUP' | 'FLW';
+import {Role} from 'API';
 
 type User = {
   authId: string;
@@ -23,13 +22,13 @@ const useAuth = (): {
   isSuperAdmin: boolean;
   isAdmin: boolean;
   isFellow: boolean;
-  authId: any;
-  email: any;
-  firstName: any;
-  lastName: any;
-  image: any;
+  authId: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  image: string;
   instId: string;
-  user: any;
+  user: User;
   Placeholder: any;
   onDemand?: boolean;
 } => {
@@ -45,15 +44,21 @@ const useAuth = (): {
   const isAdmin = role === 'ADM';
   const isSuperAdmin = role === 'SUP';
   const isFellow = role === 'FLW';
-  const instId = user?.associateInstitute[0]?.institution?.id || '';
+  const instId =
+    (user &&
+      user?.associateInstitute?.length > 0 &&
+      user?.associateInstitute[0]?.institution?.id) ||
+    '';
 
   const Placeholder = ({
     name,
     size = 'w-10 h-10 md:w-12 md:h-12',
-    textSize = 'text-2xl'
+    textSize = '2xl:text-2xl',
+    className
   }: {
     name?: string;
     textSize?: string;
+    className?: string;
     size?: string;
   }) => {
     const [firstName, lastName] = getInitialsFromString(
@@ -61,7 +66,7 @@ const useAuth = (): {
     );
     return (
       <div
-        className={`${size} flex flex-shrink-0 justify-center items-center rounded-full  border-0 border-gray-400 shadow-elem-light cursor-pointer`}>
+        className={`${size} flex flex-shrink-0 justify-center items-center rounded-full  border-0 border-gray-400 shadow-elem-light cursor-pointer ${className}`}>
         <div
           className={`h-full w-full flex justify-center items-center ${textSize} text-extrabold text-white rounded-full`}
           style={{

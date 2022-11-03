@@ -2854,6 +2854,10 @@ export const listUniversalLessonStudentDatas = /* GraphQL */ `
         studentID
         studentAuthID
         studentEmail
+        lesson {
+          title
+          id
+        }
         currentLocation
         lessonProgress
         pageData {
@@ -2903,6 +2907,11 @@ export const listUniversalLessonWritingExcercises = /* GraphQL */ `
         roomID
         currentLocation
         lessonProgress
+        lessonName
+        lesson {
+          title
+          id
+        }
         pageData {
           domID
           options
@@ -5558,6 +5567,43 @@ export const listCurriculas = /* GraphQL */ `
         name
         institutionID
         type
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+
+export const listPersonLessonsData = /* GraphQL */ `
+  query ListPersonLessonsData(
+    $id: ID
+    $filter: ModelPersonLessonsDataFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listPersonLessonsData(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        studentAuthID
+        studentEmail
+        lessonID
+        lessonType
+        pages
+        ratings
+        isCompleted
+        roomId
+        lesson {
+          id
+          title
+        }
         createdAt
         updatedAt
       }

@@ -155,6 +155,7 @@ const Event = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardProps)
       <div className="px-3 py-4">
         <div>
           <FormInput
+            dataCy="event-overlay-input"
             label="Step 2: Add overlay text"
             placeHolder="Overlay text"
             onChange={(e) => {
@@ -244,6 +245,7 @@ const Event = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardProps)
             transparent
           />
           <Buttons
+            dataCy="save-event-button"
             loading={isLoading}
             btnClass="py-1 px-8 text-xs ml-2"
             disabled={!editMode && isEmpty(file) && file?._status !== 'success'}

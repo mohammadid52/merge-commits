@@ -39,6 +39,7 @@ const SearchSelectorWithAvatar = (props: selectorProps) => {
     creatableLabel,
     onCreate
   } = props;
+
   const countdownTimer = 200;
   const [countdownEnabled, setCountdownEnabled] = useState(undefined);
   const [searchTerm, setSearchTerm] = useState<string>(undefined);
@@ -48,8 +49,6 @@ const SearchSelectorWithAvatar = (props: selectorProps) => {
   const [teacherList, setTeacherList] = useState([]);
   const {theme, clientKey} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
-
-  useEffect(() => {}, [searchTerm]);
 
   const updateSelectedItem = (str: string, name: string, id: string, avatar: string) => {
     setShowList(!showList);
@@ -95,7 +94,6 @@ const SearchSelectorWithAvatar = (props: selectorProps) => {
     } else {
       setCountdownEnabled(
         setTimeout(() => {
-          console.log('doing search');
           fetchStudentList(searchTerm);
           clearTimeout(countdownEnabled);
         }, countdownTimer)
@@ -123,30 +121,30 @@ const SearchSelectorWithAvatar = (props: selectorProps) => {
     return list.filter((nameObj: any) => nameObj.name.includes(nameSearch));
   };
 
-  React.useEffect(() => {
-    if (list && list.length > 0) {
-      const filteredList =
-        searchTerm && searchTerm.length > 2
-          ? filterListBySearchQuery(searchTerm, list)
-          : list;
-      if (imageFromS3) {
-        const modifiedlist = getList(filteredList);
-        setTeacherList(modifiedlist);
-      } else {
-        setTeacherList(filteredList);
-      }
-    }
-  }, [list, searchTerm, imageFromS3]);
+  // React.useEffect(() => {
+  //   if (list && list.length > 0) {
+  //     const filteredList =
+  //       searchTerm && searchTerm.length > 2
+  //         ? filterListBySearchQuery(searchTerm, list)
+  //         : list;
+  //     if (imageFromS3) {
+  //       const modifiedlist = getList(filteredList);
+  //       setTeacherList(modifiedlist);
+  //     } else {
+  //       setTeacherList(filteredList);
+  //     }
+  //   }
+  // }, [list, searchTerm, imageFromS3]);
 
   return (
     <div className="relative" ref={currentRef} onFocus={() => onFocus()}>
-      <span className="inline-block w-full h-full rounded-md shadow-sm">
+      <span className="inline-block w-full h-full rounded-full shadow-sm">
         <button
           type="button"
           aria-haspopup="listbox"
           aria-expanded="true"
           aria-labelledby="listbox-label"
-          className={`flex items-center cursor-pointer relative w-full h-full rounded-md  border-0 border-gray-400 bg-white pl-3 py-2 text-left focus:outline-none transition ease-in-out duration-150 sm:text-sm sm:leading-5 ${
+          className={`flex items-center cursor-pointer relative w-full h-full rounded-full  border-0 border-gray-400 bg-white pl-3 py-2 text-left focus:outline-none transition ease-in-out duration-150 sm:text-sm sm:leading-5 ${
             btnClass ? btnClass : ''
           }`}>
           {/* TOGGLE SEARCH FIELD */}
@@ -188,15 +186,17 @@ const SearchSelectorWithAvatar = (props: selectorProps) => {
       </span>
 
       {showList && (
-        <div className="z-50 absolute mt-1 w-full rounded-md bg-white shadow-lg">
+        <div className="z-50 absolute mt-1 w-full rounded-xl bg-white customShadow">
           <ul
             role="listbox"
             aria-labelledby="listbox-label"
             aria-activedescendant="listbox-item-3"
-            className="max-h-60 rounded-md py-1 text-base leading-6 ring-1 ring-black ring-opacity-10 overflow-auto focus:outline-none sm:text-sm sm:leading-5">
+            className="max-h-60 rounded-xl py-1 text-base leading-6 ring-1 ring-black ring-opacity-10 overflow-auto focus:outline-none sm:text-sm sm:leading-5">
             {searchStatus ? (
               <li className="flex justify-center relative py-2 px-4">
-                <span className="font-normal">Searching...</span>
+                <span className="font-normal">
+                  {searchTerm.length > 2 ? 'Searching...' : 'type atleast 2 letters'}{' '}
+                </span>
               </li>
             ) : (
               <>
@@ -214,8 +214,8 @@ const SearchSelectorWithAvatar = (props: selectorProps) => {
                     </span>
                   </li>
                 )}
-                {teacherList.length ? (
-                  teacherList.map(
+                {list.length ? (
+                  list.map(
                     (
                       item: {name: string; id: any; value: string; avatar?: string},
                       key: number

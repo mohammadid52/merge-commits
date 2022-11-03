@@ -1,4 +1,5 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import Loader from '@components/Atoms/Loader';
 import {getAsset} from 'assets';
 import Community from 'components/Community/Community';
 import InstitutionsHome from 'components/Dashboard/Admin/Institutons/InstitutionsHome';
@@ -791,9 +792,12 @@ const Dashboard = (props: DashboardProps) => {
       />
     );
 
+  // check if url contains game-changers
+  const isGameChangers = window.location.href.includes('game-changers');
+
   return (
     <>
-      <div id="top-menu" className="w-full bg-white">
+      <div id="top-menu" className={`w-full ${isGameChangers ? 'bg-black' : 'bg-white'}`}>
         <div className="flex justify-between items-center">
           <div className="w-auto mx-5">
             <img
@@ -830,7 +834,7 @@ const Dashboard = (props: DashboardProps) => {
           <Suspense
             fallback={
               <div className="min-h-screen w-full flex flex-col justify-center items-center">
-                <ComponentLoading />
+                <Loader withText={'Loading'} className="w-auto text-gray-400" />
               </div>
             }>
             <Switch>
@@ -856,7 +860,7 @@ const Dashboard = (props: DashboardProps) => {
                   } else
                     return (
                       <div className="min-h-screen w-full flex flex-col justify-center items-center">
-                        <ComponentLoading />
+                        <Loader withText={'Loading'} className="w-auto text-gray-400" />
                       </div>
                     );
                 }}

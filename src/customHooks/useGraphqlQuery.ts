@@ -29,12 +29,12 @@ interface Options {
  * @returns
  */
 
-const useGraphqlQuery = <VariablesType, ReturnType>(
+const useGraphqlQuery = <VariablesType, ReturnType = any[]>(
   queryName: string,
   variables: VariablesType,
   options?: Options
 ): {
-  data?: ReturnType;
+  data?: ReturnType | [];
   isSuccess?: boolean;
   isLoading?: boolean;
   isFetched?: boolean;
@@ -48,7 +48,7 @@ const useGraphqlQuery = <VariablesType, ReturnType>(
   const [error, setError] = useState('');
   const [isFetched, setIsFetched] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
-  const [data, setData] = useState<ReturnType>();
+  const [data, setData] = useState<ReturnType | []>([]);
 
   const {enabled = true, loopOnNextToken = false, custom = false, onSuccess = () => {}} =
     options || {};

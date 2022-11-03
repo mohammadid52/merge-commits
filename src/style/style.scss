@@ -11,6 +11,17 @@
 /* MAIN PARTS */
 @import 'lessons';
 
+$polka-dot-size: 0.8px;
+
+.polka-pattern {
+  background-color: $background;
+  opacity: 0.8;
+  background-image: radial-gradient($theme-500 $polka-dot-size, transparent 0.5px),
+    radial-gradient($theme-500 $polka-dot-size, $background 0.5px);
+  background-size: 20px 20px;
+  background-position: 0 0, 10px 10px;
+}
+
 .sentiment-table-view {
   & thead tr th:first-child,
   & tbody tr td:first-child {
@@ -285,16 +296,6 @@
 }
 
 ///////////
-
-.background-test {
-  background-color: #fafafa;
-}
-
-.test {
-  background-color: white;
-  border-radius: 1rem;
-  box-shadow: 1px 1px 10px 1px #e0e0e0;
-}
 
 .size {
   svg {
@@ -1020,6 +1021,11 @@
 .customShadow {
   box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.05);
 }
+
+.theme-card-shadow {
+  box-shadow: 0 10px 20px 10px $theme-box-shadow;
+}
+
 .questionItemChild:first-child {
   margin-top: 1.5rem;
 }
@@ -1555,4 +1561,25 @@
     font-weight: 400;
     color: #2b2e40;
   }
+}
+
+.room_card:hover {
+  transition: all 300ms ease;
+  box-shadow: 0 10px 20px 10px $theme-box-shadow;
+}
+.drop-down-group:hover {
+  .dropdown-arrow {
+    color: white;
+  }
+}
+
+.dynamicShadow {
+  transform: scale(0.9) skewY(6deg);
+  top: 5px;
+  filter: blur(20px);
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  z-index: -1;
 }

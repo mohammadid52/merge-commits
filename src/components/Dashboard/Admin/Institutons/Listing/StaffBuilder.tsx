@@ -1,37 +1,40 @@
-import React, {useEffect, useState, Fragment, useContext} from 'react';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import React, {useEffect, useState} from 'react';
+import {DragDropContext, Draggable, Droppable} from 'react-beautiful-dnd';
 import {useHistory, useRouteMatch} from 'react-router';
-import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
 
-import SelectorWithAvatar from 'atoms/Form/SelectorWithAvatar';
-import Selector from 'atoms/Form/Selector';
 import Buttons from 'atoms/Buttons';
+import Selector from 'atoms/Form/Selector';
+import SelectorWithAvatar from 'atoms/Form/SelectorWithAvatar';
 import {reorder} from 'utilities/strings';
 
-import {
-  getInitialsFromString,
-  initials,
-  stringToHslColor,
-  createFilterToFetchSpecificItemsOnly
-} from 'utilities/strings';
+import {getAsset} from 'assets';
 import {getImageFromS3} from 'utilities/services';
 import {statusList} from 'utilities/staticData';
-import {getAsset} from 'assets';
+import {
+  createFilterToFetchSpecificItemsOnly,
+  getInitialsFromString,
+  initials,
+  stringToHslColor
+} from 'utilities/strings';
 
-import {GlobalContext} from 'contexts/GlobalContext';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 
-import * as customQueries from 'customGraphql/customQueries';
 import * as customMutations from 'customGraphql/customMutations';
-import * as queries from 'graphql/queries';
+import * as customQueries from 'customGraphql/customQueries';
 import * as mutations from 'graphql/mutations';
+import * as queries from 'graphql/queries';
 
-import Loader from 'atoms/Loader';
-import Tooltip from 'atoms/Tooltip';
-import Status from 'atoms/Status';
 import AddButton from 'atoms/Buttons/AddButton';
+import Loader from 'atoms/Loader';
 import Modal from 'atoms/Modal';
+import Status from 'atoms/Status';
+import Tooltip from 'atoms/Tooltip';
 import Registration from 'components/Dashboard/Admin/UserManagement/Registration';
+import SearchInput from '@components/Atoms/Form/SearchInput';
+import useSearch from '@customHooks/useSearch';
+import Highlighted from '@components/Atoms/Highlighted';
 
 interface StaffBuilderProps {
   instituteId: String;
@@ -43,7 +46,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
   const {instName, instituteId} = props;
 
   // ~~~~~~~~~~ CONTEXT SPLITTING ~~~~~~~~~~ //
-  const gContext = useContext(GlobalContext);
+  const gContext = useGlobalContext();
   const userLanguage = gContext.userLanguage;
   const clientKey = gContext.clientKey;
   const state = gContext.state;
@@ -54,7 +57,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
   const themeColor = getAsset(clientKey, 'themeClassName');
   const history = useHistory();
   const match = useRouteMatch();
-  const {BUTTONS, RegistrationDict, staffBuilderDict} = useDictionary(clientKey);
+  const {BUTTONS, RegistrationDict, staffBuilderDict} = useDictionary();
   const dictionary = staffBuilderDict[userLanguage];
 
   // ~~~~~~~~~~~~~~~~ STATE ~~~~~~~~~~~~~~~~ //
@@ -356,6 +359,43 @@ const StaffBuilder = (props: StaffBuilderProps) => {
     );
   };
 
+  const [filteredList, setFilteredList] = useState([...activeStaffList]);
+
+  const {
+    searchInput,
+    setSearch,
+    removeSearchAction,
+    searchAndFilter,
+    checkSearchQueryFromUrl,
+    filterBySearchQuery,
+    findRelatedSearch
+  } = useSearch([...activeStaffList], ['name', 'email'], 'name');
+
+  // add this function to useEffect
+  useEffect(() => {
+    if (!dataLoading && activeStaffList.length > 0) {
+      const query = checkSearchQueryFromUrl();
+      if (query) {
+        const items = filterBySearchQuery(query);
+        if (Boolean(items)) {
+          setFilteredList(items);
+        }
+      }
+    }
+  }, [dataLoading]);
+
+  const searchStaff = () => {
+    const searched = searchAndFilter(searchInput.value);
+
+    if (Boolean(searched)) {
+      setFilteredList(searched);
+    } else {
+      removeSearchAction();
+    }
+  };
+
+  const finalList = searchInput.isActive ? filteredList : activeStaffList;
+
   return (
     <div className="pt-0 flex m-auto justify-center p-8">
       <div className="">
@@ -389,6 +429,16 @@ const StaffBuilder = (props: StaffBuilderProps) => {
           )}
         </div>
 
+        <SearchInput
+          dataCy="staff-loookup-search"
+          value={searchInput.value}
+          onChange={setSearch}
+          disabled={dataLoading}
+          onKeyDown={searchStaff}
+          closeAction={removeSearchAction}
+          style={`mt-4`}
+        />
+
         {showAddSection ? (
           <div className="flex items-center w-full md:w-6/10 m-auto px-2 mb-8">
             <SelectorWithAvatar
@@ -411,7 +461,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
         ) : null}
         {!dataLoading ? (
           <>
-            {activeStaffList?.length > 0 ? (
+            {finalList?.length > 0 ? (
               <div className="w-screen lg:w-auto overflow-x-hidden">
                 <div className="w-full pt-8 m-auto border-b-0 border-gray-200">
                   <div className="flex justify-between bg-gray-50 pr-2 whitespace-nowrap">
@@ -444,7 +494,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
                     <Droppable droppableId="droppable">
                       {(provided, snapshot) => (
                         <div {...provided.droppableProps} ref={provided.innerRef}>
-                          {activeStaffList.map((item, index) => (
+                          {finalList.map((item, index) => (
                             <Draggable key={item.id} draggableId={item.id} index={index}>
                               {(provided, snapshot) => (
                                 <div
@@ -494,10 +544,16 @@ const StaffBuilder = (props: StaffBuilderProps) => {
                                       </div>
                                       <div className="ml-2">
                                         <div className="hover:text-gray-600 text-sm leading-5 font-medium text-gray-900">
-                                          {item.name}
+                                          <Highlighted
+                                            text={item.name}
+                                            highlight={searchInput.value}
+                                          />
                                         </div>
                                         <div className="text-sm leading-5 text-gray-500">
-                                          {item.email}
+                                          <Highlighted
+                                            text={item.email}
+                                            highlight={searchInput.value}
+                                          />
                                         </div>
                                       </div>
                                     </div>
@@ -564,15 +620,34 @@ const StaffBuilder = (props: StaffBuilderProps) => {
               </div>
             ) : (
               <div className="text-center p-16">
-                <p> {dictionary['INFO']}</p>
+                <p className="text-gray-500">
+                  {searchInput.isActive && !searchInput.typing
+                    ? ''
+                    : searchInput.isActive && searchInput.typing
+                    ? `Hit enter to search for ${searchInput.value}`
+                    : dictionary['INFO']}
+                  {searchInput.isActive && !searchInput.typing && (
+                    <span>
+                      No staff member found - <b>{searchInput.value}</b>. Try searching
+                      for "
+                      <span
+                        className="hover:underline theme-text cursor-pointer"
+                        onClick={() => {
+                          setSearch(findRelatedSearch(searchInput.value).name);
+                        }}>
+                        {findRelatedSearch(searchInput.value).name}
+                      </span>
+                      "
+                    </span>
+                  )}
+                </p>
               </div>
             )}
           </>
         ) : (
           <div className="py-20 text-center mx-auto flex justify-center items-center w-full h-48">
             <div className="w-5/10">
-              <Loader color="rgba(107, 114, 128, 1)" />
-              <p className="mt-2 text-center text-lg text-gray-500">Loading Staff...</p>
+              <Loader withText="Loading Staff..." className="text-gray-500" />
             </div>
           </div>
         )}

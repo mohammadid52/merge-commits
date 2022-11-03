@@ -4,6 +4,7 @@ import {useHistory, useRouteMatch} from 'react-router-dom';
 import {GlobalContext} from 'contexts/GlobalContext';
 import usePrevious from 'customHooks/previousProps';
 import {UniversalLessonPage} from 'interfaces/UniversalLessonInterfaces';
+import {useQuery} from '@customHooks/urlParam';
 
 interface StageIconProps extends UniversalLessonPage {
   pageNr?: number;
@@ -52,8 +53,27 @@ const StageIcon = ({
     }
   }, [open]);
 
+  const scrollUp = () => {
+    const domID = {
+      lesson: 'lesson-app-container',
+      survey: 'survey-app-container'
+    } as any;
+    const container = document.getElementById(domID[lessonState.lessonData.type]);
+
+    if (container) {
+      container.scrollTo({top: 0, behavior: 'smooth'});
+    }
+  };
+
+  const params = useQuery(location.search);
+
   const handleLink = () => {
-    history.push(`${match.url}/${pageNr}`);
+    scrollUp();
+    const sId = params.get('sId');
+    const sEmail = params.get('sId');
+
+    const dynamicQuery = sId && sEmail ? `?sId=${sId}&sEmail=${sEmail}` : '';
+    history.push(`${match.url}/${pageNr}${dynamicQuery}`);
     lessonDispatch({type: 'SET_CURRENT_PAGE', payload: pageNr});
   };
 
@@ -112,11 +132,7 @@ const StageIcon = ({
               !enabled || !open ? 'line-through text-gray-500 hover:underline' : null
             }            
             ${!active ? 'text-gray-500 ' : null}
-            ${
-              active
-                ? 'font-bold border-b-0 border-indigo-400 text-indigo-200 hover:text-indigo-300'
-                : null
-            }
+         
             ${
               breakpoint !== 'xs' && breakpoint !== 'sm' ? 'ml-4' : ''
             } cursor-pointer w-auto  text-sm font-medium transform hover:scale-110 transition-transform duration-150
@@ -149,11 +165,7 @@ const StageIcon = ({
               !enabled || !open ? 'line-through text-gray-500 hover:underline' : null
             }
             ${!active ? 'text-gray-500 ' : null}
-            ${
-              active
-                ? 'font-bold border-b-0 border-indigo-400 text-indigo-200 hover:text-indigo-300'
-                : null
-            }
+          
             ${
               breakpoint !== 'xs' && breakpoint !== 'sm' ? 'ml-4' : ''
             } cursor-pointer w-auto  text-sm font-medium transform hover:scale-110 transition-transform duration-150

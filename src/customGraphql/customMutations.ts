@@ -619,6 +619,9 @@ export const createClassStudent = /* GraphQL */ `
       classID
       studentID
       status
+      student {
+        onDemand
+      }
       studentEmail
       studentAuthID
       createdAt

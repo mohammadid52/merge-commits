@@ -1,11 +1,25 @@
 import useUrlState from '@ahooksjs/use-url-state';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {Storage} from '@aws-amplify/storage';
+import {getAsset} from 'assets';
+import Buttons from 'atoms/Buttons';
 import Selector from 'atoms/Form/Selector';
+import Loader from 'atoms/Loader';
+import Modal from 'atoms/Modal';
 import Anthology from 'components/Dashboard/Anthology/Anthology';
+import {GlobalContext} from 'contexts/GlobalContext';
+import * as customMutations from 'customGraphql/customMutations';
+import * as customQueries from 'customGraphql/customQueries';
+import useDictionary from 'customHooks/dictionary';
+import {useQuery} from 'customHooks/urlParam';
+import {AddQuestionModalDict} from 'dictionary/dictionary.iconoclast';
 import EmojiPicker from 'emoji-picker-react';
+import * as mutations from 'graphql/mutations';
+import * as queries from 'graphql/queries';
 import {find, findIndex} from 'lodash';
 import sortBy from 'lodash/sortBy';
+import DroppableMedia from 'molecules/DroppableMedia';
+import ModalPopUp from 'molecules/ModalPopUp';
 import React, {useContext, useEffect, useRef, useState} from 'react';
 import {BiLinkAlt} from 'react-icons/bi';
 import {BsArrowLeft, BsCameraVideoFill} from 'react-icons/bs';
@@ -22,28 +36,15 @@ import {
   useParams,
   useRouteMatch
 } from 'react-router-dom';
-import {getAsset} from 'assets';
-import {GlobalContext} from 'contexts/GlobalContext';
-import * as customMutations from 'customGraphql/customMutations';
-import * as customQueries from 'customGraphql/customQueries';
-import useDictionary from 'customHooks/dictionary';
-import {useQuery} from 'customHooks/urlParam';
-import {AddQuestionModalDict} from 'dictionary/dictionary.iconoclast';
-import * as mutations from 'graphql/mutations';
-import * as queries from 'graphql/queries';
 import {getImageFromS3} from 'utilities/services';
 import {getUniqItems, initials, stringToHslColor} from 'utilities/strings';
-import Buttons from 'atoms/Buttons';
-import Loader from 'atoms/Loader';
-import Modal from 'atoms/Modal';
 import LessonLoading from '../../../Lesson/Loading/ComponentLoading';
 import AnimatedContainer from '../../../Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import {useTabs} from '../../../Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/Tabs';
-import DroppableMedia from 'molecules/DroppableMedia';
-import ModalPopUp from 'molecules/ModalPopUp';
 import ProfileCropModal from '../../Profile/ProfileCropModal';
 import Attendance from './Attendance';
 import Feedback from './Feedback';
+import SurveyList from './SurveyList';
 import UserTabs from './User/UserTabs';
 import UserEdit from './UserEdit';
 import UserInformation from './UserInformation';
@@ -110,7 +111,7 @@ const User = (props: IUserProps) => {
   const params = useQuery(location.search);
   const urlParam: any = useParams();
 
-  const {theme, state, userLanguage, clientKey} = useContext(GlobalContext);
+  const {theme, state, userLanguage, dispatch, clientKey} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
 
   const [status, setStatus] = useState('');
@@ -124,12 +125,46 @@ const User = (props: IUserProps) => {
   const tabs = [
     {name: 'User Information', current: true},
     {name: 'Coursework & Attendance', current: false},
-    {name: 'Notebook', current: false}
+    {name: 'Notebook', current: false},
+    {name: 'Completed Surveys', current: false}
   ];
+
+  const getDashboardData = async (authId: string, email: string) => {
+    try {
+      const queryObj = {
+        name: 'customQueries.getDashboardData',
+        valueObj: {
+          authId: authId,
+          email: email
+        }
+      };
+      const dashboardDataFetch = await API.graphql(
+        graphqlOperation(customQueries.getDashboardData, queryObj.valueObj)
+      );
+
+      // @ts-ignore
+      let arrayOfResponseObjects = await dashboardDataFetch?.data?.getPerson?.classes
+        ?.items;
+
+      arrayOfResponseObjects =
+        arrayOfResponseObjects
+          ?.filter((item: any) => item.class !== null)
+          ?.map((item: any) => item?.class?.room) || [];
+      dispatch({
+        type: 'UPDATE_TEMP',
+        payload: {roomData: arrayOfResponseObjects, authId}
+      });
+
+      // mapData(arrayOfResponseObjects);
+      return arrayOfResponseObjects;
+    } catch (e) {
+      console.error('getDashbaordData -> ', e);
+    }
+  };
 
   const {curTab, setCurTab, helpers} = useTabs(tabs);
 
-  const [onUserInformationTab, onCATab, onNotebookTab] = helpers;
+  const [onUserInformationTab, onCATab, onNotebookTab, onSurveyTab] = helpers;
   const [questionData, setQuestionData] = useState([]);
 
   const [urlState, setUrlState] = useUrlState(
@@ -164,6 +199,12 @@ const User = (props: IUserProps) => {
     onDemand: false,
     rooms: []
   });
+
+  useEffect(() => {
+    if (state?.temp?.authId !== user.authId && user.authId && user.email) {
+      getDashboardData(user.authId, user.email);
+    }
+  }, [user.authId, user.email]);
 
   const [imageUrl, setImageUrl] = useState('');
   const pathName = location.pathname.replace(/\/$/, '');
@@ -239,6 +280,13 @@ const User = (props: IUserProps) => {
         graphqlOperation(customQueries.getUserProfile, {id: id})
       );
       const userData = result.data.userById.items.pop();
+
+      dispatch({
+        type: 'UPDATE_TEMP_USER',
+        payload: {
+          user: {id: userData.id, name: `${userData.firstName} ${userData.lastName}`}
+        }
+      });
 
       let studentClasses: any = userData.classes?.items.map((item: any) => item?.class);
       studentClasses = studentClasses.filter((d: any) => d !== null);
@@ -1451,7 +1499,7 @@ const User = (props: IUserProps) => {
     return (
       <>
         <div
-          className={`pl-0 lg:pl-12 max-w-256 ${insideModalPopUp ? 'min-w-256' : ''}`}
+          className={`pl-0 lg:pl-12 ${insideModalPopUp ? 'min-w-256' : ''}`}
           style={insideModalPopUp ? {maxHeight: 'calc(100vh - 150px)'} : {}}>
           {/* <BreadCrums items={breadCrumsList} /> */}
           {params.get('from') && (
@@ -1485,8 +1533,8 @@ const User = (props: IUserProps) => {
               theme={theme}
             />
 
-            <div className="flex justify-end w-auto">
-              {currentPath !== 'edit' && onUserInformationTab && (
+            {currentPath !== 'edit' && onUserInformationTab && (
+              <div className="flex justify-end w-auto">
                 <Buttons
                   dataCy="edit-user-button"
                   btnClass="mr-4 px-6"
@@ -1497,8 +1545,8 @@ const User = (props: IUserProps) => {
                   }}
                   Icon={FaEdit}
                 />
-              )}
-            </div>
+              </div>
+            )}
           </div>
           <AnimatedContainer className="h-full" show={onUserInformationTab}>
             {onUserInformationTab && (
@@ -1686,6 +1734,11 @@ const User = (props: IUserProps) => {
                 studentName={user.firstName}
                 studentEmail={user.email}
               />
+            )}
+          </AnimatedContainer>
+          <AnimatedContainer show={onSurveyTab}>
+            {onSurveyTab && (
+              <SurveyList studentAuthID={user.authId} studentEmail={user.email} />
             )}
           </AnimatedContainer>
 

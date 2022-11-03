@@ -164,13 +164,13 @@ const MainRouter: React.FC = () => {
   {
     return (
       <div
-        className={`background-test h-screen md:max-w-full md:h-screen w-full overflow-x-hidden ${theme.bg} flex flex-col`}>
+        className={`iconoclast:bg-50 curate:bg-50 h-screen md:max-w-full md:h-screen w-full overflow-x-hidden ${theme.bg} flex flex-col`}>
         {false && deviceDetected.mobile ? (
           <MobileOops userAgent={deviceDetected.device} />
         ) : (
           <Suspense
             fallback={
-              <div className="min-h-screen w-full flex flex-col justify-center items-center">
+              <div className="min-h-screen polka-pattern w-full flex flex-col justify-center items-center">
                 <ComponentLoading />
               </div>
             }>

@@ -48,7 +48,7 @@ const SignOutButton = (props: SignOutButtonProps) => {
         <div
           data-cy="logout-button"
           onClick={handleSignOut}
-          className="flex-shrink-0 flex border-t p-4 hover:bg-indigo-200 rounded-md">
+          className="flex-shrink-0 mt-2 flex border-t p-2 px-4 hover:iconoclast:bg-400 hover:curate:bg-400 hover:text-white rounded-full mb-2">
           <div className="flex-shrink-0 group block">
             <div className="flex items-center">
               <IconContext.Provider

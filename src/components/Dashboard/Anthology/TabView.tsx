@@ -1,25 +1,27 @@
-import React, {useContext} from 'react';
+import React, {useCallback} from 'react';
 import {FaEdit} from 'react-icons/fa';
 
-import {GlobalContext} from 'contexts/GlobalContext';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 
 import Buttons from 'atoms/Buttons';
 
-import {IoIosJournal} from 'react-icons/io';
-import {IconContext} from 'react-icons/lib';
 import {getAsset} from 'assets';
-import {
-  UniversalClassData,
-  UniversalJournalData,
-  UniversalLessonStudentData
-} from 'interfaces/UniversalLessonInterfaces';
-import {stringToHslColor} from 'utilities/strings';
 import {ViewEditMode} from 'components/Dashboard/Anthology/Anthology';
 import AnthologyUnderlinedTabs from 'components/Dashboard/Anthology/AnthologyUnderlinedTabs';
 import SentimentTab from 'components/Dashboard/Anthology/SentimentTab';
 import UploadsTab from 'components/Dashboard/Anthology/UploadsTab';
 import WrittenContentTab from 'components/Dashboard/Anthology/WrittenContentTab';
+import {
+  UniversalClassData,
+  UniversalJournalData,
+  UniversalLessonStudentData
+} from 'interfaces/UniversalLessonInterfaces';
+import {IoIosJournal} from 'react-icons/io';
+import {IconContext} from 'react-icons/lib';
+import {stringToHslColor} from 'utilities/strings';
+import {filter} from 'lodash';
+import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 
 export interface ITabParentProps {
   handleEditToggle?: (
@@ -42,7 +44,12 @@ export interface ITabParentProps {
 
 export interface ITabViewProps extends ITabParentProps {
   handleEditUpdate?: (e: any) => void;
-  updateJournalContent?: (html: string, targetType: string, idx?: number) => void;
+  updateJournalContent?: (
+    html: string,
+    targetType: string,
+    idx?: number,
+    domID?: string
+  ) => void;
   createTemplate?: any;
   currentContentObj?: UniversalJournalData | UniversalClassData;
   content?: UniversalJournalData[] | UniversalClassData[];
@@ -80,14 +87,14 @@ const TabView = ({
   setAllUniversalClassData
 }: ITabViewProps) => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
-  const gContext = useContext(GlobalContext);
+  const gContext = useGlobalContext();
   const state = gContext.state;
   const userLanguage = gContext.userLanguage;
   const theme = gContext.theme;
   const clientKey = gContext.clientKey;
 
   const themeColor = getAsset(clientKey, 'themeClassName');
-  const {anthologyDict} = useDictionary(clientKey);
+  const {anthologyDict} = useDictionary();
 
   // ~~~~~~~~~~~~~~~ CONTENT ~~~~~~~~~~~~~~~ //
 
@@ -111,35 +118,26 @@ const TabView = ({
         )
       : [];
 
-  const filteredClassContent =
-    allUniversalClassData?.length > 0
-      ? allUniversalClassData.reduce(
-          (acc: UniversalClassData[], data: UniversalClassData) => {
-            if (subSection === 'work') {
-              return [...acc, data];
-            } else if (
-              subSection === ' Note' &&
-              data.type === 'Class Note' &&
-              data.roomID === sectionRoomID
-            ) {
-              return [...acc, data];
-            } else {
-              return acc;
-            }
-          },
-          []
-        )
-      : [];
+  const filteredClassContent = filter(allExerciseData, ['roomID', sectionRoomID]);
+  const removeDuplicates = (arr: any) => {
+    let result: any[] = [];
+    arr.forEach((item: any) => {
+      if (!result.find((i: any) => i.id === item.id)) {
+        result.push(item);
+      }
+    });
+    return result;
+  };
 
   const pickClassContent = () => {
     if (mainSection === 'Class' && sectionRoomID !== '') {
-      if (subSection == 'class Work') {
-        return filteredClassContent;
+      if (subSection == 'Work') {
+        return removeDuplicates(filteredClassContent);
       } else {
-        return allExerciseData;
+        return removeDuplicates(filteredJournalContent);
       }
     } else if (mainSection === 'Private') {
-      return filteredJournalContent;
+      return removeDuplicates(filteredJournalContent).filter((t) => t.shared);
     } else {
       return [];
     }
@@ -175,14 +173,14 @@ const TabView = ({
       id: 'Work',
       content: WrittenContent
     },
-    // {
-    //   index: 1,
-    //   title: anthologyDict[userLanguage].TABS.C,
-    //   id: 'Notes',
-    //   content: WrittenContent
-    // },
     {
       index: 1,
+      title: anthologyDict[userLanguage].TABS.C,
+      id: 'Notes',
+      content: WrittenContent
+    },
+    {
+      index: 2,
       title: anthologyDict[userLanguage].TABS.D,
       id: 'Uploads',
       content: (
@@ -236,7 +234,7 @@ const TabView = ({
   return (
     <>
       {subSection !== 'none' && (
-        <>
+        <div className="w-auto" id="anthology_tabs">
           <div
             className={`w-full h-14 leading-6 text-gray-900 flex flex-row justify-between items-center`}>
             <div
@@ -257,15 +255,19 @@ const TabView = ({
                 {getTitle()}
               </h2>
             </div>
-            {subSection === 'Journal' && tab === 1 && (
-              <Buttons
-                Icon={FaEdit}
-                customStyles={{width: '14rem'}}
-                label={anthologyDict[userLanguage].ACTIONS.CREATE}
-                onClick={() => handleEditToggle('create', '')}
-                type="button"
-              />
-            )}
+            <AnimatedContainer
+              className="w-auto"
+              show={subSection === 'Journal' && tab === 1}>
+              {subSection === 'Journal' && tab === 1 && (
+                <Buttons
+                  Icon={FaEdit}
+                  btnClass="mb-2 px-8"
+                  label={anthologyDict[userLanguage].ACTIONS.CREATE}
+                  onClick={() => handleEditToggle('create', '')}
+                  type="button"
+                />
+              )}
+            </AnimatedContainer>
           </div>
           <div
             className={`w-full min-h-48 pb-4 overflow-hidden bg-white rounded-b-lg shadow mb-12`}>
@@ -277,7 +279,7 @@ const TabView = ({
               handleTabSelect={handleTabSelect}
             />
           </div>
-        </>
+        </div>
       )}
     </>
   );
