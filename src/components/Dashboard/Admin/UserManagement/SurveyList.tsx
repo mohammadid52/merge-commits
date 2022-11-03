@@ -20,7 +20,7 @@ const SurveyList = ({
     roomId: {eq: room.id}
   }));
 
-  const {data, isLoading, isFetched, isSuccess, isError, error} = useGraphqlQuery<
+  const {data, isLoading, isFetched, isError, error} = useGraphqlQuery<
     any,
     ListPersonLessonsDataQuery['listPersonLessonsData']['items']
   >(

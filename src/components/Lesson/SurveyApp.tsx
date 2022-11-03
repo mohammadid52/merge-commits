@@ -1,17 +1,19 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {useQuery} from '@customHooks/urlParam';
 import useAuth from '@customHooks/useAuth';
-import {PartInput, UniversalSurveyStudentData} from 'API';
+import {CreateUniversalArchiveDataInput, PartInput} from 'API';
 import {GlobalContext} from 'contexts/GlobalContext';
 import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
 import * as mutations from 'graphql/mutations';
+import * as customQueries from 'customGraphql/customQueries';
 import * as queries from 'graphql/queries';
 import {
   PagePart,
   PartContent,
   PartContentSub,
   StudentPageInput,
-  UniversalLessonPage
+  UniversalLessonPage,
+  UniversalLessonStudentData
 } from 'interfaces/UniversalLessonInterfaces';
 import React, {useContext, useEffect, useRef, useState} from 'react';
 import {useHistory, useParams, useRouteMatch} from 'react-router-dom';
@@ -290,7 +292,7 @@ const SurveyApp = () => {
         roomID: getRoomData.id,
         currentLocation: '0',
         lessonProgress: '0',
-        surveyData: initialDataFlattened
+        surveyData: initialDataFlattened.flat()
       };
 
       const newSurveyData: any = await API.graphql(
@@ -651,6 +653,89 @@ const SurveyApp = () => {
     return array?.find((_d: any) => _d.lessonID === lessonID)?.id || '';
   };
 
+  const getLessonCurrentPage = async () => {
+    try {
+      const getLessonRatingDetails: any = await API.graphql(
+        graphqlOperation(queries.getPersonLessonsData, {
+          id: getPersonLessonsDataId()
+          // lessonID: lessonID,
+          // studentEmail: user.email,
+          // studentAuthID: user.authId
+        })
+      );
+      const pageNumber = getLessonRatingDetails.data.getPersonLessonsData.pages;
+      const currentPage = JSON.parse(pageNumber).currentPage;
+      return currentPage;
+    } catch (error) {}
+  };
+
+  const loopCreateStudentArchiveAndExcerciseData = async () => {
+    const listFilter = {
+      filter: {
+        studentAuthID: {eq: user.authId},
+        lessonID: {eq: lessonID},
+        syllabusLessonID: {eq: getRoomData.activeSyllabus},
+        roomID: {eq: getRoomData.id}
+      }
+    };
+
+    const studentDataRows: UniversalLessonStudentData[] = await fetchSurveyDataRow(
+      listFilter,
+      null,
+      []
+    );
+
+    const currentPageLocation = await getLessonCurrentPage();
+    const lessonPageID = PAGES[currentPageLocation].id;
+
+    const result = studentDataRows.map(async (item: any) => {
+      const input: CreateUniversalArchiveDataInput = {
+        id: uuidV4(),
+        syllabusLessonID: item.syllabusLessonID,
+        lessonID: item.lessonID,
+        lessonPageID: lessonPageID,
+        studentID: item.studentID,
+        studentAuthID: item.studentAuthID,
+        studentEmail: item.studentEmail,
+        roomID: item.roomID,
+        currentLocation: currentPageLocation,
+        lessonProgress: (PAGES.length - 1).toString(),
+        pageData: item.surveyData
+      };
+      let newStudentData: any;
+      let returnedData: any;
+
+      newStudentData = await API.graphql(
+        graphqlOperation(mutations.createUniversalArchiveData, {
+          input
+        })
+      );
+      console.info('\x1b[33m *Archiving rest of the pages... \x1b[0m');
+
+      returnedData = newStudentData.data.createUniversalArchiveData;
+
+      return returnedData;
+    });
+
+    // updateJournalData(studentDataRows);
+    return result;
+  };
+
+  const createStudentArchiveData = async (onSuccessCallback?: () => void) => {
+    try {
+      const result = await loopCreateStudentArchiveAndExcerciseData();
+      if (onSuccessCallback && typeof onSuccessCallback === 'function') {
+        onSuccessCallback();
+      }
+      return result;
+    } catch (e) {
+      console.error(
+        'error @createStudentArchiveData in LessonApp.tsx creating journal data - ',
+        e
+      );
+    }
+  };
+
   const handleSurveyMutateData = async () => {
     try {
       let payload;
@@ -664,7 +749,7 @@ const SurveyApp = () => {
         existingLesson = personLessonData?.data;
       } else {
         existingLesson = await API.graphql(
-          graphqlOperation(queries.listPersonLessonsData, {
+          graphqlOperation(customQueries.listPersonLessonsData, {
             filter: {
               lessonID: {eq: lessonID},
               studentAuthID: {eq: isStudent ? user.authId : params.get('sId')},
@@ -705,9 +790,10 @@ const SurveyApp = () => {
         };
 
         if (isStudent) {
-          await API.graphql(
+          const result: any = await API.graphql(
             graphqlOperation(mutations.createPersonLessonsData, {input: payload})
           );
+          setPersonLessonData([...personLessonData, result.data.createPersonLessonsData]);
         }
       } else {
         payload = {
@@ -744,15 +830,18 @@ const SurveyApp = () => {
   const {breakpoint} = useTailwindBreakpoint();
 
   const {getLessonCompletedValue} = useLessonFunctions();
-  const _getLessonCompletedValue = async () =>
-    await getLessonCompletedValue({
-      id: getPersonLessonsDataId(),
-      filter: {
-        lessonID: {eq: lessonID},
-        studentEmail: {eq: user.email},
-        studentAuthId: {eq: user.authId}
-      }
-    });
+  const _getLessonCompletedValue = async () => {
+    if (getPersonLessonsDataId()) {
+      return await getLessonCompletedValue({
+        id: getPersonLessonsDataId(),
+        filter: {
+          lessonID: {eq: lessonID},
+          studentEmail: {eq: user.email},
+          studentAuthId: {eq: user.authId}
+        }
+      });
+    }
+  };
 
   return (
     <>
@@ -783,6 +872,7 @@ const SurveyApp = () => {
             getLessonCompletedValue={
               lessonState?.misc?.personLessonData?.lessonID && _getLessonCompletedValue
             }
+            createJournalData={createStudentArchiveData}
             setOverlay={setOverlay}
             isAtEnd={isAtEnd}
             setisAtEnd={setisAtEnd}

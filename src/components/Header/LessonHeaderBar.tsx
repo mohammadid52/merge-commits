@@ -84,20 +84,22 @@ const LessonHeaderBar = ({
 
   const {setNotification} = useNotifications();
 
+  const triggerNotification = () => {
+    setNotification({
+      title: 'Your notebook has been saved',
+      show: true,
+      type: 'success',
+      buttonText: 'See notebook',
+      buttonUrl: '/anthology?roomId=' + getRoomData.id
+    });
+  };
+
   const handleNotebookSave = () => {
+    const callback = isLesson ? () => triggerNotification() : () => {};
+    createJournalData(callback);
+
     if (isLesson) {
       console.log('\x1b[33m Saving notebook... \x1b[0m');
-      createJournalData(() => {
-        setNotification({
-          title: 'Your notebook has been saved',
-          show: true,
-          type: 'success',
-          buttonText: 'See notebook',
-          buttonUrl: '/anthology?roomId=' + getRoomData.id
-        });
-      });
-
-      console.log(saveJournalData);
 
       if (saveJournalData?.current) {
         saveJournalData?.current();
@@ -377,16 +379,20 @@ const LessonHeaderBar = ({
           header={
             leaveAfterCompletion && isLesson
               ? `Congratulations, you have completed the lesson ${lessonState.lessonData.title}, Did you want to keep your writing excercies in the classroom or move them to your notebook`
+              : !isLesson
+              ? `Thank you for completing ${lessonState.lessonData.title}`
               : 'This will take you out of the lesson.  Did you want to continue?'
           }
           button1={`${
-            !waiting && leaveAfterCompletion && lessonState.lessonData.type === 'lesson'
+            !waiting && leaveAfterCompletion && isLesson
               ? 'I completed this lesson. \n Move my work to my notebook.'
-              : !waiting
-              ? 'Go to the dashboard'
+              : !waiting && !isLesson
+              ? 'I am happy with my responses and want to close the survey'
               : 'Saving your data...'
           }`}
-          button2={isLesson ? 'Leave in classroom' : 'Stay on survey'}
+          button2={
+            isLesson ? 'Leave in classroom' : 'I am going to keep working on my responses'
+          }
           svg="question"
           handleButton1={leaveAfterCompletion ? handleNotebookSave : handleManualSave}
           handleButton2={isLesson ? goToClassRoom : () => setLeaveModalVisible(false)}

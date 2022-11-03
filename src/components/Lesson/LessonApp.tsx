@@ -863,9 +863,6 @@ const LessonApp = ({}: ILessonSurveyApp) => {
       const getLessonRatingDetails: any = await API.graphql(
         graphqlOperation(queries.getPersonLessonsData, {
           id: getPersonLessonsDataId()
-          // lessonID: lessonID,
-          // studentEmail: user.email,
-          // studentAuthID: user.authId
         })
       );
       const pageNumber = getLessonRatingDetails.data.getPersonLessonsData.pages;
@@ -968,6 +965,7 @@ const LessonApp = ({}: ILessonSurveyApp) => {
 
     const result = studentDataRows.map(async (item: any) => {
       const input = {
+        id: uuidV4(),
         syllabusLessonID: item.syllabusLessonID,
         lessonID: item.lessonID,
         lessonPageID: item.lessonPageID,
@@ -1056,7 +1054,7 @@ const LessonApp = ({}: ILessonSurveyApp) => {
         existingLesson = personLessonData?.data;
       } else {
         existingLesson = await API.graphql(
-          graphqlOperation(queries.listPersonLessonsData, {
+          graphqlOperation(customQueries.listPersonLessonsData, {
             filter: {
               roomId: {eq: getRoomData.id},
               lessonID: {eq: lessonID},
