@@ -51,10 +51,7 @@ const WrittenContentTab = (props: ITabViewProps) => {
   // ##################################################################### //
   const viewModeView = (contentObj: UniversalJournalData) => {
     const notesExist = contentObj?.entryData[0]?.domID.includes('notes_form');
-    console.log(
-      '🚀 ~ file: WrittenContentTab.tsx ~ line 54 ~ viewModeView ~ notesExist',
-      notesExist
-    );
+
     const filtered = filter(
       contentObj?.entryData,
       (ed) => ed && ed.type.includes('content')
@@ -80,8 +77,8 @@ const WrittenContentTab = (props: ITabViewProps) => {
       <>
         <div className={`flex mb-2 justify-between items-center`}>
           <p className={`w-auto text-right text-xs text-gray-500`}>
-            {/* @ts-ignore */}
-            Lesson Name: {contentObj?.lessonName || 'not available'}
+            Lesson Name: {/* @ts-ignore */}
+            {contentObj?.lessonName || contentObj?.lesson?.title || 'not available'}
           </p>
           <p className={`w-auto text-right text-xs text-gray-500`}>
             Updated: {dateFromServer(contentObj?.updatedAt)}
@@ -177,11 +174,13 @@ const WrittenContentTab = (props: ITabViewProps) => {
         <div className={`pb-2 mb-2`}>
           <FormInput
             id={organized.header.domID}
-            label={`Title`}
+            // label={`Title`}
             onChange={handleInputFieldUpdate}
             value={organized.header.input}
             placeHolder={
-              organized.header?.input ? organized.header.input : `Please add title...`
+              organized.header?.input
+                ? organized.header.input
+                : `What are you thinking about today?`
             }
           />
         </div>
@@ -190,6 +189,8 @@ const WrittenContentTab = (props: ITabViewProps) => {
          */}
         <div className={`mt-2 mb-2`}>
           <RichTextEditor
+            minHeight={200}
+            placeholder="Write more about what you are thinking about here..."
             initialValue={organized.content.input}
             onChange={(htmlContent) => updateJournalContent(htmlContent, 'content')}
           />
@@ -285,33 +286,38 @@ const WrittenContentTab = (props: ITabViewProps) => {
 
   return (
     <>
-      {viewEditMode.mode === 'create' && viewEditMode.dataID === createTemplate.id && (
-        <ContentCard hasBackground={false}>
-          <div id={`anthology_${subSection}_create`} className={`flex flex-col px-6 p-2`}>
-            {viewEditMode && viewEditMode.mode === 'create'
-              ? createModeView(createTemplate)
-              : null}
-            <div className={`flex ${viewEditMode.mode === 'create' ? 'pt-2 mt-2' : ''}`}>
-              {viewEditMode.mode === 'create' &&
-              viewEditMode.dataID === createTemplate.id ? (
-                <Buttons
-                  onClick={() => handleEditToggle('', '', 0, '')}
-                  label={anthologyDict[userLanguage].ACTIONS.CANCEL}
-                  transparent
-                  btnClass="mr-2"
-                />
-              ) : null}
-              {viewEditMode.mode === 'create' &&
-              viewEditMode.dataID === createTemplate.id ? (
-                <Buttons
-                  onClick={() => handleEditToggle('savenew', '')}
-                  label={anthologyDict[userLanguage].ACTIONS.SAVE}
-                />
-              ) : null}
+      {viewEditMode.mode === 'create' &&
+        viewEditMode.dataID === createTemplate.id &&
+        subSection === 'Journal' && (
+          <ContentCard hasBackground={false}>
+            <div
+              id={`anthology_${subSection}_create`}
+              className={`flex flex-col px-6 p-4`}>
+              {viewEditMode && viewEditMode.mode === 'create'
+                ? createModeView(createTemplate)
+                : null}
+              <div
+                className={`flex ${viewEditMode.mode === 'create' ? 'pt-2 mt-2' : ''}`}>
+                {viewEditMode.mode === 'create' &&
+                viewEditMode.dataID === createTemplate.id ? (
+                  <Buttons
+                    onClick={() => handleEditToggle('', '', 0, '')}
+                    label={anthologyDict[userLanguage].ACTIONS.CANCEL}
+                    transparent
+                    btnClass="mr-2"
+                  />
+                ) : null}
+                {viewEditMode.mode === 'create' &&
+                viewEditMode.dataID === createTemplate.id ? (
+                  <Buttons
+                    onClick={() => handleEditToggle('savenew', '')}
+                    label={anthologyDict[userLanguage].ACTIONS.SAVE}
+                  />
+                ) : null}
+              </div>
             </div>
-          </div>
-        </ContentCard>
-      )}
+          </ContentCard>
+        )}
       {content?.length > 0 ? (
         content?.map((contentObj: any, idx: number) => {
           return (

@@ -41,6 +41,7 @@ const LessonHeaderBar = ({
 
   // don't remove this line or we are screwed
   const initializeTimer = useStudentTimer();
+  const isLesson = lessonState?.lessonData.type === 'lesson';
 
   // ##################################################################### //
   // ################## LOGIC FOR RETURNING TO CLASSROOM ################# //
@@ -84,7 +85,7 @@ const LessonHeaderBar = ({
   const {setNotification} = useNotifications();
 
   const handleNotebookSave = () => {
-    if (lessonState.lessonData.type === 'lesson') {
+    if (isLesson) {
       console.log('\x1b[33m Saving notebook... \x1b[0m');
       createJournalData(() => {
         setNotification({
@@ -111,7 +112,9 @@ const LessonHeaderBar = ({
       .mutate({input: {id, isCompleted: true}})
       .then(() => {
         // goToClassRoom();
-        history.push(`/dashboard/anthology?roomId=${getRoomData.id}`);
+        isLesson
+          ? history.push(`/dashboard/anthology?roomId=${getRoomData.id}`)
+          : goToClassRoom();
         console.log('Successfully completed ' + lessonState?.lessonData?.type);
       })
       .catch((err) => {
@@ -355,6 +358,7 @@ const LessonHeaderBar = ({
   // ##################################################################### //
   // ############################### OUTPUT ############################## //
   // ##################################################################### //
+
   return (
     <div
       style={{zIndex: 3000}}
@@ -371,21 +375,21 @@ const LessonHeaderBar = ({
             'border-sea-green hover:bg-sea-green text-sea-green white-text-on-hover border-2'
           }
           header={
-            leaveAfterCompletion
+            leaveAfterCompletion && isLesson
               ? `Congratulations, you have completed the lesson ${lessonState.lessonData.title}, Did you want to keep your writing excercies in the classroom or move them to your notebook`
               : 'This will take you out of the lesson.  Did you want to continue?'
           }
           button1={`${
             !waiting && leaveAfterCompletion && lessonState.lessonData.type === 'lesson'
-              ? 'Mark lesson as complete and move your work to your notebook'
+              ? 'I completed this lesson. \n Move my work to my notebook.'
               : !waiting
               ? 'Go to the dashboard'
               : 'Saving your data...'
           }`}
-          button2="Leave in classroom"
+          button2={isLesson ? 'Leave in classroom' : 'Stay on survey'}
           svg="question"
           handleButton1={leaveAfterCompletion ? handleNotebookSave : handleManualSave}
-          handleButton2={goToClassRoom}
+          handleButton2={isLesson ? goToClassRoom : () => setLeaveModalVisible(false)}
           theme="dark"
           fill="screen"
         />

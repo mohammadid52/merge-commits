@@ -2,11 +2,11 @@ import {escapeRegExp} from 'lodash';
 import React from 'react';
 
 const Highlighted = ({text = '', highlight = ''}) => {
-  if (!highlight.trim()) {
+  if (!highlight?.trim()) {
     return <span>{text}</span>;
   }
   const regex = new RegExp(`(${escapeRegExp(highlight)})`, 'gi');
-  const parts = text.split(regex);
+  const parts = text?.split(regex);
   return (
     <span>
       {parts

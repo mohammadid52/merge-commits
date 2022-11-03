@@ -1,21 +1,20 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import {getAsset} from 'assets';
+import BreadCrums from 'atoms/BreadCrums';
+import SectionTitleV3 from 'atoms/SectionTitleV3';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import useAuth from 'customHooks/useAuth';
+import * as mutations from 'graphql/mutations';
+import * as queries from 'graphql/queries';
 import isEmpty from 'lodash/isEmpty';
 import React, {useContext, useEffect, useState} from 'react';
 import {useRouteMatch} from 'react-router';
-import {getAsset} from 'assets';
-import {GlobalContext} from 'contexts/GlobalContext';
-import useDictionary from 'customHooks/dictionary';
-import * as mutations from 'graphql/mutations';
-import * as queries from 'graphql/queries';
-import {v4 as uuidV4} from 'uuid';
-import BreadCrums from 'atoms/BreadCrums';
-import SectionTitleV3 from 'atoms/SectionTitleV3';
 import {DashboardProps} from '../Dashboard';
 import DashboardContainer from '../DashboardContainer';
 import DateAndTime from '../DateAndTime/DateAndTime';
 import SyllabusSwitch from './SyllabusSwitch';
 import Today from './TodayLesson';
-import useAuth from 'customHooks/useAuth';
 
 interface Artist {
   id: string;
@@ -496,7 +495,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
               </>
             )}
 
-            {Boolean(activeRoomInfo?.activeSyllabus) && (
+            {Boolean(activeRoomInfo?.activeSyllabus) ? (
               <>
                 <SectionTitleV3
                   fontSize="2xl"
@@ -532,6 +531,12 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
                   </div>
                 </div>
               </>
+            ) : (
+              <div className="text-center">
+                <p className="w-auto text-center text-gray-500 font-medium">
+                  No active unit for this room
+                </p>
+              </div>
             )}
           </div>
         </div>

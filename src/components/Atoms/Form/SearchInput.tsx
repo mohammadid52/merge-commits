@@ -11,6 +11,7 @@ interface SearchProps {
   closeAction?: () => void;
   style?: string;
   liveSearch?: boolean;
+  disabled?: boolean;
   dataCy?: string;
 }
 
@@ -22,6 +23,7 @@ const SearchInput: React.FC<SearchProps> = (searchProps: SearchProps) => {
     onKeyDown,
     closeAction,
     style,
+    disabled,
     dataCy
   } = searchProps;
   const {theme, clientKey} = useContext(GlobalContext);
@@ -50,11 +52,14 @@ const SearchInput: React.FC<SearchProps> = (searchProps: SearchProps) => {
       onKeyDown();
     }
   };
+
+  const disabledClass = disabled ? 'cursor-not-allowed bg-gray-200' : '';
+
   return (
     <div
-      className={`flex w-auto py-3 px-4 rounded  ${theme.formSelect} ${
+      className={`flex w-auto py-3 px-4 rounded-full  ${theme.formSelect} ${
         theme.outlineNone
-      } ${style ? style : ''}`}>
+      } ${style ? style : ''}  ${disabledClass}`}>
       <span className="w-6 mr-4 cursor-pointer" onClick={onKeyDown}>
         <IconContext.Provider
           value={{size: '1.5rem', color: theme.searchIcon[themeColor]}}>
@@ -65,6 +70,7 @@ const SearchInput: React.FC<SearchProps> = (searchProps: SearchProps) => {
         data-cy={dataCy}
         placeholder={liveSearch ? 'Type atleaset 3 characters...' : 'Search...'}
         id="searchInput"
+        disabled={disabled}
         value={value ? value : ''}
         onChange={(e: any) => onChange(e.target.value)}
         onKeyDown={(e: any) => search(e.keyCode)}

@@ -283,14 +283,14 @@ const Anthology = ({
     shared: false,
     entryData: [
       {
-        domID: `title_${nanoid(4)}`,
+        domID: `title_${nanoid(12)}`,
         type: 'header',
-        input: 'Default Title'
+        input: ''
       },
       {
-        domID: `note_${nanoid(4)}`,
+        domID: `note_${nanoid(12)}`,
         type: 'content',
-        input: '<p>Enter notes here...</p>'
+        input: ''
       }
     ]
   };
@@ -314,15 +314,12 @@ const Anthology = ({
       const listFilterIfTeacher = {
         filter: {
           studentAuthID: {eq: studentAuthID},
-          shared: {eq: 'true'}
+          shared: {eq: true}
         }
       };
 
       const journalEntryData: any = await API.graphql(
-        graphqlOperation(
-          queries.listUniversalJournalData,
-          isTeacher ? listFilterIfTeacher : listFilter
-        )
+        graphqlOperation(queries.listUniversalJournalData, listFilter)
       );
       const journalEntryDataRows =
         journalEntryData?.data?.listUniversalJournalData?.items || [];
@@ -561,30 +558,17 @@ const Anthology = ({
       option: option || 0,
       recordID: recordID || ''
     });
+
+    if (editMode === 'create') {
+      const el = document.getElementById('anthology_Journal_create');
+      if (el) {
+        el.scrollIntoView({behavior: 'smooth', block: 'start'});
+      }
+    }
   };
 
   const handleResetJournalEntry = async () => {
-    setJournalEntryData({
-      id: '',
-      studentID: state.user.authId,
-      studentAuthID: state.user.authId,
-      studentEmail: state.user.email,
-      type: 'journal-entry',
-      shared: false,
-      feedbacks: [''],
-      entryData: [
-        {
-          domID: `title_${nanoid(4)}`,
-          type: 'header',
-          input: 'Default Title'
-        },
-        {
-          domID: `note_${nanoid(4)}`,
-          type: 'content',
-          input: '<p>Enter notes here...</p>'
-        }
-      ]
-    });
+    setJournalEntryData(DEFAULT_JOURNAL_ENTRY);
   };
   const [mainSection, setMainSection] = useState<string>('');
 
@@ -847,37 +831,31 @@ const Anthology = ({
     roomIdString: string,
     roomName?: string
   ) => {
-    if (roomIdString !== sectionRoomID) {
-      if (section === 'Class Notebook') {
-        setMainSection('Class');
-        setSectionRoomID(roomIdString);
-        setSectionTitle(roomName);
-        setSubSection('Work');
-        setTab(0);
-        setShowPasscodeEntry(false);
-        setPasscodeInput('');
-        setAccessMessage('');
-      } else if (section === 'Private Notebook' && !isTeacher) {
-        setShowPasscodeEntry(true);
-      } else if (section === 'Private Notebook' && isTeacher) {
-        setMainSection('Private');
-        setSectionRoomID('private');
-        setSectionTitle(`Private Notebook`);
-        setSubSection('Journal');
-        setTab(0);
-        setShowPasscodeEntry(false);
-        setPasscodeInput('');
-        setAccessMessage({message: '', textClass: ''});
-      }
+    if (section === 'Class Notebook') {
+      setMainSection('Class');
+      setSectionRoomID(roomIdString);
+      setSectionTitle(roomName);
+      setSubSection('Work');
+      setTab(0);
+      setShowPasscodeEntry(false);
+      setPasscodeInput('');
+      setAccessMessage('');
+    } else if (section === 'Private Notebook' && !isTeacher) {
+      setShowPasscodeEntry(true);
+    } else if (section === 'Private Notebook' && isTeacher) {
+      setMainSection('Private');
+      setSectionRoomID('private');
+      setSectionTitle(`Private Notebook`);
+      setSubSection('Journal');
+      setTab(0);
+      setShowPasscodeEntry(false);
+      setPasscodeInput('');
+      setAccessMessage({message: '', textClass: ''});
+    }
 
-      const el = document.getElementById('anthology_tabs');
-      if (el) {
-        el.scrollIntoView({behavior: 'smooth', block: 'start'});
-      }
-    } else {
-      setSectionRoomID('');
-      setSectionTitle('');
-      setSubSection('none');
+    const el = document.getElementById('anthology_tabs');
+    if (el) {
+      el.scrollIntoView({behavior: 'smooth', block: 'start'});
     }
   };
   const params = useQuery(location.search);

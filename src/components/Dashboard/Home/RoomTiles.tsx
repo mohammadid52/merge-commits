@@ -4,7 +4,7 @@ import ContentCard from 'atoms/ContentCard';
 import ImageAlternate from 'atoms/ImageAlternative';
 import SectionTitleV3 from 'atoms/SectionTitleV3';
 import {ModifiedListProps} from 'components/Dashboard/Home/Home';
-import {GlobalContext} from 'contexts/GlobalContext';
+import {GlobalContext, useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import React, {useContext, useEffect, useState} from 'react';
 
@@ -49,10 +49,10 @@ const SingleRoomCard = ({
       }
       key={`homepage__classrooms-${idx}`}
       className="flex customShadow  transition-all room_card flex-col cursor-pointer rounded-lg overflow-hidden ">
-      <div className="flex-shrink-0">
+      <div className="flex-shrink-0 bg-gray-500">
         <img
           loading="lazy"
-          className=" h-48 w-full object-cover hover:scale-105 transform transition-transform duration-300"
+          className="room-image h-48 w-full object-cover hover:scale-105 transform transition-transform duration-300"
           src={bannerImage || fallbackUrls.room}
           alt={`${roomName || ''} banner image`}
         />
@@ -107,12 +107,20 @@ const RoomTiles = (props: {
   classList: ModifiedListProps[];
 }) => {
   const {classList: classes, isTeacher, handleRoomSelection} = props;
-  const {userLanguage, clientKey} = useContext(GlobalContext);
-  const {DashboardDict} = useDictionary(clientKey);
+  const {userLanguage} = useGlobalContext();
+  const {DashboardDict} = useDictionary();
 
   const [showMore, setShowMore] = useState(false);
 
   const [classList, setClassList] = useState([]);
+
+  const animateOnShowMore = () => {
+    if (showMore) {
+      setShowMore(false);
+    } else {
+      setShowMore(true);
+    }
+  };
 
   useEffect(() => {
     if (classes.length > 0) {
@@ -131,7 +139,7 @@ const RoomTiles = (props: {
             <div className="flex justify-end">
               <Buttons
                 label={!showMore ? 'Show All' : 'Show Few'}
-                onClick={() => setShowMore(!showMore)}
+                onClick={animateOnShowMore}
                 type="button"
               />
             </div>
@@ -142,7 +150,7 @@ const RoomTiles = (props: {
         extraClass="leading-6 text-gray-900"
         borderBottom
       />
-      <ContentCard hasBackground={false} additionalClass="shadow bg-white rounded-b-lg">
+      <ContentCard hasBackground={false}>
         {classList.length > 0 ? (
           <div className="relative">
             <div className="relative max-w-7xl mx-auto">

@@ -126,7 +126,7 @@ const User = (props: IUserProps) => {
     {name: 'User Information', current: true},
     {name: 'Coursework & Attendance', current: false},
     {name: 'Notebook', current: false},
-    {name: 'Surveys', current: false}
+    {name: 'Completed Surveys', current: false}
   ];
 
   const getDashboardData = async (authId: string, email: string) => {
@@ -154,6 +154,7 @@ const User = (props: IUserProps) => {
         type: 'UPDATE_TEMP',
         payload: {roomData: arrayOfResponseObjects, authId}
       });
+
       // mapData(arrayOfResponseObjects);
       return arrayOfResponseObjects;
     } catch (e) {
@@ -279,6 +280,13 @@ const User = (props: IUserProps) => {
         graphqlOperation(customQueries.getUserProfile, {id: id})
       );
       const userData = result.data.userById.items.pop();
+
+      dispatch({
+        type: 'UPDATE_TEMP_USER',
+        payload: {
+          user: {id: userData.id, name: `${userData.firstName} ${userData.lastName}`}
+        }
+      });
 
       let studentClasses: any = userData.classes?.items.map((item: any) => item?.class);
       studentClasses = studentClasses.filter((d: any) => d !== null);
@@ -1491,7 +1499,7 @@ const User = (props: IUserProps) => {
     return (
       <>
         <div
-          className={`pl-0 lg:pl-12 max-w-256 ${insideModalPopUp ? 'min-w-256' : ''}`}
+          className={`pl-0 lg:pl-12 ${insideModalPopUp ? 'min-w-256' : ''}`}
           style={insideModalPopUp ? {maxHeight: 'calc(100vh - 150px)'} : {}}>
           {/* <BreadCrums items={breadCrumsList} /> */}
           {params.get('from') && (

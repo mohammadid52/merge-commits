@@ -1,6 +1,7 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import {useQuery} from '@customHooks/urlParam';
 import useAuth from '@customHooks/useAuth';
-import {PartInput} from 'API';
+import {PartInput, UniversalSurveyStudentData} from 'API';
 import {GlobalContext} from 'contexts/GlobalContext';
 import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
 import * as mutations from 'graphql/mutations';
@@ -85,11 +86,15 @@ const SurveyApp = () => {
       const lessonProgress = JSON.parse(pages).lessonProgress || 0;
 
       lessonDispatch({type: 'SET_CURRENT_PAGE', payload: lessonProgress});
-      setLessonDataLoaded(true);
       setPageStateUpdated(true);
-      history.push(`${match.url}/${lessonProgress}`);
+
+      const sId = params.get('sId');
+      const sEmail = params.get('sId');
+
+      const dynamicQuery = sId && sEmail ? `?sId=${sId}&sEmail=${sEmail}` : '';
+      history.push(`${match.url}/${lessonProgress}${dynamicQuery}`);
     }
-  }, [lessonData.id, misc?.personLessonData]);
+  }, [lessonData.id, misc?.personLessonData?.lessonID]);
 
   // ##################################################################### //
   // ###################### INITIALIZE STUDENT DATA ###################### //
@@ -309,6 +314,39 @@ const SurveyApp = () => {
    * IF THERE IS ANY, AND SETS IT IN STATE  *
    ******************************************/
 
+  // const fetchSurveyDataRow = async (
+  //   filterObj: any,
+  //   nextToken: string,
+  //   outArray: any[]
+  // ): Promise<any> => {
+  //   let combined;
+  //   setLessonDataLoaded(false);
+  //   try {
+  //     let surveyData: any = await API.graphql(
+  //       graphqlOperation(queries.listUniversalSurveyStudentData, {
+  //         ...filterObj,
+  //         nextToken: nextToken
+  //       })
+  //     );
+
+  //     let surveyDataRow = surveyData.data.listUniversalSurveyStudentData.items;
+
+  //     let theNextToken = surveyData.data.listUniversalSurveyStudentData?.nextToken;
+
+  //     combined = [...outArray, ...surveyDataRow];
+
+  //     if (theNextToken) {
+  //       // console.log('nextToken fetching more - ', nextToken);
+  //       combined = await fetchSurveyDataRow(filterObj, theNextToken, combined);
+  //     }
+  //     setLessonDataLoaded(true);
+  //     return combined;
+  //   } catch (e) {
+  //     console.error('loopFetchStudentData - ', e);
+  //     return [];
+  //   }
+  // };
+
   const fetchSurveyDataRow = async (
     filterObj: any,
     nextToken: string,
@@ -343,14 +381,21 @@ const SurveyApp = () => {
   };
 
   const {isStudent} = useAuth();
+
+  const params = useQuery(location.search);
+
   const getOrCreateSurveyData = async () => {
     // TRY TRY TRY
     try {
       // existing student rows
-      // const surveyDataRow = await (await _fetchSurveyDataRow()).filter(Boolean); // table object
+
+      // existing student rows
+
+      const dynamicUser = isStudent ? user : {authId: params.get('sId')};
+
       const listFilter = {
         filter: {
-          studentAuthID: {eq: user.authId},
+          studentAuthID: {eq: dynamicUser.authId},
           lessonID: {eq: lessonID},
           syllabusLessonID: {eq: getRoomData.activeSyllabus},
           roomID: {eq: getRoomData.id}
@@ -374,11 +419,13 @@ const SurveyApp = () => {
             user.authId,
             user.email
           );
-          if (createNewRecords?.surveyData?.length > 0) {
+          const newRecords = await Promise.all(createNewRecords);
+
+          if (newRecords?.length > 0) {
             lessonDispatch({
               type: 'LOAD_SURVEY_DATA',
               payload: {
-                dataIdReferences: surveyDataId(createNewRecords)
+                dataIdReferences: surveyDataId(newRecords)
               }
             });
           }
@@ -597,9 +644,12 @@ const SurveyApp = () => {
     handleSurveyMutateData();
   }, [lessonState.currentPage]);
 
-  const getPersonLessonsDataId = (): string =>
-    lessonState?.misc?.personLessonData?.data?.find((_d: any) => _d.lessonID === lessonID)
-      ?.id || '';
+  const [personLessonData, setPersonLessonData] = useState([]);
+
+  const getPersonLessonsDataId = (): string => {
+    const array = personLessonData || lessonState?.misc?.personLessonData?.data || [];
+    return array?.find((_d: any) => _d.lessonID === lessonID)?.id || '';
+  };
 
   const handleSurveyMutateData = async () => {
     try {
@@ -617,12 +667,13 @@ const SurveyApp = () => {
           graphqlOperation(queries.listPersonLessonsData, {
             filter: {
               lessonID: {eq: lessonID},
-              studentAuthID: {eq: user.authId},
-              studentEmail: {eq: user.email},
+              studentAuthID: {eq: isStudent ? user.authId : params.get('sId')},
+              studentEmail: {eq: isStudent ? user.email : params.get('sEmail')},
               roomId: {eq: getRoomData.id}
             }
           })
         );
+
         lessonDispatch({
           type: 'SET_PERSON_LESSON_DATA',
           payload: {
@@ -635,7 +686,7 @@ const SurveyApp = () => {
       const items = isSameAndDataExists
         ? existingLesson
         : existingLesson?.data?.listPersonLessonsData?.items || [];
-
+      setPersonLessonData(items);
       if (!items.length) {
         payload = {
           id: uuidV4(),

@@ -14,6 +14,7 @@ import RoomTiles from './RoomTiles';
 import StudentsTiles from './StudentsTiles';
 import TeacherRows from './TeacherRows';
 import HeaderTextBar from '../HeaderTextBar/HeaderTextBar';
+import Loader from '@components/Atoms/Loader';
 
 export interface ModifiedListProps {
   id: any;
@@ -288,7 +289,7 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
           </div>
         </>
       ) : (
-        <ComponentLoading />
+        <Loader withText={'Loading'} className="w-auto text-gray-400" />
       )}
       <InformationalWalkThrough
         open={openWalkThroughModal}

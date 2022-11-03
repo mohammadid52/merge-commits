@@ -23,11 +23,13 @@ interface RichTextEditorProps {
   maxHeight?: string;
   wrapperClass?: string;
   placeholder?: string;
+  minHeight?: number;
 }
 
 const RichTextEditor = (props: RichTextEditorProps) => {
   const {
     onChange,
+    minHeight,
     initialValue,
     fullWHOverride,
     dark = false,
@@ -47,6 +49,15 @@ const RichTextEditor = (props: RichTextEditorProps) => {
 
   const ulbContext = useULBContext();
   const previewMode = ulbContext?.previewMode ? ulbContext.previewMode : undefined;
+
+  useEffect(() => {
+    if (minHeight !== undefined) {
+      const editor = document.querySelector('.rdw-editor-main');
+      if (editor) {
+        editor.setAttribute('style', `min-height:${minHeight}px`);
+      }
+    }
+  }, [minHeight]);
 
   const options: string[] = [
     'inline',
