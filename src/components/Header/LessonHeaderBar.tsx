@@ -1,7 +1,9 @@
 import {StudentPageInput} from 'interfaces/UniversalLessonInterfaces';
+import * as customQueries from 'customGraphql/customQueries';
 import Modal from 'atoms/Modal';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import React, {useEffect, useState} from 'react';
 import ReactPlayer from 'react-player';
 import {useHistory, useRouteMatch} from 'react-router-dom';
@@ -94,6 +96,20 @@ const LessonHeaderBar = ({
     });
   };
 
+  const forceFetchId = async () => {
+    let existingLesson: any = await API.graphql(
+      graphqlOperation(customQueries.listPersonLessonsData, {
+        filter: {
+          lessonID: {eq: lessonState.misc?.personLessonData?.lessonID},
+          studentAuthID: {eq: user.authId},
+          studentEmail: {eq: user.email},
+          roomId: {eq: getRoomData.id}
+        }
+      })
+    );
+    return existingLesson?.data?.listPersonLessonsData?.items[0]?.id;
+  };
+
   const handleNotebookSave = () => {
     const callback = isLesson ? () => triggerNotification() : () => {};
     createJournalData(callback);
@@ -108,12 +124,15 @@ const LessonHeaderBar = ({
     const id =
       lessonState.misc?.personLessonData?.data?.find(
         (_d: any) => _d.lessonID === lessonState?.lessonData?.id
-      )?.id || '';
+      )?.id ||
+      forceFetchId() ||
+      '';
+
+    console.log(`\x1b[33m Updating lesson completion... \x1b[0m`);
 
     updatePersonLessonsDataMutation
       .mutate({input: {id, isCompleted: true}})
       .then(() => {
-        // goToClassRoom();
         isLesson
           ? history.push(`/dashboard/anthology?roomId=${getRoomData.id}`)
           : goToClassRoom();
@@ -394,7 +413,7 @@ const LessonHeaderBar = ({
             isLesson ? 'Leave in classroom' : 'I am going to keep working on my responses'
           }
           svg="question"
-          handleButton1={leaveAfterCompletion ? handleNotebookSave : handleManualSave}
+          handleButton1={handleNotebookSave}
           handleButton2={isLesson ? goToClassRoom : () => setLeaveModalVisible(false)}
           theme="dark"
           fill="screen"
