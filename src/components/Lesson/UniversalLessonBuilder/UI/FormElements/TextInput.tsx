@@ -114,7 +114,8 @@ const TextInput = ({
         id: partContentId,
         type: d.textArea ? FORM_TYPES.TEXTAREA : FORM_TYPES.TEXT,
         label: d.title,
-        value: d.placeholder
+        value: d.placeholder,
+        isRequired: d.required
       };
     });
     const type: string = `form-${numbered ? 'numbered' : 'default'}`;
@@ -184,7 +185,18 @@ const TextInput = ({
                     Paragraph
                   </div>
                 )}
+                <div className="flex items-center text-xs w-auto">
+                  Make this required
+                  <Toggle
+                    checked={input.required}
+                    onClick={() => {
+                      update(list[idx], `required`, () => !input.required);
+                      setList([...list]);
+                    }}
+                  />
+                </div>
               </div>
+
               {shouldShowActions && (
                 <div className="border-b-2 border-dashed border-gray-300 my-4 "></div>
               )}
