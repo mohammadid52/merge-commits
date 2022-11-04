@@ -209,16 +209,18 @@ const UserInformation = ({
                   <dd className="mt-2 text-base leading-5 text-gray-900">{created()}</dd>
                 </div>
                 {/*----ON DEMAND TOGGLE----*/}
-                <div className="sm:col-span-1 p-2">
-                  <dt className="text-sm leading-5 font-regular text-gray-600">
-                    {UserInformationDict[userLanguage]['ondemand']}
-                  </dt>
-                  <dd
-                    data-cy="self-paced-text"
-                    className="mt-2 text-base leading-5 text-gray-900">
-                    <Status status={user?.onDemand ? 'YES' : 'NO'} />
-                  </dd>
-                </div>
+                {user.role === 'ST' && (
+                  <div className="sm:col-span-1 p-2">
+                    <dt className="text-sm leading-5 font-regular text-gray-600">
+                      {UserInformationDict[userLanguage]['ondemand']}
+                    </dt>
+                    <dd
+                      data-cy="self-paced-text"
+                      className="mt-2 text-base leading-5 text-gray-900">
+                      <Status status={user?.onDemand ? 'YES' : 'NO'} />
+                    </dd>
+                  </div>
+                )}
                 <div className="sm:col-span-1 p-2 flex items-centers">
                   <Buttons
                     dataCy="reset-password-button"

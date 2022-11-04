@@ -122,13 +122,6 @@ const User = (props: IUserProps) => {
   const [isTimelineOpen, setIsTimelineOpen] = useState(false);
   const [selectedRoomId, setSelectedRoomId] = useState<string>('');
 
-  const tabs = [
-    {name: 'User Information', current: true},
-    {name: 'Coursework & Attendance', current: false},
-    {name: 'Notebook', current: false},
-    {name: 'Completed Surveys', current: false}
-  ];
-
   const getDashboardData = async (authId: string, email: string) => {
     try {
       const queryObj = {
@@ -162,9 +155,6 @@ const User = (props: IUserProps) => {
     }
   };
 
-  const {curTab, setCurTab, helpers} = useTabs(tabs);
-
-  const [onUserInformationTab, onCATab, onNotebookTab, onSurveyTab] = helpers;
   const [questionData, setQuestionData] = useState([]);
 
   const [urlState, setUrlState] = useUrlState(
@@ -420,6 +410,18 @@ const User = (props: IUserProps) => {
       console.error(error);
     }
   }
+
+  let tabs = [
+    {name: 'User Information', current: true},
+    {name: 'Coursework & Attendance', current: false},
+    user.role === 'ST' && {name: 'Notebook', current: false},
+    user.role === 'ST' && {name: 'Completed Surveys', current: false}
+  ];
+  tabs = tabs.filter(Boolean);
+
+  const {curTab, setCurTab, helpers} = useTabs(tabs);
+
+  const [onUserInformationTab, onCATab, onNotebookTab, onSurveyTab] = helpers;
 
   // ##################################################################### //
   // ########################### PROFILE IMAGE ########################### //

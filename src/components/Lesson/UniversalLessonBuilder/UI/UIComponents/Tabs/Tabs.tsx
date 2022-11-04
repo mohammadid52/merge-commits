@@ -1,6 +1,7 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {setState} from 'interfaces';
 import {classNames} from '../../FormElements/UniversalInput';
+import {useHistory, useRouteMatch} from 'react-router';
 const _tabs = [
   {name: 'Component Details', current: true},
   {name: 'Preview', current: false}
@@ -31,6 +32,17 @@ export const Tabs2 = ({
   curTab: string;
   setCurTab: React.Dispatch<React.SetStateAction<string>>;
 }) => {
+  const history = useHistory();
+  const match = useRouteMatch();
+
+  const params = new URLSearchParams(location.search);
+  const tab = params.get('tab');
+  useEffect(() => {
+    if (tab !== curTab) {
+      setCurTab(tab);
+    }
+  }, [tab, curTab]);
+
   return (
     <div>
       <div className="sm:hidden">
@@ -53,7 +65,10 @@ export const Tabs2 = ({
             {tabs.map((tab) => (
               <button
                 key={tab.name}
-                onClick={() => setCurTab(tab.name)}
+                onClick={() => {
+                  setCurTab(tab.name);
+                  history.push(`${match.url}?tab=${tab.name}`);
+                }}
                 className={classNames(
                   tabs.length >= 4 ? 'text-xs' : 'text-sm',
 
@@ -88,6 +103,16 @@ const Tabs = ({
 
   setCurTab: React.Dispatch<React.SetStateAction<string>>;
 }) => {
+  const history = useHistory();
+  const match = useRouteMatch();
+
+  const params = new URLSearchParams(location.search);
+  const tab = params.get('tab');
+  useEffect(() => {
+    if (tab !== curTab) {
+      setCurTab(tab);
+    }
+  }, [tab, curTab]);
   return (
     <div>
       <div className="sm:hidden">
@@ -112,6 +137,7 @@ const Tabs = ({
                 key={tab.name}
                 onClick={() => {
                   setCurTab(tab.name);
+                  history.push(`${match.url}?tab=${tab.name}`);
                 }}
                 className={classNames(
                   tabs.length >= 4 ? 'text-xs' : 'text-sm',
@@ -152,6 +178,16 @@ export const Tabs3 = ({
   setCurTab: setState['string'];
   numbered?: boolean;
 }) => {
+  const history = useHistory();
+  const match = useRouteMatch();
+
+  const params = new URLSearchParams(location.search);
+  const tab = params.get('tab');
+  useEffect(() => {
+    if (tab !== curTab) {
+      setCurTab(tab);
+    }
+  }, [tab, curTab]);
   return (
     <div>
       <div className="sm:hidden">
@@ -172,7 +208,10 @@ export const Tabs3 = ({
         <nav className="transition-all mb-4 flex space-x-4" aria-label="Tabs">
           {tabs.map((tab, idx) => (
             <div
-              onClick={() => setCurTab(tab.name)}
+              onClick={() => {
+                setCurTab(tab.name);
+                history.push(`${match.url}?tab=${tab.name}`);
+              }}
               key={tab.name}
               role="button"
               className={classNames(

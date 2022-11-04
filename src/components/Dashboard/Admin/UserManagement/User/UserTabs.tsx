@@ -1,4 +1,5 @@
-import React from 'react';
+import React, {useEffect} from 'react';
+import {useHistory, useRouteMatch} from 'react-router';
 
 interface IUserTabsProps {
   tabs: any[];
@@ -17,7 +18,7 @@ const UserTabs = ({
   setCurrentTab,
   isTeacher,
   isAdmin,
-  theme,
+  theme
 }: IUserTabsProps) => {
   const getTabsData = () => {
     if (viewedUser?.role === 'TR' || viewedUser?.role === 'FLW') {
@@ -28,6 +29,18 @@ const UserTabs = ({
       return tabs;
     }
   };
+
+  const history = useHistory();
+  const match = useRouteMatch();
+
+  const params = new URLSearchParams(location.search);
+  const tab = params.get('tab');
+
+  useEffect(() => {
+    if (tab && tab !== currentTab) {
+      setCurrentTab(tab);
+    }
+  }, [tab, currentTab]);
   // const tabsData = !isTeacher && !isAdmin ? tabs : tabs;
 
   return (
@@ -55,6 +68,8 @@ const UserTabs = ({
               key={tab.name}
               onClick={() => {
                 setCurrentTab(tab.name);
+
+                history.push(`${match.url}?tab=${tab.name}`);
               }}
               className={`px-3 ${
                 theme === 'iconoclastIndigo' ? 'iconoclastIndigo' : 'curateBlue'
