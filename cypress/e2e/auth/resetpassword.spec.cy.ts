@@ -19,9 +19,9 @@ describe('Reset Password', () => {
   it('From Student', () => {
     cy.visit(urlConfig.baseURL); // Go to production website of IA
     cy.get('[data-cy="email"]').type(loginConfig.student.username); // Enter email
-    cy.get('button').contains('Enter').click(); // Click on button
+    cy.dataCy('login-button').click(); // Click on button
     cy.get('[data-cy="password"]').type(loginConfig.student.password); // Enter password
-    cy.get('button').contains('Login').click(); // Click on login button
+    cy.dataCy('login-button').click(); // Click on login button
 
     cy.wait(10000); // Wait for user to login
     cy.url().should('contain', urlConfig.dashboardURL);
@@ -46,9 +46,9 @@ describe('Reset Password', () => {
   it('From Admin', () => {
     cy.visit(urlConfig.baseURL); // Go to production website of IA
     cy.get('[data-cy="email"]').type(loginConfig.admin.username); // Enter email
-    cy.get('button').contains('Enter').click(); // Click on button
+    cy.dataCy('login-button').click(); // Click on button
     cy.get('[data-cy="password"]').type(loginConfig.admin.password); // Enter password
-    cy.get('button').contains('Login').click(); // Click on login button
+    cy.dataCy('login-button').click(); // Click on login button
 
     cy.wait(10000); // Wait for user to login
     cy.url().should('contain', urlConfig.dashboardURL);
@@ -68,7 +68,7 @@ describe('Reset Password', () => {
 
     cy.visit(urlConfig.baseURL); // go to login page
     cy.dataCy('email').type(loginConfig.student.username); // Enter email
-    cy.get('button').contains('Enter').click(); // Click on enter button
+    cy.dataCy('login-button').click(); // Click on enter button
     cy.dataCy('password').type(loginConfig.student.password); // Enter password
     cy.dataCy('set-password').click(); // Set password
 

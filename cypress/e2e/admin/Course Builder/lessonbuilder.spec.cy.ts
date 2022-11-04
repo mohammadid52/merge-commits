@@ -13,9 +13,9 @@ describe('Lesson Preview', () => {
   it('Preview should be visible', () => {
     cy.visit(urlConfig.baseURL); // Go to production website of IA
     cy.get('[data-cy="email"]').type(loginConfig.admin.username); // Enter email
-    cy.get('button').contains('Enter').click(); // Click on button
+    cy.dataCy('login-button').click(); // Click on button
     cy.get('[data-cy="password"]').type(loginConfig.admin.password); // Enter password
-    cy.get('button').contains('Login').click(); // Click on login button
+    cy.dataCy('login-button').click(); // Click on login button
 
     cy.wait(10000); // Wait for user to login
     cy.url().should('contain', urlConfig.dashboardURL);

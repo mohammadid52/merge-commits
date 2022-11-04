@@ -147,9 +147,7 @@ const List = (props: ListProps) => {
             </div>
             <div className="ml-2">
               <div
-                data-cy={`${item.lastName}, ${
-                  item.preferredName ? item.preferredName : item.firstName
-                }`}
+                data-cy={`${item.id}`}
                 id={item.id}
                 className="hover:text-gray-600 cursor-pointer text-sm leading-5 font-medium text-gray-900"
                 onClick={() => handleLink(item.id)}>

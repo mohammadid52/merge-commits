@@ -31,9 +31,9 @@ describe('Production Save Notebooks Check', () => {
 
     // ~~~~~~ login ~~~~~~ //
     cy.get('[data-cy="email"]').type(loginConfig.production.student1.username); // enter email as mike
-    cy.get('button').contains('Enter').click(); // click on button
+    cy.dataCy('login-button').click(); // click on button
     cy.get('[data-cy="password"]').type(loginConfig.production.student1.password); // enter password
-    cy.get('button').contains('Login').click(); // click on login button
+    cy.dataCy('login-button').click(); // click on login button
 
     cy.wait(10000); // wait for user to login
     cy.url().should('contain', urlConfig.IADashboardUrl);

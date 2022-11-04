@@ -17,9 +17,9 @@ describe('Production Lyrics Check', () => {
   it('Check Lyrics for Marlon', {defaultCommandTimeout: 20000}, () => {
     cy.visit(urlConfig.IAProductionUrl); // go to production website of IA
     cy.get('[data-cy="email"]').type(loginConfig.production.student1.username); // enter email as mike
-    cy.get('button').contains('Enter').click(); // click on button
+    cy.dataCy('login-button').click(); // click on button
     cy.get('[data-cy="password"]').type(loginConfig.production.student1.password); // enter password
-    cy.get('button').contains('Login').click(); // click on login button
+    cy.dataCy('login-button').click(); // click on login button
 
     cy.url().should('contain', urlConfig.IADashboardUrl);
     cy.get('body').then((body) => {
@@ -38,9 +38,9 @@ describe('Production Lyrics Check', () => {
   it('Check Lyrics for Angela', {defaultCommandTimeout: 20000}, () => {
     cy.visit(urlConfig.IAProductionUrl); // go to production website of IA
     cy.get('[data-cy="email"]').type(loginConfig.production.student2.username); // enter email as mike
-    cy.get('button').contains('Enter').click(); // click on button
+    cy.dataCy('login-button').click(); // click on button
     cy.get('[data-cy="password"]').type(loginConfig.production.student2.password); // enter password
-    cy.get('button').contains('Login').click(); // click on login button
+    cy.dataCy('login-button').click(); // click on login button
 
     cy.url().should('contain', urlConfig.IADashboardUrl);
     cy.get('body').then((body) => {
