@@ -210,7 +210,13 @@ const UploadLessonPlanModal = ({
         {(!file || isUpdated) && (
           <div className="flex mt-8 justify-center px-6 pb-4">
             <div className="flex justify-end">
-              <Buttons btnClass="py-1 px-4 text-xs mr-2" label={'Cancel'} transparent />
+              <Buttons
+                btnClass="py-1 px-4 text-xs mr-2"
+                disabled={isLoading}
+                onClick={onClose}
+                label={'Cancel'}
+                transparent
+              />
               <Buttons
                 btnClass="py-1 px-8 text-xs ml-2"
                 label={isLoading ? 'Uploading' : 'Upload'}

@@ -13,7 +13,7 @@ import {StudentPageInput} from 'interfaces/UniversalLessonInterfaces';
 import React, {useEffect, useState} from 'react';
 import ReactPlayer from 'react-player';
 import {useHistory, useRouteMatch} from 'react-router-dom';
-import {getLocalStorageData} from 'utilities/localStorage';
+import {getLocalStorageData, removeLocalStorageData} from 'utilities/localStorage';
 import PositiveAlert from '../General/Popup';
 import LessonTopMenu from '../Lesson/Navigation/LessonTopMenu';
 import SideMenu from '../Lesson/Navigation/SideMenu';
@@ -57,10 +57,12 @@ const LessonHeaderBar = ({
   const getUrl = () => getLocalStorageData('survey_redirect');
 
   const {isStudent} = useAuth();
-  const goToClassRoom = () =>
+  const goToClassRoom = () => {
     isStudent
       ? history.push(`/dashboard/classroom/${getRoomData.id}`)
       : history.push(`${getUrl()}?tab=Completed%20Surveys` || '/dashboard');
+    removeLocalStorageData('survey_redirect');
+  };
 
   // const handleManualSave = () => {
   //   if (lessonState.updated) {

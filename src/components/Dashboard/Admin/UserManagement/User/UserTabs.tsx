@@ -73,7 +73,7 @@ const UserTabs = ({
               }}
               className={`px-3 ${
                 theme === 'iconoclastIndigo' ? 'iconoclastIndigo' : 'curateBlue'
-              } py-2 cursor-pointer font-medium tab text-sm rounded-md ${
+              } py-2 cursor-pointer font-medium tab text-sm rounded-full ${
                 tab.name === currentTab ? 'active' : ''
               }`}>
               {tab.name}
