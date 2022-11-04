@@ -2012,6 +2012,7 @@ export type CreateAnthologyCommentInput = {
   edited?: boolean | null,
   createdAt?: string | null,
   updatedAt?: string | null,
+  entryID: string,
 };
 
 export type AttachmentInput = {
@@ -2028,6 +2029,7 @@ export type ModelAnthologyCommentConditionInput = {
   edited?: ModelBooleanInput | null,
   createdAt?: ModelStringInput | null,
   updatedAt?: ModelStringInput | null,
+  entryID?: ModelIDInput | null,
   and?: Array< ModelAnthologyCommentConditionInput | null > | null,
   or?: Array< ModelAnthologyCommentConditionInput | null > | null,
   not?: ModelAnthologyCommentConditionInput | null,
@@ -2044,6 +2046,7 @@ export type AnthologyComment = {
   edited?: boolean | null,
   createdAt?: string | null,
   updatedAt?: string | null,
+  entryID: string,
 };
 
 export type Attachment = {
@@ -2063,6 +2066,7 @@ export type UpdateAnthologyCommentInput = {
   edited?: boolean | null,
   createdAt?: string | null,
   updatedAt?: string | null,
+  entryID?: string | null,
 };
 
 export type DeleteAnthologyCommentInput = {
@@ -4351,6 +4355,7 @@ export type ModelAnthologyCommentFilterInput = {
   edited?: ModelBooleanInput | null,
   createdAt?: ModelStringInput | null,
   updatedAt?: ModelStringInput | null,
+  entryID?: ModelIDInput | null,
   and?: Array< ModelAnthologyCommentFilterInput | null > | null,
   or?: Array< ModelAnthologyCommentFilterInput | null > | null,
   not?: ModelAnthologyCommentFilterInput | null,
@@ -12202,6 +12207,7 @@ export type CreateAnthologyCommentMutation = {
     edited?: boolean | null,
     createdAt?: string | null,
     updatedAt?: string | null,
+    entryID: string,
   } | null,
 };
 
@@ -12268,6 +12274,7 @@ export type UpdateAnthologyCommentMutation = {
     edited?: boolean | null,
     createdAt?: string | null,
     updatedAt?: string | null,
+    entryID: string,
   } | null,
 };
 
@@ -12334,6 +12341,7 @@ export type DeleteAnthologyCommentMutation = {
     edited?: boolean | null,
     createdAt?: string | null,
     updatedAt?: string | null,
+    entryID: string,
   } | null,
 };
 
@@ -25328,6 +25336,7 @@ export type GetAnthologyCommentQuery = {
     edited?: boolean | null,
     createdAt?: string | null,
     updatedAt?: string | null,
+    entryID: string,
   } | null,
 };
 
@@ -25389,6 +25398,7 @@ export type ListAnthologyCommentsQuery = {
       edited?: boolean | null,
       createdAt?: string | null,
       updatedAt?: string | null,
+      entryID: string,
     } | null >,
     nextToken?: string | null,
   } | null,
@@ -38075,6 +38085,7 @@ export type OnCreateAnthologyCommentSubscription = {
     edited?: boolean | null,
     createdAt?: string | null,
     updatedAt?: string | null,
+    entryID: string,
   } | null,
 };
 
@@ -38136,6 +38147,7 @@ export type OnUpdateAnthologyCommentSubscription = {
     edited?: boolean | null,
     createdAt?: string | null,
     updatedAt?: string | null,
+    entryID: string,
   } | null,
 };
 
@@ -38197,6 +38209,7 @@ export type OnDeleteAnthologyCommentSubscription = {
     edited?: boolean | null,
     createdAt?: string | null,
     updatedAt?: string | null,
+    entryID: string,
   } | null,
 };
 

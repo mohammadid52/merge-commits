@@ -34,6 +34,7 @@ const Feedbacks = ({
   fileObject,
   setFileObject
 }: any) => {
+  const entryID = item.id;
   const {state, clientKey, userLanguage} = useContext(GlobalContext);
 
   const [profileUrl, setProfileUrl] = useState('');
@@ -233,7 +234,8 @@ const Feedbacks = ({
       let input = {
         email: state.user.email,
         authID: state.user.authId,
-        text
+        text,
+        entryID: entryID
       };
 
       const finalInput =
@@ -466,7 +468,7 @@ const Feedbacks = ({
 
   const isImage = fileObject && fileObject.type && fileObject.type.includes('image');
   const isVideo = fileObject && fileObject.type && fileObject.type.includes('video');
-  const actionStyles = `flex items-center justify-center ml-2 h-7 w-7 rounded cursor-pointer transition-all duration-150 hover:text-white text-gray-500 ${
+  const actionStyles = `flex items-center justify-center ml-2 h-7 w-7 rounded-full cursor-pointer transition-all duration-150 hover:text-white text-gray-500  ${
     themeColor === 'iconoclastIndigo' ? getColor('indigo') : getColor('blue')
   }`;
 
@@ -504,7 +506,7 @@ const Feedbacks = ({
                   cols={125}
                   rows={1}
                   placeholder="Edit Feedback"
-                  className="text-sm w-96 p-2 px-4 pt-3 text-gray-700 border-0 border-gray-200 rounded"
+                  className="text-sm w-96 p-2 px-4 pt-3 text-gray-700 border-0 border-gray-200 rounded-xl"
                   value={editCommentInput}
                   onChange={(e) => setEditCommentInput(e.target.value)}
                 />
@@ -603,7 +605,7 @@ const Feedbacks = ({
               </div>
             </div>
           )}
-          <div className="comment-box w-auto flex flex-col border-0 border-gray-200 h-auto rounded mt-4">
+          <div className="comment-box w-auto flex flex-col border-0 border-gray-200 h-auto rounded-xl mt-4">
             <div
               style={{minHeight: '2.5rem'}}
               className="flex comment-box__inner flex-col border-b-0 border-gray-200">
@@ -611,7 +613,7 @@ const Feedbacks = ({
                 onKeyUp={(e) => do_resize(e.target)}
                 style={{resize: 'none'}}
                 placeholder="Add Feedback"
-                className="comment-input text-sm w-9/10 m-2 mx-4 mt-3 text-gray-700"
+                className="comment-input text-sm w-9/10 m-2 mx-4 mt-3 rounded-full text-gray-700"
                 rows={1}
                 cols={125}
                 value={comment}
@@ -736,7 +738,8 @@ const Feedbacks = ({
                 </div>
               </div>
               <div className="right-action w-auto p-2">
-                <div
+                <button
+                  disabled={comment.length === 0 && !fileObject.name}
                   onClick={onCommentSubmit}
                   className={`flex items-center justify-center ml-2 h-7 w-7 rounded transition-all duration-300 ${
                     comment.length || fileObject.name
@@ -744,7 +747,7 @@ const Feedbacks = ({
                       : 'cursor-default text-indigo-300'
                   }`}>
                   <IoSendSharp className="" />
-                </div>
+                </button>
               </div>
             </div>
           </div>

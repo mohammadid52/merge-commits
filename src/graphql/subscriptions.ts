@@ -6772,6 +6772,7 @@ export const onCreateAnthologyComment = /* GraphQL */ `
       edited
       createdAt
       updatedAt
+      entryID
     }
   }
 `;
@@ -6829,6 +6830,7 @@ export const onUpdateAnthologyComment = /* GraphQL */ `
       edited
       createdAt
       updatedAt
+      entryID
     }
   }
 `;
@@ -6886,6 +6888,7 @@ export const onDeleteAnthologyComment = /* GraphQL */ `
       edited
       createdAt
       updatedAt
+      entryID
     }
   }
 `;

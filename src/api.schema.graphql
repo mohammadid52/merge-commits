@@ -70,7 +70,7 @@ type PersonLessonsData @model @auth(rules: [{allow: public}]) {
   id: ID! @primaryKey
   studentAuthID: String! @index(name: "byStudentAuthID")
   studentEmail: String!
-  lessonID: String!
+  lessonID: ID!
   lessonType: String @index(name: "byLessonType", queryField: "lessonsByType2")
   pages: AWSJSON
   ratings: Int @default(value: "0")
@@ -480,6 +480,7 @@ type AnthologyComment @model @auth(rules: [{allow: public}]) {
   edited: Boolean
   createdAt: AWSDateTime
   updatedAt: AWSDateTime
+  entryID: ID!
 }
 
 type Attachment {

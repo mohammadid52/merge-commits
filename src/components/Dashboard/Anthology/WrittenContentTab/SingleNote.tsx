@@ -1,16 +1,15 @@
-import ComponentLoading from 'components/Lesson/Loading/ComponentLoading';
-import useGraphqlQuery from 'customHooks/useGraphqlQuery';
+import Loader from '@components/Atoms/Loader';
 import {ListAnthologyCommentsQuery, ListAnthologyCommentsQueryVariables} from 'API';
-import {sortBy} from 'lodash';
-import React, {Suspense, useEffect, useState} from 'react';
 import {getAsset} from 'assets';
-import {useGlobalContext} from 'contexts/GlobalContext';
-import {anthologyDict} from 'dictionary/dictionary.iconoclast';
 import Buttons from 'atoms/Buttons';
 import ContentCard from 'atoms/ContentCard';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import useGraphqlQuery from 'customHooks/useGraphqlQuery';
+import {anthologyDict} from 'dictionary/dictionary.iconoclast';
+import {sortBy} from 'lodash';
+import React, {Suspense, useEffect, useState} from 'react';
 import Toggle from './../AnthologyContentNote/Toggle';
 import Feedbacks from './Feedbacks';
-import Loader from '@components/Atoms/Loader';
 
 const SingleNote = (props: any) => {
   const {
@@ -41,7 +40,7 @@ const SingleNote = (props: any) => {
 
   const [fileObject, setFileObject] = useState({});
 
-  const filter: any = (contentObj?.feedbacks || [])?.map((id: string) => {
+  const orFilter: any = (contentObj?.feedbacks || [])?.map((id: string) => {
     return {
       id: {
         eq: id
@@ -49,15 +48,23 @@ const SingleNote = (props: any) => {
     };
   });
 
+  const filter =
+    orFilter.length > 0
+      ? {
+          or: [...orFilter],
+          entryID: {eq: contentObj.id}
+        }
+      : {
+          entryID: {eq: contentObj.id}
+        };
+
   const {data: listCommentData, refetch, isLoading, isFetched} = useGraphqlQuery<
     ListAnthologyCommentsQueryVariables,
     ListAnthologyCommentsQuery['listAnthologyComments']['items']
   >(
     'listAnthologyComments',
     {
-      filter: {
-        or: [...filter]
-      }
+      filter: filter
     },
     {enabled: showComments}
   ); // why enabled:false? because we don't want to run this query on page load, we want to run it when the user clicks on the feedback button. So we'll run it with filter on click
