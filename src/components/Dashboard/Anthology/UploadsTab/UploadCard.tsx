@@ -144,19 +144,27 @@ const UploadCard = ({
   // ~~~~~~~~~~~~~~~~~ GET ~~~~~~~~~~~~~~~~~ //
 
   const listComments = async (feedbacks: string[] = []) => {
-    const filter: any = feedbacks.map((id: string) => {
+    const orFilter: any = feedbacks.map((id: string) => {
       return {
         id: {
           eq: id
         }
       };
     });
+
+    const filter =
+      orFilter.length > 0
+        ? {
+            or: [...orFilter],
+            entryID: {eq: contentObj.id}
+          }
+        : {
+            entryID: {eq: contentObj.id}
+          };
     try {
       const listCommentData: any = await API.graphql(
         graphqlOperation(queries.listAnthologyComments, {
-          filter: {
-            or: [...filter]
-          }
+          filter: filter
         })
       );
       return listCommentData?.data?.listAnthologyComments?.items;

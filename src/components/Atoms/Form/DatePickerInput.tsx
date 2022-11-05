@@ -27,7 +27,7 @@ const DatePickerInput = ({
   const themeColor = getAsset(clientKey, 'themeClassName');
   const DateCustomInput = forwardRef(({value, onClick, ...rest}: any, ref: any) => (
     <div
-      className={`flex w-auto py-2 px-3 rounded  ${theme.formSelect} ${theme.outlineNone}`}
+      className={`flex w-auto py-2 px-3 rounded-full  ${theme.formSelect} ${theme.outlineNone}`}
       onClick={onClick}>
       <span className="w-6 mr-4 cursor-pointer">
         <IconContext.Provider

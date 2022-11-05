@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
 import {setState} from 'interfaces';
+import React, {useState} from 'react';
 import {classNames} from '../../FormElements/UniversalInput';
 const _tabs = [
   {name: 'Component Details', current: true},
@@ -53,7 +53,9 @@ export const Tabs2 = ({
             {tabs.map((tab) => (
               <button
                 key={tab.name}
-                onClick={() => setCurTab(tab.name)}
+                onClick={() => {
+                  setCurTab(tab.name);
+                }}
                 className={classNames(
                   tabs.length >= 4 ? 'text-xs' : 'text-sm',
 
@@ -172,7 +174,9 @@ export const Tabs3 = ({
         <nav className="transition-all mb-4 flex space-x-4" aria-label="Tabs">
           {tabs.map((tab, idx) => (
             <div
-              onClick={() => setCurTab(tab.name)}
+              onClick={() => {
+                setCurTab(tab.name);
+              }}
               key={tab.name}
               role="button"
               className={classNames(

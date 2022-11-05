@@ -202,6 +202,14 @@ const RoomView = ({
               transitionTimingFunction: 'cubic-bezier(0.1, 0.7, 1, 0.1)'
             }}
             className="mt-0 max-w-lg mx-auto p-6 grid gap-4 lg:max-w-none md:grid-cols-4 grid-cols-1 2xl:grid-cols-5 sm:grid-cols-2">
+            <RoomViewCard
+              roomID={'private'}
+              mainSection={mainSection}
+              sectionRoomID={sectionRoomID}
+              sectionTitle={sectionTitle}
+              handleSectionSelect={handleSectionSelect}
+              type={'Private Notebook'}
+            />
             {mappedNotebookRoomCards && mappedNotebookRoomCards.length > 0
               ? mappedNotebookRoomCards.map((room, idx) => (
                   <RoomViewCard
@@ -217,15 +225,6 @@ const RoomView = ({
                   />
                 ))
               : null}
-
-            <RoomViewCard
-              roomID={'private'}
-              mainSection={mainSection}
-              sectionRoomID={sectionRoomID}
-              sectionTitle={sectionTitle}
-              handleSectionSelect={handleSectionSelect}
-              type={'Private Notebook'}
-            />
           </div>
         </div>
       </div>

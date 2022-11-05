@@ -74,6 +74,7 @@ const StageIcon = ({
 
     const dynamicQuery = sId && sEmail ? `?sId=${sId}&sEmail=${sEmail}` : '';
     history.push(`${match.url}/${pageNr}${dynamicQuery}`);
+
     lessonDispatch({type: 'SET_CURRENT_PAGE', payload: pageNr});
   };
 

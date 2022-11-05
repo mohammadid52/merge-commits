@@ -225,6 +225,122 @@ export const getPersonLessonsData = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      room {
+        id
+        institutionID
+        classID
+        teacherAuthID
+        teacherEmail
+        name
+        maxPersons
+        status
+        filters
+        location
+        startDate
+        startTime
+        endDate
+        endTime
+        length
+        repeat
+        notes
+        activeSyllabus
+        frequency
+        coTeachers {
+          nextToken
+        }
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          setupComplete
+          createdAt
+          updatedAt
+        }
+        teacher {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          inactiveStatusDate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          onDemand
+          sentiments
+          passcode
+          spotlightUser
+          spotlightDate
+          statusReason
+          addedby
+          createdAt
+          updatedAt
+        }
+        class {
+          id
+          institutionID
+          type
+          name
+          roomId
+          createdAt
+          updatedAt
+        }
+        curricula {
+          nextToken
+        }
+        activeLessonId
+        ClosedPages
+        disabledPages
+        studentViewing
+        displayData {
+          isTeacher
+          studentAuthID
+          lessonPageID
+        }
+        currentPage
+        completedLessons {
+          lessonID
+          time
+        }
+        activeLessons
+        classroomGroups {
+          nextToken
+        }
+        weekDay
+        conferenceCallLink
+        lessonImpactLog {
+          impactDate
+          reasonComment
+          lessonImpact
+          adjustment
+        }
+        classSentiment
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
     }
@@ -287,6 +403,38 @@ export const listPersonLessonsData = /* GraphQL */ `
           studentMaterials
           targetAudience
           isUsed
+          createdAt
+          updatedAt
+        }
+        room {
+          id
+          institutionID
+          classID
+          teacherAuthID
+          teacherEmail
+          name
+          maxPersons
+          status
+          filters
+          location
+          startDate
+          startTime
+          endDate
+          endTime
+          length
+          repeat
+          notes
+          activeSyllabus
+          frequency
+          activeLessonId
+          ClosedPages
+          disabledPages
+          studentViewing
+          currentPage
+          activeLessons
+          weekDay
+          conferenceCallLink
+          classSentiment
           createdAt
           updatedAt
         }
@@ -3203,6 +3351,7 @@ export const getAnthologyComment = /* GraphQL */ `
       edited
       createdAt
       updatedAt
+      entryID
     }
   }
 `;
@@ -3263,6 +3412,7 @@ export const listAnthologyComments = /* GraphQL */ `
         edited
         createdAt
         updatedAt
+        entryID
       }
       nextToken
     }
@@ -8016,6 +8166,38 @@ export const lessonsByType2 = /* GraphQL */ `
           studentMaterials
           targetAudience
           isUsed
+          createdAt
+          updatedAt
+        }
+        room {
+          id
+          institutionID
+          classID
+          teacherAuthID
+          teacherEmail
+          name
+          maxPersons
+          status
+          filters
+          location
+          startDate
+          startTime
+          endDate
+          endTime
+          length
+          repeat
+          notes
+          activeSyllabus
+          frequency
+          activeLessonId
+          ClosedPages
+          disabledPages
+          studentViewing
+          currentPage
+          activeLessons
+          weekDay
+          conferenceCallLink
+          classSentiment
           createdAt
           updatedAt
         }

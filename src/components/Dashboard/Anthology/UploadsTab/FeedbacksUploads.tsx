@@ -191,7 +191,8 @@ const FeedbacksUploads = ({
       let input = {
         email: state.user.email,
         authID: state.user.authId,
-        text
+        text,
+        entryID: contentObj.id
       };
 
       const finalInput =
