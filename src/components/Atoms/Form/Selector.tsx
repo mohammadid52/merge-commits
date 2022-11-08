@@ -26,6 +26,7 @@ interface SelectorProps {
   isClearable?: boolean;
   onClear?: () => void;
   setHoveringItem?: React.Dispatch<React.SetStateAction<{}>>;
+  dataCy?: string;
 }
 
 const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
@@ -49,7 +50,9 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
     isClearable = false,
     onClear,
 
-    setHoveringItem
+    setHoveringItem,
+
+    dataCy = ''
   } = selectorProps;
   const [showList, setShowList] = useState(false);
   const currentRef: any = useRef(null);
@@ -101,6 +104,7 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
     return (
       <>
         <li
+          data-cy={`${dataCy}-item-${item.id}`}
           onMouseEnter={() => {
             setHoveringItem && setHoveringItem(item);
           }}
@@ -138,6 +142,7 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
       <Label label={label} isRequired={isRequired} />
       <span className="inline-block w-full h-full rounded-full shadow-sm">
         <button
+          data-cy={`${dataCy}-button`}
           disabled={disabled || loading}
           onClick={() => setShowList(!showList)}
           type="button"

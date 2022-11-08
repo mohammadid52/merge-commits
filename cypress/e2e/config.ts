@@ -57,6 +57,7 @@ export const urlConfig = {
   dashboardURL: `${baseURL}/dashboard`,
   registerURL: `${baseURL}/dashboard/manage-institutions/institution/${institutionID}/register-user`,
   userListURL: `${baseURL}/dashboard/manage-institutions/institution/${institutionID}/manage-users`,
+  analyticsURL: `${baseURL}/dashboard/manage-institutions/institution/${institutionID}/research-and-analytics`,
   simpleSurveURL: `${baseURL}/lesson/${surveyIDs[0]}/0`,
   complexSurveURL: `${baseURL}/lesson/${surveyIDs[1]}/0`,
   notebookURL: `${baseURL}/dashboard/anthology`,
