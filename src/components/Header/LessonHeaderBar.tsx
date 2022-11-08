@@ -1,24 +1,23 @@
-import {StudentPageInput} from 'interfaces/UniversalLessonInterfaces';
-import * as customQueries from 'customGraphql/customQueries';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import {useNotifications} from '@contexts/NotificationContext';
+import useStudentTimer from '@customHooks/timer';
+import useAuth from '@customHooks/useAuth';
+import useGraphqlMutation from '@customHooks/useGraphqlMutation';
+import {UniversalLessonStudentData, UpdatePersonLessonsDataInput} from 'API';
 import Modal from 'atoms/Modal';
 import {useGlobalContext} from 'contexts/GlobalContext';
+import * as customQueries from 'customGraphql/customQueries';
 import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import {LessonHeaderBarProps} from 'interfaces/LessonComponentsInterfaces';
+import {StudentPageInput} from 'interfaces/UniversalLessonInterfaces';
 import React, {useEffect, useState} from 'react';
 import ReactPlayer from 'react-player';
 import {useHistory, useRouteMatch} from 'react-router-dom';
-import {getLocalStorageData} from 'utilities/localStorage';
-import {LessonHeaderBarProps} from 'interfaces/LessonComponentsInterfaces';
+import {getLocalStorageData, removeLocalStorageData} from 'utilities/localStorage';
 import PositiveAlert from '../General/Popup';
 import LessonTopMenu from '../Lesson/Navigation/LessonTopMenu';
 import SideMenu from '../Lesson/Navigation/SideMenu';
 import VideoWidget from '../Lesson/Navigation/Widgets/VideoWidget';
-import useStudentTimer from '@customHooks/timer';
-import useGraphqlMutation from '@customHooks/useGraphqlMutation';
-import {UniversalLessonStudentData, UpdatePersonLessonsDataInput} from 'API';
-import {useNotifications} from '@contexts/NotificationContext';
-import {useLessonContext} from '@contexts/LessonContext';
-import useAuth from '@customHooks/useAuth';
 
 const LessonHeaderBar = ({
   overlay,
@@ -50,32 +49,33 @@ const LessonHeaderBar = ({
   // ##################################################################### //
 
   const getRoomData = getLocalStorageData('room_info');
-  const [waiting, setWaiting] = useState<boolean>(null);
+
   const [safeToLeave, setSafeToLeave] = useState<any>(null);
 
   // To track user clicks on home button or click next on last page
-  const [leaveAfterCompletion, setLeaveAfterCompletion] = useState<boolean>(false);
 
   const getUrl = () => getLocalStorageData('survey_redirect');
 
   const {isStudent} = useAuth();
-  const goToClassRoom = () =>
+  const goToClassRoom = () => {
     isStudent
       ? history.push(`/dashboard/classroom/${getRoomData.id}`)
       : history.push(`${getUrl()}?tab=Completed%20Surveys` || '/dashboard');
-
-  const handleManualSave = () => {
-    if (lessonState.updated) {
-      setWaiting(true);
-      setSafeToLeave(false);
-    } else {
-      setWaiting(false);
-      setSafeToLeave(true);
-    }
-    setTimeout(() => {
-      goToClassRoom();
-    }, 1500);
+    removeLocalStorageData('survey_redirect');
   };
+
+  // const handleManualSave = () => {
+  //   if (lessonState.updated) {
+  //     setWaiting(true);
+  //     setSafeToLeave(false);
+  //   } else {
+  //     setWaiting(false);
+  //     setSafeToLeave(true);
+  //   }
+  //   setTimeout(() => {
+  //     goToClassRoom();
+  //   }, 1500);
+  // };
 
   const updatePersonLessonsDataMutation = useGraphqlMutation<
     {
@@ -143,31 +143,31 @@ const LessonHeaderBar = ({
       });
   };
 
-  let timer: any;
-  useEffect(() => {
-    timer = setTimeout(() => {
-      getLessonCompletedValue &&
-        getLessonCompletedValue().then((value: any) => {
-          if (value?.lessonProgress === value?.totalPages) {
-            setLeaveAfterCompletion(true);
-          } else {
-            setLeaveAfterCompletion(false);
-          }
-        });
-    }, 1300);
+  // let timer: any;
+  // useEffect(() => {
+  //   timer = setTimeout(() => {
+  //     getLessonCompletedValue &&
+  //       getLessonCompletedValue().then((value: any) => {
+  //         if (value?.lessonProgress === value?.totalPages) {
 
-    return () => {
-      clearTimeout(timer);
-    };
-  }, [lessonState.currentPage]);
+  //         } else {
+
+  //         }
+  //       });
+  //   }, 1300);
+
+  //   return () => {
+  //     clearTimeout(timer);
+  //   };
+  // }, [lessonState.currentPage]);
 
   useEffect(() => {
     if (!lessonState.updated) {
-      if (waiting === true && safeToLeave === false) {
-        setWaiting(false);
+      if (safeToLeave === false) {
+        // setWaiting(false);
         setSafeToLeave(true);
       } else {
-        setWaiting(null);
+        // setWaiting(null);
         setSafeToLeave(null);
       }
     }
@@ -204,7 +204,7 @@ const LessonHeaderBar = ({
     }
 
     // setLeaveModalVisible(!leaveModalVisible);
-    setLeaveAfterCompletion(isLeavingAfterCompletion);
+    // setLeaveAfterCompletion(isLeavingAfterCompletion);
 
     goToClassRoom();
   };
@@ -396,16 +396,16 @@ const LessonHeaderBar = ({
             'border-sea-green hover:bg-sea-green text-sea-green white-text-on-hover border-2'
           }
           header={
-            leaveAfterCompletion && isLesson
+            isLesson
               ? `Congratulations, you have completed the lesson ${lessonState.lessonData.title}, Did you want to keep your writing excercies in the classroom or move them to your notebook`
               : !isLesson
               ? `Thank you for completing ${lessonState.lessonData.title}`
               : 'This will take you out of the lesson.  Did you want to continue?'
           }
           button1={`${
-            !waiting && leaveAfterCompletion && isLesson
+            isLesson
               ? 'I completed this lesson. \n Move my work to my notebook.'
-              : !waiting && !isLesson
+              : !isLesson
               ? 'I am happy with my responses and want to close the survey'
               : 'Saving your data...'
           }`}

@@ -225,6 +225,122 @@ export const getPersonLessonsData = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      room {
+        id
+        institutionID
+        classID
+        teacherAuthID
+        teacherEmail
+        name
+        maxPersons
+        status
+        filters
+        location
+        startDate
+        startTime
+        endDate
+        endTime
+        length
+        repeat
+        notes
+        activeSyllabus
+        frequency
+        coTeachers {
+          nextToken
+        }
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          setupComplete
+          createdAt
+          updatedAt
+        }
+        teacher {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          inactiveStatusDate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          onDemand
+          sentiments
+          passcode
+          spotlightUser
+          spotlightDate
+          statusReason
+          addedby
+          createdAt
+          updatedAt
+        }
+        class {
+          id
+          institutionID
+          type
+          name
+          roomId
+          createdAt
+          updatedAt
+        }
+        curricula {
+          nextToken
+        }
+        activeLessonId
+        ClosedPages
+        disabledPages
+        studentViewing
+        displayData {
+          isTeacher
+          studentAuthID
+          lessonPageID
+        }
+        currentPage
+        completedLessons {
+          lessonID
+          time
+        }
+        activeLessons
+        classroomGroups {
+          nextToken
+        }
+        weekDay
+        conferenceCallLink
+        lessonImpactLog {
+          impactDate
+          reasonComment
+          lessonImpact
+          adjustment
+        }
+        classSentiment
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
     }
@@ -287,6 +403,38 @@ export const listPersonLessonsData = /* GraphQL */ `
           studentMaterials
           targetAudience
           isUsed
+          createdAt
+          updatedAt
+        }
+        room {
+          id
+          institutionID
+          classID
+          teacherAuthID
+          teacherEmail
+          name
+          maxPersons
+          status
+          filters
+          location
+          startDate
+          startTime
+          endDate
+          endTime
+          length
+          repeat
+          notes
+          activeSyllabus
+          frequency
+          activeLessonId
+          ClosedPages
+          disabledPages
+          studentViewing
+          currentPage
+          activeLessons
+          weekDay
+          conferenceCallLink
+          classSentiment
           createdAt
           updatedAt
         }
@@ -567,7 +715,11 @@ export const getStaff = /* GraphQL */ `
   }
 `;
 export const listStaff = /* GraphQL */ `
-  query ListStaff($filter: ModelStaffFilterInput, $limit: Int, $nextToken: String) {
+  query ListStaff(
+    $filter: ModelStaffFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
     listStaff(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
@@ -860,7 +1012,11 @@ export const getRoom = /* GraphQL */ `
   }
 `;
 export const listRooms = /* GraphQL */ `
-  query ListRooms($filter: ModelRoomFilterInput, $limit: Int, $nextToken: String) {
+  query ListRooms(
+    $filter: ModelRoomFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
     listRooms(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
@@ -1169,7 +1325,11 @@ export const listClassroomGroupStudents = /* GraphQL */ `
     $limit: Int
     $nextToken: String
   ) {
-    listClassroomGroupStudents(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    listClassroomGroupStudents(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
       items {
         id
         classRoomGroupID
@@ -1930,7 +2090,11 @@ export const getClass = /* GraphQL */ `
   }
 `;
 export const listClasses = /* GraphQL */ `
-  query ListClasses($filter: ModelClassFilterInput, $limit: Int, $nextToken: String) {
+  query ListClasses(
+    $filter: ModelClassFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
     listClasses(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
@@ -2915,7 +3079,11 @@ export const getRoomMsgs = /* GraphQL */ `
   }
 `;
 export const listRoomMsgs = /* GraphQL */ `
-  query ListRoomMsgs($filter: ModelRoomMsgsFilterInput, $limit: Int, $nextToken: String) {
+  query ListRoomMsgs(
+    $filter: ModelRoomMsgsFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
     listRoomMsgs(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
@@ -3183,6 +3351,7 @@ export const getAnthologyComment = /* GraphQL */ `
       edited
       createdAt
       updatedAt
+      entryID
     }
   }
 `;
@@ -3192,7 +3361,11 @@ export const listAnthologyComments = /* GraphQL */ `
     $limit: Int
     $nextToken: String
   ) {
-    listAnthologyComments(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    listAnthologyComments(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
       items {
         id
         text
@@ -3239,6 +3412,7 @@ export const listAnthologyComments = /* GraphQL */ `
         edited
         createdAt
         updatedAt
+        entryID
       }
       nextToken
     }
@@ -4763,7 +4937,6 @@ export const listUniversalArchiveData = /* GraphQL */ `
         studentAuthID
         studentEmail
         roomID
-
         currentLocation
         lessonProgress
         pageData {
@@ -5721,7 +5894,11 @@ export const listUniversalSyllabusLessons = /* GraphQL */ `
     $limit: Int
     $nextToken: String
   ) {
-    listUniversalSyllabusLessons(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    listUniversalSyllabusLessons(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
       items {
         id
         syllabusID
@@ -5874,7 +6051,11 @@ export const listUniversalLessonFeedbacks = /* GraphQL */ `
     $limit: Int
     $nextToken: String
   ) {
-    listUniversalLessonFeedbacks(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    listUniversalLessonFeedbacks(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
       items {
         id
         syllabusLessonID
@@ -5998,7 +6179,11 @@ export const listStudentConnections = /* GraphQL */ `
     $limit: Int
     $nextToken: String
   ) {
-    listStudentConnections(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    listStudentConnections(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
       items {
         fromEmail
         fromAuthID
@@ -7981,6 +8166,38 @@ export const lessonsByType2 = /* GraphQL */ `
           studentMaterials
           targetAudience
           isUsed
+          createdAt
+          updatedAt
+        }
+        room {
+          id
+          institutionID
+          classID
+          teacherAuthID
+          teacherEmail
+          name
+          maxPersons
+          status
+          filters
+          location
+          startDate
+          startTime
+          endDate
+          endTime
+          length
+          repeat
+          notes
+          activeSyllabus
+          frequency
+          activeLessonId
+          ClosedPages
+          disabledPages
+          studentViewing
+          currentPage
+          activeLessons
+          weekDay
+          conferenceCallLink
+          classSentiment
           createdAt
           updatedAt
         }

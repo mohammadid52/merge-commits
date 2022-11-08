@@ -32,7 +32,7 @@ const AuthCard = ({children, title, message, isSuccess, subtitle}: AuthCardProps
           delay: 1,
           duration: 1,
           y: '-200%',
-          scale: 0.5,
+          // scale: 0.5,
           opacity: 0
         });
       }

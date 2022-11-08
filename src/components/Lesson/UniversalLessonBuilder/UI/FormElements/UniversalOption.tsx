@@ -463,6 +463,7 @@ const UniversalOption = ({
     update(list[idx], `${field}`, () => !bool);
     setList([...list]);
   };
+
   const changeValue = (idx: number, field: string, val: string) => {
     update(list[idx], `${field}`, () => val);
     setList([...list]);
