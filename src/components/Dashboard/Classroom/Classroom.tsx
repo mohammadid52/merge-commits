@@ -7,6 +7,7 @@ import useDictionary from 'customHooks/dictionary';
 import useAuth from 'customHooks/useAuth';
 import * as mutations from 'graphql/mutations';
 import * as queries from 'graphql/queries';
+import * as customQueries from 'customGraphql/customQueries';
 import isEmpty from 'lodash/isEmpty';
 import React, {useContext, useEffect, useState} from 'react';
 import {useRouteMatch} from 'react-router';
@@ -390,7 +391,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
         const id = listPersonData?.find((item: any) => item.lessonID === lessonId)?.id;
         if (id) {
           const getLessonRatingDetails: any = await API.graphql(
-            graphqlOperation(queries.getPersonLessonsData, {
+            graphqlOperation(customQueries.getPersonLessonsData, {
               id: id || ''
             })
           );

@@ -20,7 +20,7 @@ interface IProgressBarProps {
 const Disabled = ({text}: {text: string}) => {
   return (
     <div className="absolute inset-0 flex items-center justify-center bg-gray-800 bg-opacity-70 disabled z-50">
-      <p className="text-center font-bold text-sm">{text}</p>
+      <p className="text-center font-bold text-sm">text</p>
     </div>
   );
 };

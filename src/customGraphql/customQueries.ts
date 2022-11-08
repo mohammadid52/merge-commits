@@ -5594,20 +5594,45 @@ export const listPersonLessonsData = /* GraphQL */ `
         id
         studentAuthID
         studentEmail
+
         lessonID
         lessonType
         pages
         ratings
         isCompleted
         roomId
+        room {
+          name
+        }
         lesson {
           id
           title
+          institution {
+            name
+          }
         }
         createdAt
         updatedAt
       }
       nextToken
+    }
+  }
+`;
+
+export const getPersonLessonsData = /* GraphQL */ `
+  query GetPersonLessonsData($id: ID!) {
+    getPersonLessonsData(id: $id) {
+      id
+      studentAuthID
+      studentEmail
+      lessonID
+      lessonType
+      pages
+      ratings
+      isCompleted
+      roomId
+      createdAt
+      updatedAt
     }
   }
 `;

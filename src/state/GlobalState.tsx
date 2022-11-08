@@ -40,6 +40,8 @@ export interface globalStateType {
   temp: any;
 }
 
+// test comment
+
 export const globalState: globalStateType = {
   sidebar: {
     upcomingLessons: []

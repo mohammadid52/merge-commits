@@ -4093,6 +4093,7 @@ const General: any = {
     SENTIMENT: {
       TITLE: "How you've been?",
       MODAL_TITLE: 'The Backstory',
+      NO_DATA: 'No sentiments data found',
       EMOJIS: {
         AWFUL: 'awful',
         BAD: 'bad',
@@ -4106,6 +4107,7 @@ const General: any = {
     SENTIMENT: {
       MODAL_TITLE: 'TBD',
       TITLE: 'TBD',
+      NO_DATA: 'No sentiments data found',
       EMOJIS: {
         AWFUL: 'TBD',
         BAD: 'TBD',

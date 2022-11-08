@@ -30,9 +30,6 @@ amplifytools.xcconfig
 .secret-*
 
 
-.secret-*
-
-
 cypress/videos
 cypress/screenshots
 

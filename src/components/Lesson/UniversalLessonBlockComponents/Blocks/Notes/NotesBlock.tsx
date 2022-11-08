@@ -466,7 +466,7 @@ const NotesBlock = ({
               </Tooltip>
 
               {!saveInProgress && (
-                <Tooltip text="Save to Notebook">
+                <Tooltip text="Save">
                   <button
                     data-cy="save-note-button"
                     onClick={() => {

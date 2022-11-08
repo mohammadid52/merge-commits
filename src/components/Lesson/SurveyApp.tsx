@@ -422,15 +422,17 @@ const SurveyApp = () => {
             user.authId,
             user.email
           );
-          const newRecords = await Promise.all(createNewRecords);
+          if (createNewRecords) {
+            const newRecords = await Promise.all(createNewRecords);
 
-          if (newRecords?.length > 0) {
-            lessonDispatch({
-              type: 'LOAD_SURVEY_DATA',
-              payload: {
-                dataIdReferences: surveyDataId(newRecords)
-              }
-            });
+            if (newRecords?.length > 0) {
+              lessonDispatch({
+                type: 'LOAD_SURVEY_DATA',
+                payload: {
+                  dataIdReferences: surveyDataId(newRecords)
+                }
+              });
+            }
           }
         }
       } else {
