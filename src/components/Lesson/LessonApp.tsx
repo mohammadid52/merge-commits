@@ -30,7 +30,12 @@ import {ILessonSurveyApp} from './Lesson';
 import LessonPageLoader from './LessonPageLoader';
 import CoreUniversalLesson from './UniversalLesson/views/CoreUniversalLesson';
 import useLessonFunctions from './useLessonFunctions';
-const LessonApp = ({personLessonData}: ILessonSurveyApp) => {
+const LessonApp = ({
+  personLessonData,
+  canContinue,
+  validateRequired,
+  invokeRequiredField
+}: ILessonSurveyApp) => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
 
   const gContext = useGlobalContext();
@@ -157,7 +162,7 @@ const LessonApp = ({personLessonData}: ILessonSurveyApp) => {
 
   const [lessonDataLoaded, setLessonDataLoaded] = useState<boolean>(false);
 
-  const [pageStateUpdated, setPageStateUpdated] = useState(false);
+  const [pageStateUpdated, setPageStateUpdated] = useState(true);
 
   useEffect(() => {
     if (!isEmpty(personLessonData)) {
@@ -165,7 +170,7 @@ const LessonApp = ({personLessonData}: ILessonSurveyApp) => {
       const lessonProgress = JSON.parse(pages).lessonProgress || 0;
 
       lessonDispatch({type: 'SET_CURRENT_PAGE', payload: lessonProgress});
-      setPageStateUpdated(true);
+      // setPageStateUpdated(true);
       history.push(`${match.url}/${lessonProgress}`);
     }
   }, [personLessonData]);
@@ -1146,6 +1151,8 @@ const LessonApp = ({personLessonData}: ILessonSurveyApp) => {
             personLessonData={personLessonData}
             createJournalData={createStudentArchiveData}
             isAtEnd={isAtEnd}
+            canContinue={canContinue}
+            validateRequired={validateRequired}
             setisAtEnd={setisAtEnd}
             handleRequiredNotification={handleRequiredNotification}
           />
@@ -1162,7 +1169,10 @@ const LessonApp = ({personLessonData}: ILessonSurveyApp) => {
             <ErrorBoundary fallback={<h1>Error in the Lesson App</h1>}>
               {/* ADD LESSONWRAPPER HERE */}
               <div className="mt-4 mb-8 lesson-page-container">
-                <CoreUniversalLesson createJournalData={createStudentArchiveData} />
+                <CoreUniversalLesson
+                  invokeRequiredField={invokeRequiredField}
+                  canContinue={canContinue}
+                />
               </div>
             </ErrorBoundary>
           )}

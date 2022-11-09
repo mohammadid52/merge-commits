@@ -7,7 +7,6 @@ import Modal from 'atoms/Modal';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
 import {LessonHeaderBarProps} from 'interfaces/LessonComponentsInterfaces';
-import {StudentPageInput} from 'interfaces/UniversalLessonInterfaces';
 import React, {useEffect, useState} from 'react';
 import ReactPlayer from 'react-player';
 import {useHistory, useRouteMatch} from 'react-router-dom';
@@ -25,7 +24,9 @@ const LessonHeaderBar = ({
   setisAtEnd,
   createJournalData,
   handleRequiredNotification,
-  personLessonData
+  personLessonData,
+  canContinue,
+  validateRequired
 }: LessonHeaderBarProps) => {
   // ~~~~~~~~~~ CONTEXT SPLITTING ~~~~~~~~~~ //
   const gContext = useGlobalContext();
@@ -234,40 +235,6 @@ const LessonHeaderBar = ({
   const PAGES = lessonState.lessonData.lessonPlan;
 
   // ~~~~~~~~~ SIMPLE LOGIC CHECKS ~~~~~~~~~ //
-  const validateRequired = (pageIdx: number) => {
-    if (PAGES) {
-      const thisPageData = lessonState?.studentData[pageIdx];
-      const thisPageRequired = lessonState?.requiredInputs[pageIdx];
-      if (thisPageData && thisPageData.length > 0) {
-        const areAnyEmpty = thisPageData.filter((input: StudentPageInput) => {
-          if (thisPageRequired.includes(input.domID) && input.input[0] === '') {
-            return input;
-          }
-        });
-
-        if (areAnyEmpty.length > 0) {
-          return false;
-        } else {
-          return true;
-        }
-      } else {
-        return true;
-      }
-    } else {
-      return false;
-    }
-  };
-
-  const canContinue = () => {
-    if (PAGES) {
-      return (
-        validateRequired(lessonState.currentPage) &&
-        lessonState.currentPage <= PAGES.length - 1
-      );
-    } else {
-      return false;
-    }
-  };
 
   const userAtEnd = () => {
     return lessonState.currentPage === PAGES.length - 1;
@@ -311,7 +278,7 @@ const LessonHeaderBar = ({
     } else {
       if (!userAtEnd()) {
         if (isAtEnd) setisAtEnd(false);
-        if (canContinue()) {
+        if (canContinue) {
           history.push(`${match.url}/${lessonState.currentPage + 1}`);
           lessonDispatch({
             type: 'SET_CURRENT_PAGE',
@@ -426,9 +393,10 @@ const LessonHeaderBar = ({
         handlePopup={handleLeavePopup}
         isAtEnd={isAtEnd}
         setisAtEnd={setisAtEnd}
+        validateRequired={validateRequired}
         handleRequiredNotification={handleRequiredNotification}
         pages={PAGES}
-        canContinue={canContinue()}
+        canContinue={canContinue}
         handleForward={handleForward}
       />
 
@@ -459,7 +427,7 @@ const LessonHeaderBar = ({
           setisAtEnd={setisAtEnd}
           handleRequiredNotification={handleRequiredNotification}
           pages={PAGES}
-          canContinue={canContinue()}
+          canContinue={canContinue}
           handleBack={handleBack}
           handleForward={handleForward}
         />

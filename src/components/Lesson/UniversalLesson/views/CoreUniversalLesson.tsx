@@ -8,7 +8,13 @@ import {LessonPageWrapper} from '../../UniversalLessonBlockComponents/LessonPage
 import LessonRowComposer from './CoreUniversalLesson/LessonRowComposer';
 import useAuth from '@customHooks/useAuth';
 
-const CoreUniversalLesson = ({createJournalData}: {createJournalData?: () => void}) => {
+const CoreUniversalLesson = ({
+  invokeRequiredField,
+  canContinue
+}: {
+  canContinue: boolean;
+  invokeRequiredField?: () => void;
+}) => {
   const isInLesson = useInLessonCheck();
   const gContext = useGlobalContext();
   const lessonState = gContext.lessonState;
@@ -30,7 +36,11 @@ const CoreUniversalLesson = ({createJournalData}: {createJournalData?: () => voi
           <ErrorBoundary fallback={<h1>Error in the LessonRowComposer</h1>}>
             <LessonRowComposer />
             {userAtEnd() && isStudent ? (
-              <SaveQuit createJournalData={createJournalData} roomID={getRoomData?.id} />
+              <SaveQuit
+                invokeRequiredField={invokeRequiredField}
+                canContinue={canContinue}
+                roomID={getRoomData?.id}
+              />
             ) : null}
           </ErrorBoundary>
         </LessonPageWrapper>

@@ -24,12 +24,14 @@ import Foot from './Foot/Foot';
 import {ILessonSurveyApp} from './Lesson';
 import LessonPageLoader from './LessonPageLoader';
 import CoreUniversalLesson from './UniversalLesson/views/CoreUniversalLesson';
-import useLessonFunctions from './useLessonFunctions';
 
 const SurveyApp = ({
   personLoading,
   personLessonData,
-  setPersonLessonData
+  setPersonLessonData,
+  canContinue,
+  validateRequired,
+  invokeRequiredField
 }: ILessonSurveyApp) => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
 
@@ -77,7 +79,7 @@ const SurveyApp = ({
   // ~~~~~~~~~~~~~ LESSON SETUP ~~~~~~~~~~~~ //
 
   const [lessonDataLoaded, setLessonDataLoaded] = useState<boolean>(false);
-  const [pageStateUpdated, setPageStateUpdated] = useState(false);
+  const [pageStateUpdated, setPageStateUpdated] = useState(true);
 
   // ##################################################################### //
   // ###################### INITIALIZE STUDENT DATA ###################### //
@@ -87,7 +89,7 @@ const SurveyApp = ({
   // ~~~~~~~~ INITIALIZE STUDENTDATA ~~~~~~~ //
 
   const initializeSurveyData = async () => {
-    if (studentDataInitialized === false && PAGES) {
+    if (!studentDataInitialized && PAGES) {
       const mappedPages = PAGES.reduce(
         (
           inputs: {
@@ -273,7 +275,7 @@ const SurveyApp = ({
         roomID: getRoomData.id,
         currentLocation: '0',
         lessonProgress: '0',
-        surveyData: initialDataFlattened.flat()
+        surveyData: initialDataFlattened
       };
 
       const newSurveyData: any = await API.graphql(
@@ -387,6 +389,7 @@ const SurveyApp = ({
 
       // existing student rows
       const surveyDataRow = await fetchSurveyDataRow(listFilter, undefined, []); // table object
+
       const surveyDataResponses = surveyDataRow[0]?.surveyData
         ? surveyDataRow[0].surveyData
         : []; // flat 1D - array
@@ -435,14 +438,10 @@ const SurveyApp = ({
   // ~~ INITIALIZE STUDENT DATA STRUCTURE ~~ //
 
   useEffect(() => {
-    if (
-      !lessonState.loaded &&
-      lessonState.lessonData.lessonPlan &&
-      lessonState.lessonData.lessonPlan.length > 0
-    ) {
+    if (!lessonState.loaded && PAGES.length > 0) {
       initializeSurveyData();
     }
-  }, [lessonState.lessonData.lessonPlan]);
+  }, [PAGES]);
 
   // ~~~~~ GET & CREATE DB DATA RECORDS ~~~~ //
 
@@ -726,31 +725,7 @@ const SurveyApp = ({
   const handleSurveyMutateData = async () => {
     try {
       let payload;
-      let existingLesson: any;
       if (!personLoading) {
-        // if (personLessonData) {
-        //   existingLesson = personLessonData;
-        // } else {
-        //   // existingLesson = await API.graphql(
-        //   //   graphqlOperation(customQueries.listPersonLessonsData, {
-        //   //     filter: {
-        //   //       lessonID: {eq: lessonID},
-        //   //       studentAuthID: {eq: isStudent ? user.authId : params.get('sId')},
-        //   //       studentEmail: {eq: isStudent ? user.email : params.get('sEmail')},
-        //   //       roomId: {eq: getRoomData.id}
-        //   //     }
-        //   //   })
-        //   // );
-
-        //   lessonDispatch({
-        //     type: 'SET_PERSON_LESSON_DATA',
-        //     payload: {
-        //       lessonID: lessonID,
-        //       data: existingLesson?.data?.listPersonLessonsData?.items || []
-        //     }
-        //   });
-        // }
-
         if (!personLessonData) {
           payload = {
             id: uuidV4(),
@@ -759,12 +734,15 @@ const SurveyApp = ({
             studentEmail: user.email,
             lessonID: lessonID,
             lessonType: lessonState.lessonData?.type,
-            //prettier-ignore
             pages: `{
             "currentPage":${JSON.stringify(lessonState.currentPage)},
-            "totalPages":${JSON.stringify(lessonState.lessonData?.lessonPlan?.length - 1)},
+            "totalPages":${JSON.stringify(
+              lessonState.lessonData?.lessonPlan?.length - 1
+            )},
             "lessonProgress":${JSON.stringify(lessonState.currentPage)}
-            }`.replace(/(\s\s+|[\t\n])/g, ' ').trim(),
+            }`
+              .replace(/(\s\s+|[\t\n])/g, ' ')
+              .trim(),
             ratings: 0
           };
 
@@ -809,17 +787,6 @@ const SurveyApp = ({
   // ~~~~~~~~~~~ RESPONSIVE CHECK ~~~~~~~~~~ //
   const {breakpoint} = useTailwindBreakpoint();
 
-  // const _getLessonCompletedValue = async () => {
-  //   return await getLessonCompletedValue({
-  //     id: personLessonData.id,
-  //     filter: {
-  //       lessonID: {eq: lessonID},
-  //       studentEmail: {eq: user.email},
-  //       studentAuthId: {eq: user.authId}
-  //     }
-  //   });
-  // };
-
   return (
     <>
       {/* 
@@ -848,9 +815,11 @@ const SurveyApp = ({
             pageStateUpdated={pageStateUpdated}
             createJournalData={createStudentArchiveData}
             setOverlay={setOverlay}
+            canContinue={canContinue}
             personLessonData={personLessonData}
             isAtEnd={isAtEnd}
             setisAtEnd={setisAtEnd}
+            validateRequired={validateRequired}
             handleRequiredNotification={handleRequiredNotification}
           />
         </div>
@@ -866,7 +835,10 @@ const SurveyApp = ({
             <ErrorBoundary fallback={<h1>Error in the Lesson App</h1>}>
               {/* ADD LESSONWRAPPER HERE */}
               <div className="mt-4 mb-8 lesson-page-container ">
-                <CoreUniversalLesson />
+                <CoreUniversalLesson
+                  invokeRequiredField={invokeRequiredField}
+                  canContinue={canContinue}
+                />
               </div>
             </ErrorBoundary>
           )}

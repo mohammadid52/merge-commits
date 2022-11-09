@@ -25,6 +25,8 @@ export interface LessonHeaderBarProps extends LessonComponentsInterface {
   handleRequiredNotification?: () => void;
   pages?: UniversalLessonPage[];
   canContinue?: boolean;
+  validateRequired?: (pageIdx: number) => boolean;
+
   personLessonData?: PersonLessonsData | null;
 
   handleForward?: (back?: boolean) => void;
