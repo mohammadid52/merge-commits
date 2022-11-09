@@ -247,6 +247,14 @@ const SentimentTab = () => {
           </div>
         </Transition>
 
+        {studentSentiments.length === 0 && !loadingSentiments && (
+          <div className="flex h-96 items-center justify-center text-center">
+            <p className="text-gray-500 text-lg">
+              {General[userLanguage]['SENTIMENT']['NO_DATA']}
+            </p>
+          </div>
+        )}
+
         <Transition
           enter="transform transition ease-in-out duration-500"
           enterFrom="-translate-x-full opacity-0"
@@ -378,20 +386,22 @@ const SentimentTab = () => {
         </Transition>
       </div>
 
-      <div className="pr-4 w-auto absolute bottom-0 right-0 ">
-        <Buttons
-          disabled={disableLoad}
-          label={
-            !loadingMore ? (
-              'Load more'
-            ) : (
-              <Loader withText="Loading" className="text-white" />
-            )
-          }
-          onClick={onLoadMore}
-          type="button"
-        />
-      </div>
+      {studentSentiments.length === 0 && !loadingSentiments && (
+        <div className="pr-4 w-auto absolute bottom-0 right-0 ">
+          <Buttons
+            disabled={disableLoad}
+            label={
+              !loadingMore ? (
+                'Load more'
+              ) : (
+                <Loader withText="Loading" className="text-white" />
+              )
+            }
+            onClick={onLoadMore}
+            type="button"
+          />
+        </div>
+      )}
     </div>
   );
 };
