@@ -1,3 +1,4 @@
+import {PersonLessonsData} from 'API';
 import {UniversalLessonPage} from 'interfaces/UniversalLessonInterfaces';
 import React, {SetStateAction} from 'react';
 
@@ -24,6 +25,7 @@ export interface LessonHeaderBarProps extends LessonComponentsInterface {
   handleRequiredNotification?: () => void;
   pages?: UniversalLessonPage[];
   canContinue?: boolean;
+  personLessonData?: PersonLessonsData | null;
 
   handleForward?: (back?: boolean) => void;
   getLessonCompletedValue?: () => any;

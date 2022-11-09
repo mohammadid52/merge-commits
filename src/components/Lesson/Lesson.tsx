@@ -2,14 +2,20 @@ import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import Noticebar from 'components/Noticebar/Noticebar';
 import {GlobalContext} from 'contexts/GlobalContext';
 import useNotifications from 'customHooks/notifications';
-import {setLocalStorageData} from 'utilities/localStorage';
+import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
 import React, {useContext, useEffect, useState} from 'react';
 import {useParams} from 'react-router-dom';
 import * as customQueries from 'customGraphql/customQueries';
 import LessonApp from './LessonApp';
 import SurveyApp from './SurveyApp';
+import {PersonLessonsData} from 'API';
+import {isEmpty} from 'lodash';
 
-export interface ILessonSurveyApp {}
+export interface ILessonSurveyApp {
+  personLoading: boolean;
+  personLessonData: PersonLessonsData | null;
+  setPersonLessonData?: React.Dispatch<React.SetStateAction<PersonLessonsData | null>>;
+}
 
 const Lesson = () => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
@@ -50,8 +56,8 @@ const Lesson = () => {
     }
   };
 
+  const {lessonID} = urlParams;
   useEffect(() => {
-    const {lessonID} = urlParams;
     if (lessonID) {
       lessonDispatch({
         type: 'SET_INITIAL_STATE',
@@ -63,13 +69,41 @@ const Lesson = () => {
     }
   }, []);
 
+  const [personLessonData, setPersonLessonData] = useState<PersonLessonsData | null>(
+    null
+  );
+  const [personLoading, setPersonLoading] = useState(true);
+
+  const data: PersonLessonsData[] = getLocalStorageData('lessonPersonData');
+
+  useEffect(() => {
+    if (isEmpty(personLessonData)) {
+      setPersonLessonData(data.find((d) => d.lessonID === lessonID));
+      setPersonLoading(false);
+    }
+  }, [data]);
+
   // ~~~~~~~~~~~ CHECK IF SURVEY ~~~~~~~~~~~ //
   const isSurvey = lessonState && lessonState.lessonData?.type === 'survey';
 
   return (
     <>
       <Noticebar notifications={notifications} />
-      {loaded ? isSurvey ? <SurveyApp /> : <LessonApp /> : null}
+      {loaded ? (
+        isSurvey ? (
+          <SurveyApp
+            setPersonLessonData={setPersonLessonData}
+            personLoading={personLoading}
+            personLessonData={personLessonData}
+          />
+        ) : (
+          <LessonApp
+            setPersonLessonData={setPersonLessonData}
+            personLoading={personLoading}
+            personLessonData={personLessonData}
+          />
+        )
+      ) : null}
     </>
   );
 };

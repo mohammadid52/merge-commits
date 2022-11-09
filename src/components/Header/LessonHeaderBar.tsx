@@ -27,7 +27,7 @@ const LessonHeaderBar = ({
   setisAtEnd,
   createJournalData,
   handleRequiredNotification,
-  getLessonCompletedValue
+  personLessonData
 }: LessonHeaderBarProps) => {
   // ~~~~~~~~~~ CONTEXT SPLITTING ~~~~~~~~~~ //
   const gContext = useGlobalContext();
@@ -96,20 +96,6 @@ const LessonHeaderBar = ({
     });
   };
 
-  const forceFetchId = async () => {
-    let existingLesson: any = await API.graphql(
-      graphqlOperation(customQueries.listPersonLessonsData, {
-        filter: {
-          lessonID: {eq: lessonState.misc?.personLessonData?.lessonID},
-          studentAuthID: {eq: user.authId},
-          studentEmail: {eq: user.email},
-          roomId: {eq: getRoomData.id}
-        }
-      })
-    );
-    return existingLesson?.data?.listPersonLessonsData?.items[0]?.id;
-  };
-
   const handleNotebookSave = () => {
     const callback = isLesson ? () => triggerNotification() : () => {};
     createJournalData(callback);
@@ -121,12 +107,7 @@ const LessonHeaderBar = ({
         saveJournalData?.current();
       }
     }
-    const id =
-      lessonState.misc?.personLessonData?.data?.find(
-        (_d: any) => _d.lessonID === lessonState?.lessonData?.id
-      )?.id ||
-      forceFetchId() ||
-      '';
+    const id = personLessonData.id;
 
     console.log(`\x1b[33m Updating lesson completion... \x1b[0m`);
 

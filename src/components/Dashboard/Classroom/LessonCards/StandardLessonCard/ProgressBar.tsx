@@ -1,87 +1,44 @@
-import {getLocalStorageData} from '@utilities/localStorage';
-import {LessonsByType2Query, LessonsByType2QueryVariables} from 'API';
-import useGraphqlQuery from 'customHooks/useGraphqlQuery';
 import React, {useEffect, useState} from 'react';
 
 interface ProgressBarProps {
-  value: string;
-  max: string;
-  lessonProps: any;
-  user?: any;
-  getLessonRating?: (lessonId: string, userEmail: string, userAuthId: string) => any;
-  getLessonByType?: (type: string, lessonID: string) => any;
+  personDataObj?: any;
 }
 
-const ProgressBar = ({lessonProps, user}: ProgressBarProps) => {
+const ProgressBar = ({personDataObj}: ProgressBarProps) => {
   const [progressValue, setProgressValue] = useState<any>(0);
-
-  const getRoomData = getLocalStorageData('room_info');
-
-  const lesson = lessonProps.lesson;
-
-  const shouldShowProgress = Boolean(lesson) && Boolean(user);
-  const [progressLoaded, setProgressLoaded] = useState(false);
-
-  const {data, isFetched} = useGraphqlQuery<
-    LessonsByType2QueryVariables,
-    LessonsByType2Query['lessonsByType2']['items']
-  >(
-    'lessonsByType2',
-    {
-      lessonType: lesson.type,
-      filter: {
-        lessonID: {eq: lesson.id},
-        studentAuthID: {eq: user.authId},
-        studentEmail: {eq: user.email},
-        roomId: {eq: getRoomData.id}
-      }
-    },
-    {enabled: shouldShowProgress && !progressLoaded}
-  );
 
   const generateLessonProgress = async () => {
     try {
-      const isCompleted = data && data.length > 0 ? data[0]?.isCompleted : false;
-      const pageNumber = data && data.length > 0 ? data[0].pages : '{}';
+      if (personDataObj) {
+        const isCompleted = personDataObj ? personDataObj?.isCompleted : false;
+        const {totalPages = 0, lessonProgress = 0} = personDataObj;
+        const roundOff = isCompleted ? 0 : -1;
+        const percentCorrect = (lessonProgress * 100) / totalPages;
 
-      const currentPage = JSON.parse(pageNumber).currentPage;
+        const progress = Number.isNaN(percentCorrect) ? 0 : percentCorrect;
 
-      const totalPages = JSON.parse(pageNumber).totalPages || 0;
+        const finalPercent = Math.round(progress) < 100 ? Math.round(progress) : 100;
 
-      const lessonProgressNum = JSON.parse(pageNumber)?.lessonProgress || NaN;
-      const lessonProgress = !Number.isNaN(lessonProgressNum) ? lessonProgressNum : 0;
-
-      const roundOff = isCompleted ? 0 : -1;
-      const percentCorrect = (lessonProgress * 100) / totalPages;
-
-      const progress = Number.isNaN(percentCorrect) ? 0 : percentCorrect;
-
-      const finalPercent = Math.round(progress) < 100 ? Math.round(progress) : 100;
-
-      setProgressValue(
-        isCompleted ? 100 : finalPercent === 100 ? finalPercent + roundOff : finalPercent
-      );
-      setProgressLoaded(true);
-      return {
-        lessonProgress,
-        currentPage,
-        totalPages
-      };
+        setProgressValue(
+          isCompleted
+            ? 100
+            : finalPercent === 100
+            ? finalPercent + roundOff
+            : finalPercent
+        );
+      } else {
+        setProgressValue(0);
+      }
     } catch (error) {
-      console.error(
-        `lessondID:${lesson.id} error @getLessonByType Classroom.tsx `,
-        error
-      );
+      console.error(` error @getLessonByType Classroom.tsx `, error);
     }
   };
 
   useEffect(() => {
-    if (isFetched && data) {
-      generateLessonProgress();
-    }
-  }, [isFetched]);
+    generateLessonProgress();
+  }, [personDataObj]);
 
-  if (!shouldShowProgress) return null;
+  // if (!shouldShowProgress) return null;
 
   const infoWhenNinetyNine = '';
 

@@ -21,15 +21,15 @@ const StandardLessonCard = (props: LessonCardProps) => {
     user,
     handleLessonMutationRating,
     getLessonRating,
-    getLessonByType,
     getImageFromS3 = true,
     preview = false
   } = props;
 
   const {theme, lessonDispatch} = useContext(GlobalContext);
   const [existsOrNot, setexistsOrNot] = useState<boolean>(false);
-  const [isCompleted, setIsCompleted] = useState<boolean>(false);
+
   const [isFetched, setIsFetched] = useState(false);
+  const [personDataObj, setPersonDataObj] = useState<any>(null);
 
   const {isStudent} = useAuth();
   useEffect(() => {
@@ -38,7 +38,6 @@ const StandardLessonCard = (props: LessonCardProps) => {
     }
   }, [isFetched]);
 
-  const [lessonProgress, setLessonProgress] = useState(0);
   const checkValueOrNull = async () => {
     try {
       const value = await getLessonRating(lessonProps.lesson.id, user.email, user.authId);
@@ -46,8 +45,7 @@ const StandardLessonCard = (props: LessonCardProps) => {
       if (typeof value === 'undefined') setexistsOrNot(true);
 
       if (value) {
-        if (value.isCompleted) setIsCompleted(true);
-        setLessonProgress(value.lessonProgress);
+        setPersonDataObj(value);
         lessonDispatch({type: 'SET_CURRENT_PAGE', payload: value.lessonProgress});
       }
       return;
@@ -70,19 +68,10 @@ const StandardLessonCard = (props: LessonCardProps) => {
        */}
       <div className={`w-7.5/10 flex flex-col rounded-b`}>
         <MainSummary lessonProps={lessonProps} />
-        {isStudent && (
-          <ProgressBar
-            lessonProps={{
-              ...lessonProps,
-              lesson: {...lessonProps.lesson, type: lessonProps.lesson.type}
-            }}
-            user={user}
-            value=""
-            max="100"
-            getLessonByType={getLessonByType}
-          />
-        )}
-        {lessonProps.lesson.type !== 'survey' && !existsOrNot && isCompleted ? (
+        {isStudent && <ProgressBar personDataObj={personDataObj} />}
+        {lessonProps.lesson.type !== 'survey' &&
+        !existsOrNot &&
+        personDataObj?.isCompleted ? (
           <Rating
             user={user}
             getLessonRating={getLessonRating}
@@ -97,10 +86,10 @@ const StandardLessonCard = (props: LessonCardProps) => {
           activeRoomInfo={activeRoomInfo}
           preview={preview}
           accessible={accessible}
-          lessonProgress={lessonProgress}
+          lessonProgress={personDataObj?.lessonProgress}
           roomID={roomID}
           lessonProps={lessonProps}
-          isCompleted={isCompleted}
+          isCompleted={personDataObj?.isCompleted}
           syllabusProps={syllabusProps}
           lessonType={lessonProps.lesson.type}
         />
