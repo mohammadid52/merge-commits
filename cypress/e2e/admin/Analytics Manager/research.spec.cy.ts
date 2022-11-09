@@ -16,9 +16,9 @@ describe('Research and Analytics', () => {
     cy.wait(10000); // wait for page to load
     cy.url().should('contain', urlConfig.dashboardURL); // check if it is on dashboard page
     cy.wait(10000); // wait for page to load
-    cy.get(`button:contains(${dropdownDetail.title})`).trigger('mouseover');
-    cy.get(`body:contains(${dropdownDetail.item})`).should('exist');
-    // cy.visit(urlConfig.analyticsURL); // go to registration page
+    // cy.get(`button:contains(${dropdownDetail.title})`).trigger('mouseover');
+    // cy.get(`div:contains(${dropdownDetail.item})`).first().click();
+    cy.visit(urlConfig.analyticsURL); // go to registration page
     cy.wait(10000); // wait for page to load
     cy.dataCy('analytics-classroom-button').click(); // click on dropdown
     cy.dataCy('analytics-classroom-item-3956fdc3-d36d-43db-b43e-75efa30ea8cc').click(); // click on first item
