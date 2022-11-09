@@ -112,11 +112,11 @@ const SurveyList = ({
                     className="px-6 py-3 w-auto text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
                     Classroom
                   </th>
-                  {/* <th
+                  <th
                     scope="col"
-                    className="px-6 py-3 w-auto text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                    className="hidden 2xl:block px-6 py-3 w-auto text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
                     Completed At
-                  </th> */}
+                  </th>
                   <th
                     scope="col"
                     className="px-6 py-3 w-auto text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
@@ -137,9 +137,9 @@ const SurveyList = ({
                         <td className="px-6 py-4 w-auto whitespace-nowrap text-sm text-gray-500">
                           {survey?.room?.name}
                         </td>
-                        {/* <td className="px-6 py-4 w-auto whitespace-nowrap text-sm text-gray-500">
+                        <td className="hidden 2xl:block px-6 py-4 w-auto whitespace-nowrap text-sm text-gray-500">
                           {moment(survey.updatedAt).format('DD/MM/YYYY')}
-                        </td> */}
+                        </td>
                         <td className="px-6 py-4 w-auto whitespace-nowrap text-sm text-gray-500">
                           <a
                             href={`/lesson/${survey.lessonID}/0?sId=${studentAuthID}&sEmail=${studentEmail}&tab=Completed%20Surveys`}
