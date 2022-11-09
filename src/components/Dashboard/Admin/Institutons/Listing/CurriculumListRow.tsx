@@ -48,6 +48,7 @@ const CurriculumListRow = ({
         {index + 1}.
       </div>
       <div
+        data-cy={`curriculum-${item.name.split(' ').join('-')}`}
         onClick={() => editCurrentCurricular(item.id)}
         className={`cursor-pointer flex ${
           isSuperAdmin ? 'w-2/10' : 'w-3.5/10'

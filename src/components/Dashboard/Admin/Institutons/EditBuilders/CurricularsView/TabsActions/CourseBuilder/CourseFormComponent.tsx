@@ -438,6 +438,7 @@ const CourseFormComponent = ({courseId, courseData}: CourseBuilderProps) => {
           <div className="h-9/10 md:flex-row">
             <div className="px-3 py-4">
               <FormInput
+                dataCy="curricular-name-input"
                 value={name}
                 id="curricularName"
                 onChange={onChange}
