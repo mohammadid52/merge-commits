@@ -1143,7 +1143,7 @@ const LessonApp = ({personLessonData}: ILessonSurveyApp) => {
             overlay={overlay}
             setOverlay={setOverlay}
             pageStateUpdated={pageStateUpdated}
-            getLessonCompletedValue={_getLessonCompletedValue}
+            personLessonData={personLessonData}
             createJournalData={createStudentArchiveData}
             isAtEnd={isAtEnd}
             setisAtEnd={setisAtEnd}

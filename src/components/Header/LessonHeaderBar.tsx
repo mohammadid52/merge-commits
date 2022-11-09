@@ -1,4 +1,3 @@
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {useNotifications} from '@contexts/NotificationContext';
 import useStudentTimer from '@customHooks/timer';
 import useAuth from '@customHooks/useAuth';
@@ -6,7 +5,6 @@ import useGraphqlMutation from '@customHooks/useGraphqlMutation';
 import {UniversalLessonStudentData, UpdatePersonLessonsDataInput} from 'API';
 import Modal from 'atoms/Modal';
 import {useGlobalContext} from 'contexts/GlobalContext';
-import * as customQueries from 'customGraphql/customQueries';
 import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
 import {LessonHeaderBarProps} from 'interfaces/LessonComponentsInterfaces';
 import {StudentPageInput} from 'interfaces/UniversalLessonInterfaces';
