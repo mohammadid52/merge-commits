@@ -11,26 +11,41 @@ const summary = `High-level hammer out, so overcome key issues to meet key miles
 
 describe('Lesson Preview', () => {
   it('Preview should be visible', () => {
+    cy.log('Login to the application');
     cy.visit(urlConfig.baseURL); // Go to production website of IA
+    cy.log('Enter email');
     cy.get('[data-cy="email"]').type(loginConfig.admin.username); // Enter email
+    cy.log('Click on login');
     cy.dataCy('login-button').click(); // Click on button
+    cy.log('Enter Password');
     cy.get('[data-cy="password"]').type(loginConfig.admin.password); // Enter password
+    cy.log('Click on login');
     cy.dataCy('login-button').click(); // Click on login button
 
-    cy.wait(10000); // Wait for user to login
+    cy.log('Wait for page to load');
+    cy.wait(10000);
+    cy.log('Check if it is on the dashboard');
     cy.url().should('contain', urlConfig.dashboardURL);
 
+    cy.log('Go to lesson page');
     cy.visit(lessonUrl);
-    cy.wait(15000); // Wait for page to load
+    cy.log('Wait for page to load');
+    cy.wait(15000);
+    cy.log('Lesson title should be visible');
     cy.get(`h4:contains(${lessonTitle})`).should('exist');
+    cy.log('Type image caption');
     cy.dataCy('lesson-image-caption').clear().type(imageCaption);
+    cy.log('Type Lesson Summary');
     cy.dataCy('lesson-summary').clear().type(summary);
+    cy.log('Click on preview');
     cy.get('button:contains("Preview")').click();
+    cy.log('Check if image caption is visible');
     cy.get('h2')
       .invoke('text')
       .then((text) => {
         expect(text).includes(imageCaption);
       });
+    cy.log('Check if summary is visible');
     cy.get('p')
       .invoke('text')
       .then((text) => {

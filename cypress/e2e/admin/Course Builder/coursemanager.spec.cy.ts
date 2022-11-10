@@ -8,18 +8,29 @@ const courseTitle = 'Big Bang Course Testing';
 
 describe('Course Page', {defaultCommandTimeout: 20000}, () => {
   it('Courses should be visible', () => {
-    cy.visit(urlConfig.baseURL); // Go to production website of IA
-    cy.get('[data-cy="email"]').type(loginConfig.admin.username); // Enter email
+    cy.log('Login to the application');
+    cy.visit(urlConfig.baseURL);
+    cy.log('Enter email');
+    cy.get('[data-cy="email"]').type(loginConfig.admin.username);
+    cy.log('Click on login');
     cy.dataCy('login-button').click(); // Click on button
+    cy.log('Enter Password');
     cy.get('[data-cy="password"]').type(loginConfig.admin.password); // Enter password
+    cy.log('Click on login');
     cy.dataCy('login-button').click(); // Click on login button
 
-    cy.wait(10000); // Wait for user to login
+    cy.log('Wait for page to load');
+    cy.wait(10000);
+    cy.log('Check if it is on the dashboard');
     cy.url().should('contain', urlConfig.dashboardURL);
 
+    cy.log('Go to course page');
     cy.visit(courseUrl);
-    cy.wait(10000); // Wait for page to load
+    cy.log('Wait for page to load');
+    cy.wait(10000);
+    cy.log('Click on first curriculum');
     cy.dataCy('curriculum-Big-Bang-Course-Testing').click();
+    cy.log('curriculum input to have expected value');
     cy.dataCy('curricular-name-input').should('have.value', courseTitle);
   });
 });
