@@ -19,54 +19,79 @@ const notebookLink = Institute_info[userLanguage]['TABS']['NOTEBOOK'];
 const courseName = 'Big Bang Course Testing';
 
 const loadClassroomPage = () => {
+  cy.log('Login as admin');
   cy.login(loginConfig.admin.username, loginConfig.admin.password);
-
-  cy.wait(10000); // Wait for user to login
+  cy.log('Wait for page to load');
+  cy.wait(10000);
+  cy.log('Check if it is on the dashboard');
   cy.url().should('contain', urlConfig.dashboardURL);
 
+  cy.log('Go to classroom page');
   cy.visit(classroomUrl);
-  cy.wait(10000); // Wait for page to load
+  cy.log('Wait for page to load');
+  cy.wait(10000);
+  cy.log('Click on the classroom name');
   cy.dataCy('edit-classroom').first().click();
+  cy.log('Go to classroom builder');
   cy.dataCy('classroom-builder-step-1').click();
 };
 
 const logout = () => {
-  cy.dataCy('dropdown-button').click(); // Click on profile dropdown
-  cy.dataCy('logout-button').click(); // Logout
+  cy.log('Click on profile dropdown');
+  cy.dataCy('dropdown-button').click();
+  cy.log('Click on logout');
+  cy.dataCy('logout-button').click();
 };
 
 describe('Classroom Manager', {defaultCommandTimeout: 20000}, () => {
   it('Student should be added to classroom', () => {
     loadClassroomPage();
+    cy.log('Wait for page to load');
     cy.wait(3000);
+    cy.log('Click on search student');
     cy.dataCy('edit-class-button').click();
+    cy.log('Enter student name');
     cy.dataCy('edit-class-input').clear().type(studentName);
+    cy.log('Select first student');
     cy.dataCy('edit-class-item-0').click();
+    cy.log('Wait for page to load');
     cy.wait(1000);
+    cy.log('Click on add student');
     cy.dataCy('edit-class-add-button').click();
+    cy.log('Wait for page to load');
     cy.wait(1000);
+    cy.log('Check if student is added');
     cy.get('p')
       .invoke('text')
       .then((text) => {
         expect(text).includes(sucessMessage);
       });
+    cy.log('Check Student in the list');
     cy.get('div')
       .invoke('text')
       .then((text) => {
         expect(text).includes(studentName);
       });
     logout();
+    cy.log('Login as student');
     cy.login(studentConfig.email, studentConfig.password);
-    cy.wait(10000); // Wait for user to login
+    cy.log('Wait for page to load');
+    cy.wait(10000);
+    cy.log('Check if it is on the dashboard');
     cy.url().should('contain', urlConfig.dashboardURL);
-    cy.wait(5000); // wait for page to load
+    cy.log('Wait for page to load');
+    cy.wait(5000);
+    cy.log('Check if there is a emoji feedback');
     cy.get('body').then((body) => {
       if (body.find('[data-cy="emoji-feedback-button"]').length > 0) {
-        cy.dataCy('emoji-feedback-button').click(); // If emoji feedback popup is open click on save button
+        cy.dataCy('emoji-feedback-button').click();
       }
     });
-    cy.get(`button:contains(${notebookLink})`).click(); // Click on Notebook button in header
-    cy.wait(3000); // Wait for notebooks to load
+    cy.log('Click on the notebook link');
+    cy.get(`button:contains(${notebookLink})`).click();
+    cy.log('Wait for page to load');
+    cy.wait(3000);
+    cy.log('Check if course name is correct');
     cy.get('div')
       .invoke('text')
       .then((text) => {
@@ -74,6 +99,7 @@ describe('Classroom Manager', {defaultCommandTimeout: 20000}, () => {
       });
     logout();
     loadClassroomPage();
+    cy.log('Wait for page to load');
     cy.wait(5000);
     // cy.dataCy('delete-user-7-button').click();
     // cy.dataCy('edit-class-delete-student-modal').click();
