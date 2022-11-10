@@ -2,7 +2,7 @@ import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {getAsset} from 'assets';
 import BreadCrums from 'atoms/BreadCrums';
 import SectionTitleV3 from 'atoms/SectionTitleV3';
-import {GlobalContext} from 'contexts/GlobalContext';
+import {GlobalContext, useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import useAuth from 'customHooks/useAuth';
 import * as mutations from 'graphql/mutations';
@@ -16,6 +16,7 @@ import DashboardContainer from '../DashboardContainer';
 import DateAndTime from '../DateAndTime/DateAndTime';
 import SyllabusSwitch from './SyllabusSwitch';
 import Today from './TodayLesson';
+import {removeLocalStorageData, setLocalStorageData} from '@utilities/localStorage';
 
 interface Artist {
   id: string;
@@ -128,9 +129,10 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
   // ##################################################################### //
   // ############################ BASIC STATE ############################ //
   // ##################################################################### //
-  const gContext = useContext(GlobalContext);
+  const gContext = useGlobalContext();
   const state = gContext.state;
   const dispatch = gContext.dispatch;
+  const lessonDispatch = gContext.lessonDispatch;
   const stateUser = gContext.stateUser;
   const theme = gContext.theme;
   const clientKey = gContext.clientKey;
@@ -365,7 +367,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
   const fetchLessonPersonData = async () => {
     try {
       const lessonPersonData: any = await API.graphql(
-        graphqlOperation(queries.listPersonLessonsData, {
+        graphqlOperation(customQueries.lessonsByType, {
           filter: {
             roomId: {eq: roomId},
             studentAuthID: {eq: authId},
@@ -373,7 +375,12 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
           }
         })
       );
-      setListPersonData(lessonPersonData.data.listPersonLessonsData.items);
+
+      const data = lessonPersonData?.data?.listPersonLessonsData?.items || [];
+      removeLocalStorageData('lessonPersonData');
+      setLocalStorageData('lessonPersonData', data);
+
+      setListPersonData(data);
     } catch (e) {
       console.error('listLessonPersonData: ', e);
     } finally {
@@ -386,39 +393,26 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
     userEmail: string,
     userAuthId: string
   ) => {
-    if (!fetchingPersonData) {
-      try {
-        const id = listPersonData?.find((item: any) => item.lessonID === lessonId)?.id;
-        if (id) {
-          const getLessonRatingDetails: any = await API.graphql(
-            graphqlOperation(customQueries.getPersonLessonsData, {
-              id: id || ''
-            })
-          );
+    const data = listPersonData.find((pd) => pd.lessonID === lessonId);
 
-          const data = getLessonRatingDetails.data.getPersonLessonsData;
-
-          const ratingValue = data.ratings;
-          const pageNumber = data.pages;
-          const currentPage = JSON.parse(pageNumber).currentPage;
-          const lessonProgress = JSON.parse(pageNumber).lessonProgress;
-          const totalPages = JSON.parse(pageNumber).totalPages;
-          return {
-            ratingValue,
-            currentPage,
-            lessonProgress,
-            totalPages,
-            isCompleted: data?.isCompleted || false
-          };
-        }
-      } catch (error) {}
-    }
+    const ratingValue = data.ratings;
+    const pageNumber = data.pages;
+    const currentPage = JSON.parse(pageNumber).currentPage;
+    const lessonProgress = JSON.parse(pageNumber).lessonProgress;
+    const totalPages = JSON.parse(pageNumber).totalPages;
+    return {
+      ratingValue,
+      currentPage,
+      lessonProgress,
+      totalPages,
+      ...data,
+      isCompleted: data?.isCompleted || false
+    };
   };
 
   const handleLessonMutationRating = async (lessonID: string, ratingValue: string) => {
     if (!fetchingPersonData) {
-      const id = listPersonData?.find((item: any) => item.lessonID === lessonID)?.id;
-
+      const id = listPersonData.find((pd) => pd.lessonID === lessonID)?.id;
       try {
         await API.graphql(
           graphqlOperation(mutations.updatePersonLessonsData, {

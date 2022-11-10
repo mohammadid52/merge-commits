@@ -18,6 +18,7 @@ import {
   UniversalLessonPage,
   UniversalLessonStudentData
 } from 'interfaces/UniversalLessonInterfaces';
+import {isEmpty} from 'lodash';
 import React, {useEffect, useRef, useState} from 'react';
 import {useHistory, useParams, useRouteMatch} from 'react-router-dom';
 import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
@@ -29,7 +30,12 @@ import {ILessonSurveyApp} from './Lesson';
 import LessonPageLoader from './LessonPageLoader';
 import CoreUniversalLesson from './UniversalLesson/views/CoreUniversalLesson';
 import useLessonFunctions from './useLessonFunctions';
-const LessonApp = ({}: ILessonSurveyApp) => {
+const LessonApp = ({
+  personLessonData,
+  canContinue,
+  validateRequired,
+  invokeRequiredField
+}: ILessonSurveyApp) => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
 
   const gContext = useGlobalContext();
@@ -155,26 +161,19 @@ const LessonApp = ({}: ILessonSurveyApp) => {
   // ~~~~~~~~~~~~~ LESSON SETUP ~~~~~~~~~~~~ //
 
   const [lessonDataLoaded, setLessonDataLoaded] = useState<boolean>(false);
-  const {lessonData, misc} = lessonState;
 
-  const [pageStateUpdated, setPageStateUpdated] = useState(false);
+  const [pageStateUpdated, setPageStateUpdated] = useState(true);
 
   useEffect(() => {
-    if (
-      misc?.personLessonData &&
-      misc?.personLessonData?.lessonID &&
-      misc?.personLessonData?.lessonID === lessonData?.id
-    ) {
-      const data = misc?.personLessonData?.data[0];
-
-      const pages = data?.pages || '{}';
+    if (!isEmpty(personLessonData)) {
+      const pages = personLessonData?.pages || '{}';
       const lessonProgress = JSON.parse(pages).lessonProgress || 0;
 
       lessonDispatch({type: 'SET_CURRENT_PAGE', payload: lessonProgress});
-      setPageStateUpdated(true);
+      // setPageStateUpdated(true);
       history.push(`${match.url}/${lessonProgress}`);
     }
-  }, [lessonData.id, misc?.personLessonData?.lessonID]);
+  }, [personLessonData]);
 
   useEffect(() => {
     if (lessonState.lessonData && lessonState.lessonData.id) {
@@ -855,14 +854,11 @@ const LessonApp = ({}: ILessonSurveyApp) => {
     }
   };
 
-  const getPersonLessonsDataId = (): string =>
-    listPersonLessonsData?.find((_d: any) => _d.lessonID === lessonID)?.id || '';
-
   const getLessonCurrentPage = async () => {
     try {
       const getLessonRatingDetails: any = await API.graphql(
         graphqlOperation(queries.getPersonLessonsData, {
-          id: getPersonLessonsDataId()
+          id: personLessonData.id
         })
       );
       const pageNumber = getLessonRatingDetails.data.getPersonLessonsData.pages;
@@ -1031,7 +1027,7 @@ const LessonApp = ({}: ILessonSurveyApp) => {
 
   const _getLessonCompletedValue = async () =>
     await getLessonCompletedValue({
-      id: getPersonLessonsDataId(),
+      id: personLessonData.id,
       filter: {
         lessonID: {eq: lessonID},
         studentEmail: {eq: user.email},
@@ -1039,19 +1035,21 @@ const LessonApp = ({}: ILessonSurveyApp) => {
       }
     });
 
-  const [listPersonLessonsData, setListPersonLessonsData] = useState([]);
+  // const datafromStorage = getLocalStorageData('lessonPersonData');
+
+  // useEffect(() => {
+  //   if (datafromStorage) {
+  //     setPersonLessonData(datafromStorage);
+  //   }
+  // }, [datafromStorage]);
 
   const handleLessonMutateData = async () => {
     try {
       let payload;
       let existingLesson: any;
 
-      const personLessonData = lessonState?.misc?.personLessonData;
-      const isSameAndDataExists =
-        personLessonData?.lessonID === lessonID && personLessonData?.data?.length > 0;
-
-      if (isSameAndDataExists) {
-        existingLesson = personLessonData?.data;
+      if (personLessonData) {
+        existingLesson = personLessonData;
       } else {
         existingLesson = await API.graphql(
           graphqlOperation(customQueries.listPersonLessonsData, {
@@ -1072,7 +1070,7 @@ const LessonApp = ({}: ILessonSurveyApp) => {
         });
       }
 
-      const items = isSameAndDataExists
+      const items = personLessonData
         ? existingLesson
         : existingLesson?.data?.listPersonLessonsData?.items || [];
 
@@ -1092,14 +1090,7 @@ const LessonApp = ({}: ILessonSurveyApp) => {
             }`.replace(/(\s\s+|[\t\n])/g, ' ').trim(),
           ratings: 0
         };
-
-        await API.graphql(
-          graphqlOperation(mutations.createPersonLessonsData, {
-            input: payload
-          })
-        );
       } else {
-        setListPersonLessonsData(items);
         payload = {
           id: items?.find((_d: any) => _d.lessonID === lessonID)?.id,
 
@@ -1157,11 +1148,11 @@ const LessonApp = ({}: ILessonSurveyApp) => {
             overlay={overlay}
             setOverlay={setOverlay}
             pageStateUpdated={pageStateUpdated}
-            getLessonCompletedValue={
-              listPersonLessonsData.length > 0 && _getLessonCompletedValue
-            }
+            personLessonData={personLessonData}
             createJournalData={createStudentArchiveData}
             isAtEnd={isAtEnd}
+            canContinue={canContinue}
+            validateRequired={validateRequired}
             setisAtEnd={setisAtEnd}
             handleRequiredNotification={handleRequiredNotification}
           />
@@ -1178,7 +1169,10 @@ const LessonApp = ({}: ILessonSurveyApp) => {
             <ErrorBoundary fallback={<h1>Error in the Lesson App</h1>}>
               {/* ADD LESSONWRAPPER HERE */}
               <div className="mt-4 mb-8 lesson-page-container">
-                <CoreUniversalLesson createJournalData={createStudentArchiveData} />
+                <CoreUniversalLesson
+                  invokeRequiredField={invokeRequiredField}
+                  canContinue={canContinue}
+                />
               </div>
             </ErrorBoundary>
           )}

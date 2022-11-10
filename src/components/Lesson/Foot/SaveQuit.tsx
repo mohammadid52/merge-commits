@@ -1,18 +1,7 @@
-import useAuth from '@customHooks/useAuth';
-import useGraphqlMutation from '@customHooks/useGraphqlMutation';
-import {
-  DeleteUniversalLessonStudentDataInput,
-  ModelUniversalLessonStudentDataConditionInput,
-  UniversalLessonStudentData,
-  UpdatePersonLessonsDataInput
-} from 'API';
 import Buttons from 'atoms/Buttons';
 import {useGlobalContext} from 'contexts/GlobalContext';
-import useStudentTimer from 'customHooks/timer';
 import React, {useEffect, useState} from 'react';
 import {BiSave} from 'react-icons/bi';
-import {useHistory} from 'react-router-dom';
-import {getLocalStorageData} from 'utilities/localStorage';
 
 interface SaveQuitProps {
   id?: string;
@@ -21,10 +10,12 @@ interface SaveQuitProps {
     text: string;
   };
   roomID: string;
+  canContinue: boolean;
   createJournalData?: () => any;
+  invokeRequiredField?: () => any;
 }
 
-const SaveQuit = ({createJournalData}: SaveQuitProps) => {
+const SaveQuit = ({canContinue, invokeRequiredField}: SaveQuitProps) => {
   const {lessonState, lessonDispatch} = useGlobalContext();
 
   // ##################################################################### //
@@ -53,6 +44,13 @@ const SaveQuit = ({createJournalData}: SaveQuitProps) => {
     }
   };
 
+  const goToThatRequiredElement = (domID: string) => {
+    const element = document.getElementById(domID);
+    if (element) {
+      element.scrollIntoView({behavior: 'smooth'});
+    }
+  };
+
   const setLeaveModalVisible = (updatedState: boolean) => {
     lessonDispatch({type: 'SET_LEAVE_MODAL_VISIBLE_STATE', payload: updatedState});
   };
@@ -74,11 +72,14 @@ const SaveQuit = ({createJournalData}: SaveQuitProps) => {
       <div className={''}>
         <Buttons
           dataCy="save-lesson"
+          disabled={!canContinue}
           label={waiting ? 'Saving your data...' : 'Save and Go to Classroom'}
           Icon={BiSave}
           btnClass="w-full"
           iconBeforeLabel
-          onClick={handleManualSave}></Buttons>
+          onClick={
+            canContinue ? handleManualSave : () => invokeRequiredField()
+          }></Buttons>
       </div>
     </>
   );

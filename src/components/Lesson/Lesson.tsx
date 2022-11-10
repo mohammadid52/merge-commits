@@ -2,14 +2,24 @@ import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import Noticebar from 'components/Noticebar/Noticebar';
 import {GlobalContext} from 'contexts/GlobalContext';
 import useNotifications from 'customHooks/notifications';
-import {setLocalStorageData} from 'utilities/localStorage';
+import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
 import React, {useContext, useEffect, useState} from 'react';
 import {useParams} from 'react-router-dom';
 import * as customQueries from 'customGraphql/customQueries';
 import LessonApp from './LessonApp';
 import SurveyApp from './SurveyApp';
+import {PersonLessonsData} from 'API';
+import {isEmpty} from 'lodash';
+import {StudentPageInput} from '@interfaces/UniversalLessonInterfaces';
 
-export interface ILessonSurveyApp {}
+export interface ILessonSurveyApp {
+  personLoading: boolean;
+  personLessonData: PersonLessonsData | null;
+  canContinue?: boolean;
+  setPersonLessonData?: React.Dispatch<React.SetStateAction<PersonLessonsData | null>>;
+  invokeRequiredField?: () => void;
+  validateRequired?: (pageIdx: number) => boolean;
+}
 
 const Lesson = () => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
@@ -50,8 +60,9 @@ const Lesson = () => {
     }
   };
 
+  const {lessonID} = urlParams;
+
   useEffect(() => {
-    const {lessonID} = urlParams;
     if (lessonID) {
       lessonDispatch({
         type: 'SET_INITIAL_STATE',
@@ -63,13 +74,115 @@ const Lesson = () => {
     }
   }, []);
 
+  const [personLessonData, setPersonLessonData] = useState<PersonLessonsData | null>(
+    null
+  );
+
+  const [personLoading, setPersonLoading] = useState(true);
+
+  const data: PersonLessonsData[] = getLocalStorageData('lessonPersonData');
+
+  useEffect(() => {
+    if (isEmpty(personLessonData)) {
+      const _personLessonData = data.find(
+        (d: PersonLessonsData) => d.lessonID === lessonID
+      );
+
+      setPersonLessonData(_personLessonData);
+      setPersonLoading(false);
+    }
+  }, [data]);
+
   // ~~~~~~~~~~~ CHECK IF SURVEY ~~~~~~~~~~~ //
   const isSurvey = lessonState && lessonState.lessonData?.type === 'survey';
+
+  const PAGES = lessonState.lessonData.lessonPlan;
+
+  const invokeRequiredField = () => {
+    if (validateRequired(lessonState.currentPage)) {
+      const domID = getFirstEmptyFieldDomId();
+      if (domID && typeof domID === 'string') {
+        const domElement = document.getElementById(domID);
+        if (domElement) {
+          domElement.scrollIntoView();
+        }
+      }
+    }
+  };
+
+  const validateRequired = (pageIdx: number) => {
+    if (PAGES) {
+      const thisPageData = lessonState?.studentData || [];
+      const thisPageRequired = lessonState?.requiredInputs[pageIdx] || [];
+
+      if (thisPageData && thisPageData.length > 0) {
+        const areAnyEmpty = thisPageData.filter((input: StudentPageInput) => {
+          if (thisPageRequired.includes(input.domID) && input.input[0] === '') {
+            return input;
+          }
+        });
+
+        if (areAnyEmpty.length > 0) {
+          return false;
+        } else {
+          return true;
+        }
+      } else {
+        return true;
+      }
+    } else {
+      return false;
+    }
+  };
+  const getFirstEmptyFieldDomId = (): any => {
+    if (PAGES) {
+      const thisPageData = lessonState?.studentData || [];
+      const thisPageRequired = lessonState?.requiredInputs[lessonState.currentPage] || [];
+
+      if (thisPageData && thisPageData.length > 0) {
+        const areAnyEmpty = thisPageData.filter((input: StudentPageInput) => {
+          if (thisPageRequired.includes(input.domID) && input.input[0] === '') {
+            return input;
+          }
+        });
+
+        if (areAnyEmpty.length > 0) {
+          return areAnyEmpty[0].domID;
+        } else {
+          return true;
+        }
+      } else {
+        return true;
+      }
+    } else {
+      return false;
+    }
+  };
+
+  const canContinue = () => {
+    if (PAGES) {
+      return (
+        validateRequired(lessonState.currentPage) &&
+        lessonState.currentPage <= PAGES.length - 1
+      );
+    } else {
+      return false;
+    }
+  };
+
+  const props = {
+    personLessonData,
+    invokeRequiredField,
+    setPersonLessonData,
+    personLoading,
+    canContinue: canContinue(),
+    validateRequired
+  };
 
   return (
     <>
       <Noticebar notifications={notifications} />
-      {loaded ? isSurvey ? <SurveyApp /> : <LessonApp /> : null}
+      {loaded ? isSurvey ? <SurveyApp {...props} /> : <LessonApp {...props} /> : null}
     </>
   );
 };
