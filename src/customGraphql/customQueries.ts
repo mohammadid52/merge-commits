@@ -5619,6 +5619,41 @@ export const listPersonLessonsData = /* GraphQL */ `
   }
 `;
 
+export const lessonsByType = /* GraphQL */ `
+  query ListPersonLessonsData(
+    $id: ID
+    $filter: ModelPersonLessonsDataFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listPersonLessonsData(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        studentAuthID
+        studentEmail
+        lessonID
+        lessonType
+        lesson {
+          title
+        }
+        pages
+        ratings
+        isCompleted
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+
 export const getPersonLessonsData = /* GraphQL */ `
   query GetPersonLessonsData($id: ID!) {
     getPersonLessonsData(id: $id) {

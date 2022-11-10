@@ -12,6 +12,7 @@ interface StageIconProps extends UniversalLessonPage {
   hidden?: boolean;
   userAtEnd?: boolean;
   isShared?: boolean;
+  canContinue?: boolean;
   handleRequiredNotification?: () => void;
 }
 
@@ -20,6 +21,7 @@ const StageIcon = ({
   enabled,
   open,
   active,
+  canContinue,
   label,
   clickable,
   hidden,
@@ -68,14 +70,19 @@ const StageIcon = ({
   const params = useQuery(location.search);
 
   const handleLink = () => {
-    scrollUp();
-    const sId = params.get('sId');
-    const sEmail = params.get('sId');
+    const isNotMovingForward = pageNr < lessonProgress;
+    if (canContinue || isNotMovingForward) {
+      scrollUp();
+      const sId = params.get('sId');
+      const sEmail = params.get('sId');
 
-    const dynamicQuery = sId && sEmail ? `?sId=${sId}&sEmail=${sEmail}` : '';
-    history.push(`${match.url}/${pageNr}${dynamicQuery}`);
+      const dynamicQuery = sId && sEmail ? `?sId=${sId}&sEmail=${sEmail}` : '';
+      history.push(`${match.url}/${pageNr}${dynamicQuery}`);
 
-    lessonDispatch({type: 'SET_CURRENT_PAGE', payload: pageNr});
+      lessonDispatch({type: 'SET_CURRENT_PAGE', payload: pageNr});
+    } else {
+      handleRequiredNotification && handleRequiredNotification();
+    }
   };
 
   const clickedLesson = active

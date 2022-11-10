@@ -10,11 +10,13 @@ import StageIcon from './StageIcon';
 
 interface IProgressBarProps {
   handleHome?: () => void;
+  validateRequired?: (pageIdx: number) => boolean;
   handleRequiredNotification?: () => void;
   pages?: any[];
   currentPage?: number;
   studentData?: any[];
   requiredInputs?: any[];
+  canContinue?: boolean;
 }
 
 const Disabled = ({text}: {text: string}) => {
@@ -31,7 +33,9 @@ const ProgressBar = ({
   pages,
   currentPage,
   studentData,
-  requiredInputs
+  requiredInputs,
+  validateRequired,
+  canContinue
 }: IProgressBarProps) => {
   const gContext = useContext(GlobalContext);
   const lessonState = gContext.lessonState;
@@ -49,47 +53,6 @@ const ProgressBar = ({
    *  THE CODE FROM THE ELSE - IF AFTER LINE 58   *
    *     IS USED FOR CHECKING REQUIRED FIELDS     *
    ************************************************/
-
-  const validateRequired = (pageIdx: number) => {
-    if (pages) {
-      let inputResponseData =
-        studentData && !isSurvey ? studentData[pageIdx] : studentData;
-
-      let thisPageRequired = requiredInputs && requiredInputs[pageIdx]; // ['a','b','id_123']
-
-      if (inputResponseData && inputResponseData.length > 0) {
-        let areAnyEmpty2 =
-          thisPageRequired && thisPageRequired.length > 0
-            ? thisPageRequired.reduce((truth: boolean, requiredId: string) => {
-                let findInSurveyData = inputResponseData.find(
-                  (inputObj: any) =>
-                    (inputObj.domID === requiredId && inputObj.input[0] === '') ||
-                    (inputObj.domID === requiredId && inputObj.input[0] === undefined)
-                );
-                if (truth === true) {
-                  return true;
-                } else {
-                  if (findInSurveyData !== undefined && findInSurveyData !== null) {
-                    return true;
-                  } else {
-                    return false;
-                  }
-                }
-              }, false)
-            : false;
-
-        if (areAnyEmpty2) {
-          return false;
-        } else {
-          return true;
-        }
-      } else {
-        return true;
-      }
-    } else {
-      return false;
-    }
-  };
 
   const nextRequiredIdx = pages
     ? pages.reduce((nextIdx: number, _: any, currIdx: number) => {
@@ -177,6 +140,7 @@ const ProgressBar = ({
                 open={page.open !== false || isOnDemand}
                 active={key === currentPage}
                 label={page.label}
+                canContinue={canContinue}
                 handleRequiredNotification={handleRequiredNotification}
                 clickable={
                   key === 0 ||
