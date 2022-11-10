@@ -12,7 +12,7 @@ const CoreUniversalLesson = ({
   invokeRequiredField,
   canContinue
 }: {
-  canContinue: boolean;
+  canContinue?: boolean;
   invokeRequiredField?: () => void;
 }) => {
   const isInLesson = useInLessonCheck();
