@@ -16,6 +16,7 @@ interface IProgressBarProps {
   currentPage?: number;
   studentData?: any[];
   requiredInputs?: any[];
+  canContinue?: boolean;
 }
 
 const Disabled = ({text}: {text: string}) => {
@@ -33,7 +34,8 @@ const ProgressBar = ({
   currentPage,
   studentData,
   requiredInputs,
-  validateRequired
+  validateRequired,
+  canContinue
 }: IProgressBarProps) => {
   const gContext = useContext(GlobalContext);
   const lessonState = gContext.lessonState;
@@ -138,6 +140,7 @@ const ProgressBar = ({
                 open={page.open !== false || isOnDemand}
                 active={key === currentPage}
                 label={page.label}
+                canContinue={canContinue}
                 handleRequiredNotification={handleRequiredNotification}
                 clickable={
                   key === 0 ||

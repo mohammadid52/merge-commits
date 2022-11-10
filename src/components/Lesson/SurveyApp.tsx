@@ -275,7 +275,7 @@ const SurveyApp = ({
         roomID: getRoomData.id,
         currentLocation: '0',
         lessonProgress: '0',
-        surveyData: initialDataFlattened
+        surveyData: initialDataFlattened.flat()
       };
 
       const newSurveyData: any = await API.graphql(
@@ -836,7 +836,10 @@ const SurveyApp = ({
               {/* ADD LESSONWRAPPER HERE */}
               <div className="mt-4 mb-8 lesson-page-container ">
                 <CoreUniversalLesson
-                  invokeRequiredField={invokeRequiredField}
+                  invokeRequiredField={() => {
+                    invokeRequiredField();
+                    handleRequiredNotification();
+                  }}
                   canContinue={canContinue}
                 />
               </div>

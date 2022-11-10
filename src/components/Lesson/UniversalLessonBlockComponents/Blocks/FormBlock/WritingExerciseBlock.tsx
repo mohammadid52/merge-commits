@@ -27,7 +27,7 @@ const WritingExerciseBlock = ({
 
   return (
     <div
-      id={id}
+      id={`${inputID}_for_error`}
       className={`w-full max-w-256 mx-auto  flex flex-col justify-between items-center`}>
       {!title ? (
         <EditingBlock options={options} inputID={inputID} id={inputID} value={value[0]} />
