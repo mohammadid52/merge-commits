@@ -2,10 +2,10 @@
 
 import {loginConfig, urlConfig} from '../../config';
 
-// const dropdownDetail = {
-//   title: 'Analytics Manager',
-//   item: 'Download CSV'
-// };
+const dropdownDetail = {
+  button: 'Analytics Manager',
+  item: 'Download-CSV-item'
+};
 
 describe('Research and Analytics', () => {
   beforeEach(() => {
@@ -13,33 +13,33 @@ describe('Research and Analytics', () => {
     cy.login(loginConfig.admin.username, loginConfig.admin.password);
   });
 
-  it('', {defaultCommandTimeout: 20000}, function () {
+  it('data should be visible', {defaultCommandTimeout: 20000}, function () {
     cy.log('Wait for page to load');
     cy.wait(10000); // wait for page to load
     cy.log('Check if it is on the dashboard');
     cy.url().should('contain', urlConfig.dashboardURL);
     cy.log('Wait for page to load');
     cy.wait(10000);
-    // cy.get(`button:contains(${dropdownDetail.title})`).trigger('mouseover');
-    // cy.get(`div:contains(${dropdownDetail.item})`).first().click();
-    cy.log('Go to registration page');
-    cy.visit(urlConfig.analyticsURL);
-    cy.log('Wait for page to load');
-    cy.wait(10000);
+    cy.log('Go to Analytics Manager through navbar');
+    cy.navMenuClick(dropdownDetail.button, dropdownDetail.item);
+    // cy.log('Go to registration page');
+    // cy.visit(urlConfig.analyticsURL);
+    cy.log('Wait for classrooms to load');
+    cy.wait(5000);
     cy.log('Click on classroom selector');
     cy.dataCy('analytics-classroom-button').click();
     cy.log('Click on the first item');
-    cy.dataCy('analytics-classroom-item-3956fdc3-d36d-43db-b43e-75efa30ea8cc').click();
+    cy.dataCy('analytics-classroom-item-3936fdc3-d36d-43db-b43e-75efa30ea8cc').click();
 
-    cy.log('Wait for data to load');
-    cy.wait(3000);
+    cy.log('Wait for unit to load');
+    cy.wait(5000);
     cy.log('Click on unit selector');
     cy.dataCy('analytics-unit-button').click();
     cy.log('Click on the first item');
     cy.dataCy('analytics-unit-item-1bc60136-42aa-4db8-a9f2-6dc0bf05cd43').click();
 
-    cy.log('Wait for data to load');
-    cy.wait(3000);
+    cy.log('Wait for survey to load');
+    cy.wait(5000);
     cy.log('Click on survey selector');
     cy.dataCy('analytics-survey-button').click();
     cy.log('Click on the first item');

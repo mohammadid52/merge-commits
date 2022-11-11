@@ -15,6 +15,7 @@ declare global {
       dataCy(value: string): Chainable<Element>;
       closeCheckInModal(): Chainable<Element>;
       saveSurvey(): Chainable<Element>;
+      navMenuClick(button: string, item: string): Chainable<Element>;
       controlledInputChange(value: string | number): Chainable<Element>;
     }
   }
@@ -60,3 +61,8 @@ Cypress.Commands.add(
     return cy.get(input).then((input) => changeInputValue(input)(value));
   }
 );
+
+Cypress.Commands.add('navMenuClick', (button, item) => {
+  cy.get(`button:contains(${button})`).trigger('mouseover');
+  cy.dataCy(item).click();
+});

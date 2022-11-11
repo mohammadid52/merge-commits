@@ -91,7 +91,10 @@ const DropDownMenu = ({index, menu, onClick}: any) => {
                 onMouseEnter={() => onMouseEnter()}
                 onMouseLeave={() => onMouseLeave(open)}>
                 {menu.children.map((item: any, menuIndex: number) => (
-                  <Menu.Item key={`${index}_${menuIndex}`} onClick={() => onClick(item)}>
+                  <Menu.Item
+                    data-cy={`${item.title.split(' ').join('-')}-item`}
+                    key={`${index}_${menuIndex}`}
+                    onClick={() => onClick(item)}>
                     <div className="hover:iconoclast:bg-400 hover:curate:bg-400 hover:text-white rounded-full p-2 px-4 text-xs 2xl:text-base">
                       {item.title}
                     </div>

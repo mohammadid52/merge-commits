@@ -2,8 +2,13 @@
 
 import {loginConfig, urlConfig} from '../../config';
 
+const dropdownDetail = {
+  button: 'Course Builder',
+  item: 'Course-Manager-item'
+};
+
 const instituteId = 'f3aef681-6fff-4795-8fde-67cb159bd275';
-const courseUrl = `http://localhost:8085/dashboard/manage-institutions/institution/${instituteId}/courses`;
+// const courseUrl = `http://localhost:8085/dashboard/manage-institutions/institution/${instituteId}/courses`;
 const courseTitle = 'Big Bang Course Testing';
 
 describe('Course Page', {defaultCommandTimeout: 20000}, () => {
@@ -24,8 +29,8 @@ describe('Course Page', {defaultCommandTimeout: 20000}, () => {
     cy.log('Check if it is on the dashboard');
     cy.url().should('contain', urlConfig.dashboardURL);
 
-    cy.log('Go to course page');
-    cy.visit(courseUrl);
+    cy.log('Go to Course Manager through navbar');
+    cy.navMenuClick(dropdownDetail.button, dropdownDetail.item);
     cy.log('Wait for page to load');
     cy.wait(10000);
     cy.log('Click on first curriculum');

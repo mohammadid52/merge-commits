@@ -8,6 +8,11 @@ const uniqueId = Date.now().toString();
 const {RegistrationDict} = getDictionary(getClientKey());
 const userLanguage = 'EN';
 
+const dropdownDetail = {
+  button: 'Institution Manager',
+  item: 'Register-New-User-item'
+};
+
 const randomDetails = () => {
   const firstName = `cypress-${uniqueId}`;
   const lastName = ` test`;
@@ -44,10 +49,8 @@ describe('Student flow', () => {
   it('register existing user', {defaultCommandTimeout: 20000}, function () {
     cy.log('Check if it is on the dashboard');
     cy.url().should('contain', urlConfig.dashboardURL);
-    cy.log('Go to register url');
-    cy.visit(urlConfig.registerURL); // go to registration page
-    cy.wait('Wait for page to load');
-    cy.wait(3000); // wait for page to load
+    cy.log('Go to Register new user through navbar');
+    cy.navMenuClick(dropdownDetail.button, dropdownDetail.item);
     cy.log('Type in first name');
     cy.get(`input#${newUserCreateFields.firstName}`)
       .type(randomDetails().firstName)

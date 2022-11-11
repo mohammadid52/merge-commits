@@ -21,8 +21,8 @@ const randomDetails = () => {
 };
 
 const dropdownDetail = {
-  title: 'Institution Manager',
-  item: 'Register New User'
+  button: 'Institution Manager',
+  item: 'Register-New-User-item'
 };
 
 const newUserFields = {
@@ -57,14 +57,14 @@ describe('Student flow', () => {
 
   it('should go to register user page', {defaultCommandTimeout: 20000}, function () {
     cy.url().should('contain', urlConfig.dashboardURL);
-    cy.get(`button:contains(${dropdownDetail.title})`).trigger('mouseover');
-    cy.get(`body:contains(${dropdownDetail.item})`).should('exist');
-    cy.visit(urlConfig.registerURL);
+    cy.log('Go to Register new user through navbar');
+    cy.navMenuClick(dropdownDetail.button, dropdownDetail.item);
   });
 
   it('should contain all fields', {defaultCommandTimeout: 20000}, function () {
     cy.url().should('contain', urlConfig.dashboardURL);
-    cy.visit(urlConfig.registerURL);
+    cy.log('Go to Register new user through navbar');
+    cy.navMenuClick(dropdownDetail.button, dropdownDetail.item);
     cy.get(`label:contains(${newUserFields.firstName})`).should('exist');
     cy.get(`label:contains(${newUserFields.lastName})`).should('exist');
     cy.get(`label:contains(${newUserFields.email})`).should('exist');
@@ -79,8 +79,8 @@ describe('Student flow', () => {
 
   it('should create new user (student)', {defaultCommandTimeout: 20000}, function () {
     cy.url().should('contain', urlConfig.dashboardURL);
-    cy.visit(urlConfig.registerURL);
-    cy.wait(3000);
+    cy.log('Go to Register new user through navbar');
+    cy.navMenuClick(dropdownDetail.button, dropdownDetail.item);
     cy.get(`input#${newUserCreateFields.firstName}`)
       .type(randomDetails().firstName)
       .should('have.value', randomDetails().firstName);

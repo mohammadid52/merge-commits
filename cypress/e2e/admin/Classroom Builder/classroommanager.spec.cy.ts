@@ -3,11 +3,16 @@
 import {loginConfig, urlConfig} from '../../config';
 import {getClientKey, getDictionary} from '../../../support/e2e';
 
-const instituteId = 'f3aef681-6fff-4795-8fde-67cb159bd275';
-const classroomUrl = `http://localhost:8085/dashboard/manage-institutions/institution/${instituteId}/class-rooms`;
+const dropdownDetail = {
+  button: 'Classroom Builder',
+  item: 'Classroom-Manager-item'
+};
+
+// const instituteId = 'f3aef681-6fff-4795-8fde-67cb159bd275';
+// const classroomUrl = `http://localhost:8085/dashboard/manage-institutions/institution/${instituteId}/class-rooms`;
 const studentName = 'Jasperooo Prague';
 const sucessMessage = 'Student added successfully';
-const deleteMessage = 'Student removed from classroom';
+// const deleteMessage = 'Student removed from classroom';
 const studentConfig = {
   email: 'jasperprague@yopmail.com',
   password: 'panda123'
@@ -26,8 +31,8 @@ const loadClassroomPage = () => {
   cy.log('Check if it is on the dashboard');
   cy.url().should('contain', urlConfig.dashboardURL);
 
-  cy.log('Go to classroom page');
-  cy.visit(classroomUrl);
+  cy.log('Go to Classroom Manager through navbar');
+  cy.navMenuClick(dropdownDetail.button, dropdownDetail.item);
   cy.log('Wait for page to load');
   cy.wait(10000);
   cy.log('Click on the classroom name');
