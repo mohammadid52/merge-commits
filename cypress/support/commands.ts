@@ -28,7 +28,7 @@ Cypress.Commands.add('dataCy', (value) => {
 Cypress.Commands.add('login', (email, pw, customURL = urlConfig.baseURL) => {
   cy.visit(customURL);
   cy.dataCy('email').type(email);
-  cy.get('button').contains('Enter').click();
+  cy.get('button').contains('Login').click();
   cy.dataCy('password').type(pw);
   cy.get('button').contains('Login').click();
 });

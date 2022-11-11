@@ -629,6 +629,33 @@ export const createClassStudent = /* GraphQL */ `
   }
 `;
 
+export const updatePersonLessonsData = /* GraphQL */ `
+  mutation UpdatePersonLessonsData(
+    $input: UpdatePersonLessonsDataInput!
+    $condition: ModelPersonLessonsDataConditionInput
+  ) {
+    updatePersonLessonsData(input: $input, condition: $condition) {
+      id
+      studentAuthID
+      studentEmail
+      lessonID
+      lessonType
+      pages
+      ratings
+      isCompleted
+      roomId
+      lesson {
+        id
+        type
+        title
+      }
+
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
 export const updateClassStudent = /* GraphQL */ `
   mutation UpdateClassStudent(
     $input: UpdateClassStudentInput!

@@ -1,11 +1,18 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {useQuery} from '@customHooks/urlParam';
 import useAuth from '@customHooks/useAuth';
-import {CreateUniversalArchiveDataInput, PartInput} from 'API';
+import {
+  CreateUniversalArchiveDataInput,
+  PartInput,
+  UpdatePersonLessonsDataInput
+} from 'API';
 import {GlobalContext} from 'contexts/GlobalContext';
+import * as customMutations from 'customGraphql/customMutations';
+import * as customQueries from 'customGraphql/customQueries';
 import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
 import * as mutations from 'graphql/mutations';
 import * as queries from 'graphql/queries';
+
 import {
   PagePart,
   PartContent,
@@ -14,6 +21,7 @@ import {
   UniversalLessonPage,
   UniversalLessonStudentData
 } from 'interfaces/UniversalLessonInterfaces';
+import {isEmpty} from 'lodash';
 import React, {useContext, useEffect, useRef, useState} from 'react';
 import {useHistory, useParams, useRouteMatch} from 'react-router-dom';
 import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
@@ -30,8 +38,11 @@ const SurveyApp = ({
   personLessonData,
   setPersonLessonData,
   canContinue,
+  setPersonLoading,
   validateRequired,
-  invokeRequiredField
+  invokeRequiredField,
+  pageStateUpdated,
+  updatePageInLocalStorage
 }: ILessonSurveyApp) => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
 
@@ -79,7 +90,6 @@ const SurveyApp = ({
   // ~~~~~~~~~~~~~ LESSON SETUP ~~~~~~~~~~~~ //
 
   const [lessonDataLoaded, setLessonDataLoaded] = useState<boolean>(false);
-  const [pageStateUpdated, setPageStateUpdated] = useState(true);
 
   // ##################################################################### //
   // ###################### INITIALIZE STUDENT DATA ###################### //
@@ -465,7 +475,7 @@ const SurveyApp = ({
       const lessonProgress = JSON.parse(pages).lessonProgress || 0;
 
       lessonDispatch({type: 'SET_CURRENT_PAGE', payload: lessonProgress});
-      setPageStateUpdated(true);
+
       history.push(`${match.url}/${lessonProgress}`);
     }
   }, [personLoading]);
@@ -722,55 +732,82 @@ const SurveyApp = ({
     }
   };
 
+  const commonPersonLessonPayload = {
+    studentAuthID: user.authId,
+    roomId: getRoomData.id,
+    studentEmail: user.email,
+    lessonID: lessonID,
+    lessonType: lessonState.lessonData?.type,
+    pages: `{
+      "currentPage":${JSON.stringify(lessonState.currentPage)},
+      "totalPages":${JSON.stringify(lessonState.lessonData?.lessonPlan?.length - 1)},
+      "lessonProgress":${JSON.stringify(lessonState.currentPage)}
+      }`
+      .replace(/(\s\s+|[\t\n])/g, ' ')
+      .trim()
+  };
+
+  const createPersonLessonPayload: UpdatePersonLessonsDataInput = {
+    ...commonPersonLessonPayload,
+    id: uuidV4(),
+    ratings: 0
+  };
+
+  const updatePersonLessonPayload: UpdatePersonLessonsDataInput = {
+    ...commonPersonLessonPayload,
+    id: personLessonData?.id
+  };
+
+  const createPersonLessonsData = async () => {
+    if (isStudent) {
+      const result: any = await API.graphql(
+        graphqlOperation(mutations.createPersonLessonsData, {
+          input: createPersonLessonPayload
+        })
+      );
+      setPersonLessonData(result?.data?.createPersonLessonsData);
+    }
+  };
+
+  const fetchLessonPersonData = async () => {
+    try {
+      setPersonLoading(true);
+      const lessonPersonData: any = await API.graphql(
+        graphqlOperation(customQueries.lessonsByType, {
+          filter: {
+            roomId: {eq: getRoomData.id},
+            studentAuthID: {eq: user.authId},
+            studentEmail: {eq: user.email}
+          },
+          limit: 500
+        })
+      );
+
+      const data = lessonPersonData?.data?.listPersonLessonsData?.items || [];
+      setLocalStorageData('lessonPersonData', data);
+      const _personLessonData = data.find((d: any) => d.lessonID === lessonID);
+      if (_personLessonData) {
+        setPersonLessonData(_personLessonData);
+      } else {
+        await createPersonLessonsData();
+      }
+    } catch (e) {
+      console.error('listLessonPersonData: ', e);
+    } finally {
+      setPersonLoading(false);
+    }
+  };
+
   const handleSurveyMutateData = async () => {
     try {
-      let payload;
       if (!personLoading) {
         if (!personLessonData) {
-          payload = {
-            id: uuidV4(),
-            studentAuthID: user.authId,
-            roomId: getRoomData.id,
-            studentEmail: user.email,
-            lessonID: lessonID,
-            lessonType: lessonState.lessonData?.type,
-            pages: `{
-            "currentPage":${JSON.stringify(lessonState.currentPage)},
-            "totalPages":${JSON.stringify(
-              lessonState.lessonData?.lessonPlan?.length - 1
-            )},
-            "lessonProgress":${JSON.stringify(lessonState.currentPage)}
-            }`
-              .replace(/(\s\s+|[\t\n])/g, ' ')
-              .trim(),
-            ratings: 0
-          };
-
-          if (isStudent) {
-            const result: any = await API.graphql(
-              graphqlOperation(mutations.createPersonLessonsData, {input: payload})
-            );
-            setPersonLessonData(result?.data?.createPersonLessonsData);
-          }
-        } else {
-          payload = {
-            id: personLessonData?.id,
-
-            pages: `{
-            "currentPage":${JSON.stringify(lessonState.currentPage)},
-            "totalPages":${JSON.stringify(
-              lessonState.lessonData?.lessonPlan?.length - 1
-            )},
-            "lessonProgress":${JSON.stringify(lessonState.currentPage)}
-            }`
-              .replace(/(\s\s+|[\t\n])/g, ' ')
-              .trim()
-          };
-
+          fetchLessonPersonData();
+        } else if (personLessonData) {
           if (isStudent) {
             await API.graphql(
-              graphqlOperation(mutations.updatePersonLessonsData, {
-                input: payload
+              graphqlOperation(customMutations.updatePersonLessonsData, {
+                input: updatePersonLessonPayload
               })
             );
           }
@@ -816,8 +853,10 @@ const SurveyApp = ({
             createJournalData={createStudentArchiveData}
             setOverlay={setOverlay}
             canContinue={canContinue}
+            updatePageInLocalStorage={updatePageInLocalStorage}
             personLessonData={personLessonData}
             isAtEnd={isAtEnd}
+            setPersonLessonData={setPersonLessonData}
             setisAtEnd={setisAtEnd}
             validateRequired={validateRequired}
             handleRequiredNotification={handleRequiredNotification}

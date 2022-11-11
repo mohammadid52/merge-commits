@@ -372,7 +372,8 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
             roomId: {eq: roomId},
             studentAuthID: {eq: authId},
             studentEmail: {eq: email}
-          }
+          },
+          limit: 500
         })
       );
 
