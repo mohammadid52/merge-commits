@@ -11,12 +11,14 @@ import SurveyApp from './SurveyApp';
 import {PersonLessonsData} from 'API';
 import {isEmpty} from 'lodash';
 import {StudentPageInput} from '@interfaces/UniversalLessonInterfaces';
+import moment from 'moment';
 
 export interface ILessonSurveyApp {
   personLoading: boolean;
   personLessonData: PersonLessonsData | null;
   canContinue?: boolean;
   setPersonLessonData?: React.Dispatch<React.SetStateAction<PersonLessonsData | null>>;
+  setPersonLoading?: React.Dispatch<React.SetStateAction<boolean>>;
   invokeRequiredField?: () => void;
   validateRequired?: (pageIdx: number) => boolean;
 }
@@ -80,9 +82,8 @@ const Lesson = () => {
 
   const [personLoading, setPersonLoading] = useState(true);
 
-  const data: PersonLessonsData[] = getLocalStorageData('lessonPersonData');
-
   useEffect(() => {
+    const data: PersonLessonsData[] = getLocalStorageData('lessonPersonData');
     if (isEmpty(personLessonData)) {
       const _personLessonData = data.find(
         (d: PersonLessonsData) => d.lessonID === lessonID
@@ -91,7 +92,7 @@ const Lesson = () => {
       setPersonLessonData(_personLessonData);
       setPersonLoading(false);
     }
-  }, [data]);
+  }, []);
 
   // ~~~~~~~~~~~ CHECK IF SURVEY ~~~~~~~~~~~ //
   const isSurvey = lessonState && lessonState.lessonData?.type === 'survey';
@@ -175,8 +176,74 @@ const Lesson = () => {
     setPersonLessonData,
     personLoading,
     canContinue: canContinue(),
-    validateRequired
+    validateRequired,
+    setPersonLoading
   };
+
+  /**
+   * Lesson IDs
+   * 531eafe6-61aa-4c82-b056-247b14be3035
+   */
+
+  const getAllStudentIds = async (nextToken?: string, outArray?: any) => {
+    try {
+      let combined: any;
+
+      const universalLesson: any = await API.graphql(
+        graphqlOperation(customQueries.listUniversalLessonStudentDatas, {
+          nextToken: nextToken,
+          filter: {
+            hasExerciseData: {eq: true},
+            lessonID: {eq: '531eafe6-61aa-4c82-b056-247b14be3035'}
+          }
+        })
+      );
+      const response = universalLesson.data.listUniversalLessonStudentData.items;
+      const NextToken = universalLesson.data.listUniversalLessonStudentData.nextToken;
+
+      combined = [...outArray, ...response];
+
+      if (NextToken) {
+        combined = await getAllStudentIds(NextToken, combined);
+      }
+
+      return combined;
+    } catch (error) {}
+  };
+
+  const test = async () => {
+    const res = await getAllStudentIds(null, []);
+    const studentIdArr: any = [];
+    const lessonPageIdArr: any = [];
+    const roomIdArr: any = [];
+
+    const duplicate: any = [];
+
+    res.forEach((r: any) => {
+      const dup = duplicate.find(
+        (d: any) =>
+          d.studentAuthID === r.studentAuthID &&
+          d.roomID &&
+          r.roomID &&
+          d.lessonPageID &&
+          r.lessonPageID
+      );
+      if (dup) {
+        console.log('dup', {
+          studentAuthID: r.studentAuthID,
+          roomID: r.roomID,
+          lessonPageID: r.lessonPageID
+        });
+      } else {
+        duplicate.push(r);
+      }
+    });
+
+    //
+  };
+  // useEffect(() => {
+  //   test();
+  // }, []);
 
   return (
     <>

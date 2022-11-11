@@ -3,6 +3,7 @@ import {UniversalLessonStudentData as UniversalLessonStudentDataFromAPI} from 'A
 import 'components/Dashboard/GameChangers/styles/Flickity.scss';
 import 'components/Dashboard/GameChangers/styles/GameChanger.scss';
 import {useGlobalContext} from 'contexts/GlobalContext';
+import * as customMutations from 'customGraphql/customMutations';
 import * as customQueries from 'customGraphql/customQueries';
 import * as customSubscriptions from 'customGraphql/customSubscriptions';
 import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
@@ -18,7 +19,6 @@ import {
   UniversalLessonPage,
   UniversalLessonStudentData
 } from 'interfaces/UniversalLessonInterfaces';
-import {isEmpty} from 'lodash';
 import React, {useEffect, useRef, useState} from 'react';
 import {useHistory, useParams, useRouteMatch} from 'react-router-dom';
 import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
@@ -34,7 +34,10 @@ const LessonApp = ({
   personLessonData,
   canContinue,
   validateRequired,
-  invokeRequiredField
+  invokeRequiredField,
+  personLoading,
+  setPersonLessonData,
+  setPersonLoading
 }: ILessonSurveyApp) => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
 
@@ -163,17 +166,6 @@ const LessonApp = ({
   const [lessonDataLoaded, setLessonDataLoaded] = useState<boolean>(false);
 
   const [pageStateUpdated, setPageStateUpdated] = useState(true);
-
-  useEffect(() => {
-    if (!isEmpty(personLessonData)) {
-      const pages = personLessonData?.pages || '{}';
-      const lessonProgress = JSON.parse(pages).lessonProgress || 0;
-
-      lessonDispatch({type: 'SET_CURRENT_PAGE', payload: lessonProgress});
-      // setPageStateUpdated(true);
-      history.push(`${match.url}/${lessonProgress}`);
-    }
-  }, [personLessonData]);
 
   useEffect(() => {
     if (lessonState.lessonData && lessonState.lessonData.id) {
@@ -562,7 +554,7 @@ const LessonApp = ({
         await Promise.all(
           PAGES.map(async (page: any, idx: number) => {
             let studentData: any = await API.graphql(
-              graphqlOperation(queries.getUniversalLessonStudentData, {
+              graphqlOperation(customQueries.getUniversalLessonStudentData, {
                 id: `${user.authId}-${getRoomData.id}-${lessonID}-${page.id}`
                 // filter: {...filterObj.filter, lessonPageID: {eq: page.id}}
               })
@@ -1042,77 +1034,97 @@ const LessonApp = ({
   //     setPersonLessonData(datafromStorage);
   //   }
   // }, [datafromStorage]);
+  useEffect(() => {
+    if (!personLoading) {
+      const pages = personLessonData?.pages || '{}';
+      const lessonProgress = JSON.parse(pages).lessonProgress || 0;
+
+      lessonDispatch({type: 'SET_CURRENT_PAGE', payload: lessonProgress});
+      setPageStateUpdated(true);
+      history.push(`${match.url}/${lessonProgress}`);
+    }
+  }, [personLoading]);
+
+  const fetchLessonPersonData = async () => {
+    try {
+      setPersonLoading(true);
+      const lessonPersonData: any = await API.graphql(
+        graphqlOperation(customQueries.lessonsByType, {
+          filter: {
+            roomId: {eq: getRoomData.id},
+            studentAuthID: {eq: user.authId},
+            studentEmail: {eq: user.email}
+          }
+        })
+      );
+
+      const data = lessonPersonData?.data?.listPersonLessonsData?.items || [];
+      setLocalStorageData('lessonPersonData', data);
+      const _personLessonData = data.find((d: any) => d.lessonID === lessonID);
+      if (_personLessonData) {
+        setPersonLessonData(_personLessonData);
+      }
+    } catch (e) {
+      console.error('listLessonPersonData: ', e);
+    } finally {
+      setPersonLoading(false);
+    }
+  };
 
   const handleLessonMutateData = async () => {
     try {
       let payload;
-      let existingLesson: any;
+      if (!personLoading) {
+        if (!personLessonData) {
+          fetchLessonPersonData();
+        }
 
-      if (personLessonData) {
-        existingLesson = personLessonData;
-      } else {
-        existingLesson = await API.graphql(
-          graphqlOperation(customQueries.listPersonLessonsData, {
-            filter: {
-              roomId: {eq: getRoomData.id},
-              lessonID: {eq: lessonID},
-              studentAuthID: {eq: user.authId},
-              studentEmail: {eq: user.email}
-            }
-          })
-        );
-        lessonDispatch({
-          type: 'SET_PERSON_LESSON_DATA',
-          payload: {
+        if (!personLessonData) {
+          payload = {
+            id: uuidV4(),
+            studentAuthID: user.authId,
+            roomId: getRoomData.id,
+            studentEmail: user.email,
             lessonID: lessonID,
-            data: existingLesson?.data?.listPersonLessonsData?.items || []
-          }
-        });
-      }
+            lessonType: lessonState.lessonData?.type,
+            //prettier-ignore
+            pages: `{
+              "currentPage":${JSON.stringify(lessonState.currentPage)},
+              "totalPages":${JSON.stringify(lessonState.lessonData?.lessonPlan?.length - 1)},
+              "lessonProgress":${JSON.stringify(lessonState.currentPage)}
+              }`.replace(/(\s\s+|[\t\n])/g, ' ').trim(),
+            ratings: 0
+          };
 
-      const items = personLessonData
-        ? existingLesson
-        : existingLesson?.data?.listPersonLessonsData?.items || [];
+          const result: any = await API.graphql(
+            graphqlOperation(mutations.createPersonLessonsData, {input: payload})
+          );
+          setPersonLessonData(result?.data?.createPersonLessonsData);
+        } else {
+          payload = {
+            id: personLessonData?.id,
 
-      if (!items?.length) {
-        payload = {
-          id: uuidV4(),
-          studentAuthID: user.authId,
-          roomId: getRoomData.id,
-          studentEmail: user.email,
-          lessonID: lessonID,
-          lessonType: lessonState.lessonData?.type,
-          //prettier-ignore
-          pages: `{
-            "currentPage":${JSON.stringify(lessonState.currentPage)},
-            "totalPages":${JSON.stringify(lessonState.lessonData?.lessonPlan?.length - 1)},
-            "lessonProgress":${JSON.stringify(lessonState.currentPage)}
-            }`.replace(/(\s\s+|[\t\n])/g, ' ').trim(),
-          ratings: 0
-        };
-      } else {
-        payload = {
-          id: items?.find((_d: any) => _d.lessonID === lessonID)?.id,
+            pages: `{
+              "currentPage":${JSON.stringify(lessonState.currentPage)},
+              "totalPages":${JSON.stringify(
+                lessonState.lessonData?.lessonPlan?.length - 1
+              )},
+              "lessonProgress":${JSON.stringify(lessonState.currentPage)}
+              }`
+              .replace(/(\s\s+|[\t\n])/g, ' ')
+              .trim()
+          };
 
-          pages: `{
-            "currentPage":${JSON.stringify(lessonState.currentPage)},
-            "totalPages":${JSON.stringify(
-              lessonState.lessonData?.lessonPlan?.length - 1
-            )},
-            "lessonProgress":${JSON.stringify(lessonState.currentPage)}
-            }`
-            .replace(/(\s\s+|[\t\n])/g, ' ')
-            .trim()
-        };
-        await API.graphql(
-          graphqlOperation(mutations.updatePersonLessonsData, {
-            input: payload
-          })
-        );
+          await API.graphql(
+            graphqlOperation(customMutations.updatePersonLessonsData, {
+              input: payload
+            })
+          );
+        }
       }
     } catch (error) {
       console.error(
-        '🚀 ~ file: Start.tsx ~ line 215 ~ handleLessonMutateData ~ error',
+        '🚀 ~ file: SurveyApp.tsx ~ line 652 ~ handleSurveyMutateData ~ error',
         error
       );
     }

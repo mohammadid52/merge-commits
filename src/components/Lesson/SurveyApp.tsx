@@ -6,6 +6,9 @@ import {GlobalContext} from 'contexts/GlobalContext';
 import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
 import * as mutations from 'graphql/mutations';
 import * as queries from 'graphql/queries';
+import * as customMutations from 'customGraphql/customMutations';
+import * as customQueries from 'customGraphql/customQueries';
+
 import {
   PagePart,
   PartContent,
@@ -30,6 +33,7 @@ const SurveyApp = ({
   personLessonData,
   setPersonLessonData,
   canContinue,
+  setPersonLoading,
   validateRequired,
   invokeRequiredField
 }: ILessonSurveyApp) => {
@@ -722,10 +726,39 @@ const SurveyApp = ({
     }
   };
 
+  const fetchLessonPersonData = async () => {
+    try {
+      setPersonLoading(true);
+      const lessonPersonData: any = await API.graphql(
+        graphqlOperation(customQueries.lessonsByType, {
+          filter: {
+            roomId: {eq: getRoomData.id},
+            studentAuthID: {eq: user.authId},
+            studentEmail: {eq: user.email}
+          }
+        })
+      );
+
+      const data = lessonPersonData?.data?.listPersonLessonsData?.items || [];
+      setLocalStorageData('lessonPersonData', data);
+      const _personLessonData = data.find((d: any) => d.lessonID === lessonID);
+      if (_personLessonData) {
+        setPersonLessonData(_personLessonData);
+      }
+    } catch (e) {
+      console.error('listLessonPersonData: ', e);
+    } finally {
+      setPersonLoading(false);
+    }
+  };
+
   const handleSurveyMutateData = async () => {
     try {
       let payload;
       if (!personLoading) {
+        if (!personLessonData) {
+          fetchLessonPersonData();
+        }
         if (!personLessonData) {
           payload = {
             id: uuidV4(),
@@ -769,7 +802,7 @@ const SurveyApp = ({
 
           if (isStudent) {
             await API.graphql(
-              graphqlOperation(mutations.updatePersonLessonsData, {
+              graphqlOperation(customMutations.updatePersonLessonsData, {
                 input: payload
               })
             );
