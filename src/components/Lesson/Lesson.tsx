@@ -1,25 +1,26 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import {StudentPageInput} from '@interfaces/UniversalLessonInterfaces';
+import {PersonLessonsData} from 'API';
 import Noticebar from 'components/Noticebar/Noticebar';
 import {GlobalContext} from 'contexts/GlobalContext';
-import useNotifications from 'customHooks/notifications';
-import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
-import React, {useContext, useEffect, useState} from 'react';
-import {useParams} from 'react-router-dom';
 import * as customQueries from 'customGraphql/customQueries';
+import useNotifications from 'customHooks/notifications';
+import {isEmpty, update} from 'lodash';
+import React, {useContext, useEffect, useState} from 'react';
+import {useHistory, useParams, useRouteMatch} from 'react-router-dom';
+import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
 import LessonApp from './LessonApp';
 import SurveyApp from './SurveyApp';
-import {PersonLessonsData} from 'API';
-import {isEmpty} from 'lodash';
-import {StudentPageInput} from '@interfaces/UniversalLessonInterfaces';
-import moment from 'moment';
 
 export interface ILessonSurveyApp {
+  pageStateUpdated: boolean;
   personLoading: boolean;
   personLessonData: PersonLessonsData | null;
   canContinue?: boolean;
   setPersonLessonData?: React.Dispatch<React.SetStateAction<PersonLessonsData | null>>;
   setPersonLoading?: React.Dispatch<React.SetStateAction<boolean>>;
   invokeRequiredField?: () => void;
+  updatePageInLocalStorage?: (pageIdx: number) => void;
   validateRequired?: (pageIdx: number) => boolean;
 }
 
@@ -82,22 +83,45 @@ const Lesson = () => {
 
   const [personLoading, setPersonLoading] = useState(true);
 
+  const [pageStateUpdated, setPageStateUpdated] = useState(false);
+  const history = useHistory();
+  const match = useRouteMatch();
+  const PAGES = lessonState.lessonData.lessonPlan;
+
+  useEffect(() => {
+    if (!personLoading && !pageStateUpdated) {
+      const pages = personLessonData?.pages || '{}';
+      const lessonProgress = JSON.parse(pages).lessonProgress || 0;
+
+      if (PAGES) {
+        lessonDispatch({
+          type: 'SET_CURRENT_PAGE',
+          payload: lessonProgress > PAGES.length - 1 ? 0 : lessonProgress
+        });
+        setPageStateUpdated(true);
+        history.push(`${match.url}/${lessonProgress}`);
+      }
+    }
+  }, [personLoading, personLessonData, PAGES]);
+  const [listPersonData, setListPersonData] = useState([]);
+
   useEffect(() => {
     const data: PersonLessonsData[] = getLocalStorageData('lessonPersonData');
+    setListPersonData(data);
     if (isEmpty(personLessonData)) {
-      const _personLessonData = data.find(
-        (d: PersonLessonsData) => d.lessonID === lessonID
-      );
+      if (data && data?.length > 0) {
+        const _personLessonData = data.find(
+          (d: PersonLessonsData) => d.lessonID === lessonID
+        );
 
-      setPersonLessonData(_personLessonData);
+        setPersonLessonData(_personLessonData);
+      }
       setPersonLoading(false);
     }
   }, []);
 
   // ~~~~~~~~~~~ CHECK IF SURVEY ~~~~~~~~~~~ //
   const isSurvey = lessonState && lessonState.lessonData?.type === 'survey';
-
-  const PAGES = lessonState.lessonData.lessonPlan;
 
   const invokeRequiredField = () => {
     const domID = getFirstEmptyFieldDomId();
@@ -170,16 +194,6 @@ const Lesson = () => {
     }
   };
 
-  const props = {
-    personLessonData,
-    invokeRequiredField,
-    setPersonLessonData,
-    personLoading,
-    canContinue: canContinue(),
-    validateRequired,
-    setPersonLoading
-  };
-
   /**
    * Lesson IDs
    * 531eafe6-61aa-4c82-b056-247b14be3035
@@ -241,9 +255,39 @@ const Lesson = () => {
 
     //
   };
+
+  const updatePageInLocalStorage = (page: number): void => {
+    if (personLessonData) {
+      let updatedPage = `{
+        "currentPage":${page},
+        "totalPages":${JSON.stringify(lessonState.lessonData?.lessonPlan?.length - 1)},
+        "lessonProgress":${page}
+      }`
+        .replace(/(\s\s+|[\t\n])/g, ' ')
+        .trim();
+
+      const idx = listPersonData.findIndex((d: any) => d.id === personLessonData.id);
+      let test = update(listPersonData[idx], 'pages', () => updatedPage);
+      const updatedData = listPersonData.splice(idx, 1, test);
+      setLocalStorageData('lessonPersonData', updatedData);
+    }
+  };
+
   // useEffect(() => {
   //   test();
   // }, []);
+
+  const props = {
+    personLessonData,
+    invokeRequiredField,
+    setPersonLessonData,
+    personLoading,
+    canContinue: canContinue(),
+    validateRequired,
+    setPersonLoading,
+    pageStateUpdated,
+    updatePageInLocalStorage
+  };
 
   return (
     <>

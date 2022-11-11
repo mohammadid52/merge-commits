@@ -26,7 +26,9 @@ const LessonHeaderBar = ({
   handleRequiredNotification,
   personLessonData,
   canContinue,
-  validateRequired
+  setPersonLessonData,
+  validateRequired,
+  updatePageInLocalStorage
 }: LessonHeaderBarProps) => {
   // ~~~~~~~~~~ CONTEXT SPLITTING ~~~~~~~~~~ //
   const gContext = useGlobalContext();
@@ -57,24 +59,12 @@ const LessonHeaderBar = ({
 
   const {isStudent} = useAuth();
   const goToClassRoom = () => {
+    setPersonLessonData(null);
     isStudent
       ? history.push(`/dashboard/classroom/${getRoomData.id}`)
       : history.push(`${getUrl()}?tab=Completed%20Surveys` || '/dashboard');
     removeLocalStorageData('survey_redirect');
   };
-
-  // const handleManualSave = () => {
-  //   if (lessonState.updated) {
-  //     setWaiting(true);
-  //     setSafeToLeave(false);
-  //   } else {
-  //     setWaiting(false);
-  //     setSafeToLeave(true);
-  //   }
-  //   setTimeout(() => {
-  //     goToClassRoom();
-  //   }, 1500);
-  // };
 
   const updatePersonLessonsDataMutation = useGraphqlMutation<
     {
@@ -100,6 +90,7 @@ const LessonHeaderBar = ({
     updatePersonLessonsDataMutation
       .mutate({input: {id, isCompleted: true}})
       .then(() => {
+        setPersonLessonData(null);
         isLesson
           ? history.push(`/dashboard/anthology?roomId=${getRoomData.id}`)
           : goToClassRoom();
@@ -109,24 +100,6 @@ const LessonHeaderBar = ({
         console.error('Error updating current lesson/survey complete status', err);
       });
   };
-
-  // let timer: any;
-  // useEffect(() => {
-  //   timer = setTimeout(() => {
-  //     getLessonCompletedValue &&
-  //       getLessonCompletedValue().then((value: any) => {
-  //         if (value?.lessonProgress === value?.totalPages) {
-
-  //         } else {
-
-  //         }
-  //       });
-  //   }, 1300);
-
-  //   return () => {
-  //     clearTimeout(timer);
-  //   };
-  // }, [lessonState.currentPage]);
 
   useEffect(() => {
     if (!lessonState.updated) {
@@ -165,13 +138,10 @@ const LessonHeaderBar = ({
   const [videoLinkModalVisible, setVideoLinkModalVisible] = useState<boolean>(false);
 
   // ~~~~ HANDLE USER LEAVING THE LESSON ~~~ //
-  const handleLeavePopup = (isLeavingAfterCompletion: boolean = true) => {
+  const handleLeavePopup = () => {
     if (videoLinkModalVisible) {
       setVideoLinkModalVisible(false);
     }
-
-    // setLeaveModalVisible(!leaveModalVisible);
-    // setLeaveAfterCompletion(isLeavingAfterCompletion);
 
     goToClassRoom();
   };
@@ -286,7 +256,7 @@ const LessonHeaderBar = ({
 
   const handleBack = () => {
     if (lessonState.currentPage === 0) {
-      handleLeavePopup(true);
+      handleLeavePopup();
     } else {
       if (userAtEnd()) {
         if (isAtEnd) setisAtEnd(false);
@@ -379,6 +349,7 @@ const LessonHeaderBar = ({
         setOverlay={setOverlay}
         handlePopup={handleLeavePopup}
         isAtEnd={isAtEnd}
+        updatePageInLocalStorage={updatePageInLocalStorage}
         setisAtEnd={setisAtEnd}
         validateRequired={validateRequired}
         handleRequiredNotification={handleRequiredNotification}

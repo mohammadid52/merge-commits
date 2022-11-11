@@ -22,10 +22,12 @@ export interface LessonHeaderBarProps extends LessonComponentsInterface {
   overlay?: string;
   isAtEnd?: boolean;
   setisAtEnd?: React.Dispatch<React.SetStateAction<boolean>>;
+  setPersonLessonData?: React.Dispatch<React.SetStateAction<any>>;
   handleRequiredNotification?: () => void;
   pages?: UniversalLessonPage[];
   canContinue?: boolean;
   validateRequired?: (pageIdx: number) => boolean;
+  updatePageInLocalStorage?: (pageIdx: number) => void;
 
   personLessonData?: PersonLessonsData | null;
 

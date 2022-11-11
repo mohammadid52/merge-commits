@@ -13,6 +13,7 @@ const LessonTopMenu = ({
 
   handleRequiredNotification,
   pages,
+  updatePageInLocalStorage,
   canContinue,
   handleForward,
   pageStateUpdated,
@@ -78,6 +79,7 @@ const LessonTopMenu = ({
                 handleRequiredNotification={handleRequiredNotification}
                 pages={pages}
                 canContinue={canContinue}
+                updatePageInLocalStorage={updatePageInLocalStorage}
                 validateRequired={validateRequired}
                 currentPage={lessonState?.currentPage}
                 studentData={lessonState?.studentData}
