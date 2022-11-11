@@ -801,8 +801,7 @@ const SurveyApp = ({
   const handleSurveyMutateData = async () => {
     try {
       if (!personLoading) {
-        const data = getLocalStorageData('lessonPersonData');
-        if (!personLessonData || isEmpty(data)) {
+        if (!personLessonData) {
           fetchLessonPersonData();
         } else if (personLessonData) {
           if (isStudent) {

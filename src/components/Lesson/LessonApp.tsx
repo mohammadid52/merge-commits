@@ -1081,11 +1081,10 @@ const LessonApp = ({
     }
   };
 
-  const data = getLocalStorageData('lessonPersonData');
   const handleLessonMutateData = async () => {
     try {
       if (!personLoading) {
-        if (!personLessonData || isEmpty(data)) {
+        if (!personLessonData) {
           fetchLessonPersonData();
         } else if (personLessonData) {
           await API.graphql(

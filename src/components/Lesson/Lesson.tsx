@@ -105,8 +105,9 @@ const Lesson = () => {
   }, [personLoading, personLessonData, PAGES]);
   const [listPersonData, setListPersonData] = useState([]);
 
+  const data: PersonLessonsData[] = getLocalStorageData('lessonPersonData');
+
   useEffect(() => {
-    const data: PersonLessonsData[] = getLocalStorageData('lessonPersonData');
     setListPersonData(data);
     if (isEmpty(personLessonData)) {
       if (data && data?.length > 0) {
