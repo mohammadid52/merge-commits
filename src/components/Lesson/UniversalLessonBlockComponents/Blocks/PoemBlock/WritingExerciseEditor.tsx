@@ -11,10 +11,12 @@ const WritingExerciseEditor = ({
   editorState,
   setEditorState,
   onChangeCallback,
-  initialValue
+  initialValue,
+  minHeight
 }: {
   editorState: any;
   initialValue?: string;
+  minHeight?: number;
   setEditorState: any;
   onChangeCallback: (html: string, text: string) => void;
 }) => {
@@ -60,6 +62,14 @@ const WritingExerciseEditor = ({
 
   const options: string[] = ['inline', 'colorPicker'];
   const DEFAULT_INLINE_OPTIONS = ['bold', 'italic'];
+  useEffect(() => {
+    if (minHeight !== undefined) {
+      const editor = document.querySelector('.rdw-editor-main');
+      if (editor) {
+        editor.setAttribute('style', `min-height:${minHeight}px`);
+      }
+    }
+  }, [minHeight]);
 
   return (
     <div>

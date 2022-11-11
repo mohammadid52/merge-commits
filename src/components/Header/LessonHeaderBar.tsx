@@ -91,9 +91,7 @@ const LessonHeaderBar = ({
       .mutate({input: {id, isCompleted: true}})
       .then(() => {
         setPersonLessonData(null);
-        isLesson
-          ? history.push(`/dashboard/anthology?roomId=${getRoomData.id}`)
-          : goToClassRoom();
+        goToClassRoom();
         console.log('Successfully completed ' + lessonState?.lessonData?.type);
       })
       .catch((err) => {
