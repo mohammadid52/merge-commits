@@ -58,7 +58,7 @@ const EditingBlock = ({options, inputID, value}: EditingBlockProps) => {
         ) : null}
       </div>
       <WritingExerciseEditor
-        minHeight={270}
+        minHeight={400}
         initialValue={value}
         onChangeCallback={onChangeCallback}
         editorState={editorState}
