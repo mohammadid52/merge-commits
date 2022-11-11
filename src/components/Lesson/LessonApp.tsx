@@ -1170,7 +1170,10 @@ const LessonApp = ({
               {/* ADD LESSONWRAPPER HERE */}
               <div className="mt-4 mb-8 lesson-page-container">
                 <CoreUniversalLesson
-                  invokeRequiredField={invokeRequiredField}
+                  invokeRequiredField={() => {
+                    invokeRequiredField();
+                    handleRequiredNotification();
+                  }}
                   canContinue={canContinue}
                 />
               </div>

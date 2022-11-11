@@ -99,13 +99,12 @@ const Lesson = () => {
   const PAGES = lessonState.lessonData.lessonPlan;
 
   const invokeRequiredField = () => {
-    if (validateRequired(lessonState.currentPage)) {
-      const domID = getFirstEmptyFieldDomId();
-      if (domID && typeof domID === 'string') {
-        const domElement = document.getElementById(domID);
-        if (domElement) {
-          domElement.scrollIntoView();
-        }
+    const domID = getFirstEmptyFieldDomId();
+
+    if (domID && typeof domID === 'string') {
+      const domElement = document.getElementById(`${domID}_for_error`);
+      if (domElement) {
+        domElement.scrollIntoView({behavior: 'smooth', block: 'center'});
       }
     }
   };

@@ -32,7 +32,7 @@ const TextBlock = (props: IFormBlockProps) => {
 
   return (
     <div
-      id={id}
+      id={`${inputID}_for_error`}
       key={id}
       className={`questionItemChild mb-4 p-4 bg-component-dark rounded-2xl border-0 border-gray-700`}>
       <label className={`text-sm ${themeTextColor}`} htmlFor="label">

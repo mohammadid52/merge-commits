@@ -113,7 +113,7 @@ export const FormBlock = ({
     index
   }: FormControlProps) => {
     return (
-      <div id={id} key={id} className={`mb-4 p-4`}>
+      <div id={`${inputID}_for_error`} key={id} className={`mb-4 p-4`}>
         <label
           className={`text-sm text-gray-${lessonPageTheme === 'dark' ? '200' : '800'}`}
           htmlFor="label">

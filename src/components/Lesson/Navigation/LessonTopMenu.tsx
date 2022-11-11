@@ -77,6 +77,7 @@ const LessonTopMenu = ({
                 handleHome={() => handlePopup(false)}
                 handleRequiredNotification={handleRequiredNotification}
                 pages={pages}
+                canContinue={canContinue}
                 validateRequired={validateRequired}
                 currentPage={lessonState?.currentPage}
                 studentData={lessonState?.studentData}

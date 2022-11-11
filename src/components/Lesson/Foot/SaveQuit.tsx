@@ -1,3 +1,4 @@
+import {StudentPageInput} from '@interfaces/UniversalLessonInterfaces';
 import Buttons from 'atoms/Buttons';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import React, {useEffect, useState} from 'react';
@@ -15,7 +16,7 @@ interface SaveQuitProps {
   invokeRequiredField?: () => any;
 }
 
-const SaveQuit = ({canContinue, invokeRequiredField}: SaveQuitProps) => {
+const SaveQuit = ({invokeRequiredField}: SaveQuitProps) => {
   const {lessonState, lessonDispatch} = useGlobalContext();
 
   // ##################################################################### //
@@ -31,23 +32,48 @@ const SaveQuit = ({canContinue, invokeRequiredField}: SaveQuitProps) => {
     setIsUpdated(lessonState.updated);
   }, [lessonState.updated]);
 
-  const handleManualSave = async () => {
-    if (isUpdated) {
-      setWaiting(true);
-      setSafeToLeave(false);
+  const PAGES = lessonState.lessonData.lessonPlan;
+
+  const checkAllFields = () => {
+    if (PAGES) {
+      const thisPageData = lessonState?.studentData || [];
+
+      const thisPageRequired = lessonState?.requiredInputs?.flat() || [];
+
+      if (thisPageData && thisPageData.length > 0) {
+        const areAnyEmpty = thisPageData.filter((input: StudentPageInput) => {
+          if (thisPageRequired.includes(input.domID) && input.input[0] === '') {
+            return input;
+          }
+        });
+
+        if (areAnyEmpty.length > 0) {
+          return false;
+        } else {
+          return true;
+        }
+      } else {
+        return true;
+      }
     } else {
-      setWaiting(false);
-      setSafeToLeave(true);
-      setLeaveModalVisible(true);
-      // ---- IMPORTANT ---- //
-      // JSX of modal is on LessonHeaderBar.tsx file
+      return false;
     }
   };
 
-  const goToThatRequiredElement = (domID: string) => {
-    const element = document.getElementById(domID);
-    if (element) {
-      element.scrollIntoView({behavior: 'smooth'});
+  const handleManualSave = async () => {
+    if (checkAllFields()) {
+      if (isUpdated) {
+        setWaiting(true);
+        setSafeToLeave(false);
+      } else {
+        setWaiting(false);
+        setSafeToLeave(true);
+        setLeaveModalVisible(true);
+        // ---- IMPORTANT ---- //
+        // JSX of modal is on LessonHeaderBar.tsx file
+      }
+    } else {
+      invokeRequiredField();
     }
   };
 
@@ -72,14 +98,12 @@ const SaveQuit = ({canContinue, invokeRequiredField}: SaveQuitProps) => {
       <div className={''}>
         <Buttons
           dataCy="save-lesson"
-          disabled={!canContinue}
+          // disabled={!canContinue}
           label={waiting ? 'Saving your data...' : 'Save and Go to Classroom'}
           Icon={BiSave}
           btnClass="w-full"
           iconBeforeLabel
-          onClick={
-            canContinue ? handleManualSave : () => invokeRequiredField()
-          }></Buttons>
+          onClick={handleManualSave}></Buttons>
       </div>
     </>
   );

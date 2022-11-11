@@ -83,21 +83,8 @@ const LessonHeaderBar = ({
     UniversalLessonStudentData
   >('updatePersonLessonsData');
 
-  const {setNotification} = useNotifications();
-
-  const triggerNotification = () => {
-    setNotification({
-      title: 'Your notebook has been saved',
-      show: true,
-      type: 'success',
-      buttonText: 'See notebook',
-      buttonUrl: '/anthology?roomId=' + getRoomData.id
-    });
-  };
-
   const handleNotebookSave = () => {
-    const callback = isLesson ? () => triggerNotification() : () => {};
-    createJournalData(callback);
+    createJournalData();
 
     if (isLesson) {
       console.log('\x1b[33m Saving notebook... \x1b[0m');

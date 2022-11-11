@@ -143,8 +143,7 @@ const OptionBlock = (props: IOptionProps) => {
   } = props;
 
   const gContext = useContext(GlobalContext);
-  const lessonState = gContext.lessonState;
-  const lessonDispatch = gContext.lessonDispatch;
+
   const gState = gContext.state;
   const {
     user,
@@ -215,8 +214,8 @@ const OptionBlock = (props: IOptionProps) => {
 
   return (
     <div
-      id={id}
       key={inputID}
+      id={`${inputID}_for_error`}
       className={`questionItemChild mb-4 p-4 bg-component-dark rounded-2xl border-0 border-gray-700`}>
       <label className={`text-sm ${themeTextColor}`} htmlFor="label">
         {numbered && index} {label} <RequiredMark isRequired={required} />
