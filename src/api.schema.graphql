@@ -64,6 +64,7 @@ type Person @model @auth(rules: [{allow: public}]) {
   spotlightDate: AWSDate
   statusReason: String
   addedby: String
+  lastEmotionSubmission: AWSDate
 }
 
 type PersonLessonsData @model @auth(rules: [{allow: public}]) {

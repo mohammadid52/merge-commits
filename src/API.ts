@@ -137,6 +137,7 @@ export type Person = {
   spotlightDate?: string | null,
   statusReason?: string | null,
   addedby?: string | null,
+  lastEmotionSubmission?: string | null,
   createdAt: string,
   updatedAt: string,
 };
@@ -701,6 +702,7 @@ export type CreatePersonInput = {
   spotlightDate?: string | null,
   statusReason?: string | null,
   addedby?: string | null,
+  lastEmotionSubmission?: string | null,
 };
 
 export type ModelPersonConditionInput = {
@@ -729,6 +731,7 @@ export type ModelPersonConditionInput = {
   spotlightDate?: ModelStringInput | null,
   statusReason?: ModelStringInput | null,
   addedby?: ModelStringInput | null,
+  lastEmotionSubmission?: ModelStringInput | null,
   and?: Array< ModelPersonConditionInput | null > | null,
   or?: Array< ModelPersonConditionInput | null > | null,
   not?: ModelPersonConditionInput | null,
@@ -825,6 +828,7 @@ export type UpdatePersonInput = {
   spotlightDate?: string | null,
   statusReason?: string | null,
   addedby?: string | null,
+  lastEmotionSubmission?: string | null,
 };
 
 export type DeletePersonInput = {
@@ -3956,6 +3960,7 @@ export type ModelPersonFilterInput = {
   spotlightDate?: ModelStringInput | null,
   statusReason?: ModelStringInput | null,
   addedby?: ModelStringInput | null,
+  lastEmotionSubmission?: ModelStringInput | null,
   and?: Array< ModelPersonFilterInput | null > | null,
   or?: Array< ModelPersonFilterInput | null > | null,
   not?: ModelPersonFilterInput | null,
@@ -4950,824 +4955,6 @@ export type ModelCypressTestingConnection = {
   nextToken?: string | null,
 };
 
-export type ModelSubscriptionPersonFilterInput = {
-  id?: ModelSubscriptionIDInput | null,
-  authId?: ModelSubscriptionStringInput | null,
-  status?: ModelSubscriptionStringInput | null,
-  email?: ModelSubscriptionStringInput | null,
-  role?: ModelSubscriptionStringInput | null,
-  type?: ModelSubscriptionStringInput | null,
-  firstName?: ModelSubscriptionStringInput | null,
-  preferredName?: ModelSubscriptionStringInput | null,
-  lastName?: ModelSubscriptionStringInput | null,
-  externalId?: ModelSubscriptionStringInput | null,
-  grade?: ModelSubscriptionStringInput | null,
-  onBoardSurvey?: ModelSubscriptionBooleanInput | null,
-  offBoardSurvey?: ModelSubscriptionBooleanInput | null,
-  phone?: ModelSubscriptionStringInput | null,
-  birthdate?: ModelSubscriptionStringInput | null,
-  inactiveStatusDate?: ModelSubscriptionStringInput | null,
-  image?: ModelSubscriptionStringInput | null,
-  language?: ModelSubscriptionStringInput | null,
-  filters?: ModelSubscriptionStringInput | null,
-  lastLoggedIn?: ModelSubscriptionStringInput | null,
-  lastLoggedOut?: ModelSubscriptionStringInput | null,
-  onDemand?: ModelSubscriptionBooleanInput | null,
-  sentiments?: ModelSubscriptionStringInput | null,
-  passcode?: ModelSubscriptionStringInput | null,
-  spotlightUser?: ModelSubscriptionBooleanInput | null,
-  spotlightDate?: ModelSubscriptionStringInput | null,
-  statusReason?: ModelSubscriptionStringInput | null,
-  addedby?: ModelSubscriptionStringInput | null,
-  and?: Array< ModelSubscriptionPersonFilterInput | null > | null,
-  or?: Array< ModelSubscriptionPersonFilterInput | null > | null,
-};
-
-export type ModelSubscriptionIDInput = {
-  ne?: string | null,
-  eq?: string | null,
-  le?: string | null,
-  lt?: string | null,
-  ge?: string | null,
-  gt?: string | null,
-  contains?: string | null,
-  notContains?: string | null,
-  between?: Array< string | null > | null,
-  beginsWith?: string | null,
-  in?: Array< string | null > | null,
-  notIn?: Array< string | null > | null,
-};
-
-export type ModelSubscriptionStringInput = {
-  ne?: string | null,
-  eq?: string | null,
-  le?: string | null,
-  lt?: string | null,
-  ge?: string | null,
-  gt?: string | null,
-  contains?: string | null,
-  notContains?: string | null,
-  between?: Array< string | null > | null,
-  beginsWith?: string | null,
-  in?: Array< string | null > | null,
-  notIn?: Array< string | null > | null,
-};
-
-export type ModelSubscriptionBooleanInput = {
-  ne?: boolean | null,
-  eq?: boolean | null,
-};
-
-export type ModelSubscriptionPersonLessonsDataFilterInput = {
-  id?: ModelSubscriptionIDInput | null,
-  studentAuthID?: ModelSubscriptionStringInput | null,
-  studentEmail?: ModelSubscriptionStringInput | null,
-  lessonID?: ModelSubscriptionIDInput | null,
-  lessonType?: ModelSubscriptionStringInput | null,
-  pages?: ModelSubscriptionStringInput | null,
-  ratings?: ModelSubscriptionIntInput | null,
-  isCompleted?: ModelSubscriptionBooleanInput | null,
-  roomId?: ModelSubscriptionIDInput | null,
-  and?: Array< ModelSubscriptionPersonLessonsDataFilterInput | null > | null,
-  or?: Array< ModelSubscriptionPersonLessonsDataFilterInput | null > | null,
-};
-
-export type ModelSubscriptionIntInput = {
-  ne?: number | null,
-  eq?: number | null,
-  le?: number | null,
-  lt?: number | null,
-  ge?: number | null,
-  gt?: number | null,
-  between?: Array< number | null > | null,
-  in?: Array< number | null > | null,
-  notIn?: Array< number | null > | null,
-};
-
-export type ModelSubscriptionInstitutionFilterInput = {
-  id?: ModelSubscriptionIDInput | null,
-  name?: ModelSubscriptionStringInput | null,
-  type?: ModelSubscriptionStringInput | null,
-  district?: ModelSubscriptionStringInput | null,
-  address?: ModelSubscriptionStringInput | null,
-  addressLine2?: ModelSubscriptionStringInput | null,
-  city?: ModelSubscriptionStringInput | null,
-  state?: ModelSubscriptionStringInput | null,
-  zip?: ModelSubscriptionStringInput | null,
-  phone?: ModelSubscriptionStringInput | null,
-  website?: ModelSubscriptionStringInput | null,
-  image?: ModelSubscriptionStringInput | null,
-  isServiceProvider?: ModelSubscriptionBooleanInput | null,
-  filters?: ModelSubscriptionStringInput | null,
-  setupComplete?: ModelSubscriptionBooleanInput | null,
-  and?: Array< ModelSubscriptionInstitutionFilterInput | null > | null,
-  or?: Array< ModelSubscriptionInstitutionFilterInput | null > | null,
-};
-
-export type ModelSubscriptionServiceProviderFilterInput = {
-  id?: ModelSubscriptionIDInput | null,
-  partnerID?: ModelSubscriptionIDInput | null,
-  providerID?: ModelSubscriptionIDInput | null,
-  status?: ModelSubscriptionStringInput | null,
-  and?: Array< ModelSubscriptionServiceProviderFilterInput | null > | null,
-  or?: Array< ModelSubscriptionServiceProviderFilterInput | null > | null,
-};
-
-export type ModelSubscriptionStaffFilterInput = {
-  id?: ModelSubscriptionIDInput | null,
-  institutionID?: ModelSubscriptionIDInput | null,
-  staffAuthID?: ModelSubscriptionStringInput | null,
-  staffEmail?: ModelSubscriptionStringInput | null,
-  status?: ModelSubscriptionStringInput | null,
-  statusChangeDate?: ModelSubscriptionStringInput | null,
-  and?: Array< ModelSubscriptionStaffFilterInput | null > | null,
-  or?: Array< ModelSubscriptionStaffFilterInput | null > | null,
-};
-
-export type ModelSubscriptionRoomFilterInput = {
-  id?: ModelSubscriptionIDInput | null,
-  institutionID?: ModelSubscriptionIDInput | null,
-  classID?: ModelSubscriptionIDInput | null,
-  teacherAuthID?: ModelSubscriptionStringInput | null,
-  teacherEmail?: ModelSubscriptionStringInput | null,
-  name?: ModelSubscriptionStringInput | null,
-  maxPersons?: ModelSubscriptionIntInput | null,
-  status?: ModelSubscriptionStringInput | null,
-  filters?: ModelSubscriptionStringInput | null,
-  location?: ModelSubscriptionStringInput | null,
-  startDate?: ModelSubscriptionStringInput | null,
-  startTime?: ModelSubscriptionStringInput | null,
-  endDate?: ModelSubscriptionStringInput | null,
-  endTime?: ModelSubscriptionStringInput | null,
-  length?: ModelSubscriptionIntInput | null,
-  repeat?: ModelSubscriptionStringInput | null,
-  notes?: ModelSubscriptionStringInput | null,
-  activeSyllabus?: ModelSubscriptionStringInput | null,
-  frequency?: ModelSubscriptionStringInput | null,
-  activeLessonId?: ModelSubscriptionStringInput | null,
-  ClosedPages?: ModelSubscriptionStringInput | null,
-  disabledPages?: ModelSubscriptionStringInput | null,
-  studentViewing?: ModelSubscriptionStringInput | null,
-  currentPage?: ModelSubscriptionStringInput | null,
-  activeLessons?: ModelSubscriptionStringInput | null,
-  weekDay?: ModelSubscriptionStringInput | null,
-  conferenceCallLink?: ModelSubscriptionStringInput | null,
-  classSentiment?: ModelSubscriptionStringInput | null,
-  and?: Array< ModelSubscriptionRoomFilterInput | null > | null,
-  or?: Array< ModelSubscriptionRoomFilterInput | null > | null,
-};
-
-export type ModelSubscriptionArchiveSurveyDataSQLFilterInput = {
-  id?: ModelSubscriptionIDInput | null,
-  AuthId?: ModelSubscriptionStringInput | null,
-  Email?: ModelSubscriptionStringInput | null,
-  UniversalSurveyStudentID?: ModelSubscriptionStringInput | null,
-  createdAt?: ModelSubscriptionStringInput | null,
-  updatedAt?: ModelSubscriptionStringInput | null,
-  and?: Array< ModelSubscriptionArchiveSurveyDataSQLFilterInput | null > | null,
-  or?: Array< ModelSubscriptionArchiveSurveyDataSQLFilterInput | null > | null,
-};
-
-export type ModelSubscriptionClassroomGroupStudentsFilterInput = {
-  id?: ModelSubscriptionIDInput | null,
-  classRoomGroupID?: ModelSubscriptionIDInput | null,
-  studentEmail?: ModelSubscriptionStringInput | null,
-  studentAuthId?: ModelSubscriptionStringInput | null,
-  studentType?: ModelSubscriptionStringInput | null,
-  studentNote?: ModelSubscriptionStringInput | null,
-  and?: Array< ModelSubscriptionClassroomGroupStudentsFilterInput | null > | null,
-  or?: Array< ModelSubscriptionClassroomGroupStudentsFilterInput | null > | null,
-};
-
-export type ModelSubscriptionClassroomGroupsFilterInput = {
-  id?: ModelSubscriptionIDInput | null,
-  classRoomID?: ModelSubscriptionIDInput | null,
-  groupName?: ModelSubscriptionStringInput | null,
-  groupType?: ModelSubscriptionStringInput | null,
-  advisorEmail?: ModelSubscriptionStringInput | null,
-  advisorAuthId?: ModelSubscriptionStringInput | null,
-  groupLocation?: ModelSubscriptionStringInput | null,
-  and?: Array< ModelSubscriptionClassroomGroupsFilterInput | null > | null,
-  or?: Array< ModelSubscriptionClassroomGroupsFilterInput | null > | null,
-};
-
-export type ModelSubscriptionRoomCoTeachersFilterInput = {
-  id?: ModelSubscriptionIDInput | null,
-  roomID?: ModelSubscriptionIDInput | null,
-  teacherID?: ModelSubscriptionIDInput | null,
-  teacherEmail?: ModelSubscriptionStringInput | null,
-  teacherAuthID?: ModelSubscriptionStringInput | null,
-  and?: Array< ModelSubscriptionRoomCoTeachersFilterInput | null > | null,
-  or?: Array< ModelSubscriptionRoomCoTeachersFilterInput | null > | null,
-};
-
-export type ModelSubscriptionClassFilterInput = {
-  id?: ModelSubscriptionIDInput | null,
-  institutionID?: ModelSubscriptionIDInput | null,
-  type?: ModelSubscriptionStringInput | null,
-  name?: ModelSubscriptionStringInput | null,
-  roomId?: ModelSubscriptionIDInput | null,
-  and?: Array< ModelSubscriptionClassFilterInput | null > | null,
-  or?: Array< ModelSubscriptionClassFilterInput | null > | null,
-};
-
-export type ModelSubscriptionClassStudentFilterInput = {
-  id?: ModelSubscriptionIDInput | null,
-  classID?: ModelSubscriptionIDInput | null,
-  studentID?: ModelSubscriptionIDInput | null,
-  studentEmail?: ModelSubscriptionStringInput | null,
-  studentAuthID?: ModelSubscriptionStringInput | null,
-  status?: ModelSubscriptionStringInput | null,
-  group?: ModelSubscriptionStringInput | null,
-  and?: Array< ModelSubscriptionClassStudentFilterInput | null > | null,
-  or?: Array< ModelSubscriptionClassStudentFilterInput | null > | null,
-};
-
-export type ModelSubscriptionCurriculumFilterInput = {
-  id?: ModelSubscriptionIDInput | null,
-  institutionID?: ModelSubscriptionIDInput | null,
-  name?: ModelSubscriptionStringInput | null,
-  type?: ModelSubscriptionStringInput | null,
-  image?: ModelSubscriptionStringInput | null,
-  summary?: ModelSubscriptionStringInput | null,
-  description?: ModelSubscriptionStringInput | null,
-  objectives?: ModelSubscriptionStringInput | null,
-  languages?: ModelSubscriptionStringInput | null,
-  designers?: ModelSubscriptionStringInput | null,
-  universalSyllabusSeq?: ModelSubscriptionStringInput | null,
-  syllabiHistory?: ModelSubscriptionStringInput | null,
-  and?: Array< ModelSubscriptionCurriculumFilterInput | null > | null,
-  or?: Array< ModelSubscriptionCurriculumFilterInput | null > | null,
-};
-
-export type ModelSubscriptionTopicFilterInput = {
-  id?: ModelSubscriptionIDInput | null,
-  curriculumID?: ModelSubscriptionIDInput | null,
-  learningObjectiveID?: ModelSubscriptionIDInput | null,
-  name?: ModelSubscriptionStringInput | null,
-  description?: ModelSubscriptionStringInput | null,
-  distinguished?: ModelSubscriptionStringInput | null,
-  excelled?: ModelSubscriptionStringInput | null,
-  adequite?: ModelSubscriptionStringInput | null,
-  basic?: ModelSubscriptionStringInput | null,
-  and?: Array< ModelSubscriptionTopicFilterInput | null > | null,
-  or?: Array< ModelSubscriptionTopicFilterInput | null > | null,
-};
-
-export type ModelSubscriptionCSequencesFilterInput = {
-  id?: ModelSubscriptionIDInput | null,
-  sequence?: ModelSubscriptionStringInput | null,
-  and?: Array< ModelSubscriptionCSequencesFilterInput | null > | null,
-  or?: Array< ModelSubscriptionCSequencesFilterInput | null > | null,
-};
-
-export type ModelSubscriptionLearningObjectiveFilterInput = {
-  id?: ModelSubscriptionIDInput | null,
-  name?: ModelSubscriptionStringInput | null,
-  description?: ModelSubscriptionStringInput | null,
-  curriculumID?: ModelSubscriptionIDInput | null,
-  and?: Array< ModelSubscriptionLearningObjectiveFilterInput | null > | null,
-  or?: Array< ModelSubscriptionLearningObjectiveFilterInput | null > | null,
-};
-
-export type ModelSubscriptionRubricFilterInput = {
-  id?: ModelSubscriptionIDInput | null,
-  name?: ModelSubscriptionStringInput | null,
-  criteria?: ModelSubscriptionStringInput | null,
-  topicID?: ModelSubscriptionIDInput | null,
-  curriculumID?: ModelSubscriptionIDInput | null,
-  and?: Array< ModelSubscriptionRubricFilterInput | null > | null,
-  or?: Array< ModelSubscriptionRubricFilterInput | null > | null,
-};
-
-export type ModelSubscriptionRoomCurriculumFilterInput = {
-  id?: ModelSubscriptionIDInput | null,
-  roomID?: ModelSubscriptionIDInput | null,
-  curriculumID?: ModelSubscriptionIDInput | null,
-  and?: Array< ModelSubscriptionRoomCurriculumFilterInput | null > | null,
-  or?: Array< ModelSubscriptionRoomCurriculumFilterInput | null > | null,
-};
-
-export type ModelSubscriptionCheckpointFilterInput = {
-  id?: ModelSubscriptionIDInput | null,
-  label?: ModelSubscriptionStringInput | null,
-  title?: ModelSubscriptionStringInput | null,
-  subtitle?: ModelSubscriptionStringInput | null,
-  stage?: ModelSubscriptionStringInput | null,
-  type?: ModelSubscriptionStringInput | null,
-  instructionsTitle?: ModelSubscriptionStringInput | null,
-  instructions?: ModelSubscriptionStringInput | null,
-  purpose?: ModelSubscriptionStringInput | null,
-  objectives?: ModelSubscriptionStringInput | null,
-  designers?: ModelSubscriptionStringInput | null,
-  language?: ModelSubscriptionStringInput | null,
-  estTime?: ModelSubscriptionIntInput | null,
-  scope?: ModelSubscriptionStringInput | null,
-  questionSeq?: ModelSubscriptionStringInput | null,
-  and?: Array< ModelSubscriptionCheckpointFilterInput | null > | null,
-  or?: Array< ModelSubscriptionCheckpointFilterInput | null > | null,
-};
-
-export type ModelSubscriptionCommonCheckpointFilterInput = {
-  id?: ModelSubscriptionIDInput | null,
-  type?: ModelSubscriptionStringInput | null,
-  typeID?: ModelSubscriptionIDInput | null,
-  checkpointID?: ModelSubscriptionIDInput | null,
-  and?: Array< ModelSubscriptionCommonCheckpointFilterInput | null > | null,
-  or?: Array< ModelSubscriptionCommonCheckpointFilterInput | null > | null,
-};
-
-export type ModelSubscriptionCheckpointQuestionsFilterInput = {
-  id?: ModelSubscriptionIDInput | null,
-  checkpointID?: ModelSubscriptionIDInput | null,
-  questionID?: ModelSubscriptionIDInput | null,
-  required?: ModelSubscriptionBooleanInput | null,
-  and?: Array< ModelSubscriptionCheckpointQuestionsFilterInput | null > | null,
-  or?: Array< ModelSubscriptionCheckpointQuestionsFilterInput | null > | null,
-};
-
-export type ModelSubscriptionQuestionFilterInput = {
-  id?: ModelSubscriptionIDInput | null,
-  label?: ModelSubscriptionStringInput | null,
-  type?: ModelSubscriptionStringInput | null,
-  question?: ModelSubscriptionStringInput | null,
-  designers?: ModelSubscriptionStringInput | null,
-  language?: ModelSubscriptionStringInput | null,
-  sourceId?: ModelSubscriptionStringInput | null,
-  note?: ModelSubscriptionStringInput | null,
-  published?: ModelSubscriptionBooleanInput | null,
-  and?: Array< ModelSubscriptionQuestionFilterInput | null > | null,
-  or?: Array< ModelSubscriptionQuestionFilterInput | null > | null,
-};
-
-export type ModelSubscriptionQuestionSourceFilterInput = {
-  id?: ModelSubscriptionIDInput | null,
-  name?: ModelSubscriptionStringInput | null,
-  and?: Array< ModelSubscriptionQuestionSourceFilterInput | null > | null,
-  or?: Array< ModelSubscriptionQuestionSourceFilterInput | null > | null,
-};
-
-export type ModelSubscriptionQuestionTypeFilterInput = {
-  id?: ModelSubscriptionIDInput | null,
-  name?: ModelSubscriptionStringInput | null,
-  and?: Array< ModelSubscriptionQuestionTypeFilterInput | null > | null,
-  or?: Array< ModelSubscriptionQuestionTypeFilterInput | null > | null,
-};
-
-export type ModelSubscriptionRoomMsgsFilterInput = {
-  id?: ModelSubscriptionIDInput | null,
-  roomID?: ModelSubscriptionIDInput | null,
-  senderAuthID?: ModelSubscriptionStringInput | null,
-  senderEmail?: ModelSubscriptionStringInput | null,
-  body?: ModelSubscriptionStringInput | null,
-  createdAt?: ModelSubscriptionStringInput | null,
-  and?: Array< ModelSubscriptionRoomMsgsFilterInput | null > | null,
-  or?: Array< ModelSubscriptionRoomMsgsFilterInput | null > | null,
-};
-
-export type ModelSubscriptionAnthologyCommentFilterInput = {
-  id?: ModelSubscriptionIDInput | null,
-  text?: ModelSubscriptionStringInput | null,
-  email?: ModelSubscriptionStringInput | null,
-  authID?: ModelSubscriptionStringInput | null,
-  edited?: ModelSubscriptionBooleanInput | null,
-  createdAt?: ModelSubscriptionStringInput | null,
-  updatedAt?: ModelSubscriptionStringInput | null,
-  entryID?: ModelSubscriptionIDInput | null,
-  and?: Array< ModelSubscriptionAnthologyCommentFilterInput | null > | null,
-  or?: Array< ModelSubscriptionAnthologyCommentFilterInput | null > | null,
-};
-
-export type ModelSubscriptionQuestionDataFilterInput = {
-  id?: ModelSubscriptionIDInput | null,
-  syllabusLessonID?: ModelSubscriptionIDInput | null,
-  checkpointID?: ModelSubscriptionIDInput | null,
-  email?: ModelSubscriptionStringInput | null,
-  authID?: ModelSubscriptionStringInput | null,
-  componentType?: ModelSubscriptionStringInput | null,
-  scheduleID?: ModelSubscriptionStringInput | null,
-  lessonID?: ModelSubscriptionStringInput | null,
-  and?: Array< ModelSubscriptionQuestionDataFilterInput | null > | null,
-  or?: Array< ModelSubscriptionQuestionDataFilterInput | null > | null,
-};
-
-export type ModelSubscriptionQuestionDataStudentDataFilterInput = {
-  id?: ModelSubscriptionIDInput | null,
-  studentDataID?: ModelSubscriptionIDInput | null,
-  questionDataID?: ModelSubscriptionIDInput | null,
-  and?: Array< ModelSubscriptionQuestionDataStudentDataFilterInput | null > | null,
-  or?: Array< ModelSubscriptionQuestionDataStudentDataFilterInput | null > | null,
-};
-
-export type ModelSubscriptionPersonLocationFilterInput = {
-  id?: ModelSubscriptionIDInput | null,
-  personAuthID?: ModelSubscriptionStringInput | null,
-  personEmail?: ModelSubscriptionStringInput | null,
-  syllabusLessonID?: ModelSubscriptionIDInput | null,
-  lessonID?: ModelSubscriptionIDInput | null,
-  roomID?: ModelSubscriptionIDInput | null,
-  currentLocation?: ModelSubscriptionStringInput | null,
-  lessonProgress?: ModelSubscriptionStringInput | null,
-  and?: Array< ModelSubscriptionPersonLocationFilterInput | null > | null,
-  or?: Array< ModelSubscriptionPersonLocationFilterInput | null > | null,
-};
-
-export type ModelSubscriptionAttendanceFilterInput = {
-  id?: ModelSubscriptionIDInput | null,
-  studentID?: ModelSubscriptionIDInput | null,
-  curriculumID?: ModelSubscriptionIDInput | null,
-  syllabusID?: ModelSubscriptionIDInput | null,
-  lessonID?: ModelSubscriptionIDInput | null,
-  roomID?: ModelSubscriptionIDInput | null,
-  date?: ModelSubscriptionStringInput | null,
-  time?: ModelSubscriptionStringInput | null,
-  isComplete?: ModelSubscriptionBooleanInput | null,
-  and?: Array< ModelSubscriptionAttendanceFilterInput | null > | null,
-  or?: Array< ModelSubscriptionAttendanceFilterInput | null > | null,
-};
-
-export type ModelSubscriptionUniversalLessonFilterInput = {
-  id?: ModelSubscriptionIDInput | null,
-  type?: ModelSubscriptionStringInput | null,
-  label?: ModelSubscriptionStringInput | null,
-  title?: ModelSubscriptionStringInput | null,
-  institutionID?: ModelSubscriptionIDInput | null,
-  language?: ModelSubscriptionStringInput | null,
-  designers?: ModelSubscriptionStringInput | null,
-  objectives?: ModelSubscriptionStringInput | null,
-  lessonPlanAttachment?: ModelSubscriptionStringInput | null,
-  purpose?: ModelSubscriptionStringInput | null,
-  introduction?: ModelSubscriptionStringInput | null,
-  introductionTitle?: ModelSubscriptionStringInput | null,
-  instructions?: ModelSubscriptionStringInput | null,
-  instructionsTitle?: ModelSubscriptionStringInput | null,
-  summary?: ModelSubscriptionStringInput | null,
-  summaryTitle?: ModelSubscriptionStringInput | null,
-  duration?: ModelSubscriptionFloatInput | null,
-  resources?: ModelSubscriptionStringInput | null,
-  notes?: ModelSubscriptionStringInput | null,
-  cardImage?: ModelSubscriptionStringInput | null,
-  cardCaption?: ModelSubscriptionStringInput | null,
-  darkMode?: ModelSubscriptionBooleanInput | null,
-  rubrics?: ModelSubscriptionStringInput | null,
-  smallGroup?: ModelSubscriptionStringInput | null,
-  groupSize?: ModelSubscriptionIntInput | null,
-  groupType?: ModelSubscriptionStringInput | null,
-  smallGroupSize?: ModelSubscriptionIntInput | null,
-  smallGroupOption?: ModelSubscriptionStringInput | null,
-  studentMaterials?: ModelSubscriptionStringInput | null,
-  targetAudience?: ModelSubscriptionStringInput | null,
-  isUsed?: ModelSubscriptionBooleanInput | null,
-  createdAt?: ModelSubscriptionStringInput | null,
-  updatedAt?: ModelSubscriptionStringInput | null,
-  and?: Array< ModelSubscriptionUniversalLessonFilterInput | null > | null,
-  or?: Array< ModelSubscriptionUniversalLessonFilterInput | null > | null,
-};
-
-export type ModelSubscriptionFloatInput = {
-  ne?: number | null,
-  eq?: number | null,
-  le?: number | null,
-  lt?: number | null,
-  ge?: number | null,
-  gt?: number | null,
-  between?: Array< number | null > | null,
-  in?: Array< number | null > | null,
-  notIn?: Array< number | null > | null,
-};
-
-export type ModelSubscriptionUniversalLessonStudentDataFilterInput = {
-  id?: ModelSubscriptionIDInput | null,
-  syllabusLessonID?: ModelSubscriptionIDInput | null,
-  lessonID?: ModelSubscriptionIDInput | null,
-  lessonPageID?: ModelSubscriptionIDInput | null,
-  studentID?: ModelSubscriptionIDInput | null,
-  studentAuthID?: ModelSubscriptionIDInput | null,
-  studentEmail?: ModelSubscriptionStringInput | null,
-  roomID?: ModelSubscriptionStringInput | null,
-  currentLocation?: ModelSubscriptionStringInput | null,
-  lessonProgress?: ModelSubscriptionStringInput | null,
-  hasExerciseData?: ModelSubscriptionBooleanInput | null,
-  date?: ModelSubscriptionStringInput | null,
-  and?: Array< ModelSubscriptionUniversalLessonStudentDataFilterInput | null > | null,
-  or?: Array< ModelSubscriptionUniversalLessonStudentDataFilterInput | null > | null,
-};
-
-export type ModelSubscriptionUniversalLessonWritingExcercisesFilterInput = {
-  id?: ModelSubscriptionIDInput | null,
-  syllabusLessonID?: ModelSubscriptionIDInput | null,
-  lessonID?: ModelSubscriptionIDInput | null,
-  lessonPageID?: ModelSubscriptionIDInput | null,
-  lessonName?: ModelSubscriptionStringInput | null,
-  studentID?: ModelSubscriptionIDInput | null,
-  studentAuthID?: ModelSubscriptionIDInput | null,
-  studentEmail?: ModelSubscriptionStringInput | null,
-  roomID?: ModelSubscriptionStringInput | null,
-  currentLocation?: ModelSubscriptionStringInput | null,
-  lessonProgress?: ModelSubscriptionStringInput | null,
-  hasExerciseData?: ModelSubscriptionBooleanInput | null,
-  and?: Array< ModelSubscriptionUniversalLessonWritingExcercisesFilterInput | null > | null,
-  or?: Array< ModelSubscriptionUniversalLessonWritingExcercisesFilterInput | null > | null,
-};
-
-export type ModelSubscriptionUniversalArchiveDataFilterInput = {
-  id?: ModelSubscriptionIDInput | null,
-  syllabusLessonID?: ModelSubscriptionIDInput | null,
-  lessonID?: ModelSubscriptionIDInput | null,
-  lessonPageID?: ModelSubscriptionIDInput | null,
-  studentID?: ModelSubscriptionIDInput | null,
-  studentAuthID?: ModelSubscriptionIDInput | null,
-  studentEmail?: ModelSubscriptionStringInput | null,
-  roomID?: ModelSubscriptionStringInput | null,
-  currentLocation?: ModelSubscriptionStringInput | null,
-  lessonProgress?: ModelSubscriptionStringInput | null,
-  hasExerciseData?: ModelSubscriptionBooleanInput | null,
-  and?: Array< ModelSubscriptionUniversalArchiveDataFilterInput | null > | null,
-  or?: Array< ModelSubscriptionUniversalArchiveDataFilterInput | null > | null,
-};
-
-export type ModelSubscriptionUniversalSurveyStudentDataFilterInput = {
-  id?: ModelSubscriptionIDInput | null,
-  syllabusLessonID?: ModelSubscriptionIDInput | null,
-  lessonID?: ModelSubscriptionIDInput | null,
-  studentID?: ModelSubscriptionIDInput | null,
-  studentAuthID?: ModelSubscriptionIDInput | null,
-  studentEmail?: ModelSubscriptionStringInput | null,
-  roomID?: ModelSubscriptionStringInput | null,
-  currentLocation?: ModelSubscriptionStringInput | null,
-  lessonProgress?: ModelSubscriptionStringInput | null,
-  createdAt?: ModelSubscriptionStringInput | null,
-  updatedAt?: ModelSubscriptionStringInput | null,
-  and?: Array< ModelSubscriptionUniversalSurveyStudentDataFilterInput | null > | null,
-  or?: Array< ModelSubscriptionUniversalSurveyStudentDataFilterInput | null > | null,
-};
-
-export type ModelSubscriptionTemporaryUniversalUploadSurveyDataFilterInput = {
-  id?: ModelSubscriptionIDInput | null,
-  updatedUserId?: ModelSubscriptionIDInput | null,
-  universalSurveyId?: ModelSubscriptionIDInput | null,
-  and?: Array< ModelSubscriptionTemporaryUniversalUploadSurveyDataFilterInput | null > | null,
-  or?: Array< ModelSubscriptionTemporaryUniversalUploadSurveyDataFilterInput | null > | null,
-};
-
-export type ModelSubscriptionTemporaryDemographicsUploadDataFilterInput = {
-  id?: ModelSubscriptionIDInput | null,
-  updatedUserId?: ModelSubscriptionIDInput | null,
-  questionDataID?: ModelSubscriptionIDInput | null,
-  and?: Array< ModelSubscriptionTemporaryDemographicsUploadDataFilterInput | null > | null,
-  or?: Array< ModelSubscriptionTemporaryDemographicsUploadDataFilterInput | null > | null,
-};
-
-export type ModelSubscriptionUploadLogsFilterInput = {
-  id?: ModelSubscriptionIDInput | null,
-  User_id?: ModelSubscriptionIDInput | null,
-  TemporaryUniversalUploadSurveyDataID?: ModelSubscriptionIDInput | null,
-  TemporaryDemographicsUploadDataID?: ModelSubscriptionIDInput | null,
-  UploadType?: ModelSubscriptionStringInput | null,
-  updateType?: ModelSubscriptionStringInput | null,
-  Date?: ModelSubscriptionStringInput | null,
-  Curricullum_id?: ModelSubscriptionIDInput | null,
-  Unit_id?: ModelSubscriptionIDInput | null,
-  lesson_id?: ModelSubscriptionIDInput | null,
-  Class_id?: ModelSubscriptionIDInput | null,
-  PaperSurveyURL?: ModelSubscriptionStringInput | null,
-  Reason?: ModelSubscriptionStringInput | null,
-  and?: Array< ModelSubscriptionUploadLogsFilterInput | null > | null,
-  or?: Array< ModelSubscriptionUploadLogsFilterInput | null > | null,
-};
-
-export type ModelSubscriptionUniversalJournalDataFilterInput = {
-  id?: ModelSubscriptionIDInput | null,
-  studentID?: ModelSubscriptionIDInput | null,
-  studentAuthID?: ModelSubscriptionIDInput | null,
-  studentEmail?: ModelSubscriptionStringInput | null,
-  type?: ModelSubscriptionStringInput | null,
-  lessonName?: ModelSubscriptionStringInput | null,
-  feedbacks?: ModelSubscriptionStringInput | null,
-  shared?: ModelSubscriptionBooleanInput | null,
-  lessonID?: ModelSubscriptionIDInput | null,
-  syllabusLessonID?: ModelSubscriptionStringInput | null,
-  lessonType?: ModelSubscriptionStringInput | null,
-  roomID?: ModelSubscriptionStringInput | null,
-  and?: Array< ModelSubscriptionUniversalJournalDataFilterInput | null > | null,
-  or?: Array< ModelSubscriptionUniversalJournalDataFilterInput | null > | null,
-};
-
-export type ModelSubscriptionUniversalSyllabusFilterInput = {
-  id?: ModelSubscriptionIDInput | null,
-  name?: ModelSubscriptionStringInput | null,
-  type?: ModelSubscriptionStringInput | null,
-  institutionID?: ModelSubscriptionIDInput | null,
-  description?: ModelSubscriptionStringInput | null,
-  methodology?: ModelSubscriptionStringInput | null,
-  policies?: ModelSubscriptionStringInput | null,
-  pupose?: ModelSubscriptionStringInput | null,
-  objectives?: ModelSubscriptionStringInput | null,
-  languages?: ModelSubscriptionStringInput | null,
-  universalLessonsSeq?: ModelSubscriptionStringInput | null,
-  designers?: ModelSubscriptionStringInput | null,
-  status?: ModelSubscriptionBooleanInput | null,
-  isUsed?: ModelSubscriptionBooleanInput | null,
-  lessonHistory?: ModelSubscriptionStringInput | null,
-  and?: Array< ModelSubscriptionUniversalSyllabusFilterInput | null > | null,
-  or?: Array< ModelSubscriptionUniversalSyllabusFilterInput | null > | null,
-};
-
-export type ModelSubscriptionCurriculumUnitsFilterInput = {
-  id?: ModelSubscriptionIDInput | null,
-  unitId?: ModelSubscriptionIDInput | null,
-  curriculumId?: ModelSubscriptionIDInput | null,
-  and?: Array< ModelSubscriptionCurriculumUnitsFilterInput | null > | null,
-  or?: Array< ModelSubscriptionCurriculumUnitsFilterInput | null > | null,
-};
-
-export type ModelSubscriptionUniversalSyllabusLessonFilterInput = {
-  id?: ModelSubscriptionIDInput | null,
-  syllabusID?: ModelSubscriptionIDInput | null,
-  lessonID?: ModelSubscriptionIDInput | null,
-  unit?: ModelSubscriptionStringInput | null,
-  sequence?: ModelSubscriptionIntInput | null,
-  status?: ModelSubscriptionStringInput | null,
-  complete?: ModelSubscriptionBooleanInput | null,
-  roster?: ModelSubscriptionStringInput | null,
-  viewing?: ModelSubscriptionStringInput | null,
-  startDate?: ModelSubscriptionStringInput | null,
-  endDate?: ModelSubscriptionStringInput | null,
-  and?: Array< ModelSubscriptionUniversalSyllabusLessonFilterInput | null > | null,
-  or?: Array< ModelSubscriptionUniversalSyllabusLessonFilterInput | null > | null,
-};
-
-export type ModelSubscriptionUniversalLessonFeedbackFilterInput = {
-  id?: ModelSubscriptionIDInput | null,
-  syllabusLessonID?: ModelSubscriptionIDInput | null,
-  liked?: ModelSubscriptionStringInput | null,
-  comment?: ModelSubscriptionStringInput | null,
-  and?: Array< ModelSubscriptionUniversalLessonFeedbackFilterInput | null > | null,
-  or?: Array< ModelSubscriptionUniversalLessonFeedbackFilterInput | null > | null,
-};
-
-export type ModelSubscriptionStudentConnectionsFilterInput = {
-  fromEmail?: ModelSubscriptionStringInput | null,
-  fromAuthID?: ModelSubscriptionStringInput | null,
-  toEmail?: ModelSubscriptionStringInput | null,
-  toAuthID?: ModelSubscriptionStringInput | null,
-  remarks?: ModelSubscriptionStringInput | null,
-  and?: Array< ModelSubscriptionStudentConnectionsFilterInput | null > | null,
-  or?: Array< ModelSubscriptionStudentConnectionsFilterInput | null > | null,
-};
-
-export type ModelSubscriptionPersonSentimentsFilterInput = {
-  personAuthID?: ModelSubscriptionStringInput | null,
-  personEmail?: ModelSubscriptionStringInput | null,
-  date?: ModelSubscriptionStringInput | null,
-  time?: ModelSubscriptionStringInput | null,
-  responseText?: ModelSubscriptionStringInput | null,
-  backstory?: ModelSubscriptionStringInput | null,
-  and?: Array< ModelSubscriptionPersonSentimentsFilterInput | null > | null,
-  or?: Array< ModelSubscriptionPersonSentimentsFilterInput | null > | null,
-};
-
-export type ModelSubscriptionSentimentsFilterInput = {
-  id?: ModelSubscriptionIDInput | null,
-  sentimentName?: ModelSubscriptionStringInput | null,
-  sentimentType?: ModelSubscriptionStringInput | null,
-  and?: Array< ModelSubscriptionSentimentsFilterInput | null > | null,
-  or?: Array< ModelSubscriptionSentimentsFilterInput | null > | null,
-};
-
-export type ModelSubscriptionSentimentTrackerFilterInput = {
-  personAuthID?: ModelSubscriptionStringInput | null,
-  personEmail?: ModelSubscriptionStringInput | null,
-  sentimentId?: ModelSubscriptionIDInput | null,
-  classRoomID?: ModelSubscriptionIDInput | null,
-  syllabusLessonID?: ModelSubscriptionIDInput | null,
-  date?: ModelSubscriptionStringInput | null,
-  time?: ModelSubscriptionStringInput | null,
-  sentimentName?: ModelSubscriptionStringInput | null,
-  sentimentType?: ModelSubscriptionStringInput | null,
-  and?: Array< ModelSubscriptionSentimentTrackerFilterInput | null > | null,
-  or?: Array< ModelSubscriptionSentimentTrackerFilterInput | null > | null,
-};
-
-export type ModelSubscriptionFeelingTrackerFilterInput = {
-  id?: ModelSubscriptionIDInput | null,
-  personAuthID?: ModelSubscriptionStringInput | null,
-  personEmail?: ModelSubscriptionStringInput | null,
-  sentimentId?: ModelSubscriptionIDInput | null,
-  classRoomID?: ModelSubscriptionIDInput | null,
-  lessonID?: ModelSubscriptionIDInput | null,
-  date?: ModelSubscriptionStringInput | null,
-  time?: ModelSubscriptionStringInput | null,
-  sentimentName?: ModelSubscriptionStringInput | null,
-  sentimentType?: ModelSubscriptionStringInput | null,
-  and?: Array< ModelSubscriptionFeelingTrackerFilterInput | null > | null,
-  or?: Array< ModelSubscriptionFeelingTrackerFilterInput | null > | null,
-};
-
-export type ModelSubscriptionFeelingsArchiveFilterInput = {
-  id?: ModelSubscriptionIDInput | null,
-  personAuthID?: ModelSubscriptionStringInput | null,
-  personEmail?: ModelSubscriptionStringInput | null,
-  sentimentId?: ModelSubscriptionIDInput | null,
-  classRoomID?: ModelSubscriptionIDInput | null,
-  lessonID?: ModelSubscriptionIDInput | null,
-  date?: ModelSubscriptionStringInput | null,
-  time?: ModelSubscriptionStringInput | null,
-  sentimentName?: ModelSubscriptionStringInput | null,
-  comments?: ModelSubscriptionStringInput | null,
-  and?: Array< ModelSubscriptionFeelingsArchiveFilterInput | null > | null,
-  or?: Array< ModelSubscriptionFeelingsArchiveFilterInput | null > | null,
-};
-
-export type ModelSubscriptionPersonFilesFilterInput = {
-  id?: ModelSubscriptionIDInput | null,
-  personAuthID?: ModelSubscriptionStringInput | null,
-  personEmail?: ModelSubscriptionStringInput | null,
-  uploadedAt?: ModelSubscriptionStringInput | null,
-  feedbacks?: ModelSubscriptionStringInput | null,
-  shared?: ModelSubscriptionBooleanInput | null,
-  lessonID?: ModelSubscriptionIDInput | null,
-  syllabusLessonID?: ModelSubscriptionStringInput | null,
-  lessonType?: ModelSubscriptionStringInput | null,
-  roomID?: ModelSubscriptionStringInput | null,
-  lessonPageID?: ModelSubscriptionIDInput | null,
-  and?: Array< ModelSubscriptionPersonFilesFilterInput | null > | null,
-  or?: Array< ModelSubscriptionPersonFilesFilterInput | null > | null,
-};
-
-export type ModelSubscriptionCommunityFilterInput = {
-  id?: ModelSubscriptionIDInput | null,
-  institutionID?: ModelSubscriptionIDInput | null,
-  cardName?: ModelSubscriptionStringInput | null,
-  cardType?: ModelSubscriptionStringInput | null,
-  cardDate?: ModelSubscriptionStringInput | null,
-  summary?: ModelSubscriptionStringInput | null,
-  cardImageLink?: ModelSubscriptionStringInput | null,
-  startTime?: ModelSubscriptionStringInput | null,
-  endTime?: ModelSubscriptionStringInput | null,
-  location?: ModelSubscriptionStringInput | null,
-  geoLocation?: ModelSubscriptionStringInput | null,
-  additionalLinks?: ModelSubscriptionStringInput | null,
-  additionalInfo?: ModelSubscriptionStringInput | null,
-  personAuthID?: ModelSubscriptionStringInput | null,
-  personEmail?: ModelSubscriptionStringInput | null,
-  isEditedCard?: ModelSubscriptionBooleanInput | null,
-  summaryHtml?: ModelSubscriptionStringInput | null,
-  likes?: ModelSubscriptionStringInput | null,
-  chatCount?: ModelSubscriptionIntInput | null,
-  and?: Array< ModelSubscriptionCommunityFilterInput | null > | null,
-  or?: Array< ModelSubscriptionCommunityFilterInput | null > | null,
-};
-
-export type ModelSubscriptionGameChangerFilterInput = {
-  id?: ModelSubscriptionIDInput | null,
-  gameChangerName?: ModelSubscriptionStringInput | null,
-  title?: ModelSubscriptionStringInput | null,
-  objective?: ModelSubscriptionStringInput | null,
-  gameChangerLinks?: ModelSubscriptionStringInput | null,
-  inputs?: ModelSubscriptionStringInput | null,
-  likes?: ModelSubscriptionStringInput | null,
-  and?: Array< ModelSubscriptionGameChangerFilterInput | null > | null,
-  or?: Array< ModelSubscriptionGameChangerFilterInput | null > | null,
-};
-
-export type ModelSubscriptionGameChangerLogFilterInput = {
-  id?: ModelSubscriptionIDInput | null,
-  gameChangerID?: ModelSubscriptionIDInput | null,
-  personEmail?: ModelSubscriptionStringInput | null,
-  personAuthID?: ModelSubscriptionStringInput | null,
-  startTime?: ModelSubscriptionStringInput | null,
-  endTime?: ModelSubscriptionStringInput | null,
-  and?: Array< ModelSubscriptionGameChangerLogFilterInput | null > | null,
-  or?: Array< ModelSubscriptionGameChangerLogFilterInput | null > | null,
-};
-
-export type ModelSubscriptionCommunityChatFilterInput = {
-  id?: ModelSubscriptionIDInput | null,
-  communityId?: ModelSubscriptionIDInput | null,
-  personAuthID?: ModelSubscriptionStringInput | null,
-  personEmail?: ModelSubscriptionStringInput | null,
-  msg?: ModelSubscriptionStringInput | null,
-  createdAt?: ModelSubscriptionStringInput | null,
-  isEditedChat?: ModelSubscriptionBooleanInput | null,
-  and?: Array< ModelSubscriptionCommunityChatFilterInput | null > | null,
-  or?: Array< ModelSubscriptionCommunityChatFilterInput | null > | null,
-};
-
-export type ModelSubscriptionCypressTestingFilterInput = {
-  id?: ModelSubscriptionIDInput | null,
-  testID?: ModelSubscriptionStringInput | null,
-  testName?: ModelSubscriptionStringInput | null,
-  testType?: ModelSubscriptionStringInput | null,
-  testSteps?: ModelSubscriptionStringInput | null,
-  testData?: ModelSubscriptionStringInput | null,
-  testExpResults?: ModelSubscriptionStringInput | null,
-  edgeCases?: ModelSubscriptionStringInput | null,
-  lastUpdate?: ModelSubscriptionStringInput | null,
-  and?: Array< ModelSubscriptionCypressTestingFilterInput | null > | null,
-  or?: Array< ModelSubscriptionCypressTestingFilterInput | null > | null,
-};
-
 export type BatchAddClassStudentMutationVariables = {
   classStudents?: Array< CreateClassStudentInput | null > | null,
 };
@@ -5887,6 +5074,7 @@ export type BatchAddClassStudentMutation = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -5965,6 +5153,7 @@ export type CreatePersonMutation = {
     spotlightDate?: string | null,
     statusReason?: string | null,
     addedby?: string | null,
+    lastEmotionSubmission?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -6040,6 +5229,7 @@ export type UpdatePersonMutation = {
     spotlightDate?: string | null,
     statusReason?: string | null,
     addedby?: string | null,
+    lastEmotionSubmission?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -6115,6 +5305,7 @@ export type DeletePersonMutation = {
     spotlightDate?: string | null,
     statusReason?: string | null,
     addedby?: string | null,
+    lastEmotionSubmission?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -6302,6 +5493,7 @@ export type CreatePersonLessonsDataMutation = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -6540,6 +5732,7 @@ export type UpdatePersonLessonsDataMutation = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -6778,6 +5971,7 @@ export type DeletePersonLessonsDataMutation = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -7492,6 +6686,7 @@ export type CreateStaffMutation = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -7596,6 +6791,7 @@ export type UpdateStaffMutation = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -7700,6 +6896,7 @@ export type DeleteStaffMutation = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -7875,6 +7072,7 @@ export type CreateRoomMutation = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -8128,6 +7326,7 @@ export type UpdateRoomMutation = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -8381,6 +7580,7 @@ export type DeleteRoomMutation = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -8661,6 +7861,7 @@ export type CreateClassroomGroupStudentsMutation = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -8712,6 +7913,7 @@ export type CreateClassroomGroupStudentsMutation = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -8803,6 +8005,7 @@ export type UpdateClassroomGroupStudentsMutation = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -8854,6 +8057,7 @@ export type UpdateClassroomGroupStudentsMutation = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -8945,6 +8149,7 @@ export type DeleteClassroomGroupStudentsMutation = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -8996,6 +8201,7 @@ export type DeleteClassroomGroupStudentsMutation = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -9091,6 +8297,7 @@ export type CreateClassroomGroupsMutation = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -9184,6 +8391,7 @@ export type CreateClassroomGroupsMutation = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -9293,6 +8501,7 @@ export type UpdateClassroomGroupsMutation = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -9386,6 +8595,7 @@ export type UpdateClassroomGroupsMutation = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -9495,6 +8705,7 @@ export type DeleteClassroomGroupsMutation = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -9588,6 +8799,7 @@ export type DeleteClassroomGroupsMutation = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -9700,6 +8912,7 @@ export type CreateRoomCoTeachersMutation = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -9789,6 +9002,7 @@ export type CreateRoomCoTeachersMutation = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -9885,6 +9099,7 @@ export type UpdateRoomCoTeachersMutation = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -9974,6 +9189,7 @@ export type UpdateRoomCoTeachersMutation = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -10070,6 +9286,7 @@ export type DeleteRoomCoTeachersMutation = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -10159,6 +9376,7 @@ export type DeleteRoomCoTeachersMutation = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -10299,6 +9517,7 @@ export type CreateClassMutation = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -10503,6 +9722,7 @@ export type UpdateClassMutation = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -10707,6 +9927,7 @@ export type DeleteClassMutation = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -10899,6 +10120,7 @@ export type CreateClassStudentMutation = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -11027,6 +10249,7 @@ export type UpdateClassStudentMutation = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -11155,6 +10378,7 @@ export type DeleteClassStudentMutation = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -12922,6 +12146,7 @@ export type CreateRoomMsgsMutation = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -12981,6 +12206,7 @@ export type UpdateRoomMsgsMutation = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -13040,6 +12266,7 @@ export type DeleteRoomMsgsMutation = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -13101,6 +12328,7 @@ export type CreateStudentDataMutation = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     },
@@ -13199,6 +12427,7 @@ export type UpdateStudentDataMutation = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     },
@@ -13297,6 +12526,7 @@ export type DeleteStudentDataMutation = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     },
@@ -13391,6 +12621,7 @@ export type CreateAnthologyCommentMutation = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -13458,6 +12689,7 @@ export type UpdateAnthologyCommentMutation = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -13525,6 +12757,7 @@ export type DeleteAnthologyCommentMutation = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -13593,6 +12826,7 @@ export type CreateQuestionDataMutation = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -13662,6 +12896,7 @@ export type UpdateQuestionDataMutation = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -13731,6 +12966,7 @@ export type DeleteQuestionDataMutation = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -13799,6 +13035,7 @@ export type CreateQuestionDataStudentDataMutation = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       },
@@ -13863,6 +13100,7 @@ export type CreateQuestionDataStudentDataMutation = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -13934,6 +13172,7 @@ export type UpdateQuestionDataStudentDataMutation = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       },
@@ -13998,6 +13237,7 @@ export type UpdateQuestionDataStudentDataMutation = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -14069,6 +13309,7 @@ export type DeleteQuestionDataStudentDataMutation = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       },
@@ -14133,6 +13374,7 @@ export type DeleteQuestionDataStudentDataMutation = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -14208,6 +13450,7 @@ export type CreatePersonLocationMutation = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -14286,6 +13529,7 @@ export type CreatePersonLocationMutation = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -14396,6 +13640,7 @@ export type UpdatePersonLocationMutation = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -14474,6 +13719,7 @@ export type UpdatePersonLocationMutation = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -14584,6 +13830,7 @@ export type DeletePersonLocationMutation = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -14662,6 +13909,7 @@ export type DeletePersonLocationMutation = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -14989,6 +14237,7 @@ export type CreateAttendanceMutation = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -15316,6 +14565,7 @@ export type UpdateAttendanceMutation = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -15643,6 +14893,7 @@ export type DeleteAttendanceMutation = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -17388,6 +16639,7 @@ export type CreateTemporaryDemographicsUploadDataMutation = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -17464,6 +16716,7 @@ export type UpdateTemporaryDemographicsUploadDataMutation = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -17540,6 +16793,7 @@ export type DeleteTemporaryDemographicsUploadDataMutation = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -19392,6 +18646,7 @@ export type CreateStudentConnectionsMutation = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -19433,6 +18688,7 @@ export type CreateStudentConnectionsMutation = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -19493,6 +18749,7 @@ export type UpdateStudentConnectionsMutation = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -19534,6 +18791,7 @@ export type UpdateStudentConnectionsMutation = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -19594,6 +18852,7 @@ export type DeleteStudentConnectionsMutation = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -19635,6 +18894,7 @@ export type DeleteStudentConnectionsMutation = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -19692,6 +18952,7 @@ export type CreatePersonSentimentsMutation = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -19752,6 +19013,7 @@ export type UpdatePersonSentimentsMutation = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -19812,6 +19074,7 @@ export type DeletePersonSentimentsMutation = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -19920,6 +19183,7 @@ export type CreateSentimentTrackerMutation = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -20008,6 +19272,7 @@ export type CreateSentimentTrackerMutation = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -20187,6 +19452,7 @@ export type UpdateSentimentTrackerMutation = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -20275,6 +19541,7 @@ export type UpdateSentimentTrackerMutation = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -20454,6 +19721,7 @@ export type DeleteSentimentTrackerMutation = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -20542,6 +19810,7 @@ export type DeleteSentimentTrackerMutation = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -20722,6 +19991,7 @@ export type CreateFeelingTrackerMutation = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -20810,6 +20080,7 @@ export type CreateFeelingTrackerMutation = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -20920,6 +20191,7 @@ export type UpdateFeelingTrackerMutation = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -21008,6 +20280,7 @@ export type UpdateFeelingTrackerMutation = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -21118,6 +20391,7 @@ export type DeleteFeelingTrackerMutation = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -21206,6 +20480,7 @@ export type DeleteFeelingTrackerMutation = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -21316,6 +20591,7 @@ export type CreateFeelingsArchiveMutation = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -21408,6 +20684,7 @@ export type CreateFeelingsArchiveMutation = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -21608,6 +20885,7 @@ export type UpdateFeelingsArchiveMutation = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -21700,6 +20978,7 @@ export type UpdateFeelingsArchiveMutation = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -21900,6 +21179,7 @@ export type DeleteFeelingsArchiveMutation = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -21992,6 +21272,7 @@ export type DeleteFeelingsArchiveMutation = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -22339,6 +21620,7 @@ export type CreateCommunityMutation = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -22471,6 +21753,7 @@ export type UpdateCommunityMutation = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -22603,6 +21886,7 @@ export type DeleteCommunityMutation = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -22751,6 +22035,7 @@ export type CreateGameChangerLogMutation = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -22823,6 +22108,7 @@ export type UpdateGameChangerLogMutation = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -22895,6 +22181,7 @@ export type DeleteGameChangerLogMutation = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -23098,6 +22385,7 @@ export type GetPersonQuery = {
     spotlightDate?: string | null,
     statusReason?: string | null,
     addedby?: string | null,
+    lastEmotionSubmission?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -23153,6 +22441,7 @@ export type ListPeopleQuery = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null >,
@@ -23341,6 +22630,7 @@ export type GetPersonLessonsDataQuery = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -23745,6 +23035,7 @@ export type GetStaffQuery = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -23844,6 +23135,7 @@ export type ListStaffQuery = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -23996,6 +23288,7 @@ export type GetRoomQuery = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -24210,6 +23503,7 @@ export type ListRoomsQuery = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -24399,6 +23693,7 @@ export type GetClassroomGroupStudentsQuery = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -24450,6 +23745,7 @@ export type GetClassroomGroupStudentsQuery = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -24517,6 +23813,7 @@ export type ListClassroomGroupStudentsQuery = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -24613,6 +23910,7 @@ export type GetClassroomGroupsQuery = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -24706,6 +24004,7 @@ export type GetClassroomGroupsQuery = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -24810,6 +24109,7 @@ export type ListClassroomGroupsQuery = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -24912,6 +24212,7 @@ export type GetRoomCoTeachersQuery = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -25001,6 +24302,7 @@ export type GetRoomCoTeachersQuery = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -25088,6 +24390,7 @@ export type ListRoomCoTeachersQuery = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -25229,6 +24532,7 @@ export type GetClassQuery = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -25500,6 +24804,7 @@ export type GetClassStudentQuery = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -25566,6 +24871,7 @@ export type ListClassStudentsQuery = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -26387,6 +25693,7 @@ export type GetRoomMsgsQuery = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -26441,6 +25748,7 @@ export type ListRoomMsgsQuery = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -26504,6 +25812,7 @@ export type GetStudentDataQuery = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     },
@@ -26600,6 +25909,7 @@ export type ListStudentDataQuery = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       },
@@ -26679,6 +25989,7 @@ export type GetAnthologyCommentQuery = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -26741,6 +26052,7 @@ export type ListAnthologyCommentsQuery = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -26810,6 +26122,7 @@ export type GetQuestionDataQuery = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -26874,6 +26187,7 @@ export type ListQuestionDataQuery = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -26948,6 +26262,7 @@ export type GetPersonLocationQuery = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -27026,6 +26341,7 @@ export type GetPersonLocationQuery = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -27134,6 +26450,7 @@ export type ListPersonLocationsQuery = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -27447,6 +26764,7 @@ export type GetAttendanceQuery = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -28615,6 +27933,7 @@ export type GetTemporaryDemographicsUploadDataQuery = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -29665,6 +28984,7 @@ export type GetStudentConnectionsQuery = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -29706,6 +29026,7 @@ export type GetStudentConnectionsQuery = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -29761,6 +29082,7 @@ export type ListStudentConnectionsQuery = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -29794,6 +29116,7 @@ export type ListStudentConnectionsQuery = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -29853,6 +29176,7 @@ export type GetPersonSentimentsQuery = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -29911,6 +29235,7 @@ export type ListPersonSentimentsQuery = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -30009,6 +29334,7 @@ export type GetSentimentTrackerQuery = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -30097,6 +29423,7 @@ export type GetSentimentTrackerQuery = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -30274,6 +29601,7 @@ export type ListSentimentTrackersQuery = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -30397,6 +29725,7 @@ export type GetFeelingTrackerQuery = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -30485,6 +29814,7 @@ export type GetFeelingTrackerQuery = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -30593,6 +29923,7 @@ export type ListFeelingTrackersQuery = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -30699,6 +30030,7 @@ export type GetFeelingsArchiveQuery = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -30791,6 +30123,7 @@ export type GetFeelingsArchiveQuery = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -30988,6 +30321,7 @@ export type ListFeelingsArchivesQuery = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -31249,6 +30583,7 @@ export type GetCommunityQuery = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -31354,6 +30689,7 @@ export type ListCommunitiesQuery = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -31478,6 +30814,7 @@ export type GetGameChangerLogQuery = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -31547,6 +30884,7 @@ export type ListGameChangerLogsQuery = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -31700,6 +31038,7 @@ export type UserByIdQuery = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null >,
@@ -31756,6 +31095,7 @@ export type UsersByRoleQuery = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null >,
@@ -31911,6 +31251,7 @@ export type MessagesByRoomIDQuery = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -31971,6 +31312,7 @@ export type PersonLocationBySyllabusLessonQuery = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -32205,6 +31547,7 @@ export type OnCreateUpdatePersonLocationItemSubscription = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -32283,6 +31626,7 @@ export type OnCreateUpdatePersonLocationItemSubscription = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -32394,6 +31738,7 @@ export type OnDeletePersonLocationItemSubscription = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -32472,6 +31817,7 @@ export type OnDeletePersonLocationItemSubscription = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -32581,6 +31927,7 @@ export type OnChangeStudentDataSubscription = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     },
@@ -32887,6 +32234,7 @@ export type OnChangeRoomSubscription = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -33017,10 +32365,6 @@ export type OnChangeRoomSubscription = {
   } | null,
 };
 
-export type OnCreatePersonSubscriptionVariables = {
-  filter?: ModelSubscriptionPersonFilterInput | null,
-};
-
 export type OnCreatePersonSubscription = {
   onCreatePerson?:  {
     __typename: "Person",
@@ -33086,13 +32430,10 @@ export type OnCreatePersonSubscription = {
     spotlightDate?: string | null,
     statusReason?: string | null,
     addedby?: string | null,
+    lastEmotionSubmission?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnUpdatePersonSubscriptionVariables = {
-  filter?: ModelSubscriptionPersonFilterInput | null,
 };
 
 export type OnUpdatePersonSubscription = {
@@ -33160,13 +32501,10 @@ export type OnUpdatePersonSubscription = {
     spotlightDate?: string | null,
     statusReason?: string | null,
     addedby?: string | null,
+    lastEmotionSubmission?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnDeletePersonSubscriptionVariables = {
-  filter?: ModelSubscriptionPersonFilterInput | null,
 };
 
 export type OnDeletePersonSubscription = {
@@ -33234,13 +32572,10 @@ export type OnDeletePersonSubscription = {
     spotlightDate?: string | null,
     statusReason?: string | null,
     addedby?: string | null,
+    lastEmotionSubmission?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnCreatePersonLessonsDataSubscriptionVariables = {
-  filter?: ModelSubscriptionPersonLessonsDataFilterInput | null,
 };
 
 export type OnCreatePersonLessonsDataSubscription = {
@@ -33420,6 +32755,7 @@ export type OnCreatePersonLessonsDataSubscription = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -33474,10 +32810,6 @@ export type OnCreatePersonLessonsDataSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnUpdatePersonLessonsDataSubscriptionVariables = {
-  filter?: ModelSubscriptionPersonLessonsDataFilterInput | null,
 };
 
 export type OnUpdatePersonLessonsDataSubscription = {
@@ -33657,6 +32989,7 @@ export type OnUpdatePersonLessonsDataSubscription = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -33711,10 +33044,6 @@ export type OnUpdatePersonLessonsDataSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnDeletePersonLessonsDataSubscriptionVariables = {
-  filter?: ModelSubscriptionPersonLessonsDataFilterInput | null,
 };
 
 export type OnDeletePersonLessonsDataSubscription = {
@@ -33894,6 +33223,7 @@ export type OnDeletePersonLessonsDataSubscription = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -33948,10 +33278,6 @@ export type OnDeletePersonLessonsDataSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnCreateInstitutionSubscriptionVariables = {
-  filter?: ModelSubscriptionInstitutionFilterInput | null,
 };
 
 export type OnCreateInstitutionSubscription = {
@@ -34090,10 +33416,6 @@ export type OnCreateInstitutionSubscription = {
   } | null,
 };
 
-export type OnUpdateInstitutionSubscriptionVariables = {
-  filter?: ModelSubscriptionInstitutionFilterInput | null,
-};
-
 export type OnUpdateInstitutionSubscription = {
   onUpdateInstitution?:  {
     __typename: "Institution",
@@ -34228,10 +33550,6 @@ export type OnUpdateInstitutionSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnDeleteInstitutionSubscriptionVariables = {
-  filter?: ModelSubscriptionInstitutionFilterInput | null,
 };
 
 export type OnDeleteInstitutionSubscription = {
@@ -34370,10 +33688,6 @@ export type OnDeleteInstitutionSubscription = {
   } | null,
 };
 
-export type OnCreateServiceProviderSubscriptionVariables = {
-  filter?: ModelSubscriptionServiceProviderFilterInput | null,
-};
-
 export type OnCreateServiceProviderSubscription = {
   onCreateServiceProvider?:  {
     __typename: "ServiceProvider",
@@ -34428,10 +33742,6 @@ export type OnCreateServiceProviderSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnUpdateServiceProviderSubscriptionVariables = {
-  filter?: ModelSubscriptionServiceProviderFilterInput | null,
 };
 
 export type OnUpdateServiceProviderSubscription = {
@@ -34490,10 +33800,6 @@ export type OnUpdateServiceProviderSubscription = {
   } | null,
 };
 
-export type OnDeleteServiceProviderSubscriptionVariables = {
-  filter?: ModelSubscriptionServiceProviderFilterInput | null,
-};
-
 export type OnDeleteServiceProviderSubscription = {
   onDeleteServiceProvider?:  {
     __typename: "ServiceProvider",
@@ -34550,10 +33856,6 @@ export type OnDeleteServiceProviderSubscription = {
   } | null,
 };
 
-export type OnCreateStaffSubscriptionVariables = {
-  filter?: ModelSubscriptionStaffFilterInput | null,
-};
-
 export type OnCreateStaffSubscription = {
   onCreateStaff?:  {
     __typename: "Staff",
@@ -34601,6 +33903,7 @@ export type OnCreateStaffSubscription = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -34651,10 +33954,6 @@ export type OnCreateStaffSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnUpdateStaffSubscriptionVariables = {
-  filter?: ModelSubscriptionStaffFilterInput | null,
 };
 
 export type OnUpdateStaffSubscription = {
@@ -34704,6 +34003,7 @@ export type OnUpdateStaffSubscription = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -34754,10 +34054,6 @@ export type OnUpdateStaffSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnDeleteStaffSubscriptionVariables = {
-  filter?: ModelSubscriptionStaffFilterInput | null,
 };
 
 export type OnDeleteStaffSubscription = {
@@ -34807,6 +34103,7 @@ export type OnDeleteStaffSubscription = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -34857,10 +34154,6 @@ export type OnDeleteStaffSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnCreateRoomSubscriptionVariables = {
-  filter?: ModelSubscriptionRoomFilterInput | null,
 };
 
 export type OnCreateRoomSubscription = {
@@ -34981,6 +34274,7 @@ export type OnCreateRoomSubscription = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -35109,10 +34403,6 @@ export type OnCreateRoomSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnUpdateRoomSubscriptionVariables = {
-  filter?: ModelSubscriptionRoomFilterInput | null,
 };
 
 export type OnUpdateRoomSubscription = {
@@ -35233,6 +34523,7 @@ export type OnUpdateRoomSubscription = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -35361,10 +34652,6 @@ export type OnUpdateRoomSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnDeleteRoomSubscriptionVariables = {
-  filter?: ModelSubscriptionRoomFilterInput | null,
 };
 
 export type OnDeleteRoomSubscription = {
@@ -35485,6 +34772,7 @@ export type OnDeleteRoomSubscription = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -35615,10 +34903,6 @@ export type OnDeleteRoomSubscription = {
   } | null,
 };
 
-export type OnCreateArchiveSurveyDataSQLSubscriptionVariables = {
-  filter?: ModelSubscriptionArchiveSurveyDataSQLFilterInput | null,
-};
-
 export type OnCreateArchiveSurveyDataSQLSubscription = {
   onCreateArchiveSurveyDataSQL?:  {
     __typename: "ArchiveSurveyDataSQL",
@@ -35635,10 +34919,6 @@ export type OnCreateArchiveSurveyDataSQLSubscription = {
     createdAt?: string | null,
     updatedAt?: string | null,
   } | null,
-};
-
-export type OnUpdateArchiveSurveyDataSQLSubscriptionVariables = {
-  filter?: ModelSubscriptionArchiveSurveyDataSQLFilterInput | null,
 };
 
 export type OnUpdateArchiveSurveyDataSQLSubscription = {
@@ -35659,10 +34939,6 @@ export type OnUpdateArchiveSurveyDataSQLSubscription = {
   } | null,
 };
 
-export type OnDeleteArchiveSurveyDataSQLSubscriptionVariables = {
-  filter?: ModelSubscriptionArchiveSurveyDataSQLFilterInput | null,
-};
-
 export type OnDeleteArchiveSurveyDataSQLSubscription = {
   onDeleteArchiveSurveyDataSQL?:  {
     __typename: "ArchiveSurveyDataSQL",
@@ -35679,10 +34955,6 @@ export type OnDeleteArchiveSurveyDataSQLSubscription = {
     createdAt?: string | null,
     updatedAt?: string | null,
   } | null,
-};
-
-export type OnCreateClassroomGroupStudentsSubscriptionVariables = {
-  filter?: ModelSubscriptionClassroomGroupStudentsFilterInput | null,
 };
 
 export type OnCreateClassroomGroupStudentsSubscription = {
@@ -35761,6 +35033,7 @@ export type OnCreateClassroomGroupStudentsSubscription = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -35812,6 +35085,7 @@ export type OnCreateClassroomGroupStudentsSubscription = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -35820,10 +35094,6 @@ export type OnCreateClassroomGroupStudentsSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnUpdateClassroomGroupStudentsSubscriptionVariables = {
-  filter?: ModelSubscriptionClassroomGroupStudentsFilterInput | null,
 };
 
 export type OnUpdateClassroomGroupStudentsSubscription = {
@@ -35902,6 +35172,7 @@ export type OnUpdateClassroomGroupStudentsSubscription = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -35953,6 +35224,7 @@ export type OnUpdateClassroomGroupStudentsSubscription = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -35961,10 +35233,6 @@ export type OnUpdateClassroomGroupStudentsSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnDeleteClassroomGroupStudentsSubscriptionVariables = {
-  filter?: ModelSubscriptionClassroomGroupStudentsFilterInput | null,
 };
 
 export type OnDeleteClassroomGroupStudentsSubscription = {
@@ -36043,6 +35311,7 @@ export type OnDeleteClassroomGroupStudentsSubscription = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -36094,6 +35363,7 @@ export type OnDeleteClassroomGroupStudentsSubscription = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -36102,10 +35372,6 @@ export type OnDeleteClassroomGroupStudentsSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnCreateClassroomGroupsSubscriptionVariables = {
-  filter?: ModelSubscriptionClassroomGroupsFilterInput | null,
 };
 
 export type OnCreateClassroomGroupsSubscription = {
@@ -36188,6 +35454,7 @@ export type OnCreateClassroomGroupsSubscription = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -36281,6 +35548,7 @@ export type OnCreateClassroomGroupsSubscription = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -36303,10 +35571,6 @@ export type OnCreateClassroomGroupsSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnUpdateClassroomGroupsSubscriptionVariables = {
-  filter?: ModelSubscriptionClassroomGroupsFilterInput | null,
 };
 
 export type OnUpdateClassroomGroupsSubscription = {
@@ -36389,6 +35653,7 @@ export type OnUpdateClassroomGroupsSubscription = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -36482,6 +35747,7 @@ export type OnUpdateClassroomGroupsSubscription = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -36504,10 +35770,6 @@ export type OnUpdateClassroomGroupsSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnDeleteClassroomGroupsSubscriptionVariables = {
-  filter?: ModelSubscriptionClassroomGroupsFilterInput | null,
 };
 
 export type OnDeleteClassroomGroupsSubscription = {
@@ -36590,6 +35852,7 @@ export type OnDeleteClassroomGroupsSubscription = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -36683,6 +35946,7 @@ export type OnDeleteClassroomGroupsSubscription = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -36705,10 +35969,6 @@ export type OnDeleteClassroomGroupsSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnCreateRoomCoTeachersSubscriptionVariables = {
-  filter?: ModelSubscriptionRoomCoTeachersFilterInput | null,
 };
 
 export type OnCreateRoomCoTeachersSubscription = {
@@ -36794,6 +36054,7 @@ export type OnCreateRoomCoTeachersSubscription = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -36883,16 +36144,13 @@ export type OnCreateRoomCoTeachersSubscription = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnUpdateRoomCoTeachersSubscriptionVariables = {
-  filter?: ModelSubscriptionRoomCoTeachersFilterInput | null,
 };
 
 export type OnUpdateRoomCoTeachersSubscription = {
@@ -36978,6 +36236,7 @@ export type OnUpdateRoomCoTeachersSubscription = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -37067,16 +36326,13 @@ export type OnUpdateRoomCoTeachersSubscription = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnDeleteRoomCoTeachersSubscriptionVariables = {
-  filter?: ModelSubscriptionRoomCoTeachersFilterInput | null,
 };
 
 export type OnDeleteRoomCoTeachersSubscription = {
@@ -37162,6 +36418,7 @@ export type OnDeleteRoomCoTeachersSubscription = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -37251,16 +36508,13 @@ export type OnDeleteRoomCoTeachersSubscription = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnCreateClassSubscriptionVariables = {
-  filter?: ModelSubscriptionClassFilterInput | null,
 };
 
 export type OnCreateClassSubscription = {
@@ -37390,6 +36644,7 @@ export type OnCreateClassSubscription = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -37460,10 +36715,6 @@ export type OnCreateClassSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnUpdateClassSubscriptionVariables = {
-  filter?: ModelSubscriptionClassFilterInput | null,
 };
 
 export type OnUpdateClassSubscription = {
@@ -37593,6 +36844,7 @@ export type OnUpdateClassSubscription = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -37663,10 +36915,6 @@ export type OnUpdateClassSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnDeleteClassSubscriptionVariables = {
-  filter?: ModelSubscriptionClassFilterInput | null,
 };
 
 export type OnDeleteClassSubscription = {
@@ -37796,6 +37044,7 @@ export type OnDeleteClassSubscription = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -37866,10 +37115,6 @@ export type OnDeleteClassSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnCreateClassStudentSubscriptionVariables = {
-  filter?: ModelSubscriptionClassStudentFilterInput | null,
 };
 
 export type OnCreateClassStudentSubscription = {
@@ -37987,16 +37232,13 @@ export type OnCreateClassStudentSubscription = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnUpdateClassStudentSubscriptionVariables = {
-  filter?: ModelSubscriptionClassStudentFilterInput | null,
 };
 
 export type OnUpdateClassStudentSubscription = {
@@ -38114,16 +37356,13 @@ export type OnUpdateClassStudentSubscription = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnDeleteClassStudentSubscriptionVariables = {
-  filter?: ModelSubscriptionClassStudentFilterInput | null,
 };
 
 export type OnDeleteClassStudentSubscription = {
@@ -38241,16 +37480,13 @@ export type OnDeleteClassStudentSubscription = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnCreateCurriculumSubscriptionVariables = {
-  filter?: ModelSubscriptionCurriculumFilterInput | null,
 };
 
 export type OnCreateCurriculumSubscription = {
@@ -38342,10 +37578,6 @@ export type OnCreateCurriculumSubscription = {
   } | null,
 };
 
-export type OnUpdateCurriculumSubscriptionVariables = {
-  filter?: ModelSubscriptionCurriculumFilterInput | null,
-};
-
 export type OnUpdateCurriculumSubscription = {
   onUpdateCurriculum?:  {
     __typename: "Curriculum",
@@ -38433,10 +37665,6 @@ export type OnUpdateCurriculumSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnDeleteCurriculumSubscriptionVariables = {
-  filter?: ModelSubscriptionCurriculumFilterInput | null,
 };
 
 export type OnDeleteCurriculumSubscription = {
@@ -38528,10 +37756,6 @@ export type OnDeleteCurriculumSubscription = {
   } | null,
 };
 
-export type OnCreateTopicSubscriptionVariables = {
-  filter?: ModelSubscriptionTopicFilterInput | null,
-};
-
 export type OnCreateTopicSubscription = {
   onCreateTopic?:  {
     __typename: "Topic",
@@ -38601,10 +37825,6 @@ export type OnCreateTopicSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnUpdateTopicSubscriptionVariables = {
-  filter?: ModelSubscriptionTopicFilterInput | null,
 };
 
 export type OnUpdateTopicSubscription = {
@@ -38678,10 +37898,6 @@ export type OnUpdateTopicSubscription = {
   } | null,
 };
 
-export type OnDeleteTopicSubscriptionVariables = {
-  filter?: ModelSubscriptionTopicFilterInput | null,
-};
-
 export type OnDeleteTopicSubscription = {
   onDeleteTopic?:  {
     __typename: "Topic",
@@ -38753,10 +37969,6 @@ export type OnDeleteTopicSubscription = {
   } | null,
 };
 
-export type OnCreateCSequencesSubscriptionVariables = {
-  filter?: ModelSubscriptionCSequencesFilterInput | null,
-};
-
 export type OnCreateCSequencesSubscription = {
   onCreateCSequences?:  {
     __typename: "CSequences",
@@ -38765,10 +37977,6 @@ export type OnCreateCSequencesSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnUpdateCSequencesSubscriptionVariables = {
-  filter?: ModelSubscriptionCSequencesFilterInput | null,
 };
 
 export type OnUpdateCSequencesSubscription = {
@@ -38781,10 +37989,6 @@ export type OnUpdateCSequencesSubscription = {
   } | null,
 };
 
-export type OnDeleteCSequencesSubscriptionVariables = {
-  filter?: ModelSubscriptionCSequencesFilterInput | null,
-};
-
 export type OnDeleteCSequencesSubscription = {
   onDeleteCSequences?:  {
     __typename: "CSequences",
@@ -38793,10 +37997,6 @@ export type OnDeleteCSequencesSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnCreateLearningObjectiveSubscriptionVariables = {
-  filter?: ModelSubscriptionLearningObjectiveFilterInput | null,
 };
 
 export type OnCreateLearningObjectiveSubscription = {
@@ -38811,10 +38011,6 @@ export type OnCreateLearningObjectiveSubscription = {
   } | null,
 };
 
-export type OnUpdateLearningObjectiveSubscriptionVariables = {
-  filter?: ModelSubscriptionLearningObjectiveFilterInput | null,
-};
-
 export type OnUpdateLearningObjectiveSubscription = {
   onUpdateLearningObjective?:  {
     __typename: "LearningObjective",
@@ -38827,10 +38023,6 @@ export type OnUpdateLearningObjectiveSubscription = {
   } | null,
 };
 
-export type OnDeleteLearningObjectiveSubscriptionVariables = {
-  filter?: ModelSubscriptionLearningObjectiveFilterInput | null,
-};
-
 export type OnDeleteLearningObjectiveSubscription = {
   onDeleteLearningObjective?:  {
     __typename: "LearningObjective",
@@ -38841,10 +38033,6 @@ export type OnDeleteLearningObjectiveSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnCreateRubricSubscriptionVariables = {
-  filter?: ModelSubscriptionRubricFilterInput | null,
 };
 
 export type OnCreateRubricSubscription = {
@@ -38900,10 +38088,6 @@ export type OnCreateRubricSubscription = {
   } | null,
 };
 
-export type OnUpdateRubricSubscriptionVariables = {
-  filter?: ModelSubscriptionRubricFilterInput | null,
-};
-
 export type OnUpdateRubricSubscription = {
   onUpdateRubric?:  {
     __typename: "Rubric",
@@ -38957,10 +38141,6 @@ export type OnUpdateRubricSubscription = {
   } | null,
 };
 
-export type OnDeleteRubricSubscriptionVariables = {
-  filter?: ModelSubscriptionRubricFilterInput | null,
-};
-
 export type OnDeleteRubricSubscription = {
   onDeleteRubric?:  {
     __typename: "Rubric",
@@ -39012,10 +38192,6 @@ export type OnDeleteRubricSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnCreateRoomCurriculumSubscriptionVariables = {
-  filter?: ModelSubscriptionRoomCurriculumFilterInput | null,
 };
 
 export type OnCreateRoomCurriculumSubscription = {
@@ -39074,10 +38250,6 @@ export type OnCreateRoomCurriculumSubscription = {
   } | null,
 };
 
-export type OnUpdateRoomCurriculumSubscriptionVariables = {
-  filter?: ModelSubscriptionRoomCurriculumFilterInput | null,
-};
-
 export type OnUpdateRoomCurriculumSubscription = {
   onUpdateRoomCurriculum?:  {
     __typename: "RoomCurriculum",
@@ -39132,10 +38304,6 @@ export type OnUpdateRoomCurriculumSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnDeleteRoomCurriculumSubscriptionVariables = {
-  filter?: ModelSubscriptionRoomCurriculumFilterInput | null,
 };
 
 export type OnDeleteRoomCurriculumSubscription = {
@@ -39194,10 +38362,6 @@ export type OnDeleteRoomCurriculumSubscription = {
   } | null,
 };
 
-export type OnCreateCheckpointSubscriptionVariables = {
-  filter?: ModelSubscriptionCheckpointFilterInput | null,
-};
-
 export type OnCreateCheckpointSubscription = {
   onCreateCheckpoint?:  {
     __typename: "Checkpoint",
@@ -39232,10 +38396,6 @@ export type OnCreateCheckpointSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnUpdateCheckpointSubscriptionVariables = {
-  filter?: ModelSubscriptionCheckpointFilterInput | null,
 };
 
 export type OnUpdateCheckpointSubscription = {
@@ -39274,10 +38434,6 @@ export type OnUpdateCheckpointSubscription = {
   } | null,
 };
 
-export type OnDeleteCheckpointSubscriptionVariables = {
-  filter?: ModelSubscriptionCheckpointFilterInput | null,
-};
-
 export type OnDeleteCheckpointSubscription = {
   onDeleteCheckpoint?:  {
     __typename: "Checkpoint",
@@ -39312,10 +38468,6 @@ export type OnDeleteCheckpointSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnCreateCommonCheckpointSubscriptionVariables = {
-  filter?: ModelSubscriptionCommonCheckpointFilterInput | null,
 };
 
 export type OnCreateCommonCheckpointSubscription = {
@@ -39399,10 +38551,6 @@ export type OnCreateCommonCheckpointSubscription = {
   } | null,
 };
 
-export type OnUpdateCommonCheckpointSubscriptionVariables = {
-  filter?: ModelSubscriptionCommonCheckpointFilterInput | null,
-};
-
 export type OnUpdateCommonCheckpointSubscription = {
   onUpdateCommonCheckpoint?:  {
     __typename: "commonCheckpoint",
@@ -39482,10 +38630,6 @@ export type OnUpdateCommonCheckpointSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnDeleteCommonCheckpointSubscriptionVariables = {
-  filter?: ModelSubscriptionCommonCheckpointFilterInput | null,
 };
 
 export type OnDeleteCommonCheckpointSubscription = {
@@ -39569,10 +38713,6 @@ export type OnDeleteCommonCheckpointSubscription = {
   } | null,
 };
 
-export type OnCreateCheckpointQuestionsSubscriptionVariables = {
-  filter?: ModelSubscriptionCheckpointQuestionsFilterInput | null,
-};
-
 export type OnCreateCheckpointQuestionsSubscription = {
   onCreateCheckpointQuestions?:  {
     __typename: "CheckpointQuestions",
@@ -39628,10 +38768,6 @@ export type OnCreateCheckpointQuestionsSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnUpdateCheckpointQuestionsSubscriptionVariables = {
-  filter?: ModelSubscriptionCheckpointQuestionsFilterInput | null,
 };
 
 export type OnUpdateCheckpointQuestionsSubscription = {
@@ -39691,10 +38827,6 @@ export type OnUpdateCheckpointQuestionsSubscription = {
   } | null,
 };
 
-export type OnDeleteCheckpointQuestionsSubscriptionVariables = {
-  filter?: ModelSubscriptionCheckpointQuestionsFilterInput | null,
-};
-
 export type OnDeleteCheckpointQuestionsSubscription = {
   onDeleteCheckpointQuestions?:  {
     __typename: "CheckpointQuestions",
@@ -39752,10 +38884,6 @@ export type OnDeleteCheckpointQuestionsSubscription = {
   } | null,
 };
 
-export type OnCreateQuestionSubscriptionVariables = {
-  filter?: ModelSubscriptionQuestionFilterInput | null,
-};
-
 export type OnCreateQuestionSubscription = {
   onCreateQuestion?:  {
     __typename: "Question",
@@ -39778,10 +38906,6 @@ export type OnCreateQuestionSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnUpdateQuestionSubscriptionVariables = {
-  filter?: ModelSubscriptionQuestionFilterInput | null,
 };
 
 export type OnUpdateQuestionSubscription = {
@@ -39808,10 +38932,6 @@ export type OnUpdateQuestionSubscription = {
   } | null,
 };
 
-export type OnDeleteQuestionSubscriptionVariables = {
-  filter?: ModelSubscriptionQuestionFilterInput | null,
-};
-
 export type OnDeleteQuestionSubscription = {
   onDeleteQuestion?:  {
     __typename: "Question",
@@ -39836,10 +38956,6 @@ export type OnDeleteQuestionSubscription = {
   } | null,
 };
 
-export type OnCreateQuestionSourceSubscriptionVariables = {
-  filter?: ModelSubscriptionQuestionSourceFilterInput | null,
-};
-
 export type OnCreateQuestionSourceSubscription = {
   onCreateQuestionSource?:  {
     __typename: "QuestionSource",
@@ -39848,10 +38964,6 @@ export type OnCreateQuestionSourceSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnUpdateQuestionSourceSubscriptionVariables = {
-  filter?: ModelSubscriptionQuestionSourceFilterInput | null,
 };
 
 export type OnUpdateQuestionSourceSubscription = {
@@ -39864,10 +38976,6 @@ export type OnUpdateQuestionSourceSubscription = {
   } | null,
 };
 
-export type OnDeleteQuestionSourceSubscriptionVariables = {
-  filter?: ModelSubscriptionQuestionSourceFilterInput | null,
-};
-
 export type OnDeleteQuestionSourceSubscription = {
   onDeleteQuestionSource?:  {
     __typename: "QuestionSource",
@@ -39876,10 +38984,6 @@ export type OnDeleteQuestionSourceSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnCreateQuestionTypeSubscriptionVariables = {
-  filter?: ModelSubscriptionQuestionTypeFilterInput | null,
 };
 
 export type OnCreateQuestionTypeSubscription = {
@@ -39892,10 +38996,6 @@ export type OnCreateQuestionTypeSubscription = {
   } | null,
 };
 
-export type OnUpdateQuestionTypeSubscriptionVariables = {
-  filter?: ModelSubscriptionQuestionTypeFilterInput | null,
-};
-
 export type OnUpdateQuestionTypeSubscription = {
   onUpdateQuestionType?:  {
     __typename: "QuestionType",
@@ -39906,10 +39006,6 @@ export type OnUpdateQuestionTypeSubscription = {
   } | null,
 };
 
-export type OnDeleteQuestionTypeSubscriptionVariables = {
-  filter?: ModelSubscriptionQuestionTypeFilterInput | null,
-};
-
 export type OnDeleteQuestionTypeSubscription = {
   onDeleteQuestionType?:  {
     __typename: "QuestionType",
@@ -39918,10 +39014,6 @@ export type OnDeleteQuestionTypeSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnCreateRoomMsgsSubscriptionVariables = {
-  filter?: ModelSubscriptionRoomMsgsFilterInput | null,
 };
 
 export type OnCreateRoomMsgsSubscription = {
@@ -39971,15 +39063,12 @@ export type OnCreateRoomMsgsSubscription = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
     updatedAt: string,
   } | null,
-};
-
-export type OnUpdateRoomMsgsSubscriptionVariables = {
-  filter?: ModelSubscriptionRoomMsgsFilterInput | null,
 };
 
 export type OnUpdateRoomMsgsSubscription = {
@@ -40029,15 +39118,12 @@ export type OnUpdateRoomMsgsSubscription = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
     updatedAt: string,
   } | null,
-};
-
-export type OnDeleteRoomMsgsSubscriptionVariables = {
-  filter?: ModelSubscriptionRoomMsgsFilterInput | null,
 };
 
 export type OnDeleteRoomMsgsSubscription = {
@@ -40087,15 +39173,12 @@ export type OnDeleteRoomMsgsSubscription = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
     updatedAt: string,
   } | null,
-};
-
-export type OnCreateAnthologyCommentSubscriptionVariables = {
-  filter?: ModelSubscriptionAnthologyCommentFilterInput | null,
 };
 
 export type OnCreateAnthologyCommentSubscription = {
@@ -40143,6 +39226,7 @@ export type OnCreateAnthologyCommentSubscription = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -40158,10 +39242,6 @@ export type OnCreateAnthologyCommentSubscription = {
     updatedAt?: string | null,
     entryID: string,
   } | null,
-};
-
-export type OnUpdateAnthologyCommentSubscriptionVariables = {
-  filter?: ModelSubscriptionAnthologyCommentFilterInput | null,
 };
 
 export type OnUpdateAnthologyCommentSubscription = {
@@ -40209,6 +39289,7 @@ export type OnUpdateAnthologyCommentSubscription = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -40224,10 +39305,6 @@ export type OnUpdateAnthologyCommentSubscription = {
     updatedAt?: string | null,
     entryID: string,
   } | null,
-};
-
-export type OnDeleteAnthologyCommentSubscriptionVariables = {
-  filter?: ModelSubscriptionAnthologyCommentFilterInput | null,
 };
 
 export type OnDeleteAnthologyCommentSubscription = {
@@ -40275,6 +39352,7 @@ export type OnDeleteAnthologyCommentSubscription = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -40290,10 +39368,6 @@ export type OnDeleteAnthologyCommentSubscription = {
     updatedAt?: string | null,
     entryID: string,
   } | null,
-};
-
-export type OnCreateQuestionDataSubscriptionVariables = {
-  filter?: ModelSubscriptionQuestionDataFilterInput | null,
 };
 
 export type OnCreateQuestionDataSubscription = {
@@ -40342,6 +39416,7 @@ export type OnCreateQuestionDataSubscription = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -40358,10 +39433,6 @@ export type OnCreateQuestionDataSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnUpdateQuestionDataSubscriptionVariables = {
-  filter?: ModelSubscriptionQuestionDataFilterInput | null,
 };
 
 export type OnUpdateQuestionDataSubscription = {
@@ -40410,6 +39481,7 @@ export type OnUpdateQuestionDataSubscription = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -40426,10 +39498,6 @@ export type OnUpdateQuestionDataSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnDeleteQuestionDataSubscriptionVariables = {
-  filter?: ModelSubscriptionQuestionDataFilterInput | null,
 };
 
 export type OnDeleteQuestionDataSubscription = {
@@ -40478,6 +39546,7 @@ export type OnDeleteQuestionDataSubscription = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -40494,10 +39563,6 @@ export type OnDeleteQuestionDataSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnCreateQuestionDataStudentDataSubscriptionVariables = {
-  filter?: ModelSubscriptionQuestionDataStudentDataFilterInput | null,
 };
 
 export type OnCreateQuestionDataStudentDataSubscription = {
@@ -40545,6 +39610,7 @@ export type OnCreateQuestionDataStudentDataSubscription = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       },
@@ -40609,6 +39675,7 @@ export type OnCreateQuestionDataStudentDataSubscription = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -40628,10 +39695,6 @@ export type OnCreateQuestionDataStudentDataSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnUpdateQuestionDataStudentDataSubscriptionVariables = {
-  filter?: ModelSubscriptionQuestionDataStudentDataFilterInput | null,
 };
 
 export type OnUpdateQuestionDataStudentDataSubscription = {
@@ -40679,6 +39742,7 @@ export type OnUpdateQuestionDataStudentDataSubscription = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       },
@@ -40743,6 +39807,7 @@ export type OnUpdateQuestionDataStudentDataSubscription = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -40762,10 +39827,6 @@ export type OnUpdateQuestionDataStudentDataSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnDeleteQuestionDataStudentDataSubscriptionVariables = {
-  filter?: ModelSubscriptionQuestionDataStudentDataFilterInput | null,
 };
 
 export type OnDeleteQuestionDataStudentDataSubscription = {
@@ -40813,6 +39874,7 @@ export type OnDeleteQuestionDataStudentDataSubscription = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       },
@@ -40877,6 +39939,7 @@ export type OnDeleteQuestionDataStudentDataSubscription = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -40896,10 +39959,6 @@ export type OnDeleteQuestionDataStudentDataSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnCreatePersonLocationSubscriptionVariables = {
-  filter?: ModelSubscriptionPersonLocationFilterInput | null,
 };
 
 export type OnCreatePersonLocationSubscription = {
@@ -40951,6 +40010,7 @@ export type OnCreatePersonLocationSubscription = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -41029,6 +40089,7 @@ export type OnCreatePersonLocationSubscription = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -41083,10 +40144,6 @@ export type OnCreatePersonLocationSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnUpdatePersonLocationSubscriptionVariables = {
-  filter?: ModelSubscriptionPersonLocationFilterInput | null,
 };
 
 export type OnUpdatePersonLocationSubscription = {
@@ -41138,6 +40195,7 @@ export type OnUpdatePersonLocationSubscription = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -41216,6 +40274,7 @@ export type OnUpdatePersonLocationSubscription = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -41270,10 +40329,6 @@ export type OnUpdatePersonLocationSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnDeletePersonLocationSubscriptionVariables = {
-  filter?: ModelSubscriptionPersonLocationFilterInput | null,
 };
 
 export type OnDeletePersonLocationSubscription = {
@@ -41325,6 +40380,7 @@ export type OnDeletePersonLocationSubscription = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -41403,6 +40459,7 @@ export type OnDeletePersonLocationSubscription = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -41457,10 +40514,6 @@ export type OnDeletePersonLocationSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnCreateAttendanceSubscriptionVariables = {
-  filter?: ModelSubscriptionAttendanceFilterInput | null,
 };
 
 export type OnCreateAttendanceSubscription = {
@@ -41729,6 +40782,7 @@ export type OnCreateAttendanceSubscription = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -41783,10 +40837,6 @@ export type OnCreateAttendanceSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnUpdateAttendanceSubscriptionVariables = {
-  filter?: ModelSubscriptionAttendanceFilterInput | null,
 };
 
 export type OnUpdateAttendanceSubscription = {
@@ -42055,6 +41105,7 @@ export type OnUpdateAttendanceSubscription = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -42109,10 +41160,6 @@ export type OnUpdateAttendanceSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnDeleteAttendanceSubscriptionVariables = {
-  filter?: ModelSubscriptionAttendanceFilterInput | null,
 };
 
 export type OnDeleteAttendanceSubscription = {
@@ -42381,6 +41428,7 @@ export type OnDeleteAttendanceSubscription = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -42435,10 +41483,6 @@ export type OnDeleteAttendanceSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnCreateUniversalLessonSubscriptionVariables = {
-  filter?: ModelSubscriptionUniversalLessonFilterInput | null,
 };
 
 export type OnCreateUniversalLessonSubscription = {
@@ -42574,10 +41618,6 @@ export type OnCreateUniversalLessonSubscription = {
   } | null,
 };
 
-export type OnUpdateUniversalLessonSubscriptionVariables = {
-  filter?: ModelSubscriptionUniversalLessonFilterInput | null,
-};
-
 export type OnUpdateUniversalLessonSubscription = {
   onUpdateUniversalLesson?:  {
     __typename: "UniversalLesson",
@@ -42711,10 +41751,6 @@ export type OnUpdateUniversalLessonSubscription = {
   } | null,
 };
 
-export type OnDeleteUniversalLessonSubscriptionVariables = {
-  filter?: ModelSubscriptionUniversalLessonFilterInput | null,
-};
-
 export type OnDeleteUniversalLessonSubscription = {
   onDeleteUniversalLesson?:  {
     __typename: "UniversalLesson",
@@ -42846,10 +41882,6 @@ export type OnDeleteUniversalLessonSubscription = {
     createdAt?: string | null,
     updatedAt?: string | null,
   } | null,
-};
-
-export type OnCreateUniversalLessonStudentDataSubscriptionVariables = {
-  filter?: ModelSubscriptionUniversalLessonStudentDataFilterInput | null,
 };
 
 export type OnCreateUniversalLessonStudentDataSubscription = {
@@ -42986,10 +42018,6 @@ export type OnCreateUniversalLessonStudentDataSubscription = {
   } | null,
 };
 
-export type OnUpdateUniversalLessonStudentDataSubscriptionVariables = {
-  filter?: ModelSubscriptionUniversalLessonStudentDataFilterInput | null,
-};
-
 export type OnUpdateUniversalLessonStudentDataSubscription = {
   onUpdateUniversalLessonStudentData?:  {
     __typename: "UniversalLessonStudentData",
@@ -43122,10 +42150,6 @@ export type OnUpdateUniversalLessonStudentDataSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnDeleteUniversalLessonStudentDataSubscriptionVariables = {
-  filter?: ModelSubscriptionUniversalLessonStudentDataFilterInput | null,
 };
 
 export type OnDeleteUniversalLessonStudentDataSubscription = {
@@ -43262,10 +42286,6 @@ export type OnDeleteUniversalLessonStudentDataSubscription = {
   } | null,
 };
 
-export type OnCreateUniversalLessonWritingExcercisesSubscriptionVariables = {
-  filter?: ModelSubscriptionUniversalLessonWritingExcercisesFilterInput | null,
-};
-
 export type OnCreateUniversalLessonWritingExcercisesSubscription = {
   onCreateUniversalLessonWritingExcercises?:  {
     __typename: "UniversalLessonWritingExcercises",
@@ -43398,10 +42418,6 @@ export type OnCreateUniversalLessonWritingExcercisesSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnUpdateUniversalLessonWritingExcercisesSubscriptionVariables = {
-  filter?: ModelSubscriptionUniversalLessonWritingExcercisesFilterInput | null,
 };
 
 export type OnUpdateUniversalLessonWritingExcercisesSubscription = {
@@ -43538,10 +42554,6 @@ export type OnUpdateUniversalLessonWritingExcercisesSubscription = {
   } | null,
 };
 
-export type OnDeleteUniversalLessonWritingExcercisesSubscriptionVariables = {
-  filter?: ModelSubscriptionUniversalLessonWritingExcercisesFilterInput | null,
-};
-
 export type OnDeleteUniversalLessonWritingExcercisesSubscription = {
   onDeleteUniversalLessonWritingExcercises?:  {
     __typename: "UniversalLessonWritingExcercises",
@@ -43676,10 +42688,6 @@ export type OnDeleteUniversalLessonWritingExcercisesSubscription = {
   } | null,
 };
 
-export type OnCreateUniversalArchiveDataSubscriptionVariables = {
-  filter?: ModelSubscriptionUniversalArchiveDataFilterInput | null,
-};
-
 export type OnCreateUniversalArchiveDataSubscription = {
   onCreateUniversalArchiveData?:  {
     __typename: "UniversalArchiveData",
@@ -43721,10 +42729,6 @@ export type OnCreateUniversalArchiveDataSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnUpdateUniversalArchiveDataSubscriptionVariables = {
-  filter?: ModelSubscriptionUniversalArchiveDataFilterInput | null,
 };
 
 export type OnUpdateUniversalArchiveDataSubscription = {
@@ -43770,10 +42774,6 @@ export type OnUpdateUniversalArchiveDataSubscription = {
   } | null,
 };
 
-export type OnDeleteUniversalArchiveDataSubscriptionVariables = {
-  filter?: ModelSubscriptionUniversalArchiveDataFilterInput | null,
-};
-
 export type OnDeleteUniversalArchiveDataSubscription = {
   onDeleteUniversalArchiveData?:  {
     __typename: "UniversalArchiveData",
@@ -43817,10 +42817,6 @@ export type OnDeleteUniversalArchiveDataSubscription = {
   } | null,
 };
 
-export type OnCreateUniversalSurveyStudentDataSubscriptionVariables = {
-  filter?: ModelSubscriptionUniversalSurveyStudentDataFilterInput | null,
-};
-
 export type OnCreateUniversalSurveyStudentDataSubscription = {
   onCreateUniversalSurveyStudentData?:  {
     __typename: "UniversalSurveyStudentData",
@@ -43848,10 +42844,6 @@ export type OnCreateUniversalSurveyStudentDataSubscription = {
     createdAt?: string | null,
     updatedAt?: string | null,
   } | null,
-};
-
-export type OnUpdateUniversalSurveyStudentDataSubscriptionVariables = {
-  filter?: ModelSubscriptionUniversalSurveyStudentDataFilterInput | null,
 };
 
 export type OnUpdateUniversalSurveyStudentDataSubscription = {
@@ -43883,10 +42875,6 @@ export type OnUpdateUniversalSurveyStudentDataSubscription = {
   } | null,
 };
 
-export type OnDeleteUniversalSurveyStudentDataSubscriptionVariables = {
-  filter?: ModelSubscriptionUniversalSurveyStudentDataFilterInput | null,
-};
-
 export type OnDeleteUniversalSurveyStudentDataSubscription = {
   onDeleteUniversalSurveyStudentData?:  {
     __typename: "UniversalSurveyStudentData",
@@ -43914,10 +42902,6 @@ export type OnDeleteUniversalSurveyStudentDataSubscription = {
     createdAt?: string | null,
     updatedAt?: string | null,
   } | null,
-};
-
-export type OnCreateTemporaryUniversalUploadSurveyDataSubscriptionVariables = {
-  filter?: ModelSubscriptionTemporaryUniversalUploadSurveyDataFilterInput | null,
 };
 
 export type OnCreateTemporaryUniversalUploadSurveyDataSubscription = {
@@ -43964,10 +42948,6 @@ export type OnCreateTemporaryUniversalUploadSurveyDataSubscription = {
   } | null,
 };
 
-export type OnUpdateTemporaryUniversalUploadSurveyDataSubscriptionVariables = {
-  filter?: ModelSubscriptionTemporaryUniversalUploadSurveyDataFilterInput | null,
-};
-
 export type OnUpdateTemporaryUniversalUploadSurveyDataSubscription = {
   onUpdateTemporaryUniversalUploadSurveyData?:  {
     __typename: "TemporaryUniversalUploadSurveyData",
@@ -44010,10 +42990,6 @@ export type OnUpdateTemporaryUniversalUploadSurveyDataSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnDeleteTemporaryUniversalUploadSurveyDataSubscriptionVariables = {
-  filter?: ModelSubscriptionTemporaryUniversalUploadSurveyDataFilterInput | null,
 };
 
 export type OnDeleteTemporaryUniversalUploadSurveyDataSubscription = {
@@ -44060,10 +43036,6 @@ export type OnDeleteTemporaryUniversalUploadSurveyDataSubscription = {
   } | null,
 };
 
-export type OnCreateTemporaryDemographicsUploadDataSubscriptionVariables = {
-  filter?: ModelSubscriptionTemporaryDemographicsUploadDataFilterInput | null,
-};
-
 export type OnCreateTemporaryDemographicsUploadDataSubscription = {
   onCreateTemporaryDemographicsUploadData?:  {
     __typename: "TemporaryDemographicsUploadData",
@@ -44107,6 +43079,7 @@ export type OnCreateTemporaryDemographicsUploadDataSubscription = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -44133,10 +43106,6 @@ export type OnCreateTemporaryDemographicsUploadDataSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnUpdateTemporaryDemographicsUploadDataSubscriptionVariables = {
-  filter?: ModelSubscriptionTemporaryDemographicsUploadDataFilterInput | null,
 };
 
 export type OnUpdateTemporaryDemographicsUploadDataSubscription = {
@@ -44182,6 +43151,7 @@ export type OnUpdateTemporaryDemographicsUploadDataSubscription = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -44208,10 +43178,6 @@ export type OnUpdateTemporaryDemographicsUploadDataSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnDeleteTemporaryDemographicsUploadDataSubscriptionVariables = {
-  filter?: ModelSubscriptionTemporaryDemographicsUploadDataFilterInput | null,
 };
 
 export type OnDeleteTemporaryDemographicsUploadDataSubscription = {
@@ -44257,6 +43223,7 @@ export type OnDeleteTemporaryDemographicsUploadDataSubscription = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -44283,10 +43250,6 @@ export type OnDeleteTemporaryDemographicsUploadDataSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnCreateUploadLogsSubscriptionVariables = {
-  filter?: ModelSubscriptionUploadLogsFilterInput | null,
 };
 
 export type OnCreateUploadLogsSubscription = {
@@ -44367,10 +43330,6 @@ export type OnCreateUploadLogsSubscription = {
   } | null,
 };
 
-export type OnUpdateUploadLogsSubscriptionVariables = {
-  filter?: ModelSubscriptionUploadLogsFilterInput | null,
-};
-
 export type OnUpdateUploadLogsSubscription = {
   onUpdateUploadLogs?:  {
     __typename: "UploadLogs",
@@ -44449,10 +43408,6 @@ export type OnUpdateUploadLogsSubscription = {
   } | null,
 };
 
-export type OnDeleteUploadLogsSubscriptionVariables = {
-  filter?: ModelSubscriptionUploadLogsFilterInput | null,
-};
-
 export type OnDeleteUploadLogsSubscription = {
   onDeleteUploadLogs?:  {
     __typename: "UploadLogs",
@@ -44529,10 +43484,6 @@ export type OnDeleteUploadLogsSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnCreateUniversalJournalDataSubscriptionVariables = {
-  filter?: ModelSubscriptionUniversalJournalDataFilterInput | null,
 };
 
 export type OnCreateUniversalJournalDataSubscription = {
@@ -44651,10 +43602,6 @@ export type OnCreateUniversalJournalDataSubscription = {
   } | null,
 };
 
-export type OnUpdateUniversalJournalDataSubscriptionVariables = {
-  filter?: ModelSubscriptionUniversalJournalDataFilterInput | null,
-};
-
 export type OnUpdateUniversalJournalDataSubscription = {
   onUpdateUniversalJournalData?:  {
     __typename: "UniversalJournalData",
@@ -44769,10 +43716,6 @@ export type OnUpdateUniversalJournalDataSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnDeleteUniversalJournalDataSubscriptionVariables = {
-  filter?: ModelSubscriptionUniversalJournalDataFilterInput | null,
 };
 
 export type OnDeleteUniversalJournalDataSubscription = {
@@ -44891,10 +43834,6 @@ export type OnDeleteUniversalJournalDataSubscription = {
   } | null,
 };
 
-export type OnCreateUniversalSyllabusSubscriptionVariables = {
-  filter?: ModelSubscriptionUniversalSyllabusFilterInput | null,
-};
-
 export type OnCreateUniversalSyllabusSubscription = {
   onCreateUniversalSyllabus?:  {
     __typename: "UniversalSyllabus",
@@ -44980,10 +43919,6 @@ export type OnCreateUniversalSyllabusSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnUpdateUniversalSyllabusSubscriptionVariables = {
-  filter?: ModelSubscriptionUniversalSyllabusFilterInput | null,
 };
 
 export type OnUpdateUniversalSyllabusSubscription = {
@@ -45073,10 +44008,6 @@ export type OnUpdateUniversalSyllabusSubscription = {
   } | null,
 };
 
-export type OnDeleteUniversalSyllabusSubscriptionVariables = {
-  filter?: ModelSubscriptionUniversalSyllabusFilterInput | null,
-};
-
 export type OnDeleteUniversalSyllabusSubscription = {
   onDeleteUniversalSyllabus?:  {
     __typename: "UniversalSyllabus",
@@ -45164,10 +44095,6 @@ export type OnDeleteUniversalSyllabusSubscription = {
   } | null,
 };
 
-export type OnCreateCurriculumUnitsSubscriptionVariables = {
-  filter?: ModelSubscriptionCurriculumUnitsFilterInput | null,
-};
-
 export type OnCreateCurriculumUnitsSubscription = {
   onCreateCurriculumUnits?:  {
     __typename: "curriculumUnits",
@@ -45221,10 +44148,6 @@ export type OnCreateCurriculumUnitsSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnUpdateCurriculumUnitsSubscriptionVariables = {
-  filter?: ModelSubscriptionCurriculumUnitsFilterInput | null,
 };
 
 export type OnUpdateCurriculumUnitsSubscription = {
@@ -45282,10 +44205,6 @@ export type OnUpdateCurriculumUnitsSubscription = {
   } | null,
 };
 
-export type OnDeleteCurriculumUnitsSubscriptionVariables = {
-  filter?: ModelSubscriptionCurriculumUnitsFilterInput | null,
-};
-
 export type OnDeleteCurriculumUnitsSubscription = {
   onDeleteCurriculumUnits?:  {
     __typename: "curriculumUnits",
@@ -45339,10 +44258,6 @@ export type OnDeleteCurriculumUnitsSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnCreateUniversalSyllabusLessonSubscriptionVariables = {
-  filter?: ModelSubscriptionUniversalSyllabusLessonFilterInput | null,
 };
 
 export type OnCreateUniversalSyllabusLessonSubscription = {
@@ -45488,10 +44403,6 @@ export type OnCreateUniversalSyllabusLessonSubscription = {
   } | null,
 };
 
-export type OnUpdateUniversalSyllabusLessonSubscriptionVariables = {
-  filter?: ModelSubscriptionUniversalSyllabusLessonFilterInput | null,
-};
-
 export type OnUpdateUniversalSyllabusLessonSubscription = {
   onUpdateUniversalSyllabusLesson?:  {
     __typename: "UniversalSyllabusLesson",
@@ -45633,10 +44544,6 @@ export type OnUpdateUniversalSyllabusLessonSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnDeleteUniversalSyllabusLessonSubscriptionVariables = {
-  filter?: ModelSubscriptionUniversalSyllabusLessonFilterInput | null,
 };
 
 export type OnDeleteUniversalSyllabusLessonSubscription = {
@@ -45782,10 +44689,6 @@ export type OnDeleteUniversalSyllabusLessonSubscription = {
   } | null,
 };
 
-export type OnCreateUniversalLessonFeedbackSubscriptionVariables = {
-  filter?: ModelSubscriptionUniversalLessonFeedbackFilterInput | null,
-};
-
 export type OnCreateUniversalLessonFeedbackSubscription = {
   onCreateUniversalLessonFeedback?:  {
     __typename: "UniversalLessonFeedback",
@@ -45866,10 +44769,6 @@ export type OnCreateUniversalLessonFeedbackSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnUpdateUniversalLessonFeedbackSubscriptionVariables = {
-  filter?: ModelSubscriptionUniversalLessonFeedbackFilterInput | null,
 };
 
 export type OnUpdateUniversalLessonFeedbackSubscription = {
@@ -45954,10 +44853,6 @@ export type OnUpdateUniversalLessonFeedbackSubscription = {
   } | null,
 };
 
-export type OnDeleteUniversalLessonFeedbackSubscriptionVariables = {
-  filter?: ModelSubscriptionUniversalLessonFeedbackFilterInput | null,
-};
-
 export type OnDeleteUniversalLessonFeedbackSubscription = {
   onDeleteUniversalLessonFeedback?:  {
     __typename: "UniversalLessonFeedback",
@@ -46040,10 +44935,6 @@ export type OnDeleteUniversalLessonFeedbackSubscription = {
   } | null,
 };
 
-export type OnCreateStudentConnectionsSubscriptionVariables = {
-  filter?: ModelSubscriptionStudentConnectionsFilterInput | null,
-};
-
 export type OnCreateStudentConnectionsSubscription = {
   onCreateStudentConnections?:  {
     __typename: "StudentConnections",
@@ -46090,6 +44981,7 @@ export type OnCreateStudentConnectionsSubscription = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -46131,6 +45023,7 @@ export type OnCreateStudentConnectionsSubscription = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -46138,10 +45031,6 @@ export type OnCreateStudentConnectionsSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnUpdateStudentConnectionsSubscriptionVariables = {
-  filter?: ModelSubscriptionStudentConnectionsFilterInput | null,
 };
 
 export type OnUpdateStudentConnectionsSubscription = {
@@ -46190,6 +45079,7 @@ export type OnUpdateStudentConnectionsSubscription = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -46231,6 +45121,7 @@ export type OnUpdateStudentConnectionsSubscription = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -46238,10 +45129,6 @@ export type OnUpdateStudentConnectionsSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnDeleteStudentConnectionsSubscriptionVariables = {
-  filter?: ModelSubscriptionStudentConnectionsFilterInput | null,
 };
 
 export type OnDeleteStudentConnectionsSubscription = {
@@ -46290,6 +45177,7 @@ export type OnDeleteStudentConnectionsSubscription = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -46331,6 +45219,7 @@ export type OnDeleteStudentConnectionsSubscription = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -46338,10 +45227,6 @@ export type OnDeleteStudentConnectionsSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnCreatePersonSentimentsSubscriptionVariables = {
-  filter?: ModelSubscriptionPersonSentimentsFilterInput | null,
 };
 
 export type OnCreatePersonSentimentsSubscription = {
@@ -46387,6 +45272,7 @@ export type OnCreatePersonSentimentsSubscription = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -46397,10 +45283,6 @@ export type OnCreatePersonSentimentsSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnUpdatePersonSentimentsSubscriptionVariables = {
-  filter?: ModelSubscriptionPersonSentimentsFilterInput | null,
 };
 
 export type OnUpdatePersonSentimentsSubscription = {
@@ -46446,6 +45328,7 @@ export type OnUpdatePersonSentimentsSubscription = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -46456,10 +45339,6 @@ export type OnUpdatePersonSentimentsSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnDeletePersonSentimentsSubscriptionVariables = {
-  filter?: ModelSubscriptionPersonSentimentsFilterInput | null,
 };
 
 export type OnDeletePersonSentimentsSubscription = {
@@ -46505,6 +45384,7 @@ export type OnDeletePersonSentimentsSubscription = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -46515,10 +45395,6 @@ export type OnDeletePersonSentimentsSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnCreateSentimentsSubscriptionVariables = {
-  filter?: ModelSubscriptionSentimentsFilterInput | null,
 };
 
 export type OnCreateSentimentsSubscription = {
@@ -46532,10 +45408,6 @@ export type OnCreateSentimentsSubscription = {
   } | null,
 };
 
-export type OnUpdateSentimentsSubscriptionVariables = {
-  filter?: ModelSubscriptionSentimentsFilterInput | null,
-};
-
 export type OnUpdateSentimentsSubscription = {
   onUpdateSentiments?:  {
     __typename: "Sentiments",
@@ -46547,10 +45419,6 @@ export type OnUpdateSentimentsSubscription = {
   } | null,
 };
 
-export type OnDeleteSentimentsSubscriptionVariables = {
-  filter?: ModelSubscriptionSentimentsFilterInput | null,
-};
-
 export type OnDeleteSentimentsSubscription = {
   onDeleteSentiments?:  {
     __typename: "Sentiments",
@@ -46560,10 +45428,6 @@ export type OnDeleteSentimentsSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnCreateSentimentTrackerSubscriptionVariables = {
-  filter?: ModelSubscriptionSentimentTrackerFilterInput | null,
 };
 
 export type OnCreateSentimentTrackerSubscription = {
@@ -46609,6 +45473,7 @@ export type OnCreateSentimentTrackerSubscription = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -46697,6 +45562,7 @@ export type OnCreateSentimentTrackerSubscription = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -46826,10 +45692,6 @@ export type OnCreateSentimentTrackerSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnUpdateSentimentTrackerSubscriptionVariables = {
-  filter?: ModelSubscriptionSentimentTrackerFilterInput | null,
 };
 
 export type OnUpdateSentimentTrackerSubscription = {
@@ -46875,6 +45737,7 @@ export type OnUpdateSentimentTrackerSubscription = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -46963,6 +45826,7 @@ export type OnUpdateSentimentTrackerSubscription = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -47092,10 +45956,6 @@ export type OnUpdateSentimentTrackerSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnDeleteSentimentTrackerSubscriptionVariables = {
-  filter?: ModelSubscriptionSentimentTrackerFilterInput | null,
 };
 
 export type OnDeleteSentimentTrackerSubscription = {
@@ -47141,6 +46001,7 @@ export type OnDeleteSentimentTrackerSubscription = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -47229,6 +46090,7 @@ export type OnDeleteSentimentTrackerSubscription = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -47358,10 +46220,6 @@ export type OnDeleteSentimentTrackerSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnCreateFeelingTrackerSubscriptionVariables = {
-  filter?: ModelSubscriptionFeelingTrackerFilterInput | null,
 };
 
 export type OnCreateFeelingTrackerSubscription = {
@@ -47408,6 +46266,7 @@ export type OnCreateFeelingTrackerSubscription = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -47496,6 +46355,7 @@ export type OnCreateFeelingTrackerSubscription = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -47555,10 +46415,6 @@ export type OnCreateFeelingTrackerSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnUpdateFeelingTrackerSubscriptionVariables = {
-  filter?: ModelSubscriptionFeelingTrackerFilterInput | null,
 };
 
 export type OnUpdateFeelingTrackerSubscription = {
@@ -47605,6 +46461,7 @@ export type OnUpdateFeelingTrackerSubscription = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -47693,6 +46550,7 @@ export type OnUpdateFeelingTrackerSubscription = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -47752,10 +46610,6 @@ export type OnUpdateFeelingTrackerSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnDeleteFeelingTrackerSubscriptionVariables = {
-  filter?: ModelSubscriptionFeelingTrackerFilterInput | null,
 };
 
 export type OnDeleteFeelingTrackerSubscription = {
@@ -47802,6 +46656,7 @@ export type OnDeleteFeelingTrackerSubscription = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -47890,6 +46745,7 @@ export type OnDeleteFeelingTrackerSubscription = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -47951,10 +46807,6 @@ export type OnDeleteFeelingTrackerSubscription = {
   } | null,
 };
 
-export type OnCreateFeelingsArchiveSubscriptionVariables = {
-  filter?: ModelSubscriptionFeelingsArchiveFilterInput | null,
-};
-
 export type OnCreateFeelingsArchiveSubscription = {
   onCreateFeelingsArchive?:  {
     __typename: "FeelingsArchive",
@@ -47999,6 +46851,7 @@ export type OnCreateFeelingsArchiveSubscription = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -48091,6 +46944,7 @@ export type OnCreateFeelingsArchiveSubscription = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -48240,10 +47094,6 @@ export type OnCreateFeelingsArchiveSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnUpdateFeelingsArchiveSubscriptionVariables = {
-  filter?: ModelSubscriptionFeelingsArchiveFilterInput | null,
 };
 
 export type OnUpdateFeelingsArchiveSubscription = {
@@ -48290,6 +47140,7 @@ export type OnUpdateFeelingsArchiveSubscription = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -48382,6 +47233,7 @@ export type OnUpdateFeelingsArchiveSubscription = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -48531,10 +47383,6 @@ export type OnUpdateFeelingsArchiveSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnDeleteFeelingsArchiveSubscriptionVariables = {
-  filter?: ModelSubscriptionFeelingsArchiveFilterInput | null,
 };
 
 export type OnDeleteFeelingsArchiveSubscription = {
@@ -48581,6 +47429,7 @@ export type OnDeleteFeelingsArchiveSubscription = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -48673,6 +47522,7 @@ export type OnDeleteFeelingsArchiveSubscription = {
         spotlightDate?: string | null,
         statusReason?: string | null,
         addedby?: string | null,
+        lastEmotionSubmission?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -48824,10 +47674,6 @@ export type OnDeleteFeelingsArchiveSubscription = {
   } | null,
 };
 
-export type OnCreatePersonFilesSubscriptionVariables = {
-  filter?: ModelSubscriptionPersonFilesFilterInput | null,
-};
-
 export type OnCreatePersonFilesSubscription = {
   onCreatePersonFiles?:  {
     __typename: "PersonFiles",
@@ -48851,10 +47697,6 @@ export type OnCreatePersonFilesSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnUpdatePersonFilesSubscriptionVariables = {
-  filter?: ModelSubscriptionPersonFilesFilterInput | null,
 };
 
 export type OnUpdatePersonFilesSubscription = {
@@ -48882,10 +47724,6 @@ export type OnUpdatePersonFilesSubscription = {
   } | null,
 };
 
-export type OnDeletePersonFilesSubscriptionVariables = {
-  filter?: ModelSubscriptionPersonFilesFilterInput | null,
-};
-
 export type OnDeletePersonFilesSubscription = {
   onDeletePersonFiles?:  {
     __typename: "PersonFiles",
@@ -48909,10 +47747,6 @@ export type OnDeletePersonFilesSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnCreateCommunitySubscriptionVariables = {
-  filter?: ModelSubscriptionCommunityFilterInput | null,
 };
 
 export type OnCreateCommunitySubscription = {
@@ -49016,6 +47850,7 @@ export type OnCreateCommunitySubscription = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -49040,10 +47875,6 @@ export type OnCreateCommunitySubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnUpdateCommunitySubscriptionVariables = {
-  filter?: ModelSubscriptionCommunityFilterInput | null,
 };
 
 export type OnUpdateCommunitySubscription = {
@@ -49147,6 +47978,7 @@ export type OnUpdateCommunitySubscription = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -49171,10 +48003,6 @@ export type OnUpdateCommunitySubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnDeleteCommunitySubscriptionVariables = {
-  filter?: ModelSubscriptionCommunityFilterInput | null,
 };
 
 export type OnDeleteCommunitySubscription = {
@@ -49278,6 +48106,7 @@ export type OnDeleteCommunitySubscription = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -49304,10 +48133,6 @@ export type OnDeleteCommunitySubscription = {
   } | null,
 };
 
-export type OnCreateGameChangerSubscriptionVariables = {
-  filter?: ModelSubscriptionGameChangerFilterInput | null,
-};
-
 export type OnCreateGameChangerSubscription = {
   onCreateGameChanger?:  {
     __typename: "GameChanger",
@@ -49321,10 +48146,6 @@ export type OnCreateGameChangerSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnUpdateGameChangerSubscriptionVariables = {
-  filter?: ModelSubscriptionGameChangerFilterInput | null,
 };
 
 export type OnUpdateGameChangerSubscription = {
@@ -49342,10 +48163,6 @@ export type OnUpdateGameChangerSubscription = {
   } | null,
 };
 
-export type OnDeleteGameChangerSubscriptionVariables = {
-  filter?: ModelSubscriptionGameChangerFilterInput | null,
-};
-
 export type OnDeleteGameChangerSubscription = {
   onDeleteGameChanger?:  {
     __typename: "GameChanger",
@@ -49359,10 +48176,6 @@ export type OnDeleteGameChangerSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnCreateGameChangerLogSubscriptionVariables = {
-  filter?: ModelSubscriptionGameChangerLogFilterInput | null,
 };
 
 export type OnCreateGameChangerLogSubscription = {
@@ -49422,6 +48235,7 @@ export type OnCreateGameChangerLogSubscription = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -49430,10 +48244,6 @@ export type OnCreateGameChangerLogSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnUpdateGameChangerLogSubscriptionVariables = {
-  filter?: ModelSubscriptionGameChangerLogFilterInput | null,
 };
 
 export type OnUpdateGameChangerLogSubscription = {
@@ -49493,6 +48303,7 @@ export type OnUpdateGameChangerLogSubscription = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -49501,10 +48312,6 @@ export type OnUpdateGameChangerLogSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnDeleteGameChangerLogSubscriptionVariables = {
-  filter?: ModelSubscriptionGameChangerLogFilterInput | null,
 };
 
 export type OnDeleteGameChangerLogSubscription = {
@@ -49564,6 +48371,7 @@ export type OnDeleteGameChangerLogSubscription = {
       spotlightDate?: string | null,
       statusReason?: string | null,
       addedby?: string | null,
+      lastEmotionSubmission?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -49572,10 +48380,6 @@ export type OnDeleteGameChangerLogSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnCreateCommunityChatSubscriptionVariables = {
-  filter?: ModelSubscriptionCommunityChatFilterInput | null,
 };
 
 export type OnCreateCommunityChatSubscription = {
@@ -49592,10 +48396,6 @@ export type OnCreateCommunityChatSubscription = {
   } | null,
 };
 
-export type OnUpdateCommunityChatSubscriptionVariables = {
-  filter?: ModelSubscriptionCommunityChatFilterInput | null,
-};
-
 export type OnUpdateCommunityChatSubscription = {
   onUpdateCommunityChat?:  {
     __typename: "CommunityChat",
@@ -49610,10 +48410,6 @@ export type OnUpdateCommunityChatSubscription = {
   } | null,
 };
 
-export type OnDeleteCommunityChatSubscriptionVariables = {
-  filter?: ModelSubscriptionCommunityChatFilterInput | null,
-};
-
 export type OnDeleteCommunityChatSubscription = {
   onDeleteCommunityChat?:  {
     __typename: "CommunityChat",
@@ -49626,10 +48422,6 @@ export type OnDeleteCommunityChatSubscription = {
     isEditedChat?: boolean | null,
     updatedAt: string,
   } | null,
-};
-
-export type OnCreateCypressTestingSubscriptionVariables = {
-  filter?: ModelSubscriptionCypressTestingFilterInput | null,
 };
 
 export type OnCreateCypressTestingSubscription = {
@@ -49649,10 +48441,6 @@ export type OnCreateCypressTestingSubscription = {
   } | null,
 };
 
-export type OnUpdateCypressTestingSubscriptionVariables = {
-  filter?: ModelSubscriptionCypressTestingFilterInput | null,
-};
-
 export type OnUpdateCypressTestingSubscription = {
   onUpdateCypressTesting?:  {
     __typename: "CypressTesting",
@@ -49668,10 +48456,6 @@ export type OnUpdateCypressTestingSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnDeleteCypressTestingSubscriptionVariables = {
-  filter?: ModelSubscriptionCypressTestingFilterInput | null,
 };
 
 export type OnDeleteCypressTestingSubscription = {

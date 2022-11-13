@@ -63,6 +63,7 @@ export const getPerson = /* GraphQL */ `
       spotlightDate
       statusReason
       addedby
+      lastEmotionSubmission
       createdAt
       updatedAt
     }
@@ -120,6 +121,7 @@ export const listPeople = /* GraphQL */ `
         spotlightDate
         statusReason
         addedby
+        lastEmotionSubmission
         createdAt
         updatedAt
       }
@@ -296,6 +298,7 @@ export const getPersonLessonsData = /* GraphQL */ `
           spotlightDate
           statusReason
           addedby
+          lastEmotionSubmission
           createdAt
           updatedAt
         }
@@ -669,6 +672,7 @@ export const getStaff = /* GraphQL */ `
         spotlightDate
         statusReason
         addedby
+        lastEmotionSubmission
         createdAt
         updatedAt
       }
@@ -757,6 +761,7 @@ export const listStaff = /* GraphQL */ `
           spotlightDate
           statusReason
           addedby
+          lastEmotionSubmission
           createdAt
           updatedAt
         }
@@ -892,6 +897,7 @@ export const getRoom = /* GraphQL */ `
         spotlightDate
         statusReason
         addedby
+        lastEmotionSubmission
         createdAt
         updatedAt
       }
@@ -1089,6 +1095,7 @@ export const listRooms = /* GraphQL */ `
           spotlightDate
           statusReason
           addedby
+          lastEmotionSubmission
           createdAt
           updatedAt
         }
@@ -1262,6 +1269,7 @@ export const getClassroomGroupStudents = /* GraphQL */ `
           spotlightDate
           statusReason
           addedby
+          lastEmotionSubmission
           createdAt
           updatedAt
         }
@@ -1309,6 +1317,7 @@ export const getClassroomGroupStudents = /* GraphQL */ `
         spotlightDate
         statusReason
         addedby
+        lastEmotionSubmission
         createdAt
         updatedAt
       }
@@ -1375,6 +1384,7 @@ export const listClassroomGroupStudents = /* GraphQL */ `
           spotlightDate
           statusReason
           addedby
+          lastEmotionSubmission
           createdAt
           updatedAt
         }
@@ -1463,6 +1473,7 @@ export const getClassroomGroups = /* GraphQL */ `
           spotlightDate
           statusReason
           addedby
+          lastEmotionSubmission
           createdAt
           updatedAt
         }
@@ -1547,6 +1558,7 @@ export const getClassroomGroups = /* GraphQL */ `
         spotlightDate
         statusReason
         addedby
+        lastEmotionSubmission
         createdAt
         updatedAt
       }
@@ -1644,6 +1656,7 @@ export const listClassroomGroups = /* GraphQL */ `
           spotlightDate
           statusReason
           addedby
+          lastEmotionSubmission
           createdAt
           updatedAt
         }
@@ -1737,6 +1750,7 @@ export const getRoomCoTeachers = /* GraphQL */ `
           spotlightDate
           statusReason
           addedby
+          lastEmotionSubmission
           createdAt
           updatedAt
         }
@@ -1817,6 +1831,7 @@ export const getRoomCoTeachers = /* GraphQL */ `
         spotlightDate
         statusReason
         addedby
+        lastEmotionSubmission
         createdAt
         updatedAt
       }
@@ -1899,6 +1914,7 @@ export const listRoomCoTeachers = /* GraphQL */ `
           spotlightDate
           statusReason
           addedby
+          lastEmotionSubmission
           createdAt
           updatedAt
         }
@@ -2025,6 +2041,7 @@ export const getClass = /* GraphQL */ `
           spotlightDate
           statusReason
           addedby
+          lastEmotionSubmission
           createdAt
           updatedAt
         }
@@ -2271,6 +2288,7 @@ export const getClassStudent = /* GraphQL */ `
         spotlightDate
         statusReason
         addedby
+        lastEmotionSubmission
         createdAt
         updatedAt
       }
@@ -2332,6 +2350,7 @@ export const listClassStudents = /* GraphQL */ `
           spotlightDate
           statusReason
           addedby
+          lastEmotionSubmission
           createdAt
           updatedAt
         }
@@ -3071,6 +3090,7 @@ export const getRoomMsgs = /* GraphQL */ `
         spotlightDate
         statusReason
         addedby
+        lastEmotionSubmission
         createdAt
         updatedAt
       }
@@ -3121,6 +3141,7 @@ export const listRoomMsgs = /* GraphQL */ `
           spotlightDate
           statusReason
           addedby
+          lastEmotionSubmission
           createdAt
           updatedAt
         }
@@ -3176,6 +3197,7 @@ export const getStudentData = /* GraphQL */ `
         spotlightDate
         statusReason
         addedby
+        lastEmotionSubmission
         createdAt
         updatedAt
       }
@@ -3270,6 +3292,7 @@ export const listStudentData = /* GraphQL */ `
           spotlightDate
           statusReason
           addedby
+          lastEmotionSubmission
           createdAt
           updatedAt
         }
@@ -3339,6 +3362,7 @@ export const getAnthologyComment = /* GraphQL */ `
         spotlightDate
         statusReason
         addedby
+        lastEmotionSubmission
         createdAt
         updatedAt
       }
@@ -3400,6 +3424,7 @@ export const listAnthologyComments = /* GraphQL */ `
           spotlightDate
           statusReason
           addedby
+          lastEmotionSubmission
           createdAt
           updatedAt
         }
@@ -3461,6 +3486,7 @@ export const getQuestionData = /* GraphQL */ `
         spotlightDate
         statusReason
         addedby
+        lastEmotionSubmission
         createdAt
         updatedAt
       }
@@ -3520,6 +3546,7 @@ export const listQuestionData = /* GraphQL */ `
           spotlightDate
           statusReason
           addedby
+          lastEmotionSubmission
           createdAt
           updatedAt
         }
@@ -3585,6 +3612,7 @@ export const getPersonLocation = /* GraphQL */ `
         spotlightDate
         statusReason
         addedby
+        lastEmotionSubmission
         createdAt
         updatedAt
       }
@@ -3659,6 +3687,7 @@ export const getPersonLocation = /* GraphQL */ `
           spotlightDate
           statusReason
           addedby
+          lastEmotionSubmission
           createdAt
           updatedAt
         }
@@ -3764,6 +3793,7 @@ export const listPersonLocations = /* GraphQL */ `
           spotlightDate
           statusReason
           addedby
+          lastEmotionSubmission
           createdAt
           updatedAt
         }
@@ -4057,6 +4087,7 @@ export const getAttendance = /* GraphQL */ `
           spotlightDate
           statusReason
           addedby
+          lastEmotionSubmission
           createdAt
           updatedAt
         }
@@ -5149,6 +5180,7 @@ export const getTemporaryDemographicsUploadData = /* GraphQL */ `
           spotlightDate
           statusReason
           addedby
+          lastEmotionSubmission
           createdAt
           updatedAt
         }
@@ -6126,6 +6158,7 @@ export const getStudentConnections = /* GraphQL */ `
         spotlightDate
         statusReason
         addedby
+        lastEmotionSubmission
         createdAt
         updatedAt
       }
@@ -6164,6 +6197,7 @@ export const getStudentConnections = /* GraphQL */ `
         spotlightDate
         statusReason
         addedby
+        lastEmotionSubmission
         createdAt
         updatedAt
       }
@@ -6219,6 +6253,7 @@ export const listStudentConnections = /* GraphQL */ `
           spotlightDate
           statusReason
           addedby
+          lastEmotionSubmission
           createdAt
           updatedAt
         }
@@ -6251,6 +6286,7 @@ export const listStudentConnections = /* GraphQL */ `
           spotlightDate
           statusReason
           addedby
+          lastEmotionSubmission
           createdAt
           updatedAt
         }
@@ -6302,6 +6338,7 @@ export const getPersonSentiments = /* GraphQL */ `
         spotlightDate
         statusReason
         addedby
+        lastEmotionSubmission
         createdAt
         updatedAt
       }
@@ -6363,6 +6400,7 @@ export const listPersonSentiments = /* GraphQL */ `
           spotlightDate
           statusReason
           addedby
+          lastEmotionSubmission
           createdAt
           updatedAt
         }
@@ -6446,6 +6484,7 @@ export const getSentimentTracker = /* GraphQL */ `
         spotlightDate
         statusReason
         addedby
+        lastEmotionSubmission
         createdAt
         updatedAt
       }
@@ -6529,6 +6568,7 @@ export const getSentimentTracker = /* GraphQL */ `
           spotlightDate
           statusReason
           addedby
+          lastEmotionSubmission
           createdAt
           updatedAt
         }
@@ -6698,6 +6738,7 @@ export const listSentimentTrackers = /* GraphQL */ `
           spotlightDate
           statusReason
           addedby
+          lastEmotionSubmission
           createdAt
           updatedAt
         }
@@ -6810,6 +6851,7 @@ export const getFeelingTracker = /* GraphQL */ `
         spotlightDate
         statusReason
         addedby
+        lastEmotionSubmission
         createdAt
         updatedAt
       }
@@ -6893,6 +6935,7 @@ export const getFeelingTracker = /* GraphQL */ `
           spotlightDate
           statusReason
           addedby
+          lastEmotionSubmission
           createdAt
           updatedAt
         }
@@ -6998,6 +7041,7 @@ export const listFeelingTrackers = /* GraphQL */ `
           spotlightDate
           statusReason
           addedby
+          lastEmotionSubmission
           createdAt
           updatedAt
         }
@@ -7095,6 +7139,7 @@ export const getFeelingsArchive = /* GraphQL */ `
         spotlightDate
         statusReason
         addedby
+        lastEmotionSubmission
         createdAt
         updatedAt
       }
@@ -7181,6 +7226,7 @@ export const getFeelingsArchive = /* GraphQL */ `
           spotlightDate
           statusReason
           addedby
+          lastEmotionSubmission
           createdAt
           updatedAt
         }
@@ -7370,6 +7416,7 @@ export const listFeelingsArchives = /* GraphQL */ `
           spotlightDate
           statusReason
           addedby
+          lastEmotionSubmission
           createdAt
           updatedAt
         }
@@ -7611,6 +7658,7 @@ export const getCommunity = /* GraphQL */ `
         spotlightDate
         statusReason
         addedby
+        lastEmotionSubmission
         createdAt
         updatedAt
       }
@@ -7715,6 +7763,7 @@ export const listCommunities = /* GraphQL */ `
           spotlightDate
           statusReason
           addedby
+          lastEmotionSubmission
           createdAt
           updatedAt
         }
@@ -7829,6 +7878,7 @@ export const getGameChangerLog = /* GraphQL */ `
         spotlightDate
         statusReason
         addedby
+        lastEmotionSubmission
         createdAt
         updatedAt
       }
@@ -7899,6 +7949,7 @@ export const listGameChangerLogs = /* GraphQL */ `
           spotlightDate
           statusReason
           addedby
+          lastEmotionSubmission
           createdAt
           updatedAt
         }
@@ -8045,6 +8096,7 @@ export const userById = /* GraphQL */ `
         spotlightDate
         statusReason
         addedby
+        lastEmotionSubmission
         createdAt
         updatedAt
       }
@@ -8102,6 +8154,7 @@ export const usersByRole = /* GraphQL */ `
         spotlightDate
         statusReason
         addedby
+        lastEmotionSubmission
         createdAt
         updatedAt
       }
@@ -8261,6 +8314,7 @@ export const messagesByRoomID = /* GraphQL */ `
           spotlightDate
           statusReason
           addedby
+          lastEmotionSubmission
           createdAt
           updatedAt
         }
@@ -8323,6 +8377,7 @@ export const personLocationBySyllabusLesson = /* GraphQL */ `
           spotlightDate
           statusReason
           addedby
+          lastEmotionSubmission
           createdAt
           updatedAt
         }
