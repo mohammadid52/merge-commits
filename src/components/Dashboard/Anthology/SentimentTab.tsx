@@ -441,7 +441,7 @@ const SentimentTab = ({
                 />
               ) : (
                 <p className=" text-gray-700 h-32 w-1/2 text-center flex items-center">
-                  {'No response provided'}
+                  {'No response'}
                 </p>
               )}
               <span className="w-auto text-gray-500 text-sm">

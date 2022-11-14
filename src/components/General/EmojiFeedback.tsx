@@ -1,6 +1,6 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import SentimentTab from '@components/Dashboard/Anthology/SentimentTab';
 import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
+import {useNotifications} from '@contexts/NotificationContext';
 import '@style/general/EmojiFeedback.scss';
 import Modal from 'atoms/Modal';
 import {GlobalContext} from 'contexts/GlobalContext';
@@ -45,30 +45,6 @@ const EmojiCard = ({
 
   const id = `emoji-slider-feedback-${label}${selectedCard ? '-selected' : ''}`;
 
-  // useEffect(() => {
-  //   if (selectedCard) {
-  //     let emoji = $(`#${id}`);
-  //     gsap.fromTo(
-  //       emoji,
-  //       {
-  //         duration: 0.5,
-  //         scale: 0,
-  //         opacity: 0,
-  //         ease: 'ease.in'
-  //       },
-  //       {
-  //         scale: 1,
-  //         opacity: 1,
-  //         onComplete: () => {
-  //           setLocalShowState(true);
-  //         }
-  //       }
-  //     );
-  //   } else {
-  //     setLocalShowState(true);
-  //   }
-  // }, [selectedCard]);
-
   const onClose = () => {
     let emoji = $(`#${id}`);
     gsap.to(emoji, {
@@ -87,12 +63,12 @@ const EmojiCard = ({
       onClick={() => {
         onSave(label);
       }}
-      className="w-auto z-100">
+      className="w-auto z-100 theme-card-shadow">
       <div
         id={id}
         className={` ${selectedCard ? 'selected-card' : ''} ${
           !selectedCard ? 'cursor-pointer' : ''
-        } ${label} transition-all emoji-slider-feedback flex items-center justify-center`}>
+        } ${label} transition-all  emoji-slider-feedback flex items-center justify-center`}>
         <ul>
           <li>{label}</li>
         </ul>
@@ -216,8 +192,10 @@ const EmojiFeedback = () => {
     setSelectedEmotion(false);
   };
 
+  const {setNotification} = useNotifications();
   const onSave = async (response: string) => {
     try {
+      setShow({great: false, awful: false, okay: false, bad: false});
       setShowSentimentModal(false);
       const payload = {
         personAuthID: authId,
@@ -242,6 +220,12 @@ const EmojiFeedback = () => {
         })
       );
 
+      setNotification({
+        show: true,
+        title: 'Your response has been saved',
+        type: 'success'
+      });
+
       console.log('data saved'); // <=== data saved here
     } catch (error) {
       console.error(error);
@@ -261,13 +245,37 @@ const EmojiFeedback = () => {
     onSave
   };
 
-  const backstoryData = {
-    personAuthID: authId,
-    personEmail: email,
-    date,
-    time,
-    responseText: selectedEmotion
-  };
+  // const backstoryData = {
+  //   personAuthID: authId,
+  //   personEmail: email,
+  //   date,
+  //   time,
+  //   responseText: selectedEmotion
+  // };
+
+  useEffect(() => {
+    const elements = document.querySelectorAll('.emoji-slider-feedback');
+    if (elements) {
+      elements.forEach((e) => {
+        e.addEventListener('mouseenter', (e2) => {
+          // @ts-ignore
+          e2.target.classList.add('scale');
+        });
+        e.addEventListener('mouseleave', (e2) => {
+          // @ts-ignore
+          e2.target.classList.remove('scale');
+        });
+      });
+    }
+  });
+
+  const [show, setShow] = useState({great: false, awful: false, okay: false, bad: false});
+
+  useEffect(() => {
+    setInterval(() => {
+      setShow({great: true, awful: true, okay: true, bad: true});
+    }, 1000);
+  }, []);
 
   return (
     showSentimentModal && (
@@ -284,59 +292,51 @@ const EmojiFeedback = () => {
         showHeader
         showHeaderBorder
         showFooter={false}>
-        {showJournal && (
-          <SentimentTab
-            onSuccess={onSuccess}
-            backstoryData={backstoryData}
-            goBack={() => setShowJournal(false)}
-          />
-        )}
-
         {!showJournal && (
           <>
             <div className="relative rounded-b-xl w-auto grid bg-white grid-cols-2 p-4 gap-4">
-              {/* <AnimatedContainer className="w-auto" show={selectedEmotion !== null}>
-                {selectedEmotion !== null && (
-                  <div
-                    className="absolute inset-0 w-auto flex items-center justify-center z-100"
-                    style={{zIndex: 99999}}>
-                    <EmojiCard
-                      selectedCard
-                      {...commonEmojiProps}
-                      setShowJournal={setShowJournal}
-                      label={selectedEmotion}
-                      eye={points[selectedEmotion]['eye']}
-                      mouth={points[selectedEmotion]['mouth']}
-                    />
-                  </div>
+              <AnimatedContainer delay=".2s" show={show.great}>
+                {show.great && (
+                  <EmojiCard
+                    {...commonEmojiProps}
+                    label="great"
+                    eye={points['great']['eye']}
+                    mouth={points['great']['mouth']}
+                  />
                 )}
-              </AnimatedContainer> */}
-              <EmojiCard
-                {...commonEmojiProps}
-                label="great"
-                eye={points['great']['eye']}
-                mouth={points['great']['mouth']}
-              />
+              </AnimatedContainer>
 
-              <EmojiCard
-                {...commonEmojiProps}
-                label="okay"
-                eye={points['okay']['eye']}
-                mouth={points['okay']['mouth']}
-              />
+              <AnimatedContainer delay=".4s" show={show.okay}>
+                {show.okay && (
+                  <EmojiCard
+                    {...commonEmojiProps}
+                    label="okay"
+                    eye={points['okay']['eye']}
+                    mouth={points['okay']['mouth']}
+                  />
+                )}
+              </AnimatedContainer>
+              <AnimatedContainer delay=".6s" show={show.bad}>
+                {show.bad && (
+                  <EmojiCard
+                    {...commonEmojiProps}
+                    label="bad"
+                    eye={points['bad']['eye']}
+                    mouth={points['bad']['mouth']}
+                  />
+                )}
+              </AnimatedContainer>
 
-              <EmojiCard
-                {...commonEmojiProps}
-                label="bad"
-                eye={points['bad']['eye']}
-                mouth={points['bad']['mouth']}
-              />
-              <EmojiCard
-                {...commonEmojiProps}
-                label="awful"
-                eye={points['awful']['eye']}
-                mouth={points['awful']['mouth']}
-              />
+              <AnimatedContainer delay=".8s" show={show.awful}>
+                {show.awful && (
+                  <EmojiCard
+                    {...commonEmojiProps}
+                    label="awful"
+                    eye={points['awful']['eye']}
+                    mouth={points['awful']['mouth']}
+                  />
+                )}
+              </AnimatedContainer>
             </div>
           </>
         )}

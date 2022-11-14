@@ -59,6 +59,13 @@
   height: 270px;
   border-radius: 20px;
 
+  &:hover ul {
+    top: 5px;
+    li {
+      background-image: linear-gradient(rgba(#fff, 1), rgba(#fff, 0.1) 90%);
+    }
+  }
+
   &.okay {
     --gradient-start: var(--okay-gradient-start);
     --gradient-end: var(--okay-gradient-end);
@@ -122,7 +129,7 @@
 
   &.scale {
     .smiley {
-      animation: scale 1s ease forwards infinite;
+      animation: scale 1.5s ease forwards;
     }
   }
 
@@ -136,6 +143,7 @@
     text-align: center;
     position: absolute;
     text-transform: uppercase;
+    transition: all 0.5s ease;
 
     li {
       user-select: none;
@@ -224,15 +232,6 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    animation: translateUp 0.5s ease forwards;
-    @keyframes translateUp {
-      from {
-        transform: translateY(100%);
-      }
-      to {
-        transform: translateY(0);
-      }
-    }
 
     .emoji-response-save {
       -webkit-appearance: none;
@@ -258,6 +257,7 @@
 @keyframes scale {
   50% {
     transform: scale(1.08) translateZ(0);
+    opacity: 0.5;
     filter: drop-shadow(0 8px 24px rgba(#000, 0.12));
   }
 }
