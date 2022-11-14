@@ -173,6 +173,7 @@ const Dashboard = (props: DashboardProps) => {
         onBoardSurvey: user.onBoardSurvey ? user.onBoardSurvey : false,
         role: user.role,
         image: user?.image,
+        lastEmotionSubmission: user?.lastEmotionSubmission,
         onDemand: user?.onDemand
       }
     });
