@@ -1,10 +1,10 @@
-import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
-import React, {useContext, useEffect, useState} from 'react';
-import {useHistory, useRouteMatch} from 'react-router-dom';
+import {useQuery} from '@customHooks/urlParam';
 import {GlobalContext} from 'contexts/GlobalContext';
 import usePrevious from 'customHooks/previousProps';
+import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
 import {UniversalLessonPage} from 'interfaces/UniversalLessonInterfaces';
-import {useQuery} from '@customHooks/urlParam';
+import React, {useContext, useEffect, useState} from 'react';
+import {useHistory, useRouteMatch} from 'react-router-dom';
 
 interface StageIconProps extends UniversalLessonPage {
   pageNr?: number;
@@ -14,6 +14,7 @@ interface StageIconProps extends UniversalLessonPage {
   isShared?: boolean;
   canContinue?: boolean;
   handleRequiredNotification?: () => void;
+  updatePageInLocalStorage?: (pageNr: number) => void;
 }
 
 const StageIcon = ({
@@ -25,7 +26,8 @@ const StageIcon = ({
   label,
   clickable,
   hidden,
-  handleRequiredNotification
+  handleRequiredNotification,
+  updatePageInLocalStorage
 }: StageIconProps) => {
   const history = useHistory();
   const match = useRouteMatch();
@@ -80,6 +82,8 @@ const StageIcon = ({
       history.push(`${match.url}/${pageNr}${dynamicQuery}`);
 
       lessonDispatch({type: 'SET_CURRENT_PAGE', payload: pageNr});
+
+      updatePageInLocalStorage(pageNr);
     } else {
       handleRequiredNotification && handleRequiredNotification();
     }
@@ -91,96 +95,52 @@ const StageIcon = ({
     ? 'text-gray-700'
     : '';
 
+  const Button = ({showArrow, last}: {showArrow?: boolean; last?: boolean}) => {
+    return (
+      <div
+        onClick={clickable ? () => handleLink() : () => handleRequiredNotification()}
+        className={`${recentOpened ? 'animate-activation' : ''} 
+        
+        ${clickable ? 'cursor-pointer' : 'cursor-default'}
+        flex items-center w-auto group`}>
+        {showArrow && breakpoint !== 'xs' && breakpoint !== 'sm' && (
+          <svg
+            className={`flex-shrink-0 w-6 h-full text-gray-200 group-hover:text-gray-300 transition-all duration-150    `}
+            viewBox="0 0 24 44"
+            preserveAspectRatio="none"
+            fill="currentColor"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true">
+            <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
+          </svg>
+        )}
+
+        <a
+          data-cy={last ? 'last-button-on-progress-bar' : ''}
+          className={`
+          ${clickedLesson}
+          ${
+            !enabled || !open ? 'line-through text-gray-500 hover:underline' : null
+          }            
+          ${!active ? 'text-gray-500 ' : null}
+       
+          ${
+            breakpoint !== 'xs' && breakpoint !== 'sm' ? 'ml-4' : ''
+          } cursor-pointer w-auto  text-sm font-medium transform hover:scale-110 transition-transform duration-150
+          flex flex-row`}>
+          <p className="flex-shrink-0">{label}</p>
+        </a>
+      </div>
+    );
+  };
+
   const stageButtonChoice = () => {
     if (pageNr === 0) {
-      return (
-        <div
-          onClick={clickable ? () => handleLink() : () => {}}
-          className={`${recentOpened ? 'animate-activation' : ''} 
-          ${clickable ? 'cursor-pointer' : 'cursor-default'}
-          flex items-center w-auto group `}>
-          <a
-            className={`
-            ${clickedLesson}
-          
-            xs:ml-0 sm:ml-0 ml-4 cursor-pointer w-auto  text-sm font-medium transform hover:scale-110 transition-transform duration-150
-            flex flex-row`}>
-            <p className="flex-shrink-0">{label}</p>
-          </a>
-        </div>
-      );
+      return <Button />;
     } else if (pageNr < PAGES.length - 1) {
-      return (
-        <div
-          onClick={clickable ? () => handleLink() : () => handleRequiredNotification()}
-          className={`${recentOpened ? 'animate-activation' : ''} 
-          
-          ${clickable ? 'cursor-pointer' : 'cursor-default'}
-          flex items-center w-auto group`}>
-          {breakpoint !== 'xs' && breakpoint !== 'sm' && (
-            <svg
-              className={`flex-shrink-0 w-6 h-full text-gray-200 group-hover:text-gray-300 transition-all duration-150    `}
-              viewBox="0 0 24 44"
-              preserveAspectRatio="none"
-              fill="currentColor"
-              xmlns="http://www.w3.org/2000/svg"
-              aria-hidden="true">
-              <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
-            </svg>
-          )}
-
-          <a
-            className={`
-            ${clickedLesson}
-            ${
-              !enabled || !open ? 'line-through text-gray-500 hover:underline' : null
-            }            
-            ${!active ? 'text-gray-500 ' : null}
-         
-            ${
-              breakpoint !== 'xs' && breakpoint !== 'sm' ? 'ml-4' : ''
-            } cursor-pointer w-auto  text-sm font-medium transform hover:scale-110 transition-transform duration-150
-            flex flex-row`}>
-            <p className="flex-shrink-0">{label}</p>
-          </a>
-        </div>
-      );
+      return <Button showArrow />;
     } else {
-      return (
-        <div
-          onClick={clickable ? () => handleLink() : () => handleRequiredNotification()}
-          className={`${recentOpened ? 'animate-activation' : ''} 
-          
-          ${clickable ? 'cursor-pointer' : 'cursor-default'}
-          flex items-center w-auto group`}>
-          {breakpoint !== 'xs' && breakpoint !== 'sm' && (
-            <svg
-              className={`flex-shrink-0 w-6 h-full text-gray-200 group-hover:text-gray-300 transition-all duration-150    ${
-                lessonProgress > pageNr ? 'text-gray-700' : ''
-              } `}
-              viewBox="0 0 24 44"
-              preserveAspectRatio="none"
-              fill="currentColor"
-              xmlns="http://www.w3.org/2000/svg"
-              aria-hidden="true">
-              <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
-            </svg>
-          )}
-
-          <a
-            className={`
-            ${clickedLesson}
-            ${!enabled || !open ? 'line-through text-gray-500 hover:underline' : null}
-            ${!active ? 'text-gray-500 ' : null}
-          
-            ${
-              breakpoint !== 'xs' && breakpoint !== 'sm' ? 'ml-4' : ''
-            } cursor-pointer w-auto  text-sm font-medium transform hover:scale-110 transition-transform duration-150
-            flex flex-row`}>
-            <p className="flex-shrink-0">{label}</p>
-          </a>
-        </div>
-      );
+      return <Button showArrow last />;
     }
   };
 

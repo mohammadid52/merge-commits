@@ -1,11 +1,16 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import {UniversalLessonStudentData as UniversalLessonStudentDataFromAPI} from 'API';
+import {
+  UniversalLessonStudentData as UniversalLessonStudentDataFromAPI,
+  UpdatePersonLessonsDataInput
+} from 'API';
 import 'components/Dashboard/GameChangers/styles/Flickity.scss';
 import 'components/Dashboard/GameChangers/styles/GameChanger.scss';
 import {useGlobalContext} from 'contexts/GlobalContext';
+import * as customMutations from 'customGraphql/customMutations';
 import * as customQueries from 'customGraphql/customQueries';
 import * as customSubscriptions from 'customGraphql/customSubscriptions';
 import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
+import {update} from 'lodash';
 import * as mutations from 'graphql/mutations';
 import * as queries from 'graphql/queries';
 import {
@@ -20,7 +25,7 @@ import {
 } from 'interfaces/UniversalLessonInterfaces';
 import {isEmpty} from 'lodash';
 import React, {useEffect, useRef, useState} from 'react';
-import {useHistory, useParams, useRouteMatch} from 'react-router-dom';
+import {useParams} from 'react-router-dom';
 import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
 import {v4 as uuidV4} from 'uuid';
 import ErrorBoundary from '../Error/ErrorBoundary';
@@ -29,12 +34,16 @@ import Foot from './Foot/Foot';
 import {ILessonSurveyApp} from './Lesson';
 import LessonPageLoader from './LessonPageLoader';
 import CoreUniversalLesson from './UniversalLesson/views/CoreUniversalLesson';
-import useLessonFunctions from './useLessonFunctions';
 const LessonApp = ({
   personLessonData,
   canContinue,
   validateRequired,
-  invokeRequiredField
+  invokeRequiredField,
+  personLoading,
+  setPersonLessonData,
+  setPersonLoading,
+  updatePageInLocalStorage,
+  pageStateUpdated
 }: ILessonSurveyApp) => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
 
@@ -44,9 +53,6 @@ const LessonApp = ({
   const displayData = gContext.lessonState.displayData;
   const lessonDispatch = gContext.lessonDispatch;
   const theme = gContext.theme;
-
-  const history = useHistory();
-  const match = useRouteMatch();
 
   // ~~~~~~~~~~~~~~~~ OTHER ~~~~~~~~~~~~~~~~ //
 
@@ -161,19 +167,6 @@ const LessonApp = ({
   // ~~~~~~~~~~~~~ LESSON SETUP ~~~~~~~~~~~~ //
 
   const [lessonDataLoaded, setLessonDataLoaded] = useState<boolean>(false);
-
-  const [pageStateUpdated, setPageStateUpdated] = useState(true);
-
-  useEffect(() => {
-    if (!isEmpty(personLessonData)) {
-      const pages = personLessonData?.pages || '{}';
-      const lessonProgress = JSON.parse(pages).lessonProgress || 0;
-
-      lessonDispatch({type: 'SET_CURRENT_PAGE', payload: lessonProgress});
-      // setPageStateUpdated(true);
-      history.push(`${match.url}/${lessonProgress}`);
-    }
-  }, [personLessonData]);
 
   useEffect(() => {
     if (lessonState.lessonData && lessonState.lessonData.id) {
@@ -562,7 +555,7 @@ const LessonApp = ({
         await Promise.all(
           PAGES.map(async (page: any, idx: number) => {
             let studentData: any = await API.graphql(
-              graphqlOperation(queries.getUniversalLessonStudentData, {
+              graphqlOperation(customQueries.getUniversalLessonStudentData, {
                 id: `${user.authId}-${getRoomData.id}-${lessonID}-${page.id}`
                 // filter: {...filterObj.filter, lessonPageID: {eq: page.id}}
               })
@@ -1023,101 +1016,91 @@ const LessonApp = ({
     handleLessonMutateData();
   }, [lessonState.currentPage]);
 
-  const {getLessonCompletedValue} = useLessonFunctions();
+  const commonPersonLessonPayload = {
+    studentAuthID: user.authId,
+    roomId: getRoomData.id,
+    studentEmail: user.email,
+    lessonID: lessonID,
+    lessonType: lessonState.lessonData?.type,
 
-  const _getLessonCompletedValue = async () =>
-    await getLessonCompletedValue({
-      id: personLessonData.id,
-      filter: {
-        lessonID: {eq: lessonID},
-        studentEmail: {eq: user.email},
-        studentAuthId: {eq: user.authId}
+    pages: `{
+              "currentPage":${JSON.stringify(lessonState.currentPage)},
+              "totalPages":${JSON.stringify(
+                lessonState.lessonData?.lessonPlan?.length - 1
+              )},
+              "lessonProgress":${JSON.stringify(lessonState.currentPage)}
+              }`
+      .replace(/(\s\s+|[\t\n])/g, ' ')
+      .trim()
+  };
+  const createPersonLessonPayload: UpdatePersonLessonsDataInput = {
+    ...commonPersonLessonPayload,
+    id: uuidV4(),
+    ratings: 0
+  };
+  const updatePersonLessonPayload: UpdatePersonLessonsDataInput = {
+    ...commonPersonLessonPayload,
+    id: personLessonData?.id
+  };
+
+  const createPersonLessonsData = async () => {
+    const result: any = await API.graphql(
+      graphqlOperation(mutations.createPersonLessonsData, {
+        input: createPersonLessonPayload
+      })
+    );
+    setPersonLessonData(result?.data?.createPersonLessonsData);
+  };
+
+  const fetchLessonPersonData = async () => {
+    try {
+      setPersonLoading(true);
+      const lessonPersonData: any = await API.graphql(
+        graphqlOperation(customQueries.lessonsByType, {
+          filter: {
+            roomId: {eq: getRoomData.id},
+            studentAuthID: {eq: user.authId},
+            studentEmail: {eq: user.email}
+          },
+          limit: 500
+        })
+      );
+
+      const data = lessonPersonData?.data?.listPersonLessonsData?.items || [];
+      setLocalStorageData('lessonPersonData', data);
+      const _personLessonData = data.find((d: any) => d.lessonID === lessonID);
+      if (_personLessonData) {
+        setPersonLessonData(_personLessonData);
+      } else {
+        await createPersonLessonsData();
       }
-    });
-
-  // const datafromStorage = getLocalStorageData('lessonPersonData');
-
-  // useEffect(() => {
-  //   if (datafromStorage) {
-  //     setPersonLessonData(datafromStorage);
-  //   }
-  // }, [datafromStorage]);
+    } catch (e) {
+      console.error('listLessonPersonData: ', e);
+    } finally {
+      setPersonLoading(false);
+    }
+  };
 
   const handleLessonMutateData = async () => {
     try {
-      let payload;
-      let existingLesson: any;
-
-      if (personLessonData) {
-        existingLesson = personLessonData;
-      } else {
-        existingLesson = await API.graphql(
-          graphqlOperation(customQueries.listPersonLessonsData, {
-            filter: {
-              roomId: {eq: getRoomData.id},
-              lessonID: {eq: lessonID},
-              studentAuthID: {eq: user.authId},
-              studentEmail: {eq: user.email}
-            }
-          })
-        );
-        lessonDispatch({
-          type: 'SET_PERSON_LESSON_DATA',
-          payload: {
-            lessonID: lessonID,
-            data: existingLesson?.data?.listPersonLessonsData?.items || []
-          }
-        });
-      }
-
-      const items = personLessonData
-        ? existingLesson
-        : existingLesson?.data?.listPersonLessonsData?.items || [];
-
-      if (!items?.length) {
-        payload = {
-          id: uuidV4(),
-          studentAuthID: user.authId,
-          roomId: getRoomData.id,
-          studentEmail: user.email,
-          lessonID: lessonID,
-          lessonType: lessonState.lessonData?.type,
-          //prettier-ignore
-          pages: `{
-            "currentPage":${JSON.stringify(lessonState.currentPage)},
-            "totalPages":${JSON.stringify(lessonState.lessonData?.lessonPlan?.length - 1)},
-            "lessonProgress":${JSON.stringify(lessonState.currentPage)}
-            }`.replace(/(\s\s+|[\t\n])/g, ' ').trim(),
-          ratings: 0
-        };
-      } else {
-        payload = {
-          id: items?.find((_d: any) => _d.lessonID === lessonID)?.id,
-
-          pages: `{
-            "currentPage":${JSON.stringify(lessonState.currentPage)},
-            "totalPages":${JSON.stringify(
-              lessonState.lessonData?.lessonPlan?.length - 1
-            )},
-            "lessonProgress":${JSON.stringify(lessonState.currentPage)}
-            }`
-            .replace(/(\s\s+|[\t\n])/g, ' ')
-            .trim()
-        };
-        await API.graphql(
-          graphqlOperation(mutations.updatePersonLessonsData, {
-            input: payload
-          })
-        );
+      if (!personLoading) {
+        if (!personLessonData) {
+          fetchLessonPersonData();
+        } else if (personLessonData) {
+          await API.graphql(
+            graphqlOperation(customMutations.updatePersonLessonsData, {
+              input: updatePersonLessonPayload
+            })
+          );
+        }
       }
     } catch (error) {
       console.error(
-        '🚀 ~ file: Start.tsx ~ line 215 ~ handleLessonMutateData ~ error',
+        '🚀 ~ file: SurveyApp.tsx ~ line 652 ~ handleSurveyMutateData ~ error',
         error
       );
     }
   };
-
   // ~~~~~~~~~~~ RESPONSIVE CHECK ~~~~~~~~~~ //
   const {breakpoint} = useTailwindBreakpoint();
 
@@ -1149,6 +1132,8 @@ const LessonApp = ({
             setOverlay={setOverlay}
             pageStateUpdated={pageStateUpdated}
             personLessonData={personLessonData}
+            updatePageInLocalStorage={updatePageInLocalStorage}
+            setPersonLessonData={setPersonLessonData}
             createJournalData={createStudentArchiveData}
             isAtEnd={isAtEnd}
             canContinue={canContinue}

@@ -10,6 +10,7 @@ import StageIcon from './StageIcon';
 
 interface IProgressBarProps {
   handleHome?: () => void;
+  updatePageInLocalStorage?: (pageIdx: number) => void;
   validateRequired?: (pageIdx: number) => boolean;
   handleRequiredNotification?: () => void;
   pages?: any[];
@@ -32,20 +33,18 @@ const ProgressBar = ({
   handleRequiredNotification,
   pages,
   currentPage,
-  studentData,
-  requiredInputs,
+  updatePageInLocalStorage,
   validateRequired,
   canContinue
 }: IProgressBarProps) => {
   const gContext = useContext(GlobalContext);
   const lessonState = gContext.lessonState;
-  const lessonDispatch = gContext.lessonDispatch;
+
   const user = gContext.state.user;
 
   const getRoomData = getLocalStorageData('room_info');
 
   // ~~~~~~~~~~~ CHECK IF SURVEY ~~~~~~~~~~~ //
-  const isSurvey = lessonState && lessonState.lessonData?.type === 'survey';
 
   // ~~~~~~~~~ SIMPLE LOGIC CHECKS ~~~~~~~~~ //
   /************************************************
@@ -135,6 +134,7 @@ const ProgressBar = ({
               <StageIcon
                 key={`${page.id}_progressIcon`}
                 pageNr={key}
+                updatePageInLocalStorage={updatePageInLocalStorage}
                 id={page.id}
                 enabled={page.disabled !== true || isOnDemand}
                 open={page.open !== false || isOnDemand}

@@ -13,7 +13,9 @@ const ProgressBar = ({personDataObj}: ProgressBarProps) => {
         const isCompleted = personDataObj ? personDataObj?.isCompleted : false;
         const {totalPages = 0, lessonProgress = 0} = personDataObj;
         const roundOff = isCompleted ? 0 : -1;
-        const percentCorrect = (lessonProgress * 100) / totalPages;
+        let lp = lessonProgress + 1;
+        let tp = totalPages + 1;
+        const percentCorrect = (lp * 100) / tp;
 
         const progress = Number.isNaN(percentCorrect) ? 0 : percentCorrect;
 
