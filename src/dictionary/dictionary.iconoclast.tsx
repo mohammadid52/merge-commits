@@ -311,7 +311,7 @@ const dashboardTestCasesDict: any = {
 const anthologyDict: any = {
   EN: {
     TITLE_CONTAINER: 'Your Notebooks',
-    TITLE: 'Notebook',
+    TITLE: 'Notebooks p',
     NO_SELECTED: 'No notebook selected...',
     TABS: {
       A: 'Journal',
