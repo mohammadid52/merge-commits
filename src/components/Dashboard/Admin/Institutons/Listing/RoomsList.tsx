@@ -1,17 +1,16 @@
-import React, {useEffect, useState, Fragment, useContext} from 'react';
-import {useHistory, useRouteMatch} from 'react-router';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import React, {Fragment, useContext, useEffect, useState} from 'react';
+import {useHistory, useRouteMatch} from 'react-router';
 
 import {getAsset} from 'assets';
-import {GlobalContext} from 'contexts/GlobalContext';
-import * as customQueries from 'customGraphql/customQueries';
-import * as mutations from 'graphql/mutations';
-import useDictionary from 'customHooks/dictionary';
-import Loader from 'atoms/Loader';
-import Tooltip from 'atoms/Tooltip';
 import AddButton from 'atoms/Buttons/AddButton';
 import SearchInput from 'atoms/Form/SearchInput';
 import Selector from 'atoms/Form/Selector';
+import Loader from 'atoms/Loader';
+import Tooltip from 'atoms/Tooltip';
+import {GlobalContext} from 'contexts/GlobalContext';
+import * as customQueries from 'customGraphql/customQueries';
+import useDictionary from 'customHooks/dictionary';
 
 interface RoomListProps {
   instId: string;
@@ -227,7 +226,7 @@ const RoomsList = (props: RoomListProps) => {
           <div className={`flex md:justify-end flex-wrap`}>
             <div
               className={`flex justify-between w-auto ${
-                isSuperAdmin || isAdmin || isBuilder ? 'lg:w-144' : 'lg:w-96 mr-4'
+                isSuperAdmin || isAdmin || isBuilder ? 'lg:w-144' : ' mr-4'
               }`}>
               {(isSuperAdmin || isAdmin || isBuilder) && (
                 <Selector

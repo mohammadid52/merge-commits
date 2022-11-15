@@ -1,12 +1,12 @@
-import React, {useContext} from 'react';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import React from 'react';
 import {FaBook} from 'react-icons/fa';
 import {useHistory} from 'react-router';
 import {DashboardProps} from '../Dashboard';
 import {Syllabus} from './Classroom';
-import {GlobalContext, useGlobalContext} from 'contexts/GlobalContext';
-import useDictionary from 'customHooks/dictionary';
-import {getAsset} from 'assets';
 
+import Tooltip from '@components/Atoms/Tooltip';
 import Buttons from 'atoms/Buttons';
 // import ProgressBar from './ProgressBar';
 
@@ -17,16 +17,17 @@ const SyllabusSwitch = ({
   currentPage,
   syllabusLoading,
   handleSyllabusActivation,
-  institutionId
+  institutionId,
+  syllabusActivating
 }: DashboardProps) => {
   const history = useHistory();
-  const {state, theme, clientKey, userLanguage} = useGlobalContext();
-  const {classRoomDict} = useDictionary(clientKey);
+  const {state} = useGlobalContext();
+  const {classRoomDict, userLanguage} = useDictionary();
 
   return (
     <>
       {syllabusLoading ? (
-        <div className="relative shadow rounded-lg flex mb-8">
+        <div className="relative rounded-lg flex mb-8">
           <div className="animate-pulse space-y-8 flex flex-col">
             <div className={`grid grid-cols-1 md:grid-cols-2 gap-2`}>
               <div className={'h-12 bg-gray-400 rounded-lg'} />
@@ -37,39 +38,46 @@ const SyllabusSwitch = ({
       ) : state.roomData?.syllabus?.length ? (
         <div className={`grid grid-cols-1 md:grid-cols-2 gap-2`}>
           {state.roomData.syllabus.map((syllabus: Syllabus, i: number) => {
+            const isActive = classRoomActiveSyllabus === syllabus.id;
             // const progressPercentage = completedLessons;
             return (
-              <div
+              <Tooltip
                 key={`testSyllabus_${i}`}
-                id={`testSyllabus_${i}`}
-                className={`flex relative flex-col ${
-                  classRoomActiveSyllabus === syllabus.id ? 'bg-white' : 'bg-gray-400'
-                } rounded-lg shadow justify-center items-center`}>
-                <div className={`flex justify-between p-2`}>
-                  <div className="flex items-center">
-                    <span className="w-auto">
-                      <FaBook className="w-6 h-6" />
-                    </span>
-                    <span className={`text-sm 2xl:text-base text-darker-gray pl-2`}>
-                      {syllabus.name}
-                    </span>
-                  </div>
+                placement={i % 2 === 0 ? 'left' : 'right'}
+                text={
+                  isActive ? 'Currently Active' : 'Click on select to activate this unit'
+                }>
+                <div
+                  id={`testSyllabus_${i}`}
+                  className={`${
+                    isActive
+                      ? 'pointer-events-none iconoclast:bg-600 curate:bg-600'
+                      : 'pointer-events-auto bg-white'
+                  } flex relative flex-col transition-all   rounded-xl customShadow hover:theme-card-shadow justify-center items-center h-full`}>
+                  <div className={`flex justify-between items-center p-4`}>
+                    <div className="flex items-center">
+                      <span
+                        className={`w-auto ${isActive ? 'text-white' : 'theme-text'} `}>
+                        <FaBook className="w-6 h-6" />
+                      </span>
+                      <span
+                        className={`text-sm 2xl:text-base ${
+                          isActive ? 'text-white' : 'text-gray-900'
+                        } font-medium pl-4`}>
+                        {syllabus.name}
+                      </span>
+                    </div>
 
-                  {classRoomActiveSyllabus !== syllabus.id ? (
-                    <div
-                      className={`${theme.btn.iconoclastIndigo} text-center rounded-lg cursor-pointer text-sm 2xl:text-base hover:text-white transition-all w-24 py-1 duration-150`}
-                      onClick={() => handleSyllabusActivation(syllabus.id)}>
-                      Select
-                    </div>
-                  ) : (
-                    <div
-                      className={`w-24 rounded-lg py-1 flex justify-center  items-center text-base bg-green-400 text-white font-semibold`}>
-                      Active
-                    </div>
-                  )}
+                    <Buttons
+                      greenBtn={isActive}
+                      loading={syllabusActivating}
+                      btnClass="ml-2"
+                      onClick={() => !isActive && handleSyllabusActivation(syllabus.id)}
+                      label={isActive ? 'Active' : 'Select'}
+                    />
+                  </div>
                 </div>
-                {/* <ProgressBar progressPercentage={60} /> */}
-              </div>
+              </Tooltip>
             );
           })}
         </div>
