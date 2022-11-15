@@ -124,8 +124,7 @@ const Tabs = ({tabsData, updateTab, currentTab}: ITabsProps) => {
             const tab = tabsData.find((_d) => _d.title === e.target.value);
             updateTab(tab);
           }}
-          className="block w-full text-xs md:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-full"
-          defaultValue={currentTab}>
+          className="block w-full text-xs md:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-full">
           {tabsData.map((tab: ITabElements, index: number) => (
             <option value={tab.title} className="transition-all" key={index}>
               {tab.title}
