@@ -51,9 +51,9 @@ const SyllabusSwitch = ({
                   id={`testSyllabus_${i}`}
                   className={`${
                     isActive
-                      ? 'pointer-events-none iconoclast:bg-600 curate:bg-600'
+                      ? 'pointer-events-none iconoclast:bg-500 curate:bg-500'
                       : 'pointer-events-auto bg-white'
-                  } flex relative flex-col transition-all   rounded-xl customShadow hover:theme-card-shadow justify-center items-center h-full`}>
+                  } flex relative flex-col transition-all rounded-xl customShadow hover:theme-card-shadow justify-center items-center h-full`}>
                   <div className={`flex justify-between items-center p-4`}>
                     <div className="flex items-center">
                       <span
@@ -68,13 +68,15 @@ const SyllabusSwitch = ({
                       </span>
                     </div>
 
-                    <Buttons
-                      greenBtn={isActive}
-                      loading={syllabusActivating}
-                      btnClass="ml-2"
-                      onClick={() => !isActive && handleSyllabusActivation(syllabus.id)}
-                      label={isActive ? 'Active' : 'Select'}
-                    />
+                    {!isActive && (
+                      <Buttons
+                        greenBtn={isActive}
+                        loading={syllabusActivating}
+                        btnClass="ml-2"
+                        onClick={() => handleSyllabusActivation(syllabus.id)}
+                        label={'Select'}
+                      />
+                    )}
                   </div>
                 </div>
               </Tooltip>

@@ -216,9 +216,10 @@ const Start: React.FC<StartProps> = ({
   };
 
   const discardChanges = async () => {
+    const activeLessons = activeRoomInfo?.activeLessons || [];
     await API.graphql(
       graphqlOperation(mutations.updateRoom, {
-        input: {id: roomID, activeLessons: [...activeRoomInfo?.activeLessons, lessonKey]}
+        input: {id: roomID, activeLessons: [...activeLessons, lessonKey]}
       })
     );
     history.push(goBackUrl);

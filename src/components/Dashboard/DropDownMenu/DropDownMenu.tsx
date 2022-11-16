@@ -86,8 +86,8 @@ const DropDownMenu = ({
               leave="transition ease-in duration-75"
               leaveFrom="transform opacity-100 scale-100"
               leaveTo="transform opacity-0 scale-95">
-              <Menu.Items className="absolute right-1 w-52 mt-1 origin-top-right bg-white divide-y divide-gray-100 rounded-md customShadow focus:outline-none cursor-pointer z-max">
-                <div className="px-2 py-1 shadow-lg">
+              <Menu.Items className="absolute right-1 w-52 mt-1 origin-top-right bg-white divide-y divide-gray-100 rounded-xl customShadow focus:outline-none cursor-pointer z-max">
+                <div className="px-2 py-1 customShadow">
                   <Menu.Item key={'role'}>
                     <div className="p-4 border-b-0 border-gray-400">
                       <span>
