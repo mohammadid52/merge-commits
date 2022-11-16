@@ -1,6 +1,6 @@
+import PrivateRoute from 'components/Auth/PrivateRoute';
 import React, {lazy} from 'react';
 import {Redirect, Route, Switch} from 'react-router-dom';
-import PrivateRoute from 'components/Auth/PrivateRoute';
 
 const Dashboard = lazy(() => import('components/Dashboard/Dashboard'));
 const Lesson = lazy(() => import('components/Lesson/Lesson'));

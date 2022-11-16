@@ -55,6 +55,12 @@ const StandardLessonCard = (props: LessonCardProps) => {
     }
   };
 
+  const _isCompleted =
+    activeRoomInfo?.completedLessons?.findIndex(
+      (item: {lessonID?: string | null; time?: string | null}) =>
+        item.lessonID === lessonProps.lessonID
+    ) > -1 || personDataObj?.isCompleted;
+
   return (
     <div
       key={keyProps}
@@ -67,8 +73,10 @@ const StandardLessonCard = (props: LessonCardProps) => {
        *  RIGHT SECTION
        */}
       <div className={`w-7.5/10 flex flex-col rounded-b`}>
-        <MainSummary lessonProps={lessonProps} />
-        {isStudent && <ProgressBar personDataObj={personDataObj} />}
+        <MainSummary lessonProps={{...lessonProps, isTeacher, accessible}} />
+        {isStudent && (
+          <ProgressBar _isCompleted={_isCompleted} personDataObj={personDataObj} />
+        )}
         {lessonProps.lesson.type !== 'survey' &&
         !existsOrNot &&
         personDataObj?.isCompleted ? (
@@ -88,8 +96,8 @@ const StandardLessonCard = (props: LessonCardProps) => {
           accessible={accessible}
           lessonProgress={personDataObj?.lessonProgress}
           roomID={roomID}
+          isCompleted={_isCompleted}
           lessonProps={lessonProps}
-          isCompleted={personDataObj?.isCompleted}
           syllabusProps={syllabusProps}
           lessonType={lessonProps.lesson.type}
         />

@@ -1,13 +1,13 @@
-import React from 'react';
-import {CookiesProvider} from 'react-cookie';
-import {BrowserRouter as Router} from 'react-router-dom';
-import {GlobalContextProvider} from 'contexts/GlobalContext';
+import Notification from 'atoms/Notification';
 import MainRouter from 'components/AppMainRouter';
+import {GlobalContextProvider} from 'contexts/GlobalContext';
+import NotificationContextProvider from 'contexts/NotificationContext';
 import {OverlayContextProvider} from 'contexts/OverlayContext';
 import {PageBuilderProvider} from 'contexts/PageBuilderContext';
-import Notification from 'atoms/Notification';
-import NotificationContextProvider from 'contexts/NotificationContext';
+import React from 'react';
+import {CookiesProvider} from 'react-cookie';
 import {QueryClient, QueryClientProvider} from 'react-query';
+import {BrowserRouter as Router} from 'react-router-dom';
 
 // This is the main component that wraps all other components
 // It is the entry point for the application

@@ -1,7 +1,9 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import {useNotifications} from '@contexts/NotificationContext';
+import useGraphqlMutation from '@customHooks/useGraphqlMutation';
 import '@style/general/EmojiFeedback.scss';
+import {CreatePersonSentimentsInput, UpdatePersonInput} from 'API';
 import Modal from 'atoms/Modal';
 import {GlobalContext} from 'contexts/GlobalContext';
 import * as customMutations from 'customGraphql/customMutations';
@@ -29,7 +31,7 @@ const EmojiCard = ({
   label,
   setSelectedEmotion,
   selectedCard,
-  setShowJournal,
+
   onSave
 }: {
   setSelectedEmotion: React.Dispatch<React.SetStateAction<string>>;
@@ -63,7 +65,7 @@ const EmojiCard = ({
       onClick={() => {
         onSave(label);
       }}
-      className="w-auto z-100 theme-card-shadow">
+      className="w-auto z-100 rounded-xl theme-card-shadow">
       <div
         id={id}
         className={` ${selectedCard ? 'selected-card' : ''} ${
@@ -89,7 +91,7 @@ const EmojiCard = ({
             </svg>
           )}
         </div>
-        {selectedCard && (
+        {/* {selectedCard && (
           <div className="emoji-slider-bottom">
             <button
               onClick={() => {
@@ -107,7 +109,7 @@ const EmojiCard = ({
               Save
             </button>
           </div>
-        )}
+        )} */}
       </div>
     </div>
   );
@@ -193,6 +195,20 @@ const EmojiFeedback = () => {
   };
 
   const {setNotification} = useNotifications();
+
+  const createPersonSentiments = useGraphqlMutation<
+    {input: CreatePersonSentimentsInput},
+    any
+  >('createPersonSentiments', {
+    custom: true
+  });
+  const updateLastSubmissionDate = useGraphqlMutation<{input: UpdatePersonInput}, any>(
+    'updateLastSubmissionDate',
+    {
+      custom: true
+    }
+  );
+
   const onSave = async (response: string) => {
     try {
       setShow({great: false, awful: false, okay: false, bad: false});
@@ -205,26 +221,20 @@ const EmojiFeedback = () => {
         responseText: response,
         backstory: ''
       };
-      await API.graphql(
-        graphqlOperation(customMutations.createPersonSentiments, {
-          input: payload
-        })
-      );
-      await API.graphql(
-        graphqlOperation(customMutations.updateLastSubmissionDate, {
-          input: {
-            authId: authId,
-            email: email,
-            lastEmotionSubmission: date
-          }
-        })
-      );
 
-      setNotification({
-        show: true,
-        title: 'Your response has been saved',
-        type: 'success'
+      createPersonSentiments.mutate({input: payload});
+
+      updateLastSubmissionDate.mutate({
+        input: {authId: authId, email: email, lastEmotionSubmission: date}
       });
+
+      if (response !== 'none') {
+        setNotification({
+          show: true,
+          title: '😀 Thanks for checking in today',
+          type: 'success'
+        });
+      }
 
       console.log('data saved'); // <=== data saved here
     } catch (error) {

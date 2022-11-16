@@ -14,8 +14,8 @@ const BottomBar = (props: LessonCardProps) => {
     syllabusProps,
     accessible,
     lessonType,
-    isCompleted,
-    lessonProgress = 0
+    lessonProgress = 0,
+    isCompleted
   } = props;
 
   const startButtonProps = {
@@ -25,11 +25,7 @@ const BottomBar = (props: LessonCardProps) => {
     lessonKey: lessonProps ? lessonProps.lessonID : null,
     isActive: activeRoomInfo?.activeLessons?.includes(lessonProps?.lessonID),
     open: lessonProps && lessonProps.status === 'Active' ? true : false,
-    isCompleted:
-      activeRoomInfo?.completedLessons?.findIndex(
-        (item: {lessonID?: string | null; time?: string | null}) =>
-          item.lessonID === lessonProps.lessonID
-      ) > -1 || isCompleted,
+    isCompleted: isCompleted,
     accessible: accessible,
     type: lessonProps.lesson.type,
     activeRoomInfo: activeRoomInfo,
@@ -42,7 +38,7 @@ const BottomBar = (props: LessonCardProps) => {
   return (
     <div>
       <div
-        className={`bg-transparent border-t-0 border-gray-200 flex justify-between text-base p-2 px-3 ${
+        className={`bg-transparent relative border-t-0 border-gray-200 flex justify-between text-base p-2 px-3 ${
           lessonType === 'survey' ? 'rounded-b' : 'rounded-br'
         }`}>
         {/* TIME */}
@@ -61,6 +57,17 @@ const BottomBar = (props: LessonCardProps) => {
           <div className="w-auto text-gray-500">
             <AiOutlineUser className="w-4 h-4 sm:w-6 sm:h-6" />
           </div>
+
+          {/* {isTeacher && (
+            <p className="overflow-ellipsis overflow-hidden text-base text-left">
+              Status:
+              {accessible ? (
+                <span className="ml-2 text-base font-semibold text-green-400">Open</span>
+              ) : (
+                <span className="ml-2 text-base font-semibold text-red-600">Closed</span>
+              )}
+            </p>
+          )} */}
           {/*
            * SHOW TEACHER NAME
            */}
