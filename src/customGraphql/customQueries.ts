@@ -408,6 +408,61 @@ export const getDashboardDataForCoTeachers = /* GraphQL */ `
     }
   }
 `;
+export const getCoTeachersForRoom = /* GraphQL */ `
+  query ListRoomCoTeachers(
+    $filter: ModelRoomCoTeachersFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listRoomCoTeachers(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        room {
+          id
+          institutionID
+          classID
+          teacherAuthID
+          teacherEmail
+          name
+          coTeachers {
+            items {
+              id
+              roomID
+              teacher {
+                id
+                authId
+                status
+                email
+                firstName
+                lastName
+              }
+              teacherID
+              teacherEmail
+              teacherAuthID
+              createdAt
+              updatedAt
+            }
+            nextToken
+          }
+        }
+        teacher {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 
 export const getPerson = /* GraphQL */ `
   query GetPerson($email: String!, $authId: String!) {
@@ -1125,27 +1180,11 @@ export const listRoomsDashboard = /* GraphQL */ `
         }
         teacher {
           id
-          authId
           status
-          email
-          role
-          type
           firstName
           preferredName
           lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
           image
-          language
-          filters
-          lastLoggedIn
-          lastLoggedOut
-          createdAt
-          updatedAt
         }
         class {
           id

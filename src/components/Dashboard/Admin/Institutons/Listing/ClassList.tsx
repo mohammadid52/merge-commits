@@ -81,9 +81,7 @@ const ClassList = (props: ClassListProps) => {
                         `/dashboard/manage-institutions/institution/${instId}/class-edit/${item.id}`
                       )
                     }>
-                    <Tooltip text="Click to edit class" placement="left">
-                      {Institute_class[userLanguage]['EDIT']}
-                    </Tooltip>
+                    {Institute_class[userLanguage]['EDIT']}
                   </span>
                 </div>
               ))}

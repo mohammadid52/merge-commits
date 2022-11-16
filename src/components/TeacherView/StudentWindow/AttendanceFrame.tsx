@@ -1,19 +1,16 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import orderBy from 'lodash/orderBy';
-import moment from 'moment';
-import React, {forwardRef, useContext, useEffect, useRef, useState} from 'react';
-import DatePicker from 'react-datepicker';
-import {IconContext} from 'react-icons';
-import {FaArrowDown, FaArrowUp} from 'react-icons/fa';
-import {IoIosCalendar, IoMdArrowBack} from 'react-icons/io';
 import {getAsset} from 'assets';
 import {GlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
+import orderBy from 'lodash/orderBy';
+import React, {forwardRef, useContext, useEffect, useRef, useState} from 'react';
+import {IconContext} from 'react-icons';
+import {FaArrowDown, FaArrowUp} from 'react-icons/fa';
+import {IoIosCalendar} from 'react-icons/io';
 
+import Modal from 'atoms/Modal';
 import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
 import AttendanceList from './AttendanceFrame/AttendanceList';
-import Buttons from 'atoms/Buttons';
-import Modal from 'atoms/Modal';
 
 const pad = (num: any) => {
   return `0${num}`.slice(-2);
@@ -202,6 +199,10 @@ const Attendance = ({
   // ##################################################################### //
   const {breakpoint} = useTailwindBreakpoint();
 
+  const name = user?.firstName
+    ? `${user?.firstName} ${user?.lastName}`
+    : user?.preferredName || '';
+
   return (
     <div
       ref={frameRef}
@@ -211,7 +212,7 @@ const Attendance = ({
       className={`absolute mr-0 top-0 right-0 h-full flex flex-col items-center z-50`}>
       {visible && (
         <Modal
-          customTitle={user ? `Attendance for ${user.preferredName}` : 'Attendance'}
+          customTitle={user ? `Attendance for ${name}` : 'Attendance'}
           showHeader={true}
           showHeaderBorder={false}
           showFooter={false}
