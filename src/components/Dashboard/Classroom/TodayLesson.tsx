@@ -1,11 +1,11 @@
-import React, {Fragment, useContext, useEffect, useState} from 'react';
-import {LessonProps} from './Classroom';
-import StandardLessonCard from './LessonCards/StandardLessonCard';
 import {GlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
-import {getLocalStorageData} from 'utilities/localStorage';
-import ClassroomLoader from './ClassroomLoader';
 import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
+import React, {Fragment, useContext, useEffect, useState} from 'react';
+import {getLocalStorageData} from 'utilities/localStorage';
+import {LessonProps} from './Classroom';
+import ClassroomLoader from './ClassroomLoader';
+import StandardLessonCard from './LessonCards/StandardLessonCard';
 
 const groupBy = (item: any, key: string) =>
   item.reduce(
@@ -108,26 +108,22 @@ const Today: React.FC<LessonProps> = ({
               </div>
             </div>
             {session.lessons.filter(Boolean).map((lesson: any, key: number) => {
-              if (lesson?.lesson?.id) {
-                return (
-                  <div
-                    id={`todayLesson_${key}_wrapper`}
-                    key={`todayLesson_${key}_wrapper`}>
-                    <StandardLessonCard
-                      roomID={getRoomData?.id}
-                      isTeacher={isTeacher}
-                      keyProps={`todayLesson_${key}`}
-                      activeRoomInfo={activeRoomInfo}
-                      lessonProps={lesson}
-                      syllabusProps={syllabus}
-                      accessible={accessible}
-                      user={state.user}
-                      handleLessonMutationRating={handleLessonMutationRating}
-                      getLessonRating={getLessonRating}
-                    />
-                  </div>
-                );
-              } else return <div key={`todayLesson_${key}_wrapper`} />;
+              return (
+                <div id={`todayLesson_${key}_wrapper`} key={`todayLesson_${key}_wrapper`}>
+                  <StandardLessonCard
+                    roomID={getRoomData?.id}
+                    isTeacher={isTeacher}
+                    keyProps={`todayLesson_${key}`}
+                    activeRoomInfo={activeRoomInfo}
+                    lessonProps={lesson}
+                    syllabusProps={syllabus}
+                    accessible={accessible}
+                    user={state.user}
+                    handleLessonMutationRating={handleLessonMutationRating}
+                    getLessonRating={getLessonRating}
+                  />
+                </div>
+              );
             })}
           </Fragment>
         ))
