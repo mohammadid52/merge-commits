@@ -2,16 +2,110 @@ import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import React, {Fragment, useContext, useEffect, useState} from 'react';
 import {useHistory, useRouteMatch} from 'react-router';
 
+import Popover from '@components/Atoms/Popover';
+import useAuth from '@customHooks/useAuth';
+import {ModelRoomFilterInput} from 'API';
 import {getAsset} from 'assets';
 import AddButton from 'atoms/Buttons/AddButton';
 import SearchInput from 'atoms/Form/SearchInput';
 import Selector from 'atoms/Form/Selector';
 import Loader from 'atoms/Loader';
-import Tooltip from 'atoms/Tooltip';
 import {GlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
+import {Status} from '../../UserManagement/UserStatus';
 
+const Room = ({
+  i,
+  editCurrentRoom,
+  item
+}: {
+  i: number;
+  editCurrentRoom?: (id: string, instId: string) => void;
+  item?: any;
+}) => {
+  const {isSuperAdmin, isAdmin, isBuilder} = useAuth();
+  const match = useRouteMatch();
+  const history = useHistory();
+
+  const [showPopover, setShowPopover] = useState(false);
+
+  const coTeachers = item?.room?.coTeachers?.items || [];
+
+  const content = (
+    <h1>{coTeachers.map((item: any) => item.teacher.firstName).join(',')}</h1>
+  );
+
+  return (
+    <tr
+      title="click to view/edit details"
+      style={{cursor: 'pointer !important'}}
+      className={`cursor-pointer hover:iconoclast:bg-200 hover:iconoclast:text-600
+hover:curate:bg-200 hover:curate:text-600
+`}>
+      <td className={''}>{i + 1}.</td>
+      {(isSuperAdmin || isAdmin || isBuilder) && (
+        <td
+          className="text-xs leading-4 font-medium whitespace-normal break-normal"
+          onClick={(e) => {
+            e.stopPropagation();
+            isSuperAdmin &&
+              history.push(
+                `/dashboard/manage-institutions/institution/${item.institution?.id}/edit?back=${match.url}`
+              );
+          }}>
+          {item.institution?.name}
+        </td>
+      )}
+      <td
+        onClick={() => editCurrentRoom(item.id, item.institutionID)}
+        className={`text-xs leading-4 font-medium whitespace-normal break-normal`}>
+        {item.name}
+      </td>
+      <td className="text-xs leading-4 whitespace-normal break-normal">
+        {item.teacher?.firstName || ''} {item.teacher?.lastName || ''}
+      </td>
+
+      {/* <td className="text-xs leading-4 whitespace-normal break-normal">
+        {coTeachers.length > 0 ? (
+          <Popover setShow={setShowPopover} content={content} show={showPopover}>
+            See co teachers
+          </Popover>
+        ) : (
+          '-'
+        )}
+      </td> */}
+
+      <td
+        onClick={() => editCurrentRoom(item.id, item.institutionID)}
+        className="text-xs leading-4  whitespace-normal break-normal">
+        {item?.curricula?.items
+          ?.map((d: any) => {
+            return d?.curriculum?.name;
+          })
+          .join(',') || '-'}
+      </td>
+      <td className="text-xs leading-4 whitespace-normal break-normal">
+        {/* <div className="w-auto md:w-32 lg:w-28">
+    </div> */}
+
+        <Status
+          className={
+            item.status.toLowerCase() === 'active'
+              ? 'bg-green-200 text-green-600'
+              : 'bg-yellow-200 text-yellow-600'
+          }>
+          {item.status ? item.status : 'ACTIVE'}
+        </Status>
+      </td>
+      {/* <td
+    className={`text-indigo-600 text-s leading-4 font-medium whitespace-normal break-normal h-6 flex px-4 items-center cursor-pointer text-left py-2 ${theme.textColor[themeColor]}`}
+    onClick={() => editCurrentRoom(item.id, item.institutionID)}>
+    {InstitueRomms[userLanguage]['EDIT']}
+  </td> */}
+    </tr>
+  );
+};
 interface RoomListProps {
   instId: string;
   instName: string;
@@ -102,16 +196,45 @@ const RoomsList = (props: RoomListProps) => {
     }
   };
 
+  const {authId, isFellow, isTeacher} = useAuth();
+
   const fetchRoomList = async () => {
     try {
-      const list: any = await API.graphql(
-        graphqlOperation(customQueries.listRoomsDashboard)
+      const filter: ModelRoomFilterInput =
+        isFellow || isTeacher
+          ? {
+              teacherAuthID: {eq: authId}
+            }
+          : {};
+      const assignedRoomsAsTeachers: any = await API.graphql(
+        graphqlOperation(customQueries.listRoomsDashboard, {filter: filter})
       );
 
-      const newList = list.data.listRooms.items;
+      const assignedRoomsAsCoTeacher: any = await API.graphql(
+        graphqlOperation(customQueries.getCoTeachersForRoom, {
+          filter: filter
+        })
+      );
 
-      setRoomList(newList);
-      setAllRooms(newList);
+      const teachersList = assignedRoomsAsTeachers.data.listRooms.items;
+      const coTeachersList = assignedRoomsAsCoTeacher.data.listRoomCoTeachers.items;
+
+      // cause co teachers list return different data structure
+      const updatedCoTeachersList = coTeachersList.map((coTeacher: any) => {
+        const {room, teacher} = coTeacher;
+        return {
+          ...coTeacher,
+          name: room.name,
+          status: teacher.status
+        };
+      });
+
+      console.log({first: teachersList[0], second: updatedCoTeachersList[0]});
+
+      const merged = [...teachersList, ...updatedCoTeachersList];
+
+      setRoomList(merged);
+      setAllRooms(merged);
       setLoading(false);
     } catch {
       setMessages({
@@ -302,6 +425,9 @@ const RoomsList = (props: RoomListProps) => {
                   <th className="bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                     {InstitueRomms[userLanguage]['TEACHER']}
                   </th>
+                  {/* <th className="bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                    {InstitueRomms[userLanguage]['CO_TEACHER']}
+                  </th> */}
 
                   <th className="bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                     {InstitueRomms[userLanguage]['CURRICULUM']}
@@ -311,62 +437,15 @@ const RoomsList = (props: RoomListProps) => {
                     {InstitueRomms[userLanguage]['STATUS']}
                   </th>
 
-                  <th className="bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                  {/* <th className="bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                     {InstitueRomms[userLanguage]['ACTION']}
-                  </th>
+                  </th> */}
                 </tr>
               </thead>
               <tbody>
                 {roomList.map((item: any, i: number) => {
                   return (
-                    <tr key={i} className={``}>
-                      <td className={''}>{i + 1}.</td>
-                      {(isSuperAdmin || isAdmin || isBuilder) && (
-                        <td
-                          className="text-s leading-4 font-medium whitespace-normal break-normal"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            isSuperAdmin &&
-                              history.push(
-                                `/dashboard/manage-institutions/institution/${item.institution?.id}/edit?back=${match.url}`
-                              );
-                          }}>
-                          {item.institution?.name}
-                        </td>
-                      )}
-                      <td
-                        onClick={() => editCurrentRoom(item.id, item.institutionID)}
-                        className={`text-s leading-4 font-medium whitespace-normal break-normal`}>
-                        {item.name}
-                      </td>
-                      <td className="text-s leading-4 whitespace-normal break-normal">
-                        {item.teacher?.firstName || ''} {item.teacher?.lastName || ''}
-                      </td>
-                      <td
-                        onClick={() => editCurrentRoom(item.id, item.institutionID)}
-                        className="text-s leading-4  whitespace-normal break-normal">
-                        {item?.curricula?.items
-                          ?.map((d: any) => {
-                            return d?.curriculum?.name;
-                          })
-                          .join(',') || '-'}
-                      </td>
-                      <td className="text-s leading-4 whitespace-normal break-normal">
-                        <div className="w-auto md:w-32 lg:w-28">
-                          {item.status ? item.status : 'ACTIVE'}
-                        </div>
-                      </td>
-                      <td
-                        className={`text-indigo-600 text-s leading-4 font-medium whitespace-normal break-normal h-6 flex px-4 items-center cursor-pointer text-left py-2 ${theme.textColor[themeColor]}`}
-                        onClick={() => editCurrentRoom(item.id, item.institutionID)}>
-                        <Tooltip
-                          additionalClass="mt-9"
-                          text="Click to edit class"
-                          placement="left">
-                          {InstitueRomms[userLanguage]['EDIT']}
-                        </Tooltip>
-                      </td>
-                    </tr>
+                    <Room item={item} i={i} key={i} editCurrentRoom={editCurrentRoom} />
                   );
                 })}
               </tbody>
