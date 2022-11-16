@@ -62,12 +62,13 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
     endDate: null,
     startTime: '',
     endTime: '',
-    frequency: '',
+    frequency: 'One Time',
     location: '',
     notes: '',
     weekDay: '',
     conferenceCallLink: ''
   });
+
   const [unsavedChanges, setUnsavedChanges] = useState(false);
   const [serverMessage, setServerMessage] = useState({
     message: '',
@@ -78,9 +79,9 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
     const {
       startDate,
       endDate,
-      startTime,
-      endTime,
-      frequency,
+      startTime = '',
+      endTime = '',
+      frequency = 'One Time',
       location,
       notes,
       weekDay,
@@ -93,7 +94,7 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
         endDate: endDate ? new Date(endDate) : null,
         startTime: startTime ? moment(startTime, 'HH:mm:ss').format('h:mm A') : null,
         endTime: endTime ? moment(endTime, 'HH:mm:ss').format('h:mm A') : null,
-        frequency,
+        frequency: frequency || 'One Time',
         location,
         notes,
         weekDay,

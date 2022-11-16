@@ -93,33 +93,6 @@ const UnitPlanner = ({
     }
   }, [isDetailsComplete, syllabusList.length]);
 
-  // useEffect(() => {
-  //   if (logsChanged) {
-  //     calculateSchedule();
-  //   }
-  // }, [logsChanged, syllabusList.length]);
-
-  // useEffect(() => {
-  //   console.log(
-  //     'inside room data change useeffect',
-  //     syllabusList?.length,
-  //     roomData.startDate,
-  //     roomData.endDate,
-  //     roomData.frequency
-  //   );
-
-  //   if (
-  //     syllabusList?.length &&
-  //     roomData.startDate &&
-  //     roomData.endDate &&
-  //     roomData.frequency
-  //   ) {
-  //     console.log("inside if above calculation");
-
-  //     calculateSchedule();
-  //   }
-  // }, [roomData.startDate, roomData.endDate, roomData.frequency]);
-
   const calculateAvailableStartDate = (
     date: Moment,
     frequency: any,
@@ -143,12 +116,7 @@ const UnitPlanner = ({
           new Date(new Date(ele).toDateString()).getTime() ===
           new Date(moment(date).add(i, frequency).toDate()).getTime()
       );
-      console.log(
-        isOccupied,
-        'isOccupied',
-        iteration,
-        moment(date).add(i, frequency).day()
-      );
+
       if (
         !isOccupied &&
         (roomData.frequency !== 'M/W/F' ||
@@ -158,11 +126,8 @@ const UnitPlanner = ({
           (roomData.frequency === 'Tu/Th' &&
             [2, 4].includes(moment(date).add(i, frequency).day())))
       ) {
-        console.log('inside finalization if');
-
         if (iteration === 1) {
           startDate = new Date(moment(date).add(i, frequency).toDate());
-          console.log(startDate, moment(startDate).day(), 'startDate inside if+++++++++');
         }
         if (iteration === duration) {
           estEndDate = new Date(moment(date).add(i, frequency).toDate());
@@ -175,8 +140,6 @@ const UnitPlanner = ({
   };
 
   const calculateSchedule = () => {
-    console.log('inside calculateSchedule');
-
     let count: number = 0,
       lastOccupiedDate: any = roomData.startDate,
       scheduleDates = lessonImpactLogs
@@ -194,8 +157,8 @@ const UnitPlanner = ({
             .map((item: any) => {
               if (count !== 0 && 1 - count < item.lesson.duration) {
                 lastOccupiedDate = moment(lastOccupiedDate).add(
-                  frequencyMapping[roomData.frequency].step,
-                  frequencyMapping[roomData.frequency].unit
+                  frequencyMapping[roomData.frequency || 'One Time'].step,
+                  frequencyMapping[roomData.frequency || 'One Time'].unit
                 );
                 count = 0;
               }
@@ -203,12 +166,11 @@ const UnitPlanner = ({
 
               const {startDate, estEndDate}: any = calculateAvailableStartDate(
                 moment(lastOccupiedDate),
-                frequencyMapping[roomData.frequency].unit,
-                frequencyMapping[roomData.frequency].step,
+                frequencyMapping[roomData.frequency || 'One Time'].unit,
+                frequencyMapping[roomData.frequency || 'One Time'].step,
                 item.lesson.duration,
                 scheduleDates
               );
-              console.log(startDate, estEndDate, 'startDate, estEndDate');
 
               item.startDate = startDate;
               item.estEndDate = estEndDate;
@@ -252,6 +214,8 @@ const UnitPlanner = ({
     // saveRoomDetails();
     setLogsChanged(false);
   };
+
+  const validateAllRequiredFields = (ifAllGood: () => void) => {};
 
   return (
     <div className="py-8">
@@ -386,8 +350,10 @@ const UnitPlanner = ({
           btnClass="py-3 px-12 text-sm ml-4"
           label={'Run calculations and save'}
           onClick={() => {
-            calculateSchedule();
-            saveRoomDetails();
+            validateAllRequiredFields(() => {
+              calculateSchedule();
+              saveRoomDetails();
+            });
           }}
         />
       </div>
