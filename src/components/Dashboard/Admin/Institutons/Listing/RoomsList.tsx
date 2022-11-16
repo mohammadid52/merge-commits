@@ -210,15 +210,21 @@ const RoomsList = (props: RoomListProps) => {
         graphqlOperation(customQueries.listRoomsDashboard, {filter: filter})
       );
 
-      const assignedRoomsAsCoTeacher: any = await API.graphql(
-        graphqlOperation(customQueries.getCoTeachersForRoom, {
-          filter: filter
-        })
-      );
+      let assignedRoomsAsCoTeacher: any;
+
+      if (isFellow || isTeacher) {
+        assignedRoomsAsCoTeacher = await API.graphql(
+          graphqlOperation(customQueries.getCoTeachersForRoom, {
+            filter: filter
+          })
+        );
+      }
 
       const teachersList = assignedRoomsAsTeachers?.data?.listRooms?.items;
       const coTeachersList =
-        assignedRoomsAsCoTeacher?.data?.listRoomCoTeachers?.items || [];
+        isFellow || isTeacher
+          ? assignedRoomsAsCoTeacher?.data?.listRoomCoTeachers?.items || []
+          : [];
 
       // cause co teachers list return different data structure
       const updatedCoTeachersList = coTeachersList.map((coTeacher: any) => {
