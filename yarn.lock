@@ -6607,7 +6607,7 @@
   "resolved" "https://registry.npmjs.org/cyclist/-/cyclist-1.0.1.tgz"
   "version" "1.0.1"
 
-"cypress@^10.8.0":
+"cypress@^10.9.0":
   "integrity" "sha512-MjIWrRpc+bQM9U4kSSdATZWZ2hUqHGFEQTF7dfeZRa4MnalMtc88FIE49USWP2ZVtfy5WPBcgfBX+YorFqGElA=="
   "resolved" "https://registry.npmjs.org/cypress/-/cypress-10.9.0.tgz"
   "version" "10.9.0"
