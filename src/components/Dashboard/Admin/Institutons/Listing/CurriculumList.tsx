@@ -262,6 +262,7 @@ const CurriculumList = ({
                 isSuperAdmin ? 'md:w-72 lg:w-96' : 'md:w-36 lg:w-48 mr-4'
               }`}>
               <SearchInput
+                dataCy="curriculum-search-input"
                 value={searchInput}
                 onChange={(value) => setSearchInput(value)}
                 onKeyDown={() => onSearch(searchInput, selectedInstitution?.id)}

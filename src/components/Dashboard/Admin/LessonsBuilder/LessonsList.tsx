@@ -430,6 +430,7 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
           )}
           <div className={`flex justify-end ${isInInstitution ? 'w-auto' : 'py-4 mb-4'}`}>
             <SearchInput
+              dataCy="lesson-search-input"
               value={searchInput.value}
               onChange={setSearch}
               onKeyDown={() => onSearch(searchInput.value, selectedInstitution?.id)}
