@@ -210,33 +210,39 @@ const RoomsList = (props: RoomListProps) => {
         graphqlOperation(customQueries.listRoomsDashboard, {filter: filter})
       );
 
-      const assignedRoomsAsCoTeacher: any = await API.graphql(
-        graphqlOperation(customQueries.getCoTeachersForRoom, {
-          filter: filter
-        })
-      );
+      let assignedRoomsAsCoTeacher: any;
 
-      const teachersList = assignedRoomsAsTeachers.data.listRooms.items;
-      const coTeachersList = assignedRoomsAsCoTeacher.data.listRoomCoTeachers.items;
+      if (isFellow || isTeacher) {
+        assignedRoomsAsCoTeacher = await API.graphql(
+          graphqlOperation(customQueries.getCoTeachersForRoom, {
+            filter: filter
+          })
+        );
+      }
+
+      const teachersList = assignedRoomsAsTeachers?.data?.listRooms?.items;
+      const coTeachersList =
+        isFellow || isTeacher
+          ? assignedRoomsAsCoTeacher?.data?.listRoomCoTeachers?.items || []
+          : [];
 
       // cause co teachers list return different data structure
       const updatedCoTeachersList = coTeachersList.map((coTeacher: any) => {
         const {room, teacher} = coTeacher;
         return {
           ...coTeacher,
-          name: room.name,
-          status: teacher.status
+          name: room?.name || '',
+          status: teacher?.status || ''
         };
       });
-
-      console.log({first: teachersList[0], second: updatedCoTeachersList[0]});
 
       const merged = [...teachersList, ...updatedCoTeachersList];
 
       setRoomList(merged);
       setAllRooms(merged);
       setLoading(false);
-    } catch {
+    } catch (e) {
+      console.error(e);
       setMessages({
         show: true,
         message: InstitueRomms[userLanguage]['messages']['fetcherr'],
