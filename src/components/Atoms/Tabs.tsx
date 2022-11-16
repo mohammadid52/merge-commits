@@ -83,7 +83,7 @@ const DropDownMenu = ({index, menu, onClick}: any) => {
             leaveFrom="transform opacity-100 scale-100"
             leaveTo="transform opacity-0 scale-95">
             <Menu.Items
-              className="absolute left-0 w-60 my-2 mb-4 origin-top-right bg-white divide-y divide-gray-100 rounded-md customShadow focus:outline-none cursor-pointer z-100"
+              className="absolute left-0 w-60 my-2 mb-4 mt-4 origin-top-right bg-white divide-y divide-gray-100 rounded-xl customShadow focus:outline-none cursor-pointer z-100"
               static>
               <div
                 className="p-2 customShadow"
@@ -127,8 +127,7 @@ const Tabs = ({tabsData, updateTab, currentTab}: ITabsProps) => {
             const tab = tabsData.find((_d) => _d.title === e.target.value);
             updateTab(tab);
           }}
-          className="block w-full text-xs md:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-full"
-          defaultValue={currentTab}>
+          className="block w-full text-xs md:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-full">
           {tabsData.map((tab: ITabElements, index: number) => (
             <option value={tab.title} className="transition-all" key={index}>
               {tab.title}

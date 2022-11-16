@@ -3,6 +3,14 @@ import React, {useContext} from 'react';
 import {IconContext} from 'react-icons';
 import {IoClose} from 'react-icons/io5';
 
+export const CloseButton = ({onClick}: {onClick: () => void}) => (
+  <button className={`ml-auto w-auto outline-none}`} onClick={onClick}>
+    <span className="w-8 h-8 ml-4 flex cursor-pointer hover:bg-gray-200 items-center justify-center rounded transition-all duration-150">
+      <IoClose size={'1.5rem'} style={{color: '#000000'}} />
+    </span>
+  </button>
+);
+
 const ModalHeader = (headerProps: {
   title?: string;
   onClick?: () => void;
@@ -24,13 +32,7 @@ const ModalHeader = (headerProps: {
         {titleButton}
       </div>
 
-      <button className={`ml-auto w-auto ${theme.outlineNone}`} onClick={onClick}>
-        <span className="w-8 h-8 ml-4 flex cursor-pointer hover:bg-gray-200 items-center justify-center rounded transition-all duration-150">
-          <IconContext.Provider value={{size: '1.5rem', color: '#000000'}}>
-            <IoClose />
-          </IconContext.Provider>
-        </span>
-      </button>
+      <CloseButton onClick={onClick} />
     </div>
   );
 };

@@ -147,7 +147,6 @@ const StudentsTiles = (props: {
                       return (
                         <li
                           key={`homepage__student-${idx}`}
-                          className=""
                           onClick={() => {
                             if (student.id && isTeacher) {
                               history.push(
@@ -158,7 +157,7 @@ const StudentsTiles = (props: {
                           <div className="space-y-4">
                             {student.image ? (
                               <img
-                                className="transform hover:scale-105 cursor-pointer transition duration-150 ease-in-out mx-auto h-20 w-20 rounded-full lg:w-24 lg:h-24"
+                                className="transform hover:theme-card-shadow hover:scale-105 cursor-pointer transition duration-150 ease-in-out mx-auto h-20 w-20 rounded-full lg:w-24 lg:h-24"
                                 src={student?.image}
                                 alt=""
                               />
@@ -166,7 +165,7 @@ const StudentsTiles = (props: {
                               <ImageAlternate
                                 user={student}
                                 textSize={'text-3xl'}
-                                styleClass="transform hover:scale-105 cursor-pointer transition duration-150 ease-in-out mx-auto h-20 w-20 rounded-full lg:w-24 lg:h-24"
+                                styleClass="transform hover:theme-card-shadow hover:scale-105 cursor-pointer transition duration-150 ease-in-out mx-auto h-20 w-20 rounded-full lg:w-24 lg:h-24"
                               />
                             )}
                             <div className="space-y-2">

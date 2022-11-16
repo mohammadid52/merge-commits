@@ -1,6 +1,7 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import Loader from '@components/Atoms/Loader';
 import {getAsset} from 'assets';
+import awsmobile from 'aws-exports';
 import Community from 'components/Community/Community';
 import InstitutionsHome from 'components/Dashboard/Admin/Institutons/InstitutionsHome';
 import QuestionBank from 'components/Dashboard/Admin/Questions/QuestionBank';
@@ -28,6 +29,7 @@ import {useCookies} from 'react-cookie';
 import {Redirect, Route, Switch, useHistory, useRouteMatch} from 'react-router-dom';
 import {setLocalStorageData} from 'utilities/localStorage';
 import {frequencyMapping} from 'utilities/staticData';
+import SwitchAccount from './Classroom/SwitchAccount';
 const Classroom = lazy(() => import('components/Dashboard/Classroom/Classroom'));
 
 const GameChangers = lazy(() => import('components/Dashboard/GameChangers/GameChangers'));
@@ -90,6 +92,7 @@ export interface DashboardProps {
   loading?: boolean;
   isTeacher?: boolean;
   isOnDemandStudent?: boolean;
+  syllabusActivating?: boolean;
   updateAuthState?: Function;
   currentPageData?: any[];
   setCurrentPageData?: React.Dispatch<any>;
@@ -173,6 +176,7 @@ const Dashboard = (props: DashboardProps) => {
         onBoardSurvey: user.onBoardSurvey ? user.onBoardSurvey : false,
         role: user.role,
         image: user?.image,
+        lastEmotionSubmission: user?.lastEmotionSubmission,
         onDemand: user?.onDemand
       }
     });
@@ -794,6 +798,8 @@ const Dashboard = (props: DashboardProps) => {
 
   // check if url contains game-changers
   const isGameChangers = window.location.href.includes('game-changers');
+  const isLocalhost = window.location.hostname === 'localhost';
+  const isDev = awsmobile.aws_user_files_s3_bucket.includes('dev');
 
   return (
     <>
@@ -819,6 +825,7 @@ const Dashboard = (props: DashboardProps) => {
         </div>
       </div>
       <div className="relative h-screen flex overflow-hidden container_background ">
+        {/* {isLocalhost && isDev && <SwitchAccount />} */}
         {stateUser?.role === 'ST' && <EmojiFeedback />}
         {/* <ResizablePanels> */}
 

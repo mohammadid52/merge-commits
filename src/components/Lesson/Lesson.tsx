@@ -267,10 +267,12 @@ const Lesson = () => {
         .replace(/(\s\s+|[\t\n])/g, ' ')
         .trim();
 
-      const idx = listPersonData.findIndex((d: any) => d.id === personLessonData.id);
-      let test = update(listPersonData[idx], 'pages', () => updatedPage);
-      const updatedData = listPersonData.splice(idx, 1, test);
-      setLocalStorageData('lessonPersonData', updatedData);
+      if (listPersonData) {
+        const idx = listPersonData.findIndex((d: any) => d.id === personLessonData.id);
+        let test = update(listPersonData[idx], 'pages', () => updatedPage);
+        const updatedData = listPersonData.splice(idx, 1, test);
+        setLocalStorageData('lessonPersonData', updatedData);
+      }
     }
   };
 

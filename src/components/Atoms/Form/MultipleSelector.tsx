@@ -82,7 +82,7 @@ const MultipleSelector = (props: MultipleSelectorProps) => {
 
   return (
     <div className="relative" ref={currentRef}>
-      <span className="inline-block w-full h-full rounded-md shadow-sm">
+      <span className="inline-block w-full h-full rounded-full shadow-sm">
         <button
           disabled={disabled}
           onClick={() => setShowList(!showList)}
@@ -92,7 +92,7 @@ const MultipleSelector = (props: MultipleSelectorProps) => {
           aria-labelledby="listbox-label"
           className={`${
             disabled ? 'bg-gray-100' : ''
-          } flex items-center cursor-pointer relative w-full h-full rounded-md  border-0 border-gray-300 bg-white pl-3 py-2 text-left focus:outline-none transition ease-in-out duration-150 sm:text-sm sm:leading-5 ${
+          } flex items-center cursor-pointer relative w-full h-full rounded-full  border-0 border-gray-300 bg-white pl-3 py-2 text-left focus:outline-none transition ease-in-out duration-150 sm:text-sm sm:leading-5 ${
             btnClass ? btnClass : ''
           }`}>
           <span className="block truncate text-gray-700">
@@ -126,12 +126,12 @@ const MultipleSelector = (props: MultipleSelectorProps) => {
         </button>
       </span>
       {showList && (
-        <div className="z-50 absolute mt-1 w-full rounded-md bg-white shadow-lg">
+        <div className="z-50 absolute mt-1 w-full rounded-xl bg-white shadow-lg">
           <ul
             role="listbox"
             aria-labelledby="listbox-label"
             aria-activedescendant="listbox-item-3"
-            className="max-h-60 focus:shadow-none rounded-md py-1 text-base leading-6 overflow-auto focus:outline-none sm:text-sm sm:leading-5">
+            className="max-h-60 focus:shadow-none rounded-xl py-1 text-base leading-6 overflow-auto focus:outline-none sm:text-sm sm:leading-5">
             {modifiedList.length > 0 ? (
               modifiedList.map(
                 (
