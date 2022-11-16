@@ -99,7 +99,7 @@ const SelectorWithAvatar = (props: selectorProps) => {
           aria-haspopup="listbox"
           aria-expanded="true"
           aria-labelledby="listbox-label"
-          className={`flex items-center cursor-pointer relative w-full h-full rounded-full  border-0 border-gray-400 bg-white pl-3 py-2 text-left focus:outline-none transition ease-in-out duration-150 sm:text-sm sm:leading-5 ${
+          className={`flex items-center cursor-pointer relative w-full h-full rounded-full  border-0 border-gray-300 bg-white pl-3 py-2 text-left focus:outline-none transition ease-in-out duration-150 sm:text-sm sm:leading-5 ${
             btnClass ? btnClass : ''
           }`}>
           <span className="block truncate text-gray-700">

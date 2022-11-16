@@ -1,22 +1,21 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import {removeLocalStorageData, setLocalStorageData} from '@utilities/localStorage';
 import {getAsset} from 'assets';
 import BreadCrums from 'atoms/BreadCrums';
 import SectionTitleV3 from 'atoms/SectionTitleV3';
-import {GlobalContext, useGlobalContext} from 'contexts/GlobalContext';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import * as customQueries from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import useAuth from 'customHooks/useAuth';
 import * as mutations from 'graphql/mutations';
-import * as queries from 'graphql/queries';
-import * as customQueries from 'customGraphql/customQueries';
 import isEmpty from 'lodash/isEmpty';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useRouteMatch} from 'react-router';
 import {DashboardProps} from '../Dashboard';
 import DashboardContainer from '../DashboardContainer';
 import DateAndTime from '../DateAndTime/DateAndTime';
 import SyllabusSwitch from './SyllabusSwitch';
 import Today from './TodayLesson';
-import {removeLocalStorageData, setLocalStorageData} from '@utilities/localStorage';
 
 interface Artist {
   id: string;
@@ -80,6 +79,7 @@ export interface LessonProps extends DashboardProps {
 
 export interface LessonCardProps {
   isCompleted?: boolean;
+
   isTeacher?: boolean;
   keyProps?: string;
   activeRoomInfo?: any;
@@ -306,7 +306,11 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
   // ##################################################################### //
   // ###################### TEACHER SYLLABUS CONTROL ##################### //
   // ##################################################################### //
+
+  const [syllabusActivating, setSyllabusActivating] = useState(false);
+
   const handleSyllabusActivation = async (syllabusID: string) => {
+    setSyllabusActivating(true);
     const input = {
       id: activeRoomInfo.id,
       institutionID: activeRoomInfo.institutionID,
@@ -346,6 +350,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
     } catch (e) {
       console.error('handleSyllabusActivation: ', e);
     } finally {
+      setSyllabusActivating(false);
       setActiveRoomInfo({...activeRoomInfo, activeSyllabus: syllabusID});
     }
   };
@@ -445,7 +450,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
         clientKey={clientKey}
         bannerImg={bannerImg}
         bannerTitle={`${classRoomDict[userLanguage]['TITLE']}`}>
-        <div className="px-5 2xl:px-0 lg:mx-auto lg:max-w-192 md:max-w-none 2xl:max-w-256">
+        <div className="relative px-5 2xl:px-0 lg:mx-auto lg:max-w-192 md:max-w-none 2xl:max-w-256">
           <div className="flex flex-row my-0 w-full py-0 mb-4 justify-between items-center">
             <BreadCrums items={breadCrumsList} />
 
@@ -478,6 +483,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
                   <div className={`pb-4 m-auto px-0`}>
                     <SyllabusSwitch
                       activeRoom={state.activeRoom}
+                      syllabusActivating={syllabusActivating}
                       classRoomActiveSyllabus={activeRoomInfo?.activeSyllabus}
                       completedLessons={activeRoomInfo?.completedLessons}
                       currentPage={currentPage}

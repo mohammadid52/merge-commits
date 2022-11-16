@@ -128,6 +128,19 @@ export const updatePerson = /* GraphQL */ `
   }
 `;
 
+export const updateLastSubmissionDate = /* GraphQL */ `
+  mutation UpdatePerson(
+    $input: UpdatePersonInput!
+    $condition: ModelPersonConditionInput
+  ) {
+    updatePerson(input: $input, condition: $condition) {
+      id
+      authId
+      lastEmotionSubmission
+    }
+  }
+`;
+
 export const updatePersonLoginTime = /* GraphQL */ `
   mutation UpdatePerson(
     $input: UpdatePersonInput!

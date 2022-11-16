@@ -1022,6 +1022,17 @@ $polka-dot-size: 0.8px;
   box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.05);
 }
 
+.hover\:customShadow {
+  &:hover {
+    box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.05);
+  }
+}
+.hover\:theme-card-shadow {
+  &:hover {
+    box-shadow: 0 10px 20px 10px $theme-box-shadow;
+  }
+}
+
 .theme-card-shadow {
   box-shadow: 0 10px 20px 10px $theme-box-shadow;
 }

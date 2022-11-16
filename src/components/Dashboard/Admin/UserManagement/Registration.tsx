@@ -248,7 +248,7 @@ const Registration = ({
       externalId: newUserInputs.externalId,
       grade: newUserInputs.grade,
       language: Language.EN,
-      onDemand: newUserInputs.isSelfPaced,
+      onDemand: newUserInputs.role === 'ST' ? newUserInputs.isSelfPaced : false,
       addedby: state.user.authId
     };
 

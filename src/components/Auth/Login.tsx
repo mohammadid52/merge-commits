@@ -97,7 +97,8 @@ const Login = ({updateAuthState}: LoginProps) => {
                   (item: any) => item.institution
                 ) || [],
               onDemand: userInfo?.onDemand,
-              lessons: userInfo.lessons
+              lessons: userInfo.lessons,
+              lastEmotionSubmission: userInfo?.lastEmotionSubmission
             }
           });
           const input = {
@@ -278,7 +279,8 @@ const Login = ({updateAuthState}: LoginProps) => {
           language: userInfo.language,
           onBoardSurvey: userInfo.onBoardSurvey ? userInfo.onBoardSurvey : false,
           role: userInfo.role,
-          image: userInfo.image
+          image: userInfo.image,
+          lastEmotionSubmission: userInfo?.lastEmotionSubmission
         }
       });
       const input = {

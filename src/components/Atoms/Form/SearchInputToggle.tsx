@@ -35,7 +35,7 @@ const SearchInputToggle: React.FC<SearchProps> = (searchProps: SearchProps) => {
     <div
       style={{width: showFull ? '200px' : '32px'}}
       onBlur={() => setShowFull(false)}
-      className={`flex w-auto transition items-center py-1 rounded px-2 justify-center ${
+      className={`flex w-auto transition items-center py-1 rounded-full px-2 justify-center ${
         theme.formSelect
       } ${theme.outlineNone} ${style ? style : ''}`}>
       <span

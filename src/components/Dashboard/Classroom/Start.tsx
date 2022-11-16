@@ -10,7 +10,6 @@ import {noop} from 'lodash';
 import ModalPopUp from 'molecules/ModalPopUp';
 import React, {useEffect, useState} from 'react';
 import {useHistory} from 'react-router-dom';
-import {lessonState} from 'state/LessonState';
 import {getLocalStorageData} from 'utilities/localStorage';
 import {awsFormatDate, dateString} from 'utilities/time';
 import {tableCleanupUrl} from 'utilities/urls';
@@ -217,9 +216,10 @@ const Start: React.FC<StartProps> = ({
   };
 
   const discardChanges = async () => {
+    const activeLessons = activeRoomInfo?.activeLessons || [];
     await API.graphql(
       graphqlOperation(mutations.updateRoom, {
-        input: {id: roomID, activeLessons: [...activeRoomInfo?.activeLessons, lessonKey]}
+        input: {id: roomID, activeLessons: [...activeLessons, lessonKey]}
       })
     );
     history.push(goBackUrl);
@@ -288,7 +288,7 @@ const Start: React.FC<StartProps> = ({
         }
       } else {
         if (isCompleted) {
-          return classRoomDict[userLanguage]['BOTTOM_BAR']['COMPLETED'];
+          return classRoomDict[userLanguage]['BOTTOM_BAR']['GO_TO_NOTEBOOK'];
         } else if (isActive) {
           return classRoomDict[userLanguage]['BOTTOM_BAR']['START'];
         } else {
@@ -352,7 +352,7 @@ const Start: React.FC<StartProps> = ({
       case 'START LESSON':
         return 'GO TO LESSON';
       case 'Lesson Completed':
-        return 'GO TO NOTEBOOK';
+        return classRoomDict[userLanguage]['BOTTOM_BAR']['GO_TO_NOTEBOOK'];
 
       default:
         return buttonText;
@@ -360,7 +360,8 @@ const Start: React.FC<StartProps> = ({
   };
 
   const {isStudent} = useAuth();
-  const showNotebookBtn = isStudent && isCompleted && type === 'lesson';
+  const isLesson = type === 'lesson';
+  const showNotebookBtn = isStudent && isCompleted && isLesson;
 
   return (
     <div data-cy="survey-button">
@@ -374,13 +375,14 @@ const Start: React.FC<StartProps> = ({
         disabled={
           loading ||
           (!open && !isTeacher && !isOnDemand) ||
-          (!isActive && !isTeacher && !isOnDemand) ||
-          (isCompleted && type === 'survey')
+          (!isActive && !isTeacher && !isOnDemand && !isLesson) ||
+          (isCompleted && type === 'survey') ||
+          (isCompleted && isTeacher)
         }
         btnClass={` h-full w-full text-xs focus:outline-none ${
           !open || (isCompleted && type === 'survey') ? 'opacity-80' : 'opacity-100'
         }`}
-        greenBtn={showNotebookBtn}
+        greenBtn={showNotebookBtn || (isCompleted && isTeacher)}
       />
       {warnModal.show && (
         <ModalPopUp
@@ -397,3 +399,13 @@ const Start: React.FC<StartProps> = ({
 };
 
 export default Start;
+
+// For classroom students
+// these are two active lessons
+// nothing is completed for new student
+
+// From teacher side
+// these are two completed lessons
+// 1)  I Write
+// 2) Short stories
+// 3) Where I'm From- High School

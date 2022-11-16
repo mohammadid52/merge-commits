@@ -2,9 +2,10 @@ import React, {useEffect, useState} from 'react';
 
 interface ProgressBarProps {
   personDataObj?: any;
+  _isCompleted?: boolean;
 }
 
-const ProgressBar = ({personDataObj}: ProgressBarProps) => {
+const ProgressBar = ({personDataObj, _isCompleted}: ProgressBarProps) => {
   const [progressValue, setProgressValue] = useState<any>(0);
 
   const generateLessonProgress = async () => {
@@ -48,13 +49,13 @@ const ProgressBar = ({personDataObj}: ProgressBarProps) => {
     <div className="flex justify-end px-4 flex-wrap mb-3">
       <div className="flex items-center justify-between my-2">
         <p className="text-gray-500 text-sm">
-          {progressValue > 0 ? progressValue : 0}% complete{' '}
+          {_isCompleted ? 100 : progressValue > 0 ? progressValue : 0}% complete{' '}
           <span className="italic">{progressValue === 99 ? infoWhenNinetyNine : ''}</span>
         </p>
       </div>
       <div className="w-full h-2 iconoclast:bg-200 curate:bg-200 rounded-full">
         <div
-          style={{width: `${progressValue}%`}}
+          style={{width: `${_isCompleted ? '100' : progressValue}%`}}
           className="h-full text-center transition-all duration-1000 text-xs text-white iconoclast:bg-600 curate:bg-600 rounded-full"></div>
       </div>
     </div>

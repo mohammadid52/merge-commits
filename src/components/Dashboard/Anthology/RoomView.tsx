@@ -1,5 +1,6 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import Loader from '@components/Atoms/Loader';
+import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import {useQuery} from '@customHooks/urlParam';
 import useAuth from '@customHooks/useAuth';
 import {createFilterToFetchSpecificItemsOnly} from '@utilities/strings';
@@ -188,12 +189,23 @@ const RoomView = ({
   return (
     <>
       <div className="relative pb-4 overflow-hidden bg-white rounded-b-lg shadow mb-4">
-        <div className="relative mx-auto">
+        <div className="relative  p-6 mx-auto">
           {!loaded && (
             <div className="my-4">
               <Loader color="rgba(160, 174, 192, 1)" />
             </div>
           )}
+
+          <AnimatedContainer
+            delay="1s"
+            animationType="opacity"
+            show={sectionRoomID === ''}>
+            {sectionRoomID === '' && (
+              <p className="text-base inline text-gray-500">
+                Select a notebook to continue
+              </p>
+            )}
+          </AnimatedContainer>
 
           <div
             // #ts-ignores
@@ -201,7 +213,7 @@ const RoomView = ({
               transition: 'width 2s',
               transitionTimingFunction: 'cubic-bezier(0.1, 0.7, 1, 0.1)'
             }}
-            className="mt-0 max-w-lg mx-auto p-6 grid gap-4 lg:max-w-none md:grid-cols-4 grid-cols-1 2xl:grid-cols-5 sm:grid-cols-2">
+            className="mt-0 max-w-lg mx-auto grid gap-4 lg:max-w-none md:grid-cols-4 grid-cols-1 2xl:grid-cols-5 sm:grid-cols-2">
             <RoomViewCard
               roomID={'private'}
               mainSection={mainSection}

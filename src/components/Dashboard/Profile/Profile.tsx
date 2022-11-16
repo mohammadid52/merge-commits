@@ -123,7 +123,8 @@ const Profile = (props: ProfilePageProps) => {
         onBoardSurvey: state.user.onBoardSurvey ? state.user.onBoardSurvey : false,
         role: state.user.role,
         image: ID,
-        onDemand: state.user?.onDemand
+        onDemand: state.user?.onDemand,
+        lastEmotionSubmission: state.user?.lastEmotionSubmission
       }
     });
     setImageLoading(false);
