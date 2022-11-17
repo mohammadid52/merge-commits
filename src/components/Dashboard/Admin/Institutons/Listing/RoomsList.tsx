@@ -2,8 +2,8 @@ import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import React, {Fragment, useContext, useEffect, useState} from 'react';
 import {useHistory, useRouteMatch} from 'react-router';
 
-import Popover from '@components/Atoms/Popover';
 import useAuth from '@customHooks/useAuth';
+import {getLocalStorageData} from '@utilities/localStorage';
 import {ModelRoomFilterInput} from 'API';
 import {getAsset} from 'assets';
 import AddButton from 'atoms/Buttons/AddButton';
@@ -12,6 +12,7 @@ import Selector from 'atoms/Form/Selector';
 import Loader from 'atoms/Loader';
 import {GlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
+import * as queries from 'graphql/queries';
 import useDictionary from 'customHooks/dictionary';
 import {Status} from '../../UserManagement/UserStatus';
 
@@ -27,14 +28,6 @@ const Room = ({
   const {isSuperAdmin, isAdmin, isBuilder} = useAuth();
   const match = useRouteMatch();
   const history = useHistory();
-
-  const [showPopover, setShowPopover] = useState(false);
-
-  const coTeachers = item?.room?.coTeachers?.items || [];
-
-  const content = (
-    <h1>{coTeachers.map((item: any) => item.teacher.firstName).join(',')}</h1>
-  );
 
   return (
     <tr
@@ -148,11 +141,14 @@ const RoomsList = (props: RoomListProps) => {
     );
   };
 
+  const roomData = getLocalStorageData('room_info');
   const editCurrentRoom = (id: string, instId: string) => {
     history.push(
       isSuperAdmin
         ? `/dashboard/manage-institutions/room-edit/${id}`
-        : `/dashboard/manage-institutions/institution/${instId}/room-edit/${id}`
+        : `/dashboard/manage-institutions/institution/${
+            instId || roomData.institutionID
+          }/room-edit/${id}`
     );
   };
 
@@ -214,7 +210,7 @@ const RoomsList = (props: RoomListProps) => {
 
       if (isFellow || isTeacher) {
         assignedRoomsAsCoTeacher = await API.graphql(
-          graphqlOperation(customQueries.getCoTeachersForRoom, {
+          graphqlOperation(queries.listRoomCoTeachers, {
             filter: filter
           })
         );

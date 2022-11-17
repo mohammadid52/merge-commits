@@ -382,7 +382,11 @@ const Start: React.FC<StartProps> = ({
         btnClass={` h-full w-full text-xs focus:outline-none ${
           !open || (isCompleted && type === 'survey') ? 'opacity-80' : 'opacity-100'
         }`}
-        greenBtn={showNotebookBtn || (isCompleted && isTeacher)}
+        greenBtn={
+          showNotebookBtn ||
+          (isCompleted && isTeacher) ||
+          (isActive && isTeacher && isLesson)
+        }
       />
       {warnModal.show && (
         <ModalPopUp
