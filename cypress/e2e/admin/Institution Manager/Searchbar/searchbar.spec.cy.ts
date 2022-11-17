@@ -2,8 +2,8 @@
 
 import {loginConfig, urlConfig} from '../../../config';
 
-const studentName = 'Claudia Crane';
-const studentName2 = 'Adam';
+const studentName = 'direct st staff';
+const studentName2 = 'student, John';
 
 const dropdownDetail = {
   button: 'Institution Manager',
@@ -28,7 +28,7 @@ describe('Searchbar flow', () => {
       cy.wait(10000);
 
       cy.log('Search for claudia');
-      cy.dataCy('staff-loookup-search').clear().type(studentName);
+      cy.dataCy('staff-loookup-search').clear().type(`${studentName}{enter}`);
       cy.get(`span:contains(${studentName})`).then((span) => {
         expect(span).to.be.visible;
       });
@@ -39,7 +39,7 @@ describe('Searchbar flow', () => {
       cy.url().should('contain', 'manage-users');
 
       cy.log('Search for Adam');
-      cy.dataCy('user-loookup-search').clear().type(studentName2);
+      cy.dataCy('user-loookup-search').clear().type(`${studentName2}{enter}`);
       cy.get(`span:contains(${studentName2})`).then((span) => {
         expect(span).to.be.visible;
       });

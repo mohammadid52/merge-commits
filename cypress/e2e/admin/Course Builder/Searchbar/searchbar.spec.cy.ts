@@ -2,9 +2,9 @@
 
 import {loginConfig, urlConfig} from '../../../config';
 
-const curriculumName = 'Summer Bridge';
-const unitName = 'Identity';
-const lessonName = 'Short Stories';
+const curriculumName = 'Big Bang Course Testing';
+const unitName = 'Cypress Testing Unit 1';
+const lessonName = 'Big Bang Test Lesson';
 
 const dropdownDetail = {
   button: 'Course Builder',
@@ -33,7 +33,7 @@ describe('Searchbar flow', () => {
     cy.url().should('contain', 'courses');
 
     cy.log('Search for Curriculum');
-    cy.dataCy('curriculum-search-input').clear().type(curriculumName);
+    cy.dataCy('curriculum-search-input').clear().type(`${curriculumName}{enter}`);
     cy.get(`div:contains(${curriculumName})`).then((div) => {
       expect(div).to.be.visible;
     });
@@ -44,7 +44,7 @@ describe('Searchbar flow', () => {
     cy.url().should('contain', 'units');
 
     cy.log('Search for Unit');
-    cy.dataCy('unit-search-input').clear().type(unitName);
+    cy.dataCy('unit-search-input').clear().type(`${unitName}{enter}`);
     cy.get(`div:contains(${unitName})`).then((div) => {
       expect(div).to.be.visible;
     });
@@ -55,7 +55,7 @@ describe('Searchbar flow', () => {
     cy.url().should('contain', 'lessons');
 
     cy.log('Search for Lesson');
-    cy.dataCy('lesson-search-input').clear().type(lessonName);
+    cy.dataCy('lesson-search-input').clear().type(`${lessonName}{enter}`);
     cy.get(`div:contains(${lessonName})`).then((div) => {
       expect(div).to.be.visible;
     });
