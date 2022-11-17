@@ -192,7 +192,11 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
               </IconContext.Provider>
             )}
             {isClearable && selectedItem && (
-              <FaTimes className="relative mr-4" onClick={onClear} />
+              <FaTimes
+                data-cy="clear-selector"
+                className="relative mr-4"
+                onClick={onClear}
+              />
             )}
             {error.length > 0 && (
               <ExclamationCircleIcon

@@ -230,6 +230,7 @@ const RoomsList = (props: RoomListProps) => {
               }`}>
               {(isSuperAdmin || isAdmin || isBuilder) && (
                 <Selector
+                  dataCy="classroom-institution"
                   placeholder={InstitueRomms[userLanguage]['SELECT_INSTITUTION']}
                   list={institutionList}
                   selectedItem={selectedInstitution?.name}
@@ -243,6 +244,7 @@ const RoomsList = (props: RoomListProps) => {
                 />
               )}
               <SearchInput
+                dataCy="classroom-search-input"
                 value={searchInput}
                 onChange={(value) => setSearchInput(value)}
                 onKeyDown={() =>
