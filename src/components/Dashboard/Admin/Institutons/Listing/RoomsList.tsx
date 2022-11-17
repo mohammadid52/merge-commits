@@ -51,7 +51,7 @@ hover:curate:bg-200 hover:curate:text-600
         </td>
       )}
       <td
-        onClick={() => editCurrentRoom(item.id, item.institutionID)}
+        onClick={() => !item?.isCoteacher && editCurrentRoom(item.id, item.institutionID)}
         className={`text-xs leading-4 font-medium whitespace-normal break-normal`}>
         {item.name}
       </td>
@@ -70,7 +70,7 @@ hover:curate:bg-200 hover:curate:text-600
       </td> */}
 
       <td
-        onClick={() => editCurrentRoom(item.id, item.institutionID)}
+        onClick={() => !item?.isCoteacher && editCurrentRoom(item.id, item.institutionID)}
         className="text-xs leading-4  whitespace-normal break-normal">
         {item?.curricula?.items
           ?.map((d: any) => {
@@ -228,7 +228,8 @@ const RoomsList = (props: RoomListProps) => {
         return {
           ...coTeacher,
           name: room?.name || '',
-          status: teacher?.status || ''
+          status: teacher?.status || '',
+          isCoteacher: true
         };
       });
 
