@@ -11,6 +11,8 @@ import Tooltip from 'atoms/Tooltip';
 import {GlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
+import useSearch from '@customHooks/useSearch';
+import Highlighted from '@components/Atoms/Highlighted';
 
 interface RoomListProps {
   instId: string;
@@ -36,7 +38,7 @@ const RoomsList = (props: RoomListProps) => {
   const [allRooms, setAllRooms] = useState([]);
   const [staffList, setStaffList] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [searchInput, setSearchInput] = useState('');
+
   const [institutionList, setInstitutionList] = useState<any>([]);
   const [selectedInstitution, setSelectedInstitution] = useState<any>({});
   const [selectedStaff, setSelectedStaff] = useState<any>({});
@@ -110,8 +112,16 @@ const RoomsList = (props: RoomListProps) => {
 
       const newList = list.data.listRooms.items;
 
-      setRoomList(newList);
-      setAllRooms(newList);
+      const updated = newList.map((item: any) => {
+        return {
+          ...item,
+          institutionId: item.institution?.id,
+          institutionName: item.institution?.name
+        };
+      });
+
+      setRoomList(updated);
+      setAllRooms(updated);
       setLoading(false);
     } catch {
       setMessages({
@@ -140,71 +150,83 @@ const RoomsList = (props: RoomListProps) => {
 
   const instituteChange = (_: string, name: string, value: string) => {
     setSelectedInstitution({name, id: value});
-    onSearch(searchInput, value, selectedStaff?.id);
+    updateRoomList(value);
   };
 
   const handleStaffChange = (_: string, name: string, value: string) => {
     setSelectedStaff({name, id: value});
-    onSearch(searchInput, selectedInstitution?.id, value);
+    // onSearch(searchInput, selectedInstitution?.id, value);
   };
 
-  const onSearch = (
-    searchValue: string,
-    institutionId?: string,
-    staffMemberId?: string
-  ) => {
-    setRoomList(
-      [...allRooms].filter(
-        (item: any) =>
-          (searchValue
-            ? item.name?.toLowerCase().includes(searchValue.toLowerCase())
-            : true) &&
-          (institutionId ? item.institution?.id === institutionId : true) &&
-          (staffMemberId ? item.teacherAuthID === staffMemberId : true)
-      )
-    );
-    history.push(
-      `/dashboard/manage-institutions/institution/${institutionId}/class-rooms`
-    );
-    // if (searchValue && institutionId && staffMemberId) {
-    //   setRoomList(
-    //     [...allRooms].filter(
-    //       (item: any) =>
-    //         item.name?.toLowerCase().includes(searchValue.toLowerCase()) &&
-    //         item.institution?.id === institutionId
-    //     )
-    //   );
-    // }
-    // if (searchValue && institutionId) {
-    //   setRoomList(
-    //     [...allRooms].filter(
-    //       (item: any) =>
-    //         item.name?.toLowerCase().includes(searchValue.toLowerCase()) &&
-    //         item.institution?.id === institutionId
-    //     )
-    //   );
-    // } else if (institutionId) {
-    //   setRoomList(
-    //     [...allRooms].filter((item: any) => item.institution?.id === institutionId)
-    //   );
-    // } else if (searchValue) {
-    //   setRoomList(
-    //     [...allRooms].filter((item: any) =>
-    //       item.name?.toLowerCase().includes(searchValue.toLowerCase())
-    //     )
-    //   );
-    // } else {
-    //   setRoomList(allRooms);
-    // }
+  const {
+    searchInput,
+    setSearch,
+    checkSearchQueryFromUrl,
+    filterBySearchQuery,
+    removeSearchAction,
+    searchAndFilter,
+    setSearchInput
+  } = useSearch([...roomList], ['name', 'institutionName']);
+
+  const [filteredList, setFilteredList] = useState([...roomList]);
+
+  useEffect(() => {
+    if (!loading && roomList.length > 0) {
+      const query = checkSearchQueryFromUrl();
+      if (query) {
+        const items = filterBySearchQuery(query);
+        if (Boolean(items)) {
+          setFilteredList(items);
+        }
+      }
+    }
+  }, [loading]);
+
+  const updateRoomList = (institutionId: string) => {
+    const filteredByInstitution = filterBySearchQuery(institutionId, ['institutionId']);
+
+    if (Boolean(filteredByInstitution)) {
+      setFilteredList(filteredByInstitution);
+      setSearchInput({...searchInput, isActive: true});
+    } else {
+      removeSearchAction();
+    }
   };
 
-  const removeSearchAction = () => {
-    setSearchInput('');
-    onSearch('', selectedInstitution?.id, selectedStaff?.id);
+  const searchRoom = () => {
+    const searched = searchAndFilter(searchInput.value);
+    if (Boolean(searched)) {
+      setFilteredList(searched);
+    } else {
+      removeSearchAction();
+    }
   };
+
+  const finalList = searchInput.isActive ? filteredList : roomList;
+
+  // const onSearch = (
+  //   searchValue: string,
+  //   institutionId?: string,
+  //   staffMemberId?: string
+  // ) => {
+  //   setRoomList(
+  //     [...allRooms].filter(
+  //       (item: any) =>
+  //         (searchValue
+  //           ? item.name?.toLowerCase().includes(searchValue.toLowerCase())
+  //           : true) &&
+  //         (institutionId ? item.institution?.id === institutionId : true) &&
+  //         (staffMemberId ? item.teacherAuthID === staffMemberId : true)
+  //     )
+  //   );
+  //   history.push(
+  //     `/dashboard/manage-institutions/institution/${institutionId}/class-rooms`
+  //   );
+  // };
 
   const onInstitutionSelectionRemove = () => {
     setSelectedInstitution({});
+    setSearchInput({...searchInput, isActive: false});
     history.push(
       `/dashboard/manage-institutions/institution/${associateInstitute[0].institution.id}/class-rooms`
     );
@@ -213,7 +235,7 @@ const RoomsList = (props: RoomListProps) => {
 
   const onStaffSelectionRemove = () => {
     setSelectedStaff({});
-    onSearch(searchInput, selectedInstitution?.id, '');
+    // onSearch(searchInput, selectedInstitution?.id, '');
   };
 
   return (
@@ -245,11 +267,10 @@ const RoomsList = (props: RoomListProps) => {
               )}
               <SearchInput
                 dataCy="classroom-search-input"
-                value={searchInput}
-                onChange={(value) => setSearchInput(value)}
-                onKeyDown={() =>
-                  onSearch(searchInput, selectedInstitution?.id, selectedStaff?.id)
-                }
+                value={searchInput.value}
+                onChange={setSearch}
+                disabled={loading}
+                onKeyDown={searchRoom}
                 closeAction={removeSearchAction}
                 style={`mr-4 w-auto md:w-40 lg:w-48 mb-8`}
               />
@@ -284,7 +305,7 @@ const RoomsList = (props: RoomListProps) => {
               </p>
             </div>
           </div>
-        ) : roomList.length ? (
+        ) : finalList.length ? (
           <div className="table-custom-responsive max-h-88 overflow-y-auto">
             <table className="border-collapse table-auto w-full table-hover table-striped">
               <thead className="thead-light">
@@ -319,7 +340,7 @@ const RoomsList = (props: RoomListProps) => {
                 </tr>
               </thead>
               <tbody>
-                {roomList.map((item: any, i: number) => {
+                {finalList.map((item: any, i: number) => {
                   return (
                     <tr key={i} className={``}>
                       <td className={''}>{i + 1}.</td>
@@ -333,13 +354,16 @@ const RoomsList = (props: RoomListProps) => {
                                 `/dashboard/manage-institutions/institution/${item.institution?.id}/edit?back=${match.url}`
                               );
                           }}>
-                          {item.institution?.name}
+                          <Highlighted
+                            text={item?.institutionName}
+                            highlight={searchInput.value}
+                          />
                         </td>
                       )}
                       <td
                         onClick={() => editCurrentRoom(item.id, item.institutionID)}
                         className={`text-s leading-4 font-medium whitespace-normal break-normal`}>
-                        {item.name}
+                        <Highlighted text={item.name} highlight={searchInput.value} />
                       </td>
                       <td className="text-s leading-4 whitespace-normal break-normal">
                         {item.teacher?.firstName || ''} {item.teacher?.lastName || ''}
