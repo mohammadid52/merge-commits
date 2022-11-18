@@ -296,7 +296,7 @@ export const UnitList = ({instId}: any) => {
           borderBottom
           shadowOff
           withButton={
-            <div className={`flex gap-x-4 justify-end items-center flex-wrap`}>
+            <div className={`w-auto flex gap-x-4 justify-end items-center flex-wrap`}>
               {isSuperAdmin && (
                 <Selector
                   placeholder={UnitLookupDict[userLanguage]['SELECT_INSTITUTION']}

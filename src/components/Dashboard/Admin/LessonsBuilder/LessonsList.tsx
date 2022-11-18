@@ -462,7 +462,7 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
             borderBottom
             shadowOff
             withButton={
-              <div className={`flex gap-x-4 justify-end items-center flex-wrap`}>
+              <div className={`w-auto flex gap-x-4 justify-end items-center flex-wrap`}>
                 {isSuperAdmin && (
                   <Selector
                     placeholder={LessonsListDict[userLanguage]['SELECT_INSTITUTION']}

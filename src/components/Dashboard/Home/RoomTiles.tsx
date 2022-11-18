@@ -138,7 +138,7 @@ const RoomTiles = (props: {
         withButton={
           classList &&
           classList.length > 3 && (
-            <div className="flex justify-end">
+            <div className="flex w-auto justify-end">
               <Buttons
                 label={!showMore ? 'Show All' : 'Show Few'}
                 onClick={animateOnShowMore}

@@ -942,7 +942,7 @@ const Anthology = ({
               fontSize="xl"
               withButton={
                 roomId ? (
-                  <div className="flex items-end justify-end">
+                  <div className="w-auto flex items-end justify-end">
                     <a
                       className="w-auto hover:underline iconoclast:text-main curate:text-main"
                       href={`/dashboard/classroom/${roomId}`}>

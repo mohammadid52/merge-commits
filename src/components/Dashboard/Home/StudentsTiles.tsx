@@ -91,9 +91,9 @@ const StudentsTiles = (props: {
         extraClass="leading-6 text-gray-900"
         withButton={
           <div
-            className={`flex items-center justify-${
+            className={`flex items-center w-auto justify-${
               list.length > 12 && isTeacher ? 'end' : 'end'
-            } w-full`}>
+            } `}>
             {isTeacher && (
               <div className="w-auto">
                 <SearchInput
