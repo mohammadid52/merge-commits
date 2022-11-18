@@ -2,18 +2,108 @@ import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import React, {Fragment, useContext, useEffect, useState} from 'react';
 import {useHistory, useRouteMatch} from 'react-router';
 
+import useAuth from '@customHooks/useAuth';
+import {getLocalStorageData} from '@utilities/localStorage';
+import {ModelRoomFilterInput} from 'API';
 import {getAsset} from 'assets';
 import AddButton from 'atoms/Buttons/AddButton';
 import SearchInput from 'atoms/Form/SearchInput';
 import Selector from 'atoms/Form/Selector';
 import Loader from 'atoms/Loader';
-import Tooltip from 'atoms/Tooltip';
 import {GlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
+import * as queries from 'graphql/queries';
 import useDictionary from 'customHooks/dictionary';
 import useSearch from '@customHooks/useSearch';
 import Highlighted from '@components/Atoms/Highlighted';
+import {Status} from '../../UserManagement/UserStatus';
 
+const Room = ({
+  i,
+  editCurrentRoom,
+  item,
+  searchInput
+}: {
+  i: number;
+  searchInput?: string;
+  editCurrentRoom?: (id: string, instId: string) => void;
+  item?: any;
+}) => {
+  const {isSuperAdmin, isAdmin, isBuilder} = useAuth();
+  const match = useRouteMatch();
+  const history = useHistory();
+
+  return (
+    <tr
+      title="click to view/edit details"
+      style={{cursor: 'pointer !important'}}
+      className={`cursor-pointer hover:iconoclast:bg-200 hover:iconoclast:text-600
+hover:curate:bg-200 hover:curate:text-600
+`}>
+      <td className={''}>{i + 1}.</td>
+      {(isSuperAdmin || isAdmin || isBuilder) && (
+        <td
+          className="text-xs leading-4 font-medium whitespace-normal break-normal"
+          onClick={(e) => {
+            e.stopPropagation();
+            isSuperAdmin &&
+              history.push(
+                `/dashboard/manage-institutions/institution/${item.institution?.id}/edit?back=${match.url}`
+              );
+          }}>
+          <Highlighted text={item.institutionName} highlight={searchInput} />
+        </td>
+      )}
+      <td
+        onClick={() => !item?.isCoteacher && editCurrentRoom(item.id, item.institutionID)}
+        className={`text-xs leading-4 font-medium whitespace-normal break-normal`}>
+        <Highlighted text={item.name} highlight={searchInput} />
+      </td>
+
+      <td className="text-xs leading-4 whitespace-normal break-normal">
+        {item.teacher?.firstName || ''} {item.teacher?.lastName || ''}
+      </td>
+
+      {/* <td className="text-xs leading-4 whitespace-normal break-normal">
+        {coTeachers.length > 0 ? (
+          <Popover setShow={setShowPopover} content={content} show={showPopover}>
+            See co teachers
+          </Popover>
+        ) : (
+          '-'
+        )}
+      </td> */}
+
+      <td
+        onClick={() => !item?.isCoteacher && editCurrentRoom(item.id, item.institutionID)}
+        className="text-xs leading-4  whitespace-normal break-normal">
+        {item?.curricula?.items
+          ?.map((d: any) => {
+            return d?.curriculum?.name;
+          })
+          .join(',') || '-'}
+      </td>
+      <td className="text-xs leading-4 whitespace-normal break-normal">
+        {/* <div className="w-auto md:w-32 lg:w-28">
+    </div> */}
+
+        <Status
+          className={
+            item.status?.toLowerCase() === 'active'
+              ? 'bg-green-200 text-green-600'
+              : 'bg-yellow-200 text-yellow-600'
+          }>
+          {item.status ? item.status : 'ACTIVE'}
+        </Status>
+      </td>
+      {/* <td
+    className={`text-indigo-600 text-s leading-4 font-medium whitespace-normal break-normal h-6 flex px-4 items-center cursor-pointer text-left py-2 ${theme.textColor[themeColor]}`}
+    onClick={() => editCurrentRoom(item.id, item.institutionID)}>
+    {InstitueRomms[userLanguage]['EDIT']}
+  </td> */}
+    </tr>
+  );
+};
 interface RoomListProps {
   instId: string;
   instName: string;
@@ -56,11 +146,14 @@ const RoomsList = (props: RoomListProps) => {
     );
   };
 
+  const roomData = getLocalStorageData('room_info');
   const editCurrentRoom = (id: string, instId: string) => {
     history.push(
       isSuperAdmin
         ? `/dashboard/manage-institutions/room-edit/${id}`
-        : `/dashboard/manage-institutions/institution/${instId}/room-edit/${id}`
+        : `/dashboard/manage-institutions/institution/${
+            instId || roomData.institutionID
+          }/room-edit/${id}`
     );
   };
 
@@ -104,26 +197,62 @@ const RoomsList = (props: RoomListProps) => {
     }
   };
 
+  const {authId, isFellow, isTeacher} = useAuth();
+
   const fetchRoomList = async () => {
     try {
-      const list: any = await API.graphql(
-        graphqlOperation(customQueries.listRoomsDashboard)
+      const filter: ModelRoomFilterInput =
+        isFellow || isTeacher
+          ? {
+              teacherAuthID: {eq: authId}
+            }
+          : {};
+      const assignedRoomsAsTeachers: any = await API.graphql(
+        graphqlOperation(customQueries.listRoomsDashboard, {filter: filter})
       );
 
-      const newList = list.data.listRooms.items;
+      let assignedRoomsAsCoTeacher: any;
 
-      const updated = newList.map((item: any) => {
+      if (isFellow || isTeacher) {
+        assignedRoomsAsCoTeacher = await API.graphql(
+          graphqlOperation(queries.listRoomCoTeachers, {
+            filter: filter
+          })
+        );
+      }
+
+      const teachersList = assignedRoomsAsTeachers?.data?.listRooms?.items;
+      const coTeachersList =
+        isFellow || isTeacher
+          ? assignedRoomsAsCoTeacher?.data?.listRoomCoTeachers?.items || []
+          : [];
+
+      // cause co teachers list return different data structure
+      const updatedCoTeachersList = coTeachersList.map((coTeacher: any) => {
+        const {room, teacher} = coTeacher;
         return {
-          ...item,
-          institutionId: item.institution?.id,
-          institutionName: item.institution?.name
+          ...coTeacher,
+          name: room?.name || '',
+          status: teacher?.status || '',
+          isCoteacher: true
         };
       });
 
-      setRoomList(updated);
-      setAllRooms(updated);
+      const merged = [...teachersList, ...updatedCoTeachersList];
+
+      const updatedMerge = merged.map((room: any) => {
+        return {
+          ...room,
+          institutionId: room.institution?.id,
+          institutionName: room.institution?.name
+        };
+      });
+
+      setRoomList(updatedMerge);
+      setAllRooms(updatedMerge);
       setLoading(false);
-    } catch {
+    } catch (e) {
+      console.error(e);
       setMessages({
         show: true,
         message: InstitueRomms[userLanguage]['messages']['fetcherr'],
@@ -325,6 +454,9 @@ const RoomsList = (props: RoomListProps) => {
                   <th className="bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                     {InstitueRomms[userLanguage]['TEACHER']}
                   </th>
+                  {/* <th className="bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                    {InstitueRomms[userLanguage]['CO_TEACHER']}
+                  </th> */}
 
                   <th className="bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                     {InstitueRomms[userLanguage]['CURRICULUM']}
@@ -334,66 +466,21 @@ const RoomsList = (props: RoomListProps) => {
                     {InstitueRomms[userLanguage]['STATUS']}
                   </th>
 
-                  <th className="bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                  {/* <th className="bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                     {InstitueRomms[userLanguage]['ACTION']}
-                  </th>
+                  </th> */}
                 </tr>
               </thead>
               <tbody>
                 {finalList.map((item: any, i: number) => {
                   return (
-                    <tr key={i} className={``}>
-                      <td className={''}>{i + 1}.</td>
-                      {(isSuperAdmin || isAdmin || isBuilder) && (
-                        <td
-                          className="text-s leading-4 font-medium whitespace-normal break-normal"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            isSuperAdmin &&
-                              history.push(
-                                `/dashboard/manage-institutions/institution/${item.institution?.id}/edit?back=${match.url}`
-                              );
-                          }}>
-                          <Highlighted
-                            text={item?.institutionName}
-                            highlight={searchInput.value}
-                          />
-                        </td>
-                      )}
-                      <td
-                        onClick={() => editCurrentRoom(item.id, item.institutionID)}
-                        className={`text-s leading-4 font-medium whitespace-normal break-normal`}>
-                        <Highlighted text={item.name} highlight={searchInput.value} />
-                      </td>
-                      <td className="text-s leading-4 whitespace-normal break-normal">
-                        {item.teacher?.firstName || ''} {item.teacher?.lastName || ''}
-                      </td>
-                      <td
-                        onClick={() => editCurrentRoom(item.id, item.institutionID)}
-                        className="text-s leading-4  whitespace-normal break-normal">
-                        {item?.curricula?.items
-                          ?.map((d: any) => {
-                            return d?.curriculum?.name;
-                          })
-                          .join(',') || '-'}
-                      </td>
-                      <td className="text-s leading-4 whitespace-normal break-normal">
-                        <div className="w-auto md:w-32 lg:w-28">
-                          {item.status ? item.status : 'ACTIVE'}
-                        </div>
-                      </td>
-                      <td
-                        data-cy="edit-classroom"
-                        className={`text-indigo-600 text-s leading-4 font-medium whitespace-normal break-normal h-6 flex px-4 items-center cursor-pointer text-left py-2 ${theme.textColor[themeColor]}`}
-                        onClick={() => editCurrentRoom(item.id, item.institutionID)}>
-                        <Tooltip
-                          additionalClass="mt-9"
-                          text="Click to edit class"
-                          placement="left">
-                          {InstitueRomms[userLanguage]['EDIT']}
-                        </Tooltip>
-                      </td>
-                    </tr>
+                    <Room
+                      searchInput={searchInput.value}
+                      item={item}
+                      i={i}
+                      key={i}
+                      editCurrentRoom={editCurrentRoom}
+                    />
                   );
                 })}
               </tbody>

@@ -13,7 +13,7 @@ import {LessonEditDict} from 'dictionary/dictionary.iconoclast';
 import ModalPopUp from 'molecules/ModalPopUp';
 import StepComponent, {IStepElementInterface} from 'atoms/StepComponent';
 import CourseDynamics from './CourseDynamics/CourseDynamics';
-import ClassRoomForm from './ClassRoomForm';
+import ClassRoomForm, {fetchSingleCoTeacher} from './ClassRoomForm';
 import CourseSchedule from './CourseSchedule';
 import {BsArrowLeft} from 'react-icons/bs';
 import EditClass from '../EditClass';
@@ -35,6 +35,10 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
   const isSuperAdmin: boolean = state.user.role === 'SUP';
   const [activeStep, setActiveStep] = useState('overview');
   const [roomData, setRoomData] = useState<any>({});
+  console.log(
+    '🚀 ~ file: ClassRoomBuilder.tsx ~ line 38 ~ ClassRoomBuilder ~ roomData',
+    roomData
+  );
   const [curricularList, setCurricularList] = useState([]);
   const [prevName, setPrevName] = useState('');
   const [selectedCurrID, setSelectedCurrID] = useState('');
@@ -206,15 +210,30 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
     if (isRoomEditPage) {
       if (roomId) {
         try {
-          console.log('called from ClassRoomBuilder.tsx');
-
           const result: any = await API.graphql(
             graphqlOperation(customQueries.getRoom, {id: roomId})
           );
-          const savedData = result.data.getRoom;
+
+          let savedData = result.data.getRoom;
+          if (!savedData) {
+            savedData = await fetchSingleCoTeacher(roomId);
+            savedData = {
+              ...savedData,
+              coTeachers: savedData?.room?.coTeachers || [],
+              curricula: {
+                ...savedData.room.curricula
+              },
+              name: savedData.room.name,
+              institution: savedData.room.institution,
+              activeSyllabus: savedData?.room?.activeSyllabus,
+              status: savedData?.room?.status,
+              conferenceCallLink: savedData?.room?.conferenceCallLink,
+              location: savedData?.room?.location
+            };
+          }
           const curricularId = savedData.curricula.items[0]?.curriculumID;
 
-          const coTeachers = savedData.coTeachers?.items;
+          const coTeachers = savedData.coTeachers?.items || [];
           setRoomData({
             ...savedData,
             institute: {
@@ -223,7 +242,7 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
               value: savedData.institution?.name
             },
             advisorOptions: [
-              ...coTeachers.map((teacher: any) => ({
+              ...coTeachers?.map((teacher: any) => ({
                 id: teacher.teacherID,
                 name: `${teacher.teacher.firstName} ${teacher.teacher.lastName}`,
                 authId: teacher.teacherAuthID,
@@ -241,7 +260,8 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
           });
           setPrevName(savedData.name);
           setSelectedCurrID(curricularId);
-        } catch {
+        } catch (e) {
+          console.error(e);
           setMessages({
             show: true,
             message: RoomEDITdict[userLanguage]['messages']['errfetch'],

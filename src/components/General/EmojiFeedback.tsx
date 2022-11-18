@@ -62,6 +62,7 @@ const EmojiCard = ({
 
   return (
     <div
+      data-cy={'emoji-feedback-card'}
       onClick={() => {
         onSave(label);
       }}
@@ -231,7 +232,7 @@ const EmojiFeedback = () => {
       if (response !== 'none') {
         setNotification({
           show: true,
-          title: '😀 Thanks for checking in today',
+          title: 'Thanks for checking in today',
           type: 'success'
         });
       }
