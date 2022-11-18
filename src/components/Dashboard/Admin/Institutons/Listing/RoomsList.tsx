@@ -17,6 +17,7 @@ import useDictionary from 'customHooks/dictionary';
 import useSearch from '@customHooks/useSearch';
 import Highlighted from '@components/Atoms/Highlighted';
 import {Status} from '../../UserManagement/UserStatus';
+import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 
 const Room = ({
   i,
@@ -33,6 +34,8 @@ const Room = ({
   const match = useRouteMatch();
   const history = useHistory();
 
+  const commonClass = 'text-base leading-4 font-medium whitespace-normal break-normal';
+
   return (
     <tr
       title="click to view/edit details"
@@ -43,7 +46,7 @@ hover:curate:bg-200 hover:curate:text-600
       <td className={''}>{i + 1}.</td>
       {(isSuperAdmin || isAdmin || isBuilder) && (
         <td
-          className="text-xs leading-4 font-medium whitespace-normal break-normal"
+          className={commonClass}
           onClick={(e) => {
             e.stopPropagation();
             isSuperAdmin &&
@@ -56,15 +59,15 @@ hover:curate:bg-200 hover:curate:text-600
       )}
       <td
         onClick={() => !item?.isCoteacher && editCurrentRoom(item.id, item.institutionID)}
-        className={`text-xs leading-4 font-medium whitespace-normal break-normal`}>
+        className={commonClass}>
         <Highlighted text={item.name} highlight={searchInput} />
       </td>
 
-      <td className="text-xs leading-4 whitespace-normal break-normal">
+      <td className={commonClass}>
         {item.teacher?.firstName || ''} {item.teacher?.lastName || ''}
       </td>
 
-      {/* <td className="text-xs leading-4 whitespace-normal break-normal">
+      {/* <td className=commonClass>
         {coTeachers.length > 0 ? (
           <Popover setShow={setShowPopover} content={content} show={showPopover}>
             See co teachers
@@ -76,14 +79,14 @@ hover:curate:bg-200 hover:curate:text-600
 
       <td
         onClick={() => !item?.isCoteacher && editCurrentRoom(item.id, item.institutionID)}
-        className="text-xs leading-4  whitespace-normal break-normal">
+        className={commonClass}>
         {item?.curricula?.items
           ?.map((d: any) => {
             return d?.curriculum?.name;
           })
           .join(',') || '-'}
       </td>
-      <td className="text-xs leading-4 whitespace-normal break-normal">
+      <td className={commonClass}>
         {/* <div className="w-auto md:w-32 lg:w-28">
     </div> */}
 
@@ -294,7 +297,8 @@ const RoomsList = (props: RoomListProps) => {
     filterBySearchQuery,
     removeSearchAction,
     searchAndFilter,
-    setSearchInput
+    setSearchInput,
+    findRelatedSearch
   } = useSearch([...roomList], ['name', 'institutionName']);
 
   const [filteredList, setFilteredList] = useState([...roomList]);
@@ -371,39 +375,41 @@ const RoomsList = (props: RoomListProps) => {
     <div className="flex m-auto justify-center p-4 pt-0 pl-md-12">
       <div className="">
         <div className="flex flex-col lg:flex-row justify-start lg:justify-between items-center">
-          <h3 className="text-lg leading-6 text-gray-600 w-full lg:w-auto mb-8">
-            {InstitueRomms[userLanguage]['TITLE']}
-          </h3>
-          <div className={`flex md:justify-end flex-wrap`}>
-            <div
-              className={`flex justify-between w-auto ${
-                isSuperAdmin || isAdmin || isBuilder ? 'lg:w-144' : ' mr-4'
-              }`}>
-              {(isSuperAdmin || isAdmin || isBuilder) && (
-                <Selector
-                  dataCy="classroom-institution"
-                  placeholder={InstitueRomms[userLanguage]['SELECT_INSTITUTION']}
-                  list={institutionList}
-                  selectedItem={selectedInstitution?.name}
-                  onChange={instituteChange}
-                  arrowHidden={true}
-                  additionalClass={`w-60 ${
-                    isSuperAdmin || isAdmin || isBuilder ? 'mr-4 mb-8' : ''
-                  }`}
-                  isClearable
-                  onClear={onInstitutionSelectionRemove}
+          <SectionTitleV3
+            title={InstitueRomms[userLanguage]['TITLE']}
+            fontSize="xl"
+            fontStyle="semibold"
+            extraClass="leading-6 text-gray-900"
+            borderBottom
+            shadowOff
+            withButton={
+              <div className={`flex gap-x-4 justify-end items-center flex-wrap`}>
+                {(isSuperAdmin || isAdmin || isBuilder) && (
+                  <Selector
+                    dataCy="classroom-institution"
+                    placeholder={InstitueRomms[userLanguage]['SELECT_INSTITUTION']}
+                    list={institutionList}
+                    selectedItem={selectedInstitution?.name}
+                    onChange={instituteChange}
+                    arrowHidden={true}
+                    additionalClass={`w-60 ${
+                      isSuperAdmin || isAdmin || isBuilder ? 'mr-4 mb-8' : ''
+                    }`}
+                    isClearable
+                    onClear={onInstitutionSelectionRemove}
+                  />
+                )}
+                <SearchInput
+                  dataCy="classroom-search-input"
+                  value={searchInput.value}
+                  onChange={setSearch}
+                  isActive={searchInput.isActive}
+                  disabled={loading}
+                  onKeyDown={searchRoom}
+                  closeAction={removeSearchAction}
+                  // style={`mr-4 w-auto md:w-40 lg:w-48 mb-8`}
                 />
-              )}
-              <SearchInput
-                dataCy="classroom-search-input"
-                value={searchInput.value}
-                onChange={setSearch}
-                disabled={loading}
-                onKeyDown={searchRoom}
-                closeAction={removeSearchAction}
-                style={`mr-4 w-auto md:w-40 lg:w-48 mb-8`}
-              />
-              {/* <Selector
+                {/* <Selector
                 placeholder={InstitueRomms[userLanguage]['SELECT_STAFF']}
                 list={staffList}
                 selectedItem={selectedStaff?.name}
@@ -415,15 +421,16 @@ const RoomsList = (props: RoomListProps) => {
                 isClearable
                 onClear={onStaffSelectionRemove}
               /> */}
-            </div>
-            {(!isSuperAdmin || !isAdmin || !isBuilder) && (
-              <AddButton
-                className="mb-8"
-                label={InstitueRomms[userLanguage]['BUTTON']['ADD']}
-                onClick={createNewRoom}
-              />
-            )}
-          </div>
+                {/* </div> */}
+                {(!isSuperAdmin || !isAdmin || !isBuilder) && (
+                  <AddButton
+                    label={InstitueRomms[userLanguage]['BUTTON']['ADD']}
+                    onClick={createNewRoom}
+                  />
+                )}
+              </div>
+            }
+          />
         </div>
         {loading ? (
           <div className="py-20 text-center mx-auto flex justify-center items-center w-full h-48">
@@ -498,11 +505,38 @@ const RoomsList = (props: RoomListProps) => {
               </div>
             )}
 
-            <p className={`text-center p-16 ${messages.isError ? 'text-red-600' : ''}`}>
-              {searchInput || selectedInstitution?.id || selectedStaff?.id
-                ? CommonlyUsedDict[userLanguage]['NO_SEARCH_RESULT']
-                : messages.message}
-            </p>
+            {messages.isError && (
+              <p className={`text-center p-16 ${messages.isError ? 'text-red-600' : ''}`}>
+                {messages.message}
+              </p>
+            )}
+            <div className="text-center mt-4">
+              <p className="text-gray-500">
+                {searchInput.isActive && !searchInput.typing
+                  ? ''
+                  : searchInput.isActive && searchInput.typing
+                  ? `Hit enter to search for ${searchInput.value}`
+                  : ''}
+                {searchInput.isActive && !searchInput.typing && (
+                  <span>
+                    No classroom found - <b>{searchInput.value}</b>.
+                    {findRelatedSearch(searchInput.value).name && (
+                      <span>
+                        Try searching for "
+                        <span
+                          className="hover:underline theme-text cursor-pointer"
+                          onClick={() => {
+                            setSearch(findRelatedSearch(searchInput.value).name);
+                          }}>
+                          {findRelatedSearch(searchInput.value).name}
+                        </span>
+                        "
+                      </span>
+                    )}
+                  </span>
+                )}
+              </p>
+            </div>
           </Fragment>
         )}
       </div>

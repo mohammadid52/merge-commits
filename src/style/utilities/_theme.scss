@@ -266,6 +266,10 @@
   .theme-border {
     border-color: $iconoclast !important;
   }
+
+  .input-wrapper:focus-within {
+    border-color: $iconoclast !important;
+  }
 }
 .curate {
   .theme-text {
@@ -275,6 +279,10 @@
     background-color: $curate !important;
   }
   .theme-border {
+    border-color: $curate !important;
+  }
+
+  .input-wrapper:focus-within {
     border-color: $curate !important;
   }
 }

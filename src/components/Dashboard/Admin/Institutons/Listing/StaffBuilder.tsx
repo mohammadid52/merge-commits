@@ -435,6 +435,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
           onChange={setSearch}
           disabled={dataLoading}
           onKeyDown={searchStaff}
+          isActive={searchInput.isActive}
           closeAction={removeSearchAction}
           style={`mt-4`}
         />

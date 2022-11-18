@@ -5,6 +5,7 @@ import React, {useContext, useState} from 'react';
 import {BiDotsVerticalRounded} from 'react-icons/bi';
 import {stringToHslColor, initials, getInitialsFromString} from 'utilities/strings';
 import {getImageFromS3Static} from 'utilities/services';
+import Highlighted from '@components/Atoms/Highlighted';
 
 interface ICurriculumListRowProps {
   index: number;
@@ -15,6 +16,7 @@ interface ICurriculumListRowProps {
   editCurrentCurricular: any;
   redirectToInstitution: () => void;
   redirectToUnit: (unitId: string) => void;
+  searchInput?: string;
 }
 
 const CurriculumListRow = ({
@@ -25,7 +27,8 @@ const CurriculumListRow = ({
   handleToggleDelete,
   editCurrentCurricular,
   redirectToInstitution,
-  redirectToUnit
+  redirectToUnit,
+  searchInput
 }: ICurriculumListRowProps) => {
   // ~~~~~~~~~~ CONTEXT_SPLITTING ~~~~~~~~~~ //
   const gContext = useContext(GlobalContext);
@@ -79,13 +82,15 @@ const CurriculumListRow = ({
             </div>
           )}
         </div>
-        <div className="ml-2">{item.name ? item.name : ''}</div>
+        <div className="ml-2">
+          <Highlighted text={item.name} highlight={searchInput} />
+        </div>
       </div>
       {isSuperAdmin && (
         <div
           className="flex w-1.5/10 items-center px-8 py-3 text-left text-sm font-medium leading-4 whitespace-normal cursor-pointer"
           onClick={redirectToInstitution}>
-          {item.institution?.name}
+          <Highlighted text={item.institutionName} highlight={searchInput} />
         </div>
       )}
       <div
