@@ -1,7 +1,6 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import Loader from '@components/Atoms/Loader';
 import {getAsset} from 'assets';
-import awsmobile from 'aws-exports';
 import Community from 'components/Community/Community';
 import InstitutionsHome from 'components/Dashboard/Admin/Institutons/InstitutionsHome';
 import QuestionBank from 'components/Dashboard/Admin/Questions/QuestionBank';
@@ -37,6 +36,14 @@ const TestCases = lazy(() => import('components/Dashboard/TestCases/TestCases'))
 const Registration = lazy(
   () => import('components/Dashboard/Admin/UserManagement/Registration')
 );
+
+const conditionalRender = (children: JSX.Element, condition: boolean) => {
+  if (condition) {
+    return children;
+  } else {
+    return <Redirect to={`/dashboard/home`} />;
+  }
+};
 
 export const reorderSyllabus = (syllabusArray: any[], sequenceArray: any[]) => {
   let getSyllabusInSequence =
@@ -117,6 +124,7 @@ export interface DashboardProps {
 
 export interface ClassroomControlProps extends DashboardProps {
   children?: React.ReactNode;
+  roomsLoading?: boolean;
   [key: string]: any;
 }
 
@@ -225,10 +233,10 @@ const Dashboard = (props: DashboardProps) => {
   // ~~~~ DISABLE ROOM LOADING FOR ADMIN ~~~ //
 
   useEffect(() => {
-    const userRole = stateUser?.role;
-    if (userRole === 'SUP' || userRole === 'ADM') {
-      setRoomsLoading(true);
-    }
+    // const userRole = stateUser?.role;
+    // if (userRole === 'SUP' || userRole === 'ADM') {
+    //   setRoomsLoading(true);
+    // }
     setLocalStorageData('last_page', 'dashboard');
   }, []);
 
@@ -258,6 +266,7 @@ const Dashboard = (props: DashboardProps) => {
 
   const getDashboardData = async (authId: string, email: string) => {
     try {
+      setRoomsLoading(true);
       const queryObj = {
         name: 'customQueries.getDashboardData',
         valueObj: {
@@ -281,10 +290,12 @@ const Dashboard = (props: DashboardProps) => {
       console.error('getDashbaordData -> ', e);
     } finally {
       // need to do some cleanup
+      setRoomsLoading(false);
     }
   };
 
   const getDashboardDataForTeachers = async (teacherAuthID: string) => {
+    setRoomsLoading(true);
     try {
       const dashboardDataFetch: any = await API.graphql(
         graphqlOperation(customQueries.getDashboardDataForTeachers, {
@@ -317,6 +328,7 @@ const Dashboard = (props: DashboardProps) => {
       console.error('getDashboardDataForTeachers -> ', e);
     } finally {
       // need to do some cleanup
+      setRoomsLoading(false);
     }
   };
   useEffect(() => {
@@ -783,6 +795,7 @@ const Dashboard = (props: DashboardProps) => {
         activeRoomInfo={activeRoomInfo}
         setActiveRoomInfo={setActiveRoomInfo}
         handleRoomSelection={handleRoomSelection}
+        roomsLoading={roomsLoading}
       />
     ) : (
       <Home
@@ -791,17 +804,20 @@ const Dashboard = (props: DashboardProps) => {
         activeRoomInfo={activeRoomInfo}
         setActiveRoomInfo={setActiveRoomInfo}
         handleRoomSelection={handleRoomSelection}
+        roomsLoading={roomsLoading}
       />
     );
 
   // check if url contains game-changers
   const isGameChangers = window.location.href.includes('game-changers');
-  const isLocalhost = window.location.hostname === 'localhost';
-  const isDev = awsmobile.aws_user_files_s3_bucket.includes('dev');
+
+  const isStudent = userData.role === 'ST';
 
   return (
     <>
-      <div id="top-menu" className={`w-full ${isGameChangers ? 'bg-black' : 'bg-white'}`}>
+      <div
+        id="top-menu"
+        className={`w-full ${isGameChangers && isStudent ? 'bg-black' : 'bg-white'}`}>
         <div className="flex justify-between items-center">
           <div className="w-auto mx-5">
             <img
@@ -888,25 +904,37 @@ const Dashboard = (props: DashboardProps) => {
                   </ErrorBoundary>
                 )}
               />
+
               <Route
                 // exact
                 path={`${match.url}/game-changers`}
-                render={() => (
-                  <ErrorBoundary fallback={<h1>Game changers is not working</h1>}>
-                    <GameChangerProvider>
-                      <GameChangers />
-                    </GameChangerProvider>
-                  </ErrorBoundary>
-                )}
+                render={() => {
+                  return conditionalRender(
+                    <ErrorBoundary fallback={<h1>Game changers is not working</h1>}>
+                      <GameChangerProvider>
+                        <GameChangers />
+                      </GameChangerProvider>
+                    </ErrorBoundary>,
+                    isStudent
+                  );
+                }}
               />
-              ]
-              {(userData.role === 'SUP' ||
-                userData.role === 'ADM' ||
-                userData.role === 'TR' ||
-                userData.role === 'FLW' ||
-                userData.role === 'BLD') && (
-                <Route exact path={`${match.url}/csv`} render={() => <Csv />} />
-              )}
+
+              <Route
+                exact
+                path={`${match.url}/csv`}
+                render={() =>
+                  conditionalRender(
+                    <Csv />,
+                    userData.role === 'SUP' ||
+                      userData.role === 'ADM' ||
+                      userData.role === 'TR' ||
+                      userData.role === 'FLW' ||
+                      userData.role === 'BLD'
+                  )
+                }
+              />
+
               <Route
                 exact
                 path={`${match.url}/classroom/:roomId`}

@@ -1,20 +1,19 @@
-import {setLocalStorageData} from 'utilities/localStorage';
 import isEmpty from 'lodash/isEmpty';
 import React, {useContext, useEffect, useState} from 'react';
 import {BsFillInfoCircleFill} from 'react-icons/bs';
+import {setLocalStorageData} from 'utilities/localStorage';
 
+import Loader from '@components/Atoms/Loader';
 import {getAsset} from 'assets';
+import SectionTitleV3 from 'atoms/SectionTitleV3';
+import InformationalWalkThrough from 'components/Dashboard/Admin/Institutons/InformationalWalkThrough/InformationalWalkThrough';
 import {GlobalContext} from 'contexts/GlobalContext';
 import {getImageFromS3} from 'utilities/services';
-import SectionTitleV3 from 'atoms/SectionTitleV3';
-import ComponentLoading from '../../Lesson/Loading/ComponentLoading';
-import InformationalWalkThrough from 'components/Dashboard/Admin/Institutons/InformationalWalkThrough/InformationalWalkThrough';
 import {ClassroomControlProps} from '../Dashboard';
+import HeaderTextBar from '../HeaderTextBar/HeaderTextBar';
 import RoomTiles from './RoomTiles';
 import StudentsTiles from './StudentsTiles';
 import TeacherRows from './TeacherRows';
-import HeaderTextBar from '../HeaderTextBar/HeaderTextBar';
-import Loader from '@components/Atoms/Loader';
 
 export interface ModifiedListProps {
   id: any;
@@ -36,13 +35,11 @@ export interface ModifiedListProps {
 }
 
 const HomeForTeachers = (props: ClassroomControlProps) => {
-  const {homeData, handleRoomSelection} = props;
+  const {homeData, handleRoomSelection, roomsLoading} = props;
 
   const {state, dispatch, theme, clientKey} = useContext(GlobalContext);
   const dashboardBanner1 = getAsset(clientKey, 'dashboardBanner2');
-  const [loading, setLoading] = useState(false);
   const [openWalkThroughModal, setOpenWalkThroughModal] = useState(false);
-  const themeColor = getAsset(clientKey, 'themeClassName');
 
   const user = !isEmpty(state)
     ? {firstName: state.user.firstName, preferredName: state.user.firstName}
@@ -258,6 +255,7 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
             {/* Classroom Section */}
 
             <RoomTiles
+              roomsLoading={roomsLoading}
               isTeacher
               handleRoomSelection={handleRoomSelection}
               classList={getClassList()}

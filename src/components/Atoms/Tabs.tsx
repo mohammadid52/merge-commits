@@ -2,6 +2,7 @@ import React, {Fragment, useContext, useRef} from 'react';
 import {GlobalContext} from 'contexts/GlobalContext';
 import {Menu, Transition} from '@headlessui/react';
 import {ChevronDownIcon, ChevronUpIcon} from '@heroicons/react/solid';
+import useAuth from '@customHooks/useAuth';
 
 export interface ITabElements {
   title: string;
@@ -113,8 +114,13 @@ const Tabs = ({tabsData, updateTab, currentTab}: ITabsProps) => {
   const {theme} = useContext(GlobalContext);
   const isGameChangers = window.location.href.includes('game-changers');
 
+  const {isStudent} = useAuth();
+
   return (
-    <div className={`w-full ${isGameChangers ? 'bg-black' : 'bg-white'} rounded-lg p-2`}>
+    <div
+      className={`w-full ${
+        isGameChangers && isStudent ? 'bg-black' : 'bg-white'
+      } rounded-lg p-2`}>
       <div className="sm:hidden">
         <label htmlFor="tabs" className="sr-only">
           Select a tab
