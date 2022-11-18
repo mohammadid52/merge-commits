@@ -34,7 +34,7 @@ const Room = ({
   const match = useRouteMatch();
   const history = useHistory();
 
-  const commonClass = 'text-base leading-4 font-medium whitespace-normal break-normal';
+  const commonClass = 'text-sm leading-4 font-medium whitespace-normal break-normal';
 
   return (
     <tr
@@ -59,11 +59,11 @@ hover:curate:bg-200 hover:curate:text-600
       )}
       <td
         onClick={() => !item?.isCoteacher && editCurrentRoom(item.id, item.institutionID)}
-        className={commonClass}>
+        className={`${commonClass}`}>
         <Highlighted text={item.name} highlight={searchInput} />
       </td>
 
-      <td className={commonClass}>
+      <td className={`${commonClass} text-gray-500`}>
         {item.teacher?.firstName || ''} {item.teacher?.lastName || ''}
       </td>
 
@@ -79,22 +79,22 @@ hover:curate:bg-200 hover:curate:text-600
 
       <td
         onClick={() => !item?.isCoteacher && editCurrentRoom(item.id, item.institutionID)}
-        className={commonClass}>
+        className={`${commonClass} text-gray-500`}>
         {item?.curricula?.items
           ?.map((d: any) => {
             return d?.curriculum?.name;
           })
           .join(',') || '-'}
       </td>
-      <td className={commonClass}>
+      <td className={`${commonClass} text-gray-500`}>
         {/* <div className="w-auto md:w-32 lg:w-28">
     </div> */}
 
         <Status
           className={
             item.status?.toLowerCase() === 'active'
-              ? 'bg-green-200 text-green-600'
-              : 'bg-yellow-200 text-yellow-600'
+              ? 'bg-green-100 text-green-800'
+              : 'bg-yellow-100 text-yellow-800'
           }>
           {item.status ? item.status : 'ACTIVE'}
         </Status>
