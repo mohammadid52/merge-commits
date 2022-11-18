@@ -62,6 +62,7 @@ const EmojiCard = ({
 
   return (
     <div
+      data-cy={'emoji-feedback-card'}
       onClick={() => {
         onSave(label);
       }}

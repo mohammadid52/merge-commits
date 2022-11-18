@@ -88,8 +88,8 @@ describe('Classroom Manager', {defaultCommandTimeout: 20000}, () => {
     cy.wait(5000);
     cy.log('Check if there is a emoji feedback');
     cy.get('body').then((body) => {
-      if (body.find('[data-cy="emoji-feedback-button"]').length > 0) {
-        cy.dataCy('emoji-feedback-button').click();
+      if (body.find('[data-cy="emoji-feedback-card"]').length > 0) {
+        cy.dataCy('emoji-feedback-card').first().click();
       }
     });
     cy.log('Click on the notebook link');

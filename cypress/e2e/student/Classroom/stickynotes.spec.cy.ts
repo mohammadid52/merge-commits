@@ -20,8 +20,8 @@ const loadActiveRoomData = () => {
   // go to classroom page to load activeRoomData.. without this survey won't save data
   cy.get('h2').should('contain', 'Your Classrooms');
   cy.get('body').then((body) => {
-    if (body.find('[data-cy="emoji-feedback-button"]').length > 0) {
-      cy.dataCy('emoji-feedback-button').click(); // If emoji feedback popup is open click on save button
+    if (body.find('[data-cy="emoji-feedback-card"]').length > 0) {
+      cy.dataCy('emoji-feedback-card').first().click(); // If emoji feedback popup is open click on save button
     }
   });
   cy.dataCy('classroom-cards').first().click({force: true});

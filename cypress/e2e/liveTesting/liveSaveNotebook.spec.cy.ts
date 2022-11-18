@@ -38,8 +38,8 @@ describe('Production Save Notebooks Check', () => {
     cy.wait(10000); // wait for user to login
     cy.url().should('contain', urlConfig.IADashboardUrl);
     cy.get('body').then((body) => {
-      if (body.find('[data-cy="emoji-feedback-button"]').length > 0) {
-        cy.dataCy('emoji-feedback-button').click(); // if emoji feedback popup is open click on save button
+      if (body.find('[data-cy="emoji-feedback-card"]').length > 0) {
+        cy.dataCy('emoji-feedback-card').first().click(); // If emoji feedback popup is open click on save button
       }
     });
 
