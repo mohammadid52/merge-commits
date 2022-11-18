@@ -282,70 +282,74 @@ const EmojiFeedback = () => {
   }, []);
 
   return (
-    showSentimentModal && (
-      <Modal
-        title={'How are you today?'}
-        scrollHidden
-        intenseOpacity
-        width={showJournal ? 'w-full' : 'w-auto'}
-        modalCloseId="sentiment-modal-close"
-        closeAction={onCancel}
-        closeOnBackdrop={false}
-        hidePadding
-        className="bg-white rounded-b-xl"
-        showHeader
-        showHeaderBorder
-        showFooter={false}>
-        {!showJournal && (
-          <>
-            <div className="relative rounded-b-xl w-auto grid bg-white grid-cols-2 p-4 gap-4">
-              <AnimatedContainer delay=".2s" show={show.great}>
-                {show.great && (
-                  <EmojiCard
-                    {...commonEmojiProps}
-                    label="great"
-                    eye={points['great']['eye']}
-                    mouth={points['great']['mouth']}
-                  />
-                )}
-              </AnimatedContainer>
+    <Modal
+      // title={'How are you today?'}
+      customTitle={
+        <div className="w-auto">
+          <h3 className="text-xl font-medium text-gray-900">How are you today?</h3>
+          <p className="text-sm  text-gray-500">Hover on emoji and click save</p>
+        </div>
+      }
+      scrollHidden
+      intenseOpacity
+      width={showJournal ? 'w-full' : 'w-auto'}
+      modalCloseId="sentiment-modal-close"
+      closeAction={onCancel}
+      closeOnBackdrop={false}
+      hidePadding
+      className="bg-white rounded-b-xl"
+      showHeader
+      showHeaderBorder
+      showFooter={false}>
+      {!showJournal && (
+        <>
+          <div className="relative rounded-b-xl w-auto grid bg-white grid-cols-2 p-4 gap-4">
+            <AnimatedContainer delay=".2s" show={show.great}>
+              {show.great && (
+                <EmojiCard
+                  {...commonEmojiProps}
+                  label="great"
+                  eye={points['great']['eye']}
+                  mouth={points['great']['mouth']}
+                />
+              )}
+            </AnimatedContainer>
 
-              <AnimatedContainer delay=".4s" show={show.okay}>
-                {show.okay && (
-                  <EmojiCard
-                    {...commonEmojiProps}
-                    label="okay"
-                    eye={points['okay']['eye']}
-                    mouth={points['okay']['mouth']}
-                  />
-                )}
-              </AnimatedContainer>
-              <AnimatedContainer delay=".6s" show={show.bad}>
-                {show.bad && (
-                  <EmojiCard
-                    {...commonEmojiProps}
-                    label="bad"
-                    eye={points['bad']['eye']}
-                    mouth={points['bad']['mouth']}
-                  />
-                )}
-              </AnimatedContainer>
+            <AnimatedContainer delay=".4s" show={show.okay}>
+              {show.okay && (
+                <EmojiCard
+                  {...commonEmojiProps}
+                  label="okay"
+                  eye={points['okay']['eye']}
+                  mouth={points['okay']['mouth']}
+                />
+              )}
+            </AnimatedContainer>
+            <AnimatedContainer delay=".6s" show={show.bad}>
+              {show.bad && (
+                <EmojiCard
+                  {...commonEmojiProps}
+                  label="bad"
+                  eye={points['bad']['eye']}
+                  mouth={points['bad']['mouth']}
+                />
+              )}
+            </AnimatedContainer>
 
-              <AnimatedContainer delay=".8s" show={show.awful}>
-                {show.awful && (
-                  <EmojiCard
-                    {...commonEmojiProps}
-                    label="awful"
-                    eye={points['awful']['eye']}
-                    mouth={points['awful']['mouth']}
-                  />
-                )}
-              </AnimatedContainer>
-            </div>
-          </>
-        )}
-      </Modal>
-    )
+            <AnimatedContainer delay=".8s" show={show.awful}>
+              {show.awful && (
+                <EmojiCard
+                  {...commonEmojiProps}
+                  label="awful"
+                  eye={points['awful']['eye']}
+                  mouth={points['awful']['mouth']}
+                />
+              )}
+            </AnimatedContainer>
+          </div>
+        </>
+      )}
+    </Modal>
   );
 };
 
