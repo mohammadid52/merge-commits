@@ -39,23 +39,23 @@ const CurriculumListRow = ({
   const [showMenu, setShowMenu] = useState<boolean>(false);
 
   const textClass = `text-sm leading-5 text-gray-800 hover:iconoclast:text-500 transition-all duration-50 hover:curate:text-500`;
-  const textDisabledClass = ` line-through text-sm leading-5 text-gray-500 hover:text-gray-600 transition-all duration-50`;
 
   return (
-    <div
+    <tr
       key={index}
-      className={`flex justify-between items-center w-full px-8 py-4 whitespace-nowrap border-b-0 border-gray-200 ${
+      className={`flex justify-between items-center w-full whitespace-nowrap border-b-0 border-gray-200 ${
         index % 2 !== 0 ? 'bg-gray-50' : ''
-      }`}>
-      <div className="flex w-.5/10 items-center px-8 py-3 text-left text-sm leading-4">
+      } hover:iconoclast:bg-200 hover:iconoclast:text-600
+      hover:curate:bg-200 hover:curate:text-600 transition-all`}>
+      <td className="flex w-.5/10 items-center px-8 py-3 text-left text-sm leading-4">
         {index + 1}.
-      </div>
-      <div
+      </td>
+      <td
         data-cy={`curriculum-${item.name.split(' ').join('-')}`}
         onClick={() => editCurrentCurricular(item.id)}
         className={`cursor-pointer flex ${
           isSuperAdmin ? 'w-2/10' : 'w-3.5/10'
-        } items-center px-8 py-3 text-left text-sm leading-4 font-medium whitespace-normal`}>
+        } items-center px-8 py-4 text-left text-sm leading-4 font-medium whitespace-normal`}>
         <div className="flex-shrink-0 h-10 w-10 flex items-center">
           {item.image ? (
             <img
@@ -85,20 +85,20 @@ const CurriculumListRow = ({
         <div className="ml-2">
           <Highlighted text={item.name} highlight={searchInput} />
         </div>
-      </div>
+      </td>
       {isSuperAdmin && (
-        <div
-          className="flex w-1.5/10 items-center px-8 py-3 text-left text-sm font-medium leading-4 whitespace-normal cursor-pointer"
+        <td
+          className="flex w-1.5/10 text-gray-500 items-center px-8 py-4 text-left text-sm font-medium leading-4 whitespace-normal cursor-pointer"
           onClick={redirectToInstitution}>
           <Highlighted text={item.institutionName} highlight={searchInput} />
-        </div>
+        </td>
       )}
-      <div
-        className={`flex w-2/10 items-center px-8 py-3 text-left text-sm leading-4 font-medium whitespace-normal`}>
+      <td
+        className={`flex w-2/10 items-center text-gray-500 px-8 py-4 text-left text-sm leading-4 font-medium whitespace-normal`}>
         {item.type || '-'}
-      </div>
-      <div
-        className={`w-3/10 items-center px-8 py-3 text-left text-sm leading-4 font-medium whitespace-normal`}>
+      </td>
+      <td
+        className={`w-3/10 items-center text-gray-500 px-8 py-4 text-left text-sm leading-4 font-medium whitespace-normal`}>
         {item.universalSyllabus?.items?.map(
           ({
             id,
@@ -115,8 +115,8 @@ const CurriculumListRow = ({
             </li>
           )
         )}
-      </div>
-      <div
+      </td>
+      <td
         className={`w-1/10 flex justify-center items-center px-4 py-4 whitespace-nowrap text-sm leading-5 font-medium`}>
         <span className="w-auto">
           <Popover
@@ -163,8 +163,8 @@ const CurriculumListRow = ({
             </span>
           </Popover>
         </span>
-      </div>
-    </div>
+      </td>
+    </tr>
   );
 };
 

@@ -39,7 +39,7 @@ const SectionTitleV3: React.FC<SectionTitleProps> = (sectProps: SectionTitleProp
             } rounded-t-xl bg-white mb-0`
           : ''
       } ${extraContainerClass} `}>
-      <div className={``}>
+      <div className={`w-auto`}>
         {title && (
           <h2 className={`text-lg 2xl:text-${fontSize} font-${fontStyle} ${extraClass}`}>
             {title}

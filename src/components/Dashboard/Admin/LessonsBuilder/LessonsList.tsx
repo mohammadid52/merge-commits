@@ -1,33 +1,31 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import ModalPopUp from 'molecules/ModalPopUp';
-import {useQuery} from 'customHooks/urlParam';
-import * as mutations from 'graphql/mutations';
-import {find} from 'lodash';
-import React, {Fragment, useContext, useEffect, useState} from 'react';
-import {AiOutlineArrowDown, AiOutlineArrowUp} from 'react-icons/ai';
-import {IoMdAddCircleOutline} from 'react-icons/io';
-import {IoArrowUndoCircleOutline} from 'react-icons/io5';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
-import {useHistory, useRouteMatch} from 'react-router-dom';
+import AddButton from '@components/Atoms/Buttons/AddButton';
+import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
+import useAuth from '@customHooks/useAuth';
+import useSearch from '@customHooks/useSearch';
 import {getAsset} from 'assets';
-import {GlobalContext} from 'contexts/GlobalContext';
-import * as customQueries from 'customGraphql/customQueries';
-import useDictionary from 'customHooks/dictionary';
-import {getLanguageString} from 'utilities/strings';
 import BreadCrums from 'atoms/BreadCrums';
 import Buttons from 'atoms/Buttons';
 import SearchInput from 'atoms/Form/SearchInput';
 import Selector from 'atoms/Form/Selector';
 import PageCountSelector from 'atoms/PageCountSelector';
 import Pagination from 'atoms/Pagination';
-import SectionTitle from 'atoms/SectionTitle';
+import {GlobalContext} from 'contexts/GlobalContext';
+import * as customQueries from 'customGraphql/customQueries';
+import useDictionary from 'customHooks/dictionary';
+import {useQuery} from 'customHooks/urlParam';
+import * as mutations from 'graphql/mutations';
+import {find} from 'lodash';
+import ModalPopUp from 'molecules/ModalPopUp';
+import React, {Fragment, useContext, useEffect, useState} from 'react';
+import {AiOutlineArrowDown, AiOutlineArrowUp} from 'react-icons/ai';
+import {IoArrowUndoCircleOutline} from 'react-icons/io5';
+import {IconContext} from 'react-icons/lib/esm/iconContext';
+import {useHistory, useRouteMatch} from 'react-router-dom';
+import {getLanguageString} from 'utilities/strings';
 import CloneLesson from './CloneLesson';
 import LessonListLoader from './LessonListLoader';
 import LessonsListRow from './LessonsListRow';
-import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
-import useAuth from '@customHooks/useAuth';
-import AddButton from '@components/Atoms/Buttons/AddButton';
-import useSearch from '@customHooks/useSearch';
 
 interface LessonListProps {
   isInInstitution?: boolean; // props for managing lesson tab inside institution
@@ -64,6 +62,7 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
     name: '',
     asc: true
   });
+
   const [institutionList, setInstitutionList] = useState<any>([]);
   const [selectedInstitution, setSelectedInstitution] = useState<any>({});
 
@@ -172,9 +171,23 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
       if (!fetchUList) {
         throw new Error('fail!');
       } else {
-        const data = fetchUList?.data?.listUniversalLessons.items;
+        let data = fetchUList?.data?.listUniversalLessons.items;
 
-        const filteredList = getFilteredList(data, state.user.id);
+        let filteredList = getFilteredList(data, state.user.id);
+        filteredList = filteredList.map((lesson) => {
+          return {
+            ...lesson,
+            institutionName: lesson?.institution?.name,
+            institutionId: lesson?.institution?.id
+          };
+        });
+        data = data.map((lesson: {institution: {name: any; id: any}}) => {
+          return {
+            ...lesson,
+            institutionName: lesson?.institution?.name,
+            institutionId: lesson?.institution?.id
+          };
+        });
 
         // setLessonsData(isTeacher ? filteredList : data);
         setLessonsData(data);

@@ -80,10 +80,10 @@ const LessonsListRow = (props: LessonsListRow) => {
   return (
     <td
       id={id}
-      className={`flex justify-between transition-all bg-white w-full border-b-0 border-gray-200 ${
+      className={`flex justify-between  bg-white w-full border-b-0 border-gray-200 ${
         props.zebraStripping && index % 2 !== 0 ? 'bg-gray-50' : ''
       } hover:iconoclast:bg-200 hover:iconoclast:text-600
-      hover:curate:bg-200 hover:curate:text-600`}>
+      hover:curate:bg-200 hover:curate:text-600 transition-all`}>
       <tr className="w-.5/10 flex justify-center items-center px-8 py-4 whitespace-normal text-sm leading-5 font-medium">
         {index + 1}.
       </tr>
@@ -91,7 +91,7 @@ const LessonsListRow = (props: LessonsListRow) => {
         title={title ? title : '--'}
         className={`${
           isSuperAdmin ? 'w-1.5/10' : 'w-3/10'
-        } flex items-center px-8 py-4 hover:text-gray-600 cursor-pointer text-sm leading-5 font-medium text-gray-900 whitespace-normal`}
+        } flex items-center px-8 py-4 cursor-pointer text-sm leading-5 font-medium whitespace-normal`}
         onClick={() => handleLessonsEdit(type)}>
         <Highlighted text={title} highlight={searchTerm} />
       </tr>

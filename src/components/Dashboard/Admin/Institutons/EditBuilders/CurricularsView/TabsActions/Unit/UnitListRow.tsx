@@ -52,7 +52,7 @@ hover:curate:bg-200 hover:curate:text-600 transition-all
         onClick={() => editCurrentUnit(item.id)}
         className={`${
           isSuperAdmin ? 'w-1.5/10' : 'w-3/10'
-        } flex items-center  px-8 py-4 hover:text-gray-600 cursor-pointer text-sm leading-5 font-medium text-gray-900 whitespace-normal`}>
+        } flex items-center  px-8 py-4  cursor-pointer text-sm leading-5 font-medium whitespace-normal`}>
         <Highlighted text={item.name} highlight={searchInput} />
       </td>
       {isSuperAdmin && (
