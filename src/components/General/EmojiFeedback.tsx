@@ -40,7 +40,7 @@ const EmojiCard = ({
   eye: string;
   mouth: string;
   label: string;
-  onSave: (emotionName: string) => void;
+  onSave: (emotionName: string, backstory?: string) => void;
   selectedCard?: boolean;
 }) => {
   const $ = (s: any, o = document) => o?.querySelector(s);
@@ -60,57 +60,66 @@ const EmojiCard = ({
     });
   };
 
+  const [backstory, setBackstory] = useState('');
+
   return (
-    <div
-      data-cy={'emoji-feedback-card'}
-      onClick={() => {
-        onSave(label);
-      }}
-      className="w-auto z-100 rounded-xl theme-card-shadow">
+    <div className="flip-card">
       <div
-        id={id}
-        className={` ${selectedCard ? 'selected-card' : ''} ${
-          !selectedCard ? 'cursor-pointer' : ''
-        } ${label} transition-all  emoji-slider-feedback flex items-center justify-center`}>
-        <ul>
-          <li>{label}</li>
-        </ul>
-        {selectedCard && <CloseButton onClick={onClose} />}
-        <div className="smiley">
-          <svg className="eye left" viewBox="0 0 18 22">
-            <path d={eye}></path>
-          </svg>
-          <svg className="eye right" viewBox="0 0 18 22">
-            <path d={eye}></path>
-          </svg>
-          <svg className="mouth" viewBox="0 0 64 28">
-            <path d={mouth}></path>
-          </svg>
-          {label === 'great' && (
-            <svg className="teeth" viewBox="0 0 64 28">
-              <path d="M32,7.83261436 C41.5729357,7.83261436 52.5729357,7.05507624 63,1.5 C63,10.3056732 46.3594035,14.5 32,14.5 C17.6405965,14.5 1,10.3056732 1,1.5 C11.4270643,7.05507624 22.4270643,7.83261436 32,7.83261436 Z"></path>
+        data-cy={'emoji-feedback-card'}
+        onClick={() => {
+          // onSave(label);
+        }}
+        className="w-auto flip-card-inner z-100 rounded-xl theme-card-shadow">
+        <div
+          id={id}
+          className={` ${selectedCard ? 'selected-card' : ''} ${
+            !selectedCard ? 'cursor-pointer' : ''
+          } ${label} transition-all  emoji-slider-feedback flex items-center justify-center flip-card-front`}>
+          <ul>
+            <li>{label}</li>
+          </ul>
+          {selectedCard && <CloseButton onClick={onClose} />}
+          <div className="smiley">
+            <svg className="eye left" viewBox="0 0 18 22">
+              <path d={eye}></path>
             </svg>
-          )}
+            <svg className="eye right" viewBox="0 0 18 22">
+              <path d={eye}></path>
+            </svg>
+            <svg className="mouth" viewBox="0 0 64 28">
+              <path d={mouth}></path>
+            </svg>
+            {label === 'great' && (
+              <svg className="teeth" viewBox="0 0 64 28">
+                <path d="M32,7.83261436 C41.5729357,7.83261436 52.5729357,7.05507624 63,1.5 C63,10.3056732 46.3594035,14.5 32,14.5 C17.6405965,14.5 1,10.3056732 1,1.5 C11.4270643,7.05507624 22.4270643,7.83261436 32,7.83261436 Z"></path>
+              </svg>
+            )}
+          </div>
         </div>
-        {/* {selectedCard && (
+        <div
+          className={`flip-card-back sticky-container rounded-xl  emoji-slider-feedback ${label}`}>
+          {/* Journal body */}
+
+          <div className="flex p-4 flex-col items-center justify-center h-full">
+            <textarea
+              value={backstory}
+              onChange={(e) => setBackstory(e.target.value)}
+              className="text-xl text-white"
+              placeholder={`I feel ${label} because...`}
+            />
+          </div>
+
           <div className="emoji-slider-bottom">
-            <button
-              onClick={() => {
-                setShowJournal(true);
-              }}
-              className="emoji-response-save w-auto">
-              Journal
-            </button>
             <button
               data-cy="emoji-feedback-button"
               onClick={() => {
-                onSave(label);
+                onSave(label, backstory);
               }}
               className="emoji-response-save w-auto">
               Save
             </button>
           </div>
-        )} */}
+        </div>
       </div>
     </div>
   );
@@ -210,7 +219,7 @@ const EmojiFeedback = () => {
     }
   );
 
-  const onSave = async (response: string) => {
+  const onSave = async (response: string, backstory?: string) => {
     try {
       setShow({great: false, awful: false, okay: false, bad: false});
       setShowSentimentModal(false);
@@ -220,7 +229,7 @@ const EmojiFeedback = () => {
         time,
         date,
         responseText: response,
-        backstory: ''
+        backstory: backstory || ''
       };
 
       createPersonSentiments.mutate({input: payload});
@@ -263,22 +272,6 @@ const EmojiFeedback = () => {
   //   time,
   //   responseText: selectedEmotion
   // };
-
-  useEffect(() => {
-    const elements = document.querySelectorAll('.emoji-slider-feedback');
-    if (elements) {
-      elements.forEach((e) => {
-        e.addEventListener('mouseenter', (e2) => {
-          // @ts-ignore
-          e2.target.classList.add('scale');
-        });
-        e.addEventListener('mouseleave', (e2) => {
-          // @ts-ignore
-          e2.target.classList.remove('scale');
-        });
-      });
-    }
-  });
 
   const [show, setShow] = useState({great: false, awful: false, okay: false, bad: false});
 
