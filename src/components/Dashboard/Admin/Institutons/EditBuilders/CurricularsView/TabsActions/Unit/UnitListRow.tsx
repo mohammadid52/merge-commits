@@ -3,6 +3,7 @@ import {GlobalContext} from 'contexts/GlobalContext';
 import {UnitLookupDict} from '@dictionary/dictionary.iconoclast';
 import React, {useContext, useState} from 'react';
 import {BiDotsVerticalRounded} from 'react-icons/bi';
+import Highlighted from '@components/Atoms/Highlighted';
 
 interface IUnitListRowProps {
   index: number;
@@ -11,12 +12,14 @@ interface IUnitListRowProps {
   checkIfRemovable: any;
   handleToggleDelete: any;
   editCurrentUnit: any;
+  searchInput?: string;
   redirectToInstitution: () => void;
   redirectToLesson: (id: string) => void;
 }
 
 const UnitListRow = ({
   index,
+  searchInput,
   isSuperAdmin,
   item,
   checkIfRemovable,
@@ -46,13 +49,14 @@ const UnitListRow = ({
       <div
         onClick={() => editCurrentUnit(item.id)}
         className={`cursor-pointer flex w-4/10 items-center px-8 py-3 text-left text-s leading-4 font-medium whitespace-normal`}>
-        {item.name ? item.name : ''}
+        <Highlighted text={item.name} highlight={searchInput} />
       </div>
       {isSuperAdmin && (
         <div
           className="flex w-2/10 items-center px-8 py-3 text-left text-sm font-bold leading-4 whitespace-normal cursor-pointer"
           onClick={redirectToInstitution}>
           {item.institution?.name}
+          <Highlighted text={item.institutionName} highlight={searchInput} />
         </div>
       )}
       <div

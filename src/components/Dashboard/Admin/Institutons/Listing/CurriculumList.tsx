@@ -121,6 +121,7 @@ const CurriculumList = ({
         (item: ICurricular) => ({
           ...item,
           institutionName: item?.institution?.name,
+          institutionId: item?.institution?.id,
           universalSyllabus: {
             ...(item.universalSyllabus || {}),
             items: item.universalSyllabus?.items

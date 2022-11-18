@@ -908,16 +908,13 @@ const Dashboard = (props: DashboardProps) => {
               <Route
                 // exact
                 path={`${match.url}/game-changers`}
-                render={() => {
-                  return conditionalRender(
-                    <ErrorBoundary fallback={<h1>Game changers is not working</h1>}>
-                      <GameChangerProvider>
-                        <GameChangers />
-                      </GameChangerProvider>
-                    </ErrorBoundary>,
-                    isStudent
-                  );
-                }}
+                render={() => (
+                  <ErrorBoundary fallback={<h1>Game changers is not working</h1>}>
+                    <GameChangerProvider>
+                      <GameChangers />
+                    </GameChangerProvider>
+                  </ErrorBoundary>
+                )}
               />
 
               <Route
