@@ -17,7 +17,6 @@ import HeaderMegaMenu from 'components/Dashboard/Menu/HeaderMegaMenu';
 import NoticeboardAdmin from 'components/Dashboard/NoticeboardAdmin/NoticeboardAdmin';
 import ErrorBoundary from 'components/Error/ErrorBoundary';
 import EmojiFeedback from 'components/General/EmojiFeedback';
-import ComponentLoading from 'components/Lesson/Loading/ComponentLoading';
 import Noticebar from 'components/Noticebar/Noticebar';
 import {GlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
@@ -29,7 +28,6 @@ import {useCookies} from 'react-cookie';
 import {Redirect, Route, Switch, useHistory, useRouteMatch} from 'react-router-dom';
 import {setLocalStorageData} from 'utilities/localStorage';
 import {frequencyMapping} from 'utilities/staticData';
-import SwitchAccount from './Classroom/SwitchAccount';
 const Classroom = lazy(() => import('components/Dashboard/Classroom/Classroom'));
 
 const GameChangers = lazy(() => import('components/Dashboard/GameChangers/GameChangers'));
@@ -836,7 +834,7 @@ const Dashboard = (props: DashboardProps) => {
               : 'overflow-y-auto'
           }`}>
           {/*<FloatingSideMenu />*/}
-          <Noticebar notifications={notifications} />
+          {!isGameChangers && <Noticebar notifications={notifications} />}
 
           <Suspense
             fallback={
