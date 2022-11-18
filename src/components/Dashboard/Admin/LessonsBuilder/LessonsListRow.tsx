@@ -78,49 +78,50 @@ const LessonsListRow = (props: LessonsListRow) => {
   const textClass = `text-sm leading-5 text-gray-800 hover:iconoclast:text-500 transition-all duration-50 hover:curate:text-500`;
 
   return (
-    <div
+    <td
       id={id}
-      className={`flex justify-between bg-white w-full border-b-0 border-gray-200 ${
+      className={`flex justify-between transition-all bg-white w-full border-b-0 border-gray-200 ${
         props.zebraStripping && index % 2 !== 0 ? 'bg-gray-50' : ''
-      }`}>
-      <div className="w-.5/10 flex justify-center items-center px-8 py-4 whitespace-normal text-sm leading-5 font-medium">
+      } hover:iconoclast:bg-200 hover:iconoclast:text-600
+      hover:curate:bg-200 hover:curate:text-600`}>
+      <tr className="w-.5/10 flex justify-center items-center px-8 py-4 whitespace-normal text-sm leading-5 font-medium">
         {index + 1}.
-      </div>
-      <div
+      </tr>
+      <tr
         title={title ? title : '--'}
         className={`${
           isSuperAdmin ? 'w-1.5/10' : 'w-3/10'
         } flex items-center px-8 py-4 hover:text-gray-600 cursor-pointer text-sm leading-5 font-medium text-gray-900 whitespace-normal`}
         onClick={() => handleLessonsEdit(type)}>
         <Highlighted text={title} highlight={searchTerm} />
-      </div>
+      </tr>
       {isSuperAdmin && (
-        <div
+        <tr
           className="w-1.5/10 flex items-center px-8 py-4 hover:text-gray-600 text-sm leading-5 font-bold text-gray-900 whitespace-normal cursor-pointer"
           onClick={redirectToInstitution}>
           <span>{institutionName || '--'}</span>
-        </div>
+        </tr>
       )}
 
-      <div className="w-1/10 flex justify-start items-center px-8 py-4 whitespace-normal text-sm leading-5 text-gray-500">
+      <tr className="w-1/10 flex justify-start items-center px-8 py-4 whitespace-normal text-sm leading-5 text-gray-500">
         <span className="w-auto">{type ? type : '--'}</span>
-      </div>
+      </tr>
 
-      <div className="w-1.5/10 flex justify-start items-center px-8 py-4 whitespace-normal text-sm leading-5 text-gray-500">
+      <tr className="w-1.5/10 flex justify-start items-center px-8 py-4 whitespace-normal text-sm leading-5 text-gray-500">
         {targetAudience || '-'}
-      </div>
+      </tr>
 
-      <div className="w-1.5/10 flex justify-center items-center px-8 py-4 whitespace-normal text-sm leading-5 text-gray-500">
+      <tr className="w-1.5/10 flex justify-center items-center px-8 py-4 whitespace-normal text-sm leading-5 text-gray-500">
         <span className="w-auto">
           {createdAt ? new Date(createdAt).toLocaleDateString() : '--'}
         </span>
-      </div>
+      </tr>
 
-      <div className="w-1.5/10 flex justify-center items-center px-8 py-4 whitespace-normal text-sm leading-5 text-gray-500">
+      <tr className="w-1.5/10 flex justify-center items-center px-8 py-4 whitespace-normal text-sm leading-5 text-gray-500">
         <span className="w-auto">
           {updatedAt ? new Date(updatedAt).toLocaleDateString() : '--'}
         </span>
-      </div>
+      </tr>
 
       {/* <div className="w-1.5/10 flex justify-start items-center px-8 py-4 whitespace-normal text-sm leading-5 text-gray-500">
         <span className="w-auto">
@@ -133,7 +134,7 @@ const LessonsListRow = (props: LessonsListRow) => {
         </span>
       </div> */}
 
-      <div
+      <tr
         className={`w-1/10 flex justify-center items-center pr-4 py-4 whitespace-nowrap text-sm leading-5 font-medium`}>
         <span className="w-auto">
           <Popover
@@ -185,8 +186,8 @@ const LessonsListRow = (props: LessonsListRow) => {
             </span>
           </Popover>
         </span>
-      </div>
-    </div>
+      </tr>
+    </td>
   );
 };
 

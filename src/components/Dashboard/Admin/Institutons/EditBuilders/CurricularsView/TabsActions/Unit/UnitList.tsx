@@ -190,33 +190,6 @@ export const UnitList = ({instId}: any) => {
     updateRoomList(value);
   };
 
-  const onSearch = (searchValue: string, institutionId?: string) => {
-    if (searchValue && institutionId) {
-      setUnits(
-        allUnits.filter(
-          (item: any) =>
-            item.name?.toLowerCase().includes(searchValue.toLowerCase()) &&
-            item.institution?.id === institutionId
-        )
-      );
-    } else if (institutionId) {
-      setUnits(allUnits.filter((item: any) => item.institution?.id === institutionId));
-    } else if (searchValue) {
-      setUnits(
-        allUnits.filter((item: any) =>
-          item.name?.toLowerCase().includes(searchValue.toLowerCase())
-        )
-      );
-    } else {
-      setUnits(allUnits);
-    }
-  };
-
-  // const removeSearchAction = () => {
-  //   setSearchInput('');
-  //   onSearch('', selectedInstitution?.id);
-  // };
-
   const onInstitutionSelectionRemove = () => {
     setSelectedInstitution({});
     // onSearch(searchInput, '');
@@ -363,27 +336,27 @@ export const UnitList = ({instId}: any) => {
           </div>
         ) : finalList?.length ? (
           <>
-            <div className="w-full m-auto border-b-0 border-gray-200">
-              <div className="flex justify-between bg-gray-50 px-8 whitespace-nowrap">
-                <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+            <div className="w-full m-auto ">
+              <div className="flex justify-between bg-gray-50 whitespace-nowrap">
+                <div className="w-1/10 px-8 py-4 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>{UnitLookupDict[userLanguage]['NO']}</span>
                 </div>
                 <div
-                  className={`w-4/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider`}>
+                  className={`w-4/10 px-8 py-4 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider`}>
                   <span>{UnitLookupDict[userLanguage]['NAME']}</span>
                 </div>
                 {isSuperAdmin && (
-                  <div className="w-2/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider truncate">
+                  <div className="w-2/10 px-8 py-4 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider truncate">
                     <span>{UnitLookupDict[userLanguage]['INSTITUTION_NAME']}</span>
                   </div>
                 )}
                 <div
                   className={`${
                     isSuperAdmin ? 'w-2/10' : 'w-4/10'
-                  } px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider`}>
+                  } px-8 py-4 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider`}>
                   <span>{UnitLookupDict[userLanguage]['LESSONS']}</span>
                 </div>
-                <div className="w-1/10 m-auto py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                <div className="w-1/10 m-auto py-4 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span className="w-auto">{UnitLookupDict[userLanguage]['ACTION']}</span>
                 </div>
               </div>

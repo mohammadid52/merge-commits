@@ -35,34 +35,40 @@ const UnitListRow = ({
   const [showMenu, setShowMenu] = useState<boolean>(false);
 
   const textClass = `text-sm leading-5 text-gray-800 hover:iconoclast:text-500 transition-all duration-50 hover:curate:text-500`;
-  const textDisabledClass = ` line-through text-sm leading-5 text-gray-500 hover:text-gray-600 transition-all duration-50`;
 
   return (
-    <div
+    <tr
       key={index}
-      className={`flex justify-between items-center w-full px-8 py-4 whitespace-nowrap border-b-0 border-gray-200 ${
+      className={`flex
+      hover:iconoclast:bg-200 hover:iconoclast:text-600
+hover:curate:bg-200 hover:curate:text-600 transition-all
+      justify-between items-center w-full  whitespace-nowrap border-b-0 border-gray-200 ${
         index % 2 !== 0 ? 'bg-gray-50' : ''
       }`}>
-      <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4">
+      <td className="flex w-1/10 px-8 py-4 items-center  text-left text-s leading-4">
         {index + 1}.
-      </div>
-      <div
+      </td>
+      <td
         onClick={() => editCurrentUnit(item.id)}
-        className={`cursor-pointer flex w-4/10 items-center px-8 py-3 text-left text-s leading-4 font-medium whitespace-normal`}>
+        className={`${
+          isSuperAdmin ? 'w-1.5/10' : 'w-3/10'
+        } flex items-center  px-8 py-4 hover:text-gray-600 cursor-pointer text-sm leading-5 font-medium text-gray-900 whitespace-normal`}>
         <Highlighted text={item.name} highlight={searchInput} />
-      </div>
+      </td>
       {isSuperAdmin && (
-        <div
-          className="flex w-2/10 items-center px-8 py-3 text-left text-sm font-bold leading-4 whitespace-normal cursor-pointer"
+        <td
+          className="flex w-1.5/10 px-8 py-4 items-center  text-left text-sm font-bold leading-4 whitespace-normal cursor-pointer"
           onClick={redirectToInstitution}>
-          {item.institution?.name}
-          <Highlighted text={item.institutionName} highlight={searchInput} />
-        </div>
+          <Highlighted
+            text={item?.institutionName || item?.institution?.name}
+            highlight={searchInput}
+          />
+        </td>
       )}
-      <div
+      <td
         className={`${
           isSuperAdmin ? 'w-2/10' : 'w-4/10'
-        } items-center px-8 py-3 text-left text-sm leading-4 whitespace-normal cursor-pointer`}>
+        } items-center text-left px-8 py-4 text-sm leading-4 text-gray-500 whitespace-normal cursor-pointer`}>
         {item.lessons?.items?.map(
           (lesson: {id: string; lesson: {id: string; title: string}}) => {
             if (lesson) {
@@ -76,9 +82,9 @@ const UnitListRow = ({
             }
           }
         )}
-      </div>
-      <div
-        className={`w-1/10 flex justify-center items-center px-4 py-4 whitespace-nowrap text-sm leading-5 font-medium`}>
+      </td>
+      <td
+        className={`w-1/10 flex px-8 py-4 justify-center items-center  whitespace-nowrap text-sm leading-5 font-medium`}>
         <span className="w-auto">
           <Popover
             show={showMenu}
@@ -124,8 +130,8 @@ const UnitListRow = ({
             </span>
           </Popover>
         </span>
-      </div>
-    </div>
+      </td>
+    </tr>
   );
 };
 
