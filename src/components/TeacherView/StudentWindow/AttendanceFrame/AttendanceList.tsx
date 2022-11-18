@@ -1,10 +1,8 @@
-import React from 'react';
 import Buttons from 'atoms/Buttons';
 import Loader from 'atoms/Loader';
-import orderBy from 'lodash/orderBy';
-import moment from 'moment';
-import DatePicker from 'react-datepicker';
 import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
+import moment from 'moment';
+import React from 'react';
 
 interface IAttendanceListProps {
   loading: boolean;
@@ -130,6 +128,7 @@ const AttendanceList = ({
                   style={{width: '15%'}}
                   className="text-left p-3 overflow-hidden text-sm text-gray-500">
                   {new Date(item.date).toLocaleDateString()}
+                  {/* {moment(item.date).format('DD/MM/YYYY')} */}
                 </div>
                 <div
                   style={{width: '15%'}}

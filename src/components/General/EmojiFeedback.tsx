@@ -231,7 +231,7 @@ const EmojiFeedback = () => {
       if (response !== 'none') {
         setNotification({
           show: true,
-          title: '😀 Thanks for checking in today',
+          title: 'Thanks for checking in today',
           type: 'success'
         });
       }
