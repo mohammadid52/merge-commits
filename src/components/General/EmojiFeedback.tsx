@@ -1,4 +1,3 @@
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import {useNotifications} from '@contexts/NotificationContext';
 import useGraphqlMutation from '@customHooks/useGraphqlMutation';
@@ -6,10 +5,10 @@ import '@style/general/EmojiFeedback.scss';
 import {CreatePersonSentimentsInput, UpdatePersonInput} from 'API';
 import Modal from 'atoms/Modal';
 import {GlobalContext} from 'contexts/GlobalContext';
-import * as customMutations from 'customGraphql/customMutations';
 import {gsap} from 'gsap';
 import moment from 'moment';
 import React, {useContext, useEffect, useState} from 'react';
+import {BiArrowBack, BiPencil} from 'react-icons/bi';
 import {IoClose} from 'react-icons/io5';
 import {awsFormatDate, dateString} from 'utilities/time';
 
@@ -37,6 +36,7 @@ const EmojiCard = ({
   setSelectedEmotion: React.Dispatch<React.SetStateAction<string>>;
   setShowJournal?: React.Dispatch<React.SetStateAction<boolean>>;
   selectedEmotion: string;
+
   eye: string;
   mouth: string;
   label: string;
@@ -45,41 +45,81 @@ const EmojiCard = ({
 }) => {
   const $ = (s: any, o = document) => o?.querySelector(s);
 
-  const id = `emoji-slider-feedback-${label}${selectedCard ? '-selected' : ''}`;
-
-  const onClose = () => {
-    let emoji = $(`#${id}`);
-    gsap.to(emoji, {
-      opacity: 0,
-      scale: 0,
-      ease: 'ease.in',
-      duration: 0.5,
-      onComplete: () => {
-        setSelectedEmotion(null);
-      }
-    });
-  };
+  const id = `emoji-slider-feedback-${label}`;
 
   const [backstory, setBackstory] = useState('');
 
+  const closePreviousCard = (closeThis?: boolean) => {
+    let list = ['awful', 'bad', 'okay', 'great'];
+    list = closeThis ? list.filter((e) => e === label) : list.filter((e) => e !== label);
+    if (closeThis) {
+      setFlip(false);
+    }
+    list.forEach((e) => {
+      const id = `emoji-slider-feedback-${e}`;
+
+      let tl = gsap.timeline();
+      tl.to(`#${id} .flip-card-inner`, {
+        rotateY: 0,
+        duration: 1.5,
+        ease: 'back.out(2)'
+      }).to(
+        [`#${id} .smiley`, `#${id} ul`],
+        {
+          opacity: 1,
+          duration: 0.5
+        },
+        '>-1'
+      );
+
+      gsap.to(`#${id} .flip-card-front`, {
+        pointerEvents: 'all'
+      });
+    });
+  };
+
+  const [flip, setFlip] = useState(false);
+
+  const focusOnTextArea = () => {
+    const textarea = $(`#${id} textarea`);
+    textarea.focus();
+  };
+
+  const flipCard = () => {
+    setFlip(true);
+    gsap.to(`#${id} .flip-card-inner`, {
+      rotateY: 180,
+      duration: 1.5,
+      ease: 'back.out(2)',
+      onComplete: () => focusOnTextArea()
+    });
+    gsap.to([`#${id} .smiley`, `#${id} ul`], {
+      opacity: 0,
+      duration: 1
+    });
+    gsap.to(`#${id} .flip-card-front`, {
+      pointerEvents: 'none',
+      onComplete: () => closePreviousCard()
+    });
+  };
+
   return (
-    <div className="flip-card">
+    <div id={id} className="flip-card">
       <div
         data-cy={'emoji-feedback-card'}
-        onClick={() => {
-          // onSave(label);
-        }}
         className="w-auto flip-card-inner z-100 rounded-xl theme-card-shadow">
         <div
-          id={id}
           className={` ${selectedCard ? 'selected-card' : ''} ${
             !selectedCard ? 'cursor-pointer' : ''
           } ${label} transition-all  emoji-slider-feedback flex items-center justify-center flip-card-front`}>
           <ul>
             <li>{label}</li>
           </ul>
-          {selectedCard && <CloseButton onClick={onClose} />}
-          <div className="smiley">
+          <div
+            onClick={() => {
+              onSave(label);
+            }}
+            className="smiley">
             <svg className="eye left" viewBox="0 0 18 22">
               <path d={eye}></path>
             </svg>
@@ -95,6 +135,24 @@ const EmojiCard = ({
               </svg>
             )}
           </div>
+          <div className="emoji-slider-bottom justify-end">
+            <AnimatedContainer
+              animationType="sliderInvert"
+              delay=".5s"
+              duration="500"
+              className="w-auto"
+              show={!flip}>
+              {!flip && (
+                <button
+                  onClick={() => {
+                    flipCard();
+                  }}
+                  className="emoji-response-save w-auto">
+                  <BiPencil size={'1rem'} />
+                </button>
+              )}
+            </AnimatedContainer>
+          </div>
         </div>
         <div
           className={`flip-card-back sticky-container rounded-xl  emoji-slider-feedback ${label}`}>
@@ -104,20 +162,47 @@ const EmojiCard = ({
             <textarea
               value={backstory}
               onChange={(e) => setBackstory(e.target.value)}
-              className="text-xl text-white"
+              className="text-xl text-white rounded-xl p-3"
               placeholder={`I feel ${label} because...`}
             />
           </div>
 
-          <div className="emoji-slider-bottom">
-            <button
-              data-cy="emoji-feedback-button"
-              onClick={() => {
-                onSave(label, backstory);
-              }}
-              className="emoji-response-save w-auto">
-              Save
-            </button>
+          <div className="emoji-slider-bottom justify-between">
+            <AnimatedContainer
+              animationType="slider"
+              delay=".5s"
+              duration="500"
+              className="w-auto"
+              show={flip}>
+              {flip && (
+                <button
+                  data-cy="emoji-feedback-button"
+                  onClick={() => {
+                    closePreviousCard(true);
+                  }}
+                  className="emoji-response-save w-auto">
+                  <BiArrowBack />
+                </button>
+              )}
+            </AnimatedContainer>
+
+            <AnimatedContainer
+              animationType="sliderInvert"
+              delay=".5s"
+              duration="500"
+              className="w-auto"
+              show={flip}>
+              {flip && (
+                <button
+                  data-cy="emoji-feedback-button"
+                  onClick={() => {
+                    onSave(label, backstory);
+                  }}
+                  className="emoji-response-save w-auto">
+                  Save
+                </button>
+              )}
+            </AnimatedContainer>
           </div>
         </div>
       </div>
@@ -194,9 +279,9 @@ const EmojiFeedback = () => {
 
   const [selectedEmotion, setSelectedEmotion] = useState(null);
 
-  const date = awsFormatDate(dateString('-', 'WORLD'));
+  const getDate = () => awsFormatDate(dateString('-', 'WORLD'));
 
-  const time = new Date().toTimeString().split(' ')[0];
+  const getTime = () => new Date().toTimeString().split(' ')[0];
 
   const onSuccess = () => {
     setShowSentimentModal(false);
@@ -226,8 +311,8 @@ const EmojiFeedback = () => {
       const payload = {
         personAuthID: authId,
         personEmail: email,
-        time,
-        date,
+        time: getTime(),
+        date: getDate(),
         responseText: response,
         backstory: backstory || ''
       };
@@ -235,7 +320,7 @@ const EmojiFeedback = () => {
       createPersonSentiments.mutate({input: payload});
 
       updateLastSubmissionDate.mutate({
-        input: {authId: authId, email: email, lastEmotionSubmission: date}
+        input: {authId: authId, email: email, lastEmotionSubmission: getDate()}
       });
 
       if (response !== 'none') {
@@ -245,10 +330,13 @@ const EmojiFeedback = () => {
           type: 'success'
         });
       }
-
-      console.log('data saved'); // <=== data saved here
     } catch (error) {
       console.error(error);
+      setNotification({
+        show: true,
+        title: 'Something went wrong',
+        type: 'error'
+      });
     } finally {
       onSuccess();
     }
@@ -265,14 +353,6 @@ const EmojiFeedback = () => {
     onSave
   };
 
-  // const backstoryData = {
-  //   personAuthID: authId,
-  //   personEmail: email,
-  //   date,
-  //   time,
-  //   responseText: selectedEmotion
-  // };
-
   const [show, setShow] = useState({great: false, awful: false, okay: false, bad: false});
 
   useEffect(() => {
@@ -288,7 +368,7 @@ const EmojiFeedback = () => {
         customTitle={
           <div className="w-auto">
             <h3 className="text-xl font-medium text-gray-900">How are you today?</h3>
-            <p className="text-sm  text-gray-500">Hover on emoji and click save</p>
+            <p className="text-sm  text-gray-500">Click on emoji to save emotion</p>
           </div>
         }
         scrollHidden

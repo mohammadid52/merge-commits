@@ -8,7 +8,7 @@ const AnimatedContainer = ({
   className,
   customAnimation,
   fixWidth = false,
-  delay = '0s',
+  delay = '0s'
 }: {
   show: boolean;
   fixWidth?: boolean;
@@ -17,12 +17,15 @@ const AnimatedContainer = ({
   customAnimation?: {show: string; hide: string};
   children: React.ReactNode;
   duration?: '150' | '200' | '300' | '500' | '700' | '1000' | string;
-  animationType?: 'slider' | 'opacity' | 'scale' | 'translateY' | string;
+  animationType?: 'slider' | 'opacity' | 'scale' | 'translateY' | 'sliderInvert' | string;
 }) => {
   const genAnimation = () => {
     switch (animationType) {
       case 'slider':
         return show ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-full';
+      case 'sliderInvert':
+        return show ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-full';
+
       case 'opacity':
         return show ? 'opacity-100' : 'opacity-0';
       case 'scale':
