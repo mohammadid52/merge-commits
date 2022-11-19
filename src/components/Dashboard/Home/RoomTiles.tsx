@@ -1,12 +1,13 @@
+import Loader from '@components/Atoms/Loader';
 import {fallbackUrls} from 'assets';
 import Buttons from 'atoms/Buttons';
 import ContentCard from 'atoms/ContentCard';
 import ImageAlternate from 'atoms/ImageAlternative';
 import SectionTitleV3 from 'atoms/SectionTitleV3';
 import {ModifiedListProps} from 'components/Dashboard/Home/Home';
-import {GlobalContext, useGlobalContext} from 'contexts/GlobalContext';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
 const limitDesc = (str: string, len: number = 250): string => {
   if (str) {
@@ -104,9 +105,10 @@ const SingleRoomCard = ({
 const RoomTiles = (props: {
   isTeacher?: boolean;
   handleRoomSelection: Function;
+  roomsLoading?: boolean;
   classList: ModifiedListProps[];
 }) => {
-  const {classList: classes, isTeacher, handleRoomSelection} = props;
+  const {classList: classes, roomsLoading, isTeacher, handleRoomSelection} = props;
   const {userLanguage} = useGlobalContext();
   const {DashboardDict} = useDictionary();
 
@@ -136,7 +138,7 @@ const RoomTiles = (props: {
         withButton={
           classList &&
           classList.length > 3 && (
-            <div className="flex justify-end">
+            <div className="flex w-auto justify-end">
               <Buttons
                 label={!showMore ? 'Show All' : 'Show Few'}
                 onClick={animateOnShowMore}
@@ -151,7 +153,11 @@ const RoomTiles = (props: {
         borderBottom
       />
       <ContentCard hasBackground={false}>
-        {classList.length > 0 ? (
+        {roomsLoading ? (
+          <div className="min-h-56 flex items-center justify-center">
+            <Loader className="w-auto text-gray-400" withText="Loading classrooms..." />
+          </div>
+        ) : classList.length > 0 ? (
           <div className="relative">
             <div className="relative max-w-7xl mx-auto">
               <div
@@ -168,6 +174,7 @@ const RoomTiles = (props: {
                       <SingleRoomCard
                         item={item}
                         idx={idx}
+                        key={idx}
                         isTeacher={isTeacher}
                         handleRoomSelection={handleRoomSelection}
                       />

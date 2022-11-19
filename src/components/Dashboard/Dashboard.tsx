@@ -1,7 +1,7 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import Loader from '@components/Atoms/Loader';
+import ComponentLoading from '@components/Lesson/Loading/ComponentLoading';
 import {getAsset} from 'assets';
-import awsmobile from 'aws-exports';
 import Community from 'components/Community/Community';
 import InstitutionsHome from 'components/Dashboard/Admin/Institutons/InstitutionsHome';
 import QuestionBank from 'components/Dashboard/Admin/Questions/QuestionBank';
@@ -17,7 +17,6 @@ import HeaderMegaMenu from 'components/Dashboard/Menu/HeaderMegaMenu';
 import NoticeboardAdmin from 'components/Dashboard/NoticeboardAdmin/NoticeboardAdmin';
 import ErrorBoundary from 'components/Error/ErrorBoundary';
 import EmojiFeedback from 'components/General/EmojiFeedback';
-import ComponentLoading from 'components/Lesson/Loading/ComponentLoading';
 import Noticebar from 'components/Noticebar/Noticebar';
 import {GlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
@@ -29,7 +28,6 @@ import {useCookies} from 'react-cookie';
 import {Redirect, Route, Switch, useHistory, useRouteMatch} from 'react-router-dom';
 import {setLocalStorageData} from 'utilities/localStorage';
 import {frequencyMapping} from 'utilities/staticData';
-import SwitchAccount from './Classroom/SwitchAccount';
 const Classroom = lazy(() => import('components/Dashboard/Classroom/Classroom'));
 
 const GameChangers = lazy(() => import('components/Dashboard/GameChangers/GameChangers'));
@@ -39,6 +37,14 @@ const TestCases = lazy(() => import('components/Dashboard/TestCases/TestCases'))
 const Registration = lazy(
   () => import('components/Dashboard/Admin/UserManagement/Registration')
 );
+
+const conditionalRender = (children: JSX.Element, condition: boolean) => {
+  if (condition) {
+    return children;
+  } else {
+    return <Redirect to={`/dashboard/home`} />;
+  }
+};
 
 export const reorderSyllabus = (syllabusArray: any[], sequenceArray: any[]) => {
   let getSyllabusInSequence =
@@ -119,6 +125,7 @@ export interface DashboardProps {
 
 export interface ClassroomControlProps extends DashboardProps {
   children?: React.ReactNode;
+  roomsLoading?: boolean;
   [key: string]: any;
 }
 
@@ -157,6 +164,8 @@ const Dashboard = (props: DashboardProps) => {
     role: '',
     image: ''
   });
+  const isStudent = userData.role === 'ST';
+
   const isTeacher = stateUser?.role === 'FLW' || stateUser?.role === 'TR';
   const isOnDemandStudent = stateUser?.onDemand;
 
@@ -227,10 +236,10 @@ const Dashboard = (props: DashboardProps) => {
   // ~~~~ DISABLE ROOM LOADING FOR ADMIN ~~~ //
 
   useEffect(() => {
-    const userRole = stateUser?.role;
-    if (userRole === 'SUP' || userRole === 'ADM') {
-      setRoomsLoading(true);
-    }
+    // const userRole = stateUser?.role;
+    // if (userRole === 'SUP' || userRole === 'ADM') {
+    //   setRoomsLoading(true);
+    // }
     setLocalStorageData('last_page', 'dashboard');
   }, []);
 
@@ -260,6 +269,7 @@ const Dashboard = (props: DashboardProps) => {
 
   const getDashboardData = async (authId: string, email: string) => {
     try {
+      setRoomsLoading(true);
       const queryObj = {
         name: 'customQueries.getDashboardData',
         valueObj: {
@@ -283,10 +293,12 @@ const Dashboard = (props: DashboardProps) => {
       console.error('getDashbaordData -> ', e);
     } finally {
       // need to do some cleanup
+      setRoomsLoading(false);
     }
   };
 
   const getDashboardDataForTeachers = async (teacherAuthID: string) => {
+    setRoomsLoading(true);
     try {
       const dashboardDataFetch: any = await API.graphql(
         graphqlOperation(customQueries.getDashboardDataForTeachers, {
@@ -319,6 +331,7 @@ const Dashboard = (props: DashboardProps) => {
       console.error('getDashboardDataForTeachers -> ', e);
     } finally {
       // need to do some cleanup
+      setRoomsLoading(false);
     }
   };
   useEffect(() => {
@@ -327,10 +340,10 @@ const Dashboard = (props: DashboardProps) => {
     if (stateUser?.role === 'ST') {
       getDashboardData(authId, email);
     }
-    if (isTeacher) {
+    if (!isStudent) {
       getDashboardDataForTeachers(authId);
     }
-  }, [stateUser?.role, isTeacher]);
+  }, [stateUser?.role, isStudent]);
 
   /******************************************
    * 1.2 REDUCE ROOMS FROM CLASSLIST ARRAY  *
@@ -778,13 +791,14 @@ const Dashboard = (props: DashboardProps) => {
   };
 
   const HomeSwitch = () =>
-    isTeacher ? (
+    !isStudent ? (
       <HomeForTeachers
         homeData={homeDataForTeachers}
         isTeacher={isTeacher}
         activeRoomInfo={activeRoomInfo}
         setActiveRoomInfo={setActiveRoomInfo}
         handleRoomSelection={handleRoomSelection}
+        roomsLoading={roomsLoading}
       />
     ) : (
       <Home
@@ -793,13 +807,12 @@ const Dashboard = (props: DashboardProps) => {
         activeRoomInfo={activeRoomInfo}
         setActiveRoomInfo={setActiveRoomInfo}
         handleRoomSelection={handleRoomSelection}
+        roomsLoading={roomsLoading}
       />
     );
 
   // check if url contains game-changers
   const isGameChangers = window.location.href.includes('game-changers');
-  const isLocalhost = window.location.hostname === 'localhost';
-  const isDev = awsmobile.aws_user_files_s3_bucket.includes('dev');
 
   return (
     <>
@@ -836,12 +849,12 @@ const Dashboard = (props: DashboardProps) => {
               : 'overflow-y-auto'
           }`}>
           {/*<FloatingSideMenu />*/}
-          <Noticebar notifications={notifications} />
+          {!isGameChangers && <Noticebar notifications={notifications} />}
 
           <Suspense
             fallback={
               <div className="min-h-screen w-full flex flex-col justify-center items-center">
-                <Loader withText={'Loading'} className="w-auto text-gray-400" />
+                <ComponentLoading />
               </div>
             }>
             <Switch>
@@ -867,7 +880,7 @@ const Dashboard = (props: DashboardProps) => {
                   } else
                     return (
                       <div className="min-h-screen w-full flex flex-col justify-center items-center">
-                        <Loader withText={'Loading'} className="w-auto text-gray-400" />
+                        <ComponentLoading />
                       </div>
                     );
                 }}
@@ -890,6 +903,7 @@ const Dashboard = (props: DashboardProps) => {
                   </ErrorBoundary>
                 )}
               />
+
               <Route
                 // exact
                 path={`${match.url}/game-changers`}
@@ -901,14 +915,22 @@ const Dashboard = (props: DashboardProps) => {
                   </ErrorBoundary>
                 )}
               />
-              ]
-              {(userData.role === 'SUP' ||
-                userData.role === 'ADM' ||
-                userData.role === 'TR' ||
-                userData.role === 'FLW' ||
-                userData.role === 'BLD') && (
-                <Route exact path={`${match.url}/csv`} render={() => <Csv />} />
-              )}
+
+              <Route
+                exact
+                path={`${match.url}/csv`}
+                render={() =>
+                  conditionalRender(
+                    <Csv />,
+                    userData.role === 'SUP' ||
+                      userData.role === 'ADM' ||
+                      userData.role === 'TR' ||
+                      userData.role === 'FLW' ||
+                      userData.role === 'BLD'
+                  )
+                }
+              />
+
               <Route
                 exact
                 path={`${match.url}/classroom/:roomId`}

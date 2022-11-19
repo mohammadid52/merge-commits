@@ -1,19 +1,20 @@
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import AddButton from 'atoms/Buttons/AddButton';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import * as mutations from 'graphql/mutations';
 import React, {useContext, useEffect, useState} from 'react';
 import {useHistory, useRouteMatch} from 'react-router';
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import * as mutations from 'graphql/mutations';
-import AddButton from 'atoms/Buttons/AddButton';
-import useDictionary from 'customHooks/dictionary';
-import {GlobalContext} from 'contexts/GlobalContext';
 
-import * as customQueries from 'customGraphql/customQueries';
-import Loader from 'atoms/Loader';
-import {getAsset} from 'assets';
-import UnitListRow from './UnitListRow';
-import ModalPopUp from 'molecules/ModalPopUp';
+import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
+import useSearch from '@customHooks/useSearch';
 import SearchInput from 'atoms/Form/SearchInput';
 import Selector from 'atoms/Form/Selector';
+import Loader from 'atoms/Loader';
 import ErrorBoundary from 'components/Error/ErrorBoundary';
+import * as customQueries from 'customGraphql/customQueries';
+import ModalPopUp from 'molecules/ModalPopUp';
+import UnitListRow from './UnitListRow';
 
 export const UnitList = ({instId}: any) => {
   const history = useHistory();
@@ -26,7 +27,7 @@ export const UnitList = ({instId}: any) => {
     theme,
     userLanguage
   } = useContext(GlobalContext);
-  const themeColor = getAsset(clientKey, 'themeClassName');
+
   const {CommonlyUsedDict, UnitLookupDict} = useDictionary(clientKey);
   // ~~~~~~~~~~~~~~ UNIT LIST ~~~~~~~~~~~~~~ //
   const [loading, setLoading] = useState(true);
@@ -34,7 +35,6 @@ export const UnitList = ({instId}: any) => {
   const [allUnits, setAllUnits] = useState<any>([]);
   const [units, setUnits] = useState<any>([]);
 
-  const [searchInput, setSearchInput] = useState('');
   const [selectedInstitution, setSelectedInstitution] = useState<any>({});
 
   useEffect(() => {
@@ -49,6 +49,8 @@ export const UnitList = ({instId}: any) => {
       .map((item: any) => {
         return {
           ...item,
+          institutionId: item.institution.id,
+          institutionName: item.institution.name,
           lessons: {
             ...(item.lessons || {}),
             items: item.lessons?.items
@@ -172,41 +174,25 @@ export const UnitList = ({instId}: any) => {
     } catch (error) {}
   };
 
-  const instituteChange = (_: string, name: string, value: string) => {
-    setSelectedInstitution({name, id: value});
-    onSearch(searchInput, value);
-  };
+  const updateRoomList = (institutionId: string) => {
+    const filteredByInstitution = filterBySearchQuery(institutionId, ['institutionId']);
 
-  const onSearch = (searchValue: string, institutionId?: string) => {
-    if (searchValue && institutionId) {
-      setUnits(
-        allUnits.filter(
-          (item: any) =>
-            item.name?.toLowerCase().includes(searchValue.toLowerCase()) &&
-            item.institution?.id === institutionId
-        )
-      );
-    } else if (institutionId) {
-      setUnits(allUnits.filter((item: any) => item.institution?.id === institutionId));
-    } else if (searchValue) {
-      setUnits(
-        allUnits.filter((item: any) =>
-          item.name?.toLowerCase().includes(searchValue.toLowerCase())
-        )
-      );
+    if (Boolean(filteredByInstitution)) {
+      setFilteredList(filteredByInstitution);
+      setSearchInput({...searchInput, isActive: true});
     } else {
-      setUnits(allUnits);
+      removeSearchAction();
     }
   };
 
-  const removeSearchAction = () => {
-    setSearchInput('');
-    onSearch('', selectedInstitution?.id);
+  const instituteChange = (_: string, name: string, value: string) => {
+    setSelectedInstitution({name, id: value});
+    updateRoomList(value);
   };
 
   const onInstitutionSelectionRemove = () => {
     setSelectedInstitution({});
-    onSearch(searchInput, '');
+    // onSearch(searchInput, '');
   };
 
   const redirectToInstitution = (institutionId: string) => {
@@ -224,6 +210,41 @@ export const UnitList = ({instId}: any) => {
     );
   };
 
+  const {
+    searchInput,
+    setSearch,
+    checkSearchQueryFromUrl,
+    filterBySearchQuery,
+    removeSearchAction,
+    searchAndFilter,
+    setSearchInput
+  } = useSearch([...(units || [])], ['name', 'institutionName']);
+
+  const [filteredList, setFilteredList] = useState([...units]);
+
+  useEffect(() => {
+    if (!loading && units?.length > 0) {
+      const query = checkSearchQueryFromUrl();
+      if (query) {
+        const items = filterBySearchQuery(query);
+        if (Boolean(items)) {
+          setFilteredList(items);
+        }
+      }
+    }
+  }, [loading]);
+
+  const searchRoom = () => {
+    const searched = searchAndFilter(searchInput.value);
+    if (Boolean(searched)) {
+      setFilteredList(searched);
+    } else {
+      removeSearchAction();
+    }
+  };
+
+  const finalList = searchInput.isActive ? filteredList : units;
+
   // ##################################################################### //
   // ############################### OUTPUT ############################## //
   // ##################################################################### //
@@ -231,7 +252,7 @@ export const UnitList = ({instId}: any) => {
   return (
     <div className="pt-0 flex m-auto justify-center h-full p-8">
       <div className="flex flex-col">
-        <div className="flex justify-between items-center w-full mx-auto">
+        {/* <div className="flex justify-between items-center w-full mx-auto">
           <h3 className="text-lg leading-6 uppercase text-gray-600 w-auto">Units</h3>
           <div className={`flex justify-end`}>
             <div
@@ -239,6 +260,7 @@ export const UnitList = ({instId}: any) => {
                 isSuperAdmin ? 'md:w-72 lg:w-96' : 'md:w-36 lg:w-48 mr-4'
               }`}>
               <SearchInput
+                dataCy="unit-search-input"
                 value={searchInput}
                 onChange={(value) => setSearchInput(value)}
                 onKeyDown={() => onSearch(searchInput, selectedInstitution?.id)}
@@ -265,43 +287,83 @@ export const UnitList = ({instId}: any) => {
               />
             )}
           </div>
-        </div>
+        </div> */}
+        <SectionTitleV3
+          title={'Units'}
+          fontSize="xl"
+          fontStyle="semibold"
+          extraClass="leading-6 text-gray-900"
+          borderBottom
+          shadowOff
+          withButton={
+            <div className={`w-auto flex gap-x-4 justify-end items-center flex-wrap`}>
+              {isSuperAdmin && (
+                <Selector
+                  placeholder={UnitLookupDict[userLanguage]['SELECT_INSTITUTION']}
+                  list={institutionList}
+                  selectedItem={selectedInstitution?.name}
+                  onChange={instituteChange}
+                  arrowHidden={true}
+                  additionalClass={'w-auto lg:w-48'}
+                  isClearable
+                  onClear={onInstitutionSelectionRemove}
+                />
+              )}
+              <SearchInput
+                dataCy="unit-search-input"
+                value={searchInput.value}
+                onChange={setSearch}
+                isActive={searchInput.isActive}
+                disabled={loading}
+                onKeyDown={searchRoom}
+                closeAction={removeSearchAction}
+              />
+
+              {!isSuperAdmin && (
+                <AddButton
+                  label={UnitLookupDict[userLanguage]['NEW_UNIT']}
+                  onClick={handleAdd}
+                />
+              )}
+            </div>
+          }
+        />
         {loading ? (
           <div className="py-20 text-center mx-auto flex justify-center items-center w-full h-48">
             <div className="w-5/10">
               <Loader />
             </div>
           </div>
-        ) : units?.length ? (
+        ) : finalList?.length ? (
           <>
-            <div className="w-full pt-8 m-auto border-b-0 border-gray-200">
-              <div className="flex justify-between bg-gray-50 px-8 whitespace-nowrap">
-                <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+            <div className="w-full m-auto ">
+              <div className="flex justify-between bg-gray-50 whitespace-nowrap">
+                <div className="w-1/10 px-8 py-4 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>{UnitLookupDict[userLanguage]['NO']}</span>
                 </div>
                 <div
-                  className={`w-4/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider`}>
+                  className={`w-4/10 px-8 py-4 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider`}>
                   <span>{UnitLookupDict[userLanguage]['NAME']}</span>
                 </div>
                 {isSuperAdmin && (
-                  <div className="w-2/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider truncate">
+                  <div className="w-2/10 px-8 py-4 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider truncate">
                     <span>{UnitLookupDict[userLanguage]['INSTITUTION_NAME']}</span>
                   </div>
                 )}
                 <div
                   className={`${
                     isSuperAdmin ? 'w-2/10' : 'w-4/10'
-                  } px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider`}>
+                  } px-8 py-4 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider`}>
                   <span>{UnitLookupDict[userLanguage]['LESSONS']}</span>
                 </div>
-                <div className="w-1/10 m-auto py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                <div className="w-1/10 m-auto py-4 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span className="w-auto">{UnitLookupDict[userLanguage]['ACTION']}</span>
                 </div>
               </div>
             </div>
 
             <div className="mb-8 w-full m-auto flex-1 overflow-y-auto">
-              {units.map((unit: any, index: number) => {
+              {finalList.map((unit: any, index: number) => {
                 return (
                   <ErrorBoundary
                     key={`unit_list_row_${index}`}
@@ -309,6 +371,7 @@ export const UnitList = ({instId}: any) => {
                     <UnitListRow
                       key={`unit_list_row_${index}`}
                       index={index}
+                      searchInput={searchInput.value}
                       item={unit}
                       checkIfRemovable={checkIfRemovable}
                       handleToggleDelete={handleToggleDelete}
@@ -349,7 +412,7 @@ export const UnitList = ({instId}: any) => {
             )}
             <p className="text-center p-16">
               {' '}
-              {searchInput || selectedInstitution?.id
+              {searchInput.isActive || selectedInstitution?.id
                 ? CommonlyUsedDict[userLanguage]['NO_SEARCH_RESULT']
                 : UnitLookupDict[userLanguage]['INFO']}
             </p>

@@ -1,3 +1,4 @@
+import Buttons from '@components/Atoms/Buttons';
 import {classNames} from 'components/Lesson/UniversalLessonBuilder/UI/FormElements/TextInput';
 import AnimatedContainer from 'components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import React from 'react';
@@ -14,16 +15,16 @@ const NextButton = ({onClick, countSelected}: NextButtonProps) => {
     <div className={'flex items-center gap-x-6 justify-center'}>
       <AnimatedContainer className="w-auto" show={countSelected === null}>
         {countSelected === null && (
-          <button
+          <Buttons
             // disabled={isActive}
             onClick={onClick}
-            className={classNames(
-              commonBtnClass,
-              // isActive ? "bg-opacity-70 pointer-events-none" : "",
-              ' px-4 py-2  bg-teal-500 hover:bg-teal-600  rounded-lg text-white'
-            )}>
-            Start
-          </button>
+            // className={classNames(
+            //   commonBtnClass,
+            //   // isActive ? "bg-opacity-70 pointer-events-none" : "",
+            //   ' px-4 py-2  bg-teal-500 hover:bg-teal-600  rounded-lg text-white'
+            // )}
+            label="Start"
+          />
         )}
       </AnimatedContainer>
     </div>

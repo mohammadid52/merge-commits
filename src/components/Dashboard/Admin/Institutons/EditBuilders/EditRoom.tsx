@@ -676,7 +676,8 @@ const EditRoom = (props: EditRoomProps) => {
         });
         setPrevName(savedData.name);
         setSelectedCurrID(curricularId);
-      } catch {
+      } catch (e) {
+        console.error(e);
         setMessages({
           show: true,
           message: RoomEDITdict[userLanguage]['messages']['errfetch'],

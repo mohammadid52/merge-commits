@@ -381,6 +381,7 @@ const Login = ({updateAuthState}: LoginProps) => {
             )}
             <div className="relative flex flex-col justify-center items-center">
               <Buttons
+                dataCy="login-button"
                 disabled={isToggled}
                 onClick={handleSubmit}
                 btnClass="w-full py-3"

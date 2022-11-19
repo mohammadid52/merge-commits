@@ -115,11 +115,6 @@
     --color: var(--awful-color);
   }
 
-  &.selected-card {
-    width: 350px;
-    height: 330px;
-  }
-
   overflow: hidden;
   position: relative;
   background-image: linear-gradient(
@@ -231,7 +226,7 @@
     position: absolute;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-end;
 
     .emoji-response-save {
       -webkit-appearance: none;
@@ -259,5 +254,80 @@
     transform: scale(1.08) translateZ(0);
     opacity: 0.7;
     filter: drop-shadow(0 8px 24px rgba(#000, 0.12));
+  }
+}
+
+.flip-card {
+  perspective: 1000px;
+  width: 300px;
+  height: 270px;
+}
+
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 1s;
+  transform-style: preserve-3d;
+}
+.flip-card:hover {
+  .flip-card-inner {
+    transform: rotateY(180deg);
+  }
+  .flip-card-front {
+    pointer-events: none;
+  }
+}
+
+.flip-card-front,
+.flip-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden; /* Safari */
+  backface-visibility: hidden;
+}
+
+.flip-card-front {
+}
+
+.flip-card-back {
+  cursor: text;
+  transform: rotateY(180deg);
+}
+
+.flip-card-back textarea {
+  font-family: 'Patrick Hand', cursive;
+  background: transparent;
+  cursor: text !important;
+  height: 70px;
+  border: transparent;
+  user-select: text !important;
+  display: inline-block;
+  box-sizing: border-box;
+
+  overflow: scroll;
+  width: 100%;
+  padding: 0;
+  // pseudo-elements
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  &:focus {
+    cursor: text !important;
+    outline: none;
+    box-shadow: none;
+  }
+
+  &::first-line {
+    position: relative;
+    font-weight: bold;
+  }
+
+  &::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: bold;
   }
 }

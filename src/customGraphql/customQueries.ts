@@ -408,42 +408,55 @@ export const getDashboardDataForCoTeachers = /* GraphQL */ `
     }
   }
 `;
-export const getCoTeachersForRoom = /* GraphQL */ `
-  query ListRoomCoTeachers(
-    $filter: ModelRoomCoTeachersFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listRoomCoTeachers(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
+export const getRoomCoTeachers = /* GraphQL */ `
+  query GetRoomCoTeachers($id: ID!) {
+    getRoomCoTeachers(id: $id) {
+      id
+      roomID
+      teacherID
+      teacherEmail
+      teacherAuthID
+      room {
         id
-        room {
+        institutionID
+        classID
+        teacherAuthID
+        teacherEmail
+        name
+        maxPersons
+        status
+        filters
+        location
+        startDate
+        startTime
+        endDate
+        endTime
+        length
+        repeat
+        notes
+        activeSyllabus
+        frequency
+        coTeachers {
+          nextToken
+        }
+        institution {
           id
-          institutionID
-          classID
-          teacherAuthID
-          teacherEmail
           name
-          coTeachers {
-            items {
-              id
-              roomID
-              teacher {
-                id
-                authId
-                status
-                email
-                firstName
-                lastName
-              }
-              teacherID
-              teacherEmail
-              teacherAuthID
-              createdAt
-              updatedAt
-            }
-            nextToken
-          }
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          setupComplete
+          createdAt
+          updatedAt
         }
         teacher {
           id
@@ -455,11 +468,119 @@ export const getCoTeachersForRoom = /* GraphQL */ `
           firstName
           preferredName
           lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          inactiveStatusDate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          onDemand
+          sentiments
+          passcode
+          spotlightUser
+          spotlightDate
+          statusReason
+          addedby
+          lastEmotionSubmission
+          createdAt
+          updatedAt
         }
+        class {
+          id
+          institutionID
+          type
+          name
+          roomId
+          createdAt
+          updatedAt
+        }
+        curricula {
+          items {
+            id
+            roomID
+            curriculumID
+            createdAt
+            updatedAt
+          }
+          nextToken
+        }
+        activeLessonId
+        ClosedPages
+        disabledPages
+        studentViewing
+        displayData {
+          isTeacher
+          studentAuthID
+          lessonPageID
+        }
+        currentPage
+        completedLessons {
+          lessonID
+          time
+        }
+        activeLessons
+        classroomGroups {
+          nextToken
+        }
+        weekDay
+        conferenceCallLink
+        lessonImpactLog {
+          impactDate
+          reasonComment
+          lessonImpact
+          adjustment
+        }
+        classSentiment
         createdAt
         updatedAt
       }
-      nextToken
+      teacher {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        inactiveStatusDate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        onDemand
+        sentiments
+        passcode
+        classes {
+          nextToken
+        }
+        lessons {
+          nextToken
+        }
+        spotlightUser
+        spotlightDate
+        statusReason
+        addedby
+        lastEmotionSubmission
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
     }
   }
 `;
@@ -1088,6 +1209,53 @@ export const getRoom = /* GraphQL */ `
       repeat
       notes
       activeSyllabus
+      coTeachers {
+        items {
+          id
+          roomID
+          teacherID
+          teacherEmail
+          teacherAuthID
+          createdAt
+          updatedAt
+          teacher {
+            firstName
+            lastName
+          }
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+export const getSingleRoomForCoTeacher = /* GraphQL */ `
+  query GetRoom($id: ID!) {
+    getRoom(id: $id) {
+      id
+      institutionID
+      classID
+      teacherAuthID
+      teacherEmail
+      name
+      status
+
+      teacher {
+        id
+
+        firstName
+        preferredName
+        lastName
+
+        classes {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+
       coTeachers {
         items {
           id

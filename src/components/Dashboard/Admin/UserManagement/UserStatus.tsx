@@ -4,8 +4,7 @@ type StatusProps = {
   status: any;
 };
 
-const commonClass =
-  'w-auto inline-flex text-xs leading-5 font-semibold uppercase rounded';
+const commonClass = 'w-auto inline-flex text-xs leading-5 font-medium uppercase rounded';
 
 export const Status = ({
   children,
