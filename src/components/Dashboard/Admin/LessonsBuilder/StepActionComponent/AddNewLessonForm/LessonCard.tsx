@@ -123,6 +123,7 @@ const LessonCard = ({
                       <span className="text-red-500"> * </span>
                     </label>
                     <FormInput
+                      dataCy="lesson-image-caption"
                       value={imageCaption}
                       id="imageCaption"
                       onChange={onInputChange}
@@ -143,6 +144,7 @@ const LessonCard = ({
                       <span className="text-red-500"> *</span>
                     </label>
                     <TextArea
+                      dataCy="lesson-summary"
                       rows={5}
                       id="studentSummary"
                       value={studentSummary}

@@ -128,6 +128,19 @@ export const updatePerson = /* GraphQL */ `
   }
 `;
 
+export const updateLastSubmissionDate = /* GraphQL */ `
+  mutation UpdatePerson(
+    $input: UpdatePersonInput!
+    $condition: ModelPersonConditionInput
+  ) {
+    updatePerson(input: $input, condition: $condition) {
+      id
+      authId
+      lastEmotionSubmission
+    }
+  }
+`;
+
 export const updatePersonLoginTime = /* GraphQL */ `
   mutation UpdatePerson(
     $input: UpdatePersonInput!
@@ -625,6 +638,33 @@ export const createClassStudent = /* GraphQL */ `
       studentEmail
       studentAuthID
       createdAt
+    }
+  }
+`;
+
+export const updatePersonLessonsData = /* GraphQL */ `
+  mutation UpdatePersonLessonsData(
+    $input: UpdatePersonLessonsDataInput!
+    $condition: ModelPersonLessonsDataConditionInput
+  ) {
+    updatePersonLessonsData(input: $input, condition: $condition) {
+      id
+      studentAuthID
+      studentEmail
+      lessonID
+      lessonType
+      pages
+      ratings
+      isCompleted
+      roomId
+      lesson {
+        id
+        type
+        title
+      }
+
+      createdAt
+      updatedAt
     }
   }
 `;

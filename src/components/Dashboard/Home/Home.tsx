@@ -1,19 +1,18 @@
-import {setLocalStorageData} from 'utilities/localStorage';
-import isEmpty from 'lodash/isEmpty';
-import React, {useContext, useEffect, useState} from 'react';
+import Loader from '@components/Atoms/Loader';
 import {getAsset} from 'assets';
+import SectionTitleV3 from 'atoms/SectionTitleV3';
 import {GlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
+import isEmpty from 'lodash/isEmpty';
+import React, {useContext, useEffect, useState} from 'react';
+import {setLocalStorageData} from 'utilities/localStorage';
 import {getImageFromS3} from 'utilities/services';
-import SectionTitleV3 from 'atoms/SectionTitleV3';
 import HeroBanner from '../../Header/HeroBanner';
-import ComponentLoading from '../../Lesson/Loading/ComponentLoading';
 import {ClassroomControlProps} from '../Dashboard';
 import HeaderTextBar from '../HeaderTextBar/HeaderTextBar';
 import RoomTiles from './RoomTiles';
 import StudentsTiles from './StudentsTiles';
 import TeacherRows from './TeacherRows';
-import Loader from '@components/Atoms/Loader';
 
 export interface ModifiedListProps {
   id: any;
@@ -35,7 +34,7 @@ export interface ModifiedListProps {
 }
 
 const Home = (props: ClassroomControlProps) => {
-  const {homeData, classList, handleRoomSelection, isTeacher} = props;
+  const {homeData, classList, handleRoomSelection, isTeacher, roomsLoading} = props;
 
   const {state, dispatch, userLanguage, theme, clientKey} = useContext(GlobalContext);
   const dashboardBanner1 = getAsset(clientKey, 'dashboardBanner1');
@@ -244,6 +243,7 @@ const Home = (props: ClassroomControlProps) => {
           {/* Classroom Section */}
           <div className="px-3">
             <RoomTiles
+              roomsLoading={roomsLoading}
               handleRoomSelection={handleRoomSelection}
               classList={getClassList()}
             />

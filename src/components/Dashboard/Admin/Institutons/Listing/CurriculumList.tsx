@@ -1,16 +1,19 @@
-import React, {Fragment, useContext, useEffect, useState} from 'react';
-import {useHistory, useRouteMatch} from 'react-router';
-import * as customQueries from 'customGraphql/customQueries';
-import * as mutations from 'graphql/mutations';
-import {GlobalContext} from 'contexts/GlobalContext';
-import useDictionary from 'customHooks/dictionary';
-import AddButton from 'atoms/Buttons/AddButton';
-import CurriculumListRow from './CurriculumListRow';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import ModalPopUp from 'molecules/ModalPopUp';
-import Loader from 'atoms/Loader';
+import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
+import useAuth from '@customHooks/useAuth';
+import useSearch from '@customHooks/useSearch';
+import AddButton from 'atoms/Buttons/AddButton';
 import SearchInput from 'atoms/Form/SearchInput';
 import Selector from 'atoms/Form/Selector';
+import Loader from 'atoms/Loader';
+import {GlobalContext} from 'contexts/GlobalContext';
+import * as customQueries from 'customGraphql/customQueries';
+import useDictionary from 'customHooks/dictionary';
+import * as mutations from 'graphql/mutations';
+import ModalPopUp from 'molecules/ModalPopUp';
+import React, {Fragment, useContext, useEffect, useState} from 'react';
+import {useHistory, useRouteMatch} from 'react-router';
+import CurriculumListRow from './CurriculumListRow';
 
 interface CurriculumListProps {
   curricular?: {items: ICurricular[]};
@@ -40,12 +43,16 @@ const CurriculumList = ({
   const clientKey = gContext.clientKey;
   const userLanguage = gContext.userLanguage;
   const {CommonlyUsedDict, InstitueCurriculum} = useDictionary(clientKey);
-  const isSuperAdmin: boolean = gContext.state.user.isSuperAdmin;
-  const [courseList, setCourseList] = useState<Array<ICurricular>>();
-  const [allCourses, setAllCourses] = useState<Array<ICurricular>>();
+
+  const [courseList, setCourseList] = useState<Array<ICurricular>>([]);
+  const [allCourses, setAllCourses] = useState<Array<ICurricular>>([]);
   const [institutionList, setInstitutionList] = useState<any>([]);
+
+  const {isSuperAdmin: _isSuperAdmin, isAdmin, isBuilder} = useAuth();
+  const isSuperAdmin = isBuilder || isAdmin || _isSuperAdmin;
+
   const [loading, setLoading] = useState(isSuperAdmin);
-  const [searchInput, setSearchInput] = useState('');
+
   const [selectedInstitution, setSelectedInstitution] = useState<any>({});
 
   //  CHECK TO SEE IF CURRICULUM CAN BE DELETED  //
@@ -67,11 +74,23 @@ const CurriculumList = ({
       fetchCurriculums();
       fetchInstitutions();
     }
-  }, []);
+  }, [isSuperAdmin]);
 
   const instituteChange = (_: string, name: string, value: string) => {
     setSelectedInstitution({name, id: value});
-    onSearch(searchInput, value);
+    // onSearch(searchInput, value);
+    updateRoomList(value);
+  };
+
+  const updateRoomList = (institutionId: string) => {
+    const filteredByInstitution = filterBySearchQuery(institutionId, ['institutionId']);
+
+    if (Boolean(filteredByInstitution)) {
+      setFilteredList(filteredByInstitution);
+      setSearchInput({...searchInput, isActive: true});
+    } else {
+      removeSearchAction();
+    }
   };
 
   useEffect(() => {
@@ -101,6 +120,8 @@ const CurriculumList = ({
       const updatedList: ICurricular[] = list.data?.listCurriculums?.items?.map(
         (item: ICurricular) => ({
           ...item,
+          institutionName: item?.institution?.name,
+          institutionId: item?.institution?.id,
           universalSyllabus: {
             ...(item.universalSyllabus || {}),
             items: item.universalSyllabus?.items
@@ -112,6 +133,7 @@ const CurriculumList = ({
           }
         })
       );
+
       setCourseList(updatedList);
       setAllCourses(updatedList);
       setLoading(false);
@@ -120,40 +142,14 @@ const CurriculumList = ({
     }
   };
 
-  const onSearch = (searchValue: string, institutionId?: string) => {
-    if (searchValue && institutionId) {
-      setCourseList(
-        [...allCourses].filter(
-          (item: ICurricular) =>
-            item.name?.toLowerCase().includes(searchValue.toLowerCase()) &&
-            item.institution?.id === institutionId
-        )
-      );
-    } else if (institutionId) {
-      setCourseList(
-        [...allCourses].filter(
-          (item: ICurricular) => item.institution?.id === institutionId
-        )
-      );
-    } else if (searchValue) {
-      setCourseList(
-        [...allCourses].filter((item: ICurricular) =>
-          item.name?.toLowerCase().includes(searchValue.toLowerCase())
-        )
-      );
-    } else {
-      setCourseList(allCourses);
-    }
-  };
-
-  const removeSearchAction = () => {
-    setSearchInput('');
-    onSearch('', selectedInstitution?.id);
-  };
+  // const removeSearchAction = () => {
+  //   setSearchInput('');
+  //   onSearch('', selectedInstitution?.id);
+  // };
 
   const onInstitutionSelectionRemove = () => {
     setSelectedInstitution({});
-    onSearch(searchInput, '');
+    // onSearch(searchInput, '');
   };
 
   const fetchInstitutions = async () => {
@@ -246,28 +242,56 @@ const CurriculumList = ({
     );
   };
 
+  const {
+    searchInput,
+    setSearch,
+    checkSearchQueryFromUrl,
+    filterBySearchQuery,
+    removeSearchAction,
+    searchAndFilter,
+    setSearchInput
+  } = useSearch([...(courseList || [])], ['name', 'institutionName']);
+
+  const [filteredList, setFilteredList] = useState([...courseList]);
+
+  useEffect(() => {
+    if (!loading && courseList?.length > 0) {
+      const query = checkSearchQueryFromUrl();
+      if (query) {
+        const items = filterBySearchQuery(query);
+        if (Boolean(items)) {
+          setFilteredList(items);
+        }
+      }
+    }
+  }, [loading]);
+
+  const searchRoom = () => {
+    const searched = searchAndFilter(searchInput.value);
+    if (Boolean(searched)) {
+      setFilteredList(searched);
+    } else {
+      removeSearchAction();
+    }
+  };
+
+  const finalList = searchInput.isActive ? filteredList : courseList;
+
   // ##################################################################### //
   // ############################### OUTPUT ############################## //
   // ##################################################################### //
   return (
     <div className="pt-0 flex m-auto justify-center h-full p-8">
       <div className="flex flex-col">
-        <div className="flex justify-between items-center w-full m-auto">
-          <h3 className="text-lg leading-6 uppercase text-gray-600 w-auto">
-            {InstitueCurriculum[userLanguage]['TITLE']}
-          </h3>
-          <div className={`flex justify-end`}>
-            <div
-              className={`flex justify-between w-auto ${
-                isSuperAdmin ? 'md:w-72 lg:w-96' : 'md:w-36 lg:w-48 mr-4'
-              }`}>
-              <SearchInput
-                value={searchInput}
-                onChange={(value) => setSearchInput(value)}
-                onKeyDown={() => onSearch(searchInput, selectedInstitution?.id)}
-                closeAction={removeSearchAction}
-                style={`mr-4 w-auto lg:w-48`}
-              />
+        <SectionTitleV3
+          title={InstitueCurriculum[userLanguage]['TITLE']}
+          fontSize="xl"
+          fontStyle="semibold"
+          extraClass="leading-6 text-gray-900"
+          borderBottom
+          shadowOff
+          withButton={
+            <div className={`w-auto flex gap-x-4 justify-end items-center flex-wrap`}>
               {isSuperAdmin && (
                 <Selector
                   placeholder={InstitueCurriculum[userLanguage]['SELECT_INSTITUTION']}
@@ -280,15 +304,26 @@ const CurriculumList = ({
                   onClear={onInstitutionSelectionRemove}
                 />
               )}
-            </div>
-            {!isSuperAdmin && (
-              <AddButton
-                label={InstitueCurriculum[userLanguage]['BUTTON']['ADD']}
-                onClick={createNewCurricular}
+              <SearchInput
+                dataCy="curriculum-search-input"
+                value={searchInput.value}
+                onChange={setSearch}
+                isActive={searchInput.isActive}
+                disabled={loading}
+                onKeyDown={searchRoom}
+                closeAction={removeSearchAction}
               />
-            )}
-          </div>
-        </div>
+
+              {!isSuperAdmin && (
+                <AddButton
+                  label={InstitueCurriculum[userLanguage]['BUTTON']['ADD']}
+                  onClick={createNewCurricular}
+                />
+              )}
+            </div>
+          }
+        />
+
         {loading ? (
           <div className="py-20 text-center mx-auto flex justify-center items-center w-full h-48">
             <div className="w-5/10">
@@ -298,7 +333,7 @@ const CurriculumList = ({
               </p>
             </div>
           </div>
-        ) : courseList?.length ? (
+        ) : finalList?.length ? (
           <>
             <div className="w-full pt-8 m-auto border-b-0 border-gray-200">
               <div className="flex justify-between bg-gray-50 px-8 whitespace-nowrap">
@@ -333,10 +368,11 @@ const CurriculumList = ({
             </div>
 
             <div className="mb-8 w-full m-auto flex-1 overflow-y-auto">
-              {courseList.map((item, index) => (
+              {finalList.map((item, index) => (
                 <CurriculumListRow
                   key={`curr_list_row_${index}`}
                   index={index}
+                  searchInput={searchInput.value}
                   isSuperAdmin={isSuperAdmin}
                   item={item}
                   checkIfRemovable={checkIfRemovable}

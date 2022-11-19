@@ -1,4 +1,5 @@
 import React from 'react';
+import {Status} from '../../UserManagement/UserStatus';
 
 interface LocationBadgeProps {
   onDemand: boolean;
@@ -6,12 +7,12 @@ interface LocationBadgeProps {
 
 const LocationBadge = ({onDemand}: LocationBadgeProps) => {
   return (
-    <span
-      className={`w-auto inline-flex text-xs leading-5 font-semibold uppercase rounded  px-2 ${
+    <Status
+      className={
         onDemand ? 'bg-yellow-200 text-yellow-600' : 'bg-blue-200 text-blue-600'
-      }`}>
+      }>
       {onDemand ? 'Self Paced' : 'Classroom'}
-    </span>
+    </Status>
   );
 };
 

@@ -1,4 +1,3 @@
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {useNotifications} from '@contexts/NotificationContext';
 import useStudentTimer from '@customHooks/timer';
 import useAuth from '@customHooks/useAuth';
@@ -6,10 +5,8 @@ import useGraphqlMutation from '@customHooks/useGraphqlMutation';
 import {UniversalLessonStudentData, UpdatePersonLessonsDataInput} from 'API';
 import Modal from 'atoms/Modal';
 import {useGlobalContext} from 'contexts/GlobalContext';
-import * as customQueries from 'customGraphql/customQueries';
 import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
 import {LessonHeaderBarProps} from 'interfaces/LessonComponentsInterfaces';
-import {StudentPageInput} from 'interfaces/UniversalLessonInterfaces';
 import React, {useEffect, useState} from 'react';
 import ReactPlayer from 'react-player';
 import {useHistory, useRouteMatch} from 'react-router-dom';
@@ -27,7 +24,11 @@ const LessonHeaderBar = ({
   setisAtEnd,
   createJournalData,
   handleRequiredNotification,
-  getLessonCompletedValue
+  personLessonData,
+  canContinue,
+  setPersonLessonData,
+  validateRequired,
+  updatePageInLocalStorage
 }: LessonHeaderBarProps) => {
   // ~~~~~~~~~~ CONTEXT SPLITTING ~~~~~~~~~~ //
   const gContext = useGlobalContext();
@@ -58,24 +59,12 @@ const LessonHeaderBar = ({
 
   const {isStudent} = useAuth();
   const goToClassRoom = () => {
+    setPersonLessonData(null);
     isStudent
       ? history.push(`/dashboard/classroom/${getRoomData.id}`)
       : history.push(`${getUrl()}?tab=Completed%20Surveys` || '/dashboard');
     removeLocalStorageData('survey_redirect');
   };
-
-  // const handleManualSave = () => {
-  //   if (lessonState.updated) {
-  //     setWaiting(true);
-  //     setSafeToLeave(false);
-  //   } else {
-  //     setWaiting(false);
-  //     setSafeToLeave(true);
-  //   }
-  //   setTimeout(() => {
-  //     goToClassRoom();
-  //   }, 1500);
-  // };
 
   const updatePersonLessonsDataMutation = useGraphqlMutation<
     {
@@ -84,35 +73,8 @@ const LessonHeaderBar = ({
     UniversalLessonStudentData
   >('updatePersonLessonsData');
 
-  const {setNotification} = useNotifications();
-
-  const triggerNotification = () => {
-    setNotification({
-      title: 'Your notebook has been saved',
-      show: true,
-      type: 'success',
-      buttonText: 'See notebook',
-      buttonUrl: '/anthology?roomId=' + getRoomData.id
-    });
-  };
-
-  const forceFetchId = async () => {
-    let existingLesson: any = await API.graphql(
-      graphqlOperation(customQueries.listPersonLessonsData, {
-        filter: {
-          lessonID: {eq: lessonState.misc?.personLessonData?.lessonID},
-          studentAuthID: {eq: user.authId},
-          studentEmail: {eq: user.email},
-          roomId: {eq: getRoomData.id}
-        }
-      })
-    );
-    return existingLesson?.data?.listPersonLessonsData?.items[0]?.id;
-  };
-
   const handleNotebookSave = () => {
-    const callback = isLesson ? () => triggerNotification() : () => {};
-    createJournalData(callback);
+    createJournalData();
 
     if (isLesson) {
       console.log('\x1b[33m Saving notebook... \x1b[0m');
@@ -121,45 +83,21 @@ const LessonHeaderBar = ({
         saveJournalData?.current();
       }
     }
-    const id =
-      lessonState.misc?.personLessonData?.data?.find(
-        (_d: any) => _d.lessonID === lessonState?.lessonData?.id
-      )?.id ||
-      forceFetchId() ||
-      '';
+    const id = personLessonData.id;
 
     console.log(`\x1b[33m Updating lesson completion... \x1b[0m`);
 
     updatePersonLessonsDataMutation
       .mutate({input: {id, isCompleted: true}})
       .then(() => {
-        isLesson
-          ? history.push(`/dashboard/anthology?roomId=${getRoomData.id}`)
-          : goToClassRoom();
+        setPersonLessonData(null);
+        goToClassRoom();
         console.log('Successfully completed ' + lessonState?.lessonData?.type);
       })
       .catch((err) => {
         console.error('Error updating current lesson/survey complete status', err);
       });
   };
-
-  // let timer: any;
-  // useEffect(() => {
-  //   timer = setTimeout(() => {
-  //     getLessonCompletedValue &&
-  //       getLessonCompletedValue().then((value: any) => {
-  //         if (value?.lessonProgress === value?.totalPages) {
-
-  //         } else {
-
-  //         }
-  //       });
-  //   }, 1300);
-
-  //   return () => {
-  //     clearTimeout(timer);
-  //   };
-  // }, [lessonState.currentPage]);
 
   useEffect(() => {
     if (!lessonState.updated) {
@@ -198,13 +136,10 @@ const LessonHeaderBar = ({
   const [videoLinkModalVisible, setVideoLinkModalVisible] = useState<boolean>(false);
 
   // ~~~~ HANDLE USER LEAVING THE LESSON ~~~ //
-  const handleLeavePopup = (isLeavingAfterCompletion: boolean = true) => {
+  const handleLeavePopup = () => {
     if (videoLinkModalVisible) {
       setVideoLinkModalVisible(false);
     }
-
-    // setLeaveModalVisible(!leaveModalVisible);
-    // setLeaveAfterCompletion(isLeavingAfterCompletion);
 
     goToClassRoom();
   };
@@ -255,40 +190,6 @@ const LessonHeaderBar = ({
   const PAGES = lessonState.lessonData.lessonPlan;
 
   // ~~~~~~~~~ SIMPLE LOGIC CHECKS ~~~~~~~~~ //
-  const validateRequired = (pageIdx: number) => {
-    if (PAGES) {
-      const thisPageData = lessonState?.studentData[pageIdx];
-      const thisPageRequired = lessonState?.requiredInputs[pageIdx];
-      if (thisPageData && thisPageData.length > 0) {
-        const areAnyEmpty = thisPageData.filter((input: StudentPageInput) => {
-          if (thisPageRequired.includes(input.domID) && input.input[0] === '') {
-            return input;
-          }
-        });
-
-        if (areAnyEmpty.length > 0) {
-          return false;
-        } else {
-          return true;
-        }
-      } else {
-        return true;
-      }
-    } else {
-      return false;
-    }
-  };
-
-  const canContinue = () => {
-    if (PAGES) {
-      return (
-        validateRequired(lessonState.currentPage) &&
-        lessonState.currentPage <= PAGES.length - 1
-      );
-    } else {
-      return false;
-    }
-  };
 
   const userAtEnd = () => {
     return lessonState.currentPage === PAGES.length - 1;
@@ -332,7 +233,7 @@ const LessonHeaderBar = ({
     } else {
       if (!userAtEnd()) {
         if (isAtEnd) setisAtEnd(false);
-        if (canContinue()) {
+        if (canContinue) {
           history.push(`${match.url}/${lessonState.currentPage + 1}`);
           lessonDispatch({
             type: 'SET_CURRENT_PAGE',
@@ -353,7 +254,7 @@ const LessonHeaderBar = ({
 
   const handleBack = () => {
     if (lessonState.currentPage === 0) {
-      handleLeavePopup(true);
+      handleLeavePopup();
     } else {
       if (userAtEnd()) {
         if (isAtEnd) setisAtEnd(false);
@@ -446,10 +347,12 @@ const LessonHeaderBar = ({
         setOverlay={setOverlay}
         handlePopup={handleLeavePopup}
         isAtEnd={isAtEnd}
+        updatePageInLocalStorage={updatePageInLocalStorage}
         setisAtEnd={setisAtEnd}
+        validateRequired={validateRequired}
         handleRequiredNotification={handleRequiredNotification}
         pages={PAGES}
-        canContinue={canContinue()}
+        canContinue={canContinue}
         handleForward={handleForward}
       />
 
@@ -480,7 +383,7 @@ const LessonHeaderBar = ({
           setisAtEnd={setisAtEnd}
           handleRequiredNotification={handleRequiredNotification}
           pages={PAGES}
-          canContinue={canContinue()}
+          canContinue={canContinue}
           handleBack={handleBack}
           handleForward={handleForward}
         />

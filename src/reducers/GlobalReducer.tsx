@@ -68,6 +68,7 @@ type globalActions =
         role: string;
         isSuperAdmin: boolean;
         isAdmin: boolean;
+        lastEmotionSubmission?: boolean;
         isBuilder: boolean;
         isTeacher: boolean;
         isStudent: boolean;
@@ -243,7 +244,8 @@ export const globalReducer = (state: globalStateType, action: globalActions) => 
           lastLoggedOut: action.payload.lastLoggedOut,
           associateInstitute: action.payload.associateInstitute,
           onDemand: action.payload?.onDemand,
-          lessons: action.payload?.lessons
+          lessons: action.payload?.lessons,
+          lastEmotionSubmission: action.payload?.lastEmotionSubmission
         }
       };
     case 'LOG_IN':

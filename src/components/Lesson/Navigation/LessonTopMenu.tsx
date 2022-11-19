@@ -13,9 +13,11 @@ const LessonTopMenu = ({
 
   handleRequiredNotification,
   pages,
+  updatePageInLocalStorage,
   canContinue,
   handleForward,
-  pageStateUpdated
+  pageStateUpdated,
+  validateRequired
 }: LessonHeaderBarProps) => {
   const gContext = useGlobalContext();
   const lessonState = gContext.lessonState;
@@ -76,6 +78,9 @@ const LessonTopMenu = ({
                 handleHome={() => handlePopup(false)}
                 handleRequiredNotification={handleRequiredNotification}
                 pages={pages}
+                canContinue={canContinue}
+                updatePageInLocalStorage={updatePageInLocalStorage}
+                validateRequired={validateRequired}
                 currentPage={lessonState?.currentPage}
                 studentData={lessonState?.studentData}
                 requiredInputs={lessonState?.requiredInputs}

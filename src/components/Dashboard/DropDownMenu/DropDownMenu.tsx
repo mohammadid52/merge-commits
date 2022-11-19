@@ -40,10 +40,16 @@ const DropDownMenu = ({
             <div>
               <Menu.Button
                 className={`${
-                  open ? 'bg-indigo-300 text-indigo-700' : ''
-                } hover:bg-gray-400 hover:text-gray-700 inline-flex justify-center w-full px-4 py-2 text-sm font-medium ${
+                  open ? 'iconoclast:bg-main curate:bg-main' : ''
+                } hover:bg-gray-400 hover:text-gray-700 inline-flex justify-center w-full px-2 py-1 text-sm font-medium ${
                   theme === 'iconoclastIndigo' ? 'iconoclastIndigo' : 'curateBlue'
-                } rounded-full hover:iconoclast:bg-main hover:curate:bg-main focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 transition duration-150 drop-down-group ease-in-out transform  text-gray-700`}>
+                } rounded-full 
+                
+                hover:bg-gray-400
+                bg-opacity-20 hover:bg-opacity-30
+
+                 
+                focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 transition duration-150 drop-down-group ease-in-out transform  text-gray-700`}>
                 <div className="w-auto  inline-flex items-center">
                   <div className="w-8 h-8 2xl:w-12 2xl:h-12">
                     {image ? (
@@ -64,7 +70,7 @@ const DropDownMenu = ({
                           }`,
                           textShadow: '0.1rem 0.1rem 2px #423939b3'
                         }}
-                        className="rounded flex justify-center items-center text-xs text-white h-full font-sans">
+                        className="rounded-full flex justify-center items-center text-xs text-white h-full font-sans">
                         {`${initials(firstName, lastName)}`}
                       </div>
                     )}
@@ -72,7 +78,7 @@ const DropDownMenu = ({
 
                   {/* <span>{[firstName, lastName].join(' ')}</span> */}
                   <ChevronDownIcon
-                    className="w-6 dropdown-arrow h-6 2xl:w-8 2xl:h-8 ml-2 -mr-1 text-violet-200 hover:text-violet-100"
+                    className="w-6 dropdown-arrow h-6 2xl:w-8 2xl:h-8 text-violet-200 hover:text-violet-100"
                     aria-hidden="true"
                   />
                 </div>
@@ -86,8 +92,8 @@ const DropDownMenu = ({
               leave="transition ease-in duration-75"
               leaveFrom="transform opacity-100 scale-100"
               leaveTo="transform opacity-0 scale-95">
-              <Menu.Items className="absolute right-1 w-52 mt-1 origin-top-right bg-white divide-y divide-gray-100 rounded-md customShadow focus:outline-none cursor-pointer z-max">
-                <div className="px-2 py-1 shadow-lg">
+              <Menu.Items className="absolute right-1 w-52 mt-1 origin-top-right bg-white divide-y divide-gray-100 rounded-xl customShadow focus:outline-none cursor-pointer z-max">
+                <div className="px-2 py-1 customShadow">
                   <Menu.Item key={'role'}>
                     <div className="p-4 border-b-0 border-gray-400">
                       <span>

@@ -64,6 +64,7 @@ type Person @model @auth(rules: [{allow: public}]) {
   spotlightDate: AWSDate
   statusReason: String
   addedby: String
+  lastEmotionSubmission: AWSDate
 }
 
 type PersonLessonsData @model @auth(rules: [{allow: public}]) {
@@ -75,7 +76,7 @@ type PersonLessonsData @model @auth(rules: [{allow: public}]) {
   pages: AWSJSON
   ratings: Int @default(value: "0")
   isCompleted: Boolean @default(value: "false")
-  roomId: ID!
+  roomId: ID
   lesson: UniversalLesson @hasOne(fields: ["lessonID"])
   room: Room @hasOne(fields: ["roomId"])
 }

@@ -7,6 +7,8 @@ interface IAddButtonActionInterface {
   onClick?: () => void;
   label: string;
   disabled?: boolean;
+  dataCy?: string;
+  loading?: boolean;
 }
 
 const AddButton = ({
@@ -14,14 +16,18 @@ const AddButton = ({
   disabled = false,
   onClick,
   label,
+  dataCy,
+  loading
 }: IAddButtonActionInterface) => {
   return (
     <BUTTONS
+      dataCy={dataCy}
       btnClass={className}
       disabled={disabled}
       label={label}
       labelClass={'leading-6'}
       Icon={IoIosAdd}
+      loading={loading}
       iconBeforeLabel
       onClick={onClick}
     />

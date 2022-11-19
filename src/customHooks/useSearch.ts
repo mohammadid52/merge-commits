@@ -30,14 +30,14 @@ const useSearch = (
     });
   };
 
-  const filterBySearchQuery = (searchQuery?: string) => {
+  const filterBySearchQuery = (searchQuery?: string, customFields?: any[]) => {
     if (searchQuery) {
       let searchVal = searchQuery.toLowerCase();
       const currentUsersList = [...list];
       const newList = currentUsersList.filter((item) => {
         // Search on firstName, lastName, email, and prefferred name for match.
 
-        return fieldsToSearch.some((fieldName) =>
+        return (customFields || fieldsToSearch).some((fieldName) =>
           item[fieldName]?.toLowerCase().includes(searchVal)
         );
       });

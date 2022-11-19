@@ -10,11 +10,14 @@ import StageIcon from './StageIcon';
 
 interface IProgressBarProps {
   handleHome?: () => void;
+  updatePageInLocalStorage?: (pageIdx: number) => void;
+  validateRequired?: (pageIdx: number) => boolean;
   handleRequiredNotification?: () => void;
   pages?: any[];
   currentPage?: number;
   studentData?: any[];
   requiredInputs?: any[];
+  canContinue?: boolean;
 }
 
 const Disabled = ({text}: {text: string}) => {
@@ -30,18 +33,18 @@ const ProgressBar = ({
   handleRequiredNotification,
   pages,
   currentPage,
-  studentData,
-  requiredInputs
+  updatePageInLocalStorage,
+  validateRequired,
+  canContinue
 }: IProgressBarProps) => {
   const gContext = useContext(GlobalContext);
   const lessonState = gContext.lessonState;
-  const lessonDispatch = gContext.lessonDispatch;
+
   const user = gContext.state.user;
 
   const getRoomData = getLocalStorageData('room_info');
 
   // ~~~~~~~~~~~ CHECK IF SURVEY ~~~~~~~~~~~ //
-  const isSurvey = lessonState && lessonState.lessonData?.type === 'survey';
 
   // ~~~~~~~~~ SIMPLE LOGIC CHECKS ~~~~~~~~~ //
   /************************************************
@@ -49,47 +52,6 @@ const ProgressBar = ({
    *  THE CODE FROM THE ELSE - IF AFTER LINE 58   *
    *     IS USED FOR CHECKING REQUIRED FIELDS     *
    ************************************************/
-
-  const validateRequired = (pageIdx: number) => {
-    if (pages) {
-      let inputResponseData =
-        studentData && !isSurvey ? studentData[pageIdx] : studentData;
-
-      let thisPageRequired = requiredInputs && requiredInputs[pageIdx]; // ['a','b','id_123']
-
-      if (inputResponseData && inputResponseData.length > 0) {
-        let areAnyEmpty2 =
-          thisPageRequired && thisPageRequired.length > 0
-            ? thisPageRequired.reduce((truth: boolean, requiredId: string) => {
-                let findInSurveyData = inputResponseData.find(
-                  (inputObj: any) =>
-                    (inputObj.domID === requiredId && inputObj.input[0] === '') ||
-                    (inputObj.domID === requiredId && inputObj.input[0] === undefined)
-                );
-                if (truth === true) {
-                  return true;
-                } else {
-                  if (findInSurveyData !== undefined && findInSurveyData !== null) {
-                    return true;
-                  } else {
-                    return false;
-                  }
-                }
-              }, false)
-            : false;
-
-        if (areAnyEmpty2) {
-          return false;
-        } else {
-          return true;
-        }
-      } else {
-        return true;
-      }
-    } else {
-      return false;
-    }
-  };
 
   const nextRequiredIdx = pages
     ? pages.reduce((nextIdx: number, _: any, currIdx: number) => {
@@ -172,11 +134,13 @@ const ProgressBar = ({
               <StageIcon
                 key={`${page.id}_progressIcon`}
                 pageNr={key}
+                updatePageInLocalStorage={updatePageInLocalStorage}
                 id={page.id}
                 enabled={page.disabled !== true || isOnDemand}
                 open={page.open !== false || isOnDemand}
                 active={key === currentPage}
                 label={page.label}
+                canContinue={canContinue}
                 handleRequiredNotification={handleRequiredNotification}
                 clickable={
                   key === 0 ||

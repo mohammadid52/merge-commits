@@ -1,3 +1,4 @@
+import {PersonLessonsData} from 'API';
 import {UniversalLessonPage} from 'interfaces/UniversalLessonInterfaces';
 import React, {SetStateAction} from 'react';
 
@@ -21,9 +22,14 @@ export interface LessonHeaderBarProps extends LessonComponentsInterface {
   overlay?: string;
   isAtEnd?: boolean;
   setisAtEnd?: React.Dispatch<React.SetStateAction<boolean>>;
+  setPersonLessonData?: React.Dispatch<React.SetStateAction<any>>;
   handleRequiredNotification?: () => void;
   pages?: UniversalLessonPage[];
   canContinue?: boolean;
+  validateRequired?: (pageIdx: number) => boolean;
+  updatePageInLocalStorage?: (pageIdx: number) => void;
+
+  personLessonData?: PersonLessonsData | null;
 
   handleForward?: (back?: boolean) => void;
   getLessonCompletedValue?: () => any;

@@ -1,4 +1,5 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import {useQuery} from '@customHooks/urlParam';
 import useAuth from '@customHooks/useAuth';
 import {
@@ -941,7 +942,7 @@ const Anthology = ({
               fontSize="xl"
               withButton={
                 roomId ? (
-                  <div className="flex items-end justify-end">
+                  <div className="w-auto flex items-end justify-end">
                     <a
                       className="w-auto hover:underline iconoclast:text-main curate:text-main"
                       href={`/dashboard/classroom/${roomId}`}>

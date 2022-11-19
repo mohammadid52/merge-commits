@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-import {loginConfig, urlConfig} from '../config';
+import {loginConfig, urlConfig} from '../../config';
 
 const filePath = 'cypress/fixtures/images/avatar1.png';
 
@@ -8,15 +8,15 @@ describe('Change Avatar', () => {
   it('Should change avatar sucessfully', () => {
     cy.visit(urlConfig.baseURL); // Go to production website of IA
     cy.get('[data-cy="email"]').type(loginConfig.student.username); // Enter email
-    cy.get('button').contains('Enter').click(); // Click on button
+    cy.dataCy('login-button').click(); // Click on button
     cy.get('[data-cy="password"]').type(loginConfig.student.password); // Enter password
-    cy.get('button').contains('Login').click(); // Click on login button
+    cy.dataCy('login-button').click(); // Click on login button
 
     cy.wait(10000); // Wait for user to login
     cy.url().should('contain', urlConfig.dashboardURL);
     cy.get('body').then((body) => {
-      if (body.find('[data-cy="emoji-feedback-button"]').length > 0) {
-        cy.dataCy('emoji-feedback-button').click(); // If emoji feedback popup is open click on save button
+      if (body.find('[data-cy="emoji-feedback-card"]').length > 0) {
+        cy.dataCy('emoji-feedback-card').first().click(); // If emoji feedback popup is open click on save button
       }
     });
 

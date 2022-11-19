@@ -22,6 +22,7 @@ interface ModalProps {
   titleButton?: React.ReactElement;
   className?: string;
   smallText?: string;
+  dataCy?: string;
 }
 
 const ModalPopUp = (props: ModalProps) => {
@@ -43,7 +44,8 @@ const ModalPopUp = (props: ModalProps) => {
     saveTooltip,
     smallText,
     titleButton,
-    className = 'w-168'
+    className = 'w-168',
+    dataCy
   } = props;
   return (
     <Modal
@@ -63,6 +65,7 @@ const ModalPopUp = (props: ModalProps) => {
         <div className="flex justify-center mt-16 w-full mx-auto">
           {deleteModal ? (
             <Buttons
+              dataCy={dataCy}
               label={deleteLabel ? deleteLabel : 'Delete'}
               btnClass="px-10 py-3 ml-4 text-red-600 border-red-600 hover:bg-gray-100 hover:text-red-500"
               onClick={saveAction}
@@ -75,6 +78,7 @@ const ModalPopUp = (props: ModalProps) => {
                 placement="bottom"
                 text={saveTooltip}>
                 <Buttons
+                  dataCy={dataCy}
                   disabled={loading}
                   label={
                     saveLabel

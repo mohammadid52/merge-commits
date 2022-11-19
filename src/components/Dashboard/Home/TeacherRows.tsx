@@ -21,7 +21,11 @@ const TeacherRows = (props: {coTeachersList: Teacher[]; teachersList: Teacher[]}
             <ul className="">
               {allTeachers.map((teacher, idx: number) => {
                 return (
-                  <li key={`home__teacher-${idx}`} className="border-b-0">
+                  <li
+                    key={`home__teacher-${idx}`}
+                    className={`border-b-0 ${
+                      allTeachers.length - 1 === idx ? 'rounded-b-xl' : ''
+                    }`}>
                     <a
                       href="#"
                       className="block hover:bg-gray-100 "

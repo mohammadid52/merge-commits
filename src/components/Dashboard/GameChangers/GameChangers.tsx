@@ -17,6 +17,9 @@ import {
 } from 'components/Dashboard/GameChangers/__contstants';
 import {useGameChangers} from 'components/Dashboard/GameChangers/context/GameChangersContext';
 import Counter from 'components/Dashboard/GameChangers/components/Counter';
+import {useHistory, useRouteMatch} from 'react-router';
+import {useQuery} from '@customHooks/urlParam';
+import {isEmpty} from 'lodash';
 
 const GameChangers = () => {
   const {
@@ -32,31 +35,29 @@ const GameChangers = () => {
   const infoText =
     cardsList[selectedCard]?.type === 'square' ? sqaureBreathingInfoText : FSEInfoText;
 
+  const history = useHistory();
+  const match = useRouteMatch();
   const onClick = (id: number) => {
-    turnOnImmersiveMode();
-
     setInitialIndex(id);
     setSelectedCard(selectedCard === null ? id : null);
+    // history.push(`${match.url}?exercise=${id}`);
   };
+
+  const params = useQuery(location.search);
+  const exerciseIdFromUrl = params.get('exercise');
+
+  let numbered = Number(exerciseIdFromUrl);
+
+  // useEffect(() => {
+  //   if (!isEmpty(exerciseIdFromUrl)) {
+  //     onClick(numbered);
+  //   } else {
+  //     setSelectedCard(null);
+  //   }
+  // }, [exerciseIdFromUrl]);
 
   const animation = 'translateY';
   const duration = '1000';
-
-  const turnOnImmersiveMode = () => {
-    $('#top-menu').hide();
-    // openFullscreen();
-  };
-  const turnOffImmersiveMode = () => {
-    // closeFullscreen();
-    $('#top-menu').show();
-  };
-
-  // useEffect(() => {
-  //   turnOnImmersiveMode();
-  //   return () => {
-  //     turnOffImmersiveMode();
-  //   };
-  // }, []);
 
   return (
     <div className="bg-black h-screen w-screen overflow-y-auto">
@@ -64,8 +65,8 @@ const GameChangers = () => {
       <InfoTab howToList={howToList} infoText={infoText} />
       {/* Info tab ends >----< */}
 
-      <div className=" w-full flex flex-col items-center justify-center sm:mt-12 lg:mt-0">
-        <AnimatedContainer
+      <div className=" w-full flex flex-col items-center justify-center h-full">
+        {/* <AnimatedContainer
           duration={duration}
           animationType={'opacity'}
           show={selectedCard === null}
@@ -75,7 +76,7 @@ const GameChangers = () => {
               <span className="font-semibold w-auto">Select</span> Game Changer
             </h1>
           )}
-        </AnimatedContainer>
+        </AnimatedContainer> */}
 
         <AnimatedContainer
           duration={'700'}
@@ -106,19 +107,20 @@ const GameChangers = () => {
         <AnimatedContainer
           duration={duration}
           animationType={animation}
-          className="md:h-full flex items-center justify-start   md:justify-center flex-col"
+          className=""
           show={selectedCard !== null}>
           {selectedCard !== null && (
-            <SelectedCard
-              inLesson={false}
-              onClick={onClick}
-              card={cardsList.find((c) => c.id === selectedCard)}
-            />
+            <div className="relative w-auto md:h-full flex items-center justify-start   md:justify-center flex-col">
+              <SelectedCard
+                inLesson={false}
+                onClick={onClick}
+                card={cardsList.find((c) => c.id === selectedCard)}
+              />
+              <BottomSection />
+            </div>
           )}
           <Counter />
         </AnimatedContainer>
-
-        <BottomSection />
       </div>
     </div>
   );

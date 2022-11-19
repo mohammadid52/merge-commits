@@ -208,7 +208,7 @@ const SelectedCard = ({
           style={{
             background: 'rgb(27, 25, 29)'
           }}
-          className={`h-full  transition-all rounded-2xl  ${
+          className={`h-full  transition-all rounded-xl  ${
             selected?.type === EMOTIONS ? '' : 'p-4 md:p-16 md:px-14 px-8'
           }  flex flex-col border-gray-900 md:border-2 items-center justify-center overflow-hidden `}>
           <div>

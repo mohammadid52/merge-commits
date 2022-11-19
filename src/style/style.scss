@@ -84,7 +84,7 @@ $polka-dot-size: 0.8px;
 /* Handle */
 .manual-overflow::-webkit-scrollbar-thumb {
   background: #4b5359;
-  border-radius: 0;
+  border-radius: 12px;
   border: 0 solid #4b5359;
 }
 
@@ -1020,6 +1020,17 @@ $polka-dot-size: 0.8px;
 
 .customShadow {
   box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.05);
+}
+
+.hover\:customShadow {
+  &:hover {
+    box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.05);
+  }
+}
+.hover\:theme-card-shadow {
+  &:hover {
+    box-shadow: 0 10px 20px 10px $theme-box-shadow;
+  }
 }
 
 .theme-card-shadow {

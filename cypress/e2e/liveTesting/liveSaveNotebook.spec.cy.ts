@@ -31,15 +31,15 @@ describe('Production Save Notebooks Check', () => {
 
     // ~~~~~~ login ~~~~~~ //
     cy.get('[data-cy="email"]').type(loginConfig.production.student1.username); // enter email as mike
-    cy.get('button').contains('Enter').click(); // click on button
+    cy.dataCy('login-button').click(); // click on button
     cy.get('[data-cy="password"]').type(loginConfig.production.student1.password); // enter password
-    cy.get('button').contains('Login').click(); // click on login button
+    cy.dataCy('login-button').click(); // click on login button
 
     cy.wait(10000); // wait for user to login
     cy.url().should('contain', urlConfig.IADashboardUrl);
     cy.get('body').then((body) => {
-      if (body.find('[data-cy="emoji-feedback-button"]').length > 0) {
-        cy.dataCy('emoji-feedback-button').click(); // if emoji feedback popup is open click on save button
+      if (body.find('[data-cy="emoji-feedback-card"]').length > 0) {
+        cy.dataCy('emoji-feedback-card').first().click(); // If emoji feedback popup is open click on save button
       }
     });
 

@@ -1,12 +1,18 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {useQuery} from '@customHooks/urlParam';
 import useAuth from '@customHooks/useAuth';
-import {CreateUniversalArchiveDataInput, PartInput} from 'API';
+import {
+  CreateUniversalArchiveDataInput,
+  PartInput,
+  UpdatePersonLessonsDataInput
+} from 'API';
 import {GlobalContext} from 'contexts/GlobalContext';
+import * as customMutations from 'customGraphql/customMutations';
+import * as customQueries from 'customGraphql/customQueries';
 import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
 import * as mutations from 'graphql/mutations';
-import * as customQueries from 'customGraphql/customQueries';
 import * as queries from 'graphql/queries';
+
 import {
   PagePart,
   PartContent,
@@ -15,6 +21,7 @@ import {
   UniversalLessonPage,
   UniversalLessonStudentData
 } from 'interfaces/UniversalLessonInterfaces';
+import {isEmpty} from 'lodash';
 import React, {useContext, useEffect, useRef, useState} from 'react';
 import {useHistory, useParams, useRouteMatch} from 'react-router-dom';
 import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
@@ -22,11 +29,21 @@ import {v4 as uuidV4} from 'uuid';
 import ErrorBoundary from '../Error/ErrorBoundary';
 import LessonHeaderBar from '../Header/LessonHeaderBar';
 import Foot from './Foot/Foot';
+import {ILessonSurveyApp} from './Lesson';
 import LessonPageLoader from './LessonPageLoader';
 import CoreUniversalLesson from './UniversalLesson/views/CoreUniversalLesson';
-import useLessonFunctions from './useLessonFunctions';
 
-const SurveyApp = () => {
+const SurveyApp = ({
+  personLoading,
+  personLessonData,
+  setPersonLessonData,
+  canContinue,
+  setPersonLoading,
+  validateRequired,
+  invokeRequiredField,
+  pageStateUpdated,
+  updatePageInLocalStorage
+}: ILessonSurveyApp) => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
 
   const gContext = useContext(GlobalContext);
@@ -54,7 +71,6 @@ const SurveyApp = () => {
   const [isAtEnd, setisAtEnd] = useState<boolean>(false);
 
   const PAGES = lessonState?.lessonData?.lessonPlan;
-  const CURRENT_PAGE = lessonState.currentPage;
 
   const topLessonRef = useRef();
 
@@ -74,30 +90,6 @@ const SurveyApp = () => {
   // ~~~~~~~~~~~~~ LESSON SETUP ~~~~~~~~~~~~ //
 
   const [lessonDataLoaded, setLessonDataLoaded] = useState<boolean>(false);
-  const [pageStateUpdated, setPageStateUpdated] = useState(false);
-  const {lessonData, misc} = lessonState;
-  useEffect(() => {
-    if (
-      misc?.personLessonData &&
-      misc?.personLessonData?.lessonID &&
-      misc?.personLessonData?.lessonID === lessonData?.id
-    ) {
-      const data = misc?.personLessonData?.data[0];
-
-      const pages = data?.pages || '{}';
-      const lessonProgress = JSON.parse(pages).lessonProgress || 0;
-
-      lessonDispatch({type: 'SET_CURRENT_PAGE', payload: lessonProgress});
-      setPageStateUpdated(true);
-
-      const sId = params.get('sId');
-      const sEmail = params.get('sId');
-
-      const dynamicQuery =
-        sId && sEmail ? `?sId=${sId}&sEmail=${sEmail}&tab=Completed%20Surveys` : '';
-      history.push(`${match.url}/${lessonProgress}${dynamicQuery}`);
-    }
-  }, [lessonData.id, misc?.personLessonData?.lessonID]);
 
   // ##################################################################### //
   // ###################### INITIALIZE STUDENT DATA ###################### //
@@ -107,7 +99,7 @@ const SurveyApp = () => {
   // ~~~~~~~~ INITIALIZE STUDENTDATA ~~~~~~~ //
 
   const initializeSurveyData = async () => {
-    if (studentDataInitialized === false && PAGES) {
+    if (!studentDataInitialized && PAGES) {
       const mappedPages = PAGES.reduce(
         (
           inputs: {
@@ -407,6 +399,7 @@ const SurveyApp = () => {
 
       // existing student rows
       const surveyDataRow = await fetchSurveyDataRow(listFilter, undefined, []); // table object
+
       const surveyDataResponses = surveyDataRow[0]?.surveyData
         ? surveyDataRow[0].surveyData
         : []; // flat 1D - array
@@ -455,14 +448,10 @@ const SurveyApp = () => {
   // ~~ INITIALIZE STUDENT DATA STRUCTURE ~~ //
 
   useEffect(() => {
-    if (
-      !lessonState.loaded &&
-      lessonState.lessonData.lessonPlan &&
-      lessonState.lessonData.lessonPlan.length > 0
-    ) {
+    if (!lessonState.loaded && PAGES.length > 0) {
       initializeSurveyData();
     }
-  }, [lessonState.lessonData.lessonPlan]);
+  }, [PAGES]);
 
   // ~~~~~ GET & CREATE DB DATA RECORDS ~~~~ //
 
@@ -479,6 +468,17 @@ const SurveyApp = () => {
   // ##################################################################### //
   // ####################### MANAGE PERSON LOCATION ###################### //
   // ##################################################################### //
+
+  useEffect(() => {
+    if (!personLoading) {
+      const pages = personLessonData?.pages || '{}';
+      const lessonProgress = JSON.parse(pages).lessonProgress || 0;
+
+      lessonDispatch({type: 'SET_CURRENT_PAGE', payload: lessonProgress});
+
+      history.push(`${match.url}/${lessonProgress}`);
+    }
+  }, [personLoading]);
 
   const [getted, setGetted] = useState(false);
   const [cleared, setCleared] = useState(false);
@@ -649,18 +649,11 @@ const SurveyApp = () => {
     handleSurveyMutateData();
   }, [lessonState.currentPage]);
 
-  const [personLessonData, setPersonLessonData] = useState([]);
-
-  const getPersonLessonsDataId = (): string => {
-    const array = personLessonData || lessonState?.misc?.personLessonData?.data || [];
-    return array?.find((_d: any) => _d.lessonID === lessonID)?.id || '';
-  };
-
   const getLessonCurrentPage = async () => {
     try {
       const getLessonRatingDetails: any = await API.graphql(
         graphqlOperation(queries.getPersonLessonsData, {
-          id: getPersonLessonsDataId()
+          id: personLessonData.id
           // lessonID: lessonID,
           // studentEmail: user.email,
           // studentAuthID: user.authId
@@ -739,86 +732,85 @@ const SurveyApp = () => {
     }
   };
 
+  const commonPersonLessonPayload = {
+    studentAuthID: user.authId,
+    roomId: getRoomData.id,
+    studentEmail: user.email,
+    lessonID: lessonID,
+    lessonType: lessonState.lessonData?.type,
+    pages: `{
+      "currentPage":${JSON.stringify(lessonState.currentPage)},
+      "totalPages":${JSON.stringify(lessonState.lessonData?.lessonPlan?.length - 1)},
+      "lessonProgress":${JSON.stringify(lessonState.currentPage)}
+      }`
+      .replace(/(\s\s+|[\t\n])/g, ' ')
+      .trim()
+  };
+
+  const createPersonLessonPayload: UpdatePersonLessonsDataInput = {
+    ...commonPersonLessonPayload,
+    id: uuidV4(),
+    ratings: 0
+  };
+
+  const updatePersonLessonPayload: UpdatePersonLessonsDataInput = {
+    ...commonPersonLessonPayload,
+    id: personLessonData?.id
+  };
+
+  const createPersonLessonsData = async () => {
+    if (isStudent) {
+      const result: any = await API.graphql(
+        graphqlOperation(mutations.createPersonLessonsData, {
+          input: createPersonLessonPayload
+        })
+      );
+      setPersonLessonData(result?.data?.createPersonLessonsData);
+    }
+  };
+
+  const fetchLessonPersonData = async () => {
+    try {
+      setPersonLoading(true);
+      const lessonPersonData: any = await API.graphql(
+        graphqlOperation(customQueries.lessonsByType, {
+          filter: {
+            roomId: {eq: getRoomData.id},
+            studentAuthID: {eq: user.authId},
+            studentEmail: {eq: user.email}
+          },
+          limit: 500
+        })
+      );
+
+      const data = lessonPersonData?.data?.listPersonLessonsData?.items || [];
+      setLocalStorageData('lessonPersonData', data);
+      const _personLessonData = data.find((d: any) => d.lessonID === lessonID);
+      if (_personLessonData) {
+        setPersonLessonData(_personLessonData);
+      } else {
+        await createPersonLessonsData();
+      }
+    } catch (e) {
+      console.error('listLessonPersonData: ', e);
+    } finally {
+      setPersonLoading(false);
+    }
+  };
+
   const handleSurveyMutateData = async () => {
     try {
-      let payload;
-      let existingLesson: any;
-
-      const personLessonData = lessonState?.misc?.personLessonData;
-      const isSameAndDataExists =
-        personLessonData?.lessonID === lessonID && personLessonData?.data?.length > 0;
-
-      if (isSameAndDataExists) {
-        existingLesson = personLessonData?.data;
-      } else {
-        existingLesson = await API.graphql(
-          graphqlOperation(customQueries.listPersonLessonsData, {
-            filter: {
-              lessonID: {eq: lessonID},
-              studentAuthID: {eq: isStudent ? user.authId : params.get('sId')},
-              studentEmail: {eq: isStudent ? user.email : params.get('sEmail')},
-              roomId: {eq: getRoomData.id}
-            }
-          })
-        );
-
-        lessonDispatch({
-          type: 'SET_PERSON_LESSON_DATA',
-          payload: {
-            lessonID: lessonID,
-            data: existingLesson?.data?.listPersonLessonsData?.items || []
+      if (!personLoading) {
+        if (!personLessonData) {
+          fetchLessonPersonData();
+        } else if (personLessonData) {
+          if (isStudent) {
+            await API.graphql(
+              graphqlOperation(customMutations.updatePersonLessonsData, {
+                input: updatePersonLessonPayload
+              })
+            );
           }
-        });
-      }
-
-      const items = isSameAndDataExists
-        ? existingLesson
-        : existingLesson?.data?.listPersonLessonsData?.items || [];
-      setPersonLessonData(items);
-      if (!items.length) {
-        payload = {
-          id: uuidV4(),
-          studentAuthID: user.authId,
-          roomId: getRoomData.id,
-          studentEmail: user.email,
-          lessonID: lessonID,
-          lessonType: lessonState.lessonData?.type,
-          //prettier-ignore
-          pages: `{
-            "currentPage":${JSON.stringify(lessonState.currentPage)},
-            "totalPages":${JSON.stringify(lessonState.lessonData?.lessonPlan?.length - 1)},
-            "lessonProgress":${JSON.stringify(lessonState.currentPage)}
-            }`.replace(/(\s\s+|[\t\n])/g, ' ').trim(),
-          ratings: 0
-        };
-
-        if (isStudent) {
-          const result: any = await API.graphql(
-            graphqlOperation(mutations.createPersonLessonsData, {input: payload})
-          );
-          setPersonLessonData([...personLessonData, result.data.createPersonLessonsData]);
-        }
-      } else {
-        payload = {
-          id: items?.find((_d: any) => _d.lessonID === lessonID)?.id,
-
-          pages: `{
-            "currentPage":${JSON.stringify(lessonState.currentPage)},
-            "totalPages":${JSON.stringify(
-              lessonState.lessonData?.lessonPlan?.length - 1
-            )},
-            "lessonProgress":${JSON.stringify(lessonState.currentPage)}
-            }`
-            .replace(/(\s\s+|[\t\n])/g, ' ')
-            .trim()
-        };
-
-        if (isStudent) {
-          await API.graphql(
-            graphqlOperation(mutations.updatePersonLessonsData, {
-              input: payload
-            })
-          );
         }
       }
     } catch (error) {
@@ -831,20 +823,6 @@ const SurveyApp = () => {
 
   // ~~~~~~~~~~~ RESPONSIVE CHECK ~~~~~~~~~~ //
   const {breakpoint} = useTailwindBreakpoint();
-
-  const {getLessonCompletedValue} = useLessonFunctions();
-  const _getLessonCompletedValue = async () => {
-    if (getPersonLessonsDataId()) {
-      return await getLessonCompletedValue({
-        id: getPersonLessonsDataId(),
-        filter: {
-          lessonID: {eq: lessonID},
-          studentEmail: {eq: user.email},
-          studentAuthId: {eq: user.authId}
-        }
-      });
-    }
-  };
 
   return (
     <>
@@ -872,13 +850,15 @@ const SurveyApp = () => {
             lessonDataLoaded={lessonDataLoaded}
             overlay={overlay}
             pageStateUpdated={pageStateUpdated}
-            getLessonCompletedValue={
-              lessonState?.misc?.personLessonData?.lessonID && _getLessonCompletedValue
-            }
             createJournalData={createStudentArchiveData}
             setOverlay={setOverlay}
+            canContinue={canContinue}
+            updatePageInLocalStorage={updatePageInLocalStorage}
+            personLessonData={personLessonData}
             isAtEnd={isAtEnd}
+            setPersonLessonData={setPersonLessonData}
             setisAtEnd={setisAtEnd}
+            validateRequired={validateRequired}
             handleRequiredNotification={handleRequiredNotification}
           />
         </div>
@@ -894,7 +874,13 @@ const SurveyApp = () => {
             <ErrorBoundary fallback={<h1>Error in the Lesson App</h1>}>
               {/* ADD LESSONWRAPPER HERE */}
               <div className="mt-4 mb-8 lesson-page-container ">
-                <CoreUniversalLesson />
+                <CoreUniversalLesson
+                  invokeRequiredField={() => {
+                    invokeRequiredField();
+                    handleRequiredNotification();
+                  }}
+                  canContinue={canContinue}
+                />
               </div>
             </ErrorBoundary>
           )}

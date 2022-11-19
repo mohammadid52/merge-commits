@@ -29,13 +29,13 @@ const BottomSection = () => {
   const animation = 'translateY';
   const duration = '1000';
   const commonBtnClass =
-    'w-auto cursor-pointer hover:scale-110 hover:text-teal-500 transform transition-all meditation-card__btn lg:text-xl 2xl:text-xl  text-opacity-50';
+    'w-auto cursor-pointer hover:scale-110 hover:iconoclast:text-main hover:curate:text-main transform transition-all meditation-card__btn lg:text-xl 2xl:text-xl  text-opacity-50';
 
   const history = useHistory();
   const show = selectedCard !== 2 && selectedCard !== 3 && selectedCard !== 4;
   // because 2 is thinkaboutit card
   return (
-    <>
+    <div className="">
       <AnimatedContainer
         duration={duration}
         animationType={animation}
@@ -43,7 +43,7 @@ const BottomSection = () => {
         show={selectedCard === null}>
         {selectedCard === null && (
           <div className="flex items-center justify-center  md:gap-x-4   w-auto">
-            <Tooltip text="Go back" placement="top">
+            <Tooltip text="Go back" placement="bottom">
               <div
                 onClick={() => {
                   setCountSelected(null);
@@ -66,7 +66,7 @@ const BottomSection = () => {
         show={selectedCard !== null && !isCompleted}>
         {selectedCard !== null && !isCompleted && (
           <div className=" flex items-center justify-center md:gap-x-4   w-auto">
-            <Tooltip text="Go back" placement="top">
+            <Tooltip text="Go back" placement="bottom">
               <div
                 onClick={() => {
                   if (goBackCallback.current) {
@@ -83,12 +83,12 @@ const BottomSection = () => {
               </div>
             </Tooltip>
             {show && (
-              <Tooltip text="Show how-to" placement="top">
+              <Tooltip text="Show how-to" placement="bottom">
                 <div
                   onClick={() => setShowHowTo((prev) => !prev)}
                   className={classNames(
                     commonBtnClass,
-                    showHowTo ? 'text-teal-500' : 'text-white',
+                    showHowTo ? 'theme-text' : 'text-white',
                     'hidden xl:block'
                   )}>
                   <IoIosHelpCircleOutline />
@@ -96,12 +96,12 @@ const BottomSection = () => {
               </Tooltip>
             )}
             {show && (
-              <Tooltip text="Show info" placement="top">
+              <Tooltip text="Show info" placement="bottom">
                 <div
                   onClick={() => setShowInfo((prev) => !prev)}
                   className={classNames(
                     commonBtnClass,
-                    showInfo ? 'text-teal-500' : 'text-white',
+                    showInfo ? 'theme-text' : 'text-white',
                     'hidden xl:block'
                   )}>
                   <AiOutlineInfoCircle />
@@ -113,11 +113,11 @@ const BottomSection = () => {
               {isActive && show && (
                 <Tooltip
                   text={isPlayingMusic ? 'Turn off music' : 'Turn on music'}
-                  placement="top">
+                  placement="bottom">
                   <div
                     onClick={() => setIsPlayingMusic((prev) => !prev)}
                     className={classNames(
-                      isPlayingMusic ? 'text-teal-500' : 'text-white',
+                      isPlayingMusic ? 'theme-text' : 'text-white',
                       commonBtnClass
                     )}>
                     {isPlayingMusic ? <MdOutlineMusicOff /> : <MdOutlineMusicNote />}
@@ -128,7 +128,7 @@ const BottomSection = () => {
           </div>
         )}
       </AnimatedContainer>
-    </>
+    </div>
   );
 };
 

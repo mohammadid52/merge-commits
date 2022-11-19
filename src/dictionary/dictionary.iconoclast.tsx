@@ -310,7 +310,7 @@ const dashboardTestCasesDict: any = {
 
 const anthologyDict: any = {
   EN: {
-    TITLE_CONTAINER: 'Your Notebook',
+    TITLE_CONTAINER: 'Your Notebooks',
     TITLE: 'Notebook',
     NO_SELECTED: 'No notebook selected...',
     TABS: {
@@ -690,7 +690,8 @@ const classRoomDict: any = {
       OPENED: 'OPEN',
       CLOSED: 'CLOSED',
       SURVEY: 'SURVEY',
-      UPCOMING: 'UPCOMING'
+      UPCOMING: 'UPCOMING',
+      GO_TO_NOTEBOOK: 'Go to Notebook'
     },
     LESSON_TABS: {
       TAB_ONE: `Today's Lesson`,
@@ -1281,6 +1282,7 @@ const InstitueRomms: any = {
     CLASS_NAME: 'Class Name',
     INSTITUTION_NAME: 'Institution Name',
     TEACHER: 'Teacher',
+    CO_TEACHER: 'Co Teachers',
     CURRICULUM: 'Course',
     STATUS: 'Status',
     MXSTUDENTS: 'Max. Students',
@@ -1304,6 +1306,7 @@ const InstitueRomms: any = {
     CURRICULUM: 'TBD',
     CLASSROOMS_NAME: 'TBD',
     CLASS_NAME: 'TBD',
+    CO_TEACHER: 'TBD',
     INSTITUTION_NAME: 'TBD',
     TEACHER: 'TBD',
     MXSTUDENTS: 'TBD',

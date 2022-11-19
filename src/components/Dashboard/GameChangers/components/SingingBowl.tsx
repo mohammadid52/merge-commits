@@ -5,6 +5,7 @@ import {CreateGameChangerLogInput, GameChangerLog} from 'API';
 import {nanoid} from 'nanoid';
 import React, {useEffect, useState} from 'react';
 import Button from './Button';
+import Buttons from '@components/Atoms/Buttons';
 
 const BowlSvg = ({animate}: {animate: boolean}) => {
   const colorList = [
@@ -153,10 +154,11 @@ const SingingBowl = () => {
         />
       </audio>
       <BowlSvg animate={isPlaying} />
-      <Button
-        width="100%"
+
+      <Buttons
+        btnClass="w-full"
         onClick={start}
-        text={isPlaying ? 'Stop Meditation' : 'Start Meditation'}
+        label={isPlaying ? 'Stop Meditation' : 'Start Meditation'}
       />
     </div>
   );

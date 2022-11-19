@@ -31,6 +31,7 @@ import ModalPopUp from 'molecules/ModalPopUp';
 import LocationBadge from './LocationBadge';
 import {PersonStatus} from 'API';
 import {useNotifications} from '@contexts/NotificationContext';
+import Buttons from '@components/Atoms/Buttons';
 
 interface EditClassProps {
   instId: string;
@@ -310,10 +311,14 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
         isError: false
       });
     }
+    setAddStudentModal(true);
   };
+
+  const [addStudentModal, setAddStudentModal] = useState(false);
 
   const addStudentInClass = async () => {
     if (newMember.id) {
+      setAddStudentModal(false);
       const {id} = newMember;
       await saveClassStudent(id);
       setNewMember(defaultNewMember);
@@ -517,23 +522,47 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
         </h3>
       </div>
 
+      {addStudentModal && (
+        <Modal
+          saveAction={addStudentInClass}
+          closeAction={() => {
+            setAddStudentModal(false);
+            setNewMember(defaultNewMember);
+          }}
+          showHeader={false}
+          showFooter={false}>
+          <p>Do you want to add {newMember.name}?</p>
+          <div className="w-full flex items-center justify-end gap-4 mt-2">
+            <Buttons
+              label={'Cancel'}
+              transparent
+              onClick={() => {
+                setAddStudentModal(false);
+                setNewMember(defaultNewMember);
+              }}
+            />
+            <Buttons label={'Add'} onClick={addStudentInClass} />
+          </div>
+        </Modal>
+      )}
+
       {loading ? (
         <div className="h-100 flex justify-center items-center">
           <div className="w-5/10">
-            <Loader />
-            <p className="mt-2 text-center">{dictionary.LOADING}</p>
+            <Loader withText={dictionary.LOADING} className="w-auto text-gray-400" />
           </div>
         </div>
       ) : (
         <div className="px-4 mt-4">
           <div className="flex flex-col items-center justify-center m-auto px-4 mb-4">
             <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
-              <div className="col-span-1 md:col-span-2 lg:col-span-4">
+              <div className="col-span-5">
                 <label className="block text-xs font-semibold mb-1 leading-5 text-gray-700">
                   Add students to class
                 </label>
                 <div className="flex items-center justify-between">
                   <SearchSelectorWithAvatar
+                    dataCy="edit-class"
                     selectedItem={newMember}
                     list={filteredStudents.length > 0 ? filteredStudents : allStudents}
                     placeholder={dictionary.ADD_STUDENT_PLACEHOLDER}
@@ -550,12 +579,14 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
                 </div>
               </div>
 
-              <AddButton
+              {/* <AddButton
+              dataCy={`edit-class-add-button`}
+                loading={adding}
                 className="mx-2 2xl:ml-5 2xl:mr-10 py-1 px-5 mt-auto"
                 label={dictionary.ADD_STUDENT_BUTTON}
                 onClick={addStudentInClass}
                 disabled={adding || !newMember.id}
-              />
+              /> */}
             </div>
             <div className="py-2">
               <p className={`${messages.isError ? 'text-red-600' : 'text-green-600'}`}>
@@ -649,7 +680,10 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
                           </div>
 
                           <div className="w-1/10 px-3 flex justify-center cursor-pointer">
-                            <DeleteActionBtn handleClick={() => onDelete(item.id)} />
+                            <DeleteActionBtn
+                              dataCy={`delete-user-${index}-button`}
+                              handleClick={() => onDelete(item.id)}
+                            />
                             {studentIdToEdit === item.id ? (
                               <span
                                 className={`ml-2 w-4 h-4 flex items-center cursor-pointer ${
@@ -695,6 +729,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
               )}
               {warnModal2.show && (
                 <ModalPopUp
+                  dataCy="edit-class-delete-student-modal"
                   closeAction={closeDeleteModal}
                   saveAction={warnModal2.action}
                   saveLabel="Yes"

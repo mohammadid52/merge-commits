@@ -66,7 +66,7 @@ const useAuth = (): {
     );
     return (
       <div
-        className={`${size} flex flex-shrink-0 justify-center items-center rounded-full  border-0 border-gray-400 shadow-elem-light cursor-pointer ${className}`}>
+        className={`${size} flex flex-shrink-0 justify-center items-center rounded-full  border-0 border-gray-400 customShadow cursor-pointer ${className}`}>
         <div
           className={`h-full w-full flex justify-center items-center ${textSize} text-extrabold text-white rounded-full`}
           style={{

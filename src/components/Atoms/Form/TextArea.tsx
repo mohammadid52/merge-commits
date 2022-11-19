@@ -13,6 +13,7 @@ interface TextAreaProps {
   rows?: number;
   maxLength?: number;
   showCharacterUsage?: boolean;
+  dataCy?: string;
 }
 
 const TextArea = (props: TextAreaProps) => {
@@ -27,7 +28,8 @@ const TextArea = (props: TextAreaProps) => {
     value,
     maxLength,
     placeHolder,
-    showCharacterUsage
+    showCharacterUsage,
+    dataCy
   } = props;
   const {theme} = useContext(GlobalContext);
   const otherInputProps: any = {};
@@ -40,6 +42,7 @@ const TextArea = (props: TextAreaProps) => {
         {label} <span className="text-red-500"> {isRequired ? '*' : null}</span>
       </label>
       <textarea
+        data-cy={dataCy}
         id={id}
         name={name}
         onChange={(e: any) => onChange(e)}

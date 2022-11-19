@@ -1049,6 +1049,7 @@ const Csv = ({institutionId}: ICsvProps) => {
 
         <div className="w-auto relative">
           <Selector
+            dataCy="analytics-classroom"
             disabled={!selectedInst?.id}
             setHoveringItem={setHoveringItem}
             loading={classRoomLoading}
@@ -1119,6 +1120,7 @@ const Csv = ({institutionId}: ICsvProps) => {
         </div>
 
         <Selector
+          dataCy="analytics-unit"
           loading={unitsLoading}
           selectedItem={selectedUnit ? selectedUnit.name : ''}
           placeholder="select unit"
@@ -1128,6 +1130,7 @@ const Csv = ({institutionId}: ICsvProps) => {
         />
 
         <Selector
+          dataCy="analytics-survey"
           loading={surveysLoading}
           disabled={!selectedUnit}
           selectedItem={selectedSurvey ? selectedSurvey.name : ''}

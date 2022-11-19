@@ -19,5 +19,8 @@
   "less.validate": false,
   "scss.validate": false,
   "workbench.tree.indent": 16,
-  "editor.showFoldingControls": "always"
+  "editor.showFoldingControls": "always",
+  "marquee.widgets.npm-stats.packageNames": [
+    "iconoclast-lesson-demo"
+  ]
 }

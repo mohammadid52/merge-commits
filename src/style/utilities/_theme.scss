@@ -260,9 +260,29 @@
   .theme-text {
     color: $iconoclast !important;
   }
+  .theme-bg {
+    background-color: $iconoclast !important;
+  }
+  .theme-border {
+    border-color: $iconoclast !important;
+  }
+
+  .input-wrapper:focus-within {
+    border-color: $iconoclast !important;
+  }
 }
-.iconoclast {
+.curate {
   .theme-text {
     color: $curate !important;
+  }
+  .theme-bg {
+    background-color: $curate !important;
+  }
+  .theme-border {
+    border-color: $curate !important;
+  }
+
+  .input-wrapper:focus-within {
+    border-color: $curate !important;
   }
 }

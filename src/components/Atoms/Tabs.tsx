@@ -2,6 +2,7 @@ import React, {Fragment, useContext, useRef} from 'react';
 import {GlobalContext} from 'contexts/GlobalContext';
 import {Menu, Transition} from '@headlessui/react';
 import {ChevronDownIcon, ChevronUpIcon} from '@heroicons/react/solid';
+import useAuth from '@customHooks/useAuth';
 
 export interface ITabElements {
   title: string;
@@ -83,7 +84,7 @@ const DropDownMenu = ({index, menu, onClick}: any) => {
             leaveFrom="transform opacity-100 scale-100"
             leaveTo="transform opacity-0 scale-95">
             <Menu.Items
-              className="absolute left-0 w-60 my-2 mb-4 origin-top-right bg-white divide-y divide-gray-100 rounded-md customShadow focus:outline-none cursor-pointer z-100"
+              className="absolute left-0 w-60 my-2 mb-4 mt-4 origin-top-right bg-white divide-y divide-gray-100 rounded-xl customShadow focus:outline-none cursor-pointer z-100"
               static>
               <div
                 className="p-2 customShadow"
@@ -91,7 +92,10 @@ const DropDownMenu = ({index, menu, onClick}: any) => {
                 onMouseEnter={() => onMouseEnter()}
                 onMouseLeave={() => onMouseLeave(open)}>
                 {menu.children.map((item: any, menuIndex: number) => (
-                  <Menu.Item key={`${index}_${menuIndex}`} onClick={() => onClick(item)}>
+                  <Menu.Item
+                    data-cy={`${item.title.split(' ').join('-')}-item`}
+                    key={`${index}_${menuIndex}`}
+                    onClick={() => onClick(item)}>
                     <div className="hover:iconoclast:bg-400 hover:curate:bg-400 hover:text-white rounded-full p-2 px-4 text-xs 2xl:text-base">
                       {item.title}
                     </div>
@@ -110,8 +114,13 @@ const Tabs = ({tabsData, updateTab, currentTab}: ITabsProps) => {
   const {theme} = useContext(GlobalContext);
   const isGameChangers = window.location.href.includes('game-changers');
 
+  const {isStudent} = useAuth();
+
   return (
-    <div className={`w-full ${isGameChangers ? 'bg-black' : 'bg-white'} rounded-lg p-2`}>
+    <div
+      className={`w-full ${
+        isGameChangers && isStudent ? 'bg-black' : 'bg-white'
+      } rounded-lg p-2`}>
       <div className="sm:hidden">
         <label htmlFor="tabs" className="sr-only">
           Select a tab
@@ -124,8 +133,7 @@ const Tabs = ({tabsData, updateTab, currentTab}: ITabsProps) => {
             const tab = tabsData.find((_d) => _d.title === e.target.value);
             updateTab(tab);
           }}
-          className="block w-full text-xs md:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-full"
-          defaultValue={currentTab}>
+          className="block w-full text-xs md:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-full">
           {tabsData.map((tab: ITabElements, index: number) => (
             <option value={tab.title} className="transition-all" key={index}>
               {tab.title}

@@ -10,7 +10,7 @@ interface ClassProps {
 }
 
 const Today: React.FC<ClassProps> = (props: ClassProps) => {
-  const { link, curriculums, display } = props;
+  const {link, curriculums, display} = props;
   const [accessible, setAccessible] = useState<boolean>(true);
 
   const Lessons = curriculums

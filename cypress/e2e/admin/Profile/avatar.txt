@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-import {loginConfig, urlConfig} from '../config';
+import {loginConfig, urlConfig} from '../../config';
 
 const filePath = 'cypress/fixtures/images/avatar2.png';
 
@@ -15,6 +15,7 @@ describe('Change Avatar', () => {
     cy.wait(10000); // Wait for user to login
     cy.url().should('contain', urlConfig.dashboardURL);
 
+    cy.wait(5000); // Wait for page to load
     cy.dataCy('dropdown-button').click(); // Click on profile dropdown
     cy.dataCy('dropdown-item-profile').click(); // Click on edit profile dropdown button
     cy.wait(5000); // Wait for page to load
