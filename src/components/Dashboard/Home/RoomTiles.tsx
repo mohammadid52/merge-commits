@@ -174,6 +174,7 @@ const RoomTiles = (props: {
                       <SingleRoomCard
                         item={item}
                         idx={idx}
+                        key={idx}
                         isTeacher={isTeacher}
                         handleRoomSelection={handleRoomSelection}
                       />

@@ -45,11 +45,10 @@ const CurriculumList = ({
   const {CommonlyUsedDict, InstitueCurriculum} = useDictionary(clientKey);
 
   const [courseList, setCourseList] = useState<Array<ICurricular>>([]);
-  const [allCourses, setAllCourses] = useState<Array<ICurricular>>([]);
+
   const [institutionList, setInstitutionList] = useState<any>([]);
 
-  const {isSuperAdmin: _isSuperAdmin, isAdmin, isBuilder} = useAuth();
-  const isSuperAdmin = isBuilder || isAdmin || _isSuperAdmin;
+  const isSuperAdmin: boolean = gContext.state.user.isSuperAdmin;
 
   const [loading, setLoading] = useState(isSuperAdmin);
 
@@ -108,7 +107,6 @@ const CurriculumList = ({
         }
       }));
       setCourseList(updatedList);
-      setAllCourses(updatedList);
     }
   }, [curricular?.items?.length]);
 
@@ -135,7 +133,7 @@ const CurriculumList = ({
       );
 
       setCourseList(updatedList);
-      setAllCourses(updatedList);
+
       setLoading(false);
     } catch (error) {
       setLoading(false);

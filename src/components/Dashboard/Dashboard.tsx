@@ -1,5 +1,6 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import Loader from '@components/Atoms/Loader';
+import ComponentLoading from '@components/Lesson/Loading/ComponentLoading';
 import {getAsset} from 'assets';
 import Community from 'components/Community/Community';
 import InstitutionsHome from 'components/Dashboard/Admin/Institutons/InstitutionsHome';
@@ -163,6 +164,8 @@ const Dashboard = (props: DashboardProps) => {
     role: '',
     image: ''
   });
+  const isStudent = userData.role === 'ST';
+
   const isTeacher = stateUser?.role === 'FLW' || stateUser?.role === 'TR';
   const isOnDemandStudent = stateUser?.onDemand;
 
@@ -337,10 +340,10 @@ const Dashboard = (props: DashboardProps) => {
     if (stateUser?.role === 'ST') {
       getDashboardData(authId, email);
     }
-    if (isTeacher) {
+    if (!isStudent) {
       getDashboardDataForTeachers(authId);
     }
-  }, [stateUser?.role, isTeacher]);
+  }, [stateUser?.role, isStudent]);
 
   /******************************************
    * 1.2 REDUCE ROOMS FROM CLASSLIST ARRAY  *
@@ -788,7 +791,7 @@ const Dashboard = (props: DashboardProps) => {
   };
 
   const HomeSwitch = () =>
-    isTeacher ? (
+    !isStudent ? (
       <HomeForTeachers
         homeData={homeDataForTeachers}
         isTeacher={isTeacher}
@@ -811,13 +814,9 @@ const Dashboard = (props: DashboardProps) => {
   // check if url contains game-changers
   const isGameChangers = window.location.href.includes('game-changers');
 
-  const isStudent = userData.role === 'ST';
-
   return (
     <>
-      <div
-        id="top-menu"
-        className={`w-full ${isGameChangers && isStudent ? 'bg-black' : 'bg-white'}`}>
+      <div id="top-menu" className={`w-full ${isGameChangers ? 'bg-black' : 'bg-white'}`}>
         <div className="flex justify-between items-center">
           <div className="w-auto mx-5">
             <img
@@ -855,7 +854,7 @@ const Dashboard = (props: DashboardProps) => {
           <Suspense
             fallback={
               <div className="min-h-screen w-full flex flex-col justify-center items-center">
-                <Loader withText={'Loading'} className="w-auto text-gray-400" />
+                <ComponentLoading />
               </div>
             }>
             <Switch>
@@ -881,7 +880,7 @@ const Dashboard = (props: DashboardProps) => {
                   } else
                     return (
                       <div className="min-h-screen w-full flex flex-col justify-center items-center">
-                        <Loader withText={'Loading'} className="w-auto text-gray-400" />
+                        <ComponentLoading />
                       </div>
                     );
                 }}

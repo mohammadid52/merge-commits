@@ -276,9 +276,7 @@ const Home = (props: ClassroomControlProps) => {
             </div>
           </div>
         </>
-      ) : (
-        <Loader withText={'Loading'} className="w-auto text-gray-400" />
-      )}
+      ) : null}
     </>
   );
 };

@@ -117,10 +117,7 @@ const Tabs = ({tabsData, updateTab, currentTab}: ITabsProps) => {
   const {isStudent} = useAuth();
 
   return (
-    <div
-      className={`w-full ${
-        isGameChangers && isStudent ? 'bg-black' : 'bg-white'
-      } rounded-lg p-2`}>
+    <div className={`w-full ${isGameChangers ? 'bg-black' : 'bg-white'} rounded-lg p-2`}>
       <div className="sm:hidden">
         <label htmlFor="tabs" className="sr-only">
           Select a tab

@@ -286,9 +286,7 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
             </div>
           </div>
         </>
-      ) : (
-        <Loader withText={'Loading'} className="w-auto text-gray-400" />
-      )}
+      ) : null}
       <InformationalWalkThrough
         open={openWalkThroughModal}
         onCancel={() => setOpenWalkThroughModal(false)}
