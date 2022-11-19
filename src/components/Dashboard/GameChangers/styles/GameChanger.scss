@@ -437,8 +437,14 @@ icon {
     transition: all 0.5s ease;
     background: rgba(21, 19, 21, 0.8);
   }
+  .hide-bg {
+    background: transparent;
+  }
 }
 
+.game-changer-card {
+  background-image: linear-gradient(45deg, rgb(182 89 255 / 60%) 0%, #0e5dc4 100%);
+}
 .carousel-cell.is-selected {
   & .inner-card,
   button {
@@ -448,7 +454,7 @@ icon {
     pointer-events: visible;
   }
 
-  .inner-card {
+  .inner-card:not(.hide-bg) {
     background-image: linear-gradient(45deg, rgb(182 89 255 / 60%) 0%, #0e5dc4 100%);
   }
 

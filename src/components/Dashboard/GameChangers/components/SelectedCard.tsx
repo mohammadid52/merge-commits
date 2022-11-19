@@ -205,12 +205,9 @@ const SelectedCard = ({
           />
         </audio>
         <div
-          style={{
-            background: 'rgb(27, 25, 29)'
-          }}
           className={`h-full  transition-all rounded-xl  ${
             selected?.type === EMOTIONS ? '' : 'p-4 md:p-16 md:px-14 px-8'
-          }  flex flex-col border-gray-900 md:border-2 items-center justify-center overflow-hidden `}>
+          } game-changer-card flex flex-col border-gray-900 md:border-2 items-center justify-center overflow-hidden `}>
           <div>
             <AnimatedContainer show={selected && selected?.type === THINK_ABOUT_IT}>
               {selected && selected?.type === THINK_ABOUT_IT && <ThinkAboutItCard />}
@@ -270,7 +267,7 @@ const SelectedCard = ({
                     disableImagesLoaded={false}>
                     {times(10, (t) => (
                       <div className="w-auto counter carousel-cell">
-                        <h1 className="inner-card w-auto mx-4 text-white text-xl font-semibold">
+                        <h1 className="inner-card hide-bg w-auto mx-4 text-white text-xl font-semibold">
                           {t + 1}
                         </h1>
                       </div>
