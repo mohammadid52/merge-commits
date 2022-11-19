@@ -225,8 +225,6 @@ const EmojiFeedback = () => {
     }
   }, []);
 
-  const [showJournal, setShowJournal] = useState(false);
-
   let points: any = {
     awful: {
       name: 'awful',
@@ -273,9 +271,11 @@ const EmojiFeedback = () => {
 
   const onSuccess = () => {
     setShowSentimentModal(false);
-    setShowJournal(false);
+
     setSelectedEmotion(false);
   };
+
+  const [fakeLoading, setFakeLoading] = useState(true);
 
   const {setNotification} = useNotifications();
 
@@ -346,6 +346,7 @@ const EmojiFeedback = () => {
   useEffect(() => {
     setInterval(() => {
       setShow({great: true, awful: true, okay: true, bad: true});
+      setFakeLoading(false);
     }, 1000);
   }, []);
 
@@ -361,7 +362,7 @@ const EmojiFeedback = () => {
         }
         scrollHidden
         intenseOpacity
-        width={showJournal ? 'w-full' : 'w-auto'}
+        width={'w-auto'}
         modalCloseId="sentiment-modal-close"
         closeAction={onCancel}
         closeOnBackdrop={false}
@@ -370,54 +371,37 @@ const EmojiFeedback = () => {
         showHeader
         showHeaderBorder
         showFooter={false}>
-        {!showJournal && (
-          <>
-            <div className="relative rounded-b-xl w-auto grid bg-white grid-cols-2 p-4 gap-4">
-              <AnimatedContainer delay=".2s" show={show.great}>
-                {show.great && (
-                  <EmojiCard
-                    {...commonEmojiProps}
-                    label="great"
-                    eye={points['great']['eye']}
-                    mouth={points['great']['mouth']}
-                  />
-                )}
-              </AnimatedContainer>
+        <>
+          <div className=" relative rounded-b-xl w-auto grid bg-white grid-cols-2 p-4 gap-4">
+            <EmojiCard
+              {...commonEmojiProps}
+              label="great"
+              eye={points['great']['eye']}
+              mouth={points['great']['mouth']}
+            />
 
-              <AnimatedContainer delay=".4s" show={show.okay}>
-                {show.okay && (
-                  <EmojiCard
-                    {...commonEmojiProps}
-                    label="okay"
-                    eye={points['okay']['eye']}
-                    mouth={points['okay']['mouth']}
-                  />
-                )}
-              </AnimatedContainer>
-              <AnimatedContainer delay=".6s" show={show.bad}>
-                {show.bad && (
-                  <EmojiCard
-                    {...commonEmojiProps}
-                    label="bad"
-                    eye={points['bad']['eye']}
-                    mouth={points['bad']['mouth']}
-                  />
-                )}
-              </AnimatedContainer>
+            <EmojiCard
+              {...commonEmojiProps}
+              label="okay"
+              eye={points['okay']['eye']}
+              mouth={points['okay']['mouth']}
+            />
 
-              <AnimatedContainer delay=".8s" show={show.awful}>
-                {show.awful && (
-                  <EmojiCard
-                    {...commonEmojiProps}
-                    label="awful"
-                    eye={points['awful']['eye']}
-                    mouth={points['awful']['mouth']}
-                  />
-                )}
-              </AnimatedContainer>
-            </div>
-          </>
-        )}
+            <EmojiCard
+              {...commonEmojiProps}
+              label="bad"
+              eye={points['bad']['eye']}
+              mouth={points['bad']['mouth']}
+            />
+
+            <EmojiCard
+              {...commonEmojiProps}
+              label="awful"
+              eye={points['awful']['eye']}
+              mouth={points['awful']['mouth']}
+            />
+          </div>
+        </>
       </Modal>
     )
   );
