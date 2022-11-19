@@ -57,9 +57,6 @@ const Card = ({
     <div
       className={`carousel-cell box mx-6 z-100 my-12 lg:my-0 gap-y-4 cursor-pointer  w-84  transition-all  flex flex-col items-center justify-center overflow-hidden form-button xl:max-h-156 xl:min-h-156 max-h-104 min-h-104`}>
       <div
-        style={{
-          background: 'rgba(21, 19, 21, .8)'
-        }}
         className={`h-full mb-4 inner-card transition-all rounded-xl p-8 lg:py-16  flex flex-col border-gray-900 border-2 items-center justify-center overflow-hidden `}>
         {getSVG(card.type)}
 
@@ -68,6 +65,7 @@ const Card = ({
       </div>
 
       <Buttons
+        btnClass="w-full"
         onClick={() => onClick(card.id)}
         label={`Select ${card.type !== THINK_ABOUT_IT ? 'Exercise' : ''}`}
       />

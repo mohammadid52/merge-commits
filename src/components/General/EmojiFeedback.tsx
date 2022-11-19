@@ -9,26 +9,13 @@ import {gsap} from 'gsap';
 import moment from 'moment';
 import React, {useContext, useEffect, useState} from 'react';
 import {BiArrowBack, BiPencil} from 'react-icons/bi';
-import {IoClose} from 'react-icons/io5';
 import {awsFormatDate, dateString} from 'utilities/time';
-
-const CloseButton = ({onClick}: {onClick: () => void}) => (
-  <button
-    className={`ml-auto absolute top-0 right-0 p-2 w-auto outline-none`}
-    onClick={() => {
-      onClick();
-    }}>
-    <span className="w-8 h-8 flex cursor-pointer items-center justify-center rounded transition-all duration-150">
-      <IoClose size={'1.5rem'} style={{color: '#fff'}} />
-    </span>
-  </button>
-);
 
 const EmojiCard = ({
   eye,
   mouth,
   label,
-  setSelectedEmotion,
+
   selectedCard,
 
   onSave
@@ -50,6 +37,7 @@ const EmojiCard = ({
   const [backstory, setBackstory] = useState('');
 
   const closePreviousCard = (closeThis?: boolean) => {
+    setBackstory('');
     let list = ['awful', 'bad', 'okay', 'great'];
     list = closeThis ? list.filter((e) => e === label) : list.filter((e) => e !== label);
     if (closeThis) {
