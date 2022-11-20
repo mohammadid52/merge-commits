@@ -72,6 +72,7 @@ const BottomSection = () => {
                   if (goBackCallback.current) {
                     goBackCallback.current();
                   } else {
+                    history.push('/dashboard/game-changers');
                     setCountSelected(null);
                     setSelectedCard(null);
                     setIsPlayingMusic(false);

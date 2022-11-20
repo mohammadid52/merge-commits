@@ -37,10 +37,11 @@ const GameChangers = () => {
 
   const history = useHistory();
   const match = useRouteMatch();
-  const onClick = (id: number) => {
+
+  const onClick = (id: number, autoClick?: boolean) => {
+    !autoClick && history.push(`${match.url}?exercise=${id}`);
     setInitialIndex(id);
     setSelectedCard(selectedCard === null ? id : null);
-    // history.push(`${match.url}?exercise=${id}`);
   };
 
   const params = useQuery(location.search);
@@ -48,13 +49,13 @@ const GameChangers = () => {
 
   let numbered = Number(exerciseIdFromUrl);
 
-  // useEffect(() => {
-  //   if (!isEmpty(exerciseIdFromUrl)) {
-  //     onClick(numbered);
-  //   } else {
-  //     setSelectedCard(null);
-  //   }
-  // }, [exerciseIdFromUrl]);
+  useEffect(() => {
+    if (!isEmpty(exerciseIdFromUrl)) {
+      onClick(numbered, true);
+    } else {
+      setSelectedCard(null);
+    }
+  }, []);
 
   const animation = 'translateY';
   const duration = '1000';

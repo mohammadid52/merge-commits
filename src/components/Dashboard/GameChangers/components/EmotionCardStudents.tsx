@@ -1,13 +1,12 @@
+import {FeelingsArchive, ListFeelingsArchivesQueryVariables} from 'API';
 import Loader from 'atoms/Loader';
 import AnimatedContainer from 'components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useInGC from 'customHooks/checkIfGameChanges';
 import useAuth from 'customHooks/useAuth';
-import useGraphqlMutation from 'customHooks/useGraphqlMutation';
 import useGraphqlQuery from 'customHooks/useGraphqlQuery';
-import {FeelingsArchive, ListFeelingsArchivesQueryVariables} from 'API';
 import React, {useEffect, useState} from 'react';
-import {useRouteMatch} from 'react-router';
+import {useHistory, useRouteMatch} from 'react-router';
 import {useGameChangers} from '../context/GameChangersContext';
 import BubbleVersion from './BubbleVersion';
 
@@ -33,8 +32,10 @@ const EmotionCard = ({inLesson}: {inLesson: boolean}) => {
     // }
   };
   const inGC = useInGC();
+  const history = useHistory();
 
   goBackCallback.current = () => {
+    history.push('/dashboard/game-changers');
     setSelectedCard(null);
     setPrimaryEmotion('');
     checkChanges(changesSaved);

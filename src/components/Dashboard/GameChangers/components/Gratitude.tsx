@@ -10,14 +10,21 @@ import gsap from 'gsap';
 import {nanoid} from 'nanoid';
 import React, {useEffect, useState} from 'react';
 import {useGameChangers} from '../context/GameChangersContext';
+import {getAsset} from 'assets';
+import {useGlobalContext} from '@contexts/GlobalContext';
+import CustomRichTextEditor from '@components/Lesson/UniversalLessonBlockComponents/Blocks/HighlighterBlock/CustomRichTextEditor';
 
 const Gratitude = () => {
   const {email, authId} = useAuth();
+  const {clientKey} = useGlobalContext();
 
   const [error, setError] = useState('');
 
   const {setIsCompleted, isCompleted} = useGameChangers();
-  const [fields, setFields] = useState({summary: '1. \n\n2. \n\n3. \n', summaryHtml: ''});
+  const [fields, setFields] = useState({
+    summary: '',
+    summaryHtml: '<p>1.</p>\n<p>2.</p>\n<p>3.</p>\n'
+  });
 
   const mutationLog = useGraphqlMutation<
     {input: CreateGameChangerLogInput},
@@ -64,18 +71,20 @@ const Gratitude = () => {
     });
   };
 
-  useEffect(() => {
-    gsap.fromTo(
-      '#journal-editor',
-      {
-        delay: 1,
-        height: 0,
-        duration: 2,
-        opacity: 0
-      },
-      {height: 'auto', opacity: 1, delay: 1}
-    );
-  }, []);
+  // useEffect(() => {
+  //   gsap.fromTo(
+  //     '#journal-editor',
+  //     {
+  //       delay: 1,
+  //       height: 0,
+  //       duration: 2,
+  //       opacity: 0
+  //     },
+  //     {height: 'auto', opacity: 1, delay: 1}
+  //   );
+  // }, []);
+  const themeColor = getAsset(clientKey, 'themeClassName');
+  const features: string[] = ['colorPicker', 'inline'];
 
   return (
     <>
@@ -86,12 +95,14 @@ const Gratitude = () => {
               Write down 3 things that you feel grateful for right now.
             </h1>
             <div id="journal-editor">
-              <RichTextEditor
-                wrapperClass="bg-component-dark border-none"
+              <CustomRichTextEditor
+                theme={themeColor}
+                withStyles
+                features={features}
                 rounded
                 customStyle
                 dark
-                initialValue={fields.summary}
+                initialValue={fields.summaryHtml}
                 onChange={(htmlContent, plainText) =>
                   onEditorStateChange(htmlContent, plainText, 'summaryHtml', 'summary')
                 }
