@@ -28,6 +28,7 @@ interface FormInputProps {
   maxLength?: number;
   showCharacterUsage?: boolean;
   updateHeight?: boolean;
+  resize?: boolean;
   inputRef?: any;
   className?: string;
   Icon?: any;
@@ -58,7 +59,8 @@ const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
     inputRef,
     onKeyDown,
     dataCy,
-    Icon
+    Icon,
+    resize = true
   } = inputProps;
   const {theme, clientKey} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
@@ -88,7 +90,7 @@ const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
             dark ? 'border-gray-700  text-white bg-gray-800' : ''
           } max-w-256 block w-full sm:text-sm sm:leading-5 focus:outline-none focus:ring-2 focus:ring-${
             themeColor === 'iconoclastIndigo' ? 'indigo' : 'blue'
-          }-600 focus:border-transparent border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm ${
+          }-600 focus:border-transparent border-0 border-gray-300 py-2 px-3 rounded-xl shadow-sm ${
             theme.outlineNone
           } ${className} ${disabledClass}`}
           disabled={disabled}
@@ -97,7 +99,7 @@ const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
           ref={inputRef}
           onKeyDown={(e) => {
             onKeyDown && onKeyDown();
-            doResize(e.target);
+            resize && doResize(e.target);
           }}
           onChange={onChange}
           placeholder={placeHolder}

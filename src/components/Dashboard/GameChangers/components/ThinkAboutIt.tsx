@@ -25,8 +25,9 @@ const ThinkAboutItCard = () => {
               dark
               onChange={onAnsChange}
               id={qa.id}
+              resize={false}
               value={answers[qa.id]}
-              rows={qa.textarea ? 3 : undefined}
+              rows={qa.textarea ? 5 : undefined}
               placeHolder={qa.placeholder}
             />
           </div>

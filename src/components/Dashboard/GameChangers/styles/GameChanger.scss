@@ -443,8 +443,33 @@ icon {
 }
 
 .game-changer-card {
-  background-image: linear-gradient(45deg, rgb(182 89 255 / 60%) 0%, #0e5dc4 100%);
+  display: flex;
+  align-items: center;
+  margin: auto;
+
+  box-sizing: border-box;
+
+  $border: 2px;
+  color: #fff;
+  background: rgba(27, 25, 29, 0.85);
+  background-clip: padding-box;
+  border: solid $border transparent;
+  border-radius: 1rem;
+
+  &:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: -1;
+    margin: -$border;
+    border-radius: inherit;
+    background: linear-gradient(45deg, rgb(182 89 255 / 60%) 0%, #0e5dc4 100%);
+  }
 }
+
 .carousel-cell.is-selected {
   & .inner-card,
   button {

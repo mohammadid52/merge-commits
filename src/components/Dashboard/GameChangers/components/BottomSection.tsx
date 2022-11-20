@@ -2,7 +2,7 @@ import Tooltip from 'atoms/Tooltip';
 import {useGameChangers} from 'components/Dashboard/GameChangers/context/GameChangersContext';
 import {classNames} from 'components/Lesson/UniversalLessonBuilder/UI/FormElements/TextInput';
 import AnimatedContainer from 'components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {AiOutlineInfoCircle} from 'react-icons/ai';
 import {BsChevronLeft} from 'react-icons/bs';
 import {IoIosHelpCircleOutline} from 'react-icons/io';
@@ -31,9 +31,11 @@ const BottomSection = () => {
   const commonBtnClass =
     'w-auto cursor-pointer hover:scale-110 hover:iconoclast:text-main hover:curate:text-main transform transition-all meditation-card__btn lg:text-xl 2xl:text-xl  text-opacity-50';
 
-  const history = useHistory();
   const show = selectedCard !== 2 && selectedCard !== 3 && selectedCard !== 4;
   // because 2 is thinkaboutit card
+
+  const history = useHistory();
+
   return (
     <div className="">
       <AnimatedContainer
