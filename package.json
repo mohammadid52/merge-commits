@@ -20,7 +20,8 @@
     "push:ia": "sh ./scripts/push-ia.sh",
     "push:pc": "sh ./scripts/push-pc.sh",
     "push": "sh ./scripts/push.sh",
-    "pull:uat": "sh ./scripts/pull-uat.sh"
+    "pull:uat": "sh ./scripts/pull-uat.sh",
+    "update-amplify": "sh ./scripts/update-amplify.sh"
   },
   "devDependencies": {
     "@aws-sdk/client-s3": "^3.37.0",
