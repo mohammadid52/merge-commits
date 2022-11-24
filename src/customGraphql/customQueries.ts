@@ -5920,3 +5920,38 @@ export const getPersonLessonsData = /* GraphQL */ `
     }
   }
 `;
+
+export const listCommunityChats = /* GraphQL */ `
+  query ListCommunityChats(
+    $filter: ModelCommunityChatFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listCommunityChats(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        communityId
+        personAuthID
+        personEmail
+        msg
+        createdAt
+        isEditedChat
+        person {
+          id
+          authId
+          status
+          email
+          role
+          firstName
+          preferredName
+          lastName
+          image
+          createdAt
+          updatedAt
+        }
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;

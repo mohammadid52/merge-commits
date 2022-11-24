@@ -457,29 +457,14 @@ const Card = ({
       setIsLoading(true);
 
       const res: any = await API.graphql(
-        graphqlOperation(queries.listCommunityChats, {
+        graphqlOperation(customQueries.listCommunityChats, {
           filter: {communityId: {eq: cardDetails.id}}
         })
       );
       const data = res.data.listCommunityChats.items;
       if (data.length > 0) {
         let orderedList = orderBy(data, ['createdAt'], 'desc');
-        const filterArray = orderedList.map((item) => ({
-          authId: {
-            eq: item.personAuthID
-          }
-        }));
 
-        const _res: any = await API.graphql(
-          graphqlOperation(customQueries.listPersons, {
-            filter: {or: filterArray}
-          })
-        );
-        const persons = _res.data.listPeople.items;
-        orderedList = orderedList.map((d) => ({
-          ...d,
-          person: persons.find((p: any) => p.authId === d.personAuthID)
-        }));
         setChats([...orderedList]);
       }
     } catch (error) {

@@ -15789,6 +15789,45 @@ export const createCommunityChat = /* GraphQL */ `
       msg
       createdAt
       isEditedChat
+      person {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        inactiveStatusDate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        onDemand
+        sentiments
+        passcode
+        classes {
+          nextToken
+        }
+        lessons {
+          nextToken
+        }
+        spotlightUser
+        spotlightDate
+        statusReason
+        addedby
+        lastEmotionSubmission
+        createdAt
+        updatedAt
+      }
       updatedAt
     }
   }
@@ -15806,6 +15845,45 @@ export const updateCommunityChat = /* GraphQL */ `
       msg
       createdAt
       isEditedChat
+      person {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        inactiveStatusDate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        onDemand
+        sentiments
+        passcode
+        classes {
+          nextToken
+        }
+        lessons {
+          nextToken
+        }
+        spotlightUser
+        spotlightDate
+        statusReason
+        addedby
+        lastEmotionSubmission
+        createdAt
+        updatedAt
+      }
       updatedAt
     }
   }
@@ -15823,6 +15901,45 @@ export const deleteCommunityChat = /* GraphQL */ `
       msg
       createdAt
       isEditedChat
+      person {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        inactiveStatusDate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        onDemand
+        sentiments
+        passcode
+        classes {
+          nextToken
+        }
+        lessons {
+          nextToken
+        }
+        spotlightUser
+        spotlightDate
+        statusReason
+        addedby
+        lastEmotionSubmission
+        createdAt
+        updatedAt
+      }
       updatedAt
     }
   }

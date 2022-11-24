@@ -7972,6 +7972,45 @@ export const getCommunityChat = /* GraphQL */ `
       msg
       createdAt
       isEditedChat
+      person {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        inactiveStatusDate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        onDemand
+        sentiments
+        passcode
+        classes {
+          nextToken
+        }
+        lessons {
+          nextToken
+        }
+        spotlightUser
+        spotlightDate
+        statusReason
+        addedby
+        lastEmotionSubmission
+        createdAt
+        updatedAt
+      }
       updatedAt
     }
   }
@@ -7991,6 +8030,39 @@ export const listCommunityChats = /* GraphQL */ `
         msg
         createdAt
         isEditedChat
+        person {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          inactiveStatusDate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          onDemand
+          sentiments
+          passcode
+          spotlightUser
+          spotlightDate
+          statusReason
+          addedby
+          lastEmotionSubmission
+          createdAt
+          updatedAt
+        }
         updatedAt
       }
       nextToken

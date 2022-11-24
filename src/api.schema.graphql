@@ -1014,6 +1014,7 @@ type CommunityChat @model @auth(rules: [{allow: public}]) {
   msg: String
   createdAt: AWSDateTime
   isEditedChat: Boolean
+  person: Person @hasOne(fields: ["personEmail", "personAuthID"])
 }
 
 type Subscription {

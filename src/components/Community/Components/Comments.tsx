@@ -119,7 +119,7 @@ const Comments = ({
   const orderedList = orderBy(chats, ['createdAt'], ['desc']);
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center w-auto">
+      <div className="flex my-4 items-center justify-center w-auto">
         <Loader withText="Loading comments..." className=" text-gray-400" />
       </div>
     );
