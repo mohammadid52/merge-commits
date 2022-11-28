@@ -360,7 +360,7 @@ const CustomRichTextEditor = (props: RichTextEditorProps) => {
           ${theme}
           ${customStyle ? `${dark ? 'dark' : 'light'} text-black` : ''}  
           toolbarNestedDropdown toolItemClassName  toolbarCustomIcon`,
-            colors: ['#DC2626', '#34D399']
+            colors: ['#DC2626', '#34D399', '#fff']
           }
         }}
       />
