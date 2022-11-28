@@ -175,7 +175,12 @@ const HighlighterBlock = (props: HighlighterBlockProps) => {
     }
   }, [userValue]);
 
-  const initialValue = isInLesson && isStudent ? userValue : editorState;
+  const initialValue =
+    isInLesson && isStudent
+      ? userValue
+      : isInLesson && !isStudent
+      ? value[0].value
+      : editorState;
 
   return (
     <div className={` py-4 `}>

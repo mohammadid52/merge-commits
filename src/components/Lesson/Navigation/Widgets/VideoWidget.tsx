@@ -36,7 +36,7 @@ const VideoWidget = ({
     <>
       <div
         ref={buttonContainerRef}
-        className={`absolute w-16 left-1 transform translate-y-4 flex flex-col`}>
+        className={`absolute w-16 left-1 transform translate-y-4 flex flex-col items-center`}>
         <ButtonsRound
           onClick={videoLink ? () => handleClickAnimation() : () => {}}
           Icon={AiOutlineVideoCamera}
@@ -48,7 +48,7 @@ const VideoWidget = ({
                 ? 'bg-white bg-opacity-70'
                 : 'bg-white'
               : 'bg-gray-700 bg-opacity-40 pointer-events-none'
-          } p-2 rounded-full`}
+          } p-2 rounded-full mb-1`}
           buttonBgClass={`bg-transparent`}
           iconTxtColorClass={`${
             videoLink
@@ -60,11 +60,7 @@ const VideoWidget = ({
           disabled={!videoLink}
         />
         <p
-          className={
-            videoLink
-              ? 'w-12 text-xs text-center text-white'
-              : 'w-12 text-xs text-center text-gray-600'
-          }>
+          className={`text-xs text-center ${videoLink ? 'text-white' : 'text-gray-600'}`}>
           Video
         </p>
       </div>

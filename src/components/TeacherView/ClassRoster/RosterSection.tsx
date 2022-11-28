@@ -1,9 +1,9 @@
 import {getAsset} from 'assets';
-import Buttons from 'atoms/Buttons';
 import {GlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import gsap from 'gsap/all';
 import React, {useContext, useRef, useState} from 'react';
+import {BiChevronDown, BiChevronUp} from 'react-icons/bi';
 import {IoMdRefresh} from 'react-icons/io';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 import RosterRow from './RosterRow';
@@ -92,25 +92,15 @@ const RosterSection = ({
 
   return (
     <>
-      <div className={`w-full h-10 flex items-center bg-transparent`}>
+      <div className={`w-full flex items-center bg-transparent`}>
         <div className="relative w-full h-auto flex flex-row items-center">
           <span className="text-sm font-semibold text-gray-600">{sectionTitle}</span>
           <span
-            className="text-sm font-bold text-gray-600 cursor-pointer p-2"
+            className="text-sm font-bold w-auto text-gray-600 cursor-pointer p-2"
             onClick={() =>
               toggleAnimation(minimized, listRef, rollDownAnimation, rollUpAnimation)
             }>
-            {minimized === true ? '+' : '−'}
-          </span>
-          <span className="relative mr-0 flex justify-end">
-            {hot && (
-              <Buttons
-                overrideClass
-                btnClass={`${theme.btn[themeColor]} h-8 font-bold uppercase text-xs p-1 rounded items-center w-auto`}
-                label="Sentiments"
-                onClick={() => handleToggleRightView({view: 'lessonInfo', option: ''})}
-              />
-            )}
+            {minimized ? <BiChevronUp /> : <BiChevronDown />}
           </span>
         </div>
       </div>

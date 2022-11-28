@@ -125,7 +125,7 @@
 } */
 
 .editorClassName p,
-span {
+.editorClassName span {
   margin: unset;
 }
 

@@ -68,13 +68,12 @@ const useAuth = (): {
       <div
         className={`${size} flex flex-shrink-0 justify-center items-center rounded-full  border-0 border-gray-400 customShadow cursor-pointer ${className}`}>
         <div
-          className={`h-full w-full flex justify-center items-center ${textSize} text-extrabold text-white rounded-full`}
+          className={`h-full w-full flex justify-center items-center ${textSize} text-extrabold text-white rounded-full text-shadow`}
           style={{
             /*  stylelint-disable */
             background: `${
               firstName ? stringToHslColor(firstName + ' ' + lastName) : null
-            }`,
-            textShadow: '0.2rem 0.2rem 3px #423939b3'
+            }`
           }}>
           {firstName && initials(firstName, lastName)}
         </div>

@@ -257,13 +257,17 @@
 @include curate('text'); // with demo
 
 .iconoclast {
-  .theme-text {
+  .theme-text,
+  .hover\:theme-text &:hover {
     color: $iconoclast !important;
   }
-  .theme-bg {
+  .theme-bg,
+  .hover\:theme-bg &:hover {
     background-color: $iconoclast !important;
   }
-  .theme-border {
+
+  .theme-border,
+  .hover\:theme-border &:hover {
     border-color: $iconoclast !important;
   }
 
@@ -272,13 +276,17 @@
   }
 }
 .curate {
-  .theme-text {
+  .theme-text,
+  .hover\:theme-text &:hover {
     color: $curate !important;
   }
-  .theme-bg {
+  .theme-bg,
+  .hover\:theme-bg &:hover {
     background-color: $curate !important;
   }
-  .theme-border {
+
+  .theme-border,
+  .hover\:theme-border &:hover {
     border-color: $curate !important;
   }
 

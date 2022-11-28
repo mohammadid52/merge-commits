@@ -72,6 +72,7 @@ const LessonApp = ({
   >([]);
 
   const PAGES = lessonState?.lessonData?.lessonPlan;
+  const LESSON_NAME = lessonState?.lessonData?.title;
   const CURRENT_PAGE = lessonState.currentPage;
 
   const topLessonRef = useRef();
@@ -1146,6 +1147,9 @@ const LessonApp = ({
           <p className="text-white font-medium tracking-wide">
             <span className="text-red-500">*</span>Please fill all the required fields
           </p>
+        </div>
+        <div className={`absolute bottom-1 left-0 py-4 px-6 z-max  w-auto `}>
+          <h6 className="text-xs text-shadow text-gray-500">{LESSON_NAME}</h6>
         </div>
 
         <div className="fixed " style={{zIndex: 5000}}>

@@ -1,13 +1,13 @@
-import React, {useContext, useEffect, useState, useRef} from 'react';
-import {gsap} from 'gsap/all';
-import usePrevious from 'customHooks/previousProps';
-import LessonDetails from '../TopMenu/LessonDetails';
-import LessonInfoTitleBar from '../TopMenu/LessonInfoTitleBar';
-import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
-import {AiOutlineCloseCircle, AiOutlineMenu} from 'react-icons/ai';
-import ButtonsRound from 'atoms/ButtonsRound';
+import Buttons from '@components/Atoms/Buttons';
 import {getAsset} from 'assets';
-
+import ButtonsRound from 'atoms/ButtonsRound';
+import usePrevious from 'customHooks/previousProps';
+import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
+import {gsap} from 'gsap/all';
+import React, {useEffect, useRef, useState} from 'react';
+import {AiFillEye, AiOutlineCloseCircle, AiOutlineMenu} from 'react-icons/ai';
+import {BiCloudDownload} from 'react-icons/bi';
+import LessonDetails from '../TopMenu/LessonDetails';
 interface IRosterFrame {
   children?: React.ReactNode;
   fullscreen?: boolean;
@@ -72,6 +72,14 @@ const RosterFrame = ({
   // ##################################################################### //
   const {breakpoint} = useTailwindBreakpoint();
 
+  const handleToggleRightView = (rightViewObj: {view: string; option: string}) => {
+    let toggleValue =
+      rightView.view === rightViewObj.view
+        ? {...rightViewObj, view: 'lesson'}
+        : {...rightViewObj, view: rightViewObj.view};
+    setRightView(toggleValue);
+  };
+
   return (
     <>
       {/* FULL ROSTER */}
@@ -83,10 +91,7 @@ const RosterFrame = ({
 
         <LessonDetails
           hidden={breakpoint !== 'xl' && breakpoint !== '2xl'}
-          theme={theme}
-          themeColor={themeColor}
-          rightView={rightView}
-          setRightView={setRightView}
+          handleToggleRightView={handleToggleRightView}
         />
         <div className={`h-full w-full flex flex-col justify-between items-center z-100`}>
           <div className={`h-full`}>{children}</div>
@@ -125,7 +130,8 @@ const RosterFrame = ({
           buttonBgClass={`bg-transparent`}
           iconTxtColorClass={theme.textColor[themeColor]}
         />
-        <LessonDetails theme={theme} themeColor={themeColor} />
+        <LessonDetails />
+
         <div className={`h-full w-full flex flex-col justify-between items-center`}>
           <div className={`h-full`}>{children}</div>
         </div>

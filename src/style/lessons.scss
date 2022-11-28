@@ -165,3 +165,14 @@
     color: #fff !important;
   }
 }
+
+.text-shadow {
+  text-shadow: 0.2rem 0.2rem 3px #352c2cb3;
+}
+
+.dot-menu {
+  opacity: 0;
+}
+.roster-row:hover .dot-menu {
+  opacity: 1;
+}

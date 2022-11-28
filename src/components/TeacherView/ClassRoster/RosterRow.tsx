@@ -4,6 +4,7 @@ import React, {useContext, useEffect, useState} from 'react';
 import {GlobalContext} from 'contexts/GlobalContext';
 import DotMenu from './RosterRow/DotMenu';
 import {IRosterSectionProps} from './RosterSection';
+import Buttons from '@components/Atoms/Buttons';
 
 interface RosterRowProps extends IRosterSectionProps {
   number: number;
@@ -33,8 +34,7 @@ const RosterRow: React.FC<RosterRowProps> = ({
   viewedStudent,
   sharedStudent,
   handlePageChange,
-  rightView,
-  setRightView,
+
   handleToggleRightView,
   hot
 }: RosterRowProps) => {
@@ -105,7 +105,7 @@ const RosterRow: React.FC<RosterRowProps> = ({
   const getPageLabel = (locationIndex: string) => {
     if (lessonState.lessonData && lessonState.lessonData?.lessonPlan) {
       if (locationIndex === '') {
-        return 'n/a';
+        return '--';
       } else {
         return lessonState.lessonData.lessonPlan[parseInt(locationIndex)]?.label;
       }
@@ -129,19 +129,38 @@ const RosterRow: React.FC<RosterRowProps> = ({
   // ############################### OUTPUT ############################## //
   // ##################################################################### //
 
+  const commonShareButtonClass = 'p-1 transition-all rounded-full text-white  text-sm';
+
+  const disabledShareButton = (
+    <div
+      id={`${personAuthID}`}
+      data-studentid={personAuthID}
+      draggable={false}
+      className={` w-3/10 mx-auto cursor-not-allowed flex items-center text-center  ${
+        active && activeHoverClass
+      }`}
+      onClick={() => {}}>
+      <span className={`${commonShareButtonClass} bg-dark-gray bg-opacity-20`}>
+        Share
+      </span>
+    </div>
+  );
+
   return (
     <>
-      <div className="border-t-0 border-gray-400 mb-1" />
+      {/* <div className="" /> */}
       <div
         id={`${personAuthID}`}
         draggable={false}
-        className={`w-full flex h-10 rounded shadow-sm px-1 ${
+        className={`w-full flex h-10 rounded items-center shadow-sm px-1 ${
           active && activeHoverClass
         }  ${!active && inactiveTextClass} ${
           number % 2 === 0 ? 'bg-gray-200 bg-opacity-50' : ''
         } ${
           studentIsViewed() ? `bg-white border-l-4 ${theme.borderColor[themeColor]}` : ''
-        } ${studentIsShared() ? `border-l-4 ${theme.borderColor[themeColor]}` : ''} `}>
+        } ${
+          studentIsShared() ? `border-l-4 ${theme.borderColor[themeColor]}` : ''
+        } roster-row `}>
         {/* STUDENT NAME */}
         <div
           id={`${personAuthID}`}
@@ -151,7 +170,8 @@ const RosterRow: React.FC<RosterRowProps> = ({
           <div
             id={`${personAuthID}`}
             draggable={false}
-            className={`w-1/2 text-gray-600 overflow-hidden mr-2 flex items-center pointer-events-none text-sm whitespace-pre truncate ... ${
+            title={`${preferredName ? preferredName : firstName} ${lastName}`}
+            className={`w-2/3 text-gray-600 overflow-hidden mr-2 flex items-center pointer-events-none text-sm whitespace-pre truncate ... ${
               active && activeHoverClass
             } `}>
             {preferredName ? preferredName : firstName} {lastName}
@@ -160,7 +180,7 @@ const RosterRow: React.FC<RosterRowProps> = ({
           <div
             id={`${personAuthID}`}
             draggable={false}
-            className={`w-1/2 mx-2 flex justify-center items-center pointer-events-none overflow-hidden text-gray-600 text-sm text-center ${
+            className={`w-1/3 mx-2 flex justify-center items-center pointer-events-none overflow-hidden text-gray-600 text-sm text-center ${
               active && activeHoverClass
             }`}>
             <div id={personAuthID} draggable={false} className={`pointer-events-none`}>
@@ -175,8 +195,7 @@ const RosterRow: React.FC<RosterRowProps> = ({
             anyoneIsShared ? (
               studentIsShared() ? (
                 // UNSHARE CURRENTLY SHARED STUDENT
-                <div
-                  aria-label={`asd`}
+                <button
                   id={`${personAuthID}`}
                   draggable={false}
                   className={`w-3/10 mx-auto flex items-center text-center  ${
@@ -185,59 +204,48 @@ const RosterRow: React.FC<RosterRowProps> = ({
                   onClick={() =>
                     handleShareStudentData(personAuthID, getPageID(currentLocation))
                   }>
-                  <div className="p-1 rounded text-white bg-dark-red hover:bg-red-500 text-sm">
-                    <span id={`${personAuthID}`} className="">
-                      Unshare
-                    </span>
-                  </div>
-                </div>
+                  <span
+                    id={`${personAuthID}`}
+                    className={`${commonShareButtonClass} bg-dark-red hover:bg-red-500 `}>
+                    Unshare
+                  </span>
+                </button>
               ) : (
                 // INACTIVE SHARE BUTTON IF ANY SHARING IS ACTIVE
-                <div
-                  id={`${personAuthID}`}
-                  data-studentid={personAuthID}
-                  draggable={false}
-                  className={` w-3/10 mx-auto flex items-center text-center  ${
-                    active && activeHoverClass
-                  }`}
-                  onClick={() => {}}>
-                  <div className="p-1 rounded text-white bg-dark-gray bg-opacity-20 text-sm">
-                    <span className="pointer-events-none ">Share</span>
-                  </div>
-                </div>
+                disabledShareButton
               )
             ) : (
               // ACTIVE SHARE BUTTON IF NO SHARING IS ACTIVE
-              <div
+              <button
                 id={`${personAuthID}`}
                 data-studentid={personAuthID}
                 draggable={false}
-                className={`w-3/10 mx-auto flex items-center text-center  ${
+                className={` w-3/10 mx-auto flex items-center text-center  ${
                   active && activeHoverClass
                 }`}
                 onClick={() =>
                   handleShareStudentData(personAuthID, getPageID(currentLocation))
                 }>
-                <div className="p-1  rounded text-white bg-green-500 bg-opacity-20 hover:bg-opacity-80 text-sm">
-                  <span className="pointer-events-none">Share</span>
-                </div>
-              </div>
+                <span
+                  className={`${commonShareButtonClass} bg-green-500 hover:bg-green-400`}>
+                  Share
+                </span>
+              </button>
+
+              // <Buttons
+              //   size="small"
+              //   btnClass="text-white"
+              //   label={'Share'}
+              //   greenBtn
+              // onClick={() =>
+              //   handleShareStudentData(personAuthID, getPageID(currentLocation))
+              // }
+              // />
             )
           ) : null
         ) : (
           // INACTIVE SHARE BUTTON IF LESSON IS SURVEY
-          <div
-            id={`${personAuthID}`}
-            data-studentid={personAuthID}
-            draggable={false}
-            className={`w-3/10 mx-auto flex items-center text-center ${
-              active && activeHoverClass
-            }`}
-            onClick={() => {}}>
-            <div className="p-1 rounded text-white bg-dark-gray bg-opacity-20 text-sm">
-              <span className="pointer-events-none">Share</span>
-            </div>
-          </div>
+          disabledShareButton
         )}
 
         {/* INFO BUTTON */}
@@ -251,8 +259,7 @@ const RosterRow: React.FC<RosterRowProps> = ({
           onClick={() =>
             handleShareStudentData(personAuthID, getPageID(currentLocation))
           }>
-          <div
-            className={`hover:${theme.textColor[themeColor]} pl-1 text-white hover:bg-opacity-80 text-sm`}>
+          <div className={`dot-menu transition duration-150`}>
             <DotMenu
               menuItems={[
                 {

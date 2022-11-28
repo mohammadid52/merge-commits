@@ -22,6 +22,7 @@ interface ButtonProps {
   insideElement?: React.ReactNode;
   title?: string;
   dataCy?: string;
+  size?: 'small' | 'medium' | 'large';
 }
 
 const Buttons: React.FC<ButtonProps> = (btnProps: ButtonProps) => {
@@ -42,10 +43,17 @@ const Buttons: React.FC<ButtonProps> = (btnProps: ButtonProps) => {
     loading = false,
     loadingText = 'Loading...',
     insideElement = null,
-    dataCy
+    dataCy,
+    size = 'medium'
   } = btnProps;
   const {theme, clientKey} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
+
+  const _Icon = (
+    <span className="w-auto">
+      <Icon className={`w-6 h-6 ${transparent ? 'theme-text' : 'text-white'}`} />
+    </span>
+  );
 
   return (
     <button
@@ -60,15 +68,15 @@ const Buttons: React.FC<ButtonProps> = (btnProps: ButtonProps) => {
           ? ''
           : `${
               transparent
-                ? `${
-                    greenBtn
-                      ? ''
-                      : 'iconoclast:border-main  curate:border-main iconoclast:text-main curate:text-main hover-text-white'
-                  }`
+                ? `${greenBtn ? '' : 'theme-border theme-text hover-text-white'}`
                 : `${greenBtn ? '' : 'iconoclast:bg-500 curate:bg-500'}`
-            } font-bold transition duration-150 text-white ease-in-out md:py-2 sm:py-auto  ${
+            } font-bold transition duration-150 text-white ease-in-out ${
+              size === 'small' ? '' : 'md:py-2'
+            } sm:py-auto  ${
               greenBtn ? '' : 'hover:iconoclast:bg-600  hover:curate:bg-600'
-            } uppercase text-xs px-4 py-2 rounded-full flex items-center justify-center w-auto `
+            } uppercase text-xs ${
+              size === 'small' ? 'px-2 py-1' : 'px-4 py-2'
+            } rounded-full flex items-center justify-center w-auto `
       }
       ${btnClass ? btnClass : ''} 
       ${theme.outlineNone} 
@@ -87,23 +95,11 @@ const Buttons: React.FC<ButtonProps> = (btnProps: ButtonProps) => {
         <Loader withText={loadingText} className="w-auto text-gray-400" />
       ) : (
         <div className="w-auto flex items-center justify-center">
-          {Icon && iconBeforeLabel && (
-            <span className="w-auto">
-              <IconContext.Provider value={{color: '#ffffff'}}>
-                <Icon className="w-6 h-6" />
-              </IconContext.Provider>
-            </span>
-          )}
+          {Icon && iconBeforeLabel && _Icon}
           {label ? (
             <span className={`mx-2 ${labelClass ? labelClass : ''}`}>{label}</span>
           ) : null}
-          {Icon && !iconBeforeLabel ? (
-            <span className="w-8 h-8 flex items-center">
-              <IconContext.Provider value={{size: '1.2rem', color: '#ffffff'}}>
-                <Icon />
-              </IconContext.Provider>
-            </span>
-          ) : null}
+          {Icon && !iconBeforeLabel ? _Icon : null}
         </div>
       )}
 

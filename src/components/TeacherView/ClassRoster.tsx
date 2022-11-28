@@ -8,6 +8,7 @@ import * as queries from 'graphql/queries';
 import * as subscriptions from 'graphql/subscriptions';
 import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
 import RosterSection from './ClassRoster/RosterSection';
+import Buttons from '@components/Atoms/Buttons';
 
 interface IClassRosterProps {
   handleQuitShare: () => void;
@@ -411,7 +412,6 @@ const ClassRoster = ({
   // ##################################################################### //
 
   const handleToggleRightView = (rightViewObj: {view: string; option: string}) => {
-    console.log('toggle toggle');
     let toggleValue =
       rightView.view === rightViewObj.view
         ? {...rightViewObj, view: 'lesson'}
@@ -424,10 +424,13 @@ const ClassRoster = ({
   // ##################################################################### //
 
   return (
-    <div className={`w-full h-full px-4 pt-2 overflow-y-auto overflow-x-hidden`}>
+    <div className={`w-full h-full px-4 pt-2 overflow-y-auto overflow-x-hidden pb-48`}>
+      {/* */}
+
       {/* STUDENTS - IN CLASS */}
+
       <RosterSection
-        hot={true}
+        hot
         handleManualRefresh={handleManualRefresh}
         loading={loading}
         handleToggleRightView={handleToggleRightView}

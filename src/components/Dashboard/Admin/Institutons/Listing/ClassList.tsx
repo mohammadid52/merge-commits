@@ -1,13 +1,10 @@
-import React, {Fragment, useContext, useState} from 'react';
+import React, {Fragment, useContext} from 'react';
 import {useHistory} from 'react-router';
 
-import PageWrapper from 'atoms/PageWrapper';
-import Buttons from 'atoms/Buttons';
 import {getAsset} from 'assets';
+import AddButton from 'atoms/Buttons/AddButton';
 import {GlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
-import Tooltip from 'atoms/Tooltip';
-import AddButton from 'atoms/Buttons/AddButton';
 
 interface ClassListProps {
   classes: {items: {name?: string; id: string}[]};
@@ -17,11 +14,11 @@ interface ClassListProps {
 
 const ClassList = (props: ClassListProps) => {
   const {classes, instId, instName} = props;
-  const [classList, setClassList] = useState([]);
+
   const history = useHistory();
   const {clientKey, theme, userLanguage} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
-  const {Institute_class, BreadcrumsTitles} = useDictionary(clientKey);
+  const {Institute_class} = useDictionary();
 
   const createNewClass = () => {
     history.push(`/dashboard/manage-institutions/institution/${instId}/class-creation`);
