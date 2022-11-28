@@ -1,4 +1,5 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import useAuth from '@customHooks/useAuth';
 import {
   UniversalLessonStudentData as UniversalLessonStudentDataFromAPI,
   UpdatePersonLessonsDataInput
@@ -10,7 +11,6 @@ import * as customMutations from 'customGraphql/customMutations';
 import * as customQueries from 'customGraphql/customQueries';
 import * as customSubscriptions from 'customGraphql/customSubscriptions';
 import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
-import {update} from 'lodash';
 import * as mutations from 'graphql/mutations';
 import * as queries from 'graphql/queries';
 import {
@@ -23,7 +23,6 @@ import {
   UniversalLessonPage,
   UniversalLessonStudentData
 } from 'interfaces/UniversalLessonInterfaces';
-import {isEmpty} from 'lodash';
 import React, {useEffect, useRef, useState} from 'react';
 import {useParams} from 'react-router-dom';
 import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
@@ -136,6 +135,7 @@ const LessonApp = ({
         if (subscription) {
           subscription.unsubscribe();
         }
+
         lessonDispatch({type: 'CLEANUP'});
       });
     };
@@ -905,6 +905,7 @@ const LessonApp = ({
       currentLocation: currentPageLocation,
       lessonProgress: updatedLocationObj.lessonProgress
     };
+
     try {
       await API.graphql(
         graphqlOperation(mutations.updatePersonLocation, {input: locationUpdateProps})
@@ -1016,6 +1017,15 @@ const LessonApp = ({
     handleLessonMutateData();
   }, [lessonState.currentPage]);
 
+  const getUpdatedPagesData = () =>
+    `{
+    "currentPage":${JSON.stringify(lessonState.currentPage)},
+    "totalPages":${JSON.stringify(lessonState.lessonData?.lessonPlan?.length - 1)},
+    "lessonProgress":${JSON.stringify(lessonState.currentPage)}
+    }`
+      .replace(/(\s\s+|[\t\n])/g, ' ')
+      .trim();
+
   const commonPersonLessonPayload = {
     studentAuthID: user.authId,
     roomId: getRoomData.id,
@@ -1023,15 +1033,7 @@ const LessonApp = ({
     lessonID: lessonID,
     lessonType: lessonState.lessonData?.type,
 
-    pages: `{
-              "currentPage":${JSON.stringify(lessonState.currentPage)},
-              "totalPages":${JSON.stringify(
-                lessonState.lessonData?.lessonPlan?.length - 1
-              )},
-              "lessonProgress":${JSON.stringify(lessonState.currentPage)}
-              }`
-      .replace(/(\s\s+|[\t\n])/g, ' ')
-      .trim()
+    pages: getUpdatedPagesData()
   };
   const createPersonLessonPayload: UpdatePersonLessonsDataInput = {
     ...commonPersonLessonPayload,
@@ -1092,6 +1094,14 @@ const LessonApp = ({
               input: updatePersonLessonPayload
             })
           );
+          const updatedLocationObj = {
+            ...getLocationData,
+            currentLocation: lessonState.currentPage,
+            lessonProgress: lessonState.currentPage
+          };
+          updatePersonLocation(updatedLocationObj);
+
+          setLocalStorageData('person_location', updatedLocationObj);
         }
       }
     } catch (error) {

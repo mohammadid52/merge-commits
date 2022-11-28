@@ -1,13 +1,13 @@
 import {getAsset} from 'assets';
+import Buttons from 'atoms/Buttons';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import gsap from 'gsap/all';
 import React, {useContext, useRef, useState} from 'react';
 import {IoMdRefresh} from 'react-icons/io';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
-import {GlobalContext} from 'contexts/GlobalContext';
-import useDictionary from 'customHooks/dictionary';
 import RosterRow from './RosterRow';
 import RosterRowEmpty from './RosterRowEmpty';
-import gsap from 'gsap/all';
-import Buttons from 'atoms/Buttons';
 
 export interface IRosterSectionProps {
   hot?: boolean;

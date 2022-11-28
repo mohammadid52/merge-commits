@@ -77,7 +77,7 @@ const Start: React.FC<StartProps> = ({
   }, []);
 
   useEffect(() => {
-    if (type === 'lesson') {
+    if (type === 'lesson' && isStudent) {
       fetchAttendance();
     }
   }, [state.roomData.syllabus]);

@@ -145,6 +145,7 @@ const ClassRoster = ({
       const classStudents: any = await API.graphql(
         graphqlOperation(queries.listClassStudents, {
           nextToken: nextToken,
+          limit: 500,
           filter: {classID: {contains: sessionClassID}}
         })
       );
