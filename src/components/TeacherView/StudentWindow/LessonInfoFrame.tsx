@@ -22,11 +22,11 @@ interface ILessonInfoFrame {
 const DATE_REGEX = /\d{4}-\d{1,2}-\d{1,2}/g;
 const SENTIMENT_TEMPLATE = {
   great: 0,
-  good: 0,
   okay: 0,
   bad: 0,
   awful: 0,
-  _: 0,
+  did_not_answered: 0,
+  not_logged_in: 0,
   total: 0
 };
 
@@ -49,6 +49,29 @@ const LessonInfoFrame = ({visible, rightView, setRightView}: ILessonInfoFrame) =
   // ##################################################################### //
   const [loading, setLoading] = useState<boolean>(false);
   const [sentimentStore, setSentimentStore] = useState<any>({});
+  const [notLoggedInCount, setNotLoggedInCount] = useState(0);
+
+  const getOverallSentimentResult = async (dateString: string) => {
+    let result: any[] = [];
+
+    await Promise.all(
+      studentAuthIDArray.map(async (authID: string) => {
+        let response: any = await API.graphql(
+          graphqlOperation(queries.listPersonSentiments, {
+            limit: 100,
+            personAuthID: authID,
+            date: {
+              eq: dateString
+            }
+          })
+        );
+        let data = response?.data?.listPersonSentiments?.items || [];
+        result.push(data);
+      })
+    );
+
+    return result;
+  };
 
   //@ts-ignore
   const fetchStudentSentiments = async (
@@ -65,16 +88,13 @@ const LessonInfoFrame = ({visible, rightView, setRightView}: ILessonInfoFrame) =
 
     if (thereAreStudents && validDate) {
       try {
-        let result: any = await API.graphql(
-          graphqlOperation(queries.listPersonSentiments, {
-            limit: 500,
-            filter: {
-              date: {eq: dateString},
-              ...listQuery
-            }
-          })
-        );
-        return result.data.listPersonSentiments.items;
+        const result: any[] = (await getOverallSentimentResult(dateString)).flat() || [];
+
+        let not_logged_in_count = studentAuthIDArray.length - result.length || 0;
+
+        setNotLoggedInCount(not_logged_in_count);
+
+        return result;
       } catch (e) {
         console.error('fetchStudentSentiments - ', e);
         return [];
@@ -93,11 +113,13 @@ const LessonInfoFrame = ({visible, rightView, setRightView}: ILessonInfoFrame) =
   ) => {
     let prepare = {
       ...sentimentObjTemplate,
-      none: rosterArr.length - sentimentArr.length,
       total: rosterArr.length
     };
     return sentimentArr.reduce((sentimentAcc: any, sentimentStr: string) => {
       if (Object.keys(sentimentObjTemplate).includes(sentimentStr)) {
+        if (sentimentStr === 'none') {
+          return {...sentimentAcc, did_not_answered: sentimentAcc.did_not_answered + 1};
+        }
         return {...sentimentAcc, [sentimentStr]: sentimentAcc[sentimentStr] + 1};
       } else {
         return sentimentAcc;
@@ -213,16 +235,24 @@ const LessonInfoFrame = ({visible, rightView, setRightView}: ILessonInfoFrame) =
                           ) : null}
                         </span>
                         <span className="w-2.5/10 text-left whitespace-pre overflow-hidden">
-                          {sentimentKey === '_'
-                            ? "Didn't Answer"
+                          {sentimentKey === 'did_not_answered'
+                            ? 'Did not answered'
+                            : sentimentKey === 'not_logged_in'
+                            ? 'Not logged in yet'
                             : keywordCapitilizer(sentimentKey)}
                           :
                         </span>
                         <span className="w-2.5/10 flex justify-center">
-                          {sentimentStore[sentimentKey]}
+                          {sentimentKey === 'not_logged_in'
+                            ? notLoggedInCount
+                            : sentimentStore[sentimentKey]}
                         </span>
                         <span className="w-2.5/10 flex justify-center">
-                          {(sentimentStore[sentimentKey] / sentimentStore.total) * 100}%
+                          {(
+                            (sentimentStore[sentimentKey] / sentimentStore.total) *
+                            100
+                          ).toFixed(0)}
+                          %
                         </span>
                       </li>
                     );
