@@ -777,7 +777,7 @@ const lessonPlannerDict: any = {
       STUDENT_SECTION: {
         IN_CLASS: 'Student Roster',
         NOT_IN_CLASS: 'Not In Class',
-        ON_DEMAND: 'On Demand'
+        ON_DEMAND: 'Self Paced (Not Online/Lesson)'
       }
     },
     ACCESS_BUTTONS: {
