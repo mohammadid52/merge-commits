@@ -1,9 +1,10 @@
 import useStudentDataValue from 'customHooks/studentDataValue';
-import React, {useEffect, useState} from 'react';
-import WritingExerciseEditor from './WritingExerciseEditor';
-import {EditorState, Modifier} from 'draft-js';
+import {ContentState, convertToRaw, EditorState, Modifier} from 'draft-js';
+import React, {useState} from 'react';
 import WritingBlock from './WritingBlock';
-import {isEmpty} from 'lodash';
+import WritingExerciseEditor from './WritingExerciseEditor';
+import htmlToDraft from 'html-to-draftjs';
+import draftToHtml from 'draftjs-to-html';
 
 interface EditingBlockProps {
   id?: string;
@@ -17,8 +18,8 @@ const EditingBlock = ({options, inputID, value}: EditingBlockProps) => {
   const initialState = () => EditorState.createEmpty();
   const [editorState, setEditorState] = useState(initialState);
 
-  const sendTextToEditor = (text: string, cb?: any) => {
-    setEditorState(insertText(text, editorState));
+  const sendTextToEditor = async (text: string, cb?: any) => {
+    await insertTextNew(text);
     if (cb) {
       cb();
     }
@@ -30,20 +31,15 @@ const EditingBlock = ({options, inputID, value}: EditingBlockProps) => {
     setDataValue(inputID, [html]);
   };
 
-  // useEffect(() => {
-  //   if (!isEmpty(value)) {
-  //     sendTextToEditor(value);
-  //   }
-  // }, []);
+  const insertTextNew = async (addItem: string) => {
+    const data = draftToHtml(convertToRaw(editorState.getCurrentContent()));
+    const aa = data.concat(`<span><br/>${addItem}</span>`);
 
-  const insertText = (text: string, editorValue: any) => {
-    const currentContent = editorValue.getCurrentContent();
-    const currentSelection = editorValue.getSelection();
+    const contentBlock = htmlToDraft(aa);
+    const contentState = ContentState.createFromBlockArray(contentBlock?.contentBlocks);
 
-    const newContent = Modifier.replaceText(currentContent, currentSelection, text);
-
-    const newEditorState = EditorState.push(editorValue, newContent, 'insert-characters');
-    return EditorState.forceSelection(newEditorState, newContent.getSelectionAfter());
+    const updateState = await EditorState.createWithContent(contentState);
+    setEditorState(updateState);
   };
 
   return (
