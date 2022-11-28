@@ -19,7 +19,11 @@ interface ILessonDetailProps {
 // ##################################################################### //
 // ############################# COMPONENT ############################# //
 // ##################################################################### //
-const LessonDetails = ({hidden, handleToggleRightView}: ILessonDetailProps) => {
+const LessonDetails = ({
+  hidden,
+  handleToggleRightView,
+  rightView
+}: ILessonDetailProps) => {
   const gContext = useContext(GlobalContext);
   const lessonState = gContext.lessonState;
 
@@ -90,7 +94,7 @@ const LessonDetails = ({hidden, handleToggleRightView}: ILessonDetailProps) => {
         <Buttons
           size="small"
           Icon={AiFillEye}
-          transparent
+          transparent={rightView?.view !== 'lessonInfo'}
           title="see student sentiments"
           label="Sentiments"
           onClick={() => handleToggleRightView({view: 'lessonInfo', option: ''})}

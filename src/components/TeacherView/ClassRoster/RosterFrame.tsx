@@ -90,6 +90,7 @@ const RosterFrame = ({
         {/* <LessonInfoTitleBar /> */}
 
         <LessonDetails
+          rightView={rightView}
           hidden={breakpoint !== 'xl' && breakpoint !== '2xl'}
           handleToggleRightView={handleToggleRightView}
         />

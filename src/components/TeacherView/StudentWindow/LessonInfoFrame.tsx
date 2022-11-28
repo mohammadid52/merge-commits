@@ -1,16 +1,16 @@
-import React, {useContext, useEffect, useState, useRef} from 'react';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {getAsset} from 'assets';
+import Buttons from 'atoms/Buttons';
+import Loader from 'atoms/Loader';
+import Modal from 'atoms/Modal';
 import {GlobalContext} from 'contexts/GlobalContext';
 import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
 import * as queries from 'graphql/queries';
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import {createFilterToFetchSpecificItemsOnly} from 'utilities/strings';
-import {keywordCapitilizer} from 'utilities/strings';
-import ButtonsRound from 'atoms/ButtonsRound';
-import {AiOutlineCloseCircle} from 'react-icons/ai';
-import Loader from 'atoms/Loader';
-import Modal from 'atoms/Modal';
-import Buttons from 'atoms/Buttons';
+import React, {useContext, useEffect, useRef, useState} from 'react';
+import {
+  createFilterToFetchSpecificItemsOnly,
+  keywordCapitilizer
+} from 'utilities/strings';
 
 interface ILessonInfoFrame {
   children?: React.ReactNode;
@@ -38,8 +38,6 @@ const LessonInfoFrame = ({visible, rightView, setRightView}: ILessonInfoFrame) =
   const user = gContext.state.user;
   const roster = gContext.controlState.roster;
   const clientKey = gContext.clientKey;
-  const theme = gContext.theme;
-  const themeColor = getAsset(clientKey, 'themeClassName');
 
   let studentAuthIDArray = roster.map((st: any) => st.personAuthID);
   let lastLoggedIn = user?.lastLoggedIn;
@@ -69,6 +67,7 @@ const LessonInfoFrame = ({visible, rightView, setRightView}: ILessonInfoFrame) =
       try {
         let result: any = await API.graphql(
           graphqlOperation(queries.listPersonSentiments, {
+            limit: 500,
             filter: {
               date: {eq: dateString},
               ...listQuery
@@ -94,7 +93,7 @@ const LessonInfoFrame = ({visible, rightView, setRightView}: ILessonInfoFrame) =
   ) => {
     let prepare = {
       ...sentimentObjTemplate,
-      _: rosterArr.length - sentimentArr.length,
+      none: rosterArr.length - sentimentArr.length,
       total: rosterArr.length
     };
     return sentimentArr.reduce((sentimentAcc: any, sentimentStr: string) => {
@@ -176,10 +175,10 @@ const LessonInfoFrame = ({visible, rightView, setRightView}: ILessonInfoFrame) =
             <div className="absolute w-full h-full bg-gray-800 bg-opacity-50 z-40"></div>
             <Modal
               customTitle={customTitle()}
-              showHeader={true}
+              showHeader
               showHeaderBorder={false}
               showFooter={false}
-              scrollHidden={true}
+              scrollHidden
               closeAction={() => setRightView({view: 'lesson', option: ''})}
               position="absolute"
               width="w-full"
