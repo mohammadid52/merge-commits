@@ -1,3 +1,23 @@
+export const updatePersonLocation = /* GraphQL */ `
+  mutation UpdatePersonLocation(
+    $input: UpdatePersonLocationInput!
+    $condition: ModelPersonLocationConditionInput
+  ) {
+    updatePersonLocation(input: $input, condition: $condition) {
+      id
+      personAuthID
+      personEmail
+      syllabusLessonID
+      lessonID
+      roomID
+      currentLocation
+      lessonProgress
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
 export const updateUniversalLesson = /* GraphQL */ `
   mutation UpdateUniversalLesson(
     $input: UpdateUniversalLessonInput!

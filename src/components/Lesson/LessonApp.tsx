@@ -849,13 +849,19 @@ const LessonApp = ({
 
   const getLessonCurrentPage = async () => {
     try {
-      const getLessonRatingDetails: any = await API.graphql(
-        graphqlOperation(queries.getPersonLessonsData, {
-          id: personLessonData.id
-        })
-      );
-      const pageNumber = getLessonRatingDetails.data.getPersonLessonsData.pages;
-      const currentPage = JSON.parse(pageNumber).currentPage;
+      let pages: any;
+      if (personLessonData) {
+        pages = personLessonData.pages;
+      } else {
+        const getLessonRatingDetails: any = await API.graphql(
+          graphqlOperation(queries.getPersonLessonsData, {
+            id: personLessonData.id
+          })
+        );
+        pages = getLessonRatingDetails.data.getPersonLessonsData.pages;
+      }
+
+      const currentPage = JSON.parse(pages).currentPage;
       return currentPage;
     } catch (error) {}
   };
@@ -908,11 +914,18 @@ const LessonApp = ({
 
     try {
       await API.graphql(
-        graphqlOperation(mutations.updatePersonLocation, {input: locationUpdateProps})
+        graphqlOperation(customMutations.updatePersonLocation, {
+          input: locationUpdateProps
+        })
       );
       setLocalStorageData('person_location', locationUpdateProps);
     } catch (e) {
-      console.error('updatePersonLocation - ', e);
+      if (e.errors[0].errorType === 'DynamoDB:ConditionalCheckFailedException') {
+        console.log('no existing person location object found.. creating new... ');
+        createPersonLocation();
+      } else {
+        console.error('updatePersonLocation - ', e);
+      }
     }
   };
 

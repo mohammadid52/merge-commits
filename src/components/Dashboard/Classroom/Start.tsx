@@ -102,7 +102,8 @@ const Start: React.FC<StartProps> = ({
         }
         const list: any = await API.graphql(
           graphqlOperation(queries.listAttendances, {
-            filter
+            filter,
+            limit: 500
           })
         );
         if (isMounted) {
