@@ -101,7 +101,7 @@ const LessonDetails = ({hidden, handleToggleRightView}: ILessonDetailProps) => {
           transparent
           title="download lesson plan"
           label={isDownloading ? 'Downloading' : 'Download plan'}
-          disabled={isDownloading}
+          disabled={!lessonPlanAttachment || isDownloading}
           insideElement={
             <a id="download-lesson-plan-file" target="_blank" className={`hidden`}>
               Download

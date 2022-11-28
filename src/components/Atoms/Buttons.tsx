@@ -25,7 +25,7 @@ interface ButtonProps {
   size?: 'small' | 'medium' | 'large';
 }
 
-const Buttons: React.FC<ButtonProps> = (btnProps: ButtonProps) => {
+const Buttons: React.FC<ButtonProps> = (btnProps: ButtonProps): React.ReactElement => {
   const {
     label,
     Icon,
@@ -33,7 +33,7 @@ const Buttons: React.FC<ButtonProps> = (btnProps: ButtonProps) => {
     greenBtn,
     iconBeforeLabel,
     transparent,
-    type,
+    type = 'button',
     onClick,
     btnClass,
     overrideClass,
@@ -49,7 +49,7 @@ const Buttons: React.FC<ButtonProps> = (btnProps: ButtonProps) => {
   const {theme, clientKey} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
 
-  const _Icon = (
+  const _Icon = () => (
     <span className="w-auto">
       <Icon className={`w-6 h-6 ${transparent ? 'theme-text' : 'text-white'}`} />
     </span>
@@ -95,11 +95,11 @@ const Buttons: React.FC<ButtonProps> = (btnProps: ButtonProps) => {
         <Loader withText={loadingText} className="w-auto text-gray-400" />
       ) : (
         <div className="w-auto flex items-center justify-center">
-          {Icon && iconBeforeLabel && _Icon}
+          {Icon && iconBeforeLabel ? <_Icon /> : null}
           {label ? (
             <span className={`mx-2 ${labelClass ? labelClass : ''}`}>{label}</span>
           ) : null}
-          {Icon && !iconBeforeLabel ? _Icon : null}
+          {Icon && !iconBeforeLabel ? <_Icon /> : null}
         </div>
       )}
 
