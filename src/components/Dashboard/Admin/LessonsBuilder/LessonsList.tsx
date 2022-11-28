@@ -412,9 +412,9 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
     filterBySearchQuery,
     removeSearchAction,
     searchAndFilter
-  } = useSearch([...(currentList || [])], ['title']);
+  } = useSearch([...(lessonsData || [])], ['title']);
 
-  const [filteredList, setFilteredList] = useState([...currentList]);
+  const [filteredList, setFilteredList] = useState([...lessonsData]);
 
   useEffect(() => {
     if (status === 'done' && currentList?.length > 0) {

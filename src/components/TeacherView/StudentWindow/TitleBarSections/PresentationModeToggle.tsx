@@ -76,10 +76,7 @@ const PresentationModeToggle = ({
   return (
     <div className="w-1/3 flex justify-center h-8 align-middle leading-8 ">
       <Buttons
-        overrideClass
-        btnClass={`${
-          isPresenting ? theme.btn['cancel'] : theme.btn[themeColor]
-        } h-8 font-bold uppercase text-xs p-1 rounded flex items-center w-auto`}
+        transparent={isPresenting}
         label={isPresenting ? 'Stop Presenting' : 'Start Presenting'}
         onClick={() => handlePresentationToggle(isPresenting, anyoneIsShared)}
       />

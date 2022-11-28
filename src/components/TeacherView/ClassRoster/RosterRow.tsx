@@ -220,7 +220,7 @@ const RosterRow: React.FC<RosterRowProps> = ({
 
                 <Buttons
                   size="small"
-                  btnClass="text-white outline-none  bg-dark-red hover:bg-red-500 w-1/4 ml-4"
+                  btnClass="text-white outline-none  bg-dark-red hover:bg-red-500 w-1/4 ml-4 mr-2"
                   label={'Unshare'}
                   onClick={() =>
                     handleShareStudentData(personAuthID, getPageID(currentLocation))
@@ -250,7 +250,7 @@ const RosterRow: React.FC<RosterRowProps> = ({
 
               <Buttons
                 size="small"
-                btnClass="text-white outline-none w-1/4 ml-4"
+                btnClass="text-white outline-none w-1/4 ml-4 mr-2"
                 label={'Share'}
                 greenBtn
                 onClick={() =>
