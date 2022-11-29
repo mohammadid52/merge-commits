@@ -7,6 +7,7 @@ import {GlobalContext} from 'contexts/GlobalContext';
 import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
 import * as queries from 'graphql/queries';
 import React, {useContext, useEffect, useRef, useState} from 'react';
+import {AiOutlineStop} from 'react-icons/ai';
 import {
   createFilterToFetchSpecificItemsOnly,
   keywordCapitilizer
@@ -25,8 +26,6 @@ const SENTIMENT_TEMPLATE = {
   okay: 0,
   bad: 0,
   awful: 0,
-  did_not_answered: 0,
-  not_logged_in: 0,
   total: 0
 };
 
@@ -37,9 +36,9 @@ const LessonInfoFrame = ({visible, rightView, setRightView}: ILessonInfoFrame) =
   const gContext = useContext(GlobalContext);
   const user = gContext.state.user;
   const roster = gContext.controlState.roster;
-  const clientKey = gContext.clientKey;
 
   let studentAuthIDArray = roster.map((st: any) => st.personAuthID);
+
   let lastLoggedIn = user?.lastLoggedIn;
   let dateString = lastLoggedIn ? lastLoggedIn.match(DATE_REGEX) : '';
   // let dateString: any = undefined;
@@ -49,6 +48,7 @@ const LessonInfoFrame = ({visible, rightView, setRightView}: ILessonInfoFrame) =
   // ##################################################################### //
   const [loading, setLoading] = useState<boolean>(false);
   const [sentimentStore, setSentimentStore] = useState<any>({});
+
   const [notLoggedInCount, setNotLoggedInCount] = useState(0);
 
   const getOverallSentimentResult = async (dateString: string) => {
@@ -81,18 +81,9 @@ const LessonInfoFrame = ({visible, rightView, setRightView}: ILessonInfoFrame) =
     let thereAreStudents = studentAuthIDArray && studentAuthIDArray.length > 0;
     let validDate = DATE_REGEX.test(dateString);
 
-    let listQuery = createFilterToFetchSpecificItemsOnly(
-      studentAuthIDArray,
-      'personAuthID'
-    );
-
     if (thereAreStudents && validDate) {
       try {
-        const result: any[] = (await getOverallSentimentResult(dateString)).flat() || [];
-
-        let not_logged_in_count = studentAuthIDArray.length - result.length || 0;
-
-        setNotLoggedInCount(not_logged_in_count);
+        let result: any[] = (await getOverallSentimentResult(dateString)) || [[]];
 
         return result;
       } catch (e) {
@@ -109,22 +100,37 @@ const LessonInfoFrame = ({visible, rightView, setRightView}: ILessonInfoFrame) =
   const countSentiments = (
     sentimentObjTemplate: any,
     rosterArr: any[],
-    sentimentArr: string[]
+    sentimentArr: string[],
+    notLoggedInCount: number
   ) => {
     let prepare = {
       ...sentimentObjTemplate,
+      did_not_answered: 0,
+      not_logged_in: 0,
       total: rosterArr.length
     };
-    return sentimentArr.reduce((sentimentAcc: any, sentimentStr: string) => {
-      if (Object.keys(sentimentObjTemplate).includes(sentimentStr)) {
-        if (sentimentStr === 'none') {
-          return {...sentimentAcc, did_not_answered: sentimentAcc.did_not_answered + 1};
-        }
-        return {...sentimentAcc, [sentimentStr]: sentimentAcc[sentimentStr] + 1};
+    let response = sentimentArr.reduce((sentimentAcc: any, sentimentStr: string) => {
+      let sentiment = sentimentStr.toLowerCase();
+
+      if (sentiment === 'none') {
+        return {
+          ...sentimentAcc,
+          did_not_answered: (sentimentAcc['did_not_answered'] += 1) || 0
+        };
       } else {
-        return sentimentAcc;
+        return {
+          ...sentimentAcc,
+          [sentiment]: (sentimentAcc[sentiment] += 1)
+        };
       }
     }, prepare);
+
+    response = {
+      ...response,
+      not_logged_in: notLoggedInCount
+    };
+
+    return response;
   };
 
   // ~~~~~~~~ ONCLICK AND USEEFFECT ~~~~~~~~ //
@@ -136,11 +142,23 @@ const LessonInfoFrame = ({visible, rightView, setRightView}: ILessonInfoFrame) =
           studentAuthIDArray,
           dateString[0]
         );
+
+        let filteredResult = fetchResults.filter((r: any) => r.length > 0);
+
+        let not_logged_in_count = fetchResults.length - filteredResult.length || 0;
+
+        let flatten = fetchResults.flat();
+
         let sentimentArray =
           roster && roster.length >= 5
-            ? fetchResults.map((sentimentObj: any) => sentimentObj.responseText)
+            ? flatten.map((sentimentObj: any) => sentimentObj.responseText)
             : [];
-        let output = countSentiments(SENTIMENT_TEMPLATE, roster, sentimentArray);
+        let output = countSentiments(
+          SENTIMENT_TEMPLATE,
+          roster,
+          sentimentArray,
+          not_logged_in_count
+        );
         setSentimentStore(output);
       } finally {
         setLoading(false);
@@ -184,6 +202,21 @@ const LessonInfoFrame = ({visible, rightView, setRightView}: ILessonInfoFrame) =
   // ##################################################################### //
   const {breakpoint} = useTailwindBreakpoint();
 
+  const tableOrder = [
+    'great',
+    'okay',
+    'bad',
+    'awful',
+    'did_not_answered',
+    'not_logged_in',
+    'total'
+  ];
+
+  const getPercentage = (sentimentKey: string) =>
+    Math.ceil(
+      Number(((sentimentStore[sentimentKey] / sentimentStore.total) * 100).toFixed(0))
+    );
+
   return (
     <>
       <div
@@ -219,7 +252,7 @@ const LessonInfoFrame = ({visible, rightView, setRightView}: ILessonInfoFrame) =
                     <Loader />
                   </li>
                 ) : roster && roster.length > 0 && sentimentStore ? (
-                  Object.keys(sentimentStore).map((sentimentKey: string, idx: number) => {
+                  tableOrder.map((sentimentKey: string, idx: number) => {
                     return (
                       <li
                         key={`sentimentRow_${idx}`}
@@ -232,6 +265,8 @@ const LessonInfoFrame = ({visible, rightView, setRightView}: ILessonInfoFrame) =
                               src={EMOJIS[sentimentKey]}
                               className="w-auto h-8 object-contain"
                             />
+                          ) : sentimentKey === 'did_not_answered' ? (
+                            <AiOutlineStop size={'1.5rem'} />
                           ) : null}
                         </span>
                         <span className="w-2.5/10 text-left whitespace-pre overflow-hidden">
@@ -243,23 +278,16 @@ const LessonInfoFrame = ({visible, rightView, setRightView}: ILessonInfoFrame) =
                           :
                         </span>
                         <span className="w-2.5/10 flex justify-center">
-                          {sentimentKey === 'not_logged_in'
-                            ? notLoggedInCount
-                            : sentimentStore[sentimentKey]}
+                          {sentimentStore[sentimentKey]}
                         </span>
                         <span className="w-2.5/10 flex justify-center">
-                          {(
-                            (sentimentStore[sentimentKey] / sentimentStore.total) *
-                            100
-                          ).toFixed(0)}
-                          %
+                          {getPercentage(sentimentKey)}%
                         </span>
                       </li>
                     );
                   })
                 ) : null}
               </ul>
-              {/* </div> */}
             </Modal>
           </>
         )}

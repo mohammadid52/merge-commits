@@ -1,14 +1,8 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {useQuery} from '@customHooks/urlParam';
 import useAuth from '@customHooks/useAuth';
-import {
-  CreateUniversalArchiveDataInput,
-  PartInput,
-  UpdatePersonLessonsDataInput
-} from 'API';
+import {CreateUniversalArchiveDataInput, PartInput} from 'API';
 import {GlobalContext} from 'contexts/GlobalContext';
-import * as customMutations from 'customGraphql/customMutations';
-import * as customQueries from 'customGraphql/customQueries';
 import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
 import * as mutations from 'graphql/mutations';
 import * as queries from 'graphql/queries';
@@ -21,10 +15,9 @@ import {
   UniversalLessonPage,
   UniversalLessonStudentData
 } from 'interfaces/UniversalLessonInterfaces';
-import {isEmpty} from 'lodash';
 import React, {useContext, useEffect, useRef, useState} from 'react';
 import {useHistory, useParams, useRouteMatch} from 'react-router-dom';
-import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
+import {getLocalStorageData} from 'utilities/localStorage';
 import {v4 as uuidV4} from 'uuid';
 import ErrorBoundary from '../Error/ErrorBoundary';
 import LessonHeaderBar from '../Header/LessonHeaderBar';
@@ -42,7 +35,10 @@ const SurveyApp = ({
   validateRequired,
   invokeRequiredField,
   pageStateUpdated,
-  updatePageInLocalStorage
+  updatePageInLocalStorage,
+
+  getLessonCurrentPage,
+  handleMutationOnPageChange
 }: ILessonSurveyApp) => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
 
@@ -480,155 +476,6 @@ const SurveyApp = ({
     }
   }, [personLoading]);
 
-  const [getted, setGetted] = useState(false);
-  const [cleared, setCleared] = useState(false);
-  const [created, setCreated] = useState(false);
-
-  const getLocationData = getLocalStorageData('person_location');
-
-  const [personLocationObj, setPersonLocationObj] = useState<any>({
-    id: '',
-    personAuthID: '',
-    personEmail: '',
-    lessonID: '',
-    syllabusLessonID: '',
-    roomID: '',
-    currentLocation: '',
-    lessonProgress: ''
-  });
-
-  // ~~~~~~~~~~~~~~~~ 1 INIT ~~~~~~~~~~~~~~~ //
-
-  useEffect(() => {
-    if (!isOnDemand && personLocationObj.id === '' && isStudent) {
-      initializeLocation();
-    }
-  }, [lessonState.lessonData.id, isStudent]);
-
-  // ~~~~~~~~~~~~ 2 PAGE CHANGE ~~~~~~~~~~~~ //
-
-  useEffect(() => {
-    if (!isOnDemand && created && lessonState.currentPage >= 0 && isStudent) {
-      const pageChangeLocation = {
-        ...getLocationData,
-        currentLocation: lessonState.currentPage,
-        lessonProgress: lessonState.lessonProgress
-      };
-      setPersonLocationObj(pageChangeLocation);
-      updatePersonLocation(pageChangeLocation);
-      setLocalStorageData('person_location', pageChangeLocation);
-      //@ts-ignore
-      topLessonRef?.current?.scrollIntoView();
-    }
-  }, [created, lessonState.currentPage, isStudent]);
-
-  const initializeLocation = async () => {
-    if (!getted) {
-      const getLocation = await getPersonLocation();
-
-      if (getLocation === undefined || getLocation === null) {
-        await createPersonLocation();
-      } else {
-        if (getLocation.lessonID === lessonID) {
-          await updatePersonLocation(getLocation);
-        } else {
-          await leaveRoomLocation(user.authId, user.email);
-          await createPersonLocation();
-        }
-      }
-    }
-  };
-
-  // ~~~~~~ LESSON LOAD LOCATION FETC ~~~~~~ //
-
-  const getPersonLocation = async () => {
-    try {
-      const getUserLocation: any = await API.graphql(
-        graphqlOperation(queries.getPersonLocation, {
-          personEmail: user.email,
-          personAuthID: user.authId
-        })
-      );
-      const response = getUserLocation.data.getPersonLocation;
-
-      return response;
-    } catch (e) {
-      // console.error('createPersonLocation - ', e);
-    } finally {
-      setGetted(true);
-    }
-  };
-
-  const createPersonLocation = async () => {
-    const {lessonID} = urlParams;
-
-    const newLocation = {
-      personAuthID: user?.authId,
-      personEmail: user?.email,
-      syllabusLessonID: getRoomData.activeSyllabus,
-      lessonID: lessonID,
-      roomID: getRoomData.id,
-      currentLocation: '0',
-      lessonProgress: '0'
-    };
-    try {
-      const newUserLocation: any = await API.graphql(
-        graphqlOperation(mutations.createPersonLocation, {input: newLocation})
-      );
-      const response = newUserLocation.data.createPersonLocation;
-      const newLocationObj = {
-        ...newLocation,
-        id: response.id
-      };
-      setPersonLocationObj(newLocationObj);
-      setLocalStorageData('person_location', newLocationObj);
-    } catch (e) {
-      // console.error('createPersonLocation - ', e);
-    } finally {
-      setCreated(true);
-    }
-  };
-
-  // ~~~~~~~~~~ LOCATION UPDATING ~~~~~~~~~~ //
-
-  const updatePersonLocation = async (updatedLocationObj: any) => {
-    const locationUpdateProps = {
-      id: updatedLocationObj.id,
-      personAuthID: updatedLocationObj.personAuthID,
-      personEmail: updatedLocationObj.personEmail,
-      lessonID: updatedLocationObj.lessonID,
-      syllabusLessonID: updatedLocationObj.syllabusLessonID,
-      roomID: updatedLocationObj.roomID,
-      currentLocation: updatedLocationObj.currentLocation,
-      lessonProgress: updatedLocationObj.lessonProgress
-    };
-    try {
-      await API.graphql(
-        graphqlOperation(mutations.updatePersonLocation, {input: locationUpdateProps})
-      );
-      setLocalStorageData('person_location', locationUpdateProps);
-    } catch (e) {
-      console.error('updatePersonLocation - ', e);
-    }
-  };
-
-  const leaveRoomLocation = async (inputAuthId: string, inputEmail: string) => {
-    try {
-      await API.graphql(
-        graphqlOperation(mutations.deletePersonLocation, {
-          input: {
-            personEmail: inputEmail,
-            personAuthID: inputAuthId
-          }
-        })
-      );
-    } catch (e) {
-      console.error('error deleting location record - ', e);
-    } finally {
-      setCleared(true);
-    }
-  };
-
   // ##################################################################### //
   // ######################### NAVIGATION CONTROL ######################## //
   // ##################################################################### //
@@ -646,24 +493,8 @@ const SurveyApp = ({
   };
 
   useEffect(() => {
-    handleSurveyMutateData();
+    handleMutationOnPageChange();
   }, [lessonState.currentPage]);
-
-  const getLessonCurrentPage = async () => {
-    try {
-      const getLessonRatingDetails: any = await API.graphql(
-        graphqlOperation(queries.getPersonLessonsData, {
-          id: personLessonData.id
-          // lessonID: lessonID,
-          // studentEmail: user.email,
-          // studentAuthID: user.authId
-        })
-      );
-      const pageNumber = getLessonRatingDetails.data.getPersonLessonsData.pages;
-      const currentPage = JSON.parse(pageNumber).currentPage;
-      return currentPage;
-    } catch (error) {}
-  };
 
   const loopCreateStudentArchiveAndExcerciseData = async () => {
     const listFilter = {
@@ -694,7 +525,7 @@ const SurveyApp = ({
         studentAuthID: item.studentAuthID,
         studentEmail: item.studentEmail,
         roomID: item.roomID,
-        currentLocation: currentPageLocation,
+        currentLocation: currentPageLocation.toString(),
         lessonProgress: (PAGES.length - 1).toString(),
         pageData: item.surveyData
       };
@@ -728,95 +559,6 @@ const SurveyApp = ({
       console.error(
         'error @createStudentArchiveData in LessonApp.tsx creating journal data - ',
         e
-      );
-    }
-  };
-
-  const commonPersonLessonPayload = {
-    studentAuthID: user.authId,
-    roomId: getRoomData.id,
-    studentEmail: user.email,
-    lessonID: lessonID,
-    lessonType: lessonState.lessonData?.type,
-    pages: `{
-      "currentPage":${JSON.stringify(lessonState.currentPage)},
-      "totalPages":${JSON.stringify(lessonState.lessonData?.lessonPlan?.length - 1)},
-      "lessonProgress":${JSON.stringify(lessonState.currentPage)}
-      }`
-      .replace(/(\s\s+|[\t\n])/g, ' ')
-      .trim()
-  };
-
-  const createPersonLessonPayload: UpdatePersonLessonsDataInput = {
-    ...commonPersonLessonPayload,
-    id: uuidV4(),
-    ratings: 0
-  };
-
-  const updatePersonLessonPayload: UpdatePersonLessonsDataInput = {
-    ...commonPersonLessonPayload,
-    id: personLessonData?.id
-  };
-
-  const createPersonLessonsData = async () => {
-    if (isStudent) {
-      const result: any = await API.graphql(
-        graphqlOperation(mutations.createPersonLessonsData, {
-          input: createPersonLessonPayload
-        })
-      );
-      setPersonLessonData(result?.data?.createPersonLessonsData);
-    }
-  };
-
-  const fetchLessonPersonData = async () => {
-    try {
-      setPersonLoading(true);
-      const lessonPersonData: any = await API.graphql(
-        graphqlOperation(customQueries.lessonsByType, {
-          filter: {
-            roomId: {eq: getRoomData.id},
-            studentAuthID: {eq: user.authId},
-            studentEmail: {eq: user.email}
-          },
-          limit: 500
-        })
-      );
-
-      const data = lessonPersonData?.data?.listPersonLessonsData?.items || [];
-      setLocalStorageData('lessonPersonData', data);
-      const _personLessonData = data.find((d: any) => d.lessonID === lessonID);
-      if (_personLessonData) {
-        setPersonLessonData(_personLessonData);
-      } else {
-        await createPersonLessonsData();
-      }
-    } catch (e) {
-      console.error('listLessonPersonData: ', e);
-    } finally {
-      setPersonLoading(false);
-    }
-  };
-
-  const handleSurveyMutateData = async () => {
-    try {
-      if (!personLoading) {
-        if (!personLessonData) {
-          fetchLessonPersonData();
-        } else if (personLessonData) {
-          if (isStudent) {
-            await API.graphql(
-              graphqlOperation(customMutations.updatePersonLessonsData, {
-                input: updatePersonLessonPayload
-              })
-            );
-          }
-        }
-      }
-    } catch (error) {
-      console.error(
-        '🚀 ~ file: SurveyApp.tsx ~ line 652 ~ handleSurveyMutateData ~ error',
-        error
       );
     }
   };

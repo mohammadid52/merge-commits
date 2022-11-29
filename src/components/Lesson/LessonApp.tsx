@@ -1,25 +1,18 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import useAuth from '@customHooks/useAuth';
-import {
-  UniversalLessonStudentData as UniversalLessonStudentDataFromAPI,
-  UpdatePersonLessonsDataInput
-} from 'API';
+import {UniversalLessonStudentData as UniversalLessonStudentDataFromAPI} from 'API';
 import 'components/Dashboard/GameChangers/styles/Flickity.scss';
 import 'components/Dashboard/GameChangers/styles/GameChanger.scss';
 import {useGlobalContext} from 'contexts/GlobalContext';
-import * as customMutations from 'customGraphql/customMutations';
 import * as customQueries from 'customGraphql/customQueries';
 import * as customSubscriptions from 'customGraphql/customSubscriptions';
 import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
 import * as mutations from 'graphql/mutations';
-import * as queries from 'graphql/queries';
 import {
   PagePart,
   PartContent,
   PartContentSub,
   StudentExerciseData,
   StudentPageInput,
-  UniversalJournalData,
   UniversalLessonPage,
   UniversalLessonStudentData
 } from 'interfaces/UniversalLessonInterfaces';
@@ -33,16 +26,20 @@ import Foot from './Foot/Foot';
 import {ILessonSurveyApp} from './Lesson';
 import LessonPageLoader from './LessonPageLoader';
 import CoreUniversalLesson from './UniversalLesson/views/CoreUniversalLesson';
+
 const LessonApp = ({
   personLessonData,
   canContinue,
   validateRequired,
   invokeRequiredField,
-  personLoading,
+
   setPersonLessonData,
-  setPersonLoading,
+
   updatePageInLocalStorage,
-  pageStateUpdated
+  pageStateUpdated,
+  leaveRoomLocation,
+  getLessonCurrentPage,
+  handleMutationOnPageChange
 }: ILessonSurveyApp) => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
 
@@ -67,13 +64,8 @@ const LessonApp = ({
   const [overlay, setOverlay] = useState<string>('');
   const [isAtEnd, setisAtEnd] = useState<boolean>(false);
 
-  const [allUniversalJournalData, setAllUniversalJournalData] = useState<
-    UniversalJournalData[]
-  >([]);
-
   const PAGES = lessonState?.lessonData?.lessonPlan;
   const LESSON_NAME = lessonState?.lessonData?.title;
-  const CURRENT_PAGE = lessonState.currentPage;
 
   const topLessonRef = useRef();
 
@@ -129,24 +121,6 @@ const LessonApp = ({
   }, [subscriptionData]);
 
   // ~~~~~~~~~~~~~~ GET LESSON ~~~~~~~~~~~~~ //
-  useEffect(() => {
-    const leaveUnload = () => {
-      const leaveRoom = leaveRoomLocation(user?.authId, user?.email);
-      Promise.resolve(leaveRoom).then((_: void) => {
-        if (subscription) {
-          subscription.unsubscribe();
-        }
-
-        lessonDispatch({type: 'CLEANUP'});
-      });
-    };
-
-    console.log('lesson loaded....');
-
-    return () => {
-      leaveUnload();
-    };
-  }, []);
 
   // ~~~~~~~~~~ RESPONSE TO FETCH ~~~~~~~~~~ //
 
@@ -769,183 +743,7 @@ const LessonApp = ({
   // ####################### MANAGE PERSON LOCATION ###################### //
   // ##################################################################### //
 
-  const [getted, setGetted] = useState(false);
-  const [cleared, setCleared] = useState(false);
-  const [created, setCreated] = useState(false);
-
-  const getLocationData = getLocalStorageData('person_location');
-
-  const [personLocationObj, setPersonLocationObj] = useState<any>({
-    id: '',
-    personAuthID: '',
-    personEmail: '',
-    lessonID: '',
-    syllabusLessonID: '',
-    roomID: '',
-    currentLocation: '',
-    lessonProgress: ''
-  });
-
-  // ~~~~~~~~~~~~~~~~ 1 INIT ~~~~~~~~~~~~~~~ //
-
-  useEffect(() => {
-    if (!isOnDemand && personLocationObj.id === '') {
-      initializeLocation();
-    }
-  }, [lessonState.lessonData.id]);
-
-  // ~~~~~~~~~~~~ 2 PAGE CHANGE ~~~~~~~~~~~~ //
-
-  useEffect(() => {
-    if (!isOnDemand && created && lessonState.currentPage >= 0) {
-      const pageChangeLocation = {
-        ...getLocationData,
-        currentLocation: lessonState.currentPage,
-        lessonProgress: lessonState.lessonProgress
-      };
-      setPersonLocationObj(pageChangeLocation);
-      updatePersonLocation(pageChangeLocation);
-      setLocalStorageData('person_location', pageChangeLocation);
-      //@ts-ignore
-      topLessonRef?.current?.scrollIntoView();
-    }
-  }, [created, lessonState.currentPage]);
-
-  const initializeLocation = async () => {
-    if (!getted) {
-      const getLocation = await getPersonLocation();
-
-      if (getLocation === undefined || getLocation === null) {
-        await createPersonLocation();
-      } else {
-        if (getLocation.lessonID === lessonID) {
-          await updatePersonLocation(getLocation);
-        } else {
-          await leaveRoomLocation(user.authId, user.email);
-          await createPersonLocation();
-        }
-      }
-    }
-  };
-
   // ~~~~~~ LESSON LOAD LOCATION FETC ~~~~~~ //
-
-  const getPersonLocation = async () => {
-    try {
-      const getUserLocation: any = await API.graphql(
-        graphqlOperation(queries.getPersonLocation, {
-          personEmail: user.email,
-          personAuthID: user.authId
-        })
-      );
-      const response = getUserLocation.data.getPersonLocation;
-
-      return response;
-    } catch (e) {
-      // console.error('createPersonLocation - ', e);
-    } finally {
-      setGetted(true);
-    }
-  };
-
-  const getLessonCurrentPage = async () => {
-    try {
-      let pages: any;
-      if (personLessonData) {
-        pages = personLessonData.pages;
-      } else {
-        const getLessonRatingDetails: any = await API.graphql(
-          graphqlOperation(queries.getPersonLessonsData, {
-            id: personLessonData.id
-          })
-        );
-        pages = getLessonRatingDetails.data.getPersonLessonsData.pages;
-      }
-
-      const currentPage = JSON.parse(pages).currentPage;
-      return currentPage;
-    } catch (error) {}
-  };
-
-  const createPersonLocation = async () => {
-    const {lessonID} = urlParams;
-
-    const currentPageLocation = await getLessonCurrentPage();
-    const newLocation = {
-      personAuthID: user?.authId,
-      personEmail: user?.email,
-      syllabusLessonID: getRoomData.activeSyllabus,
-      lessonID: lessonID,
-      roomID: getRoomData.id,
-      currentLocation: currentPageLocation,
-      lessonProgress: '0'
-    };
-    try {
-      const newUserLocation: any = await API.graphql(
-        graphqlOperation(mutations.createPersonLocation, {input: newLocation})
-      );
-      const response = newUserLocation.data.createPersonLocation;
-      const newLocationObj = {
-        ...newLocation,
-        id: response.id
-      };
-      setPersonLocationObj(newLocationObj);
-      setLocalStorageData('person_location', newLocationObj);
-    } catch (e) {
-      // console.error('createPersonLocation - ', e);
-    } finally {
-      setCreated(true);
-    }
-  };
-
-  // ~~~~~~~~~~ LOCATION UPDATING ~~~~~~~~~~ //
-
-  const updatePersonLocation = async (updatedLocationObj: any) => {
-    const currentPageLocation = await getLessonCurrentPage();
-    const locationUpdateProps = {
-      id: updatedLocationObj.id,
-      personAuthID: updatedLocationObj.personAuthID,
-      personEmail: updatedLocationObj.personEmail,
-      lessonID: updatedLocationObj.lessonID,
-      syllabusLessonID: updatedLocationObj.syllabusLessonID,
-      roomID: updatedLocationObj.roomID,
-      currentLocation: currentPageLocation,
-      lessonProgress: updatedLocationObj.lessonProgress
-    };
-
-    try {
-      await API.graphql(
-        graphqlOperation(customMutations.updatePersonLocation, {
-          input: locationUpdateProps
-        })
-      );
-      setLocalStorageData('person_location', locationUpdateProps);
-    } catch (e) {
-      if (e.errors[0].errorType === 'DynamoDB:ConditionalCheckFailedException') {
-        console.log('no existing person location object found.. creating new... ');
-        createPersonLocation();
-      } else {
-        console.error('updatePersonLocation - ', e);
-      }
-    }
-  };
-
-  const leaveRoomLocation = async (inputAuthId: string, inputEmail: string) => {
-    try {
-      await API.graphql(
-        graphqlOperation(mutations.deletePersonLocation, {
-          input: {
-            personEmail: inputEmail,
-            personAuthID: inputAuthId
-          }
-        })
-      );
-    } catch (e) {
-      console.error('error deleting location record - ', e);
-    } finally {
-      setCleared(true);
-    }
-  };
 
   // ##################################################################### //
   // ######################### NAVIGATION CONTROL ######################## //
@@ -977,7 +775,7 @@ const LessonApp = ({
         studentAuthID: item.studentAuthID,
         studentEmail: item.studentEmail,
         roomID: item.roomID,
-        currentLocation: currentPageLocation,
+        currentLocation: currentPageLocation.toString(),
         lessonProgress: item.lessonProgress,
         pageData: item.pageData,
         hasExerciseData: item.hasExerciseData,
@@ -1028,103 +826,9 @@ const LessonApp = ({
   };
 
   useEffect(() => {
-    handleLessonMutateData();
+    handleMutationOnPageChange();
   }, [lessonState.currentPage]);
 
-  const getUpdatedPagesData = () =>
-    `{
-    "currentPage":${JSON.stringify(lessonState.currentPage)},
-    "totalPages":${JSON.stringify(lessonState.lessonData?.lessonPlan?.length - 1)},
-    "lessonProgress":${JSON.stringify(lessonState.currentPage)}
-    }`
-      .replace(/(\s\s+|[\t\n])/g, ' ')
-      .trim();
-
-  const commonPersonLessonPayload = {
-    studentAuthID: user.authId,
-    roomId: getRoomData.id,
-    studentEmail: user.email,
-    lessonID: lessonID,
-    lessonType: lessonState.lessonData?.type,
-
-    pages: getUpdatedPagesData()
-  };
-  const createPersonLessonPayload: UpdatePersonLessonsDataInput = {
-    ...commonPersonLessonPayload,
-    id: uuidV4(),
-    ratings: 0
-  };
-  const updatePersonLessonPayload: UpdatePersonLessonsDataInput = {
-    ...commonPersonLessonPayload,
-    id: personLessonData?.id
-  };
-
-  const createPersonLessonsData = async () => {
-    const result: any = await API.graphql(
-      graphqlOperation(mutations.createPersonLessonsData, {
-        input: createPersonLessonPayload
-      })
-    );
-    setPersonLessonData(result?.data?.createPersonLessonsData);
-  };
-
-  const fetchLessonPersonData = async () => {
-    try {
-      setPersonLoading(true);
-      const lessonPersonData: any = await API.graphql(
-        graphqlOperation(customQueries.lessonsByType, {
-          filter: {
-            roomId: {eq: getRoomData.id},
-            studentAuthID: {eq: user.authId},
-            studentEmail: {eq: user.email}
-          },
-          limit: 500
-        })
-      );
-
-      const data = lessonPersonData?.data?.listPersonLessonsData?.items || [];
-      setLocalStorageData('lessonPersonData', data);
-      const _personLessonData = data.find((d: any) => d.lessonID === lessonID);
-      if (_personLessonData) {
-        setPersonLessonData(_personLessonData);
-      } else {
-        await createPersonLessonsData();
-      }
-    } catch (e) {
-      console.error('listLessonPersonData: ', e);
-    } finally {
-      setPersonLoading(false);
-    }
-  };
-
-  const handleLessonMutateData = async () => {
-    try {
-      if (!personLoading) {
-        if (!personLessonData) {
-          fetchLessonPersonData();
-        } else if (personLessonData) {
-          await API.graphql(
-            graphqlOperation(customMutations.updatePersonLessonsData, {
-              input: updatePersonLessonPayload
-            })
-          );
-          const updatedLocationObj = {
-            ...getLocationData,
-            currentLocation: lessonState.currentPage,
-            lessonProgress: lessonState.currentPage
-          };
-          updatePersonLocation(updatedLocationObj);
-
-          setLocalStorageData('person_location', updatedLocationObj);
-        }
-      }
-    } catch (error) {
-      console.error(
-        '🚀 ~ file: SurveyApp.tsx ~ line 652 ~ handleSurveyMutateData ~ error',
-        error
-      );
-    }
-  };
   // ~~~~~~~~~~~ RESPONSIVE CHECK ~~~~~~~~~~ //
   const {breakpoint} = useTailwindBreakpoint();
 

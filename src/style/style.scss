@@ -773,7 +773,7 @@ $polka-dot-size: 0.8px;
   }
 
   &.collapse {
-    animation: sidebar-collapse 1s ease;
+    animation: sidebar-collapse 0.5s ease;
   }
 }
 
@@ -1295,6 +1295,7 @@ $polka-dot-size: 0.8px;
   border: none !important;
   padding: 0.7rem !important;
   height: 2rem !important;
+  transition: all 150ms ease;
   &:hover {
     box-shadow: none !important;
     color: #fff;
