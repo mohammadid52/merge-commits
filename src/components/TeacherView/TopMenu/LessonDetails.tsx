@@ -104,7 +104,7 @@ const LessonDetails = ({
           Icon={BiCloudDownload}
           transparent
           title="download lesson plan"
-          label={isDownloading ? 'Downloading' : 'Download plan'}
+          label={isDownloading ? 'Downloading' : 'Lesson plan'}
           disabled={!lessonPlanAttachment || isDownloading}
           insideElement={
             <a id="download-lesson-plan-file" target="_blank" className={`hidden`}>
