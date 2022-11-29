@@ -23,6 +23,7 @@ interface ButtonProps {
   title?: string;
   dataCy?: string;
   size?: 'small' | 'medium' | 'large';
+  iconSize?: string;
 }
 
 const Buttons: React.FC<ButtonProps> = (btnProps: ButtonProps): React.ReactElement => {
@@ -44,6 +45,7 @@ const Buttons: React.FC<ButtonProps> = (btnProps: ButtonProps): React.ReactEleme
     loadingText = 'Loading...',
     insideElement = null,
     dataCy,
+    iconSize,
     size = 'medium'
   } = btnProps;
   const {theme, clientKey} = useContext(GlobalContext);
@@ -51,7 +53,11 @@ const Buttons: React.FC<ButtonProps> = (btnProps: ButtonProps): React.ReactEleme
 
   const _Icon = () => (
     <span className="w-auto">
-      <Icon className={`w-6 h-6 ${transparent ? 'theme-text' : 'text-white'}`} />
+      <Icon
+        className={`${iconSize || 'w-6 h-6'} ${
+          transparent ? 'theme-text' : 'text-white'
+        }`}
+      />
     </span>
   );
 

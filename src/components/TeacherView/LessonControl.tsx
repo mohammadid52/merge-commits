@@ -5,6 +5,7 @@ import * as customQueries from 'customGraphql/customQueries';
 import useLessonControls from 'customHooks/lessonControls';
 import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
 import useAuth from 'customHooks/useAuth';
+import {UniversalLessonStudentData as UniversalLessonStudentDataFromAPI} from 'API';
 import * as mutations from 'graphql/mutations';
 import * as subscriptions from 'graphql/subscriptions';
 import {
@@ -87,14 +88,6 @@ const LessonControl = () => {
     const {lessonID} = urlParams;
     const syllabusID = getRoomData.activeSyllabus; // in the table this is called SyllabusLessonID, but it's just the syllabusID
 
-    const subscriptionFilter = {
-      filter: {
-        studentAuthID: {eq: lessonState.studentViewing},
-        lessonID: {eq: lessonID},
-        syllabusLessonID: {eq: syllabusID}
-      }
-    };
-
     const studentDataSubscription = API.graphql(
       graphqlOperation(subscriptions.onChangeUniversalLessonStudentData, {
         studentAuthID: lessonState.studentViewing,
@@ -106,6 +99,10 @@ const LessonControl = () => {
       next: (studentData: any) => {
         const updatedStudentData =
           studentData.value.data.onChangeUniversalLessonStudentData;
+        console.log(
+          '🚀 ~ file: LessonControl.tsx ~ line 109 ~ subscribeToStudent ~ updatedStudentData',
+          updatedStudentData
+        );
         setSubscriptionData(updatedStudentData);
       }
     });
@@ -144,7 +141,7 @@ const LessonControl = () => {
       .reduce((acc: any[], dataObj: any, idx: number) => {
         const idObj = {
           id: dataObj.id,
-          pageIdx: lessonState.lessonData.lessonPlan.findIndex(
+          pageIdx: PAGES.findIndex(
             (lessonPlanObj: any) => lessonPlanObj.id === dataObj.lessonPageID
           ),
           lessonPageID: dataObj.lessonPageID,
@@ -208,7 +205,6 @@ const LessonControl = () => {
         let combined = [...outArray, ...studentDataRows];
 
         if (theNextToken) {
-          console.log('nextToken fetching more - ', nextToken);
           loopFetchStudentData(filterObj, theNextToken, combined);
         } else {
           // console.log('no more - ', combined);
@@ -223,21 +219,55 @@ const LessonControl = () => {
     }
   };
 
+  const [lessonDataLoaded, setLessonDataLoaded] = useState<boolean>(false);
+  const PAGES = lessonState?.lessonData?.lessonPlan;
+
+  const _loopFetchStudentData = async (): Promise<UniversalLessonStudentDataFromAPI[]> =>
+    new Promise(async (resolve) => {
+      try {
+        const {lessonID} = urlParams;
+
+        setLessonDataLoaded(false);
+        // fetch by pages
+
+        let result: any = [];
+
+        await Promise.all(
+          PAGES.map(async (page: any, idx: number) => {
+            let studentData: any = await API.graphql(
+              graphqlOperation(customQueries.getUniversalLessonStudentData, {
+                id: `${lessonState.studentViewing}-${getRoomData.id}-${lessonID}-${page.id}`
+                // filter: {...filterObj.filter, lessonPageID: {eq: page.id}}
+              })
+            );
+
+            let studentDataObject = studentData.data.getUniversalLessonStudentData;
+            result.push(studentDataObject);
+          })
+        );
+
+        /**
+         * combination of last fetch results
+         * && current fetch results
+         */
+
+        lessonDispatch({type: 'LESSON_LOADED', payload: true});
+
+        // console.log('no more - ', combined);
+        setLessonDataLoaded(true);
+        resolve(result);
+      } catch (e) {
+        console.error('loopFetchStudentData - ', e);
+        return [];
+      }
+    });
+
   const getStudentData = async (studentAuthId: string) => {
-    const {lessonID} = urlParams;
-
     try {
-      const listFilter = {
-        filter: {
-          studentAuthID: {eq: studentAuthId},
-          lessonID: {eq: lessonID},
-          syllabusLessonID: {eq: getRoomData.activeSyllabus},
-          roomID: {eq: getRoomData.id}
-        }
-      };
-
       // existing student rows
-      const studentDataRows = await loopFetchStudentData(listFilter, undefined, []);
+      const studentDataRows: UniversalLessonStudentDataFromAPI[] = await (
+        await _loopFetchStudentData()
+      ).filter(Boolean);
 
       if (studentDataRows.length > 0) {
         subscription = subscribeToStudent();
@@ -298,22 +328,6 @@ const LessonControl = () => {
   const handleQuitViewing = () => {
     dispatch({type: 'QUIT_STUDENT_VIEWING'});
     setIsSameStudentShared(false);
-  };
-
-  const handleRoomUpdate = async (payload: any) => {
-    if (typeof payload === 'object' && Object.keys(payload).length > 0) {
-      try {
-        const updateRoom: any = await API.graphql(
-          graphqlOperation(mutations.updateRoom, {
-            input: payload
-          })
-        );
-      } catch (e) {
-        console.error('handleRoomUpdate - ', e);
-      }
-    } else {
-      console.error('incorrect data for handleRoomUpdate() - ', payload);
-    }
   };
 
   // ##################################################################### //
@@ -387,10 +401,7 @@ const LessonControl = () => {
         const getRoomData = getLocalStorageData('room_info');
         setLocalStorageData('room_info', {...getRoomData, studentViewing: ''});
 
-        if (
-          lessonState.lessonData.lessonPlan &&
-          lessonState.lessonData.lessonPlan.length > 0
-        ) {
+        if (PAGES && PAGES.length > 0) {
           lessonDispatch({
             type: 'SET_ROOM_SUBSCRIPTION_DATA',
             payload: {
@@ -407,19 +418,21 @@ const LessonControl = () => {
   // ################### OTHER SHARING / VIEWING LOGIC ################### //
   // ##################################################################### //
 
-  const {resetViewAndShare} = useLessonControls();
+  const {resetViewAndShare, handleRoomUpdate} = useLessonControls();
 
   // ~~~~~~ AUTO PAGE NAVIGATION LOGIC ~~~~~ //
   useEffect(() => {
     if (lessonState.displayData[0].studentAuthID === '') {
       if (lessonState.studentViewing !== '') {
-        const viewedStudentLocation = controlState.roster.find(
+        const viewedStudentLocation = controlState.rosterActive.find(
           (student: any) => student.personAuthID === lessonState.studentViewing
-        )?.currentLocation;
+        );
 
-        if (viewedStudentLocation !== undefined) {
-          lessonDispatch({type: 'SET_CURRENT_PAGE', payload: viewedStudentLocation});
-          history.push(`${match.url}/${viewedStudentLocation}`);
+        let numbered = Number(viewedStudentLocation.currentLocation) || 0;
+
+        if (numbered !== undefined) {
+          lessonDispatch({type: 'SET_CURRENT_PAGE', payload: numbered});
+          history.push(`${match.url}/${numbered}`);
         } else {
           lessonDispatch({
             type: 'SET_CURRENT_PAGE',
@@ -472,6 +485,7 @@ const LessonControl = () => {
   const handleGoToUserManagement = () => {
     history.push('/dashboard/manage-users');
   };
+
   const handleHome = async () => {
     await handleRoomUpdate({id: getRoomData.id, studentViewing: ''});
     history.push(`/dashboard/lesson-planner/${getRoomData.id}`);
@@ -495,8 +509,6 @@ const LessonControl = () => {
   // ##################################################################### //
   // ############################# RESPONSIVE ############################ //
   // ##################################################################### //
-
-  const {breakpoint} = useTailwindBreakpoint();
 
   // ##################################################################### //
   // ############################### OUTPUT ############################## //

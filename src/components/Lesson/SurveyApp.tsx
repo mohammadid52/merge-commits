@@ -57,7 +57,6 @@ const SurveyApp = ({
   const getRoomData = getLocalStorageData('room_info');
   const urlParams: any = useParams();
   const {lessonID} = urlParams;
-  const isOnDemand = user.onDemand;
 
   // ##################################################################### //
   // ######################### BASIC UI CONTROLS ######################### //
@@ -304,39 +303,6 @@ const SurveyApp = ({
    * GETS THE PREVIOUSLY SAVED STUDENT DATA *
    * IF THERE IS ANY, AND SETS IT IN STATE  *
    ******************************************/
-
-  // const fetchSurveyDataRow = async (
-  //   filterObj: any,
-  //   nextToken: string,
-  //   outArray: any[]
-  // ): Promise<any> => {
-  //   let combined;
-  //   setLessonDataLoaded(false);
-  //   try {
-  //     let surveyData: any = await API.graphql(
-  //       graphqlOperation(queries.listUniversalSurveyStudentData, {
-  //         ...filterObj,
-  //         nextToken: nextToken
-  //       })
-  //     );
-
-  //     let surveyDataRow = surveyData.data.listUniversalSurveyStudentData.items;
-
-  //     let theNextToken = surveyData.data.listUniversalSurveyStudentData?.nextToken;
-
-  //     combined = [...outArray, ...surveyDataRow];
-
-  //     if (theNextToken) {
-  //       // console.log('nextToken fetching more - ', nextToken);
-  //       combined = await fetchSurveyDataRow(filterObj, theNextToken, combined);
-  //     }
-  //     setLessonDataLoaded(true);
-  //     return combined;
-  //   } catch (e) {
-  //     console.error('loopFetchStudentData - ', e);
-  //     return [];
-  //   }
-  // };
 
   const fetchSurveyDataRow = async (
     filterObj: any,

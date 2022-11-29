@@ -5,6 +5,7 @@ import WritingBlock from './WritingBlock';
 import WritingExerciseEditor from './WritingExerciseEditor';
 import htmlToDraft from 'html-to-draftjs';
 import draftToHtml from 'draftjs-to-html';
+import {useGlobalContext} from '@contexts/GlobalContext';
 
 interface EditingBlockProps {
   id?: string;
@@ -15,6 +16,7 @@ interface EditingBlockProps {
 }
 
 const EditingBlock = ({options, inputID, value}: EditingBlockProps) => {
+  const {lessonState} = useGlobalContext();
   const initialState = () => EditorState.createEmpty();
   const [editorState, setEditorState] = useState(initialState);
 
@@ -25,7 +27,9 @@ const EditingBlock = ({options, inputID, value}: EditingBlockProps) => {
     }
   };
 
-  const {setDataValue} = useStudentDataValue();
+  const viewingStudent = lessonState.studentViewing;
+
+  const {setDataValue, getDataValue} = useStudentDataValue();
 
   const onChangeCallback = (html: string, text: string) => {
     setDataValue(inputID, [html]);
@@ -42,6 +46,8 @@ const EditingBlock = ({options, inputID, value}: EditingBlockProps) => {
     setEditorState(updateState);
   };
 
+  const initialValue = viewingStudent ? getDataValue(inputID)[0] : value;
+
   return (
     <div className="relative flex flex-col justify-between items-center ">
       <div className="relative">
@@ -55,7 +61,7 @@ const EditingBlock = ({options, inputID, value}: EditingBlockProps) => {
       </div>
       <WritingExerciseEditor
         minHeight={400}
-        initialValue={value}
+        initialValue={initialValue}
         onChangeCallback={onChangeCallback}
         editorState={editorState}
         setEditorState={setEditorState}

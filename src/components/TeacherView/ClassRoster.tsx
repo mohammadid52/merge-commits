@@ -361,6 +361,7 @@ const ClassRoster = ({
         type: 'SET_ROOM_SUBSCRIPTION_DATA',
         payload: {id: getRoomData.id, studentViewing: idStr}
       });
+
       setLocalStorageData('room_info', {...getRoomData, studentViewing: idStr});
       await handleRoomUpdate({id: getRoomData.id, studentViewing: idStr});
     }

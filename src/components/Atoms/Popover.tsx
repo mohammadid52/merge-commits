@@ -11,6 +11,7 @@ interface IPopOver {
   content: children;
   containerClass?: string;
   padding?: number;
+  customStyle?: any;
   /**
    * Tailwind classes
    * 1 = 1rem
@@ -42,7 +43,8 @@ const Popover = ({
   dir = 'bottom',
   className,
   content,
-  rounded = 'xl'
+  rounded = 'xl',
+  customStyle
 }: IPopOver) => {
   const dynamicDir = {
     [dir]: `${bottom}rem`
@@ -65,7 +67,7 @@ const Popover = ({
             leave="transform transition ease-in-out duration-200"
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
-            style={{...dynamicDir}}
+            style={{...dynamicDir, ...customStyle}}
             className={`${containerClass} z-100 w-auto  select-none ${
               rounded ? `rounded-${rounded}` : 'rounded'
             } customShadow absolute right-${right} border-0  min-h-${minHeight} min-w-${minWidth} p-${padding}`}

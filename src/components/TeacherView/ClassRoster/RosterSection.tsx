@@ -92,7 +92,7 @@ const RosterSection = ({
 
   return (
     <>
-      <div className={`w-full flex items-center bg-transparent`}>
+      <div className={`w-full flex items-center bg-transparent mt-4 mb-2`}>
         <div className="relative w-full h-auto flex flex-row items-center">
           <span className="text-sm font-semibold text-gray-600">{sectionTitle}</span>
           <span
@@ -100,17 +100,16 @@ const RosterSection = ({
             onClick={() =>
               toggleAnimation(minimized, listRef, rollDownAnimation, rollUpAnimation)
             }>
-            {minimized ? <BiChevronUp /> : <BiChevronDown />}
+            {minimized ? <BiChevronUp size={'1rem'} /> : <BiChevronDown size={'1rem'} />}
           </span>
         </div>
       </div>
 
       {/* ROSTER HEAD LABELS*/}
       {hot && (
-        <div
-          className={`${theme.textColor[themeColor]} w-full h-8 flex py-2  bg-transparent`}>
+        <div className={`theme-text w-full flex py-2 bg-transparent `}>
           <div
-            className={`w-3/10  relative  flex items-center hover:underline cursor-pointer text-xs`}>
+            className={`w-6/10  relative  flex items-center hover:underline cursor-pointer text-xs`}>
             <span className="w-auto">
               {lessonPlannerDict[userLanguage]['OTHER_LABELS']['COLUMN']['ONE']}
             </span>
@@ -132,9 +131,6 @@ const RosterSection = ({
               {lessonPlannerDict[userLanguage]['OTHER_LABELS']['COLUMN']['THREE']}
             </span>
           </div>
-          <div
-            className={`w-1/10 flex items-center justify-center rounded-lg text-center text-xs`}
-          />
         </div>
       )}
 
@@ -145,8 +141,6 @@ const RosterSection = ({
               key={`rosterrow_inactive_${key}`}
               number={key}
               personAuthID={student.personAuthID}
-              studentID={student?.person?.id}
-              active={false}
               firstName={student.person?.firstName ? student.person?.firstName : ''}
               lastName={student.person?.lastName ? student.person?.lastName : ''}
               preferredName={

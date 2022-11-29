@@ -88,13 +88,31 @@ const LessonApp = ({
     ).subscribe({
       next: (roomData: any) => {
         const updatedRoomData = roomData.value.data.onChangeRoom;
-
         setSubscriptionData(updatedRoomData);
       }
     });
 
     return roomSubscription;
   };
+
+  useEffect(() => {
+    const leaveUnload = () => {
+      const leaveRoom = leaveRoomLocation(user?.authId, user?.email);
+
+      Promise.resolve(leaveRoom).then((_: void) => {
+        if (subscription) {
+          subscription.unsubscribe();
+        }
+        lessonDispatch({type: 'CLEANUP'});
+      });
+    };
+
+    console.log('lesson loaded....');
+
+    return () => {
+      leaveUnload();
+    };
+  }, []);
 
   // ----------- 3 ---------- //
 
@@ -103,6 +121,7 @@ const LessonApp = ({
       ...getRoomData,
       ClosedPages: subscriptionData.ClosedPages
     });
+
     lessonDispatch({type: 'SET_ROOM_SUBSCRIPTION_DATA', payload: subscriptionData});
   };
 

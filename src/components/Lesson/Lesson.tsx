@@ -16,6 +16,7 @@ import * as mutations from 'graphql/mutations';
 import * as queries from 'graphql/queries';
 import useAuth from '@customHooks/useAuth';
 import {v4 as uuidV4} from 'uuid';
+import useLessonControls from '@customHooks/lessonControls';
 
 export interface ILessonSurveyApp {
   pageStateUpdated: boolean;
