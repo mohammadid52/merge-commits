@@ -426,7 +426,7 @@ const ClassRoster = ({
   // ##################################################################### //
 
   return (
-    <div className={`w-full h-full px-4 pt-2 overflow-y-auto overflow-x-hidden pb-48`}>
+    <div className={`w-full h-full pl-4 pt-2 overflow-y-auto overflow-x-hidden pb-48`}>
       {/* */}
 
       {/* STUDENTS - IN CLASS */}

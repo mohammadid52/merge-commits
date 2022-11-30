@@ -65,7 +65,7 @@ const RosterRow: React.FC<RosterRowProps> = ({
       return false;
     }
   };
-  const [successSound, terminateSound] = useSounds(['success', 'error']);
+  // const [successSound, terminateSound] = useSounds(['success', 'error']);
 
   const studentIsShared = () => {
     return sharedStudent === personAuthID;
@@ -82,10 +82,10 @@ const RosterRow: React.FC<RosterRowProps> = ({
       handleViewStudentData(personAuthID);
     }
     if (!studentIsViewed()) {
-      successSound.play();
+      // successSound.play();
       handlePageChange(parseInt(currentLocation));
     } else {
-      terminateSound.play();
+      // terminateSound.play();
     }
   };
 
@@ -206,7 +206,7 @@ const RosterRow: React.FC<RosterRowProps> = ({
                   btnClass="text-white outline-none  bg-dark-red hover:bg-red-500 w-1/4 mx-2"
                   label={'Unshare'}
                   onClick={() => {
-                    terminateSound.play();
+                    // terminateSound.play();
                     handleShareStudentData(personAuthID, getPageID(currentLocation));
                   }}
                 />
@@ -224,7 +224,7 @@ const RosterRow: React.FC<RosterRowProps> = ({
                 Icon={AiOutlineShareAlt}
                 transparent={!studentIsShared()}
                 onClick={() => {
-                  successSound.play();
+                  // successSound.play();
                   handleShareStudentData(personAuthID, getPageID(currentLocation));
                 }}
               />
