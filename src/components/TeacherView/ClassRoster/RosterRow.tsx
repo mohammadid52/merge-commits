@@ -9,6 +9,7 @@ import useAuth from '@customHooks/useAuth';
 import {VscScreenFull} from 'react-icons/vsc';
 import {AiOutlineShareAlt} from 'react-icons/ai';
 import useSounds from '@customHooks/useSounds';
+import LocationBadge from '@components/Dashboard/Admin/Institutons/EditBuilders/LocationBadge';
 
 interface RosterRowProps extends IRosterSectionProps {
   number: number;
@@ -21,6 +22,7 @@ interface RosterRowProps extends IRosterSectionProps {
   currentLocation: string;
   lessonProgress: string;
   hot?: boolean;
+  onDemand?: boolean;
 }
 
 const RosterRow: React.FC<RosterRowProps> = ({
@@ -36,7 +38,7 @@ const RosterRow: React.FC<RosterRowProps> = ({
   viewedStudent,
   sharedStudent,
   handlePageChange,
-
+  onDemand,
   handleToggleRightView,
   hot
 }: RosterRowProps) => {
@@ -74,8 +76,6 @@ const RosterRow: React.FC<RosterRowProps> = ({
   const studentIsViewed = () => {
     return viewedStudent === personAuthID;
   };
-
-  const {onDemand} = useAuth();
 
   const handleRowSelection = () => {
     if (lessonState.lessonData?.type !== 'survey') {
@@ -172,7 +172,8 @@ const RosterRow: React.FC<RosterRowProps> = ({
             className={`w-3/4 text-gray-600 overflow-hidden mr-2 flex items-center pointer-events-none text-sm whitespace-pre truncate ... ${
               active && activeHoverClass
             } `}>
-            {preferredName ? preferredName : firstName} {lastName}
+            {preferredName ? preferredName : firstName} {lastName}{' '}
+            {!hot && onDemand && <LocationBadge customText="SP" onDemand={onDemand} />}
           </div>
 
           <div
@@ -181,15 +182,19 @@ const RosterRow: React.FC<RosterRowProps> = ({
               active && activeHoverClass
             }`}>
             <div id={personAuthID} draggable={false} className={`pointer-events-none`}>
-              {studentIsShared() ? frozenPage : getPageLabel(currentLocation)}
+              {!hot && onDemand
+                ? null
+                : studentIsShared()
+                ? frozenPage
+                : getPageLabel(currentLocation)}
             </div>
           </div>
         </div>
 
         <Buttons
-          transparent={!studentIsViewed()}
           iconSize="w-4 h-6"
           disabled={!hot}
+          greenBtn={studentIsViewed()}
           onClick={handleRowSelection}
           title="View student screen"
           size="small"

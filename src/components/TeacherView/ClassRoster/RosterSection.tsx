@@ -143,6 +143,7 @@ const RosterSection = ({
               preferredName={
                 student.person?.preferredName ? student.person?.preferredName : ''
               }
+              onDemand={student.person.onDemand}
               role={student.person?.role ? student.person?.role : ''}
               currentLocation={student.currentLocation}
               lessonProgress={student.lessonProgress}

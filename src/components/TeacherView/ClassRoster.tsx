@@ -426,72 +426,81 @@ const ClassRoster = ({
   // ##################################################################### //
 
   return (
-    <div className={`w-full h-full pl-4 pt-2 overflow-y-auto overflow-x-hidden pb-48`}>
-      {/* */}
+    <>
+      <div className="px-4">
+        <div className="text-sm w-full pt-2 font-semibold text-gray-600 border-b-0 border-gray-600 pb-1">
+          <p>Student Roster</p>
+        </div>
+      </div>
+      <div className={`w-full h-full pl-4  overflow-y-auto overflow-x-hidden pb-48`}>
+        {/* */}
 
-      {/* STUDENTS - IN CLASS */}
+        {/* STUDENTS - IN CLASS */}
 
-      <RosterSection
-        hot
-        handleManualRefresh={handleManualRefresh}
-        loading={loading}
-        handleToggleRightView={handleToggleRightView}
-        rightView={rightView}
-        setRightView={setRightView}
-        studentList={controlState.rosterActive}
-        handleResetViewAndShare={resetViewAndShare}
-        handleViewStudentData={handleViewStudentData}
-        handleShareStudentData={handleShareStudentData}
-        viewedStudent={viewedStudent}
-        sharedStudent={sharedStudent}
-        handlePageChange={handlePageChange}
-        sectionTitle={
-          lessonPlannerDict[userLanguage]['OTHER_LABELS']['STUDENT_SECTION']['IN_CLASS']
-        }
-        emptyMessage={'No students are in class'}
-      />
-      {/* STUDENTS - NOT IN CLASS */}
-      <RosterSection
-        hot={false}
-        handleManualRefresh={handleManualRefresh}
-        handleToggleRightView={handleToggleRightView}
-        rightView={rightView}
-        setRightView={setRightView}
-        studentList={inactiveStudents?.notInClass}
-        handleResetViewAndShare={resetViewAndShare}
-        handleViewStudentData={handleViewStudentData}
-        handleShareStudentData={handleShareStudentData}
-        viewedStudent={viewedStudent}
-        sharedStudent={sharedStudent}
-        handlePageChange={handlePageChange}
-        sectionTitle={
-          lessonPlannerDict[userLanguage]['OTHER_LABELS']['STUDENT_SECTION'][
-            'NOT_IN_CLASS'
-          ]
-        }
-        emptyMessage={'...'}
-      />
+        <RosterSection
+          hot
+          handleManualRefresh={handleManualRefresh}
+          loading={loading}
+          handleToggleRightView={handleToggleRightView}
+          rightView={rightView}
+          setRightView={setRightView}
+          studentList={controlState.rosterActive}
+          handleResetViewAndShare={resetViewAndShare}
+          handleViewStudentData={handleViewStudentData}
+          handleShareStudentData={handleShareStudentData}
+          viewedStudent={viewedStudent}
+          sharedStudent={sharedStudent}
+          handlePageChange={handlePageChange}
+          sectionTitle={
+            lessonPlannerDict[userLanguage]['OTHER_LABELS']['STUDENT_SECTION']['IN_CLASS']
+          }
+          emptyMessage={'No students are in class'}
+        />
+        {/* STUDENTS - NOT IN CLASS */}
+        <RosterSection
+          hot={false}
+          handleManualRefresh={handleManualRefresh}
+          handleToggleRightView={handleToggleRightView}
+          rightView={rightView}
+          setRightView={setRightView}
+          studentList={inactiveStudents?.notInClass}
+          handleResetViewAndShare={resetViewAndShare}
+          handleViewStudentData={handleViewStudentData}
+          handleShareStudentData={handleShareStudentData}
+          viewedStudent={viewedStudent}
+          sharedStudent={sharedStudent}
+          handlePageChange={handlePageChange}
+          sectionTitle={
+            lessonPlannerDict[userLanguage]['OTHER_LABELS']['STUDENT_SECTION'][
+              'NOT_IN_CLASS'
+            ]
+          }
+          emptyMessage={'...'}
+        />
 
-      {/* STUDENTS - ON DEMAND*/}
-      <RosterSection
-        hot={false}
-        handleManualRefresh={handleManualRefresh}
-        handleToggleRightView={handleToggleRightView}
-        rightView={rightView}
-        setRightView={setRightView}
-        studentList={inactiveStudents?.onDemand}
-        handleResetViewAndShare={resetViewAndShare}
-        handleViewStudentData={handleViewStudentData}
-        handleShareStudentData={handleShareStudentData}
-        viewedStudent={viewedStudent}
-        sharedStudent={sharedStudent}
-        handlePageChange={handlePageChange}
-        sectionTitle={
-          lessonPlannerDict[userLanguage]['OTHER_LABELS']['STUDENT_SECTION']['ON_DEMAND']
-        }
-        emptyMessage={'No self-paced students'}
-      />
-    </div>
+        {/* STUDENTS - ON DEMAND*/}
+        <RosterSection
+          hot={false}
+          handleManualRefresh={handleManualRefresh}
+          handleToggleRightView={handleToggleRightView}
+          rightView={rightView}
+          setRightView={setRightView}
+          studentList={inactiveStudents?.onDemand}
+          handleResetViewAndShare={resetViewAndShare}
+          handleViewStudentData={handleViewStudentData}
+          handleShareStudentData={handleShareStudentData}
+          viewedStudent={viewedStudent}
+          sharedStudent={sharedStudent}
+          handlePageChange={handlePageChange}
+          sectionTitle={
+            lessonPlannerDict[userLanguage]['OTHER_LABELS']['STUDENT_SECTION'][
+              'ON_DEMAND'
+            ]
+          }
+          emptyMessage={'No self-paced students'}
+        />
+      </div>
+    </>
   );
 };
 

@@ -79,15 +79,17 @@ const LessonDetails = ({
       <div className="relative w-full flex flex-col my-auto bg-gray-200 p-2 text-gray-600 text-sm shadow-sm rounded">
         <p className="">
           {lessonPlannerDict[userLanguage]['OTHER_LABELS']['STUDDENT_ONLINE']}:{' '}
-          {studentsOnline()}
+          <span className="font-medium">{studentsOnline()} students</span>
         </p>
         <p className="">
           {lessonPlannerDict[userLanguage]['OTHER_LABELS']['ROOM_NAME']}:{' '}
-          {`${getRoomData.name ? getRoomData.name : ''}`}
+          <span className="font-medium">{`${
+            getRoomData.name ? getRoomData.name : ''
+          }`}</span>
         </p>
         <p className="">
           {lessonPlannerDict[userLanguage]['OTHER_LABELS']['EST_TIME']}: {duration}{' '}
-          {`${duration > 1 ? 'weeks' : 'week'}`}
+          <span className="font-medium">{`${duration > 1 ? 'weeks' : 'week'}`}</span>
         </p>
       </div>
       <div className="flex items-center justify-between mt-4 mb-2">

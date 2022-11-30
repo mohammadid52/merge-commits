@@ -764,7 +764,7 @@ const lessonPlannerDict: any = {
     ACTIVITY_BREAKDOWN: 'Activity/Breakdown',
     OTHER_LABELS: {
       ROOM_NAME: 'Room',
-      STUDDENT_ONLINE: 'Students Online',
+      STUDDENT_ONLINE: 'Class size',
       TOPIC: 'Topic',
       START_DATE: 'Start Date',
       EST_TIME: 'Estimated Time',
@@ -775,8 +775,8 @@ const lessonPlannerDict: any = {
         THREE: 'Action'
       },
       STUDENT_SECTION: {
-        IN_CLASS: 'Student Roster',
-        NOT_IN_CLASS: 'Not In Class',
+        IN_CLASS: 'In Classroom',
+        NOT_IN_CLASS: 'Not In Classroom',
         ON_DEMAND: 'Self Paced (Not Online/Lesson)'
       }
     },
