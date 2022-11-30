@@ -53,18 +53,18 @@ const PresentationModeToggle = ({
     });
   };
 
-  const [onSound, offSound] = useSounds(['success', 'error']);
+  // const [onSound, offSound] = useSounds(['success', 'error']);
 
   const handlePresentationToggle = async (
     presenting: boolean,
     sharingActive: boolean
   ) => {
     if (presenting) {
-      offSound.play();
+      // offSound.play();
       await resetViewAndShare();
     } else {
-      offSound.pause();
-      onSound.play();
+      // offSound.pause();
+      // onSound.play();
       sharingActive && (await resetViewAndShare());
       await handlePresentationUpdate(getRoomData.id, getPageID(currentPage));
     }
