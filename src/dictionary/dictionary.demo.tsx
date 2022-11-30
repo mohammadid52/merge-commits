@@ -764,7 +764,7 @@ const lessonPlannerDict: any = {
     ACTIVITY_BREAKDOWN: 'Activity/Breakdown',
     OTHER_LABELS: {
       ROOM_NAME: 'Room',
-      STUDDENT_ONLINE: 'Students Online',
+      STUDDENT_ONLINE: 'Class Size',
       TOPIC: 'Topic',
       START_DATE: 'Start Date',
       EST_TIME: 'Estimated Time',
