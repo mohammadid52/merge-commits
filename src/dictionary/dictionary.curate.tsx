@@ -767,7 +767,7 @@ const lessonPlannerDict: any = {
       STUDDENT_ONLINE: 'Class Size',
       TOPIC: 'Topic',
       START_DATE: 'Start Date',
-      EST_TIME: 'Estimated Time',
+      EST_TIME: 'Scheduled Lesson Time',
       LESSON_CONTROL: 'Lesson Control',
       COLUMN: {
         ONE: 'Name',
@@ -3772,7 +3772,7 @@ const LessonBuilderDict: any = {
       PLAN_LABEL: 'Activity label',
       DESCRIPTION: 'Instructions',
       TAGS: 'Add Tags',
-      ESTIMATED_TIME: 'Estimated Time',
+      ESTIMATED_TIME:'Scheduled Lesson Time',
       ACTIVITY_TYPE: 'Activity Type',
       INTERACTION_TYPE: 'Interaction Type',
       ACTIVITY_INSTRUCTIONS: 'Activity Instructions',
