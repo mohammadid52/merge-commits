@@ -267,6 +267,16 @@ const ClassRoster = ({
     }
   );
 
+  const notInClassStudents = () => {
+    return roster.filter((student: any) => {
+      const isInStateRoster = controlState.rosterActive.find(
+        (studentTarget: any) => studentTarget.personAuthID === student.personAuthID
+      );
+
+      return isInStateRoster === undefined;
+    });
+  };
+
   // ##################################################################### //
   // ####################### ROSTER UPDATE / DELETE ###################### //
   // ##################################################################### //
@@ -421,19 +431,19 @@ const ClassRoster = ({
     setRightView(toggleValue);
   };
 
+  const [recordPrevPage, setRecordPrevPage] = useState(0);
+
   // ##################################################################### //
   // ############################### OUTPUT ############################## //
   // ##################################################################### //
 
   return (
     <>
-      <div className="px-4">
+      <div className={`w-full h-full px-4  overflow-y-auto overflow-x-hidden pb-48`}>
+        {/* */}
         <div className="text-sm w-full pt-2 font-semibold text-gray-600 border-b-0 border-gray-600 pb-1">
           <p>Student Roster</p>
         </div>
-      </div>
-      <div className={`w-full h-full pl-4  overflow-y-auto overflow-x-hidden pb-48`}>
-        {/* */}
 
         {/* STUDENTS - IN CLASS */}
 
@@ -441,6 +451,8 @@ const ClassRoster = ({
           hot
           handleManualRefresh={handleManualRefresh}
           loading={loading}
+          recordPrevPage={recordPrevPage}
+          setRecordPrevPage={setRecordPrevPage}
           handleToggleRightView={handleToggleRightView}
           rightView={rightView}
           setRightView={setRightView}
@@ -463,7 +475,7 @@ const ClassRoster = ({
           handleToggleRightView={handleToggleRightView}
           rightView={rightView}
           setRightView={setRightView}
-          studentList={inactiveStudents?.notInClass}
+          studentList={notInClassStudents()}
           handleResetViewAndShare={resetViewAndShare}
           handleViewStudentData={handleViewStudentData}
           handleShareStudentData={handleShareStudentData}
@@ -479,7 +491,7 @@ const ClassRoster = ({
         />
 
         {/* STUDENTS - ON DEMAND*/}
-        <RosterSection
+        {/* <RosterSection
           hot={false}
           handleManualRefresh={handleManualRefresh}
           handleToggleRightView={handleToggleRightView}
@@ -498,7 +510,7 @@ const ClassRoster = ({
             ]
           }
           emptyMessage={'No self-paced students'}
-        />
+        /> */}
       </div>
     </>
   );

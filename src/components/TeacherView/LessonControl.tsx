@@ -58,6 +58,7 @@ const LessonControl = () => {
 
   const handlePageChange = (pageNr: number) => {
     lessonDispatch({type: 'SET_CURRENT_PAGE', payload: pageNr});
+    history.push(`${match.url}/${pageNr}`);
   };
 
   const [fullscreen, setFullscreen] = useState(false);

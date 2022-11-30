@@ -95,7 +95,7 @@ const RosterFrame = ({
           handleToggleRightView={handleToggleRightView}
         />
         <div className={`h-full w-full flex flex-col justify-between items-center z-100`}>
-          <div className={`h-full`}>{children}</div>
+          <div className={`h-full pb-24`}>{children}</div>
         </div>
       </div>
       {/* THIN SIDEBAR */}
@@ -134,7 +134,7 @@ const RosterFrame = ({
         <LessonDetails />
 
         <div className={`h-full w-full flex flex-col justify-between items-center`}>
-          <div className={`h-full`}>{children}</div>
+          <div className={`h-full pb-24`}>{children}</div>
         </div>
       </div>
     </>

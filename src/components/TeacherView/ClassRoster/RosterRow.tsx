@@ -1,15 +1,13 @@
 // import {PersonalizeEvents} from 'aws-sdk';
+import Buttons from '@components/Atoms/Buttons';
+import LocationBadge from '@components/Dashboard/Admin/Institutons/EditBuilders/LocationBadge';
 import {getAsset} from 'assets';
-import React, {useContext, useEffect, useState} from 'react';
 import {GlobalContext} from 'contexts/GlobalContext';
+import React, {useContext, useEffect, useState} from 'react';
+import {AiOutlineShareAlt} from 'react-icons/ai';
+import {VscScreenFull} from 'react-icons/vsc';
 import DotMenu from './RosterRow/DotMenu';
 import {IRosterSectionProps} from './RosterSection';
-import Buttons from '@components/Atoms/Buttons';
-import useAuth from '@customHooks/useAuth';
-import {VscScreenFull} from 'react-icons/vsc';
-import {AiOutlineShareAlt} from 'react-icons/ai';
-import useSounds from '@customHooks/useSounds';
-import LocationBadge from '@components/Dashboard/Admin/Institutons/EditBuilders/LocationBadge';
 
 interface RosterRowProps extends IRosterSectionProps {
   number: number;
@@ -40,7 +38,9 @@ const RosterRow: React.FC<RosterRowProps> = ({
   handlePageChange,
   onDemand,
   handleToggleRightView,
-  hot
+  hot,
+  setRecordPrevPage,
+  recordPrevPage
 }: RosterRowProps) => {
   // ~~~~~~~~~~~~~~~ CONTEXT ~~~~~~~~~~~~~~~ //
   const gContext = useContext(GlobalContext);
@@ -82,10 +82,10 @@ const RosterRow: React.FC<RosterRowProps> = ({
       handleViewStudentData(personAuthID);
     }
     if (!studentIsViewed()) {
-      // successSound.play();
+      setRecordPrevPage(lessonState.currentPage);
       handlePageChange(parseInt(currentLocation));
     } else {
-      // terminateSound.play();
+      handlePageChange(recordPrevPage);
     }
   };
 
@@ -152,12 +152,14 @@ const RosterRow: React.FC<RosterRowProps> = ({
       {/* <div className="" /> */}
       <div
         draggable={false}
-        className={`w-full flex py-2 items-center shadow-sm px-1 ${
+        className={`w-full flex py-2 transition-all duration-300 items-center px-1 ${
           active && activeHoverClass
         }  ${!active && inactiveTextClass} ${
           number % 2 === 0 ? 'bg-gray-200 bg-opacity-50' : ''
         } ${
-          studentIsViewed() ? `bg-white border-l-4 ${theme.borderColor[themeColor]}` : ''
+          studentIsViewed()
+            ? `theme-card-shadow border-l-4 border-green-600 bg-opacity-50 bg-green-200 `
+            : ''
         } ${
           studentIsShared() ? `border-l-4 ${theme.borderColor[themeColor]}` : ''
         } roster-row `}>
@@ -169,26 +171,28 @@ const RosterRow: React.FC<RosterRowProps> = ({
             id={`${personAuthID}`}
             draggable={false}
             title={`${preferredName ? preferredName : firstName} ${lastName}`}
-            className={`w-3/4 text-gray-600 overflow-hidden mr-2 flex items-center pointer-events-none text-sm whitespace-pre truncate ... ${
+            className={` text-gray-600 overflow-hidden mr-2 flex items-center pointer-events-none text-sm whitespace-pre truncate  ${
               active && activeHoverClass
             } `}>
             {preferredName ? preferredName : firstName} {lastName}{' '}
-            {!hot && onDemand && <LocationBadge customText="SP" onDemand={onDemand} />}
+            <LocationBadge
+              style={onDemand ? {} : {fontSize: '.5rem'}}
+              customText={onDemand ? 'SP' : 'CLSRM'}
+              onDemand={onDemand}
+            />
           </div>
 
-          <div
-            draggable={false}
-            className={`w-1/4 mx-2 flex justify-center items-center pointer-events-none overflow-hidden text-gray-600 text-sm text-center ${
-              active && activeHoverClass
-            }`}>
-            <div id={personAuthID} draggable={false} className={`pointer-events-none`}>
-              {!hot && onDemand
-                ? null
-                : studentIsShared()
-                ? frozenPage
-                : getPageLabel(currentLocation)}
+          {hot && (
+            <div
+              draggable={false}
+              className={`w-1/4 mx-2 flex justify-center items-center pointer-events-none overflow-hidden text-gray-600 text-sm text-center ${
+                active && activeHoverClass
+              }`}>
+              <div id={personAuthID} draggable={false} className={`pointer-events-none`}>
+                {studentIsShared() ? frozenPage : getPageLabel(currentLocation)}
+              </div>
             </div>
-          </div>
+          )}
         </div>
 
         <Buttons
@@ -196,7 +200,9 @@ const RosterRow: React.FC<RosterRowProps> = ({
           disabled={!hot}
           greenBtn={studentIsViewed()}
           onClick={handleRowSelection}
-          title="View student screen"
+          title={
+            studentIsViewed() ? 'Cancel viewing student screen' : 'View student screen'
+          }
           size="small"
           Icon={VscScreenFull}
         />

@@ -24,6 +24,8 @@ export interface IRosterSectionProps {
   handlePageChange?: any;
   sectionTitle?: string;
   emptyMessage?: string;
+  setRecordPrevPage?: React.SetStateAction<React.Dispatch<number>>;
+  recordPrevPage?: number;
 }
 
 const RosterSection = ({
@@ -40,7 +42,9 @@ const RosterSection = ({
   sharedStudent,
   handlePageChange,
   sectionTitle,
-  emptyMessage
+  emptyMessage,
+  setRecordPrevPage,
+  recordPrevPage
 }: IRosterSectionProps) => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
   const gContext = useContext(GlobalContext);
@@ -143,6 +147,8 @@ const RosterSection = ({
               preferredName={
                 student.person?.preferredName ? student.person?.preferredName : ''
               }
+              setRecordPrevPage={setRecordPrevPage}
+              recordPrevPage={recordPrevPage}
               onDemand={student.person.onDemand}
               role={student.person?.role ? student.person?.role : ''}
               currentLocation={student.currentLocation}
