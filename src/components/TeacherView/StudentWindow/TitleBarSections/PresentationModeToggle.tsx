@@ -1,3 +1,4 @@
+import useSounds from '@customHooks/useSounds';
 import Buttons from 'atoms/Buttons';
 import useLessonControls from 'customHooks/lessonControls';
 import React, {useEffect} from 'react';
@@ -52,19 +53,20 @@ const PresentationModeToggle = ({
     });
   };
 
+  const [onSound, offSound] = useSounds(['success', 'error']);
+
   const handlePresentationToggle = async (
     presenting: boolean,
     sharingActive: boolean
   ) => {
     if (presenting) {
+      offSound.play();
       await resetViewAndShare();
     } else {
-      if (sharingActive) {
-        await resetViewAndShare();
-        await handlePresentationUpdate(getRoomData.id, getPageID(currentPage));
-      } else {
-        await handlePresentationUpdate(getRoomData.id, getPageID(currentPage));
-      }
+      offSound.pause();
+      onSound.play();
+      sharingActive && (await resetViewAndShare());
+      await handlePresentationUpdate(getRoomData.id, getPageID(currentPage));
     }
   };
 
