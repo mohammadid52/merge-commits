@@ -4,8 +4,9 @@ import {downloadBlob} from 'components/Lesson/UniversalLessonBuilder/UI/UICompon
 import {GlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import React, {useContext, useState} from 'react';
-import {AiFillEye} from 'react-icons/ai';
+import {AiFillEye, AiOutlineLink} from 'react-icons/ai';
 import {BiCloudDownload} from 'react-icons/bi';
+import {useHistory} from 'react-router';
 import {getLocalStorageData} from 'utilities/localStorage';
 interface ILessonDetailProps {
   hidden?: boolean;
@@ -62,6 +63,10 @@ const LessonDetails = ({
 
   const {title, lessonPlanAttachment, duration} = lessonState?.lessonData;
 
+  const pageBuilderUrl = `/dashboard/manage-institutions/institution/${
+    getRoomData.institutionID || lessonState.lessonData.institutionID
+  }/lessons/${lessonState.lessonData.id}/page-builder`;
+
   return (
     <div
       className={`${
@@ -70,9 +75,21 @@ const LessonDetails = ({
       <div
         title={title}
         className="align-middle mb-2 text-gray-600 text-sm leading-8  relative w-full h-auto flex flex-row items-center">
-        <div>
-          <span className="font-bold">{classRoomDict[userLanguage]['LESSON']}: </span>
-          <span>{title}</span>
+        <div className="w-auto flex items-center">
+          <span className="font-bold w-auto mr-1">
+            {classRoomDict[userLanguage]['LESSON']}:{' '}
+          </span>
+          <span
+            className="flex items-center hover:theme-text transition-all"
+            title="Open page builder on new tab">
+            <a className="w-auto" target="_blank" href={pageBuilderUrl}>
+              {title}
+            </a>
+
+            <span className="w-auto">
+              <AiOutlineLink className="w-auto theme-text" size={'1rem'} />
+            </span>
+          </span>
         </div>
       </div>
 

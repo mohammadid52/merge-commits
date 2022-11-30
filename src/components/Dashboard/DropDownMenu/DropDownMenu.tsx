@@ -105,12 +105,10 @@ const DropDownMenu = ({
                       <span>
                         {[firstName, lastName].join(' ')}
                         <br />
-                        {role === 'ST' ? (
-                          <div className="w-auto mb-1">
-                            <UserRole role={role} />
-                          </div>
-                        ) : null}
-                        <LocationBadge onDemand={onDemand} />
+                        <div className="w-auto mb-1">
+                          <UserRole role={role} />
+                        </div>
+                        {role === 'ST' ? <LocationBadge onDemand={onDemand} /> : null}
                       </span>
                     </div>
                   </Menu.Item>

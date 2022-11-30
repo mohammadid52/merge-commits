@@ -52,6 +52,8 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
       ? '/dashboard/manage-institutions'
       : '/dashboard/manage-institutions/institution/{institutionId}';
 
+  const pageId = activeSection?.data?.universalLessons[0].lessonPlan[0].id;
+  const institutionId = selectedInstitution?.institution?.id;
   const data: any = {
     title: 'root',
     children: [
@@ -228,13 +230,13 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                     title: 'Blocks & Components',
                     type: 'list',
                     id: 'lesson_builder_plan_block_and_component',
-                    redirectionUrl: `${baseUrl}/lessons/{lessonId}/page-builder?pageId={pageId}`
+                    redirectionUrl: `${baseUrl}/lessons/{lessonId}/page-builder?pageId=${pageId}`
                   },
                   {
                     title: 'Lesson Plan Manager',
                     type: 'list',
                     id: 'lesson_builder_plan_manager',
-                    redirectionUrl: `${baseUrl}/lessons/{lessonId}page-builder?pageId={pageId}`
+                    redirectionUrl: `${baseUrl}/lessons/{lessonId}page-builder?pageId=${pageId}`
                   },
                   {
                     title: 'Homework & Challenges (Coming Soon)',
@@ -243,7 +245,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                     redirectionUrl: `${baseUrl}/lessons/{lessonId}`
                   }
                 ],
-                redirectionUrl: `${baseUrl}/lessons/{lessonId}/page-builder?pageId={pageId}`
+                redirectionUrl: `${baseUrl}/lessons/{lessonId}/page-builder?pageId=${pageId}`
               },
               {
                 title: 'Courses',
@@ -336,7 +338,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
             redirectionUrl: `/dashboard/home`
           }
         ],
-        redirectionUrl: `/dashboard/manage-institutions/institution?id={institutionId}`
+        redirectionUrl: `/dashboard/manage-institutions/institution?id=${institutionId}`
       },
       (role === 'FLW' || role === 'TR') && {
         title: 'Student Profile',
@@ -362,7 +364,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
             redirectionUrl: `${baseUrl}/research-and-analytics`
           }
         ],
-        redirectionUrl: `/dashboard/manage-institutions/institution?id={institutionId}`
+        redirectionUrl: `/dashboard/manage-institutions/institution?id=${institutionId}`
       },
       role === 'ST' && {
         title: 'Dashboard',

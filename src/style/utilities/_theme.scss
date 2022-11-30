@@ -258,16 +258,16 @@
 
 .iconoclast {
   .theme-text,
-  .hover\:theme-text &:hover {
+  .hover\:theme-text:hover {
     color: $iconoclast !important;
   }
   .theme-bg,
-  .hover\:theme-bg &:hover {
+  .hover\:theme-bg:hover {
     background-color: $iconoclast !important;
   }
 
   .theme-border,
-  .hover\:theme-border &:hover {
+  .hover\:theme-border:hover {
     border-color: $iconoclast !important;
   }
 
@@ -277,16 +277,16 @@
 }
 .curate {
   .theme-text,
-  .hover\:theme-text &:hover {
+  .hover\:theme-text:hover {
     color: $curate !important;
   }
   .theme-bg,
-  .hover\:theme-bg &:hover {
+  .hover\:theme-bg:hover {
     background-color: $curate !important;
   }
 
   .theme-border,
-  .hover\:theme-border &:hover {
+  .hover\:theme-border:hover {
     border-color: $curate !important;
   }
 
