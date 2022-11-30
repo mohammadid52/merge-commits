@@ -1,4 +1,5 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import useLessonControls from '@customHooks/lessonControls';
 import {UniversalLessonStudentData as UniversalLessonStudentDataFromAPI} from 'API';
 import 'components/Dashboard/GameChangers/styles/Flickity.scss';
 import 'components/Dashboard/GameChangers/styles/GameChanger.scss';

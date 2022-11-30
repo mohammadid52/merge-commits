@@ -1,13 +1,11 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import {UniversalLessonStudentData as UniversalLessonStudentDataFromAPI} from 'API';
 import {GlobalContext} from 'contexts/GlobalContext';
 import {useNotifications} from 'contexts/NotificationContext';
 import * as customQueries from 'customGraphql/customQueries';
+import * as customSubscriptions from 'customGraphql/customSubscriptions';
 import useLessonControls from 'customHooks/lessonControls';
-import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
 import useAuth from 'customHooks/useAuth';
-import {UniversalLessonStudentData as UniversalLessonStudentDataFromAPI} from 'API';
-import * as mutations from 'graphql/mutations';
-import * as subscriptions from 'graphql/subscriptions';
 import {
   StudentPageInput,
   UniversalLessonStudentData
@@ -88,8 +86,10 @@ const LessonControl = () => {
     const {lessonID} = urlParams;
     const syllabusID = getRoomData.activeSyllabus; // in the table this is called SyllabusLessonID, but it's just the syllabusID
 
+    console.log({lessonID, syllabusID, studentAuthID: lessonState.studentViewing});
+
     const studentDataSubscription = API.graphql(
-      graphqlOperation(subscriptions.onChangeUniversalLessonStudentData, {
+      graphqlOperation(customSubscriptions.onChangeUniversalLessonStudentData, {
         studentAuthID: lessonState.studentViewing,
         syllabusLessonID: syllabusID,
         lessonID: lessonID
@@ -367,6 +367,7 @@ const LessonControl = () => {
 
       if (!isCompleted || !isTeacher) {
         clearNotification();
+
         lessonDispatch({
           type: 'SET_INITIAL_STATE',
           payload: {universalLessonID: lessonID}
@@ -389,6 +390,7 @@ const LessonControl = () => {
 
   // ~~~~~~~~~~ RESPONSE TO FETCH ~~~~~~~~~~ //
   // ~~~~~~~~~~~~~ LESSON SETUP ~~~~~~~~~~~~ //
+
   useEffect(() => {
     const {lessonID} = urlParams;
 
@@ -406,7 +408,7 @@ const LessonControl = () => {
             type: 'SET_ROOM_SUBSCRIPTION_DATA',
             payload: {
               ClosedPages: getRoomData.ClosedPages,
-              studentViewing: ''
+              studentViewing: getRoomData.studentViewing
             }
           });
         }
@@ -428,7 +430,7 @@ const LessonControl = () => {
           (student: any) => student.personAuthID === lessonState.studentViewing
         );
 
-        let numbered = Number(viewedStudentLocation.currentLocation) || 0;
+        let numbered = Number(viewedStudentLocation?.currentLocation) || 0;
 
         if (numbered !== undefined) {
           lessonDispatch({type: 'SET_CURRENT_PAGE', payload: numbered});

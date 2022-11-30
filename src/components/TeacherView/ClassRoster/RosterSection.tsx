@@ -1,9 +1,8 @@
-import {getAsset} from 'assets';
 import {GlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import gsap from 'gsap/all';
 import React, {useContext, useRef, useState} from 'react';
-import {BiChevronDown, BiChevronUp} from 'react-icons/bi';
+import {GoChevronDown, GoChevronUp} from 'react-icons/go';
 import {IoMdRefresh} from 'react-icons/io';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 import RosterRow from './RosterRow';
@@ -45,12 +44,10 @@ const RosterSection = ({
 }: IRosterSectionProps) => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
   const gContext = useContext(GlobalContext);
-  const theme = gContext.theme;
-  const clientKey = gContext.clientKey;
-  const userLanguage = gContext.userLanguage;
-  const themeColor = getAsset(clientKey, 'themeClassName');
 
-  const {lessonPlannerDict} = useDictionary(clientKey);
+  const userLanguage = gContext.userLanguage;
+
+  const {lessonPlannerDict} = useDictionary();
 
   // ~~~~~~~~~ MINIMIZE / ANIMATION ~~~~~~~~ //
   const listRef = useRef();
@@ -62,7 +59,7 @@ const RosterSection = ({
     gsap.to(ref.current, {
       height: '0%',
       opacity: 0,
-      duration: 0.5,
+      duration: 0.15,
       ease: 'easeInOut'
     });
   };
@@ -72,7 +69,7 @@ const RosterSection = ({
     gsap.to(ref.current, {
       height: 'auto',
       opacity: 1,
-      duration: 0.5,
+      duration: 0.15,
       ease: 'easeInOut'
     });
   };
@@ -100,7 +97,7 @@ const RosterSection = ({
             onClick={() =>
               toggleAnimation(minimized, listRef, rollDownAnimation, rollUpAnimation)
             }>
-            {minimized ? <BiChevronUp size={'1rem'} /> : <BiChevronDown size={'1rem'} />}
+            {minimized ? <GoChevronUp size={'1rem'} /> : <GoChevronDown size={'1rem'} />}
           </span>
         </div>
       </div>
@@ -108,15 +105,15 @@ const RosterSection = ({
       {/* ROSTER HEAD LABELS*/}
       {hot && (
         <div className={`theme-text w-full flex py-2 bg-transparent `}>
-          <div
-            className={`w-6/10  relative  flex items-center hover:underline cursor-pointer text-xs`}>
+          <div className={`w-6/10  relative flex items-center  text-xs`}>
             <span className="w-auto">
               {lessonPlannerDict[userLanguage]['OTHER_LABELS']['COLUMN']['ONE']}
             </span>
-            <span className={`w-8`} onClick={handleManualRefresh}>
-              <IconContext.Provider value={{color: '#EDF2F7'}}>
-                <IoMdRefresh size={28} className={`${loading ? 'animate-spin' : null}`} />
-              </IconContext.Provider>
+            <span
+              title="refresh list"
+              className={`w-auto cursor-pointer iconoclast:text-500 curate:text-500 rounded-full ml-2 iconoclast:bg-100 curate:bg-100 p-0.5`}
+              onClick={handleManualRefresh}>
+              <IoMdRefresh size={20} className={`${loading ? 'animate-spin' : null} `} />
             </span>
           </div>
           <div

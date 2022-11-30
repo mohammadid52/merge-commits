@@ -18,7 +18,7 @@ const useLessonControls = () => {
   const handleRoomUpdate = async (payload: any) => {
     if (typeof payload === 'object' && Object.keys(payload).length > 0) {
       try {
-        const updateRoom: any = await API.graphql(
+        await API.graphql(
           graphqlOperation(mutations.updateRoom, {
             input: payload
           })
@@ -43,8 +43,6 @@ const useLessonControls = () => {
   const sharedStudent = lessonState?.displayData[0]?.studentAuthID;
 
   const resetViewAndShare = async () => {
-    console.log('resetViewAndShare');
-
     if (viewedStudent !== '' || sharedStudent !== '') {
       lessonDispatch({
         type: 'SET_ROOM_SUBSCRIPTION_DATA',
@@ -54,6 +52,8 @@ const useLessonControls = () => {
           displayData: [{isTeacher: false, studentAuthID: '', lessonPageID: ''}]
         }
       });
+
+      console.log('resetViewAndShare - ', getRoomData.id);
 
       setLocalStorageData('room_info', {
         ...getRoomData,

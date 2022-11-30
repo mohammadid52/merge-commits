@@ -393,7 +393,7 @@ const RoomsList = (props: RoomListProps) => {
                     onChange={instituteChange}
                     arrowHidden={true}
                     additionalClass={`w-60 ${
-                      isSuperAdmin || isAdmin || isBuilder ? 'mr-4 mb-8' : ''
+                      isSuperAdmin || isAdmin || isBuilder ? 'mr-4' : ''
                     }`}
                     isClearable
                     onClear={onInstitutionSelectionRemove}

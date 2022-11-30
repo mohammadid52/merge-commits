@@ -35,19 +35,15 @@ const OpenClosePagesToggle = ({
        *
        */}
       {currentPage !== 0 && activePageData && activePageData.disabled !== true ? (
-        activePageData.open !== false ? (
-          <span
-            className={`mr-2 ${theme.textColor[themeColor]} w-auto h-6 my-auto text-sm text-gray-600 underline leading-4 text-underline transform hover:scale-110 transition-transform duration-150 p-1 cursor-pointer`}
-            onClick={() => handleCloseComponent(currentPage)}>
-            Close Component
-          </span>
-        ) : (
-          <span
-            className={`mr-2 ${theme.textColor[themeColor]} w-auto h-6 my-auto text-sm text-gray-600 underline leading-4 text-underline transform hover:scale-110 transition-transform duration-150 p-1 cursor-pointer`}
-            onClick={() => handleOpenComponent(currentPage)}>
-            Open Component
-          </span>
-        )
+        <span
+          className={`mr-2 ${theme.textColor[themeColor]} w-auto h-6 my-auto text-sm text-gray-600 underline leading-4 text-underline transform hover:scale-110 transition-transform duration-150 p-1 cursor-pointer`}
+          onClick={() =>
+            activePageData.open
+              ? handleCloseComponent(currentPage)
+              : handleOpenComponent(currentPage)
+          }>
+          {activePageData.open ? 'Close' : 'Open'} Component
+        </span>
       ) : null}
     </div>
   );

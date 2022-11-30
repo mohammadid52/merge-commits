@@ -1,13 +1,13 @@
 import isEmpty from 'lodash/isEmpty';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {BsFillInfoCircleFill} from 'react-icons/bs';
 import {setLocalStorageData} from 'utilities/localStorage';
 
-import Loader from '@components/Atoms/Loader';
+import useAuth from '@customHooks/useAuth';
 import {getAsset} from 'assets';
 import SectionTitleV3 from 'atoms/SectionTitleV3';
 import InformationalWalkThrough from 'components/Dashboard/Admin/Institutons/InformationalWalkThrough/InformationalWalkThrough';
-import {GlobalContext} from 'contexts/GlobalContext';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import {getImageFromS3} from 'utilities/services';
 import {ClassroomControlProps} from '../Dashboard';
 import HeaderTextBar from '../HeaderTextBar/HeaderTextBar';
@@ -37,16 +37,15 @@ export interface ModifiedListProps {
 const HomeForTeachers = (props: ClassroomControlProps) => {
   const {homeData, handleRoomSelection, roomsLoading} = props;
 
-  const {state, dispatch, theme, clientKey} = useContext(GlobalContext);
+  const {state, dispatch, clientKey} = useGlobalContext();
   const dashboardBanner1 = getAsset(clientKey, 'dashboardBanner2');
   const [openWalkThroughModal, setOpenWalkThroughModal] = useState(false);
+  const {firstName, isTeacher, isFellow} = useAuth();
 
-  const user = !isEmpty(state)
-    ? {firstName: state.user.firstName, preferredName: state.user.firstName}
-    : null;
+  const user = !isEmpty(state) ? {firstName: firstName, preferredName: firstName} : null;
 
   useEffect(() => {
-    if (state.user.role === 'TR' || state.user.role === 'FLW') {
+    if (isTeacher || isFellow) {
       if (state.currentPage !== 'home') {
         // dispatch({ type: 'UPDATE_CURRENTPAGE', payload: { data: 'lesson-planner' } });
       }
@@ -54,7 +53,7 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
         dispatch({type: 'UPDATE_ACTIVEROOM', payload: {data: null}});
       }
     }
-  }, [state.user.role]);
+  }, [isTeacher, isFellow]);
 
   const [teacherList, setTeacherList] = useState<any[]>();
   const [coTeachersList, setCoTeachersList] = useState<any[]>();
@@ -235,13 +234,13 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
           {/* Header */}
           {user && (
             <HeaderTextBar>
-              <h2 className={`text-sm 2xl:text-base text-center font-normal`}>
+              <p className={`text-sm 2xl:text-base text-center font-normal`}>
                 Welcome,{' '}
                 <span className="font-semibold">
                   {user.preferredName ? user.preferredName : user.firstName}
                 </span>
                 . What do you want to teach today?
-              </h2>
+              </p>
               <div className="absolute z-100 w-6 top-0 right-1">
                 <span
                   className="w-auto cursor-pointer"
@@ -280,7 +279,6 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
               <StudentsTiles
                 isTeacher
                 title={`Your Students`}
-                state={state}
                 studentsList={studentsList}
               />
             </div>

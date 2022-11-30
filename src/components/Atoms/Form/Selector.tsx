@@ -139,7 +139,7 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
 
   return (
     <div className={`relative space-y-1 ${additionalClass}`} ref={currentRef}>
-      <Label label={label} isRequired={isRequired} />
+      {label && <Label label={label} isRequired={isRequired} />}
       <span className="inline-block w-full h-full rounded-full shadow-sm">
         <button
           data-cy={`${dataCy}-button`}
@@ -155,7 +155,7 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
             themeColor === 'iconoclastIndigo' ? 'indigo' : 'blue'
           }-600 focus:border-transparent  relative items-center cursor-pointer ${width} h-full rounded-full ${
             error.length === 0 ? 'border-gray-300' : 'border-red-300'
-          }  border-0 bg-white pl-3 py-2 text-left transition ease-in-out duration-150 sm:text-sm sm:leading-5 ${
+          }  border-0 bg-white px-4 py-2 text-left transition ease-in-out duration-150 sm:text-sm sm:leading-5 ${
             btnClass ? btnClass : ''
           }`}>
           <span className="block truncate text-gray-700">

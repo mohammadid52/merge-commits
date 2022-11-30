@@ -46,145 +46,148 @@ const Login = ({updateAuthState}: LoginProps) => {
 
   const [isLoginSuccess, setIsLoginSuccess] = useState(false);
 
-  async function SignIn() {
-    let username = input.email;
-    let password = input.password;
-    if (showPasswordField) {
-      try {
-        const user = await Auth.signIn(username, password);
-        dispatch({type: 'LOG_IN', payload: {email: username, authId: user.username}});
-        if (isChecked) {
-          setCookie('cred', {email: username, isChecked, password}, {path: '/'});
-        } else {
-          removeCookie('cred');
-        }
-        setCookie(
-          'auth',
-          {email: username, authId: user.username},
-          {secure: false, path: '/'}
+  const onShowPassword = async (username: string, password: string) => {
+    try {
+      const user = await Auth.signIn(username, password);
+      dispatch({type: 'LOG_IN', payload: {email: username, authId: user.username}});
+      if (isChecked) {
+        setCookie('cred', {email: username, isChecked, password}, {path: '/'});
+      } else {
+        removeCookie('cred');
+      }
+      setCookie(
+        'auth',
+        {email: username, authId: user.username},
+        {secure: false, path: '/'}
+      );
+      sessionStorage.setItem('accessToken', user.signInUserSession.accessToken.jwtToken);
+      if (user) {
+        setIsLoginSuccess(true);
+        let userInfo: any = await API.graphql(
+          graphqlOperation(queries.getPerson, {email: username, authId: user.username})
         );
-        sessionStorage.setItem(
-          'accessToken',
-          user.signInUserSession.accessToken.jwtToken
-        );
-        if (user) {
-          setIsLoginSuccess(true);
-          let userInfo: any = await API.graphql(
-            graphqlOperation(queries.getPerson, {email: username, authId: user.username})
+        userInfo = userInfo.data.getPerson;
+        let instInfo: any = {};
+        if (userInfo.role !== 'ST') {
+          instInfo = await API.graphql(
+            graphqlOperation(customQueries.getAssignedInstitutionToStaff, {
+              filter: {staffAuthID: {eq: user.username}}
+            })
           );
-          userInfo = userInfo.data.getPerson;
-          let instInfo: any = {};
-          if (userInfo.role !== 'ST') {
-            instInfo = await API.graphql(
-              graphqlOperation(customQueries.getAssignedInstitutionToStaff, {
-                filter: {staffAuthID: {eq: user.username}}
-              })
-            );
-          }
+        }
 
-          dispatch({
-            type: 'SET_USER',
-            payload: {
-              id: userInfo.id,
-              firstName: userInfo.preferredName || userInfo.firstName,
-              lastName: userInfo.lastName,
-              language: userInfo.language,
-              onBoardSurvey: userInfo.onBoardSurvey ? userInfo.onBoardSurvey : false,
-              role: userInfo.role,
-              image: userInfo.image,
-              associateInstitute:
-                instInfo?.data?.listStaff?.items.filter(
-                  (item: any) => item.institution
-                ) || [],
-              onDemand: userInfo?.onDemand,
-              lessons: userInfo.lessons,
-              lastEmotionSubmission: userInfo?.lastEmotionSubmission
-            }
-          });
-          const input = {
+        dispatch({
+          type: 'SET_USER',
+          payload: {
             id: userInfo.id,
-            authId: user.username,
-            email: username,
-            lastLoggedIn: new Date().toISOString()
-          };
-          const update: any = await API.graphql(
-            graphqlOperation(customMutations.updatePersonLoginTime, {input})
-          );
+            firstName: userInfo.preferredName || userInfo.firstName,
+            lastName: userInfo.lastName,
+            language: userInfo.language,
+            onBoardSurvey: userInfo.onBoardSurvey ? userInfo.onBoardSurvey : false,
+            role: userInfo.role,
+            image: userInfo.image,
+            associateInstitute:
+              instInfo?.data?.listStaff?.items.filter((item: any) => item.institution) ||
+              [],
+            onDemand: userInfo?.onDemand,
+            lessons: userInfo.lessons,
+            lastEmotionSubmission: userInfo?.lastEmotionSubmission
+          }
+        });
+        const input = {
+          id: userInfo.id,
+          authId: user.username,
+          email: username,
+          lastLoggedIn: new Date().toISOString()
+        };
+        await API.graphql(
+          graphqlOperation(customMutations.updatePersonLoginTime, {input})
+        );
 
-          updateAuthState(true);
-        }
-      } catch (error) {
-        console.error('error', error);
-        const errMsg = {show: true, type: 'error'};
-        if (!username) {
-          setMessage({...errMsg, message: 'Please enter your email'});
-        } else if (!username.includes('@')) {
-          setMessage({
-            ...errMsg,
-            message: 'Your email is not in the expected email address format'
-          });
-        } else if (!password) {
-          setMessage({...errMsg, message: 'Please enter your password'});
-        } else {
-          manageSignInError(error, false);
-        }
+        updateAuthState(true);
+      }
+    } catch (error) {
+      console.error('error', error);
+      const errMsg = {show: true, type: 'error'};
+      if (!username) {
+        setMessage({...errMsg, message: 'Please enter your email'});
+      } else if (!username.includes('@')) {
+        setMessage({
+          ...errMsg,
+          message: 'Your email is not in the expected email address format'
+        });
+      } else if (!password) {
+        setMessage({...errMsg, message: 'Please enter your password'});
+      } else {
+        manageSignInError(error, false);
+      }
+      toggleLoading(false);
+    }
+  };
+
+  const onDefaultView = async (username: string) => {
+    try {
+      const user = await Auth.signIn(username, 'xIconoclast.5x');
+
+      if (user.challengeName === 'NEW_PASSWORD_REQUIRED') {
+        setNewUser(user);
+        setCreatePassword(true);
+        setMessage({
+          show: false,
+          type: '',
+          message: ''
+        });
         toggleLoading(false);
       }
-    } else {
-      try {
-        const user = await Auth.signIn(username, 'xIconoclast.5x');
-        console.log('user', user);
-        if (user.challengeName === 'NEW_PASSWORD_REQUIRED') {
-          setNewUser(user);
-          setCreatePassword(true);
-          setMessage({
-            show: false,
-            type: '',
-            message: ''
-          });
-          toggleLoading(false);
-        }
-      } catch (error) {
-        console.error('error', error);
-        if (error.code === 'NotAuthorizedException') {
-          if (error.message === 'Incorrect username or password.') {
-            setShowPasswordField(true);
-          } else if (
-            error.message ===
-            'Temporary password has expired and must be reset by an administrator.'
-          ) {
-            try {
-              await axios.post(createUserUrl, {email: username, status: 'temporary'});
-              setMessage({
-                show: true,
-                type: 'success',
-                message:
-                  'Your account has been activated by the admin. Please click on enter or login and create you password to continue.'
-              });
-            } catch (err) {
-              console.error('Error temporary password could not be reset');
-            }
-          }
-        } else if (error.code === 'UserNotConfirmedException') {
+    } catch (error) {
+      if (error.code === 'NotAuthorizedException') {
+        if (error.message === 'Incorrect username or password.') {
+          setShowPasswordField(true);
+        } else if (
+          error.message ===
+          'Temporary password has expired and must be reset by an administrator.'
+        ) {
           try {
-            await axios.post(createUserUrl, {email: username, status: 'unconfirmed'});
+            await axios.post(createUserUrl, {email: username, status: 'temporary'});
             setMessage({
               show: true,
               type: 'success',
               message:
                 'Your account has been activated by the admin. Please click on enter or login and create you password to continue.'
             });
-            // confirm user, set password, and sign in which should ask them to create a new password.
           } catch (err) {
-            console.error('Error in resetting unconfirmed user.');
+            console.error('Error temporary password could not be reset');
           }
-        } else {
-          manageSignInError(error, true);
         }
-        toggleLoading(false);
+      } else if (error.code === 'UserNotConfirmedException') {
+        try {
+          await axios.post(createUserUrl, {email: username, status: 'unconfirmed'});
+          setMessage({
+            show: true,
+            type: 'success',
+            message:
+              'Your account has been activated by the admin. Please click on enter or login and create you password to continue.'
+          });
+          // confirm user, set password, and sign in which should ask them to create a new password.
+        } catch (err) {
+          console.error('Error in resetting unconfirmed user.');
+        }
+      } else {
+        manageSignInError(error, true);
       }
+      toggleLoading(false);
     }
-  }
+  };
+
+  const signIn = async () => {
+    let username = input.email;
+    let password = input.password;
+    if (showPasswordField) {
+      await onShowPassword(username, password);
+    } else {
+      await onDefaultView(username);
+    }
+  };
 
   const manageSignInError = (error: any, onlyEmail: any) => {
     setMessage(() => {
@@ -203,6 +206,7 @@ const Login = ({updateAuthState}: LoginProps) => {
               message: 'The email or password you entered was not correct'
             };
           }
+          return;
         case 'UserNotConfirmedException':
           return {
             show: true,
@@ -289,21 +293,14 @@ const Login = ({updateAuthState}: LoginProps) => {
         email: username,
         lastLoggedIn: new Date().toISOString()
       };
-      const update: any = await API.graphql(
-        graphqlOperation(customMutations.updatePersonLoginTime, {input})
-      );
+      await API.graphql(graphqlOperation(customMutations.updatePersonLoginTime, {input}));
       updateAuthState(true);
       toggleLoading(false);
     } catch (error) {
-      setMessage(() => {
-        switch (error.code) {
-          default:
-            return {
-              show: true,
-              type: 'error',
-              message: error.message
-            };
-        }
+      setMessage({
+        show: true,
+        type: 'error',
+        message: error.message
       });
       toggleLoading(false);
     }
@@ -311,7 +308,7 @@ const Login = ({updateAuthState}: LoginProps) => {
 
   const handleSubmit = () => {
     toggleLoading(true);
-    SignIn();
+    signIn();
   };
   const checkLoginCred = () => {
     const auth = cookies.cred;

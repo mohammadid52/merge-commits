@@ -452,32 +452,37 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
     if (!associateInstitute?.length && !institutionList.length) {
       fetchInstListForAdmin();
     }
+
+    return () => {
+      setInstitutionList([]);
+    };
   }, [associateInstitute]);
 
-  useEffect(() => {
-    const setupActiveSection = async () => {
-      const activeStep = getLocalStorageData('active_step_section');
-      const selected_institution: any = getLocalStorageData('selected_institution');
-      if (activeStep) {
-        setSectionDetailsLoading(true);
-        const data = await fetchDataOfActiveSection(
-          activeStep.id,
-          selected_institution?.institution?.id
-        );
-        setActiveSection({...activeStep, data});
-        setSectionDetailsLoading(false);
-      }
+  const setupActiveSection = async () => {
+    const activeStep = getLocalStorageData('active_step_section');
+    const selected_institution: any = getLocalStorageData('selected_institution');
+    if (activeStep) {
+      setSectionDetailsLoading(true);
+      const data = await fetchDataOfActiveSection(
+        activeStep.id,
+        selected_institution?.institution?.id
+      );
+      setActiveSection({...activeStep, data});
       setSectionDetailsLoading(false);
-      if (selected_institution) {
-        setSelectedInstitution(selected_institution);
-        setLoading(false);
-      } else {
-        if (associateInstitute?.length) {
-          setSelectedInstitution(associateInstitute[0]);
-        }
-        setLoading(false);
+    }
+    setSectionDetailsLoading(false);
+    if (selected_institution) {
+      setSelectedInstitution(selected_institution);
+      setLoading(false);
+    } else {
+      if (associateInstitute?.length) {
+        setSelectedInstitution(associateInstitute[0]);
       }
-    };
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     if (open) {
       setupActiveSection();
     }

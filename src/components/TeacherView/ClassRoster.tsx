@@ -71,6 +71,7 @@ const ClassRoster = ({
         deleteSubscription.unsubscribe();
       }
 
+      console.log('unsubscribe from student updates -- ClassRoster');
       lessonDispatch({
         type: 'SET_ROOM_SUBSCRIPTION_DATA',
         payload: {id: getRoomData.id, studentViewing: ''}

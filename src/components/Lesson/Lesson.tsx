@@ -31,6 +31,7 @@ export interface ILessonSurveyApp {
   leaveRoomLocation: (authID: string, email: string) => void;
   getLessonCurrentPage: () => Promise<number>;
   handleMutationOnPageChange: () => Promise<void>;
+  resetViewAndShare?: () => void;
 }
 
 const Lesson = () => {
@@ -314,7 +315,6 @@ const Lesson = () => {
       updatePersonLocation(pageChangeLocation);
       setLocalStorageData('person_location', pageChangeLocation);
       //@ts-ignore
-      topLessonRef?.current?.scrollIntoView();
     }
   }, [created, lessonState.currentPage]);
 

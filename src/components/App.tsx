@@ -1,3 +1,4 @@
+import {AudioProvider} from '@contexts/AudioContext';
 import Notification from 'atoms/Notification';
 import MainRouter from 'components/AppMainRouter';
 import {GlobalContextProvider} from 'contexts/GlobalContext';
@@ -19,16 +20,18 @@ const App: React.FC = () => {
     <QueryClientProvider client={queryClient}>
       <CookiesProvider>
         <GlobalContextProvider>
-          <OverlayContextProvider>
-            <PageBuilderProvider>
-              <NotificationContextProvider>
-                <Router>
-                  <MainRouter />
-                  <Notification />
-                </Router>
-              </NotificationContextProvider>
-            </PageBuilderProvider>
-          </OverlayContextProvider>
+          <AudioProvider>
+            <OverlayContextProvider>
+              <PageBuilderProvider>
+                <NotificationContextProvider>
+                  <Router>
+                    <MainRouter />
+                    <Notification />
+                  </Router>
+                </NotificationContextProvider>
+              </PageBuilderProvider>
+            </OverlayContextProvider>
+          </AudioProvider>
         </GlobalContextProvider>
       </CookiesProvider>
     </QueryClientProvider>

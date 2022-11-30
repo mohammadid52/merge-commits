@@ -1,5 +1,4 @@
-import React, {useState, useEffect} from 'react';
-import {NotificationListItem} from 'interfaces/GlobalInfoComponentsInterfaces';
+import React, {useEffect, useState} from 'react';
 
 interface INoticebarProps {
   notifications: any[];
@@ -49,7 +48,7 @@ const Noticebar = ({notifications}: INoticebarProps) => {
 
   // ~~~~~~~~~~~~~~~~ COLOR ~~~~~~~~~~~~~~~~ //
   const bgStyle = (currentNr: number, noticeList: any[]) => {
-    const notificationType = noticeList[currentNr].notification.type;
+    const notificationType = noticeList[currentNr]?.notification?.type;
     switch (notificationType) {
       case 'info':
         return 'iconoclast:bg-main curate:bg-main';

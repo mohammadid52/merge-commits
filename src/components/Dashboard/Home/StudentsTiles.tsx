@@ -1,84 +1,79 @@
-import {GlobalContext} from 'contexts/GlobalContext';
-import useDictionary from 'customHooks/dictionary';
-import React, {useContext, useEffect, useState} from 'react';
-import {useHistory} from 'react-router-dom';
+import SearchInput from '@components/Atoms/Form/SearchInput';
+import Highlighted from '@components/Atoms/Highlighted';
+import useAuth from '@customHooks/useAuth';
+import useSearch from '@customHooks/useSearch';
 import Buttons from 'atoms/Buttons';
 import ContentCard from 'atoms/ContentCard';
-import SearchInput from 'atoms/Form/SearchInputToggle';
 import ImageAlternate from 'atoms/ImageAlternative';
-import SectionTitleV3 from 'atoms/SectionTitleV3';
 import Loader from 'atoms/Loader';
+import SectionTitleV3 from 'atoms/SectionTitleV3';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import React, {useEffect, useState} from 'react';
+import {useHistory} from 'react-router-dom';
 
 const StudentsTiles = (props: {
   studentsList: any;
-  state: any;
   title: string;
   isTeacher?: boolean;
   loading?: boolean;
 }) => {
-  const {studentsList, title, state, isTeacher = false, loading = false} = props;
+  const {studentsList, title, isTeacher = false, loading = false} = props;
 
-  const {
-    clientKey,
-    userLanguage,
-    state: {user}
-  } = useContext(GlobalContext);
+  const {clientKey, userLanguage} = useGlobalContext();
   const {StudentDict} = useDictionary(clientKey);
+
+  const {user} = useAuth();
 
   const [viewMore, setViewMore] = useState(false);
   const history = useHistory();
 
-  const [searchInput, setSearchInput] = useState({
-    value: '',
-    isActive: false
-  });
+  // const [searchInput, setSearchInput] = useState({
+  //   value: '',
+  //   isActive: false
+  // });
 
   const [list, setList] = useState([]);
 
   useEffect(() => {
     if (studentsList && studentsList.length > 0) {
-      setList(studentsList.filter(({student}: any) => student.id !== state.user.id));
+      const filtered = studentsList.filter(
+        ({student}: any) => student.id !== user.authId
+      );
+      setList(
+        filtered.map((item: any) => {
+          return {
+            ...item,
+            name: `${item.student.firstName} ${item.student.lastName}`
+          };
+        })
+      );
     }
   }, [studentsList]);
 
-  const setSearch = (str: string) => {
-    setSearchInput({
-      ...searchInput,
-      value: str
-    });
-  };
+  const {
+    searchAndFilter,
 
-  const searchStudentFromList = () => {
-    if (searchInput.value) {
-      const currentStudentList = [...studentsList];
-      const newList = currentStudentList.filter(({student}: any) => {
-        // Search on name for match.
-        const {firstName, lastName} = student;
-        const fullName = `${firstName} ${lastName}`?.toLowerCase();
-        const searchValue = searchInput.value.toLowerCase();
-        return (
-          student.firstName?.toLowerCase().includes(searchValue) ||
-          student.lastName?.toLowerCase().includes(searchValue) ||
-          fullName.includes(searchValue)
-        );
-      });
-      setSearchInput({
-        ...searchInput,
-        isActive: true
-      });
-      setList(newList);
+    searchInput,
+    removeSearchAction,
+    setSearch,
+    setSearchInput
+  } = useSearch([...list], ['name']);
+
+  const [filteredList, setFilteredList] = useState([...list]);
+
+  const searchStudents = () => {
+    const searched = searchAndFilter(searchInput.value, false);
+
+    if (Boolean(searched)) {
+      setViewMore(false);
+      setFilteredList(searched);
     } else {
-      // reset search state
-      removeSearchAction();
+      removeSearchAction(null, false);
     }
   };
 
-  const removeSearchAction = () => {
-    setSearchInput({value: '', isActive: false});
-    if (studentsList && studentsList.length > 0) {
-      setList(studentsList);
-    }
-  };
+  const finalList = searchInput.isActive ? filteredList : list;
 
   return (
     <>
@@ -97,11 +92,12 @@ const StudentsTiles = (props: {
             {isTeacher && (
               <div className="w-auto">
                 <SearchInput
+                  dataCy="student-loookup-search"
                   value={searchInput.value}
                   onChange={setSearch}
-                  onKeyDown={searchStudentFromList}
+                  onKeyDown={searchStudents}
+                  isActive={searchInput.isActive}
                   closeAction={removeSearchAction}
-                  style="w-full"
                 />
               </div>
             )}
@@ -109,7 +105,12 @@ const StudentsTiles = (props: {
               <div className="flex justify-end ml-4 w-auto">
                 <Buttons
                   label={!viewMore ? 'Show All' : 'Show Few'}
-                  onClick={() => setViewMore(!viewMore)}
+                  onClick={() => {
+                    if (!viewMore) {
+                      setSearchInput({...searchInput, isActive: false});
+                    }
+                    setViewMore(!viewMore);
+                  }}
                   type="button"
                 />
               </div>
@@ -126,11 +127,11 @@ const StudentsTiles = (props: {
                   <Loader color="rgba(107, 114, 128, 1)" />
                 </div>
               </div>
-            ) : list?.length ? (
+            ) : finalList?.length ? (
               <ul className="grid grid-cols-2 justify-center gap-x-4 gap-y-8 sm:grid-cols-4 md:gap-x-6 lg:max-w-5xl lg:gap-x-8 lg:gap-y-12 xl:grid-cols-6">
-                {list &&
-                  list.length > 0 &&
-                  list.slice(0, viewMore ? list.length - 1 : 12).map(
+                {finalList &&
+                  finalList.length > 0 &&
+                  finalList.slice(0, viewMore ? finalList.length - 1 : 12).map(
                     (
                       {
                         student
@@ -171,7 +172,10 @@ const StudentsTiles = (props: {
                             <div className="space-y-2">
                               <div className="text-xs font-medium lg:text-sm">
                                 <h3 className="font-medium">
-                                  {student.firstName + ' ' + student.lastName}
+                                  <Highlighted
+                                    text={student.firstName + ' ' + student.lastName}
+                                    highlight={searchInput.value}
+                                  />
                                 </h3>
                               </div>
                             </div>
