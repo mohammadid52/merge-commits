@@ -1,19 +1,23 @@
 // import {BsFillInfoCircleFill} from 'react-icons/bs';
-import SignOutButton from 'components/Auth/SignOut';
+import useAuth from '@customHooks/useAuth';
 import {Menu, Transition} from '@headlessui/react';
 import {ChevronDownIcon} from '@heroicons/react/solid';
-import {getImageFromS3Static} from 'utilities/services';
-import {getUserRoleString, initials, stringToHslColor} from 'utilities/strings';
+import {Role} from 'API';
+import SignOutButton from 'components/Auth/SignOut';
 import React, {Fragment} from 'react';
 import {FiUser} from 'react-icons/fi';
-import {VscChecklist} from 'react-icons/vsc';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
+import {VscChecklist} from 'react-icons/vsc';
 import {useHistory} from 'react-router-dom';
+import {getImageFromS3Static} from 'utilities/services';
+import {initials, stringToHslColor} from 'utilities/strings';
+import LocationBadge from '../Admin/Institutons/EditBuilders/LocationBadge';
+import UserRole from '../Admin/UserManagement/UserRole';
 
 interface IDropDownMenu {
   firstName: string;
   lastName: string;
-  role: string;
+  role: Role | string;
   image: string;
   theme: string;
   updateAuthState: Function;
@@ -28,6 +32,8 @@ const DropDownMenu = ({
   updateAuthState
 }: IDropDownMenu) => {
   const history = useHistory();
+
+  const {onDemand} = useAuth();
 
   if (firstName && lastName && theme) {
     return (
@@ -92,12 +98,19 @@ const DropDownMenu = ({
               leave="transition ease-in duration-75"
               leaveFrom="transform opacity-100 scale-100"
               leaveTo="transform opacity-0 scale-95">
-              <Menu.Items className="absolute right-1 w-52 mt-1 origin-top-right bg-white divide-y divide-gray-100 rounded-xl customShadow focus:outline-none cursor-pointer z-max">
+              <Menu.Items className="absolute right-1 w-56 mt-1 origin-top-right bg-white divide-y divide-gray-100 rounded-xl customShadow focus:outline-none cursor-pointer z-max">
                 <div className="px-2 py-1 customShadow">
                   <Menu.Item key={'role'}>
                     <div className="p-4 border-b-0 border-gray-400">
                       <span>
-                        {[firstName, lastName].join(' ')} ({getUserRoleString(role)})
+                        {[firstName, lastName].join(' ')}
+                        <br />
+                        {role === 'ST' ? (
+                          <div className="w-auto mb-1">
+                            <UserRole role={role} />
+                          </div>
+                        ) : null}
+                        <LocationBadge onDemand={onDemand} />
                       </span>
                     </div>
                   </Menu.Item>

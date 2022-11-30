@@ -1,30 +1,18 @@
+import {getUserRoleString} from '@utilities/strings';
+import {Role} from 'API';
 import React from 'react';
+import {Status} from './UserStatus';
 
 // type Role = 'ADM' | 'BLD' | 'FLW' | 'CRD' | 'TR' | 'ST';
 
 type RoleProps = {
-  role: any;
+  role: Role | string;
 };
 
 const UserRole = ({role}: RoleProps) => {
-  switch (role) {
-    case 'ADM':
-      return <div>Admin</div>;
-    case 'SUP':
-      return <div>Super Admin</div>;
-    case 'BLD':
-      return <div>Builder</div>;
-    case 'FLW':
-      return <div>Fellow</div>;
-    case 'CRD':
-      return <div>Coordinator</div>;
-    case 'TR':
-      return <div>Teacher</div>;
-    case 'ST':
-      return <div>Student</div>;
-    default:
-      return null;
-  }
+  return (
+    <Status className={'bg-gray-200 text-gray-600'}>{getUserRoleString(role)}</Status>
+  );
 };
 
 export default UserRole;

@@ -775,8 +775,8 @@ const lessonPlannerDict: any = {
         THREE: 'Action'
       },
       STUDENT_SECTION: {
-        IN_CLASS: 'Student Roster',
-        NOT_IN_CLASS: 'Not In Class',
+        IN_CLASS: 'In Classroom',
+        NOT_IN_CLASS: 'Not In Classroom',
         ON_DEMAND: 'Self Paced (Not Online/Lesson)'
       }
     },
@@ -3772,7 +3772,7 @@ const LessonBuilderDict: any = {
       PLAN_LABEL: 'Activity label',
       DESCRIPTION: 'Instructions',
       TAGS: 'Add Tags',
-      ESTIMATED_TIME:'Scheduled Lesson Time',
+      ESTIMATED_TIME: 'Scheduled Lesson Time',
       ACTIVITY_TYPE: 'Activity Type',
       INTERACTION_TYPE: 'Interaction Type',
       ACTIVITY_INSTRUCTIONS: 'Activity Instructions',

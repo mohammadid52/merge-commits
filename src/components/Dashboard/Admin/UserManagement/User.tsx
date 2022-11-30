@@ -1,6 +1,7 @@
 import useUrlState from '@ahooksjs/use-url-state';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {Storage} from '@aws-amplify/storage';
+import {PersonStatus, Role} from 'API';
 import {getAsset} from 'assets';
 import Buttons from 'atoms/Buttons';
 import Selector from 'atoms/Form/Selector';
@@ -52,8 +53,8 @@ export interface UserInfo {
   language: string;
   lastName: string;
   preferredName?: string;
-  role: string;
-  status: string;
+  role: Role | string;
+  status: PersonStatus | string;
   inactiveStatusDate?: string;
   statusReason?: string;
   phone: string;

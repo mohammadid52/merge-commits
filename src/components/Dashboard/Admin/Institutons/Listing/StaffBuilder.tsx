@@ -552,7 +552,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
                                       </div>
                                     )}
                                     <div className="flex w-2/10 px-8 py-4 text-left text-s leading-4 items-center">
-                                      <p className="inline-flex items-center px-2.5 py-0.5 rounded-md text-sm font-medium bg-gray-100 text-gray-800 w-auto">
+                                      <p className="inline-flex items-center px-2.5 py-0.5 rounded-md text-sm font-medium bg-gray-200 text-gray-600 w-auto">
                                         {item.role ? getStaffRole(item.role) : ''}
                                       </p>
                                     </div>
