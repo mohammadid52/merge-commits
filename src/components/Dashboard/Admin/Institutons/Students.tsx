@@ -57,7 +57,6 @@ const Students = (props: any) => {
       <StudentsTiles
         isTeacher
         title={`Your Students`}
-        state={state}
         studentsList={studentsList}
         loading={loading}
       />

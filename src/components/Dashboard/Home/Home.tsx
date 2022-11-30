@@ -36,10 +36,10 @@ export interface ModifiedListProps {
 const Home = (props: ClassroomControlProps) => {
   const {homeData, classList, handleRoomSelection, isTeacher, roomsLoading} = props;
 
-  const {state, dispatch, userLanguage, theme, clientKey} = useContext(GlobalContext);
+  const {state, dispatch, userLanguage, clientKey} = useContext(GlobalContext);
   const dashboardBanner1 = getAsset(clientKey, 'dashboardBanner1');
-  const themeColor = getAsset(clientKey, 'themeClassName');
-  const {DashboardDict} = useDictionary(clientKey);
+
+  const {DashboardDict} = useDictionary();
 
   const user = !isEmpty(state)
     ? {firstName: state.user.firstName, preferredName: state.user.firstName}
@@ -270,7 +270,6 @@ const Home = (props: ClassroomControlProps) => {
                     isTeacher ? 'YOUR_STUDENTS' : 'YOUR_CLASSMATES'
                   ]
                 }
-                state={state}
                 studentsList={studentsList}
               />
             </div>
