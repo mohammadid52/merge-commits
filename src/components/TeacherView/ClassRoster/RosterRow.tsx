@@ -163,11 +163,11 @@ const RosterRow: React.FC<RosterRowProps> = ({
           }  ${!active && inactiveTextClass} ${
             number % 2 === 0 ? 'bg-gray-200 bg-opacity-50' : ''
           } ${
-            studentIsViewed()
-              ? `theme-card-shadow border-l-4 border-green-600 bg-opacity-50 bg-green-200 `
+            studentIsViewed() && !studentIsShared()
+              ? `theme-card-shadow border-l-4 iconoclast:border-500 curate:border-500 bg-opacity-50 iconoclast:bg-200 curate:bg-200`
               : ''
           } ${
-            studentIsShared()
+            studentIsViewed() && studentIsShared()
               ? 'border-l-4 border-green-600 bg-opacity-50 bg-green-200'
               : ''
           } `}>
