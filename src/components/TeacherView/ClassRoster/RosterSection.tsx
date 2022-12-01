@@ -93,7 +93,7 @@ const RosterSection = ({
 
   return (
     <>
-      <div className={`w-full flex items-center bg-transparent mt-4 mb-2`}>
+      <div className={`w-full flex items-center bg-transparent mt-4 mb-2 px-4`}>
         <div className="relative w-full h-auto flex flex-row items-center">
           <span className="text-sm font-semibold text-gray-600">{sectionTitle}</span>
           <span
@@ -108,8 +108,8 @@ const RosterSection = ({
 
       {/* ROSTER HEAD LABELS*/}
       {hot && (
-        <div className={`theme-text w-full flex py-2 bg-transparent `}>
-          <div className={`w-6/10  relative flex items-center  text-xs`}>
+        <div className={`theme-text w-full flex py-2 bg-transparent px-4`}>
+          <div className={`w-5/10  relative flex items-center  text-xs`}>
             <span className="w-auto">
               {lessonPlannerDict[userLanguage]['OTHER_LABELS']['COLUMN']['ONE']}
             </span>
@@ -127,7 +127,7 @@ const RosterSection = ({
             </span>
           </div>
           <div
-            className={`w-3/10 flex items-center justify-center rounded-lg text-center text-xs`}>
+            className={`w-2.5/10 flex items-center justify-center rounded-lg text-center text-xs`}>
             <span className="w-auto">
               {lessonPlannerDict[userLanguage]['OTHER_LABELS']['COLUMN']['THREE']}
             </span>
@@ -135,7 +135,11 @@ const RosterSection = ({
         </div>
       )}
 
-      <div ref={listRef} className={`w-full flex flex-col items-center`}>
+      <div
+        ref={listRef}
+        className={`w-full flex flex-col items-center ${
+          studentList.length > 0 ? 'border-b-0 border-gray-300' : ''
+        }`}>
         {studentList && studentList.length > 0 ? (
           studentList.map((student: any, key: number) => (
             <RosterRow

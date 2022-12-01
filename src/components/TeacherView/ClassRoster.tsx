@@ -243,30 +243,6 @@ const ClassRoster = ({
     }
   }, [roster]);
 
-  // ~~~ FILTER INACTIVE // Self-Paced ST ~~~ //
-
-  const inactiveStudents = roster.reduce(
-    (studentAcc: {notInClass: any[]; onDemand: any[]}, student: any) => {
-      let isOnDemand = student.person.onDemand;
-      let isInStateRoster = controlState.rosterActive.find(
-        (studentTarget: any) => studentTarget.personAuthID === student.personAuthID
-      );
-      if (isInStateRoster === undefined) {
-        if (isOnDemand) {
-          return {...studentAcc, onDemand: [...studentAcc.onDemand, student]};
-        } else {
-          return {...studentAcc, notInClass: [...studentAcc.notInClass, student]};
-        }
-      } else {
-        return studentAcc;
-      }
-    },
-    {
-      notInClass: [],
-      onDemand: []
-    }
-  );
-
   const notInClassStudents = () => {
     return roster.filter((student: any) => {
       const isInStateRoster = controlState.rosterActive.find(
@@ -439,10 +415,12 @@ const ClassRoster = ({
 
   return (
     <>
-      <div className={`w-full h-full px-4  overflow-y-auto overflow-x-hidden pb-48`}>
+      <div className={`w-full h-full   overflow-y-auto overflow-x-hidden pb-48`}>
         {/* */}
-        <div className="text-sm w-full pt-2 font-semibold text-gray-600 border-b-0 border-gray-600 pb-1">
-          <p>Student Roster</p>
+        <div className="px-4">
+          <div className="text-sm w-full pt-2 font-semibold text-gray-600 border-b-0 border-gray-600 pb-1">
+            <p>Student Roster</p>
+          </div>
         </div>
 
         {/* STUDENTS - IN CLASS */}

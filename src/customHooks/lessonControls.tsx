@@ -53,8 +53,6 @@ const useLessonControls = () => {
         }
       });
 
-      console.log('resetViewAndShare - ', getRoomData.id);
-
       setLocalStorageData('room_info', {
         ...getRoomData,
         studentViewing: '',

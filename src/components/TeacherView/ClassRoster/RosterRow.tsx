@@ -3,9 +3,11 @@ import Buttons from '@components/Atoms/Buttons';
 import LocationBadge from '@components/Dashboard/Admin/Institutons/EditBuilders/LocationBadge';
 import {getAsset} from 'assets';
 import {GlobalContext} from 'contexts/GlobalContext';
+import gsap from 'gsap';
 import React, {useContext, useEffect, useState} from 'react';
 import {AiOutlineShareAlt} from 'react-icons/ai';
 import {VscScreenFull} from 'react-icons/vsc';
+import {HtmlElement} from 'react-pdf-html/dist/parse';
 import DotMenu from './RosterRow/DotMenu';
 import {IRosterSectionProps} from './RosterSection';
 
@@ -37,6 +39,7 @@ const RosterRow: React.FC<RosterRowProps> = ({
   sharedStudent,
   handlePageChange,
   onDemand,
+  rightView,
   handleToggleRightView,
   hot,
   setRecordPrevPage,
@@ -50,12 +53,14 @@ const RosterRow: React.FC<RosterRowProps> = ({
   const lessonState = gContext.lessonState;
   const controlState = gContext.controlState;
 
+  const {lessonData, displayData, currentPage} = lessonState;
+
   // ##################################################################### //
   // ########################### SHARING CHECKS ########################## //
   // ##################################################################### //
 
-  const isLessonSurvey = lessonState.lessonData?.type === 'survey';
-  const anyoneIsShared = lessonState.displayData[0].studentAuthID !== '';
+  const isLessonSurvey = lessonData?.type === 'survey';
+  const anyoneIsShared = displayData[0].studentAuthID !== '';
 
   const studentIsInLesson = () => {
     const findInRoster = controlState.roster.find(
@@ -78,11 +83,11 @@ const RosterRow: React.FC<RosterRowProps> = ({
   };
 
   const handleRowSelection = () => {
-    if (lessonState.lessonData?.type !== 'survey') {
+    if (lessonData?.type !== 'survey') {
       handleViewStudentData(personAuthID);
     }
     if (!studentIsViewed()) {
-      setRecordPrevPage(lessonState.currentPage);
+      setRecordPrevPage(currentPage);
       handlePageChange(parseInt(currentLocation));
     } else {
       handlePageChange(recordPrevPage);
@@ -95,32 +100,38 @@ const RosterRow: React.FC<RosterRowProps> = ({
    *      PREVENT LABEL SWITCHING      *
    *************************************/
   const [frozenPage, setFrozenPage] = useState<string>('');
+
   useEffect(() => {
     if (!studentIsShared()) {
       setFrozenPage(getPageLabel(currentLocation));
     }
   }, [currentLocation]);
 
+  const unshareScreen = () => {
+    handleShareStudentData(personAuthID, getPageID(currentLocation));
+    handlePageChange(recordPrevPage);
+  };
+
   // ##################################################################### //
   // ######################### VISUAL LOGIC ETC. ######################### //
   // ##################################################################### //
 
   const getPageLabel = (locationIndex: string) => {
-    if (lessonState.lessonData && lessonState.lessonData?.lessonPlan) {
+    if (lessonData && lessonData?.lessonPlan) {
       if (locationIndex === '') {
         return '--';
       } else {
-        return lessonState.lessonData.lessonPlan[parseInt(locationIndex)]?.label;
+        return lessonData.lessonPlan[parseInt(locationIndex)]?.label;
       }
     }
   };
 
   const getPageID = (locationIndex: string) => {
-    if (lessonState.lessonData && lessonState.lessonData?.lessonPlan) {
+    if (lessonData && lessonData?.lessonPlan) {
       if (locationIndex === '') {
         return 'n/a';
       } else {
-        return lessonState.lessonData.lessonPlan[parseInt(locationIndex)]?.id;
+        return lessonData.lessonPlan[parseInt(locationIndex)]?.id;
       }
     }
   };
@@ -147,110 +158,123 @@ const RosterRow: React.FC<RosterRowProps> = ({
 
   const active = false;
 
+  const onActionClick = (view: string) =>
+    handleToggleRightView({view: view, option: personAuthID});
+
   return (
     <>
       {/* <div className="" /> */}
-      <div
-        draggable={false}
-        className={`w-full flex py-2 transition-all duration-300 items-center px-1 ${
-          active && activeHoverClass
-        }  ${!active && inactiveTextClass} ${
-          number % 2 === 0 ? 'bg-gray-200 bg-opacity-50' : ''
-        } ${
-          studentIsViewed()
-            ? `theme-card-shadow border-l-4 border-green-600 bg-opacity-50 bg-green-200 `
-            : ''
-        } ${
-          studentIsShared() ? `border-l-4 ${theme.borderColor[themeColor]}` : ''
-        } roster-row `}>
-        {/* STUDENT NAME */}
+      <div className="roster-row cursor-pointer">
         <div
           draggable={false}
-          className={`w-8/10 flex flex-row select-none ${active && activeHoverClass} `}>
+          className={`w-full px-4 flex py-2 transition-all duration-300 items-center ${
+            active && activeHoverClass
+          }  ${!active && inactiveTextClass} ${
+            number % 2 === 0 ? 'bg-gray-200 bg-opacity-50' : ''
+          } ${
+            studentIsViewed()
+              ? `theme-card-shadow border-l-4 border-green-600 bg-opacity-50 bg-green-200 `
+              : ''
+          } ${studentIsShared() ? `border-l-4 ${theme.borderColor[themeColor]}` : ''} `}>
+          {/* STUDENT NAME */}
           <div
-            id={`${personAuthID}`}
             draggable={false}
-            title={`${preferredName ? preferredName : firstName} ${lastName}`}
-            className={` text-gray-600 overflow-hidden mr-2 flex items-center pointer-events-none text-sm whitespace-pre truncate  ${
+            className={`${hot ? 'w-5/10' : 'w-7/10'}  flex flex-row select-none ${
               active && activeHoverClass
             } `}>
-            {preferredName ? preferredName : firstName} {lastName}{' '}
-            <LocationBadge
-              style={onDemand ? {} : {fontSize: '.5rem'}}
-              customText={onDemand ? 'SP' : 'CLSRM'}
-              onDemand={onDemand}
-            />
+            <div
+              id={`${personAuthID}`}
+              draggable={false}
+              title={`${preferredName ? preferredName : firstName} ${lastName}`}
+              className={`text-gray-600 overflow-hidden mr-2 flex items-center pointer-events-none text-sm whitespace-pre truncate  ${
+                active && activeHoverClass
+              } `}>
+              {preferredName ? preferredName : firstName} {lastName}{' '}
+              <LocationBadge
+                style={onDemand ? {} : {fontSize: '.5rem'}}
+                customText={onDemand ? 'SP' : 'CLSRM'}
+                onDemand={onDemand}
+              />
+            </div>
+          </div>
+          <div className={hot ? 'w-3/10 ' : 'w-2/10'}>
+            {hot && (
+              <div
+                draggable={false}
+                className={`flex justify-start items-center pointer-events-none overflow-hidden text-gray-600 text-xs text-left ${
+                  active && activeHoverClass
+                }`}>
+                <div
+                  id={personAuthID}
+                  draggable={false}
+                  className={`pointer-events-none`}>
+                  {studentIsShared() ? frozenPage : getPageLabel(currentLocation)}
+                </div>
+              </div>
+            )}
           </div>
 
-          {hot && (
-            <div
-              draggable={false}
-              className={`w-1/4 mx-2 flex justify-center items-center pointer-events-none overflow-hidden text-gray-600 text-sm text-center ${
-                active && activeHoverClass
-              }`}>
-              <div id={personAuthID} draggable={false} className={`pointer-events-none`}>
-                {studentIsShared() ? frozenPage : getPageLabel(currentLocation)}
-              </div>
-            </div>
-          )}
-        </div>
+          <div className={`${hot ? 'w-2.5/10' : 'w-3/10'} flex items-center`}>
+            <Buttons
+              iconSize="w-4 h-6"
+              disabled={!hot}
+              greenBtn={studentIsViewed()}
+              onClick={handleRowSelection}
+              title={
+                studentIsViewed()
+                  ? 'Cancel viewing student screen'
+                  : 'View student screen'
+              }
+              size="small"
+              Icon={VscScreenFull}
+            />
 
-        <Buttons
-          iconSize="w-4 h-6"
-          disabled={!hot}
-          greenBtn={studentIsViewed()}
-          onClick={handleRowSelection}
-          title={
-            studentIsViewed() ? 'Cancel viewing student screen' : 'View student screen'
-          }
-          size="small"
-          Icon={VscScreenFull}
-        />
+            {/* MR SHARE BUTTON */}
+            {!isLessonSurvey && hot ? (
+              studentIsInLesson() ? (
+                anyoneIsShared ? (
+                  studentIsShared() ? (
+                    <Buttons
+                      size="small"
+                      btnClass="text-white outline-none  bg-dark-red hover:bg-red-500 w-1/4 mx-2"
+                      label={'Unshare'}
+                      title="Unshare screen"
+                      onClick={() => {
+                        // terminateSound.play();
+                        unshareScreen();
+                      }}
+                    />
+                  ) : (
+                    // INACTIVE SHARE BUTTON IF ANY SHARING IS ACTIVE
+                    disabledShareButton
+                  )
+                ) : studentIsViewed() ? (
+                  // ACTIVE SHARE BUTTON IF NO SHARING IS ACTIVE
 
-        {/* MR SHARE BUTTON */}
-        {!isLessonSurvey && hot ? (
-          studentIsInLesson() ? (
-            anyoneIsShared ? (
-              studentIsShared() ? (
-                <Buttons
-                  size="small"
-                  btnClass="text-white outline-none  bg-dark-red hover:bg-red-500 w-1/4 mx-2"
-                  label={'Unshare'}
-                  onClick={() => {
-                    // terminateSound.play();
-                    handleShareStudentData(personAuthID, getPageID(currentLocation));
-                  }}
-                />
-              ) : (
-                // INACTIVE SHARE BUTTON IF ANY SHARING IS ACTIVE
-                disabledShareButton
-              )
-            ) : studentIsViewed() ? (
-              // ACTIVE SHARE BUTTON IF NO SHARING IS ACTIVE
-
-              <Buttons
-                size="small"
-                btnClass="text-white outline-none  mx-2"
-                iconSize="w-4 h-6"
-                Icon={AiOutlineShareAlt}
-                transparent={!studentIsShared()}
-                onClick={() => {
-                  // successSound.play();
-                  handleShareStudentData(personAuthID, getPageID(currentLocation));
-                }}
-              />
+                  <Buttons
+                    size="small"
+                    btnClass="text-white outline-none  mx-2"
+                    iconSize="w-4 h-6"
+                    title="share screen"
+                    Icon={AiOutlineShareAlt}
+                    transparent={!studentIsShared()}
+                    onClick={() => {
+                      handleShareStudentData(personAuthID, getPageID(currentLocation));
+                    }}
+                  />
+                ) : (
+                  disabledShareButton
+                )
+              ) : null
             ) : (
+              // INACTIVE SHARE BUTTON IF LESSON IS SURVEY
               disabledShareButton
-            )
-          ) : null
-        ) : (
-          // INACTIVE SHARE BUTTON IF LESSON IS SURVEY
-          disabledShareButton
-        )}
+            )}
+          </div>
 
-        {/* INFO BUTTON */}
+          {/* INFO BUTTON */}
 
-        <div
+          {/* <div
           id={`${personAuthID}`}
           draggable={false}
           className={`w-auto flex items-center text-center ${active && activeHoverClass}`}
@@ -273,6 +297,23 @@ const RosterRow: React.FC<RosterRowProps> = ({
               ]}
             />
           </div>
+        </div> */}
+        </div>
+
+        <div className="roster-actions flex items-center justify-evenly my-2">
+          <Buttons
+            onClick={() => onActionClick('profile')}
+            label={'Profile'}
+            transparent={rightView?.view !== 'profile'}
+            size="small"
+          />
+
+          <Buttons
+            label={'Attendance'}
+            onClick={() => onActionClick('attendance')}
+            transparent={rightView?.view !== 'attendance'}
+            size="small"
+          />
         </div>
       </div>
     </>
