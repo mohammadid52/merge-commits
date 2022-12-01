@@ -78,14 +78,18 @@ const RosterRow: React.FC<RosterRowProps> = ({
   };
 
   const handleRowSelection = () => {
-    if (lessonData?.type !== 'survey') {
-      handleViewStudentData(personAuthID);
-    }
-    if (!studentIsViewed()) {
-      setRecordPrevPage(currentPage);
-      handlePageChange(parseInt(currentLocation));
+    if (studentIsShared()) {
+      unshareScreen();
     } else {
-      handlePageChange(recordPrevPage);
+      if (lessonData?.type !== 'survey') {
+        handleViewStudentData(personAuthID);
+      }
+      if (!studentIsViewed()) {
+        setRecordPrevPage(currentPage);
+        handlePageChange(parseInt(currentLocation));
+      } else {
+        handlePageChange(recordPrevPage);
+      }
     }
   };
 
