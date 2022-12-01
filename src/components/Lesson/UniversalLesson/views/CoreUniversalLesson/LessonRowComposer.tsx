@@ -18,10 +18,6 @@ const LessonRowComposer = () => {
   const gState = gContext.state;
   const {user, lessonPage} = gState;
   const [activePageData, setActivePageData] = useState<UniversalLessonPage>();
-  console.log(
-    '🚀 ~ file: LessonRowComposer.tsx ~ line 21 ~ LessonRowComposer ~ activePageData',
-    activePageData
-  );
 
   const [currentLesson, setCurrentLesson] = useState<any>();
 
@@ -72,10 +68,6 @@ const LessonRowComposer = () => {
 
   const lessonState = gContext.lessonState;
   const PAGES = lessonState?.lessonData?.lessonPlan || [];
-  console.log(
-    '🚀 ~ file: LessonRowComposer.tsx ~ line 71 ~ LessonRowComposer ~ PAGES',
-    PAGES
-  );
 
   const isLastPage = PAGES?.length - 1 === lessonState.currentPage;
 

@@ -24,6 +24,7 @@ interface ButtonProps {
   dataCy?: string;
   size?: 'small' | 'medium' | 'large';
   iconSize?: string;
+  variant?: 'primary' | 'secondary';
 }
 
 const Buttons: React.FC<ButtonProps> = (btnProps: ButtonProps): React.ReactElement => {
@@ -32,6 +33,7 @@ const Buttons: React.FC<ButtonProps> = (btnProps: ButtonProps): React.ReactEleme
     Icon,
     title,
     greenBtn,
+    variant = 'primary',
     iconBeforeLabel,
     transparent,
     type = 'button',
@@ -75,7 +77,7 @@ const Buttons: React.FC<ButtonProps> = (btnProps: ButtonProps): React.ReactEleme
           : `${
               transparent
                 ? `${greenBtn ? '' : 'theme-border theme-text hover-text-white'}`
-                : `${greenBtn ? '' : 'iconoclast:bg-500 curate:bg-500'}`
+                : `${greenBtn ? '' : `iconoclast:bg-500 curate:bg-500`}`
             } font-bold transition duration-150 text-white ease-in-out ${
               size === 'small' ? '' : 'md:py-2'
             } sm:py-auto  ${
@@ -84,13 +86,19 @@ const Buttons: React.FC<ButtonProps> = (btnProps: ButtonProps): React.ReactEleme
               size === 'small' ? 'px-2 py-1' : 'px-4 py-2'
             } rounded-full flex items-center justify-center w-auto `
       }
+
+      ${variant === 'secondary' ? 'opacity-50' : ''}
       ${btnClass ? btnClass : ''} 
       ${theme.outlineNone} 
       ${
         transparent
           ? theme.btn.cancel
           : !overrideClass
-          ? `${disabled ? 'bg-gray-400 text-gray-200' : theme.btn[themeColor]}`
+          ? `${
+              variant === 'secondary' || disabled
+                ? 'bg-gray-400 text-gray-200'
+                : theme.btn[themeColor]
+            }`
           : ''
       } 
       ${disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'} 

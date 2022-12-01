@@ -121,7 +121,7 @@ const RosterSection = ({
             </span>
           </div>
           <div
-            className={`w-3/10  flex items-center justify-center rounded-lg text-center text-xs`}>
+            className={`w-3/10 -ml-6 flex items-center justify-center rounded-lg text-center text-xs`}>
             <span className="w-auto">
               {lessonPlannerDict[userLanguage]['OTHER_LABELS']['COLUMN']['TWO']}
             </span>

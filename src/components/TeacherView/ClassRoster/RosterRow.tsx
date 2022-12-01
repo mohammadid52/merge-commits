@@ -1,14 +1,11 @@
 // import {PersonalizeEvents} from 'aws-sdk';
 import Buttons from '@components/Atoms/Buttons';
+import Tooltip from '@components/Atoms/Tooltip';
 import LocationBadge from '@components/Dashboard/Admin/Institutons/EditBuilders/LocationBadge';
-import useTailwindBreakpoint from '@customHooks/tailwindBreakpoint';
-import {getAsset} from 'assets';
 import {GlobalContext} from 'contexts/GlobalContext';
-import gsap from 'gsap';
 import React, {useContext, useEffect, useState} from 'react';
-import {AiOutlineShareAlt} from 'react-icons/ai';
+import {MdOutlineScreenShare, MdOutlineStopScreenShare} from 'react-icons/md';
 import {VscScreenFull} from 'react-icons/vsc';
-import {HtmlElement} from 'react-pdf-html/dist/parse';
 import DotMenu from './RosterRow/DotMenu';
 import {IRosterSectionProps} from './RosterSection';
 
@@ -48,9 +45,6 @@ const RosterRow: React.FC<RosterRowProps> = ({
 }: RosterRowProps) => {
   // ~~~~~~~~~~~~~~~ CONTEXT ~~~~~~~~~~~~~~~ //
   const gContext = useContext(GlobalContext);
-  const theme = gContext.theme;
-  const clientKey = gContext.clientKey;
-  const themeColor = getAsset(clientKey, 'themeClassName');
   const lessonState = gContext.lessonState;
   const controlState = gContext.controlState;
 
@@ -149,20 +143,14 @@ const RosterRow: React.FC<RosterRowProps> = ({
       size="small"
       btnClass="mx-2"
       iconSize="w-4 h-6"
-      Icon={AiOutlineShareAlt}
-      disabled
+      Icon={MdOutlineScreenShare}
       title="Share screen"
-      transparent
+      disabled
       onClick={() => handleShareStudentData(personAuthID, getPageID(currentLocation))}
     />
   );
 
   const active = false;
-
-  const onActionClick = (view: string) =>
-    handleToggleRightView({view: view, option: personAuthID});
-
-  const {breakpoint} = useTailwindBreakpoint();
 
   return (
     <>
@@ -178,7 +166,11 @@ const RosterRow: React.FC<RosterRowProps> = ({
             studentIsViewed()
               ? `theme-card-shadow border-l-4 border-green-600 bg-opacity-50 bg-green-200 `
               : ''
-          } ${studentIsShared() ? `border-l-4 ${theme.borderColor[themeColor]}` : ''} `}>
+          } ${
+            studentIsShared()
+              ? 'border-l-4 border-green-600 bg-opacity-50 bg-green-200'
+              : ''
+          } `}>
           {/* STUDENT NAME */}
           <div
             draggable={false}
@@ -221,7 +213,9 @@ const RosterRow: React.FC<RosterRowProps> = ({
             <Buttons
               iconSize="w-4 h-6"
               disabled={!hot}
-              greenBtn={studentIsViewed()}
+              variant={
+                studentIsInLesson() && !studentIsViewed() ? 'secondary' : 'primary'
+              }
               onClick={handleRowSelection}
               title={
                 studentIsViewed()
@@ -239,8 +233,10 @@ const RosterRow: React.FC<RosterRowProps> = ({
                   studentIsShared() ? (
                     <Buttons
                       size="small"
-                      btnClass="text-white outline-none  bg-dark-red hover:bg-red-500 w-1/4 mx-2"
-                      label={'Unshare'}
+                      btnClass="text-white outline-none   mx-2"
+                      Icon={MdOutlineStopScreenShare}
+                      greenBtn
+                      iconSize="w-4 h-6"
                       title="Unshare screen"
                       onClick={() => {
                         // terminateSound.play();
@@ -259,14 +255,16 @@ const RosterRow: React.FC<RosterRowProps> = ({
                     btnClass="text-white outline-none  mx-2"
                     iconSize="w-4 h-6"
                     title="share screen"
-                    Icon={AiOutlineShareAlt}
-                    transparent={!studentIsShared()}
+                    Icon={MdOutlineScreenShare}
+                    variant={'secondary'}
                     onClick={() => {
                       handleShareStudentData(personAuthID, getPageID(currentLocation));
                     }}
                   />
                 ) : (
-                  disabledShareButton
+                  <Tooltip show={true} placement="left" text="view student screen first">
+                    {disabledShareButton}
+                  </Tooltip>
                 )
               ) : null
             ) : (
@@ -303,28 +301,7 @@ const RosterRow: React.FC<RosterRowProps> = ({
               />
             </div>
           </div>
-          {/* {breakpoint === 'xl' || breakpoint === '2xl' ? null : (
-            
-          )} */}
         </div>
-        {/* 
-        {(breakpoint === 'xl' || breakpoint === '2xl') && (
-          <div className="roster-actions flex items-center justify-evenly my-2">
-            <Buttons
-              onClick={() => onActionClick('profile')}
-              label={'Profile'}
-              transparent={rightView?.view !== 'profile'}
-              size="small"
-            />
-
-            <Buttons
-              label={'Attendance'}
-              onClick={() => onActionClick('attendance')}
-              transparent={rightView?.view !== 'attendance'}
-              size="small"
-            />
-          </div>
-        )} */}
       </div>
     </>
   );
