@@ -2,6 +2,7 @@
 import Buttons from '@components/Atoms/Buttons';
 import Tooltip from '@components/Atoms/Tooltip';
 import LocationBadge from '@components/Dashboard/Admin/Institutons/EditBuilders/LocationBadge';
+import useLessonControls from '@customHooks/lessonControls';
 import {GlobalContext} from 'contexts/GlobalContext';
 import React, {useContext, useEffect, useState} from 'react';
 import {MdOutlineScreenShare, MdOutlineStopScreenShare} from 'react-icons/md';
@@ -79,14 +80,22 @@ const RosterRow: React.FC<RosterRowProps> = ({
   };
 
   const handleRowSelection = () => {
-    if (lessonData?.type !== 'survey') {
+    if (studentIsShared()) {
+      handleShareStudentData(personAuthID, getPageID(currentLocation));
       handleViewStudentData(personAuthID);
-    }
-    if (!studentIsViewed()) {
       setRecordPrevPage(currentPage);
       handlePageChange(parseInt(currentLocation));
+      // terminateSound();
     } else {
-      handlePageChange(recordPrevPage);
+      if (lessonData?.type !== 'survey') {
+        handleViewStudentData(personAuthID);
+      }
+      if (!studentIsViewed()) {
+        setRecordPrevPage(currentPage);
+        handlePageChange(parseInt(currentLocation));
+      } else {
+        handlePageChange(recordPrevPage);
+      }
     }
   };
 
@@ -108,6 +117,13 @@ const RosterRow: React.FC<RosterRowProps> = ({
 
     handleResetViewAndShare();
     handlePageChange(recordPrevPage);
+  };
+
+  const {resetView} = useLessonControls();
+
+  const shareScreen = async () => {
+    handleViewStudentData(personAuthID);
+    handleShareStudentData(personAuthID, getPageID(currentLocation));
   };
 
   // ##################################################################### //
@@ -148,9 +164,7 @@ const RosterRow: React.FC<RosterRowProps> = ({
       iconSize="w-4 h-6"
       transparent
       Icon={MdOutlineScreenShare}
-      title="Share screen"
       disabled
-      onClick={() => handleShareStudentData(personAuthID, getPageID(currentLocation))}
     />
   );
 
@@ -185,9 +199,7 @@ const RosterRow: React.FC<RosterRowProps> = ({
         title="share screen"
         transparent={!studentIsViewed()}
         Icon={MdOutlineScreenShare}
-        onClick={() => {
-          handleShareStudentData(personAuthID, getPageID(currentLocation));
-        }}
+        onClick={shareScreen}
       />
     ) : (
       <Tooltip show={true} placement="left" text="view student screen first">
@@ -207,11 +219,11 @@ const RosterRow: React.FC<RosterRowProps> = ({
           }  ${!active && inactiveTextClass} ${
             number % 2 === 0 ? 'bg-gray-200 bg-opacity-50' : ''
           } ${
-            studentIsViewed() && !studentIsShared()
+            studentIsViewed()
               ? `theme-card-shadow border-l-4 iconoclast:border-500 curate:border-500 bg-opacity-50 iconoclast:bg-200 curate:bg-200`
               : ''
           } ${
-            studentIsViewed() && studentIsShared()
+            studentIsShared()
               ? 'border-l-4 border-green-600 bg-opacity-50 bg-green-200'
               : ''
           } `}>
@@ -258,7 +270,11 @@ const RosterRow: React.FC<RosterRowProps> = ({
               iconSize="w-4 h-6"
               disabled={!hot}
               variant={
-                studentIsInLesson() && !studentIsViewed() ? 'secondary' : 'primary'
+                studentIsShared()
+                  ? 'primary'
+                  : studentIsInLesson() && !studentIsViewed()
+                  ? 'secondary'
+                  : 'primary'
               }
               transparent={!hot}
               greenBtn={studentIsViewed() && !studentIsShared()}
