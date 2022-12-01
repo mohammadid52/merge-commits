@@ -1,6 +1,7 @@
 // import {PersonalizeEvents} from 'aws-sdk';
 import Buttons from '@components/Atoms/Buttons';
 import LocationBadge from '@components/Dashboard/Admin/Institutons/EditBuilders/LocationBadge';
+import useTailwindBreakpoint from '@customHooks/tailwindBreakpoint';
 import {getAsset} from 'assets';
 import {GlobalContext} from 'contexts/GlobalContext';
 import gsap from 'gsap';
@@ -161,6 +162,8 @@ const RosterRow: React.FC<RosterRowProps> = ({
   const onActionClick = (view: string) =>
     handleToggleRightView({view: view, option: personAuthID});
 
+  const {breakpoint} = useTailwindBreakpoint();
+
   return (
     <>
       {/* <div className="" /> */}
@@ -274,47 +277,54 @@ const RosterRow: React.FC<RosterRowProps> = ({
 
           {/* INFO BUTTON */}
 
-          {/* <div
-          id={`${personAuthID}`}
-          draggable={false}
-          className={`w-auto flex items-center text-center ${active && activeHoverClass}`}
-          onClick={() =>
-            handleShareStudentData(personAuthID, getPageID(currentLocation))
-          }>
-          <div className={`dot-menu transition duration-150`}>
-            <DotMenu
-              menuItems={[
-                {
-                  label: 'Profile',
-                  action: () =>
-                    handleToggleRightView({view: 'profile', option: personAuthID})
-                },
-                {
-                  label: 'Attendance',
-                  action: () =>
-                    handleToggleRightView({view: 'attendance', option: personAuthID})
-                }
-              ]}
+          <div
+            id={`${personAuthID}`}
+            draggable={false}
+            className={`w-auto flex items-center text-center ${
+              active && activeHoverClass
+            }`}
+            onClick={() =>
+              handleShareStudentData(personAuthID, getPageID(currentLocation))
+            }>
+            <div className={`dot-menu transition duration-150`}>
+              <DotMenu
+                menuItems={[
+                  {
+                    label: 'Profile',
+                    action: () =>
+                      handleToggleRightView({view: 'profile', option: personAuthID})
+                  },
+                  {
+                    label: 'Attendance',
+                    action: () =>
+                      handleToggleRightView({view: 'attendance', option: personAuthID})
+                  }
+                ]}
+              />
+            </div>
+          </div>
+          {/* {breakpoint === 'xl' || breakpoint === '2xl' ? null : (
+            
+          )} */}
+        </div>
+        {/* 
+        {(breakpoint === 'xl' || breakpoint === '2xl') && (
+          <div className="roster-actions flex items-center justify-evenly my-2">
+            <Buttons
+              onClick={() => onActionClick('profile')}
+              label={'Profile'}
+              transparent={rightView?.view !== 'profile'}
+              size="small"
+            />
+
+            <Buttons
+              label={'Attendance'}
+              onClick={() => onActionClick('attendance')}
+              transparent={rightView?.view !== 'attendance'}
+              size="small"
             />
           </div>
-        </div> */}
-        </div>
-
-        <div className="roster-actions flex items-center justify-evenly my-2">
-          <Buttons
-            onClick={() => onActionClick('profile')}
-            label={'Profile'}
-            transparent={rightView?.view !== 'profile'}
-            size="small"
-          />
-
-          <Buttons
-            label={'Attendance'}
-            onClick={() => onActionClick('attendance')}
-            transparent={rightView?.view !== 'attendance'}
-            size="small"
-          />
-        </div>
+        )} */}
       </div>
     </>
   );
