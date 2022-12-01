@@ -38,6 +38,7 @@ const RosterRow: React.FC<RosterRowProps> = ({
   handlePageChange,
   onDemand,
   rightView,
+  handleResetViewAndShare,
   handleToggleRightView,
   hot,
   setRecordPrevPage,
@@ -78,18 +79,14 @@ const RosterRow: React.FC<RosterRowProps> = ({
   };
 
   const handleRowSelection = () => {
-    if (studentIsShared()) {
-      unshareScreen();
+    if (lessonData?.type !== 'survey') {
+      handleViewStudentData(personAuthID);
+    }
+    if (!studentIsViewed()) {
+      setRecordPrevPage(currentPage);
+      handlePageChange(parseInt(currentLocation));
     } else {
-      if (lessonData?.type !== 'survey') {
-        handleViewStudentData(personAuthID);
-      }
-      if (!studentIsViewed()) {
-        setRecordPrevPage(currentPage);
-        handlePageChange(parseInt(currentLocation));
-      } else {
-        handlePageChange(recordPrevPage);
-      }
+      handlePageChange(recordPrevPage);
     }
   };
 
@@ -107,7 +104,9 @@ const RosterRow: React.FC<RosterRowProps> = ({
   }, [currentLocation]);
 
   const unshareScreen = () => {
-    handleShareStudentData(personAuthID, getPageID(currentLocation));
+    // handleViewStudentData(personAuthID);
+
+    handleResetViewAndShare();
     handlePageChange(recordPrevPage);
   };
 
