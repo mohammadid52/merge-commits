@@ -83,7 +83,6 @@ const RosterRow: React.FC<RosterRowProps> = ({
     if (studentIsShared()) {
       handleShareStudentData(personAuthID, getPageID(currentLocation));
       handleViewStudentData(personAuthID);
-      setRecordPrevPage(currentPage);
       handlePageChange(parseInt(currentLocation));
       // terminateSound();
     } else {
