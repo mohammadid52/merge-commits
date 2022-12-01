@@ -33,10 +33,18 @@ const RosterFrame = ({
   const miniFrameRef = useRef();
 
   const slideOut = (refTarget: any) => {
-    gsap.fromTo(refTarget.current, {x: 0}, {x: '-100%', duration: 1, ease: 'easeInOut'});
+    gsap.fromTo(
+      refTarget.current,
+      {x: 0},
+      {x: '-100%', duration: 0.5, ease: 'easeInOut'}
+    );
   };
   const slideIn = (refTarget: any) => {
-    gsap.fromTo(refTarget.current, {x: '-100%'}, {x: 0, duration: 1, ease: 'easeInOut'});
+    gsap.fromTo(
+      refTarget.current,
+      {x: '-100%'},
+      {x: 0, duration: 0.5, ease: 'easeInOut'}
+    );
   };
 
   const toggleMiniOut = () => {
@@ -127,7 +135,7 @@ const RosterFrame = ({
           onClick={() => toggleMiniOut()}
           iconSizePX={24}
           buttonWHClass={`w-8 h-8 `}
-          containerBgClass={`absolute right-0 bg-transparent`}
+          containerBgClass={`absolute right-0 bg-transparent z-max`}
           buttonBgClass={`bg-transparent`}
           iconTxtColorClass={theme.textColor[themeColor]}
         />
