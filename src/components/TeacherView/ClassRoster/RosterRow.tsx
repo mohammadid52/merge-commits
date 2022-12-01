@@ -143,6 +143,7 @@ const RosterRow: React.FC<RosterRowProps> = ({
       size="small"
       btnClass="mx-2"
       iconSize="w-4 h-6"
+      transparent={!hot}
       Icon={MdOutlineScreenShare}
       title="Share screen"
       disabled
@@ -216,6 +217,7 @@ const RosterRow: React.FC<RosterRowProps> = ({
               variant={
                 studentIsInLesson() && !studentIsViewed() ? 'secondary' : 'primary'
               }
+              transparent={!hot}
               greenBtn={studentIsViewed()}
               onClick={handleRowSelection}
               title={
@@ -257,7 +259,6 @@ const RosterRow: React.FC<RosterRowProps> = ({
                     iconSize="w-4 h-6"
                     title="share screen"
                     Icon={MdOutlineScreenShare}
-                    variant={'secondary'}
                     onClick={() => {
                       handleShareStudentData(personAuthID, getPageID(currentLocation));
                     }}

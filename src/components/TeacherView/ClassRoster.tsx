@@ -244,12 +244,25 @@ const ClassRoster = ({
   }, [roster]);
 
   const notInClassStudents = () => {
-    return roster.filter((student: any) => {
+    let notInClass = roster.filter((student: any) => {
       const isInStateRoster = controlState.rosterActive.find(
         (studentTarget: any) => studentTarget.personAuthID === student.personAuthID
       );
 
       return isInStateRoster === undefined;
+    });
+
+    return notInClass.sort(function (
+      a: {person: {firstName: number}},
+      b: {person: {firstName: number}}
+    ) {
+      if (a.person.firstName < b.person.firstName) {
+        return -1;
+      }
+      if (a.person.firstName > b.person.firstName) {
+        return 1;
+      }
+      return 0;
     });
   };
 
