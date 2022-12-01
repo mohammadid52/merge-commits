@@ -95,7 +95,20 @@ const RosterSection = ({
     <>
       <div className={`w-full flex items-center bg-transparent mt-4 mb-2 px-4`}>
         <div className="relative w-full h-auto flex flex-row items-center">
-          <span className="text-sm font-semibold text-gray-600">{sectionTitle}</span>
+          <div className="text-sm flex font-semibold text-gray-600">
+            <p className="w-auto">{sectionTitle}</p>
+            {hot && (
+              <span
+                title="refresh list"
+                className={`w-auto cursor-pointer iconoclast:text-500 curate:text-500 rounded-full ml-2 iconoclast:bg-100 curate:bg-100 p-0.5`}
+                onClick={handleManualRefresh}>
+                <IoMdRefresh
+                  size={20}
+                  className={`${loading ? 'animate-spin' : null} `}
+                />
+              </span>
+            )}
+          </div>
           <span
             className="text-sm font-bold w-auto text-gray-600 cursor-pointer p-2"
             onClick={() =>
@@ -109,25 +122,19 @@ const RosterSection = ({
       {/* ROSTER HEAD LABELS*/}
       {hot && (
         <div className={`theme-text w-full flex py-2 bg-transparent px-4`}>
-          <div className={`w-5/10  relative flex items-center  text-xs`}>
+          <div className={`w-4/10  relative flex items-center  text-xs`}>
             <span className="w-auto">
               {lessonPlannerDict[userLanguage]['OTHER_LABELS']['COLUMN']['ONE']}
             </span>
-            <span
-              title="refresh list"
-              className={`w-auto cursor-pointer iconoclast:text-500 curate:text-500 rounded-full ml-2 iconoclast:bg-100 curate:bg-100 p-0.5`}
-              onClick={handleManualRefresh}>
-              <IoMdRefresh size={20} className={`${loading ? 'animate-spin' : null} `} />
-            </span>
           </div>
           <div
-            className={`w-3/10 -ml-6 flex items-center justify-center rounded-lg text-center text-xs`}>
+            className={`w-3/10 flex items-center justify-center rounded-lg text-center text-xs`}>
             <span className="w-auto">
               {lessonPlannerDict[userLanguage]['OTHER_LABELS']['COLUMN']['TWO']}
             </span>
           </div>
           <div
-            className={`w-2.5/10 flex items-center justify-center rounded-lg text-center text-xs`}>
+            className={`w-2.5/10 -ml-6 flex items-center justify-center rounded-lg text-center text-xs`}>
             <span className="w-auto">
               {lessonPlannerDict[userLanguage]['OTHER_LABELS']['COLUMN']['THREE']}
             </span>

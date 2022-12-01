@@ -95,18 +95,22 @@ const LessonDetails = ({
 
       <div className="relative w-full flex flex-col my-auto bg-gray-200 p-2 text-gray-600 text-sm shadow-sm rounded">
         <p className="">
-          {lessonPlannerDict[userLanguage]['OTHER_LABELS']['STUDDENT_ONLINE']}:{' '}
-          <span className="font-medium">{studentsOnline()} students</span>
+          <span className="font-medium">
+            {lessonPlannerDict[userLanguage]['OTHER_LABELS']['STUDDENT_ONLINE']}:{' '}
+          </span>
+          <span className="">{studentsOnline()} students</span>
         </p>
         <p className="">
-          {lessonPlannerDict[userLanguage]['OTHER_LABELS']['ROOM_NAME']}:{' '}
-          <span className="font-medium">{`${
-            getRoomData.name ? getRoomData.name : ''
-          }`}</span>
+          <span className="font-medium">
+            {lessonPlannerDict[userLanguage]['OTHER_LABELS']['ROOM_NAME']}:{' '}
+          </span>
+          {`${getRoomData.name ? getRoomData.name : ''}`}
         </p>
         <p className="">
-          {lessonPlannerDict[userLanguage]['OTHER_LABELS']['EST_TIME']}: {duration}{' '}
-          <span className="font-medium">{`${duration > 1 ? 'weeks' : 'week'}`}</span>
+          <span className="font-medium">
+            {lessonPlannerDict[userLanguage]['OTHER_LABELS']['EST_TIME']}: {duration}{' '}
+          </span>
+          {`${duration > 1 ? 'weeks' : 'week'}`}
         </p>
       </div>
       <div className="flex items-center justify-between mt-4 mb-2">

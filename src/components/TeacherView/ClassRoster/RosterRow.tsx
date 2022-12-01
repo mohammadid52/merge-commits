@@ -153,6 +153,45 @@ const RosterRow: React.FC<RosterRowProps> = ({
 
   const active = false;
 
+  const ifHotAndInLesson = studentIsInLesson() ? (
+    anyoneIsShared ? (
+      studentIsShared() ? (
+        <Buttons
+          size="small"
+          btnClass="text-white outline-none   mx-2"
+          Icon={MdOutlineStopScreenShare}
+          greenBtn
+          iconSize="w-4 h-6"
+          title="Unshare screen"
+          onClick={() => {
+            // terminateSound.play();
+            unshareScreen();
+          }}
+        />
+      ) : (
+        // INACTIVE SHARE BUTTON IF ANY SHARING IS ACTIVE
+        disabledShareButton
+      )
+    ) : studentIsViewed() ? (
+      // ACTIVE SHARE BUTTON IF NO SHARING IS ACTIVE
+
+      <Buttons
+        size="small"
+        btnClass="text-white outline-none  mx-2"
+        iconSize="w-4 h-6"
+        title="share screen"
+        Icon={MdOutlineScreenShare}
+        onClick={() => {
+          handleShareStudentData(personAuthID, getPageID(currentLocation));
+        }}
+      />
+    ) : (
+      <Tooltip show={true} placement="left" text="view student screen first">
+        {disabledShareButton}
+      </Tooltip>
+    )
+  ) : null;
+
   return (
     <>
       {/* <div className="" /> */}
@@ -218,6 +257,7 @@ const RosterRow: React.FC<RosterRowProps> = ({
                 studentIsInLesson() && !studentIsViewed() ? 'secondary' : 'primary'
               }
               transparent={!hot}
+              greenBtn={studentIsViewed() && !studentIsShared()}
               onClick={handleRowSelection}
               title={
                 studentIsViewed()
@@ -229,49 +269,10 @@ const RosterRow: React.FC<RosterRowProps> = ({
             />
 
             {/* MR SHARE BUTTON */}
-            {!isLessonSurvey && hot ? (
-              studentIsInLesson() ? (
-                anyoneIsShared ? (
-                  studentIsShared() ? (
-                    <Buttons
-                      size="small"
-                      btnClass="text-white outline-none   mx-2"
-                      Icon={MdOutlineStopScreenShare}
-                      greenBtn
-                      iconSize="w-4 h-6"
-                      title="Unshare screen"
-                      onClick={() => {
-                        // terminateSound.play();
-                        unshareScreen();
-                      }}
-                    />
-                  ) : (
-                    // INACTIVE SHARE BUTTON IF ANY SHARING IS ACTIVE
-                    disabledShareButton
-                  )
-                ) : studentIsViewed() ? (
-                  // ACTIVE SHARE BUTTON IF NO SHARING IS ACTIVE
-
-                  <Buttons
-                    size="small"
-                    btnClass="text-white outline-none  mx-2"
-                    iconSize="w-4 h-6"
-                    title="share screen"
-                    Icon={MdOutlineScreenShare}
-                    onClick={() => {
-                      handleShareStudentData(personAuthID, getPageID(currentLocation));
-                    }}
-                  />
-                ) : (
-                  <Tooltip show={true} placement="left" text="view student screen first">
-                    {disabledShareButton}
-                  </Tooltip>
-                )
-              ) : null
-            ) : (
-              // INACTIVE SHARE BUTTON IF LESSON IS SURVEY
-              disabledShareButton
-            )}
+            {!isLessonSurvey && hot
+              ? ifHotAndInLesson
+              : // INACTIVE SHARE BUTTON IF LESSON IS SURVEY
+                disabledShareButton}
           </div>
 
           {/* INFO BUTTON */}
