@@ -349,13 +349,13 @@ const ClassRoster = ({
   const viewedStudent = lessonState?.studentViewing;
   const sharedStudent = lessonState?.displayData[0]?.studentAuthID;
 
-  const {resetViewAndShare} = useLessonControls();
+  const {resetViewAndShare, resetShare, resetView} = useLessonControls();
 
   // ~~~~~~~~~~~~~~~ VIEWING ~~~~~~~~~~~~~~~ //
 
   const handleViewStudentData = async (idStr: string) => {
     if (viewedStudent === idStr) {
-      await resetViewAndShare();
+      await resetView();
     } else {
       lessonDispatch({
         type: 'SET_ROOM_SUBSCRIPTION_DATA',
@@ -372,7 +372,7 @@ const ClassRoster = ({
   const handleShareStudentData = async (idStr: string, pageIdStr: string) => {
     if (lessonState?.lessonData?.type !== 'survey') {
       if (sharedStudent === idStr) {
-        await resetViewAndShare();
+        await resetShare();
       } else {
         lessonDispatch({
           type: 'SET_ROOM_SUBSCRIPTION_DATA',

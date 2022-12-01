@@ -42,27 +42,56 @@ const useLessonControls = () => {
   const viewedStudent = lessonState?.studentViewing;
   const sharedStudent = lessonState?.displayData[0]?.studentAuthID;
 
-  const resetViewAndShare = async () => {
-    if (viewedStudent !== '' || sharedStudent !== '') {
-      lessonDispatch({
-        type: 'SET_ROOM_SUBSCRIPTION_DATA',
-        payload: {
-          id: getRoomData.id,
-          studentViewing: '',
-          displayData: [{isTeacher: false, studentAuthID: '', lessonPageID: ''}]
-        }
-      });
-
-      setLocalStorageData('room_info', {
-        ...getRoomData,
-        studentViewing: '',
-        displayData: [{isTeacher: false, studentAuthID: '', lessonPageID: ''}]
-      });
-      await handleRoomUpdate({
+  const resetView = async () => {
+    console.log('reset view');
+    lessonDispatch({
+      type: 'SET_ROOM_SUBSCRIPTION_DATA',
+      payload: {
         id: getRoomData.id,
         studentViewing: '',
+        displayData: lessonState.displayData
+      }
+    });
+
+    setLocalStorageData('room_info', {
+      ...getRoomData,
+      studentViewing: '',
+      displayData: lessonState.displayData
+    });
+    await handleRoomUpdate({
+      id: getRoomData.id,
+      studentViewing: '',
+      displayData: lessonState.displayData
+    });
+  };
+
+  const resetShare = async () => {
+    console.log('reset share');
+    lessonDispatch({
+      type: 'SET_ROOM_SUBSCRIPTION_DATA',
+      payload: {
+        id: getRoomData.id,
+        studentViewing: viewedStudent,
         displayData: [{isTeacher: false, studentAuthID: '', lessonPageID: ''}]
-      });
+      }
+    });
+
+    setLocalStorageData('room_info', {
+      ...getRoomData,
+      studentViewing: viewedStudent,
+      displayData: [{isTeacher: false, studentAuthID: '', lessonPageID: ''}]
+    });
+    await handleRoomUpdate({
+      id: getRoomData.id,
+      studentViewing: viewedStudent,
+      displayData: [{isTeacher: false, studentAuthID: '', lessonPageID: ''}]
+    });
+  };
+
+  const resetViewAndShare = async () => {
+    if (viewedStudent !== '' || sharedStudent !== '') {
+      await resetView();
+      await resetShare();
     }
   };
 
@@ -71,7 +100,9 @@ const useLessonControls = () => {
     resetViewAndShare: resetViewAndShare,
     viewedStudent,
     sharedStudent,
-    getPageID
+    getPageID,
+    resetView,
+    resetShare
   };
 };
 
