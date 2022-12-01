@@ -216,6 +216,7 @@ const RosterRow: React.FC<RosterRowProps> = ({
               variant={
                 studentIsInLesson() && !studentIsViewed() ? 'secondary' : 'primary'
               }
+              greenBtn={studentIsViewed()}
               onClick={handleRowSelection}
               title={
                 studentIsViewed()
