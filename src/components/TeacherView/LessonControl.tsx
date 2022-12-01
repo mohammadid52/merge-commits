@@ -513,11 +513,23 @@ const LessonControl = () => {
   // ##################################################################### //
   // ############################### OUTPUT ############################## //
   // ##################################################################### //
+  const {notification} = useNotifications();
 
   return (
     <div className={`w-full h-screen bg-gray-200 overflow-hidden`}>
       <div className={`relative w-full h-full flex flex-col`}>
         {/* QUICK REGISTER */}
+
+        {notification.show && (
+          <div
+            className={`opacity-${
+              notification.show
+                ? '100 translate-x-0 transform z-100'
+                : '0 translate-x-10 transform'
+            } absolute bottom-5 right-5 w-96 py-4 px-6 rounded-md shadow bg-gray-800 duration-300 transition-all`}>
+            <p className="text-white font-medium tracking-wide">{notification.title}</p>
+          </div>
+        )}
 
         {/* USER MANAGEMENT */}
         <div

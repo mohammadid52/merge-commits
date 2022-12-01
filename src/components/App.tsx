@@ -1,5 +1,4 @@
 import {AudioProvider} from '@contexts/AudioContext';
-import Notification from 'atoms/Notification';
 import MainRouter from 'components/AppMainRouter';
 import {GlobalContextProvider} from 'contexts/GlobalContext';
 import NotificationContextProvider from 'contexts/NotificationContext';
@@ -26,7 +25,6 @@ const App: React.FC = () => {
                 <NotificationContextProvider>
                   <Router>
                     <MainRouter />
-                    <Notification />
                   </Router>
                 </NotificationContextProvider>
               </PageBuilderProvider>

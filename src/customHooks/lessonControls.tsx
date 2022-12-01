@@ -90,8 +90,25 @@ const useLessonControls = () => {
 
   const resetViewAndShare = async () => {
     if (viewedStudent !== '' || sharedStudent !== '') {
-      await resetView();
-      await resetShare();
+      lessonDispatch({
+        type: 'SET_ROOM_SUBSCRIPTION_DATA',
+        payload: {
+          id: getRoomData.id,
+          studentViewing: '',
+          displayData: [{isTeacher: false, studentAuthID: '', lessonPageID: ''}]
+        }
+      });
+
+      setLocalStorageData('room_info', {
+        ...getRoomData,
+        studentViewing: '',
+        displayData: [{isTeacher: false, studentAuthID: '', lessonPageID: ''}]
+      });
+      await handleRoomUpdate({
+        id: getRoomData.id,
+        studentViewing: '',
+        displayData: [{isTeacher: false, studentAuthID: '', lessonPageID: ''}]
+      });
     }
   };
 

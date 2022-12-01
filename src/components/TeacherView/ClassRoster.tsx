@@ -9,6 +9,7 @@ import * as subscriptions from 'graphql/subscriptions';
 import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
 import RosterSection from './ClassRoster/RosterSection';
 import Buttons from '@components/Atoms/Buttons';
+import {useNotifications} from '@contexts/NotificationContext';
 
 interface IClassRosterProps {
   handleQuitShare: () => void;
@@ -353,9 +354,17 @@ const ClassRoster = ({
 
   // ~~~~~~~~~~~~~~~ VIEWING ~~~~~~~~~~~~~~~ //
 
+  const {setNotification, clearNotification} = useNotifications();
+
   const handleViewStudentData = async (idStr: string) => {
     if (viewedStudent === idStr) {
-      await resetView();
+      clearNotification();
+      setNotification({
+        show: true,
+        timeout: 2000,
+        title: 'Student screen sharing and viewing cancelled'
+      });
+      await resetViewAndShare();
     } else {
       lessonDispatch({
         type: 'SET_ROOM_SUBSCRIPTION_DATA',
@@ -363,6 +372,8 @@ const ClassRoster = ({
       });
 
       setLocalStorageData('room_info', {...getRoomData, studentViewing: idStr});
+      clearNotification();
+      setNotification({show: true, timeout: 2000, title: 'Viewing student screen'});
       await handleRoomUpdate({id: getRoomData.id, studentViewing: idStr});
     }
   };
@@ -372,6 +383,12 @@ const ClassRoster = ({
   const handleShareStudentData = async (idStr: string, pageIdStr: string) => {
     if (lessonState?.lessonData?.type !== 'survey') {
       if (sharedStudent === idStr) {
+        clearNotification();
+        setNotification({
+          show: true,
+          timeout: 2000,
+          title: 'Student screen sharing cancelled'
+        });
         await resetShare();
       } else {
         lessonDispatch({
@@ -387,6 +404,10 @@ const ClassRoster = ({
           ...getRoomData,
           displayData: [{isTeacher: false, studentAuthID: idStr, lessonPageID: pageIdStr}]
         });
+
+        clearNotification();
+        setNotification({show: true, timeout: 2000, title: 'Sharing student screen'});
+
         await handleRoomUpdate({
           id: getRoomData.id,
           displayData: [{isTeacher: false, studentAuthID: idStr, lessonPageID: pageIdStr}]

@@ -1,5 +1,4 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import useLessonControls from '@customHooks/lessonControls';
 import {UniversalLessonStudentData as UniversalLessonStudentDataFromAPI} from 'API';
 import 'components/Dashboard/GameChangers/styles/Flickity.scss';
 import 'components/Dashboard/GameChangers/styles/GameChanger.scss';
@@ -872,6 +871,7 @@ const LessonApp = ({
             <span className="text-red-500">*</span>Please fill all the required fields
           </p>
         </div>
+
         <div className={`absolute bottom-1 left-0 py-4 px-6 z-max  w-auto `}>
           <h6 className="text-xs text-shadow text-gray-500">{LESSON_NAME}</h6>
         </div>
