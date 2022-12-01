@@ -100,10 +100,7 @@ const LessonControl = () => {
       next: (studentData: any) => {
         const updatedStudentData =
           studentData.value.data.onChangeUniversalLessonStudentData;
-        console.log(
-          '🚀 ~ file: LessonControl.tsx ~ line 109 ~ subscribeToStudent ~ updatedStudentData',
-          updatedStudentData
-        );
+
         setSubscriptionData(updatedStudentData);
       }
     });

@@ -18,6 +18,10 @@ const LessonRowComposer = () => {
   const gState = gContext.state;
   const {user, lessonPage} = gState;
   const [activePageData, setActivePageData] = useState<UniversalLessonPage>();
+  console.log(
+    '🚀 ~ file: LessonRowComposer.tsx ~ line 21 ~ LessonRowComposer ~ activePageData',
+    activePageData
+  );
 
   const [currentLesson, setCurrentLesson] = useState<any>();
 
@@ -31,8 +35,8 @@ const LessonRowComposer = () => {
 
   const getRemovedDownloadablesFromlist = useCallback(() => {
     const removeDownloadablesFromlist: any[] = [];
-    activePageData && activePageData.pageContent && activePageData.pageContent.length > 0
-      ? activePageData.pageContent.forEach((a) => {
+    activePageData && activePageData?.pageContent && activePageData.pageContent.length > 0
+      ? activePageData?.pageContent?.forEach((a) => {
           const objArray: any[] = [];
           a.partContent.forEach((b) => {
             //  && !b.type.includes('notes-form')
@@ -68,6 +72,10 @@ const LessonRowComposer = () => {
 
   const lessonState = gContext.lessonState;
   const PAGES = lessonState?.lessonData?.lessonPlan || [];
+  console.log(
+    '🚀 ~ file: LessonRowComposer.tsx ~ line 71 ~ LessonRowComposer ~ PAGES',
+    PAGES
+  );
 
   const isLastPage = PAGES?.length - 1 === lessonState.currentPage;
 
