@@ -1,5 +1,7 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import {updatePageState} from '@graphql/functions';
 import {removeLocalStorageData, setLocalStorageData} from '@utilities/localStorage';
+import {UserPageState} from 'API';
 import {getAsset} from 'assets';
 import BreadCrums from 'atoms/BreadCrums';
 import SectionTitleV3 from 'atoms/SectionTitleV3';
@@ -156,12 +158,26 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
 
   const roomId = match?.params?.roomId;
 
+  const {authId, email, pageState} = useAuth();
+
   useEffect(() => {
     if (!isEmpty(roomId) && state.roomData?.rooms?.length > 0) {
       const roomIndex = state.roomData.rooms.findIndex((d: any) => d.id === roomId);
       const room = state.roomData.rooms[roomIndex];
       const name = room?.name;
       handleRoomSelection(roomId, name, roomIndex);
+      updatePageState(
+        UserPageState.CLASS,
+        {
+          authId: authId,
+          email: email,
+          pageState: pageState
+        },
+        dispatch({
+          type: 'SET_USER',
+          payload: {...state.user, pageState: UserPageState.CLASS}
+        })
+      );
     }
   }, [roomId, state.roomData.rooms]);
 
@@ -366,7 +382,6 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
 
   const [listPersonData, setListPersonData] = useState([]);
 
-  const {authId, email} = useAuth();
   const [fetchingPersonData, setFetchingPersonData] = useState(true);
 
   const fetchLessonPersonData = async () => {

@@ -1,14 +1,12 @@
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import Highlighted from '@components/Atoms/Highlighted';
-import useGraphqlQuery from '@customHooks/useGraphqlQuery';
-import {
-  GetPersonLocationQuery,
-  GetPersonLocationQueryVariables,
-  PersonLocation
-} from 'API';
+import Popover from '@components/Atoms/Popover';
+import {PersonLocation, UserPageState} from 'API';
 import Buttons from 'atoms/Buttons';
 import Modal from 'atoms/Modal';
 import axios from 'axios';
 import {GlobalContext} from 'contexts/GlobalContext';
+import * as customSubscriptions from 'customGraphql/customSubscriptions';
 import React, {useContext, useEffect, useState} from 'react';
 import {FiAlertCircle} from 'react-icons/fi';
 import {useHistory, useRouteMatch} from 'react-router-dom';
@@ -22,10 +20,128 @@ interface ListProps {
   item: any;
   searchTerm?: string;
   roomInfo?: PersonLocation;
+  idx?: number;
 }
 
+type LocationInfoType = {
+  info: PersonLocation;
+  idx: number;
+  authId: string;
+  showLocationInfo: boolean;
+  pageState: UserPageState;
+  setShowLocationInfo: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+const formatPageName = (pageState: UserPageState) => {
+  switch (pageState) {
+    case UserPageState.GAME_CHANGERS:
+      return 'Game Changers';
+    case UserPageState.NOT_LOGGED_IN:
+      return 'Logged Out';
+    case UserPageState.CLASS:
+      return 'Classroom';
+    case UserPageState.LESSON:
+      return 'Lesson';
+    case UserPageState.DASHBOARD:
+      return 'Dashboard';
+    case UserPageState.COMMUNITY:
+      return 'Community';
+    default:
+      return pageState;
+  }
+};
+
+const LocationInfo = ({
+  info,
+  idx,
+  authId,
+  setShowLocationInfo,
+  showLocationInfo,
+  pageState
+}: LocationInfoType) => {
+  let subscribe: any;
+
+  const [localPageState, setLocalPageState] = useState(pageState);
+  const inLesson = localPageState === UserPageState.LESSON;
+
+  const subscribeToLocation = () => {
+    const personLocationSub = API.graphql(
+      graphqlOperation(customSubscriptions.onUpdatePerson, {
+        authId: authId
+      })
+      //@ts-ignore
+    ).subscribe({
+      next: (locationData: any) => {
+        const updatedStudent = locationData.value.data.onUpdatePerson;
+        setLocalPageState(updatedStudent.pageState);
+      }
+    });
+    return personLocationSub;
+  };
+
+  useEffect(() => {
+    if (authId) {
+      subscribe = subscribeToLocation();
+    }
+    return () => {
+      subscribe.unsubscribe();
+    };
+  }, []);
+
+  const loggedOut = localPageState === UserPageState.NOT_LOGGED_IN;
+
+  return (
+    <>
+      <Popover
+        bottom={idx < 2 ? -3 : 1.5}
+        minHeight="null"
+        minWidth={inLesson ? 96 : 52}
+        className="w-auto"
+        show={showLocationInfo && inLesson}
+        content={
+          <div className="w-auto">
+            <dl className="grid grid-cols-1 gap-x-4 gap-y-1">
+              <div className="flex w-auto items-end justify-between">
+                <dt className="w-auto text-sm font-medium text-gray-500">Page:</dt>
+                <dd className="w-auto mt-1 text-sm break-all text-gray-700 font-medium">
+                  {localPageState !== UserPageState.LOGGED_IN && !loggedOut ? (
+                    <span className="capitalize">
+                      {inLesson ? `in Lesson` : `on ${localPageState?.toLowerCase()}`}
+                    </span>
+                  ) : (
+                    localPageState
+                  )}
+                </dd>
+              </div>
+              {inLesson && (
+                <>
+                  <div className="flex w-auto items-end justify-between">
+                    <dt className="w-auto text-sm font-medium text-gray-500">Lesson:</dt>
+                    <dd className="w-auto mt-1 flex items-center justify-between  text-sm text-gray-700 font-medium">
+                      {info?.lesson?.title || '-'}
+                    </dd>
+                  </div>
+
+                  <div className="flex w-auto items-end justify-between">
+                    <dt className="w-auto text-sm font-medium text-gray-500">Room:</dt>
+                    <dd className="w-auto mt-1 flex items-center justify-between  text-sm text-gray-700 font-medium">
+                      {info?.room?.name || '-'}
+                    </dd>
+                  </div>
+                </>
+              )}
+            </dl>
+          </div>
+        }
+        setShow={setShowLocationInfo}>
+        {formatPageName(localPageState) || '--'}
+      </Popover>
+    </>
+  );
+};
+
 const List = (props: ListProps) => {
-  const {item, searchTerm, roomInfo} = props;
+  const {item, idx, searchTerm, roomInfo} = props;
 
   const match = useRouteMatch();
   const history = useHistory();
@@ -120,7 +236,9 @@ const List = (props: ListProps) => {
     });
   };
 
-  const checkRoom = () => {};
+  const [showLocationInfo, setShowLocationInfo] = useState(false);
+
+  let interval: any;
 
   return (
     ///change INFO, MARGIN and WIDTH if needed
@@ -182,12 +300,26 @@ const List = (props: ListProps) => {
 
         <div
           className="w-2/10 flex justify-center items-center pr-4 py-4 cursor-pointer whitespace-nowrap text-right text-sm text-gray-500 leading-5 font-medium"
-          onClick={() => (roomInfo !== undefined ? checkRoom() : () => {})}>
-          {item.role === 'ST'
-            ? roomInfo !== undefined
-              ? 'In class'
-              : 'Not in class'
-            : '--'}
+          onMouseEnter={() => {
+            if (item.role === 'ST' && item.pageState !== null) {
+              setShowLocationInfo(true);
+            }
+          }}
+          onMouseLeave={() => {
+            setShowLocationInfo(false);
+          }}>
+          {item.role === 'ST' && item.pageState ? (
+            <LocationInfo
+              info={roomInfo}
+              idx={idx}
+              authId={item.authId}
+              setShowLocationInfo={setShowLocationInfo}
+              showLocationInfo={showLocationInfo}
+              pageState={item.pageState}
+            />
+          ) : (
+            '--'
+          )}
         </div>
 
         {state.user.role !== 'ST' && state.user.role !== 'BLD' ? (

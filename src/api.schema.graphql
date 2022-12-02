@@ -546,6 +546,7 @@ type PersonLocation @model @auth(rules: [{allow: public}]) {
   lessonProgress: String
   person: Person @hasOne(fields: ["personEmail", "personAuthID"])
   room: Room @hasOne(fields: ["roomID"])
+  lesson: UniversalLesson @hasOne(fields: ["lessonID"])
 }
 
 type Links {

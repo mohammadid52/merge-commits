@@ -1,6 +1,8 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import Loader from '@components/Atoms/Loader';
 import ComponentLoading from '@components/Lesson/Loading/ComponentLoading';
+import {updatePageState} from '@graphql/functions';
+import {UserPageState} from 'API';
 import {getAsset} from 'assets';
 import Community from 'components/Community/Community';
 import InstitutionsHome from 'components/Dashboard/Admin/Institutons/InstitutionsHome';
@@ -337,6 +339,7 @@ const Dashboard = (props: DashboardProps) => {
   useEffect(() => {
     const authId = stateUser?.authId;
     const email = stateUser?.email;
+
     if (stateUser?.role === 'ST') {
       getDashboardData(authId, email);
     }

@@ -1,3 +1,5 @@
+import {UserPageState} from 'API';
+
 export interface globalStateType {
   sidebar: {
     upcomingLessons: any[];
@@ -33,6 +35,7 @@ export interface globalStateType {
     location: any[];
     lastLoggedOut?: string;
     lastLoggedIn?: string;
+    pageState?: UserPageState;
   };
   lessonsPayload: {
     lessonsData: any[];
@@ -75,7 +78,8 @@ export const globalState: globalStateType = {
     role: '',
     location: [],
     lastLoggedIn: '',
-    lastLoggedOut: ''
+    lastLoggedOut: '',
+    pageState: UserPageState.NOT_LOGGED_IN
   },
 
   temp: {},

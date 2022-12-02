@@ -1,3 +1,14 @@
+export const onUpdatePerson = /* GraphQL */ `
+  subscription OnUpdatePerson {
+    onUpdatePerson {
+      id
+      authId
+      email
+      pageState
+    }
+  }
+`;
+
 export const onUpdateClassroom = /* GraphQL */ `
   subscription onUpdateClassroom($id: ID!) {
     onUpdateClassroom(id: $id) {

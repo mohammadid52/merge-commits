@@ -1,16 +1,15 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import useLessonControls from 'customHooks/lessonControls';
-import React, {useContext, useEffect, useState} from 'react';
-import {useParams} from 'react-router-dom';
-import {GlobalContext} from 'contexts/GlobalContext';
-import useDictionary from 'customHooks/dictionary';
-import * as queries from 'graphql/queries';
-import * as subscriptions from 'graphql/subscriptions';
-import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
-import RosterSection from './ClassRoster/RosterSection';
-import Buttons from '@components/Atoms/Buttons';
 import {useNotifications} from '@contexts/NotificationContext';
 import {PersonStatus} from 'API';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import useLessonControls from 'customHooks/lessonControls';
+import * as queries from 'graphql/queries';
+import * as subscriptions from 'graphql/subscriptions';
+import React, {useContext, useEffect, useState} from 'react';
+import {useParams} from 'react-router-dom';
+import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
+import RosterSection from './ClassRoster/RosterSection';
 
 interface IClassRosterProps {
   handleQuitShare: () => void;

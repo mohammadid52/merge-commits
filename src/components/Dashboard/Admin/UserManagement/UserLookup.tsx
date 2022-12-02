@@ -14,7 +14,9 @@ import * as customQueries from 'customGraphql/customQueries';
 import * as queries from 'graphql/queries';
 
 // import LessonLoading from '../../../Lesson/Loading/ComponentLoading';
+import useGraphqlQuery from '@customHooks/useGraphqlQuery';
 import useSearch from '@customHooks/useSearch';
+import {ListPersonLocationsQueryVariables, PersonLocation} from 'API';
 import BreadCrums from 'atoms/BreadCrums';
 import Buttons from 'atoms/Buttons';
 import SearchInput from 'atoms/Form/SearchInput';
@@ -26,14 +28,6 @@ import useDictionary from 'customHooks/dictionary';
 import {createFilterToFetchSpecificItemsOnly} from 'utilities/strings';
 import List from './List';
 import UserListLoader from './UserListLoader';
-import useGraphqlQuery from '@customHooks/useGraphqlQuery';
-import {
-  GetPersonLocationQueryVariables,
-  GetPersonLocationQuery,
-  ListPersonLocationsQueryVariables,
-  PersonLocation,
-  ListPersonLocationsQuery
-} from 'API';
 
 const UserLookup = ({isInInstitute, instituteId}: any) => {
   const {state, theme, dispatch, userLanguage, clientKey} = useContext(GlobalContext);
@@ -112,6 +106,7 @@ const UserLookup = ({isInInstitute, instituteId}: any) => {
         const items = filterBySearchQuery(query);
         if (Boolean(items)) {
           setUserList(items);
+          handleFetchPersonLocation(items);
         }
       }
     }
@@ -122,7 +117,7 @@ const UserLookup = ({isInInstitute, instituteId}: any) => {
 
     if (Boolean(searched)) {
       setUserList(searched);
-      handleFetchPersonLocation();
+      handleFetchPersonLocation(searched);
     } else {
       _removeSearchAction();
     }
@@ -410,9 +405,10 @@ const UserLookup = ({isInInstitute, instituteId}: any) => {
 
   const [inClassList, setInClassList] = useState<PersonLocation[] | null>([]);
 
-  const handleFetchPersonLocation = async () => {
+  const handleFetchPersonLocation = async (_userList?: any[]) => {
     try {
-      const authIdArray = userList.map((user: any) => user.email) || [];
+      const list = _userList || userList;
+      const authIdArray = list.map((user: any) => user.email) || [];
       await refetch({
         filter: {
           ...createFilterToFetchSpecificItemsOnly(authIdArray, 'personEmail'),
@@ -428,7 +424,7 @@ const UserLookup = ({isInInstitute, instituteId}: any) => {
 
   useEffect(() => {
     if (!isPersonLocationFetched && !loading) {
-      handleFetchPersonLocation();
+      handleFetchPersonLocation(userList);
     }
   }, [isPersonLocationFetched, loading]);
 
@@ -505,9 +501,7 @@ const UserLookup = ({isInInstitute, instituteId}: any) => {
                   <span>{UserLookupDict[userLanguage]['name']}</span>
                 </div>
                 <div className="w-1/10 flex justify-center px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span className="w-auto">
-                    {UserLookupDict[userLanguage]['location']}
-                  </span>
+                  <span className="w-auto">{UserLookupDict[userLanguage]['flow']}</span>
                 </div>
                 <div className="w-1/10 flex justify-center px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span className="w-auto">{UserLookupDict[userLanguage]['role']}</span>
@@ -516,8 +510,7 @@ const UserLookup = ({isInInstitute, instituteId}: any) => {
                   <span className="w-auto">{UserLookupDict[userLanguage]['status']}</span>
                 </div>
                 <div className="w-2/10 px-8 justify-center py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  {/* {UserLookupDict[userLanguage]['action']} */}
-                  Classroom location
+                  {UserLookupDict[userLanguage]['location']}
                 </div>
                 {state.user.role !== 'ST' && state.user.role !== 'BLD' ? (
                   <div className="w-2/10 px-8 justify-center py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
@@ -542,6 +535,7 @@ const UserLookup = ({isInInstitute, instituteId}: any) => {
                       )}
                       searchTerm={searchInput.value}
                       item={item}
+                      idx={key}
                       key={key}
                     />
                   </div>

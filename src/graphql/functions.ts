@@ -1,4 +1,7 @@
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {Storage} from '@aws-amplify/storage';
+import {UserPageState} from 'API';
+import * as customMutations from 'customGraphql/customMutations';
 
 interface S3UploadOptions {
   onSuccess?: (result: Object) => void;
@@ -56,5 +59,28 @@ export const deleteImageFromS3 = async (key: string) => {
     console.log('File with key: ', key, ' deleted successfully');
   } catch (error) {
     console.error('Error in deleting file from s3', {key}, error);
+  }
+};
+
+export const updatePageState = async (
+  pageState: UserPageState,
+  auth: {authId: string; email: string; pageState: UserPageState},
+  onSuccessCallback?: () => void
+) => {
+  if (auth.pageState !== pageState) {
+    try {
+      const input = {
+        authId: auth.authId,
+        email: auth.email,
+        pageState: pageState
+      };
+      const res = await API.graphql(
+        graphqlOperation(customMutations.updatePersonLoginTime, {input})
+      );
+      console.log(res);
+      onSuccessCallback && onSuccessCallback();
+    } catch (error) {
+      console.error('error updating page -> ', {pageState, auth}, error);
+    }
   }
 };

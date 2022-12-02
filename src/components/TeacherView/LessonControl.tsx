@@ -87,8 +87,6 @@ const LessonControl = () => {
     const {lessonID} = urlParams;
     const syllabusID = getRoomData.activeSyllabus; // in the table this is called SyllabusLessonID, but it's just the syllabusID
 
-    console.log({lessonID, syllabusID, studentAuthID: lessonState.studentViewing});
-
     const studentDataSubscription = API.graphql(
       graphqlOperation(customSubscriptions.onChangeUniversalLessonStudentData, {
         studentAuthID: lessonState.studentViewing,

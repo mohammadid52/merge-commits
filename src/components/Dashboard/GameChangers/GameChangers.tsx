@@ -1,25 +1,28 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-hooks/rules-of-hooks */
-import React, {useEffect} from 'react';
 import AnimatedContainer from 'components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
+import React, {useEffect} from 'react';
 import Flickity from 'react-flickity-component';
 
-import InfoTab from 'components/Dashboard/GameChangers/components/InfoTab';
-import SelectedCard from 'components/Dashboard/GameChangers/components/SelectedCard';
+import {useQuery} from '@customHooks/urlParam';
 import BottomSection from 'components/Dashboard/GameChangers/components/BottomSection';
 import Card from 'components/Dashboard/GameChangers/components/Card';
+import Counter from 'components/Dashboard/GameChangers/components/Counter';
+import InfoTab from 'components/Dashboard/GameChangers/components/InfoTab';
+import SelectedCard from 'components/Dashboard/GameChangers/components/SelectedCard';
+import {useGameChangers} from 'components/Dashboard/GameChangers/context/GameChangersContext';
 import {
   cardsList,
   FSEBreathingHowTo,
-  sqaureBreathingInfoText,
+  FSEInfoText,
   sqaureBreathingHowTo,
-  FSEInfoText
+  sqaureBreathingInfoText
 } from 'components/Dashboard/GameChangers/__contstants';
-import {useGameChangers} from 'components/Dashboard/GameChangers/context/GameChangersContext';
-import Counter from 'components/Dashboard/GameChangers/components/Counter';
-import {useHistory, useRouteMatch} from 'react-router';
-import {useQuery} from '@customHooks/urlParam';
 import {isEmpty} from 'lodash';
+import {useHistory, useRouteMatch} from 'react-router';
+import {updatePageState} from '@graphql/functions';
+import {UserPageState} from 'API';
+import useAuth from '@customHooks/useAuth';
 
 const GameChangers = () => {
   const {
@@ -43,6 +46,16 @@ const GameChangers = () => {
     setInitialIndex(id);
     setSelectedCard(selectedCard === null ? id : null);
   };
+
+  const {authId, pageState, email} = useAuth();
+
+  useEffect(() => {
+    updatePageState(UserPageState.GAME_CHANGERS, {
+      authId,
+      email,
+      pageState
+    });
+  }, []);
 
   const params = useQuery(location.search);
   const exerciseIdFromUrl = params.get('exercise');

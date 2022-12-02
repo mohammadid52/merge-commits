@@ -1,4 +1,6 @@
 import Loader from '@components/Atoms/Loader';
+import {updatePageState} from '@graphql/functions';
+import {UserPageState} from 'API';
 import {getAsset} from 'assets';
 import SectionTitleV3 from 'atoms/SectionTitleV3';
 import {GlobalContext} from 'contexts/GlobalContext';
@@ -59,6 +61,20 @@ const Home = (props: ClassroomControlProps) => {
   const [teacherList, setTeacherList] = useState<any[]>();
   const [coTeachersList, setCoTeachersList] = useState<any[]>();
   const [studentsList, setStudentsList] = useState<any[]>();
+
+  const [isPageUpdatedOnPersonTable, setIsPageUpdatedOnPersonTable] = useState(false);
+
+  useEffect(() => {
+    if (!isPageUpdatedOnPersonTable) {
+      updatePageState(UserPageState.DASHBOARD, {
+        authId: state.user?.authId,
+        email: state.user?.email,
+        pageState: state.user?.pageState
+      });
+
+      setIsPageUpdatedOnPersonTable(true);
+    }
+  }, [isPageUpdatedOnPersonTable]);
 
   const getImageURL = async (uniqKey: string) => {
     const imageUrl: any = await getImageFromS3(uniqKey);

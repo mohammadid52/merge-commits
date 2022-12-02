@@ -1942,6 +1942,13 @@ export const listPersonLocations = /* GraphQL */ `
         lessonProgress
         createdAt
         updatedAt
+        room {
+          name
+        }
+        lesson {
+          id
+          title
+        }
       }
       nextToken
     }

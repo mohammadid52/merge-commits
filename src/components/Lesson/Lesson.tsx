@@ -1,6 +1,6 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {StudentPageInput} from '@interfaces/UniversalLessonInterfaces';
-import {PersonLessonsData, UpdatePersonLessonsDataInput} from 'API';
+import {PersonLessonsData, UpdatePersonLessonsDataInput, UserPageState} from 'API';
 import Noticebar from 'components/Noticebar/Noticebar';
 import {GlobalContext} from 'contexts/GlobalContext';
 import useNotifications from 'customHooks/notifications';
@@ -17,6 +17,7 @@ import * as queries from 'graphql/queries';
 import useAuth from '@customHooks/useAuth';
 import {v4 as uuidV4} from 'uuid';
 import useLessonControls from '@customHooks/lessonControls';
+import {updatePageState} from '@graphql/functions';
 
 export interface ILessonSurveyApp {
   pageStateUpdated: boolean;
@@ -280,7 +281,7 @@ const Lesson = () => {
 
   const getLocationData = getLocalStorageData('person_location');
 
-  const {authId, email} = useAuth();
+  const {authId, email, pageState} = useAuth();
 
   const [personLocationObj, setPersonLocationObj] = useState<any>({
     id: '',
@@ -356,6 +357,22 @@ const Lesson = () => {
   };
 
   const getRoomData = getLocalStorageData('room_info');
+
+  const [isPageUpdatedOnPersonTable, setIsPageUpdatedOnPersonTable] = useState(false);
+
+  useEffect(() => {
+    if (!isPageUpdatedOnPersonTable) {
+      updatePageState(
+        UserPageState.LESSON,
+        {
+          authId: authId,
+          email: email,
+          pageState
+        },
+        () => setIsPageUpdatedOnPersonTable(true)
+      );
+    }
+  }, [isPageUpdatedOnPersonTable]);
 
   const createPersonLocation = async () => {
     const {lessonID} = urlParams;
@@ -434,6 +451,11 @@ const Lesson = () => {
           }
         })
       );
+      updatePageState(UserPageState.CLASS, {
+        authId: authId,
+        email: email,
+        pageState
+      });
     } catch (e) {
       console.error('error deleting location record - ', e);
     } finally {
