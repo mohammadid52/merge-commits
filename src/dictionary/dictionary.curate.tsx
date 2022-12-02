@@ -2864,7 +2864,7 @@ const UserInformationDict: any = {
     email: 'Email Address',
     account: 'Account Created',
     ondemand: 'Self-Paced',
-    FLOW: 'Flow',
+
     LOCATION: 'Location',
     SUPER_ADMIN: 'Super Admin',
     RESET_PASSWORD: 'Reset password',
@@ -2883,7 +2883,7 @@ const UserInformationDict: any = {
     nickname: 'TBD',
     role: 'TBD',
     status: 'TBD',
-    FLOW: 'TBD',
+
     CLASSROOM_LOCATION: 'TBD',
     email: 'TBD',
     account: 'TBD',
@@ -2905,6 +2905,7 @@ const UserLookupDict: any = {
     name: 'Name',
     role: 'Role',
     location: 'location',
+    flow: 'flow',
     status: 'Status',
     action: 'Actions',
     noresult: 'No Results',
