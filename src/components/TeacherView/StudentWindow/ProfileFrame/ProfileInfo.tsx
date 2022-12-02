@@ -1,16 +1,17 @@
 import React, {useContext} from 'react';
 
+import LocationBadge from '@components/Dashboard/Admin/Institutons/EditBuilders/LocationBadge';
 import Buttons from 'atoms/Buttons';
 import Modal from 'atoms/Modal';
-import {FiAlertCircle} from 'react-icons/fi';
 import Status from 'atoms/Status';
 import UserRole from 'components/Dashboard/Admin/UserManagement/UserRole';
 import {GlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
-import {FaEdit} from 'react-icons/fa';
+import {FiAlertCircle} from 'react-icons/fi';
 
 interface IProfileFrameInfo {
   user: any;
+  room?: {name: string};
   created: () => string;
   loading: boolean;
   resetPasswordServerResponse: {
@@ -29,13 +30,13 @@ const ProfileFrameInfo = ({
   resetPasswordServerResponse,
   resetPassword,
   onAlertClose,
-  setIsEditing
+  room
 }: IProfileFrameInfo) => {
   // ~~~~~~~~~~~~~~~ CONTEXT ~~~~~~~~~~~~~~~ //
-  const {theme, userLanguage, clientKey} = useContext(GlobalContext);
+  const {userLanguage} = useContext(GlobalContext);
   // ~~~~~~~~~~~~~~ DICTIONARY ~~~~~~~~~~~~~ //
-  const {dashboardProfileDict} = useDictionary(clientKey);
-  const {UserInformationDict} = useDictionary(clientKey);
+
+  const {UserInformationDict} = useDictionary();
 
   return (
     <div className="m-auto p-2 bg-white shadow-5 rounded z-50">
@@ -93,10 +94,18 @@ const ProfileFrameInfo = ({
           {/*----ON DEMAND TOGGLE----*/}
           <div className="sm:col-span-1 p-2">
             <dt className="text-sm leading-5 font-regular text-gray-600">
-              {UserInformationDict[userLanguage]['ondemand']}
+              {UserInformationDict[userLanguage]['location']}
+            </dt>
+            <dd>
+              <LocationBadge onDemand={user?.onDemand} />
+            </dd>
+          </div>
+          <div className="sm:col-span-1 p-2">
+            <dt className="text-sm leading-5 font-regular text-gray-600">
+              {UserInformationDict[userLanguage]['CLASSROOM_LOCATION']}
             </dt>
             <dd className="mt-2 text-base leading-5 text-gray-900">
-              <Status status={user?.onDemand ? 'YES' : 'NO'} />
+              {room && room?.name ? `In ${room.name}` : `Not in classroom`}
             </dd>
           </div>
           <div className="sm:col-span-1 p-2 flex items-centers">

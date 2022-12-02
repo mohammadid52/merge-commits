@@ -15,6 +15,7 @@ import FormInput from 'atoms/Form/FormInput';
 import AuthCard from 'components/Auth/AuthCard';
 import RememberMe from 'components/Auth/RememberMe';
 import {AiOutlineLock, AiOutlineUser} from 'react-icons/ai';
+import {UserPageState} from 'API';
 
 interface LoginProps {
   updateAuthState: Function;
@@ -98,7 +99,8 @@ const Login = ({updateAuthState}: LoginProps) => {
           id: userInfo.id,
           authId: user.username,
           email: username,
-          lastLoggedIn: new Date().toISOString()
+          lastLoggedIn: new Date().toISOString(),
+          pageState: UserPageState.LOGGED_IN
         };
         await API.graphql(
           graphqlOperation(customMutations.updatePersonLoginTime, {input})
@@ -291,7 +293,8 @@ const Login = ({updateAuthState}: LoginProps) => {
         id: userInfo.id,
         authId: user.username,
         email: username,
-        lastLoggedIn: new Date().toISOString()
+        lastLoggedIn: new Date().toISOString(),
+        pageState: UserPageState.LOGGED_IN
       };
       await API.graphql(graphqlOperation(customMutations.updatePersonLoginTime, {input}));
       updateAuthState(true);

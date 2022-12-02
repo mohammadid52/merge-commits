@@ -2864,6 +2864,8 @@ const UserInformationDict: any = {
     email: 'Email Address',
     account: 'Account Created',
     ondemand: 'Self-Paced',
+    location: 'Location',
+    CLASSROOM_LOCATION: 'Classroom Location',
     SUPER_ADMIN: 'Super Admin',
     RESET_PASSWORD: 'Reset password',
     RESETTING_PASSWORD: 'Resetting password',

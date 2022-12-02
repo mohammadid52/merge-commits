@@ -11,6 +11,17 @@ enum PersonStatus {
   HOLD
 }
 
+enum UserPageState {
+  DASHBOARD
+  NOT_LOGGED_IN
+  LOGGED_IN
+  GAME_CHANGERS
+  COMMUNITY
+  NOTEBOOK
+  CLASS
+  LESSON
+}
+
 enum Role {
   SUP
   ADM
@@ -65,6 +76,7 @@ type Person @model @auth(rules: [{allow: public}]) {
   statusReason: String
   addedby: String
   lastEmotionSubmission: AWSDate
+  pageState: UserPageState
 }
 
 type PersonLessonsData @model @auth(rules: [{allow: public}]) {

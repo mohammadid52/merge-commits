@@ -2,6 +2,7 @@
 // import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {Auth} from '@aws-amplify/auth';
+import {UserPageState} from 'API';
 import {getAsset} from 'assets';
 import AuthRoutes from 'components/AppRoutes/AuthRoutes';
 import UnauthRoutes from 'components/AppRoutes/UnauthRoutes';
@@ -142,7 +143,8 @@ const MainRouter: React.FC = () => {
         id: state.user.id,
         authId: state.user.authId,
         email: state.user.email,
-        lastLoggedOut: new Date().toISOString()
+        lastLoggedOut: new Date().toISOString(),
+        pageState: UserPageState.NOT_LOGGED_IN
       };
       API.graphql(graphqlOperation(customMutations.updatePersonLogoutTime, {input}));
       await Auth.signOut();

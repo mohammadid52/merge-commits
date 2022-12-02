@@ -26,6 +26,14 @@ import useDictionary from 'customHooks/dictionary';
 import {createFilterToFetchSpecificItemsOnly} from 'utilities/strings';
 import List from './List';
 import UserListLoader from './UserListLoader';
+import useGraphqlQuery from '@customHooks/useGraphqlQuery';
+import {
+  GetPersonLocationQueryVariables,
+  GetPersonLocationQuery,
+  ListPersonLocationsQueryVariables,
+  PersonLocation,
+  ListPersonLocationsQuery
+} from 'API';
 
 const UserLookup = ({isInInstitute, instituteId}: any) => {
   const {state, theme, dispatch, userLanguage, clientKey} = useContext(GlobalContext);
@@ -114,6 +122,7 @@ const UserLookup = ({isInInstitute, instituteId}: any) => {
 
     if (Boolean(searched)) {
       setUserList(searched);
+      handleFetchPersonLocation();
     } else {
       _removeSearchAction();
     }
@@ -389,6 +398,40 @@ const UserLookup = ({isInInstitute, instituteId}: any) => {
   // return <LessonLoading />;
   // }
 
+  const {
+    refetch,
+    data: personLocationList,
+    isFetched: isPersonLocationFetched
+  } = useGraphqlQuery<ListPersonLocationsQueryVariables, PersonLocation[]>(
+    'listPersonLocations',
+    null,
+    {custom: true, enabled: false}
+  );
+
+  const [inClassList, setInClassList] = useState<PersonLocation[] | null>([]);
+
+  const handleFetchPersonLocation = async () => {
+    try {
+      const authIdArray = userList.map((user: any) => user.email) || [];
+      await refetch({
+        filter: {
+          ...createFilterToFetchSpecificItemsOnly(authIdArray, 'personEmail'),
+          lessonID: {attributeExists: true}
+        }
+      });
+
+      setInClassList(personLocationList);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    if (!isPersonLocationFetched && !loading) {
+      handleFetchPersonLocation();
+    }
+  }, [isPersonLocationFetched, loading]);
+
   return (
     <div className={`w-full h-full ${isInInstitute ? 'px-12' : ''}`}>
       {/* Header Section */}
@@ -461,19 +504,20 @@ const UserLookup = ({isInInstitute, instituteId}: any) => {
                 <div className="w-4/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>{UserLookupDict[userLanguage]['name']}</span>
                 </div>
-                <div className="w-2/10 flex justify-center px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                <div className="w-1/10 flex justify-center px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span className="w-auto">
                     {UserLookupDict[userLanguage]['location']}
                   </span>
                 </div>
-                <div className="w-2/10 flex justify-center px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                <div className="w-1/10 flex justify-center px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span className="w-auto">{UserLookupDict[userLanguage]['role']}</span>
                 </div>
-                <div className="w-2/10 flex justify-center px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                <div className="w-1/10 flex justify-center px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span className="w-auto">{UserLookupDict[userLanguage]['status']}</span>
                 </div>
                 <div className="w-2/10 px-8 justify-center py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  {UserLookupDict[userLanguage]['action']}
+                  {/* {UserLookupDict[userLanguage]['action']} */}
+                  Classroom location
                 </div>
                 {state.user.role !== 'ST' && state.user.role !== 'BLD' ? (
                   <div className="w-2/10 px-8 justify-center py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
@@ -492,7 +536,14 @@ const UserLookup = ({isInInstitute, instituteId}: any) => {
               ) : userList.length > 0 ? (
                 userList.map((item: any, key: number) => (
                   <div key={key}>
-                    <List searchTerm={searchInput.value} item={item} key={key} />
+                    <List
+                      roomInfo={inClassList.find(
+                        (user) => user.personAuthID === item.authId
+                      )}
+                      searchTerm={searchInput.value}
+                      item={item}
+                      key={key}
+                    />
                   </div>
                 ))
               ) : (

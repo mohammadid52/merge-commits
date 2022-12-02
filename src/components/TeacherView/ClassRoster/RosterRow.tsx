@@ -210,7 +210,7 @@ const RosterRow: React.FC<RosterRowProps> = ({
   return (
     <>
       {/* <div className="" /> */}
-      <div className="roster-row cursor-pointer">
+      <div className="roster-row">
         <div
           draggable={false}
           className={`w-full px-4 flex py-2 transition-all duration-300 items-center ${

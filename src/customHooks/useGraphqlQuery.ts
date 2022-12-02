@@ -2,6 +2,7 @@ import * as customQueries from 'customGraphql/customQueries';
 import * as queries from 'graphql/queries';
 import {API, graphqlOperation} from 'aws-amplify';
 import {useEffect, useState} from 'react';
+import {isEmpty} from 'lodash';
 
 /*
   Example:
@@ -55,6 +56,8 @@ const useGraphqlQuery = <VariablesType, ReturnType = any[]>(
 
   const action = custom ? customQueries : queries;
 
+  const isGet = queryName.startsWith('get');
+
   const fetch = async (
     nextToken?: string,
     loopArray?: any[],
@@ -68,20 +71,21 @@ const useGraphqlQuery = <VariablesType, ReturnType = any[]>(
         // @ts-ignore
         graphqlOperation(action[queryName], {..._v, nextToken: nextToken})
       );
-      const data = res.data[queryName].items;
-      const theNextToken = res.data[queryName]?.nextToken;
-      const outputData = loopArray ? [...loopArray, ...data] : data;
+
+      const data = isGet ? res.data[queryName] : res.data[queryName].items;
+      const theNextToken = isGet ? null : res.data[queryName]?.nextToken;
+      const outputData = isGet ? data : loopArray ? [...loopArray, ...data] : data;
 
       if (theNextToken && loopOnNextToken) {
         await fetch(theNextToken, outputData);
       } else {
-        if (outputData.length > 0) {
+        if ((isGet && isEmpty(outputData)) || (!isGet && outputData.length > 0)) {
           setIsSuccess(true);
           setData(outputData);
           setError('');
           setIsError(false);
           if (onSuccess && typeof onSuccess === 'function') {
-            onSuccess(outputData, (updatedData) => setData(updatedData));
+            onSuccess(outputData, (updatedData: ReturnType) => setData(updatedData));
           }
 
           return outputData;

@@ -1,27 +1,31 @@
+import Highlighted from '@components/Atoms/Highlighted';
+import useGraphqlQuery from '@customHooks/useGraphqlQuery';
+import {
+  GetPersonLocationQuery,
+  GetPersonLocationQueryVariables,
+  PersonLocation
+} from 'API';
+import Buttons from 'atoms/Buttons';
+import Modal from 'atoms/Modal';
+import axios from 'axios';
+import {GlobalContext} from 'contexts/GlobalContext';
 import React, {useContext, useEffect, useState} from 'react';
+import {FiAlertCircle} from 'react-icons/fi';
 import {useHistory, useRouteMatch} from 'react-router-dom';
+import {getImageFromS3} from 'utilities/services';
+import {requestResetPassword} from 'utilities/urls';
+import UserLocation from './UserLocation';
 import UserRole from './UserRole';
 import UserStatus from './UserStatus';
-import UserLocation from './UserLocation';
-import {getImageFromS3} from 'utilities/services';
-import {getAsset} from 'assets';
-import {GlobalContext} from 'contexts/GlobalContext';
-import useDictionary from 'customHooks/dictionary';
-import axios from 'axios';
-import {requestResetPassword} from 'utilities/urls';
-import Modal from 'atoms/Modal';
-import {FiAlertCircle} from 'react-icons/fi';
-import Buttons from 'atoms/Buttons';
-import Highlighted from '@components/Atoms/Highlighted';
-import {useQuery} from '@customHooks/urlParam';
 
 interface ListProps {
   item: any;
   searchTerm?: string;
+  roomInfo?: PersonLocation;
 }
 
 const List = (props: ListProps) => {
-  const {item, searchTerm} = props;
+  const {item, searchTerm, roomInfo} = props;
 
   const match = useRouteMatch();
   const history = useHistory();
@@ -31,9 +35,7 @@ const List = (props: ListProps) => {
     show: false,
     message: ''
   });
-  const {state, theme, clientKey, userLanguage} = useContext(GlobalContext);
-  const {BUTTONS} = useDictionary(clientKey);
-  const themeColor = getAsset(clientKey, 'themeClassName');
+  const {state} = useContext(GlobalContext);
 
   const initials = (firstName: string, lastName: string) => {
     let firstInitial = firstName.charAt(0).toUpperCase();
@@ -95,19 +97,19 @@ const List = (props: ListProps) => {
     if (loggedUserRole === 'FLW' && userRole === 'ST') {
       show = true;
     }
+
     if (show) {
       return (
-        <div
-          className="w-2/10 flex justify-center items-center pr-4 py-4 cursor-pointer whitespace-nowrap text-right text-sm leading-5 font-medium"
-          onClick={() => resetPassword(item)}>
-          <div
-            id={item.id}
-            className={`flex justify-center ${theme.textColor[themeColor]}`}>
-            {loading ? 'Resetting' : 'Reset Password'}
-          </div>
-        </div>
+        <Buttons
+          size="small"
+          transparent
+          label={loading ? 'Resetting' : 'Reset Password'}
+          disabled={loading}
+          onClick={() => resetPassword(item)}
+        />
       );
     }
+
     return <div className="w-2/10" />;
   };
 
@@ -118,12 +120,15 @@ const List = (props: ListProps) => {
     });
   };
 
+  const checkRoom = () => {};
+
   return (
     ///change INFO, MARGIN and WIDTH if needed
     <>
       <div
         id={item.id}
-        className="flex justify-between bg-white w-full border-b-0 border-gray-200">
+        onClick={() => handleLink(item.id)}
+        className="flex hover:bg-gray-200 justify-between bg-white w-full border-b-0 border-gray-200">
         <div className="w-4/10 px-8 py-4">
           <div className="flex items-center">
             <div className="flex-shrink-0 h-10 w-10">
@@ -159,33 +164,37 @@ const List = (props: ListProps) => {
             </div>
           </div>
         </div>
-        <div className="w-2/10 flex justify-center items-center px-8 py-4 whitespace-nowrap">
+        <div className="w-1/10 flex justify-center items-center px-8 py-4 whitespace-nowrap">
           <span id={item.id} className="w-auto text-sm leading-5 text-gray-500">
             <UserLocation role={item.role} onDemand={item?.onDemand} />
           </span>
         </div>
-        <div className="w-2/10 flex justify-center items-center px-8 py-4 whitespace-nowrap">
+        <div className="w-1/10 flex justify-center items-center px-8 py-4 whitespace-nowrap">
           <span id={item.id} className="w-auto text-sm leading-5 text-gray-500">
             <UserRole role={item.role ? item.role : '--'} />
           </span>
         </div>
-        <div className="w-2/10 flex justify-center items-center px-8 py-4 whitespace-nowrap">
+        <div className="w-1/10 flex justify-center items-center px-8 py-4 whitespace-nowrap">
           <div className="w-16 flex justify-center">
             <UserStatus status={item.status ? item.status : '--'} />
           </div>
         </div>
+
         <div
-          className="w-2/10 flex justify-center items-center pr-4 py-4 cursor-pointer whitespace-nowrap text-right text-sm leading-5 font-medium"
-          onClick={() => handleLink(item.id)}>
-          <div
-            id={item.id}
-            className={`flex justify-center ${theme.textColor[themeColor]}`}>
-            {BUTTONS[userLanguage]['EDIT']}
-          </div>
+          className="w-2/10 flex justify-center items-center pr-4 py-4 cursor-pointer whitespace-nowrap text-right text-sm text-gray-500 leading-5 font-medium"
+          onClick={() => (roomInfo !== undefined ? checkRoom() : () => {})}>
+          {item.role === 'ST'
+            ? roomInfo !== undefined
+              ? 'In class'
+              : 'Not in class'
+            : '--'}
         </div>
-        {state.user.role !== 'ST' && state.user.role !== 'BLD'
-          ? showResetPasswordOption(state.user.role, item.role)
-          : null}
+
+        {state.user.role !== 'ST' && state.user.role !== 'BLD' ? (
+          <div className="w-2/10 flex items-center justify-center">
+            {showResetPasswordOption(state.user.role, item.role)}
+          </div>
+        ) : null}
       </div>
       {resetPasswordServerResponse.show && (
         <Modal showHeader={false} showFooter={false} closeAction={onAlertClose}>

@@ -10,6 +10,7 @@ import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
 import RosterSection from './ClassRoster/RosterSection';
 import Buttons from '@components/Atoms/Buttons';
 import {useNotifications} from '@contexts/NotificationContext';
+import {PersonStatus} from 'API';
 
 interface IClassRosterProps {
   handleQuitShare: () => void;
@@ -219,7 +220,10 @@ const ClassRoster = ({
           const findStudentInClasslist = roster.find(
             (student2: any) => student2.personEmail === student.personEmail
           );
-          if (findStudentInClasslist) {
+          if (
+            findStudentInClasslist &&
+            findStudentInClasslist.person.status !== PersonStatus.INACTIVE
+          ) {
             return findStudentInClasslist;
           }
         });

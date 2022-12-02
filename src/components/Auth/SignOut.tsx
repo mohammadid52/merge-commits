@@ -7,6 +7,7 @@ import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import * as customMutations from 'customGraphql/customMutations';
 import {FiLogOut} from 'react-icons/all';
 import {removeLocalStorageData} from 'utilities/localStorage';
+import {UserPageState} from 'API';
 
 interface SignOutButtonProps {
   updateAuthState: Function;
@@ -23,7 +24,8 @@ const SignOutButton = (props: SignOutButtonProps) => {
         id: state.user.id,
         authId: state.user.authId,
         email: state.user.email,
-        lastLoggedOut: new Date().toISOString()
+        lastLoggedOut: new Date().toISOString(),
+        pageState: UserPageState.NOT_LOGGED_IN
       };
       API.graphql(graphqlOperation(customMutations.updatePersonLogoutTime, {input}));
       await Auth.signOut();
