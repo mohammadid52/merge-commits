@@ -352,16 +352,6 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
     }
   };
 
-  const getStudentsFromCoTeachers = (data: any[]) => {
-    let students: any[] = [];
-    data.forEach((item: any) => {
-      item?.room?.class?.students?.items.forEach((student: any) => {
-        students.push(student.student);
-      });
-    });
-    return students;
-  };
-
   const sortByName = (data: any[]) => {
     return data.sort((a: any, b: any) => {
       if (a.name < b.name) {
@@ -373,6 +363,8 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
       return 0;
     });
   };
+
+  const [classList, setClassList] = useState([]);
 
   const fetchStudentList = async () => {
     setLoading(true);
@@ -389,16 +381,23 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
       );
 
       let students1: any[] = [];
+      let students2: any[] = [];
+
+      let classes: any[] = [];
 
       response?.data?.listRooms?.items.forEach((item: any) => {
+        classes.push(item.class);
         item?.class?.students?.items.forEach((student: any) => {
-          students1.push(student.student);
+          students1.push({...student.student, classId: item.class.id});
         });
       });
 
-      const students2: any[] = getStudentsFromCoTeachers(
-        assignedRoomsAsCoTeacher?.data?.listRoomCoTeachers?.items || []
-      );
+      assignedRoomsAsCoTeacher?.data?.listRoomCoTeachers?.items.forEach((item: any) => {
+        classes.push(item.room.class);
+        item?.room?.class?.students?.items.forEach((student: any) => {
+          students2.push({...student.student, classId: item.room.classID});
+        });
+      });
 
       let ids: any[] = [];
       const concated = [...students1, ...students2].filter((item: any) => {
@@ -410,6 +409,17 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
         }
       });
 
+      let classIds: any[] = [];
+      const uniqClasses = classes.filter((item: any) => {
+        if (classIds.includes(item.id)) {
+          return false;
+        } else {
+          classIds.push(item.id);
+          return true;
+        }
+      });
+
+      setClassList(uniqClasses);
       setTotalUserList(sortByName(addName(concated)));
     } catch (error) {
       console.error(error);
@@ -500,7 +510,31 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
     }
   }, [isPersonLocationFetched, loading]);
 
-  console.log(inClassList);
+  const getClassListForSelector = () => {
+    return classList.map((item: any, idx) => {
+      return {
+        id: idx,
+        value: item.id,
+        name: item.name
+      };
+    });
+  };
+
+  const [selectedClass, setSelectedClass] = useState<any>(null);
+
+  const setSelectedClassValue = (str: string, name: string) => {
+    setSelectedClass({
+      ...selectedClass,
+      value: str,
+      name: name
+    });
+
+    const filtered = totalUserList.filter((item: any) => {
+      return item?.classId === str;
+    });
+
+    setUserList(filtered);
+  };
 
   const getRoomInfo = (authId: string) =>
     inClassList.find((user) => user.personAuthID === authId);
@@ -520,7 +554,25 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
             subtitle={UserLookupDict[userLanguage]['subtitle']}
           />
         )}
-        <div className="flex justify-end mb-4">
+        <div
+          className={
+            isStudentRoster
+              ? 'flex justify-end mb-4 items-center'
+              : 'flex justify-end mb-4'
+          }>
+          {isStudentRoster && (
+            <div className="w-auto mr-2 min-w-64">
+              <Selector
+                placeholder={'Select a class'}
+                list={getClassListForSelector()}
+                selectedItem={selectedClass?.name}
+                onChange={setSelectedClassValue}
+                disabled={loading}
+                arrowHidden={true}
+              />
+            </div>
+          )}
+
           <SearchInput
             dataCy="user-loookup-search"
             value={searchInput.value}
