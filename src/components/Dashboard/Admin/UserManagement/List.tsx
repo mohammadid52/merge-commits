@@ -7,6 +7,7 @@ import Modal from 'atoms/Modal';
 import axios from 'axios';
 import {GlobalContext} from 'contexts/GlobalContext';
 import * as customSubscriptions from 'customGraphql/customSubscriptions';
+import moment from 'moment';
 import React, {useContext, useEffect, useState} from 'react';
 import {FiAlertCircle} from 'react-icons/fi';
 import {useHistory, useRouteMatch} from 'react-router-dom';
@@ -32,12 +33,14 @@ type LocationInfoType = {
   setShowLocationInfo: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const formatPageName = (pageState: UserPageState) => {
+export const formatPageName = (pageState: UserPageState) => {
   switch (pageState) {
     case UserPageState.GAME_CHANGERS:
       return 'Game Changers';
     case UserPageState.NOT_LOGGED_IN:
       return 'Logged Out';
+    case UserPageState.LOGGED_IN:
+      return 'Logged In';
     case UserPageState.CLASS:
       return 'Classroom';
     case UserPageState.LESSON:
@@ -61,8 +64,12 @@ const LocationInfo = ({
 }: LocationInfoType) => {
   let subscribe: any;
 
-  const [localPageState, setLocalPageState] = useState(pageState);
-  const inLesson = localPageState === UserPageState.LESSON;
+  const [localPageState, setLocalPageState] = useState({
+    pageState: pageState || UserPageState.NOT_LOGGED_IN,
+    lastPageStateUpdate: new Date().toISOString()
+  });
+
+  const inLesson = localPageState.pageState === UserPageState.LESSON;
 
   const subscribeToLocation = () => {
     const personLocationSub = API.graphql(
@@ -73,7 +80,10 @@ const LocationInfo = ({
     ).subscribe({
       next: (locationData: any) => {
         const updatedStudent = locationData.value.data.onUpdatePerson;
-        setLocalPageState(updatedStudent.pageState);
+        setLocalPageState({
+          pageState: updatedStudent.pageState,
+          lastPageStateUpdate: updatedStudent.lastPageStateUpdate
+        });
       }
     });
     return personLocationSub;
@@ -88,7 +98,12 @@ const LocationInfo = ({
     };
   }, []);
 
-  const loggedOut = localPageState === UserPageState.NOT_LOGGED_IN;
+  const loggedOut = localPageState.pageState === UserPageState.NOT_LOGGED_IN;
+  const loggedIn = localPageState.pageState === UserPageState.LOGGED_IN;
+
+  const lastPageStateUpdate = localPageState.lastPageStateUpdate
+    ? moment(localPageState.lastPageStateUpdate).format('lll')
+    : null;
 
   return (
     <>
@@ -97,22 +112,25 @@ const LocationInfo = ({
         minHeight="null"
         minWidth={inLesson ? 96 : 52}
         className="w-auto"
-        show={showLocationInfo && inLesson}
+        show={showLocationInfo}
         content={
           <div className="w-auto">
             <dl className="grid grid-cols-1 gap-x-4 gap-y-1">
               <div className="flex w-auto items-end justify-between">
                 <dt className="w-auto text-sm font-medium text-gray-500">Page:</dt>
                 <dd className="w-auto mt-1 text-sm break-all text-gray-700 font-medium">
-                  {localPageState !== UserPageState.LOGGED_IN && !loggedOut ? (
+                  {loggedIn && !loggedOut ? (
                     <span className="capitalize">
-                      {inLesson ? `in Lesson` : `on ${localPageState?.toLowerCase()}`}
+                      {inLesson
+                        ? `in Lesson`
+                        : `on ${localPageState.pageState?.toLowerCase()}`}
                     </span>
                   ) : (
-                    localPageState
+                    formatPageName(localPageState.pageState)
                   )}
                 </dd>
               </div>
+
               {inLesson && (
                 <>
                   <div className="flex w-auto items-end justify-between">
@@ -130,11 +148,17 @@ const LocationInfo = ({
                   </div>
                 </>
               )}
+
+              {lastPageStateUpdate !== null && (
+                <span className="border-t-0 border-gray-500 text-gray-600 pt-1 text-xs text-center">
+                  Since {lastPageStateUpdate}
+                </span>
+              )}
             </dl>
           </div>
         }
         setShow={setShowLocationInfo}>
-        {formatPageName(localPageState) || '--'}
+        {formatPageName(localPageState.pageState) || '--'}
       </Popover>
     </>
   );
@@ -238,8 +262,6 @@ const List = (props: ListProps) => {
 
   const [showLocationInfo, setShowLocationInfo] = useState(false);
 
-  let interval: any;
-
   return (
     ///change INFO, MARGIN and WIDTH if needed
     <>
@@ -277,7 +299,7 @@ const List = (props: ListProps) => {
                 <Highlighted text={item.name} highlight={searchTerm} />
               </div>
               <div id={item.id} className="text-sm leading-5 text-gray-500 break-all">
-                {item.email}
+                <Highlighted text={item.email} highlight={searchTerm} />
               </div>
             </div>
           </div>

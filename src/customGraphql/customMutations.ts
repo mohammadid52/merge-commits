@@ -172,6 +172,7 @@ export const updatePersonLoginTime = /* GraphQL */ `
       email
       lastLoggedIn
       pageState
+      lastPageStateUpdate
     }
   }
 `;
@@ -187,6 +188,7 @@ export const updatePersonLogoutTime = /* GraphQL */ `
       email
       lastLoggedIn
       pageState
+      lastPageStateUpdate
     }
   }
 `;

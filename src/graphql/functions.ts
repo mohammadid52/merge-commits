@@ -72,12 +72,12 @@ export const updatePageState = async (
       const input = {
         authId: auth.authId,
         email: auth.email,
-        pageState: pageState
+        pageState: pageState,
+        lastPageStateUpdate: new Date().toISOString()
       };
       const res = await API.graphql(
         graphqlOperation(customMutations.updatePersonLoginTime, {input})
       );
-      console.log(res);
       onSuccessCallback && onSuccessCallback();
     } catch (error) {
       console.error('error updating page -> ', {pageState, auth}, error);

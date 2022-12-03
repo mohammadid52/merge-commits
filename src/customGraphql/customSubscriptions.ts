@@ -5,6 +5,7 @@ export const onUpdatePerson = /* GraphQL */ `
       authId
       email
       pageState
+      lastPageStateUpdate
     }
   }
 `;

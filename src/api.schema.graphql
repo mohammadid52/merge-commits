@@ -76,7 +76,8 @@ type Person @model @auth(rules: [{allow: public}]) {
   statusReason: String
   addedby: String
   lastEmotionSubmission: AWSDate
-  pageState: UserPageState
+  pageState: UserPageState @default(value: "NOT_LOGGED_IN")
+  lastPageStateUpdate: String
 }
 
 type PersonLessonsData @model @auth(rules: [{allow: public}]) {

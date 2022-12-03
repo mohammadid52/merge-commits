@@ -65,6 +65,7 @@ export const getPerson = /* GraphQL */ `
       addedby
       lastEmotionSubmission
       pageState
+      lastPageStateUpdate
       createdAt
       updatedAt
     }
@@ -124,6 +125,7 @@ export const listPeople = /* GraphQL */ `
         addedby
         lastEmotionSubmission
         pageState
+        lastPageStateUpdate
         createdAt
         updatedAt
       }
@@ -302,6 +304,7 @@ export const getPersonLessonsData = /* GraphQL */ `
           addedby
           lastEmotionSubmission
           pageState
+          lastPageStateUpdate
           createdAt
           updatedAt
         }
@@ -677,6 +680,7 @@ export const getStaff = /* GraphQL */ `
         addedby
         lastEmotionSubmission
         pageState
+        lastPageStateUpdate
         createdAt
         updatedAt
       }
@@ -767,6 +771,7 @@ export const listStaff = /* GraphQL */ `
           addedby
           lastEmotionSubmission
           pageState
+          lastPageStateUpdate
           createdAt
           updatedAt
         }
@@ -904,6 +909,7 @@ export const getRoom = /* GraphQL */ `
         addedby
         lastEmotionSubmission
         pageState
+        lastPageStateUpdate
         createdAt
         updatedAt
       }
@@ -1103,6 +1109,7 @@ export const listRooms = /* GraphQL */ `
           addedby
           lastEmotionSubmission
           pageState
+          lastPageStateUpdate
           createdAt
           updatedAt
         }
@@ -1278,6 +1285,7 @@ export const getClassroomGroupStudents = /* GraphQL */ `
           addedby
           lastEmotionSubmission
           pageState
+          lastPageStateUpdate
           createdAt
           updatedAt
         }
@@ -1327,6 +1335,7 @@ export const getClassroomGroupStudents = /* GraphQL */ `
         addedby
         lastEmotionSubmission
         pageState
+        lastPageStateUpdate
         createdAt
         updatedAt
       }
@@ -1395,6 +1404,7 @@ export const listClassroomGroupStudents = /* GraphQL */ `
           addedby
           lastEmotionSubmission
           pageState
+          lastPageStateUpdate
           createdAt
           updatedAt
         }
@@ -1485,6 +1495,7 @@ export const getClassroomGroups = /* GraphQL */ `
           addedby
           lastEmotionSubmission
           pageState
+          lastPageStateUpdate
           createdAt
           updatedAt
         }
@@ -1571,6 +1582,7 @@ export const getClassroomGroups = /* GraphQL */ `
         addedby
         lastEmotionSubmission
         pageState
+        lastPageStateUpdate
         createdAt
         updatedAt
       }
@@ -1670,6 +1682,7 @@ export const listClassroomGroups = /* GraphQL */ `
           addedby
           lastEmotionSubmission
           pageState
+          lastPageStateUpdate
           createdAt
           updatedAt
         }
@@ -1765,6 +1778,7 @@ export const getRoomCoTeachers = /* GraphQL */ `
           addedby
           lastEmotionSubmission
           pageState
+          lastPageStateUpdate
           createdAt
           updatedAt
         }
@@ -1847,6 +1861,7 @@ export const getRoomCoTeachers = /* GraphQL */ `
         addedby
         lastEmotionSubmission
         pageState
+        lastPageStateUpdate
         createdAt
         updatedAt
       }
@@ -1931,6 +1946,7 @@ export const listRoomCoTeachers = /* GraphQL */ `
           addedby
           lastEmotionSubmission
           pageState
+          lastPageStateUpdate
           createdAt
           updatedAt
         }
@@ -2059,6 +2075,7 @@ export const getClass = /* GraphQL */ `
           addedby
           lastEmotionSubmission
           pageState
+          lastPageStateUpdate
           createdAt
           updatedAt
         }
@@ -2307,6 +2324,7 @@ export const getClassStudent = /* GraphQL */ `
         addedby
         lastEmotionSubmission
         pageState
+        lastPageStateUpdate
         createdAt
         updatedAt
       }
@@ -2370,6 +2388,7 @@ export const listClassStudents = /* GraphQL */ `
           addedby
           lastEmotionSubmission
           pageState
+          lastPageStateUpdate
           createdAt
           updatedAt
         }
@@ -3111,6 +3130,7 @@ export const getRoomMsgs = /* GraphQL */ `
         addedby
         lastEmotionSubmission
         pageState
+        lastPageStateUpdate
         createdAt
         updatedAt
       }
@@ -3163,6 +3183,7 @@ export const listRoomMsgs = /* GraphQL */ `
           addedby
           lastEmotionSubmission
           pageState
+          lastPageStateUpdate
           createdAt
           updatedAt
         }
@@ -3220,6 +3241,7 @@ export const getStudentData = /* GraphQL */ `
         addedby
         lastEmotionSubmission
         pageState
+        lastPageStateUpdate
         createdAt
         updatedAt
       }
@@ -3316,6 +3338,7 @@ export const listStudentData = /* GraphQL */ `
           addedby
           lastEmotionSubmission
           pageState
+          lastPageStateUpdate
           createdAt
           updatedAt
         }
@@ -3387,6 +3410,7 @@ export const getAnthologyComment = /* GraphQL */ `
         addedby
         lastEmotionSubmission
         pageState
+        lastPageStateUpdate
         createdAt
         updatedAt
       }
@@ -3450,6 +3474,7 @@ export const listAnthologyComments = /* GraphQL */ `
           addedby
           lastEmotionSubmission
           pageState
+          lastPageStateUpdate
           createdAt
           updatedAt
         }
@@ -3513,6 +3538,7 @@ export const getQuestionData = /* GraphQL */ `
         addedby
         lastEmotionSubmission
         pageState
+        lastPageStateUpdate
         createdAt
         updatedAt
       }
@@ -3574,6 +3600,7 @@ export const listQuestionData = /* GraphQL */ `
           addedby
           lastEmotionSubmission
           pageState
+          lastPageStateUpdate
           createdAt
           updatedAt
         }
@@ -3641,6 +3668,7 @@ export const getPersonLocation = /* GraphQL */ `
         addedby
         lastEmotionSubmission
         pageState
+        lastPageStateUpdate
         createdAt
         updatedAt
       }
@@ -3717,6 +3745,7 @@ export const getPersonLocation = /* GraphQL */ `
           addedby
           lastEmotionSubmission
           pageState
+          lastPageStateUpdate
           createdAt
           updatedAt
         }
@@ -3910,6 +3939,7 @@ export const listPersonLocations = /* GraphQL */ `
           addedby
           lastEmotionSubmission
           pageState
+          lastPageStateUpdate
           createdAt
           updatedAt
         }
@@ -4240,6 +4270,7 @@ export const getAttendance = /* GraphQL */ `
           addedby
           lastEmotionSubmission
           pageState
+          lastPageStateUpdate
           createdAt
           updatedAt
         }
@@ -5334,6 +5365,7 @@ export const getTemporaryDemographicsUploadData = /* GraphQL */ `
           addedby
           lastEmotionSubmission
           pageState
+          lastPageStateUpdate
           createdAt
           updatedAt
         }
@@ -6313,6 +6345,7 @@ export const getStudentConnections = /* GraphQL */ `
         addedby
         lastEmotionSubmission
         pageState
+        lastPageStateUpdate
         createdAt
         updatedAt
       }
@@ -6353,6 +6386,7 @@ export const getStudentConnections = /* GraphQL */ `
         addedby
         lastEmotionSubmission
         pageState
+        lastPageStateUpdate
         createdAt
         updatedAt
       }
@@ -6410,6 +6444,7 @@ export const listStudentConnections = /* GraphQL */ `
           addedby
           lastEmotionSubmission
           pageState
+          lastPageStateUpdate
           createdAt
           updatedAt
         }
@@ -6444,6 +6479,7 @@ export const listStudentConnections = /* GraphQL */ `
           addedby
           lastEmotionSubmission
           pageState
+          lastPageStateUpdate
           createdAt
           updatedAt
         }
@@ -6497,6 +6533,7 @@ export const getPersonSentiments = /* GraphQL */ `
         addedby
         lastEmotionSubmission
         pageState
+        lastPageStateUpdate
         createdAt
         updatedAt
       }
@@ -6560,6 +6597,7 @@ export const listPersonSentiments = /* GraphQL */ `
           addedby
           lastEmotionSubmission
           pageState
+          lastPageStateUpdate
           createdAt
           updatedAt
         }
@@ -6645,6 +6683,7 @@ export const getSentimentTracker = /* GraphQL */ `
         addedby
         lastEmotionSubmission
         pageState
+        lastPageStateUpdate
         createdAt
         updatedAt
       }
@@ -6730,6 +6769,7 @@ export const getSentimentTracker = /* GraphQL */ `
           addedby
           lastEmotionSubmission
           pageState
+          lastPageStateUpdate
           createdAt
           updatedAt
         }
@@ -6901,6 +6941,7 @@ export const listSentimentTrackers = /* GraphQL */ `
           addedby
           lastEmotionSubmission
           pageState
+          lastPageStateUpdate
           createdAt
           updatedAt
         }
@@ -7015,6 +7056,7 @@ export const getFeelingTracker = /* GraphQL */ `
         addedby
         lastEmotionSubmission
         pageState
+        lastPageStateUpdate
         createdAt
         updatedAt
       }
@@ -7100,6 +7142,7 @@ export const getFeelingTracker = /* GraphQL */ `
           addedby
           lastEmotionSubmission
           pageState
+          lastPageStateUpdate
           createdAt
           updatedAt
         }
@@ -7207,6 +7250,7 @@ export const listFeelingTrackers = /* GraphQL */ `
           addedby
           lastEmotionSubmission
           pageState
+          lastPageStateUpdate
           createdAt
           updatedAt
         }
@@ -7306,6 +7350,7 @@ export const getFeelingsArchive = /* GraphQL */ `
         addedby
         lastEmotionSubmission
         pageState
+        lastPageStateUpdate
         createdAt
         updatedAt
       }
@@ -7394,6 +7439,7 @@ export const getFeelingsArchive = /* GraphQL */ `
           addedby
           lastEmotionSubmission
           pageState
+          lastPageStateUpdate
           createdAt
           updatedAt
         }
@@ -7585,6 +7631,7 @@ export const listFeelingsArchives = /* GraphQL */ `
           addedby
           lastEmotionSubmission
           pageState
+          lastPageStateUpdate
           createdAt
           updatedAt
         }
@@ -7828,6 +7875,7 @@ export const getCommunity = /* GraphQL */ `
         addedby
         lastEmotionSubmission
         pageState
+        lastPageStateUpdate
         createdAt
         updatedAt
       }
@@ -7934,6 +7982,7 @@ export const listCommunities = /* GraphQL */ `
           addedby
           lastEmotionSubmission
           pageState
+          lastPageStateUpdate
           createdAt
           updatedAt
         }
@@ -8050,6 +8099,7 @@ export const getGameChangerLog = /* GraphQL */ `
         addedby
         lastEmotionSubmission
         pageState
+        lastPageStateUpdate
         createdAt
         updatedAt
       }
@@ -8122,6 +8172,7 @@ export const listGameChangerLogs = /* GraphQL */ `
           addedby
           lastEmotionSubmission
           pageState
+          lastPageStateUpdate
           createdAt
           updatedAt
         }
@@ -8181,6 +8232,7 @@ export const getCommunityChat = /* GraphQL */ `
         addedby
         lastEmotionSubmission
         pageState
+        lastPageStateUpdate
         createdAt
         updatedAt
       }
@@ -8234,6 +8286,7 @@ export const listCommunityChats = /* GraphQL */ `
           addedby
           lastEmotionSubmission
           pageState
+          lastPageStateUpdate
           createdAt
           updatedAt
         }
@@ -8344,6 +8397,7 @@ export const userById = /* GraphQL */ `
         addedby
         lastEmotionSubmission
         pageState
+        lastPageStateUpdate
         createdAt
         updatedAt
       }
@@ -8403,6 +8457,7 @@ export const usersByRole = /* GraphQL */ `
         addedby
         lastEmotionSubmission
         pageState
+        lastPageStateUpdate
         createdAt
         updatedAt
       }
@@ -8564,6 +8619,7 @@ export const messagesByRoomID = /* GraphQL */ `
           addedby
           lastEmotionSubmission
           pageState
+          lastPageStateUpdate
           createdAt
           updatedAt
         }
@@ -8628,6 +8684,7 @@ export const personLocationBySyllabusLesson = /* GraphQL */ `
           addedby
           lastEmotionSubmission
           pageState
+          lastPageStateUpdate
           createdAt
           updatedAt
         }

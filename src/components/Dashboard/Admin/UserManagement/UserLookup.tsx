@@ -28,8 +28,9 @@ import useDictionary from 'customHooks/dictionary';
 import {createFilterToFetchSpecificItemsOnly} from 'utilities/strings';
 import List from './List';
 import UserListLoader from './UserListLoader';
+import useAuth from '@customHooks/useAuth';
 
-const UserLookup = ({isInInstitute, instituteId}: any) => {
+const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
   const {state, theme, dispatch, userLanguage, clientKey} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const history = useHistory();
@@ -252,6 +253,14 @@ const UserLookup = ({isInInstitute, instituteId}: any) => {
     return users;
   };
 
+  const addName = (data: any[]) =>
+    data.map((item: any) => ({
+      ...item,
+      name: `${item.firstName}, ${
+        item.preferredName ? item.preferredName : item.lastName
+      }`
+    }));
+
   const fetchAllUsersList = async () => {
     const isTeacher = state.user.role === 'TR' || state.user.role === 'FLW';
     const isBuilder = state.user.role === 'BLD';
@@ -333,14 +342,7 @@ const UserLookup = ({isInInstitute, instituteId}: any) => {
           setTotalPages(totalListPages + 1);
         }
 
-        setTotalUserList(
-          usersList.map((user: any) => ({
-            ...user,
-            name: `${user.firstName}, ${
-              user.preferredName ? user.preferredName : user.lastName
-            }`
-          }))
-        );
+        setTotalUserList(sortByName(addName(userList)));
         setTotalUserNum(usersList.length);
       }
       setLoading(false);
@@ -350,9 +352,79 @@ const UserLookup = ({isInInstitute, instituteId}: any) => {
     }
   };
 
+  const getStudentsFromCoTeachers = (data: any[]) => {
+    let students: any[] = [];
+    data.forEach((item: any) => {
+      item?.room?.class?.students?.items.forEach((student: any) => {
+        students.push(student.student);
+      });
+    });
+    return students;
+  };
+
+  const sortByName = (data: any[]) => {
+    return data.sort((a: any, b: any) => {
+      if (a.name < b.name) {
+        return -1;
+      }
+      if (a.name > b.name) {
+        return 1;
+      }
+      return 0;
+    });
+  };
+
+  const fetchStudentList = async () => {
+    setLoading(true);
+    try {
+      const response: any = await API.graphql(
+        graphqlOperation(customQueries.getDashboardDataForTeachers, {
+          filter: {teacherAuthID: {eq: state.user.authId}}
+        })
+      );
+      const assignedRoomsAsCoTeacher: any = await API.graphql(
+        graphqlOperation(customQueries.getDashboardDataForCoTeachers, {
+          filter: {teacherAuthID: {eq: state.user.authId}}
+        })
+      );
+
+      let students1: any[] = [];
+
+      response?.data?.listRooms?.items.forEach((item: any) => {
+        item?.class?.students?.items.forEach((student: any) => {
+          students1.push(student.student);
+        });
+      });
+
+      const students2: any[] = getStudentsFromCoTeachers(
+        assignedRoomsAsCoTeacher?.data?.listRoomCoTeachers?.items || []
+      );
+
+      let ids: any[] = [];
+      const concated = [...students1, ...students2].filter((item: any) => {
+        if (ids.includes(item.authId)) {
+          return false;
+        } else {
+          ids.push(item.authId);
+          return true;
+        }
+      });
+
+      setTotalUserList(sortByName(addName(concated)));
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    fetchAllUsersList();
-  }, []);
+    if (isStudentRoster) {
+      fetchStudentList();
+    } else {
+      fetchAllUsersList();
+    }
+  }, [isStudentRoster]);
 
   useEffect(() => {
     backToInitials();
@@ -428,6 +500,11 @@ const UserLookup = ({isInInstitute, instituteId}: any) => {
     }
   }, [isPersonLocationFetched, loading]);
 
+  console.log(inClassList);
+
+  const getRoomInfo = (authId: string) =>
+    inClassList.find((user) => user.personAuthID === authId);
+
   return (
     <div className={`w-full h-full ${isInInstitute ? 'px-12' : ''}`}>
       {/* Header Section */}
@@ -435,7 +512,7 @@ const UserLookup = ({isInInstitute, instituteId}: any) => {
       <div className="flex flex-col lg:flex-row justify-between items-center">
         {isInInstitute ? (
           <h3 className="text-lg leading-6 text-gray-600 w-full lg:w-auto mb-4 lg:mb-0">
-            Users
+            {isStudentRoster ? 'Your Students' : 'Users'}
           </h3>
         ) : (
           <SectionTitle
@@ -510,7 +587,14 @@ const UserLookup = ({isInInstitute, instituteId}: any) => {
                   <span className="w-auto">{UserLookupDict[userLanguage]['status']}</span>
                 </div>
                 <div className="w-2/10 px-8 justify-center py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  {UserLookupDict[userLanguage]['location']}
+                  <span
+                    title="see live updates of student's page"
+                    className="flex items-end justify-center">
+                    <span className="w-auto">
+                      {UserLookupDict[userLanguage]['location']}
+                    </span>
+                    <div className="h-2 w-2 bg-green-500 ml-1 rounded-full self-start"></div>
+                  </span>
                 </div>
                 {state.user.role !== 'ST' && state.user.role !== 'BLD' ? (
                   <div className="w-2/10 px-8 justify-center py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
@@ -530,9 +614,7 @@ const UserLookup = ({isInInstitute, instituteId}: any) => {
                 userList.map((item: any, key: number) => (
                   <div key={key}>
                     <List
-                      roomInfo={inClassList.find(
-                        (user) => user.personAuthID === item.authId
-                      )}
+                      roomInfo={getRoomInfo(item.authId)}
                       searchTerm={searchInput.value}
                       item={item}
                       idx={key}

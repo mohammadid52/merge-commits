@@ -62,7 +62,7 @@ const NavBarRouter = (instProps: any) => {
       <Route
         path={`${match.url}/students`}
         exact
-        render={() => <Students instId={institute?.id} />}
+        render={() => <Students instituteId={instProps?.institute?.id} isInInstitute />}
       />
       <Route
         path={`${match.url}/courses`}

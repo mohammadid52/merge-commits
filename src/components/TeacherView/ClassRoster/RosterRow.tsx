@@ -3,12 +3,17 @@ import Buttons from '@components/Atoms/Buttons';
 import Tooltip from '@components/Atoms/Tooltip';
 import LocationBadge from '@components/Dashboard/Admin/Institutons/EditBuilders/LocationBadge';
 import useLessonControls from '@customHooks/lessonControls';
+import * as customSubscriptions from 'customGraphql/customSubscriptions';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+
 import {GlobalContext} from 'contexts/GlobalContext';
 import React, {useContext, useEffect, useState} from 'react';
 import {MdOutlineScreenShare, MdOutlineStopScreenShare} from 'react-icons/md';
 import {VscScreenFull} from 'react-icons/vsc';
 import DotMenu from './RosterRow/DotMenu';
 import {IRosterSectionProps} from './RosterSection';
+import {UserPageState} from 'API';
+import {formatPageName} from '@components/Dashboard/Admin/UserManagement/List';
 
 interface RosterRowProps extends IRosterSectionProps {
   number: number;
@@ -207,6 +212,40 @@ const RosterRow: React.FC<RosterRowProps> = ({
     )
   ) : null;
 
+  let subscribe: any;
+
+  const [localPageState, setLocalPageState] = useState({
+    pageState: UserPageState.NOT_LOGGED_IN,
+    lastPageStateUpdate: new Date().toISOString()
+  });
+
+  const subscribeToLocation = () => {
+    const personLocationSub = API.graphql(
+      graphqlOperation(customSubscriptions.onUpdatePerson, {
+        authId: personAuthID
+      })
+      //@ts-ignore
+    ).subscribe({
+      next: (locationData: any) => {
+        const updatedStudent = locationData.value.data.onUpdatePerson;
+        setLocalPageState({
+          pageState: updatedStudent.pageState,
+          lastPageStateUpdate: updatedStudent.lastPageStateUpdate
+        });
+      }
+    });
+    return personLocationSub;
+  };
+
+  useEffect(() => {
+    if (personAuthID) {
+      subscribe = subscribeToLocation();
+    }
+    return () => {
+      subscribe.unsubscribe();
+    };
+  }, []);
+
   return (
     <>
       {/* <div className="" /> */}
@@ -307,6 +346,13 @@ const RosterRow: React.FC<RosterRowProps> = ({
             }>
             <div className={`dot-menu transition duration-150`}>
               <DotMenu
+                extraContent={
+                  !hot && (
+                    <div className="border-t-0 border-gray-500 mt-1 pt-1 text-sm capitalize text-gray-600 text-center">
+                      {formatPageName(localPageState.pageState) || '--'}
+                    </div>
+                  )
+                }
                 menuItems={[
                   {
                     label: 'Profile',
