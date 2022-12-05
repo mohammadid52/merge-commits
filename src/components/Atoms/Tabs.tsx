@@ -1,8 +1,7 @@
-import React, {Fragment, useContext, useRef} from 'react';
-import {GlobalContext} from 'contexts/GlobalContext';
 import {Menu, Transition} from '@headlessui/react';
 import {ChevronDownIcon, ChevronUpIcon} from '@heroicons/react/solid';
-import useAuth from '@customHooks/useAuth';
+import {GlobalContext} from 'contexts/GlobalContext';
+import React, {Fragment, useContext, useRef} from 'react';
 
 export interface ITabElements {
   title: string;
@@ -113,8 +112,6 @@ const DropDownMenu = ({index, menu, onClick}: any) => {
 const Tabs = ({tabsData, updateTab, currentTab}: ITabsProps) => {
   const {theme} = useContext(GlobalContext);
   const isGameChangers = window.location.href.includes('game-changers');
-
-  const {isStudent} = useAuth();
 
   return (
     <div className={`w-full ${isGameChangers ? 'bg-black' : 'bg-white'} rounded-lg p-2`}>

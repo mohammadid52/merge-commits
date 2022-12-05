@@ -28,8 +28,24 @@ import useDictionary from 'customHooks/dictionary';
 import {createFilterToFetchSpecificItemsOnly} from 'utilities/strings';
 import List from './List';
 import UserListLoader from './UserListLoader';
-import useAuth from '@customHooks/useAuth';
 
+export const sortByName = (data: any[]) => {
+  return data.sort((a: any, b: any) => {
+    if (a.name < b.name) {
+      return -1;
+    }
+    if (a.name > b.name) {
+      return 1;
+    }
+    return 0;
+  });
+};
+
+export const addName = (data: any[]) =>
+  data.map((item: any) => ({
+    ...item,
+    name: `${item.firstName}, ${item.preferredName ? item.preferredName : item.lastName}`
+  }));
 const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
   const {state, theme, dispatch, userLanguage, clientKey} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
@@ -253,14 +269,6 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
     return users;
   };
 
-  const addName = (data: any[]) =>
-    data.map((item: any) => ({
-      ...item,
-      name: `${item.firstName}, ${
-        item.preferredName ? item.preferredName : item.lastName
-      }`
-    }));
-
   const fetchAllUsersList = async () => {
     const isTeacher = state.user.role === 'TR' || state.user.role === 'FLW';
     const isBuilder = state.user.role === 'BLD';
@@ -350,18 +358,6 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
     } catch (error) {
       console.error(error);
     }
-  };
-
-  const sortByName = (data: any[]) => {
-    return data.sort((a: any, b: any) => {
-      if (a.name < b.name) {
-        return -1;
-      }
-      if (a.name > b.name) {
-        return 1;
-      }
-      return 0;
-    });
   };
 
   const [classList, setClassList] = useState([]);

@@ -1,4 +1,5 @@
 // import {BsFillInfoCircleFill} from 'react-icons/bs';
+import Placeholder from '@components/Atoms/Placeholder';
 import useAuth from '@customHooks/useAuth';
 import {Menu, Transition} from '@headlessui/react';
 import {ChevronDownIcon} from '@heroicons/react/solid';
@@ -10,7 +11,6 @@ import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {VscChecklist} from 'react-icons/vsc';
 import {useHistory} from 'react-router-dom';
 import {getImageFromS3Static} from 'utilities/services';
-import {initials, stringToHslColor} from 'utilities/strings';
 import LocationBadge from '../Admin/Institutons/EditBuilders/LocationBadge';
 import UserRole from '../Admin/UserManagement/UserRole';
 
@@ -45,40 +45,22 @@ const DropDownMenu = ({
           <>
             <div>
               <Menu.Button
-                className={`${
-                  open ? 'iconoclast:bg-main curate:bg-main' : ''
-                } hover:bg-gray-400 hover:text-gray-700 inline-flex justify-center w-full px-2 py-1 text-sm font-medium ${
+                className={`${open ? 'active' : ''} ${
+                  open ? 'theme-bg' : ''
+                } theme-border:500 border-0 hover:theme-bg:500 theme-bg:200 theme-text:600 hover:text-gray-700 inline-flex justify-center w-full px-2 text-sm font-medium ${
                   theme === 'iconoclastIndigo' ? 'iconoclastIndigo' : 'curateBlue'
-                } rounded-full 
-                
-                hover:bg-gray-400
-                bg-opacity-20 hover:bg-opacity-30
-
-                 
-                focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 transition duration-150 drop-down-group ease-in-out transform  text-gray-700`}>
-                <div className="w-auto  inline-flex items-center">
-                  <div className="w-8 h-8 2xl:w-12 2xl:h-12">
+                } rounded-full  focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 transition duration-150 drop-down-group ease-in-out transform  `}>
+                <div className="w-auto my-1 inline-flex items-center">
+                  <div className="w-6 h-6 2xl:w-12 2xl:h-12">
                     {image ? (
                       <img
-                        className="inline-block rounded-full border-2 border-gray-400 w-8 h-8 2xl:w-12 2xl:h-12"
+                        className="inline-block rounded-full border-2 border-gray-400 w-6 h-6 2xl:w-12 2xl:h-12"
                         // style={{width: 48, height: 48}}
                         src={getImageFromS3Static(image)}
                         alt=""
                       />
                     ) : (
-                      <div
-                        style={{
-                          /* stylelint-disable */
-                          background: `${
-                            firstName
-                              ? stringToHslColor(firstName + ' ' + lastName)
-                              : '#272730'
-                          }`,
-                          textShadow: '0.1rem 0.1rem 2px #423939b3'
-                        }}
-                        className="rounded-full flex justify-center items-center text-xs text-white h-full font-sans">
-                        {`${initials(firstName, lastName)}`}
-                      </div>
+                      <Placeholder size="w-full" />
                     )}
                   </div>
 

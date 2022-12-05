@@ -64,10 +64,10 @@ const SingleRoomCard = ({
             {type}
           </p>
           <div data-cy="classroom-cards" className="block mt-2">
-            <p className="text-base room-name tracking-wider font-medium 2xl:text-lg text-gray-900">
+            <p className="text-base room-name tracking-wider font-medium 2xl:text-lg theme-text">
               {name}
             </p>
-            <p className="mt-2 room-summary text-xs 2xl:text-sm text-gray-800">
+            <p className="mt-2 room-summary text-xs 2xl:text-sm text-gray-600">
               {limitDesc(summary, 50)}
             </p>
           </div>

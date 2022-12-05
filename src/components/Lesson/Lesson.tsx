@@ -11,12 +11,12 @@ import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
 import LessonApp from './LessonApp';
 import SurveyApp from './SurveyApp';
 import * as customMutations from 'customGraphql/customMutations';
+import * as customSubscriptions from 'customGraphql/customSubscriptions';
 import * as customQueries from 'customGraphql/customQueries';
 import * as mutations from 'graphql/mutations';
 import * as queries from 'graphql/queries';
 import useAuth from '@customHooks/useAuth';
 import {v4 as uuidV4} from 'uuid';
-import useLessonControls from '@customHooks/lessonControls';
 import {updatePageState} from '@graphql/functions';
 
 export interface ILessonSurveyApp {
@@ -462,6 +462,46 @@ const Lesson = () => {
       setCleared(true);
     }
   };
+
+  const subscribeToLocation = () => {
+    const personLocationSub = API.graphql(
+      graphqlOperation(customSubscriptions.onUpdatePerson, {
+        authId: authId
+      })
+      //@ts-ignore
+    ).subscribe({
+      next: (locationData: any) => {
+        const updatedStudent = locationData.value.data.onUpdatePerson;
+
+        if (updatedStudent.authId === authId && updatedStudent.status === 'INACTIVE') {
+          leaveRoomLocation(authId, email);
+
+          updatePageState(
+            UserPageState.DASHBOARD,
+            {
+              pageState: UserPageState.LESSON,
+              authId: authId,
+              email: email
+            },
+            () => {
+              history.push('/dashboard');
+            }
+          );
+        }
+      }
+    });
+    return personLocationSub;
+  };
+
+  let subscribe: any;
+  useEffect(() => {
+    if (authId) {
+      subscribe = subscribeToLocation();
+    }
+    return () => {
+      subscribe.unsubscribe();
+    };
+  }, []);
 
   const getUpdatedPagesData = () =>
     `{

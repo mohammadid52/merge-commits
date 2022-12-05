@@ -31,6 +31,35 @@
 
 @mixin iconoclast($util: 'bg') {
   @each $themeName, $themeValue in $iconoclastColors {
+    .iconoclast {
+      @if $util == 'bg' {
+        .theme-bg\:#{$themeName} {
+          background-color: $themeValue;
+        }
+
+        .hover\:theme-bg\:#{$themeName}:hover {
+          background-color: $themeValue;
+        }
+      }
+
+      @if $util == 'text' {
+        .theme-text\:#{$themeName} {
+          color: $themeValue;
+        }
+        .hover\:theme-text\:#{$themeName}:hover {
+          color: $themeValue;
+        }
+      }
+      @if $util == 'border' {
+        .theme-border\:#{$themeName} {
+          border-color: $themeValue;
+        }
+        .hover\:theme-border\:#{$themeName}:hover {
+          border-color: $themeValue;
+        }
+      }
+    }
+
     .iconoclast .iconoclast\:#{$util}-#{$themeName} {
       @if $util == 'bg' {
         background-color: $themeValue !important;
@@ -107,6 +136,35 @@
 
 @mixin curate($util: 'bg') {
   @each $themeName, $themeValue in $curateColors {
+    .curate {
+      @if $util == 'bg' {
+        .theme-bg\:#{$themeName} {
+          background-color: $themeValue;
+        }
+
+        .hover\:theme-bg\:#{$themeName}:hover {
+          background-color: $themeValue;
+        }
+      }
+
+      @if $util == 'text' {
+        .theme-text\:#{$themeName} {
+          color: $themeValue;
+        }
+        .hover\:theme-text\:#{$themeName}:hover {
+          color: $themeValue;
+        }
+      }
+      @if $util == 'border' {
+        .theme-border\:#{$themeName} {
+          border-color: $themeValue;
+        }
+        .hover\:theme-border\:#{$themeName}:hover {
+          border-color: $themeValue;
+        }
+      }
+    }
+
     .curate .curate\:#{$util}-#{$themeName} {
       @if $util == 'bg' {
         background-color: $themeValue !important;
@@ -275,6 +333,7 @@
     border-color: $iconoclast !important;
   }
 }
+
 .curate {
   .theme-text,
   .hover\:theme-text:hover {

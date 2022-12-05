@@ -35,10 +35,7 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
   const isSuperAdmin: boolean = state.user.role === 'SUP';
   const [activeStep, setActiveStep] = useState('overview');
   const [roomData, setRoomData] = useState<any>({});
-  console.log(
-    '🚀 ~ file: ClassRoomBuilder.tsx ~ line 38 ~ ClassRoomBuilder ~ roomData',
-    roomData
-  );
+
   const [curricularList, setCurricularList] = useState([]);
   const [prevName, setPrevName] = useState('');
   const [selectedCurrID, setSelectedCurrID] = useState('');

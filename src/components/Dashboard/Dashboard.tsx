@@ -820,8 +820,8 @@ const Dashboard = (props: DashboardProps) => {
   return (
     <>
       <div id="top-menu" className={`w-full ${isGameChangers ? 'bg-black' : 'bg-white'}`}>
-        <div className="flex justify-between items-center">
-          <div className="w-auto mx-5">
+        <div className="flex px-8 justify-between items-center">
+          <div className="w-auto mr-5">
             <img
               onClick={stateUser?.role === 'ST' ? () => handleLink() : () => {}}
               className="h-12 w-auto cursor-pointer"

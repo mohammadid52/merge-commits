@@ -1,10 +1,12 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {useNotifications} from '@contexts/NotificationContext';
-import {PersonStatus} from 'API';
+import {updatePageState} from '@graphql/functions';
+import {PersonStatus, UserPageState} from 'API';
 import {GlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import useLessonControls from 'customHooks/lessonControls';
 import * as queries from 'graphql/queries';
+import * as mutations from 'graphql/mutations';
 import * as subscriptions from 'graphql/subscriptions';
 import React, {useContext, useEffect, useState} from 'react';
 import {useParams} from 'react-router-dom';
@@ -219,14 +221,12 @@ const ClassRoster = ({
           const findStudentInClasslist = roster.find(
             (student2: any) => student2.personEmail === student.personEmail
           );
-          if (
-            findStudentInClasslist &&
-            findStudentInClasslist.person.status !== PersonStatus.INACTIVE
-          ) {
+          if (findStudentInClasslist) {
             return findStudentInClasslist;
           }
         });
-        setPersonLocationStudents(studentsFromThisClass);
+
+        setPersonLocationStudents(studentsFromThisClass || []);
         controlDispatch({
           type: 'UPDATE_ACTIVE_ROSTER',
           payload: {students: studentsFromThisClass}
@@ -381,6 +381,49 @@ const ClassRoster = ({
     }
   };
 
+  const leaveRoomLocation = async (inputAuthId: string, inputEmail: string) => {
+    try {
+      let updateStudentStatus = API.graphql(
+        graphqlOperation(mutations.updatePerson, {
+          input: {
+            email: inputEmail,
+            authId: inputAuthId,
+            status: PersonStatus.INACTIVE,
+            pageState: UserPageState.LESSON,
+            lastPageStateUpdate: new Date().toISOString()
+          }
+        })
+      );
+
+      const personLocationStudentsDeleted = personLocationStudents.filter(
+        (_student) => _student.personAuthID !== inputAuthId
+      );
+
+      setPersonLocationStudents(personLocationStudentsDeleted);
+      controlDispatch({
+        type: 'UPDATE_ACTIVE_ROSTER',
+        payload: {students: personLocationStudentsDeleted}
+      });
+      Promise.all([updateStudentStatus]).then(() => {});
+    } catch (e) {
+      console.error('error deleting location record - ', e);
+    }
+  };
+
+  const kickoutStudent = (studentId: string, studentEmail: string) => {
+    if (viewedStudent === studentId) {
+      clearNotification();
+      setNotification({
+        show: true,
+        timeout: 2000,
+        title: 'Student screen sharing and viewing cancelled'
+      });
+      resetViewAndShare();
+    }
+
+    leaveRoomLocation(studentId, studentEmail);
+  };
+
   // ~~~~~~~~~~~~~~~ SHARING ~~~~~~~~~~~~~~~ //
 
   const handleShareStudentData = async (idStr: string, pageIdStr: string) => {
@@ -469,6 +512,7 @@ const ClassRoster = ({
           recordPrevPage={recordPrevPage}
           setRecordPrevPage={setRecordPrevPage}
           handleToggleRightView={handleToggleRightView}
+          kickoutStudent={kickoutStudent}
           rightView={rightView}
           setRightView={setRightView}
           studentList={controlState.rosterActive}

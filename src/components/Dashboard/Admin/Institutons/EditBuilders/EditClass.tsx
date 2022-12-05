@@ -4,11 +4,11 @@ import {FaSpinner, FaTimes} from 'react-icons/fa';
 import {HiPencil} from 'react-icons/hi';
 import {useHistory} from 'react-router-dom';
 
-import AddButton from 'atoms/Buttons/AddButton';
 import {DeleteActionBtn} from 'atoms/Buttons/DeleteActionBtn';
 import SearchSelectorWithAvatar from 'atoms/Form/SearchSelectorWithAvatar';
 import Loader from 'atoms/Loader';
 
+import {getAsset} from 'assets';
 import {getImageFromS3} from 'utilities/services';
 import {
   createFilterToFetchAllItemsExcept,
@@ -16,8 +16,10 @@ import {
   initials,
   stringToHslColor
 } from 'utilities/strings';
-import {getAsset} from 'assets';
 
+import Buttons from '@components/Atoms/Buttons';
+import {useNotifications} from '@contexts/NotificationContext';
+import {PersonStatus} from 'API';
 import Modal from 'atoms/Modal';
 import Registration from 'components/Dashboard/Admin/UserManagement/Registration';
 import User from 'components/Dashboard/Admin/UserManagement/User';
@@ -29,9 +31,7 @@ import useAuth from 'customHooks/useAuth';
 import * as mutations from 'graphql/mutations';
 import ModalPopUp from 'molecules/ModalPopUp';
 import LocationBadge from './LocationBadge';
-import {PersonStatus} from 'API';
-import {useNotifications} from '@contexts/NotificationContext';
-import Buttons from '@components/Atoms/Buttons';
+import {addName, sortByName} from '../../UserManagement/UserLookup';
 
 interface EditClassProps {
   instId: string;
@@ -193,6 +193,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
           status: stu.status,
           createAt: stu.createdAt,
           studentAuthID: stu.studentAuthID,
+          name: `${stu.student.firstName || ''} ${stu.student.lastName || ''}`,
           student: {
             ...stu.student,
             email: stu.studentEmail,
@@ -215,7 +216,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
         lastName: item.lastName || ''
       }));
       await getClassRoomGroups(roomData.id);
-      setClassStudents(selectedStudents);
+      setClassStudents(sortStudents(selectedStudents));
       setAllStudents(sortStudents(students));
       setLoading(false);
     } catch (err) {

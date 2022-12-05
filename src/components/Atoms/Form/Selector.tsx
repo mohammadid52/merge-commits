@@ -139,7 +139,7 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
 
   return (
     <div className={`relative space-y-1 ${additionalClass}`} ref={currentRef}>
-      {label && <Label label={label} isRequired={isRequired} />}
+      {label && <Label dark={false} label={label} isRequired={isRequired} />}
       <span className="inline-block w-full h-full rounded-full shadow-sm">
         <button
           data-cy={`${dataCy}-button`}

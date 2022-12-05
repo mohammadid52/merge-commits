@@ -26,6 +26,7 @@ export interface IRosterSectionProps {
   emptyMessage?: string;
   setRecordPrevPage?: React.SetStateAction<React.Dispatch<number>>;
   recordPrevPage?: number;
+  kickoutStudent?: (authId: string, email: string) => void;
 }
 
 const RosterSection = ({
@@ -33,6 +34,7 @@ const RosterSection = ({
   handleManualRefresh,
   loading,
   handleToggleRightView,
+  kickoutStudent,
   rightView,
   studentList,
   handleResetViewAndShare,
@@ -148,33 +150,38 @@ const RosterSection = ({
           studentList.length > 0 ? 'border-b-0 border-gray-300' : ''
         }`}>
         {studentList && studentList.length > 0 ? (
-          studentList.map((student: any, key: number) => (
-            <RosterRow
-              key={`rosterrow_inactive_${key}`}
-              number={key}
-              personAuthID={student.personAuthID}
-              firstName={student.person?.firstName ? student.person?.firstName : ''}
-              lastName={student.person?.lastName ? student.person?.lastName : ''}
-              preferredName={
-                student.person?.preferredName ? student.person?.preferredName : ''
-              }
-              setRecordPrevPage={setRecordPrevPage}
-              recordPrevPage={recordPrevPage}
-              onDemand={student.person.onDemand}
-              role={student.person?.role ? student.person?.role : ''}
-              currentLocation={student.currentLocation}
-              lessonProgress={student.lessonProgress}
-              handleResetViewAndShare={handleResetViewAndShare}
-              handleViewStudentData={handleViewStudentData}
-              handleShareStudentData={handleShareStudentData}
-              viewedStudent={viewedStudent}
-              sharedStudent={sharedStudent}
-              handlePageChange={handlePageChange}
-              rightView={rightView}
-              handleToggleRightView={handleToggleRightView}
-              hot={hot}
-            />
-          ))
+          studentList.map(
+            (student: any, key: number) =>
+              student && (
+                <RosterRow
+                  key={`rosterrow_inactive_${key}`}
+                  number={key}
+                  kickoutStudent={kickoutStudent}
+                  personEmail={student.person.email}
+                  personAuthID={student.personAuthID}
+                  firstName={student.person?.firstName ? student.person?.firstName : ''}
+                  lastName={student.person?.lastName ? student.person?.lastName : ''}
+                  preferredName={
+                    student.person?.preferredName ? student.person?.preferredName : ''
+                  }
+                  setRecordPrevPage={setRecordPrevPage}
+                  recordPrevPage={recordPrevPage}
+                  onDemand={student.person.onDemand}
+                  role={student.person?.role ? student.person?.role : ''}
+                  currentLocation={student.currentLocation}
+                  lessonProgress={student.lessonProgress}
+                  handleResetViewAndShare={handleResetViewAndShare}
+                  handleViewStudentData={handleViewStudentData}
+                  handleShareStudentData={handleShareStudentData}
+                  viewedStudent={viewedStudent}
+                  sharedStudent={sharedStudent}
+                  handlePageChange={handlePageChange}
+                  rightView={rightView}
+                  handleToggleRightView={handleToggleRightView}
+                  hot={hot}
+                />
+              )
+          )
         ) : (
           <>
             <RosterRowEmpty message={emptyMessage} />

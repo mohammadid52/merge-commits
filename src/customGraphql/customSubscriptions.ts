@@ -6,6 +6,7 @@ export const onUpdatePerson = /* GraphQL */ `
       email
       pageState
       lastPageStateUpdate
+      status
     }
   }
 `;

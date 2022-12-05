@@ -27,11 +27,13 @@ interface RosterRowProps extends IRosterSectionProps {
   lessonProgress: string;
   hot?: boolean;
   onDemand?: boolean;
+  personEmail?: string;
 }
 
 const RosterRow: React.FC<RosterRowProps> = ({
   number,
   personAuthID,
+  kickoutStudent,
 
   firstName,
   lastName,
@@ -46,6 +48,7 @@ const RosterRow: React.FC<RosterRowProps> = ({
   rightView,
   handleResetViewAndShare,
   handleToggleRightView,
+  personEmail,
   hot,
   setRecordPrevPage,
   recordPrevPage
@@ -122,8 +125,6 @@ const RosterRow: React.FC<RosterRowProps> = ({
     handleResetViewAndShare();
     handlePageChange(recordPrevPage);
   };
-
-  const {resetView} = useLessonControls();
 
   const shareScreen = async () => {
     handleViewStudentData(personAuthID);
@@ -228,10 +229,12 @@ const RosterRow: React.FC<RosterRowProps> = ({
     ).subscribe({
       next: (locationData: any) => {
         const updatedStudent = locationData.value.data.onUpdatePerson;
-        setLocalPageState({
-          pageState: updatedStudent.pageState,
-          lastPageStateUpdate: updatedStudent.lastPageStateUpdate
-        });
+        if (updatedStudent) {
+          setLocalPageState({
+            pageState: updatedStudent.pageState,
+            lastPageStateUpdate: updatedStudent.lastPageStateUpdate
+          });
+        }
       }
     });
     return personLocationSub;
@@ -363,6 +366,12 @@ const RosterRow: React.FC<RosterRowProps> = ({
                     label: 'Attendance',
                     action: () =>
                       handleToggleRightView({view: 'attendance', option: personAuthID})
+                  },
+                  hot && {
+                    label: 'Remove',
+                    action: () => {
+                      kickoutStudent(personAuthID, personEmail);
+                    }
                   }
                 ]}
               />
