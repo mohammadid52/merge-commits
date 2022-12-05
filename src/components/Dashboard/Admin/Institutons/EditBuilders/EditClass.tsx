@@ -616,7 +616,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
                   </div>
 
                   <div className="mb-4 w-full m-auto pl-2 max-h-88 overflow-y-scroll">
-                    {classStudents.map((item, index) => {
+                    {sortByName(classStudents).map((item, index) => {
                       return (
                         <div
                           key={item.id}
