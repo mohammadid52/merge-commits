@@ -383,7 +383,7 @@ const ClassRoster = ({
 
   const leaveRoomLocation = async (inputAuthId: string, inputEmail: string) => {
     try {
-      let updateStudentStatus = API.graphql(
+      let updateStudentStatus = await API.graphql(
         graphqlOperation(mutations.updatePerson, {
           input: {
             email: inputEmail,
@@ -404,7 +404,6 @@ const ClassRoster = ({
         type: 'UPDATE_ACTIVE_ROSTER',
         payload: {students: personLocationStudentsDeleted}
       });
-      Promise.all([updateStudentStatus]).then(() => {});
     } catch (e) {
       console.error('error deleting location record - ', e);
     }
