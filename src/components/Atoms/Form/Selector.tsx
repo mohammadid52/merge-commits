@@ -108,6 +108,7 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
           onMouseEnter={() => {
             setHoveringItem && setHoveringItem(item);
           }}
+          title={item.name}
           onMouseLeave={() => {
             setHoveringItem && setHoveringItem({});
           }}

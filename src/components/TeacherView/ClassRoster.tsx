@@ -256,14 +256,18 @@ const ClassRoster = ({
       return isInStateRoster === undefined;
     });
 
-    return notInClass.sort(function (
-      a: {person: {firstName: number}},
-      b: {person: {firstName: number}}
-    ) {
-      if (a.person.firstName < b.person.firstName) {
+    notInClass = notInClass.map((item: any) => {
+      return {
+        ...item,
+        _sortName: item?.person?.firstName.toLowerCase()
+      };
+    });
+
+    return notInClass.sort(function (a: {_sortName: number}, b: {_sortName: number}) {
+      if (a._sortName < b._sortName) {
         return -1;
       }
-      if (a.person.firstName > b.person.firstName) {
+      if (a._sortName > b._sortName) {
         return 1;
       }
       return 0;

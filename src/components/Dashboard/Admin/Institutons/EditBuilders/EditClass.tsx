@@ -30,8 +30,8 @@ import useDictionary from 'customHooks/dictionary';
 import useAuth from 'customHooks/useAuth';
 import * as mutations from 'graphql/mutations';
 import ModalPopUp from 'molecules/ModalPopUp';
-import LocationBadge from './LocationBadge';
 import {addName, sortByName} from '../../UserManagement/UserLookup';
+import LocationBadge from './LocationBadge';
 
 interface EditClassProps {
   instId: string;
@@ -616,7 +616,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
                   </div>
 
                   <div className="mb-4 w-full m-auto pl-2 max-h-88 overflow-y-scroll">
-                    {sortByName(classStudents).map((item, index) => {
+                    {sortByName(addName(classStudents)).map((item, index) => {
                       return (
                         <div
                           key={item.id}

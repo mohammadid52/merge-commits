@@ -31,10 +31,10 @@ import UserListLoader from './UserListLoader';
 
 export const sortByName = (data: any[]) => {
   return data.sort((a: any, b: any) => {
-    if (a.name < b.name) {
+    if (a._sortName < b._sortName) {
       return -1;
     }
-    if (a.name > b.name) {
+    if (a._sortName > b._sortName) {
       return 1;
     }
     return 0;
@@ -44,8 +44,10 @@ export const sortByName = (data: any[]) => {
 export const addName = (data: any[]) =>
   data.map((item: any) => ({
     ...item,
-    name: `${item.firstName}, ${item.preferredName ? item.preferredName : item.lastName}`
+    name: `${item?.firstName} ${item?.lastName}`,
+    _sortName: `${item?.firstName?.toLowerCase()} `
   }));
+
 const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
   const {state, theme, dispatch, userLanguage, clientKey} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
@@ -553,7 +555,7 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
         <div
           className={
             isStudentRoster
-              ? 'flex justify-end mb-4 items-center'
+              ? 'flex justify-end mb-4 items-center w-auto'
               : 'flex justify-end mb-4'
           }>
           {isStudentRoster && (
