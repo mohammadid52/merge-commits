@@ -115,6 +115,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
     try {
       const result: any = await API.graphql(
         graphqlOperation(customQueries.listClassStudentsForRoom, {
+          limit: 500,
           ...filter,
           nextToken: nextToken
         })

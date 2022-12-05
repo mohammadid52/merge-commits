@@ -98,7 +98,9 @@ const RosterSection = ({
       <div className={`w-full flex items-center bg-transparent mt-4 mb-2 px-4`}>
         <div className="relative w-full h-auto flex flex-row items-center">
           <div className="text-sm flex font-semibold text-gray-600">
-            <p className="w-auto">{sectionTitle}</p>
+            <p className="w-auto">
+              {sectionTitle} ({studentList.length})
+            </p>
             {hot && (
               <span
                 title="refresh list"

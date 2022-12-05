@@ -16,7 +16,7 @@ import * as queries from 'graphql/queries';
 // import LessonLoading from '../../../Lesson/Loading/ComponentLoading';
 import useGraphqlQuery from '@customHooks/useGraphqlQuery';
 import useSearch from '@customHooks/useSearch';
-import {ListPersonLocationsQueryVariables, PersonLocation} from 'API';
+import {ListPersonLocationsQueryVariables, PersonLocation, PersonStatus} from 'API';
 import BreadCrums from 'atoms/BreadCrums';
 import Buttons from 'atoms/Buttons';
 import SearchInput from 'atoms/Form/SearchInput';
@@ -386,14 +386,19 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
       response?.data?.listRooms?.items.forEach((item: any) => {
         classes.push(item.class);
         item?.class?.students?.items.forEach((student: any) => {
-          students1.push({...student.student, classId: item.class.id});
+          // filter by role
+          if (student?.student?.role === 'ST') {
+            students1.push({...student.student, classId: item.class.id});
+          }
         });
       });
 
       assignedRoomsAsCoTeacher?.data?.listRoomCoTeachers?.items.forEach((item: any) => {
         classes.push(item.room.class);
         item?.room?.class?.students?.items.forEach((student: any) => {
-          students2.push({...student.student, classId: item.room.classID});
+          if (student?.student?.role === 'ST') {
+            students2.push({...student.student, classId: item.room.classID});
+          }
         });
       });
 
@@ -402,8 +407,12 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
         if (ids.includes(item.authId)) {
           return false;
         } else {
-          ids.push(item.authId);
-          return true;
+          if (item.role === 'ST' && item.status !== PersonStatus.INACTIVE) {
+            ids.push(item.authId);
+            return true;
+          } else {
+            return false;
+          }
         }
       });
 
@@ -537,6 +546,10 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
   const getRoomInfo = (authId: string) =>
     inClassList.find((user) => user.personAuthID === authId);
 
+  const headerForStudentRoster = () => {
+    return selectedClass !== null ? userList?.length : totalUserList?.length;
+  };
+
   return (
     <div className={`w-full h-full ${isInInstitute ? 'px-12' : ''}`}>
       {/* Header Section */}
@@ -544,7 +557,7 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
       <div className="flex flex-col lg:flex-row justify-between items-center">
         {isInInstitute ? (
           <h3 className="text-lg leading-6 text-gray-600 w-full lg:w-auto mb-4 lg:mb-0">
-            {isStudentRoster ? 'Your Students' : 'Users'}
+            {isStudentRoster ? `Your Students (${headerForStudentRoster()})` : 'Users'}
           </h3>
         ) : (
           <SectionTitle
