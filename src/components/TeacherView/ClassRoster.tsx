@@ -164,23 +164,28 @@ const ClassRoster = ({
 
       // }
 
-      const initClassStudentList = classStudentList.map((student: any) => {
-        return {
-          id: '',
-          personAuthID: student.studentAuthID,
-          personEmail: student.studentEmail,
-          syllabusLessonID: '',
-          roomID: '',
-          currentLocation: '',
-          lessonProgress: '',
-          person: student.student,
-          syllabusLesson: {},
-          room: '',
-          createdAt: student.createdAt,
-          updatedAt: student.updatedAt,
-          saveType: ''
-        };
-      });
+      const initClassStudentList = classStudentList
+        .filter(
+          (i: {student: {status: PersonStatus}}) =>
+            i.student.status !== PersonStatus.INACTIVE
+        )
+        .map((student: any) => {
+          return {
+            id: '',
+            personAuthID: student.studentAuthID,
+            personEmail: student.studentEmail,
+            syllabusLessonID: '',
+            roomID: '',
+            currentLocation: '',
+            lessonProgress: '',
+            person: student.student,
+            syllabusLesson: {},
+            room: '',
+            createdAt: student.createdAt,
+            updatedAt: student.updatedAt,
+            saveType: ''
+          };
+        });
       controlDispatch({
         type: 'UPDATE_STUDENT_ROSTER',
         payload: {students: initClassStudentList}
