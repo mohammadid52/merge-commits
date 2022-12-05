@@ -32,6 +32,7 @@ import * as mutations from 'graphql/mutations';
 import ModalPopUp from 'molecules/ModalPopUp';
 import {addName, sortByName} from '../../UserManagement/UserLookup';
 import LocationBadge from './LocationBadge';
+import {getLocalStorageData} from '@utilities/localStorage';
 
 interface EditClassProps {
   instId: string;
@@ -126,9 +127,9 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
 
       combined = [...outArray, ...returnedData];
 
-      if (NextToken) {
-        combined = await getAllClassStudentByClassId(filter, NextToken, combined);
-      }
+      // if (NextToken) {
+      //   combined = await getAllClassStudentByClassId(filter, NextToken, combined);
+      // }
 
       return combined;
     } catch (error) {
@@ -148,6 +149,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
       let combined: any[] = [];
       let studentsFromAPI: any = await API.graphql(
         graphqlOperation(customQueries.fetchPersons, {
+          limit: 500,
           filter: {
             role: {eq: 'ST'},
             or: [
@@ -164,9 +166,9 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
       let NextToken: string = studentsFromAPI.data.listPeople.nextToken;
 
       combined = [...studentsData, ...outArray];
-      if (NextToken) {
-        combined = await recursiveFetchAllStudents(neqList, combined, NextToken);
-      }
+      // if (NextToken) {
+      //   combined = await recursiveFetchAllStudents(neqList, combined, NextToken);
+      // }
       return combined;
     } catch (error) {
       console.error(error);
@@ -216,7 +218,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
         firstName: item.firstName || '',
         lastName: item.lastName || ''
       }));
-      await getClassRoomGroups(roomData.id);
+      await getClassRoomGroups(roomData.id || room.id);
       setClassStudents(sortStudents(selectedStudents));
       setAllStudents(sortStudents(students));
       setLoading(false);
@@ -232,26 +234,6 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
   };
 
   const fetchStudentList = async (searchQuery: string) => {
-    // const result: any = await API.graphql(
-    //   graphqlOperation(customQueries.listPersons, {
-    //     filter: {
-    //       role: {eq: 'ST'},
-    //       or: [{firstName: {contains: searchQuery}}, {lastName: {contains: searchQuery}}]
-    //     }
-    //   })
-    // );
-    // const students = result.data.listPeople.items;
-
-    // const mappedStudents = students.map((item: any, i: any) => ({
-    //   id: item.id,
-    //   name: `${item.firstName || ''} ${item.lastName || ''}`,
-    //   value: `${item.firstName || ''} ${item.lastName || ''}`,
-    //   avatar: item.image ? getImageFromS3(item.image) : '',
-    //   status: item.status || 'Inactive',
-    //   email: item.email || '',
-    //   authId: item.authId || ''
-    // }));
-
     // filter allStudents by searchQuery
 
     const filteredStudents = allStudents.filter((student: any) => {
@@ -275,6 +257,9 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
       personA.name[0] < personB.name[0] ? -1 : 1
     );
   };
+
+  const room = getLocalStorageData('room_info');
+  const withbackupClassId = classId || room.classID;
 
   const getClassRoomGroups = async (roomId: string) => {
     try {
@@ -335,7 +320,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
       setAdding(true);
       const selected = allStudents.find((item: any) => item.id === id);
       const input = {
-        classID: classId,
+        classID: withbackupClassId,
         group: newMember.group,
         studentID: id,
         studentAuthID: selected.authId,
@@ -435,8 +420,13 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
   };
 
   useEffect(() => {
-    if (classId) fetchClassData(classId);
-  }, [classId]);
+    if (withbackupClassId) {
+      fetchClassData(withbackupClassId);
+    } else {
+      console.log('class id not found');
+      setLoading(false);
+    }
+  }, [withbackupClassId]);
 
   const validateForm = async () => {
     if (classData.name.trim() === '') {
@@ -491,7 +481,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
 
   const postMutation = () => {
     setShowRegistrationForm(false);
-    fetchClassData(classId);
+    fetchClassData(withbackupClassId);
   };
 
   const DiscardChanges = () => {
@@ -747,7 +737,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
                   showFooter={false}
                   closeAction={() => setShowRegistrationForm(false)}>
                   <Registration
-                    classData={{classId, roomId: roomData.id}}
+                    classData={{classId: withbackupClassId, roomId: roomData.id}}
                     isInInstitute
                     isInModalPopup
                     postMutation={postMutation}

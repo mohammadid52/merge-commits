@@ -335,15 +335,12 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
         const dynamicFilter =
           isTeacher || isBuilder
             ? {
-                or: [...authIdFilter]
+                or: [{role: {eq: 'ST'}}, {role: {eq: 'TR'}}, ...authIdFilter]
               }
             : {};
         users = await fetchAllPerson(dynamicFilter);
         response = users;
-        const usersList =
-          state.user.role === 'FLW'
-            ? response.filter((user: any) => user.role === 'ST' || user.role === 'TR')
-            : response;
+        const usersList = response;
 
         const totalListPages = Math.floor(usersList.length / userCount);
         if (totalListPages * userCount === usersList.length) {
@@ -352,7 +349,7 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
           setTotalPages(totalListPages + 1);
         }
 
-        setTotalUserList(sortByName(addName(userList)));
+        setTotalUserList(sortByName(addName(usersList)));
         setTotalUserNum(usersList.length);
       }
       setLoading(false);
@@ -388,7 +385,7 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
         item?.class?.students?.items.forEach((student: any) => {
           // filter by role
           if (student?.student?.role === 'ST') {
-            students1.push({...student.student, classId: item.class.id});
+            students1.push({...student.student, classId: item.classID});
           }
         });
       });
@@ -572,11 +569,13 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
               : 'flex justify-end mb-4'
           }>
           {isStudentRoster && (
-            <div className="w-auto mr-2 min-w-64">
+            <div className="w-auto flex mr-2 min-w-64">
               <Selector
+                isClearable
                 placeholder={'Select a class'}
                 list={getClassListForSelector()}
                 selectedItem={selectedClass?.name}
+                setSelectedItem={setSelectedClass}
                 onChange={setSelectedClassValue}
                 disabled={loading}
                 arrowHidden={true}
@@ -713,7 +712,7 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
 
             {/* Pagination And Counter */}
             <div className={`flex justify-center ${isInInstitute ? '' : 'px-8 my-4'}`}>
-              {!searchInput.isActive && (
+              {!searchInput.isActive && selectedClass === null && (
                 <Fragment>
                   <span className="py-3 px-5 w-auto flex-shrink-0 my-5 text-md leading-5 font-medium text-gray-900">
                     {paginationPage(userLanguage, currentPage, totalPages)}{' '}

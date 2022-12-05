@@ -149,7 +149,7 @@ const ClassRoster = ({
         graphqlOperation(queries.listClassStudents, {
           nextToken: nextToken,
           limit: 500,
-          filter: {classID: {contains: sessionClassID}}
+          filter: {classID: {eq: sessionClassID}}
         })
       );
       const classStudentList = outArray
@@ -158,31 +158,33 @@ const ClassRoster = ({
 
       const theNextToken = classStudents.data.listClassStudents?.nextToken;
 
-      if (theNextToken) {
-        getClassStudents(sessionClassID, theNextToken, classStudentList);
-      } else {
-        const initClassStudentList = classStudentList.map((student: any) => {
-          return {
-            id: '',
-            personAuthID: student.studentAuthID,
-            personEmail: student.studentEmail,
-            syllabusLessonID: '',
-            roomID: '',
-            currentLocation: '',
-            lessonProgress: '',
-            person: student.student,
-            syllabusLesson: {},
-            room: '',
-            createdAt: student.createdAt,
-            updatedAt: student.updatedAt,
-            saveType: ''
-          };
-        });
-        controlDispatch({
-          type: 'UPDATE_STUDENT_ROSTER',
-          payload: {students: initClassStudentList}
-        });
-      }
+      // if (theNextToken) {
+      //   // getClassStudents(sessionClassID, theNextToken, classStudentList);
+      // } else {
+
+      // }
+
+      const initClassStudentList = classStudentList.map((student: any) => {
+        return {
+          id: '',
+          personAuthID: student.studentAuthID,
+          personEmail: student.studentEmail,
+          syllabusLessonID: '',
+          roomID: '',
+          currentLocation: '',
+          lessonProgress: '',
+          person: student.student,
+          syllabusLesson: {},
+          room: '',
+          createdAt: student.createdAt,
+          updatedAt: student.updatedAt,
+          saveType: ''
+        };
+      });
+      controlDispatch({
+        type: 'UPDATE_STUDENT_ROSTER',
+        payload: {students: initClassStudentList}
+      });
     } catch (e) {
       console.error('getClassStudents - ', e);
     }

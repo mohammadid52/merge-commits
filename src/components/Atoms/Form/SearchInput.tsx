@@ -1,9 +1,8 @@
-import React, {useContext} from 'react';
-import {IconContext} from 'react-icons';
-import {IoClose, IoSearchSharp} from 'react-icons/io5';
+import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import {getAsset} from 'assets';
 import {GlobalContext} from 'contexts/GlobalContext';
-import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
+import React, {useContext} from 'react';
+import {IoClose, IoSearchSharp} from 'react-icons/io5';
 
 interface SearchProps {
   value?: string;

@@ -1,10 +1,12 @@
+import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import {ExclamationCircleIcon} from '@heroicons/react/outline';
-import React, {ReactNode, useContext, useEffect, useRef, useState} from 'react';
-import {FaSpinner, FaTimes} from 'react-icons/fa';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {getAsset} from 'assets';
-import {GlobalContext} from 'contexts/GlobalContext';
 import Label from 'atoms/Form/Label';
+import {GlobalContext} from 'contexts/GlobalContext';
+import React, {ReactNode, useContext, useEffect, useRef, useState} from 'react';
+import {FaSpinner} from 'react-icons/fa';
+import {IoClose} from 'react-icons/io5';
+import {IconContext} from 'react-icons/lib/esm/iconContext';
 
 interface SelectorProps {
   list?: {id: number; name: string | number; popoverElement?: ReactNode}[];
@@ -26,6 +28,7 @@ interface SelectorProps {
   isClearable?: boolean;
   onClear?: () => void;
   setHoveringItem?: React.Dispatch<React.SetStateAction<{}>>;
+  setSelectedItem?: React.Dispatch<React.SetStateAction<{}>>;
   dataCy?: string;
 }
 
@@ -37,7 +40,7 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
     additionalClass = '',
     btnClass,
     disabled,
-
+    setSelectedItem,
     arrowHidden,
     placeholder,
     error = '',
@@ -138,6 +141,12 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
     );
   };
 
+  const clearSort = () => {
+    if (setSelectedItem) {
+      setSelectedItem(null);
+    }
+  };
+
   return (
     <div className={`relative space-y-1 ${additionalClass}`} ref={currentRef}>
       {label && <Label dark={false} label={label} isRequired={isRequired} />}
@@ -162,43 +171,37 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
           <span className="block truncate text-gray-700">
             {capitalizeFirstLetter(selectedItem ? selectedItem : placeholder)}
           </span>
-          <div className="w-auto">
-            {!loading && (
-              <span
-                className={`relative justify-end inset-y-0 right-0 items-center w-12 pr-2 pointer-events-none ${
-                  arrowHidden ? 'hidden' : 'flex'
-                }`}>
-                <svg
-                  className="h-5 w-5 text-gray-400"
-                  viewBox="0 0 20 20"
-                  fill="none"
-                  stroke="currentColor">
-                  <path
-                    d="M7 7l3-3 3 3m0 6l-3 3-3-3"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
+          {loading && (
+            <IconContext.Provider
+              value={{
+                size: '1.2rem',
+                style: {},
+                className: `relative mr-4 animate-spin ${theme.textColor[themeColor]}`
+              }}>
+              <FaSpinner />
+            </IconContext.Provider>
+          )}
+
+          <div className="h-full flex items-center ml-8 w-auto justify-center">
+            <AnimatedContainer
+              animationType="translateY"
+              className="w-auto absolute right-1"
+              show={isClearable && selectedItem !== null}>
+              {isClearable && selectedItem !== null && (
+                <span
+                  title="clear sort"
+                  className=" flex justify-center  cursor-pointer hover:iconoclast:bg-200 hover:iconoclast:text-600
+                   hover:curate:bg-200 hover:curate:text-600
+                   rounded-full"
+                  onClick={clearSort}>
+                  <IoClose
+                    size={'1rem'}
+                    className="hover:iconoclast:text-main hover:curate:text-main transition-all text-gray-600"
                   />
-                </svg>
-              </span>
-            )}
-            {loading && (
-              <IconContext.Provider
-                value={{
-                  size: '1.2rem',
-                  style: {},
-                  className: `relative mr-4 animate-spin ${theme.textColor[themeColor]}`
-                }}>
-                <FaSpinner />
-              </IconContext.Provider>
-            )}
-            {isClearable && selectedItem && (
-              <FaTimes
-                data-cy="clear-selector"
-                className="relative mr-4"
-                onClick={onClear}
-              />
-            )}
+                </span>
+              )}
+            </AnimatedContainer>
+
             {error.length > 0 && (
               <ExclamationCircleIcon
                 className={`h-5 relative mr-4 w-5 text-red-500 ${

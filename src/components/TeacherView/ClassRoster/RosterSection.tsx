@@ -1,3 +1,4 @@
+import {PersonStatus} from 'API';
 import {GlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import gsap from 'gsap/all';
@@ -55,6 +56,14 @@ const RosterSection = ({
 
   const {lessonPlannerDict} = useDictionary();
 
+  const removeInactiveStudents = (studentList: any[]) => {
+    return studentList.filter(
+      (student) => student.person.status !== PersonStatus.INACTIVE
+    );
+  };
+
+  const activeStudentList = removeInactiveStudents(studentList);
+
   // ~~~~~~~~~ MINIMIZE / ANIMATION ~~~~~~~~ //
   const listRef = useRef();
 
@@ -99,7 +108,7 @@ const RosterSection = ({
         <div className="relative w-full h-auto flex flex-row items-center">
           <div className="text-sm flex font-semibold text-gray-600">
             <p className="w-auto">
-              {sectionTitle} ({studentList.length})
+              {sectionTitle} ({activeStudentList.length})
             </p>
             {hot && (
               <span
@@ -149,10 +158,10 @@ const RosterSection = ({
       <div
         ref={listRef}
         className={`w-full flex flex-col items-center ${
-          studentList.length > 0 ? 'border-b-0 border-gray-300' : ''
+          activeStudentList.length > 0 ? 'border-b-0 border-gray-300' : ''
         }`}>
-        {studentList && studentList.length > 0 ? (
-          studentList.map(
+        {activeStudentList && activeStudentList.length > 0 ? (
+          activeStudentList.map(
             (student: any, key: number) =>
               student && (
                 <RosterRow

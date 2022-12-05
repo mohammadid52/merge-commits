@@ -221,6 +221,7 @@ export const getDashboardDataForTeachers = /* GraphQL */ `
                 lastName
                 image
                 role
+                onDemand
                 status
                 pageState
                 lastPageStateUpdate
@@ -370,14 +371,15 @@ export const getDashboardDataForCoTeachers = /* GraphQL */ `
               items {
                 student {
                   authId
+                  email
                   firstName
                   lastName
-                  email
+                  image
                   role
+                  onDemand
                   status
                   pageState
                   lastPageStateUpdate
-                  image
                   id
                 }
               }

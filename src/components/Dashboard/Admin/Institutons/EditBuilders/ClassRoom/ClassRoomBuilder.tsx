@@ -17,6 +17,7 @@ import ClassRoomForm, {fetchSingleCoTeacher} from './ClassRoomForm';
 import CourseSchedule from './CourseSchedule';
 import {BsArrowLeft} from 'react-icons/bs';
 import EditClass from '../EditClass';
+import {getLocalStorageData} from '@utilities/localStorage';
 
 interface ClassRoomBuilderProps {
   instId: string;
@@ -315,7 +316,7 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
     history.push(redirectionUrl);
   };
 
-  const {classID} = roomData;
+  const {classID} = roomData || getLocalStorageData('room_info');
 
   const steps: IStepElementInterface[] = [
     {

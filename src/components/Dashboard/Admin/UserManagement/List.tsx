@@ -296,7 +296,7 @@ const List = (props: ListProps) => {
                 id={item.id}
                 className="hover:text-gray-600 cursor-pointer text-sm leading-5 font-medium text-gray-900"
                 onClick={() => handleLink(item.id)}>
-                <Highlighted text={item.name} highlight={searchTerm} />
+                <Highlighted text={`${idx + 1}) ${item.name}`} highlight={searchTerm} />
               </div>
               <div id={item.id} className="text-sm leading-5 text-gray-500 break-all">
                 <Highlighted text={item.email} highlight={searchTerm} />
