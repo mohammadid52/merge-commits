@@ -2,6 +2,8 @@ import React from 'react';
 import {Options} from 'interfaces/UniversalLessonInterfaces';
 import {FormControlProps} from '../FormBlock';
 import EditingBlock from '../PoemBlock/EditingBlock';
+import useStudentDataValue from '@customHooks/studentDataValue';
+import {useGlobalContext} from '@contexts/GlobalContext';
 
 interface WritingExerciseProps extends FormControlProps {
   onChange: (e: any) => void;
@@ -25,6 +27,12 @@ const WritingExerciseBlock = ({
   //   $('.wrapperClassName.dark').css('borderColor', '#1B191D ');
   // }, []);
 
+  const {getDataValue} = useStudentDataValue();
+  const {lessonState} = useGlobalContext();
+  const viewingStudent = lessonState.studentViewing;
+
+  const initialValue = viewingStudent ? getDataValue(inputID)[0] : value;
+
   return (
     <div
       id={`${inputID}_for_error`}
@@ -43,7 +51,7 @@ const WritingExerciseBlock = ({
                 type={'text'}
                 onChange={onChange}
                 placeholder={label}
-                value={value}
+                value={initialValue}
               />
             </>
           )}

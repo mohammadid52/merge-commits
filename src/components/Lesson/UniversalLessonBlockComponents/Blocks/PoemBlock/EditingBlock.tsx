@@ -1,11 +1,12 @@
+import {useGlobalContext} from '@contexts/GlobalContext';
+import useAuth from '@customHooks/useAuth';
 import useStudentDataValue from 'customHooks/studentDataValue';
-import {ContentState, convertToRaw, EditorState, Modifier} from 'draft-js';
+import {ContentState, convertToRaw, EditorState} from 'draft-js';
+import draftToHtml from 'draftjs-to-html';
+import htmlToDraft from 'html-to-draftjs';
 import React, {useState} from 'react';
 import WritingBlock from './WritingBlock';
 import WritingExerciseEditor from './WritingExerciseEditor';
-import htmlToDraft from 'html-to-draftjs';
-import draftToHtml from 'draftjs-to-html';
-import {useGlobalContext} from '@contexts/GlobalContext';
 
 interface EditingBlockProps {
   id?: string;
@@ -19,9 +20,10 @@ const EditingBlock = ({options, inputID, value}: EditingBlockProps) => {
   const {lessonState} = useGlobalContext();
   const initialState = () => EditorState.createEmpty();
   const [editorState, setEditorState] = useState(initialState);
+  const {isStudent} = useAuth();
 
   const sendTextToEditor = async (text: string, cb?: any) => {
-    await insertTextNew(text);
+    insertTextNew(text);
     if (cb) {
       cb();
     }
@@ -35,18 +37,20 @@ const EditingBlock = ({options, inputID, value}: EditingBlockProps) => {
     setDataValue(inputID, [html]);
   };
 
-  const insertTextNew = async (addItem: string) => {
+  const insertTextNew = (addItem: string) => {
     const data = draftToHtml(convertToRaw(editorState.getCurrentContent()));
     const aa = data.concat(`<span><br/>${addItem}</span>`);
 
     const contentBlock = htmlToDraft(aa);
     const contentState = ContentState.createFromBlockArray(contentBlock?.contentBlocks);
 
-    const updateState = await EditorState.createWithContent(contentState);
+    const updateState = EditorState.createWithContent(contentState);
     setEditorState(updateState);
   };
 
   const initialValue = viewingStudent ? getDataValue(inputID)[0] : value;
+
+  const isStudentViewing = !isStudent && viewingStudent !== '';
 
   return (
     <div className="relative flex flex-col justify-between items-center ">
@@ -61,6 +65,7 @@ const EditingBlock = ({options, inputID, value}: EditingBlockProps) => {
       </div>
       <WritingExerciseEditor
         minHeight={400}
+        isStudentViewing={isStudentViewing}
         initialValue={initialValue}
         onChangeCallback={onChangeCallback}
         editorState={editorState}

@@ -88,6 +88,7 @@ const LessonApp = ({
     ).subscribe({
       next: (roomData: any) => {
         const updatedRoomData = roomData.value.data.onChangeRoom;
+
         setSubscriptionData(updatedRoomData);
       }
     });
@@ -169,7 +170,6 @@ const LessonApp = ({
       // Initialize closed pages based on room-configuration
 
       if (
-        !isOnDemand &&
         lessonState.lessonData.lessonPlan &&
         lessonState.lessonData.lessonPlan?.length > 0
       ) {

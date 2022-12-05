@@ -12,10 +12,12 @@ const WritingExerciseEditor = ({
   setEditorState,
   onChangeCallback,
   initialValue,
-  minHeight
+  minHeight,
+  isStudentViewing
 }: {
   editorState: any;
   initialValue?: string;
+  isStudentViewing?: boolean;
   minHeight?: number;
   setEditorState: any;
   onChangeCallback: (html: string, text: string) => void;
@@ -31,10 +33,25 @@ const WritingExerciseEditor = ({
       setEditorState(EditorState.createEmpty());
     }
   };
+  const onInitCopy = (val: string) => {
+    const html = val ? val : '<p></p>';
+    const contentBlock = htmlToDraft(html);
+
+    if (contentBlock) {
+      const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
+      setEditorState(EditorState.createWithContent(contentState));
+    } else {
+      setEditorState(EditorState.createEmpty());
+    }
+  };
 
   useEffect(() => {
     onInit(initialValue);
   }, []);
+
+  useEffect(() => {
+    isStudentViewing && onInitCopy(initialValue);
+  }, [isStudentViewing, initialValue]);
 
   const onChange = async (value: any) => {
     const editorStateHtml: string = draftToHtml(

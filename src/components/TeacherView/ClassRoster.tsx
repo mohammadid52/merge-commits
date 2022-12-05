@@ -105,8 +105,6 @@ const ClassRoster = ({
     ).subscribe({
       next: (locationData: any) => {
         const updatedStudent = locationData.value.data.onCreateUpdatePersonLocationItem;
-
-        console.log('new create update location: ', updatedStudent);
         setUpdatedStudent(updatedStudent);
       }
     });

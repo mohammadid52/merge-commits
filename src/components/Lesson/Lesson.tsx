@@ -41,6 +41,7 @@ const Lesson = () => {
   const lessonState = gContext.lessonState;
   const lessonDispatch = gContext.lessonDispatch;
   const {notifications} = useNotifications('lesson');
+
   const urlParams: any = useParams();
 
   // ##################################################################### //
@@ -473,20 +474,22 @@ const Lesson = () => {
       next: (locationData: any) => {
         const updatedStudent = locationData.value.data.onUpdatePerson;
 
-        if (updatedStudent.authId === authId && updatedStudent.status === 'INACTIVE') {
-          leaveRoomLocation(authId, email);
+        if (updatedStudent) {
+          if (updatedStudent.authId === authId && updatedStudent.status === 'INACTIVE') {
+            leaveRoomLocation(authId, email);
 
-          updatePageState(
-            UserPageState.DASHBOARD,
-            {
-              pageState: UserPageState.LESSON,
-              authId: authId,
-              email: email
-            },
-            () => {
-              history.push('/dashboard');
-            }
-          );
+            updatePageState(
+              UserPageState.DASHBOARD,
+              {
+                pageState: UserPageState.LESSON,
+                authId: authId,
+                email: email
+              },
+              () => {
+                history.push('/dashboard');
+              }
+            );
+          }
         }
       }
     });
