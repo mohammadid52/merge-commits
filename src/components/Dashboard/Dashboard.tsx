@@ -1,8 +1,6 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import Loader from '@components/Atoms/Loader';
 import ComponentLoading from '@components/Lesson/Loading/ComponentLoading';
-import {updatePageState} from '@graphql/functions';
-import {UserPageState} from 'API';
+import {PersonStatus} from 'API';
 import {getAsset} from 'assets';
 import Community from 'components/Community/Community';
 import InstitutionsHome from 'components/Dashboard/Admin/Institutons/InstitutionsHome';
@@ -188,7 +186,8 @@ const Dashboard = (props: DashboardProps) => {
         role: user.role,
         image: user?.image,
         lastEmotionSubmission: user?.lastEmotionSubmission,
-        onDemand: user?.onDemand
+        onDemand: user?.onDemand,
+        status: user?.status || PersonStatus.INACTIVE
       }
     });
 

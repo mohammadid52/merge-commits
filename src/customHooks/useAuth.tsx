@@ -11,6 +11,7 @@ type User = {
   lastName: string;
   image: string;
   associateInstitute: any[];
+  removedFrom: any[];
   onDemand?: boolean;
   pageState: UserPageState;
 };

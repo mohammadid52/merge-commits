@@ -18,7 +18,9 @@ import {
 } from 'utilities/strings';
 
 import Buttons from '@components/Atoms/Buttons';
+import BlockedStudents from '@components/Molecules/BlockedStudents';
 import {useNotifications} from '@contexts/NotificationContext';
+import {getLocalStorageData} from '@utilities/localStorage';
 import {PersonStatus} from 'API';
 import Modal from 'atoms/Modal';
 import Registration from 'components/Dashboard/Admin/UserManagement/Registration';
@@ -32,7 +34,6 @@ import * as mutations from 'graphql/mutations';
 import ModalPopUp from 'molecules/ModalPopUp';
 import {addName, sortByName} from '../../UserManagement/UserLookup';
 import LocationBadge from './LocationBadge';
-import {getLocalStorageData} from '@utilities/localStorage';
 
 interface EditClassProps {
   instId: string;
@@ -458,9 +459,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
           name: classData.name,
           institutionID: classData.institute.id
         };
-        const newClass: any = await API.graphql(
-          graphqlOperation(mutations.updateClass, {input: input})
-        );
+        await API.graphql(graphqlOperation(mutations.updateClass, {input: input}));
         toggleUpdateState();
         setMessages({
           show: true,
@@ -570,7 +569,15 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
                   />
                 </div>
               </div>
-
+              {/* {!loading &&
+                classStudents.length > 0 &&
+                roomData?.blockedStudents !== null && (
+                  <BlockedStudents
+                    blockedStudents={roomData?.blockedStudents || []}
+                    roomId={roomData.id}
+                    classList={classStudents}
+                  />
+                )} */}
               {/* <AddButton
               dataCy={`edit-class-add-button`}
                 loading={adding}

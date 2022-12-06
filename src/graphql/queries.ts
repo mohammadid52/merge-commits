@@ -66,6 +66,7 @@ export const getPerson = /* GraphQL */ `
       lastEmotionSubmission
       pageState
       lastPageStateUpdate
+      statusChangedBy
       createdAt
       updatedAt
     }
@@ -126,6 +127,7 @@ export const listPeople = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -305,6 +307,7 @@ export const getPersonLessonsData = /* GraphQL */ `
           lastEmotionSubmission
           pageState
           lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -681,6 +684,7 @@ export const getStaff = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -772,6 +776,7 @@ export const listStaff = /* GraphQL */ `
           lastEmotionSubmission
           pageState
           lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -910,6 +915,7 @@ export const getRoom = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -1110,6 +1116,7 @@ export const listRooms = /* GraphQL */ `
           lastEmotionSubmission
           pageState
           lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -1286,6 +1293,7 @@ export const getClassroomGroupStudents = /* GraphQL */ `
           lastEmotionSubmission
           pageState
           lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -1336,6 +1344,7 @@ export const getClassroomGroupStudents = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -1405,6 +1414,7 @@ export const listClassroomGroupStudents = /* GraphQL */ `
           lastEmotionSubmission
           pageState
           lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -1496,6 +1506,7 @@ export const getClassroomGroups = /* GraphQL */ `
           lastEmotionSubmission
           pageState
           lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -1583,6 +1594,7 @@ export const getClassroomGroups = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -1683,6 +1695,7 @@ export const listClassroomGroups = /* GraphQL */ `
           lastEmotionSubmission
           pageState
           lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -1779,6 +1792,7 @@ export const getRoomCoTeachers = /* GraphQL */ `
           lastEmotionSubmission
           pageState
           lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -1862,6 +1876,7 @@ export const getRoomCoTeachers = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -1947,6 +1962,7 @@ export const listRoomCoTeachers = /* GraphQL */ `
           lastEmotionSubmission
           pageState
           lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -2076,6 +2092,7 @@ export const getClass = /* GraphQL */ `
           lastEmotionSubmission
           pageState
           lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -2325,6 +2342,7 @@ export const getClassStudent = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -2389,6 +2407,7 @@ export const listClassStudents = /* GraphQL */ `
           lastEmotionSubmission
           pageState
           lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -3131,6 +3150,7 @@ export const getRoomMsgs = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -3184,6 +3204,7 @@ export const listRoomMsgs = /* GraphQL */ `
           lastEmotionSubmission
           pageState
           lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -3242,6 +3263,7 @@ export const getStudentData = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -3339,6 +3361,7 @@ export const listStudentData = /* GraphQL */ `
           lastEmotionSubmission
           pageState
           lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -3411,6 +3434,7 @@ export const getAnthologyComment = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -3475,6 +3499,7 @@ export const listAnthologyComments = /* GraphQL */ `
           lastEmotionSubmission
           pageState
           lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -3539,6 +3564,7 @@ export const getQuestionData = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -3601,6 +3627,7 @@ export const listQuestionData = /* GraphQL */ `
           lastEmotionSubmission
           pageState
           lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -3669,6 +3696,7 @@ export const getPersonLocation = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -3746,6 +3774,7 @@ export const getPersonLocation = /* GraphQL */ `
           lastEmotionSubmission
           pageState
           lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -3940,6 +3969,7 @@ export const listPersonLocations = /* GraphQL */ `
           lastEmotionSubmission
           pageState
           lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -4271,6 +4301,7 @@ export const getAttendance = /* GraphQL */ `
           lastEmotionSubmission
           pageState
           lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -5366,6 +5397,7 @@ export const getTemporaryDemographicsUploadData = /* GraphQL */ `
           lastEmotionSubmission
           pageState
           lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -6346,6 +6378,7 @@ export const getStudentConnections = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -6387,6 +6420,7 @@ export const getStudentConnections = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -6445,6 +6479,7 @@ export const listStudentConnections = /* GraphQL */ `
           lastEmotionSubmission
           pageState
           lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -6480,6 +6515,7 @@ export const listStudentConnections = /* GraphQL */ `
           lastEmotionSubmission
           pageState
           lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -6534,6 +6570,7 @@ export const getPersonSentiments = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -6598,6 +6635,7 @@ export const listPersonSentiments = /* GraphQL */ `
           lastEmotionSubmission
           pageState
           lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -6684,6 +6722,7 @@ export const getSentimentTracker = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -6770,6 +6809,7 @@ export const getSentimentTracker = /* GraphQL */ `
           lastEmotionSubmission
           pageState
           lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -6942,6 +6982,7 @@ export const listSentimentTrackers = /* GraphQL */ `
           lastEmotionSubmission
           pageState
           lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -7057,6 +7098,7 @@ export const getFeelingTracker = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -7143,6 +7185,7 @@ export const getFeelingTracker = /* GraphQL */ `
           lastEmotionSubmission
           pageState
           lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -7251,6 +7294,7 @@ export const listFeelingTrackers = /* GraphQL */ `
           lastEmotionSubmission
           pageState
           lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -7351,6 +7395,7 @@ export const getFeelingsArchive = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -7440,6 +7485,7 @@ export const getFeelingsArchive = /* GraphQL */ `
           lastEmotionSubmission
           pageState
           lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -7632,6 +7678,7 @@ export const listFeelingsArchives = /* GraphQL */ `
           lastEmotionSubmission
           pageState
           lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -7876,6 +7923,7 @@ export const getCommunity = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -7983,6 +8031,7 @@ export const listCommunities = /* GraphQL */ `
           lastEmotionSubmission
           pageState
           lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -8100,6 +8149,7 @@ export const getGameChangerLog = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -8173,6 +8223,7 @@ export const listGameChangerLogs = /* GraphQL */ `
           lastEmotionSubmission
           pageState
           lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -8233,6 +8284,7 @@ export const getCommunityChat = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -8287,6 +8339,7 @@ export const listCommunityChats = /* GraphQL */ `
           lastEmotionSubmission
           pageState
           lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -8398,6 +8451,7 @@ export const userById = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -8458,6 +8512,7 @@ export const usersByRole = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -8620,6 +8675,7 @@ export const messagesByRoomID = /* GraphQL */ `
           lastEmotionSubmission
           pageState
           lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -8685,6 +8741,7 @@ export const personLocationBySyllabusLesson = /* GraphQL */ `
           lastEmotionSubmission
           pageState
           lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }

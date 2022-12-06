@@ -1,4 +1,4 @@
-import {UserPageState} from 'API';
+import {PersonStatus, UserPageState} from 'API';
 
 export interface globalStateType {
   sidebar: {
@@ -32,6 +32,8 @@ export interface globalStateType {
     language: string;
     role: string;
     onBoardSurvey?: boolean;
+    status: PersonStatus;
+    removedFrom?: any[];
     location: any[];
     lastLoggedOut?: string;
     lastLoggedIn?: string;
@@ -79,7 +81,9 @@ export const globalState: globalStateType = {
     location: [],
     lastLoggedIn: '',
     lastLoggedOut: '',
-    pageState: UserPageState.NOT_LOGGED_IN
+    pageState: UserPageState.NOT_LOGGED_IN,
+    removedFrom: [],
+    status: PersonStatus.INACTIVE
   },
 
   temp: {},

@@ -27,6 +27,7 @@ export interface IRosterSectionProps {
   emptyMessage?: string;
   setRecordPrevPage?: React.SetStateAction<React.Dispatch<number>>;
   recordPrevPage?: number;
+  removing?: string | null;
   kickoutStudent?: (authId: string, email: string) => void;
 }
 
@@ -44,6 +45,7 @@ const RosterSection = ({
   viewedStudent,
   sharedStudent,
   handlePageChange,
+  removing,
   sectionTitle,
   emptyMessage,
   setRecordPrevPage,
@@ -58,7 +60,8 @@ const RosterSection = ({
 
   const removeInactiveStudents = (studentList: any[]) => {
     return studentList.filter(
-      (student) => student.person.status !== PersonStatus.INACTIVE
+      (student) =>
+        student && student.person && student.person.status !== PersonStatus.INACTIVE
     );
   };
 
@@ -175,6 +178,7 @@ const RosterSection = ({
                   preferredName={
                     student.person?.preferredName ? student.person?.preferredName : ''
                   }
+                  removing={removing}
                   setRecordPrevPage={setRecordPrevPage}
                   recordPrevPage={recordPrevPage}
                   onDemand={student.person.onDemand}

@@ -110,7 +110,9 @@ const MainRouter: React.FC = () => {
               [],
             onDemand: userInfo?.onDemand,
             lessons: userInfo.lessons,
-            lastEmotionSubmission: userInfo?.lastEmotionSubmission
+            lastEmotionSubmission: userInfo?.lastEmotionSubmission,
+            removedFrom: userInfo?.removedFrom,
+            status: userInfo?.status
           }
         });
       } else {

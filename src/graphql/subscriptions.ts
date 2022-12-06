@@ -59,6 +59,7 @@ export const onCreateUpdatePersonLocationItem = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -136,6 +137,7 @@ export const onCreateUpdatePersonLocationItem = /* GraphQL */ `
           lastEmotionSubmission
           pageState
           lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -329,6 +331,7 @@ export const onDeletePersonLocationItem = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -406,6 +409,7 @@ export const onDeletePersonLocationItem = /* GraphQL */ `
           lastEmotionSubmission
           pageState
           lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -591,6 +595,7 @@ export const onChangeStudentData = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -873,6 +878,7 @@ export const onChangeRoom = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -1056,6 +1062,7 @@ export const onCreatePerson = /* GraphQL */ `
       lastEmotionSubmission
       pageState
       lastPageStateUpdate
+      statusChangedBy
       createdAt
       updatedAt
     }
@@ -1125,6 +1132,7 @@ export const onUpdatePerson = /* GraphQL */ `
       lastEmotionSubmission
       pageState
       lastPageStateUpdate
+      statusChangedBy
       createdAt
       updatedAt
     }
@@ -1194,6 +1202,7 @@ export const onDeletePerson = /* GraphQL */ `
       lastEmotionSubmission
       pageState
       lastPageStateUpdate
+      statusChangedBy
       createdAt
       updatedAt
     }
@@ -1371,6 +1380,7 @@ export const onCreatePersonLessonsData = /* GraphQL */ `
           lastEmotionSubmission
           pageState
           lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -1593,6 +1603,7 @@ export const onUpdatePersonLessonsData = /* GraphQL */ `
           lastEmotionSubmission
           pageState
           lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -1815,6 +1826,7 @@ export const onDeletePersonLessonsData = /* GraphQL */ `
           lastEmotionSubmission
           pageState
           lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -2431,6 +2443,7 @@ export const onCreateStaff = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -2523,6 +2536,7 @@ export const onUpdateStaff = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -2615,6 +2629,7 @@ export const onDeleteStaff = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -2769,6 +2784,7 @@ export const onCreateRoom = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -2997,6 +3013,7 @@ export const onUpdateRoom = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -3225,6 +3242,7 @@ export const onDeleteRoom = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -3471,6 +3489,7 @@ export const onCreateClassroomGroupStudents = /* GraphQL */ `
           lastEmotionSubmission
           pageState
           lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -3521,6 +3540,7 @@ export const onCreateClassroomGroupStudents = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -3607,6 +3627,7 @@ export const onUpdateClassroomGroupStudents = /* GraphQL */ `
           lastEmotionSubmission
           pageState
           lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -3657,6 +3678,7 @@ export const onUpdateClassroomGroupStudents = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -3743,6 +3765,7 @@ export const onDeleteClassroomGroupStudents = /* GraphQL */ `
           lastEmotionSubmission
           pageState
           lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -3793,6 +3816,7 @@ export const onDeleteClassroomGroupStudents = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -3882,6 +3906,7 @@ export const onCreateClassroomGroups = /* GraphQL */ `
           lastEmotionSubmission
           pageState
           lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -3969,6 +3994,7 @@ export const onCreateClassroomGroups = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -4070,6 +4096,7 @@ export const onUpdateClassroomGroups = /* GraphQL */ `
           lastEmotionSubmission
           pageState
           lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -4157,6 +4184,7 @@ export const onUpdateClassroomGroups = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -4258,6 +4286,7 @@ export const onDeleteClassroomGroups = /* GraphQL */ `
           lastEmotionSubmission
           pageState
           lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -4345,6 +4374,7 @@ export const onDeleteClassroomGroups = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -4449,6 +4479,7 @@ export const onCreateRoomCoTeachers = /* GraphQL */ `
           lastEmotionSubmission
           pageState
           lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -4532,6 +4563,7 @@ export const onCreateRoomCoTeachers = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -4622,6 +4654,7 @@ export const onUpdateRoomCoTeachers = /* GraphQL */ `
           lastEmotionSubmission
           pageState
           lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -4705,6 +4738,7 @@ export const onUpdateRoomCoTeachers = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -4795,6 +4829,7 @@ export const onDeleteRoomCoTeachers = /* GraphQL */ `
           lastEmotionSubmission
           pageState
           lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -4878,6 +4913,7 @@ export const onDeleteRoomCoTeachers = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -5005,6 +5041,7 @@ export const onCreateClass = /* GraphQL */ `
           lastEmotionSubmission
           pageState
           lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -5188,6 +5225,7 @@ export const onUpdateClass = /* GraphQL */ `
           lastEmotionSubmission
           pageState
           lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -5371,6 +5409,7 @@ export const onDeleteClass = /* GraphQL */ `
           lastEmotionSubmission
           pageState
           lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -5546,6 +5585,7 @@ export const onCreateClassStudent = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -5665,6 +5705,7 @@ export const onUpdateClassStudent = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -5784,6 +5825,7 @@ export const onDeleteClassStudent = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -7258,6 +7300,7 @@ export const onCreateRoomMsgs = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -7312,6 +7355,7 @@ export const onUpdateRoomMsgs = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -7366,6 +7410,7 @@ export const onDeleteRoomMsgs = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -7418,6 +7463,7 @@ export const onCreateAnthologyComment = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -7479,6 +7525,7 @@ export const onUpdateAnthologyComment = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -7540,6 +7587,7 @@ export const onDeleteAnthologyComment = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -7602,6 +7650,7 @@ export const onCreateQuestionData = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -7665,6 +7714,7 @@ export const onUpdateQuestionData = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -7728,6 +7778,7 @@ export const onDeleteQuestionData = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -7791,6 +7842,7 @@ export const onCreateQuestionDataStudentData = /* GraphQL */ `
           lastEmotionSubmission
           pageState
           lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -7853,6 +7905,7 @@ export const onCreateQuestionDataStudentData = /* GraphQL */ `
           lastEmotionSubmission
           pageState
           lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -7919,6 +7972,7 @@ export const onUpdateQuestionDataStudentData = /* GraphQL */ `
           lastEmotionSubmission
           pageState
           lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -7981,6 +8035,7 @@ export const onUpdateQuestionDataStudentData = /* GraphQL */ `
           lastEmotionSubmission
           pageState
           lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -8047,6 +8102,7 @@ export const onDeleteQuestionDataStudentData = /* GraphQL */ `
           lastEmotionSubmission
           pageState
           lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -8109,6 +8165,7 @@ export const onDeleteQuestionDataStudentData = /* GraphQL */ `
           lastEmotionSubmission
           pageState
           lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -8178,6 +8235,7 @@ export const onCreatePersonLocation = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -8255,6 +8313,7 @@ export const onCreatePersonLocation = /* GraphQL */ `
           lastEmotionSubmission
           pageState
           lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -8440,6 +8499,7 @@ export const onUpdatePersonLocation = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -8517,6 +8577,7 @@ export const onUpdatePersonLocation = /* GraphQL */ `
           lastEmotionSubmission
           pageState
           lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -8702,6 +8763,7 @@ export const onDeletePersonLocation = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -8779,6 +8841,7 @@ export const onDeletePersonLocation = /* GraphQL */ `
           lastEmotionSubmission
           pageState
           lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -9169,6 +9232,7 @@ export const onCreateAttendance = /* GraphQL */ `
           lastEmotionSubmission
           pageState
           lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -9473,6 +9537,7 @@ export const onUpdateAttendance = /* GraphQL */ `
           lastEmotionSubmission
           pageState
           lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -9777,6 +9842,7 @@ export const onDeleteAttendance = /* GraphQL */ `
           lastEmotionSubmission
           pageState
           lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -11311,6 +11377,7 @@ export const onCreateTemporaryDemographicsUploadData = /* GraphQL */ `
           lastEmotionSubmission
           pageState
           lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -11381,6 +11448,7 @@ export const onUpdateTemporaryDemographicsUploadData = /* GraphQL */ `
           lastEmotionSubmission
           pageState
           lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -11451,6 +11519,7 @@ export const onDeleteTemporaryDemographicsUploadData = /* GraphQL */ `
           lastEmotionSubmission
           pageState
           lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -13095,6 +13164,7 @@ export const onCreateStudentConnections = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -13136,6 +13206,7 @@ export const onCreateStudentConnections = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -13191,6 +13262,7 @@ export const onUpdateStudentConnections = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -13232,6 +13304,7 @@ export const onUpdateStudentConnections = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -13287,6 +13360,7 @@ export const onDeleteStudentConnections = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -13328,6 +13402,7 @@ export const onDeleteStudentConnections = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -13380,6 +13455,7 @@ export const onCreatePersonSentiments = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -13435,6 +13511,7 @@ export const onUpdatePersonSentiments = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -13490,6 +13567,7 @@ export const onDeletePersonSentiments = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -13578,6 +13656,7 @@ export const onCreateSentimentTracker = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -13664,6 +13743,7 @@ export const onCreateSentimentTracker = /* GraphQL */ `
           lastEmotionSubmission
           pageState
           lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -13827,6 +13907,7 @@ export const onUpdateSentimentTracker = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -13913,6 +13994,7 @@ export const onUpdateSentimentTracker = /* GraphQL */ `
           lastEmotionSubmission
           pageState
           lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -14076,6 +14158,7 @@ export const onDeleteSentimentTracker = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -14162,6 +14245,7 @@ export const onDeleteSentimentTracker = /* GraphQL */ `
           lastEmotionSubmission
           pageState
           lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -14326,6 +14410,7 @@ export const onCreateFeelingTracker = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -14412,6 +14497,7 @@ export const onCreateFeelingTracker = /* GraphQL */ `
           lastEmotionSubmission
           pageState
           lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -14511,6 +14597,7 @@ export const onUpdateFeelingTracker = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -14597,6 +14684,7 @@ export const onUpdateFeelingTracker = /* GraphQL */ `
           lastEmotionSubmission
           pageState
           lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -14696,6 +14784,7 @@ export const onDeleteFeelingTracker = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -14782,6 +14871,7 @@ export const onDeleteFeelingTracker = /* GraphQL */ `
           lastEmotionSubmission
           pageState
           lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -14881,6 +14971,7 @@ export const onCreateFeelingsArchive = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -14970,6 +15061,7 @@ export const onCreateFeelingsArchive = /* GraphQL */ `
           lastEmotionSubmission
           pageState
           lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -15155,6 +15247,7 @@ export const onUpdateFeelingsArchive = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -15244,6 +15337,7 @@ export const onUpdateFeelingsArchive = /* GraphQL */ `
           lastEmotionSubmission
           pageState
           lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -15429,6 +15523,7 @@ export const onDeleteFeelingsArchive = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -15518,6 +15613,7 @@ export const onDeleteFeelingsArchive = /* GraphQL */ `
           lastEmotionSubmission
           pageState
           lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -15825,6 +15921,7 @@ export const onCreateCommunity = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -15943,6 +16040,7 @@ export const onUpdateCommunity = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -16061,6 +16159,7 @@ export const onDeleteCommunity = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -16186,6 +16285,7 @@ export const onCreateGameChangerLog = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -16252,6 +16352,7 @@ export const onUpdateGameChangerLog = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -16318,6 +16419,7 @@ export const onDeleteGameChangerLog = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -16376,6 +16478,7 @@ export const onCreateCommunityChat = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -16431,6 +16534,7 @@ export const onUpdateCommunityChat = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -16486,6 +16590,7 @@ export const onDeleteCommunityChat = /* GraphQL */ `
         lastEmotionSubmission
         pageState
         lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }

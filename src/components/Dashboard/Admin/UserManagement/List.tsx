@@ -1,7 +1,8 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import Highlighted from '@components/Atoms/Highlighted';
+import Placeholder from '@components/Atoms/Placeholder';
 import Popover from '@components/Atoms/Popover';
-import {PersonLocation, UserPageState} from 'API';
+import {PersonLocation, PersonStatus, UserPageState} from 'API';
 import Buttons from 'atoms/Buttons';
 import Modal from 'atoms/Modal';
 import axios from 'axios';
@@ -80,10 +81,12 @@ const LocationInfo = ({
     ).subscribe({
       next: (locationData: any) => {
         const updatedStudent = locationData.value.data.onUpdatePerson;
-        setLocalPageState({
-          pageState: updatedStudent.pageState,
-          lastPageStateUpdate: updatedStudent.lastPageStateUpdate
-        });
+        if (updatedStudent) {
+          setLocalPageState({
+            pageState: updatedStudent.pageState,
+            lastPageStateUpdate: updatedStudent.lastPageStateUpdate
+          });
+        }
       }
     });
     return personLocationSub;
@@ -275,48 +278,44 @@ const List = (props: ListProps) => {
               {item.image ? (
                 <img src={imageUrl} className="h-8 w-8 rounded-full" />
               ) : (
-                <div
-                  className="h-8 w-8 rounded-full flex justify-center items-center text-white text-sm text-bold"
-                  style={{
-                    background: `${stringToHslColor(
-                      item.firstName + ' ' + item.lastName
-                    )}`,
-                    textShadow: '0.1rem 0.1rem 2px #423939b3'
-                  }}>
-                  {initials(
-                    item.preferredName ? item.preferredName : item.firstName,
-                    item.lastName
-                  )}
-                </div>
+                <Placeholder
+                  lastName={item.lastName}
+                  firstName={item.firstName}
+                  size="h-8 w-8"
+                />
               )}
             </div>
             <div className="ml-2">
               <div
                 data-cy={`${item.id}`}
-                id={item.id}
                 className="hover:text-gray-600 cursor-pointer text-sm leading-5 font-medium text-gray-900"
                 onClick={() => handleLink(item.id)}>
                 <Highlighted text={`${idx + 1}) ${item.name}`} highlight={searchTerm} />
               </div>
-              <div id={item.id} className="text-sm leading-5 text-gray-500 break-all">
+              <div className="text-sm leading-5 text-gray-500 break-all">
                 <Highlighted text={item.email} highlight={searchTerm} />
               </div>
             </div>
           </div>
         </div>
         <div className="w-1/10 flex justify-center items-center px-8 py-4 whitespace-nowrap">
-          <span id={item.id} className="w-auto text-sm leading-5 text-gray-500">
+          <span className="w-auto text-sm leading-5 text-gray-500">
             <UserLocation role={item.role} onDemand={item?.onDemand} />
           </span>
         </div>
         <div className="w-1/10 flex justify-center items-center px-8 py-4 whitespace-nowrap">
-          <span id={item.id} className="w-auto text-sm leading-5 text-gray-500">
+          <span className="w-auto text-sm leading-5 text-gray-500">
             <UserRole role={item.role ? item.role : '--'} />
           </span>
         </div>
         <div className="w-1/10 flex justify-center items-center px-8 py-4 whitespace-nowrap">
-          <div className="w-16 flex justify-center">
+          <div className="w-16 flex justify-center flex-col">
             <UserStatus status={item.status ? item.status : '--'} />
+            {item.status === PersonStatus.INACTIVE && (
+              <span className=" text-gray-600 pt-1 text-xs text-left -ml-4">
+                Since {moment(item.inactiveStatusDate).format('ll')}
+              </span>
+            )}
           </div>
         </div>
 
@@ -330,7 +329,9 @@ const List = (props: ListProps) => {
           onMouseLeave={() => {
             setShowLocationInfo(false);
           }}>
-          {item.role === 'ST' && item.pageState ? (
+          {item.role === 'ST' &&
+          item.status !== PersonStatus.INACTIVE &&
+          item.pageState ? (
             <LocationInfo
               info={roomInfo}
               idx={idx}

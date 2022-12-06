@@ -1,6 +1,6 @@
 import Loader from '@components/Atoms/Loader';
 import {updatePageState} from '@graphql/functions';
-import {UserPageState} from 'API';
+import {PersonStatus, UserPageState} from 'API';
 import {getAsset} from 'assets';
 import SectionTitleV3 from 'atoms/SectionTitleV3';
 import {GlobalContext} from 'contexts/GlobalContext';
@@ -182,6 +182,7 @@ const Home = (props: ClassroomControlProps) => {
     })
   );
 
+  const removedFrom = state.user?.removedFrom || [];
   const getClassList = (): ModifiedListProps[] => {
     let modifiedClassList: ModifiedListProps[] = [];
     let uniqIds: string[] = [];
@@ -190,7 +191,7 @@ const Home = (props: ClassroomControlProps) => {
       classList.length > 0 &&
       classList.forEach(
         async (item: {room: any; name: string; id: string}, idx: number) => {
-          if (item.room) {
+          if (item.room && !removedFrom.includes(item.room.id)) {
             const curriculum = item.room.curricula?.items[0].curriculum;
             if (curriculum !== null) {
               const imagePath = curriculum?.image;
@@ -261,7 +262,9 @@ const Home = (props: ClassroomControlProps) => {
             <RoomTiles
               roomsLoading={roomsLoading}
               handleRoomSelection={handleRoomSelection}
-              classList={getClassList()}
+              classList={
+                state.user.status !== PersonStatus.INACTIVE ? getClassList() : []
+              }
             />
 
             {/* Teachers Section */}

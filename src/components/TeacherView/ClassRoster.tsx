@@ -1,12 +1,12 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import {getDate} from '@components/General/EmojiFeedback';
 import {useNotifications} from '@contexts/NotificationContext';
-import {updatePageState} from '@graphql/functions';
 import {PersonStatus, UserPageState} from 'API';
 import {GlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import useLessonControls from 'customHooks/lessonControls';
-import * as queries from 'graphql/queries';
 import * as mutations from 'graphql/mutations';
+import * as queries from 'graphql/queries';
 import * as subscriptions from 'graphql/subscriptions';
 import React, {useContext, useEffect, useState} from 'react';
 import {useParams} from 'react-router-dom';
@@ -139,6 +139,10 @@ const ClassRoster = ({
 
   // ~~~~~~~~~ FETCH CLASS STUDENTS ~~~~~~~~ //
 
+  const filterRemovedStudents = (i: any) => {
+    return i.status !== PersonStatus.INACTIVE;
+  };
+
   const getClassStudents = async (
     sessionClassID: string,
     nextToken?: string,
@@ -165,10 +169,7 @@ const ClassRoster = ({
       // }
 
       const initClassStudentList = classStudentList
-        .filter(
-          (i: {student: {status: PersonStatus}}) =>
-            i.student.status !== PersonStatus.INACTIVE
-        )
+        .filter(filterRemovedStudents)
         .map((student: any) => {
           return {
             id: '',
@@ -234,7 +235,7 @@ const ClassRoster = ({
         setPersonLocationStudents(studentsFromThisClass || []);
         controlDispatch({
           type: 'UPDATE_ACTIVE_ROSTER',
-          payload: {students: studentsFromThisClass}
+          payload: {students: studentsFromThisClass.filter(filterRemovedStudents)}
         });
         subscription = subscribeToPersonLocations();
         deleteSubscription = subscribeToDeletePersonLocations();
@@ -302,13 +303,16 @@ const ClassRoster = ({
       setPersonLocationStudents(existRoster);
       controlDispatch({
         type: 'UPDATE_ACTIVE_ROSTER',
-        payload: {students: existRoster}
+        payload: {students: existRoster.filter(filterRemovedStudents)}
       });
       setUpdatedStudent({});
     } else {
       const newRoster = [...personLocationStudents, newStudent];
       setPersonLocationStudents(newRoster);
-      controlDispatch({type: 'UPDATE_ACTIVE_ROSTER', payload: {students: newRoster}});
+      controlDispatch({
+        type: 'UPDATE_ACTIVE_ROSTER',
+        payload: {students: newRoster.filter(filterRemovedStudents)}
+      });
       setUpdatedStudent({});
     }
   };
@@ -341,7 +345,7 @@ const ClassRoster = ({
       setPersonLocationStudents(deleteRoster);
       controlDispatch({
         type: 'UPDATE_ACTIVE_ROSTER',
-        payload: {students: deleteRoster}
+        payload: {students: deleteRoster.filter(filterRemovedStudents)}
       });
       setDeletedStudent({});
     } else {
@@ -390,28 +394,44 @@ const ClassRoster = ({
     }
   };
 
+  const [removing, setRemoving] = useState(null);
   const leaveRoomLocation = async (inputAuthId: string, inputEmail: string) => {
     try {
-      let updateStudentStatus = await API.graphql(
+      setRemoving(inputAuthId);
+
+      let updateStudentStatus = API.graphql(
         graphqlOperation(mutations.updatePerson, {
           input: {
             email: inputEmail,
             authId: inputAuthId,
             status: PersonStatus.INACTIVE,
             pageState: UserPageState.LESSON,
-            lastPageStateUpdate: new Date().toISOString()
+            lastPageStateUpdate: new Date().toISOString(),
+            inactiveStatusDate: getDate()
           }
         })
       );
+
+      let deleteLocation = API.graphql(
+        graphqlOperation(mutations.deletePersonLocation, {
+          input: {
+            personEmail: inputEmail,
+            personAuthID: inputAuthId
+          }
+        })
+      );
+
+      Promise.resolve(Promise.all([updateStudentStatus, deleteLocation]));
 
       const personLocationStudentsDeleted = personLocationStudents.filter(
         (_student) => _student.personAuthID !== inputAuthId
       );
 
       setPersonLocationStudents(personLocationStudentsDeleted);
+      setRemoving(null);
       controlDispatch({
         type: 'UPDATE_ACTIVE_ROSTER',
-        payload: {students: personLocationStudentsDeleted}
+        payload: {students: personLocationStudentsDeleted.filter(filterRemovedStudents)}
       });
     } catch (e) {
       console.error('error deleting location record - ', e);
@@ -522,6 +542,7 @@ const ClassRoster = ({
           handleToggleRightView={handleToggleRightView}
           kickoutStudent={kickoutStudent}
           rightView={rightView}
+          removing={removing}
           setRightView={setRightView}
           studentList={controlState.rosterActive}
           handleResetViewAndShare={resetViewAndShare}

@@ -34,6 +34,7 @@ const RosterRow: React.FC<RosterRowProps> = ({
   number,
   personAuthID,
   kickoutStudent,
+  removing,
 
   firstName,
   lastName,
@@ -267,7 +268,11 @@ const RosterRow: React.FC<RosterRowProps> = ({
             studentIsShared()
               ? 'border-l-4 border-green-600 bg-opacity-50 bg-green-200'
               : ''
-          } `}>
+          } ${
+            removing === personAuthID
+              ? 'bg-opacity-50 pointer-events-none filter blur-sm'
+              : ''
+          }`}>
           {/* STUDENT NAME */}
           <div
             draggable={false}
