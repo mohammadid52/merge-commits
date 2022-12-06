@@ -123,7 +123,7 @@ export const getTeacherLookUp = /* GraphQL */ `
     listRooms(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        blockedStudents
+
         teacherAuthID
         teacher {
           id
@@ -160,7 +160,7 @@ export const getDashboardDataForTeachers = /* GraphQL */ `
         id
         institutionID
         classID
-        blockedStudents
+
         teacherAuthID
         teacherEmail
         name
@@ -298,7 +298,7 @@ export const getDashboardDataForCoTeachers = /* GraphQL */ `
     listRoomCoTeachers(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        blockedStudents
+
         room {
           id
           institutionID
@@ -429,7 +429,7 @@ export const getRoomCoTeachers = /* GraphQL */ `
       id
       roomID
       teacherID
-      blockedStudents
+
       teacherEmail
       teacherAuthID
       room {
@@ -613,7 +613,6 @@ export const getPerson = /* GraphQL */ `
       preferredName
       lastName
       language
-      removedFrom
     }
   }
 `;
@@ -1055,7 +1054,7 @@ export const listRooms = /* GraphQL */ `
         institutionID
         classID
         teacherAuthID
-        blockedStudents
+
         teacherEmail
         name
         maxPersons
@@ -1108,7 +1107,7 @@ export const getRoom = /* GraphQL */ `
       institutionID
       classID
       teacherAuthID
-      blockedStudents
+
       teacherEmail
       name
       status
@@ -1258,7 +1257,7 @@ export const getSingleRoomForCoTeacher = /* GraphQL */ `
       classID
       teacherAuthID
       teacherEmail
-      blockedStudents
+
       name
       status
 
@@ -1344,7 +1343,7 @@ export const listRoomsDashboard = /* GraphQL */ `
         institutionID
         classID
         teacherAuthID
-        blockedStudents
+
         teacherEmail
         name
         maxPersons
@@ -1430,7 +1429,7 @@ export const listRoomCurriculums = /* GraphQL */ `
         id
         roomID
         curriculumID
-        blockedStudents
+
         curriculum {
           id
           institutionID
@@ -4160,7 +4159,7 @@ export const getPersonData = /* GraphQL */ `
       language
       filters
       lastLoggedIn
-      removedFrom
+
       lastLoggedOut
       classes {
         items {
@@ -5025,7 +5024,7 @@ export const getCurriculumRooms = /* GraphQL */ `
           roomID
           room {
             id
-            blockedStudents
+
             name
             institutionID
             institution {
@@ -5329,7 +5328,7 @@ export const getScheduleDetails = /* GraphQL */ `
       endDate
       startTime
       endTime
-      blockedStudents
+
       frequency
       weekDay
       completedLessons {
@@ -5469,7 +5468,7 @@ export const listRoomsBasicDetails = /* GraphQL */ `
         classID
         teacherAuthID
         teacherEmail
-        blockedStudents
+
         name
         maxPersons
         filters
