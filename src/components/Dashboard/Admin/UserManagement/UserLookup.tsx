@@ -6,7 +6,7 @@ import {
   AiOutlineUsergroupAdd
 } from 'react-icons/ai';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
-import {useHistory} from 'react-router-dom';
+import {useHistory, useParams} from 'react-router-dom';
 
 import {getAsset} from 'assets';
 import {GlobalContext} from 'contexts/GlobalContext';
@@ -28,6 +28,7 @@ import useDictionary from 'customHooks/dictionary';
 import {createFilterToFetchSpecificItemsOnly} from 'utilities/strings';
 import List from './List';
 import UserListLoader from './UserListLoader';
+import {useQuery} from '@customHooks/urlParam';
 
 export const sortByName = (data: any[]) => {
   return data.sort((a: any, b: any) => {
@@ -125,7 +126,6 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
         const items = filterBySearchQuery(query);
         if (Boolean(items)) {
           setUserList(items);
-          handleFetchPersonLocation(items);
         }
       }
     }
@@ -136,7 +136,6 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
 
     if (Boolean(searched)) {
       setUserList(searched);
-      handleFetchPersonLocation(searched);
     } else {
       _removeSearchAction();
     }
@@ -361,9 +360,70 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
 
   const [classList, setClassList] = useState([]);
 
+  const getAllClassStudentByClassId = async (
+    filter: any,
+    nextToken: string,
+    outArray: any[]
+  ): Promise<any> => {
+    let combined: any[];
+    try {
+      const result: any = await API.graphql(
+        graphqlOperation(customQueries.listClassStudentsForRoom, {
+          limit: 500,
+          nextToken: nextToken
+        })
+      );
+
+      let returnedData = result.data.listClassStudents?.items;
+      let NextToken = result.data.listClassStudents?.nextToken;
+
+      combined = [...outArray, ...returnedData];
+
+      // if (NextToken) {
+      //   combined = await getAllClassStudentByClassId(filter, NextToken, combined);
+      // }
+
+      return combined;
+    } catch (error) {
+      console.log(
+        '🚀 ~ file: AnalyticsDashboard.tsx ~ line 24 ~ listAllStudents ~ error',
+        error
+      );
+    }
+  };
+
+  const getRoomData = async () => {
+    try {
+      // To extract room id from path name
+
+      const result: any = await API.graphql(
+        graphqlOperation(customQueries.listRoomBasicDetails, {
+          filter: {
+            institutionID: {eq: instituteId}
+          }
+        })
+      );
+
+      const items = result.data.listRooms.items;
+
+      console.log(items);
+    } catch (error) {}
+  };
+
   const fetchStudentList = async () => {
     setLoading(true);
+
     try {
+      // const classFilter = {
+      //   filter: {
+      //     classID: {
+      //       attributeExists: true
+      //     }
+      //   }
+      // };
+
+      // const result = await getAllClassStudentByClassId(classFilter, undefined, []);
+
       const response: any = await API.graphql(
         graphqlOperation(customQueries.getDashboardDataForTeachers, {
           filter: {teacherAuthID: {eq: state.user.authId}}
@@ -414,14 +474,26 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
       });
 
       let classIds: any[] = [];
-      const uniqClasses = classes.filter((item: any) => {
-        if (classIds.includes(item.id)) {
-          return false;
-        } else {
-          classIds.push(item.id);
-          return true;
-        }
-      });
+      const uniqClasses = classes
+        .filter((item: any) => {
+          if (classIds.includes(item.id)) {
+            return false;
+          } else {
+            classIds.push(item.id);
+            return true;
+          }
+        })
+        .sort((a: any, b: any) => {
+          if (a.name < b.name) {
+            return -1;
+          }
+          if (a.name > b.name) {
+            return 1;
+          }
+          return 0;
+        });
+
+      // sort this list by name
 
       setClassList(uniqClasses);
       setTotalUserList(sortByName(addName(concated)));
@@ -479,41 +551,6 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
   // return <LessonLoading />;
   // }
 
-  const {
-    refetch,
-    data: personLocationList,
-    isFetched: isPersonLocationFetched
-  } = useGraphqlQuery<ListPersonLocationsQueryVariables, PersonLocation[]>(
-    'listPersonLocations',
-    null,
-    {custom: true, enabled: false}
-  );
-
-  const [inClassList, setInClassList] = useState<PersonLocation[] | null>([]);
-
-  const handleFetchPersonLocation = async (_userList?: any[]) => {
-    try {
-      const list = _userList || userList;
-      const authIdArray = list.map((user: any) => user.email) || [];
-      await refetch({
-        filter: {
-          ...createFilterToFetchSpecificItemsOnly(authIdArray, 'personEmail'),
-          lessonID: {attributeExists: true}
-        }
-      });
-
-      setInClassList(personLocationList);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  useEffect(() => {
-    if (!isPersonLocationFetched && !loading) {
-      handleFetchPersonLocation(userList);
-    }
-  }, [isPersonLocationFetched, loading]);
-
   const getClassListForSelector = () => {
     return classList.map((item: any, idx) => {
       return {
@@ -526,25 +563,44 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
 
   const [selectedClass, setSelectedClass] = useState<any>(null);
 
-  const setSelectedClassValue = (str: string, name: string) => {
-    setSelectedClass({
-      ...selectedClass,
-      value: str,
-      name: name
-    });
+  const fetchClassStudents = async (classId: string) => {
+    try {
+      setLoading(true);
+      const classStudents: any = await API.graphql(
+        graphqlOperation(queries.listClassUserLookup, {
+          limit: 500,
+          filter: {classID: {eq: classId}}
+        })
+      );
 
-    const filtered = totalUserList.filter((item: any) => {
-      return item?.classId === str;
-    });
-
-    setUserList(filtered);
+      const resp = classStudents.data.listClassStudents?.items;
+      const userList = addName(resp.map((t: any) => t.student));
+      setUserList(userList);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const getRoomInfo = (authId: string) =>
-    inClassList.find((user) => user.personAuthID === authId);
+  const setSelectedClassValue = (str: string, name: string) => {
+    if (selectedClass === null || selectedClass?.value !== str) {
+      setSelectedClass({
+        ...selectedClass,
+        value: str,
+        name: name
+      });
+
+      fetchClassStudents(str).then((resp: any) => {});
+    }
+  };
 
   const headerForStudentRoster = () => {
-    return selectedClass !== null ? userList?.length : totalUserList?.length;
+    return loading
+      ? '...'
+      : selectedClass !== null
+      ? userList?.length
+      : totalUserList?.length;
   };
 
   return (
@@ -676,7 +732,6 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
                 userList.map((item: any, key: number) => (
                   <div key={key}>
                     <List
-                      roomInfo={getRoomInfo(item.authId)}
                       searchTerm={searchInput.value}
                       item={item}
                       idx={key}

@@ -1929,6 +1929,12 @@ export const getPersonLocation = /* GraphQL */ `
       syllabusLessonID
       lessonID
       roomID
+      lesson {
+        title
+      }
+      room {
+        name
+      }
       currentLocation
       lessonProgress
     }
@@ -5350,6 +5356,16 @@ export const getRoomBasicDetails = /* GraphQL */ `
     getRoom(id: $id) {
       id
       name
+      classID
+    }
+  }
+`;
+export const listRoomBasicDetails = /* GraphQL */ `
+  query ListRooms($filter: ModelRoomFilterInput, $limit: Int, $nextToken: String) {
+    listRooms(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      id
+      name
+      classID
     }
   }
 `;

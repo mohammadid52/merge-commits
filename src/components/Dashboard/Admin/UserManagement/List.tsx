@@ -1,8 +1,16 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import Highlighted from '@components/Atoms/Highlighted';
+import * as customQueries from 'customGraphql/customQueries';
+import Loader from '@components/Atoms/Loader';
 import Placeholder from '@components/Atoms/Placeholder';
 import Popover from '@components/Atoms/Popover';
-import {PersonLocation, PersonStatus, UserPageState} from 'API';
+import useGraphqlQuery from '@customHooks/useGraphqlQuery';
+import {
+  GetPersonLocationQueryVariables,
+  PersonLocation,
+  PersonStatus,
+  UserPageState
+} from 'API';
 import Buttons from 'atoms/Buttons';
 import Modal from 'atoms/Modal';
 import axios from 'axios';
@@ -21,16 +29,16 @@ import UserStatus from './UserStatus';
 interface ListProps {
   item: any;
   searchTerm?: string;
-  roomInfo?: PersonLocation;
+
   idx?: number;
 }
 
 type LocationInfoType = {
-  info: PersonLocation;
   idx: number;
   authId: string;
   showLocationInfo: boolean;
   pageState: UserPageState;
+  email: string;
   setShowLocationInfo: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
@@ -56,11 +64,11 @@ export const formatPageName = (pageState: UserPageState) => {
 };
 
 const LocationInfo = ({
-  info,
   idx,
   authId,
   setShowLocationInfo,
   showLocationInfo,
+  email,
   pageState
 }: LocationInfoType) => {
   let subscribe: any;
@@ -71,6 +79,35 @@ const LocationInfo = ({
   });
 
   const inLesson = localPageState.pageState === UserPageState.LESSON;
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [isPersonLocationFetched, setIsPersonLocationFetched] = useState(false);
+  const [liveLessonData, setLiveLessonData] = useState(null);
+
+  const fetchPersonLocation = async () => {
+    try {
+      setIsLoading(true);
+      const personLocation: any = await API.graphql(
+        graphqlOperation(customQueries.getPersonLocation, {
+          personAuthID: authId,
+          personEmail: email
+        } as GetPersonLocationQueryVariables)
+      );
+
+      setLiveLessonData(personLocation?.data?.getPersonLocation);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+      setIsPersonLocationFetched(true);
+    }
+  };
+
+  useEffect(() => {
+    if (inLesson && !isPersonLocationFetched && showLocationInfo) {
+      fetchPersonLocation();
+    }
+  }, [inLesson, isPersonLocationFetched, showLocationInfo]);
 
   const subscribeToLocation = () => {
     const personLocationSub = API.graphql(
@@ -134,26 +171,32 @@ const LocationInfo = ({
                 </dd>
               </div>
 
-              {inLesson && (
+              {inLesson && isLoading && (
+                <div className="flex items-center justify-center h-full">
+                  <Loader className="theme-text text-xs" />
+                </div>
+              )}
+
+              {inLesson && !isLoading && isPersonLocationFetched && liveLessonData && (
                 <>
                   <div className="flex w-auto items-end justify-between">
                     <dt className="w-auto text-sm font-medium text-gray-500">Lesson:</dt>
                     <dd className="w-auto mt-1 flex items-center justify-between  text-sm text-gray-700 font-medium">
-                      {info?.lesson?.title || '-'}
+                      {liveLessonData?.lesson?.title || '-'}
                     </dd>
                   </div>
 
                   <div className="flex w-auto items-end justify-between">
                     <dt className="w-auto text-sm font-medium text-gray-500">Room:</dt>
                     <dd className="w-auto mt-1 flex items-center justify-between  text-sm text-gray-700 font-medium">
-                      {info?.room?.name || '-'}
+                      {liveLessonData?.room?.name || '-'}
                     </dd>
                   </div>
                 </>
               )}
 
               {lastPageStateUpdate !== null && (
-                <span className="border-t-0 border-gray-500 text-gray-600 pt-1 text-xs text-center">
+                <span className="border-t-0 theme-border-200 text-gray-600 pt-1 mt-1 text-xs text-center">
                   Since {lastPageStateUpdate}
                 </span>
               )}
@@ -168,7 +211,7 @@ const LocationInfo = ({
 };
 
 const List = (props: ListProps) => {
-  const {item, idx, searchTerm, roomInfo} = props;
+  const {item, idx, searchTerm} = props;
 
   const match = useRouteMatch();
   const history = useHistory();
@@ -179,12 +222,6 @@ const List = (props: ListProps) => {
     message: ''
   });
   const {state} = useContext(GlobalContext);
-
-  const initials = (firstName: string, lastName: string) => {
-    let firstInitial = firstName.charAt(0).toUpperCase();
-    let lastInitial = lastName.charAt(0).toUpperCase();
-    return firstInitial + lastInitial;
-  };
 
   const handleLink = (id: string) => {
     const url = match.url.endsWith('/') ? match.url : match.url + '/';
@@ -311,11 +348,12 @@ const List = (props: ListProps) => {
         <div className="w-1/10 flex justify-center items-center px-8 py-4 whitespace-nowrap">
           <div className="w-16 flex justify-center flex-col">
             <UserStatus status={item.status ? item.status : '--'} />
-            {item.status === PersonStatus.INACTIVE && (
-              <span className=" text-gray-600 pt-1 text-xs text-left -ml-4">
-                Since {moment(item.inactiveStatusDate).format('ll')}
-              </span>
-            )}
+            {item.status === PersonStatus.INACTIVE &&
+              item.inactiveStatusDate !== null && (
+                <span className=" text-gray-600 pt-1 text-xs text-left -ml-4">
+                  Since {moment(item.inactiveStatusDate).format('ll')}
+                </span>
+              )}
           </div>
         </div>
 
@@ -333,9 +371,9 @@ const List = (props: ListProps) => {
           item.status !== PersonStatus.INACTIVE &&
           item.pageState ? (
             <LocationInfo
-              info={roomInfo}
               idx={idx}
               authId={item.authId}
+              email={item.email}
               setShowLocationInfo={setShowLocationInfo}
               showLocationInfo={showLocationInfo}
               pageState={item.pageState}

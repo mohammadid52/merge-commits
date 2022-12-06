@@ -214,12 +214,12 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
         </button>
       </span>
       {showList && (
-        <div className="z-50 absolute mt-1 w-full rounded-xl bg-white customShadow ">
+        <div className="z-50 absolute mt-1 w-full ">
           <ul
             role="listbox"
             aria-labelledby="listbox-label"
             aria-activedescendant="listbox-item-3"
-            className="rounded-xl customShadow relative  max-h-60 py-1 text-base overflow-y-auto leading-6 focus:shadow-none focus:outline-none sm:text-sm sm:leading-5">
+            className="rounded-xl bg-white customShadow w-132 relative  max-h-60 py-1 text-base overflow-y-auto leading-6 focus:shadow-none focus:outline-none sm:text-sm sm:leading-5">
             {list.length > 0 ? (
               list.map(
                 (item: {popoverElement?: any; name: string; id: any; value: string}) => (
