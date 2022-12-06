@@ -399,7 +399,7 @@ const ClassRoster = ({
     try {
       setRemoving(inputAuthId);
 
-      let updateStudentStatus = API.graphql(
+      let updateStudentStatus = await API.graphql(
         graphqlOperation(mutations.updatePerson, {
           input: {
             email: inputEmail,
@@ -412,7 +412,7 @@ const ClassRoster = ({
         })
       );
 
-      let deleteLocation = API.graphql(
+      let deleteLocation = await API.graphql(
         graphqlOperation(mutations.deletePersonLocation, {
           input: {
             personEmail: inputEmail,
@@ -420,8 +420,6 @@ const ClassRoster = ({
           }
         })
       );
-
-      Promise.resolve(Promise.all([updateStudentStatus, deleteLocation]));
 
       const personLocationStudentsDeleted = personLocationStudents.filter(
         (_student) => _student.personAuthID !== inputAuthId
