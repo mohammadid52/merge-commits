@@ -54,7 +54,7 @@ const DropDownMenu = ({
                   <div className="w-6 h-6 2xl:w-12 2xl:h-12">
                     {image ? (
                       <img
-                        className="inline-block rounded-full border-2 border-gray-400 w-6 h-6 2xl:w-12 2xl:h-12"
+                        className="inline-block rounded-full border-0 theme-border w-6 h-6 2xl:w-12 2xl:h-12"
                         // style={{width: 48, height: 48}}
                         src={getImageFromS3Static(image)}
                         alt=""
