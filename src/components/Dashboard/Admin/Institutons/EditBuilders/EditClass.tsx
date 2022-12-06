@@ -18,7 +18,6 @@ import {
 } from 'utilities/strings';
 
 import Buttons from '@components/Atoms/Buttons';
-import BlockedStudents from '@components/Molecules/BlockedStudents';
 import {useNotifications} from '@contexts/NotificationContext';
 import {getLocalStorageData} from '@utilities/localStorage';
 import {PersonStatus} from 'API';
