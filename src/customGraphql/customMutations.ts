@@ -142,7 +142,7 @@ export const updatePerson = /* GraphQL */ `
       phone
       birthdate
       image
-      removedFrom
+
       language
       passcode
     }
@@ -758,7 +758,6 @@ export const updateRoom = /* GraphQL */ `
       name
       maxPersons
       activeSyllabus
-      blockedStudents
     }
   }
 `;
@@ -766,7 +765,6 @@ export const updateStudentFromRoom = /* GraphQL */ `
   mutation UpdateRoom($input: UpdateRoomInput!, $condition: ModelRoomConditionInput) {
     updateRoom(input: $input, condition: $condition) {
       id
-      blockedStudents
     }
   }
 `;
