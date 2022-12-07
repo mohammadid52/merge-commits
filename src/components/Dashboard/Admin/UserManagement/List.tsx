@@ -29,7 +29,7 @@ import UserStatus from './UserStatus';
 interface ListProps {
   item: any;
   searchTerm?: string;
-
+  isStudentRoster?: boolean;
   idx?: number;
 }
 
@@ -37,6 +37,7 @@ type LocationInfoType = {
   idx: number;
   authId: string;
   showLocationInfo: boolean;
+
   pageState: UserPageState;
   email: string;
   setShowLocationInfo: React.Dispatch<React.SetStateAction<boolean>>;
@@ -211,7 +212,7 @@ const LocationInfo = ({
 };
 
 const List = (props: ListProps) => {
-  const {item, idx, searchTerm} = props;
+  const {item, idx, searchTerm, isStudentRoster} = props;
 
   const match = useRouteMatch();
   const history = useHistory();
@@ -224,8 +225,16 @@ const List = (props: ListProps) => {
   const {state} = useContext(GlobalContext);
 
   const handleLink = (id: string) => {
-    const url = match.url.endsWith('/') ? match.url : match.url + '/';
-    history.push(`${url}${id}`);
+    const {user} = state;
+
+    if (isStudentRoster) {
+      history.push(
+        `/dashboard/manage-institutions/institution/${user.associateInstitute[0].institution.id}/manage-users/${id}?from=dashboard`
+      );
+    } else {
+      const url = match.url.endsWith('/') ? match.url : match.url + '/';
+      history.push(`${url}${id}`);
+    }
   };
 
   // test

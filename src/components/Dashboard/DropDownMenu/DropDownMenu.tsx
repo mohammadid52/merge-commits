@@ -51,10 +51,10 @@ const DropDownMenu = ({
                   theme === 'iconoclastIndigo' ? 'iconoclastIndigo' : 'curateBlue'
                 } rounded-full  focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 transition duration-150 drop-down-group ease-in-out transform  `}>
                 <div className="w-auto my-1 inline-flex items-center">
-                  <div className="w-6 h-6 2xl:w-12 2xl:h-12">
+                  <div className="w-6 h-6">
                     {image ? (
                       <img
-                        className="inline-block rounded-full border-0 theme-border w-6 h-6 2xl:w-12 2xl:h-12"
+                        className="inline-block rounded-full border-0 theme-border w-6 h-6"
                         // style={{width: 48, height: 48}}
                         src={getImageFromS3Static(image)}
                         alt=""

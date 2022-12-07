@@ -249,7 +249,10 @@ const Lesson = () => {
         .trim();
 
       if (listPersonData) {
-        const idx = listPersonData.findIndex((d: any) => d.id === personLessonData.id);
+        const idx = listPersonData.findIndex(
+          (d: any) => d && d?.id === personLessonData.id
+        );
+        if (idx === -1) return;
         let test = update(listPersonData[idx], 'pages', () => updatedPage);
         const updatedData = listPersonData.splice(idx, 1, test);
         setLocalStorageData('lessonPersonData', updatedData);

@@ -102,7 +102,6 @@ const User = (props: IUserProps) => {
   const urlParam: any = useParams();
 
   const {theme, state, userLanguage, dispatch, clientKey} = useContext(GlobalContext);
-  const themeColor = getAsset(clientKey, 'themeClassName');
 
   const [status, setStatus] = useState('');
   const [upImage, setUpImage] = useState(null);

@@ -732,6 +732,7 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
                 userList.map((item: any, key: number) => (
                   <div key={key}>
                     <List
+                      isStudentRoster={isStudentRoster}
                       searchTerm={searchInput.value}
                       item={item}
                       idx={key}
