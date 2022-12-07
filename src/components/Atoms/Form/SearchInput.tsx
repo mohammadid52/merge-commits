@@ -31,23 +31,6 @@ const SearchInput: React.FC<SearchProps> = (searchProps: SearchProps) => {
   const {theme, clientKey} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
 
-  // const search = (code: number) => {
-  //   if (liveSearch) {
-  //     if (value.length >= 2) {
-  //       // type atleast 3 letters and wait for n milliseconds after each key press and the search
-  //       const wait = throttle(() => onKeyDown(), 500);
-  //       wait();
-  //     } else {
-  //       onKeyDown();
-  //     }
-  //   } else {
-  // if (code === 13) {
-  //   // hit enter to search
-  //   onKeyDown();
-  // }
-  //   }
-  // };
-
   const search = (code: number) => {
     if (code === 13) {
       // hit enter to search
@@ -64,8 +47,8 @@ const SearchInput: React.FC<SearchProps> = (searchProps: SearchProps) => {
       } ${theme.outlineNone} ${
         style ? style : ''
       }  ${disabledClass} border-0 border-transparent ${
-        isActive ? 'iconoclast:border-main  curate:border-main' : ''
-      } input-wrapper px-4 py-2`}>
+        isActive ? 'theme-border' : ''
+      } input-wrapper px-4 py-2 hover:theme-bg:200`}>
       <span className="w-6 mr-4 cursor-pointer" onClick={onKeyDown}>
         <IoSearchSharp
           size={'1.5rem'}
@@ -81,7 +64,7 @@ const SearchInput: React.FC<SearchProps> = (searchProps: SearchProps) => {
         value={value ? value : ''}
         onChange={(e: any) => onChange(e.target.value)}
         onKeyDown={(e: any) => search(e.keyCode)}
-        className={`${theme.outlineNone}  `}
+        className={`${theme.outlineNone} bg-transparent hover:bg-transparent   `}
       />
       <AnimatedContainer
         animationType="translateY"

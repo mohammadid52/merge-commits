@@ -161,7 +161,7 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
           aria-labelledby="listbox-label"
           className={`${
             disabled || loading ? 'bg-gray-100' : ''
-          } flex focus:outline-none focus:ring-2 focus:ring-${
+          } flex focus:outline-none hover:theme-bg:200 hover:theme-border:400 hover:theme-text:400 focus:ring-2 focus:ring-${
             themeColor === 'iconoclastIndigo' ? 'indigo' : 'blue'
           }-600 focus:border-transparent  relative items-center cursor-pointer ${width} h-full rounded-full ${
             error.length === 0 ? 'border-gray-300' : 'border-red-300'

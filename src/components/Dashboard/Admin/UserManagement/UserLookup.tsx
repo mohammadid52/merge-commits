@@ -392,24 +392,6 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
     }
   };
 
-  const getRoomData = async () => {
-    try {
-      // To extract room id from path name
-
-      const result: any = await API.graphql(
-        graphqlOperation(customQueries.listRoomBasicDetails, {
-          filter: {
-            institutionID: {eq: instituteId}
-          }
-        })
-      );
-
-      const items = result.data.listRooms.items;
-
-      console.log(items);
-    } catch (error) {}
-  };
-
   const fetchStudentList = async () => {
     setLoading(true);
 
@@ -591,6 +573,7 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
         name: name
       });
 
+      removeSearchAction();
       fetchClassStudents(str).then((resp: any) => {});
     }
   };
@@ -603,11 +586,17 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
       : totalUserList?.length;
   };
 
+  const goToClassroom = () => {
+    if (selectedClass !== null) {
+      history.push(`/dashboard/lesson-planner/${selectedClass.value}`);
+    }
+  };
+
   return (
     <div className={`w-full h-full ${isInInstitute ? 'px-12' : ''}`}>
       {/* Header Section */}
       {!isInInstitute && <BreadCrums items={breadCrumsList} />}
-      <div className="flex flex-col lg:flex-row justify-between items-center">
+      <div className="flex flex-col lg:flex-row justify-between mb-4 items-center">
         {isInInstitute ? (
           <h3 className="text-lg leading-6 text-gray-600 w-full lg:w-auto mb-4 lg:mb-0">
             {isStudentRoster ? `Your Students (${headerForStudentRoster()})` : 'Users'}
@@ -625,7 +614,7 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
               : 'flex justify-end mb-4'
           }>
           {isStudentRoster && (
-            <div className="w-auto flex mr-2 min-w-64">
+            <div className="w-auto relative flex mr-2 min-w-64">
               <Selector
                 isClearable
                 placeholder={'Select a class'}
@@ -636,6 +625,15 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
                 disabled={loading}
                 arrowHidden={true}
               />
+
+              {selectedClass !== null && (
+                <span
+                  onClick={goToClassroom}
+                  style={{bottom: '-1.5rem'}}
+                  className="absolute text-center theme-text text-sm capitalize hover:theme-text:600 hover:underline cursor-pointer">
+                  Go to classroom
+                </span>
+              )}
             </div>
           )}
 

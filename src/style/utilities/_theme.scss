@@ -34,28 +34,28 @@
     .iconoclast {
       @if $util == 'bg' {
         .theme-bg\:#{$themeName} {
-          background-color: $themeValue;
+          background-color: $themeValue !important;
         }
 
         .hover\:theme-bg\:#{$themeName}:hover {
-          background-color: $themeValue;
+          background-color: $themeValue !important;
         }
       }
 
       @if $util == 'text' {
         .theme-text\:#{$themeName} {
-          color: $themeValue;
+          color: $themeValue !important;
         }
         .hover\:theme-text\:#{$themeName}:hover {
-          color: $themeValue;
+          color: $themeValue !important;
         }
       }
       @if $util == 'border' {
         .theme-border\:#{$themeName} {
-          border-color: $themeValue;
+          border-color: $themeValue !important;
         }
         .hover\:theme-border\:#{$themeName}:hover {
-          border-color: $themeValue;
+          border-color: $themeValue !important;
         }
       }
     }
@@ -139,28 +139,28 @@
     .curate {
       @if $util == 'bg' {
         .theme-bg\:#{$themeName} {
-          background-color: $themeValue;
+          background-color: $themeValue !important;
         }
 
         .hover\:theme-bg\:#{$themeName}:hover {
-          background-color: $themeValue;
+          background-color: $themeValue !important;
         }
       }
 
       @if $util == 'text' {
         .theme-text\:#{$themeName} {
-          color: $themeValue;
+          color: $themeValue !important;
         }
         .hover\:theme-text\:#{$themeName}:hover {
-          color: $themeValue;
+          color: $themeValue !important;
         }
       }
       @if $util == 'border' {
         .theme-border\:#{$themeName} {
-          border-color: $themeValue;
+          border-color: $themeValue !important;
         }
         .hover\:theme-border\:#{$themeName}:hover {
-          border-color: $themeValue;
+          border-color: $themeValue !important;
         }
       }
     }
@@ -287,23 +287,23 @@
 // -----------TEXT------------- //
 
 .iconoclast .iconoclast\:text-main {
-  color: $iconoclast;
+  color: $iconoclast !important;
 }
 
 .curate .curate\:text-main {
-  color: $curate;
+  color: $curate !important;
 }
 // -----------TEXT HOVER------------- //
 
 .iconoclast .hover\:iconoclast\:text-main {
   &:hover {
-    color: $iconoclast;
+    color: $iconoclast !important;
   }
 }
 
 .curate .hover\:curate\:text-main {
   &:hover {
-    color: $curate;
+    color: $curate !important;
   }
 }
 
