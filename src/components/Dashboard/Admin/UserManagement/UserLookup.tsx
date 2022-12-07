@@ -556,7 +556,9 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
       );
 
       const resp = classStudents.data.listClassStudents?.items;
-      const userList = addName(resp.map((t: any) => t.student));
+
+      const students = resp.map((item: any) => item.student);
+      const userList = sortByName(addName(students));
       setUserList(userList);
     } catch (error) {
       console.error(error);
