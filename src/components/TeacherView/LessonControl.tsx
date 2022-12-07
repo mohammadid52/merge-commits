@@ -494,7 +494,7 @@ const LessonControl = () => {
   const anyoneIsShared = lessonState.displayData[0].studentAuthID !== '';
   const isPresenting = lessonState.displayData[0].isTeacher === true;
 
-  const {isTeacher} = useAuth();
+  const {isTeacher, email, authId} = useAuth();
 
   useEffect(() => {
     if (isPresenting && !fullscreen) {
@@ -589,7 +589,11 @@ const LessonControl = () => {
             clientKey={clientKey}
             rightView={rightView}
             setRightView={setRightView}>
-            <ErrorBoundary fallback={<h1>Error in the Classroster</h1>}>
+            <ErrorBoundary
+              authId={authId}
+              email={email}
+              componentName="Classroster"
+              fallback={<h1>Error in the Classroster</h1>}>
               <ClassRoster
                 isSameStudentShared={isSameStudentShared}
                 handleQuitShare={handleQuitShare}
@@ -628,7 +632,11 @@ const LessonControl = () => {
                       <ComponentLoading />
                     </div>
                   }>
-                  <ErrorBoundary fallback={<h1>Error in the Teacher's Lesson</h1>}>
+                  <ErrorBoundary
+                    authId={authId}
+                    email={email}
+                    componentName="CoreUniversalLesson"
+                    fallback={<h1>Error in the Teacher's Lesson</h1>}>
                     <CoreUniversalLesson />
                   </ErrorBoundary>
                 </Suspense>

@@ -1543,3 +1543,35 @@ export const deleteCurriculumUnits = /* GraphQL */ `
     }
   }
 `;
+
+export const createErrorLog = /* GraphQL */ `
+  mutation CreateErrorLog(
+    $input: CreateErrorLogInput!
+    $condition: ModelErrorLogConditionInput
+  ) {
+    createErrorLog(input: $input, condition: $condition) {
+      id
+      pageUrl
+      componentName
+      error
+      errorType
+      errorTime
+      email
+      authID
+      person {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        onDemand
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;

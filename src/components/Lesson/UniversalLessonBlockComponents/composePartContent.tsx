@@ -43,7 +43,8 @@ const composePartContent = (
   updateBlockContentULBHandler?: any,
   position?: number,
   notesData?: any,
-  isStudent: boolean = true
+  isStudent: boolean = true,
+  auth?: {authId: string; email: string}
 ): JSX.Element => {
   const commonBlockProps = {
     classString,
@@ -120,7 +121,11 @@ const composePartContent = (
   } else if (type.includes(GAME_CHANGERS) || type === 'square') {
     return (
       <GameChangerProvider>
-        <ErrorBoundary fallback={<h1>Something wrong with activity</h1>}>
+        <ErrorBoundary
+          authId={auth.authId}
+          email={auth.email}
+          componentName="ActivityBlock"
+          fallback={<h1>Something wrong with activity</h1>}>
           <ActivityBlock value={value} />
         </ErrorBoundary>
       </GameChangerProvider>

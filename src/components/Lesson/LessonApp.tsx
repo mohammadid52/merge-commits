@@ -902,7 +902,11 @@ const LessonApp = ({
               <LessonPageLoader />
             </div>
           ) : (
-            <ErrorBoundary fallback={<h1>Error in the Lesson App</h1>}>
+            <ErrorBoundary
+              authId={user.authId}
+              email={user.email}
+              componentName="CoreUniversalLesson"
+              fallback={<h1>Error in the Lesson App</h1>}>
               {/* ADD LESSONWRAPPER HERE */}
               <div className="mt-4 mb-8 lesson-page-container">
                 <CoreUniversalLesson

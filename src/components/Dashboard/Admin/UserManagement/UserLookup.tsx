@@ -6,7 +6,7 @@ import {
   AiOutlineUsergroupAdd
 } from 'react-icons/ai';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
-import {useHistory, useParams} from 'react-router-dom';
+import {useHistory} from 'react-router-dom';
 
 import {getAsset} from 'assets';
 import {GlobalContext} from 'contexts/GlobalContext';
@@ -14,9 +14,8 @@ import * as customQueries from 'customGraphql/customQueries';
 import * as queries from 'graphql/queries';
 
 // import LessonLoading from '../../../Lesson/Loading/ComponentLoading';
-import useGraphqlQuery from '@customHooks/useGraphqlQuery';
 import useSearch from '@customHooks/useSearch';
-import {ListPersonLocationsQueryVariables, PersonLocation, PersonStatus} from 'API';
+import {PersonStatus} from 'API';
 import BreadCrums from 'atoms/BreadCrums';
 import Buttons from 'atoms/Buttons';
 import SearchInput from 'atoms/Form/SearchInput';
@@ -28,7 +27,6 @@ import useDictionary from 'customHooks/dictionary';
 import {createFilterToFetchSpecificItemsOnly} from 'utilities/strings';
 import List from './List';
 import UserListLoader from './UserListLoader';
-import {useQuery} from '@customHooks/urlParam';
 
 export const sortByName = (data: any[]) => {
   return data.sort((a: any, b: any) => {
@@ -549,7 +547,7 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
     try {
       setLoading(true);
       const classStudents: any = await API.graphql(
-        graphqlOperation(queries.listClassUserLookup, {
+        graphqlOperation(customQueries.listClassUserLookup, {
           limit: 500,
           filter: {classID: {eq: classId}}
         })

@@ -16571,3 +16571,186 @@ export const deleteCypressTesting = /* GraphQL */ `
     }
   }
 `;
+export const createErrorLog = /* GraphQL */ `
+  mutation CreateErrorLog(
+    $input: CreateErrorLogInput!
+    $condition: ModelErrorLogConditionInput
+  ) {
+    createErrorLog(input: $input, condition: $condition) {
+      id
+      pageUrl
+      componentName
+      error
+      errorType
+      errorTime
+      email
+      authID
+      person {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        inactiveStatusDate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        onDemand
+        sentiments
+        passcode
+        classes {
+          nextToken
+        }
+        lessons {
+          nextToken
+        }
+        spotlightUser
+        spotlightDate
+        statusReason
+        addedby
+        lastEmotionSubmission
+        pageState
+        lastPageStateUpdate
+        statusChangedBy
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateErrorLog = /* GraphQL */ `
+  mutation UpdateErrorLog(
+    $input: UpdateErrorLogInput!
+    $condition: ModelErrorLogConditionInput
+  ) {
+    updateErrorLog(input: $input, condition: $condition) {
+      id
+      pageUrl
+      componentName
+      error
+      errorType
+      errorTime
+      email
+      authID
+      person {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        inactiveStatusDate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        onDemand
+        sentiments
+        passcode
+        classes {
+          nextToken
+        }
+        lessons {
+          nextToken
+        }
+        spotlightUser
+        spotlightDate
+        statusReason
+        addedby
+        lastEmotionSubmission
+        pageState
+        lastPageStateUpdate
+        statusChangedBy
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteErrorLog = /* GraphQL */ `
+  mutation DeleteErrorLog(
+    $input: DeleteErrorLogInput!
+    $condition: ModelErrorLogConditionInput
+  ) {
+    deleteErrorLog(input: $input, condition: $condition) {
+      id
+      pageUrl
+      componentName
+      error
+      errorType
+      errorTime
+      email
+      authID
+      person {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        inactiveStatusDate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        onDemand
+        sentiments
+        passcode
+        classes {
+          nextToken
+        }
+        lessons {
+          nextToken
+        }
+        spotlightUser
+        spotlightDate
+        statusReason
+        addedby
+        lastEmotionSubmission
+        pageState
+        lastPageStateUpdate
+        statusChangedBy
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;

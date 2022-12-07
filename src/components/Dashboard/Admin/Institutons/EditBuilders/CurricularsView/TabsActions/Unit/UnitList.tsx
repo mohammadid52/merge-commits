@@ -22,7 +22,7 @@ export const UnitList = ({instId}: any) => {
   const {
     clientKey,
     state: {
-      user: {isSuperAdmin}
+      user: {isSuperAdmin, authId, email}
     },
     theme,
     userLanguage
@@ -366,6 +366,9 @@ export const UnitList = ({instId}: any) => {
               {finalList.map((unit: any, index: number) => {
                 return (
                   <ErrorBoundary
+                    authId={authId}
+                    email={email}
+                    componentName="UnitListRow"
                     key={`unit_list_row_${index}`}
                     fallback={<h1 className="hidden"> </h1>}>
                     <UnitListRow

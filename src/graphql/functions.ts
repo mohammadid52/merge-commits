@@ -1,6 +1,6 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {Storage} from '@aws-amplify/storage';
-import {UserPageState} from 'API';
+import {CreateErrorLogInput, UserPageState} from 'API';
 import * as customMutations from 'customGraphql/customMutations';
 
 interface S3UploadOptions {
@@ -82,5 +82,28 @@ export const updatePageState = async (
     } catch (error) {
       console.error('error updating page -> ', {pageState, auth}, error);
     }
+  }
+};
+
+export const logError = async (
+  error: Error | string,
+  auth: {authId: string; email: string},
+  componentName: string
+) => {
+  try {
+    const input: CreateErrorLogInput = {
+      authID: auth.authId,
+      email: auth.email,
+      error: JSON.stringify(error),
+      errorType: typeof error === 'string' ? error : error.message,
+      errorTime: new Date().toISOString(),
+      pageUrl: location.href,
+      componentName: componentName
+    };
+    const res = await API.graphql(
+      graphqlOperation(customMutations.createErrorLog, {input})
+    );
+  } catch (error) {
+    console.error('error logging error -> ', {error, auth}, error);
   }
 };

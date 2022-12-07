@@ -1,3 +1,4 @@
+import {logError} from '@graphql/functions';
 import React from 'react';
 
 /**
@@ -11,13 +12,16 @@ import React from 'react';
  */
 interface PropsInterface {
   fallback?: React.ReactNode;
+  authId: string;
+  email: string;
+  componentName: string;
 }
 
 class ErrorBoundary extends React.Component<PropsInterface> {
   public state = {
     hasError: false,
     error: '',
-    info: '',
+    info: ''
   };
 
   constructor(props: PropsInterface) {
@@ -25,7 +29,7 @@ class ErrorBoundary extends React.Component<PropsInterface> {
     this.state = {
       hasError: false,
       error: '',
-      info: '',
+      info: ''
     };
   }
 
@@ -37,13 +41,18 @@ class ErrorBoundary extends React.Component<PropsInterface> {
     this.setState({
       hasError: true,
       error: error,
-      info: info,
+      info: info
     });
   }
 
   public componentDidUpdate() {
     if (this.state.hasError) {
-      console.log('error found in boundary');
+      logError(
+        this.state.error,
+        {authId: this.props.authId, email: this.props.email},
+        this.props.componentName
+      );
+      console.error('error logged to aws');
     }
   }
 

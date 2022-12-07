@@ -23,7 +23,7 @@ const CoreUniversalLesson = ({
     return lessonState.currentPage === lessonState.lessonData?.lessonPlan?.length - 1;
   };
 
-  const {isStudent} = useAuth();
+  const {isStudent, authId, email} = useAuth();
   const getRoomData = getLocalStorageData('room_info');
 
   return (
@@ -33,7 +33,11 @@ const CoreUniversalLesson = ({
       } bg-dark-gray relative sm:max-w-132 max-w-80 xs:max-w-96  md:max-w-200 2xl:max-w-256 mx-auto`}>
       <div className={`w-full flex flex-row mx-auto`}>
         <LessonPageWrapper>
-          <ErrorBoundary fallback={<h1>Error in the LessonRowComposer</h1>}>
+          <ErrorBoundary
+            authId={authId}
+            email={email}
+            componentName="LessonRowComposer"
+            fallback={<h1>Error in the LessonRowComposer</h1>}>
             <LessonRowComposer />
             {userAtEnd() && isStudent ? (
               <SaveQuit

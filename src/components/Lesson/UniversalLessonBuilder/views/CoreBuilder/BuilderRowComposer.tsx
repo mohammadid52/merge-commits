@@ -14,6 +14,7 @@ import {
 import {FORM_TYPES} from '@UlbUI/common/constants';
 import React, {useContext, useState} from 'react';
 import {BuilderRowWrapper} from './BuilderRowWrapper';
+import useAuth from '@customHooks/useAuth';
 
 const BuilderRowComposer = (props: RowComposerProps) => {
   const {
@@ -56,6 +57,7 @@ const BuilderRowComposer = (props: RowComposerProps) => {
 
   // this is only for header component
   const paddingForHeader = (type: any) => (type.includes('header') ? 'px-4 mb-3' : '');
+  const {authId, email} = useAuth();
 
   return (
     <div>
@@ -168,7 +170,8 @@ const BuilderRowComposer = (props: RowComposerProps) => {
                                     updateBlockContentULBHandler,
                                     idx2,
                                     undefined, // notesData
-                                    false // isStudent,
+                                    false, // isStudent,
+                                    {authId, email}
                                   )}
                                 </div>
                               </div>

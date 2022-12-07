@@ -731,7 +731,11 @@ export const getStaff = /* GraphQL */ `
   }
 `;
 export const listStaff = /* GraphQL */ `
-  query ListStaff($filter: ModelStaffFilterInput, $limit: Int, $nextToken: String) {
+  query ListStaff(
+    $filter: ModelStaffFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
     listStaff(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
@@ -1032,7 +1036,11 @@ export const getRoom = /* GraphQL */ `
   }
 `;
 export const listRooms = /* GraphQL */ `
-  query ListRooms($filter: ModelRoomFilterInput, $limit: Int, $nextToken: String) {
+  query ListRooms(
+    $filter: ModelRoomFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
     listRooms(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
@@ -1353,7 +1361,11 @@ export const listClassroomGroupStudents = /* GraphQL */ `
     $limit: Int
     $nextToken: String
   ) {
-    listClassroomGroupStudents(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    listClassroomGroupStudents(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
       items {
         id
         classRoomGroupID
@@ -2146,7 +2158,11 @@ export const getClass = /* GraphQL */ `
   }
 `;
 export const listClasses = /* GraphQL */ `
-  query ListClasses($filter: ModelClassFilterInput, $limit: Int, $nextToken: String) {
+  query ListClasses(
+    $filter: ModelClassFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
     listClasses(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
@@ -2402,43 +2418,6 @@ export const listClassStudents = /* GraphQL */ `
     }
   }
 `;
-
-export const listClassUserLookup = /* GraphQL */ `
-  query ListClassStudents(
-    $filter: ModelClassStudentFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listClassStudents(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        classID
-        studentID
-        studentEmail
-        studentAuthID
-        student {
-          id
-          authId
-          status
-          email
-          role
-          firstName
-          preferredName
-          lastName
-          inactiveStatusDate
-          image
-          onDemand
-          pageState
-          lastPageStateUpdate
-        }
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-
 export const getCurriculum = /* GraphQL */ `
   query GetCurriculum($id: ID!) {
     getCurriculum(id: $id) {
@@ -3180,7 +3159,11 @@ export const getRoomMsgs = /* GraphQL */ `
   }
 `;
 export const listRoomMsgs = /* GraphQL */ `
-  query ListRoomMsgs($filter: ModelRoomMsgsFilterInput, $limit: Int, $nextToken: String) {
+  query ListRoomMsgs(
+    $filter: ModelRoomMsgsFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
     listRoomMsgs(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
@@ -3474,7 +3457,11 @@ export const listAnthologyComments = /* GraphQL */ `
     $limit: Int
     $nextToken: String
   ) {
-    listAnthologyComments(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    listAnthologyComments(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
       items {
         id
         text
@@ -6156,7 +6143,11 @@ export const listUniversalSyllabusLessons = /* GraphQL */ `
     $limit: Int
     $nextToken: String
   ) {
-    listUniversalSyllabusLessons(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    listUniversalSyllabusLessons(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
       items {
         id
         syllabusID
@@ -6309,7 +6300,11 @@ export const listUniversalLessonFeedbacks = /* GraphQL */ `
     $limit: Int
     $nextToken: String
   ) {
-    listUniversalLessonFeedbacks(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    listUniversalLessonFeedbacks(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
       items {
         id
         syllabusLessonID
@@ -6441,7 +6436,11 @@ export const listStudentConnections = /* GraphQL */ `
     $limit: Int
     $nextToken: String
   ) {
-    listStudentConnections(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    listStudentConnections(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
       items {
         fromEmail
         fromAuthID
@@ -8392,6 +8391,131 @@ export const listCypressTestings = /* GraphQL */ `
         testExpResults
         edgeCases
         lastUpdate
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getErrorLog = /* GraphQL */ `
+  query GetErrorLog($id: ID!) {
+    getErrorLog(id: $id) {
+      id
+      pageUrl
+      componentName
+      error
+      errorType
+      errorTime
+      email
+      authID
+      person {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        inactiveStatusDate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        onDemand
+        sentiments
+        passcode
+        classes {
+          nextToken
+        }
+        lessons {
+          nextToken
+        }
+        spotlightUser
+        spotlightDate
+        statusReason
+        addedby
+        lastEmotionSubmission
+        pageState
+        lastPageStateUpdate
+        statusChangedBy
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listErrorLogs = /* GraphQL */ `
+  query ListErrorLogs(
+    $id: ID
+    $filter: ModelErrorLogFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listErrorLogs(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        pageUrl
+        componentName
+        error
+        errorType
+        errorTime
+        email
+        authID
+        person {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          inactiveStatusDate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          onDemand
+          sentiments
+          passcode
+          spotlightUser
+          spotlightDate
+          statusReason
+          addedby
+          lastEmotionSubmission
+          pageState
+          lastPageStateUpdate
+          statusChangedBy
+          createdAt
+          updatedAt
+        }
         createdAt
         updatedAt
       }

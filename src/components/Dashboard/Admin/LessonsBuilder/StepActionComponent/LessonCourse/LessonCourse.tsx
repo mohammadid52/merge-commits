@@ -50,7 +50,7 @@ const LessonCourse = ({
   const {
     clientKey,
     state: {
-      user: {isSuperAdmin}
+      user: {isSuperAdmin, authId, email}
     },
     userLanguage
   } = useContext(GlobalContext);
@@ -378,15 +378,12 @@ const LessonCourse = ({
     );
   };
 
-  const titleList = selectedCurriculumList.map((curriculum, index) => ({
-    id: index,
-    title: curriculum.name,
-    content: renderTableView(curriculum),
-    uniqueId: curriculum.id
-  }));
-
   return (
-    <ErrorBoundary fallback={<p>Something went wrong</p>}>
+    <ErrorBoundary
+      authId={authId}
+      email={email}
+      componentName="LessonCourse"
+      fallback={<p>Something went wrong</p>}>
       <div className="flex m-auto justify-center">
         <div className="">
           <PageWrapper defaultClass="px-8 border-0 border-gray-200">

@@ -2024,6 +2024,41 @@ export const getCourse = /* GraphQL */ `
     }
   }
 `;
+export const listClassUserLookup = /* GraphQL */ `
+  query ListClassStudents(
+    $filter: ModelClassStudentFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listClassStudents(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        classID
+        studentID
+        studentEmail
+        studentAuthID
+        student {
+          id
+          authId
+          status
+          email
+          role
+          firstName
+          preferredName
+          lastName
+          inactiveStatusDate
+          image
+          onDemand
+          pageState
+          lastPageStateUpdate
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 
 export const listCurriculums = /* GraphQL */ `
   query ListCurriculums(

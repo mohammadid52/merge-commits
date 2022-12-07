@@ -891,7 +891,11 @@ const Dashboard = (props: DashboardProps) => {
                 exact
                 path={`${match.url}/home`}
                 render={() => (
-                  <ErrorBoundary fallback={<h1>Oops with the Dashboard</h1>}>
+                  <ErrorBoundary
+                    authId={stateUser.authId}
+                    email={stateUser.email}
+                    componentName="HomeSwitch"
+                    fallback={<h1>Oops with the Dashboard</h1>}>
                     <HomeSwitch />
                   </ErrorBoundary>
                 )}
@@ -900,7 +904,11 @@ const Dashboard = (props: DashboardProps) => {
                 // exact
                 path={`${match.url}/community/:action`}
                 render={() => (
-                  <ErrorBoundary fallback={<h1>Community Page is not working</h1>}>
+                  <ErrorBoundary
+                    authId={stateUser.authId}
+                    email={stateUser.email}
+                    componentName="Community"
+                    fallback={<h1>Community Page is not working</h1>}>
                     <Community role={userData.role} />
                   </ErrorBoundary>
                 )}
@@ -910,7 +918,11 @@ const Dashboard = (props: DashboardProps) => {
                 // exact
                 path={`${match.url}/game-changers`}
                 render={() => (
-                  <ErrorBoundary fallback={<h1>Game changers is not working</h1>}>
+                  <ErrorBoundary
+                    authId={stateUser.authId}
+                    email={stateUser.email}
+                    componentName="GameChangers"
+                    fallback={<h1>Game changers is not working</h1>}>
                     <GameChangerProvider>
                       <GameChangers />
                     </GameChangerProvider>
@@ -923,7 +935,13 @@ const Dashboard = (props: DashboardProps) => {
                 path={`${match.url}/csv`}
                 render={() =>
                   conditionalRender(
-                    <Csv />,
+                    <ErrorBoundary
+                      authId={stateUser.authId}
+                      email={stateUser.email}
+                      componentName="Csv"
+                      fallback={<h1>Game changers is not working</h1>}>
+                      <Csv />
+                    </ErrorBoundary>,
                     userData.role === 'SUP' ||
                       userData.role === 'ADM' ||
                       userData.role === 'TR' ||
@@ -937,7 +955,11 @@ const Dashboard = (props: DashboardProps) => {
                 exact
                 path={`${match.url}/classroom/:roomId`}
                 render={() => (
-                  <ErrorBoundary fallback={<h1>Oops with the Classroom</h1>}>
+                  <ErrorBoundary
+                    authId={stateUser.authId}
+                    email={stateUser.email}
+                    componentName="Classroom"
+                    fallback={<h1>Oops with the Classroom</h1>}>
                     <Classroom
                       setClassroomCurriculum={setCurriculumObj}
                       classroomCurriculum={curriculumObj}
@@ -961,28 +983,65 @@ const Dashboard = (props: DashboardProps) => {
               <Route
                 path={`${match.url}/anthology`}
                 render={() => (
-                  <Anthology
-                    studentAuthID={stateUser?.authId}
-                    studentID={stateUser?.id}
-                    studentEmail={stateUser?.email}
-                    studentName={stateUser?.name}
-                  />
+                  <ErrorBoundary
+                    authId={stateUser.authId}
+                    email={stateUser.email}
+                    componentName="Anthology"
+                    fallback={<h1>Oops with the Anthology</h1>}>
+                    <Anthology
+                      studentAuthID={stateUser?.authId}
+                      studentID={stateUser?.id}
+                      studentEmail={stateUser?.email}
+                      studentName={stateUser?.name}
+                    />
+                  </ErrorBoundary>
                 )}
               />
               <Route
                 path={`${match.url}/noticeboard`}
-                render={() => <NoticeboardAdmin setCurrentPage={setCurrentPage} />}
+                render={() => (
+                  <ErrorBoundary
+                    authId={stateUser.authId}
+                    email={stateUser.email}
+                    componentName="NoticeboardAdmin"
+                    fallback={<h1>Oops with the NoticeboardAdmin</h1>}>
+                    <NoticeboardAdmin setCurrentPage={setCurrentPage} />
+                  </ErrorBoundary>
+                )}
               />
-              <Route path={`${match.url}/registration`} render={() => <Registration />} />
+              <Route
+                path={`${match.url}/registration`}
+                render={() => (
+                  <ErrorBoundary
+                    authId={stateUser.authId}
+                    email={stateUser.email}
+                    componentName="Registration"
+                    fallback={<h1>Oops with the Registration</h1>}>
+                    <Registration />
+                  </ErrorBoundary>
+                )}
+              />
               <Route
                 path={`${match.url}/profile`}
-                render={() => <Profile updateAuthState={updateAuthState} />}
+                render={() => (
+                  <ErrorBoundary
+                    authId={stateUser.authId}
+                    email={stateUser.email}
+                    componentName="Profile"
+                    fallback={<h1>Oops with the Profile</h1>}>
+                    <Profile updateAuthState={updateAuthState} />
+                  </ErrorBoundary>
+                )}
               />
               <Route path={`${match.url}/test-cases`} render={() => <TestCases />} />
               <Route
                 path={`${match.url}/lesson-planner/:roomId`}
                 render={() => (
-                  <ErrorBoundary fallback={<h1>Oops with the Lesson-Planner</h1>}>
+                  <ErrorBoundary
+                    authId={stateUser.authId}
+                    email={stateUser.email}
+                    componentName="LessonPlanHome"
+                    fallback={<h1>Oops with the Lesson-Planner</h1>}>
                     <LessonPlanHome
                       setClassroomCurriculum={setCurriculumObj}
                       classroomCurriculum={curriculumObj}
@@ -1003,11 +1062,25 @@ const Dashboard = (props: DashboardProps) => {
               />
               <Route
                 path={`${match.url}/manage-institutions`}
-                render={() => <InstitutionsHome setCurrentPage={setCurrentPage} />}
+                render={() => (
+                  <ErrorBoundary
+                    authId={stateUser.authId}
+                    email={stateUser.email}
+                    componentName="InstitutionsHome">
+                    <InstitutionsHome setCurrentPage={setCurrentPage} />
+                  </ErrorBoundary>
+                )}
               />
               <Route
                 path={`${match.url}/question-bank`}
-                render={() => <QuestionBank />}
+                render={() => (
+                  <ErrorBoundary
+                    authId={stateUser.authId}
+                    email={stateUser.email}
+                    componentName="QuestionBank">
+                    <QuestionBank />
+                  </ErrorBoundary>
+                )}
               />
             </Switch>
           </Suspense>
