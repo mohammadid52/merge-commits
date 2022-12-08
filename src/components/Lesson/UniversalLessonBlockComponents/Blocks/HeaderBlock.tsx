@@ -2,15 +2,17 @@ import React, {useContext} from 'react';
 import {GlobalContext} from 'contexts/GlobalContext';
 import {RowWrapperProps} from 'interfaces/UniversalLessonBuilderInterfaces';
 import './styles/HeaderStyles.scss';
+import {ParagraphBlock} from './ParagraphBlock';
 
 interface HeaderBlockProps extends RowWrapperProps {
   id?: string;
   value?: any;
   type?: string;
+  pagePartId?: string;
 }
 
 export const HeaderBlock = (props: HeaderBlockProps) => {
-  const {id, value, type, classString} = props;
+  const {id, value, type, classString, pagePartId} = props;
 
   const {
     state: {lessonPage: {themeTextColor = ''} = {}}
@@ -28,11 +30,21 @@ export const HeaderBlock = (props: HeaderBlockProps) => {
 
   return (
     <div className="w-auto">
-      {value &&
-        value.length > 0 &&
-        value.map((v: any, i: number) => (
-          <div key={id}>{composeHeader(id, v, type)}</div>
-        ))}
+      {value && value.length > 0 && (
+        <>
+          <div key={id}>{composeHeader(id, value[0], type)}</div>
+
+          {value[1] !== '' && (
+            <ParagraphBlock
+              mode="lesson"
+              pagePartId={pagePartId}
+              value={[value[1]]}
+              id={id}
+              type={type}
+            />
+          )}
+        </>
+      )}
     </div>
   );
 };

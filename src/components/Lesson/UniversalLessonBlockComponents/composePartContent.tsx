@@ -72,7 +72,7 @@ const composePartContent = (
   } else if (type.includes('links')) {
     return <LinksBlock {...commonBlockProps} />;
   } else if (type.includes('header')) {
-    return <HeaderBlock {...commonBlockProps} />;
+    return <HeaderBlock pagePartId={pagePartId} {...commonBlockProps} />;
   } else if (type.includes('paragraph')) {
     return <ParagraphBlock pagePartId={pagePartId} {...commonBlockProps} />;
   } else if (type.includes('form') && type !== 'notes-form') {

@@ -5,6 +5,7 @@ import useStudentDataValue from 'customHooks/studentDataValue';
 import {IFormBlockProps} from 'interfaces/UniversalLessonInterfaces';
 import {noop} from 'lodash';
 import React, {useContext} from 'react';
+import {FormLabel} from '../FormBlock';
 
 const TextBlock = (props: IFormBlockProps) => {
   const {id, required, numbered, label, mode, index, value, inputID} = props;
@@ -35,16 +36,14 @@ const TextBlock = (props: IFormBlockProps) => {
       id={`${inputID}_for_error`}
       key={id}
       className={`questionItemChild mb-4 p-4 bg-component-dark rounded-2xl border-0 border-gray-700`}>
-      <label className={`text-sm ${themeTextColor}`} htmlFor="label">
-        {numbered && index} {label} <RequiredMark isRequired={required} />
-      </label>
+      <FormLabel label={label} required={required} numbered={numbered} index={index} />
       <input
         id={inputID}
         data-cy={inputID}
         disabled={mode === 'building'}
         className={`w-full py-2 px-4 ${themeTextColor} mt-2 rounded-xl ${
           lessonPageTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'
-        } ${themePlaceholderColor}`}
+        } ${themePlaceholderColor} text-sm`}
         name={'text'}
         type={'text'}
         onChange={isInLesson && isStudent ? (e) => onChange(e) : noop}

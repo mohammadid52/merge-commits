@@ -52,7 +52,7 @@ const Toggle = ({
         checked={checked}
         onChange={onClick}
         className={classNames(
-          checked ? 'bg-indigo-600' : 'bg-gray-200',
+          checked ? 'theme-bg' : 'bg-gray-200',
           'relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
         )}>
         <span
@@ -73,6 +73,8 @@ const Toggle = ({
 interface IInput {
   title: string;
   animated?: boolean;
+  instructions?: boolean;
+  instructionsText?: string;
 }
 
 const HeaderModalComponent = ({
@@ -111,23 +113,35 @@ const HeaderModalComponent = ({
     if (!NO_BORDER_SELECTED) {
       setUnsavedChanges(true);
 
-      setInputFields({
-        ...inputFields,
-        animated: !inputFields.animated
-      });
+      onToggle('animated');
     } else {
       setErrors({...errors, animation: 'Please select border color first.'});
     }
   };
 
-  const [inputFields, setInputFields] = useState<IInput>({title: '', animated: false});
+  const onToggle = (name: string) => {
+    setInputFields({
+      ...inputFields,
+      // @ts-ignore
+      [name]: !inputFields[name]
+    });
+  };
+
+  const [inputFields, setInputFields] = useState<IInput>({
+    title: '',
+    animated: false,
+    instructions: false,
+    instructionsText: ''
+  });
 
   useEffect(() => {
     if (inputObj && inputObj.length) {
       setInputFields((prevInputFields: any) => ({
         ...prevInputFields,
         title: inputObj[0].value,
-        animated: classString.includes('animated-border-on')
+        animated: classString.includes('animated-border-on'),
+        instructionsText: inputObj[1].value,
+        instructions: inputObj[1]?.value?.length > 0
       }));
       // retrieves the result of matching a string against border color
       const matchBorderColor: any[] | null = classString.match(/border-\w\w+-\d+/);
@@ -211,7 +225,10 @@ const HeaderModalComponent = ({
           '',
           '',
           'header',
-          [{id: uuidv4().toString(), value}],
+          [
+            {id: uuidv4().toString(), value},
+            {id: uuidv4().toString(), value: inputFields.instructionsText || ''}
+          ],
           blockConfig.position,
           classValue
         );
@@ -223,7 +240,10 @@ const HeaderModalComponent = ({
           '',
           'header',
 
-          [{id: uuidv4().toString(), value}],
+          [
+            {id: uuidv4().toString(), value},
+            {id: uuidv4().toString(), value: inputFields.instructionsText || ''}
+          ],
           blockConfig.position,
 
           classValue
@@ -313,7 +333,7 @@ const HeaderModalComponent = ({
                 </label>
                 <button
                   onClick={() => setColorPickerActive(!colorPickerActive)}
-                  className={`border-0 border-gray-300 rounded shadow-xs flex items-center justify-start  h-10 px-3`}>
+                  className={`border-0 border-gray-300 rounded-full shadow-xs flex items-center justify-start  h-10 px-3`}>
                   <span className={'text-gray-700 w-auto text-sm mr-2 capitalize'}>
                     {selectedValues.color.split('-')[0]}
                   </span>
@@ -345,6 +365,25 @@ const HeaderModalComponent = ({
                 onClick={onAnimationToggle}
               />
             </div>
+            <div className="col-span-1 my-4 flex items-center w-auto">
+              <Toggle
+                checked={inputFields.instructions}
+                text="Instructions"
+                // disabled={NO_BORDER_SELECTED}
+                onClick={() => onToggle('instructions')}
+              />
+            </div>
+            {inputFields.instructions && (
+              <div className="col-span-2">
+                <FormInput
+                  onChange={onChange}
+                  label={'Instructions'}
+                  value={inputFields.instructionsText}
+                  id={'instructionsText'}
+                  placeHolder={`Add instructions`}
+                />
+              </div>
+            )}
             <div className="flex mt-8 justify-center px-6 pb-4">
               <div className="flex justify-end">
                 <Buttons
