@@ -326,7 +326,6 @@ const SurveyApp = ({
       combined = [...outArray, ...surveyDataRow];
 
       if (theNextToken) {
-        // console.log('nextToken fetching more - ', nextToken);
         combined = await fetchSurveyDataRow(filterObj, theNextToken, combined);
       }
       setLessonDataLoaded(true);
@@ -392,7 +391,6 @@ const SurveyApp = ({
         }
       } else {
         const finalData = [...surveyDataResponses, ...extraQuestions];
-        // console.log('loaded finaldata - ', finalData);
 
         lessonDispatch({
           type: 'LOAD_SURVEY_DATA',
@@ -510,7 +508,6 @@ const SurveyApp = ({
       return returnedData;
     });
 
-    // updateJournalData(studentDataRows);
     return result;
   };
 
@@ -587,6 +584,7 @@ const SurveyApp = ({
               {/* ADD LESSONWRAPPER HERE */}
               <div className="mt-4 mb-8 lesson-page-container ">
                 <CoreUniversalLesson
+                  validateRequired={validateRequired}
                   invokeRequiredField={() => {
                     invokeRequiredField();
                     handleRequiredNotification();

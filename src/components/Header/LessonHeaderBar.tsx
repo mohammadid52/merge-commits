@@ -1,5 +1,3 @@
-import {useNotifications} from '@contexts/NotificationContext';
-import useLessonControls from '@customHooks/lessonControls';
 import useStudentTimer from '@customHooks/timer';
 import useAuth from '@customHooks/useAuth';
 import useGraphqlMutation from '@customHooks/useGraphqlMutation';
@@ -194,9 +192,7 @@ const LessonHeaderBar = ({
 
   // ~~~~~~~~~ SIMPLE LOGIC CHECKS ~~~~~~~~~ //
 
-  const userAtEnd = () => {
-    return lessonState.currentPage === PAGES.length - 1;
-  };
+  const userAtEnd = () => lessonState.currentPage === PAGES.length - 1;
 
   // ##################################################################### //
   // ############################# NAVIGATION ############################ //
