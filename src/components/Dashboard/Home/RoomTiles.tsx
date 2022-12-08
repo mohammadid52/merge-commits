@@ -184,7 +184,7 @@ const RoomTiles = (props: {
             </div>
           </div>
         ) : (
-          <div className="flex justify-center items-center p-12">No classes found</div>
+          <div className="flex justify-center items-center p-12">No classrooms found</div>
         )}
       </ContentCard>
     </>
