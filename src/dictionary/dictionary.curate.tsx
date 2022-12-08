@@ -764,10 +764,10 @@ const lessonPlannerDict: any = {
     ACTIVITY_BREAKDOWN: 'Activity/Breakdown',
     OTHER_LABELS: {
       ROOM_NAME: 'Room',
-      STUDDENT_ONLINE: 'Students Online',
+      STUDDENT_ONLINE: 'Class Size',
       TOPIC: 'Topic',
       START_DATE: 'Start Date',
-      EST_TIME: 'Estimated Time',
+      EST_TIME: 'Scheduled Lesson Time',
       LESSON_CONTROL: 'Lesson Control',
       COLUMN: {
         ONE: 'Name',
@@ -775,9 +775,9 @@ const lessonPlannerDict: any = {
         THREE: 'Action'
       },
       STUDENT_SECTION: {
-        IN_CLASS: 'Student Roster',
-        NOT_IN_CLASS: 'Not In Class',
-        ON_DEMAND: 'On Demand'
+        IN_CLASS: 'In Classroom',
+        NOT_IN_CLASS: 'Not In Classroom',
+        ON_DEMAND: 'Self Paced (Not Online/Lesson)'
       }
     },
     ACCESS_BUTTONS: {
@@ -2864,6 +2864,8 @@ const UserInformationDict: any = {
     email: 'Email Address',
     account: 'Account Created',
     ondemand: 'Self-Paced',
+
+    LOCATION: 'Location',
     SUPER_ADMIN: 'Super Admin',
     RESET_PASSWORD: 'Reset password',
     RESETTING_PASSWORD: 'Resetting password',
@@ -2881,6 +2883,8 @@ const UserInformationDict: any = {
     nickname: 'TBD',
     role: 'TBD',
     status: 'TBD',
+
+    CLASSROOM_LOCATION: 'TBD',
     email: 'TBD',
     account: 'TBD',
     ondemand: 'TBD',
@@ -2901,6 +2905,7 @@ const UserLookupDict: any = {
     name: 'Name',
     role: 'Role',
     location: 'location',
+    flow: 'flow',
     status: 'Status',
     action: 'Actions',
     noresult: 'No Results',
@@ -3772,7 +3777,7 @@ const LessonBuilderDict: any = {
       PLAN_LABEL: 'Activity label',
       DESCRIPTION: 'Instructions',
       TAGS: 'Add Tags',
-      ESTIMATED_TIME: 'Estimated Time',
+      ESTIMATED_TIME: 'Scheduled Lesson Time',
       ACTIVITY_TYPE: 'Activity Type',
       INTERACTION_TYPE: 'Interaction Type',
       ACTIVITY_INSTRUCTIONS: 'Activity Instructions',

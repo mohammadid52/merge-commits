@@ -1,14 +1,11 @@
-import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
-import React, {useContext} from 'react';
 import {GlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
-import {getLocalStorageData} from 'utilities/localStorage';
+import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
+import React, {useContext} from 'react';
 import LessonControlBar from './LessonControlBar/LessonControlBar';
 import StudentWindowTitleBar from './StudentWindow/StudentWindowTitleBar';
 import CloseLesson from './StudentWindow/TitleBarSections/CloseLesson';
 import FullscreenToggle from './StudentWindow/TitleBarSections/FullscreenToggle';
-import HamburgerMenu from './TopMenu/HamburgerMenu';
-import LessonInfoTitleBar from './TopMenu/LessonInfoTitleBar';
 
 interface TopMenuControlProps {
   themeColor?: string;

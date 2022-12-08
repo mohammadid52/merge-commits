@@ -8,7 +8,7 @@ const TeacherView = () => {
 
   return (
     <>
-      <Noticebar notifications={notifications} />
+      {/* <Noticebar notifications={notifications} /> */}
       <LessonControl />
     </>
   );

@@ -31,6 +31,35 @@
 
 @mixin iconoclast($util: 'bg') {
   @each $themeName, $themeValue in $iconoclastColors {
+    .iconoclast {
+      @if $util == 'bg' {
+        .theme-bg\:#{$themeName} {
+          background-color: $themeValue !important;
+        }
+
+        .hover\:theme-bg\:#{$themeName}:hover {
+          background-color: $themeValue !important;
+        }
+      }
+
+      @if $util == 'text' {
+        .theme-text\:#{$themeName} {
+          color: $themeValue !important;
+        }
+        .hover\:theme-text\:#{$themeName}:hover {
+          color: $themeValue !important;
+        }
+      }
+      @if $util == 'border' {
+        .theme-border\:#{$themeName} {
+          border-color: $themeValue !important;
+        }
+        .hover\:theme-border\:#{$themeName}:hover {
+          border-color: $themeValue !important;
+        }
+      }
+    }
+
     .iconoclast .iconoclast\:#{$util}-#{$themeName} {
       @if $util == 'bg' {
         background-color: $themeValue !important;
@@ -107,6 +136,35 @@
 
 @mixin curate($util: 'bg') {
   @each $themeName, $themeValue in $curateColors {
+    .curate {
+      @if $util == 'bg' {
+        .theme-bg\:#{$themeName} {
+          background-color: $themeValue !important;
+        }
+
+        .hover\:theme-bg\:#{$themeName}:hover {
+          background-color: $themeValue !important;
+        }
+      }
+
+      @if $util == 'text' {
+        .theme-text\:#{$themeName} {
+          color: $themeValue !important;
+        }
+        .hover\:theme-text\:#{$themeName}:hover {
+          color: $themeValue !important;
+        }
+      }
+      @if $util == 'border' {
+        .theme-border\:#{$themeName} {
+          border-color: $themeValue !important;
+        }
+        .hover\:theme-border\:#{$themeName}:hover {
+          border-color: $themeValue !important;
+        }
+      }
+    }
+
     .curate .curate\:#{$util}-#{$themeName} {
       @if $util == 'bg' {
         background-color: $themeValue !important;
@@ -229,23 +287,23 @@
 // -----------TEXT------------- //
 
 .iconoclast .iconoclast\:text-main {
-  color: $iconoclast;
+  color: $iconoclast !important;
 }
 
 .curate .curate\:text-main {
-  color: $curate;
+  color: $curate !important;
 }
 // -----------TEXT HOVER------------- //
 
 .iconoclast .hover\:iconoclast\:text-main {
   &:hover {
-    color: $iconoclast;
+    color: $iconoclast !important;
   }
 }
 
 .curate .hover\:curate\:text-main {
   &:hover {
-    color: $curate;
+    color: $curate !important;
   }
 }
 
@@ -257,13 +315,17 @@
 @include curate('text'); // with demo
 
 .iconoclast {
-  .theme-text {
+  .theme-text,
+  .hover\:theme-text:hover {
     color: $iconoclast !important;
   }
-  .theme-bg {
+  .theme-bg,
+  .hover\:theme-bg:hover {
     background-color: $iconoclast !important;
   }
-  .theme-border {
+
+  .theme-border,
+  .hover\:theme-border:hover {
     border-color: $iconoclast !important;
   }
 
@@ -271,14 +333,19 @@
     border-color: $iconoclast !important;
   }
 }
+
 .curate {
-  .theme-text {
+  .theme-text,
+  .hover\:theme-text:hover {
     color: $curate !important;
   }
-  .theme-bg {
+  .theme-bg,
+  .hover\:theme-bg:hover {
     background-color: $curate !important;
   }
-  .theme-border {
+
+  .theme-border,
+  .hover\:theme-border:hover {
     border-color: $curate !important;
   }
 

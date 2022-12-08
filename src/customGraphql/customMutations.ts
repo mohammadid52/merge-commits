@@ -1,3 +1,23 @@
+export const updatePersonLocation = /* GraphQL */ `
+  mutation UpdatePersonLocation(
+    $input: UpdatePersonLocationInput!
+    $condition: ModelPersonLocationConditionInput
+  ) {
+    updatePersonLocation(input: $input, condition: $condition) {
+      id
+      personAuthID
+      personEmail
+      syllabusLessonID
+      lessonID
+      roomID
+      currentLocation
+      lessonProgress
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
 export const updateUniversalLesson = /* GraphQL */ `
   mutation UpdateUniversalLesson(
     $input: UpdateUniversalLessonInput!
@@ -122,6 +142,7 @@ export const updatePerson = /* GraphQL */ `
       phone
       birthdate
       image
+
       language
       passcode
     }
@@ -151,6 +172,8 @@ export const updatePersonLoginTime = /* GraphQL */ `
       authId
       email
       lastLoggedIn
+      pageState
+      lastPageStateUpdate
     }
   }
 `;
@@ -165,6 +188,8 @@ export const updatePersonLogoutTime = /* GraphQL */ `
       authId
       email
       lastLoggedIn
+      pageState
+      lastPageStateUpdate
     }
   }
 `;
@@ -733,6 +758,13 @@ export const updateRoom = /* GraphQL */ `
       name
       maxPersons
       activeSyllabus
+    }
+  }
+`;
+export const updateStudentFromRoom = /* GraphQL */ `
+  mutation UpdateRoom($input: UpdateRoomInput!, $condition: ModelRoomConditionInput) {
+    updateRoom(input: $input, condition: $condition) {
+      id
     }
   }
 `;
@@ -1508,6 +1540,38 @@ export const deleteCurriculumUnits = /* GraphQL */ `
     deleteCurriculumUnits(input: $input, condition: $condition) {
       id
       unitId
+    }
+  }
+`;
+
+export const createErrorLog = /* GraphQL */ `
+  mutation CreateErrorLog(
+    $input: CreateErrorLogInput!
+    $condition: ModelErrorLogConditionInput
+  ) {
+    createErrorLog(input: $input, condition: $condition) {
+      id
+      pageUrl
+      componentName
+      error
+      errorType
+      errorTime
+      email
+      authID
+      person {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        onDemand
+      }
+      createdAt
+      updatedAt
     }
   }
 `;

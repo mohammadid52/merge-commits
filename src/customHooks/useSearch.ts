@@ -69,11 +69,11 @@ const useSearch = (
     }
   };
 
-  const removeSearchAction = (cb?: () => void) => {
+  const removeSearchAction = (cb?: () => void, navigateSearchQuery: boolean = true) => {
     if (cb && typeof cb === 'function') {
       cb();
     }
-    history.push(`${match.url}`);
+    navigateSearchQuery && history.push(`${match.url}`);
     setSearchInput({value: '', isActive: false, typing: false});
   };
 
@@ -90,10 +90,10 @@ const useSearch = (
     }
   };
 
-  const searchAndFilter = (searchQuery: string) => {
+  const searchAndFilter = (searchQuery: string, navigateSearchQuery: boolean = true) => {
     const query = searchQuery || searchInput.value;
     if (query) {
-      history.push(`${match.url}?search=${query}`);
+      navigateSearchQuery && history.push(`${match.url}?search=${query}`);
 
       setSearchInput({
         ...searchInput,

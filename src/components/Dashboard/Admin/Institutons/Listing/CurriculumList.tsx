@@ -332,40 +332,40 @@ const CurriculumList = ({
             </div>
           </div>
         ) : finalList?.length ? (
-          <>
-            <div className="w-full pt-8 m-auto border-b-0 border-gray-200">
-              <div className="flex justify-between bg-gray-50 px-8 whitespace-nowrap">
-                <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+          <table>
+            <thead className="w-full pt-8 m-auto border-b-0 border-gray-200">
+              <tr className="flex justify-between bg-gray-50 px-8 whitespace-nowrap">
+                <th className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>{InstitueCurriculum[userLanguage]['NO']}</span>
-                </div>
-                <div
+                </th>
+                <th
                   className={`${
                     isSuperAdmin ? 'w-1.5/10' : 'w-3/10'
                   } px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider truncate`}>
                   <span>{InstitueCurriculum[userLanguage]['NAME']}</span>
-                </div>
+                </th>
                 {isSuperAdmin && (
-                  <div className="w-1.5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
+                  <th className="w-1.5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
                     <span>{InstitueCurriculum[userLanguage]['INSTITUTION_NAME']}</span>
-                  </div>
+                  </th>
                 )}
-                <div
+                <th
                   className={`w-2/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider truncate`}>
                   <span>{InstitueCurriculum[userLanguage]['COURSE_TYPE']}</span>
-                </div>
-                <div
+                </th>
+                <th
                   className={`w-3/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider truncate`}>
                   <span>{InstitueCurriculum[userLanguage]['UNITS']}</span>
-                </div>
-                <div className="w-1/10 m-auto py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                </th>
+                <th className="w-1/10 m-auto py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span className="w-auto">
                     {InstitueCurriculum[userLanguage]['ACTION']}
                   </span>
-                </div>
-              </div>
-            </div>
+                </th>
+              </tr>
+            </thead>
 
-            <div className="mb-8 w-full m-auto flex-1 overflow-y-auto">
+            <tbody className="mb-8 w-full m-auto flex-1 overflow-y-auto">
               {finalList.map((item, index) => (
                 <CurriculumListRow
                   key={`curr_list_row_${index}`}
@@ -382,7 +382,7 @@ const CurriculumList = ({
                   }
                 />
               ))}
-            </div>
+            </tbody>
             {deleteModal.show && (
               <ModalPopUp
                 closeAction={handleToggleDelete}
@@ -392,7 +392,7 @@ const CurriculumList = ({
                 message={deleteModal.message}
               />
             )}
-          </>
+          </table>
         ) : (
           <Fragment>
             {!isSuperAdmin && (

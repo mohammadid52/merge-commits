@@ -1,4 +1,5 @@
 // import React from 'react';
+import {PersonStatus, UserPageState} from 'API';
 import {globalStateType, globalState} from 'state/GlobalState';
 
 type globalActions =
@@ -60,6 +61,8 @@ type globalActions =
       type: 'SET_USER';
       payload: {
         location: any[];
+        removedFrom?: any[];
+
         id: string;
         firstName: string;
         lastName: string;
@@ -78,6 +81,8 @@ type globalActions =
         associateInstitute?: any[];
         onDemand?: any;
         lessons?: any[];
+        pageState: UserPageState;
+        status: PersonStatus;
       };
     }
   | {
@@ -245,7 +250,10 @@ export const globalReducer = (state: globalStateType, action: globalActions) => 
           associateInstitute: action.payload.associateInstitute,
           onDemand: action.payload?.onDemand,
           lessons: action.payload?.lessons,
-          lastEmotionSubmission: action.payload?.lastEmotionSubmission
+          lastEmotionSubmission: action.payload?.lastEmotionSubmission,
+          pageState: action.payload.pageState,
+          status: action.payload?.status,
+          removedFrom: action.payload?.removedFrom || []
         }
       };
     case 'LOG_IN':

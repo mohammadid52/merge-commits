@@ -64,6 +64,9 @@ export const getPerson = /* GraphQL */ `
       statusReason
       addedby
       lastEmotionSubmission
+      pageState
+      lastPageStateUpdate
+      statusChangedBy
       createdAt
       updatedAt
     }
@@ -122,6 +125,9 @@ export const listPeople = /* GraphQL */ `
         statusReason
         addedby
         lastEmotionSubmission
+        pageState
+        lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -299,6 +305,9 @@ export const getPersonLessonsData = /* GraphQL */ `
           statusReason
           addedby
           lastEmotionSubmission
+          pageState
+          lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -673,6 +682,9 @@ export const getStaff = /* GraphQL */ `
         statusReason
         addedby
         lastEmotionSubmission
+        pageState
+        lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -762,6 +774,9 @@ export const listStaff = /* GraphQL */ `
           statusReason
           addedby
           lastEmotionSubmission
+          pageState
+          lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -898,6 +913,9 @@ export const getRoom = /* GraphQL */ `
         statusReason
         addedby
         lastEmotionSubmission
+        pageState
+        lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -1096,6 +1114,9 @@ export const listRooms = /* GraphQL */ `
           statusReason
           addedby
           lastEmotionSubmission
+          pageState
+          lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -1270,6 +1291,9 @@ export const getClassroomGroupStudents = /* GraphQL */ `
           statusReason
           addedby
           lastEmotionSubmission
+          pageState
+          lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -1318,6 +1342,9 @@ export const getClassroomGroupStudents = /* GraphQL */ `
         statusReason
         addedby
         lastEmotionSubmission
+        pageState
+        lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -1385,6 +1412,9 @@ export const listClassroomGroupStudents = /* GraphQL */ `
           statusReason
           addedby
           lastEmotionSubmission
+          pageState
+          lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -1474,6 +1504,9 @@ export const getClassroomGroups = /* GraphQL */ `
           statusReason
           addedby
           lastEmotionSubmission
+          pageState
+          lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -1559,6 +1592,9 @@ export const getClassroomGroups = /* GraphQL */ `
         statusReason
         addedby
         lastEmotionSubmission
+        pageState
+        lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -1657,6 +1693,9 @@ export const listClassroomGroups = /* GraphQL */ `
           statusReason
           addedby
           lastEmotionSubmission
+          pageState
+          lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -1751,6 +1790,9 @@ export const getRoomCoTeachers = /* GraphQL */ `
           statusReason
           addedby
           lastEmotionSubmission
+          pageState
+          lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -1832,6 +1874,9 @@ export const getRoomCoTeachers = /* GraphQL */ `
         statusReason
         addedby
         lastEmotionSubmission
+        pageState
+        lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -1915,6 +1960,9 @@ export const listRoomCoTeachers = /* GraphQL */ `
           statusReason
           addedby
           lastEmotionSubmission
+          pageState
+          lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -2042,6 +2090,9 @@ export const getClass = /* GraphQL */ `
           statusReason
           addedby
           lastEmotionSubmission
+          pageState
+          lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -2289,6 +2340,9 @@ export const getClassStudent = /* GraphQL */ `
         statusReason
         addedby
         lastEmotionSubmission
+        pageState
+        lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -2351,6 +2405,9 @@ export const listClassStudents = /* GraphQL */ `
           statusReason
           addedby
           lastEmotionSubmission
+          pageState
+          lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -3091,6 +3148,9 @@ export const getRoomMsgs = /* GraphQL */ `
         statusReason
         addedby
         lastEmotionSubmission
+        pageState
+        lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -3142,6 +3202,9 @@ export const listRoomMsgs = /* GraphQL */ `
           statusReason
           addedby
           lastEmotionSubmission
+          pageState
+          lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -3198,6 +3261,9 @@ export const getStudentData = /* GraphQL */ `
         statusReason
         addedby
         lastEmotionSubmission
+        pageState
+        lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -3293,6 +3359,9 @@ export const listStudentData = /* GraphQL */ `
           statusReason
           addedby
           lastEmotionSubmission
+          pageState
+          lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -3363,6 +3432,9 @@ export const getAnthologyComment = /* GraphQL */ `
         statusReason
         addedby
         lastEmotionSubmission
+        pageState
+        lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -3425,6 +3497,9 @@ export const listAnthologyComments = /* GraphQL */ `
           statusReason
           addedby
           lastEmotionSubmission
+          pageState
+          lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -3487,6 +3562,9 @@ export const getQuestionData = /* GraphQL */ `
         statusReason
         addedby
         lastEmotionSubmission
+        pageState
+        lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -3547,6 +3625,9 @@ export const listQuestionData = /* GraphQL */ `
           statusReason
           addedby
           lastEmotionSubmission
+          pageState
+          lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -3613,6 +3694,9 @@ export const getPersonLocation = /* GraphQL */ `
         statusReason
         addedby
         lastEmotionSubmission
+        pageState
+        lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -3688,6 +3772,9 @@ export const getPersonLocation = /* GraphQL */ `
           statusReason
           addedby
           lastEmotionSubmission
+          pageState
+          lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -3730,6 +3817,92 @@ export const getPersonLocation = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        createdAt
+        updatedAt
+      }
+      lesson {
+        id
+        type
+        label
+        title
+        institutionID
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          setupComplete
+          createdAt
+          updatedAt
+        }
+        language
+        designers
+        objectives
+        lessonPlanAttachment
+        purpose
+        introduction
+        introductionTitle
+        instructions
+        instructionsTitle
+        summary
+        summaryTitle
+        duration
+        resources
+        notes
+        cardImage
+        cardCaption
+        lessonPlan {
+          id
+          title
+          label
+          description
+          class
+          active
+          disabled
+          displayMode
+          open
+          estTime
+          activityType
+          interactionType
+          tags
+          videoLink
+        }
+        homework {
+          id
+          title
+          label
+          description
+          class
+          active
+          disabled
+          displayMode
+          open
+          estTime
+          activityType
+          interactionType
+          tags
+          videoLink
+        }
+        darkMode
+        rubrics
+        smallGroup
+        groupSize
+        groupType
+        smallGroupSize
+        smallGroupOption
+        studentMaterials
+        targetAudience
+        isUsed
         createdAt
         updatedAt
       }
@@ -3794,6 +3967,9 @@ export const listPersonLocations = /* GraphQL */ `
           statusReason
           addedby
           lastEmotionSubmission
+          pageState
+          lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -3826,6 +4002,41 @@ export const listPersonLocations = /* GraphQL */ `
           weekDay
           conferenceCallLink
           classSentiment
+          createdAt
+          updatedAt
+        }
+        lesson {
+          id
+          type
+          label
+          title
+          institutionID
+          language
+          designers
+          objectives
+          lessonPlanAttachment
+          purpose
+          introduction
+          introductionTitle
+          instructions
+          instructionsTitle
+          summary
+          summaryTitle
+          duration
+          resources
+          notes
+          cardImage
+          cardCaption
+          darkMode
+          rubrics
+          smallGroup
+          groupSize
+          groupType
+          smallGroupSize
+          smallGroupOption
+          studentMaterials
+          targetAudience
+          isUsed
           createdAt
           updatedAt
         }
@@ -4088,6 +4299,9 @@ export const getAttendance = /* GraphQL */ `
           statusReason
           addedby
           lastEmotionSubmission
+          pageState
+          lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -5181,6 +5395,9 @@ export const getTemporaryDemographicsUploadData = /* GraphQL */ `
           statusReason
           addedby
           lastEmotionSubmission
+          pageState
+          lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -6159,6 +6376,9 @@ export const getStudentConnections = /* GraphQL */ `
         statusReason
         addedby
         lastEmotionSubmission
+        pageState
+        lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -6198,6 +6418,9 @@ export const getStudentConnections = /* GraphQL */ `
         statusReason
         addedby
         lastEmotionSubmission
+        pageState
+        lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -6254,6 +6477,9 @@ export const listStudentConnections = /* GraphQL */ `
           statusReason
           addedby
           lastEmotionSubmission
+          pageState
+          lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -6287,6 +6513,9 @@ export const listStudentConnections = /* GraphQL */ `
           statusReason
           addedby
           lastEmotionSubmission
+          pageState
+          lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -6339,6 +6568,9 @@ export const getPersonSentiments = /* GraphQL */ `
         statusReason
         addedby
         lastEmotionSubmission
+        pageState
+        lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -6401,6 +6633,9 @@ export const listPersonSentiments = /* GraphQL */ `
           statusReason
           addedby
           lastEmotionSubmission
+          pageState
+          lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -6485,6 +6720,9 @@ export const getSentimentTracker = /* GraphQL */ `
         statusReason
         addedby
         lastEmotionSubmission
+        pageState
+        lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -6569,6 +6807,9 @@ export const getSentimentTracker = /* GraphQL */ `
           statusReason
           addedby
           lastEmotionSubmission
+          pageState
+          lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -6739,6 +6980,9 @@ export const listSentimentTrackers = /* GraphQL */ `
           statusReason
           addedby
           lastEmotionSubmission
+          pageState
+          lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -6852,6 +7096,9 @@ export const getFeelingTracker = /* GraphQL */ `
         statusReason
         addedby
         lastEmotionSubmission
+        pageState
+        lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -6936,6 +7183,9 @@ export const getFeelingTracker = /* GraphQL */ `
           statusReason
           addedby
           lastEmotionSubmission
+          pageState
+          lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -7042,6 +7292,9 @@ export const listFeelingTrackers = /* GraphQL */ `
           statusReason
           addedby
           lastEmotionSubmission
+          pageState
+          lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -7140,6 +7393,9 @@ export const getFeelingsArchive = /* GraphQL */ `
         statusReason
         addedby
         lastEmotionSubmission
+        pageState
+        lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -7227,6 +7483,9 @@ export const getFeelingsArchive = /* GraphQL */ `
           statusReason
           addedby
           lastEmotionSubmission
+          pageState
+          lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -7417,6 +7676,9 @@ export const listFeelingsArchives = /* GraphQL */ `
           statusReason
           addedby
           lastEmotionSubmission
+          pageState
+          lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -7659,6 +7921,9 @@ export const getCommunity = /* GraphQL */ `
         statusReason
         addedby
         lastEmotionSubmission
+        pageState
+        lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -7764,6 +8029,9 @@ export const listCommunities = /* GraphQL */ `
           statusReason
           addedby
           lastEmotionSubmission
+          pageState
+          lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -7879,6 +8147,9 @@ export const getGameChangerLog = /* GraphQL */ `
         statusReason
         addedby
         lastEmotionSubmission
+        pageState
+        lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -7950,6 +8221,9 @@ export const listGameChangerLogs = /* GraphQL */ `
           statusReason
           addedby
           lastEmotionSubmission
+          pageState
+          lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -8008,6 +8282,9 @@ export const getCommunityChat = /* GraphQL */ `
         statusReason
         addedby
         lastEmotionSubmission
+        pageState
+        lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -8060,6 +8337,9 @@ export const listCommunityChats = /* GraphQL */ `
           statusReason
           addedby
           lastEmotionSubmission
+          pageState
+          lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -8118,6 +8398,131 @@ export const listCypressTestings = /* GraphQL */ `
     }
   }
 `;
+export const getErrorLog = /* GraphQL */ `
+  query GetErrorLog($id: ID!) {
+    getErrorLog(id: $id) {
+      id
+      pageUrl
+      componentName
+      error
+      errorType
+      errorTime
+      email
+      authID
+      person {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        inactiveStatusDate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        onDemand
+        sentiments
+        passcode
+        classes {
+          nextToken
+        }
+        lessons {
+          nextToken
+        }
+        spotlightUser
+        spotlightDate
+        statusReason
+        addedby
+        lastEmotionSubmission
+        pageState
+        lastPageStateUpdate
+        statusChangedBy
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listErrorLogs = /* GraphQL */ `
+  query ListErrorLogs(
+    $id: ID
+    $filter: ModelErrorLogFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listErrorLogs(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        pageUrl
+        componentName
+        error
+        errorType
+        errorTime
+        email
+        authID
+        person {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          inactiveStatusDate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          onDemand
+          sentiments
+          passcode
+          spotlightUser
+          spotlightDate
+          statusReason
+          addedby
+          lastEmotionSubmission
+          pageState
+          lastPageStateUpdate
+          statusChangedBy
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const userById = /* GraphQL */ `
   query UserById(
     $id: ID!
@@ -8169,6 +8574,9 @@ export const userById = /* GraphQL */ `
         statusReason
         addedby
         lastEmotionSubmission
+        pageState
+        lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -8227,6 +8635,9 @@ export const usersByRole = /* GraphQL */ `
         statusReason
         addedby
         lastEmotionSubmission
+        pageState
+        lastPageStateUpdate
+        statusChangedBy
         createdAt
         updatedAt
       }
@@ -8387,6 +8798,9 @@ export const messagesByRoomID = /* GraphQL */ `
           statusReason
           addedby
           lastEmotionSubmission
+          pageState
+          lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -8450,6 +8864,9 @@ export const personLocationBySyllabusLesson = /* GraphQL */ `
           statusReason
           addedby
           lastEmotionSubmission
+          pageState
+          lastPageStateUpdate
+          statusChangedBy
           createdAt
           updatedAt
         }
@@ -8482,6 +8899,41 @@ export const personLocationBySyllabusLesson = /* GraphQL */ `
           weekDay
           conferenceCallLink
           classSentiment
+          createdAt
+          updatedAt
+        }
+        lesson {
+          id
+          type
+          label
+          title
+          institutionID
+          language
+          designers
+          objectives
+          lessonPlanAttachment
+          purpose
+          introduction
+          introductionTitle
+          instructions
+          instructionsTitle
+          summary
+          summaryTitle
+          duration
+          resources
+          notes
+          cardImage
+          cardCaption
+          darkMode
+          rubrics
+          smallGroup
+          groupSize
+          groupType
+          smallGroupSize
+          smallGroupOption
+          studentMaterials
+          targetAudience
+          isUsed
           createdAt
           updatedAt
         }

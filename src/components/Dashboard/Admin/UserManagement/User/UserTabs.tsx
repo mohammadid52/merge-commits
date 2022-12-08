@@ -17,7 +17,7 @@ const UserTabs = ({
   setCurrentTab,
   isTeacher,
   isAdmin,
-  theme,
+  theme
 }: IUserTabsProps) => {
   const getTabsData = () => {
     if (viewedUser?.role === 'TR' || viewedUser?.role === 'FLW') {

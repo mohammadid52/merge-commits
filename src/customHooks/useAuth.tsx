@@ -1,7 +1,7 @@
 import {useGlobalContext} from 'contexts/GlobalContext';
 import {getInitialsFromString, initials, stringToHslColor} from 'utilities/strings';
 import React from 'react';
-import {Role} from 'API';
+import {Role, UserPageState} from 'API';
 
 type User = {
   authId: string;
@@ -11,7 +11,9 @@ type User = {
   lastName: string;
   image: string;
   associateInstitute: any[];
+  removedFrom: any[];
   onDemand?: boolean;
+  pageState: UserPageState;
 };
 
 const useAuth = (): {
@@ -31,12 +33,13 @@ const useAuth = (): {
   user: User;
   Placeholder: any;
   onDemand?: boolean;
+  pageState: UserPageState;
 } => {
   const context = useGlobalContext();
 
   const user: User = context.state.user;
 
-  const {authId, role, email, firstName, lastName, image, onDemand} = user;
+  const {authId, pageState, role, email, firstName, lastName, image, onDemand} = user;
 
   const isStudent = role === 'ST';
   const isTeacher = role === 'TR';
@@ -68,13 +71,12 @@ const useAuth = (): {
       <div
         className={`${size} flex flex-shrink-0 justify-center items-center rounded-full  border-0 border-gray-400 customShadow cursor-pointer ${className}`}>
         <div
-          className={`h-full w-full flex justify-center items-center ${textSize} text-extrabold text-white rounded-full`}
+          className={`h-full w-full flex justify-center items-center ${textSize} text-extrabold text-white rounded-full text-shadow`}
           style={{
             /*  stylelint-disable */
             background: `${
               firstName ? stringToHslColor(firstName + ' ' + lastName) : null
-            }`,
-            textShadow: '0.2rem 0.2rem 3px #423939b3'
+            }`
           }}>
           {firstName && initials(firstName, lastName)}
         </div>
@@ -92,6 +94,7 @@ const useAuth = (): {
     authId,
     email,
     firstName,
+    pageState,
     lastName,
     image,
     instId,

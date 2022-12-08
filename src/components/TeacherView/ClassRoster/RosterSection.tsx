@@ -1,13 +1,13 @@
-import {getAsset} from 'assets';
-import React, {useContext, useRef, useState} from 'react';
-import {IoMdRefresh} from 'react-icons/io';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
+import {PersonStatus} from 'API';
 import {GlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
+import gsap from 'gsap/all';
+import React, {useContext, useRef, useState} from 'react';
+import {GoChevronDown, GoChevronUp} from 'react-icons/go';
+import {IoMdRefresh} from 'react-icons/io';
+import {IconContext} from 'react-icons/lib/esm/iconContext';
 import RosterRow from './RosterRow';
 import RosterRowEmpty from './RosterRowEmpty';
-import gsap from 'gsap/all';
-import Buttons from 'atoms/Buttons';
 
 export interface IRosterSectionProps {
   hot?: boolean;
@@ -25,6 +25,10 @@ export interface IRosterSectionProps {
   handlePageChange?: any;
   sectionTitle?: string;
   emptyMessage?: string;
+  setRecordPrevPage?: React.SetStateAction<React.Dispatch<number>>;
+  recordPrevPage?: number;
+  removing?: string | null;
+  kickoutStudent?: (authId: string, email: string) => void;
 }
 
 const RosterSection = ({
@@ -32,6 +36,7 @@ const RosterSection = ({
   handleManualRefresh,
   loading,
   handleToggleRightView,
+  kickoutStudent,
   rightView,
   studentList,
   handleResetViewAndShare,
@@ -40,17 +45,27 @@ const RosterSection = ({
   viewedStudent,
   sharedStudent,
   handlePageChange,
+  removing,
   sectionTitle,
-  emptyMessage
+  emptyMessage,
+  setRecordPrevPage,
+  recordPrevPage
 }: IRosterSectionProps) => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
   const gContext = useContext(GlobalContext);
-  const theme = gContext.theme;
-  const clientKey = gContext.clientKey;
-  const userLanguage = gContext.userLanguage;
-  const themeColor = getAsset(clientKey, 'themeClassName');
 
-  const {lessonPlannerDict} = useDictionary(clientKey);
+  const userLanguage = gContext.userLanguage;
+
+  const {lessonPlannerDict} = useDictionary();
+
+  const removeInactiveStudents = (studentList: any[]) => {
+    return studentList.filter(
+      (student) =>
+        student && student.person && student.person.status !== PersonStatus.INACTIVE
+    );
+  };
+
+  const activeStudentList = removeInactiveStudents(studentList);
 
   // ~~~~~~~~~ MINIMIZE / ANIMATION ~~~~~~~~ //
   const listRef = useRef();
@@ -62,7 +77,7 @@ const RosterSection = ({
     gsap.to(ref.current, {
       height: '0%',
       opacity: 0,
-      duration: 0.5,
+      duration: 0.15,
       ease: 'easeInOut'
     });
   };
@@ -72,7 +87,7 @@ const RosterSection = ({
     gsap.to(ref.current, {
       height: 'auto',
       opacity: 1,
-      duration: 0.5,
+      duration: 0.15,
       ease: 'easeInOut'
     });
   };
@@ -92,90 +107,96 @@ const RosterSection = ({
 
   return (
     <>
-      <div className={`w-full h-10 flex items-center bg-transparent`}>
+      <div className={`w-full flex items-center bg-transparent mt-4 mb-2 px-4`}>
         <div className="relative w-full h-auto flex flex-row items-center">
-          <span className="text-sm font-semibold text-gray-600">{sectionTitle}</span>
+          <div className="text-sm flex font-semibold text-gray-600">
+            <p className="w-auto">
+              {sectionTitle} ({activeStudentList.length})
+            </p>
+            {hot && (
+              <span
+                title="refresh list"
+                className={`w-auto cursor-pointer iconoclast:text-500 curate:text-500 rounded-full ml-2 iconoclast:bg-100 curate:bg-100 p-0.5`}
+                onClick={handleManualRefresh}>
+                <IoMdRefresh
+                  size={20}
+                  className={`${loading ? 'animate-spin' : null} `}
+                />
+              </span>
+            )}
+          </div>
           <span
-            className="text-sm font-bold text-gray-600 cursor-pointer p-2"
+            className="text-sm font-bold w-auto text-gray-600 cursor-pointer p-2"
             onClick={() =>
               toggleAnimation(minimized, listRef, rollDownAnimation, rollUpAnimation)
             }>
-            {minimized === true ? '+' : '−'}
-          </span>
-          <span className="relative mr-0 flex justify-end">
-            {hot && (
-              <Buttons
-                overrideClass
-                btnClass={`${theme.btn[themeColor]} h-8 font-bold uppercase text-xs p-1 rounded items-center w-auto`}
-                label="Sentiments"
-                onClick={() => handleToggleRightView({view: 'lessonInfo', option: ''})}
-              />
-            )}
+            {minimized ? <GoChevronUp size={'1rem'} /> : <GoChevronDown size={'1rem'} />}
           </span>
         </div>
       </div>
 
       {/* ROSTER HEAD LABELS*/}
       {hot && (
-        <div
-          className={`${theme.textColor[themeColor]} w-full h-8 flex py-2  bg-transparent`}>
-          <div
-            className={`w-3/10  relative  flex items-center hover:underline cursor-pointer text-xs`}>
+        <div className={`theme-text w-full flex py-2 bg-transparent px-4`}>
+          <div className={`w-4/10  relative flex items-center  text-xs`}>
             <span className="w-auto">
               {lessonPlannerDict[userLanguage]['OTHER_LABELS']['COLUMN']['ONE']}
-            </span>
-            <span className={`w-8`} onClick={handleManualRefresh}>
-              <IconContext.Provider value={{color: '#EDF2F7'}}>
-                <IoMdRefresh size={28} className={`${loading ? 'animate-spin' : null}`} />
-              </IconContext.Provider>
-            </span>
-          </div>
-          <div
-            className={`w-3/10  flex items-center justify-center rounded-lg text-center text-xs`}>
-            <span className="w-auto">
-              {lessonPlannerDict[userLanguage]['OTHER_LABELS']['COLUMN']['TWO']}
             </span>
           </div>
           <div
             className={`w-3/10 flex items-center justify-center rounded-lg text-center text-xs`}>
             <span className="w-auto">
-              {lessonPlannerDict[userLanguage]['OTHER_LABELS']['COLUMN']['THREE']}
+              {lessonPlannerDict[userLanguage]['OTHER_LABELS']['COLUMN']['TWO']}
             </span>
           </div>
           <div
-            className={`w-1/10 flex items-center justify-center rounded-lg text-center text-xs`}
-          />
+            className={`w-2.5/10 -ml-6 flex items-center justify-center rounded-lg text-center text-xs`}>
+            <span className="w-auto">
+              {lessonPlannerDict[userLanguage]['OTHER_LABELS']['COLUMN']['THREE']}
+            </span>
+          </div>
         </div>
       )}
 
-      <div ref={listRef} className={`w-full flex flex-col items-center`}>
-        {studentList && studentList.length > 0 ? (
-          studentList.map((student: any, key: number) => (
-            <RosterRow
-              key={`rosterrow_inactive_${key}`}
-              number={key}
-              personAuthID={student.personAuthID}
-              studentID={student.person.id}
-              active={false}
-              firstName={student.person?.firstName ? student.person?.firstName : ''}
-              lastName={student.person?.lastName ? student.person?.lastName : ''}
-              preferredName={
-                student.person?.preferredName ? student.person?.preferredName : ''
-              }
-              role={student.person?.role ? student.person?.role : ''}
-              currentLocation={student.currentLocation}
-              lessonProgress={student.lessonProgress}
-              handleResetViewAndShare={handleResetViewAndShare}
-              handleViewStudentData={handleViewStudentData}
-              handleShareStudentData={handleShareStudentData}
-              viewedStudent={viewedStudent}
-              sharedStudent={sharedStudent}
-              handlePageChange={handlePageChange}
-              rightView={rightView}
-              handleToggleRightView={handleToggleRightView}
-              hot={hot}
-            />
-          ))
+      <div
+        ref={listRef}
+        className={`w-full flex flex-col items-center ${
+          activeStudentList.length > 0 ? 'border-b-0 border-gray-300' : ''
+        }`}>
+        {activeStudentList && activeStudentList.length > 0 ? (
+          activeStudentList.map(
+            (student: any, key: number) =>
+              student && (
+                <RosterRow
+                  key={`rosterrow_inactive_${key}`}
+                  number={key}
+                  kickoutStudent={kickoutStudent}
+                  personEmail={student.person.email}
+                  personAuthID={student.personAuthID}
+                  firstName={student.person?.firstName ? student.person?.firstName : ''}
+                  lastName={student.person?.lastName ? student.person?.lastName : ''}
+                  preferredName={
+                    student.person?.preferredName ? student.person?.preferredName : ''
+                  }
+                  removing={removing}
+                  setRecordPrevPage={setRecordPrevPage}
+                  recordPrevPage={recordPrevPage}
+                  onDemand={student.person.onDemand}
+                  role={student.person?.role ? student.person?.role : ''}
+                  currentLocation={student.currentLocation}
+                  lessonProgress={student.lessonProgress}
+                  handleResetViewAndShare={handleResetViewAndShare}
+                  handleViewStudentData={handleViewStudentData}
+                  handleShareStudentData={handleShareStudentData}
+                  viewedStudent={viewedStudent}
+                  sharedStudent={sharedStudent}
+                  handlePageChange={handlePageChange}
+                  rightView={rightView}
+                  handleToggleRightView={handleToggleRightView}
+                  hot={hot}
+                />
+              )
+          )
         ) : (
           <>
             <RosterRowEmpty message={emptyMessage} />

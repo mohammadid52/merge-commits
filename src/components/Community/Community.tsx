@@ -41,12 +41,19 @@ import {useHistory, useRouteMatch} from 'react-router';
 import {deleteImageFromS3} from 'utilities/services';
 import {awsFormatDate, dateString} from 'utilities/time';
 import {v4 as uuidV4} from 'uuid';
-import {ListCommunitiesQuery, ListCommunitiesQueryVariables} from 'API';
+import {ListCommunitiesQuery, ListCommunitiesQueryVariables, UserPageState} from 'API';
+import {updatePageState} from '@graphql/functions';
 
 const Community = ({}: {role: string}) => {
   const {clientKey, userLanguage} = useGlobalContext();
 
-  const {authId: personAuthID, email: personEmail, instId, isStudent} = useAuth();
+  const {
+    authId: personAuthID,
+    email: personEmail,
+    instId,
+    isStudent,
+    pageState
+  } = useAuth();
 
   const route: any = useRouteMatch();
 
@@ -99,6 +106,14 @@ const Community = ({}: {role: string}) => {
       }
     }
   );
+
+  useEffect(() => {
+    updatePageState(UserPageState.COMMUNITY, {
+      authId: personAuthID,
+      email: personEmail,
+      pageState
+    });
+  }, []);
 
   const [navState, setNavState] = useState<NavStateTypes>('init');
   const [filteredList, setFilteredList] = useState([]);

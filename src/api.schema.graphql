@@ -11,6 +11,17 @@ enum PersonStatus {
   HOLD
 }
 
+enum UserPageState {
+  DASHBOARD
+  NOT_LOGGED_IN
+  LOGGED_IN
+  GAME_CHANGERS
+  COMMUNITY
+  NOTEBOOK
+  CLASS
+  LESSON
+}
+
 enum Role {
   SUP
   ADM
@@ -65,6 +76,9 @@ type Person @model @auth(rules: [{allow: public}]) {
   statusReason: String
   addedby: String
   lastEmotionSubmission: AWSDate
+  pageState: UserPageState @default(value: "NOT_LOGGED_IN")
+  lastPageStateUpdate: String
+  statusChangedBy: String
 }
 
 type PersonLessonsData @model @auth(rules: [{allow: public}]) {
@@ -534,6 +548,7 @@ type PersonLocation @model @auth(rules: [{allow: public}]) {
   lessonProgress: String
   person: Person @hasOne(fields: ["personEmail", "personAuthID"])
   room: Room @hasOne(fields: ["roomID"])
+  lesson: UniversalLesson @hasOne(fields: ["lessonID"])
 }
 
 type Links {
@@ -1078,5 +1093,17 @@ type CypressTesting @model @auth(rules: [{allow: public}]) {
   testExpResults: String!
   edgeCases: String
   lastUpdate: AWSDate
+}
+
+type ErrorLog @model @auth(rules: [{allow: public}]) {
+  id: ID! @primaryKey
+  pageUrl: String
+  componentName: String
+  error: String!
+  errorType: String!
+  errorTime: AWSDateTime
+  email: String!
+  authID: String!
+  person: Person @hasOne(fields: ["email", "authID"])
 }
 # asdfasdfsd10

@@ -1,16 +1,17 @@
-import React, {useContext, useEffect, useState, useRef} from 'react';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {getAsset} from 'assets';
+import Buttons from 'atoms/Buttons';
+import Loader from 'atoms/Loader';
+import Modal from 'atoms/Modal';
 import {GlobalContext} from 'contexts/GlobalContext';
 import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
 import * as queries from 'graphql/queries';
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import {createFilterToFetchSpecificItemsOnly} from 'utilities/strings';
-import {keywordCapitilizer} from 'utilities/strings';
-import ButtonsRound from 'atoms/ButtonsRound';
-import {AiOutlineCloseCircle} from 'react-icons/ai';
-import Loader from 'atoms/Loader';
-import Modal from 'atoms/Modal';
-import Buttons from 'atoms/Buttons';
+import React, {useContext, useEffect, useRef, useState} from 'react';
+import {AiOutlineStop} from 'react-icons/ai';
+import {
+  createFilterToFetchSpecificItemsOnly,
+  keywordCapitilizer
+} from 'utilities/strings';
 
 interface ILessonInfoFrame {
   children?: React.ReactNode;
@@ -22,11 +23,9 @@ interface ILessonInfoFrame {
 const DATE_REGEX = /\d{4}-\d{1,2}-\d{1,2}/g;
 const SENTIMENT_TEMPLATE = {
   great: 0,
-  good: 0,
   okay: 0,
   bad: 0,
   awful: 0,
-  _: 0,
   total: 0
 };
 
@@ -37,11 +36,9 @@ const LessonInfoFrame = ({visible, rightView, setRightView}: ILessonInfoFrame) =
   const gContext = useContext(GlobalContext);
   const user = gContext.state.user;
   const roster = gContext.controlState.roster;
-  const clientKey = gContext.clientKey;
-  const theme = gContext.theme;
-  const themeColor = getAsset(clientKey, 'themeClassName');
 
   let studentAuthIDArray = roster.map((st: any) => st.personAuthID);
+
   let lastLoggedIn = user?.lastLoggedIn;
   let dateString = lastLoggedIn ? lastLoggedIn.match(DATE_REGEX) : '';
   // let dateString: any = undefined;
@@ -52,6 +49,30 @@ const LessonInfoFrame = ({visible, rightView, setRightView}: ILessonInfoFrame) =
   const [loading, setLoading] = useState<boolean>(false);
   const [sentimentStore, setSentimentStore] = useState<any>({});
 
+  const [notLoggedInCount, setNotLoggedInCount] = useState(0);
+
+  const getOverallSentimentResult = async (dateString: string) => {
+    let result: any[] = [];
+
+    await Promise.all(
+      studentAuthIDArray.map(async (authID: string) => {
+        let response: any = await API.graphql(
+          graphqlOperation(queries.listPersonSentiments, {
+            limit: 100,
+            personAuthID: authID,
+            date: {
+              eq: dateString
+            }
+          })
+        );
+        let data = response?.data?.listPersonSentiments?.items || [];
+        result.push(data);
+      })
+    );
+
+    return result;
+  };
+
   //@ts-ignore
   const fetchStudentSentiments = async (
     studentAuthIDArray: any[],
@@ -60,22 +81,11 @@ const LessonInfoFrame = ({visible, rightView, setRightView}: ILessonInfoFrame) =
     let thereAreStudents = studentAuthIDArray && studentAuthIDArray.length > 0;
     let validDate = DATE_REGEX.test(dateString);
 
-    let listQuery = createFilterToFetchSpecificItemsOnly(
-      studentAuthIDArray,
-      'personAuthID'
-    );
-
     if (thereAreStudents && validDate) {
       try {
-        let result: any = await API.graphql(
-          graphqlOperation(queries.listPersonSentiments, {
-            filter: {
-              date: {eq: dateString},
-              ...listQuery
-            }
-          })
-        );
-        return result.data.listPersonSentiments.items;
+        let result: any[] = (await getOverallSentimentResult(dateString)) || [[]];
+
+        return result;
       } catch (e) {
         console.error('fetchStudentSentiments - ', e);
         return [];
@@ -90,20 +100,37 @@ const LessonInfoFrame = ({visible, rightView, setRightView}: ILessonInfoFrame) =
   const countSentiments = (
     sentimentObjTemplate: any,
     rosterArr: any[],
-    sentimentArr: string[]
+    sentimentArr: string[],
+    notLoggedInCount: number
   ) => {
     let prepare = {
       ...sentimentObjTemplate,
-      _: rosterArr.length - sentimentArr.length,
+      did_not_answered: 0,
+      not_logged_in: 0,
       total: rosterArr.length
     };
-    return sentimentArr.reduce((sentimentAcc: any, sentimentStr: string) => {
-      if (Object.keys(sentimentObjTemplate).includes(sentimentStr)) {
-        return {...sentimentAcc, [sentimentStr]: sentimentAcc[sentimentStr] + 1};
+    let response = sentimentArr.reduce((sentimentAcc: any, sentimentStr: string) => {
+      let sentiment = sentimentStr.toLowerCase();
+
+      if (sentiment === 'none') {
+        return {
+          ...sentimentAcc,
+          did_not_answered: (sentimentAcc['did_not_answered'] += 1) || 0
+        };
       } else {
-        return sentimentAcc;
+        return {
+          ...sentimentAcc,
+          [sentiment]: (sentimentAcc[sentiment] += 1)
+        };
       }
     }, prepare);
+
+    response = {
+      ...response,
+      not_logged_in: notLoggedInCount
+    };
+
+    return response;
   };
 
   // ~~~~~~~~ ONCLICK AND USEEFFECT ~~~~~~~~ //
@@ -115,11 +142,23 @@ const LessonInfoFrame = ({visible, rightView, setRightView}: ILessonInfoFrame) =
           studentAuthIDArray,
           dateString[0]
         );
+
+        let filteredResult = fetchResults.filter((r: any) => r.length > 0);
+
+        let not_logged_in_count = fetchResults.length - filteredResult.length || 0;
+
+        let flatten = fetchResults.flat();
+
         let sentimentArray =
           roster && roster.length >= 5
-            ? fetchResults.map((sentimentObj: any) => sentimentObj.responseText)
+            ? flatten.map((sentimentObj: any) => sentimentObj.responseText)
             : [];
-        let output = countSentiments(SENTIMENT_TEMPLATE, roster, sentimentArray);
+        let output = countSentiments(
+          SENTIMENT_TEMPLATE,
+          roster,
+          sentimentArray,
+          not_logged_in_count
+        );
         setSentimentStore(output);
       } finally {
         setLoading(false);
@@ -163,6 +202,21 @@ const LessonInfoFrame = ({visible, rightView, setRightView}: ILessonInfoFrame) =
   // ##################################################################### //
   const {breakpoint} = useTailwindBreakpoint();
 
+  const tableOrder = [
+    'great',
+    'okay',
+    'bad',
+    'awful',
+    'did_not_answered',
+    'not_logged_in',
+    'total'
+  ];
+
+  const getPercentage = (sentimentKey: string) =>
+    Math.ceil(
+      Number(((sentimentStore[sentimentKey] / sentimentStore.total) * 100).toFixed(0))
+    );
+
   return (
     <>
       <div
@@ -176,10 +230,10 @@ const LessonInfoFrame = ({visible, rightView, setRightView}: ILessonInfoFrame) =
             <div className="absolute w-full h-full bg-gray-800 bg-opacity-50 z-40"></div>
             <Modal
               customTitle={customTitle()}
-              showHeader={true}
+              showHeader
               showHeaderBorder={false}
               showFooter={false}
-              scrollHidden={true}
+              scrollHidden
               closeAction={() => setRightView({view: 'lesson', option: ''})}
               position="absolute"
               width="w-full"
@@ -198,7 +252,7 @@ const LessonInfoFrame = ({visible, rightView, setRightView}: ILessonInfoFrame) =
                     <Loader />
                   </li>
                 ) : roster && roster.length > 0 && sentimentStore ? (
-                  Object.keys(sentimentStore).map((sentimentKey: string, idx: number) => {
+                  tableOrder.map((sentimentKey: string, idx: number) => {
                     return (
                       <li
                         key={`sentimentRow_${idx}`}
@@ -211,11 +265,15 @@ const LessonInfoFrame = ({visible, rightView, setRightView}: ILessonInfoFrame) =
                               src={EMOJIS[sentimentKey]}
                               className="w-auto h-8 object-contain"
                             />
+                          ) : sentimentKey === 'did_not_answered' ? (
+                            <AiOutlineStop size={'1.5rem'} />
                           ) : null}
                         </span>
                         <span className="w-2.5/10 text-left whitespace-pre overflow-hidden">
-                          {sentimentKey === '_'
-                            ? "Didn't Answer"
+                          {sentimentKey === 'did_not_answered'
+                            ? 'Did not answered'
+                            : sentimentKey === 'not_logged_in'
+                            ? 'Not logged in yet'
                             : keywordCapitilizer(sentimentKey)}
                           :
                         </span>
@@ -223,14 +281,13 @@ const LessonInfoFrame = ({visible, rightView, setRightView}: ILessonInfoFrame) =
                           {sentimentStore[sentimentKey]}
                         </span>
                         <span className="w-2.5/10 flex justify-center">
-                          {(sentimentStore[sentimentKey] / sentimentStore.total) * 100}%
+                          {getPercentage(sentimentKey)}%
                         </span>
                       </li>
                     );
                   })
                 ) : null}
               </ul>
-              {/* </div> */}
             </Modal>
           </>
         )}

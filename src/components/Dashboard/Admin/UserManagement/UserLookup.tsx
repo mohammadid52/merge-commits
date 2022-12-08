@@ -15,6 +15,7 @@ import * as queries from 'graphql/queries';
 
 // import LessonLoading from '../../../Lesson/Loading/ComponentLoading';
 import useSearch from '@customHooks/useSearch';
+import {PersonStatus} from 'API';
 import BreadCrums from 'atoms/BreadCrums';
 import Buttons from 'atoms/Buttons';
 import SearchInput from 'atoms/Form/SearchInput';
@@ -27,7 +28,26 @@ import {createFilterToFetchSpecificItemsOnly} from 'utilities/strings';
 import List from './List';
 import UserListLoader from './UserListLoader';
 
-const UserLookup = ({isInInstitute, instituteId}: any) => {
+export const sortByName = (data: any[]) => {
+  return data.sort((a: any, b: any) => {
+    if (a._sortName < b._sortName) {
+      return -1;
+    }
+    if (a._sortName > b._sortName) {
+      return 1;
+    }
+    return 0;
+  });
+};
+
+export const addName = (data: any[]) =>
+  data.map((item: any) => ({
+    ...item,
+    name: `${item?.firstName} ${item?.lastName}`,
+    _sortName: `${item?.firstName?.toLowerCase()} `
+  }));
+
+const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
   const {state, theme, dispatch, userLanguage, clientKey} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const history = useHistory();
@@ -312,15 +332,12 @@ const UserLookup = ({isInInstitute, instituteId}: any) => {
         const dynamicFilter =
           isTeacher || isBuilder
             ? {
-                or: [...authIdFilter]
+                or: [{role: {eq: 'ST'}}, {role: {eq: 'TR'}}, ...authIdFilter]
               }
             : {};
         users = await fetchAllPerson(dynamicFilter);
         response = users;
-        const usersList =
-          state.user.role === 'FLW'
-            ? response.filter((user: any) => user.role === 'ST' || user.role === 'TR')
-            : response;
+        const usersList = response;
 
         const totalListPages = Math.floor(usersList.length / userCount);
         if (totalListPages * userCount === usersList.length) {
@@ -329,14 +346,7 @@ const UserLookup = ({isInInstitute, instituteId}: any) => {
           setTotalPages(totalListPages + 1);
         }
 
-        setTotalUserList(
-          usersList.map((user: any) => ({
-            ...user,
-            name: `${user.firstName}, ${
-              user.preferredName ? user.preferredName : user.lastName
-            }`
-          }))
-        );
+        setTotalUserList(sortByName(addName(usersList)));
         setTotalUserNum(usersList.length);
       }
       setLoading(false);
@@ -346,9 +356,141 @@ const UserLookup = ({isInInstitute, instituteId}: any) => {
     }
   };
 
+  const [classList, setClassList] = useState([]);
+
+  const getAllClassStudentByClassId = async (
+    filter: any,
+    nextToken: string,
+    outArray: any[]
+  ): Promise<any> => {
+    let combined: any[];
+    try {
+      const result: any = await API.graphql(
+        graphqlOperation(customQueries.listClassStudentsForRoom, {
+          limit: 500,
+          nextToken: nextToken
+        })
+      );
+
+      let returnedData = result.data.listClassStudents?.items;
+      let NextToken = result.data.listClassStudents?.nextToken;
+
+      combined = [...outArray, ...returnedData];
+
+      // if (NextToken) {
+      //   combined = await getAllClassStudentByClassId(filter, NextToken, combined);
+      // }
+
+      return combined;
+    } catch (error) {
+      console.log(
+        '🚀 ~ file: AnalyticsDashboard.tsx ~ line 24 ~ listAllStudents ~ error',
+        error
+      );
+    }
+  };
+
+  const fetchStudentList = async () => {
+    setLoading(true);
+
+    try {
+      // const classFilter = {
+      //   filter: {
+      //     classID: {
+      //       attributeExists: true
+      //     }
+      //   }
+      // };
+
+      // const result = await getAllClassStudentByClassId(classFilter, undefined, []);
+
+      const response: any = await API.graphql(
+        graphqlOperation(customQueries.getDashboardDataForTeachers, {
+          filter: {teacherAuthID: {eq: state.user.authId}}
+        })
+      );
+      const assignedRoomsAsCoTeacher: any = await API.graphql(
+        graphqlOperation(customQueries.getDashboardDataForCoTeachers, {
+          filter: {teacherAuthID: {eq: state.user.authId}}
+        })
+      );
+
+      let students1: any[] = [];
+      let students2: any[] = [];
+
+      let classes: any[] = [];
+
+      response?.data?.listRooms?.items.forEach((item: any) => {
+        classes.push(item.class);
+        item?.class?.students?.items.forEach((student: any) => {
+          // filter by role
+          if (student?.student?.role === 'ST') {
+            students1.push({...student.student, classId: item.classID});
+          }
+        });
+      });
+
+      assignedRoomsAsCoTeacher?.data?.listRoomCoTeachers?.items.forEach((item: any) => {
+        classes.push(item.room.class);
+        item?.room?.class?.students?.items.forEach((student: any) => {
+          if (student?.student?.role === 'ST') {
+            students2.push({...student.student, classId: item.room.classID});
+          }
+        });
+      });
+
+      let ids: any[] = [];
+      const concated = [...students1, ...students2].filter((item: any) => {
+        if (ids.includes(item.authId)) {
+          return false;
+        } else {
+          if (item.role === 'ST' && item.status !== PersonStatus.INACTIVE) {
+            ids.push(item.authId);
+            return true;
+          } else {
+            return false;
+          }
+        }
+      });
+
+      let classIds: any[] = [];
+      const uniqClasses = classes
+        .filter((item: any) => {
+          if (classIds.includes(item.id)) {
+            return false;
+          } else {
+            classIds.push(item.id);
+            return true;
+          }
+        })
+        .sort((a: any, b: any) => {
+          if (a.name < b.name) {
+            return -1;
+          }
+          if (a.name > b.name) {
+            return 1;
+          }
+          return 0;
+        });
+
+      // sort this list by name
+
+      setClassList(uniqClasses);
+      setTotalUserList(sortByName(addName(concated)));
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    fetchAllUsersList();
-  }, []);
+    if (isStudentRoster) {
+      fetchStudentList();
+    } else {
+      fetchAllUsersList();
+    }
+  }, [isStudentRoster]);
 
   useEffect(() => {
     backToInitials();
@@ -389,14 +531,75 @@ const UserLookup = ({isInInstitute, instituteId}: any) => {
   // return <LessonLoading />;
   // }
 
+  const getClassListForSelector = () => {
+    return classList.map((item: any, idx) => {
+      return {
+        id: idx,
+        value: item.id,
+        name: item.name
+      };
+    });
+  };
+
+  const [selectedClass, setSelectedClass] = useState<any>(null);
+
+  const fetchClassStudents = async (classId: string) => {
+    try {
+      setLoading(true);
+      const classStudents: any = await API.graphql(
+        graphqlOperation(customQueries.listClassUserLookup, {
+          limit: 500,
+          filter: {classID: {eq: classId}}
+        })
+      );
+
+      const resp = classStudents.data.listClassStudents?.items;
+
+      const students = resp.map((item: any) => item.student);
+      const userList = sortByName(addName(students));
+      setUserList(userList);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const setSelectedClassValue = (str: string, name: string) => {
+    if (selectedClass === null || selectedClass?.value !== str) {
+      setSelectedClass({
+        ...selectedClass,
+        value: str,
+        name: name
+      });
+
+      removeSearchAction();
+      fetchClassStudents(str).then((resp: any) => {});
+    }
+  };
+
+  const headerForStudentRoster = () => {
+    return loading
+      ? '...'
+      : selectedClass !== null
+      ? userList?.length
+      : totalUserList?.length;
+  };
+
+  const goToClassroom = () => {
+    if (selectedClass !== null) {
+      history.push(`/dashboard/lesson-planner/${selectedClass.value}`);
+    }
+  };
+
   return (
     <div className={`w-full h-full ${isInInstitute ? 'px-12' : ''}`}>
       {/* Header Section */}
       {!isInInstitute && <BreadCrums items={breadCrumsList} />}
-      <div className="flex flex-col lg:flex-row justify-between items-center">
+      <div className="flex flex-col lg:flex-row justify-between mb-4 items-center">
         {isInInstitute ? (
           <h3 className="text-lg leading-6 text-gray-600 w-full lg:w-auto mb-4 lg:mb-0">
-            Users
+            {isStudentRoster ? `Your Students (${headerForStudentRoster()})` : 'Users'}
           </h3>
         ) : (
           <SectionTitle
@@ -404,7 +607,36 @@ const UserLookup = ({isInInstitute, instituteId}: any) => {
             subtitle={UserLookupDict[userLanguage]['subtitle']}
           />
         )}
-        <div className="flex justify-end mb-4">
+        <div
+          className={
+            isStudentRoster
+              ? 'flex justify-end mb-4 items-center w-auto'
+              : 'flex justify-end mb-4'
+          }>
+          {isStudentRoster && (
+            <div className="w-auto relative flex mr-2 min-w-64">
+              <Selector
+                isClearable
+                placeholder={'Select a class'}
+                list={getClassListForSelector()}
+                selectedItem={selectedClass?.name}
+                setSelectedItem={setSelectedClass}
+                onChange={setSelectedClassValue}
+                disabled={loading}
+                arrowHidden={true}
+              />
+
+              {selectedClass !== null && (
+                <span
+                  onClick={goToClassroom}
+                  style={{bottom: '-1.5rem'}}
+                  className="absolute text-center theme-text text-sm capitalize hover:theme-text:600 hover:underline cursor-pointer">
+                  Go to classroom
+                </span>
+              )}
+            </div>
+          )}
+
           <SearchInput
             dataCy="user-loookup-search"
             value={searchInput.value}
@@ -461,19 +693,24 @@ const UserLookup = ({isInInstitute, instituteId}: any) => {
                 <div className="w-4/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>{UserLookupDict[userLanguage]['name']}</span>
                 </div>
-                <div className="w-2/10 flex justify-center px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span className="w-auto">
-                    {UserLookupDict[userLanguage]['location']}
-                  </span>
+                <div className="w-1/10 flex justify-center px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                  <span className="w-auto">{UserLookupDict[userLanguage]['flow']}</span>
                 </div>
-                <div className="w-2/10 flex justify-center px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                <div className="w-1/10 flex justify-center px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span className="w-auto">{UserLookupDict[userLanguage]['role']}</span>
                 </div>
-                <div className="w-2/10 flex justify-center px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                <div className="w-1/10 flex justify-center px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span className="w-auto">{UserLookupDict[userLanguage]['status']}</span>
                 </div>
                 <div className="w-2/10 px-8 justify-center py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  {UserLookupDict[userLanguage]['action']}
+                  <span
+                    title="see live updates of student's page"
+                    className="flex items-end justify-center">
+                    <span className="w-auto">
+                      {UserLookupDict[userLanguage]['location']}
+                    </span>
+                    <div className="h-2 w-2 bg-green-500 ml-1 rounded-full self-start"></div>
+                  </span>
                 </div>
                 {state.user.role !== 'ST' && state.user.role !== 'BLD' ? (
                   <div className="w-2/10 px-8 justify-center py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
@@ -492,7 +729,13 @@ const UserLookup = ({isInInstitute, instituteId}: any) => {
               ) : userList.length > 0 ? (
                 userList.map((item: any, key: number) => (
                   <div key={key}>
-                    <List searchTerm={searchInput.value} item={item} key={key} />
+                    <List
+                      isStudentRoster={isStudentRoster}
+                      searchTerm={searchInput.value}
+                      item={item}
+                      idx={key}
+                      key={key}
+                    />
                   </div>
                 ))
               ) : (
@@ -523,7 +766,7 @@ const UserLookup = ({isInInstitute, instituteId}: any) => {
 
             {/* Pagination And Counter */}
             <div className={`flex justify-center ${isInInstitute ? '' : 'px-8 my-4'}`}>
-              {!searchInput.isActive && (
+              {!searchInput.isActive && selectedClass === null && (
                 <Fragment>
                   <span className="py-3 px-5 w-auto flex-shrink-0 my-5 text-md leading-5 font-medium text-gray-900">
                     {paginationPage(userLanguage, currentPage, totalPages)}{' '}

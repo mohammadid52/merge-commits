@@ -1,4 +1,7 @@
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {Storage} from '@aws-amplify/storage';
+import {CreateErrorLogInput, UserPageState} from 'API';
+import * as customMutations from 'customGraphql/customMutations';
 
 interface S3UploadOptions {
   onSuccess?: (result: Object) => void;
@@ -56,5 +59,51 @@ export const deleteImageFromS3 = async (key: string) => {
     console.log('File with key: ', key, ' deleted successfully');
   } catch (error) {
     console.error('Error in deleting file from s3', {key}, error);
+  }
+};
+
+export const updatePageState = async (
+  pageState: UserPageState,
+  auth: {authId: string; email: string; pageState: UserPageState},
+  onSuccessCallback?: () => void
+) => {
+  if (auth.pageState !== pageState) {
+    try {
+      const input = {
+        authId: auth.authId,
+        email: auth.email,
+        pageState: pageState,
+        lastPageStateUpdate: new Date().toISOString()
+      };
+      const res = await API.graphql(
+        graphqlOperation(customMutations.updatePersonLoginTime, {input})
+      );
+      onSuccessCallback && onSuccessCallback();
+    } catch (error) {
+      console.error('error updating page -> ', {pageState, auth}, error);
+    }
+  }
+};
+
+export const logError = async (
+  error: Error | string,
+  auth: {authId: string; email: string},
+  componentName: string
+) => {
+  try {
+    const input: CreateErrorLogInput = {
+      authID: auth.authId,
+      email: auth.email,
+      error: JSON.stringify(error),
+      errorType: typeof error === 'string' ? error : error.message,
+      errorTime: new Date().toISOString(),
+      pageUrl: location.href,
+      componentName: componentName
+    };
+    const res = await API.graphql(
+      graphqlOperation(customMutations.createErrorLog, {input})
+    );
+  } catch (error) {
+    console.error('error logging error -> ', {error, auth}, error);
   }
 };

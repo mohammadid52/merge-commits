@@ -1,12 +1,11 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import {UniversalLessonStudentData as UniversalLessonStudentDataFromAPI} from 'API';
 import {GlobalContext} from 'contexts/GlobalContext';
 import {useNotifications} from 'contexts/NotificationContext';
 import * as customQueries from 'customGraphql/customQueries';
+import * as customSubscriptions from 'customGraphql/customSubscriptions';
 import useLessonControls from 'customHooks/lessonControls';
-import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
 import useAuth from 'customHooks/useAuth';
-import * as mutations from 'graphql/mutations';
-import * as subscriptions from 'graphql/subscriptions';
 import {
   StudentPageInput,
   UniversalLessonStudentData
@@ -59,6 +58,7 @@ const LessonControl = () => {
 
   const handlePageChange = (pageNr: number) => {
     lessonDispatch({type: 'SET_CURRENT_PAGE', payload: pageNr});
+    history.push(`${match.url}/${pageNr}`);
   };
 
   const [fullscreen, setFullscreen] = useState(false);
@@ -87,16 +87,8 @@ const LessonControl = () => {
     const {lessonID} = urlParams;
     const syllabusID = getRoomData.activeSyllabus; // in the table this is called SyllabusLessonID, but it's just the syllabusID
 
-    const subscriptionFilter = {
-      filter: {
-        studentAuthID: {eq: lessonState.studentViewing},
-        lessonID: {eq: lessonID},
-        syllabusLessonID: {eq: syllabusID}
-      }
-    };
-
     const studentDataSubscription = API.graphql(
-      graphqlOperation(subscriptions.onChangeUniversalLessonStudentData, {
+      graphqlOperation(customSubscriptions.onChangeUniversalLessonStudentData, {
         studentAuthID: lessonState.studentViewing,
         syllabusLessonID: syllabusID,
         lessonID: lessonID
@@ -106,6 +98,7 @@ const LessonControl = () => {
       next: (studentData: any) => {
         const updatedStudentData =
           studentData.value.data.onChangeUniversalLessonStudentData;
+
         setSubscriptionData(updatedStudentData);
       }
     });
@@ -144,7 +137,7 @@ const LessonControl = () => {
       .reduce((acc: any[], dataObj: any, idx: number) => {
         const idObj = {
           id: dataObj.id,
-          pageIdx: lessonState.lessonData.lessonPlan.findIndex(
+          pageIdx: PAGES.findIndex(
             (lessonPlanObj: any) => lessonPlanObj.id === dataObj.lessonPageID
           ),
           lessonPageID: dataObj.lessonPageID,
@@ -208,7 +201,6 @@ const LessonControl = () => {
         let combined = [...outArray, ...studentDataRows];
 
         if (theNextToken) {
-          console.log('nextToken fetching more - ', nextToken);
           loopFetchStudentData(filterObj, theNextToken, combined);
         } else {
           // console.log('no more - ', combined);
@@ -223,21 +215,55 @@ const LessonControl = () => {
     }
   };
 
+  const [lessonDataLoaded, setLessonDataLoaded] = useState<boolean>(false);
+  const PAGES = lessonState?.lessonData?.lessonPlan;
+
+  const _loopFetchStudentData = async (): Promise<UniversalLessonStudentDataFromAPI[]> =>
+    new Promise(async (resolve) => {
+      try {
+        const {lessonID} = urlParams;
+
+        setLessonDataLoaded(false);
+        // fetch by pages
+
+        let result: any = [];
+
+        await Promise.all(
+          PAGES.map(async (page: any, idx: number) => {
+            let studentData: any = await API.graphql(
+              graphqlOperation(customQueries.getUniversalLessonStudentData, {
+                id: `${lessonState.studentViewing}-${getRoomData.id}-${lessonID}-${page.id}`
+                // filter: {...filterObj.filter, lessonPageID: {eq: page.id}}
+              })
+            );
+
+            let studentDataObject = studentData.data.getUniversalLessonStudentData;
+            result.push(studentDataObject);
+          })
+        );
+
+        /**
+         * combination of last fetch results
+         * && current fetch results
+         */
+
+        lessonDispatch({type: 'LESSON_LOADED', payload: true});
+
+        // console.log('no more - ', combined);
+        setLessonDataLoaded(true);
+        resolve(result);
+      } catch (e) {
+        console.error('loopFetchStudentData - ', e);
+        return [];
+      }
+    });
+
   const getStudentData = async (studentAuthId: string) => {
-    const {lessonID} = urlParams;
-
     try {
-      const listFilter = {
-        filter: {
-          studentAuthID: {eq: studentAuthId},
-          lessonID: {eq: lessonID},
-          syllabusLessonID: {eq: getRoomData.activeSyllabus},
-          roomID: {eq: getRoomData.id}
-        }
-      };
-
       // existing student rows
-      const studentDataRows = await loopFetchStudentData(listFilter, undefined, []);
+      const studentDataRows: UniversalLessonStudentDataFromAPI[] = await (
+        await _loopFetchStudentData()
+      ).filter(Boolean);
 
       if (studentDataRows.length > 0) {
         subscription = subscribeToStudent();
@@ -300,22 +326,6 @@ const LessonControl = () => {
     setIsSameStudentShared(false);
   };
 
-  const handleRoomUpdate = async (payload: any) => {
-    if (typeof payload === 'object' && Object.keys(payload).length > 0) {
-      try {
-        const updateRoom: any = await API.graphql(
-          graphqlOperation(mutations.updateRoom, {
-            input: payload
-          })
-        );
-      } catch (e) {
-        console.error('handleRoomUpdate - ', e);
-      }
-    } else {
-      console.error('incorrect data for handleRoomUpdate() - ', payload);
-    }
-  };
-
   // ##################################################################### //
   // ############################ LESSON FETCH ########################### //
   // ##################################################################### //
@@ -353,6 +363,7 @@ const LessonControl = () => {
 
       if (!isCompleted || !isTeacher) {
         clearNotification();
+
         lessonDispatch({
           type: 'SET_INITIAL_STATE',
           payload: {universalLessonID: lessonID}
@@ -375,6 +386,7 @@ const LessonControl = () => {
 
   // ~~~~~~~~~~ RESPONSE TO FETCH ~~~~~~~~~~ //
   // ~~~~~~~~~~~~~ LESSON SETUP ~~~~~~~~~~~~ //
+
   useEffect(() => {
     const {lessonID} = urlParams;
 
@@ -387,15 +399,12 @@ const LessonControl = () => {
         const getRoomData = getLocalStorageData('room_info');
         setLocalStorageData('room_info', {...getRoomData, studentViewing: ''});
 
-        if (
-          lessonState.lessonData.lessonPlan &&
-          lessonState.lessonData.lessonPlan.length > 0
-        ) {
+        if (PAGES && PAGES.length > 0) {
           lessonDispatch({
             type: 'SET_ROOM_SUBSCRIPTION_DATA',
             payload: {
               ClosedPages: getRoomData.ClosedPages,
-              studentViewing: ''
+              studentViewing: getRoomData.studentViewing
             }
           });
         }
@@ -407,19 +416,21 @@ const LessonControl = () => {
   // ################### OTHER SHARING / VIEWING LOGIC ################### //
   // ##################################################################### //
 
-  const {resetViewAndShare} = useLessonControls();
+  const {resetViewAndShare, handleRoomUpdate} = useLessonControls();
 
   // ~~~~~~ AUTO PAGE NAVIGATION LOGIC ~~~~~ //
   useEffect(() => {
     if (lessonState.displayData[0].studentAuthID === '') {
       if (lessonState.studentViewing !== '') {
-        const viewedStudentLocation = controlState.roster.find(
+        const viewedStudentLocation = controlState.rosterActive.find(
           (student: any) => student.personAuthID === lessonState.studentViewing
-        )?.currentLocation;
+        );
 
-        if (viewedStudentLocation !== undefined) {
-          lessonDispatch({type: 'SET_CURRENT_PAGE', payload: viewedStudentLocation});
-          history.push(`${match.url}/${viewedStudentLocation}`);
+        let numbered = Number(viewedStudentLocation?.currentLocation) || 0;
+
+        if (numbered !== undefined) {
+          lessonDispatch({type: 'SET_CURRENT_PAGE', payload: numbered});
+          history.push(`${match.url}/${numbered}`);
         } else {
           lessonDispatch({
             type: 'SET_CURRENT_PAGE',
@@ -472,6 +483,7 @@ const LessonControl = () => {
   const handleGoToUserManagement = () => {
     history.push('/dashboard/manage-users');
   };
+
   const handleHome = async () => {
     await handleRoomUpdate({id: getRoomData.id, studentViewing: ''});
     history.push(`/dashboard/lesson-planner/${getRoomData.id}`);
@@ -482,7 +494,7 @@ const LessonControl = () => {
   const anyoneIsShared = lessonState.displayData[0].studentAuthID !== '';
   const isPresenting = lessonState.displayData[0].isTeacher === true;
 
-  const {isTeacher} = useAuth();
+  const {isTeacher, email, authId} = useAuth();
 
   useEffect(() => {
     if (isPresenting && !fullscreen) {
@@ -496,16 +508,26 @@ const LessonControl = () => {
   // ############################# RESPONSIVE ############################ //
   // ##################################################################### //
 
-  const {breakpoint} = useTailwindBreakpoint();
-
   // ##################################################################### //
   // ############################### OUTPUT ############################## //
   // ##################################################################### //
+  const {notification} = useNotifications();
 
   return (
     <div className={`w-full h-screen bg-gray-200 overflow-hidden`}>
       <div className={`relative w-full h-full flex flex-col`}>
         {/* QUICK REGISTER */}
+
+        {notification.show && (
+          <div
+            className={`opacity-${
+              notification.show
+                ? '100 translate-x-0 transform z-100'
+                : '0 translate-x-10 transform'
+            } absolute bottom-5 right-5 w-96 py-4 px-6 rounded-md shadow bg-gray-800 duration-300 transition-all`}>
+            <p className="text-white font-medium tracking-wide">{notification.title}</p>
+          </div>
+        )}
 
         {/* USER MANAGEMENT */}
         <div
@@ -567,7 +589,11 @@ const LessonControl = () => {
             clientKey={clientKey}
             rightView={rightView}
             setRightView={setRightView}>
-            <ErrorBoundary fallback={<h1>Error in the Classroster</h1>}>
+            <ErrorBoundary
+              authId={authId}
+              email={email}
+              componentName="Classroster"
+              fallback={<h1>Error in the Classroster</h1>}>
               <ClassRoster
                 isSameStudentShared={isSameStudentShared}
                 handleQuitShare={handleQuitShare}
@@ -606,7 +632,11 @@ const LessonControl = () => {
                       <ComponentLoading />
                     </div>
                   }>
-                  <ErrorBoundary fallback={<h1>Error in the Teacher's Lesson</h1>}>
+                  <ErrorBoundary
+                    authId={authId}
+                    email={email}
+                    componentName="CoreUniversalLesson"
+                    fallback={<h1>Error in the Teacher's Lesson</h1>}>
                     <CoreUniversalLesson />
                   </ErrorBoundary>
                 </Suspense>

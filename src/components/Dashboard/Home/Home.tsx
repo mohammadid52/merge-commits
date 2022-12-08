@@ -1,4 +1,6 @@
 import Loader from '@components/Atoms/Loader';
+import {updatePageState} from '@graphql/functions';
+import {PersonStatus, UserPageState} from 'API';
 import {getAsset} from 'assets';
 import SectionTitleV3 from 'atoms/SectionTitleV3';
 import {GlobalContext} from 'contexts/GlobalContext';
@@ -36,10 +38,10 @@ export interface ModifiedListProps {
 const Home = (props: ClassroomControlProps) => {
   const {homeData, classList, handleRoomSelection, isTeacher, roomsLoading} = props;
 
-  const {state, dispatch, userLanguage, theme, clientKey} = useContext(GlobalContext);
+  const {state, dispatch, userLanguage, clientKey} = useContext(GlobalContext);
   const dashboardBanner1 = getAsset(clientKey, 'dashboardBanner1');
-  const themeColor = getAsset(clientKey, 'themeClassName');
-  const {DashboardDict} = useDictionary(clientKey);
+
+  const {DashboardDict} = useDictionary();
 
   const user = !isEmpty(state)
     ? {firstName: state.user.firstName, preferredName: state.user.firstName}
@@ -59,6 +61,20 @@ const Home = (props: ClassroomControlProps) => {
   const [teacherList, setTeacherList] = useState<any[]>();
   const [coTeachersList, setCoTeachersList] = useState<any[]>();
   const [studentsList, setStudentsList] = useState<any[]>();
+
+  const [isPageUpdatedOnPersonTable, setIsPageUpdatedOnPersonTable] = useState(false);
+
+  useEffect(() => {
+    if (!isPageUpdatedOnPersonTable) {
+      updatePageState(UserPageState.DASHBOARD, {
+        authId: state.user?.authId,
+        email: state.user?.email,
+        pageState: state.user?.pageState
+      });
+
+      setIsPageUpdatedOnPersonTable(true);
+    }
+  }, [isPageUpdatedOnPersonTable]);
 
   const getImageURL = async (uniqKey: string) => {
     const imageUrl: any = await getImageFromS3(uniqKey);
@@ -166,6 +182,7 @@ const Home = (props: ClassroomControlProps) => {
     })
   );
 
+  const removedFrom = state.user?.removedFrom || [];
   const getClassList = (): ModifiedListProps[] => {
     let modifiedClassList: ModifiedListProps[] = [];
     let uniqIds: string[] = [];
@@ -174,7 +191,7 @@ const Home = (props: ClassroomControlProps) => {
       classList.length > 0 &&
       classList.forEach(
         async (item: {room: any; name: string; id: string}, idx: number) => {
-          if (item.room) {
+          if (item.room && !removedFrom.includes(item.room.id)) {
             const curriculum = item.room.curricula?.items[0].curriculum;
             if (curriculum !== null) {
               const imagePath = curriculum?.image;
@@ -245,7 +262,9 @@ const Home = (props: ClassroomControlProps) => {
             <RoomTiles
               roomsLoading={roomsLoading}
               handleRoomSelection={handleRoomSelection}
-              classList={getClassList()}
+              classList={
+                state.user.status !== PersonStatus.INACTIVE ? getClassList() : []
+              }
             />
 
             {/* Teachers Section */}
@@ -270,7 +289,6 @@ const Home = (props: ClassroomControlProps) => {
                     isTeacher ? 'YOUR_STUDENTS' : 'YOUR_CLASSMATES'
                   ]
                 }
-                state={state}
                 studentsList={studentsList}
               />
             </div>

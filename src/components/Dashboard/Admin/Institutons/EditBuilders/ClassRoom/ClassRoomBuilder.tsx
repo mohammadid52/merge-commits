@@ -1,22 +1,23 @@
-import React, {useState, useEffect, useContext} from 'react';
-import {useHistory, useLocation, useParams, useRouteMatch} from 'react-router-dom';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import React, {useContext, useEffect, useState} from 'react';
+import {useHistory, useLocation, useParams, useRouteMatch} from 'react-router-dom';
 
 import * as customQueries from 'customGraphql/customQueries';
 import {useQuery} from 'customHooks/urlParam';
 
-import * as queries from 'graphql/queries';
-import {getFilterORArray} from 'utilities/strings';
+import {getLocalStorageData} from '@utilities/localStorage';
+import StepComponent, {IStepElementInterface} from 'atoms/StepComponent';
 import {GlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import {LessonEditDict} from 'dictionary/dictionary.iconoclast';
+import * as queries from 'graphql/queries';
 import ModalPopUp from 'molecules/ModalPopUp';
-import StepComponent, {IStepElementInterface} from 'atoms/StepComponent';
-import CourseDynamics from './CourseDynamics/CourseDynamics';
-import ClassRoomForm, {fetchSingleCoTeacher} from './ClassRoomForm';
-import CourseSchedule from './CourseSchedule';
 import {BsArrowLeft} from 'react-icons/bs';
+import {getFilterORArray} from 'utilities/strings';
 import EditClass from '../EditClass';
+import ClassRoomForm, {fetchSingleCoTeacher} from './ClassRoomForm';
+import CourseDynamics from './CourseDynamics/CourseDynamics';
+import CourseSchedule from './CourseSchedule';
 
 interface ClassRoomBuilderProps {
   instId: string;
@@ -35,10 +36,7 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
   const isSuperAdmin: boolean = state.user.role === 'SUP';
   const [activeStep, setActiveStep] = useState('overview');
   const [roomData, setRoomData] = useState<any>({});
-  console.log(
-    '🚀 ~ file: ClassRoomBuilder.tsx ~ line 38 ~ ClassRoomBuilder ~ roomData',
-    roomData
-  );
+
   const [curricularList, setCurricularList] = useState([]);
   const [prevName, setPrevName] = useState('');
   const [selectedCurrID, setSelectedCurrID] = useState('');
@@ -172,26 +170,6 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
     }
   };
 
-  const checkUniqRoomName = async () => {
-    try {
-      const list: any = await API.graphql(
-        graphqlOperation(queries.listRooms, {
-          filter: {
-            institutionID: {eq: roomData?.institute?.id},
-            name: {eq: roomData.name}
-          }
-        })
-      );
-      return list.data.listRooms.items.length === 0 ? true : false;
-    } catch {
-      setMessages({
-        show: true,
-        message: RoomEDITdict[userLanguage]['messages']['errorprocess'],
-        isError: true
-      });
-    }
-  };
-
   const filterCurricularData = (currId: string) => {
     const currentList = [...curricularList];
     const selectedCurr = currentList.find((item) => item.id === currId);
@@ -228,9 +206,11 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
               activeSyllabus: savedData?.room?.activeSyllabus,
               status: savedData?.room?.status,
               conferenceCallLink: savedData?.room?.conferenceCallLink,
-              location: savedData?.room?.location
+              location: savedData?.room?.location,
+              blockedStudents: savedData?.room?.blockedStudents
             };
           }
+
           const curricularId = savedData.curricula.items[0]?.curriculumID;
 
           const coTeachers = savedData.coTeachers?.items || [];
@@ -318,7 +298,7 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
     history.push(redirectionUrl);
   };
 
-  const {classID} = roomData;
+  const {classID} = roomData || getLocalStorageData('room_info');
 
   const steps: IStepElementInterface[] = [
     {

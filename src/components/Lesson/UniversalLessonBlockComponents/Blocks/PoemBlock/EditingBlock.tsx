@@ -1,9 +1,12 @@
+import {useGlobalContext} from '@contexts/GlobalContext';
+import useAuth from '@customHooks/useAuth';
 import useStudentDataValue from 'customHooks/studentDataValue';
-import React, {useEffect, useState} from 'react';
-import WritingExerciseEditor from './WritingExerciseEditor';
-import {EditorState, Modifier} from 'draft-js';
+import {ContentState, convertToRaw, EditorState} from 'draft-js';
+import draftToHtml from 'draftjs-to-html';
+import htmlToDraft from 'html-to-draftjs';
+import React, {useState} from 'react';
 import WritingBlock from './WritingBlock';
-import {isEmpty} from 'lodash';
+import WritingExerciseEditor from './WritingExerciseEditor';
 
 interface EditingBlockProps {
   id?: string;
@@ -14,37 +17,40 @@ interface EditingBlockProps {
 }
 
 const EditingBlock = ({options, inputID, value}: EditingBlockProps) => {
+  const {lessonState} = useGlobalContext();
   const initialState = () => EditorState.createEmpty();
   const [editorState, setEditorState] = useState(initialState);
+  const {isStudent} = useAuth();
 
-  const sendTextToEditor = (text: string, cb?: any) => {
-    setEditorState(insertText(text, editorState));
+  const sendTextToEditor = async (text: string, cb?: any) => {
+    insertTextNew(text);
     if (cb) {
       cb();
     }
   };
 
-  const {setDataValue} = useStudentDataValue();
+  const viewingStudent = lessonState.studentViewing;
+
+  const {setDataValue, getDataValue} = useStudentDataValue();
 
   const onChangeCallback = (html: string, text: string) => {
     setDataValue(inputID, [html]);
   };
 
-  // useEffect(() => {
-  //   if (!isEmpty(value)) {
-  //     sendTextToEditor(value);
-  //   }
-  // }, []);
+  const insertTextNew = (addItem: string) => {
+    const data = draftToHtml(convertToRaw(editorState.getCurrentContent()));
+    const aa = data.concat(`<span><br/>${addItem}</span>`);
 
-  const insertText = (text: string, editorValue: any) => {
-    const currentContent = editorValue.getCurrentContent();
-    const currentSelection = editorValue.getSelection();
+    const contentBlock = htmlToDraft(aa);
+    const contentState = ContentState.createFromBlockArray(contentBlock?.contentBlocks);
 
-    const newContent = Modifier.replaceText(currentContent, currentSelection, text);
-
-    const newEditorState = EditorState.push(editorValue, newContent, 'insert-characters');
-    return EditorState.forceSelection(newEditorState, newContent.getSelectionAfter());
+    const updateState = EditorState.createWithContent(contentState);
+    setEditorState(updateState);
   };
+
+  const initialValue = viewingStudent ? getDataValue(inputID)[0] : value;
+
+  const isStudentViewing = !isStudent && viewingStudent !== '';
 
   return (
     <div className="relative flex flex-col justify-between items-center ">
@@ -59,7 +65,8 @@ const EditingBlock = ({options, inputID, value}: EditingBlockProps) => {
       </div>
       <WritingExerciseEditor
         minHeight={400}
-        initialValue={value}
+        isStudentViewing={isStudentViewing}
+        initialValue={initialValue}
         onChangeCallback={onChangeCallback}
         editorState={editorState}
         setEditorState={setEditorState}

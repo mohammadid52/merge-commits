@@ -1,4 +1,4 @@
-import React, {createContext, useContext, useState} from 'react';
+import React, {createContext, useContext, useEffect, useState} from 'react';
 
 const NotificationContext = createContext(null);
 type INotification = {
@@ -26,6 +26,14 @@ const NotificationContextProvider = ({children}: {children: React.ReactNode}) =>
   const clearNotification = () => {
     setNotification({title: '', buttonText: '', buttonUrl: '', show: false});
   };
+
+  useEffect(() => {
+    if (notification.show) {
+      setTimeout(() => {
+        clearNotification();
+      }, notification.timeout);
+    }
+  }, [notification.show]);
 
   return (
     <NotificationContext.Provider

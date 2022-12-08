@@ -1,9 +1,8 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import {Auth} from '@aws-amplify/auth';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import * as mutations from 'graphql/mutations';
-import {getLocalStorageData} from 'utilities/localStorage';
 import {useEffect, useState} from 'react';
+import {getLocalStorageData} from 'utilities/localStorage';
 
 const useStudentTimer = () => {
   const {state, lessonState, lessonDispatch} = useGlobalContext();
@@ -16,25 +15,26 @@ const useStudentTimer = () => {
 
   const [iAmViewed, setiAmViewed] = useState<boolean>(false);
 
-  const viewingLogic = async () => {
-    const user = await Auth.currentAuthenticatedUser();
-    const authId = user.attributes.sub;
+  const authId = state.user.authId;
 
-    if (lessonState.studentViewing && lessonState.studentViewing === authId) {
-      if (!iAmViewed) {
-        setiAmViewed(true);
+  const viewingLogic = async () => {
+    if (lessonState.studentViewing) {
+      if (lessonState.studentViewing === authId) {
+        if (!iAmViewed) {
+          setiAmViewed(true);
+        }
       }
-    }
-    if (lessonState.studentViewing !== authId) {
-      if (iAmViewed) {
-        setiAmViewed(false);
+      if (lessonState.studentViewing !== authId) {
+        if (iAmViewed) {
+          setiAmViewed(false);
+        }
       }
     }
   };
 
   useEffect(() => {
     viewingLogic();
-  }, [lessonState.studentViewing, state.user.authId]);
+  }, [lessonState.studentViewing, authId]);
 
   // ##################################################################### //
   // ###################### SAVE TIMERS & TRIGGERING ##################### //

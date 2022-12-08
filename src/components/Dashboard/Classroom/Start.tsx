@@ -77,7 +77,7 @@ const Start: React.FC<StartProps> = ({
   }, []);
 
   useEffect(() => {
-    if (type === 'lesson') {
+    if (type === 'lesson' && isStudent) {
       fetchAttendance();
     }
   }, [state.roomData.syllabus]);
@@ -102,7 +102,8 @@ const Start: React.FC<StartProps> = ({
         }
         const list: any = await API.graphql(
           graphqlOperation(queries.listAttendances, {
-            filter
+            filter,
+            limit: 500
           })
         );
         if (isMounted) {

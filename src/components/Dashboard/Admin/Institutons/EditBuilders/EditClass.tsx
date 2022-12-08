@@ -4,11 +4,11 @@ import {FaSpinner, FaTimes} from 'react-icons/fa';
 import {HiPencil} from 'react-icons/hi';
 import {useHistory} from 'react-router-dom';
 
-import AddButton from 'atoms/Buttons/AddButton';
 import {DeleteActionBtn} from 'atoms/Buttons/DeleteActionBtn';
 import SearchSelectorWithAvatar from 'atoms/Form/SearchSelectorWithAvatar';
 import Loader from 'atoms/Loader';
 
+import {getAsset} from 'assets';
 import {getImageFromS3} from 'utilities/services';
 import {
   createFilterToFetchAllItemsExcept,
@@ -16,8 +16,11 @@ import {
   initials,
   stringToHslColor
 } from 'utilities/strings';
-import {getAsset} from 'assets';
 
+import Buttons from '@components/Atoms/Buttons';
+import {useNotifications} from '@contexts/NotificationContext';
+import {getLocalStorageData} from '@utilities/localStorage';
+import {PersonStatus} from 'API';
 import Modal from 'atoms/Modal';
 import Registration from 'components/Dashboard/Admin/UserManagement/Registration';
 import User from 'components/Dashboard/Admin/UserManagement/User';
@@ -28,10 +31,8 @@ import useDictionary from 'customHooks/dictionary';
 import useAuth from 'customHooks/useAuth';
 import * as mutations from 'graphql/mutations';
 import ModalPopUp from 'molecules/ModalPopUp';
+import {addName, sortByName} from '../../UserManagement/UserLookup';
 import LocationBadge from './LocationBadge';
-import {PersonStatus} from 'API';
-import {useNotifications} from '@contexts/NotificationContext';
-import Buttons from '@components/Atoms/Buttons';
 
 interface EditClassProps {
   instId: string;
@@ -115,6 +116,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
     try {
       const result: any = await API.graphql(
         graphqlOperation(customQueries.listClassStudentsForRoom, {
+          limit: 500,
           ...filter,
           nextToken: nextToken
         })
@@ -125,9 +127,9 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
 
       combined = [...outArray, ...returnedData];
 
-      if (NextToken) {
-        combined = await getAllClassStudentByClassId(filter, NextToken, combined);
-      }
+      // if (NextToken) {
+      //   combined = await getAllClassStudentByClassId(filter, NextToken, combined);
+      // }
 
       return combined;
     } catch (error) {
@@ -147,6 +149,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
       let combined: any[] = [];
       let studentsFromAPI: any = await API.graphql(
         graphqlOperation(customQueries.fetchPersons, {
+          limit: 500,
           filter: {
             role: {eq: 'ST'},
             or: [
@@ -163,9 +166,9 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
       let NextToken: string = studentsFromAPI.data.listPeople.nextToken;
 
       combined = [...studentsData, ...outArray];
-      if (NextToken) {
-        combined = await recursiveFetchAllStudents(neqList, combined, NextToken);
-      }
+      // if (NextToken) {
+      //   combined = await recursiveFetchAllStudents(neqList, combined, NextToken);
+      // }
       return combined;
     } catch (error) {
       console.error(error);
@@ -193,6 +196,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
           status: stu.status,
           createAt: stu.createdAt,
           studentAuthID: stu.studentAuthID,
+          name: `${stu.student.firstName || ''} ${stu.student.lastName || ''}`,
           student: {
             ...stu.student,
             email: stu.studentEmail,
@@ -214,8 +218,8 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
         firstName: item.firstName || '',
         lastName: item.lastName || ''
       }));
-      await getClassRoomGroups(roomData.id);
-      setClassStudents(selectedStudents);
+      await getClassRoomGroups(roomData.id || room.id);
+      setClassStudents(sortStudents(selectedStudents));
       setAllStudents(sortStudents(students));
       setLoading(false);
     } catch (err) {
@@ -230,26 +234,6 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
   };
 
   const fetchStudentList = async (searchQuery: string) => {
-    // const result: any = await API.graphql(
-    //   graphqlOperation(customQueries.listPersons, {
-    //     filter: {
-    //       role: {eq: 'ST'},
-    //       or: [{firstName: {contains: searchQuery}}, {lastName: {contains: searchQuery}}]
-    //     }
-    //   })
-    // );
-    // const students = result.data.listPeople.items;
-
-    // const mappedStudents = students.map((item: any, i: any) => ({
-    //   id: item.id,
-    //   name: `${item.firstName || ''} ${item.lastName || ''}`,
-    //   value: `${item.firstName || ''} ${item.lastName || ''}`,
-    //   avatar: item.image ? getImageFromS3(item.image) : '',
-    //   status: item.status || 'Inactive',
-    //   email: item.email || '',
-    //   authId: item.authId || ''
-    // }));
-
     // filter allStudents by searchQuery
 
     const filteredStudents = allStudents.filter((student: any) => {
@@ -273,6 +257,9 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
       personA.name[0] < personB.name[0] ? -1 : 1
     );
   };
+
+  const room = getLocalStorageData('room_info');
+  const withbackupClassId = classId || room.classID;
 
   const getClassRoomGroups = async (roomId: string) => {
     try {
@@ -333,7 +320,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
       setAdding(true);
       const selected = allStudents.find((item: any) => item.id === id);
       const input = {
-        classID: classId,
+        classID: withbackupClassId,
         group: newMember.group,
         studentID: id,
         studentAuthID: selected.authId,
@@ -433,8 +420,13 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
   };
 
   useEffect(() => {
-    if (classId) fetchClassData(classId);
-  }, [classId]);
+    if (withbackupClassId) {
+      fetchClassData(withbackupClassId);
+    } else {
+      console.log('class id not found');
+      setLoading(false);
+    }
+  }, [withbackupClassId]);
 
   const validateForm = async () => {
     if (classData.name.trim() === '') {
@@ -466,9 +458,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
           name: classData.name,
           institutionID: classData.institute.id
         };
-        const newClass: any = await API.graphql(
-          graphqlOperation(mutations.updateClass, {input: input})
-        );
+        await API.graphql(graphqlOperation(mutations.updateClass, {input: input}));
         toggleUpdateState();
         setMessages({
           show: true,
@@ -489,7 +479,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
 
   const postMutation = () => {
     setShowRegistrationForm(false);
-    fetchClassData(classId);
+    fetchClassData(withbackupClassId);
   };
 
   const DiscardChanges = () => {
@@ -578,7 +568,15 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
                   />
                 </div>
               </div>
-
+              {/* {!loading &&
+                classStudents.length > 0 &&
+                roomData?.blockedStudents !== null && (
+                  <BlockedStudents
+                    blockedStudents={roomData?.blockedStudents || []}
+                    roomId={roomData.id}
+                    classList={classStudents}
+                  />
+                )} */}
               {/* <AddButton
               dataCy={`edit-class-add-button`}
                 loading={adding}
@@ -615,7 +613,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
                   </div>
 
                   <div className="mb-4 w-full m-auto pl-2 max-h-88 overflow-y-scroll">
-                    {classStudents.map((item, index) => {
+                    {sortByName(addName(classStudents)).map((item, index) => {
                       return (
                         <div
                           key={item.id}
@@ -745,7 +743,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
                   showFooter={false}
                   closeAction={() => setShowRegistrationForm(false)}>
                   <Registration
-                    classData={{classId, roomId: roomData.id}}
+                    classData={{classId: withbackupClassId, roomId: roomData.id}}
                     isInInstitute
                     isInModalPopup
                     postMutation={postMutation}

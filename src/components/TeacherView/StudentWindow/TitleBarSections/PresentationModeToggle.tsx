@@ -1,6 +1,8 @@
+import useSounds from '@customHooks/useSounds';
 import Buttons from 'atoms/Buttons';
 import useLessonControls from 'customHooks/lessonControls';
 import React, {useEffect} from 'react';
+import {CgScreen} from 'react-icons/cg';
 import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
 import {StudentWindowTitleBarProps} from '../StudentWindowTitleBar';
 
@@ -51,19 +53,20 @@ const PresentationModeToggle = ({
     });
   };
 
+  // const [onSound, offSound] = useSounds(['success', 'error']);
+
   const handlePresentationToggle = async (
     presenting: boolean,
     sharingActive: boolean
   ) => {
     if (presenting) {
+      // offSound.play();
       await resetViewAndShare();
     } else {
-      if (sharingActive) {
-        await resetViewAndShare();
-        await handlePresentationUpdate(getRoomData.id, getPageID(currentPage));
-      } else {
-        await handlePresentationUpdate(getRoomData.id, getPageID(currentPage));
-      }
+      // offSound.pause();
+      // onSound.play();
+      sharingActive && (await resetViewAndShare());
+      await handlePresentationUpdate(getRoomData.id, getPageID(currentPage));
     }
   };
 
@@ -74,12 +77,11 @@ const PresentationModeToggle = ({
   }, [isPresenting, currentPage]);
 
   return (
-    <div className="w-1/3 flex justify-center h-8 align-middle leading-8 ">
+    <div className="w-1/3 flex justify-end h-8 align-middle leading-8 ">
       <Buttons
-        overrideClass
-        btnClass={`${
-          isPresenting ? theme.btn['cancel'] : theme.btn[themeColor]
-        } h-8 font-bold uppercase text-xs p-1 rounded flex items-center w-auto`}
+        Icon={CgScreen}
+        iconSize="h-3.5 w-3.5"
+        transparent={isPresenting}
         label={isPresenting ? 'Stop Presenting' : 'Start Presenting'}
         onClick={() => handlePresentationToggle(isPresenting, anyoneIsShared)}
       />

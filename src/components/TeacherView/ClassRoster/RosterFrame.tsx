@@ -1,13 +1,13 @@
-import React, {useContext, useEffect, useState, useRef} from 'react';
-import {gsap} from 'gsap/all';
-import usePrevious from 'customHooks/previousProps';
-import LessonDetails from '../TopMenu/LessonDetails';
-import LessonInfoTitleBar from '../TopMenu/LessonInfoTitleBar';
-import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
-import {AiOutlineCloseCircle, AiOutlineMenu} from 'react-icons/ai';
-import ButtonsRound from 'atoms/ButtonsRound';
+import Buttons from '@components/Atoms/Buttons';
 import {getAsset} from 'assets';
-
+import ButtonsRound from 'atoms/ButtonsRound';
+import usePrevious from 'customHooks/previousProps';
+import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
+import {gsap} from 'gsap/all';
+import React, {useEffect, useRef, useState} from 'react';
+import {AiFillEye, AiOutlineCloseCircle, AiOutlineMenu} from 'react-icons/ai';
+import {BiCloudDownload} from 'react-icons/bi';
+import LessonDetails from '../TopMenu/LessonDetails';
 interface IRosterFrame {
   children?: React.ReactNode;
   fullscreen?: boolean;
@@ -33,10 +33,18 @@ const RosterFrame = ({
   const miniFrameRef = useRef();
 
   const slideOut = (refTarget: any) => {
-    gsap.fromTo(refTarget.current, {x: 0}, {x: '-100%', duration: 1, ease: 'easeInOut'});
+    gsap.fromTo(
+      refTarget.current,
+      {x: 0},
+      {x: '-100%', duration: 0.5, ease: 'easeInOut'}
+    );
   };
   const slideIn = (refTarget: any) => {
-    gsap.fromTo(refTarget.current, {x: '-100%'}, {x: 0, duration: 1, ease: 'easeInOut'});
+    gsap.fromTo(
+      refTarget.current,
+      {x: '-100%'},
+      {x: 0, duration: 0.5, ease: 'easeInOut'}
+    );
   };
 
   const toggleMiniOut = () => {
@@ -72,6 +80,14 @@ const RosterFrame = ({
   // ##################################################################### //
   const {breakpoint} = useTailwindBreakpoint();
 
+  const handleToggleRightView = (rightViewObj: {view: string; option: string}) => {
+    let toggleValue =
+      rightView.view === rightViewObj.view
+        ? {...rightViewObj, view: 'lesson'}
+        : {...rightViewObj, view: rightViewObj.view};
+    setRightView(toggleValue);
+  };
+
   return (
     <>
       {/* FULL ROSTER */}
@@ -82,14 +98,12 @@ const RosterFrame = ({
         {/* <LessonInfoTitleBar /> */}
 
         <LessonDetails
-          hidden={breakpoint !== 'xl' && breakpoint !== '2xl'}
-          theme={theme}
-          themeColor={themeColor}
           rightView={rightView}
-          setRightView={setRightView}
+          hidden={breakpoint !== 'xl' && breakpoint !== '2xl'}
+          handleToggleRightView={handleToggleRightView}
         />
         <div className={`h-full w-full flex flex-col justify-between items-center z-100`}>
-          <div className={`h-full`}>{children}</div>
+          <div className={`h-full pb-24`}>{children}</div>
         </div>
       </div>
       {/* THIN SIDEBAR */}
@@ -121,13 +135,14 @@ const RosterFrame = ({
           onClick={() => toggleMiniOut()}
           iconSizePX={24}
           buttonWHClass={`w-8 h-8 `}
-          containerBgClass={`absolute right-0 bg-transparent`}
+          containerBgClass={`absolute right-0 bg-transparent z-max`}
           buttonBgClass={`bg-transparent`}
           iconTxtColorClass={theme.textColor[themeColor]}
         />
-        <LessonDetails theme={theme} themeColor={themeColor} />
+        <LessonDetails />
+
         <div className={`h-full w-full flex flex-col justify-between items-center`}>
-          <div className={`h-full`}>{children}</div>
+          <div className={`h-full pb-24`}>{children}</div>
         </div>
       </div>
     </>

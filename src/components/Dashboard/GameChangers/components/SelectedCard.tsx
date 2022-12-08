@@ -62,6 +62,7 @@ const SelectedCard = ({
 
   const tl = gsap.timeline({});
   const commonFields = {duration: 4, ease: Linear.easeNone};
+
   const onSquareAnimationStart = () => {
     const squareEl = $('#square');
     const width = squareEl.width();

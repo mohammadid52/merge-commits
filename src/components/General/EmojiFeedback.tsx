@@ -10,7 +10,7 @@ import moment from 'moment';
 import React, {useContext, useEffect, useState} from 'react';
 import {BiArrowBack, BiPencil} from 'react-icons/bi';
 import {awsFormatDate, dateString} from 'utilities/time';
-
+export const getDate = () => awsFormatDate(dateString('-', 'WORLD'));
 const EmojiCard = ({
   eye,
   mouth,
@@ -264,8 +264,6 @@ const EmojiFeedback = () => {
   };
 
   const [selectedEmotion, setSelectedEmotion] = useState(null);
-
-  const getDate = () => awsFormatDate(dateString('-', 'WORLD'));
 
   const getTime = () => new Date().toTimeString().split(' ')[0];
 

@@ -18,7 +18,7 @@ const useLessonControls = () => {
   const handleRoomUpdate = async (payload: any) => {
     if (typeof payload === 'object' && Object.keys(payload).length > 0) {
       try {
-        const updateRoom: any = await API.graphql(
+        await API.graphql(
           graphqlOperation(mutations.updateRoom, {
             input: payload
           })
@@ -42,9 +42,53 @@ const useLessonControls = () => {
   const viewedStudent = lessonState?.studentViewing;
   const sharedStudent = lessonState?.displayData[0]?.studentAuthID;
 
-  const resetViewAndShare = async () => {
-    console.log('resetViewAndShare');
+  const resetView = async () => {
+    console.log('reset view');
+    lessonDispatch({
+      type: 'SET_ROOM_SUBSCRIPTION_DATA',
+      payload: {
+        id: getRoomData.id,
+        studentViewing: '',
+        displayData: lessonState.displayData
+      }
+    });
 
+    setLocalStorageData('room_info', {
+      ...getRoomData,
+      studentViewing: '',
+      displayData: lessonState.displayData
+    });
+    await handleRoomUpdate({
+      id: getRoomData.id,
+      studentViewing: '',
+      displayData: lessonState.displayData
+    });
+  };
+
+  const resetShare = async () => {
+    console.log('reset share');
+    lessonDispatch({
+      type: 'SET_ROOM_SUBSCRIPTION_DATA',
+      payload: {
+        id: getRoomData.id,
+        studentViewing: viewedStudent,
+        displayData: [{isTeacher: false, studentAuthID: '', lessonPageID: ''}]
+      }
+    });
+
+    setLocalStorageData('room_info', {
+      ...getRoomData,
+      studentViewing: viewedStudent,
+      displayData: [{isTeacher: false, studentAuthID: '', lessonPageID: ''}]
+    });
+    await handleRoomUpdate({
+      id: getRoomData.id,
+      studentViewing: viewedStudent,
+      displayData: [{isTeacher: false, studentAuthID: '', lessonPageID: ''}]
+    });
+  };
+
+  const resetViewAndShare = async () => {
     if (viewedStudent !== '' || sharedStudent !== '') {
       lessonDispatch({
         type: 'SET_ROOM_SUBSCRIPTION_DATA',
@@ -73,7 +117,9 @@ const useLessonControls = () => {
     resetViewAndShare: resetViewAndShare,
     viewedStudent,
     sharedStudent,
-    getPageID
+    getPageID,
+    resetView,
+    resetShare
   };
 };
 

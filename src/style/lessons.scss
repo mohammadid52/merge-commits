@@ -165,3 +165,38 @@
     color: #fff !important;
   }
 }
+
+.text-shadow {
+  text-shadow: 0.2rem 0.2rem 3px #352c2cb3;
+}
+
+.roster-row {
+  transition: all 500ms ease-in-out;
+}
+
+.roster-row:hover .roster-actions {
+  transform: translateX(0%);
+  max-height: unset;
+  opacity: 1;
+
+  & button {
+    transition: all 500ms ease-in-out;
+    transform: translateX(0%);
+  }
+}
+.roster-actions {
+  height: 100%;
+  opacity: 0.8;
+  max-height: 0;
+  transition: all 500ms ease-in-out;
+
+  & button {
+    transition: all 500ms ease-in-out;
+    &:nth-child(1) {
+      transform: translateX(-200%);
+    }
+    &:nth-child(2) {
+      transform: translateX(200%);
+    }
+  }
+}

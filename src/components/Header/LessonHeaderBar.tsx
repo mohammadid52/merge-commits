@@ -1,4 +1,5 @@
 import {useNotifications} from '@contexts/NotificationContext';
+import useLessonControls from '@customHooks/lessonControls';
 import useStudentTimer from '@customHooks/timer';
 import useAuth from '@customHooks/useAuth';
 import useGraphqlMutation from '@customHooks/useGraphqlMutation';
@@ -58,8 +59,10 @@ const LessonHeaderBar = ({
   const getUrl = () => getLocalStorageData('survey_redirect');
 
   const {isStudent} = useAuth();
-  const goToClassRoom = () => {
+
+  const goToClassRoom = async () => {
     setPersonLessonData(null);
+
     isStudent
       ? history.push(`/dashboard/classroom/${getRoomData.id}`)
       : history.push(`${getUrl()}?tab=Completed%20Surveys` || '/dashboard');

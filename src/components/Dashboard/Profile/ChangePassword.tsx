@@ -15,6 +15,7 @@ import ModalPopUp from 'molecules/ModalPopUp';
 
 import * as customMutations from 'customGraphql/customMutations';
 import FormInput from 'atoms/Form/FormInput';
+import {UserPageState} from 'API';
 
 interface ChangePasswordProps {
   updateAuthState: Function;
@@ -60,7 +61,8 @@ const ChangePassword = (props: ChangePasswordProps) => {
         id: state.user.id,
         authId: state.user.authId,
         email: state.user.email,
-        lastLoggedOut: new Date().toISOString()
+        lastLoggedOut: new Date().toISOString(),
+        pageState: UserPageState.NOT_LOGGED_IN
       };
       API.graphql(graphqlOperation(customMutations.updatePersonLogoutTime, {input}));
       await Auth.signOut();

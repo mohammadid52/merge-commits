@@ -34,6 +34,10 @@ $polka-dot-size: 0.8px;
 
 .hover-text-white {
   &:hover {
+    svg {
+      transition: all 150ms ease;
+      fill: #fff;
+    }
     color: white !important;
   }
 }
@@ -769,7 +773,7 @@ $polka-dot-size: 0.8px;
   }
 
   &.collapse {
-    animation: sidebar-collapse 1s ease;
+    animation: sidebar-collapse 0.5s ease;
   }
 }
 
@@ -1133,6 +1137,7 @@ $polka-dot-size: 0.8px;
   border: 1px solid #9ca3af;
   color: white;
 }
+// select all span in this div
 
 .editorClassName {
   resize: vertical;
@@ -1290,6 +1295,7 @@ $polka-dot-size: 0.8px;
   border: none !important;
   padding: 0.7rem !important;
   height: 2rem !important;
+  transition: all 150ms ease;
   &:hover {
     box-shadow: none !important;
     color: #fff;
@@ -1577,6 +1583,10 @@ $polka-dot-size: 0.8px;
 .room_card:hover {
   transition: all 300ms ease;
   box-shadow: 0 10px 20px 10px $theme-box-shadow;
+}
+
+.drop-down-group.active {
+  color: white;
 }
 .drop-down-group:hover {
   .dropdown-arrow {

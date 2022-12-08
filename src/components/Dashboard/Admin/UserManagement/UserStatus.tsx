@@ -8,12 +8,18 @@ const commonClass = 'w-auto inline-flex text-xs leading-5 font-medium uppercase 
 
 export const Status = ({
   children,
+  style,
   className = 'bg-green-200 text-green-600'
 }: {
   className?: string;
+  style?: any;
   children: React.ReactNode;
 }) => {
-  return <span className={`${commonClass} ${className}  px-2`}>{children}</span>;
+  return (
+    <span style={style} className={`${commonClass} ${className}  px-2`}>
+      {children}
+    </span>
+  );
 };
 
 const UserStatus = ({status}: StatusProps) => {

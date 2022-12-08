@@ -2,22 +2,21 @@ import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import React, {Fragment, useContext, useEffect, useState} from 'react';
 import {useHistory, useRouteMatch} from 'react-router';
 
+import Highlighted from '@components/Atoms/Highlighted';
+import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import useAuth from '@customHooks/useAuth';
+import useSearch from '@customHooks/useSearch';
 import {getLocalStorageData} from '@utilities/localStorage';
 import {ModelRoomFilterInput} from 'API';
-import {getAsset} from 'assets';
 import AddButton from 'atoms/Buttons/AddButton';
 import SearchInput from 'atoms/Form/SearchInput';
 import Selector from 'atoms/Form/Selector';
 import Loader from 'atoms/Loader';
 import {GlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
-import * as queries from 'graphql/queries';
 import useDictionary from 'customHooks/dictionary';
-import useSearch from '@customHooks/useSearch';
-import Highlighted from '@components/Atoms/Highlighted';
+import * as queries from 'graphql/queries';
 import {Status} from '../../UserManagement/UserStatus';
-import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 
 const Room = ({
   i,
@@ -58,7 +57,7 @@ hover:curate:bg-200 hover:curate:text-600
         </td>
       )}
       <td
-        onClick={() => !item?.isCoteacher && editCurrentRoom(item.id, item.institutionID)}
+        onClick={() => editCurrentRoom(item.id, item.institutionID)}
         className={`${commonClass}`}>
         <Highlighted text={item.name} highlight={searchInput} />
       </td>
@@ -119,13 +118,12 @@ const RoomsList = (props: RoomListProps) => {
     state: {
       user: {isSuperAdmin, isAdmin, isBuilder, associateInstitute}
     },
-    theme,
+
     userLanguage
   } = useContext(GlobalContext);
-  const match = useRouteMatch();
-  const themeColor = getAsset(clientKey, 'themeClassName');
+
   const history = useHistory();
-  const {CommonlyUsedDict, InstitueRomms} = useDictionary(clientKey);
+  const {InstitueRomms} = useDictionary(clientKey);
 
   const [roomList, setRoomList] = useState([]);
   const [allRooms, setAllRooms] = useState([]);
@@ -393,7 +391,7 @@ const RoomsList = (props: RoomListProps) => {
                     onChange={instituteChange}
                     arrowHidden={true}
                     additionalClass={`w-60 ${
-                      isSuperAdmin || isAdmin || isBuilder ? 'mr-4 mb-8' : ''
+                      isSuperAdmin || isAdmin || isBuilder ? 'mr-4' : ''
                     }`}
                     isClearable
                     onClear={onInstitutionSelectionRemove}

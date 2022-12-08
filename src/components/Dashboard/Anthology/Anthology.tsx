@@ -1,10 +1,11 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import {useQuery} from '@customHooks/urlParam';
 import useAuth from '@customHooks/useAuth';
+import {updatePageState} from '@graphql/functions';
 import {
   UniversalLessonWritingExcercises,
-  UpdateUniversalLessonWritingExcercisesInput
+  UpdateUniversalLessonWritingExcercisesInput,
+  UserPageState
 } from 'API';
 import {getAsset} from 'assets';
 import Buttons from 'atoms/Buttons';
@@ -78,7 +79,14 @@ const Anthology = ({
   // ##################################################################### //
 
   useEffect(() => {
-    dispatch({type: 'UPDATE_CURRENTPAGE', payload: {data: 'anthology'}});
+    if (isStudent) {
+      dispatch({type: 'UPDATE_CURRENTPAGE', payload: {data: 'anthology'}});
+      updatePageState(UserPageState.NOTEBOOK, {
+        authId: state.user.authId,
+        email: state.user.email,
+        pageState: state.user.pageState
+      });
+    }
   }, []);
 
   const [subSection, setSubSection] = useState<string>('none');
