@@ -9,19 +9,6 @@ import {v4 as uuidv4} from 'uuid';
 import {FORM_TYPES} from '../common/constants';
 import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
 
-const Checkbox = ({val}: {val: boolean}) => {
-  return (
-    <>
-      {val ? (
-        <BiCheckboxChecked className="w-auto text-3xl text-blue-600 cursor-pointer" />
-      ) : (
-        <BiCheckbox className="w-auto text-3xl text-blue-600 cursor-pointer" />
-      )}
-      <p className="w-auto cursor-pointer">textarea</p>
-    </>
-  );
-};
-
 import {Switch} from '@headlessui/react';
 
 /**

@@ -3,6 +3,7 @@ import Placeholder from '@components/Atoms/Placeholder';
 import useAuth from '@customHooks/useAuth';
 import {Menu, Transition} from '@headlessui/react';
 import {ChevronDownIcon} from '@heroicons/react/solid';
+import {initials, stringToHslColor} from '@utilities/strings';
 import {Role} from 'API';
 import SignOutButton from 'components/Auth/SignOut';
 import React, {Fragment} from 'react';
@@ -60,7 +61,19 @@ const DropDownMenu = ({
                         alt=""
                       />
                     ) : (
-                      <Placeholder size="w-full" />
+                      <div
+                        style={{
+                          /* stylelint-disable */
+                          background: `${
+                            firstName
+                              ? stringToHslColor(firstName + ' ' + lastName)
+                              : '#272730'
+                          }`,
+                          textShadow: '0.1rem 0.1rem 2px #423939b3'
+                        }}
+                        className="rounded-full border-0 theme-border  flex justify-center items-center text-xs text-white h-full font-sans">
+                        {`${initials(firstName, lastName)}`}
+                      </div>
                     )}
                   </div>
 

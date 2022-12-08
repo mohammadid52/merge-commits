@@ -341,14 +341,6 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
       id: syllabusID,
       isUsed: true
     };
-    const input3 = {
-      id: classroomCurriculum.id,
-      syllabiHistory: classroomCurriculum.syllabiHistory
-        ? classroomCurriculum.syllabiHistory.includes(syllabusID)
-          ? classroomCurriculum.syllabiHistory
-          : [...classroomCurriculum.syllabiHistory, syllabusID]
-        : [syllabusID]
-    };
 
     try {
       const updateRoomMutation: any = await API.graphql(
@@ -359,10 +351,21 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
       const updateUniversalSyllabusMutation: any = await API.graphql(
         graphqlOperation(mutations.updateUniversalSyllabus, {input: input2})
       );
-      const updateCurriculum: any = await API.graphql(
-        graphqlOperation(mutations.updateCurriculum, {input: input3})
-      );
-      setClassroomCurriculum(updateCurriculum.data.updateCurriculu);
+
+      if (classroomCurriculum) {
+        const input3 = {
+          id: classroomCurriculum.id,
+          syllabiHistory: classroomCurriculum.syllabiHistory
+            ? classroomCurriculum.syllabiHistory.includes(syllabusID)
+              ? classroomCurriculum.syllabiHistory
+              : [...classroomCurriculum.syllabiHistory, syllabusID]
+            : [syllabusID]
+        };
+        const updateCurriculum: any = await API.graphql(
+          graphqlOperation(mutations.updateCurriculum, {input: input3})
+        );
+        setClassroomCurriculum(updateCurriculum.data.updateCurriculu);
+      }
     } catch (e) {
       console.error('handleSyllabusActivation: ', e);
     } finally {

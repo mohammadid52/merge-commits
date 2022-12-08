@@ -575,7 +575,7 @@ const AttachmentBlock = ({
         </Modal>
       )}
       <div id={id} key={inputID} className={`mb-4 p-4`}>
-        <label className={`text-sm ${themeTextColor}`} htmlFor="label">
+        <label className={`text-base ${themeTextColor}`} htmlFor="label">
           {numbered && index} {label}{' '}
           {isUploaded && (
             <button

@@ -18,6 +18,28 @@ import {RowWrapperProps} from 'interfaces/UniversalLessonBuilderInterfaces';
 import {FORM_TYPES} from '../../UniversalLessonBuilder/UI/common/constants';
 import EmojiInput from './FormBlock/EmojiInputBlock';
 
+export const FormLabel = ({
+  numbered,
+  index,
+  label,
+  required
+}: {
+  index: string;
+  numbered: boolean;
+  label: string;
+  required: boolean;
+}) => {
+  const gContext = useContext(GlobalContext);
+  const gState = gContext.state;
+  const {lessonPage: {theme: themeTextColor = ''} = {}} = gState;
+
+  return (
+    <label className={`text-base ${themeTextColor}`} htmlFor="label">
+      {numbered && index} {label} <RequiredMark isRequired={required} />
+    </label>
+  );
+};
+
 interface FormBlockProps extends RowWrapperProps {
   id?: string;
   type?: string;
@@ -114,11 +136,7 @@ export const FormBlock = ({
   }: FormControlProps) => {
     return (
       <div id={`${inputID}_for_error`} key={id} className={`mb-4 p-4`}>
-        <label
-          className={`text-sm text-gray-${lessonPageTheme === 'dark' ? '200' : '800'}`}
-          htmlFor="label">
-          {numbered && index} {label} <RequiredMark isRequired={required} />
-        </label>
+        <FormLabel label={label} required={required} numbered={numbered} index={index} />
         <input
           id={inputID}
           disabled={mode === 'building'}
