@@ -104,7 +104,7 @@ const CoreUniversalLesson = ({
               {!userAtFirst() && (
                 <>
                   <Buttons
-                    label="Last page"
+                    label="Go Back"
                     title={getPageName('prev')}
                     Icon={AiOutlineArrowLeft}
                     iconBeforeLabel
