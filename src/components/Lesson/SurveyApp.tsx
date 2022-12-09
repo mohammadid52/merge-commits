@@ -315,7 +315,8 @@ const SurveyApp = ({
       let surveyData: any = await API.graphql(
         graphqlOperation(queries.listUniversalSurveyStudentData, {
           ...filterObj,
-          nextToken: nextToken
+          nextToken: nextToken,
+          limit: 500
         })
       );
 
@@ -529,8 +530,14 @@ const SurveyApp = ({
   // ~~~~~~~~~~~ RESPONSIVE CHECK ~~~~~~~~~~ //
   const {breakpoint} = useTailwindBreakpoint();
 
+  const SURVEY_NAME = lessonState?.lessonData?.title;
+
   return (
-    <>
+    <ErrorBoundary
+      authId={user.authId}
+      email={user.email}
+      componentName="SurveyApp"
+      fallback={<h1>SurveyApp is not working</h1>}>
       {/* 
       TODO: Add this again later
       */}
@@ -548,6 +555,9 @@ const SurveyApp = ({
           <p className="text-white font-medium tracking-wide">
             <span className="text-red-500">*</span>Please fill all the required fields
           </p>
+        </div>
+        <div className={`absolute bottom-1 left-0 py-4 px-6 z-max  w-auto `}>
+          <h6 className="text-xs text-shadow text-gray-500">{SURVEY_NAME}</h6>
         </div>
 
         <div className="fixed " style={{zIndex: 5000}}>
@@ -606,7 +616,7 @@ const SurveyApp = ({
           )}
         </div>
       </div>
-    </>
+    </ErrorBoundary>
   );
 };
 

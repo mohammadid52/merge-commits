@@ -79,11 +79,17 @@ const useStudentDataValue = () => {
     }
   };
 
+  const removeBlinkError = (domID: string) => {
+    const element = document.getElementById(`${domID}_for_error`);
+    element && element.classList.remove('blink-error');
+  };
+
   // ##################################################################### //
   // ############################## SETTERS ############################## //
   // ##################################################################### //
   const setStudentDataValue = (domID: string, input: string[]) => {
     if (isStudent && isInLesson) {
+      removeBlinkError(domID);
       if (!isSurvey) {
         lessonDispatch({
           type: 'UPDATE_STUDENT_DATA',

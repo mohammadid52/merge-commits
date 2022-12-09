@@ -138,11 +138,11 @@ const Lesson = () => {
 
   const invokeRequiredField = () => {
     const domID = getFirstEmptyFieldDomId();
-
     if (domID && typeof domID === 'string') {
       const domElement = document.getElementById(`${domID}_for_error`);
       if (domElement) {
         domElement.scrollIntoView({behavior: 'smooth', block: 'center'});
+        domElement.classList.add('blink-error');
       }
     }
   };
