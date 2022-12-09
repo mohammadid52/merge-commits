@@ -17,7 +17,7 @@ export const ParagraphBlock = (props: ParagraphBlockProps) => {
 
   const Paragraph = ({inputID, inputValue}: any) => {
     return (
-      <div className="flex w-auto items-center p-4 px-0 paragraph-block">
+      <div className="flex w-auto items-center p-4 paragraph-block">
         <p
           key={inputID}
           id={inputID}

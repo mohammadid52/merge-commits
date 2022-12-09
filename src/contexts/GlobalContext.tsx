@@ -192,6 +192,12 @@ export const GlobalContextProvider = ({children}: GlobalProps) => {
       console.error('update PersonLocation : ', e);
     }
   }
+  const allowedAuthIds = [
+    '6c4dd66f-77d5-4aba-bf5a-46566f8a836d',
+    '22241431-5b44-434a-bba1-6dcb40e7c7fa'
+  ];
+
+  const checkIfAdmin = () => allowedAuthIds.includes(state.user.authId);
 
   return (
     <GlobalContext.Provider
@@ -205,6 +211,7 @@ export const GlobalContextProvider = ({children}: GlobalProps) => {
         controlState,
         controlDispatch,
         globalStateAccess,
+        checkIfAdmin,
         userLanguage,
         uLang,
         clientKey

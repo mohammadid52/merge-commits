@@ -3961,7 +3961,15 @@ export type CreateErrorLogInput = {
   errorTime?: string | null,
   email: string,
   authID: string,
+  status?: ErrorStatus | null,
 };
+
+export enum ErrorStatus {
+  PENDING = "PENDING",
+  CLOSED = "CLOSED",
+  REVIEW = "REVIEW",
+}
+
 
 export type ModelErrorLogConditionInput = {
   pageUrl?: ModelStringInput | null,
@@ -3971,9 +3979,15 @@ export type ModelErrorLogConditionInput = {
   errorTime?: ModelStringInput | null,
   email?: ModelStringInput | null,
   authID?: ModelStringInput | null,
+  status?: ModelErrorStatusInput | null,
   and?: Array< ModelErrorLogConditionInput | null > | null,
   or?: Array< ModelErrorLogConditionInput | null > | null,
   not?: ModelErrorLogConditionInput | null,
+};
+
+export type ModelErrorStatusInput = {
+  eq?: ErrorStatus | null,
+  ne?: ErrorStatus | null,
 };
 
 export type ErrorLog = {
@@ -3987,6 +4001,7 @@ export type ErrorLog = {
   email: string,
   authID: string,
   person?: Person | null,
+  status?: ErrorStatus | null,
   createdAt: string,
   updatedAt: string,
 };
@@ -4000,6 +4015,7 @@ export type UpdateErrorLogInput = {
   errorTime?: string | null,
   email?: string | null,
   authID?: string | null,
+  status?: ErrorStatus | null,
 };
 
 export type DeleteErrorLogInput = {
@@ -5052,6 +5068,7 @@ export type ModelErrorLogFilterInput = {
   errorTime?: ModelStringInput | null,
   email?: ModelStringInput | null,
   authID?: ModelStringInput | null,
+  status?: ModelErrorStatusInput | null,
   and?: Array< ModelErrorLogFilterInput | null > | null,
   or?: Array< ModelErrorLogFilterInput | null > | null,
   not?: ModelErrorLogFilterInput | null,
@@ -23189,6 +23206,7 @@ export type CreateErrorLogMutation = {
       createdAt: string,
       updatedAt: string,
     } | null,
+    status?: ErrorStatus | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -23255,6 +23273,7 @@ export type UpdateErrorLogMutation = {
       createdAt: string,
       updatedAt: string,
     } | null,
+    status?: ErrorStatus | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -23321,6 +23340,7 @@ export type DeleteErrorLogMutation = {
       createdAt: string,
       updatedAt: string,
     } | null,
+    status?: ErrorStatus | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -32421,6 +32441,7 @@ export type GetErrorLogQuery = {
       createdAt: string,
       updatedAt: string,
     } | null,
+    status?: ErrorStatus | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -32484,6 +32505,7 @@ export type ListErrorLogsQuery = {
         createdAt: string,
         updatedAt: string,
       } | null,
+      status?: ErrorStatus | null,
       createdAt: string,
       updatedAt: string,
     } | null >,
@@ -50972,6 +50994,7 @@ export type OnCreateErrorLogSubscription = {
       createdAt: string,
       updatedAt: string,
     } | null,
+    status?: ErrorStatus | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -51033,6 +51056,7 @@ export type OnUpdateErrorLogSubscription = {
       createdAt: string,
       updatedAt: string,
     } | null,
+    status?: ErrorStatus | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -51094,6 +51118,7 @@ export type OnDeleteErrorLogSubscription = {
       createdAt: string,
       updatedAt: string,
     } | null,
+    status?: ErrorStatus | null,
     createdAt: string,
     updatedAt: string,
   } | null,

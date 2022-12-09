@@ -1,6 +1,7 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import AddButton from '@components/Atoms/Buttons/AddButton';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
+import ErrorBoundary from '@components/Error/ErrorBoundary';
 import useAuth from '@customHooks/useAuth';
 import useSearch from '@customHooks/useSearch';
 import {getAsset} from 'assets';
@@ -189,8 +190,20 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
           };
         });
 
-        // setLessonsData(isTeacher ? filteredList : data);
-        setLessonsData(data);
+        const sortedList = (data: any[]) => {
+          // sort by title
+          return data.sort((a: {title: number}, b: {title: number}) => {
+            if (a.title < b.title) {
+              return -1;
+            }
+            if (a.title > b.title) {
+              return 1;
+            }
+            return 0;
+          });
+        };
+
+        setLessonsData(sortedList(data));
         const totalListPages = Math.floor(
           (isTeacher ? filteredList.length : data.length) / pageCount
         );
@@ -586,33 +599,39 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
                     ))
                 ) : finalList?.length ? (
                   finalList.map((lessonsObject, i) => (
-                    <LessonsListRow
-                      searchTerm={searchInput.value}
-                      setShowCloneModal={setShowCloneModal}
-                      key={`lessonsRows${i}`}
-                      index={currentPage * pageCount + i}
-                      id={lessonsObject.id}
-                      title={lessonsObject.title}
-                      institution={lessonsObject.institution}
-                      type={lessonsObject.type && getType(lessonsObject.type)}
-                      languages={
-                        lessonsObject?.language &&
-                        lessonsObject?.language.map((item: string) =>
-                          getLanguageString(item)
-                        )
-                      }
-                      targetAudience={lessonsObject.targetAudience}
-                      lessonObject={lessonsObject}
-                      checkIfRemovable={checkIfRemovable}
-                      handleToggleDelete={handleToggleDelete}
-                      createdAt={lessonsObject.createdAt}
-                      updatedAt={lessonsObject.updatedAt}
-                      zebraStripping={isInInstitution}
-                      isSuperAdmin={state.user.isSuperAdmin}
-                      redirectToInstitution={() =>
-                        redirectToInstitution(lessonsObject.institution?.id)
-                      }
-                    />
+                    <ErrorBoundary
+                      authId={state.user.authId}
+                      email={state.user.email}
+                      componentName="LessonsListRow"
+                      fallback={<h1>Oops with the LessonsListRow</h1>}>
+                      <LessonsListRow
+                        searchTerm={searchInput.value}
+                        setShowCloneModal={setShowCloneModal}
+                        key={`lessonsRows${i}`}
+                        index={currentPage * pageCount + i}
+                        id={lessonsObject.id}
+                        title={lessonsObject.title}
+                        institution={lessonsObject.institution}
+                        type={lessonsObject.type && getType(lessonsObject.type)}
+                        languages={
+                          lessonsObject?.language &&
+                          lessonsObject?.language.map((item: string) =>
+                            getLanguageString(item)
+                          )
+                        }
+                        targetAudience={lessonsObject.targetAudience}
+                        lessonObject={lessonsObject}
+                        checkIfRemovable={checkIfRemovable}
+                        handleToggleDelete={handleToggleDelete}
+                        createdAt={lessonsObject.createdAt}
+                        updatedAt={lessonsObject.updatedAt}
+                        zebraStripping={isInInstitution}
+                        isSuperAdmin={state.user.isSuperAdmin}
+                        redirectToInstitution={() =>
+                          redirectToInstitution(lessonsObject.institution?.id)
+                        }
+                      />
+                    </ErrorBoundary>
                   ))
                 ) : (
                   <div className="flex p-12 mx-auto text-gray-400 justify-center">

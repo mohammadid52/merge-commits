@@ -1,20 +1,14 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import Highlighted from '@components/Atoms/Highlighted';
-import * as customQueries from 'customGraphql/customQueries';
 import Loader from '@components/Atoms/Loader';
 import Placeholder from '@components/Atoms/Placeholder';
 import Popover from '@components/Atoms/Popover';
-import useGraphqlQuery from '@customHooks/useGraphqlQuery';
-import {
-  GetPersonLocationQueryVariables,
-  PersonLocation,
-  PersonStatus,
-  UserPageState
-} from 'API';
+import {GetPersonLocationQueryVariables, PersonStatus, UserPageState} from 'API';
 import Buttons from 'atoms/Buttons';
 import Modal from 'atoms/Modal';
 import axios from 'axios';
 import {GlobalContext} from 'contexts/GlobalContext';
+import * as customQueries from 'customGraphql/customQueries';
 import * as customSubscriptions from 'customGraphql/customSubscriptions';
 import moment from 'moment';
 import React, {useContext, useEffect, useState} from 'react';
@@ -254,17 +248,6 @@ const List = (props: ListProps) => {
     } finally {
       setLoading(false);
     }
-  };
-
-  const stringToHslColor = (str: string) => {
-    let hash = 0;
-    let i;
-    for (i = 0; i < str.length; i++) {
-      hash = str.charCodeAt(i) + ((hash << 5) - hash);
-    }
-
-    let h = hash % 360;
-    return 'hsl(' + h + ', 70%, 72%)';
   };
 
   useEffect(() => {

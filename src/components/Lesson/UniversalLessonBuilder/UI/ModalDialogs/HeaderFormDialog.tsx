@@ -140,8 +140,8 @@ const HeaderModalComponent = ({
         ...prevInputFields,
         title: inputObj[0].value,
         animated: classString.includes('animated-border-on'),
-        instructionsText: inputObj[1].value,
-        instructions: inputObj[1]?.value?.length > 0
+        instructionsText: inputObj[1]?.value || '',
+        instructions: inputObj[1]?.value?.length > 0 || false
       }));
       // retrieves the result of matching a string against border color
       const matchBorderColor: any[] | null = classString.match(/border-\w\w+-\d+/);

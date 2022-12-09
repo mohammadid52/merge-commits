@@ -1,3 +1,8 @@
+import ErrorBoundary from '@components/Error/ErrorBoundary';
+import DatePicker from '@UlbBlocks/FormBlock/DatePicker';
+import TextAreaBlock from '@UlbBlocks/FormBlock/TextAreaBlock';
+import TextBlock from '@UlbBlocks/FormBlock/TextBlock';
+import NotesBlock from '@UlbBlocks/Notes/NotesBlock';
 import RequiredMark from 'atoms/RequiredMark';
 import AttachmentBlock from 'components/Lesson/UniversalLessonBlockComponents/Blocks/FormBlock/AttachmentBlock';
 import OptionBlock from 'components/Lesson/UniversalLessonBlockComponents/Blocks/FormBlock/OptionBlock';
@@ -7,14 +12,9 @@ import ReviewSliderBlock from 'components/Lesson/UniversalLessonBlockComponents/
 import {GlobalContext} from 'contexts/GlobalContext';
 import useInLessonCheck from 'customHooks/checkIfInLesson';
 import useStudentDataValue from 'customHooks/studentDataValue';
-import {UniversalLessonPage} from 'interfaces/UniversalLessonInterfaces';
-import DatePicker from '@UlbBlocks/FormBlock/DatePicker';
-import TextAreaBlock from '@UlbBlocks/FormBlock/TextAreaBlock';
-import TextBlock from '@UlbBlocks/FormBlock/TextBlock';
-import NotesBlock from '@UlbBlocks/Notes/NotesBlock';
-import {filter, map, noop} from 'lodash';
-import React, {useContext, useEffect, useState} from 'react';
 import {RowWrapperProps} from 'interfaces/UniversalLessonBuilderInterfaces';
+import {map, noop} from 'lodash';
+import React, {useContext} from 'react';
 import {FORM_TYPES} from '../../UniversalLessonBuilder/UI/common/constants';
 import EmojiInput from './FormBlock/EmojiInputBlock';
 
@@ -73,7 +73,6 @@ export const FormBlock = ({
   pagePartId
 }: FormBlockProps) => {
   const {
-    lessonState,
     state: {user, lessonPage: {theme: lessonPageTheme = 'dark'} = {}}
   } = useContext(GlobalContext);
   const themePlaceholderColor =
@@ -82,15 +81,6 @@ export const FormBlock = ({
   const {getDataValue, setDataValue} = useStudentDataValue();
 
   // ~~~~~~~~~~~~~~~~ PAGES ~~~~~~~~~~~~~~~~ //
-  const PAGES = lessonState.lessonData.lessonPlan;
-  const CURRENT_PAGE = lessonState.currentPage;
-
-  const [activePageData, setActivePageData] = useState<UniversalLessonPage>();
-
-  const notes =
-    activePageData && activePageData.pageContent && activePageData.pageContent.length > 0
-      ? filter(activePageData.pageContent, (f) => f.id.includes('notes-container'))
-      : [];
 
   // ##################################################################### //
   // ######################## STUDENT DATA CONTEXT ####################### //
@@ -98,13 +88,6 @@ export const FormBlock = ({
 
   const isStudent = user.role === 'ST';
   const isInLesson = isStudent ? useInLessonCheck() : false;
-
-  useEffect(() => {
-    if (PAGES) {
-      const ACTIVE_PAGE_DATA = PAGES[CURRENT_PAGE];
-      setActivePageData(ACTIVE_PAGE_DATA);
-    }
-  }, [lessonState.lessonData, lessonState.currentPage]);
 
   const onChange = (e: any) => {
     const {id, value} = e.target;
@@ -310,22 +293,24 @@ export const FormBlock = ({
         value.length > 0 &&
         value.map((v: any, i: number) => {
           return (
-            <React.Fragment key={`formBlock_${i}`}>
-              {composeInput(
-                v.id,
-                v.type,
-                v.label,
-                v.value,
-                v.options,
-                isInLesson,
-                setDataValue,
-                getDataValue,
-                numbered,
-                `${i + 1}.`,
-                v.isRequired,
-                v.class
-              )}
-            </React.Fragment>
+            <ErrorBoundary componentName="FormBlock-composeInput">
+              <React.Fragment key={`formBlock_${i}`}>
+                {composeInput(
+                  v.id,
+                  v.type,
+                  v.label,
+                  v.value,
+                  v.options,
+                  isInLesson,
+                  setDataValue,
+                  getDataValue,
+                  numbered,
+                  `${i + 1}.`,
+                  v.isRequired,
+                  v.class
+                )}
+              </React.Fragment>
+            </ErrorBoundary>
           );
         })}
     </>

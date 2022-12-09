@@ -48,7 +48,7 @@ const SearchInput: React.FC<SearchProps> = (searchProps: SearchProps) => {
         style ? style : ''
       }  ${disabledClass} border-0 border-transparent ${
         isActive ? 'theme-border' : ''
-      } input-wrapper px-4 py-2 hover:theme-bg:200`}>
+      } input-wrapper px-4 py-2 `}>
       <span className="w-6 mr-4 cursor-pointer" onClick={onKeyDown}>
         <IoSearchSharp
           size={'1.5rem'}

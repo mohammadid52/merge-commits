@@ -87,7 +87,7 @@ const LessonCard = ({
                  *  LEFT SECTION IMAGE
                  */}
                 <DroppableMedia
-                  className="w-full md:h-56 h-48 md:h-56 h-48 lg:w-2.5/10 md:w-4/12  rounded-tl rounded-bl shadow cursor-pointer"
+                  className="w-full md:h-56 h-48 lg:w-2.5/10 md:w-4/12  rounded-tl rounded-bl shadow cursor-pointer"
                   mediaRef={imageRef}
                   setImage={(img: any, file: any) => {
                     setImage(img);
@@ -143,7 +143,8 @@ const LessonCard = ({
                       {AddNewLessonFormDict[userLanguage]['SUMMARY']}
                       <span className="text-red-500"> *</span>
                     </label>
-                    <TextArea
+                    <FormInput
+                      textarea
                       dataCy="lesson-summary"
                       rows={5}
                       id="studentSummary"

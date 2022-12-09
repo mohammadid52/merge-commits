@@ -16702,6 +16702,7 @@ export const onCreateErrorLog = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      status
       createdAt
       updatedAt
     }
@@ -16760,6 +16761,7 @@ export const onUpdateErrorLog = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      status
       createdAt
       updatedAt
     }
@@ -16818,6 +16820,7 @@ export const onDeleteErrorLog = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      status
       createdAt
       updatedAt
     }

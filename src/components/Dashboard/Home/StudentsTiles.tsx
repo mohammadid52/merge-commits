@@ -186,7 +186,7 @@ const StudentsTiles = (props: {
                   )}
               </ul>
             ) : (
-              <div className="grid justify-center items-center">
+              <div className="grid justify-center text-gray-500 items-center">
                 {StudentDict[userLanguage].NO_STUDENT}
               </div>
             )}

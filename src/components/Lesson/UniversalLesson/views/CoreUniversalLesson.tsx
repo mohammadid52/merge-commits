@@ -65,21 +65,12 @@ const CoreUniversalLesson = ({
   };
 
   const handleBack = () => {
-    if (currentPage === 0) {
-    } else {
-      if (userAtEnd()) {
-        history.push(`${match.url}/${currentPage - 1}`);
-        lessonDispatch({
-          type: 'SET_CURRENT_PAGE',
-          payload: currentPage - 1
-        });
-      } else if (!userAtEnd() && currentPage > 0) {
-        history.push(`${match.url}/${currentPage - 1}`);
-        lessonDispatch({
-          type: 'SET_CURRENT_PAGE',
-          payload: currentPage - 1
-        });
-      }
+    if (userAtEnd()) {
+      history.push(`${match.url}/${currentPage - 1}`);
+      lessonDispatch({
+        type: 'SET_CURRENT_PAGE',
+        payload: currentPage - 1
+      });
     }
   };
 

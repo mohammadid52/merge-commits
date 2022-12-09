@@ -1575,3 +1575,17 @@ export const createErrorLog = /* GraphQL */ `
     }
   }
 `;
+
+export const updateErrorLog = /* GraphQL */ `
+  mutation UpdateErrorLog(
+    $input: UpdateErrorLogInput!
+    $condition: ModelErrorLogConditionInput
+  ) {
+    updateErrorLog(input: $input, condition: $condition) {
+      id
+      status
+      createdAt
+      updatedAt
+    }
+  }
+`;
