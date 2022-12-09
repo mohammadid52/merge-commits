@@ -95,14 +95,13 @@ const SaveQuit = ({invokeRequiredField}: SaveQuitProps) => {
 
   return (
     <>
-      <div className={''}>
+      <div className={'w-auto'}>
         <Buttons
           dataCy="save-lesson"
           // disabled={!canContinue}
           label={waiting ? 'Saving your data...' : 'Save and Go to Classroom'}
           Icon={BiSave}
           btnClass="w-full"
-          iconBeforeLabel
           onClick={handleManualSave}></Buttons>
       </div>
     </>

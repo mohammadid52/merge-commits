@@ -1,6 +1,7 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import ComponentLoading from '@components/Lesson/Loading/ComponentLoading';
-import {PersonStatus} from 'API';
+import {updatePageState} from '@graphql/functions';
+import {PersonStatus, UserPageState} from 'API';
 import {getAsset} from 'assets';
 import Community from 'components/Community/Community';
 import InstitutionsHome from 'components/Dashboard/Admin/Institutons/InstitutionsHome';
@@ -148,6 +149,29 @@ const Dashboard = (props: DashboardProps) => {
   const [activeRoomInfo, setActiveRoomInfo] = useState<any>();
 
   const [activeRoomName, setActiveRoomName] = useState<string>('');
+
+  const [isPageUpdatedOnPersonTable, setIsPageUpdatedOnPersonTable] = useState(false);
+
+  useEffect(() => {
+    if (!isPageUpdatedOnPersonTable) {
+      updatePageState(
+        UserPageState.DASHBOARD,
+        {
+          authId: state.user?.authId,
+          email: state.user?.email,
+          pageState: state.user?.pageState
+        },
+        () => {
+          dispatch({
+            type: 'SET_USER',
+            payload: {...state.user, pageState: UserPageState.DASHBOARD}
+          });
+        }
+      );
+
+      setIsPageUpdatedOnPersonTable(true);
+    }
+  }, [isPageUpdatedOnPersonTable]);
 
   useEffect(() => {
     if (state.currentPage === 'homepage') {

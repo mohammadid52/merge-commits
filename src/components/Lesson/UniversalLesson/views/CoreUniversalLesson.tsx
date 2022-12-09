@@ -97,22 +97,31 @@ const CoreUniversalLesson = ({
             fallback={<h1>Error in the LessonRowComposer</h1>}>
             <LessonRowComposer />
 
-            <div className="flex items-center justify-center gap-x-4">
+            <div
+              className={`${
+                userAtFirst() ? 'justify-end' : 'justify-between'
+              } flex items-center  gap-x-4`}>
               {!userAtFirst() && (
-                <Buttons
-                  label="Last page"
-                  title={getPageName('prev')}
-                  Icon={AiOutlineArrowLeft}
-                  iconBeforeLabel
-                  onClick={() => handleForward(false)}
-                  size="small"
-                  transparent
-                  btnClass={userAtEnd() ? 'mb-4' : ''}
-                />
+                <>
+                  <Buttons
+                    label="Last page"
+                    title={getPageName('prev')}
+                    Icon={AiOutlineArrowLeft}
+                    iconBeforeLabel
+                    onClick={() => handleForward(false)}
+                    transparent
+                  />
+                  {userAtEnd() && isStudent ? (
+                    <SaveQuit
+                      invokeRequiredField={invokeRequiredField}
+                      canContinue={canContinue}
+                      roomID={getRoomData?.id}
+                    />
+                  ) : null}
+                </>
               )}
               {!userAtEnd() && (
                 <Buttons
-                  size="small"
                   label="Next page"
                   title={getPageName('next')}
                   onClick={handleForward}
@@ -121,14 +130,6 @@ const CoreUniversalLesson = ({
                 />
               )}
             </div>
-
-            {userAtEnd() && isStudent ? (
-              <SaveQuit
-                invokeRequiredField={invokeRequiredField}
-                canContinue={canContinue}
-                roomID={getRoomData?.id}
-              />
-            ) : null}
           </ErrorBoundary>
         </LessonPageWrapper>
       </div>

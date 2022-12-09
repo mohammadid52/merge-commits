@@ -92,7 +92,7 @@ const Buttons: React.FC<ButtonProps> = (btnProps: ButtonProps): React.ReactEleme
       ${theme.outlineNone} 
       ${
         transparent
-          ? theme.btn.cancel
+          ? 'bg-transparent theme-border border-0'
           : !overrideClass
           ? `${
               variant === 'secondary' || disabled
