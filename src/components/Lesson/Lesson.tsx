@@ -41,6 +41,7 @@ const Lesson = () => {
   const lessonState = gContext.lessonState;
   const lessonDispatch = gContext.lessonDispatch;
   const {notifications} = useNotifications('lesson');
+  const {notifications: inputNotifications} = useNotifications('input');
 
   const urlParams: any = useParams();
 
@@ -171,6 +172,7 @@ const Lesson = () => {
       return false;
     }
   };
+
   const getFirstEmptyFieldDomId = (): any => {
     if (PAGES) {
       const thisPageData = lessonState?.studentData || [];
@@ -184,58 +186,32 @@ const Lesson = () => {
         });
 
         if (areAnyEmpty.length > 0) {
+          lessonDispatch({type: 'SET_IS_VALID', payload: false});
           return areAnyEmpty[0].domID;
         } else {
+          lessonDispatch({type: 'SET_IS_VALID', payload: true});
           return true;
         }
       } else {
+        lessonDispatch({type: 'SET_IS_VALID', payload: true});
         return true;
       }
     } else {
+      lessonDispatch({type: 'SET_IS_VALID', payload: false});
       return false;
     }
   };
 
   const canContinue = () => {
     if (PAGES) {
-      return (
+      const isValid =
         validateRequired(lessonState.currentPage) &&
-        lessonState.currentPage <= PAGES.length - 1
-      );
+        lessonState.currentPage <= PAGES.length - 1;
+
+      return isValid;
     } else {
       return false;
     }
-  };
-
-  /**
-   * Lesson IDs
-   * 531eafe6-61aa-4c82-b056-247b14be3035
-   */
-
-  const getAllStudentIds = async (nextToken?: string, outArray?: any) => {
-    try {
-      let combined: any;
-
-      const universalLesson: any = await API.graphql(
-        graphqlOperation(customQueries.listUniversalLessonStudentDatas, {
-          nextToken: nextToken,
-          filter: {
-            hasExerciseData: {eq: true},
-            lessonID: {eq: '531eafe6-61aa-4c82-b056-247b14be3035'}
-          }
-        })
-      );
-      const response = universalLesson.data.listUniversalLessonStudentData.items;
-      const NextToken = universalLesson.data.listUniversalLessonStudentData.nextToken;
-
-      combined = [...outArray, ...response];
-
-      if (NextToken) {
-        combined = await getAllStudentIds(NextToken, combined);
-      }
-
-      return combined;
-    } catch (error) {}
   };
 
   const updatePageInLocalStorage = (page: number): void => {
@@ -627,7 +603,7 @@ const Lesson = () => {
 
   return (
     <>
-      <Noticebar notifications={notifications} />
+      <Noticebar notifications={[...inputNotifications, ...notifications]} />
       {loaded ? isSurvey ? <SurveyApp {...props} /> : <LessonApp {...props} /> : null}
     </>
   );

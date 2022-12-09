@@ -80,6 +80,7 @@ const useStudentDataValue = () => {
   };
 
   const removeBlinkError = (domID: string) => {
+    lessonDispatch({type: 'SET_IS_VALID', payload: true});
     const element = document.getElementById(`${domID}_for_error`);
     element && element.classList.remove('blink-error');
   };
