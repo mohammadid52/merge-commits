@@ -18,6 +18,8 @@ import DroppableMedia from 'molecules/DroppableMedia';
 import ProfileCropModal from '../../Profile/ProfileCropModal';
 import InstitutionPopUp from './InstitutionPopUp';
 import ServiceProviders from './Listing/ServiceProviders';
+import {logError} from '@graphql/functions';
+import useAuth from '@customHooks/useAuth';
 
 interface InstitutionEditProps {
   institute: InstInfo;
@@ -221,6 +223,8 @@ const InstitutionEdit = (instEditProps: InstitutionEditProps) => {
     setShowCropper(!showCropper);
   };
 
+  const {authId, email} = useAuth();
+
   const uploadImageToS3 = async (file: any, id: string, type: string) => {
     // Upload file to s3 bucket
 
@@ -239,6 +243,7 @@ const InstitutionEdit = (instEditProps: InstitutionEditProps) => {
             show: true,
             errorMsg: InstitutionEditDict[userLanguage]['messages']['uploderr']
           });
+          logError(err, {authId: authId, email: email}, 'InstitutionEdit');
           console.error('Error in uploading file to s3', err);
           reject(err);
         });

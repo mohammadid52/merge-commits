@@ -11,7 +11,8 @@ import update from 'lodash/update';
 import {nanoid} from 'nanoid';
 import React, {useCallback, useRef, useState} from 'react';
 import {useDropzone} from 'react-dropzone';
-import {uploadImageToS3} from '@graphql/functions';
+import {logError, uploadImageToS3} from '@graphql/functions';
+import useAuth from '@customHooks/useAuth';
 
 interface MediaProps {
   file: IFile;
@@ -45,6 +46,8 @@ const Media = ({
     setFile({...file});
   };
 
+  const {authId, email} = useAuth();
+
   const _uploadImageToS3 = async (
     file: any,
     id: string,
@@ -62,6 +65,7 @@ const Media = ({
       onError: (error: any) => {
         updateStatus(currentFile, 'failed');
         updateProgress(currentFile, null);
+        logError(error, {authId: authId, email: email}, 'Media');
         console.error('Error in uploading file to s3', error);
       },
       progressCallback: ({progress}: {progress: number}): void => {

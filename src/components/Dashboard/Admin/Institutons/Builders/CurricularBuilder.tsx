@@ -20,6 +20,8 @@ import PageWrapper from 'atoms/PageWrapper';
 import SectionTitle from 'atoms/SectionTitle';
 import DroppableMedia from 'molecules/DroppableMedia';
 import ProfileCropModal from '../../../Profile/ProfileCropModal';
+import {logError} from '@graphql/functions';
+import useAuth from '@customHooks/useAuth';
 
 interface CurricularBuilderProps {}
 interface InitialData {
@@ -323,6 +325,7 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
     setImageLoading(false);
   };
 
+  const {authId, email} = useAuth();
   const uploadImageToS3 = async (file: any, id: string, type: string) => {
     // Upload file to s3 bucket
 
@@ -341,6 +344,7 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
             show: true,
             errorMsg: 'Unable to upload image. Please try again later. '
           });
+          logError(err, {authId: authId, email: email}, 'CurricularBuilder');
           console.error('Error in uploading file to s3', err);
           reject(err);
         });

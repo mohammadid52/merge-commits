@@ -187,8 +187,6 @@ interface ISingleRowProps {
 const SingleContentRow = React.memo((props: ISingleRowProps) => {
   const {content, idx, idx2, pagePart, notes} = props;
 
-  const {authId, email} = useAuth();
-
   return (
     <>
       {content &&
@@ -204,8 +202,7 @@ const SingleContentRow = React.memo((props: ISingleRowProps) => {
           undefined, // function related to builder
           undefined, // position number related to builder
           content.type === 'notes-form' && notes && notes.length > 0 ? notes : [],
-          true, // isStudent,
-          {authId, email}
+          true // isStudent,
         )}
     </>
   );

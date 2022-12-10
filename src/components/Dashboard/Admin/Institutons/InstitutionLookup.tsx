@@ -18,6 +18,7 @@ import PageCountSelector from 'atoms/PageCountSelector';
 import Pagination from 'atoms/Pagination';
 import InstitutionRow from './InstitutionRow';
 import InstitutionRowLoader from './InstitutionRowLoader';
+import {logError} from '@graphql/functions';
 
 /**
  * This component represents the bulk code of the institutions-lookup/all-institutions page
@@ -164,6 +165,11 @@ const InstitutionLookup: React.FC = () => {
       setStatus('done');
     } catch (error) {
       console.error(error);
+      logError(
+        error,
+        {authId: state.user.authId, email: state.user.email},
+        'InstitutionLookup'
+      );
     }
   }
 

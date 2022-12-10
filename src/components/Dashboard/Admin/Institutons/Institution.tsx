@@ -8,6 +8,8 @@ import React, {useContext, useEffect, useState} from 'react';
 import {Route, Switch, useLocation, useParams, useRouteMatch} from 'react-router-dom';
 import {getAsset} from 'assets';
 import InstitutionInfo from './InstitutionInfo';
+import {logError} from '@graphql/functions';
+import useAuth from '@customHooks/useAuth';
 
 interface InstitutionProps {
   tabProps?: any;
@@ -99,6 +101,8 @@ const Institution = (props: InstitutionProps) => {
     }));
   };
 
+  const {authId, email} = useAuth();
+
   async function getInstitutionData() {
     try {
       if (institutionId) {
@@ -122,6 +126,7 @@ const Institution = (props: InstitutionProps) => {
         // history.push('/dashboard/manage-institutions');
       }
     } catch (error) {
+      logError(error, {authId: authId, email: email}, 'Institution');
       console.error(error);
     }
   }

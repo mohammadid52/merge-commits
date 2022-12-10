@@ -1,6 +1,6 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import ComponentLoading from '@components/Lesson/Loading/ComponentLoading';
-import {updatePageState} from '@graphql/functions';
+import {logError, updatePageState} from '@graphql/functions';
 import {PersonStatus, UserPageState} from 'API';
 import {getAsset} from 'assets';
 import Community from 'components/Community/Community';
@@ -246,6 +246,7 @@ const Dashboard = (props: DashboardProps) => {
         sessionStorage.removeItem('accessToken');
         updateAuthState(false);
       }
+      logError(error, {authId: userEmail, email: userAuthId}, 'Dashboard');
       console.error('Dashboard - getUser(): ', error);
     }
   }
@@ -317,8 +318,10 @@ const Dashboard = (props: DashboardProps) => {
       );
 
       setHomeData(arrayOfResponseObjects);
-    } catch (e) {
-      console.error('getDashbaordData -> ', e);
+    } catch (error) {
+      logError(error, {authId: authId, email: email}, 'Dashboard');
+
+      console.error('getDashbaordData -> ', error);
     } finally {
       // need to do some cleanup
       setRoomsLoading(false);
@@ -355,8 +358,9 @@ const Dashboard = (props: DashboardProps) => {
       // console.log('dashboard data teachers - ', arrayOfResponseObjects);
 
       setHomeDataForTeachers(arrayOfResponseObjects);
-    } catch (e) {
-      console.error('getDashboardDataForTeachers -> ', e);
+    } catch (error) {
+      logError(error, {authId: stateUser?.authId, email: stateUser?.email}, 'Dashboard');
+      console.error('getDashboardDataForTeachers -> ', error);
     } finally {
       // need to do some cleanup
       setRoomsLoading(false);
@@ -468,6 +472,7 @@ const Dashboard = (props: DashboardProps) => {
         }
       });
     } catch (e) {
+      logError(e, {authId: stateUser?.authId, email: stateUser?.email}, 'Dashboard');
       console.error('Classes Fetch ERR: ', e);
     }
   };
@@ -511,6 +516,7 @@ const Dashboard = (props: DashboardProps) => {
           setCurriculumObj(arrayOfResponseObjects[0]?.curriculum);
         }
       } catch (e) {
+        logError(e, {authId: stateUser?.authId, email: stateUser?.email}, 'Dashboard');
         console.error('RoomCurriculums fetch ERR: ', e);
       } finally {
         // console.log('curriciulum ids - ', curriculumIds);
@@ -679,6 +685,7 @@ const Dashboard = (props: DashboardProps) => {
         }
       });
     } catch (e) {
+      logError(e, {authId: stateUser?.authId, email: stateUser?.email}, 'Dashboard');
       console.error('Curriculum ids ERR: ', e);
       setSyllabusLoading(false);
     } finally {
@@ -715,6 +722,7 @@ const Dashboard = (props: DashboardProps) => {
           const modifiedData = calculateSchedule(syllabusArray, scheduleDetails);
         }
       } catch (e) {
+        logError(e, {authId: stateUser?.authId, email: stateUser?.email}, 'Dashboard');
         console.error('error with initSchedule() ', e);
       }
     }
@@ -772,6 +780,7 @@ const Dashboard = (props: DashboardProps) => {
         }
       });
     } catch (e) {
+      logError(e, {authId: stateUser?.authId, email: stateUser?.email}, 'Dashboard');
       console.error('syllabus lessons: ', e);
     } finally {
       setLessonLoading(false);

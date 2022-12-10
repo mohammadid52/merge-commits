@@ -43,8 +43,7 @@ const composePartContent = (
   updateBlockContentULBHandler?: any,
   position?: number,
   notesData?: any,
-  isStudent: boolean = true,
-  auth?: {authId: string; email: string}
+  isStudent: boolean = true
 ): JSX.Element => {
   const commonBlockProps = {
     classString,
@@ -57,7 +56,7 @@ const composePartContent = (
   if (type.includes('jumbotron')) {
     return (
       <ErrorBoundary componentName="ActivityBlock">
-        <JumbotronBlock {...commonBlockProps} />;
+        <JumbotronBlock {...commonBlockProps} />
       </ErrorBoundary>
     );
   } else if (type.includes('keyword')) {
@@ -89,16 +88,16 @@ const composePartContent = (
         <LinksBlock {...commonBlockProps} />
       </ErrorBoundary>
     );
-  } else if (type.includes('HeaderBlock')) {
+  } else if (type.includes('header')) {
     return (
-      <ErrorBoundary componentName="HighlighterBlock">
-        <HeaderBlock pagePartId={pagePartId} {...commonBlockProps} />;
+      <ErrorBoundary componentName="HeaderBlock">
+        <HeaderBlock pagePartId={pagePartId} {...commonBlockProps} />
       </ErrorBoundary>
     );
-  } else if (type.includes('ParagraphBlock')) {
+  } else if (type.includes('paragraph')) {
     return (
       <ErrorBoundary componentName="HighlighterBlock">
-        <ParagraphBlock pagePartId={pagePartId} {...commonBlockProps} />;
+        <ParagraphBlock pagePartId={pagePartId} {...commonBlockProps} />
       </ErrorBoundary>
     );
   } else if (type.includes('form') && type !== 'notes-form') {
@@ -114,7 +113,7 @@ const composePartContent = (
   } else if (type.includes('image')) {
     return (
       <ErrorBoundary componentName="ImageBlock">
-        <ImageBlock key={inputKey} dataIdAttribute={inputKey} {...commonBlockProps} />;
+        <ImageBlock key={inputKey} dataIdAttribute={inputKey} {...commonBlockProps} />
       </ErrorBoundary>
     );
   } else if (type.includes('custom_video')) {

@@ -20,6 +20,8 @@ import SectionTitle from 'atoms/SectionTitle';
 import DroppableMedia from 'molecules/DroppableMedia';
 import ProfileCropModal from '../../Profile/ProfileCropModal';
 import ServiceProviders from './Listing/ServiceProviders';
+import {logError} from '@graphql/functions';
+import useAuth from '@customHooks/useAuth';
 
 const InstitutionAdd = () => {
   const history = useHistory();
@@ -153,6 +155,8 @@ const InstitutionAdd = () => {
     setShowCropper(!showCropper);
   };
 
+  const {authId, email} = useAuth();
+
   const uploadImageToS3 = async (file: any, id: string, type: string) => {
     // Upload file to s3 bucket
 
@@ -172,6 +176,8 @@ const InstitutionAdd = () => {
             errorMsg: InstitutionAddDict[userLanguage]['messages']['uploaderr']
           });
           console.error('Error in uploading file to s3', err);
+          logError(err, {authId: authId, email: email}, 'InstitutionAdd');
+
           reject(err);
         });
     });

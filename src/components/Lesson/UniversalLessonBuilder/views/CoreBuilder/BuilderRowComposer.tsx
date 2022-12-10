@@ -57,7 +57,6 @@ const BuilderRowComposer = (props: RowComposerProps) => {
 
   // this is only for header component
   const paddingForHeader = (type: any) => (type.includes('header') ? 'px-4 mb-3' : '');
-  const {authId, email} = useAuth();
 
   return (
     <div>
@@ -170,8 +169,7 @@ const BuilderRowComposer = (props: RowComposerProps) => {
                                     updateBlockContentULBHandler,
                                     idx2,
                                     undefined, // notesData
-                                    false, // isStudent,
-                                    {authId, email}
+                                    false // isStudent,
                                   )}
                                 </div>
                               </div>

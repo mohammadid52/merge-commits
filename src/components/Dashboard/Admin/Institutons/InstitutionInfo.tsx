@@ -34,30 +34,6 @@ interface InstInfo {
 const InstitutionInfo = (instProps: InstitutionInfoProps) => {
   const {institute} = instProps;
 
-  const uploadImageToS3 = async (file: any, id: string, type: string) => {
-    // Upload file to s3 bucket
-
-    return new Promise((resolve, reject) => {
-      Storage.put(`instituteImages/institute_image_${id}`, file, {
-        contentType: type,
-        acl: 'public-read',
-        ContentEncoding: 'base64'
-      })
-        .then((result) => {
-          console.log('File successfully uploaded to s3', result);
-          resolve(true);
-        })
-        .catch((err) => {
-          // setError({
-          //   show: true,
-          //   errorMsg: InstitutionBuilderDict[userLanguage]['messages']['uploaderr'],
-          // });
-          console.error('Error in uploading file to s3', err);
-          reject(err);
-        });
-    });
-  };
-
   // ~~~~~~~~~~~ CURRICULAR LIST ~~~~~~~~~~~ //
   const [curricular, setCurricular] = useState<any>({});
   useEffect(() => {

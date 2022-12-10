@@ -94,7 +94,7 @@ export const logError = async (
     const input: CreateErrorLogInput = {
       authID: auth.authId,
       email: auth.email,
-      error: JSON.stringify(error),
+      error: typeof error === 'string' ? error : error.message,
       errorType: typeof error === 'string' ? error : error.message,
       errorTime: new Date().toISOString(),
       pageUrl: location.href,
@@ -104,6 +104,10 @@ export const logError = async (
       graphqlOperation(customMutations.createErrorLog, {input})
     );
   } catch (error) {
-    console.error('error logging error -> ', {error, auth}, error);
+    console.error(
+      'error logging error.. haha this is kind of ironic -> ',
+      {error, auth},
+      error
+    );
   }
 };
