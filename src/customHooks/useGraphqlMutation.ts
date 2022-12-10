@@ -2,6 +2,8 @@ import * as customMutations from 'customGraphql/customMutations';
 import * as mutations from 'graphql/mutations';
 import {API, graphqlOperation} from 'aws-amplify';
 import {useCallback, useState} from 'react';
+import {logError} from '@graphql/functions';
+import useAuth from './useAuth';
 
 interface Options {
   custom?: boolean;
@@ -36,6 +38,7 @@ const useGraphqlMutation = <VariablesType, ReturnType>(
       `Mutation ${mutationName} does not exist. Please check the spelling and try again.`
     );
   }
+  const {authId, email} = useAuth();
 
   const mutate = useCallback(
     async (
@@ -63,6 +66,7 @@ const useGraphqlMutation = <VariablesType, ReturnType>(
         setIsSuccess(false);
         setError(error.message);
         console.error(error);
+        logError(error, {authId, email}, 'useGraphqlMutation');
       } finally {
         if (onCancel && typeof onCancel === 'function') {
           onCancel();

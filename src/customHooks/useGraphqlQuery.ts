@@ -3,6 +3,8 @@ import * as queries from 'graphql/queries';
 import {API, graphqlOperation} from 'aws-amplify';
 import {useEffect, useState} from 'react';
 import {isEmpty} from 'lodash';
+import {logError} from '@graphql/functions';
+import useAuth from './useAuth';
 
 /*
   Example:
@@ -57,6 +59,7 @@ const useGraphqlQuery = <VariablesType, ReturnType = any[]>(
   const action = custom ? customQueries : queries;
 
   const isGet = queryName.startsWith('get');
+  const {authId, email} = useAuth();
 
   const fetch = async (
     nextToken?: string,
@@ -96,6 +99,7 @@ const useGraphqlQuery = <VariablesType, ReturnType = any[]>(
       setIsError(true);
       setError(error.message);
       setIsSuccess(false);
+      logError(error, {authId, email}, 'useGraphlQuery');
     } finally {
       setIsLoading(false);
       setIsFetched(true);

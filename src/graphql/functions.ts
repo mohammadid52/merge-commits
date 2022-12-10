@@ -15,6 +15,10 @@ interface S3UploadOptions {
     total: number;
     progress: number;
   }) => void;
+  auth: {
+    authId: string;
+    email: string;
+  };
 }
 
 export const uploadImageToS3 = async (
@@ -41,6 +45,11 @@ export const uploadImageToS3 = async (
     }
     return result;
   } catch (error) {
+    logError(
+      error,
+      {authId: options.auth.authId, email: options.auth.email},
+      'uploadImageToS3'
+    );
     if (options && options?.onError && typeof options?.onError === 'function') {
       // if there is a error callback, call the onError function
       options.onError(error);
@@ -80,6 +89,7 @@ export const updatePageState = async (
       );
       onSuccessCallback && onSuccessCallback();
     } catch (error) {
+      logError(error, {authId: auth.authId, email: auth.email}, 'updatePageState');
       console.error('error updating page -> ', {pageState, auth}, error);
     }
   }

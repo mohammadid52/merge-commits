@@ -1,3 +1,5 @@
+import Buttons from '@components/Atoms/Buttons';
+import Label from '@components/Atoms/Form/Label';
 import DotMenu from '@components/TeacherView/ClassRoster/RosterRow/DotMenu';
 import {useGlobalContext} from '@contexts/GlobalContext';
 import useAuth from '@customHooks/useAuth';
@@ -12,40 +14,39 @@ import {
 import {API, graphqlOperation} from 'aws-amplify';
 import * as customMutations from 'customGraphql/customMutations';
 import moment from 'moment';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Redirect} from 'react-router';
 import UserListLoader from '../Admin/UserManagement/UserListLoader';
 
 const ErrorItem = ({
   error,
-  updateStatus
+  updateStatus,
+  idx
 }: {
-  updateStatus: (id: string, status: ErrorStatus) => void;
+  updateStatus: (id: string, status: ErrorStatus, idx: number, item: ErrorLog) => void;
   error: ErrorLog;
+  idx: number;
 }) => {
-  const [errorStatus, setErrorStatus] = useState(error.status || ErrorStatus.PENDING);
-
   const pendingItem = {
     label: 'set to pending',
     action: () => {
-      setErrorStatus(ErrorStatus.PENDING);
-      updateStatus(error.id, ErrorStatus.PENDING);
+      updateStatus(error.id, ErrorStatus.PENDING, idx, error);
     }
   };
 
   const reviewItem = {
     label: 'set to review',
     action: () => {
-      setErrorStatus(ErrorStatus.REVIEW);
-      updateStatus(error.id, ErrorStatus.REVIEW);
+      updateStatus(error.id, ErrorStatus.REVIEW, idx, error);
     }
   };
+
+  const errorStatus = error.status;
 
   const closedItem = {
     label: 'set to closed',
     action: () => {
-      setErrorStatus(ErrorStatus.CLOSED);
-      updateStatus(error.id, ErrorStatus.CLOSED);
+      updateStatus(error.id, ErrorStatus.CLOSED, idx, error);
     }
   };
 
@@ -100,14 +101,32 @@ const ErrorsPage = () => {
     return <Redirect to={'/dashboard/home'} />;
   }
 
-  const {data, isLoading} = useGraphqlQuery<ListErrorLogsQueryVariables, ErrorLog[]>(
-    'listErrorLogs',
-    {limit: 100},
-    {enabled: checkIfAdmin()}
-  );
+  const {data, setData, isLoading, isFetched} = useGraphqlQuery<
+    ListErrorLogsQueryVariables,
+    ErrorLog[]
+  >('listErrorLogs', {limit: 100}, {enabled: checkIfAdmin()});
 
-  const updateStatus = async (id: string, status: ErrorStatus) => {
+  const [filteredList, setFilteredList] = useState([...data]);
+
+  useEffect(() => {
+    if (!isLoading && isFetched) {
+      setFilteredList([...data]);
+    }
+  }, [isLoading, isFetched]);
+
+  const updateStatus = async (
+    id: string,
+    status: ErrorStatus,
+    idx: number,
+    item: ErrorLog
+  ) => {
     try {
+      const updatedError = {...item, status};
+
+      data.splice(idx, 0, updatedError);
+      setData([...data]);
+      setFilteredList([...data]);
+
       const input: UpdateErrorLogInput = {
         id,
         status
@@ -120,10 +139,50 @@ const ErrorsPage = () => {
     }
   };
 
+  const [filters, setFilters] = useState<ErrorStatus[]>([]);
+
+  const updateFilter = (filterName: ErrorStatus) => {
+    if (filters.includes(filterName)) {
+      setFilters(filters.filter((_d) => _d !== filterName));
+      if (filters.length === 0) {
+        setFilteredList([...data]);
+      } else {
+        const filtered = data.filter((_d: ErrorLog) => filters.includes(_d.status));
+        setFilteredList([...filtered]);
+      }
+    } else {
+      filters.push(filterName);
+      const filtered = data.filter((_d: ErrorLog) => filters.includes(_d.status));
+      setFilteredList([...filtered]);
+      setFilters([...filters]);
+    }
+  };
+
   return (
     <div className="flex flex-col">
       <div className="overflow-x-auto">
         <div className="py-2 my-8 inline-block min-w-full sm:px-6 lg:px-8">
+          <div>
+            <Label label="Filters" />
+            <div className="flex gap-x-4 mb-4 mt-2 items-center">
+              <Buttons
+                onClick={() => updateFilter(ErrorStatus.PENDING)}
+                transparent={!filters.includes(ErrorStatus.PENDING)}
+                label={'Pending'}
+              />
+              <Buttons
+                onClick={() => updateFilter(ErrorStatus.CLOSED)}
+                transparent={!filters.includes(ErrorStatus.CLOSED)}
+                label={'Closed'}
+              />
+              <Buttons
+                onClick={() => updateFilter(ErrorStatus.REVIEW)}
+                transparent={!filters.includes(ErrorStatus.REVIEW)}
+                label={'Review'}
+              />
+            </div>
+          </div>
+
           <div className="overflow-hidden">
             <table className="min-w-full">
               <thead className="bg-white border-b-0">
@@ -158,11 +217,21 @@ const ErrorsPage = () => {
               <tbody>
                 {isLoading ? (
                   <UserListLoader userRole="ADM" />
-                ) : (
-                  data.length > 0 &&
-                  data.map((error, idx) => (
-                    <ErrorItem updateStatus={updateStatus} error={error} key={idx} />
+                ) : filteredList.length > 0 ? (
+                  filteredList.map((error, idx) => (
+                    <ErrorItem
+                      idx={idx}
+                      updateStatus={updateStatus}
+                      error={error}
+                      key={idx}
+                    />
                   ))
+                ) : (
+                  <p className="min-h-56 flex items-center w-full justify-center text-gray-500">
+                    {filters.length > 0
+                      ? `No errors found for status - ${filters.join(', ')}`
+                      : 'Woahhh.. no errors.. its good.'}
+                  </p>
                 )}
               </tbody>
             </table>

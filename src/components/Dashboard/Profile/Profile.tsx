@@ -24,6 +24,7 @@ import ProfileCropModal from './ProfileCropModal';
 import ProfileEdit from './ProfileEdit';
 import ProfileInfo from './ProfileInfo';
 import ProfileVault from './ProfileVault';
+import useAuth from '@customHooks/useAuth';
 
 export interface UserInfo {
   authId: string;
@@ -101,12 +102,15 @@ const Profile = (props: ProfilePageProps) => {
     setShowCropper(!showCropper);
   };
   const [fileObj, setFileObj] = useState<any>({});
+  const {authId, email} = useAuth();
 
   const saveCroppedImage = async (image: string) => {
     setImageLoading(true);
     toggleCropper();
     const ID = `profile_image_${person.id}`;
-    await uploadImageToS3(image ? image : fileObj, ID, fileObj?.type || 'image/jpeg');
+    await uploadImageToS3(image ? image : fileObj, ID, fileObj?.type || 'image/jpeg', {
+      auth: {authId, email}
+    });
     const imageUrl: any = await getImageFromS3(ID);
 
     setImageUrl(imageUrl);
