@@ -55,6 +55,7 @@ const Media = ({
     currentFile: any
   ) => {
     uploadImageToS3(file, `${COMMUNITY_UPLOAD_KEY}${id}`, type, {
+      auth: {authId, email},
       onSuccess: (result: any) => {
         console.log('File successfully uploaded to s3', result);
         updateStatus(currentFile, 'success');
