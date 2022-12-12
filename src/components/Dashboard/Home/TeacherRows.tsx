@@ -1,6 +1,7 @@
 import React from 'react';
 import ContentCard from 'atoms/ContentCard';
 import ImageAlternate from 'atoms/ImageAlternative';
+import {orderBy} from 'lodash';
 
 interface Teacher {
   firstName: string;
@@ -12,7 +13,11 @@ interface Teacher {
 
 const TeacherRows = (props: {coTeachersList: Teacher[]; teachersList: Teacher[]}) => {
   const {coTeachersList = [], teachersList = []} = props;
-  const allTeachers = [...teachersList, ...coTeachersList];
+  const allTeachers = orderBy(
+    [...teachersList, ...coTeachersList],
+    ['firstName'],
+    ['asc']
+  );
   return (
     <ContentCard hasBackground={false}>
       <div className="overflow-hidden">
@@ -28,7 +33,7 @@ const TeacherRows = (props: {coTeachersList: Teacher[]; teachersList: Teacher[]}
                     }`}>
                     <a
                       href="#"
-                      className="block hover:bg-gray-100 "
+                      className="block hover:bg-gray-200 "
                       style={{borderRadius: 'inherit'}}>
                       <div className="flex items-center px-4 py-4 sm:px-6">
                         <div className="min-w-0 flex-1 flex items-center">

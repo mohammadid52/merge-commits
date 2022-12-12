@@ -1,19 +1,18 @@
 // import {PersonalizeEvents} from 'aws-sdk';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import Buttons from '@components/Atoms/Buttons';
 import Tooltip from '@components/Atoms/Tooltip';
 import LocationBadge from '@components/Dashboard/Admin/Institutons/EditBuilders/LocationBadge';
-import useLessonControls from '@customHooks/lessonControls';
 import * as customSubscriptions from 'customGraphql/customSubscriptions';
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 
+import {formatPageName} from '@components/Dashboard/Admin/UserManagement/List';
+import {UserPageState} from 'API';
 import {GlobalContext} from 'contexts/GlobalContext';
 import React, {useContext, useEffect, useState} from 'react';
 import {MdOutlineScreenShare, MdOutlineStopScreenShare} from 'react-icons/md';
 import {VscScreenFull} from 'react-icons/vsc';
 import DotMenu from './RosterRow/DotMenu';
 import {IRosterSectionProps} from './RosterSection';
-import {UserPageState} from 'API';
-import {formatPageName} from '@components/Dashboard/Admin/UserManagement/List';
 
 interface RosterRowProps extends IRosterSectionProps {
   number: number;
@@ -46,7 +45,6 @@ const RosterRow: React.FC<RosterRowProps> = ({
   sharedStudent,
   handlePageChange,
   onDemand,
-  rightView,
   handleResetViewAndShare,
   handleToggleRightView,
   personEmail,

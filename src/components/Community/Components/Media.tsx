@@ -1,18 +1,17 @@
+import useAuth from '@customHooks/useAuth';
+import {logError, uploadImageToS3} from '@graphql/functions';
+import {Transition} from '@headlessui/react';
+import {getAsset} from 'assets';
 import FormInput from 'atoms/Form/FormInput';
-import {Storage} from '@aws-amplify/storage';
 import Label from 'atoms/Form/Label';
 import {COMMUNITY_UPLOAD_KEY, IFile} from 'components/Community/constants.community';
 import File from 'components/Community/File';
 import {REGEX} from 'components/Lesson/UniversalLessonBuilder/UI/common/constants';
-import {Transition} from '@headlessui/react';
-import {getAsset} from 'assets';
 import isEmpty from 'lodash/isEmpty';
 import update from 'lodash/update';
 import {nanoid} from 'nanoid';
 import React, {useCallback, useRef, useState} from 'react';
 import {useDropzone} from 'react-dropzone';
-import {logError, uploadImageToS3} from '@graphql/functions';
-import useAuth from '@customHooks/useAuth';
 
 interface MediaProps {
   file: IFile;

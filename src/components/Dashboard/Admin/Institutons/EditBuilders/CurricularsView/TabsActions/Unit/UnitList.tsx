@@ -15,6 +15,7 @@ import ErrorBoundary from 'components/Error/ErrorBoundary';
 import * as customQueries from 'customGraphql/customQueries';
 import ModalPopUp from 'molecules/ModalPopUp';
 import UnitListRow from './UnitListRow';
+import {orderBy} from 'lodash';
 
 export const UnitList = ({instId}: any) => {
   const history = useHistory();
@@ -243,7 +244,11 @@ export const UnitList = ({instId}: any) => {
     }
   };
 
-  const finalList = searchInput.isActive ? filteredList : units;
+  const finalList = orderBy(
+    searchInput.isActive ? filteredList : units,
+    ['name', 'institutionName'],
+    ['asc']
+  );
 
   // ##################################################################### //
   // ############################### OUTPUT ############################## //

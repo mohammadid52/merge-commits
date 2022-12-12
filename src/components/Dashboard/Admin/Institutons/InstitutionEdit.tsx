@@ -18,7 +18,7 @@ import DroppableMedia from 'molecules/DroppableMedia';
 import ProfileCropModal from '../../Profile/ProfileCropModal';
 import InstitutionPopUp from './InstitutionPopUp';
 import ServiceProviders from './Listing/ServiceProviders';
-import {logError} from '@graphql/functions';
+import {logError, uploadImageToS3} from '@graphql/functions';
 import useAuth from '@customHooks/useAuth';
 
 interface InstitutionEditProps {
@@ -225,35 +225,16 @@ const InstitutionEdit = (instEditProps: InstitutionEditProps) => {
 
   const {authId, email} = useAuth();
 
-  const uploadImageToS3 = async (file: any, id: string, type: string) => {
+  const _uploadImageToS3 = async (file: any, id: string, type: string) => {
     // Upload file to s3 bucket
-
-    return new Promise((resolve, reject) => {
-      Storage.put(`instituteImages/institute_image_${id}`, file, {
-        contentType: type,
-        acl: 'public-read',
-        ContentEncoding: 'base64'
-      })
-        .then((result) => {
-          console.log('File successfully uploaded to s3', result);
-          resolve(true);
-        })
-        .catch((err) => {
-          setError({
-            show: true,
-            errorMsg: InstitutionEditDict[userLanguage]['messages']['uploderr']
-          });
-          logError(err, {authId: authId, email: email}, 'InstitutionEdit');
-          console.error('Error in uploading file to s3', err);
-          reject(err);
-        });
-    });
+    const key = `instituteImages/institute_image_${id}`;
+    await uploadImageToS3(file, key, type, {auth: {authId, email}});
   };
 
   const saveCroppedImage = async (image: string) => {
     setImageLoading(true);
     toggleCropper();
-    await uploadImageToS3(image ? image : fileObj, editFormValues.id, 'image/jpeg');
+    await _uploadImageToS3(image ? image : fileObj, editFormValues.id, 'image/jpeg');
     const imageUrl: any = await getImageFromS3(
       `instituteImages/institute_image_${editFormValues.id}`
     );

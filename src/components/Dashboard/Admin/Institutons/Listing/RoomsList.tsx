@@ -39,8 +39,7 @@ const Room = ({
     <tr
       title="click to view/edit details"
       style={{cursor: 'pointer !important'}}
-      className={`cursor-pointer hover:iconoclast:bg-200 hover:iconoclast:text-600
-hover:curate:bg-200 hover:curate:text-600
+      className={`cursor-pointer hover:bg-gray-200
 `}>
       <td className={''}>{i + 1}.</td>
       {(isSuperAdmin || isAdmin || isBuilder) && (

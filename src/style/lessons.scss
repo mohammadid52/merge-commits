@@ -9,6 +9,12 @@
   }
 }
 
+.red-btn.transparent:hover {
+  svg {
+    color: white;
+  }
+}
+
 // .first {
 //     p::first-letter {
 //         color: red;

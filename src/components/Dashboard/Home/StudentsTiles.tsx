@@ -9,6 +9,7 @@ import Loader from 'atoms/Loader';
 import SectionTitleV3 from 'atoms/SectionTitleV3';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
+import {orderBy} from 'lodash';
 import React, {useEffect, useState} from 'react';
 import {useHistory} from 'react-router-dom';
 
@@ -73,7 +74,11 @@ const StudentsTiles = (props: {
     }
   };
 
-  const finalList = searchInput.isActive ? filteredList : list;
+  const finalList = orderBy(
+    searchInput.isActive ? filteredList : list,
+    ['name'],
+    ['asc']
+  );
 
   return (
     <>

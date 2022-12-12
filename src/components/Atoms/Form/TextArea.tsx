@@ -46,7 +46,7 @@ const TextArea = (props: TextAreaProps) => {
         id={id}
         name={name}
         onChange={(e: any) => onChange(e)}
-        className={`mt-1 block w-full sm:text-sm rounded-full sm:leading-5  border-0 border-gray-400 py-2 px-3  shadow-sm ${theme.outlineNone}`}
+        className={`mt-1 block w-full sm:text-sm rounded-xl sm:leading-5  border-0 border-gray-300 py-2 px-3  shadow-sm ${theme.outlineNone}`}
         value={value ? value : ''}
         placeholder={placeHolder}
         rows={rows ? rows : 5}

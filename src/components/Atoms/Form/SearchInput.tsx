@@ -73,8 +73,7 @@ const SearchInput: React.FC<SearchProps> = (searchProps: SearchProps) => {
         {value.length > 0 && (
           <span
             title="clear search"
-            className=" flex justify-center  cursor-pointer hover:iconoclast:bg-200 hover:iconoclast:text-600
-            hover:curate:bg-200 hover:curate:text-600
+            className=" flex justify-center  cursor-pointer hover:bg-gray-200
             rounded-full"
             onClick={closeAction}>
             <IoClose

@@ -1,6 +1,5 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
-import useAuth from '@customHooks/useAuth';
 import useSearch from '@customHooks/useSearch';
 import AddButton from 'atoms/Buttons/AddButton';
 import SearchInput from 'atoms/Form/SearchInput';
@@ -10,6 +9,7 @@ import {GlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import * as mutations from 'graphql/mutations';
+import {orderBy} from 'lodash';
 import ModalPopUp from 'molecules/ModalPopUp';
 import React, {Fragment, useContext, useEffect, useState} from 'react';
 import {useHistory, useRouteMatch} from 'react-router';
@@ -273,7 +273,11 @@ const CurriculumList = ({
     }
   };
 
-  const finalList = searchInput.isActive ? filteredList : courseList;
+  const finalList = orderBy(
+    searchInput.isActive ? filteredList : courseList,
+    ['name', 'institutionName'],
+    ['asc']
+  );
 
   // ##################################################################### //
   // ############################### OUTPUT ############################## //

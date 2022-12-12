@@ -190,8 +190,7 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
               {isClearable && selectedItem !== null && (
                 <span
                   title="clear sort"
-                  className=" flex justify-center  cursor-pointer hover:iconoclast:bg-200 hover:iconoclast:text-600
-                   hover:curate:bg-200 hover:curate:text-600
+                  className=" flex justify-center  cursor-pointer hover:bg-gray-200
                    rounded-full"
                   onClick={clearSort}>
                   <IoClose

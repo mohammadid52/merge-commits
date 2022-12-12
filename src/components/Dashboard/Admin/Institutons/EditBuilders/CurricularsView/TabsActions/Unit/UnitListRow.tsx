@@ -40,8 +40,8 @@ const UnitListRow = ({
     <tr
       key={index}
       className={`flex
-      hover:iconoclast:bg-200 hover:iconoclast:text-600
-hover:curate:bg-200 hover:curate:text-600 transition-all
+      hover:bg-gray-200
+ transition-all
       justify-between items-center w-full  whitespace-nowrap border-b-0 border-gray-200 ${
         index % 2 !== 0 ? 'bg-gray-50' : ''
       }`}>

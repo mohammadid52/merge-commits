@@ -1,13 +1,12 @@
-import React, {Fragment, useContext, useEffect, useState} from 'react';
-import {useHistory} from 'react-router';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import React, {Fragment, useContext, useEffect, useState} from 'react';
 import {IconContext} from 'react-icons';
 import {HiPencil} from 'react-icons/hi';
-import {IoAdd} from 'react-icons/io5';
 import {IoIosAdd} from 'react-icons/io';
+import {IoAdd} from 'react-icons/io5';
 // import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
 
-import {reorder, stringToHslColor} from 'utilities/strings';
+import {stringToHslColor} from 'utilities/strings';
 
 import Buttons from 'atoms/Buttons';
 
@@ -15,17 +14,17 @@ import Modal from 'atoms/Modal';
 import PageWrapper from 'atoms/PageWrapper';
 import ModalPopUp from 'molecules/ModalPopUp';
 
+import {getAsset} from 'assets';
+import {GlobalContext} from 'contexts/GlobalContext';
+import * as customQueries from 'customGraphql/customQueries';
+import useDictionary from 'customHooks/dictionary';
 import * as mutations from 'graphql/mutations';
 import * as queries from 'graphql/queries';
-import * as customQueries from 'customGraphql/customQueries';
-import {GlobalContext} from 'contexts/GlobalContext';
-import useDictionary from 'customHooks/dictionary';
-import {getAsset} from 'assets';
 
+import {DeleteActionBtn} from 'atoms/Buttons/DeleteActionBtn';
 import AddLearningObjective from '../TabsActions/AddLearningObjective';
 import AddMeasurement from '../TabsActions/AddMeasurement';
 import AddTopic from '../TabsActions/AddTopic';
-import {DeleteActionBtn} from 'atoms/Buttons/DeleteActionBtn';
 
 declare global {
   interface Array<T> {
@@ -47,7 +46,7 @@ interface LearningObjectiveListProps {
 }
 
 const LearningObjectiveList = (props: LearningObjectiveListProps) => {
-  const {curricularId, institutionId} = props;
+  const {curricularId} = props;
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState(false);
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -72,33 +71,6 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
     LEARINGOBJECTIVEDICT,
     TOPICLISTDICT
   } = useDictionary(clientKey);
-
-  const history = useHistory();
-
-  const onDragEnd = async (result: any) => {
-    try {
-      if (result.source.index !== result.destination.index) {
-        const list = reorder(learningIds, result.source.index, result.destination.index);
-        setLearningIds(list);
-        let learningsList = learnings
-          .map((t: any) => {
-            let index = list.indexOf(t.id);
-            return {...t, index};
-          })
-          .sort((a: any, b: any) => (a.index > b.index ? 1 : -1));
-        setLearnings(learningsList);
-        let seqItem: any = await API.graphql(
-          graphqlOperation(mutations.updateCSequences, {
-            input: {id: `l_${curricularId}`, sequence: list}
-          })
-        );
-        seqItem = seqItem.data.updateCSequences;
-        console.log('seq updated');
-      }
-    } catch (err) {
-      console.error('err', err);
-    }
-  };
 
   const createLearningObjective = () => {
     setIsFormOpen(true);
@@ -490,21 +462,12 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
                       />
                     </div>
                   )}
-                  {learnings.map((learning: any, index: number) => (
-                    // <Draggable
-                    //   key={learning.id}
-                    //   draggableId={learning.id}
-                    //   index={index}>
-                    //   {(provided, snapshot) => (
-                    //     <div
-                    //       ref={provided.innerRef}
-                    //       {...provided.draggableProps}
-                    //       {...provided.dragHandleProps}>
+                  {learnings.map((learning: any) => (
                     <div
                       className="flex shadow flex-col white_back overflow-hidden"
                       key={learning.id}>
                       <div className="flex-shrink-0">
-                        <div className="p-4">
+                        <div className="p-4 pb-0">
                           <div className="flex">
                             {/* <span className="w-auto">
                                               <GiArrowScope className="w-12 h-12" />
@@ -623,53 +586,37 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
                                         </div>
                                       </div>
                                     ) : (
-                                      <div
-                                        className={`text-base ${theme.text.active}  cursor-pointer flex`}
+                                      <Buttons
+                                        type="submit"
                                         onClick={() =>
                                           createNewMeasurement(topic.id, learning.id)
-                                        }>
-                                        <span className="w-auto flex items-center mr-1">
-                                          <IconContext.Provider
-                                            value={{
-                                              color: theme.iconColor[themeColor]
-                                            }}>
-                                            <IoAdd className="w-4 h-4" />
-                                          </IconContext.Provider>
-                                        </span>
-                                        Add measurement
-                                      </div>
+                                        }
+                                        title={AddMeasurementDict[userLanguage]['title']}
+                                        iconBeforeLabel
+                                        Icon={IoIosAdd}
+                                      />
                                     )}
                                   </ul>
                                 </div>
                               ))
                             ) : (
-                              <div className="flex justify-center items-center">
-                                <div
-                                  className="flex justify-center items-center my-2 w-9/10 mx-auto px-8 py-4 h-36 border-0 border-dashed font-medium border-gray-400 text-gray-600 cursor-pointer"
-                                  onClick={() => createNewTopic(learning.id)}>
-                                  <span className="w-6 h-6 flex items-center mr-4">
-                                    <IconContext.Provider
-                                      value={{
-                                        size: '1.5rem',
-                                        color: 'darkgray'
-                                      }}>
-                                      <IoAdd />
-                                    </IconContext.Provider>
-                                  </span>
-                                  Add Topic
-                                </div>
-                              </div>
+                              <Buttons
+                                type="submit"
+                                size="small"
+                                onClick={() => createNewTopic(learning.id)}
+                                label={TOPICLISTDICT[userLanguage]['ADD']}
+                                iconBeforeLabel
+                                Icon={IoIosAdd}
+                              />
                             )}
                           </div>
                         </div>
-                        <div className="border border-t-0 flex justify-center">
+                        <div className="py-2 border-t-0 flex justify-center">
                           <Buttons
                             type="submit"
+                            size="small"
                             onClick={() => createNewTopic(learning.id)}
                             label={TOPICLISTDICT[userLanguage]['ADD']}
-                            labelClass={'leading-6'}
-                            overrideClass={true}
-                            btnClass={`h-9 w-auto my-2 flex items-center rounded px-12 text-xs font-bold focus:outline-none transition duration-150 ease-in-out ${theme.btn.iconoclastIndigo}`}
                             iconBeforeLabel
                             Icon={IoIosAdd}
                           />

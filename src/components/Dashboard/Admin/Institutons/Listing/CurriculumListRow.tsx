@@ -33,7 +33,7 @@ const CurriculumListRow = ({
   // ~~~~~~~~~~ CONTEXT_SPLITTING ~~~~~~~~~~ //
   const gContext = useContext(GlobalContext);
   const clientKey = gContext.clientKey;
-  const {InstitueCurriculum, BreadcrumsTitles} = useDictionary(clientKey);
+  const {InstitueCurriculum} = useDictionary(clientKey);
   const userLanguage = gContext.userLanguage;
   // ~~~~~~~~~~~~~~~~ STATE ~~~~~~~~~~~~~~~~ //
   const [showMenu, setShowMenu] = useState<boolean>(false);
@@ -45,8 +45,7 @@ const CurriculumListRow = ({
       key={index}
       className={`flex justify-between items-center w-full whitespace-nowrap border-b-0 border-gray-200 ${
         index % 2 !== 0 ? 'bg-gray-50' : ''
-      } hover:iconoclast:bg-200 hover:iconoclast:text-600
-      hover:curate:bg-200 hover:curate:text-600 transition-all`}>
+      } hover:bg-gray-200 transition-all`}>
       <td className="flex w-.5/10 items-center px-8 py-3 text-left text-sm leading-4">
         {index + 1}.
       </td>
