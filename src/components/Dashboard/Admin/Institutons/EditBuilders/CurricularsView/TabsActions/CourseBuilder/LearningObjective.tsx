@@ -1,8 +1,6 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import Loader from '@components/Atoms/Loader';
-import {getAsset} from 'assets';
 import Buttons from 'atoms/Buttons';
-import {DeleteActionBtn} from 'atoms/Buttons/DeleteActionBtn';
 import Modal from 'atoms/Modal';
 import PageWrapper from 'atoms/PageWrapper';
 import {GlobalContext} from 'contexts/GlobalContext';
@@ -12,10 +10,8 @@ import * as mutations from 'graphql/mutations';
 import * as queries from 'graphql/queries';
 import ModalPopUp from 'molecules/ModalPopUp';
 import React, {Fragment, useContext, useEffect, useState} from 'react';
-import {IconContext} from 'react-icons';
 import {HiOutlineTrash, HiPencil} from 'react-icons/hi';
 import {IoIosAdd} from 'react-icons/io';
-import {IoAdd} from 'react-icons/io5';
 import AddLearningObjective from '../AddLearningObjective';
 import AddMeasurement from '../AddMeasurement';
 import AddTopic from '../AddTopic';
@@ -57,8 +53,8 @@ const LearningObjective = (props: LearningObjectiveProps) => {
     id: '',
     message: "Are you sure? This can't be undone."
   });
-  const {clientKey, userLanguage, theme} = useContext(GlobalContext);
-  const themeColor = getAsset(clientKey, 'themeClassName');
+  const {clientKey, userLanguage} = useContext(GlobalContext);
+
   const {
     AddMeasurementDict,
     AddTopicDict,
@@ -645,6 +641,7 @@ const LearningObjective = (props: LearningObjectiveProps) => {
             <div className="py-12 my-12 m-auto text-center">
               <Loader
                 className="text-gray-500"
+                animation
                 withText={LEARINGOBJECTIVEDICT[userLanguage]['FETCH']}
               />
             </div>

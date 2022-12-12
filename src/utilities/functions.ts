@@ -53,3 +53,8 @@ export const ellipsis = (text: string, len: number): string => {
 export const randomNumber = (min: number, max: number): number => {
   return Math.random() * (max - min) + min;
 };
+
+export  const getJSON = async(url:string):Promise<string> =>{
+  const response = await fetch(url);
+  return await response.json();
+}

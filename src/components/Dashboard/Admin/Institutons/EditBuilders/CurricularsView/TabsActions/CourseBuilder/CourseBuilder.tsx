@@ -235,8 +235,11 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
           {fetchingDetails ? (
             <div className="h-100 flex justify-center items-center">
               <div className="w-5/10">
-                <Loader />
-                <p className="mt-2 text-center">Fetching course details please wait...</p>
+                <Loader
+                  animation
+                  withText="Fetching course details please wait..."
+                  className="text-gray-500"
+                />
               </div>
             </div>
           ) : (
