@@ -7,6 +7,7 @@ import {
 } from 'components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/Tabs';
 import {GlobalContext} from 'contexts/GlobalContext';
 import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
+import RichTextEditor from 'atoms/RichTextEditor';
 import {EditQuestionModalDict} from '@dictionary/dictionary.iconoclast';
 import {Switch} from '@headlessui/react';
 import {IContentTypeComponentProps} from 'interfaces/UniversalLessonBuilderInterfaces';
@@ -75,6 +76,7 @@ interface IInput {
   animated?: boolean;
   instructions?: boolean;
   instructionsText?: string;
+  instructionsHtml?: string;
 }
 
 const HeaderModalComponent = ({
@@ -131,7 +133,8 @@ const HeaderModalComponent = ({
     title: '',
     animated: false,
     instructions: false,
-    instructionsText: ''
+    instructionsText: '',
+    instructionsHtml: '<p></p>'
   });
 
   useEffect(() => {
@@ -141,7 +144,8 @@ const HeaderModalComponent = ({
         title: inputObj[0].value,
         animated: classString.includes('animated-border-on'),
         instructionsText: inputObj[1]?.value || '',
-        instructions: inputObj[1]?.value?.length > 0 || false
+        instructions: inputObj[1]?.value?.length > 0 || false,
+        instructionsHtml: inputObj[1]?.value || '<p></p>'
       }));
       // retrieves the result of matching a string against border color
       const matchBorderColor: any[] | null = classString.match(/border-\w\w+-\d+/);
@@ -227,7 +231,7 @@ const HeaderModalComponent = ({
           'header',
           [
             {id: uuidv4().toString(), value},
-            {id: uuidv4().toString(), value: inputFields.instructionsText || ''}
+            {id: uuidv4().toString(), value: inputFields.instructionsHtml || ''}
           ],
           blockConfig.position,
           classValue
@@ -242,7 +246,7 @@ const HeaderModalComponent = ({
 
           [
             {id: uuidv4().toString(), value},
-            {id: uuidv4().toString(), value: inputFields.instructionsText || ''}
+            {id: uuidv4().toString(), value: inputFields.instructionsHtml || ''}
           ],
           blockConfig.position,
 
@@ -289,6 +293,11 @@ const HeaderModalComponent = ({
 
     setErrors({...errors});
     return isValid;
+  };
+
+  const onEditorStateChange = (html: string, text: string) => {
+    setUnsavedChanges(true);
+    setInputFields({...inputFields, instructionsText: text, instructionsHtml: html});
   };
 
   const {curTab, setCurTab, helpers} = useTabs();
@@ -374,13 +383,13 @@ const HeaderModalComponent = ({
               />
             </div>
             {inputFields.instructions && (
-              <div className="col-span-2">
-                <FormInput
-                  onChange={onChange}
-                  label={'Instructions'}
-                  value={inputFields.instructionsText}
-                  id={'instructionsText'}
-                  placeHolder={`Add instructions`}
+              <div className="col-span-2 max-w-256">
+                <RichTextEditor
+                  withStyles
+                  initialValue={inputFields.instructionsText}
+                  onChange={(htmlContent, plainText) =>
+                    onEditorStateChange(htmlContent, plainText)
+                  }
                 />
               </div>
             )}

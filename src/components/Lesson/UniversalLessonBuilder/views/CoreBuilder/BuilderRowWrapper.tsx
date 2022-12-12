@@ -45,7 +45,7 @@ export const BuilderRowWrapper = (props: RowWrapperProps) => {
         className={` builderWrapper transition-all duration-200 ${
           mode === 'building' && !previewMode ? customBorder : viewModeClass
         } rounded-lg divide-y divide-gray-200`}>
-        <div className="relative">{children}</div>
+        <div className="relative p-4">{children}</div>
       </div>
     </div>
   );

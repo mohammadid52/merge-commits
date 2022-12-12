@@ -1,4 +1,3 @@
-import useAuth from '@customHooks/useAuth';
 import AllEmotions from 'components/Lesson/AllEmotions';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import {
@@ -19,8 +18,6 @@ const LessonRowComposer = () => {
   const gState = gContext.state;
   const {user, lessonPage} = gState;
   const [activePageData, setActivePageData] = useState<UniversalLessonPage>();
-
-  const [currentLesson, setCurrentLesson] = useState<any>();
 
   const getSeparateData = (id: string) =>
     activePageData && activePageData.pageContent && activePageData.pageContent.length > 0
@@ -78,9 +75,6 @@ const LessonRowComposer = () => {
       const ACTIVE_PAGE_DATA = PAGES[CURRENT_PAGE];
       setActivePageData(ACTIVE_PAGE_DATA);
     }
-    if (lessonState.lessonData) {
-      setCurrentLesson(lessonState.lessonData);
-    }
   }, [lessonState.lessonData, PAGES, lessonState.currentPage]);
 
   // this is only for header component
@@ -90,7 +84,6 @@ const LessonRowComposer = () => {
     switch (type) {
       case 'video':
       case FORM_TYPES.WRITING_EXERCISE:
-      case DIVIDER:
         return 'p-4';
       default:
         return '';
