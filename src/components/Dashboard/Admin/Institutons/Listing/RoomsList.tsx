@@ -17,6 +17,7 @@ import * as customQueries from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import * as queries from 'graphql/queries';
 import {Status} from '../../UserManagement/UserStatus';
+import {orderBy} from 'lodash';
 
 const Room = ({
   i,
@@ -282,11 +283,6 @@ const RoomsList = (props: RoomListProps) => {
     updateRoomList(value);
   };
 
-  const handleStaffChange = (_: string, name: string, value: string) => {
-    setSelectedStaff({name, id: value});
-    // onSearch(searchInput, selectedInstitution?.id, value);
-  };
-
   const {
     searchInput,
     setSearch,
@@ -332,7 +328,11 @@ const RoomsList = (props: RoomListProps) => {
     }
   };
 
-  const finalList = searchInput.isActive ? filteredList : roomList;
+  const finalList = orderBy(
+    searchInput.isActive ? filteredList : roomList,
+    ['name', 'institutionName'],
+    ['asc']
+  );
 
   // const onSearch = (
   //   searchValue: string,

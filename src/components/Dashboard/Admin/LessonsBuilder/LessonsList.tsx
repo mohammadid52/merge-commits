@@ -16,7 +16,7 @@ import * as customQueries from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import {useQuery} from 'customHooks/urlParam';
 import * as mutations from 'graphql/mutations';
-import {find} from 'lodash';
+import {find, orderBy} from 'lodash';
 import ModalPopUp from 'molecules/ModalPopUp';
 import React, {Fragment, useContext, useEffect, useState} from 'react';
 import {AiOutlineArrowDown, AiOutlineArrowUp} from 'react-icons/ai';
@@ -190,20 +190,7 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
           };
         });
 
-        const sortedList = (data: any[]) => {
-          // sort by title
-          return data.sort((a: {title: number}, b: {title: number}) => {
-            if (a.title < b.title) {
-              return -1;
-            }
-            if (a.title > b.title) {
-              return 1;
-            }
-            return 0;
-          });
-        };
-
-        setLessonsData(sortedList(data));
+        setLessonsData(data);
         const totalListPages = Math.floor(
           (isTeacher ? filteredList.length : data.length) / pageCount
         );
@@ -450,7 +437,11 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
     }
   };
 
-  const finalList = searchInput.isActive ? filteredList : currentList;
+  const finalList = orderBy(
+    searchInput.isActive ? filteredList : currentList,
+    ['title'],
+    ['asc']
+  );
 
   {
     return (
