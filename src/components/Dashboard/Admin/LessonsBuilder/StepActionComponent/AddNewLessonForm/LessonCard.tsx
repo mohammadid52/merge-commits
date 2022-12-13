@@ -1,17 +1,16 @@
-import React, {useContext} from 'react';
-import {IoCamera} from 'react-icons/io5';
-import {v4 as uuidv4} from 'uuid';
+import FormInput from 'atoms/Form/FormInput';
 import {GlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
+import DroppableMedia from 'molecules/DroppableMedia';
+import React, {useContext} from 'react';
+import {IoCamera} from 'react-icons/io5';
 import {getLocalStorageData} from 'utilities/localStorage';
-import FormInput from 'atoms/Form/FormInput';
-import TextArea from 'atoms/Form/TextArea';
+import {v4 as uuidv4} from 'uuid';
 import AnimatedContainer from '../../../../../Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import {
   Tabs2,
   useTabs
 } from '../../../../../Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/Tabs';
-import DroppableMedia from 'molecules/DroppableMedia';
 import StandardLessonCard from '../../../../Classroom/LessonCards/StandardLessonCard';
 
 interface ILessonCard {

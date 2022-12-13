@@ -7,7 +7,8 @@ const MainSummary = (props: LessonCardProps) => {
   const {lessonProps} = props;
 
   return (
-    <div className={`sm:h-44 relative p-5 px-5 flex flex-col justify-start items-center`}>
+    <div
+      className={`sm:min-h-48 relative p-5 px-5 flex flex-col justify-start items-center`}>
       <h1 className={`${theme.lessonCard.title}  w-full font-medium`}>
         <span className="w-full">
           {lessonProps.lesson && lessonProps.lesson.title
@@ -20,7 +21,7 @@ const MainSummary = (props: LessonCardProps) => {
             : ''}
         </span> */}
       </h1>
-      <div className="descriptive overflow-hidden hover-overflow-auto">
+      <div className="descriptive">
         <p
           className="text-md mt-1 text-gray-500 text-left"
           dangerouslySetInnerHTML={{
