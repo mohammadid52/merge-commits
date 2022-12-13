@@ -155,8 +155,6 @@ export const FormBlock = ({
     required?: boolean,
     classString?: string
   ) => {
-    console.log(type);
-
     const formBlockProps = {
       id,
       numbered,

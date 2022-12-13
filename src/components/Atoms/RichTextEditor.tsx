@@ -58,6 +58,7 @@ const RichTextEditor = (props: RichTextEditorProps) => {
       const editor = document.querySelector('.rdw-editor-main');
       if (editor) {
         editor.setAttribute('style', `min-height:${minHeight}px`);
+        editor.classList.add('large-editor');
       }
     }
   }, [minHeight]);
