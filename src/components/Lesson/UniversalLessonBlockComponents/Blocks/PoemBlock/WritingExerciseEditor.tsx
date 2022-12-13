@@ -73,7 +73,7 @@ const WritingExerciseEditor = ({
   const themeColor = getAsset(clientKey, 'themeClassName');
 
   const wrapperClassName = `${
-    true ? `bg-component-dark border-none dark  wrapperClassName` : 'wrapperClassName '
+    true ? ` border-none dark  wrapperClassName` : 'wrapperClassName '
   } ${themeColor}`;
   const editorClassName = `${true ? `dark editorClassName` : 'editorClassName'}`;
 

@@ -63,7 +63,7 @@ const CustomizedQuoteBlock = (props: QuoteBlockProps) => {
               style={{
                 MozUserSelect: 'none',
                 WebkitUserSelect: 'none',
-                msUserSelect: 'none',
+                msUserSelect: 'none'
               }}
             />
           </IconContext.Provider>
@@ -90,9 +90,9 @@ const CustomizedQuoteBlock = (props: QuoteBlockProps) => {
 
         <div
           className={`
-          ${heroIsActive ? 'opacity-0' : `opacity-100`}
-         
-          absolute bottom-0 opacity-100 h-full flex flex-col justify-end transition-all duration-500 ease-in-out`}>
+          ${
+            heroIsActive ? 'opacity-0' : `opacity-100`
+          } absolute bottom-0 opacity-100 h-full flex flex-col justify-end transition-all duration-500 ease-in-out`}>
           <div
             className={`${textClass} absolute bottom-0 left-0 px-4 pb-4 h-auto mb-0 flex flex-col bg-gradient-to-r from-black20 rounded-b-lg  `}>
             <div className="text-4.5xl header-font font-light">{title}</div>

@@ -13,6 +13,7 @@ import {
   SPACER,
   TABLE
 } from '../UniversalLessonBuilder/UI/common/constants';
+import LinestarterModalDialog from '../UniversalLessonBuilder/UI/ModalDialogs/LinestarterModalDialog';
 import CustomVideoBlock from './Blocks/CustomVideoBlock';
 import DividerBlock from './Blocks/DividerBlock';
 import DownloadBlock from './Blocks/DownloadBlock';
@@ -100,7 +101,10 @@ const composePartContent = (
         <ParagraphBlock pagePartId={pagePartId} {...commonBlockProps} />
       </ErrorBoundary>
     );
-  } else if (type.includes('form') && type !== 'notes-form') {
+  } else if (
+    (type.includes('form') && type !== 'notes-form') ||
+    type.includes(FORM_TYPES.POEM)
+  ) {
     return (
       <ErrorBoundary componentName="FormBlock">
         <FormBlock

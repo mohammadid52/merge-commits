@@ -144,7 +144,7 @@ const BuilderRowComposer = (props: RowComposerProps) => {
                                 <div
                                   className={`${
                                     content.type === FORM_TYPES.JUMBOTRON
-                                      ? 'px-4 pt-4'
+                                      ? 'px-0 pt-4'
                                       : content.type === 'header' ||
                                         content.type === 'image' ||
                                         content.type === 'customVideo' ||

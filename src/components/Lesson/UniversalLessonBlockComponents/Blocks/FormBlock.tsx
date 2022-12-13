@@ -9,7 +9,7 @@ import OptionBlock from 'components/Lesson/UniversalLessonBlockComponents/Blocks
 import StarRatingBlock from 'components/Lesson/UniversalLessonBlockComponents/Blocks/FormBlock/StarRatingBlock';
 import WritingExerciseBlock from 'components/Lesson/UniversalLessonBlockComponents/Blocks/FormBlock/WritingExerciseBlock';
 import ReviewSliderBlock from 'components/Lesson/UniversalLessonBlockComponents/Blocks/ReviewSliderBlock';
-import {GlobalContext} from 'contexts/GlobalContext';
+import {GlobalContext, useGlobalContext} from 'contexts/GlobalContext';
 import useInLessonCheck from 'customHooks/checkIfInLesson';
 import useStudentDataValue from 'customHooks/studentDataValue';
 import {RowWrapperProps} from 'interfaces/UniversalLessonBuilderInterfaces';
@@ -74,7 +74,7 @@ export const FormBlock = ({
 }: FormBlockProps) => {
   const {
     state: {user, lessonPage: {theme: lessonPageTheme = 'dark'} = {}}
-  } = useContext(GlobalContext);
+  } = useGlobalContext();
   const themePlaceholderColor =
     lessonPageTheme === 'light' ? 'placeholder-gray-800' : 'text-gray-400';
 
@@ -155,6 +155,8 @@ export const FormBlock = ({
     required?: boolean,
     classString?: string
   ) => {
+    console.log(type);
+
     const formBlockProps = {
       id,
       numbered,
@@ -252,9 +254,10 @@ export const FormBlock = ({
           </div>
         );
 
+      case FORM_TYPES.POEM:
       case `${FORM_TYPES.POEM}-content`:
         return (
-          <div className={`border-0 border-gray-700  rounded-2xl`}>
+          <div className={`mt-4  rounded-2xl`}>
             <WritingExerciseBlock
               title={false}
               value={isInLesson ? getValue(inputID) : value}
