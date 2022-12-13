@@ -103,7 +103,8 @@ const composePartContent = (
     );
   } else if (
     (type.includes('form') && type !== 'notes-form') ||
-    type.includes(FORM_TYPES.POEM)
+    type.includes(FORM_TYPES.POEM) ||
+    type.includes(FORM_TYPES.WRITING_EXERCISE)
   ) {
     return (
       <ErrorBoundary componentName="FormBlock">

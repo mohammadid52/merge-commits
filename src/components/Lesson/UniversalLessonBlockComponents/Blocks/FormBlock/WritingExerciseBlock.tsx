@@ -16,7 +16,7 @@ const WritingExerciseBlock = ({
   inputID,
 
   label,
-  options,
+  options = [],
   onChange,
   title,
   value,
