@@ -206,7 +206,7 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
           </div>
         </button>
       </span>
-      <AnimatedContainer show={showList}>
+      <AnimatedContainer className="z-50 absolute w-full " show={showList}>
         {showList && (
           <div className="z-50 absolute mt-1 w-full " style={{...style}}>
             <ul
