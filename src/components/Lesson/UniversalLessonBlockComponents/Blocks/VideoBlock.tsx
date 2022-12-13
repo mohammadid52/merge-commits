@@ -1,6 +1,6 @@
+import {RowWrapperProps} from 'interfaces/UniversalLessonBuilderInterfaces';
 import React from 'react';
 import ReactPlayer from 'react-player';
-import {RowWrapperProps} from 'interfaces/UniversalLessonBuilderInterfaces';
 
 interface VideoBlockProps extends RowWrapperProps {
   id: string;

@@ -31,7 +31,9 @@ const CoreUniversalLesson = ({
   const userAtFirst = () => currentPage === 0;
 
   const getPageName = (dir = 'next'): string =>
-    `Go to ${lessonPlan[dir === 'next' ? currentPage + 1 : currentPage - 1].title}`;
+    lessonPlan
+      ? `Go to ${lessonPlan[dir === 'next' ? currentPage + 1 : currentPage - 1].title}`
+      : `${dir === 'next' ? 'Next' : 'Prev'}`;
 
   const {isStudent, authId, email} = useAuth();
   const getRoomData = getLocalStorageData('room_info');
