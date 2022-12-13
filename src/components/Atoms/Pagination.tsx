@@ -3,6 +3,9 @@ import {IconContext} from 'react-icons';
 import {FaAngleRight, FaAngleLeft} from 'react-icons/fa';
 import {GlobalContext} from 'contexts/GlobalContext';
 import {getAsset} from 'assets';
+import {RiArrowLeftSLine, RiArrowRightSLine} from 'react-icons/ri';
+import Buttons from './Buttons';
+import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 
 interface PaginationProps {
   currentPage: number;
@@ -10,6 +13,7 @@ interface PaginationProps {
   firstPage: boolean;
   setNext: () => void;
   setPrev: () => void;
+  totalPages?: number;
 }
 
 interface PageArrowsProps {
@@ -20,12 +24,9 @@ interface PageArrowsProps {
 }
 
 const Active = (activeProps: {page: number}) => {
-  const {theme, clientKey} = useContext(GlobalContext);
-  const themeColor = getAsset(clientKey, 'themeClassName');
-
   return (
     <button
-      className={`${theme.btn[themeColor]} py-2 px-4 rounded-full ml-2 w-10 cursor-default hover:outline-none focus:outline-none `}>
+      className={`inline-flex w-auto transition-all items-center border-t-2 theme-border:500 px-4 pt-4 text-sm font-medium theme-text:600`}>
       {activeProps.page}
     </button>
   );
@@ -42,7 +43,7 @@ const Inactive = (InActiveProps: {
   return (
     <button
       onClick={currentPage < page ? setNext : setPrev}
-      className="hover:outline-none cursor-pointer focus:outline-none w-auto py-2 px-4 rounded-full">
+      className="inline-flex w-auto transition-all items-center border-t-2 border-transparent px-4 pt-4 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700">
       {page}
     </button>
   );
@@ -55,9 +56,20 @@ const PageNo = (pageNoProps: {
   setPrev: () => void;
 }) => {
   const {page, currentPage, setNext, setPrev} = pageNoProps;
-  if (page === currentPage) return <Active page={page} />;
+
   return (
-    <Inactive page={page} currentPage={currentPage} setPrev={setPrev} setNext={setNext} />
+    <>
+      {page === currentPage && <Active page={page} />}
+
+      {page !== currentPage && (
+        <Inactive
+          page={page}
+          currentPage={currentPage}
+          setPrev={setPrev}
+          setNext={setNext}
+        />
+      )}
+    </>
   );
 };
 
@@ -100,40 +112,33 @@ const PageCount = (pageCountProps: {
 
 const PageArrows: React.FC<PageArrowsProps> = (pageProps: PageArrowsProps) => {
   const {active, onClick, isBack} = pageProps;
-  const {theme, clientKey} = useContext(GlobalContext);
-  const themeColor = getAsset(clientKey, 'themeClassName');
 
   return (
-    <button
+    <Buttons
+      Icon={isBack ? RiArrowLeftSLine : RiArrowRightSLine}
+      transparent
+      size="small"
+      btnClass="mt-4"
       onClick={onClick}
-      className={`btn btn-default w-20 ${theme.outlineNone} ${
-        !active ? 'cursor-default' : ''
-      }`}
-      disabled={!active}>
-      <span className="w-6 cursor-pointer hover:text-gray-400">
-        <IconContext.Provider
-          value={{
-            size: '1.5rem',
-            color: `${active ? theme.iconColor[themeColor] : 'darkgrey'}`
-          }}>
-          {isBack ? <FaAngleLeft /> : <FaAngleRight />}
-        </IconContext.Provider>
-      </span>
-    </button>
+      iconSize="w-4 h-6"
+      disabled={!active}
+    />
   );
 };
 
+const Dots = () => (
+  <span className="inline-flex w-auto items-center border-t-2 border-transparent px-4 pt-4 text-sm font-medium text-gray-500">
+    ...
+  </span>
+);
+
 const Pagination: React.FC<PaginationProps> = (pageProps: PaginationProps) => {
-  const {currentPage, lastPage, firstPage, setNext, setPrev} = pageProps;
-  const {theme, clientKey} = useContext(GlobalContext);
-  const themeColor = getAsset(clientKey, 'themeClassName');
+  const {currentPage, lastPage, firstPage, setNext, setPrev, totalPages = 10} = pageProps;
 
   return (
-    <div className="flex flex-wrap items-center justify-start lg:justify-center">
+    <div className="flex gap-x-4 flex-wrap items-center justify-start lg:justify-center">
       <PageArrows onClick={setPrev} active={currentPage !== 1} isBack={true} />
-      {currentPage !== 1 && (
-        <span className={`w-auto mr-2 ${theme.textColor[themeColor]}`}> . . . </span>
-      )}
+      {currentPage !== 1 && <Dots />}
       <PageCount
         setPrev={setPrev}
         setNext={setNext}
@@ -141,9 +146,7 @@ const Pagination: React.FC<PaginationProps> = (pageProps: PaginationProps) => {
         lastPage={lastPage}
         currentPage={currentPage}
       />
-      {!lastPage && (
-        <span className={`w-auto ml-2 ${theme.textColor[themeColor]}`}> . . . </span>
-      )}
+      {!lastPage && <Dots />}
       <PageArrows onClick={setNext} active={!lastPage} />
     </div>
   );

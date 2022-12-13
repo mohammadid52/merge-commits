@@ -14,14 +14,14 @@ import * as customQueries from 'customGraphql/customQueries';
 import * as queries from 'graphql/queries';
 
 // import LessonLoading from '../../../Lesson/Loading/ComponentLoading';
+import ListBottomBar from '@components/Molecules/ListBottomBar';
+import usePagination from '@customHooks/usePagination';
 import useSearch from '@customHooks/useSearch';
 import {PersonStatus} from 'API';
 import BreadCrums from 'atoms/BreadCrums';
 import Buttons from 'atoms/Buttons';
 import SearchInput from 'atoms/Form/SearchInput';
 import Selector from 'atoms/Form/Selector';
-import PageCountSelector from 'atoms/PageCountSelector';
-import Pagination from 'atoms/Pagination';
 import SectionTitle from 'atoms/SectionTitle';
 import useDictionary from 'customHooks/dictionary';
 import {createFilterToFetchSpecificItemsOnly} from 'utilities/strings';
@@ -51,14 +51,10 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
   const {state, theme, dispatch, userLanguage, clientKey} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const history = useHistory();
-  const [status, setStatus] = useState('');
+
   const [loading, setLoading] = useState<boolean>(false);
-  const [userList, setUserList] = useState([]);
-  const [userCount, setUserCount] = useState(10);
-  const [currentPage, setCurrentPage] = useState(0);
-  const [lastPage, setLastPage] = useState(false);
-  const [firstPage, setFirstPage] = useState(false);
-  const {UserLookupDict, paginationPage, BreadcrumsTitles} = useDictionary(clientKey);
+
+  const {UserLookupDict, BreadcrumsTitles} = useDictionary(clientKey);
 
   const [sortingType, setSortingType] = useState({
     value: '',
@@ -69,7 +65,15 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
   // Below changes are for fetching entire list on client side.
   const [totalUserList, setTotalUserList] = useState([]);
   const [totalUserNum, setTotalUserNum] = useState(0);
-  const [totalPages, setTotalPages] = useState(0);
+
+  const {
+    currentList,
+    setCurrentList,
+    allAsProps,
+    setTotalPages,
+    resetPagination
+  } = usePagination(totalUserList || [], loading ? 0 : totalUserList.length);
+
   // ...End.
 
   const breadCrumsList = [
@@ -87,29 +91,6 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
     {id: 4, name: 'Status', value: 'status'}
   ];
 
-  const goNextPage = () => {
-    const pageHigherLimit = totalPages - 1;
-    if (firstPage) {
-      setFirstPage(false);
-    }
-    if (currentPage < pageHigherLimit - 1) {
-      setCurrentPage(currentPage + 1);
-    } else if (currentPage === pageHigherLimit - 1) {
-      setCurrentPage(currentPage + 1);
-      setLastPage(true);
-    }
-  };
-
-  const goPrevPage = () => {
-    if (lastPage) {
-      setLastPage(false);
-    }
-    if (currentPage > 0) setCurrentPage(currentPage - 1);
-    else {
-      setFirstPage(true);
-    }
-  };
-
   const handleLink = () => {
     history.push(
       `/dashboard/manage-institutions/institution/${instituteId}/register-user`
@@ -118,12 +99,12 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
 
   // add this function to useEffect
   useEffect(() => {
-    if (!loading && userList.length > 0) {
+    if (!loading && currentList.length > 0) {
       const query = checkSearchQueryFromUrl();
       if (query) {
         const items = filterBySearchQuery(query);
         if (Boolean(items)) {
-          setUserList(items);
+          setCurrentList(items);
         }
       }
     }
@@ -133,7 +114,7 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
     const searched = searchAndFilter(searchInput.value);
 
     if (Boolean(searched)) {
-      setUserList(searched);
+      setCurrentList(searched);
     } else {
       _removeSearchAction();
     }
@@ -155,16 +136,6 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
     });
   };
 
-  const backToInitials = () => {
-    setCurrentPage(0);
-    currenPageUsers();
-    setFirstPage(true);
-    if (totalPages === 1) {
-      setLastPage(true);
-    } else {
-      setLastPage(false);
-    }
-  };
   const toggleSortDimention = () => {
     setSortingType({
       ...sortingType,
@@ -173,7 +144,7 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
   };
 
   const _removeSearchAction = () => {
-    backToInitials();
+    resetPagination();
     removeSearchAction();
   };
 
@@ -195,12 +166,6 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
         : -1
     );
     setTotalUserList(newUserList);
-  };
-
-  const currenPageUsers = () => {
-    const initialItem = currentPage * userCount;
-    const updatedList = totalUserList.slice(initialItem, initialItem + userCount);
-    setUserList(updatedList);
   };
 
   const getStudentsList = (data: any) => {
@@ -339,8 +304,8 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
         response = users;
         const usersList = response;
 
-        const totalListPages = Math.floor(usersList.length / userCount);
-        if (totalListPages * userCount === usersList.length) {
+        const totalListPages = Math.floor(usersList.length / totalUserNum);
+        if (totalListPages * totalUserNum === usersList.length) {
           setTotalPages(totalListPages);
         } else {
           setTotalPages(totalListPages + 1);
@@ -350,7 +315,6 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
         setTotalUserNum(usersList.length);
       }
       setLoading(false);
-      setStatus('done');
     } catch (error) {
       console.error(error);
     }
@@ -358,52 +322,10 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
 
   const [classList, setClassList] = useState([]);
 
-  const getAllClassStudentByClassId = async (
-    filter: any,
-    nextToken: string,
-    outArray: any[]
-  ): Promise<any> => {
-    let combined: any[];
-    try {
-      const result: any = await API.graphql(
-        graphqlOperation(customQueries.listClassStudentsForRoom, {
-          limit: 500,
-          nextToken: nextToken
-        })
-      );
-
-      let returnedData = result.data.listClassStudents?.items;
-      let NextToken = result.data.listClassStudents?.nextToken;
-
-      combined = [...outArray, ...returnedData];
-
-      // if (NextToken) {
-      //   combined = await getAllClassStudentByClassId(filter, NextToken, combined);
-      // }
-
-      return combined;
-    } catch (error) {
-      console.log(
-        '🚀 ~ file: AnalyticsDashboard.tsx ~ line 24 ~ listAllStudents ~ error',
-        error
-      );
-    }
-  };
-
   const fetchStudentList = async () => {
     setLoading(true);
 
     try {
-      // const classFilter = {
-      //   filter: {
-      //     classID: {
-      //       attributeExists: true
-      //     }
-      //   }
-      // };
-
-      // const result = await getAllClassStudentByClassId(classFilter, undefined, []);
-
       const response: any = await API.graphql(
         graphqlOperation(customQueries.getDashboardDataForTeachers, {
           filter: {teacherAuthID: {eq: state.user.authId}}
@@ -493,37 +415,6 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
   }, [isStudentRoster]);
 
   useEffect(() => {
-    backToInitials();
-  }, [totalUserList]);
-
-  useEffect(() => {
-    setCurrentPage(0);
-    setFirstPage(true);
-    setLastPage(false);
-    const totalListPages = Math.floor(totalUserNum / userCount);
-    if (userCount * totalListPages === totalUserNum) {
-      setTotalPages(totalListPages);
-    } else {
-      setTotalPages(totalListPages + 1);
-    }
-    if (totalPages === 1 && totalListPages === 0) {
-      setFirstPage(true);
-      setLastPage(true);
-    }
-  }, [userCount]);
-
-  useEffect(() => {
-    currenPageUsers();
-  }, [currentPage, totalUserNum, userCount]);
-
-  useEffect(() => {
-    if (totalPages === 1) {
-      setFirstPage(true);
-      setLastPage(true);
-    }
-  }, [totalPages]);
-
-  useEffect(() => {
     fetchSortedList();
   }, [sortingType.value, sortingType.asc]);
 
@@ -557,7 +448,7 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
 
       const students = resp.map((item: any) => item.student);
       const userList = sortByName(addName(students));
-      setUserList(userList);
+      setCurrentList(userList);
     } catch (error) {
       console.error(error);
     } finally {
@@ -582,7 +473,7 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
     return loading
       ? '...'
       : selectedClass !== null
-      ? userList?.length
+      ? currentList?.length
       : totalUserList?.length;
   };
 
@@ -726,8 +617,8 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
                       <UserListLoader userRole={state.user.role} />
                     </Fragment>
                   ))
-              ) : userList.length > 0 ? (
-                userList.map((item: any, key: number) => (
+              ) : currentList.length > 0 ? (
+                currentList.map((item: any, key: number) => (
                   <div key={key}>
                     <List
                       isStudentRoster={isStudentRoster}
@@ -767,22 +658,7 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
             {/* Pagination And Counter */}
             <div className={`flex justify-center ${isInInstitute ? '' : 'px-8 my-4'}`}>
               {!searchInput.isActive && selectedClass === null && (
-                <Fragment>
-                  <span className="py-3 px-5 w-auto flex-shrink-0 my-5 text-md leading-5 font-medium text-gray-900">
-                    {paginationPage(userLanguage, currentPage, totalPages)}{' '}
-                  </span>
-                  <Pagination
-                    currentPage={currentPage + 1}
-                    setNext={goNextPage}
-                    setPrev={goPrevPage}
-                    firstPage={firstPage}
-                    lastPage={lastPage}
-                  />
-                  <PageCountSelector
-                    pageSize={userCount}
-                    setPageSize={(c: number) => setUserCount(c)}
-                  />
-                </Fragment>
+                <ListBottomBar {...allAsProps} />
               )}
             </div>
           </div>

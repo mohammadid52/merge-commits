@@ -58,3 +58,9 @@ export  const getJSON = async(url:string):Promise<string> =>{
   const response = await fetch(url);
   return await response.json();
 }
+
+export const paginationPage = (lang: string, page: number, total: number) => {
+  if (lang === 'EN') return `Showing Page ${page + 1} of ${total} pages`;
+  if (lang === 'ES') return `Mostrando página ${page + 1} de ${total} páginas`;
+  return '';
+}

@@ -17,6 +17,8 @@ import Pagination from 'atoms/Pagination';
 import SearchInput from 'atoms/Form/SearchInput';
 import SectionTitle from 'atoms/SectionTitle';
 import PageCountSelector from 'atoms/PageCountSelector';
+import usePagination from '@customHooks/usePagination';
+import ListBottomBar from '@components/Molecules/ListBottomBar';
 interface QuestionsListProps {}
 
 const QuestionsList = (props: QuestionsListProps) => {
@@ -27,18 +29,26 @@ const QuestionsList = (props: QuestionsListProps) => {
   const {theme} = useContext(GlobalContext);
 
   const [status, setStatus] = useState('');
-  const [totalPages, setTotalPages] = useState(0);
-  const [currentPage, setCurrentPage] = useState(0);
+
   const [questionsData, setQuestionsData] = useState([]);
-  const [currentList, setCurrentList] = useState([]);
-  const [lastPage, setLastPage] = useState(false);
-  const [firstPage, setFirstPage] = useState(false);
-  const [pageCount, setPageCount] = useState(10);
+
   const [totalQuesNum, setTotalQuesNum] = useState(0);
+
+  const {
+    currentPage,
+    allAsProps,
+    setTotalPages,
+    pageCount,
+    setCurrentList,
+    currentList,
+    resetPagination
+  } = usePagination(questionsData, totalQuesNum);
+
   const [searchInput, setSearchInput] = useState({
     value: '',
     isActive: false
   });
+
   const [sortingType, setSortingType] = useState({
     value: '',
     name: '',
@@ -57,46 +67,6 @@ const QuestionsList = (props: QuestionsListProps) => {
     // { id: 3, name: 'Topics', value: '' },
     {id: 4, name: 'Language', value: 'language'}
   ];
-
-  const goNextPage = () => {
-    const pageHigherLimit = totalPages - 1;
-    if (firstPage) {
-      setFirstPage(false);
-    }
-    if (currentPage < pageHigherLimit - 1) {
-      setCurrentPage(currentPage + 1);
-    } else if (currentPage === pageHigherLimit - 1) {
-      setCurrentPage(currentPage + 1);
-      setLastPage(true);
-    }
-  };
-
-  const goPrevPage = () => {
-    if (lastPage) {
-      setLastPage(false);
-    }
-    if (currentPage > 0) setCurrentPage(currentPage - 1);
-    else {
-      setFirstPage(true);
-    }
-  };
-
-  const currentPageQuestions = () => {
-    const initialItem = currentPage * pageCount;
-    const updatedList = questionsData.slice(initialItem, initialItem + pageCount);
-    setCurrentList(updatedList);
-  };
-
-  const backToInitials = () => {
-    setCurrentPage(0);
-    currentPageQuestions();
-    setFirstPage(true);
-    if (totalPages === 1) {
-      setLastPage(true);
-    } else {
-      setLastPage(false);
-    }
-  };
 
   const addNewQuestion = () => {
     history.push(`${match.url}/question/add`);
@@ -156,7 +126,7 @@ const QuestionsList = (props: QuestionsListProps) => {
     });
   };
   const removeSearchAction = () => {
-    backToInitials();
+    resetPagination();
     setSearchInput({value: '', isActive: false});
   };
 
@@ -180,39 +150,6 @@ const QuestionsList = (props: QuestionsListProps) => {
   useEffect(() => {
     getQuestionsList();
   }, []);
-
-  useEffect(() => {
-    backToInitials();
-  }, [questionsData]);
-
-  useEffect(() => {
-    setCurrentPage(0);
-    setFirstPage(true);
-    setLastPage(false);
-    const totalListPages = Math.floor(totalQuesNum / pageCount);
-    console.log('totalListPages', totalListPages);
-    if (pageCount * totalListPages === totalQuesNum) {
-      setTotalPages(totalListPages);
-    } else {
-      setTotalPages(totalListPages + 1);
-    }
-    if (totalPages === 1 && totalListPages === 0) {
-      setFirstPage(true);
-      setLastPage(true);
-    }
-  }, [pageCount]);
-
-  useEffect(() => {
-    currentPageQuestions();
-  }, [currentPage, totalQuesNum, pageCount]);
-
-  useEffect(() => {
-    if (totalPages === 1) {
-      console.log('set page initials called.');
-      setFirstPage(true);
-      setLastPage(true);
-    }
-  }, [totalPages]);
 
   useEffect(() => {
     fetchSortedList();
@@ -313,24 +250,7 @@ const QuestionsList = (props: QuestionsListProps) => {
 
               {/* Pagination And Counter */}
               <div className="flex justify-center my-8">
-                {!searchInput.isActive && (
-                  <Fragment>
-                    <span className="py-3 px-5 w-auto flex-shrink-0 my-5 text-md leading-5 font-medium text-gray-900">
-                      Showing Page {currentPage + 1} of {totalPages} pages
-                    </span>
-                    <Pagination
-                      currentPage={currentPage + 1}
-                      setNext={goNextPage}
-                      setPrev={goPrevPage}
-                      firstPage={firstPage}
-                      lastPage={lastPage}
-                    />
-                    <PageCountSelector
-                      pageSize={pageCount}
-                      setPageSize={(c: number) => setPageCount(c)}
-                    />
-                  </Fragment>
-                )}
+                {!searchInput.isActive && <ListBottomBar {...allAsProps} />}
               </div>
             </div>
           </div>

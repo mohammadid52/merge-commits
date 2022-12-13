@@ -288,6 +288,12 @@ type ClassStudent @model @auth(rules: [{allow: public}]) {
   student: Person @belongsTo(fields: ["studentEmail", "studentAuthID"])
 }
 
+type SignedOffStep {
+  authID: String!
+  date: String
+  step: String!
+}
+
 type Curriculum @model @auth(rules: [{allow: public}]) {
   id: ID! @primaryKey
   institutionID: ID! @index(name: "curriculumByInstitution")
@@ -305,6 +311,8 @@ type Curriculum @model @auth(rules: [{allow: public}]) {
   universalSyllabus: [curriculumUnits]
     @hasMany(indexName: "unitsbyCurriculum", fields: ["id"])
   syllabiHistory: [String]
+  signedOff: Boolean
+  signedOffSteps: [SignedOffStep]
 }
 
 type Topic @model @auth(rules: [{allow: public}]) {
@@ -636,6 +644,7 @@ type UniversalLessonPlan {
   interactionType: [String]
   tags: [String]
   videoLink: String
+  notes: String
 }
 
 type UniversalpageContent {
