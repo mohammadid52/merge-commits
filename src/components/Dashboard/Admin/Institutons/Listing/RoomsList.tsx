@@ -433,7 +433,9 @@ const RoomsList = (props: RoomListProps) => {
             </div>
           </div>
         ) : finalList.length ? (
-          <div className="table-custom-responsive max-h-88 overflow-y-auto">
+          <div
+            style={{maxHeight: '57vh'}}
+            className="table-custom-responsive overflow-y-auto">
             <table className="border-collapse table-auto w-full table-hover table-striped">
               <thead className="thead-light">
                 <tr>
