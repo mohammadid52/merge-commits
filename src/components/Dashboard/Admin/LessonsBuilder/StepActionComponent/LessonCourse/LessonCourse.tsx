@@ -4,17 +4,16 @@ import Selector from 'atoms/Form/Selector';
 import Loader from 'atoms/Loader';
 import Modal from 'atoms/Modal';
 import PageWrapper from 'atoms/PageWrapper';
+import {API, graphqlOperation} from 'aws-amplify';
 import UnitFormComponent from 'components/Dashboard/Admin/Institutons/EditBuilders/CurricularsView/TabsActions/Unit/UnitFormComponent';
 import ErrorBoundary from 'components/Error/ErrorBoundary';
-import ModalPopUp from 'molecules/ModalPopUp';
+import {GlobalContext} from 'contexts/GlobalContext';
 import * as customMutations from 'customGraphql/customMutations';
 import * as customQueries from 'customGraphql/customQueries';
-import {API, graphqlOperation} from 'aws-amplify';
-import React, {useContext, useEffect, useState} from 'react';
-import {useHistory, useRouteMatch} from 'react-router';
-import {GlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
-import DetailTable from './DetailTable';
+import ModalPopUp from 'molecules/ModalPopUp';
+import React, {useContext, useEffect, useState} from 'react';
+import {useHistory} from 'react-router';
 
 interface ILessonCourseProps {
   curriculumList: any[];
@@ -32,7 +31,6 @@ interface ILessonCourseProps {
 }
 
 const LessonCourse = ({
-  curriculumList,
   fetchCurriculum,
   institution,
   lessonId,
@@ -40,13 +38,11 @@ const LessonCourse = ({
   lessonName,
   lessonPlans,
   loading,
-  selectedCurriculums,
-  institutionCollection,
   addedSyllabus,
   setAddedSyllabus
 }: ILessonCourseProps) => {
   const history = useHistory();
-  const match = useRouteMatch();
+
   const {
     clientKey,
     state: {
@@ -58,8 +54,7 @@ const LessonCourse = ({
   const [saving, setSaving] = useState(false);
   const [assignedUnitsLoading, setAssignedUnitsLoading] = useState(false);
   const [addModalShow, setAddModalShow] = useState(false);
-  const [roomLoading, setRoomLoading] = useState(false);
-  const [selectedCurriculumList, setSelectedCurriculumList] = useState([]);
+
   const [showAddSection, setShowAddSection] = useState(false);
   const [allUnits, setAllUnits] = useState<any>([]);
   const [units, setUnits] = useState<any>([]);
@@ -78,12 +73,6 @@ const LessonCourse = ({
       fetchSyllabusList();
     }
   }, [institution]);
-
-  useEffect(() => {
-    if (selectedCurriculums?.length) {
-      setSelectedCurriculumList(selectedCurriculums);
-    }
-  }, [selectedCurriculums]);
 
   const fetchSyllabusList = async () => {
     try {
@@ -146,34 +135,6 @@ const LessonCourse = ({
     }
   };
 
-  // useEffect(() => {
-  //   console.log(curriculumList, 'curriculumList inside useeffect');
-  //   if (curriculumList.length) {
-  //     fetchClassRoomDetails();
-  //   }
-  // }, [curriculumList]);
-
-  const fetchClassRoomDetails = async () => {
-    setRoomLoading(true);
-    const classroomsResult: any = await API.graphql(
-      graphqlOperation(customQueries.getInstClassRooms, {id: institution?.id})
-    );
-    const classRooms = classroomsResult?.data.getInstitution?.rooms.items;
-    setSelectedCurriculumList((prevSelectedCurriculums) =>
-      prevSelectedCurriculums.map((selectedCurriculum) => {
-        const associatedClassRoomData = classRooms.filter(
-          (classRoom: any) =>
-            classRoom.curricula.items.filter(
-              (e: any) => e.curriculumID === selectedCurriculum.id
-            ).length
-        );
-        selectedCurriculum.associatedClassRoomData = associatedClassRoomData;
-        return selectedCurriculum;
-      })
-    );
-    setRoomLoading(false);
-  };
-
   const handleToggleDelete = (targetString?: string, uniqueId?: string) => {
     if (!deleteModal.show) {
       setDeleteModal({
@@ -221,21 +182,6 @@ const LessonCourse = ({
   const onAddModalClose = () => {
     setAddModalShow(false);
     fetchCurriculum();
-  };
-
-  const postDeletion = () => {
-    fetchCurriculum();
-  };
-
-  const renderTableView = (curriculum: any) => {
-    return (
-      <DetailTable
-        curriculum={curriculum}
-        lessonId={lessonId}
-        loading={roomLoading}
-        postDeletion={postDeletion}
-      />
-    );
   };
 
   const addLessonToSyllabusLesson = async (unitId: string = unitInput.id) => {
@@ -298,46 +244,16 @@ const LessonCourse = ({
             }
           }
         ]);
-        // const newItem: any = {
-        //   ...newLesson,
-        //   curricularName: formState?.curriculum?.name,
-        //   curricularId: formState?.curriculum?.id,
-        //   syllabusName: formState?.unit?.name,
-        // };
-        // const updatedList: any = curriculaList.map((curricular: any) => {
-        //   if (curricular?.curricularId === formState?.curriculum?.id) {
-        //     const updatedUnitList: any = curricular?.unitList?.filter(
-        //       (item: any) => item.id !== formState.unit.id
-        //     );
-        //     return {
-        //       ...curricular,
-        //       unitList: updatedUnitList,
-        //     };
-        //   } else {
-        //     return curricular;
-        //   }
-        // });
-        // setCurriculaList([...updatedList]);
-        // setSelectedUnitsList([...selectedUnitsList, newItem]);
+
         setUnitInput({
           id: '',
           name: ''
         });
-        // setUnitsList([]);
-        // setMessage({
-        //   ...message,
-        //   isError: false,
-        //   msg: UnitLookupDict[userLanguage]['MESSAGES']['ADDED'],
-        // });
+
         setSaving(false);
       }
     } catch (error) {
       console.log(error, 'error');
-      // setMessage({
-      //   ...message,
-      //   isError: true,
-      //   msg: UnitLookupDict[userLanguage]['MESSAGES']['ADDERR'],
-      // });
     }
   };
 
@@ -428,7 +344,7 @@ const LessonCourse = ({
             ) : null}
             {loading || assignedUnitsLoading ? (
               <div className="mt-4">
-                <Loader />
+                <Loader animation />
               </div>
             ) : (
               <>
@@ -492,11 +408,14 @@ const LessonCourse = ({
                               )}
                           </div>
                           {!unit.lessonHistory?.includes(lessonId) ? (
-                            <div
-                              className="flex w-2/10 items-center justify-center px-8 py-3 text-left text-s leading-4"
-                              onClick={() => handleToggleDelete(unit.name, unit.id)}>
-                              <DeleteActionBtn />
-                            </div>
+                            <Buttons
+                              onClick={() => handleToggleDelete(unit.name, unit.id)}
+                              Icon={DeleteActionBtn}
+                              redBtn
+                              transparent
+                              iconSize="w-4 h-6"
+                              size="small"
+                            />
                           ) : (
                             <span
                               className={`relative w-2/10 flex text-gray-500 items-center justify-center px-8 py-3`}>
@@ -516,52 +435,8 @@ const LessonCourse = ({
                 )}
               </>
             )}
-            {/* <div className="grid gap-5 lg:grid-cols-2 grid-cols-1 xl:grid-cols-2 lg:max-w-none mt-8">
-            {selectedCurriculumList.map((curriculum) => (
-                <CourseCard
-                  institutionCollection={institutionCollection}
-                  curriculum={curriculum}
-                  lessonId={lessonId}
-                  loading={roomLoading}
-                  postDeletion={postDeletion}
-                  key={curriculum.id}
-                />
-              ))}
-            </div> */}
-            {/* ) : (
-            // <div className="w-full flex justify-between border-b-0 border-gray-200 mt-8">
-            //   <Accordion
-            //     titleList={titleList}
-            //     actionOnAccordionClick={fetchClassRoomDetails}
-            //   />
-            // </div>
-            <div className="text-center p-16 mt-4">
-              <p className="text-gray-600 font-medium">
-                {UnitLookupDict[userLanguage]['NOTADDED']}
-              </p>
-            </div>
-          )} */}
           </PageWrapper>
-          {/* {addModalShow && (
-          <Modal
-            showHeader
-            showFooter={false}
-            showHeaderBorder
-            title={'Add Lesson to Syllabus'}
-            closeOnBackdrop
-            closeAction={onAddModalClose}>
-            <div className="min-w-180 lg:min-w-256">
-              <AddCourse
-                curriculumList={curriculumList}
-                institutionID={institution?.id}
-                lessonId={lessonId}
-                lessonType={lessonType}
-                lessonPlans={lessonPlans}
-                selectedCurriculumList={selectedCurriculumList}
-              />
-            </div>
-          </Modal>
-        )} */}
+
           {addModalShow && (
             <Modal
               showHeader

@@ -3,6 +3,7 @@ import {getAsset} from 'assets';
 import {GlobalContext} from 'contexts/GlobalContext';
 import {getImageFromS3} from 'utilities/services';
 import {getInitialsFromString, initials, stringToHslColor} from 'utilities/strings';
+import {orderBy} from 'lodash';
 
 interface MultipleSelectorProps {
   list?: {id: string; name: string; value?: string; avatar?: string}[];
@@ -80,6 +81,8 @@ const MultipleSelector = (props: MultipleSelectorProps) => {
     }
   }, [list, withAvatar]);
 
+  const sortedList = orderBy(modifiedList, ['name'], ['asc']);
+
   return (
     <div className="relative" ref={currentRef}>
       <span className="inline-block w-full h-full rounded-full shadow-sm">
@@ -98,7 +101,7 @@ const MultipleSelector = (props: MultipleSelectorProps) => {
           <span className="block truncate text-gray-700">
             {selectedItems.length
               ? selectedItems.length < 3
-                ? selectedItems.map(
+                ? sortedList.map(
                     (item, index) =>
                       item.name +
                       `${selectedItems.length - 1 === index ? '.' : ',' + ' '}`

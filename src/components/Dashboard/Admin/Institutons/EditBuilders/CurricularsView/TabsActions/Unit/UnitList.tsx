@@ -336,7 +336,7 @@ export const UnitList = ({instId}: any) => {
         {loading ? (
           <div className="py-20 text-center mx-auto flex justify-center items-center w-full h-48">
             <div className="w-5/10">
-              <Loader />
+              <Loader animation />
             </div>
           </div>
         ) : finalList?.length ? (

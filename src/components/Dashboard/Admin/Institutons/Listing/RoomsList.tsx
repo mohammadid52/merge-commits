@@ -132,7 +132,6 @@ const RoomsList = (props: RoomListProps) => {
 
   const [institutionList, setInstitutionList] = useState<any>([]);
   const [selectedInstitution, setSelectedInstitution] = useState<any>({});
-  const [selectedStaff, setSelectedStaff] = useState<any>({});
 
   const [messages, setMessages] = useState({
     show: false,
@@ -363,11 +362,6 @@ const RoomsList = (props: RoomListProps) => {
     // onSearch(searchInput, '', '');
   };
 
-  const onStaffSelectionRemove = () => {
-    setSelectedStaff({});
-    // onSearch(searchInput, selectedInstitution?.id, '');
-  };
-
   return (
     <div className="flex m-auto justify-center p-4 pt-0 pl-md-12">
       <div className="">
@@ -432,7 +426,7 @@ const RoomsList = (props: RoomListProps) => {
         {loading ? (
           <div className="py-20 text-center mx-auto flex justify-center items-center w-full h-48">
             <div className="w-5/10">
-              <Loader color="rgba(107, 114, 128, 1)" />
+              <Loader animation />
               <p className="mt-2 text-center text-lg text-gray-500">
                 {InstitueRomms[userLanguage]['LOADING']}
               </p>

@@ -3,6 +3,7 @@ import {ExclamationCircleIcon} from '@heroicons/react/outline';
 import {getAsset} from 'assets';
 import Label from 'atoms/Form/Label';
 import {GlobalContext} from 'contexts/GlobalContext';
+import {orderBy} from 'lodash';
 import React, {ReactNode, useContext, useEffect, useRef, useState} from 'react';
 import {FaSpinner} from 'react-icons/fa';
 import {IoClose} from 'react-icons/io5';
@@ -63,6 +64,8 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
   const currentRef: any = useRef(null);
   const {theme, clientKey} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
+
+  const sortedList = orderBy(list, ['name'], ['asc']);
 
   const updateSelectedItem = (str: string, name: string, id: string) => {
     setShowList(!showList);
@@ -214,7 +217,7 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
                 dropdownWidth || 'w-132'
               } relative  max-h-60 text-base overflow-y-auto leading-6 focus:shadow-none focus:outline-none sm:text-sm sm:leading-5`}>
               {list.length > 0 ? (
-                list.map(
+                sortedList.map(
                   (item: {
                     popoverElement?: any;
                     name: string;

@@ -332,7 +332,7 @@ const UnitLookup = (props: UnitLookupProps) => {
           <div className="mb-8 w-full m-auto max-h-88 overflow-y-auto">
             {loading ? (
               <div className="mt-4">
-                <Loader />
+                <Loader animation />
               </div>
             ) : selectedUnitsList.length ? (
               selectedUnitsList?.map((item: any, index: number) => (
