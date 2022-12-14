@@ -8,6 +8,7 @@ import MainSummary from './StandardLessonCard/MainSummary';
 import Rating from './StandardLessonCard/Rating';
 import ProgressBar from './StandardLessonCard/ProgressBar';
 import useAuth from '@customHooks/useAuth';
+import {logError} from '@graphql/functions';
 
 const StandardLessonCard = (props: LessonCardProps) => {
   const {
@@ -31,7 +32,7 @@ const StandardLessonCard = (props: LessonCardProps) => {
   const [isFetched, setIsFetched] = useState(false);
   const [personDataObj, setPersonDataObj] = useState<any>(null);
 
-  const {isStudent} = useAuth();
+  const {isStudent, authId, email} = useAuth();
   useEffect(() => {
     if (!isFetched) {
       checkValueOrNull();
@@ -50,6 +51,7 @@ const StandardLessonCard = (props: LessonCardProps) => {
       }
       return;
     } catch (error) {
+      logError(error, {authId, email}, 'StandardLessonCard @checkValueOrNull');
     } finally {
       setIsFetched(true);
     }

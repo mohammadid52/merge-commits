@@ -1,5 +1,5 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import {updatePageState} from '@graphql/functions';
+import {logError, updatePageState} from '@graphql/functions';
 import {setPageTitle} from '@utilities/functions';
 import {removeLocalStorageData, setLocalStorageData} from '@utilities/localStorage';
 import {UserPageState} from 'API';
@@ -372,6 +372,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
       }
     } catch (e) {
       console.error('handleSyllabusActivation: ', e);
+      logError(e, {authId, email}, 'Classroom @handleSyllabusActivation');
     } finally {
       setSyllabusActivating(false);
       setActiveRoomInfo({...activeRoomInfo, activeSyllabus: syllabusID});
@@ -407,10 +408,10 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
       const data = lessonPersonData?.data?.listPersonLessonsData?.items || [];
       removeLocalStorageData('lessonPersonData');
       setLocalStorageData('lessonPersonData', data);
-
       setListPersonData(data);
     } catch (e) {
       console.error('listLessonPersonData: ', e);
+      logError(e, {authId, email}, 'Classroom @fetchLessonPersonData');
     } finally {
       setFetchingPersonData(false);
     }
@@ -451,7 +452,9 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
             }
           })
         );
-      } catch (error) {}
+      } catch (error) {
+        logError(error, {authId, email}, 'Classroom @handleLessonMutationRating');
+      }
     }
   };
 
