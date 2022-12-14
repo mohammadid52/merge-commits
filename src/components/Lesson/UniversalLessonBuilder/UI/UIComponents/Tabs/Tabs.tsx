@@ -184,10 +184,10 @@ export const Tabs3 = ({
 
                 tab.name === curTab
                   ? config.fullColor
-                    ? 'iconoclast:bg-main text-white curate:bg-main '
-                    : 'iconoclast:bg-100 iconoclast:text-700 curate:bg-100 curate:text-700 '
-                  : 'text-gray-500 hover:text-gray-600',
-                'px-3 text-center cursor-pointer transition-all py-3 font-medium  rounded-md'
+                    ? 'theme-bg theme-card-shadow border-0 theme-border text-white'
+                    : 'theme-bg text-white'
+                  : 'theme-text hover:theme-bg border-0  hover-text-white theme-border bg-transparent',
+                'px-3 text-center cursor-pointer transition-all py-2 font-medium  rounded-full'
               )}
               aria-current={tab.current ? 'page' : undefined}>
               {numbered ? `${idx + 1}. ` : ''}

@@ -6,7 +6,7 @@ import '../../style/atoms/_table.scss';
 const Table = ({
   dataList,
   headers,
-  config = {dark: true},
+  config = {dark: true}
 }: {
   config?: {
     dark?: boolean;
@@ -30,10 +30,7 @@ const Table = ({
               config?.dark ? 'border-gray-700' : 'border-gray-200'
             } sm:rounded-lg`}>
             <table className="min-w-full divide-y-0 divide-gray-700">
-              <thead
-                className={`${
-                  config?.headers?.bgColor || 'iconoclast:bg-main curate:bg-main'
-                } `}>
+              <thead className={`${config?.headers?.bgColor || 'theme-bg'} `}>
                 <tr>
                   {map(headers, (header, idx) => (
                     <th
@@ -75,7 +72,7 @@ const Table = ({
                             _idx === 0 ? 'w-72' : ''
                           } whitespace-nowrap text-sm`}
                           dangerouslySetInnerHTML={{
-                            __html: _item,
+                            __html: _item
                           }}></td>
                       );
                     })}
