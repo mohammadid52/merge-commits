@@ -1,6 +1,7 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import ComponentLoading from '@components/Lesson/Loading/ComponentLoading';
 import {logError, updatePageState} from '@graphql/functions';
+import {setPageTitle} from '@utilities/functions';
 import {PersonStatus, UserPageState} from 'API';
 import {getAsset} from 'assets';
 import Community from 'components/Community/Community';
@@ -39,8 +40,6 @@ const Registration = lazy(
   () => import('components/Dashboard/Admin/UserManagement/Registration')
 );
 const ErrorsPage = lazy(() => import('components/Dashboard/Errors/ErrorsPage'));
-
-const adminEmail = 'michael.russel@zoiq.io';
 
 const conditionalRender = (children: JSX.Element, condition: boolean) => {
   if (condition) {

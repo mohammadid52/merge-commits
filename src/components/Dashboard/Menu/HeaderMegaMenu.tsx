@@ -208,7 +208,7 @@ const HeaderMegaMenu = () => {
     headerMenusForStudent?.find((d) => d.active)?.title || headerMenusForStudent[0]?.title
   );
 
-  const updateTab = ({key, redirectionUrl, title}: typeof headerMenusForStudent[0]) => {
+  const updateTab = ({redirectionUrl, title}: typeof headerMenusForStudent[0]) => {
     setCurrentTab(title);
     if (redirectionUrl) {
       history.push(redirectionUrl);

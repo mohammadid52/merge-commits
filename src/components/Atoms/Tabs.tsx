@@ -144,15 +144,13 @@ const Tabs = ({tabsData, updateTab, currentTab}: ITabsProps) => {
               <button
                 key={index}
                 onClick={() => {
-                  updateTab(menu);
+                  if (currentTab !== menu.title) {
+                    updateTab(menu);
+                  }
                 }}
                 className={`${
-                  menu.active ? 'bg-indigo-300 text-indigo-700' : ''
-                }  hover:bg-gray-400 ${
-                  !isGameChangers ? 'hover:text-gray-700' : 'hover-text-white'
-                }  inline-flex justify-center w-full px-1 xl:px-2 2xl:px-4 py-2 text-xs 2xl:text-base font-medium ${
-                  theme === 'iconoclastIndigo' ? 'iconoclastIndigo' : 'curateBlue'
-                } rounded-full bg-opacity-20 hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 transition duration-150 ease-in-out transform text-gray-700 font-bold`}>
+                  menu.active ? 'theme-bg text-white' : 'theme-text:500'
+                } theme-border:300 border-0 hover:theme-bg:500 bg-transparent  hover-text-white  inline-flex justify-center w-full px-1 xl:px-2 2xl:px-4 py-2 text-xs 2xl:text-base  rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 transition duration-150 ease-in-out transform font-medium`}>
                 {menu.title}
               </button>
             )

@@ -1,5 +1,4 @@
 // import {BsFillInfoCircleFill} from 'react-icons/bs';
-import Placeholder from '@components/Atoms/Placeholder';
 import {useGlobalContext} from '@contexts/GlobalContext';
 import useAuth from '@customHooks/useAuth';
 import {Menu, Transition} from '@headlessui/react';

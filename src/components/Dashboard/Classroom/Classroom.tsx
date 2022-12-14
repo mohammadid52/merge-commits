@@ -1,5 +1,6 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {updatePageState} from '@graphql/functions';
+import {setPageTitle} from '@utilities/functions';
 import {removeLocalStorageData, setLocalStorageData} from '@utilities/localStorage';
 import {UserPageState} from 'API';
 import {getAsset} from 'assets';
@@ -134,12 +135,12 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
   const gContext = useGlobalContext();
   const state = gContext.state;
   const dispatch = gContext.dispatch;
-  const lessonDispatch = gContext.lessonDispatch;
   const stateUser = gContext.stateUser;
   const theme = gContext.theme;
   const clientKey = gContext.clientKey;
   const userLanguage = gContext.userLanguage;
 
+  const {authId, email, pageState, isStudent, isFellow} = useAuth();
   const match: any = useRouteMatch();
   const bannerImg = getAsset(clientKey, 'dashboardBanner1');
   const {classRoomDict, BreadcrumsTitles} = useDictionary(clientKey);
@@ -148,17 +149,15 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
   // ########################### ROOM SWITCHING ########################## //
   // ##################################################################### //
   useEffect(() => {
-    if (stateUser?.role === 'ST') {
+    if (isStudent) {
       dispatch({type: 'UPDATE_CURRENTPAGE', payload: {data: 'classroom'}});
     }
-    if (stateUser?.role === 'TR' || stateUser?.role === 'FLW') {
+    if (isTeacher || isFellow) {
       dispatch({type: 'UPDATE_CURRENTPAGE', payload: {data: 'lesson-planner'}});
     }
   }, [stateUser?.role]);
 
   const roomId = match?.params?.roomId;
-
-  const {authId, email, pageState} = useAuth();
 
   useEffect(() => {
     if (!isEmpty(roomId) && state.roomData?.rooms?.length > 0) {
@@ -166,6 +165,9 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
       const room = state.roomData.rooms[roomIndex];
       const name = room?.name;
       handleRoomSelection(roomId, name, roomIndex);
+
+      name && setPageTitle(name);
+
       updatePageState(
         UserPageState.CLASS,
         {

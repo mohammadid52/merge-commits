@@ -18,6 +18,7 @@ import * as queries from 'graphql/queries';
 import useAuth from '@customHooks/useAuth';
 import {v4 as uuidV4} from 'uuid';
 import {updatePageState} from '@graphql/functions';
+import {setPageTitle} from '@utilities/functions';
 
 export interface ILessonSurveyApp {
   pageStateUpdated: boolean;
@@ -56,6 +57,7 @@ const Lesson = () => {
         graphqlOperation(customQueries.getUniversalLesson, {id: lessonID})
       );
       const response = universalLesson.data.getUniversalLesson;
+      setPageTitle(response?.title);
       if (response) {
         const lessonPlan = response.lessonPlan.reduce((acc: any[], page: any) => {
           return [

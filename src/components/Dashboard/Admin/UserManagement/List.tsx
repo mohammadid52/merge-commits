@@ -53,6 +53,8 @@ export const formatPageName = (pageState: UserPageState) => {
       return 'Dashboard';
     case UserPageState.COMMUNITY:
       return 'Community';
+    case UserPageState.NOTEBOOK:
+      return 'Notebook';
     default:
       return pageState;
   }

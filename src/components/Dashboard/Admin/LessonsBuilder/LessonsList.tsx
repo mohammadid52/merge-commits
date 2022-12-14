@@ -11,8 +11,6 @@ import BreadCrums from 'atoms/BreadCrums';
 import Buttons from 'atoms/Buttons';
 import SearchInput from 'atoms/Form/SearchInput';
 import Selector from 'atoms/Form/Selector';
-import PageCountSelector from 'atoms/PageCountSelector';
-import Pagination from 'atoms/Pagination';
 import {GlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';

@@ -1,5 +1,7 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {Storage} from '@aws-amplify/storage';
+import {formatPageName} from '@components/Dashboard/Admin/UserManagement/List';
+import {setPageTitle} from '@utilities/functions';
 import {CreateErrorLogInput, UserPageState} from 'API';
 import * as customMutations from 'customGraphql/customMutations';
 
@@ -76,6 +78,15 @@ export const updatePageState = async (
   auth: {authId: string; email: string; pageState: UserPageState},
   onSuccessCallback?: () => void
 ) => {
+  if (
+    pageState === UserPageState.DASHBOARD ||
+    pageState === UserPageState.COMMUNITY ||
+    pageState === UserPageState.GAME_CHANGERS ||
+    pageState === UserPageState.NOTEBOOK
+  ) {
+    setPageTitle(formatPageName(pageState));
+  }
+
   if (auth.pageState !== pageState) {
     try {
       const input = {
