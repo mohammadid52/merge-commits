@@ -19,6 +19,8 @@ import PageCountSelector from 'atoms/PageCountSelector';
 import SearchInput from 'atoms/Form/SearchInput';
 import Selector from 'atoms/Form/Selector';
 import useDictionary from 'customHooks/dictionary';
+import ListBottomBar from '@components/Molecules/ListBottomBar';
+import usePagination from '@customHooks/usePagination';
 
 {
   /* 
@@ -36,15 +38,12 @@ const UserLookup = () => {
   const [status, setStatus] = useState('');
   const [userList, setUserList] = useState([]);
   const [userCount, setUserCount] = useState(10);
-  const [currentPage, setCurrentPage] = useState(0);
   const [pageTokens, setPageTokens] = useState({
     currentPageToken: null,
     nextPageToken: null,
     prevToken: []
   });
   const [userListLength, setUSerListLength] = useState(10);
-  const [lastPage, setLastPage] = useState(false);
-  const [firstPage, setFirstPage] = useState(false);
   const [searchInput, setSearchInput] = useState({
     value: '',
     isActive: false
@@ -54,9 +53,16 @@ const UserLookup = () => {
     name: '',
     asc: true
   });
-  const {UserLookupWithTokenDict, paginationPage, BreadcrumsTitles} = useDictionary(
-    clientKey
-  );
+  const {UserLookupWithTokenDict, BreadcrumsTitles} = useDictionary(clientKey);
+
+  const {
+    currentPage,
+    allAsProps,
+
+    setCurrentPage,
+    setFirstPage,
+    setLastPage
+  } = usePagination(userList || [], userCount || 0);
 
   const breadCrumsList = [
     {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
@@ -113,31 +119,6 @@ const UserLookup = () => {
       console.error(error);
     }
   }
-
-  const loadPrevPage = () => {
-    if (lastPage) {
-      setLastPage(false);
-    }
-    // This will find token for the previous page from prevToken list.
-    listUsers(pageTokens.prevToken[currentPage - 1], true);
-    setSortingToInitial();
-  };
-
-  const loadNextPage = () => {
-    if (firstPage) {
-      setFirstPage(false);
-    }
-    // Below conditions decides which token to use for data fetching.
-
-    if (pageTokens.prevToken.length < currentPage + 1) {
-      listUsers(pageTokens.nextPageToken);
-    } else if (pageTokens.prevToken.length === currentPage + 1) {
-      listUsers(pageTokens.currentPageToken, false, true);
-    } else {
-      listUsers(pageTokens.prevToken[currentPage + 1], false, true);
-    }
-    setSortingToInitial();
-  };
 
   const handleLink = () => {
     history.push(`/dashboard/registration`);
@@ -321,23 +302,8 @@ const UserLookup = () => {
                   </div>
                 )}
               </div>
-              <div className="flex justify-center my-8">
-                {!searchInput.isActive && (
-                  <Fragment>
-                    <Pagination
-                      currentPage={currentPage}
-                      setNext={loadNextPage}
-                      setPrev={loadPrevPage}
-                      firstPage={firstPage}
-                      lastPage={lastPage}
-                    />
-                    <PageCountSelector
-                      pageSize={userCount}
-                      setPageSize={(c: number) => setUserCount(c)}
-                    />
-                  </Fragment>
-                )}
-              </div>
+
+              {!searchInput.isActive && <ListBottomBar {...allAsProps} />}
             </div>
           </div>
         </div>

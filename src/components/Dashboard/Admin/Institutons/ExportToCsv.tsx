@@ -2,6 +2,8 @@ import React, {useState, useEffect} from 'react';
 import {CSVLink} from 'react-csv';
 import API, {graphqlOperation} from '@aws-amplify/api';
 import * as queries from 'graphql/queries';
+import {logError} from '@graphql/functions';
+import useAuth from '@customHooks/useAuth';
 
 /**
  * This component represents the feature for extracting institutions list into csv files.
@@ -9,6 +11,7 @@ import * as queries from 'graphql/queries';
  */
 
 const ExportToCsv: React.FC = () => {
+  const {authId, email} = useAuth();
   const [institutionsList, setInstitutionsList] = useState([]);
 
   // This will fetch all the institutions list data.
@@ -38,6 +41,7 @@ const ExportToCsv: React.FC = () => {
         setInstitutionsList(updatedList);
       }
     } catch (error) {
+      logError(error, {authId: authId, email: email}, 'ExportToCsv');
       console.error(error);
     }
   };

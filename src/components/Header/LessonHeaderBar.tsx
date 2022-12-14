@@ -1,5 +1,4 @@
-import {useNotifications} from '@contexts/NotificationContext';
-import useLessonControls from '@customHooks/lessonControls';
+import ErrorBoundary from '@components/Error/ErrorBoundary';
 import useStudentTimer from '@customHooks/timer';
 import useAuth from '@customHooks/useAuth';
 import useGraphqlMutation from '@customHooks/useGraphqlMutation';
@@ -194,9 +193,7 @@ const LessonHeaderBar = ({
 
   // ~~~~~~~~~ SIMPLE LOGIC CHECKS ~~~~~~~~~ //
 
-  const userAtEnd = () => {
-    return lessonState.currentPage === PAGES.length - 1;
-  };
+  const userAtEnd = () => lessonState.currentPage === PAGES.length - 1;
 
   // ##################################################################### //
   // ############################# NAVIGATION ############################ //
@@ -285,113 +282,121 @@ const LessonHeaderBar = ({
   // ##################################################################### //
 
   return (
-    <div
-      style={{zIndex: 3000}}
-      className={` relative center w-full 
+    <ErrorBoundary
+      authId={user.authId}
+      email={user.email}
+      componentName="LessonHeaderBar"
+      fallback={<h1>LessonHeaderBar is not working</h1>}>
+      <div
+        style={{zIndex: 3000}}
+        className={` relative center w-full 
         h-.7/10 text-gray-200 shadow-2xl  
         ${theme.toolbar.bg} `}>
-      {/* LEAVE POPUP */}
-      <div className={`${leaveModalVisible ? 'absolute z-100' : 'hidden'}`}>
-        <PositiveAlert
-          closeAction={() => setLeaveModalVisible(false)}
-          alert={leaveModalVisible}
-          setAlert={setLeaveModalVisible}
-          button1Color={
-            'border-sea-green hover:bg-sea-green text-sea-green white-text-on-hover border-2'
-          }
-          header={
-            isLesson
-              ? `Congratulations, you have completed the lesson ${lessonState.lessonData.title}, Did you want to keep your writing excercies in the classroom or move them to your notebook`
-              : !isLesson
-              ? `Thank you for completing ${lessonState.lessonData.title}`
-              : 'This will take you out of the lesson.  Did you want to continue?'
-          }
-          button1={`${
-            isLesson
-              ? 'I completed this lesson. \n Move my work to my notebook.'
-              : !isLesson
-              ? 'I am happy with my responses and want to close the survey'
-              : 'Saving your data...'
-          }`}
-          button2={
-            isLesson ? 'Leave in classroom' : 'I am going to keep working on my responses'
-          }
-          svg="question"
-          handleButton1={handleNotebookSave}
-          handleButton2={isLesson ? goToClassRoom : () => setLeaveModalVisible(false)}
-          theme="dark"
-          fill="screen"
-        />
-      </div>
-
-      {/* VIDEO POPUP */}
-      {!leaveModalVisible && videoLink && (
-        <div className={`${videoLinkModalVisible ? 'absolute z-100' : 'hidden'}`}>
-          <Modal
-            title={`Video for "${getPageLabel(lessonState.currentPage)}"`}
-            showHeader={true}
-            showHeaderBorder={false}
-            showFooter={false}
-            scrollHidden={true}
-            closeAction={handleVideoLinkPopup}>
-            <ReactPlayer
-              url={videoLink}
-              controls={true}
-              pip={true}
-              stopOnUnmount={false}
-            />
-          </Modal>
+        {/* LEAVE POPUP */}
+        <div className={`${leaveModalVisible ? 'absolute z-100' : 'hidden'}`}>
+          <PositiveAlert
+            closeAction={() => setLeaveModalVisible(false)}
+            alert={leaveModalVisible}
+            setAlert={setLeaveModalVisible}
+            button1Color={
+              'border-sea-green hover:bg-sea-green text-sea-green white-text-on-hover border-2'
+            }
+            header={
+              isLesson
+                ? `Congratulations, you have completed the lesson ${lessonState.lessonData.title}, Did you want to keep your writing excercies in the classroom or move them to your notebook`
+                : !isLesson
+                ? `Thank you for completing ${lessonState.lessonData.title}`
+                : 'This will take you out of the lesson.  Did you want to continue?'
+            }
+            button1={`${
+              isLesson
+                ? 'I completed this lesson. \n Move my work to my notebook.'
+                : !isLesson
+                ? 'I am happy with my responses and want to close the survey'
+                : 'Saving your data...'
+            }`}
+            button2={
+              isLesson
+                ? 'Leave in classroom'
+                : 'I am going to keep working on my responses'
+            }
+            svg="question"
+            handleButton1={handleNotebookSave}
+            handleButton2={isLesson ? goToClassRoom : () => setLeaveModalVisible(false)}
+            theme="dark"
+            fill="screen"
+          />
         </div>
-      )}
 
-      <LessonTopMenu
-        overlay={overlay}
-        pageStateUpdated={pageStateUpdated}
-        setOverlay={setOverlay}
-        handlePopup={handleLeavePopup}
-        isAtEnd={isAtEnd}
-        updatePageInLocalStorage={updatePageInLocalStorage}
-        setisAtEnd={setisAtEnd}
-        validateRequired={validateRequired}
-        handleRequiredNotification={handleRequiredNotification}
-        pages={PAGES}
-        canContinue={canContinue}
-        handleForward={handleForward}
-      />
+        {/* VIDEO POPUP */}
+        {!leaveModalVisible && videoLink && (
+          <div className={`${videoLinkModalVisible ? 'absolute z-100' : 'hidden'}`}>
+            <Modal
+              title={`Video for "${getPageLabel(lessonState.currentPage)}"`}
+              showHeader={true}
+              showHeaderBorder={false}
+              showFooter={false}
+              scrollHidden={true}
+              closeAction={handleVideoLinkPopup}>
+              <ReactPlayer
+                url={videoLink}
+                controls={true}
+                pip={true}
+                stopOnUnmount={false}
+              />
+            </Modal>
+          </div>
+        )}
 
-      {/**
-       *
-       *
-       * SIDE MENU UNDER PROGRESS BAR HIDDEN UNTIL FURTHER NOTICE
-       *
-       *
-       */}
-
-      {breakpoint !== 'xs' && breakpoint !== 'sm' ? (
-        <VideoWidget
-          videoLink={videoLink}
-          videoLinkModalVisible={videoLinkModalVisible}
-          handleVideoLinkPopup={handleVideoLinkPopup}
-        />
-      ) : (
-        <SideMenu
-          isOpen={overlay === 'sidemenu'}
+        <LessonTopMenu
           overlay={overlay}
+          pageStateUpdated={pageStateUpdated}
           setOverlay={setOverlay}
-          videoLink={videoLink}
-          videoLinkModalVisible={videoLinkModalVisible}
-          handleVideoLinkPopup={handleVideoLinkPopup}
           handlePopup={handleLeavePopup}
           isAtEnd={isAtEnd}
+          updatePageInLocalStorage={updatePageInLocalStorage}
           setisAtEnd={setisAtEnd}
+          validateRequired={validateRequired}
           handleRequiredNotification={handleRequiredNotification}
           pages={PAGES}
           canContinue={canContinue}
-          handleBack={handleBack}
           handleForward={handleForward}
         />
-      )}
-    </div>
+
+        {/**
+         *
+         *
+         * SIDE MENU UNDER PROGRESS BAR HIDDEN UNTIL FURTHER NOTICE
+         *
+         *
+         */}
+
+        {breakpoint !== 'xs' && breakpoint !== 'sm' ? (
+          <VideoWidget
+            videoLink={videoLink}
+            videoLinkModalVisible={videoLinkModalVisible}
+            handleVideoLinkPopup={handleVideoLinkPopup}
+          />
+        ) : (
+          <SideMenu
+            isOpen={overlay === 'sidemenu'}
+            overlay={overlay}
+            setOverlay={setOverlay}
+            videoLink={videoLink}
+            videoLinkModalVisible={videoLinkModalVisible}
+            handleVideoLinkPopup={handleVideoLinkPopup}
+            handlePopup={handleLeavePopup}
+            isAtEnd={isAtEnd}
+            setisAtEnd={setisAtEnd}
+            handleRequiredNotification={handleRequiredNotification}
+            pages={PAGES}
+            canContinue={canContinue}
+            handleBack={handleBack}
+            handleForward={handleForward}
+          />
+        )}
+      </div>
+    </ErrorBoundary>
   );
 };
 

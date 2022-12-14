@@ -18,6 +18,9 @@ import PageCountSelector from 'atoms/PageCountSelector';
 import Pagination from 'atoms/Pagination';
 import InstitutionRow from './InstitutionRow';
 import InstitutionRowLoader from './InstitutionRowLoader';
+import {logError} from '@graphql/functions';
+import ListBottomBar from '@components/Molecules/ListBottomBar';
+import usePagination from '@customHooks/usePagination';
 
 /**
  * This component represents the bulk code of the institutions-lookup/all-institutions page
@@ -37,14 +40,18 @@ const InstitutionLookup: React.FC = () => {
   const bannerImage = getAsset(clientKey, 'dashboardBanner1');
   const [status, setStatus] = useState('');
   const [institutionsData, setInstitutionsData] = useState([]);
-  const [currentList, setCurrentList] = useState([]);
+
   const [userCount, setUserCount] = useState(10);
-  const [currentPage, setCurrentPage] = useState(0);
-  const [lastPage, setLastPage] = useState(false);
-  const [firstPage, setFirstPage] = useState(false);
   const [totalInstNum, setTotalInstNum] = useState(0);
-  const [totalPages, setTotalPages] = useState(0);
   const [showAlert, setShowAlert] = useState(false);
+
+  const {
+    currentList,
+    allAsProps,
+    setTotalPages,
+    setCurrentList,
+    resetPagination
+  } = usePagination(institutionsData || [], totalInstNum || 0);
 
   const [searchInput, setSearchInput] = useState({
     value: '',
@@ -75,46 +82,6 @@ const InstitutionLookup: React.FC = () => {
     },
     {id: 4, name: `${InstitutionDict[userLanguage]['TABLE']['CONTACT']}`, value: 'phone'}
   ];
-
-  const goNextPage = () => {
-    const pageHigherLimit = totalPages - 1;
-    if (firstPage) {
-      setFirstPage(false);
-    }
-    if (currentPage < pageHigherLimit - 1) {
-      setCurrentPage(currentPage + 1);
-    } else if (currentPage === pageHigherLimit - 1) {
-      setCurrentPage(currentPage + 1);
-      setLastPage(true);
-    }
-  };
-
-  const goPrevPage = () => {
-    if (lastPage) {
-      setLastPage(false);
-    }
-    if (currentPage > 0) setCurrentPage(currentPage - 1);
-    else {
-      setFirstPage(true);
-    }
-  };
-
-  const currentPageInstitutes = () => {
-    const initialItem = currentPage * userCount;
-    const updatedList = institutionsData.slice(initialItem, initialItem + userCount);
-    setCurrentList(updatedList);
-  };
-
-  const backToInitials = () => {
-    setCurrentPage(0);
-    currentPageInstitutes();
-    setFirstPage(true);
-    if (totalPages === 1) {
-      setLastPage(true);
-    } else {
-      setLastPage(false);
-    }
-  };
 
   const addNewInstitution = () => {
     history.push(`${match.url}/add`);
@@ -164,6 +131,11 @@ const InstitutionLookup: React.FC = () => {
       setStatus('done');
     } catch (error) {
       console.error(error);
+      logError(
+        error,
+        {authId: state.user.authId, email: state.user.email},
+        'InstitutionLookup'
+      );
     }
   }
 
@@ -199,7 +171,7 @@ const InstitutionLookup: React.FC = () => {
   };
 
   const removeSearchAction = () => {
-    backToInitials();
+    resetPagination();
     setSearchInput({value: '', isActive: false});
   };
 
@@ -230,37 +202,6 @@ const InstitutionLookup: React.FC = () => {
   useEffect(() => {
     getInstitutionsData();
   }, []);
-
-  useEffect(() => {
-    backToInitials();
-  }, [institutionsData]);
-
-  useEffect(() => {
-    setCurrentPage(0);
-    setFirstPage(true);
-    setLastPage(false);
-    const totalListPages = Math.floor(totalInstNum / userCount);
-    if (userCount * totalListPages === totalInstNum) {
-      setTotalPages(totalListPages);
-    } else {
-      setTotalPages(totalListPages + 1);
-    }
-    if (totalPages === 1 && totalListPages === 0) {
-      setFirstPage(true);
-      setLastPage(true);
-    }
-  }, [userCount]);
-
-  useEffect(() => {
-    currentPageInstitutes();
-  }, [currentPage, totalInstNum, userCount]);
-
-  useEffect(() => {
-    if (totalPages === 1) {
-      setFirstPage(true);
-      setLastPage(true);
-    }
-  }, [totalPages]);
 
   useEffect(() => {
     fetchSortedList();
@@ -392,24 +333,7 @@ const InstitutionLookup: React.FC = () => {
                 {/* Pagination And Counter */}
                 <div className="flex justify-center my-4">
                   {!searchInput.isActive && Boolean(currentList?.length) && (
-                    <Fragment>
-                      <span className="py-3 px-5 w-auto flex-shrink-0 my-5 text-md leading-5 font-medium text-gray-900">
-                        {InstitutionDict[userLanguage]['SHOWPAGE']} {currentPage + 1}{' '}
-                        {InstitutionDict[userLanguage]['OF']} {totalPages}{' '}
-                        {InstitutionDict[userLanguage]['PAGES']}
-                      </span>
-                      <Pagination
-                        currentPage={currentPage + 1}
-                        setNext={goNextPage}
-                        setPrev={goPrevPage}
-                        firstPage={firstPage}
-                        lastPage={lastPage}
-                      />
-                      <PageCountSelector
-                        pageSize={userCount}
-                        setPageSize={(c: number) => setUserCount(c)}
-                      />
-                    </Fragment>
+                    <ListBottomBar {...allAsProps} />
                   )}
                 </div>
               </div>

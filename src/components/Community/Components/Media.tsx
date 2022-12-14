@@ -1,17 +1,17 @@
+import useAuth from '@customHooks/useAuth';
+import {logError, uploadImageToS3} from '@graphql/functions';
+import {Transition} from '@headlessui/react';
+import {getAsset} from 'assets';
 import FormInput from 'atoms/Form/FormInput';
-import {Storage} from '@aws-amplify/storage';
 import Label from 'atoms/Form/Label';
 import {COMMUNITY_UPLOAD_KEY, IFile} from 'components/Community/constants.community';
 import File from 'components/Community/File';
 import {REGEX} from 'components/Lesson/UniversalLessonBuilder/UI/common/constants';
-import {Transition} from '@headlessui/react';
-import {getAsset} from 'assets';
 import isEmpty from 'lodash/isEmpty';
 import update from 'lodash/update';
 import {nanoid} from 'nanoid';
 import React, {useCallback, useRef, useState} from 'react';
 import {useDropzone} from 'react-dropzone';
-import {uploadImageToS3} from '@graphql/functions';
 
 interface MediaProps {
   file: IFile;
@@ -45,6 +45,8 @@ const Media = ({
     setFile({...file});
   };
 
+  const {authId, email} = useAuth();
+
   const _uploadImageToS3 = async (
     file: any,
     id: string,
@@ -52,6 +54,7 @@ const Media = ({
     currentFile: any
   ) => {
     uploadImageToS3(file, `${COMMUNITY_UPLOAD_KEY}${id}`, type, {
+      auth: {authId, email},
       onSuccess: (result: any) => {
         console.log('File successfully uploaded to s3', result);
         updateStatus(currentFile, 'success');
@@ -62,6 +65,7 @@ const Media = ({
       onError: (error: any) => {
         updateStatus(currentFile, 'failed');
         updateProgress(currentFile, null);
+        logError(error, {authId: authId, email: email}, 'Media');
         console.error('Error in uploading file to s3', error);
       },
       progressCallback: ({progress}: {progress: number}): void => {

@@ -1,12 +1,14 @@
-import PageWrapper from 'atoms/PageWrapper';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import useAuth from '@customHooks/useAuth';
+import {logError} from '@graphql/functions';
+import {getAsset} from 'assets';
 import BreadcrumbsWithBanner from 'atoms/BreadcrumbsWithBanner';
+import PageWrapper from 'atoms/PageWrapper';
 import {GlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
 import queryString from 'query-string';
 import React, {useContext, useEffect, useState} from 'react';
 import {Route, Switch, useLocation, useParams, useRouteMatch} from 'react-router-dom';
-import {getAsset} from 'assets';
 import InstitutionInfo from './InstitutionInfo';
 
 interface InstitutionProps {
@@ -68,14 +70,7 @@ const Institution = (props: InstitutionProps) => {
     serviceProviders: {items: [{id: '', providerID: '', status}]},
     curricula: {items: [{name: '', id: ''}]}
   });
-  const [lessonData, setLessonData] = useState<{
-    id?: string;
-    title?: string;
-  }>({});
-  const [roomData, setRoomData] = useState<{
-    id?: string;
-    title?: string;
-  }>({});
+
   const [isNewUpdate, setISNewUpdate] = useState(false);
 
   const match = useRouteMatch();
@@ -85,8 +80,6 @@ const Institution = (props: InstitutionProps) => {
   const {clientKey} = useContext(GlobalContext);
 
   const bannerImage = getAsset(clientKey, 'dashboardBanner1');
-
-  const {pathname} = location;
 
   const toggleUpdateState = () => {
     setISNewUpdate((prevNewUpdate) => !prevNewUpdate);
@@ -98,6 +91,8 @@ const Institution = (props: InstitutionProps) => {
       ...data
     }));
   };
+
+  const {authId, email} = useAuth();
 
   async function getInstitutionData() {
     try {
@@ -122,57 +117,14 @@ const Institution = (props: InstitutionProps) => {
         // history.push('/dashboard/manage-institutions');
       }
     } catch (error) {
+      logError(error, {authId: authId, email: email}, 'Institution');
       console.error(error);
     }
   }
 
-  const getLessonData = async () => {
-    try {
-      // To extract lesson id from path name
-      const splitUrl = pathname.split('/lessons/')?.length
-        ? pathname.split('/lessons/')[1]
-        : '';
-      if (splitUrl.indexOf('add') === -1) {
-        const result: any = await API.graphql(
-          graphqlOperation(customQueries.getUniversalLessonBasicDetails, {
-            id: splitUrl.split('/')[0]
-          })
-        );
-        setLessonData(result.data?.getUniversalLesson);
-      }
-    } catch (error) {}
-  };
-
-  const getRoomData = async () => {
-    try {
-      // To extract room id from path name
-      const roomId = pathname.split('/room-edit/')?.length
-        ? pathname.split('/room-edit/')[1]
-        : '';
-
-      if (roomId) {
-        const result: any = await API.graphql(
-          graphqlOperation(customQueries.getRoomBasicDetails, {
-            id: roomId
-          })
-        );
-
-        setRoomData(result.data?.getRoom);
-      }
-    } catch (error) {}
-  };
-
   useEffect(() => {
     getInstitutionData();
   }, [institutionId]);
-
-  useEffect(() => {
-    if (pathname.indexOf('lessons/') > -1) {
-      getLessonData();
-    } else if (pathname.indexOf('room') > -1) {
-      getRoomData();
-    }
-  }, [pathname]);
 
   useEffect(() => {
     const {tab} = urlQueryParams;

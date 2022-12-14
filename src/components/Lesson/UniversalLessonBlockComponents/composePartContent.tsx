@@ -13,6 +13,7 @@ import {
   SPACER,
   TABLE
 } from '../UniversalLessonBuilder/UI/common/constants';
+import LinestarterModalDialog from '../UniversalLessonBuilder/UI/ModalDialogs/LinestarterModalDialog';
 import CustomVideoBlock from './Blocks/CustomVideoBlock';
 import DividerBlock from './Blocks/DividerBlock';
 import DownloadBlock from './Blocks/DownloadBlock';
@@ -43,8 +44,7 @@ const composePartContent = (
   updateBlockContentULBHandler?: any,
   position?: number,
   notesData?: any,
-  isStudent: boolean = true,
-  auth?: {authId: string; email: string}
+  isStudent: boolean = true
 ): JSX.Element => {
   const commonBlockProps = {
     classString,
@@ -55,55 +55,115 @@ const composePartContent = (
   };
 
   if (type.includes('jumbotron')) {
-    return <JumbotronBlock {...commonBlockProps} />;
+    return (
+      <ErrorBoundary componentName="ActivityBlock">
+        <JumbotronBlock {...commonBlockProps} />
+      </ErrorBoundary>
+    );
   } else if (type.includes('keyword')) {
-    return <KeywordBlock id={id} type={type} value={value} mode={mode} />;
+    return (
+      <ErrorBoundary componentName="KeywordBlock">
+        <KeywordBlock id={id} type={type} value={value} mode={mode} />
+      </ErrorBoundary>
+    );
   } else if (type.includes(SPACER)) {
-    return <Spacer id={id} type={type} value={value} mode={mode} />;
+    return (
+      <ErrorBoundary componentName="Spacer">
+        <Spacer id={id} type={type} value={value} mode={mode} />
+      </ErrorBoundary>
+    );
   } else if (type.includes('highlighter')) {
     return (
-      <HighlighterBlock
-        updateBlockContentULBHandler={updateBlockContentULBHandler}
-        position={position}
-        pagePartId={pagePartId}
-        {...commonBlockProps}
-      />
+      <ErrorBoundary componentName="HighlighterBlock">
+        <HighlighterBlock
+          updateBlockContentULBHandler={updateBlockContentULBHandler}
+          position={position}
+          pagePartId={pagePartId}
+          {...commonBlockProps}
+        />
+      </ErrorBoundary>
     );
   } else if (type.includes('links')) {
-    return <LinksBlock {...commonBlockProps} />;
-  } else if (type.includes('header')) {
-    return <HeaderBlock {...commonBlockProps} />;
-  } else if (type.includes('paragraph')) {
-    return <ParagraphBlock pagePartId={pagePartId} {...commonBlockProps} />;
-  } else if (type.includes('form') && type !== 'notes-form') {
     return (
-      <FormBlock
-        pagePartId={pagePartId}
-        numbered={type === 'form-numbered'}
-        {...commonBlockProps}
-      />
+      <ErrorBoundary componentName="LinksBlock">
+        <LinksBlock {...commonBlockProps} />
+      </ErrorBoundary>
+    );
+  } else if (type.includes('header')) {
+    return (
+      <ErrorBoundary componentName="HeaderBlock">
+        <HeaderBlock pagePartId={pagePartId} {...commonBlockProps} />
+      </ErrorBoundary>
+    );
+  } else if (type.includes('paragraph')) {
+    return (
+      <ErrorBoundary componentName="HighlighterBlock">
+        <ParagraphBlock pagePartId={pagePartId} {...commonBlockProps} />
+      </ErrorBoundary>
+    );
+  } else if (
+    (type.includes('form') && type !== 'notes-form') ||
+    type.includes(FORM_TYPES.POEM) ||
+    type.includes(FORM_TYPES.WRITING_EXERCISE)
+  ) {
+    return (
+      <ErrorBoundary componentName="FormBlock">
+        <FormBlock
+          pagePartId={pagePartId}
+          numbered={type === 'form-numbered'}
+          {...commonBlockProps}
+        />
+      </ErrorBoundary>
     );
   } else if (type.includes('image')) {
-    return <ImageBlock key={inputKey} dataIdAttribute={inputKey} {...commonBlockProps} />;
+    return (
+      <ErrorBoundary componentName="ImageBlock">
+        <ImageBlock key={inputKey} dataIdAttribute={inputKey} {...commonBlockProps} />
+      </ErrorBoundary>
+    );
   } else if (type.includes('custom_video')) {
     return (
-      <CustomVideoBlock key={inputKey} dataIdAttribute={inputKey} {...commonBlockProps} />
+      <ErrorBoundary componentName="CustomVideoBlock">
+        <CustomVideoBlock
+          key={inputKey}
+          dataIdAttribute={inputKey}
+          {...commonBlockProps}
+        />
+      </ErrorBoundary>
     );
   } else if (type.includes('video')) {
-    return <VideoBlock key={inputKey} dataIdAttribute={inputKey} {...commonBlockProps} />;
+    return (
+      <ErrorBoundary componentName="VideoBlock">
+        <VideoBlock key={inputKey} dataIdAttribute={inputKey} {...commonBlockProps} />
+      </ErrorBoundary>
+    );
   } else if (type === DIVIDER) {
-    return <DividerBlock value={value[0]?.value} />;
+    return (
+      <ErrorBoundary componentName="DividerBlock">
+        <DividerBlock value={value[0]?.value} />
+      </ErrorBoundary>
+    );
   } else if (type === TABLE) {
-    return <TableBlock classString={classString} value={value} />;
+    return (
+      <ErrorBoundary componentName="TableBlock">
+        <TableBlock classString={classString} value={value} />
+      </ErrorBoundary>
+    );
   } else if (type === FORM_TYPES.DOWNLOAD) {
-    return <DownloadBlock value={value} />;
+    return (
+      <ErrorBoundary componentName="DownloadBlock">
+        <DownloadBlock value={value} />
+      </ErrorBoundary>
+    );
   } else if (type === 'notes-form' && isStudent) {
     return (
       notesData &&
       notesData.length > 0 && (
-        <div id="fab-download">
-          <NotesContainer notes={notesData} />
-        </div>
+        <ErrorBoundary componentName="NotesContainer">
+          <div id="fab-download">
+            <NotesContainer notes={notesData} />
+          </div>
+        </ErrorBoundary>
       )
     );
   } else if (type === 'notes-form' && !isStudent) {
@@ -115,15 +175,21 @@ const composePartContent = (
       value: v.value
     }));
 
-    return <NotesBlock preview grid={{cols: 4, rows: 3}} value={modifiyValues} />;
+    return (
+      <ErrorBoundary componentName="NotesBlock">
+        <NotesBlock preview grid={{cols: 4, rows: 3}} value={modifiyValues} />
+      </ErrorBoundary>
+    );
   } else if (type.includes(FORM_TYPES.DOCS)) {
-    return <DocsBlock value={value} />;
+    return (
+      <ErrorBoundary componentName="DocsBlock">
+        <DocsBlock value={value} />
+      </ErrorBoundary>
+    );
   } else if (type.includes(GAME_CHANGERS) || type === 'square') {
     return (
       <GameChangerProvider>
         <ErrorBoundary
-          authId={auth.authId}
-          email={auth.email}
           componentName="ActivityBlock"
           fallback={<h1>Something wrong with activity</h1>}>
           <ActivityBlock value={value} />

@@ -17,6 +17,10 @@ import * as customQueries from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import * as queries from 'graphql/queries';
 import {Status} from '../../UserManagement/UserStatus';
+import {orderBy} from 'lodash';
+import Buttons from '@components/Atoms/Buttons';
+
+type SortType = 'ACTIVE' | 'TRAINING' | 'INACTIVE';
 
 const Room = ({
   i,
@@ -39,10 +43,14 @@ const Room = ({
     <tr
       title="click to view/edit details"
       style={{cursor: 'pointer !important'}}
-      className={`cursor-pointer hover:iconoclast:bg-200 hover:iconoclast:text-600
-hover:curate:bg-200 hover:curate:text-600
+      className={`cursor-pointer hover:bg-gray-200
 `}>
       <td className={''}>{i + 1}.</td>
+      <td
+        onClick={() => editCurrentRoom(item.id, item.institutionID)}
+        className={`${commonClass}`}>
+        <Highlighted text={item.name} highlight={searchInput} />
+      </td>
       {(isSuperAdmin || isAdmin || isBuilder) && (
         <td
           className={commonClass}
@@ -56,11 +64,6 @@ hover:curate:bg-200 hover:curate:text-600
           <Highlighted text={item.institutionName} highlight={searchInput} />
         </td>
       )}
-      <td
-        onClick={() => editCurrentRoom(item.id, item.institutionID)}
-        className={`${commonClass}`}>
-        <Highlighted text={item.name} highlight={searchInput} />
-      </td>
 
       <td className={`${commonClass} text-gray-500`}>
         {item.teacher?.firstName || ''} {item.teacher?.lastName || ''}
@@ -132,7 +135,6 @@ const RoomsList = (props: RoomListProps) => {
 
   const [institutionList, setInstitutionList] = useState<any>([]);
   const [selectedInstitution, setSelectedInstitution] = useState<any>({});
-  const [selectedStaff, setSelectedStaff] = useState<any>({});
 
   const [messages, setMessages] = useState({
     show: false,
@@ -281,11 +283,7 @@ const RoomsList = (props: RoomListProps) => {
   const instituteChange = (_: string, name: string, value: string) => {
     setSelectedInstitution({name, id: value});
     updateRoomList(value);
-  };
-
-  const handleStaffChange = (_: string, name: string, value: string) => {
-    setSelectedStaff({name, id: value});
-    // onSearch(searchInput, selectedInstitution?.id, value);
+    setFilters(null);
   };
 
   const {
@@ -333,27 +331,13 @@ const RoomsList = (props: RoomListProps) => {
     }
   };
 
-  const finalList = searchInput.isActive ? filteredList : roomList;
+  const [filters, setFilters] = useState<SortType>();
 
-  // const onSearch = (
-  //   searchValue: string,
-  //   institutionId?: string,
-  //   staffMemberId?: string
-  // ) => {
-  //   setRoomList(
-  //     [...allRooms].filter(
-  //       (item: any) =>
-  //         (searchValue
-  //           ? item.name?.toLowerCase().includes(searchValue.toLowerCase())
-  //           : true) &&
-  //         (institutionId ? item.institution?.id === institutionId : true) &&
-  //         (staffMemberId ? item.teacherAuthID === staffMemberId : true)
-  //     )
-  //   );
-  //   history.push(
-  //     `/dashboard/manage-institutions/institution/${institutionId}/class-rooms`
-  //   );
-  // };
+  const finalList = orderBy(
+    searchInput.isActive ? filteredList : roomList,
+    ['name', 'institutionName'],
+    ['asc']
+  );
 
   const onInstitutionSelectionRemove = () => {
     setSelectedInstitution({});
@@ -364,9 +348,18 @@ const RoomsList = (props: RoomListProps) => {
     // onSearch(searchInput, '', '');
   };
 
-  const onStaffSelectionRemove = () => {
-    setSelectedStaff({});
-    // onSearch(searchInput, selectedInstitution?.id, '');
+  const updateFilter = (filterName: SortType) => {
+    if (filterName === filters) {
+      setSearchInput({...searchInput, isActive: false});
+      setFilters(null);
+      setFilteredList([]);
+    } else {
+      setSearchInput({...searchInput, isActive: true});
+      const filtered = roomList.filter((_d: any) => filterName === _d.status);
+      setFilteredList(filtered);
+      setFilters(filterName);
+      setSelectedInstitution({});
+    }
   };
 
   return (
@@ -430,32 +423,57 @@ const RoomsList = (props: RoomListProps) => {
             }
           />
         </div>
+
+        <div className="flex items-center justify-end">
+          <div className="flex gap-x-4 mb-4 mt-2 items-center">
+            <Buttons
+              onClick={() => updateFilter('ACTIVE')}
+              transparent={filters !== 'ACTIVE'}
+              label={'Active'}
+            />
+            <Buttons
+              onClick={() => updateFilter('INACTIVE')}
+              transparent={filters !== 'INACTIVE'}
+              label={'Inactive'}
+            />
+            <Buttons
+              onClick={() => updateFilter('TRAINING')}
+              transparent={filters !== 'TRAINING'}
+              label={'Training'}
+            />
+          </div>
+        </div>
+
         {loading ? (
           <div className="py-20 text-center mx-auto flex justify-center items-center w-full h-48">
             <div className="w-5/10">
-              <Loader color="rgba(107, 114, 128, 1)" />
+              <Loader animation />
               <p className="mt-2 text-center text-lg text-gray-500">
                 {InstitueRomms[userLanguage]['LOADING']}
               </p>
             </div>
           </div>
         ) : finalList.length ? (
-          <div className="table-custom-responsive max-h-88 overflow-y-auto">
+          <div
+            style={{maxHeight: '57vh'}}
+            className="table-custom-responsive overflow-y-auto">
             <table className="border-collapse table-auto w-full table-hover table-striped">
               <thead className="thead-light">
                 <tr>
                   <th className="bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                     {InstitueRomms[userLanguage]['NO']}
                   </th>
+
+                  <th
+                    className={`bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider`}>
+                    {InstitueRomms[userLanguage]['CLASSROOMS_NAME']}
+                  </th>
                   {(isSuperAdmin || isAdmin || isBuilder) && (
                     <th className="bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                       {InstitueRomms[userLanguage]['INSTITUTION_NAME']}
                     </th>
                   )}
-                  <th
-                    className={`bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider`}>
-                    {InstitueRomms[userLanguage]['CLASSROOMS_NAME']}
-                  </th>
+
                   <th className="bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                     {InstitueRomms[userLanguage]['TEACHER']}
                   </th>

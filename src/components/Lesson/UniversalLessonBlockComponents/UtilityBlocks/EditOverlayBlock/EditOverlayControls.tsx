@@ -201,7 +201,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
   const iconClass = 'w-8 h-8 flex items-center text-xl';
   const textClass = 'mx-2 w-auto tracking-widest';
   // if (previewMode) return null;
-  const iconPos = isComponent ? {top: '10%', left: '-8%'} : {top: '10%', right: '-13%'};
+  const iconPos = isComponent ? {top: '10%', left: '-10%'} : {top: '10%', right: '-13%'};
 
   const addToDB = async (list: any) => {
     const input = {

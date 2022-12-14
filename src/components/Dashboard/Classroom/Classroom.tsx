@@ -1,5 +1,6 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import {updatePageState} from '@graphql/functions';
+import {logError, updatePageState} from '@graphql/functions';
+import {setPageTitle} from '@utilities/functions';
 import {removeLocalStorageData, setLocalStorageData} from '@utilities/localStorage';
 import {UserPageState} from 'API';
 import {getAsset} from 'assets';
@@ -134,12 +135,12 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
   const gContext = useGlobalContext();
   const state = gContext.state;
   const dispatch = gContext.dispatch;
-  const lessonDispatch = gContext.lessonDispatch;
   const stateUser = gContext.stateUser;
   const theme = gContext.theme;
   const clientKey = gContext.clientKey;
   const userLanguage = gContext.userLanguage;
 
+  const {authId, email, pageState, isStudent, isFellow} = useAuth();
   const match: any = useRouteMatch();
   const bannerImg = getAsset(clientKey, 'dashboardBanner1');
   const {classRoomDict, BreadcrumsTitles} = useDictionary(clientKey);
@@ -148,17 +149,15 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
   // ########################### ROOM SWITCHING ########################## //
   // ##################################################################### //
   useEffect(() => {
-    if (stateUser?.role === 'ST') {
+    if (isStudent) {
       dispatch({type: 'UPDATE_CURRENTPAGE', payload: {data: 'classroom'}});
     }
-    if (stateUser?.role === 'TR' || stateUser?.role === 'FLW') {
+    if (isTeacher || isFellow) {
       dispatch({type: 'UPDATE_CURRENTPAGE', payload: {data: 'lesson-planner'}});
     }
   }, [stateUser?.role]);
 
   const roomId = match?.params?.roomId;
-
-  const {authId, email, pageState} = useAuth();
 
   useEffect(() => {
     if (!isEmpty(roomId) && state.roomData?.rooms?.length > 0) {
@@ -166,18 +165,23 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
       const room = state.roomData.rooms[roomIndex];
       const name = room?.name;
       handleRoomSelection(roomId, name, roomIndex);
-      updatePageState(
-        UserPageState.CLASS,
-        {
-          authId: authId,
-          email: email,
-          pageState: pageState
-        },
-        dispatch({
-          type: 'SET_USER',
-          payload: {...state.user, pageState: UserPageState.CLASS}
-        })
-      );
+
+      name && setPageTitle(name);
+
+      if (isStudent) {
+        updatePageState(
+          UserPageState.CLASS,
+          {
+            authId: authId,
+            email: email,
+            pageState: pageState
+          },
+          dispatch({
+            type: 'SET_USER',
+            payload: {...state.user, pageState: UserPageState.CLASS}
+          })
+        );
+      }
     }
   }, [roomId, state.roomData.rooms]);
 
@@ -341,14 +345,6 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
       id: syllabusID,
       isUsed: true
     };
-    const input3 = {
-      id: classroomCurriculum.id,
-      syllabiHistory: classroomCurriculum.syllabiHistory
-        ? classroomCurriculum.syllabiHistory.includes(syllabusID)
-          ? classroomCurriculum.syllabiHistory
-          : [...classroomCurriculum.syllabiHistory, syllabusID]
-        : [syllabusID]
-    };
 
     try {
       const updateRoomMutation: any = await API.graphql(
@@ -359,12 +355,24 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
       const updateUniversalSyllabusMutation: any = await API.graphql(
         graphqlOperation(mutations.updateUniversalSyllabus, {input: input2})
       );
-      const updateCurriculum: any = await API.graphql(
-        graphqlOperation(mutations.updateCurriculum, {input: input3})
-      );
-      setClassroomCurriculum(updateCurriculum.data.updateCurriculu);
+
+      if (classroomCurriculum) {
+        const input3 = {
+          id: classroomCurriculum.id,
+          syllabiHistory: classroomCurriculum.syllabiHistory
+            ? classroomCurriculum.syllabiHistory.includes(syllabusID)
+              ? classroomCurriculum.syllabiHistory
+              : [...classroomCurriculum.syllabiHistory, syllabusID]
+            : [syllabusID]
+        };
+        const updateCurriculum: any = await API.graphql(
+          graphqlOperation(mutations.updateCurriculum, {input: input3})
+        );
+        setClassroomCurriculum(updateCurriculum.data.updateCurriculu);
+      }
     } catch (e) {
       console.error('handleSyllabusActivation: ', e);
+      logError(e, {authId, email}, 'Classroom @handleSyllabusActivation');
     } finally {
       setSyllabusActivating(false);
       setActiveRoomInfo({...activeRoomInfo, activeSyllabus: syllabusID});
@@ -400,10 +408,10 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
       const data = lessonPersonData?.data?.listPersonLessonsData?.items || [];
       removeLocalStorageData('lessonPersonData');
       setLocalStorageData('lessonPersonData', data);
-
       setListPersonData(data);
     } catch (e) {
       console.error('listLessonPersonData: ', e);
+      logError(e, {authId, email}, 'Classroom @fetchLessonPersonData');
     } finally {
       setFetchingPersonData(false);
     }
@@ -444,7 +452,9 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
             }
           })
         );
-      } catch (error) {}
+      } catch (error) {
+        logError(error, {authId, email}, 'Classroom @handleLessonMutationRating');
+      }
     }
   };
 

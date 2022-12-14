@@ -10,14 +10,14 @@ interface ParagraphBlockProps extends RowWrapperProps {
 }
 
 export const ParagraphBlock = (props: ParagraphBlockProps) => {
-  const {id, value, type} = props;
+  const {id, value} = props;
   const {
     state: {lessonPage: {themeTextColor = ''} = {}}
   } = useContext(GlobalContext);
 
   const Paragraph = ({inputID, inputValue}: any) => {
     return (
-      <div className="flex w-auto items-center p-4 px-0 paragraph-block">
+      <div className="flex w-auto items-center paragraph-block">
         <p
           key={inputID}
           id={inputID}

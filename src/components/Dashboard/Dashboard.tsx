@@ -1,6 +1,8 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import ComponentLoading from '@components/Lesson/Loading/ComponentLoading';
-import {PersonStatus} from 'API';
+import {logError, updatePageState} from '@graphql/functions';
+import {setPageTitle} from '@utilities/functions';
+import {PersonStatus, UserPageState} from 'API';
 import {getAsset} from 'assets';
 import Community from 'components/Community/Community';
 import InstitutionsHome from 'components/Dashboard/Admin/Institutons/InstitutionsHome';
@@ -37,6 +39,7 @@ const TestCases = lazy(() => import('components/Dashboard/TestCases/TestCases'))
 const Registration = lazy(
   () => import('components/Dashboard/Admin/UserManagement/Registration')
 );
+const ErrorsPage = lazy(() => import('components/Dashboard/Errors/ErrorsPage'));
 
 const conditionalRender = (children: JSX.Element, condition: boolean) => {
   if (condition) {
@@ -149,6 +152,29 @@ const Dashboard = (props: DashboardProps) => {
 
   const [activeRoomName, setActiveRoomName] = useState<string>('');
 
+  const [isPageUpdatedOnPersonTable, setIsPageUpdatedOnPersonTable] = useState(false);
+
+  useEffect(() => {
+    if (!isPageUpdatedOnPersonTable && stateUser.role === 'ST') {
+      updatePageState(
+        UserPageState.DASHBOARD,
+        {
+          authId: state.user?.authId,
+          email: state.user?.email,
+          pageState: state.user?.pageState
+        },
+        () => {
+          dispatch({
+            type: 'SET_USER',
+            payload: {...state.user, pageState: UserPageState.DASHBOARD}
+          });
+        }
+      );
+
+      setIsPageUpdatedOnPersonTable(true);
+    }
+  }, [isPageUpdatedOnPersonTable, stateUser.role]);
+
   useEffect(() => {
     if (state.currentPage === 'homepage') {
       dispatch({
@@ -164,8 +190,8 @@ const Dashboard = (props: DashboardProps) => {
     role: '',
     image: ''
   });
-  const isStudent = userData.role === 'ST';
 
+  const isStudent = userData.role === 'ST';
   const isTeacher = stateUser?.role === 'FLW' || stateUser?.role === 'TR';
   const isOnDemandStudent = stateUser?.onDemand;
 
@@ -219,6 +245,7 @@ const Dashboard = (props: DashboardProps) => {
         sessionStorage.removeItem('accessToken');
         updateAuthState(false);
       }
+      logError(error, {authId: userEmail, email: userAuthId}, 'Dashboard');
       console.error('Dashboard - getUser(): ', error);
     }
   }
@@ -290,8 +317,10 @@ const Dashboard = (props: DashboardProps) => {
       );
 
       setHomeData(arrayOfResponseObjects);
-    } catch (e) {
-      console.error('getDashbaordData -> ', e);
+    } catch (error) {
+      logError(error, {authId: authId, email: email}, 'Dashboard');
+
+      console.error('getDashbaordData -> ', error);
     } finally {
       // need to do some cleanup
       setRoomsLoading(false);
@@ -328,8 +357,9 @@ const Dashboard = (props: DashboardProps) => {
       // console.log('dashboard data teachers - ', arrayOfResponseObjects);
 
       setHomeDataForTeachers(arrayOfResponseObjects);
-    } catch (e) {
-      console.error('getDashboardDataForTeachers -> ', e);
+    } catch (error) {
+      logError(error, {authId: stateUser?.authId, email: stateUser?.email}, 'Dashboard');
+      console.error('getDashboardDataForTeachers -> ', error);
     } finally {
       // need to do some cleanup
       setRoomsLoading(false);
@@ -341,11 +371,10 @@ const Dashboard = (props: DashboardProps) => {
 
     if (stateUser?.role === 'ST') {
       getDashboardData(authId, email);
-    }
-    if (!isStudent) {
+    } else {
       getDashboardDataForTeachers(authId);
     }
-  }, [stateUser?.role, isStudent]);
+  }, [stateUser?.role]);
 
   /******************************************
    * 1.2 REDUCE ROOMS FROM CLASSLIST ARRAY  *
@@ -441,6 +470,7 @@ const Dashboard = (props: DashboardProps) => {
         }
       });
     } catch (e) {
+      logError(e, {authId: stateUser?.authId, email: stateUser?.email}, 'Dashboard');
       console.error('Classes Fetch ERR: ', e);
     }
   };
@@ -484,6 +514,7 @@ const Dashboard = (props: DashboardProps) => {
           setCurriculumObj(arrayOfResponseObjects[0]?.curriculum);
         }
       } catch (e) {
+        logError(e, {authId: stateUser?.authId, email: stateUser?.email}, 'Dashboard');
         console.error('RoomCurriculums fetch ERR: ', e);
       } finally {
         // console.log('curriciulum ids - ', curriculumIds);
@@ -652,6 +683,7 @@ const Dashboard = (props: DashboardProps) => {
         }
       });
     } catch (e) {
+      logError(e, {authId: stateUser?.authId, email: stateUser?.email}, 'Dashboard');
       console.error('Curriculum ids ERR: ', e);
       setSyllabusLoading(false);
     } finally {
@@ -688,6 +720,7 @@ const Dashboard = (props: DashboardProps) => {
           const modifiedData = calculateSchedule(syllabusArray, scheduleDetails);
         }
       } catch (e) {
+        logError(e, {authId: stateUser?.authId, email: stateUser?.email}, 'Dashboard');
         console.error('error with initSchedule() ', e);
       }
     }
@@ -745,6 +778,7 @@ const Dashboard = (props: DashboardProps) => {
         }
       });
     } catch (e) {
+      logError(e, {authId: stateUser?.authId, email: stateUser?.email}, 'Dashboard');
       console.error('syllabus lessons: ', e);
     } finally {
       setLessonLoading(false);
@@ -892,8 +926,6 @@ const Dashboard = (props: DashboardProps) => {
                 path={`${match.url}/home`}
                 render={() => (
                   <ErrorBoundary
-                    authId={stateUser.authId}
-                    email={stateUser.email}
                     componentName="HomeSwitch"
                     fallback={<h1>Oops with the Dashboard</h1>}>
                     <HomeSwitch />
@@ -905,8 +937,6 @@ const Dashboard = (props: DashboardProps) => {
                 path={`${match.url}/community/:action`}
                 render={() => (
                   <ErrorBoundary
-                    authId={stateUser.authId}
-                    email={stateUser.email}
                     componentName="Community"
                     fallback={<h1>Community Page is not working</h1>}>
                     <Community role={userData.role} />
@@ -919,8 +949,6 @@ const Dashboard = (props: DashboardProps) => {
                 path={`${match.url}/game-changers`}
                 render={() => (
                   <ErrorBoundary
-                    authId={stateUser.authId}
-                    email={stateUser.email}
                     componentName="GameChangers"
                     fallback={<h1>Game changers is not working</h1>}>
                     <GameChangerProvider>
@@ -936,8 +964,6 @@ const Dashboard = (props: DashboardProps) => {
                 render={() =>
                   conditionalRender(
                     <ErrorBoundary
-                      authId={stateUser.authId}
-                      email={stateUser.email}
                       componentName="Csv"
                       fallback={<h1>Game changers is not working</h1>}>
                       <Csv />
@@ -956,8 +982,6 @@ const Dashboard = (props: DashboardProps) => {
                 path={`${match.url}/classroom/:roomId`}
                 render={() => (
                   <ErrorBoundary
-                    authId={stateUser.authId}
-                    email={stateUser.email}
                     componentName="Classroom"
                     fallback={<h1>Oops with the Classroom</h1>}>
                     <Classroom
@@ -984,8 +1008,6 @@ const Dashboard = (props: DashboardProps) => {
                 path={`${match.url}/anthology`}
                 render={() => (
                   <ErrorBoundary
-                    authId={stateUser.authId}
-                    email={stateUser.email}
                     componentName="Anthology"
                     fallback={<h1>Oops with the Anthology</h1>}>
                     <Anthology
@@ -1001,8 +1023,6 @@ const Dashboard = (props: DashboardProps) => {
                 path={`${match.url}/noticeboard`}
                 render={() => (
                   <ErrorBoundary
-                    authId={stateUser.authId}
-                    email={stateUser.email}
                     componentName="NoticeboardAdmin"
                     fallback={<h1>Oops with the NoticeboardAdmin</h1>}>
                     <NoticeboardAdmin setCurrentPage={setCurrentPage} />
@@ -1013,8 +1033,6 @@ const Dashboard = (props: DashboardProps) => {
                 path={`${match.url}/registration`}
                 render={() => (
                   <ErrorBoundary
-                    authId={stateUser.authId}
-                    email={stateUser.email}
                     componentName="Registration"
                     fallback={<h1>Oops with the Registration</h1>}>
                     <Registration />
@@ -1024,22 +1042,24 @@ const Dashboard = (props: DashboardProps) => {
               <Route
                 path={`${match.url}/profile`}
                 render={() => (
-                  <ErrorBoundary
-                    authId={stateUser.authId}
-                    email={stateUser.email}
-                    componentName="Profile"
-                    fallback={<h1>Oops with the Profile</h1>}>
+                  <ErrorBoundary componentName="Profile">
                     <Profile updateAuthState={updateAuthState} />
                   </ErrorBoundary>
                 )}
               />
               <Route path={`${match.url}/test-cases`} render={() => <TestCases />} />
               <Route
+                path={`${match.url}/errors`}
+                render={() => (
+                  <ErrorBoundary componentName="Errors">
+                    <ErrorsPage />
+                  </ErrorBoundary>
+                )}
+              />
+              <Route
                 path={`${match.url}/lesson-planner/:roomId`}
                 render={() => (
                   <ErrorBoundary
-                    authId={stateUser.authId}
-                    email={stateUser.email}
                     componentName="LessonPlanHome"
                     fallback={<h1>Oops with the Lesson-Planner</h1>}>
                     <LessonPlanHome
@@ -1063,10 +1083,7 @@ const Dashboard = (props: DashboardProps) => {
               <Route
                 path={`${match.url}/manage-institutions`}
                 render={() => (
-                  <ErrorBoundary
-                    authId={stateUser.authId}
-                    email={stateUser.email}
-                    componentName="InstitutionsHome">
+                  <ErrorBoundary componentName="InstitutionsHome">
                     <InstitutionsHome setCurrentPage={setCurrentPage} />
                   </ErrorBoundary>
                 )}
@@ -1074,10 +1091,7 @@ const Dashboard = (props: DashboardProps) => {
               <Route
                 path={`${match.url}/question-bank`}
                 render={() => (
-                  <ErrorBoundary
-                    authId={stateUser.authId}
-                    email={stateUser.email}
-                    componentName="QuestionBank">
+                  <ErrorBoundary componentName="QuestionBank">
                     <QuestionBank />
                   </ErrorBoundary>
                 )}

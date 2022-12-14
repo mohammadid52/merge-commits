@@ -38,6 +38,12 @@ enum RoomStatus {
   TRAINING
 }
 
+enum ErrorStatus {
+  PENDING
+  CLOSED
+  REVIEW
+}
+
 enum UpdateType {
   DEMOGRAPHIC_DATA_UPDATE
   SURVEY_DATA_UPDATE
@@ -282,6 +288,12 @@ type ClassStudent @model @auth(rules: [{allow: public}]) {
   student: Person @belongsTo(fields: ["studentEmail", "studentAuthID"])
 }
 
+type SignedOffStep {
+  authID: String!
+  date: String
+  step: String!
+}
+
 type Curriculum @model @auth(rules: [{allow: public}]) {
   id: ID! @primaryKey
   institutionID: ID! @index(name: "curriculumByInstitution")
@@ -299,6 +311,8 @@ type Curriculum @model @auth(rules: [{allow: public}]) {
   universalSyllabus: [curriculumUnits]
     @hasMany(indexName: "unitsbyCurriculum", fields: ["id"])
   syllabiHistory: [String]
+  signedOff: Boolean
+  signedOffSteps: [SignedOffStep]
 }
 
 type Topic @model @auth(rules: [{allow: public}]) {
@@ -630,6 +644,7 @@ type UniversalLessonPlan {
   interactionType: [String]
   tags: [String]
   videoLink: String
+  notes: String
 }
 
 type UniversalpageContent {
@@ -1105,5 +1120,6 @@ type ErrorLog @model @auth(rules: [{allow: public}]) {
   email: String!
   authID: String!
   person: Person @hasOne(fields: ["email", "authID"])
+  status: ErrorStatus @default(value: "PENDING")
 }
 # asdfasdfsd10

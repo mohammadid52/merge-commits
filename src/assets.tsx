@@ -109,12 +109,15 @@ export const fallbackUrls = {
   room: 'https://selready.s3.us-east-2.amazonaws.com/card_texture.jpg'
 };
 
+export const ANIMATIONS = {
+  loading: 'https://iconoclaststorage143306-dev.s3.amazonaws.com/animation/education.json'
+};
+
 export const general: any = {
   emoji: {
     awful: 'https://iconoclaststorage143306-dev.s3.amazonaws.com/emojis/emojis/angry.gif',
     bad: 'https://iconoclaststorage143306-dev.s3.amazonaws.com/emojis/emojis/sad.gif',
-    okay:
-      'https://iconoclaststorage143306-dev.s3.amazonaws.com/emojis/emojis/neutral.gif',
+    okay: 'https//iconoclaststorage143306-dev.s3.amazonaws.com/emojis/emojis/neutral.gif',
     good: 'https://iconoclaststorage143306-dev.s3.amazonaws.com/emojis/emojis/happy.gif',
     great:
       'https://iconoclaststorage143306-dev.s3.amazonaws.com/emojis/emojis/excited.gif'

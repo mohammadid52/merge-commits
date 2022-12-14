@@ -235,12 +235,15 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
           {fetchingDetails ? (
             <div className="h-100 flex justify-center items-center">
               <div className="w-5/10">
-                <Loader />
-                <p className="mt-2 text-center">Fetching course details please wait...</p>
+                <Loader
+                  animation
+                  withText="Fetching course details please wait..."
+                  className="text-gray-500"
+                />
               </div>
             </div>
           ) : (
-            <div className="border-0 border-gray-200 lg:border-t-none py-8 my-8 lg:my-0">
+            <div className="border-0 border-gray-200 lg:border-t-none py-8 bg-gray-100 my-8 lg:my-0">
               {currentStepComp(activeStep)}
             </div>
           )}

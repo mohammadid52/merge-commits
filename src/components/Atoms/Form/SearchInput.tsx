@@ -48,7 +48,7 @@ const SearchInput: React.FC<SearchProps> = (searchProps: SearchProps) => {
         style ? style : ''
       }  ${disabledClass} border-0 border-transparent ${
         isActive ? 'theme-border' : ''
-      } input-wrapper px-4 py-2 hover:theme-bg:200`}>
+      } input-wrapper px-4 py-2 `}>
       <span className="w-6 mr-4 cursor-pointer" onClick={onKeyDown}>
         <IoSearchSharp
           size={'1.5rem'}
@@ -73,8 +73,7 @@ const SearchInput: React.FC<SearchProps> = (searchProps: SearchProps) => {
         {value.length > 0 && (
           <span
             title="clear search"
-            className=" flex justify-center  cursor-pointer hover:iconoclast:bg-200 hover:iconoclast:text-600
-            hover:curate:bg-200 hover:curate:text-600
+            className=" flex justify-center  cursor-pointer hover:bg-gray-200
             rounded-full"
             onClick={closeAction}>
             <IoClose

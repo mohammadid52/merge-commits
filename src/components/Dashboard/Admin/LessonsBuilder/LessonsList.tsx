@@ -1,21 +1,22 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import AddButton from '@components/Atoms/Buttons/AddButton';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
+import ErrorBoundary from '@components/Error/ErrorBoundary';
+import ListBottomBar from '@components/Molecules/ListBottomBar';
 import useAuth from '@customHooks/useAuth';
+import usePagination from '@customHooks/usePagination';
 import useSearch from '@customHooks/useSearch';
 import {getAsset} from 'assets';
 import BreadCrums from 'atoms/BreadCrums';
 import Buttons from 'atoms/Buttons';
 import SearchInput from 'atoms/Form/SearchInput';
 import Selector from 'atoms/Form/Selector';
-import PageCountSelector from 'atoms/PageCountSelector';
-import Pagination from 'atoms/Pagination';
 import {GlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import {useQuery} from 'customHooks/urlParam';
 import * as mutations from 'graphql/mutations';
-import {find} from 'lodash';
+import {find, orderBy} from 'lodash';
 import ModalPopUp from 'molecules/ModalPopUp';
 import React, {Fragment, useContext, useEffect, useState} from 'react';
 import {AiOutlineArrowDown, AiOutlineArrowUp} from 'react-icons/ai';
@@ -32,30 +33,34 @@ interface LessonListProps {
   title?: string;
   instId?: string;
 }
+const getSortedList = (list: any[]) => orderBy(list, ['title'], ['asc']);
 
-const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
+const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
   const match = useRouteMatch();
   const history = useHistory();
   const params = useQuery(location.search);
 
   const {theme, clientKey, state, userLanguage} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
-  const {
-    BreadcrumsTitles,
-    CommonlyUsedDict,
-    LessonsListDict,
-    paginationPage
-  } = useDictionary(clientKey);
+  const {BreadcrumsTitles, CommonlyUsedDict, LessonsListDict} = useDictionary(clientKey);
 
   const [status, setStatus] = useState('');
-  const [totalPages, setTotalPages] = useState(0);
-  const [currentPage, setCurrentPage] = useState(0);
   const [lessonsData, setLessonsData] = useState([]);
-  const [currentList, setCurrentList] = useState([]);
-  const [lastPage, setLastPage] = useState(false);
-  const [firstPage, setFirstPage] = useState(false);
-  const [pageCount, setPageCount] = useState(10);
   const [totalLessonNum, setTotalLessonNum] = useState(0);
+
+  const {
+    currentPage,
+    pageCount,
+    setFirstPage,
+    setLastPage,
+    setTotalPages,
+
+    currentList: _currentList,
+    allAsProps,
+    setCurrentList
+  } = usePagination(getSortedList(lessonsData) || [], totalLessonNum || 0);
+
+  const currentList = getSortedList(_currentList);
 
   const [sortingType, setSortingType] = useState({
     value: '',
@@ -88,46 +93,6 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
         return 'Survey';
       case 'assessment':
         return 'Assessment';
-    }
-  };
-
-  const goNextPage = () => {
-    const pageHigherLimit = totalPages - 1;
-    if (firstPage) {
-      setFirstPage(false);
-    }
-    if (currentPage < pageHigherLimit - 1) {
-      setCurrentPage(currentPage + 1);
-    } else if (currentPage === pageHigherLimit - 1) {
-      setCurrentPage(currentPage + 1);
-      setLastPage(true);
-    }
-  };
-
-  const goPrevPage = () => {
-    if (lastPage) {
-      setLastPage(false);
-    }
-    if (currentPage > 0) setCurrentPage(currentPage - 1);
-    else {
-      setFirstPage(true);
-    }
-  };
-
-  const currentPageLessons = () => {
-    const initialItem = currentPage * pageCount;
-    const updatedList = lessonsData.slice(initialItem, initialItem + pageCount);
-    setCurrentList(updatedList);
-  };
-
-  const backToInitials = () => {
-    setCurrentPage(0);
-    currentPageLessons();
-    setFirstPage(true);
-    if (totalPages === 1) {
-      setLastPage(true);
-    } else {
-      setLastPage(false);
     }
   };
 
@@ -189,8 +154,7 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
           };
         });
 
-        // setLessonsData(isTeacher ? filteredList : data);
-        setLessonsData(data);
+        setLessonsData(getSortedList(data));
         const totalListPages = Math.floor(
           (isTeacher ? filteredList.length : data.length) / pageCount
         );
@@ -242,7 +206,7 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
       filteredData = lessonsData;
     }
 
-    setCurrentList(filteredData);
+    setCurrentList(getSortedList(filteredData));
     setTotalPages(Math.floor(filteredData.length / pageCount));
     setFirstPage(true);
     setLastPage(!(filteredData.length > pageCount));
@@ -280,37 +244,6 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
     fetchInstitutions();
     getLessonsList();
   }, []);
-
-  useEffect(() => {
-    backToInitials();
-  }, [lessonsData]);
-
-  useEffect(() => {
-    setCurrentPage(0);
-    setFirstPage(true);
-    setLastPage(false);
-    const totalListPages = Math.floor(totalLessonNum / pageCount);
-    if (pageCount * totalListPages === totalLessonNum) {
-      setTotalPages(totalListPages);
-    } else {
-      setTotalPages(totalListPages + 1);
-    }
-    if (totalPages === 1 && totalListPages === 0) {
-      setFirstPage(true);
-      setLastPage(true);
-    }
-  }, [pageCount]);
-
-  useEffect(() => {
-    currentPageLessons();
-  }, [currentPage, totalLessonNum, pageCount]);
-
-  useEffect(() => {
-    if (totalPages === 1) {
-      setFirstPage(true);
-      setLastPage(true);
-    }
-  }, [totalPages]);
 
   useEffect(() => {
     fetchSortedList();
@@ -393,7 +326,9 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
 
   const updateLessonList = (lessonObj: any) => {
     setCurrentList(
-      currentList.filter((lessonListObj: any) => lessonListObj.id !== lessonObj.id)
+      getSortedList(
+        currentList.filter((lessonListObj: any) => lessonListObj.id !== lessonObj.id)
+      )
     );
   };
 
@@ -437,7 +372,7 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
     }
   };
 
-  const finalList = searchInput.isActive ? filteredList : currentList;
+  const finalList = getSortedList(searchInput.isActive ? filteredList : currentList);
 
   {
     return (
@@ -526,13 +461,12 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
 
         {/* List / Table */}
         <div className={`flex flex-col ${isInInstitution ? 'px-8' : ''}`}>
-          <div className="-my-2 py-2">
+          <div className="">
             <div
               className={`${
                 isInInstitution ? '' : 'white_back px-8'
-              } py-4 mt-2 mb-8 align-middle rounded-lg border-b-0 border-gray-200 overflow-x-scroll`}>
-              <div
-                className={`h-8/10 ${isInInstitution ? '' : 'px-4'} w-screen lg:w-auto`}>
+              } py-4 mt-2 mb-8 align-middle rounded-lg `}>
+              <div className={``}>
                 <div className="w-full flex justify-between border-b-0 border-gray-200 ">
                   <div className="w-.5/10 px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                     <span>{LessonsListDict[userLanguage]['NO']}</span>
@@ -586,33 +520,39 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
                     ))
                 ) : finalList?.length ? (
                   finalList.map((lessonsObject, i) => (
-                    <LessonsListRow
-                      searchTerm={searchInput.value}
-                      setShowCloneModal={setShowCloneModal}
-                      key={`lessonsRows${i}`}
-                      index={currentPage * pageCount + i}
-                      id={lessonsObject.id}
-                      title={lessonsObject.title}
-                      institution={lessonsObject.institution}
-                      type={lessonsObject.type && getType(lessonsObject.type)}
-                      languages={
-                        lessonsObject?.language &&
-                        lessonsObject?.language.map((item: string) =>
-                          getLanguageString(item)
-                        )
-                      }
-                      targetAudience={lessonsObject.targetAudience}
-                      lessonObject={lessonsObject}
-                      checkIfRemovable={checkIfRemovable}
-                      handleToggleDelete={handleToggleDelete}
-                      createdAt={lessonsObject.createdAt}
-                      updatedAt={lessonsObject.updatedAt}
-                      zebraStripping={isInInstitution}
-                      isSuperAdmin={state.user.isSuperAdmin}
-                      redirectToInstitution={() =>
-                        redirectToInstitution(lessonsObject.institution?.id)
-                      }
-                    />
+                    <ErrorBoundary
+                      authId={state.user.authId}
+                      email={state.user.email}
+                      componentName="LessonsListRow"
+                      fallback={<h1>Oops with the LessonsListRow</h1>}>
+                      <LessonsListRow
+                        searchTerm={searchInput.value}
+                        setShowCloneModal={setShowCloneModal}
+                        key={`lessonsRows${i}`}
+                        index={currentPage * pageCount + i}
+                        id={lessonsObject.id}
+                        title={lessonsObject.title}
+                        institution={lessonsObject.institution}
+                        type={lessonsObject.type && getType(lessonsObject.type)}
+                        languages={
+                          lessonsObject?.language &&
+                          lessonsObject?.language.map((item: string) =>
+                            getLanguageString(item)
+                          )
+                        }
+                        targetAudience={lessonsObject.targetAudience}
+                        lessonObject={lessonsObject}
+                        checkIfRemovable={checkIfRemovable}
+                        handleToggleDelete={handleToggleDelete}
+                        createdAt={lessonsObject.createdAt}
+                        updatedAt={lessonsObject.updatedAt}
+                        zebraStripping={isInInstitution}
+                        isSuperAdmin={state.user.isSuperAdmin}
+                        redirectToInstitution={() =>
+                          redirectToInstitution(lessonsObject.institution?.id)
+                        }
+                      />
+                    </ErrorBoundary>
                   ))
                 ) : (
                   <div className="flex p-12 mx-auto text-gray-400 justify-center">
@@ -634,27 +574,7 @@ const LessonsList = ({isInInstitution, title, instId}: LessonListProps) => {
 
               {/* Pagination And Counter */}
               {!searchInput.isActive && totalLessonNum > 0 && (
-                <div className="flex justify-center my-4">
-                  <Fragment>
-                    <div className="flex justify-between flex-col lg:flex-row">
-                      <span className="py-3 px-5 w-auto flex-shrink-0 my-5 text-md leading-5 font-medium text-gray-900">
-                        {' '}
-                        {paginationPage(userLanguage, currentPage, totalPages)}
-                      </span>
-                      <Pagination
-                        currentPage={currentPage + 1}
-                        setNext={goNextPage}
-                        setPrev={goPrevPage}
-                        firstPage={firstPage}
-                        lastPage={lastPage}
-                      />
-                    </div>
-                    <PageCountSelector
-                      pageSize={pageCount}
-                      setPageSize={(c: number) => setPageCount(c)}
-                    />
-                  </Fragment>
-                </div>
+                <ListBottomBar {...allAsProps} />
               )}
             </div>
           </div>

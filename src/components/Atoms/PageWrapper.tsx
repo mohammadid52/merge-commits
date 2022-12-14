@@ -1,14 +1,34 @@
-import React from 'react';
+import {setPageTitle} from '@utilities/functions';
+import React, {useEffect} from 'react';
 
 interface PageWrapperProps {
   children: React.ReactNode;
   wrapClass?: string;
   defaultClass?: string;
+  pageName?: string;
 }
 
 const PageWrapper: React.FC<PageWrapperProps> = (pageWrapperProps: PageWrapperProps) => {
-  const { children, wrapClass, defaultClass = 'px-4 white_back' } = pageWrapperProps;
-  return <div className={`w-full py-8 ${defaultClass} mb-0 ${wrapClass ? wrapClass : ''}`}>{children}</div>;
+  const {
+    children,
+    wrapClass,
+    defaultClass = 'px-4 white_back theme-card-shadow',
+    pageName
+  } = pageWrapperProps;
+
+  useEffect(() => {
+    pageName && setPageTitle(pageName);
+
+    return () => {
+      setPageTitle(null);
+    };
+  }, [pageName]);
+
+  return (
+    <div className={`w-full py-8 ${defaultClass} mb-0 ${wrapClass ? wrapClass : ''}`}>
+      {children}
+    </div>
+  );
 };
 
 export default PageWrapper;

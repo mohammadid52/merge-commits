@@ -501,10 +501,10 @@ const StaffBuilder = (props: StaffBuilderProps) => {
                                   {...provided.dragHandleProps}>
                                   <div
                                     key={index}
-                                    className={`flex justify-between w-auto whitespace-nowrap border-b-0 border-gray-200 hover:iconoclast:bg-200 hover:iconoclast:text-600
-                                    hover:curate:bg-200 hover:curate:text-600 transition-all ${
-                                      index % 2 !== 0 ? 'bg-gray-50' : ''
-                                    }`}>
+                                    className={`flex justify-between w-auto whitespace-nowrap border-b-0 border-gray-200 hover:bg-gray-200
+                                     transition-all ${
+                                       index % 2 !== 0 ? 'bg-gray-50' : ''
+                                     }`}>
                                     <div className="flex w-.5/10 items-center px-8 py-4 text-left text-s leading-4">
                                       {index + 1}.
                                     </div>

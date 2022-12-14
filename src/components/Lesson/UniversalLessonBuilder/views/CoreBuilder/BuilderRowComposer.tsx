@@ -1,8 +1,8 @@
+import {FORM_TYPES} from '@UlbUI/common/constants';
 import Buttons from 'atoms/Buttons';
-import AllEmotions from 'components/Lesson/AllEmotions';
 import composePartContent from 'components/Lesson/UniversalLessonBlockComponents/composePartContent';
 import EditOverlayBlock from 'components/Lesson/UniversalLessonBlockComponents/UtilityBlocks/EditOverlayBlock';
-import {GlobalContext, useGlobalContext} from 'contexts/GlobalContext';
+import {GlobalContext} from 'contexts/GlobalContext';
 import {usePageBuilderContext} from 'contexts/PageBuilderContext';
 import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
 import {RowComposerProps} from 'interfaces/UniversalLessonBuilderInterfaces';
@@ -11,10 +11,8 @@ import {
   PartContent,
   UniversalLessonPage
 } from 'interfaces/UniversalLessonInterfaces';
-import {FORM_TYPES} from '@UlbUI/common/constants';
 import React, {useContext, useState} from 'react';
 import {BuilderRowWrapper} from './BuilderRowWrapper';
-import useAuth from '@customHooks/useAuth';
 
 const BuilderRowComposer = (props: RowComposerProps) => {
   const {
@@ -28,7 +26,6 @@ const BuilderRowComposer = (props: RowComposerProps) => {
   } = props;
 
   const {selectedComponent, setNavState, navState} = usePageBuilderContext();
-  const {lessonState} = useGlobalContext();
 
   const [editedID, setEditedID] = useState<string>('');
   const {
@@ -56,8 +53,6 @@ const BuilderRowComposer = (props: RowComposerProps) => {
   );
 
   // this is only for header component
-  const paddingForHeader = (type: any) => (type.includes('header') ? 'px-4 mb-3' : '');
-  const {authId, email} = useAuth();
 
   return (
     <div>
@@ -145,14 +140,15 @@ const BuilderRowComposer = (props: RowComposerProps) => {
                             deleteFromULBHandler={deleteFromULBHandler}
                             updateFromULBHandler={updateFromULBHandler}>
                             {content.value.length > 0 ? (
-                              <div className={`${paddingForHeader(content.type)}`}>
+                              <div>
                                 <div
                                   className={`${
                                     content.type === FORM_TYPES.JUMBOTRON
-                                      ? 'px-4 pt-4'
+                                      ? 'px-0 pt-4'
                                       : content.type === 'header' ||
                                         content.type === 'image' ||
-                                        content.type === 'customVideo'
+                                        content.type === 'customVideo' ||
+                                        content.type === 'divider'
                                       ? ''
                                       : content.class
                                   }`}
@@ -170,8 +166,7 @@ const BuilderRowComposer = (props: RowComposerProps) => {
                                     updateBlockContentULBHandler,
                                     idx2,
                                     undefined, // notesData
-                                    false, // isStudent,
-                                    {authId, email}
+                                    false // isStudent,
                                   )}
                                 </div>
                               </div>

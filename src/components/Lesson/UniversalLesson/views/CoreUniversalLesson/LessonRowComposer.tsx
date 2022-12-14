@@ -1,4 +1,3 @@
-import useAuth from '@customHooks/useAuth';
 import AllEmotions from 'components/Lesson/AllEmotions';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import {
@@ -9,9 +8,10 @@ import {
 import {filter} from 'lodash';
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import composePartContent from '../../../UniversalLessonBlockComponents/composePartContent';
-import {DIVIDER, FORM_TYPES} from '../../../UniversalLessonBuilder/UI/common/constants';
+import {FORM_TYPES} from '../../../UniversalLessonBuilder/UI/common/constants';
 import Downloadables from '../../../UniversalLessonBuilder/UI/UIComponents/Downloadables';
 import {BuilderRowWrapper} from '../../../UniversalLessonBuilder/views/CoreBuilder/BuilderRowWrapper';
+import LessonModule from './LessonModule';
 
 const LessonRowComposer = () => {
   const gContext = useGlobalContext();
@@ -19,8 +19,6 @@ const LessonRowComposer = () => {
   const gState = gContext.state;
   const {user, lessonPage} = gState;
   const [activePageData, setActivePageData] = useState<UniversalLessonPage>();
-
-  const [currentLesson, setCurrentLesson] = useState<any>();
 
   const getSeparateData = (id: string) =>
     activePageData && activePageData.pageContent && activePageData.pageContent.length > 0
@@ -78,9 +76,6 @@ const LessonRowComposer = () => {
       const ACTIVE_PAGE_DATA = PAGES[CURRENT_PAGE];
       setActivePageData(ACTIVE_PAGE_DATA);
     }
-    if (lessonState.lessonData) {
-      setCurrentLesson(lessonState.lessonData);
-    }
   }, [lessonState.lessonData, PAGES, lessonState.currentPage]);
 
   // this is only for header component
@@ -90,7 +85,6 @@ const LessonRowComposer = () => {
     switch (type) {
       case 'video':
       case FORM_TYPES.WRITING_EXERCISE:
-      case DIVIDER:
         return 'p-4';
       default:
         return '';
@@ -169,7 +163,7 @@ const LessonRowComposer = () => {
               </div>
             )}
           </div>
-          {/* <LessonModule currentLesson={currentLesson} /> */}
+          <LessonModule currentLesson={lessonState?.lessonData} />
         </>
       )}
     </div>
@@ -187,8 +181,6 @@ interface ISingleRowProps {
 const SingleContentRow = React.memo((props: ISingleRowProps) => {
   const {content, idx, idx2, pagePart, notes} = props;
 
-  const {authId, email} = useAuth();
-
   return (
     <>
       {content &&
@@ -204,8 +196,7 @@ const SingleContentRow = React.memo((props: ISingleRowProps) => {
           undefined, // function related to builder
           undefined, // position number related to builder
           content.type === 'notes-form' && notes && notes.length > 0 ? notes : [],
-          true, // isStudent,
-          {authId, email}
+          true // isStudent,
         )}
     </>
   );

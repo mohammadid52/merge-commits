@@ -9,6 +9,7 @@ import AnimatedContainer from 'uiComponents/Tabs/AnimatedContainer';
 import {API, graphqlOperation} from 'aws-amplify';
 import orderBy from 'lodash/orderBy';
 import React, {useEffect, useState} from 'react';
+import {logError} from '@graphql/functions';
 
 const CommanCommunityContent = ({
   customContent,
@@ -34,7 +35,7 @@ const CommanCommunityContent = ({
   const [isLoading, setIsLoading] = useState(false);
 
   const [error, setError] = useState('');
-  const {instId} = useAuth();
+  const {instId, authId, email} = useAuth();
 
   const fetchCommunities = async () => {
     try {
@@ -52,6 +53,7 @@ const CommanCommunityContent = ({
         setCommonList([...orderedList]);
       }
     } catch (error) {
+      logError(error, {authId: authId, email: email}, 'CommanCommunityChat');
       console.error(error);
       setError(error.message);
     } finally {

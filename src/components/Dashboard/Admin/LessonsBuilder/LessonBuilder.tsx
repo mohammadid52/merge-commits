@@ -135,12 +135,6 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     message: ''
   });
 
-  const [checkpointSaveModal, setCheckpointSaveModal] = useState({
-    show: false,
-    stepOnHold: '',
-    message: ''
-  });
-
   const fetchStaffByInstitution = async (institutionID: string) => {
     setDesignersList([]);
     try {
@@ -264,13 +258,6 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     setAddedSyllabus(assignedSyllabus);
   };
 
-  // old query
-  // const result: any = await API.graphql(
-  //   graphqlOperation(customQueries.getLesson, {
-  //     id: lessonId,
-  //   })
-  // );
-
   useEffect(() => {
     if (lessonId) {
       setLoading(true);
@@ -293,10 +280,6 @@ const LessonBuilder = (props: LessonBuilderProps) => {
       setLessonId(lessonIdFromUrl);
     }
   }, [lessonIdFromUrl]);
-
-  // useEffect(() => {
-  //   fetchCurriculum();
-  // }, [formData?.institution]);
 
   useEffect(() => {
     if (instId && !lessonId) {
@@ -529,9 +512,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
       //     })
       //   );
       // }
-      const rubricsToBeRemoved = rubrics.filter(
-        (rubric: any) => rubric.id && !rubric.checked
-      );
+
       // if (rubricsToBeRemoved?.length) {
       //   await API.graphql(
       //     graphqlOperation(mutations.batchDeleteLessonRubrics, {
@@ -640,15 +621,6 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     }
   };
 
-  const toggleUnSaveModal = (url?: string) => {
-    setWarnModal({
-      ...warnModal,
-      message: 'Do you want to save changes before going?',
-      show: !warnModal.show,
-      url
-    });
-  };
-
   const discardChanges = () => {
     history.push(warnModal.url);
     setWarnModal({
@@ -749,8 +721,6 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     }
   ];
 
-  const animationProps = {animationType: 'translateY', duration: '500'};
-
   return (
     <div className="w-full h-full">
       <h3 className="text-lg leading-6 uppercase text-gray-600 w-auto px-8 pb-8">
@@ -767,8 +737,11 @@ const LessonBuilder = (props: LessonBuilderProps) => {
           {loading ? (
             <div className="h-100 flex justify-center items-center">
               <div className="w-5/10">
-                <Loader />
-                <p className="mt-2 text-center">Fetching lesson details please wait...</p>
+                <Loader
+                  className="text-gray-500"
+                  animation
+                  withText="Fetching lesson details please wait..."
+                />
               </div>
             </div>
           ) : (

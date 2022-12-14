@@ -1604,3 +1604,15 @@ $polka-dot-size: 0.8px;
   background-size: cover;
   z-index: -1;
 }
+
+.actions {
+  opacity: 0;
+  transition: all 300ms ease;
+}
+
+.show-action-on-hover:hover {
+  & .actions {
+    opacity: 1;
+    transition: all 300ms ease;
+  }
+}

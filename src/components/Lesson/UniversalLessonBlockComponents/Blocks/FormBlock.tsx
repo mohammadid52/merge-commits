@@ -1,22 +1,44 @@
+import ErrorBoundary from '@components/Error/ErrorBoundary';
+import DatePicker from '@UlbBlocks/FormBlock/DatePicker';
+import TextAreaBlock from '@UlbBlocks/FormBlock/TextAreaBlock';
+import TextBlock from '@UlbBlocks/FormBlock/TextBlock';
+import NotesBlock from '@UlbBlocks/Notes/NotesBlock';
 import RequiredMark from 'atoms/RequiredMark';
 import AttachmentBlock from 'components/Lesson/UniversalLessonBlockComponents/Blocks/FormBlock/AttachmentBlock';
 import OptionBlock from 'components/Lesson/UniversalLessonBlockComponents/Blocks/FormBlock/OptionBlock';
 import StarRatingBlock from 'components/Lesson/UniversalLessonBlockComponents/Blocks/FormBlock/StarRatingBlock';
 import WritingExerciseBlock from 'components/Lesson/UniversalLessonBlockComponents/Blocks/FormBlock/WritingExerciseBlock';
 import ReviewSliderBlock from 'components/Lesson/UniversalLessonBlockComponents/Blocks/ReviewSliderBlock';
-import {GlobalContext} from 'contexts/GlobalContext';
+import {GlobalContext, useGlobalContext} from 'contexts/GlobalContext';
 import useInLessonCheck from 'customHooks/checkIfInLesson';
 import useStudentDataValue from 'customHooks/studentDataValue';
-import {UniversalLessonPage} from 'interfaces/UniversalLessonInterfaces';
-import DatePicker from '@UlbBlocks/FormBlock/DatePicker';
-import TextAreaBlock from '@UlbBlocks/FormBlock/TextAreaBlock';
-import TextBlock from '@UlbBlocks/FormBlock/TextBlock';
-import NotesBlock from '@UlbBlocks/Notes/NotesBlock';
-import {filter, map, noop} from 'lodash';
-import React, {useContext, useEffect, useState} from 'react';
 import {RowWrapperProps} from 'interfaces/UniversalLessonBuilderInterfaces';
+import {map, noop} from 'lodash';
+import React, {useContext} from 'react';
 import {FORM_TYPES} from '../../UniversalLessonBuilder/UI/common/constants';
 import EmojiInput from './FormBlock/EmojiInputBlock';
+
+export const FormLabel = ({
+  numbered,
+  index,
+  label,
+  required
+}: {
+  index: string;
+  numbered: boolean;
+  label: string;
+  required: boolean;
+}) => {
+  const gContext = useContext(GlobalContext);
+  const gState = gContext.state;
+  const {lessonPage: {theme: themeTextColor = ''} = {}} = gState;
+
+  return (
+    <label className={`text-base ${themeTextColor}`} htmlFor="label">
+      {numbered && index} {label} <RequiredMark isRequired={required} />
+    </label>
+  );
+};
 
 interface FormBlockProps extends RowWrapperProps {
   id?: string;
@@ -51,24 +73,14 @@ export const FormBlock = ({
   pagePartId
 }: FormBlockProps) => {
   const {
-    lessonState,
     state: {user, lessonPage: {theme: lessonPageTheme = 'dark'} = {}}
-  } = useContext(GlobalContext);
+  } = useGlobalContext();
   const themePlaceholderColor =
     lessonPageTheme === 'light' ? 'placeholder-gray-800' : 'text-gray-400';
 
   const {getDataValue, setDataValue} = useStudentDataValue();
 
   // ~~~~~~~~~~~~~~~~ PAGES ~~~~~~~~~~~~~~~~ //
-  const PAGES = lessonState.lessonData.lessonPlan;
-  const CURRENT_PAGE = lessonState.currentPage;
-
-  const [activePageData, setActivePageData] = useState<UniversalLessonPage>();
-
-  const notes =
-    activePageData && activePageData.pageContent && activePageData.pageContent.length > 0
-      ? filter(activePageData.pageContent, (f) => f.id.includes('notes-container'))
-      : [];
 
   // ##################################################################### //
   // ######################## STUDENT DATA CONTEXT ####################### //
@@ -77,15 +89,9 @@ export const FormBlock = ({
   const isStudent = user.role === 'ST';
   const isInLesson = isStudent ? useInLessonCheck() : false;
 
-  useEffect(() => {
-    if (PAGES) {
-      const ACTIVE_PAGE_DATA = PAGES[CURRENT_PAGE];
-      setActivePageData(ACTIVE_PAGE_DATA);
-    }
-  }, [lessonState.lessonData, lessonState.currentPage]);
-
   const onChange = (e: any) => {
     const {id, value} = e.target;
+
     setDataValue(id, [value]);
   };
 
@@ -114,11 +120,7 @@ export const FormBlock = ({
   }: FormControlProps) => {
     return (
       <div id={`${inputID}_for_error`} key={id} className={`mb-4 p-4`}>
-        <label
-          className={`text-sm text-gray-${lessonPageTheme === 'dark' ? '200' : '800'}`}
-          htmlFor="label">
-          {numbered && index} {label} <RequiredMark isRequired={required} />
-        </label>
+        <FormLabel label={label} required={required} numbered={numbered} index={index} />
         <input
           id={inputID}
           disabled={mode === 'building'}
@@ -250,9 +252,10 @@ export const FormBlock = ({
           </div>
         );
 
+      case FORM_TYPES.POEM:
       case `${FORM_TYPES.POEM}-content`:
         return (
-          <div className={`border-0 border-gray-700  rounded-2xl`}>
+          <div className={`mt-4  rounded-2xl`}>
             <WritingExerciseBlock
               title={false}
               value={isInLesson ? getValue(inputID) : value}
@@ -291,22 +294,24 @@ export const FormBlock = ({
         value.length > 0 &&
         value.map((v: any, i: number) => {
           return (
-            <React.Fragment key={`formBlock_${i}`}>
-              {composeInput(
-                v.id,
-                v.type,
-                v.label,
-                v.value,
-                v.options,
-                isInLesson,
-                setDataValue,
-                getDataValue,
-                numbered,
-                `${i + 1}.`,
-                v.isRequired,
-                v.class
-              )}
-            </React.Fragment>
+            <ErrorBoundary componentName="FormBlock-composeInput">
+              <React.Fragment key={`formBlock_${i}`}>
+                {composeInput(
+                  v.id,
+                  v.type,
+                  v.label,
+                  v.value,
+                  v.options,
+                  isInLesson,
+                  setDataValue,
+                  getDataValue,
+                  numbered,
+                  `${i + 1}.`,
+                  v.isRequired,
+                  v.class
+                )}
+              </React.Fragment>
+            </ErrorBoundary>
           );
         })}
     </>

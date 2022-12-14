@@ -34,30 +34,6 @@ interface InstInfo {
 const InstitutionInfo = (instProps: InstitutionInfoProps) => {
   const {institute} = instProps;
 
-  const uploadImageToS3 = async (file: any, id: string, type: string) => {
-    // Upload file to s3 bucket
-
-    return new Promise((resolve, reject) => {
-      Storage.put(`instituteImages/institute_image_${id}`, file, {
-        contentType: type,
-        acl: 'public-read',
-        ContentEncoding: 'base64'
-      })
-        .then((result) => {
-          console.log('File successfully uploaded to s3', result);
-          resolve(true);
-        })
-        .catch((err) => {
-          // setError({
-          //   show: true,
-          //   errorMsg: InstitutionBuilderDict[userLanguage]['messages']['uploaderr'],
-          // });
-          console.error('Error in uploading file to s3', err);
-          reject(err);
-        });
-    });
-  };
-
   // ~~~~~~~~~~~ CURRICULAR LIST ~~~~~~~~~~~ //
   const [curricular, setCurricular] = useState<any>({});
   useEffect(() => {
@@ -86,9 +62,9 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
         <div className="flex-col lg:flex-row flex justify-center lg:justify-start w-full">
           <InstitutionProfile institute={institute} />
 
-          <div className="flex flex-1 overflow-auto">
+          <div className="flex flex-1">
             <div className="bg-white border-l-0 border-gray-200 mb-4 flex-1">
-              <div className="overflow-hidden h-full">
+              <div className="">
                 {/* {renderElementBySelectedMenu()} */}
                 <NavBarRouter
                   {...instProps}

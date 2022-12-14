@@ -22,6 +22,7 @@ import React, {useEffect, useState} from 'react';
 import {AiOutlineHeart} from 'react-icons/ai';
 import {BiDotsVerticalRounded} from 'react-icons/bi';
 import {v4 as uuidV4} from 'uuid';
+import {logError} from '@graphql/functions';
 
 const BottomSection = ({
   setShowComments,
@@ -468,6 +469,7 @@ const Card = ({
         setChats([...orderedList]);
       }
     } catch (error) {
+      logError(error, {authId: authId, email: email}, 'Card');
       console.error(error);
       setError(error.message);
     } finally {

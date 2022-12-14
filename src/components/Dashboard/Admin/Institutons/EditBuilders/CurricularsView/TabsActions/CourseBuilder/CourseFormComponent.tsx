@@ -2,7 +2,6 @@ import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
 import MultipleSelector from 'atoms/Form/MultipleSelector';
 import Selector from 'atoms/Form/Selector';
-import TextArea from 'atoms/Form/TextArea';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {Storage} from '@aws-amplify/storage';
 import ProfileCropModal from 'components/Dashboard/Profile/ProfileCropModal';
@@ -67,7 +66,7 @@ const CourseFormComponent = ({courseId, courseData}: CourseBuilderProps) => {
   });
   const [loading, setIsLoading] = useState(false);
   const {clientKey, userLanguage} = useContext(GlobalContext);
-  const {CurricularBuilderdict, BreadcrumsTitles} = useDictionary(clientKey);
+  const {CurricularBuilderdict} = useDictionary(clientKey);
   const [messages, setMessages] = useState({
     show: false,
     message: '',
@@ -154,7 +153,6 @@ const CourseFormComponent = ({courseId, courseData}: CourseBuilderProps) => {
               image: `instituteImages/curricular_image_${courseId}`
             };
           }
-          console.log(input, 'inputinput');
 
           await API.graphql(graphqlOperation(mutation.updateCurriculum, {input}));
           history.push(
@@ -210,7 +208,7 @@ const CourseFormComponent = ({courseId, courseData}: CourseBuilderProps) => {
         //   );
         // }
       } catch (error) {
-        console.log(error, 'inside catch');
+        console.error(error, 'inside catch');
         setMessages({
           show: true,
           message: CurricularBuilderdict[userLanguage]['messages']['error']['save'],
@@ -345,17 +343,26 @@ const CourseFormComponent = ({courseId, courseData}: CourseBuilderProps) => {
   }, []);
 
   useEffect(() => {
-    if (designersList?.length && courseData.designers?.length) {
+    if (
+      courseData.designers !== null &&
+      designersList?.length &&
+      courseData.designers?.length
+    ) {
       const designers = [...courseData.designers].map((desID: string) => {
         const personData = designersList.find((per) => per.id === desID);
-        const personObj = {
-          id: personData?.id,
-          name: personData?.name,
-          value: personData?.name
-        };
-        return personObj;
+        if (personData) {
+          const personObj = {
+            id: personData?.id,
+            name: personData?.name,
+            value: personData?.name
+          };
+          return personObj;
+        }
       });
-      setSelectedDesigners(designers);
+
+      setSelectedDesigners(designers.filter(Boolean));
+    } else {
+      setSelectedDesigners([]);
     }
   }, [designersList, courseData.designers]);
 
@@ -408,7 +415,7 @@ const CourseFormComponent = ({courseId, courseData}: CourseBuilderProps) => {
       <div className="w-9/10 m-auto">
         <div className="h-9/10 flex flex-col lg:flex-row">
           <div className="w-auto p-4 mr-6 flex flex-col text-center items-center">
-            <button className="group hover:opacity-80 focus:outline-none focus:opacity-95 flex flex-col items-center mt-4">
+            <button className="group hover:opacity-80 transition-all focus:outline-none focus:opacity-95 flex flex-col items-center mt-4">
               <label className="cursor-pointer flex justify-center">
                 <DroppableMedia
                   mediaRef={mediaRef}
@@ -417,10 +424,10 @@ const CourseFormComponent = ({courseId, courseData}: CourseBuilderProps) => {
                     setFileObj(file);
                   }}
                   toggleCropper={toggleCropper}>
-                  {imageUrl ? (
+                  {!imageLoading || imageUrl ? (
                     <img
                       onClick={handleImage}
-                      className={`profile  w-120 h-80 md:w-120 md:h-80 border flex flex-shrink-0 border-gray-400`}
+                      className={`profile  w-120  md:w-120  border flex flex-shrink-0 rounded-xl theme-card-shadow`}
                       src={imageUrl}
                     />
                   ) : (
@@ -497,7 +504,9 @@ const CourseFormComponent = ({courseId, courseData}: CourseBuilderProps) => {
               />
             </div>
             <div className="px-3 py-4">
-              <TextArea
+              <FormInput
+                textarea
+                rows={6}
                 value={summary}
                 id="summary"
                 onChange={onChange}
@@ -507,8 +516,10 @@ const CourseFormComponent = ({courseId, courseData}: CourseBuilderProps) => {
             </div>
 
             <div className="px-3 py-4">
-              <TextArea
+              <FormInput
+                textarea
                 value={description}
+                rows={6}
                 id="description"
                 onChange={onChange}
                 name="description"
@@ -516,7 +527,9 @@ const CourseFormComponent = ({courseId, courseData}: CourseBuilderProps) => {
               />
             </div>
             <div className="px-3 py-4">
-              <TextArea
+              <FormInput
+                textarea
+                rows={6}
                 value={objectives}
                 id="objectives"
                 onChange={onChange}

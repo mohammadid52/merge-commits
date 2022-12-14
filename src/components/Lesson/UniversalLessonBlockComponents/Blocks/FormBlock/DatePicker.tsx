@@ -7,6 +7,7 @@ import Tooltip from 'atoms/Tooltip';
 import RequiredMark from 'atoms/RequiredMark';
 import useInLessonCheck from 'customHooks/checkIfInLesson';
 import useStudentDataValue from 'customHooks/studentDataValue';
+import {FormLabel} from '../FormBlock';
 
 interface DatePickerProps {
   id: string;
@@ -70,9 +71,8 @@ const DatePicker = (props: IFormBlockProps) => {
   const {id, required, numbered, label, mode, index, value, inputID} = props;
 
   const gContext = useContext(GlobalContext);
-  const lessonState = gContext.lessonState;
-  const lessonDispatch = gContext.lessonDispatch;
   const gState = gContext.state;
+
   const {
     user,
     lessonPage: {theme: lessonPageTheme = 'dark', themeTextColor = ''} = {}
@@ -97,9 +97,7 @@ const DatePicker = (props: IFormBlockProps) => {
       id={`${inputID}_for_error`}
       key={id}
       className={`questionItemChild mb-4 p-4 bg-component-dark rounded-2xl border-0 border-gray-700`}>
-      <label className={`text-sm ${themeTextColor}`} htmlFor="label">
-        {numbered && index} {label} <RequiredMark isRequired={required} />
-      </label>
+      <FormLabel label={label} required={required} numbered={numbered} index={index} />
 
       <div className={`w-auto datePickerWrapper ${lessonPageTheme}`}>
         <CustomDatePicker

@@ -3,6 +3,7 @@ import {ExclamationCircleIcon} from '@heroicons/react/outline';
 import {getAsset} from 'assets';
 import Label from 'atoms/Form/Label';
 import {GlobalContext} from 'contexts/GlobalContext';
+import {orderBy} from 'lodash';
 import React, {ReactNode, useContext, useEffect, useRef, useState} from 'react';
 import {FaSpinner} from 'react-icons/fa';
 import {IoClose} from 'react-icons/io5';
@@ -19,6 +20,7 @@ interface SelectorProps {
   onChange: (c: string, n: string, id: string) => void;
   disabled?: boolean;
   isRequired?: boolean;
+  style?: any;
   loading?: boolean;
   label?: string;
   labelTextClass?: string;
@@ -30,6 +32,7 @@ interface SelectorProps {
   setHoveringItem?: React.Dispatch<React.SetStateAction<{}>>;
   setSelectedItem?: React.Dispatch<React.SetStateAction<{}>>;
   dataCy?: string;
+  dropdownWidth?: string;
 }
 
 const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
@@ -41,8 +44,8 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
     btnClass,
     disabled,
     setSelectedItem,
-    arrowHidden,
     placeholder,
+    style,
     error = '',
     onChange,
     isRequired = false,
@@ -51,7 +54,7 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
 
     width = 'w-full',
     isClearable = false,
-    onClear,
+    dropdownWidth,
 
     setHoveringItem,
 
@@ -61,6 +64,8 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
   const currentRef: any = useRef(null);
   const {theme, clientKey} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
+
+  const sortedList = orderBy(list, ['name'], ['asc']);
 
   const updateSelectedItem = (str: string, name: string, id: string) => {
     setShowList(!showList);
@@ -125,17 +130,6 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
               : 'hover:bg-indigo-100 hover:text-indigo-400'
           }`}>
           <span className={`block truncate`}>{item.name}</span>
-          {/* {isSelected(item.name) && (
-            <span className={`text-white relative w-auto flex items-center`}>
-              <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                <path
-                  fillRule="evenodd"
-                  d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            </span>
-          )} */}
         </li>
       </>
     );
@@ -190,8 +184,7 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
               {isClearable && selectedItem !== null && (
                 <span
                   title="clear sort"
-                  className=" flex justify-center  cursor-pointer hover:iconoclast:bg-200 hover:iconoclast:text-600
-                   hover:curate:bg-200 hover:curate:text-600
+                  className=" flex justify-center  cursor-pointer hover:bg-gray-200
                    rounded-full"
                   onClick={clearSort}>
                   <IoClose
@@ -213,27 +206,34 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
           </div>
         </button>
       </span>
-      {showList && (
-        <div className="z-50 absolute mt-1 w-full ">
-          <ul
-            role="listbox"
-            aria-labelledby="listbox-label"
-            aria-activedescendant="listbox-item-3"
-            className="rounded-xl bg-white customShadow w-132 relative  max-h-60 py-1 text-base overflow-y-auto leading-6 focus:shadow-none focus:outline-none sm:text-sm sm:leading-5">
-            {list.length > 0 ? (
-              list.map(
-                (item: {popoverElement?: any; name: string; id: any; value: string}) => (
-                  <SelectorItem item={item} key={item.id} />
+      <AnimatedContainer className="z-50 absolute w-full " show={showList}>
+        {showList && (
+          <div className="z-50 absolute mt-1 w-full " style={{...style}}>
+            <ul
+              role="listbox"
+              aria-labelledby="listbox-label"
+              aria-activedescendant="listbox-item-3"
+              className={`rounded-xl bg-white customShadow ${
+                dropdownWidth || 'w-132'
+              } relative  max-h-60 text-base overflow-y-auto leading-6 focus:shadow-none focus:outline-none sm:text-sm sm:leading-5`}>
+              {list.length > 0 ? (
+                sortedList.map(
+                  (item: {
+                    popoverElement?: any;
+                    name: string;
+                    id: any;
+                    value: string;
+                  }) => <SelectorItem item={item} key={item.id} />
                 )
-              )
-            ) : (
-              <li className="flex justify-center relative py-2 px-4">
-                <span className="font-normal">{noOptionMessage || 'No Results'}</span>
-              </li>
-            )}
-          </ul>
-        </div>
-      )}
+              ) : (
+                <li className="flex justify-center relative py-2 px-4">
+                  <span className="font-normal">{noOptionMessage || 'No Results'}</span>
+                </li>
+              )}
+            </ul>
+          </div>
+        )}
+      </AnimatedContainer>
     </div>
   );
 };

@@ -8451,6 +8451,7 @@ export const getErrorLog = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      status
       createdAt
       updatedAt
     }
@@ -8516,6 +8517,7 @@ export const listErrorLogs = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        status
         createdAt
         updatedAt
       }

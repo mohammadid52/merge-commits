@@ -5,6 +5,8 @@ import React, {useEffect, useState} from 'react';
 import {Editor} from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
+import {logError} from '@graphql/functions';
+import useAuth from '@customHooks/useAuth';
 
 interface RichTextEditorProps {
   onChange: (html: string, text: string) => void;
@@ -46,6 +48,7 @@ const RichTextEditor = (props: RichTextEditorProps) => {
 
   const initialState: any = EditorState.createEmpty();
   const [editorState, setEditorState] = useState(initialState);
+  const {authId, email} = useAuth();
 
   const ulbContext = useULBContext();
   const previewMode = ulbContext?.previewMode ? ulbContext.previewMode : undefined;
@@ -55,6 +58,7 @@ const RichTextEditor = (props: RichTextEditorProps) => {
       const editor = document.querySelector('.rdw-editor-main');
       if (editor) {
         editor.setAttribute('style', `min-height:${minHeight}px`);
+        editor.classList.add('large-editor');
       }
     }
   }, [minHeight]);
@@ -118,6 +122,7 @@ const RichTextEditor = (props: RichTextEditorProps) => {
       }
       setEditorState(editorState);
     } catch (error) {
+      logError(error, {authId, email}, 'RichTextEditor');
       console.error('error@RichTextEditor in useEffect: ', error);
     }
   }, []);

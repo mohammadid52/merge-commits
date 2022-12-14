@@ -1,17 +1,16 @@
-import React, {useContext} from 'react';
-import {IoCamera} from 'react-icons/io5';
-import {v4 as uuidv4} from 'uuid';
+import FormInput from 'atoms/Form/FormInput';
 import {GlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
+import DroppableMedia from 'molecules/DroppableMedia';
+import React, {useContext} from 'react';
+import {IoCamera} from 'react-icons/io5';
 import {getLocalStorageData} from 'utilities/localStorage';
-import FormInput from 'atoms/Form/FormInput';
-import TextArea from 'atoms/Form/TextArea';
+import {v4 as uuidv4} from 'uuid';
 import AnimatedContainer from '../../../../../Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import {
   Tabs2,
   useTabs
 } from '../../../../../Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/Tabs';
-import DroppableMedia from 'molecules/DroppableMedia';
 import StandardLessonCard from '../../../../Classroom/LessonCards/StandardLessonCard';
 
 interface ILessonCard {
@@ -87,7 +86,7 @@ const LessonCard = ({
                  *  LEFT SECTION IMAGE
                  */}
                 <DroppableMedia
-                  className="w-full md:h-56 h-48 md:h-56 h-48 lg:w-2.5/10 md:w-4/12  rounded-tl rounded-bl shadow cursor-pointer"
+                  className="w-full md:h-56 h-48 lg:w-2.5/10 md:w-4/12  rounded-tl rounded-bl shadow cursor-pointer"
                   mediaRef={imageRef}
                   setImage={(img: any, file: any) => {
                     setImage(img);
@@ -143,7 +142,8 @@ const LessonCard = ({
                       {AddNewLessonFormDict[userLanguage]['SUMMARY']}
                       <span className="text-red-500"> *</span>
                     </label>
-                    <TextArea
+                    <FormInput
+                      textarea
                       dataCy="lesson-summary"
                       rows={5}
                       id="studentSummary"

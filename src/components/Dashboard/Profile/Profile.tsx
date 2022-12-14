@@ -1,6 +1,6 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import BreadcrumbsWithBanner from 'atoms/BreadcrumbsWithBanner';
-import {uploadImageToS3} from 'graphql/functions';
+import {updatePageState, uploadImageToS3} from 'graphql/functions';
 import React, {Fragment, useContext, useEffect, useState} from 'react';
 import {FaEdit, FaPlus} from 'react-icons/fa';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
@@ -24,6 +24,8 @@ import ProfileCropModal from './ProfileCropModal';
 import ProfileEdit from './ProfileEdit';
 import ProfileInfo from './ProfileInfo';
 import ProfileVault from './ProfileVault';
+import useAuth from '@customHooks/useAuth';
+import {UserPageState} from 'API';
 
 export interface UserInfo {
   authId: string;
@@ -97,6 +99,26 @@ const Profile = (props: ProfilePageProps) => {
     }
   ];
 
+  const {authId, email, isStudent} = useAuth();
+  useEffect(() => {
+    if (isStudent) {
+      updatePageState(
+        UserPageState.DASHBOARD,
+        {
+          authId,
+          email,
+          pageState: state.user.pageState
+        },
+        () => {
+          dispatch({
+            type: 'SET_USER',
+            payload: {...state.user, pageState: UserPageState.DASHBOARD}
+          });
+        }
+      );
+    }
+  }, [isStudent]);
+
   const toggleCropper = () => {
     setShowCropper(!showCropper);
   };
@@ -106,7 +128,9 @@ const Profile = (props: ProfilePageProps) => {
     setImageLoading(true);
     toggleCropper();
     const ID = `profile_image_${person.id}`;
-    await uploadImageToS3(image ? image : fileObj, ID, fileObj?.type || 'image/jpeg');
+    await uploadImageToS3(image ? image : fileObj, ID, fileObj?.type || 'image/jpeg', {
+      auth: {authId, email}
+    });
     const imageUrl: any = await getImageFromS3(ID);
 
     setImageUrl(imageUrl);

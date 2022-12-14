@@ -1,3 +1,7 @@
+import {getAsset} from 'assets';
+import {getLocalStorageData, setLocalStorageData} from './localStorage';
+import {getClientKey} from './strings';
+
 export const goBackBreadCrumb = (list: any[], history: any) => {
   const lastSecondIdx = list.length - 2;
   const url = list[lastSecondIdx]?.url;
@@ -52,4 +56,28 @@ export const ellipsis = (text: string, len: number): string => {
 
 export const randomNumber = (min: number, max: number): number => {
   return Math.random() * (max - min) + min;
+};
+
+export const getJSON = async (url: string): Promise<string> => {
+  const doestThisJsonExistsInLocalStorage = getLocalStorageData(url);
+  if (doestThisJsonExistsInLocalStorage !== undefined) {
+    return doestThisJsonExistsInLocalStorage;
+  } else {
+    const response = await fetch(url);
+    const json = await response.json();
+    setLocalStorageData(url, json);
+    return json;
+  }
+};
+
+export const paginationPage = (lang: string, page: number, total: number) => {
+  if (lang === 'EN') return `Showing Page ${page + 1} of ${total} pages`;
+  if (lang === 'ES') return `Mostrando página ${page + 1} de ${total} páginas`;
+  return '';
+};
+
+export const setPageTitle = (title: string) => {
+  if (title) {
+    document.title = `${title} | `.concat(getAsset(getClientKey(), 'appTitle'));
+  }
 };

@@ -1,3 +1,4 @@
+import {GlobalContext} from '@contexts/GlobalContext';
 import {logError} from '@graphql/functions';
 import React from 'react';
 
@@ -12,12 +13,14 @@ import React from 'react';
  */
 interface PropsInterface {
   fallback?: React.ReactNode;
-  authId: string;
-  email: string;
+  authId?: string;
+  email?: string;
   componentName: string;
 }
 
 class ErrorBoundary extends React.Component<PropsInterface> {
+  static contextType = GlobalContext;
+
   public state = {
     hasError: false,
     error: '',
@@ -46,10 +49,12 @@ class ErrorBoundary extends React.Component<PropsInterface> {
   }
 
   public componentDidUpdate() {
+    const {authId, email} = this.context.state?.user;
+
     if (this.state.hasError) {
       logError(
         this.state.error,
-        {authId: this.props.authId, email: this.props.email},
+        {authId: authId, email: email},
         this.props.componentName
       );
       console.error('error logged to aws');
@@ -58,7 +63,7 @@ class ErrorBoundary extends React.Component<PropsInterface> {
 
   public render() {
     if (this.state.hasError) {
-      return this.props.fallback;
+      return this.props.fallback || <div>Oops with {this.props.componentName}</div>;
     } else {
       return this.props.children;
     }

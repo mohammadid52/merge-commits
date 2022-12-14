@@ -1,14 +1,14 @@
-import React, {useContext} from 'react';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
-import {GlobalContext} from 'contexts/GlobalContext';
 import {getAsset} from 'assets';
 import Loader from 'atoms/Loader';
+import {GlobalContext} from 'contexts/GlobalContext';
+import React, {useContext} from 'react';
 
 interface ButtonProps {
   type?: 'button' | 'submit' | 'reset';
   label?: string | any;
   onClick?: (event?: any) => void;
   transparent?: boolean;
+  redBtn?: boolean;
   Icon?: any;
   btnClass?: string;
   overrideClass?: boolean;
@@ -33,6 +33,7 @@ const Buttons: React.FC<ButtonProps> = (btnProps: ButtonProps): React.ReactEleme
     Icon,
     title,
     greenBtn,
+    redBtn,
     variant = 'primary',
     iconBeforeLabel,
     transparent,
@@ -53,15 +54,15 @@ const Buttons: React.FC<ButtonProps> = (btnProps: ButtonProps): React.ReactEleme
   const {theme, clientKey} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
 
-  const _Icon = () => (
-    <span className="w-auto">
-      <Icon
-        className={`${iconSize || 'w-6 h-6'} ${
-          transparent ? 'theme-text' : 'text-white'
-        }`}
-      />
-    </span>
-  );
+  const _Icon = () => {
+    const color =
+      redBtn && transparent ? 'text-red-500' : transparent ? 'theme-text' : 'text-white';
+    return (
+      <span className="w-auto">
+        <Icon className={`${iconSize || 'w-6 h-6'} ${color}`} />
+      </span>
+    );
+  };
 
   return (
     <button
@@ -76,12 +77,18 @@ const Buttons: React.FC<ButtonProps> = (btnProps: ButtonProps): React.ReactEleme
           ? ''
           : `${
               transparent
-                ? `${greenBtn ? '' : 'theme-border theme-text hover-text-white'}`
-                : `${greenBtn ? '' : `iconoclast:bg-500 curate:bg-500`}`
+                ? `${
+                    greenBtn
+                      ? ''
+                      : redBtn
+                      ? ''
+                      : 'theme-border theme-text hover-text-white'
+                  }`
+                : `${greenBtn ? '' : redBtn ? '' : ` theme-bg:500 theme-card-shadow`}`
             } font-bold transition duration-150 text-white ease-in-out ${
               size === 'small' ? '' : 'md:py-2'
             } sm:py-auto  ${
-              greenBtn ? '' : 'hover:iconoclast:bg-600  hover:curate:bg-600'
+              greenBtn ? '' : redBtn ? '' : 'hover:theme-bg:600'
             } uppercase text-xs ${
               size === 'small' ? 'px-2 py-1' : 'px-4 py-2'
             } rounded-full flex items-center justify-center w-auto `
@@ -89,10 +96,12 @@ const Buttons: React.FC<ButtonProps> = (btnProps: ButtonProps): React.ReactEleme
 
       ${variant === 'secondary' ? 'opacity-50' : ''}
       ${btnClass ? btnClass : ''} 
+      ${transparent ? 'transparent' : ''}
       ${theme.outlineNone} 
+${redBtn ? 'red-btn ' : ''}
       ${
         transparent
-          ? theme.btn.cancel
+          ? `bg-transparent  ${redBtn ? '' : 'theme-border'} border-0`
           : !overrideClass
           ? `${
               variant === 'secondary' || disabled
@@ -103,6 +112,13 @@ const Buttons: React.FC<ButtonProps> = (btnProps: ButtonProps): React.ReactEleme
       } 
       ${disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'} 
       ${greenBtn ? 'green-btn' : ''}
+      ${
+        redBtn && transparent
+          ? 'border-red-500 hover:bg-red-500 hover:text-white red-btn text-red-500'
+          : redBtn && !transparent
+          ? 'bg-red-500 hover:bg-red-600 text-white'
+          : ''
+      }
       `}
       onClick={onClick}>
       {loading ? (

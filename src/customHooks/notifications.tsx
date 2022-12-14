@@ -11,6 +11,7 @@ import {
   setSessionStorageData
 } from 'utilities/sessionStorage';
 import useLessonControls from './lessonControls';
+import {StudentPageInput} from '@interfaces/UniversalLessonInterfaces';
 
 // ##################################################################### //
 // ######################## GLOBAL NOTIFICATIONS ####################### //
@@ -65,12 +66,7 @@ const useGlobalNotifications = () => {
 const useLessonControlNotifications = () => {
   // ~~~~~~~~~~~~~~~ CONTEXT ~~~~~~~~~~~~~~~ //
   const gContext = useContext(GlobalContext);
-  const user = gContext.state.user;
   const lessonState = gContext.lessonState;
-  const lessonDispatch = gContext.lessonDispatch;
-
-  // ~~~~~~~ LOCAL & SESSION STROAGE ~~~~~~~ //
-  const getRoomData = getLocalStorageData('room_info');
 
   // ~~~~~~~~~~~ FUNCTIONS - LIVE ~~~~~~~~~~ //
 
@@ -217,11 +213,6 @@ const useLessonNotifications = () => {
   const match = useRouteMatch();
   const getNavigationState = getSessionStorageData('navigation_state');
 
-  const navigateToHome = () => {
-    navigateCancel();
-    history.push('/');
-  };
-
   // ~~~~~~~~ FUNCTIONS - NAVIGATION ~~~~~~~ //
   const navigateAway = () => {
     setSessionStorageData('navigation_state', {
@@ -301,9 +292,6 @@ const useLessonNotifications = () => {
   const goToDashboard = () => {
     history.push('/dashboard');
   };
-
-  // console.log('lessonState.isCompleted', lessonState.isCompleted);
-  // const isCompleted = false;
 
   // ~~~~~~~~~~ NOTIFICATION LIST ~~~~~~~~~~ //
   const watchList = [
@@ -443,16 +431,53 @@ const useLessonNotifications = () => {
 
   return {lessonNotifications: collectNotifications(watchList)};
 };
+const useInputNotifications = () => {
+  // ~~~~~~~~~~~~~~~ CONTEXT ~~~~~~~~~~~~~~~ //
+  const gContext = useContext(GlobalContext);
+
+  const lessonState = gContext.lessonState;
+
+  // ~~~~~~~~~~ NOTIFICATION LIST ~~~~~~~~~~ //
+  const watchList = [
+    {
+      check: !lessonState.isValid,
+      notification: {
+        label: 'Please fill all required fields',
+        message: '',
+        type: 'alert',
+        cta: ''
+      },
+      action: () => {
+        //
+      },
+      cancel: () => {
+        //
+      }
+    }
+  ];
+
+  const collectNotifications = (list: NotificationListItem[]) =>
+    list.reduce((acc: NotificationListItem[], val: NotificationListItem) => {
+      if (val.check) {
+        return [...acc, val];
+      } else {
+        return acc;
+      }
+    }, []);
+
+  return {inputNotifications: collectNotifications(watchList)};
+};
 
 // ##################################################################### //
 // ############################# MAIN HOOK ############################# //
 // ##################################################################### //
 
-const useNotifications = (props: 'lesson' | 'lessonControl' | 'global') => {
+const useNotifications = (props: 'lesson' | 'lessonControl' | 'global' | 'input') => {
   const globalNotifications = () => useGlobalNotifications().globalNotifications;
   const lessonControlNotifications = () =>
     useLessonControlNotifications().lessonControlNotifications;
   const lessonNotifications = () => useLessonNotifications().lessonNotifications;
+  const inputNotifications = () => useInputNotifications().inputNotifications;
 
   const notifications = (switchByContext: string) => {
     switch (switchByContext) {
@@ -462,6 +487,8 @@ const useNotifications = (props: 'lesson' | 'lessonControl' | 'global') => {
         return lessonControlNotifications();
       case 'lesson':
         return lessonNotifications();
+      case 'input':
+        return inputNotifications();
       default:
         return null;
     }

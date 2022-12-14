@@ -14,19 +14,14 @@ interface WritingExerciseProps extends FormControlProps {
 
 const WritingExerciseBlock = ({
   inputID,
-  id,
+
   label,
-  options,
+  options = [],
   onChange,
   title,
   value,
   disabled
 }: WritingExerciseProps) => {
-  // useEffect(() => {
-  //   $('.wrapperClassName.dark').css('background', '#1B191D ');
-  //   $('.wrapperClassName.dark').css('borderColor', '#1B191D ');
-  // }, []);
-
   const {getDataValue} = useStudentDataValue();
   const {lessonState} = useGlobalContext();
   const viewingStudent = lessonState.studentViewing;

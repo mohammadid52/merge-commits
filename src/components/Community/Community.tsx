@@ -42,7 +42,7 @@ import {deleteImageFromS3} from 'utilities/services';
 import {awsFormatDate, dateString} from 'utilities/time';
 import {v4 as uuidV4} from 'uuid';
 import {ListCommunitiesQuery, ListCommunitiesQueryVariables, UserPageState} from 'API';
-import {updatePageState} from '@graphql/functions';
+import {logError, updatePageState} from '@graphql/functions';
 
 const Community = ({}: {role: string}) => {
   const {clientKey, userLanguage} = useGlobalContext();
@@ -108,12 +108,14 @@ const Community = ({}: {role: string}) => {
   );
 
   useEffect(() => {
-    updatePageState(UserPageState.COMMUNITY, {
-      authId: personAuthID,
-      email: personEmail,
-      pageState
-    });
-  }, []);
+    if (isStudent) {
+      updatePageState(UserPageState.COMMUNITY, {
+        authId: personAuthID,
+        email: personEmail,
+        pageState
+      });
+    }
+  }, [isStudent]);
 
   const [navState, setNavState] = useState<NavStateTypes>('init');
   const [filteredList, setFilteredList] = useState([]);
@@ -195,6 +197,7 @@ const Community = ({}: {role: string}) => {
       await refetch();
       console.log('Community list updated');
     } catch (error) {
+      logError(error, {authId: personAuthID, email: personEmail}, 'Community');
       console.error('Error while updating community list', error);
     }
   };
@@ -220,6 +223,7 @@ const Community = ({}: {role: string}) => {
       await refetch();
       console.log('Community list updated');
     } catch (error) {
+      logError(error, {authId: personAuthID, email: personEmail}, 'Community');
       console.error('Error while updating community list', error);
     }
   };
@@ -245,6 +249,7 @@ const Community = ({}: {role: string}) => {
       await refetch();
       console.log('Community list updated');
     } catch (error) {
+      logError(error, {authId: personAuthID, email: personEmail}, 'Community');
       console.error('Error while updating community list', error);
     }
   };
@@ -270,6 +275,7 @@ const Community = ({}: {role: string}) => {
       await refetch();
       console.log('Community list updated');
     } catch (error) {
+      logError(error, {authId: personAuthID, email: personEmail}, 'Community');
       console.error('Error while updating community list', error);
     }
   };
@@ -300,6 +306,7 @@ const Community = ({}: {role: string}) => {
         graphqlOperation(mutations.deleteCommunity, {input: {id: cardId}})
       );
     } catch (error) {
+      logError(error, {authId: personAuthID, email: personEmail}, 'Community');
       console.error(error);
     } finally {
     }

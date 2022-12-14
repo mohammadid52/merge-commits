@@ -138,7 +138,7 @@ const SurveyList = ({
                           {survey?.room?.name}
                         </td>
                         <td className="hidden 2xl:block px-6 py-4 w-auto whitespace-nowrap text-sm text-gray-500">
-                          {moment(survey.updatedAt).format('DD/MM/YYYY')}
+                          {new Date(survey.updatedAt).toLocaleDateString()}
                         </td>
                         <td className="px-6 py-4 w-auto whitespace-nowrap text-sm text-gray-500">
                           <a

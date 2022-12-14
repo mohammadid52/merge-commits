@@ -14,6 +14,7 @@ import {BsEnvelope} from 'react-icons/bs';
 import {FiPhone} from 'react-icons/fi';
 import {HiPencil} from 'react-icons/hi';
 import {IoIosGlobe} from 'react-icons/io';
+import useAuth from '@customHooks/useAuth';
 
 const InstitutionProfile = ({institute}: {institute: any}) => {
   // Add image handler
@@ -55,12 +56,15 @@ const InstitutionProfile = ({institute}: {institute: any}) => {
     setShowCropper(!showCropper);
   };
 
+  const {authId, email} = useAuth();
   const saveCroppedImage = async (image: string) => {
     setImageLoading(true);
     toggleCropper();
 
     const key = `instituteImages/institute_image_${institute?.id}`;
-    await uploadImageToS3(image ? image : fileObj, key, 'image/jpeg');
+    await uploadImageToS3(image ? image : fileObj, key, 'image/jpeg', {
+      auth: {authId, email}
+    });
     const input = {
       id: institute?.id,
       image: key

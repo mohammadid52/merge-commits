@@ -1,19 +1,21 @@
-import React, {useEffect, useState, useContext, useRef} from 'react';
-import {GlobalContext} from 'contexts/GlobalContext';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import Buttons from '@components/Atoms/Buttons';
+import FormInput from '@components/Atoms/Form/FormInput';
+import {getAsset} from 'assets';
+import Label from 'atoms/Form/Label';
+import Selector from 'atoms/Form/Selector';
+import {Storage} from 'aws-amplify';
+import {GlobalContext} from 'contexts/GlobalContext';
+import * as customQueries from 'customGraphql/customQueries';
+import useDictionary from 'customHooks/dictionary';
 import * as mutations from 'graphql/mutations';
 import * as queries from 'graphql/queries';
-import Selector from 'atoms/Form/Selector';
-import DateAndTime from '../DateAndTime/DateAndTime';
-import {getAsset} from 'assets';
-import useDictionary from 'customHooks/dictionary';
-import {v4 as uuidv4} from 'uuid';
-import {Storage} from 'aws-amplify';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
-import {FaSpinner} from 'react-icons/fa';
 import Papa from 'papaparse';
-import * as customQueries from 'customGraphql/customQueries';
-import Label from 'atoms/Form/Label';
+import React, {useContext, useRef, useState} from 'react';
+import {FaSpinner} from 'react-icons/fa';
+import {IconContext} from 'react-icons/lib/esm/iconContext';
+import {v4 as uuidv4} from 'uuid';
+import DateAndTime from '../DateAndTime/DateAndTime';
 interface ICsvProps {
   institutionId?: string;
 }
@@ -772,7 +774,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
           <Selector
             btnClass={!file && 'cursor-not-allowed'}
             disabled={!file}
-            placement="left"
+            dropdownWidth="w-64"
             loading={loading}
             selectedItem={selectedReason ? selectedReason.name : ''}
             placeholder={CsvDict[userLanguage]['SELECT_REASON']}
@@ -815,44 +817,30 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
         </>
       )}
       {/* <br /> */}
-      <Label
-        className="mt-4"
+
+      <FormInput
+        textarea
         label={CsvDict[userLanguage]['DESCRIBE_REASON']}
-        isRequired={true}
-      />
-      <textarea
-        className={`w-full mt-2 h-32 border-2 border-gray-300 rounded-lg ${
-          (!file || loading || !selectedReason.value) && `cursor-not-allowed`
-        }`}
-        placeholder={CsvDict[userLanguage]['REASON']}
+        isRequired
         rows={10}
         cols={50}
         value={reason}
         disabled={!file || loading || !selectedReason.value}
         onChange={(e: any) => setReason(e.target.value)}
+        placeHolder={CsvDict[userLanguage]['REASON']}
       />
+
       {success && (
         <div className="flex flex-row mt-2 justify-center">
           <h2>Successfully Uploaded!</h2>
         </div>
       )}
       <div className="grid grid-cols-4 gap-x-4 mt-3">
-        <button
-          type="button"
-          className={`col-end-5 ${
-            isSuperAdmin ? 'mt-5' : ''
-          } inline-flex justify-center h-9 border-0 border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:ring-indigo transition duration-150 ease-in-out items-center ${
-            !reason && `cursor-not-allowed`
-          }`}
-          style={{
-            /* stylelint-disable */
-            opacity: reason ? 1 : 0.5
-          }}
-          disabled={!reason || loading || !selectedReason.value}
-          onClick={(e) => handleSubmit(e)}>
-          {loading ? 'Uploading Please wait...' : 'Upload CSV'}
-          {/* )} */}
-        </button>
+        <Buttons
+          label={loading ? 'Uploading Please wait...' : 'Upload CSV'}
+          disabled={!reason || loading}
+          onClick={(e) => handleSubmit(e)}
+        />
       </div>
     </div>
   );

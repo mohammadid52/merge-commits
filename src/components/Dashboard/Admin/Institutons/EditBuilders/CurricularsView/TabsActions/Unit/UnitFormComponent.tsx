@@ -1,18 +1,15 @@
-import React, {useState, useEffect, useContext} from 'react';
-import {useHistory, useParams} from 'react-router';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import React, {useContext, useEffect, useState} from 'react';
 
 import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
-import TextArea from 'atoms/Form/TextArea';
 import MultipleSelector from 'atoms/Form/MultipleSelector';
+import TextArea from 'atoms/Form/TextArea';
 
-import {languageList} from 'utilities/staticData';
-import * as mutations from 'graphql/mutations';
-import * as customQueries from 'customGraphql/customQueries';
 import {GlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
-import {getAsset} from 'assets';
+import * as mutations from 'graphql/mutations';
+import {languageList} from 'utilities/staticData';
 
 interface AddSyllabusProps {
   syllabusDetails?: any;
@@ -38,8 +35,6 @@ const UnitFormComponent = ({
   instId,
   isInModal = false
 }: AddSyllabusProps) => {
-  const urlParams: any = useParams();
-  const curricularId = urlParams.curricularId;
   const initialData = {
     name: '',
     description: '',
@@ -50,15 +45,11 @@ const UnitFormComponent = ({
     languages: [{id: '1', name: 'English', value: 'EN'}]
   };
   const [syllabusData, setSyllabusData] = useState<InitialData>(initialData);
-  const [universalSyllabusSeq, setUniversalSyllabusSeq] = useState([]);
-  const [loading, setIsLoading] = useState(false);
-  const {theme, clientKey, userLanguage} = useContext(GlobalContext);
-  const themeColor = getAsset(clientKey, 'themeClassName');
-  const {AddSyllabusDict} = useDictionary(clientKey);
 
-  const useQuery = () => {
-    return new URLSearchParams(location.search);
-  };
+  const [loading, setIsLoading] = useState(false);
+  const {clientKey, userLanguage} = useContext(GlobalContext);
+
+  const {AddSyllabusDict} = useDictionary(clientKey);
 
   const [messages, setMessages] = useState({
     show: false,
@@ -110,15 +101,6 @@ const UnitFormComponent = ({
       ...syllabusData,
       languages: updatedList
     });
-  };
-
-  const fetchSyllabusSequence = async () => {
-    let result: any = await API.graphql(
-      graphqlOperation(customQueries.getCurriculumUniversalSyllabusSequence, {
-        id: `${curricularId}`
-      })
-    );
-    setUniversalSyllabusSeq(result?.data.getCurriculum?.universalSyllabusSeq || []);
   };
 
   const saveSyllabusDetails = async () => {
@@ -192,39 +174,12 @@ const UnitFormComponent = ({
       return false;
     }
     // TODO: Need to confirm that syllabus name should be uniq or not?
-
-    // else if (syllabusData.name.trim() !== '') {
-    //   const isUniq = await checkUniqSyllabusName()
-    //   if (!isUniq) {
-    //     setMessages({
-    //       show: true,
-    //       message: 'This syllabus name is already exist, please add another name.',
-    //       isError: true
-    //     })
-    //     return false;
-    //   } else {
-    //     return true
-    //   }
-    // }
     else {
       return true;
     }
   };
 
-  useEffect(() => {
-    // fetchPersonsList();
-    fetchSyllabusSequence();
-  }, []);
-
-  const {
-    name,
-    languages,
-    description,
-    purpose,
-    objectives,
-    methodology,
-    policies
-  } = syllabusData;
+  const {name, languages, description, purpose, objectives} = syllabusData;
 
   return (
     <div className={`bg-white ${isInModal ? '' : 'shadow-5'} overflow-hidden mb-4`}>
@@ -304,7 +259,7 @@ const UnitFormComponent = ({
                 label={AddSyllabusDict[userLanguage]['objective']}
               />
             </div>
-            <div>
+            {/* <div>
               <TextArea
                 value={methodology}
                 rows={5}
@@ -313,9 +268,9 @@ const UnitFormComponent = ({
                 name="methodology"
                 label={AddSyllabusDict[userLanguage]['methodology']}
               />
-            </div>
+            </div> */}
           </div>
-          <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
+          {/* <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
             <div>
               <TextArea
                 value={policies}
@@ -326,7 +281,7 @@ const UnitFormComponent = ({
                 label={AddSyllabusDict[userLanguage]['policy']}
               />
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
       {messages.show ? (

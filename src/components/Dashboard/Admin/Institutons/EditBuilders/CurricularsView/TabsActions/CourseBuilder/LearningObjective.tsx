@@ -1,21 +1,17 @@
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import Loader from '@components/Atoms/Loader';
 import Buttons from 'atoms/Buttons';
-import {DeleteActionBtn} from 'atoms/Buttons/DeleteActionBtn';
 import Modal from 'atoms/Modal';
 import PageWrapper from 'atoms/PageWrapper';
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {GlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import * as mutations from 'graphql/mutations';
 import * as queries from 'graphql/queries';
 import ModalPopUp from 'molecules/ModalPopUp';
-import {stringToHslColor} from 'utilities/strings';
 import React, {Fragment, useContext, useEffect, useState} from 'react';
-import {IconContext} from 'react-icons';
-import {HiPencil} from 'react-icons/hi';
+import {HiOutlineTrash, HiPencil} from 'react-icons/hi';
 import {IoIosAdd} from 'react-icons/io';
-import {IoAdd} from 'react-icons/io5';
-import {getAsset} from 'assets';
 import AddLearningObjective from '../AddLearningObjective';
 import AddMeasurement from '../AddMeasurement';
 import AddTopic from '../AddTopic';
@@ -57,8 +53,8 @@ const LearningObjective = (props: LearningObjectiveProps) => {
     id: '',
     message: "Are you sure? This can't be undone."
   });
-  const {clientKey, userLanguage, theme} = useContext(GlobalContext);
-  const themeColor = getAsset(clientKey, 'themeClassName');
+  const {clientKey, userLanguage} = useContext(GlobalContext);
+
   const {
     AddMeasurementDict,
     AddTopicDict,
@@ -194,11 +190,6 @@ const LearningObjective = (props: LearningObjectiveProps) => {
   const onMeasurementClose = () => {
     setOpenMeasurementModal(false);
     setSelectedRubricData({});
-  };
-
-  const getInitialFromObjectiveName = (name: string) => {
-    const temp = name.replace(/a |an |the /gi, '');
-    return temp.split('')[0];
   };
 
   const postLearningObjectiveChange = (data: any) => {
@@ -410,10 +401,38 @@ const LearningObjective = (props: LearningObjectiveProps) => {
     } catch (error) {}
   };
 
+  const ActionBtns = ({
+    actionOne,
+    actionTwo
+  }: {
+    actionOne: () => void;
+    actionTwo: () => void;
+  }) => {
+    return (
+      <span className="w-auto inline-flex gap-x-2 items-center cursor-pointer">
+        <Buttons
+          onClick={actionOne}
+          iconSize="w-4 h-6"
+          Icon={HiPencil}
+          size="small"
+          transparent
+        />
+        <Buttons
+          onClick={actionTwo}
+          iconSize="w-4 h-6"
+          Icon={HiOutlineTrash}
+          size="small"
+          transparent
+          redBtn
+        />
+      </span>
+    );
+  };
+
   return (
     <div className="py-2 px-0 2xl:p-8 flex m-auto justify-center">
       <div className="">
-        <PageWrapper defaultClass="px-4 bg-gray-100">
+        <PageWrapper defaultClass="px-4 ">
           <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8">
             {LEARINGOBJECTIVEDICT[userLanguage]['TITLE']}
           </h3>
@@ -450,71 +469,40 @@ const LearningObjective = (props: LearningObjectiveProps) => {
                       />
                     </div>
                   )}
-                  {learnings.map((learning: any, index: number) => (
-                    // <Draggable
-                    //   key={learning.id}
-                    //   draggableId={learning.id}
-                    //   index={index}>
-                    //   {(provided, snapshot) => (
-                    //     <div
-                    //       ref={provided.innerRef}
-                    //       {...provided.draggableProps}
-                    //       {...provided.dragHandleProps}>
+                  {learnings.map((learning: any) => (
                     <div
-                      className="flex shadow flex-col white_back overflow-hidden"
+                      className="flex customShadow hover:theme-card-shadow flex-col bg-white rounded-xl overflow-hidden"
                       key={learning.id}>
                       <div className="flex-shrink-0">
-                        <div className="p-4">
+                        <div className="p-4 pb-0">
                           <div className="flex">
-                            {/* <span className="w-auto">
-                                              <GiArrowScope className="w-12 h-12" />
-                                            </span> */}
-                            <div className="flex-shrink-0 h-16 w-16 flex items-center">
-                              <div
-                                className="h-14 w-14 rounded-full flex justify-center items-center text-white text-lg text-bold"
-                                style={{
-                                  background: `${stringToHslColor(
-                                    getInitialFromObjectiveName(learning.name)
-                                  )}`,
-                                  textShadow: '0.1rem 0.1rem 2px #423939b3'
-                                }}>
-                                {getInitialFromObjectiveName(learning.name)}
-                              </div>
-                            </div>
-                            <span className="inline-flex items-center ml-2 text-base font-bold">
+                            <span className="inline-flex items-center text-base font-medium">
                               {learning.name}
                             </span>
-                            <span className="w-auto inline-flex items-center cursor-pointer">
-                              <HiPencil
-                                className="w-4 h-4"
-                                onClick={() => editLearningObj(learning)}
-                              />
-                              <DeleteActionBtn
-                                handleClick={() => deleteModal(learning?.id, 'objective')}
-                              />
-                            </span>
+
+                            <ActionBtns
+                              actionOne={() => editLearningObj(learning)}
+                              actionTwo={() => deleteModal(learning?.id, 'objective')}
+                            />
                           </div>
 
                           <div className="mt-5 h-48 overflow-y-auto">
                             {learning.topics?.length ? (
                               learning.topics.map((topic: any, topicIndex: number) => (
-                                <div key={topic.id} className="pr-1 mb-2">
-                                  <div className="flex justify-between items-center">
-                                    <span
-                                      className={`text-base ${theme.text.active} font-bold pr-2`}>
+                                <div
+                                  key={topic.id}
+                                  className="pr-1 show-action-on-hover-2 mb-2">
+                                  <div className="flex show-action-on-hover justify-between items-center">
+                                    <span className={`text-base  pr-2`}>
                                       {topicIndex + 1}. {topic.name}
                                     </span>
-                                    <span className="w-auto inline-flex items-center cursor-pointer">
-                                      <HiPencil
-                                        className="w-4 h-4"
-                                        onClick={() => editCurrentTopic(topic)}
+
+                                    <div className="actions w-auto">
+                                      <ActionBtns
+                                        actionOne={() => editCurrentTopic(topic)}
+                                        actionTwo={() => deleteModal(topic?.id, 'topic')}
                                       />
-                                      <DeleteActionBtn
-                                        handleClick={() =>
-                                          deleteModal(topic?.id, 'topic')
-                                        }
-                                      />
-                                    </span>
+                                    </div>
                                   </div>
                                   <ul className="pl-3">
                                     {topic.rubrics?.length ? (
@@ -522,114 +510,94 @@ const LearningObjective = (props: LearningObjectiveProps) => {
                                         {topic.rubrics.map(
                                           (rubric: any, rubricIndex: number) => (
                                             <li
-                                              className="flex justify-between items-center py-1 truncate"
+                                              className="flex show-action-on-hover justify-between items-center py-1 truncate"
                                               key={rubric.id}>
-                                              <span className="pr-2 text-base truncate">
+                                              <span className="pr-2 text-gray-600 text-base truncate">
                                                 {topicIndex + 1}.{rubricIndex + 1}{' '}
                                                 {rubric.name}
                                               </span>
-                                              <span className="w-auto inline-flex items-center cursor-pointer">
-                                                <HiPencil
-                                                  className="w-4 h-4"
-                                                  onClick={() =>
+
+                                              <div className="actions w-auto">
+                                                <ActionBtns
+                                                  actionOne={() =>
                                                     editCurrentMeasurement(
                                                       rubric,
                                                       learning.id
                                                     )
                                                   }
-                                                />
-                                                <DeleteActionBtn
-                                                  handleClick={() =>
+                                                  actionTwo={() =>
                                                     deleteModal(rubric?.id, 'measurement')
                                                   }
                                                 />
-                                              </span>
+                                              </div>
                                             </li>
                                           )
                                         )}
-                                        <div
-                                          className={`text-sm ${theme.text.active} cursor-pointer flex`}
+                                        <Buttons
+                                          type="submit"
+                                          size="small"
                                           onClick={() =>
                                             createNewMeasurement(topic.id, learning.id)
-                                          }>
-                                          <span className="w-auto flex items-center mr-1">
-                                            <IconContext.Provider
-                                              value={{
-                                                color: theme.iconColor[themeColor]
-                                              }}>
-                                              <IoAdd className="w-4 h-4" />
-                                            </IconContext.Provider>
-                                          </span>
-                                          Add new measurement
-                                        </div>
+                                          }
+                                          title={
+                                            AddMeasurementDict[userLanguage]['title']
+                                          }
+                                          transparent
+                                          label={
+                                            AddMeasurementDict[userLanguage]['title']
+                                          }
+                                          iconBeforeLabel
+                                          Icon={IoIosAdd}
+                                        />
                                       </>
                                     ) : learning.topics?.length < 2 ? (
-                                      <div className="flex justify-center items-center">
-                                        <div
-                                          className="flex justify-center items-center my-5 w-full mx-2 px-8 py-4 h-28 border-0 border-dashed font-medium border-gray-400 text-gray-600 cursor-pointer"
-                                          onClick={() =>
-                                            createNewMeasurement(topic.id, learning.id)
-                                          }>
-                                          <span className="w-6 h-6 flex items-center mr-4">
-                                            <IconContext.Provider
-                                              value={{
-                                                size: '1.5rem',
-                                                color: 'darkgray'
-                                              }}>
-                                              <IoAdd />
-                                            </IconContext.Provider>
-                                          </span>
-                                          Add measurement
-                                        </div>
-                                      </div>
-                                    ) : (
-                                      <div
-                                        className={`text-base ${theme.text.active}  cursor-pointer flex`}
+                                      <Buttons
+                                        type="submit"
+                                        size="small"
+                                        transparent
                                         onClick={() =>
                                           createNewMeasurement(topic.id, learning.id)
-                                        }>
-                                        <span className="w-auto flex items-center mr-1">
-                                          <IconContext.Provider
-                                            value={{
-                                              color: theme.iconColor[themeColor]
-                                            }}>
-                                            <IoAdd className="w-4 h-4" />
-                                          </IconContext.Provider>
-                                        </span>
-                                        Add measurement
-                                      </div>
+                                        }
+                                        label={AddMeasurementDict[userLanguage]['title']}
+                                        title={AddMeasurementDict[userLanguage]['title']}
+                                        iconBeforeLabel
+                                        Icon={IoIosAdd}
+                                      />
+                                    ) : (
+                                      <Buttons
+                                        type="submit"
+                                        size="small"
+                                        transparent
+                                        onClick={() =>
+                                          createNewMeasurement(topic.id, learning.id)
+                                        }
+                                        label={AddMeasurementDict[userLanguage]['title']}
+                                        title={AddMeasurementDict[userLanguage]['title']}
+                                        iconBeforeLabel
+                                        Icon={IoIosAdd}
+                                      />
                                     )}
                                   </ul>
                                 </div>
                               ))
                             ) : (
-                              <div className="flex justify-center items-center">
-                                <div
-                                  className="flex justify-center items-center my-2 w-9/10 mx-auto px-8 py-4 h-36 border-0 border-dashed font-medium border-gray-400 text-gray-600 cursor-pointer"
-                                  onClick={() => createNewTopic(learning.id)}>
-                                  <span className="w-6 h-6 flex items-center mr-4">
-                                    <IconContext.Provider
-                                      value={{
-                                        size: '1.5rem',
-                                        color: 'darkgray'
-                                      }}>
-                                      <IoAdd />
-                                    </IconContext.Provider>
-                                  </span>
-                                  Add Topic
-                                </div>
-                              </div>
+                              <Buttons
+                                size="small"
+                                type="submit"
+                                onClick={() => createNewTopic(learning.id)}
+                                label={TOPICLISTDICT[userLanguage]['ADD']}
+                                iconBeforeLabel
+                                Icon={IoIosAdd}
+                              />
                             )}
                           </div>
                         </div>
-                        <div className="border border-t-0 flex justify-center">
+                        <div className="py-3 border-t-0 flex justify-center">
                           <Buttons
+                            size="small"
                             type="submit"
                             onClick={() => createNewTopic(learning.id)}
                             label={TOPICLISTDICT[userLanguage]['ADD']}
-                            labelClass={'leading-6'}
-                            overrideClass={true}
-                            btnClass={`h-9 w-auto my-2 flex items-center rounded px-12 text-xs font-bold focus:outline-none transition duration-150 ease-in-out ${theme.btn.iconoclastIndigo}`}
                             iconBeforeLabel
                             Icon={IoIosAdd}
                           />
@@ -671,7 +639,11 @@ const LearningObjective = (props: LearningObjectiveProps) => {
             </Fragment>
           ) : (
             <div className="py-12 my-12 m-auto text-center">
-              {LEARINGOBJECTIVEDICT[userLanguage]['FETCH']}
+              <Loader
+                className="text-gray-500"
+                animation
+                withText={LEARINGOBJECTIVEDICT[userLanguage]['FETCH']}
+              />
             </div>
           )}
         </PageWrapper>

@@ -1,8 +1,9 @@
 // import {BsFillInfoCircleFill} from 'react-icons/bs';
-import Placeholder from '@components/Atoms/Placeholder';
+import {useGlobalContext} from '@contexts/GlobalContext';
 import useAuth from '@customHooks/useAuth';
 import {Menu, Transition} from '@headlessui/react';
 import {ChevronDownIcon} from '@heroicons/react/solid';
+import {initials, stringToHslColor} from '@utilities/strings';
 import {Role} from 'API';
 import SignOutButton from 'components/Auth/SignOut';
 import React, {Fragment} from 'react';
@@ -34,6 +35,7 @@ const DropDownMenu = ({
   const history = useHistory();
 
   const {onDemand} = useAuth();
+  const {checkIfAdmin} = useGlobalContext();
 
   if (firstName && lastName && theme) {
     return (
@@ -60,7 +62,19 @@ const DropDownMenu = ({
                         alt=""
                       />
                     ) : (
-                      <Placeholder size="w-full" />
+                      <div
+                        style={{
+                          /* stylelint-disable */
+                          background: `${
+                            firstName
+                              ? stringToHslColor(firstName + ' ' + lastName)
+                              : '#272730'
+                          }`,
+                          textShadow: '0.1rem 0.1rem 2px #423939b3'
+                        }}
+                        className="rounded-full border-0 theme-border  flex justify-center items-center text-xs text-white h-full font-sans">
+                        {`${initials(firstName, lastName)}`}
+                      </div>
                     )}
                   </div>
 
@@ -130,6 +144,26 @@ const DropDownMenu = ({
                       </div>
                     </div>
                   </Menu.Item>
+                  {checkIfAdmin() && (
+                    <Menu.Item key={'profile-3'}>
+                      <div
+                        onClick={() => history.push('/dashboard/errors')}
+                        className="flex-shrink-0 mt-2 flex border-t p-2 px-4 hover:iconoclast:bg-400 hover:curate:bg-400 hover:text-white rounded-full">
+                        <div className="flex-shrink-0 group block">
+                          <div className="flex items-center">
+                            <IconContext.Provider
+                              value={{
+                                size: '24px',
+                                className: 'w-auto mr-1'
+                              }}>
+                              <VscChecklist className="cursor-pointer" />
+                            </IconContext.Provider>
+                            <p className="text-sm ml-2 font-medium">Errors</p>
+                          </div>
+                        </div>
+                      </div>
+                    </Menu.Item>
+                  )}
                   <Menu.Item key={'logout'}>
                     <SignOutButton updateAuthState={updateAuthState} />
                   </Menu.Item>

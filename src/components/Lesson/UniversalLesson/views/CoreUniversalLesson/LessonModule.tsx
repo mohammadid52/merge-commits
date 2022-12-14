@@ -1,6 +1,6 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {Transition} from '@headlessui/react';
-import {UniversalLesson} from 'interfaces/UniversalLessonInterfaces';
+
 import map from 'lodash/map';
 import React, {useState} from 'react';
 import {AiFillCheckCircle} from 'react-icons/ai';
@@ -13,11 +13,12 @@ import Table from 'molecules/Table';
 import ThemeModal from 'molecules/ThemeModal';
 import AnimatedContainer from '../../../UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import {Tabs3, useTabs} from '../../../UniversalLessonBuilder/UI/UIComponents/Tabs/Tabs';
+import {UniversalLesson} from 'API';
+import Label from '@components/Atoms/Form/Label';
 
 const EvidenceTab = ({
   curTab,
   currentLesson,
-  setSelectedMeasurements,
   selectedMeasurements,
   setCheckedEvidence,
   checkedEvidence,
@@ -32,28 +33,8 @@ const EvidenceTab = ({
       if (selectedCurriculumList.length === 0) {
         fetchCurriculum();
       }
-      if (selectedMeasurements.length === 0) {
-        fetchLessonRubrics();
-      }
     }
   }, [curTab, selectedCurriculumList, selectedMeasurements]);
-
-  const fetchLessonRubrics = async () => {
-    try {
-      // const result: any = await API.graphql(
-      //   graphqlOperation(customQueries.listLessonRubricss, {
-      //     filter: {
-      //       lessonID: {eq: currentLesson.id},
-      //     },
-      //   })
-      // );
-      // const rubricList = result.data?.listLessonRubricss.items.map((rubric: any) => ({
-      //   ...rubric,
-      //   checked: true,
-      // }));
-      // setSelectedMeasurements(rubricList);
-    } catch (error) {}
-  };
 
   const fetchObjectives = async (curricularId: string) => {
     const learningEvidenceList: any[] = [];
@@ -248,6 +229,21 @@ const EvidenceTab = ({
   );
 };
 
+const WithHtml = ({html, emptyText = '--'}: {html: string; emptyText: string}) => {
+  return html && html.length > 0 && html !== '<p></p>' ? (
+    <div>
+      <span
+        dangerouslySetInnerHTML={{__html: html || '<p>---</p>'}}
+        className="text-gray-400  remove-draft-styles font-medium text-lg leading-7"
+      />
+    </div>
+  ) : (
+    <div className="flex items-center justify-center min-h-32">
+      <p className="text-gray-400 font-medium text-lg leading-3 w-auto">{emptyText}</p>
+    </div>
+  );
+};
+
 const LessonModule = ({currentLesson}: {currentLesson: UniversalLesson}) => {
   const [open, setOpen] = useState(true);
   const tabs = [
@@ -283,9 +279,8 @@ const LessonModule = ({currentLesson}: {currentLesson: UniversalLesson}) => {
 
   return (
     <ThemeModal
-      dark={currentLesson?.darkMode || true}
+      dark={currentLesson?.darkMode !== undefined ? currentLesson?.darkMode : true}
       subHeader={currentLesson?.summary}
-      //@ts-ignore
       header={`${currentLesson?.title} - Lesson Overview`}
       open={open}
       setOpen={setOpen}>
@@ -296,56 +291,33 @@ const LessonModule = ({currentLesson}: {currentLesson: UniversalLesson}) => {
             setCurTab={setCurTab}
             curTab={curTab}
             tabs={tabs}
-            numbered
           />
 
           <div className="mt-4">
-            <AnimatedContainer show={onObjectivesTab} animationType="scale">
+            <AnimatedContainer
+              duration="500"
+              show={onObjectivesTab}
+              animationType="scale">
               {onObjectivesTab && (
                 <>
-                  {currentLesson?.objectives[0] ? (
-                    <div>
-                      <p
-                        // style={{color: 'rgba(203, 213, 224, 1) !important'}}
-                        dangerouslySetInnerHTML={{__html: currentLesson?.objectives[0]}}
-                        className="text-gray-400  remove-draft-styles font-medium text-lg leading-7"></p>
-                    </div>
-                  ) : (
-                    <div className="flex items-center justify-center min-h-32">
-                      <p className="text-gray-400 font-medium text-lg leading-3 w-auto">
-                        No Objectives Listed
-                      </p>
-                    </div>
-                  )}
+                  <WithHtml
+                    emptyText="No Objectives Listed"
+                    html={currentLesson?.objectives[0]}
+                  />
                 </>
               )}
             </AnimatedContainer>
-            <AnimatedContainer show={onResourcesTab} animationType="scale">
+            <AnimatedContainer duration="500" show={onResourcesTab} animationType="scale">
               {onResourcesTab && (
                 <>
-                  {
-                    //@ts-ignore
-                    currentLesson?.studentMaterials ? (
-                      <div>
-                        <p
-                          className="text-gray-400 remove-draft-styles font-medium text-lg leading-7"
-                          dangerouslySetInnerHTML={{
-                            // @ts-ignore
-                            __html: currentLesson?.studentMaterials
-                          }}></p>
-                      </div>
-                    ) : (
-                      <div className="flex items-center justify-center min-h-32">
-                        <p className="text-gray-400 font-medium text-lg leading-3 w-auto">
-                          No Resources Listed
-                        </p>
-                      </div>
-                    )
-                  }
+                  <WithHtml
+                    emptyText="No Resources Listed"
+                    html={currentLesson?.studentMaterials}
+                  />
                 </>
               )}
             </AnimatedContainer>
-            <AnimatedContainer show={onEvidencesTab} animationType="scale">
+            <AnimatedContainer duration="500" show={onEvidencesTab} animationType="scale">
               {onEvidencesTab && (
                 <EvidenceTab
                   selectedMeasurements={selectedMeasurements}
@@ -362,12 +334,8 @@ const LessonModule = ({currentLesson}: {currentLesson: UniversalLesson}) => {
           </div>
         </div>
         <div className="min-h-56 py-4">
-          <h2
-            className={`${
-              currentLesson?.darkMode ? 'text-white' : 'text-gray-900'
-            } font-medium text-lg `}>
-            Lesson Plan
-          </h2>
+          <Label label="Lesson Plan" />
+
           <Table {...lessonPlanTableConfig} />
         </div>
       </div>

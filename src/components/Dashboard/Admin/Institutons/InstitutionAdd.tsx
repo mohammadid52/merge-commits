@@ -20,6 +20,8 @@ import SectionTitle from 'atoms/SectionTitle';
 import DroppableMedia from 'molecules/DroppableMedia';
 import ProfileCropModal from '../../Profile/ProfileCropModal';
 import ServiceProviders from './Listing/ServiceProviders';
+import {logError, uploadImageToS3} from '@graphql/functions';
+import useAuth from '@customHooks/useAuth';
 
 const InstitutionAdd = () => {
   const history = useHistory();
@@ -153,28 +155,12 @@ const InstitutionAdd = () => {
     setShowCropper(!showCropper);
   };
 
-  const uploadImageToS3 = async (file: any, id: string, type: string) => {
-    // Upload file to s3 bucket
+  const {authId, email} = useAuth();
 
-    return new Promise((resolve, reject) => {
-      Storage.put(`instituteImages/institute_image_${id}`, file, {
-        contentType: type,
-        acl: 'public-read',
-        ContentEncoding: 'base64'
-      })
-        .then((result) => {
-          console.log('File successfully uploaded to s3', result);
-          resolve(true);
-        })
-        .catch((err) => {
-          setError({
-            show: true,
-            errorMsg: InstitutionAddDict[userLanguage]['messages']['uploaderr']
-          });
-          console.error('Error in uploading file to s3', err);
-          reject(err);
-        });
-    });
+  const _uploadImageToS3 = async (file: any, id: string, type: string) => {
+    // Upload file to s3 bucket
+    const key = `instituteImages/institute_image_${id}`;
+    await uploadImageToS3(file, key, type, {auth: {authId, email}});
   };
 
   const updateServiceProviders = (item: any) => {
@@ -185,11 +171,6 @@ const InstitutionAdd = () => {
         items: [...(prevData.serviceProviders.items || []), item]
       }
     }));
-  };
-
-  const deletUserProfile = async () => {
-    setInstituteData({...instituteData, image: ''});
-    setImageUrl(null);
   };
 
   const [fileObj, setFileObj] = useState({});
@@ -219,7 +200,7 @@ const InstitutionAdd = () => {
       try {
         setSaving(true);
         if (s3Image) {
-          await uploadImageToS3(s3Image, instituteData.id, 'image/jpeg');
+          await _uploadImageToS3(s3Image, instituteData.id, 'image/jpeg');
         }
         const payload = {...instituteData};
         delete payload.serviceProviders;
@@ -275,8 +256,6 @@ const InstitutionAdd = () => {
     isServiceProvider,
     serviceProviders
   } = instituteData;
-
-  console.log(id, 'id before return');
 
   return (
     <div className="w-full h-full p-4">

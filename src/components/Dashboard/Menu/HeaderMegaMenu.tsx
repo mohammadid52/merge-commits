@@ -172,7 +172,9 @@ const HeaderMegaMenu = () => {
       title: Institute_info[userLanguage]['TABS']['HOME'],
       key: 'dashboard',
       redirectionUrl: `${baseUrl}/dashboard/home`,
-      active: location.pathname.indexOf('home') > -1
+      active:
+        location.pathname.indexOf('home') > -1 ||
+        location.pathname.indexOf('classroom') > -1
     },
     {
       title: Institute_info[userLanguage]['TABS']['GAME_CHANGERS'],
@@ -208,7 +210,7 @@ const HeaderMegaMenu = () => {
     headerMenusForStudent?.find((d) => d.active)?.title || headerMenusForStudent[0]?.title
   );
 
-  const updateTab = ({key, redirectionUrl, title}: typeof headerMenusForStudent[0]) => {
+  const updateTab = ({redirectionUrl, title}: typeof headerMenusForStudent[0]) => {
     setCurrentTab(title);
     if (redirectionUrl) {
       history.push(redirectionUrl);

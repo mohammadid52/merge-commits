@@ -127,9 +127,9 @@ const InstitutionsHome: React.FC<DashboardProps> = (props: DashboardProps) => {
           <div className={`w-full h-full`}>
             <BreadcrumbsWithBanner forInstitution bannerImage={bannerImage} />
             <div className="px-2 py-8 md:px-4 lg:p-8">
-              <PageWrapper>
-                <NavBarRouter />
-              </PageWrapper>
+              {/* <PageWrapper> */}
+              <NavBarRouter />
+              {/* </PageWrapper> */}
             </div>
           </div>
         )}

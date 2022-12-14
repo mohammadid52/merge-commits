@@ -20,6 +20,8 @@ import PageWrapper from 'atoms/PageWrapper';
 import SectionTitle from 'atoms/SectionTitle';
 import DroppableMedia from 'molecules/DroppableMedia';
 import ProfileCropModal from '../../../Profile/ProfileCropModal';
+import {logError, uploadImageToS3} from '@graphql/functions';
+import useAuth from '@customHooks/useAuth';
 
 interface CurricularBuilderProps {}
 interface InitialData {
@@ -176,7 +178,7 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
         const newCurricular: any = response?.data?.createCurriculum;
 
         if (s3Image) {
-          await uploadImageToS3(s3Image, newCurricular.id, 'image/jpeg');
+          await _uploadImageToS3(s3Image, newCurricular.id, 'image/jpeg');
           await API.graphql(
             graphqlOperation(mutation.updateCurriculum, {
               input: {
@@ -323,28 +325,36 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
     setImageLoading(false);
   };
 
-  const uploadImageToS3 = async (file: any, id: string, type: string) => {
-    // Upload file to s3 bucket
+  const {authId, email} = useAuth();
+  // const uploadImageToS3 = async (file: any, id: string, type: string) => {
+  //   // Upload file to s3 bucket
 
-    return new Promise((resolve, reject) => {
-      Storage.put(`instituteImages/curricular_image_${id}`, file, {
-        contentType: type,
-        acl: 'public-read',
-        ContentEncoding: 'base64'
-      })
-        .then((result) => {
-          console.log('File successfully uploaded to s3', result);
-          resolve(true);
-        })
-        .catch((err) => {
-          setError({
-            show: true,
-            errorMsg: 'Unable to upload image. Please try again later. '
-          });
-          console.error('Error in uploading file to s3', err);
-          reject(err);
-        });
-    });
+  //   return new Promise((resolve, reject) => {
+  //     Storage.put(, file, {
+  //       contentType: type,
+  //       acl: 'public-read',
+  //       ContentEncoding: 'base64'
+  //     })
+  //       .then((result) => {
+  //         console.log('File successfully uploaded to s3', result);
+  //         resolve(true);
+  //       })
+  //       .catch((err) => {
+  //         setError({
+  //           show: true,
+  //           errorMsg: 'Unable to upload image. Please try again later. '
+  //         });
+  //         logError(err, {authId: authId, email: email}, 'CurricularBuilder');
+  //         console.error('Error in uploading file to s3', err);
+  //         reject(err);
+  //       });
+  //   });
+  // };
+
+  const _uploadImageToS3 = async (file: any, id: string, type: string) => {
+    // Upload file to s3 bucket
+    const key = `instituteImages/curricular_image_${id}`;
+    await uploadImageToS3(file, key, type, {auth: {authId, email}});
   };
 
   useEffect(() => {

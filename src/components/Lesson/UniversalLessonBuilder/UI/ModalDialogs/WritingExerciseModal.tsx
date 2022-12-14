@@ -74,8 +74,8 @@ const WritingExerciseModal = (props: WEProps) => {
 
   useEffect(() => {
     if (inputObj && inputObj.length) {
-      const title = inputObj[0].label;
-      const lineStarter = inputObj[1].options;
+      const title = inputObj[0]?.label;
+      const lineStarter = inputObj[1]?.options || [];
       if (title) {
         enable.title = true;
       } else {
@@ -87,7 +87,7 @@ const WritingExerciseModal = (props: WEProps) => {
         enable.lineStarter = false;
       }
 
-      setFields({...fields, title: inputObj[0].label});
+      setFields({...fields, title: inputObj[0]?.label});
       if (lineStarter) {
         setInputFieldsArray(lineStarter);
       }

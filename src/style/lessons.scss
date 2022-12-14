@@ -9,6 +9,12 @@
   }
 }
 
+.red-btn.transparent:hover {
+  svg {
+    color: white;
+  }
+}
+
 // .first {
 //     p::first-letter {
 //         color: red;
@@ -198,5 +204,24 @@
     &:nth-child(2) {
       transform: translateX(200%);
     }
+  }
+}
+
+.blink-error {
+  border: 2px solid red;
+  animation: shake 0.5s;
+  animation-delay: 1s;
+  transform: translateX(0px);
+}
+
+@keyframes shake {
+  0% {
+    transform: translateX(-5px);
+  }
+  25% {
+    transform: translateX(5px);
+  }
+  100% {
+    transform: translateX(-5px);
   }
 }

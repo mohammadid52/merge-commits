@@ -73,18 +73,21 @@ const WritingExerciseEditor = ({
   const themeColor = getAsset(clientKey, 'themeClassName');
 
   const wrapperClassName = `${
-    true ? `bg-component-dark border-none dark  wrapperClassName` : 'wrapperClassName '
+    true ? ` border-none dark  wrapperClassName` : 'wrapperClassName '
   } ${themeColor}`;
   const editorClassName = `${true ? `dark editorClassName` : 'editorClassName'}`;
 
   const options: string[] = ['inline', 'colorPicker'];
   const DEFAULT_INLINE_OPTIONS = ['bold', 'italic'];
   useEffect(() => {
-    if (minHeight !== undefined) {
-      const editor = document.querySelector('.rdw-editor-main');
-      if (editor) {
-        editor.setAttribute('style', `min-height:${minHeight}px`);
-      }
+    if (minHeight !== undefined && typeof minHeight === 'number') {
+      const editors = document.querySelectorAll('.rdw-editor-main');
+
+      editors.forEach((editor) => {
+        if (editor) {
+          editor.setAttribute('style', `min-height:${minHeight}px`);
+        }
+      });
     }
   }, [minHeight]);
 

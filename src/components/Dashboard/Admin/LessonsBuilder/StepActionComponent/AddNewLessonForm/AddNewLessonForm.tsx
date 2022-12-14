@@ -70,8 +70,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
     postLessonCreation,
 
     lessonId,
-    lessonPlanAttachment,
-    institutionList
+    lessonPlanAttachment
   } = props;
 
   const {clientKey, userLanguage} = useContext(GlobalContext);

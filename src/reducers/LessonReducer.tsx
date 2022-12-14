@@ -37,7 +37,8 @@ const LESSON_REDUCER_TYPES = {
   ADD_NEW_INPUT: 'ADD_NEW_INPUT',
   SET_LESSON_PAYLOAD: 'SET_LESSON_PAYLOAD',
   SET_PERSON_LESSON_DATA: 'SET_PERSON_LESSON_DATA',
-  SET_LEAVE_MODAL_VISIBLE_STATE: 'SET_LEAVE_MODAL_VISIBLE_STATE'
+  SET_LEAVE_MODAL_VISIBLE_STATE: 'SET_LEAVE_MODAL_VISIBLE_STATE',
+  SET_IS_VALID: 'SET_IS_VALID'
 };
 
 export type LessonActions =
@@ -143,6 +144,10 @@ export type LessonActions =
   | {
       type: 'SET_UPDATE_STATUS';
       payload: {pageIdx: number};
+    }
+  | {
+      type: 'SET_IS_VALID';
+      payload: {isValid: boolean};
     }
   | {
       type: 'UPDATE_STUDENT_DATA';
@@ -507,6 +512,11 @@ export const lessonReducer = (state: any, action: LessonActions) => {
           ...state.misc,
           leaveModalVisible: action.payload
         }
+      };
+    case LESSON_REDUCER_TYPES.SET_IS_VALID:
+      return {
+        ...state,
+        isValid: action.payload
       };
 
     default:

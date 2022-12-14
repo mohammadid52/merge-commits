@@ -1,5 +1,7 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {Storage} from '@aws-amplify/storage';
+import {formatPageName} from '@components/Dashboard/Admin/UserManagement/List';
+import {setPageTitle} from '@utilities/functions';
 import {CreateErrorLogInput, UserPageState} from 'API';
 import * as customMutations from 'customGraphql/customMutations';
 
@@ -15,6 +17,10 @@ interface S3UploadOptions {
     total: number;
     progress: number;
   }) => void;
+  auth: {
+    authId: string;
+    email: string;
+  };
 }
 
 export const uploadImageToS3 = async (
@@ -41,6 +47,11 @@ export const uploadImageToS3 = async (
     }
     return result;
   } catch (error) {
+    logError(
+      error,
+      {authId: options.auth.authId, email: options.auth.email},
+      'uploadImageToS3'
+    );
     if (options && options?.onError && typeof options?.onError === 'function') {
       // if there is a error callback, call the onError function
       options.onError(error);
@@ -67,6 +78,15 @@ export const updatePageState = async (
   auth: {authId: string; email: string; pageState: UserPageState},
   onSuccessCallback?: () => void
 ) => {
+  if (
+    pageState === UserPageState.DASHBOARD ||
+    pageState === UserPageState.COMMUNITY ||
+    pageState === UserPageState.GAME_CHANGERS ||
+    pageState === UserPageState.NOTEBOOK
+  ) {
+    setPageTitle(formatPageName(pageState));
+  }
+
   if (auth.pageState !== pageState) {
     try {
       const input = {
@@ -80,6 +100,7 @@ export const updatePageState = async (
       );
       onSuccessCallback && onSuccessCallback();
     } catch (error) {
+      logError(error, {authId: auth.authId, email: auth.email}, 'updatePageState');
       console.error('error updating page -> ', {pageState, auth}, error);
     }
   }
@@ -94,7 +115,7 @@ export const logError = async (
     const input: CreateErrorLogInput = {
       authID: auth.authId,
       email: auth.email,
-      error: JSON.stringify(error),
+      error: typeof error === 'string' ? error : error.message,
       errorType: typeof error === 'string' ? error : error.message,
       errorTime: new Date().toISOString(),
       pageUrl: location.href,
@@ -104,6 +125,10 @@ export const logError = async (
       graphqlOperation(customMutations.createErrorLog, {input})
     );
   } catch (error) {
-    console.error('error logging error -> ', {error, auth}, error);
+    console.error(
+      'error logging error.. haha this is kind of ironic -> ',
+      {error, auth},
+      error
+    );
   }
 };

@@ -2,7 +2,7 @@ import React, {useContext, useEffect, useState} from 'react';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {AiFillStar, AiOutlineStar} from 'react-icons/ai';
 import {GlobalContext} from 'contexts/GlobalContext';
-import {FormControlProps} from '../FormBlock';
+import {FormControlProps, FormLabel} from '../FormBlock';
 import useStudentDataValue from 'customHooks/studentDataValue';
 
 const StarRatingBlock = ({
@@ -54,16 +54,10 @@ const StarRatingBlock = ({
     }
   };
 
-  const RequiredMark = ({isRequired}: {isRequired: boolean}) => (
-    <span className="text-red-500"> {isRequired ? '*' : null}</span>
-  );
-
   const iconColor = lessonPageTheme === 'light' ? 'gray' : '#ffffff';
   return (
     <div id={id} key={inputID} className={`mb-4 p-4`}>
-      <label className={`text-sm text-gray-200 my-2`} htmlFor="label">
-        {numbered && index} {label} <RequiredMark isRequired={required} />
-      </label>
+      <FormLabel label={label} required={required} numbered={numbered} index={index} />
       <div
         className="w-auto flex flex-row flex-start"
         onPointerOver={handleStarHover}
