@@ -108,12 +108,14 @@ const Community = ({}: {role: string}) => {
   );
 
   useEffect(() => {
-    updatePageState(UserPageState.COMMUNITY, {
-      authId: personAuthID,
-      email: personEmail,
-      pageState
-    });
-  }, []);
+    if (isStudent) {
+      updatePageState(UserPageState.COMMUNITY, {
+        authId: personAuthID,
+        email: personEmail,
+        pageState
+      });
+    }
+  }, [isStudent]);
 
   const [navState, setNavState] = useState<NavStateTypes>('init');
   const [filteredList, setFilteredList] = useState([]);

@@ -155,7 +155,7 @@ const Dashboard = (props: DashboardProps) => {
   const [isPageUpdatedOnPersonTable, setIsPageUpdatedOnPersonTable] = useState(false);
 
   useEffect(() => {
-    if (!isPageUpdatedOnPersonTable) {
+    if (!isPageUpdatedOnPersonTable && stateUser.role === 'ST') {
       updatePageState(
         UserPageState.DASHBOARD,
         {
@@ -173,7 +173,7 @@ const Dashboard = (props: DashboardProps) => {
 
       setIsPageUpdatedOnPersonTable(true);
     }
-  }, [isPageUpdatedOnPersonTable]);
+  }, [isPageUpdatedOnPersonTable, stateUser.role]);
 
   useEffect(() => {
     if (state.currentPage === 'homepage') {
@@ -190,8 +190,8 @@ const Dashboard = (props: DashboardProps) => {
     role: '',
     image: ''
   });
-  const isStudent = userData.role === 'ST';
 
+  const isStudent = userData.role === 'ST';
   const isTeacher = stateUser?.role === 'FLW' || stateUser?.role === 'TR';
   const isOnDemandStudent = stateUser?.onDemand;
 
@@ -371,11 +371,10 @@ const Dashboard = (props: DashboardProps) => {
 
     if (stateUser?.role === 'ST') {
       getDashboardData(authId, email);
-    }
-    if (!isStudent) {
+    } else {
       getDashboardDataForTeachers(authId);
     }
-  }, [stateUser?.role, isStudent]);
+  }, [stateUser?.role]);
 
   /******************************************
    * 1.2 REDUCE ROOMS FROM CLASSLIST ARRAY  *

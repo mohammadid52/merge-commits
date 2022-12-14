@@ -263,7 +263,7 @@ const Lesson = () => {
 
   const getLocationData = getLocalStorageData('person_location');
 
-  const {authId, email, pageState} = useAuth();
+  const {authId, email, pageState, isStudent} = useAuth();
 
   const [personLocationObj, setPersonLocationObj] = useState<any>({
     id: '',

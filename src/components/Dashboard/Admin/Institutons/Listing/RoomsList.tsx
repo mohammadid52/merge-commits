@@ -283,6 +283,7 @@ const RoomsList = (props: RoomListProps) => {
   const instituteChange = (_: string, name: string, value: string) => {
     setSelectedInstitution({name, id: value});
     updateRoomList(value);
+    setFilters(null);
   };
 
   const {

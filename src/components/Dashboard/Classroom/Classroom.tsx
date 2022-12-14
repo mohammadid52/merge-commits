@@ -168,18 +168,20 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
 
       name && setPageTitle(name);
 
-      updatePageState(
-        UserPageState.CLASS,
-        {
-          authId: authId,
-          email: email,
-          pageState: pageState
-        },
-        dispatch({
-          type: 'SET_USER',
-          payload: {...state.user, pageState: UserPageState.CLASS}
-        })
-      );
+      if (isStudent) {
+        updatePageState(
+          UserPageState.CLASS,
+          {
+            authId: authId,
+            email: email,
+            pageState: pageState
+          },
+          dispatch({
+            type: 'SET_USER',
+            payload: {...state.user, pageState: UserPageState.CLASS}
+          })
+        );
+      }
     }
   }, [roomId, state.roomData.rooms]);
 

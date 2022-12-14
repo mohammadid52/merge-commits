@@ -47,15 +47,17 @@ const GameChangers = () => {
     setSelectedCard(selectedCard === null ? id : null);
   };
 
-  const {authId, pageState, email} = useAuth();
+  const {authId, pageState, email, isStudent} = useAuth();
 
   useEffect(() => {
-    updatePageState(UserPageState.GAME_CHANGERS, {
-      authId,
-      email,
-      pageState
-    });
-  }, []);
+    if (isStudent) {
+      updatePageState(UserPageState.GAME_CHANGERS, {
+        authId,
+        email,
+        pageState
+      });
+    }
+  }, [isStudent]);
 
   const params = useQuery(location.search);
   const exerciseIdFromUrl = params.get('exercise');
