@@ -1,16 +1,11 @@
-import React, {useEffect, useState, useContext} from 'react';
-import {GlobalContext} from 'contexts/GlobalContext';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import * as customQueries from 'customGraphql/customQueries';
 import Selector from 'atoms/Form/Selector';
-import {createFilterToFetchSpecificItemsOnly} from 'utilities/strings';
-import {CSVLink} from 'react-csv';
+import * as customQueries from 'customGraphql/customQueries';
+import React, {useEffect, useState} from 'react';
 
 interface DownloadCSV {}
 
-const DownloadCSV = (props: DownloadCSV) => {
-  const {state, dispatch} = useContext(GlobalContext);
-
+const DownloadCSV = () => {
   const [institutions, setInstitutions] = useState([]);
   const [selectedInstitute, setSelectedInstitute] = useState(null);
 
@@ -22,8 +17,6 @@ const DownloadCSV = (props: DownloadCSV) => {
 
   const [selectedClass, setSelectedClass] = useState(null);
   const [selectedCurriculum, setSelectedCurriculum] = useState(null);
-
-  const [classStudents, setClassStudents] = useState([]);
 
   /* Institution methods */
 
@@ -113,24 +106,6 @@ const DownloadCSV = (props: DownloadCSV) => {
   }, [selectedClassroom]);
 
   /* Class methods */
-  useEffect(() => {
-    if (selectedClass) {
-      fetchClassStudents(selectedClass.id);
-    }
-  }, [selectedClass]);
-
-  const fetchClassStudents = async (classId: string) => {
-    let classData: any = await API.graphql(
-      graphqlOperation(customQueries.fetchClassStudents, {
-        id: classId
-      })
-    );
-    let students = classData?.data?.getClass?.students?.items || [];
-    let classStudents = students.map((stu: any) => {
-      return stu.student;
-    });
-    setClassStudents(classStudents);
-  };
 
   // race condition.
   // need to fetch demographics questions when both students and list units are fetched.

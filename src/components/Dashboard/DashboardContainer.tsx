@@ -1,9 +1,8 @@
-import React, {useState} from 'react';
-import {BsFillInfoCircleFill} from 'react-icons/bs';
-import {getAsset} from 'assets';
-import HeroBanner from '../Header/HeroBanner';
 import InformationalWalkThrough from 'components/Dashboard/Admin/Institutons/InformationalWalkThrough/InformationalWalkThrough';
 import HeaderTextBar from 'components/Dashboard/HeaderTextBar/HeaderTextBar';
+import React, {useState} from 'react';
+import {BsFillInfoCircleFill} from 'react-icons/bs';
+import HeroBanner from '../Header/HeroBanner';
 
 interface DashboardContainerProps {
   user?: any;
@@ -30,9 +29,6 @@ const DashboardContainer = ({
 }: DashboardContainerProps) => {
   const isTeacher = user?.role === 'TR' || user?.role === 'FLW';
   const isOnDemandStudent = user?.onDemand;
-  const themeColor = getAsset(clientKey, 'themeClassName');
-  const themeSection = theme?.section ? theme?.section : '';
-  const themeBackground = theme?.backGround ? theme?.backGround[themeColor] : '';
 
   const [openWalkThroughModal, setOpenWalkThroughModal] = useState(false);
 
