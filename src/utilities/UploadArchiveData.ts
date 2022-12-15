@@ -436,7 +436,7 @@ const CreateOrUpdateData = async (input: any[]) => {
   try {
     input.map(async (data: any) => {
       const getData: any = await API.graphql(
-        graphqlOperation(queries.getArchiveSurveyDataSQL, {
+        graphqlOperation(queries.getArchiveSurveyDataSql, {
           AuthId: data.AuthId,
           Email: data.Email
         })
@@ -444,7 +444,7 @@ const CreateOrUpdateData = async (input: any[]) => {
       const ArchiveData = getData.data.getArchiveSurveyDataSQL;
       if (ArchiveData) {
         await API.graphql(
-          graphqlOperation(mutations.updateArchiveSurveyDataSQL, {
+          graphqlOperation(mutations.updateArchiveSurveyDataSql, {
             input: {
               id: ArchiveData.id,
               ...data
@@ -453,7 +453,7 @@ const CreateOrUpdateData = async (input: any[]) => {
         );
       } else {
         await API.graphql(
-          graphqlOperation(mutations.createArchiveSurveyDataSQL, {
+          graphqlOperation(mutations.createArchiveSurveyDataSql, {
             input: {
               ...data
             }
@@ -462,7 +462,7 @@ const CreateOrUpdateData = async (input: any[]) => {
       }
     });
   } catch (err) {
-    console.log(
+    console.error(
       '🚀 ~ file: AnalyticsDashboard.tsx ~ line 532 ~ UploadDataToAthena ~ err',
       err
     );

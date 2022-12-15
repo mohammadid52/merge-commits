@@ -14,108 +14,108 @@ export type CreateClassStudentInput = {
 
 export type ClassStudent = {
   __typename: "ClassStudent",
-  id: string,
-  classID: string,
-  studentID: string,
-  studentEmail: string,
-  studentAuthID: string,
+  id?: string,
+  classID?: string,
+  studentID?: string,
+  studentEmail?: string,
+  studentAuthID?: string,
   status?: string | null,
   group?: string | null,
-  class?: Class | null,
-  student?: Person | null,
-  createdAt: string,
-  updatedAt: string,
+  class?: Class,
+  student?: Person,
+  createdAt?: string,
+  updatedAt?: string,
 };
 
 export type Class = {
   __typename: "Class",
-  id: string,
-  institutionID: string,
+  id?: string,
+  institutionID?: string,
   type?: string | null,
-  name: string,
-  roomId: string,
-  institution?: Institution | null,
-  room?: Room | null,
-  students?: ModelClassStudentConnection | null,
-  createdAt: string,
-  updatedAt: string,
+  name?: string,
+  roomId?: string,
+  institution?: Institution,
+  room?: Room,
+  students?: ModelClassStudentConnection,
+  createdAt?: string,
+  updatedAt?: string,
 };
 
 export type Institution = {
   __typename: "Institution",
-  id: string,
-  name: string,
-  type: string,
+  id?: string,
+  name?: string,
+  type?: string,
   district?: string | null,
-  address: string,
+  address?: string,
   addressLine2?: string | null,
-  city: string,
+  city?: string,
   state?: string | null,
-  zip: string,
+  zip?: string,
   phone?: string | null,
   website?: string | null,
   image?: string | null,
   isServiceProvider?: boolean | null,
-  serviceProviders?: ModelServiceProviderConnection | null,
-  staff?: ModelStaffConnection | null,
-  rooms?: ModelRoomConnection | null,
-  curricula?: ModelCurriculumConnection | null,
-  classes?: ModelClassConnection | null,
+  serviceProviders?: ModelServiceProviderConnection,
+  staff?: ModelStaffConnection,
+  rooms?: ModelRoomConnection,
+  curricula?: ModelCurriculumConnection,
+  classes?: ModelClassConnection,
   filters?: Array< string | null > | null,
-  checkpoints?: ModelcommonCheckpointConnection | null,
+  checkpoints?: ModelcommonCheckpointConnection,
   setupComplete?: boolean | null,
-  createdAt: string,
-  updatedAt: string,
+  createdAt?: string,
+  updatedAt?: string,
 };
 
 export type ModelServiceProviderConnection = {
   __typename: "ModelServiceProviderConnection",
-  items:  Array<ServiceProvider | null >,
+  items?:  Array<ServiceProvider | null >,
   nextToken?: string | null,
 };
 
 export type ServiceProvider = {
   __typename: "ServiceProvider",
-  id: string,
-  partnerID: string,
-  providerID: string,
+  id?: string,
+  partnerID?: string,
+  providerID?: string,
   status?: string | null,
-  providerInstitution?: Institution | null,
-  createdAt: string,
-  updatedAt: string,
+  providerInstitution?: Institution,
+  createdAt?: string,
+  updatedAt?: string,
 };
 
 export type ModelStaffConnection = {
   __typename: "ModelStaffConnection",
-  items:  Array<Staff | null >,
+  items?:  Array<Staff | null >,
   nextToken?: string | null,
 };
 
 export type Staff = {
   __typename: "Staff",
-  id: string,
-  institutionID: string,
-  staffAuthID: string,
-  staffEmail: string,
+  id?: string,
+  institutionID?: string,
+  staffAuthID?: string,
+  staffEmail?: string,
   status?: string | null,
   statusChangeDate?: string | null,
-  staffMember?: Person | null,
-  institution?: Institution | null,
-  createdAt: string,
-  updatedAt: string,
+  staffMember?: Person,
+  institution?: Institution,
+  createdAt?: string,
+  updatedAt?: string,
 };
 
 export type Person = {
   __typename: "Person",
-  id: string,
-  authId: string,
-  status: PersonStatus,
-  email: string,
-  role: Role,
+  id?: string,
+  authId?: string,
+  status?: PersonStatus,
+  email?: string,
+  role?: Role,
   type?: string | null,
-  firstName: string,
+  firstName?: string,
   preferredName?: string | null,
-  lastName: string,
+  lastName?: string,
   externalId?: string | null,
   grade?: string | null,
   onBoardSurvey?: boolean | null,
@@ -124,15 +124,15 @@ export type Person = {
   birthdate?: string | null,
   inactiveStatusDate?: string | null,
   image?: string | null,
-  language: Language,
+  language?: Language,
   filters?: Array< string | null > | null,
   lastLoggedIn?: string | null,
   lastLoggedOut?: string | null,
   onDemand?: boolean | null,
   sentiments?: Array< string | null > | null,
   passcode?: string | null,
-  classes?: ModelClassStudentConnection | null,
-  lessons?: ModelPersonLessonsDataConnection | null,
+  classes?: ModelClassStudentConnection,
+  lessons?: ModelPersonLessonsDataConnection,
   spotlightUser?: boolean | null,
   spotlightDate?: string | null,
   statusReason?: string | null,
@@ -141,8 +141,8 @@ export type Person = {
   pageState?: UserPageState | null,
   lastPageStateUpdate?: string | null,
   statusChangedBy?: string | null,
-  createdAt: string,
-  updatedAt: string,
+  createdAt?: string,
+  updatedAt?: string,
 };
 
 export enum PersonStatus {
@@ -173,41 +173,41 @@ export enum Language {
 
 export type ModelClassStudentConnection = {
   __typename: "ModelClassStudentConnection",
-  items:  Array<ClassStudent | null >,
+  items?:  Array<ClassStudent | null >,
   nextToken?: string | null,
 };
 
 export type ModelPersonLessonsDataConnection = {
   __typename: "ModelPersonLessonsDataConnection",
-  items:  Array<PersonLessonsData | null >,
+  items?:  Array<PersonLessonsData | null >,
   nextToken?: string | null,
 };
 
 export type PersonLessonsData = {
   __typename: "PersonLessonsData",
-  id: string,
-  studentAuthID: string,
-  studentEmail: string,
-  lessonID: string,
+  id?: string,
+  studentAuthID?: string,
+  studentEmail?: string,
+  lessonID?: string,
   lessonType?: string | null,
   pages?: string | null,
   ratings?: number | null,
   isCompleted?: boolean | null,
   roomId?: string | null,
-  lesson?: UniversalLesson | null,
-  room?: Room | null,
-  createdAt: string,
-  updatedAt: string,
+  lesson?: UniversalLesson,
+  room?: Room,
+  createdAt?: string,
+  updatedAt?: string,
 };
 
 export type UniversalLesson = {
   __typename: "UniversalLesson",
-  id: string,
-  type: string,
+  id?: string,
+  type?: string,
   label?: string | null,
-  title: string,
-  institutionID: string,
-  institution?: Institution | null,
+  title?: string,
+  institutionID?: string,
+  institution?: Institution,
   language?: Array< Language > | null,
   designers?: Array< string | null > | null,
   objectives?: Array< string | null > | null,
@@ -257,6 +257,7 @@ export type UniversalLessonPlan = {
   interactionType?: Array< string | null > | null,
   tags?: Array< string | null > | null,
   videoLink?: string | null,
+  notes?: string | null,
 };
 
 export type UniversalpageContent = {
@@ -301,12 +302,12 @@ export type UniversalContentOptions = {
 
 export type Room = {
   __typename: "Room",
-  id: string,
-  institutionID: string,
+  id?: string,
+  institutionID?: string,
   classID?: string | null,
-  teacherAuthID: string,
-  teacherEmail: string,
-  name: string,
+  teacherAuthID?: string,
+  teacherEmail?: string,
+  name?: string,
   maxPersons?: number | null,
   status?: RoomStatus | null,
   filters?: Array< string | null > | null,
@@ -320,11 +321,11 @@ export type Room = {
   notes?: string | null,
   activeSyllabus?: string | null,
   frequency?: string | null,
-  coTeachers?: ModelRoomCoTeachersConnection | null,
-  institution?: Institution | null,
-  teacher?: Person | null,
-  class?: Class | null,
-  curricula?: ModelRoomCurriculumConnection | null,
+  coTeachers?: ModelRoomCoTeachersConnection,
+  institution?: Institution,
+  teacher?: Person,
+  class?: Class,
+  curricula?: ModelRoomCurriculumConnection,
   activeLessonId?: string | null,
   ClosedPages?: Array< string | null > | null,
   disabledPages?: Array< string | null > | null,
@@ -333,13 +334,13 @@ export type Room = {
   currentPage?: string | null,
   completedLessons?:  Array<CompleteLesson | null > | null,
   activeLessons?: Array< string | null > | null,
-  classroomGroups?: ModelClassroomGroupsConnection | null,
+  classroomGroups?: ModelClassroomGroupsConnection,
   weekDay?: string | null,
   conferenceCallLink?: string | null,
   lessonImpactLog?:  Array<ImpactLogEntry | null > | null,
   classSentiment?: Array< string | null > | null,
-  createdAt: string,
-  updatedAt: string,
+  createdAt?: string,
+  updatedAt?: string,
 };
 
 export enum RoomStatus {
@@ -351,89 +352,92 @@ export enum RoomStatus {
 
 export type ModelRoomCoTeachersConnection = {
   __typename: "ModelRoomCoTeachersConnection",
-  items:  Array<RoomCoTeachers | null >,
+  items?:  Array<RoomCoTeachers | null >,
   nextToken?: string | null,
 };
 
 export type RoomCoTeachers = {
   __typename: "RoomCoTeachers",
-  id: string,
-  roomID: string,
-  teacherID: string,
-  teacherEmail: string,
-  teacherAuthID: string,
-  room?: Room | null,
-  teacher?: Person | null,
-  createdAt: string,
-  updatedAt: string,
+  id?: string,
+  roomID?: string,
+  teacherID?: string,
+  teacherEmail?: string,
+  teacherAuthID?: string,
+  room?: Room,
+  teacher?: Person,
+  curricula?: ModelRoomCurriculumConnection,
+  createdAt?: string,
+  updatedAt?: string,
 };
 
 export type ModelRoomCurriculumConnection = {
   __typename: "ModelRoomCurriculumConnection",
-  items:  Array<RoomCurriculum | null >,
+  items?:  Array<RoomCurriculum | null >,
   nextToken?: string | null,
 };
 
 export type RoomCurriculum = {
   __typename: "RoomCurriculum",
-  id: string,
-  roomID: string,
-  curriculumID: string,
-  curriculum?: Curriculum | null,
-  createdAt: string,
-  updatedAt: string,
+  id?: string,
+  roomID?: string,
+  curriculumID?: string,
+  curriculum?: Curriculum,
+  createdAt?: string,
+  updatedAt?: string,
 };
 
 export type Curriculum = {
   __typename: "Curriculum",
-  id: string,
-  institutionID: string,
-  name: string,
+  id?: string,
+  institutionID?: string,
+  name?: string,
   type?: string | null,
   image?: string | null,
   summary?: string | null,
   description?: string | null,
   objectives?: Array< string | null > | null,
   languages?: Array< Language | null > | null,
-  institution?: Institution | null,
+  institution?: Institution,
   designers?: Array< string | null > | null,
   universalSyllabusSeq?: Array< string | null > | null,
-  checkpoints?: ModelcommonCheckpointConnection | null,
-  universalSyllabus?: ModelcurriculumUnitsConnection | null,
+  checkpoints?: ModelcommonCheckpointConnection,
+  universalSyllabus?: ModelcurriculumUnitsConnection,
   syllabiHistory?: Array< string | null > | null,
-  createdAt: string,
-  updatedAt: string,
+  signedOff?: boolean | null,
+  signedOffSteps?:  Array<SignedOffStep | null > | null,
+  createdAt?: string,
+  updatedAt?: string,
 };
 
 export type ModelcommonCheckpointConnection = {
   __typename: "ModelcommonCheckpointConnection",
-  items:  Array<commonCheckpoint | null >,
+  items?:  Array<commonCheckpoint | null >,
   nextToken?: string | null,
 };
 
 export type commonCheckpoint = {
   __typename: "commonCheckpoint",
-  id: string,
-  type: string,
-  typeID: string,
-  checkpointID: string,
-  curriculum?: Curriculum | null,
-  checkpoint?: Checkpoint | null,
-  createdAt: string,
-  updatedAt: string,
+  id?: string,
+  type?: string,
+  typeID?: string,
+  checkpointID?: string,
+  curriculum?: Curriculum,
+  checkpoint?: Checkpoint,
+  createdAt?: string,
+  updatedAt?: string,
 };
 
 export type Checkpoint = {
   __typename: "Checkpoint",
-  id: string,
-  label: string,
+  id?: string,
+  label?: string,
   title?: string | null,
   subtitle?: string | null,
   stage?: string | null,
-  type: string,
+  type?: string,
   instructionsTitle?: string | null,
   instructions?: string | null,
-  questions?: ModelCheckpointQuestionsConnection | null,
+  questions?: ModelCheckpointQuestionsConnection,
   purpose?: string | null,
   objectives?: string | null,
   designers?: Array< string | null > | null,
@@ -441,47 +445,47 @@ export type Checkpoint = {
   estTime?: number | null,
   scope?: string | null,
   questionSeq?: Array< string | null > | null,
-  createdAt: string,
-  updatedAt: string,
+  createdAt?: string,
+  updatedAt?: string,
 };
 
 export type ModelCheckpointQuestionsConnection = {
   __typename: "ModelCheckpointQuestionsConnection",
-  items:  Array<CheckpointQuestions | null >,
+  items?:  Array<CheckpointQuestions | null >,
   nextToken?: string | null,
 };
 
 export type CheckpointQuestions = {
   __typename: "CheckpointQuestions",
-  id: string,
-  checkpointID: string,
-  questionID: string,
-  required: boolean,
-  checkpoint?: Checkpoint | null,
-  question?: Question | null,
-  createdAt: string,
-  updatedAt: string,
+  id?: string,
+  checkpointID?: string,
+  questionID?: string,
+  required?: boolean,
+  checkpoint?: Checkpoint,
+  question?: Question,
+  createdAt?: string,
+  updatedAt?: string,
 };
 
 export type Question = {
   __typename: "Question",
-  id: string,
-  label: string,
-  type: string,
-  question: string,
+  id?: string,
+  label?: string,
+  type?: string,
+  question?: string,
   designers?: Array< string | null > | null,
   language?: string | null,
   sourceId?: string | null,
   note?: string | null,
   options?:  Array<Option | null > | null,
   published?: boolean | null,
-  createdAt: string,
-  updatedAt: string,
+  createdAt?: string,
+  updatedAt?: string,
 };
 
 export type Option = {
   __typename: "Option",
-  text: string,
+  text?: string,
   label?: string | null,
   icon?: string | null,
   color?: string | null,
@@ -489,74 +493,74 @@ export type Option = {
 
 export type ModelcurriculumUnitsConnection = {
   __typename: "ModelcurriculumUnitsConnection",
-  items:  Array<curriculumUnits | null >,
+  items?:  Array<curriculumUnits | null >,
   nextToken?: string | null,
 };
 
 export type curriculumUnits = {
   __typename: "curriculumUnits",
-  id: string,
-  unitId: string,
-  unit?: UniversalSyllabus | null,
-  curriculumId: string,
-  createdAt: string,
-  updatedAt: string,
+  id?: string,
+  unitId?: string,
+  unit?: UniversalSyllabus,
+  curriculumId?: string,
+  createdAt?: string,
+  updatedAt?: string,
 };
 
 export type UniversalSyllabus = {
   __typename: "UniversalSyllabus",
-  id: string,
-  name: string,
+  id?: string,
+  name?: string,
   type?: string | null,
-  institutionID: string,
-  institution?: Institution | null,
+  institutionID?: string,
+  institution?: Institution,
   description?: string | null,
   methodology?: string | null,
   policies?: string | null,
   pupose?: string | null,
   objectives?: string | null,
   languages?: Array< Language | null > | null,
-  lessons?: ModelUniversalSyllabusLessonConnection | null,
+  lessons?: ModelUniversalSyllabusLessonConnection,
   universalLessonsSeq?: Array< string | null > | null,
   designers?: Array< string | null > | null,
   status?: boolean | null,
   isUsed?: boolean | null,
   lessonHistory?: Array< string | null > | null,
-  createdAt: string,
-  updatedAt: string,
+  createdAt?: string,
+  updatedAt?: string,
 };
 
 export type ModelUniversalSyllabusLessonConnection = {
   __typename: "ModelUniversalSyllabusLessonConnection",
-  items:  Array<UniversalSyllabusLesson | null >,
+  items?:  Array<UniversalSyllabusLesson | null >,
   nextToken?: string | null,
 };
 
 export type UniversalSyllabusLesson = {
   __typename: "UniversalSyllabusLesson",
-  id: string,
-  syllabusID: string,
-  lessonID: string,
+  id?: string,
+  syllabusID?: string,
+  lessonID?: string,
   unit?: string | null,
   sequence?: number | null,
   status?: string | null,
   complete?: boolean | null,
   roster?: Array< string > | null,
   viewing?: string | null,
-  lesson?: UniversalLesson | null,
-  displayData?: DisplayData | null,
+  lesson?: UniversalLesson,
+  displayData?: DisplayData,
   lessonPlan?:  Array<ComponentSummary > | null,
   startDate?: string | null,
   endDate?: string | null,
-  feedback?: ModelUniversalLessonFeedbackConnection | null,
-  createdAt: string,
-  updatedAt: string,
+  feedback?: ModelUniversalLessonFeedbackConnection,
+  createdAt?: string,
+  updatedAt?: string,
 };
 
 export type DisplayData = {
   __typename: "DisplayData",
   breakdownComponent?: string | null,
-  studentInfo?: StudentInfo | null,
+  studentInfo?: StudentInfo,
 };
 
 export type StudentInfo = {
@@ -570,29 +574,36 @@ export type StudentInfo = {
 export type ComponentSummary = {
   __typename: "ComponentSummary",
   id?: string | null,
-  disabled: boolean,
-  open: boolean,
-  active: boolean,
-  stage: string,
-  type: string,
+  disabled?: boolean,
+  open?: boolean,
+  active?: boolean,
+  stage?: string,
+  type?: string,
   displayMode?: string | null,
 };
 
 export type ModelUniversalLessonFeedbackConnection = {
   __typename: "ModelUniversalLessonFeedbackConnection",
-  items:  Array<UniversalLessonFeedback | null >,
+  items?:  Array<UniversalLessonFeedback | null >,
   nextToken?: string | null,
 };
 
 export type UniversalLessonFeedback = {
   __typename: "UniversalLessonFeedback",
-  id: string,
-  syllabusLessonID: string,
+  id?: string,
+  syllabusLessonID?: string,
   liked?: string | null,
   comment?: string | null,
-  syllabusLesson?: UniversalSyllabusLesson | null,
-  createdAt: string,
-  updatedAt: string,
+  syllabusLesson?: UniversalSyllabusLesson,
+  createdAt?: string,
+  updatedAt?: string,
+};
+
+export type SignedOffStep = {
+  __typename: "SignedOffStep",
+  authID?: string,
+  date?: string | null,
+  step?: string,
 };
 
 export type StudentSharing = {
@@ -610,44 +621,44 @@ export type CompleteLesson = {
 
 export type ModelClassroomGroupsConnection = {
   __typename: "ModelClassroomGroupsConnection",
-  items:  Array<ClassroomGroups | null >,
+  items?:  Array<ClassroomGroups | null >,
   nextToken?: string | null,
 };
 
 export type ClassroomGroups = {
   __typename: "ClassroomGroups",
-  id: string,
-  classRoomID: string,
-  classRoom?: Room | null,
+  id?: string,
+  classRoomID?: string,
+  classRoom?: Room,
   groupName?: string | null,
   groupType?: string | null,
-  advisorEmail: string,
-  advisorAuthId: string,
-  groupAdvisor?: Person | null,
+  advisorEmail?: string,
+  advisorAuthId?: string,
+  groupAdvisor?: Person,
   groupLocation?: string | null,
-  classroomGroupsStudents?: ModelClassroomGroupStudentsConnection | null,
-  createdAt: string,
-  updatedAt: string,
+  classroomGroupsStudents?: ModelClassroomGroupStudentsConnection,
+  createdAt?: string,
+  updatedAt?: string,
 };
 
 export type ModelClassroomGroupStudentsConnection = {
   __typename: "ModelClassroomGroupStudentsConnection",
-  items:  Array<ClassroomGroupStudents | null >,
+  items?:  Array<ClassroomGroupStudents | null >,
   nextToken?: string | null,
 };
 
 export type ClassroomGroupStudents = {
   __typename: "ClassroomGroupStudents",
-  id: string,
-  classRoomGroupID: string,
-  classRoomGroup?: ClassroomGroups | null,
-  studentEmail: string,
-  studentAuthId: string,
-  student?: Person | null,
+  id?: string,
+  classRoomGroupID?: string,
+  classRoomGroup?: ClassroomGroups,
+  studentEmail?: string,
+  studentAuthId?: string,
+  student?: Person,
   studentType?: string | null,
   studentNote?: string | null,
-  createdAt: string,
-  updatedAt: string,
+  createdAt?: string,
+  updatedAt?: string,
 };
 
 export type ImpactLogEntry = {
@@ -672,19 +683,19 @@ export enum UserPageState {
 
 export type ModelRoomConnection = {
   __typename: "ModelRoomConnection",
-  items:  Array<Room | null >,
+  items?:  Array<Room | null >,
   nextToken?: string | null,
 };
 
 export type ModelCurriculumConnection = {
   __typename: "ModelCurriculumConnection",
-  items:  Array<Curriculum | null >,
+  items?:  Array<Curriculum | null >,
   nextToken?: string | null,
 };
 
 export type ModelClassConnection = {
   __typename: "ModelClassConnection",
-  items:  Array<Class | null >,
+  items?:  Array<Class | null >,
   nextToken?: string | null,
 };
 
@@ -1210,20 +1221,20 @@ export type ModelArchiveSurveyDataSQLConditionInput = {
 
 export type ArchiveSurveyDataSQL = {
   __typename: "ArchiveSurveyDataSQL",
-  id: string,
-  AuthId: string,
-  Email: string,
+  id?: string,
+  AuthId?: string,
+  Email?: string,
   UniversalSurveyStudentID?: string | null,
-  QuestionResult:  Array<QuestionResults | null >,
+  QuestionResult?:  Array<QuestionResults | null >,
   createdAt?: string | null,
   updatedAt?: string | null,
 };
 
 export type QuestionResults = {
   __typename: "QuestionResults",
-  QuestionId: string,
-  QuestionLabel: string,
-  QuestionResponse: string,
+  QuestionId?: string,
+  QuestionLabel?: string,
+  QuestionResponse?: string,
 };
 
 export type UpdateArchiveSurveyDataSQLInput = {
@@ -1409,6 +1420,14 @@ export type CreateCurriculumInput = {
   designers?: Array< string | null > | null,
   universalSyllabusSeq?: Array< string | null > | null,
   syllabiHistory?: Array< string | null > | null,
+  signedOff?: boolean | null,
+  signedOffSteps?: Array< SignedOffStepInput | null > | null,
+};
+
+export type SignedOffStepInput = {
+  authID: string,
+  date?: string | null,
+  step: string,
 };
 
 export type ModelCurriculumConditionInput = {
@@ -1423,6 +1442,7 @@ export type ModelCurriculumConditionInput = {
   designers?: ModelStringInput | null,
   universalSyllabusSeq?: ModelStringInput | null,
   syllabiHistory?: ModelStringInput | null,
+  signedOff?: ModelBooleanInput | null,
   and?: Array< ModelCurriculumConditionInput | null > | null,
   or?: Array< ModelCurriculumConditionInput | null > | null,
   not?: ModelCurriculumConditionInput | null,
@@ -1448,6 +1468,8 @@ export type UpdateCurriculumInput = {
   designers?: Array< string | null > | null,
   universalSyllabusSeq?: Array< string | null > | null,
   syllabiHistory?: Array< string | null > | null,
+  signedOff?: boolean | null,
+  signedOffSteps?: Array< SignedOffStepInput | null > | null,
 };
 
 export type DeleteCurriculumInput = {
@@ -1482,29 +1504,29 @@ export type ModelTopicConditionInput = {
 
 export type Topic = {
   __typename: "Topic",
-  id: string,
-  curriculumID: string,
-  learningObjectiveID: string,
-  curriculum?: Curriculum | null,
-  learningObjective?: LearningObjective | null,
-  name: string,
+  id?: string,
+  curriculumID?: string,
+  learningObjectiveID?: string,
+  curriculum?: Curriculum,
+  learningObjective?: LearningObjective,
+  name?: string,
   description?: string | null,
   distinguished?: string | null,
   excelled?: string | null,
   adequite?: string | null,
   basic?: string | null,
-  createdAt: string,
-  updatedAt: string,
+  createdAt?: string,
+  updatedAt?: string,
 };
 
 export type LearningObjective = {
   __typename: "LearningObjective",
-  id: string,
-  name: string,
+  id?: string,
+  name?: string,
   description?: string | null,
-  curriculumID: string,
-  createdAt: string,
-  updatedAt: string,
+  curriculumID?: string,
+  createdAt?: string,
+  updatedAt?: string,
 };
 
 export type UpdateTopicInput = {
@@ -1537,10 +1559,10 @@ export type ModelCSequencesConditionInput = {
 
 export type CSequences = {
   __typename: "CSequences",
-  id: string,
+  id?: string,
   sequence?: Array< string | null > | null,
-  createdAt: string,
-  updatedAt: string,
+  createdAt?: string,
+  updatedAt?: string,
 };
 
 export type UpdateCSequencesInput = {
@@ -1599,14 +1621,14 @@ export type ModelRubricConditionInput = {
 
 export type Rubric = {
   __typename: "Rubric",
-  id: string,
+  id?: string,
   name?: string | null,
   criteria?: string | null,
-  topicID: string,
-  topic?: Topic | null,
-  curriculumID: string,
-  createdAt: string,
-  updatedAt: string,
+  topicID?: string,
+  topic?: Topic,
+  curriculumID?: string,
+  createdAt?: string,
+  updatedAt?: string,
 };
 
 export type UpdateRubricInput = {
@@ -1824,10 +1846,10 @@ export type ModelQuestionSourceConditionInput = {
 
 export type QuestionSource = {
   __typename: "QuestionSource",
-  id: string,
-  name: string,
-  createdAt: string,
-  updatedAt: string,
+  id?: string,
+  name?: string,
+  createdAt?: string,
+  updatedAt?: string,
 };
 
 export type UpdateQuestionSourceInput = {
@@ -1853,10 +1875,10 @@ export type ModelQuestionTypeConditionInput = {
 
 export type QuestionType = {
   __typename: "QuestionType",
-  id: string,
-  name: string,
-  createdAt: string,
-  updatedAt: string,
+  id?: string,
+  name?: string,
+  createdAt?: string,
+  updatedAt?: string,
 };
 
 export type UpdateQuestionTypeInput = {
@@ -1890,14 +1912,14 @@ export type ModelRoomMsgsConditionInput = {
 
 export type RoomMsgs = {
   __typename: "RoomMsgs",
-  id: string,
-  roomID: string,
-  senderAuthID: string,
-  senderEmail: string,
-  body: string,
+  id?: string,
+  roomID?: string,
+  senderAuthID?: string,
+  senderEmail?: string,
+  body?: string,
   createdAt?: string | null,
-  sender?: Person | null,
-  updatedAt: string,
+  sender?: Person,
+  updatedAt?: string,
 };
 
 export type UpdateRoomMsgsInput = {
@@ -1950,53 +1972,53 @@ export type ModelStudentDataConditionInput = {
 
 export type StudentData = {
   __typename: "StudentData",
-  id: string,
-  lessonProgress: string,
+  id?: string,
+  lessonProgress?: string,
   currentLocation?: string | null,
-  status: string,
+  status?: string,
   saveType?: string | null,
-  syllabusLessonID: string,
-  studentID: string,
-  studentAuthID: string,
-  student: Person,
-  doFirstData?: ModelQuestionDataStudentDataConnection | null,
-  checkpointData?: ModelQuestionDataStudentDataConnection | null,
+  syllabusLessonID?: string,
+  studentID?: string,
+  studentAuthID?: string,
+  student?: Person,
+  doFirstData?: ModelQuestionDataStudentDataConnection,
+  checkpointData?: ModelQuestionDataStudentDataConnection,
   anthologyContent?:  Array<AnthologyContent | null > | null,
-  createdAt: string,
-  updatedAt: string,
+  createdAt?: string,
+  updatedAt?: string,
 };
 
 export type ModelQuestionDataStudentDataConnection = {
   __typename: "ModelQuestionDataStudentDataConnection",
-  items:  Array<QuestionDataStudentData | null >,
+  items?:  Array<QuestionDataStudentData | null >,
   nextToken?: string | null,
 };
 
 export type QuestionDataStudentData = {
   __typename: "QuestionDataStudentData",
-  id: string,
-  studentDataID: string,
-  studentData?: StudentData | null,
-  questionDataID: string,
-  questionData?: QuestionData | null,
-  createdAt: string,
-  updatedAt: string,
+  id?: string,
+  studentDataID?: string,
+  studentData?: StudentData,
+  questionDataID?: string,
+  questionData?: QuestionData,
+  createdAt?: string,
+  updatedAt?: string,
 };
 
 export type QuestionData = {
   __typename: "QuestionData",
-  id: string,
-  syllabusLessonID: string,
-  checkpointID: string,
-  email: string,
-  authID: string,
-  person?: Person | null,
+  id?: string,
+  syllabusLessonID?: string,
+  checkpointID?: string,
+  email?: string,
+  authID?: string,
+  person?: Person,
   componentType?: string | null,
   scheduleID?: string | null,
   lessonID?: string | null,
   responseObject?:  Array<QuestionResponse | null > | null,
-  createdAt: string,
-  updatedAt: string,
+  createdAt?: string,
+  updatedAt?: string,
 };
 
 export type QuestionResponse = {
@@ -2071,16 +2093,16 @@ export type ModelAnthologyCommentConditionInput = {
 
 export type AnthologyComment = {
   __typename: "AnthologyComment",
-  id: string,
+  id?: string,
   text?: string | null,
-  email: string,
-  authID: string,
-  person?: Person | null,
+  email?: string,
+  authID?: string,
+  person?: Person,
   attachments?:  Array<Attachment | null > | null,
   edited?: boolean | null,
   createdAt?: string | null,
   updatedAt?: string | null,
-  entryID: string,
+  entryID?: string,
 };
 
 export type Attachment = {
@@ -2203,19 +2225,19 @@ export type ModelPersonLocationConditionInput = {
 
 export type PersonLocation = {
   __typename: "PersonLocation",
-  id: string,
-  personAuthID: string,
-  personEmail: string,
-  syllabusLessonID: string,
-  lessonID: string,
-  roomID: string,
+  id?: string,
+  personAuthID?: string,
+  personEmail?: string,
+  syllabusLessonID?: string,
+  lessonID?: string,
+  roomID?: string,
   currentLocation?: string | null,
   lessonProgress?: string | null,
-  person?: Person | null,
-  room?: Room | null,
-  lesson?: UniversalLesson | null,
-  createdAt: string,
-  updatedAt: string,
+  person?: Person,
+  room?: Room,
+  lesson?: UniversalLesson,
+  createdAt?: string,
+  updatedAt?: string,
 };
 
 export type UpdatePersonLocationInput = {
@@ -2262,21 +2284,21 @@ export type ModelAttendanceConditionInput = {
 
 export type Attendance = {
   __typename: "Attendance",
-  id: string,
-  studentID: string,
-  curriculumID: string,
-  syllabusID: string,
-  lessonID: string,
-  roomID: string,
+  id?: string,
+  studentID?: string,
+  curriculumID?: string,
+  syllabusID?: string,
+  lessonID?: string,
+  roomID?: string,
   date?: string | null,
   time?: string | null,
   isComplete?: boolean | null,
-  curriculum?: Curriculum | null,
-  syllabus?: UniversalSyllabus | null,
-  lesson?: UniversalLesson | null,
-  room?: Room | null,
-  createdAt: string,
-  updatedAt: string,
+  curriculum?: Curriculum,
+  syllabus?: UniversalSyllabus,
+  lesson?: UniversalLesson,
+  room?: Room,
+  createdAt?: string,
+  updatedAt?: string,
 };
 
 export type UpdateAttendanceInput = {
@@ -2349,6 +2371,7 @@ export type UniversalLessonPlanInput = {
   interactionType?: Array< string | null > | null,
   tags?: Array< string | null > | null,
   videoLink?: string | null,
+  notes?: string | null,
 };
 
 export type UniversalpageContentInput = {
@@ -2541,14 +2564,14 @@ export type ModelUniversalLessonStudentDataConditionInput = {
 
 export type UniversalLessonStudentData = {
   __typename: "UniversalLessonStudentData",
-  id: string,
-  syllabusLessonID: string,
-  lessonID: string,
-  lesson?: UniversalLesson | null,
-  lessonPageID: string,
-  studentID: string,
-  studentAuthID: string,
-  studentEmail: string,
+  id?: string,
+  syllabusLessonID?: string,
+  lessonID?: string,
+  lesson?: UniversalLesson,
+  lessonPageID?: string,
+  studentID?: string,
+  studentAuthID?: string,
+  studentEmail?: string,
   roomID?: string | null,
   currentLocation?: string | null,
   lessonProgress?: string | null,
@@ -2556,8 +2579,8 @@ export type UniversalLessonStudentData = {
   hasExerciseData?: boolean | null,
   exerciseData?:  Array<ExerciseData | null > | null,
   date?: string | null,
-  createdAt: string,
-  updatedAt: string,
+  createdAt?: string,
+  updatedAt?: string,
 };
 
 export type PartInput = {
@@ -2577,7 +2600,7 @@ export type InputComment = {
 
 export type ExerciseData = {
   __typename: "ExerciseData",
-  id: string,
+  id?: string,
   entryData?:  Array<JournalEntryData | null > | null,
   feedbacks?: Array< string | null > | null,
   shared?: boolean | null,
@@ -2647,23 +2670,23 @@ export type ModelUniversalLessonWritingExcercisesConditionInput = {
 
 export type UniversalLessonWritingExcercises = {
   __typename: "UniversalLessonWritingExcercises",
-  id: string,
-  syllabusLessonID: string,
-  lessonID: string,
-  lesson?: UniversalLesson | null,
-  lessonPageID: string,
+  id?: string,
+  syllabusLessonID?: string,
+  lessonID?: string,
+  lesson?: UniversalLesson,
+  lessonPageID?: string,
   lessonName?: string | null,
-  studentID: string,
-  studentAuthID: string,
-  studentEmail: string,
+  studentID?: string,
+  studentAuthID?: string,
+  studentEmail?: string,
   roomID?: string | null,
   currentLocation?: string | null,
   lessonProgress?: string | null,
   pageData?:  Array<PartInput | null > | null,
   hasExerciseData?: boolean | null,
   exerciseData?:  Array<ExerciseData | null > | null,
-  createdAt: string,
-  updatedAt: string,
+  createdAt?: string,
+  updatedAt?: string,
 };
 
 export type UpdateUniversalLessonWritingExcercisesInput = {
@@ -2721,21 +2744,21 @@ export type ModelUniversalArchiveDataConditionInput = {
 
 export type UniversalArchiveData = {
   __typename: "UniversalArchiveData",
-  id: string,
-  syllabusLessonID: string,
-  lessonID: string,
-  lessonPageID: string,
-  studentID: string,
-  studentAuthID: string,
-  studentEmail: string,
+  id?: string,
+  syllabusLessonID?: string,
+  lessonID?: string,
+  lessonPageID?: string,
+  studentID?: string,
+  studentAuthID?: string,
+  studentEmail?: string,
   roomID?: string | null,
   currentLocation?: string | null,
   lessonProgress?: string | null,
   pageData?:  Array<PartInput | null > | null,
   hasExerciseData?: boolean | null,
   exerciseData?:  Array<ExerciseData | null > | null,
-  createdAt: string,
-  updatedAt: string,
+  createdAt?: string,
+  updatedAt?: string,
 };
 
 export type UpdateUniversalArchiveDataInput = {
@@ -2791,12 +2814,12 @@ export type ModelUniversalSurveyStudentDataConditionInput = {
 
 export type UniversalSurveyStudentData = {
   __typename: "UniversalSurveyStudentData",
-  id: string,
-  syllabusLessonID: string,
-  lessonID: string,
-  studentID: string,
-  studentAuthID: string,
-  studentEmail: string,
+  id?: string,
+  syllabusLessonID?: string,
+  lessonID?: string,
+  studentID?: string,
+  studentAuthID?: string,
+  studentEmail?: string,
   roomID?: string | null,
   currentLocation?: string | null,
   lessonProgress?: string | null,
@@ -2841,13 +2864,13 @@ export type ModelTemporaryUniversalUploadSurveyDataConditionInput = {
 
 export type TemporaryUniversalUploadSurveyData = {
   __typename: "TemporaryUniversalUploadSurveyData",
-  id: string,
-  updatedUserId: string,
+  id?: string,
+  updatedUserId?: string,
   universalSurveyId?: string | null,
-  universalSurveyStudentData?: UniversalSurveyStudentData | null,
+  universalSurveyStudentData?: UniversalSurveyStudentData,
   surveyData?:  Array<PartInput | null > | null,
-  createdAt: string,
-  updatedAt: string,
+  createdAt?: string,
+  updatedAt?: string,
 };
 
 export type UpdateTemporaryUniversalUploadSurveyDataInput = {
@@ -2878,13 +2901,13 @@ export type ModelTemporaryDemographicsUploadDataConditionInput = {
 
 export type TemporaryDemographicsUploadData = {
   __typename: "TemporaryDemographicsUploadData",
-  id: string,
-  updatedUserId: string,
+  id?: string,
+  updatedUserId?: string,
   questionDataID?: string | null,
-  QuestionData?: QuestionData | null,
+  QuestionData?: QuestionData,
   responseObject?:  Array<QuestionResponse | null > | null,
-  createdAt: string,
-  updatedAt: string,
+  createdAt?: string,
+  updatedAt?: string,
 };
 
 export type UpdateTemporaryDemographicsUploadDataInput = {
@@ -2945,12 +2968,12 @@ export type ModelUpdateTypeInput = {
 
 export type UploadLogs = {
   __typename: "UploadLogs",
-  id: string,
-  User_id: string,
+  id?: string,
+  User_id?: string,
   TemporaryUniversalUploadSurveyDataID?: string | null,
-  TemporaryUniversalUploadSurveyData?: TemporaryUniversalUploadSurveyData | null,
+  TemporaryUniversalUploadSurveyData?: TemporaryUniversalUploadSurveyData,
   TemporaryDemographicsUploadDataID?: string | null,
-  TemporaryDemographicsUploadData?: TemporaryDemographicsUploadData | null,
+  TemporaryDemographicsUploadData?: TemporaryDemographicsUploadData,
   UploadType?: string | null,
   updateType?: UpdateType | null,
   Date?: string | null,
@@ -2960,8 +2983,8 @@ export type UploadLogs = {
   Class_id?: string | null,
   PaperSurveyURL?: Array< string | null > | null,
   Reason?: string | null,
-  createdAt: string,
-  updatedAt: string,
+  createdAt?: string,
+  updatedAt?: string,
 };
 
 export type UpdateUploadLogsInput = {
@@ -3019,22 +3042,22 @@ export type ModelUniversalJournalDataConditionInput = {
 
 export type UniversalJournalData = {
   __typename: "UniversalJournalData",
-  id: string,
-  studentID: string,
-  studentAuthID: string,
-  studentEmail: string,
-  type: string,
+  id?: string,
+  studentID?: string,
+  studentAuthID?: string,
+  studentEmail?: string,
+  type?: string,
   lessonName?: string | null,
   entryData?:  Array<JournalEntryData | null > | null,
   feedbacks?: Array< string | null > | null,
   shared?: boolean | null,
   lessonID?: string | null,
-  lesson?: UniversalLesson | null,
+  lesson?: UniversalLesson,
   syllabusLessonID?: string | null,
   lessonType?: string | null,
   roomID?: string | null,
-  createdAt: string,
-  updatedAt: string,
+  createdAt?: string,
+  updatedAt?: string,
 };
 
 export type UpdateUniversalJournalDataInput = {
@@ -3264,16 +3287,16 @@ export type ModelStudentConnectionsConditionInput = {
 
 export type StudentConnections = {
   __typename: "StudentConnections",
-  fromEmail: string,
-  fromAuthID: string,
-  toEmail: string,
-  toAuthID: string,
+  fromEmail?: string,
+  fromAuthID?: string,
+  toEmail?: string,
+  toAuthID?: string,
   remarks?: string | null,
-  fromStudent?: Person | null,
-  toStudent?: Person | null,
-  id: string,
-  createdAt: string,
-  updatedAt: string,
+  fromStudent?: Person,
+  toStudent?: Person,
+  id?: string,
+  createdAt?: string,
+  updatedAt?: string,
 };
 
 export type UpdateStudentConnectionsInput = {
@@ -3310,15 +3333,15 @@ export type ModelPersonSentimentsConditionInput = {
 
 export type PersonSentiments = {
   __typename: "PersonSentiments",
-  personAuthID: string,
-  personEmail: string,
-  person?: Person | null,
-  date: string,
-  time: string,
+  personAuthID?: string,
+  personEmail?: string,
+  person?: Person,
+  date?: string,
+  time?: string,
   responseText?: string | null,
   backstory?: string | null,
-  createdAt: string,
-  updatedAt: string,
+  createdAt?: string,
+  updatedAt?: string,
 };
 
 export type UpdatePersonSentimentsInput = {
@@ -3351,11 +3374,11 @@ export type ModelSentimentsConditionInput = {
 
 export type Sentiments = {
   __typename: "Sentiments",
-  id: string,
-  sentimentName: string,
-  sentimentType: string,
-  createdAt: string,
-  updatedAt: string,
+  id?: string,
+  sentimentName?: string,
+  sentimentType?: string,
+  createdAt?: string,
+  updatedAt?: string,
 };
 
 export type UpdateSentimentsInput = {
@@ -3395,21 +3418,21 @@ export type ModelSentimentTrackerConditionInput = {
 
 export type SentimentTracker = {
   __typename: "SentimentTracker",
-  personAuthID: string,
-  personEmail: string,
-  person?: Person | null,
-  sentimentId: string,
-  sentiment?: Sentiments | null,
-  classRoomID: string,
-  classRoom?: Room | null,
-  syllabusLessonID: string,
-  syllabusLesson?: UniversalSyllabusLesson | null,
-  date: string,
-  time: string,
-  sentimentName: string,
-  sentimentType: string,
-  createdAt: string,
-  updatedAt: string,
+  personAuthID?: string,
+  personEmail?: string,
+  person?: Person,
+  sentimentId?: string,
+  sentiment?: Sentiments,
+  classRoomID?: string,
+  classRoom?: Room,
+  syllabusLessonID?: string,
+  syllabusLesson?: UniversalSyllabusLesson,
+  date?: string,
+  time?: string,
+  sentimentName?: string,
+  sentimentType?: string,
+  createdAt?: string,
+  updatedAt?: string,
 };
 
 export type UpdateSentimentTrackerInput = {
@@ -3457,21 +3480,21 @@ export type ModelFeelingTrackerConditionInput = {
 
 export type FeelingTracker = {
   __typename: "FeelingTracker",
-  id: string,
-  personAuthID: string,
-  personEmail: string,
-  person?: Person | null,
-  sentimentId: string,
-  sentiment?: Sentiments | null,
-  classRoomID: string,
-  classRoom?: Room | null,
-  lessonID: string,
-  date: string,
-  time: string,
-  sentimentName: string,
-  sentimentType: string,
-  createdAt: string,
-  updatedAt: string,
+  id?: string,
+  personAuthID?: string,
+  personEmail?: string,
+  person?: Person,
+  sentimentId?: string,
+  sentiment?: Sentiments,
+  classRoomID?: string,
+  classRoom?: Room,
+  lessonID?: string,
+  date?: string,
+  time?: string,
+  sentimentName?: string,
+  sentimentType?: string,
+  createdAt?: string,
+  updatedAt?: string,
 };
 
 export type UpdateFeelingTrackerInput = {
@@ -3522,27 +3545,27 @@ export type ModelFeelingsArchiveConditionInput = {
 
 export type FeelingsArchive = {
   __typename: "FeelingsArchive",
-  id: string,
-  personAuthID: string,
-  personEmail: string,
-  person?: Person | null,
-  sentimentId: string,
-  sentiment?: ModelSentimentsConnection | null,
-  classRoomID: string,
-  classRoom?: Room | null,
-  lessonID: string,
-  lesson?: UniversalLesson | null,
-  date: string,
-  time: string,
+  id?: string,
+  personAuthID?: string,
+  personEmail?: string,
+  person?: Person,
+  sentimentId?: string,
+  sentiment?: ModelSentimentsConnection,
+  classRoomID?: string,
+  classRoom?: Room,
+  lessonID?: string,
+  lesson?: UniversalLesson,
+  date?: string,
+  time?: string,
   sentimentName?: Array< string > | null,
   comments?: string | null,
-  createdAt: string,
-  updatedAt: string,
+  createdAt?: string,
+  updatedAt?: string,
 };
 
 export type ModelSentimentsConnection = {
   __typename: "ModelSentimentsConnection",
-  items:  Array<Sentiments | null >,
+  items?:  Array<Sentiments | null >,
   nextToken?: string | null,
 };
 
@@ -3602,9 +3625,9 @@ export type ModelPersonFilesConditionInput = {
 
 export type PersonFiles = {
   __typename: "PersonFiles",
-  id: string,
-  personAuthID: string,
-  personEmail: string,
+  id?: string,
+  personAuthID?: string,
+  personEmail?: string,
   uploadedAt?: string | null,
   feedbacks?: Array< string | null > | null,
   shared?: boolean | null,
@@ -3614,14 +3637,14 @@ export type PersonFiles = {
   roomID?: string | null,
   files?:  Array<File | null > | null,
   lessonPageID?: string | null,
-  createdAt: string,
-  updatedAt: string,
+  createdAt?: string,
+  updatedAt?: string,
 };
 
 export type File = {
   __typename: "File",
-  fileName: string,
-  fileKey: string,
+  fileName?: string,
+  fileKey?: string,
   fileSize?: number | null,
 };
 
@@ -3692,9 +3715,9 @@ export type ModelCommunityConditionInput = {
 
 export type Community = {
   __typename: "Community",
-  id: string,
-  institutionID: string,
-  institution?: Institution | null,
+  id?: string,
+  institutionID?: string,
+  institution?: Institution,
   cardName?: string | null,
   cardType?: string | null,
   cardDate?: string | null,
@@ -3706,35 +3729,35 @@ export type Community = {
   geoLocation?: string | null,
   additionalLinks?: Array< string | null > | null,
   additionalInfo?: string | null,
-  personAuthID: string,
-  personEmail: string,
+  personAuthID?: string,
+  personEmail?: string,
   isEditedCard?: boolean | null,
-  person?: Person | null,
-  chat?: ModelCommunityChatConnection | null,
+  person?: Person,
+  chat?: ModelCommunityChatConnection,
   summaryHtml?: string | null,
   likes?: Array< string | null > | null,
   chatCount?: number | null,
-  createdAt: string,
-  updatedAt: string,
+  createdAt?: string,
+  updatedAt?: string,
 };
 
 export type ModelCommunityChatConnection = {
   __typename: "ModelCommunityChatConnection",
-  items:  Array<CommunityChat | null >,
+  items?:  Array<CommunityChat | null >,
   nextToken?: string | null,
 };
 
 export type CommunityChat = {
   __typename: "CommunityChat",
-  id: string,
-  communityId: string,
-  personAuthID: string,
-  personEmail: string,
+  id?: string,
+  communityId?: string,
+  personAuthID?: string,
+  personEmail?: string,
   msg?: string | null,
   createdAt?: string | null,
   isEditedChat?: boolean | null,
-  person?: Person | null,
-  updatedAt: string,
+  person?: Person,
+  updatedAt?: string,
 };
 
 export type UpdateCommunityInput = {
@@ -3787,15 +3810,15 @@ export type ModelGameChangerConditionInput = {
 
 export type GameChanger = {
   __typename: "GameChanger",
-  id: string,
+  id?: string,
   gameChangerName?: string | null,
   title?: string | null,
   objective?: string | null,
   gameChangerLinks?: Array< string | null > | null,
   inputs?: Array< string | null > | null,
   likes?: Array< string | null > | null,
-  createdAt: string,
-  updatedAt: string,
+  createdAt?: string,
+  updatedAt?: string,
 };
 
 export type UpdateGameChangerInput = {
@@ -3834,16 +3857,16 @@ export type ModelGameChangerLogConditionInput = {
 
 export type GameChangerLog = {
   __typename: "GameChangerLog",
-  id: string,
-  gameChangerID: string,
-  gameChanger?: GameChanger | null,
-  personEmail: string,
-  personAuthID: string,
-  person?: Person | null,
+  id?: string,
+  gameChangerID?: string,
+  gameChanger?: GameChanger,
+  personEmail?: string,
+  personAuthID?: string,
+  person?: Person,
   startTime?: string | null,
   endTime?: string | null,
-  createdAt: string,
-  updatedAt: string,
+  createdAt?: string,
+  updatedAt?: string,
 };
 
 export type UpdateGameChangerLogInput = {
@@ -3923,17 +3946,17 @@ export type ModelCypressTestingConditionInput = {
 
 export type CypressTesting = {
   __typename: "CypressTesting",
-  id: string,
-  testID: string,
-  testName: string,
-  testType: string,
-  testSteps: string,
-  testData: string,
-  testExpResults: string,
+  id?: string,
+  testID?: string,
+  testName?: string,
+  testType?: string,
+  testSteps?: string,
+  testData?: string,
+  testExpResults?: string,
   edgeCases?: string | null,
   lastUpdate?: string | null,
-  createdAt: string,
-  updatedAt: string,
+  createdAt?: string,
+  updatedAt?: string,
 };
 
 export type UpdateCypressTestingInput = {
@@ -3992,18 +4015,18 @@ export type ModelErrorStatusInput = {
 
 export type ErrorLog = {
   __typename: "ErrorLog",
-  id: string,
+  id?: string,
   pageUrl?: string | null,
   componentName?: string | null,
-  error: string,
-  errorType: string,
+  error?: string,
+  errorType?: string,
   errorTime?: string | null,
-  email: string,
-  authID: string,
-  person?: Person | null,
+  email?: string,
+  authID?: string,
+  person?: Person,
   status?: ErrorStatus | null,
-  createdAt: string,
-  updatedAt: string,
+  createdAt?: string,
+  updatedAt?: string,
 };
 
 export type UpdateErrorLogInput = {
@@ -4078,7 +4101,7 @@ export enum ModelSortDirection {
 
 export type ModelPersonConnection = {
   __typename: "ModelPersonConnection",
-  items:  Array<Person | null >,
+  items?:  Array<Person | null >,
   nextToken?: string | null,
 };
 
@@ -4120,7 +4143,7 @@ export type ModelInstitutionFilterInput = {
 
 export type ModelInstitutionConnection = {
   __typename: "ModelInstitutionConnection",
-  items:  Array<Institution | null >,
+  items?:  Array<Institution | null >,
   nextToken?: string | null,
 };
 
@@ -4184,7 +4207,7 @@ export type ModelArchiveSurveyDataSQLFilterInput = {
 
 export type ModelArchiveSurveyDataSQLConnection = {
   __typename: "ModelArchiveSurveyDataSQLConnection",
-  items:  Array<ArchiveSurveyDataSQL | null >,
+  items?:  Array<ArchiveSurveyDataSQL | null >,
   nextToken?: string | null,
 };
 
@@ -4261,6 +4284,7 @@ export type ModelCurriculumFilterInput = {
   designers?: ModelStringInput | null,
   universalSyllabusSeq?: ModelStringInput | null,
   syllabiHistory?: ModelStringInput | null,
+  signedOff?: ModelBooleanInput | null,
   and?: Array< ModelCurriculumFilterInput | null > | null,
   or?: Array< ModelCurriculumFilterInput | null > | null,
   not?: ModelCurriculumFilterInput | null,
@@ -4283,7 +4307,7 @@ export type ModelTopicFilterInput = {
 
 export type ModelTopicConnection = {
   __typename: "ModelTopicConnection",
-  items:  Array<Topic | null >,
+  items?:  Array<Topic | null >,
   nextToken?: string | null,
 };
 
@@ -4297,7 +4321,7 @@ export type ModelCSequencesFilterInput = {
 
 export type ModelCSequencesConnection = {
   __typename: "ModelCSequencesConnection",
-  items:  Array<CSequences | null >,
+  items?:  Array<CSequences | null >,
   nextToken?: string | null,
 };
 
@@ -4313,7 +4337,7 @@ export type ModelLearningObjectiveFilterInput = {
 
 export type ModelLearningObjectiveConnection = {
   __typename: "ModelLearningObjectiveConnection",
-  items:  Array<LearningObjective | null >,
+  items?:  Array<LearningObjective | null >,
   nextToken?: string | null,
 };
 
@@ -4330,7 +4354,7 @@ export type ModelRubricFilterInput = {
 
 export type ModelRubricConnection = {
   __typename: "ModelRubricConnection",
-  items:  Array<Rubric | null >,
+  items?:  Array<Rubric | null >,
   nextToken?: string | null,
 };
 
@@ -4366,7 +4390,7 @@ export type ModelCheckpointFilterInput = {
 
 export type ModelCheckpointConnection = {
   __typename: "ModelCheckpointConnection",
-  items:  Array<Checkpoint | null >,
+  items?:  Array<Checkpoint | null >,
   nextToken?: string | null,
 };
 
@@ -4387,7 +4411,7 @@ export type ModelQuestionFilterInput = {
 
 export type ModelQuestionConnection = {
   __typename: "ModelQuestionConnection",
-  items:  Array<Question | null >,
+  items?:  Array<Question | null >,
   nextToken?: string | null,
 };
 
@@ -4401,7 +4425,7 @@ export type ModelQuestionSourceFilterInput = {
 
 export type ModelQuestionSourceConnection = {
   __typename: "ModelQuestionSourceConnection",
-  items:  Array<QuestionSource | null >,
+  items?:  Array<QuestionSource | null >,
   nextToken?: string | null,
 };
 
@@ -4415,7 +4439,7 @@ export type ModelQuestionTypeFilterInput = {
 
 export type ModelQuestionTypeConnection = {
   __typename: "ModelQuestionTypeConnection",
-  items:  Array<QuestionType | null >,
+  items?:  Array<QuestionType | null >,
   nextToken?: string | null,
 };
 
@@ -4433,7 +4457,7 @@ export type ModelRoomMsgsFilterInput = {
 
 export type ModelRoomMsgsConnection = {
   __typename: "ModelRoomMsgsConnection",
-  items:  Array<RoomMsgs | null >,
+  items?:  Array<RoomMsgs | null >,
   nextToken?: string | null,
 };
 
@@ -4453,7 +4477,7 @@ export type ModelStudentDataFilterInput = {
 
 export type ModelStudentDataConnection = {
   __typename: "ModelStudentDataConnection",
-  items:  Array<StudentData | null >,
+  items?:  Array<StudentData | null >,
   nextToken?: string | null,
 };
 
@@ -4473,7 +4497,7 @@ export type ModelAnthologyCommentFilterInput = {
 
 export type ModelAnthologyCommentConnection = {
   __typename: "ModelAnthologyCommentConnection",
-  items:  Array<AnthologyComment | null >,
+  items?:  Array<AnthologyComment | null >,
   nextToken?: string | null,
 };
 
@@ -4493,7 +4517,7 @@ export type ModelQuestionDataFilterInput = {
 
 export type ModelQuestionDataConnection = {
   __typename: "ModelQuestionDataConnection",
-  items:  Array<QuestionData | null >,
+  items?:  Array<QuestionData | null >,
   nextToken?: string | null,
 };
 
@@ -4513,7 +4537,7 @@ export type ModelPersonLocationFilterInput = {
 
 export type ModelPersonLocationConnection = {
   __typename: "ModelPersonLocationConnection",
-  items:  Array<PersonLocation | null >,
+  items?:  Array<PersonLocation | null >,
   nextToken?: string | null,
 };
 
@@ -4534,7 +4558,7 @@ export type ModelAttendanceFilterInput = {
 
 export type ModelAttendanceConnection = {
   __typename: "ModelAttendanceConnection",
-  items:  Array<Attendance | null >,
+  items?:  Array<Attendance | null >,
   nextToken?: string | null,
 };
 
@@ -4579,7 +4603,7 @@ export type ModelUniversalLessonFilterInput = {
 
 export type ModelUniversalLessonConnection = {
   __typename: "ModelUniversalLessonConnection",
-  items:  Array<UniversalLesson | null >,
+  items?:  Array<UniversalLesson | null >,
   nextToken?: string | null,
 };
 
@@ -4603,7 +4627,7 @@ export type ModelUniversalLessonStudentDataFilterInput = {
 
 export type ModelUniversalLessonStudentDataConnection = {
   __typename: "ModelUniversalLessonStudentDataConnection",
-  items:  Array<UniversalLessonStudentData | null >,
+  items?:  Array<UniversalLessonStudentData | null >,
   nextToken?: string | null,
 };
 
@@ -4627,7 +4651,7 @@ export type ModelUniversalLessonWritingExcercisesFilterInput = {
 
 export type ModelUniversalLessonWritingExcercisesConnection = {
   __typename: "ModelUniversalLessonWritingExcercisesConnection",
-  items:  Array<UniversalLessonWritingExcercises | null >,
+  items?:  Array<UniversalLessonWritingExcercises | null >,
   nextToken?: string | null,
 };
 
@@ -4650,7 +4674,7 @@ export type ModelUniversalArchiveDataFilterInput = {
 
 export type ModelUniversalArchiveDataConnection = {
   __typename: "ModelUniversalArchiveDataConnection",
-  items:  Array<UniversalArchiveData | null >,
+  items?:  Array<UniversalArchiveData | null >,
   nextToken?: string | null,
 };
 
@@ -4673,7 +4697,7 @@ export type ModelUniversalSurveyStudentDataFilterInput = {
 
 export type ModelUniversalSurveyStudentDataConnection = {
   __typename: "ModelUniversalSurveyStudentDataConnection",
-  items:  Array<UniversalSurveyStudentData | null >,
+  items?:  Array<UniversalSurveyStudentData | null >,
   nextToken?: string | null,
 };
 
@@ -4688,7 +4712,7 @@ export type ModelTemporaryUniversalUploadSurveyDataFilterInput = {
 
 export type ModelTemporaryUniversalUploadSurveyDataConnection = {
   __typename: "ModelTemporaryUniversalUploadSurveyDataConnection",
-  items:  Array<TemporaryUniversalUploadSurveyData | null >,
+  items?:  Array<TemporaryUniversalUploadSurveyData | null >,
   nextToken?: string | null,
 };
 
@@ -4703,7 +4727,7 @@ export type ModelTemporaryDemographicsUploadDataFilterInput = {
 
 export type ModelTemporaryDemographicsUploadDataConnection = {
   __typename: "ModelTemporaryDemographicsUploadDataConnection",
-  items:  Array<TemporaryDemographicsUploadData | null >,
+  items?:  Array<TemporaryDemographicsUploadData | null >,
   nextToken?: string | null,
 };
 
@@ -4728,7 +4752,7 @@ export type ModelUploadLogsFilterInput = {
 
 export type ModelUploadLogsConnection = {
   __typename: "ModelUploadLogsConnection",
-  items:  Array<UploadLogs | null >,
+  items?:  Array<UploadLogs | null >,
   nextToken?: string | null,
 };
 
@@ -4752,7 +4776,7 @@ export type ModelUniversalJournalDataFilterInput = {
 
 export type ModelUniversalJournalDataConnection = {
   __typename: "ModelUniversalJournalDataConnection",
-  items:  Array<UniversalJournalData | null >,
+  items?:  Array<UniversalJournalData | null >,
   nextToken?: string | null,
 };
 
@@ -4779,7 +4803,7 @@ export type ModelUniversalSyllabusFilterInput = {
 
 export type ModelUniversalSyllabusConnection = {
   __typename: "ModelUniversalSyllabusConnection",
-  items:  Array<UniversalSyllabus | null >,
+  items?:  Array<UniversalSyllabus | null >,
   nextToken?: string | null,
 };
 
@@ -4794,7 +4818,7 @@ export type ModelCurriculumUnitsFilterInput = {
 
 export type ModelCurriculumUnitsConnection = {
   __typename: "ModelCurriculumUnitsConnection",
-  items:  Array<curriculumUnits | null >,
+  items?:  Array<curriculumUnits | null >,
   nextToken?: string | null,
 };
 
@@ -4838,7 +4862,7 @@ export type ModelStudentConnectionsFilterInput = {
 
 export type ModelStudentConnectionsConnection = {
   __typename: "ModelStudentConnectionsConnection",
-  items:  Array<StudentConnections | null >,
+  items?:  Array<StudentConnections | null >,
   nextToken?: string | null,
 };
 
@@ -4856,7 +4880,7 @@ export type ModelPersonSentimentsFilterInput = {
 
 export type ModelPersonSentimentsConnection = {
   __typename: "ModelPersonSentimentsConnection",
-  items:  Array<PersonSentiments | null >,
+  items?:  Array<PersonSentiments | null >,
   nextToken?: string | null,
 };
 
@@ -4886,7 +4910,7 @@ export type ModelSentimentTrackerFilterInput = {
 
 export type ModelSentimentTrackerConnection = {
   __typename: "ModelSentimentTrackerConnection",
-  items:  Array<SentimentTracker | null >,
+  items?:  Array<SentimentTracker | null >,
   nextToken?: string | null,
 };
 
@@ -4908,7 +4932,7 @@ export type ModelFeelingTrackerFilterInput = {
 
 export type ModelFeelingTrackerConnection = {
   __typename: "ModelFeelingTrackerConnection",
-  items:  Array<FeelingTracker | null >,
+  items?:  Array<FeelingTracker | null >,
   nextToken?: string | null,
 };
 
@@ -4930,7 +4954,7 @@ export type ModelFeelingsArchiveFilterInput = {
 
 export type ModelFeelingsArchiveConnection = {
   __typename: "ModelFeelingsArchiveConnection",
-  items:  Array<FeelingsArchive | null >,
+  items?:  Array<FeelingsArchive | null >,
   nextToken?: string | null,
 };
 
@@ -4953,7 +4977,7 @@ export type ModelPersonFilesFilterInput = {
 
 export type ModelPersonFilesConnection = {
   __typename: "ModelPersonFilesConnection",
-  items:  Array<PersonFiles | null >,
+  items?:  Array<PersonFiles | null >,
   nextToken?: string | null,
 };
 
@@ -4984,7 +5008,7 @@ export type ModelCommunityFilterInput = {
 
 export type ModelCommunityConnection = {
   __typename: "ModelCommunityConnection",
-  items:  Array<Community | null >,
+  items?:  Array<Community | null >,
   nextToken?: string | null,
 };
 
@@ -5003,7 +5027,7 @@ export type ModelGameChangerFilterInput = {
 
 export type ModelGameChangerConnection = {
   __typename: "ModelGameChangerConnection",
-  items:  Array<GameChanger | null >,
+  items?:  Array<GameChanger | null >,
   nextToken?: string | null,
 };
 
@@ -5021,7 +5045,7 @@ export type ModelGameChangerLogFilterInput = {
 
 export type ModelGameChangerLogConnection = {
   __typename: "ModelGameChangerLogConnection",
-  items:  Array<GameChangerLog | null >,
+  items?:  Array<GameChangerLog | null >,
   nextToken?: string | null,
 };
 
@@ -5055,7 +5079,7 @@ export type ModelCypressTestingFilterInput = {
 
 export type ModelCypressTestingConnection = {
   __typename: "ModelCypressTestingConnection",
-  items:  Array<CypressTesting | null >,
+  items?:  Array<CypressTesting | null >,
   nextToken?: string | null,
 };
 
@@ -5076,7 +5100,7 @@ export type ModelErrorLogFilterInput = {
 
 export type ModelErrorLogConnection = {
   __typename: "ModelErrorLogConnection",
-  items:  Array<ErrorLog | null >,
+  items?:  Array<ErrorLog | null >,
   nextToken?: string | null,
 };
 
@@ -5212,7 +5236,7 @@ export type BatchAddClassStudentMutation = {
 };
 
 export type CreatePersonMutationVariables = {
-  input: CreatePersonInput,
+  input?: CreatePersonInput,
   condition?: ModelPersonConditionInput | null,
 };
 
@@ -5291,7 +5315,7 @@ export type CreatePersonMutation = {
 };
 
 export type UpdatePersonMutationVariables = {
-  input: UpdatePersonInput,
+  input?: UpdatePersonInput,
   condition?: ModelPersonConditionInput | null,
 };
 
@@ -5370,7 +5394,7 @@ export type UpdatePersonMutation = {
 };
 
 export type DeletePersonMutationVariables = {
-  input: DeletePersonInput,
+  input?: DeletePersonInput,
   condition?: ModelPersonConditionInput | null,
 };
 
@@ -5449,7 +5473,7 @@ export type DeletePersonMutation = {
 };
 
 export type CreatePersonLessonsDataMutationVariables = {
-  input: CreatePersonLessonsDataInput,
+  input?: CreatePersonLessonsDataInput,
   condition?: ModelPersonLessonsDataConditionInput | null,
 };
 
@@ -5524,6 +5548,7 @@ export type CreatePersonLessonsDataMutation = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       homework?:  Array< {
         __typename: "UniversalLessonPlan",
@@ -5541,6 +5566,7 @@ export type CreatePersonLessonsDataMutation = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
@@ -5691,7 +5717,7 @@ export type CreatePersonLessonsDataMutation = {
 };
 
 export type UpdatePersonLessonsDataMutationVariables = {
-  input: UpdatePersonLessonsDataInput,
+  input?: UpdatePersonLessonsDataInput,
   condition?: ModelPersonLessonsDataConditionInput | null,
 };
 
@@ -5766,6 +5792,7 @@ export type UpdatePersonLessonsDataMutation = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       homework?:  Array< {
         __typename: "UniversalLessonPlan",
@@ -5783,6 +5810,7 @@ export type UpdatePersonLessonsDataMutation = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
@@ -5933,7 +5961,7 @@ export type UpdatePersonLessonsDataMutation = {
 };
 
 export type DeletePersonLessonsDataMutationVariables = {
-  input: DeletePersonLessonsDataInput,
+  input?: DeletePersonLessonsDataInput,
   condition?: ModelPersonLessonsDataConditionInput | null,
 };
 
@@ -6008,6 +6036,7 @@ export type DeletePersonLessonsDataMutation = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       homework?:  Array< {
         __typename: "UniversalLessonPlan",
@@ -6025,6 +6054,7 @@ export type DeletePersonLessonsDataMutation = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
@@ -6175,7 +6205,7 @@ export type DeletePersonLessonsDataMutation = {
 };
 
 export type CreateInstitutionMutationVariables = {
-  input: CreateInstitutionInput,
+  input?: CreateInstitutionInput,
   condition?: ModelInstitutionConditionInput | null,
 };
 
@@ -6276,6 +6306,7 @@ export type CreateInstitutionMutation = {
         designers?: Array< string | null > | null,
         universalSyllabusSeq?: Array< string | null > | null,
         syllabiHistory?: Array< string | null > | null,
+        signedOff?: boolean | null,
         createdAt: string,
         updatedAt: string,
       } | null >,
@@ -6316,7 +6347,7 @@ export type CreateInstitutionMutation = {
 };
 
 export type UpdateInstitutionMutationVariables = {
-  input: UpdateInstitutionInput,
+  input?: UpdateInstitutionInput,
   condition?: ModelInstitutionConditionInput | null,
 };
 
@@ -6417,6 +6448,7 @@ export type UpdateInstitutionMutation = {
         designers?: Array< string | null > | null,
         universalSyllabusSeq?: Array< string | null > | null,
         syllabiHistory?: Array< string | null > | null,
+        signedOff?: boolean | null,
         createdAt: string,
         updatedAt: string,
       } | null >,
@@ -6457,7 +6489,7 @@ export type UpdateInstitutionMutation = {
 };
 
 export type DeleteInstitutionMutationVariables = {
-  input: DeleteInstitutionInput,
+  input?: DeleteInstitutionInput,
   condition?: ModelInstitutionConditionInput | null,
 };
 
@@ -6558,6 +6590,7 @@ export type DeleteInstitutionMutation = {
         designers?: Array< string | null > | null,
         universalSyllabusSeq?: Array< string | null > | null,
         syllabiHistory?: Array< string | null > | null,
+        signedOff?: boolean | null,
         createdAt: string,
         updatedAt: string,
       } | null >,
@@ -6598,7 +6631,7 @@ export type DeleteInstitutionMutation = {
 };
 
 export type CreateServiceProviderMutationVariables = {
-  input: CreateServiceProviderInput,
+  input?: CreateServiceProviderInput,
   condition?: ModelServiceProviderConditionInput | null,
 };
 
@@ -6659,7 +6692,7 @@ export type CreateServiceProviderMutation = {
 };
 
 export type UpdateServiceProviderMutationVariables = {
-  input: UpdateServiceProviderInput,
+  input?: UpdateServiceProviderInput,
   condition?: ModelServiceProviderConditionInput | null,
 };
 
@@ -6720,7 +6753,7 @@ export type UpdateServiceProviderMutation = {
 };
 
 export type DeleteServiceProviderMutationVariables = {
-  input: DeleteServiceProviderInput,
+  input?: DeleteServiceProviderInput,
   condition?: ModelServiceProviderConditionInput | null,
 };
 
@@ -6781,7 +6814,7 @@ export type DeleteServiceProviderMutation = {
 };
 
 export type CreateStaffMutationVariables = {
-  input: CreateStaffInput,
+  input?: CreateStaffInput,
   condition?: ModelStaffConditionInput | null,
 };
 
@@ -6889,7 +6922,7 @@ export type CreateStaffMutation = {
 };
 
 export type UpdateStaffMutationVariables = {
-  input: UpdateStaffInput,
+  input?: UpdateStaffInput,
   condition?: ModelStaffConditionInput | null,
 };
 
@@ -6997,7 +7030,7 @@ export type UpdateStaffMutation = {
 };
 
 export type DeleteStaffMutationVariables = {
-  input: DeleteStaffInput,
+  input?: DeleteStaffInput,
   condition?: ModelStaffConditionInput | null,
 };
 
@@ -7105,7 +7138,7 @@ export type DeleteStaffMutation = {
 };
 
 export type CreateRoomMutationVariables = {
-  input: CreateRoomInput,
+  input?: CreateRoomInput,
   condition?: ModelRoomConditionInput | null,
 };
 
@@ -7362,7 +7395,7 @@ export type CreateRoomMutation = {
 };
 
 export type UpdateRoomMutationVariables = {
-  input: UpdateRoomInput,
+  input?: UpdateRoomInput,
   condition?: ModelRoomConditionInput | null,
 };
 
@@ -7619,7 +7652,7 @@ export type UpdateRoomMutation = {
 };
 
 export type DeleteRoomMutationVariables = {
-  input: DeleteRoomInput,
+  input?: DeleteRoomInput,
   condition?: ModelRoomConditionInput | null,
 };
 
@@ -7875,12 +7908,12 @@ export type DeleteRoomMutation = {
   } | null,
 };
 
-export type CreateArchiveSurveyDataSQLMutationVariables = {
-  input: CreateArchiveSurveyDataSQLInput,
+export type CreateArchiveSurveyDataSqlMutationVariables = {
+  input?: CreateArchiveSurveyDataSQLInput,
   condition?: ModelArchiveSurveyDataSQLConditionInput | null,
 };
 
-export type CreateArchiveSurveyDataSQLMutation = {
+export type CreateArchiveSurveyDataSqlMutation = {
   createArchiveSurveyDataSQL?:  {
     __typename: "ArchiveSurveyDataSQL",
     id: string,
@@ -7898,12 +7931,12 @@ export type CreateArchiveSurveyDataSQLMutation = {
   } | null,
 };
 
-export type UpdateArchiveSurveyDataSQLMutationVariables = {
-  input: UpdateArchiveSurveyDataSQLInput,
+export type UpdateArchiveSurveyDataSqlMutationVariables = {
+  input?: UpdateArchiveSurveyDataSQLInput,
   condition?: ModelArchiveSurveyDataSQLConditionInput | null,
 };
 
-export type UpdateArchiveSurveyDataSQLMutation = {
+export type UpdateArchiveSurveyDataSqlMutation = {
   updateArchiveSurveyDataSQL?:  {
     __typename: "ArchiveSurveyDataSQL",
     id: string,
@@ -7921,12 +7954,12 @@ export type UpdateArchiveSurveyDataSQLMutation = {
   } | null,
 };
 
-export type DeleteArchiveSurveyDataSQLMutationVariables = {
-  input: DeleteArchiveSurveyDataSQLInput,
+export type DeleteArchiveSurveyDataSqlMutationVariables = {
+  input?: DeleteArchiveSurveyDataSQLInput,
   condition?: ModelArchiveSurveyDataSQLConditionInput | null,
 };
 
-export type DeleteArchiveSurveyDataSQLMutation = {
+export type DeleteArchiveSurveyDataSqlMutation = {
   deleteArchiveSurveyDataSQL?:  {
     __typename: "ArchiveSurveyDataSQL",
     id: string,
@@ -7945,7 +7978,7 @@ export type DeleteArchiveSurveyDataSQLMutation = {
 };
 
 export type CreateClassroomGroupStudentsMutationVariables = {
-  input: CreateClassroomGroupStudentsInput,
+  input?: CreateClassroomGroupStudentsInput,
   condition?: ModelClassroomGroupStudentsConditionInput | null,
 };
 
@@ -8095,7 +8128,7 @@ export type CreateClassroomGroupStudentsMutation = {
 };
 
 export type UpdateClassroomGroupStudentsMutationVariables = {
-  input: UpdateClassroomGroupStudentsInput,
+  input?: UpdateClassroomGroupStudentsInput,
   condition?: ModelClassroomGroupStudentsConditionInput | null,
 };
 
@@ -8245,7 +8278,7 @@ export type UpdateClassroomGroupStudentsMutation = {
 };
 
 export type DeleteClassroomGroupStudentsMutationVariables = {
-  input: DeleteClassroomGroupStudentsInput,
+  input?: DeleteClassroomGroupStudentsInput,
   condition?: ModelClassroomGroupStudentsConditionInput | null,
 };
 
@@ -8395,7 +8428,7 @@ export type DeleteClassroomGroupStudentsMutation = {
 };
 
 export type CreateClassroomGroupsMutationVariables = {
-  input: CreateClassroomGroupsInput,
+  input?: CreateClassroomGroupsInput,
   condition?: ModelClassroomGroupsConditionInput | null,
 };
 
@@ -8605,7 +8638,7 @@ export type CreateClassroomGroupsMutation = {
 };
 
 export type UpdateClassroomGroupsMutationVariables = {
-  input: UpdateClassroomGroupsInput,
+  input?: UpdateClassroomGroupsInput,
   condition?: ModelClassroomGroupsConditionInput | null,
 };
 
@@ -8815,7 +8848,7 @@ export type UpdateClassroomGroupsMutation = {
 };
 
 export type DeleteClassroomGroupsMutationVariables = {
-  input: DeleteClassroomGroupsInput,
+  input?: DeleteClassroomGroupsInput,
   condition?: ModelClassroomGroupsConditionInput | null,
 };
 
@@ -9025,7 +9058,7 @@ export type DeleteClassroomGroupsMutation = {
 };
 
 export type CreateRoomCoTeachersMutationVariables = {
-  input: CreateRoomCoTeachersInput,
+  input?: CreateRoomCoTeachersInput,
   condition?: ModelRoomCoTeachersConditionInput | null,
 };
 
@@ -9212,13 +9245,25 @@ export type CreateRoomCoTeachersMutation = {
       createdAt: string,
       updatedAt: string,
     } | null,
+    curricula?:  {
+      __typename: "ModelRoomCurriculumConnection",
+      items:  Array< {
+        __typename: "RoomCurriculum",
+        id: string,
+        roomID: string,
+        curriculumID: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null >,
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
 export type UpdateRoomCoTeachersMutationVariables = {
-  input: UpdateRoomCoTeachersInput,
+  input?: UpdateRoomCoTeachersInput,
   condition?: ModelRoomCoTeachersConditionInput | null,
 };
 
@@ -9405,13 +9450,25 @@ export type UpdateRoomCoTeachersMutation = {
       createdAt: string,
       updatedAt: string,
     } | null,
+    curricula?:  {
+      __typename: "ModelRoomCurriculumConnection",
+      items:  Array< {
+        __typename: "RoomCurriculum",
+        id: string,
+        roomID: string,
+        curriculumID: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null >,
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
 export type DeleteRoomCoTeachersMutationVariables = {
-  input: DeleteRoomCoTeachersInput,
+  input?: DeleteRoomCoTeachersInput,
   condition?: ModelRoomCoTeachersConditionInput | null,
 };
 
@@ -9598,13 +9655,25 @@ export type DeleteRoomCoTeachersMutation = {
       createdAt: string,
       updatedAt: string,
     } | null,
+    curricula?:  {
+      __typename: "ModelRoomCurriculumConnection",
+      items:  Array< {
+        __typename: "RoomCurriculum",
+        id: string,
+        roomID: string,
+        curriculumID: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null >,
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
 export type CreateClassMutationVariables = {
-  input: CreateClassInput,
+  input?: CreateClassInput,
   condition?: ModelClassConditionInput | null,
 };
 
@@ -9812,7 +9881,7 @@ export type CreateClassMutation = {
 };
 
 export type UpdateClassMutationVariables = {
-  input: UpdateClassInput,
+  input?: UpdateClassInput,
   condition?: ModelClassConditionInput | null,
 };
 
@@ -10020,7 +10089,7 @@ export type UpdateClassMutation = {
 };
 
 export type DeleteClassMutationVariables = {
-  input: DeleteClassInput,
+  input?: DeleteClassInput,
   condition?: ModelClassConditionInput | null,
 };
 
@@ -10228,7 +10297,7 @@ export type DeleteClassMutation = {
 };
 
 export type CreateClassStudentMutationVariables = {
-  input: CreateClassStudentInput,
+  input?: CreateClassStudentInput,
   condition?: ModelClassStudentConditionInput | null,
 };
 
@@ -10360,7 +10429,7 @@ export type CreateClassStudentMutation = {
 };
 
 export type UpdateClassStudentMutationVariables = {
-  input: UpdateClassStudentInput,
+  input?: UpdateClassStudentInput,
   condition?: ModelClassStudentConditionInput | null,
 };
 
@@ -10492,7 +10561,7 @@ export type UpdateClassStudentMutation = {
 };
 
 export type DeleteClassStudentMutationVariables = {
-  input: DeleteClassStudentInput,
+  input?: DeleteClassStudentInput,
   condition?: ModelClassStudentConditionInput | null,
 };
 
@@ -10624,7 +10693,7 @@ export type DeleteClassStudentMutation = {
 };
 
 export type CreateCurriculumMutationVariables = {
-  input: CreateCurriculumInput,
+  input?: CreateCurriculumInput,
   condition?: ModelCurriculumConditionInput | null,
 };
 
@@ -10712,13 +10781,20 @@ export type CreateCurriculumMutation = {
       nextToken?: string | null,
     } | null,
     syllabiHistory?: Array< string | null > | null,
+    signedOff?: boolean | null,
+    signedOffSteps?:  Array< {
+      __typename: "SignedOffStep",
+      authID: string,
+      date?: string | null,
+      step: string,
+    } | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
 export type UpdateCurriculumMutationVariables = {
-  input: UpdateCurriculumInput,
+  input?: UpdateCurriculumInput,
   condition?: ModelCurriculumConditionInput | null,
 };
 
@@ -10806,13 +10882,20 @@ export type UpdateCurriculumMutation = {
       nextToken?: string | null,
     } | null,
     syllabiHistory?: Array< string | null > | null,
+    signedOff?: boolean | null,
+    signedOffSteps?:  Array< {
+      __typename: "SignedOffStep",
+      authID: string,
+      date?: string | null,
+      step: string,
+    } | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
 export type DeleteCurriculumMutationVariables = {
-  input: DeleteCurriculumInput,
+  input?: DeleteCurriculumInput,
   condition?: ModelCurriculumConditionInput | null,
 };
 
@@ -10900,13 +10983,20 @@ export type DeleteCurriculumMutation = {
       nextToken?: string | null,
     } | null,
     syllabiHistory?: Array< string | null > | null,
+    signedOff?: boolean | null,
+    signedOffSteps?:  Array< {
+      __typename: "SignedOffStep",
+      authID: string,
+      date?: string | null,
+      step: string,
+    } | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
 };
 
 export type CreateTopicMutationVariables = {
-  input: CreateTopicInput,
+  input?: CreateTopicInput,
   condition?: ModelTopicConditionInput | null,
 };
 
@@ -10958,6 +11048,13 @@ export type CreateTopicMutation = {
         nextToken?: string | null,
       } | null,
       syllabiHistory?: Array< string | null > | null,
+      signedOff?: boolean | null,
+      signedOffSteps?:  Array< {
+        __typename: "SignedOffStep",
+        authID: string,
+        date?: string | null,
+        step: string,
+      } | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -10982,7 +11079,7 @@ export type CreateTopicMutation = {
 };
 
 export type UpdateTopicMutationVariables = {
-  input: UpdateTopicInput,
+  input?: UpdateTopicInput,
   condition?: ModelTopicConditionInput | null,
 };
 
@@ -11034,6 +11131,13 @@ export type UpdateTopicMutation = {
         nextToken?: string | null,
       } | null,
       syllabiHistory?: Array< string | null > | null,
+      signedOff?: boolean | null,
+      signedOffSteps?:  Array< {
+        __typename: "SignedOffStep",
+        authID: string,
+        date?: string | null,
+        step: string,
+      } | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -11058,7 +11162,7 @@ export type UpdateTopicMutation = {
 };
 
 export type DeleteTopicMutationVariables = {
-  input: DeleteTopicInput,
+  input?: DeleteTopicInput,
   condition?: ModelTopicConditionInput | null,
 };
 
@@ -11110,6 +11214,13 @@ export type DeleteTopicMutation = {
         nextToken?: string | null,
       } | null,
       syllabiHistory?: Array< string | null > | null,
+      signedOff?: boolean | null,
+      signedOffSteps?:  Array< {
+        __typename: "SignedOffStep",
+        authID: string,
+        date?: string | null,
+        step: string,
+      } | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -11134,7 +11245,7 @@ export type DeleteTopicMutation = {
 };
 
 export type CreateCSequencesMutationVariables = {
-  input: CreateCSequencesInput,
+  input?: CreateCSequencesInput,
   condition?: ModelCSequencesConditionInput | null,
 };
 
@@ -11149,7 +11260,7 @@ export type CreateCSequencesMutation = {
 };
 
 export type UpdateCSequencesMutationVariables = {
-  input: UpdateCSequencesInput,
+  input?: UpdateCSequencesInput,
   condition?: ModelCSequencesConditionInput | null,
 };
 
@@ -11164,7 +11275,7 @@ export type UpdateCSequencesMutation = {
 };
 
 export type DeleteCSequencesMutationVariables = {
-  input: DeleteCSequencesInput,
+  input?: DeleteCSequencesInput,
   condition?: ModelCSequencesConditionInput | null,
 };
 
@@ -11179,7 +11290,7 @@ export type DeleteCSequencesMutation = {
 };
 
 export type CreateLearningObjectiveMutationVariables = {
-  input: CreateLearningObjectiveInput,
+  input?: CreateLearningObjectiveInput,
   condition?: ModelLearningObjectiveConditionInput | null,
 };
 
@@ -11196,7 +11307,7 @@ export type CreateLearningObjectiveMutation = {
 };
 
 export type UpdateLearningObjectiveMutationVariables = {
-  input: UpdateLearningObjectiveInput,
+  input?: UpdateLearningObjectiveInput,
   condition?: ModelLearningObjectiveConditionInput | null,
 };
 
@@ -11213,7 +11324,7 @@ export type UpdateLearningObjectiveMutation = {
 };
 
 export type DeleteLearningObjectiveMutationVariables = {
-  input: DeleteLearningObjectiveInput,
+  input?: DeleteLearningObjectiveInput,
   condition?: ModelLearningObjectiveConditionInput | null,
 };
 
@@ -11230,7 +11341,7 @@ export type DeleteLearningObjectiveMutation = {
 };
 
 export type CreateRubricMutationVariables = {
-  input: CreateRubricInput,
+  input?: CreateRubricInput,
   condition?: ModelRubricConditionInput | null,
 };
 
@@ -11260,6 +11371,7 @@ export type CreateRubricMutation = {
         designers?: Array< string | null > | null,
         universalSyllabusSeq?: Array< string | null > | null,
         syllabiHistory?: Array< string | null > | null,
+        signedOff?: boolean | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -11288,7 +11400,7 @@ export type CreateRubricMutation = {
 };
 
 export type UpdateRubricMutationVariables = {
-  input: UpdateRubricInput,
+  input?: UpdateRubricInput,
   condition?: ModelRubricConditionInput | null,
 };
 
@@ -11318,6 +11430,7 @@ export type UpdateRubricMutation = {
         designers?: Array< string | null > | null,
         universalSyllabusSeq?: Array< string | null > | null,
         syllabiHistory?: Array< string | null > | null,
+        signedOff?: boolean | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -11346,7 +11459,7 @@ export type UpdateRubricMutation = {
 };
 
 export type DeleteRubricMutationVariables = {
-  input: DeleteRubricInput,
+  input?: DeleteRubricInput,
   condition?: ModelRubricConditionInput | null,
 };
 
@@ -11376,6 +11489,7 @@ export type DeleteRubricMutation = {
         designers?: Array< string | null > | null,
         universalSyllabusSeq?: Array< string | null > | null,
         syllabiHistory?: Array< string | null > | null,
+        signedOff?: boolean | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -11404,7 +11518,7 @@ export type DeleteRubricMutation = {
 };
 
 export type CreateRoomCurriculumMutationVariables = {
-  input: CreateRoomCurriculumInput,
+  input?: CreateRoomCurriculumInput,
   condition?: ModelRoomCurriculumConditionInput | null,
 };
 
@@ -11456,6 +11570,13 @@ export type CreateRoomCurriculumMutation = {
         nextToken?: string | null,
       } | null,
       syllabiHistory?: Array< string | null > | null,
+      signedOff?: boolean | null,
+      signedOffSteps?:  Array< {
+        __typename: "SignedOffStep",
+        authID: string,
+        date?: string | null,
+        step: string,
+      } | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -11465,7 +11586,7 @@ export type CreateRoomCurriculumMutation = {
 };
 
 export type UpdateRoomCurriculumMutationVariables = {
-  input: UpdateRoomCurriculumInput,
+  input?: UpdateRoomCurriculumInput,
   condition?: ModelRoomCurriculumConditionInput | null,
 };
 
@@ -11517,6 +11638,13 @@ export type UpdateRoomCurriculumMutation = {
         nextToken?: string | null,
       } | null,
       syllabiHistory?: Array< string | null > | null,
+      signedOff?: boolean | null,
+      signedOffSteps?:  Array< {
+        __typename: "SignedOffStep",
+        authID: string,
+        date?: string | null,
+        step: string,
+      } | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -11526,7 +11654,7 @@ export type UpdateRoomCurriculumMutation = {
 };
 
 export type DeleteRoomCurriculumMutationVariables = {
-  input: DeleteRoomCurriculumInput,
+  input?: DeleteRoomCurriculumInput,
   condition?: ModelRoomCurriculumConditionInput | null,
 };
 
@@ -11578,6 +11706,13 @@ export type DeleteRoomCurriculumMutation = {
         nextToken?: string | null,
       } | null,
       syllabiHistory?: Array< string | null > | null,
+      signedOff?: boolean | null,
+      signedOffSteps?:  Array< {
+        __typename: "SignedOffStep",
+        authID: string,
+        date?: string | null,
+        step: string,
+      } | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -11587,7 +11722,7 @@ export type DeleteRoomCurriculumMutation = {
 };
 
 export type CreateCheckpointMutationVariables = {
-  input: CreateCheckpointInput,
+  input?: CreateCheckpointInput,
   condition?: ModelCheckpointConditionInput | null,
 };
 
@@ -11628,7 +11763,7 @@ export type CreateCheckpointMutation = {
 };
 
 export type UpdateCheckpointMutationVariables = {
-  input: UpdateCheckpointInput,
+  input?: UpdateCheckpointInput,
   condition?: ModelCheckpointConditionInput | null,
 };
 
@@ -11669,7 +11804,7 @@ export type UpdateCheckpointMutation = {
 };
 
 export type DeleteCheckpointMutationVariables = {
-  input: DeleteCheckpointInput,
+  input?: DeleteCheckpointInput,
   condition?: ModelCheckpointConditionInput | null,
 };
 
@@ -11710,7 +11845,7 @@ export type DeleteCheckpointMutation = {
 };
 
 export type CreateCommonCheckpointMutationVariables = {
-  input: CreateCommonCheckpointInput,
+  input?: CreateCommonCheckpointInput,
   condition?: ModelCommonCheckpointConditionInput | null,
 };
 
@@ -11763,6 +11898,13 @@ export type CreateCommonCheckpointMutation = {
         nextToken?: string | null,
       } | null,
       syllabiHistory?: Array< string | null > | null,
+      signedOff?: boolean | null,
+      signedOffSteps?:  Array< {
+        __typename: "SignedOffStep",
+        authID: string,
+        date?: string | null,
+        step: string,
+      } | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -11796,7 +11938,7 @@ export type CreateCommonCheckpointMutation = {
 };
 
 export type UpdateCommonCheckpointMutationVariables = {
-  input: UpdateCommonCheckpointInput,
+  input?: UpdateCommonCheckpointInput,
   condition?: ModelCommonCheckpointConditionInput | null,
 };
 
@@ -11849,6 +11991,13 @@ export type UpdateCommonCheckpointMutation = {
         nextToken?: string | null,
       } | null,
       syllabiHistory?: Array< string | null > | null,
+      signedOff?: boolean | null,
+      signedOffSteps?:  Array< {
+        __typename: "SignedOffStep",
+        authID: string,
+        date?: string | null,
+        step: string,
+      } | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -11882,7 +12031,7 @@ export type UpdateCommonCheckpointMutation = {
 };
 
 export type DeleteCommonCheckpointMutationVariables = {
-  input: DeleteCommonCheckpointInput,
+  input?: DeleteCommonCheckpointInput,
   condition?: ModelCommonCheckpointConditionInput | null,
 };
 
@@ -11935,6 +12084,13 @@ export type DeleteCommonCheckpointMutation = {
         nextToken?: string | null,
       } | null,
       syllabiHistory?: Array< string | null > | null,
+      signedOff?: boolean | null,
+      signedOffSteps?:  Array< {
+        __typename: "SignedOffStep",
+        authID: string,
+        date?: string | null,
+        step: string,
+      } | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -11968,7 +12124,7 @@ export type DeleteCommonCheckpointMutation = {
 };
 
 export type CreateCheckpointQuestionsMutationVariables = {
-  input: CreateCheckpointQuestionsInput,
+  input?: CreateCheckpointQuestionsInput,
   condition?: ModelCheckpointQuestionsConditionInput | null,
 };
 
@@ -12030,7 +12186,7 @@ export type CreateCheckpointQuestionsMutation = {
 };
 
 export type UpdateCheckpointQuestionsMutationVariables = {
-  input: UpdateCheckpointQuestionsInput,
+  input?: UpdateCheckpointQuestionsInput,
   condition?: ModelCheckpointQuestionsConditionInput | null,
 };
 
@@ -12092,7 +12248,7 @@ export type UpdateCheckpointQuestionsMutation = {
 };
 
 export type DeleteCheckpointQuestionsMutationVariables = {
-  input: DeleteCheckpointQuestionsInput,
+  input?: DeleteCheckpointQuestionsInput,
   condition?: ModelCheckpointQuestionsConditionInput | null,
 };
 
@@ -12154,7 +12310,7 @@ export type DeleteCheckpointQuestionsMutation = {
 };
 
 export type CreateQuestionMutationVariables = {
-  input: CreateQuestionInput,
+  input?: CreateQuestionInput,
   condition?: ModelQuestionConditionInput | null,
 };
 
@@ -12183,7 +12339,7 @@ export type CreateQuestionMutation = {
 };
 
 export type UpdateQuestionMutationVariables = {
-  input: UpdateQuestionInput,
+  input?: UpdateQuestionInput,
   condition?: ModelQuestionConditionInput | null,
 };
 
@@ -12212,7 +12368,7 @@ export type UpdateQuestionMutation = {
 };
 
 export type DeleteQuestionMutationVariables = {
-  input: DeleteQuestionInput,
+  input?: DeleteQuestionInput,
   condition?: ModelQuestionConditionInput | null,
 };
 
@@ -12241,7 +12397,7 @@ export type DeleteQuestionMutation = {
 };
 
 export type CreateQuestionSourceMutationVariables = {
-  input: CreateQuestionSourceInput,
+  input?: CreateQuestionSourceInput,
   condition?: ModelQuestionSourceConditionInput | null,
 };
 
@@ -12256,7 +12412,7 @@ export type CreateQuestionSourceMutation = {
 };
 
 export type UpdateQuestionSourceMutationVariables = {
-  input: UpdateQuestionSourceInput,
+  input?: UpdateQuestionSourceInput,
   condition?: ModelQuestionSourceConditionInput | null,
 };
 
@@ -12271,7 +12427,7 @@ export type UpdateQuestionSourceMutation = {
 };
 
 export type DeleteQuestionSourceMutationVariables = {
-  input: DeleteQuestionSourceInput,
+  input?: DeleteQuestionSourceInput,
   condition?: ModelQuestionSourceConditionInput | null,
 };
 
@@ -12286,7 +12442,7 @@ export type DeleteQuestionSourceMutation = {
 };
 
 export type CreateQuestionTypeMutationVariables = {
-  input: CreateQuestionTypeInput,
+  input?: CreateQuestionTypeInput,
   condition?: ModelQuestionTypeConditionInput | null,
 };
 
@@ -12301,7 +12457,7 @@ export type CreateQuestionTypeMutation = {
 };
 
 export type UpdateQuestionTypeMutationVariables = {
-  input: UpdateQuestionTypeInput,
+  input?: UpdateQuestionTypeInput,
   condition?: ModelQuestionTypeConditionInput | null,
 };
 
@@ -12316,7 +12472,7 @@ export type UpdateQuestionTypeMutation = {
 };
 
 export type DeleteQuestionTypeMutationVariables = {
-  input: DeleteQuestionTypeInput,
+  input?: DeleteQuestionTypeInput,
   condition?: ModelQuestionTypeConditionInput | null,
 };
 
@@ -12331,7 +12487,7 @@ export type DeleteQuestionTypeMutation = {
 };
 
 export type CreateRoomMsgsMutationVariables = {
-  input: CreateRoomMsgsInput,
+  input?: CreateRoomMsgsInput,
   condition?: ModelRoomMsgsConditionInput | null,
 };
 
@@ -12394,7 +12550,7 @@ export type CreateRoomMsgsMutation = {
 };
 
 export type UpdateRoomMsgsMutationVariables = {
-  input: UpdateRoomMsgsInput,
+  input?: UpdateRoomMsgsInput,
   condition?: ModelRoomMsgsConditionInput | null,
 };
 
@@ -12457,7 +12613,7 @@ export type UpdateRoomMsgsMutation = {
 };
 
 export type DeleteRoomMsgsMutationVariables = {
-  input: DeleteRoomMsgsInput,
+  input?: DeleteRoomMsgsInput,
   condition?: ModelRoomMsgsConditionInput | null,
 };
 
@@ -12520,7 +12676,7 @@ export type DeleteRoomMsgsMutation = {
 };
 
 export type CreateStudentDataMutationVariables = {
-  input: CreateStudentDataInput,
+  input?: CreateStudentDataInput,
   condition?: ModelStudentDataConditionInput | null,
 };
 
@@ -12622,7 +12778,7 @@ export type CreateStudentDataMutation = {
 };
 
 export type UpdateStudentDataMutationVariables = {
-  input: UpdateStudentDataInput,
+  input?: UpdateStudentDataInput,
   condition?: ModelStudentDataConditionInput | null,
 };
 
@@ -12724,7 +12880,7 @@ export type UpdateStudentDataMutation = {
 };
 
 export type DeleteStudentDataMutationVariables = {
-  input: DeleteStudentDataInput,
+  input?: DeleteStudentDataInput,
   condition?: ModelStudentDataConditionInput | null,
 };
 
@@ -12826,7 +12982,7 @@ export type DeleteStudentDataMutation = {
 };
 
 export type CreateAnthologyCommentMutationVariables = {
-  input: CreateAnthologyCommentInput,
+  input?: CreateAnthologyCommentInput,
   condition?: ModelAnthologyCommentConditionInput | null,
 };
 
@@ -12897,7 +13053,7 @@ export type CreateAnthologyCommentMutation = {
 };
 
 export type UpdateAnthologyCommentMutationVariables = {
-  input: UpdateAnthologyCommentInput,
+  input?: UpdateAnthologyCommentInput,
   condition?: ModelAnthologyCommentConditionInput | null,
 };
 
@@ -12968,7 +13124,7 @@ export type UpdateAnthologyCommentMutation = {
 };
 
 export type DeleteAnthologyCommentMutationVariables = {
-  input: DeleteAnthologyCommentInput,
+  input?: DeleteAnthologyCommentInput,
   condition?: ModelAnthologyCommentConditionInput | null,
 };
 
@@ -13039,7 +13195,7 @@ export type DeleteAnthologyCommentMutation = {
 };
 
 export type CreateQuestionDataMutationVariables = {
-  input: CreateQuestionDataInput,
+  input?: CreateQuestionDataInput,
   condition?: ModelQuestionDataConditionInput | null,
 };
 
@@ -13112,7 +13268,7 @@ export type CreateQuestionDataMutation = {
 };
 
 export type UpdateQuestionDataMutationVariables = {
-  input: UpdateQuestionDataInput,
+  input?: UpdateQuestionDataInput,
   condition?: ModelQuestionDataConditionInput | null,
 };
 
@@ -13185,7 +13341,7 @@ export type UpdateQuestionDataMutation = {
 };
 
 export type DeleteQuestionDataMutationVariables = {
-  input: DeleteQuestionDataInput,
+  input?: DeleteQuestionDataInput,
   condition?: ModelQuestionDataConditionInput | null,
 };
 
@@ -13258,7 +13414,7 @@ export type DeleteQuestionDataMutation = {
 };
 
 export type CreateQuestionDataStudentDataMutationVariables = {
-  input: CreateQuestionDataStudentDataInput,
+  input?: CreateQuestionDataStudentDataInput,
   condition?: ModelQuestionDataStudentDataConditionInput | null,
 };
 
@@ -13401,7 +13557,7 @@ export type CreateQuestionDataStudentDataMutation = {
 };
 
 export type UpdateQuestionDataStudentDataMutationVariables = {
-  input: UpdateQuestionDataStudentDataInput,
+  input?: UpdateQuestionDataStudentDataInput,
   condition?: ModelQuestionDataStudentDataConditionInput | null,
 };
 
@@ -13544,7 +13700,7 @@ export type UpdateQuestionDataStudentDataMutation = {
 };
 
 export type DeleteQuestionDataStudentDataMutationVariables = {
-  input: DeleteQuestionDataStudentDataInput,
+  input?: DeleteQuestionDataStudentDataInput,
   condition?: ModelQuestionDataStudentDataConditionInput | null,
 };
 
@@ -13687,7 +13843,7 @@ export type DeleteQuestionDataStudentDataMutation = {
 };
 
 export type CreatePersonLocationMutationVariables = {
-  input: CreatePersonLocationInput,
+  input?: CreatePersonLocationInput,
   condition?: ModelPersonLocationConditionInput | null,
 };
 
@@ -13936,6 +14092,7 @@ export type CreatePersonLocationMutation = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       homework?:  Array< {
         __typename: "UniversalLessonPlan",
@@ -13953,6 +14110,7 @@ export type CreatePersonLocationMutation = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
@@ -13973,7 +14131,7 @@ export type CreatePersonLocationMutation = {
 };
 
 export type UpdatePersonLocationMutationVariables = {
-  input: UpdatePersonLocationInput,
+  input?: UpdatePersonLocationInput,
   condition?: ModelPersonLocationConditionInput | null,
 };
 
@@ -14222,6 +14380,7 @@ export type UpdatePersonLocationMutation = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       homework?:  Array< {
         __typename: "UniversalLessonPlan",
@@ -14239,6 +14398,7 @@ export type UpdatePersonLocationMutation = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
@@ -14259,7 +14419,7 @@ export type UpdatePersonLocationMutation = {
 };
 
 export type DeletePersonLocationMutationVariables = {
-  input: DeletePersonLocationInput,
+  input?: DeletePersonLocationInput,
   condition?: ModelPersonLocationConditionInput | null,
 };
 
@@ -14508,6 +14668,7 @@ export type DeletePersonLocationMutation = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       homework?:  Array< {
         __typename: "UniversalLessonPlan",
@@ -14525,6 +14686,7 @@ export type DeletePersonLocationMutation = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
@@ -14545,7 +14707,7 @@ export type DeletePersonLocationMutation = {
 };
 
 export type CreateAttendanceMutationVariables = {
-  input: CreateAttendanceInput,
+  input?: CreateAttendanceInput,
   condition?: ModelAttendanceConditionInput | null,
 };
 
@@ -14603,6 +14765,13 @@ export type CreateAttendanceMutation = {
         nextToken?: string | null,
       } | null,
       syllabiHistory?: Array< string | null > | null,
+      signedOff?: boolean | null,
+      signedOffSteps?:  Array< {
+        __typename: "SignedOffStep",
+        authID: string,
+        date?: string | null,
+        step: string,
+      } | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -14709,6 +14878,7 @@ export type CreateAttendanceMutation = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       homework?:  Array< {
         __typename: "UniversalLessonPlan",
@@ -14726,6 +14896,7 @@ export type CreateAttendanceMutation = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
@@ -14876,7 +15047,7 @@ export type CreateAttendanceMutation = {
 };
 
 export type UpdateAttendanceMutationVariables = {
-  input: UpdateAttendanceInput,
+  input?: UpdateAttendanceInput,
   condition?: ModelAttendanceConditionInput | null,
 };
 
@@ -14934,6 +15105,13 @@ export type UpdateAttendanceMutation = {
         nextToken?: string | null,
       } | null,
       syllabiHistory?: Array< string | null > | null,
+      signedOff?: boolean | null,
+      signedOffSteps?:  Array< {
+        __typename: "SignedOffStep",
+        authID: string,
+        date?: string | null,
+        step: string,
+      } | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -15040,6 +15218,7 @@ export type UpdateAttendanceMutation = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       homework?:  Array< {
         __typename: "UniversalLessonPlan",
@@ -15057,6 +15236,7 @@ export type UpdateAttendanceMutation = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
@@ -15207,7 +15387,7 @@ export type UpdateAttendanceMutation = {
 };
 
 export type DeleteAttendanceMutationVariables = {
-  input: DeleteAttendanceInput,
+  input?: DeleteAttendanceInput,
   condition?: ModelAttendanceConditionInput | null,
 };
 
@@ -15265,6 +15445,13 @@ export type DeleteAttendanceMutation = {
         nextToken?: string | null,
       } | null,
       syllabiHistory?: Array< string | null > | null,
+      signedOff?: boolean | null,
+      signedOffSteps?:  Array< {
+        __typename: "SignedOffStep",
+        authID: string,
+        date?: string | null,
+        step: string,
+      } | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -15371,6 +15558,7 @@ export type DeleteAttendanceMutation = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       homework?:  Array< {
         __typename: "UniversalLessonPlan",
@@ -15388,6 +15576,7 @@ export type DeleteAttendanceMutation = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
@@ -15538,7 +15727,7 @@ export type DeleteAttendanceMutation = {
 };
 
 export type CreateUniversalLessonMutationVariables = {
-  input: CreateUniversalLessonInput,
+  input?: CreateUniversalLessonInput,
   condition?: ModelUniversalLessonConditionInput | null,
 };
 
@@ -15634,6 +15823,7 @@ export type CreateUniversalLessonMutation = {
       interactionType?: Array< string | null > | null,
       tags?: Array< string | null > | null,
       videoLink?: string | null,
+      notes?: string | null,
     } | null > | null,
     homework?:  Array< {
       __typename: "UniversalLessonPlan",
@@ -15659,6 +15849,7 @@ export type CreateUniversalLessonMutation = {
       interactionType?: Array< string | null > | null,
       tags?: Array< string | null > | null,
       videoLink?: string | null,
+      notes?: string | null,
     } | null > | null,
     darkMode?: boolean | null,
     rubrics?: Array< string | null > | null,
@@ -15676,7 +15867,7 @@ export type CreateUniversalLessonMutation = {
 };
 
 export type UpdateUniversalLessonMutationVariables = {
-  input: UpdateUniversalLessonInput,
+  input?: UpdateUniversalLessonInput,
   condition?: ModelUniversalLessonConditionInput | null,
 };
 
@@ -15772,6 +15963,7 @@ export type UpdateUniversalLessonMutation = {
       interactionType?: Array< string | null > | null,
       tags?: Array< string | null > | null,
       videoLink?: string | null,
+      notes?: string | null,
     } | null > | null,
     homework?:  Array< {
       __typename: "UniversalLessonPlan",
@@ -15797,6 +15989,7 @@ export type UpdateUniversalLessonMutation = {
       interactionType?: Array< string | null > | null,
       tags?: Array< string | null > | null,
       videoLink?: string | null,
+      notes?: string | null,
     } | null > | null,
     darkMode?: boolean | null,
     rubrics?: Array< string | null > | null,
@@ -15814,7 +16007,7 @@ export type UpdateUniversalLessonMutation = {
 };
 
 export type DeleteUniversalLessonMutationVariables = {
-  input: DeleteUniversalLessonInput,
+  input?: DeleteUniversalLessonInput,
   condition?: ModelUniversalLessonConditionInput | null,
 };
 
@@ -15910,6 +16103,7 @@ export type DeleteUniversalLessonMutation = {
       interactionType?: Array< string | null > | null,
       tags?: Array< string | null > | null,
       videoLink?: string | null,
+      notes?: string | null,
     } | null > | null,
     homework?:  Array< {
       __typename: "UniversalLessonPlan",
@@ -15935,6 +16129,7 @@ export type DeleteUniversalLessonMutation = {
       interactionType?: Array< string | null > | null,
       tags?: Array< string | null > | null,
       videoLink?: string | null,
+      notes?: string | null,
     } | null > | null,
     darkMode?: boolean | null,
     rubrics?: Array< string | null > | null,
@@ -15952,7 +16147,7 @@ export type DeleteUniversalLessonMutation = {
 };
 
 export type CreateUniversalLessonStudentDataMutationVariables = {
-  input: CreateUniversalLessonStudentDataInput,
+  input?: CreateUniversalLessonStudentDataInput,
   condition?: ModelUniversalLessonStudentDataConditionInput | null,
 };
 
@@ -16021,6 +16216,7 @@ export type CreateUniversalLessonStudentDataMutation = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       homework?:  Array< {
         __typename: "UniversalLessonPlan",
@@ -16038,6 +16234,7 @@ export type CreateUniversalLessonStudentDataMutation = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
@@ -16091,7 +16288,7 @@ export type CreateUniversalLessonStudentDataMutation = {
 };
 
 export type UpdateUniversalLessonStudentDataMutationVariables = {
-  input: UpdateUniversalLessonStudentDataInput,
+  input?: UpdateUniversalLessonStudentDataInput,
   condition?: ModelUniversalLessonStudentDataConditionInput | null,
 };
 
@@ -16160,6 +16357,7 @@ export type UpdateUniversalLessonStudentDataMutation = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       homework?:  Array< {
         __typename: "UniversalLessonPlan",
@@ -16177,6 +16375,7 @@ export type UpdateUniversalLessonStudentDataMutation = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
@@ -16230,7 +16429,7 @@ export type UpdateUniversalLessonStudentDataMutation = {
 };
 
 export type DeleteUniversalLessonStudentDataMutationVariables = {
-  input: DeleteUniversalLessonStudentDataInput,
+  input?: DeleteUniversalLessonStudentDataInput,
   condition?: ModelUniversalLessonStudentDataConditionInput | null,
 };
 
@@ -16299,6 +16498,7 @@ export type DeleteUniversalLessonStudentDataMutation = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       homework?:  Array< {
         __typename: "UniversalLessonPlan",
@@ -16316,6 +16516,7 @@ export type DeleteUniversalLessonStudentDataMutation = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
@@ -16369,7 +16570,7 @@ export type DeleteUniversalLessonStudentDataMutation = {
 };
 
 export type CreateUniversalLessonWritingExcercisesMutationVariables = {
-  input: CreateUniversalLessonWritingExcercisesInput,
+  input?: CreateUniversalLessonWritingExcercisesInput,
   condition?: ModelUniversalLessonWritingExcercisesConditionInput | null,
 };
 
@@ -16438,6 +16639,7 @@ export type CreateUniversalLessonWritingExcercisesMutation = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       homework?:  Array< {
         __typename: "UniversalLessonPlan",
@@ -16455,6 +16657,7 @@ export type CreateUniversalLessonWritingExcercisesMutation = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
@@ -16508,7 +16711,7 @@ export type CreateUniversalLessonWritingExcercisesMutation = {
 };
 
 export type UpdateUniversalLessonWritingExcercisesMutationVariables = {
-  input: UpdateUniversalLessonWritingExcercisesInput,
+  input?: UpdateUniversalLessonWritingExcercisesInput,
   condition?: ModelUniversalLessonWritingExcercisesConditionInput | null,
 };
 
@@ -16577,6 +16780,7 @@ export type UpdateUniversalLessonWritingExcercisesMutation = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       homework?:  Array< {
         __typename: "UniversalLessonPlan",
@@ -16594,6 +16798,7 @@ export type UpdateUniversalLessonWritingExcercisesMutation = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
@@ -16647,7 +16852,7 @@ export type UpdateUniversalLessonWritingExcercisesMutation = {
 };
 
 export type DeleteUniversalLessonWritingExcercisesMutationVariables = {
-  input: DeleteUniversalLessonWritingExcercisesInput,
+  input?: DeleteUniversalLessonWritingExcercisesInput,
   condition?: ModelUniversalLessonWritingExcercisesConditionInput | null,
 };
 
@@ -16716,6 +16921,7 @@ export type DeleteUniversalLessonWritingExcercisesMutation = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       homework?:  Array< {
         __typename: "UniversalLessonPlan",
@@ -16733,6 +16939,7 @@ export type DeleteUniversalLessonWritingExcercisesMutation = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
@@ -16786,7 +16993,7 @@ export type DeleteUniversalLessonWritingExcercisesMutation = {
 };
 
 export type CreateUniversalArchiveDataMutationVariables = {
-  input: CreateUniversalArchiveDataInput,
+  input?: CreateUniversalArchiveDataInput,
   condition?: ModelUniversalArchiveDataConditionInput | null,
 };
 
@@ -16834,7 +17041,7 @@ export type CreateUniversalArchiveDataMutation = {
 };
 
 export type UpdateUniversalArchiveDataMutationVariables = {
-  input: UpdateUniversalArchiveDataInput,
+  input?: UpdateUniversalArchiveDataInput,
   condition?: ModelUniversalArchiveDataConditionInput | null,
 };
 
@@ -16882,7 +17089,7 @@ export type UpdateUniversalArchiveDataMutation = {
 };
 
 export type DeleteUniversalArchiveDataMutationVariables = {
-  input: DeleteUniversalArchiveDataInput,
+  input?: DeleteUniversalArchiveDataInput,
   condition?: ModelUniversalArchiveDataConditionInput | null,
 };
 
@@ -16930,7 +17137,7 @@ export type DeleteUniversalArchiveDataMutation = {
 };
 
 export type CreateUniversalSurveyStudentDataMutationVariables = {
-  input: CreateUniversalSurveyStudentDataInput,
+  input?: CreateUniversalSurveyStudentDataInput,
   condition?: ModelUniversalSurveyStudentDataConditionInput | null,
 };
 
@@ -16964,7 +17171,7 @@ export type CreateUniversalSurveyStudentDataMutation = {
 };
 
 export type UpdateUniversalSurveyStudentDataMutationVariables = {
-  input: UpdateUniversalSurveyStudentDataInput,
+  input?: UpdateUniversalSurveyStudentDataInput,
   condition?: ModelUniversalSurveyStudentDataConditionInput | null,
 };
 
@@ -16998,7 +17205,7 @@ export type UpdateUniversalSurveyStudentDataMutation = {
 };
 
 export type DeleteUniversalSurveyStudentDataMutationVariables = {
-  input: DeleteUniversalSurveyStudentDataInput,
+  input?: DeleteUniversalSurveyStudentDataInput,
   condition?: ModelUniversalSurveyStudentDataConditionInput | null,
 };
 
@@ -17032,7 +17239,7 @@ export type DeleteUniversalSurveyStudentDataMutation = {
 };
 
 export type CreateTemporaryUniversalUploadSurveyDataMutationVariables = {
-  input: CreateTemporaryUniversalUploadSurveyDataInput,
+  input?: CreateTemporaryUniversalUploadSurveyDataInput,
   condition?: ModelTemporaryUniversalUploadSurveyDataConditionInput | null,
 };
 
@@ -17081,7 +17288,7 @@ export type CreateTemporaryUniversalUploadSurveyDataMutation = {
 };
 
 export type UpdateTemporaryUniversalUploadSurveyDataMutationVariables = {
-  input: UpdateTemporaryUniversalUploadSurveyDataInput,
+  input?: UpdateTemporaryUniversalUploadSurveyDataInput,
   condition?: ModelTemporaryUniversalUploadSurveyDataConditionInput | null,
 };
 
@@ -17130,7 +17337,7 @@ export type UpdateTemporaryUniversalUploadSurveyDataMutation = {
 };
 
 export type DeleteTemporaryUniversalUploadSurveyDataMutationVariables = {
-  input: DeleteTemporaryUniversalUploadSurveyDataInput,
+  input?: DeleteTemporaryUniversalUploadSurveyDataInput,
   condition?: ModelTemporaryUniversalUploadSurveyDataConditionInput | null,
 };
 
@@ -17179,7 +17386,7 @@ export type DeleteTemporaryUniversalUploadSurveyDataMutation = {
 };
 
 export type CreateTemporaryDemographicsUploadDataMutationVariables = {
-  input: CreateTemporaryDemographicsUploadDataInput,
+  input?: CreateTemporaryDemographicsUploadDataInput,
   condition?: ModelTemporaryDemographicsUploadDataConditionInput | null,
 };
 
@@ -17259,7 +17466,7 @@ export type CreateTemporaryDemographicsUploadDataMutation = {
 };
 
 export type UpdateTemporaryDemographicsUploadDataMutationVariables = {
-  input: UpdateTemporaryDemographicsUploadDataInput,
+  input?: UpdateTemporaryDemographicsUploadDataInput,
   condition?: ModelTemporaryDemographicsUploadDataConditionInput | null,
 };
 
@@ -17339,7 +17546,7 @@ export type UpdateTemporaryDemographicsUploadDataMutation = {
 };
 
 export type DeleteTemporaryDemographicsUploadDataMutationVariables = {
-  input: DeleteTemporaryDemographicsUploadDataInput,
+  input?: DeleteTemporaryDemographicsUploadDataInput,
   condition?: ModelTemporaryDemographicsUploadDataConditionInput | null,
 };
 
@@ -17419,7 +17626,7 @@ export type DeleteTemporaryDemographicsUploadDataMutation = {
 };
 
 export type CreateUploadLogsMutationVariables = {
-  input: CreateUploadLogsInput,
+  input?: CreateUploadLogsInput,
   condition?: ModelUploadLogsConditionInput | null,
 };
 
@@ -17502,7 +17709,7 @@ export type CreateUploadLogsMutation = {
 };
 
 export type UpdateUploadLogsMutationVariables = {
-  input: UpdateUploadLogsInput,
+  input?: UpdateUploadLogsInput,
   condition?: ModelUploadLogsConditionInput | null,
 };
 
@@ -17585,7 +17792,7 @@ export type UpdateUploadLogsMutation = {
 };
 
 export type DeleteUploadLogsMutationVariables = {
-  input: DeleteUploadLogsInput,
+  input?: DeleteUploadLogsInput,
   condition?: ModelUploadLogsConditionInput | null,
 };
 
@@ -17668,7 +17875,7 @@ export type DeleteUploadLogsMutation = {
 };
 
 export type CreateUniversalJournalDataMutationVariables = {
-  input: CreateUniversalJournalDataInput,
+  input?: CreateUniversalJournalDataInput,
   condition?: ModelUniversalJournalDataConditionInput | null,
 };
 
@@ -17749,6 +17956,7 @@ export type CreateUniversalJournalDataMutation = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       homework?:  Array< {
         __typename: "UniversalLessonPlan",
@@ -17766,6 +17974,7 @@ export type CreateUniversalJournalDataMutation = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
@@ -17789,7 +17998,7 @@ export type CreateUniversalJournalDataMutation = {
 };
 
 export type UpdateUniversalJournalDataMutationVariables = {
-  input: UpdateUniversalJournalDataInput,
+  input?: UpdateUniversalJournalDataInput,
   condition?: ModelUniversalJournalDataConditionInput | null,
 };
 
@@ -17870,6 +18079,7 @@ export type UpdateUniversalJournalDataMutation = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       homework?:  Array< {
         __typename: "UniversalLessonPlan",
@@ -17887,6 +18097,7 @@ export type UpdateUniversalJournalDataMutation = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
@@ -17910,7 +18121,7 @@ export type UpdateUniversalJournalDataMutation = {
 };
 
 export type DeleteUniversalJournalDataMutationVariables = {
-  input: DeleteUniversalJournalDataInput,
+  input?: DeleteUniversalJournalDataInput,
   condition?: ModelUniversalJournalDataConditionInput | null,
 };
 
@@ -17991,6 +18202,7 @@ export type DeleteUniversalJournalDataMutation = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       homework?:  Array< {
         __typename: "UniversalLessonPlan",
@@ -18008,6 +18220,7 @@ export type DeleteUniversalJournalDataMutation = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
@@ -18031,7 +18244,7 @@ export type DeleteUniversalJournalDataMutation = {
 };
 
 export type CreateUniversalSyllabusMutationVariables = {
-  input: CreateUniversalSyllabusInput,
+  input?: CreateUniversalSyllabusInput,
   condition?: ModelUniversalSyllabusConditionInput | null,
 };
 
@@ -18123,7 +18336,7 @@ export type CreateUniversalSyllabusMutation = {
 };
 
 export type UpdateUniversalSyllabusMutationVariables = {
-  input: UpdateUniversalSyllabusInput,
+  input?: UpdateUniversalSyllabusInput,
   condition?: ModelUniversalSyllabusConditionInput | null,
 };
 
@@ -18215,7 +18428,7 @@ export type UpdateUniversalSyllabusMutation = {
 };
 
 export type DeleteUniversalSyllabusMutationVariables = {
-  input: DeleteUniversalSyllabusInput,
+  input?: DeleteUniversalSyllabusInput,
   condition?: ModelUniversalSyllabusConditionInput | null,
 };
 
@@ -18307,7 +18520,7 @@ export type DeleteUniversalSyllabusMutation = {
 };
 
 export type CreateCurriculumUnitsMutationVariables = {
-  input: CreateCurriculumUnitsInput,
+  input?: CreateCurriculumUnitsInput,
   condition?: ModelCurriculumUnitsConditionInput | null,
 };
 
@@ -18367,7 +18580,7 @@ export type CreateCurriculumUnitsMutation = {
 };
 
 export type UpdateCurriculumUnitsMutationVariables = {
-  input: UpdateCurriculumUnitsInput,
+  input?: UpdateCurriculumUnitsInput,
   condition?: ModelCurriculumUnitsConditionInput | null,
 };
 
@@ -18427,7 +18640,7 @@ export type UpdateCurriculumUnitsMutation = {
 };
 
 export type DeleteCurriculumUnitsMutationVariables = {
-  input: DeleteCurriculumUnitsInput,
+  input?: DeleteCurriculumUnitsInput,
   condition?: ModelCurriculumUnitsConditionInput | null,
 };
 
@@ -18487,7 +18700,7 @@ export type DeleteCurriculumUnitsMutation = {
 };
 
 export type CreateUniversalSyllabusLessonMutationVariables = {
-  input: CreateUniversalSyllabusLessonInput,
+  input?: CreateUniversalSyllabusLessonInput,
   condition?: ModelUniversalSyllabusLessonConditionInput | null,
 };
 
@@ -18562,6 +18775,7 @@ export type CreateUniversalSyllabusLessonMutation = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       homework?:  Array< {
         __typename: "UniversalLessonPlan",
@@ -18579,6 +18793,7 @@ export type CreateUniversalSyllabusLessonMutation = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
@@ -18635,7 +18850,7 @@ export type CreateUniversalSyllabusLessonMutation = {
 };
 
 export type UpdateUniversalSyllabusLessonMutationVariables = {
-  input: UpdateUniversalSyllabusLessonInput,
+  input?: UpdateUniversalSyllabusLessonInput,
   condition?: ModelUniversalSyllabusLessonConditionInput | null,
 };
 
@@ -18710,6 +18925,7 @@ export type UpdateUniversalSyllabusLessonMutation = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       homework?:  Array< {
         __typename: "UniversalLessonPlan",
@@ -18727,6 +18943,7 @@ export type UpdateUniversalSyllabusLessonMutation = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
@@ -18783,7 +19000,7 @@ export type UpdateUniversalSyllabusLessonMutation = {
 };
 
 export type DeleteUniversalSyllabusLessonMutationVariables = {
-  input: DeleteUniversalSyllabusLessonInput,
+  input?: DeleteUniversalSyllabusLessonInput,
   condition?: ModelUniversalSyllabusLessonConditionInput | null,
 };
 
@@ -18858,6 +19075,7 @@ export type DeleteUniversalSyllabusLessonMutation = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       homework?:  Array< {
         __typename: "UniversalLessonPlan",
@@ -18875,6 +19093,7 @@ export type DeleteUniversalSyllabusLessonMutation = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
@@ -18931,7 +19150,7 @@ export type DeleteUniversalSyllabusLessonMutation = {
 };
 
 export type CreateUniversalLessonFeedbackMutationVariables = {
-  input: CreateUniversalLessonFeedbackInput,
+  input?: CreateUniversalLessonFeedbackInput,
   condition?: ModelUniversalLessonFeedbackConditionInput | null,
 };
 
@@ -19018,7 +19237,7 @@ export type CreateUniversalLessonFeedbackMutation = {
 };
 
 export type UpdateUniversalLessonFeedbackMutationVariables = {
-  input: UpdateUniversalLessonFeedbackInput,
+  input?: UpdateUniversalLessonFeedbackInput,
   condition?: ModelUniversalLessonFeedbackConditionInput | null,
 };
 
@@ -19105,7 +19324,7 @@ export type UpdateUniversalLessonFeedbackMutation = {
 };
 
 export type DeleteUniversalLessonFeedbackMutationVariables = {
-  input: DeleteUniversalLessonFeedbackInput,
+  input?: DeleteUniversalLessonFeedbackInput,
   condition?: ModelUniversalLessonFeedbackConditionInput | null,
 };
 
@@ -19192,7 +19411,7 @@ export type DeleteUniversalLessonFeedbackMutation = {
 };
 
 export type CreateStudentConnectionsMutationVariables = {
-  input: CreateStudentConnectionsInput,
+  input?: CreateStudentConnectionsInput,
   condition?: ModelStudentConnectionsConditionInput | null,
 };
 
@@ -19301,7 +19520,7 @@ export type CreateStudentConnectionsMutation = {
 };
 
 export type UpdateStudentConnectionsMutationVariables = {
-  input: UpdateStudentConnectionsInput,
+  input?: UpdateStudentConnectionsInput,
   condition?: ModelStudentConnectionsConditionInput | null,
 };
 
@@ -19410,7 +19629,7 @@ export type UpdateStudentConnectionsMutation = {
 };
 
 export type DeleteStudentConnectionsMutationVariables = {
-  input: DeleteStudentConnectionsInput,
+  input?: DeleteStudentConnectionsInput,
   condition?: ModelStudentConnectionsConditionInput | null,
 };
 
@@ -19519,7 +19738,7 @@ export type DeleteStudentConnectionsMutation = {
 };
 
 export type CreatePersonSentimentsMutationVariables = {
-  input: CreatePersonSentimentsInput,
+  input?: CreatePersonSentimentsInput,
   condition?: ModelPersonSentimentsConditionInput | null,
 };
 
@@ -19583,7 +19802,7 @@ export type CreatePersonSentimentsMutation = {
 };
 
 export type UpdatePersonSentimentsMutationVariables = {
-  input: UpdatePersonSentimentsInput,
+  input?: UpdatePersonSentimentsInput,
   condition?: ModelPersonSentimentsConditionInput | null,
 };
 
@@ -19647,7 +19866,7 @@ export type UpdatePersonSentimentsMutation = {
 };
 
 export type DeletePersonSentimentsMutationVariables = {
-  input: DeletePersonSentimentsInput,
+  input?: DeletePersonSentimentsInput,
   condition?: ModelPersonSentimentsConditionInput | null,
 };
 
@@ -19711,7 +19930,7 @@ export type DeletePersonSentimentsMutation = {
 };
 
 export type CreateSentimentsMutationVariables = {
-  input: CreateSentimentsInput,
+  input?: CreateSentimentsInput,
   condition?: ModelSentimentsConditionInput | null,
 };
 
@@ -19727,7 +19946,7 @@ export type CreateSentimentsMutation = {
 };
 
 export type UpdateSentimentsMutationVariables = {
-  input: UpdateSentimentsInput,
+  input?: UpdateSentimentsInput,
   condition?: ModelSentimentsConditionInput | null,
 };
 
@@ -19743,7 +19962,7 @@ export type UpdateSentimentsMutation = {
 };
 
 export type DeleteSentimentsMutationVariables = {
-  input: DeleteSentimentsInput,
+  input?: DeleteSentimentsInput,
   condition?: ModelSentimentsConditionInput | null,
 };
 
@@ -19759,7 +19978,7 @@ export type DeleteSentimentsMutation = {
 };
 
 export type CreateSentimentTrackerMutationVariables = {
-  input: CreateSentimentTrackerInput,
+  input?: CreateSentimentTrackerInput,
   condition?: ModelSentimentTrackerConditionInput | null,
 };
 
@@ -20034,7 +20253,7 @@ export type CreateSentimentTrackerMutation = {
 };
 
 export type UpdateSentimentTrackerMutationVariables = {
-  input: UpdateSentimentTrackerInput,
+  input?: UpdateSentimentTrackerInput,
   condition?: ModelSentimentTrackerConditionInput | null,
 };
 
@@ -20309,7 +20528,7 @@ export type UpdateSentimentTrackerMutation = {
 };
 
 export type DeleteSentimentTrackerMutationVariables = {
-  input: DeleteSentimentTrackerInput,
+  input?: DeleteSentimentTrackerInput,
   condition?: ModelSentimentTrackerConditionInput | null,
 };
 
@@ -20584,7 +20803,7 @@ export type DeleteSentimentTrackerMutation = {
 };
 
 export type CreateFeelingTrackerMutationVariables = {
-  input: CreateFeelingTrackerInput,
+  input?: CreateFeelingTrackerInput,
   condition?: ModelFeelingTrackerConditionInput | null,
 };
 
@@ -20790,7 +21009,7 @@ export type CreateFeelingTrackerMutation = {
 };
 
 export type UpdateFeelingTrackerMutationVariables = {
-  input: UpdateFeelingTrackerInput,
+  input?: UpdateFeelingTrackerInput,
   condition?: ModelFeelingTrackerConditionInput | null,
 };
 
@@ -20996,7 +21215,7 @@ export type UpdateFeelingTrackerMutation = {
 };
 
 export type DeleteFeelingTrackerMutationVariables = {
-  input: DeleteFeelingTrackerInput,
+  input?: DeleteFeelingTrackerInput,
   condition?: ModelFeelingTrackerConditionInput | null,
 };
 
@@ -21202,7 +21421,7 @@ export type DeleteFeelingTrackerMutation = {
 };
 
 export type CreateFeelingsArchiveMutationVariables = {
-  input: CreateFeelingsArchiveInput,
+  input?: CreateFeelingsArchiveInput,
   condition?: ModelFeelingsArchiveConditionInput | null,
 };
 
@@ -21461,6 +21680,7 @@ export type CreateFeelingsArchiveMutation = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       homework?:  Array< {
         __typename: "UniversalLessonPlan",
@@ -21478,6 +21698,7 @@ export type CreateFeelingsArchiveMutation = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
@@ -21502,7 +21723,7 @@ export type CreateFeelingsArchiveMutation = {
 };
 
 export type UpdateFeelingsArchiveMutationVariables = {
-  input: UpdateFeelingsArchiveInput,
+  input?: UpdateFeelingsArchiveInput,
   condition?: ModelFeelingsArchiveConditionInput | null,
 };
 
@@ -21761,6 +21982,7 @@ export type UpdateFeelingsArchiveMutation = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       homework?:  Array< {
         __typename: "UniversalLessonPlan",
@@ -21778,6 +22000,7 @@ export type UpdateFeelingsArchiveMutation = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
@@ -21802,7 +22025,7 @@ export type UpdateFeelingsArchiveMutation = {
 };
 
 export type DeleteFeelingsArchiveMutationVariables = {
-  input: DeleteFeelingsArchiveInput,
+  input?: DeleteFeelingsArchiveInput,
   condition?: ModelFeelingsArchiveConditionInput | null,
 };
 
@@ -22061,6 +22284,7 @@ export type DeleteFeelingsArchiveMutation = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       homework?:  Array< {
         __typename: "UniversalLessonPlan",
@@ -22078,6 +22302,7 @@ export type DeleteFeelingsArchiveMutation = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
@@ -22102,7 +22327,7 @@ export type DeleteFeelingsArchiveMutation = {
 };
 
 export type CreatePersonFilesMutationVariables = {
-  input: CreatePersonFilesInput,
+  input?: CreatePersonFilesInput,
   condition?: ModelPersonFilesConditionInput | null,
 };
 
@@ -22132,7 +22357,7 @@ export type CreatePersonFilesMutation = {
 };
 
 export type UpdatePersonFilesMutationVariables = {
-  input: UpdatePersonFilesInput,
+  input?: UpdatePersonFilesInput,
   condition?: ModelPersonFilesConditionInput | null,
 };
 
@@ -22162,7 +22387,7 @@ export type UpdatePersonFilesMutation = {
 };
 
 export type DeletePersonFilesMutationVariables = {
-  input: DeletePersonFilesInput,
+  input?: DeletePersonFilesInput,
   condition?: ModelPersonFilesConditionInput | null,
 };
 
@@ -22192,7 +22417,7 @@ export type DeletePersonFilesMutation = {
 };
 
 export type CreateCommunityMutationVariables = {
-  input: CreateCommunityInput,
+  input?: CreateCommunityInput,
   condition?: ModelCommunityConditionInput | null,
 };
 
@@ -22328,7 +22553,7 @@ export type CreateCommunityMutation = {
 };
 
 export type UpdateCommunityMutationVariables = {
-  input: UpdateCommunityInput,
+  input?: UpdateCommunityInput,
   condition?: ModelCommunityConditionInput | null,
 };
 
@@ -22464,7 +22689,7 @@ export type UpdateCommunityMutation = {
 };
 
 export type DeleteCommunityMutationVariables = {
-  input: DeleteCommunityInput,
+  input?: DeleteCommunityInput,
   condition?: ModelCommunityConditionInput | null,
 };
 
@@ -22600,7 +22825,7 @@ export type DeleteCommunityMutation = {
 };
 
 export type CreateGameChangerMutationVariables = {
-  input: CreateGameChangerInput,
+  input?: CreateGameChangerInput,
   condition?: ModelGameChangerConditionInput | null,
 };
 
@@ -22620,7 +22845,7 @@ export type CreateGameChangerMutation = {
 };
 
 export type UpdateGameChangerMutationVariables = {
-  input: UpdateGameChangerInput,
+  input?: UpdateGameChangerInput,
   condition?: ModelGameChangerConditionInput | null,
 };
 
@@ -22640,7 +22865,7 @@ export type UpdateGameChangerMutation = {
 };
 
 export type DeleteGameChangerMutationVariables = {
-  input: DeleteGameChangerInput,
+  input?: DeleteGameChangerInput,
   condition?: ModelGameChangerConditionInput | null,
 };
 
@@ -22660,7 +22885,7 @@ export type DeleteGameChangerMutation = {
 };
 
 export type CreateGameChangerLogMutationVariables = {
-  input: CreateGameChangerLogInput,
+  input?: CreateGameChangerLogInput,
   condition?: ModelGameChangerLogConditionInput | null,
 };
 
@@ -22736,7 +22961,7 @@ export type CreateGameChangerLogMutation = {
 };
 
 export type UpdateGameChangerLogMutationVariables = {
-  input: UpdateGameChangerLogInput,
+  input?: UpdateGameChangerLogInput,
   condition?: ModelGameChangerLogConditionInput | null,
 };
 
@@ -22812,7 +23037,7 @@ export type UpdateGameChangerLogMutation = {
 };
 
 export type DeleteGameChangerLogMutationVariables = {
-  input: DeleteGameChangerLogInput,
+  input?: DeleteGameChangerLogInput,
   condition?: ModelGameChangerLogConditionInput | null,
 };
 
@@ -22888,7 +23113,7 @@ export type DeleteGameChangerLogMutation = {
 };
 
 export type CreateCommunityChatMutationVariables = {
-  input: CreateCommunityChatInput,
+  input?: CreateCommunityChatInput,
   condition?: ModelCommunityChatConditionInput | null,
 };
 
@@ -22952,7 +23177,7 @@ export type CreateCommunityChatMutation = {
 };
 
 export type UpdateCommunityChatMutationVariables = {
-  input: UpdateCommunityChatInput,
+  input?: UpdateCommunityChatInput,
   condition?: ModelCommunityChatConditionInput | null,
 };
 
@@ -23016,7 +23241,7 @@ export type UpdateCommunityChatMutation = {
 };
 
 export type DeleteCommunityChatMutationVariables = {
-  input: DeleteCommunityChatInput,
+  input?: DeleteCommunityChatInput,
   condition?: ModelCommunityChatConditionInput | null,
 };
 
@@ -23080,7 +23305,7 @@ export type DeleteCommunityChatMutation = {
 };
 
 export type CreateCypressTestingMutationVariables = {
-  input: CreateCypressTestingInput,
+  input?: CreateCypressTestingInput,
   condition?: ModelCypressTestingConditionInput | null,
 };
 
@@ -23102,7 +23327,7 @@ export type CreateCypressTestingMutation = {
 };
 
 export type UpdateCypressTestingMutationVariables = {
-  input: UpdateCypressTestingInput,
+  input?: UpdateCypressTestingInput,
   condition?: ModelCypressTestingConditionInput | null,
 };
 
@@ -23124,7 +23349,7 @@ export type UpdateCypressTestingMutation = {
 };
 
 export type DeleteCypressTestingMutationVariables = {
-  input: DeleteCypressTestingInput,
+  input?: DeleteCypressTestingInput,
   condition?: ModelCypressTestingConditionInput | null,
 };
 
@@ -23146,7 +23371,7 @@ export type DeleteCypressTestingMutation = {
 };
 
 export type CreateErrorLogMutationVariables = {
-  input: CreateErrorLogInput,
+  input?: CreateErrorLogInput,
   condition?: ModelErrorLogConditionInput | null,
 };
 
@@ -23213,7 +23438,7 @@ export type CreateErrorLogMutation = {
 };
 
 export type UpdateErrorLogMutationVariables = {
-  input: UpdateErrorLogInput,
+  input?: UpdateErrorLogInput,
   condition?: ModelErrorLogConditionInput | null,
 };
 
@@ -23280,7 +23505,7 @@ export type UpdateErrorLogMutation = {
 };
 
 export type DeleteErrorLogMutationVariables = {
-  input: DeleteErrorLogInput,
+  input?: DeleteErrorLogInput,
   condition?: ModelErrorLogConditionInput | null,
 };
 
@@ -23347,8 +23572,8 @@ export type DeleteErrorLogMutation = {
 };
 
 export type GetPersonQueryVariables = {
-  email: string,
-  authId: string,
+  email?: string,
+  authId?: string,
 };
 
 export type GetPersonQuery = {
@@ -23487,7 +23712,7 @@ export type ListPeopleQuery = {
 };
 
 export type GetPersonLessonsDataQueryVariables = {
-  id: string,
+  id?: string,
 };
 
 export type GetPersonLessonsDataQuery = {
@@ -23561,6 +23786,7 @@ export type GetPersonLessonsDataQuery = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       homework?:  Array< {
         __typename: "UniversalLessonPlan",
@@ -23578,6 +23804,7 @@ export type GetPersonLessonsDataQuery = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
@@ -23826,7 +24053,7 @@ export type ListPersonLessonsDataQuery = {
 };
 
 export type GetInstitutionQueryVariables = {
-  id: string,
+  id?: string,
 };
 
 export type GetInstitutionQuery = {
@@ -23926,6 +24153,7 @@ export type GetInstitutionQuery = {
         designers?: Array< string | null > | null,
         universalSyllabusSeq?: Array< string | null > | null,
         syllabiHistory?: Array< string | null > | null,
+        signedOff?: boolean | null,
         createdAt: string,
         updatedAt: string,
       } | null >,
@@ -24025,7 +24253,7 @@ export type ListInstitutionsQuery = {
 };
 
 export type GetStaffQueryVariables = {
-  id: string,
+  id?: string,
 };
 
 export type GetStaffQuery = {
@@ -24213,7 +24441,7 @@ export type ListStaffQuery = {
 };
 
 export type GetRoomQueryVariables = {
-  id: string,
+  id?: string,
 };
 
 export type GetRoomQuery = {
@@ -24611,12 +24839,12 @@ export type ListRoomsQuery = {
   } | null,
 };
 
-export type GetArchiveSurveyDataSQLQueryVariables = {
-  Email: string,
-  AuthId: string,
+export type GetArchiveSurveyDataSqlQueryVariables = {
+  Email?: string,
+  AuthId?: string,
 };
 
-export type GetArchiveSurveyDataSQLQuery = {
+export type GetArchiveSurveyDataSqlQuery = {
   getArchiveSurveyDataSQL?:  {
     __typename: "ArchiveSurveyDataSQL",
     id: string,
@@ -24634,7 +24862,7 @@ export type GetArchiveSurveyDataSQLQuery = {
   } | null,
 };
 
-export type ListArchiveSurveyDataSQLSQueryVariables = {
+export type ListArchiveSurveyDataSqlsQueryVariables = {
   Email?: string | null,
   AuthId?: ModelStringKeyConditionInput | null,
   filter?: ModelArchiveSurveyDataSQLFilterInput | null,
@@ -24643,7 +24871,7 @@ export type ListArchiveSurveyDataSQLSQueryVariables = {
   sortDirection?: ModelSortDirection | null,
 };
 
-export type ListArchiveSurveyDataSQLSQuery = {
+export type ListArchiveSurveyDataSqlsQuery = {
   listArchiveSurveyDataSQLS?:  {
     __typename: "ModelArchiveSurveyDataSQLConnection",
     items:  Array< {
@@ -24666,7 +24894,7 @@ export type ListArchiveSurveyDataSQLSQuery = {
 };
 
 export type GetClassroomGroupStudentsQueryVariables = {
-  id: string,
+  id?: string,
 };
 
 export type GetClassroomGroupStudentsQuery = {
@@ -24888,7 +25116,7 @@ export type ListClassroomGroupStudentsQuery = {
 };
 
 export type GetClassroomGroupsQueryVariables = {
-  id: string,
+  id?: string,
 };
 
 export type GetClassroomGroupsQuery = {
@@ -25196,7 +25424,7 @@ export type ListClassroomGroupsQuery = {
 };
 
 export type GetRoomCoTeachersQueryVariables = {
-  id: string,
+  id?: string,
 };
 
 export type GetRoomCoTeachersQuery = {
@@ -25382,6 +25610,18 @@ export type GetRoomCoTeachersQuery = {
       createdAt: string,
       updatedAt: string,
     } | null,
+    curricula?:  {
+      __typename: "ModelRoomCurriculumConnection",
+      items:  Array< {
+        __typename: "RoomCurriculum",
+        id: string,
+        roomID: string,
+        curriculumID: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null >,
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -25473,6 +25713,10 @@ export type ListRoomCoTeachersQuery = {
         createdAt: string,
         updatedAt: string,
       } | null,
+      curricula?:  {
+        __typename: "ModelRoomCurriculumConnection",
+        nextToken?: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null >,
@@ -25481,7 +25725,7 @@ export type ListRoomCoTeachersQuery = {
 };
 
 export type GetClassQueryVariables = {
-  id: string,
+  id?: string,
 };
 
 export type GetClassQuery = {
@@ -25768,7 +26012,7 @@ export type ListClassesQuery = {
 };
 
 export type GetClassStudentQueryVariables = {
-  id: string,
+  id?: string,
 };
 
 export type GetClassStudentQuery = {
@@ -25971,7 +26215,7 @@ export type ListClassStudentsQuery = {
 };
 
 export type GetCurriculumQueryVariables = {
-  id: string,
+  id?: string,
 };
 
 export type GetCurriculumQuery = {
@@ -26058,6 +26302,13 @@ export type GetCurriculumQuery = {
       nextToken?: string | null,
     } | null,
     syllabiHistory?: Array< string | null > | null,
+    signedOff?: boolean | null,
+    signedOffSteps?:  Array< {
+      __typename: "SignedOffStep",
+      authID: string,
+      date?: string | null,
+      step: string,
+    } | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -26116,6 +26367,13 @@ export type ListCurriculaQuery = {
         nextToken?: string | null,
       } | null,
       syllabiHistory?: Array< string | null > | null,
+      signedOff?: boolean | null,
+      signedOffSteps?:  Array< {
+        __typename: "SignedOffStep",
+        authID: string,
+        date?: string | null,
+        step: string,
+      } | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null >,
@@ -26124,7 +26382,7 @@ export type ListCurriculaQuery = {
 };
 
 export type GetTopicQueryVariables = {
-  id: string,
+  id?: string,
 };
 
 export type GetTopicQuery = {
@@ -26175,6 +26433,13 @@ export type GetTopicQuery = {
         nextToken?: string | null,
       } | null,
       syllabiHistory?: Array< string | null > | null,
+      signedOff?: boolean | null,
+      signedOffSteps?:  Array< {
+        __typename: "SignedOffStep",
+        authID: string,
+        date?: string | null,
+        step: string,
+      } | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -26228,6 +26493,7 @@ export type ListTopicsQuery = {
         designers?: Array< string | null > | null,
         universalSyllabusSeq?: Array< string | null > | null,
         syllabiHistory?: Array< string | null > | null,
+        signedOff?: boolean | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -26254,7 +26520,7 @@ export type ListTopicsQuery = {
 };
 
 export type GetCSequencesQueryVariables = {
-  id: string,
+  id?: string,
 };
 
 export type GetCSequencesQuery = {
@@ -26290,7 +26556,7 @@ export type ListCSequencesQuery = {
 };
 
 export type GetLearningObjectiveQueryVariables = {
-  id: string,
+  id?: string,
 };
 
 export type GetLearningObjectiveQuery = {
@@ -26330,7 +26596,7 @@ export type ListLearningObjectivesQuery = {
 };
 
 export type GetRubricQueryVariables = {
-  id: string,
+  id?: string,
 };
 
 export type GetRubricQuery = {
@@ -26359,6 +26625,7 @@ export type GetRubricQuery = {
         designers?: Array< string | null > | null,
         universalSyllabusSeq?: Array< string | null > | null,
         syllabiHistory?: Array< string | null > | null,
+        signedOff?: boolean | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -26426,7 +26693,7 @@ export type ListRubricsQuery = {
 };
 
 export type GetRoomCurriculumQueryVariables = {
-  id: string,
+  id?: string,
 };
 
 export type GetRoomCurriculumQuery = {
@@ -26477,6 +26744,13 @@ export type GetRoomCurriculumQuery = {
         nextToken?: string | null,
       } | null,
       syllabiHistory?: Array< string | null > | null,
+      signedOff?: boolean | null,
+      signedOffSteps?:  Array< {
+        __typename: "SignedOffStep",
+        authID: string,
+        date?: string | null,
+        step: string,
+      } | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -26513,6 +26787,7 @@ export type ListRoomCurriculaQuery = {
         designers?: Array< string | null > | null,
         universalSyllabusSeq?: Array< string | null > | null,
         syllabiHistory?: Array< string | null > | null,
+        signedOff?: boolean | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -26524,7 +26799,7 @@ export type ListRoomCurriculaQuery = {
 };
 
 export type GetCheckpointQueryVariables = {
-  id: string,
+  id?: string,
 };
 
 export type GetCheckpointQuery = {
@@ -26601,7 +26876,7 @@ export type ListCheckpointsQuery = {
 };
 
 export type GetQuestionQueryVariables = {
-  id: string,
+  id?: string,
 };
 
 export type GetQuestionQuery = {
@@ -26663,7 +26938,7 @@ export type ListQuestionsQuery = {
 };
 
 export type GetQuestionSourceQueryVariables = {
-  id: string,
+  id?: string,
 };
 
 export type GetQuestionSourceQuery = {
@@ -26697,7 +26972,7 @@ export type ListQuestionSourcesQuery = {
 };
 
 export type GetQuestionTypeQueryVariables = {
-  id: string,
+  id?: string,
 };
 
 export type GetQuestionTypeQuery = {
@@ -26731,7 +27006,7 @@ export type ListQuestionTypesQuery = {
 };
 
 export type GetRoomMsgsQueryVariables = {
-  id: string,
+  id?: string,
 };
 
 export type GetRoomMsgsQuery = {
@@ -26853,8 +27128,8 @@ export type ListRoomMsgsQuery = {
 };
 
 export type GetStudentDataQueryVariables = {
-  syllabusLessonID: string,
-  studentID: string,
+  syllabusLessonID?: string,
+  studentID?: string,
 };
 
 export type GetStudentDataQuery = {
@@ -27041,7 +27316,7 @@ export type ListStudentDataQuery = {
 };
 
 export type GetAnthologyCommentQueryVariables = {
-  id: string,
+  id?: string,
 };
 
 export type GetAnthologyCommentQuery = {
@@ -27179,7 +27454,7 @@ export type ListAnthologyCommentsQuery = {
 };
 
 export type GetQuestionDataQueryVariables = {
-  id: string,
+  id?: string,
 };
 
 export type GetQuestionDataQuery = {
@@ -27321,8 +27596,8 @@ export type ListQuestionDataQuery = {
 };
 
 export type GetPersonLocationQueryVariables = {
-  personEmail: string,
-  personAuthID: string,
+  personEmail?: string,
+  personAuthID?: string,
 };
 
 export type GetPersonLocationQuery = {
@@ -27570,6 +27845,7 @@ export type GetPersonLocationQuery = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       homework?:  Array< {
         __typename: "UniversalLessonPlan",
@@ -27587,6 +27863,7 @@ export type GetPersonLocationQuery = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
@@ -27742,7 +28019,7 @@ export type ListPersonLocationsQuery = {
 };
 
 export type GetAttendanceQueryVariables = {
-  id: string,
+  id?: string,
 };
 
 export type GetAttendanceQuery = {
@@ -27799,6 +28076,13 @@ export type GetAttendanceQuery = {
         nextToken?: string | null,
       } | null,
       syllabiHistory?: Array< string | null > | null,
+      signedOff?: boolean | null,
+      signedOffSteps?:  Array< {
+        __typename: "SignedOffStep",
+        authID: string,
+        date?: string | null,
+        step: string,
+      } | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -27905,6 +28189,7 @@ export type GetAttendanceQuery = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       homework?:  Array< {
         __typename: "UniversalLessonPlan",
@@ -27922,6 +28207,7 @@ export type GetAttendanceQuery = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
@@ -28105,6 +28391,7 @@ export type ListAttendancesQuery = {
         designers?: Array< string | null > | null,
         universalSyllabusSeq?: Array< string | null > | null,
         syllabiHistory?: Array< string | null > | null,
+        signedOff?: boolean | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -28205,7 +28492,7 @@ export type ListAttendancesQuery = {
 };
 
 export type GetUniversalLessonQueryVariables = {
-  id: string,
+  id?: string,
 };
 
 export type GetUniversalLessonQuery = {
@@ -28300,6 +28587,7 @@ export type GetUniversalLessonQuery = {
       interactionType?: Array< string | null > | null,
       tags?: Array< string | null > | null,
       videoLink?: string | null,
+      notes?: string | null,
     } | null > | null,
     homework?:  Array< {
       __typename: "UniversalLessonPlan",
@@ -28325,6 +28613,7 @@ export type GetUniversalLessonQuery = {
       interactionType?: Array< string | null > | null,
       tags?: Array< string | null > | null,
       videoLink?: string | null,
+      notes?: string | null,
     } | null > | null,
     darkMode?: boolean | null,
     rubrics?: Array< string | null > | null,
@@ -28411,6 +28700,7 @@ export type ListUniversalLessonsQuery = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       homework?:  Array< {
         __typename: "UniversalLessonPlan",
@@ -28428,6 +28718,7 @@ export type ListUniversalLessonsQuery = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
@@ -28447,7 +28738,7 @@ export type ListUniversalLessonsQuery = {
 };
 
 export type GetUniversalLessonStudentDataQueryVariables = {
-  id: string,
+  id?: string,
 };
 
 export type GetUniversalLessonStudentDataQuery = {
@@ -28515,6 +28806,7 @@ export type GetUniversalLessonStudentDataQuery = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       homework?:  Array< {
         __typename: "UniversalLessonPlan",
@@ -28532,6 +28824,7 @@ export type GetUniversalLessonStudentDataQuery = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
@@ -28666,7 +28959,7 @@ export type ListUniversalLessonStudentDataQuery = {
 };
 
 export type GetUniversalLessonWritingExcercisesQueryVariables = {
-  id: string,
+  id?: string,
 };
 
 export type GetUniversalLessonWritingExcercisesQuery = {
@@ -28734,6 +29027,7 @@ export type GetUniversalLessonWritingExcercisesQuery = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       homework?:  Array< {
         __typename: "UniversalLessonPlan",
@@ -28751,6 +29045,7 @@ export type GetUniversalLessonWritingExcercisesQuery = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
@@ -28885,7 +29180,7 @@ export type ListUniversalLessonWritingExcercisesQuery = {
 };
 
 export type GetUniversalArchiveDataQueryVariables = {
-  id: string,
+  id?: string,
 };
 
 export type GetUniversalArchiveDataQuery = {
@@ -28976,7 +29271,7 @@ export type ListUniversalArchiveDataQuery = {
 };
 
 export type GetUniversalSurveyStudentDataQueryVariables = {
-  id: string,
+  id?: string,
 };
 
 export type GetUniversalSurveyStudentDataQuery = {
@@ -29045,7 +29340,7 @@ export type ListUniversalSurveyStudentDataQuery = {
 };
 
 export type GetTemporaryUniversalUploadSurveyDataQueryVariables = {
-  id: string,
+  id?: string,
 };
 
 export type GetTemporaryUniversalUploadSurveyDataQuery = {
@@ -29137,7 +29432,7 @@ export type ListTemporaryUniversalUploadSurveyDataQuery = {
 };
 
 export type GetTemporaryDemographicsUploadDataQueryVariables = {
-  id: string,
+  id?: string,
 };
 
 export type GetTemporaryDemographicsUploadDataQuery = {
@@ -29259,7 +29554,7 @@ export type ListTemporaryDemographicsUploadDataQuery = {
 };
 
 export type GetUploadLogsQueryVariables = {
-  id: string,
+  id?: string,
 };
 
 export type GetUploadLogsQuery = {
@@ -29390,7 +29685,7 @@ export type ListUploadLogsQuery = {
 };
 
 export type GetUniversalJournalDataQueryVariables = {
-  id: string,
+  id?: string,
 };
 
 export type GetUniversalJournalDataQuery = {
@@ -29470,6 +29765,7 @@ export type GetUniversalJournalDataQuery = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       homework?:  Array< {
         __typename: "UniversalLessonPlan",
@@ -29487,6 +29783,7 @@ export type GetUniversalJournalDataQuery = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
@@ -29584,7 +29881,7 @@ export type ListUniversalJournalDataQuery = {
 };
 
 export type GetUniversalSyllabusQueryVariables = {
-  id: string,
+  id?: string,
 };
 
 export type GetUniversalSyllabusQuery = {
@@ -29734,7 +30031,7 @@ export type ListUniversalSyllabiQuery = {
 };
 
 export type GetCurriculumUnitsQueryVariables = {
-  id: string,
+  id?: string,
 };
 
 export type GetCurriculumUnitsQuery = {
@@ -29834,7 +30131,7 @@ export type ListCurriculumUnitsQuery = {
 };
 
 export type GetUniversalSyllabusLessonQueryVariables = {
-  id: string,
+  id?: string,
 };
 
 export type GetUniversalSyllabusLessonQuery = {
@@ -29908,6 +30205,7 @@ export type GetUniversalSyllabusLessonQuery = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       homework?:  Array< {
         __typename: "UniversalLessonPlan",
@@ -29925,6 +30223,7 @@ export type GetUniversalSyllabusLessonQuery = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
@@ -30064,7 +30363,7 @@ export type ListUniversalSyllabusLessonsQuery = {
 };
 
 export type GetUniversalLessonFeedbackQueryVariables = {
-  id: string,
+  id?: string,
 };
 
 export type GetUniversalLessonFeedbackQuery = {
@@ -30188,7 +30487,7 @@ export type ListUniversalLessonFeedbacksQuery = {
 };
 
 export type GetStudentConnectionsQueryVariables = {
-  id: string,
+  id?: string,
 };
 
 export type GetStudentConnectionsQuery = {
@@ -30394,8 +30693,8 @@ export type ListStudentConnectionsQuery = {
 };
 
 export type GetPersonSentimentsQueryVariables = {
-  personAuthID: string,
-  date: string,
+  personAuthID?: string,
+  date?: string,
 };
 
 export type GetPersonSentimentsQuery = {
@@ -30522,7 +30821,7 @@ export type ListPersonSentimentsQuery = {
 };
 
 export type GetSentimentsQueryVariables = {
-  id: string,
+  id?: string,
 };
 
 export type GetSentimentsQuery = {
@@ -30558,8 +30857,8 @@ export type ListSentimentsQuery = {
 };
 
 export type GetSentimentTrackerQueryVariables = {
-  personAuthID: string,
-  date: string,
+  personAuthID?: string,
+  date?: string,
 };
 
 export type GetSentimentTrackerQuery = {
@@ -30957,8 +31256,8 @@ export type ListSentimentTrackersQuery = {
 };
 
 export type GetFeelingTrackerQueryVariables = {
-  personAuthID: string,
-  date: string,
+  personAuthID?: string,
+  date?: string,
 };
 
 export type GetFeelingTrackerQuery = {
@@ -31272,7 +31571,7 @@ export type ListFeelingTrackersQuery = {
 };
 
 export type GetFeelingsArchiveQueryVariables = {
-  id: string,
+  id?: string,
 };
 
 export type GetFeelingsArchiveQuery = {
@@ -31530,6 +31829,7 @@ export type GetFeelingsArchiveQuery = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       homework?:  Array< {
         __typename: "UniversalLessonPlan",
@@ -31547,6 +31847,7 @@ export type GetFeelingsArchiveQuery = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
@@ -31711,7 +32012,7 @@ export type ListFeelingsArchivesQuery = {
 };
 
 export type GetPersonFilesQueryVariables = {
-  id: string,
+  id?: string,
 };
 
 export type GetPersonFilesQuery = {
@@ -31777,7 +32078,7 @@ export type ListPersonFilesQuery = {
 };
 
 export type GetCommunityQueryVariables = {
-  id: string,
+  id?: string,
 };
 
 export type GetCommunityQuery = {
@@ -32012,7 +32313,7 @@ export type ListCommunitiesQuery = {
 };
 
 export type GetGameChangerQueryVariables = {
-  id: string,
+  id?: string,
 };
 
 export type GetGameChangerQuery = {
@@ -32058,7 +32359,7 @@ export type ListGameChangersQuery = {
 };
 
 export type GetGameChangerLogQueryVariables = {
-  id: string,
+  id?: string,
 };
 
 export type GetGameChangerLogQuery = {
@@ -32208,7 +32509,7 @@ export type ListGameChangerLogsQuery = {
 };
 
 export type GetCommunityChatQueryVariables = {
-  id: string,
+  id?: string,
 };
 
 export type GetCommunityChatQuery = {
@@ -32332,7 +32633,7 @@ export type ListCommunityChatsQuery = {
 };
 
 export type GetCypressTestingQueryVariables = {
-  id: string,
+  id?: string,
 };
 
 export type GetCypressTestingQuery = {
@@ -32382,7 +32683,7 @@ export type ListCypressTestingsQuery = {
 };
 
 export type GetErrorLogQueryVariables = {
-  id: string,
+  id?: string,
 };
 
 export type GetErrorLogQuery = {
@@ -32514,7 +32815,7 @@ export type ListErrorLogsQuery = {
 };
 
 export type UserByIdQueryVariables = {
-  id: string,
+  id?: string,
   sortDirection?: ModelSortDirection | null,
   filter?: ModelPersonFilterInput | null,
   limit?: number | null,
@@ -32574,7 +32875,7 @@ export type UserByIdQuery = {
 };
 
 export type UsersByRoleQueryVariables = {
-  role: Role,
+  role?: Role,
   sortDirection?: ModelSortDirection | null,
   filter?: ModelPersonFilterInput | null,
   limit?: number | null,
@@ -32634,7 +32935,7 @@ export type UsersByRoleQuery = {
 };
 
 export type LessonsByType2QueryVariables = {
-  lessonType: string,
+  lessonType?: string,
   sortDirection?: ModelSortDirection | null,
   filter?: ModelPersonLessonsDataFilterInput | null,
   limit?: number | null,
@@ -32731,8 +33032,8 @@ export type LessonsByType2Query = {
   } | null,
 };
 
-export type MessagesByRoomIDQueryVariables = {
-  roomID: string,
+export type MessagesByRoomIdQueryVariables = {
+  roomID?: string,
   createdAt?: ModelStringKeyConditionInput | null,
   sortDirection?: ModelSortDirection | null,
   filter?: ModelRoomMsgsFilterInput | null,
@@ -32740,7 +33041,7 @@ export type MessagesByRoomIDQueryVariables = {
   nextToken?: string | null,
 };
 
-export type MessagesByRoomIDQuery = {
+export type MessagesByRoomIdQuery = {
   messagesByRoomID?:  {
     __typename: "ModelRoomMsgsConnection",
     items:  Array< {
@@ -32795,7 +33096,7 @@ export type MessagesByRoomIDQuery = {
 };
 
 export type PersonLocationBySyllabusLessonQueryVariables = {
-  syllabusLessonID: string,
+  syllabusLessonID?: string,
   sortDirection?: ModelSortDirection | null,
   filter?: ModelPersonLocationFilterInput | null,
   limit?: number | null,
@@ -32929,7 +33230,7 @@ export type PersonLocationBySyllabusLessonQuery = {
 };
 
 export type AttendanceByStudentQueryVariables = {
-  studentID: string,
+  studentID?: string,
   date?: ModelStringKeyConditionInput | null,
   sortDirection?: ModelSortDirection | null,
   filter?: ModelAttendanceFilterInput | null,
@@ -32965,6 +33266,7 @@ export type AttendanceByStudentQuery = {
         designers?: Array< string | null > | null,
         universalSyllabusSeq?: Array< string | null > | null,
         syllabiHistory?: Array< string | null > | null,
+        signedOff?: boolean | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -33065,9 +33367,9 @@ export type AttendanceByStudentQuery = {
 };
 
 export type OnCreateUpdatePersonLocationItemSubscriptionVariables = {
-  syllabusLessonID: string,
-  lessonID: string,
-  roomID: string,
+  syllabusLessonID?: string,
+  lessonID?: string,
+  roomID?: string,
 };
 
 export type OnCreateUpdatePersonLocationItemSubscription = {
@@ -33315,6 +33617,7 @@ export type OnCreateUpdatePersonLocationItemSubscription = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       homework?:  Array< {
         __typename: "UniversalLessonPlan",
@@ -33332,6 +33635,7 @@ export type OnCreateUpdatePersonLocationItemSubscription = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
@@ -33352,9 +33656,9 @@ export type OnCreateUpdatePersonLocationItemSubscription = {
 };
 
 export type OnDeletePersonLocationItemSubscriptionVariables = {
-  syllabusLessonID: string,
-  lessonID: string,
-  roomID: string,
+  syllabusLessonID?: string,
+  lessonID?: string,
+  roomID?: string,
 };
 
 export type OnDeletePersonLocationItemSubscription = {
@@ -33602,6 +33906,7 @@ export type OnDeletePersonLocationItemSubscription = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       homework?:  Array< {
         __typename: "UniversalLessonPlan",
@@ -33619,6 +33924,7 @@ export type OnDeletePersonLocationItemSubscription = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
@@ -33639,7 +33945,7 @@ export type OnDeletePersonLocationItemSubscription = {
 };
 
 export type OnChangeStudentDataSubscriptionVariables = {
-  syllabusLessonID: string,
+  syllabusLessonID?: string,
 };
 
 export type OnChangeStudentDataSubscription = {
@@ -33740,9 +34046,9 @@ export type OnChangeStudentDataSubscription = {
 };
 
 export type OnChangeUniversalLessonStudentDataSubscriptionVariables = {
-  syllabusLessonID: string,
-  lessonID: string,
-  studentAuthID: string,
+  syllabusLessonID?: string,
+  lessonID?: string,
+  studentAuthID?: string,
 };
 
 export type OnChangeUniversalLessonStudentDataSubscription = {
@@ -33810,6 +34116,7 @@ export type OnChangeUniversalLessonStudentDataSubscription = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       homework?:  Array< {
         __typename: "UniversalLessonPlan",
@@ -33827,6 +34134,7 @@ export type OnChangeUniversalLessonStudentDataSubscription = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
@@ -33880,7 +34188,7 @@ export type OnChangeUniversalLessonStudentDataSubscription = {
 };
 
 export type OnChangeRoomSubscriptionVariables = {
-  id: string,
+  id?: string,
 };
 
 export type OnChangeRoomSubscription = {
@@ -34428,6 +34736,7 @@ export type OnCreatePersonLessonsDataSubscription = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       homework?:  Array< {
         __typename: "UniversalLessonPlan",
@@ -34445,6 +34754,7 @@ export type OnCreatePersonLessonsDataSubscription = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
@@ -34665,6 +34975,7 @@ export type OnUpdatePersonLessonsDataSubscription = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       homework?:  Array< {
         __typename: "UniversalLessonPlan",
@@ -34682,6 +34993,7 @@ export type OnUpdatePersonLessonsDataSubscription = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
@@ -34902,6 +35214,7 @@ export type OnDeletePersonLessonsDataSubscription = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       homework?:  Array< {
         __typename: "UniversalLessonPlan",
@@ -34919,6 +35232,7 @@ export type OnDeletePersonLessonsDataSubscription = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
@@ -35165,6 +35479,7 @@ export type OnCreateInstitutionSubscription = {
         designers?: Array< string | null > | null,
         universalSyllabusSeq?: Array< string | null > | null,
         syllabiHistory?: Array< string | null > | null,
+        signedOff?: boolean | null,
         createdAt: string,
         updatedAt: string,
       } | null >,
@@ -35301,6 +35616,7 @@ export type OnUpdateInstitutionSubscription = {
         designers?: Array< string | null > | null,
         universalSyllabusSeq?: Array< string | null > | null,
         syllabiHistory?: Array< string | null > | null,
+        signedOff?: boolean | null,
         createdAt: string,
         updatedAt: string,
       } | null >,
@@ -35437,6 +35753,7 @@ export type OnDeleteInstitutionSubscription = {
         designers?: Array< string | null > | null,
         universalSyllabusSeq?: Array< string | null > | null,
         syllabiHistory?: Array< string | null > | null,
+        signedOff?: boolean | null,
         createdAt: string,
         updatedAt: string,
       } | null >,
@@ -36709,7 +37026,7 @@ export type OnDeleteRoomSubscription = {
   } | null,
 };
 
-export type OnCreateArchiveSurveyDataSQLSubscription = {
+export type OnCreateArchiveSurveyDataSqlSubscription = {
   onCreateArchiveSurveyDataSQL?:  {
     __typename: "ArchiveSurveyDataSQL",
     id: string,
@@ -36727,7 +37044,7 @@ export type OnCreateArchiveSurveyDataSQLSubscription = {
   } | null,
 };
 
-export type OnUpdateArchiveSurveyDataSQLSubscription = {
+export type OnUpdateArchiveSurveyDataSqlSubscription = {
   onUpdateArchiveSurveyDataSQL?:  {
     __typename: "ArchiveSurveyDataSQL",
     id: string,
@@ -36745,7 +37062,7 @@ export type OnUpdateArchiveSurveyDataSQLSubscription = {
   } | null,
 };
 
-export type OnDeleteArchiveSurveyDataSQLSubscription = {
+export type OnDeleteArchiveSurveyDataSqlSubscription = {
   onDeleteArchiveSurveyDataSQL?:  {
     __typename: "ArchiveSurveyDataSQL",
     id: string,
@@ -37996,6 +38313,18 @@ export type OnCreateRoomCoTeachersSubscription = {
       createdAt: string,
       updatedAt: string,
     } | null,
+    curricula?:  {
+      __typename: "ModelRoomCurriculumConnection",
+      items:  Array< {
+        __typename: "RoomCurriculum",
+        id: string,
+        roomID: string,
+        curriculumID: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null >,
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -38184,6 +38513,18 @@ export type OnUpdateRoomCoTeachersSubscription = {
       createdAt: string,
       updatedAt: string,
     } | null,
+    curricula?:  {
+      __typename: "ModelRoomCurriculumConnection",
+      items:  Array< {
+        __typename: "RoomCurriculum",
+        id: string,
+        roomID: string,
+        curriculumID: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null >,
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -38371,6 +38712,18 @@ export type OnDeleteRoomCoTeachersSubscription = {
       statusChangedBy?: string | null,
       createdAt: string,
       updatedAt: string,
+    } | null,
+    curricula?:  {
+      __typename: "ModelRoomCurriculumConnection",
+      items:  Array< {
+        __typename: "RoomCurriculum",
+        id: string,
+        roomID: string,
+        curriculumID: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null >,
+      nextToken?: string | null,
     } | null,
     createdAt: string,
     updatedAt: string,
@@ -39451,6 +39804,13 @@ export type OnCreateCurriculumSubscription = {
       nextToken?: string | null,
     } | null,
     syllabiHistory?: Array< string | null > | null,
+    signedOff?: boolean | null,
+    signedOffSteps?:  Array< {
+      __typename: "SignedOffStep",
+      authID: string,
+      date?: string | null,
+      step: string,
+    } | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -39540,6 +39900,13 @@ export type OnUpdateCurriculumSubscription = {
       nextToken?: string | null,
     } | null,
     syllabiHistory?: Array< string | null > | null,
+    signedOff?: boolean | null,
+    signedOffSteps?:  Array< {
+      __typename: "SignedOffStep",
+      authID: string,
+      date?: string | null,
+      step: string,
+    } | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -39629,6 +39996,13 @@ export type OnDeleteCurriculumSubscription = {
       nextToken?: string | null,
     } | null,
     syllabiHistory?: Array< string | null > | null,
+    signedOff?: boolean | null,
+    signedOffSteps?:  Array< {
+      __typename: "SignedOffStep",
+      authID: string,
+      date?: string | null,
+      step: string,
+    } | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -39682,6 +40056,13 @@ export type OnCreateTopicSubscription = {
         nextToken?: string | null,
       } | null,
       syllabiHistory?: Array< string | null > | null,
+      signedOff?: boolean | null,
+      signedOffSteps?:  Array< {
+        __typename: "SignedOffStep",
+        authID: string,
+        date?: string | null,
+        step: string,
+      } | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -39753,6 +40134,13 @@ export type OnUpdateTopicSubscription = {
         nextToken?: string | null,
       } | null,
       syllabiHistory?: Array< string | null > | null,
+      signedOff?: boolean | null,
+      signedOffSteps?:  Array< {
+        __typename: "SignedOffStep",
+        authID: string,
+        date?: string | null,
+        step: string,
+      } | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -39824,6 +40212,13 @@ export type OnDeleteTopicSubscription = {
         nextToken?: string | null,
       } | null,
       syllabiHistory?: Array< string | null > | null,
+      signedOff?: boolean | null,
+      signedOffSteps?:  Array< {
+        __typename: "SignedOffStep",
+        authID: string,
+        date?: string | null,
+        step: string,
+      } | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -39939,6 +40334,7 @@ export type OnCreateRubricSubscription = {
         designers?: Array< string | null > | null,
         universalSyllabusSeq?: Array< string | null > | null,
         syllabiHistory?: Array< string | null > | null,
+        signedOff?: boolean | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -39992,6 +40388,7 @@ export type OnUpdateRubricSubscription = {
         designers?: Array< string | null > | null,
         universalSyllabusSeq?: Array< string | null > | null,
         syllabiHistory?: Array< string | null > | null,
+        signedOff?: boolean | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -40045,6 +40442,7 @@ export type OnDeleteRubricSubscription = {
         designers?: Array< string | null > | null,
         universalSyllabusSeq?: Array< string | null > | null,
         syllabiHistory?: Array< string | null > | null,
+        signedOff?: boolean | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -40120,6 +40518,13 @@ export type OnCreateRoomCurriculumSubscription = {
         nextToken?: string | null,
       } | null,
       syllabiHistory?: Array< string | null > | null,
+      signedOff?: boolean | null,
+      signedOffSteps?:  Array< {
+        __typename: "SignedOffStep",
+        authID: string,
+        date?: string | null,
+        step: string,
+      } | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -40176,6 +40581,13 @@ export type OnUpdateRoomCurriculumSubscription = {
         nextToken?: string | null,
       } | null,
       syllabiHistory?: Array< string | null > | null,
+      signedOff?: boolean | null,
+      signedOffSteps?:  Array< {
+        __typename: "SignedOffStep",
+        authID: string,
+        date?: string | null,
+        step: string,
+      } | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -40232,6 +40644,13 @@ export type OnDeleteRoomCurriculumSubscription = {
         nextToken?: string | null,
       } | null,
       syllabiHistory?: Array< string | null > | null,
+      signedOff?: boolean | null,
+      signedOffSteps?:  Array< {
+        __typename: "SignedOffStep",
+        authID: string,
+        date?: string | null,
+        step: string,
+      } | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -40397,6 +40816,13 @@ export type OnCreateCommonCheckpointSubscription = {
         nextToken?: string | null,
       } | null,
       syllabiHistory?: Array< string | null > | null,
+      signedOff?: boolean | null,
+      signedOffSteps?:  Array< {
+        __typename: "SignedOffStep",
+        authID: string,
+        date?: string | null,
+        step: string,
+      } | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -40478,6 +40904,13 @@ export type OnUpdateCommonCheckpointSubscription = {
         nextToken?: string | null,
       } | null,
       syllabiHistory?: Array< string | null > | null,
+      signedOff?: boolean | null,
+      signedOffSteps?:  Array< {
+        __typename: "SignedOffStep",
+        authID: string,
+        date?: string | null,
+        step: string,
+      } | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -40559,6 +40992,13 @@ export type OnDeleteCommonCheckpointSubscription = {
         nextToken?: string | null,
       } | null,
       syllabiHistory?: Array< string | null > | null,
+      signedOff?: boolean | null,
+      signedOffSteps?:  Array< {
+        __typename: "SignedOffStep",
+        authID: string,
+        date?: string | null,
+        step: string,
+      } | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -42129,6 +42569,7 @@ export type OnCreatePersonLocationSubscription = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       homework?:  Array< {
         __typename: "UniversalLessonPlan",
@@ -42146,6 +42587,7 @@ export type OnCreatePersonLocationSubscription = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
@@ -42410,6 +42852,7 @@ export type OnUpdatePersonLocationSubscription = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       homework?:  Array< {
         __typename: "UniversalLessonPlan",
@@ -42427,6 +42870,7 @@ export type OnUpdatePersonLocationSubscription = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
@@ -42691,6 +43135,7 @@ export type OnDeletePersonLocationSubscription = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       homework?:  Array< {
         __typename: "UniversalLessonPlan",
@@ -42708,6 +43153,7 @@ export type OnDeletePersonLocationSubscription = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
@@ -42781,6 +43227,13 @@ export type OnCreateAttendanceSubscription = {
         nextToken?: string | null,
       } | null,
       syllabiHistory?: Array< string | null > | null,
+      signedOff?: boolean | null,
+      signedOffSteps?:  Array< {
+        __typename: "SignedOffStep",
+        authID: string,
+        date?: string | null,
+        step: string,
+      } | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -42887,6 +43340,7 @@ export type OnCreateAttendanceSubscription = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       homework?:  Array< {
         __typename: "UniversalLessonPlan",
@@ -42904,6 +43358,7 @@ export type OnCreateAttendanceSubscription = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
@@ -43107,6 +43562,13 @@ export type OnUpdateAttendanceSubscription = {
         nextToken?: string | null,
       } | null,
       syllabiHistory?: Array< string | null > | null,
+      signedOff?: boolean | null,
+      signedOffSteps?:  Array< {
+        __typename: "SignedOffStep",
+        authID: string,
+        date?: string | null,
+        step: string,
+      } | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -43213,6 +43675,7 @@ export type OnUpdateAttendanceSubscription = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       homework?:  Array< {
         __typename: "UniversalLessonPlan",
@@ -43230,6 +43693,7 @@ export type OnUpdateAttendanceSubscription = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
@@ -43433,6 +43897,13 @@ export type OnDeleteAttendanceSubscription = {
         nextToken?: string | null,
       } | null,
       syllabiHistory?: Array< string | null > | null,
+      signedOff?: boolean | null,
+      signedOffSteps?:  Array< {
+        __typename: "SignedOffStep",
+        authID: string,
+        date?: string | null,
+        step: string,
+      } | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -43539,6 +44010,7 @@ export type OnDeleteAttendanceSubscription = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       homework?:  Array< {
         __typename: "UniversalLessonPlan",
@@ -43556,6 +44028,7 @@ export type OnDeleteAttendanceSubscription = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
@@ -43797,6 +44270,7 @@ export type OnCreateUniversalLessonSubscription = {
       interactionType?: Array< string | null > | null,
       tags?: Array< string | null > | null,
       videoLink?: string | null,
+      notes?: string | null,
     } | null > | null,
     homework?:  Array< {
       __typename: "UniversalLessonPlan",
@@ -43822,6 +44296,7 @@ export type OnCreateUniversalLessonSubscription = {
       interactionType?: Array< string | null > | null,
       tags?: Array< string | null > | null,
       videoLink?: string | null,
+      notes?: string | null,
     } | null > | null,
     darkMode?: boolean | null,
     rubrics?: Array< string | null > | null,
@@ -43930,6 +44405,7 @@ export type OnUpdateUniversalLessonSubscription = {
       interactionType?: Array< string | null > | null,
       tags?: Array< string | null > | null,
       videoLink?: string | null,
+      notes?: string | null,
     } | null > | null,
     homework?:  Array< {
       __typename: "UniversalLessonPlan",
@@ -43955,6 +44431,7 @@ export type OnUpdateUniversalLessonSubscription = {
       interactionType?: Array< string | null > | null,
       tags?: Array< string | null > | null,
       videoLink?: string | null,
+      notes?: string | null,
     } | null > | null,
     darkMode?: boolean | null,
     rubrics?: Array< string | null > | null,
@@ -44063,6 +44540,7 @@ export type OnDeleteUniversalLessonSubscription = {
       interactionType?: Array< string | null > | null,
       tags?: Array< string | null > | null,
       videoLink?: string | null,
+      notes?: string | null,
     } | null > | null,
     homework?:  Array< {
       __typename: "UniversalLessonPlan",
@@ -44088,6 +44566,7 @@ export type OnDeleteUniversalLessonSubscription = {
       interactionType?: Array< string | null > | null,
       tags?: Array< string | null > | null,
       videoLink?: string | null,
+      notes?: string | null,
     } | null > | null,
     darkMode?: boolean | null,
     rubrics?: Array< string | null > | null,
@@ -44169,6 +44648,7 @@ export type OnCreateUniversalLessonStudentDataSubscription = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       homework?:  Array< {
         __typename: "UniversalLessonPlan",
@@ -44186,6 +44666,7 @@ export type OnCreateUniversalLessonStudentDataSubscription = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
@@ -44303,6 +44784,7 @@ export type OnUpdateUniversalLessonStudentDataSubscription = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       homework?:  Array< {
         __typename: "UniversalLessonPlan",
@@ -44320,6 +44802,7 @@ export type OnUpdateUniversalLessonStudentDataSubscription = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
@@ -44437,6 +44920,7 @@ export type OnDeleteUniversalLessonStudentDataSubscription = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       homework?:  Array< {
         __typename: "UniversalLessonPlan",
@@ -44454,6 +44938,7 @@ export type OnDeleteUniversalLessonStudentDataSubscription = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
@@ -44571,6 +45056,7 @@ export type OnCreateUniversalLessonWritingExcercisesSubscription = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       homework?:  Array< {
         __typename: "UniversalLessonPlan",
@@ -44588,6 +45074,7 @@ export type OnCreateUniversalLessonWritingExcercisesSubscription = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
@@ -44705,6 +45192,7 @@ export type OnUpdateUniversalLessonWritingExcercisesSubscription = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       homework?:  Array< {
         __typename: "UniversalLessonPlan",
@@ -44722,6 +45210,7 @@ export type OnUpdateUniversalLessonWritingExcercisesSubscription = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
@@ -44839,6 +45328,7 @@ export type OnDeleteUniversalLessonWritingExcercisesSubscription = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       homework?:  Array< {
         __typename: "UniversalLessonPlan",
@@ -44856,6 +45346,7 @@ export type OnDeleteUniversalLessonWritingExcercisesSubscription = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
@@ -45792,6 +46283,7 @@ export type OnCreateUniversalJournalDataSubscription = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       homework?:  Array< {
         __typename: "UniversalLessonPlan",
@@ -45809,6 +46301,7 @@ export type OnCreateUniversalJournalDataSubscription = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
@@ -45908,6 +46401,7 @@ export type OnUpdateUniversalJournalDataSubscription = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       homework?:  Array< {
         __typename: "UniversalLessonPlan",
@@ -45925,6 +46419,7 @@ export type OnUpdateUniversalJournalDataSubscription = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
@@ -46024,6 +46519,7 @@ export type OnDeleteUniversalJournalDataSubscription = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       homework?:  Array< {
         __typename: "UniversalLessonPlan",
@@ -46041,6 +46537,7 @@ export type OnDeleteUniversalJournalDataSubscription = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
@@ -46560,6 +47057,7 @@ export type OnCreateUniversalSyllabusLessonSubscription = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       homework?:  Array< {
         __typename: "UniversalLessonPlan",
@@ -46577,6 +47075,7 @@ export type OnCreateUniversalSyllabusLessonSubscription = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
@@ -46703,6 +47202,7 @@ export type OnUpdateUniversalSyllabusLessonSubscription = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       homework?:  Array< {
         __typename: "UniversalLessonPlan",
@@ -46720,6 +47220,7 @@ export type OnUpdateUniversalSyllabusLessonSubscription = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
@@ -46846,6 +47347,7 @@ export type OnDeleteUniversalSyllabusLessonSubscription = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       homework?:  Array< {
         __typename: "UniversalLessonPlan",
@@ -46863,6 +47365,7 @@ export type OnDeleteUniversalSyllabusLessonSubscription = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
@@ -49354,6 +49857,7 @@ export type OnCreateFeelingsArchiveSubscription = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       homework?:  Array< {
         __typename: "UniversalLessonPlan",
@@ -49371,6 +49875,7 @@ export type OnCreateFeelingsArchiveSubscription = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
@@ -49649,6 +50154,7 @@ export type OnUpdateFeelingsArchiveSubscription = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       homework?:  Array< {
         __typename: "UniversalLessonPlan",
@@ -49666,6 +50172,7 @@ export type OnUpdateFeelingsArchiveSubscription = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
@@ -49944,6 +50451,7 @@ export type OnDeleteFeelingsArchiveSubscription = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       homework?:  Array< {
         __typename: "UniversalLessonPlan",
@@ -49961,6 +50469,7 @@ export type OnDeleteFeelingsArchiveSubscription = {
         interactionType?: Array< string | null > | null,
         tags?: Array< string | null > | null,
         videoLink?: string | null,
+        notes?: string | null,
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,

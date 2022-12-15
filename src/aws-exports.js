@@ -28,5 +28,3 @@ const awsmobile = {
 };
 
 export default awsmobile;
-
-// copy this to main aws-exports.js file
