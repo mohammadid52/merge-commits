@@ -170,40 +170,42 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
               value={{
                 size: '1.2rem',
                 style: {},
-                className: `relative mr-4 animate-spin ${theme.textColor[themeColor]}`
+                className: `relative mr-2 w-auto animate-spin ${theme.textColor[themeColor]}`
               }}>
               <FaSpinner />
             </IconContext.Provider>
           )}
 
-          <div className="h-full flex items-center ml-8 w-auto justify-center">
-            <AnimatedContainer
-              animationType="translateY"
-              className="w-auto absolute right-1"
-              show={isClearable && selectedItem !== null}>
-              {isClearable && selectedItem !== null && (
-                <span
-                  title="clear sort"
-                  className=" flex justify-center  cursor-pointer hover:bg-gray-200
+          {!loading && (
+            <div className="h-full flex items-center ml-8 w-auto justify-center">
+              <AnimatedContainer
+                animationType="translateY"
+                className="w-auto absolute right-1"
+                show={isClearable && selectedItem !== null}>
+                {isClearable && selectedItem !== null && (
+                  <span
+                    title="clear sort"
+                    className=" flex justify-center  cursor-pointer hover:bg-gray-200
                    rounded-full"
-                  onClick={clearSort}>
-                  <IoClose
-                    size={'1rem'}
-                    className="hover:iconoclast:text-main hover:curate:text-main transition-all text-gray-600"
-                  />
-                </span>
-              )}
-            </AnimatedContainer>
+                    onClick={clearSort}>
+                    <IoClose
+                      size={'1rem'}
+                      className="hover:iconoclast:text-main hover:curate:text-main transition-all text-gray-600"
+                    />
+                  </span>
+                )}
+              </AnimatedContainer>
 
-            {error.length > 0 && (
-              <ExclamationCircleIcon
-                className={`h-5 relative mr-4 w-5 text-red-500 ${
-                  error.length === 0 ? 'hidden' : ''
-                }`}
-                aria-hidden="true"
-              />
-            )}
-          </div>
+              {error.length > 0 && (
+                <ExclamationCircleIcon
+                  className={`h-5 relative mr-4 w-5 text-red-500 ${
+                    error.length === 0 ? 'hidden' : ''
+                  }`}
+                  aria-hidden="true"
+                />
+              )}
+            </div>
+          )}
         </button>
       </span>
       <AnimatedContainer className="z-50 absolute w-full " show={showList}>

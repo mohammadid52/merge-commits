@@ -59,7 +59,9 @@ const Buttons: React.FC<ButtonProps> = (btnProps: ButtonProps): React.ReactEleme
       redBtn && transparent ? 'text-red-500' : transparent ? 'theme-text' : 'text-white';
     return (
       <span className="w-auto">
-        <Icon className={`${iconSize || 'w-6 h-6'} ${color}`} />
+        <Icon
+          className={`${size === 'small' ? 'w-4 h-6' : iconSize || 'w-6 h-6'} ${color}`}
+        />
       </span>
     );
   };
@@ -110,7 +112,9 @@ ${redBtn ? 'red-btn ' : ''}
             }`
           : ''
       } 
-      ${disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'} 
+      ${
+        disabled ? 'cursor-not-allowed opacity-50 pointer-events-none' : 'cursor-pointer '
+      } 
       ${greenBtn ? 'green-btn' : ''}
       ${
         redBtn && transparent
@@ -133,7 +137,14 @@ ${redBtn ? 'red-btn ' : ''}
         </div>
       )}
 
-      {insideElement}
+      {
+        <div
+          className={`${
+            disabled ? 'cursor-not-allowed pointer-events-none' : ''
+          } w-auto`}>
+          {insideElement}
+        </div>
+      }
     </button>
   );
 };

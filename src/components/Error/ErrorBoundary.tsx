@@ -41,6 +41,7 @@ class ErrorBoundary extends React.Component<PropsInterface> {
   }
 
   public componentDidCatch(error: Error, info: React.ErrorInfo) {
+    console.log(info);
     this.setState({
       hasError: true,
       error: error,
@@ -53,11 +54,11 @@ class ErrorBoundary extends React.Component<PropsInterface> {
 
     if (this.state.hasError) {
       logError(
-        this.state.error,
+        this.state.error.toString(),
         {authId: authId, email: email},
-        this.props.componentName
+        this.props.componentName,
+        this.state.info
       );
-      console.error('error logged to aws');
     }
   }
 

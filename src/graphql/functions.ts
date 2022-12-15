@@ -109,27 +109,29 @@ export const updatePageState = async (
 export const logError = async (
   error: Error | string,
   auth: {authId: string; email: string},
-  componentName: string
+  componentName: string,
+  additionalInfo?: any
 ) => {
-  try {
-    const input: CreateErrorLogInput = {
-      authID: auth.authId,
-      email: auth.email,
-      error: JSON.stringify(error) || 'Invalid error',
-      errorType:
-        (typeof error === 'string' ? error : error.message) || 'Invalid error type',
-      errorTime: new Date().toISOString(),
-      pageUrl: location.href,
-      componentName: componentName
-    };
-    const res = await API.graphql(
-      graphqlOperation(customMutations.createErrorLog, {input})
-    );
-  } catch (error) {
-    console.error(
-      'error logging error.. this is kind of ironic -> ',
-      {error, auth},
-      error
-    );
+  if (!location.origin.includes('localhost')) {
+    try {
+      const input: CreateErrorLogInput = {
+        authID: auth.authId,
+        email: auth.email,
+        error: error?.toString() || 'Invalid error',
+        errorType: additionalInfo?.toString() || 'Invalid error type',
+        errorTime: new Date().toISOString(),
+        pageUrl: location.href,
+        componentName: componentName
+      };
+      const res = await API.graphql(
+        graphqlOperation(customMutations.createErrorLog, {input})
+      );
+    } catch (error) {
+      console.error(
+        'error logging error.. this is kind of ironic -> ',
+        {error, auth},
+        error
+      );
+    }
   }
 };

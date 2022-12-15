@@ -62,9 +62,11 @@ const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
     Icon,
     resize = true
   } = inputProps;
+
   const {theme, clientKey} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const otherInputProps: any = {};
+
   if (maxLength) {
     otherInputProps.maxLength = maxLength;
   }
