@@ -263,6 +263,7 @@ type RoomCoTeachers @model @auth(rules: [{allow: public}]) {
   teacherAuthID: String!
   room: Room @belongsTo(fields: ["roomID"])
   teacher: Person @hasOne(fields: ["teacherEmail", "teacherAuthID"])
+  curricula: [RoomCurriculum] @hasMany(indexName: "curriculumByRoom", fields: ["id"])
 }
 
 type Class @model @auth(rules: [{allow: public}]) {

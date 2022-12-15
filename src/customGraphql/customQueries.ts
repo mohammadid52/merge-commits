@@ -423,6 +423,96 @@ export const getDashboardDataForCoTeachers = /* GraphQL */ `
     }
   }
 `;
+
+export const listRoomCoTeachers = /* GraphQL */ `
+  query ListRoomCoTeachers(
+    $filter: ModelRoomCoTeachersFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listRoomCoTeachers(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        roomID
+        teacherID
+        teacherEmail
+        teacherAuthID
+        room {
+          id
+          institutionID
+          classID
+          teacherAuthID
+          teacherEmail
+          name
+          maxPersons
+          status
+          filters
+          location
+          startDate
+          startTime
+          endDate
+          endTime
+          length
+          repeat
+          notes
+          activeSyllabus
+          frequency
+          activeLessonId
+          ClosedPages
+          disabledPages
+          studentViewing
+          currentPage
+          activeLessons
+          weekDay
+          conferenceCallLink
+          classSentiment
+          createdAt
+          updatedAt
+        }
+        teacher {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          inactiveStatusDate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          onDemand
+          sentiments
+          passcode
+          spotlightUser
+          spotlightDate
+          statusReason
+          addedby
+          lastEmotionSubmission
+          pageState
+          lastPageStateUpdate
+          statusChangedBy
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+
 export const getRoomCoTeachers = /* GraphQL */ `
   query GetRoomCoTeachers($id: ID!) {
     getRoomCoTeachers(id: $id) {
@@ -4658,7 +4748,6 @@ export const getInstitutionsList = /* GraphQL */ `
             id
             type
             name
-            roomId
           }
           nextToken
         }

@@ -18,13 +18,14 @@ import Selector from 'atoms/Form/Selector';
 import SectionTitleV3 from 'atoms/SectionTitleV3';
 import DateAndTime from '../DateAndTime/DateAndTime';
 import SurveyPDF from './SurveyPDF';
+import {logError} from '@graphql/functions';
 
 interface ICsvProps {
   institutionId?: string;
 }
 
 const Csv = ({institutionId}: ICsvProps) => {
-  const {state, theme, dispatch, clientKey, userLanguage} = useContext(GlobalContext);
+  const {state, clientKey, userLanguage} = useContext(GlobalContext);
   const {CsvDict} = useDictionary(clientKey);
   const [institutions, setInstitutions] = useState([]);
   const [selectedInst, setSelectedInst] = useState(null);
@@ -125,9 +126,11 @@ const Csv = ({institutionId}: ICsvProps) => {
         };
       });
       setInstitutions(institutions);
-      setInstitutionsLoading(false);
     } catch (error) {
+      logError(error, {authId, email}, 'Csv @listInstitutions');
       console.log('🚀 ~ file: Csv.tsx ~ line 122 ~ listInstitutions ~ error', error);
+    } finally {
+      setInstitutionsLoading(false);
     }
   };
 
@@ -195,7 +198,7 @@ const Csv = ({institutionId}: ICsvProps) => {
     }
   };
 
-  const {authId, isTeacher, isFellow, instId} = useAuth();
+  const {authId, isTeacher, email, isFellow} = useAuth();
 
   const fetchClassRooms = async () => {
     setClassRoomLoading(true);
@@ -210,7 +213,19 @@ const Csv = ({institutionId}: ICsvProps) => {
         isTeacher || isFellow ? variablesForTR_FR : variablesForBLD_ADM
       )
     );
+    let coTeahcerClassrooms: any = await API.graphql(
+      graphqlOperation(
+        customQueries.listRoomCoTeachers,
+        isTeacher || isFellow ? variablesForTR_FR : variablesForBLD_ADM
+      )
+    );
 
+    // let coTeachersRooms = coTeahcerClassrooms?.data?.listRoomCoTeachers?.items.map((item:any) => {
+    //   return {
+    //     ...item,
+    //     curricula:
+    //   }
+    // })
     classrooms = classrooms?.data.listRooms?.items || [];
 
     classrooms = classrooms.map((cr: any) => {
@@ -1025,7 +1040,7 @@ const Csv = ({institutionId}: ICsvProps) => {
       <div className="mx-auto w-full">
         <div className="flex flex-row my-0 w-full py-0 mb-8 justify-between">
           <h3 className="text-lg leading-6 text-gray-600 w-auto">
-            {CsvDict[userLanguage]['TITLE']}
+            <SectionTitleV3 title={CsvDict[userLanguage]['TITLE']} />
           </h3>
 
           <div className="w-auto">
@@ -1144,7 +1159,7 @@ const Csv = ({institutionId}: ICsvProps) => {
             type="button"
             className={`col-end-5 ${
               isSuperAdmin ? 'mt-5' : ''
-            } inline-flex justify-center h-full border-0 border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:ring-indigo transition duration-150 ease-in-out items-center`}
+            } inline-flex justify-center h-full border-0 border-transparent text-sm leading-5 font-medium rounded-full text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:ring-indigo transition duration-150 ease-in-out items-center`}
             style={{
               /* stylelint-disable */
               opacity: isCSVDownloadReady ? 1 : 0.5
@@ -1171,7 +1186,7 @@ const Csv = ({institutionId}: ICsvProps) => {
             type="button"
             className={`col-end-5 ${
               isSuperAdmin ? 'mt-5' : ''
-            } inline-flex justify-center h-full border-0 border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:ring-indigo transition duration-150 ease-in-out items-center`}
+            } inline-flex justify-center h-full border-0 border-transparent text-sm leading-5 font-medium rounded-full text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:ring-indigo transition duration-150 ease-in-out items-center`}
             style={{
               /* stylelint-disable */
               opacity: isCSVDownloadReady ? 1 : 0.5
