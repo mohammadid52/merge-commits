@@ -1,3 +1,4 @@
+import ErrorBoundary from '@components/Error/ErrorBoundary';
 import PrivateRoute from 'components/Auth/PrivateRoute';
 import React, {lazy} from 'react';
 import {Redirect, Route, Switch} from 'react-router-dom';
@@ -40,7 +41,9 @@ const AuthRoutes = ({updateAuthState}: AuthRoutesProps) => {
           <Chat />
         </PrivateRoute>
         <PrivateRoute path="/csv">
+          <ErrorBoundary  componentName='Csv'>
           <Csv />
+          </ErrorBoundary>
         </PrivateRoute>
         <Route render={() => <Redirect to="/" />} />
       </Switch>

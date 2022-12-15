@@ -1,6 +1,7 @@
 import useUrlState from '@ahooksjs/use-url-state';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {Storage} from '@aws-amplify/storage';
+import ErrorBoundary from '@components/Error/ErrorBoundary';
 import {PersonStatus, Role} from 'API';
 import {getAsset} from 'assets';
 import Buttons from 'atoms/Buttons';
@@ -827,46 +828,50 @@ const User = (props: IUserProps) => {
                     <Route
                       path={`${match.url}/edit`}
                       render={() => (
-                        <UserEdit
-                          // tab={stdCheckpoints.length > 0 ? tab : 'p'}
-                          instituteId={props.instituteId}
-                          tab={tab}
-                          setTab={setTab}
-                          onSuccessCallback={onSuccessCallback}
-                          user={user}
-                          shouldNavigate={shouldNavigate}
-                          status={status}
-                          setStatus={setStatus}
-                          getUserById={getUserProfile}
-                          questionData={questionData}
-                          checkpoints={
-                            tab === 'demographics'
-                              ? demographicCheckpoints
-                              : tab === 'private'
-                              ? privateCheckpoints
-                              : []
-                          }
-                        />
+                        <ErrorBoundary componentName="UserEdit">
+                          <UserEdit
+                            // tab={stdCheckpoints.length > 0 ? tab : 'p'}
+                            instituteId={props.instituteId}
+                            tab={tab}
+                            setTab={setTab}
+                            onSuccessCallback={onSuccessCallback}
+                            user={user}
+                            shouldNavigate={shouldNavigate}
+                            status={status}
+                            setStatus={setStatus}
+                            getUserById={getUserProfile}
+                            questionData={questionData}
+                            checkpoints={
+                              tab === 'demographics'
+                                ? demographicCheckpoints
+                                : tab === 'private'
+                                ? privateCheckpoints
+                                : []
+                            }
+                          />
+                        </ErrorBoundary>
                       )}
                     />
                     <Route
                       path={`${match.url}/`}
                       render={() => (
-                        <UserInformation
-                          // tab={stdCheckpoints.length > 0 ? tab : 'p'}
-                          tab={tab}
-                          setTab={setTab}
-                          questionData={questionData}
-                          checkpoints={
-                            tab === 'demographics'
-                              ? demographicCheckpoints
-                              : tab === 'private'
-                              ? privateCheckpoints
-                              : []
-                          }
-                          user={user}
-                          status={status}
-                        />
+                        <ErrorBoundary componentName="UserInformation">
+                          <UserInformation
+                            // tab={stdCheckpoints.length > 0 ? tab : 'p'}
+                            tab={tab}
+                            setTab={setTab}
+                            questionData={questionData}
+                            checkpoints={
+                              tab === 'demographics'
+                                ? demographicCheckpoints
+                                : tab === 'private'
+                                ? privateCheckpoints
+                                : []
+                            }
+                            user={user}
+                            status={status}
+                          />
+                        </ErrorBoundary>
                       )}
                     />
                   </Switch>

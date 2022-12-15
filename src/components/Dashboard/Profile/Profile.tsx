@@ -26,6 +26,7 @@ import ProfileInfo from './ProfileInfo';
 import ProfileVault from './ProfileVault';
 import useAuth from '@customHooks/useAuth';
 import {UserPageState} from 'API';
+import ErrorBoundary from '@components/Error/ErrorBoundary';
 
 export interface UserInfo {
   authId: string;
@@ -430,36 +431,55 @@ const Profile = (props: ProfilePageProps) => {
                     exact
                     path={`${match.url}/`}
                     render={() => (
-                      <ProfileInfo
-                        user={person}
-                        status={status}
-                        stdCheckpoints={stdCheckpoints}
-                        questionData={questionData}
-                      />
+                      <ErrorBoundary componentName="ProfileInfo">
+                        <ProfileInfo
+                          user={person}
+                          status={status}
+                          stdCheckpoints={stdCheckpoints}
+                          questionData={questionData}
+                        />
+                      </ErrorBoundary>
                     )}
                   />
                   <Route path={`${match.url}/about`} render={() => <AboutMe />} />
                   <Route
                     path={`${match.url}/edit`}
                     render={() => (
-                      <ProfileEdit
-                        user={person}
-                        status={status}
-                        setStatus={setStatus}
-                        getUser={getUser}
-                        stdCheckpoints={stdCheckpoints}
-                        questionData={questionData}
-                      />
+                      <ErrorBoundary componentName="ProfileEdit">
+                        <ProfileEdit
+                          user={person}
+                          status={status}
+                          setStatus={setStatus}
+                          getUser={getUser}
+                          stdCheckpoints={stdCheckpoints}
+                          questionData={questionData}
+                        />
+                      </ErrorBoundary>
                     )}
                   />
-                  <Route path={`${match.url}/vault`} render={() => <ProfileVault />} />
+                  <Route
+                    path={`${match.url}/vault`}
+                    render={() => (
+                      <ErrorBoundary componentName="ProfileVault">
+                        <ProfileVault />
+                      </ErrorBoundary>
+                    )}
+                  />
                   <Route
                     path={`${match.url}/password`}
-                    render={() => <ChangePassword updateAuthState={updateAuthState} />}
+                    render={() => (
+                      <ErrorBoundary componentName="ChangePassword">
+                        <ChangePassword updateAuthState={updateAuthState} />
+                      </ErrorBoundary>
+                    )}
                   />
                   <Route
                     path={`${match.url}/passcode`}
-                    render={() => <ChangePasscode />}
+                    render={() => (
+                      <ErrorBoundary componentName="ChangePassword">
+                        <ChangePasscode />
+                      </ErrorBoundary>
+                    )}
                   />
                 </Switch>
                 {showCropper && (

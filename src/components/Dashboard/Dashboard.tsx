@@ -817,7 +817,7 @@ const Dashboard = (props: DashboardProps) => {
                   conditionalRender(
                     <ErrorBoundary
                       componentName="Csv"
-                      fallback={<h1>Game changers is not working</h1>}>
+                      fallback={<h1>CSV is not working</h1>}>
                       <Csv />
                     </ErrorBoundary>,
                     userData.role === 'SUP' ||

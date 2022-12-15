@@ -492,110 +492,120 @@ const StaffBuilder = (props: StaffBuilderProps) => {
                     <Droppable droppableId="droppable">
                       {(provided, snapshot) => (
                         <div {...provided.droppableProps} ref={provided.innerRef}>
-                          {finalList.map((item, index) => (
-                            <Draggable key={item.id} draggableId={item.id} index={index}>
-                              {(provided, snapshot) => (
-                                <div
-                                  ref={provided.innerRef}
-                                  {...provided.draggableProps}
-                                  {...provided.dragHandleProps}>
-                                  <div
-                                    key={index}
-                                    className={`flex justify-between w-auto whitespace-nowrap border-b-0 border-gray-200 hover:bg-gray-200
+                          {finalList.map(
+                            (item, index) =>
+                              item && (
+                                <Draggable
+                                  key={item.id}
+                                  draggableId={item.id}
+                                  index={index}>
+                                  {(provided, snapshot) => (
+                                    <div
+                                      ref={provided.innerRef}
+                                      {...provided.draggableProps}
+                                      {...provided.dragHandleProps}>
+                                      <div
+                                        key={index}
+                                        className={`flex justify-between w-auto whitespace-nowrap border-b-0 border-gray-200 hover:bg-gray-200
                                      transition-all ${
                                        index % 2 !== 0 ? 'bg-gray-50' : ''
                                      }`}>
-                                    <div className="flex w-.5/10 items-center px-8 py-4 text-left text-s leading-4">
-                                      {index + 1}.
-                                    </div>
+                                        <div className="flex w-.5/10 items-center px-8 py-4 text-left text-s leading-4">
+                                          {index + 1}.
+                                        </div>
 
-                                    <div
-                                      className="flex w-4.5/10 px-8 py-4 items-center text-left text-s leading-4 font-medium whitespace-normal cursor-pointer "
-                                      onClick={() => gotoProfilePage(item.userId)}>
-                                      <div className="flex-shrink-0 h-10 w-10 flex items-center">
-                                        {!item.image ? (
-                                          <Placeholder
-                                            size="h-8 w-8"
-                                            name={`${item.firstName} ${item.lastName}`}
-                                          />
-                                        ) : (
-                                          <div className="h-8 w-8 rounded-full flex justify-center items-center">
-                                            <img
-                                              src={item.image}
-                                              className="rounded-full"
-                                            />
+                                        <div
+                                          className="flex w-4.5/10 px-8 py-4 items-center text-left text-s leading-4 font-medium whitespace-normal cursor-pointer "
+                                          onClick={() => gotoProfilePage(item.userId)}>
+                                          <div className="flex-shrink-0 h-10 w-10 flex items-center">
+                                            {!item.image ? (
+                                              <Placeholder
+                                                size="h-8 w-8"
+                                                name={`${item.firstName} ${item.lastName}`}
+                                              />
+                                            ) : (
+                                              <div className="h-8 w-8 rounded-full flex justify-center items-center">
+                                                <img
+                                                  src={item.image}
+                                                  className="rounded-full"
+                                                />
+                                              </div>
+                                            )}
+                                          </div>
+                                          <div className="ml-2">
+                                            <div className=" text-sm leading-5 font-medium ">
+                                              <Highlighted
+                                                text={item?.name}
+                                                highlight={searchInput.value}
+                                              />
+                                            </div>
+                                            <div className="text-sm leading-5 text-gray-500">
+                                              <Highlighted
+                                                text={item.email}
+                                                highlight={searchInput.value}
+                                              />
+                                            </div>
+                                          </div>
+                                        </div>
+                                        {user.isSuperAdmin && (
+                                          <div
+                                            className="w-2/10 px-8 py-4 flex items-center text-left text-xs leading-4 font-bold text-gray-800 uppercase tracking-wider cursor-pointer"
+                                            onClick={() =>
+                                              redirectToInstitution(item.institution?.id)
+                                            }>
+                                            <span>{item.institution?.name}</span>
                                           </div>
                                         )}
-                                      </div>
-                                      <div className="ml-2">
-                                        <div className=" text-sm leading-5 font-medium ">
-                                          <Highlighted
-                                            text={item.name}
-                                            highlight={searchInput.value}
-                                          />
+                                        <div className="flex w-2/10 px-8 py-4 text-left text-s leading-4 items-center">
+                                          <p className="inline-flex items-center px-2.5 py-0.5 rounded-md text-sm font-medium bg-gray-200 text-gray-600 w-auto">
+                                            {item.role ? getStaffRole(item.role) : ''}
+                                          </p>
                                         </div>
-                                        <div className="text-sm leading-5 text-gray-500">
-                                          <Highlighted
-                                            text={item.email}
-                                            highlight={searchInput.value}
-                                          />
+                                        {statusEdit === item.id ? (
+                                          <div className="flex w-2.5/10 px-8 py-4 text-left text-s leading-4 items-center">
+                                            <Selector
+                                              selectedItem={item.status}
+                                              placeholder="Select Status"
+                                              list={statusList}
+                                              onChange={(val, name, id) =>
+                                                onStaffStatusChange(
+                                                  val,
+                                                  item.id,
+                                                  item.status
+                                                )
+                                              }
+                                            />
+                                          </div>
+                                        ) : (
+                                          <div className="flex w-2.5/10 px-8 py-4 text-left text-s leading-4 items-center">
+                                            <Status status={item.status} />
+                                          </div>
+                                        )}
+                                        <div className="flex w-1/10 px-8 py-4 text-left text-s leading-4 items-center">
+                                          {statusEdit === item.id ? (
+                                            <span
+                                              className={`w-6 h-6 flex items-center cursor-pointer ${theme.textColor[themeColor]}`}
+                                              onClick={() => setStatusEdit('')}>
+                                              {updateStatus ? 'updating...' : 'Cancel'}
+                                            </span>
+                                          ) : (
+                                            <span
+                                              className={`w-6 h-6 flex items-center cursor-pointer ${theme.textColor[themeColor]}`}
+                                              onClick={() => setStatusEdit(item.id)}>
+                                              <Tooltip
+                                                text="Click to edit status"
+                                                placement="left">
+                                                Edit
+                                              </Tooltip>
+                                            </span>
+                                          )}
                                         </div>
                                       </div>
                                     </div>
-                                    {user.isSuperAdmin && (
-                                      <div
-                                        className="w-2/10 px-8 py-4 flex items-center text-left text-xs leading-4 font-bold text-gray-800 uppercase tracking-wider cursor-pointer"
-                                        onClick={() =>
-                                          redirectToInstitution(item.institution?.id)
-                                        }>
-                                        <span>{item.institution?.name}</span>
-                                      </div>
-                                    )}
-                                    <div className="flex w-2/10 px-8 py-4 text-left text-s leading-4 items-center">
-                                      <p className="inline-flex items-center px-2.5 py-0.5 rounded-md text-sm font-medium bg-gray-200 text-gray-600 w-auto">
-                                        {item.role ? getStaffRole(item.role) : ''}
-                                      </p>
-                                    </div>
-                                    {statusEdit === item.id ? (
-                                      <div className="flex w-2.5/10 px-8 py-4 text-left text-s leading-4 items-center">
-                                        <Selector
-                                          selectedItem={item.status}
-                                          placeholder="Select Status"
-                                          list={statusList}
-                                          onChange={(val, name, id) =>
-                                            onStaffStatusChange(val, item.id, item.status)
-                                          }
-                                        />
-                                      </div>
-                                    ) : (
-                                      <div className="flex w-2.5/10 px-8 py-4 text-left text-s leading-4 items-center">
-                                        <Status status={item.status} />
-                                      </div>
-                                    )}
-                                    <div className="flex w-1/10 px-8 py-4 text-left text-s leading-4 items-center">
-                                      {statusEdit === item.id ? (
-                                        <span
-                                          className={`w-6 h-6 flex items-center cursor-pointer ${theme.textColor[themeColor]}`}
-                                          onClick={() => setStatusEdit('')}>
-                                          {updateStatus ? 'updating...' : 'Cancel'}
-                                        </span>
-                                      ) : (
-                                        <span
-                                          className={`w-6 h-6 flex items-center cursor-pointer ${theme.textColor[themeColor]}`}
-                                          onClick={() => setStatusEdit(item.id)}>
-                                          <Tooltip
-                                            text="Click to edit status"
-                                            placement="left">
-                                            Edit
-                                          </Tooltip>
-                                        </span>
-                                      )}
-                                    </div>
-                                  </div>
-                                </div>
-                              )}
-                            </Draggable>
-                          ))}
+                                  )}
+                                </Draggable>
+                              )
+                          )}
                           {provided.placeholder}
                         </div>
                       )}
@@ -618,9 +628,9 @@ const StaffBuilder = (props: StaffBuilderProps) => {
                       <span
                         className="hover:underline theme-text cursor-pointer"
                         onClick={() => {
-                          setSearch(findRelatedSearch(searchInput.value).name);
+                          setSearch(findRelatedSearch(searchInput.value)?.name);
                         }}>
-                        {findRelatedSearch(searchInput.value).name}
+                        {findRelatedSearch(searchInput.value)?.name}
                       </span>
                       "
                     </span>
