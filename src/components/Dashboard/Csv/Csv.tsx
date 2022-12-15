@@ -220,14 +220,15 @@ const Csv = ({institutionId}: ICsvProps) => {
       )
     );
 
-    // let coTeachersRooms = coTeahcerClassrooms?.data?.listRoomCoTeachers?.items.map((item:any) => {
-    //   return {
-    //     ...item,
-    //     curricula:
-    //   }
-    // })
-    classrooms = classrooms?.data.listRooms?.items || [];
-
+    let coTeachersRooms = coTeahcerClassrooms?.data?.listRoomCoTeachers?.items.map((item:any) => {
+      return {
+        ...item,
+        name:item.room.name,
+        class:{id:item.room.classID,},
+        curricula:item.room.curricula || {items:[]}
+      }
+    })
+    classrooms = [...coTeachersRooms,...classrooms?.data.listRooms?.items] || [];
     classrooms = classrooms.map((cr: any) => {
       let curriculum =
         cr.curricula?.items &&
