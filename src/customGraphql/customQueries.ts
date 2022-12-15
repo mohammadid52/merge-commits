@@ -505,6 +505,17 @@ export const listRoomCoTeachers = /* GraphQL */ `
           createdAt
           updatedAt
         }
+
+        curricula {
+          items {
+            id
+            roomID
+            curriculumID
+            createdAt
+            updatedAt
+          }
+          nextToken
+        }
         createdAt
         updatedAt
       }
