@@ -933,8 +933,8 @@ const Institute_info: any = {
       DOWNLOAD_SURVEYS: 'Download Surveys',
       UPLOAD_SURVEY: 'Upload Survey',
 
-      DOWNLOAD_CSV: 'Download CSV',
-      UPLOAD_CSV: 'Upload CSV',
+      DOWNLOAD_CSV: 'Download Surveys',
+      UPLOAD_CSV: 'Upload Surveys',
       UPLOAD_TO_ATHENA: 'Upload to Athena',
       HOME: 'Dashboard',
       NOTEBOOK: 'Notebook',
