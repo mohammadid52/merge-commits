@@ -203,6 +203,7 @@ export const getPersonLessonsData = /* GraphQL */ `
           interactionType
           tags
           videoLink
+          notes
         }
         homework {
           id
@@ -219,6 +220,7 @@ export const getPersonLessonsData = /* GraphQL */ `
           interactionType
           tags
           videoLink
+          notes
         }
         darkMode
         rubrics
@@ -546,6 +548,7 @@ export const getInstitution = /* GraphQL */ `
           designers
           universalSyllabusSeq
           syllabiHistory
+          signedOff
           createdAt
           updatedAt
         }
@@ -1166,8 +1169,8 @@ export const listRooms = /* GraphQL */ `
     }
   }
 `;
-export const getArchiveSurveyDataSQL = /* GraphQL */ `
-  query GetArchiveSurveyDataSQL($Email: String!, $AuthId: String!) {
+export const getArchiveSurveyDataSql = /* GraphQL */ `
+  query GetArchiveSurveyDataSql($Email: String!, $AuthId: String!) {
     getArchiveSurveyDataSQL(Email: $Email, AuthId: $AuthId) {
       id
       AuthId
@@ -1183,8 +1186,8 @@ export const getArchiveSurveyDataSQL = /* GraphQL */ `
     }
   }
 `;
-export const listArchiveSurveyDataSQLS = /* GraphQL */ `
-  query ListArchiveSurveyDataSQLS(
+export const listArchiveSurveyDataSqls = /* GraphQL */ `
+  query ListArchiveSurveyDataSqls(
     $Email: String
     $AuthId: ModelStringKeyConditionInput
     $filter: ModelArchiveSurveyDataSQLFilterInput
@@ -1880,6 +1883,16 @@ export const getRoomCoTeachers = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      curricula {
+        items {
+          id
+          roomID
+          curriculumID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -1965,6 +1978,9 @@ export const listRoomCoTeachers = /* GraphQL */ `
           statusChangedBy
           createdAt
           updatedAt
+        }
+        curricula {
+          nextToken
         }
         createdAt
         updatedAt
@@ -2491,6 +2507,12 @@ export const getCurriculum = /* GraphQL */ `
         nextToken
       }
       syllabiHistory
+      signedOff
+      signedOffSteps {
+        authID
+        date
+        step
+      }
       createdAt
       updatedAt
     }
@@ -2549,6 +2571,12 @@ export const listCurricula = /* GraphQL */ `
           nextToken
         }
         syllabiHistory
+        signedOff
+        signedOffSteps {
+          authID
+          date
+          step
+        }
         createdAt
         updatedAt
       }
@@ -2600,6 +2628,12 @@ export const getTopic = /* GraphQL */ `
           nextToken
         }
         syllabiHistory
+        signedOff
+        signedOffSteps {
+          authID
+          date
+          step
+        }
         createdAt
         updatedAt
       }
@@ -2654,6 +2688,7 @@ export const listTopics = /* GraphQL */ `
           designers
           universalSyllabusSeq
           syllabiHistory
+          signedOff
           createdAt
           updatedAt
         }
@@ -2776,6 +2811,7 @@ export const getRubric = /* GraphQL */ `
           designers
           universalSyllabusSeq
           syllabiHistory
+          signedOff
           createdAt
           updatedAt
         }
@@ -2887,6 +2923,12 @@ export const getRoomCurriculum = /* GraphQL */ `
           nextToken
         }
         syllabiHistory
+        signedOff
+        signedOffSteps {
+          authID
+          date
+          step
+        }
         createdAt
         updatedAt
       }
@@ -2919,6 +2961,7 @@ export const listRoomCurricula = /* GraphQL */ `
           designers
           universalSyllabusSeq
           syllabiHistory
+          signedOff
           createdAt
           updatedAt
         }
@@ -3876,6 +3919,7 @@ export const getPersonLocation = /* GraphQL */ `
           interactionType
           tags
           videoLink
+          notes
         }
         homework {
           id
@@ -3892,6 +3936,7 @@ export const getPersonLocation = /* GraphQL */ `
           interactionType
           tags
           videoLink
+          notes
         }
         darkMode
         rubrics
@@ -4097,6 +4142,12 @@ export const getAttendance = /* GraphQL */ `
           nextToken
         }
         syllabiHistory
+        signedOff
+        signedOffSteps {
+          authID
+          date
+          step
+        }
         createdAt
         updatedAt
       }
@@ -4197,6 +4248,7 @@ export const getAttendance = /* GraphQL */ `
           interactionType
           tags
           videoLink
+          notes
         }
         homework {
           id
@@ -4213,6 +4265,7 @@ export const getAttendance = /* GraphQL */ `
           interactionType
           tags
           videoLink
+          notes
         }
         darkMode
         rubrics
@@ -4382,6 +4435,7 @@ export const listAttendances = /* GraphQL */ `
           designers
           universalSyllabusSeq
           syllabiHistory
+          signedOff
           createdAt
           updatedAt
         }
@@ -4561,6 +4615,7 @@ export const getUniversalLesson = /* GraphQL */ `
         interactionType
         tags
         videoLink
+        notes
       }
       homework {
         id
@@ -4584,6 +4639,7 @@ export const getUniversalLesson = /* GraphQL */ `
         interactionType
         tags
         videoLink
+        notes
       }
       darkMode
       rubrics
@@ -4671,6 +4727,7 @@ export const listUniversalLessons = /* GraphQL */ `
           interactionType
           tags
           videoLink
+          notes
         }
         homework {
           id
@@ -4687,6 +4744,7 @@ export const listUniversalLessons = /* GraphQL */ `
           interactionType
           tags
           videoLink
+          notes
         }
         darkMode
         rubrics
@@ -4767,6 +4825,7 @@ export const getUniversalLessonStudentData = /* GraphQL */ `
           interactionType
           tags
           videoLink
+          notes
         }
         homework {
           id
@@ -4783,6 +4842,7 @@ export const getUniversalLessonStudentData = /* GraphQL */ `
           interactionType
           tags
           videoLink
+          notes
         }
         darkMode
         rubrics
@@ -4974,6 +5034,7 @@ export const getUniversalLessonWritingExcercises = /* GraphQL */ `
           interactionType
           tags
           videoLink
+          notes
         }
         homework {
           id
@@ -4990,6 +5051,7 @@ export const getUniversalLessonWritingExcercises = /* GraphQL */ `
           interactionType
           tags
           videoLink
+          notes
         }
         darkMode
         rubrics
@@ -5663,6 +5725,7 @@ export const getUniversalJournalData = /* GraphQL */ `
           interactionType
           tags
           videoLink
+          notes
         }
         homework {
           id
@@ -5679,6 +5742,7 @@ export const getUniversalJournalData = /* GraphQL */ `
           interactionType
           tags
           videoLink
+          notes
         }
         darkMode
         rubrics
@@ -6071,6 +6135,7 @@ export const getUniversalSyllabusLesson = /* GraphQL */ `
           interactionType
           tags
           videoLink
+          notes
         }
         homework {
           id
@@ -6087,6 +6152,7 @@ export const getUniversalSyllabusLesson = /* GraphQL */ `
           interactionType
           tags
           videoLink
+          notes
         }
         darkMode
         rubrics
@@ -7588,6 +7654,7 @@ export const getFeelingsArchive = /* GraphQL */ `
           interactionType
           tags
           videoLink
+          notes
         }
         homework {
           id
@@ -7604,6 +7671,7 @@ export const getFeelingsArchive = /* GraphQL */ `
           interactionType
           tags
           videoLink
+          notes
         }
         darkMode
         rubrics
@@ -8746,8 +8814,8 @@ export const lessonsByType2 = /* GraphQL */ `
     }
   }
 `;
-export const messagesByRoomID = /* GraphQL */ `
-  query MessagesByRoomID(
+export const messagesByRoomId = /* GraphQL */ `
+  query MessagesByRoomId(
     $roomID: ID!
     $createdAt: ModelStringKeyConditionInput
     $sortDirection: ModelSortDirection
@@ -8986,6 +9054,7 @@ export const attendanceByStudent = /* GraphQL */ `
           designers
           universalSyllabusSeq
           syllabiHistory
+          signedOff
           createdAt
           updatedAt
         }

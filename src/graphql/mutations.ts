@@ -412,6 +412,7 @@ export const createPersonLessonsData = /* GraphQL */ `
           interactionType
           tags
           videoLink
+          notes
         }
         homework {
           id
@@ -428,6 +429,7 @@ export const createPersonLessonsData = /* GraphQL */ `
           interactionType
           tags
           videoLink
+          notes
         }
         darkMode
         rubrics
@@ -638,6 +640,7 @@ export const updatePersonLessonsData = /* GraphQL */ `
           interactionType
           tags
           videoLink
+          notes
         }
         homework {
           id
@@ -654,6 +657,7 @@ export const updatePersonLessonsData = /* GraphQL */ `
           interactionType
           tags
           videoLink
+          notes
         }
         darkMode
         rubrics
@@ -864,6 +868,7 @@ export const deletePersonLessonsData = /* GraphQL */ `
           interactionType
           tags
           videoLink
+          notes
         }
         homework {
           id
@@ -880,6 +885,7 @@ export const deletePersonLessonsData = /* GraphQL */ `
           interactionType
           tags
           videoLink
+          notes
         }
         darkMode
         rubrics
@@ -1111,6 +1117,7 @@ export const createInstitution = /* GraphQL */ `
           designers
           universalSyllabusSeq
           syllabiHistory
+          signedOff
           createdAt
           updatedAt
         }
@@ -1238,6 +1245,7 @@ export const updateInstitution = /* GraphQL */ `
           designers
           universalSyllabusSeq
           syllabiHistory
+          signedOff
           createdAt
           updatedAt
         }
@@ -1365,6 +1373,7 @@ export const deleteInstitution = /* GraphQL */ `
           designers
           universalSyllabusSeq
           syllabiHistory
+          signedOff
           createdAt
           updatedAt
         }
@@ -2540,8 +2549,8 @@ export const deleteRoom = /* GraphQL */ `
     }
   }
 `;
-export const createArchiveSurveyDataSQL = /* GraphQL */ `
-  mutation CreateArchiveSurveyDataSQL(
+export const createArchiveSurveyDataSql = /* GraphQL */ `
+  mutation CreateArchiveSurveyDataSql(
     $input: CreateArchiveSurveyDataSQLInput!
     $condition: ModelArchiveSurveyDataSQLConditionInput
   ) {
@@ -2560,8 +2569,8 @@ export const createArchiveSurveyDataSQL = /* GraphQL */ `
     }
   }
 `;
-export const updateArchiveSurveyDataSQL = /* GraphQL */ `
-  mutation UpdateArchiveSurveyDataSQL(
+export const updateArchiveSurveyDataSql = /* GraphQL */ `
+  mutation UpdateArchiveSurveyDataSql(
     $input: UpdateArchiveSurveyDataSQLInput!
     $condition: ModelArchiveSurveyDataSQLConditionInput
   ) {
@@ -2580,8 +2589,8 @@ export const updateArchiveSurveyDataSQL = /* GraphQL */ `
     }
   }
 `;
-export const deleteArchiveSurveyDataSQL = /* GraphQL */ `
-  mutation DeleteArchiveSurveyDataSQL(
+export const deleteArchiveSurveyDataSql = /* GraphQL */ `
+  mutation DeleteArchiveSurveyDataSql(
     $input: DeleteArchiveSurveyDataSQLInput!
     $condition: ModelArchiveSurveyDataSQLConditionInput
   ) {
@@ -3775,6 +3784,16 @@ export const createRoomCoTeachers = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      curricula {
+        items {
+          id
+          roomID
+          curriculumID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -3953,6 +3972,16 @@ export const updateRoomCoTeachers = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      curricula {
+        items {
+          id
+          roomID
+          curriculumID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -4130,6 +4159,16 @@ export const deleteRoomCoTeachers = /* GraphQL */ `
         statusChangedBy
         createdAt
         updatedAt
+      }
+      curricula {
+        items {
+          id
+          roomID
+          curriculumID
+          createdAt
+          updatedAt
+        }
+        nextToken
       }
       createdAt
       updatedAt
@@ -5142,6 +5181,12 @@ export const createCurriculum = /* GraphQL */ `
         nextToken
       }
       syllabiHistory
+      signedOff
+      signedOffSteps {
+        authID
+        date
+        step
+      }
       createdAt
       updatedAt
     }
@@ -5223,6 +5268,12 @@ export const updateCurriculum = /* GraphQL */ `
         nextToken
       }
       syllabiHistory
+      signedOff
+      signedOffSteps {
+        authID
+        date
+        step
+      }
       createdAt
       updatedAt
     }
@@ -5304,6 +5355,12 @@ export const deleteCurriculum = /* GraphQL */ `
         nextToken
       }
       syllabiHistory
+      signedOff
+      signedOffSteps {
+        authID
+        date
+        step
+      }
       createdAt
       updatedAt
     }
@@ -5356,6 +5413,12 @@ export const createTopic = /* GraphQL */ `
           nextToken
         }
         syllabiHistory
+        signedOff
+        signedOffSteps {
+          authID
+          date
+          step
+        }
         createdAt
         updatedAt
       }
@@ -5425,6 +5488,12 @@ export const updateTopic = /* GraphQL */ `
           nextToken
         }
         syllabiHistory
+        signedOff
+        signedOffSteps {
+          authID
+          date
+          step
+        }
         createdAt
         updatedAt
       }
@@ -5494,6 +5563,12 @@ export const deleteTopic = /* GraphQL */ `
           nextToken
         }
         syllabiHistory
+        signedOff
+        signedOffSteps {
+          authID
+          date
+          step
+        }
         createdAt
         updatedAt
       }
@@ -5627,6 +5702,7 @@ export const createRubric = /* GraphQL */ `
           designers
           universalSyllabusSeq
           syllabiHistory
+          signedOff
           createdAt
           updatedAt
         }
@@ -5680,6 +5756,7 @@ export const updateRubric = /* GraphQL */ `
           designers
           universalSyllabusSeq
           syllabiHistory
+          signedOff
           createdAt
           updatedAt
         }
@@ -5733,6 +5810,7 @@ export const deleteRubric = /* GraphQL */ `
           designers
           universalSyllabusSeq
           syllabiHistory
+          signedOff
           createdAt
           updatedAt
         }
@@ -5806,6 +5884,12 @@ export const createRoomCurriculum = /* GraphQL */ `
           nextToken
         }
         syllabiHistory
+        signedOff
+        signedOffSteps {
+          authID
+          date
+          step
+        }
         createdAt
         updatedAt
       }
@@ -5861,6 +5945,12 @@ export const updateRoomCurriculum = /* GraphQL */ `
           nextToken
         }
         syllabiHistory
+        signedOff
+        signedOffSteps {
+          authID
+          date
+          step
+        }
         createdAt
         updatedAt
       }
@@ -5916,6 +6006,12 @@ export const deleteRoomCurriculum = /* GraphQL */ `
           nextToken
         }
         syllabiHistory
+        signedOff
+        signedOffSteps {
+          authID
+          date
+          step
+        }
         createdAt
         updatedAt
       }
@@ -6083,6 +6179,12 @@ export const createCommonCheckpoint = /* GraphQL */ `
           nextToken
         }
         syllabiHistory
+        signedOff
+        signedOffSteps {
+          authID
+          date
+          step
+        }
         createdAt
         updatedAt
       }
@@ -6161,6 +6263,12 @@ export const updateCommonCheckpoint = /* GraphQL */ `
           nextToken
         }
         syllabiHistory
+        signedOff
+        signedOffSteps {
+          authID
+          date
+          step
+        }
         createdAt
         updatedAt
       }
@@ -6239,6 +6347,12 @@ export const deleteCommonCheckpoint = /* GraphQL */ `
           nextToken
         }
         syllabiHistory
+        signedOff
+        signedOffSteps {
+          authID
+          date
+          step
+        }
         createdAt
         updatedAt
       }
@@ -8070,6 +8184,7 @@ export const createPersonLocation = /* GraphQL */ `
           interactionType
           tags
           videoLink
+          notes
         }
         homework {
           id
@@ -8086,6 +8201,7 @@ export const createPersonLocation = /* GraphQL */ `
           interactionType
           tags
           videoLink
+          notes
         }
         darkMode
         rubrics
@@ -8337,6 +8453,7 @@ export const updatePersonLocation = /* GraphQL */ `
           interactionType
           tags
           videoLink
+          notes
         }
         homework {
           id
@@ -8353,6 +8470,7 @@ export const updatePersonLocation = /* GraphQL */ `
           interactionType
           tags
           videoLink
+          notes
         }
         darkMode
         rubrics
@@ -8604,6 +8722,7 @@ export const deletePersonLocation = /* GraphQL */ `
           interactionType
           tags
           videoLink
+          notes
         }
         homework {
           id
@@ -8620,6 +8739,7 @@ export const deletePersonLocation = /* GraphQL */ `
           interactionType
           tags
           videoLink
+          notes
         }
         darkMode
         rubrics
@@ -8692,6 +8812,12 @@ export const createAttendance = /* GraphQL */ `
           nextToken
         }
         syllabiHistory
+        signedOff
+        signedOffSteps {
+          authID
+          date
+          step
+        }
         createdAt
         updatedAt
       }
@@ -8792,6 +8918,7 @@ export const createAttendance = /* GraphQL */ `
           interactionType
           tags
           videoLink
+          notes
         }
         homework {
           id
@@ -8808,6 +8935,7 @@ export const createAttendance = /* GraphQL */ `
           interactionType
           tags
           videoLink
+          notes
         }
         darkMode
         rubrics
@@ -9000,6 +9128,12 @@ export const updateAttendance = /* GraphQL */ `
           nextToken
         }
         syllabiHistory
+        signedOff
+        signedOffSteps {
+          authID
+          date
+          step
+        }
         createdAt
         updatedAt
       }
@@ -9100,6 +9234,7 @@ export const updateAttendance = /* GraphQL */ `
           interactionType
           tags
           videoLink
+          notes
         }
         homework {
           id
@@ -9116,6 +9251,7 @@ export const updateAttendance = /* GraphQL */ `
           interactionType
           tags
           videoLink
+          notes
         }
         darkMode
         rubrics
@@ -9308,6 +9444,12 @@ export const deleteAttendance = /* GraphQL */ `
           nextToken
         }
         syllabiHistory
+        signedOff
+        signedOffSteps {
+          authID
+          date
+          step
+        }
         createdAt
         updatedAt
       }
@@ -9408,6 +9550,7 @@ export const deleteAttendance = /* GraphQL */ `
           interactionType
           tags
           videoLink
+          notes
         }
         homework {
           id
@@ -9424,6 +9567,7 @@ export const deleteAttendance = /* GraphQL */ `
           interactionType
           tags
           videoLink
+          notes
         }
         darkMode
         rubrics
@@ -9649,6 +9793,7 @@ export const createUniversalLesson = /* GraphQL */ `
         interactionType
         tags
         videoLink
+        notes
       }
       homework {
         id
@@ -9672,6 +9817,7 @@ export const createUniversalLesson = /* GraphQL */ `
         interactionType
         tags
         videoLink
+        notes
       }
       darkMode
       rubrics
@@ -9774,6 +9920,7 @@ export const updateUniversalLesson = /* GraphQL */ `
         interactionType
         tags
         videoLink
+        notes
       }
       homework {
         id
@@ -9797,6 +9944,7 @@ export const updateUniversalLesson = /* GraphQL */ `
         interactionType
         tags
         videoLink
+        notes
       }
       darkMode
       rubrics
@@ -9899,6 +10047,7 @@ export const deleteUniversalLesson = /* GraphQL */ `
         interactionType
         tags
         videoLink
+        notes
       }
       homework {
         id
@@ -9922,6 +10071,7 @@ export const deleteUniversalLesson = /* GraphQL */ `
         interactionType
         tags
         videoLink
+        notes
       }
       darkMode
       rubrics
@@ -10003,6 +10153,7 @@ export const createUniversalLessonStudentData = /* GraphQL */ `
           interactionType
           tags
           videoLink
+          notes
         }
         homework {
           id
@@ -10019,6 +10170,7 @@ export const createUniversalLessonStudentData = /* GraphQL */ `
           interactionType
           tags
           videoLink
+          notes
         }
         darkMode
         rubrics
@@ -10132,6 +10284,7 @@ export const updateUniversalLessonStudentData = /* GraphQL */ `
           interactionType
           tags
           videoLink
+          notes
         }
         homework {
           id
@@ -10148,6 +10301,7 @@ export const updateUniversalLessonStudentData = /* GraphQL */ `
           interactionType
           tags
           videoLink
+          notes
         }
         darkMode
         rubrics
@@ -10261,6 +10415,7 @@ export const deleteUniversalLessonStudentData = /* GraphQL */ `
           interactionType
           tags
           videoLink
+          notes
         }
         homework {
           id
@@ -10277,6 +10432,7 @@ export const deleteUniversalLessonStudentData = /* GraphQL */ `
           interactionType
           tags
           videoLink
+          notes
         }
         darkMode
         rubrics
@@ -10393,6 +10549,7 @@ export const createUniversalLessonWritingExcercises = /* GraphQL */ `
           interactionType
           tags
           videoLink
+          notes
         }
         homework {
           id
@@ -10409,6 +10566,7 @@ export const createUniversalLessonWritingExcercises = /* GraphQL */ `
           interactionType
           tags
           videoLink
+          notes
         }
         darkMode
         rubrics
@@ -10525,6 +10683,7 @@ export const updateUniversalLessonWritingExcercises = /* GraphQL */ `
           interactionType
           tags
           videoLink
+          notes
         }
         homework {
           id
@@ -10541,6 +10700,7 @@ export const updateUniversalLessonWritingExcercises = /* GraphQL */ `
           interactionType
           tags
           videoLink
+          notes
         }
         darkMode
         rubrics
@@ -10657,6 +10817,7 @@ export const deleteUniversalLessonWritingExcercises = /* GraphQL */ `
           interactionType
           tags
           videoLink
+          notes
         }
         homework {
           id
@@ -10673,6 +10834,7 @@ export const deleteUniversalLessonWritingExcercises = /* GraphQL */ `
           interactionType
           tags
           videoLink
+          notes
         }
         darkMode
         rubrics
@@ -11607,6 +11769,7 @@ export const createUniversalJournalData = /* GraphQL */ `
           interactionType
           tags
           videoLink
+          notes
         }
         homework {
           id
@@ -11623,6 +11786,7 @@ export const createUniversalJournalData = /* GraphQL */ `
           interactionType
           tags
           videoLink
+          notes
         }
         darkMode
         rubrics
@@ -11721,6 +11885,7 @@ export const updateUniversalJournalData = /* GraphQL */ `
           interactionType
           tags
           videoLink
+          notes
         }
         homework {
           id
@@ -11737,6 +11902,7 @@ export const updateUniversalJournalData = /* GraphQL */ `
           interactionType
           tags
           videoLink
+          notes
         }
         darkMode
         rubrics
@@ -11835,6 +12001,7 @@ export const deleteUniversalJournalData = /* GraphQL */ `
           interactionType
           tags
           videoLink
+          notes
         }
         homework {
           id
@@ -11851,6 +12018,7 @@ export const deleteUniversalJournalData = /* GraphQL */ `
           interactionType
           tags
           videoLink
+          notes
         }
         darkMode
         rubrics
@@ -12352,6 +12520,7 @@ export const createUniversalSyllabusLesson = /* GraphQL */ `
           interactionType
           tags
           videoLink
+          notes
         }
         homework {
           id
@@ -12368,6 +12537,7 @@ export const createUniversalSyllabusLesson = /* GraphQL */ `
           interactionType
           tags
           videoLink
+          notes
         }
         darkMode
         rubrics
@@ -12489,6 +12659,7 @@ export const updateUniversalSyllabusLesson = /* GraphQL */ `
           interactionType
           tags
           videoLink
+          notes
         }
         homework {
           id
@@ -12505,6 +12676,7 @@ export const updateUniversalSyllabusLesson = /* GraphQL */ `
           interactionType
           tags
           videoLink
+          notes
         }
         darkMode
         rubrics
@@ -12626,6 +12798,7 @@ export const deleteUniversalSyllabusLesson = /* GraphQL */ `
           interactionType
           tags
           videoLink
+          notes
         }
         homework {
           id
@@ -12642,6 +12815,7 @@ export const deleteUniversalSyllabusLesson = /* GraphQL */ `
           interactionType
           tags
           videoLink
+          notes
         }
         darkMode
         rubrics
@@ -15026,6 +15200,7 @@ export const createFeelingsArchive = /* GraphQL */ `
           interactionType
           tags
           videoLink
+          notes
         }
         homework {
           id
@@ -15042,6 +15217,7 @@ export const createFeelingsArchive = /* GraphQL */ `
           interactionType
           tags
           videoLink
+          notes
         }
         darkMode
         rubrics
@@ -15305,6 +15481,7 @@ export const updateFeelingsArchive = /* GraphQL */ `
           interactionType
           tags
           videoLink
+          notes
         }
         homework {
           id
@@ -15321,6 +15498,7 @@ export const updateFeelingsArchive = /* GraphQL */ `
           interactionType
           tags
           videoLink
+          notes
         }
         darkMode
         rubrics
@@ -15584,6 +15762,7 @@ export const deleteFeelingsArchive = /* GraphQL */ `
           interactionType
           tags
           videoLink
+          notes
         }
         homework {
           id
@@ -15600,6 +15779,7 @@ export const deleteFeelingsArchive = /* GraphQL */ `
           interactionType
           tags
           videoLink
+          notes
         }
         darkMode
         rubrics
