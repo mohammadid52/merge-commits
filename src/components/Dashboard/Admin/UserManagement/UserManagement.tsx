@@ -3,6 +3,7 @@ import {Route, Switch, useRouteMatch} from 'react-router-dom';
 import {GlobalContext} from 'contexts/GlobalContext';
 import User from './User';
 import UserLookup from './UserLookup';
+import ErrorBoundary from '@components/Error/ErrorBoundary';
 
 const UserManagement = () => {
   const {dispatch} = useContext(GlobalContext);
@@ -15,8 +16,23 @@ const UserManagement = () => {
   return (
     <div className={`w-full h-full p-8 flex justify-center`}>
       <Switch>
-        <Route exact path={`${match.url}`} render={() => <UserLookup />} />
-        <Route path={`${match.url}/user`} render={() => <User />} />
+        <Route
+          exact
+          path={`${match.url}`}
+          render={() => (
+            <ErrorBoundary componentName="UserLookup">
+              <UserLookup />
+            </ErrorBoundary>
+          )}
+        />
+        <Route
+          path={`${match.url}/user`}
+          render={() => (
+            <ErrorBoundary componentName="User">
+              <User />
+            </ErrorBoundary>
+          )}
+        />
       </Switch>
     </div>
   );

@@ -115,8 +115,9 @@ export const logError = async (
     const input: CreateErrorLogInput = {
       authID: auth.authId,
       email: auth.email,
-      error: typeof error === 'string' ? error : error.message,
-      errorType: typeof error === 'string' ? error : error.message,
+      error: JSON.stringify(error) || 'Invalid error',
+      errorType:
+        (typeof error === 'string' ? error : error.message) || 'Invalid error type',
       errorTime: new Date().toISOString(),
       pageUrl: location.href,
       componentName: componentName
@@ -126,7 +127,7 @@ export const logError = async (
     );
   } catch (error) {
     console.error(
-      'error logging error.. haha this is kind of ironic -> ',
+      'error logging error.. this is kind of ironic -> ',
       {error, auth},
       error
     );

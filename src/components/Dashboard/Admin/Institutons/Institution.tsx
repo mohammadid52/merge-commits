@@ -1,4 +1,5 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import ErrorBoundary from '@components/Error/ErrorBoundary';
 import useAuth from '@customHooks/useAuth';
 import {logError} from '@graphql/functions';
 import {getAsset} from 'assets';
@@ -157,14 +158,16 @@ const Institution = (props: InstitutionProps) => {
             <Route
               path={`${match.url}/`}
               render={() => (
-                <InstitutionInfo
-                  institute={institutionData}
-                  loading={fetchingDetails}
-                  postInfoUpdate={postInfoUpdate}
-                  tabProps={props.tabProps}
-                  toggleUpdateState={toggleUpdateState}
-                  updateServiceProviders={updateServiceProviders}
-                />
+                <ErrorBoundary componentName="InstitutionInfo">
+                  <InstitutionInfo
+                    institute={institutionData}
+                    loading={fetchingDetails}
+                    postInfoUpdate={postInfoUpdate}
+                    tabProps={props.tabProps}
+                    toggleUpdateState={toggleUpdateState}
+                    updateServiceProviders={updateServiceProviders}
+                  />
+                </ErrorBoundary>
               )}
             />
           </Switch>

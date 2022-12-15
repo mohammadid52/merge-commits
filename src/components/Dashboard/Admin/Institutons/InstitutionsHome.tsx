@@ -1,4 +1,5 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import ErrorBoundary from '@components/Error/ErrorBoundary';
 import {getAsset} from 'assets';
 import BreadcrumbsWithBanner from 'atoms/BreadcrumbsWithBanner';
 import PageWrapper from 'atoms/PageWrapper';
@@ -77,51 +78,99 @@ const InstitutionsHome: React.FC<DashboardProps> = (props: DashboardProps) => {
         <Route
           exact
           path={`${match.url}`}
-          render={() => <InstitutionLookup />} // Institutions list
+          render={() => (
+            <ErrorBoundary componentName="InstitutionLookup">
+              <InstitutionLookup />
+            </ErrorBoundary>
+          )} // Institutions list
         />
         <Route
           path={`${match.url}/add`}
-          render={() => <InstitutionBuilder />} // Create New institution.
+          render={() => (
+            <ErrorBoundary componentName="InstitutionBuilder">
+              <InstitutionBuilder />
+            </ErrorBoundary>
+          )} // Create New institution.
         />
         <Route
           path={`${match.url}/institution/curricular-creation`}
-          render={() => <CurricularBuilder />} // Create new curricular
+          render={() => (
+            <ErrorBoundary componentName="CurricularBuilder">
+              <CurricularBuilder />
+            </ErrorBoundary>
+          )} // Create new curricular
         />
         <Route
           path={`${match.url}/institution/:institutionId`}
-          render={() => <Institution tabProps={tabProps} />} // Institution info page
+          render={() => (
+            <ErrorBoundary componentName="Institution">
+              <Institution tabProps={tabProps} />
+            </ErrorBoundary>
+          )} // Institution info page
         />
         <Route
           path={`${match.url}/:institutionId/curricular/:curricularId/learning-objective/edit/:id`}
-          render={() => <EditLearningObjective />} // Edit curricular topic
+          render={() => (
+            <ErrorBoundary componentName="EditLearningObjective">
+              <EditLearningObjective />
+            </ErrorBoundary>
+          )} // Edit curricular topic
         />
         <Route
           path={`${match.url}/curricular/:curricularId/topic/edit/:id`}
-          render={() => <EditTopic />} // Edit curricular topic
+          render={() => (
+            <ErrorBoundary componentName="EditTopic">
+              <EditTopic />
+            </ErrorBoundary>
+          )} // Edit curricular topic
         />
         <Route
           path={`${match.url}/curricular/:curricularId/measurement/edit/:id`}
-          render={() => <EditMeasurement />} // Edit curricular measurement
+          render={() => (
+            <ErrorBoundary componentName="EditMeasurement">
+              <EditMeasurement />
+            </ErrorBoundary>
+          )} // Edit curricular measurement
         />
         <Route
           path={`${match.url}/:institutionId/curricular/:curricularId/syllabus/edit`}
-          render={() => <UnitBuilder />} // Edit curricular syllabus
+          render={() => (
+            <ErrorBoundary componentName="UnitBuilder">
+              <UnitBuilder />
+            </ErrorBoundary>
+          )} // Edit curricular syllabus
         />
         <Route
           path={`${match.url}/:institutionId/curricular/:curricularId/checkpoint/addNew`}
-          render={() => <AddProfileCheckpoint />} // Add new Checkpoint to curricular
+          render={() => (
+            <ErrorBoundary componentName="AddProfileCheckpoint">
+              <AddProfileCheckpoint />
+            </ErrorBoundary>
+          )} // Add new Checkpoint to curricular
         />
         <Route
           path={`${match.url}/:institutionId/curricular/:curricularId/checkpoint/edit/:id`}
-          render={() => <EditProfileCheckpoint />} // Edit curricular Checkpoint
+          render={() => (
+            <ErrorBoundary componentName="EditProfileCheckpoint">
+              <EditProfileCheckpoint />
+            </ErrorBoundary>
+          )} // Edit curricular Checkpoint
         />
         <Route
           path={`${match.url}/:institutionId/curricular/:curricularId/checkpoint/addPrevious`}
-          render={() => <ProfileCheckpointlookup />} // Add existing Checkpoint to curricular
+          render={() => (
+            <ErrorBoundary componentName="ProfileCheckpointlookup">
+              <ProfileCheckpointlookup />
+            </ErrorBoundary>
+          )} // Add existing Checkpoint to curricular
         />
         <Route
           path={`${match.url}/:institutionId/curricular`}
-          render={() => <CurricularView tabProps={tabProps} />} // Curricular information view.
+          render={() => (
+            <ErrorBoundary componentName="CurricularView">
+              <CurricularView tabProps={tabProps} />
+            </ErrorBoundary>
+          )} // Curricular information view.
         />
         {pathname.indexOf('/manage-institutions/institution') === -1 && (
           <div className={`w-full h-full`}>

@@ -156,6 +156,7 @@
     "react-router-dom": "^5.1.2",
     "react-tagsinput": "^3.19.0",
     "react-tiny-link": "^3.6.1",
+    "read-excel-file": "^5.5.3",
     "recharts": "^2.1.12",
     "sass": "^1.26.11",
     "sass-loader": "^8.0.2",

@@ -1,18 +1,18 @@
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import {getAsset} from 'assets';
 import BreadcrumbsWithBanner from 'atoms/BreadcrumbsWithBanner';
+import Buttons from 'atoms/Buttons';
+import SectionTitle from 'atoms/SectionTitle';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
 import React, {useContext, useEffect, useState} from 'react';
 import {FaPlus} from 'react-icons/fa';
 import {Route, Switch, useHistory, useRouteMatch} from 'react-router-dom';
-import {getAsset} from 'assets';
-import {GlobalContext} from 'contexts/GlobalContext';
-import useDictionary from 'customHooks/dictionary';
-import Buttons from 'atoms/Buttons';
-import SectionTitle from 'atoms/SectionTitle';
 import TestCasesInfo from './TestCasesInfo';
 
 // import {listCypressTestings} from 'graphql/queries';
-import TestCasesAdd from './TestCasesAdd';
+import ErrorBoundary from '@components/Error/ErrorBoundary';
 import LessonLoading from 'components/Lesson/Loading/LessonLoading';
+import TestCasesAdd from './TestCasesAdd';
 
 const TestCases = () => {
   const {theme, userLanguage, clientKey} = useContext(GlobalContext);
@@ -110,16 +110,22 @@ const TestCases = () => {
                   exact
                   path={`${match.url}/`}
                   render={() => (
-                    <TestCasesInfo
-                      deleteTestCase={deleteTestCase}
-                      tableData={tableData}
-                      status={status}
-                    />
+                    <ErrorBoundary componentName="TestCasesInfo">
+                      <TestCasesInfo
+                        deleteTestCase={deleteTestCase}
+                        tableData={tableData}
+                        status={status}
+                      />
+                    </ErrorBoundary>
                   )}
                 />
                 <Route
                   path={`${match.url}/add`}
-                  render={() => <TestCasesAdd status={status} setStatus={setStatus} />}
+                  render={() => (
+                    <ErrorBoundary componentName="TestCasesAdd">
+                      <TestCasesAdd status={status} setStatus={setStatus} />
+                    </ErrorBoundary>
+                  )}
                 />
               </Switch>
             </div>

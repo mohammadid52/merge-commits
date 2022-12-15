@@ -1,16 +1,15 @@
-import React from 'react'
-import { Switch, Route, useRouteMatch } from 'react-router-dom';
+import React from 'react';
+import {Switch, Route, useRouteMatch} from 'react-router-dom';
 
 import QuestionsList from './QuestionsList';
 import QuestionAdd from './QuestionAdd';
 import QuestionEdit from './QuestionEdit';
+import ErrorBoundary from '@components/Error/ErrorBoundary';
 
-interface QuestionBankProps {
-
-}
+interface QuestionBankProps {}
 
 const QuestionBank = (props: QuestionBankProps) => {
-  const { } = props;
+  const {} = props;
   const match = useRouteMatch();
 
   return (
@@ -19,21 +18,33 @@ const QuestionBank = (props: QuestionBankProps) => {
         <Route
           exact
           path={`${match.url}`}
-          render={() => <QuestionsList />}    // Questions list
+          render={() => (
+            <ErrorBoundary componentName="QuestionsList">
+              <QuestionsList />
+            </ErrorBoundary>
+          )} // Questions list
         />
         <Route
           exact
           path={`${match.url}/question/add`}
-          render={() => <QuestionAdd />}    // Question add
+          render={() => (
+            <ErrorBoundary componentName="QuestionAdd">
+              <QuestionAdd />
+            </ErrorBoundary>
+          )} // Question add
         />
         <Route
           exact
           path={`${match.url}/question/edit`}
-          render={() => <QuestionEdit />}    // Question edit
+          render={() => (
+            <ErrorBoundary componentName="QuestionEdit">
+              <QuestionEdit />
+            </ErrorBoundary>
+          )} // Question edit
         />
       </Switch>
     </div>
-  )
-}
+  );
+};
 
 export default QuestionBank;

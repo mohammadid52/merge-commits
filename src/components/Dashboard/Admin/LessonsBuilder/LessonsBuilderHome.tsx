@@ -9,6 +9,7 @@ import UniversalLessonBuilder from '../../../Lesson/UniversalLessonBuilder/Unive
 import LessonBuilder from './LessonBuilder';
 import LessonsList from './LessonsList';
 import LessonTabView from './StepActionComponent/LessonTabView';
+import ErrorBoundary from '@components/Error/ErrorBoundary';
 
 interface ILessonBuilderHomeProps {
   instId?: string;
@@ -86,17 +87,23 @@ const LessonsBuilderHome = ({instId}: ILessonBuilderHomeProps) => {
           <Route
             exact
             path={`${match.url}`}
-            render={() => <LessonsList isInInstitution instId={instId} />} // Lessons builder List Home
+            render={() => (
+              <ErrorBoundary componentName="LessonsList">
+                <LessonsList isInInstitution instId={instId} />
+              </ErrorBoundary>
+            )} // Lessons builder List Home
           />
           <Route
             exact
             path={`${match.url}/add`}
             render={() => (
-              <LessonBuilder
-                designersList={designersList}
-                institutionList={institutionList}
-                instId={instId}
-              />
+              <ErrorBoundary componentName="LessonBuilder">
+                <LessonBuilder
+                  designersList={designersList}
+                  institutionList={institutionList}
+                  instId={instId}
+                />
+              </ErrorBoundary>
             )} // Add new lesson form
           />
           <Route
@@ -104,26 +111,40 @@ const LessonsBuilderHome = ({instId}: ILessonBuilderHomeProps) => {
             path={`${match.url}/:lessonId`}
             render={() => (
               // <LessonEdit designersList={designersList} />
-              <LessonBuilder
-                designersList={designersList}
-                institutionList={institutionList}
-                instId={instId}
-              />
+              <ErrorBoundary componentName="LessonBuilder">
+                <LessonBuilder
+                  designersList={designersList}
+                  institutionList={institutionList}
+                  instId={instId}
+                />
+              </ErrorBoundary>
             )} // Edit lesson, assessment or survey form
           />
           <Route
             exact
             path={`${match.url}/lesson/view`}
-            render={() => <LessonTabView designersList={designersList} />}
+            render={() => (
+              <ErrorBoundary componentName="LessonTabView">
+                <LessonTabView designersList={designersList} />
+              </ErrorBoundary>
+            )}
           />
           <Route
             exact
             path={`${match.url}/lesson/add/lesson-plan`}
-            render={() => <LessonPlan />}
+            render={() => (
+              <ErrorBoundary componentName="LessonPlan">
+                <LessonPlan />
+              </ErrorBoundary>
+            )}
           />
           <Route
             path={`${match.url}/:lessonId/page-builder`}
-            render={() => <UniversalLessonBuilder instId={instId} />}
+            render={() => (
+              <ErrorBoundary componentName="UniversalLessonBuilder">
+                <UniversalLessonBuilder instId={instId} />
+              </ErrorBoundary>
+            )}
           />
         </Switch>
         {/*</UniversalLessonBuilderProvider>*/}
