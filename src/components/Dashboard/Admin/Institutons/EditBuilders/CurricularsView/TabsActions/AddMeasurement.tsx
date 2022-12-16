@@ -105,42 +105,11 @@ const AddMeasurement = (props: AddMeasurementProps) => {
           setLoading(false);
         }
       }
-      // if (!measurementIds.length) {
-      //   let seqItem: any = await API.graphql(graphqlOperation(mutations.createCSequences, { input: { id: `m_${topic.id}`, sequence: [addedItem.id] } }));
-      //   seqItem = seqItem.data.createCSequences
-      //   console.log('seqItem', seqItem)
-      // } else {
-      //   let seqItem: any = await API.graphql(graphqlOperation(mutations.updateCSequences, { input: { id: `m_${topic.id}`, sequence: [...measurementIds, addedItem.id] } }));
-      //   seqItem = seqItem.data.updateCSequences
-      //   console.log('seqItem', seqItem)
-      // }
-      // if (addedItem) {
-      //   postMutation(addedItem);
-      // } else {
-      //   console.log('Could not add measurement');
-      // }
     }
   };
 
-  // useEffect(() => {
-  //   if (topic?.id) {
-  //     fetchMeasurementSequence(topic.id)
-  //   }
-  // }, [topic.id])
-
   return (
-    <div className="min-w-172">
-      {/* Section Header
-      <BreadCrums items={breadCrumsList} />
-      <div className="flex justify-between">
-        <SectionTitle title={AddMeasurementDict[userLanguage]['title']} subtitle={AddMeasurementDict[userLanguage]['subtitle']} />
-        <div className="flex justify-end py-4 mb-4 w-5/10">
-          <Buttons label="Go Back" btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
-        </div>
-      </div>
-
-      {/* Body section */}
-      {/* <PageWrapper> */}
+    <div className="lg:min-w-132">
       <div className="w-full m-auto">
         <div className="">
           <div className="px-3 py-4">
@@ -154,20 +123,10 @@ const AddMeasurement = (props: AddMeasurementProps) => {
             />
             {validation.name && <p className="text-red-600">{validation.name}</p>}
           </div>
-          {/* <div className="px-3 py-4">
-              <div>
-                <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
-                  {AddMeasurementDict[userLanguage]['selecttopic']} <span className="text-red-500">*</span>
-                </label>
-                <Selector selectedItem={topic.value} placeholder={AddMeasurementDict[userLanguage]['topic']} list={topics} onChange={selectTopic} />
-                {
-                  validation.topic && <p className="text-red-600">{validation.topic}</p>
-                }
-              </div>
-            </div> */}
 
           <div className="px-3 py-4">
-            <TextArea
+            <FormInput
+              textarea
               rows={3}
               id="criteria"
               value={criteria}
@@ -192,7 +151,6 @@ const AddMeasurement = (props: AddMeasurementProps) => {
           disabled={loading}
         />
       </div>
-      {/* </PageWrapper> */}
     </div>
   );
 };

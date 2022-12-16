@@ -12,6 +12,7 @@ import Buttons from 'atoms/Buttons';
 import CheckpointQueTable from '../../../../LessonsBuilder/StepActionComponent/CheckPointSteps/CheckpointQueTable';
 import {GlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
+import Loader from '@components/Atoms/Loader';
 
 interface CheckpointListProps {
   curricularId: string;
@@ -141,7 +142,11 @@ const CheckpointList = (props: CheckpointListProps) => {
             )
           ) : (
             <div className="py-12 my-12 m-auto text-center">
-              {CHECKPOINTSDICT[userLanguage]['FETCH']}
+              <Loader
+                withText={CHECKPOINTSDICT[userLanguage]['FETCH']}
+                animation
+                className="text-gray-500"
+              />
             </div>
           )}
         </PageWrapper>

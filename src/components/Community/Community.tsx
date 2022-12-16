@@ -334,10 +334,7 @@ const Community = ({}: {role: string}) => {
 
         {!Boolean(error) && isLoading && !isFetched && (
           <div className="flex items-center justify-center">
-            <Loader
-              withText="Loading cards..."
-              className="w-auto iconoclast:text-main curate:text-main"
-            />
+            <Loader animation withText="Loading cards..." className="w-auto" />
           </div>
         )}
 

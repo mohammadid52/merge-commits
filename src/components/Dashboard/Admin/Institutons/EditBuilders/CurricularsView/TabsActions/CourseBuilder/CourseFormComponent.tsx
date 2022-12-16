@@ -427,7 +427,7 @@ const CourseFormComponent = ({courseId, courseData}: CourseBuilderProps) => {
                   {!imageLoading || imageUrl ? (
                     <img
                       onClick={handleImage}
-                      className={`profile  w-120  md:w-120  border flex flex-shrink-0 rounded-xl theme-card-shadow`}
+                      className={`profile  w-120  md:w-120 bg-gray-100  border flex flex-shrink-0 rounded-xl theme-card-shadow`}
                       src={imageUrl}
                     />
                   ) : (
@@ -455,23 +455,9 @@ const CourseFormComponent = ({courseId, courseData}: CourseBuilderProps) => {
               />
             </div>
 
-            {/*
-             **
-             * Hide institution drop down since all the things are tied to the
-             * Institute, will add this later if need to add builders saperately.
-             */}
-            {/* <div className="px-3 py-4">
-              <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
-                Institute
-              </label>
-              <Selector selectedItem={institute.value} placeholder="Select Institute" list={institutionList} onChange={selectInstitute} />
-            </div> */}
-
             <div className="px-3 py-4">
-              <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
-                {CurricularBuilderdict[userLanguage]['LANGUAGE']}
-              </label>
               <MultipleSelector
+                label={CurricularBuilderdict[userLanguage]['LANGUAGE']}
                 selectedItems={languages}
                 placeholder={CurricularBuilderdict[userLanguage]['LANGUAGE']}
                 list={languageList}
@@ -480,10 +466,8 @@ const CourseFormComponent = ({courseId, courseData}: CourseBuilderProps) => {
             </div>
 
             <div className="px-3 py-4">
-              <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
-                {CurricularBuilderdict[userLanguage]['DESIGNER']}
-              </label>
               <MultipleSelector
+                label={CurricularBuilderdict[userLanguage]['DESIGNER']}
                 selectedItems={selectedDesigners}
                 placeholder={CurricularBuilderdict[userLanguage]['DESIGNER']}
                 list={designersList}
@@ -491,10 +475,8 @@ const CourseFormComponent = ({courseId, courseData}: CourseBuilderProps) => {
               />
             </div>
             <div className="px-3 py-4">
-              <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
-                {CurricularBuilderdict[userLanguage]['TYPE']}
-              </label>
               <Selector
+                label={CurricularBuilderdict[userLanguage]['TYPE']}
                 placeholder={CurricularBuilderdict[userLanguage]['TYPE']}
                 list={typeList}
                 onChange={(str: any, name: string) => {

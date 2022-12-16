@@ -4,6 +4,7 @@ import {GlobalContext} from 'contexts/GlobalContext';
 import {getImageFromS3} from 'utilities/services';
 import {getInitialsFromString, initials, stringToHslColor} from 'utilities/strings';
 import {orderBy} from 'lodash';
+import Label from './Label';
 
 interface MultipleSelectorProps {
   list?: {id: string; name: string; value?: string; avatar?: string}[];
@@ -15,6 +16,8 @@ interface MultipleSelectorProps {
   onChange: (id: string, name: string, value: string) => void;
   disabled?: boolean;
   withAvatar?: boolean;
+  isRequired?: boolean;
+  label?: string;
 }
 
 const MultipleSelector = (props: MultipleSelectorProps) => {
@@ -26,8 +29,10 @@ const MultipleSelector = (props: MultipleSelectorProps) => {
     btnClass,
     arrowHidden,
     placeholder,
+    isRequired,
     onChange,
-    noOptionMessage
+    noOptionMessage,
+    label
   } = props;
   const [showList, setShowList] = useState(false);
   const currentRef: any = useRef(null);
@@ -85,6 +90,7 @@ const MultipleSelector = (props: MultipleSelectorProps) => {
 
   return (
     <div className="relative" ref={currentRef}>
+      {label && <Label dark={false} label={label} isRequired={isRequired} />}
       <span className="inline-block w-full h-full rounded-full shadow-sm">
         <button
           disabled={disabled}

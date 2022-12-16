@@ -114,26 +114,9 @@ const AddLearningObjective = (props: AddLearningObjectiveProps) => {
   }, []);
 
   return (
-    <div>
-      {/* Section Header */}
-      {/* <BreadCrums items={breadCrumsList} />
-      <div className="flex justify-between">
-        <SectionTitle
-          title={ADDLEARINGOBJDICT[userLanguage]['TITLE']}
-          subtitle={ADDLEARINGOBJDICT[userLanguage]['SUBTITLE']}
-        />
-        <div className="flex justify-end py-4 mb-4 w-5/10">
-          <Buttons label="Go Back" btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
-        </div>
-      </div> */}
-
-      {/* Body section */}
-      {/* <PageWrapper> */}
+    <div className=" lg:min-w-132">
       <div className="w-full m-auto">
-        {/* <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">
-            {ADDLEARINGOBJDICT[userLanguage]['HEADING']}
-          </h3> */}
-        <div className="my-4">
+        <div className="mb-4">
           <div className="px-3">
             <FormInput
               value={name}
@@ -150,17 +133,13 @@ const AddLearningObjective = (props: AddLearningObjectiveProps) => {
             ) : null}
           </div>
 
-          {/* <div className="px-3 py-4">
-              <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
-                Select Sequence
-              </label>
-              <Selector placeholder="Sequence" list={sequenceList} onChange={() => console.log('')} />
-            </div> */}
-
           <div className="px-3">
-            <TextArea
+            <FormInput
+              resize={false}
+              textarea
               id="description"
               value={description}
+              rows={5}
               onChange={onInputChange}
               name="description"
               label={ADDLEARINGOBJDICT[userLanguage]['DESC']}
@@ -168,7 +147,7 @@ const AddLearningObjective = (props: AddLearningObjectiveProps) => {
           </div>
         </div>
       </div>
-      <div className="flex my-4 justify-center">
+      <div className="flex my-4 justify-end">
         <Buttons
           btnClass="py-3 px-2 2xl:px-10 mr-2"
           label={'Cancel'}

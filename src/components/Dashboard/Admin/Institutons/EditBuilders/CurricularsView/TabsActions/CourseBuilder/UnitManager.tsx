@@ -407,7 +407,7 @@ const UnitManager = ({
           {loading ? (
             <div className="h-100 flex justify-center items-center">
               <div className="w-5/10">
-                <Loader />
+                <Loader animation withText="Fetching units..." />
               </div>
             </div>
           ) : selectedSyllabusList?.length > 0 ? (

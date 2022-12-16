@@ -60,7 +60,7 @@ const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
     onKeyDown,
     dataCy,
     Icon,
-    resize = true
+    resize = false
   } = inputProps;
 
   const {theme, clientKey} = useContext(GlobalContext);
