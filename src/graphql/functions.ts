@@ -133,5 +133,7 @@ export const logError = async (
         error
       );
     }
+  } else {
+    console.error(error);
   }
 };

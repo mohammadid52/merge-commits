@@ -41,7 +41,6 @@ class ErrorBoundary extends React.Component<PropsInterface> {
   }
 
   public componentDidCatch(error: Error, info: React.ErrorInfo) {
-    console.log(info);
     this.setState({
       hasError: true,
       error: error,

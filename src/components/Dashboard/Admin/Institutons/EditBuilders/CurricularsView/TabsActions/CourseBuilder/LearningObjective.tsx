@@ -26,22 +26,21 @@ const ActionBtns = ({
   actionTwo: () => void;
 }) => {
   return (
-    <span className="w-auto inline-flex gap-x-2 items-center cursor-pointer">
-      <Buttons
-        onClick={actionOne}
-        iconSize="w-4 h-6"
-        Icon={HiPencil}
-        size="small"
-        transparent
-      />
-      <Buttons
-        onClick={actionTwo}
-        iconSize="w-4 h-6"
-        Icon={HiOutlineTrash}
-        size="small"
-        transparent
-        redBtn
-      />
+    <span
+      style={{transform: 'scale(0.7)'}}
+      className="w-auto inline-flex gap-x-2 items-center cursor-pointer">
+      {actionOne && (
+        <Buttons onClick={actionOne} Icon={HiPencil} size="small" transparent />
+      )}
+      {actionTwo && (
+        <Buttons
+          onClick={actionTwo}
+          Icon={HiOutlineTrash}
+          size="small"
+          transparent
+          redBtn
+        />
+      )}
     </span>
   );
 };
@@ -72,15 +71,39 @@ const Topic = ({
     <div className=" w-auto">
       <div key={topic.id} className="pr-1  show-action-on-hover-2 mb-2">
         <div className="flex show-action-on-hover justify-start items-center">
-          <span className={`text-base  pr-2`}>
+          <span className={`text-base w-auto  pr-2`}>
             {topicIndex + 1}. {topic.name}
           </span>
 
-          <div className="w-auto">
-            <ActionBtns
-              actionOne={() => editCurrentTopic(topic)}
-              actionTwo={() => deleteModal(topic?.id, 'topic')}
-            />
+          <div className="w-auto flex actions">
+            <span
+              style={{transform: 'scale(0.7)'}}
+              className="w-auto inline-flex gap-x-2 items-center cursor-pointer">
+              <Buttons
+                title={'Edit topic'}
+                onClick={() => editCurrentTopic(topic)}
+                Icon={HiPencil}
+                size="small"
+                transparent
+              />
+
+              <Buttons
+                onClick={() => deleteModal(topic?.id, 'topic')}
+                Icon={HiOutlineTrash}
+                title={'Delete topic'}
+                size="small"
+                transparent
+                redBtn
+              />
+
+              <Buttons
+                title={AddMeasurementDict[userLanguage]['title']}
+                onClick={() => createNewMeasurement(topic.id, learning.id)}
+                Icon={IoIosAdd}
+                size="small"
+                transparent
+              />
+            </span>
           </div>
         </div>
         <ul className="pl-3">
@@ -102,40 +125,8 @@ const Topic = ({
                   </div>
                 </li>
               ))}
-              <Buttons
-                type="submit"
-                size="small"
-                onClick={() => createNewMeasurement(topic.id, learning.id)}
-                title={AddMeasurementDict[userLanguage]['title']}
-                transparent
-                label={AddMeasurementDict[userLanguage]['title']}
-                iconBeforeLabel
-                Icon={IoIosAdd}
-              />
             </>
-          ) : learning.topics?.length < 2 ? (
-            <Buttons
-              type="submit"
-              size="small"
-              transparent
-              onClick={() => createNewMeasurement(topic.id, learning.id)}
-              label={AddMeasurementDict[userLanguage]['title']}
-              title={AddMeasurementDict[userLanguage]['title']}
-              iconBeforeLabel
-              Icon={IoIosAdd}
-            />
-          ) : (
-            <Buttons
-              type="submit"
-              size="small"
-              transparent
-              onClick={() => createNewMeasurement(topic.id, learning.id)}
-              label={AddMeasurementDict[userLanguage]['title']}
-              title={AddMeasurementDict[userLanguage]['title']}
-              iconBeforeLabel
-              Icon={IoIosAdd}
-            />
-          )}
+          ) : learning.topics?.length < 2 ? null : null}
         </ul>
       </div>
     </div>
@@ -538,6 +529,7 @@ const LearningObjective = (props: LearningObjectiveProps) => {
                 />
               )
             }
+            subtitle={!loading ? 'hover on items for action' : ''}
             title={LEARINGOBJECTIVEDICT[userLanguage]['TITLE']}
           />
           {!loading ? (
@@ -562,12 +554,13 @@ const LearningObjective = (props: LearningObjectiveProps) => {
                                 Icon={HiPencil}
                                 size="small"
                                 transparent
+                                title="Edit topic"
                               />
                               <Buttons
                                 size="small"
                                 type="submit"
                                 onClick={() => createNewTopic(learning.id)}
-                                label={TOPICLISTDICT[userLanguage]['ADD']}
+                                title={TOPICLISTDICT[userLanguage]['ADD']}
                                 iconBeforeLabel
                                 Icon={IoIosAdd}
                               />
@@ -577,6 +570,7 @@ const LearningObjective = (props: LearningObjectiveProps) => {
                                 Icon={HiOutlineTrash}
                                 size="small"
                                 transparent
+                                title="Delete topic"
                                 redBtn
                               />
                             </div>
@@ -604,20 +598,6 @@ const LearningObjective = (props: LearningObjectiveProps) => {
                             )}
                           </div>
                         </div>
-                        {/* <div className="py-3 px-4 border-t-0 flex justify-end gap-x-4">
-                          <ActionBtns
-                            actionOne={() => editLearningObj(learning)}
-                            actionTwo={() => deleteModal(learning?.id, 'objective')}
-                          />
-                          <Buttons
-                            size="small"
-                            type="submit"
-                            onClick={() => createNewTopic(learning.id)}
-                            label={TOPICLISTDICT[userLanguage]['ADD']}
-                            iconBeforeLabel
-                            Icon={IoIosAdd}
-                          />
-                        </div> */}
                       </div>
                     </div>
                   ))}
