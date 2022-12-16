@@ -1,6 +1,8 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
+import useAuth from '@customHooks/useAuth';
 import useSearch from '@customHooks/useSearch';
+import {logError} from '@graphql/functions';
 import AddButton from 'atoms/Buttons/AddButton';
 import SearchInput from 'atoms/Form/SearchInput';
 import Selector from 'atoms/Form/Selector';
@@ -50,7 +52,9 @@ const CurriculumList = ({
 
   const isSuperAdmin: boolean = gContext.state.user.isSuperAdmin;
 
-  const [loading, setLoading] = useState(isSuperAdmin);
+  const [loading, setLoading] = useState(false);
+
+  const {authId, email} = useAuth();
 
   const [selectedInstitution, setSelectedInstitution] = useState<any>({});
 
@@ -112,6 +116,7 @@ const CurriculumList = ({
 
   const fetchCurriculums = async () => {
     try {
+      setLoading(true);
       const list: any = await API.graphql(
         graphqlOperation(customQueries.listCurriculumsForSuperAdmin)
       );
@@ -133,25 +138,20 @@ const CurriculumList = ({
       );
 
       setCourseList(updatedList);
-
-      setLoading(false);
     } catch (error) {
+      logError(error, {authId, email}, 'CurriculumList @fetchCurriculums');
+    } finally {
       setLoading(false);
     }
   };
 
-  // const removeSearchAction = () => {
-  //   setSearchInput('');
-  //   onSearch('', selectedInstitution?.id);
-  // };
-
   const onInstitutionSelectionRemove = () => {
     setSelectedInstitution({});
-    // onSearch(searchInput, '');
   };
 
   const fetchInstitutions = async () => {
     try {
+      setLoading(true);
       const list: any = await API.graphql(
         graphqlOperation(customQueries.listInstitutionOptions)
       );
@@ -160,8 +160,9 @@ const CurriculumList = ({
           a.name?.toLowerCase() > b.name?.toLowerCase() ? 1 : -1
         )
       );
-      setLoading(false);
     } catch (error) {
+      logError(error, {authId, email}, 'CurriculumList @fetchInstitutions');
+    } finally {
       setLoading(false);
     }
   };
@@ -192,7 +193,6 @@ const CurriculumList = ({
   const handleDelete = async (item: any) => {
     setDeleting(true);
     try {
-      console.log('deleting...');
       await API.graphql(
         graphqlOperation(mutations.deleteCurriculum, {
           input: {id: item.id}
@@ -200,7 +200,7 @@ const CurriculumList = ({
       );
       updateCurricularList(item);
     } catch (e) {
-      console.error('error deleting...', e);
+      logError(e, {authId, email}, 'CurriculumList @handleDelete');
     } finally {
       setDeleting(false);
       setDeleteModal({show: false, message: '', action: () => {}});
@@ -329,13 +329,14 @@ const CurriculumList = ({
         {loading ? (
           <div className="py-20 text-center mx-auto flex justify-center items-center w-full h-48">
             <div className="w-5/10">
-              <Loader color="rgba(107, 114, 128, 1)" />
-              <p className="mt-2 text-center text-lg text-gray-500">
-                {InstitueCurriculum[userLanguage]['LOADING']}
-              </p>
+              <Loader
+                withText={InstitueCurriculum[userLanguage]['LOADING']}
+                animation
+                color="rgba(107, 114, 128, 1)"
+              />
             </div>
           </div>
-        ) : finalList?.length ? (
+        ) : finalList?.length > 0 ? (
           <table>
             <thead className="w-full pt-8 m-auto border-b-0 border-gray-200">
               <tr className="flex justify-between bg-gray-50 px-8 whitespace-nowrap">
@@ -370,22 +371,27 @@ const CurriculumList = ({
             </thead>
 
             <tbody className="mb-8 w-full m-auto flex-1 overflow-y-auto">
-              {finalList.map((item, index) => (
-                <CurriculumListRow
-                  key={`curr_list_row_${index}`}
-                  index={index}
-                  searchInput={searchInput.value}
-                  isSuperAdmin={isSuperAdmin}
-                  item={item}
-                  checkIfRemovable={checkIfRemovable}
-                  handleToggleDelete={handleToggleDelete}
-                  editCurrentCurricular={editCurrentCurricular}
-                  redirectToInstitution={() => redirectToInstitution(item.institutionID)}
-                  redirectToUnit={(unitId: string) =>
-                    redirectToUnit(item.institutionID, unitId)
-                  }
-                />
-              ))}
+              {finalList.map(
+                (item, index) =>
+                  item && (
+                    <CurriculumListRow
+                      key={`curr_list_row_${index}`}
+                      index={index}
+                      searchInput={searchInput.value}
+                      isSuperAdmin={isSuperAdmin}
+                      item={item}
+                      checkIfRemovable={checkIfRemovable}
+                      handleToggleDelete={handleToggleDelete}
+                      editCurrentCurricular={editCurrentCurricular}
+                      redirectToInstitution={() =>
+                        redirectToInstitution(item.institutionID)
+                      }
+                      redirectToUnit={(unitId: string) =>
+                        redirectToUnit(item.institutionID, unitId)
+                      }
+                    />
+                  )
+              )}
             </tbody>
             {deleteModal.show && (
               <ModalPopUp
@@ -409,7 +415,6 @@ const CurriculumList = ({
               </div>
             )}
             <p className="text-center p-16">
-              {' '}
               {searchInput || selectedInstitution?.id
                 ? CommonlyUsedDict[userLanguage]['NO_SEARCH_RESULT']
                 : InstitueCurriculum[userLanguage]['INFO']}

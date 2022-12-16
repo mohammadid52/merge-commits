@@ -1,19 +1,12 @@
-import React, {useContext, useEffect, useState} from 'react';
-import {useHistory, useParams} from 'react-router';
-import {IoArrowUndoCircleOutline} from 'react-icons/io5';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import BreadCrums from 'atoms/BreadCrums';
-import SectionTitle from 'atoms/SectionTitle';
 import Buttons from 'atoms/Buttons';
-import PageWrapper from 'atoms/PageWrapper';
 import FormInput from 'atoms/Form/FormInput';
 import TextArea from 'atoms/Form/TextArea';
-import Selector from 'atoms/Form/Selector';
-import * as queries from 'graphql/queries';
-import * as mutations from 'graphql/mutations';
+import {GlobalContext} from 'contexts/GlobalContext';
 import * as customMutations from 'customGraphql/customMutations';
 import useDictionary from 'customHooks/dictionary';
-import {GlobalContext} from 'contexts/GlobalContext';
+import * as queries from 'graphql/queries';
+import React, {useContext, useEffect, useState} from 'react';
 interface AddTopicProps {
   curricularId: string;
   onCancel?: () => void;
@@ -24,20 +17,15 @@ interface AddTopicProps {
 const AddTopic = (props: AddTopicProps) => {
   const {curricularId, onCancel, postMutation, topicData} = props;
 
-  const useQuery = () => {
-    return new URLSearchParams(location.search);
-  };
-
-  const urlGetParams: any = useQuery();
-  const {theme, clientKey, userLanguage} = useContext(GlobalContext);
-  const {AddTopicDict, BreadcrumsTitles} = useDictionary(clientKey);
+  const {clientKey, userLanguage} = useContext(GlobalContext);
+  const {AddTopicDict} = useDictionary(clientKey);
 
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [learning, setLearning] = useState({id: '', name: '', value: ''});
   const [validation, setValidation] = useState({name: '', learning: ''});
-  const [learnings, setLearnings] = useState([]);
+
   const [topicIds, setTopicIds] = useState([]);
   const [evalution, setEvalution] = useState({
     distinguished: '',
@@ -82,12 +70,7 @@ const AddTopic = (props: AddTopicProps) => {
     } else {
       msgs.name = '';
     }
-    // if (!learning.id) {
-    //   isValid = false;
-    //   msgs.learning = AddTopicDict[userLanguage]['messages']['objectiverequired'];
-    // } else {
-    //   msgs.learning = '';
-    // }
+
     setValidation({...msgs});
     return isValid;
   };
@@ -133,13 +116,6 @@ const AddTopic = (props: AddTopicProps) => {
     }
   };
 
-  const selectLearning = (val: string, name: string, id: string) => {
-    if (validation.learning) {
-      setValidation({...validation, learning: ''});
-    }
-    setLearning({id, name, value: val});
-  };
-
   const fetchTopicsSequence = async (leraningID: string) => {
     let seq: any = await API.graphql(
       graphqlOperation(queries.getCSequences, {id: `t_${leraningID}`})
@@ -157,22 +133,10 @@ const AddTopic = (props: AddTopicProps) => {
   const {distinguished, excelled, adequite, basic} = evalution;
 
   return (
-    <div className="min-w-256">
-      {/* Section Header */}
-      {/* <BreadCrums items={breadCrumsList} />
-      <div className="flex justify-between">
-        <SectionTitle title={AddTopicDict[userLanguage]['title']} subtitle={AddTopicDict[userLanguage]['subtitle']} />
-        <div className="flex justify-end py-4 mb-4 w-5/10">
-          <Buttons label="Go Back" btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
-        </div>
-      </div> */}
-
-      {/* Body section */}
-      {/* <PageWrapper> */}
+    <div className="lg:min-w-132">
       <div className="w-full m-auto">
-        {/* <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">{AddTopicDict[userLanguage]['heading']}</h3> */}
         <div className="grid grid-cols-2 gap-2">
-          <div className="px-3 py-4">
+          <div className="px-3 py-4 col-span-2">
             <FormInput
               value={name}
               id="name"
@@ -185,20 +149,11 @@ const AddTopic = (props: AddTopicProps) => {
             />
             {validation.name && <p className="text-red-600">{validation.name}</p>}
           </div>
-          <div></div>
-
-          {/* <div className="px-3 py-4">
-              <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
-                {AddTopicDict[userLanguage]['learningobj']} <span className="text-red-500">*</span>
-              </label>
-              <Selector selectedItem={learning.value} placeholder={AddTopicDict[userLanguage]['learningobjpl']} list={learnings} onChange={selectLearning} />
-              {
-                validation.learning && <p className="text-red-600">{validation.learning}</p>
-              }
-            </div> */}
 
           <div className="px-3 py-4">
-            <TextArea
+            <FormInput
+              textarea
+              rows={5}
               id="description"
               value={description}
               onChange={onInputChange}
@@ -208,7 +163,9 @@ const AddTopic = (props: AddTopicProps) => {
           </div>
 
           <div className="px-3 py-4">
-            <TextArea
+            <FormInput
+              textarea
+              rows={5}
               id="distinguished"
               value={distinguished}
               onChange={onInputChange}
@@ -217,16 +174,20 @@ const AddTopic = (props: AddTopicProps) => {
             />
           </div>
           <div className="px-3 py-4">
-            <TextArea
+            <FormInput
               id="excelled"
               value={excelled}
+              textarea
+              rows={5}
               onChange={onInputChange}
               name="excelled"
               label="Excelled"
             />
           </div>
           <div className="px-3 py-4">
-            <TextArea
+            <FormInput
+              textarea
+              rows={5}
               id="adequite"
               value={adequite}
               onChange={onInputChange}
@@ -235,8 +196,10 @@ const AddTopic = (props: AddTopicProps) => {
             />
           </div>
           <div className="px-3 py-4">
-            <TextArea
+            <FormInput
               id="basic"
+              textarea
+              rows={5}
               value={basic}
               onChange={onInputChange}
               name="basic"
