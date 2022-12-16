@@ -9,6 +9,7 @@ import * as customQueries from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import * as mutations from 'graphql/mutations';
 import * as queries from 'graphql/queries';
+import {isEmpty} from 'lodash';
 import ModalPopUp from 'molecules/ModalPopUp';
 import React, {Fragment, useEffect, useState} from 'react';
 import {HiOutlineTrash, HiPencil} from 'react-icons/hi';
@@ -179,7 +180,10 @@ const LearningObjective = (props: LearningObjectiveProps) => {
   });
   const {userLanguage} = useGlobalContext();
 
-  const [createLearningObjectiveModal, setCreateLearningObjectiveModal] = useState(false);
+  const [
+    createOrEditLearningObjectiveModal,
+    setCreateOrEditLearningObjectiveModal
+  ] = useState(false);
 
   const {
     AddMeasurementDict,
@@ -189,16 +193,16 @@ const LearningObjective = (props: LearningObjectiveProps) => {
   } = useDictionary();
 
   const createLearningObjective = () => {
-    setCreateLearningObjectiveModal(true);
+    setCreateOrEditLearningObjectiveModal(true);
     setSelectedObjectiveData({});
   };
   const editLearningObj = (learningData: any) => {
     setSelectedObjectiveData(learningData);
-    setCreateLearningObjectiveModal(true);
+    setCreateOrEditLearningObjectiveModal(true);
   };
 
   const handleCancel = () => {
-    setCreateLearningObjectiveModal(false);
+    setCreateOrEditLearningObjectiveModal(false);
 
     setSelectedObjectiveData({});
   };
@@ -645,10 +649,14 @@ const LearningObjective = (props: LearningObjectiveProps) => {
           </Modal>
         )}
 
-        {createLearningObjectiveModal && (
+        {createOrEditLearningObjectiveModal && (
           <Modal
             showHeader={true}
-            title={LEARINGOBJECTIVEDICT[userLanguage]['BUTTON']['ADD']}
+            title={
+              LEARINGOBJECTIVEDICT[userLanguage]['BUTTON'][
+                isEmpty(selectedObjectiveData) ? 'ADD' : 'EDIT'
+              ]
+            }
             showHeaderBorder={true}
             showFooter={false}
             closeAction={handleCancel}>
