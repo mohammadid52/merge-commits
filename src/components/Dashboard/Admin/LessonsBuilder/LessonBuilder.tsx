@@ -520,10 +520,10 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     try {
       setUpdating(true);
 
-      setServerMessage({
-        isError: false,
-        message: AddNewLessonFormDict[userLanguage]['MESSAGES']['MEASUREMENTADDSUCCESS']
-      });
+      // setServerMessage({
+      //   isError: false,
+      //   message: AddNewLessonFormDict[userLanguage]['MESSAGES']['MEASUREMENTADDSUCCESS']
+      // });
 
       setUnsavedChanges(false);
       setUpdating(false);

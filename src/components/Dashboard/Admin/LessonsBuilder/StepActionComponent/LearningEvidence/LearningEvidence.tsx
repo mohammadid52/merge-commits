@@ -276,11 +276,12 @@ const LearningEvidence = ({
       });
     }
     setSelectedMeasurements(rubrics);
+    updateMeasurementList(rubrics);
   };
 
-  const onSubmit = () => {
-    updateMeasurementList(selectedMeasurements);
-  };
+  // const onSubmit = () => {
+  //   updateMeasurementList(selectedMeasurements);
+  // };
 
   const postLearningObjectiveChange = (data: any) => {
     setSelectedCurriculumList((prevList) =>
@@ -451,7 +452,7 @@ const LearningEvidence = ({
                   ))}
                 </div>
               </div>
-              <div className="flex justify-end mt-8">
+              {/* <div className="flex justify-end mt-8">
                 <Buttons
                   label={
                     updating
@@ -462,7 +463,7 @@ const LearningEvidence = ({
                   onClick={onSubmit}
                   disabled={updating}
                 />
-              </div>
+              </div> */}
               {serverMessage.message && (
                 <div className="py-2 m-auto mt-2 text-center">
                   <p
