@@ -124,12 +124,12 @@ const CourseMeasurementsCard = ({
                                         <span className="w-auto mr-4">
                                           <CheckBox
                                             className="group:hover:bg-gray-500"
-                                            value={
+                                            value={Boolean(
                                               (selectedMeasurements || []).find(
                                                 (measurement: any) =>
                                                   measurement.rubricID === rubric.id
                                               )?.checked
-                                            }
+                                            )}
                                             onChange={(e) =>
                                               handleCheckboxChange(e, rubric.id)
                                             }

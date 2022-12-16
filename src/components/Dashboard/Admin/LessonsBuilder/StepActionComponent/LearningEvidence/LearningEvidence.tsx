@@ -38,7 +38,7 @@ const LearningEvidence = ({
   institutionId,
   serverMessage,
   setUnsavedChanges,
-  selectedMeasurements,
+  selectedMeasurements = [],
   setSelectedMeasurements,
   updating,
   updateMeasurementList
@@ -256,8 +256,11 @@ const LearningEvidence = ({
     event.stopPropagation();
     setUnsavedChanges(true);
     const checked: boolean = (event.target as HTMLInputElement).checked;
-    let rubrics = [...selectedMeasurements];
-    const index: number = selectedMeasurements.findIndex(
+    let rubrics =
+      selectedMeasurements && selectedMeasurements?.length > 0
+        ? [...selectedMeasurements]
+        : [];
+    const index: number = (selectedMeasurements || []).findIndex(
       (item: any) => item.rubricID === rubricId
     );
 
