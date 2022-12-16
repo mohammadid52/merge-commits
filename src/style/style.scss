@@ -1616,3 +1616,31 @@ $polka-dot-size: 0.8px;
     transition: all 300ms ease;
   }
 }
+.topic-header {
+  position: relative;
+  height: 30px;
+}
+.topic-header .topic-header__heading {
+  transform: translateY(0);
+  transition: all 300ms ease;
+  height: auto;
+}
+
+.topic-header:hover .topic-header__heading {
+  transform: translateY(-50px);
+  opacity: 0;
+  height: 0;
+}
+
+.topic-header .actions-2 {
+  transition: all 300ms ease;
+  transform: translateY(50px);
+  opacity: 0;
+  height: 0;
+}
+
+.topic-header:hover .actions-2 {
+  transform: translateY(0px);
+  opacity: 1;
+  height: auto;
+}

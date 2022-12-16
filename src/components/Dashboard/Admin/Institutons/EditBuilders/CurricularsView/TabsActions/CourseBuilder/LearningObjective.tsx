@@ -550,10 +550,36 @@ const LearningObjective = (props: LearningObjectiveProps) => {
                       key={learning.id}>
                       <div className="flex-shrink-0">
                         <div className="p-4">
-                          <div className="flex text-center w-auto py-2">
-                            <span className="text-center tracking-wider uppercase text-base font-medium theme-text">
+                          <div className=" topic-header text-center w-auto py-2">
+                            <div className="text-center topic-header__heading tracking-wider uppercase text-base font-medium theme-text">
                               {learning.name}
-                            </span>
+                            </div>
+
+                            <div className="actions-2 justify-center gap-x-4 flex items-center">
+                              <Buttons
+                                onClick={() => editLearningObj(learning)}
+                                iconSize="w-4 h-6"
+                                Icon={HiPencil}
+                                size="small"
+                                transparent
+                              />
+                              <Buttons
+                                size="small"
+                                type="submit"
+                                onClick={() => createNewTopic(learning.id)}
+                                label={TOPICLISTDICT[userLanguage]['ADD']}
+                                iconBeforeLabel
+                                Icon={IoIosAdd}
+                              />
+                              <Buttons
+                                onClick={() => deleteModal(learning?.id, 'objective')}
+                                iconSize="w-4 h-6"
+                                Icon={HiOutlineTrash}
+                                size="small"
+                                transparent
+                                redBtn
+                              />
+                            </div>
                           </div>
 
                           <div className="py-5 h-48 p-4 overflow-y-auto">
@@ -578,7 +604,7 @@ const LearningObjective = (props: LearningObjectiveProps) => {
                             )}
                           </div>
                         </div>
-                        <div className="py-3 px-4 border-t-0 flex justify-end gap-x-4">
+                        {/* <div className="py-3 px-4 border-t-0 flex justify-end gap-x-4">
                           <ActionBtns
                             actionOne={() => editLearningObj(learning)}
                             actionTwo={() => deleteModal(learning?.id, 'objective')}
@@ -591,7 +617,7 @@ const LearningObjective = (props: LearningObjectiveProps) => {
                             iconBeforeLabel
                             Icon={IoIosAdd}
                           />
-                        </div>
+                        </div> */}
                       </div>
                     </div>
                   ))}
