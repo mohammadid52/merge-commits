@@ -40,7 +40,7 @@ const CourseMeasurementsCard = ({
   handleCheckboxChange,
 
   editLearningObj,
-  selectedMeasurements,
+  selectedMeasurements = [],
   editCurrentMeasurement,
   editCurrentTopic,
   curIdx
@@ -125,7 +125,7 @@ const CourseMeasurementsCard = ({
                                           <CheckBox
                                             className="group:hover:bg-gray-500"
                                             value={
-                                              selectedMeasurements.find(
+                                              (selectedMeasurements || []).find(
                                                 (measurement: any) =>
                                                   measurement.rubricID === rubric.id
                                               )?.checked

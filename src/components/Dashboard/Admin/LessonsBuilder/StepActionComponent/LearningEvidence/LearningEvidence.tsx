@@ -431,7 +431,7 @@ const LearningEvidence = ({
           ) : titleList.length ? (
             <>
               <div className="w-full flex justify-between">
-                <div className="grid gap-x-4 grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 lg:max-w-none">
+                <div className="grid gap-4 grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 lg:max-w-none">
                   {selectedCurriculumList.map((curriculum, idx) => (
                     <CourseMeasurementsCard
                       curriculum={curriculum}
