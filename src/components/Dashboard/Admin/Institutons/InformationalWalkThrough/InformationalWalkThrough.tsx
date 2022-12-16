@@ -875,7 +875,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
               universalLessonsList = result.data?.listUniversalLessons?.items;
             }
             const list: any = await API.graphql(
-              graphqlOperation(customQueries.listCurriculumsForLessons, {
+              graphqlOperation(queries.listCurricula, {
                 filter: {
                   institutionID: {eq: instId}
                 }

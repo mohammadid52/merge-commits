@@ -1,6 +1,7 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import Loader from '@components/Atoms/Loader';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
+import {Empty} from '@components/Dashboard/Admin/LessonsBuilder/StepActionComponent/LearningEvidence/CourseMeasurementsCard';
 import Buttons from 'atoms/Buttons';
 import Modal from 'atoms/Modal';
 import PageWrapper from 'atoms/PageWrapper';
@@ -258,7 +259,7 @@ const LearningObjective = (props: LearningObjectiveProps) => {
     );
     setLearnings(list.sort((a: any, b: any) => (a.index > b.index ? 1 : -1)));
     setLearningIds(seq);
-
+    setLoading(false);
     if (listLength && !sequenceLength) {
       let learningsID = list.map((item: {id: string}) => item.id);
       let seqItem: any = await API.graphql(
@@ -269,7 +270,6 @@ const LearningObjective = (props: LearningObjectiveProps) => {
       seqItem = seqItem.data.createCSequences;
       setLearningIds(learningsID);
     }
-    setLoading(false);
   };
 
   useEffect(() => {
@@ -413,7 +413,7 @@ const LearningObjective = (props: LearningObjectiveProps) => {
       show: true,
       id,
       section,
-      message: `Are you sure you want to delete ${section}?. This action cannot be undone.`
+      message: `Are you sure you want to delete ${section}?. This action cannot be undone. `
     });
   };
 
@@ -595,6 +595,7 @@ const LearningObjective = (props: LearningObjectiveProps) => {
                                 return (
                                   <Topic
                                     topic={topic}
+                                    key={topic?.id}
                                     topicIndex={topicIndex}
                                     editCurrentMeasurement={editCurrentMeasurement}
                                     createNewMeasurement={createNewMeasurement}
@@ -605,9 +606,7 @@ const LearningObjective = (props: LearningObjectiveProps) => {
                                 );
                               })
                             ) : (
-                              <div className="flex items-center text-center h-full justify-center">
-                                <p className="text-gray-500 ">No topics found</p>
-                              </div>
+                              <Empty text="No topics found" />
                             )}
                           </div>
                         </div>

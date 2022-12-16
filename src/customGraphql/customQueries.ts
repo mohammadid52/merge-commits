@@ -6138,3 +6138,92 @@ export const listCommunityChats = /* GraphQL */ `
     }
   }
 `;
+
+export const listCurricula = /* GraphQL */ `
+  query ListCurricula(
+    $id: ID
+    $filter: ModelCurriculumFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listCurricula(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        institutionID
+        name
+        type
+        image
+        summary
+        description
+        objectives
+        languages
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          setupComplete
+          createdAt
+          updatedAt
+        }
+        designers
+        universalSyllabusSeq
+        checkpoints {
+          nextToken
+        }
+        universalSyllabus {
+          items {
+            id
+            unitId
+            unit {
+              id
+              name
+              institutionID
+              universalLessonsSeq
+              isUsed
+              status
+              createdAt
+              updatedAt
+              lessons {
+                items {
+                  lessonID
+                }
+              }
+            }
+            curriculumId
+            createdAt
+            updatedAt
+          }
+          nextToken
+        }
+        syllabiHistory
+        signedOff
+        signedOffSteps {
+          authID
+          date
+          step
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;

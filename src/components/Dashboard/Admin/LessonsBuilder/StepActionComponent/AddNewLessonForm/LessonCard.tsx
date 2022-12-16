@@ -117,14 +117,12 @@ const LessonCard = ({
                 <div
                   className={`w-full md:w-8/12 lg:w-7.5/10 ml-4 flex flex-col rounded-b`}>
                   <div className="pr-2 lg:pr-8 pt-5">
-                    <label className="block text-m font-medium leading-5 text-gray-700 mb-1 text-left">
-                      {AddNewLessonFormDict[userLanguage]['IMAGE_CAPTION']}{' '}
-                      <span className="text-red-500"> * </span>
-                    </label>
                     <FormInput
+                      isRequired
                       dataCy="lesson-image-caption"
                       value={imageCaption}
                       id="imageCaption"
+                      label={AddNewLessonFormDict[userLanguage]['IMAGE_CAPTION']}
                       onChange={onInputChange}
                       name="imageCaption"
                       maxLength={25}
@@ -138,15 +136,13 @@ const LessonCard = ({
                   </div>
 
                   <div className="pr-2 lg:pr-8 pt-1">
-                    <label className="block text-m font-medium leading-5 text-gray-700 mb-3">
-                      {AddNewLessonFormDict[userLanguage]['SUMMARY']}
-                      <span className="text-red-500"> *</span>
-                    </label>
                     <FormInput
                       textarea
+                      isRequired
                       dataCy="lesson-summary"
                       rows={5}
                       id="studentSummary"
+                      label={AddNewLessonFormDict[userLanguage]['SUMMARY']}
                       value={studentSummary}
                       onChange={onInputChange}
                       name="studentSummary"

@@ -249,21 +249,7 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
           )}
         </div>
       </div>
-      <Switch>
-        {/* <Route
-          path={`${match.url}/checkpoint/addNew`}
-          render={() => <AddProfileCheckpoint />} // Edit course
-        />
-        <Route
-          path={`${match.url}/checkpoint/addPrevious`}
-          render={() => <ProfileCheckpointlookup instId={courseData?.institution.id} />} // Edit course
-        />
-        <Route
-          path={`${match.url}/checkpoint/edit/:id`}
-          render={() => <EditProfileCheckpoint />} // Edit course
-        /> */}
-      </Switch>
-      {/* </PageWrapper> */}
+      <Switch></Switch>
     </div>
   );
 };

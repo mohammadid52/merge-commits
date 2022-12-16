@@ -7,6 +7,7 @@ import {GlobalContext} from 'contexts/GlobalContext';
 import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
 import * as customMutations from 'customGraphql/customMutations';
 import * as customQueries from 'customGraphql/customQueries';
+import * as queries from 'graphql/queries';
 import useDictionary from 'customHooks/dictionary';
 import {useQuery} from 'customHooks/urlParam';
 import * as mutations from 'graphql/mutations';
@@ -426,7 +427,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     try {
       setCurriculumLoading(true);
       const list: any = await API.graphql(
-        graphqlOperation(customQueries.listCurriculumsForLessons, {
+        graphqlOperation(queries.listCurricula, {
           filter: {
             institutionID: {eq: formData?.institution?.id}
           }
@@ -501,27 +502,8 @@ const LessonBuilder = (props: LessonBuilderProps) => {
   const updateMeasurementList = async (rubrics: string[] | null) => {
     try {
       setUpdating(true);
-      const newRubrics = rubrics.filter((rubric: any) => !rubric.id);
-      // if (newRubrics?.length) {
-      //   await API.graphql(
-      //     graphqlOperation(mutations.batchAddLessonRubrics, {
-      //       lessonRubrics: newRubrics.map((rubric: any) => ({
-      //         lessonID: lessonId,
-      //         rubricID: rubric.rubricID,
-      //       })),
-      //     })
-      //   );
-      // }
+      const newRubrics = (rubrics || []).filter((rubric: any) => !rubric.id);
 
-      // if (rubricsToBeRemoved?.length) {
-      //   await API.graphql(
-      //     graphqlOperation(mutations.batchDeleteLessonRubrics, {
-      //       lessonRubrics: rubricsToBeRemoved.map((rubric: any) => ({
-      //         id: rubric.id,
-      //       })),
-      //     })
-      //   );
-      // }
       setServerMessage({
         isError: false,
         message: AddNewLessonFormDict[userLanguage]['MESSAGES']['MEASUREMENTADDSUCCESS']

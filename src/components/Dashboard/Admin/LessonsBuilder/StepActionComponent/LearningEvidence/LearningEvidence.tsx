@@ -1,7 +1,9 @@
+import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import Buttons from 'atoms/Buttons';
 import Loader from 'atoms/Loader';
 import Modal from 'atoms/Modal';
 import PageWrapper from 'atoms/PageWrapper';
+import {API, graphqlOperation} from 'aws-amplify';
 import AddLearningObjective from 'components/Dashboard/Admin/Institutons/EditBuilders/CurricularsView/TabsActions/AddLearningObjective';
 import AddMeasurement from 'components/Dashboard/Admin/Institutons/EditBuilders/CurricularsView/TabsActions/AddMeasurement';
 import AddTopic from 'components/Dashboard/Admin/Institutons/EditBuilders/CurricularsView/TabsActions/AddTopic';
@@ -9,7 +11,6 @@ import {GlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import * as queries from 'graphql/queries';
-import {API, graphqlOperation} from 'aws-amplify';
 import React, {useContext, useEffect, useState} from 'react';
 import AddEvidence from './AddEvidence';
 import CourseMeasurementsCard from './CourseMeasurementsCard';
@@ -208,13 +209,13 @@ const LearningEvidence = ({
     try {
       setLoading(true);
       const list: any = await API.graphql(
-        graphqlOperation(customQueries.listCurriculumsForLessons, {
+        graphqlOperation(customQueries.listCurricula, {
           filter: {
             institutionID: {eq: institutionId}
           }
         })
       );
-      const curriculums = list.data?.listCurriculums?.items;
+      const curriculums = list.data?.listCurricula?.items;
       let selectedCurriculums: any = [];
       curriculums.map((curriculum: any) => {
         const assignedSyllabi = curriculum.universalSyllabus?.items.filter(
@@ -420,27 +421,17 @@ const LearningEvidence = ({
   return (
     <div className="flex m-auto justify-center">
       <div className="">
-        <PageWrapper defaultClass="px-2 xl:px-8 border-0 border-gray-200">
-          <div className="flex justify-between pb-8">
-            <h3 className="text-lg leading-6 font-medium text-gray-900 text-center">
-              {LearningEvidenceDict[userLanguage]['TITLE']}
-            </h3>
-            {/* <div className="flex justify-end w-72">
-              <Buttons
-                btnClass=""
-                label={'Add Learning Objective'}
-                onClick={() => setIsFormOpen(true)}
-              />
-            </div> */}
-          </div>
+        <PageWrapper defaultClass="px-2 xl:px-8 bg-gray-100 border-0 border-gray-200">
+          <SectionTitleV3 title={LearningEvidenceDict[userLanguage]['TITLE']} />
+
           {loading ? (
             <div className="mt-4">
-              <Loader />
+              <Loader animation />
             </div>
           ) : titleList.length ? (
             <>
               <div className="w-full flex justify-between">
-                <div className="grid px-2 xl:px-6 gap-5 grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 lg:max-w-none">
+                <div className="grid gap-x-4 grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 lg:max-w-none">
                   {selectedCurriculumList.map((curriculum, idx) => (
                     <CourseMeasurementsCard
                       curriculum={curriculum}
@@ -456,15 +447,9 @@ const LearningEvidence = ({
                     />
                   ))}
                 </div>
-
-                {/* <Accordion
-                  titleList={titleList}
-                  actionOnAccordionClick={fetchObjectives}
-                /> */}
               </div>
               <div className="flex justify-end mt-8">
                 <Buttons
-                  btnClass="py-1 px-8 text-xs ml-2"
                   label={
                     updating
                       ? BUTTONS[userLanguage]['SAVING']
