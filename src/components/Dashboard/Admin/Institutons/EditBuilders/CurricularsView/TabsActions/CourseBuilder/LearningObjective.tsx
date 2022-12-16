@@ -20,21 +20,32 @@ import AddTopic from '../AddTopic';
 
 const ActionBtns = ({
   actionOne,
-  actionTwo
+  actionTwo,
+  titleOne,
+  titleTwo
 }: {
   actionOne: () => void;
   actionTwo: () => void;
+  titleOne?: string;
+  titleTwo?: string;
 }) => {
   return (
     <span
       style={{transform: 'scale(0.7)'}}
       className="w-auto inline-flex gap-x-2 items-center cursor-pointer">
       {actionOne && (
-        <Buttons onClick={actionOne} Icon={HiPencil} size="small" transparent />
+        <Buttons
+          title={titleOne}
+          onClick={actionOne}
+          Icon={HiPencil}
+          size="small"
+          transparent
+        />
       )}
       {actionTwo && (
         <Buttons
           onClick={actionTwo}
+          title={titleTwo}
           Icon={HiOutlineTrash}
           size="small"
           transparent
@@ -119,6 +130,8 @@ const Topic = ({
 
                   <div className="actions w-auto">
                     <ActionBtns
+                      titleOne="Edit measurement"
+                      titleTwo="Delete measurement"
                       actionOne={() => editCurrentMeasurement(rubric, learning.id)}
                       actionTwo={() => deleteModal(rubric?.id, 'measurement')}
                     />
