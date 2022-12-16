@@ -2014,7 +2014,8 @@ const LEARINGOBJECTIVEDICT: any = {
       'This course does not have any learning objectives yet. Please create a new one.',
     FETCH: 'Fetching Data Please wait...',
     BUTTON: {
-      ADD: 'Add Learning Objective'
+      ADD: 'Add Learning Objective',
+      EDIT: 'Edit Learning Objective'
     }
   },
   ES: {
@@ -2022,7 +2023,8 @@ const LEARINGOBJECTIVEDICT: any = {
     INFO: 'TBD',
     FETCH: 'TBD',
     BUTTON: {
-      ADD: 'TBD'
+      ADD: 'TBD',
+      EDIT: 'TBD'
     }
   }
 };
