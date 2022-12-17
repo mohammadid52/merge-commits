@@ -139,7 +139,10 @@ export const breadcrumbsRoutes = ({
       ];
     }
   } else if (pathname.indexOf('research-and-analytics') > -1) {
-    heroSectionTitle = instituteTabTitles['TABS']['RESEARCH_AND_ANALYTICS'];
+    heroSectionTitle =
+      instituteTabTitles['TABS'][
+        pathname.indexOf('upload-csv') ? 'UPLOAD_SURVEY' : 'DOWNLOAD_SURVEYS'
+      ];
     breadcrumbPathForSection = [
       {
         title: heroSectionTitle,

@@ -60,11 +60,13 @@ const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
     onKeyDown,
     dataCy,
     Icon,
-    resize = true
+    resize = false
   } = inputProps;
+
   const {theme, clientKey} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const otherInputProps: any = {};
+
   if (maxLength) {
     otherInputProps.maxLength = maxLength;
   }

@@ -44,9 +44,11 @@ esac
 if [ "$run_test" = "y" ] || [ "$run_test" = "Y" ]; then
   echo "Running cypress test..."
   npm run cypress:run
+  git pull
   git push origin ${branch}
 
 else 
     echo "Skipping cypress test..."
+    git pull
     git push origin ${branch}
     fi

@@ -20,7 +20,9 @@ const PageCountSelector: React.FC<CountProps> = (countProps: CountProps) => {
     {value: 100, name: 'show 100', id: 4}
   ].filter((selector) => selector.value <= nearestNum);
 
-  const [selectedItem, setSelectedItem] = useState<string>(list[0].name);
+  const _list = list.length > 0 ? list : [{value: 10, name: 'show 10', id: 1}];
+
+  const [selectedItem, setSelectedItem] = useState<string>(_list[0].name);
 
   return (
     <div className={`w-auto`}>

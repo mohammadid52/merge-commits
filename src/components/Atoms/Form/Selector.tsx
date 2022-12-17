@@ -55,6 +55,7 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
     width = 'w-full',
     isClearable = false,
     dropdownWidth,
+    arrowHidden,
 
     setHoveringItem,
 
@@ -159,10 +160,10 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
             themeColor === 'iconoclastIndigo' ? 'indigo' : 'blue'
           }-600 focus:border-transparent  relative items-center cursor-pointer ${width} h-full rounded-full ${
             error.length === 0 ? 'border-gray-300' : 'border-red-300'
-          }  border-0 bg-white px-4 py-2 text-left transition ease-in-out duration-150 sm:text-sm sm:leading-5 ${
+          }  border-0 bg-white px-4 pr-0 py-2 justify-between text-left transition ease-in-out duration-150 sm:text-sm sm:leading-5 ${
             btnClass ? btnClass : ''
           }`}>
-          <span className="block truncate text-gray-700">
+          <span className="block w-auto truncate text-gray-700">
             {capitalizeFirstLetter(selectedItem ? selectedItem : placeholder)}
           </span>
           {loading && (
@@ -170,40 +171,60 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
               value={{
                 size: '1.2rem',
                 style: {},
-                className: `relative mr-4 animate-spin ${theme.textColor[themeColor]}`
+                className: `relative mr-2 w-auto animate-spin ${theme.textColor[themeColor]}`
               }}>
               <FaSpinner />
             </IconContext.Provider>
           )}
 
-          <div className="h-full flex items-center ml-8 w-auto justify-center">
-            <AnimatedContainer
-              animationType="translateY"
-              className="w-auto absolute right-1"
-              show={isClearable && selectedItem !== null}>
-              {isClearable && selectedItem !== null && (
-                <span
-                  title="clear sort"
-                  className=" flex justify-center  cursor-pointer hover:bg-gray-200
+          {!loading && (
+            <div className="h-full flex items-center ml-8 w-auto justify-center">
+              <AnimatedContainer
+                animationType="translateY"
+                className="w-auto absolute right-1"
+                show={isClearable && selectedItem !== null}>
+                {isClearable && selectedItem !== null && (
+                  <span
+                    title="clear sort"
+                    className=" flex justify-center  cursor-pointer hover:bg-gray-200
                    rounded-full"
-                  onClick={clearSort}>
-                  <IoClose
-                    size={'1rem'}
-                    className="hover:iconoclast:text-main hover:curate:text-main transition-all text-gray-600"
-                  />
-                </span>
-              )}
-            </AnimatedContainer>
+                    onClick={clearSort}>
+                    <IoClose
+                      size={'1rem'}
+                      className="hover:iconoclast:text-main hover:curate:text-main transition-all text-gray-600"
+                    />
+                  </span>
+                )}
+              </AnimatedContainer>
 
-            {error.length > 0 && (
-              <ExclamationCircleIcon
-                className={`h-5 relative mr-4 w-5 text-red-500 ${
-                  error.length === 0 ? 'hidden' : ''
-                }`}
-                aria-hidden="true"
+              {error.length > 0 && (
+                <ExclamationCircleIcon
+                  className={`h-5 relative mr-4 w-5 text-red-500 ${
+                    error.length === 0 ? 'hidden' : ''
+                  }`}
+                  aria-hidden="true"
+                />
+              )}
+            </div>
+          )}
+
+          <span
+            className={`relative justify-end w-auto inset-y-0 pr-2 right-0 items-center pointer-events-none ${
+              arrowHidden ? 'hidden' : 'flex'
+            }`}>
+            <svg
+              className="h-5 w-5 text-gray-400"
+              viewBox="0 0 20 20"
+              fill="none"
+              stroke="currentColor">
+              <path
+                d="M7 7l3-3 3 3m0 6l-3 3-3-3"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
               />
-            )}
-          </div>
+            </svg>
+          </span>
         </button>
       </span>
       <AnimatedContainer className="z-50 absolute w-full " show={showList}>

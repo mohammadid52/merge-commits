@@ -930,8 +930,11 @@ const Institute_info: any = {
       GENERAL_INFORMATION: 'General Information',
       LESSONS: 'Lesson Manager',
       RESEARCH_AND_ANALYTICS: 'Analytics Manager',
-      DOWNLOAD_CSV: 'Download CSV',
-      UPLOAD_CSV: 'Upload CSV',
+      DOWNLOAD_SURVEYS: 'Download Surveys',
+      UPLOAD_SURVEY: 'Upload Survey',
+
+      DOWNLOAD_CSV: 'Download Surveys',
+      UPLOAD_CSV: 'Upload Surveys',
       UPLOAD_TO_ATHENA: 'Upload to Athena',
       HOME: 'Dashboard',
       NOTEBOOK: 'Notebook',
@@ -954,6 +957,7 @@ const Institute_info: any = {
       CURRICULAR: 'TBD',
       CLASSROOMS: 'TBD',
       STUDENT_ROASTER: 'TBD',
+      DOWNLOAD_SURVEYS: 'TBD',
       GENERAL_INFORMATION: 'TBD',
       LESSONS: 'TBD',
       RESEARCH_AND_ANALYTICS: 'TBD',
@@ -2010,7 +2014,8 @@ const LEARINGOBJECTIVEDICT: any = {
       'This course does not have any learning objectives yet. Please create a new one.',
     FETCH: 'Fetching Data Please wait...',
     BUTTON: {
-      ADD: 'Add Learning Objective'
+      ADD: 'Add Learning Objective',
+      EDIT: 'Edit Learning Objective'
     }
   },
   ES: {
@@ -2018,7 +2023,8 @@ const LEARINGOBJECTIVEDICT: any = {
     INFO: 'TBD',
     FETCH: 'TBD',
     BUTTON: {
-      ADD: 'TBD'
+      ADD: 'TBD',
+      EDIT: 'TBD'
     }
   }
 };
@@ -4034,7 +4040,7 @@ const UniversalBuilderDict: any = {
 
 const CsvDict: any = {
   EN: {
-    TITLE: 'Research & Analytics',
+    TITLE: 'Download Surveys',
     SELECT_INST: 'Select institute',
     SELECT_CLASSROOM: 'Select classroom',
     SELECT_FILTERS: 'Select Filters',
@@ -4044,7 +4050,7 @@ const CsvDict: any = {
     DESCRIBE_REASON: 'Describe Reason'
   },
   ES: {
-    TITLE: 'Investigar & Analítica',
+    TITLE: 'TBD',
     SELECT_INST: 'Seleccione instituto',
     SELECT_FILTERS: 'Seleccione Filtros',
     SELECT_CLASSROOM: 'Seleccione salón de clases',

@@ -1,9 +1,9 @@
+import CheckBox from 'atoms/Form/CheckBox';
 import Tooltip from 'atoms/Tooltip';
 import React from 'react';
 import {FaGraduationCap} from 'react-icons/fa';
-import {HiOutlineArrowRight, HiPlus} from 'react-icons/hi';
+import {HiOutlineArrowRight} from 'react-icons/hi';
 import {getImageFromS3Static} from 'utilities/services';
-import CheckBox from 'atoms/Form/CheckBox';
 
 interface ICourseMeasurementsProps {
   curriculum: any;
@@ -26,7 +26,7 @@ interface ICourseMeasurementsProps {
   curIdx?: number;
 }
 
-const Empty = ({text}: {text: string}) => (
+export const Empty = ({text}: {text: string}) => (
   <h5
     className={
       'text-sm text-gray-500 text-center mt-2 border-0 border-gray-400 rounded-lg p-2 border-dashed'
@@ -40,19 +40,19 @@ const CourseMeasurementsCard = ({
   handleCheckboxChange,
 
   editLearningObj,
-  selectedMeasurements,
+  selectedMeasurements = [],
   editCurrentMeasurement,
   editCurrentTopic,
   curIdx
 }: ICourseMeasurementsProps) => {
   return (
     <div
-      className="flex shadow flex-col white_back overflow-hidden mx-2"
+      className="flex flex-col rounded-xl theme-card-shadow overflow-hidden"
       key={curriculum.id}>
       <div className="flex-shrink-0">
         <div className="">
-          <div className="flex p-4 text-white items-center iconoclast:bg-main curate:bg-main">
-            <div className="flex-shrink-0 h-14 w-14 flex items-center">
+          <div className="flex p-4 text-white items-center theme-bg">
+            <div className="flex-shrink-0 h-12 w-12 mr-2 flex items-center">
               {curriculum.image ? (
                 <img
                   src={getImageFromS3Static(curriculum.image)}
@@ -64,7 +64,7 @@ const CourseMeasurementsCard = ({
                 </span>
               )}
             </div>
-            <div className="text-xl font-bold inline-flex items-center">
+            <div className="text-xl font-medium inline-flex items-center">
               {curriculum.name}
             </div>
           </div>
@@ -124,12 +124,12 @@ const CourseMeasurementsCard = ({
                                         <span className="w-auto mr-4">
                                           <CheckBox
                                             className="group:hover:bg-gray-500"
-                                            value={
-                                              selectedMeasurements.find(
+                                            value={Boolean(
+                                              (selectedMeasurements || []).find(
                                                 (measurement: any) =>
                                                   measurement.rubricID === rubric.id
                                               )?.checked
-                                            }
+                                            )}
                                             onChange={(e) =>
                                               handleCheckboxChange(e, rubric.id)
                                             }

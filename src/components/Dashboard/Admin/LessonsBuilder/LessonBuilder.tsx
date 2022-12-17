@@ -7,6 +7,7 @@ import {GlobalContext} from 'contexts/GlobalContext';
 import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
 import * as customMutations from 'customGraphql/customMutations';
 import * as customQueries from 'customGraphql/customQueries';
+import * as queries from 'graphql/queries';
 import useDictionary from 'customHooks/dictionary';
 import {useQuery} from 'customHooks/urlParam';
 import * as mutations from 'graphql/mutations';
@@ -20,9 +21,13 @@ import AddNewLessonForm from './StepActionComponent/AddNewLessonForm/AddNewLesso
 import LearningEvidence from './StepActionComponent/LearningEvidence/LearningEvidence';
 import LessonActivities from './StepActionComponent/LessonActivities';
 import LessonCourse from './StepActionComponent/LessonCourse/LessonCourse';
+import {logError} from '@graphql/functions';
+import useAuth from '@customHooks/useAuth';
+import {UpdateUniversalLessonInput} from 'API';
 
 export interface InitialData {
   name: string;
+  id: string;
   type: InputValueObject;
   duration: string;
   purpose: string;
@@ -66,6 +71,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
 
   const initialData = {
     name: '',
+    id: '',
     type: {id: '', name: '', value: ''},
     duration: '1',
     purpose: '',
@@ -189,6 +195,15 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     }
   };
 
+  const getRubricsData = (rubrics: string[]) => {
+    return rubrics.map((id) => {
+      return {
+        rubricID: id,
+        checked: true
+      };
+    });
+  };
+
   const fetchUniversalLessonDetails = async () => {
     try {
       const result: any = await API.graphql(
@@ -203,10 +218,11 @@ const LessonBuilder = (props: LessonBuilderProps) => {
         const institution = await getInstitutionByID(savedData.institutionID);
 
         setInstitutionData(institution);
-        setSelectedMeasurements(savedData.rubrics);
+        setSelectedMeasurements(getRubricsData(savedData?.rubrics || []));
         setFormData({
           ...formData,
           ...savedData,
+          id: savedData.id,
           lessonPlan: [...savedData.lessonPlan],
           imageCaption: savedData.cardCaption,
           imageUrl: savedData.cardImage,
@@ -426,7 +442,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     try {
       setCurriculumLoading(true);
       const list: any = await API.graphql(
-        graphqlOperation(customQueries.listCurriculumsForLessons, {
+        graphqlOperation(queries.listCurricula, {
           filter: {
             institutionID: {eq: formData?.institution?.id}
           }
@@ -498,37 +514,31 @@ const LessonBuilder = (props: LessonBuilderProps) => {
       history.push(redirectionUrl);
     }
   };
-  const updateMeasurementList = async (rubrics: string[] | null) => {
+
+  const {authId, email} = useAuth();
+  const updateMeasurementList = async (rubrics: any[] | null) => {
     try {
       setUpdating(true);
-      const newRubrics = rubrics.filter((rubric: any) => !rubric.id);
-      // if (newRubrics?.length) {
-      //   await API.graphql(
-      //     graphqlOperation(mutations.batchAddLessonRubrics, {
-      //       lessonRubrics: newRubrics.map((rubric: any) => ({
-      //         lessonID: lessonId,
-      //         rubricID: rubric.rubricID,
-      //       })),
-      //     })
-      //   );
-      // }
 
-      // if (rubricsToBeRemoved?.length) {
-      //   await API.graphql(
-      //     graphqlOperation(mutations.batchDeleteLessonRubrics, {
-      //       lessonRubrics: rubricsToBeRemoved.map((rubric: any) => ({
-      //         id: rubric.id,
-      //       })),
-      //     })
-      //   );
-      // }
-      setServerMessage({
-        isError: false,
-        message: AddNewLessonFormDict[userLanguage]['MESSAGES']['MEASUREMENTADDSUCCESS']
-      });
+      // setServerMessage({
+      //   isError: false,
+      //   message: AddNewLessonFormDict[userLanguage]['MESSAGES']['MEASUREMENTADDSUCCESS']
+      // });
+
       setUnsavedChanges(false);
       setUpdating(false);
+      setSelectedMeasurements(rubrics);
+
+      const input: UpdateUniversalLessonInput = {
+        id: formData.id,
+        rubrics: rubrics.map((d) => d?.rubricID).filter(Boolean)
+      };
+
+      await API.graphql(
+        graphqlOperation(customMutations.updateUniversalLesson, {input: input})
+      );
     } catch (error) {
+      logError(error, {authId, email}, 'LessonBuilder @updateMeasurementList');
       console.error(
         '🚀 ~ file: LessonBuilder.tsx ~ line 561 ~ updateMeasurementList ~ error',
         error
@@ -582,7 +592,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
             lessonName={formData?.name}
             lessonPlans={universalLessonDetails?.lessonPlan}
             lessonType={formData.type?.value}
-            loading={curriculumLoading}
+            loading={curriculumLoading || updating}
             selectedCurriculums={selectedCurriculumList}
             addedSyllabus={addedSyllabus}
             setAddedSyllabus={setAddedSyllabus}

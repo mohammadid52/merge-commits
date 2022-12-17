@@ -1,4 +1,5 @@
 import {getAsset} from 'assets';
+import {isEmpty} from 'lodash';
 import {getLocalStorageData, setLocalStorageData} from './localStorage';
 import {getClientKey} from './strings';
 
@@ -60,11 +61,12 @@ export const randomNumber = (min: number, max: number): number => {
 
 export const getJSON = async (url: string): Promise<string> => {
   const doestThisJsonExistsInLocalStorage = getLocalStorageData(url);
-  if (doestThisJsonExistsInLocalStorage !== undefined) {
+  if (!isEmpty(doestThisJsonExistsInLocalStorage)) {
     return doestThisJsonExistsInLocalStorage;
   } else {
     const response = await fetch(url);
     const json = await response.json();
+
     setLocalStorageData(url, json);
     return json;
   }

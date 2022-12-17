@@ -1,20 +1,151 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import Loader from '@components/Atoms/Loader';
+import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
+import {Empty} from '@components/Dashboard/Admin/LessonsBuilder/StepActionComponent/LearningEvidence/CourseMeasurementsCard';
 import Buttons from 'atoms/Buttons';
 import Modal from 'atoms/Modal';
 import PageWrapper from 'atoms/PageWrapper';
-import {GlobalContext} from 'contexts/GlobalContext';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import * as mutations from 'graphql/mutations';
 import * as queries from 'graphql/queries';
+import {isEmpty} from 'lodash';
 import ModalPopUp from 'molecules/ModalPopUp';
-import React, {Fragment, useContext, useEffect, useState} from 'react';
+import React, {Fragment, useEffect, useState} from 'react';
 import {HiOutlineTrash, HiPencil} from 'react-icons/hi';
 import {IoIosAdd} from 'react-icons/io';
 import AddLearningObjective from '../AddLearningObjective';
 import AddMeasurement from '../AddMeasurement';
 import AddTopic from '../AddTopic';
+
+const ActionBtns = ({
+  actionOne,
+  actionTwo,
+  titleOne,
+  titleTwo
+}: {
+  actionOne: () => void;
+  actionTwo: () => void;
+  titleOne?: string;
+  titleTwo?: string;
+}) => {
+  return (
+    <span
+      style={{transform: 'scale(0.7)'}}
+      className="w-auto inline-flex gap-x-2 items-center cursor-pointer">
+      {actionOne && (
+        <Buttons
+          title={titleOne}
+          onClick={actionOne}
+          Icon={HiPencil}
+          size="small"
+          transparent
+        />
+      )}
+      {actionTwo && (
+        <Buttons
+          onClick={actionTwo}
+          title={titleTwo}
+          Icon={HiOutlineTrash}
+          size="small"
+          transparent
+          redBtn
+        />
+      )}
+    </span>
+  );
+};
+
+const Topic = ({
+  topic,
+  topicIndex,
+
+  createNewMeasurement,
+  learning,
+  deleteModal,
+  editCurrentMeasurement,
+  editCurrentTopic
+}: {
+  topic: any;
+  topicIndex: number;
+  editCurrentTopic: (topic: any) => void;
+
+  createNewMeasurement: (topicId: string, learningId: string) => void;
+  learning: any;
+  deleteModal: (id: string, type: string) => void;
+  editCurrentMeasurement: (rubric: any, learningId: string) => void;
+}) => {
+  const {userLanguage} = useGlobalContext();
+  const {AddMeasurementDict} = useDictionary();
+
+  return (
+    <div className=" w-auto">
+      <div key={topic.id} className="pr-1  show-action-on-hover-2 mb-2">
+        <div className="flex show-action-on-hover justify-start items-center">
+          <span className={`text-base w-auto  pr-2`}>
+            {topicIndex + 1}. {topic.name}
+          </span>
+
+          <div className="w-auto flex actions">
+            <span
+              style={{transform: 'scale(0.7)'}}
+              className="w-auto inline-flex gap-x-2 items-center cursor-pointer">
+              <Buttons
+                title={'Edit topic'}
+                onClick={() => editCurrentTopic(topic)}
+                Icon={HiPencil}
+                size="small"
+                transparent
+              />
+
+              <Buttons
+                onClick={() => deleteModal(topic?.id, 'topic')}
+                Icon={HiOutlineTrash}
+                title={'Delete topic'}
+                size="small"
+                transparent
+                redBtn
+              />
+
+              <Buttons
+                title={AddMeasurementDict[userLanguage]['title']}
+                onClick={() => createNewMeasurement(topic.id, learning.id)}
+                Icon={IoIosAdd}
+                size="small"
+                transparent
+              />
+            </span>
+          </div>
+        </div>
+        <ul className="pl-3">
+          {topic.rubrics?.length ? (
+            <>
+              {topic.rubrics.map((rubric: any, rubricIndex: number) => (
+                <li
+                  className="flex show-action-on-hover justify-between items-center py-1 truncate"
+                  key={rubric.id}>
+                  <span className="pr-2 text-gray-600 text-base truncate">
+                    {topicIndex + 1}.{rubricIndex + 1} {rubric.name}
+                  </span>
+
+                  <div className="actions w-auto">
+                    <ActionBtns
+                      titleOne="Edit measurement"
+                      titleTwo="Delete measurement"
+                      actionOne={() => editCurrentMeasurement(rubric, learning.id)}
+                      actionTwo={() => deleteModal(rubric?.id, 'measurement')}
+                    />
+                  </div>
+                </li>
+              ))}
+            </>
+          ) : learning.topics?.length < 2 ? null : null}
+        </ul>
+      </div>
+    </div>
+  );
+};
 
 declare global {
   interface Array<T> {
@@ -39,7 +170,6 @@ const LearningObjective = (props: LearningObjectiveProps) => {
   const {curricularId} = props;
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState(false);
-  const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedObjectiveData, setSelectedObjectiveData] = useState<any>({});
   const [learnings, setLearnings] = useState([]);
   const [learningIds, setLearningIds] = useState([]);
@@ -53,26 +183,32 @@ const LearningObjective = (props: LearningObjectiveProps) => {
     id: '',
     message: "Are you sure? This can't be undone."
   });
-  const {clientKey, userLanguage} = useContext(GlobalContext);
+  const {userLanguage} = useGlobalContext();
+
+  const [
+    createOrEditLearningObjectiveModal,
+    setCreateOrEditLearningObjectiveModal
+  ] = useState(false);
 
   const {
     AddMeasurementDict,
     AddTopicDict,
     LEARINGOBJECTIVEDICT,
     TOPICLISTDICT
-  } = useDictionary(clientKey);
+  } = useDictionary();
 
   const createLearningObjective = () => {
-    setIsFormOpen(true);
+    setCreateOrEditLearningObjectiveModal(true);
     setSelectedObjectiveData({});
   };
   const editLearningObj = (learningData: any) => {
-    setIsFormOpen(true);
     setSelectedObjectiveData(learningData);
+    setCreateOrEditLearningObjectiveModal(true);
   };
 
   const handleCancel = () => {
-    setIsFormOpen(false);
+    setCreateOrEditLearningObjectiveModal(false);
+
     setSelectedObjectiveData({});
   };
 
@@ -123,7 +259,7 @@ const LearningObjective = (props: LearningObjectiveProps) => {
     );
     setLearnings(list.sort((a: any, b: any) => (a.index > b.index ? 1 : -1)));
     setLearningIds(seq);
-
+    setLoading(false);
     if (listLength && !sequenceLength) {
       let learningsID = list.map((item: {id: string}) => item.id);
       let seqItem: any = await API.graphql(
@@ -134,7 +270,6 @@ const LearningObjective = (props: LearningObjectiveProps) => {
       seqItem = seqItem.data.createCSequences;
       setLearningIds(learningsID);
     }
-    setLoading(false);
   };
 
   useEffect(() => {
@@ -146,17 +281,11 @@ const LearningObjective = (props: LearningObjectiveProps) => {
     setSelectedTopicData({
       learningObjectiveID
     });
-    // history.push(
-    //   `/dashboard/manage-institutions/curricular/${curricularId}/topic/add?lid=${learningId}`
-    // );
   };
 
   const editCurrentTopic = (topicData: any) => {
     setTopicModal(true);
     setSelectedTopicData(topicData);
-    // history.push(
-    //   `/dashboard/manage-institutions/curricular/${curricularId}/topic/edit/${id}`
-    // );
   };
 
   const onTopicModalClose = () => {
@@ -170,9 +299,6 @@ const LearningObjective = (props: LearningObjectiveProps) => {
       topicId,
       objectiveId
     });
-    // history.push(
-    //   `/dashboard/manage-institutions/curricular/${curricularId}/measurement/add?tid=${topicID}`
-    // );
   };
 
   const editCurrentMeasurement = (rubricData: any, objectiveId: string) => {
@@ -182,9 +308,6 @@ const LearningObjective = (props: LearningObjectiveProps) => {
       topicId: rubricData.topicID,
       objectiveId
     });
-    // history.push(
-    //   `/dashboard/manage-institutions/curricular/${curricularId}/measurement/edit/${id}`
-    // );
   };
 
   const onMeasurementClose = () => {
@@ -290,7 +413,7 @@ const LearningObjective = (props: LearningObjectiveProps) => {
       show: true,
       id,
       section,
-      message: `Are you sure you want to delete ${section}?. This action cannot be undone.`
+      message: `Are you sure you want to delete ${section}?. This action cannot be undone. `
     });
   };
 
@@ -401,227 +524,98 @@ const LearningObjective = (props: LearningObjectiveProps) => {
     } catch (error) {}
   };
 
-  const ActionBtns = ({
-    actionOne,
-    actionTwo
-  }: {
-    actionOne: () => void;
-    actionTwo: () => void;
-  }) => {
-    return (
-      <span className="w-auto inline-flex gap-x-2 items-center cursor-pointer">
-        <Buttons
-          onClick={actionOne}
-          iconSize="w-4 h-6"
-          Icon={HiPencil}
-          size="small"
-          transparent
-        />
-        <Buttons
-          onClick={actionTwo}
-          iconSize="w-4 h-6"
-          Icon={HiOutlineTrash}
-          size="small"
-          transparent
-          redBtn
-        />
-      </span>
-    );
-  };
-
   return (
     <div className="py-2 px-0 2xl:p-8 flex m-auto justify-center">
       <div className="">
-        <PageWrapper defaultClass="px-4 ">
-          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8">
-            {LEARINGOBJECTIVEDICT[userLanguage]['TITLE']}
-          </h3>
+        <PageWrapper defaultClass="px-4 lg:px-6 ">
+          <SectionTitleV3
+            withButton={
+              Boolean(learnings?.length) && (
+                <Buttons
+                  disabled={loading}
+                  btnClass=""
+                  label={LEARINGOBJECTIVEDICT[userLanguage]['BUTTON']['ADD']}
+                  labelClass={'leading-6'}
+                  Icon={IoIosAdd}
+                  iconBeforeLabel
+                  onClick={createLearningObjective}
+                />
+              )
+            }
+            subtitle={!loading ? 'hover on items for action' : ''}
+            title={LEARINGOBJECTIVEDICT[userLanguage]['TITLE']}
+          />
           {!loading ? (
             <Fragment>
-              {Boolean(learnings?.length) && (
-                <div className="flex justify-end w-fulll px-6 pb-4 m-auto">
-                  <Buttons
-                    btnClass=""
-                    label={LEARINGOBJECTIVEDICT[userLanguage]['BUTTON']['ADD']}
-                    labelClass={'leading-6'}
-                    Icon={IoIosAdd}
-                    iconBeforeLabel
-                    onClick={createLearningObjective}
-                  />
-                </div>
-              )}
               <div className="py-4">
-                <div className="grid px-2 lg:px-6 gap-5 grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 lg:max-w-none">
-                  {/* <DragDropContext onDragEnd={onDragEnd}>
-                    <Droppable droppableId="droppable" direction="horizontal">
-                      {(provided, snapshot) => (
-                        <div
-                          {...provided.droppableProps}
-                          ref={provided.innerRef}
-                          className="grid px-6 gap-5 lg:grid-cols-3 lg:max-w-none"> */}
-                  {isFormOpen && (
-                    <div className="flex shadow flex-col overflow-hidden white_back">
-                      <AddLearningObjective
-                        curricularId={curricularId}
-                        handleCancel={handleCancel}
-                        learningObjectiveData={selectedObjectiveData}
-                        postMutation={postLearningObjectiveChange}
-                      />
-                    </div>
-                  )}
+                <div className="grid  gap-5 grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 lg:max-w-none">
                   {learnings.map((learning: any) => (
                     <div
                       className="flex customShadow hover:theme-card-shadow flex-col bg-white rounded-xl overflow-hidden"
                       key={learning.id}>
                       <div className="flex-shrink-0">
-                        <div className="p-4 pb-0">
-                          <div className="flex">
-                            <span className="inline-flex items-center text-base font-medium">
+                        <div className="p-4">
+                          <div className=" topic-header text-center w-auto py-2">
+                            <div className="text-center topic-header__heading tracking-wider uppercase text-base font-medium theme-text">
                               {learning.name}
-                            </span>
+                            </div>
 
-                            <ActionBtns
-                              actionOne={() => editLearningObj(learning)}
-                              actionTwo={() => deleteModal(learning?.id, 'objective')}
-                            />
-                          </div>
-
-                          <div className="mt-5 h-48 overflow-y-auto">
-                            {learning.topics?.length ? (
-                              learning.topics.map((topic: any, topicIndex: number) => (
-                                <div
-                                  key={topic.id}
-                                  className="pr-1 show-action-on-hover-2 mb-2">
-                                  <div className="flex show-action-on-hover justify-between items-center">
-                                    <span className={`text-base  pr-2`}>
-                                      {topicIndex + 1}. {topic.name}
-                                    </span>
-
-                                    <div className="actions w-auto">
-                                      <ActionBtns
-                                        actionOne={() => editCurrentTopic(topic)}
-                                        actionTwo={() => deleteModal(topic?.id, 'topic')}
-                                      />
-                                    </div>
-                                  </div>
-                                  <ul className="pl-3">
-                                    {topic.rubrics?.length ? (
-                                      <>
-                                        {topic.rubrics.map(
-                                          (rubric: any, rubricIndex: number) => (
-                                            <li
-                                              className="flex show-action-on-hover justify-between items-center py-1 truncate"
-                                              key={rubric.id}>
-                                              <span className="pr-2 text-gray-600 text-base truncate">
-                                                {topicIndex + 1}.{rubricIndex + 1}{' '}
-                                                {rubric.name}
-                                              </span>
-
-                                              <div className="actions w-auto">
-                                                <ActionBtns
-                                                  actionOne={() =>
-                                                    editCurrentMeasurement(
-                                                      rubric,
-                                                      learning.id
-                                                    )
-                                                  }
-                                                  actionTwo={() =>
-                                                    deleteModal(rubric?.id, 'measurement')
-                                                  }
-                                                />
-                                              </div>
-                                            </li>
-                                          )
-                                        )}
-                                        <Buttons
-                                          type="submit"
-                                          size="small"
-                                          onClick={() =>
-                                            createNewMeasurement(topic.id, learning.id)
-                                          }
-                                          title={
-                                            AddMeasurementDict[userLanguage]['title']
-                                          }
-                                          transparent
-                                          label={
-                                            AddMeasurementDict[userLanguage]['title']
-                                          }
-                                          iconBeforeLabel
-                                          Icon={IoIosAdd}
-                                        />
-                                      </>
-                                    ) : learning.topics?.length < 2 ? (
-                                      <Buttons
-                                        type="submit"
-                                        size="small"
-                                        transparent
-                                        onClick={() =>
-                                          createNewMeasurement(topic.id, learning.id)
-                                        }
-                                        label={AddMeasurementDict[userLanguage]['title']}
-                                        title={AddMeasurementDict[userLanguage]['title']}
-                                        iconBeforeLabel
-                                        Icon={IoIosAdd}
-                                      />
-                                    ) : (
-                                      <Buttons
-                                        type="submit"
-                                        size="small"
-                                        transparent
-                                        onClick={() =>
-                                          createNewMeasurement(topic.id, learning.id)
-                                        }
-                                        label={AddMeasurementDict[userLanguage]['title']}
-                                        title={AddMeasurementDict[userLanguage]['title']}
-                                        iconBeforeLabel
-                                        Icon={IoIosAdd}
-                                      />
-                                    )}
-                                  </ul>
-                                </div>
-                              ))
-                            ) : (
+                            <div className="actions-2 justify-center gap-x-4 flex items-center">
+                              <Buttons
+                                onClick={() => editLearningObj(learning)}
+                                iconSize="w-4 h-6"
+                                Icon={HiPencil}
+                                size="small"
+                                transparent
+                                title="Edit topic"
+                              />
                               <Buttons
                                 size="small"
                                 type="submit"
                                 onClick={() => createNewTopic(learning.id)}
-                                label={TOPICLISTDICT[userLanguage]['ADD']}
+                                title={TOPICLISTDICT[userLanguage]['ADD']}
                                 iconBeforeLabel
                                 Icon={IoIosAdd}
                               />
+                              <Buttons
+                                onClick={() => deleteModal(learning?.id, 'objective')}
+                                iconSize="w-4 h-6"
+                                Icon={HiOutlineTrash}
+                                size="small"
+                                transparent
+                                title="Delete topic"
+                                redBtn
+                              />
+                            </div>
+                          </div>
+
+                          <div className="py-5 h-48 p-4 overflow-y-auto">
+                            {learning.topics?.length ? (
+                              learning.topics.map((topic: any, topicIndex: number) => {
+                                return (
+                                  <Topic
+                                    topic={topic}
+                                    key={topic?.id}
+                                    topicIndex={topicIndex}
+                                    editCurrentMeasurement={editCurrentMeasurement}
+                                    createNewMeasurement={createNewMeasurement}
+                                    editCurrentTopic={editCurrentTopic}
+                                    deleteModal={deleteModal}
+                                    learning={learning}
+                                  />
+                                );
+                              })
+                            ) : (
+                              <Empty text="No topics found" />
                             )}
                           </div>
                         </div>
-                        <div className="py-3 border-t-0 flex justify-center">
-                          <Buttons
-                            size="small"
-                            type="submit"
-                            onClick={() => createNewTopic(learning.id)}
-                            label={TOPICLISTDICT[userLanguage]['ADD']}
-                            iconBeforeLabel
-                            Icon={IoIosAdd}
-                          />
-                        </div>
                       </div>
                     </div>
-                    // </div>
-                    // )}
-                    // </Draggable>
                   ))}
-                  {/* {provided.placeholder} */}
                 </div>
-                {/* )} */}
-                {/* </Droppable>
-                  </DragDropContext> */}
-                {/* </div> */}
-                {/* <DragableAccordion
-                    titleList={learnings}
-                    onDragEnd={onDragEnd}
-                    showEdit
-                    onItemEdit={editLearningObj}
-                  /> */}
               </div>
-              {!loading && !isFormOpen && !learnings?.length && (
+              {!loading && !learnings?.length && (
                 <Fragment>
                   <div className="flex justify-center mt-8">
                     <Buttons
@@ -631,7 +625,6 @@ const LearningObjective = (props: LearningObjectiveProps) => {
                     />
                   </div>
                   <p className="text-center p-16">
-                    {' '}
                     {LEARINGOBJECTIVEDICT[userLanguage]['INFO']}
                   </p>
                 </Fragment>
@@ -640,9 +633,9 @@ const LearningObjective = (props: LearningObjectiveProps) => {
           ) : (
             <div className="py-12 my-12 m-auto text-center">
               <Loader
-                className="text-gray-500"
-                animation
                 withText={LEARINGOBJECTIVEDICT[userLanguage]['FETCH']}
+                animation
+                className="text-gray-500"
               />
             </div>
           )}
@@ -673,6 +666,27 @@ const LearningObjective = (props: LearningObjectiveProps) => {
             />
           </Modal>
         )}
+
+        {createOrEditLearningObjectiveModal && (
+          <Modal
+            showHeader={true}
+            title={
+              LEARINGOBJECTIVEDICT[userLanguage]['BUTTON'][
+                isEmpty(selectedObjectiveData) ? 'ADD' : 'EDIT'
+              ]
+            }
+            showHeaderBorder={true}
+            showFooter={false}
+            closeAction={handleCancel}>
+            <AddLearningObjective
+              curricularId={curricularId}
+              handleCancel={handleCancel}
+              learningObjectiveData={selectedObjectiveData}
+              postMutation={postLearningObjectiveChange}
+            />
+          </Modal>
+        )}
+
         {openTopicModal && (
           <Modal
             showHeader={true}

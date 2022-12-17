@@ -17,6 +17,7 @@ import Loader from 'atoms/Loader';
 import ModalPopUp from 'molecules/ModalPopUp';
 import {getAsset} from 'assets';
 import UnitManagerRow from './UnitManagerRow';
+import {Empty} from '@components/Dashboard/Admin/LessonsBuilder/StepActionComponent/LearningEvidence/CourseMeasurementsCard';
 
 interface UIMessages {
   show: boolean;
@@ -34,11 +35,6 @@ const UnitManager = ({
   syllabusIds,
   setSyllabusIds
 }: any) => {
-  // console.log(
-  //   '🚀 ~ file: UnitManager.tsx ~ line 37 ~ courseData',
-  //   courseData,
-  //   syllabusIds
-  // );
   const history = useHistory();
 
   const {theme, clientKey, userLanguage} = useContext(GlobalContext);
@@ -407,7 +403,7 @@ const UnitManager = ({
           {loading ? (
             <div className="h-100 flex justify-center items-center">
               <div className="w-5/10">
-                <Loader />
+                <Loader animation withText="Fetching units..." />
               </div>
             </div>
           ) : selectedSyllabusList?.length > 0 ? (
@@ -470,9 +466,7 @@ const UnitManager = ({
               )}
             </Fragment>
           ) : (
-            <div className="text-center p-16 mt-4">
-              {CourseBuilderDict[userLanguage]['NO_UNIT']}
-            </div>
+            <Empty text={CourseBuilderDict[userLanguage]['NO_UNIT']} />
           )}
         </div>
       </div>

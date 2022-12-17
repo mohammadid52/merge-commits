@@ -19,6 +19,11 @@ import SectionTitleV3 from 'atoms/SectionTitleV3';
 import DateAndTime from '../DateAndTime/DateAndTime';
 import SurveyPDF from './SurveyPDF';
 import {logError} from '@graphql/functions';
+<<<<<<< HEAD
+=======
+import PageWrapper from '@components/Atoms/PageWrapper';
+import Buttons from '@components/Atoms/Buttons';
+>>>>>>> 8dc28e996ede8ecbb7700715c44b9175d8455fbf
 
 interface ICsvProps {
   institutionId?: string;
@@ -174,9 +179,9 @@ const Csv = ({institutionId}: ICsvProps) => {
 
   const fetchActiveUnits = async (crList: any) => {
     const arrayOfActiveUnits = crList
-      ?.filter((_c: {activeSyllabus: any}) => Boolean(_c.activeSyllabus))
+      ?.filter((_c: {activeSyllabus: any}) => Boolean(_c?.activeSyllabus))
       .map((_c: {activeSyllabus: string | null}) => {
-        if (_c.activeSyllabus) return {unitId: {eq: _c.activeSyllabus}};
+        if (_c?.activeSyllabus) return {unitId: {eq: _c.activeSyllabus}};
       });
 
     try {
@@ -220,6 +225,7 @@ const Csv = ({institutionId}: ICsvProps) => {
       )
     );
 
+<<<<<<< HEAD
     let coTeachersRooms = coTeahcerClassrooms?.data?.listRoomCoTeachers?.items.map((item:any) => {
       return {
         ...item,
@@ -237,17 +243,44 @@ const Csv = ({institutionId}: ICsvProps) => {
           ? cr.curricula?.items[0].curriculum
           : null;
       instCRs.push({id: cr.id, name: cr.name, value: cr.name});
+=======
+    let coTeachersRooms = coTeahcerClassrooms?.data?.listRoomCoTeachers?.items.map(
+      (item: any) => {
+        if (item && item.room) {
+          return {
+            ...item,
+            name: item.room.name,
+            class: {id: item.room.classID},
+            curricula: item?.curricula || {items: []}
+          };
+        }
+      }
+    );
+    classrooms = [...coTeachersRooms, ...classrooms?.data.listRooms?.items] || [];
+    classrooms = classrooms
+      .map((cr: any) => {
+        if (cr) {
+          let curriculum =
+            cr.curricula?.items &&
+            Array.isArray(cr.curricula?.items) &&
+            cr.curricula?.items.length > 0
+              ? cr.curricula?.items[0].curriculum
+              : null;
+          instCRs.push({id: cr.id, name: cr.name, value: cr.name});
 
-      return {
-        id: cr.id,
+          return {
+            id: cr.id,
+>>>>>>> 8dc28e996ede8ecbb7700715c44b9175d8455fbf
 
-        name: cr.name,
-        value: cr.name,
-        class: {...cr.class},
-        curriculum,
-        ...insertExtraData(cr)
-      };
-    });
+            name: cr.name,
+            value: cr.name,
+            class: {...cr.class},
+            curriculum,
+            ...insertExtraData(cr)
+          };
+        }
+      })
+      .filter(Boolean);
 
     setClassRoomsList(classrooms);
     setInstClassRooms(instCRs);
@@ -600,72 +633,6 @@ const Csv = ({institutionId}: ICsvProps) => {
   // ##################################################################### //
   // ############################# TEMP CODE ############################# //
   // ##################################################################### //
-
-  // const createNewSurveyDataRecord = async (surveyObj: any) => {
-  //   try {
-  //     let surveyData: any = await API.graphql(
-  //       graphqlOperation(mutations.createUniversalSurveyStudentData, {
-  //         input: {
-  //           ...surveyObj,
-  //         },
-  //       })
-  //     );
-  //     console.log('surveyData', surveyData);
-  //   } catch (err) {
-  //     console.log('createNewSurveyDataRecord error', err);
-  //   }
-  // };
-
-  // const adaptStudentDataToSurveyData = async (studentData: any[]) => {
-  //   let studentDataAdapted = studentData.reduce(
-  //     (acc: {[key: string]: any}, studentDataObj: any) => {
-  //       let keyExists = acc[studentDataObj.studentID];
-
-  //       if (keyExists) {
-  //         return {
-  //           ...acc,
-  //           [studentDataObj.studentID]: {
-  //             ...acc[studentDataObj.studentID],
-  //             currentLocation: studentDataObj.currentLocation,
-  //             lessonProgress: studentDataObj.lessonProgress,
-  //             surveyData: [
-  //               ...acc[studentDataObj.studentID].surveyData,
-  //               ...studentDataObj.pageData,
-  //             ],
-  //           },
-  //         };
-  //       } else {
-  //         return {
-  //           ...acc,
-  //           [studentDataObj.studentID]: {
-  //             syllabusLessonID: studentDataObj.syllabusLessonID,
-  //             lessonID: studentDataObj.lessonID,
-  //             studentID: studentDataObj.studentID,
-  //             studentAuthID: studentDataObj.studentAuthID,
-  //             studentEmail: studentDataObj.studentEmail,
-  //             roomID: studentDataObj.roomID,
-  //             currentLocation: studentDataObj.currentLocation,
-  //             lessonProgress: studentDataObj.lessonProgress,
-  //             surveyData: [...studentDataObj.pageData],
-  //           },
-  //         };
-  //       }
-  //     },
-  //     {}
-  //   );
-  //   console.log('studentDataAdapted', studentDataAdapted);
-
-  //   if (studentDataAdapted && Object.keys(studentDataAdapted).length > 0) {
-  //     let loopOverAdaptedData = Object.keys(studentDataAdapted).map(
-  //       async (studentID: string) => {
-  //         await createNewSurveyDataRecord(studentDataAdapted[studentID]);
-  //       }
-  //     );
-  //     Promise.all(loopOverAdaptedData).then(() => {
-  //       console.log('loopOverAdaptedData - done');
-  //     });
-  //   }
-  // };
 
   // ##################################################################### //
   // ########################## END OF TEMP CODE ######################### //
@@ -1037,103 +1004,135 @@ const Csv = ({institutionId}: ICsvProps) => {
   };
 
   return (
+<<<<<<< HEAD
     <div className="flex flex-col overflow-h-scroll w-full h-full px-8 py-4">
       <div className="mx-auto w-full">
         <div className="flex flex-row my-0 w-full py-0 mb-8 justify-between">
           <h3 className="text-lg leading-6 text-gray-600 w-auto">
             <SectionTitleV3 title={CsvDict[userLanguage]['TITLE']} />
           </h3>
+=======
+    <>
+      <div className="flex flex-col overflow-h-auto w-full h-full px-8 py-4">
+        <div className="mx-auto w-full">
+          <div className="flex flex-row my-0 w-full py-0 mb-4 justify-between">
+            <div className="w-auto">
+              <SectionTitleV3 title={CsvDict[userLanguage]['TITLE']} />
+            </div>
+>>>>>>> 8dc28e996ede8ecbb7700715c44b9175d8455fbf
 
-          <div className="w-auto">
-            <span className={`mr-0 float-right text-gray-600 text-right`}>
-              <DateAndTime />
-            </span>
+            <div className="w-auto">
+              <span className={`mr-0 float-right text-gray-600 text-right`}>
+                <DateAndTime />
+              </span>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div className="grid grid-cols-4 gap-x-4">
-        {isSuperAdmin && (
-          <Selector
-            loading={institutionsLoading}
-            selectedItem={selectedInst ? selectedInst.name : ''}
-            placeholder={CsvDict[userLanguage]['SELECT_INST']}
-            list={institutions}
-            onChange={(value, name, id) => onInstSelect(id, name, value)}
-          />
-        )}
-
-        <div className="w-auto relative">
-          <Selector
-            dataCy="analytics-classroom"
-            disabled={!selectedInst?.id}
-            setHoveringItem={setHoveringItem}
-            loading={classRoomLoading}
-            selectedItem={selectedClassRoom ? selectedClassRoom.name : ''}
-            placeholder="select classroom"
-            list={instClassRooms}
-            onChange={(value, name, id) => {
-              setHoveringItem({});
-              onClassRoomSelect(id, name, value);
-            }}
-          />
-          {currentSelectedClassroomData && (
-            <ClickAwayListener onClickAway={() => setHoveringItem({})}>
-              <Transition
-                style={{top: '0rem', bottom: '1.5rem', right: '-110%', zIndex: 999999}}
-                className="hidden md:block cursor-pointer select-none  absolute right-1 text-black "
-                show={Boolean(hoveringItem && hoveringItem.name)}>
-                <div className="bg-white flex flex-col border-gray-200 rounded-xl  customShadow border-0 p-4  min-w-70 max-w-70 w-auto">
-                  <DataValue
-                    title={'Institution Name'}
-                    content={currentSelectedClassroomData?.institutionName}
-                  />
-                  <DataValue
-                    title={'Clasroom Name'}
-                    content={currentSelectedClassroomData?.name}
-                  />
-                  <DataValue
-                    title={'Status'}
-                    content={
-                      <p
-                        className={`${
-                          currentSelectedClassroomData.status === 'ACTIVE'
-                            ? 'text-green-500'
-                            : 'text-yellow-500'
-                        } lowercase`}>
-                        {currentSelectedClassroomData.status}
-                      </p>
-                    }
-                  />
-                  <DataValue
-                    title={'Teacher'}
-                    content={
-                      <div className="flex items-center justify-center w-auto">
-                        <span className="w-auto">
-                          <img
-                            src={currentSelectedClassroomData.teacher.image}
-                            className="h-6 w-6 rounded-full"
-                          />
-                        </span>
-                        <p className="w-auto ml-2">
-                          {currentSelectedClassroomData.teacher.name}
-                        </p>
-                      </div>
-                    }
-                  />
-                  <DataValue
-                    title={'Course Name'}
-                    content={currentSelectedClassroomData.courseName}
-                  />
-                  <DataValue
-                    title={'Active Unit'}
-                    content={currentActiveUnit?.name || 'None'}
-                  />
-                </div>
-              </Transition>
-            </ClickAwayListener>
+        <div className="grid grid-cols-4 gap-x-4">
+          {isSuperAdmin && (
+            <Selector
+              loading={institutionsLoading}
+              selectedItem={selectedInst ? selectedInst.name : ''}
+              placeholder={CsvDict[userLanguage]['SELECT_INST']}
+              list={institutions}
+              onChange={(value, name, id) => onInstSelect(id, name, value)}
+            />
           )}
+
+          <div className="w-auto relative">
+            <Selector
+              dataCy="analytics-classroom"
+              disabled={!selectedInst?.id}
+              setHoveringItem={setHoveringItem}
+              loading={classRoomLoading}
+              selectedItem={selectedClassRoom ? selectedClassRoom.name : ''}
+              placeholder="select classroom"
+              list={instClassRooms}
+              onChange={(value, name, id) => {
+                setHoveringItem({});
+                onClassRoomSelect(id, name, value);
+              }}
+            />
+            {currentSelectedClassroomData && (
+              <ClickAwayListener onClickAway={() => setHoveringItem({})}>
+                <Transition
+                  style={{top: '0rem', bottom: '1.5rem', right: '-110%', zIndex: 999999}}
+                  className="hidden md:block cursor-pointer select-none  absolute right-1 text-black "
+                  show={Boolean(hoveringItem && hoveringItem.name)}>
+                  <div className="bg-white flex flex-col border-gray-200 rounded-xl  customShadow border-0 p-4  min-w-70 max-w-70 w-auto">
+                    <DataValue
+                      title={'Institution Name'}
+                      content={currentSelectedClassroomData?.institutionName}
+                    />
+                    <DataValue
+                      title={'Clasroom Name'}
+                      content={currentSelectedClassroomData?.name}
+                    />
+                    <DataValue
+                      title={'Status'}
+                      content={
+                        <p
+                          className={`${
+                            currentSelectedClassroomData.status === 'ACTIVE'
+                              ? 'text-green-500'
+                              : 'text-yellow-500'
+                          } lowercase`}>
+                          {currentSelectedClassroomData.status}
+                        </p>
+                      }
+                    />
+                    <DataValue
+                      title={'Teacher'}
+                      content={
+                        <div className="flex items-center justify-center w-auto">
+                          <span className="w-auto">
+                            <img
+                              src={currentSelectedClassroomData.teacher.image}
+                              className="h-6 w-6 rounded-full"
+                            />
+                          </span>
+                          <p className="w-auto ml-2">
+                            {currentSelectedClassroomData.teacher.name}
+                          </p>
+                        </div>
+                      }
+                    />
+                    <DataValue
+                      title={'Course Name'}
+                      content={currentSelectedClassroomData.courseName}
+                    />
+                    <DataValue
+                      title={'Active Unit'}
+                      content={currentActiveUnit?.name || 'None'}
+                    />
+                  </div>
+                </Transition>
+              </ClickAwayListener>
+            )}
+          </div>
+
+          <Selector
+            dataCy="analytics-unit"
+            loading={unitsLoading}
+            selectedItem={selectedUnit ? selectedUnit.name : ''}
+            placeholder="select unit"
+            list={units}
+            disabled={!selectedCurriculum}
+            onChange={(value, name, id) => onUnitSelect(id, name, value)}
+          />
+
+          <Selector
+            dataCy="analytics-survey"
+            loading={surveysLoading}
+            disabled={!selectedUnit}
+            selectedItem={selectedSurvey ? selectedSurvey.name : ''}
+            placeholder="select survey"
+            list={surveys}
+            onChange={(value, name, id) => onSurveySelect(id, name, value)}
+          />
         </div>
+<<<<<<< HEAD
 
         <Selector
           dataCy="analytics-unit"
@@ -1170,15 +1169,25 @@ const Csv = ({institutionId}: ICsvProps) => {
               <BsDownload />
             </span>
             {isCSVDownloadReady ? (
+=======
+        <div className="w-auto mt-4 md:gap-x-4 relative flex items-center">
+          <Buttons
+            disabled={!isCSVDownloadReady}
+            Icon={BsDownload}
+            size="small"
+            btnClass="px-6"
+            insideElement={
+>>>>>>> 8dc28e996ede8ecbb7700715c44b9175d8455fbf
               <CSVLink
                 data={CSVData}
-                className="w-auto"
+                className="w-auto ml-2"
                 headers={CSVHeaders}
-                filename={`${selectedClassRoom.name}_${
-                  selectedSurvey.name
+                filename={`${selectedClassRoom?.name}_${
+                  selectedSurvey?.name
                 }_${getTodayDate()}.csv`}>
-                CSV
+                Survey CSV
               </CSVLink>
+<<<<<<< HEAD
             ) : (
               'CSV'
             )}
@@ -1197,63 +1206,97 @@ const Csv = ({institutionId}: ICsvProps) => {
               <BsDownload />
             </span>
             {lessonPDFData.length > 0 ? (
+=======
+            }
+          />
+
+          <Buttons
+            disabled={!isCSVDownloadReady && lessonPDFData.length === 0}
+            Icon={BsDownload}
+            size="small"
+            btnClass="px-6"
+            insideElement={
+>>>>>>> 8dc28e996ede8ecbb7700715c44b9175d8455fbf
               <PDFDownloadLink
-                className="w-auto"
+                className="w-auto ml-2"
                 document={
                   <SurveyPDF lessonPDFData={lessonPDFData} clientKey={clientKey} />
                 }
                 fileName={`${selectedSurvey?.name}.pdf`}>
-                {({loading}) => (loading ? 'Loading' : 'Survey PDF')}
+                Survey XLSX
               </PDFDownloadLink>
-            ) : (
-              'Survey PDF'
-            )}
-          </button>
+            }
+          />
+          <Buttons
+            disabled={!isCSVDownloadReady && lessonPDFData.length === 0}
+            Icon={BsDownload}
+            size="small"
+            btnClass="px-6"
+            insideElement={
+              <PDFDownloadLink
+                className="w-auto ml-2"
+                document={
+                  <SurveyPDF lessonPDFData={lessonPDFData} clientKey={clientKey} />
+                }
+                fileName={`${selectedSurvey?.name}.pdf`}>
+                Survey PDF
+              </PDFDownloadLink>
+            }
+          />
         </div>
-      </div>
-      <div>
-        <SectionTitleV3 title={'Survey results'} />
-        {CSVData.length > 0 ? (
-          <Table />
-        ) : (
-          <div className="bg-white flex justify-center items-center inner_card h-30 overflow-hidden border-b border-gray-200 sm:rounded-lg">
-            {csvGettingReady ? (
-              <div className="py-20 text-center mx-auto flex justify-center items-center w-full h-48">
-                <div className="w-5/10">
-                  <Loader color="rgba(107, 114, 128, 1)" />
-                  <p className="mt-2 text-center text-lg text-gray-500">
-                    Populating data please wait...
-                  </p>
+        <div>
+          <div className="w-auto my-4">
+            <SectionTitleV3 title={'Survey results'} />
+          </div>
+          {CSVData.length > 0 ? (
+            <Table />
+          ) : (
+            <div className="bg-white flex justify-center items-center inner_card h-30 overflow-hidden border-b border-gray-200 sm:rounded-lg">
+              {csvGettingReady ? (
+                <div className="py-20 text-center mx-auto flex justify-center items-center w-full h-48">
+                  <div className="w-5/10">
+                    <Loader
+                      withText="Populating data please wait..."
+                      className="text-gray-500"
+                      animation
+                    />
+                  </div>
                 </div>
-              </div>
-            ) : (
-              <div className="py-20 text-center mx-auto flex justify-center items-center w-full h-48">
-                <div className="w-5/10">
-                  <p className="mt-2 text-center text-lg text-gray-500">
-                    Select filters options to populate data
-                  </p>
+              ) : (
+                <div className="py-20 text-center mx-auto flex justify-center items-center w-full h-48">
+                  <div className="w-5/10">
+                    <p className="mt-2 text-center text-lg text-gray-500">
+                      Select filters options to populate data
+                    </p>
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
+          )}
+        </div>
+        {isCSVDownloadReady && (
+          <div>
+            <div className="w-auto my-4">
+              <SectionTitleV3 title={'Statistics'} />
+            </div>
+
+            <div className={`grid grid-cols-2 md:grid-cols-4 gap-6`}>
+              {/* @Aman change the value:{value} */}
+              <Card
+                keyItem="Survey First"
+                value={getFormatedDate(statistics.surveyFirst)}
+              />
+              <Card
+                keyItem="Survey Last"
+                value={getFormatedDate(statistics.surveyLast)}
+              />
+              <Card keyItem="Taken Survey" value={statistics.takenSurvey} />
+              <Card keyItem="Not Taken Survey" value={statistics.notTakenSurvey} />
+            </div>
           </div>
         )}
       </div>
-      {isCSVDownloadReady && (
-        <div>
-          <SectionTitleV3 fontSize="2xl" fontStyle="bold" title={'Statistics'} />
-          <div className={`grid grid-cols-2 md:grid-cols-4 gap-6`}>
-            {/* @Aman change the value:{value} */}
-            <Card
-              keyItem="Survey First"
-              value={getFormatedDate(statistics.surveyFirst)}
-            />
-            <Card keyItem="Survey Last" value={getFormatedDate(statistics.surveyLast)} />
-            <Card keyItem="Taken Survey" value={statistics.takenSurvey} />
-            <Card keyItem="Not Taken Survey" value={statistics.notTakenSurvey} />
-          </div>
-        </div>
-      )}
-    </div>
+    </>
   );
 };
 
