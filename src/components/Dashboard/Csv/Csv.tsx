@@ -19,11 +19,8 @@ import SectionTitleV3 from 'atoms/SectionTitleV3';
 import DateAndTime from '../DateAndTime/DateAndTime';
 import SurveyPDF from './SurveyPDF';
 import {logError} from '@graphql/functions';
-<<<<<<< HEAD
-=======
 import PageWrapper from '@components/Atoms/PageWrapper';
 import Buttons from '@components/Atoms/Buttons';
->>>>>>> 8dc28e996ede8ecbb7700715c44b9175d8455fbf
 
 interface ICsvProps {
   institutionId?: string;
@@ -225,25 +222,6 @@ const Csv = ({institutionId}: ICsvProps) => {
       )
     );
 
-<<<<<<< HEAD
-    let coTeachersRooms = coTeahcerClassrooms?.data?.listRoomCoTeachers?.items.map((item:any) => {
-      return {
-        ...item,
-        name:item.room.name,
-        class:{id:item.room.classID,},
-        curricula:item.room.curricula || {items:[]}
-      }
-    })
-    classrooms = [...coTeachersRooms,...classrooms?.data.listRooms?.items] || [];
-    classrooms = classrooms.map((cr: any) => {
-      let curriculum =
-        cr.curricula?.items &&
-        Array.isArray(cr.curricula?.items) &&
-        cr.curricula?.items.length > 0
-          ? cr.curricula?.items[0].curriculum
-          : null;
-      instCRs.push({id: cr.id, name: cr.name, value: cr.name});
-=======
     let coTeachersRooms = coTeahcerClassrooms?.data?.listRoomCoTeachers?.items.map(
       (item: any) => {
         if (item && item.room) {
@@ -270,7 +248,6 @@ const Csv = ({institutionId}: ICsvProps) => {
 
           return {
             id: cr.id,
->>>>>>> 8dc28e996ede8ecbb7700715c44b9175d8455fbf
 
             name: cr.name,
             value: cr.name,
@@ -1004,14 +981,6 @@ const Csv = ({institutionId}: ICsvProps) => {
   };
 
   return (
-<<<<<<< HEAD
-    <div className="flex flex-col overflow-h-scroll w-full h-full px-8 py-4">
-      <div className="mx-auto w-full">
-        <div className="flex flex-row my-0 w-full py-0 mb-8 justify-between">
-          <h3 className="text-lg leading-6 text-gray-600 w-auto">
-            <SectionTitleV3 title={CsvDict[userLanguage]['TITLE']} />
-          </h3>
-=======
     <>
       <div className="flex flex-col overflow-h-auto w-full h-full px-8 py-4">
         <div className="mx-auto w-full">
@@ -1019,7 +988,6 @@ const Csv = ({institutionId}: ICsvProps) => {
             <div className="w-auto">
               <SectionTitleV3 title={CsvDict[userLanguage]['TITLE']} />
             </div>
->>>>>>> 8dc28e996ede8ecbb7700715c44b9175d8455fbf
 
             <div className="w-auto">
               <span className={`mr-0 float-right text-gray-600 text-right`}>
@@ -1132,44 +1100,6 @@ const Csv = ({institutionId}: ICsvProps) => {
             onChange={(value, name, id) => onSurveySelect(id, name, value)}
           />
         </div>
-<<<<<<< HEAD
-
-        <Selector
-          dataCy="analytics-unit"
-          loading={unitsLoading}
-          selectedItem={selectedUnit ? selectedUnit.name : ''}
-          placeholder="select unit"
-          list={units}
-          disabled={!selectedCurriculum}
-          onChange={(value, name, id) => onUnitSelect(id, name, value)}
-        />
-
-        <Selector
-          dataCy="analytics-survey"
-          loading={surveysLoading}
-          disabled={!selectedUnit}
-          selectedItem={selectedSurvey ? selectedSurvey.name : ''}
-          placeholder="select survey"
-          list={surveys}
-          onChange={(value, name, id) => onSurveySelect(id, name, value)}
-        />
-
-        <div className="w-auto md:gap-x-2 relative flex items-center">
-          <button
-            type="button"
-            className={`col-end-5 ${
-              isSuperAdmin ? 'mt-5' : ''
-            } inline-flex justify-center h-full border-0 border-transparent text-sm leading-5 font-medium rounded-full text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:ring-indigo transition duration-150 ease-in-out items-center`}
-            style={{
-              /* stylelint-disable */
-              opacity: isCSVDownloadReady ? 1 : 0.5
-            }}
-            disabled={!isCSVDownloadReady}>
-            <span className="w-auto mr-2">
-              <BsDownload />
-            </span>
-            {isCSVDownloadReady ? (
-=======
         <div className="w-auto mt-4 md:gap-x-4 relative flex items-center">
           <Buttons
             disabled={!isCSVDownloadReady}
@@ -1177,7 +1107,6 @@ const Csv = ({institutionId}: ICsvProps) => {
             size="small"
             btnClass="px-6"
             insideElement={
->>>>>>> 8dc28e996ede8ecbb7700715c44b9175d8455fbf
               <CSVLink
                 data={CSVData}
                 className="w-auto ml-2"
@@ -1187,26 +1116,6 @@ const Csv = ({institutionId}: ICsvProps) => {
                 }_${getTodayDate()}.csv`}>
                 Survey CSV
               </CSVLink>
-<<<<<<< HEAD
-            ) : (
-              'CSV'
-            )}
-          </button>
-          <button
-            type="button"
-            className={`col-end-5 ${
-              isSuperAdmin ? 'mt-5' : ''
-            } inline-flex justify-center h-full border-0 border-transparent text-sm leading-5 font-medium rounded-full text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:ring-indigo transition duration-150 ease-in-out items-center`}
-            style={{
-              /* stylelint-disable */
-              opacity: isCSVDownloadReady ? 1 : 0.5
-            }}
-            disabled={!isCSVDownloadReady}>
-            <span className="w-auto mr-2">
-              <BsDownload />
-            </span>
-            {lessonPDFData.length > 0 ? (
-=======
             }
           />
 
@@ -1216,7 +1125,6 @@ const Csv = ({institutionId}: ICsvProps) => {
             size="small"
             btnClass="px-6"
             insideElement={
->>>>>>> 8dc28e996ede8ecbb7700715c44b9175d8455fbf
               <PDFDownloadLink
                 className="w-auto ml-2"
                 document={

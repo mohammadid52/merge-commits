@@ -423,20 +423,21 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
     userAuthId: string
   ) => {
     const data = listPersonData.find((pd) => pd.lessonID === lessonId);
-
-    const ratingValue = data.ratings;
-    const pageNumber = data.pages;
-    const currentPage = JSON.parse(pageNumber).currentPage;
-    const lessonProgress = JSON.parse(pageNumber).lessonProgress;
-    const totalPages = JSON.parse(pageNumber).totalPages;
-    return {
-      ratingValue,
-      currentPage,
-      lessonProgress,
-      totalPages,
-      ...data,
-      isCompleted: data?.isCompleted || false
-    };
+    if (!isEmpty(data)) {
+      const ratingValue = data.ratings;
+      const pageNumber = data.pages;
+      const currentPage = JSON.parse(pageNumber).currentPage;
+      const lessonProgress = JSON.parse(pageNumber).lessonProgress;
+      const totalPages = JSON.parse(pageNumber).totalPages;
+      return {
+        ratingValue,
+        currentPage,
+        lessonProgress,
+        totalPages,
+        ...data,
+        isCompleted: data?.isCompleted || false
+      };
+    }
   };
 
   const handleLessonMutationRating = async (lessonID: string, ratingValue: string) => {

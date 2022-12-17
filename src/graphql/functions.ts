@@ -112,28 +112,6 @@ export const logError = async (
   componentName: string,
   additionalInfo?: any
 ) => {
-<<<<<<< HEAD
-  try {
-    const input: CreateErrorLogInput = {
-      authID: auth.authId,
-      email: auth.email,
-      error: JSON.stringify(error) || 'Invalid error',
-      errorType:
-        (typeof error === 'string' ? error : error.message) || 'Invalid error type',
-      errorTime: new Date().toISOString(),
-      pageUrl: location.href,
-      componentName: componentName
-    };
-    const res = await API.graphql(
-      graphqlOperation(customMutations.createErrorLog, {input})
-    );
-  } catch (error) {
-    console.error(
-      'error logging error.. this is kind of ironic -> ',
-      {error, auth},
-      error
-    );
-=======
   if (!location.origin.includes('localhost')) {
     try {
       const input: CreateErrorLogInput = {
@@ -157,6 +135,5 @@ export const logError = async (
     }
   } else {
     console.error(error);
->>>>>>> 8dc28e996ede8ecbb7700715c44b9175d8455fbf
   }
 };
