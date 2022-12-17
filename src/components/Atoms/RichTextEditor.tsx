@@ -122,7 +122,7 @@ const RichTextEditor = (props: RichTextEditorProps) => {
       }
       setEditorState(editorState);
     } catch (error) {
-      logError(error, {authId, email}, 'RichTextEditor');
+      logError(error, {authId, email}, 'RichTextEditor useEffect');
       console.error('error@RichTextEditor in useEffect: ', error);
     }
   }, []);

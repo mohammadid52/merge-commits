@@ -33,7 +33,7 @@ const Registration = () => {
       // console.log(res);
       history.push('/new-password');
     } catch (error) {
-      logError(error, {authId: username, email: username}, 'Confirmation');
+      logError(error, {authId: username, email: username}, 'Confirmation @confirmSignUp');
       console.error('error confirming sign up', error);
       /////change the error code
       setMessage(() => {

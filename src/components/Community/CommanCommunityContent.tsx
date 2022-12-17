@@ -53,7 +53,11 @@ const CommanCommunityContent = ({
         setCommonList([...orderedList]);
       }
     } catch (error) {
-      logError(error, {authId: authId, email: email}, 'CommanCommunityChat');
+      logError(
+        error,
+        {authId: authId, email: email},
+        'CommanCommunityChat @fetchCommunities'
+      );
       console.error(error);
       setError(error.message);
     } finally {

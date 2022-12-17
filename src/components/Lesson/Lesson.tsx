@@ -17,7 +17,7 @@ import * as mutations from 'graphql/mutations';
 import * as queries from 'graphql/queries';
 import useAuth from '@customHooks/useAuth';
 import {v4 as uuidV4} from 'uuid';
-import {updatePageState} from '@graphql/functions';
+import {logError, updatePageState} from '@graphql/functions';
 import {setPageTitle} from '@utilities/functions';
 
 export interface ILessonSurveyApp {
@@ -254,7 +254,9 @@ const Lesson = () => {
 
       const currentPage = JSON.parse(pages).currentPage;
       return currentPage;
-    } catch (error) {}
+    } catch (error) {
+      logError(error, {authId, email}, 'Lesson @getLessonCurrentPage');
+    }
   };
 
   const [getted, setGetted] = useState(false);

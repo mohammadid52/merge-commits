@@ -197,7 +197,11 @@ const Community = ({}: {role: string}) => {
       await refetch();
       console.log('Community list updated');
     } catch (error) {
-      logError(error, {authId: personAuthID, email: personEmail}, 'Community');
+      logError(
+        error,
+        {authId: personAuthID, email: personEmail},
+        'Community @onSpotlightSubmit'
+      );
       console.error('Error while updating community list', error);
     }
   };
@@ -223,7 +227,11 @@ const Community = ({}: {role: string}) => {
       await refetch();
       console.log('Community list updated');
     } catch (error) {
-      logError(error, {authId: personAuthID, email: personEmail}, 'Community');
+      logError(
+        error,
+        {authId: personAuthID, email: personEmail},
+        'Community @onAnnouncementSubmit'
+      );
       console.error('Error while updating community list', error);
     }
   };
@@ -249,7 +257,11 @@ const Community = ({}: {role: string}) => {
       await refetch();
       console.log('Community list updated');
     } catch (error) {
-      logError(error, {authId: personAuthID, email: personEmail}, 'Community');
+      logError(
+        error,
+        {authId: personAuthID, email: personEmail},
+        'Community @onEventSubmit'
+      );
       console.error('Error while updating community list', error);
     }
   };
@@ -275,7 +287,11 @@ const Community = ({}: {role: string}) => {
       await refetch();
       console.log('Community list updated');
     } catch (error) {
-      logError(error, {authId: personAuthID, email: personEmail}, 'Community');
+      logError(
+        error,
+        {authId: personAuthID, email: personEmail},
+        'Community @onCheckItOutSubmit'
+      );
       console.error('Error while updating community list', error);
     }
   };
@@ -306,7 +322,7 @@ const Community = ({}: {role: string}) => {
         graphqlOperation(mutations.deleteCommunity, {input: {id: cardId}})
       );
     } catch (error) {
-      logError(error, {authId: personAuthID, email: personEmail}, 'Community');
+      logError(error, {authId: personAuthID, email: personEmail}, 'Community @onDelete');
       console.error(error);
     } finally {
     }

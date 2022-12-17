@@ -422,21 +422,25 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
     userEmail: string,
     userAuthId: string
   ) => {
-    const data = listPersonData.find((pd) => pd.lessonID === lessonId);
-    if (!isEmpty(data)) {
-      const ratingValue = data.ratings;
-      const pageNumber = data.pages;
-      const currentPage = JSON.parse(pageNumber).currentPage;
-      const lessonProgress = JSON.parse(pageNumber).lessonProgress;
-      const totalPages = JSON.parse(pageNumber).totalPages;
-      return {
-        ratingValue,
-        currentPage,
-        lessonProgress,
-        totalPages,
-        ...data,
-        isCompleted: data?.isCompleted || false
-      };
+    try {
+      const data = listPersonData.find((pd) => pd.lessonID === lessonId);
+      if (!isEmpty(data)) {
+        const ratingValue = data.ratings;
+        const pageNumber = data.pages;
+        const currentPage = JSON.parse(pageNumber).currentPage;
+        const lessonProgress = JSON.parse(pageNumber).lessonProgress;
+        const totalPages = JSON.parse(pageNumber).totalPages;
+        return {
+          ratingValue,
+          currentPage,
+          lessonProgress,
+          totalPages,
+          ...data,
+          isCompleted: data?.isCompleted || false
+        };
+      }
+    } catch (error) {
+      logError(error, {authId, email}, 'Classroom @getLessonRating');
     }
   };
 

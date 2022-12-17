@@ -1,7 +1,7 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import * as queries from 'graphql/queries';
 import * as customQueries from 'customGraphql/customQueries';
 import * as mutations from 'graphql/mutations';
+import * as queries from 'graphql/queries';
 
 const removeDoubleSpaces = (str: string) => {
   return str.replace(/\s{2,}/g, ' ');

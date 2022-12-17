@@ -1,8 +1,11 @@
 import {API, graphqlOperation} from 'aws-amplify';
 import React from 'react';
 import * as queries from 'graphql/queries';
+import {logError} from '@graphql/functions';
+import useAuth from '@customHooks/useAuth';
 
 const useLessonFunctions = () => {
+  const {authId, email} = useAuth();
   const getLessonCompletedValue = async (input: any) => {
     try {
       const getLessonRatingDetails: any = await API.graphql(
@@ -17,6 +20,8 @@ const useLessonFunctions = () => {
         totalPages
       };
     } catch (error) {
+      logError(error, {authId, email}, 'useLessonFunctions @getLessonCompletedValue');
+
       console.error(error);
     }
   };

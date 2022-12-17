@@ -2,6 +2,7 @@ import {useState, useEffect, useContext} from 'react';
 import {GlobalContext} from 'contexts/GlobalContext';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import * as customQueries from 'customGraphql/customQueries';
+import {logError} from '@graphql/functions';
 
 const useLoadRooms = () => {
   const {state, theme, dispatch} = useContext(GlobalContext);
@@ -31,7 +32,11 @@ const useLoadRooms = () => {
             }
           });
         } catch (e) {
-          console.error('Classes Fetch ERR: ', e);
+          logError(
+            e,
+            {authId: state.user.authId, email: state.user.email},
+            'loadRooms @listRoomTeacher'
+          );
         }
       }
     };

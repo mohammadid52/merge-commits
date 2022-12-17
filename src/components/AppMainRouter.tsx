@@ -119,6 +119,11 @@ const MainRouter: React.FC = () => {
         updateAuthState(false);
       }
     } catch (err) {
+      // logError(
+      //   err,
+      //   {authId: state.user.authId, email: state.user.email},
+      //   'AppMainRouter @checkUserAuthenticated'
+      // );
       updateAuthState(false);
     }
   };

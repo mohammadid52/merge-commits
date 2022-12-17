@@ -469,7 +469,7 @@ const Card = ({
         setChats([...orderedList]);
       }
     } catch (error) {
-      logError(error, {authId: authId, email: email}, 'Card');
+      logError(error, {authId: authId, email: email}, 'Card @fetchChats');
       console.error(error);
       setError(error.message);
     } finally {

@@ -242,7 +242,7 @@ const Dashboard = (props: DashboardProps) => {
         sessionStorage.removeItem('accessToken');
         updateAuthState(false);
       }
-      logError(error, {authId: userEmail, email: userAuthId}, 'Dashboard');
+      logError(error, {authId: userEmail, email: userAuthId}, 'Dashboard @getUser');
       console.error('Dashboard - getUser(): ', error);
     }
   }
@@ -315,7 +315,7 @@ const Dashboard = (props: DashboardProps) => {
 
       setHomeData(arrayOfResponseObjects);
     } catch (error) {
-      logError(error, {authId: authId, email: email}, 'Dashboard');
+      logError(error, {authId: authId, email: email}, 'Dashboard @getDashboardData');
 
       console.error('getDashbaordData -> ', error);
     } finally {
@@ -495,7 +495,7 @@ const Dashboard = (props: DashboardProps) => {
 
         // const roomCurriculumsFetch = await handleFetchAndCache(queryObj);
         const roomCurriculumsFetch = await API.graphql(
-          graphqlOperation(queries.listRoomCurricula, {
+          graphqlOperation(customQueries.listRoomCurriculums, {
             filter: {
               roomID: {eq: state.activeRoom}
             }

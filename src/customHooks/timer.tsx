@@ -1,4 +1,5 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import {logError} from '@graphql/functions';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import * as mutations from 'graphql/mutations';
 import {useEffect, useState} from 'react';
@@ -159,6 +160,12 @@ const useStudentTimer = () => {
               graphqlOperation(mutations.updateUniversalLessonStudentData, {input: data})
             );
           } catch (e) {
+            logError(
+              e,
+              {authId: state.user.authId, email: state.user.email},
+              'timer @updateStudentLessonData'
+            );
+
             console.error('update universal student data - ', e);
           } finally {
             if (idx === lessonState.universalStudentDataID.length - 1) {

@@ -12,6 +12,7 @@ import HeroBanner from 'components/Header/HeroBanner';
 import useDictionary from 'customHooks/dictionary';
 import {breadcrumbsRoutes} from 'utilities/breadcrumb';
 import useAuth from '@customHooks/useAuth';
+import {logError} from '@graphql/functions';
 
 interface BreadCrumbProps {
   items?: {title: string; url?: string; last: boolean; goBack?: boolean}[];
@@ -87,7 +88,13 @@ const BreadcrumbsWithBanner: React.FC<BreadCrumbProps> = (props: BreadCrumbProps
         );
         setLessonData(result.data?.getUniversalLesson);
       }
-    } catch (error) {}
+    } catch (error) {
+      logError(
+        error,
+        {authId: state.user.authId, email: state.user.email},
+        'BreadcrumbsWithBanner @getLessonData'
+      );
+    }
   };
 
   const getRoomData = async () => {
@@ -106,7 +113,13 @@ const BreadcrumbsWithBanner: React.FC<BreadCrumbProps> = (props: BreadCrumbProps
 
         setRoomData(result.data?.getRoom);
       }
-    } catch (error) {}
+    } catch (error) {
+      logError(
+        error,
+        {authId: state.user.authId, email: state.user.email},
+        'BreadcrumbsWithBanner @getRoomData'
+      );
+    }
   };
 
   const getCourseData = async () => {
@@ -125,7 +138,13 @@ const BreadcrumbsWithBanner: React.FC<BreadCrumbProps> = (props: BreadCrumbProps
 
         setCourseData(result.data?.getCurriculum);
       }
-    } catch (error) {}
+    } catch (error) {
+      logError(
+        error,
+        {authId: state.user.authId, email: state.user.email},
+        'BreadcrumbsWithBanner @getCourseData'
+      );
+    }
   };
 
   const getUnitData = async () => {
@@ -143,7 +162,13 @@ const BreadcrumbsWithBanner: React.FC<BreadCrumbProps> = (props: BreadCrumbProps
         );
         setUnitData(result.data?.getUniversalSyllabus);
       }
-    } catch (error) {}
+    } catch (error) {
+      logError(
+        error,
+        {authId: state.user.authId, email: state.user.email},
+        'BreadcrumbsWithBanner @getUnitData'
+      );
+    }
   };
 
   useEffect(() => {

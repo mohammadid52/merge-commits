@@ -112,28 +112,28 @@ export const logError = async (
   componentName: string,
   additionalInfo?: any
 ) => {
-  if (!location.origin.includes('localhost')) {
-    try {
-      const input: CreateErrorLogInput = {
-        authID: auth.authId,
-        email: auth.email,
-        error: error?.toString() || 'Invalid error',
-        errorType: additionalInfo?.toString() || 'Invalid error type',
-        errorTime: new Date().toISOString(),
-        pageUrl: location.href,
-        componentName: componentName
-      };
-      const res = await API.graphql(
-        graphqlOperation(customMutations.createErrorLog, {input})
-      );
-    } catch (error) {
-      console.error(
-        'error logging error.. this is kind of ironic -> ',
-        {error, auth},
-        error
-      );
-    }
-  } else {
-    console.error(error);
+  // if (!location.origin.includes('localhost')) {
+  try {
+    const input: CreateErrorLogInput = {
+      authID: auth.authId,
+      email: auth.email,
+      error: JSON.stringify(error?.toString()) || 'Invalid error',
+      errorType: additionalInfo?.toString() || 'Invalid error type',
+      errorTime: new Date().toISOString(),
+      pageUrl: location.href,
+      componentName: componentName
+    };
+    const res = await API.graphql(
+      graphqlOperation(customMutations.createErrorLog, {input})
+    );
+  } catch (error) {
+    console.error(
+      'error logging error.. this is kind of ironic -> ',
+      {error, auth},
+      error
+    );
   }
+  // } else {
+  //   console.error(error);
+  // }
 };

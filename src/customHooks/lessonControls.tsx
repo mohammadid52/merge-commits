@@ -3,10 +3,12 @@ import {GlobalContext} from 'contexts/GlobalContext';
 import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import * as mutations from 'graphql/mutations';
+import {logError} from '@graphql/functions';
 
 const useLessonControls = () => {
   // ~~~~~~~~~~~~~~~ CONTEXT ~~~~~~~~~~~~~~~ //
   const gContext = useContext(GlobalContext);
+  const state = gContext.state;
   const lessonState = gContext.lessonState;
   const lessonDispatch = gContext.lessonDispatch;
 
@@ -24,6 +26,11 @@ const useLessonControls = () => {
           })
         );
       } catch (e) {
+        logError(
+          e,
+          {authId: state.user.authId, email: state.user.email},
+          'lessonControls @handleRoomUpdate'
+        );
         console.error('handleRoomUpdate - ', e);
       }
     } else {
