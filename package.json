@@ -13,7 +13,7 @@
     "analysis": "webpack --config webpack.analysis.js",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run --record --key 975c7f2a-e638-48b2-a46c-cd2fce404e69",
-    "cypress:run-everything": "cypress run --spec ./cypress/e2e/everything-admin.cy.ts --record --key 975c7f2a-e638-48b2-a46c-cd2fce404e69",
+    "cypress:run-everything": "cypress run --spec ./cypress/e2e/everything.cy.ts --record --key 975c7f2a-e638-48b2-a46c-cd2fce404e69",
     "prepare": "husky install",
     "lint": "eslint .",
     "lint:fix": "eslint --fix",
