@@ -17,6 +17,7 @@ declare global {
       saveSurvey(): Chainable<Element>;
       navMenuClick(button: string, item: string): Chainable<Element>;
       controlledInputChange(value: string | number): Chainable<Element>;
+      hoverOnMenuItems(dropdownCy: string, items: string[]): Chainable<Element>;
     }
   }
 }
@@ -38,6 +39,17 @@ Cypress.Commands.add('closeCheckInModal', () => {
   cy.dataCy('sentiment-modal-close').click();
 });
 
+Cypress.Commands.add('hoverOnMenuItems', (dropdownCy: string, items: string[]) => {
+  cy.dataCy(dropdownCy).trigger('mouseover');
+  items &&
+    items.length > 0 &&
+    items.forEach((menuItem) => {
+      cy.dataCy(dropdownCy).trigger('mouseover');
+      cy.wait(5000);
+      cy.dataCy(menuItem).click();
+    });
+});
+
 Cypress.Commands.add('saveSurvey', () => {
   cy.dataCy('save-lesson').click();
 });
@@ -52,7 +64,9 @@ Cypress.Commands.add(
       window.HTMLInputElement.prototype,
       'value'
     ).set;
-    const changeInputValue = (inputToChange) => (newValue) => {
+    const changeInputValue = (
+      inputToChange: JQuery<HTMLElement> | {dispatchEvent: (arg0: Event) => void}[]
+    ) => (newValue: any) => {
       // @ts-ignore
       nativeInputValueSetter.call(inputToChange[0], newValue);
       // @ts-ignore

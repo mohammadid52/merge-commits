@@ -1,6 +1,7 @@
 import {Menu, Transition} from '@headlessui/react';
 import {ChevronDownIcon, ChevronUpIcon} from '@heroicons/react/solid';
 import {GlobalContext} from 'contexts/GlobalContext';
+import {kebabCase} from 'lodash';
 import React, {Fragment, useContext, useRef} from 'react';
 
 export interface ITabElements {
@@ -35,6 +36,7 @@ const DropDownMenu = ({index, menu, onClick}: any) => {
   };
 
   const onMouseEnter = (closed: boolean = false) => {
+    console.log('mouse entering');
     clearTimeout(timeout);
     closed && openMenu();
   };
@@ -45,11 +47,12 @@ const DropDownMenu = ({index, menu, onClick}: any) => {
 
   return (
     <Menu as="div" className="relative inline-block text-left">
-      {({open}) => (
+      {({open = true}) => (
         <>
           <div
             onClick={openMenu}
             onMouseEnter={() => onMouseEnter(!open)}
+            data-cy={kebabCase(menu.title)}
             onMouseLeave={() => onMouseLeave(open)}>
             <Menu.Button
               ref={buttonRef}
@@ -92,7 +95,7 @@ const DropDownMenu = ({index, menu, onClick}: any) => {
                 onMouseLeave={() => onMouseLeave(open)}>
                 {menu.children.map((item: any, menuIndex: number) => (
                   <Menu.Item
-                    data-cy={`${item.title.split(' ').join('-')}-item`}
+                    data-cy={kebabCase(`${item.title}-item`)}
                     key={`${index}_${menuIndex}`}
                     onClick={() => onClick(item)}>
                     <div className="hover:iconoclast:bg-400 hover:curate:bg-400 hover:text-white rounded-full p-2 px-4 text-xs 2xl:text-base">
