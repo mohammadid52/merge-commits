@@ -167,13 +167,19 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
   const currentStepComp = (currentStep: string) => {
     switch (currentStep) {
       case 'overview':
-        return <CourseFormComponent courseId={courseId} courseData={courseData} />;
+        return (
+          <CourseFormComponent
+            setCourseData={setCourseData}
+            courseId={courseId}
+            courseData={courseData}
+          />
+        );
       case 'unit_manager':
         return (
           <UnitManager
             courseId={courseId}
             courseData={courseData}
-            institutionId={courseData?.institution.id}
+            institutionId={courseData?.institution?.id}
             savedSyllabusList={savedSyllabusList}
             setSavedSyllabusList={setSavedSyllabusList}
             syllabusIds={syllabusIds}

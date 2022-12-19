@@ -21,6 +21,7 @@ import {useHistory, useRouteMatch} from 'react-router-dom';
 interface CourseBuilderProps {
   courseId: string;
   courseData: any;
+  setCourseData: React.Dispatch<React.SetStateAction<any>>;
 }
 
 interface ICourseForm {
@@ -34,7 +35,11 @@ interface ICourseForm {
     id: string;
   };
 }
-const CourseFormComponent = ({courseId, courseData}: CourseBuilderProps) => {
+const CourseFormComponent = ({
+  courseId,
+  courseData,
+  setCourseData
+}: CourseBuilderProps) => {
   const initialData: ICourseForm = {
     name: '',
     description: '',
@@ -124,10 +129,10 @@ const CourseFormComponent = ({courseId, courseData}: CourseBuilderProps) => {
   };
 
   const saveCourse = async () => {
+    setIsLoading(true);
     const isValid = await validateForm();
     if (isValid) {
       try {
-        setIsLoading(true);
         const languagesCode = curricularData.languages.map(
           (item: {value: string}) => item.value
         );
@@ -154,10 +159,14 @@ const CourseFormComponent = ({courseId, courseData}: CourseBuilderProps) => {
             };
           }
 
-          await API.graphql(graphqlOperation(mutation.updateCurriculum, {input}));
+          const response: any = await API.graphql(
+            graphqlOperation(mutation.updateCurriculum, {input})
+          );
+          const data = response.data.updateCurriculum;
           history.push(
             `${match.url}?step=unit_manager&institutionId=${curricularData.institute.id}`
           );
+          setCourseData({...data});
         } else {
           const response: any = await API.graphql(
             graphqlOperation(customMutations.createCurriculum, {input: input})
