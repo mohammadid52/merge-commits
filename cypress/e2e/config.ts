@@ -7,7 +7,7 @@ const classroomIDs = ['3936fdc3-d36d-43db-b43e-75efa30ea8cc'];
 
 export const loginConfig = {
   student: {
-    username: 'cypressclassroom@zoiq.io',
+    username: 'demostudent2@zoiq.io',
     password: 'admin123'
   },
   teacher: {

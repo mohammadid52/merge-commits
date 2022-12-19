@@ -146,6 +146,7 @@ const Tabs = ({tabsData, updateTab, currentTab}: ITabsProps) => {
             ) : (
               <button
                 key={index}
+                data-cy={kebabCase(`${menu.title}-item`)}
                 onClick={() => {
                   if (currentTab !== menu.title) {
                     updateTab(menu);
