@@ -36,7 +36,6 @@ const DropDownMenu = ({index, menu, onClick}: any) => {
   };
 
   const onMouseEnter = (closed: boolean = false) => {
-    console.log('mouse entering');
     clearTimeout(timeout);
     closed && openMenu();
   };

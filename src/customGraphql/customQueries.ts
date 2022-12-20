@@ -2191,14 +2191,14 @@ export const listCurriculums = /* GraphQL */ `
 `;
 
 export const listCurriculumsForSuperAdmin = /* GraphQL */ `
-  query ListCurriculums(
+  query ListCurricula(
     $id: ID
     $filter: ModelCurriculumFilterInput
     $limit: Int
     $nextToken: String
     $sortDirection: ModelSortDirection
   ) {
-    listCurriculums(
+    listCurricula(
       id: $id
       filter: $filter
       limit: $limit
@@ -2207,13 +2207,19 @@ export const listCurriculumsForSuperAdmin = /* GraphQL */ `
     ) {
       items {
         id
+        institutionID
         name
         type
         image
-        institutionID
+
         institution {
           id
           name
+        }
+        designers
+        universalSyllabusSeq
+        checkpoints {
+          nextToken
         }
         universalSyllabus {
           items {
@@ -2224,7 +2230,9 @@ export const listCurriculumsForSuperAdmin = /* GraphQL */ `
             }
           }
         }
-        universalSyllabusSeq
+
+        createdAt
+        updatedAt
       }
       nextToken
     }

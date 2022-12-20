@@ -474,7 +474,7 @@ const LessonPlanManager = ({
           {loading ? (
             <div className="h-100 flex justify-center items-center">
               <div className="w-5/10">
-                <Loader />
+                <Loader animation withText="Fetching lessons..." />
               </div>
             </div>
           ) : selectedLessonsList && selectedLessonsList.length > 0 ? (

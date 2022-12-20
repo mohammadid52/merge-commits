@@ -73,8 +73,8 @@ const CurriculumList = ({
   });
 
   useEffect(() => {
+    fetchCurriculums();
     if (isSuperAdmin) {
-      fetchCurriculums();
       fetchInstitutions();
     }
   }, [isSuperAdmin]);
@@ -120,7 +120,7 @@ const CurriculumList = ({
       const list: any = await API.graphql(
         graphqlOperation(customQueries.listCurriculumsForSuperAdmin)
       );
-      const updatedList: ICurricular[] = list.data?.listCurriculums?.items?.map(
+      const updatedList: ICurricular[] = list.data?.listCurricula?.items?.map(
         (item: ICurricular) => ({
           ...item,
           institutionName: item?.institution?.name,

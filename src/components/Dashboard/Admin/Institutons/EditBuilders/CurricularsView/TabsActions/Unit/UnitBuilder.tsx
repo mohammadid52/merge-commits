@@ -120,19 +120,7 @@ const UnitBuilder = ({instId}: any) => {
           lessonHistory: savedData.lessonHistory
         });
         setLessonsIds(savedData.universalLessonsSeq || []);
-        const associatedLessons = savedData.lessons?.items;
-        // await Promise.all(
-        //   associatedLessons.map(async (lesson: any) => {
-        //     const result: any = await API.graphql(
-        //       graphqlOperation(customQueries.listLessonRubricss, {
-        //         filter: {
-        //           lessonID: {eq: lesson.lessonID},
-        //         },
-        //       })
-        //     );
-        //     lesson.measurements = result.data?.listLessonRubricss.items;
-        //   })
-        // );
+
         const sortedLessonsList = [...savedData.lessons?.items]
           .map((t: any) => {
             let index = savedData.universalLessonsSeq.indexOf(t.id);
@@ -198,17 +186,7 @@ const UnitBuilder = ({instId}: any) => {
   return (
     <div className="w-full h-full p-4">
       {/* Section Header */}
-      {/* <div className="flex justify-between">
-        <SectionTitle title={SyllabusDict[userLanguage]['TITLE']} />
-        <div className="flex justify-end py-4 mb-4 w-5/10">
-          <Buttons
-            label="Go back"
-            btnClass="mr-4"
-            onClick={gobackToLessonsList}
-            Icon={IoArrowUndoCircleOutline}
-          />
-        </div>
-      </div> */}
+
       <div className="px-8 pb-4">
         <h3 className="text-lg leading-6 font-medium text-gray-900 w-auto capitalize">
           {!fetchingDetails &&
@@ -228,14 +206,6 @@ const UnitBuilder = ({instId}: any) => {
           </span>
           <div className="text-sm">{CommonlyUsedDict[userLanguage]['BACK_TO_LIST']}</div>
         </div>
-        {/* <div className="flex justify-end py-4 mb-4 w-5/10">
-          <Buttons
-            label="Go back"
-            btnClass="mr-4"
-            onClick={() => null}
-            Icon={IoArrowUndoCircleOutline}
-          />
-        </div> */}
       </div>
       {/* Body */}
       <div className="w-full m-auto">
@@ -248,10 +218,7 @@ const UnitBuilder = ({instId}: any) => {
           {fetchingDetails ? (
             <div className="h-100 flex justify-center items-center">
               <div className="w-5/10">
-                <Loader />
-                <p className="mt-2 text-center">
-                  Fetching syllabus details please wait...
-                </p>
+                <Loader animation withText="Fetching syllabus details please wait..." />
               </div>
             </div>
           ) : (

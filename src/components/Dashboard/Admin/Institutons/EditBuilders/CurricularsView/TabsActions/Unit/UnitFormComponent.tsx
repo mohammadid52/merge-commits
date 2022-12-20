@@ -4,7 +4,6 @@ import React, {useContext, useEffect, useState} from 'react';
 import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
 import MultipleSelector from 'atoms/Form/MultipleSelector';
-import TextArea from 'atoms/Form/TextArea';
 
 import {GlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
@@ -139,15 +138,7 @@ const UnitFormComponent = ({
             graphqlOperation(mutations.createUniversalSyllabus, {input})
           );
           const newItem = newSyllabus.data.createUniversalSyllabus;
-          // replace this with custom mutation updateCurriculumSyllabusSequence
-          // await API.graphql(
-          //   graphqlOperation(customMutations.updateCurriculumSyllabusSequence, {
-          //     input: {
-          //       id: curricularId,
-          //       universalSyllabusSeq: [...universalSyllabusSeq, newItem.id],
-          //     },
-          //   })
-          // );
+
           if (newItem) {
             postAddSyllabus(newItem.id);
           } else {
@@ -183,11 +174,6 @@ const UnitFormComponent = ({
 
   return (
     <div className={`bg-white ${isInModal ? '' : 'shadow-5'} overflow-hidden mb-4`}>
-      {/* <div className={`border-b-0 p-4 pl-2 ${theme.borderColor[themeColor]} mt-6`}>
-        <h3 className="text-lg leading-6 font-medium text-gray-900">
-          {AddSyllabusDict[userLanguage]['heading']}
-        </h3>
-      </div> */}
       <div className="m-auto">
         <div className="py-4 px-2">
           <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
@@ -201,17 +187,7 @@ const UnitFormComponent = ({
                 isRequired
               />
             </div>
-            {/* <div>
-                <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
-                  {AddSyllabusDict[userLanguage]['designer']}
-                </label>
-                <MultipleSelector
-                  selectedItems={selectedDesigners}
-                  placeholder={AddSyllabusDict[userLanguage]['placeholder']}
-                  list={designersList}
-                  onChange={selectDesigner}
-                />
-              </div> */}
+
             <div>
               <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
                 {AddSyllabusDict[userLanguage]['language']}
@@ -227,9 +203,10 @@ const UnitFormComponent = ({
 
           <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
             <div>
-              <TextArea
+              <FormInput
                 value={description}
                 rows={5}
+                textarea
                 id="description"
                 onChange={onInputChange}
                 name="description"
@@ -237,8 +214,9 @@ const UnitFormComponent = ({
               />
             </div>
             <div>
-              <TextArea
+              <FormInput
                 value={purpose}
+                textarea
                 rows={5}
                 id="purpose"
                 onChange={onInputChange}
@@ -250,8 +228,9 @@ const UnitFormComponent = ({
 
           <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
             <div>
-              <TextArea
+              <FormInput
                 value={objectives}
+                textarea
                 rows={5}
                 id="objectives"
                 onChange={onInputChange}
@@ -259,29 +238,7 @@ const UnitFormComponent = ({
                 label={AddSyllabusDict[userLanguage]['objective']}
               />
             </div>
-            {/* <div>
-              <TextArea
-                value={methodology}
-                rows={5}
-                id="methodology"
-                onChange={onInputChange}
-                name="methodology"
-                label={AddSyllabusDict[userLanguage]['methodology']}
-              />
-            </div> */}
           </div>
-          {/* <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
-            <div>
-              <TextArea
-                value={policies}
-                rows={5}
-                id="policies"
-                onChange={onInputChange}
-                name="policies"
-                label={AddSyllabusDict[userLanguage]['policy']}
-              />
-            </div>
-          </div> */}
         </div>
       </div>
       {messages.show ? (
