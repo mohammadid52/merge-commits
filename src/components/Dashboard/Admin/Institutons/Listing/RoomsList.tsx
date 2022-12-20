@@ -20,7 +20,29 @@ import {Status} from '../../UserManagement/UserStatus';
 import {orderBy} from 'lodash';
 import Buttons from '@components/Atoms/Buttons';
 
-type SortType = 'ACTIVE' | 'TRAINING' | 'INACTIVE';
+export type SortType = 'ACTIVE' | 'TRAINING' | 'INACTIVE';
+
+export const Filters = ({updateFilter, filters}: {updateFilter: any; filters: any}) => (
+  <div className="flex items-center justify-end">
+    <div className="flex gap-x-4 mb-4 mt-2 items-center">
+      <Buttons
+        onClick={() => updateFilter('ACTIVE')}
+        transparent={filters !== 'ACTIVE'}
+        label={'Active'}
+      />
+      <Buttons
+        onClick={() => updateFilter('INACTIVE')}
+        transparent={filters !== 'INACTIVE'}
+        label={'Inactive'}
+      />
+      <Buttons
+        onClick={() => updateFilter('TRAINING')}
+        transparent={filters !== 'TRAINING'}
+        label={'Training'}
+      />
+    </div>
+  </div>
+);
 
 const Room = ({
   i,
@@ -69,16 +91,6 @@ const Room = ({
         {item.teacher?.firstName || ''} {item.teacher?.lastName || ''}
       </td>
 
-      {/* <td className=commonClass>
-        {coTeachers.length > 0 ? (
-          <Popover setShow={setShowPopover} content={content} show={showPopover}>
-            See co teachers
-          </Popover>
-        ) : (
-          '-'
-        )}
-      </td> */}
-
       <td
         onClick={() => !item?.isCoteacher && editCurrentRoom(item.id, item.institutionID)}
         className={`${commonClass} text-gray-500`}>
@@ -89,9 +101,6 @@ const Room = ({
           .join(',') || '-'}
       </td>
       <td className={`${commonClass} text-gray-500`}>
-        {/* <div className="w-auto md:w-32 lg:w-28">
-    </div> */}
-
         <Status
           className={
             item.status?.toLowerCase() === 'active'
@@ -101,11 +110,6 @@ const Room = ({
           {item.status ? item.status : 'ACTIVE'}
         </Status>
       </td>
-      {/* <td
-    className={`text-indigo-600 text-s leading-4 font-medium whitespace-normal break-normal h-6 flex px-4 items-center cursor-pointer text-left py-2 ${theme.textColor[themeColor]}`}
-    onClick={() => editCurrentRoom(item.id, item.institutionID)}>
-    {InstitueRomms[userLanguage]['EDIT']}
-  </td> */}
     </tr>
   );
 };
@@ -424,25 +428,7 @@ const RoomsList = (props: RoomListProps) => {
           />
         </div>
 
-        <div className="flex items-center justify-end">
-          <div className="flex gap-x-4 mb-4 mt-2 items-center">
-            <Buttons
-              onClick={() => updateFilter('ACTIVE')}
-              transparent={filters !== 'ACTIVE'}
-              label={'Active'}
-            />
-            <Buttons
-              onClick={() => updateFilter('INACTIVE')}
-              transparent={filters !== 'INACTIVE'}
-              label={'Inactive'}
-            />
-            <Buttons
-              onClick={() => updateFilter('TRAINING')}
-              transparent={filters !== 'TRAINING'}
-              label={'Training'}
-            />
-          </div>
-        </div>
+        <Filters updateFilter={updateFilter} filters={filters} />
 
         {loading ? (
           <div className="py-20 text-center mx-auto flex justify-center items-center w-full h-48">

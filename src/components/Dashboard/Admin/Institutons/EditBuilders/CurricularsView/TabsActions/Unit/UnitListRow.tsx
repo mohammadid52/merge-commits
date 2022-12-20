@@ -4,6 +4,7 @@ import {UnitLookupDict} from '@dictionary/dictionary.iconoclast';
 import React, {useContext, useState} from 'react';
 import {BiDotsVerticalRounded} from 'react-icons/bi';
 import Highlighted from '@components/Atoms/Highlighted';
+import {Status} from '@components/Dashboard/Admin/UserManagement/UserStatus';
 
 interface IUnitListRowProps {
   index: number;
@@ -51,7 +52,7 @@ const UnitListRow = ({
       <td
         onClick={() => editCurrentUnit(item.id)}
         className={`${
-          isSuperAdmin ? 'w-1.5/10' : 'w-3/10'
+          isSuperAdmin ? 'w-1.5/10' : 'w-4/10'
         } flex items-center  px-8 py-4  cursor-pointer text-sm leading-5 font-medium whitespace-normal`}>
         <Highlighted text={item.name} highlight={searchInput} />
       </td>
@@ -82,6 +83,17 @@ const UnitListRow = ({
             }
           }
         )}
+      </td>
+      <td
+        className={`text-sm w-1/10 leading-4 font-medium whitespace-normal break-normal text-gray-500`}>
+        <Status
+          className={
+            item.status?.toLowerCase() === 'active'
+              ? 'bg-green-100 text-green-800'
+              : 'bg-yellow-100 text-yellow-800'
+          }>
+          {item.status ? item.status : 'ACTIVE'}
+        </Status>
       </td>
       <td
         className={`w-1/10 flex px-8 py-4 justify-center items-center  whitespace-nowrap text-sm leading-5 font-medium`}>

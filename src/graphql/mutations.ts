@@ -1118,6 +1118,7 @@ export const createInstitution = /* GraphQL */ `
           universalSyllabusSeq
           syllabiHistory
           signedOff
+          status
           createdAt
           updatedAt
         }
@@ -1246,6 +1247,7 @@ export const updateInstitution = /* GraphQL */ `
           universalSyllabusSeq
           syllabiHistory
           signedOff
+          status
           createdAt
           updatedAt
         }
@@ -1374,6 +1376,7 @@ export const deleteInstitution = /* GraphQL */ `
           universalSyllabusSeq
           syllabiHistory
           signedOff
+          status
           createdAt
           updatedAt
         }
@@ -5182,6 +5185,7 @@ export const createCurriculum = /* GraphQL */ `
       }
       syllabiHistory
       signedOff
+      status
       signedOffSteps {
         authID
         date
@@ -5269,6 +5273,7 @@ export const updateCurriculum = /* GraphQL */ `
       }
       syllabiHistory
       signedOff
+      status
       signedOffSteps {
         authID
         date
@@ -5356,6 +5361,7 @@ export const deleteCurriculum = /* GraphQL */ `
       }
       syllabiHistory
       signedOff
+      status
       signedOffSteps {
         authID
         date
@@ -5414,6 +5420,7 @@ export const createTopic = /* GraphQL */ `
         }
         syllabiHistory
         signedOff
+        status
         signedOffSteps {
           authID
           date
@@ -5489,6 +5496,7 @@ export const updateTopic = /* GraphQL */ `
         }
         syllabiHistory
         signedOff
+        status
         signedOffSteps {
           authID
           date
@@ -5564,6 +5572,7 @@ export const deleteTopic = /* GraphQL */ `
         }
         syllabiHistory
         signedOff
+        status
         signedOffSteps {
           authID
           date
@@ -5703,6 +5712,7 @@ export const createRubric = /* GraphQL */ `
           universalSyllabusSeq
           syllabiHistory
           signedOff
+          status
           createdAt
           updatedAt
         }
@@ -5757,6 +5767,7 @@ export const updateRubric = /* GraphQL */ `
           universalSyllabusSeq
           syllabiHistory
           signedOff
+          status
           createdAt
           updatedAt
         }
@@ -5811,6 +5822,7 @@ export const deleteRubric = /* GraphQL */ `
           universalSyllabusSeq
           syllabiHistory
           signedOff
+          status
           createdAt
           updatedAt
         }
@@ -5885,6 +5897,7 @@ export const createRoomCurriculum = /* GraphQL */ `
         }
         syllabiHistory
         signedOff
+        status
         signedOffSteps {
           authID
           date
@@ -5946,6 +5959,7 @@ export const updateRoomCurriculum = /* GraphQL */ `
         }
         syllabiHistory
         signedOff
+        status
         signedOffSteps {
           authID
           date
@@ -6007,6 +6021,7 @@ export const deleteRoomCurriculum = /* GraphQL */ `
         }
         syllabiHistory
         signedOff
+        status
         signedOffSteps {
           authID
           date
@@ -6180,6 +6195,7 @@ export const createCommonCheckpoint = /* GraphQL */ `
         }
         syllabiHistory
         signedOff
+        status
         signedOffSteps {
           authID
           date
@@ -6264,6 +6280,7 @@ export const updateCommonCheckpoint = /* GraphQL */ `
         }
         syllabiHistory
         signedOff
+        status
         signedOffSteps {
           authID
           date
@@ -6348,6 +6365,7 @@ export const deleteCommonCheckpoint = /* GraphQL */ `
         }
         syllabiHistory
         signedOff
+        status
         signedOffSteps {
           authID
           date
@@ -8813,6 +8831,7 @@ export const createAttendance = /* GraphQL */ `
         }
         syllabiHistory
         signedOff
+        status
         signedOffSteps {
           authID
           date
@@ -9130,6 +9149,7 @@ export const updateAttendance = /* GraphQL */ `
         }
         syllabiHistory
         signedOff
+        status
         signedOffSteps {
           authID
           date
@@ -9447,6 +9467,7 @@ export const deleteAttendance = /* GraphQL */ `
         }
         syllabiHistory
         signedOff
+        status
         signedOffSteps {
           authID
           date

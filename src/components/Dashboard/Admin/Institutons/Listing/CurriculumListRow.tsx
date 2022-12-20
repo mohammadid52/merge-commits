@@ -6,6 +6,7 @@ import {BiDotsVerticalRounded} from 'react-icons/bi';
 import {stringToHslColor, initials, getInitialsFromString} from 'utilities/strings';
 import {getImageFromS3Static} from 'utilities/services';
 import Highlighted from '@components/Atoms/Highlighted';
+import {Status} from '../../UserManagement/UserStatus';
 
 interface ICurriculumListRowProps {
   index: number;
@@ -114,6 +115,17 @@ const CurriculumListRow = ({
             </li>
           )
         )}
+      </td>
+      <td
+        className={`text-sm w-1/10 leading-4 font-medium whitespace-normal break-normal text-gray-500`}>
+        <Status
+          className={
+            item.status?.toLowerCase() === 'active'
+              ? 'bg-green-100 text-green-800'
+              : 'bg-yellow-100 text-yellow-800'
+          }>
+          {item.status ? item.status : 'ACTIVE'}
+        </Status>
       </td>
       <td
         className={`w-1/10 flex justify-center items-center px-4 py-4 whitespace-nowrap text-sm leading-5 font-medium`}>

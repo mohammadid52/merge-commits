@@ -549,6 +549,7 @@ export const getInstitution = /* GraphQL */ `
           universalSyllabusSeq
           syllabiHistory
           signedOff
+          status
           createdAt
           updatedAt
         }
@@ -2508,6 +2509,7 @@ export const getCurriculum = /* GraphQL */ `
       }
       syllabiHistory
       signedOff
+      status
       signedOffSteps {
         authID
         date
@@ -2572,6 +2574,7 @@ export const listCurricula = /* GraphQL */ `
         }
         syllabiHistory
         signedOff
+        status
         signedOffSteps {
           authID
           date
@@ -2629,6 +2632,7 @@ export const getTopic = /* GraphQL */ `
         }
         syllabiHistory
         signedOff
+        status
         signedOffSteps {
           authID
           date
@@ -2689,6 +2693,7 @@ export const listTopics = /* GraphQL */ `
           universalSyllabusSeq
           syllabiHistory
           signedOff
+          status
           createdAt
           updatedAt
         }
@@ -2812,6 +2817,7 @@ export const getRubric = /* GraphQL */ `
           universalSyllabusSeq
           syllabiHistory
           signedOff
+          status
           createdAt
           updatedAt
         }
@@ -2924,6 +2930,7 @@ export const getRoomCurriculum = /* GraphQL */ `
         }
         syllabiHistory
         signedOff
+        status
         signedOffSteps {
           authID
           date
@@ -2962,6 +2969,7 @@ export const listRoomCurricula = /* GraphQL */ `
           universalSyllabusSeq
           syllabiHistory
           signedOff
+          status
           createdAt
           updatedAt
         }
@@ -4143,6 +4151,7 @@ export const getAttendance = /* GraphQL */ `
         }
         syllabiHistory
         signedOff
+        status
         signedOffSteps {
           authID
           date
@@ -4437,6 +4446,7 @@ export const listAttendances = /* GraphQL */ `
           universalSyllabusSeq
           syllabiHistory
           signedOff
+          status
           createdAt
           updatedAt
         }
@@ -9061,6 +9071,7 @@ export const attendanceByStudent = /* GraphQL */ `
           universalSyllabusSeq
           syllabiHistory
           signedOff
+          status
           createdAt
           updatedAt
         }

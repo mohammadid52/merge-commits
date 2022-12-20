@@ -313,6 +313,7 @@ type Curriculum @model @auth(rules: [{allow: public}]) {
     @hasMany(indexName: "unitsbyCurriculum", fields: ["id"])
   syllabiHistory: [String]
   signedOff: Boolean
+  status: RoomStatus @default(value: "ACTIVE")
   signedOffSteps: [SignedOffStep]
 }
 
@@ -853,11 +854,12 @@ type UniversalSyllabus @model @auth(rules: [{allow: public}]) {
   priorities: String
   objectives: String
   languages: [Language]
+
   lessons: [UniversalSyllabusLesson]
     @hasMany(indexName: "UniversalLessonsBySyllabus", fields: ["id"])
   universalLessonsSeq: [String]
   designers: [String]
-  status: Boolean
+  status: RoomStatus @default(value: "ACTIVE")
   isUsed: Boolean
   lessonHistory: [String]
 }

@@ -2,7 +2,9 @@ import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import useAuth from '@customHooks/useAuth';
 import useSearch from '@customHooks/useSearch';
+import {InstitueRomms} from '@dictionary/dictionary.iconoclast';
 import {logError} from '@graphql/functions';
+import {RoomStatus} from 'API';
 import AddButton from 'atoms/Buttons/AddButton';
 import SearchInput from 'atoms/Form/SearchInput';
 import Selector from 'atoms/Form/Selector';
@@ -16,6 +18,7 @@ import ModalPopUp from 'molecules/ModalPopUp';
 import React, {Fragment, useContext, useEffect, useState} from 'react';
 import {useHistory, useRouteMatch} from 'react-router';
 import CurriculumListRow from './CurriculumListRow';
+import {Filters, SortType} from './RoomsList';
 
 interface CurriculumListProps {
   curricular?: {items: ICurricular[]};
@@ -26,6 +29,7 @@ interface CurriculumListProps {
 
 interface ICurricular {
   name?: string;
+  status?: string;
   id: string;
   institutionID: string;
   institution?: {name?: string; id: string};
@@ -100,6 +104,7 @@ const CurriculumList = ({
     if (curricular?.items?.length) {
       const updatedList: ICurricular[] = curricular.items?.map((item: ICurricular) => ({
         ...item,
+        status: item?.status || RoomStatus.ACTIVE,
         universalSyllabus: {
           ...(item.universalSyllabus || {}),
           items: item.universalSyllabus?.items
@@ -124,6 +129,7 @@ const CurriculumList = ({
         (item: ICurricular) => ({
           ...item,
           institutionName: item?.institution?.name,
+          status: item?.status || RoomStatus.ACTIVE,
           institutionId: item?.institution?.id,
           universalSyllabus: {
             ...(item.universalSyllabus || {}),
@@ -279,6 +285,22 @@ const CurriculumList = ({
     ['asc']
   );
 
+  const [filters, setFilters] = useState<SortType>();
+
+  const updateFilter = (filterName: SortType) => {
+    if (filterName === filters) {
+      setSearchInput({...searchInput, isActive: false});
+      setFilters(null);
+      setFilteredList([]);
+    } else {
+      setSearchInput({...searchInput, isActive: true});
+      const filtered = courseList.filter((_d: any) => filterName === _d.status);
+      setFilteredList(filtered);
+      setFilters(filterName);
+      setSelectedInstitution({});
+    }
+  };
+
   // ##################################################################### //
   // ############################### OUTPUT ############################## //
   // ##################################################################### //
@@ -326,6 +348,8 @@ const CurriculumList = ({
           }
         />
 
+        <Filters updateFilter={updateFilter} filters={filters} />
+
         {loading ? (
           <div className="py-20 text-center mx-auto flex justify-center items-center w-full h-48">
             <div className="w-5/10">
@@ -339,7 +363,7 @@ const CurriculumList = ({
         ) : finalList?.length > 0 ? (
           <table>
             <thead className="w-full pt-8 m-auto border-b-0 border-gray-200">
-              <tr className="flex justify-between bg-gray-50 px-8 whitespace-nowrap">
+              <tr className="flex justify-between bg-gray-50  whitespace-nowrap">
                 <th className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>{InstitueCurriculum[userLanguage]['NO']}</span>
                 </th>
@@ -361,6 +385,9 @@ const CurriculumList = ({
                 <th
                   className={`w-3/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider truncate`}>
                   <span>{InstitueCurriculum[userLanguage]['UNITS']}</span>
+                </th>
+                <th className="bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider w-1/10 flex items-center ">
+                  {InstitueRomms[userLanguage]['STATUS']}
                 </th>
                 <th className="w-1/10 m-auto py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span className="w-auto">

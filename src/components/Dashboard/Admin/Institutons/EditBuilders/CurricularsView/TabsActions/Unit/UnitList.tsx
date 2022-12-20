@@ -16,6 +16,12 @@ import * as customQueries from 'customGraphql/customQueries';
 import ModalPopUp from 'molecules/ModalPopUp';
 import UnitListRow from './UnitListRow';
 import {orderBy} from 'lodash';
+import {RoomStatus} from 'API';
+import {
+  Filters,
+  SortType
+} from '@components/Dashboard/Admin/Institutons/Listing/RoomsList';
+import {InstitueRomms} from '@dictionary/dictionary.iconoclast';
 
 export const UnitList = ({instId}: any) => {
   const history = useHistory();
@@ -50,6 +56,8 @@ export const UnitList = ({instId}: any) => {
       .map((item: any) => {
         return {
           ...item,
+          status: item?.status || RoomStatus.ACTIVE,
+
           institutionId: item.institution.id,
           institutionName: item.institution.name,
           lessons: {
@@ -250,6 +258,22 @@ export const UnitList = ({instId}: any) => {
     ['asc']
   );
 
+  const [filters, setFilters] = useState<SortType>();
+
+  const updateFilter = (filterName: SortType) => {
+    if (filterName === filters) {
+      setSearchInput({...searchInput, isActive: false});
+      setFilters(null);
+      setFilteredList([]);
+    } else {
+      setSearchInput({...searchInput, isActive: true});
+      const filtered = units.filter((_d: any) => filterName === _d.status);
+      setFilteredList(filtered);
+      setFilters(filterName);
+      setSelectedInstitution({});
+    }
+  };
+
   // ##################################################################### //
   // ############################### OUTPUT ############################## //
   // ##################################################################### //
@@ -333,6 +357,9 @@ export const UnitList = ({instId}: any) => {
             </div>
           }
         />
+
+        <Filters updateFilter={updateFilter} filters={filters} />
+
         {loading ? (
           <div className="py-20 text-center mx-auto flex justify-center items-center w-full h-48">
             <div className="w-5/10">
@@ -361,6 +388,9 @@ export const UnitList = ({instId}: any) => {
                   } px-8 py-4 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider`}>
                   <span>{UnitLookupDict[userLanguage]['LESSONS']}</span>
                 </div>
+                <th className="bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider w-1/10 flex items-center ">
+                  {InstitueRomms[userLanguage]['STATUS']}
+                </th>
                 <div className="w-1/10 m-auto py-4 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span className="w-auto">{UnitLookupDict[userLanguage]['ACTION']}</span>
                 </div>
