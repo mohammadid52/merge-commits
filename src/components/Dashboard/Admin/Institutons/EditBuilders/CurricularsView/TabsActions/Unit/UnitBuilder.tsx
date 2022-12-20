@@ -23,6 +23,7 @@ interface IUnitData {
   methodology: string;
   policies: string;
   purpose: string;
+  priorities: string;
   objectives: string;
   languages: {id: string; name: string; value: string}[];
   lessonHistory: any;
@@ -67,6 +68,8 @@ const UnitBuilder = ({instId}: any) => {
     description: '',
     methodology: '',
     policies: '',
+    priorities: '',
+
     purpose: '',
     objectives: '',
     languages: [{id: '1', name: 'English', value: 'EN'}],
@@ -117,7 +120,8 @@ const UnitBuilder = ({instId}: any) => {
           purpose: savedData.pupose,
           methodology: savedData.methodology,
           policies: savedData.policies,
-          lessonHistory: savedData.lessonHistory
+          lessonHistory: savedData.lessonHistory,
+          priorities: savedData.priorities
         });
         setLessonsIds(savedData.universalLessonsSeq || []);
 
@@ -222,7 +226,9 @@ const UnitBuilder = ({instId}: any) => {
               </div>
             </div>
           ) : (
-            currentStepComp(activeStep)
+            <div className="border-0 border-gray-200 lg:border-t-none bg-gray-100 lg:my-0">
+              {currentStepComp(activeStep)}
+            </div>
           )}
         </div>
       </div>

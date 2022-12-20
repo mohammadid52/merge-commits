@@ -36,6 +36,7 @@ interface InitialData {
   policies: string;
   purpose: string;
   objectives: string;
+  priorities: string;
   languages: {id: string; name: string; value: string}[];
 }
 
@@ -60,6 +61,7 @@ const EditSyllabus = (props: EditSyllabusProps) => {
     description: '',
     methodology: '',
     policies: '',
+    priorities: '',
     purpose: '',
     objectives: '',
     languages: [{id: '1', name: 'English', value: 'EN'}]
@@ -206,7 +208,8 @@ const EditSyllabus = (props: EditSyllabusProps) => {
           objectives: savedData.objectives,
           purpose: savedData.pupose,
           methodology: savedData.methodology,
-          policies: savedData.policies
+          policies: savedData.policies,
+          priorities: savedData.priorities
         });
         if (savedData.designers) {
           setDesignerIds([...savedData?.designers]);

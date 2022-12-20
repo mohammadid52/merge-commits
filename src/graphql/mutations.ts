@@ -8849,6 +8849,7 @@ export const createAttendance = /* GraphQL */ `
         methodology
         policies
         pupose
+        priorities
         objectives
         languages
         lessons {
@@ -9165,6 +9166,7 @@ export const updateAttendance = /* GraphQL */ `
         methodology
         policies
         pupose
+        priorities
         objectives
         languages
         lessons {
@@ -9481,6 +9483,7 @@ export const deleteAttendance = /* GraphQL */ `
         methodology
         policies
         pupose
+        priorities
         objectives
         languages
         lessons {
@@ -12092,6 +12095,7 @@ export const createUniversalSyllabus = /* GraphQL */ `
       methodology
       policies
       pupose
+      priorities
       objectives
       languages
       lessons {
@@ -12173,6 +12177,7 @@ export const updateUniversalSyllabus = /* GraphQL */ `
       methodology
       policies
       pupose
+      priorities
       objectives
       languages
       lessons {
@@ -12254,6 +12259,7 @@ export const deleteUniversalSyllabus = /* GraphQL */ `
       methodology
       policies
       pupose
+      priorities
       objectives
       languages
       lessons {
@@ -12320,6 +12326,7 @@ export const createCurriculumUnits = /* GraphQL */ `
         methodology
         policies
         pupose
+        priorities
         objectives
         languages
         lessons {
@@ -12375,6 +12382,7 @@ export const updateCurriculumUnits = /* GraphQL */ `
         methodology
         policies
         pupose
+        priorities
         objectives
         languages
         lessons {
@@ -12430,6 +12438,7 @@ export const deleteCurriculumUnits = /* GraphQL */ `
         methodology
         policies
         pupose
+        priorities
         objectives
         languages
         lessons {

@@ -438,11 +438,12 @@ const CourseFormComponent = ({
                       onClick={handleImage}
                       className={`profile  w-120  md:w-120 bg-gray-100  border flex flex-shrink-0 rounded-xl theme-card-shadow`}
                       src={imageUrl}
+                      onLoad={() => setImageLoading(false)}
                     />
                   ) : (
                     <div
                       onClick={handleImage}
-                      className={`profile justify-center align-center items-center content-center w-80 h-80 md:w-80 md:h-80 bg-gray-100 border flex-shrink-0 flex border-gray-400`}>
+                      className={`profile  w-120  md:w-120 bg-gray-100  border flex flex-shrink-0 rounded-xl theme-card-shadow bg-gray-200`}>
                       <IoImage className="fill-current text-gray-80" size={32} />
                     </div>
                   )}

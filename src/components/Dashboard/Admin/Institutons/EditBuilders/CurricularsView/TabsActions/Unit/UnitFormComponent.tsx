@@ -23,6 +23,7 @@ interface InitialData {
   methodology: string;
   policies: string;
   purpose: string;
+  priorities: string;
   objectives: string;
   languages: {id: string; name: string; value: string}[];
 }
@@ -41,6 +42,7 @@ const UnitFormComponent = ({
     policies: '',
     purpose: '',
     objectives: '',
+    priorities: '',
     languages: [{id: '1', name: 'English', value: 'EN'}]
   };
   const [syllabusData, setSyllabusData] = useState<InitialData>(initialData);
@@ -66,9 +68,10 @@ const UnitFormComponent = ({
         ),
         description: syllabusDetails.description,
         objectives: syllabusDetails.objectives,
-        purpose: syllabusDetails.purpose,
-        methodology: syllabusDetails.methodology,
-        policies: syllabusDetails.policies
+        purpose: syllabusDetails?.purpose,
+        methodology: syllabusDetails?.methodology,
+        policies: syllabusDetails?.policies,
+        priorities: syllabusDetails?.priorities
       });
     }
   }, [syllabusDetails]);
@@ -119,7 +122,8 @@ const UnitFormComponent = ({
           pupose: syllabusData.purpose,
           objectives: syllabusData.objectives,
           languages: languagesCode,
-          universalLessonsSeq: []
+          universalLessonsSeq: [],
+          priorities: syllabusData?.priorities
         };
         if (syllabusDetails?.id) {
           await API.graphql(
@@ -170,10 +174,10 @@ const UnitFormComponent = ({
     }
   };
 
-  const {name, languages, description, purpose, objectives} = syllabusData;
+  const {name, languages, description, purpose, priorities, objectives} = syllabusData;
 
   return (
-    <div className={`bg-white ${isInModal ? '' : 'shadow-5'} overflow-hidden mb-4`}>
+    <div className={`overflow-hidden mb-4`}>
       <div className="m-auto">
         <div className="py-4 px-2">
           <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
@@ -189,10 +193,8 @@ const UnitFormComponent = ({
             </div>
 
             <div>
-              <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
-                {AddSyllabusDict[userLanguage]['language']}
-              </label>
               <MultipleSelector
+                label={AddSyllabusDict[userLanguage]['language']}
                 selectedItems={languages}
                 placeholder={AddSyllabusDict[userLanguage]['placeholderlanguage']}
                 list={languageList}
@@ -229,6 +231,17 @@ const UnitFormComponent = ({
           <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
             <div>
               <FormInput
+                value={priorities}
+                textarea
+                rows={5}
+                id="priorities"
+                onChange={onInputChange}
+                name="priorities"
+                label={AddSyllabusDict[userLanguage]['priority']}
+              />
+            </div>
+            <div>
+              <FormInput
                 value={objectives}
                 textarea
                 rows={5}
@@ -257,11 +270,7 @@ const UnitFormComponent = ({
         />
         <Buttons
           btnClass="py-3 px-10"
-          label={
-            loading
-              ? AddSyllabusDict[userLanguage]['saving']
-              : AddSyllabusDict[userLanguage]['save']
-          }
+          label={AddSyllabusDict[userLanguage][loading ? 'saving' : 'save']}
           onClick={saveSyllabusDetails}
           disabled={loading ? true : false}
         />

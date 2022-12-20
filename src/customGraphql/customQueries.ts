@@ -2698,6 +2698,7 @@ export const getUniversalSyllabus = /* GraphQL */ `
       pupose
       objectives
       languages
+      priorities
       lessons {
         items {
           id

@@ -518,6 +518,7 @@ export type UniversalSyllabus = {
   methodology?: string | null,
   policies?: string | null,
   pupose?: string | null,
+  priorities?: string | null,
   objectives?: string | null,
   languages?: Array< Language | null > | null,
   lessons?: ModelUniversalSyllabusLessonConnection,
@@ -3089,6 +3090,7 @@ export type CreateUniversalSyllabusInput = {
   methodology?: string | null,
   policies?: string | null,
   pupose?: string | null,
+  priorities?: string | null,
   objectives?: string | null,
   languages?: Array< Language | null > | null,
   universalLessonsSeq?: Array< string | null > | null,
@@ -3106,6 +3108,7 @@ export type ModelUniversalSyllabusConditionInput = {
   methodology?: ModelStringInput | null,
   policies?: ModelStringInput | null,
   pupose?: ModelStringInput | null,
+  priorities?: ModelStringInput | null,
   objectives?: ModelStringInput | null,
   languages?: ModelLanguageListInput | null,
   universalLessonsSeq?: ModelStringInput | null,
@@ -3127,6 +3130,7 @@ export type UpdateUniversalSyllabusInput = {
   methodology?: string | null,
   policies?: string | null,
   pupose?: string | null,
+  priorities?: string | null,
   objectives?: string | null,
   languages?: Array< Language | null > | null,
   universalLessonsSeq?: Array< string | null > | null,
@@ -4789,6 +4793,7 @@ export type ModelUniversalSyllabusFilterInput = {
   methodology?: ModelStringInput | null,
   policies?: ModelStringInput | null,
   pupose?: ModelStringInput | null,
+  priorities?: ModelStringInput | null,
   objectives?: ModelStringInput | null,
   languages?: ModelLanguageListInput | null,
   universalLessonsSeq?: ModelStringInput | null,
@@ -14805,6 +14810,7 @@ export type CreateAttendanceMutation = {
       methodology?: string | null,
       policies?: string | null,
       pupose?: string | null,
+      priorities?: string | null,
       objectives?: string | null,
       languages?: Array< Language | null > | null,
       lessons?:  {
@@ -15145,6 +15151,7 @@ export type UpdateAttendanceMutation = {
       methodology?: string | null,
       policies?: string | null,
       pupose?: string | null,
+      priorities?: string | null,
       objectives?: string | null,
       languages?: Array< Language | null > | null,
       lessons?:  {
@@ -15485,6 +15492,7 @@ export type DeleteAttendanceMutation = {
       methodology?: string | null,
       policies?: string | null,
       pupose?: string | null,
+      priorities?: string | null,
       objectives?: string | null,
       languages?: Array< Language | null > | null,
       lessons?:  {
@@ -18303,6 +18311,7 @@ export type CreateUniversalSyllabusMutation = {
     methodology?: string | null,
     policies?: string | null,
     pupose?: string | null,
+    priorities?: string | null,
     objectives?: string | null,
     languages?: Array< Language | null > | null,
     lessons?:  {
@@ -18395,6 +18404,7 @@ export type UpdateUniversalSyllabusMutation = {
     methodology?: string | null,
     policies?: string | null,
     pupose?: string | null,
+    priorities?: string | null,
     objectives?: string | null,
     languages?: Array< Language | null > | null,
     lessons?:  {
@@ -18487,6 +18497,7 @@ export type DeleteUniversalSyllabusMutation = {
     methodology?: string | null,
     policies?: string | null,
     pupose?: string | null,
+    priorities?: string | null,
     objectives?: string | null,
     languages?: Array< Language | null > | null,
     lessons?:  {
@@ -18559,6 +18570,7 @@ export type CreateCurriculumUnitsMutation = {
       methodology?: string | null,
       policies?: string | null,
       pupose?: string | null,
+      priorities?: string | null,
       objectives?: string | null,
       languages?: Array< Language | null > | null,
       lessons?:  {
@@ -18619,6 +18631,7 @@ export type UpdateCurriculumUnitsMutation = {
       methodology?: string | null,
       policies?: string | null,
       pupose?: string | null,
+      priorities?: string | null,
       objectives?: string | null,
       languages?: Array< Language | null > | null,
       lessons?:  {
@@ -18679,6 +18692,7 @@ export type DeleteCurriculumUnitsMutation = {
       methodology?: string | null,
       policies?: string | null,
       pupose?: string | null,
+      priorities?: string | null,
       objectives?: string | null,
       languages?: Array< Language | null > | null,
       lessons?:  {
@@ -28116,6 +28130,7 @@ export type GetAttendanceQuery = {
       methodology?: string | null,
       policies?: string | null,
       pupose?: string | null,
+      priorities?: string | null,
       objectives?: string | null,
       languages?: Array< Language | null > | null,
       lessons?:  {
@@ -28405,6 +28420,7 @@ export type ListAttendancesQuery = {
         methodology?: string | null,
         policies?: string | null,
         pupose?: string | null,
+        priorities?: string | null,
         objectives?: string | null,
         languages?: Array< Language | null > | null,
         universalLessonsSeq?: Array< string | null > | null,
@@ -29939,6 +29955,7 @@ export type GetUniversalSyllabusQuery = {
     methodology?: string | null,
     policies?: string | null,
     pupose?: string | null,
+    priorities?: string | null,
     objectives?: string | null,
     languages?: Array< Language | null > | null,
     lessons?:  {
@@ -30012,6 +30029,7 @@ export type ListUniversalSyllabiQuery = {
       methodology?: string | null,
       policies?: string | null,
       pupose?: string | null,
+      priorities?: string | null,
       objectives?: string | null,
       languages?: Array< Language | null > | null,
       lessons?:  {
@@ -30069,6 +30087,7 @@ export type GetCurriculumUnitsQuery = {
       methodology?: string | null,
       policies?: string | null,
       pupose?: string | null,
+      priorities?: string | null,
       objectives?: string | null,
       languages?: Array< Language | null > | null,
       lessons?:  {
@@ -30112,6 +30131,7 @@ export type ListCurriculumUnitsQuery = {
         methodology?: string | null,
         policies?: string | null,
         pupose?: string | null,
+        priorities?: string | null,
         objectives?: string | null,
         languages?: Array< Language | null > | null,
         universalLessonsSeq?: Array< string | null > | null,
@@ -33280,6 +33300,7 @@ export type AttendanceByStudentQuery = {
         methodology?: string | null,
         policies?: string | null,
         pupose?: string | null,
+        priorities?: string | null,
         objectives?: string | null,
         languages?: Array< Language | null > | null,
         universalLessonsSeq?: Array< string | null > | null,
@@ -43267,6 +43288,7 @@ export type OnCreateAttendanceSubscription = {
       methodology?: string | null,
       policies?: string | null,
       pupose?: string | null,
+      priorities?: string | null,
       objectives?: string | null,
       languages?: Array< Language | null > | null,
       lessons?:  {
@@ -43602,6 +43624,7 @@ export type OnUpdateAttendanceSubscription = {
       methodology?: string | null,
       policies?: string | null,
       pupose?: string | null,
+      priorities?: string | null,
       objectives?: string | null,
       languages?: Array< Language | null > | null,
       lessons?:  {
@@ -43937,6 +43960,7 @@ export type OnDeleteAttendanceSubscription = {
       methodology?: string | null,
       policies?: string | null,
       pupose?: string | null,
+      priorities?: string | null,
       objectives?: string | null,
       languages?: Array< Language | null > | null,
       lessons?:  {
@@ -46615,6 +46639,7 @@ export type OnCreateUniversalSyllabusSubscription = {
     methodology?: string | null,
     policies?: string | null,
     pupose?: string | null,
+    priorities?: string | null,
     objectives?: string | null,
     languages?: Array< Language | null > | null,
     lessons?:  {
@@ -46702,6 +46727,7 @@ export type OnUpdateUniversalSyllabusSubscription = {
     methodology?: string | null,
     policies?: string | null,
     pupose?: string | null,
+    priorities?: string | null,
     objectives?: string | null,
     languages?: Array< Language | null > | null,
     lessons?:  {
@@ -46789,6 +46815,7 @@ export type OnDeleteUniversalSyllabusSubscription = {
     methodology?: string | null,
     policies?: string | null,
     pupose?: string | null,
+    priorities?: string | null,
     objectives?: string | null,
     languages?: Array< Language | null > | null,
     lessons?:  {
@@ -46856,6 +46883,7 @@ export type OnCreateCurriculumUnitsSubscription = {
       methodology?: string | null,
       policies?: string | null,
       pupose?: string | null,
+      priorities?: string | null,
       objectives?: string | null,
       languages?: Array< Language | null > | null,
       lessons?:  {
@@ -46911,6 +46939,7 @@ export type OnUpdateCurriculumUnitsSubscription = {
       methodology?: string | null,
       policies?: string | null,
       pupose?: string | null,
+      priorities?: string | null,
       objectives?: string | null,
       languages?: Array< Language | null > | null,
       lessons?:  {
@@ -46966,6 +46995,7 @@ export type OnDeleteCurriculumUnitsSubscription = {
       methodology?: string | null,
       policies?: string | null,
       pupose?: string | null,
+      priorities?: string | null,
       objectives?: string | null,
       languages?: Array< Language | null > | null,
       lessons?:  {

@@ -4179,6 +4179,7 @@ export const getAttendance = /* GraphQL */ `
         methodology
         policies
         pupose
+        priorities
         objectives
         languages
         lessons {
@@ -4448,6 +4449,7 @@ export const listAttendances = /* GraphQL */ `
           methodology
           policies
           pupose
+          priorities
           objectives
           languages
           universalLessonsSeq
@@ -5888,6 +5890,7 @@ export const getUniversalSyllabus = /* GraphQL */ `
       methodology
       policies
       pupose
+      priorities
       objectives
       languages
       lessons {
@@ -5961,6 +5964,7 @@ export const listUniversalSyllabi = /* GraphQL */ `
         methodology
         policies
         pupose
+        priorities
         objectives
         languages
         lessons {
@@ -6011,6 +6015,7 @@ export const getCurriculumUnits = /* GraphQL */ `
         methodology
         policies
         pupose
+        priorities
         objectives
         languages
         lessons {
@@ -6049,6 +6054,7 @@ export const listCurriculumUnits = /* GraphQL */ `
           methodology
           policies
           pupose
+          priorities
           objectives
           languages
           universalLessonsSeq
@@ -9067,6 +9073,7 @@ export const attendanceByStudent = /* GraphQL */ `
           methodology
           policies
           pupose
+          priorities
           objectives
           languages
           universalLessonsSeq

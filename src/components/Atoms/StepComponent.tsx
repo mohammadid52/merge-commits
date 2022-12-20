@@ -39,7 +39,7 @@ const StepComponent = ({
       <div
         className={`h-full border border-gray-200 ${
           stepValue === activeStep ? '' : 'border-b-0'
-        } border-b-0 lg:border-0 ${
+        } border-b lg:border ${
           index === 0
             ? 'lg:border-r-none'
             : index !== steps.length - 1
@@ -47,13 +47,6 @@ const StepComponent = ({
             : 'lg:border-l-none'
         }`}>
         <div className="group">
-          {/* <span
-            className={`absolute top-0 left-0 w-1 h-full ${
-              stepValue === activeStep
-                ? 'bg-gray-900'
-                : 'bg-transparent group-hover:bg-gray-200'
-            } lg:w-full lg:h-1 lg:bottom-0 lg:top-auto`}
-            aria-hidden="true"></span> */}
           <span className="px-6 py-5 flex items-start text-sm font-medium">
             <span className="flex-shrink-0 w-auto">
               <span
@@ -110,13 +103,13 @@ const StepComponent = ({
     );
   };
   return (
-    <div className="lg:border-t lg:border-b lg:border-gray-200">
+    <div className="lg:border-t-0 lg:border-b-0 lg:border-gray-200">
       <nav className="mx-auto max-w-7xl px-2 lg:px-8" aria-label="Progress">
         <ol className="rounded-md lg:flex lg:border-l lg:border-r lg:border-gray-200 lg:rounded-none">
           {steps.map((step: any, index: number) => (
             <li
               data-cy={`${dataCy}-step-${index}`}
-              className={`relative lg:flex-1 ${
+              className={`relative hover:theme-text:500 lg:flex-1 ${
                 step.disabled ? 'bg-gray-300 cursor-not-allowed' : 'cursor-pointer'
               }`}
               key={index}

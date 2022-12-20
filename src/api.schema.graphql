@@ -850,6 +850,7 @@ type UniversalSyllabus @model @auth(rules: [{allow: public}]) {
   methodology: String
   policies: String
   pupose: String
+  priorities: String
   objectives: String
   languages: [Language]
   lessons: [UniversalSyllabusLesson]

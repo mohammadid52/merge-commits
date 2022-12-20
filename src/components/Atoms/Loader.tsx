@@ -15,7 +15,7 @@ interface LoadingProps {
 
 const Loader: React.FC<LoadingProps> = (loadingProps: LoadingProps) => {
   const {
-    className = '',
+    className = 'text-gray-500',
     color = '#000000',
     size = '1.5rem',
     animation,
