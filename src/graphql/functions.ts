@@ -117,7 +117,7 @@ export const logError = async (
     const input: CreateErrorLogInput = {
       authID: auth.authId,
       email: auth.email,
-      error: JSON.stringify(error?.toString()) || 'Invalid error',
+      error: JSON.stringify(error) || 'Invalid error',
       errorType: additionalInfo?.toString() || 'Invalid error type',
       errorTime: new Date().toISOString(),
       pageUrl: location.href,
