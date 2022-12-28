@@ -281,7 +281,7 @@ const LessonModule = ({currentLesson}: {currentLesson: UniversalLesson}) => {
     <ThemeModal
       dark={currentLesson?.darkMode !== undefined ? currentLesson?.darkMode : true}
       subHeader={currentLesson?.summary}
-      header={`${currentLesson?.title} - Lesson Overview`}
+      header={`${currentLesson?.title} - Overview`}
       open={open}
       setOpen={setOpen}>
       <div>
