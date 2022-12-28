@@ -358,6 +358,7 @@ const LessonDetails = ({
             label={UserEditDict[userLanguage]['status']}
             placeholder={UserEditDict[userLanguage]['status']}
             list={RoomStatusList}
+            noSpace
             onChange={updateStatus}
             dropdownWidth="w-56"
             selectedItem={status || UserEditDict[userLanguage]['status']}
