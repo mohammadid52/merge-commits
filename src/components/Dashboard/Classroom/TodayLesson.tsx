@@ -20,6 +20,7 @@ const Today: React.FC<LessonProps> = ({
   activeRoom,
   activeRoomInfo,
   isTeacher,
+  searchTerm,
   lessonLoading,
   lessons,
   syllabus,
@@ -115,6 +116,7 @@ const Today: React.FC<LessonProps> = ({
                     key={`todayLesson_${key}_wrapper`}>
                     <StandardLessonCard
                       roomID={getRoomData?.id}
+                      searchTerm={searchTerm}
                       isTeacher={isTeacher}
                       keyProps={`todayLesson_${key}`}
                       activeRoomInfo={activeRoomInfo}

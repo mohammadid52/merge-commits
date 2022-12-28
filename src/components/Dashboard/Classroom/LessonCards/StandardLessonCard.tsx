@@ -23,6 +23,7 @@ const StandardLessonCard = (props: LessonCardProps) => {
     handleLessonMutationRating,
     getLessonRating,
     getImageFromS3 = true,
+    searchTerm,
     preview = false
   } = props;
 
@@ -75,7 +76,10 @@ const StandardLessonCard = (props: LessonCardProps) => {
        *  RIGHT SECTION
        */}
       <div className={`w-7.5/10 flex flex-col rounded-b`}>
-        <MainSummary lessonProps={{...lessonProps, isTeacher, accessible}} />
+        <MainSummary
+          searchTerm={searchTerm}
+          lessonProps={{...lessonProps, isTeacher, accessible}}
+        />
         {isStudent && (
           <ProgressBar _isCompleted={_isCompleted} personDataObj={personDataObj} />
         )}
