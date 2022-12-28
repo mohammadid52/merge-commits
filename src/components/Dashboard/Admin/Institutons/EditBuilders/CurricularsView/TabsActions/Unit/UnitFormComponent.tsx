@@ -9,6 +9,9 @@ import {GlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import * as mutations from 'graphql/mutations';
 import {languageList} from 'utilities/staticData';
+import Selector from '@components/Atoms/Form/Selector';
+import {RoomStatus} from 'API';
+import {RoomStatusList} from '../CourseBuilder/CourseFormComponent';
 
 interface AddSyllabusProps {
   syllabusDetails?: any;
@@ -25,6 +28,7 @@ interface InitialData {
   purpose: string;
   priorities: string;
   objectives: string;
+  status: RoomStatus;
   languages: {id: string; name: string; value: string}[];
 }
 
@@ -43,6 +47,7 @@ const UnitFormComponent = ({
     purpose: '',
     objectives: '',
     priorities: '',
+    status: RoomStatus.ACTIVE,
     languages: [{id: '1', name: 'English', value: 'EN'}]
   };
   const [syllabusData, setSyllabusData] = useState<InitialData>(initialData);
@@ -50,7 +55,7 @@ const UnitFormComponent = ({
   const [loading, setIsLoading] = useState(false);
   const {clientKey, userLanguage} = useContext(GlobalContext);
 
-  const {AddSyllabusDict} = useDictionary(clientKey);
+  const {AddSyllabusDict, UserEditDict} = useDictionary(clientKey);
 
   const [messages, setMessages] = useState({
     show: false,
@@ -71,7 +76,8 @@ const UnitFormComponent = ({
         purpose: syllabusDetails?.purpose,
         methodology: syllabusDetails?.methodology,
         policies: syllabusDetails?.policies,
-        priorities: syllabusDetails?.priorities
+        priorities: syllabusDetails?.priorities,
+        status: syllabusDetails?.status || RoomStatus.ACTIVE
       });
     }
   }, [syllabusDetails]);
@@ -123,7 +129,8 @@ const UnitFormComponent = ({
           objectives: syllabusData.objectives,
           languages: languagesCode,
           universalLessonsSeq: [],
-          priorities: syllabusData?.priorities
+          priorities: syllabusData?.priorities,
+          status: syllabusData?.status || RoomStatus.ACTIVE
         };
         if (syllabusDetails?.id) {
           await API.graphql(
@@ -174,83 +181,98 @@ const UnitFormComponent = ({
     }
   };
 
-  const {name, languages, description, purpose, priorities, objectives} = syllabusData;
+  const {
+    name,
+    languages,
+    description,
+    purpose,
+    status,
+    priorities,
+    objectives
+  } = syllabusData;
 
   return (
-    <div className={`overflow-hidden mb-4`}>
+    <div className={`overflow-hidden mb-4 p-6`}>
       <div className="m-auto">
-        <div className="py-4 px-2">
-          <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
-            <div>
-              <FormInput
-                value={name}
-                id="name"
-                onChange={onInputChange}
-                name="name"
-                label={AddSyllabusDict[userLanguage]['unitname']}
-                isRequired
-              />
-            </div>
-
-            <div>
-              <MultipleSelector
-                label={AddSyllabusDict[userLanguage]['language']}
-                selectedItems={languages}
-                placeholder={AddSyllabusDict[userLanguage]['placeholderlanguage']}
-                list={languageList}
-                onChange={selectLanguage}
-              />
-            </div>
+        <div className="py-4  grid gap-8 grid-cols-2">
+          <div className="col-span-2">
+            <FormInput
+              value={name}
+              id="name"
+              onChange={onInputChange}
+              name="name"
+              label={AddSyllabusDict[userLanguage]['unitname']}
+              isRequired
+            />
           </div>
 
-          <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
-            <div>
-              <FormInput
-                value={description}
-                rows={5}
-                textarea
-                id="description"
-                onChange={onInputChange}
-                name="description"
-                label={AddSyllabusDict[userLanguage]['description']}
-              />
-            </div>
-            <div>
-              <FormInput
-                value={purpose}
-                textarea
-                rows={5}
-                id="purpose"
-                onChange={onInputChange}
-                name="purpose"
-                label={AddSyllabusDict[userLanguage]['purpose']}
-              />
-            </div>
+          <div>
+            <MultipleSelector
+              label={AddSyllabusDict[userLanguage]['language']}
+              selectedItems={languages}
+              placeholder={AddSyllabusDict[userLanguage]['placeholderlanguage']}
+              list={languageList}
+              onChange={selectLanguage}
+            />
           </div>
 
-          <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
-            <div>
-              <FormInput
-                value={priorities}
-                textarea
-                rows={5}
-                id="priorities"
-                onChange={onInputChange}
-                name="priorities"
-                label={AddSyllabusDict[userLanguage]['priority']}
-              />
-            </div>
-            <div>
-              <FormInput
-                value={objectives}
-                textarea
-                rows={5}
-                id="objectives"
-                onChange={onInputChange}
-                name="objectives"
-                label={AddSyllabusDict[userLanguage]['objective']}
-              />
-            </div>
+          <div className="">
+            <Selector
+              label={UserEditDict[userLanguage]['status']}
+              placeholder={UserEditDict[userLanguage]['status']}
+              list={RoomStatusList}
+              onChange={(str: any, name: RoomStatus) => {
+                setSyllabusData({...syllabusData, status: name});
+              }}
+              dropdownWidth="w-56"
+              selectedItem={status || UserEditDict[userLanguage]['status']}
+            />
+          </div>
+
+          <div>
+            <FormInput
+              value={description}
+              rows={5}
+              textarea
+              id="description"
+              onChange={onInputChange}
+              name="description"
+              label={AddSyllabusDict[userLanguage]['description']}
+            />
+          </div>
+          <div>
+            <FormInput
+              value={purpose}
+              textarea
+              rows={5}
+              id="purpose"
+              onChange={onInputChange}
+              name="purpose"
+              label={AddSyllabusDict[userLanguage]['purpose']}
+            />
+          </div>
+
+          <div>
+            <FormInput
+              value={priorities}
+              textarea
+              rows={5}
+              id="priorities"
+              onChange={onInputChange}
+              name="priorities"
+              label={AddSyllabusDict[userLanguage]['priority']}
+            />
+          </div>
+          <div>
+            <FormInput
+              value={objectives}
+              textarea
+              rows={5}
+              id="objectives"
+              onChange={onInputChange}
+              name="objectives"
+              label={AddSyllabusDict[userLanguage]['objective']}
+            />
           </div>
         </div>
       </div>
@@ -261,7 +283,7 @@ const UnitFormComponent = ({
           </p>
         </div>
       ) : null}
-      <div className="flex my-8 justify-center">
+      <div className="flex my-8 justify-end">
         <Buttons
           btnClass="py-3 px-10 text-sm mr-4"
           label="Cancel"

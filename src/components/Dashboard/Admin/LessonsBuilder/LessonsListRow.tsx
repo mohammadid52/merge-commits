@@ -5,6 +5,8 @@ import React, {useContext, useState} from 'react';
 import {BiDotsVerticalRounded} from 'react-icons/bi';
 import {useHistory, useRouteMatch} from 'react-router-dom';
 import Popover from 'atoms/Popover';
+import {Status} from '../UserManagement/UserStatus';
+import {RoomStatus} from 'API';
 
 interface ICloneModalProps {
   show: boolean;
@@ -22,6 +24,7 @@ interface LessonsListRow {
   type: string;
   languages: string[];
   lessonObject?: any;
+  status: RoomStatus;
   checkIfRemovable?: any;
   handleToggleDelete?: any;
   createdAt: Date;
@@ -65,7 +68,8 @@ const LessonsListRow = (props: LessonsListRow) => {
     createdAt,
     updatedAt,
     redirectToInstitution,
-    searchTerm
+    searchTerm,
+    status
   } = props;
 
   const [showMenu, setShowMenu] = useState(false);
@@ -111,9 +115,14 @@ const LessonsListRow = (props: LessonsListRow) => {
       </tr>
 
       <tr className="w-1.5/10 flex justify-center items-center px-8 py-4 whitespace-normal text-sm leading-5 text-gray-500">
-        <span className="w-auto">
-          {createdAt ? new Date(createdAt).toLocaleDateString() : '--'}
-        </span>
+        <Status
+          className={
+            status?.toLowerCase() === 'active'
+              ? 'bg-green-100 text-green-800'
+              : 'bg-yellow-100 text-yellow-800'
+          }>
+          {status || RoomStatus.ACTIVE}
+        </Status>
       </tr>
 
       <tr className="w-1.5/10 flex justify-center items-center px-8 py-4 whitespace-normal text-sm leading-5 text-gray-500">

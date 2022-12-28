@@ -215,6 +215,7 @@ export const onCreateUpdatePersonLocationItem = /* GraphQL */ `
         purpose
         introduction
         introductionTitle
+        status
         instructions
         instructionsTitle
         summary
@@ -489,6 +490,7 @@ export const onDeletePersonLocationItem = /* GraphQL */ `
         purpose
         introduction
         introductionTitle
+        status
         instructions
         instructionsTitle
         summary
@@ -685,6 +687,7 @@ export const onChangeUniversalLessonStudentData = /* GraphQL */ `
         purpose
         introduction
         introductionTitle
+        status
         instructions
         instructionsTitle
         summary
@@ -1258,6 +1261,7 @@ export const onCreatePersonLessonsData = /* GraphQL */ `
         purpose
         introduction
         introductionTitle
+        status
         instructions
         instructionsTitle
         summary
@@ -1483,6 +1487,7 @@ export const onUpdatePersonLessonsData = /* GraphQL */ `
         purpose
         introduction
         introductionTitle
+        status
         instructions
         instructionsTitle
         summary
@@ -1708,6 +1713,7 @@ export const onDeletePersonLessonsData = /* GraphQL */ `
         purpose
         introduction
         introductionTitle
+        status
         instructions
         instructionsTitle
         summary
@@ -8529,6 +8535,7 @@ export const onCreatePersonLocation = /* GraphQL */ `
         purpose
         introduction
         introductionTitle
+        status
         instructions
         instructionsTitle
         summary
@@ -8795,6 +8802,7 @@ export const onUpdatePersonLocation = /* GraphQL */ `
         purpose
         introduction
         introductionTitle
+        status
         instructions
         instructionsTitle
         summary
@@ -9061,6 +9069,7 @@ export const onDeletePersonLocation = /* GraphQL */ `
         purpose
         introduction
         introductionTitle
+        status
         instructions
         instructionsTitle
         summary
@@ -9256,6 +9265,7 @@ export const onCreateAttendance = /* GraphQL */ `
         purpose
         introduction
         introductionTitle
+        status
         instructions
         instructionsTitle
         summary
@@ -9571,6 +9581,7 @@ export const onUpdateAttendance = /* GraphQL */ `
         purpose
         introduction
         introductionTitle
+        status
         instructions
         instructionsTitle
         summary
@@ -9886,6 +9897,7 @@ export const onDeleteAttendance = /* GraphQL */ `
         purpose
         introduction
         introductionTitle
+        status
         instructions
         instructionsTitle
         summary
@@ -10119,6 +10131,7 @@ export const onCreateUniversalLesson = /* GraphQL */ `
       purpose
       introduction
       introductionTitle
+      status
       instructions
       instructionsTitle
       summary
@@ -10243,6 +10256,7 @@ export const onUpdateUniversalLesson = /* GraphQL */ `
       purpose
       introduction
       introductionTitle
+      status
       instructions
       instructionsTitle
       summary
@@ -10367,6 +10381,7 @@ export const onDeleteUniversalLesson = /* GraphQL */ `
       purpose
       introduction
       introductionTitle
+      status
       instructions
       instructionsTitle
       summary
@@ -10477,6 +10492,7 @@ export const onCreateUniversalLessonStudentData = /* GraphQL */ `
         purpose
         introduction
         introductionTitle
+        status
         instructions
         instructionsTitle
         summary
@@ -10605,6 +10621,7 @@ export const onUpdateUniversalLessonStudentData = /* GraphQL */ `
         purpose
         introduction
         introductionTitle
+        status
         instructions
         instructionsTitle
         summary
@@ -10733,6 +10750,7 @@ export const onDeleteUniversalLessonStudentData = /* GraphQL */ `
         purpose
         introduction
         introductionTitle
+        status
         instructions
         instructionsTitle
         summary
@@ -10861,6 +10879,7 @@ export const onCreateUniversalLessonWritingExcercises = /* GraphQL */ `
         purpose
         introduction
         introductionTitle
+        status
         instructions
         instructionsTitle
         summary
@@ -10989,6 +11008,7 @@ export const onUpdateUniversalLessonWritingExcercises = /* GraphQL */ `
         purpose
         introduction
         introductionTitle
+        status
         instructions
         instructionsTitle
         summary
@@ -11117,6 +11137,7 @@ export const onDeleteUniversalLessonWritingExcercises = /* GraphQL */ `
         purpose
         introduction
         introductionTitle
+        status
         instructions
         instructionsTitle
         summary
@@ -12003,6 +12024,7 @@ export const onCreateUniversalJournalData = /* GraphQL */ `
         purpose
         introduction
         introductionTitle
+        status
         instructions
         instructionsTitle
         summary
@@ -12116,6 +12138,7 @@ export const onUpdateUniversalJournalData = /* GraphQL */ `
         purpose
         introduction
         introductionTitle
+        status
         instructions
         instructionsTitle
         summary
@@ -12229,6 +12252,7 @@ export const onDeleteUniversalJournalData = /* GraphQL */ `
         purpose
         introduction
         introductionTitle
+        status
         instructions
         instructionsTitle
         summary
@@ -12733,6 +12757,7 @@ export const onCreateUniversalSyllabusLesson = /* GraphQL */ `
         purpose
         introduction
         introductionTitle
+        status
         instructions
         instructionsTitle
         summary
@@ -12869,6 +12894,7 @@ export const onUpdateUniversalSyllabusLesson = /* GraphQL */ `
         purpose
         introduction
         introductionTitle
+        status
         instructions
         instructionsTitle
         summary
@@ -13005,6 +13031,7 @@ export const onDeleteUniversalSyllabusLesson = /* GraphQL */ `
         purpose
         introduction
         introductionTitle
+        status
         instructions
         instructionsTitle
         summary
@@ -13127,6 +13154,7 @@ export const onCreateUniversalLessonFeedback = /* GraphQL */ `
           purpose
           introduction
           introductionTitle
+          status
           instructions
           instructionsTitle
           summary
@@ -13204,6 +13232,7 @@ export const onUpdateUniversalLessonFeedback = /* GraphQL */ `
           purpose
           introduction
           introductionTitle
+          status
           instructions
           instructionsTitle
           summary
@@ -13281,6 +13310,7 @@ export const onDeleteUniversalLessonFeedback = /* GraphQL */ `
           purpose
           introduction
           introductionTitle
+          status
           instructions
           instructionsTitle
           summary
@@ -14023,6 +14053,7 @@ export const onCreateSentimentTracker = /* GraphQL */ `
           purpose
           introduction
           introductionTitle
+          status
           instructions
           instructionsTitle
           summary
@@ -14274,6 +14305,7 @@ export const onUpdateSentimentTracker = /* GraphQL */ `
           purpose
           introduction
           introductionTitle
+          status
           instructions
           instructionsTitle
           summary
@@ -14525,6 +14557,7 @@ export const onDeleteSentimentTracker = /* GraphQL */ `
           purpose
           introduction
           introductionTitle
+          status
           instructions
           instructionsTitle
           summary
@@ -15350,6 +15383,7 @@ export const onCreateFeelingsArchive = /* GraphQL */ `
         purpose
         introduction
         introductionTitle
+        status
         instructions
         instructionsTitle
         summary
@@ -15628,6 +15662,7 @@ export const onUpdateFeelingsArchive = /* GraphQL */ `
         purpose
         introduction
         introductionTitle
+        status
         instructions
         instructionsTitle
         summary
@@ -15906,6 +15941,7 @@ export const onDeleteFeelingsArchive = /* GraphQL */ `
         purpose
         introduction
         introductionTitle
+        status
         instructions
         instructionsTitle
         summary

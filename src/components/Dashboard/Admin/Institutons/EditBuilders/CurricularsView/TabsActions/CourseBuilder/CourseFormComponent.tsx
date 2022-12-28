@@ -17,7 +17,23 @@ import {languageList} from 'utilities/staticData';
 import React, {useContext, useEffect, useState} from 'react';
 import {IoImage} from 'react-icons/io5';
 import {useHistory, useRouteMatch} from 'react-router-dom';
+import {RoomStatus} from 'API';
 
+export const RoomStatusList = [
+  {
+    name: RoomStatus.ACTIVE,
+    id: 1
+  },
+
+  {
+    name: RoomStatus.INACTIVE,
+    id: 3
+  },
+  {
+    name: RoomStatus.TRAINING,
+    id: 4
+  }
+];
 interface CourseBuilderProps {
   courseId: string;
   courseData: any;
@@ -34,6 +50,7 @@ interface ICourseForm {
   institute: {
     id: string;
   };
+  status: RoomStatus;
 }
 const CourseFormComponent = ({
   courseId,
@@ -44,6 +61,7 @@ const CourseFormComponent = ({
     name: '',
     description: '',
     objectives: '',
+    status: RoomStatus.ACTIVE,
     summary: '',
     type: '',
     languages: [{id: '1', name: 'English', value: 'EN'}],
@@ -71,7 +89,7 @@ const CourseFormComponent = ({
   });
   const [loading, setIsLoading] = useState(false);
   const {clientKey, userLanguage} = useContext(GlobalContext);
-  const {CurricularBuilderdict} = useDictionary(clientKey);
+  const {CurricularBuilderdict, UserEditDict} = useDictionary(clientKey);
   const [messages, setMessages] = useState({
     show: false,
     message: '',
@@ -146,7 +164,8 @@ const CourseFormComponent = ({
           objectives: [curricularData.objectives],
           languages: languagesCode,
           designers,
-          image: null as any
+          image: null as any,
+          status: curricularData.status
         };
         if (courseId) {
           input.id = courseId;
@@ -188,34 +207,6 @@ const CourseFormComponent = ({
             `${match.url}/${newCourse.id}?step=unit_manager&institutionId=${curricularData.institute.id}`
           );
         }
-        // const response: any = await API.graphql(
-        //   graphqlOperation(customMutations.createCurriculum, {input: input})
-        // );
-        // const newCurricular: any = response?.data?.createCurriculum;
-
-        // if (s3Image) {
-        //   await uploadImageToS3(s3Image, newCurricular.id, 'image/jpeg');
-        //   await API.graphql(
-        //     graphqlOperation(mutation.updateCurriculum, {
-        //       input: {
-        //         id: newCurricular.id,
-        //         image: `instituteImages/curricular_image_${newCurricular.id}`,
-        //       },
-        //     })
-        //   );
-        // }
-        // setMessages({
-        //   show: true,
-        //   message: CurricularBuilderdict[userLanguage]['messages']['success']['save'],
-        //   isError: false,
-        // });
-        // setCurricularData(initialData);
-        // setIsLoading(false);
-        // if (newCurricular?.id) {
-        //   history.push(
-        //     `/dashboard/manage-institutions/${curricularData.institute.id}/curricular/${newCurricular.id}/syllabus/add`
-        //   );
-        // }
       } catch (error) {
         console.error(error, 'inside catch');
         setMessages({
@@ -383,6 +374,7 @@ const CourseFormComponent = ({
           type: courseData.type,
           summary: courseData.summary,
           description: courseData.description,
+          status: courseData?.status || RoomStatus.ACTIVE,
           objectives: courseData.objectives[0],
           institute: {
             id: courseData.institution.id
@@ -417,8 +409,10 @@ const CourseFormComponent = ({
     languages,
     type,
     institute,
+    status = RoomStatus.ACTIVE,
     summary
   } = curricularData;
+
   return (
     <div className="">
       <div className="w-9/10 m-auto">
@@ -452,8 +446,8 @@ const CourseFormComponent = ({
             </button>
             <p className="text-gray-600 my-4">Click to add curricular image</p>
           </div>
-          <div className="h-9/10 md:flex-row">
-            <div className="px-3 py-4">
+          <div className="  grid gap-4 grid-cols-2 py-4">
+            <div className="">
               <FormInput
                 dataCy="curricular-name-input"
                 value={name}
@@ -465,7 +459,7 @@ const CourseFormComponent = ({
               />
             </div>
 
-            <div className="px-3 py-4">
+            <div className="">
               <MultipleSelector
                 label={CurricularBuilderdict[userLanguage]['LANGUAGE']}
                 selectedItems={languages}
@@ -475,7 +469,7 @@ const CourseFormComponent = ({
               />
             </div>
 
-            <div className="px-3 py-4">
+            <div className="">
               <MultipleSelector
                 label={CurricularBuilderdict[userLanguage]['DESIGNER']}
                 selectedItems={selectedDesigners}
@@ -484,7 +478,19 @@ const CourseFormComponent = ({
                 onChange={selectDesigner}
               />
             </div>
-            <div className="px-3 py-4">
+            <div className="">
+              <Selector
+                label={UserEditDict[userLanguage]['status']}
+                placeholder={UserEditDict[userLanguage]['status']}
+                list={RoomStatusList}
+                onChange={(str: any, name: RoomStatus) => {
+                  setCurricularData({...curricularData, status: name});
+                }}
+                dropdownWidth="w-56"
+                selectedItem={status || UserEditDict[userLanguage]['status']}
+              />
+            </div>
+            <div className=" col-span-2">
               <Selector
                 label={CurricularBuilderdict[userLanguage]['TYPE']}
                 placeholder={CurricularBuilderdict[userLanguage]['TYPE']}
@@ -495,7 +501,8 @@ const CourseFormComponent = ({
                 selectedItem={type || CurricularBuilderdict[userLanguage]['TYPE']}
               />
             </div>
-            <div className="px-3 py-4">
+
+            <div className="">
               <FormInput
                 textarea
                 rows={6}
@@ -507,7 +514,7 @@ const CourseFormComponent = ({
               />
             </div>
 
-            <div className="px-3 py-4">
+            <div className="">
               <FormInput
                 textarea
                 value={description}
@@ -518,7 +525,7 @@ const CourseFormComponent = ({
                 label={CurricularBuilderdict[userLanguage]['DESCRIPTION']}
               />
             </div>
-            <div className="px-3 py-4">
+            <div className="col-span-2">
               <FormInput
                 textarea
                 rows={6}

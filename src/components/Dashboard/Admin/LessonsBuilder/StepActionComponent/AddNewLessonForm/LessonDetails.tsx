@@ -1,25 +1,26 @@
-import ULBFileUploader from 'atoms/Form/FileUploader';
 import {Storage} from '@aws-amplify/storage';
+import {RoomStatusList} from '@components/Dashboard/Admin/Institutons/EditBuilders/CurricularsView/TabsActions/CourseBuilder/CourseFormComponent';
+import Buttons from 'atoms/Buttons';
+import File from 'atoms/File';
+import ULBFileUploader from 'atoms/Form/FileUploader';
 import FormInput from 'atoms/Form/FormInput';
 import MultipleSelector from 'atoms/Form/MultipleSelector';
 import Selector from 'atoms/Form/Selector';
 import Modal from 'atoms/Modal';
+import ProgressBar from 'components/Lesson/UniversalLessonBuilder/UI/ProgressBar';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import {useQuery} from 'customHooks/urlParam';
+import useGraphqlMutation from 'customHooks/useGraphqlMutation';
+import {truncate} from 'lodash';
+import React, {useEffect, useState} from 'react';
+import {deleteImageFromS3, getImageFromS3Static} from 'utilities/services';
 import {
   languageList,
   lessonTypeList,
   periodOptions,
   targetAudienceForIconoclast
 } from 'utilities/staticData';
-import React, {useEffect, useState} from 'react';
-import ProgressBar from 'components/Lesson/UniversalLessonBuilder/UI/ProgressBar';
-import Buttons from 'atoms/Buttons';
-import useGraphqlMutation from 'customHooks/useGraphqlMutation';
-import {deleteImageFromS3, getImageFromS3Static} from 'utilities/services';
-import File from 'atoms/File';
-import {truncate} from 'lodash';
 
 const UploadLessonPlanModal = ({
   onClose,
@@ -31,7 +32,7 @@ const UploadLessonPlanModal = ({
   lessonPlanAttachment?: any;
 }) => {
   const [input, setInput] = useState({imageData: null, previewUrl: ''});
-  console.log('🚀 ~ file: LessonDetails.tsx ~ line 34 ~ input', input);
+
   const updateFileUrl = (previewUrl: string, imageData: File | null) => {
     setIsUpdated(true);
 
@@ -249,6 +250,8 @@ const LessonDetails = ({
   selectLanguage,
   designersList,
   selectDesigner,
+  status,
+  updateStatus,
   onClose,
   showUploadModal,
   lessonPlanAttachment
@@ -269,7 +272,7 @@ const LessonDetails = ({
 
   const {clientKey, userLanguage} = useGlobalContext();
 
-  const {AddNewLessonFormDict} = useDictionary(clientKey);
+  const {AddNewLessonFormDict, UserEditDict} = useDictionary(clientKey);
 
   return (
     <div className="px-3">
@@ -280,29 +283,24 @@ const LessonDetails = ({
           onClose={onClose}
         />
       )}
+      <div className="grid grid-cols-2 gap-4 gap-y-8">
+        <div className="col-span-2">
+          <FormInput
+            value={name}
+            label={AddNewLessonFormDict[userLanguage]['NAME']}
+            inputRef={inputRef}
+            id="name"
+            onChange={onInputChange}
+            name="name"
+          />
+          {validation.name && <p className="text-red-600 text-sm">{validation.name}</p>}
+        </div>
 
-      <div className="px-0 py-4">
-        <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
-          {AddNewLessonFormDict[userLanguage]['NAME']}{' '}
-          <span className="text-red-500"> * </span>
-        </label>
-        <FormInput
-          value={name}
-          inputRef={inputRef}
-          id="name"
-          onChange={onInputChange}
-          name="name"
-        />
-        {validation.name && <p className="text-red-600 text-sm">{validation.name}</p>}
-      </div>
-      <div className="grid lg:grid-cols-2 gap-x-4">
-        <div className="px-0 py-4">
-          <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
-            {AddNewLessonFormDict[userLanguage]['SELECTTYPE']}{' '}
-            <span className="text-red-500"> * </span>
-          </label>
+        <div className="">
           <Selector
             disabled={lessonId !== ''}
+            isRequired
+            label={AddNewLessonFormDict[userLanguage]['SELECTTYPE']}
             selectedItem={type.name}
             placeholder={AddNewLessonFormDict[userLanguage]['TYPE']}
             list={lessonTypeList}
@@ -310,59 +308,61 @@ const LessonDetails = ({
           />
           {validation.type && <p className="text-red-600 text-sm">{validation.type}</p>}
         </div>
-        <div className="px-0 py-4">
-          <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
-            {AddNewLessonFormDict[userLanguage]['DURATION']}{' '}
-          </label>
+        <div className="">
           <Selector
+            label={AddNewLessonFormDict[userLanguage]['DURATION']}
             selectedItem={duration.toString() || ''}
             placeholder={AddNewLessonFormDict[userLanguage]['DURATION']}
             list={periodOptions}
             onChange={onDurationSelect}
           />
         </div>
-      </div>
-      <div className="grid lg:grid-cols-2 gap-x-4">
-        <div className="px-0 py-4">
-          <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
-            {AddNewLessonFormDict[userLanguage]['TARGET_AUDIENCE']}{' '}
-          </label>
+
+        <div className="">
           <Selector
+            label={AddNewLessonFormDict[userLanguage]['TARGET_AUDIENCE']}
             selectedItem={targetAudience}
             placeholder={AddNewLessonFormDict[userLanguage]['SELECT_TARGET_AUDIENCE']}
             list={targetAudienceForIconoclast}
             onChange={onSelectTargetAudience}
           />
         </div>
-        <div className="px-0 py-4">
-          <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
-            {AddNewLessonFormDict[userLanguage]['SELECTLANG']}
-            <span className="text-red-500"> * </span>
-          </label>
+        <div className="">
           <MultipleSelector
             // disabled={lessonId !== ''}
+            isRequired
+            label={AddNewLessonFormDict[userLanguage]['SELECTLANG']}
             selectedItems={languages}
             placeholder={AddNewLessonFormDict[userLanguage]['LANGUAGE']}
             list={languageList}
             onChange={selectLanguage}
           />
         </div>
-      </div>
-      <div className="py-4 col-span-2">
-        <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
-          {AddNewLessonFormDict[userLanguage]['SELECTDESIGNER']}
-        </label>
-        <MultipleSelector
-          selectedItems={selectedDesigners}
-          placeholder={AddNewLessonFormDict[userLanguage]['DESIGNER']}
-          list={designersList}
-          onChange={selectDesigner}
-          noOptionMessage={
-            designerListLoading
-              ? AddNewLessonFormDict[userLanguage]['MESSAGES']['LOADING']
-              : AddNewLessonFormDict[userLanguage]['MESSAGES']['NODESIGNEROPTION']
-          }
-        />
+
+        <div className="">
+          <MultipleSelector
+            label={AddNewLessonFormDict[userLanguage]['SELECTDESIGNER']}
+            selectedItems={selectedDesigners}
+            placeholder={AddNewLessonFormDict[userLanguage]['DESIGNER']}
+            list={designersList}
+            onChange={selectDesigner}
+            noOptionMessage={
+              designerListLoading
+                ? AddNewLessonFormDict[userLanguage]['MESSAGES']['LOADING']
+                : AddNewLessonFormDict[userLanguage]['MESSAGES']['NODESIGNEROPTION']
+            }
+          />
+        </div>
+        <div className="">
+          <Selector
+            label={UserEditDict[userLanguage]['status']}
+            placeholder={UserEditDict[userLanguage]['status']}
+            list={RoomStatusList}
+            onChange={updateStatus}
+            dropdownWidth="w-56"
+            selectedItem={status || UserEditDict[userLanguage]['status']}
+          />
+        </div>
       </div>
     </div>
   );

@@ -179,6 +179,7 @@ export const getPersonLessonsData = /* GraphQL */ `
         purpose
         introduction
         introductionTitle
+        status
         instructions
         instructionsTitle
         summary
@@ -398,6 +399,7 @@ export const listPersonLessonsData = /* GraphQL */ `
           purpose
           introduction
           introductionTitle
+          status
           instructions
           instructionsTitle
           summary
@@ -3903,6 +3905,7 @@ export const getPersonLocation = /* GraphQL */ `
         purpose
         introduction
         introductionTitle
+        status
         instructions
         instructionsTitle
         summary
@@ -4071,6 +4074,7 @@ export const listPersonLocations = /* GraphQL */ `
           purpose
           introduction
           introductionTitle
+          status
           instructions
           instructionsTitle
           summary
@@ -4234,6 +4238,7 @@ export const getAttendance = /* GraphQL */ `
         purpose
         introduction
         introductionTitle
+        status
         instructions
         instructionsTitle
         summary
@@ -4483,6 +4488,7 @@ export const listAttendances = /* GraphQL */ `
           purpose
           introduction
           introductionTitle
+          status
           instructions
           instructionsTitle
           summary
@@ -4596,6 +4602,7 @@ export const getUniversalLesson = /* GraphQL */ `
       purpose
       introduction
       introductionTitle
+      status
       instructions
       instructionsTitle
       summary
@@ -4715,6 +4722,7 @@ export const listUniversalLessons = /* GraphQL */ `
         purpose
         introduction
         introductionTitle
+        status
         instructions
         instructionsTitle
         summary
@@ -4813,6 +4821,7 @@ export const getUniversalLessonStudentData = /* GraphQL */ `
         purpose
         introduction
         introductionTitle
+        status
         instructions
         instructionsTitle
         summary
@@ -4935,6 +4944,7 @@ export const listUniversalLessonStudentData = /* GraphQL */ `
           purpose
           introduction
           introductionTitle
+          status
           instructions
           instructionsTitle
           summary
@@ -5022,6 +5032,7 @@ export const getUniversalLessonWritingExcercises = /* GraphQL */ `
         purpose
         introduction
         introductionTitle
+        status
         instructions
         instructionsTitle
         summary
@@ -5144,6 +5155,7 @@ export const listUniversalLessonWritingExcercises = /* GraphQL */ `
           purpose
           introduction
           introductionTitle
+          status
           instructions
           instructionsTitle
           summary
@@ -5713,6 +5725,7 @@ export const getUniversalJournalData = /* GraphQL */ `
         purpose
         introduction
         introductionTitle
+        status
         instructions
         instructionsTitle
         summary
@@ -5820,6 +5833,7 @@ export const listUniversalJournalData = /* GraphQL */ `
           purpose
           introduction
           introductionTitle
+          status
           instructions
           instructionsTitle
           summary
@@ -6127,6 +6141,7 @@ export const getUniversalSyllabusLesson = /* GraphQL */ `
         purpose
         introduction
         introductionTitle
+        status
         instructions
         instructionsTitle
         summary
@@ -6253,6 +6268,7 @@ export const listUniversalSyllabusLessons = /* GraphQL */ `
           purpose
           introduction
           introductionTitle
+          status
           instructions
           instructionsTitle
           summary
@@ -6329,6 +6345,7 @@ export const getUniversalLessonFeedback = /* GraphQL */ `
           purpose
           introduction
           introductionTitle
+          status
           instructions
           instructionsTitle
           summary
@@ -6961,6 +6978,7 @@ export const getSentimentTracker = /* GraphQL */ `
           purpose
           introduction
           introductionTitle
+          status
           instructions
           instructionsTitle
           summary
@@ -7646,6 +7664,7 @@ export const getFeelingsArchive = /* GraphQL */ `
         purpose
         introduction
         introductionTitle
+        status
         instructions
         instructionsTitle
         summary
@@ -7817,6 +7836,7 @@ export const listFeelingsArchives = /* GraphQL */ `
           purpose
           introduction
           introductionTitle
+          status
           instructions
           instructionsTitle
           summary
@@ -8769,6 +8789,7 @@ export const lessonsByType2 = /* GraphQL */ `
           purpose
           introduction
           introductionTitle
+          status
           instructions
           instructionsTitle
           summary
@@ -9001,6 +9022,7 @@ export const personLocationBySyllabusLesson = /* GraphQL */ `
           purpose
           introduction
           introductionTitle
+          status
           instructions
           instructionsTitle
           summary
@@ -9108,6 +9130,7 @@ export const attendanceByStudent = /* GraphQL */ `
           purpose
           introduction
           introductionTitle
+          status
           instructions
           instructionsTitle
           summary

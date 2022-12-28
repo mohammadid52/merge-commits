@@ -1,26 +1,111 @@
-import Loader from 'atoms/Loader';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import useAuth from 'customHooks/useAuth';
-import * as queries from 'graphql/queries';
+import Buttons from '@components/Atoms/Buttons';
+import {logError} from '@graphql/functions';
 import {Transition} from '@headlessui/react';
 import {PDFDownloadLink} from '@react-pdf/renderer';
-import {getImageFromS3Static} from 'utilities/services';
+import Selector from 'atoms/Form/Selector';
+import Loader from 'atoms/Loader';
+import SectionTitleV3 from 'atoms/SectionTitleV3';
+import {GlobalContext} from 'contexts/GlobalContext';
+import * as customQueries from 'customGraphql/customQueries';
+import useDictionary from 'customHooks/dictionary';
+import useAuth from 'customHooks/useAuth';
+import * as queries from 'graphql/queries';
 import {orderBy, uniqBy} from 'lodash';
 import React, {useContext, useEffect, useState} from 'react';
 import ClickAwayListener from 'react-click-away-listener';
 import {CSVLink} from 'react-csv';
 import {BsDownload} from 'react-icons/bs';
-import {GlobalContext} from 'contexts/GlobalContext';
-import * as customQueries from 'customGraphql/customQueries';
-import useDictionary from 'customHooks/dictionary';
+import {getImageFromS3Static} from 'utilities/services';
 import {createFilterToFetchSpecificItemsOnly} from 'utilities/strings';
-import Selector from 'atoms/Form/Selector';
-import SectionTitleV3 from 'atoms/SectionTitleV3';
 import DateAndTime from '../DateAndTime/DateAndTime';
 import SurveyPDF from './SurveyPDF';
-import {logError} from '@graphql/functions';
-import PageWrapper from '@components/Atoms/PageWrapper';
-import Buttons from '@components/Atoms/Buttons';
+
+const getFormatedDate = (date: string) => {
+  if (date !== '-') {
+    return date.split(',')[0];
+  } else {
+    return '-';
+  }
+};
+
+const theadStyles =
+  'px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider';
+const tdataStyles = 'px-6 py-4 whitespace-nowrap text-sm text-gray-800';
+
+const Table = ({CSVData}: {CSVData: any[]}) => {
+  return (
+    <div className="flex flex-col">
+      <div className="overflow-x-auto ">
+        <div className="py-2 align-middle inline-block min-w-full ">
+          <div className="flex flex-1 shadow inner_card overflow-hidden border-b border-gray-200 sm:rounded-lg">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-100">
+                <tr>
+                  <th scope="col" style={{width: '15%'}} className={theadStyles}>
+                    Id
+                  </th>
+                  <th scope="col" style={{width: '20%'}} className={theadStyles}>
+                    first name
+                  </th>
+                  <th scope="col" style={{width: '15%'}} className={theadStyles}>
+                    last Name
+                  </th>
+                  <th scope="col" style={{width: '20%'}} className={theadStyles}>
+                    Email
+                  </th>
+                  <th scope="col" style={{width: '20%'}} className={theadStyles}>
+                    Taken Survey
+                  </th>
+                  <th scope="col" style={{width: '20%'}} className={theadStyles}>
+                    Completed Date
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {CSVData.map(
+                  (listItem, idx): JSX.Element => (
+                    <tr key={idx} className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-100'}>
+                      <td style={{width: '15%'}} className={tdataStyles}>
+                        {listItem.id}
+                      </td>
+                      <td style={{width: '20%'}} className={tdataStyles}>
+                        {listItem.firstName}
+                      </td>
+                      <td style={{width: '15%'}} className={tdataStyles}>
+                        {listItem.lastName}
+                      </td>
+                      <td style={{width: '20%'}} className={tdataStyles}>
+                        {listItem.email}
+                      </td>
+                      <td style={{width: '20%'}} className={tdataStyles}>
+                        {listItem.hasTakenSurvey ? 'Yes' : 'No'}
+                      </td>
+                      <td style={{width: '10%'}} className={tdataStyles}>
+                        {getFormatedDate(listItem.last)}
+                      </td>
+                    </tr>
+                  )
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const Card = ({keyItem, value}: any) => {
+  return (
+    <div className="flex relative bg-white rounded-lg  justify-center items-center h-20 shadow inner_card">
+      <p className={`text-sm text-semibold text-gray-500 w-auto mr-2 text-md`}>
+        {keyItem}:
+      </p>
+      <p className={`text-dark-gray font-medium text-center w-auto text-md`}>{value}</p>
+    </div>
+  );
+};
 
 interface ICsvProps {
   institutionId?: string;
@@ -103,6 +188,7 @@ const Csv = ({institutionId}: ICsvProps) => {
     setCSVData([]);
     setCSVHeaders([]);
   };
+
   const clearStudentsAnswers = () => {
     setSCQAnswers([]);
     setDCQAnswers([]);
@@ -113,6 +199,7 @@ const Csv = ({institutionId}: ICsvProps) => {
     listInstitutions();
   }, []);
 
+  // if this doesn't work.. fuck this function
   const listInstitutions = async () => {
     try {
       setInstitutionsLoading(true);
@@ -202,6 +289,19 @@ const Csv = ({institutionId}: ICsvProps) => {
 
   const {authId, isTeacher, email, isFellow} = useAuth();
 
+  const removeDuplicates = (array: any[]) => {
+    let ids: any[] = [];
+
+    let result: any[] = [];
+    array.forEach((item) => {
+      if (!ids.includes(item?.id)) {
+        result.push(item);
+        ids.push(item.id);
+      }
+    });
+    return result;
+  };
+
   const fetchClassRooms = async () => {
     setClassRoomLoading(true);
     let instCRs: any = [];
@@ -244,7 +344,9 @@ const Csv = ({institutionId}: ICsvProps) => {
             cr.curricula?.items.length > 0
               ? cr.curricula?.items[0].curriculum
               : null;
-          instCRs.push({id: cr.id, name: cr.name, value: cr.name});
+
+          !instCRs.find((d: any) => d.name === cr.name) &&
+            instCRs.push({id: cr.id, name: cr.name, value: cr.name});
 
           return {
             id: cr.id,
@@ -260,7 +362,7 @@ const Csv = ({institutionId}: ICsvProps) => {
       .filter(Boolean);
 
     setClassRoomsList(classrooms);
-    setInstClassRooms(instCRs);
+    setInstClassRooms(removeDuplicates(instCRs));
     fetchActiveUnits(classrooms);
     setClassRoomLoading(false);
   };
@@ -286,7 +388,8 @@ const Csv = ({institutionId}: ICsvProps) => {
             cr.curricula?.items && Array.isArray(cr.curricula?.items)
               ? cr.curricula?.items[0]?.curriculum
               : null;
-          instCRs.push({id: cr.id, name: cr.name, value: cr.name});
+          !instCRs.find((d: any) => d.name === cr.name) &&
+            instCRs.push({id: cr.id, name: cr.name, value: cr.name});
           return {
             id: cr.id,
             name: cr.name,
@@ -298,7 +401,7 @@ const Csv = ({institutionId}: ICsvProps) => {
           };
         });
         setClassRoomsList(classrooms);
-        setInstClassRooms(instCRs);
+        setInstClassRooms(removeDuplicates(instCRs));
         setClassRoomLoading(false);
       } else {
         // console.log('institution already selected');
@@ -855,10 +958,6 @@ const Csv = ({institutionId}: ICsvProps) => {
     }
   }, [isCSVReady]);
 
-  const theadStyles =
-    'px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider';
-  const tdataStyles = 'px-6 py-4 whitespace-nowrap text-sm text-gray-800';
-
   const getTodayDate = () => {
     let today: any = new Date();
     let dd = String(today.getDate()).padStart(2, '0');
@@ -866,90 +965,6 @@ const Csv = ({institutionId}: ICsvProps) => {
     let yyyy = today.getFullYear();
     today = mm + '-' + dd + '-' + yyyy;
     return today;
-  };
-
-  const getFormatedDate = (date: string) => {
-    if (date !== '-') {
-      return date.split(',')[0];
-    } else {
-      return '-';
-    }
-  };
-
-  const Table = () => {
-    return (
-      <div className="flex flex-col">
-        <div className="overflow-x-auto ">
-          <div className="py-2 align-middle inline-block min-w-full ">
-            <div className="flex flex-1 shadow inner_card overflow-hidden border-b border-gray-200 sm:rounded-lg">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-100">
-                  <tr>
-                    <th scope="col" style={{width: '15%'}} className={theadStyles}>
-                      Id
-                    </th>
-                    <th scope="col" style={{width: '20%'}} className={theadStyles}>
-                      first name
-                    </th>
-                    <th scope="col" style={{width: '15%'}} className={theadStyles}>
-                      last Name
-                    </th>
-                    <th scope="col" style={{width: '20%'}} className={theadStyles}>
-                      Email
-                    </th>
-                    <th scope="col" style={{width: '20%'}} className={theadStyles}>
-                      Taken Survey
-                    </th>
-                    <th scope="col" style={{width: '20%'}} className={theadStyles}>
-                      Completed Date
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {CSVData.map((listItem, idx) => {
-                    return (
-                      <tr
-                        key={idx}
-                        className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-100'}>
-                        <td style={{width: '15%'}} className={tdataStyles}>
-                          {listItem.id}
-                        </td>
-                        <td style={{width: '20%'}} className={tdataStyles}>
-                          {listItem.firstName}
-                        </td>
-                        <td style={{width: '15%'}} className={tdataStyles}>
-                          {listItem.lastName}
-                        </td>
-                        <td style={{width: '20%'}} className={tdataStyles}>
-                          {listItem.email}
-                        </td>
-                        <td style={{width: '20%'}} className={tdataStyles}>
-                          {listItem.hasTakenSurvey ? 'Yes' : 'No'}
-                        </td>
-                        <td style={{width: '10%'}} className={tdataStyles}>
-                          {getFormatedDate(listItem.last)}
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  };
-
-  const Card = ({keyItem, value}: any) => {
-    return (
-      <div className="flex relative bg-white rounded-lg  justify-center items-center h-20 shadow inner_card">
-        <p className={`text-sm text-semibold text-gray-500 w-auto mr-2 text-md`}>
-          {keyItem}:
-        </p>
-        <p className={`text-dark-gray font-medium text-center w-auto text-md`}>{value}</p>
-      </div>
-    );
   };
 
   const isSuperAdmin = state.user.role === 'SUP';
@@ -1119,22 +1134,23 @@ const Csv = ({institutionId}: ICsvProps) => {
             }
           />
 
-          <Buttons
+          {/* <Buttons
             disabled={!isCSVDownloadReady && lessonPDFData.length === 0}
             Icon={BsDownload}
             size="small"
             btnClass="px-6"
             insideElement={
-              <PDFDownloadLink
+              <XlsxDownloadLink
+                // data={}
                 className="w-auto ml-2"
-                document={
-                  <SurveyPDF lessonPDFData={lessonPDFData} clientKey={clientKey} />
-                }
-                fileName={`${selectedSurvey?.name}.pdf`}>
+                // document={
+                //   <SurveyPDF lessonPDFData={lessonPDFData} clientKey={clientKey} />
+                // }
+                fileName={`${selectedSurvey?.name}.xlsx`}>
                 Survey XLSX
-              </PDFDownloadLink>
+              </XlsxDownloadLink>
             }
-          />
+          /> */}
           <Buttons
             disabled={!isCSVDownloadReady && lessonPDFData.length === 0}
             Icon={BsDownload}
@@ -1157,7 +1173,7 @@ const Csv = ({institutionId}: ICsvProps) => {
             <SectionTitleV3 title={'Survey results'} />
           </div>
           {CSVData.length > 0 ? (
-            <Table />
+            <Table CSVData={CSVData} />
           ) : (
             <div className="bg-white flex justify-center items-center inner_card h-30 overflow-hidden border-b border-gray-200 sm:rounded-lg">
               {csvGettingReady ? (

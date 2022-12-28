@@ -6,6 +6,7 @@ import ListBottomBar from '@components/Molecules/ListBottomBar';
 import useAuth from '@customHooks/useAuth';
 import usePagination from '@customHooks/usePagination';
 import useSearch from '@customHooks/useSearch';
+import {RoomStatus} from 'API';
 import {getAsset} from 'assets';
 import BreadCrums from 'atoms/BreadCrums';
 import Buttons from 'atoms/Buttons';
@@ -24,6 +25,7 @@ import {IoArrowUndoCircleOutline} from 'react-icons/io5';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {useHistory, useRouteMatch} from 'react-router-dom';
 import {getLanguageString} from 'utilities/strings';
+import {Filters, SortType} from '../Institutons/Listing/RoomsList';
 import CloneLesson from './CloneLesson';
 import LessonListLoader from './LessonListLoader';
 import LessonsListRow from './LessonsListRow';
@@ -346,6 +348,7 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
     checkSearchQueryFromUrl,
     filterBySearchQuery,
     removeSearchAction,
+    setSearchInput,
     searchAndFilter
   } = useSearch([...(lessonsData || [])], ['title']);
 
@@ -373,6 +376,22 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
   };
 
   const finalList = getSortedList(searchInput.isActive ? filteredList : currentList);
+
+  const [filters, setFilters] = useState<SortType>();
+
+  const updateFilter = (filterName: SortType) => {
+    if (filterName === filters) {
+      setSearchInput({...searchInput, isActive: false});
+      setFilters(null);
+      setFilteredList([]);
+    } else {
+      setSearchInput({...searchInput, isActive: true});
+      const filtered = currentList.filter((_d: any) => filterName === _d.status);
+      setFilteredList(filtered);
+      setFilters(filterName);
+      setSelectedInstitution({});
+    }
+  };
 
   {
     return (
@@ -458,6 +477,9 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
             }
           />
         </div>
+        <div className="px-8">
+          <Filters updateFilter={updateFilter} filters={filters} />
+        </div>
 
         {/* List / Table */}
         <div className={`flex flex-col ${isInInstitution ? 'px-8' : ''}`}>
@@ -496,7 +518,7 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
                     </span>
                   </div>
                   <div className="w-1.5/10 flex justify-center px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                    <span className="w-auto">Created Date</span>
+                    <span className="w-auto">Status</span>
                   </div>
                   <div className="w-1.5/10 flex justify-center px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                     <span className="w-auto">Last Edit Date</span>
@@ -531,6 +553,7 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
                         key={`lessonsRows${i}`}
                         index={currentPage * pageCount + i}
                         id={lessonsObject.id}
+                        status={lessonsObject?.status || RoomStatus.ACTIVE}
                         title={lessonsObject.title}
                         institution={lessonsObject.institution}
                         type={lessonsObject.type && getType(lessonsObject.type)}

@@ -4769,6 +4769,19 @@
     "exit-on-epipe" "~1.0.1"
     "printj" "~1.1.0"
 
+"adler-32@~1.2.0":
+  "integrity" "sha512-/vUqU/UY4MVeFsg+SsK6c+/05RZXIHZMGJA+PX5JyWI0ZRcBpupnRuPLU/NXXoFwMYCPCoxIfElM2eS+DUXCqQ=="
+  "resolved" "https://registry.npmjs.org/adler-32/-/adler-32-1.2.0.tgz"
+  "version" "1.2.0"
+  dependencies:
+    "exit-on-epipe" "~1.0.1"
+    "printj" "~1.1.0"
+
+"adler-32@~1.3.0":
+  "integrity" "sha512-ynZ4w/nUUv5rrsR8UUGoe1VC9hZj6V5hU9Qw1HlMDJGEJw5S7TfTErWTjMys6M7vr0YWcPqs3qAr4ss0nDfP+A=="
+  "resolved" "https://registry.npmjs.org/adler-32/-/adler-32-1.3.1.tgz"
+  "version" "1.3.1"
+
 "aggregate-error@^3.0.0":
   "integrity" "sha512-4I7Td01quW/RpocfNayFdFVk1qSuoh0E7JrbRJ16nH01HhKFQ88INq9Sd+nd72zqRySlr9BmDA8xlEJ6vJMrYA=="
   "resolved" "https://registry.npmjs.org/aggregate-error/-/aggregate-error-3.1.0.tgz"
@@ -5878,6 +5891,14 @@
   "resolved" "https://registry.npmjs.org/caseless/-/caseless-0.12.0.tgz"
   "version" "0.12.0"
 
+"cfb@^1.1.3", "cfb@^1.1.4":
+  "integrity" "sha512-KfdUZsSOw19/ObEWasvBP/Ac4reZvAGauZhs6S/gqNhXhI7cKwvlH7ulj+dOEYnca4bm4SGo8C1bTAQvnTjgQA=="
+  "resolved" "https://registry.npmjs.org/cfb/-/cfb-1.2.2.tgz"
+  "version" "1.2.2"
+  dependencies:
+    "adler-32" "~1.3.0"
+    "crc-32" "~1.2.0"
+
 "cfb@~0.12.0":
   "integrity" "sha512-cP+4A0tTqtyza5gJwNwDetZ8FPjl0gPLE7mIxGKyUzOS6HkM23WaAWW/l3t7jIQSMqVXroa09Ey0lo7gV8LNxw=="
   "resolved" "https://registry.npmjs.org/cfb/-/cfb-0.12.1.tgz"
@@ -6163,6 +6184,14 @@
     "exit-on-epipe" "~1.0.1"
     "voc" "~1.0.0"
 
+"codepage@~1.14.0":
+  "integrity" "sha512-iz3zJLhlrg37/gYRWgEPkaFTtzmnEv1h+r7NgZum2lFElYQPi0/5bnmuDfODHxfp0INEfnRqyfyeIJDbb7ahRw=="
+  "resolved" "https://registry.npmjs.org/codepage/-/codepage-1.14.0.tgz"
+  "version" "1.14.0"
+  dependencies:
+    "commander" "~2.14.1"
+    "exit-on-epipe" "~1.0.1"
+
 "collection-visit@^1.0.0":
   "integrity" "sha512-lNkKvzEeMBBjUGHZ+q6z9pSJla0KWAQPvtzhEV9+iGyQYG+pBpl7xKDhxoNSOZH2hhv0v5k0y2yAM4o4SjoSkw=="
   "resolved" "https://registry.npmjs.org/collection-visit/-/collection-visit-1.0.0.tgz"
@@ -6283,6 +6312,16 @@
   "integrity" "sha512-b0553uYA5YAEGgyYIGYROzKQ7X5RAqedkfjiZxwi0kL1g3bOaBNNZfYkzt/CL0umgD5wc9Jec2FbB98CjkMRvQ=="
   "resolved" "https://registry.npmjs.org/commander/-/commander-2.11.0.tgz"
   "version" "2.11.0"
+
+"commander@~2.14.1":
+  "integrity" "sha512-+YR16o3rK53SmWHU3rEM3tPAh2rwb1yPcQX5irVn7mb0gXbwuCCrnkbV5+PBfETdfg1vui07nM6PCG1zndcjQw=="
+  "resolved" "https://registry.npmjs.org/commander/-/commander-2.14.1.tgz"
+  "version" "2.14.1"
+
+"commander@~2.17.1":
+  "integrity" "sha512-wPMUt6FnH2yzG95SA6mzjQOEKUU3aLaDEmzs1ti+1E9h+CsrZghRlqEM/EJ4KscsQVG8uNN4uVreUeT8+drlgg=="
+  "resolved" "https://registry.npmjs.org/commander/-/commander-2.17.1.tgz"
+  "version" "2.17.1"
 
 "common-tags@^1.8.0":
   "integrity" "sha512-gk/Z852D2Wtb//0I+kRFNKKE9dIIVirjoqPoA1wJU+XePVXZfGeBpk45+A1rKO4Q43prqWBNY/MiIeRLbPWUaA=="
@@ -6477,6 +6516,11 @@
   dependencies:
     "exit-on-epipe" "~1.0.1"
     "printj" "~1.1.0"
+
+"crc-32@~1.2.0":
+  "integrity" "sha512-ROmzCKrTnOwybPcJApAA6WBWij23HVfGVNKqqrZpuyZOHqK2CwHSvpGuyt/UNNvaIjEd8X5IFGp4Mh+Ie1IHJQ=="
+  "resolved" "https://registry.npmjs.org/crc-32/-/crc-32-1.2.2.tgz"
+  "version" "1.2.2"
 
 "create-ecdh@^4.0.0":
   "integrity" "sha512-mf+TCx8wWc9VpuxfP2ht0iSISLZnt0JgWlrOKZiNqyUZWnjIaCIVNQArMHnCZKfEYRg6IM7A+NeJoN8gf/Ws0A=="
@@ -8000,6 +8044,11 @@
   "version" "1.1.0"
   dependencies:
     "pend" "~1.2.0"
+
+"fflate@^0.3.8":
+  "integrity" "sha512-Rr5QlUeGN1mbOHlaqcSYMKVpPbgLy0AWT/W0EHxA6NGI12yO1jpoui2zBBvU2G824ltM6Ut8BFgfHSBGfkmS0A=="
+  "resolved" "https://registry.npmjs.org/fflate/-/fflate-0.3.11.tgz"
+  "version" "0.3.11"
 
 "fflate@^0.7.3":
   "integrity" "sha512-5u2V/CDW15QM1XbbgS+0DfPxVB+jUKhWEKuuFuHncbk3tEEqzmoXL+2KyOFuKGqOnmdIy0/davWF1CkuwtibCw=="
@@ -10009,7 +10058,7 @@
   "resolved" "https://registry.npmjs.org/loader-runner/-/loader-runner-4.2.0.tgz"
   "version" "4.2.0"
 
-"loader-utils@^1.0.2", "loader-utils@^1.1.0", "loader-utils@^1.2.3", "loader-utils@^1.4.0":
+"loader-utils@^1.0.0", "loader-utils@^1.0.2", "loader-utils@^1.1.0", "loader-utils@^1.2.3", "loader-utils@^1.4.0":
   "integrity" "sha512-qH0WSMBtn/oHuwjy/NucEgbx5dbxxnxup9s4PVXJUDHZBQY+s0NWA9rJf53RBnQZxfch7euUui7hpoAPvALZdA=="
   "resolved" "https://registry.npmjs.org/loader-utils/-/loader-utils-1.4.0.tgz"
   "version" "1.4.0"
@@ -11366,6 +11415,15 @@
     "safe-buffer" "^5.0.1"
     "sha.js" "^2.4.8"
 
+"pdf-to-excel@^0.3.2":
+  "integrity" "sha512-fem0a3R5J1Fvo6H7iXpWta1bZrZcVjvah6tPC2YD8bgBQ92Ts5s/X9Tu+fks4l1RAjyFry5ST1ONg9UPxkJ7HA=="
+  "resolved" "https://registry.npmjs.org/pdf-to-excel/-/pdf-to-excel-0.3.2.tgz"
+  "version" "0.3.2"
+  dependencies:
+    "pdfjs-dist" "2.2.228"
+    "regenerator-runtime" "^0.13.7"
+    "xlsx" "^0.16.9"
+
 "pdfjs-dist@1.8.357":
   "integrity" "sha512-ampPgu+QHnreVkCebVprhKvFX7Z+K5Zf5vQdFc7d48pzJgg9//lv4mjpZbrX+j5nSocrbEZZPnyHdN/5zjf39w=="
   "resolved" "https://registry.npmjs.org/pdfjs-dist/-/pdfjs-dist-1.8.357.tgz"
@@ -11373,6 +11431,14 @@
   dependencies:
     "node-ensure" "^0.0.0"
     "worker-loader" "^0.8.0"
+
+"pdfjs-dist@2.2.228":
+  "integrity" "sha512-W5LhYPMS2UKX0ELIa4u+CFCMoox5qQNQElt0bAK2mwz1V8jZL0rvLao+0tBujce84PK6PvWG36Nwr7agCCWFGQ=="
+  "resolved" "https://registry.npmjs.org/pdfjs-dist/-/pdfjs-dist-2.2.228.tgz"
+  "version" "2.2.228"
+  dependencies:
+    "node-ensure" "^0.0.0"
+    "worker-loader" "^2.0.0"
 
 "pend@~1.2.0":
   "integrity" "sha512-F3asv42UuXchdzt+xXqfW1OGlVBe+mxa2mqI0pg5yAHZPvFmY3Y6drSf/GQ1A86WgWEN9Kzh/WrgKa6iGcHXLg=="
@@ -12535,7 +12601,7 @@
   "resolved" "https://registry.npmjs.org/regenerate/-/regenerate-1.4.2.tgz"
   "version" "1.4.2"
 
-"regenerator-runtime@^0.13.4":
+"regenerator-runtime@^0.13.4", "regenerator-runtime@^0.13.7":
   "integrity" "sha512-a54FxoJDIr27pgf7IgeQGxmqUNYrcV338lf/6gH456HZ/PhX+5BcwHXG9ajESmwe6WRO0tAzRUrRmNONWgkrew=="
   "resolved" "https://registry.npmjs.org/regenerator-runtime/-/regenerator-runtime-0.13.7.tgz"
   "version" "0.13.7"
@@ -12920,6 +12986,14 @@
   "version" "0.3.0"
   dependencies:
     "ajv" "^5.0.0"
+
+"schema-utils@^0.4.0":
+  "integrity" "sha512-v/iwU6wvwGK8HbU9yi3/nhGzP0yGSuhQMzL6ySiec1FSrZZDkhm4noOSWzrNFo/jEc+SJY6jRTwuwbSXJPDUnQ=="
+  "resolved" "https://registry.npmjs.org/schema-utils/-/schema-utils-0.4.7.tgz"
+  "version" "0.4.7"
+  dependencies:
+    "ajv" "^6.1.0"
+    "ajv-keywords" "^3.1.0"
 
 "schema-utils@^1.0.0":
   "integrity" "sha512-i27Mic4KovM/lnGsy8whRCHhc7VicJajAjTrYg11K9zfZXnYIt4k5F+kZkwjnrhKzLic/HLU4j11mjsz2G/75g=="
@@ -13424,6 +13498,20 @@
   "integrity" "sha512-pRuUdW0WwyB2doSqqjWyzwCD6PkfxpHAHdZp39K3dp/Hq7f+xfMwNAWIi16DyrRg4gg9c/RvLYkJTSawTPTm1w=="
   "resolved" "https://registry.npmjs.org/ssf/-/ssf-0.10.3.tgz"
   "version" "0.10.3"
+  dependencies:
+    "frac" "~1.1.2"
+
+"ssf@~0.10.2":
+  "integrity" "sha512-pRuUdW0WwyB2doSqqjWyzwCD6PkfxpHAHdZp39K3dp/Hq7f+xfMwNAWIi16DyrRg4gg9c/RvLYkJTSawTPTm1w=="
+  "resolved" "https://registry.npmjs.org/ssf/-/ssf-0.10.3.tgz"
+  "version" "0.10.3"
+  dependencies:
+    "frac" "~1.1.2"
+
+"ssf@~0.11.2":
+  "integrity" "sha512-+idbmIXoYET47hH+d7dfm2epdOMUDjqcB4648sTZ+t2JwoyBFL/insLfB/racrDmsKB3diwsDA696pZMieAC5g=="
+  "resolved" "https://registry.npmjs.org/ssf/-/ssf-0.11.2.tgz"
+  "version" "0.11.2"
   dependencies:
     "frac" "~1.1.2"
 
@@ -14899,10 +14987,20 @@
   "resolved" "https://registry.npmjs.org/wildcard/-/wildcard-2.0.0.tgz"
   "version" "2.0.0"
 
+"wmf@~1.0.1":
+  "integrity" "sha512-/p9K7bEh0Dj6WbXg4JG0xvLQmIadrner1bi45VMJTfnbVHsc7yIajZyoSoK60/dtVBs12Fm6WkUI5/3WAVsNMw=="
+  "resolved" "https://registry.npmjs.org/wmf/-/wmf-1.0.2.tgz"
+  "version" "1.0.2"
+
 "word-wrap@^1.2.3":
   "integrity" "sha512-Hz/mrNwitNRh/HUAtM/VT/5VH+ygD6DV7mYKZAtHOrbs8U7lvPS6xf7EJKMF0uW1KJCl0H701g3ZGus+muE5vQ=="
   "resolved" "https://registry.npmjs.org/word-wrap/-/word-wrap-1.2.3.tgz"
   "version" "1.2.3"
+
+"word@~0.3.0":
+  "integrity" "sha512-OELeY0Q61OXpdUfTp+oweA/vtLVg5VDOXh+3he3PNzLGG/y0oylSOC1xRVj0+l4vQ3tj/bB1HVHv1ocXkQceFA=="
+  "resolved" "https://registry.npmjs.org/word/-/word-0.3.0.tgz"
+  "version" "0.3.0"
 
 "worker-farm@^1.7.0":
   "integrity" "sha512-rvw3QTZc8lAxyVrqcSGVm5yP/IJ2UcB3U0graE3LCFoZ0Yn2x4EoVSqJKdB/T5M+FLcRPjz4TDacRf3OCfNUzw=="
@@ -14918,6 +15016,14 @@
   dependencies:
     "loader-utils" "^1.0.2"
     "schema-utils" "^0.3.0"
+
+"worker-loader@^2.0.0":
+  "integrity" "sha512-tnvNp4K3KQOpfRnD20m8xltE3eWh89Ye+5oj7wXEEHKac1P4oZ6p9oTj8/8ExqoSBnk9nu5Pr4nKfQ1hn2APJw=="
+  "resolved" "https://registry.npmjs.org/worker-loader/-/worker-loader-2.0.0.tgz"
+  "version" "2.0.0"
+  dependencies:
+    "loader-utils" "^1.0.0"
+    "schema-utils" "^0.4.0"
 
 "wrap-ansi@^5.1.0":
   "integrity" "sha512-QC1/iN/2/RPVJ5jYK8BGttj5z83LmSKmvbvrXPNCLZSEb32KKVDJDl/MOt2N01qU2H/FkzEa9PKto1BqDjtd7Q=="
@@ -14980,6 +15086,35 @@
     "crc-32" "~1.1.0"
     "exit-on-epipe" "~1.0.1"
     "ssf" "~0.10.0"
+
+"xlsx@^0.15.1":
+  "integrity" "sha512-z+o4+QPMc32EPboLCzJAz94o0Zyy+8jrmWTsVpfzwknFln9qDO6/HN1KrGGVC4//sGA7dh4R3HA4fhbGIKCDOA=="
+  "resolved" "https://registry.npmjs.org/xlsx/-/xlsx-0.15.1.tgz"
+  "version" "0.15.1"
+  dependencies:
+    "adler-32" "~1.2.0"
+    "cfb" "^1.1.3"
+    "codepage" "~1.14.0"
+    "commander" "~2.17.1"
+    "crc-32" "~1.2.0"
+    "exit-on-epipe" "~1.0.1"
+    "ssf" "~0.10.2"
+
+"xlsx@^0.16.9":
+  "integrity" "sha512-gxi1I3EasYvgCX1vN9pGyq920Ron4NO8PNfhuoA3Hpq6Y8f0ECXiy4OLrK4QZBnj1jx3QD+8Fq5YZ/3mPZ5iXw=="
+  "resolved" "https://registry.npmjs.org/xlsx/-/xlsx-0.16.9.tgz"
+  "version" "0.16.9"
+  dependencies:
+    "adler-32" "~1.2.0"
+    "cfb" "^1.1.4"
+    "codepage" "~1.14.0"
+    "commander" "~2.17.1"
+    "crc-32" "~1.2.0"
+    "exit-on-epipe" "~1.0.1"
+    "fflate" "^0.3.8"
+    "ssf" "~0.11.2"
+    "wmf" "~1.0.1"
+    "word" "~0.3.0"
 
 "xml2js@0.4.19":
   "integrity" "sha512-esZnJZJOiJR9wWKMyuvSE1y6Dq5LCuJanqhxslH2bxM6duahNZ+HMpCLhBQGZkbX6xRf8x1Y2eJlgt2q3qo49Q=="
