@@ -10,7 +10,7 @@ import useDictionary from 'customHooks/dictionary';
 import * as mutations from 'graphql/mutations';
 import {languageList} from 'utilities/staticData';
 import Selector from '@components/Atoms/Form/Selector';
-import {RoomStatus} from 'API';
+import {RoomStatus, UniversalSyllabus} from 'API';
 import {RoomStatusList} from '../CourseBuilder/CourseFormComponent';
 
 interface AddSyllabusProps {
@@ -28,6 +28,7 @@ interface InitialData {
   purpose: string;
   priorities: string;
   objectives: string;
+  secondary: string;
   status: RoomStatus;
   languages: {id: string; name: string; value: string}[];
 }
@@ -47,6 +48,7 @@ const UnitFormComponent = ({
     purpose: '',
     objectives: '',
     priorities: '',
+    secondary: '',
     status: RoomStatus.ACTIVE,
     languages: [{id: '1', name: 'English', value: 'EN'}]
   };
@@ -130,6 +132,8 @@ const UnitFormComponent = ({
           languages: languagesCode,
           universalLessonsSeq: [],
           priorities: syllabusData?.priorities,
+          secondary: syllabusData?.secondary || '',
+
           status: syllabusData?.status || RoomStatus.ACTIVE
         };
         if (syllabusDetails?.id) {
@@ -188,7 +192,8 @@ const UnitFormComponent = ({
     purpose,
     status,
     priorities,
-    objectives
+    objectives,
+    secondary
   } = syllabusData;
 
   return (
@@ -261,6 +266,17 @@ const UnitFormComponent = ({
               onChange={onInputChange}
               name="priorities"
               label={AddSyllabusDict[userLanguage]['priority']}
+            />
+          </div>
+          <div>
+            <FormInput
+              value={secondary}
+              textarea
+              rows={5}
+              id="secondary"
+              onChange={onInputChange}
+              name="secondary"
+              label={AddSyllabusDict[userLanguage]['secondary']}
             />
           </div>
           <div>

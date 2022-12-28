@@ -81,7 +81,7 @@ const LessonCard = ({
           {onSetupTab && (
             <>
               <div
-                className={`relative bg-white shadow items-center rounded-lg flex flex-col md:flex-row mb-8 `}>
+                className={`relative bg-white shadow items-center rounded-lg flex flex-col md:flex-row mb-8 p-4`}>
                 {/**
                  *  LEFT SECTION IMAGE
                  */}
@@ -116,7 +116,7 @@ const LessonCard = ({
                  */}
                 <div
                   className={`w-full md:w-8/12 lg:w-7.5/10 ml-4 flex flex-col rounded-b`}>
-                  <div className="pr-2 lg:pr-8 pt-5">
+                  <div className="">
                     <FormInput
                       isRequired
                       dataCy="lesson-image-caption"
@@ -135,7 +135,7 @@ const LessonCard = ({
                     </div>
                   </div>
 
-                  <div className="pr-2 lg:pr-8 pt-1">
+                  <div className="">
                     <FormInput
                       textarea
                       isRequired

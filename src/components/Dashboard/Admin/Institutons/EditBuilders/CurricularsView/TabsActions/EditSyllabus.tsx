@@ -519,62 +519,8 @@ const EditSyllabus = (props: EditSyllabusProps) => {
     });
   };
 
-  const onStatusChange = async (val: string, name: string, id: string, item?: any) => {
-    try {
-      setEditState({...editState, action: 'updating...'});
-      if (val === 'Dropped') {
-        const onDrop = async () => {
-          closeLessonAction();
-          const result: any = await API.graphql(
-            graphqlOperation(mutations.deleteUniversalSyllabusLesson, {
-              input: {id: item.uniqlessonId}
-            })
-          );
-          setSelectedLessonsList((list: any) =>
-            list.filter((_item: any) => _item.id !== item.id)
-          );
-        };
-        setWarnModal2({
-          show: true,
-          message: `Are you sure you want to delete (${item.title})?`,
-          action: onDrop
-        });
-      } else {
-        const input = {id: item.uniqlessonId, status: val};
-        const result: any = await API.graphql(
-          graphqlOperation(mutations.updateUniversalSyllabus, {input})
-        );
-        const newLesson = result.data.updateSyllabusLesson;
-        updateStatusOnTable(newLesson.lessonID, newLesson.status);
-      }
-      setEditState({id: ''});
-    } catch {
-      setMessages({
-        show: true,
-        message: EditSyllabusDict[userLanguage]['messages']['updateerr'],
-        isError: true,
-        lessonError: true
-      });
-      setEditState({id: '', action: ''});
-    }
-  };
-
-  const updateStatusOnTable = (lessonId: string, status: string) => {
-    let updatedList = [...selectedLessonsList];
-    updatedList.find((item) => item.id === lessonId).status = status;
-    setSelectedLessonsList(updatedList);
-  };
-
   const closeLessonAction = () => {
     setWarnModal2({...warnModal2, show: false});
-  };
-
-  const cancelEdit = () => {
-    setEditState({id: '', action: ''});
-  };
-
-  const editCurrentLesson = (id: string) => {
-    setEditState({id});
   };
 
   const cancelSaveAction = () => {

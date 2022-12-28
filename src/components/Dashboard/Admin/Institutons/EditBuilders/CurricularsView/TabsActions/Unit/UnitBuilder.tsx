@@ -25,6 +25,7 @@ interface IUnitData {
   methodology: string;
   policies: string;
   purpose: string;
+  secondary: string;
   priorities: string;
   objectives: string;
   languages: {id: string; name: string; value: string}[];
@@ -71,6 +72,7 @@ const UnitBuilder = ({instId}: any) => {
     methodology: '',
     policies: '',
     priorities: '',
+    secondary: '',
 
     purpose: '',
     status: RoomStatus.ACTIVE,
@@ -124,6 +126,7 @@ const UnitBuilder = ({instId}: any) => {
           methodology: savedData.methodology,
           policies: savedData.policies,
           lessonHistory: savedData.lessonHistory,
+          secondary: savedData.secondary || '',
           priorities: savedData.priorities,
           status: savedData.status || RoomStatus.ACTIVE
         });

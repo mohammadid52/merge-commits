@@ -2700,6 +2700,7 @@ export const getUniversalSyllabus = /* GraphQL */ `
       objectives
       languages
       priorities
+      secondary
       status
       lessons {
         items {

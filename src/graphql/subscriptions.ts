@@ -9220,6 +9220,7 @@ export const onCreateAttendance = /* GraphQL */ `
         policies
         pupose
         priorities
+        secondary
         objectives
         languages
         lessons {
@@ -9536,6 +9537,7 @@ export const onUpdateAttendance = /* GraphQL */ `
         policies
         pupose
         priorities
+        secondary
         objectives
         languages
         lessons {
@@ -9852,6 +9854,7 @@ export const onDeleteAttendance = /* GraphQL */ `
         policies
         pupose
         priorities
+        secondary
         objectives
         languages
         lessons {
@@ -12366,6 +12369,7 @@ export const onCreateUniversalSyllabus = /* GraphQL */ `
       policies
       pupose
       priorities
+      secondary
       objectives
       languages
       lessons {
@@ -12445,6 +12449,7 @@ export const onUpdateUniversalSyllabus = /* GraphQL */ `
       policies
       pupose
       priorities
+      secondary
       objectives
       languages
       lessons {
@@ -12524,6 +12529,7 @@ export const onDeleteUniversalSyllabus = /* GraphQL */ `
       policies
       pupose
       priorities
+      secondary
       objectives
       languages
       lessons {
@@ -12588,6 +12594,7 @@ export const onCreateCurriculumUnits = /* GraphQL */ `
         policies
         pupose
         priorities
+        secondary
         objectives
         languages
         lessons {
@@ -12641,6 +12648,7 @@ export const onUpdateCurriculumUnits = /* GraphQL */ `
         policies
         pupose
         priorities
+        secondary
         objectives
         languages
         lessons {
@@ -12694,6 +12702,7 @@ export const onDeleteCurriculumUnits = /* GraphQL */ `
         policies
         pupose
         priorities
+        secondary
         objectives
         languages
         lessons {
