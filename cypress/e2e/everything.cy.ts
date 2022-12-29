@@ -119,50 +119,50 @@ describe(
   }
 );
 
-// describe(
-//   'Well... Testing everything now as student',
-//   {defaultCommandTimeout: 10000},
-//   () => {
-//     it('go to login page', () => {
-//       cy.login(loginConfig.student.username, loginConfig.student.password);
-//       cy.wait(5000);
-//     });
+describe(
+  'Well... Testing everything now as student',
+  {defaultCommandTimeout: 10000},
+  () => {
+    it('go to login page', () => {
+      cy.login(loginConfig.student.username, loginConfig.student.password);
+      cy.wait(5000);
+    });
 
-//     it('close modal', () => {
-//       cy.closeCheckInModal();
-//       cy.wait(5000);
-//     });
+    it('close modal', () => {
+      cy.closeCheckInModal();
+      cy.wait(5000);
+    });
 
-//     it("Go to 'Dashboard' pages", () => {
-//       cy.dataCy('dashboard-item').click();
-//       cy.wait(2000);
+    it("Go to 'Dashboard' pages", () => {
+      cy.dataCy('dashboard-item').click();
+      cy.wait(2000);
 
-//       cy.dataCy('homepage__classrooms-0').then((e) => {
-//         if (e) {
-//           cy.dataCy('homepage__classrooms-0').click();
-//         } else {
-//           console.error('room click error');
-//         }
-//       });
-//     });
+      cy.dataCy('homepage__classrooms-0').then((e) => {
+        if (e) {
+          cy.dataCy('homepage__classrooms-0').click();
+        } else {
+          console.error('room click error');
+        }
+      });
+    });
 
-//     it("check out 'Game changers' page", () => {
-//       cy.wait(5000);
+    it("check out 'Game changers' page", () => {
+      cy.wait(5000);
 
-//       cy.dataCy('game-changers-item').click();
-//     });
+      cy.dataCy('game-changers-item').click();
+    });
 
-//     it("check out 'Community' page", () => {
-//       cy.wait(5000);
+    it("check out 'Community' page", () => {
+      cy.wait(5000);
 
-//       cy.dataCy('community-item').click();
-//     });
-//     it("check out 'Notebook' page", () => {
-//       cy.wait(5000);
+      cy.dataCy('community-item').click();
+    });
+    it("check out 'Notebook' page", () => {
+      cy.wait(5000);
 
-//       cy.dataCy('notebook-item').click();
-//     });
+      cy.dataCy('notebook-item').click();
+    });
 
-//     it('sign out as student', logout);
-//   }
-// );
+    it('sign out as student', logout);
+  }
+);
