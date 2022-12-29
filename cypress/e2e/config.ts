@@ -11,7 +11,7 @@ export const loginConfig = {
     password: 'admin123'
   },
   teacher: {
-    username: 'cypressfellow@zoiq.io',
+    username: 'demoteacher@zoiq.io',
     password: 'admin123'
   },
   admin: {

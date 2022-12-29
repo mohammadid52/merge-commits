@@ -1,10 +1,18 @@
 import {GlobalContext} from 'contexts/GlobalContext';
 import React, {useContext} from 'react';
-import {IconContext} from 'react-icons';
 import {IoClose} from 'react-icons/io5';
 
-export const CloseButton = ({onClick}: {onClick: () => void}) => (
-  <button className={`ml-auto w-auto outline-none}`} onClick={onClick}>
+export const CloseButton = ({
+  onClick,
+  modalCloseId = ''
+}: {
+  onClick: () => void;
+  modalCloseId?: string;
+}) => (
+  <button
+    data-cy={modalCloseId}
+    className={`ml-auto w-auto outline-none}`}
+    onClick={onClick}>
     <span className="w-8 h-8 ml-4 flex cursor-pointer hover:bg-gray-200 items-center justify-center rounded transition-all duration-150">
       <IoClose size={'1.5rem'} style={{color: '#000000'}} />
     </span>
@@ -17,8 +25,16 @@ const ModalHeader = (headerProps: {
   titleButton?: React.ReactElement;
   customTitle?: React.ReactNode;
   showBorder?: boolean;
+  modalCloseId?: string;
 }) => {
-  const {title, onClick, showBorder, customTitle, titleButton} = headerProps;
+  const {
+    title,
+    onClick,
+    modalCloseId,
+    showBorder,
+    customTitle,
+    titleButton
+  } = headerProps;
   const {theme} = useContext(GlobalContext);
 
   return (
@@ -32,7 +48,7 @@ const ModalHeader = (headerProps: {
         {titleButton}
       </div>
 
-      <CloseButton onClick={onClick} />
+      <CloseButton modalCloseId={modalCloseId} onClick={onClick} />
     </div>
   );
 };

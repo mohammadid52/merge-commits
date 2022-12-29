@@ -1,5 +1,4 @@
 /// <reference types="cypress" />
-import {getLocalStorageData} from '@utilities/localStorage';
 import {loginConfig} from './config';
 
 const logout = () => {
@@ -127,6 +126,7 @@ describe(
     });
 
     it("Go to 'Dashboard' pages", () => {
+      cy.closeCheckInModal();
       cy.wait(5000);
       cy.dataCy('dashboard-item').click();
       cy.wait(2000);
