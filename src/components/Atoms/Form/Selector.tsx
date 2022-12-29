@@ -33,6 +33,7 @@ interface SelectorProps {
   setSelectedItem?: React.Dispatch<React.SetStateAction<{}>>;
   dataCy?: string;
   dropdownWidth?: string;
+  noSpace?: boolean;
 }
 
 const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
@@ -51,7 +52,7 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
     isRequired = false,
     loading = false,
     noOptionMessage = '',
-
+    noSpace,
     width = 'w-full',
     isClearable = false,
     dropdownWidth,
@@ -143,7 +144,9 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
   };
 
   return (
-    <div className={`relative space-y-1 ${additionalClass}`} ref={currentRef}>
+    <div
+      className={`relative ${noSpace ? '' : 'space-y-1'} ${additionalClass}`}
+      ref={currentRef}>
       {label && <Label dark={false} label={label} isRequired={isRequired} />}
       <span className="inline-block w-full h-full rounded-full shadow-sm">
         <button

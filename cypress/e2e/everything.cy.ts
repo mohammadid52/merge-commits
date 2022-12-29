@@ -1,5 +1,4 @@
 /// <reference types="cypress" />
-import {getLocalStorageData} from '@utilities/localStorage';
 import {loginConfig} from './config';
 
 const logout = () => {
@@ -13,6 +12,7 @@ describe(
   () => {
     it('go to login page', () => {
       cy.login(loginConfig.admin.username, loginConfig.admin.password);
+      cy.wait(5000);
     });
 
     it("check out 'Institution Manager' pages", () => {
@@ -67,6 +67,7 @@ describe(
   () => {
     it('go to login page', () => {
       cy.login(loginConfig.teacher.username, loginConfig.teacher.password);
+      cy.wait(5000);
     });
 
     it("check out 'Institution Manager' pages", () => {
@@ -75,7 +76,7 @@ describe(
       cy.hoverOnMenuItems('institution-manager', [
         'general-information-item',
         'staff-item',
-        'user-registry-item'
+        'register-new-user-item'
       ]);
     });
 
@@ -118,45 +119,50 @@ describe(
   }
 );
 
-describe(
-  'Well... Testing everything now as student',
-  {defaultCommandTimeout: 10000},
-  () => {
-    it('go to login page', () => {
-      cy.login(loginConfig.student.username, loginConfig.student.password);
-    });
+// describe(
+//   'Well... Testing everything now as student',
+//   {defaultCommandTimeout: 10000},
+//   () => {
+//     it('go to login page', () => {
+//       cy.login(loginConfig.student.username, loginConfig.student.password);
+//       cy.wait(5000);
+//     });
 
-    it("Go to 'Dashboard' pages", () => {
-      cy.wait(5000);
-      cy.dataCy('dashboard-item').click();
-      cy.wait(2000);
+//     it('close modal', () => {
+//       cy.closeCheckInModal();
+//       cy.wait(5000);
+//     });
 
-      cy.dataCy('homepage__classrooms-0').then((e) => {
-        if (e) {
-          cy.dataCy('homepage__classrooms-0').click();
-        } else {
-          console.error('room click error');
-        }
-      });
-    });
+//     it("Go to 'Dashboard' pages", () => {
+//       cy.dataCy('dashboard-item').click();
+//       cy.wait(2000);
 
-    it("check out 'Game changers' page", () => {
-      cy.wait(5000);
+//       cy.dataCy('homepage__classrooms-0').then((e) => {
+//         if (e) {
+//           cy.dataCy('homepage__classrooms-0').click();
+//         } else {
+//           console.error('room click error');
+//         }
+//       });
+//     });
 
-      cy.dataCy('game-changers-item').click();
-    });
+//     it("check out 'Game changers' page", () => {
+//       cy.wait(5000);
 
-    it("check out 'Community' page", () => {
-      cy.wait(5000);
+//       cy.dataCy('game-changers-item').click();
+//     });
 
-      cy.dataCy('community-item').click();
-    });
-    it("check out 'Notebook' page", () => {
-      cy.wait(5000);
+//     it("check out 'Community' page", () => {
+//       cy.wait(5000);
 
-      cy.dataCy('notebook-item').click();
-    });
+//       cy.dataCy('community-item').click();
+//     });
+//     it("check out 'Notebook' page", () => {
+//       cy.wait(5000);
 
-    it('sign out as student', logout);
-  }
-);
+//       cy.dataCy('notebook-item').click();
+//     });
+
+//     it('sign out as student', logout);
+//   }
+// );

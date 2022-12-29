@@ -1666,3 +1666,9 @@ $polka-dot-size: 0.8px;
     }
   }
 }
+
+.multiple-selector:hover {
+  & .arrow-up-down {
+    fill: $indigo-600;
+  }
+}

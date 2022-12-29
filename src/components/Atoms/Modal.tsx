@@ -147,6 +147,7 @@ const Modal: React.FC<ModalProps> = (modalProps: ModalProps) => {
               <ModalHeader
                 titleButton={titleButton}
                 customTitle={customTitle}
+                modalCloseId={modalCloseId}
                 title={title}
                 onClick={closeAction}
                 showBorder={showHeaderBorder}

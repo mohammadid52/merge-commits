@@ -12,6 +12,7 @@ import {InitialData, InputValueObject} from '../../LessonBuilder';
 import LessonCard from './LessonCard';
 import LessonDetails from './LessonDetails';
 import MaterialsCard from './MaterialsCard';
+import {RoomStatus} from 'API';
 
 interface AddNewLessonFormProps {
   formData: InitialData;
@@ -286,6 +287,10 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
 
   const [creatingLessons, setCreatingLessons] = useState(false); // loader for saving new lessons
 
+  const updateStatus = (_: string, name: RoomStatus) => {
+    setFormData({...formData, status: name});
+  };
+
   const createNewLesson = async () => {
     const isValid = validateForm();
     if (isValid) {
@@ -317,7 +322,8 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
             duration: Number(formData.duration),
             resources: '',
             darkMode: true,
-            label: ''
+            label: '',
+            status: formData?.status || RoomStatus.ACTIVE
           };
 
           const result: any = await API.graphql(
@@ -346,6 +352,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
             cardImage: fileName,
             darkMode: true,
             studentMaterials: formData.studentMaterials,
+            status: formData?.status || RoomStatus.ACTIVE,
             cardCaption: formData.imageCaption,
             duration: Number(formData.duration),
             targetAudience: formData.targetAudience || null
@@ -394,6 +401,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
     duration = '1',
     languages,
     purposeHtml,
+    status = RoomStatus.ACTIVE,
     objectiveHtml,
     notesHtml,
     institution,
@@ -437,8 +445,10 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
               onInputChange={onInputChange}
               lessonId={lessonId}
               targetAudience={targetAudience}
+              updateStatus={updateStatus}
               type={type}
               duration={duration}
+              status={status}
               selectedDesigners={selectedDesigners}
               languages={languages}
               designerListLoading={designerListLoading}

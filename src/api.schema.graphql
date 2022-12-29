@@ -605,6 +605,7 @@ type UniversalLesson @model @auth(rules: [{allow: public}]) {
   purpose: String
   introduction: String
   introductionTitle: String
+  status: RoomStatus @default(value: "ACTIVE")
   instructions: [String]
   instructionsTitle: String
   summary: String
@@ -852,6 +853,7 @@ type UniversalSyllabus @model @auth(rules: [{allow: public}]) {
   policies: String
   pupose: String
   priorities: String
+  secondary: String
   objectives: String
   languages: [Language]
 

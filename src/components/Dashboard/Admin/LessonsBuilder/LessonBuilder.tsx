@@ -23,7 +23,7 @@ import LessonActivities from './StepActionComponent/LessonActivities';
 import LessonCourse from './StepActionComponent/LessonCourse/LessonCourse';
 import {logError} from '@graphql/functions';
 import useAuth from '@customHooks/useAuth';
-import {UpdateUniversalLessonInput} from 'API';
+import {RoomStatus, UpdateUniversalLessonInput} from 'API';
 
 export interface InitialData {
   name: string;
@@ -35,6 +35,7 @@ export interface InitialData {
   studentMaterials: string;
   objective: string;
   objectiveHtml: string;
+  status: RoomStatus;
   notes?: string;
   notesHtml?: string;
   languages: {id: string; name: string; value: string}[];
@@ -71,6 +72,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
 
   const initialData = {
     name: '',
+    status: RoomStatus.ACTIVE,
     id: '',
     type: {id: '', name: '', value: ''},
     duration: '1',
@@ -225,6 +227,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
           id: savedData.id,
           lessonPlan: [...savedData.lessonPlan],
           imageCaption: savedData.cardCaption,
+
           imageUrl: savedData.cardImage,
           imagePreviewUrl: savedData.cardImage
             ? getImageFromS3Static(savedData.cardImage)
@@ -240,6 +243,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
           languages: savedData.language.map((it: any) =>
             languageList.find((it2: any) => it2.value === it)
           ),
+          status: savedData?.status || RoomStatus.ACTIVE,
           studentSummary: savedData.summary,
           institution: {
             id: institution?.id,

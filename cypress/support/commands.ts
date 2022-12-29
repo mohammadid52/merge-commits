@@ -36,7 +36,11 @@ Cypress.Commands.add('login', (email, pw, customURL = urlConfig.baseURL) => {
 });
 
 Cypress.Commands.add('closeCheckInModal', () => {
-  cy.dataCy('sentiment-modal-close').click();
+  try {
+    cy.dataCy('sentiment-modal-close').click();
+  } catch (error) {
+    console.log('trying to close modal. but its already closed for today');
+  }
 });
 
 Cypress.Commands.add('hoverOnMenuItems', (dropdownCy: string, items: string[]) => {

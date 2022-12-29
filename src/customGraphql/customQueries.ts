@@ -2478,6 +2478,7 @@ export const listUniversalLessons = /* GraphQL */ `
       items {
         id
         type
+        status
         label
         title
         institutionID
@@ -2699,6 +2700,8 @@ export const getUniversalSyllabus = /* GraphQL */ `
       objectives
       languages
       priorities
+      secondary
+      status
       lessons {
         items {
           id
@@ -2869,6 +2872,7 @@ export const getUniversalLesson = /* GraphQL */ `
       duration
       resources
       studentMaterials
+      status
       notes
       darkMode
       cardImage
@@ -3813,6 +3817,7 @@ export const getCurriculum = /* GraphQL */ `
       name
       type
       summary
+      status
       description
       objectives
       languages

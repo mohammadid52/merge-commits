@@ -14,15 +14,18 @@ import Loader from 'atoms/Loader';
 import LessonPlanManager from './LessonPlanManager';
 import UnitFormComponent from './UnitFormComponent';
 import {BsArrowLeft} from 'react-icons/bs';
+import {RoomStatus} from 'API';
 
 interface IUnitData {
   id: string;
   institutionID?: string;
   name: string;
   description: string;
+  status: RoomStatus;
   methodology: string;
   policies: string;
   purpose: string;
+  secondary: string;
   priorities: string;
   objectives: string;
   languages: {id: string; name: string; value: string}[];
@@ -69,8 +72,10 @@ const UnitBuilder = ({instId}: any) => {
     methodology: '',
     policies: '',
     priorities: '',
+    secondary: '',
 
     purpose: '',
+    status: RoomStatus.ACTIVE,
     objectives: '',
     languages: [{id: '1', name: 'English', value: 'EN'}],
     lessonHistory: undefined
@@ -121,7 +126,9 @@ const UnitBuilder = ({instId}: any) => {
           methodology: savedData.methodology,
           policies: savedData.policies,
           lessonHistory: savedData.lessonHistory,
-          priorities: savedData.priorities
+          secondary: savedData.secondary || '',
+          priorities: savedData.priorities,
+          status: savedData.status || RoomStatus.ACTIVE
         });
         setLessonsIds(savedData.universalLessonsSeq || []);
 

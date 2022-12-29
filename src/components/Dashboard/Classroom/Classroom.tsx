@@ -1,4 +1,6 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import SearchInput from '@components/Atoms/Form/SearchInput';
+import useSearch from '@customHooks/useSearch';
 import {logError, updatePageState} from '@graphql/functions';
 import {setPageTitle} from '@utilities/functions';
 import {removeLocalStorageData, setLocalStorageData} from '@utilities/localStorage';
@@ -76,6 +78,7 @@ export interface Lesson {
 export interface LessonProps extends DashboardProps {
   lessons: Lesson[];
   syllabus?: any;
+  searchTerm?: string;
   handleLessonMutationRating: (lessonID: string, ratingValue: string) => void;
   getLessonRating: (lessonId: string, userEmail: string, userAuthId: string) => any;
 }
@@ -84,6 +87,7 @@ export interface LessonCardProps {
   isCompleted?: boolean;
 
   isTeacher?: boolean;
+  searchTerm?: string;
   keyProps?: string;
   activeRoomInfo?: any;
   lessonProps?: any;
@@ -469,8 +473,32 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
     }
   }, []);
 
+  const withTitle = lessonData
+    ? lessonData.map((item: any) => ({...item, lessonTitle: item?.lesson?.title || ''}))
+    : [];
+
+  const [filteredList, setFilteredList] = useState([...withTitle]);
+
+  const {
+    searchInput,
+    setSearch,
+
+    removeSearchAction,
+    searchAndFilter
+  } = useSearch([...withTitle], ['lessonTitle']);
+
+  const searchLesson = () => {
+    const searched = searchAndFilter(searchInput.value);
+    if (Boolean(searched)) {
+      setFilteredList(searched);
+    } else {
+      removeSearchAction();
+    }
+  };
+
   const courseName = state?.roomData?.curriculum?.name || '';
 
+  const finalList = searchInput.isActive ? filteredList : withTitle;
   return (
     <>
       <DashboardContainer
@@ -548,12 +576,24 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
 
                 <div className={`bg-opacity-10`}>
                   <div className={`pb-4 text-xl m-auto`}>
+                    <div className="py-2 flex items-center justify-end">
+                      <SearchInput
+                        dataCy="classroom-search-input"
+                        value={searchInput.value}
+                        onChange={setSearch}
+                        isActive={searchInput.isActive}
+                        disabled={lessonLoading || settingLessons || syllabusLoading}
+                        onKeyDown={searchLesson}
+                        closeAction={removeSearchAction}
+                      />
+                    </div>
                     <Today
                       activeRoom={state.activeRoom}
                       activeRoomInfo={activeRoomInfo}
                       isTeacher={isTeacher}
+                      searchTerm={searchInput.value}
                       lessonLoading={lessonLoading || settingLessons || syllabusLoading}
-                      lessons={lessonData}
+                      lessons={finalList}
                       syllabus={syllabusData}
                       handleLessonMutationRating={handleLessonMutationRating}
                       getLessonRating={
