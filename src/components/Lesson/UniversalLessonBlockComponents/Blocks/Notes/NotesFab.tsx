@@ -15,6 +15,7 @@ import forEach from 'lodash/forEach';
 import {nanoid} from 'nanoid';
 import React, {useContext, useEffect, useState} from 'react';
 import {useParams} from 'react-router';
+import useStudentDataValue from '@customHooks/studentDataValue';
 
 const INITIAL_NOTESDATA: UniversalJournalData = {
   id: '',
@@ -37,29 +38,28 @@ const INITIAL_NOTESDATA: UniversalJournalData = {
   ]
 };
 
+const mapNotesTogether = (notes: any[]) => {
+  let res: any[] = [];
+  forEach(notes, (d) => {
+    if (d.partContent && d.partContent.length > 0) {
+      forEach(d.partContent, (_d) => {
+        if (_d.value && _d.value.length > 0) {
+          forEach(_d.value, (f) => {
+            res.push({...f, pagePartId: d.id, partContentId: _d.id});
+          });
+        }
+      });
+    }
+  });
+  return res;
+};
 const NotesContainer = ({notes}: {notes: any[]}) => {
-  const mapNotesTogether = () => {
-    let res: any[] = [];
-    forEach(notes, (d) => {
-      if (d.partContent && d.partContent.length > 0) {
-        forEach(d.partContent, (_d) => {
-          if (_d.value && _d.value.length > 0) {
-            forEach(_d.value, (f) => {
-              res.push({...f, pagePartId: d.id, partContentId: _d.id});
-            });
-          }
-        });
-      }
-    });
-    return res;
-  };
-
   const gContext = useGlobalContext();
 
   const lessonState = gContext.lessonState;
   const saveJournalData = gContext.saveJournalData;
 
-  const allNotes = mapNotesTogether();
+  const allNotes = mapNotesTogether(notes);
 
   const urlParams: any = useParams();
   const getRoomData = getLocalStorageData('room_info');
@@ -487,12 +487,13 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
       // @ts-ignore
       const note = find(allNotes, ['id', m.domID]);
       if (note && m) {
+        // @ts-ignore
+        const value = strippedString(m.input.toString());
         return {
           // @ts-ignore
           id: m.domID,
           class: note?.class,
-          // @ts-ignore
-          value: strippedString(m.input.toString()),
+          value: value,
           pagePartId: note?.pagePartId,
           partContentId: note?.partContentId,
           custom: false
@@ -526,8 +527,10 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
           {collectedNotes.length > 0 && (
             <NotesBlock
               addNew={addNewNote}
+              defaultNotes={mapFixedData}
               grid={{cols: 3, rows: 3}}
               value={collectedNotes}
+              allNotes={allNotes}
               notesData={notesData}
               setNotesData={setNotesData}
               noteDelete={noteDelete}
