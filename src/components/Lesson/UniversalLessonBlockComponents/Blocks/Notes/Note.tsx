@@ -49,6 +49,8 @@ const InnerNote = React.memo(
     let angle = useMemo(() => randomNumber(-3, 3), []);
 
     const {getDataValue} = useStudentDataValue();
+
+    const value = isInLesson && isStudent ? getDataValue(note.id) : note.value;
     return (
       <div
         id={note.id}
@@ -61,12 +63,10 @@ const InnerNote = React.memo(
           style={{fontSize: `${genFontSize(size)}px`}}
           id={`note-${note.id}`}
           onChange={
-            isInLesson && isStudent && custom
-              ? (e: any) => updateText(e, note.id, idx)
-              : noop
+            isInLesson && isStudent ? (e: any) => updateText(e, note.id, idx) : noop
           }
           // value={isInLesson ? getDataValue(note.id) : note.value}
-          value={isInLesson && isStudent && custom ? getDataValue(note.id) : note.value}
+          value={value}
         />
         {custom && isInLesson && isStudent && (
           <span className="space-x-3 opacity-0 group-hover:opacity-95 transition-all absolute mb-2 mr-2 bottom-0 right-0 w-auto">
