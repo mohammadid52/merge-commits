@@ -73,7 +73,7 @@ const ErrorItem = ({
   };
 
   return (
-    <div className={`white_back p-4 relative border-l-6 ${statusBorder()}`}>
+    <div className={`white_back p-4 pb-8 relative border-l-6 ${statusBorder()}`}>
       <div className="absolute top-0 w-auto p-4 right-0">
         <DotMenu menuItems={[...menuItems]} />
       </div>
@@ -85,7 +85,7 @@ const ErrorItem = ({
         {error.componentName}
       </h6>
 
-      <div className="border-t-0 pt-1 border-gray-200 flex items-center justify-between">
+      <div className="absolute left-0  bottom-0 border-t-0 pt-1 border-gray-200 flex items-center justify-between px-4 py-28">
         <div
           title={error.pageUrl}
           className="text-sm underline theme-text:600 w-auto hover:theme-text:500 text-gray-900 font-light ">
@@ -131,6 +131,8 @@ const ErrorsPage = () => {
 
   const updateStatus = async (id: string, status: ErrorStatus) => {
     try {
+      setFilters(null);
+
       const _idx = data.findIndex((_d: ErrorLog) => _d.id === id);
       update(data[_idx], 'status', () => status);
 
@@ -149,22 +151,16 @@ const ErrorsPage = () => {
     }
   };
 
-  const [filters, setFilters] = useState<ErrorStatus[]>([]);
+  const [filters, setFilters] = useState<ErrorStatus>();
 
   const updateFilter = (filterName: ErrorStatus) => {
-    if (filters.includes(filterName)) {
-      setFilters(filters.filter((_d) => _d !== filterName));
-      if (filters.length === 0) {
-        setFilteredList([...data]);
-      } else {
-        const filtered = data.filter((_d: ErrorLog) => filters.includes(_d.status));
-        setFilteredList([...filtered]);
-      }
+    if (filterName === filters) {
+      setFilters(null);
+      setFilteredList([...data]);
     } else {
-      filters.push(filterName);
-      const filtered = data.filter((_d: ErrorLog) => filters.includes(_d.status));
-      setFilteredList([...filtered]);
-      setFilters([...filters]);
+      const filtered = data.filter((_d: any) => filterName === _d.status);
+      setFilteredList(filtered);
+      setFilters(filterName);
     }
   };
 
@@ -180,17 +176,17 @@ const ErrorsPage = () => {
             <div className="flex gap-x-4 mb-4 mt-2 items-center">
               <Buttons
                 onClick={() => updateFilter(ErrorStatus.PENDING)}
-                transparent={!filters.includes(ErrorStatus.PENDING)}
+                transparent={filters !== ErrorStatus.PENDING}
                 label={'Pending'}
               />
               <Buttons
                 onClick={() => updateFilter(ErrorStatus.CLOSED)}
-                transparent={!filters.includes(ErrorStatus.CLOSED)}
+                transparent={filters !== ErrorStatus.CLOSED}
                 label={'Closed'}
               />
               <Buttons
                 onClick={() => updateFilter(ErrorStatus.REVIEW)}
-                transparent={!filters.includes(ErrorStatus.REVIEW)}
+                transparent={filters !== ErrorStatus.REVIEW}
                 label={'Review'}
               />
             </div>
@@ -199,7 +195,7 @@ const ErrorsPage = () => {
           <div className="overflow-hidden">
             {isLoading ? null : (
               <h5 className="text-base mb-4 text-gray-800">
-                {data.length} errors - {pendingLength} pending errors
+                {pendingLength} pending errors - total {data.length} errors
               </h5>
             )}
 
@@ -218,8 +214,8 @@ const ErrorsPage = () => {
               </div>
             ) : (
               <p className="min-h-56 flex items-center w-full justify-center text-gray-500">
-                {filters.length > 0
-                  ? `No errors found for status - ${filters.join(', ')}`
+                {filters !== undefined
+                  ? `No errors found for status - ${filters}`
                   : 'Woahhh.. no errors.. its good.'}
               </p>
             )}
