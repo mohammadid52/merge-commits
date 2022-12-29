@@ -12,6 +12,7 @@ describe(
   () => {
     it('go to login page', () => {
       cy.login(loginConfig.admin.username, loginConfig.admin.password);
+      cy.wait(5000);
     });
 
     it("check out 'Institution Manager' pages", () => {
@@ -66,6 +67,7 @@ describe(
   () => {
     it('go to login page', () => {
       cy.login(loginConfig.teacher.username, loginConfig.teacher.password);
+      cy.wait(5000);
     });
 
     it("check out 'Institution Manager' pages", () => {
@@ -74,7 +76,7 @@ describe(
       cy.hoverOnMenuItems('institution-manager', [
         'general-information-item',
         'staff-item',
-        'user-registry-item'
+        'register-new-user-item'
       ]);
     });
 
@@ -123,11 +125,15 @@ describe(
   () => {
     it('go to login page', () => {
       cy.login(loginConfig.student.username, loginConfig.student.password);
+      cy.wait(5000);
+    });
+
+    it('close modal', () => {
+      cy.closeCheckInModal();
+      cy.wait(5000);
     });
 
     it("Go to 'Dashboard' pages", () => {
-      cy.closeCheckInModal();
-      cy.wait(5000);
       cy.dataCy('dashboard-item').click();
       cy.wait(2000);
 
