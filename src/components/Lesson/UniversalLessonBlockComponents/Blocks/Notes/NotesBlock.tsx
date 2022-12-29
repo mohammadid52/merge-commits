@@ -17,6 +17,7 @@ import {BiSave} from 'react-icons/bi';
 import {FiFilePlus} from 'react-icons/fi';
 import {v4 as uuidv4} from 'uuid';
 import Tooltip from 'atoms/Tooltip';
+import {VscDebugRestart} from 'react-icons/vsc';
 const genSticky = (
   {rows, cols}: {rows?: number; cols?: number},
 
@@ -93,6 +94,8 @@ interface INoteBlock {
   updateJournalData?: any;
   noteDelete?: (notesData: any) => void;
   setNotesData?: React.Dispatch<React.SetStateAction<any>>;
+  defaultNotes?: any[];
+  allNotes?: any[];
 }
 
 const genSize = (size: string) => {
@@ -112,13 +115,16 @@ const NotesBlock = ({
   value: notesList,
   notesData,
   setNotesData,
+  allNotes,
   addNew,
   notesInitialized,
   noteDelete,
   grid,
+
   saveData,
   updateJournalData,
-  preview = false
+  preview = false,
+  defaultNotes = []
 }: INoteBlock) => {
   const {
     state: {user},
@@ -183,11 +189,6 @@ const NotesBlock = ({
   const [notesChanged, setNotesChanged] = useState<boolean>(false);
   const [saveInProgress, setSaveInProgress] = useState<boolean>(false);
 
-  const onUnload = () => {
-    if (notesChanged) {
-      return 'You have unsaved changes on this page.';
-    }
-  };
   // window.onbeforeunload = onUnload;
 
   const updateNotesContent = (html: string, noteId: string) => {
@@ -198,7 +199,7 @@ const NotesBlock = ({
     if (!notesChanged) setNotesChanged(true);
   };
 
-  const updateText = (e: any, noteId: string, idx: number) => {
+  const updateText = (e: any, noteId: string) => {
     notesInitialized ? updateNotesContent(e.target.value, noteId) : noop;
     setDataValue(noteId, [e.target.value]);
   };
@@ -312,6 +313,12 @@ const NotesBlock = ({
       save: onNoteEdit,
       cancel: () => setShowEditModal({show: false, id: '', value: ''})
     }
+  };
+
+  const resetDefaultNotes = () => {
+    allNotes.map((note) => {
+      updateText({target: {value: note.value}}, note.id);
+    });
   };
 
   const colorList = [
@@ -455,6 +462,18 @@ const NotesBlock = ({
 
           {isInLesson && isStudent && (
             <div className="w-auto space-y-4 flex items-center flex-col justify-center">
+              {defaultNotes.length > 0 &&
+                resetDefaultNotes &&
+                typeof resetDefaultNotes === 'function' && (
+                  <Tooltip text="reset to default">
+                    <button
+                      data-cy="reset-to-default-button"
+                      onClick={resetDefaultNotes}
+                      className="w-auto text-green-600 hover:text-green-500 transition-all">
+                      <VscDebugRestart className="h-10 w-10 " />
+                    </button>
+                  </Tooltip>
+                )}
               <Tooltip text="Add new note">
                 <button
                   data-cy="add-new-note-button"
