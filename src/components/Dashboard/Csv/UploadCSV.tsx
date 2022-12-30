@@ -935,10 +935,10 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
       e.persist();
       e.preventDefault();
       setUploadingCSV(true);
-      // await handleSurveyExistingUpload();
-      // await handleNewSurveyUniversalUpload();
-      // await handleDemographicsExistingUpload();
-      // await handleDemographicsNewUpload();
+      await handleSurveyExistingUpload();
+      await handleNewSurveyUniversalUpload();
+      await handleDemographicsExistingUpload();
+      await handleDemographicsNewUpload();
       setSelectedReason({
         id: 0,
         name: '',
