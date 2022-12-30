@@ -34,6 +34,7 @@ interface SelectorProps {
   dataCy?: string;
   dropdownWidth?: string;
   noSpace?: boolean;
+  direction?: 'left' | 'right';
 }
 
 const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
@@ -46,6 +47,7 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
     disabled,
     setSelectedItem,
     placeholder,
+    direction = 'right',
     style,
     error = '',
     onChange,
@@ -148,7 +150,9 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
       className={`relative ${noSpace ? '' : 'space-y-1'} ${additionalClass}`}
       ref={currentRef}>
       {label && <Label dark={false} label={label} isRequired={isRequired} />}
-      <span className="inline-block w-full h-full rounded-full shadow-sm">
+      <span
+        title={capitalizeFirstLetter(selectedItem ? selectedItem : placeholder)}
+        className="inline-block w-full h-full rounded-full shadow-sm">
         <button
           data-cy={`${dataCy}-button`}
           disabled={disabled || loading}
@@ -169,18 +173,8 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
           <span className="block w-auto truncate text-gray-700">
             {capitalizeFirstLetter(selectedItem ? selectedItem : placeholder)}
           </span>
-          {loading && (
-            <IconContext.Provider
-              value={{
-                size: '1.2rem',
-                style: {},
-                className: `relative mr-2 w-auto animate-spin ${theme.textColor[themeColor]}`
-              }}>
-              <FaSpinner />
-            </IconContext.Provider>
-          )}
 
-          {!loading && (
+          {!loading ? (
             <div className="h-full flex items-center ml-8 w-auto justify-center">
               <AnimatedContainer
                 animationType="translateY"
@@ -209,30 +203,43 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
                 />
               )}
             </div>
-          )}
+          ) : null}
 
           <span
             className={`relative justify-end w-auto inset-y-0 pr-2 right-0 items-center pointer-events-none ${
               arrowHidden ? 'hidden' : 'flex'
             }`}>
-            <svg
-              className="h-5 w-5 text-gray-400"
-              viewBox="0 0 20 20"
-              fill="none"
-              stroke="currentColor">
-              <path
-                d="M7 7l3-3 3 3m0 6l-3 3-3-3"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
+            {loading ? (
+              <IconContext.Provider
+                value={{
+                  size: '1.2rem',
+                  style: {},
+                  className: `relative mr-2 w-auto animate-spin ${theme.textColor[themeColor]}`
+                }}>
+                <FaSpinner />
+              </IconContext.Provider>
+            ) : (
+              <svg
+                className="h-5 w-5 text-gray-400"
+                viewBox="0 0 20 20"
+                fill="none"
+                stroke="currentColor">
+                <path
+                  d="M7 7l3-3 3 3m0 6l-3 3-3-3"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            )}
           </span>
         </button>
       </span>
       <AnimatedContainer className="z-50 absolute w-full " show={showList}>
         {showList && (
-          <div className="z-50 absolute mt-1 w-full " style={{...style}}>
+          <div
+            className="z-50 absolute mt-1 w-full "
+            style={{...style, left: direction === 'left' ? '-100%' : 'unset'}}>
             <ul
               role="listbox"
               aria-labelledby="listbox-label"

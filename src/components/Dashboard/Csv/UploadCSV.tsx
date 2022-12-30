@@ -1,11 +1,16 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import Buttons from '@components/Atoms/Buttons';
 import FormInput from '@components/Atoms/Form/FormInput';
-import {logError} from '@graphql/functions';
-import {getAsset} from 'assets';
+import {logError, uploadImageToS3} from '@graphql/functions';
+import {getAsset, XLSX_TO_CSV_URL} from 'assets';
 
 import UploadButton from '@components/Atoms/Form/UploadButton';
+import Modal from '@components/Atoms/Modal';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
+import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
+import useGraphqlQuery from '@customHooks/useGraphqlQuery';
+import {getExtension} from '@utilities/functions';
+import {ModelUniversalLessonFilterInput} from 'API';
 import Selector from 'atoms/Form/Selector';
 import {Storage} from 'aws-amplify';
 import {GlobalContext} from 'contexts/GlobalContext';
@@ -14,14 +19,27 @@ import useDictionary from 'customHooks/dictionary';
 import * as mutations from 'graphql/mutations';
 import * as queries from 'graphql/queries';
 import Papa from 'papaparse';
-import React, {useContext, useRef, useState} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import {FaSpinner} from 'react-icons/fa';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
+import {RiErrorWarningLine} from 'react-icons/ri';
+import {useHistory} from 'react-router';
 import {v4 as uuidv4} from 'uuid';
-import DateAndTime from '../DateAndTime/DateAndTime';
+import useAuth from '@customHooks/useAuth';
+import {removeDuplicates} from './Csv';
+import {uniqBy} from 'lodash';
 interface ICsvProps {
   institutionId?: string;
 }
+
+const FieldValue = ({field, value}: {field: string; value: string}) => {
+  return (
+    <div className="w-auto flex items-center justify-start text-sm">
+      <div className="w-auto text-gray-700 mr-2">{field}: </div>
+      <div className="w-auto text-gray-700 font-medium">{value}</div>
+    </div>
+  );
+};
 
 const UploadCsv = ({institutionId}: ICsvProps) => {
   const {state, theme, clientKey, userLanguage} = useContext(GlobalContext);
@@ -31,7 +49,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
   const [reason, setReason] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [success, setSuccess] = useState<boolean>(false);
-  const [surveyQuestions, setSurveyQuestions] = useState([]);
+
   const [selectedReason, setSelectedReason] = useState<{
     id: number;
     name: string;
@@ -67,38 +85,6 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
       value: 'user-update'
     }
   ];
-
-  const _UploadToS3 = async (
-    imageFile: File,
-    imageFileName: string,
-    imageFileType: string
-  ) => {
-    try {
-      const FileUpload = await Storage.put(imageFileName, imageFile, {
-        contentType: imageFileType,
-        contentEncoding: 'base64',
-        acl: 'public-read',
-        completeCallback: (event: any) => {
-          console.log(`Successfully uploaded ${event.key}`);
-        },
-        progressCallback: (progress: any) => {
-          console.log(`Uploaded: ${progress.loaded * 100}/${progress.total}`);
-        },
-        errorCallback: (err: any) => {
-          logError(
-            err,
-            {authId: state.user.authId, email: state.user.email},
-            'UploadCSV @_UploadToS3'
-          );
-          console.error('Unexpected error while uploading', err);
-        }
-      });
-
-      return FileUpload;
-    } catch (error) {
-      console.log('🚀 ~ file: UploadCSV.tsx ~ line 81 ~ UploadCsv ~ error', error);
-    }
-  };
 
   const _GetUrlFromS3 = async (key: string) => {
     try {
@@ -147,7 +133,6 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
         });
       }
 
-      setSurveyQuestions(questions);
       return questions;
     } catch (err) {
       logError(
@@ -466,81 +451,154 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
 
   const [error, setError] = useState(null);
 
+  const INITIAL_MODAL_STATE = {
+    show: false,
+    element: <div />,
+    title: '',
+    saveAction: () => {},
+    saveLabel: '',
+    closeLabel: ''
+  };
+  const [showModal, setShowModal] = useState(INITIAL_MODAL_STATE);
+  const clearModal = () => setShowModal(INITIAL_MODAL_STATE);
+
+  const resetFile = () => {
+    setFile(null);
+    setSurveyData([]);
+    setNewUniversalSurveyData([]);
+  };
+
   const handleUpload = async (e: any) => {
-    try {
-      setFile(null);
-      setSurveyData([]);
-      setNewUniversalSurveyData([]);
-      const file = e.target.files[0];
-      setFile(file);
+    const file = e.target.files[0];
+    const ext = getExtension(file.name);
 
-      let surveyQuestionOptions: any = {};
-      fileReader.onload = async (event: any) => {
-        setIsMapping(true);
-        const result: any = Papa.parse(event.target.result, {
-          // skipEmptyLines: true
-        });
+    if (ext === 'csv') {
+      clearModal();
+      try {
+        resetFile();
+        setFile(file);
 
-        const parsed = customParse(result.data);
-
-        const surveyID = parsed['SurveyID'][0];
-        if (surveyID) {
-          let listOptionsId = await listQuestions(surveyID);
-          listOptionsId &&
-            listOptionsId.length > 0 &&
-            listOptionsId.forEach((ques: any) => {
-              return (surveyQuestionOptions[ques.question.id] = ques.question.options);
-            });
-        }
-
-        Object.keys(parsed).forEach((keyName, index2: number) => {
-          const valueArray = parsed[keyName];
-
-          valueArray.forEach(async (value: string, index: number) => {
-            if (keyName === 'UniversalSurveyStudentID' && value !== 'Not-taken-yet') {
-              //
-              ussIDAndTakenSurvey(value, surveyQuestionOptions, parsed, index, keyName);
-            } else if (
-              keyName === 'UniversalSurveyStudentID' &&
-              value === 'Not-taken-yet'
-            ) {
-              //
-              ussIdAndNotTakenSurvey(
-                value,
-                surveyQuestionOptions,
-                parsed,
-                index,
-                keyName
-              );
-            } else if (
-              keyName === 'DemographicsDataID' &&
-              value !== 'No-demographics-data'
-            ) {
-              ddIDAndDemographicData(value, parsed, index2);
-              // }
-            } else if (
-              keyName === 'DemographicsDataID' &&
-              value === 'No-demographics-data'
-            ) {
-              ddIDAndNotDemographicData(value, parsed, index, index2);
-            }
+        let surveyQuestionOptions: any = {};
+        fileReader.onload = async (event: any) => {
+          setIsMapping(true);
+          const result: any = Papa.parse(event.target.result, {
+            // skipEmptyLines: true
           });
-        });
 
-        setIsMapping(false);
-      };
-      fileReader.readAsText(file);
-    } catch (error) {
-      logError(
-        error,
-        {authId: state.user.authId, email: state.user.email},
-        'UploadCSV @handleUpload'
-      );
+          const parsed = customParse(result.data);
 
-      setError('Something went wrong!');
+          const surveyID = parsed['SurveyID'][0];
+          const unitID = parsed['UnitID'][0];
+          const classroomName = parsed['Classroom'][0];
 
-      console.error('🚀 ~ file: UploadCSV.tsx ~ line 39 ~ handleUpload ~ error', error);
-    } finally {
+          if (
+            surveyID !== selectedSurvey?.id ||
+            unitID !== selectedUnit?.id ||
+            classroomName !== selectedClassRoom?.name
+          ) {
+            resetFile();
+            setIsMapping(false);
+            setShowModal({
+              show: true,
+              title: 'Mismatch values',
+              element: (
+                <div>
+                  <p className="p-4 text-sm text-gray-700">
+                    Make sure selected values are matching with the values in csv file
+                  </p>
+                  <h1 className="text-red-500 text-center font-medium">
+                    {surveyID !== selectedSurvey?.id
+                      ? 'Survey id does not match'
+                      : unitID !== selectedUnit?.id
+                      ? 'Unit id does not match'
+                      : 'classroom does not match'}
+                  </h1>
+                </div>
+              ),
+
+              saveAction: null,
+              saveLabel: '',
+              closeLabel: ''
+            });
+            return;
+          }
+          if (surveyID && unitID && classroomName) {
+            let listOptionsId = await listQuestions(surveyID);
+            listOptionsId &&
+              listOptionsId.length > 0 &&
+              listOptionsId.forEach((ques: any) => {
+                return (surveyQuestionOptions[ques.question.id] = ques.question.options);
+              });
+          }
+
+          Object.keys(parsed).forEach((keyName, index2: number) => {
+            const valueArray = parsed[keyName];
+
+            valueArray.forEach(async (value: string, index: number) => {
+              if (keyName === 'UniversalSurveyStudentID' && value !== 'Not-taken-yet') {
+                //
+                ussIDAndTakenSurvey(value, surveyQuestionOptions, parsed, index, keyName);
+              } else if (
+                keyName === 'UniversalSurveyStudentID' &&
+                value === 'Not-taken-yet'
+              ) {
+                //
+                ussIdAndNotTakenSurvey(
+                  value,
+                  surveyQuestionOptions,
+                  parsed,
+                  index,
+                  keyName
+                );
+              } else if (
+                keyName === 'DemographicsDataID' &&
+                value !== 'No-demographics-data'
+              ) {
+                ddIDAndDemographicData(value, parsed, index2);
+                // }
+              } else if (
+                keyName === 'DemographicsDataID' &&
+                value === 'No-demographics-data'
+              ) {
+                ddIDAndNotDemographicData(value, parsed, index, index2);
+              }
+            });
+          });
+
+          setIsMapping(false);
+        };
+        fileReader.readAsText(file);
+      } catch (error) {
+        logError(
+          error,
+          {authId: state.user.authId, email: state.user.email},
+          'UploadCSV @handleUpload'
+        );
+
+        setError('Something went wrong!');
+
+        console.error('🚀 ~ file: UploadCSV.tsx ~ line 39 ~ handleUpload ~ error', error);
+      } finally {
+      }
+    } else if (ext === 'xlsx') {
+      setShowModal({
+        show: true,
+        title: 'Not supported',
+        saveLabel: 'Convert file',
+        closeLabel: 'Cancel',
+        saveAction: () => {
+          window.location.replace(XLSX_TO_CSV_URL);
+        },
+        element: (
+          <div className="flex flex-col justify-center items-center gap-y-4">
+            <RiErrorWarningLine fontSize={'4rem'} className="text-yellow-500 animate-y" />
+            <p className="text-gray-600 pt-0 p-4 text-center">
+              xlsx file is not supported. Please convert it to csv file and then try
+              again.
+            </p>
+          </div>
+        )
+      });
     }
   };
 
@@ -850,14 +908,37 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
     }
   };
 
+  const [uploadingCSV, setUploadingCSV] = useState(false);
+
+  const showModalWhenUploadCsv = (e: any) => {
+    setShowModal({
+      show: true,
+      title: 'Confirmation',
+      element: (
+        <div>
+          <p className="text-gray-700 text-sm p-4">
+            Please confirm column headers and tab names have not been modified
+          </p>
+        </div>
+      ),
+      saveLabel: 'Confirm',
+      closeLabel: 'Cancel',
+      saveAction: () => {
+        clearModal();
+        handleSubmit(e);
+      }
+    });
+  };
+
   const handleSubmit = async (e: any) => {
     try {
+      e.persist();
       e.preventDefault();
-      setLoading(true);
-      await handleSurveyExistingUpload();
-      await handleNewSurveyUniversalUpload();
-      await handleDemographicsExistingUpload();
-      await handleDemographicsNewUpload();
+      setUploadingCSV(true);
+      // await handleSurveyExistingUpload();
+      // await handleNewSurveyUniversalUpload();
+      // await handleDemographicsExistingUpload();
+      // await handleDemographicsNewUpload();
       setSelectedReason({
         id: 0,
         name: '',
@@ -868,10 +949,6 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
       setFile(null);
       setReason('');
       setTimeout(() => {
-        setLoading(false);
-        setSuccess(true);
-      }, 1500);
-      setTimeout(() => {
         setSuccess(false);
       }, 4500);
     } catch (error) {
@@ -881,16 +958,22 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
         'UploadCSV @handleSubmit'
       );
       console.error('🚀 ~ file: UploadCSV.tsx ~ line 38 ~ handleSubmit ~ error', error);
+    } finally {
+      setUploadingCSV(false);
     }
   };
 
   const onReasonSelected = (id: any, name: string, value: string) => {
     let reasonDropdownValue = {id, name, value};
     setSelectedReason(reasonDropdownValue);
+    setMultipleImagesUploaded(false);
   };
 
+  const [multipleImagesUploaded, setMultipleImagesUploaded] = useState(false);
+  const [multipleImagesUploading, setMultipleImagesUploading] = useState(false);
+
   const imageUpload = async (e: any) => {
-    setLoading(true);
+    setMultipleImagesUploading(true);
     try {
       e.preventDefault();
       let imgArr = fileInputRef.current.files;
@@ -898,11 +981,11 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
         const file = imgArr[i];
         const fileName = file.name;
         const fileType = file.type;
-        const fileUpload: any = await _UploadToS3(file, fileName, fileType);
+        const fileUpload: any = await uploadImageToS3(file, fileName, fileType);
         const fileUrl = await _GetUrlFromS3(fileUpload.key);
         setImgUrl((prevState: any) => [...prevState, fileUrl]);
       }
-      setLoading(false);
+      setMultipleImagesUploaded(true);
     } catch (e) {
       logError(
         e,
@@ -910,104 +993,354 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
         'UploadCSV @imageUpload'
       );
       console.log('error uploading image', e);
+    } finally {
+      setMultipleImagesUploading(false);
     }
   };
 
+  const [selectedSurvey, setSelectedSurvey] = useState(null);
+
+  const onChangeSurvey = (id: any, name: string, value: string) => {
+    resetFile();
+    let reasonDropdownValue = {id, name, value};
+    setSelectedSurvey(reasonDropdownValue);
+  };
+
+  const {authId, isTeacher, isFellow} = useAuth();
+
+  const [classRoomLoading, setClassRoomLoading] = useState(false);
+  const [unitsLoading, setUnitsLoading] = useState(false);
+
+  const [instClassRooms, setInstClassRooms] = useState([]);
+  const [classRoomsList, setClassRoomsList] = useState([]);
+
+  const [units, setUnits] = useState([]);
+
+  const fetchUnits = async (curriculumId: string) => {
+    try {
+      setUnitsLoading(true);
+      let curriculumUnits: any = await API.graphql(
+        graphqlOperation(customQueries.listUnits, {
+          filter: {curriculumId: {eq: curriculumId}}
+        })
+      );
+      let units = curriculumUnits?.data.listCurriculumUnits?.items || [];
+
+      units = units.map((syl: any) => {
+        let unitData = syl.unit;
+        return {id: unitData.id, name: unitData.name, value: unitData.name};
+      });
+      // console.log('units', units)
+      setUnits(units);
+
+      // here we have curricularCheckpoints and use syllabusLessonId 999999 to fetch list of question data
+    } catch (err) {
+      console.log('fetch units (syllabus) error', err);
+    } finally {
+      setUnitsLoading(false);
+    }
+  };
+
+  const fetchClassRooms = async () => {
+    setClassRoomLoading(true);
+    let instCRs: any = [];
+
+    const variablesForTR_FR = {filter: {teacherAuthID: {eq: authId}}};
+    const variablesForBLD_ADM = {};
+
+    let classrooms: any = await API.graphql(
+      graphqlOperation(
+        customQueries.listRoomsDashboard,
+        isTeacher || isFellow ? variablesForTR_FR : variablesForBLD_ADM
+      )
+    );
+    let coTeahcerClassrooms: any = await API.graphql(
+      graphqlOperation(
+        customQueries.listRoomCoTeachers,
+        isTeacher || isFellow ? variablesForTR_FR : variablesForBLD_ADM
+      )
+    );
+
+    let coTeachersRooms = coTeahcerClassrooms?.data?.listRoomCoTeachers?.items.map(
+      (item: any) => {
+        if (item && item.room) {
+          return {
+            ...item,
+            name: item.room.name,
+            class: {id: item.room.classID},
+            curricula: item?.curricula || {items: []}
+          };
+        }
+      }
+    );
+    classrooms = [...coTeachersRooms, ...classrooms?.data.listRooms?.items] || [];
+    classrooms = classrooms
+      .map((cr: any) => {
+        if (cr) {
+          let curriculum =
+            cr.curricula?.items &&
+            Array.isArray(cr.curricula?.items) &&
+            cr.curricula?.items.length > 0
+              ? cr.curricula?.items[0].curriculum
+              : null;
+
+          !instCRs.find((d: any) => d.name === cr.name) &&
+            instCRs.push({id: cr.id, name: cr.name, value: cr.name});
+
+          return {
+            id: cr.id,
+
+            name: cr.name,
+            value: cr.name,
+            class: {...cr.class},
+            curriculum
+          };
+        }
+      })
+      .filter(Boolean);
+
+    setClassRoomsList(classrooms);
+    setInstClassRooms(removeDuplicates(instCRs));
+    setClassRoomLoading(false);
+  };
+
+  useEffect(() => {
+    if (institutionId) {
+      fetchClassRooms();
+    }
+  }, [institutionId]);
+
+  const [selectedClassRoom, setSelectedClassRoom] = useState(null);
+  const [selectedCurriculum, setSelectedCurriculum] = useState(null);
+
+  const [surveys, setSurveys] = useState([]);
+  const [surveysLoading, setSurveysLoading] = useState(false);
+
+  const fetchSurveys = async (unitId: string) => {
+    setSurveysLoading(true);
+    try {
+      let syllabusLessons: any = await API.graphql(
+        graphqlOperation(customQueries.listSurveys, {
+          id: unitId
+        })
+      );
+      syllabusLessons = syllabusLessons?.data.getUniversalSyllabus?.lessons?.items || [];
+      let surveys: any = [];
+      let syllabusLessonsData: any = [];
+      syllabusLessons.filter((les: any) => {
+        if (les.lesson && les.lesson.type === 'survey') {
+          syllabusLessonsData.push({
+            syllabusLessonID: les.id,
+            lessonID: les.lessonID,
+            lesson: les.lesson
+          });
+          surveys.push({
+            id: les.lesson.id,
+            name: les.lesson.title,
+            value: les.lesson.title
+          });
+          return les.lesson;
+        }
+      });
+
+      setSurveys(uniqBy(surveys, 'id'));
+      setSurveysLoading(false);
+    } catch (err) {
+      console.error('fetch surveys list error', err);
+    } finally {
+      setSurveysLoading(false);
+    }
+  };
+
+  const onClassRoomSelect = async (id: string, name: string, value: string) => {
+    try {
+      let sCR = selectedClassRoom;
+      let cr = {id, name, value};
+      resetFile();
+      setSelectedClassRoom(cr);
+      if (!sCR || sCR.id !== cr.id) {
+        let classroom = classRoomsList.filter((c) => c.id === cr.id)[0];
+        // with classroom => class and curriculum are directly selected
+        setSelectedCurriculum(classroom?.curriculum);
+        if (classroom?.curriculum?.id) {
+          await fetchUnits(classroom?.curriculum?.id);
+        }
+        // units (syllabus fetched)
+      } else {
+        console.log('classroom already selected');
+      }
+    } catch (err) {
+      console.log('on class room select', err);
+    }
+  };
+
+  const [selectedUnit, setSelectedUnit] = useState(null);
+
+  const onUnitSelect = (id: string, name: string, value: string) => {
+    let unit = {id, name, value};
+    resetFile();
+    setSelectedUnit(unit);
+    fetchSurveys(unit.id);
+  };
+
   return (
-    <div className="flex flex-col overflow-h-scroll w-full h-full px-8 py-4">
-      <div className="mx-auto w-full">
-        <div className="flex flex-row my-0 w-full py-0 mb-8 justify-between">
-          <div className="w-auto">
-            <SectionTitleV3
-              title={Institute_info[userLanguage]['TABS']['UPLOAD_SURVEY']}
-            />
-          </div>
-          <div className="w-auto">
-            <span className={`mr-0 float-right text-gray-600 text-right`}>
-              <DateAndTime />
-            </span>
+    <>
+      {showModal.show && (
+        <Modal
+          showHeader
+          title={showModal.title}
+          closeAction={clearModal}
+          saveAction={showModal.saveAction}
+          closeOnBackdrop
+          closeLabel={showModal.closeLabel}
+          saveLabel={showModal.saveLabel}
+          showFooter={Boolean(showModal.saveLabel && showModal.closeLabel)}>
+          {showModal.element}
+        </Modal>
+      )}
+      <div className="flex flex-col overflow-h-scroll w-full h-full px-8 py-4">
+        <div className="mx-auto w-full">
+          <div className="flex flex-row my-0 w-full py-0 justify-start">
+            <div className="w-auto">
+              <SectionTitleV3
+                withButton={
+                  <div className="w-auto flex items-center gap-x-4 ml-4">
+                    <Selector
+                      dataCy="upload-analytics-classroom"
+                      loading={classRoomLoading}
+                      selectedItem={selectedClassRoom ? selectedClassRoom.name : ''}
+                      placeholder="select classroom"
+                      width="w-64"
+                      list={instClassRooms}
+                      onChange={(value, name, id) => {
+                        onClassRoomSelect(id, name, value);
+                      }}
+                    />
+                    <Selector
+                      dataCy="upload-analytics-unit"
+                      loading={unitsLoading}
+                      selectedItem={selectedUnit ? selectedUnit.name : ''}
+                      placeholder="select unit"
+                      list={units}
+                      width="w-64"
+                      disabled={!selectedCurriculum}
+                      onChange={(value, name, id) => onUnitSelect(id, name, value)}
+                    />
+
+                    <Selector
+                      dataCy="analytics-survey"
+                      loading={surveysLoading}
+                      width="w-64"
+                      direction="left"
+                      disabled={!selectedUnit}
+                      selectedItem={selectedSurvey ? selectedSurvey.name : ''}
+                      placeholder="select survey"
+                      list={surveys}
+                      onChange={(value, name, id) => onChangeSurvey(id, name, value)}
+                    />
+                  </div>
+                }
+                title={Institute_info[userLanguage]['TABS']['UPLOAD_SURVEY']}
+              />
+            </div>
           </div>
         </div>
-      </div>
-      {error && <p className="text-red-500 w-auto text-xs">{error}</p>}
-      <div className="flex justify-between">
-        <input
-          id="csvFile"
-          type="file"
-          className={`${
-            isMapping ? 'cursor-not-allowed bg-gray-200' : ''
-          } w-3/10 block sm:text-sm sm:leading-5 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent border-0 border-gray-300 py-2 px-3 rounded-full shadow-sm`}
-          accept=".csv"
-          disabled={isMapping}
-          ref={csvInputRef}
-          onChange={handleUpload}
-        />
-        <div className="w-3/10">
+
+        <div className="flex items-center justify-start  gap-x-4 border-t-0 border-b-0 border-gray-400 border-dashed py-4 mb-4">
+          <UploadButton
+            disabled={isMapping || !Boolean(selectedSurvey)}
+            label={file ? 'Change file' : 'Choose file'}
+            acceptedFilesFormat=".csv, .xlsx"
+            ref={csvInputRef}
+            onUpload={handleUpload}
+          />
+
           <Selector
+            additionalClass="w-auto"
             btnClass={!file && 'cursor-not-allowed'}
             disabled={!file}
-            dropdownWidth="w-64"
-            loading={loading}
+            dropdownWidth="w-96"
             selectedItem={selectedReason ? selectedReason.name : ''}
             placeholder={CsvDict[userLanguage]['SELECT_REASON']}
             list={reasonDropdown}
             onChange={(value, name, id) => onReasonSelected(id, name, value)}
           />
         </div>
-      </div>
-      <br />
-      {selectedReason.value === 'paper-survey' && (
-        <>
-          <UploadButton
-            isRequired
-            file={file}
-            label={CsvDict[userLanguage]['UPLOAD_MULTIPLE_SURVEY_IMAGES']}
-            onUpload={imageUpload}
-            multiple
-            acceptedFilesFormat="image/*"
-          />
-          {loading && (
-            <IconContext.Provider
-              value={{
-                size: '1.2rem',
-                style: {
-                  left: '-25%',
-                  top: '-5%'
-                },
-                className: `relative mr-4 animate-spin ${theme.textColor[themeColor]}`
-              }}>
-              <FaSpinner />
-            </IconContext.Provider>
+
+        <AnimatedContainer show={Boolean(file) && file?.name}>
+          {file && file?.name && (
+            <div className="p-2 px-4 border-dashed border-0 border-gray-400 rounded-md my-4">
+              <FieldValue field={'Filename'} value={file?.name} />
+              {Boolean(selectedReason.name) && (
+                <FieldValue field={'Reason'} value={selectedReason?.name} />
+              )}
+            </div>
           )}
-        </>
-      )}
+        </AnimatedContainer>
 
-      <FormInput
-        textarea
-        label={CsvDict[userLanguage]['DESCRIBE_REASON']}
-        isRequired
-        rows={10}
-        resize={false}
-        cols={50}
-        value={reason}
-        disabled={!file || loading || !selectedReason.value}
-        onChange={(e: any) => setReason(e.target.value)}
-        placeHolder={CsvDict[userLanguage]['REASON']}
-      />
+        <AnimatedContainer
+          animationType="translateY"
+          show={selectedReason.value === 'paper-survey'}>
+          {selectedReason.value === 'paper-survey' && (
+            <div className="mb-4 flex items-center">
+              <UploadButton
+                isRequired
+                label={CsvDict[userLanguage]['UPLOAD_MULTIPLE_SURVEY_IMAGES']}
+                disabled={!file || multipleImagesUploading}
+                onUpload={imageUpload}
+                multiple
+                message={
+                  multipleImagesUploaded
+                    ? {message: 'Images uploaded', type: 'success'}
+                    : null
+                }
+                ref={fileInputRef}
+                acceptedFilesFormat="image/*"
+              />
+              {multipleImagesUploading && (
+                <IconContext.Provider
+                  value={{
+                    size: '1.2rem',
 
-      {success && (
-        <div className="flex flex-row mt-2 justify-center">
-          <h2>Successfully Uploaded!</h2>
-        </div>
-      )}
-      <div className="grid grid-cols-4 gap-x-4 mt-3">
-        <Buttons
-          label={loading ? 'Uploading Please wait...' : 'Upload CSV'}
-          disabled={!reason || loading}
-          onClick={(e) => handleSubmit(e)}
+                    className: `relative mx-4 w-auto animate-spin ${theme.textColor[themeColor]}`
+                  }}>
+                  <FaSpinner />
+                </IconContext.Provider>
+              )}
+            </div>
+          )}
+        </AnimatedContainer>
+
+        {error && <p className="text-red-500 w-auto text-xs">{error}</p>}
+
+        <FormInput
+          textarea
+          label={CsvDict[userLanguage]['DESCRIBE_REASON']}
+          isRequired
+          rows={10}
+          resize={false}
+          maxWidth="-"
+          cols={50}
+          value={reason}
+          disabled={!file || loading || !selectedReason.value}
+          onChange={(e: any) => setReason(e.target.value)}
+          placeHolder={CsvDict[userLanguage]['REASON']}
         />
+
+        {success && (
+          <div className="flex flex-row mt-2 justify-center">
+            <h2>Successfully Uploaded!</h2>
+          </div>
+        )}
+        <div className="flex items-center justify-end mt-3">
+          <Buttons
+            label={loading ? 'Uploading Please wait...' : 'Upload CSV'}
+            disabled={!reason || uploadingCSV}
+            onClick={(e) => showModalWhenUploadCsv(e)}
+          />
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

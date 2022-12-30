@@ -83,3 +83,10 @@ export const setPageTitle = (title: string) => {
     document.title = `${title} | `.concat(getAsset(getClientKey(), 'appTitle'));
   }
 };
+
+export const getExtension = (str: string) => {
+  let temp = str.split('.');
+
+  const extension = temp.pop();
+  return extension;
+};

@@ -1,5 +1,6 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import Buttons from '@components/Atoms/Buttons';
+import Modal from '@components/Atoms/Modal';
 import {logError} from '@graphql/functions';
 import {Transition} from '@headlessui/react';
 import {PDFDownloadLink} from '@react-pdf/renderer';
@@ -16,10 +17,23 @@ import React, {useContext, useEffect, useState} from 'react';
 import ClickAwayListener from 'react-click-away-listener';
 import {CSVLink} from 'react-csv';
 import {BsDownload} from 'react-icons/bs';
+import {RiErrorWarningLine} from 'react-icons/ri';
 import {getImageFromS3Static} from 'utilities/services';
 import {createFilterToFetchSpecificItemsOnly} from 'utilities/strings';
-import DateAndTime from '../DateAndTime/DateAndTime';
 import SurveyPDF from './SurveyPDF';
+
+export const removeDuplicates = (array: any[]) => {
+  let ids: any[] = [];
+
+  let result: any[] = [];
+  array.forEach((item) => {
+    if (!ids.includes(item?.id)) {
+      result.push(item);
+      ids.push(item.id);
+    }
+  });
+  return result;
+};
 
 const getFormatedDate = (date: string) => {
   if (date !== '-') {
@@ -121,9 +135,9 @@ const Csv = ({institutionId}: ICsvProps) => {
   const [classRoomsList, setClassRoomsList] = useState([]);
 
   const [selectedClassRoom, setSelectedClassRoom] = useState(null);
+  const [selectedCurriculum, setSelectedCurriculum] = useState(null);
 
   const [selectedClass, setSelectedClass] = useState(null);
-  const [selectedCurriculum, setSelectedCurriculum] = useState(null);
 
   const [units, setUnits] = useState([]);
   const [selectedUnit, setSelectedUnit] = useState(null);
@@ -288,19 +302,6 @@ const Csv = ({institutionId}: ICsvProps) => {
   };
 
   const {authId, isTeacher, email, isFellow} = useAuth();
-
-  const removeDuplicates = (array: any[]) => {
-    let ids: any[] = [];
-
-    let result: any[] = [];
-    array.forEach((item) => {
-      if (!ids.includes(item?.id)) {
-        result.push(item);
-        ids.push(item.id);
-      }
-    });
-    return result;
-  };
 
   const fetchClassRooms = async () => {
     setClassRoomLoading(true);
@@ -995,127 +996,159 @@ const Csv = ({institutionId}: ICsvProps) => {
     );
   };
 
+  useEffect(() => {
+    document.getElementById('csv-download-button').addEventListener('click', () => {
+      setShowWarnModal(true);
+    });
+  }, []);
+
+  const [showWarnModal, setShowWarnModal] = useState(false);
+
   return (
     <>
+      {showWarnModal && (
+        <Modal
+          closeAction={() => setShowWarnModal(false)}
+          closeOnBackdrop
+          showFooter={false}
+          showHeader={true}
+          title="Csv Download">
+          <div className="flex flex-col justify-center items-center gap-y-4">
+            <RiErrorWarningLine fontSize={'4rem'} className="text-yellow-500 animate-y" />
+            <hr />
+            <p className="text-gray-600 pt-0 p-4 text-center">
+              If you will be using this file to upload results to the app, please do not
+              change column header or tab names
+            </p>
+          </div>
+        </Modal>
+      )}
       <div className="flex flex-col overflow-h-auto w-full h-full px-8 py-4">
         <div className="mx-auto w-full">
           <div className="flex flex-row my-0 w-full py-0 mb-4 justify-between">
             <div className="w-auto">
-              <SectionTitleV3 title={CsvDict[userLanguage]['TITLE']} />
-            </div>
+              <SectionTitleV3
+                withButton={
+                  <div className="w-auto flex items-center gap-x-4 ml-4">
+                    {isSuperAdmin && (
+                      <Selector
+                        loading={institutionsLoading}
+                        selectedItem={selectedInst ? selectedInst.name : ''}
+                        placeholder={CsvDict[userLanguage]['SELECT_INST']}
+                        list={institutions}
+                        onChange={(value, name, id) => onInstSelect(id, name, value)}
+                      />
+                    )}
 
-            <div className="w-auto">
-              <span className={`mr-0 float-right text-gray-600 text-right`}>
-                <DateAndTime />
-              </span>
-            </div>
-          </div>
-        </div>
+                    <div className="w-auto relative">
+                      <Selector
+                        dataCy="analytics-classroom"
+                        width="w-64"
+                        disabled={!selectedInst?.id}
+                        setHoveringItem={setHoveringItem}
+                        loading={classRoomLoading}
+                        selectedItem={selectedClassRoom ? selectedClassRoom.name : ''}
+                        placeholder="select classroom"
+                        list={instClassRooms}
+                        onChange={(value, name, id) => {
+                          setHoveringItem({});
+                          onClassRoomSelect(id, name, value);
+                        }}
+                      />
+                      {currentSelectedClassroomData && (
+                        <ClickAwayListener onClickAway={() => setHoveringItem({})}>
+                          <Transition
+                            style={{
+                              top: '0rem',
+                              bottom: '1.5rem',
+                              right: '-110%',
+                              zIndex: 999999
+                            }}
+                            className="hidden md:block cursor-pointer select-none  absolute right-1 text-black "
+                            show={Boolean(hoveringItem && hoveringItem.name)}>
+                            <div className="bg-white flex flex-col border-gray-200 rounded-xl  customShadow border-0 p-4  min-w-70 max-w-70 w-auto">
+                              <DataValue
+                                title={'Institution Name'}
+                                content={currentSelectedClassroomData?.institutionName}
+                              />
+                              <DataValue
+                                title={'Clasroom Name'}
+                                content={currentSelectedClassroomData?.name}
+                              />
+                              <DataValue
+                                title={'Status'}
+                                content={
+                                  <p
+                                    className={`${
+                                      currentSelectedClassroomData.status === 'ACTIVE'
+                                        ? 'text-green-500'
+                                        : 'text-yellow-500'
+                                    } lowercase`}>
+                                    {currentSelectedClassroomData.status}
+                                  </p>
+                                }
+                              />
+                              <DataValue
+                                title={'Teacher'}
+                                content={
+                                  <div className="flex items-center justify-center w-auto">
+                                    <span className="w-auto">
+                                      <img
+                                        src={currentSelectedClassroomData.teacher.image}
+                                        className="h-6 w-6 rounded-full"
+                                      />
+                                    </span>
+                                    <p className="w-auto ml-2">
+                                      {currentSelectedClassroomData.teacher.name}
+                                    </p>
+                                  </div>
+                                }
+                              />
+                              <DataValue
+                                title={'Course Name'}
+                                content={currentSelectedClassroomData.courseName}
+                              />
+                              <DataValue
+                                title={'Active Unit'}
+                                content={currentActiveUnit?.name || 'None'}
+                              />
+                            </div>
+                          </Transition>
+                        </ClickAwayListener>
+                      )}
+                    </div>
 
-        <div className="grid grid-cols-4 gap-x-4">
-          {isSuperAdmin && (
-            <Selector
-              loading={institutionsLoading}
-              selectedItem={selectedInst ? selectedInst.name : ''}
-              placeholder={CsvDict[userLanguage]['SELECT_INST']}
-              list={institutions}
-              onChange={(value, name, id) => onInstSelect(id, name, value)}
-            />
-          )}
+                    <Selector
+                      dataCy="analytics-unit"
+                      loading={unitsLoading}
+                      selectedItem={selectedUnit ? selectedUnit.name : ''}
+                      placeholder="select unit"
+                      width="w-64"
+                      list={units}
+                      disabled={!selectedCurriculum}
+                      onChange={(value, name, id) => onUnitSelect(id, name, value)}
+                    />
 
-          <div className="w-auto relative">
-            <Selector
-              dataCy="analytics-classroom"
-              disabled={!selectedInst?.id}
-              setHoveringItem={setHoveringItem}
-              loading={classRoomLoading}
-              selectedItem={selectedClassRoom ? selectedClassRoom.name : ''}
-              placeholder="select classroom"
-              list={instClassRooms}
-              onChange={(value, name, id) => {
-                setHoveringItem({});
-                onClassRoomSelect(id, name, value);
-              }}
-            />
-            {currentSelectedClassroomData && (
-              <ClickAwayListener onClickAway={() => setHoveringItem({})}>
-                <Transition
-                  style={{top: '0rem', bottom: '1.5rem', right: '-110%', zIndex: 999999}}
-                  className="hidden md:block cursor-pointer select-none  absolute right-1 text-black "
-                  show={Boolean(hoveringItem && hoveringItem.name)}>
-                  <div className="bg-white flex flex-col border-gray-200 rounded-xl  customShadow border-0 p-4  min-w-70 max-w-70 w-auto">
-                    <DataValue
-                      title={'Institution Name'}
-                      content={currentSelectedClassroomData?.institutionName}
-                    />
-                    <DataValue
-                      title={'Clasroom Name'}
-                      content={currentSelectedClassroomData?.name}
-                    />
-                    <DataValue
-                      title={'Status'}
-                      content={
-                        <p
-                          className={`${
-                            currentSelectedClassroomData.status === 'ACTIVE'
-                              ? 'text-green-500'
-                              : 'text-yellow-500'
-                          } lowercase`}>
-                          {currentSelectedClassroomData.status}
-                        </p>
-                      }
-                    />
-                    <DataValue
-                      title={'Teacher'}
-                      content={
-                        <div className="flex items-center justify-center w-auto">
-                          <span className="w-auto">
-                            <img
-                              src={currentSelectedClassroomData.teacher.image}
-                              className="h-6 w-6 rounded-full"
-                            />
-                          </span>
-                          <p className="w-auto ml-2">
-                            {currentSelectedClassroomData.teacher.name}
-                          </p>
-                        </div>
-                      }
-                    />
-                    <DataValue
-                      title={'Course Name'}
-                      content={currentSelectedClassroomData.courseName}
-                    />
-                    <DataValue
-                      title={'Active Unit'}
-                      content={currentActiveUnit?.name || 'None'}
+                    <Selector
+                      dataCy="analytics-survey"
+                      direction="left"
+                      width="w-64"
+                      loading={surveysLoading}
+                      disabled={!selectedUnit}
+                      selectedItem={selectedSurvey ? selectedSurvey.name : ''}
+                      placeholder="select survey"
+                      list={surveys}
+                      onChange={(value, name, id) => onSurveySelect(id, name, value)}
                     />
                   </div>
-                </Transition>
-              </ClickAwayListener>
-            )}
+                }
+                title={CsvDict[userLanguage]['TITLE']}
+              />
+            </div>
           </div>
-
-          <Selector
-            dataCy="analytics-unit"
-            loading={unitsLoading}
-            selectedItem={selectedUnit ? selectedUnit.name : ''}
-            placeholder="select unit"
-            list={units}
-            disabled={!selectedCurriculum}
-            onChange={(value, name, id) => onUnitSelect(id, name, value)}
-          />
-
-          <Selector
-            dataCy="analytics-survey"
-            loading={surveysLoading}
-            disabled={!selectedUnit}
-            selectedItem={selectedSurvey ? selectedSurvey.name : ''}
-            placeholder="select survey"
-            list={surveys}
-            onChange={(value, name, id) => onSurveySelect(id, name, value)}
-          />
         </div>
-        <div className="w-auto mt-4 md:gap-x-4 relative flex items-center">
+
+        <div className="w-auto  border-t-0 border-b-0 border-gray-400 border-dashed py-4 md:gap-x-4 relative flex items-center">
           <Buttons
             disabled={!isCSVDownloadReady}
             Icon={BsDownload}
@@ -1125,6 +1158,7 @@ const Csv = ({institutionId}: ICsvProps) => {
               <CSVLink
                 data={CSVData}
                 className="w-auto ml-2"
+                id="csv-download-button"
                 headers={CSVHeaders}
                 filename={`${selectedClassRoom?.name}_${
                   selectedSurvey?.name
@@ -1168,6 +1202,7 @@ const Csv = ({institutionId}: ICsvProps) => {
             }
           />
         </div>
+
         <div>
           <div className="w-auto my-4">
             <SectionTitleV3 title={'Survey results'} />
@@ -1178,7 +1213,7 @@ const Csv = ({institutionId}: ICsvProps) => {
             <div className="bg-white flex justify-center items-center inner_card h-30 overflow-hidden border-b border-gray-200 sm:rounded-lg">
               {csvGettingReady ? (
                 <div className="py-20 text-center mx-auto flex justify-center items-center w-full h-48">
-                  <div className="w-5/10">
+                  <div className="w-5/10 p-4">
                     <Loader
                       withText="Populating data please wait..."
                       className="text-gray-500"

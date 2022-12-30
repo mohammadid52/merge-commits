@@ -2,6 +2,7 @@ import {GlobalContext} from 'contexts/GlobalContext';
 import ModalHeader from 'molecules/ModalHeader';
 import React, {useContext, useEffect} from 'react';
 import {IoClose} from 'react-icons/io5';
+import Buttons from './Buttons';
 // @ts-ignore
 
 interface ModalProps {
@@ -25,6 +26,8 @@ interface ModalProps {
   className?: string;
   modalCloseId?: string;
   maxWidth?: string;
+  closeLabel?: string;
+  saveLabel?: string;
 }
 
 const ModalBody = (bodyProps: {
@@ -55,21 +58,19 @@ const ModalBody = (bodyProps: {
   );
 };
 
-const ModalFooter = (footerProps: {onSave?: () => void; onClose?: () => void}) => {
-  const {onSave, onClose} = footerProps;
+const ModalFooter = (footerProps: {
+  onSave?: () => void;
+  onClose?: () => void;
+  closeLabel?: string;
+  saveLabel?: string;
+}) => {
+  const {onSave, onClose, saveLabel = 'Save changes', closeLabel = 'Close'} = footerProps;
   const {theme} = useContext(GlobalContext);
 
   return (
     <div className={`${theme.modals.footer}`}>
-      <button className="btn btn-flat btn-red" type="button" onClick={onClose}>
-        Close
-      </button>
-      <button
-        className="btn btn-default btn-green btn-rounded"
-        type="button"
-        onClick={onSave}>
-        Save Changes
-      </button>
+      <Buttons label={closeLabel} title={closeLabel} onClick={onClose} transparent />
+      <Buttons label={saveLabel} title={saveLabel} onClick={onSave} />
     </div>
   );
 };
@@ -94,7 +95,9 @@ const Modal: React.FC<ModalProps> = (modalProps: ModalProps) => {
     position,
     width,
     maxWidth,
-    className
+    className,
+    closeLabel,
+    saveLabel
   } = modalProps;
   const {theme} = useContext(GlobalContext);
   useEffect(() => {
@@ -160,7 +163,14 @@ const Modal: React.FC<ModalProps> = (modalProps: ModalProps) => {
               closeOnBackdrop={closeOnBackdrop}>
               {children}
             </ModalBody>
-            {showFooter && <ModalFooter onSave={saveAction} onClose={closeAction} />}
+            {showFooter && (
+              <ModalFooter
+                closeLabel={closeLabel}
+                saveLabel={saveLabel}
+                onSave={saveAction}
+                onClose={closeAction}
+              />
+            )}
           </div>
         </div>
       </div>
