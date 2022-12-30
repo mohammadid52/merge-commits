@@ -958,6 +958,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
       csvInputRef.current.value = '';
       setFile(null);
       setReason('');
+      setSuccess(true);
       setTimeout(() => {
         setSuccess(false);
       }, 4500);
@@ -1450,8 +1451,6 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
           )}
         </AnimatedContainer>
 
-        {error && <p className="text-red-500 w-auto text-xs">{error}</p>}
-
         <FormInput
           textarea
           label={CsvDict[userLanguage]['DESCRIBE_REASON']}
@@ -1466,11 +1465,15 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
           placeHolder={CsvDict[userLanguage]['REASON']}
         />
 
-        {success && (
-          <div className="flex flex-row mt-2 justify-center">
-            <h2>Successfully Uploaded!</h2>
-          </div>
-        )}
+        <AnimatedContainer show={success} animationType="translateY">
+          {success && (
+            <p className={`mt-1 text-green-500 text-xs`}>Successfully Uploaded!</p>
+          )}
+        </AnimatedContainer>
+        <AnimatedContainer show={error} animationType="translateY">
+          {error && <p className={`mt-1 text-red-500 text-xs`}>{error}</p>}
+        </AnimatedContainer>
+
         <div className="flex items-center justify-end mt-3">
           <Buttons
             label={loading ? 'Uploading Please wait...' : 'Upload CSV'}
