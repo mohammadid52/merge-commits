@@ -85,7 +85,7 @@ const ErrorItem = ({
         {error.componentName}
       </h6>
 
-      <div className="absolute left-0  bottom-0 border-t-0 pt-1 border-gray-200 flex items-center justify-between px-4 py-28">
+      <div className="absolute left-0  bottom-0 border-t-0 pt-1 border-gray-200 flex items-center justify-between px-4 py-2">
         <div
           title={error.pageUrl}
           className="text-sm underline theme-text:600 w-auto hover:theme-text:500 text-gray-900 font-light ">

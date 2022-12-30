@@ -1,6 +1,6 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import React, {useContext, useEffect, useReducer, useRef, useState} from 'react';
 import * as mutations from 'graphql/mutations';
+import React, {useContext, useEffect, useReducer, useRef} from 'react';
 import {globalReducer} from 'reducers/GlobalReducer';
 import {lessonControlReducer} from 'reducers/LessonControlReducer';
 import {lessonReducer} from 'reducers/LessonReducer';
@@ -123,7 +123,7 @@ export const standardTheme = {
     header:
       'flex items-center justify-between p-4 border-solid rounded-t-xl bg-gray-100 text-gray-900 border-gray-200',
     footer:
-      'flex items-center justify-end p-4  border-t-0 border-solid rounded-b-xl bg-white text-gray-900 border-gray-200',
+      'flex items-center justify-end px-4 py-2 gap-x-4 border-t-0 border-solid rounded-b-xl bg-white text-gray-900 border-gray-200',
     content:
       'border-0 rounded-lg shadow-lg relative flex flex-col w-full outline-none bg-white text-gray-900',
     hideBg: `border-transparent  rounded-lg shadow-lg relative flex flex-col w-full outline-none bg-transparent text-gray-900`

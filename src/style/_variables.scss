@@ -41,11 +41,27 @@ $blue-900: #1e3a8a;
 
 $green: rgb(56, 178, 172);
 
+$theme-100: $indigo-100;
+$theme-200: $indigo-200;
+$theme-300: $indigo-300;
+$theme-400: $indigo-400;
 $theme-500: $indigo-500;
+$theme-600: $indigo-600;
+$theme-700: $indigo-700;
+$theme-800: $indigo-800;
+$theme-900: $indigo-900;
 $theme-box-shadow: rgb(129, 131, 244, 0.1);
 
 .curate {
+  $theme-100: $blue-100;
+  $theme-200: $blue-200;
+  $theme-300: $blue-300;
+  $theme-400: $blue-400;
   $theme-500: $blue-500;
+  $theme-600: $blue-600;
+  $theme-700: $blue-700;
+  $theme-800: $blue-800;
+  $theme-900: $blue-900;
   $theme-box-shadow: rgb(65, 132, 242, 0.1);
 }
 
