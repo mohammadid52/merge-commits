@@ -42,7 +42,7 @@ const DataValue = ({
   return (
     <div className="w-auto flex mb-2 flex-col items-start justify-start">
       <p className="text-sm text-gray-500">{title}</p>
-      <p className="text-dark-gray font-medium text-left w-auto text-sm">{content}</p>
+      <div className="text-dark-gray font-medium text-left w-auto text-sm">{content}</div>
     </div>
   );
 };
@@ -490,15 +490,10 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
     if (ext === 'csv') {
       clearModal();
       try {
-        resetFile();
-        setFile(file);
-
         let surveyQuestionOptions: any = {};
         fileReader.onload = async (event: any) => {
           setIsMapping(true);
-          const result: any = Papa.parse(event.target.result, {
-            // skipEmptyLines: true
-          });
+          const result: any = Papa.parse(event.target.result);
 
           const parsed = customParse(result.data);
 
@@ -515,19 +510,12 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
             setIsMapping(false);
             setShowModal({
               show: true,
-              title: 'Mismatch values',
+              title: 'Confirm File',
               element: (
                 <div>
                   <p className="p-4 text-sm text-gray-700">
-                    Make sure selected values are matching with the values in csv file
+                    Selected file does not match target survey
                   </p>
-                  <h1 className="text-red-500 text-center font-medium">
-                    {surveyID !== selectedSurvey?.id
-                      ? 'Survey id does not match'
-                      : unitID !== selectedUnit?.id
-                      ? 'Unit id does not match'
-                      : 'classroom does not match'}
-                  </h1>
                 </div>
               ),
 
@@ -536,51 +524,58 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
               closeLabel: ''
             });
             return;
-          }
-          if (surveyID && unitID && classroomName) {
+          } else if (surveyID && unitID && classroomName) {
+            resetFile();
+            setFile(file);
             let listOptionsId = await listQuestions(surveyID);
             listOptionsId &&
               listOptionsId.length > 0 &&
               listOptionsId.forEach((ques: any) => {
                 return (surveyQuestionOptions[ques.question.id] = ques.question.options);
               });
-          }
 
-          Object.keys(parsed).forEach((keyName, index2: number) => {
-            const valueArray = parsed[keyName];
+            Object.keys(parsed).forEach((keyName, index2: number) => {
+              const valueArray = parsed[keyName];
 
-            valueArray.forEach(async (value: string, index: number) => {
-              if (keyName === 'UniversalSurveyStudentID' && value !== 'Not-taken-yet') {
-                //
-                ussIDAndTakenSurvey(value, surveyQuestionOptions, parsed, index, keyName);
-              } else if (
-                keyName === 'UniversalSurveyStudentID' &&
-                value === 'Not-taken-yet'
-              ) {
-                //
-                ussIdAndNotTakenSurvey(
-                  value,
-                  surveyQuestionOptions,
-                  parsed,
-                  index,
-                  keyName
-                );
-              } else if (
-                keyName === 'DemographicsDataID' &&
-                value !== 'No-demographics-data'
-              ) {
-                ddIDAndDemographicData(value, parsed, index2);
-                // }
-              } else if (
-                keyName === 'DemographicsDataID' &&
-                value === 'No-demographics-data'
-              ) {
-                ddIDAndNotDemographicData(value, parsed, index, index2);
-              }
+              valueArray.forEach(async (value: string, index: number) => {
+                if (keyName === 'UniversalSurveyStudentID' && value !== 'Not-taken-yet') {
+                  //
+                  ussIDAndTakenSurvey(
+                    value,
+                    surveyQuestionOptions,
+                    parsed,
+                    index,
+                    keyName
+                  );
+                } else if (
+                  keyName === 'UniversalSurveyStudentID' &&
+                  value === 'Not-taken-yet'
+                ) {
+                  //
+                  ussIdAndNotTakenSurvey(
+                    value,
+                    surveyQuestionOptions,
+                    parsed,
+                    index,
+                    keyName
+                  );
+                } else if (
+                  keyName === 'DemographicsDataID' &&
+                  value !== 'No-demographics-data'
+                ) {
+                  ddIDAndDemographicData(value, parsed, index2);
+                  // }
+                } else if (
+                  keyName === 'DemographicsDataID' &&
+                  value === 'No-demographics-data'
+                ) {
+                  ddIDAndNotDemographicData(value, parsed, index, index2);
+                }
+              });
             });
-          });
 
-          setIsMapping(false);
+            setIsMapping(false);
+          }
         };
         fileReader.readAsText(file);
       } catch (error) {
@@ -1218,6 +1213,10 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
       let cr = {id, name, value};
       resetFile();
       setSelectedClassRoom(cr);
+      setUnits([]);
+      setSelectedUnit(null);
+      setSurveys([]);
+      setSelectedSurvey(null);
       if (!sCR || sCR.id !== cr.id) {
         let classroom = classRoomsList.filter((c) => c.id === cr.id)[0];
         // with classroom => class and curriculum are directly selected
@@ -1241,6 +1240,8 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
     resetFile();
     setSelectedUnit(unit);
     fetchSurveys(unit.id);
+    setSurveys([]);
+    setSelectedSurvey(null);
   };
 
   const [hoveringItem, setHoveringItem] = useState<{name?: string}>({});
@@ -1286,6 +1287,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
                         setHoveringItem={setHoveringItem}
                         list={instClassRooms}
                         onChange={(value, name, id) => {
+                          setHoveringItem({});
                           onClassRoomSelect(id, name, value);
                         }}
                       />
@@ -1387,6 +1389,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
             label={file ? 'Change file' : 'Choose file'}
             acceptedFilesFormat=".csv, .xlsx"
             ref={csvInputRef}
+            id="upload-csv-button"
             onUpload={handleUpload}
           />
 
@@ -1420,6 +1423,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
             <div className="mb-4 flex items-center">
               <UploadButton
                 isRequired
+                id="upload-multiple-images"
                 label={CsvDict[userLanguage]['UPLOAD_MULTIPLE_SURVEY_IMAGES']}
                 disabled={!file || multipleImagesUploading}
                 onUpload={imageUpload}

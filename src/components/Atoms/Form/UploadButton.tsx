@@ -1,5 +1,5 @@
 import Label from './Label';
-import React, {forwardRef, MutableRefObject} from 'react';
+import React, {forwardRef, MutableRefObject, useEffect} from 'react';
 import Buttons from '../Buttons';
 import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 
@@ -10,14 +10,21 @@ interface IUploadButtonProps {
   multiple?: boolean;
   isRequired?: boolean;
   message?: {message: string; type: 'error' | 'success' | 'default'};
+  id: string;
   acceptedFilesFormat?: string;
   onUpload: React.ChangeEventHandler<HTMLInputElement>;
 }
 
 const UploadButton = forwardRef<HTMLInputElement, IUploadButtonProps>(
-  ({onUpload, label, message, disabled, multiple, acceptedFilesFormat}, ref) => {
+  ({onUpload, label, message, id, disabled, multiple, acceptedFilesFormat}, ref) => {
     // @ts-ignore
     const handleFile = () => ref?.current?.click();
+
+    const handleClick = (event: any) => {
+      const {target = {}} = event || {};
+      target.value = '';
+    };
+
     return (
       <>
         <div className="w-auto">
@@ -32,9 +39,11 @@ const UploadButton = forwardRef<HTMLInputElement, IUploadButtonProps>(
             multiple={multiple}
             className="hidden w-auto"
             type="file"
+            id={id}
+            onClick={handleClick}
+            onChange={onUpload}
             accept={acceptedFilesFormat}
             ref={ref}
-            onChange={onUpload}
           />
           {/* @ts-ignore */}
           <AnimatedContainer
