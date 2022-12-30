@@ -113,6 +113,8 @@ export const ANIMATIONS = {
   loading: 'https://iconoclaststorage143306-dev.s3.amazonaws.com/animation/education.json'
 };
 
+export const XLSX_TO_CSV_URL = 'https://cloudconvert.com/xlsx-to-csv';
+
 export const general: any = {
   emoji: {
     awful: 'https://iconoclaststorage143306-dev.s3.amazonaws.com/emojis/emojis/angry.gif',

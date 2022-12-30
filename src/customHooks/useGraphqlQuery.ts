@@ -21,6 +21,7 @@ interface Options {
   enabled?: boolean;
   loopOnNextToken?: boolean;
   custom?: boolean;
+  originalName?: string;
   onSuccess?: (data: any, updateCallback?: (updatedData: any) => void) => void;
 }
 
@@ -58,6 +59,8 @@ const useGraphqlQuery = <VariablesType, ReturnType = any[]>(
 
   const action = custom ? customQueries : queries;
 
+  const _queryName = custom ? options?.originalName || queryName : queryName;
+
   const isGet = queryName.startsWith('get');
   const {authId, email} = useAuth();
 
@@ -75,8 +78,8 @@ const useGraphqlQuery = <VariablesType, ReturnType = any[]>(
         graphqlOperation(action[queryName], {..._v, nextToken: nextToken})
       );
 
-      const data = isGet ? res.data[queryName] : res.data[queryName].items;
-      const theNextToken = isGet ? null : res.data[queryName]?.nextToken;
+      const data = isGet ? res.data[_queryName] : res.data[_queryName].items;
+      const theNextToken = isGet ? null : res.data[_queryName]?.nextToken;
       const outputData = isGet ? data : loopArray ? [...loopArray, ...data] : data;
 
       if (theNextToken && loopOnNextToken) {

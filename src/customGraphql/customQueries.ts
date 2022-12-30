@@ -2604,6 +2604,33 @@ export const listUniversalLessonsOptions = /* GraphQL */ `
     }
   }
 `;
+export const listOnlySurveys = /* GraphQL */ `
+  query ListUniversalLessons(
+    $id: ID
+    $filter: ModelUniversalLessonFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listUniversalLessons(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        type
+        label
+        title
+        institutionID
+        language
+      }
+      nextToken
+    }
+  }
+`;
 
 export const listUniversalLessonsForInstitution = /* GraphQL */ `
   query ListUniversalLessons(
