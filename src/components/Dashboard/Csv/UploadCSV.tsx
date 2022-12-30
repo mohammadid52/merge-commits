@@ -8,9 +8,9 @@ import UploadButton from '@components/Atoms/Form/UploadButton';
 import Modal from '@components/Atoms/Modal';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
-import useGraphqlQuery from '@customHooks/useGraphqlQuery';
+import useAuth from '@customHooks/useAuth';
+import {Transition} from '@headlessui/react';
 import {getExtension} from '@utilities/functions';
-import {ModelUniversalLessonFilterInput} from 'API';
 import Selector from 'atoms/Form/Selector';
 import {Storage} from 'aws-amplify';
 import {GlobalContext} from 'contexts/GlobalContext';
@@ -18,19 +18,34 @@ import * as customQueries from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import * as mutations from 'graphql/mutations';
 import * as queries from 'graphql/queries';
+import {uniqBy} from 'lodash';
 import Papa from 'papaparse';
 import React, {useContext, useEffect, useRef, useState} from 'react';
+import ClickAwayListener from 'react-click-away-listener';
 import {FaSpinner} from 'react-icons/fa';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {RiErrorWarningLine} from 'react-icons/ri';
-import {useHistory} from 'react-router';
 import {v4 as uuidv4} from 'uuid';
-import useAuth from '@customHooks/useAuth';
 import {removeDuplicates} from './Csv';
-import {uniqBy} from 'lodash';
+import {getImageFromS3Static} from '@utilities/services';
 interface ICsvProps {
   institutionId?: string;
 }
+
+const DataValue = ({
+  title,
+  content
+}: {
+  title: string;
+  content: string | React.ReactNode;
+}) => {
+  return (
+    <div className="w-auto flex mb-2 flex-col items-start justify-start">
+      <p className="text-sm text-gray-500">{title}</p>
+      <p className="text-dark-gray font-medium text-left w-auto text-sm">{content}</p>
+    </div>
+  );
+};
 
 const FieldValue = ({field, value}: {field: string; value: string}) => {
   return (
@@ -1041,6 +1056,48 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
     }
   };
 
+  const insertExtraData = (cr: any) => {
+    const teacherImage = getImageFromS3Static(cr?.teacher?.image);
+    return {
+      institutionName: cr?.institution?.name || '',
+      teacher: {
+        name: `${cr?.teacher?.firstName} ${cr?.teacher?.lastName}`,
+        image: teacherImage
+      },
+      courseName: cr?.curricula?.items[0]?.curriculum?.name || '--',
+      status: cr?.status,
+      activeSyllabus: cr?.activeSyllabus
+    };
+  };
+
+  const [activeUnits, setActiveUnits] = useState([]);
+
+  const fetchActiveUnits = async (crList: any) => {
+    const arrayOfActiveUnits = crList
+      ?.filter((_c: {activeSyllabus: any}) => Boolean(_c?.activeSyllabus))
+      .map((_c: {activeSyllabus: string | null}) => {
+        if (_c?.activeSyllabus) return {unitId: {eq: _c.activeSyllabus}};
+      });
+
+    try {
+      let curriculumUnits: any = await API.graphql(
+        graphqlOperation(customQueries.listUnits, {
+          filter: {or: arrayOfActiveUnits}
+        })
+      );
+      let units = curriculumUnits?.data.listCurriculumUnits?.items || [];
+
+      units = units.map((syl: any) => {
+        let unitData = syl.unit;
+        return {id: unitData.id, name: unitData.name};
+      });
+
+      setActiveUnits(units);
+    } catch (error) {
+      console.error('error at fetchActiveUnits Csv.tsx', error);
+    }
+  };
+
   const fetchClassRooms = async () => {
     setClassRoomLoading(true);
     let instCRs: any = [];
@@ -1093,7 +1150,8 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
             name: cr.name,
             value: cr.name,
             class: {...cr.class},
-            curriculum
+            curriculum,
+            ...insertExtraData(cr)
           };
         }
       })
@@ -1101,6 +1159,8 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
 
     setClassRoomsList(classrooms);
     setInstClassRooms(removeDuplicates(instCRs));
+    fetchActiveUnits(classrooms);
+
     setClassRoomLoading(false);
   };
 
@@ -1183,6 +1243,17 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
     fetchSurveys(unit.id);
   };
 
+  const [hoveringItem, setHoveringItem] = useState<{name?: string}>({});
+
+  const currentSelectedClassroomData =
+    hoveringItem &&
+    hoveringItem?.name &&
+    classRoomsList?.find((_c) => _c.name === hoveringItem?.name);
+
+  const currentActiveUnit =
+    currentSelectedClassroomData &&
+    activeUnits.find((_d) => _d?.id === currentSelectedClassroomData?.activeSyllabus);
+
   return (
     <>
       {showModal.show && (
@@ -1205,17 +1276,81 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
               <SectionTitleV3
                 withButton={
                   <div className="w-auto flex items-center gap-x-4 ml-4">
-                    <Selector
-                      dataCy="upload-analytics-classroom"
-                      loading={classRoomLoading}
-                      selectedItem={selectedClassRoom ? selectedClassRoom.name : ''}
-                      placeholder="select classroom"
-                      width="w-64"
-                      list={instClassRooms}
-                      onChange={(value, name, id) => {
-                        onClassRoomSelect(id, name, value);
-                      }}
-                    />
+                    <div className="w-auto relative">
+                      <Selector
+                        dataCy="upload-analytics-classroom"
+                        loading={classRoomLoading}
+                        selectedItem={selectedClassRoom ? selectedClassRoom.name : ''}
+                        placeholder="select classroom"
+                        width="w-64"
+                        setHoveringItem={setHoveringItem}
+                        list={instClassRooms}
+                        onChange={(value, name, id) => {
+                          onClassRoomSelect(id, name, value);
+                        }}
+                      />
+                      {currentSelectedClassroomData && (
+                        <ClickAwayListener onClickAway={() => setHoveringItem({})}>
+                          <Transition
+                            style={{
+                              top: '0rem',
+                              bottom: '1.5rem',
+                              right: '-110%',
+                              zIndex: 999999
+                            }}
+                            className="hidden md:block cursor-pointer select-none  absolute right-1 text-black "
+                            show={Boolean(hoveringItem && hoveringItem.name)}>
+                            <div className="bg-white flex flex-col border-gray-200 rounded-xl  customShadow border-0 p-4  min-w-70 max-w-70 w-auto">
+                              <DataValue
+                                title={'Institution Name'}
+                                content={currentSelectedClassroomData?.institutionName}
+                              />
+                              <DataValue
+                                title={'Clasroom Name'}
+                                content={currentSelectedClassroomData?.name}
+                              />
+                              <DataValue
+                                title={'Status'}
+                                content={
+                                  <p
+                                    className={`${
+                                      currentSelectedClassroomData.status === 'ACTIVE'
+                                        ? 'text-green-500'
+                                        : 'text-yellow-500'
+                                    } lowercase`}>
+                                    {currentSelectedClassroomData.status}
+                                  </p>
+                                }
+                              />
+                              <DataValue
+                                title={'Teacher'}
+                                content={
+                                  <div className="flex items-center justify-center w-auto">
+                                    <span className="w-auto">
+                                      <img
+                                        src={currentSelectedClassroomData.teacher.image}
+                                        className="h-6 w-6 rounded-full"
+                                      />
+                                    </span>
+                                    <p className="w-auto ml-2">
+                                      {currentSelectedClassroomData.teacher.name}
+                                    </p>
+                                  </div>
+                                }
+                              />
+                              <DataValue
+                                title={'Course Name'}
+                                content={currentSelectedClassroomData?.courseName || '--'}
+                              />
+                              <DataValue
+                                title={'Active Unit'}
+                                content={currentActiveUnit?.name || '--'}
+                              />
+                            </div>
+                          </Transition>
+                        </ClickAwayListener>
+                      )}
+                    </div>
                     <Selector
                       dataCy="upload-analytics-unit"
                       loading={unitsLoading}
