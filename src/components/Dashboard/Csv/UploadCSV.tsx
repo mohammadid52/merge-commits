@@ -16,6 +16,7 @@ import {Storage} from 'aws-amplify';
 import {GlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
+import * as customMutations from 'customGraphql/customMutations';
 import * as mutations from 'graphql/mutations';
 import * as queries from 'graphql/queries';
 import {uniqBy} from 'lodash';
@@ -108,11 +109,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
       });
       return getFileURL.toString();
     } catch (error) {
-      logError(
-        error,
-        {authId: state.user.authId, email: state.user.email},
-        'UploadCSV @_GetUrlFromS3'
-      );
+      logError(error, {authId, email}, 'UploadCSV @_GetUrlFromS3');
 
       console.error(
         '🚀 ~ file: UploadCSV.tsx ~ line 92 ~ const_GetUrlFromS3= ~ error',
@@ -150,11 +147,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
 
       return questions;
     } catch (err) {
-      logError(
-        err,
-        {authId: state.user.authId, email: state.user.email},
-        'UploadCSV @listQuestions'
-      );
+      logError(err, {authId, email}, 'UploadCSV @listQuestions');
       console.log('list questions error', err);
     }
   };
@@ -466,6 +459,8 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
 
   const [error, setError] = useState(null);
 
+  const {authId, isTeacher, isFellow, email} = useAuth();
+
   const INITIAL_MODAL_STATE = {
     show: false,
     element: <div />,
@@ -579,11 +574,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
         };
         fileReader.readAsText(file);
       } catch (error) {
-        logError(
-          error,
-          {authId: state.user.authId, email: state.user.email},
-          'UploadCSV @handleUpload'
-        );
+        logError(error, {authId, email}, 'UploadCSV @handleUpload');
 
         setError('Something went wrong!');
 
@@ -631,11 +622,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
 
       return returnedData;
     } catch (e) {
-      logError(
-        e,
-        {authId: state.user.authId, email: state.user.email},
-        'UploadCSV @createTempSurveyData'
-      );
+      logError(e, {authId, email}, 'UploadCSV @createTempSurveyData');
       console.error('error creating survey data - ', e);
       return {};
     }
@@ -660,11 +647,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
 
       return returnedData;
     } catch (error) {
-      logError(
-        error,
-        {authId: state.user.authId, email: state.user.email},
-        'UploadCSV @createTempDemographicsData'
-      );
+      logError(error, {authId, email}, 'UploadCSV @createTempDemographicsData');
       console.error(
         '🚀 ~ file: UploadCSV.tsx ~ line 447 ~ createTempDemographicsData ~ error',
         error
@@ -674,31 +657,26 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
 
   const [urlLink, setUrlLink] = useState('');
 
-  const createUploadLogs = async (
-    // surveyTempID: any,
-    // demoTempID: any,
-    updateType: any
-    // unitID: any,
-    // lessonID: any
-  ) => {
+  // this will create single upload log
+  const createUploadLog = async () => {
     try {
       let input: CreateUploadLogsInput = {
         id: uuidv4(),
-        // TemporaryUniversalUploadSurveyDataID: surveyTempID || '',
-        // TemporaryDemographicsUploadDataID: demoTempID || '',
         User_id: state.user.authId,
-        // Unit_id: unitID,
-        // lesson_id: lessonID,
+        Unit_id: selectedUnit.id,
+        lesson_id: selectedSurvey.id,
         Date: new Date().toISOString().split('T')[0],
         UploadType: selectedReason.value,
-        updateType: updateType,
+        room_id: selectedClassRoom.id,
         PaperSurveyURL: imgUrl as string[],
         Reason: reason,
-        urlLink
+        urlLink,
+        authID: authId,
+        email
       };
 
       const newUploadLogs: any = await API.graphql(
-        graphqlOperation(mutations.createUploadLogs, {
+        graphqlOperation(customMutations.createUploadLogs, {
           input: input
         })
       );
@@ -708,11 +686,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
       return returnedData;
     } catch (e) {
       console.error('error creating upload logs - ', e);
-      logError(
-        e,
-        {authId: state.user.authId, email: state.user.email},
-        'UploadCSV @createUploadLogs'
-      );
+      logError(e, {authId, email}, 'UploadCSV @createUploadLogs');
       return {};
     }
   };
@@ -727,13 +701,6 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
           data.unshift(surveyData[i]);
         }
       }
-      await createUploadLogs(
-        // '',
-        // '',
-        'SURVEY_DATA_UPDATE'
-        // item.syllabusLessonID,
-        // item.lessonID
-      );
 
       data.forEach(async (item: any) => {
         // const createTempSurveyresult = await createTempSurveyData(
@@ -753,11 +720,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
         );
       });
     } catch (error) {
-      logError(
-        error,
-        {authId: state.user.authId, email: state.user.email},
-        'UploadCSV @handleSurveyExistingUpload'
-      );
+      logError(error, {authId, email}, 'UploadCSV @handleSurveyExistingUpload');
       console.error(
         '🚀 ~ file: UploadCSV.tsx ~ line 169 ~ handleExistingUpload ~ error',
         error
@@ -772,13 +735,6 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
           return sData.hasTakenSurvey === true;
         });
       });
-      await createUploadLogs(
-        // '',
-        // '',
-        'SURVEY_DATA_UPDATE'
-        // item.syllabusLessonID,
-        // item.lessonID
-      );
 
       changedSurveyData.forEach(async (item: any) => {
         const createData: any = await API.graphql(
@@ -802,11 +758,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
         }
       });
     } catch (error) {
-      logError(
-        error,
-        {authId: state.user.authId, email: state.user.email},
-        'UploadCSV @handleNewSurveyUniversalUpload'
-      );
+      logError(error, {authId, email}, 'UploadCSV @handleNewSurveyUniversalUpload');
       console.error(
         '🚀 ~ file: UploadCSV.tsx ~ line 172 ~ handleUniversalUpload ~ error',
         error
@@ -825,14 +777,6 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
         }
       }
 
-      await createUploadLogs(
-        // '',
-        // '',
-        'DEMOGRAPHIC_DATA_UPDATE'
-        // item.syllabusLessonID,
-        // item.lessonID
-      );
-
       data.forEach(async (item: any) => {
         // const createTempDemographicsDataResult = await createTempDemographicsData(
         //   item.questionDataId,
@@ -850,11 +794,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
         );
       });
     } catch (error) {
-      logError(
-        error,
-        {authId: state.user.authId, email: state.user.email},
-        'UploadCSV @handleDemographicsExistingUpload'
-      );
+      logError(error, {authId, email}, 'UploadCSV @handleDemographicsExistingUpload');
       console.error(
         '🚀 ~ file: UploadCSV.tsx ~ line 575 ~ handleDemographicsExistingUpload ~ error',
         error
@@ -869,14 +809,6 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
           return dData.demographicsUpdated === true;
         });
       });
-
-      await createUploadLogs(
-        // '',
-        // '',
-        'DEMOGRAPHIC_DATA_UPDATE'
-        // createDemographicsQuestionData.data.createQuestionData.syllabusLessonID,
-        // createDemographicsQuestionData.data.createQuestionData.lessonID
-      );
 
       changedDemographicsUpdatedData.forEach(async (item: any) => {
         const createCheckpointData: any = await API.graphql(
@@ -911,11 +843,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
         }
       });
     } catch (error) {
-      logError(
-        error,
-        {authId: state.user.authId, email: state.user.email},
-        'UploadCSV @handleDemographicsNewUpload'
-      );
+      logError(error, {authId, email}, 'UploadCSV @handleDemographicsNewUpload');
       console.error(
         '🚀 ~ file: UploadCSV.tsx ~ line 575 ~ handleDemographicsNewUpload ~ error',
         error
@@ -962,7 +890,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
       }
     } catch (error) {
       console.error(error);
-      logError(error, {authId, email: state.user.email}, 'UploadCSV @uploadCsvToS3');
+      logError(error, {authId, email}, 'UploadCSV @uploadCsvToS3');
     }
   };
 
@@ -973,6 +901,9 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
       setUploadingCSV(true);
 
       await uploadCsvToS3();
+
+      await createUploadLog();
+
       await handleSurveyExistingUpload();
       await handleNewSurveyUniversalUpload();
       await handleDemographicsExistingUpload();
@@ -992,11 +923,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
         setSuccess(false);
       }, 4500);
     } catch (error) {
-      logError(
-        error,
-        {authId: state.user.authId, email: state.user.email},
-        'UploadCSV @handleSubmit'
-      );
+      logError(error, {authId, email}, 'UploadCSV @handleSubmit');
       console.error('🚀 ~ file: UploadCSV.tsx ~ line 38 ~ handleSubmit ~ error', error);
     } finally {
       setUploadingCSV(false);
@@ -1027,11 +954,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
       }
       setMultipleImagesUploaded(true);
     } catch (e) {
-      logError(
-        e,
-        {authId: state.user.authId, email: state.user.email},
-        'UploadCSV @imageUpload'
-      );
+      logError(e, {authId, email}, 'UploadCSV @imageUpload');
       console.log('error uploading image', e);
     } finally {
       setMultipleImagesUploading(false);
@@ -1045,8 +968,6 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
     let reasonDropdownValue = {id, name, value};
     setSelectedSurvey(reasonDropdownValue);
   };
-
-  const {authId, isTeacher, isFellow} = useAuth();
 
   const [classRoomLoading, setClassRoomLoading] = useState(false);
   const [unitsLoading, setUnitsLoading] = useState(false);

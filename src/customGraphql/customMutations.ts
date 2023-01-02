@@ -1589,3 +1589,53 @@ export const updateErrorLog = /* GraphQL */ `
     }
   }
 `;
+
+export const createUploadLogs = /* GraphQL */ `
+  mutation CreateUploadLogs(
+    $input: CreateUploadLogsInput!
+    $condition: ModelUploadLogsConditionInput
+  ) {
+    createUploadLogs(input: $input, condition: $condition) {
+      id
+      TemporaryUniversalUploadSurveyDataID
+      TemporaryDemographicsUploadDataID
+      UploadType
+      Date
+      User_id
+      Curricullum_id
+      urlLink
+      Unit_id
+      authID
+      email
+      lesson_id
+      room_id
+      Class_id
+      PaperSurveyURL
+      Reason
+      person {
+        id
+        authId
+        email
+        firstName
+        preferredName
+        lastName
+      }
+      lesson {
+        id
+        type
+        label
+        title
+      }
+      room {
+        id
+        name
+      }
+      unit {
+        id
+        name
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;

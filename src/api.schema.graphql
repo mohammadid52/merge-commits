@@ -776,7 +776,6 @@ type TemporaryDemographicsUploadData @model @auth(rules: [{allow: public}]) {
 
 type UploadLogs @model @auth(rules: [{allow: public}]) {
   id: ID! @primaryKey
-  User_id: ID!
   TemporaryUniversalUploadSurveyDataID: ID
   TemporaryUniversalUploadSurveyData: TemporaryUniversalUploadSurveyData
     @hasOne(fields: ["TemporaryUniversalUploadSurveyDataID"])
@@ -786,13 +785,21 @@ type UploadLogs @model @auth(rules: [{allow: public}]) {
   UploadType: String
   updateType: UpdateType
   Date: AWSDate
+  User_id: String!
   Curricullum_id: ID
   urlLink: String
   Unit_id: ID
+  authID: String!
+  email: String!
   lesson_id: ID
+  room_id: ID
   Class_id: ID
   PaperSurveyURL: [String]
   Reason: String
+  person: Person @hasOne(fields: ["email", "authID"])
+  lesson: UniversalLesson @hasOne(fields: ["lesson_id"])
+  room: Room @hasOne(fields: ["room_id"])
+  unit: UniversalSyllabus @hasOne(fields: ["Unit_id"])
 }
 
 type ExerciseData {
