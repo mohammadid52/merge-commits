@@ -11824,6 +11824,7 @@ export const onCreateUploadLogs = /* GraphQL */ `
       updateType
       Date
       Curricullum_id
+      urlLink
       Unit_id
       lesson_id
       Class_id
@@ -11896,6 +11897,7 @@ export const onUpdateUploadLogs = /* GraphQL */ `
       updateType
       Date
       Curricullum_id
+      urlLink
       Unit_id
       lesson_id
       Class_id
@@ -11968,6 +11970,7 @@ export const onDeleteUploadLogs = /* GraphQL */ `
       updateType
       Date
       Curricullum_id
+      urlLink
       Unit_id
       lesson_id
       Class_id

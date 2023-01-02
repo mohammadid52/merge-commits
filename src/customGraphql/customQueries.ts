@@ -2632,6 +2632,37 @@ export const listOnlySurveys = /* GraphQL */ `
   }
 `;
 
+export const getReasonFromUploadLogs = /* GraphQL */ `
+  query ListUploadLogs(
+    $id: ID
+    $filter: ModelUploadLogsFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listUploadLogs(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        Curricullum_id
+        Unit_id
+        lesson_id
+        Class_id
+        Reason
+        createdAt
+        User_id
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+
 export const listUniversalLessonsForInstitution = /* GraphQL */ `
   query ListUniversalLessons(
     $id: ID

@@ -4,6 +4,7 @@ import Modal from '@components/Atoms/Modal';
 import {logError} from '@graphql/functions';
 import {Transition} from '@headlessui/react';
 import {PDFDownloadLink} from '@react-pdf/renderer';
+import {ModelUploadLogsFilterInput} from 'API';
 import Selector from 'atoms/Form/Selector';
 import Loader from 'atoms/Loader';
 import SectionTitleV3 from 'atoms/SectionTitleV3';
@@ -273,6 +274,8 @@ const Csv = ({institutionId}: ICsvProps) => {
     };
   };
 
+  const [curriculumId, setCurriculumId] = useState(null);
+
   const [activeUnits, setActiveUnits] = useState([]);
 
   const fetchActiveUnits = async (crList: any) => {
@@ -439,6 +442,7 @@ const Csv = ({institutionId}: ICsvProps) => {
 
   const fetchUnits = async (curriculumId: string, studentsEmails: any) => {
     try {
+      setCurriculumId(curriculumId);
       let curriculumUnits: any = await API.graphql(
         graphqlOperation(customQueries.listUnits, {
           filter: {curriculumId: {eq: curriculumId}}
@@ -562,8 +566,26 @@ const Csv = ({institutionId}: ICsvProps) => {
       clearCSVData();
     }
     setSCQAnswers([]);
+    // getReason();
+
     setSelectedsurvey(survey);
     await listQuestions(survey.id);
+  };
+
+  const getReason = async () => {
+    let res: any = await API.graphql(
+      graphqlOperation(customQueries.getReasonFromUploadLogs, {
+        filter: {
+          Unit_id: {eq: selectedUnit.id},
+          // Curricullum_id: {eq: curriculumId},
+          User_id: {eq: authId},
+          lesson_id: {eq: selectedSurvey.id}
+        } as ModelUploadLogsFilterInput,
+        limit: 500,
+        sortDirection: 'DESC'
+      })
+    );
+    let lessonObject = res.data.listUploadLogs.items || [];
   };
 
   const listQuestions = async (lessonId: string) => {
@@ -596,14 +618,17 @@ const Csv = ({institutionId}: ICsvProps) => {
       }
 
       setSurveyQuestions(questions);
-      let syllabusLes = syllabusLessonsData.filter((sl) => sl.lessonID === lessonId)[0];
+
       await getStudentsSurveyQuestionsResponse(lessonId, undefined, []);
       setIsCSVReady(true);
       setCsvGettingReady(false);
     } catch (err) {
-      console.log('list questions error', err);
+      logError(err, {authId, email}, 'Csv @listQuestions');
+      console.error('list questions error', err);
     }
   };
+
+  const [reason, setReason] = useState(null);
 
   // ##################################################################### //
   // ########## LOOP OVER LESSONPLAN AND GENERATE QUESTION LIST ########## //
@@ -753,7 +778,6 @@ const Csv = ({institutionId}: ICsvProps) => {
         combined
       );
     }
-    console.log('fetched from universalSurveyData');
     setSCQAnswers((prevState: any) => {
       return [...prevState, combined];
     });
@@ -1069,11 +1093,13 @@ const Csv = ({institutionId}: ICsvProps) => {
                             <div className="bg-white flex flex-col border-gray-200 rounded-xl  customShadow border-0 p-4  min-w-70 max-w-70 w-auto">
                               <DataValue
                                 title={'Institution Name'}
-                                content={currentSelectedClassroomData?.institutionName}
+                                content={
+                                  currentSelectedClassroomData?.institutionName || '--'
+                                }
                               />
                               <DataValue
                                 title={'Clasroom Name'}
-                                content={currentSelectedClassroomData?.name}
+                                content={currentSelectedClassroomData?.name || '--'}
                               />
                               <DataValue
                                 title={'Status'}
@@ -1084,7 +1110,7 @@ const Csv = ({institutionId}: ICsvProps) => {
                                         ? 'text-green-500'
                                         : 'text-yellow-500'
                                     } lowercase`}>
-                                    {currentSelectedClassroomData.status}
+                                    {currentSelectedClassroomData.status || '--'}
                                   </p>
                                 }
                               />
@@ -1093,10 +1119,14 @@ const Csv = ({institutionId}: ICsvProps) => {
                                 content={
                                   <div className="flex items-center justify-center w-auto">
                                     <span className="w-auto">
-                                      <img
-                                        src={currentSelectedClassroomData.teacher.image}
-                                        className="h-6 w-6 rounded-full"
-                                      />
+                                      {currentSelectedClassroomData.teacher.image ? (
+                                        <img
+                                          src={currentSelectedClassroomData.teacher.image}
+                                          className="h-6 w-6 rounded-full"
+                                        />
+                                      ) : (
+                                        <div className="h-6 w-6 rounded-full bg-gray-400"></div>
+                                      )}
                                     </span>
                                     <p className="w-auto ml-2">
                                       {currentSelectedClassroomData.teacher.name}
@@ -1106,11 +1136,11 @@ const Csv = ({institutionId}: ICsvProps) => {
                               />
                               <DataValue
                                 title={'Course Name'}
-                                content={currentSelectedClassroomData.courseName}
+                                content={currentSelectedClassroomData.courseName || '--'}
                               />
                               <DataValue
                                 title={'Active Unit'}
-                                content={currentActiveUnit?.name || 'None'}
+                                content={currentActiveUnit?.name || '--'}
                               />
                             </div>
                           </Transition>

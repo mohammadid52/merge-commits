@@ -28,6 +28,7 @@ import {RiErrorWarningLine} from 'react-icons/ri';
 import {v4 as uuidv4} from 'uuid';
 import {removeDuplicates} from './Csv';
 import {getImageFromS3Static} from '@utilities/services';
+import {CreateUploadLogsInput} from 'API';
 interface ICsvProps {
   institutionId?: string;
 }
@@ -62,7 +63,6 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
   const themeColor = getAsset(clientKey, 'themeClassName');
   const [file, setFile] = useState<any>(null);
   const [reason, setReason] = useState<string>('');
-  const [loading, setLoading] = useState<boolean>(false);
   const [success, setSuccess] = useState<boolean>(false);
 
   const [selectedReason, setSelectedReason] = useState<{
@@ -101,12 +101,12 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
     }
   ];
 
-  const _GetUrlFromS3 = async (key: string) => {
+  const _GetUrlFromS3 = async (key: string): Promise<string> => {
     try {
       const getFileURL = await Storage.get(key, {
         level: 'public'
       });
-      return getFileURL;
+      return getFileURL.toString();
     } catch (error) {
       logError(
         error,
@@ -672,31 +672,34 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
     }
   };
 
+  const [urlLink, setUrlLink] = useState('');
+
   const createUploadLogs = async (
-    surveyTempID: any,
-    demoTempID: any,
-    updateType: any,
-    unitID: any,
-    lessonID: any
+    // surveyTempID: any,
+    // demoTempID: any,
+    updateType: any
+    // unitID: any,
+    // lessonID: any
   ) => {
     try {
-      const value = {
+      let input: CreateUploadLogsInput = {
         id: uuidv4(),
-        ...(surveyTempID !== '' && {TemporaryUniversalUploadSurveyDataID: surveyTempID}),
-        ...(demoTempID !== '' && {TemporaryDemographicsUploadDataID: demoTempID}),
+        // TemporaryUniversalUploadSurveyDataID: surveyTempID || '',
+        // TemporaryDemographicsUploadDataID: demoTempID || '',
         User_id: state.user.authId,
-        Unit_id: unitID,
-        lesson_id: lessonID,
+        // Unit_id: unitID,
+        // lesson_id: lessonID,
         Date: new Date().toISOString().split('T')[0],
         UploadType: selectedReason.value,
         updateType: updateType,
-        ...(imgUrl && {PaperSurveyURL: imgUrl}),
-        Reason: reason
+        PaperSurveyURL: imgUrl as string[],
+        Reason: reason,
+        urlLink
       };
 
       const newUploadLogs: any = await API.graphql(
         graphqlOperation(mutations.createUploadLogs, {
-          input: value
+          input: input
         })
       );
 
@@ -717,14 +720,29 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
   const handleSurveyExistingUpload = async () => {
     try {
       let index = [],
-        data: any = [];
+        data: any[] = [];
       for (let i = surveyData.length - 1; i >= 0; i--) {
         if (index.indexOf(surveyData[i].UniversalSurveyStudentID) === -1) {
           index.push(surveyData[i].UniversalSurveyStudentID);
           data.unshift(surveyData[i]);
         }
       }
+      await createUploadLogs(
+        // '',
+        // '',
+        'SURVEY_DATA_UPDATE'
+        // item.syllabusLessonID,
+        // item.lessonID
+      );
+
       data.forEach(async (item: any) => {
+        // const createTempSurveyresult = await createTempSurveyData(
+        //   item.UniversalSurveyStudentID,
+        //   item.surveyData
+        // );
+
+        // createTempSurveyresult &&
+
         const updateData: any = await API.graphql(
           graphqlOperation(mutations.updateUniversalSurveyStudentData, {
             input: {
@@ -733,21 +751,6 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
             }
           })
         );
-        if (updateData) {
-          const createTempSurveyresult = await createTempSurveyData(
-            updateData.data.updateUniversalSurveyStudentData.id,
-            item.surveyData
-          );
-
-          createTempSurveyresult &&
-            (await createUploadLogs(
-              createTempSurveyresult.id,
-              '',
-              'SURVEY_DATA_UPDATE',
-              updateData.data.updateUniversalSurveyStudentData.syllabusLessonID,
-              updateData.data.updateUniversalSurveyStudentData.lessonID
-            ));
-        }
       });
     } catch (error) {
       logError(
@@ -769,6 +772,14 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
           return sData.hasTakenSurvey === true;
         });
       });
+      await createUploadLogs(
+        // '',
+        // '',
+        'SURVEY_DATA_UPDATE'
+        // item.syllabusLessonID,
+        // item.lessonID
+      );
+
       changedSurveyData.forEach(async (item: any) => {
         const createData: any = await API.graphql(
           graphqlOperation(mutations.createUniversalSurveyStudentData, {
@@ -783,18 +794,11 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
           })
         );
         if (createData) {
-          const createTempSurveyresult = await createTempSurveyData(
-            createData.data.createUniversalSurveyStudentData.id,
-            item.surveyData
-          );
-          createTempSurveyresult &&
-            (await createUploadLogs(
-              createTempSurveyresult.id,
-              '',
-              'SURVEY_DATA_UPDATE',
-              item.syllabusLessonID,
-              item.lessonID
-            ));
+          // const createTempSurveyresult = await createTempSurveyData(
+          //   createData.data.createUniversalSurveyStudentData.id,
+          //   item.surveyData
+          // );
+          // createTempSurveyresult &&
         }
       });
     } catch (error) {
@@ -821,7 +825,21 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
         }
       }
 
+      await createUploadLogs(
+        // '',
+        // '',
+        'DEMOGRAPHIC_DATA_UPDATE'
+        // item.syllabusLessonID,
+        // item.lessonID
+      );
+
       data.forEach(async (item: any) => {
+        // const createTempDemographicsDataResult = await createTempDemographicsData(
+        //   item.questionDataId,
+        //   item.responseObject
+        // );
+        // createTempDemographicsDataResult &&
+
         const updateDemographicsData: any = await API.graphql(
           graphqlOperation(mutations.updateQuestionData, {
             input: {
@@ -830,21 +848,6 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
             }
           })
         );
-
-        if (updateDemographicsData) {
-          const createTempDemographicsDataResult = await createTempDemographicsData(
-            updateDemographicsData.data.updateQuestionData.id,
-            item.responseObject
-          );
-          createTempDemographicsDataResult &&
-            (await createUploadLogs(
-              '',
-              createTempDemographicsDataResult.id,
-              'DEMOGRAPHIC_DATA_UPDATE',
-              updateDemographicsData.data.updateQuestionData.syllabusLessonID,
-              updateDemographicsData.data.updateQuestionData.lessonID
-            ));
-        }
       });
     } catch (error) {
       logError(
@@ -866,6 +869,15 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
           return dData.demographicsUpdated === true;
         });
       });
+
+      await createUploadLogs(
+        // '',
+        // '',
+        'DEMOGRAPHIC_DATA_UPDATE'
+        // createDemographicsQuestionData.data.createQuestionData.syllabusLessonID,
+        // createDemographicsQuestionData.data.createQuestionData.lessonID
+      );
+
       changedDemographicsUpdatedData.forEach(async (item: any) => {
         const createCheckpointData: any = await API.graphql(
           graphqlOperation(mutations.createCheckpoint, {
@@ -890,18 +902,11 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
             })
           );
           if (createDemographicsQuestionData) {
-            const createTempDemographicsDataResult = await createTempDemographicsData(
-              createDemographicsQuestionData.data.createQuestionData.id,
-              item.responseObject
-            );
-            createTempDemographicsDataResult &&
-              (await createUploadLogs(
-                '',
-                createTempDemographicsDataResult.id,
-                'DEMOGRAPHIC_DATA_UPDATE',
-                createDemographicsQuestionData.data.createQuestionData.syllabusLessonID,
-                createDemographicsQuestionData.data.createQuestionData.lessonID
-              ));
+            // const createTempDemographicsDataResult = await createTempDemographicsData(
+            //   createDemographicsQuestionData.data.createQuestionData.id,
+            //   item.responseObject
+            // );
+            // createTempDemographicsDataResult &&
           }
         }
       });
@@ -940,15 +945,39 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
     });
   };
 
+  const CSV_KEY = 'CSV';
+
+  const uploadCsvToS3 = async () => {
+    try {
+      if (file) {
+        const fileName = file.name;
+        const fileType = file.type;
+        const fileUpload: any = await uploadImageToS3(
+          file,
+          `${CSV_KEY}/${fileName}`,
+          fileType
+        );
+        const fileUrl = await _GetUrlFromS3(fileUpload.key);
+        setUrlLink(fileUrl);
+      }
+    } catch (error) {
+      console.error(error);
+      logError(error, {authId, email: state.user.email}, 'UploadCSV @uploadCsvToS3');
+    }
+  };
+
   const handleSubmit = async (e: any) => {
     try {
       e.persist();
       e.preventDefault();
       setUploadingCSV(true);
+
+      await uploadCsvToS3();
       await handleSurveyExistingUpload();
       await handleNewSurveyUniversalUpload();
       await handleDemographicsExistingUpload();
       await handleDemographicsNewUpload();
+
       setSelectedReason({
         id: 0,
         name: '',
@@ -1460,7 +1489,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
           maxWidth="-"
           cols={50}
           value={reason}
-          disabled={!file || loading || !selectedReason.value}
+          disabled={!file || uploadingCSV || !selectedReason.value}
           onChange={(e: any) => setReason(e.target.value)}
           placeHolder={CsvDict[userLanguage]['REASON']}
         />
@@ -1476,7 +1505,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
 
         <div className="flex items-center justify-end mt-3">
           <Buttons
-            label={loading ? 'Uploading Please wait...' : 'Upload CSV'}
+            label={uploadingCSV ? 'Uploading Please wait...' : 'Upload CSV'}
             disabled={!reason || uploadingCSV}
             onClick={(e) => showModalWhenUploadCsv(e)}
           />
