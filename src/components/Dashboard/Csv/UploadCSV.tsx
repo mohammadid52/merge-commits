@@ -11,7 +11,7 @@ import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UICo
 import useAuth from '@customHooks/useAuth';
 import {Transition} from '@headlessui/react';
 import {getExtension} from '@utilities/functions';
-import {getImageFromS3Static} from '@utilities/services';
+import {getImageFromS3, getImageFromS3Static} from '@utilities/services';
 import {CreateUploadLogsInput} from 'API';
 import Selector from 'atoms/Form/Selector';
 import {Storage} from 'aws-amplify';
@@ -455,7 +455,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
 
   const [error, setError] = useState(null);
 
-  const {authId, isTeacher, isFellow, email} = useAuth();
+  const {authId, isTeacher, isFellow, email, firstName, lastName} = useAuth();
 
   const INITIAL_MODAL_STATE = {
     show: false,
@@ -666,7 +666,11 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
         Reason: reason,
         urlLink: csvUrl,
         authID: authId,
-        email
+        email,
+        surveyName: selectedSurvey.name,
+        roomName: selectedReason.name,
+        personName: `${firstName} ${lastName}`,
+        unitName: selectedUnit.name
       };
 
       const newUploadLogs: any = await API.graphql(
@@ -880,9 +884,9 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
           fileType
         );
 
-        const fileUrl = await _GetUrlFromS3(fileUpload.key);
+        const fileUrl = (await getImageFromS3(fileUpload.key)) || '';
 
-        return fileUrl;
+        return fileUrl as string;
       }
     } catch (error) {
       console.error(error);
@@ -1325,17 +1329,6 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
             onChange={(value, name, id) => onReasonSelected(id, name, value)}
           />
         </div>
-
-        <AnimatedContainer show={Boolean(file) && file?.name}>
-          {file && file?.name && (
-            <div className="p-2 px-4 border-dashed border-0 border-gray-400 rounded-md my-4">
-              <FieldValue field={'Filename'} value={file?.name} />
-              {Boolean(selectedReason.name) && (
-                <FieldValue field={'Reason'} value={selectedReason?.name} />
-              )}
-            </div>
-          )}
-        </AnimatedContainer>
 
         {/* <AnimatedContainer
           animationType="translateY"
