@@ -6299,3 +6299,68 @@ export const listCurricula = /* GraphQL */ `
     }
   }
 `;
+
+export const listUploadLogs = /* GraphQL */ `
+  query ListUploadLogs(
+    $id: ID
+    $filter: ModelUploadLogsFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listUploadLogs(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        UploadType
+        updateType
+        Date
+        User_id
+        Curricullum_id
+        urlLink
+        Unit_id
+        authID
+        email
+        lesson_id
+        room_id
+        Class_id
+        PaperSurveyURL
+        Reason
+        person {
+          id
+          authId
+          email
+          firstName
+          preferredName
+          lastName
+        }
+        lesson {
+          id
+          type
+          label
+          title
+        }
+        room {
+          id
+          name
+        }
+        unit {
+          id
+          name
+        }
+        surveyName
+        unitName
+        roomName
+        personName
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;

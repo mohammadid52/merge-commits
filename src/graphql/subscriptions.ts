@@ -12127,6 +12127,10 @@ export const onCreateUploadLogs = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      surveyName
+      unitName
+      roomName
+      personName
       createdAt
       updatedAt
     }
@@ -12497,6 +12501,10 @@ export const onUpdateUploadLogs = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      surveyName
+      unitName
+      roomName
+      personName
       createdAt
       updatedAt
     }
@@ -12867,6 +12875,10 @@ export const onDeleteUploadLogs = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      surveyName
+      unitName
+      roomName
+      personName
       createdAt
       updatedAt
     }

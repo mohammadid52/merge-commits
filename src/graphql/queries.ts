@@ -5921,6 +5921,10 @@ export const getUploadLogs = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      surveyName
+      unitName
+      roomName
+      personName
       createdAt
       updatedAt
     }
@@ -6098,6 +6102,10 @@ export const listUploadLogs = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        surveyName
+        unitName
+        roomName
+        personName
         createdAt
         updatedAt
       }
