@@ -27,7 +27,9 @@ import React, {lazy, Suspense, useContext, useEffect, useState} from 'react';
 import {useCookies} from 'react-cookie';
 import {Redirect, Route, Switch, useHistory, useRouteMatch} from 'react-router-dom';
 import {setLocalStorageData} from 'utilities/localStorage';
+
 const Classroom = lazy(() => import('components/Dashboard/Classroom/Classroom'));
+const UploadLogsPage = lazy(() => import('components/Dashboard/Csv/UploadLogsPage'));
 
 const GameChangers = lazy(() => import('components/Dashboard/GameChangers/GameChangers'));
 const Anthology = lazy(() => import('components/Dashboard/Anthology/Anthology'));
@@ -905,6 +907,14 @@ const Dashboard = (props: DashboardProps) => {
                 render={() => (
                   <ErrorBoundary componentName="Errors">
                     <ErrorsPage />
+                  </ErrorBoundary>
+                )}
+              />
+              <Route
+                path={`${match.url}/upload-logs`}
+                render={() => (
+                  <ErrorBoundary componentName="UploadLogs">
+                    <UploadLogsPage />
                   </ErrorBoundary>
                 )}
               />

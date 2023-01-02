@@ -800,6 +800,10 @@ type UploadLogs @model @auth(rules: [{allow: public}]) {
   lesson: UniversalLesson @hasOne(fields: ["lesson_id"])
   room: Room @hasOne(fields: ["room_id"])
   unit: UniversalSyllabus @hasOne(fields: ["Unit_id"])
+  surveyName: String
+  unitName: String
+  roomName: String
+  personName: String
 }
 
 type ExerciseData {
