@@ -11,25 +11,23 @@ import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UICo
 import useAuth from '@customHooks/useAuth';
 import {Transition} from '@headlessui/react';
 import {getExtension} from '@utilities/functions';
+import {getImageFromS3Static} from '@utilities/services';
+import {CreateUploadLogsInput} from 'API';
 import Selector from 'atoms/Form/Selector';
 import {Storage} from 'aws-amplify';
 import {GlobalContext} from 'contexts/GlobalContext';
+import * as customMutations from 'customGraphql/customMutations';
 import * as customQueries from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
-import * as customMutations from 'customGraphql/customMutations';
 import * as mutations from 'graphql/mutations';
 import * as queries from 'graphql/queries';
 import {uniqBy} from 'lodash';
 import Papa from 'papaparse';
 import React, {useContext, useEffect, useRef, useState} from 'react';
 import ClickAwayListener from 'react-click-away-listener';
-import {FaSpinner} from 'react-icons/fa';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {RiErrorWarningLine} from 'react-icons/ri';
 import {v4 as uuidv4} from 'uuid';
 import {removeDuplicates} from './Csv';
-import {getImageFromS3Static} from '@utilities/services';
-import {CreateUploadLogsInput} from 'API';
 interface ICsvProps {
   institutionId?: string;
 }
@@ -82,8 +80,6 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
   const [demographicsData, setDemographicsData] = useState<any[]>([]);
 
   const [newDemographicsData, setNewDemographicsData] = useState<string[]>([]);
-
-  const [imgUrl, setImgUrl] = useState<string[] | Object[]>([]);
 
   const fileReader = new FileReader();
   const fileInputRef = useRef<HTMLInputElement>();
@@ -655,10 +651,8 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
     }
   };
 
-  const [urlLink, setUrlLink] = useState('');
-
   // this will create single upload log
-  const createUploadLog = async () => {
+  const createUploadLog = async (csvUrl: string) => {
     try {
       let input: CreateUploadLogsInput = {
         id: uuidv4(),
@@ -668,9 +662,9 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
         Date: new Date().toISOString().split('T')[0],
         UploadType: selectedReason.value,
         room_id: selectedClassRoom.id,
-        PaperSurveyURL: imgUrl as string[],
+        // PaperSurveyURL: imgUrl as string[],
         Reason: reason,
-        urlLink,
+        urlLink: csvUrl,
         authID: authId,
         email
       };
@@ -885,8 +879,10 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
           `${CSV_KEY}/${fileName}`,
           fileType
         );
+
         const fileUrl = await _GetUrlFromS3(fileUpload.key);
-        setUrlLink(fileUrl);
+
+        return fileUrl;
       }
     } catch (error) {
       console.error(error);
@@ -900,21 +896,21 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
       e.preventDefault();
       setUploadingCSV(true);
 
-      await uploadCsvToS3();
+      const csvUrl = await uploadCsvToS3();
 
-      await createUploadLog();
+      await createUploadLog(csvUrl);
 
-      await handleSurveyExistingUpload();
-      await handleNewSurveyUniversalUpload();
-      await handleDemographicsExistingUpload();
-      await handleDemographicsNewUpload();
+      // await handleSurveyExistingUpload();
+      // await handleNewSurveyUniversalUpload();
+      // await handleDemographicsExistingUpload();
+      // await handleDemographicsNewUpload();
 
       setSelectedReason({
         id: 0,
         name: '',
         value: ''
       });
-      setImgUrl([]);
+
       csvInputRef.current.value = '';
       setFile(null);
       setReason('');
@@ -933,32 +929,6 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
   const onReasonSelected = (id: any, name: string, value: string) => {
     let reasonDropdownValue = {id, name, value};
     setSelectedReason(reasonDropdownValue);
-    setMultipleImagesUploaded(false);
-  };
-
-  const [multipleImagesUploaded, setMultipleImagesUploaded] = useState(false);
-  const [multipleImagesUploading, setMultipleImagesUploading] = useState(false);
-
-  const imageUpload = async (e: any) => {
-    setMultipleImagesUploading(true);
-    try {
-      e.preventDefault();
-      let imgArr = fileInputRef.current.files;
-      for (let i = 0; i < imgArr.length; i++) {
-        const file = imgArr[i];
-        const fileName = file.name;
-        const fileType = file.type;
-        const fileUpload: any = await uploadImageToS3(file, fileName, fileType);
-        const fileUrl = await _GetUrlFromS3(fileUpload.key);
-        setImgUrl((prevState: any) => [...prevState, fileUrl]);
-      }
-      setMultipleImagesUploaded(true);
-    } catch (e) {
-      logError(e, {authId, email}, 'UploadCSV @imageUpload');
-      console.log('error uploading image', e);
-    } finally {
-      setMultipleImagesUploading(false);
-    }
   };
 
   const [selectedSurvey, setSelectedSurvey] = useState(null);
@@ -1367,7 +1337,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
           )}
         </AnimatedContainer>
 
-        <AnimatedContainer
+        {/* <AnimatedContainer
           animationType="translateY"
           show={selectedReason.value === 'paper-survey'}>
           {selectedReason.value === 'paper-survey' && (
@@ -1399,7 +1369,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
               )}
             </div>
           )}
-        </AnimatedContainer>
+        </AnimatedContainer> */}
 
         <FormInput
           textarea
