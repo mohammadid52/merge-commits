@@ -787,6 +787,7 @@ type UploadLogs @model @auth(rules: [{allow: public}]) {
   updateType: UpdateType
   Date: AWSDate
   Curricullum_id: ID
+  urlLink: String
   Unit_id: ID
   lesson_id: ID
   Class_id: ID
