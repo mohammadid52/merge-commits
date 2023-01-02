@@ -5618,6 +5618,7 @@ export const getUploadLogs = /* GraphQL */ `
       updateType
       Date
       Curricullum_id
+      urlLink
       Unit_id
       lesson_id
       Class_id
@@ -5666,6 +5667,7 @@ export const listUploadLogs = /* GraphQL */ `
         updateType
         Date
         Curricullum_id
+        urlLink
         Unit_id
         lesson_id
         Class_id
