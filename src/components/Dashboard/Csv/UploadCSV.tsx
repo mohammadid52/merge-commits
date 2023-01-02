@@ -19,9 +19,9 @@ import {
 } from 'API';
 import Selector from 'atoms/Form/Selector';
 import {useGlobalContext} from 'contexts/GlobalContext';
-import * as customMutations from 'customGraphql/customMutations';
 import * as customQueries from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
+import * as customMutations from 'customGraphql/customMutations';
 import * as mutations from 'graphql/mutations';
 import * as queries from 'graphql/queries';
 import {isEmpty, uniqBy} from 'lodash';
