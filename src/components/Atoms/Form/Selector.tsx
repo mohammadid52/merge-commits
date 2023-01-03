@@ -27,6 +27,7 @@ interface SelectorProps {
   noOptionMessage?: string;
   width?: string;
   error?: string;
+  btnId?: string;
   isClearable?: boolean;
   onClear?: () => void;
   setHoveringItem?: React.Dispatch<React.SetStateAction<{}>>;
@@ -59,6 +60,7 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
     isClearable = false,
     dropdownWidth,
     arrowHidden,
+    btnId,
 
     setHoveringItem,
 
@@ -158,6 +160,7 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
           disabled={disabled || loading}
           onClick={() => setShowList(!showList)}
           type="button"
+          id={btnId}
           aria-haspopup="listbox"
           aria-expanded="true"
           aria-labelledby="listbox-label"

@@ -2,7 +2,7 @@ import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import Buttons from '@components/Atoms/Buttons';
 import FormInput from '@components/Atoms/Form/FormInput';
 import {logError, uploadImageToS3} from '@graphql/functions';
-import {getAsset, XLSX_TO_CSV_URL} from 'assets';
+import {XLSX_TO_CSV_URL} from 'assets';
 
 import UploadButton from '@components/Atoms/Form/UploadButton';
 import Modal from '@components/Atoms/Modal';
@@ -10,20 +10,19 @@ import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import useAuth from '@customHooks/useAuth';
 import {Transition} from '@headlessui/react';
-import {getExtension} from '@utilities/functions';
+import {focusOn, getExtension} from '@utilities/functions';
 import {getImageFromS3, getImageFromS3Static} from '@utilities/services';
 import {CreateUploadLogsInput} from 'API';
 import Selector from 'atoms/Form/Selector';
-import {Storage} from 'aws-amplify';
-import {GlobalContext} from 'contexts/GlobalContext';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import * as customMutations from 'customGraphql/customMutations';
 import * as customQueries from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import * as mutations from 'graphql/mutations';
 import * as queries from 'graphql/queries';
-import {uniqBy} from 'lodash';
+import {isEmpty, kebabCase, uniqBy} from 'lodash';
 import Papa from 'papaparse';
-import React, {useContext, useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import ClickAwayListener from 'react-click-away-listener';
 import {RiErrorWarningLine} from 'react-icons/ri';
 import {v4 as uuidv4} from 'uuid';
@@ -47,23 +46,96 @@ const DataValue = ({
   );
 };
 
-const FieldValue = ({field, value}: {field: string; value: string}) => {
+const getFormatedDate = (date: string) => {
+  if (date) {
+    if (date !== '-') {
+      return date.split(',')[0];
+    } else {
+      return '-';
+    }
+  }
+  return '-';
+};
+
+const theadStyles =
+  'px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider';
+const tdataStyles = 'px-6 py-4 whitespace-nowrap text-sm text-gray-800';
+
+export const Table = ({CSVData}: {CSVData: any[]}) => {
   return (
-    <div className="w-auto flex items-center justify-start text-sm">
-      <div className="w-auto text-gray-700 mr-2">{field}: </div>
-      <div className="w-auto text-gray-700 font-medium">{value}</div>
+    <div className="flex flex-col">
+      <div className="overflow-x-auto ">
+        <div className="py-2 align-middle inline-block min-w-full ">
+          <div className="flex flex-1 shadow inner_card  border-b-0 border-gray-200 sm:rounded-lg">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-100">
+                <tr>
+                  <th scope="col" style={{width: '15%'}} className={theadStyles}>
+                    Id
+                  </th>
+                  <th scope="col" style={{width: '20%'}} className={theadStyles}>
+                    first name
+                  </th>
+                  <th scope="col" style={{width: '15%'}} className={theadStyles}>
+                    last Name
+                  </th>
+                  <th scope="col" style={{width: '20%'}} className={theadStyles}>
+                    Email
+                  </th>
+                  <th scope="col" style={{width: '20%'}} className={theadStyles}>
+                    Taken Survey
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {CSVData.map(
+                  (listItem, idx): JSX.Element => (
+                    <tr key={idx} className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-100'}>
+                      <td style={{width: '15%'}} className={tdataStyles}>
+                        {listItem['AuthId']}
+                      </td>
+                      <td style={{width: '20%'}} className={tdataStyles}>
+                        {listItem['First Name']}
+                      </td>
+                      <td style={{width: '15%'}} className={tdataStyles}>
+                        {listItem['Last Name']}
+                      </td>
+                      <td style={{width: '20%'}} className={tdataStyles}>
+                        {listItem['Email']}
+                      </td>
+                      <td style={{width: '20%'}} className={tdataStyles}>
+                        {listItem['UniversalSurveyStudentID'] === 'Not-taken-yet'
+                          ? 'No'
+                          : 'Yes'}
+                      </td>
+                    </tr>
+                  )
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
 
+const INITIAL_MODAL_STATE = {
+  show: false,
+  element: <div />,
+  title: '',
+  saveAction: () => {},
+  saveLabel: '',
+  closeLabel: ''
+};
+
 const UploadCsv = ({institutionId}: ICsvProps) => {
-  const {state, theme, clientKey, userLanguage} = useContext(GlobalContext);
-  const {CsvDict, Institute_info} = useDictionary(clientKey);
-  const themeColor = getAsset(clientKey, 'themeClassName');
+  const {state, userLanguage} = useGlobalContext();
+  const {CsvDict, Institute_info} = useDictionary();
+
   const [file, setFile] = useState<any>(null);
   const [reason, setReason] = useState<string>('');
   const [success, setSuccess] = useState<boolean>(false);
-
   const [selectedReason, setSelectedReason] = useState<{
     id: number;
     name: string;
@@ -74,12 +146,34 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
     value: ''
   });
   const [surveyData, setSurveyData] = useState<any[]>([]);
-
   const [newUniversalSurveyData, setNewUniversalSurveyData] = useState<string[]>([]);
-
   const [demographicsData, setDemographicsData] = useState<any[]>([]);
-
   const [newDemographicsData, setNewDemographicsData] = useState<string[]>([]);
+  const [selectedSurvey, setSelectedSurvey] = useState(null);
+  const [classRoomLoading, setClassRoomLoading] = useState(false);
+  const [unitsLoading, setUnitsLoading] = useState(false);
+  const [instClassRooms, setInstClassRooms] = useState([]);
+  const [classRoomsList, setClassRoomsList] = useState([]);
+  const [units, setUnits] = useState([]);
+  const [isMapping, setIsMapping] = useState(false);
+  const [error, setError] = useState(null);
+  const [showModal, setShowModal] = useState(INITIAL_MODAL_STATE);
+
+  const [selectedClassRoom, setSelectedClassRoom] = useState(null);
+  const [selectedCurriculum, setSelectedCurriculum] = useState(null);
+
+  const [selectedUnit, setSelectedUnit] = useState(null);
+  const [activeUnits, setActiveUnits] = useState([]);
+  const [uploadingCSV, setUploadingCSV] = useState(false);
+
+  const [surveys, setSurveys] = useState([]);
+  const [surveysLoading, setSurveysLoading] = useState(false);
+
+  const [checkingCsvFile, setCheckingCsvFile] = useState(false);
+
+  const [parsedObj, setParsedObj] = useState({});
+
+  const {authId, isTeacher, isFellow, email, firstName, lastName} = useAuth();
 
   const fileReader = new FileReader();
   const fileInputRef = useRef<HTMLInputElement>();
@@ -97,22 +191,6 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
       value: 'user-update'
     }
   ];
-
-  const _GetUrlFromS3 = async (key: string): Promise<string> => {
-    try {
-      const getFileURL = await Storage.get(key, {
-        level: 'public'
-      });
-      return getFileURL.toString();
-    } catch (error) {
-      logError(error, {authId, email}, 'UploadCSV @_GetUrlFromS3');
-
-      console.error(
-        '🚀 ~ file: UploadCSV.tsx ~ line 92 ~ const_GetUrlFromS3= ~ error',
-        error
-      );
-    }
-  };
 
   const listQuestions = async (lessonId: string) => {
     try {
@@ -251,7 +329,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
 
   const customParse = (data: any[]) => {
     if (data[0][0] !== 'AuthId') {
-      setError('Invalid formatted header.. Make sure header has valid values');
+      setError('Invalid formatted header.. Make sure column header are not changed');
       console.error('Invalid formatted header.. Make sure header has valid values');
       return;
     } else {
@@ -265,7 +343,12 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
 
       data.slice(1, data.length).forEach((row) => {
         row.forEach((value: string, index2: number) => {
-          headers[keys[index2]] = [...headers[keys[index2]], value || '-'];
+          if (typeof value === 'string' || typeof value === 'number') {
+            let updateValue = value.toString().trim();
+            headers[keys[index2]] = [...headers[keys[index2]], updateValue || '-'];
+          } else {
+            return false;
+          }
         });
       });
 
@@ -300,19 +383,22 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
 
       if (surveyDomId) {
         const findSurveyDatabasedonDomId = returnedData.surveyData.filter(
-          (item: any) => item.domID === surveyDomId
+          (item: any) => item && item?.domID === surveyDomId
         );
 
         const updateSurveyInput = findSurveyDatabasedonDomId.find((item: any) => {
-          let selectedOption = surveyQuestionOptions[surveyDomId].filter(
-            (option: any) => {
-              return option.text === value;
+          if (item) {
+            let selectedOption = surveyQuestionOptions[surveyDomId].filter(
+              (option: any) => {
+                return option.text === value;
+              }
+            );
+
+            if (selectedOption.length > 0 && item.domID === surveyDomId) {
+              return (item.input = [selectedOption[0].id]);
+            } else {
+              return (item.input = [value]);
             }
-          );
-          if (selectedOption.length > 0 && item.domID === surveyDomId) {
-            return (item.input = [selectedOption[0].id]);
-          } else {
-            return (item.input = [value]);
           }
         });
 
@@ -393,11 +479,11 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
 
       if (demographicsQuesId) {
         const findDemographicsQuesIdResponse = returnedData.responseObject.filter(
-          (item: any) => item.qid === demographicsQuesId
+          (item: any) => item && item.qid === demographicsQuesId
         );
         const updateDemographicsQuesResponse = findDemographicsQuesIdResponse.find(
           (item: any) => {
-            if (item.qid === demographicsQuesId) {
+            if (item && item.qid === demographicsQuesId) {
               item.response = [value];
               return true;
             }
@@ -451,27 +537,36 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
     });
   };
 
-  const [isMapping, setIsMapping] = useState(false);
-
-  const [error, setError] = useState(null);
-
-  const {authId, isTeacher, isFellow, email, firstName, lastName} = useAuth();
-
-  const INITIAL_MODAL_STATE = {
-    show: false,
-    element: <div />,
-    title: '',
-    saveAction: () => {},
-    saveLabel: '',
-    closeLabel: ''
-  };
-  const [showModal, setShowModal] = useState(INITIAL_MODAL_STATE);
   const clearModal = () => setShowModal(INITIAL_MODAL_STATE);
 
   const resetFile = () => {
     setFile(null);
     setSurveyData([]);
     setNewUniversalSurveyData([]);
+  };
+
+  const removeBlankAuthIds = (obj: any): any => {
+    // record which index has blank auth_id
+    let indexOfBlankAuthId: number[] = [];
+    let authIdArr = obj['AuthId'];
+
+    authIdArr.forEach((_d: string, index: number) => {
+      if (_d === '-') {
+        indexOfBlankAuthId.push(index);
+      }
+    });
+
+    let result: any = {};
+
+    Object.keys(obj).forEach((_d) => {
+      const values = obj[_d];
+      indexOfBlankAuthId.forEach((idxToBeRemoved) => {
+        values.splice(idxToBeRemoved, 1);
+      });
+      result[_d] = values;
+    });
+
+    return result;
   };
 
   const handleUpload = async (e: any) => {
@@ -481,12 +576,37 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
     if (ext === 'csv') {
       clearModal();
       try {
+        setCheckingCsvFile(true);
         let surveyQuestionOptions: any = {};
         fileReader.onload = async (event: any) => {
           setIsMapping(true);
           const result: any = Papa.parse(event.target.result);
 
-          const parsed = customParse(result.data);
+          let parsed = customParse(result.data);
+          if (typeof parsed === 'boolean' && !parsed) {
+            resetFile();
+            setIsMapping(false);
+            setShowModal({
+              show: true,
+              title: 'Confirm File',
+              element: (
+                <div>
+                  <p className="p-4 text-sm text-gray-700">
+                    please check your input file, You are trying to import unapproved
+                    response types
+                  </p>
+                </div>
+              ),
+
+              saveAction: null,
+              saveLabel: '',
+              closeLabel: ''
+            });
+            return;
+          }
+
+          parsed = removeBlankAuthIds(parsed);
+          setParsedObj(parsed);
 
           const surveyID = parsed['SurveyID'][0];
           const unitID = parsed['UnitID'][0];
@@ -519,11 +639,14 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
             resetFile();
             setFile(file);
             let listOptionsId = await listQuestions(surveyID);
+
             listOptionsId &&
               listOptionsId.length > 0 &&
               listOptionsId.forEach((ques: any) => {
                 return (surveyQuestionOptions[ques.question.id] = ques.question.options);
               });
+
+            focusOn('reason-button');
 
             Object.keys(parsed).forEach((keyName, index2: number) => {
               const valueArray = parsed[keyName];
@@ -576,6 +699,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
 
         console.error('🚀 ~ file: UploadCSV.tsx ~ line 39 ~ handleUpload ~ error', error);
       } finally {
+        setCheckingCsvFile(false);
       }
     } else if (ext === 'xlsx') {
       setShowModal({
@@ -849,8 +973,6 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
     }
   };
 
-  const [uploadingCSV, setUploadingCSV] = useState(false);
-
   const showModalWhenUploadCsv = (e: any) => {
     setShowModal({
       show: true,
@@ -894,16 +1016,69 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
     }
   };
 
+  const deletePrevTempDataUploadSurveyData = async () => {
+    try {
+      const res: any = await API.graphql(
+        graphqlOperation(queries.listTemporaryUniversalUploadSurveyData)
+      );
+
+      const list: any[] = res.data.listTemporaryUniversalUploadSurveyData.items || [];
+
+      if (list.length > 0) {
+        list.forEach(async (item) => {
+          await API.graphql(
+            graphqlOperation(mutations.deleteTemporaryUniversalUploadSurveyData, {
+              input: {id: item.id}
+            })
+          );
+        });
+      }
+    } catch (error) {
+      console.error(error);
+      logError(error, {authId, email}, 'UploadCSV @deletePrevTempData');
+    }
+  };
+
+  const deletePrevTempDataDempographics = async () => {
+    try {
+      const res: any = await API.graphql(
+        graphqlOperation(queries.listTemporaryDemographicsUploadData)
+      );
+
+      const list: any[] = res.data.listTemporaryDemographicsUploadData.items || [];
+
+      if (list.length > 0) {
+        list.forEach(async (item) => {
+          await API.graphql(
+            graphqlOperation(mutations.deleteTemporaryDemographicsUploadData, {
+              input: {id: item.id}
+            })
+          );
+        });
+      }
+    } catch (error) {
+      console.error(error);
+      logError(error, {authId, email}, 'UploadCSV @deletePrevTempData');
+    }
+  };
+
   const handleSubmit = async (e: any) => {
     try {
       e.persist();
       e.preventDefault();
       setUploadingCSV(true);
 
+      // step 1  - upload csv file to s3 and get the url
       const csvUrl = await uploadCsvToS3();
 
+      // step 2 - create upload log record and use csv url there
       await createUploadLog(csvUrl);
 
+      // step 3 - delete previous temporary records for both tables
+      await deletePrevTempDataUploadSurveyData();
+      await deletePrevTempDataDempographics();
+
+      // step 4 - upload everything to table
       // await handleSurveyExistingUpload();
       // await handleNewSurveyUniversalUpload();
       // await handleDemographicsExistingUpload();
@@ -935,21 +1110,11 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
     setSelectedReason(reasonDropdownValue);
   };
 
-  const [selectedSurvey, setSelectedSurvey] = useState(null);
-
   const onChangeSurvey = (id: any, name: string, value: string) => {
     resetFile();
     let reasonDropdownValue = {id, name, value};
     setSelectedSurvey(reasonDropdownValue);
   };
-
-  const [classRoomLoading, setClassRoomLoading] = useState(false);
-  const [unitsLoading, setUnitsLoading] = useState(false);
-
-  const [instClassRooms, setInstClassRooms] = useState([]);
-  const [classRoomsList, setClassRoomsList] = useState([]);
-
-  const [units, setUnits] = useState([]);
 
   const fetchUnits = async (curriculumId: string) => {
     try {
@@ -970,7 +1135,8 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
 
       // here we have curricularCheckpoints and use syllabusLessonId 999999 to fetch list of question data
     } catch (err) {
-      console.log('fetch units (syllabus) error', err);
+      console.error('fetch units (syllabus) error', err);
+      logError(err, {authId, email}, 'UploadCSV @fetchUnits');
     } finally {
       setUnitsLoading(false);
     }
@@ -989,8 +1155,6 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
       activeSyllabus: cr?.activeSyllabus
     };
   };
-
-  const [activeUnits, setActiveUnits] = useState([]);
 
   const fetchActiveUnits = async (crList: any) => {
     const arrayOfActiveUnits = crList
@@ -1015,73 +1179,79 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
       setActiveUnits(units);
     } catch (error) {
       console.error('error at fetchActiveUnits Csv.tsx', error);
+      logError(error, {authId, email}, 'UploadCSV @fetchActiveUnits');
     }
   };
 
   const fetchClassRooms = async () => {
-    setClassRoomLoading(true);
-    let instCRs: any = [];
+    try {
+      setClassRoomLoading(true);
+      let instCRs: any = [];
 
-    const variablesForTR_FR = {filter: {teacherAuthID: {eq: authId}}};
-    const variablesForBLD_ADM = {};
+      const variablesForTR_FR = {filter: {teacherAuthID: {eq: authId}}};
+      const variablesForBLD_ADM = {};
 
-    let classrooms: any = await API.graphql(
-      graphqlOperation(
-        customQueries.listRoomsDashboard,
-        isTeacher || isFellow ? variablesForTR_FR : variablesForBLD_ADM
-      )
-    );
-    let coTeahcerClassrooms: any = await API.graphql(
-      graphqlOperation(
-        customQueries.listRoomCoTeachers,
-        isTeacher || isFellow ? variablesForTR_FR : variablesForBLD_ADM
-      )
-    );
+      let classrooms: any = await API.graphql(
+        graphqlOperation(
+          customQueries.listRoomsDashboard,
+          isTeacher || isFellow ? variablesForTR_FR : variablesForBLD_ADM
+        )
+      );
+      let coTeahcerClassrooms: any = await API.graphql(
+        graphqlOperation(
+          customQueries.listRoomCoTeachers,
+          isTeacher || isFellow ? variablesForTR_FR : variablesForBLD_ADM
+        )
+      );
 
-    let coTeachersRooms = coTeahcerClassrooms?.data?.listRoomCoTeachers?.items.map(
-      (item: any) => {
-        if (item && item.room) {
-          return {
-            ...item,
-            name: item.room.name,
-            class: {id: item.room.classID},
-            curricula: item?.curricula || {items: []}
-          };
+      let coTeachersRooms = coTeahcerClassrooms?.data?.listRoomCoTeachers?.items.map(
+        (item: any) => {
+          if (item && item.room) {
+            return {
+              ...item,
+              name: item.room.name,
+              class: {id: item.room.classID},
+              curricula: item?.curricula || {items: []}
+            };
+          }
         }
-      }
-    );
-    classrooms = [...coTeachersRooms, ...classrooms?.data.listRooms?.items] || [];
-    classrooms = classrooms
-      .map((cr: any) => {
-        if (cr) {
-          let curriculum =
-            cr.curricula?.items &&
-            Array.isArray(cr.curricula?.items) &&
-            cr.curricula?.items.length > 0
-              ? cr.curricula?.items[0].curriculum
-              : null;
+      );
+      classrooms = [...coTeachersRooms, ...classrooms?.data.listRooms?.items] || [];
+      classrooms = classrooms
+        .map((cr: any) => {
+          if (cr) {
+            let curriculum =
+              cr.curricula?.items &&
+              Array.isArray(cr.curricula?.items) &&
+              cr.curricula?.items.length > 0
+                ? cr.curricula?.items[0].curriculum
+                : null;
 
-          !instCRs.find((d: any) => d.name === cr.name) &&
-            instCRs.push({id: cr.id, name: cr.name, value: cr.name});
+            !instCRs.find((d: any) => d.name === cr.name) &&
+              instCRs.push({id: cr.id, name: cr.name, value: cr.name});
 
-          return {
-            id: cr.id,
+            return {
+              id: cr.id,
 
-            name: cr.name,
-            value: cr.name,
-            class: {...cr.class},
-            curriculum,
-            ...insertExtraData(cr)
-          };
-        }
-      })
-      .filter(Boolean);
+              name: cr.name,
+              value: cr.name,
+              class: {...cr.class},
+              curriculum,
+              ...insertExtraData(cr)
+            };
+          }
+        })
+        .filter(Boolean);
 
-    setClassRoomsList(classrooms);
-    setInstClassRooms(removeDuplicates(instCRs));
-    fetchActiveUnits(classrooms);
+      setClassRoomsList(classrooms);
+      setInstClassRooms(removeDuplicates(instCRs));
+      fetchActiveUnits(classrooms);
 
-    setClassRoomLoading(false);
+      setClassRoomLoading(false);
+    } catch (error) {
+      console.error(error);
+      logError(error, {authId, email}, 'UploadCSV @fetchClassRooms');
+    }
   };
 
   useEffect(() => {
@@ -1089,12 +1259,6 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
       fetchClassRooms();
     }
   }, [institutionId]);
-
-  const [selectedClassRoom, setSelectedClassRoom] = useState(null);
-  const [selectedCurriculum, setSelectedCurriculum] = useState(null);
-
-  const [surveys, setSurveys] = useState([]);
-  const [surveysLoading, setSurveysLoading] = useState(false);
 
   const fetchSurveys = async (unitId: string) => {
     setSurveysLoading(true);
@@ -1127,6 +1291,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
       setSurveysLoading(false);
     } catch (err) {
       console.error('fetch surveys list error', err);
+      logError(err, {authId, email}, 'UploadCSV @fetchSurveys');
     } finally {
       setSurveysLoading(false);
     }
@@ -1155,10 +1320,9 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
       }
     } catch (err) {
       console.log('on class room select', err);
+      logError(err, {authId, email}, 'UploadCSV @onClassRoomSelect');
     }
   };
-
-  const [selectedUnit, setSelectedUnit] = useState(null);
 
   const onUnitSelect = (id: string, name: string, value: string) => {
     let unit = {id, name, value};
@@ -1179,6 +1343,32 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
   const currentActiveUnit =
     currentSelectedClassroomData &&
     activeUnits.find((_d) => _d?.id === currentSelectedClassroomData?.activeSyllabus);
+
+  const getMappedValues = (input: any) => {
+    let result: any[] = [];
+
+    const values = input['AuthId'];
+
+    values.forEach(() => {
+      let res: any = {};
+      Object.keys(input).forEach((_d) => {
+        res[_d] = '';
+      });
+      result.push(res);
+    });
+
+    let mapped = result.map((_e, idx) => {
+      let final = _e;
+
+      Object.keys(_e).forEach((_v) => {
+        final[_v] = input[_v][idx];
+      });
+
+      return final;
+    });
+
+    return mapped;
+  };
 
   return (
     <>
@@ -1214,6 +1404,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
                         onChange={(value, name, id) => {
                           setHoveringItem({});
                           onClassRoomSelect(id, name, value);
+                          focusOn('upload-analytics-unit');
                         }}
                       />
                       {currentSelectedClassroomData && (
@@ -1283,14 +1474,19 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
                       loading={unitsLoading}
                       selectedItem={selectedUnit ? selectedUnit.name : ''}
                       placeholder="select unit"
+                      btnId="upload-analytics-unit"
                       list={units}
                       width="w-64"
                       disabled={!selectedCurriculum}
-                      onChange={(value, name, id) => onUnitSelect(id, name, value)}
+                      onChange={(value, name, id) => {
+                        onUnitSelect(id, name, value);
+                        focusOn('analytics-survey');
+                      }}
                     />
 
                     <Selector
                       dataCy="analytics-survey"
+                      btnId="analytics-survey"
                       loading={surveysLoading}
                       width="w-64"
                       direction="left"
@@ -1308,7 +1504,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
           </div>
         </div>
 
-        <div className="flex items-center justify-start  gap-x-4 border-t-0 border-b-0 border-gray-400 border-dashed py-4 mb-4">
+        <div className="flex items-center justify-start  gap-x-4 border-t-0 border-gray-400 border-dashed py-4 mb-4">
           <UploadButton
             disabled={isMapping || !Boolean(selectedSurvey)}
             label={file ? 'Change file' : 'Choose file'}
@@ -1323,12 +1519,18 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
             btnClass={!file && 'cursor-not-allowed'}
             disabled={!file}
             dropdownWidth="w-96"
+            btnId="reason-button"
             selectedItem={selectedReason ? selectedReason.name : ''}
             placeholder={CsvDict[userLanguage]['SELECT_REASON']}
             list={reasonDropdown}
             onChange={(value, name, id) => onReasonSelected(id, name, value)}
           />
         </div>
+        <AnimatedContainer show={checkingCsvFile} animationType="translateY">
+          {checkingCsvFile && (
+            <p className={`mt-1 text-gray-500 text-xs`}>Checking file information...</p>
+          )}
+        </AnimatedContainer>
 
         {/* <AnimatedContainer
           animationType="translateY"
@@ -1364,7 +1566,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
           )}
         </AnimatedContainer> */}
 
-        <FormInput
+        {/* <FormInput
           textarea
           label={CsvDict[userLanguage]['DESCRIBE_REASON']}
           isRequired
@@ -1376,16 +1578,23 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
           disabled={!file || uploadingCSV || !selectedReason.value}
           onChange={(e: any) => setReason(e.target.value)}
           placeHolder={CsvDict[userLanguage]['REASON']}
-        />
+        /> */}
 
         <AnimatedContainer show={success} animationType="translateY">
           {success && (
             <p className={`mt-1 text-green-500 text-xs`}>Successfully Uploaded!</p>
           )}
         </AnimatedContainer>
+
         <AnimatedContainer show={error} animationType="translateY">
           {error && <p className={`mt-1 text-red-500 text-xs`}>{error}</p>}
         </AnimatedContainer>
+
+        {!isEmpty(parsedObj) && (
+          <div className="max-w-256 flex items-center justify-center ">
+            <Table CSVData={getMappedValues(parsedObj)} />
+          </div>
+        )}
 
         <div className="flex items-center justify-end mt-3">
           <Buttons
