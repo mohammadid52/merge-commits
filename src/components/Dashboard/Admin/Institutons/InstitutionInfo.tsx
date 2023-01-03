@@ -62,7 +62,7 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
         <div className="flex-col lg:flex-row flex justify-center lg:justify-start w-full">
           <InstitutionProfile institute={institute} />
 
-          <div className="flex flex-1">
+          <div className="flex flex-1 overdlow-x-hidden">
             <div className="bg-white border-l-0 border-gray-200 mb-4 flex-1">
               <div className="">
                 {/* {renderElementBySelectedMenu()} */}

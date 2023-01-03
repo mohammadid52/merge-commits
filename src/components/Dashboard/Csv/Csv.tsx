@@ -37,18 +37,21 @@ export const removeDuplicates = (array: any[]) => {
 };
 
 const getFormatedDate = (date: string) => {
-  if (date !== '-') {
-    return date.split(',')[0];
-  } else {
-    return '-';
+  if (date) {
+    if (date !== '-') {
+      return date.split(',')[0];
+    } else {
+      return '-';
+    }
   }
+  return '-';
 };
 
 const theadStyles =
   'px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider';
 const tdataStyles = 'px-6 py-4 whitespace-nowrap text-sm text-gray-800';
 
-const Table = ({CSVData}: {CSVData: any[]}) => {
+export const Table = ({CSVData}: {CSVData: any[]}) => {
   return (
     <div className="flex flex-col">
       <div className="overflow-x-auto ">
@@ -82,22 +85,22 @@ const Table = ({CSVData}: {CSVData: any[]}) => {
                   (listItem, idx): JSX.Element => (
                     <tr key={idx} className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-100'}>
                       <td style={{width: '15%'}} className={tdataStyles}>
-                        {listItem.id}
+                        {listItem?.id}
                       </td>
                       <td style={{width: '20%'}} className={tdataStyles}>
-                        {listItem.firstName}
+                        {listItem?.firstName}
                       </td>
                       <td style={{width: '15%'}} className={tdataStyles}>
-                        {listItem.lastName}
+                        {listItem?.lastName}
                       </td>
                       <td style={{width: '20%'}} className={tdataStyles}>
-                        {listItem.email}
+                        {listItem?.email}
                       </td>
                       <td style={{width: '20%'}} className={tdataStyles}>
-                        {listItem.hasTakenSurvey ? 'Yes' : 'No'}
+                        {listItem?.hasTakenSurvey ? 'Yes' : 'No'}
                       </td>
                       <td style={{width: '10%'}} className={tdataStyles}>
-                        {getFormatedDate(listItem.last)}
+                        {getFormatedDate(listItem?.last)}
                       </td>
                     </tr>
                   )
