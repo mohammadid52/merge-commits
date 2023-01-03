@@ -372,7 +372,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
         const updateCurriculum: any = await API.graphql(
           graphqlOperation(mutations.updateCurriculum, {input: input3})
         );
-        setClassroomCurriculum(updateCurriculum.data.updateCurriculu);
+        setClassroomCurriculum(updateCurriculum.data.updateCurriculum);
       }
     } catch (e) {
       console.error('handleSyllabusActivation: ', e);
