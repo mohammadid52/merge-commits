@@ -90,3 +90,14 @@ export const getExtension = (str: string) => {
   const extension = temp.pop();
   return extension;
 };
+
+export const focusOn = (id: string) => {
+  const el = document.getElementById(id);
+
+  if (el) {
+    el.classList.add('blink');
+    setTimeout(() => {
+      el.classList.remove('blink');
+    }, 2000);
+  }
+};

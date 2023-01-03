@@ -1639,3 +1639,14 @@ export const createUploadLogs = /* GraphQL */ `
     }
   }
 `;
+
+export const deleteUploadLogs = /* GraphQL */ `
+  mutation DeleteUploadLogs(
+    $input: DeleteUploadLogsInput!
+    $condition: ModelUploadLogsConditionInput
+  ) {
+    deleteUploadLogs(input: $input, condition: $condition) {
+      id
+    }
+  }
+`;
