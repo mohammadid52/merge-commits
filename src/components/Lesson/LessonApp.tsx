@@ -55,7 +55,6 @@ const LessonApp = ({
   const getRoomData = getLocalStorageData('room_info');
   const urlParams: any = useParams();
   const {lessonID} = urlParams;
-  const isOnDemand = user.onDemand;
 
   // ##################################################################### //
   // ######################### BASIC UI CONTROLS ######################### //
@@ -567,7 +566,6 @@ const LessonApp = ({
 
         lessonDispatch({type: 'LESSON_LOADED', payload: true});
 
-        // console.log('no more - ', combined);
         setLessonDataLoaded(true);
         resolve(result);
       } catch (e) {
@@ -577,15 +575,7 @@ const LessonApp = ({
     });
 
   const getOrCreateStudentData = async () => {
-    // const syllabusID = getRoomData.activeSyllabus;
-
-    // console.log('getOrCreateData - user - ', user);
-
     try {
-      // const studentData: any = await API.graphql(
-      //   graphqlOperation(customQueries.listUniversalLessonStudentDatas, listFilter)
-      // );
-
       // existing student rowss
       const studentDataRows: UniversalLessonStudentDataFromAPI[] = await (
         await _loopFetchStudentData()
@@ -665,7 +655,7 @@ const LessonApp = ({
               filteredData.exerciseData,
               lessonState.exerciseData
             );
-            // console.log('merged data', finalData);
+
             lessonDispatch({
               type: 'LOAD_STUDENT_DATA',
               payload: {
@@ -825,7 +815,6 @@ const LessonApp = ({
       return returnedData;
     });
 
-    // updateJournalData(studentDataRows);
     return result;
   };
 
