@@ -4,7 +4,7 @@ import Modal from '@components/Atoms/Modal';
 import {logError} from '@graphql/functions';
 import {Transition} from '@headlessui/react';
 import {PDFDownloadLink} from '@react-pdf/renderer';
-import {ModelUploadLogsFilterInput} from 'API';
+import {ModelUploadLogsFilterInput, RoomStatus} from 'API';
 import Selector from 'atoms/Form/Selector';
 import Loader from 'atoms/Loader';
 import SectionTitleV3 from 'atoms/SectionTitleV3';
@@ -22,6 +22,20 @@ import {RiErrorWarningLine} from 'react-icons/ri';
 import {getImageFromS3Static} from 'utilities/services';
 import {createFilterToFetchSpecificItemsOnly} from 'utilities/strings';
 import SurveyPDF from './SurveyPDF';
+
+export const insertExtraDataForClassroom = (cr: any) => {
+  const teacherImage = getImageFromS3Static(cr?.teacher?.image);
+  return {
+    institutionName: cr?.institution?.name || '',
+    teacher: {
+      name: `${cr?.teacher?.firstName} ${cr?.teacher?.lastName}`,
+      image: teacherImage
+    },
+    courseName: cr?.curricula?.items[0]?.curriculum?.name || '',
+    status: cr?.status || RoomStatus.ACTIVE,
+    activeSyllabus: cr?.activeSyllabus
+  };
+};
 
 export const removeDuplicates = (array: any[]) => {
   let ids: any[] = [];
@@ -263,20 +277,6 @@ const Csv = ({institutionId}: ICsvProps) => {
     }
   }, [institutionId]);
 
-  const insertExtraData = (cr: any) => {
-    const teacherImage = getImageFromS3Static(cr?.teacher?.image);
-    return {
-      institutionName: cr?.institution?.name || '',
-      teacher: {
-        name: `${cr?.teacher?.firstName} ${cr?.teacher?.lastName}`,
-        image: teacherImage
-      },
-      courseName: cr?.curricula?.items[0]?.curriculum?.name || '',
-      status: cr?.status,
-      activeSyllabus: cr?.activeSyllabus
-    };
-  };
-
   const [curriculumId, setCurriculumId] = useState(null);
 
   const [activeUnits, setActiveUnits] = useState([]);
@@ -362,7 +362,7 @@ const Csv = ({institutionId}: ICsvProps) => {
             value: cr.name,
             class: {...cr.class},
             curriculum,
-            ...insertExtraData(cr)
+            ...insertExtraDataForClassroom(cr)
           };
         }
       })
@@ -404,7 +404,7 @@ const Csv = ({institutionId}: ICsvProps) => {
             value: cr.name,
             class: {...cr.class},
             curriculum,
-            ...insertExtraData(cr)
+            ...insertExtraDataForClassroom(cr)
           };
         });
         setClassRoomsList(classrooms);

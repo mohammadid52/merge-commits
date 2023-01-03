@@ -12,7 +12,7 @@ import useAuth from '@customHooks/useAuth';
 import {Transition} from '@headlessui/react';
 import {focusOn, getExtension} from '@utilities/functions';
 import {getImageFromS3, getImageFromS3Static} from '@utilities/services';
-import {CreateUploadLogsInput} from 'API';
+import {CreateUploadLogsInput, RoomStatus} from 'API';
 import Selector from 'atoms/Form/Selector';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import * as customMutations from 'customGraphql/customMutations';
@@ -26,7 +26,7 @@ import React, {useEffect, useRef, useState} from 'react';
 import ClickAwayListener from 'react-click-away-listener';
 import {RiErrorWarningLine} from 'react-icons/ri';
 import {v4 as uuidv4} from 'uuid';
-import {removeDuplicates} from './Csv';
+import {insertExtraDataForClassroom, removeDuplicates} from './Csv';
 interface ICsvProps {
   institutionId?: string;
 }
@@ -825,10 +825,10 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
       }
 
       data.forEach(async (item: any) => {
-        // const createTempSurveyresult = await createTempSurveyData(
-        //   item.UniversalSurveyStudentID,
-        //   item.surveyData
-        // );
+        const createTempSurveyresult = await createTempSurveyData(
+          item.UniversalSurveyStudentID,
+          item.surveyData
+        );
 
         // createTempSurveyresult &&
 
@@ -872,10 +872,10 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
           })
         );
         if (createData) {
-          // const createTempSurveyresult = await createTempSurveyData(
-          //   createData.data.createUniversalSurveyStudentData.id,
-          //   item.surveyData
-          // );
+          const createTempSurveyresult = await createTempSurveyData(
+            createData.data.createUniversalSurveyStudentData.id,
+            item.surveyData
+          );
           // createTempSurveyresult &&
         }
       });
@@ -900,10 +900,10 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
       }
 
       data.forEach(async (item: any) => {
-        // const createTempDemographicsDataResult = await createTempDemographicsData(
-        //   item.questionDataId,
-        //   item.responseObject
-        // );
+        const createTempDemographicsDataResult = await createTempDemographicsData(
+          item.questionDataId,
+          item.responseObject
+        );
         // createTempDemographicsDataResult &&
 
         const updateDemographicsData: any = await API.graphql(
@@ -956,10 +956,10 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
             })
           );
           if (createDemographicsQuestionData) {
-            // const createTempDemographicsDataResult = await createTempDemographicsData(
-            //   createDemographicsQuestionData.data.createQuestionData.id,
-            //   item.responseObject
-            // );
+            const createTempDemographicsDataResult = await createTempDemographicsData(
+              createDemographicsQuestionData.data.createQuestionData.id,
+              item.responseObject
+            );
             // createTempDemographicsDataResult &&
           }
         }
@@ -1079,10 +1079,10 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
       await deletePrevTempDataDempographics();
 
       // step 4 - upload everything to table
-      // await handleSurveyExistingUpload();
-      // await handleNewSurveyUniversalUpload();
-      // await handleDemographicsExistingUpload();
-      // await handleDemographicsNewUpload();
+      await handleSurveyExistingUpload();
+      await handleNewSurveyUniversalUpload();
+      await handleDemographicsExistingUpload();
+      await handleDemographicsNewUpload();
 
       setSelectedReason({
         id: 0,
@@ -1142,20 +1142,6 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
     }
   };
 
-  const insertExtraData = (cr: any) => {
-    const teacherImage = getImageFromS3Static(cr?.teacher?.image);
-    return {
-      institutionName: cr?.institution?.name || '',
-      teacher: {
-        name: `${cr?.teacher?.firstName} ${cr?.teacher?.lastName}`,
-        image: teacherImage
-      },
-      courseName: cr?.curricula?.items[0]?.curriculum?.name || '--',
-      status: cr?.status,
-      activeSyllabus: cr?.activeSyllabus
-    };
-  };
-
   const fetchActiveUnits = async (crList: any) => {
     const arrayOfActiveUnits = crList
       ?.filter((_c: {activeSyllabus: any}) => Boolean(_c?.activeSyllabus))
@@ -1188,8 +1174,12 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
       setClassRoomLoading(true);
       let instCRs: any = [];
 
-      const variablesForTR_FR = {filter: {teacherAuthID: {eq: authId}}};
-      const variablesForBLD_ADM = {};
+      const variablesForTR_FR = {
+        filter: {teacherAuthID: {eq: authId}, status: {ne: RoomStatus.INACTIVE}}
+      };
+      const variablesForBLD_ADM = {
+        filter: {status: {ne: RoomStatus.INACTIVE}}
+      };
 
       let classrooms: any = await API.graphql(
         graphqlOperation(
@@ -1197,10 +1187,11 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
           isTeacher || isFellow ? variablesForTR_FR : variablesForBLD_ADM
         )
       );
+
       let coTeahcerClassrooms: any = await API.graphql(
         graphqlOperation(
           customQueries.listRoomCoTeachers,
-          isTeacher || isFellow ? variablesForTR_FR : variablesForBLD_ADM
+          isTeacher || isFellow ? {filter: {teacherAuthID: {eq: authId}}} : {}
         )
       );
 
@@ -1237,7 +1228,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
               value: cr.name,
               class: {...cr.class},
               curriculum,
-              ...insertExtraData(cr)
+              ...insertExtraDataForClassroom(cr)
             };
           }
         })
@@ -1246,11 +1237,11 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
       setClassRoomsList(classrooms);
       setInstClassRooms(removeDuplicates(instCRs));
       fetchActiveUnits(classrooms);
-
-      setClassRoomLoading(false);
     } catch (error) {
       console.error(error);
       logError(error, {authId, email}, 'UploadCSV @fetchClassRooms');
+    } finally {
+      setClassRoomLoading(false);
     }
   };
 
