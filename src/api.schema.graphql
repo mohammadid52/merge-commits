@@ -3,6 +3,11 @@ enum Language {
   ES
 }
 
+enum ClassroomType {
+  ONLINE
+  TRADITIONAL
+}
+
 enum PersonStatus {
   ACTIVE
   SUSPENDED
@@ -184,6 +189,7 @@ type Room @model @auth(rules: [{allow: public}]) {
   conferenceCallLink: String
   lessonImpactLog: [ImpactLogEntry]
   classSentiment: [String]
+  type: ClassroomType @default(value: "ONLINE")
 }
 
 type ArchiveSurveyDataSQL @model @auth(rules: [{allow: public}]) {
@@ -264,6 +270,7 @@ type RoomCoTeachers @model @auth(rules: [{allow: public}]) {
   room: Room @belongsTo(fields: ["roomID"])
   teacher: Person @hasOne(fields: ["teacherEmail", "teacherAuthID"])
   curricula: [RoomCurriculum] @hasMany(indexName: "curriculumByRoom", fields: ["id"])
+  type: ClassroomType @default(value: "ONLINE")
 }
 
 type Class @model @auth(rules: [{allow: public}]) {
