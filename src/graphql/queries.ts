@@ -353,6 +353,7 @@ export const getPersonLessonsData = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -451,6 +452,7 @@ export const listPersonLessonsData = /* GraphQL */ `
           weekDay
           conferenceCallLink
           classSentiment
+          type
           createdAt
           updatedAt
         }
@@ -531,6 +533,7 @@ export const getInstitution = /* GraphQL */ `
           weekDay
           conferenceCallLink
           classSentiment
+          type
           createdAt
           updatedAt
         }
@@ -841,6 +844,7 @@ export const getRoom = /* GraphQL */ `
           teacherID
           teacherEmail
           teacherAuthID
+          type
           createdAt
           updatedAt
         }
@@ -979,6 +983,7 @@ export const getRoom = /* GraphQL */ `
           weekDay
           conferenceCallLink
           classSentiment
+          type
           createdAt
           updatedAt
         }
@@ -1036,6 +1041,7 @@ export const getRoom = /* GraphQL */ `
         adjustment
       }
       classSentiment
+      type
       createdAt
       updatedAt
     }
@@ -1165,6 +1171,7 @@ export const listRooms = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -1260,6 +1267,7 @@ export const getClassroomGroupStudents = /* GraphQL */ `
           weekDay
           conferenceCallLink
           classSentiment
+          type
           createdAt
           updatedAt
         }
@@ -1555,6 +1563,7 @@ export const getClassroomGroups = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -1662,6 +1671,7 @@ export const listClassroomGroups = /* GraphQL */ `
           weekDay
           conferenceCallLink
           classSentiment
+          type
           createdAt
           updatedAt
         }
@@ -1841,6 +1851,7 @@ export const getRoomCoTeachers = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -1896,6 +1907,7 @@ export const getRoomCoTeachers = /* GraphQL */ `
         }
         nextToken
       }
+      type
       createdAt
       updatedAt
     }
@@ -1943,6 +1955,7 @@ export const listRoomCoTeachers = /* GraphQL */ `
           weekDay
           conferenceCallLink
           classSentiment
+          type
           createdAt
           updatedAt
         }
@@ -1985,6 +1998,7 @@ export const listRoomCoTeachers = /* GraphQL */ `
         curricula {
           nextToken
         }
+        type
         createdAt
         updatedAt
       }
@@ -2154,6 +2168,7 @@ export const getClass = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -2237,6 +2252,7 @@ export const listClasses = /* GraphQL */ `
           weekDay
           conferenceCallLink
           classSentiment
+          type
           createdAt
           updatedAt
         }
@@ -2314,6 +2330,7 @@ export const getClassStudent = /* GraphQL */ `
           weekDay
           conferenceCallLink
           classSentiment
+          type
           createdAt
           updatedAt
         }
@@ -3870,6 +3887,7 @@ export const getPersonLocation = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -4058,6 +4076,7 @@ export const listPersonLocations = /* GraphQL */ `
           weekDay
           conferenceCallLink
           classSentiment
+          type
           createdAt
           updatedAt
         }
@@ -4413,6 +4432,7 @@ export const getAttendance = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -4542,6 +4562,7 @@ export const listAttendances = /* GraphQL */ `
           weekDay
           conferenceCallLink
           classSentiment
+          type
           createdAt
           updatedAt
         }
@@ -5875,6 +5896,7 @@ export const getUploadLogs = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -6078,6 +6100,7 @@ export const listUploadLogs = /* GraphQL */ `
           weekDay
           conferenceCallLink
           classSentiment
+          type
           createdAt
           updatedAt
         }
@@ -7392,6 +7415,7 @@ export const getSentimentTracker = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -7565,6 +7589,7 @@ export const listSentimentTrackers = /* GraphQL */ `
           weekDay
           conferenceCallLink
           classSentiment
+          type
           createdAt
           updatedAt
         }
@@ -7769,6 +7794,7 @@ export const getFeelingTracker = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -7877,6 +7903,7 @@ export const listFeelingTrackers = /* GraphQL */ `
           weekDay
           conferenceCallLink
           classSentiment
+          type
           createdAt
           updatedAt
         }
@@ -8069,6 +8096,7 @@ export const getFeelingsArchive = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -8260,6 +8288,7 @@ export const listFeelingsArchives = /* GraphQL */ `
           weekDay
           conferenceCallLink
           classSentiment
+          type
           createdAt
           updatedAt
         }
@@ -9282,6 +9311,7 @@ export const lessonsByType2 = /* GraphQL */ `
           weekDay
           conferenceCallLink
           classSentiment
+          type
           createdAt
           updatedAt
         }
@@ -9447,6 +9477,7 @@ export const personLocationBySyllabusLesson = /* GraphQL */ `
           weekDay
           conferenceCallLink
           classSentiment
+          type
           createdAt
           updatedAt
         }
@@ -9624,6 +9655,7 @@ export const attendanceByStudent = /* GraphQL */ `
           weekDay
           conferenceCallLink
           classSentiment
+          type
           createdAt
           updatedAt
         }

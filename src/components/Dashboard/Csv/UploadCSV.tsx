@@ -1,6 +1,5 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import Buttons from '@components/Atoms/Buttons';
-import FormInput from '@components/Atoms/Form/FormInput';
 import {logError, uploadImageToS3} from '@graphql/functions';
 import {XLSX_TO_CSV_URL} from 'assets';
 
@@ -11,8 +10,8 @@ import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UICo
 import useAuth from '@customHooks/useAuth';
 import {Transition} from '@headlessui/react';
 import {focusOn, getExtension} from '@utilities/functions';
-import {getImageFromS3, getImageFromS3Static} from '@utilities/services';
-import {CreateUploadLogsInput, RoomStatus} from 'API';
+import {getImageFromS3} from '@utilities/services';
+import {ClassroomType, CreateUploadLogsInput} from 'API';
 import Selector from 'atoms/Form/Selector';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import * as customMutations from 'customGraphql/customMutations';
@@ -20,7 +19,7 @@ import * as customQueries from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import * as mutations from 'graphql/mutations';
 import * as queries from 'graphql/queries';
-import {isEmpty, kebabCase, uniqBy} from 'lodash';
+import {isEmpty, uniqBy} from 'lodash';
 import Papa from 'papaparse';
 import React, {useEffect, useRef, useState} from 'react';
 import ClickAwayListener from 'react-click-away-listener';
@@ -825,14 +824,11 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
       }
 
       data.forEach(async (item: any) => {
-        const createTempSurveyresult = await createTempSurveyData(
-          item.UniversalSurveyStudentID,
-          item.surveyData
-        );
+        await createTempSurveyData(item.UniversalSurveyStudentID, item.surveyData);
 
         // createTempSurveyresult &&
 
-        const updateData: any = await API.graphql(
+        await API.graphql(
           graphqlOperation(mutations.updateUniversalSurveyStudentData, {
             input: {
               id: item.UniversalSurveyStudentID,
@@ -1169,31 +1165,49 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
     }
   };
 
+  const [isFetchedClassroom, setIsFetchedClassroom] = useState(false);
+
   const fetchClassRooms = async () => {
     try {
       setClassRoomLoading(true);
       let instCRs: any = [];
 
-      const variablesForTR_FR = {
-        filter: {teacherAuthID: {eq: authId}, status: {ne: RoomStatus.INACTIVE}}
-      };
-      const variablesForBLD_ADM = {
-        filter: {status: {ne: RoomStatus.INACTIVE}}
-      };
+      let classrooms: any;
+      let coTeahcerClassrooms: any;
 
-      let classrooms: any = await API.graphql(
-        graphqlOperation(
-          customQueries.listRoomsDashboard,
-          isTeacher || isFellow ? variablesForTR_FR : variablesForBLD_ADM
-        )
-      );
+      if (isTeacher || isFellow) {
+        classrooms = await API.graphql(
+          graphqlOperation(customQueries.listRoomsDashboard, {
+            filter: {
+              teacherAuthID: {eq: authId},
 
-      let coTeahcerClassrooms: any = await API.graphql(
-        graphqlOperation(
-          customQueries.listRoomCoTeachers,
-          isTeacher || isFellow ? {filter: {teacherAuthID: {eq: authId}}} : {}
-        )
-      );
+              type: {eq: ClassroomType.TRADITIONAL}
+            }
+          })
+        );
+
+        coTeahcerClassrooms = await API.graphql(
+          graphqlOperation(customQueries.listRoomCoTeachers, {
+            filter: {
+              teacherAuthID: {eq: authId},
+
+              type: {eq: ClassroomType.TRADITIONAL}
+            }
+          })
+        );
+      } else {
+        classrooms = await API.graphql(
+          graphqlOperation(customQueries.listRoomsDashboard, {
+            filter: {type: {eq: ClassroomType.TRADITIONAL}}
+          })
+        );
+
+        coTeahcerClassrooms = await API.graphql(
+          graphqlOperation(customQueries.listRoomCoTeachers, {
+            filter: {type: {eq: ClassroomType.TRADITIONAL}}
+          })
+        );
+      }
 
       let coTeachersRooms = coTeahcerClassrooms?.data?.listRoomCoTeachers?.items.map(
         (item: any) => {
@@ -1242,14 +1256,15 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
       logError(error, {authId, email}, 'UploadCSV @fetchClassRooms');
     } finally {
       setClassRoomLoading(false);
+      setIsFetchedClassroom(true);
     }
   };
 
   useEffect(() => {
-    if (institutionId) {
+    if (institutionId && !isFetchedClassroom) {
       fetchClassRooms();
     }
-  }, [institutionId]);
+  }, [institutionId, isFetchedClassroom]);
 
   const fetchSurveys = async (unitId: string) => {
     setSurveysLoading(true);
