@@ -66,6 +66,7 @@ export const batchAddClassStudent = /* GraphQL */ `
           weekDay
           conferenceCallLink
           classSentiment
+          type
           createdAt
           updatedAt
         }
@@ -562,6 +563,7 @@ export const createPersonLessonsData = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -791,6 +793,7 @@ export const updatePersonLessonsData = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -1020,6 +1023,7 @@ export const deletePersonLessonsData = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -1101,6 +1105,7 @@ export const createInstitution = /* GraphQL */ `
           weekDay
           conferenceCallLink
           classSentiment
+          type
           createdAt
           updatedAt
         }
@@ -1230,6 +1235,7 @@ export const updateInstitution = /* GraphQL */ `
           weekDay
           conferenceCallLink
           classSentiment
+          type
           createdAt
           updatedAt
         }
@@ -1359,6 +1365,7 @@ export const deleteInstitution = /* GraphQL */ `
           weekDay
           conferenceCallLink
           classSentiment
+          type
           createdAt
           updatedAt
         }
@@ -1572,10 +1579,7 @@ export const deleteServiceProvider = /* GraphQL */ `
   }
 `;
 export const createStaff = /* GraphQL */ `
-  mutation CreateStaff(
-    $input: CreateStaffInput!
-    $condition: ModelStaffConditionInput
-  ) {
+  mutation CreateStaff($input: CreateStaffInput!, $condition: ModelStaffConditionInput) {
     createStaff(input: $input, condition: $condition) {
       id
       institutionID
@@ -1668,10 +1672,7 @@ export const createStaff = /* GraphQL */ `
   }
 `;
 export const updateStaff = /* GraphQL */ `
-  mutation UpdateStaff(
-    $input: UpdateStaffInput!
-    $condition: ModelStaffConditionInput
-  ) {
+  mutation UpdateStaff($input: UpdateStaffInput!, $condition: ModelStaffConditionInput) {
     updateStaff(input: $input, condition: $condition) {
       id
       institutionID
@@ -1764,10 +1765,7 @@ export const updateStaff = /* GraphQL */ `
   }
 `;
 export const deleteStaff = /* GraphQL */ `
-  mutation DeleteStaff(
-    $input: DeleteStaffInput!
-    $condition: ModelStaffConditionInput
-  ) {
+  mutation DeleteStaff($input: DeleteStaffInput!, $condition: ModelStaffConditionInput) {
     deleteStaff(input: $input, condition: $condition) {
       id
       institutionID
@@ -1860,10 +1858,7 @@ export const deleteStaff = /* GraphQL */ `
   }
 `;
 export const createRoom = /* GraphQL */ `
-  mutation CreateRoom(
-    $input: CreateRoomInput!
-    $condition: ModelRoomConditionInput
-  ) {
+  mutation CreateRoom($input: CreateRoomInput!, $condition: ModelRoomConditionInput) {
     createRoom(input: $input, condition: $condition) {
       id
       institutionID
@@ -1891,6 +1886,7 @@ export const createRoom = /* GraphQL */ `
           teacherID
           teacherEmail
           teacherAuthID
+          type
           createdAt
           updatedAt
         }
@@ -2029,6 +2025,7 @@ export const createRoom = /* GraphQL */ `
           weekDay
           conferenceCallLink
           classSentiment
+          type
           createdAt
           updatedAt
         }
@@ -2086,16 +2083,14 @@ export const createRoom = /* GraphQL */ `
         adjustment
       }
       classSentiment
+      type
       createdAt
       updatedAt
     }
   }
 `;
 export const updateRoom = /* GraphQL */ `
-  mutation UpdateRoom(
-    $input: UpdateRoomInput!
-    $condition: ModelRoomConditionInput
-  ) {
+  mutation UpdateRoom($input: UpdateRoomInput!, $condition: ModelRoomConditionInput) {
     updateRoom(input: $input, condition: $condition) {
       id
       institutionID
@@ -2123,6 +2118,7 @@ export const updateRoom = /* GraphQL */ `
           teacherID
           teacherEmail
           teacherAuthID
+          type
           createdAt
           updatedAt
         }
@@ -2261,6 +2257,7 @@ export const updateRoom = /* GraphQL */ `
           weekDay
           conferenceCallLink
           classSentiment
+          type
           createdAt
           updatedAt
         }
@@ -2318,16 +2315,15 @@ export const updateRoom = /* GraphQL */ `
         adjustment
       }
       classSentiment
+      type
       createdAt
       updatedAt
     }
   }
 `;
+
 export const deleteRoom = /* GraphQL */ `
-  mutation DeleteRoom(
-    $input: DeleteRoomInput!
-    $condition: ModelRoomConditionInput
-  ) {
+  mutation DeleteRoom($input: DeleteRoomInput!, $condition: ModelRoomConditionInput) {
     deleteRoom(input: $input, condition: $condition) {
       id
       institutionID
@@ -2355,6 +2351,7 @@ export const deleteRoom = /* GraphQL */ `
           teacherID
           teacherEmail
           teacherAuthID
+          type
           createdAt
           updatedAt
         }
@@ -2493,6 +2490,7 @@ export const deleteRoom = /* GraphQL */ `
           weekDay
           conferenceCallLink
           classSentiment
+          type
           createdAt
           updatedAt
         }
@@ -2550,6 +2548,7 @@ export const deleteRoom = /* GraphQL */ `
         adjustment
       }
       classSentiment
+      type
       createdAt
       updatedAt
     }
@@ -2655,6 +2654,7 @@ export const createClassroomGroupStudents = /* GraphQL */ `
           weekDay
           conferenceCallLink
           classSentiment
+          type
           createdAt
           updatedAt
         }
@@ -2796,6 +2796,7 @@ export const updateClassroomGroupStudents = /* GraphQL */ `
           weekDay
           conferenceCallLink
           classSentiment
+          type
           createdAt
           updatedAt
         }
@@ -2937,6 +2938,7 @@ export const deleteClassroomGroupStudents = /* GraphQL */ `
           weekDay
           conferenceCallLink
           classSentiment
+          type
           createdAt
           updatedAt
         }
@@ -3163,6 +3165,7 @@ export const createClassroomGroups = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -3356,6 +3359,7 @@ export const updateClassroomGroups = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -3549,6 +3553,7 @@ export const deleteClassroomGroups = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -3745,6 +3750,7 @@ export const createRoomCoTeachers = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -3800,6 +3806,7 @@ export const createRoomCoTeachers = /* GraphQL */ `
         }
         nextToken
       }
+      type
       createdAt
       updatedAt
     }
@@ -3933,6 +3940,7 @@ export const updateRoomCoTeachers = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -3988,6 +3996,7 @@ export const updateRoomCoTeachers = /* GraphQL */ `
         }
         nextToken
       }
+      type
       createdAt
       updatedAt
     }
@@ -4121,6 +4130,7 @@ export const deleteRoomCoTeachers = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -4176,16 +4186,14 @@ export const deleteRoomCoTeachers = /* GraphQL */ `
         }
         nextToken
       }
+      type
       createdAt
       updatedAt
     }
   }
 `;
 export const createClass = /* GraphQL */ `
-  mutation CreateClass(
-    $input: CreateClassInput!
-    $condition: ModelClassConditionInput
-  ) {
+  mutation CreateClass($input: CreateClassInput!, $condition: ModelClassConditionInput) {
     createClass(input: $input, condition: $condition) {
       id
       institutionID
@@ -4346,6 +4354,7 @@ export const createClass = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -4369,10 +4378,7 @@ export const createClass = /* GraphQL */ `
   }
 `;
 export const updateClass = /* GraphQL */ `
-  mutation UpdateClass(
-    $input: UpdateClassInput!
-    $condition: ModelClassConditionInput
-  ) {
+  mutation UpdateClass($input: UpdateClassInput!, $condition: ModelClassConditionInput) {
     updateClass(input: $input, condition: $condition) {
       id
       institutionID
@@ -4533,6 +4539,7 @@ export const updateClass = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -4556,10 +4563,7 @@ export const updateClass = /* GraphQL */ `
   }
 `;
 export const deleteClass = /* GraphQL */ `
-  mutation DeleteClass(
-    $input: DeleteClassInput!
-    $condition: ModelClassConditionInput
-  ) {
+  mutation DeleteClass($input: DeleteClassInput!, $condition: ModelClassConditionInput) {
     deleteClass(input: $input, condition: $condition) {
       id
       institutionID
@@ -4720,6 +4724,7 @@ export const deleteClass = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -4809,6 +4814,7 @@ export const createClassStudent = /* GraphQL */ `
           weekDay
           conferenceCallLink
           classSentiment
+          type
           createdAt
           updatedAt
         }
@@ -4932,6 +4938,7 @@ export const updateClassStudent = /* GraphQL */ `
           weekDay
           conferenceCallLink
           classSentiment
+          type
           createdAt
           updatedAt
         }
@@ -5055,6 +5062,7 @@ export const deleteClassStudent = /* GraphQL */ `
           weekDay
           conferenceCallLink
           classSentiment
+          type
           createdAt
           updatedAt
         }
@@ -5376,10 +5384,7 @@ export const deleteCurriculum = /* GraphQL */ `
   }
 `;
 export const createTopic = /* GraphQL */ `
-  mutation CreateTopic(
-    $input: CreateTopicInput!
-    $condition: ModelTopicConditionInput
-  ) {
+  mutation CreateTopic($input: CreateTopicInput!, $condition: ModelTopicConditionInput) {
     createTopic(input: $input, condition: $condition) {
       id
       curriculumID
@@ -5452,10 +5457,7 @@ export const createTopic = /* GraphQL */ `
   }
 `;
 export const updateTopic = /* GraphQL */ `
-  mutation UpdateTopic(
-    $input: UpdateTopicInput!
-    $condition: ModelTopicConditionInput
-  ) {
+  mutation UpdateTopic($input: UpdateTopicInput!, $condition: ModelTopicConditionInput) {
     updateTopic(input: $input, condition: $condition) {
       id
       curriculumID
@@ -5528,10 +5530,7 @@ export const updateTopic = /* GraphQL */ `
   }
 `;
 export const deleteTopic = /* GraphQL */ `
-  mutation DeleteTopic(
-    $input: DeleteTopicInput!
-    $condition: ModelTopicConditionInput
-  ) {
+  mutation DeleteTopic($input: DeleteTopicInput!, $condition: ModelTopicConditionInput) {
     deleteTopic(input: $input, condition: $condition) {
       id
       curriculumID
@@ -8146,6 +8145,7 @@ export const createPersonLocation = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -8416,6 +8416,7 @@ export const updatePersonLocation = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -8686,6 +8687,7 @@ export const deletePersonLocation = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -9095,6 +9097,7 @@ export const createAttendance = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -9415,6 +9418,7 @@ export const updateAttendance = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -9735,6 +9739,7 @@ export const deleteAttendance = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -10528,10 +10533,7 @@ export const createUniversalLessonWritingExcercises = /* GraphQL */ `
     $input: CreateUniversalLessonWritingExcercisesInput!
     $condition: ModelUniversalLessonWritingExcercisesConditionInput
   ) {
-    createUniversalLessonWritingExcercises(
-      input: $input
-      condition: $condition
-    ) {
+    createUniversalLessonWritingExcercises(input: $input, condition: $condition) {
       id
       syllabusLessonID
       lessonID
@@ -10663,10 +10665,7 @@ export const updateUniversalLessonWritingExcercises = /* GraphQL */ `
     $input: UpdateUniversalLessonWritingExcercisesInput!
     $condition: ModelUniversalLessonWritingExcercisesConditionInput
   ) {
-    updateUniversalLessonWritingExcercises(
-      input: $input
-      condition: $condition
-    ) {
+    updateUniversalLessonWritingExcercises(input: $input, condition: $condition) {
       id
       syllabusLessonID
       lessonID
@@ -10798,10 +10797,7 @@ export const deleteUniversalLessonWritingExcercises = /* GraphQL */ `
     $input: DeleteUniversalLessonWritingExcercisesInput!
     $condition: ModelUniversalLessonWritingExcercisesConditionInput
   ) {
-    deleteUniversalLessonWritingExcercises(
-      input: $input
-      condition: $condition
-    ) {
+    deleteUniversalLessonWritingExcercises(input: $input, condition: $condition) {
       id
       syllabusLessonID
       lessonID
@@ -11149,10 +11145,7 @@ export const createTemporaryUniversalUploadSurveyData = /* GraphQL */ `
     $input: CreateTemporaryUniversalUploadSurveyDataInput!
     $condition: ModelTemporaryUniversalUploadSurveyDataConditionInput
   ) {
-    createTemporaryUniversalUploadSurveyData(
-      input: $input
-      condition: $condition
-    ) {
+    createTemporaryUniversalUploadSurveyData(input: $input, condition: $condition) {
       id
       updatedUserId
       universalSurveyId
@@ -11195,10 +11188,7 @@ export const updateTemporaryUniversalUploadSurveyData = /* GraphQL */ `
     $input: UpdateTemporaryUniversalUploadSurveyDataInput!
     $condition: ModelTemporaryUniversalUploadSurveyDataConditionInput
   ) {
-    updateTemporaryUniversalUploadSurveyData(
-      input: $input
-      condition: $condition
-    ) {
+    updateTemporaryUniversalUploadSurveyData(input: $input, condition: $condition) {
       id
       updatedUserId
       universalSurveyId
@@ -11241,10 +11231,7 @@ export const deleteTemporaryUniversalUploadSurveyData = /* GraphQL */ `
     $input: DeleteTemporaryUniversalUploadSurveyDataInput!
     $condition: ModelTemporaryUniversalUploadSurveyDataConditionInput
   ) {
-    deleteTemporaryUniversalUploadSurveyData(
-      input: $input
-      condition: $condition
-    ) {
+    deleteTemporaryUniversalUploadSurveyData(input: $input, condition: $condition) {
       id
       updatedUserId
       universalSurveyId
@@ -11287,10 +11274,7 @@ export const createTemporaryDemographicsUploadData = /* GraphQL */ `
     $input: CreateTemporaryDemographicsUploadDataInput!
     $condition: ModelTemporaryDemographicsUploadDataConditionInput
   ) {
-    createTemporaryDemographicsUploadData(
-      input: $input
-      condition: $condition
-    ) {
+    createTemporaryDemographicsUploadData(input: $input, condition: $condition) {
       id
       updatedUserId
       questionDataID
@@ -11364,10 +11348,7 @@ export const updateTemporaryDemographicsUploadData = /* GraphQL */ `
     $input: UpdateTemporaryDemographicsUploadDataInput!
     $condition: ModelTemporaryDemographicsUploadDataConditionInput
   ) {
-    updateTemporaryDemographicsUploadData(
-      input: $input
-      condition: $condition
-    ) {
+    updateTemporaryDemographicsUploadData(input: $input, condition: $condition) {
       id
       updatedUserId
       questionDataID
@@ -11441,10 +11422,7 @@ export const deleteTemporaryDemographicsUploadData = /* GraphQL */ `
     $input: DeleteTemporaryDemographicsUploadDataInput!
     $condition: ModelTemporaryDemographicsUploadDataConditionInput
   ) {
-    deleteTemporaryDemographicsUploadData(
-      input: $input
-      condition: $condition
-    ) {
+    deleteTemporaryDemographicsUploadData(input: $input, condition: $condition) {
       id
       updatedUserId
       questionDataID
@@ -11835,6 +11813,7 @@ export const createUploadLogs = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -12212,6 +12191,7 @@ export const updateUploadLogs = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -12589,6 +12569,7 @@ export const deleteUploadLogs = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -14776,6 +14757,7 @@ export const createSentimentTracker = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -15031,6 +15013,7 @@ export const updateSentimentTracker = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -15286,6 +15269,7 @@ export const deleteSentimentTracker = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -15542,6 +15526,7 @@ export const createFeelingTracker = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -15732,6 +15717,7 @@ export const updateFeelingTracker = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -15922,6 +15908,7 @@ export const deleteFeelingTracker = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -16115,6 +16102,7 @@ export const createFeelingsArchive = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -16397,6 +16385,7 @@ export const updateFeelingsArchive = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -16679,6 +16668,7 @@ export const deleteFeelingsArchive = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }

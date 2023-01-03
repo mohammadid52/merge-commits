@@ -123,13 +123,8 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
       );
 
       let returnedData = result.data.listClassStudents?.items;
-      let NextToken = result.data.listClassStudents?.nextToken;
 
       combined = [...outArray, ...returnedData];
-
-      // if (NextToken) {
-      //   combined = await getAllClassStudentByClassId(filter, NextToken, combined);
-      // }
 
       return combined;
     } catch (error) {
@@ -163,12 +158,9 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
       );
 
       let studentsData = studentsFromAPI.data.listPeople.items;
-      let NextToken: string = studentsFromAPI.data.listPeople.nextToken;
 
       combined = [...studentsData, ...outArray];
-      // if (NextToken) {
-      //   combined = await recursiveFetchAllStudents(neqList, combined, NextToken);
-      // }
+
       return combined;
     } catch (error) {
       console.error(error);
@@ -506,7 +498,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
 
   return (
     <div className="">
-      <div className="px-8 py-4">
+      <div className="py-8 py-4">
         <h3 className="text-lg leading-6 font-medium text-gray-900 w-auto capitalize">
           {roomData.name}
         </h3>
@@ -568,23 +560,6 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
                   />
                 </div>
               </div>
-              {/* {!loading &&
-                classStudents.length > 0 &&
-                roomData?.blockedStudents !== null && (
-                  <BlockedStudents
-                    blockedStudents={roomData?.blockedStudents || []}
-                    roomId={roomData.id}
-                    classList={classStudents}
-                  />
-                )} */}
-              {/* <AddButton
-              dataCy={`edit-class-add-button`}
-                loading={adding}
-                className="mx-2 2xl:ml-5 2xl:mr-10 py-1 px-5 mt-auto"
-                label={dictionary.ADD_STUDENT_BUTTON}
-                onClick={addStudentInClass}
-                disabled={adding || !newMember.id}
-              /> */}
             </div>
             <div className="py-2">
               <p className={`${messages.isError ? 'text-red-600' : 'text-green-600'}`}>

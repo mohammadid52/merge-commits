@@ -180,6 +180,7 @@ export const onCreateUpdatePersonLocationItem = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -455,6 +456,7 @@ export const onDeletePersonLocationItem = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -807,6 +809,7 @@ export const onChangeRoom = /* GraphQL */ `
           teacherID
           teacherEmail
           teacherAuthID
+          type
           createdAt
           updatedAt
         }
@@ -945,6 +948,7 @@ export const onChangeRoom = /* GraphQL */ `
           weekDay
           conferenceCallLink
           classSentiment
+          type
           createdAt
           updatedAt
         }
@@ -1002,6 +1006,7 @@ export const onChangeRoom = /* GraphQL */ `
         adjustment
       }
       classSentiment
+      type
       createdAt
       updatedAt
     }
@@ -1435,6 +1440,7 @@ export const onCreatePersonLessonsData = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -1661,6 +1667,7 @@ export const onUpdatePersonLessonsData = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -1887,6 +1894,7 @@ export const onDeletePersonLessonsData = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -1965,6 +1973,7 @@ export const onCreateInstitution = /* GraphQL */ `
           weekDay
           conferenceCallLink
           classSentiment
+          type
           createdAt
           updatedAt
         }
@@ -2091,6 +2100,7 @@ export const onUpdateInstitution = /* GraphQL */ `
           weekDay
           conferenceCallLink
           classSentiment
+          type
           createdAt
           updatedAt
         }
@@ -2217,6 +2227,7 @@ export const onDeleteInstitution = /* GraphQL */ `
           weekDay
           conferenceCallLink
           classSentiment
+          type
           createdAt
           updatedAt
         }
@@ -2728,6 +2739,7 @@ export const onCreateRoom = /* GraphQL */ `
           teacherID
           teacherEmail
           teacherAuthID
+          type
           createdAt
           updatedAt
         }
@@ -2866,6 +2878,7 @@ export const onCreateRoom = /* GraphQL */ `
           weekDay
           conferenceCallLink
           classSentiment
+          type
           createdAt
           updatedAt
         }
@@ -2923,6 +2936,7 @@ export const onCreateRoom = /* GraphQL */ `
         adjustment
       }
       classSentiment
+      type
       createdAt
       updatedAt
     }
@@ -2957,6 +2971,7 @@ export const onUpdateRoom = /* GraphQL */ `
           teacherID
           teacherEmail
           teacherAuthID
+          type
           createdAt
           updatedAt
         }
@@ -3095,6 +3110,7 @@ export const onUpdateRoom = /* GraphQL */ `
           weekDay
           conferenceCallLink
           classSentiment
+          type
           createdAt
           updatedAt
         }
@@ -3152,6 +3168,7 @@ export const onUpdateRoom = /* GraphQL */ `
         adjustment
       }
       classSentiment
+      type
       createdAt
       updatedAt
     }
@@ -3186,6 +3203,7 @@ export const onDeleteRoom = /* GraphQL */ `
           teacherID
           teacherEmail
           teacherAuthID
+          type
           createdAt
           updatedAt
         }
@@ -3324,6 +3342,7 @@ export const onDeleteRoom = /* GraphQL */ `
           weekDay
           conferenceCallLink
           classSentiment
+          type
           createdAt
           updatedAt
         }
@@ -3381,6 +3400,7 @@ export const onDeleteRoom = /* GraphQL */ `
         adjustment
       }
       classSentiment
+      type
       createdAt
       updatedAt
     }
@@ -3474,6 +3494,7 @@ export const onCreateClassroomGroupStudents = /* GraphQL */ `
           weekDay
           conferenceCallLink
           classSentiment
+          type
           createdAt
           updatedAt
         }
@@ -3612,6 +3633,7 @@ export const onUpdateClassroomGroupStudents = /* GraphQL */ `
           weekDay
           conferenceCallLink
           classSentiment
+          type
           createdAt
           updatedAt
         }
@@ -3750,6 +3772,7 @@ export const onDeleteClassroomGroupStudents = /* GraphQL */ `
           weekDay
           conferenceCallLink
           classSentiment
+          type
           createdAt
           updatedAt
         }
@@ -3973,6 +3996,7 @@ export const onCreateClassroomGroups = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -4163,6 +4187,7 @@ export const onUpdateClassroomGroups = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -4353,6 +4378,7 @@ export const onDeleteClassroomGroups = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -4546,6 +4572,7 @@ export const onCreateRoomCoTeachers = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -4601,6 +4628,7 @@ export const onCreateRoomCoTeachers = /* GraphQL */ `
         }
         nextToken
       }
+      type
       createdAt
       updatedAt
     }
@@ -4731,6 +4759,7 @@ export const onUpdateRoomCoTeachers = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -4786,6 +4815,7 @@ export const onUpdateRoomCoTeachers = /* GraphQL */ `
         }
         nextToken
       }
+      type
       createdAt
       updatedAt
     }
@@ -4916,6 +4946,7 @@ export const onDeleteRoomCoTeachers = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -4971,6 +5002,7 @@ export const onDeleteRoomCoTeachers = /* GraphQL */ `
         }
         nextToken
       }
+      type
       createdAt
       updatedAt
     }
@@ -5138,6 +5170,7 @@ export const onCreateClass = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -5322,6 +5355,7 @@ export const onUpdateClass = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -5506,6 +5540,7 @@ export const onDeleteClass = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -5592,6 +5627,7 @@ export const onCreateClassStudent = /* GraphQL */ `
           weekDay
           conferenceCallLink
           classSentiment
+          type
           createdAt
           updatedAt
         }
@@ -5712,6 +5748,7 @@ export const onUpdateClassStudent = /* GraphQL */ `
           weekDay
           conferenceCallLink
           classSentiment
+          type
           createdAt
           updatedAt
         }
@@ -5832,6 +5869,7 @@ export const onDeleteClassStudent = /* GraphQL */ `
           weekDay
           conferenceCallLink
           classSentiment
+          type
           createdAt
           updatedAt
         }
@@ -8500,6 +8538,7 @@ export const onCreatePersonLocation = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -8767,6 +8806,7 @@ export const onUpdatePersonLocation = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -9034,6 +9074,7 @@ export const onDeletePersonLocation = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -9440,6 +9481,7 @@ export const onCreateAttendance = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -9757,6 +9799,7 @@ export const onUpdateAttendance = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -10074,6 +10117,7 @@ export const onDeleteAttendance = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -12081,6 +12125,7 @@ export const onCreateUploadLogs = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -12455,6 +12500,7 @@ export const onUpdateUploadLogs = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -12829,6 +12875,7 @@ export const onDeleteUploadLogs = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -14941,6 +14988,7 @@ export const onCreateSentimentTracker = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -15193,6 +15241,7 @@ export const onUpdateSentimentTracker = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -15445,6 +15494,7 @@ export const onDeleteSentimentTracker = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -15698,6 +15748,7 @@ export const onCreateFeelingTracker = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -15885,6 +15936,7 @@ export const onUpdateFeelingTracker = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -16072,6 +16124,7 @@ export const onDeleteFeelingTracker = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -16262,6 +16315,7 @@ export const onCreateFeelingsArchive = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -16541,6 +16595,7 @@ export const onUpdateFeelingsArchive = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -16820,6 +16875,7 @@ export const onDeleteFeelingsArchive = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
