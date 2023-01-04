@@ -622,8 +622,8 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
           }
 
           if (previousActiveUnitId !== roomData.activeUnit.id) {
-            setLoading(true);
-            await onActiveUnitUpdate(roomData.activeUnit.id);
+            // setLoading(true);
+            // await onActiveUnitUpdate(roomData.activeUnit.id);
           } else {
             setUnsavedChanges(false);
             setNotification({
