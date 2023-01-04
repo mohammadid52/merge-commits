@@ -71,16 +71,19 @@ const SearchInput: React.FC<SearchProps> = (searchProps: SearchProps) => {
         className="w-auto absolute right-1"
         show={value.length > 0}>
         {value.length > 0 && (
-          <span
+          <button
             title="clear search"
             className=" flex justify-center  cursor-pointer hover:bg-gray-200
             rounded-full"
-            onClick={closeAction}>
+            onClick={(e) => {
+              e.stopPropagation();
+              closeAction();
+            }}>
             <IoClose
               size={'1rem'}
               className="hover:iconoclast:text-main hover:curate:text-main transition-all text-gray-600"
             />
-          </span>
+          </button>
         )}
       </AnimatedContainer>
     </div>

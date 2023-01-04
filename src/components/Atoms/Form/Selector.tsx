@@ -32,6 +32,7 @@ interface SelectorProps {
   onClear?: () => void;
   setHoveringItem?: React.Dispatch<React.SetStateAction<{}>>;
   setSelectedItem?: React.Dispatch<React.SetStateAction<{}>>;
+
   dataCy?: string;
   dropdownWidth?: string;
   noSpace?: boolean;
@@ -57,6 +58,7 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
     noOptionMessage = '',
     noSpace,
     width = 'w-full',
+    onClear,
     isClearable = false,
     dropdownWidth,
     arrowHidden,
@@ -142,6 +144,7 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
   };
 
   const clearSort = () => {
+    onClear && onClear();
     if (setSelectedItem) {
       setSelectedItem(null);
     }
@@ -158,7 +161,10 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
         <button
           data-cy={`${dataCy}-button`}
           disabled={disabled || loading}
-          onClick={() => setShowList(!showList)}
+          onClick={(e) => {
+            e.stopPropagation();
+            setShowList(!showList);
+          }}
           type="button"
           id={btnId}
           aria-haspopup="listbox"
@@ -184,16 +190,19 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
                 className="w-auto absolute right-1"
                 show={isClearable && selectedItem !== null}>
                 {isClearable && selectedItem !== null && (
-                  <span
+                  <button
                     title="clear sort"
-                    className=" flex justify-center  cursor-pointer hover:bg-gray-200
+                    className="z-100 relative flex justify-center  cursor-pointer hover:bg-gray-200
                    rounded-full"
-                    onClick={clearSort}>
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      clearSort();
+                    }}>
                     <IoClose
                       size={'1rem'}
                       className="hover:iconoclast:text-main hover:curate:text-main transition-all text-gray-600"
                     />
-                  </span>
+                  </button>
                 )}
               </AnimatedContainer>
 
