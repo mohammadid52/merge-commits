@@ -1148,4 +1148,4 @@ type ErrorLog @model @auth(rules: [{allow: public}]) {
   person: Person @hasOne(fields: ["email", "authID"])
   status: ErrorStatus @default(value: "PENDING")
 }
-# asdfasdfsd10
+# asdfasdfsd11
