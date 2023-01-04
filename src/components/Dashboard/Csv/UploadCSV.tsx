@@ -11,7 +11,12 @@ import useAuth from '@customHooks/useAuth';
 import {Transition} from '@headlessui/react';
 import {focusOn, getExtension} from '@utilities/functions';
 import {getImageFromS3} from '@utilities/services';
-import {ClassroomType, CreateUploadLogsInput} from 'API';
+import {
+  ClassroomType,
+  CreateUniversalArchiveDataInput,
+  CreateUploadLogsInput,
+  UpdateUniversalArchiveDataInput
+} from 'API';
 import Selector from 'atoms/Form/Selector';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import * as customMutations from 'customGraphql/customMutations';
@@ -43,17 +48,6 @@ const DataValue = ({
       <div className="text-dark-gray font-medium text-left w-auto text-sm">{content}</div>
     </div>
   );
-};
-
-const getFormatedDate = (date: string) => {
-  if (date) {
-    if (date !== '-') {
-      return date.split(',')[0];
-    } else {
-      return '-';
-    }
-  }
-  return '-';
 };
 
 const theadStyles =
@@ -133,7 +127,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
   const {CsvDict, Institute_info} = useDictionary();
 
   const [file, setFile] = useState<any>(null);
-  const [reason, setReason] = useState<string>('');
+
   const [success, setSuccess] = useState<boolean>(false);
   const [selectedReason, setSelectedReason] = useState<{
     id: number;
@@ -605,7 +599,6 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
           }
 
           parsed = removeBlankAuthIds(parsed);
-          setParsedObj(parsed);
 
           const surveyID = parsed['SurveyID'][0];
           const unitID = parsed['UnitID'][0];
@@ -635,6 +628,8 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
             });
             return;
           } else if (surveyID && unitID && classroomName) {
+            setParsedObj(parsed);
+
             resetFile();
             setFile(file);
             let listOptionsId = await listQuestions(surveyID);
@@ -785,8 +780,6 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
         Date: new Date().toISOString().split('T')[0],
         UploadType: selectedReason.value,
         room_id: selectedClassRoom.id,
-        // PaperSurveyURL: imgUrl as string[],
-        Reason: reason,
         urlLink: csvUrl,
         authID: authId,
         email,
@@ -825,15 +818,12 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
 
       data.forEach(async (item: any) => {
         await createTempSurveyData(item.UniversalSurveyStudentID, item.surveyData);
-
-        // createTempSurveyresult &&
-
         await API.graphql(
-          graphqlOperation(mutations.updateUniversalSurveyStudentData, {
+          graphqlOperation(mutations.updateUniversalArchiveData, {
             input: {
               id: item.UniversalSurveyStudentID,
               surveyData: item.surveyData
-            }
+            } as UpdateUniversalArchiveDataInput
           })
         );
       });
@@ -855,24 +845,26 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
       });
 
       changedSurveyData.forEach(async (item: any) => {
+        const input: CreateUniversalArchiveDataInput = {
+          id: uuidv4(),
+          lessonPageID: '999',
+          lessonID: item.lessonID,
+          studentAuthID: item.studentAuthID,
+          studentEmail: item.studentEmail,
+          studentID: item.studentAuthID,
+          syllabusLessonID: item.syllabusLessonID,
+          surveyData: item.surveyData
+        };
         const createData: any = await API.graphql(
-          graphqlOperation(mutations.createUniversalSurveyStudentData, {
-            input: {
-              lessonID: item.lessonID,
-              studentAuthID: item.studentAuthID,
-              studentEmail: item.studentEmail,
-              studentID: item.studentAuthID,
-              syllabusLessonID: item.syllabusLessonID,
-              surveyData: item.surveyData
-            }
+          graphqlOperation(mutations.createUniversalArchiveData, {
+            input
           })
         );
         if (createData) {
-          const createTempSurveyresult = await createTempSurveyData(
-            createData.data.createUniversalSurveyStudentData.id,
+          await createTempSurveyData(
+            createData.data.createUniversalArchiveData.id,
             item.surveyData
           );
-          // createTempSurveyresult &&
         }
       });
     } catch (error) {
@@ -896,13 +888,10 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
       }
 
       data.forEach(async (item: any) => {
-        const createTempDemographicsDataResult = await createTempDemographicsData(
-          item.questionDataId,
-          item.responseObject
-        );
+        await createTempDemographicsData(item.questionDataId, item.responseObject);
         // createTempDemographicsDataResult &&
 
-        const updateDemographicsData: any = await API.graphql(
+        await API.graphql(
           graphqlOperation(mutations.updateQuestionData, {
             input: {
               id: item.questionDataId,
@@ -952,7 +941,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
             })
           );
           if (createDemographicsQuestionData) {
-            const createTempDemographicsDataResult = await createTempDemographicsData(
+            await createTempDemographicsData(
               createDemographicsQuestionData.data.createQuestionData.id,
               item.responseObject
             );
@@ -1088,7 +1077,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
 
       csvInputRef.current.value = '';
       setFile(null);
-      setReason('');
+
       setSuccess(true);
       setTimeout(() => {
         setSuccess(false);
@@ -1538,54 +1527,6 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
           )}
         </AnimatedContainer>
 
-        {/* <AnimatedContainer
-          animationType="translateY"
-          show={selectedReason.value === 'paper-survey'}>
-          {selectedReason.value === 'paper-survey' && (
-            <div className="mb-4 flex items-center">
-              <UploadButton
-                isRequired
-                id="upload-multiple-images"
-                label={CsvDict[userLanguage]['UPLOAD_MULTIPLE_SURVEY_IMAGES']}
-                disabled={!file || multipleImagesUploading}
-                onUpload={imageUpload}
-                multiple
-                message={
-                  multipleImagesUploaded
-                    ? {message: 'Images uploaded', type: 'success'}
-                    : null
-                }
-                ref={fileInputRef}
-                acceptedFilesFormat="image/*"
-              />
-              {multipleImagesUploading && (
-                <IconContext.Provider
-                  value={{
-                    size: '1.2rem',
-
-                    className: `relative mx-4 w-auto animate-spin ${theme.textColor[themeColor]}`
-                  }}>
-                  <FaSpinner />
-                </IconContext.Provider>
-              )}
-            </div>
-          )}
-        </AnimatedContainer> */}
-
-        {/* <FormInput
-          textarea
-          label={CsvDict[userLanguage]['DESCRIBE_REASON']}
-          isRequired
-          rows={10}
-          resize={false}
-          maxWidth="-"
-          cols={50}
-          value={reason}
-          disabled={!file || uploadingCSV || !selectedReason.value}
-          onChange={(e: any) => setReason(e.target.value)}
-          placeHolder={CsvDict[userLanguage]['REASON']}
-        /> */}
-
         <AnimatedContainer show={success} animationType="translateY">
           {success && (
             <p className={`mt-1 text-green-500 text-xs`}>Successfully Uploaded!</p>
@@ -1597,7 +1538,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
         </AnimatedContainer>
 
         {!isEmpty(parsedObj) && (
-          <div className="max-w-256 flex items-center justify-center ">
+          <div className="2xl:max-w-9/10 max-w-256 flex items-center justify-center ">
             <Table CSVData={getMappedValues(parsedObj)} />
           </div>
         )}
@@ -1605,7 +1546,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
         <div className="flex items-center justify-end mt-3">
           <Buttons
             label={uploadingCSV ? 'Uploading Please wait...' : 'Upload CSV'}
-            disabled={!reason || uploadingCSV}
+            disabled={uploadingCSV}
             onClick={(e) => showModalWhenUploadCsv(e)}
           />
         </div>
