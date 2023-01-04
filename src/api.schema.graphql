@@ -746,6 +746,7 @@ type UniversalArchiveData @model @auth(rules: [{allow: public}]) {
   pageData: [PartInput]
   hasExerciseData: Boolean
   exerciseData: [ExerciseData]
+  surveyData: [PartInput]
 }
 
 type UniversalSurveyStudentData @model @auth(rules: [{allow: public}]) {

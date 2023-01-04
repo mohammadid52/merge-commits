@@ -189,54 +189,10 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
     }
   }, [roomId, state.roomData.rooms]);
 
-  // ##################################################################### //
-  // ########################## TAB LESSON COUNT ######################### //
-  // ##################################################################### //
-  // const [lessonGroupCount, setLessonGroupCount] = useState<{
-  //   open: number;
-  //   completed: number;
-  // }>({
-  //   open: 0,
-  //   completed: 0,
-  // });
   const [syllabusData, setSyllabusData] = useState<any>({});
   const [lessonData, setLessonData] = useState<Array<any>>([]);
 
   const [settingLessons, setSettingLessons] = useState<boolean>(true);
-
-  // ##################################################################### //
-  // ########################## LESSON GROUPING ########################## //
-  // ##################################################################### //
-  /**
-   * Open Lessons
-   */
-  // const openLessons =
-  //   state.roomData.lessons?.length && activeRoomInfo?.completedLessons?.length
-  //     ? state.roomData.lessons.filter(
-  //         (lesson: Lesson) =>
-  //           activeRoomInfo?.completedLessons.findIndex(
-  //             (item: {lessonID?: string | null; time?: string | null}) =>
-  //               item.lessonID === lesson.lessonID
-  //           ) < 0
-  //       )
-  //     : [];
-
-  /**
-   * Completed Lessons -
-   *  This array is a filter of lessons which are completed, closed or open
-   */
-  // const completedLessons =
-  //   state.roomData.lessons?.length && activeRoomInfo?.completedLessons?.length
-  //     ? state.roomData.lessons.filter(
-  //         (lesson: Lesson) =>
-  //           activeRoomInfo?.completedLessons.findIndex(
-  //             (item: {lessonID?: string | null; time?: string | null}) =>
-  //               item.lessonID === lesson.lessonID
-  //           ) > -1
-  //       )
-  //     : [];
-
-  // ~~~~~~~~~~~ EMPTY EVERYGHING ~~~~~~~~~~ //
 
   useEffect(() => {
     if (lessonLoading) {
@@ -351,12 +307,12 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
     };
 
     try {
-      const updateRoomMutation: any = await API.graphql(
+      await API.graphql(
         graphqlOperation(mutations.updateRoom, {
           input: input
         })
       );
-      const updateUniversalSyllabusMutation: any = await API.graphql(
+      await API.graphql(
         graphqlOperation(mutations.updateUniversalSyllabus, {input: input2})
       );
 
@@ -520,7 +476,6 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
             </div>
           </div>
           <div>
-            {/*{isTeacher && state.currentPage === 'lesson-planner' && (*/}
             {isTeacher && (
               <>
                 <SectionTitleV3

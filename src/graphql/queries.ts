@@ -5262,6 +5262,16 @@ export const getUniversalArchiveData = /* GraphQL */ `
         feedbacks
         shared
       }
+      surveyData {
+        domID
+        options
+        input
+        comments {
+          commentBy
+          comment
+        }
+        hasTakenSurvey
+      }
       createdAt
       updatedAt
     }
@@ -5304,6 +5314,12 @@ export const listUniversalArchiveData = /* GraphQL */ `
           id
           feedbacks
           shared
+        }
+        surveyData {
+          domID
+          options
+          input
+          hasTakenSurvey
         }
         createdAt
         updatedAt

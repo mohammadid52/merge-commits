@@ -160,14 +160,6 @@ const ClassRoster = ({
         ? [...classStudents.data.listClassStudents.items, ...outArray]
         : classStudents.data.listClassStudents?.items;
 
-      const theNextToken = classStudents.data.listClassStudents?.nextToken;
-
-      // if (theNextToken) {
-      //   // getClassStudents(sessionClassID, theNextToken, classStudentList);
-      // } else {
-
-      // }
-
       const initClassStudentList = classStudentList
         .filter(filterRemovedStudents)
         .map((student: any) => {

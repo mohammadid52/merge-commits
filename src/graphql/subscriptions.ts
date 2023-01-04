@@ -11309,6 +11309,16 @@ export const onCreateUniversalArchiveData = /* GraphQL */ `
         feedbacks
         shared
       }
+      surveyData {
+        domID
+        options
+        input
+        comments {
+          commentBy
+          comment
+        }
+        hasTakenSurvey
+      }
       createdAt
       updatedAt
     }
@@ -11348,6 +11358,16 @@ export const onUpdateUniversalArchiveData = /* GraphQL */ `
         feedbacks
         shared
       }
+      surveyData {
+        domID
+        options
+        input
+        comments {
+          commentBy
+          comment
+        }
+        hasTakenSurvey
+      }
       createdAt
       updatedAt
     }
@@ -11386,6 +11406,16 @@ export const onDeleteUniversalArchiveData = /* GraphQL */ `
         }
         feedbacks
         shared
+      }
+      surveyData {
+        domID
+        options
+        input
+        comments {
+          commentBy
+          comment
+        }
+        hasTakenSurvey
       }
       createdAt
       updatedAt

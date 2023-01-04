@@ -1099,8 +1099,8 @@ export const fetchPersons = /* GraphQL */ `
   }
 `;
 export const listClassStudents = /* GraphQL */ `
-  query ListClassStudents($studentID: ID) {
-    listClassStudents(filter: {studentID: {contains: $studentID}}) {
+  query ListClassStudents($filter: ModelClassStudentFilterInput, $limit: Int) {
+    listClassStudents(filter: $filter, limit: $limit) {
       items {
         classID
         studentID
@@ -1208,7 +1208,7 @@ export const getRoom = /* GraphQL */ `
       institutionID
       classID
       teacherAuthID
-
+      type
       teacherEmail
       name
       status
@@ -6361,6 +6361,24 @@ export const listUploadLogs = /* GraphQL */ `
         updatedAt
       }
       nextToken
+    }
+  }
+`;
+
+export const getActiveUniversalSyllabus = /* GraphQL */ `
+  query GetUniversalSyllabus($id: ID!) {
+    getUniversalSyllabus(id: $id) {
+      id
+      name
+      type
+      lessons {
+        items {
+          id
+          syllabusID
+          lessonID
+          unit
+        }
+      }
     }
   }
 `;
