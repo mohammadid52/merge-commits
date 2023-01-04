@@ -1329,6 +1329,19 @@ export const updatePersonSentiments = /* GraphQL */ `
   }
 `;
 
+export const createPersonLessonsData = /* GraphQL */ `
+  mutation CreatePersonLessonsData(
+    $input: CreatePersonLessonsDataInput!
+    $condition: ModelPersonLessonsDataConditionInput
+  ) {
+    createPersonLessonsData(input: $input, condition: $condition) {
+      id
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
 export const createPersonSentiments = /* GraphQL */ `
   mutation CreatePersonSentiments(
     $input: CreatePersonSentimentsInput!

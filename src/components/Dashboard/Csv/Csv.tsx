@@ -4,7 +4,7 @@ import Modal from '@components/Atoms/Modal';
 import {logError} from '@graphql/functions';
 import {Transition} from '@headlessui/react';
 import {PDFDownloadLink} from '@react-pdf/renderer';
-import {ModelUploadLogsFilterInput, RoomStatus} from 'API';
+import {RoomStatus} from 'API';
 import Selector from 'atoms/Form/Selector';
 import Loader from 'atoms/Loader';
 import SectionTitleV3 from 'atoms/SectionTitleV3';
@@ -70,7 +70,7 @@ export const Table = ({CSVData}: {CSVData: any[]}) => {
     <div className="flex flex-col">
       <div className="overflow-x-auto ">
         <div className="py-2 align-middle inline-block min-w-full ">
-          <div className="flex flex-1 shadow inner_card overflow-hidden border-b border-gray-200 sm:rounded-lg">
+          <div className="flex flex-1 shadow inner_card border-b-0 border-gray-200 sm:rounded-lg">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-100">
                 <tr>
@@ -575,22 +575,6 @@ const Csv = ({institutionId}: ICsvProps) => {
     await listQuestions(survey.id);
   };
 
-  const getReason = async () => {
-    let res: any = await API.graphql(
-      graphqlOperation(customQueries.getReasonFromUploadLogs, {
-        filter: {
-          Unit_id: {eq: selectedUnit.id},
-          // Curricullum_id: {eq: curriculumId},
-          User_id: {eq: authId},
-          lesson_id: {eq: selectedSurvey.id}
-        } as ModelUploadLogsFilterInput,
-        limit: 500,
-        sortDirection: 'DESC'
-      })
-    );
-    let lessonObject = res.data.listUploadLogs.items || [];
-  };
-
   const listQuestions = async (lessonId: string) => {
     try {
       setCsvGettingReady(true);
@@ -622,7 +606,20 @@ const Csv = ({institutionId}: ICsvProps) => {
 
       setSurveyQuestions(questions);
 
-      await getStudentsSurveyQuestionsResponse(lessonId, undefined, []);
+      let response = await getStudentsSurveyQuestionsResponse(lessonId, undefined, []);
+
+      if (response.length === 0) {
+        response = await getStudentsSurveyQuestionsResponseFromArchiveTable(
+          lessonId,
+          undefined,
+          []
+        );
+      }
+
+      setSCQAnswers((prevState: any) => {
+        return [...prevState, response];
+      });
+
       setIsCSVReady(true);
       setCsvGettingReady(false);
     } catch (err) {
@@ -630,8 +627,6 @@ const Csv = ({institutionId}: ICsvProps) => {
       console.error('list questions error', err);
     }
   };
-
-  const [reason, setReason] = useState(null);
 
   // ##################################################################### //
   // ########## LOOP OVER LESSONPLAN AND GENERATE QUESTION LIST ########## //
@@ -757,6 +752,7 @@ const Csv = ({institutionId}: ICsvProps) => {
     let universalSurveyStudentData: any = await API.graphql(
       graphqlOperation(queries.listUniversalSurveyStudentData, {
         nextToken: nextToken,
+        limit: 200,
         filter: {
           lessonID: {eq: lessonId},
           ...createFilterToFetchSpecificItemsOnly(studsEmails, 'studentEmail')
@@ -765,8 +761,6 @@ const Csv = ({institutionId}: ICsvProps) => {
     );
     let studentsAnswersSurveyQuestionsData =
       universalSurveyStudentData.data.listUniversalSurveyStudentData.items;
-    let theNextToken =
-      universalSurveyStudentData.data.listUniversalSurveyStudentData?.nextToken;
 
     /**
      * combination of last fetch results
@@ -774,18 +768,36 @@ const Csv = ({institutionId}: ICsvProps) => {
      */
     let combined: any = [...studentsAnswersSurveyQuestionsData, ...outArray];
 
-    if (theNextToken) {
-      combined = await getStudentsSurveyQuestionsResponse(
-        lessonId,
-        theNextToken,
-        combined
-      );
-    }
-    setSCQAnswers((prevState: any) => {
-      return [...prevState, combined];
-    });
-    setCsvGettingReady(false);
-    return;
+    return combined;
+  };
+
+  const getStudentsSurveyQuestionsResponseFromArchiveTable = async (
+    lessonId: String,
+    nextToken?: string,
+    outArray?: any[]
+  ) => {
+    setCsvGettingReady(true);
+    let studsEmails = classStudents.map((stu: any) => stu.email);
+    let universalSurveyStudentData: any = await API.graphql(
+      graphqlOperation(queries.listUniversalArchiveData, {
+        nextToken: nextToken,
+        limit: 200,
+        filter: {
+          lessonID: {eq: lessonId},
+          ...createFilterToFetchSpecificItemsOnly(studsEmails, 'studentEmail')
+        }
+      })
+    );
+    let studentsAnswersSurveyQuestionsData =
+      universalSurveyStudentData.data.listUniversalArchiveData.items;
+
+    /**
+     * combination of last fetch results
+     * && current fetch results
+     */
+    let combined: any = [...studentsAnswersSurveyQuestionsData, ...outArray];
+
+    return combined;
   };
 
   // regex match double spaces and replace with single space
@@ -1241,7 +1253,9 @@ const Csv = ({institutionId}: ICsvProps) => {
             <SectionTitleV3 title={'Survey results'} />
           </div>
           {CSVData.length > 0 ? (
-            <Table CSVData={CSVData} />
+            <div className="max-w-256 2xl:max-w-9/10 flex items-center justify-center ">
+              <Table CSVData={CSVData} />
+            </div>
           ) : (
             <div className="bg-white flex justify-center items-center inner_card h-30 overflow-hidden border-b border-gray-200 sm:rounded-lg">
               {csvGettingReady ? (

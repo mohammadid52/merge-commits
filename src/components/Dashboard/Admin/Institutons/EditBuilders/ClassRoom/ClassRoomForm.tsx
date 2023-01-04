@@ -1,6 +1,14 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import {
+  ClassStudent,
+  UniversalLesson,
+  UniversalLessonPlan,
+  UniversalLessonStudentData as UniversalLessonStudentDataFromAPI,
+  UpdatePersonLessonsDataInput
+} from 'API';
 import React, {useEffect, useState} from 'react';
 import {useHistory, useLocation, useParams, useRouteMatch} from 'react-router-dom';
+import {v4 as uuidV4} from 'uuid';
 
 import * as customMutations from 'customGraphql/customMutations';
 import * as customQueries from 'customGraphql/customQueries';
@@ -15,12 +23,14 @@ import SelectorWithAvatar from 'atoms/Form/SelectorWithAvatar';
 import PageWrapper from 'atoms/PageWrapper';
 import ModalPopUp from 'molecules/ModalPopUp';
 
+import {useNotifications} from '@contexts/NotificationContext';
+import useAuth from '@customHooks/useAuth';
+import {LessonEditDict} from '@dictionary/dictionary.iconoclast';
+import {logError} from '@graphql/functions';
+import {ClassroomType} from 'API';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
-import {LessonEditDict} from '@dictionary/dictionary.iconoclast';
-import {getFilterORArray} from 'utilities/strings';
-import {useNotifications} from '@contexts/NotificationContext';
-import {ClassroomType} from 'API';
+import {createFilterToFetchSpecificItemsOnly, getFilterORArray} from 'utilities/strings';
 
 export const fetchSingleCoTeacher = async (roomId: string) => {
   const result: any = await API.graphql(
@@ -72,6 +82,8 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
   const [units, setUnits] = useState([]);
 
   const [unitsLoading, setUnitsLoading] = useState(false);
+
+  const [previousActiveUnitId, setPreviousActiveUnitId] = useState(null);
 
   const fetchUnits = async (curriculaId: string) => {
     try {
@@ -132,7 +144,8 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
       id: '',
       name: ''
     },
-    activeSyllabus: ''
+    activeSyllabus: '',
+    classID: ''
   };
   const [roomData, setRoomData] = useState(initialData);
   const [teachersList, setTeachersList] = useState([]);
@@ -607,12 +620,18 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
           } else {
             await createRoomCurricular(roomId, roomData.curricular.id);
           }
-          setUnsavedChanges(false);
-          setNotification({
-            show: true,
-            type: 'success',
-            title: 'class updated successfully'
-          });
+
+          if (previousActiveUnitId !== roomData.activeUnit.id) {
+            setLoading(true);
+            await onActiveUnitUpdate(roomData.activeUnit.id);
+          } else {
+            setUnsavedChanges(false);
+            setNotification({
+              show: true,
+              type: 'success',
+              title: 'class updated successfully'
+            });
+          }
         } else {
           const input = {
             institutionID: roomData.institute.id,
@@ -754,6 +773,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
           );
 
           let savedData = result.data.getRoom;
+
           if (!savedData) {
             savedData = await fetchSingleCoTeacher(roomId);
             savedData = {
@@ -798,12 +818,14 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
               );
             }
 
+            setPreviousActiveUnitId(savedData?.activeSyllabus);
             setRoomData({
               ...roomData,
               id: savedData.id,
               name: savedData.name,
+              classID: savedData.classID,
               activeSyllabus: savedData?.activeSyllabus,
-
+              type: savedData?.type || ClassroomType.ONLINE,
               institute: {
                 id: savedData.institution?.id,
                 name: savedData.institution?.name,
@@ -900,6 +922,263 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
         value: institute.name
       }
     });
+  };
+
+  const {authId, email} = useAuth();
+
+  const createPersonLessonsData = async (lessonID: string, type: string, len: number) => {
+    const result: any = await API.graphql(
+      graphqlOperation(customMutations.createPersonLessonsData, {
+        input: {
+          id: uuidV4(),
+          ratings: 0,
+          studentAuthID: authId,
+          roomId: roomId,
+          studentEmail: email,
+          lessonID: lessonID,
+          lessonType: type,
+
+          pages: `{
+              "currentPage":${JSON.stringify(0)},
+              "totalPages":${JSON.stringify(len - 1)},
+              "lessonProgress":${JSON.stringify(0)}
+              }`
+            .replace(/(\s\s+|[\t\n])/g, ' ')
+            .trim()
+        }
+      })
+    );
+    return result?.data?.createPersonLessonsData;
+  };
+
+  const fetchLessonPersonData = async (lessonID: string) => {
+    try {
+      const lessonPersonData: any = await API.graphql(
+        graphqlOperation(customQueries.lessonsByType, {
+          filter: {
+            roomId: {eq: roomId},
+            studentAuthID: {eq: authId},
+            studentEmail: {eq: email}
+          },
+          limit: 500
+        })
+      );
+
+      const data = lessonPersonData?.data?.listPersonLessonsData?.items || [];
+      let _personLessonData = data.find((d: any) => d.lessonID === lessonID);
+
+      return _personLessonData;
+    } catch (e) {
+      console.error('listLessonPersonData: ', e);
+    } finally {
+    }
+  };
+
+  const _loopFetchStudentData = async (
+    lessonID: string,
+    PAGES: UniversalLessonPlan[],
+    authId: string
+  ): Promise<UniversalLessonStudentDataFromAPI[]> =>
+    new Promise(async (resolve) => {
+      try {
+        // fetch by pages
+
+        let result: any = [];
+
+        await Promise.all(
+          PAGES.map(async (page: any, idx: number) => {
+            let studentData: any = await API.graphql(
+              graphqlOperation(customQueries.getUniversalLessonStudentData, {
+                id: `${authId}-${roomId}-${lessonID}-${page.id}`
+                // filter: {...filterObj.filter, lessonPageID: {eq: page.id}}
+              })
+            );
+
+            let studentDataObject = studentData.data.getUniversalLessonStudentData;
+            if (studentDataObject !== null || studentDataObject !== undefined) {
+              result.push(studentDataObject);
+            }
+          })
+        );
+
+        /**
+         * combination of last fetch results
+         * && current fetch results
+         */
+
+        resolve(result);
+      } catch (e) {
+        console.error('loopFetchStudentData - ', e);
+        return [];
+      }
+    });
+
+  const getClassStudents = async (classID: string) => {
+    try {
+      const classStudents: any = await API.graphql(
+        graphqlOperation(customQueries.listClassStudents, {
+          limit: 500,
+          filter: {classID: {eq: classID}, status: {eq: 'ACTIVE'}}
+        })
+      );
+      const classStudentList = classStudents.data.listClassStudents?.items || [];
+
+      // return student.studentAuthID
+      return classStudentList;
+    } catch (e) {
+      console.error('getClassStudents - ', e);
+    }
+  };
+
+  const getLessonCurrentPage = async (id: string) => {
+    try {
+      const getLessonRatingDetails: any = await API.graphql(
+        graphqlOperation(customQueries.getPersonLessonsData, {
+          id
+        })
+      );
+      let pages = getLessonRatingDetails.data.getPersonLessonsData.pages;
+      const currentPage = JSON.parse(pages).currentPage;
+      return currentPage;
+    } catch (error) {
+      logError(error, {authId, email}, 'Lesson @getLessonCurrentPage');
+    }
+  };
+
+  const loopCreateStudentArchiveAndExcerciseData = async (
+    lessonID: string,
+    PAGES: UniversalLessonPlan[],
+    authId: string,
+    personLessonDataId: string,
+    lessonName: string
+  ) => {
+    console.log('fetching for -> ', lessonID);
+
+    const studentDataRows: UniversalLessonStudentDataFromAPI[] = await _loopFetchStudentData(
+      lessonID,
+      PAGES,
+      authId
+    );
+    const currentPageLocation = await getLessonCurrentPage(personLessonDataId);
+
+    const result = studentDataRows.filter(Boolean).map(async (item: any) => {
+      const input = {
+        id: uuidV4(),
+        syllabusLessonID: item.syllabusLessonID,
+        lessonID: item.lessonID,
+        lessonPageID: item.lessonPageID,
+        studentID: item.studentID,
+        studentAuthID: item.studentAuthID,
+        studentEmail: item.studentEmail,
+        roomID: item.roomID,
+        currentLocation: currentPageLocation.toString(),
+        lessonProgress: item.lessonProgress,
+        pageData: item.pageData,
+        hasExerciseData: item.hasExerciseData,
+        exerciseData: item.exerciseData,
+        lessonName
+      };
+      let newStudentData: any;
+      let returnedData: any;
+
+      if (item.hasExerciseData) {
+        console.info('\x1b[33m *Moving lesson data to writing exercise table... \x1b[0m');
+        newStudentData = await API.graphql(
+          graphqlOperation(mutation.createUniversalLessonWritingExcercises, {
+            input
+          })
+        );
+      } else {
+        delete input.lessonName;
+        newStudentData = await API.graphql(
+          graphqlOperation(mutation.createUniversalArchiveData, {
+            input
+          })
+        );
+        console.info('\x1b[33m *Archiving rest of the pages... \x1b[0m');
+      }
+      returnedData = newStudentData.data.createUniversalArchiveData;
+
+      return returnedData;
+    });
+
+    return result;
+  };
+
+  const createStudentArchiveData = async (
+    lessonID: string,
+    PAGES: UniversalLessonPlan[],
+    authId: string,
+    personLessonDataId: string,
+    lessonName: string
+  ) => {
+    try {
+      const result = await loopCreateStudentArchiveAndExcerciseData(
+        lessonID,
+        PAGES,
+        authId,
+        personLessonDataId,
+        lessonName
+      );
+
+      return result;
+    } catch (e) {
+      console.error(
+        'error @createStudentArchiveData in LessonApp.tsx creating journal data - ',
+        e
+      );
+    }
+  };
+
+  const onActiveUnitUpdate = async (id: string) => {
+    try {
+      const result: any = await API.graphql(
+        graphqlOperation(customQueries.getActiveUniversalSyllabus, {id: id})
+      );
+
+      const lessons = result?.data?.getUniversalSyllabus?.lessons?.items || [];
+
+      const lessonIds = lessons.map((_d: any) => _d.lessonID);
+
+      const result2: any = await API.graphql(
+        graphqlOperation(customQueries.listUniversalLessons, {
+          filter: {...createFilterToFetchSpecificItemsOnly(lessonIds, 'id')}
+        })
+      );
+
+      const finalLessons: UniversalLesson[] =
+        result2?.data?.listUniversalLessons?.items || [];
+      const students = await getClassStudents(roomData.classID);
+
+      if (students && students.length > 0) {
+        for (const lesson of finalLessons) {
+          let personLessonData =
+            (await fetchLessonPersonData(lesson.id)) ||
+            (await createPersonLessonsData(
+              lesson.id,
+              lesson.type,
+              lesson.lessonPlan.length
+            ));
+
+          if (personLessonData) {
+            for (const student of students) {
+              await createStudentArchiveData(
+                lesson.id,
+                lesson.lessonPlan,
+                student.studentID,
+                personLessonData.id,
+                lesson.title
+              );
+            }
+          }
+        }
+      }
+    } catch (error) {
+      console.error(error);
+      logError(error, {authId, email}, 'ClassRoomForm @onActiveUnitUpdate');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const onSelectActiveUnit = (unit: {id: string; name: string}) => {
