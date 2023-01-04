@@ -83,3 +83,21 @@ export const setPageTitle = (title: string) => {
     document.title = `${title} | `.concat(getAsset(getClientKey(), 'appTitle'));
   }
 };
+
+export const getExtension = (str: string) => {
+  let temp = str.split('.');
+
+  const extension = temp.pop();
+  return extension;
+};
+
+export const focusOn = (id: string) => {
+  const el = document.getElementById(id);
+
+  if (el) {
+    el.classList.add('blink');
+    setTimeout(() => {
+      el.classList.remove('blink');
+    }, 2000);
+  }
+};

@@ -1672,3 +1672,31 @@ $polka-dot-size: 0.8px;
     fill: $indigo-600;
   }
 }
+
+.animate-y {
+  animation: animateY infinite 1s alternate;
+}
+
+@keyframes animateY {
+  from {
+    transform: translateY(-5px);
+  }
+  to {
+    transform: translateY(5px);
+  }
+}
+
+.blink {
+  animation-delay: 200ms;
+  animation: blink 1000ms alternate ease-in-out infinite;
+}
+
+@keyframes blink {
+  from {
+    background-color: $theme-200;
+    color: white;
+  }
+  to {
+    background-color: white;
+  }
+}

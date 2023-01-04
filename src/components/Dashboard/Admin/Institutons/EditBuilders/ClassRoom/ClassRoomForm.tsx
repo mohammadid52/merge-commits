@@ -1,6 +1,14 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import {
+  ClassStudent,
+  UniversalLesson,
+  UniversalLessonPlan,
+  UniversalLessonStudentData as UniversalLessonStudentDataFromAPI,
+  UpdatePersonLessonsDataInput
+} from 'API';
 import React, {useEffect, useState} from 'react';
 import {useHistory, useLocation, useParams, useRouteMatch} from 'react-router-dom';
+import {v4 as uuidV4} from 'uuid';
 
 import * as customMutations from 'customGraphql/customMutations';
 import * as customQueries from 'customGraphql/customQueries';
@@ -15,11 +23,14 @@ import SelectorWithAvatar from 'atoms/Form/SelectorWithAvatar';
 import PageWrapper from 'atoms/PageWrapper';
 import ModalPopUp from 'molecules/ModalPopUp';
 
+import {useNotifications} from '@contexts/NotificationContext';
+import useAuth from '@customHooks/useAuth';
+import {LessonEditDict} from '@dictionary/dictionary.iconoclast';
+import {logError} from '@graphql/functions';
+import {ClassroomType} from 'API';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
-import {LessonEditDict} from '@dictionary/dictionary.iconoclast';
-import {getFilterORArray} from 'utilities/strings';
-import {useNotifications} from '@contexts/NotificationContext';
+import {createFilterToFetchSpecificItemsOnly, getFilterORArray} from 'utilities/strings';
 
 export const fetchSingleCoTeacher = async (roomId: string) => {
   const result: any = await API.graphql(
@@ -31,12 +42,24 @@ interface ClassRoomFormProps {
   instId: string;
 }
 
+export const TypeList = [
+  {
+    id: 1,
+    name: 'ONLINE',
+    value: 'ONLINE'
+  },
+  {
+    id: 2,
+    name: 'TRADITIONAL',
+    value: 'TRADITIONAL'
+  }
+];
 const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
   const history = useHistory();
   const location = useLocation();
   const match = useRouteMatch();
   const {roomId}: any = useParams();
-  const {userLanguage, state} = useGlobalContext();
+  const {userLanguage} = useGlobalContext();
 
   const StatusList = [
     {
@@ -59,6 +82,8 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
   const [units, setUnits] = useState([]);
 
   const [unitsLoading, setUnitsLoading] = useState(false);
+
+  const [previousActiveUnitId, setPreviousActiveUnitId] = useState(null);
 
   const fetchUnits = async (curriculaId: string) => {
     try {
@@ -105,6 +130,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
   const initialData = {
     id: '',
     name: '',
+    type: ClassroomType.ONLINE,
     institute: {id: instId, name: '', value: ''},
     teacher: {id: '', name: '', value: ''},
     coTeachers: [{}],
@@ -118,7 +144,8 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
       id: '',
       name: ''
     },
-    activeSyllabus: ''
+    activeSyllabus: '',
+    classID: ''
   };
   const [roomData, setRoomData] = useState(initialData);
   const [teachersList, setTeachersList] = useState([]);
@@ -187,7 +214,6 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
       combined = [...outArray, ...returnedData];
 
       if (NextToken) {
-        // console.log('nextToken fetching more - ', nextToken);
         combined = await listInstitutions(NextToken, combined);
       }
 
@@ -219,6 +245,10 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
     setSelectedCoTeachers((list: any) => list.filter((d: any) => d.id !== id));
   };
 
+  const selectClassroomType = (id: string, name: ClassroomType, value: string) => {
+    setRoomData({...roomData, type: name});
+  };
+
   const selectCoTeacher = (id: string, name: string, value: string) => {
     let updatedList;
     const currentCoTeachers = selectedCoTeachers;
@@ -241,7 +271,6 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
       [e.target.name]: e.target.value
     });
     setUnsavedChanges(true);
-
     removeErrorMsg();
   };
 
@@ -316,9 +345,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
         })
       );
       const listStaffs = list.data.listStaff.items;
-      // if (!isMounted) {
-      //   return;
-      // }
+
       if (listStaffs?.length === 0) {
         console.error('No staff found');
 
@@ -370,50 +397,6 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
     }
   };
 
-  // const getClassLists = async (allInstiId: string[]) => {
-  //   try {
-  //     const list: any = await API.graphql(
-  //       graphqlOperation(queries.listClasss, {
-  //         filter: {or: getFilterORArray(allInstiId, 'institutionID')},
-  //       })
-  //     );
-  //     const listClass = list.data.listClasss?.items;
-  //     // if (!isMounted) {
-  //     //   return;
-  //     // }
-  //     if (listClass.length === 0) {
-  //       setMessages({
-  //         show: true,
-  //         message: RoomEDITdict[userLanguage]['messages']['addclassfirst'],
-  //         isError: true,
-  //       });
-  //     } else {
-  //       const sortedList = listClass.sort((a: any, b: any) =>
-  //         a.name?.toLowerCase() > b.name?.toLowerCase() ? 1 : -1
-  //       );
-  //       const filteredClassList = sortedList.filter((classItem: any) => {
-  //         return (
-  //           classItem?.institution.isServiceProvider === false ||
-  //           (classItem?.institution.isServiceProvider === true &&
-  //             classItem.institution.id === instId)
-  //         );
-  //       });
-  //       const classList = filteredClassList.map((item: any, i: any) => ({
-  //         id: item.id,
-  //         name: `${item.name ? item.name : ''}`,
-  //         value: `${item.name ? item.name : ''}`,
-  //       }));
-  //       setClassList(classList);
-  //     }
-  //   error catch (err){console.log(err,'err inside catch')
-  //     setMessages({
-  //       show: true,
-  //       message: RoomEDITdict[userLanguage]['messages']['unableclass'],
-  //       isError: true,
-  //     });
-  //   }
-  // };
-
   const getCurricularList = async (allInstiId: string[]) => {
     try {
       const list: any = await API.graphql(
@@ -421,9 +404,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
           filter: {or: getFilterORArray(allInstiId, 'institutionID')}
         })
       );
-      // if (!isMounted) {
-      //   return;
-      // }
+
       const sortedList = list.data.listCurricula?.items.sort((a: any, b: any) =>
         a.name?.toLowerCase() > b.name?.toLowerCase() ? 1 : -1
       );
@@ -493,33 +474,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
         isError: true
       });
       return false;
-    }
-
-    // else if (roomData.classRoom.id === '') {
-    //   setMessages({
-    //     show: true,
-    //     message: RoomEDITdict[userLanguage]['messages']['selectclass'],
-    //     isError: true,
-    //   });
-    //   return false;
-    // }
-    // else if (roomData.maxPersons == '') {
-    //   setMessages({
-    //     show: true,
-    //     message: RoomEDITdict[userLanguage]['messages']['mxstudent'],
-    //     isError: true,
-    //   });
-    //   return false;
-    // }
-    // else if (roomData.maxPersons > '256') {
-    //   setMessages({
-    //     show: true,
-    //     message: RoomEDITdict[userLanguage]['messages']['oneclass'],
-    //     isError: true,
-    //   });
-    //   return false;
-    // }
-    else if (roomData.name.trim() !== '' && prevName !== roomData.name) {
+    } else if (roomData.name.trim() !== '' && prevName !== roomData.name) {
       const isUniq = await checkUniqRoomName();
       if (!isUniq) {
         setMessages({
@@ -545,7 +500,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
           curriculumID: currId
         };
 
-        const addCurricular: any = await API.graphql(
+        await API.graphql(
           graphqlOperation(mutation.updateRoomCurriculum, {input: curricularInput})
         );
         setLoading(false);
@@ -581,7 +536,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
           curriculumID: currId
         };
 
-        const addCurricular: any = await API.graphql(
+        await API.graphql(
           graphqlOperation(mutation.createRoomCurriculum, {input: curricularInput})
         );
         setMessages({
@@ -630,6 +585,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
   };
 
   const {setNotification} = useNotifications();
+
   const saveRoomDetails = async () => {
     const isValid = await validateForm();
     if (isValid) {
@@ -649,12 +605,13 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
             ).email,
             name: roomData.name,
             maxPersons: roomData.maxPersons,
+            type: roomData.type || ClassroomType.ONLINE,
             status: roomData.status || 'ACTIVE',
             location: roomData.location,
             conferenceCallLink: roomData.conferenceCallLink
           };
           const newRoom: any = await API.graphql(
-            graphqlOperation(mutation.updateRoom, {input: input})
+            graphqlOperation(customMutations._updateRoom, {input: input})
           );
           const curriculaId = newRoom.data.updateRoom.curricula.items[0]?.id;
           await saveRoomTeachers(roomData.id);
@@ -663,20 +620,18 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
           } else {
             await createRoomCurricular(roomId, roomData.curricular.id);
           }
-          setUnsavedChanges(false);
-          setNotification({
-            show: true,
-            type: 'success',
-            title: 'class updated successfully'
-          });
-          // setMessages({
-          //   show: true,
-          //   message: RoomEDITdict[userLanguage]['messages']['classupdate'],
-          //   isError: false
-          // });
-          // history.push(
-          //   `/dashboard/manage-institutions/institution?id=${roomData.institute?.id}&tab=4`
-          // );
+
+          if (previousActiveUnitId !== roomData.activeUnit.id) {
+            // setLoading(true);
+            // await onActiveUnitUpdate(roomData.activeUnit.id);
+          } else {
+            setUnsavedChanges(false);
+            setNotification({
+              show: true,
+              type: 'success',
+              title: 'class updated successfully'
+            });
+          }
         } else {
           const input = {
             institutionID: roomData.institute.id,
@@ -719,12 +674,6 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
             await createRoomCurricular(roomId, roomData.curricular.id);
             await saveRoomTeachers(roomId);
           } else {
-            // setMessages({
-            //   show: true,
-            //   message:
-            //     RoomBuilderdict[userLanguage]['messages']['success']['newclassroom'],
-            //   isError: false
-            // });
             setNotification({
               show: true,
               type: 'success',
@@ -742,11 +691,6 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
       } catch (err) {
         console.error(err, 'err inside catch');
         setLoading(false);
-        // setMessages({
-        //   show: true,
-        //   message: RoomEDITdict[userLanguage]['messages']['errupdatingclass'],
-        //   isError: true
-        // });
 
         setNotification({
           show: true,
@@ -829,6 +773,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
           );
 
           let savedData = result.data.getRoom;
+
           if (!savedData) {
             savedData = await fetchSingleCoTeacher(roomId);
             savedData = {
@@ -873,12 +818,14 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
               );
             }
 
+            setPreviousActiveUnitId(savedData?.activeSyllabus);
             setRoomData({
               ...roomData,
               id: savedData.id,
               name: savedData.name,
+              classID: savedData.classID,
               activeSyllabus: savedData?.activeSyllabus,
-
+              type: savedData?.type || ClassroomType.ONLINE,
               institute: {
                 id: savedData.institution?.id,
                 name: savedData.institution?.name,
@@ -936,7 +883,6 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
     const serviceProviders = items.map((item: any) => item.providerID);
     const allInstiId = [...serviceProviders, roomData.institute?.id];
     getTeachersList(allInstiId);
-    // getClassLists(allInstiId);
     getCurricularList(allInstiId);
   };
 
@@ -954,18 +900,16 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
 
   useEffect(() => {
     fetchRoomDetails();
-    // getInstitutionList();
   }, [roomId]);
 
   const {
     name,
     curricular,
-    classRoom,
-    maxPersons,
     institute,
     teacher,
     status,
     conferenceCallLink,
+    type,
     location: roomLocation
   } = roomData;
 
@@ -978,6 +922,263 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
         value: institute.name
       }
     });
+  };
+
+  const {authId, email} = useAuth();
+
+  const createPersonLessonsData = async (lessonID: string, type: string, len: number) => {
+    const result: any = await API.graphql(
+      graphqlOperation(customMutations.createPersonLessonsData, {
+        input: {
+          id: uuidV4(),
+          ratings: 0,
+          studentAuthID: authId,
+          roomId: roomId,
+          studentEmail: email,
+          lessonID: lessonID,
+          lessonType: type,
+
+          pages: `{
+              "currentPage":${JSON.stringify(0)},
+              "totalPages":${JSON.stringify(len - 1)},
+              "lessonProgress":${JSON.stringify(0)}
+              }`
+            .replace(/(\s\s+|[\t\n])/g, ' ')
+            .trim()
+        }
+      })
+    );
+    return result?.data?.createPersonLessonsData;
+  };
+
+  const fetchLessonPersonData = async (lessonID: string) => {
+    try {
+      const lessonPersonData: any = await API.graphql(
+        graphqlOperation(customQueries.lessonsByType, {
+          filter: {
+            roomId: {eq: roomId},
+            studentAuthID: {eq: authId},
+            studentEmail: {eq: email}
+          },
+          limit: 500
+        })
+      );
+
+      const data = lessonPersonData?.data?.listPersonLessonsData?.items || [];
+      let _personLessonData = data.find((d: any) => d.lessonID === lessonID);
+
+      return _personLessonData;
+    } catch (e) {
+      console.error('listLessonPersonData: ', e);
+    } finally {
+    }
+  };
+
+  const _loopFetchStudentData = async (
+    lessonID: string,
+    PAGES: UniversalLessonPlan[],
+    authId: string
+  ): Promise<UniversalLessonStudentDataFromAPI[]> =>
+    new Promise(async (resolve) => {
+      try {
+        // fetch by pages
+
+        let result: any = [];
+
+        await Promise.all(
+          PAGES.map(async (page: any, idx: number) => {
+            let studentData: any = await API.graphql(
+              graphqlOperation(customQueries.getUniversalLessonStudentData, {
+                id: `${authId}-${roomId}-${lessonID}-${page.id}`
+                // filter: {...filterObj.filter, lessonPageID: {eq: page.id}}
+              })
+            );
+
+            let studentDataObject = studentData.data.getUniversalLessonStudentData;
+            if (studentDataObject !== null || studentDataObject !== undefined) {
+              result.push(studentDataObject);
+            }
+          })
+        );
+
+        /**
+         * combination of last fetch results
+         * && current fetch results
+         */
+
+        resolve(result);
+      } catch (e) {
+        console.error('loopFetchStudentData - ', e);
+        return [];
+      }
+    });
+
+  const getClassStudents = async (classID: string) => {
+    try {
+      const classStudents: any = await API.graphql(
+        graphqlOperation(customQueries.listClassStudents, {
+          limit: 500,
+          filter: {classID: {eq: classID}, status: {eq: 'ACTIVE'}}
+        })
+      );
+      const classStudentList = classStudents.data.listClassStudents?.items || [];
+
+      // return student.studentAuthID
+      return classStudentList;
+    } catch (e) {
+      console.error('getClassStudents - ', e);
+    }
+  };
+
+  const getLessonCurrentPage = async (id: string) => {
+    try {
+      const getLessonRatingDetails: any = await API.graphql(
+        graphqlOperation(customQueries.getPersonLessonsData, {
+          id
+        })
+      );
+      let pages = getLessonRatingDetails.data.getPersonLessonsData.pages;
+      const currentPage = JSON.parse(pages).currentPage;
+      return currentPage;
+    } catch (error) {
+      logError(error, {authId, email}, 'Lesson @getLessonCurrentPage');
+    }
+  };
+
+  const loopCreateStudentArchiveAndExcerciseData = async (
+    lessonID: string,
+    PAGES: UniversalLessonPlan[],
+    authId: string,
+    personLessonDataId: string,
+    lessonName: string
+  ) => {
+    console.log('fetching for -> ', lessonID);
+
+    const studentDataRows: UniversalLessonStudentDataFromAPI[] = await _loopFetchStudentData(
+      lessonID,
+      PAGES,
+      authId
+    );
+    const currentPageLocation = await getLessonCurrentPage(personLessonDataId);
+
+    const result = studentDataRows.filter(Boolean).map(async (item: any) => {
+      const input = {
+        id: uuidV4(),
+        syllabusLessonID: item.syllabusLessonID,
+        lessonID: item.lessonID,
+        lessonPageID: item.lessonPageID,
+        studentID: item.studentID,
+        studentAuthID: item.studentAuthID,
+        studentEmail: item.studentEmail,
+        roomID: item.roomID,
+        currentLocation: currentPageLocation.toString(),
+        lessonProgress: item.lessonProgress,
+        pageData: item.pageData,
+        hasExerciseData: item.hasExerciseData,
+        exerciseData: item.exerciseData,
+        lessonName
+      };
+      let newStudentData: any;
+      let returnedData: any;
+
+      if (item.hasExerciseData) {
+        console.info('\x1b[33m *Moving lesson data to writing exercise table... \x1b[0m');
+        newStudentData = await API.graphql(
+          graphqlOperation(mutation.createUniversalLessonWritingExcercises, {
+            input
+          })
+        );
+      } else {
+        delete input.lessonName;
+        newStudentData = await API.graphql(
+          graphqlOperation(mutation.createUniversalArchiveData, {
+            input
+          })
+        );
+        console.info('\x1b[33m *Archiving rest of the pages... \x1b[0m');
+      }
+      returnedData = newStudentData.data.createUniversalArchiveData;
+
+      return returnedData;
+    });
+
+    return result;
+  };
+
+  const createStudentArchiveData = async (
+    lessonID: string,
+    PAGES: UniversalLessonPlan[],
+    authId: string,
+    personLessonDataId: string,
+    lessonName: string
+  ) => {
+    try {
+      const result = await loopCreateStudentArchiveAndExcerciseData(
+        lessonID,
+        PAGES,
+        authId,
+        personLessonDataId,
+        lessonName
+      );
+
+      return result;
+    } catch (e) {
+      console.error(
+        'error @createStudentArchiveData in LessonApp.tsx creating journal data - ',
+        e
+      );
+    }
+  };
+
+  const onActiveUnitUpdate = async (id: string) => {
+    try {
+      const result: any = await API.graphql(
+        graphqlOperation(customQueries.getActiveUniversalSyllabus, {id: id})
+      );
+
+      const lessons = result?.data?.getUniversalSyllabus?.lessons?.items || [];
+
+      const lessonIds = lessons.map((_d: any) => _d.lessonID);
+
+      const result2: any = await API.graphql(
+        graphqlOperation(customQueries.listUniversalLessons, {
+          filter: {...createFilterToFetchSpecificItemsOnly(lessonIds, 'id')}
+        })
+      );
+
+      const finalLessons: UniversalLesson[] =
+        result2?.data?.listUniversalLessons?.items || [];
+      const students = await getClassStudents(roomData.classID);
+
+      if (students && students.length > 0) {
+        for (const lesson of finalLessons) {
+          let personLessonData =
+            (await fetchLessonPersonData(lesson.id)) ||
+            (await createPersonLessonsData(
+              lesson.id,
+              lesson.type,
+              lesson.lessonPlan.length
+            ));
+
+          if (personLessonData) {
+            for (const student of students) {
+              await createStudentArchiveData(
+                lesson.id,
+                lesson.lessonPlan,
+                student.studentID,
+                personLessonData.id,
+                lesson.title
+              );
+            }
+          }
+        }
+      }
+    } catch (error) {
+      console.error(error);
+      logError(error, {authId, email}, 'ClassRoomForm @onActiveUnitUpdate');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const onSelectActiveUnit = (unit: {id: string; name: string}) => {
@@ -995,9 +1196,6 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
       {/* Body section */}
       <PageWrapper defaultClass="px-4">
         <div className="w-full m-auto">
-          {/* <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">
-            {RoomEDITdict[userLanguage]['HEADING']}
-          </h3> */}
           <div className="">
             <div className="text-lg font-medium mb-4">
               {RoomEDITdict[userLanguage].HEADING}
@@ -1060,6 +1258,17 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
                   onChange={selectStatus}
                 />
               </div>
+              <div className="px-3 py-4">
+                <Selector
+                  selectedItem={type}
+                  placeholder={'Classroom type'}
+                  label={'Classroom type'}
+                  labelTextClass={'text-xs'}
+                  list={TypeList}
+                  isRequired
+                  onChange={selectClassroomType}
+                />
+              </div>
             </div>
             {/*
              **
@@ -1093,38 +1302,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
                   />
                 </div>
               </div>
-              {/* <div className="grid grid-cols-2">
-                <div className="px-3 py-4">
-                  <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
-                    {RoomEDITdict[userLanguage]['CLASS_NAME_LABEL']}{' '}
-                    <span className="text-red-500"> *</span>
-                  </label>
-                  <Selector
-                    selectedItem={classRoom.value}
-                    placeholder={RoomEDITdict[userLanguage]['CLASS_NAME_PLACEHOLDER']}
-                    list={classList}
-                    onChange={selectClass}
-                  />
-                </div>
-                <div className="px-3 py-4">
-                  <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
-                    {RoomEDITdict[userLanguage]['MAXSTUDENT_LABEL']}{' '}
-                    <span className="text-red-500"> *</span>
-                  </label>
-                  <input
-                    type="number"
-                    id="maxPersons"
-                    name="maxPersons"
-                    onChange={editInputField}
-                    className={`mt-1 block w-full sm:text-sm sm:leading-5  border-0 border-gray-400 py-2 px-3 rounded-md shadow-sm ${theme.outlineNone}`}
-                    value={maxPersons}
-                    placeholder={RoomEDITdict[userLanguage]['MAXSTUDENT_PLACEHOLDER']}
-                    min="1"
-                    max="256"
-                  />
-                </div>
-              </div>
-               */}
+
               <div className="grid grid-cols-2">
                 <div className="px-3 py-4">
                   <FormInput
@@ -1153,7 +1331,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
         {messages.show ? (
           <div className="py-2 m-auto text-center">
             <p className={`${messages.isError ? 'text-red-600' : 'text-green-600'}`}>
-              {messages.message && messages.message}
+              {messages.message || ''}
             </p>
           </div>
         ) : null}

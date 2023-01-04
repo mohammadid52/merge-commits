@@ -1329,6 +1329,19 @@ export const updatePersonSentiments = /* GraphQL */ `
   }
 `;
 
+export const createPersonLessonsData = /* GraphQL */ `
+  mutation CreatePersonLessonsData(
+    $input: CreatePersonLessonsDataInput!
+    $condition: ModelPersonLessonsDataConditionInput
+  ) {
+    createPersonLessonsData(input: $input, condition: $condition) {
+      id
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
 export const createPersonSentiments = /* GraphQL */ `
   mutation CreatePersonSentiments(
     $input: CreatePersonSentimentsInput!
@@ -1584,6 +1597,300 @@ export const updateErrorLog = /* GraphQL */ `
     updateErrorLog(input: $input, condition: $condition) {
       id
       status
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+export const createUploadLogs = /* GraphQL */ `
+  mutation CreateUploadLogs(
+    $input: CreateUploadLogsInput!
+    $condition: ModelUploadLogsConditionInput
+  ) {
+    createUploadLogs(input: $input, condition: $condition) {
+      id
+      TemporaryUniversalUploadSurveyDataID
+      TemporaryDemographicsUploadDataID
+      UploadType
+      Date
+      User_id
+      Curricullum_id
+      urlLink
+      Unit_id
+      authID
+      email
+      lesson_id
+      room_id
+      Class_id
+      PaperSurveyURL
+      Reason
+      person {
+        id
+        authId
+        email
+        firstName
+        preferredName
+        lastName
+      }
+      lesson {
+        id
+        type
+        label
+        title
+      }
+      room {
+        id
+        name
+      }
+      unit {
+        id
+        name
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+export const deleteUploadLogs = /* GraphQL */ `
+  mutation DeleteUploadLogs(
+    $input: DeleteUploadLogsInput!
+    $condition: ModelUploadLogsConditionInput
+  ) {
+    deleteUploadLogs(input: $input, condition: $condition) {
+      id
+    }
+  }
+`;
+
+export const _updateRoom = /* GraphQL */ `
+  mutation UpdateRoom($input: UpdateRoomInput!, $condition: ModelRoomConditionInput) {
+    updateRoom(input: $input, condition: $condition) {
+      id
+      institutionID
+      classID
+      teacherAuthID
+      teacherEmail
+      name
+      maxPersons
+      status
+      filters
+      location
+      startDate
+      startTime
+      endDate
+      endTime
+      length
+      repeat
+      notes
+      activeSyllabus
+      frequency
+      coTeachers {
+        items {
+          id
+          roomID
+          teacherID
+          teacherEmail
+          teacherAuthID
+          type
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      institution {
+        id
+        name
+        type
+        district
+        address
+        addressLine2
+        city
+        state
+        zip
+        phone
+        website
+        image
+        isServiceProvider
+        serviceProviders {
+          nextToken
+        }
+        staff {
+          nextToken
+        }
+        rooms {
+          nextToken
+        }
+        curricula {
+          nextToken
+        }
+        classes {
+          nextToken
+        }
+        filters
+        checkpoints {
+          nextToken
+        }
+        setupComplete
+        createdAt
+        updatedAt
+      }
+      teacher {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        inactiveStatusDate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        onDemand
+        sentiments
+        passcode
+        classes {
+          nextToken
+        }
+        lessons {
+          nextToken
+        }
+        spotlightUser
+        spotlightDate
+        statusReason
+        addedby
+        lastEmotionSubmission
+        pageState
+        lastPageStateUpdate
+        statusChangedBy
+        createdAt
+        updatedAt
+      }
+      class {
+        id
+        institutionID
+        type
+        name
+
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          setupComplete
+          createdAt
+          updatedAt
+        }
+        room {
+          id
+          institutionID
+          classID
+          teacherAuthID
+          teacherEmail
+          name
+          maxPersons
+          status
+          filters
+          location
+          startDate
+          startTime
+          endDate
+          endTime
+          length
+          repeat
+          notes
+          activeSyllabus
+          frequency
+          activeLessonId
+          ClosedPages
+          disabledPages
+          studentViewing
+          currentPage
+          activeLessons
+          weekDay
+          conferenceCallLink
+          classSentiment
+          type
+          createdAt
+          updatedAt
+        }
+        students {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      curricula {
+        items {
+          id
+          roomID
+          curriculumID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      activeLessonId
+      ClosedPages
+      disabledPages
+      studentViewing
+      displayData {
+        isTeacher
+        studentAuthID
+        lessonPageID
+      }
+      currentPage
+      completedLessons {
+        lessonID
+        time
+      }
+      activeLessons
+      classroomGroups {
+        items {
+          id
+          classRoomID
+          groupName
+          groupType
+          advisorEmail
+          advisorAuthId
+          groupLocation
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      weekDay
+      conferenceCallLink
+      lessonImpactLog {
+        impactDate
+        reasonComment
+        lessonImpact
+        adjustment
+      }
+      classSentiment
+      type
       createdAt
       updatedAt
     }

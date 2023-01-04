@@ -345,10 +345,8 @@ const RoomsList = (props: RoomListProps) => {
 
   const onInstitutionSelectionRemove = () => {
     setSelectedInstitution({});
-    setSearchInput({...searchInput, isActive: false});
-    history.push(
-      `/dashboard/manage-institutions/institution/${associateInstitute[0].institution.id}/class-rooms`
-    );
+    removeSearchAction();
+
     // onSearch(searchInput, '', '');
   };
 
@@ -401,7 +399,9 @@ const RoomsList = (props: RoomListProps) => {
                   isActive={searchInput.isActive}
                   disabled={loading}
                   onKeyDown={searchRoom}
-                  closeAction={removeSearchAction}
+                  closeAction={() => {
+                    removeSearchAction();
+                  }}
                   // style={`mr-4 w-auto md:w-40 lg:w-48 mb-8`}
                 />
                 {/* <Selector
@@ -463,9 +463,6 @@ const RoomsList = (props: RoomListProps) => {
                   <th className="bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                     {InstitueRomms[userLanguage]['TEACHER']}
                   </th>
-                  {/* <th className="bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                    {InstitueRomms[userLanguage]['CO_TEACHER']}
-                  </th> */}
 
                   <th className="bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                     {InstitueRomms[userLanguage]['CURRICULUM']}
@@ -474,10 +471,6 @@ const RoomsList = (props: RoomListProps) => {
                   <th className="bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                     {InstitueRomms[userLanguage]['STATUS']}
                   </th>
-
-                  {/* <th className="bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                    {InstitueRomms[userLanguage]['ACTION']}
-                  </th> */}
                 </tr>
               </thead>
               <tbody>

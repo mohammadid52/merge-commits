@@ -1,5 +1,6 @@
 import Buttons from '@components/Atoms/Buttons';
 import Label from '@components/Atoms/Form/Label';
+import Loader from '@components/Atoms/Loader';
 import DotMenu from '@components/TeacherView/ClassRoster/RosterRow/DotMenu';
 import {useGlobalContext} from '@contexts/GlobalContext';
 import useAuth from '@customHooks/useAuth';
@@ -13,31 +14,31 @@ import {
 } from 'API';
 import {API, graphqlOperation} from 'aws-amplify';
 import * as customMutations from 'customGraphql/customMutations';
+import {orderBy, update} from 'lodash';
 import moment from 'moment';
 import React, {useEffect, useState} from 'react';
 import {Redirect} from 'react-router';
-import UserListLoader from '../Admin/UserManagement/UserListLoader';
 
 const ErrorItem = ({
   error,
   updateStatus,
   idx
 }: {
-  updateStatus: (id: string, status: ErrorStatus, idx: number, item: ErrorLog) => void;
+  updateStatus: (id: string, status: ErrorStatus) => void;
   error: ErrorLog;
   idx: number;
 }) => {
   const pendingItem = {
     label: 'set to pending',
     action: () => {
-      updateStatus(error.id, ErrorStatus.PENDING, idx, error);
+      updateStatus(error.id, ErrorStatus.PENDING);
     }
   };
 
   const reviewItem = {
     label: 'set to review',
     action: () => {
-      updateStatus(error.id, ErrorStatus.REVIEW, idx, error);
+      updateStatus(error.id, ErrorStatus.REVIEW);
     }
   };
 
@@ -46,7 +47,7 @@ const ErrorItem = ({
   const closedItem = {
     label: 'set to closed',
     action: () => {
-      updateStatus(error.id, ErrorStatus.CLOSED, idx, error);
+      updateStatus(error.id, ErrorStatus.CLOSED);
     }
   };
 
@@ -72,25 +73,29 @@ const ErrorItem = ({
   };
 
   return (
-    <tr className={`bg-gray-100 border-l-4 ${statusBorder()}`}>
-      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-        {error.email}
-      </td>
-      <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-        {error.errorType.slice(0, 20)}
-      </td>
-      <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-        {moment(error.errorTime).format('lll')}
-      </td>
-      <td className="text-sm theme-text:600 hover:theme-text:500 text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-        <a href={error.pageUrl}>{error.pageUrl}</a>
-      </td>
-      <td className="text-sm  text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-        <div className={`dot-menu transition duration-150`}>
-          <DotMenu menuItems={[...menuItems]} />
+    <div className={`white_back p-4 pb-8 relative border-l-6 ${statusBorder()}`}>
+      <div className="absolute top-0 w-auto p-4 right-0">
+        <DotMenu menuItems={[...menuItems]} />
+      </div>
+      <h2 className=" text-sm font-medium text-gray-900">{error.email}</h2>
+      <h4 className="text-sm text-red-600 font-light h-24 overflow-auto py-2">
+        {error.errorType}
+      </h4>
+      <h6 className="text-sm text-gray-900 font-light overflow-auto py-2">
+        {error.componentName}
+      </h6>
+
+      <div className="absolute left-0  bottom-0 border-t-0 pt-1 border-gray-200 flex items-center justify-between px-4 py-2">
+        <div
+          title={error.pageUrl}
+          className="text-sm underline theme-text:600 w-auto hover:theme-text:500 text-gray-900 font-light ">
+          <a href={error.pageUrl}>visit url</a>
         </div>
-      </td>
-    </tr>
+        <p className="text-xs text-gray-500 font-light italic w-auto">
+          {moment(error.errorTime).format('lll')}
+        </p>
+      </div>
+    </div>
   );
 };
 
@@ -104,7 +109,17 @@ const ErrorsPage = () => {
   const {data, setData, isLoading, isFetched} = useGraphqlQuery<
     ListErrorLogsQueryVariables,
     ErrorLog[]
-  >('listErrorLogs', {limit: 100}, {enabled: checkIfAdmin()});
+  >(
+    'listErrorLogs',
+    {limit: 150},
+    {
+      enabled: checkIfAdmin(),
+      onSuccess: (data) => {
+        const orderedList = orderBy([...data], ['errorTime'], ['desc']);
+        setData([...orderedList]);
+      }
+    }
+  );
 
   const [filteredList, setFilteredList] = useState([...data]);
 
@@ -114,16 +129,13 @@ const ErrorsPage = () => {
     }
   }, [isLoading, isFetched]);
 
-  const updateStatus = async (
-    id: string,
-    status: ErrorStatus,
-    idx: number,
-    item: ErrorLog
-  ) => {
+  const updateStatus = async (id: string, status: ErrorStatus) => {
     try {
-      const updatedError = {...item, status};
+      setFilters(null);
 
-      data.splice(idx, 0, updatedError);
+      const _idx = data.findIndex((_d: ErrorLog) => _d.id === id);
+      update(data[_idx], 'status', () => status);
+
       setData([...data]);
       setFilteredList([...data]);
 
@@ -139,24 +151,21 @@ const ErrorsPage = () => {
     }
   };
 
-  const [filters, setFilters] = useState<ErrorStatus[]>([]);
+  const [filters, setFilters] = useState<ErrorStatus>();
 
   const updateFilter = (filterName: ErrorStatus) => {
-    if (filters.includes(filterName)) {
-      setFilters(filters.filter((_d) => _d !== filterName));
-      if (filters.length === 0) {
-        setFilteredList([...data]);
-      } else {
-        const filtered = data.filter((_d: ErrorLog) => filters.includes(_d.status));
-        setFilteredList([...filtered]);
-      }
+    if (filterName === filters) {
+      setFilters(null);
+      setFilteredList([...data]);
     } else {
-      filters.push(filterName);
-      const filtered = data.filter((_d: ErrorLog) => filters.includes(_d.status));
-      setFilteredList([...filtered]);
-      setFilters([...filters]);
+      const filtered = data.filter((_d: any) => filterName === _d.status);
+      setFilteredList(filtered);
+      setFilters(filterName);
     }
   };
+
+  const pendingLength = data.filter((_d: ErrorLog) => _d.status === ErrorStatus.PENDING)
+    .length;
 
   return (
     <div className="flex flex-col">
@@ -167,74 +176,51 @@ const ErrorsPage = () => {
             <div className="flex gap-x-4 mb-4 mt-2 items-center">
               <Buttons
                 onClick={() => updateFilter(ErrorStatus.PENDING)}
-                transparent={!filters.includes(ErrorStatus.PENDING)}
+                transparent={filters !== ErrorStatus.PENDING}
                 label={'Pending'}
               />
               <Buttons
                 onClick={() => updateFilter(ErrorStatus.CLOSED)}
-                transparent={!filters.includes(ErrorStatus.CLOSED)}
+                transparent={filters !== ErrorStatus.CLOSED}
                 label={'Closed'}
               />
               <Buttons
                 onClick={() => updateFilter(ErrorStatus.REVIEW)}
-                transparent={!filters.includes(ErrorStatus.REVIEW)}
+                transparent={filters !== ErrorStatus.REVIEW}
                 label={'Review'}
               />
             </div>
           </div>
 
           <div className="overflow-hidden">
-            <table className="min-w-full">
-              <thead className="bg-white border-b-0">
-                <tr>
-                  <th
-                    scope="col"
-                    className="text-sm font-medium text-gray-900 px-6 py-4 text-left">
-                    email
-                  </th>
-                  <th
-                    scope="col"
-                    className="text-sm font-medium text-gray-900 px-6 py-4 text-left">
-                    error
-                  </th>
-                  <th
-                    scope="col"
-                    className="text-sm font-medium text-gray-900 px-6 py-4 text-left">
-                    time
-                  </th>
-                  <th
-                    scope="col"
-                    className="text-sm font-medium text-gray-900 px-6 py-4 text-left">
-                    url
-                  </th>
-                  <th
-                    scope="col"
-                    className="text-sm font-medium text-gray-900 px-6 py-4 text-left">
-                    actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {isLoading ? (
-                  <UserListLoader userRole="ADM" />
-                ) : filteredList.length > 0 ? (
-                  filteredList.map((error, idx) => (
-                    <ErrorItem
-                      idx={idx}
-                      updateStatus={updateStatus}
-                      error={error}
-                      key={idx}
-                    />
-                  ))
-                ) : (
-                  <p className="min-h-56 flex items-center w-full justify-center text-gray-500">
-                    {filters.length > 0
-                      ? `No errors found for status - ${filters.join(', ')}`
-                      : 'Woahhh.. no errors.. its good.'}
-                  </p>
-                )}
-              </tbody>
-            </table>
+            {isLoading ? null : (
+              <h5 className="text-base mb-4 text-gray-800">
+                {pendingLength} pending errors - total {data.length} errors
+              </h5>
+            )}
+
+            {isLoading ? (
+              <Loader withText="loading error logs" animation />
+            ) : filteredList.length > 0 ? (
+              <div className="grid grid-cols-2 xl:grid-cols-4 2xl:grid-cols-5 gap-8">
+                {filteredList.map((error, idx) => (
+                  <ErrorItem
+                    idx={idx}
+                    updateStatus={updateStatus}
+                    error={error}
+                    key={idx}
+                  />
+                ))}
+              </div>
+            ) : (
+              <p className="min-h-56 flex items-center w-full justify-center text-gray-500">
+                {filters !== undefined
+                  ? `No errors found for status - ${filters}`
+                  : 'Woahhh.. no errors.. its good.'}
+              </p>
+            )}
+            {/* </tbody> */}
+            {/* </table> */}
           </div>
         </div>
       </div>

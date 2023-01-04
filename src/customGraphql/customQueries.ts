@@ -1099,8 +1099,8 @@ export const fetchPersons = /* GraphQL */ `
   }
 `;
 export const listClassStudents = /* GraphQL */ `
-  query ListClassStudents($studentID: ID) {
-    listClassStudents(filter: {studentID: {contains: $studentID}}) {
+  query ListClassStudents($filter: ModelClassStudentFilterInput, $limit: Int) {
+    listClassStudents(filter: $filter, limit: $limit) {
       items {
         classID
         studentID
@@ -1208,7 +1208,7 @@ export const getRoom = /* GraphQL */ `
       institutionID
       classID
       teacherAuthID
-
+      type
       teacherEmail
       name
       status
@@ -2599,6 +2599,64 @@ export const listUniversalLessonsOptions = /* GraphQL */ `
         lessonPlan {
           id
         }
+      }
+      nextToken
+    }
+  }
+`;
+export const listOnlySurveys = /* GraphQL */ `
+  query ListUniversalLessons(
+    $id: ID
+    $filter: ModelUniversalLessonFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listUniversalLessons(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        type
+        label
+        title
+        institutionID
+        language
+      }
+      nextToken
+    }
+  }
+`;
+
+export const getReasonFromUploadLogs = /* GraphQL */ `
+  query ListUploadLogs(
+    $id: ID
+    $filter: ModelUploadLogsFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listUploadLogs(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        Curricullum_id
+        Unit_id
+        lesson_id
+        Class_id
+        Reason
+        createdAt
+        User_id
+        updatedAt
       }
       nextToken
     }
@@ -6238,6 +6296,89 @@ export const listCurricula = /* GraphQL */ `
         updatedAt
       }
       nextToken
+    }
+  }
+`;
+
+export const listUploadLogs = /* GraphQL */ `
+  query ListUploadLogs(
+    $id: ID
+    $filter: ModelUploadLogsFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listUploadLogs(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        UploadType
+        updateType
+        Date
+        User_id
+        Curricullum_id
+        urlLink
+        Unit_id
+        authID
+        email
+        lesson_id
+        room_id
+        Class_id
+        PaperSurveyURL
+        Reason
+        person {
+          id
+          authId
+          email
+          firstName
+          preferredName
+          lastName
+        }
+        lesson {
+          id
+          type
+          label
+          title
+        }
+        room {
+          id
+          name
+        }
+        unit {
+          id
+          name
+        }
+        surveyName
+        unitName
+        roomName
+        personName
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+
+export const getActiveUniversalSyllabus = /* GraphQL */ `
+  query GetUniversalSyllabus($id: ID!) {
+    getUniversalSyllabus(id: $id) {
+      id
+      name
+      type
+      lessons {
+        items {
+          id
+          syllabusID
+          lessonID
+          unit
+        }
+      }
     }
   }
 `;

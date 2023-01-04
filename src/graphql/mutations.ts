@@ -66,6 +66,7 @@ export const batchAddClassStudent = /* GraphQL */ `
           weekDay
           conferenceCallLink
           classSentiment
+          type
           createdAt
           updatedAt
         }
@@ -562,6 +563,7 @@ export const createPersonLessonsData = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -791,6 +793,7 @@ export const updatePersonLessonsData = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -1020,6 +1023,7 @@ export const deletePersonLessonsData = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -1101,6 +1105,7 @@ export const createInstitution = /* GraphQL */ `
           weekDay
           conferenceCallLink
           classSentiment
+          type
           createdAt
           updatedAt
         }
@@ -1230,6 +1235,7 @@ export const updateInstitution = /* GraphQL */ `
           weekDay
           conferenceCallLink
           classSentiment
+          type
           createdAt
           updatedAt
         }
@@ -1359,6 +1365,7 @@ export const deleteInstitution = /* GraphQL */ `
           weekDay
           conferenceCallLink
           classSentiment
+          type
           createdAt
           updatedAt
         }
@@ -1891,6 +1898,7 @@ export const createRoom = /* GraphQL */ `
           teacherID
           teacherEmail
           teacherAuthID
+          type
           createdAt
           updatedAt
         }
@@ -2029,6 +2037,7 @@ export const createRoom = /* GraphQL */ `
           weekDay
           conferenceCallLink
           classSentiment
+          type
           createdAt
           updatedAt
         }
@@ -2086,6 +2095,7 @@ export const createRoom = /* GraphQL */ `
         adjustment
       }
       classSentiment
+      type
       createdAt
       updatedAt
     }
@@ -2123,6 +2133,7 @@ export const updateRoom = /* GraphQL */ `
           teacherID
           teacherEmail
           teacherAuthID
+          type
           createdAt
           updatedAt
         }
@@ -2261,6 +2272,7 @@ export const updateRoom = /* GraphQL */ `
           weekDay
           conferenceCallLink
           classSentiment
+          type
           createdAt
           updatedAt
         }
@@ -2318,6 +2330,7 @@ export const updateRoom = /* GraphQL */ `
         adjustment
       }
       classSentiment
+      type
       createdAt
       updatedAt
     }
@@ -2355,6 +2368,7 @@ export const deleteRoom = /* GraphQL */ `
           teacherID
           teacherEmail
           teacherAuthID
+          type
           createdAt
           updatedAt
         }
@@ -2493,6 +2507,7 @@ export const deleteRoom = /* GraphQL */ `
           weekDay
           conferenceCallLink
           classSentiment
+          type
           createdAt
           updatedAt
         }
@@ -2550,6 +2565,7 @@ export const deleteRoom = /* GraphQL */ `
         adjustment
       }
       classSentiment
+      type
       createdAt
       updatedAt
     }
@@ -2655,6 +2671,7 @@ export const createClassroomGroupStudents = /* GraphQL */ `
           weekDay
           conferenceCallLink
           classSentiment
+          type
           createdAt
           updatedAt
         }
@@ -2796,6 +2813,7 @@ export const updateClassroomGroupStudents = /* GraphQL */ `
           weekDay
           conferenceCallLink
           classSentiment
+          type
           createdAt
           updatedAt
         }
@@ -2937,6 +2955,7 @@ export const deleteClassroomGroupStudents = /* GraphQL */ `
           weekDay
           conferenceCallLink
           classSentiment
+          type
           createdAt
           updatedAt
         }
@@ -3163,6 +3182,7 @@ export const createClassroomGroups = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -3356,6 +3376,7 @@ export const updateClassroomGroups = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -3549,6 +3570,7 @@ export const deleteClassroomGroups = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -3745,6 +3767,7 @@ export const createRoomCoTeachers = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -3800,6 +3823,7 @@ export const createRoomCoTeachers = /* GraphQL */ `
         }
         nextToken
       }
+      type
       createdAt
       updatedAt
     }
@@ -3933,6 +3957,7 @@ export const updateRoomCoTeachers = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -3988,6 +4013,7 @@ export const updateRoomCoTeachers = /* GraphQL */ `
         }
         nextToken
       }
+      type
       createdAt
       updatedAt
     }
@@ -4121,6 +4147,7 @@ export const deleteRoomCoTeachers = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -4176,6 +4203,7 @@ export const deleteRoomCoTeachers = /* GraphQL */ `
         }
         nextToken
       }
+      type
       createdAt
       updatedAt
     }
@@ -4346,6 +4374,7 @@ export const createClass = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -4533,6 +4562,7 @@ export const updateClass = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -4720,6 +4750,7 @@ export const deleteClass = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -4809,6 +4840,7 @@ export const createClassStudent = /* GraphQL */ `
           weekDay
           conferenceCallLink
           classSentiment
+          type
           createdAt
           updatedAt
         }
@@ -4932,6 +4964,7 @@ export const updateClassStudent = /* GraphQL */ `
           weekDay
           conferenceCallLink
           classSentiment
+          type
           createdAt
           updatedAt
         }
@@ -5055,6 +5088,7 @@ export const deleteClassStudent = /* GraphQL */ `
           weekDay
           conferenceCallLink
           classSentiment
+          type
           createdAt
           updatedAt
         }
@@ -8146,6 +8180,7 @@ export const createPersonLocation = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -8416,6 +8451,7 @@ export const updatePersonLocation = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -8686,6 +8722,7 @@ export const deletePersonLocation = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -9095,6 +9132,7 @@ export const createAttendance = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -9415,6 +9453,7 @@ export const updateAttendance = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -9735,6 +9774,7 @@ export const deleteAttendance = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -10965,6 +11005,16 @@ export const createUniversalArchiveData = /* GraphQL */ `
         feedbacks
         shared
       }
+      surveyData {
+        domID
+        options
+        input
+        comments {
+          commentBy
+          comment
+        }
+        hasTakenSurvey
+      }
       createdAt
       updatedAt
     }
@@ -11007,6 +11057,16 @@ export const updateUniversalArchiveData = /* GraphQL */ `
         feedbacks
         shared
       }
+      surveyData {
+        domID
+        options
+        input
+        comments {
+          commentBy
+          comment
+        }
+        hasTakenSurvey
+      }
       createdAt
       updatedAt
     }
@@ -11048,6 +11108,16 @@ export const deleteUniversalArchiveData = /* GraphQL */ `
         }
         feedbacks
         shared
+      }
+      surveyData {
+        domID
+        options
+        input
+        comments {
+          commentBy
+          comment
+        }
+        hasTakenSurvey
       }
       createdAt
       updatedAt
@@ -11520,7 +11590,6 @@ export const createUploadLogs = /* GraphQL */ `
   ) {
     createUploadLogs(input: $input, condition: $condition) {
       id
-      User_id
       TemporaryUniversalUploadSurveyDataID
       TemporaryUniversalUploadSurveyData {
         id
@@ -11577,12 +11646,316 @@ export const createUploadLogs = /* GraphQL */ `
       UploadType
       updateType
       Date
+      User_id
       Curricullum_id
+      urlLink
       Unit_id
+      authID
+      email
       lesson_id
+      room_id
       Class_id
       PaperSurveyURL
       Reason
+      person {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        inactiveStatusDate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        onDemand
+        sentiments
+        passcode
+        classes {
+          nextToken
+        }
+        lessons {
+          nextToken
+        }
+        spotlightUser
+        spotlightDate
+        statusReason
+        addedby
+        lastEmotionSubmission
+        pageState
+        lastPageStateUpdate
+        statusChangedBy
+        createdAt
+        updatedAt
+      }
+      lesson {
+        id
+        type
+        label
+        title
+        institutionID
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          setupComplete
+          createdAt
+          updatedAt
+        }
+        language
+        designers
+        objectives
+        lessonPlanAttachment
+        purpose
+        introduction
+        introductionTitle
+        status
+        instructions
+        instructionsTitle
+        summary
+        summaryTitle
+        duration
+        resources
+        notes
+        cardImage
+        cardCaption
+        lessonPlan {
+          id
+          title
+          label
+          description
+          class
+          active
+          disabled
+          displayMode
+          open
+          estTime
+          activityType
+          interactionType
+          tags
+          videoLink
+          notes
+        }
+        homework {
+          id
+          title
+          label
+          description
+          class
+          active
+          disabled
+          displayMode
+          open
+          estTime
+          activityType
+          interactionType
+          tags
+          videoLink
+          notes
+        }
+        darkMode
+        rubrics
+        smallGroup
+        groupSize
+        groupType
+        smallGroupSize
+        smallGroupOption
+        studentMaterials
+        targetAudience
+        isUsed
+        createdAt
+        updatedAt
+      }
+      room {
+        id
+        institutionID
+        classID
+        teacherAuthID
+        teacherEmail
+        name
+        maxPersons
+        status
+        filters
+        location
+        startDate
+        startTime
+        endDate
+        endTime
+        length
+        repeat
+        notes
+        activeSyllabus
+        frequency
+        coTeachers {
+          nextToken
+        }
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          setupComplete
+          createdAt
+          updatedAt
+        }
+        teacher {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          inactiveStatusDate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          onDemand
+          sentiments
+          passcode
+          spotlightUser
+          spotlightDate
+          statusReason
+          addedby
+          lastEmotionSubmission
+          pageState
+          lastPageStateUpdate
+          statusChangedBy
+          createdAt
+          updatedAt
+        }
+        class {
+          id
+          institutionID
+          type
+          name
+          roomId
+          createdAt
+          updatedAt
+        }
+        curricula {
+          nextToken
+        }
+        activeLessonId
+        ClosedPages
+        disabledPages
+        studentViewing
+        displayData {
+          isTeacher
+          studentAuthID
+          lessonPageID
+        }
+        currentPage
+        completedLessons {
+          lessonID
+          time
+        }
+        activeLessons
+        classroomGroups {
+          nextToken
+        }
+        weekDay
+        conferenceCallLink
+        lessonImpactLog {
+          impactDate
+          reasonComment
+          lessonImpact
+          adjustment
+        }
+        classSentiment
+        type
+        createdAt
+        updatedAt
+      }
+      unit {
+        id
+        name
+        type
+        institutionID
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          setupComplete
+          createdAt
+          updatedAt
+        }
+        description
+        methodology
+        policies
+        pupose
+        priorities
+        secondary
+        objectives
+        languages
+        lessons {
+          nextToken
+        }
+        universalLessonsSeq
+        designers
+        status
+        isUsed
+        lessonHistory
+        createdAt
+        updatedAt
+      }
+      surveyName
+      unitName
+      roomName
+      personName
       createdAt
       updatedAt
     }
@@ -11595,7 +11968,6 @@ export const updateUploadLogs = /* GraphQL */ `
   ) {
     updateUploadLogs(input: $input, condition: $condition) {
       id
-      User_id
       TemporaryUniversalUploadSurveyDataID
       TemporaryUniversalUploadSurveyData {
         id
@@ -11652,12 +12024,316 @@ export const updateUploadLogs = /* GraphQL */ `
       UploadType
       updateType
       Date
+      User_id
       Curricullum_id
+      urlLink
       Unit_id
+      authID
+      email
       lesson_id
+      room_id
       Class_id
       PaperSurveyURL
       Reason
+      person {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        inactiveStatusDate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        onDemand
+        sentiments
+        passcode
+        classes {
+          nextToken
+        }
+        lessons {
+          nextToken
+        }
+        spotlightUser
+        spotlightDate
+        statusReason
+        addedby
+        lastEmotionSubmission
+        pageState
+        lastPageStateUpdate
+        statusChangedBy
+        createdAt
+        updatedAt
+      }
+      lesson {
+        id
+        type
+        label
+        title
+        institutionID
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          setupComplete
+          createdAt
+          updatedAt
+        }
+        language
+        designers
+        objectives
+        lessonPlanAttachment
+        purpose
+        introduction
+        introductionTitle
+        status
+        instructions
+        instructionsTitle
+        summary
+        summaryTitle
+        duration
+        resources
+        notes
+        cardImage
+        cardCaption
+        lessonPlan {
+          id
+          title
+          label
+          description
+          class
+          active
+          disabled
+          displayMode
+          open
+          estTime
+          activityType
+          interactionType
+          tags
+          videoLink
+          notes
+        }
+        homework {
+          id
+          title
+          label
+          description
+          class
+          active
+          disabled
+          displayMode
+          open
+          estTime
+          activityType
+          interactionType
+          tags
+          videoLink
+          notes
+        }
+        darkMode
+        rubrics
+        smallGroup
+        groupSize
+        groupType
+        smallGroupSize
+        smallGroupOption
+        studentMaterials
+        targetAudience
+        isUsed
+        createdAt
+        updatedAt
+      }
+      room {
+        id
+        institutionID
+        classID
+        teacherAuthID
+        teacherEmail
+        name
+        maxPersons
+        status
+        filters
+        location
+        startDate
+        startTime
+        endDate
+        endTime
+        length
+        repeat
+        notes
+        activeSyllabus
+        frequency
+        coTeachers {
+          nextToken
+        }
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          setupComplete
+          createdAt
+          updatedAt
+        }
+        teacher {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          inactiveStatusDate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          onDemand
+          sentiments
+          passcode
+          spotlightUser
+          spotlightDate
+          statusReason
+          addedby
+          lastEmotionSubmission
+          pageState
+          lastPageStateUpdate
+          statusChangedBy
+          createdAt
+          updatedAt
+        }
+        class {
+          id
+          institutionID
+          type
+          name
+          roomId
+          createdAt
+          updatedAt
+        }
+        curricula {
+          nextToken
+        }
+        activeLessonId
+        ClosedPages
+        disabledPages
+        studentViewing
+        displayData {
+          isTeacher
+          studentAuthID
+          lessonPageID
+        }
+        currentPage
+        completedLessons {
+          lessonID
+          time
+        }
+        activeLessons
+        classroomGroups {
+          nextToken
+        }
+        weekDay
+        conferenceCallLink
+        lessonImpactLog {
+          impactDate
+          reasonComment
+          lessonImpact
+          adjustment
+        }
+        classSentiment
+        type
+        createdAt
+        updatedAt
+      }
+      unit {
+        id
+        name
+        type
+        institutionID
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          setupComplete
+          createdAt
+          updatedAt
+        }
+        description
+        methodology
+        policies
+        pupose
+        priorities
+        secondary
+        objectives
+        languages
+        lessons {
+          nextToken
+        }
+        universalLessonsSeq
+        designers
+        status
+        isUsed
+        lessonHistory
+        createdAt
+        updatedAt
+      }
+      surveyName
+      unitName
+      roomName
+      personName
       createdAt
       updatedAt
     }
@@ -11670,7 +12346,6 @@ export const deleteUploadLogs = /* GraphQL */ `
   ) {
     deleteUploadLogs(input: $input, condition: $condition) {
       id
-      User_id
       TemporaryUniversalUploadSurveyDataID
       TemporaryUniversalUploadSurveyData {
         id
@@ -11727,12 +12402,316 @@ export const deleteUploadLogs = /* GraphQL */ `
       UploadType
       updateType
       Date
+      User_id
       Curricullum_id
+      urlLink
       Unit_id
+      authID
+      email
       lesson_id
+      room_id
       Class_id
       PaperSurveyURL
       Reason
+      person {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        inactiveStatusDate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        onDemand
+        sentiments
+        passcode
+        classes {
+          nextToken
+        }
+        lessons {
+          nextToken
+        }
+        spotlightUser
+        spotlightDate
+        statusReason
+        addedby
+        lastEmotionSubmission
+        pageState
+        lastPageStateUpdate
+        statusChangedBy
+        createdAt
+        updatedAt
+      }
+      lesson {
+        id
+        type
+        label
+        title
+        institutionID
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          setupComplete
+          createdAt
+          updatedAt
+        }
+        language
+        designers
+        objectives
+        lessonPlanAttachment
+        purpose
+        introduction
+        introductionTitle
+        status
+        instructions
+        instructionsTitle
+        summary
+        summaryTitle
+        duration
+        resources
+        notes
+        cardImage
+        cardCaption
+        lessonPlan {
+          id
+          title
+          label
+          description
+          class
+          active
+          disabled
+          displayMode
+          open
+          estTime
+          activityType
+          interactionType
+          tags
+          videoLink
+          notes
+        }
+        homework {
+          id
+          title
+          label
+          description
+          class
+          active
+          disabled
+          displayMode
+          open
+          estTime
+          activityType
+          interactionType
+          tags
+          videoLink
+          notes
+        }
+        darkMode
+        rubrics
+        smallGroup
+        groupSize
+        groupType
+        smallGroupSize
+        smallGroupOption
+        studentMaterials
+        targetAudience
+        isUsed
+        createdAt
+        updatedAt
+      }
+      room {
+        id
+        institutionID
+        classID
+        teacherAuthID
+        teacherEmail
+        name
+        maxPersons
+        status
+        filters
+        location
+        startDate
+        startTime
+        endDate
+        endTime
+        length
+        repeat
+        notes
+        activeSyllabus
+        frequency
+        coTeachers {
+          nextToken
+        }
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          setupComplete
+          createdAt
+          updatedAt
+        }
+        teacher {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          inactiveStatusDate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          onDemand
+          sentiments
+          passcode
+          spotlightUser
+          spotlightDate
+          statusReason
+          addedby
+          lastEmotionSubmission
+          pageState
+          lastPageStateUpdate
+          statusChangedBy
+          createdAt
+          updatedAt
+        }
+        class {
+          id
+          institutionID
+          type
+          name
+          roomId
+          createdAt
+          updatedAt
+        }
+        curricula {
+          nextToken
+        }
+        activeLessonId
+        ClosedPages
+        disabledPages
+        studentViewing
+        displayData {
+          isTeacher
+          studentAuthID
+          lessonPageID
+        }
+        currentPage
+        completedLessons {
+          lessonID
+          time
+        }
+        activeLessons
+        classroomGroups {
+          nextToken
+        }
+        weekDay
+        conferenceCallLink
+        lessonImpactLog {
+          impactDate
+          reasonComment
+          lessonImpact
+          adjustment
+        }
+        classSentiment
+        type
+        createdAt
+        updatedAt
+      }
+      unit {
+        id
+        name
+        type
+        institutionID
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          setupComplete
+          createdAt
+          updatedAt
+        }
+        description
+        methodology
+        policies
+        pupose
+        priorities
+        secondary
+        objectives
+        languages
+        lessons {
+          nextToken
+        }
+        universalLessonsSeq
+        designers
+        status
+        isUsed
+        lessonHistory
+        createdAt
+        updatedAt
+      }
+      surveyName
+      unitName
+      roomName
+      personName
       createdAt
       updatedAt
     }
@@ -13870,6 +14849,7 @@ export const createSentimentTracker = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -14125,6 +15105,7 @@ export const updateSentimentTracker = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -14380,6 +15361,7 @@ export const deleteSentimentTracker = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -14636,6 +15618,7 @@ export const createFeelingTracker = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -14826,6 +15809,7 @@ export const updateFeelingTracker = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -15016,6 +16000,7 @@ export const deleteFeelingTracker = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -15209,6 +16194,7 @@ export const createFeelingsArchive = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -15491,6 +16477,7 @@ export const updateFeelingsArchive = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }
@@ -15773,6 +16760,7 @@ export const deleteFeelingsArchive = /* GraphQL */ `
           adjustment
         }
         classSentiment
+        type
         createdAt
         updatedAt
       }

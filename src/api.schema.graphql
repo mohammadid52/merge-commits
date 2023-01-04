@@ -3,6 +3,11 @@ enum Language {
   ES
 }
 
+enum ClassroomType {
+  ONLINE
+  TRADITIONAL
+}
+
 enum PersonStatus {
   ACTIVE
   SUSPENDED
@@ -184,6 +189,7 @@ type Room @model @auth(rules: [{allow: public}]) {
   conferenceCallLink: String
   lessonImpactLog: [ImpactLogEntry]
   classSentiment: [String]
+  type: ClassroomType @default(value: "ONLINE")
 }
 
 type ArchiveSurveyDataSQL @model @auth(rules: [{allow: public}]) {
@@ -264,6 +270,7 @@ type RoomCoTeachers @model @auth(rules: [{allow: public}]) {
   room: Room @belongsTo(fields: ["roomID"])
   teacher: Person @hasOne(fields: ["teacherEmail", "teacherAuthID"])
   curricula: [RoomCurriculum] @hasMany(indexName: "curriculumByRoom", fields: ["id"])
+  type: ClassroomType @default(value: "ONLINE")
 }
 
 type Class @model @auth(rules: [{allow: public}]) {
@@ -739,6 +746,7 @@ type UniversalArchiveData @model @auth(rules: [{allow: public}]) {
   pageData: [PartInput]
   hasExerciseData: Boolean
   exerciseData: [ExerciseData]
+  surveyData: [PartInput]
 }
 
 type UniversalSurveyStudentData @model @auth(rules: [{allow: public}]) {
@@ -776,7 +784,6 @@ type TemporaryDemographicsUploadData @model @auth(rules: [{allow: public}]) {
 
 type UploadLogs @model @auth(rules: [{allow: public}]) {
   id: ID! @primaryKey
-  User_id: ID!
   TemporaryUniversalUploadSurveyDataID: ID
   TemporaryUniversalUploadSurveyData: TemporaryUniversalUploadSurveyData
     @hasOne(fields: ["TemporaryUniversalUploadSurveyDataID"])
@@ -786,12 +793,25 @@ type UploadLogs @model @auth(rules: [{allow: public}]) {
   UploadType: String
   updateType: UpdateType
   Date: AWSDate
+  User_id: String!
   Curricullum_id: ID
+  urlLink: String
   Unit_id: ID
+  authID: String!
+  email: String!
   lesson_id: ID
+  room_id: ID
   Class_id: ID
   PaperSurveyURL: [String]
   Reason: String
+  person: Person @hasOne(fields: ["email", "authID"])
+  lesson: UniversalLesson @hasOne(fields: ["lesson_id"])
+  room: Room @hasOne(fields: ["room_id"])
+  unit: UniversalSyllabus @hasOne(fields: ["Unit_id"])
+  surveyName: String
+  unitName: String
+  roomName: String
+  personName: String
 }
 
 type ExerciseData {
