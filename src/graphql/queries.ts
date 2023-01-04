@@ -1179,8 +1179,8 @@ export const listRooms = /* GraphQL */ `
     }
   }
 `;
-export const getArchiveSurveyDataSql = /* GraphQL */ `
-  query GetArchiveSurveyDataSql($Email: String!, $AuthId: String!) {
+export const getArchiveSurveyDataSQL = /* GraphQL */ `
+  query GetArchiveSurveyDataSQL($Email: String!, $AuthId: String!) {
     getArchiveSurveyDataSQL(Email: $Email, AuthId: $AuthId) {
       id
       AuthId
@@ -1196,8 +1196,8 @@ export const getArchiveSurveyDataSql = /* GraphQL */ `
     }
   }
 `;
-export const listArchiveSurveyDataSqls = /* GraphQL */ `
-  query ListArchiveSurveyDataSqls(
+export const listArchiveSurveyDataSQLS = /* GraphQL */ `
+  query ListArchiveSurveyDataSQLS(
     $Email: String
     $AuthId: ModelStringKeyConditionInput
     $filter: ModelArchiveSurveyDataSQLFilterInput
@@ -9338,8 +9338,8 @@ export const lessonsByType2 = /* GraphQL */ `
     }
   }
 `;
-export const messagesByRoomId = /* GraphQL */ `
-  query MessagesByRoomId(
+export const messagesByRoomID = /* GraphQL */ `
+  query MessagesByRoomID(
     $roomID: ID!
     $createdAt: ModelStringKeyConditionInput
     $sortDirection: ModelSortDirection
