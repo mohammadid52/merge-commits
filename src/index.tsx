@@ -10,6 +10,8 @@ import 'index.html';
 import 'style/style.css';
 import 'style/style.scss';
 
+require('dotenv').config();
+
 // Amplify.configure(awsconfig);
 
 Amplify.configure({

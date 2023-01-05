@@ -7233,6 +7233,11 @@
     "no-case" "^3.0.4"
     "tslib" "^2.0.3"
 
+"dotenv@^16.0.3":
+  "integrity" "sha512-7GO6HghkA5fYG9TYnNxi14/7K9f5occMlp3zXAuSxn7CKCxt9xbNWG7yF8hTCSUchlfWSe3uLmlPfigevRItzQ=="
+  "resolved" "https://registry.npmjs.org/dotenv/-/dotenv-16.0.3.tgz"
+  "version" "16.0.3"
+
 "draft-js-color-picker-plugin@^1.2.0":
   "integrity" "sha512-eqrLxrLeXxNhaZo6FV4egpMtlQSlFjQFpuMZUoYDS/aNmoYrhyElAhf84dfaGEmux3ogH98gVDC5NsDIZlUttg=="
   "resolved" "https://registry.npmjs.org/draft-js-color-picker-plugin/-/draft-js-color-picker-plugin-1.2.0.tgz"
