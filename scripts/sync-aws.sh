@@ -23,14 +23,7 @@ push_to_cloud(){
     echo "pushed"
 }
 
-pull_from_cloud(){
-     amplify pull \
-    --amplify $AMPLIFY \
-    --providers $PROVIDERS \
-    --yes || true
-    echo "success pulled.. now copying content from api.schema.graphql to schema.graphql"
 
-}
 
 switch_profiles(){
     select envName in dev demosite
@@ -56,6 +49,11 @@ if [ "$AWS_ACCESS_ID" = ""  ] || [ "$AWS_SECRET_ACCESS_KEY" = "" ] ; then
 else 
     IFS='|'
 
+ 
+    remove # remove current amplify folder
+    
+    switch_profiles #switch backend profile [only variables]
+
     AMPLIFY_APP_ID="d3009lcqngzhv4"
     AWS_REGION='us-east-1'
 
@@ -75,11 +73,12 @@ else
     PROVIDERS="{\
     \"awscloudformation\":$AWSCLOUDFORMATIONCONFIG}"
 
-    remove # remove current amplify folder
-    
-    switch_profiles #switch backend profile [only variables]
 
-    pull_from_cloud 
+    amplify pull \
+    --amplify $AMPLIFY \
+    --providers $PROVIDERS \
+    --yes || true
+    echo "success pulled.. now copying content from api.schema.graphql to schema.graphql"
 
     copy_content_schema
     
