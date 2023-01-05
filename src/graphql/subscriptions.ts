@@ -1904,8 +1904,8 @@ export const onDeletePersonLessonsData = /* GraphQL */ `
   }
 `;
 export const onCreateInstitution = /* GraphQL */ `
-  subscription OnCreateInstitution($filter: ModelSubscriptionInstitutionFilterInput) {
-    onCreateInstitution(filter: $filter) {
+  subscription OnCreateInstitution {
+    onCreateInstitution {
       id
       name
       type
@@ -2031,8 +2031,8 @@ export const onCreateInstitution = /* GraphQL */ `
   }
 `;
 export const onUpdateInstitution = /* GraphQL */ `
-  subscription OnUpdateInstitution($filter: ModelSubscriptionInstitutionFilterInput) {
-    onUpdateInstitution(filter: $filter) {
+  subscription OnUpdateInstitution {
+    onUpdateInstitution {
       id
       name
       type
@@ -2158,8 +2158,8 @@ export const onUpdateInstitution = /* GraphQL */ `
   }
 `;
 export const onDeleteInstitution = /* GraphQL */ `
-  subscription OnDeleteInstitution($filter: ModelSubscriptionInstitutionFilterInput) {
-    onDeleteInstitution(filter: $filter) {
+  subscription OnDeleteInstitution {
+    onDeleteInstitution {
       id
       name
       type
@@ -5564,8 +5564,8 @@ export const onDeleteClass = /* GraphQL */ `
   }
 `;
 export const onCreateClassStudent = /* GraphQL */ `
-  subscription OnCreateClassStudent($filter: ModelSubscriptionClassStudentFilterInput) {
-    onCreateClassStudent(filter: $filter) {
+  subscription OnCreateClassStudent {
+    onCreateClassStudent {
       id
       classID
       studentID
@@ -5685,8 +5685,8 @@ export const onCreateClassStudent = /* GraphQL */ `
   }
 `;
 export const onUpdateClassStudent = /* GraphQL */ `
-  subscription OnUpdateClassStudent($filter: ModelSubscriptionClassStudentFilterInput) {
-    onUpdateClassStudent(filter: $filter) {
+  subscription OnUpdateClassStudent {
+    onUpdateClassStudent {
       id
       classID
       studentID
@@ -5806,8 +5806,8 @@ export const onUpdateClassStudent = /* GraphQL */ `
   }
 `;
 export const onDeleteClassStudent = /* GraphQL */ `
-  subscription OnDeleteClassStudent($filter: ModelSubscriptionClassStudentFilterInput) {
-    onDeleteClassStudent(filter: $filter) {
+  subscription OnDeleteClassStudent {
+    onDeleteClassStudent {
       id
       classID
       studentID
@@ -5927,8 +5927,8 @@ export const onDeleteClassStudent = /* GraphQL */ `
   }
 `;
 export const onCreateCurriculum = /* GraphQL */ `
-  subscription OnCreateCurriculum($filter: ModelSubscriptionCurriculumFilterInput) {
-    onCreateCurriculum(filter: $filter) {
+  subscription OnCreateCurriculum {
+    onCreateCurriculum {
       id
       institutionID
       name
@@ -6012,8 +6012,8 @@ export const onCreateCurriculum = /* GraphQL */ `
   }
 `;
 export const onUpdateCurriculum = /* GraphQL */ `
-  subscription OnUpdateCurriculum($filter: ModelSubscriptionCurriculumFilterInput) {
-    onUpdateCurriculum(filter: $filter) {
+  subscription OnUpdateCurriculum {
+    onUpdateCurriculum {
       id
       institutionID
       name
@@ -6097,8 +6097,8 @@ export const onUpdateCurriculum = /* GraphQL */ `
   }
 `;
 export const onDeleteCurriculum = /* GraphQL */ `
-  subscription OnDeleteCurriculum($filter: ModelSubscriptionCurriculumFilterInput) {
-    onDeleteCurriculum(filter: $filter) {
+  subscription OnDeleteCurriculum {
+    onDeleteCurriculum {
       id
       institutionID
       name
@@ -6401,8 +6401,8 @@ export const onDeleteTopic = /* GraphQL */ `
   }
 `;
 export const onCreateCSequences = /* GraphQL */ `
-  subscription OnCreateCSequences($filter: ModelSubscriptionCSequencesFilterInput) {
-    onCreateCSequences(filter: $filter) {
+  subscription OnCreateCSequences {
+    onCreateCSequences {
       id
       sequence
       createdAt
@@ -6411,8 +6411,8 @@ export const onCreateCSequences = /* GraphQL */ `
   }
 `;
 export const onUpdateCSequences = /* GraphQL */ `
-  subscription OnUpdateCSequences($filter: ModelSubscriptionCSequencesFilterInput) {
-    onUpdateCSequences(filter: $filter) {
+  subscription OnUpdateCSequences {
+    onUpdateCSequences {
       id
       sequence
       createdAt
@@ -6421,8 +6421,8 @@ export const onUpdateCSequences = /* GraphQL */ `
   }
 `;
 export const onDeleteCSequences = /* GraphQL */ `
-  subscription OnDeleteCSequences($filter: ModelSubscriptionCSequencesFilterInput) {
-    onDeleteCSequences(filter: $filter) {
+  subscription OnDeleteCSequences {
+    onDeleteCSequences {
       id
       sequence
       createdAt
@@ -6800,8 +6800,8 @@ export const onDeleteRoomCurriculum = /* GraphQL */ `
   }
 `;
 export const onCreateCheckpoint = /* GraphQL */ `
-  subscription OnCreateCheckpoint($filter: ModelSubscriptionCheckpointFilterInput) {
-    onCreateCheckpoint(filter: $filter) {
+  subscription OnCreateCheckpoint {
+    onCreateCheckpoint {
       id
       label
       title
@@ -6834,8 +6834,8 @@ export const onCreateCheckpoint = /* GraphQL */ `
   }
 `;
 export const onUpdateCheckpoint = /* GraphQL */ `
-  subscription OnUpdateCheckpoint($filter: ModelSubscriptionCheckpointFilterInput) {
-    onUpdateCheckpoint(filter: $filter) {
+  subscription OnUpdateCheckpoint {
+    onUpdateCheckpoint {
       id
       label
       title
@@ -6868,8 +6868,8 @@ export const onUpdateCheckpoint = /* GraphQL */ `
   }
 `;
 export const onDeleteCheckpoint = /* GraphQL */ `
-  subscription OnDeleteCheckpoint($filter: ModelSubscriptionCheckpointFilterInput) {
-    onDeleteCheckpoint(filter: $filter) {
+  subscription OnDeleteCheckpoint {
+    onDeleteCheckpoint {
       id
       label
       title
@@ -7406,8 +7406,8 @@ export const onDeleteQuestionSource = /* GraphQL */ `
   }
 `;
 export const onCreateQuestionType = /* GraphQL */ `
-  subscription OnCreateQuestionType($filter: ModelSubscriptionQuestionTypeFilterInput) {
-    onCreateQuestionType(filter: $filter) {
+  subscription OnCreateQuestionType {
+    onCreateQuestionType {
       id
       name
       createdAt
@@ -7416,8 +7416,8 @@ export const onCreateQuestionType = /* GraphQL */ `
   }
 `;
 export const onUpdateQuestionType = /* GraphQL */ `
-  subscription OnUpdateQuestionType($filter: ModelSubscriptionQuestionTypeFilterInput) {
-    onUpdateQuestionType(filter: $filter) {
+  subscription OnUpdateQuestionType {
+    onUpdateQuestionType {
       id
       name
       createdAt
@@ -7426,8 +7426,8 @@ export const onUpdateQuestionType = /* GraphQL */ `
   }
 `;
 export const onDeleteQuestionType = /* GraphQL */ `
-  subscription OnDeleteQuestionType($filter: ModelSubscriptionQuestionTypeFilterInput) {
-    onDeleteQuestionType(filter: $filter) {
+  subscription OnDeleteQuestionType {
+    onDeleteQuestionType {
       id
       name
       createdAt
@@ -7787,8 +7787,8 @@ export const onDeleteAnthologyComment = /* GraphQL */ `
   }
 `;
 export const onCreateQuestionData = /* GraphQL */ `
-  subscription OnCreateQuestionData($filter: ModelSubscriptionQuestionDataFilterInput) {
-    onCreateQuestionData(filter: $filter) {
+  subscription OnCreateQuestionData {
+    onCreateQuestionData {
       id
       syllabusLessonID
       checkpointID
@@ -7851,8 +7851,8 @@ export const onCreateQuestionData = /* GraphQL */ `
   }
 `;
 export const onUpdateQuestionData = /* GraphQL */ `
-  subscription OnUpdateQuestionData($filter: ModelSubscriptionQuestionDataFilterInput) {
-    onUpdateQuestionData(filter: $filter) {
+  subscription OnUpdateQuestionData {
+    onUpdateQuestionData {
       id
       syllabusLessonID
       checkpointID
@@ -7915,8 +7915,8 @@ export const onUpdateQuestionData = /* GraphQL */ `
   }
 `;
 export const onDeleteQuestionData = /* GraphQL */ `
-  subscription OnDeleteQuestionData($filter: ModelSubscriptionQuestionDataFilterInput) {
-    onDeleteQuestionData(filter: $filter) {
+  subscription OnDeleteQuestionData {
+    onDeleteQuestionData {
       id
       syllabusLessonID
       checkpointID
@@ -9173,8 +9173,8 @@ export const onDeletePersonLocation = /* GraphQL */ `
   }
 `;
 export const onCreateAttendance = /* GraphQL */ `
-  subscription OnCreateAttendance($filter: ModelSubscriptionAttendanceFilterInput) {
-    onCreateAttendance(filter: $filter) {
+  subscription OnCreateAttendance {
+    onCreateAttendance {
       id
       studentID
       curriculumID
@@ -9491,8 +9491,8 @@ export const onCreateAttendance = /* GraphQL */ `
   }
 `;
 export const onUpdateAttendance = /* GraphQL */ `
-  subscription OnUpdateAttendance($filter: ModelSubscriptionAttendanceFilterInput) {
-    onUpdateAttendance(filter: $filter) {
+  subscription OnUpdateAttendance {
+    onUpdateAttendance {
       id
       studentID
       curriculumID
@@ -9809,8 +9809,8 @@ export const onUpdateAttendance = /* GraphQL */ `
   }
 `;
 export const onDeleteAttendance = /* GraphQL */ `
-  subscription OnDeleteAttendance($filter: ModelSubscriptionAttendanceFilterInput) {
-    onDeleteAttendance(filter: $filter) {
+  subscription OnDeleteAttendance {
+    onDeleteAttendance {
       id
       studentID
       curriculumID
@@ -11837,8 +11837,8 @@ export const onDeleteTemporaryDemographicsUploadData = /* GraphQL */ `
   }
 `;
 export const onCreateUploadLogs = /* GraphQL */ `
-  subscription OnCreateUploadLogs($filter: ModelSubscriptionUploadLogsFilterInput) {
-    onCreateUploadLogs(filter: $filter) {
+  subscription OnCreateUploadLogs {
+    onCreateUploadLogs {
       id
       TemporaryUniversalUploadSurveyDataID
       TemporaryUniversalUploadSurveyData {
@@ -12212,8 +12212,8 @@ export const onCreateUploadLogs = /* GraphQL */ `
   }
 `;
 export const onUpdateUploadLogs = /* GraphQL */ `
-  subscription OnUpdateUploadLogs($filter: ModelSubscriptionUploadLogsFilterInput) {
-    onUpdateUploadLogs(filter: $filter) {
+  subscription OnUpdateUploadLogs {
+    onUpdateUploadLogs {
       id
       TemporaryUniversalUploadSurveyDataID
       TemporaryUniversalUploadSurveyData {
@@ -12587,8 +12587,8 @@ export const onUpdateUploadLogs = /* GraphQL */ `
   }
 `;
 export const onDeleteUploadLogs = /* GraphQL */ `
-  subscription OnDeleteUploadLogs($filter: ModelSubscriptionUploadLogsFilterInput) {
-    onDeleteUploadLogs(filter: $filter) {
+  subscription OnDeleteUploadLogs {
+    onDeleteUploadLogs {
       id
       TemporaryUniversalUploadSurveyDataID
       TemporaryUniversalUploadSurveyData {
@@ -14813,8 +14813,8 @@ export const onDeletePersonSentiments = /* GraphQL */ `
   }
 `;
 export const onCreateSentiments = /* GraphQL */ `
-  subscription OnCreateSentiments($filter: ModelSubscriptionSentimentsFilterInput) {
-    onCreateSentiments(filter: $filter) {
+  subscription OnCreateSentiments {
+    onCreateSentiments {
       id
       sentimentName
       sentimentType
@@ -14824,8 +14824,8 @@ export const onCreateSentiments = /* GraphQL */ `
   }
 `;
 export const onUpdateSentiments = /* GraphQL */ `
-  subscription OnUpdateSentiments($filter: ModelSubscriptionSentimentsFilterInput) {
-    onUpdateSentiments(filter: $filter) {
+  subscription OnUpdateSentiments {
+    onUpdateSentiments {
       id
       sentimentName
       sentimentType
@@ -14835,8 +14835,8 @@ export const onUpdateSentiments = /* GraphQL */ `
   }
 `;
 export const onDeleteSentiments = /* GraphQL */ `
-  subscription OnDeleteSentiments($filter: ModelSubscriptionSentimentsFilterInput) {
-    onDeleteSentiments(filter: $filter) {
+  subscription OnDeleteSentiments {
+    onDeleteSentiments {
       id
       sentimentName
       sentimentType
@@ -17009,8 +17009,8 @@ export const onDeleteFeelingsArchive = /* GraphQL */ `
   }
 `;
 export const onCreatePersonFiles = /* GraphQL */ `
-  subscription OnCreatePersonFiles($filter: ModelSubscriptionPersonFilesFilterInput) {
-    onCreatePersonFiles(filter: $filter) {
+  subscription OnCreatePersonFiles {
+    onCreatePersonFiles {
       id
       personAuthID
       personEmail
@@ -17033,8 +17033,8 @@ export const onCreatePersonFiles = /* GraphQL */ `
   }
 `;
 export const onUpdatePersonFiles = /* GraphQL */ `
-  subscription OnUpdatePersonFiles($filter: ModelSubscriptionPersonFilesFilterInput) {
-    onUpdatePersonFiles(filter: $filter) {
+  subscription OnUpdatePersonFiles {
+    onUpdatePersonFiles {
       id
       personAuthID
       personEmail
@@ -17057,8 +17057,8 @@ export const onUpdatePersonFiles = /* GraphQL */ `
   }
 `;
 export const onDeletePersonFiles = /* GraphQL */ `
-  subscription OnDeletePersonFiles($filter: ModelSubscriptionPersonFilesFilterInput) {
-    onDeletePersonFiles(filter: $filter) {
+  subscription OnDeletePersonFiles {
+    onDeletePersonFiles {
       id
       personAuthID
       personEmail
@@ -17081,8 +17081,8 @@ export const onDeletePersonFiles = /* GraphQL */ `
   }
 `;
 export const onCreateCommunity = /* GraphQL */ `
-  subscription OnCreateCommunity($filter: ModelSubscriptionCommunityFilterInput) {
-    onCreateCommunity(filter: $filter) {
+  subscription OnCreateCommunity {
+    onCreateCommunity {
       id
       institutionID
       institution {
@@ -17200,8 +17200,8 @@ export const onCreateCommunity = /* GraphQL */ `
   }
 `;
 export const onUpdateCommunity = /* GraphQL */ `
-  subscription OnUpdateCommunity($filter: ModelSubscriptionCommunityFilterInput) {
-    onUpdateCommunity(filter: $filter) {
+  subscription OnUpdateCommunity {
+    onUpdateCommunity {
       id
       institutionID
       institution {
@@ -17319,8 +17319,8 @@ export const onUpdateCommunity = /* GraphQL */ `
   }
 `;
 export const onDeleteCommunity = /* GraphQL */ `
-  subscription OnDeleteCommunity($filter: ModelSubscriptionCommunityFilterInput) {
-    onDeleteCommunity(filter: $filter) {
+  subscription OnDeleteCommunity {
+    onDeleteCommunity {
       id
       institutionID
       institution {
@@ -17438,8 +17438,8 @@ export const onDeleteCommunity = /* GraphQL */ `
   }
 `;
 export const onCreateGameChanger = /* GraphQL */ `
-  subscription OnCreateGameChanger($filter: ModelSubscriptionGameChangerFilterInput) {
-    onCreateGameChanger(filter: $filter) {
+  subscription OnCreateGameChanger {
+    onCreateGameChanger {
       id
       gameChangerName
       title
@@ -17453,8 +17453,8 @@ export const onCreateGameChanger = /* GraphQL */ `
   }
 `;
 export const onUpdateGameChanger = /* GraphQL */ `
-  subscription OnUpdateGameChanger($filter: ModelSubscriptionGameChangerFilterInput) {
-    onUpdateGameChanger(filter: $filter) {
+  subscription OnUpdateGameChanger {
+    onUpdateGameChanger {
       id
       gameChangerName
       title
@@ -17468,8 +17468,8 @@ export const onUpdateGameChanger = /* GraphQL */ `
   }
 `;
 export const onDeleteGameChanger = /* GraphQL */ `
-  subscription OnDeleteGameChanger($filter: ModelSubscriptionGameChangerFilterInput) {
-    onDeleteGameChanger(filter: $filter) {
+  subscription OnDeleteGameChanger {
+    onDeleteGameChanger {
       id
       gameChangerName
       title
@@ -17684,8 +17684,8 @@ export const onDeleteGameChangerLog = /* GraphQL */ `
   }
 `;
 export const onCreateCommunityChat = /* GraphQL */ `
-  subscription OnCreateCommunityChat($filter: ModelSubscriptionCommunityChatFilterInput) {
-    onCreateCommunityChat(filter: $filter) {
+  subscription OnCreateCommunityChat {
+    onCreateCommunityChat {
       id
       communityId
       personAuthID
@@ -17740,8 +17740,8 @@ export const onCreateCommunityChat = /* GraphQL */ `
   }
 `;
 export const onUpdateCommunityChat = /* GraphQL */ `
-  subscription OnUpdateCommunityChat($filter: ModelSubscriptionCommunityChatFilterInput) {
-    onUpdateCommunityChat(filter: $filter) {
+  subscription OnUpdateCommunityChat {
+    onUpdateCommunityChat {
       id
       communityId
       personAuthID
@@ -17796,8 +17796,8 @@ export const onUpdateCommunityChat = /* GraphQL */ `
   }
 `;
 export const onDeleteCommunityChat = /* GraphQL */ `
-  subscription OnDeleteCommunityChat($filter: ModelSubscriptionCommunityChatFilterInput) {
-    onDeleteCommunityChat(filter: $filter) {
+  subscription OnDeleteCommunityChat {
+    onDeleteCommunityChat {
       id
       communityId
       personAuthID
