@@ -26,6 +26,7 @@ const Login = ({updateAuthState}: LoginProps) => {
   const [cookies, setCookie, removeCookie] = useCookies();
 
   const {dispatch} = useGlobalContext();
+  console.log('test');
 
   let [message, setMessage] = useState<{show: boolean; type: string; message: string}>({
     show: false,
