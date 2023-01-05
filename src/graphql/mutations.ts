@@ -2571,8 +2571,8 @@ export const deleteRoom = /* GraphQL */ `
     }
   }
 `;
-export const createArchiveSurveyDataSQL = /* GraphQL */ `
-  mutation CreateArchiveSurveyDataSQL(
+export const createArchiveSurveyDataSql = /* GraphQL */ `
+  mutation CreateArchiveSurveyDataSql(
     $input: CreateArchiveSurveyDataSQLInput!
     $condition: ModelArchiveSurveyDataSQLConditionInput
   ) {
@@ -2591,8 +2591,8 @@ export const createArchiveSurveyDataSQL = /* GraphQL */ `
     }
   }
 `;
-export const updateArchiveSurveyDataSQL = /* GraphQL */ `
-  mutation UpdateArchiveSurveyDataSQL(
+export const updateArchiveSurveyDataSql = /* GraphQL */ `
+  mutation UpdateArchiveSurveyDataSql(
     $input: UpdateArchiveSurveyDataSQLInput!
     $condition: ModelArchiveSurveyDataSQLConditionInput
   ) {
@@ -2611,8 +2611,8 @@ export const updateArchiveSurveyDataSQL = /* GraphQL */ `
     }
   }
 `;
-export const deleteArchiveSurveyDataSQL = /* GraphQL */ `
-  mutation DeleteArchiveSurveyDataSQL(
+export const deleteArchiveSurveyDataSql = /* GraphQL */ `
+  mutation DeleteArchiveSurveyDataSql(
     $input: DeleteArchiveSurveyDataSQLInput!
     $condition: ModelArchiveSurveyDataSQLConditionInput
   ) {
