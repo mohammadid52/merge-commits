@@ -17,7 +17,7 @@ copy_content_schema(){
 }
 
 push_to_cloud(){
-    amplify push api \
+    amplify push \
     --yes || true
 
     echo "pushed"

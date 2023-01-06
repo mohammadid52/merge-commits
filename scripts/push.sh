@@ -13,6 +13,8 @@ commit (){
       git commit -m "update aws-exports.js"
 }
 
+
+
 # run switch case
 case $branch in
     "new-dev")
