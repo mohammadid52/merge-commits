@@ -37,31 +37,35 @@ const AttachedCourses = ({curricular, unitId}: {curricular: any; unitId: string}
 
   return (
     <ul className="list-disc grid grid-cols-2 ">
-      {attachedCourses?.map((curricula: any) => {
-        if (curricula) {
-          return (
-            <Tooltip placement="left" text={`Go to ${curricula.name}`}>
-              <li key={curricula.id} className="flex items-center gap-y-2">
-                <div className="flex-shrink-0 h-8 w-8 flex items-center">
-                  {curricula.image ? (
-                    <img
-                      src={getImageFromS3Static(curricula.image)}
-                      className="h-5 w-5 rounded-full"
-                    />
-                  ) : (
-                    <Placeholder size="h-5 w-5" />
-                  )}
-                </div>
-                <h4
-                  onClick={() => redirectToCourse(curricula.id)}
-                  className="text-gray-700 cursor-pointer hover:underline hover:theme-text:400 text-sm">
-                  {curricula.name}
-                </h4>
-              </li>
-            </Tooltip>
-          );
-        }
-      })}
+      {attachedCourses.length > 0 ? (
+        attachedCourses?.map((curricula: any) => {
+          if (curricula) {
+            return (
+              <Tooltip placement="left" text={`Go to ${curricula.name}`}>
+                <li key={curricula.id} className="flex items-center gap-y-2">
+                  <div className="flex-shrink-0 h-8 w-8 flex items-center">
+                    {curricula.image ? (
+                      <img
+                        src={getImageFromS3Static(curricula.image)}
+                        className="h-5 w-5 rounded-full"
+                      />
+                    ) : (
+                      <Placeholder size="h-5 w-5" />
+                    )}
+                  </div>
+                  <h4
+                    onClick={() => redirectToCourse(curricula.id)}
+                    className="text-gray-700 cursor-pointer hover:underline hover:theme-text:400 text-sm">
+                    {curricula.name}
+                  </h4>
+                </li>
+              </Tooltip>
+            );
+          }
+        })
+      ) : (
+        <p className="text-gray-600 text-xs">no attached course found</p>
+      )}
     </ul>
   );
 };

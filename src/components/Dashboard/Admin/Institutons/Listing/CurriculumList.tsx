@@ -13,7 +13,7 @@ import {GlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import * as mutations from 'graphql/mutations';
-import {orderBy, update} from 'lodash';
+import {orderBy} from 'lodash';
 import ModalPopUp from 'molecules/ModalPopUp';
 import React, {Fragment, useContext, useEffect, useState} from 'react';
 import {useHistory, useRouteMatch} from 'react-router';
@@ -46,9 +46,8 @@ const CurriculumList = ({
   const history = useHistory();
   // ~~~~~~~~~~ CONTEXT_SPLITTING ~~~~~~~~~~ //
   const gContext = useContext(GlobalContext);
-  const clientKey = gContext.clientKey;
   const userLanguage = gContext.userLanguage;
-  const {CommonlyUsedDict, InstitueCurriculum} = useDictionary(clientKey);
+  const {CommonlyUsedDict, InstitueCurriculum} = useDictionary();
 
   const [courseList, setCourseList] = useState<Array<ICurricular>>([]);
 
@@ -142,6 +141,10 @@ const CurriculumList = ({
           }
         })
       );
+      console.log(
+        '🚀 ~ file: CurriculumList.tsx:144 ~ fetchCurriculums ~ updatedList',
+        updatedList
+      );
 
       setCourseList(updatedList);
     } catch (error) {
@@ -176,7 +179,8 @@ const CurriculumList = ({
   const checkIfRemovable = (curriculumObj: any) => {
     if (
       curriculumObj.syllabi?.length > 0 ||
-      (curriculumObj.syllabiHistory && curriculumObj.syllabiHistory?.length > 0)
+      (curriculumObj.syllabiHistory && curriculumObj.syllabiHistory?.length > 0) ||
+      curriculumObj?.isUsed
     ) {
       return false;
     } else {

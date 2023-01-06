@@ -2225,6 +2225,7 @@ export const listCurriculumsForSuperAdmin = /* GraphQL */ `
           items {
             id
             unit {
+              status
               id
               name
             }
@@ -5796,6 +5797,7 @@ export const listCurriculumUnitss = /* GraphQL */ `
           name
           type
           institutionID
+          status
         }
         curriculumId
         createdAt

@@ -15,6 +15,7 @@ import CourseFormComponent from './CourseFormComponent';
 import UnitManager from './UnitManager';
 import LearningObjective from './LearningObjective';
 import CheckpointList from '../../TabsListing/CheckpointList';
+import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 
 // import AddProfileCheckpoint from '../../../../EditBuilders/CurricularsView/TabsActions/AddProfileCheckpoint';
 // import ProfileCheckpointlookup from '../../../../EditBuilders/CurricularsView/TabsActions/ProfileCheckpointlookup';
@@ -249,8 +250,47 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
               </div>
             </div>
           ) : (
-            <div className="border-0 border-gray-200 lg:border-t-none bg-gray-100 lg:my-0">
-              {currentStepComp(activeStep)}
+            <div className="">
+              <AnimatedContainer
+                animationType="translateY"
+                show={activeStep === 'overview'}>
+                {activeStep === 'overview' && (
+                  <CourseFormComponent
+                    setCourseData={setCourseData}
+                    courseId={courseId}
+                    courseData={courseData}
+                  />
+                )}
+              </AnimatedContainer>
+              <AnimatedContainer
+                animationType="translateY"
+                show={activeStep === 'unit_manager'}>
+                {activeStep === 'unit_manager' && (
+                  <UnitManager
+                    courseId={courseId}
+                    courseData={courseData}
+                    institutionId={courseData?.institution?.id}
+                    savedSyllabusList={savedSyllabusList}
+                    setSavedSyllabusList={setSavedSyllabusList}
+                    syllabusIds={syllabusIds}
+                    setSyllabusIds={setSyllabusIds}
+                  />
+                )}
+              </AnimatedContainer>
+              <AnimatedContainer
+                animationType="translateY"
+                show={activeStep === 'learning_objectives'}>
+                {activeStep === 'learning_objectives' && (
+                  <LearningObjective curricularId={courseId} institutionId={instId} />
+                )}
+              </AnimatedContainer>
+              <AnimatedContainer
+                animationType="translateY"
+                show={activeStep === 'demographics'}>
+                {activeStep === 'demographics' && (
+                  <CheckpointList curricularId={courseId} institutionId={instId} />
+                )}
+              </AnimatedContainer>
             </div>
           )}
         </div>

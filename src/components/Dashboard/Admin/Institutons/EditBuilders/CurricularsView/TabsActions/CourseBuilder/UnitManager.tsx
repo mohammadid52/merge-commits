@@ -1,23 +1,24 @@
-import React, {Fragment, useContext, useEffect, useState} from 'react';
-import {useHistory} from 'react-router';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import React, {Fragment, useContext, useEffect, useState} from 'react';
 import {DragDropContext, Draggable, Droppable} from 'react-beautiful-dnd';
+import {useHistory} from 'react-router';
 
 import {GlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 
-import * as mutations from 'graphql/mutations';
-import * as customQueries from 'customGraphql/customQueries';
 import * as customMutations from 'customGraphql/customMutations';
+import * as customQueries from 'customGraphql/customQueries';
+import * as mutations from 'graphql/mutations';
 
-import {reorder} from 'utilities/strings';
-import Selector from 'atoms/Form/Selector';
+import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
+import {Empty} from '@components/Dashboard/Admin/LessonsBuilder/StepActionComponent/LearningEvidence/CourseMeasurementsCard';
+import {RoomStatus} from 'API';
 import AddButton from 'atoms/Buttons/AddButton';
+import Selector from 'atoms/Form/Selector';
 import Loader from 'atoms/Loader';
 import ModalPopUp from 'molecules/ModalPopUp';
-import {getAsset} from 'assets';
+import {reorder} from 'utilities/strings';
 import UnitManagerRow from './UnitManagerRow';
-import {Empty} from '@components/Dashboard/Admin/LessonsBuilder/StepActionComponent/LearningEvidence/CourseMeasurementsCard';
 
 interface UIMessages {
   show: boolean;
@@ -37,9 +38,8 @@ const UnitManager = ({
 }: any) => {
   const history = useHistory();
 
-  const {theme, clientKey, userLanguage} = useContext(GlobalContext);
-  const {CourseBuilderDict} = useDictionary(clientKey);
-  const themeColor = getAsset(clientKey, 'themeClassName');
+  const {userLanguage} = useContext(GlobalContext);
+  const {CourseBuilderDict} = useDictionary();
 
   // ~~~~~~~~~~~~~~~~ STATE ~~~~~~~~~~~~~~~~ //
   const [loading, setLoading] = useState(false);
@@ -133,7 +133,9 @@ const UnitManager = ({
 
   const updateListAndDropdown = async () => {
     // To update table list and dropdown as per selected items.
-    const savedSyllabusIds = [...savedSyllabusList];
+    const savedSyllabusIds = [...savedSyllabusList].filter(
+      (d) => d.unit.status === courseData.status
+    );
     let filteredList = savedSyllabusIds.map((assignedSyllabus) => ({
       ...assignedSyllabus.unit,
       id: assignedSyllabus.id,
@@ -144,6 +146,7 @@ const UnitManager = ({
     );
 
     filteredList = filteredList
+
       .map((t: any) => {
         let index = syllabusIds?.indexOf(t.unitId);
         return {...t, index};
@@ -192,6 +195,7 @@ const UnitManager = ({
       const result: any = await API.graphql(
         graphqlOperation(customQueries.listUniversalSyllabusOptions, {
           filter: {institutionID: {eq: institutionId}}
+          // status: {eq: courseData.status || RoomStatus.ACTIVE}
         })
       );
       const savedData = result.data.listUniversalSyllabi;
@@ -358,38 +362,36 @@ const UnitManager = ({
   return (
     <div className="">
       {/* *************** SECTION HEADER ************ */}
-      <div
-        className={`flex items-center justify-between p-4 ${theme.borderColor[themeColor]}`}>
-        {/* <h3 className="text-lg leading-6 font-medium text-gray-900">
-          {CourseBuilderDict[userLanguage]['LESSON_PLAN_HEADING']}
-        </h3> */}
-        <div className="flex justify-end">
-          <AddButton
-            label={CourseBuilderDict[userLanguage]['ADD_NEW_UNIT']}
-            onClick={createNewUnit}
-          />
-        </div>
-      </div>
-      {/* *************** ADD LESSON TO SYLLABUS SECTION ************ */}
-      <div className="w-full m-auto p-4">
-        <div className="my-8 w-8/10 lg:w-6/10 m-auto flex items-center justify-center">
-          <div className="mr-4">
+
+      <SectionTitleV3
+        title={'Unit List'}
+        fontSize="xl"
+        fontStyle="semibold"
+        extraClass="leading-6 text-gray-900  mb-2 lg:mb-0"
+        extraContainerClass="flex-col lg:flex-row "
+        borderBottom
+        withButton={
+          <div className="lg:w-7/10 w-full flex gap-x-4 justify-end items-center">
             <Selector
               selectedItem={selectedSyllabus.value}
               list={dropdownSyllabusList}
               placeholder={CourseBuilderDict[userLanguage]['SELECT_UNIT']}
               onChange={handleSelectSyllabus}
+              additionalClass="w-auto "
+              width="w-96"
             />
-          </div>
-          <div className="ml-4 w-auto">
+
             <AddButton
-              className="ml-4 py-1"
-              label={'Add'}
-              onClick={addNewSyllabusToCourse}
-              disabled={!Boolean(selectedSyllabus.value) || addingSyllabus}
+              label={CourseBuilderDict[userLanguage]['ADD_NEW_UNIT']}
+              onClick={createNewUnit}
             />
           </div>
-        </div>
+        }
+        shadowOff
+      />
+
+      {/* *************** ADD LESSON TO SYLLABUS SECTION ************ */}
+      <div className="w-full m-auto p-4">
         {messages.show && messages.lessonError ? (
           <div className="py-2 mb-4 m-auto text-center">
             <p className={`${messages.isError ? 'text-red-600' : 'text-green-600'}`}>
@@ -409,7 +411,7 @@ const UnitManager = ({
           ) : selectedSyllabusList?.length > 0 ? (
             <Fragment>
               {/* *************** SYLLABUS TABLE HEADERS ************ */}
-              <div className="flex justify-between w-full bg-gray-50  px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
+              <div className="flex justify-between w-full bg-gray-50  px-8 whitespace-nowrap border-b-0 border-gray-200">
                 <div className="w-1/10 px-8 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>{CourseBuilderDict[userLanguage]['TABLE_HEADS']['NUMBER']}</span>
                 </div>
@@ -466,7 +468,9 @@ const UnitManager = ({
               )}
             </Fragment>
           ) : (
-            <Empty text={CourseBuilderDict[userLanguage]['NO_UNIT']} />
+            <Empty
+              text={`${CourseBuilderDict[userLanguage]['NO_UNIT']} - current status of course is ${courseData.status}`}
+            />
           )}
         </div>
       </div>

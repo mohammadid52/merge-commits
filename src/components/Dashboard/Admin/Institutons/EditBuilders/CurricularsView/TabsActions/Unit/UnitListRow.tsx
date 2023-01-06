@@ -11,6 +11,7 @@ import {RoomStatus} from 'API';
 import {DataValue} from '@components/Dashboard/Csv/Csv';
 import AttachedCourses from './AttachedCourses';
 import moment from 'moment';
+import {truncate} from 'lodash';
 
 interface IUnitListRowProps {
   index: number;
@@ -130,7 +131,9 @@ const UnitListRow = ({
                 />
                 <DataValue
                   title={'Description'}
-                  content={currentSelectedItem?.description || '--'}
+                  content={
+                    truncate(currentSelectedItem?.description, {length: 200}) || '--'
+                  }
                 />
 
                 <div className="mt-2">
@@ -166,7 +169,7 @@ const UnitListRow = ({
                 if (lesson) {
                   return (
                     <li
-                      className="mb-2 hover:underline hover:theme-text:400"
+                      className="mb-2 cursor-pointer hover:underline hover:theme-text:400"
                       key={lesson.lesson.id}
                       onClick={() => redirectToLesson(lesson.lesson.id)}>
                       {lesson.lesson.title}

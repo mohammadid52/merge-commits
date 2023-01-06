@@ -41,6 +41,11 @@ const CurriculumListRow = ({
 
   const textClass = `text-sm leading-5 text-gray-800 hover:iconoclast:text-500 transition-all duration-50 hover:curate:text-500`;
 
+  const filteredUnits =
+    item.universalSyllabus?.items && item.universalSyllabus?.items.length > 0
+      ? item.universalSyllabus?.items.filter((d: any) => d.unit.status === item.status)
+      : [];
+
   return (
     <tr
       key={index}
@@ -82,7 +87,7 @@ const CurriculumListRow = ({
             </div>
           )}
         </div>
-        <div className="ml-2">
+        <div className="ml-2 hover:underline hover:theme-text:400">
           <Highlighted text={item.name} highlight={searchInput} />
         </div>
       </td>
@@ -99,22 +104,28 @@ const CurriculumListRow = ({
       </td>
       <td
         className={`w-3/10 items-center text-gray-500 px-8 py-4 text-left text-sm leading-4 font-medium whitespace-normal`}>
-        {item.universalSyllabus?.items?.map(
-          ({
-            id,
-            unit: {id: unitId, name}
-          }: {
-            id: string;
-            unit: {id: string; name: string};
-          }) => (
-            <li
-              key={id}
-              className="cursor-pointer"
-              onClick={() => redirectToUnit(unitId)}>
-              {name}
-            </li>
-          )
-        )}
+        <ul className="list-disc">
+          {filteredUnits?.length > 0 ? (
+            filteredUnits?.map(
+              ({
+                id,
+                unit: {id: unitId, name}
+              }: {
+                id: string;
+                unit: {id: string; name: string};
+              }) => (
+                <li
+                  className="mb-2 cursor-pointer hover:underline hover:theme-text:400"
+                  key={id}
+                  onClick={() => redirectToUnit(unitId)}>
+                  {name}
+                </li>
+              )
+            )
+          ) : (
+            <p className="">No unit</p>
+          )}
+        </ul>
       </td>
       <td
         className={`text-sm w-1/10 leading-4 font-medium whitespace-normal break-normal text-gray-500`}>
