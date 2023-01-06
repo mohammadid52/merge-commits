@@ -10,6 +10,7 @@ import {Transition} from '@headlessui/react';
 import {RoomStatus} from 'API';
 import {DataValue} from '@components/Dashboard/Csv/Csv';
 import AttachedCourses from './AttachedCourses';
+import moment from 'moment';
 
 interface IUnitListRowProps {
   index: number;
@@ -47,6 +48,21 @@ const UnitListRow = ({
   const userLanguage = gContext.userLanguage;
   // ~~~~~~~~~~~~~~~~ STATE ~~~~~~~~~~~~~~~~ //
   const [showMenu, setShowMenu] = useState<boolean>(false);
+
+  const getAttachedCourses = (): any[] => {
+    if (curricular) {
+      const filtered = curricular?.items?.filter((__item: any) => {
+        if (__item.universalSyllabus) {
+          return __item.universalSyllabus?.items.find(
+            (_item: any) => _item.unit.id === item.id
+          );
+        }
+      });
+
+      return filtered;
+    }
+    return [];
+  };
 
   const textClass = `text-sm leading-5 text-gray-800 hover:iconoclast:text-500 transition-all duration-50 hover:curate:text-500`;
 
@@ -86,34 +102,43 @@ const UnitListRow = ({
               className="hidden md:block cursor-pointer select-none  absolute  text-black "
               show={Boolean(hoveringItem && hoveringItem.name)}>
               <div className="bg-white flex flex-col border-gray-200 rounded-xl  customShadow border-0 p-4  min-w-70 max-w-70 w-auto">
-                <DataValue
-                  title={'Institution Name'}
-                  content={currentSelectedItem?.institution?.name || '--'}
-                />
+                <h1 className="text-base text-gray-700 mb-2">Unit Details</h1>
+                <hr />
 
+                <div className="mt-2">
+                  <DataValue
+                    title={'Status'}
+                    content={
+                      <p
+                        className={`${
+                          currentSelectedItem.status === RoomStatus.ACTIVE
+                            ? 'text-green-500'
+                            : 'text-yellow-500'
+                        } uppercase`}>
+                        {currentSelectedItem.status || RoomStatus.ACTIVE}
+                      </p>
+                    }
+                  />
+                </div>
                 <DataValue
-                  title={'Status'}
-                  content={
-                    <p
-                      className={`${
-                        currentSelectedItem.status === RoomStatus.ACTIVE
-                          ? 'text-green-500'
-                          : 'text-yellow-500'
-                      } uppercase`}>
-                      {currentSelectedItem.status || RoomStatus.ACTIVE}
-                    </p>
-                  }
+                  title={'Created date'}
+                  content={moment(item.createdAt).format('lll')}
                 />
-
                 <DataValue
-                  title={'Attached courses'}
-                  content={<AttachedCourses curricular={curricular} unitId={item.id} />}
+                  title={'Last update'}
+                  content={moment(item.updatedAt).format('lll')}
                 />
-
                 <DataValue
                   title={'Description'}
                   content={currentSelectedItem?.description || '--'}
                 />
+
+                <div className="mt-2">
+                  <DataValue
+                    title={`Attached courses (${getAttachedCourses().length})`}
+                    content={<AttachedCourses curricular={curricular} unitId={item.id} />}
+                  />
+                </div>
               </div>
             </Transition>
           </ClickAwayListener>
