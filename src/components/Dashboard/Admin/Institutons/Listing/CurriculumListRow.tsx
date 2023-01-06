@@ -105,7 +105,7 @@ const CurriculumListRow = ({
             </div>
           )}
         </div>
-        <div className="ml-2 relative hover:underline hover:theme-text:400">
+        <div className="ml-2 relative cursor-pointer hover:underline hover:theme-text:400">
           <Highlighted text={item.name} highlight={searchInput} />
           {hoveringItem?.name === item.name && currentSelectedItem && (
             <ClickAwayListener onClickAway={() => setHoveringItem({})}>
@@ -118,7 +118,7 @@ const CurriculumListRow = ({
                 }}
                 className="hidden md:block cursor-pointer select-none  absolute  text-black "
                 show={Boolean(hoveringItem && hoveringItem.name)}>
-                <div className="bg-white flex flex-col border-gray-200 rounded-xl  customShadow border-0 p-4  min-w-70 max-w-70 w-auto">
+                <div className="bg-white flex flex-col border-gray-200 rounded-xl  customShadow border-0 p-4  min-w-96 max-w-96 w-auto">
                   <h1 className="text-base text-gray-700 mb-2">Course Details</h1>
                   <hr />
 
