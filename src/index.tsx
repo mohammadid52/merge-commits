@@ -35,8 +35,6 @@ Amplify.configure({
   }
 });
 
-console.log('-');
-
 const Page: React.FC = () => {
   useEffect(() => {
     // console.log('createUserUrl = ', createUserUrl);
