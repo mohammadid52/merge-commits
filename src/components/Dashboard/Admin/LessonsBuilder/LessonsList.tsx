@@ -145,16 +145,20 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
           return {
             ...lesson,
             institutionName: lesson?.institution?.name,
-            institutionId: lesson?.institution?.id
+            institutionId: lesson?.institution?.id,
+            status: lesson?.status || RoomStatus.ACTIVE
           };
         });
-        data = data.map((lesson: {institution: {name: any; id: any}}) => {
-          return {
-            ...lesson,
-            institutionName: lesson?.institution?.name,
-            institutionId: lesson?.institution?.id
-          };
-        });
+        data = data.map(
+          (lesson: {status: RoomStatus; institution: {name: any; id: any}}) => {
+            return {
+              ...lesson,
+              institutionName: lesson?.institution?.name,
+              institutionId: lesson?.institution?.id,
+              status: status || RoomStatus.ACTIVE
+            };
+          }
+        );
 
         setLessonsData(getSortedList(data));
         const totalListPages = Math.floor(
