@@ -41,8 +41,8 @@ const UnitListRow = ({
   redirectToLesson,
   hoveringItem,
   setHoveringItem,
-  curricular,
-  currentSelectedItem
+  currentSelectedItem,
+  curricular
 }: IUnitListRowProps) => {
   // ~~~~~~~~~~ CONTEXT_SPLITTING ~~~~~~~~~~ //
   const gContext = useContext(GlobalContext);

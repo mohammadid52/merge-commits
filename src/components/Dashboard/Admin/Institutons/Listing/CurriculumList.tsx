@@ -141,10 +141,6 @@ const CurriculumList = ({
           }
         })
       );
-      console.log(
-        '🚀 ~ file: CurriculumList.tsx:144 ~ fetchCurriculums ~ updatedList',
-        updatedList
-      );
 
       setCourseList(updatedList);
     } catch (error) {
@@ -305,6 +301,13 @@ const CurriculumList = ({
     }
   };
 
+  const [hoveringItem, setHoveringItem] = useState<{name?: string}>({});
+
+  const currentSelectedItem =
+    hoveringItem &&
+    hoveringItem?.name &&
+    courseList?.find((_c: any) => _c.name === hoveringItem?.name);
+
   // ##################################################################### //
   // ############################### OUTPUT ############################## //
   // ##################################################################### //
@@ -410,6 +413,9 @@ const CurriculumList = ({
                       index={index}
                       searchInput={searchInput.value}
                       isSuperAdmin={isSuperAdmin}
+                      currentSelectedItem={currentSelectedItem}
+                      setHoveringItem={setHoveringItem}
+                      hoveringItem={hoveringItem}
                       item={item}
                       checkIfRemovable={checkIfRemovable}
                       handleToggleDelete={handleToggleDelete}

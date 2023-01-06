@@ -2212,6 +2212,8 @@ export const listCurriculumsForSuperAdmin = /* GraphQL */ `
         type
         image
         status
+        summary
+        description
         institution {
           id
           name

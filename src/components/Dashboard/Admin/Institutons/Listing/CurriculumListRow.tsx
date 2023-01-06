@@ -7,6 +7,12 @@ import {stringToHslColor, initials, getInitialsFromString} from 'utilities/strin
 import {getImageFromS3Static} from 'utilities/services';
 import Highlighted from '@components/Atoms/Highlighted';
 import {Status} from '../../UserManagement/UserStatus';
+import ClickAwayListener from 'react-click-away-listener';
+import {Transition} from '@headlessui/react';
+import {DataValue} from '@components/Dashboard/Csv/Csv';
+import moment from 'moment';
+import {RoomStatus} from 'API';
+import {truncate} from 'lodash';
 
 interface ICurriculumListRowProps {
   index: number;
@@ -18,6 +24,9 @@ interface ICurriculumListRowProps {
   redirectToInstitution: () => void;
   redirectToUnit: (unitId: string) => void;
   searchInput?: string;
+  hoveringItem?: any;
+  setHoveringItem?: any;
+  currentSelectedItem?: any;
 }
 
 const CurriculumListRow = ({
@@ -29,7 +38,10 @@ const CurriculumListRow = ({
   editCurrentCurricular,
   redirectToInstitution,
   redirectToUnit,
-  searchInput
+  searchInput,
+  hoveringItem,
+  setHoveringItem,
+  currentSelectedItem
 }: ICurriculumListRowProps) => {
   // ~~~~~~~~~~ CONTEXT_SPLITTING ~~~~~~~~~~ //
   const gContext = useContext(GlobalContext);
@@ -56,6 +68,12 @@ const CurriculumListRow = ({
         {index + 1}.
       </td>
       <td
+        onMouseEnter={() => {
+          setHoveringItem({name: item.name});
+        }}
+        onMouseLeave={() => {
+          setHoveringItem({});
+        }}
         data-cy={`curriculum-${item.name.split(' ').join('-')}`}
         onClick={() => editCurrentCurricular(item.id)}
         className={`cursor-pointer flex ${
@@ -87,8 +105,64 @@ const CurriculumListRow = ({
             </div>
           )}
         </div>
-        <div className="ml-2 hover:underline hover:theme-text:400">
+        <div className="ml-2 relative hover:underline hover:theme-text:400">
           <Highlighted text={item.name} highlight={searchInput} />
+          {hoveringItem?.name === item.name && currentSelectedItem && (
+            <ClickAwayListener onClickAway={() => setHoveringItem({})}>
+              <Transition
+                style={{
+                  top: '0rem',
+                  bottom: '1.5rem',
+                  right: '-90%',
+                  zIndex: 999999
+                }}
+                className="hidden md:block cursor-pointer select-none  absolute  text-black "
+                show={Boolean(hoveringItem && hoveringItem.name)}>
+                <div className="bg-white flex flex-col border-gray-200 rounded-xl  customShadow border-0 p-4  min-w-70 max-w-70 w-auto">
+                  <h1 className="text-base text-gray-700 mb-2">Course Details</h1>
+                  <hr />
+
+                  <div className="mt-2">
+                    <DataValue
+                      title={'Status'}
+                      content={
+                        <p
+                          className={`${
+                            currentSelectedItem.status === RoomStatus.ACTIVE
+                              ? 'text-green-500'
+                              : 'text-yellow-500'
+                          } uppercase`}>
+                          {currentSelectedItem.status || RoomStatus.ACTIVE}
+                        </p>
+                      }
+                    />
+                  </div>
+                  <DataValue
+                    title={'Summary'}
+                    content={truncate(item.summary || '--', {length: 200})}
+                  />
+                  <DataValue
+                    title={'Description'}
+                    content={truncate(item.description || '--', {length: 200})}
+                  />
+                  <DataValue
+                    title={'Created date'}
+                    content={moment(item.createdAt).format('lll')}
+                  />
+                  <DataValue
+                    title={'Last update'}
+                    content={moment(item.updatedAt).format('lll')}
+                  />
+                  {/* <DataValue
+                  title={'Description'}
+                  content={
+                    truncate(currentSelectedItem?.description, {length: 200}) || '--'
+                  }
+                /> */}
+                </div>
+              </Transition>
+            </ClickAwayListener>
+          )}
         </div>
       </td>
       {isSuperAdmin && (
