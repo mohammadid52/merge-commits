@@ -22,7 +22,7 @@
     "push:pc": "sh ./scripts/push-pc.sh",
     "push": "sh ./scripts/push.sh",
     "pull:uat": "sh ./scripts/pull-uat.sh",
-    "update-amplify": "sh ./scripts/update-amplify.sh"
+    "sync-aws": "sh ./scripts/sync-aws.sh"
   },
   "devDependencies": {
     "@aws-sdk/client-s3": "^3.37.0",
@@ -125,6 +125,7 @@
     "aws-sdk": "^2.930.0",
     "axios": "^0.21.1",
     "babel-plugin-module-resolver": "^4.1.0",
+    "dotenv": "^16.0.3",
     "draft-js": "^0.11.7",
     "draft-js-color-picker-plugin": "^1.2.0",
     "draftjs-to-html": "^0.9.1",
