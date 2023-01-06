@@ -24,7 +24,7 @@ export type SortType = 'ACTIVE' | 'TRAINING' | 'INACTIVE';
 
 export const Filters = ({updateFilter, filters}: {updateFilter: any; filters: any}) => (
   <div className="flex items-center justify-end">
-    <div className="flex gap-x-4 mb-4 mt-2 items-center">
+    <div className="flex gap-x-4 my-4 items-center">
       <Buttons
         onClick={() => updateFilter('ACTIVE')}
         transparent={filters !== 'ACTIVE'}
@@ -133,8 +133,7 @@ const RoomsList = (props: RoomListProps) => {
   const {InstitueRomms} = useDictionary(clientKey);
 
   const [roomList, setRoomList] = useState([]);
-  const [allRooms, setAllRooms] = useState([]);
-  const [staffList, setStaffList] = useState([]);
+
   const [loading, setLoading] = useState(true);
 
   const [institutionList, setInstitutionList] = useState<any>([]);
@@ -162,30 +161,6 @@ const RoomsList = (props: RoomListProps) => {
             instId || roomData.institutionID
           }/room-edit/${id}`
     );
-  };
-
-  const fetchStaffOptions = async () => {
-    try {
-      const list: any = await API.graphql(
-        graphqlOperation(customQueries.listStaffOptions)
-      );
-      setStaffList(
-        list.data.listStaff.items
-          ?.filter(
-            ({staffMember}: any) =>
-              staffMember?.role === 'TR' || staffMember?.role === 'FLW'
-          )
-          .map(({staffMember, staffAuthID}: any) => ({
-            id: staffAuthID,
-            name: [staffMember?.firstName, staffMember?.lastName]
-              .filter(Boolean)
-              .join(' ')
-          }))
-          .sort((a: any, b: any) =>
-            a.name?.toLowerCase() > b.name?.toLowerCase() ? 1 : -1
-          )
-      );
-    } catch (error) {}
   };
 
   const fetchInstitutions = async () => {
@@ -256,7 +231,7 @@ const RoomsList = (props: RoomListProps) => {
       });
 
       setRoomList(updatedMerge);
-      setAllRooms(updatedMerge);
+
       setLoading(false);
     } catch (e) {
       console.error(e);
@@ -272,7 +247,6 @@ const RoomsList = (props: RoomListProps) => {
   useEffect(() => {
     if (instId === associateInstitute[0]?.institution?.id) {
       fetchRoomList();
-      fetchStaffOptions();
     }
   }, [instId]);
 
@@ -280,7 +254,6 @@ const RoomsList = (props: RoomListProps) => {
     if (isSuperAdmin || isAdmin || isBuilder) {
       fetchInstitutions();
       fetchRoomList();
-      fetchStaffOptions();
     }
   }, [isSuperAdmin]);
 

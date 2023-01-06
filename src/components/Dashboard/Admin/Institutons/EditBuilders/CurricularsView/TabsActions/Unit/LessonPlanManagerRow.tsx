@@ -1,10 +1,6 @@
-import {DeleteActionBtn} from 'atoms/Buttons/DeleteActionBtn';
 import {GlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
-import React, {useContext, useState} from 'react';
-import {BiDotsVerticalRounded} from 'react-icons/bi';
-import {HiOutlineTrash} from 'react-icons/hi';
-import {useHistory, useRouteMatch} from 'react-router-dom';
+import React, {useContext} from 'react';
 
 interface ILessonPlanManagerRowProps {
   index: number;

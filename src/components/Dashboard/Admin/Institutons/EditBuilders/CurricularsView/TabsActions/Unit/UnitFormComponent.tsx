@@ -19,6 +19,7 @@ interface AddSyllabusProps {
   onCancel: () => void;
   instId: string;
   isInModal?: boolean;
+  setSyllabusDataParent: React.Dispatch<React.SetStateAction<any>>;
 }
 interface InitialData {
   name: string;
@@ -38,6 +39,7 @@ const UnitFormComponent = ({
   postAddSyllabus,
   syllabusDetails,
   instId,
+  setSyllabusDataParent,
   isInModal = false
 }: AddSyllabusProps) => {
   const initialData = {
@@ -137,11 +139,30 @@ const UnitFormComponent = ({
           status: syllabusData?.status || RoomStatus.ACTIVE
         };
         if (syllabusDetails?.id) {
-          await API.graphql(
+          const res: any = await API.graphql(
             graphqlOperation(mutations.updateUniversalSyllabus, {
               input: {...input, id: syllabusDetails?.id}
             })
           );
+          const savedData = res.data.updateUniversalSyllabus;
+          setSyllabusDataParent({
+            ...syllabusData,
+            institutionID: savedData.institutionID,
+            id: savedData.id,
+            name: savedData.name,
+            languages: languageList.filter((item) =>
+              savedData.languages.includes(item.value)
+            ),
+            description: savedData.description,
+            objectives: savedData.objectives,
+            purpose: savedData.pupose,
+            methodology: savedData.methodology,
+            policies: savedData.policies,
+            lessonHistory: savedData.lessonHistory,
+            secondary: savedData.secondary || '',
+            priorities: savedData.priorities,
+            status: savedData.status || RoomStatus.ACTIVE
+          });
           setMessages({
             show: true,
             message: AddSyllabusDict[userLanguage]['messages']['unitupdate'],

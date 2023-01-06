@@ -2594,6 +2594,7 @@ export const listUniversalLessonsOptions = /* GraphQL */ `
         type
         label
         title
+        status
         institutionID
         language
         lessonPlan {
@@ -2765,65 +2766,22 @@ export const getUniversalSyllabus = /* GraphQL */ `
           id
           syllabusID
           lessonID
-          unit
-          sequence
           status
-          complete
-          roster
-          viewing
           lesson {
             id
             type
             label
             title
-            institutionID
-            language
-            designers
-            objectives
-            purpose
-            introduction
-            introductionTitle
-            instructions
-            instructionsTitle
-            summary
-            summaryTitle
-            duration
-            resources
-            notes
-            cardImage
-            cardCaption
+            status
             lessonPlan {
               id
               title
               label
-              description
-              class
-              active
-              disabled
-              displayMode
-              open
-              estTime
-              activityType
-              interactionType
-              tags
             }
-            isUsed
-            darkMode
-            rubrics
-            createdAt
-            updatedAt
           }
-          startDate
-          endDate
-          createdAt
-          updatedAt
         }
-        nextToken
       }
       universalLessonsSeq
-      lessonHistory
-      designers
-      status
       createdAt
       updatedAt
     }
@@ -2858,7 +2816,6 @@ export const listUniversalSyllabuss = /* GraphQL */ `
         id
         name
         type
-        institutionID
         institution {
           id
           name
@@ -2875,6 +2832,7 @@ export const listUniversalSyllabuss = /* GraphQL */ `
             lesson {
               id
               title
+              status
             }
           }
           nextToken

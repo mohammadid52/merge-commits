@@ -27,19 +27,17 @@ export const UnitList = ({instId}: any) => {
   const history = useHistory();
   const match = useRouteMatch();
   const {
-    clientKey,
     state: {
       user: {isSuperAdmin, authId, email}
     },
-    theme,
+
     userLanguage
   } = useContext(GlobalContext);
 
-  const {CommonlyUsedDict, UnitLookupDict} = useDictionary(clientKey);
+  const {CommonlyUsedDict, UnitLookupDict} = useDictionary();
   // ~~~~~~~~~~~~~~ UNIT LIST ~~~~~~~~~~~~~~ //
   const [loading, setLoading] = useState(true);
   const [institutionList, setInstitutionList] = useState<any>([]);
-  const [allUnits, setAllUnits] = useState<any>([]);
   const [units, setUnits] = useState<any>([]);
 
   const [selectedInstitution, setSelectedInstitution] = useState<any>({});
@@ -63,6 +61,10 @@ export const UnitList = ({instId}: any) => {
           lessons: {
             ...(item.lessons || {}),
             items: item.lessons?.items
+              .filter(
+                (_d: any) =>
+                  _d.lesson?.status?.toLowerCase() === item?.status?.toLowerCase()
+              )
               .map((lesson: any) => {
                 if (lesson?.lesson?.id) {
                   return {
@@ -94,7 +96,7 @@ export const UnitList = ({instId}: any) => {
       const updatedList = getUpdatedList(result.data?.listUniversalSyllabi.items);
 
       setUnits(updatedList);
-      setAllUnits(updatedList);
+
       setLoading(false);
     } catch (error) {
       setLoading(false);
@@ -281,44 +283,8 @@ export const UnitList = ({instId}: any) => {
   return (
     <div className="pt-0 flex m-auto justify-center h-full p-8">
       <div className="flex flex-col">
-        {/* <div className="flex justify-between items-center w-full mx-auto">
-          <h3 className="text-lg leading-6 uppercase text-gray-600 w-auto">Units</h3>
-          <div className={`flex justify-end`}>
-            <div
-              className={`flex justify-between w-auto ${
-                isSuperAdmin ? 'md:w-72 lg:w-96' : 'md:w-36 lg:w-48 mr-4'
-              }`}>
-              <SearchInput
-                dataCy="unit-search-input"
-                value={searchInput}
-                onChange={(value) => setSearchInput(value)}
-                onKeyDown={() => onSearch(searchInput, selectedInstitution?.id)}
-                closeAction={removeSearchAction}
-                style={`mr-4 w-auto lg:w-48`}
-              />
-              {isSuperAdmin && (
-                <Selector
-                  placeholder={UnitLookupDict[userLanguage]['SELECT_INSTITUTION']}
-                  list={institutionList}
-                  selectedItem={selectedInstitution?.name}
-                  onChange={instituteChange}
-                  arrowHidden={true}
-                  additionalClass={'w-auto lg:w-48'}
-                  isClearable
-                  onClear={onInstitutionSelectionRemove}
-                />
-              )}
-            </div>
-            {!isSuperAdmin && (
-              <AddButton
-                label={UnitLookupDict[userLanguage]['NEW_UNIT']}
-                onClick={handleAdd}
-              />
-            )}
-          </div>
-        </div> */}
         <SectionTitleV3
-          title={'Units'}
+          title={'Unit List'}
           fontSize="xl"
           fontStyle="semibold"
           extraClass="leading-6 text-gray-900"

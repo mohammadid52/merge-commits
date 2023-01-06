@@ -1,21 +1,25 @@
-import React, {useContext, useEffect, useState} from 'react';
-import {useHistory} from 'react-router';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import React, {useContext, useEffect, useState} from 'react';
 import {DragDropContext, Draggable, Droppable} from 'react-beautiful-dnd';
+import {useHistory} from 'react-router';
 
 import {GlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 
-import * as mutations from 'graphql/mutations';
-import * as customQueries from 'customGraphql/customQueries';
 import * as customMutations from 'customGraphql/customMutations';
+import * as customQueries from 'customGraphql/customQueries';
+import * as mutations from 'graphql/mutations';
 
-import {getLessonType, reorder} from 'utilities/strings';
-import Selector from 'atoms/Form/Selector';
+import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
+import {Empty} from '@components/Dashboard/Admin/LessonsBuilder/StepActionComponent/LearningEvidence/CourseMeasurementsCard';
+import useAuth from '@customHooks/useAuth';
+import {logError} from '@graphql/functions';
+import {RoomStatus} from 'API';
 import AddButton from 'atoms/Buttons/AddButton';
+import Selector from 'atoms/Form/Selector';
 import Loader from 'atoms/Loader';
 import ModalPopUp from 'molecules/ModalPopUp';
-import {getAsset} from 'assets';
+import {getLessonType, reorder} from 'utilities/strings';
 import LessonPlanManagerRow from './LessonPlanManagerRow';
 
 interface UIMessages {
@@ -40,12 +44,10 @@ const LessonPlanManager = ({
     state: {
       user: {isSuperAdmin}
     },
-    theme,
-    clientKey,
+
     userLanguage
   } = useContext(GlobalContext);
-  const {SyllabusDict} = useDictionary(clientKey);
-  const themeColor = getAsset(clientKey, 'themeClassName');
+  const {SyllabusDict} = useDictionary();
 
   const [loading, setLoading] = useState(false);
   const [addingLesson, setAddingLesson] = useState(false);
@@ -53,7 +55,8 @@ const LessonPlanManager = ({
   const [allLessonsList, setAllLessonsList] = useState([]);
   const [dropdownLessonsList, setDropdownLessonsList] = useState([]);
   const [selectedLessonsList, setSelectedLessonsList] = useState([]);
-  const [selecetedLesson, setSelectedLesson] = useState({
+
+  const [selectedLesson, setSelectedLesson] = useState({
     id: '',
     name: '',
     value: ''
@@ -91,7 +94,10 @@ const LessonPlanManager = ({
       setLoading(true);
       const result: any = await API.graphql(
         graphqlOperation(customQueries.listUniversalLessonsOptions, {
-          filter: {institutionID: {eq: institutionId}}
+          filter: {
+            institutionID: {eq: institutionId},
+            status: {eq: syllabusDetails.status || RoomStatus.ACTIVE}
+          }
         })
       );
       const savedData = result.data.listUniversalLessons;
@@ -99,14 +105,6 @@ const LessonPlanManager = ({
         a.title.toLowerCase() > b.title.toLowerCase() ? 1 : -1
       );
 
-      const updatedList = sortedList
-        ?.filter((item: any) => (item.lessonPlan ? true : false))
-        .map((item: {id: string; title: string; type: string}) => ({
-          id: item.id,
-          name: `${item.title} - ${item.type && getLessonType(item.type)}`,
-          value: item.title
-        }));
-      // setDropdownLessonsList([...updatedList]);
       setAllLessonsList([...sortedList]);
       setLoading(false);
     } catch {
@@ -122,6 +120,7 @@ const LessonPlanManager = ({
   useEffect(() => {
     if (savedLessonsList?.length && !lessonsIds.length) {
       const lessonSeq = savedLessonsList.map((item: any) => item.id);
+
       updateLessonSequence(lessonSeq);
     }
   }, [savedLessonsList]);
@@ -153,8 +152,8 @@ const LessonPlanManager = ({
   const addNewLesson = async () => {
     try {
       setAddingLesson(true);
-      const selectedLesson = allLessonsList.find(
-        (item) => item.id === selecetedLesson.id
+      const selectedLesson: any = allLessonsList.find(
+        (item) => item.id === selectedLesson.id
       );
 
       const lessonComponentPlan: any =
@@ -171,10 +170,10 @@ const LessonPlanManager = ({
         });
       const input = {
         syllabusID: syllabusId,
-        lessonID: selecetedLesson.id,
+        lessonID: selectedLesson.id,
         displayData: {breakdownComponent: selectedLesson?.type},
         lessonPlan: lessonComponentPlan?.length > 0 ? lessonComponentPlan : [],
-        status: 'Active'
+        status: RoomStatus.ACTIVE
       };
 
       const result: any = await API.graphql(
@@ -191,7 +190,7 @@ const LessonPlanManager = ({
         associatedRooms?.data.listRooms.items?.map(async (room: any) => {
           const updatedRoomResult: any = await API.graphql(
             graphqlOperation(mutations.updateRoom, {
-              input: {id: room.id, activeLessons: [selecetedLesson.id]}
+              input: {id: room.id, activeLessons: [selectedLesson.id]}
             })
           );
         });
@@ -202,8 +201,9 @@ const LessonPlanManager = ({
       setSelectedLesson({id: '', name: '', value: ''});
       setSavedLessonsList([...savedLessonsList, newLesson]);
       setAddingLesson(false);
-    } catch {
+    } catch (e) {
       setAddingLesson(false);
+      logError(e, {authId, email}, 'LessonPlanManager @addNewLesson');
       setMessages({
         show: true,
         message: SyllabusDict[userLanguage]['MESSAGES']['UPDATE_ERROR'],
@@ -217,9 +217,7 @@ const LessonPlanManager = ({
     // To update table list and dropdown as per selected items.
     const savedLessonIds = [...savedLessonsList];
     const lessonsDetails = [...allLessonsList];
-    const filteredList = lessonsDetails.filter((item) =>
-      savedLessonIds.some((lesson) => lesson.lessonID === item.id)
-    );
+    const filteredList = savedLessonIds;
     let updatedTableList = filteredList.map((item) => {
       let tableList;
       const selectedLesson = savedLessonIds.find((lesson) => lesson.lessonID === item.id);
@@ -231,6 +229,7 @@ const LessonPlanManager = ({
       };
       return tableList;
     });
+
     const filteredDropDownList = allLessonsList
       .filter((item) =>
         updatedTableList.find((lesson) => lesson.id === item.id) ? false : true
@@ -244,6 +243,9 @@ const LessonPlanManager = ({
       }));
 
     updatedTableList = updatedTableList
+      .filter(
+        (_d) => _d.lesson.status.toLowerCase() === syllabusDetails.status.toLowerCase()
+      )
       .map((t: any) => {
         let index = lessonsIds?.indexOf(t.uniqlessonId);
         return {...t, index};
@@ -253,13 +255,6 @@ const LessonPlanManager = ({
     setSelectedLessonsList(updatedTableList);
     setDropdownLessonsList(filteredDropDownList);
   };
-
-  useEffect(() => {
-    if (savedLessonsList?.length && !lessonsIds.length) {
-      const lessonSeq = savedLessonsList.map((item: any) => item.id);
-      updateLessonSequence(lessonSeq);
-    }
-  }, [savedLessonsList]);
 
   useEffect(() => {
     if (Array.isArray(savedLessonsList) && savedLessonsList.length) {
@@ -344,6 +339,8 @@ const LessonPlanManager = ({
     }
   };
 
+  const {authId, email} = useAuth();
+
   const handleDelete = async (lesson: any) => {
     setDeleting(true);
     try {
@@ -363,47 +360,12 @@ const LessonPlanManager = ({
         prevList.filter((item: any) => item.id !== lesson.uniqlessonId)
       );
     } catch (e) {
+      logError(e, {authId, email}, 'LessonPlanManager @handleDelete');
       console.error('error deleting...', e);
     } finally {
       setDeleting(false);
       setDeleteModal({show: false, message: '', action: () => {}});
     }
-  };
-
-  const updateLessonList = (lessonObj: any) => {
-    setAllLessonsList(
-      allLessonsList.filter((lessonListObj: any) => lessonListObj.id !== lessonObj.id)
-    );
-  };
-
-  /*******
-   * END *
-   *******/
-  const onDelete = (item: any) => {
-    const onDrop = async () => {
-      setDeleting(true);
-      const result: any = await API.graphql(
-        graphqlOperation(mutations.deleteUniversalSyllabusLesson, {
-          input: {id: item.uniqlessonId}
-        })
-      );
-      await updateLessonSequence(
-        lessonsIds.filter((lessonId: any) => lessonId !== item.uniqlessonId)
-      );
-      setSelectedLessonsList((list: any) =>
-        list.filter((_item: any) => _item.id !== item.id)
-      );
-      setSavedLessonsList((prevList: any) =>
-        prevList.filter((lesson: any) => lesson.id !== item.uniqlessonId)
-      );
-      setDeleting(false);
-      closeLessonAction();
-    };
-    setWarnModal2({
-      show: true,
-      message: `Are you sure you want to delete (${item.title})?`,
-      action: onDrop
-    });
   };
 
   const gotoLessonBuilder = (id: string, type: string) => {
@@ -425,123 +387,122 @@ const LessonPlanManager = ({
   };
 
   return (
-    <div className="bg-white shadow-5 mb-4 overflow-x-auto lg:overflow-x-hidden">
+    <div className="">
       {/* *************** SECTION HEADER ************ */}
-      <div
-        className={`flex items-center justify-between p-4 ${theme.borderColor[themeColor]}`}>
-        {/* <h3 className="text-lg leading-6 font-medium text-gray-900">
-          {SyllabusDict[userLanguage]['LESSON_PLAN_HEADING']}
-        </h3> */}
-        {!isSuperAdmin && (
-          <div className="flex justify-end">
-            <AddButton
-              label={SyllabusDict[userLanguage]['ADD_NEW_LESSON']}
-              onClick={createNewLesson}
-            />
-          </div>
-        )}
-      </div>
-      {/* *************** ADD LESSON TO SYLLABUS SECTION ************ */}
-      <div className="w-full m-auto p-4">
-        <div className="my-8 w-8/10 lg:w-6/10 m-auto flex items-center justify-center">
-          <div className="mr-4">
+
+      <SectionTitleV3
+        title={'Lesson Plan Manager'}
+        fontSize="xl"
+        fontStyle="semibold"
+        extraClass="leading-6 text-gray-900  mb-2 lg:mb-0"
+        extraContainerClass="flex-col lg:flex-row "
+        borderBottom
+        withButton={
+          <div className="lg:w-7/10 w-full flex gap-x-4 justify-end items-center">
             <Selector
-              selectedItem={selecetedLesson.value}
+              selectedItem={selectedLesson.name}
               list={dropdownLessonsList}
               placeholder={SyllabusDict[userLanguage]['SELECT_LESSON']}
               onChange={selectLesson}
+              additionalClass="w-auto "
+              width="w-96"
             />
-          </div>
-          <div className="ml-4 w-auto">
+
             <AddButton
               className="ml-4 py-1"
               label={'Add'}
               onClick={addNewLesson}
-              disabled={!Boolean(selecetedLesson.value) || addingLesson}
+              disabled={!Boolean(selectedLesson.value) || addingLesson}
+            />
+
+            {!isSuperAdmin && (
+              <div className="w-auto">
+                <AddButton
+                  transparent
+                  label={SyllabusDict[userLanguage]['ADD_NEW_LESSON']}
+                  onClick={createNewLesson}
+                />
+              </div>
+            )}
+          </div>
+        }
+        shadowOff
+      />
+
+      <div className="mt-4">
+        {loading ? (
+          <div className="h-100 flex justify-center items-center">
+            <div className="w-5/10">
+              <Loader animation withText="Fetching lessons..." />
+            </div>
+          </div>
+        ) : selectedLessonsList && selectedLessonsList.length > 0 ? (
+          <div>
+            {/* *************** LESSONS TABLE HEADERS ************ */}
+            <div className="flex justify-between bg-gray-50  px-8 whitespace-nowrap border-b-0 border-gray-200  lg:w-full">
+              <div className="w-.5/10 px-8 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                <span>{SyllabusDict[userLanguage]['TABLE_HEADS']['NUMBER']}</span>
+              </div>
+              <div className="w-2/10 px-8 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                <span>{SyllabusDict[userLanguage]['TABLE_HEADS']['LESSON_NAME']}</span>
+              </div>
+              <div className="w-1/10 px-8 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                <span>{SyllabusDict[userLanguage]['TABLE_HEADS']['TYPE']}</span>
+              </div>
+              <div className="w-3/10 px-8 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                <span>{SyllabusDict[userLanguage]['TABLE_HEADS']['MEASUREMENTS']}</span>
+              </div>
+              <div className="w-2.5/10 px-8 py-3 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                <span>{SyllabusDict[userLanguage]['TABLE_HEADS']['ACTION']}</span>
+              </div>
+            </div>
+
+            <div className="max-h-88  lg:w-full overflow-y-auto overflow-x-hidden mb-10">
+              <DragDropContext onDragEnd={onDragEnd}>
+                <Droppable droppableId="droppable">
+                  {(provided1, snapshot) => (
+                    <div {...provided1.droppableProps} ref={provided1.innerRef}>
+                      {selectedLessonsList.map((item, index) => {
+                        return (
+                          <Draggable key={item.id} draggableId={item.id} index={index}>
+                            {(provided, snapshot) => (
+                              <div
+                                ref={provided.innerRef}
+                                {...provided.draggableProps}
+                                {...provided.dragHandleProps}>
+                                <div
+                                  key={index}
+                                  className="flex justify-between w-full px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
+                                  <LessonPlanManagerRow
+                                    index={index}
+                                    lessonObject={item.lesson}
+                                    syllabusObject={syllabusDetails}
+                                    checkIfRemovable={checkIfRemovable}
+                                    handleToggleDelete={handleToggleDelete}
+                                    gotoLessonBuilder={gotoLessonBuilder}
+                                  />
+                                </div>
+                              </div>
+                            )}
+                          </Draggable>
+                        );
+                      })}
+                      {provided1.placeholder}
+                    </div>
+                  )}
+                </Droppable>
+              </DragDropContext>
+            </div>
+          </div>
+        ) : (
+          <div className="text-center p-16 mt-4">
+            <Empty
+              text={`No lesson found - current unit status is ${syllabusDetails.status}`}
             />
           </div>
-        </div>
-        {messages.show && messages.lessonError ? (
-          <div className="py-2 mb-4 m-auto text-center">
-            <p className={`${messages.isError ? 'text-red-600' : 'text-green-600'}`}>
-              {messages.message && messages.message}
-            </p>
-          </div>
-        ) : null}
-
-        {/* *************** LESSONS LIST ************ */}
-        <div>
-          {loading ? (
-            <div className="h-100 flex justify-center items-center">
-              <div className="w-5/10">
-                <Loader animation withText="Fetching lessons..." />
-              </div>
-            </div>
-          ) : selectedLessonsList && selectedLessonsList.length > 0 ? (
-            <div>
-              {/* *************** LESSONS TABLE HEADERS ************ */}
-              <div className="flex justify-between w-full bg-gray-50  px-8 py-4 whitespace-nowrap border-b-0 border-gray-200 w-screen lg:w-full">
-                <div className="w-.5/10 px-8 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>{SyllabusDict[userLanguage]['TABLE_HEADS']['NUMBER']}</span>
-                </div>
-                <div className="w-2/10 px-8 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>{SyllabusDict[userLanguage]['TABLE_HEADS']['LESSON_NAME']}</span>
-                </div>
-                <div className="w-1/10 px-8 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>{SyllabusDict[userLanguage]['TABLE_HEADS']['TYPE']}</span>
-                </div>
-                <div className="w-3/10 px-8 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>{SyllabusDict[userLanguage]['TABLE_HEADS']['MEASUREMENTS']}</span>
-                </div>
-                <div className="w-2.5/10 px-8 py-3 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>{SyllabusDict[userLanguage]['TABLE_HEADS']['ACTION']}</span>
-                </div>
-              </div>
-
-              <div className="max-h-88 w-screen lg:w-full overflow-y-auto overflow-x-hidden mb-10">
-                <DragDropContext onDragEnd={onDragEnd}>
-                  <Droppable droppableId="droppable">
-                    {(provided1, snapshot) => (
-                      <div {...provided1.droppableProps} ref={provided1.innerRef}>
-                        {selectedLessonsList.map((item, index) => {
-                          return (
-                            <Draggable key={item.id} draggableId={item.id} index={index}>
-                              {(provided, snapshot) => (
-                                <div
-                                  ref={provided.innerRef}
-                                  {...provided.draggableProps}
-                                  {...provided.dragHandleProps}>
-                                  <div
-                                    key={index}
-                                    className="flex justify-between w-full px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
-                                    <LessonPlanManagerRow
-                                      index={index}
-                                      lessonObject={item}
-                                      syllabusObject={syllabusDetails}
-                                      checkIfRemovable={checkIfRemovable}
-                                      handleToggleDelete={handleToggleDelete}
-                                      gotoLessonBuilder={gotoLessonBuilder}
-                                    />
-                                  </div>
-                                </div>
-                              )}
-                            </Draggable>
-                          );
-                        })}
-                        {provided1.placeholder}
-                      </div>
-                    )}
-                  </Droppable>
-                </DragDropContext>
-              </div>
-            </div>
-          ) : (
-            <div className="text-center p-16 mt-4">
-              {SyllabusDict[userLanguage]['nolesson']}
-            </div>
-          )}
-        </div>
+        )}
       </div>
+
       {deleteModal.show && (
         <ModalPopUp
           closeAction={handleToggleDelete}

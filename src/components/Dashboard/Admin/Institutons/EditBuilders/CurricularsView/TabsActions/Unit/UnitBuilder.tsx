@@ -15,6 +15,7 @@ import LessonPlanManager from './LessonPlanManager';
 import UnitFormComponent from './UnitFormComponent';
 import {BsArrowLeft} from 'react-icons/bs';
 import {RoomStatus} from 'API';
+import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 
 interface IUnitData {
   id: string;
@@ -133,6 +134,7 @@ const UnitBuilder = ({instId}: any) => {
         setLessonsIds(savedData.universalLessonsSeq || []);
 
         const sortedLessonsList = [...savedData.lessons?.items]
+          .filter((_d) => _d.status?.toLowerCase() === savedData?.status?.toLowerCase())
           .map((t: any) => {
             let index = savedData.universalLessonsSeq.indexOf(t.id);
             return {...t, index};
@@ -168,31 +170,39 @@ const UnitBuilder = ({instId}: any) => {
       tooltipText: 'Add overview details in step 1 to continue'
     }
   ];
-  const currentStepComp = (currentStep: string) => {
-    switch (currentStep) {
-      case 'overview':
-        return (
-          <UnitFormComponent
-            instId={instId}
-            syllabusDetails={syllabusData}
-            postAddSyllabus={postAddSyllabus}
-            onCancel={fetchSyllabusData}
-          />
-        );
-      case 'lessons':
-        return (
-          <LessonPlanManager
-            syllabusId={unitId}
-            syllabusDetails={syllabusData}
-            institutionId={instId || syllabusData?.institutionID}
-            savedLessonsList={savedLessonsList}
-            setSavedLessonsList={setSavedLessonsList}
-            lessonsIds={lessonsIds}
-            setLessonsIds={setLessonsIds}
-          />
-        );
-    }
-  };
+  // const currentStepComp = (currentStep: string) => {
+  //   switch (currentStep) {
+  //     case 'overview':
+  //       return (
+  //         <AnimatedContainer show={currentStep === 'overview'}>
+  //           {currentStep === 'overview' && (
+  //             <UnitFormComponent
+  //               instId={instId}
+  //               syllabusDetails={syllabusData}
+  //               postAddSyllabus={postAddSyllabus}
+  //               onCancel={fetchSyllabusData}
+  //             />
+  //           )}
+  //         </AnimatedContainer>
+  //       );
+  //     case 'lessons':
+  //       return (
+  //         <AnimatedContainer show={currentStep === 'lessons'}>
+  //           {currentStep === 'lessons' && (
+  //             <LessonPlanManager
+  //               syllabusId={unitId}
+  //               syllabusDetails={syllabusData}
+  //               institutionId={instId || syllabusData?.institutionID}
+  //               savedLessonsList={savedLessonsList}
+  //               setSavedLessonsList={setSavedLessonsList}
+  //               lessonsIds={lessonsIds}
+  //               setLessonsIds={setLessonsIds}
+  //             />
+  //           )}
+  //         </AnimatedContainer>
+  //       );
+  //   }
+  // };
 
   return (
     <div className="w-full h-full p-4">
@@ -233,8 +243,35 @@ const UnitBuilder = ({instId}: any) => {
               </div>
             </div>
           ) : (
-            <div className="border-0 border-gray-200 lg:border-t-none bg-gray-100 lg:my-0">
-              {currentStepComp(activeStep)}
+            <div className="">
+              <AnimatedContainer
+                animationType="translateY"
+                show={activeStep === 'overview'}>
+                {activeStep === 'overview' && (
+                  <UnitFormComponent
+                    instId={instId}
+                    syllabusDetails={syllabusData}
+                    postAddSyllabus={postAddSyllabus}
+                    setSyllabusDataParent={setSyllabusData}
+                    onCancel={fetchSyllabusData}
+                  />
+                )}
+              </AnimatedContainer>
+              <AnimatedContainer
+                animationType="translateY"
+                show={activeStep === 'lessons'}>
+                {activeStep === 'lessons' && (
+                  <LessonPlanManager
+                    syllabusId={unitId}
+                    syllabusDetails={syllabusData}
+                    institutionId={instId || syllabusData?.institutionID}
+                    savedLessonsList={savedLessonsList}
+                    setSavedLessonsList={setSavedLessonsList}
+                    lessonsIds={lessonsIds}
+                    setLessonsIds={setLessonsIds}
+                  />
+                )}
+              </AnimatedContainer>
             </div>
           )}
         </div>

@@ -53,7 +53,7 @@ const UnitListRow = ({
         onClick={() => editCurrentUnit(item.id)}
         className={`${
           isSuperAdmin ? 'w-1.5/10' : 'w-4/10'
-        } flex items-center  px-8 py-4  cursor-pointer text-sm leading-5 font-medium whitespace-normal`}>
+        } flex items-center hover:underline hover:theme-text:400 px-8 py-4  cursor-pointer text-sm leading-5 font-medium whitespace-normal`}>
         <Highlighted text={item.name} highlight={searchInput} />
       </td>
       {isSuperAdmin && (
@@ -70,18 +70,25 @@ const UnitListRow = ({
         className={`${
           isSuperAdmin ? 'w-2/10' : 'w-4/10'
         } items-center text-left px-8 py-4 text-sm leading-4 text-gray-500 whitespace-normal cursor-pointer`}>
-        {item.lessons?.items?.map(
-          (lesson: {id: string; lesson: {id: string; title: string}}) => {
-            if (lesson) {
-              return (
-                <li
-                  key={lesson.lesson.id}
-                  onClick={() => redirectToLesson(lesson.lesson.id)}>
-                  {lesson.lesson.title}
-                </li>
-              );
-            }
-          }
+        {item.lessons?.items?.length > 0 ? (
+          <ul className="list-disc">
+            {item.lessons?.items?.map(
+              (lesson: {id: string; lesson: {id: string; title: string}}) => {
+                if (lesson) {
+                  return (
+                    <li
+                      className="mb-2 hover:underline hover:theme-text:400"
+                      key={lesson.lesson.id}
+                      onClick={() => redirectToLesson(lesson.lesson.id)}>
+                      {lesson.lesson.title}
+                    </li>
+                  );
+                }
+              }
+            )}
+          </ul>
+        ) : (
+          <p className="">No lesson plan</p>
         )}
       </td>
       <td
