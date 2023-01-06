@@ -23,7 +23,7 @@ import {
 } from '@components/Dashboard/Admin/Institutons/Listing/RoomsList';
 import {InstitueRomms} from '@dictionary/dictionary.iconoclast';
 
-export const UnitList = ({instId}: any) => {
+export const UnitList = ({instId, curricular}: any) => {
   const history = useHistory();
   const match = useRouteMatch();
   const {
@@ -276,6 +276,13 @@ export const UnitList = ({instId}: any) => {
     }
   };
 
+  const [hoveringItem, setHoveringItem] = useState<{name?: string}>({});
+
+  const currentSelectedItem =
+    hoveringItem &&
+    hoveringItem?.name &&
+    units?.find((_c: any) => _c.name === hoveringItem?.name);
+
   // ##################################################################### //
   // ############################### OUTPUT ############################## //
   // ##################################################################### //
@@ -376,8 +383,12 @@ export const UnitList = ({instId}: any) => {
                       key={`unit_list_row_${index}`}
                       index={index}
                       searchInput={searchInput.value}
+                      hoveringItem={hoveringItem}
+                      setHoveringItem={setHoveringItem}
+                      currentSelectedItem={currentSelectedItem}
                       item={unit}
                       checkIfRemovable={checkIfRemovable}
+                      curricular={curricular}
                       handleToggleDelete={handleToggleDelete}
                       editCurrentUnit={handleView}
                       isSuperAdmin={isSuperAdmin}

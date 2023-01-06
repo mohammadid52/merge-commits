@@ -40,7 +40,7 @@ interface IUIMessages {
   lessonError?: boolean;
 }
 
-const UnitBuilder = ({instId}: any) => {
+const UnitBuilder = ({instId, curricular}: any) => {
   const history = useHistory();
   const match = useRouteMatch();
   const params = useQuery(location.search);
@@ -252,6 +252,7 @@ const UnitBuilder = ({instId}: any) => {
                     instId={instId}
                     syllabusDetails={syllabusData}
                     postAddSyllabus={postAddSyllabus}
+                    curricular={curricular}
                     setSyllabusDataParent={setSyllabusData}
                     onCancel={fetchSyllabusData}
                   />

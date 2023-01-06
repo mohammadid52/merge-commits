@@ -22,6 +22,20 @@ import {RiErrorWarningLine} from 'react-icons/ri';
 import {getImageFromS3Static} from 'utilities/services';
 import {createFilterToFetchSpecificItemsOnly} from 'utilities/strings';
 import SurveyPDF from './SurveyPDF';
+export const DataValue = ({
+  title,
+  content
+}: {
+  title: string;
+  content: string | React.ReactNode;
+}) => {
+  return (
+    <div className="w-auto flex mb-2 flex-col items-start justify-start">
+      <p className="text-sm text-gray-500">{title}</p>
+      <p className="text-dark-gray font-medium text-left w-auto text-sm">{content}</p>
+    </div>
+  );
+};
 
 export const insertExtraDataForClassroom = (cr: any) => {
   const teacherImage = getImageFromS3Static(cr?.teacher?.image);
@@ -1019,21 +1033,6 @@ const Csv = ({institutionId}: ICsvProps) => {
   const currentActiveUnit =
     currentSelectedClassroomData &&
     activeUnits.find((_d) => _d?.id === currentSelectedClassroomData?.activeSyllabus);
-
-  const DataValue = ({
-    title,
-    content
-  }: {
-    title: string;
-    content: string | React.ReactNode;
-  }) => {
-    return (
-      <div className="w-auto flex mb-2 flex-col items-start justify-start">
-        <p className="text-sm text-gray-500">{title}</p>
-        <p className="text-dark-gray font-medium text-left w-auto text-sm">{content}</p>
-      </div>
-    );
-  };
 
   useEffect(() => {
     document.getElementById('csv-download-button').addEventListener('click', () => {

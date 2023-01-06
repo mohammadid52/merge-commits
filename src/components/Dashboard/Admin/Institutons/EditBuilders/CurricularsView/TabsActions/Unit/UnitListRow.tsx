@@ -5,6 +5,11 @@ import React, {useContext, useState} from 'react';
 import {BiDotsVerticalRounded} from 'react-icons/bi';
 import Highlighted from '@components/Atoms/Highlighted';
 import {Status} from '@components/Dashboard/Admin/UserManagement/UserStatus';
+import ClickAwayListener from 'react-click-away-listener';
+import {Transition} from '@headlessui/react';
+import {RoomStatus} from 'API';
+import {DataValue} from '@components/Dashboard/Csv/Csv';
+import AttachedCourses from './AttachedCourses';
 
 interface IUnitListRowProps {
   index: number;
@@ -16,6 +21,10 @@ interface IUnitListRowProps {
   searchInput?: string;
   redirectToInstitution: () => void;
   redirectToLesson: (id: string) => void;
+  hoveringItem?: any;
+  setHoveringItem?: any;
+  currentSelectedItem?: any;
+  curricular?: any;
 }
 
 const UnitListRow = ({
@@ -27,7 +36,11 @@ const UnitListRow = ({
   handleToggleDelete,
   editCurrentUnit,
   redirectToInstitution,
-  redirectToLesson
+  redirectToLesson,
+  hoveringItem,
+  setHoveringItem,
+  curricular,
+  currentSelectedItem
 }: IUnitListRowProps) => {
   // ~~~~~~~~~~ CONTEXT_SPLITTING ~~~~~~~~~~ //
   const gContext = useContext(GlobalContext);
@@ -51,11 +64,62 @@ const UnitListRow = ({
       </td>
       <td
         onClick={() => editCurrentUnit(item.id)}
+        onMouseEnter={() => {
+          setHoveringItem({name: item.name});
+        }}
+        onMouseLeave={() => {
+          setHoveringItem({});
+        }}
         className={`${
           isSuperAdmin ? 'w-1.5/10' : 'w-4/10'
-        } flex items-center hover:underline hover:theme-text:400 px-8 py-4  cursor-pointer text-sm leading-5 font-medium whitespace-normal`}>
+        } flex items-center relative hover:underline hover:theme-text:400 px-8 py-4  cursor-pointer text-sm leading-5 font-medium whitespace-normal`}>
         <Highlighted text={item.name} highlight={searchInput} />
+        {hoveringItem?.name === item.name && currentSelectedItem && (
+          <ClickAwayListener onClickAway={() => setHoveringItem({})}>
+            <Transition
+              style={{
+                top: '0rem',
+                bottom: '1.5rem',
+                right: '-90%',
+                zIndex: 999999
+              }}
+              className="hidden md:block cursor-pointer select-none  absolute  text-black "
+              show={Boolean(hoveringItem && hoveringItem.name)}>
+              <div className="bg-white flex flex-col border-gray-200 rounded-xl  customShadow border-0 p-4  min-w-70 max-w-70 w-auto">
+                <DataValue
+                  title={'Institution Name'}
+                  content={currentSelectedItem?.institution?.name || '--'}
+                />
+
+                <DataValue
+                  title={'Status'}
+                  content={
+                    <p
+                      className={`${
+                        currentSelectedItem.status === RoomStatus.ACTIVE
+                          ? 'text-green-500'
+                          : 'text-yellow-500'
+                      } uppercase`}>
+                      {currentSelectedItem.status || RoomStatus.ACTIVE}
+                    </p>
+                  }
+                />
+
+                <DataValue
+                  title={'Attached courses'}
+                  content={<AttachedCourses curricular={curricular} unitId={item.id} />}
+                />
+
+                <DataValue
+                  title={'Description'}
+                  content={currentSelectedItem?.description || '--'}
+                />
+              </div>
+            </Transition>
+          </ClickAwayListener>
+        )}
       </td>
+
       {isSuperAdmin && (
         <td
           className="flex w-1.5/10 px-8 py-4 items-center  text-left text-sm font-bold leading-4 whitespace-normal cursor-pointer"

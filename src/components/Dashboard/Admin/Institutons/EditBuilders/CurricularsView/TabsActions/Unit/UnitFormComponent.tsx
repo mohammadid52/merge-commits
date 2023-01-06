@@ -12,6 +12,13 @@ import {languageList} from 'utilities/staticData';
 import Selector from '@components/Atoms/Form/Selector';
 import {RoomStatus, UniversalSyllabus} from 'API';
 import {RoomStatusList} from '../CourseBuilder/CourseFormComponent';
+import {getImageFromS3Static} from '@utilities/services';
+import Placeholder from '@components/Atoms/Placeholder';
+import Label from '@components/Atoms/Form/Label';
+import {useHistory} from 'react-router';
+import {orderBy} from 'lodash';
+import Tooltip from '@components/Atoms/Tooltip';
+import AttachedCourses from './AttachedCourses';
 
 interface AddSyllabusProps {
   syllabusDetails?: any;
@@ -19,6 +26,7 @@ interface AddSyllabusProps {
   onCancel: () => void;
   instId: string;
   isInModal?: boolean;
+  curricular: any;
   setSyllabusDataParent: React.Dispatch<React.SetStateAction<any>>;
 }
 interface InitialData {
@@ -31,6 +39,7 @@ interface InitialData {
   objectives: string;
   secondary: string;
   status: RoomStatus;
+
   languages: {id: string; name: string; value: string}[];
 }
 
@@ -40,6 +49,7 @@ const UnitFormComponent = ({
   syllabusDetails,
   instId,
   setSyllabusDataParent,
+  curricular,
   isInModal = false
 }: AddSyllabusProps) => {
   const initialData = {
@@ -57,7 +67,13 @@ const UnitFormComponent = ({
   const [syllabusData, setSyllabusData] = useState<InitialData>(initialData);
 
   const [loading, setIsLoading] = useState(false);
-  const {clientKey, userLanguage} = useContext(GlobalContext);
+  const {
+    clientKey,
+    userLanguage,
+    state: {
+      user: {isSuperAdmin}
+    }
+  } = useContext(GlobalContext);
 
   const {AddSyllabusDict, UserEditDict} = useDictionary(clientKey);
 
@@ -310,6 +326,12 @@ const UnitFormComponent = ({
               name="objectives"
               label={AddSyllabusDict[userLanguage]['objective']}
             />
+          </div>
+          <div>
+            <Label label="Attached courses" />
+            <div className="mt-1">
+              <AttachedCourses curricular={curricular} unitId={syllabusDetails.id} />
+            </div>
           </div>
         </div>
       </div>
