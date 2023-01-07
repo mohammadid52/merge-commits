@@ -247,7 +247,7 @@ const LessonPlanManager = ({
         (_d) => _d.lesson.status.toLowerCase() === syllabusDetails.status.toLowerCase()
       )
       .map((t: any) => {
-        let index = lessonsIds?.indexOf(t.uniqlessonId);
+        let index = lessonsIds?.indexOf(t.id);
         return {...t, index};
       })
       .sort((a: any, b: any) => (a.index > b.index ? 1 : -1));
@@ -289,10 +289,11 @@ const LessonPlanManager = ({
         result.source.index,
         result.destination.index
       );
+
       setLessonsIds(list);
       let lessonsList = selectedLessonsList
         .map((t: any) => {
-          let index = list.indexOf(t.uniqlessonId);
+          let index = list.indexOf(t.id);
           return {...t, index};
         })
         .sort((a: any, b: any) => (a.index > b.index ? 1 : -1));
@@ -327,12 +328,12 @@ const LessonPlanManager = ({
     }
   };
 
-  const handleToggleDelete = (targetString?: string, lessonObj?: any) => {
+  const handleToggleDelete = (targetString?: string, lessonObj?: any, idx?: number) => {
     if (!deleteModal.show) {
       setDeleteModal({
         show: true,
         message: `Are you sure you want to remove "${targetString}" from unit?`,
-        action: () => handleDelete(lessonObj)
+        action: () => handleDelete(lessonObj, idx)
       });
     } else {
       setDeleteModal({show: false, message: '', action: () => {}});
@@ -341,7 +342,7 @@ const LessonPlanManager = ({
 
   const {authId, email} = useAuth();
 
-  const handleDelete = async (lesson: any) => {
+  const handleDelete = async (lesson: any, idx: number) => {
     setDeleting(true);
     try {
       await API.graphql(
@@ -352,6 +353,8 @@ const LessonPlanManager = ({
       await updateLessonSequence(
         lessonsIds.filter((lessonId: any) => lessonId !== lesson.id)
       );
+      selectedLessonsList.splice(idx, 1);
+      setSelectedLessonsList([...selectedLessonsList]);
       setSelectedLessonsList((list: any) =>
         list.filter((_item: any) => _item.id !== lesson.id)
       );
@@ -456,7 +459,7 @@ const LessonPlanManager = ({
               </div>
             </div>
 
-            <div className="max-h-88  lg:w-full overflow-y-auto overflow-x-hidden mb-10">
+            <div className="max-h-132  lg:w-full overflow-y-auto overflow-x-hidden mb-10">
               <DragDropContext onDragEnd={onDragEnd}>
                 <Droppable droppableId="droppable">
                   {(provided1, snapshot) => (
@@ -464,25 +467,32 @@ const LessonPlanManager = ({
                       {selectedLessonsList.map((item, index) => {
                         return (
                           <Draggable key={item.id} draggableId={item.id} index={index}>
-                            {(provided, snapshot) => (
-                              <div
-                                ref={provided.innerRef}
-                                {...provided.draggableProps}
-                                {...provided.dragHandleProps}>
+                            {(provided, snapshot) => {
+                              return (
                                 <div
-                                  key={index}
-                                  className="flex justify-between w-full px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
-                                  <LessonPlanManagerRow
-                                    index={index}
-                                    lessonObject={item.lesson}
-                                    syllabusObject={syllabusDetails}
-                                    checkIfRemovable={checkIfRemovable}
-                                    handleToggleDelete={handleToggleDelete}
-                                    gotoLessonBuilder={gotoLessonBuilder}
-                                  />
+                                  className={`${
+                                    snapshot.isDragging
+                                      ? 'theme-bg:100 transition-all isDragging'
+                                      : ''
+                                  } w-auto`}
+                                  ref={provided.innerRef}
+                                  {...provided.draggableProps}
+                                  {...provided.dragHandleProps}>
+                                  <div
+                                    key={index}
+                                    className="flex justify-between w-full px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
+                                    <LessonPlanManagerRow
+                                      index={index}
+                                      lessonObject={item.lesson}
+                                      syllabusObject={syllabusDetails}
+                                      checkIfRemovable={checkIfRemovable}
+                                      handleToggleDelete={handleToggleDelete}
+                                      gotoLessonBuilder={gotoLessonBuilder}
+                                    />
+                                  </div>
                                 </div>
-                              </div>
-                            )}
+                              );
+                            }}
                           </Draggable>
                         );
                       })}

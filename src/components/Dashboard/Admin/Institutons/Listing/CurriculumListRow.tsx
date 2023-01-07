@@ -64,7 +64,9 @@ const CurriculumListRow = ({
 
   const filteredUnits =
     item.universalSyllabus?.items && item.universalSyllabus?.items?.length > 0
-      ? item.universalSyllabus?.items?.filter((d: any) => d.unit.status === item.status)
+      ? item.universalSyllabus?.items?.filter(
+          (d: any) => d?.unit?.status?.toLowerCase() === item?.status?.toLowerCase()
+        )
       : [];
 
   const showPopover = hoveringItem?.id === item.id && currentSelectedItem;

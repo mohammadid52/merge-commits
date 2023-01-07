@@ -1,28 +1,36 @@
 import Placeholder from '@components/Atoms/Placeholder';
 import Tooltip from '@components/Atoms/Tooltip';
 import useAuth from '@customHooks/useAuth';
+import {logError} from '@graphql/functions';
 import {getImageFromS3Static} from '@utilities/services';
 import {orderBy} from 'lodash';
 import React from 'react';
 import {useHistory} from 'react-router';
 
 const AttachedCourses = ({curricular, unitId}: {curricular: any; unitId: string}) => {
+  const {email, authId} = useAuth();
   const getAttachedCourses = (): any[] => {
-    if (curricular) {
-      const filtered = curricular?.items?.filter((item: any) => {
-        if (item.universalSyllabus) {
-          return item.universalSyllabus?.items.find(
-            (item: any) => item.unit.id === unitId
-          );
-        }
-      });
+    try {
+      if (curricular) {
+        const filtered = curricular?.items?.filter((item: any) => {
+          if (item?.universalSyllabus) {
+            return item?.universalSyllabus?.items?.find(
+              (item: any) => item?.unit?.id === unitId
+            );
+          }
+        });
 
-      const sorted = orderBy(filtered, ['name'], ['asc']);
+        const sorted = orderBy(filtered, ['name'], ['asc']);
 
-      return sorted;
+        return sorted;
+      }
+      return [];
+    } catch (error) {
+      logError(error, {authId, email}, 'AttachedCourses @getAttachedCourses');
+      return [];
     }
-    return [];
   };
+
   const attachedCourses: any[] = getAttachedCourses();
 
   const history = useHistory();
@@ -41,7 +49,10 @@ const AttachedCourses = ({curricular, unitId}: {curricular: any; unitId: string}
         attachedCourses?.map((curricula: any) => {
           if (curricula) {
             return (
-              <Tooltip placement="left" text={`Go to ${curricula.name}`}>
+              <Tooltip
+                key={curricula.id}
+                placement="left"
+                text={`Go to ${curricula.name}`}>
                 <li key={curricula.id} className="flex items-center gap-y-2">
                   <div className="flex-shrink-0 h-8 w-8 flex items-center">
                     {curricula.image ? (

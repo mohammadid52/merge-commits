@@ -3,7 +3,9 @@ import Highlighted from '@components/Atoms/Highlighted';
 import Tooltip from '@components/Atoms/Tooltip';
 import {Status} from '@components/Dashboard/Admin/UserManagement/UserStatus';
 import {DataValue} from '@components/Dashboard/Csv/Csv';
+import useAuth from '@customHooks/useAuth';
 import {UnitLookupDict} from '@dictionary/dictionary.iconoclast';
+import {logError} from '@graphql/functions';
 import {RoomStatus} from 'API';
 import Popover from 'atoms/Popover';
 import {GlobalContext} from 'contexts/GlobalContext';
@@ -51,20 +53,25 @@ const UnitListRow = ({
   const userLanguage = gContext.userLanguage;
   // ~~~~~~~~~~~~~~~~ STATE ~~~~~~~~~~~~~~~~ //
   const [showMenu, setShowMenu] = useState<boolean>(false);
-
+  const {authId, email} = useAuth();
   const getAttachedCourses = (): any[] => {
-    if (curricular) {
-      const filtered = curricular?.items?.filter((__item: any) => {
-        if (__item.universalSyllabus) {
-          return __item.universalSyllabus?.items.find(
-            (_item: any) => _item.unit.id === item.id
-          );
-        }
-      });
+    try {
+      if (curricular) {
+        const filtered = curricular?.items?.filter((__item: any) => {
+          if (__item.universalSyllabus) {
+            return __item.universalSyllabus?.items?.find(
+              (_item: any) => _item?.unit?.id === item?.id
+            );
+          }
+        });
 
-      return filtered;
+        return filtered;
+      }
+      return [];
+    } catch (error) {
+      logError(error, {authId, email}, 'UnitListRow @getAttachedCourses');
+      return [];
     }
-    return [];
   };
 
   const textClass = `text-sm leading-5 text-gray-800 hover:iconoclast:text-500 transition-all duration-50 hover:curate:text-500`;

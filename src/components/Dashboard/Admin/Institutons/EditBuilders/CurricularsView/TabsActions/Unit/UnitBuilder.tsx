@@ -170,39 +170,37 @@ const UnitBuilder = ({instId, curricular}: any) => {
       tooltipText: 'Add overview details in step 1 to continue'
     }
   ];
-  // const currentStepComp = (currentStep: string) => {
-  //   switch (currentStep) {
-  //     case 'overview':
-  //       return (
-  //         <AnimatedContainer show={currentStep === 'overview'}>
-  //           {currentStep === 'overview' && (
-  //             <UnitFormComponent
-  //               instId={instId}
-  //               syllabusDetails={syllabusData}
-  //               postAddSyllabus={postAddSyllabus}
-  //               onCancel={fetchSyllabusData}
-  //             />
-  //           )}
-  //         </AnimatedContainer>
-  //       );
-  //     case 'lessons':
-  //       return (
-  //         <AnimatedContainer show={currentStep === 'lessons'}>
-  //           {currentStep === 'lessons' && (
-  //             <LessonPlanManager
-  //               syllabusId={unitId}
-  //               syllabusDetails={syllabusData}
-  //               institutionId={instId || syllabusData?.institutionID}
-  //               savedLessonsList={savedLessonsList}
-  //               setSavedLessonsList={setSavedLessonsList}
-  //               lessonsIds={lessonsIds}
-  //               setLessonsIds={setLessonsIds}
-  //             />
-  //           )}
-  //         </AnimatedContainer>
-  //       );
-  //   }
-  // };
+  const currentStepComp = (currentStep: string) => {
+    switch (currentStep) {
+      case 'overview':
+        return (
+          <AnimatedContainer show={currentStep === 'overview'}>
+            {currentStep === 'overview' && (
+              <UnitFormComponent
+                instId={instId}
+                syllabusDetails={syllabusData}
+                postAddSyllabus={postAddSyllabus}
+                curricular={curricular}
+                setSyllabusDataParent={setSyllabusData}
+                onCancel={fetchSyllabusData}
+              />
+            )}
+          </AnimatedContainer>
+        );
+      case 'lessons':
+        return (
+          <LessonPlanManager
+            syllabusId={unitId}
+            syllabusDetails={syllabusData}
+            institutionId={instId || syllabusData?.institutionID}
+            savedLessonsList={savedLessonsList}
+            setSavedLessonsList={setSavedLessonsList}
+            lessonsIds={lessonsIds}
+            setLessonsIds={setLessonsIds}
+          />
+        );
+    }
+  };
 
   return (
     <div className="w-full h-full p-4">
@@ -243,37 +241,7 @@ const UnitBuilder = ({instId, curricular}: any) => {
               </div>
             </div>
           ) : (
-            <div className="">
-              <AnimatedContainer
-                animationType="translateY"
-                show={activeStep === 'overview'}>
-                {activeStep === 'overview' && (
-                  <UnitFormComponent
-                    instId={instId}
-                    syllabusDetails={syllabusData}
-                    postAddSyllabus={postAddSyllabus}
-                    curricular={curricular}
-                    setSyllabusDataParent={setSyllabusData}
-                    onCancel={fetchSyllabusData}
-                  />
-                )}
-              </AnimatedContainer>
-              <AnimatedContainer
-                animationType="translateY"
-                show={activeStep === 'lessons'}>
-                {activeStep === 'lessons' && (
-                  <LessonPlanManager
-                    syllabusId={unitId}
-                    syllabusDetails={syllabusData}
-                    institutionId={instId || syllabusData?.institutionID}
-                    savedLessonsList={savedLessonsList}
-                    setSavedLessonsList={setSavedLessonsList}
-                    lessonsIds={lessonsIds}
-                    setLessonsIds={setLessonsIds}
-                  />
-                )}
-              </AnimatedContainer>
-            </div>
+            <div className="">{currentStepComp(activeStep)}</div>
           )}
         </div>
       </div>

@@ -125,23 +125,27 @@ const CurriculumList = ({
         graphqlOperation(customQueries.listCurriculumsForSuperAdmin)
       );
 
-      const updatedList: ICurricular[] = list.data?.listCurricula?.items?.map(
-        (item: ICurricular) => ({
-          ...item,
-          institutionName: item?.institution?.name,
-          status: item?.status || RoomStatus.ACTIVE,
-          institutionId: item?.institution?.id,
-          universalSyllabus: {
-            ...(item.universalSyllabus || {}),
-            items: item.universalSyllabus?.items
-              ?.map((syllabus) => ({
-                ...syllabus,
-                index: item?.universalSyllabusSeq?.indexOf(syllabus.unit.id)
-              }))
-              .sort((a: any, b: any) => (a.index > b.index ? 1 : -1))
+      const updatedList: ICurricular[] = list.data?.listCurricula?.items
+        ?.map((item: ICurricular) => {
+          if (item) {
+            return {
+              ...item,
+              institutionName: item?.institution?.name,
+              status: item?.status || RoomStatus.ACTIVE,
+              institutionId: item?.institution?.id,
+              universalSyllabus: {
+                ...(item.universalSyllabus || {}),
+                items: item?.universalSyllabus?.items
+                  ?.map((syllabus) => ({
+                    ...syllabus,
+                    index: item?.universalSyllabusSeq?.indexOf(syllabus?.unit?.id)
+                  }))
+                  .sort((a: any, b: any) => (a.index > b.index ? 1 : -1))
+              }
+            };
           }
         })
-      );
+        .filter(Boolean);
 
       setCourseList(updatedList);
     } catch (error) {
