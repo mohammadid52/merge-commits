@@ -223,7 +223,7 @@ const LessonPlanManager = ({
       const selectedLesson = savedLessonIds.find((lesson) => lesson.lessonID === item.id);
       tableList = {
         ...item,
-        status: selectedLesson?.status || '',
+        status: selectedLesson?.status || RoomStatus.ACTIVE,
         uniqlessonId: selectedLesson?.id,
         measurements: selectedLesson?.measurements
       };
@@ -244,7 +244,8 @@ const LessonPlanManager = ({
 
     updatedTableList = updatedTableList
       .filter(
-        (_d) => _d.lesson.status.toLowerCase() === syllabusDetails.status.toLowerCase()
+        (_d) =>
+          _d?.lesson?.status?.toLowerCase() === syllabusDetails?.status?.toLowerCase()
       )
       .map((t: any) => {
         let index = lessonsIds?.indexOf(t.id);
