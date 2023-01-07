@@ -1,26 +1,32 @@
 #!/usr/bin/env sh
- set -e
+set -e
 
 branch=$(git symbolic-ref --short HEAD)
 
-
-
-echo $TEST_VAR
+NONE='\033[00m'
+RED='\033[01;31m'
+GREEN='\033[01;32m'
+YELLOW='\033[01;33m'
+PURPLE='\033[01;35m'
+CYAN='\033[01;36m'
+WHITE='\033[01;37m'
+BOLD='\033[1m'
+UNDERLINE='\033[4m'
 
 remove () {
     rm -rf amplify
+    echo ${RED}"Removed existing amplify folder"${NONE}
 }
 
 copy_content_schema(){
     cp ./src/api.schema.graphql ./amplify/backend/api/demoselready/schema.graphql
-    echo "<---copied--->"
+    echo ${GREEN}"<---Copied all contents from api.schema.graphql to schema.graphql--->"${NONE}
 }
 
 push_to_cloud(){
     amplify push \
     --yes || true
-
-    echo "pushed"
+    echo ${GREEN}"<---Pushed to cloud--->"${NONE}
 }
 
 
@@ -43,7 +49,7 @@ switch_profiles(){
 
 
 if [ "$AWS_ACCESS_ID" = ""  ] || [ "$AWS_SECRET_ACCESS_KEY" = "" ] ; then
-    echo "Aws config is missing"
+    echo ${RED}"<---Aws config is missing--->"${NONE}
     exit 0
 
 else 
@@ -78,7 +84,8 @@ else
     --amplify $AMPLIFY \
     --providers $PROVIDERS \
     --yes || true
-    echo "success pulled.. now copying content from api.schema.graphql to schema.graphql"
+
+    echo ${GREEN}"<---Successfully pulled... now copying content from api.schema.graphql to schema.graphql--->"${NONE}
 
     copy_content_schema
     

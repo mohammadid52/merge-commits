@@ -152,17 +152,17 @@ const LessonPlanManager = ({
   const addNewLesson = async () => {
     try {
       setAddingLesson(true);
-      const selectedLesson: any = allLessonsList.find(
+      const _selectedLesson: any = allLessonsList.find(
         (item) => item.id === selectedLesson.id
       );
 
       const lessonComponentPlan: any =
-        selectedLesson?.lessonPlan &&
-        selectedLesson.lessonPlan.map((item: any) => {
+        _selectedLesson?.lessonPlan &&
+        _selectedLesson.lessonPlan.map((item: any) => {
           return {
             disabled: false,
-            open: selectedLesson.type !== 'lesson' ? true : false,
-            active: selectedLesson.type !== 'lesson' ? true : false,
+            open: _selectedLesson.type !== 'lesson' ? true : false,
+            active: _selectedLesson.type !== 'lesson' ? true : false,
             stage: `checkpoint?id=${item.LessonComponentID}`,
             type: 'survey',
             displayMode: 'SELF'
@@ -170,8 +170,8 @@ const LessonPlanManager = ({
         });
       const input = {
         syllabusID: syllabusId,
-        lessonID: selectedLesson.id,
-        displayData: {breakdownComponent: selectedLesson?.type},
+        lessonID: _selectedLesson.id,
+        displayData: {breakdownComponent: _selectedLesson?.type},
         lessonPlan: lessonComponentPlan?.length > 0 ? lessonComponentPlan : [],
         status: RoomStatus.ACTIVE
       };
@@ -344,20 +344,19 @@ const LessonPlanManager = ({
   const handleDelete = async (lesson: any) => {
     setDeleting(true);
     try {
-      console.log('deleting...', lesson);
       await API.graphql(
         graphqlOperation(mutations.deleteUniversalSyllabusLesson, {
-          input: {id: lesson.uniqlessonId}
+          input: {id: lesson.id}
         })
       );
       await updateLessonSequence(
-        lessonsIds.filter((lessonId: any) => lessonId !== lesson.uniqlessonId)
+        lessonsIds.filter((lessonId: any) => lessonId !== lesson.id)
       );
       setSelectedLessonsList((list: any) =>
         list.filter((_item: any) => _item.id !== lesson.id)
       );
       setSavedLessonsList((prevList: any) =>
-        prevList.filter((item: any) => item.id !== lesson.uniqlessonId)
+        prevList.filter((item: any) => item.id !== lesson.id)
       );
     } catch (e) {
       logError(e, {authId, email}, 'LessonPlanManager @handleDelete');

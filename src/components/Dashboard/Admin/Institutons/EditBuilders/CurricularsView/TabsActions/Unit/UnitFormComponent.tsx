@@ -5,19 +5,14 @@ import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
 import MultipleSelector from 'atoms/Form/MultipleSelector';
 
+import Label from '@components/Atoms/Form/Label';
+import Selector from '@components/Atoms/Form/Selector';
+import {RoomStatus} from 'API';
 import {GlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import * as mutations from 'graphql/mutations';
 import {languageList} from 'utilities/staticData';
-import Selector from '@components/Atoms/Form/Selector';
-import {RoomStatus, UniversalSyllabus} from 'API';
 import {RoomStatusList} from '../CourseBuilder/CourseFormComponent';
-import {getImageFromS3Static} from '@utilities/services';
-import Placeholder from '@components/Atoms/Placeholder';
-import Label from '@components/Atoms/Form/Label';
-import {useHistory} from 'react-router';
-import {orderBy} from 'lodash';
-import Tooltip from '@components/Atoms/Tooltip';
 import AttachedCourses from './AttachedCourses';
 
 interface AddSyllabusProps {
@@ -26,8 +21,8 @@ interface AddSyllabusProps {
   onCancel: () => void;
   instId: string;
   isInModal?: boolean;
-  curricular: any;
-  setSyllabusDataParent: React.Dispatch<React.SetStateAction<any>>;
+  curricular?: any;
+  setSyllabusDataParent?: React.Dispatch<React.SetStateAction<any>>;
 }
 interface InitialData {
   name: string;
@@ -161,24 +156,25 @@ const UnitFormComponent = ({
             })
           );
           const savedData = res.data.updateUniversalSyllabus;
-          setSyllabusDataParent({
-            ...syllabusData,
-            institutionID: savedData.institutionID,
-            id: savedData.id,
-            name: savedData.name,
-            languages: languageList.filter((item) =>
-              savedData.languages.includes(item.value)
-            ),
-            description: savedData.description,
-            objectives: savedData.objectives,
-            purpose: savedData.pupose,
-            methodology: savedData.methodology,
-            policies: savedData.policies,
-            lessonHistory: savedData.lessonHistory,
-            secondary: savedData.secondary || '',
-            priorities: savedData.priorities,
-            status: savedData.status || RoomStatus.ACTIVE
-          });
+          setSyllabusDataParent &&
+            setSyllabusDataParent({
+              ...syllabusData,
+              institutionID: savedData.institutionID,
+              id: savedData.id,
+              name: savedData.name,
+              languages: languageList.filter((item) =>
+                savedData.languages.includes(item.value)
+              ),
+              description: savedData.description,
+              objectives: savedData.objectives,
+              purpose: savedData.pupose,
+              methodology: savedData.methodology,
+              policies: savedData.policies,
+              lessonHistory: savedData.lessonHistory,
+              secondary: savedData.secondary || '',
+              priorities: savedData.priorities,
+              status: savedData.status || RoomStatus.ACTIVE
+            });
           setMessages({
             show: true,
             message: AddSyllabusDict[userLanguage]['messages']['unitupdate'],
@@ -327,12 +323,14 @@ const UnitFormComponent = ({
               label={AddSyllabusDict[userLanguage]['objective']}
             />
           </div>
-          <div>
-            <Label label="Attached courses" />
-            <div className="mt-1">
-              <AttachedCourses curricular={curricular} unitId={syllabusDetails.id} />
+          {curricular && (
+            <div>
+              <Label label="Attached courses" />
+              <div className="mt-1">
+                <AttachedCourses curricular={curricular} unitId={syllabusDetails.id} />
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
       {messages.show ? (

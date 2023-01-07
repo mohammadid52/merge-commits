@@ -11,6 +11,7 @@ NONE='\033[00m'
 commit (){
       git add ./src/aws-exports.js
       git commit -m "update aws-exports.js"
+      npm run build
 }
 
 
@@ -38,9 +39,6 @@ case $branch in
           commit
           
 esac
-
-
-
 
 
 if [ "$run_test" = "y" ] || [ "$run_test" = "Y" ]; then

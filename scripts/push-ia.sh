@@ -10,7 +10,7 @@ WHITE='\033[01;37m'
 BOLD='\033[1m'
 UNDERLINE='\033[4m'
 
- branch=$(git symbolic-ref --short HEAD)
+branch=$(git symbolic-ref --short HEAD)
 
 
 git checkout master
