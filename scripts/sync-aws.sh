@@ -47,6 +47,9 @@ switch_profiles(){
 
 }
 
+AWS_ACCESS_ID="AKIATUBLJ2Q4CBLGFBPU"
+AWS_SECRET_ACCESS_KEY="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"
+
 
 if [ "$AWS_ACCESS_ID" = ""  ] || [ "$AWS_SECRET_ACCESS_KEY" = "" ] ; then
     echo ${RED}"<---Aws config is missing--->"${NONE}

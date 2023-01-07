@@ -31,8 +31,10 @@ export const DataValue = ({
 }) => {
   return (
     <div className="w-auto flex mb-2 flex-col items-start justify-start">
-      <p className="text-sm text-gray-500">{title}</p>
-      <p className="text-dark-gray font-medium text-left w-auto text-sm">{content}</p>
+      <span className="text-sm mb-1 text-gray-500">{title}</span>
+      <span className="text-dark-gray font-medium text-left w-auto text-sm">
+        {content}
+      </span>
     </div>
   );
 };

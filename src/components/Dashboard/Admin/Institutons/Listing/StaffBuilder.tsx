@@ -460,7 +460,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
         {!dataLoading ? (
           <>
             {finalList?.length > 0 ? (
-              <div className="w-screen lg:w-auto overflow-x-hidden">
+              <div className=" lg:w-auto overflow-x-hidden">
                 <div className="w-full pt-8 m-auto border-b-0 border-gray-200">
                   <div className="flex justify-between bg-gray-50 pr-2 whitespace-nowrap">
                     <div className="w-.5/10 px-8 py-4 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">

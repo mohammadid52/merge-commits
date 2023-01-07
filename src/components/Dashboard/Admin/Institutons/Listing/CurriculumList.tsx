@@ -1,4 +1,5 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import Filters, {SortType} from '@components/Atoms/Filters';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import useAuth from '@customHooks/useAuth';
 import useSearch from '@customHooks/useSearch';
@@ -18,7 +19,6 @@ import ModalPopUp from 'molecules/ModalPopUp';
 import React, {Fragment, useContext, useEffect, useState} from 'react';
 import {useHistory, useRouteMatch} from 'react-router';
 import CurriculumListRow from './CurriculumListRow';
-import {Filters, SortType} from './RoomsList';
 
 interface CurriculumListProps {
   curricular?: {items: ICurricular[]};
@@ -99,24 +99,24 @@ const CurriculumList = ({
     }
   };
 
-  useEffect(() => {
-    if (curricular?.items?.length) {
-      const updatedList: ICurricular[] = curricular.items?.map((item: ICurricular) => ({
-        ...item,
-        status: item?.status || RoomStatus.ACTIVE,
-        universalSyllabus: {
-          ...(item.universalSyllabus || {}),
-          items: item.universalSyllabus?.items
-            ?.map((syllabus) => ({
-              ...syllabus,
-              index: item?.universalSyllabusSeq?.indexOf(syllabus.unit.id)
-            }))
-            .sort((a: any, b: any) => (a.index > b.index ? 1 : -1))
-        }
-      }));
-      setCourseList(updatedList);
-    }
-  }, [curricular?.items?.length]);
+  // useEffect(() => {
+  //   if (curricular?.items?.length) {
+  //     const updatedList: ICurricular[] = curricular.items?.map((item: ICurricular) => ({
+  //       ...item,
+  //       status: item?.status || RoomStatus.ACTIVE,
+  //       universalSyllabus: {
+  //         ...(item.universalSyllabus || {}),
+  //         items: item.universalSyllabus?.items
+  //           ?.map((syllabus) => ({
+  //             ...syllabus,
+  //             index: item?.universalSyllabusSeq?.indexOf(syllabus.unit.id)
+  //           }))
+  //           .sort((a: any, b: any) => (a.index > b.index ? 1 : -1))
+  //       }
+  //     }));
+  //     setCourseList(updatedList);
+  //   }
+  // }, [curricular?.items?.length]);
 
   const fetchCurriculums = async () => {
     try {
@@ -124,6 +124,7 @@ const CurriculumList = ({
       const list: any = await API.graphql(
         graphqlOperation(customQueries.listCurriculumsForSuperAdmin)
       );
+
       const updatedList: ICurricular[] = list.data?.listCurricula?.items?.map(
         (item: ICurricular) => ({
           ...item,
@@ -301,12 +302,13 @@ const CurriculumList = ({
     }
   };
 
-  const [hoveringItem, setHoveringItem] = useState<{name?: string}>({});
+  const [hoveringItem, setHoveringItem] = useState<{name?: string; id?: string}>({});
 
   const currentSelectedItem =
     hoveringItem &&
     hoveringItem?.name &&
-    courseList?.find((_c: any) => _c.name === hoveringItem?.name);
+    hoveringItem?.id &&
+    courseList?.find((_c: any) => _c.id === hoveringItem?.id);
 
   // ##################################################################### //
   // ############################### OUTPUT ############################## //
@@ -355,7 +357,12 @@ const CurriculumList = ({
           }
         />
 
-        <Filters updateFilter={updateFilter} filters={filters} />
+        <Filters
+          loading={loading}
+          list={courseList}
+          updateFilter={updateFilter}
+          filters={filters}
+        />
 
         {loading ? (
           <div className="py-20 text-center mx-auto flex justify-center items-center w-full h-48">
@@ -406,13 +413,16 @@ const CurriculumList = ({
 
             <tbody className="mb-8 w-full m-auto flex-1 overflow-y-auto">
               {finalList.map(
-                (item, index) =>
+                (item: any, index) =>
                   item && (
                     <CurriculumListRow
                       key={`curr_list_row_${index}`}
                       index={index}
                       searchInput={searchInput.value}
                       isSuperAdmin={isSuperAdmin}
+                      isLast={
+                        finalList.length - 1 === index || finalList.length - 2 === index
+                      }
                       currentSelectedItem={currentSelectedItem}
                       setHoveringItem={setHoveringItem}
                       hoveringItem={hoveringItem}

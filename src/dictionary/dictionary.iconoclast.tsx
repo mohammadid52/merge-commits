@@ -1242,7 +1242,7 @@ const Institute_class: any = {
 };
 const InstitueCurriculum: any = {
   EN: {
-    TITLE: 'Courses',
+    TITLE: 'Course List',
     BUTTON: {
       ADD: 'New Course'
     },
@@ -1250,7 +1250,7 @@ const InstitueCurriculum: any = {
     NAME: 'Course Name',
     INSTITUTION_NAME: 'Institution Name',
     COURSE_TYPE: 'Course Type',
-    UNITS: 'Units',
+    UNITS: 'Course Units',
     ACTION: 'Actions',
     VIEW: 'View',
     INFO: 'This institute does not have any course. Please create a new course.',

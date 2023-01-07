@@ -1242,7 +1242,7 @@ const Institute_class: any = {
 };
 const InstitueCurriculum: any = {
   EN: {
-    TITLE: 'Courses',
+    TITLE: 'Course List',
     BUTTON: {
       ADD: 'New Course'
     },

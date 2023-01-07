@@ -3527,6 +3527,7 @@ export const GetInstitutionDetails = /* GraphQL */ `
               id
               unit {
                 id
+                status
                 name
               }
             }

@@ -6,22 +6,19 @@ import * as mutations from 'graphql/mutations';
 import React, {useContext, useEffect, useState} from 'react';
 import {useHistory, useRouteMatch} from 'react-router';
 
+import Filters, {SortType} from '@components/Atoms/Filters';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import useSearch from '@customHooks/useSearch';
+import {InstitueRomms} from '@dictionary/dictionary.iconoclast';
+import {RoomStatus} from 'API';
 import SearchInput from 'atoms/Form/SearchInput';
 import Selector from 'atoms/Form/Selector';
 import Loader from 'atoms/Loader';
 import ErrorBoundary from 'components/Error/ErrorBoundary';
 import * as customQueries from 'customGraphql/customQueries';
+import {orderBy} from 'lodash';
 import ModalPopUp from 'molecules/ModalPopUp';
 import UnitListRow from './UnitListRow';
-import {orderBy} from 'lodash';
-import {RoomStatus} from 'API';
-import {
-  Filters,
-  SortType
-} from '@components/Dashboard/Admin/Institutons/Listing/RoomsList';
-import {InstitueRomms} from '@dictionary/dictionary.iconoclast';
 
 export const UnitList = ({instId, curricular}: any) => {
   const history = useHistory();
@@ -331,7 +328,12 @@ export const UnitList = ({instId, curricular}: any) => {
           }
         />
 
-        <Filters updateFilter={updateFilter} filters={filters} />
+        <Filters
+          loading={loading}
+          list={units}
+          updateFilter={updateFilter}
+          filters={filters}
+        />
 
         {loading ? (
           <div className="py-20 text-center mx-auto flex justify-center items-center w-full h-48">
@@ -387,6 +389,9 @@ export const UnitList = ({instId, curricular}: any) => {
                       setHoveringItem={setHoveringItem}
                       currentSelectedItem={currentSelectedItem}
                       item={unit}
+                      isLast={
+                        finalList.length - 1 === index || finalList.length - 2 === index
+                      }
                       checkIfRemovable={checkIfRemovable}
                       curricular={curricular}
                       handleToggleDelete={handleToggleDelete}

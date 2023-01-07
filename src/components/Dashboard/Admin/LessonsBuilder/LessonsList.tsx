@@ -1,5 +1,6 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import AddButton from '@components/Atoms/Buttons/AddButton';
+import Filters, {SortType} from '@components/Atoms/Filters';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import ErrorBoundary from '@components/Error/ErrorBoundary';
 import ListBottomBar from '@components/Molecules/ListBottomBar';
@@ -25,7 +26,7 @@ import {IoArrowUndoCircleOutline} from 'react-icons/io5';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {useHistory, useRouteMatch} from 'react-router-dom';
 import {getLanguageString} from 'utilities/strings';
-import {Filters, SortType} from '../Institutons/Listing/RoomsList';
+
 import CloneLesson from './CloneLesson';
 import LessonListLoader from './LessonListLoader';
 import LessonsListRow from './LessonsListRow';
@@ -482,7 +483,12 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
           />
         </div>
         <div className="px-8">
-          <Filters updateFilter={updateFilter} filters={filters} />
+          <Filters
+            loading={status !== 'done'}
+            list={currentList}
+            updateFilter={updateFilter}
+            filters={filters}
+          />
         </div>
 
         {/* List / Table */}

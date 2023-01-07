@@ -2,6 +2,7 @@ import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import React, {Fragment, useContext, useEffect, useState} from 'react';
 import {useHistory, useRouteMatch} from 'react-router';
 
+import Filters, {SortType} from '@components/Atoms/Filters';
 import Highlighted from '@components/Atoms/Highlighted';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import useAuth from '@customHooks/useAuth';
@@ -16,33 +17,8 @@ import {GlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import * as queries from 'graphql/queries';
-import {Status} from '../../UserManagement/UserStatus';
 import {orderBy} from 'lodash';
-import Buttons from '@components/Atoms/Buttons';
-
-export type SortType = 'ACTIVE' | 'TRAINING' | 'INACTIVE';
-
-export const Filters = ({updateFilter, filters}: {updateFilter: any; filters: any}) => (
-  <div className="flex items-center justify-end">
-    <div className="flex gap-x-4 my-4 items-center">
-      <Buttons
-        onClick={() => updateFilter('ACTIVE')}
-        transparent={filters !== 'ACTIVE'}
-        label={'Active'}
-      />
-      <Buttons
-        onClick={() => updateFilter('INACTIVE')}
-        transparent={filters !== 'INACTIVE'}
-        label={'Inactive'}
-      />
-      <Buttons
-        onClick={() => updateFilter('TRAINING')}
-        transparent={filters !== 'TRAINING'}
-        label={'Training'}
-      />
-    </div>
-  </div>
-);
+import {Status} from '../../UserManagement/UserStatus';
 
 const Room = ({
   i,
@@ -401,7 +377,12 @@ const RoomsList = (props: RoomListProps) => {
           />
         </div>
 
-        <Filters updateFilter={updateFilter} filters={filters} />
+        <Filters
+          loading={loading}
+          list={roomList}
+          updateFilter={updateFilter}
+          filters={filters}
+        />
 
         {loading ? (
           <div className="py-20 text-center mx-auto flex justify-center items-center w-full h-48">

@@ -1,21 +1,22 @@
+import BriefPopover from '@components/Atoms/BriefPopover';
+import Highlighted from '@components/Atoms/Highlighted';
+import Tooltip from '@components/Atoms/Tooltip';
+import {Status} from '@components/Dashboard/Admin/UserManagement/UserStatus';
+import {DataValue} from '@components/Dashboard/Csv/Csv';
+import {UnitLookupDict} from '@dictionary/dictionary.iconoclast';
+import {RoomStatus} from 'API';
 import Popover from 'atoms/Popover';
 import {GlobalContext} from 'contexts/GlobalContext';
-import {UnitLookupDict} from '@dictionary/dictionary.iconoclast';
+import {truncate} from 'lodash';
+import moment from 'moment';
 import React, {useContext, useState} from 'react';
 import {BiDotsVerticalRounded} from 'react-icons/bi';
-import Highlighted from '@components/Atoms/Highlighted';
-import {Status} from '@components/Dashboard/Admin/UserManagement/UserStatus';
-import ClickAwayListener from 'react-click-away-listener';
-import {Transition} from '@headlessui/react';
-import {RoomStatus} from 'API';
-import {DataValue} from '@components/Dashboard/Csv/Csv';
 import AttachedCourses from './AttachedCourses';
-import moment from 'moment';
-import {truncate} from 'lodash';
 
 interface IUnitListRowProps {
   index: number;
   isSuperAdmin?: boolean;
+  isLast?: boolean;
   item: any;
   checkIfRemovable: any;
   handleToggleDelete: any;
@@ -42,7 +43,8 @@ const UnitListRow = ({
   hoveringItem,
   setHoveringItem,
   currentSelectedItem,
-  curricular
+  curricular,
+  isLast
 }: IUnitListRowProps) => {
   // ~~~~~~~~~~ CONTEXT_SPLITTING ~~~~~~~~~~ //
   const gContext = useContext(GlobalContext);
@@ -91,61 +93,54 @@ const UnitListRow = ({
           isSuperAdmin ? 'w-1.5/10' : 'w-4/10'
         } flex items-center relative hover:underline hover:theme-text:400 px-8 py-4  cursor-pointer text-sm leading-5 font-medium whitespace-normal`}>
         <Highlighted text={item.name} highlight={searchInput} />
-        {hoveringItem?.name === item.name && currentSelectedItem && (
-          <ClickAwayListener onClickAway={() => setHoveringItem({})}>
-            <Transition
-              style={{
-                top: '0rem',
-                bottom: '1.5rem',
-                right: '-90%',
-                zIndex: 999999
-              }}
-              className="hidden md:block cursor-pointer select-none  absolute  text-black "
-              show={Boolean(hoveringItem && hoveringItem.name)}>
-              <div className="bg-white flex flex-col border-gray-200 rounded-xl  customShadow border-0 p-4  min-w-70 max-w-70 w-auto">
-                <h1 className="text-base text-gray-700 mb-2">Unit Details</h1>
-                <hr />
 
-                <div className="mt-2">
-                  <DataValue
-                    title={'Status'}
-                    content={
-                      <p
-                        className={`${
-                          currentSelectedItem.status === RoomStatus.ACTIVE
-                            ? 'text-green-500'
-                            : 'text-yellow-500'
-                        } uppercase`}>
-                        {currentSelectedItem.status || RoomStatus.ACTIVE}
-                      </p>
-                    }
-                  />
-                </div>
+        <BriefPopover
+          header="Unit Details"
+          isLast={isLast}
+          clear={() => setHoveringItem({})}
+          show={hoveringItem?.name === item.name && currentSelectedItem}>
+          {hoveringItem?.name === item.name && currentSelectedItem && (
+            <>
+              <div className="gap-x-4 mt-2 grid grid-cols-3">
                 <DataValue
-                  title={'Created date'}
-                  content={moment(item.createdAt).format('lll')}
-                />
-                <DataValue
-                  title={'Last update'}
-                  content={moment(item.updatedAt).format('lll')}
-                />
-                <DataValue
-                  title={'Description'}
+                  title={'Status'}
                   content={
-                    truncate(currentSelectedItem?.description, {length: 200}) || '--'
+                    <p
+                      className={`${
+                        currentSelectedItem.status === RoomStatus.ACTIVE
+                          ? 'text-green-500'
+                          : 'text-yellow-500'
+                      } uppercase`}>
+                      {currentSelectedItem.status || RoomStatus.ACTIVE}
+                    </p>
                   }
                 />
 
-                <div className="mt-2">
-                  <DataValue
-                    title={`Attached courses (${getAttachedCourses().length})`}
-                    content={<AttachedCourses curricular={curricular} unitId={item.id} />}
-                  />
-                </div>
+                <DataValue
+                  title={'Created date'}
+                  content={moment(item.createdAt).format('ll')}
+                />
+                <DataValue
+                  title={'Last update'}
+                  content={moment(item.updatedAt).format('ll')}
+                />
               </div>
-            </Transition>
-          </ClickAwayListener>
-        )}
+              <DataValue
+                title={'Description'}
+                content={
+                  truncate(currentSelectedItem?.description, {length: 200}) || '--'
+                }
+              />
+
+              <div className="mt-2">
+                <DataValue
+                  title={`Attached courses (${getAttachedCourses().length})`}
+                  content={<AttachedCourses curricular={curricular} unitId={item.id} />}
+                />
+              </div>
+            </>
+          )}
+        </BriefPopover>
       </td>
 
       {isSuperAdmin && (
@@ -168,12 +163,17 @@ const UnitListRow = ({
               (lesson: {id: string; lesson: {id: string; title: string}}) => {
                 if (lesson) {
                   return (
-                    <li
-                      className="mb-2 cursor-pointer hover:underline hover:theme-text:400"
-                      key={lesson.lesson.id}
-                      onClick={() => redirectToLesson(lesson.lesson.id)}>
-                      {lesson.lesson.title}
-                    </li>
+                    <Tooltip
+                      text={`Go to ${lesson.lesson.title}`}
+                      placement="left"
+                      key={lesson.id}>
+                      <li
+                        className="mb-2 cursor-pointer hover:underline hover:theme-text:400"
+                        key={lesson.lesson.id}
+                        onClick={() => redirectToLesson(lesson.lesson.id)}>
+                        {lesson.lesson.title}
+                      </li>
+                    </Tooltip>
                   );
                 }
               }
