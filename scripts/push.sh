@@ -11,7 +11,7 @@ NONE='\033[00m'
 commit (){
       git add ./src/aws-exports.js
       git commit -m "update aws-exports.js"
-      npm run build
+
 }
 
 

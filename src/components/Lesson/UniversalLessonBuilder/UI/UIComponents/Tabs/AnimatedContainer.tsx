@@ -43,7 +43,7 @@ const AnimatedContainer = ({
   };
   return (
     <div
-      style={{transitionDelay: delay, zIndex: zIndex || 'unset'}}
+      style={{transitionDelay: delay}}
       className={`
         ${genAnimation()}
         transition-all  transform
