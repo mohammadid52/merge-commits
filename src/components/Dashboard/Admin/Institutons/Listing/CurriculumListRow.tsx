@@ -257,7 +257,7 @@ const CurriculumListRow = ({
       </td>
       <td
         className={`w-3/10 items-center text-gray-500 px-8 py-4 text-left text-sm leading-4 font-medium whitespace-normal`}>
-        <ul className="list-decimal">
+        <ol className="list-decimal">
           {filteredUnits?.length > 0 ? (
             filteredUnits?.map((unit) => (
               <Tooltip
@@ -275,7 +275,7 @@ const CurriculumListRow = ({
           ) : (
             <p className="">No unit</p>
           )}
-        </ul>
+        </ol>
       </td>
       <td
         className={`text-sm w-1/10 leading-4 font-medium whitespace-normal break-normal text-gray-500`}>

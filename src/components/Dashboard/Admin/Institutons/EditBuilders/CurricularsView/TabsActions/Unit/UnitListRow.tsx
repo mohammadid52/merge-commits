@@ -165,7 +165,7 @@ const UnitListRow = ({
           isSuperAdmin ? 'w-2/10' : 'w-4/10'
         } items-center text-left px-8 py-4 text-sm leading-4 text-gray-500 whitespace-normal cursor-pointer`}>
         {item.lessons?.items?.length > 0 ? (
-          <ul className="list-disc">
+          <ol className="list-decimal">
             {item.lessons?.items?.map(
               (lesson: {id: string; lesson: {id: string; title: string}}) => {
                 if (lesson) {
@@ -185,7 +185,7 @@ const UnitListRow = ({
                 }
               }
             )}
-          </ul>
+          </ol>
         ) : (
           <p className="">No lesson plan</p>
         )}
