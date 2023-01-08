@@ -7,7 +7,51 @@ import {orderBy} from 'lodash';
 import React, {ReactNode, useContext, useEffect, useRef, useState} from 'react';
 import {FaSpinner} from 'react-icons/fa';
 import {IoClose} from 'react-icons/io5';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
+
+const SelectorItem = ({
+  item,
+  dataCy,
+  setHoveringItem,
+  updateSelectedItem,
+  isSelected,
+  index
+}: {
+  dataCy: string;
+  setHoveringItem?: any;
+  isSelected: (name: string) => boolean;
+  index: number;
+  updateSelectedItem: (str: string, name: string, id: string) => void;
+  item: {
+    name: string;
+    id: any;
+    value: string;
+  };
+}) => {
+  return (
+    <>
+      <li
+        data-cy={`${dataCy}-item-${item.id}`}
+        onMouseEnter={() => {
+          setHoveringItem && setHoveringItem(item);
+        }}
+        title={item.name}
+        onMouseLeave={() => {
+          setHoveringItem && setHoveringItem({});
+        }}
+        onClick={() => updateSelectedItem(item.value, item.name, item.id)}
+        id={item.id}
+        tabIndex={index}
+        role="option"
+        className={`flex cursor-pointer  select-none relative py-2 pl-8 pr-4 ${
+          isSelected(item.name)
+            ? 'iconoclast:bg-main text-white'
+            : 'hover:bg-indigo-100 hover:text-indigo-400'
+        }`}>
+        <span className={`block truncate`}>{item.name}</span>
+      </li>
+    </>
+  );
+};
 
 interface SelectorProps {
   list?: {id: number; name: string | number; popoverElement?: ReactNode}[];
@@ -108,41 +152,6 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
 
   const isSelected = (name: string) => name && selectedItem === name;
 
-  const SelectorItem = ({
-    item
-  }: {
-    item: {
-      name: string;
-      id: any;
-      value: string;
-    };
-  }) => {
-    return (
-      <>
-        <li
-          data-cy={`${dataCy}-item-${item.id}`}
-          onMouseEnter={() => {
-            setHoveringItem && setHoveringItem(item);
-          }}
-          title={item.name}
-          onMouseLeave={() => {
-            setHoveringItem && setHoveringItem({});
-          }}
-          onClick={() => updateSelectedItem(item.value, item.name, item.id)}
-          id={item.id}
-          tabIndex={-1}
-          role="option"
-          className={`flex cursor-pointer  select-none relative py-2 pl-8 pr-4 ${
-            isSelected(item.name)
-              ? 'iconoclast:bg-main text-white'
-              : 'hover:bg-indigo-100 hover:text-indigo-400'
-          }`}>
-          <span className={`block truncate`}>{item.name}</span>
-        </li>
-      </>
-    );
-  };
-
   const clearSort = () => {
     onClear && onClear();
     if (setSelectedItem) {
@@ -222,14 +231,10 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
               arrowHidden ? 'hidden' : 'flex'
             }`}>
             {loading ? (
-              <IconContext.Provider
-                value={{
-                  size: '1.2rem',
-                  style: {},
-                  className: `relative mr-2 w-auto animate-spin ${theme.textColor[themeColor]}`
-                }}>
-                <FaSpinner />
-              </IconContext.Provider>
+              <FaSpinner
+                size={'1.2rem'}
+                className={`relative mr-2 w-auto animate-spin ${theme.textColor[themeColor]}`}
+              />
             ) : (
               <svg
                 className="h-5 w-5 text-gray-400"
@@ -261,12 +266,25 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
               } relative  max-h-60 text-base overflow-y-auto leading-6 focus:shadow-none focus:outline-none sm:text-sm sm:leading-5`}>
               {list.length > 0 ? (
                 sortedList.map(
-                  (item: {
-                    popoverElement?: any;
-                    name: string;
-                    id: any;
-                    value: string;
-                  }) => <SelectorItem item={item} key={item.id} />
+                  (
+                    item: {
+                      popoverElement?: any;
+                      name: string;
+                      id: any;
+                      value: string;
+                    },
+                    index
+                  ) => (
+                    <SelectorItem
+                      isSelected={isSelected}
+                      index={index}
+                      updateSelectedItem={updateSelectedItem}
+                      setHoveringItem={setHoveringItem}
+                      dataCy={dataCy}
+                      item={item}
+                      key={item.id}
+                    />
+                  )
                 )
               ) : (
                 <li className="flex justify-center relative py-2 px-4">

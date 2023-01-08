@@ -188,7 +188,7 @@ const LessonPlanManager = ({
           })
         );
         associatedRooms?.data.listRooms.items?.map(async (room: any) => {
-          const updatedRoomResult: any = await API.graphql(
+          await API.graphql(
             graphqlOperation(mutations.updateRoom, {
               input: {id: room.id, activeLessons: [selectedLesson.id]}
             })
@@ -218,6 +218,7 @@ const LessonPlanManager = ({
     const savedLessonIds = [...savedLessonsList];
     const lessonsDetails = [...allLessonsList];
     const filteredList = savedLessonIds;
+
     let updatedTableList = filteredList.map((item) => {
       let tableList;
       const selectedLesson = savedLessonIds.find((lesson) => lesson.lessonID === item.id);
@@ -230,14 +231,17 @@ const LessonPlanManager = ({
       return tableList;
     });
 
-    const filteredDropDownList = allLessonsList
-      .filter((item) =>
-        updatedTableList.find((lesson) => lesson.id === item.id) ? false : true
+    const filteredDropDownList = lessonsDetails
+      .filter(
+        (item) =>
+          !Boolean(
+            updatedTableList.find(
+              (lesson) => lesson.lesson && lesson.lesson.id === item.id
+            )
+          ) && Boolean(item.lessonPlan)
       )
-      .filter((item: any) => (item.lessonPlan ? true : false))
       .map((item: {id: string; title: string; type: string; targetAudience: string}) => ({
         id: item.id,
-        // name: `${item.title} - ${item.type && getLessonType(item.type)}`,
         name: `${item.title} - ${item.targetAudience || 'All'}`,
         value: item.title
       }));
@@ -379,7 +383,6 @@ const LessonPlanManager = ({
         show: !warnModal.show,
         lessonEdit: true
       });
-      // setEditLesson({type, id});
     } else {
       history.push(
         isSuperAdmin
@@ -471,6 +474,7 @@ const LessonPlanManager = ({
                             {(provided, snapshot) => {
                               return (
                                 <div
+                                  key={`${item.id}_key`}
                                   className={`${
                                     snapshot.isDragging
                                       ? 'theme-bg:100 transition-all isDragging'
@@ -479,9 +483,7 @@ const LessonPlanManager = ({
                                   ref={provided.innerRef}
                                   {...provided.draggableProps}
                                   {...provided.dragHandleProps}>
-                                  <div
-                                    key={index}
-                                    className="flex justify-between w-full px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
+                                  <div className="flex justify-between w-full px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
                                     <LessonPlanManagerRow
                                       index={index}
                                       lessonObject={item.lesson}
@@ -507,11 +509,16 @@ const LessonPlanManager = ({
         ) : (
           <div className="text-center p-16 mt-4">
             <Empty
-              text={`No lesson found - current unit status is ${syllabusDetails.status}`}
+              text={`No lesson found - current unit status is ${
+                syllabusDetails?.status?.toLowerCase() ||
+                RoomStatus.ACTIVE.toLocaleLowerCase()
+              }`}
             />
           </div>
         )}
       </div>
+
+      {messages.show && <p className="text-sm text-red-500">{messages.message}</p>}
 
       {deleteModal.show && (
         <ModalPopUp
