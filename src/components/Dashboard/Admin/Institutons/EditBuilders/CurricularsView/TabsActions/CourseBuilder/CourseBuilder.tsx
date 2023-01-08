@@ -97,15 +97,27 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
           )
         ]);
         const savedData = curriculumResult.data.getCurriculum;
-        const sortedSyllabusList = [...curriculumUnits?.data.listCurriculumUnits?.items]
+
+        const sortedSyllabusList = [
+          ...curriculumUnits?.data.listCurriculumUnits?.items
+        ].filter((d) => d.unit !== null);
+
+        const updatedSeq = savedData.universalSyllabusSeq.filter((id: any) => {
+          return Boolean(
+            sortedSyllabusList.find((d) => d.unit !== null && id === d.unitId)
+          );
+        });
+
+        const mapped = sortedSyllabusList
           .map((t: any) => {
-            let index = savedData.universalSyllabusSeq.indexOf(t.unitId);
+            let index = updatedSeq.indexOf(t.unitId);
             return {...t, index};
           })
           .sort((a: any, b: any) => (a.index > b.index ? 1 : -1));
         setCourseData(savedData);
-        setSyllabusIds(savedData.universalSyllabusSeq || []);
-        setSavedSyllabusList(sortedSyllabusList);
+        setSyllabusIds(updatedSeq || []);
+
+        setSavedSyllabusList(mapped);
         setFetchingDetails(false);
       } catch {
         setMessages({
@@ -251,7 +263,7 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
             </div>
           ) : (
             <div className="">
-              <AnimatedContainer
+              {/* <AnimatedContainer
                 animationType="translateY"
                 show={activeStep === 'overview'}>
                 {activeStep === 'overview' && (
@@ -290,7 +302,8 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
                 {activeStep === 'demographics' && (
                   <CheckpointList curricularId={courseId} institutionId={instId} />
                 )}
-              </AnimatedContainer>
+              </AnimatedContainer> */}
+              {currentStepComp(activeStep)}
             </div>
           )}
         </div>
