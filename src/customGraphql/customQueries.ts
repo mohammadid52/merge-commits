@@ -2241,16 +2241,15 @@ export const listCurriculumsForSuperAdmin = /* GraphQL */ `
     }
   }
 `;
-
 export const listCurriculumsForLessons = /* GraphQL */ `
-  query ListCurriculums(
+  query ListCurricula(
     $id: ID
     $filter: ModelCurriculumFilterInput
     $limit: Int
     $nextToken: String
     $sortDirection: ModelSortDirection
   ) {
-    listCurriculums(
+    listCurricula(
       id: $id
       filter: $filter
       limit: $limit
@@ -2288,6 +2287,7 @@ export const listCurriculumsForLessons = /* GraphQL */ `
           nextToken
         }
       }
+
       nextToken
     }
   }
@@ -2769,6 +2769,7 @@ export const getUniversalSyllabus = /* GraphQL */ `
           id
           syllabusID
           lessonID
+
           status
           lesson {
             id
@@ -2776,9 +2777,13 @@ export const getUniversalSyllabus = /* GraphQL */ `
             label
             title
             status
+            summary
+            cardImage
+            cardCaption
             lessonPlan {
               id
               title
+              estTime
               label
             }
           }

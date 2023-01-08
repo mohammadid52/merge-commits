@@ -429,9 +429,10 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
     }
   }, []);
 
-  const withTitle = lessonData
-    ? lessonData.map((item: any) => ({...item, lessonTitle: item?.lesson?.title || ''}))
-    : [];
+  const addTitle = (data: any[]) =>
+    data.map((item: any) => ({...item, lessonTitle: item?.lesson?.title || ''}));
+
+  const withTitle = lessonData ? addTitle(lessonData) : [];
 
   const [filteredList, setFilteredList] = useState([...withTitle]);
 

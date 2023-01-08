@@ -34,14 +34,14 @@ const EvidenceTab = ({
         fetchCurriculum();
       }
     }
-  }, [curTab, selectedCurriculumList, selectedMeasurements]);
+  }, [curTab]);
 
   const fetchObjectives = async (curricularId: string) => {
     const learningEvidenceList: any[] = [];
 
     setEvidenceListLoading(true);
     let rubricList: any = await API.graphql(
-      graphqlOperation(customQueries.listRubrics, {
+      graphqlOperation(queries.listRubrics, {
         filter: {
           curriculumID: {eq: curricularId}
         }
@@ -105,6 +105,36 @@ const EvidenceTab = ({
     };
   };
 
+  const getFilteredUniversalSyllabus = (curriculum: any) => {
+    const assignedSyllabi = curriculum?.universalSyllabus?.items?.filter(
+      (syllabus: any) =>
+        Boolean(
+          syllabus?.unit?.lessons?.items?.filter(
+            (lesson: any) => lesson?.lessonID === currentLesson?.id
+          )?.length || 0
+        )
+    );
+    return assignedSyllabi;
+  };
+
+  const updateCurriculum = (curriculums: any[]) => {
+    let selectedCurriculums: any = [];
+    curriculums.forEach((curriculum: any) => {
+      const assignedSyllabi = getFilteredUniversalSyllabus(curriculum);
+      const isCourseAdded = assignedSyllabi.length > 0;
+
+      isCourseAdded &&
+        selectedCurriculums.push({
+          ...curriculum,
+          assignedSyllabi: assignedSyllabi.map((syllabus: any) => syllabus.unit.name),
+          assignedSyllabusId: assignedSyllabi.map((syllabus: any) => syllabus.id)
+        });
+    });
+
+    return selectedCurriculums;
+  };
+
+  const [curricula, setCurricula] = useState([]);
   const fetchCurriculum = async () => {
     try {
       setLoading(true);
@@ -115,30 +145,15 @@ const EvidenceTab = ({
           }
         })
       );
-      const curriculums = list.data?.listCurriculums?.items;
-      let selectedCurriculums: any = [];
-      curriculums.map((curriculum: any) => {
-        const assignedSyllabi = curriculum.universalSyllabus?.items.filter(
-          (syllabus: any) =>
-            syllabus.lessons?.items.filter(
-              (lesson: any) => lesson.lessonID === currentLesson.id
-            ).length
-        );
-        const isCourseAdded = Boolean(assignedSyllabi.length);
-        if (isCourseAdded) {
-          selectedCurriculums.push({
-            ...curriculum,
-            assignedSyllabi: assignedSyllabi.map((syllabus: any) => syllabus.name),
-            assignedSyllabusId: assignedSyllabi.map((syllabus: any) => syllabus.id)
-          });
-        }
-      });
-      await Promise.all(
-        selectedCurriculums.map(async (curriculum: any) => {
-          const {learningObjectiveData} = await fetchObjectives(curriculum.id);
-          curriculum.learningObjectiveData = learningObjectiveData;
-        })
-      );
+      let curriculums = list.data?.listCurricula?.items;
+      setCurricula(curriculums);
+      let selectedCurriculums = updateCurriculum(curriculums);
+
+      for (const curriculum of selectedCurriculums) {
+        const {learningObjectiveData} = await fetchObjectives(curriculum.id);
+        curriculum.learningObjectiveData = learningObjectiveData;
+      }
+
       setSelectedCurriculumList(selectedCurriculums);
       const $ = generateCheckedList(selectedCurriculums);
       setCheckedEvidence($);
@@ -150,30 +165,31 @@ const EvidenceTab = ({
 
   const roomInfo = getLocalStorageData('room_info');
 
-  const curricula = roomInfo?.curricula?.items || [];
-
   const generateCheckedList = (list: any[]) => {
     let result: any[] = [];
+
     list.forEach((curriculum: any): void => {
       curriculum.learningObjectiveData.forEach(
         (objective: {curriculumID: string; associatedTopics: any[]}): void => {
+          console.log(objective);
           if (
-            curricula.find(
-              (c: {curriculumID: string}) => c.curriculumID === objective.curriculumID
-            )
-          )
-            objective.associatedTopics.forEach((topic: any) => {
-              topic.associatedRubrics.forEach((rubric: {id: string}) => {
-                if (
-                  selectedMeasurements.find(
-                    (measurement: {rubricID: string}) =>
-                      measurement.rubricID === rubric.id
-                  )?.checked
-                ) {
-                  result.push(rubric);
-                }
+            Boolean(curricula.find((c: {id: string}) => c.id === objective.curriculumID))
+          ) {
+            objective?.associatedTopics &&
+              objective?.associatedTopics.length > 0 &&
+              objective?.associatedTopics?.forEach((topic: any) => {
+                topic.associatedRubrics.forEach((rubric: {id: string}) => {
+                  if (
+                    selectedMeasurements.find(
+                      (measurement: {rubricID: string}) =>
+                        measurement.rubricID === rubric.id
+                    )?.checked
+                  ) {
+                    result.push(rubric);
+                  }
+                });
               });
-            });
+          }
         }
       );
     });

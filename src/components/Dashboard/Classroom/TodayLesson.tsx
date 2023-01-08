@@ -112,8 +112,8 @@ const Today: React.FC<LessonProps> = ({
               if (lesson?.lesson?.id) {
                 return (
                   <div
-                    id={`todayLesson_${key}_wrapper`}
-                    key={`todayLesson_${key}_wrapper`}>
+                    id={`todayLesson_${lesson.lesson.id}_wrapper`}
+                    key={`todayLesson_${lesson.lesson.id}_wrapper`}>
                     <StandardLessonCard
                       roomID={getRoomData?.id}
                       searchTerm={searchTerm}
@@ -129,7 +129,7 @@ const Today: React.FC<LessonProps> = ({
                     />
                   </div>
                 );
-              } else return <div key={`todayLesson_${key}_wrapper`} />;
+              } else return <div key={`todayLesson_${lesson.lesson.id}_wrapper`} />;
             })}
           </Fragment>
         ))
