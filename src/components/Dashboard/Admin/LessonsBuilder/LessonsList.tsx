@@ -555,6 +555,7 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
                     <ErrorBoundary
                       authId={state.user.authId}
                       email={state.user.email}
+                      key={lessonsObject.id}
                       componentName="LessonsListRow"
                       fallback={<h1>Oops with the LessonsListRow</h1>}>
                       <LessonsListRow

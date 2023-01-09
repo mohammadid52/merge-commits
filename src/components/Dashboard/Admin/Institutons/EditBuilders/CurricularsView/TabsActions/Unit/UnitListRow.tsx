@@ -77,7 +77,7 @@ const UnitListRow = ({
   const textClass = `text-sm leading-5 text-gray-800 hover:iconoclast:text-500 transition-all duration-50 hover:curate:text-500`;
 
   return (
-    <tr
+    <div
       key={index}
       className={`flex
       hover:bg-gray-200
@@ -85,10 +85,10 @@ const UnitListRow = ({
       justify-between items-center w-full  whitespace-nowrap border-b-0 border-gray-200 ${
         index % 2 !== 0 ? 'bg-gray-50' : ''
       }`}>
-      <td className="flex w-1/10 px-8 py-4 items-center  text-left text-s leading-4">
+      <div className="flex w-1/10 px-8 py-4 items-center  text-left text-s leading-4">
         {index + 1}.
-      </td>
-      <td
+      </div>
+      <div
         onClick={() => editCurrentUnit(item.id)}
         onMouseEnter={() => {
           setHoveringItem({name: item.name});
@@ -148,19 +148,19 @@ const UnitListRow = ({
             </>
           )}
         </BriefPopover>
-      </td>
+      </div>
 
       {isSuperAdmin && (
-        <td
+        <div
           className="flex w-1.5/10 px-8 py-4 items-center  text-left text-sm font-bold leading-4 whitespace-normal cursor-pointer"
           onClick={redirectToInstitution}>
           <Highlighted
             text={item?.institutionName || item?.institution?.name}
             highlight={searchInput}
           />
-        </td>
+        </div>
       )}
-      <td
+      <div
         className={`${
           isSuperAdmin ? 'w-2/10' : 'w-4/10'
         } items-center text-left px-8 py-4 text-sm leading-4 text-gray-500 whitespace-normal cursor-pointer`}>
@@ -189,8 +189,8 @@ const UnitListRow = ({
         ) : (
           <p className="">No lesson plan</p>
         )}
-      </td>
-      <td
+      </div>
+      <div
         className={`text-sm w-1/10 leading-4 font-medium whitespace-normal break-normal text-gray-500`}>
         <Status
           className={
@@ -200,8 +200,8 @@ const UnitListRow = ({
           }>
           {item.status ? item.status : 'ACTIVE'}
         </Status>
-      </td>
-      <td
+      </div>
+      <div
         className={`w-1/10 flex px-8 py-4 justify-center items-center  whitespace-nowrap text-sm leading-5 font-medium`}>
         <span className="w-auto">
           <Popover
@@ -248,8 +248,8 @@ const UnitListRow = ({
             </span>
           </Popover>
         </span>
-      </td>
-    </tr>
+      </div>
+    </div>
   );
 };
 

@@ -9,7 +9,8 @@ import {useHistory, useRouteMatch} from 'react-router';
 import Filters, {SortType} from '@components/Atoms/Filters';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import useSearch from '@customHooks/useSearch';
-import {InstitueRomms} from '@dictionary/dictionary.iconoclast';
+import * as customMutations from 'customGraphql/customMutations';
+import {BUTTONS, InstitueRomms} from '@dictionary/dictionary.iconoclast';
 import {RoomStatus} from 'API';
 import SearchInput from 'atoms/Form/SearchInput';
 import Selector from 'atoms/Form/Selector';
@@ -19,8 +20,20 @@ import * as customQueries from 'customGraphql/customQueries';
 import {orderBy} from 'lodash';
 import ModalPopUp from 'molecules/ModalPopUp';
 import UnitListRow from './UnitListRow';
+import Modal from '@components/Atoms/Modal';
+import UnitFormComponent from './UnitFormComponent';
+import Buttons from '@components/Atoms/Buttons';
 
-export const UnitList = ({instId, curricular}: any) => {
+export const UnitList = ({
+  instId,
+  curricular,
+  addedSyllabus,
+  lessonPlans,
+  lessonType,
+  lessonId,
+  isFromLesson,
+  setAddedSyllabus
+}: any) => {
   const history = useHistory();
   const match = useRouteMatch();
   const {
@@ -37,12 +50,21 @@ export const UnitList = ({instId, curricular}: any) => {
   const [institutionList, setInstitutionList] = useState<any>([]);
   const [units, setUnits] = useState<any>([]);
 
+  const [addModalShow, setAddModalShow] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [showAddSection, setShowAddSection] = useState(false);
+
+  const [allUnits, setAllUnits] = useState<any>([]);
+
+  const [unitInput, setUnitInput] = useState<any>({});
+  const [assignedUnits, setAssignedUnits] = useState<any>([]);
+
   const [selectedInstitution, setSelectedInstitution] = useState<any>({});
 
   useEffect(() => {
     fetchSyllabusList();
     fetchInstitutions();
-  }, []);
+  }, [addedSyllabus]);
 
   const getUpdatedList = (items: any[]) => {
     const updatedList = items
@@ -78,6 +100,21 @@ export const UnitList = ({instId, curricular}: any) => {
     return updatedList;
   };
 
+  const getAssignedUnits = (list: any[]) => {
+    let selectedSyllabus: any = [];
+    addedSyllabus &&
+      addedSyllabus.length > 0 &&
+      addedSyllabus.forEach((item: any) => {
+        selectedSyllabus.push({
+          ...list.find((unit: any) => item?.syllabusID === unit?.id),
+          id: item?.id,
+          syllabusId: item?.syllabusID
+        });
+      });
+
+    return selectedSyllabus;
+  };
+
   const fetchSyllabusList = async () => {
     try {
       const result: any = await API.graphql(
@@ -90,9 +127,32 @@ export const UnitList = ({instId, curricular}: any) => {
         })
       );
 
-      const updatedList = getUpdatedList(result.data?.listUniversalSyllabi.items);
+      const items = result.data?.listUniversalSyllabi.items;
+      setAllUnits(items);
 
-      setUnits(updatedList);
+      if (isFromLesson) {
+        if (addedSyllabus && addedSyllabus.length > 0) {
+          const assignedUnits = getAssignedUnits(items);
+
+          setAssignedUnits(assignedUnits);
+
+          const filtered = items.filter(
+            (unit: any) =>
+              !addedSyllabus.find((_d: {syllabusID: any}) => _d.syllabusID === unit.id)
+          );
+
+          console.log(
+            '🚀 ~ file: UnitList.tsx:143 ~ fetchSyllabusList ~ filtered',
+            filtered
+          );
+
+          setUnits([...filtered]);
+        }
+      } else {
+        const updatedList = getUpdatedList(items);
+
+        setUnits(updatedList);
+      }
 
       setLoading(false);
     } catch (error) {
@@ -251,8 +311,10 @@ export const UnitList = ({instId, curricular}: any) => {
     }
   };
 
+  const list = isFromLesson ? assignedUnits : units;
+
   const finalList = orderBy(
-    searchInput.isActive ? filteredList : units,
+    searchInput.isActive ? filteredList : list,
     ['name', 'institutionName'],
     ['asc']
   );
@@ -271,6 +333,101 @@ export const UnitList = ({instId, curricular}: any) => {
       setFilters(filterName);
       setSelectedInstitution({});
     }
+  };
+  const updateLessonSequence = async (unitId: string) => {
+    const selectedItem = allUnits?.find((unit: any) => unit.id === unitId);
+    const existingLessonSeq = selectedItem?.universalLessonsSeq || [];
+    setUnits((prevUnits: any) => [...prevUnits, selectedItem]);
+    await API.graphql(
+      graphqlOperation(customMutations.updateUniversalSyllabusLessonSequence, {
+        input: {
+          id: unitId,
+          universalLessonsSeq: [...existingLessonSeq, lessonId]
+        }
+      })
+    );
+  };
+
+  const addLessonToSyllabusLesson = async (unitId: string) => {
+    try {
+      const lessonComponentPlan: any =
+        lessonPlans &&
+        lessonPlans.map((item: any) => {
+          return {
+            disabled: false,
+            open: lessonType !== 'lesson' ? true : false,
+            active: lessonType !== 'lesson' ? true : false,
+            stage: `checkpoint?id=${item.LessonComponentID}`,
+            type: 'survey',
+            displayMode: 'SELF'
+          };
+        });
+      const input = {
+        syllabusID: unitId,
+        lessonID: lessonId,
+        displayData: {
+          breakdownComponent: lessonType
+        },
+        lessonPlan: lessonComponentPlan?.length > 0 ? lessonComponentPlan : [],
+        status: 'Active'
+      };
+      setSaving(true);
+      const result: any = await API.graphql(
+        graphqlOperation(customMutations.createUniversalSyllabusLesson, {input: input})
+      );
+      const newLesson = result.data?.createUniversalSyllabusLesson;
+      if (newLesson?.id) {
+        updateLessonSequence(unitId);
+        setAddedSyllabus((prevValue: any) => [
+          ...prevValue,
+          {
+            id: newLesson.id,
+            syllabusID: input.syllabusID,
+            lessonID: lessonId
+          }
+        ]);
+        setUnits((prevUnits: any) =>
+          prevUnits.filter((unit: any) => unit?.id !== input.syllabusID)
+        );
+        const selectedUnitData: any =
+          allUnits.find((unit: any) => unit?.id === input.syllabusID) || {};
+        setAssignedUnits((prevList: any) => [
+          ...prevList,
+          {
+            ...selectedUnitData,
+            id: newLesson?.id,
+            syllabusId: input.syllabusID,
+            lessons: {
+              items: [
+                ...(selectedUnitData.lessons.items || []),
+                {
+                  id: newLesson.id,
+                  lesson: newLesson.lesson
+                }
+              ]
+            }
+          }
+        ]);
+
+        setUnitInput({
+          id: '',
+          name: ''
+        });
+
+        setSaving(false);
+      }
+    } catch (error) {
+      console.log(error, 'error');
+    }
+  };
+
+  const postAddSyllabus = async (unitId: string) => {
+    await addLessonToSyllabusLesson(unitId);
+    onAddModalClose();
+  };
+
+  const onAddModalClose = () => {
+    setAddModalShow(false);
   };
 
   const [hoveringItem, setHoveringItem] = useState<{name?: string}>({});
@@ -295,7 +452,7 @@ export const UnitList = ({instId, curricular}: any) => {
           borderBottom
           shadowOff
           withButton={
-            <div className={`w-auto flex gap-x-4 justify-end items-center flex-wrap`}>
+            <div className={`w-auto flex gap-x-4 justify-end items-center`}>
               {isSuperAdmin && (
                 <Selector
                   placeholder={UnitLookupDict[userLanguage]['SELECT_INSTITUTION']}
@@ -308,20 +465,48 @@ export const UnitList = ({instId, curricular}: any) => {
                   onClear={onInstitutionSelectionRemove}
                 />
               )}
-              <SearchInput
-                dataCy="unit-search-input"
-                value={searchInput.value}
-                onChange={setSearch}
-                isActive={searchInput.isActive}
-                disabled={loading}
-                onKeyDown={searchRoom}
-                closeAction={removeSearchAction}
-              />
+
+              {showAddSection ? (
+                <div className="flex items-center w-auto m-auto px-2 gap-x-4">
+                  <Selector
+                    selectedItem={unitInput.name}
+                    list={units}
+                    placeholder="Select Unit"
+                    onChange={(val, name, id) => setUnitInput({name, id})}
+                  />
+                  <Buttons
+                    label={BUTTONS[userLanguage]['ADD']}
+                    disabled={saving || !unitInput.id}
+                    onClick={() => addLessonToSyllabusLesson(unitInput.id)}
+                  />
+                  <Buttons
+                    label={BUTTONS[userLanguage]['CANCEL']}
+                    onClick={() => setShowAddSection(false)}
+                  />
+                </div>
+              ) : null}
+              {!showAddSection && (
+                <SearchInput
+                  dataCy="unit-search-input"
+                  value={searchInput.value}
+                  onChange={setSearch}
+                  isActive={searchInput.isActive}
+                  disabled={loading}
+                  onKeyDown={searchRoom}
+                  closeAction={removeSearchAction}
+                />
+              )}
+              {isFromLesson && !isSuperAdmin && !showAddSection && (
+                <Buttons
+                  label={'Add Lesson to Unit'}
+                  onClick={() => setShowAddSection(true)}
+                />
+              )}
 
               {!isSuperAdmin && (
                 <AddButton
                   label={UnitLookupDict[userLanguage]['NEW_UNIT']}
-                  onClick={handleAdd}
+                  onClick={isFromLesson ? () => setAddModalShow(true) : handleAdd}
                 />
               )}
             </div>
@@ -363,9 +548,9 @@ export const UnitList = ({instId, curricular}: any) => {
                   } px-8 py-4 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider`}>
                   <span>{UnitLookupDict[userLanguage]['LESSONS']}</span>
                 </div>
-                <th className="bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider w-1/10 flex items-center ">
+                <span className="bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider w-1/10 flex items-center ">
                   {InstitueRomms[userLanguage]['STATUS']}
-                </th>
+                </span>
                 <div className="w-1/10 m-auto py-4 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span className="w-auto">{UnitLookupDict[userLanguage]['ACTION']}</span>
                 </div>
@@ -408,6 +593,28 @@ export const UnitList = ({instId, curricular}: any) => {
                 );
               })}
             </div>
+            {addModalShow && (
+              <Modal
+                showHeader
+                showFooter={false}
+                showHeaderBorder
+                title={'Add Lesson to Syllabus'}
+                closeOnBackdrop
+                closeAction={onAddModalClose}>
+                <div
+                  className="min-w-180 lg:min-w-256"
+                  style={{
+                    height: 'calc(100vh - 150px)'
+                  }}>
+                  <UnitFormComponent
+                    isInModal={true}
+                    instId={instId}
+                    postAddSyllabus={postAddSyllabus}
+                    onCancel={() => setAddModalShow(false)}
+                  />
+                </div>
+              </Modal>
+            )}
             {deleteModal.show && (
               <ModalPopUp
                 closeAction={handleToggleDelete}

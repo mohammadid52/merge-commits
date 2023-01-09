@@ -182,7 +182,13 @@ const UnitBuilder = ({instId, curricular}: any) => {
                 postAddSyllabus={postAddSyllabus}
                 curricular={curricular}
                 setSyllabusDataParent={setSyllabusData}
-                onCancel={fetchSyllabusData}
+                onCancel={() => {
+                  history.push(
+                    isSuperAdmin
+                      ? `/dashboard/manage-institutions/units`
+                      : `/dashboard/manage-institutions/institution/${instId}/units`
+                  );
+                }}
               />
             )}
           </AnimatedContainer>

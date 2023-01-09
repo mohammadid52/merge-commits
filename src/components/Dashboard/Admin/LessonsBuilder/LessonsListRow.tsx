@@ -77,39 +77,39 @@ const LessonsListRow = (props: LessonsListRow) => {
   const textClass = `text-sm leading-5 text-gray-800 hover:iconoclast:text-500 transition-all duration-50 hover:curate:text-500`;
 
   return (
-    <td
+    <div
       id={id}
       className={`flex justify-between  bg-white w-full border-b-0 border-gray-200 ${
         props.zebraStripping && index % 2 !== 0 ? 'bg-gray-50' : ''
       } hover:bg-gray-200 transition-all`}>
-      <tr className="w-.5/10 flex justify-center items-center px-8 py-4 whitespace-normal text-sm leading-5 font-medium">
+      <div className="w-.5/10 flex justify-center items-center px-8 py-4 whitespace-normal text-sm leading-5 font-medium">
         {index + 1}.
-      </tr>
-      <tr
+      </div>
+      <div
         title={title ? title : '--'}
         className={`${
           isSuperAdmin ? 'w-1.5/10' : 'w-3/10'
         } flex items-center px-8 py-4 cursor-pointer text-sm leading-5 font-medium whitespace-normal`}
         onClick={() => handleLessonsEdit(type)}>
         <Highlighted text={title} highlight={searchTerm} />
-      </tr>
+      </div>
       {isSuperAdmin && (
-        <tr
+        <div
           className="w-1.5/10 flex items-center px-8 py-4 hover:text-gray-600 text-sm leading-5 font-bold text-gray-900 whitespace-normal cursor-pointer"
           onClick={redirectToInstitution}>
           <span>{institutionName || '--'}</span>
-        </tr>
+        </div>
       )}
 
-      <tr className="w-1/10 flex justify-start items-center px-8 py-4 whitespace-normal text-sm leading-5 text-gray-500">
+      <div className="w-1/10 flex justify-start items-center px-8 py-4 whitespace-normal text-sm leading-5 text-gray-500">
         <span className="w-auto">{type ? type : '--'}</span>
-      </tr>
+      </div>
 
-      <tr className="w-1.5/10 flex justify-start items-center px-8 py-4 whitespace-normal text-sm leading-5 text-gray-500">
-        {targetAudience || '-'}
-      </tr>
+      <div className="w-1.5/10 flex justify-start items-center px-8 py-4 whitespace-normal text-sm leading-5 text-gray-500">
+        <span className="w-auto">{targetAudience || '-'}</span>
+      </div>
 
-      <tr className="w-1.5/10 flex justify-center items-center px-8 py-4 whitespace-normal text-sm leading-5 text-gray-500">
+      <div className="w-1.5/10 flex justify-center items-center px-8 py-4 whitespace-normal text-sm leading-5 text-gray-500">
         <Status
           className={
             status?.toLowerCase() === 'active'
@@ -118,15 +118,15 @@ const LessonsListRow = (props: LessonsListRow) => {
           }>
           {status || RoomStatus.ACTIVE}
         </Status>
-      </tr>
+      </div>
 
-      <tr className="w-1.5/10 flex justify-center items-center px-8 py-4 whitespace-normal text-sm leading-5 text-gray-500">
+      <div className="w-1.5/10 flex justify-center items-center px-8 py-4 whitespace-normal text-sm leading-5 text-gray-500">
         <span className="w-auto">
           {updatedAt ? new Date(updatedAt).toLocaleDateString() : '--'}
         </span>
-      </tr>
+      </div>
 
-      <tr
+      <div
         className={`w-1/10 flex justify-center items-center pr-4 py-4 whitespace-nowrap text-sm leading-5 font-medium`}>
         <span className="w-auto">
           <Popover
@@ -178,8 +178,8 @@ const LessonsListRow = (props: LessonsListRow) => {
             </span>
           </Popover>
         </span>
-      </tr>
-    </td>
+      </div>
+    </div>
   );
 };
 

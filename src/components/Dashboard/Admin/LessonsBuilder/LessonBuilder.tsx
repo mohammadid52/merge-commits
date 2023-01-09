@@ -24,6 +24,7 @@ import LessonCourse from './StepActionComponent/LessonCourse/LessonCourse';
 import {logError} from '@graphql/functions';
 import useAuth from '@customHooks/useAuth';
 import {RoomStatus, UpdateUniversalLessonInput} from 'API';
+import UnitList from '../Institutons/EditBuilders/CurricularsView/TabsActions/Unit/UnitList';
 
 export interface InitialData {
   name: string;
@@ -446,7 +447,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     try {
       setCurriculumLoading(true);
       const list: any = await API.graphql(
-        graphqlOperation(queries.listCurricula, {
+        graphqlOperation(customQueries.listCurriculaForLesson, {
           filter: {
             institutionID: {eq: formData?.institution?.id}
           }
@@ -477,7 +478,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
       setInstitutionCollection(curriculumIds);
 
       const curriculums = list.data?.listCurriculums?.items;
-      setCurriculumList(curriculums);
+      setCurriculumList(list.data?.listCurriculums);
       let selectedCurriculums: any = [];
       curriculums.map((curriculum: any) => {
         const addedSyllabusIds = assignedSyllabus.map((item: any) => item.syllabusID);
@@ -587,20 +588,28 @@ const LessonBuilder = (props: LessonBuilderProps) => {
         );
       case 'courses':
         return (
-          <LessonCourse
-            institutionCollection={institutionCollection}
-            curriculumList={curriculumList}
-            fetchCurriculum={fetchCurriculum}
-            institution={formData?.institution}
-            lessonId={lessonId}
-            lessonName={formData?.name}
-            lessonPlans={universalLessonDetails?.lessonPlan}
-            lessonType={formData.type?.value}
-            loading={curriculumLoading || updating}
-            selectedCurriculums={selectedCurriculumList}
+          <UnitList
+            curricular={curriculumList}
+            instId={formData?.institution.id}
+            instName={formData?.institution.name}
             addedSyllabus={addedSyllabus}
+            isFromLesson
             setAddedSyllabus={setAddedSyllabus}
           />
+          // <LessonCourse
+          //   institutionCollection={institutionCollection}
+          //   curriculumList={curriculumList}
+          //   fetchCurriculum={fetchCurriculum}
+          //   institution={formData?.institution}
+          //   lessonId={lessonId}
+          //   lessonName={formData?.name}
+          //   lessonPlans={universalLessonDetails?.lessonPlan}
+          //   lessonType={formData.type?.value}
+          //   loading={curriculumLoading || updating}
+          //   selectedCurriculums={selectedCurriculumList}
+          //   addedSyllabus={addedSyllabus}
+          //   setAddedSyllabus={setAddedSyllabus}
+          // />
         );
       case 'learning-evidence':
         return (

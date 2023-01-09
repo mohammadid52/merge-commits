@@ -1,25 +1,17 @@
-import React, {useContext, useEffect, useState} from 'react';
-import {Switch, Route, useHistory, useParams, useRouteMatch} from 'react-router';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import React, {useContext, useEffect, useState} from 'react';
 import {BsArrowLeft} from 'react-icons/bs';
-
+import {Switch, useHistory, useParams, useRouteMatch} from 'react-router';
 import {GlobalContext} from 'contexts/GlobalContext';
+import * as customQueries from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import {useQuery} from 'customHooks/urlParam';
-import * as customQueries from 'customGraphql/customQueries';
-
-import StepComponent, {IStepElementInterface} from 'atoms/StepComponent';
 import Loader from 'atoms/Loader';
-
-import CourseFormComponent from './CourseFormComponent';
-import UnitManager from './UnitManager';
-import LearningObjective from './LearningObjective';
+import StepComponent, {IStepElementInterface} from 'atoms/StepComponent';
 import CheckpointList from '../../TabsListing/CheckpointList';
-import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
-
-// import AddProfileCheckpoint from '../../../../EditBuilders/CurricularsView/TabsActions/AddProfileCheckpoint';
-// import ProfileCheckpointlookup from '../../../../EditBuilders/CurricularsView/TabsActions/ProfileCheckpointlookup';
-// import EditProfileCheckpoint from '../../../../EditBuilders/CurricularsView/TabsActions/EditProfileCheckpoint';
+import CourseFormComponent from './CourseFormComponent';
+import LearningObjective from './LearningObjective';
+import UnitManager from './UnitManager';
 
 interface IUIMessages {
   show: boolean;
@@ -262,49 +254,7 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
               </div>
             </div>
           ) : (
-            <div className="">
-              {/* <AnimatedContainer
-                animationType="translateY"
-                show={activeStep === 'overview'}>
-                {activeStep === 'overview' && (
-                  <CourseFormComponent
-                    setCourseData={setCourseData}
-                    courseId={courseId}
-                    courseData={courseData}
-                  />
-                )}
-              </AnimatedContainer>
-              <AnimatedContainer
-                animationType="translateY"
-                show={activeStep === 'unit_manager'}>
-                {activeStep === 'unit_manager' && (
-                  <UnitManager
-                    courseId={courseId}
-                    courseData={courseData}
-                    institutionId={courseData?.institution?.id}
-                    savedSyllabusList={savedSyllabusList}
-                    setSavedSyllabusList={setSavedSyllabusList}
-                    syllabusIds={syllabusIds}
-                    setSyllabusIds={setSyllabusIds}
-                  />
-                )}
-              </AnimatedContainer>
-              <AnimatedContainer
-                animationType="translateY"
-                show={activeStep === 'learning_objectives'}>
-                {activeStep === 'learning_objectives' && (
-                  <LearningObjective curricularId={courseId} institutionId={instId} />
-                )}
-              </AnimatedContainer>
-              <AnimatedContainer
-                animationType="translateY"
-                show={activeStep === 'demographics'}>
-                {activeStep === 'demographics' && (
-                  <CheckpointList curricularId={courseId} institutionId={instId} />
-                )}
-              </AnimatedContainer> */}
-              {currentStepComp(activeStep)}
-            </div>
+            <div className="">{currentStepComp(activeStep)}</div>
           )}
         </div>
       </div>
