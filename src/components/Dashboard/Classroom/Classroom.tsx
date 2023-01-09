@@ -456,6 +456,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
   const courseName = state?.roomData?.curriculum?.name || '';
 
   const finalList = searchInput.isActive ? filteredList : withTitle;
+
   return (
     <>
       <DashboardContainer

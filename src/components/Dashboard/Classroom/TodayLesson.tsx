@@ -36,6 +36,7 @@ const Today: React.FC<LessonProps> = ({
   const {classRoomDict} = useDictionary(clientKey);
   const [accessible, setAccessible] = useState<boolean>(true);
   const [lessonsBySession, setLessonsBySession] = useState<any>([]);
+  console.log('🚀 ~ file: TodayLesson.tsx:39 ~ lessonsBySession', lessonsBySession);
 
   const getRoomData = getLocalStorageData('room_info');
 

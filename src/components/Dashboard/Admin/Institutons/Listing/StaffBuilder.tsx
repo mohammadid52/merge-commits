@@ -23,8 +23,8 @@ import * as queries from 'graphql/queries';
 
 import SearchInput from '@components/Atoms/Form/SearchInput';
 import Highlighted from '@components/Atoms/Highlighted';
+import Placeholder from '@components/Atoms/Placeholder';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
-import useAuth from '@customHooks/useAuth';
 import useSearch from '@customHooks/useSearch';
 import AddButton from 'atoms/Buttons/AddButton';
 import Loader from 'atoms/Loader';
@@ -392,8 +392,6 @@ const StaffBuilder = (props: StaffBuilderProps) => {
   };
 
   const finalList = searchInput.isActive ? filteredList : activeStaffList;
-
-  const {Placeholder} = useAuth();
 
   return (
     <div className="pt-0 flex m-auto justify-center p-8">
