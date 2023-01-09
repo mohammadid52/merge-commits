@@ -23,7 +23,7 @@ const BriefPopover = ({show, clear, isLast, header, children}: IBriefPopover) =>
         <ClickAwayListener onClickAway={() => clear()}>
           <div
             style={{
-              top: isLast ? '-5rem' : '0rem',
+              top: isLast ? '-15rem' : '0rem',
               bottom: isLast ? 'unset' : '1.5rem',
               right: '-90%',
               zIndex: 99999999

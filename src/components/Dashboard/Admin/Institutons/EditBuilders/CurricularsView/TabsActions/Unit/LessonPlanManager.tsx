@@ -279,7 +279,7 @@ const LessonPlanManager = ({
   }, [savedLessonsList, allLessonsList]);
 
   const updateLessonSequence = async (lessonsIDs: string[]) => {
-    setLessonsIds(lessonsIDs);
+    setLessonsIds([...lessonsIDs]);
     await API.graphql(
       graphqlOperation(customMutations.updateUniversalSyllabusLessonSequence, {
         input: {id: syllabusId, universalLessonsSeq: lessonsIDs}
@@ -333,12 +333,12 @@ const LessonPlanManager = ({
     }
   };
 
-  const handleToggleDelete = (targetString?: string, lessonObj?: any, idx?: number) => {
+  const handleToggleDelete = (targetString?: string, id?: any, idx?: number) => {
     if (!deleteModal.show) {
       setDeleteModal({
         show: true,
         message: `Are you sure you want to remove "${targetString}" from unit?`,
-        action: () => handleDelete(lessonObj, idx)
+        action: () => handleDelete(id, idx)
       });
     } else {
       setDeleteModal({show: false, message: '', action: () => {}});
@@ -347,25 +347,23 @@ const LessonPlanManager = ({
 
   const {authId, email} = useAuth();
 
-  const handleDelete = async (lesson: any, idx: number) => {
+  const handleDelete = async (id: any, idx: number) => {
     setDeleting(true);
     try {
+      setSelectedLessonsList((list: any) => list.filter((_item: any) => _item.id !== id));
+      setSavedLessonsList((prevList: any) =>
+        prevList.filter((item: any) => item.id !== id)
+      );
+      updateListAndDropdown();
+      setDeleting(false);
+      setDeleteModal({show: false, message: '', action: () => {}});
       await API.graphql(
         graphqlOperation(mutations.deleteUniversalSyllabusLesson, {
-          input: {id: lesson.id}
+          input: {id: id}
         })
       );
-      await updateLessonSequence(
-        lessonsIds.filter((lessonId: any) => lessonId !== lesson.id)
-      );
-      selectedLessonsList.splice(idx, 1);
-      setSelectedLessonsList([...selectedLessonsList]);
-      setSelectedLessonsList((list: any) =>
-        list.filter((_item: any) => _item.id !== lesson.id)
-      );
-      setSavedLessonsList((prevList: any) =>
-        prevList.filter((item: any) => item.id !== lesson.id)
-      );
+
+      await updateLessonSequence(lessonsIds.filter((lessonId: any) => lessonId !== id));
     } catch (e) {
       logError(e, {authId, email}, 'LessonPlanManager @handleDelete');
       console.error('error deleting...', e);
@@ -468,37 +466,36 @@ const LessonPlanManager = ({
                 <Droppable droppableId="droppable">
                   {(provided1, snapshot) => (
                     <div {...provided1.droppableProps} ref={provided1.innerRef}>
-                      {selectedLessonsList.map((item, index) => {
-                        return (
-                          <Draggable key={item.id} draggableId={item.id} index={index}>
-                            {(provided, snapshot) => {
-                              return (
-                                <div
-                                  key={`${item.id}_key`}
-                                  className={`${
-                                    snapshot.isDragging
-                                      ? 'theme-bg:100 transition-all isDragging'
-                                      : ''
-                                  } w-auto`}
-                                  ref={provided.innerRef}
-                                  {...provided.draggableProps}
-                                  {...provided.dragHandleProps}>
-                                  <div className="flex justify-between w-full px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
-                                    <LessonPlanManagerRow
-                                      index={index}
-                                      lessonObject={item.lesson}
-                                      syllabusObject={syllabusDetails}
-                                      checkIfRemovable={checkIfRemovable}
-                                      handleToggleDelete={handleToggleDelete}
-                                      gotoLessonBuilder={gotoLessonBuilder}
-                                    />
-                                  </div>
+                      {selectedLessonsList.map((item, index) => (
+                        <Draggable key={item.id} draggableId={item.id} index={index}>
+                          {(provided, snapshot) => {
+                            return (
+                              <div
+                                key={`${item.id}_key`}
+                                className={`${
+                                  snapshot.isDragging
+                                    ? 'theme-bg:100 transition-all isDragging'
+                                    : ''
+                                } w-auto`}
+                                ref={provided.innerRef}
+                                {...provided.draggableProps}
+                                {...provided.dragHandleProps}>
+                                <div className="flex justify-between w-full px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
+                                  <LessonPlanManagerRow
+                                    index={index}
+                                    lessonObject={item.lesson}
+                                    id={item.id}
+                                    syllabusObject={syllabusDetails}
+                                    checkIfRemovable={checkIfRemovable}
+                                    handleToggleDelete={handleToggleDelete}
+                                    gotoLessonBuilder={gotoLessonBuilder}
+                                  />
                                 </div>
-                              );
-                            }}
-                          </Draggable>
-                        );
-                      })}
+                              </div>
+                            );
+                          }}
+                        </Draggable>
+                      ))}
                       {provided1.placeholder}
                     </div>
                   )}

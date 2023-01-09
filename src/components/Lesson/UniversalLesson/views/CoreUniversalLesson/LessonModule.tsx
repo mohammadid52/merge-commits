@@ -1,25 +1,54 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {Transition} from '@headlessui/react';
 
-import map from 'lodash/map';
-import React, {useState} from 'react';
-import {AiFillCheckCircle} from 'react-icons/ai';
+import Label from '@components/Atoms/Form/Label';
+import {UniversalLesson} from 'API';
+import Loader from 'atoms/Loader';
 import * as customQueries from 'customGraphql/customQueries';
 import useUpdateEffect from 'customHooks/useUpdateEffect';
 import * as queries from 'graphql/queries';
-import {getLocalStorageData} from 'utilities/localStorage';
-import Loader from 'atoms/Loader';
+import map from 'lodash/map';
 import Table from 'molecules/Table';
 import ThemeModal from 'molecules/ThemeModal';
+import React, {useState} from 'react';
+import {AiFillCheckCircle} from 'react-icons/ai';
 import AnimatedContainer from '../../../UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import {Tabs3, useTabs} from '../../../UniversalLessonBuilder/UI/UIComponents/Tabs/Tabs';
-import {UniversalLesson} from 'API';
-import Label from '@components/Atoms/Form/Label';
+
+export const getFilteredUniversalSyllabus = (curriculum: any, lessonId: string) => {
+  const assignedSyllabi = curriculum?.universalSyllabus?.items?.filter(
+    (syllabus: any) => {
+      const items = syllabus?.unit?.lessons?.items || [];
+      const onlyLessonId = items.map((d: {lessonID: any}) => d.lessonID);
+      return Boolean(onlyLessonId.includes(lessonId));
+    }
+  );
+  return assignedSyllabi;
+};
+
+export const getSelectedCurriculum = (curriculums: any[], lessonId: string) => {
+  let selectedCurriculums: any = [];
+  curriculums.forEach((curriculum: any) => {
+    const assignedSyllabi = getFilteredUniversalSyllabus(curriculum, lessonId);
+
+    const isCourseAdded = assignedSyllabi.length > 0;
+
+    isCourseAdded &&
+      selectedCurriculums.push({
+        ...curriculum,
+        assignedSyllabi: assignedSyllabi.map((syllabus: any) => syllabus.unit.name),
+        assignedSyllabusId: assignedSyllabi.map((syllabus: any) => syllabus.id)
+      });
+  });
+
+  return selectedCurriculums;
+};
 
 const EvidenceTab = ({
   curTab,
   currentLesson,
   selectedMeasurements,
+  setSelectedMeasurements,
   setCheckedEvidence,
   checkedEvidence,
   setSelectedCurriculumList,
@@ -47,8 +76,10 @@ const EvidenceTab = ({
         }
       })
     );
-    rubricList = rubricList.data.listRubrics?.items || [];
 
+    //e94b7f1b-6cce-42d3-97d2-3ab8f65ac96d
+    rubricList = rubricList.data.listRubrics?.items || [];
+    setSelectedMeasurements(rubricList);
     const [results, learningObjectiveSeqResult, topics]: any = await Promise.all([
       await API.graphql(
         graphqlOperation(queries.listLearningObjectives, {
@@ -82,7 +113,7 @@ const EvidenceTab = ({
           const associatedRubrics = rubricList.filter(
             (rubric: any) => rubric.topicID === topic.id
           );
-          topic.associatedRubrics = associatedRubrics;
+          topic.associatedRubrics = associatedRubrics || [];
           associatedRubrics.map((rubric: any) => {
             learningEvidenceList.push({
               learningObjectiveName: objective.name,
@@ -105,36 +136,15 @@ const EvidenceTab = ({
     };
   };
 
-  const getFilteredUniversalSyllabus = (curriculum: any) => {
-    const assignedSyllabi = curriculum?.universalSyllabus?.items?.filter(
-      (syllabus: any) =>
-        Boolean(
-          syllabus?.unit?.lessons?.items?.filter(
-            (lesson: any) => lesson?.lessonID === currentLesson?.id
-          )?.length || 0
-        )
-    );
-    return assignedSyllabi;
-  };
-
-  const updateCurriculum = (curriculums: any[]) => {
-    let selectedCurriculums: any = [];
-    curriculums.forEach((curriculum: any) => {
-      const assignedSyllabi = getFilteredUniversalSyllabus(curriculum);
-      const isCourseAdded = assignedSyllabi.length > 0;
-
-      isCourseAdded &&
-        selectedCurriculums.push({
-          ...curriculum,
-          assignedSyllabi: assignedSyllabi.map((syllabus: any) => syllabus.unit.name),
-          assignedSyllabusId: assignedSyllabi.map((syllabus: any) => syllabus.id)
-        });
+  const getRubricsData = (rubrics: string[]) => {
+    return rubrics.map((id) => {
+      return {
+        rubricID: id,
+        checked: true
+      };
     });
-
-    return selectedCurriculums;
   };
 
-  const [curricula, setCurricula] = useState([]);
   const fetchCurriculum = async () => {
     try {
       setLoading(true);
@@ -146,8 +156,8 @@ const EvidenceTab = ({
         })
       );
       let curriculums = list.data?.listCurricula?.items;
-      setCurricula(curriculums);
-      let selectedCurriculums = updateCurriculum(curriculums);
+
+      let selectedCurriculums = getSelectedCurriculum(curriculums, currentLesson.id);
 
       for (const curriculum of selectedCurriculums) {
         const {learningObjectiveData} = await fetchObjectives(curriculum.id);
@@ -155,7 +165,7 @@ const EvidenceTab = ({
       }
 
       setSelectedCurriculumList(selectedCurriculums);
-      const $ = generateCheckedList(selectedCurriculums);
+      const $ = generateCheckedList(selectedCurriculums, curriculums);
       setCheckedEvidence($);
       setLoading(false);
     } catch (error) {
@@ -163,21 +173,22 @@ const EvidenceTab = ({
     }
   };
 
-  const roomInfo = getLocalStorageData('room_info');
-
-  const generateCheckedList = (list: any[]) => {
+  const generateCheckedList = (list: any[], curricula: any[]) => {
     let result: any[] = [];
+
+    const selectedMeasurements = getRubricsData(currentLesson?.rubrics || []);
 
     list.forEach((curriculum: any): void => {
       curriculum.learningObjectiveData.forEach(
         (objective: {curriculumID: string; associatedTopics: any[]}): void => {
-          console.log(objective);
+          console.log(curricula);
           if (
             Boolean(curricula.find((c: {id: string}) => c.id === objective.curriculumID))
           ) {
             objective?.associatedTopics &&
               objective?.associatedTopics.length > 0 &&
               objective?.associatedTopics?.forEach((topic: any) => {
+                console.log('topic->', topic);
                 topic.associatedRubrics.forEach((rubric: {id: string}) => {
                   if (
                     selectedMeasurements.find(

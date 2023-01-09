@@ -113,6 +113,7 @@ const UnitBuilder = ({instId, curricular}: any) => {
           })
         );
         const savedData = result.data.getUniversalSyllabus;
+
         setSyllabusData({
           ...syllabusData,
           institutionID: savedData.institutionID,
@@ -134,12 +135,15 @@ const UnitBuilder = ({instId, curricular}: any) => {
         setLessonsIds(savedData.universalLessonsSeq || []);
 
         const sortedLessonsList = [...savedData.lessons?.items]
-          .filter((_d) => _d.status?.toLowerCase() === savedData?.status?.toLowerCase())
+          .filter(
+            (_d) => _d.lesson.status?.toLowerCase() === savedData?.status?.toLowerCase()
+          )
           .map((t: any) => {
             let index = savedData.universalLessonsSeq.indexOf(t.id);
             return {...t, index};
           })
           .sort((a: any, b: any) => (a.index > b.index ? 1 : -1));
+
         setSavedLessonsList(sortedLessonsList);
         setFetchingDetails(false);
       } catch (err) {

@@ -2277,6 +2277,7 @@ export const listCurriculumsForLessons = /* GraphQL */ `
               lessons {
                 items {
                   id
+                  syllabusID
                   lessonID
                 }
               }
@@ -2769,7 +2770,6 @@ export const getUniversalSyllabus = /* GraphQL */ `
           id
           syllabusID
           lessonID
-
           status
           lesson {
             id

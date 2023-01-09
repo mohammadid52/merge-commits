@@ -67,35 +67,32 @@ export const UnitList = ({
   }, [addedSyllabus]);
 
   const getUpdatedList = (items: any[]) => {
-    const updatedList = items
-      ?.filter((item: any) => item.lessons.items.length > 0)
+    const updatedList = items.map((item: any) => {
+      return {
+        ...item,
+        status: item?.status || RoomStatus.ACTIVE,
 
-      .map((item: any) => {
-        return {
-          ...item,
-          status: item?.status || RoomStatus.ACTIVE,
-
-          institutionId: item.institution.id,
-          institutionName: item.institution.name,
-          lessons: {
-            ...(item.lessons || {}),
-            items: item.lessons?.items
-              .filter(
-                (_d: any) =>
-                  _d.lesson?.status?.toLowerCase() === item?.status?.toLowerCase()
-              )
-              .map((lesson: any) => {
-                if (lesson?.lesson?.id) {
-                  return {
-                    ...lesson,
-                    index: item?.universalLessonsSeq?.indexOf(lesson?.id)
-                  };
-                }
-              })
-              .sort((a: any, b: any) => (a.index > b.index ? 1 : -1))
-          }
-        };
-      });
+        institutionId: item.institution.id,
+        institutionName: item.institution.name,
+        lessons: {
+          ...(item.lessons || {}),
+          items: item.lessons?.items
+            .filter(
+              (_d: any) =>
+                _d.lesson?.status?.toLowerCase() === item?.status?.toLowerCase()
+            )
+            .map((lesson: any) => {
+              if (lesson?.lesson?.id) {
+                return {
+                  ...lesson,
+                  index: item?.universalLessonsSeq?.indexOf(lesson?.id)
+                };
+              }
+            })
+            .sort((a: any, b: any) => (a.index > b.index ? 1 : -1))
+        }
+      };
+    });
 
     return updatedList;
   };
@@ -569,9 +566,7 @@ export const UnitList = ({
                       setHoveringItem={setHoveringItem}
                       currentSelectedItem={currentSelectedItem}
                       item={unit}
-                      isLast={
-                        finalList.length - 1 === index || finalList.length - 2 === index
-                      }
+                      isLast={finalList.length - 5 <= index}
                       checkIfRemovable={checkIfRemovable}
                       curricular={curricular}
                       handleToggleDelete={handleToggleDelete}

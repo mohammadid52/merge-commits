@@ -1,6 +1,6 @@
-import {GlobalContext} from 'contexts/GlobalContext';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
-import React, {useContext} from 'react';
+import React from 'react';
 
 interface ILessonPlanManagerRowProps {
   index: number;
@@ -9,6 +9,7 @@ interface ILessonPlanManagerRowProps {
   checkIfRemovable?: any;
   handleToggleDelete?: any;
   gotoLessonBuilder?: any;
+  id: string;
 }
 
 const LessonPlanManagerRow = ({
@@ -17,10 +18,11 @@ const LessonPlanManagerRow = ({
   syllabusObject,
   checkIfRemovable,
   handleToggleDelete,
-  gotoLessonBuilder
+  gotoLessonBuilder,
+  id
 }: ILessonPlanManagerRowProps) => {
-  const {clientKey, userLanguage} = useContext(GlobalContext);
-  const {LessonsListDict} = useDictionary(clientKey);
+  const {userLanguage} = useGlobalContext();
+  const {LessonsListDict} = useDictionary();
 
   return (
     <>
@@ -48,17 +50,13 @@ const LessonPlanManagerRow = ({
       {checkIfRemovable(lessonObject, syllabusObject) ? (
         <span
           className={`w-2.5/10 flex items-center justify-center text-left px-8 py-3 cursor-pointer`}
-          onClick={() => handleToggleDelete(lessonObject.title, lessonObject, index)}>
-          {/* <DeleteActionBtn
-            handleClick={() => handleToggleDelete(lessonObject.name, lessonObject)}
-          /> */}
+          onClick={() => handleToggleDelete(lessonObject.title, id, index)}>
           <p className=" text-center text-red-500 hover:text-red-400  text-xs">Delete</p>
         </span>
       ) : (
         <span
           className={`relative w-2.5/10 flex text-gray-500 items-center justify-center text-left px-8 py-3`}
           onClick={() => {}}>
-          {/* <HiOutlineTrash className="w-4 h-4 pointer-events-none" /> */}
           <p className="text-center  text-gray-500 text-xs">
             Delete {LessonsListDict[userLanguage]['NO_DELETE']}
           </p>

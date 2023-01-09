@@ -1,4 +1,5 @@
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
+import {getSelectedCurriculum} from '@components/Lesson/UniversalLesson/views/CoreUniversalLesson/LessonModule';
 import Buttons from 'atoms/Buttons';
 import Loader from 'atoms/Loader';
 import Modal from 'atoms/Modal';
@@ -7,7 +8,7 @@ import {API, graphqlOperation} from 'aws-amplify';
 import AddLearningObjective from 'components/Dashboard/Admin/Institutons/EditBuilders/CurricularsView/TabsActions/AddLearningObjective';
 import AddMeasurement from 'components/Dashboard/Admin/Institutons/EditBuilders/CurricularsView/TabsActions/AddMeasurement';
 import AddTopic from 'components/Dashboard/Admin/Institutons/EditBuilders/CurricularsView/TabsActions/AddTopic';
-import {GlobalContext} from 'contexts/GlobalContext';
+import {GlobalContext, useGlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import * as queries from 'graphql/queries';
@@ -40,17 +41,15 @@ const LearningEvidence = ({
   setUnsavedChanges,
   selectedMeasurements = [],
   setSelectedMeasurements,
-  updating,
   updateMeasurementList
 }: ILearningEvidence) => {
-  const {clientKey, userLanguage} = useContext(GlobalContext);
+  const {userLanguage} = useGlobalContext();
   const {
     AddNewLessonFormDict,
     LearningEvidenceDict,
-    BUTTONS,
     AddMeasurementDict,
     AddTopicDict
-  } = useDictionary(clientKey);
+  } = useDictionary();
   const [addModalShow, setAddModalShow] = useState(false);
   const [selectedCurriculumList, setSelectedCurriculumList] = useState([]);
 
@@ -216,32 +215,16 @@ const LearningEvidence = ({
         })
       );
       const curriculums = list.data?.listCurricula?.items;
-      let selectedCurriculums: any = [];
-      curriculums.map((curriculum: any) => {
-        const assignedSyllabi = curriculum.universalSyllabus?.items.filter(
-          (syllabus: any) =>
-            syllabus.unit.lessons?.items.filter(
-              (lesson: any) => lesson.lessonID === lessonId
-            ).length
+
+      let selectedCurriculums = getSelectedCurriculum(curriculums, lessonId);
+
+      for (const curriculum of selectedCurriculums) {
+        const {learningObjectiveData, learningEvidenceList} = await fetchObjectives(
+          curriculum.id
         );
-        const isCourseAdded = Boolean(assignedSyllabi.length);
-        if (isCourseAdded) {
-          selectedCurriculums.push({
-            ...curriculum,
-            assignedSyllabi: assignedSyllabi.map((syllabus: any) => syllabus.name),
-            assignedSyllabusId: assignedSyllabi.map((syllabus: any) => syllabus.id)
-          });
-        }
-      });
-      await Promise.all(
-        selectedCurriculums.map(async (curriculum: any) => {
-          const {learningObjectiveData, learningEvidenceList} = await fetchObjectives(
-            curriculum.id
-          );
-          curriculum.learningObjectiveData = learningObjectiveData;
-          curriculum.learningEvidenceList = learningEvidenceList;
-        })
-      );
+        curriculum.learningObjectiveData = learningObjectiveData;
+        curriculum.learningEvidenceList = learningEvidenceList;
+      }
       setSelectedCurriculumList(selectedCurriculums);
       setLoading(false);
     } catch (error) {
@@ -452,18 +435,7 @@ const LearningEvidence = ({
                   ))}
                 </div>
               </div>
-              {/* <div className="flex justify-end mt-8">
-                <Buttons
-                  label={
-                    updating
-                      ? BUTTONS[userLanguage]['SAVING']
-                      : BUTTONS[userLanguage]['SAVE']
-                  }
-                  type="submit"
-                  onClick={onSubmit}
-                  disabled={updating}
-                />
-              </div> */}
+
               {serverMessage.message && (
                 <div className="py-2 m-auto mt-2 text-center">
                   <p
