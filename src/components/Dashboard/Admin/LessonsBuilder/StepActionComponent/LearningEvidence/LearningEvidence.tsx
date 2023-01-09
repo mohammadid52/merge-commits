@@ -1,5 +1,6 @@
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import {getSelectedCurriculum} from '@components/Lesson/UniversalLesson/views/CoreUniversalLesson/LessonModule';
+import {LEARINGOBJECTIVEDICT} from '@dictionary/dictionary.iconoclast';
 import Buttons from 'atoms/Buttons';
 import Loader from 'atoms/Loader';
 import Modal from 'atoms/Modal';
@@ -8,11 +9,12 @@ import {API, graphqlOperation} from 'aws-amplify';
 import AddLearningObjective from 'components/Dashboard/Admin/Institutons/EditBuilders/CurricularsView/TabsActions/AddLearningObjective';
 import AddMeasurement from 'components/Dashboard/Admin/Institutons/EditBuilders/CurricularsView/TabsActions/AddMeasurement';
 import AddTopic from 'components/Dashboard/Admin/Institutons/EditBuilders/CurricularsView/TabsActions/AddTopic';
-import {GlobalContext, useGlobalContext} from 'contexts/GlobalContext';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import * as queries from 'graphql/queries';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
+import {IoIosAdd} from 'react-icons/io';
 import AddEvidence from './AddEvidence';
 import CourseMeasurementsCard from './CourseMeasurementsCard';
 import MeasurementsList from './MeasurementsList';
@@ -75,6 +77,11 @@ const LearningEvidence = ({
     // history.push(
     //   `/dashboard/manage-institutions/curricular/${curricularId}/measurement/edit/${id}`
     // );
+  };
+
+  const createLearningObjective = () => {
+    setIsFormOpen(true);
+    setSelectedObjectiveData({});
   };
 
   const onMeasurementClose = () => {
@@ -409,7 +416,22 @@ const LearningEvidence = ({
     <div className="flex m-auto justify-center">
       <div className="">
         <PageWrapper defaultClass="px-2 xl:px-8 bg-gray-100 border-0 border-gray-200">
-          <SectionTitleV3 title={LearningEvidenceDict[userLanguage]['TITLE']} />
+          <SectionTitleV3
+            withButton={
+              Boolean(learnings?.length) && (
+                <Buttons
+                  disabled={loading}
+                  btnClass=""
+                  label={LEARINGOBJECTIVEDICT[userLanguage]['BUTTON']['ADD']}
+                  labelClass={'leading-6'}
+                  Icon={IoIosAdd}
+                  iconBeforeLabel
+                  onClick={createLearningObjective}
+                />
+              )
+            }
+            title={LearningEvidenceDict[userLanguage]['TITLE']}
+          />
 
           {loading ? (
             <div className="mt-4">
