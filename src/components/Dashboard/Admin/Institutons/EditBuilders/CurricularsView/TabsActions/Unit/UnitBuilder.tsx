@@ -136,7 +136,9 @@ const UnitBuilder = ({instId, curricular}: any) => {
 
         const sortedLessonsList = [...savedData.lessons?.items]
           .filter(
-            (_d) => _d.lesson.status?.toLowerCase() === savedData?.status?.toLowerCase()
+            (_d) =>
+              (_d?.lesson?.status || RoomStatus.ACTIVE)?.toLowerCase() ===
+              savedData?.status?.toLowerCase()
           )
           .map((t: any) => {
             let index = savedData.universalLessonsSeq.indexOf(t.id);
