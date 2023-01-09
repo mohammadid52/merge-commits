@@ -141,11 +141,6 @@ export const UnitList = ({
               !addedSyllabus.find((_d: {syllabusID: any}) => _d.syllabusID === unit.id)
           );
 
-          console.log(
-            '🚀 ~ file: UnitList.tsx:143 ~ fetchSyllabusList ~ filtered',
-            filtered
-          );
-
           setUnits([...filtered]);
         }
       } else {
