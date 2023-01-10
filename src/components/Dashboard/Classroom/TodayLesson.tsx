@@ -1,11 +1,15 @@
-import React, {Fragment, useContext, useEffect, useState} from 'react';
-import {LessonProps} from './Classroom';
-import StandardLessonCard from './LessonCards/StandardLessonCard';
-import {GlobalContext} from 'contexts/GlobalContext';
+import SearchInput from '@components/Atoms/Form/SearchInput';
+import useSearch from '@customHooks/useSearch';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
-import {getLocalStorageData} from 'utilities/localStorage';
-import ClassroomLoader from './ClassroomLoader';
 import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
+import {isNumber} from 'lodash';
+import React, {Fragment, useEffect, useState} from 'react';
+import {getLocalStorageData} from 'utilities/localStorage';
+import {Empty} from '../Admin/LessonsBuilder/StepActionComponent/LearningEvidence/CourseMeasurementsCard';
+import {LessonProps} from './Classroom';
+import ClassroomLoader from './ClassroomLoader';
+import StandardLessonCard from './LessonCards/StandardLessonCard';
 
 const groupBy = (item: any, key: string) =>
   item.reduce(
@@ -20,7 +24,7 @@ const Today: React.FC<LessonProps> = ({
   activeRoom,
   activeRoomInfo,
   isTeacher,
-  searchTerm,
+
   lessonLoading,
   lessons,
   syllabus,
@@ -28,38 +32,54 @@ const Today: React.FC<LessonProps> = ({
   getLessonRating
 }: LessonProps) => {
   // ~~~~~~~~~~ CONTEXT SPLITTING ~~~~~~~~~~ //
-  const gContext = useContext(GlobalContext);
+  const gContext = useGlobalContext();
   const state = gContext.state;
-  const clientKey = gContext.clientKey;
   const userLanguage = gContext.userLanguage;
 
-  const {classRoomDict} = useDictionary(clientKey);
+  const {classRoomDict} = useDictionary();
   const [accessible, setAccessible] = useState<boolean>(true);
   const [lessonsBySession, setLessonsBySession] = useState<any>([]);
-  console.log('🚀 ~ file: TodayLesson.tsx:39 ~ lessonsBySession', lessonsBySession);
 
   const getRoomData = getLocalStorageData('room_info');
 
+  const [filteredList, setFilteredList] = useState([...lessons]);
+
+  const {
+    searchInput,
+    setSearch,
+
+    removeSearchAction,
+    searchAndFilter
+  } = useSearch([...lessons], ['lessonTitle']);
+
+  const searchLesson = () => {
+    const searched = searchAndFilter(searchInput.value);
+    if (Boolean(searched)) {
+      setFilteredList(searched);
+    } else {
+      removeSearchAction(() => setFilteredList([]));
+    }
+  };
+
+  const finalList = searchInput.isActive ? filteredList : lessons;
+
   useEffect(() => {
     setAccessible(true);
-  }, [lessons]);
+  }, [finalList]);
 
   useEffect(() => {
     if (lessonLoading && lessonsBySession.length) {
       setLessonsBySession([]);
     }
-  }, [lessonLoading]);
+  }, [lessonLoading, finalList]);
 
   const {breakpoint} = useTailwindBreakpoint();
 
   useEffect(() => {
-    if (lessons?.length) {
+    if (finalList?.length > 0) {
       const temp: any = [];
-      const groupedData = groupBy(lessons, 'session');
+      const groupedData = groupBy(finalList, 'session');
 
-      // .filter(
-      //   (_d: any) => _d.lesson.type === 'survey'
-      // );
       for (const [key, value] of Object.entries(groupedData)) {
         const associatedLessons: any = value;
         if (breakpoint === 'sm') {
@@ -78,13 +98,11 @@ const Today: React.FC<LessonProps> = ({
       }
       setLessonsBySession(temp);
     }
-  }, [lessons, breakpoint]);
-
-  const emptyStyles = 'flex justify-center items-center w-full h-48';
+  }, [finalList, breakpoint]);
 
   return (
     <>
-      {classRoomDict && lessonLoading ? (
+      {lessonLoading ? (
         Array(3)
           .fill(' ')
           .map((_: any, index: number) => (
@@ -93,53 +111,66 @@ const Today: React.FC<LessonProps> = ({
             </Fragment>
           ))
       ) : lessonsBySession?.length ? (
-        lessonsBySession.map((session: any, index: number) => (
-          <Fragment key={index}>
-            <div className="relative mb-2">
-              <div className="absolute inset-0 flex items-center" aria-hidden="true">
-                <div className="w-full border-t-0 border-gray-400"></div>
-              </div>
-              <div className="relative flex justify-center">
-                <span
-                  className="px-2 text-sm text-gray-500 w-auto"
-                  style={{
-                    backgroundColor: '#f0f2f5'
-                  }}>
-                  {session.sessionHeading}
-                </span>
-              </div>
-            </div>
-            {session.lessons.filter(Boolean).map((lesson: any, key: number) => {
-              if (lesson?.lesson?.id) {
-                return (
-                  <div
-                    id={`todayLesson_${lesson.lesson.id}_wrapper`}
-                    key={`todayLesson_${lesson.lesson.id}_wrapper`}>
-                    <StandardLessonCard
-                      roomID={getRoomData?.id}
-                      searchTerm={searchTerm}
-                      isTeacher={isTeacher}
-                      keyProps={`todayLesson_${key}`}
-                      activeRoomInfo={activeRoomInfo}
-                      lessonProps={lesson}
-                      syllabusProps={syllabus}
-                      accessible={accessible}
-                      user={state.user}
-                      handleLessonMutationRating={handleLessonMutationRating}
-                      getLessonRating={getLessonRating}
-                    />
+        <>
+          <div className="w-full flex items-center justify-end mb-4 text-base">
+            <SearchInput
+              dataCy="classroom-search-input"
+              value={searchInput.value}
+              onChange={setSearch}
+              isActive={searchInput.isActive}
+              disabled={lessonLoading}
+              onKeyDown={searchLesson}
+              closeAction={removeSearchAction}
+            />
+          </div>
+          {lessonsBySession.map((session: any, index: number) => (
+            <Fragment key={index}>
+              {isNumber(session.sessionHeading) && (
+                <div className="relative mb-2">
+                  <div className="absolute inset-0 flex items-center" aria-hidden="true">
+                    <div className="w-full border-t-0 border-gray-400"></div>
                   </div>
-                );
-              } else return <div key={`todayLesson_${lesson.lesson.id}_wrapper`} />;
-            })}
-          </Fragment>
-        ))
+                  <div className="relative flex justify-center">
+                    <span
+                      className="px-2 text-sm text-gray-500 w-auto"
+                      style={{
+                        backgroundColor: '#f0f2f5'
+                      }}>
+                      {session.sessionHeading}
+                    </span>
+                  </div>
+                </div>
+              )}
+              {session.lessons.filter(Boolean).map((lesson: any, key: number) => {
+                if (lesson?.lesson?.id) {
+                  return (
+                    <div
+                      id={`todayLesson_${lesson.lesson.id}_wrapper`}
+                      key={`todayLesson_${lesson.lesson.id}_wrapper`}>
+                      <StandardLessonCard
+                        roomID={getRoomData?.id}
+                        searchTerm={searchInput.value}
+                        isTeacher={isTeacher}
+                        keyProps={`todayLesson_${key}`}
+                        activeRoomInfo={activeRoomInfo}
+                        lessonProps={lesson}
+                        syllabusProps={syllabus}
+                        accessible={accessible}
+                        user={state.user}
+                        handleLessonMutationRating={handleLessonMutationRating}
+                        getLessonRating={getLessonRating}
+                      />
+                    </div>
+                  );
+                } else return <div key={`todayLesson_${lesson.lesson.id}_wrapper`} />;
+              })}
+            </Fragment>
+          ))}
+        </>
+      ) : !Boolean(activeRoomInfo?.activeSyllabus) ? (
+        <Empty text="No active unit for this room" />
       ) : activeRoom !== '' && !lessonLoading && lessons?.length === 0 ? (
-        <div className={`${emptyStyles}`}>
-          <p className="text-center text-lg text-gray-500">
-            {classRoomDict[userLanguage].MESSAGES.NO_LESSONS}
-          </p>
-        </div>
+        <Empty text={classRoomDict[userLanguage].MESSAGES.NO_LESSONS} />
       ) : null}
     </>
   );

@@ -190,7 +190,7 @@ const Csv = ({institutionId}: ICsvProps) => {
   const [isCSVReady, setIsCSVReady] = useState(false);
   const [isCSVDownloadReady, setIsCSVDownloadReady] = useState(false);
   const [CSVHeaders, setCSVHeaders] = useState([]);
-  console.log('🚀 ~ file: Csv.tsx:191 ~ Csv ~ CSVHeaders', CSVHeaders);
+
   const [CSVData, setCSVData] = useState([]);
   const [lessonPDFData, setLessonPDFData] = useState<any[]>([]);
 

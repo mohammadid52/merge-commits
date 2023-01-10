@@ -12,13 +12,14 @@ import * as mutations from 'graphql/mutations';
 
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import {Empty} from '@components/Dashboard/Admin/LessonsBuilder/StepActionComponent/LearningEvidence/CourseMeasurementsCard';
-import {RoomStatus} from 'API';
 import AddButton from 'atoms/Buttons/AddButton';
 import Selector from 'atoms/Form/Selector';
 import Loader from 'atoms/Loader';
 import ModalPopUp from 'molecules/ModalPopUp';
 import {reorder} from 'utilities/strings';
 import UnitManagerRow from './UnitManagerRow';
+import Buttons from '@components/Atoms/Buttons';
+import {BUTTONS} from '@dictionary/dictionary.iconoclast';
 
 interface UIMessages {
   show: boolean;
@@ -379,6 +380,12 @@ const UnitManager = ({
               onChange={handleSelectSyllabus}
               additionalClass="w-auto "
               width="w-96"
+            />
+
+            <Buttons
+              label={BUTTONS[userLanguage]['ADD']}
+              onClick={addNewSyllabusToCourse}
+              disabled={!Boolean(selectedSyllabus.id)}
             />
 
             <AddButton
