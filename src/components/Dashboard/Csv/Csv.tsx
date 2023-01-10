@@ -22,6 +22,8 @@ import {RiErrorWarningLine} from 'react-icons/ri';
 import {getImageFromS3Static} from 'utilities/services';
 import {createFilterToFetchSpecificItemsOnly} from 'utilities/strings';
 import SurveyPDF from './SurveyPDF';
+const reg = /[,.]/gi;
+
 export const DataValue = ({
   title,
   content
@@ -188,6 +190,7 @@ const Csv = ({institutionId}: ICsvProps) => {
   const [isCSVReady, setIsCSVReady] = useState(false);
   const [isCSVDownloadReady, setIsCSVDownloadReady] = useState(false);
   const [CSVHeaders, setCSVHeaders] = useState([]);
+  console.log('🚀 ~ file: Csv.tsx:191 ~ Csv ~ CSVHeaders', CSVHeaders);
   const [CSVData, setCSVData] = useState([]);
   const [lessonPDFData, setLessonPDFData] = useState<any[]>([]);
 
@@ -312,10 +315,16 @@ const Csv = ({institutionId}: ICsvProps) => {
       );
       let units = curriculumUnits?.data.listCurriculumUnits?.items || [];
 
-      units = units.map((syl: any) => {
-        let unitData = syl.unit;
-        return {id: unitData.id, name: unitData.name};
-      });
+      units = units.filter((d: any) => d.unit !== null);
+
+      units = units
+        .map((syl: any) => {
+          let unitData = syl.unit;
+          if (unitData && unitData?.id) {
+            return {id: unitData.id, name: unitData.name};
+          }
+        })
+        .filter(Boolean);
 
       setActiveUnits(units);
     } catch (error) {
@@ -468,6 +477,7 @@ const Csv = ({institutionId}: ICsvProps) => {
         })
       );
       let units = curriculumUnits?.data.listCurriculumUnits?.items || [];
+      units = units.filter((d: any) => d.unit !== null);
 
       units = units.map((syl: any) => {
         let unitData = syl.unit;
@@ -1044,6 +1054,22 @@ const Csv = ({institutionId}: ICsvProps) => {
 
   const [showWarnModal, setShowWarnModal] = useState(false);
 
+  const getSeparatedHeaders = (arr: any[]) => {
+    if (arr && arr.length > 0) {
+      let result = arr.map((i) => {
+        return {
+          ...i,
+          label: i.label.replaceAll(reg, '')
+        };
+      });
+
+      return result;
+    }
+    return arr;
+  };
+
+  const mappedHeaders = getSeparatedHeaders(CSVHeaders);
+
   return (
     <>
       {showWarnModal && (
@@ -1205,7 +1231,7 @@ const Csv = ({institutionId}: ICsvProps) => {
                 data={CSVData}
                 className="w-auto ml-2"
                 id="csv-download-button"
-                headers={CSVHeaders}
+                headers={mappedHeaders}
                 filename={`${selectedClassRoom?.name}_${
                   selectedSurvey?.name
                 }_${getTodayDate()}.csv`}>
