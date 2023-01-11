@@ -113,24 +113,13 @@ export const Table = ({CSVData}: {CSVData: any[]}) => {
   );
 };
 
-type IModal = {
-  show: boolean;
-  element: React.ReactNode;
-  title: string;
-  saveLabel?: string;
-  saveAction?: () => void;
-  closeLabel?: string;
-  saveElement?: React.ReactNode;
-};
-
-const INITIAL_MODAL_STATE: IModal = {
+const INITIAL_MODAL_STATE = {
   show: false,
   element: <div />,
   title: '',
   saveAction: () => {},
   saveLabel: '',
-  closeLabel: '',
-  saveElement: null
+  closeLabel: ''
 };
 
 const UploadCsv = ({institutionId}: ICsvProps) => {
@@ -332,8 +321,8 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
   };
 
   const customParse = (data: any[]) => {
-    if (data[0][0] === '') {
-      setError('Invalid formatted header.. Make sure column headers are not changed');
+    if (data[0][0] !== 'AuthId') {
+      setError('Invalid formatted header.. Make sure column header are not changed');
       console.error('Invalid formatted header.. Make sure header has valid values');
       return;
     } else {
@@ -710,18 +699,11 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
       setShowModal({
         show: true,
         title: 'Not supported',
+        saveLabel: 'Convert file',
         closeLabel: 'Cancel',
-        saveAction: () => {},
-        saveElement: (
-          <a
-            href={XLSX_TO_CSV_URL}
-            onClick={() => clearModal()}
-            target="_blank"
-            rel="no-referrer"
-            className="">
-            Convert to csv
-          </a>
-        ),
+        saveAction: () => {
+          window.location.replace(XLSX_TO_CSV_URL);
+        },
         element: (
           <div className="flex flex-col justify-center items-center gap-y-4">
             <RiErrorWarningLine fontSize={'4rem'} className="text-yellow-500 animate-y" />
@@ -1392,10 +1374,9 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
           closeAction={clearModal}
           saveAction={showModal.saveAction}
           closeOnBackdrop
-          saveElement={showModal?.saveElement}
           closeLabel={showModal.closeLabel}
-          saveLabel={showModal?.saveLabel}
-          showFooter={Boolean(showModal.closeLabel)}>
+          saveLabel={showModal.saveLabel}
+          showFooter={Boolean(showModal.saveLabel && showModal.closeLabel)}>
           {showModal.element}
         </Modal>
       )}

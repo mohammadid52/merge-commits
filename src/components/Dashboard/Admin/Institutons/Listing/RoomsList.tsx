@@ -393,7 +393,54 @@ const RoomsList = (props: RoomListProps) => {
             </div>
           </div>
         ) : finalList.length ? (
-          <Table {...tableConfig} />
+          <div
+            style={{maxHeight: '57vh'}}
+            className="table-custom-responsive overflow-y-auto">
+            <table className="border-collapse table-auto w-full table-hover table-striped">
+              <thead className="thead-light">
+                <tr>
+                  <th className="bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                    {InstitueRomms[userLanguage]['NO']}
+                  </th>
+
+                  <th
+                    className={`bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider`}>
+                    {InstitueRomms[userLanguage]['CLASSROOMS_NAME']}
+                  </th>
+                  {(isSuperAdmin || isAdmin || isBuilder) && (
+                    <th className="bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                      {InstitueRomms[userLanguage]['INSTITUTION_NAME']}
+                    </th>
+                  )}
+
+                  <th className="bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                    {InstitueRomms[userLanguage]['TEACHER']}
+                  </th>
+
+                  <th className="bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                    {InstitueRomms[userLanguage]['CURRICULUM']}
+                  </th>
+
+                  <th className="bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                    {InstitueRomms[userLanguage]['STATUS']}
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {finalList.map((item: any, i: number) => {
+                  return (
+                    <Room
+                      searchInput={searchInput.value}
+                      item={item}
+                      i={i}
+                      key={i}
+                      editCurrentRoom={editCurrentRoom}
+                    />
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
         ) : (
           <Fragment>
             {(!isSuperAdmin || !isAdmin || !isBuilder) && (

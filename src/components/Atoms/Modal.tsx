@@ -28,7 +28,6 @@ interface ModalProps {
   modalCloseId?: string;
   maxWidth?: string;
   closeLabel?: string;
-
   saveLabel?: string;
 }
 
@@ -58,26 +57,14 @@ const ModalFooter = (footerProps: {
   onClose?: () => void;
   closeLabel?: string;
   saveLabel?: string;
-  saveElement?: React.ReactNode;
 }) => {
-  const {
-    onSave,
-    onClose,
-    saveElement,
-    saveLabel = 'Save changes',
-    closeLabel = 'Close'
-  } = footerProps;
+  const {onSave, onClose, saveLabel = 'Save changes', closeLabel = 'Close'} = footerProps;
   const {theme} = useContext(GlobalContext);
 
   return (
     <div className={`${theme.modals.footer}`}>
       <Buttons label={closeLabel} title={closeLabel} onClick={onClose} transparent />
-      <Buttons
-        label={saveElement !== undefined && saveElement !== null ? null : saveLabel}
-        insideElement={saveElement}
-        title={saveLabel}
-        onClick={onSave}
-      />
+      <Buttons label={saveLabel} title={saveLabel} onClick={onSave} />
     </div>
   );
 };
@@ -104,8 +91,7 @@ const Modal: React.FC<ModalProps> = (modalProps: ModalProps) => {
     maxWidth,
     className,
     closeLabel,
-    saveLabel,
-    saveElement
+    saveLabel
   } = modalProps;
   const {theme} = useContext(GlobalContext);
   useEffect(() => {
@@ -174,7 +160,6 @@ const Modal: React.FC<ModalProps> = (modalProps: ModalProps) => {
             {showFooter && (
               <ModalFooter
                 closeLabel={closeLabel}
-                saveElement={saveElement}
                 saveLabel={saveLabel}
                 onSave={saveAction}
                 onClose={closeAction}

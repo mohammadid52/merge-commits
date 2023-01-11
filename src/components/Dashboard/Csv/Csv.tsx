@@ -68,6 +68,33 @@ export const removeDuplicates = (array: any[]) => {
   return result;
 };
 
+export const insertExtraDataForClassroom = (cr: any) => {
+  const teacherImage = getImageFromS3Static(cr?.teacher?.image);
+  return {
+    institutionName: cr?.institution?.name || '',
+    teacher: {
+      name: `${cr?.teacher?.firstName} ${cr?.teacher?.lastName}`,
+      image: teacherImage
+    },
+    courseName: cr?.curricula?.items[0]?.curriculum?.name || '',
+    status: cr?.status || RoomStatus.ACTIVE,
+    activeSyllabus: cr?.activeSyllabus
+  };
+};
+
+export const removeDuplicates = (array: any[]) => {
+  let ids: any[] = [];
+
+  let result: any[] = [];
+  array.forEach((item) => {
+    if (!ids.includes(item?.id)) {
+      result.push(item);
+      ids.push(item.id);
+    }
+  });
+  return result;
+};
+
 const getFormatedDate = (date: string) => {
   if (date) {
     if (date !== '-') {
@@ -1068,7 +1095,13 @@ const Csv = ({institutionId}: ICsvProps) => {
     return arr;
   };
 
-  const mappedHeaders = getSeparatedHeaders(CSVHeaders);
+  useEffect(() => {
+    document.getElementById('csv-download-button').addEventListener('click', () => {
+      setShowWarnModal(true);
+    });
+  }, []);
+
+  const [showWarnModal, setShowWarnModal] = useState(false);
 
   return (
     <>
@@ -1231,7 +1264,7 @@ const Csv = ({institutionId}: ICsvProps) => {
                 data={CSVData}
                 className="w-auto ml-2"
                 id="csv-download-button"
-                headers={mappedHeaders}
+                headers={CSVHeaders}
                 filename={`${selectedClassRoom?.name}_${
                   selectedSurvey?.name
                 }_${getTodayDate()}.csv`}>

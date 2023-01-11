@@ -572,6 +572,12 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
 
   return (
     <div className="">
+      <div className="py-8 py-4">
+        <h3 className="text-lg leading-6 font-medium text-gray-900 w-auto capitalize">
+          {roomData.name}
+        </h3>
+      </div>
+
       {addStudentModal && (
         <Modal
           saveAction={addStudentInClass}
@@ -628,6 +634,30 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
       {
         <div className="">
           <div className="flex flex-col items-center justify-center m-auto px-4 mb-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+              <div className="col-span-5">
+                <label className="block text-xs font-semibold mb-1 leading-5 text-gray-700">
+                  Add students to class
+                </label>
+                <div className="flex items-center justify-between">
+                  <SearchSelectorWithAvatar
+                    dataCy="edit-class"
+                    selectedItem={newMember}
+                    list={filteredStudents.length > 0 ? filteredStudents : allStudents}
+                    placeholder={dictionary.ADD_STUDENT_PLACEHOLDER}
+                    onChange={onStudentSelect}
+                    fetchStudentList={fetchStudentList}
+                    clearFilteredStudents={clearFilteredStudents}
+                    searchStatus={searching}
+                    searchCallback={setSearching}
+                    imageFromS3={false}
+                    creatable
+                    creatableLabel={'Add students from register to class'}
+                    onCreate={() => setShowRegistrationForm(true)}
+                  />
+                </div>
+              </div>
+            </div>
             <div className="py-2">
               <p className={`${messages.isError ? 'text-red-600' : 'text-green-600'}`}>
                 {addMessage?.message}

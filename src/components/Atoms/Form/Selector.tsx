@@ -108,7 +108,6 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
     dropdownWidth,
     arrowHidden,
     btnId,
-    disableSort = false,
     setHoveringItem,
 
     dataCy = ''
@@ -200,8 +199,7 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
                 className="w-auto absolute right-1"
                 show={isClearable && selectedItem !== null}>
                 {isClearable && selectedItem !== null && (
-                  <span
-                    role={'button'}
+                  <button
                     title="clear sort"
                     className="z-100 relative flex justify-center  cursor-pointer hover:bg-gray-200
                    rounded-full"
@@ -213,7 +211,7 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
                       size={'1rem'}
                       className="hover:iconoclast:text-main hover:curate:text-main transition-all text-gray-600"
                     />
-                  </span>
+                  </button>
                 )}
               </AnimatedContainer>
 
@@ -233,10 +231,14 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
               arrowHidden ? 'hidden' : 'flex'
             }`}>
             {loading ? (
-              <FaSpinner
-                size={'1.2rem'}
-                className={`relative mr-2 w-auto animate-spin ${theme.textColor[themeColor]}`}
-              />
+              <IconContext.Provider
+                value={{
+                  size: '1.2rem',
+                  style: {},
+                  className: `relative mr-2 w-auto animate-spin ${theme.textColor[themeColor]}`
+                }}>
+                <FaSpinner />
+              </IconContext.Provider>
             ) : (
               <svg
                 className="h-5 w-5 text-gray-400"

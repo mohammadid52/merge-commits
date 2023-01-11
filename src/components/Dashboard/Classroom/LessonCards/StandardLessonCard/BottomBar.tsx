@@ -24,7 +24,7 @@ const BottomBar = (props: LessonCardProps) => {
     isTeacher: isTeacher,
     lessonKey: lessonProps ? lessonProps.lessonID : null,
     isActive: activeRoomInfo?.activeLessons?.includes(lessonProps?.lessonID),
-    open: lessonProps && lessonProps?.status?.toLowerCase() === 'active' ? true : false,
+    open: lessonProps && lessonProps.status === 'Active' ? true : false,
     isCompleted: isCompleted,
     accessible: accessible,
     type: lessonProps.lesson.type,
