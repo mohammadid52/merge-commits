@@ -760,69 +760,6 @@ const LessonBuilder = (props: LessonBuilderProps) => {
             </div>
           ) : (
             <div className="">{currentStepComp(activeStep)}</div>
-            // <div>
-            //   <AnimatedContainer show={activeStep === 'overview'} {...animationProps}>
-            //     {activeStep === 'overview' && (
-            //       <AddNewLessonForm
-            //         lessonId={lessonId}
-            //         changeLessonType={changeLessonType}
-            //         formData={formData}
-            //         setFormData={setFormData}
-            //         designerListLoading={designerListLoading}
-            //         designersList={designersList}
-            //         selectedDesigners={selectedDesigners}
-            //         setSelectedDesigners={setSelectedDesigners}
-            //         postLessonCreation={postLessonCreation}
-            //         allMeasurement={measurementList}
-            //         institutionList={institutionList}
-            //         setUnsavedChanges={setUnsavedChanges}
-            //         fetchStaffByInstitution={fetchStaffByInstitution}
-            //       />
-            //     )}
-            //   </AnimatedContainer>
-            //   <AnimatedContainer show={activeStep === 'activities'} {...animationProps}>
-            //     {activeStep === 'activities' && (
-            //       <LessonActivities
-            //         loading={loading}
-            //         lessonId={lessonId}
-            //         lessonName={formData?.name}
-            //         universalLessonDetails={universalLessonDetails}
-            //       />
-            //     )}
-            //   </AnimatedContainer>
-            //   <AnimatedContainer show={activeStep === 'courses'} {...animationProps}>
-            //     {activeStep === 'courses' && (
-            //       <LessonCourse
-            //         institutionCollection={institutionCollection}
-            //         curriculumList={curriculumList}
-            //         fetchCurriculum={fetchCurriculum}
-            //         institution={formData?.institution}
-            //         lessonId={lessonId}
-            //         lessonPlans={universalLessonDetails?.lessonPlan}
-            //         lessonType={formData.type?.value}
-            //         loading={curriculumLoading}
-            //         selectedCurriculums={selectedCurriculumList}
-            //       />
-            //     )}
-            //   </AnimatedContainer>
-            //   <AnimatedContainer
-            //     show={activeStep === 'learning-evidence'}
-            //     {...animationProps}>
-            //     {activeStep === 'learning-evidence' && (
-            //       <LearningEvidence
-            //         fetchLessonRubrics={fetchLessonRubrics}
-            //         institutionId={formData?.institution?.id}
-            //         lessonId={lessonId}
-            //         selectedMeasurements={selectedMeasurements}
-            //         setSelectedMeasurements={setSelectedMeasurements}
-            //         setUnsavedChanges={setUnsavedChanges}
-            //         serverMessage={serverMessage}
-            //         updating={updating}
-            //         updateMeasurementList={updateMeasurementList}
-            //       />
-            //     )}
-            //   </AnimatedContainer>
-            // </div>
           )}
         </div>
       </div>

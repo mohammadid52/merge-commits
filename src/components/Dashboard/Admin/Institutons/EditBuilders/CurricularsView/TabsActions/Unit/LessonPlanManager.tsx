@@ -1,6 +1,5 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import React, {useContext, useEffect, useState} from 'react';
-import {DragDropContext, Draggable, Droppable} from 'react-beautiful-dnd';
 import {useHistory} from 'react-router';
 
 import {GlobalContext} from 'contexts/GlobalContext';
@@ -11,16 +10,16 @@ import * as customQueries from 'customGraphql/customQueries';
 import * as mutations from 'graphql/mutations';
 
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
-import {Empty} from '@components/Dashboard/Admin/LessonsBuilder/StepActionComponent/LearningEvidence/CourseMeasurementsCard';
+import CourseAction from '@components/MicroComponents/CourseAction';
+import Table from '@components/Molecules/Table';
 import useAuth from '@customHooks/useAuth';
 import {logError} from '@graphql/functions';
 import {RoomStatus} from 'API';
 import AddButton from 'atoms/Buttons/AddButton';
 import Selector from 'atoms/Form/Selector';
-import Loader from 'atoms/Loader';
+import {map} from 'lodash';
 import ModalPopUp from 'molecules/ModalPopUp';
 import {getLessonType, reorder} from 'utilities/strings';
-import LessonPlanManagerRow from './LessonPlanManagerRow';
 
 interface UIMessages {
   show: boolean;
@@ -96,7 +95,9 @@ const LessonPlanManager = ({
         graphqlOperation(customQueries.listUniversalLessonsOptions, {
           filter: {
             institutionID: {eq: institutionId},
-            status: {eq: syllabusDetails.status || RoomStatus.ACTIVE}
+            status: {
+              eq: syllabusDetails.status || RoomStatus.ACTIVE
+            }
           }
         })
       );
@@ -219,17 +220,21 @@ const LessonPlanManager = ({
     const lessonsDetails = [...allLessonsList];
     const filteredList = savedLessonIds;
 
-    let updatedTableList = filteredList.map((item) => {
-      let tableList;
-      const selectedLesson = savedLessonIds.find((lesson) => lesson.lessonID === item.id);
-      tableList = {
-        ...item,
-        status: selectedLesson?.status || RoomStatus.ACTIVE,
-        uniqlessonId: selectedLesson?.id,
-        measurements: selectedLesson?.measurements
-      };
-      return tableList;
-    });
+    let updatedTableList = filteredList
+      .filter((d) => d.lesson !== null)
+      .map((item) => {
+        let tableList;
+        const selectedLesson = savedLessonIds.find(
+          (lesson) => lesson.lessonID === item.id
+        );
+        tableList = {
+          ...item,
+          status: selectedLesson?.status || RoomStatus.ACTIVE,
+          uniqlessonId: selectedLesson?.id,
+          measurements: selectedLesson?.measurements
+        };
+        return tableList;
+      });
 
     const filteredDropDownList = lessonsDetails
       .filter(
@@ -247,10 +252,7 @@ const LessonPlanManager = ({
       }));
 
     updatedTableList = updatedTableList
-      .filter(
-        (_d) =>
-          _d?.lesson?.status?.toLowerCase() === syllabusDetails?.status?.toLowerCase()
-      )
+
       .map((t: any) => {
         let index = lessonsIds?.indexOf(t.id);
         return {...t, index};
@@ -258,6 +260,7 @@ const LessonPlanManager = ({
       .sort((a: any, b: any) => (a.index > b.index ? 1 : -1));
 
     setSelectedLessonsList(updatedTableList);
+
     setDropdownLessonsList(filteredDropDownList);
   };
 
@@ -390,6 +393,77 @@ const LessonPlanManager = ({
     }
   };
 
+  const dict = SyllabusDict[userLanguage]['TABLE_HEADS'];
+
+  const dataList = map(selectedLessonsList, (item, idx) => {
+    const lessonObj = item.lesson;
+    return {
+      no: idx + 1,
+      id: item.id,
+      lessonName: (
+        <div
+          className="cursor-pointer"
+          onClick={() => gotoLessonBuilder(lessonObj.id, lessonObj.type)}>
+          {lessonObj.title || '--'}
+        </div>
+      ),
+      type: lessonObj.type || '--',
+      measurements:
+        lessonObj?.measurements?.length > 0
+          ? lessonObj?.measurements?.map((rubric: any, index: number) =>
+              index === lessonObj?.measurements?.length - 1
+                ? rubric?.rubric?.name + '.'
+                : rubric?.rubric?.name + ', '
+            )
+          : '-',
+      actions: (
+        <CourseAction
+          item={lessonObj}
+          onView={() => gotoLessonBuilder(lessonObj.id, lessonObj.type)}
+          onDelete={() => handleToggleDelete(lessonObj.title, item.id, idx)}
+          checkIfRemovable={(lsnObj: any) => checkIfRemovable(lsnObj, syllabusDetails)}
+        />
+      )
+    };
+  });
+
+  const tableConfig = {
+    headers: [
+      dict['NUMBER'],
+      dict['LESSON_NAME'],
+      dict['TYPE'],
+      dict['MEASUREMENTS'],
+      dict['ACTION']
+    ],
+    dataList,
+    config: {
+      dark: false,
+
+      isFirstIndex: true,
+      headers: {textColor: 'text-white'},
+      dataList: {
+        emptyText: `No lesson found - current unit status is ${
+          syllabusDetails?.status?.toLowerCase() || RoomStatus.ACTIVE.toLocaleLowerCase()
+        }`,
+        loading,
+        droppable: {
+          isDroppable: true,
+          droppableId: 'lessonPlanManagerList',
+          onDragEnd
+        },
+        customWidth: {
+          no: 'w-12',
+
+          lessonName: 'w-96',
+          actions: 'w0'
+        },
+        maxHeight: 'max-h-196',
+        pattern: 'striped',
+        patternConfig: {firstColor: 'bg-gray-100', secondColor: 'bg-gray-200'}
+      }
+    }
+  };
+
   return (
     <div className="">
       {/* *************** SECTION HEADER ************ */}
@@ -433,87 +507,7 @@ const LessonPlanManager = ({
         shadowOff
       />
 
-      <div className="mt-4">
-        {loading ? (
-          <div className="h-100 flex justify-center items-center">
-            <div className="w-5/10">
-              <Loader animation withText="Fetching lessons..." />
-            </div>
-          </div>
-        ) : selectedLessonsList && selectedLessonsList.length > 0 ? (
-          <div>
-            {/* *************** LESSONS TABLE HEADERS ************ */}
-            <div className="flex justify-between bg-gray-50  px-8 whitespace-nowrap border-b-0 border-gray-200  lg:w-full">
-              <div className="w-.5/10 px-8 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                <span>{SyllabusDict[userLanguage]['TABLE_HEADS']['NUMBER']}</span>
-              </div>
-              <div className="w-2/10 px-8 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                <span>{SyllabusDict[userLanguage]['TABLE_HEADS']['LESSON_NAME']}</span>
-              </div>
-              <div className="w-1/10 px-8 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                <span>{SyllabusDict[userLanguage]['TABLE_HEADS']['TYPE']}</span>
-              </div>
-              <div className="w-3/10 px-8 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                <span>{SyllabusDict[userLanguage]['TABLE_HEADS']['MEASUREMENTS']}</span>
-              </div>
-              <div className="w-2.5/10 px-8 py-3 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                <span>{SyllabusDict[userLanguage]['TABLE_HEADS']['ACTION']}</span>
-              </div>
-            </div>
-
-            <div className="max-h-132  lg:w-full overflow-y-auto overflow-x-hidden mb-10">
-              <DragDropContext onDragEnd={onDragEnd}>
-                <Droppable droppableId="droppable">
-                  {(provided1, snapshot) => (
-                    <div {...provided1.droppableProps} ref={provided1.innerRef}>
-                      {selectedLessonsList.map((item, index) => (
-                        <Draggable key={item.id} draggableId={item.id} index={index}>
-                          {(provided, snapshot) => {
-                            return (
-                              <div
-                                key={`${item.id}_key`}
-                                className={`${
-                                  snapshot.isDragging
-                                    ? 'theme-bg:100 transition-all isDragging'
-                                    : ''
-                                } w-auto`}
-                                ref={provided.innerRef}
-                                {...provided.draggableProps}
-                                {...provided.dragHandleProps}>
-                                <div className="flex justify-between w-full px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
-                                  <LessonPlanManagerRow
-                                    index={index}
-                                    lessonObject={item.lesson}
-                                    id={item.id}
-                                    syllabusObject={syllabusDetails}
-                                    checkIfRemovable={checkIfRemovable}
-                                    handleToggleDelete={handleToggleDelete}
-                                    gotoLessonBuilder={gotoLessonBuilder}
-                                  />
-                                </div>
-                              </div>
-                            );
-                          }}
-                        </Draggable>
-                      ))}
-                      {provided1.placeholder}
-                    </div>
-                  )}
-                </Droppable>
-              </DragDropContext>
-            </div>
-          </div>
-        ) : (
-          <div className="text-center p-16 mt-4">
-            <Empty
-              text={`No lesson found - current unit status is ${
-                syllabusDetails?.status?.toLowerCase() ||
-                RoomStatus.ACTIVE.toLocaleLowerCase()
-              }`}
-            />
-          </div>
-        )}
-      </div>
+      <Table {...tableConfig} />
 
       {messages.show && <p className="text-sm text-red-500">{messages.message}</p>}
 

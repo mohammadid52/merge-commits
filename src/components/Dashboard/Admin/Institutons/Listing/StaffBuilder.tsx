@@ -1,6 +1,5 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import React, {useEffect, useState} from 'react';
-import {DragDropContext, Draggable, Droppable} from 'react-beautiful-dnd';
 import {useHistory, useRouteMatch} from 'react-router';
 
 import Buttons from 'atoms/Buttons';
@@ -25,13 +24,14 @@ import SearchInput from '@components/Atoms/Form/SearchInput';
 import Highlighted from '@components/Atoms/Highlighted';
 import Placeholder from '@components/Atoms/Placeholder';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
+import Table from '@components/Molecules/Table';
 import useSearch from '@customHooks/useSearch';
 import AddButton from 'atoms/Buttons/AddButton';
-import Loader from 'atoms/Loader';
 import Modal from 'atoms/Modal';
 import Status from 'atoms/Status';
 import Tooltip from 'atoms/Tooltip';
 import Registration from 'components/Dashboard/Admin/UserManagement/Registration';
+import {map} from 'lodash';
 
 interface StaffBuilderProps {
   instituteId: String;
@@ -393,6 +393,112 @@ const StaffBuilder = (props: StaffBuilderProps) => {
 
   const finalList = searchInput.isActive ? filteredList : activeStaffList;
 
+  const dataList = map(finalList, (item: any, index) => ({
+    id: item.id,
+    no: index + 1,
+    name: (
+      <div
+        className="flex items-center cursor-pointer "
+        onClick={() => gotoProfilePage(item.userId)}>
+        <div className="flex-shrink-0 h-10 w-10 flex items-center">
+          {!item.image ? (
+            <Placeholder size="h-8 w-8" name={`${item.firstName} ${item.lastName}`} />
+          ) : (
+            <div className="h-8 w-8 rounded-full flex justify-center items-center">
+              <img src={item.image} className="rounded-full" />
+            </div>
+          )}
+        </div>
+        <div className="ml-2">
+          <div className=" text-sm leading-5 font-medium ">
+            <Highlighted text={item?.name} highlight={searchInput.value} />
+          </div>
+          <div className="text-sm leading-5 text-gray-500">
+            <Highlighted text={item.email} highlight={searchInput.value} />
+          </div>
+        </div>
+      </div>
+    ),
+    instituteName: user.isSuperAdmin && (
+      <div
+        className="cursor-pointer w-auto"
+        onClick={() => redirectToInstitution(item.institution?.id)}>
+        <span>{item.institution?.name}</span>
+      </div>
+    ),
+    role: (
+      <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-sm font-medium bg-gray-200 text-gray-600 w-auto">
+        {item.role ? getStaffRole(item.role) : ''}
+      </span>
+    ),
+    status:
+      statusEdit === item.id ? (
+        <div className="">
+          <Selector
+            selectedItem={item.status}
+            placeholder="Select Status"
+            dropdownWidth="w-48"
+            list={statusList}
+            onChange={(val, name, id) => onStaffStatusChange(val, item.id, item.status)}
+          />
+        </div>
+      ) : (
+        <Status status={item.status} />
+      ),
+    action: (
+      <div className="">
+        {statusEdit === item.id ? (
+          <span
+            className={`w-6 h-6 flex items-center cursor-pointer ${theme.textColor[themeColor]}`}
+            onClick={() => setStatusEdit('')}>
+            {updateStatus ? 'updating...' : 'Cancel'}
+          </span>
+        ) : (
+          <span
+            className={`w-6 h-6 flex items-center cursor-pointer ${theme.textColor[themeColor]}`}
+            onClick={() => setStatusEdit(item.id)}>
+            <Tooltip text="Click to edit status" placement="left">
+              Edit
+            </Tooltip>
+          </span>
+        )}
+      </div>
+    )
+  }));
+
+  const tableConfig = {
+    headers: [
+      dictionary['NO'],
+      dictionary['NAME'],
+      user.isSuperAdmin && dictionary['INSTITUTION_NAME'],
+      dictionary['ROLE'],
+      dictionary['STATUS'],
+      dictionary['ACTION']
+    ],
+    dataList,
+    config: {
+      dark: false,
+      isFirstIndex: true,
+      isLastAction: true,
+      headers: {textColor: 'text-white'},
+      dataList: {
+        loading: dataLoading,
+        emptyText: 'No staff found',
+        droppable: {
+          isDroppable: true,
+          onDragEnd: onDragEnd,
+          droppableId: 'staffList'
+        },
+        customWidth: {
+          name: 'w-72 -ml-24'
+        },
+        maxHeight: 'max-h-196',
+        pattern: 'striped',
+        patternConfig: {firstColor: 'bg-gray-100', secondColor: 'bg-gray-200'}
+      }
+    }
+  };
+
   return (
     <div className="pt-0 flex m-auto justify-center p-8">
       <div className="">
@@ -455,195 +561,8 @@ const StaffBuilder = (props: StaffBuilderProps) => {
           }
         />
 
-        {!dataLoading ? (
-          <>
-            {finalList?.length > 0 ? (
-              <div className=" lg:w-auto overflow-x-hidden">
-                <div className="w-full pt-8 m-auto border-b-0 border-gray-200">
-                  <div className="flex justify-between bg-gray-50 pr-2 whitespace-nowrap">
-                    <div className="w-.5/10 px-8 py-4 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                      <span>{dictionary['NO']}</span>
-                    </div>
-                    <div className="w-4.5/10 px-8 py-4 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                      <span>{dictionary['NAME']}</span>
-                    </div>
-                    {user.isSuperAdmin && (
-                      <div className="w-2/10 px-8 py-4 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                        <span>{dictionary['INSTITUTION_NAME']}</span>
-                      </div>
-                    )}
-                    <div className="w-2/10 px-8 py-4 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                      <span>{dictionary['ROLE']}</span>
-                    </div>
-                    <div className="w-2.5/10 px-8 py-4 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                      <span>{dictionary['STATUS']}</span>
-                    </div>
-                    <div className="w-1/10 px-8 py-4 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                      <span>{dictionary['ACTION']}</span>
-                    </div>
-                  </div>
-                </div>
+        <Table {...tableConfig} />
 
-                <div className="w-auto m-auto max-h-88 overflow-y-auto">
-                  {/* Drag and drop listing */}
-                  <DragDropContext onDragEnd={onDragEnd}>
-                    <Droppable droppableId="droppable">
-                      {(provided, snapshot) => (
-                        <div {...provided.droppableProps} ref={provided.innerRef}>
-                          {finalList.map(
-                            (item, index) =>
-                              item && (
-                                <Draggable
-                                  key={item.id}
-                                  draggableId={item.id}
-                                  index={index}>
-                                  {(provided, snapshot) => (
-                                    <div
-                                      ref={provided.innerRef}
-                                      {...provided.draggableProps}
-                                      {...provided.dragHandleProps}>
-                                      <div
-                                        key={index}
-                                        className={`flex justify-between w-auto whitespace-nowrap border-b-0 border-gray-200 hover:bg-gray-200
-                                     transition-all ${
-                                       index % 2 !== 0 ? 'bg-gray-50' : ''
-                                     }`}>
-                                        <div className="flex w-.5/10 items-center px-8 py-4 text-left text-s leading-4">
-                                          {index + 1}.
-                                        </div>
-
-                                        <div
-                                          className="flex w-4.5/10 px-8 py-4 items-center text-left text-s leading-4 font-medium whitespace-normal cursor-pointer "
-                                          onClick={() => gotoProfilePage(item.userId)}>
-                                          <div className="flex-shrink-0 h-10 w-10 flex items-center">
-                                            {!item.image ? (
-                                              <Placeholder
-                                                size="h-8 w-8"
-                                                name={`${item.firstName} ${item.lastName}`}
-                                              />
-                                            ) : (
-                                              <div className="h-8 w-8 rounded-full flex justify-center items-center">
-                                                <img
-                                                  src={item.image}
-                                                  className="rounded-full"
-                                                />
-                                              </div>
-                                            )}
-                                          </div>
-                                          <div className="ml-2">
-                                            <div className=" text-sm leading-5 font-medium ">
-                                              <Highlighted
-                                                text={item?.name}
-                                                highlight={searchInput.value}
-                                              />
-                                            </div>
-                                            <div className="text-sm leading-5 text-gray-500">
-                                              <Highlighted
-                                                text={item.email}
-                                                highlight={searchInput.value}
-                                              />
-                                            </div>
-                                          </div>
-                                        </div>
-                                        {user.isSuperAdmin && (
-                                          <div
-                                            className="w-2/10 px-8 py-4 flex items-center text-left text-xs leading-4 font-bold text-gray-800 uppercase tracking-wider cursor-pointer"
-                                            onClick={() =>
-                                              redirectToInstitution(item.institution?.id)
-                                            }>
-                                            <span>{item.institution?.name}</span>
-                                          </div>
-                                        )}
-                                        <div className="flex w-2/10 px-8 py-4 text-left text-s leading-4 items-center">
-                                          <p className="inline-flex items-center px-2.5 py-0.5 rounded-md text-sm font-medium bg-gray-200 text-gray-600 w-auto">
-                                            {item.role ? getStaffRole(item.role) : ''}
-                                          </p>
-                                        </div>
-                                        {statusEdit === item.id ? (
-                                          <div className="flex w-2.5/10 px-8 py-4 text-left text-s leading-4 items-center">
-                                            <Selector
-                                              selectedItem={item.status}
-                                              placeholder="Select Status"
-                                              list={statusList}
-                                              onChange={(val, name, id) =>
-                                                onStaffStatusChange(
-                                                  val,
-                                                  item.id,
-                                                  item.status
-                                                )
-                                              }
-                                            />
-                                          </div>
-                                        ) : (
-                                          <div className="flex w-2.5/10 px-8 py-4 text-left text-s leading-4 items-center">
-                                            <Status status={item.status} />
-                                          </div>
-                                        )}
-                                        <div className="flex w-1/10 px-8 py-4 text-left text-s leading-4 items-center">
-                                          {statusEdit === item.id ? (
-                                            <span
-                                              className={`w-6 h-6 flex items-center cursor-pointer ${theme.textColor[themeColor]}`}
-                                              onClick={() => setStatusEdit('')}>
-                                              {updateStatus ? 'updating...' : 'Cancel'}
-                                            </span>
-                                          ) : (
-                                            <span
-                                              className={`w-6 h-6 flex items-center cursor-pointer ${theme.textColor[themeColor]}`}
-                                              onClick={() => setStatusEdit(item.id)}>
-                                              <Tooltip
-                                                text="Click to edit status"
-                                                placement="left">
-                                                Edit
-                                              </Tooltip>
-                                            </span>
-                                          )}
-                                        </div>
-                                      </div>
-                                    </div>
-                                  )}
-                                </Draggable>
-                              )
-                          )}
-                          {provided.placeholder}
-                        </div>
-                      )}
-                    </Droppable>
-                  </DragDropContext>
-                </div>
-              </div>
-            ) : (
-              <div className="text-center p-16">
-                <p className="text-gray-500">
-                  {searchInput.isActive && !searchInput.typing
-                    ? ''
-                    : searchInput.isActive && searchInput.typing
-                    ? `Hit enter to search for ${searchInput.value}`
-                    : dictionary['INFO']}
-                  {searchInput.isActive && !searchInput.typing && (
-                    <span>
-                      No staff member found - <b>{searchInput.value}</b>. Try searching
-                      for "
-                      <span
-                        className="hover:underline theme-text cursor-pointer"
-                        onClick={() => {
-                          setSearch(findRelatedSearch(searchInput.value)?.name);
-                        }}>
-                        {findRelatedSearch(searchInput.value)?.name}
-                      </span>
-                      "
-                    </span>
-                  )}
-                </p>
-              </div>
-            )}
-          </>
-        ) : (
-          <div className="py-20 text-center mx-auto flex justify-center items-center w-full h-48">
-            <div className="w-5/10">
-              <Loader withText="Loading Staff..." className="text-gray-500" />
-            </div>
-          </div>
-        )}
         {showRegistrationForm && (
           <Modal
             showHeader={true}
