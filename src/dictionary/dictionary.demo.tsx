@@ -3970,7 +3970,7 @@ const LessonEditDict: any = {
 const LessonsListDict: any = {
   EN: {
     TITLE: 'LESSONS LIST',
-    HEADING: 'Lessons',
+    HEADING: 'Lessons List',
     SUBTITLE: 'All Lessons List',
     SORTBY: 'Sort By',
     NO: 'No.',
