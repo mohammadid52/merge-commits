@@ -4,6 +4,7 @@ import {useEffect, useState} from 'react';
 const usePagination = (data: any[], totalResults: number) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
+
   const [lastPage, setLastPage] = useState(false);
   const [firstPage, setFirstPage] = useState(false);
   const [pageCount, setPageCount] = useState(10);

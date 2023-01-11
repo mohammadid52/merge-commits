@@ -318,11 +318,11 @@ const StaffBuilder = (props: StaffBuilderProps) => {
 
     const totalListPages = Math.floor(staffLists.length / totalNum);
 
-    if (totalListPages * totalNum === staffLists.length) {
-      setTotalPages(totalListPages);
-    } else {
-      setTotalPages(totalListPages + 1);
-    }
+    setTotalPages(
+      totalListPages * pageCount === staffLists.length
+        ? totalListPages
+        : totalListPages + 1
+    );
 
     setFirstPage(true);
     setLastPage(!(staffLists.length > pageCount));

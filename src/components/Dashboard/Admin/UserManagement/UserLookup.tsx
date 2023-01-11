@@ -611,7 +611,7 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
               className={
                 isStudentRoster
                   ? 'flex justify-end mb-4 items-center w-auto'
-                  : 'flex justify-end mb-4'
+                  : 'flex justify-end mb-4 w-auto'
               }>
               {isStudentRoster && (
                 <div className="w-auto relative flex mr-2 min-w-64">

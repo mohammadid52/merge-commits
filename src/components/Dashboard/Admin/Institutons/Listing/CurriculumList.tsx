@@ -7,6 +7,7 @@ import CourseName from '@components/MicroComponents/CourseName';
 import CourseUnits from '@components/MicroComponents/CourseUnits';
 import Table from '@components/Molecules/Table';
 import useAuth from '@customHooks/useAuth';
+import usePagination from '@customHooks/usePagination';
 import useSearch from '@customHooks/useSearch';
 import {InstitueRomms} from '@dictionary/dictionary.iconoclast';
 import {logError} from '@graphql/functions';
@@ -18,7 +19,7 @@ import {GlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import * as mutations from 'graphql/mutations';
-import {map, orderBy} from 'lodash';
+import {isEmpty, map, orderBy} from 'lodash';
 import React, {useContext, useEffect, useState} from 'react';
 import {useHistory, useRouteMatch} from 'react-router';
 import {Status} from '../../UserManagement/UserStatus';
@@ -40,11 +41,7 @@ interface ICurricular {
   universalSyllabus: {items: Array<any>};
 }
 
-const CurriculumList = ({
-  curricular,
-  updateCurricularList,
-  instId
-}: CurriculumListProps) => {
+const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => {
   const match = useRouteMatch();
   const history = useHistory();
   // ~~~~~~~~~~ CONTEXT_SPLITTING ~~~~~~~~~~ //
@@ -102,24 +99,7 @@ const CurriculumList = ({
     }
   };
 
-  // useEffect(() => {
-  //   if (curricular?.items?.length) {
-  //     const updatedList: ICurricular[] = curricular.items?.map((item: ICurricular) => ({
-  //       ...item,
-  //       status: item?.status || RoomStatus.ACTIVE,
-  //       universalSyllabus: {
-  //         ...(item.universalSyllabus || {}),
-  //         items: item.universalSyllabus?.items
-  //           ?.map((syllabus) => ({
-  //             ...syllabus,
-  //             index: item?.universalSyllabusSeq?.indexOf(syllabus.unit.id)
-  //           }))
-  //           .sort((a: any, b: any) => (a.index > b.index ? 1 : -1))
-  //       }
-  //     }));
-  //     setCourseList(updatedList);
-  //   }
-  // }, [curricular?.items?.length]);
+  const [totalNum, setTotalNum] = useState(0);
 
   const fetchCurriculums = async () => {
     try {
@@ -150,6 +130,19 @@ const CurriculumList = ({
         })
         .filter(Boolean);
 
+      const totalListPages = Math.floor(updatedList.length / pageCount);
+      setTotalPages(
+        totalListPages * pageCount === updatedList.length
+          ? totalListPages
+          : totalListPages + 1
+      );
+
+      setTotalNum(updatedList.length);
+
+      setCurrentList(updatedList);
+
+      setFirstPage(true);
+      setLastPage(!(updatedList.length > pageCount));
       setCourseList(updatedList);
     } catch (error) {
       logError(error, {authId, email}, 'CurriculumList @fetchCurriculums');
@@ -255,6 +248,17 @@ const CurriculumList = ({
   };
 
   const {
+    pageCount,
+    setFirstPage,
+    setLastPage,
+    setTotalPages,
+
+    currentList,
+    allAsProps,
+    setCurrentList
+  } = usePagination(courseList, loading ? 0 : totalNum);
+
+  const {
     searchInput,
     setSearch,
     checkSearchQueryFromUrl,
@@ -267,7 +271,7 @@ const CurriculumList = ({
   const [filteredList, setFilteredList] = useState([...courseList]);
 
   useEffect(() => {
-    if (!loading && courseList?.length > 0) {
+    if (!loading && currentList?.length > 0) {
       const query = checkSearchQueryFromUrl();
       if (query) {
         const items = filterBySearchQuery(query);
@@ -288,7 +292,7 @@ const CurriculumList = ({
   };
 
   const finalList = orderBy(
-    searchInput.isActive ? filteredList : courseList,
+    searchInput.isActive ? filteredList : currentList,
     ['name', 'institutionName'],
     ['asc']
   );
@@ -367,6 +371,12 @@ const CurriculumList = ({
       headers: {textColor: 'text-white'},
       dataList: {
         loading,
+        pagination: {
+          showPagination: !searchInput.isActive && totalNum > 0 && isEmpty(filters),
+          config: {
+            allAsProps
+          }
+        },
         emptyText:
           searchInput || selectedInstitution?.id
             ? CommonlyUsedDict[userLanguage]['NO_SEARCH_RESULT']
@@ -434,6 +444,12 @@ const CurriculumList = ({
           list={courseList}
           updateFilter={updateFilter}
           filters={filters}
+          showingCount={{
+            currentPage: allAsProps.currentPage,
+            lastPage: allAsProps.lastPage,
+            totalResults: allAsProps.totalResults,
+            pageCount: allAsProps.pageCount
+          }}
         />
 
         <Table {...tableConfig} />

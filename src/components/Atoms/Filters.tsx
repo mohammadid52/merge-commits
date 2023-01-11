@@ -1,6 +1,7 @@
 import ErrorBoundary from '@components/Error/ErrorBoundary';
 import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import ShowingCount from '@components/MicroComponents/ShowingCount';
+import {isEmpty} from 'lodash';
 import React from 'react';
 import Buttons from './Buttons';
 
@@ -48,17 +49,16 @@ const Filters = ({
         </div>
 
         <AnimatedContainer duration="500" animationType="slideIn" show={!loading}>
-          {!loading &&
-            (Boolean(showingCount) ? (
-              <ShowingCount {...showingCount} />
-            ) : (
-              <h5 className="text-sm text-gray-700 text-right w-auto">
-                {filters !== undefined && filters !== null
-                  ? `${getLen(filters)} ${filters?.toLocaleLowerCase()} items - `
-                  : ''}{' '}
-                Total {list.length} items
-              </h5>
-            ))}
+          {!loading && !isEmpty(filters) ? (
+            <h5 className="text-sm text-gray-700 text-right w-auto">
+              {filters !== undefined && filters !== null
+                ? `${getLen(filters)} ${filters?.toLocaleLowerCase()} items - `
+                : ''}{' '}
+              Total {list.length} items
+            </h5>
+          ) : (
+            Boolean(showingCount) && <ShowingCount {...showingCount} />
+          )}
         </AnimatedContainer>
       </div>
     </ErrorBoundary>

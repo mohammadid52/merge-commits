@@ -155,6 +155,7 @@ const ListItem = forwardRef<any, IListItem>(
 
           let _item = item[lowerHeader];
           const _customWidth = customWidth[lowerHeader];
+          const onClick = item['onClick'];
 
           const className = `${
             config?.dataList?.textColor || 'text-gray-500'
@@ -171,6 +172,7 @@ const ListItem = forwardRef<any, IListItem>(
           if (typeof _item === 'string') {
             return (
               <td
+                onClick={typeof onClick === 'function' ? onClick : () => {}}
                 key={item.id + '-' + header}
                 className={className}
                 dangerouslySetInnerHTML={{
@@ -179,7 +181,10 @@ const ListItem = forwardRef<any, IListItem>(
             );
           } else {
             return (
-              <td key={item.id + '-' + header} className={className}>
+              <td
+                onClick={typeof onClick === 'function' ? onClick : () => {}}
+                key={item.id + '-' + header}
+                className={className}>
                 {_item}
               </td>
             );

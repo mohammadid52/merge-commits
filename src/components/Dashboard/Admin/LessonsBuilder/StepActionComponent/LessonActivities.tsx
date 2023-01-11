@@ -111,6 +111,7 @@ const LessonActivities = ({
 
   const dataList = map(pages, (page: any) => ({
     id: page.id,
+    onClick: () => lessonPagePreview(page.id, false),
     activityLabel: page.label || '-',
     activityName: page.title || '-',
     interactionType: page?.interactionType ? page.interactionType.join(', ') : '-',
