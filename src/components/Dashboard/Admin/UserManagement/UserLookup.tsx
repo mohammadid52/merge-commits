@@ -1,5 +1,5 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import React, {Fragment, useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   AiOutlineArrowDown,
   AiOutlineArrowUp,
@@ -14,7 +14,12 @@ import * as customQueries from 'customGraphql/customQueries';
 import * as queries from 'graphql/queries';
 
 // import LessonLoading from '../../../Lesson/Loading/ComponentLoading';
+import UserLookupAction from '@components/MicroComponents/UserLookupAction';
+import UserLookupLocation from '@components/MicroComponents/UserLookupLocation';
+import UserLookupName from '@components/MicroComponents/UserLookupName';
 import ListBottomBar from '@components/Molecules/ListBottomBar';
+import Table from '@components/Molecules/Table';
+import useDictionary from '@customHooks/dictionary';
 import usePagination from '@customHooks/usePagination';
 import useSearch from '@customHooks/useSearch';
 import {PersonStatus} from 'API';
@@ -23,10 +28,12 @@ import Buttons from 'atoms/Buttons';
 import SearchInput from 'atoms/Form/SearchInput';
 import Selector from 'atoms/Form/Selector';
 import SectionTitle from 'atoms/SectionTitle';
-import useDictionary from 'customHooks/dictionary';
+import {map} from 'lodash';
+import moment from 'moment';
 import {createFilterToFetchSpecificItemsOnly} from 'utilities/strings';
-import List from './List';
-import UserListLoader from './UserListLoader';
+import UserLocation from './UserLocation';
+import UserRole from './UserRole';
+import UserStatus from './UserStatus';
 
 export const sortByName = (data: any[]) => {
   return data.sort((a: any, b: any) => {
@@ -40,12 +47,13 @@ export const sortByName = (data: any[]) => {
   });
 };
 
-export const addName = (data: any[]) =>
-  data.map((item: any) => ({
+export const addName = (data: any[]) => {
+  return data.map((item: any) => ({
     ...item,
     name: `${item?.firstName} ${item?.lastName}`,
     _sortName: `${item?.firstName?.toLowerCase()} `
   }));
+};
 
 const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
   const {state, theme, dispatch, userLanguage, clientKey} = useContext(GlobalContext);
@@ -54,7 +62,7 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
 
   const [loading, setLoading] = useState<boolean>(false);
 
-  const {UserLookupDict, BreadcrumsTitles} = useDictionary(clientKey);
+  const {UserLookupDict, BreadcrumsTitles} = useDictionary();
 
   const [sortingType, setSortingType] = useState({
     value: '',
@@ -71,7 +79,9 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
     setCurrentList,
     allAsProps,
     setTotalPages,
-    resetPagination
+    resetPagination,
+    currentPage,
+    pageCount
   } = usePagination(totalUserList || [], loading ? 0 : totalUserList.length);
 
   // ...End.
@@ -483,15 +493,79 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
     }
   };
 
+  const dict = UserLookupDict[userLanguage];
+
+  const dataList = map(currentList, (item, idx) => ({
+    no: idx + 1 + (currentPage === 0 ? 0 : pageCount * currentPage),
+    name: (
+      <UserLookupName
+        searchTerm={searchInput.value}
+        isStudentRoster={isStudentRoster}
+        item={item}
+      />
+    ),
+    flow: <UserLocation role={item.role} onDemand={item?.onDemand} />,
+    role: <UserRole role={item.role ? item.role : '--'} />,
+    status: (
+      <div className="w-auto flex justify-center flex-col">
+        <UserStatus status={item.status ? item.status : '--'} />
+        {item.status === PersonStatus.INACTIVE && item.inactiveStatusDate !== null && (
+          <span className=" text-gray-600 pt-1 text-xs text-left -ml-4">
+            Since {moment(item.inactiveStatusDate).format('ll')}
+          </span>
+        )}
+      </div>
+    ),
+    location: <UserLookupLocation item={item} idx={idx} />,
+    actions: state.user.role !== 'ST' && state.user.role !== 'BLD' && (
+      <UserLookupAction item={item} />
+    )
+  }));
+
+  const tableConfig = {
+    headers: [
+      'no',
+      dict['name'],
+      dict['flow'],
+
+      dict['role'],
+      dict['status'],
+      dict['location'],
+      state.user.role !== 'ST' && state.user.role !== 'BLD' && dict['action']
+    ],
+    dataList,
+    config: {
+      dark: false,
+      isFirstIndex: true,
+
+      headers: {textColor: 'text-white'},
+      dataList: {
+        customWidth: {
+          name: 'w-72 -ml-12',
+          status: 'w-28',
+          flow: 'w-24',
+          role: 'w-24',
+          location: 'w-24',
+          actions: 'w-48'
+        },
+        maxHeight: 'max-h-none',
+        pattern: 'striped',
+        patternConfig: {firstColor: 'bg-gray-100', secondColor: 'bg-gray-200'}
+      }
+    }
+  };
+
   return (
     <div className={`w-full h-full ${isInInstitute ? 'px-12' : ''}`}>
       {/* Header Section */}
       {!isInInstitute && <BreadCrums items={breadCrumsList} />}
       <div className="flex flex-col lg:flex-row justify-between mb-4 items-center">
         {isInInstitute ? (
-          <h3 className="text-lg leading-6 text-gray-600 w-full lg:w-auto mb-4 lg:mb-0">
-            {isStudentRoster ? `Your Students (${headerForStudentRoster()})` : 'Users'}
-          </h3>
+          <SectionTitle
+            title={
+              isStudentRoster ? `Your Students (${headerForStudentRoster()})` : 'Users'
+            }
+          />
         ) : (
           <SectionTitle
             title={UserLookupDict[userLanguage]['title']}
@@ -571,89 +645,12 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
 
       {/* List / Table */}
       <div className="flex flex-col">
-        <div className="-my-2 py-2">
+        <div className="">
           <div
             className={`${
               isInInstitute ? '' : 'white_back border-b-0 border-gray-200 py-4 mt-2'
-            } mb-8 align-middle rounded-lg"`}>
-            <div
-              className={`h-8/10 w-screen lg:w-full overflow-x-scroll lg:overflow-x-hidden ${
-                isInInstitute ? '' : 'px-4'
-              }`}>
-              <div className="w-full flex justify-between border-b-0 border-gray-200 ">
-                <div className="w-4/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>{UserLookupDict[userLanguage]['name']}</span>
-                </div>
-                <div className="w-1/10 flex justify-center px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span className="w-auto">{UserLookupDict[userLanguage]['flow']}</span>
-                </div>
-                <div className="w-1/10 flex justify-center px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span className="w-auto">{UserLookupDict[userLanguage]['role']}</span>
-                </div>
-                <div className="w-1/10 flex justify-center px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span className="w-auto">{UserLookupDict[userLanguage]['status']}</span>
-                </div>
-                <div className="w-2/10 px-8 justify-center py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span
-                    title="see live updates of student's page"
-                    className="flex items-end justify-center">
-                    <span className="w-auto">
-                      {UserLookupDict[userLanguage]['location']}
-                    </span>
-                    <div className="h-2 w-2 bg-green-500 ml-1 rounded-full self-start"></div>
-                  </span>
-                </div>
-                {state.user.role !== 'ST' && state.user.role !== 'BLD' ? (
-                  <div className="w-2/10 px-8 justify-center py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                    {UserLookupDict[userLanguage]['action']}
-                  </div>
-                ) : null}
-              </div>
-              {loading ? (
-                Array(10)
-                  .fill(' ')
-                  .map((_: any, index: number) => (
-                    <Fragment key={index}>
-                      <UserListLoader userRole={state.user.role} />
-                    </Fragment>
-                  ))
-              ) : currentList.length > 0 ? (
-                currentList.map((item: any, key: number) => (
-                  <div key={key}>
-                    <List
-                      isStudentRoster={isStudentRoster}
-                      searchTerm={searchInput.value}
-                      item={item}
-                      idx={key}
-                      key={key}
-                    />
-                  </div>
-                ))
-              ) : (
-                <div className="text-center p-16">
-                  <p className="text-gray-500">
-                    {searchInput.isActive && !searchInput.typing
-                      ? ''
-                      : searchInput.isActive && searchInput.typing
-                      ? `Hit enter to search for ${searchInput.value}`
-                      : UserLookupDict[userLanguage]['noresult']}
-                    {searchInput.isActive && !searchInput.typing && (
-                      <span>
-                        No user found - <b>{searchInput.value}</b>. Try searching for "
-                        <span
-                          className="hover:underline theme-text cursor-pointer"
-                          onClick={() => {
-                            setSearch(findRelatedSearch(searchInput.value).firstName);
-                          }}>
-                          {findRelatedSearch(searchInput.value).firstName}
-                        </span>
-                        "
-                      </span>
-                    )}
-                  </p>
-                </div>
-              )}
-            </div>
+            }`}>
+            <Table {...tableConfig} />
 
             {/* Pagination And Counter */}
             <div className={`flex justify-center ${isInInstitute ? '' : 'px-8 my-4'}`}>

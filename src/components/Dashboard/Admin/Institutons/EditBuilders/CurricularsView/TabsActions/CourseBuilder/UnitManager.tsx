@@ -1,6 +1,5 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import React, {Fragment, useContext, useEffect, useState} from 'react';
-import {DragDropContext, Draggable, Droppable} from 'react-beautiful-dnd';
+import React, {useContext, useEffect, useState} from 'react';
 import {useHistory} from 'react-router';
 
 import {GlobalContext} from 'contexts/GlobalContext';
@@ -10,16 +9,19 @@ import * as customMutations from 'customGraphql/customMutations';
 import * as customQueries from 'customGraphql/customQueries';
 import * as mutations from 'graphql/mutations';
 
+import Buttons from '@components/Atoms/Buttons';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import {Empty} from '@components/Dashboard/Admin/LessonsBuilder/StepActionComponent/LearningEvidence/CourseMeasurementsCard';
+import CourseAction from '@components/MicroComponents/CourseAction';
+import Table from '@components/Molecules/Table';
+import {BUTTONS} from '@dictionary/dictionary.iconoclast';
+import {RoomStatus} from 'API';
 import AddButton from 'atoms/Buttons/AddButton';
 import Selector from 'atoms/Form/Selector';
 import Loader from 'atoms/Loader';
+import {map} from 'lodash';
 import ModalPopUp from 'molecules/ModalPopUp';
 import {reorder} from 'utilities/strings';
-import UnitManagerRow from './UnitManagerRow';
-import Buttons from '@components/Atoms/Buttons';
-import {BUTTONS} from '@dictionary/dictionary.iconoclast';
 
 interface UIMessages {
   show: boolean;
@@ -134,9 +136,7 @@ const UnitManager = ({
 
   const updateListAndDropdown = async () => {
     // To update table list and dropdown as per selected items.
-    const savedSyllabusIds = [...savedSyllabusList].filter(
-      (d) => d.unit.status === courseData.status
-    );
+    const savedSyllabusIds = [...savedSyllabusList];
     let filteredList = savedSyllabusIds.map((assignedSyllabus) => ({
       ...assignedSyllabus.unit,
       id: assignedSyllabus.id,
@@ -156,11 +156,13 @@ const UnitManager = ({
 
     setSelectedSyllabusList(filteredList);
     setDropdownSyllabusList(
-      filteredDropDownList.map((item: {id: string; name: string}) => ({
-        id: item.id,
-        name: item.name,
-        value: item.name
-      }))
+      filteredDropDownList
+        .filter((d) => d.unit.status === courseData.status)
+        .map((item: {id: string; name: string}) => ({
+          id: item.id,
+          name: item.name,
+          value: item.name
+        }))
     );
   };
 
@@ -195,8 +197,8 @@ const UnitManager = ({
       setLoading(true);
       const result: any = await API.graphql(
         graphqlOperation(customQueries.listUniversalSyllabusOptions, {
-          filter: {institutionID: {eq: institutionId}}
-          // status: {eq: courseData.status || RoomStatus.ACTIVE}
+          filter: {institutionID: {eq: institutionId}},
+          status: {eq: courseData.status || RoomStatus.ACTIVE}
         })
       );
       const savedData = result.data.listUniversalSyllabi;
@@ -360,6 +362,55 @@ const UnitManager = ({
     }
   };
 
+  const dict = CourseBuilderDict[userLanguage]['TABLE_HEADS'];
+
+  const dataList = map(selectedSyllabusList, (item, idx) => ({
+    no: idx + 1,
+    id: item.id,
+    unitName: (
+      <div
+        onClick={() => goToUnitBuilder(item.unitId, item.type)}
+        className="cursor-pointer">
+        {item.name ? item.name : ''}
+      </div>
+    ),
+    actions: (
+      <CourseAction
+        item={item}
+        checkIfRemovable={checkIfRemovable}
+        onDelete={() => handleToggleDelete(item.id, item)}
+        onView={() => goToUnitBuilder(item.unitId, item.type)}
+      />
+    )
+  }));
+
+  const tableConfig = {
+    headers: [dict['NUMBER'], dict['UNIT_NAME'], dict['ACTION']],
+    dataList,
+    config: {
+      dark: false,
+
+      isFirstIndex: true,
+      headers: {textColor: 'text-white'},
+      dataList: {
+        emptyText: `${CourseBuilderDict[userLanguage]['NO_UNIT']} - current status of course is ${courseData.status}`,
+        loading,
+        droppable: {
+          isDroppable: true,
+          droppableId: 'unitList',
+          onDragEnd
+        },
+        customWidth: {
+          no: 'w-12',
+          unitName: 'w-7/10'
+        },
+        maxHeight: 'max-h-196',
+        pattern: 'striped',
+        patternConfig: {firstColor: 'bg-gray-100', secondColor: 'bg-gray-200'}
+      }
+    }
+  };
+
   return (
     <div className="">
       {/* *************** SECTION HEADER ************ */}
@@ -408,78 +459,7 @@ const UnitManager = ({
         ) : null}
 
         {/* *************** SYLLABUS LIST ************ */}
-        <div>
-          {loading ? (
-            <div className="h-100 flex justify-center items-center">
-              <div className="w-5/10">
-                <Loader animation withText="Fetching units..." />
-              </div>
-            </div>
-          ) : selectedSyllabusList?.length > 0 ? (
-            <Fragment>
-              {/* *************** SYLLABUS TABLE HEADERS ************ */}
-              <div className="flex justify-between w-full bg-gray-50  px-8 whitespace-nowrap border-b-0 border-gray-200">
-                <div className="w-1/10 px-8 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>{CourseBuilderDict[userLanguage]['TABLE_HEADS']['NUMBER']}</span>
-                </div>
-                <div className="w-8/10 px-8 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>
-                    {CourseBuilderDict[userLanguage]['TABLE_HEADS']['UNIT_NAME']}
-                  </span>
-                </div>
-                <div className="w-1/10 m-auto py-3 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>{CourseBuilderDict[userLanguage]['TABLE_HEADS']['ACTION']}</span>
-                </div>
-              </div>
-
-              <div className="max-h-88 overflow-y-auto mb-10">
-                <DragDropContext onDragEnd={onDragEnd}>
-                  <Droppable droppableId="droppable">
-                    {(provided1, snapshot) => (
-                      <div {...provided1.droppableProps} ref={provided1.innerRef}>
-                        {selectedSyllabusList.map((item, index) => {
-                          return (
-                            <Draggable key={item.id} draggableId={item.id} index={index}>
-                              {(provided, snapshot) => (
-                                <div
-                                  ref={provided.innerRef}
-                                  {...provided.draggableProps}
-                                  {...provided.dragHandleProps}>
-                                  <UnitManagerRow
-                                    index={index}
-                                    item={item}
-                                    checkIfRemovable={checkIfRemovable}
-                                    handleToggleDelete={handleToggleDelete}
-                                    goToUnitBuilder={goToUnitBuilder}
-                                    courseObj={courseData}
-                                  />
-                                </div>
-                              )}
-                            </Draggable>
-                          );
-                        })}
-                        {provided1.placeholder}
-                      </div>
-                    )}
-                  </Droppable>
-                </DragDropContext>
-              </div>
-              {deleteModal.show && (
-                <ModalPopUp
-                  closeAction={handleToggleDelete}
-                  saveAction={deleting ? () => {} : deleteModal.action}
-                  saveLabel={deleting ? 'DELETING...' : 'CONFIRM'}
-                  cancelLabel="CANCEL"
-                  message={deleteModal.message}
-                />
-              )}
-            </Fragment>
-          ) : (
-            <Empty
-              text={`${CourseBuilderDict[userLanguage]['NO_UNIT']} - current status of course is ${courseData.status}`}
-            />
-          )}
-        </div>
+        <Table {...tableConfig} />
       </div>
       {warnModal2.show && (
         <ModalPopUp

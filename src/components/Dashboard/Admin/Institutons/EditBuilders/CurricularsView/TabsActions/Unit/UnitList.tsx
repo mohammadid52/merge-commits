@@ -6,23 +6,25 @@ import * as mutations from 'graphql/mutations';
 import React, {useContext, useEffect, useState} from 'react';
 import {useHistory, useRouteMatch} from 'react-router';
 
+import Buttons from '@components/Atoms/Buttons';
 import Filters, {SortType} from '@components/Atoms/Filters';
+import Modal from '@components/Atoms/Modal';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
+import Tooltip from '@components/Atoms/Tooltip';
+import {Status} from '@components/Dashboard/Admin/UserManagement/UserStatus';
+import CourseAction from '@components/MicroComponents/CourseAction';
+import UnitName from '@components/MicroComponents/UnitName';
+import Table from '@components/Molecules/Table';
 import useSearch from '@customHooks/useSearch';
-import * as customMutations from 'customGraphql/customMutations';
 import {BUTTONS, InstitueRomms} from '@dictionary/dictionary.iconoclast';
 import {RoomStatus} from 'API';
 import SearchInput from 'atoms/Form/SearchInput';
 import Selector from 'atoms/Form/Selector';
-import Loader from 'atoms/Loader';
-import ErrorBoundary from 'components/Error/ErrorBoundary';
+import * as customMutations from 'customGraphql/customMutations';
 import * as customQueries from 'customGraphql/customQueries';
-import {orderBy} from 'lodash';
+import {map, orderBy} from 'lodash';
 import ModalPopUp from 'molecules/ModalPopUp';
-import UnitListRow from './UnitListRow';
-import Modal from '@components/Atoms/Modal';
 import UnitFormComponent from './UnitFormComponent';
-import Buttons from '@components/Atoms/Buttons';
 
 export const UnitList = ({
   instId,
@@ -77,10 +79,10 @@ export const UnitList = ({
         lessons: {
           ...(item.lessons || {}),
           items: item.lessons?.items
-            .filter(
-              (_d: any) =>
-                _d.lesson?.status?.toLowerCase() === item?.status?.toLowerCase()
-            )
+            // .filter(
+            //   (_d: any) =>
+            //     _d.lesson?.status?.toLowerCase() === item?.status?.toLowerCase()
+            // )
             .map((lesson: any) => {
               if (lesson?.lesson?.id) {
                 return {
@@ -102,11 +104,13 @@ export const UnitList = ({
     addedSyllabus &&
       addedSyllabus.length > 0 &&
       addedSyllabus.forEach((item: any) => {
-        selectedSyllabus.push({
-          ...list.find((unit: any) => item?.syllabusID === unit?.id),
-          id: item?.id,
-          syllabusId: item?.syllabusID
-        });
+        const _item = list.find((unit: any) => item?.syllabusID === unit?.id);
+        _item &&
+          selectedSyllabus.push({
+            ..._item,
+            id: item?.id,
+            syllabusId: item?.syllabusID
+          });
       });
 
     return selectedSyllabus;
@@ -361,7 +365,7 @@ export const UnitList = ({
           breakdownComponent: lessonType
         },
         lessonPlan: lessonComponentPlan?.length > 0 ? lessonComponentPlan : [],
-        status: 'Active'
+        status: 'ACTIVE'
       };
       setSaving(true);
       const result: any = await API.graphql(
@@ -423,6 +427,99 @@ export const UnitList = ({
   };
 
   const [hoveringItem, setHoveringItem] = useState<{name?: string}>({});
+
+  const dataList = map(finalList, (item: any, index: number) => ({
+    no: index + 1,
+    instituteName: isSuperAdmin && item.institution.name,
+    status: <Status status={item.status} useDefault />,
+    unitName: (
+      <UnitName
+        currentSelectedItem={currentSelectedItem}
+        hoveringItem={hoveringItem}
+        searchTerm={searchInput.value}
+        editCurrentUnit={handleView}
+        isLast={finalList.length - 5 <= index}
+        curricular={curricular}
+        setHoveringItem={setHoveringItem}
+        isSuperAdmin={isSuperAdmin}
+        item={item}
+      />
+    ),
+
+    lessonPlan: (
+      <div>
+        {item.lessons?.items?.length > 0 ? (
+          <ol className="list-decimal">
+            {item.lessons?.items?.map(
+              (lesson: {id: string; lesson: {id: string; title: string}}) => {
+                if (lesson) {
+                  return (
+                    <Tooltip
+                      text={`Go to ${lesson.lesson.title}`}
+                      placement="left"
+                      key={lesson.id}>
+                      <li
+                        className="mb-2 cursor-pointer hover:underline hover:theme-text:400"
+                        key={lesson.lesson.id}
+                        onClick={() =>
+                          redirectToLesson(item.institution.id, lesson.lesson.id)
+                        }>
+                        {lesson.lesson.title}
+                      </li>
+                    </Tooltip>
+                  );
+                }
+              }
+            )}
+          </ol>
+        ) : (
+          <p className="">No lesson plan</p>
+        )}
+      </div>
+    ),
+    action: (
+      <CourseAction
+        onDelete={() => handleToggleDelete(item.name, item)}
+        onView={() => handleView(item.id)}
+        item={item}
+        checkIfRemovable={checkIfRemovable}
+      />
+    )
+  }));
+
+  const tableConfig = {
+    headers: [
+      UnitLookupDict[userLanguage]['NO'],
+      UnitLookupDict[userLanguage]['NAME'],
+      isSuperAdmin && UnitLookupDict[userLanguage]['INSTITUTION_NAME'],
+      UnitLookupDict[userLanguage]['LESSONS'],
+      InstitueRomms[userLanguage]['STATUS'],
+      UnitLookupDict[userLanguage]['ACTION']
+    ],
+    dataList,
+    config: {
+      dark: false,
+
+      isFirstIndex: true,
+      headers: {textColor: 'text-white'},
+      dataList: {
+        loading,
+        emptyText:
+          searchInput.isActive || selectedInstitution?.id
+            ? CommonlyUsedDict[userLanguage]['NO_SEARCH_RESULT']
+            : UnitLookupDict[userLanguage]['INFO'],
+        customWidth: {
+          no: 'w-12',
+          unitName: 'w-96',
+          lessonPlan: 'w-96',
+          action: 'w0'
+        },
+        maxHeight: 'max-h-196',
+        pattern: 'striped',
+        patternConfig: {firstColor: 'bg-gray-100', secondColor: 'bg-gray-200'}
+      }
+    }
+  };
 
   const currentSelectedItem =
     hoveringItem &&
@@ -512,128 +609,39 @@ export const UnitList = ({
           filters={filters}
         />
 
-        {loading ? (
-          <div className="py-20 text-center mx-auto flex justify-center items-center w-full h-48">
-            <div className="w-5/10">
-              <Loader animation />
-            </div>
-          </div>
-        ) : finalList?.length ? (
-          <>
-            <div className="w-full m-auto ">
-              <div className="flex justify-between bg-gray-50 whitespace-nowrap">
-                <div className="w-1/10 px-8 py-4 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>{UnitLookupDict[userLanguage]['NO']}</span>
-                </div>
-                <div
-                  className={`w-4/10 px-8 py-4 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider`}>
-                  <span>{UnitLookupDict[userLanguage]['NAME']}</span>
-                </div>
-                {isSuperAdmin && (
-                  <div className="w-2/10 px-8 py-4 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider truncate">
-                    <span>{UnitLookupDict[userLanguage]['INSTITUTION_NAME']}</span>
-                  </div>
-                )}
-                <div
-                  className={`${
-                    isSuperAdmin ? 'w-2/10' : 'w-4/10'
-                  } px-8 py-4 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider`}>
-                  <span>{UnitLookupDict[userLanguage]['LESSONS']}</span>
-                </div>
-                <span className="bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider w-1/10 flex items-center ">
-                  {InstitueRomms[userLanguage]['STATUS']}
-                </span>
-                <div className="w-1/10 m-auto py-4 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span className="w-auto">{UnitLookupDict[userLanguage]['ACTION']}</span>
-                </div>
-              </div>
-            </div>
+        <Table {...tableConfig} />
 
-            <div className="mb-8 w-full m-auto flex-1 overflow-y-auto">
-              {finalList.map((unit: any, index: number) => {
-                return (
-                  <ErrorBoundary
-                    authId={authId}
-                    email={email}
-                    componentName="UnitListRow"
-                    key={`unit_list_row_${index}`}
-                    fallback={<h1 className="hidden"> </h1>}>
-                    <UnitListRow
-                      key={`unit_list_row_${index}`}
-                      index={index}
-                      searchInput={searchInput.value}
-                      hoveringItem={hoveringItem}
-                      setHoveringItem={setHoveringItem}
-                      currentSelectedItem={currentSelectedItem}
-                      item={unit}
-                      isLast={finalList.length - 5 <= index}
-                      checkIfRemovable={checkIfRemovable}
-                      curricular={curricular}
-                      handleToggleDelete={handleToggleDelete}
-                      editCurrentUnit={handleView}
-                      isSuperAdmin={isSuperAdmin}
-                      redirectToInstitution={() =>
-                        redirectToInstitution(unit.institution?.id)
-                      }
-                      redirectToLesson={(lessonId: string) =>
-                        redirectToLesson(unit.institution?.id, lessonId)
-                      }
-                    />
-                  </ErrorBoundary>
-                );
-              })}
-            </div>
-            {addModalShow && (
-              <Modal
-                showHeader
-                showFooter={false}
-                showHeaderBorder
-                title={'Add Lesson to Syllabus'}
-                closeOnBackdrop
-                closeAction={onAddModalClose}>
-                <div
-                  className="min-w-180 lg:min-w-256"
-                  style={{
-                    height: 'calc(100vh - 150px)'
-                  }}>
-                  <UnitFormComponent
-                    isInModal={true}
-                    instId={instId}
-                    postAddSyllabus={postAddSyllabus}
-                    onCancel={() => setAddModalShow(false)}
-                  />
-                </div>
-              </Modal>
-            )}
-            {deleteModal.show && (
-              <ModalPopUp
-                closeAction={handleToggleDelete}
-                saveAction={deleting ? () => {} : deleteModal.action}
-                saveLabel={deleting ? 'DELETING...' : 'CONFIRM'}
-                cancelLabel="CANCEL"
-                loading={deleting}
-                message={deleteModal.message}
+        {addModalShow && (
+          <Modal
+            showHeader
+            showFooter={false}
+            showHeaderBorder
+            title={'Add Lesson to Syllabus'}
+            closeOnBackdrop
+            closeAction={onAddModalClose}>
+            <div
+              className="min-w-180 lg:min-w-256"
+              style={{
+                height: 'calc(100vh - 150px)'
+              }}>
+              <UnitFormComponent
+                isInModal={true}
+                instId={instId}
+                postAddSyllabus={postAddSyllabus}
+                onCancel={() => setAddModalShow(false)}
               />
-            )}
-          </>
-        ) : (
-          <>
-            {!isSuperAdmin && (
-              <div className="flex justify-center mt-8">
-                <AddButton
-                  className="mx-4"
-                  label={UnitLookupDict[userLanguage]['NEW_UNIT']}
-                  onClick={handleAdd}
-                />
-              </div>
-            )}
-            <p className="text-center p-16">
-              {' '}
-              {searchInput.isActive || selectedInstitution?.id
-                ? CommonlyUsedDict[userLanguage]['NO_SEARCH_RESULT']
-                : UnitLookupDict[userLanguage]['INFO']}
-            </p>
-          </>
+            </div>
+          </Modal>
+        )}
+        {deleteModal.show && (
+          <ModalPopUp
+            closeAction={handleToggleDelete}
+            saveAction={deleting ? () => {} : deleteModal.action}
+            saveLabel={deleting ? 'DELETING...' : 'CONFIRM'}
+            cancelLabel="CANCEL"
+            loading={deleting}
+            message={deleteModal.message}
+          />
         )}
       </div>
     </div>

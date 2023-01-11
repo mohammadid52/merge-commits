@@ -63,6 +63,7 @@ interface SelectorProps {
   placement?: 'bottom' | 'top' | 'left' | 'right' | 'bottomleft';
   onChange: (c: string, n: string, id: string) => void;
   disabled?: boolean;
+  disableSort?: boolean;
   isRequired?: boolean;
   style?: any;
   loading?: boolean;
@@ -107,7 +108,7 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
     dropdownWidth,
     arrowHidden,
     btnId,
-
+    disableSort = false,
     setHoveringItem,
 
     dataCy = ''
@@ -117,7 +118,7 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
   const {theme, clientKey} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
 
-  const sortedList = orderBy(list, ['name'], ['asc']);
+  const sortedList = disableSort ? list : orderBy(list, ['name'], ['asc']);
 
   const updateSelectedItem = (str: string, name: string, id: string) => {
     setShowList(!showList);
@@ -199,7 +200,8 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
                 className="w-auto absolute right-1"
                 show={isClearable && selectedItem !== null}>
                 {isClearable && selectedItem !== null && (
-                  <button
+                  <span
+                    role={'button'}
                     title="clear sort"
                     className="z-100 relative flex justify-center  cursor-pointer hover:bg-gray-200
                    rounded-full"
@@ -211,7 +213,7 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
                       size={'1rem'}
                       className="hover:iconoclast:text-main hover:curate:text-main transition-all text-gray-600"
                     />
-                  </button>
+                  </span>
                 )}
               </AnimatedContainer>
 

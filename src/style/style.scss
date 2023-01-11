@@ -1704,3 +1704,7 @@ $polka-dot-size: 0.8px;
 .isDragging {
   cursor: grabbing;
 }
+
+.shadowNoneOnFocus:focus {
+  box-shadow: none;
+}
