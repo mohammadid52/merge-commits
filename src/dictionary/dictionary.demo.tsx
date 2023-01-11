@@ -76,10 +76,10 @@ const BreadcrumsTitles: any = {
     AddChekpoint: 'Add Checkpoint',
     EditTopic: 'Edit Topic',
     AddExistingCheckpoint: 'Add Existing Checkpoint',
-    STAFF: 'Staff',
+    STAFF: 'Staff Manager',
     PeopleManagment: 'People Management',
     AddNewUser: 'Add New User',
-    USERS: 'Users',
+    USERS: 'User Manager',
     UserInfo: 'User Information',
     LESSONS: 'Lessons',
     LESSONPLANBUILDER: 'Lesson Plan Builder',
@@ -915,7 +915,7 @@ const Institute_info: any = {
     SERVICE_PROVIDER: 'Service Provider',
     TABS: {
       SERVICE_PROVIDER: 'Service Providers',
-      STAFF: 'Staff',
+      STAFF: 'Staff Manager',
       CLASS_MANAGER: 'Classroom Builder',
       LIVE_CLASS_ROOM: 'Live Classroom',
       COURSE_MANAGER: 'Course Builder',
@@ -1280,7 +1280,7 @@ const InstitueCurriculum: any = {
 
 const InstitueRomms: any = {
   EN: {
-    TITLE: 'CLASSROOMS',
+    TITLE: 'Classroom List',
     NO: 'No.',
     CLASSROOMS_NAME: 'Classroom Name',
     CLASS_NAME: 'Class Name',
@@ -2749,7 +2749,7 @@ const ProfileCheckpointlookupDict: any = {
 
 const RegistrationDict: any = {
   EN: {
-    title: 'New User Registration',
+    title: 'Register New User',
     subtitle: 'Add new user to the list',
     requiredfield: 'Required fields',
     firstname: 'First Name',

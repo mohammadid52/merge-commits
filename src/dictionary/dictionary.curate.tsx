@@ -76,10 +76,10 @@ const BreadcrumsTitles: any = {
     AddChekpoint: 'Add Checkpoint',
     EditTopic: 'Edit Topic',
     AddExistingCheckpoint: 'Add Existing Checkpoint',
-    STAFF: 'Staff',
+    STAFF: 'Staff Manager',
     PeopleManagment: 'People Management',
     AddNewUser: 'Add New User',
-    USERS: 'Users',
+    USERS: 'User Manager',
     UserInfo: 'User Information',
     LESSONS: 'Lessons',
     LESSONPLANBUILDER: 'Lesson Plan Builder',
@@ -915,7 +915,7 @@ const Institute_info: any = {
     SERVICE_PROVIDER: 'Service Provider',
     TABS: {
       SERVICE_PROVIDER: 'Service Providers',
-      STAFF: 'Staff',
+      STAFF: 'Staff Manager',
       CLASS_MANAGER: 'Classroom Builder',
       LIVE_CLASS_ROOM: 'Live Classroom',
       COURSE_MANAGER: 'Course Builder',
@@ -1280,7 +1280,7 @@ const InstitueCurriculum: any = {
 
 const InstitueRomms: any = {
   EN: {
-    TITLE: 'CLASSROOMS',
+    TITLE: 'Classroom List',
     NO: 'No.',
     CLASSROOMS_NAME: 'Classroom Name',
     CLASS_NAME: 'Class Name',
@@ -2327,7 +2327,7 @@ const SyllabusDict: any = {
     },
     MESSAGES: {
       wantsave: 'Do you want to save changes before moving forward?',
-      fetchlist: 'Error while fetching lessons list data.',
+      fetchlist: 'Error while fetching lesson list data.',
       fetchdesign: 'Error while fetching Designers list Please try again later.',
       UPDATE_ERROR: 'Error while updating please try again later.'
     }
@@ -2619,7 +2619,7 @@ const EditSyllabusDict: any = {
       namerequired: 'Unit name is required please enter name.',
       updateerr: 'Error while updating lesson status please try later.',
       fetcher: 'Error while fetching unit data.',
-      fetchlist: 'Error while fetching lessons list data.',
+      fetchlist: 'Error while fetching lesson list data.',
       fetchdesign: 'Error while fetching Designers list Please try again later.'
     }
   },
@@ -2749,7 +2749,7 @@ const ProfileCheckpointlookupDict: any = {
 
 const RegistrationDict: any = {
   EN: {
-    title: 'New User Registration',
+    title: 'Register New User',
     subtitle: 'Add new user to the list',
     requiredfield: 'Required fields',
     firstname: 'First Name',
@@ -3969,8 +3969,8 @@ const LessonEditDict: any = {
 
 const LessonsListDict: any = {
   EN: {
-    TITLE: 'LESSONS LIST',
-    HEADING: 'Lessons List',
+    TITLE: 'LESSON LIST',
+    HEADING: 'Lesson List',
     SUBTITLE: 'All Lessons List',
     SORTBY: 'Sort By',
     NO: 'No.',
