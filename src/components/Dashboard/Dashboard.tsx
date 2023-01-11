@@ -99,6 +99,7 @@ export interface DashboardProps {
   classRoomActiveSyllabus?: string;
   loading?: boolean;
   isTeacher?: boolean;
+  loadingRoomInfo?: boolean;
   isOnDemandStudent?: boolean;
   syllabusActivating?: boolean;
   updateAuthState?: Function;
@@ -527,8 +528,11 @@ const Dashboard = (props: DashboardProps) => {
     }
   }, [state.activeRoom]);
 
+  const [loadingRoomInfo, setLoadingRoomInfo] = useState(true);
+
   // Save info of selected room to cookie
   useEffect(() => {
+    setLoadingRoomInfo(true);
     const getRoomFromState = state.roomData.rooms.find(
       (room: any) => room.id === state.activeRoom
     );
@@ -537,6 +541,7 @@ const Dashboard = (props: DashboardProps) => {
       setLocalStorageData('room_info', getRoomFromState);
 
       setActiveRoomInfo(getRoomFromState);
+      setLoadingRoomInfo(false);
     }
   }, [state.activeRoom]);
 
@@ -843,6 +848,7 @@ const Dashboard = (props: DashboardProps) => {
                       classroomCurriculum={curriculumObj}
                       isTeacher={isTeacher}
                       isOnDemandStudent={isOnDemandStudent}
+                      loadingRoomInfo={loadingRoomInfo}
                       currentPage={currentPage}
                       setCurrentPage={setCurrentPage}
                       activeRoomInfo={activeRoomInfo}

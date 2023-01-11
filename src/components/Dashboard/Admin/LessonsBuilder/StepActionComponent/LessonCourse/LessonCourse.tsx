@@ -344,7 +344,7 @@ const LessonCourse = ({
             ) : null}
             {loading || assignedUnitsLoading ? (
               <div className="mt-4">
-                <Loader animation />
+                <Loader animation withText="Loading units..." className="text-gray-500" />
               </div>
             ) : (
               <>

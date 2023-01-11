@@ -1,12 +1,11 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import React, {useContext, useEffect, useState} from 'react';
+import Buttons from 'atoms/Buttons';
+import FormInput from 'atoms/Form/FormInput';
 import {GlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import * as mutations from 'graphql/mutations';
 import * as queries from 'graphql/queries';
-import Buttons from 'atoms/Buttons';
-import FormInput from 'atoms/Form/FormInput';
-import TextArea from 'atoms/Form/TextArea';
+import React, {useContext, useEffect, useState} from 'react';
 
 interface AddLearningObjectiveProps {
   curricularId: string;

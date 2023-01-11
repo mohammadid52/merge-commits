@@ -1,4 +1,3 @@
-// import {PersonalizeEvents} from 'aws-sdk';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import Buttons from '@components/Atoms/Buttons';
 import Tooltip from '@components/Atoms/Tooltip';
@@ -91,7 +90,6 @@ const RosterRow: React.FC<RosterRowProps> = ({
       handleShareStudentData(personAuthID, getPageID(currentLocation));
       handleViewStudentData(personAuthID);
       handlePageChange(parseInt(currentLocation));
-      // terminateSound();
     } else {
       if (lessonData?.type !== 'survey') {
         handleViewStudentData(personAuthID);

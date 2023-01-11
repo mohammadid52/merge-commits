@@ -89,7 +89,7 @@ const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
           cols={cols}
           id={id}
           style={{transition}}
-          value={value}
+          value={value !== null ? value : ''}
           className={`mt-1   ${
             dark ? 'border-gray-700  text-white bg-gray-800' : ''
           } ${maxWidth} block w-full sm:text-sm sm:leading-5 focus:outline-none focus:ring-2 focus:ring-${

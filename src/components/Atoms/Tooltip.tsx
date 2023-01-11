@@ -17,7 +17,7 @@ const Tooltip = ({
   show = true,
   placement = 'right',
   children,
-  additionalClass = '',
+  additionalClass = ''
 }: TooltipProps) => {
   if (show) {
     return (

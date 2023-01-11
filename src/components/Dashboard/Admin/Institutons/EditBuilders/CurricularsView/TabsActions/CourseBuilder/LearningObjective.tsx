@@ -201,6 +201,7 @@ const LearningObjective = (props: LearningObjectiveProps) => {
     setCreateOrEditLearningObjectiveModal(true);
     setSelectedObjectiveData({});
   };
+
   const editLearningObj = (learningData: any) => {
     setSelectedObjectiveData(learningData);
     setCreateOrEditLearningObjectiveModal(true);

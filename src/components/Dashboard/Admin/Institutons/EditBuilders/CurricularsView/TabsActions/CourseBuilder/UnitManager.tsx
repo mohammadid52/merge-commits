@@ -1,23 +1,27 @@
-import React, {Fragment, useContext, useEffect, useState} from 'react';
-import {useHistory} from 'react-router';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import {DragDropContext, Draggable, Droppable} from 'react-beautiful-dnd';
+import React, {useContext, useEffect, useState} from 'react';
+import {useHistory} from 'react-router';
 
 import {GlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 
-import * as mutations from 'graphql/mutations';
-import * as customQueries from 'customGraphql/customQueries';
 import * as customMutations from 'customGraphql/customMutations';
+import * as customQueries from 'customGraphql/customQueries';
+import * as mutations from 'graphql/mutations';
 
-import {reorder} from 'utilities/strings';
-import Selector from 'atoms/Form/Selector';
-import AddButton from 'atoms/Buttons/AddButton';
-import Loader from 'atoms/Loader';
-import ModalPopUp from 'molecules/ModalPopUp';
-import {getAsset} from 'assets';
-import UnitManagerRow from './UnitManagerRow';
+import Buttons from '@components/Atoms/Buttons';
+import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import {Empty} from '@components/Dashboard/Admin/LessonsBuilder/StepActionComponent/LearningEvidence/CourseMeasurementsCard';
+import CourseAction from '@components/MicroComponents/CourseAction';
+import Table from '@components/Molecules/Table';
+import {BUTTONS} from '@dictionary/dictionary.iconoclast';
+import {RoomStatus} from 'API';
+import AddButton from 'atoms/Buttons/AddButton';
+import Selector from 'atoms/Form/Selector';
+import Loader from 'atoms/Loader';
+import {map} from 'lodash';
+import ModalPopUp from 'molecules/ModalPopUp';
+import {reorder} from 'utilities/strings';
 
 interface UIMessages {
   show: boolean;
@@ -37,9 +41,8 @@ const UnitManager = ({
 }: any) => {
   const history = useHistory();
 
-  const {theme, clientKey, userLanguage} = useContext(GlobalContext);
-  const {CourseBuilderDict} = useDictionary(clientKey);
-  const themeColor = getAsset(clientKey, 'themeClassName');
+  const {userLanguage} = useContext(GlobalContext);
+  const {CourseBuilderDict} = useDictionary();
 
   // ~~~~~~~~~~~~~~~~ STATE ~~~~~~~~~~~~~~~~ //
   const [loading, setLoading] = useState(false);
@@ -144,6 +147,7 @@ const UnitManager = ({
     );
 
     filteredList = filteredList
+
       .map((t: any) => {
         let index = syllabusIds?.indexOf(t.unitId);
         return {...t, index};
@@ -152,11 +156,13 @@ const UnitManager = ({
 
     setSelectedSyllabusList(filteredList);
     setDropdownSyllabusList(
-      filteredDropDownList.map((item: {id: string; name: string}) => ({
-        id: item.id,
-        name: item.name,
-        value: item.name
-      }))
+      filteredDropDownList
+        .filter((d) => d.unit.status === courseData.status)
+        .map((item: {id: string; name: string}) => ({
+          id: item.id,
+          name: item.name,
+          value: item.name
+        }))
     );
   };
 
@@ -191,7 +197,8 @@ const UnitManager = ({
       setLoading(true);
       const result: any = await API.graphql(
         graphqlOperation(customQueries.listUniversalSyllabusOptions, {
-          filter: {institutionID: {eq: institutionId}}
+          filter: {institutionID: {eq: institutionId}},
+          status: {eq: courseData.status || RoomStatus.ACTIVE}
         })
       );
       const savedData = result.data.listUniversalSyllabi;
@@ -355,41 +362,94 @@ const UnitManager = ({
     }
   };
 
+  const dict = CourseBuilderDict[userLanguage]['TABLE_HEADS'];
+
+  const dataList = map(selectedSyllabusList, (item, idx) => ({
+    no: idx + 1,
+    id: item.id,
+    unitName: (
+      <div
+        onClick={() => goToUnitBuilder(item.unitId, item.type)}
+        className="cursor-pointer">
+        {item.name ? item.name : ''}
+      </div>
+    ),
+    actions: (
+      <CourseAction
+        item={item}
+        checkIfRemovable={checkIfRemovable}
+        onDelete={() => handleToggleDelete(item.id, item)}
+        onView={() => goToUnitBuilder(item.unitId, item.type)}
+      />
+    )
+  }));
+
+  const tableConfig = {
+    headers: [dict['NUMBER'], dict['UNIT_NAME'], dict['ACTION']],
+    dataList,
+    config: {
+      dark: false,
+
+      isFirstIndex: true,
+      headers: {textColor: 'text-white'},
+      dataList: {
+        emptyText: `${CourseBuilderDict[userLanguage]['NO_UNIT']} - current status of course is ${courseData.status}`,
+        loading,
+        droppable: {
+          isDroppable: true,
+          droppableId: 'unitList',
+          onDragEnd
+        },
+        customWidth: {
+          no: 'w-12',
+          unitName: 'w-7/10'
+        },
+        maxHeight: 'max-h-196',
+        pattern: 'striped',
+        patternConfig: {firstColor: 'bg-gray-100', secondColor: 'bg-gray-200'}
+      }
+    }
+  };
+
   return (
     <div className="">
       {/* *************** SECTION HEADER ************ */}
-      <div
-        className={`flex items-center justify-between p-4 ${theme.borderColor[themeColor]}`}>
-        {/* <h3 className="text-lg leading-6 font-medium text-gray-900">
-          {CourseBuilderDict[userLanguage]['LESSON_PLAN_HEADING']}
-        </h3> */}
-        <div className="flex justify-end">
-          <AddButton
-            label={CourseBuilderDict[userLanguage]['ADD_NEW_UNIT']}
-            onClick={createNewUnit}
-          />
-        </div>
-      </div>
-      {/* *************** ADD LESSON TO SYLLABUS SECTION ************ */}
-      <div className="w-full m-auto p-4">
-        <div className="my-8 w-8/10 lg:w-6/10 m-auto flex items-center justify-center">
-          <div className="mr-4">
+
+      <SectionTitleV3
+        title={'Unit List'}
+        fontSize="xl"
+        fontStyle="semibold"
+        extraClass="leading-6 text-gray-900  mb-2 lg:mb-0"
+        extraContainerClass="flex-col lg:flex-row "
+        borderBottom
+        withButton={
+          <div className="lg:w-7/10 w-full flex gap-x-4 justify-end items-center">
             <Selector
               selectedItem={selectedSyllabus.value}
               list={dropdownSyllabusList}
               placeholder={CourseBuilderDict[userLanguage]['SELECT_UNIT']}
               onChange={handleSelectSyllabus}
+              additionalClass="w-auto "
+              width="w-96"
             />
-          </div>
-          <div className="ml-4 w-auto">
-            <AddButton
-              className="ml-4 py-1"
-              label={'Add'}
+
+            <Buttons
+              label={BUTTONS[userLanguage]['ADD']}
               onClick={addNewSyllabusToCourse}
-              disabled={!Boolean(selectedSyllabus.value) || addingSyllabus}
+              disabled={!Boolean(selectedSyllabus.id)}
+            />
+
+            <AddButton
+              label={CourseBuilderDict[userLanguage]['ADD_NEW_UNIT']}
+              onClick={createNewUnit}
             />
           </div>
-        </div>
+        }
+        shadowOff
+      />
+
+      {/* *************** ADD LESSON TO SYLLABUS SECTION ************ */}
+      <div className="w-full m-auto p-4">
         {messages.show && messages.lessonError ? (
           <div className="py-2 mb-4 m-auto text-center">
             <p className={`${messages.isError ? 'text-red-600' : 'text-green-600'}`}>
@@ -399,76 +459,7 @@ const UnitManager = ({
         ) : null}
 
         {/* *************** SYLLABUS LIST ************ */}
-        <div>
-          {loading ? (
-            <div className="h-100 flex justify-center items-center">
-              <div className="w-5/10">
-                <Loader animation withText="Fetching units..." />
-              </div>
-            </div>
-          ) : selectedSyllabusList?.length > 0 ? (
-            <Fragment>
-              {/* *************** SYLLABUS TABLE HEADERS ************ */}
-              <div className="flex justify-between w-full bg-gray-50  px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
-                <div className="w-1/10 px-8 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>{CourseBuilderDict[userLanguage]['TABLE_HEADS']['NUMBER']}</span>
-                </div>
-                <div className="w-8/10 px-8 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>
-                    {CourseBuilderDict[userLanguage]['TABLE_HEADS']['UNIT_NAME']}
-                  </span>
-                </div>
-                <div className="w-1/10 m-auto py-3 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>{CourseBuilderDict[userLanguage]['TABLE_HEADS']['ACTION']}</span>
-                </div>
-              </div>
-
-              <div className="max-h-88 overflow-y-auto mb-10">
-                <DragDropContext onDragEnd={onDragEnd}>
-                  <Droppable droppableId="droppable">
-                    {(provided1, snapshot) => (
-                      <div {...provided1.droppableProps} ref={provided1.innerRef}>
-                        {selectedSyllabusList.map((item, index) => {
-                          return (
-                            <Draggable key={item.id} draggableId={item.id} index={index}>
-                              {(provided, snapshot) => (
-                                <div
-                                  ref={provided.innerRef}
-                                  {...provided.draggableProps}
-                                  {...provided.dragHandleProps}>
-                                  <UnitManagerRow
-                                    index={index}
-                                    item={item}
-                                    checkIfRemovable={checkIfRemovable}
-                                    handleToggleDelete={handleToggleDelete}
-                                    goToUnitBuilder={goToUnitBuilder}
-                                    courseObj={courseData}
-                                  />
-                                </div>
-                              )}
-                            </Draggable>
-                          );
-                        })}
-                        {provided1.placeholder}
-                      </div>
-                    )}
-                  </Droppable>
-                </DragDropContext>
-              </div>
-              {deleteModal.show && (
-                <ModalPopUp
-                  closeAction={handleToggleDelete}
-                  saveAction={deleting ? () => {} : deleteModal.action}
-                  saveLabel={deleting ? 'DELETING...' : 'CONFIRM'}
-                  cancelLabel="CANCEL"
-                  message={deleteModal.message}
-                />
-              )}
-            </Fragment>
-          ) : (
-            <Empty text={CourseBuilderDict[userLanguage]['NO_UNIT']} />
-          )}
-        </div>
+        <Table {...tableConfig} />
       </div>
       {warnModal2.show && (
         <ModalPopUp

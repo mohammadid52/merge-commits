@@ -2212,6 +2212,8 @@ export const listCurriculumsForSuperAdmin = /* GraphQL */ `
         type
         image
         status
+        summary
+        description
         institution {
           id
           name
@@ -2225,6 +2227,7 @@ export const listCurriculumsForSuperAdmin = /* GraphQL */ `
           items {
             id
             unit {
+              status
               id
               name
             }
@@ -2238,16 +2241,15 @@ export const listCurriculumsForSuperAdmin = /* GraphQL */ `
     }
   }
 `;
-
 export const listCurriculumsForLessons = /* GraphQL */ `
-  query ListCurriculums(
+  query ListCurricula(
     $id: ID
     $filter: ModelCurriculumFilterInput
     $limit: Int
     $nextToken: String
     $sortDirection: ModelSortDirection
   ) {
-    listCurriculums(
+    listCurricula(
       id: $id
       filter: $filter
       limit: $limit
@@ -2275,6 +2277,7 @@ export const listCurriculumsForLessons = /* GraphQL */ `
               lessons {
                 items {
                   id
+                  syllabusID
                   lessonID
                 }
               }
@@ -2285,6 +2288,7 @@ export const listCurriculumsForLessons = /* GraphQL */ `
           nextToken
         }
       }
+
       nextToken
     }
   }
@@ -2594,6 +2598,7 @@ export const listUniversalLessonsOptions = /* GraphQL */ `
         type
         label
         title
+        status
         institutionID
         language
         lessonPlan {
@@ -2765,65 +2770,26 @@ export const getUniversalSyllabus = /* GraphQL */ `
           id
           syllabusID
           lessonID
-          unit
-          sequence
           status
-          complete
-          roster
-          viewing
           lesson {
             id
             type
             label
             title
-            institutionID
-            language
-            designers
-            objectives
-            purpose
-            introduction
-            introductionTitle
-            instructions
-            instructionsTitle
+            status
             summary
-            summaryTitle
-            duration
-            resources
-            notes
             cardImage
             cardCaption
             lessonPlan {
               id
               title
-              label
-              description
-              class
-              active
-              disabled
-              displayMode
-              open
               estTime
-              activityType
-              interactionType
-              tags
+              label
             }
-            isUsed
-            darkMode
-            rubrics
-            createdAt
-            updatedAt
           }
-          startDate
-          endDate
-          createdAt
-          updatedAt
         }
-        nextToken
       }
       universalLessonsSeq
-      lessonHistory
-      designers
-      status
       createdAt
       updatedAt
     }
@@ -2858,7 +2824,6 @@ export const listUniversalSyllabuss = /* GraphQL */ `
         id
         name
         type
-        institutionID
         institution {
           id
           name
@@ -2875,6 +2840,7 @@ export const listUniversalSyllabuss = /* GraphQL */ `
             lesson {
               id
               title
+              status
             }
           }
           nextToken
@@ -3566,6 +3532,7 @@ export const GetInstitutionDetails = /* GraphQL */ `
               id
               unit {
                 id
+                status
                 name
               }
             }
@@ -5838,6 +5805,7 @@ export const listCurriculumUnitss = /* GraphQL */ `
           name
           type
           institutionID
+          status
         }
         curriculumId
         createdAt
@@ -6379,6 +6347,76 @@ export const getActiveUniversalSyllabus = /* GraphQL */ `
           unit
         }
       }
+    }
+  }
+`;
+
+export const listCurriculaForLesson = /* GraphQL */ `
+  query ListCurricula(
+    $id: ID
+    $filter: ModelCurriculumFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listCurricula(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        institutionID
+        name
+        type
+        image
+        summary
+        description
+        objectives
+        languages
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          setupComplete
+          createdAt
+          updatedAt
+        }
+        designers
+        universalSyllabusSeq
+        checkpoints {
+          nextToken
+        }
+        universalSyllabus {
+          items {
+            id
+            unit {
+              status
+              id
+              name
+            }
+          }
+        }
+        syllabiHistory
+        signedOff
+        status
+        createdAt
+        updatedAt
+      }
+      nextToken
     }
   }
 `;

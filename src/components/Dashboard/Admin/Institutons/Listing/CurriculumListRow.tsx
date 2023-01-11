@@ -1,16 +1,30 @@
+import BriefPopover from '@components/Atoms/BriefPopover';
+import Highlighted from '@components/Atoms/Highlighted';
+import Placeholder from '@components/Atoms/Placeholder';
+import Tooltip from '@components/Atoms/Tooltip';
+import {DataValue} from '@components/Dashboard/Csv/Csv';
+import useGraphqlQuery from '@customHooks/useGraphqlQuery';
+import {Curriculum, ModelPersonFilterInput, PersonStatus, Role, RoomStatus} from 'API';
 import Popover from 'atoms/Popover';
 import {GlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
+import {truncate} from 'lodash';
+import moment from 'moment';
 import React, {useContext, useState} from 'react';
 import {BiDotsVerticalRounded} from 'react-icons/bi';
-import {stringToHslColor, initials, getInitialsFromString} from 'utilities/strings';
 import {getImageFromS3Static} from 'utilities/services';
-import Highlighted from '@components/Atoms/Highlighted';
+import {
+  createFilterToFetchSpecificItemsOnly,
+  getInitialsFromString,
+  initials,
+  stringToHslColor
+} from 'utilities/strings';
 import {Status} from '../../UserManagement/UserStatus';
 
 interface ICurriculumListRowProps {
   index: number;
-  item: any;
+  item: Curriculum;
+  isLast: boolean;
   isSuperAdmin: boolean;
   checkIfRemovable: any;
   handleToggleDelete: any;
@@ -18,6 +32,9 @@ interface ICurriculumListRowProps {
   redirectToInstitution: () => void;
   redirectToUnit: (unitId: string) => void;
   searchInput?: string;
+  hoveringItem?: any;
+  setHoveringItem?: any;
+  currentSelectedItem?: any;
 }
 
 const CurriculumListRow = ({
@@ -29,17 +46,58 @@ const CurriculumListRow = ({
   editCurrentCurricular,
   redirectToInstitution,
   redirectToUnit,
-  searchInput
+  searchInput,
+  hoveringItem,
+  setHoveringItem,
+  currentSelectedItem,
+  isLast
 }: ICurriculumListRowProps) => {
   // ~~~~~~~~~~ CONTEXT_SPLITTING ~~~~~~~~~~ //
   const gContext = useContext(GlobalContext);
   const clientKey = gContext.clientKey;
-  const {InstitueCurriculum} = useDictionary(clientKey);
   const userLanguage = gContext.userLanguage;
   // ~~~~~~~~~~~~~~~~ STATE ~~~~~~~~~~~~~~~~ //
+  const {InstitueCurriculum} = useDictionary(clientKey);
   const [showMenu, setShowMenu] = useState<boolean>(false);
 
   const textClass = `text-sm leading-5 text-gray-800 hover:iconoclast:text-500 transition-all duration-50 hover:curate:text-500`;
+
+  const filteredUnits =
+    item.universalSyllabus?.items && item.universalSyllabus?.items?.length > 0
+      ? item.universalSyllabus?.items?.filter(
+          (d: any) => d?.unit?.status?.toLowerCase() === item?.status?.toLowerCase()
+        )
+      : [];
+
+  const showPopover = hoveringItem?.id === item.id && currentSelectedItem;
+
+  const filter: ModelPersonFilterInput = {
+    role: {
+      ne: Role.ST
+    },
+    status: {
+      ne: PersonStatus.INACTIVE
+    },
+    ...createFilterToFetchSpecificItemsOnly(item?.designers || [], 'id')
+  };
+  const [designers, setDesigners] = useState([]);
+
+  const {isLoading, isFetched} = useGraphqlQuery(
+    'fetchPersons',
+    {
+      filter: filter,
+      limit: 50
+    },
+    {
+      custom: true,
+      originalName: 'listPeople',
+      onSuccess: (data) => {
+        setDesigners(data);
+      },
+      enabled:
+        showPopover && item && item?.designers?.length > 0 && designers.length === 0
+    }
+  );
 
   return (
     <tr
@@ -51,11 +109,17 @@ const CurriculumListRow = ({
         {index + 1}.
       </td>
       <td
+        onMouseEnter={() => {
+          setHoveringItem({name: item.name, id: item.id});
+        }}
+        onMouseLeave={() => {
+          setHoveringItem({});
+        }}
         data-cy={`curriculum-${item.name.split(' ').join('-')}`}
         onClick={() => editCurrentCurricular(item.id)}
         className={`cursor-pointer flex ${
           isSuperAdmin ? 'w-2/10' : 'w-3.5/10'
-        } items-center px-8 py-4 text-left text-sm leading-4 font-medium whitespace-normal`}>
+        } items-center px-8 py-4 cursor-pointer hover:underline hover:theme-text:400 text-left text-sm leading-4 font-medium whitespace-normal`}>
         <div className="flex-shrink-0 h-10 w-10 flex items-center">
           {item.image ? (
             <img
@@ -82,15 +146,109 @@ const CurriculumListRow = ({
             </div>
           )}
         </div>
-        <div className="ml-2">
+        <div className="ml-2 relative ">
           <Highlighted text={item.name} highlight={searchInput} />
+
+          <BriefPopover
+            header="Course Details"
+            isLast={isLast}
+            clear={() => setHoveringItem({})}
+            show={showPopover}>
+            {showPopover && (
+              <>
+                <div className=" my-2 gap-x-4 flex items-start justify-between">
+                  <DataValue
+                    title={'Status'}
+                    content={
+                      <p
+                        className={`${
+                          currentSelectedItem.status === RoomStatus.ACTIVE
+                            ? 'text-green-500'
+                            : 'text-yellow-500'
+                        } uppercase`}>
+                        {currentSelectedItem.status || RoomStatus.ACTIVE}
+                      </p>
+                    }
+                  />
+                  <DataValue
+                    title={'Created date'}
+                    content={moment(item.createdAt).format('ll')}
+                  />
+                  <DataValue
+                    title={'Last update'}
+                    content={moment(item.updatedAt).format('ll')}
+                  />
+                </div>
+
+                <hr />
+
+                {item?.designers && item?.designers.length > 0 && (
+                  <>
+                    <div className="mt-2">
+                      <DataValue
+                        title={'Designers'}
+                        content={
+                          isLoading && !isFetched && designers.length === 0 ? (
+                            <p className="text-xs text-gray-400">loading...</p>
+                          ) : (
+                            <ul className="grid grid-cols-2 gap-x-4">
+                              {designers.map((person) => {
+                                return (
+                                  <li key={person.authId} className="flex items-center">
+                                    <div className="flex-shrink-0 h-8 w-8 flex items-center">
+                                      {person.image ? (
+                                        <img
+                                          src={getImageFromS3Static(person.image)}
+                                          className="h-5 w-5 rounded-full"
+                                        />
+                                      ) : (
+                                        <Placeholder
+                                          firstName={person.firstName}
+                                          lastName={person.lastName}
+                                          size="h-5 w-5"
+                                        />
+                                      )}
+                                    </div>
+                                    <h4 className="text-gray-700 cursor-pointer hover:underline hover:theme-text:400 text-sm">
+                                      {person.firstName} {person.lastName}
+                                    </h4>
+                                  </li>
+                                );
+                              })}
+                            </ul>
+                          )
+                        }
+                      />
+                    </div>
+
+                    <hr />
+                  </>
+                )}
+
+                <div className="mt-2">
+                  <DataValue
+                    title={'Summary'}
+                    content={truncate(item.summary || '--', {length: 200})}
+                  />
+                </div>
+                <hr />
+
+                <div className="my-2">
+                  <DataValue
+                    title={'Description'}
+                    content={truncate(item.description || '--', {length: 200})}
+                  />
+                </div>
+              </>
+            )}
+          </BriefPopover>
         </div>
       </td>
       {isSuperAdmin && (
         <td
           className="flex w-1.5/10 text-gray-500 items-center px-8 py-4 text-left text-sm font-medium leading-4 whitespace-normal cursor-pointer"
           onClick={redirectToInstitution}>
-          <Highlighted text={item.institutionName} highlight={searchInput} />
+          <Highlighted text={item.institution.name} highlight={searchInput} />
         </td>
       )}
       <td
@@ -99,22 +257,25 @@ const CurriculumListRow = ({
       </td>
       <td
         className={`w-3/10 items-center text-gray-500 px-8 py-4 text-left text-sm leading-4 font-medium whitespace-normal`}>
-        {item.universalSyllabus?.items?.map(
-          ({
-            id,
-            unit: {id: unitId, name}
-          }: {
-            id: string;
-            unit: {id: string; name: string};
-          }) => (
-            <li
-              key={id}
-              className="cursor-pointer"
-              onClick={() => redirectToUnit(unitId)}>
-              {name}
-            </li>
-          )
-        )}
+        <ol className="list-decimal">
+          {filteredUnits?.length > 0 ? (
+            filteredUnits?.map((unit) => (
+              <Tooltip
+                key={unit.unit.id}
+                placement="left"
+                text={`Go to ${unit.unit.name}`}>
+                <li
+                  className="mb-2 cursor-pointer hover:underline hover:theme-text:400"
+                  key={unit.unit.id}
+                  onClick={() => redirectToUnit(unit.unit.id)}>
+                  {unit.unit.name}
+                </li>
+              </Tooltip>
+            ))
+          ) : (
+            <p className="">No unit</p>
+          )}
+        </ol>
       </td>
       <td
         className={`text-sm w-1/10 leading-4 font-medium whitespace-normal break-normal text-gray-500`}>

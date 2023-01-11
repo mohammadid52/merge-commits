@@ -1,5 +1,5 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import React, {Fragment, useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   AiOutlineArrowDown,
   AiOutlineArrowUp,
@@ -14,7 +14,13 @@ import * as customQueries from 'customGraphql/customQueries';
 import * as queries from 'graphql/queries';
 
 // import LessonLoading from '../../../Lesson/Loading/ComponentLoading';
-import ListBottomBar from '@components/Molecules/ListBottomBar';
+import Filters from '@components/Atoms/Filters';
+import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
+import UserLookupAction from '@components/MicroComponents/UserLookupAction';
+import UserLookupLocation from '@components/MicroComponents/UserLookupLocation';
+import UserLookupName from '@components/MicroComponents/UserLookupName';
+import Table from '@components/Molecules/Table';
+import useDictionary from '@customHooks/dictionary';
 import usePagination from '@customHooks/usePagination';
 import useSearch from '@customHooks/useSearch';
 import {PersonStatus} from 'API';
@@ -22,11 +28,12 @@ import BreadCrums from 'atoms/BreadCrums';
 import Buttons from 'atoms/Buttons';
 import SearchInput from 'atoms/Form/SearchInput';
 import Selector from 'atoms/Form/Selector';
-import SectionTitle from 'atoms/SectionTitle';
-import useDictionary from 'customHooks/dictionary';
-import {createFilterToFetchSpecificItemsOnly} from 'utilities/strings';
-import List from './List';
-import UserListLoader from './UserListLoader';
+import {map} from 'lodash';
+import moment from 'moment';
+import {createFilterToFetchSpecificItemsOnly, getUserRoleString} from 'utilities/strings';
+import UserLocation from './UserLocation';
+import UserRole from './UserRole';
+import UserStatus from './UserStatus';
 
 export const sortByName = (data: any[]) => {
   return data.sort((a: any, b: any) => {
@@ -40,12 +47,13 @@ export const sortByName = (data: any[]) => {
   });
 };
 
-export const addName = (data: any[]) =>
-  data.map((item: any) => ({
+export const addName = (data: any[]) => {
+  return data.map((item: any) => ({
     ...item,
     name: `${item?.firstName} ${item?.lastName}`,
     _sortName: `${item?.firstName?.toLowerCase()} `
   }));
+};
 
 const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
   const {state, theme, dispatch, userLanguage, clientKey} = useContext(GlobalContext);
@@ -54,7 +62,7 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
 
   const [loading, setLoading] = useState<boolean>(false);
 
-  const {UserLookupDict, BreadcrumsTitles} = useDictionary(clientKey);
+  const {UserLookupDict, BreadcrumsTitles} = useDictionary();
 
   const [sortingType, setSortingType] = useState({
     value: '',
@@ -71,7 +79,9 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
     setCurrentList,
     allAsProps,
     setTotalPages,
-    resetPagination
+    resetPagination,
+    currentPage,
+    getIndex
   } = usePagination(totalUserList || [], loading ? 0 : totalUserList.length);
 
   // ...End.
@@ -97,14 +107,13 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
     );
   };
 
-  // add this function to useEffect
   useEffect(() => {
-    if (!loading && currentList.length > 0) {
+    if (!loading && currentList?.length > 0) {
       const query = checkSearchQueryFromUrl();
       if (query) {
         const items = filterBySearchQuery(query);
         if (Boolean(items)) {
-          setCurrentList(items);
+          setFilteredList(items);
         }
       }
     }
@@ -114,7 +123,7 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
     const searched = searchAndFilter(searchInput.value);
 
     if (Boolean(searched)) {
-      setCurrentList(searched);
+      setFilteredList(searched);
     } else {
       _removeSearchAction();
     }
@@ -151,11 +160,11 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
   const {
     filterBySearchQuery,
     searchInput,
+    setSearchInput,
     checkSearchQueryFromUrl,
     removeSearchAction,
     setSearch,
-    searchAndFilter,
-    findRelatedSearch
+    searchAndFilter
   } = useSearch(totalUserList, ['name', 'email'], 'firstName');
 
   const fetchSortedList = () => {
@@ -483,184 +492,216 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
     }
   };
 
+  const [filters, setFilters] = useState<any>();
+
+  const [filteredList, setFilteredList] = useState([]);
+
+  const finalList = searchInput.isActive ? filteredList : currentList;
+
+  const dict = UserLookupDict[userLanguage];
+
+  const dataList = map(finalList, (item, idx) => ({
+    no: getIndex(idx),
+    name: (
+      <UserLookupName
+        searchTerm={searchInput.value}
+        isStudentRoster={isStudentRoster}
+        item={item}
+      />
+    ),
+    flow: <UserLocation role={item.role} onDemand={item?.onDemand} />,
+    role: <UserRole role={item.role ? item.role : '--'} />,
+    status: (
+      <div className="w-auto flex justify-center flex-col">
+        <UserStatus status={item.status ? item.status : '--'} />
+        {item.status === PersonStatus.INACTIVE && item.inactiveStatusDate !== null && (
+          <span className=" text-gray-600 pt-1 text-xs text-left -ml-4">
+            Since {moment(item.inactiveStatusDate).format('ll')}
+          </span>
+        )}
+      </div>
+    ),
+    location: <UserLookupLocation item={item} idx={idx} />,
+    actions: state.user.role !== 'ST' && state.user.role !== 'BLD' && (
+      <UserLookupAction item={item} />
+    )
+  }));
+
+  const tableConfig = {
+    headers: [
+      'no',
+      dict['name'],
+      dict['flow'],
+
+      dict['role'],
+      dict['status'],
+      dict['location'],
+      state.user.role !== 'ST' && state.user.role !== 'BLD' && dict['action']
+    ],
+    dataList,
+    config: {
+      dark: false,
+      isFirstIndex: true,
+      headers: {textColor: 'text-white'},
+      dataList: {
+        loading,
+        emptyText:
+          searchInput.isActive && !searchInput.typing
+            ? 'no data'
+            : searchInput.isActive && searchInput.typing
+            ? `Hit enter to search for ${searchInput.value}`
+            : UserLookupDict[userLanguage]['noresult'],
+        pagination: {
+          showPagination: !searchInput.isActive && selectedClass === null,
+          config: {
+            allAsProps
+          }
+        },
+        customWidth: {
+          name: 'w-72 -ml-12',
+          status: 'w-28',
+          flow: 'w-24',
+          role: 'w-24',
+          location: 'w-24',
+          actions: 'w-48'
+        },
+        maxHeight: 'max-h-none',
+        pattern: 'striped',
+        patternConfig: {firstColor: 'bg-gray-100', secondColor: 'bg-gray-200'}
+      }
+    }
+  };
+
+  const updateFilter = (filterName: any) => {
+    if (filterName === filters) {
+      setSearchInput({...searchInput, isActive: false});
+      setFilters(null);
+      setFilteredList([]);
+    } else {
+      setSearchInput({...searchInput, isActive: true});
+      const filtered = currentList.filter(
+        (_d: any) => filterName.toLowerCase() === getUserRoleString(_d.role).toLowerCase()
+      );
+      setFilteredList(filtered);
+      setFilters(filterName);
+    }
+  };
+
   return (
-    <div className={`w-full h-full ${isInInstitute ? 'px-12' : ''}`}>
+    <div className={`w-full h-full`}>
       {/* Header Section */}
       {!isInInstitute && <BreadCrums items={breadCrumsList} />}
-      <div className="flex flex-col lg:flex-row justify-between mb-4 items-center">
-        {isInInstitute ? (
-          <h3 className="text-lg leading-6 text-gray-600 w-full lg:w-auto mb-4 lg:mb-0">
-            {isStudentRoster ? `Your Students (${headerForStudentRoster()})` : 'Users'}
-          </h3>
-        ) : (
-          <SectionTitle
-            title={UserLookupDict[userLanguage]['title']}
-            subtitle={UserLookupDict[userLanguage]['subtitle']}
-          />
-        )}
-        <div
-          className={
-            isStudentRoster
-              ? 'flex justify-end mb-4 items-center w-auto'
-              : 'flex justify-end mb-4'
-          }>
-          {isStudentRoster && (
-            <div className="w-auto relative flex mr-2 min-w-64">
-              <Selector
-                isClearable
-                placeholder={'Select a class'}
-                list={getClassListForSelector()}
-                selectedItem={selectedClass?.name}
-                setSelectedItem={setSelectedClass}
-                onChange={setSelectedClassValue}
-                disabled={loading}
-                arrowHidden={true}
-              />
+      <div className="">
+        <SectionTitleV3
+          fontSize="xl"
+          fontStyle="semibold"
+          extraClass="leading-6 text-gray-900"
+          borderBottom
+          shadowOff
+          title={
+            !isInInstitute
+              ? UserLookupDict[userLanguage]['title']
+              : isStudentRoster
+              ? `Your Students (${headerForStudentRoster()})`
+              : 'User List'
+          }
+          subtitle={isInInstitute ? null : UserLookupDict[userLanguage]['subtitle']}
+          withButton={
+            <div
+              className={
+                isStudentRoster
+                  ? 'flex justify-end mb-4 items-center w-auto'
+                  : 'flex justify-end mb-4 w-auto'
+              }>
+              {isStudentRoster && (
+                <div className="w-auto relative flex mr-2 min-w-64">
+                  <Selector
+                    isClearable
+                    placeholder={'Select a class'}
+                    list={getClassListForSelector()}
+                    selectedItem={selectedClass?.name}
+                    setSelectedItem={setSelectedClass}
+                    onChange={setSelectedClassValue}
+                    disabled={loading}
+                    arrowHidden={true}
+                  />
 
-              {selectedClass !== null && (
-                <span
-                  onClick={goToClassroom}
-                  style={{bottom: '-1.5rem'}}
-                  className="absolute text-center theme-text text-sm capitalize hover:theme-text:600 hover:underline cursor-pointer">
-                  Go to classroom
-                </span>
+                  {selectedClass !== null && (
+                    <span
+                      onClick={goToClassroom}
+                      style={{bottom: '-1.5rem'}}
+                      className="absolute text-center theme-text text-sm capitalize hover:theme-text:600 hover:underline cursor-pointer">
+                      Go to classroom
+                    </span>
+                  )}
+                </div>
+              )}
+
+              <SearchInput
+                dataCy="user-loookup-search"
+                value={searchInput.value}
+                onChange={setSearch}
+                disabled={loading}
+                onKeyDown={searchUserFromList}
+                closeAction={_removeSearchAction}
+                style={`mr-4 ${isInInstitute ? 'w-auto' : 'w-full'}`}
+              />
+              {!isInInstitute && (
+                <>
+                  <Selector
+                    placeholder={UserLookupDict[userLanguage]['sortby']}
+                    list={sortByList}
+                    selectedItem={sortingType.name}
+                    onChange={setSortingValue}
+                    disabled={loading}
+                    btnClass="rounded-r-none  border-r-none "
+                    arrowHidden={true}
+                  />
+                  <button
+                    className={`w-28 bg-gray-100 mr-4 p-3 border-gray-400  border-0 rounded border-l-none rounded-l-none ${theme.outlineNone} `}
+                    onClick={toggleSortDimention}>
+                    <IconContext.Provider
+                      value={{size: '1.5rem', color: theme.iconColor[themeColor]}}>
+                      {sortingType.asc ? <AiOutlineArrowUp /> : <AiOutlineArrowDown />}
+                    </IconContext.Provider>
+                  </button>
+                </>
+              )}
+              {state.user.role !== 'SUP' && (
+                <Buttons
+                  label={UserLookupDict[userLanguage]['button']['add']}
+                  onClick={handleLink}
+                  btnClass={isInInstitute ? '' : 'mr-4 w-full'}
+                  Icon={AiOutlineUsergroupAdd}
+                />
               )}
             </div>
-          )}
-
-          <SearchInput
-            dataCy="user-loookup-search"
-            value={searchInput.value}
-            onChange={setSearch}
-            disabled={loading}
-            onKeyDown={searchUserFromList}
-            closeAction={_removeSearchAction}
-            style={`mr-4 ${isInInstitute ? 'w-auto' : 'w-full'}`}
-          />
-          {!isInInstitute && (
-            <>
-              <Selector
-                placeholder={UserLookupDict[userLanguage]['sortby']}
-                list={sortByList}
-                selectedItem={sortingType.name}
-                onChange={setSortingValue}
-                disabled={loading}
-                btnClass="rounded-r-none  border-r-none "
-                arrowHidden={true}
-              />
-              <button
-                className={`w-28 bg-gray-100 mr-4 p-3 border-gray-400  border-0 rounded border-l-none rounded-l-none ${theme.outlineNone} `}
-                onClick={toggleSortDimention}>
-                <IconContext.Provider
-                  value={{size: '1.5rem', color: theme.iconColor[themeColor]}}>
-                  {sortingType.asc ? <AiOutlineArrowUp /> : <AiOutlineArrowDown />}
-                </IconContext.Provider>
-              </button>
-            </>
-          )}
-          {state.user.role !== 'SUP' && (
-            <Buttons
-              label={UserLookupDict[userLanguage]['button']['add']}
-              onClick={handleLink}
-              btnClass={isInInstitute ? '' : 'mr-4 w-full'}
-              Icon={AiOutlineUsergroupAdd}
-            />
-          )}
-        </div>
+          }
+        />
       </div>
 
       {/* List / Table */}
-      <div className="flex flex-col">
-        <div className="-my-2 py-2">
+      <div className="flex flex-col px-4">
+        <Filters
+          loading={loading}
+          list={currentList}
+          updateFilter={updateFilter}
+          filters={filters}
+          customFilters={['ADMIN', 'BUILDER', 'FELLOW', 'STUDENT']}
+          showingCount={{
+            currentPage,
+            lastPage: allAsProps.lastPage,
+            totalResults: allAsProps.totalResults,
+            pageCount: allAsProps.pageCount
+          }}
+        />
+
+        <div className="">
           <div
             className={`${
               isInInstitute ? '' : 'white_back border-b-0 border-gray-200 py-4 mt-2'
-            } mb-8 align-middle rounded-lg"`}>
-            <div
-              className={`h-8/10 w-screen lg:w-full overflow-x-scroll lg:overflow-x-hidden ${
-                isInInstitute ? '' : 'px-4'
-              }`}>
-              <div className="w-full flex justify-between border-b-0 border-gray-200 ">
-                <div className="w-4/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>{UserLookupDict[userLanguage]['name']}</span>
-                </div>
-                <div className="w-1/10 flex justify-center px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span className="w-auto">{UserLookupDict[userLanguage]['flow']}</span>
-                </div>
-                <div className="w-1/10 flex justify-center px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span className="w-auto">{UserLookupDict[userLanguage]['role']}</span>
-                </div>
-                <div className="w-1/10 flex justify-center px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span className="w-auto">{UserLookupDict[userLanguage]['status']}</span>
-                </div>
-                <div className="w-2/10 px-8 justify-center py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span
-                    title="see live updates of student's page"
-                    className="flex items-end justify-center">
-                    <span className="w-auto">
-                      {UserLookupDict[userLanguage]['location']}
-                    </span>
-                    <div className="h-2 w-2 bg-green-500 ml-1 rounded-full self-start"></div>
-                  </span>
-                </div>
-                {state.user.role !== 'ST' && state.user.role !== 'BLD' ? (
-                  <div className="w-2/10 px-8 justify-center py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                    {UserLookupDict[userLanguage]['action']}
-                  </div>
-                ) : null}
-              </div>
-              {loading ? (
-                Array(10)
-                  .fill(' ')
-                  .map((_: any, index: number) => (
-                    <Fragment key={index}>
-                      <UserListLoader userRole={state.user.role} />
-                    </Fragment>
-                  ))
-              ) : currentList.length > 0 ? (
-                currentList.map((item: any, key: number) => (
-                  <div key={key}>
-                    <List
-                      isStudentRoster={isStudentRoster}
-                      searchTerm={searchInput.value}
-                      item={item}
-                      idx={key}
-                      key={key}
-                    />
-                  </div>
-                ))
-              ) : (
-                <div className="text-center p-16">
-                  <p className="text-gray-500">
-                    {searchInput.isActive && !searchInput.typing
-                      ? ''
-                      : searchInput.isActive && searchInput.typing
-                      ? `Hit enter to search for ${searchInput.value}`
-                      : UserLookupDict[userLanguage]['noresult']}
-                    {searchInput.isActive && !searchInput.typing && (
-                      <span>
-                        No user found - <b>{searchInput.value}</b>. Try searching for "
-                        <span
-                          className="hover:underline theme-text cursor-pointer"
-                          onClick={() => {
-                            setSearch(findRelatedSearch(searchInput.value).firstName);
-                          }}>
-                          {findRelatedSearch(searchInput.value).firstName}
-                        </span>
-                        "
-                      </span>
-                    )}
-                  </p>
-                </div>
-              )}
-            </div>
-
-            {/* Pagination And Counter */}
-            <div className={`flex justify-center ${isInInstitute ? '' : 'px-8 my-4'}`}>
-              {!searchInput.isActive && selectedClass === null && (
-                <ListBottomBar {...allAsProps} />
-              )}
-            </div>
+            }`}>
+            <Table {...tableConfig} />
           </div>
         </div>
       </div>
