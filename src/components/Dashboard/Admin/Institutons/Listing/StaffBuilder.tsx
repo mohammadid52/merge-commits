@@ -32,6 +32,8 @@ import Status from 'atoms/Status';
 import Tooltip from 'atoms/Tooltip';
 import Registration from 'components/Dashboard/Admin/UserManagement/Registration';
 import {map} from 'lodash';
+import {logError} from '@graphql/functions';
+import useAuth from '@customHooks/useAuth';
 
 interface StaffBuilderProps {
   instituteId: String;
@@ -151,7 +153,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
   };
 
   const updateStaffSequence = async (newList: any) => {
-    let seqItem: any = await API.graphql(
+    await API.graphql(
       graphqlOperation(mutations.updateCSequences, {
         input: {id: `staff_${instituteId}`, sequence: newList}
       })
@@ -159,7 +161,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
   };
 
   const createStaffSequence = async (newList: any) => {
-    let seqItem: any = await API.graphql(
+    await API.graphql(
       graphqlOperation(mutations.createCSequences, {
         input: {id: `staff_${instituteId}`, sequence: [...newList]}
       })
@@ -221,6 +223,8 @@ const StaffBuilder = (props: StaffBuilderProps) => {
     }
   };
 
+  const {authId, email} = useAuth();
+
   const addStaffMember = async () => {
     try {
       if (newMember && newMember.id) {
@@ -262,6 +266,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
         console.log('select a user to add.');
       }
     } catch (err) {
+      logError(err, {authId, email}, 'StaffBuilder @addStaffMember');
       console.log(
         'Error: Add Staff, StaffBuilder: Could not add new staff member in institution',
         err
@@ -364,8 +369,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
     removeSearchAction,
     searchAndFilter,
     checkSearchQueryFromUrl,
-    filterBySearchQuery,
-    findRelatedSearch
+    filterBySearchQuery
   } = useSearch([...activeStaffList], ['name', 'email'], 'name');
 
   // add this function to useEffect
@@ -402,7 +406,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
         onClick={() => gotoProfilePage(item.userId)}>
         <div className="flex-shrink-0 h-10 w-10 flex items-center">
           {!item.image ? (
-            <Placeholder size="h-8 w-8" name={`${item.firstName} ${item.lastName}`} />
+            <Placeholder size="h-8 w-8" name={item.name} />
           ) : (
             <div className="h-8 w-8 rounded-full flex justify-center items-center">
               <img src={item.image} className="rounded-full" />
