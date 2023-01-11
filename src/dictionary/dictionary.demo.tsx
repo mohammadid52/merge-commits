@@ -365,7 +365,7 @@ const manageusersDict: any = {
       STATUS: 'Status',
       ACTIONS: 'Actions'
     },
-    ADD_NEW: 'Add New Person'
+    ADD_NEW: 'Add New User'
   },
   ES: {
     TITLE: 'GESTIÓN DE USUARIOS',
@@ -2951,7 +2951,7 @@ const UserLookupWithTokenDict: any = {
     action: 'Actions',
     noresult: 'No Results',
     button: {
-      add: 'Add New Person'
+      add: 'Add New User'
     }
   },
   ES: {
