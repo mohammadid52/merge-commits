@@ -157,7 +157,7 @@ const UnitManager = ({
     setSelectedSyllabusList(filteredList);
     setDropdownSyllabusList(
       filteredDropDownList
-        .filter((d) => d.unit.status === courseData.status)
+        .filter((d) => d?.unit?.status === courseData?.status)
         .map((item: {id: string; name: string}) => ({
           id: item.id,
           name: item.name,
@@ -256,6 +256,7 @@ const UnitManager = ({
   };
 
   const handleToggleDelete = (targetString?: string, itemObj?: any) => {
+    console.log('dfdf');
     if (!deleteModal.show) {
       setDeleteModal({
         show: true,
@@ -378,7 +379,7 @@ const UnitManager = ({
       <CourseAction
         item={item}
         checkIfRemovable={checkIfRemovable}
-        onDelete={() => handleToggleDelete(item.id, item)}
+        onDelete={() => handleToggleDelete(item.name, item)}
         onView={() => goToUnitBuilder(item.unitId, item.type)}
       />
     )
@@ -461,6 +462,15 @@ const UnitManager = ({
         {/* *************** SYLLABUS LIST ************ */}
         <Table {...tableConfig} />
       </div>
+      {deleteModal.show && (
+        <ModalPopUp
+          closeAction={handleToggleDelete}
+          saveAction={deleting ? () => {} : deleteModal.action}
+          saveLabel={deleting ? 'DELETING...' : 'CONFIRM'}
+          cancelLabel="CANCEL"
+          message={deleteModal.message}
+        />
+      )}
       {warnModal2.show && (
         <ModalPopUp
           closeAction={closeLessonAction}

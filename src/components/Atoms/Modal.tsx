@@ -28,7 +28,6 @@ interface ModalProps {
   modalCloseId?: string;
   maxWidth?: string;
   closeLabel?: string;
-
   saveLabel?: string;
 }
 
