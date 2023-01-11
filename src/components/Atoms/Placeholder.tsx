@@ -2,7 +2,7 @@ import {initials, stringToHslColor} from '@utilities/strings';
 import React from 'react';
 
 const Placeholder = ({
-  name,
+  name = ' ',
   size = 'w-10 h-10 md:w-12 md:h-12',
   textSize = '2xl:text-2xl',
   className,
@@ -16,7 +16,7 @@ const Placeholder = ({
   firstName?: string;
   lastName?: string;
 }) => {
-  const [_firstName, _lastName] = name.split(' ');
+  const [_firstName, _lastName] = name?.split(' ');
 
   const _f = firstName || _firstName;
   const _l = lastName || _lastName;

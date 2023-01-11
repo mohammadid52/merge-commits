@@ -5,6 +5,7 @@ import map from 'lodash/map';
 import React, {forwardRef} from 'react';
 import {DragDropContext, Draggable, Droppable} from 'react-beautiful-dnd';
 import '../../style/atoms/_table.scss';
+import ListBottomBar, {ListBottomBar as IListBottomBar} from './ListBottomBar';
 
 interface IDataListItem {
   [key: string]: any;
@@ -25,6 +26,17 @@ interface IConfig {
       isDroppable: boolean;
       onDragEnd: (result: any) => void;
       droppableId: string;
+    };
+    searchInput?: {
+      value: string;
+      isActive: boolean;
+      typing: boolean;
+    };
+    pagination?: {
+      showPagination: boolean;
+      config: {
+        allAsProps: IListBottomBar;
+      };
     };
     bgColor?: string;
     pattern?: string;
@@ -199,6 +211,10 @@ const Table = ({
     droppableConfig.droppableId &&
     typeof droppableConfig.onDragEnd === 'function';
 
+  const paginationConfig = dataListConfig?.pagination?.config;
+
+  const showPagination = Boolean(dataListConfig?.pagination?.showPagination);
+
   return (
     <ErrorBoundary fallback={<div className="hidden"></div>} componentName="Table">
       <div className="flex flex-col">
@@ -276,6 +292,8 @@ const Table = ({
                 </tbody>
               </table>
             </div>
+
+            {showPagination && <ListBottomBar {...paginationConfig?.allAsProps} />}
           </div>
         </div>
       </div>

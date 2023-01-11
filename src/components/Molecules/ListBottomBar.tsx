@@ -29,25 +29,7 @@ const ListBottomBar = ({
   return (
     <div className="flex justify-center  bg-white my-4">
       <div className="flex justify-between items-center  flex-col lg:flex-row">
-        <div className="w-auto">
-          <p className="text-sm text-gray-700">
-            Showing
-            <span className="font-medium ml-1">
-              {currentPage === 0 ? currentPage + 1 : pageCount * currentPage + 1}
-            </span>
-            <span className="ml-1">to</span>
-            <span className="font-medium ml-1">
-              {lastPage
-                ? totalResults
-                : currentPage === 0
-                ? pageCount * 1
-                : pageCount * currentPage + pageCount}
-            </span>
-            <span className="ml-1">of</span>
-            <span className="font-medium ml-1">{totalResults}</span>
-            <span className="ml-1">results</span>
-          </p>
-        </div>
+        <div className="w-auto"></div>
         <Pagination
           currentPage={currentPage + 1}
           setNext={goNextPage}

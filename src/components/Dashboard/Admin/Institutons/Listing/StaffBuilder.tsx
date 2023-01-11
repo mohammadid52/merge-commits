@@ -34,6 +34,8 @@ import Registration from 'components/Dashboard/Admin/UserManagement/Registration
 import {map} from 'lodash';
 import {logError} from '@graphql/functions';
 import useAuth from '@customHooks/useAuth';
+import Filters, {SortType} from '@components/Atoms/Filters';
+import usePagination from '@customHooks/usePagination';
 
 interface StaffBuilderProps {
   instituteId: String;
@@ -309,7 +311,25 @@ const StaffBuilder = (props: StaffBuilderProps) => {
         return {...item, index};
       })
       .sort((a: any, b: any) => (a.index > b.index ? 1 : -1));
+
     setActiveStaffList(staffLists);
+
+    setCurrentList(staffLists);
+
+    const totalListPages = Math.floor(staffLists.length / totalNum);
+
+    if (totalListPages * totalNum === staffLists.length) {
+      setTotalPages(totalListPages);
+    } else {
+      setTotalPages(totalListPages + 1);
+    }
+
+    setFirstPage(true);
+    setLastPage(!(staffLists.length > pageCount));
+
+    setTotalList(staffLists);
+    setTotalNum(staffLists.length);
+
     setDataLoading(false);
   };
 
@@ -369,12 +389,27 @@ const StaffBuilder = (props: StaffBuilderProps) => {
     removeSearchAction,
     searchAndFilter,
     checkSearchQueryFromUrl,
-    filterBySearchQuery
+    filterBySearchQuery,
+    setSearchInput
   } = useSearch([...activeStaffList], ['name', 'email'], 'name');
+
+  const [totalNum, setTotalNum] = useState(0);
+  const [totalList, setTotalList] = useState([]);
+
+  const {
+    currentList,
+    setCurrentList,
+    allAsProps,
+    setTotalPages,
+    setFirstPage,
+    setLastPage,
+    pageCount,
+    getIndex
+  } = usePagination(activeStaffList, dataLoading ? 0 : activeStaffList.length);
 
   // add this function to useEffect
   useEffect(() => {
-    if (!dataLoading && activeStaffList.length > 0) {
+    if (!dataLoading && currentList.length > 0) {
       const query = checkSearchQueryFromUrl();
       if (query) {
         const items = filterBySearchQuery(query);
@@ -395,11 +430,11 @@ const StaffBuilder = (props: StaffBuilderProps) => {
     }
   };
 
-  const finalList = searchInput.isActive ? filteredList : activeStaffList;
+  const finalList = searchInput.isActive ? filteredList : currentList;
 
   const dataList = map(finalList, (item: any, index) => ({
     id: item.id,
-    no: index + 1,
+    no: getIndex(index),
     name: (
       <div
         className="flex items-center cursor-pointer "
@@ -493,6 +528,12 @@ const StaffBuilder = (props: StaffBuilderProps) => {
           onDragEnd: onDragEnd,
           droppableId: 'staffList'
         },
+        pagination: {
+          showPagination: !searchInput.isActive && totalNum > 0,
+          config: {
+            allAsProps
+          }
+        },
         customWidth: {
           name: 'w-72 -ml-24'
         },
@@ -500,6 +541,23 @@ const StaffBuilder = (props: StaffBuilderProps) => {
         pattern: 'striped',
         patternConfig: {firstColor: 'bg-gray-100', secondColor: 'bg-gray-200'}
       }
+    }
+  };
+
+  const [filters, setFilters] = useState<SortType>();
+
+  const updateFilter = (filterName: SortType) => {
+    if (filterName === filters) {
+      setSearchInput({...searchInput, isActive: false});
+      setFilters(null);
+      setFilteredList([]);
+    } else {
+      setSearchInput({...searchInput, isActive: true});
+      const filtered = activeStaffList.filter(
+        (_d: any) => filterName.toLowerCase() === _d?.status?.toLowerCase()
+      );
+      setFilteredList(filtered);
+      setFilters(filterName);
     }
   };
 
@@ -564,6 +622,21 @@ const StaffBuilder = (props: StaffBuilderProps) => {
             </div>
           }
         />
+
+        <div className="">
+          <Filters
+            loading={dataLoading}
+            list={finalList}
+            updateFilter={updateFilter}
+            filters={filters}
+            showingCount={{
+              currentPage: allAsProps.currentPage,
+              lastPage: allAsProps.lastPage,
+              totalResults: allAsProps.totalResults,
+              pageCount: allAsProps.pageCount
+            }}
+          />
+        </div>
 
         <Table {...tableConfig} />
 

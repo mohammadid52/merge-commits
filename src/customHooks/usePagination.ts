@@ -9,6 +9,9 @@ const usePagination = (data: any[], totalResults: number) => {
   const [pageCount, setPageCount] = useState(10);
   const [currentList, setCurrentList] = useState([]);
 
+  const getIndex = (idx: number) =>
+    idx + 1 + (currentPage === 0 ? 0 : pageCount * currentPage);
+
   const goNextPage = () => {
     const pageHigherLimit = totalPages - 1;
     if (firstPage) {
@@ -105,6 +108,7 @@ const usePagination = (data: any[], totalResults: number) => {
     lastPage,
     firstPage,
     currentList,
+    getIndex,
     currentPage
   };
 };
