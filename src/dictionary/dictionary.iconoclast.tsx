@@ -55,7 +55,7 @@ const BreadcrumsTitles: any = {
     Class_Creation: 'Class Creation',
     CURRICULARBUILDER: 'New Course',
     CURRICULUM: 'Course',
-    COURSES: 'Courses',
+    COURSES: 'Course Manager',
     UNITS: 'Unit Manager',
     CLASSROOM_CREATION: 'Classroom Creation',
     CLASSROOMS: 'Classrooms',

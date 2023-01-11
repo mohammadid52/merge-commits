@@ -5,6 +5,7 @@ import map from 'lodash/map';
 import React, {forwardRef} from 'react';
 import {DragDropContext, Draggable, Droppable} from 'react-beautiful-dnd';
 import '../../style/atoms/_table.scss';
+import ListBottomBar, {ListBottomBar as IListBottomBar} from './ListBottomBar';
 
 interface IDataListItem {
   [key: string]: any;
@@ -25,6 +26,17 @@ interface IConfig {
       isDroppable: boolean;
       onDragEnd: (result: any) => void;
       droppableId: string;
+    };
+    searchInput?: {
+      value: string;
+      isActive: boolean;
+      typing: boolean;
+    };
+    pagination?: {
+      showPagination: boolean;
+      config: {
+        allAsProps: IListBottomBar;
+      };
     };
     bgColor?: string;
     pattern?: string;
@@ -143,6 +155,7 @@ const ListItem = forwardRef<any, IListItem>(
 
           let _item = item[lowerHeader];
           const _customWidth = customWidth[lowerHeader];
+          const onClick = item['onClick'];
 
           const className = `${
             config?.dataList?.textColor || 'text-gray-500'
@@ -159,6 +172,7 @@ const ListItem = forwardRef<any, IListItem>(
           if (typeof _item === 'string') {
             return (
               <td
+                onClick={typeof onClick === 'function' ? onClick : () => {}}
                 key={item.id + '-' + header}
                 className={className}
                 dangerouslySetInnerHTML={{
@@ -167,7 +181,10 @@ const ListItem = forwardRef<any, IListItem>(
             );
           } else {
             return (
-              <td key={item.id + '-' + header} className={className}>
+              <td
+                onClick={typeof onClick === 'function' ? onClick : () => {}}
+                key={item.id + '-' + header}
+                className={className}>
                 {_item}
               </td>
             );
@@ -198,6 +215,10 @@ const Table = ({
     droppableConfig.isDroppable &&
     droppableConfig.droppableId &&
     typeof droppableConfig.onDragEnd === 'function';
+
+  const paginationConfig = dataListConfig?.pagination?.config;
+
+  const showPagination = Boolean(dataListConfig?.pagination?.showPagination);
 
   return (
     <ErrorBoundary fallback={<div className="hidden"></div>} componentName="Table">
@@ -276,6 +297,8 @@ const Table = ({
                 </tbody>
               </table>
             </div>
+
+            {showPagination && <ListBottomBar {...paginationConfig?.allAsProps} />}
           </div>
         </div>
       </div>

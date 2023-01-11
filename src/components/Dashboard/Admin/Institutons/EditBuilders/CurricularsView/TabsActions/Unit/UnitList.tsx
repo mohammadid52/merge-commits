@@ -22,9 +22,10 @@ import SearchInput from 'atoms/Form/SearchInput';
 import Selector from 'atoms/Form/Selector';
 import * as customMutations from 'customGraphql/customMutations';
 import * as customQueries from 'customGraphql/customQueries';
-import {map, orderBy} from 'lodash';
+import {isEmpty, map, orderBy} from 'lodash';
 import ModalPopUp from 'molecules/ModalPopUp';
 import UnitFormComponent from './UnitFormComponent';
+import usePagination from '@customHooks/usePagination';
 
 export const UnitList = ({
   instId,
@@ -62,6 +63,19 @@ export const UnitList = ({
   const [assignedUnits, setAssignedUnits] = useState<any>([]);
 
   const [selectedInstitution, setSelectedInstitution] = useState<any>({});
+
+  const [totalNum, setTotalNum] = useState(0);
+
+  const {
+    pageCount,
+    setFirstPage,
+    setLastPage,
+    setTotalPages,
+
+    currentList,
+    allAsProps,
+    setCurrentList
+  } = usePagination(units, loading ? 0 : totalNum);
 
   useEffect(() => {
     fetchSyllabusList();
@@ -146,6 +160,21 @@ export const UnitList = ({
         }
       } else {
         const updatedList = getUpdatedList(items);
+
+        const totalListPages = Math.floor(updatedList.length / pageCount);
+
+        setTotalPages(
+          totalListPages * pageCount === updatedList.length
+            ? totalListPages
+            : totalListPages + 1
+        );
+
+        setTotalNum(updatedList.length);
+
+        setCurrentList(updatedList);
+
+        setFirstPage(true);
+        setLastPage(!(updatedList.length > pageCount));
 
         setUnits(updatedList);
       }
@@ -307,7 +336,7 @@ export const UnitList = ({
     }
   };
 
-  const list = isFromLesson ? assignedUnits : units;
+  const list = isFromLesson ? assignedUnits : currentList;
 
   const finalList = orderBy(
     searchInput.isActive ? filteredList : list,
@@ -504,6 +533,13 @@ export const UnitList = ({
       headers: {textColor: 'text-white'},
       dataList: {
         loading,
+        pagination: {
+          showPagination:
+            !isFromLesson && !searchInput.isActive && totalNum > 0 && isEmpty(filters),
+          config: {
+            allAsProps
+          }
+        },
         emptyText:
           searchInput.isActive || selectedInstitution?.id
             ? CommonlyUsedDict[userLanguage]['NO_SEARCH_RESULT']
@@ -606,6 +642,16 @@ export const UnitList = ({
           loading={loading}
           list={units}
           updateFilter={updateFilter}
+          showingCount={
+            isFromLesson
+              ? null
+              : {
+                  currentPage: allAsProps.currentPage,
+                  lastPage: allAsProps.lastPage,
+                  totalResults: allAsProps.totalResults,
+                  pageCount: allAsProps.pageCount
+                }
+          }
           filters={filters}
         />
 

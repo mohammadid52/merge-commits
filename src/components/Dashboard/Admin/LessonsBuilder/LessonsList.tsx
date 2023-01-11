@@ -89,17 +89,6 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
     {id: 2, name: 'Type', value: 'type'}
   ];
 
-  const getType = (type: string) => {
-    switch (type) {
-      case 'lesson':
-        return 'Lesson';
-      case 'survey':
-        return 'Survey';
-      case 'assessment':
-        return 'Assessment';
-    }
-  };
-
   const buildLesson = () => {
     history.push(`${match.url}/add`);
   };
@@ -409,6 +398,7 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
 
   const dataList = map(finalList, (item: any, index: number) => ({
     no: index + 1 + (currentPage === 0 ? 0 : pageCount * currentPage),
+    onClick: () => handleLessonsEdit(item.id),
     instituteName: isSuperAdmin && item.institution.name,
     status: <Status status={item.status} useDefault />,
     lessonTitle: (
@@ -448,6 +438,18 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
       isFirstIndex: true,
       headers: {textColor: 'text-white'},
       dataList: {
+        loading: status !== 'done',
+        pagination: {
+          showPagination: true,
+          config: {
+            allAsProps,
+            totalNum: totalLessonNum
+          }
+        },
+        emptyText:
+          searchInput?.value || selectedInstitution?.id
+            ? CommonlyUsedDict[userLanguage]['NO_SEARCH_RESULT']
+            : LessonsListDict[userLanguage]['NORESULT'],
         customWidth: {
           no: 'w-12',
           lessonTitle: 'w-72',
@@ -550,6 +552,12 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
             list={currentList}
             updateFilter={updateFilter}
             filters={filters}
+            showingCount={{
+              currentPage,
+              lastPage: allAsProps.lastPage,
+              totalResults: allAsProps.totalResults,
+              pageCount: allAsProps.pageCount
+            }}
           />
         </div>
 
@@ -569,7 +577,6 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
         </div>
 
         {/* Pagination And Counter */}
-        {!searchInput.isActive && totalLessonNum > 0 && <ListBottomBar {...allAsProps} />}
       </div>
     );
   }
