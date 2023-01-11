@@ -55,7 +55,7 @@ const BreadcrumsTitles: any = {
     Class_Creation: 'Class Creation',
     CURRICULARBUILDER: 'New Course',
     CURRICULUM: 'Course',
-    COURSES: 'Courses',
+    COURSES: 'Course Manager',
     UNITS: 'Unit Manager',
     CLASSROOM_CREATION: 'Classroom Creation',
     CLASSROOMS: 'Classrooms',
@@ -2327,7 +2327,7 @@ const SyllabusDict: any = {
     },
     MESSAGES: {
       wantsave: 'Do you want to save changes before moving forward?',
-      fetchlist: 'Error while fetching lesson list data.',
+      fetchlist: 'Error while fetching lessons list data.',
       fetchdesign: 'Error while fetching Designers list Please try again later.',
       UPDATE_ERROR: 'Error while updating please try again later.'
     }
@@ -2619,7 +2619,7 @@ const EditSyllabusDict: any = {
       namerequired: 'Unit name is required please enter name.',
       updateerr: 'Error while updating lesson status please try later.',
       fetcher: 'Error while fetching unit data.',
-      fetchlist: 'Error while fetching lesson list data.',
+      fetchlist: 'Error while fetching lessons list data.',
       fetchdesign: 'Error while fetching Designers list Please try again later.'
     }
   },
