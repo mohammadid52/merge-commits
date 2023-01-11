@@ -1,7 +1,5 @@
-import {useGlobalContext} from 'contexts/GlobalContext';
-import {getInitialsFromString, initials, stringToHslColor} from 'utilities/strings';
-import React from 'react';
 import {Role, UserPageState} from 'API';
+import {useGlobalContext} from 'contexts/GlobalContext';
 
 type User = {
   authId: string;
@@ -31,7 +29,6 @@ const useAuth = (): {
   image: string;
   instId: string;
   user: User;
-  Placeholder: any;
   onDemand?: boolean;
   pageState: UserPageState;
 } => {
@@ -53,37 +50,6 @@ const useAuth = (): {
       user?.associateInstitute[0]?.institution?.id) ||
     '';
 
-  const Placeholder = ({
-    name,
-    size = 'w-10 h-10 md:w-12 md:h-12',
-    textSize = '2xl:text-2xl',
-    className
-  }: {
-    name?: string;
-    textSize?: string;
-    className?: string;
-    size?: string;
-  }) => {
-    const [firstName, lastName] = getInitialsFromString(
-      name || `${user.firstName} ${user.lastName}`
-    );
-    return (
-      <div
-        className={`${size} flex flex-shrink-0 justify-center items-center rounded-full  border-0 border-gray-400 customShadow cursor-pointer ${className}`}>
-        <div
-          className={`h-full w-full flex justify-center items-center ${textSize} text-extrabold text-white rounded-full text-shadow`}
-          style={{
-            /*  stylelint-disable */
-            background: `${
-              firstName ? stringToHslColor(firstName + ' ' + lastName) : null
-            }`
-          }}>
-          {firstName && initials(firstName, lastName)}
-        </div>
-      </div>
-    );
-  };
-
   return {
     role,
     isStudent,
@@ -100,7 +66,7 @@ const useAuth = (): {
     instId,
     isSuperAdmin,
     user,
-    Placeholder,
+
     onDemand
   };
 };

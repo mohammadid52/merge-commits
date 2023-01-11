@@ -1,6 +1,13 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import Filters, {SortType} from '@components/Atoms/Filters';
+import Highlighted from '@components/Atoms/Highlighted';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
+import CourseAction from '@components/MicroComponents/CourseAction';
+import CourseName from '@components/MicroComponents/CourseName';
+import CourseUnits from '@components/MicroComponents/CourseUnits';
+import Table from '@components/Molecules/Table';
 import useAuth from '@customHooks/useAuth';
+import usePagination from '@customHooks/usePagination';
 import useSearch from '@customHooks/useSearch';
 import {InstitueRomms} from '@dictionary/dictionary.iconoclast';
 import {logError} from '@graphql/functions';
@@ -8,17 +15,14 @@ import {RoomStatus} from 'API';
 import AddButton from 'atoms/Buttons/AddButton';
 import SearchInput from 'atoms/Form/SearchInput';
 import Selector from 'atoms/Form/Selector';
-import Loader from 'atoms/Loader';
 import {GlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import * as mutations from 'graphql/mutations';
-import {orderBy} from 'lodash';
-import ModalPopUp from 'molecules/ModalPopUp';
-import React, {Fragment, useContext, useEffect, useState} from 'react';
+import {isEmpty, map, orderBy} from 'lodash';
+import React, {useContext, useEffect, useState} from 'react';
 import {useHistory, useRouteMatch} from 'react-router';
-import CurriculumListRow from './CurriculumListRow';
-import {Filters, SortType} from './RoomsList';
+import {Status} from '../../UserManagement/UserStatus';
 
 interface CurriculumListProps {
   curricular?: {items: ICurricular[]};
@@ -37,18 +41,13 @@ interface ICurricular {
   universalSyllabus: {items: Array<any>};
 }
 
-const CurriculumList = ({
-  curricular,
-  updateCurricularList,
-  instId
-}: CurriculumListProps) => {
+const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => {
   const match = useRouteMatch();
   const history = useHistory();
   // ~~~~~~~~~~ CONTEXT_SPLITTING ~~~~~~~~~~ //
   const gContext = useContext(GlobalContext);
-  const clientKey = gContext.clientKey;
   const userLanguage = gContext.userLanguage;
-  const {CommonlyUsedDict, InstitueCurriculum} = useDictionary(clientKey);
+  const {CommonlyUsedDict, InstitueCurriculum} = useDictionary();
 
   const [courseList, setCourseList] = useState<Array<ICurricular>>([]);
 
@@ -100,24 +99,7 @@ const CurriculumList = ({
     }
   };
 
-  useEffect(() => {
-    if (curricular?.items?.length) {
-      const updatedList: ICurricular[] = curricular.items?.map((item: ICurricular) => ({
-        ...item,
-        status: item?.status || RoomStatus.ACTIVE,
-        universalSyllabus: {
-          ...(item.universalSyllabus || {}),
-          items: item.universalSyllabus?.items
-            ?.map((syllabus) => ({
-              ...syllabus,
-              index: item?.universalSyllabusSeq?.indexOf(syllabus.unit.id)
-            }))
-            .sort((a: any, b: any) => (a.index > b.index ? 1 : -1))
-        }
-      }));
-      setCourseList(updatedList);
-    }
-  }, [curricular?.items?.length]);
+  const [totalNum, setTotalNum] = useState(0);
 
   const fetchCurriculums = async () => {
     try {
@@ -125,24 +107,42 @@ const CurriculumList = ({
       const list: any = await API.graphql(
         graphqlOperation(customQueries.listCurriculumsForSuperAdmin)
       );
-      const updatedList: ICurricular[] = list.data?.listCurricula?.items?.map(
-        (item: ICurricular) => ({
-          ...item,
-          institutionName: item?.institution?.name,
-          status: item?.status || RoomStatus.ACTIVE,
-          institutionId: item?.institution?.id,
-          universalSyllabus: {
-            ...(item.universalSyllabus || {}),
-            items: item.universalSyllabus?.items
-              ?.map((syllabus) => ({
-                ...syllabus,
-                index: item?.universalSyllabusSeq?.indexOf(syllabus.unit.id)
-              }))
-              .sort((a: any, b: any) => (a.index > b.index ? 1 : -1))
+
+      const updatedList: ICurricular[] = list.data?.listCurricula?.items
+        ?.map((item: ICurricular) => {
+          if (item) {
+            return {
+              ...item,
+              institutionName: item?.institution?.name,
+              status: item?.status || RoomStatus.ACTIVE,
+              institutionId: item?.institution?.id,
+              universalSyllabus: {
+                ...(item.universalSyllabus || {}),
+                items: item?.universalSyllabus?.items
+                  ?.map((syllabus) => ({
+                    ...syllabus,
+                    index: item?.universalSyllabusSeq?.indexOf(syllabus?.unit?.id)
+                  }))
+                  .sort((a: any, b: any) => (a.index > b.index ? 1 : -1))
+              }
+            };
           }
         })
+        .filter(Boolean);
+
+      const totalListPages = Math.floor(updatedList.length / pageCount);
+      setTotalPages(
+        totalListPages * pageCount === updatedList.length
+          ? totalListPages
+          : totalListPages + 1
       );
 
+      setTotalNum(updatedList.length);
+
+      setCurrentList(updatedList);
+
+      setFirstPage(true);
+      setLastPage(!(updatedList.length > pageCount));
       setCourseList(updatedList);
     } catch (error) {
       logError(error, {authId, email}, 'CurriculumList @fetchCurriculums');
@@ -176,7 +176,8 @@ const CurriculumList = ({
   const checkIfRemovable = (curriculumObj: any) => {
     if (
       curriculumObj.syllabi?.length > 0 ||
-      (curriculumObj.syllabiHistory && curriculumObj.syllabiHistory?.length > 0)
+      (curriculumObj.syllabiHistory && curriculumObj.syllabiHistory?.length > 0) ||
+      curriculumObj?.isUsed
     ) {
       return false;
     } else {
@@ -247,6 +248,17 @@ const CurriculumList = ({
   };
 
   const {
+    pageCount,
+    setFirstPage,
+    setLastPage,
+    setTotalPages,
+
+    currentList,
+    allAsProps,
+    setCurrentList
+  } = usePagination(courseList, loading ? 0 : totalNum);
+
+  const {
     searchInput,
     setSearch,
     checkSearchQueryFromUrl,
@@ -259,7 +271,7 @@ const CurriculumList = ({
   const [filteredList, setFilteredList] = useState([...courseList]);
 
   useEffect(() => {
-    if (!loading && courseList?.length > 0) {
+    if (!loading && currentList?.length > 0) {
       const query = checkSearchQueryFromUrl();
       if (query) {
         const items = filterBySearchQuery(query);
@@ -280,7 +292,7 @@ const CurriculumList = ({
   };
 
   const finalList = orderBy(
-    searchInput.isActive ? filteredList : courseList,
+    searchInput.isActive ? filteredList : currentList,
     ['name', 'institutionName'],
     ['asc']
   );
@@ -298,6 +310,85 @@ const CurriculumList = ({
       setFilteredList(filtered);
       setFilters(filterName);
       setSelectedInstitution({});
+    }
+  };
+
+  const [hoveringItem, setHoveringItem] = useState<{name?: string; id?: string}>({});
+
+  const currentSelectedItem =
+    hoveringItem &&
+    hoveringItem?.name &&
+    hoveringItem?.id &&
+    courseList?.find((_c: any) => _c.id === hoveringItem?.id);
+
+  const dataList = map(finalList, (item: any, index: number) => ({
+    no: index + 1,
+    courseName: (
+      <CourseName
+        item={item}
+        setHoveringItem={setHoveringItem}
+        hoveringItem={hoveringItem}
+        isLast={finalList.length - 3 <= index}
+        searchTerm={searchInput.value}
+        currentSelectedItem={currentSelectedItem}
+        isSuperAdmin={isSuperAdmin}
+        editCurrentCurricular={editCurrentCurricular}
+      />
+    ),
+    institutionName: isSuperAdmin && (
+      <div onClick={() => redirectToInstitution(item.institution.id)} className="w-auto">
+        <Highlighted text={item.institution.name} highlight={searchInput.value} />
+      </div>
+    ),
+    courseType: item.type || '-',
+    courseUnits: <CourseUnits item={item} redirectToUnit={redirectToUnit} />,
+    status: <Status useDefault status={item.status} />,
+    actions: (
+      <CourseAction
+        onDelete={() => handleToggleDelete(item.id, item)}
+        onView={() => editCurrentCurricular(item.id)}
+        item={item}
+        checkIfRemovable={checkIfRemovable}
+      />
+    )
+  }));
+
+  const tableConfig = {
+    headers: [
+      InstitueCurriculum[userLanguage]['NO'],
+      InstitueCurriculum[userLanguage]['NAME'],
+      isSuperAdmin && InstitueCurriculum[userLanguage]['INSTITUTION_NAME'],
+      InstitueCurriculum[userLanguage]['COURSE_TYPE'],
+      InstitueCurriculum[userLanguage]['UNITS'],
+      InstitueRomms[userLanguage]['STATUS'],
+      InstitueCurriculum[userLanguage]['ACTION']
+    ],
+    dataList,
+    config: {
+      dark: false,
+      isLastAction: true,
+      isFirstIndex: true,
+      headers: {textColor: 'text-white'},
+      dataList: {
+        loading,
+        pagination: {
+          showPagination: !searchInput.isActive && totalNum > 0 && isEmpty(filters),
+          config: {
+            allAsProps
+          }
+        },
+        emptyText:
+          searchInput || selectedInstitution?.id
+            ? CommonlyUsedDict[userLanguage]['NO_SEARCH_RESULT']
+            : InstitueCurriculum[userLanguage]['INFO'],
+        customWidth: {
+          no: 'w-12',
+          courseName: 'w-72'
+        },
+        maxHeight: 'max-h-196',
+        pattern: 'striped',
+        patternConfig: {firstColor: 'bg-gray-100', secondColor: 'bg-gray-200'}
+      }
     }
   };
 
@@ -348,106 +439,20 @@ const CurriculumList = ({
           }
         />
 
-        <Filters updateFilter={updateFilter} filters={filters} />
+        <Filters
+          loading={loading}
+          list={courseList}
+          updateFilter={updateFilter}
+          filters={filters}
+          showingCount={{
+            currentPage: allAsProps.currentPage,
+            lastPage: allAsProps.lastPage,
+            totalResults: allAsProps.totalResults,
+            pageCount: allAsProps.pageCount
+          }}
+        />
 
-        {loading ? (
-          <div className="py-20 text-center mx-auto flex justify-center items-center w-full h-48">
-            <div className="w-5/10">
-              <Loader
-                withText={InstitueCurriculum[userLanguage]['LOADING']}
-                animation
-                color="rgba(107, 114, 128, 1)"
-              />
-            </div>
-          </div>
-        ) : finalList?.length > 0 ? (
-          <table>
-            <thead className="w-full pt-8 m-auto border-b-0 border-gray-200">
-              <tr className="flex justify-between bg-gray-50  whitespace-nowrap">
-                <th className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>{InstitueCurriculum[userLanguage]['NO']}</span>
-                </th>
-                <th
-                  className={`${
-                    isSuperAdmin ? 'w-1.5/10' : 'w-3/10'
-                  } px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider truncate`}>
-                  <span>{InstitueCurriculum[userLanguage]['NAME']}</span>
-                </th>
-                {isSuperAdmin && (
-                  <th className="w-1.5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
-                    <span>{InstitueCurriculum[userLanguage]['INSTITUTION_NAME']}</span>
-                  </th>
-                )}
-                <th
-                  className={`w-2/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider truncate`}>
-                  <span>{InstitueCurriculum[userLanguage]['COURSE_TYPE']}</span>
-                </th>
-                <th
-                  className={`w-3/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider truncate`}>
-                  <span>{InstitueCurriculum[userLanguage]['UNITS']}</span>
-                </th>
-                <th className="bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider w-1/10 flex items-center ">
-                  {InstitueRomms[userLanguage]['STATUS']}
-                </th>
-                <th className="w-1/10 m-auto py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span className="w-auto">
-                    {InstitueCurriculum[userLanguage]['ACTION']}
-                  </span>
-                </th>
-              </tr>
-            </thead>
-
-            <tbody className="mb-8 w-full m-auto flex-1 overflow-y-auto">
-              {finalList.map(
-                (item, index) =>
-                  item && (
-                    <CurriculumListRow
-                      key={`curr_list_row_${index}`}
-                      index={index}
-                      searchInput={searchInput.value}
-                      isSuperAdmin={isSuperAdmin}
-                      item={item}
-                      checkIfRemovable={checkIfRemovable}
-                      handleToggleDelete={handleToggleDelete}
-                      editCurrentCurricular={editCurrentCurricular}
-                      redirectToInstitution={() =>
-                        redirectToInstitution(item.institutionID)
-                      }
-                      redirectToUnit={(unitId: string) =>
-                        redirectToUnit(item.institutionID, unitId)
-                      }
-                    />
-                  )
-              )}
-            </tbody>
-            {deleteModal.show && (
-              <ModalPopUp
-                closeAction={handleToggleDelete}
-                saveAction={deleting ? () => {} : deleteModal.action}
-                saveLabel={deleting ? 'DELETING...' : 'CONFIRM'}
-                cancelLabel="CANCEL"
-                message={deleteModal.message}
-              />
-            )}
-          </table>
-        ) : (
-          <Fragment>
-            {!isSuperAdmin && (
-              <div className="flex justify-center mt-8">
-                <AddButton
-                  className="mx-4"
-                  label={InstitueCurriculum[userLanguage]['BUTTON']['ADD']}
-                  onClick={createNewCurricular}
-                />
-              </div>
-            )}
-            <p className="text-center p-16">
-              {searchInput || selectedInstitution?.id
-                ? CommonlyUsedDict[userLanguage]['NO_SEARCH_RESULT']
-                : InstitueCurriculum[userLanguage]['INFO']}
-            </p>
-          </Fragment>
-        )}
+        <Table {...tableConfig} />
       </div>
     </div>
   );

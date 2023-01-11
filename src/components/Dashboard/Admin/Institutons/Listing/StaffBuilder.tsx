@@ -1,6 +1,5 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import React, {useEffect, useState} from 'react';
-import {DragDropContext, Draggable, Droppable} from 'react-beautiful-dnd';
 import {useHistory, useRouteMatch} from 'react-router';
 
 import Buttons from 'atoms/Buttons';
@@ -23,15 +22,20 @@ import * as queries from 'graphql/queries';
 
 import SearchInput from '@components/Atoms/Form/SearchInput';
 import Highlighted from '@components/Atoms/Highlighted';
+import Placeholder from '@components/Atoms/Placeholder';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
-import useAuth from '@customHooks/useAuth';
+import Table from '@components/Molecules/Table';
 import useSearch from '@customHooks/useSearch';
 import AddButton from 'atoms/Buttons/AddButton';
-import Loader from 'atoms/Loader';
 import Modal from 'atoms/Modal';
 import Status from 'atoms/Status';
 import Tooltip from 'atoms/Tooltip';
 import Registration from 'components/Dashboard/Admin/UserManagement/Registration';
+import {map} from 'lodash';
+import {logError} from '@graphql/functions';
+import useAuth from '@customHooks/useAuth';
+import Filters, {SortType} from '@components/Atoms/Filters';
+import usePagination from '@customHooks/usePagination';
 
 interface StaffBuilderProps {
   instituteId: String;
@@ -151,7 +155,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
   };
 
   const updateStaffSequence = async (newList: any) => {
-    let seqItem: any = await API.graphql(
+    await API.graphql(
       graphqlOperation(mutations.updateCSequences, {
         input: {id: `staff_${instituteId}`, sequence: newList}
       })
@@ -159,7 +163,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
   };
 
   const createStaffSequence = async (newList: any) => {
-    let seqItem: any = await API.graphql(
+    await API.graphql(
       graphqlOperation(mutations.createCSequences, {
         input: {id: `staff_${instituteId}`, sequence: [...newList]}
       })
@@ -221,6 +225,8 @@ const StaffBuilder = (props: StaffBuilderProps) => {
     }
   };
 
+  const {authId, email} = useAuth();
+
   const addStaffMember = async () => {
     try {
       if (newMember && newMember.id) {
@@ -262,6 +268,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
         console.log('select a user to add.');
       }
     } catch (err) {
+      logError(err, {authId, email}, 'StaffBuilder @addStaffMember');
       console.log(
         'Error: Add Staff, StaffBuilder: Could not add new staff member in institution',
         err
@@ -304,7 +311,25 @@ const StaffBuilder = (props: StaffBuilderProps) => {
         return {...item, index};
       })
       .sort((a: any, b: any) => (a.index > b.index ? 1 : -1));
+
     setActiveStaffList(staffLists);
+
+    setCurrentList(staffLists);
+
+    const totalListPages = Math.floor(staffLists.length / totalNum);
+
+    setTotalPages(
+      totalListPages * pageCount === staffLists.length
+        ? totalListPages
+        : totalListPages + 1
+    );
+
+    setFirstPage(true);
+    setLastPage(!(staffLists.length > pageCount));
+
+    setTotalList(staffLists);
+    setTotalNum(staffLists.length);
+
     setDataLoading(false);
   };
 
@@ -365,12 +390,26 @@ const StaffBuilder = (props: StaffBuilderProps) => {
     searchAndFilter,
     checkSearchQueryFromUrl,
     filterBySearchQuery,
-    findRelatedSearch
+    setSearchInput
   } = useSearch([...activeStaffList], ['name', 'email'], 'name');
+
+  const [totalNum, setTotalNum] = useState(0);
+  const [totalList, setTotalList] = useState([]);
+
+  const {
+    currentList,
+    setCurrentList,
+    allAsProps,
+    setTotalPages,
+    setFirstPage,
+    setLastPage,
+    pageCount,
+    getIndex
+  } = usePagination(activeStaffList, dataLoading ? 0 : activeStaffList.length);
 
   // add this function to useEffect
   useEffect(() => {
-    if (!dataLoading && activeStaffList.length > 0) {
+    if (!dataLoading && currentList.length > 0) {
       const query = checkSearchQueryFromUrl();
       if (query) {
         const items = filterBySearchQuery(query);
@@ -391,9 +430,136 @@ const StaffBuilder = (props: StaffBuilderProps) => {
     }
   };
 
-  const finalList = searchInput.isActive ? filteredList : activeStaffList;
+  const finalList = searchInput.isActive ? filteredList : currentList;
 
-  const {Placeholder} = useAuth();
+  const dataList = map(finalList, (item: any, index) => ({
+    id: item.id,
+    no: getIndex(index),
+    name: (
+      <div
+        className="flex items-center cursor-pointer "
+        onClick={() => gotoProfilePage(item.userId)}>
+        <div className="flex-shrink-0 h-10 w-10 flex items-center">
+          {!item.image ? (
+            <Placeholder size="h-8 w-8" name={item.name} />
+          ) : (
+            <div className="h-8 w-8 rounded-full flex justify-center items-center">
+              <img src={item.image} className="rounded-full" />
+            </div>
+          )}
+        </div>
+        <div className="ml-2">
+          <div className=" text-sm leading-5 font-medium ">
+            <Highlighted text={item?.name} highlight={searchInput.value} />
+          </div>
+          <div className="text-sm leading-5 text-gray-500">
+            <Highlighted text={item.email} highlight={searchInput.value} />
+          </div>
+        </div>
+      </div>
+    ),
+    instituteName: user.isSuperAdmin && (
+      <div
+        className="cursor-pointer w-auto"
+        onClick={() => redirectToInstitution(item.institution?.id)}>
+        <span>{item.institution?.name}</span>
+      </div>
+    ),
+    role: (
+      <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-sm font-medium bg-gray-200 text-gray-600 w-auto">
+        {item.role ? getStaffRole(item.role) : ''}
+      </span>
+    ),
+    status:
+      statusEdit === item.id ? (
+        <div className="">
+          <Selector
+            selectedItem={item.status}
+            placeholder="Select Status"
+            dropdownWidth="w-48"
+            list={statusList}
+            onChange={(val, name, id) => onStaffStatusChange(val, item.id, item.status)}
+          />
+        </div>
+      ) : (
+        <Status status={item.status} />
+      ),
+    action: (
+      <div className="">
+        {statusEdit === item.id ? (
+          <span
+            className={`w-6 h-6 flex items-center cursor-pointer ${theme.textColor[themeColor]}`}
+            onClick={() => setStatusEdit('')}>
+            {updateStatus ? 'updating...' : 'Cancel'}
+          </span>
+        ) : (
+          <span
+            className={`w-6 h-6 flex items-center cursor-pointer ${theme.textColor[themeColor]}`}
+            onClick={() => setStatusEdit(item.id)}>
+            <Tooltip text="Click to edit status" placement="left">
+              Edit
+            </Tooltip>
+          </span>
+        )}
+      </div>
+    )
+  }));
+
+  const tableConfig = {
+    headers: [
+      dictionary['NO'],
+      dictionary['NAME'],
+      user.isSuperAdmin && dictionary['INSTITUTION_NAME'],
+      dictionary['ROLE'],
+      dictionary['STATUS'],
+      dictionary['ACTION']
+    ],
+    dataList,
+    config: {
+      dark: false,
+      isFirstIndex: true,
+      isLastAction: true,
+      headers: {textColor: 'text-white'},
+      dataList: {
+        loading: dataLoading,
+        emptyText: 'No staff found',
+        droppable: {
+          isDroppable: true,
+          onDragEnd: onDragEnd,
+          droppableId: 'staffList'
+        },
+        pagination: {
+          showPagination: !searchInput.isActive && totalNum > 0,
+          config: {
+            allAsProps
+          }
+        },
+        customWidth: {
+          name: 'w-72 -ml-24'
+        },
+        maxHeight: 'max-h-196',
+        pattern: 'striped',
+        patternConfig: {firstColor: 'bg-gray-100', secondColor: 'bg-gray-200'}
+      }
+    }
+  };
+
+  const [filters, setFilters] = useState<SortType>();
+
+  const updateFilter = (filterName: SortType) => {
+    if (filterName === filters) {
+      setSearchInput({...searchInput, isActive: false});
+      setFilters(null);
+      setFilteredList([]);
+    } else {
+      setSearchInput({...searchInput, isActive: true});
+      const filtered = activeStaffList.filter(
+        (_d: any) => filterName.toLowerCase() === _d?.status?.toLowerCase()
+      );
+      setFilteredList(filtered);
+      setFilters(filterName);
+    }
+  };
 
   return (
     <div className="pt-0 flex m-auto justify-center p-8">
@@ -457,195 +623,23 @@ const StaffBuilder = (props: StaffBuilderProps) => {
           }
         />
 
-        {!dataLoading ? (
-          <>
-            {finalList?.length > 0 ? (
-              <div className="w-screen lg:w-auto overflow-x-hidden">
-                <div className="w-full pt-8 m-auto border-b-0 border-gray-200">
-                  <div className="flex justify-between bg-gray-50 pr-2 whitespace-nowrap">
-                    <div className="w-.5/10 px-8 py-4 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                      <span>{dictionary['NO']}</span>
-                    </div>
-                    <div className="w-4.5/10 px-8 py-4 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                      <span>{dictionary['NAME']}</span>
-                    </div>
-                    {user.isSuperAdmin && (
-                      <div className="w-2/10 px-8 py-4 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                        <span>{dictionary['INSTITUTION_NAME']}</span>
-                      </div>
-                    )}
-                    <div className="w-2/10 px-8 py-4 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                      <span>{dictionary['ROLE']}</span>
-                    </div>
-                    <div className="w-2.5/10 px-8 py-4 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                      <span>{dictionary['STATUS']}</span>
-                    </div>
-                    <div className="w-1/10 px-8 py-4 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                      <span>{dictionary['ACTION']}</span>
-                    </div>
-                  </div>
-                </div>
+        <div className="">
+          <Filters
+            loading={dataLoading}
+            list={finalList}
+            updateFilter={updateFilter}
+            filters={filters}
+            showingCount={{
+              currentPage: allAsProps.currentPage,
+              lastPage: allAsProps.lastPage,
+              totalResults: allAsProps.totalResults,
+              pageCount: allAsProps.pageCount
+            }}
+          />
+        </div>
 
-                <div className="w-auto m-auto max-h-88 overflow-y-auto">
-                  {/* Drag and drop listing */}
-                  <DragDropContext onDragEnd={onDragEnd}>
-                    <Droppable droppableId="droppable">
-                      {(provided, snapshot) => (
-                        <div {...provided.droppableProps} ref={provided.innerRef}>
-                          {finalList.map(
-                            (item, index) =>
-                              item && (
-                                <Draggable
-                                  key={item.id}
-                                  draggableId={item.id}
-                                  index={index}>
-                                  {(provided, snapshot) => (
-                                    <div
-                                      ref={provided.innerRef}
-                                      {...provided.draggableProps}
-                                      {...provided.dragHandleProps}>
-                                      <div
-                                        key={index}
-                                        className={`flex justify-between w-auto whitespace-nowrap border-b-0 border-gray-200 hover:bg-gray-200
-                                     transition-all ${
-                                       index % 2 !== 0 ? 'bg-gray-50' : ''
-                                     }`}>
-                                        <div className="flex w-.5/10 items-center px-8 py-4 text-left text-s leading-4">
-                                          {index + 1}.
-                                        </div>
+        <Table {...tableConfig} />
 
-                                        <div
-                                          className="flex w-4.5/10 px-8 py-4 items-center text-left text-s leading-4 font-medium whitespace-normal cursor-pointer "
-                                          onClick={() => gotoProfilePage(item.userId)}>
-                                          <div className="flex-shrink-0 h-10 w-10 flex items-center">
-                                            {!item.image ? (
-                                              <Placeholder
-                                                size="h-8 w-8"
-                                                name={`${item.firstName} ${item.lastName}`}
-                                              />
-                                            ) : (
-                                              <div className="h-8 w-8 rounded-full flex justify-center items-center">
-                                                <img
-                                                  src={item.image}
-                                                  className="rounded-full"
-                                                />
-                                              </div>
-                                            )}
-                                          </div>
-                                          <div className="ml-2">
-                                            <div className=" text-sm leading-5 font-medium ">
-                                              <Highlighted
-                                                text={item?.name}
-                                                highlight={searchInput.value}
-                                              />
-                                            </div>
-                                            <div className="text-sm leading-5 text-gray-500">
-                                              <Highlighted
-                                                text={item.email}
-                                                highlight={searchInput.value}
-                                              />
-                                            </div>
-                                          </div>
-                                        </div>
-                                        {user.isSuperAdmin && (
-                                          <div
-                                            className="w-2/10 px-8 py-4 flex items-center text-left text-xs leading-4 font-bold text-gray-800 uppercase tracking-wider cursor-pointer"
-                                            onClick={() =>
-                                              redirectToInstitution(item.institution?.id)
-                                            }>
-                                            <span>{item.institution?.name}</span>
-                                          </div>
-                                        )}
-                                        <div className="flex w-2/10 px-8 py-4 text-left text-s leading-4 items-center">
-                                          <p className="inline-flex items-center px-2.5 py-0.5 rounded-md text-sm font-medium bg-gray-200 text-gray-600 w-auto">
-                                            {item.role ? getStaffRole(item.role) : ''}
-                                          </p>
-                                        </div>
-                                        {statusEdit === item.id ? (
-                                          <div className="flex w-2.5/10 px-8 py-4 text-left text-s leading-4 items-center">
-                                            <Selector
-                                              selectedItem={item.status}
-                                              placeholder="Select Status"
-                                              list={statusList}
-                                              onChange={(val, name, id) =>
-                                                onStaffStatusChange(
-                                                  val,
-                                                  item.id,
-                                                  item.status
-                                                )
-                                              }
-                                            />
-                                          </div>
-                                        ) : (
-                                          <div className="flex w-2.5/10 px-8 py-4 text-left text-s leading-4 items-center">
-                                            <Status status={item.status} />
-                                          </div>
-                                        )}
-                                        <div className="flex w-1/10 px-8 py-4 text-left text-s leading-4 items-center">
-                                          {statusEdit === item.id ? (
-                                            <span
-                                              className={`w-6 h-6 flex items-center cursor-pointer ${theme.textColor[themeColor]}`}
-                                              onClick={() => setStatusEdit('')}>
-                                              {updateStatus ? 'updating...' : 'Cancel'}
-                                            </span>
-                                          ) : (
-                                            <span
-                                              className={`w-6 h-6 flex items-center cursor-pointer ${theme.textColor[themeColor]}`}
-                                              onClick={() => setStatusEdit(item.id)}>
-                                              <Tooltip
-                                                text="Click to edit status"
-                                                placement="left">
-                                                Edit
-                                              </Tooltip>
-                                            </span>
-                                          )}
-                                        </div>
-                                      </div>
-                                    </div>
-                                  )}
-                                </Draggable>
-                              )
-                          )}
-                          {provided.placeholder}
-                        </div>
-                      )}
-                    </Droppable>
-                  </DragDropContext>
-                </div>
-              </div>
-            ) : (
-              <div className="text-center p-16">
-                <p className="text-gray-500">
-                  {searchInput.isActive && !searchInput.typing
-                    ? ''
-                    : searchInput.isActive && searchInput.typing
-                    ? `Hit enter to search for ${searchInput.value}`
-                    : dictionary['INFO']}
-                  {searchInput.isActive && !searchInput.typing && (
-                    <span>
-                      No staff member found - <b>{searchInput.value}</b>. Try searching
-                      for "
-                      <span
-                        className="hover:underline theme-text cursor-pointer"
-                        onClick={() => {
-                          setSearch(findRelatedSearch(searchInput.value)?.name);
-                        }}>
-                        {findRelatedSearch(searchInput.value)?.name}
-                      </span>
-                      "
-                    </span>
-                  )}
-                </p>
-              </div>
-            )}
-          </>
-        ) : (
-          <div className="py-20 text-center mx-auto flex justify-center items-center w-full h-48">
-            <div className="w-5/10">
-              <Loader withText="Loading Staff..." className="text-gray-500" />
-            </div>
-          </div>
-        )}
         {showRegistrationForm && (
           <Modal
             showHeader={true}

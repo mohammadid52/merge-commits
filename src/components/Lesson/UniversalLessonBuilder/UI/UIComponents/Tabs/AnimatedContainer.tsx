@@ -8,10 +8,12 @@ const AnimatedContainer = ({
   className,
   customAnimation,
   fixWidth = false,
-  delay = '0s'
+  delay = '0s',
+  zIndex
 }: {
   show: boolean;
   fixWidth?: boolean;
+  zIndex?: number;
   className?: string;
   delay?: string;
   customAnimation?: {show: string; hide: string};

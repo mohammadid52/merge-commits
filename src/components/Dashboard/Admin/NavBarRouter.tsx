@@ -106,7 +106,11 @@ const NavBarRouter = (instProps: any) => {
         exact
         render={() => (
           <ErrorBoundary componentName="UnitList">
-            <UnitList instId={institute?.id} instName={institute?.name} />
+            <UnitList
+              curricular={curricular}
+              instId={institute?.id}
+              instName={institute?.name}
+            />
           </ErrorBoundary>
         )}
       />
@@ -124,7 +128,7 @@ const NavBarRouter = (instProps: any) => {
         path={`${match.url}/units/:unitId/edit`}
         render={() => (
           <ErrorBoundary componentName="UnitBuilder">
-            <UnitBuilder instId={institute?.id} />
+            <UnitBuilder curricular={curricular && curricular} instId={institute?.id} />
           </ErrorBoundary>
         )}
       />

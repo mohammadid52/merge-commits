@@ -1,7 +1,8 @@
-import FormInput from 'atoms/Form/FormInput';
 import Buttons from 'atoms/Buttons';
+import FormInput from 'atoms/Form/FormInput';
 import Modal from 'atoms/Modal';
 import Popover from 'atoms/Popover';
+import {API, graphqlOperation} from 'aws-amplify';
 import Comments from 'components/Community/Components/Comments';
 import HandleMedia from 'components/Community/Components/HandleMedia';
 import {
@@ -11,18 +12,17 @@ import {
 import * as customQueries from 'customGraphql/customQueries';
 import useAuth from 'customHooks/useAuth';
 import useGraphqlMutation from 'customHooks/useGraphqlMutation';
-import * as queries from 'graphql/queries';
 import {IChat, ICommunityCard} from 'interfaces/Community.interfaces';
 import {getImageFromS3Static} from 'utilities/services';
-import {API, graphqlOperation} from 'aws-amplify';
 
+import Placeholder from '@components/Atoms/Placeholder';
+import {logError} from '@graphql/functions';
 import {orderBy, remove, update} from 'lodash';
 import moment from 'moment';
 import React, {useEffect, useState} from 'react';
 import {AiOutlineHeart} from 'react-icons/ai';
 import {BiDotsVerticalRounded} from 'react-icons/bi';
 import {v4 as uuidV4} from 'uuid';
-import {logError} from '@graphql/functions';
 
 const BottomSection = ({
   setShowComments,
@@ -154,7 +154,7 @@ const PostComment = ({
     });
   };
 
-  const {image, Placeholder} = useAuth();
+  const {image} = useAuth();
 
   return (
     <div className="relative flex items-center self-center w-full max-w-xl p-4 overflow-hidden text-gray-600 focus-within:text-gray-400">

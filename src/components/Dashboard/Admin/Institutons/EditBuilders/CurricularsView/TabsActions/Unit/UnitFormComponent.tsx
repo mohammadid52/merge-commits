@@ -5,13 +5,15 @@ import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
 import MultipleSelector from 'atoms/Form/MultipleSelector';
 
+import Label from '@components/Atoms/Form/Label';
+import Selector from '@components/Atoms/Form/Selector';
+import {RoomStatus} from 'API';
 import {GlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import * as mutations from 'graphql/mutations';
 import {languageList} from 'utilities/staticData';
-import Selector from '@components/Atoms/Form/Selector';
-import {RoomStatus, UniversalSyllabus} from 'API';
 import {RoomStatusList} from '../CourseBuilder/CourseFormComponent';
+import AttachedCourses from './AttachedCourses';
 
 interface AddSyllabusProps {
   syllabusDetails?: any;
@@ -19,6 +21,8 @@ interface AddSyllabusProps {
   onCancel: () => void;
   instId: string;
   isInModal?: boolean;
+  curricular?: any;
+  setSyllabusDataParent?: React.Dispatch<React.SetStateAction<any>>;
 }
 interface InitialData {
   name: string;
@@ -30,6 +34,7 @@ interface InitialData {
   objectives: string;
   secondary: string;
   status: RoomStatus;
+
   languages: {id: string; name: string; value: string}[];
 }
 
@@ -38,6 +43,8 @@ const UnitFormComponent = ({
   postAddSyllabus,
   syllabusDetails,
   instId,
+  setSyllabusDataParent,
+  curricular,
   isInModal = false
 }: AddSyllabusProps) => {
   const initialData = {
@@ -55,7 +62,13 @@ const UnitFormComponent = ({
   const [syllabusData, setSyllabusData] = useState<InitialData>(initialData);
 
   const [loading, setIsLoading] = useState(false);
-  const {clientKey, userLanguage} = useContext(GlobalContext);
+  const {
+    clientKey,
+    userLanguage,
+    state: {
+      user: {isSuperAdmin}
+    }
+  } = useContext(GlobalContext);
 
   const {AddSyllabusDict, UserEditDict} = useDictionary(clientKey);
 
@@ -137,11 +150,31 @@ const UnitFormComponent = ({
           status: syllabusData?.status || RoomStatus.ACTIVE
         };
         if (syllabusDetails?.id) {
-          await API.graphql(
+          const res: any = await API.graphql(
             graphqlOperation(mutations.updateUniversalSyllabus, {
               input: {...input, id: syllabusDetails?.id}
             })
           );
+          const savedData = res.data.updateUniversalSyllabus;
+          setSyllabusDataParent &&
+            setSyllabusDataParent({
+              ...syllabusData,
+              institutionID: savedData.institutionID,
+              id: savedData.id,
+              name: savedData.name,
+              languages: languageList.filter((item) =>
+                savedData.languages.includes(item.value)
+              ),
+              description: savedData.description,
+              objectives: savedData.objectives,
+              purpose: savedData.pupose,
+              methodology: savedData.methodology,
+              policies: savedData.policies,
+              lessonHistory: savedData.lessonHistory,
+              secondary: savedData.secondary || '',
+              priorities: savedData.priorities,
+              status: savedData.status || RoomStatus.ACTIVE
+            });
           setMessages({
             show: true,
             message: AddSyllabusDict[userLanguage]['messages']['unitupdate'],
@@ -290,6 +323,14 @@ const UnitFormComponent = ({
               label={AddSyllabusDict[userLanguage]['objective']}
             />
           </div>
+          {curricular && (
+            <div>
+              <Label label="Attached courses" />
+              <div className="mt-1">
+                <AttachedCourses curricular={curricular} unitId={syllabusDetails.id} />
+              </div>
+            </div>
+          )}
         </div>
       </div>
       {messages.show ? (

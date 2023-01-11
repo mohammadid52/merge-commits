@@ -1,24 +1,17 @@
-import React, {useContext, useEffect, useState} from 'react';
-import {Switch, Route, useHistory, useParams, useRouteMatch} from 'react-router';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import React, {useContext, useEffect, useState} from 'react';
 import {BsArrowLeft} from 'react-icons/bs';
-
+import {Switch, useHistory, useParams, useRouteMatch} from 'react-router';
 import {GlobalContext} from 'contexts/GlobalContext';
+import * as customQueries from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import {useQuery} from 'customHooks/urlParam';
-import * as customQueries from 'customGraphql/customQueries';
-
-import StepComponent, {IStepElementInterface} from 'atoms/StepComponent';
 import Loader from 'atoms/Loader';
-
-import CourseFormComponent from './CourseFormComponent';
-import UnitManager from './UnitManager';
-import LearningObjective from './LearningObjective';
+import StepComponent, {IStepElementInterface} from 'atoms/StepComponent';
 import CheckpointList from '../../TabsListing/CheckpointList';
-
-// import AddProfileCheckpoint from '../../../../EditBuilders/CurricularsView/TabsActions/AddProfileCheckpoint';
-// import ProfileCheckpointlookup from '../../../../EditBuilders/CurricularsView/TabsActions/ProfileCheckpointlookup';
-// import EditProfileCheckpoint from '../../../../EditBuilders/CurricularsView/TabsActions/EditProfileCheckpoint';
+import CourseFormComponent from './CourseFormComponent';
+import LearningObjective from './LearningObjective';
+import UnitManager from './UnitManager';
 
 interface IUIMessages {
   show: boolean;
@@ -96,15 +89,27 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
           )
         ]);
         const savedData = curriculumResult.data.getCurriculum;
-        const sortedSyllabusList = [...curriculumUnits?.data.listCurriculumUnits?.items]
+
+        const sortedSyllabusList = [
+          ...curriculumUnits?.data.listCurriculumUnits?.items
+        ].filter((d) => d.unit !== null);
+
+        const updatedSeq = savedData.universalSyllabusSeq.filter((id: any) => {
+          return Boolean(
+            sortedSyllabusList.find((d) => d.unit !== null && id === d.unitId)
+          );
+        });
+
+        const mapped = sortedSyllabusList
           .map((t: any) => {
-            let index = savedData.universalSyllabusSeq.indexOf(t.unitId);
+            let index = updatedSeq.indexOf(t.unitId);
             return {...t, index};
           })
           .sort((a: any, b: any) => (a.index > b.index ? 1 : -1));
         setCourseData(savedData);
-        setSyllabusIds(savedData.universalSyllabusSeq || []);
-        setSavedSyllabusList(sortedSyllabusList);
+        setSyllabusIds(updatedSeq || []);
+
+        setSavedSyllabusList(mapped);
         setFetchingDetails(false);
       } catch {
         setMessages({
@@ -249,9 +254,7 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
               </div>
             </div>
           ) : (
-            <div className="border-0 border-gray-200 lg:border-t-none bg-gray-100 lg:my-0">
-              {currentStepComp(activeStep)}
-            </div>
+            <div className="">{currentStepComp(activeStep)}</div>
           )}
         </div>
       </div>

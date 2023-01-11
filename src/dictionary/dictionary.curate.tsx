@@ -55,8 +55,8 @@ const BreadcrumsTitles: any = {
     Class_Creation: 'Class Creation',
     CURRICULARBUILDER: 'New Course',
     CURRICULUM: 'Course',
-    COURSES: 'Courses',
-    UNITS: 'Units',
+    COURSES: 'Course Manager',
+    UNITS: 'Unit Manager',
     CLASSROOM_CREATION: 'Classroom Creation',
     CLASSROOMS: 'Classrooms',
     CLASSROOM: 'Classroom',
@@ -76,10 +76,10 @@ const BreadcrumsTitles: any = {
     AddChekpoint: 'Add Checkpoint',
     EditTopic: 'Edit Topic',
     AddExistingCheckpoint: 'Add Existing Checkpoint',
-    STAFF: 'Staff',
+    STAFF: 'Staff Manager',
     PeopleManagment: 'People Management',
     AddNewUser: 'Add New User',
-    USERS: 'Users',
+    USERS: 'User Manager',
     UserInfo: 'User Information',
     LESSONS: 'Lessons',
     LESSONPLANBUILDER: 'Lesson Plan Builder',
@@ -365,7 +365,7 @@ const manageusersDict: any = {
       STATUS: 'Status',
       ACTIONS: 'Actions'
     },
-    ADD_NEW: 'Add New Person'
+    ADD_NEW: 'Add New User'
   },
   ES: {
     TITLE: 'GESTIÓN DE USUARIOS',
@@ -915,7 +915,7 @@ const Institute_info: any = {
     SERVICE_PROVIDER: 'Service Provider',
     TABS: {
       SERVICE_PROVIDER: 'Service Providers',
-      STAFF: 'Staff',
+      STAFF: 'Staff Manager',
       CLASS_MANAGER: 'Classroom Builder',
       LIVE_CLASS_ROOM: 'Live Classroom',
       COURSE_MANAGER: 'Course Builder',
@@ -1242,7 +1242,7 @@ const Institute_class: any = {
 };
 const InstitueCurriculum: any = {
   EN: {
-    TITLE: 'Courses',
+    TITLE: 'Course List',
     BUTTON: {
       ADD: 'New Course'
     },
@@ -1250,7 +1250,7 @@ const InstitueCurriculum: any = {
     NAME: 'Course Name',
     INSTITUTION_NAME: 'Institution Name',
     COURSE_TYPE: 'Course Type',
-    UNITS: 'Units',
+    UNITS: 'Course Units',
     ACTION: 'Actions',
     VIEW: 'View',
     INFO: 'This institute does not have any course. Please create a new course.',
@@ -1280,7 +1280,7 @@ const InstitueCurriculum: any = {
 
 const InstitueRomms: any = {
   EN: {
-    TITLE: 'CLASSROOMS',
+    TITLE: 'Classroom List',
     NO: 'No.',
     CLASSROOMS_NAME: 'Classroom Name',
     CLASS_NAME: 'Class Name',
@@ -2749,7 +2749,7 @@ const ProfileCheckpointlookupDict: any = {
 
 const RegistrationDict: any = {
   EN: {
-    title: 'Registration',
+    title: 'Register New User',
     subtitle: 'Add new user to the list',
     requiredfield: 'Required fields',
     firstname: 'First Name',
@@ -2920,7 +2920,7 @@ const UserLookupDict: any = {
     action: 'Actions',
     noresult: 'No Results',
     button: {
-      add: 'Add New Person'
+      add: 'Add New User'
     }
   },
   ES: {
@@ -2951,7 +2951,7 @@ const UserLookupWithTokenDict: any = {
     action: 'Actions',
     noresult: 'No Results',
     button: {
-      add: 'Add New Person'
+      add: 'Add New User'
     }
   },
   ES: {
@@ -3710,10 +3710,10 @@ const UnitLookupDict: any = {
       'NOTE: Please select course and then modules to add current session to that module.',
     NO: 'No.',
     CURRICULUMNAME: 'Course Name',
-    NAME: 'Name',
+    NAME: 'Unit Name',
     INSTITUTION_NAME: 'Institution Name',
     UNITNAME: 'Module Name',
-    LESSONS: 'Lessons',
+    LESSONS: 'Lesson Plan',
     STATUS: 'Status',
     ACTION: 'Action',
     NOTADDED: ' This session is not added to any course or modules.',
@@ -3733,9 +3733,11 @@ const UnitLookupDict: any = {
   ES: {
     HEADING: 'TBD',
     NOTE: 'TBD',
+    NAME: 'TBD',
     NO: 'TBD',
     CURRICULUMNAME: 'TBD',
     INSTITUTION_NAME: 'TBD',
+    LESSONS: 'TBD',
     UNITNAME: 'TBD',
     STATUS: 'TBD',
     ACTION: 'TBD',
@@ -3967,8 +3969,8 @@ const LessonEditDict: any = {
 
 const LessonsListDict: any = {
   EN: {
-    TITLE: 'LESSONS LIST',
-    HEADING: 'Lessons',
+    TITLE: 'LESSON LIST',
+    HEADING: 'Lesson List',
     SUBTITLE: 'All Lessons List',
     SORTBY: 'Sort By',
     NO: 'No.',

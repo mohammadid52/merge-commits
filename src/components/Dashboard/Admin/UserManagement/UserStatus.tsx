@@ -9,15 +9,25 @@ const commonClass = 'w-auto inline-flex text-xs leading-5 font-medium uppercase 
 export const Status = ({
   children,
   style,
-  className = 'bg-green-200 text-green-600'
+  className = '',
+  useDefault = false,
+  status
 }: {
   className?: string;
   style?: any;
-  children: React.ReactNode;
+  children?: React.ReactNode;
+  useDefault?: boolean;
+  status?: string;
 }) => {
+  const defaultClass = !useDefault
+    ? ''
+    : status?.toLowerCase() === 'active'
+    ? 'bg-green-100 text-green-600'
+    : 'bg-yellow-100 text-yellow-600';
+
   return (
-    <span style={style} className={`${commonClass} ${className}  px-2`}>
-      {children}
+    <span style={style} className={`${commonClass} ${className} ${defaultClass}  px-2`}>
+      {useDefault ? status || 'ACTIVE' : children}
     </span>
   );
 };

@@ -19,6 +19,7 @@ interface ModalProps {
   intenseOpacity?: boolean;
   scrollHidden?: boolean;
   titleButton?: React.ReactElement;
+  saveElement?: React.ReactNode;
   customTitle?: React.ReactNode;
   outerCloseBtn?: boolean;
   position?: 'absolute' | 'relative' | 'fixed';
@@ -27,6 +28,7 @@ interface ModalProps {
   modalCloseId?: string;
   maxWidth?: string;
   closeLabel?: string;
+
   saveLabel?: string;
 }
 
@@ -37,14 +39,7 @@ const ModalBody = (bodyProps: {
   scrollHidden?: boolean;
   className?: string;
 }) => {
-  const {
-    children,
-
-    closeOnBackdrop,
-    className = 'modal-body',
-    scrollHidden,
-    hidePadding
-  } = bodyProps;
+  const {children, closeOnBackdrop, className = 'modal-body', hidePadding} = bodyProps;
 
   return (
     <div
@@ -63,14 +58,26 @@ const ModalFooter = (footerProps: {
   onClose?: () => void;
   closeLabel?: string;
   saveLabel?: string;
+  saveElement?: React.ReactNode;
 }) => {
-  const {onSave, onClose, saveLabel = 'Save changes', closeLabel = 'Close'} = footerProps;
+  const {
+    onSave,
+    onClose,
+    saveElement,
+    saveLabel = 'Save changes',
+    closeLabel = 'Close'
+  } = footerProps;
   const {theme} = useContext(GlobalContext);
 
   return (
     <div className={`${theme.modals.footer}`}>
       <Buttons label={closeLabel} title={closeLabel} onClick={onClose} transparent />
-      <Buttons label={saveLabel} title={saveLabel} onClick={onSave} />
+      <Buttons
+        label={saveElement !== undefined && saveElement !== null ? null : saveLabel}
+        insideElement={saveElement}
+        title={saveLabel}
+        onClick={onSave}
+      />
     </div>
   );
 };
@@ -97,7 +104,8 @@ const Modal: React.FC<ModalProps> = (modalProps: ModalProps) => {
     maxWidth,
     className,
     closeLabel,
-    saveLabel
+    saveLabel,
+    saveElement
   } = modalProps;
   const {theme} = useContext(GlobalContext);
   useEffect(() => {
@@ -166,6 +174,7 @@ const Modal: React.FC<ModalProps> = (modalProps: ModalProps) => {
             {showFooter && (
               <ModalFooter
                 closeLabel={closeLabel}
+                saveElement={saveElement}
                 saveLabel={saveLabel}
                 onSave={saveAction}
                 onClose={closeAction}
