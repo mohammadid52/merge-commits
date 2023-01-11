@@ -30,7 +30,7 @@ const Filters = ({
   const getLen = (status: SortType) =>
     list.filter((_d: {status: SortType}) => _d.status === status).length;
 
-  const defaultFilterMapping = ['ACTIVE', 'INACTIVE', 'TRANING'];
+  const defaultFilterMapping = ['ACTIVE', 'INACTIVE', 'TRAINING'];
   const filter = customFilters ? customFilters : defaultFilterMapping;
 
   return (

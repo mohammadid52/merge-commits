@@ -52,7 +52,7 @@ const StandardLessonCard = (props: LessonCardProps) => {
       }
       return;
     } catch (error) {
-      logError(error, {authId, email}, 'StandardLessonCard @checkValueOrNull');
+      // logError(error, {authId, email}, 'StandardLessonCard @checkValueOrNull');
     } finally {
       setIsFetched(true);
     }

@@ -14,6 +14,7 @@ import * as mutations from 'graphql/mutations';
 import isEmpty from 'lodash/isEmpty';
 import React, {useEffect, useState} from 'react';
 import {useRouteMatch} from 'react-router';
+import {Empty} from '../Admin/LessonsBuilder/StepActionComponent/LearningEvidence/CourseMeasurementsCard';
 import {DashboardProps} from '../Dashboard';
 import DashboardContainer from '../DashboardContainer';
 import DateAndTime from '../DateAndTime/DateAndTime';
@@ -191,6 +192,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
 
   const [syllabusData, setSyllabusData] = useState<any>({});
   const [lessonData, setLessonData] = useState<Array<any>>([]);
+  console.log('🚀 ~ file: Classroom.tsx:194 ~ lessonData', lessonData);
 
   const [settingLessons, setSettingLessons] = useState<boolean>(true);
 
@@ -236,6 +238,10 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
           const currentLessonItem = listPersonData.find(
             (_d) => _d.lessonID === item.lessonID
           )?.pages;
+          console.log(
+            '🚀 ~ file: Classroom.tsx:240 ~ temp?.map ~ currentLessonItem',
+            currentLessonItem
+          );
 
           const currentPage = currentLessonItem
             ? JSON.parse(currentLessonItem)?.currentPage
@@ -274,6 +280,8 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
                 ) / 5
               ) * 5
           };
+          console.log('🚀 ~ file: Classroom.tsx:268 ~ temp?.map ~ lesson', lesson);
+
           return {...item, lesson, session, sessionHeading};
         })
       );
@@ -509,23 +517,27 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
 
               <div className={`bg-opacity-10`}>
                 <div className={`pb-4 text-xl m-auto`}>
-                  <Today
-                    activeRoom={state.activeRoom}
-                    activeRoomInfo={activeRoomInfo}
-                    isTeacher={isTeacher}
-                    lessonLoading={
-                      loadingRoomInfo ||
-                      lessonLoading ||
-                      settingLessons ||
-                      syllabusLoading
-                    }
-                    lessons={withTitle}
-                    syllabus={syllabusData}
-                    handleLessonMutationRating={handleLessonMutationRating}
-                    getLessonRating={
-                      listPersonData && listPersonData.length > 0 && getLessonRating
-                    }
-                  />
+                  {Boolean(activeRoomInfo?.activeSyllabus) ? (
+                    <Today
+                      activeRoom={state.activeRoom}
+                      activeRoomInfo={activeRoomInfo}
+                      isTeacher={isTeacher}
+                      lessonLoading={
+                        loadingRoomInfo ||
+                        lessonLoading ||
+                        settingLessons ||
+                        syllabusLoading
+                      }
+                      lessons={withTitle}
+                      syllabus={syllabusData}
+                      handleLessonMutationRating={handleLessonMutationRating}
+                      getLessonRating={
+                        listPersonData && listPersonData.length > 0 && getLessonRating
+                      }
+                    />
+                  ) : (
+                    <Empty text="No active unit for this room" />
+                  )}
                 </div>
               </div>
             </>
