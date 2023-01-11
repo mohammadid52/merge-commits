@@ -24,6 +24,7 @@ import LessonCourse from './StepActionComponent/LessonCourse/LessonCourse';
 import {logError} from '@graphql/functions';
 import useAuth from '@customHooks/useAuth';
 import {RoomStatus, UpdateUniversalLessonInput} from 'API';
+import UnitList from '../Institutons/EditBuilders/CurricularsView/TabsActions/Unit/UnitList';
 
 export interface InitialData {
   name: string;
@@ -126,6 +127,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
   });
   const [selectedDesigners, setSelectedDesigners] = useState([]);
   const [curriculumList, setCurriculumList] = useState([]);
+
   const [selectedCurriculumList, setSelectedCurriculumList] = useState([]);
   const [addedSyllabus, setAddedSyllabus] = useState([]);
   const [lessonId, setLessonId] = useState('');
@@ -446,12 +448,17 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     try {
       setCurriculumLoading(true);
       const list: any = await API.graphql(
-        graphqlOperation(queries.listCurricula, {
+        graphqlOperation(customQueries.listCurriculaForLesson, {
           filter: {
             institutionID: {eq: formData?.institution?.id}
           }
         })
       );
+
+      const curriculums = list?.data?.listCurricula?.items || [];
+
+      setCurriculumList(curriculums);
+
       const institutionRooms: any = await API.graphql(
         graphqlOperation(customQueries.listInstitutionsForCurricula)
       );
@@ -476,25 +483,24 @@ const LessonBuilder = (props: LessonBuilderProps) => {
 
       setInstitutionCollection(curriculumIds);
 
-      const curriculums = list.data?.listCurriculums?.items;
-      setCurriculumList(curriculums);
-      let selectedCurriculums: any = [];
-      curriculums.map((curriculum: any) => {
-        const addedSyllabusIds = assignedSyllabus.map((item: any) => item.syllabusID);
-        const assignedSyllabi = curriculum.universalSyllabus?.items.find(
-          (syllabus: any) => addedSyllabusIds.includes(syllabus.unitId)
-        );
-        const isCourseAdded = Boolean(assignedSyllabi);
-        if (isCourseAdded) {
-          selectedCurriculums.push({
-            ...curriculum,
-            assignedSyllabi,
-            // : assignedSyllabi.map((syllabus: any) => syllabus.name),
-            assignedSyllabusId: assignedSyllabi.map((syllabus: any) => syllabus.unitId)
-          });
-        }
-      });
-      setSelectedCurriculumList(selectedCurriculums);
+      // let selectedCurriculums: any = [];
+
+      // curriculums.forEach((curriculum: any) => {
+      //   const addedSyllabusIds = assignedSyllabus.map((item: any) => item.syllabusID);
+      //   const assignedSyllabi = curriculum.universalSyllabus?.items.find(
+      //     (syllabus: any) => addedSyllabusIds.includes(syllabus.unitId)
+      //   );
+      //   const isCourseAdded = Boolean(assignedSyllabi);
+      //   if (isCourseAdded) {
+      //     selectedCurriculums.push({
+      //       ...curriculum,
+      //       assignedSyllabi,
+      //       // : assignedSyllabi.map((syllabus: any) => syllabus.name),
+      //       assignedSyllabusId: assignedSyllabi.map((syllabus: any) => syllabus.unitId)
+      //     });
+      //   }
+      // });
+      // setSelectedCurriculumList(selectedCurriculums);
       setCurriculumLoading(false);
     } catch (error) {
       setCurriculumLoading(false);
@@ -587,18 +593,12 @@ const LessonBuilder = (props: LessonBuilderProps) => {
         );
       case 'courses':
         return (
-          <LessonCourse
-            institutionCollection={institutionCollection}
-            curriculumList={curriculumList}
-            fetchCurriculum={fetchCurriculum}
-            institution={formData?.institution}
-            lessonId={lessonId}
-            lessonName={formData?.name}
-            lessonPlans={universalLessonDetails?.lessonPlan}
-            lessonType={formData.type?.value}
-            loading={curriculumLoading || updating}
-            selectedCurriculums={selectedCurriculumList}
+          <UnitList
+            curricular={curriculumList}
+            instId={formData?.institution.id}
+            instName={formData?.institution.name}
             addedSyllabus={addedSyllabus}
+            isFromLesson
             setAddedSyllabus={setAddedSyllabus}
           />
         );
@@ -760,69 +760,6 @@ const LessonBuilder = (props: LessonBuilderProps) => {
             </div>
           ) : (
             <div className="">{currentStepComp(activeStep)}</div>
-            // <div>
-            //   <AnimatedContainer show={activeStep === 'overview'} {...animationProps}>
-            //     {activeStep === 'overview' && (
-            //       <AddNewLessonForm
-            //         lessonId={lessonId}
-            //         changeLessonType={changeLessonType}
-            //         formData={formData}
-            //         setFormData={setFormData}
-            //         designerListLoading={designerListLoading}
-            //         designersList={designersList}
-            //         selectedDesigners={selectedDesigners}
-            //         setSelectedDesigners={setSelectedDesigners}
-            //         postLessonCreation={postLessonCreation}
-            //         allMeasurement={measurementList}
-            //         institutionList={institutionList}
-            //         setUnsavedChanges={setUnsavedChanges}
-            //         fetchStaffByInstitution={fetchStaffByInstitution}
-            //       />
-            //     )}
-            //   </AnimatedContainer>
-            //   <AnimatedContainer show={activeStep === 'activities'} {...animationProps}>
-            //     {activeStep === 'activities' && (
-            //       <LessonActivities
-            //         loading={loading}
-            //         lessonId={lessonId}
-            //         lessonName={formData?.name}
-            //         universalLessonDetails={universalLessonDetails}
-            //       />
-            //     )}
-            //   </AnimatedContainer>
-            //   <AnimatedContainer show={activeStep === 'courses'} {...animationProps}>
-            //     {activeStep === 'courses' && (
-            //       <LessonCourse
-            //         institutionCollection={institutionCollection}
-            //         curriculumList={curriculumList}
-            //         fetchCurriculum={fetchCurriculum}
-            //         institution={formData?.institution}
-            //         lessonId={lessonId}
-            //         lessonPlans={universalLessonDetails?.lessonPlan}
-            //         lessonType={formData.type?.value}
-            //         loading={curriculumLoading}
-            //         selectedCurriculums={selectedCurriculumList}
-            //       />
-            //     )}
-            //   </AnimatedContainer>
-            //   <AnimatedContainer
-            //     show={activeStep === 'learning-evidence'}
-            //     {...animationProps}>
-            //     {activeStep === 'learning-evidence' && (
-            //       <LearningEvidence
-            //         fetchLessonRubrics={fetchLessonRubrics}
-            //         institutionId={formData?.institution?.id}
-            //         lessonId={lessonId}
-            //         selectedMeasurements={selectedMeasurements}
-            //         setSelectedMeasurements={setSelectedMeasurements}
-            //         setUnsavedChanges={setUnsavedChanges}
-            //         serverMessage={serverMessage}
-            //         updating={updating}
-            //         updateMeasurementList={updateMeasurementList}
-            //       />
-            //     )}
-            //   </AnimatedContainer>
-            // </div>
           )}
         </div>
       </div>

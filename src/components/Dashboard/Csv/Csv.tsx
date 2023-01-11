@@ -22,6 +22,24 @@ import {RiErrorWarningLine} from 'react-icons/ri';
 import {getImageFromS3Static} from 'utilities/services';
 import {createFilterToFetchSpecificItemsOnly} from 'utilities/strings';
 import SurveyPDF from './SurveyPDF';
+const reg = /[,.]/gi;
+
+export const DataValue = ({
+  title,
+  content
+}: {
+  title: string;
+  content: string | React.ReactNode;
+}) => {
+  return (
+    <div className="w-auto flex mb-2 flex-col items-start justify-start">
+      <span className="text-sm mb-1 text-gray-500">{title}</span>
+      <span className="text-dark-gray font-medium text-left w-auto text-sm">
+        {content}
+      </span>
+    </div>
+  );
+};
 
 export const insertExtraDataForClassroom = (cr: any) => {
   const teacherImage = getImageFromS3Static(cr?.teacher?.image);
@@ -172,6 +190,7 @@ const Csv = ({institutionId}: ICsvProps) => {
   const [isCSVReady, setIsCSVReady] = useState(false);
   const [isCSVDownloadReady, setIsCSVDownloadReady] = useState(false);
   const [CSVHeaders, setCSVHeaders] = useState([]);
+
   const [CSVData, setCSVData] = useState([]);
   const [lessonPDFData, setLessonPDFData] = useState<any[]>([]);
 
@@ -296,10 +315,16 @@ const Csv = ({institutionId}: ICsvProps) => {
       );
       let units = curriculumUnits?.data.listCurriculumUnits?.items || [];
 
-      units = units.map((syl: any) => {
-        let unitData = syl.unit;
-        return {id: unitData.id, name: unitData.name};
-      });
+      units = units.filter((d: any) => d.unit !== null);
+
+      units = units
+        .map((syl: any) => {
+          let unitData = syl.unit;
+          if (unitData && unitData?.id) {
+            return {id: unitData.id, name: unitData.name};
+          }
+        })
+        .filter(Boolean);
 
       setActiveUnits(units);
     } catch (error) {
@@ -452,6 +477,7 @@ const Csv = ({institutionId}: ICsvProps) => {
         })
       );
       let units = curriculumUnits?.data.listCurriculumUnits?.items || [];
+      units = units.filter((d: any) => d.unit !== null);
 
       units = units.map((syl: any) => {
         let unitData = syl.unit;
@@ -1020,21 +1046,6 @@ const Csv = ({institutionId}: ICsvProps) => {
     currentSelectedClassroomData &&
     activeUnits.find((_d) => _d?.id === currentSelectedClassroomData?.activeSyllabus);
 
-  const DataValue = ({
-    title,
-    content
-  }: {
-    title: string;
-    content: string | React.ReactNode;
-  }) => {
-    return (
-      <div className="w-auto flex mb-2 flex-col items-start justify-start">
-        <p className="text-sm text-gray-500">{title}</p>
-        <p className="text-dark-gray font-medium text-left w-auto text-sm">{content}</p>
-      </div>
-    );
-  };
-
   useEffect(() => {
     document.getElementById('csv-download-button').addEventListener('click', () => {
       setShowWarnModal(true);
@@ -1042,6 +1053,22 @@ const Csv = ({institutionId}: ICsvProps) => {
   }, []);
 
   const [showWarnModal, setShowWarnModal] = useState(false);
+
+  const getSeparatedHeaders = (arr: any[]) => {
+    if (arr && arr.length > 0) {
+      let result = arr.map((i) => {
+        return {
+          ...i,
+          label: i.label.replaceAll(reg, '')
+        };
+      });
+
+      return result;
+    }
+    return arr;
+  };
+
+  const mappedHeaders = getSeparatedHeaders(CSVHeaders);
 
   return (
     <>
@@ -1204,7 +1231,7 @@ const Csv = ({institutionId}: ICsvProps) => {
                 data={CSVData}
                 className="w-auto ml-2"
                 id="csv-download-button"
-                headers={CSVHeaders}
+                headers={mappedHeaders}
                 filename={`${selectedClassRoom?.name}_${
                   selectedSurvey?.name
                 }_${getTodayDate()}.csv`}>

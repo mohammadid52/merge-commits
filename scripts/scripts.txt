@@ -1,0 +1,13 @@
+1. set-dictionary -> sync dictionary for all IA, PC, Demo
+2. cypress:run-everything -> this is a specific test. which checks all pages on dropdown,
+3. push:ia -> push updates to IA production
+4. push:pc -> push updates to PC production
+5. push -> push all changes
+6. pull:uat -> pull from UAT env
+7. sync-aws -> sync api.schema.graphql to schema.graphql (amplify pull and push)
+
+
+**aws cli commands**
+
+1. `amplify pull --yes || true` -> pull latest changes from cloud
+2. `amplify push api` -> push local changes to cloud

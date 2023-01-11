@@ -112,8 +112,8 @@ const AddTopic = (props: AddTopicProps) => {
           setLoading(false);
         }
       }
-      console.error('Could not add topic');
     }
+    console.error('Could not add topic');
   };
 
   const fetchTopicsSequence = async (leraningID: string) => {

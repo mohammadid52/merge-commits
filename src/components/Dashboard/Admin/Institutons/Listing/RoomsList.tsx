@@ -2,8 +2,10 @@ import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import React, {Fragment, useContext, useEffect, useState} from 'react';
 import {useHistory, useRouteMatch} from 'react-router';
 
+import Filters, {SortType} from '@components/Atoms/Filters';
 import Highlighted from '@components/Atoms/Highlighted';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
+import Table from '@components/Molecules/Table';
 import useAuth from '@customHooks/useAuth';
 import useSearch from '@customHooks/useSearch';
 import {getLocalStorageData} from '@utilities/localStorage';
@@ -16,103 +18,9 @@ import {GlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import * as queries from 'graphql/queries';
+import {map, orderBy} from 'lodash';
 import {Status} from '../../UserManagement/UserStatus';
-import {orderBy} from 'lodash';
-import Buttons from '@components/Atoms/Buttons';
 
-export type SortType = 'ACTIVE' | 'TRAINING' | 'INACTIVE';
-
-export const Filters = ({updateFilter, filters}: {updateFilter: any; filters: any}) => (
-  <div className="flex items-center justify-end">
-    <div className="flex gap-x-4 mb-4 mt-2 items-center">
-      <Buttons
-        onClick={() => updateFilter('ACTIVE')}
-        transparent={filters !== 'ACTIVE'}
-        label={'Active'}
-      />
-      <Buttons
-        onClick={() => updateFilter('INACTIVE')}
-        transparent={filters !== 'INACTIVE'}
-        label={'Inactive'}
-      />
-      <Buttons
-        onClick={() => updateFilter('TRAINING')}
-        transparent={filters !== 'TRAINING'}
-        label={'Training'}
-      />
-    </div>
-  </div>
-);
-
-const Room = ({
-  i,
-  editCurrentRoom,
-  item,
-  searchInput
-}: {
-  i: number;
-  searchInput?: string;
-  editCurrentRoom?: (id: string, instId: string) => void;
-  item?: any;
-}) => {
-  const {isSuperAdmin, isAdmin, isBuilder} = useAuth();
-  const match = useRouteMatch();
-  const history = useHistory();
-
-  const commonClass = 'text-sm leading-4 font-medium whitespace-normal break-normal';
-
-  return (
-    <tr
-      title="click to view/edit details"
-      style={{cursor: 'pointer !important'}}
-      className={`cursor-pointer hover:bg-gray-200
-`}>
-      <td className={''}>{i + 1}.</td>
-      <td
-        onClick={() => editCurrentRoom(item.id, item.institutionID)}
-        className={`${commonClass}`}>
-        <Highlighted text={item.name} highlight={searchInput} />
-      </td>
-      {(isSuperAdmin || isAdmin || isBuilder) && (
-        <td
-          className={commonClass}
-          onClick={(e) => {
-            e.stopPropagation();
-            isSuperAdmin &&
-              history.push(
-                `/dashboard/manage-institutions/institution/${item.institution?.id}/edit?back=${match.url}`
-              );
-          }}>
-          <Highlighted text={item.institutionName} highlight={searchInput} />
-        </td>
-      )}
-
-      <td className={`${commonClass} text-gray-500`}>
-        {item.teacher?.firstName || ''} {item.teacher?.lastName || ''}
-      </td>
-
-      <td
-        onClick={() => !item?.isCoteacher && editCurrentRoom(item.id, item.institutionID)}
-        className={`${commonClass} text-gray-500`}>
-        {item?.curricula?.items
-          ?.map((d: any) => {
-            return d?.curriculum?.name;
-          })
-          .join(',') || '-'}
-      </td>
-      <td className={`${commonClass} text-gray-500`}>
-        <Status
-          className={
-            item.status?.toLowerCase() === 'active'
-              ? 'bg-green-100 text-green-800'
-              : 'bg-yellow-100 text-yellow-800'
-          }>
-          {item.status ? item.status : 'ACTIVE'}
-        </Status>
-      </td>
-    </tr>
-  );
-};
 interface RoomListProps {
   instId: string;
   instName: string;
@@ -133,8 +41,7 @@ const RoomsList = (props: RoomListProps) => {
   const {InstitueRomms} = useDictionary(clientKey);
 
   const [roomList, setRoomList] = useState([]);
-  const [allRooms, setAllRooms] = useState([]);
-  const [staffList, setStaffList] = useState([]);
+
   const [loading, setLoading] = useState(true);
 
   const [institutionList, setInstitutionList] = useState<any>([]);
@@ -162,30 +69,6 @@ const RoomsList = (props: RoomListProps) => {
             instId || roomData.institutionID
           }/room-edit/${id}`
     );
-  };
-
-  const fetchStaffOptions = async () => {
-    try {
-      const list: any = await API.graphql(
-        graphqlOperation(customQueries.listStaffOptions)
-      );
-      setStaffList(
-        list.data.listStaff.items
-          ?.filter(
-            ({staffMember}: any) =>
-              staffMember?.role === 'TR' || staffMember?.role === 'FLW'
-          )
-          .map(({staffMember, staffAuthID}: any) => ({
-            id: staffAuthID,
-            name: [staffMember?.firstName, staffMember?.lastName]
-              .filter(Boolean)
-              .join(' ')
-          }))
-          .sort((a: any, b: any) =>
-            a.name?.toLowerCase() > b.name?.toLowerCase() ? 1 : -1
-          )
-      );
-    } catch (error) {}
   };
 
   const fetchInstitutions = async () => {
@@ -256,7 +139,7 @@ const RoomsList = (props: RoomListProps) => {
       });
 
       setRoomList(updatedMerge);
-      setAllRooms(updatedMerge);
+
       setLoading(false);
     } catch (e) {
       console.error(e);
@@ -272,7 +155,6 @@ const RoomsList = (props: RoomListProps) => {
   useEffect(() => {
     if (instId === associateInstitute[0]?.institution?.id) {
       fetchRoomList();
-      fetchStaffOptions();
     }
   }, [instId]);
 
@@ -280,7 +162,6 @@ const RoomsList = (props: RoomListProps) => {
     if (isSuperAdmin || isAdmin || isBuilder) {
       fetchInstitutions();
       fetchRoomList();
-      fetchStaffOptions();
     }
   }, [isSuperAdmin]);
 
@@ -364,6 +245,73 @@ const RoomsList = (props: RoomListProps) => {
     }
   };
 
+  const match = useRouteMatch();
+
+  const dataList = map(finalList, (item, index) => ({
+    no: index + 1,
+    classroomName: (
+      <div
+        onClick={() => editCurrentRoom(item.id, item.institutionID)}
+        className="w-auto  cursor-pointer">
+        <Highlighted text={item.name} highlight={searchInput.value} />
+      </div>
+    ),
+    institutionName: (isSuperAdmin || isAdmin || isBuilder) && (
+      <div
+        className={'w-auto cursor-pointer'}
+        onClick={(e) => {
+          e.stopPropagation();
+          isSuperAdmin &&
+            history.push(
+              `/dashboard/manage-institutions/institution/${item.institution?.id}/edit?back=${match.url}`
+            );
+        }}>
+        <Highlighted text={item.institutionName} highlight={searchInput.value} />
+      </div>
+    ),
+    teacher: `${item.teacher?.firstName || ''} ${item.teacher?.lastName || ''}`,
+    course: (
+      <div
+        className="w-auto"
+        onClick={() =>
+          !item?.isCoteacher && editCurrentRoom(item.id, item.institutionID)
+        }>
+        {item?.curricula?.items
+          ?.map((d: any) => {
+            return d?.curriculum?.name;
+          })
+          .join(',') || '-'}
+      </div>
+    ),
+    status: <Status useDefault status={item.status} />
+  }));
+
+  const tableConfig = {
+    headers: [
+      InstitueRomms[userLanguage]['NO'],
+      InstitueRomms[userLanguage]['CLASSROOMS_NAME'],
+      (isSuperAdmin || isAdmin || isBuilder) &&
+        InstitueRomms[userLanguage]['INSTITUTION_NAME'],
+      InstitueRomms[userLanguage]['TEACHER'],
+      InstitueRomms[userLanguage]['CURRICULUM'],
+      InstitueRomms[userLanguage]['STATUS']
+    ],
+    dataList,
+    config: {
+      dark: false,
+
+      headers: {textColor: 'text-white'},
+      dataList: {
+        customWidth: {
+          no: 'w-12'
+        },
+        maxHeight: 'max-h-132',
+        pattern: 'striped',
+        patternConfig: {firstColor: 'bg-gray-100', secondColor: 'bg-gray-200'}
+      }
+    }
+  };
+
   return (
     <div className="flex m-auto justify-center p-4 pt-0 pl-md-12">
       <div className="">
@@ -428,7 +376,12 @@ const RoomsList = (props: RoomListProps) => {
           />
         </div>
 
-        <Filters updateFilter={updateFilter} filters={filters} />
+        <Filters
+          loading={loading}
+          list={roomList}
+          updateFilter={updateFilter}
+          filters={filters}
+        />
 
         {loading ? (
           <div className="py-20 text-center mx-auto flex justify-center items-center w-full h-48">
@@ -440,54 +393,7 @@ const RoomsList = (props: RoomListProps) => {
             </div>
           </div>
         ) : finalList.length ? (
-          <div
-            style={{maxHeight: '57vh'}}
-            className="table-custom-responsive overflow-y-auto">
-            <table className="border-collapse table-auto w-full table-hover table-striped">
-              <thead className="thead-light">
-                <tr>
-                  <th className="bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                    {InstitueRomms[userLanguage]['NO']}
-                  </th>
-
-                  <th
-                    className={`bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider`}>
-                    {InstitueRomms[userLanguage]['CLASSROOMS_NAME']}
-                  </th>
-                  {(isSuperAdmin || isAdmin || isBuilder) && (
-                    <th className="bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                      {InstitueRomms[userLanguage]['INSTITUTION_NAME']}
-                    </th>
-                  )}
-
-                  <th className="bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                    {InstitueRomms[userLanguage]['TEACHER']}
-                  </th>
-
-                  <th className="bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                    {InstitueRomms[userLanguage]['CURRICULUM']}
-                  </th>
-
-                  <th className="bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                    {InstitueRomms[userLanguage]['STATUS']}
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {finalList.map((item: any, i: number) => {
-                  return (
-                    <Room
-                      searchInput={searchInput.value}
-                      item={item}
-                      i={i}
-                      key={i}
-                      editCurrentRoom={editCurrentRoom}
-                    />
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
+          <Table {...tableConfig} />
         ) : (
           <Fragment>
             {(!isSuperAdmin || !isAdmin || !isBuilder) && (

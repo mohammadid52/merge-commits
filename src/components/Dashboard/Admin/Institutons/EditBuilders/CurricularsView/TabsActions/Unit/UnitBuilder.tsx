@@ -15,6 +15,7 @@ import LessonPlanManager from './LessonPlanManager';
 import UnitFormComponent from './UnitFormComponent';
 import {BsArrowLeft} from 'react-icons/bs';
 import {RoomStatus} from 'API';
+import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 
 interface IUnitData {
   id: string;
@@ -39,7 +40,7 @@ interface IUIMessages {
   lessonError?: boolean;
 }
 
-const UnitBuilder = ({instId}: any) => {
+const UnitBuilder = ({instId, curricular}: any) => {
   const history = useHistory();
   const match = useRouteMatch();
   const params = useQuery(location.search);
@@ -112,6 +113,7 @@ const UnitBuilder = ({instId}: any) => {
           })
         );
         const savedData = result.data.getUniversalSyllabus;
+
         setSyllabusData({
           ...syllabusData,
           institutionID: savedData.institutionID,
@@ -133,11 +135,13 @@ const UnitBuilder = ({instId}: any) => {
         setLessonsIds(savedData.universalLessonsSeq || []);
 
         const sortedLessonsList = [...savedData.lessons?.items]
+
           .map((t: any) => {
             let index = savedData.universalLessonsSeq.indexOf(t.id);
             return {...t, index};
           })
           .sort((a: any, b: any) => (a.index > b.index ? 1 : -1));
+
         setSavedLessonsList(sortedLessonsList);
         setFetchingDetails(false);
       } catch (err) {
@@ -172,12 +176,24 @@ const UnitBuilder = ({instId}: any) => {
     switch (currentStep) {
       case 'overview':
         return (
-          <UnitFormComponent
-            instId={instId}
-            syllabusDetails={syllabusData}
-            postAddSyllabus={postAddSyllabus}
-            onCancel={fetchSyllabusData}
-          />
+          <AnimatedContainer show={currentStep === 'overview'}>
+            {currentStep === 'overview' && (
+              <UnitFormComponent
+                instId={instId}
+                syllabusDetails={syllabusData}
+                postAddSyllabus={postAddSyllabus}
+                curricular={curricular}
+                setSyllabusDataParent={setSyllabusData}
+                onCancel={() => {
+                  history.push(
+                    isSuperAdmin
+                      ? `/dashboard/manage-institutions/units`
+                      : `/dashboard/manage-institutions/institution/${instId}/units`
+                  );
+                }}
+              />
+            )}
+          </AnimatedContainer>
         );
       case 'lessons':
         return (
@@ -233,9 +249,7 @@ const UnitBuilder = ({instId}: any) => {
               </div>
             </div>
           ) : (
-            <div className="border-0 border-gray-200 lg:border-t-none bg-gray-100 lg:my-0">
-              {currentStepComp(activeStep)}
-            </div>
+            <div className="">{currentStepComp(activeStep)}</div>
           )}
         </div>
       </div>

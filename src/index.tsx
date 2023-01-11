@@ -10,8 +10,10 @@ import 'index.html';
 import 'style/style.css';
 import 'style/style.scss';
 
-// Amplify.configure(awsconfig);
+require('dotenv').config();
 
+// Amplify.configure(awsconfig);
+// test
 Amplify.configure({
   aws_appsync_region: awsconfig.aws_appsync_region,
   aws_appsync_graphqlEndpoint: awsconfig.aws_appsync_graphqlEndpoint,

@@ -1,6 +1,4 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import SearchInput from '@components/Atoms/Form/SearchInput';
-import useSearch from '@customHooks/useSearch';
 import {logError, updatePageState} from '@graphql/functions';
 import {setPageTitle} from '@utilities/functions';
 import {removeLocalStorageData, setLocalStorageData} from '@utilities/localStorage';
@@ -92,6 +90,7 @@ export interface LessonCardProps {
   activeRoomInfo?: any;
   lessonProps?: any;
   syllabusProps?: any;
+
   accessible?: boolean;
   openCards?: string;
   lessonProgress?: number;
@@ -130,7 +129,8 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
     setActiveRoomInfo,
     lessonLoading,
     syllabusLoading,
-    handleRoomSelection
+    handleRoomSelection,
+    loadingRoomInfo
   } = props;
 
   // ##################################################################### //
@@ -429,32 +429,13 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
     }
   }, []);
 
-  const withTitle = lessonData
-    ? lessonData.map((item: any) => ({...item, lessonTitle: item?.lesson?.title || ''}))
-    : [];
+  const addTitle = (data: any[]) =>
+    data.map((item: any) => ({...item, lessonTitle: item?.lesson?.title || ''}));
 
-  const [filteredList, setFilteredList] = useState([...withTitle]);
-
-  const {
-    searchInput,
-    setSearch,
-
-    removeSearchAction,
-    searchAndFilter
-  } = useSearch([...withTitle], ['lessonTitle']);
-
-  const searchLesson = () => {
-    const searched = searchAndFilter(searchInput.value);
-    if (Boolean(searched)) {
-      setFilteredList(searched);
-    } else {
-      removeSearchAction();
-    }
-  };
+  const withTitle = lessonData ? addTitle(lessonData) : [];
 
   const courseName = state?.roomData?.curriculum?.name || '';
 
-  const finalList = searchInput.isActive ? filteredList : withTitle;
   return (
     <>
       <DashboardContainer
@@ -464,7 +445,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
         clientKey={clientKey}
         bannerImg={bannerImg}
         bannerTitle={`${classRoomDict[userLanguage]['TITLE']}`}>
-        <div className="relative px-5 2xl:px-0 lg:mx-auto lg:max-w-192 md:max-w-none 2xl:max-w-256">
+        <div className="relative px-5 2xl:px-0 lg:mx-auto lg:max-w-256 md:max-w-none">
           <div className="flex flex-row my-0 w-full py-0 mb-4 justify-between items-center">
             <BreadCrums items={breadCrumsList} />
 
@@ -510,61 +491,44 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
               </>
             )}
 
-            {Boolean(activeRoomInfo?.activeSyllabus) ? (
-              <>
-                <SectionTitleV3
-                  fontSize="2xl"
-                  fontStyle="bold"
-                  title={`${
-                    isTeacher ? `${classRoomDict[userLanguage]['STEP']} 2:` : ''
-                  } ${classRoomDict[userLanguage]['LESSON_TITLE']} for ${
-                    state.roomData?.activeSyllabus?.name || 'loading'
-                  }`}
-                  subtitle={
-                    isTeacher
-                      ? classRoomDict[userLanguage]['LESSON_SUB_TITLE']
-                      : isOnDemandStudent
-                      ? classRoomDict[userLanguage]['LESSON_SUB_TITLE_ASYNC']
-                      : 'To enter classroom, select open lesson for this week'
-                  }
-                />
+            <>
+              <SectionTitleV3
+                fontSize="2xl"
+                fontStyle="bold"
+                title={`${isTeacher ? `${classRoomDict[userLanguage]['STEP']} 2:` : ''} ${
+                  classRoomDict[userLanguage]['LESSON_TITLE']
+                } for ${state.roomData?.activeSyllabus?.name || 'loading'}`}
+                subtitle={
+                  isTeacher
+                    ? classRoomDict[userLanguage]['LESSON_SUB_TITLE']
+                    : isOnDemandStudent
+                    ? classRoomDict[userLanguage]['LESSON_SUB_TITLE_ASYNC']
+                    : 'To enter classroom, select open lesson for this week'
+                }
+              />
 
-                <div className={`bg-opacity-10`}>
-                  <div className={`pb-4 text-xl m-auto`}>
-                    <div className="py-2 flex items-center justify-end">
-                      <SearchInput
-                        dataCy="classroom-search-input"
-                        value={searchInput.value}
-                        onChange={setSearch}
-                        isActive={searchInput.isActive}
-                        disabled={lessonLoading || settingLessons || syllabusLoading}
-                        onKeyDown={searchLesson}
-                        closeAction={removeSearchAction}
-                      />
-                    </div>
-                    <Today
-                      activeRoom={state.activeRoom}
-                      activeRoomInfo={activeRoomInfo}
-                      isTeacher={isTeacher}
-                      searchTerm={searchInput.value}
-                      lessonLoading={lessonLoading || settingLessons || syllabusLoading}
-                      lessons={finalList}
-                      syllabus={syllabusData}
-                      handleLessonMutationRating={handleLessonMutationRating}
-                      getLessonRating={
-                        listPersonData && listPersonData.length > 0 && getLessonRating
-                      }
-                    />
-                  </div>
+              <div className={`bg-opacity-10`}>
+                <div className={`pb-4 text-xl m-auto`}>
+                  <Today
+                    activeRoom={state.activeRoom}
+                    activeRoomInfo={activeRoomInfo}
+                    isTeacher={isTeacher}
+                    lessonLoading={
+                      loadingRoomInfo ||
+                      lessonLoading ||
+                      settingLessons ||
+                      syllabusLoading
+                    }
+                    lessons={withTitle}
+                    syllabus={syllabusData}
+                    handleLessonMutationRating={handleLessonMutationRating}
+                    getLessonRating={
+                      listPersonData && listPersonData.length > 0 && getLessonRating
+                    }
+                  />
                 </div>
-              </>
-            ) : (
-              <div className="text-center">
-                <p className="w-auto text-center text-gray-500 font-medium">
-                  No active unit for this room
-                </p>
               </div>
-            )}
+            </>
           </div>
         </div>
       </DashboardContainer>

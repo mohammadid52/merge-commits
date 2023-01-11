@@ -12,6 +12,11 @@ import {TABLE} from '../common/constants';
 import Toggle from '../Toggle';
 import AnimatedContainer from '../UIComponents/Tabs/AnimatedContainer';
 import {Tabs3, useTabs} from '../UIComponents/Tabs/Tabs';
+import {HiOutlineTrash} from 'react-icons/hi';
+import {getMaxWordLenOfHeader} from '@components/Lesson/UniversalLessonBlockComponents/Blocks/TableBlock';
+
+const onDark = (colIndex: number) => (colIndex % 2 !== 0 ? 'bg-gray-700' : 'bg-gray-800');
+const onLight = (colIndex: number) => (colIndex % 2 !== 0 ? 'bg-white' : 'bg-gray-100');
 
 interface TableProps extends IContentTypeComponentProps {
   inputObj?: any;
@@ -110,31 +115,40 @@ const TableModal = (props: TableProps) => {
   };
 
   const addCol = () => {
-    for (const row of rowList) {
-      row.col.push({id: uuidv4().toString(), text: ''});
+    let copy = [...rowList];
+    for (const row of copy) {
+      const newCol = {id: uuidv4().toString(), text: ''};
+      row.col.push(newCol);
     }
+
+    setRowList([...copy]);
   };
 
   const deleteCol = (id: string) => {
-    if (rowList.length === 12 || rowList.length === 2) return;
+    if (rowList.length <= 2) return;
     else {
-      remove(rowList, (n: any) => n.id === id);
-      setRowList([...rowList]);
+      let copy = [...rowList];
+      remove(copy, (n: any) => n.id === id);
+      setRowList([...copy]);
     }
   };
 
   const duplicateRow = (colIndex: number) => {
-    for (const row of rowList) {
+    let copy = [...rowList];
+    for (const row of copy) {
       const lastColValue = row.col[colIndex].text;
       row.col.push({id: uuidv4().toString(), text: lastColValue});
     }
+    setRowList([...copy]);
   };
 
   const deleteRow = () => {
-    for (const row of rowList) {
+    let copy = [...rowList];
+    for (const row of copy) {
       if (row.col.length === 1) return;
       row.col.pop();
     }
+    setRowList([...copy]);
   };
 
   // All states here
@@ -207,12 +221,17 @@ const TableModal = (props: TableProps) => {
   const tableText = dynamicClass.split(' || ')[1];
 
   const genThemeClass = (colIndex: number) =>
-    colors.dark
-      ? `${colIndex % 2 !== 0 ? 'bg-gray-700' : 'bg-gray-800'}`
-      : `${colIndex % 2 !== 0 ? 'bg-white' : 'bg-gray-100'}`;
+    colors.dark ? onDark(colIndex) : onLight(colIndex);
 
   const {curTab, setCurTab, helpers} = useTabs();
   const [onSetupTab, onPreviewTab] = helpers;
+
+  const getLastLen = () => {
+    const lastRowIdx = rowList.length - 1;
+    const lastColIdx = rowList[lastRowIdx].col.length - 1;
+
+    return lastColIdx;
+  };
 
   return (
     <>
@@ -225,15 +244,21 @@ const TableModal = (props: TableProps) => {
               {map(rowList, (rowItem, rowIndex) => {
                 return (
                   <div className="flex item-center flex-col">
-                    <button
+                    <Buttons
+                      redBtn
+                      btnClass="mb-4"
+                      transparent
                       onClick={() => deleteCol(rowItem.id)}
-                      className={`text-center focus:outline-none focus:bg-red-200 focus:border-transparent transition-all duration-200 hover:bg-red-200 text-xs font-semibold text-red-400 border-red-200 px-2 py-1 cursor-pointer rounded w-auto mb-1 border-2 hover:text-red-600`}>
-                      Delete this column
-                    </button>
+                      size="small"
+                      Icon={rowList.length >= 7 ? HiOutlineTrash : undefined}
+                      label={rowList.length >= 7 ? '' : 'Delete this column'}
+                    />
+
                     <FormInput
                       onChange={(e) => onRowChange(e, rowIndex)}
                       id={rowItem.id}
                       value={rowItem.value}
+                      maxLength={50}
                       placeHolder={`Col header ${rowIndex + 1}`}
                       className="mb-2 rows-input"
                     />
@@ -247,120 +272,122 @@ const TableModal = (props: TableProps) => {
                             value={colItem.text}
                             placeHolder={`Row ${colIndex + 1}`}
                           />
-                          {rowIndex === rowList.length - 1 &&
-                            colIndex === rowItem.col.length - 1 && (
-                              <div className="flex items-center justify-end">
-                                <button
-                                  onClick={() => duplicateRow(colIndex)}
-                                  className={`text-center focus:outline-none self-end mt-2 focus:bg-indigo-200 focus:border-transparent transition-all duration-200 hover:bg-indigo-200 text-xs font-semibold text-indigo-400 border-indigo-200 px-2 py-1 cursor-pointer rounded w-auto border-2 hover:text-indigo-600`}>
-                                  Duplicate this row
-                                </button>
-                                <button
-                                  onClick={() => deleteRow()}
-                                  className={`text-center focus:outline-none focus:bg-red-200 focus:border-transparent transition-all duration-200 hover:bg-red-200 text-xs font-semibold text-red-400 border-red-200 px-2 py-1 cursor-pointer rounded w-auto mt-2 ml-2 border-2 hover:text-red-600`}>
-                                  Delete this row
-                                </button>
-                              </div>
-                            )}
                         </>
                       );
                     })}
                   </div>
                 );
               })}
-              <div className="flex col-span-3 items-center w-auto">
-                <Buttons
-                  btnClass="py-1 px-4 text-xs mr-2 customBtn row"
-                  label="Add row"
-                  disabled={rowList.length === 12}
-                  onClick={addRow}
-                />
-                <Buttons
-                  btnClass="py-1 px-8 text-xs ml-2 customBtn col"
-                  label="Add col"
-                  onClick={addCol}
-                />
+            </div>
+
+            <div className="mt-4">
+              <div className="flex  mb-4 justify-between items-center w-auto">
+                <div className="w-auto flex items-center gap-x-4">
+                  <Buttons
+                    label="Add row"
+                    disabled={rowList.length === 12}
+                    onClick={addRow}
+                  />
+                  <Buttons label="Add col" onClick={() => addCol()} />
+                </div>
+
+                <div className="w-auto flex items-center gap-x-4">
+                  <Buttons
+                    label="Duplicate last row"
+                    disabled={rowList.length === 12}
+                    onClick={() => duplicateRow(getLastLen())}
+                  />
+                  <Buttons
+                    redBtn
+                    transparent
+                    disabled={rowList[0].col.length === 1}
+                    label="Delete last row"
+                    onClick={() => deleteRow()}
+                  />
+                </div>
               </div>
 
-              <h3 className="col-span-4 text-base text-black font-medium">
-                Customize Table
-              </h3>
-              <div className="col-span-1 relative h-full">
-                <label
-                  htmlFor={'bgColor'}
-                  className="mb-2 block text-xs font-semibold leading-5 text-gray-700">
-                  Select table header background color
-                </label>
-                <button
-                  onClick={() => setColorPickerActiveBG(!colorPickerActiveBG)}
-                  className={`border-0 border-gray-300 rounded shadow-xs flex items-center justify-start  h-10 px-3`}>
-                  <span className={'text-gray-700 w-auto text-sm mr-2 capitalize'}>
-                    {colors.tableHeader?.split('-')[0]}{' '}
-                    {getColorDensity(colors.tableHeader?.split('-')[1])}
-                  </span>
+              <hr />
 
-                  <span
-                    className={`h-4 block w-4 bg-${colors.tableHeader} rounded-full border-3 border-gray-400`}></span>
-                </button>
-                {colorPickerActiveBG && (
-                  <ColorPicker
-                    isMainPage
-                    classString={classString}
-                    callbackColor={(pickedColor) => {
-                      setColorPickerActiveBG(false);
-                      handleColorPickerSelect(pickedColor, 'bg');
-                    }}
-                    styleString={{top: '100%'}}
-                  />
-                )}
-              </div>
-              <div className="col-span-1 relative h-full">
-                <label
-                  htmlFor={'bgColor'}
-                  className="mb-2 block text-xs font-semibold leading-5 text-gray-700">
-                  Select table header text color
-                </label>
-                <button
-                  onClick={() => setColorPickerActiveText(!colorPickerActiveText)}
-                  className={`border-0 border-gray-300 rounded shadow-xs flex items-center justify-start  h-10 px-3`}>
-                  <span className={'text-gray-700 w-auto text-sm mr-2 capitalize'}>
-                    {colors.tableText === 'white'
-                      ? 'white'
-                      : colors.tableText?.split('-')[0]}{' '}
-                    {colors.tableText !== 'white' &&
-                      getColorDensity(colors.tableText?.split('-')[1])}
-                  </span>
+              <h3 className="mt-4 text-base text-black font-medium">Customize Table</h3>
+              <div className="grid gap-x-4 grid-cols-3">
+                <div className="col-span-1 relative h-full">
+                  <label
+                    htmlFor={'bgColor'}
+                    className="mb-2 block text-xs font-semibold leading-5 text-gray-700">
+                    Select table header background color
+                  </label>
+                  <button
+                    onClick={() => setColorPickerActiveBG(!colorPickerActiveBG)}
+                    className={`border-0 border-gray-300 rounded shadow-xs flex items-center justify-start  h-10 px-3`}>
+                    <span className={'text-gray-700 w-auto text-sm mr-2 capitalize'}>
+                      {colors.tableHeader?.split('-')[0]}{' '}
+                      {getColorDensity(colors.tableHeader?.split('-')[1])}
+                    </span>
 
-                  <span
-                    className={`h-4 block w-4 bg-${colors.tableText} rounded-full border-3 border-gray-400`}></span>
-                </button>
-                {colorPickerActiveText && (
-                  <ColorPicker
-                    isMainPage
-                    classString={classString}
-                    callbackColor={(pickedColor) => {
-                      setColorPickerActiveText(false);
-                      handleColorPickerSelect(pickedColor, 'text');
-                    }}
-                    styleString={{top: '100%'}}
-                  />
-                )}
-              </div>
-              <div className="col-span-1 relative h-full">
-                <label
-                  htmlFor={'bgColor'}
-                  className="mb-2 block text-xs font-semibold leading-5 text-gray-700">
-                  Select table content theme
-                </label>
-                <div
-                  className={`mt-1 flex items-center justify-between w-full sm:text-sm sm:leading-5 focus:outline-none focus:border-transparent border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm`}>
-                  <span className="w-auto">
-                    Theme: ({colors.dark ? 'dark' : 'light'})
-                  </span>
-                  <Toggle
-                    enabled={colors.dark}
-                    setEnabled={() => setColors({...colors, dark: !colors.dark})}
-                  />
+                    <span
+                      className={`h-4 block w-4 bg-${colors.tableHeader} rounded-full border-3 border-gray-400`}></span>
+                  </button>
+                  {colorPickerActiveBG && (
+                    <ColorPicker
+                      isMainPage
+                      classString={classString}
+                      callbackColor={(pickedColor) => {
+                        setColorPickerActiveBG(false);
+                        handleColorPickerSelect(pickedColor, 'bg');
+                      }}
+                      styleString={{top: '100%'}}
+                    />
+                  )}
+                </div>
+                <div className="col-span-1 relative h-full">
+                  <label
+                    htmlFor={'bgColor'}
+                    className="mb-2 block text-xs font-semibold leading-5 text-gray-700">
+                    Select table header text color
+                  </label>
+                  <button
+                    onClick={() => setColorPickerActiveText(!colorPickerActiveText)}
+                    className={`border-0 border-gray-300 rounded shadow-xs flex items-center justify-start  h-10 px-3`}>
+                    <span className={'text-gray-700 w-auto text-sm mr-2 capitalize'}>
+                      {colors.tableText === 'white'
+                        ? 'white'
+                        : colors.tableText?.split('-')[0]}{' '}
+                      {colors.tableText !== 'white' &&
+                        getColorDensity(colors.tableText?.split('-')[1])}
+                    </span>
+
+                    <span
+                      className={`h-4 block w-4 bg-${colors.tableText} rounded-full border-3 border-gray-400`}></span>
+                  </button>
+                  {colorPickerActiveText && (
+                    <ColorPicker
+                      isMainPage
+                      classString={classString}
+                      callbackColor={(pickedColor) => {
+                        setColorPickerActiveText(false);
+                        handleColorPickerSelect(pickedColor, 'text');
+                      }}
+                      styleString={{top: '100%'}}
+                    />
+                  )}
+                </div>
+                <div className="col-span-1 relative h-full">
+                  <label
+                    htmlFor={'bgColor'}
+                    className="mb-2 block text-xs font-semibold leading-5 text-gray-700">
+                    Select table content theme
+                  </label>
+                  <div
+                    className={`mt-1 flex items-center justify-between w-full sm:text-sm sm:leading-5 focus:outline-none focus:border-transparent border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm`}>
+                    <span className="w-auto">
+                      Theme: ({colors.dark ? 'dark' : 'light'})
+                    </span>
+                    <Toggle
+                      enabled={colors.dark}
+                      setEnabled={() => setColors({...colors, dark: !colors.dark})}
+                    />
+                  </div>
                 </div>
               </div>
             </div>
@@ -389,16 +416,21 @@ const TableModal = (props: TableProps) => {
             <div style={{maxWidth: '94rem'}}>
               <div
                 className={`grid  overflow-hidden  shadow-lg rounded-lg  grid-cols-${filteredList.length}`}>
-                {map(filteredList, (rowItem, rowIndex) => {
+                {map(filteredList, (rowItem) => {
                   return (
-                    <div>
+                    <div key={rowItem.id}>
                       <h4
+                        style={{
+                          minHeight:
+                            getMaxWordLenOfHeader(rowList) >= 20 ? '5rem' : 'unset'
+                        }}
                         className={`bg-${tableBg} text-${tableText} uppercase border-b-0 border-${tableBg} px-6 py-3 text-left text-xs font-medium  tracking-wider`}>
                         {rowItem.value}
                       </h4>
                       {map(rowItem.col, (colItem, colIndex: number) => {
                         return (
                           <div
+                            key={colItem.id}
                             className={`px-6 py-4 ${genThemeClass(
                               colIndex
                             )} whitespace-nowrap text-sm ${

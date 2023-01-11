@@ -6,77 +6,128 @@ import * as mutations from 'graphql/mutations';
 import React, {useContext, useEffect, useState} from 'react';
 import {useHistory, useRouteMatch} from 'react-router';
 
+import Buttons from '@components/Atoms/Buttons';
+import Filters, {SortType} from '@components/Atoms/Filters';
+import Modal from '@components/Atoms/Modal';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
+import Tooltip from '@components/Atoms/Tooltip';
+import {Status} from '@components/Dashboard/Admin/UserManagement/UserStatus';
+import CourseAction from '@components/MicroComponents/CourseAction';
+import UnitName from '@components/MicroComponents/UnitName';
+import Table from '@components/Molecules/Table';
 import useSearch from '@customHooks/useSearch';
+import {BUTTONS, InstitueRomms} from '@dictionary/dictionary.iconoclast';
+import {RoomStatus} from 'API';
 import SearchInput from 'atoms/Form/SearchInput';
 import Selector from 'atoms/Form/Selector';
-import Loader from 'atoms/Loader';
-import ErrorBoundary from 'components/Error/ErrorBoundary';
+import * as customMutations from 'customGraphql/customMutations';
 import * as customQueries from 'customGraphql/customQueries';
+import {isEmpty, map, orderBy} from 'lodash';
 import ModalPopUp from 'molecules/ModalPopUp';
-import UnitListRow from './UnitListRow';
-import {orderBy} from 'lodash';
-import {RoomStatus} from 'API';
-import {
-  Filters,
-  SortType
-} from '@components/Dashboard/Admin/Institutons/Listing/RoomsList';
-import {InstitueRomms} from '@dictionary/dictionary.iconoclast';
+import UnitFormComponent from './UnitFormComponent';
+import usePagination from '@customHooks/usePagination';
 
-export const UnitList = ({instId}: any) => {
+export const UnitList = ({
+  instId,
+  curricular,
+  addedSyllabus,
+  lessonPlans,
+  lessonType,
+  lessonId,
+  isFromLesson,
+  setAddedSyllabus
+}: any) => {
   const history = useHistory();
   const match = useRouteMatch();
   const {
-    clientKey,
     state: {
       user: {isSuperAdmin, authId, email}
     },
-    theme,
+
     userLanguage
   } = useContext(GlobalContext);
 
-  const {CommonlyUsedDict, UnitLookupDict} = useDictionary(clientKey);
+  const {CommonlyUsedDict, UnitLookupDict} = useDictionary();
   // ~~~~~~~~~~~~~~ UNIT LIST ~~~~~~~~~~~~~~ //
   const [loading, setLoading] = useState(true);
   const [institutionList, setInstitutionList] = useState<any>([]);
-  const [allUnits, setAllUnits] = useState<any>([]);
   const [units, setUnits] = useState<any>([]);
 
+  const [addModalShow, setAddModalShow] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [showAddSection, setShowAddSection] = useState(false);
+
+  const [allUnits, setAllUnits] = useState<any>([]);
+
+  const [unitInput, setUnitInput] = useState<any>({});
+  const [assignedUnits, setAssignedUnits] = useState<any>([]);
+
   const [selectedInstitution, setSelectedInstitution] = useState<any>({});
+
+  const [totalNum, setTotalNum] = useState(0);
+
+  const {
+    pageCount,
+    setFirstPage,
+    setLastPage,
+    setTotalPages,
+
+    currentList,
+    allAsProps,
+    setCurrentList
+  } = usePagination(units, loading ? 0 : totalNum);
 
   useEffect(() => {
     fetchSyllabusList();
     fetchInstitutions();
-  }, []);
+  }, [addedSyllabus]);
 
   const getUpdatedList = (items: any[]) => {
-    const updatedList = items
-      ?.filter((item: any) => item.lessons.items.length > 0)
+    const updatedList = items.map((item: any) => {
+      return {
+        ...item,
+        status: item?.status || RoomStatus.ACTIVE,
 
-      .map((item: any) => {
-        return {
-          ...item,
-          status: item?.status || RoomStatus.ACTIVE,
-
-          institutionId: item.institution.id,
-          institutionName: item.institution.name,
-          lessons: {
-            ...(item.lessons || {}),
-            items: item.lessons?.items
-              .map((lesson: any) => {
-                if (lesson?.lesson?.id) {
-                  return {
-                    ...lesson,
-                    index: item?.universalLessonsSeq?.indexOf(lesson?.id)
-                  };
-                }
-              })
-              .sort((a: any, b: any) => (a.index > b.index ? 1 : -1))
-          }
-        };
-      });
+        institutionId: item.institution.id,
+        institutionName: item.institution.name,
+        lessons: {
+          ...(item.lessons || {}),
+          items: item.lessons?.items
+            // .filter(
+            //   (_d: any) =>
+            //     _d.lesson?.status?.toLowerCase() === item?.status?.toLowerCase()
+            // )
+            .map((lesson: any) => {
+              if (lesson?.lesson?.id) {
+                return {
+                  ...lesson,
+                  index: item?.universalLessonsSeq?.indexOf(lesson?.id)
+                };
+              }
+            })
+            .sort((a: any, b: any) => (a.index > b.index ? 1 : -1))
+        }
+      };
+    });
 
     return updatedList;
+  };
+
+  const getAssignedUnits = (list: any[]) => {
+    let selectedSyllabus: any = [];
+    addedSyllabus &&
+      addedSyllabus.length > 0 &&
+      addedSyllabus.forEach((item: any) => {
+        const _item = list.find((unit: any) => item?.syllabusID === unit?.id);
+        _item &&
+          selectedSyllabus.push({
+            ..._item,
+            id: item?.id,
+            syllabusId: item?.syllabusID
+          });
+      });
+
+    return selectedSyllabus;
   };
 
   const fetchSyllabusList = async () => {
@@ -91,10 +142,43 @@ export const UnitList = ({instId}: any) => {
         })
       );
 
-      const updatedList = getUpdatedList(result.data?.listUniversalSyllabi.items);
+      const items = result.data?.listUniversalSyllabi.items;
+      setAllUnits(items);
 
-      setUnits(updatedList);
-      setAllUnits(updatedList);
+      if (isFromLesson) {
+        if (addedSyllabus && addedSyllabus.length > 0) {
+          const assignedUnits = getAssignedUnits(items);
+
+          setAssignedUnits(assignedUnits);
+
+          const filtered = items.filter(
+            (unit: any) =>
+              !addedSyllabus.find((_d: {syllabusID: any}) => _d.syllabusID === unit.id)
+          );
+
+          setUnits([...filtered]);
+        }
+      } else {
+        const updatedList = getUpdatedList(items);
+
+        const totalListPages = Math.floor(updatedList.length / pageCount);
+
+        setTotalPages(
+          totalListPages * pageCount === updatedList.length
+            ? totalListPages
+            : totalListPages + 1
+        );
+
+        setTotalNum(updatedList.length);
+
+        setCurrentList(updatedList);
+
+        setFirstPage(true);
+        setLastPage(!(updatedList.length > pageCount));
+
+        setUnits(updatedList);
+      }
+
       setLoading(false);
     } catch (error) {
       setLoading(false);
@@ -252,8 +336,10 @@ export const UnitList = ({instId}: any) => {
     }
   };
 
+  const list = isFromLesson ? assignedUnits : currentList;
+
   const finalList = orderBy(
-    searchInput.isActive ? filteredList : units,
+    searchInput.isActive ? filteredList : list,
     ['name', 'institutionName'],
     ['asc']
   );
@@ -273,6 +359,208 @@ export const UnitList = ({instId}: any) => {
       setSelectedInstitution({});
     }
   };
+  const updateLessonSequence = async (unitId: string) => {
+    const selectedItem = allUnits?.find((unit: any) => unit.id === unitId);
+    const existingLessonSeq = selectedItem?.universalLessonsSeq || [];
+    setUnits((prevUnits: any) => [...prevUnits, selectedItem]);
+    await API.graphql(
+      graphqlOperation(customMutations.updateUniversalSyllabusLessonSequence, {
+        input: {
+          id: unitId,
+          universalLessonsSeq: [...existingLessonSeq, lessonId]
+        }
+      })
+    );
+  };
+
+  const addLessonToSyllabusLesson = async (unitId: string) => {
+    try {
+      const lessonComponentPlan: any =
+        lessonPlans &&
+        lessonPlans.map((item: any) => {
+          return {
+            disabled: false,
+            open: lessonType !== 'lesson' ? true : false,
+            active: lessonType !== 'lesson' ? true : false,
+            stage: `checkpoint?id=${item.LessonComponentID}`,
+            type: 'survey',
+            displayMode: 'SELF'
+          };
+        });
+      const input = {
+        syllabusID: unitId,
+        lessonID: lessonId,
+        displayData: {
+          breakdownComponent: lessonType
+        },
+        lessonPlan: lessonComponentPlan?.length > 0 ? lessonComponentPlan : [],
+        status: 'ACTIVE'
+      };
+      setSaving(true);
+      const result: any = await API.graphql(
+        graphqlOperation(customMutations.createUniversalSyllabusLesson, {input: input})
+      );
+      const newLesson = result.data?.createUniversalSyllabusLesson;
+      if (newLesson?.id) {
+        updateLessonSequence(unitId);
+        setAddedSyllabus((prevValue: any) => [
+          ...prevValue,
+          {
+            id: newLesson.id,
+            syllabusID: input.syllabusID,
+            lessonID: lessonId
+          }
+        ]);
+        setUnits((prevUnits: any) =>
+          prevUnits.filter((unit: any) => unit?.id !== input.syllabusID)
+        );
+        const selectedUnitData: any =
+          allUnits.find((unit: any) => unit?.id === input.syllabusID) || {};
+        setAssignedUnits((prevList: any) => [
+          ...prevList,
+          {
+            ...selectedUnitData,
+            id: newLesson?.id,
+            syllabusId: input.syllabusID,
+            lessons: {
+              items: [
+                ...(selectedUnitData.lessons.items || []),
+                {
+                  id: newLesson.id,
+                  lesson: newLesson.lesson
+                }
+              ]
+            }
+          }
+        ]);
+
+        setUnitInput({
+          id: '',
+          name: ''
+        });
+
+        setSaving(false);
+      }
+    } catch (error) {
+      console.log(error, 'error');
+    }
+  };
+
+  const postAddSyllabus = async (unitId: string) => {
+    await addLessonToSyllabusLesson(unitId);
+    onAddModalClose();
+  };
+
+  const onAddModalClose = () => {
+    setAddModalShow(false);
+  };
+
+  const [hoveringItem, setHoveringItem] = useState<{name?: string}>({});
+
+  const dataList = map(finalList, (item: any, index: number) => ({
+    no: index + 1,
+    instituteName: isSuperAdmin && item.institution.name,
+    status: <Status status={item.status} useDefault />,
+    unitName: (
+      <UnitName
+        currentSelectedItem={currentSelectedItem}
+        hoveringItem={hoveringItem}
+        searchTerm={searchInput.value}
+        editCurrentUnit={handleView}
+        isLast={finalList.length - 5 <= index}
+        curricular={curricular}
+        setHoveringItem={setHoveringItem}
+        isSuperAdmin={isSuperAdmin}
+        item={item}
+      />
+    ),
+
+    lessonPlan: (
+      <div>
+        {item.lessons?.items?.length > 0 ? (
+          <ol className="list-decimal">
+            {item.lessons?.items?.map(
+              (lesson: {id: string; lesson: {id: string; title: string}}) => {
+                if (lesson) {
+                  return (
+                    <Tooltip
+                      text={`Go to ${lesson.lesson.title}`}
+                      placement="left"
+                      key={lesson.id}>
+                      <li
+                        className="mb-2 cursor-pointer hover:underline hover:theme-text:400"
+                        key={lesson.lesson.id}
+                        onClick={() =>
+                          redirectToLesson(item.institution.id, lesson.lesson.id)
+                        }>
+                        {lesson.lesson.title}
+                      </li>
+                    </Tooltip>
+                  );
+                }
+              }
+            )}
+          </ol>
+        ) : (
+          <p className="">No lesson plan</p>
+        )}
+      </div>
+    ),
+    action: (
+      <CourseAction
+        onDelete={() => handleToggleDelete(item.name, item)}
+        onView={() => handleView(item.id)}
+        item={item}
+        checkIfRemovable={checkIfRemovable}
+      />
+    )
+  }));
+
+  const tableConfig = {
+    headers: [
+      UnitLookupDict[userLanguage]['NO'],
+      UnitLookupDict[userLanguage]['NAME'],
+      isSuperAdmin && UnitLookupDict[userLanguage]['INSTITUTION_NAME'],
+      UnitLookupDict[userLanguage]['LESSONS'],
+      InstitueRomms[userLanguage]['STATUS'],
+      UnitLookupDict[userLanguage]['ACTION']
+    ],
+    dataList,
+    config: {
+      dark: false,
+
+      isFirstIndex: true,
+      headers: {textColor: 'text-white'},
+      dataList: {
+        loading,
+        pagination: {
+          showPagination:
+            !isFromLesson && !searchInput.isActive && totalNum > 0 && isEmpty(filters),
+          config: {
+            allAsProps
+          }
+        },
+        emptyText:
+          searchInput.isActive || selectedInstitution?.id
+            ? CommonlyUsedDict[userLanguage]['NO_SEARCH_RESULT']
+            : UnitLookupDict[userLanguage]['INFO'],
+        customWidth: {
+          no: 'w-12',
+          unitName: 'w-96',
+          lessonPlan: 'w-96',
+          action: 'w0'
+        },
+        maxHeight: 'max-h-196',
+        pattern: 'striped',
+        patternConfig: {firstColor: 'bg-gray-100', secondColor: 'bg-gray-200'}
+      }
+    }
+  };
+
+  const currentSelectedItem =
+    hoveringItem &&
+    hoveringItem?.name &&
+    units?.find((_c: any) => _c.name === hoveringItem?.name);
 
   // ##################################################################### //
   // ############################### OUTPUT ############################## //
@@ -281,51 +569,15 @@ export const UnitList = ({instId}: any) => {
   return (
     <div className="pt-0 flex m-auto justify-center h-full p-8">
       <div className="flex flex-col">
-        {/* <div className="flex justify-between items-center w-full mx-auto">
-          <h3 className="text-lg leading-6 uppercase text-gray-600 w-auto">Units</h3>
-          <div className={`flex justify-end`}>
-            <div
-              className={`flex justify-between w-auto ${
-                isSuperAdmin ? 'md:w-72 lg:w-96' : 'md:w-36 lg:w-48 mr-4'
-              }`}>
-              <SearchInput
-                dataCy="unit-search-input"
-                value={searchInput}
-                onChange={(value) => setSearchInput(value)}
-                onKeyDown={() => onSearch(searchInput, selectedInstitution?.id)}
-                closeAction={removeSearchAction}
-                style={`mr-4 w-auto lg:w-48`}
-              />
-              {isSuperAdmin && (
-                <Selector
-                  placeholder={UnitLookupDict[userLanguage]['SELECT_INSTITUTION']}
-                  list={institutionList}
-                  selectedItem={selectedInstitution?.name}
-                  onChange={instituteChange}
-                  arrowHidden={true}
-                  additionalClass={'w-auto lg:w-48'}
-                  isClearable
-                  onClear={onInstitutionSelectionRemove}
-                />
-              )}
-            </div>
-            {!isSuperAdmin && (
-              <AddButton
-                label={UnitLookupDict[userLanguage]['NEW_UNIT']}
-                onClick={handleAdd}
-              />
-            )}
-          </div>
-        </div> */}
         <SectionTitleV3
-          title={'Units'}
+          title={'Unit List'}
           fontSize="xl"
           fontStyle="semibold"
           extraClass="leading-6 text-gray-900"
           borderBottom
           shadowOff
           withButton={
-            <div className={`w-auto flex gap-x-4 justify-end items-center flex-wrap`}>
+            <div className={`w-auto flex gap-x-4 justify-end items-center`}>
               {isSuperAdmin && (
                 <Selector
                   placeholder={UnitLookupDict[userLanguage]['SELECT_INSTITUTION']}
@@ -338,123 +590,104 @@ export const UnitList = ({instId}: any) => {
                   onClear={onInstitutionSelectionRemove}
                 />
               )}
-              <SearchInput
-                dataCy="unit-search-input"
-                value={searchInput.value}
-                onChange={setSearch}
-                isActive={searchInput.isActive}
-                disabled={loading}
-                onKeyDown={searchRoom}
-                closeAction={removeSearchAction}
-              />
+
+              {showAddSection ? (
+                <div className="flex items-center w-auto m-auto px-2 gap-x-4">
+                  <Selector
+                    selectedItem={unitInput.name}
+                    list={units}
+                    placeholder="Select Unit"
+                    onChange={(val, name, id) => setUnitInput({name, id})}
+                  />
+                  <Buttons
+                    label={BUTTONS[userLanguage]['ADD']}
+                    disabled={saving || !unitInput.id}
+                    onClick={() => addLessonToSyllabusLesson(unitInput.id)}
+                  />
+                  <Buttons
+                    label={BUTTONS[userLanguage]['CANCEL']}
+                    onClick={() => setShowAddSection(false)}
+                  />
+                </div>
+              ) : null}
+              {!showAddSection && (
+                <SearchInput
+                  dataCy="unit-search-input"
+                  value={searchInput.value}
+                  onChange={setSearch}
+                  isActive={searchInput.isActive}
+                  disabled={loading}
+                  onKeyDown={searchRoom}
+                  closeAction={removeSearchAction}
+                />
+              )}
+              {isFromLesson && !isSuperAdmin && !showAddSection && (
+                <Buttons
+                  label={'Add Lesson to Unit'}
+                  onClick={() => setShowAddSection(true)}
+                />
+              )}
 
               {!isSuperAdmin && (
                 <AddButton
                   label={UnitLookupDict[userLanguage]['NEW_UNIT']}
-                  onClick={handleAdd}
+                  onClick={isFromLesson ? () => setAddModalShow(true) : handleAdd}
                 />
               )}
             </div>
           }
         />
 
-        <Filters updateFilter={updateFilter} filters={filters} />
+        <Filters
+          loading={loading}
+          list={units}
+          updateFilter={updateFilter}
+          showingCount={
+            isFromLesson
+              ? null
+              : {
+                  currentPage: allAsProps.currentPage,
+                  lastPage: allAsProps.lastPage,
+                  totalResults: allAsProps.totalResults,
+                  pageCount: allAsProps.pageCount
+                }
+          }
+          filters={filters}
+        />
 
-        {loading ? (
-          <div className="py-20 text-center mx-auto flex justify-center items-center w-full h-48">
-            <div className="w-5/10">
-              <Loader animation />
-            </div>
-          </div>
-        ) : finalList?.length ? (
-          <>
-            <div className="w-full m-auto ">
-              <div className="flex justify-between bg-gray-50 whitespace-nowrap">
-                <div className="w-1/10 px-8 py-4 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>{UnitLookupDict[userLanguage]['NO']}</span>
-                </div>
-                <div
-                  className={`w-4/10 px-8 py-4 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider`}>
-                  <span>{UnitLookupDict[userLanguage]['NAME']}</span>
-                </div>
-                {isSuperAdmin && (
-                  <div className="w-2/10 px-8 py-4 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider truncate">
-                    <span>{UnitLookupDict[userLanguage]['INSTITUTION_NAME']}</span>
-                  </div>
-                )}
-                <div
-                  className={`${
-                    isSuperAdmin ? 'w-2/10' : 'w-4/10'
-                  } px-8 py-4 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider`}>
-                  <span>{UnitLookupDict[userLanguage]['LESSONS']}</span>
-                </div>
-                <th className="bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider w-1/10 flex items-center ">
-                  {InstitueRomms[userLanguage]['STATUS']}
-                </th>
-                <div className="w-1/10 m-auto py-4 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span className="w-auto">{UnitLookupDict[userLanguage]['ACTION']}</span>
-                </div>
-              </div>
-            </div>
+        <Table {...tableConfig} />
 
-            <div className="mb-8 w-full m-auto flex-1 overflow-y-auto">
-              {finalList.map((unit: any, index: number) => {
-                return (
-                  <ErrorBoundary
-                    authId={authId}
-                    email={email}
-                    componentName="UnitListRow"
-                    key={`unit_list_row_${index}`}
-                    fallback={<h1 className="hidden"> </h1>}>
-                    <UnitListRow
-                      key={`unit_list_row_${index}`}
-                      index={index}
-                      searchInput={searchInput.value}
-                      item={unit}
-                      checkIfRemovable={checkIfRemovable}
-                      handleToggleDelete={handleToggleDelete}
-                      editCurrentUnit={handleView}
-                      isSuperAdmin={isSuperAdmin}
-                      redirectToInstitution={() =>
-                        redirectToInstitution(unit.institution?.id)
-                      }
-                      redirectToLesson={(lessonId: string) =>
-                        redirectToLesson(unit.institution?.id, lessonId)
-                      }
-                    />
-                  </ErrorBoundary>
-                );
-              })}
-            </div>
-            {deleteModal.show && (
-              <ModalPopUp
-                closeAction={handleToggleDelete}
-                saveAction={deleting ? () => {} : deleteModal.action}
-                saveLabel={deleting ? 'DELETING...' : 'CONFIRM'}
-                cancelLabel="CANCEL"
-                loading={deleting}
-                message={deleteModal.message}
+        {addModalShow && (
+          <Modal
+            showHeader
+            showFooter={false}
+            showHeaderBorder
+            title={'Add Lesson to Syllabus'}
+            closeOnBackdrop
+            closeAction={onAddModalClose}>
+            <div
+              className="min-w-180 lg:min-w-256"
+              style={{
+                height: 'calc(100vh - 150px)'
+              }}>
+              <UnitFormComponent
+                isInModal={true}
+                instId={instId}
+                postAddSyllabus={postAddSyllabus}
+                onCancel={() => setAddModalShow(false)}
               />
-            )}
-          </>
-        ) : (
-          <>
-            {!isSuperAdmin && (
-              <div className="flex justify-center mt-8">
-                <AddButton
-                  className="mx-4"
-                  label={UnitLookupDict[userLanguage]['NEW_UNIT']}
-                  onClick={handleAdd}
-                />
-              </div>
-            )}
-            <p className="text-center p-16">
-              {' '}
-              {searchInput.isActive || selectedInstitution?.id
-                ? CommonlyUsedDict[userLanguage]['NO_SEARCH_RESULT']
-                : UnitLookupDict[userLanguage]['INFO']}
-            </p>
-          </>
+            </div>
+          </Modal>
+        )}
+        {deleteModal.show && (
+          <ModalPopUp
+            closeAction={handleToggleDelete}
+            saveAction={deleting ? () => {} : deleteModal.action}
+            saveLabel={deleting ? 'DELETING...' : 'CONFIRM'}
+            cancelLabel="CANCEL"
+            loading={deleting}
+            message={deleteModal.message}
+          />
         )}
       </div>
     </div>

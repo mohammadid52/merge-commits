@@ -1700,3 +1700,11 @@ $polka-dot-size: 0.8px;
     background-color: white;
   }
 }
+
+.isDragging {
+  cursor: grabbing;
+}
+
+.shadowNoneOnFocus:focus {
+  box-shadow: none;
+}

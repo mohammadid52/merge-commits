@@ -1,9 +1,9 @@
-import React, {useState, useRef, useContext, useEffect} from 'react';
-import {IoIosAdd} from 'react-icons/io';
 import {getAsset} from 'assets';
 import {GlobalContext} from 'contexts/GlobalContext';
-import {getImageFromS3} from 'utilities/services';
-import {initials, getInitialsFromString, stringToHslColor} from 'utilities/strings';
+import React, {useContext, useRef, useState} from 'react';
+import {IoIosAdd} from 'react-icons/io';
+import {getInitialsFromString, initials, stringToHslColor} from 'utilities/strings';
+import Label from './Label';
 
 interface selectorProps {
   list?: {id: number; name: string; avatar?: string}[];
@@ -18,19 +18,25 @@ interface selectorProps {
   searchStatus?: boolean;
   searchCallback?: React.Dispatch<React.SetStateAction<boolean>>;
   creatable?: boolean;
+  isRequired?: boolean;
   creatableLabel?: string;
   onCreate?: () => void;
   dataCy?: string;
+  label?: string;
+  width?: string;
 }
 
 const SearchSelectorWithAvatar = (props: selectorProps) => {
   const {
     list,
+    label,
+    width = 'w-full',
     selectedItem,
     btnClass,
     arrowHidden,
     placeholder,
     onChange,
+    isRequired = false,
     imageFromS3 = true,
     fetchStudentList,
     clearFilteredStudents,
@@ -48,7 +54,6 @@ const SearchSelectorWithAvatar = (props: selectorProps) => {
 
   const [showList, setShowList] = useState(false);
   const currentRef: any = useRef(null);
-  const [teacherList, setTeacherList] = useState([]);
   const {theme, clientKey} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
 
@@ -103,51 +108,19 @@ const SearchSelectorWithAvatar = (props: selectorProps) => {
     }
   };
 
-  const getList = (listData: any) => {
-    let modifiedlist: any = [];
-
-    listData.forEach(async (item: any) => {
-      const imagePath = item?.image;
-
-      const image = await (imagePath !== null ? getImageFromS3(imagePath) : null);
-
-      const modifiedItem = {...item, avatar: image};
-
-      modifiedlist.push(modifiedItem);
-    });
-
-    return modifiedlist;
-  };
-
-  const filterListBySearchQuery = (nameSearch: string, list: any) => {
-    return list.filter((nameObj: any) => nameObj.name.includes(nameSearch));
-  };
-
-  // React.useEffect(() => {
-  //   if (list && list.length > 0) {
-  //     const filteredList =
-  //       searchTerm && searchTerm.length > 2
-  //         ? filterListBySearchQuery(searchTerm, list)
-  //         : list;
-  //     if (imageFromS3) {
-  //       const modifiedlist = getList(filteredList);
-  //       setTeacherList(modifiedlist);
-  //     } else {
-  //       setTeacherList(filteredList);
-  //     }
-  //   }
-  // }, [list, searchTerm, imageFromS3]);
-
   return (
     <div className="relative" ref={currentRef} onFocus={() => onFocus()}>
-      <span className="inline-block w-full h-full rounded-full shadow-sm">
+      {label && <Label dark={false} label={label} isRequired={isRequired} />}
+      <span className={`inline-block ${width} h-full rounded-full shadow-sm`}>
         <button
           data-cy={`${dataCy}-button`}
           type="button"
           aria-haspopup="listbox"
           aria-expanded="true"
           aria-labelledby="listbox-label"
-          className={`flex items-center cursor-pointer relative w-full h-full rounded-full  border-0 border-gray-400 bg-white pl-3 py-2 text-left focus:outline-none transition ease-in-out duration-150 sm:text-sm sm:leading-5 ${
+          className={` flex focus:outline-none hover:theme-bg:200 hover:theme-border:400 hover:theme-text:400 focus:ring-2 focus:ring-${
+            themeColor === 'iconoclastIndigo' ? 'indigo' : 'blue'
+          }-600 focus:border-transparent  relative items-center cursor-pointer ${width} h-full rounded-full  border-0 bg-white px-4 pr-0 py-2 justify-between text-left transition ease-in-out duration-150 sm:text-sm sm:leading-5 ${
             btnClass ? btnClass : ''
           }`}>
           {/* TOGGLE SEARCH FIELD */}
@@ -155,7 +128,8 @@ const SearchSelectorWithAvatar = (props: selectorProps) => {
             <input
               data-cy={`${dataCy}-input`}
               autoFocus
-              className="p-0 border-none focus:border-transparent focus:outline-none"
+              className="p-0 border-none focus:border-transparent active:border-transparent
+               bg-transparent shadowNoneOnFocus text-base focus:outline-none"
               onChange={handleSearchChange}
               id={`searchForStudent`}
               type={`text`}
