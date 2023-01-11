@@ -579,7 +579,7 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
       setFilteredList([]);
     } else {
       setSearchInput({...searchInput, isActive: true});
-      const filtered = currentList.filter(
+      const filtered = totalUserList.filter(
         (_d: any) => filterName.toLowerCase() === getUserRoleString(_d.role).toLowerCase()
       );
       setFilteredList(filtered);
