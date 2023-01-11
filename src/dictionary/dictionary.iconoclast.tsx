@@ -365,7 +365,7 @@ const manageusersDict: any = {
       STATUS: 'Status',
       ACTIONS: 'Actions'
     },
-    ADD_NEW: 'Add New Person'
+    ADD_NEW: 'Add New User'
   },
   ES: {
     TITLE: 'GESTIÓN DE USUARIOS',
@@ -2749,7 +2749,7 @@ const ProfileCheckpointlookupDict: any = {
 
 const RegistrationDict: any = {
   EN: {
-    title: 'Registration',
+    title: 'New User Registration',
     subtitle: 'Add new user to the list',
     requiredfield: 'Required fields',
     firstname: 'First Name',
@@ -2920,7 +2920,7 @@ const UserLookupDict: any = {
     action: 'Actions',
     noresult: 'No Results',
     button: {
-      add: 'Add New Person'
+      add: 'Add New User'
     }
   },
   ES: {
@@ -2951,7 +2951,7 @@ const UserLookupWithTokenDict: any = {
     action: 'Actions',
     noresult: 'No Results',
     button: {
-      add: 'Add New Person'
+      add: 'Add New User'
     }
   },
   ES: {
