@@ -56,7 +56,7 @@ const BreadcrumsTitles: any = {
     CURRICULARBUILDER: 'New Course',
     CURRICULUM: 'Course',
     COURSES: 'Courses',
-    UNITS: 'Unit Manager',
+    UNITS: 'Units',
     CLASSROOM_CREATION: 'Classroom Creation',
     CLASSROOMS: 'Classrooms',
     CLASSROOM: 'Classroom',
@@ -76,10 +76,10 @@ const BreadcrumsTitles: any = {
     AddChekpoint: 'Add Checkpoint',
     EditTopic: 'Edit Topic',
     AddExistingCheckpoint: 'Add Existing Checkpoint',
-    STAFF: 'Staff',
+    STAFF: 'Staff Manager',
     PeopleManagment: 'People Management',
     AddNewUser: 'Add New User',
-    USERS: 'Users',
+    USERS: 'User Manager',
     UserInfo: 'User Information',
     LESSONS: 'Lessons',
     LESSONPLANBUILDER: 'Lesson Plan Builder',
@@ -915,7 +915,7 @@ const Institute_info: any = {
     SERVICE_PROVIDER: 'Service Provider',
     TABS: {
       SERVICE_PROVIDER: 'Service Providers',
-      STAFF: 'Staff',
+      STAFF: 'Staff Manager',
       CLASS_MANAGER: 'Classroom Builder',
       LIVE_CLASS_ROOM: 'Live Classroom',
       COURSE_MANAGER: 'Course Builder',
@@ -1242,7 +1242,7 @@ const Institute_class: any = {
 };
 const InstitueCurriculum: any = {
   EN: {
-    TITLE: 'Course List',
+    TITLE: 'Courses',
     BUTTON: {
       ADD: 'New Course'
     },
@@ -1250,7 +1250,7 @@ const InstitueCurriculum: any = {
     NAME: 'Course Name',
     INSTITUTION_NAME: 'Institution Name',
     COURSE_TYPE: 'Course Type',
-    UNITS: 'Course Units',
+    UNITS: 'Units',
     ACTION: 'Actions',
     VIEW: 'View',
     INFO: 'This institute does not have any course. Please create a new course.',
@@ -1280,7 +1280,7 @@ const InstitueCurriculum: any = {
 
 const InstitueRomms: any = {
   EN: {
-    TITLE: 'CLASSROOMS',
+    TITLE: 'Classroom List',
     NO: 'No.',
     CLASSROOMS_NAME: 'Classroom Name',
     CLASS_NAME: 'Class Name',
@@ -1766,7 +1766,7 @@ const RoomEDITdict: any = {
       selectteacher: 'Please select a teacher for the classroom.',
       selectCurriculum: 'Please select a course for the classroom.',
       selectclass: 'Please select a class for the classroom.',
-      mxstudent: 'Please set Max students limit for the Classroom.',
+      mxstudent: 'Please set Max students limit for the classroom.',
       oneclass: 'One Classroom can allow max. 30 students.',
       alreadyexist: 'This Classroom name is already exist, please add another name.',
       classupdate: 'Classroom details has been updated.',
@@ -2749,7 +2749,7 @@ const ProfileCheckpointlookupDict: any = {
 
 const RegistrationDict: any = {
   EN: {
-    title: 'New User Registration',
+    title: 'Register New User',
     subtitle: 'Add new user to the list',
     requiredfield: 'Required fields',
     firstname: 'First Name',
@@ -3710,10 +3710,10 @@ const UnitLookupDict: any = {
       'NOTE: Please select course and then modules to add current session to that module.',
     NO: 'No.',
     CURRICULUMNAME: 'Course Name',
-    NAME: 'Unit Name',
+    NAME: 'Name',
     INSTITUTION_NAME: 'Institution Name',
     UNITNAME: 'Module Name',
-    LESSONS: 'Lesson Plan',
+    LESSONS: 'Lessons',
     STATUS: 'Status',
     ACTION: 'Action',
     NOTADDED: ' This session is not added to any course or modules.',
@@ -3733,11 +3733,9 @@ const UnitLookupDict: any = {
   ES: {
     HEADING: 'TBD',
     NOTE: 'TBD',
-    NAME: 'TBD',
     NO: 'TBD',
     CURRICULUMNAME: 'TBD',
     INSTITUTION_NAME: 'TBD',
-    LESSONS: 'TBD',
     UNITNAME: 'TBD',
     STATUS: 'TBD',
     ACTION: 'TBD',
@@ -3970,7 +3968,7 @@ const LessonEditDict: any = {
 const LessonsListDict: any = {
   EN: {
     TITLE: 'LESSONS LIST',
-    HEADING: 'Lessons List',
+    HEADING: 'Lessons',
     SUBTITLE: 'All Lessons List',
     SORTBY: 'Sort By',
     NO: 'No.',
