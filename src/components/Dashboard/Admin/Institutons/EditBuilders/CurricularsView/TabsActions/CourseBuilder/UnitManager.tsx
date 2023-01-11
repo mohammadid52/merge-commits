@@ -363,6 +363,7 @@ const UnitManager = ({
     }
   };
 
+  //
   const dict = CourseBuilderDict[userLanguage]['TABLE_HEADS'];
 
   const dataList = map(selectedSyllabusList, (item, idx) => ({
