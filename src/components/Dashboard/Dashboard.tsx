@@ -49,35 +49,39 @@ const conditionalRender = (children: JSX.Element, condition: boolean) => {
 };
 
 export const reorderSyllabus = (syllabusArray: any[], sequenceArray: any[]) => {
+  const filteredSyllabusArray = syllabusArray.filter((d) => d.unit !== null);
+
   let getSyllabusInSequence =
     sequenceArray && sequenceArray.length > 0
       ? sequenceArray?.reduce((acc: any[], syllabusID: string) => {
           return [
             ...acc,
-            syllabusArray.find((syllabus: any) => syllabus.unitId === syllabusID)
+            filteredSyllabusArray.find((syllabus: any) => syllabus.unitId === syllabusID)
           ];
         }, [])
-      : syllabusArray;
+      : filteredSyllabusArray;
 
   let mapSyllabusToSequence =
     sequenceArray && sequenceArray.length > 0
       ? getSyllabusInSequence
-          ?.map((syllabus: any) => ({
-            ...syllabus,
-            ...syllabus.unit,
-            lessons: {
-              ...syllabus.unit.lessons,
-              items:
-                syllabus?.unit.lessons?.items?.length > 0
-                  ? syllabus.unit.lessons.items
-                      .map((t: any) => {
-                        let index = syllabus?.universalLessonsSeq?.indexOf(t.id);
-                        return {...t, index};
-                      })
-                      .sort((a: any, b: any) => (a.index > b.index ? 1 : -1))
-                  : []
-            }
-          }))
+          ?.map((syllabus: any) => {
+            return {
+              ...syllabus,
+              ...syllabus.unit,
+              lessons: {
+                ...syllabus?.unit?.lessons,
+                items:
+                  syllabus?.unit.lessons?.items?.length > 0
+                    ? syllabus?.unit.lessons.items
+                        .map((t: any) => {
+                          let index = syllabus?.universalLessonsSeq?.indexOf(t.id);
+                          return {...t, index};
+                        })
+                        .sort((a: any, b: any) => (a.index > b.index ? 1 : -1))
+                    : []
+              }
+            };
+          })
           .map(({unit, ...rest}: any) => rest)
       : getSyllabusInSequence;
 
