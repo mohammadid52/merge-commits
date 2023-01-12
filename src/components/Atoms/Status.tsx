@@ -8,7 +8,7 @@ const Status = ({status}: StatusProps) => {
   const capitalizedStatus = status?.toUpperCase();
   return (
     <span
-      className={`inline-flex items-center px-2.5 py-0.5 rounded-md text-sm font-medium  w-auto ${
+      className={`inline-flex uppercase items-center px-2.5 py-0.5 rounded-md text-sm font-medium  w-auto ${
         capitalizedStatus === 'INACTIVE'
           ? 'bg-yellow-100 text-yellow-800'
           : capitalizedStatus === 'DROPPED'
