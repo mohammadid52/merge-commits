@@ -31,6 +31,8 @@ const TextBlock = (props: IFormBlockProps) => {
     }
   };
 
+  const studentValue = getDataValue(inputID) || value;
+
   return (
     <div
       id={`${inputID}_for_error`}
@@ -47,7 +49,7 @@ const TextBlock = (props: IFormBlockProps) => {
         name={'text'}
         type={'text'}
         onChange={isInLesson && isStudent ? (e) => onChange(e) : noop}
-        value={isInLesson ? getDataValue(inputID) : value}
+        value={isInLesson ? studentValue : value}
       />
     </div>
   );

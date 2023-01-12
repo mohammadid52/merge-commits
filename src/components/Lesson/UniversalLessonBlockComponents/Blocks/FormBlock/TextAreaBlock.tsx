@@ -3,7 +3,7 @@ import {GlobalContext} from 'contexts/GlobalContext';
 import useInLessonCheck from 'customHooks/checkIfInLesson';
 import useStudentDataValue from 'customHooks/studentDataValue';
 import {IFormBlockProps} from 'interfaces/UniversalLessonInterfaces';
-import React, {useContext} from 'react';
+import React, {useContext, useState} from 'react';
 import {FormLabel} from '../FormBlock';
 
 const TextAreaBlock = (props: IFormBlockProps) => {
@@ -23,11 +23,12 @@ const TextAreaBlock = (props: IFormBlockProps) => {
 
   const onChange = (e: any) => {
     const {id, value} = e.target;
-
     if (isInLesson) {
       setDataValue(id, [value]);
     }
   };
+
+  const studentValue = getDataValue(inputID) || value;
 
   return (
     <div
@@ -43,7 +44,7 @@ const TextAreaBlock = (props: IFormBlockProps) => {
         } placeholder-gray-800`}
         name="story"
         onChange={isInLesson && isStudent ? (e) => onChange(e) : () => {}}
-        value={isInLesson ? getDataValue(inputID) : value}
+        value={isInLesson ? studentValue : value}
       />
     </div>
   );
