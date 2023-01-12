@@ -265,6 +265,7 @@ const Table = ({
                     [0, 1, 2, 3].map((item: any, idx: number) => (
                       <LoadingItem
                         idx={item}
+                        key={item}
                         headers={_headers}
                         customWidth={_customWidth}
                         config={config}

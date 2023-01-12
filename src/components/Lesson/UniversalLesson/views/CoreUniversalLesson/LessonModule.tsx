@@ -275,8 +275,8 @@ const LessonModule = ({currentLesson}: {currentLesson: UniversalLesson}) => {
   const [open, setOpen] = useState(true);
   const tabs = [
     {name: 'Objectives', current: true},
-    {name: 'Resources', current: false},
-    {name: 'Evidences', current: false}
+    {name: 'Evidences', current: false},
+    {name: 'Resources', current: false}
   ];
   const [selectedMeasurements, setSelectedMeasurements] = useState([]);
   const [checkedEvidence, setCheckedEvidence] = useState([]);
@@ -286,7 +286,7 @@ const LessonModule = ({currentLesson}: {currentLesson: UniversalLesson}) => {
   const [onObjectivesTab, onResourcesTab, onEvidencesTab] = helpers;
 
   const dataList = map(currentLesson?.lessonPlan, (lesson) => ({
-    name: lesson?.title,
+    name: lesson?.label,
     time: `${lesson?.estTime} min`,
     instructions: lesson?.description || '--'
   }));
