@@ -283,7 +283,7 @@ const LessonModule = ({currentLesson}: {currentLesson: UniversalLesson}) => {
   const [selectedCurriculumList, setSelectedCurriculumList] = useState([]);
 
   const {curTab, setCurTab, helpers} = useTabs(tabs);
-  const [onObjectivesTab, onResourcesTab, onEvidencesTab] = helpers;
+  const [onObjectivesTab, onEvidencesTab, onResourcesTab] = helpers;
 
   const dataList = map(currentLesson?.lessonPlan, (lesson) => ({
     name: lesson?.label,
