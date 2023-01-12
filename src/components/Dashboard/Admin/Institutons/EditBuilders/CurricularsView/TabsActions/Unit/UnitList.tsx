@@ -456,6 +456,11 @@ export const UnitList = ({
 
   const [hoveringItem, setHoveringItem] = useState<{name?: string}>({});
 
+  const currentSelectedItem =
+    hoveringItem &&
+    hoveringItem?.name &&
+    allUnits?.find((_c: any) => _c.name === hoveringItem?.name);
+
   const dataList = map(finalList, (item: any, index: number) => ({
     no: getIndex(index),
     instituteName: isSuperAdmin && item.institution.name,
@@ -555,11 +560,6 @@ export const UnitList = ({
       }
     }
   };
-
-  const currentSelectedItem =
-    hoveringItem &&
-    hoveringItem?.name &&
-    units?.find((_c: any) => _c.name === hoveringItem?.name);
 
   // ##################################################################### //
   // ############################### OUTPUT ############################## //

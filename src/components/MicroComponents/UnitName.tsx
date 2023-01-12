@@ -17,8 +17,7 @@ const UnitName = ({
   currentSelectedItem,
   isLast,
   searchTerm,
-  setHoveringItem,
-  isSuperAdmin
+  setHoveringItem
 }: any) => {
   const {authId, email} = useAuth();
 
