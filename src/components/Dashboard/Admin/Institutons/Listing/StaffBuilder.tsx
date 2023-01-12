@@ -316,7 +316,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
 
     setCurrentList(staffLists);
 
-    const totalListPages = Math.floor(staffLists.length / totalNum);
+    const totalListPages = Math.floor(staffLists.length / pageCount);
 
     setTotalPages(
       totalListPages * pageCount === staffLists.length

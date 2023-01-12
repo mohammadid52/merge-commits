@@ -9,11 +9,13 @@ const AnimatedContainer = ({
   customAnimation,
   fixWidth = false,
   delay = '0s',
-  zIndex
+  zIndex,
+  style = {}
 }: {
   show: boolean;
   fixWidth?: boolean;
   zIndex?: number;
+  style?: any;
   className?: string;
   delay?: string;
   customAnimation?: {show: string; hide: string};
@@ -43,7 +45,7 @@ const AnimatedContainer = ({
   };
   return (
     <div
-      style={{transitionDelay: delay}}
+      style={{transitionDelay: delay, ...style}}
       className={`
         ${genAnimation()}
         transition-all  transform
