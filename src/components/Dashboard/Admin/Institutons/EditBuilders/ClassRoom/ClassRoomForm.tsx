@@ -160,6 +160,10 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
   const [teachersList, setTeachersList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [curricularList, setCurricularList] = useState([]);
+  console.log(
+    '🚀 ~ file: ClassRoomForm.tsx:163 ~ ClassRoomForm ~ curricularList',
+    curricularList
+  );
   const [allCurricular, setAllCurricular] = useState([]);
 
   const [prevName, setPrevName] = useState('');
@@ -411,6 +415,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
   };
 
   const onStatusUpdate = (curricularList: any[], status: RoomStatus) => {
+    console.log('🚀 ~ file: ClassRoomForm.tsx:418 ~ onStatusUpdate ~ status', status);
     const copy = [...curricularList];
     const filtered: any[] = copy.filter(
       (d: {status: RoomStatus}) =>
@@ -444,7 +449,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
       );
       setAllCurricular([...sortedList]);
 
-      onStatusUpdate(sortedList, roomData.status as RoomStatus);
+      onStatusUpdate(sortedList, (roomData?.status || RoomStatus.ACTIVE) as RoomStatus);
     } catch (err) {
       logError(err, {authId, email}, 'ClassRoomForm.tsx @getCurricularList');
       console.error(err, 'err inside catch');
