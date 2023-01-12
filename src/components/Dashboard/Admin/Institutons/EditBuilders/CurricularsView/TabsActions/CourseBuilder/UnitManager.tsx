@@ -22,6 +22,7 @@ import Loader from 'atoms/Loader';
 import {map} from 'lodash';
 import ModalPopUp from 'molecules/ModalPopUp';
 import {reorder} from 'utilities/strings';
+import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 
 interface UIMessages {
   show: boolean;
@@ -413,6 +414,8 @@ const UnitManager = ({
     }
   };
 
+  const isInactive = courseData?.status === RoomStatus.INACTIVE;
+
   return (
     <div className="">
       {/* *************** SECTION HEADER ************ */}
@@ -427,21 +430,26 @@ const UnitManager = ({
         withButton={
           <div className="lg:w-7/10 w-full flex gap-x-4 justify-end items-center">
             <Selector
-              selectedItem={selectedSyllabus.value}
-              list={dropdownSyllabusList}
+              selectedItem={isInactive ? 'Course inactive' : selectedSyllabus.value}
+              list={allSyllabusList}
               placeholder={CourseBuilderDict[userLanguage]['SELECT_UNIT']}
               onChange={handleSelectSyllabus}
               additionalClass="w-auto "
               width="w-96"
+              disabled={isInactive}
             />
 
-            <Buttons
-              label={BUTTONS[userLanguage]['ADD']}
-              onClick={addNewSyllabusToCourse}
-              disabled={!Boolean(selectedSyllabus.id)}
-            />
+            <AnimatedContainer className="w-auto" show={Boolean(selectedSyllabus.id)}>
+              {Boolean(selectedSyllabus.id) && (
+                <Buttons
+                  label={BUTTONS[userLanguage]['ADD']}
+                  onClick={addNewSyllabusToCourse}
+                />
+              )}
+            </AnimatedContainer>
 
             <AddButton
+              disabled={isInactive}
               label={CourseBuilderDict[userLanguage]['ADD_NEW_UNIT']}
               onClick={createNewUnit}
             />
@@ -472,6 +480,14 @@ const UnitManager = ({
           message={deleteModal.message}
         />
       )}
+
+      <AnimatedContainer show={isInactive}>
+        {isInactive && (
+          <p className="text-gray-500 text-sm text-center">
+            This course is inactive. Adding units to this course has been disabled
+          </p>
+        )}
+      </AnimatedContainer>
       {warnModal2.show && (
         <ModalPopUp
           closeAction={closeLessonAction}

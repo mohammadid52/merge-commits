@@ -154,7 +154,7 @@ const PostComment = ({
     });
   };
 
-  const {image} = useAuth();
+  const {image, firstName, lastName} = useAuth();
 
   return (
     <div className="relative flex items-center self-center w-full max-w-xl p-4 overflow-hidden text-gray-600 focus-within:text-gray-400">
@@ -165,7 +165,12 @@ const PostComment = ({
           src={getImageFromS3Static(image)}
         />
       ) : (
-        <Placeholder className="mr-4" size="w-10 h-10" />
+        <Placeholder
+          firstName={firstName}
+          lastName={lastName}
+          className="mr-4"
+          size="w-10 h-10"
+        />
       )}
       <span className="absolute inset-y-0 right-0 flex items-center pr-6 w-auto">
         <button

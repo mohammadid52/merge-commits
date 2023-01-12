@@ -1,11 +1,10 @@
-import React, {useContext, useEffect, useState} from 'react';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import {useLocation, useHistory, useRouteMatch, useParams} from 'react-router';
-import {IoArrowUndoCircleOutline} from 'react-icons/io5';
+import React, {useContext, useEffect, useState} from 'react';
 import {BiNotepad} from 'react-icons/bi';
-import {MdSpeakerNotes} from 'react-icons/md';
-import {HiPencil} from 'react-icons/hi';
 import {FiUserCheck} from 'react-icons/fi';
+import {HiPencil} from 'react-icons/hi';
+import {MdSpeakerNotes} from 'react-icons/md';
+import {useHistory, useLocation, useParams, useRouteMatch} from 'react-router';
 
 import * as customQueries from 'customGraphql/customQueries';
 
@@ -13,20 +12,20 @@ import {languageList} from 'utilities/staticData';
 import {createFilterToFetchSpecificItemsOnly} from 'utilities/strings';
 
 import BreadCrums from 'atoms/BreadCrums';
-import SectionTitle from 'atoms/SectionTitle';
 import Modal from 'atoms/Modal';
 import PageWrapper from 'atoms/PageWrapper';
+import SectionTitle from 'atoms/SectionTitle';
 import Tooltip from 'atoms/Tooltip';
 import UnderlinedTabs from 'atoms/UnderlinedTabs';
 
-import SyllabusList from './TabsListing/SyllabusList';
-import LearningObjective from './TabsListing/LearningObjective';
-import CheckpointList from './TabsListing/CheckpointList';
+import {RoomStatus} from 'API';
+import {getAsset} from 'assets';
 import {GlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
-import {goBackBreadCrumb} from 'utilities/functions';
-import {getAsset} from 'assets';
 import EditCurricular from '../EditCurricular';
+import CheckpointList from './TabsListing/CheckpointList';
+import LearningObjective from './TabsListing/LearningObjective';
+import SyllabusList from './TabsListing/SyllabusList';
 
 interface CurricularViewProps {
   tabProps?: any;
@@ -35,6 +34,7 @@ interface InitialData {
   id: string;
   name: string;
   description: string;
+  status: RoomStatus;
   summary: string;
   objectives: string;
   languages: {id: string; name: string; value: string}[];
@@ -70,6 +70,7 @@ const CurricularView = (props: CurricularViewProps) => {
     id: '',
     name: '',
     image: '',
+    status: RoomStatus.ACTIVE,
     institute: {
       id: '',
       name: '',
@@ -149,7 +150,13 @@ const CurricularView = (props: CurricularViewProps) => {
       title: curricularviewdict[userLanguage]['TAB']['INFORMATION'],
       icon: <FiUserCheck />,
       active: false,
-      content: <CheckpointList curricularId={currID} institutionId={institutionId} />
+      content: (
+        <CheckpointList
+          status={curricularData.status}
+          curricularId={currID}
+          institutionId={institutionId}
+        />
+      )
     }
   ];
 

@@ -10,7 +10,11 @@ const StudentName = ({user, item, onClick}: {item: any; user: any; onClick: any}
         {item.student.avatar ? (
           <img src={item.student.avatar} className="h-8 w-8 rounded-full" />
         ) : (
-          <Placeholder size="h-8 w-8" />
+          <Placeholder
+            lastName={item.student.lastName}
+            firstName={item.student.firstName}
+            size="h-8 w-8"
+          />
         )}
       </div>
       <div className="ml-4">

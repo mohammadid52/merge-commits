@@ -74,7 +74,9 @@ const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
   }
 
   const [passToggle, setPassToggle] = useState(false);
-  const disabledClass = disabled ? 'cursor-not-allowed bg-gray-200' : '';
+  const disabledClass = disabled
+    ? 'cursor-not-allowed pointer-events-none bg-gray-200'
+    : '';
 
   const transition = 'all 300ms ease-in-out';
   return (

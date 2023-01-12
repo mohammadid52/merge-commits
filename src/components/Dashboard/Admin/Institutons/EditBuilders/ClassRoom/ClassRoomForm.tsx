@@ -33,6 +33,7 @@ import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import {createFilterToFetchSpecificItemsOnly, getFilterORArray} from 'utilities/strings';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
+import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 
 export const fetchSingleCoTeacher = async (roomId: string) => {
   const result: any = await API.graphql(
@@ -159,6 +160,10 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
   const [teachersList, setTeachersList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [curricularList, setCurricularList] = useState([]);
+  console.log(
+    '🚀 ~ file: ClassRoomForm.tsx:163 ~ ClassRoomForm ~ curricularList',
+    curricularList
+  );
   const [allCurricular, setAllCurricular] = useState([]);
 
   const [prevName, setPrevName] = useState('');
@@ -410,6 +415,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
   };
 
   const onStatusUpdate = (curricularList: any[], status: RoomStatus) => {
+    console.log('🚀 ~ file: ClassRoomForm.tsx:418 ~ onStatusUpdate ~ status', status);
     const copy = [...curricularList];
     const filtered: any[] = copy.filter(
       (d: {status: RoomStatus}) =>
@@ -425,8 +431,11 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
     setCurricularList([...selectorList]);
   };
 
+  const [loadingCurricular, setLoadingCurricular] = useState(false);
+
   const getCurricularList = async (allInstiId: string[]) => {
     try {
+      setLoadingCurricular(true);
       const list: any = await API.graphql(
         graphqlOperation(queries.listCurricula, {
           filter: {or: getFilterORArray(allInstiId, 'institutionID')}
@@ -440,7 +449,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
       );
       setAllCurricular([...sortedList]);
 
-      onStatusUpdate(sortedList, roomData.status as RoomStatus);
+      onStatusUpdate(sortedList, (roomData?.status || RoomStatus.ACTIVE) as RoomStatus);
     } catch (err) {
       logError(err, {authId, email}, 'ClassRoomForm.tsx @getCurricularList');
       console.error(err, 'err inside catch');
@@ -449,6 +458,8 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
         message: RoomEDITdict[userLanguage]['messages']['unablecurricular'],
         isError: true
       });
+    } finally {
+      setLoadingCurricular(false);
     }
   };
 
@@ -1274,9 +1285,14 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
               </div>
               <div className="px-3 py-4">
                 <Selector
-                  selectedItem={curricular.value}
+                  selectedItem={
+                    status === RoomStatus.INACTIVE
+                      ? 'Classroom inactive'
+                      : curricular.value
+                  }
                   placeholder={RoomEDITdict[userLanguage]['CURRICULUM_PLACEHOLDER']}
                   label={RoomEDITdict[userLanguage]['CURRICULUM_LABEL']}
+                  disabled={loadingCurricular || status === RoomStatus.INACTIVE}
                   labelTextClass={'text-xs'}
                   list={curricularList}
                   isRequired
@@ -1285,7 +1301,12 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
               </div>
               <div className="px-3 py-4">
                 <Selector
-                  selectedItem={roomData.activeUnit.name}
+                  disabled={unitsLoading || status === RoomStatus.INACTIVE}
+                  selectedItem={
+                    status === RoomStatus.INACTIVE
+                      ? 'Classroom inactive'
+                      : roomData.activeUnit.name
+                  }
                   placeholder={RoomEDITdict[userLanguage]['ACTIVE_UNIT_PLACEHOLDER']}
                   label={RoomEDITdict[userLanguage]['ACTIVE_UNIT_LABEL']}
                   labelTextClass={'text-xs'}
@@ -1303,22 +1324,23 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
             <div>
               <div className="grid grid-cols-2">
                 <div className="px-3 py-4">
-                  <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
-                    {RoomEDITdict[userLanguage]['TEACHER_LABEL']}{' '}
-                    <span className="text-red-500"> *</span>
-                  </label>
                   <SelectorWithAvatar
-                    selectedItem={teacher}
+                    label={RoomEDITdict[userLanguage]['TEACHER_LABEL']}
+                    isRequired
+                    selectedItem={
+                      status === RoomStatus.INACTIVE
+                        ? {value: 'Classroom inactive'}
+                        : teacher
+                    }
                     list={teachersList}
+                    disabled={status === RoomStatus.INACTIVE}
                     placeholder={RoomEDITdict[userLanguage]['TEACHER_PLACEHOLDER']}
                     onChange={selectTeacher}
                   />
                 </div>
                 <div className="px-3 py-4">
-                  <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
-                    {RoomEDITdict[userLanguage]['CO_TEACHER_LABEL']}
-                  </label>
                   <MultipleSelector
+                    label={RoomEDITdict[userLanguage]['CO_TEACHER_LABEL']}
                     withAvatar
                     selectedItems={selectedCoTeachers}
                     list={coTeachersList}
@@ -1374,6 +1396,15 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
             onClick={saveRoomDetails}
           />
         </div>
+
+        <AnimatedContainer show={status === RoomStatus.INACTIVE}>
+          {status === RoomStatus.INACTIVE && (
+            <p className="text-gray-500 text-sm text-center">
+              This classroom is inactive and not available in the classroom
+            </p>
+          )}
+        </AnimatedContainer>
+
         {warnModal.show && (
           <ModalPopUp
             closeAction={toggleModal}

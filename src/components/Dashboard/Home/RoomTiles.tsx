@@ -1,4 +1,5 @@
 import Loader from '@components/Atoms/Loader';
+import useAuth from '@customHooks/useAuth';
 import {fallbackUrls} from 'assets';
 import Buttons from 'atoms/Buttons';
 import ContentCard from 'atoms/ContentCard';
@@ -125,6 +126,10 @@ const RoomTiles = (props: {
     }
   };
 
+  const {user} = useAuth();
+
+  const isInactive = user?.status === 'INACTIVE';
+
   useEffect(() => {
     if (classes.length > 0) {
       setClassList([...classes]);
@@ -154,8 +159,14 @@ const RoomTiles = (props: {
         borderBottom
       />
       <ContentCard hasBackground={false}>
-        {roomsLoading ? (
-          <div className="min-h-56 flex items-center justify-center">
+        {!isTeacher && isInactive ? (
+          <p className="text-gray-500 text-sm text-center py-8 px-4">
+            Your account is inactive. If you think this status is incorrect contact our
+            administration team. Acces to your writing exercises and journal are still
+            available
+          </p>
+        ) : roomsLoading ? (
+          <div className="min-h-56 flex items-center justify-center ">
             <Loader className="w-auto text-gray-400" withText="Loading classrooms..." />
           </div>
         ) : classList.length > 0 ? (

@@ -100,8 +100,10 @@ const MultipleSelector = (props: MultipleSelectorProps) => {
           aria-expanded="true"
           aria-labelledby="listbox-label"
           className={`${
-            disabled ? 'bg-gray-100' : ''
-          } flex items-center cursor-pointer multiple-selector hover:theme-bg:200 hover:theme-border:400 hover:theme-text:400 relative w-full h-full rounded-full  border-0 border-gray-300 bg-white pl-3 py-2 text-left focus:outline-none transition ease-in-out duration-150 sm:text-sm sm:leading-5 ${
+            disabled
+              ? 'bg-gray-200 pointer-events-none cursor-not-allowed'
+              : 'cursor-pointer'
+          } flex items-center  multiple-selector hover:theme-bg:200 hover:theme-border:400 hover:theme-text:400 relative w-full h-full rounded-full  border-0 border-gray-300 bg-white pl-3 py-2 text-left focus:outline-none transition ease-in-out duration-150 sm:text-sm sm:leading-5 ${
             btnClass ? btnClass : ''
           }`}>
           <span className="block truncate text-gray-700">
