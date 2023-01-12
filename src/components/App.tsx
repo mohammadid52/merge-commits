@@ -13,6 +13,7 @@ import {BrowserRouter as Router} from 'react-router-dom';
 // It is the entry point for the application
 
 const queryClient = new QueryClient();
+// 1
 
 const App: React.FC = () => {
   return (
