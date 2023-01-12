@@ -16,7 +16,6 @@ const CourseName = ({
   searchTerm,
   editCurrentCurricular,
   setHoveringItem,
-  isSuperAdmin,
   hoveringItem,
   currentSelectedItem
 }: any) => {
