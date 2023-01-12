@@ -19,10 +19,14 @@ export const Status = ({
   useDefault?: boolean;
   status?: string;
 }) => {
+  const _status = status?.toLowerCase() || 'active';
+
   const defaultClass = !useDefault
     ? ''
-    : status?.toLowerCase() === 'active'
+    : _status === 'active'
     ? 'bg-green-100 text-green-600'
+    : _status === 'inactive'
+    ? 'bg-red-100 text-red-600'
     : 'bg-yellow-100 text-yellow-600';
 
   return (

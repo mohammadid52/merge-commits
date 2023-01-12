@@ -37,6 +37,7 @@ import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import {map} from 'lodash';
 import StudentName from '@components/MicroComponents/StudentName';
 import Table from '@components/Molecules/Table';
+import {Status} from '../../UserManagement/UserStatus';
 
 interface EditClassProps {
   instId: string;
@@ -518,7 +519,8 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
         />
       ),
 
-      locationStatus: <LocationBadge onDemand={item?.student?.onDemand} />,
+      status: <Status useDefault status={item?.student?.status} />,
+      type: <LocationBadge onDemand={item?.student?.onDemand} />,
       dateAdded: item.createAt ? new Date(item.createAt).toLocaleDateString() : '--',
       actions: (
         <div className="flex cursor-pointer">
@@ -549,7 +551,14 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
   const dict = dictionary.TABLE;
 
   const tableConfig = {
-    headers: [dict['SNO'], dict['NAME'], dict['STATUS'], dict['DATE'], dict['ACTIONS']],
+    headers: [
+      dict['SNO'],
+      dict['NAME'],
+      dict['TYPE'],
+      dict['STATUS'],
+      dict['DATE'],
+      dict['ACTIONS']
+    ],
     dataList,
     config: {
       dark: false,

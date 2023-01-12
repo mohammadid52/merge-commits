@@ -64,7 +64,7 @@ const CourseName = ({
         {item.image ? (
           <img src={getImageFromS3Static(item.image)} className="h-8 w-8 rounded-full" />
         ) : (
-          <Placeholder size="h-8 w-8" />
+          <Placeholder name={item.name} size="h-8 w-8" />
         )}
       </div>
       <div className="ml-2 relative ">

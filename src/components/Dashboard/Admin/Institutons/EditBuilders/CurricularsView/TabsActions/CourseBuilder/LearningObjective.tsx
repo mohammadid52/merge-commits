@@ -2,6 +2,8 @@ import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import Loader from '@components/Atoms/Loader';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import {Empty} from '@components/Dashboard/Admin/LessonsBuilder/StepActionComponent/LearningEvidence/CourseMeasurementsCard';
+import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
+import {RoomStatus} from 'API';
 import Buttons from 'atoms/Buttons';
 import Modal from 'atoms/Modal';
 import PageWrapper from 'atoms/PageWrapper';
@@ -164,10 +166,11 @@ Array.prototype.chunk = function (n) {
 interface LearningObjectiveProps {
   curricularId: string;
   institutionId?: string;
+  status: RoomStatus;
 }
 
 const LearningObjective = (props: LearningObjectiveProps) => {
-  const {curricularId} = props;
+  const {curricularId, status} = props;
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState(false);
   const [selectedObjectiveData, setSelectedObjectiveData] = useState<any>({});
@@ -525,6 +528,8 @@ const LearningObjective = (props: LearningObjectiveProps) => {
     } catch (error) {}
   };
 
+  const isInactive = status === RoomStatus.INACTIVE;
+
   return (
     <div className="py-2 px-0 2xl:p-8 flex m-auto justify-center">
       <div className="">
@@ -533,10 +538,8 @@ const LearningObjective = (props: LearningObjectiveProps) => {
             withButton={
               Boolean(learnings?.length) && (
                 <Buttons
-                  disabled={loading}
-                  btnClass=""
+                  disabled={loading || isInactive}
                   label={LEARINGOBJECTIVEDICT[userLanguage]['BUTTON']['ADD']}
-                  labelClass={'leading-6'}
                   Icon={IoIosAdd}
                   iconBeforeLabel
                   onClick={createLearningObjective}
@@ -687,6 +690,14 @@ const LearningObjective = (props: LearningObjectiveProps) => {
             />
           </Modal>
         )}
+
+        <AnimatedContainer show={isInactive}>
+          {isInactive && (
+            <p className="text-gray-500 text-sm text-center">
+              This course is inactive. Adding units to this course has been disabled
+            </p>
+          )}
+        </AnimatedContainer>
 
         {openTopicModal && (
           <Modal

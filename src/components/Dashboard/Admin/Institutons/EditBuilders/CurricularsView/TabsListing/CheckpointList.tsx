@@ -13,14 +13,18 @@ import CheckpointQueTable from '../../../../LessonsBuilder/StepActionComponent/C
 import {GlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import Loader from '@components/Atoms/Loader';
+import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
+import {RoomStatus} from 'API';
+import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 
 interface CheckpointListProps {
   curricularId: string;
   institutionId: string;
+  status: RoomStatus;
 }
 
 const CheckpointList = (props: CheckpointListProps) => {
-  const {curricularId, institutionId} = props;
+  const {curricularId, institutionId, status} = props;
   const history = useHistory();
 
   const [checkPoints, setCheckPoints] = useState([]);
@@ -94,13 +98,31 @@ const CheckpointList = (props: CheckpointListProps) => {
   useEffect(() => {
     fetchCurricularCheckpoint();
   }, []);
+
+  const isInactive = status === RoomStatus.INACTIVE;
+
   return (
-    <div className="p-8 flex m-auto justify-center">
+    <div className="flex m-auto justify-center">
       <div className="">
-        <PageWrapper>
-          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">
-            {CHECKPOINTSDICT[userLanguage]['TITLE']}
-          </h3>
+        <PageWrapper defaultClass=" ">
+          <SectionTitleV3
+            withButton={
+              <div className="flex w-auto justify-end gap-x-4">
+                <Buttons
+                  label={CHECKPOINTSDICT[userLanguage]['BUTTON']['ADDEXISTING']}
+                  onClick={addExistingCheckpoint}
+                  disabled={isInactive}
+                />
+                <Buttons
+                  label={CHECKPOINTSDICT[userLanguage]['BUTTON']['ADDNEW']}
+                  onClick={createNewCheckpoint}
+                  disabled={isInactive}
+                />
+              </div>
+            }
+            title={CHECKPOINTSDICT[userLanguage]['TITLE']}
+          />
+
           {!loading ? (
             checkPoints && checkPoints.length > 0 ? (
               <Fragment>
@@ -122,20 +144,7 @@ const CheckpointList = (props: CheckpointListProps) => {
               </Fragment>
             ) : (
               <Fragment>
-                <div className="flex justify-center mt-8">
-                  <Buttons
-                    btnClass="mr-3"
-                    label={CHECKPOINTSDICT[userLanguage]['BUTTON']['ADDEXISTING']}
-                    onClick={addExistingCheckpoint}
-                  />
-                  <Buttons
-                    btnClass="mx-4"
-                    label={CHECKPOINTSDICT[userLanguage]['BUTTON']['ADDNEW']}
-                    onClick={createNewCheckpoint}
-                  />
-                </div>
-                <p className="text-center p-16">
-                  {' '}
+                <p className="text-gray-500 p-16 text-sm text-center">
                   {CHECKPOINTSDICT[userLanguage]['INFO']}
                 </p>
               </Fragment>
@@ -149,6 +158,18 @@ const CheckpointList = (props: CheckpointListProps) => {
               />
             </div>
           )}
+
+          <AnimatedContainer show={isInactive}>
+            {isInactive && (
+              <>
+                <hr />
+                <p className="mt-4 text-gray-500 text-sm text-center">
+                  This course is inactive. Adding demographics and information to this
+                  course has been disabled
+                </p>
+              </>
+            )}
+          </AnimatedContainer>
         </PageWrapper>
       </div>
     </div>

@@ -6,6 +6,7 @@ import {getAsset} from 'assets';
 import {GlobalContext} from 'contexts/GlobalContext';
 import {getImageFromS3} from 'utilities/services';
 import {initials, getInitialsFromString, stringToHslColor} from 'utilities/strings';
+import Label from './Label';
 
 interface selectorProps {
   list?: {id: number; name: string; avatar?: string}[];
@@ -15,8 +16,11 @@ interface selectorProps {
   arrowHidden?: boolean;
   placeholder: string;
   imageFromS3?: boolean;
+  disabled?: boolean;
   onChange: (c: string, n: string, id: string, avatar: string) => void;
   dataCy?: string;
+  isRequired?: boolean;
+  label?: string;
 }
 
 const SelectorWithAvatar = (props: selectorProps) => {
@@ -25,11 +29,14 @@ const SelectorWithAvatar = (props: selectorProps) => {
     selectedItem,
     btnClass,
     arrowHidden,
+    disabled,
     placeholder,
     onChange,
     imageFromS3 = true,
     loading,
-    dataCy
+    dataCy,
+    isRequired,
+    label
   } = props;
 
   const [showList, setShowList] = useState(false);
@@ -91,15 +98,20 @@ const SelectorWithAvatar = (props: selectorProps) => {
 
   return (
     <div className="relative" ref={currentRef} onFocus={() => onFocus()}>
+      {label && <Label dark={false} label={label} isRequired={isRequired} />}
       <span className="inline-block w-full h-full rounded-full shadow-sm">
         <button
           data-cy={`selector-${dataCy}-button`}
           type="button"
-          disabled={loading}
+          disabled={disabled || loading}
           aria-haspopup="listbox"
           aria-expanded="true"
           aria-labelledby="listbox-label"
-          className={`flex items-center cursor-pointer relative w-full h-full rounded-full  border-0 border-gray-300 bg-white pl-3 py-2 text-left focus:outline-none transition ease-in-out duration-150 sm:text-sm sm:leading-5 ${
+          className={` ${
+            disabled
+              ? 'bg-gray-200 pointer-events-none cursor-not-allowed'
+              : 'cursor-pointer'
+          } flex items-center  relative w-full h-full rounded-full  border-0 border-gray-300 bg-white pl-3 py-2 text-left focus:outline-none transition ease-in-out duration-150 sm:text-sm sm:leading-5 ${
             btnClass ? btnClass : ''
           }`}>
           <span className="block truncate text-gray-700">

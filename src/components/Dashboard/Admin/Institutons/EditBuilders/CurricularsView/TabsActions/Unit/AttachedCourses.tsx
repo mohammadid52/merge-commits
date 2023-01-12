@@ -61,7 +61,7 @@ const AttachedCourses = ({curricular, unitId}: {curricular: any; unitId: string}
                         className="h-5 w-5 rounded-full"
                       />
                     ) : (
-                      <Placeholder size="h-5 w-5" />
+                      <Placeholder name={curricula.name} size="h-5 w-5" />
                     )}
                   </div>
                   <h4

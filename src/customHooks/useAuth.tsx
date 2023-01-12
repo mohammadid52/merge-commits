@@ -1,4 +1,4 @@
-import {Role, UserPageState} from 'API';
+import {PersonStatus, Role, UserPageState} from 'API';
 import {useGlobalContext} from 'contexts/GlobalContext';
 
 type User = {
@@ -10,6 +10,7 @@ type User = {
   image: string;
   associateInstitute: any[];
   removedFrom: any[];
+  status?: PersonStatus;
   onDemand?: boolean;
   pageState: UserPageState;
 };

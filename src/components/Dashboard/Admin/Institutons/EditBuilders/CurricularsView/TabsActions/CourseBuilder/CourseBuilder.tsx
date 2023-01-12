@@ -192,9 +192,21 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
           />
         );
       case 'learning_objectives':
-        return <LearningObjective curricularId={courseId} institutionId={instId} />;
+        return (
+          <LearningObjective
+            status={courseData.status}
+            curricularId={courseId}
+            institutionId={instId}
+          />
+        );
       case 'demographics':
-        return <CheckpointList curricularId={courseId} institutionId={instId} />;
+        return (
+          <CheckpointList
+            status={courseData.status}
+            curricularId={courseId}
+            institutionId={instId}
+          />
+        );
     }
   };
 

@@ -42,6 +42,7 @@ const RoomsList = (props: RoomListProps) => {
   const {InstitueRomms} = useDictionary(clientKey);
 
   const [roomList, setRoomList] = useState([]);
+  const [totalNum, setTotalNum] = useState(0);
 
   const [loading, setLoading] = useState(true);
 
@@ -87,8 +88,6 @@ const RoomsList = (props: RoomListProps) => {
       setLoading(false);
     }
   };
-
-  const [totalNum, setTotalNum] = useState(0);
 
   const {authId, isFellow, isTeacher} = useAuth();
 
@@ -141,20 +140,16 @@ const RoomsList = (props: RoomListProps) => {
         };
       });
 
-      const totalListPages = Math.floor(updatedMerge.length / pageCount);
+      const totalListPages = Math.floor(merged.length / pageCount);
 
       setTotalPages(
-        totalListPages * pageCount === updatedMerge.length
-          ? totalListPages
-          : totalListPages + 1
+        totalListPages * pageCount === merged.length ? totalListPages : totalListPages + 1
       );
 
-      setTotalNum(updatedMerge.length);
-
-      setCurrentList(updatedMerge);
+      setTotalNum(merged.length);
 
       setFirstPage(true);
-      setLastPage(!(updatedMerge.length > pageCount));
+      setLastPage(!(merged.length > pageCount));
 
       setRoomList(updatedMerge);
 
@@ -206,8 +201,9 @@ const RoomsList = (props: RoomListProps) => {
     setTotalPages,
     currentList,
     allAsProps,
-    setCurrentList
-  } = usePagination(roomList, loading ? 0 : roomList.length);
+    setCurrentList,
+    getIndex
+  } = usePagination(roomList, loading ? 0 : totalNum);
 
   const [filteredList, setFilteredList] = useState([...roomList]);
 
@@ -273,7 +269,7 @@ const RoomsList = (props: RoomListProps) => {
   const match = useRouteMatch();
 
   const dataList = map(finalList, (item, index) => ({
-    no: index + 1,
+    no: getIndex(index),
     classroomName: (
       <div
         onClick={() => editCurrentRoom(item.id, item.institutionID)}
@@ -343,7 +339,7 @@ const RoomsList = (props: RoomListProps) => {
         customWidth: {
           no: 'w-12'
         },
-        maxHeight: 'max-h-132',
+        maxHeight: '--',
         pattern: 'striped',
         patternConfig: {firstColor: 'bg-gray-100', secondColor: 'bg-gray-200'}
       }
