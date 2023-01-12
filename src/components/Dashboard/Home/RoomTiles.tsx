@@ -128,7 +128,7 @@ const RoomTiles = (props: {
 
   const {user} = useAuth();
 
-  const isInactive = user.status === 'INACTIVE';
+  const isInactive = user?.status === 'INACTIVE';
 
   useEffect(() => {
     if (classes.length > 0) {
