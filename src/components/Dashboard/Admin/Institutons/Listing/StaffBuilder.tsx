@@ -28,7 +28,7 @@ import Table from '@components/Molecules/Table';
 import useSearch from '@customHooks/useSearch';
 import AddButton from 'atoms/Buttons/AddButton';
 import Modal from 'atoms/Modal';
-import Status from 'atoms/Status';
+
 import Tooltip from 'atoms/Tooltip';
 import Registration from 'components/Dashboard/Admin/UserManagement/Registration';
 import {map} from 'lodash';
@@ -36,6 +36,7 @@ import {logError} from '@graphql/functions';
 import useAuth from '@customHooks/useAuth';
 import Filters, {SortType} from '@components/Atoms/Filters';
 import usePagination from '@customHooks/usePagination';
+import {Status} from '../../UserManagement/UserStatus';
 
 interface StaffBuilderProps {
   instituteId: String;
@@ -482,7 +483,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
           />
         </div>
       ) : (
-        <Status status={item.status} />
+        <Status useDefault status={item.status} />
       ),
     action: (
       <div className="">
