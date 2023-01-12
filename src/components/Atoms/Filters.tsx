@@ -39,6 +39,7 @@ const Filters = ({
         <div className="flex gap-x-4 my-4 items-center">
           {filter.map((filterName) => (
             <Buttons
+              key={filterName}
               onClick={() => updateFilter(filterName)}
               transparent={filters !== filterName}
               size="small"

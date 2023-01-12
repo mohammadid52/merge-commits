@@ -81,7 +81,7 @@ interface SelectorProps {
   dataCy?: string;
   dropdownWidth?: string;
   noSpace?: boolean;
-  direction?: 'left' | 'right';
+  direction?: 'left' | 'right' | 'topleft' | 'topright';
 }
 
 const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
@@ -254,11 +254,23 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
           </span>
         </button>
       </span>
-      <AnimatedContainer className="z-50 absolute w-full " show={showList}>
+      <AnimatedContainer
+        className="z-50 absolute w-full "
+        style={
+          direction.includes('top')
+            ? {
+                bottom: '400%'
+              }
+            : {}
+        }
+        show={showList}>
         {showList && (
           <div
             className="z-50 absolute mt-1 w-full "
-            style={{...style, left: direction === 'left' ? '-100%' : 'unset'}}>
+            style={{
+              ...style,
+              left: direction === 'left' || direction === 'topleft' ? '-100%' : 'unset'
+            }}>
             <ul
               role="listbox"
               aria-labelledby="listbox-label"

@@ -100,6 +100,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
 
       let syllabi = response?.universalSyllabus?.items || [];
       let units = syllabi
+        .filter((d: {unit: any}) => d.unit !== null)
         .map((item: any) => {
           return {
             id: item?.unit?.id,

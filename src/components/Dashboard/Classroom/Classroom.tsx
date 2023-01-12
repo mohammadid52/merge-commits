@@ -192,7 +192,6 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
 
   const [syllabusData, setSyllabusData] = useState<any>({});
   const [lessonData, setLessonData] = useState<Array<any>>([]);
-  console.log('🚀 ~ file: Classroom.tsx:194 ~ lessonData', lessonData);
 
   const [settingLessons, setSettingLessons] = useState<boolean>(true);
 
@@ -211,7 +210,6 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
         state.roomData?.syllabus.find(
           (syllabusObj: any) => syllabusObj.id === state.activeSyllabus
         );
-      // console.log('foundSyllabus - ', foundSyllabus);
       if (foundSyllabus) {
         setSyllabusData(foundSyllabus);
       }
@@ -238,10 +236,6 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
           const currentLessonItem = listPersonData.find(
             (_d) => _d.lessonID === item.lessonID
           )?.pages;
-          console.log(
-            '🚀 ~ file: Classroom.tsx:240 ~ temp?.map ~ currentLessonItem',
-            currentLessonItem
-          );
 
           const currentPage = currentLessonItem
             ? JSON.parse(currentLessonItem)?.currentPage
@@ -280,8 +274,6 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
                 ) / 5
               ) * 5
           };
-          console.log('🚀 ~ file: Classroom.tsx:268 ~ temp?.map ~ lesson', lesson);
-
           return {...item, lesson, session, sessionHeading};
         })
       );

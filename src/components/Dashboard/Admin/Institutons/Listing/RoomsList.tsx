@@ -20,6 +20,7 @@ import useDictionary from 'customHooks/dictionary';
 import * as queries from 'graphql/queries';
 import {map, orderBy} from 'lodash';
 import {Status} from '../../UserManagement/UserStatus';
+import usePagination from '@customHooks/usePagination';
 
 interface RoomListProps {
   instId: string;
@@ -87,6 +88,8 @@ const RoomsList = (props: RoomListProps) => {
     }
   };
 
+  const [totalNum, setTotalNum] = useState(0);
+
   const {authId, isFellow, isTeacher} = useAuth();
 
   const fetchRoomList = async () => {
@@ -138,6 +141,21 @@ const RoomsList = (props: RoomListProps) => {
         };
       });
 
+      const totalListPages = Math.floor(updatedMerge.length / pageCount);
+
+      setTotalPages(
+        totalListPages * pageCount === updatedMerge.length
+          ? totalListPages
+          : totalListPages + 1
+      );
+
+      setTotalNum(updatedMerge.length);
+
+      setCurrentList(updatedMerge);
+
+      setFirstPage(true);
+      setLastPage(!(updatedMerge.length > pageCount));
+
       setRoomList(updatedMerge);
 
       setLoading(false);
@@ -178,9 +196,18 @@ const RoomsList = (props: RoomListProps) => {
     filterBySearchQuery,
     removeSearchAction,
     searchAndFilter,
-    setSearchInput,
-    findRelatedSearch
+    setSearchInput
   } = useSearch([...roomList], ['name', 'institutionName']);
+
+  const {
+    pageCount,
+    setFirstPage,
+    setLastPage,
+    setTotalPages,
+    currentList,
+    allAsProps,
+    setCurrentList
+  } = usePagination(roomList, loading ? 0 : roomList.length);
 
   const [filteredList, setFilteredList] = useState([...roomList]);
 
@@ -219,7 +246,7 @@ const RoomsList = (props: RoomListProps) => {
   const [filters, setFilters] = useState<SortType>();
 
   const finalList = orderBy(
-    searchInput.isActive ? filteredList : roomList,
+    searchInput.isActive ? filteredList : currentList,
     ['name', 'institutionName'],
     ['asc']
   );
@@ -227,8 +254,6 @@ const RoomsList = (props: RoomListProps) => {
   const onInstitutionSelectionRemove = () => {
     setSelectedInstitution({});
     removeSearchAction();
-
-    // onSearch(searchInput, '', '');
   };
 
   const updateFilter = (filterName: SortType) => {
@@ -302,6 +327,19 @@ const RoomsList = (props: RoomListProps) => {
 
       headers: {textColor: 'text-white'},
       dataList: {
+        loading,
+        emptyText:
+          searchInput.isActive && !searchInput.typing
+            ? 'no data'
+            : searchInput.isActive && searchInput.typing
+            ? `Hit enter to search for ${searchInput.value}`
+            : '',
+        pagination: {
+          showPagination: true,
+          config: {
+            allAsProps
+          }
+        },
         customWidth: {
           no: 'w-12'
         },
@@ -381,64 +419,20 @@ const RoomsList = (props: RoomListProps) => {
           list={roomList}
           updateFilter={updateFilter}
           filters={filters}
+          showingCount={{
+            currentPage: allAsProps.currentPage,
+            lastPage: allAsProps.lastPage,
+            totalResults: allAsProps.totalResults,
+            pageCount: allAsProps.pageCount
+          }}
         />
 
-        {loading ? (
-          <div className="py-20 text-center mx-auto flex justify-center items-center w-full h-48">
-            <div className="w-5/10">
-              <Loader animation />
-              <p className="mt-2 text-center text-lg text-gray-500">
-                {InstitueRomms[userLanguage]['LOADING']}
-              </p>
-            </div>
-          </div>
-        ) : finalList.length ? (
-          <Table {...tableConfig} />
-        ) : (
-          <Fragment>
-            {(!isSuperAdmin || !isAdmin || !isBuilder) && (
-              <div className="flex justify-center mt-8">
-                <AddButton
-                  className="mx-4"
-                  label={InstitueRomms[userLanguage]['BUTTON']['ADD']}
-                  onClick={createNewRoom}
-                />
-              </div>
-            )}
+        <Table {...tableConfig} />
 
-            {messages.isError && (
-              <p className={`text-center p-16 ${messages.isError ? 'text-red-600' : ''}`}>
-                {messages.message}
-              </p>
-            )}
-            <div className="text-center mt-4">
-              <p className="text-gray-500">
-                {searchInput.isActive && !searchInput.typing
-                  ? ''
-                  : searchInput.isActive && searchInput.typing
-                  ? `Hit enter to search for ${searchInput.value}`
-                  : ''}
-                {searchInput.isActive && !searchInput.typing && (
-                  <span>
-                    No classroom found - <b>{searchInput.value}</b>.
-                    {findRelatedSearch(searchInput.value).name && (
-                      <span>
-                        Try searching for "
-                        <span
-                          className="hover:underline theme-text cursor-pointer"
-                          onClick={() => {
-                            setSearch(findRelatedSearch(searchInput.value).name);
-                          }}>
-                          {findRelatedSearch(searchInput.value).name}
-                        </span>
-                        "
-                      </span>
-                    )}
-                  </span>
-                )}
-              </p>
-            </div>
-          </Fragment>
+        {messages.isError && (
+          <p className={`text-center p-16 ${messages.isError ? 'text-red-600' : ''}`}>
+            {messages.message}
+          </p>
         )}
       </div>
     </div>

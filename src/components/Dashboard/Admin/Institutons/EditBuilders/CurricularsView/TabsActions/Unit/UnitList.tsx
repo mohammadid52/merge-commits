@@ -71,10 +71,10 @@ export const UnitList = ({
     setFirstPage,
     setLastPage,
     setTotalPages,
-
     currentList,
     allAsProps,
-    setCurrentList
+    setCurrentList,
+    getIndex
   } = usePagination(units, loading ? 0 : totalNum);
 
   useEffect(() => {
@@ -175,7 +175,6 @@ export const UnitList = ({
 
         setFirstPage(true);
         setLastPage(!(updatedList.length > pageCount));
-
         setUnits(updatedList);
       }
 
@@ -458,7 +457,7 @@ export const UnitList = ({
   const [hoveringItem, setHoveringItem] = useState<{name?: string}>({});
 
   const dataList = map(finalList, (item: any, index: number) => ({
-    no: index + 1,
+    no: getIndex(index),
     instituteName: isSuperAdmin && item.institution.name,
     status: <Status status={item.status} useDefault />,
     unitName: (
