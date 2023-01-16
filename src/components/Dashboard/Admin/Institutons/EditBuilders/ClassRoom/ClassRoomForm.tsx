@@ -190,7 +190,8 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
   const [unsavedChanges, setUnsavedChanges] = useState(false);
   const [warnModal, setWarnModal] = useState({
     show: false,
-    message: LessonEditDict[userLanguage]['MESSAGES']['UNSAVE']
+    message: LessonEditDict[userLanguage]['MESSAGES']['UNSAVE'],
+    onSaveAction: () => {}
   });
 
   useEffect(() => {
@@ -304,6 +305,21 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
     removeErrorMsg();
   };
 
+  const beforeUptatingStatus = (val: RoomStatus) => {
+    if (val === RoomStatus.INACTIVE) {
+      setWarnModal({
+        show: true,
+        message:
+          'By setting this class to inactive, students will no longer see this course when they log in. Do you wish to continue?',
+        onSaveAction: () => {
+          selectStatus(val);
+        }
+      });
+    } else {
+      selectStatus(val);
+    }
+  };
+
   const selectStatus = (val: RoomStatus) => {
     setRoomData({
       ...roomData,
@@ -314,6 +330,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
 
     onStatusUpdate(allCurricular, val);
     removeErrorMsg();
+    setWarnModal({show: false, message: '', onSaveAction: () => {}});
   };
 
   const removeErrorMsg = () => {
@@ -1269,7 +1286,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
                   labelTextClass={'text-xs'}
                   list={StatusList}
                   isRequired
-                  onChange={selectStatus}
+                  onChange={beforeUptatingStatus}
                 />
               </div>
               <div className="px-3 py-4">
@@ -1408,7 +1425,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
         {warnModal.show && (
           <ModalPopUp
             closeAction={toggleModal}
-            saveAction={onModalSave}
+            saveAction={warnModal.onSaveAction}
             saveLabel="Yes"
             message={warnModal.message}
           />

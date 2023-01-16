@@ -1,9 +1,11 @@
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import {Storage} from '@aws-amplify/storage';
+import ModalPopUp from '@components/Molecules/ModalPopUp';
+import {RoomStatus} from 'API';
 import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
 import MultipleSelector from 'atoms/Form/MultipleSelector';
 import Selector from 'atoms/Form/Selector';
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import {Storage} from '@aws-amplify/storage';
 import ProfileCropModal from 'components/Dashboard/Profile/ProfileCropModal';
 import {GlobalContext} from 'contexts/GlobalContext';
 import * as customMutations from 'customGraphql/customMutations';
@@ -12,12 +14,11 @@ import useDictionary from 'customHooks/dictionary';
 import * as mutation from 'graphql/mutations';
 import * as queries from 'graphql/queries';
 import DroppableMedia from 'molecules/DroppableMedia';
-import {getImageFromS3} from 'utilities/services';
-import {languageList} from 'utilities/staticData';
 import React, {useContext, useEffect, useState} from 'react';
 import {IoImage} from 'react-icons/io5';
 import {useHistory, useRouteMatch} from 'react-router-dom';
-import {RoomStatus} from 'API';
+import {getImageFromS3} from 'utilities/services';
+import {languageList} from 'utilities/staticData';
 
 export const RoomStatusList = [
   {
@@ -402,6 +403,32 @@ const CourseFormComponent = ({
   const mediaRef = React.useRef(null);
   const handleImage = () => mediaRef?.current?.click();
 
+  const [warnModal, setWarnModal] = useState({
+    show: false,
+    message: 'message',
+    onSaveAction: () => {}
+  });
+
+  const closeModal = () => {
+    setWarnModal({show: false, message: '', onSaveAction: () => {}});
+  };
+
+  const selectStatus = (name: RoomStatus) =>
+    setCurricularData({...curricularData, status: name});
+
+  const beforeStatusChange = (name: RoomStatus) => {
+    if (name === RoomStatus.INACTIVE) {
+      setWarnModal({
+        show: true,
+        message:
+          'By setting this student to inactive, students will no longer see any courses when they log in (they will continue to have access to their notebooks). Do you wish to continue?',
+        onSaveAction: () => selectStatus(name)
+      });
+    } else {
+      selectStatus(name);
+    }
+  };
+
   const {
     name,
     description,
@@ -437,7 +464,7 @@ const CourseFormComponent = ({
                   ) : (
                     <div
                       onClick={handleImage}
-                      className={`profile  w-120  md:w-120 bg-gray-100  border flex flex-shrink-0 rounded-xl theme-card-shadow bg-gray-200`}>
+                      className={`profile  w-120  md:w-120   border flex flex-shrink-0 rounded-xl theme-card-shadow bg-gray-200`}>
                       <IoImage className="fill-current text-gray-80" size={32} />
                     </div>
                   )}
@@ -484,7 +511,7 @@ const CourseFormComponent = ({
                 placeholder={UserEditDict[userLanguage]['status']}
                 list={RoomStatusList}
                 onChange={(str: any, name: RoomStatus) => {
-                  setCurricularData({...curricularData, status: name});
+                  beforeStatusChange(name);
                 }}
                 dropdownWidth="w-56"
                 selectedItem={status || UserEditDict[userLanguage]['status']}
@@ -546,6 +573,16 @@ const CourseFormComponent = ({
           </p>
         </div>
       ) : null}
+
+      {warnModal.show && (
+        <ModalPopUp
+          closeAction={closeModal}
+          saveAction={warnModal.onSaveAction}
+          saveLabel="Yes"
+          message={warnModal.message}
+        />
+      )}
+
       <div className="flex my-8 justify-center">
         <Buttons
           btnClass="py-3 px-12 text-sm"

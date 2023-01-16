@@ -133,7 +133,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
 
       return combined;
     } catch (error) {
-      console.log(
+      console.error(
         '🚀 ~ file: AnalyticsDashboard.tsx ~ line 24 ~ listAllStudents ~ error',
         error
       );

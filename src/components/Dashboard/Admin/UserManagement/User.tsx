@@ -55,7 +55,7 @@ export interface UserInfo {
   lastName: string;
   preferredName?: string;
   role: Role | string;
-  status: PersonStatus | string;
+  status: PersonStatus;
   inactiveStatusDate?: string;
   statusReason?: string;
   phone: string;
@@ -172,7 +172,7 @@ const User = (props: IUserProps) => {
     preferredName: null,
     classes: null,
     role: '',
-    status: '',
+    status: PersonStatus.ACTIVE,
     phone: '',
     updatedAt: '',
     birthdate: null,

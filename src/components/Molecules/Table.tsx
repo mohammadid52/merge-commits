@@ -141,7 +141,7 @@ const ListItem = forwardRef<any, IListItem>(
         key={idx}
         {...rest}
         ref={ref}
-        className={`flex justify-between ${
+        className={`flex relative ${item?.markRed ? 'mark-red' : ''} justify-between ${
           config?.dataList?.bgColor
             ? config?.dataList?.bgColor
             : config?.dataList?.pattern === 'striped'

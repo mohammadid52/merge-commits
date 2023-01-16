@@ -201,7 +201,6 @@ const RoomsList = (props: RoomListProps) => {
     setTotalPages,
     currentList,
     allAsProps,
-    setCurrentList,
     getIndex
   } = usePagination(roomList, loading ? 0 : totalNum);
 
@@ -269,6 +268,7 @@ const RoomsList = (props: RoomListProps) => {
   const match = useRouteMatch();
 
   const dataList = map(finalList, (item, index) => ({
+    markRed: !Boolean(item?.activeSyllabus),
     no: getIndex(index),
     classroomName: (
       <div

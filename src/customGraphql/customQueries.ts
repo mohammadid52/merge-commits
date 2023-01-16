@@ -1444,7 +1444,7 @@ export const listRoomsDashboard = /* GraphQL */ `
         institutionID
         classID
         teacherAuthID
-
+        activeSyllabus
         teacherEmail
         name
         maxPersons

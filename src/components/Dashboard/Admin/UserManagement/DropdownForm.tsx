@@ -34,36 +34,6 @@ const DropdownForm = (props: DropdownProps) => {
     dataCy
   } = props;
 
-  const getOptions = () => {
-    if (userInfo === 'ACTIVE') {
-      return 'Active';
-    } else if (userInfo === 'SUSPENDED') {
-      return 'Suspended';
-    } else if (userInfo === 'INACTIVE') {
-      return 'Inactive';
-    } else if (userInfo === 'TRAINING') {
-      return 'Training';
-    } else if (userInfo === 'HOLD') {
-      return 'Hold';
-    } else if (userInfo === 'ADM') {
-      return 'Admin';
-    } else if (userInfo === 'BLD') {
-      return 'Builder';
-    } else if (userInfo === 'FLW') {
-      return 'Fellow';
-    } else if (userInfo === 'CRD') {
-      return 'Coordinator';
-    } else if (userInfo === 'TR') {
-      return 'Teacher';
-    } else if (userInfo === 'ST') {
-      return 'Student';
-    } else if (userInfo === '') {
-      return 'Choose One';
-    } else {
-      return userInfo;
-    }
-  };
-
   const componentRef = useRef(null);
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -77,8 +47,6 @@ const DropdownForm = (props: DropdownProps) => {
     };
   }, []);
 
-  const OPTIONS = getOptions();
-
   const [showItems, setShowItems] = useState(false);
 
   let [selectItem, setItem] = useState(userInfo);
@@ -89,8 +57,8 @@ const DropdownForm = (props: DropdownProps) => {
     handleChange(item);
   };
 
-  const isSelected = (name: string) => OPTIONS === name;
-  const {theme, clientKey} = useGlobalContext();
+  const isSelected = (name: string) => userInfo === name;
+  const {clientKey} = useGlobalContext();
   const themeColor = getAsset(clientKey, 'themeClassName');
 
   return (
@@ -108,7 +76,7 @@ const DropdownForm = (props: DropdownProps) => {
             className={`flex cursor-pointer relative w-full rounded-full  border-0 border-gray-300 bg-white pl-3 py-2 text-left focus:outline-none focus:ring-2 focus:ring-${
               themeColor === 'iconoclastIndigo' ? 'indigo' : 'blue'
             }-600 focus:border-transparent transition ease-in-out duration-150 sm:text-sm sm:leading-5`}>
-            <span className="block truncate">{OPTIONS}</span>
+            <span className="block truncate">{userInfo}</span>
             <span className="relative justify-end inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
               <svg
                 className="h-5 w-5 text-gray-400"

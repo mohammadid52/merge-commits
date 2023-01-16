@@ -17,6 +17,8 @@ import TextArea from 'atoms/Form/TextArea';
 import LessonLoading from '../../../Lesson/Loading/ComponentLoading';
 import DropdownForm from './DropdownForm';
 import {UserInfo} from './User';
+import {PersonStatus} from 'API';
+import ModalPopUp from '@components/Molecules/ModalPopUp';
 
 function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(' ');
@@ -383,13 +385,37 @@ const UserEdit = (props: UserInfoProps) => {
     });
   };
 
-  const handleChangeStatus = (item: {name: string; code: string}) => {
+  const handleChangeStatus = (item: {name: string; code: PersonStatus}) => {
     setEditUser(() => {
       return {
         ...editUser,
         status: item.code
       };
     });
+    closeModal();
+  };
+
+  const [warnModal, setWarnModal] = useState({
+    show: false,
+    message: 'message',
+    onSaveAction: () => {}
+  });
+
+  const closeModal = () => {
+    setWarnModal({show: false, message: '', onSaveAction: () => {}});
+  };
+
+  const beforeStatusChange = (item: {name: string; code: PersonStatus}) => {
+    if (item.name === PersonStatus.INACTIVE) {
+      setWarnModal({
+        show: true,
+        message:
+          'By setting this student to inactive, students will no longer see any courses when they log in (they will continue to have access to their notebooks). Do you wish to continue?',
+        onSaveAction: () => handleChangeStatus(item)
+      });
+    } else {
+      handleChangeStatus(item);
+    }
   };
 
   const handleChangeRole = (item: {name: string; code: string}) => {
@@ -413,19 +439,19 @@ const UserEdit = (props: UserInfoProps) => {
   const Status = [
     {
       code: 'ACTIVE',
-      name: 'Active'
+      name: 'ACTIVE'
     },
     {
       code: 'SUSPENDED',
-      name: 'Suspended'
+      name: 'SUSPENDED'
     },
     {
       code: 'INACTIVE',
-      name: 'Inactive'
+      name: 'INACTIVE'
     },
     {
       code: 'TRAINING',
-      name: 'Training'
+      name: 'TRAINING'
     }
     // {
     //   code: 'HOLD',
@@ -563,47 +589,48 @@ const UserEdit = (props: UserInfoProps) => {
   };
 
   return (
-    <div className="h-full w-3/4 md:px-2 pt-2">
-      <form>
-        <div className="h-full border-l-0 border-gray-200 bg-white mb-4">
-          <div className="border-b-0 border-gray-200">
-            <nav
-              className="-mb-px flex space-x-8 overflow-x-auto custom-scrollbar"
-              aria-label="Tabs">
-              <a
-                onClick={() => setTab('p')}
-                key="personal_information"
-                className={classNames(
-                  tab === 'p'
-                    ? 'border-indigo-500 text-indigo-600'
-                    : 'border-transparent  cursor-pointer text-gray-500 hover:text-gray-700 hover:border-gray-200',
-                  'whitespace-nowrap justify-center flex py-4 px-1 border-b-2 font-medium text-sm'
-                )}>
-                {UserEditDict[userLanguage]['heading']}
-              </a>
-              <a
-                onClick={() => setTab('demographics')}
-                key="demographics"
-                className={`${
-                  tab === 'demographics'
-                    ? 'border-indigo-500 text-indigo-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-200'
-                } whitespace-nowrap flex justify-center cursor-pointer py-4 px-1 border-b-2 font-medium text-sm`}>
-                {UserInformationDict[userLanguage]['demographics']}
-              </a>
-              <a
-                onClick={() => setTab('private')}
-                key="private"
-                className={`${
-                  tab === 'private'
-                    ? 'border-indigo-500 text-indigo-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-200'
-                } whitespace-nowrap flex justify-center cursor-pointer py-4 px-1 border-b-2 font-medium text-sm`}>
-                {UserInformationDict[userLanguage]['private']}
-                <IconContext.Provider
-                  value={{
-                    size: '0.8rem',
-                    className: `
+    <>
+      <div className="h-full w-3/4 md:px-2 pt-2">
+        <form>
+          <div className="h-full border-l-0 border-gray-200 bg-white mb-4">
+            <div className="border-b-0 border-gray-200">
+              <nav
+                className="-mb-px flex space-x-8 overflow-x-auto custom-scrollbar"
+                aria-label="Tabs">
+                <a
+                  onClick={() => setTab('p')}
+                  key="personal_information"
+                  className={classNames(
+                    tab === 'p'
+                      ? 'border-indigo-500 text-indigo-600'
+                      : 'border-transparent  cursor-pointer text-gray-500 hover:text-gray-700 hover:border-gray-200',
+                    'whitespace-nowrap justify-center flex py-4 px-1 border-b-2 font-medium text-sm'
+                  )}>
+                  {UserEditDict[userLanguage]['heading']}
+                </a>
+                <a
+                  onClick={() => setTab('demographics')}
+                  key="demographics"
+                  className={`${
+                    tab === 'demographics'
+                      ? 'border-indigo-500 text-indigo-600'
+                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-200'
+                  } whitespace-nowrap flex justify-center cursor-pointer py-4 px-1 border-b-2 font-medium text-sm`}>
+                  {UserInformationDict[userLanguage]['demographics']}
+                </a>
+                <a
+                  onClick={() => setTab('private')}
+                  key="private"
+                  className={`${
+                    tab === 'private'
+                      ? 'border-indigo-500 text-indigo-600'
+                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-200'
+                  } whitespace-nowrap flex justify-center cursor-pointer py-4 px-1 border-b-2 font-medium text-sm`}>
+                  {UserInformationDict[userLanguage]['private']}
+                  <IconContext.Provider
+                    value={{
+                      size: '0.8rem',
+                      className: `
                       ${
                         tab === 'private'
                           ? 'text-indigo-500'
@@ -611,346 +638,372 @@ const UserEdit = (props: UserInfoProps) => {
                       }
                       ml-2 h-5 w-5
                     `
-                  }}>
-                  <IoLockClosed />
-                </IconContext.Provider>
-              </a>
-            </nav>
-          </div>
+                    }}>
+                    <IoLockClosed />
+                  </IconContext.Provider>
+                </a>
+              </nav>
+            </div>
 
-          <div className="h-full px-4 py-5 sm:px-6">
-            {tab === 'p' && (
-              <div className="grid grid-cols-1 gap-y-4 gap-x-4 sm:grid-cols-6 text-gray-900">
-                <div className="sm:col-span-3 p-2">
-                  <FormInput
-                    value={editUser.firstName}
-                    id={'firstName'}
-                    label={UserEditDict[userLanguage]['firstname']}
-                    placeHolder=""
-                    name="firstName"
-                    onChange={onChange}
-                  />
-                </div>
-
-                <div className="sm:col-span-3 p-2">
-                  <FormInput
-                    value={editUser.lastName}
-                    id={'lastName'}
-                    label={UserEditDict[userLanguage]['lastname']}
-                    placeHolder=""
-                    name="lastName"
-                    onChange={onChange}
-                  />
-                </div>
-
-                <div className="sm:col-span-3 p-2">
-                  <FormInput
-                    value={editUser.preferredName}
-                    id={'preferredName'}
-                    label={UserEditDict[userLanguage]['nickname']}
-                    placeHolder=""
-                    name="preferredName"
-                    onChange={onChange}
-                  />
-                </div>
-
-                <div className="sm:col-span-3 p-2">
-                  <DropdownForm
-                    value=""
-                    style={false}
-                    handleChange={handleChangeStatus}
-                    userInfo={editUser.status}
-                    label={UserEditDict[userLanguage]['status']}
-                    id="status"
-                    isRequired
-                    items={Status}
-                  />
-                </div>
-
-                <div className="sm:col-span-3 p-2">
-                  <DropdownForm
-                    value=""
-                    style={false}
-                    handleChange={handleChangeRole}
-                    userInfo={editUser.role}
-                    label={UserEditDict[userLanguage]['role']}
-                    listClassName="h-28"
-                    id="role"
-                    isRequired
-                    items={Role}
-                  />
-                </div>
-
-                {superEdit && user.role === 'ST' && (
+            <div className="h-full px-4 py-5 sm:px-6">
+              {tab === 'p' && (
+                <div className="grid grid-cols-1 gap-y-4 gap-x-4 sm:grid-cols-6 text-gray-900">
                   <div className="sm:col-span-3 p-2">
-                    <DropdownForm
-                      dataCy="ondemand"
-                      value=""
-                      style={false}
-                      handleChange={handleChangeOnDemand}
-                      userInfo={editUser?.onDemand ? 'Yes' : 'No'}
-                      label={UserEditDict[userLanguage]['ondemand']}
-                      id="ondemand"
-                      isRequired
-                      items={OnDemand}
+                    <FormInput
+                      value={editUser.firstName}
+                      id={'firstName'}
+                      label={UserEditDict[userLanguage]['firstname']}
+                      placeHolder=""
+                      name="firstName"
+                      onChange={onChange}
                     />
                   </div>
-                )}
-                {(editUser.status === 'SUSPENDED' || editUser.status === 'INACTIVE') && (
-                  <>
-                    <div className="sm:col-span-3 p-2">
-                      <FormInput
-                        value={inactiveDate}
-                        id={'inactive_date'}
-                        label={UserEditDict[userLanguage]['inactive_date']}
-                        placeHolder="MM/DD/YYYY"
-                        name="inactive_date"
-                        onChange={onDateChange}
-                      />
-                    </div>
-                    <div className="sm:col-span-3 p-2">
-                      <TextArea
-                        value={editUser.statusReason}
-                        id="statusReason"
-                        onChange={onStatusReasonChange}
-                        name="statusReason"
-                        label={UserEditDict[userLanguage]['status_reason']}
-                      />
-                    </div>
-                  </>
-                )}
-              </div>
-            )}
-            {tab !== 'p' && checkpoints.length > 0 && (
-              <div className="text-gray-900">
-                {checkpoints.map((checkpoint: any) => (
-                  <Fragment key={`checkpoint_${checkpoint.id}`}>
-                    <div className="h-auto bg-white shadow-5 sm:rounded-lg mb-4 text-gray-900">
-                      <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
-                        <h3 className="text-lg leading-6 font-medium uppercase">
-                          {checkpoint.title}
-                        </h3>
-                      </div>
 
-                      <div className="h-full px-4 py-5 sm:px-6">
-                        <div className="grid grid-cols-1 gap-y-4 gap-x-4 sm:grid-cols-6 text-gray-900">
-                          {checkpoint.questions?.items.map((item: any) => (
-                            <Fragment key={item.question.id}>
-                              <div className="sm:col-span-6 p-2 flex items-end">
-                                <div className="flex flex-col justify-between">
-                                  {item.question.type === 'text' ? (
-                                    <FormInput
-                                      value={
-                                        checkpointData[checkpoint.id]
-                                          ? checkpointData[checkpoint.id][
-                                              item.question.id
-                                            ]
-                                          : ''
-                                      }
-                                      id={item.question.id}
-                                      name=""
-                                      label={item?.question?.question}
-                                      onChange={(e) =>
-                                        onInputChange(e, checkpoint.id, item.question.id)
-                                      }
-                                    />
-                                  ) : null}
-                                  {/* Will change it to text box if required. */}
-                                  {item.question.type === 'input' ? (
-                                    <FormInput
-                                      value={
-                                        checkpointData[checkpoint.id]
-                                          ? checkpointData[checkpoint.id][
-                                              item.question.id
-                                            ]
-                                          : ''
-                                      }
-                                      id={item.question.id}
-                                      name=""
-                                      label={item?.question?.question}
-                                      onChange={(e) =>
-                                        onInputChange(e, checkpoint.id, item.question.id)
-                                      }
-                                    />
-                                  ) : null}
-                                  {item.question.type === 'link' ? (
-                                    <div className="sm:col-span-3">
-                                      <label
-                                        htmlFor="date picker"
-                                        className="block text-m font-medium leading-5 text-gray-700">
-                                        {item?.question?.question}
-                                      </label>
-                                      <div className="mt-1  border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm">
-                                        <input
-                                          id={item.question.id}
-                                          type="url"
-                                          name="url"
-                                          placeholder="https://example.com"
-                                          pattern="https://.*"
-                                          size={30}
-                                          required
-                                          value={
+                  <div className="sm:col-span-3 p-2">
+                    <FormInput
+                      value={editUser.lastName}
+                      id={'lastName'}
+                      label={UserEditDict[userLanguage]['lastname']}
+                      placeHolder=""
+                      name="lastName"
+                      onChange={onChange}
+                    />
+                  </div>
+
+                  <div className="sm:col-span-3 p-2">
+                    <FormInput
+                      value={editUser.preferredName}
+                      id={'preferredName'}
+                      label={UserEditDict[userLanguage]['nickname']}
+                      placeHolder=""
+                      name="preferredName"
+                      onChange={onChange}
+                    />
+                  </div>
+
+                  <div className="sm:col-span-3 p-2">
+                    <DropdownForm
+                      value=""
+                      style={false}
+                      handleChange={beforeStatusChange}
+                      userInfo={editUser.status}
+                      label={UserEditDict[userLanguage]['status']}
+                      id="status"
+                      isRequired
+                      items={Status}
+                    />
+                  </div>
+
+                  <div className="sm:col-span-3 p-2">
+                    <DropdownForm
+                      value=""
+                      style={false}
+                      handleChange={handleChangeRole}
+                      userInfo={editUser.role}
+                      label={UserEditDict[userLanguage]['role']}
+                      listClassName="h-28"
+                      id="role"
+                      isRequired
+                      items={Role}
+                    />
+                  </div>
+
+                  {superEdit && user.role === 'ST' && (
+                    <div className="sm:col-span-3 p-2">
+                      <DropdownForm
+                        dataCy="ondemand"
+                        value=""
+                        style={false}
+                        handleChange={handleChangeOnDemand}
+                        userInfo={editUser?.onDemand ? 'Yes' : 'No'}
+                        label={UserEditDict[userLanguage]['ondemand']}
+                        id="ondemand"
+                        isRequired
+                        items={OnDemand}
+                      />
+                    </div>
+                  )}
+                  {(editUser.status === 'SUSPENDED' ||
+                    editUser.status === 'INACTIVE') && (
+                    <>
+                      <div className="sm:col-span-3 p-2">
+                        <FormInput
+                          value={inactiveDate}
+                          id={'inactive_date'}
+                          label={UserEditDict[userLanguage]['inactive_date']}
+                          placeHolder="MM/DD/YYYY"
+                          name="inactive_date"
+                          onChange={onDateChange}
+                        />
+                      </div>
+                      <div className="sm:col-span-3 p-2">
+                        <TextArea
+                          value={editUser.statusReason}
+                          id="statusReason"
+                          onChange={onStatusReasonChange}
+                          name="statusReason"
+                          label={UserEditDict[userLanguage]['status_reason']}
+                        />
+                      </div>
+                    </>
+                  )}
+                </div>
+              )}
+              {tab !== 'p' && checkpoints.length > 0 && (
+                <div className="text-gray-900">
+                  {checkpoints.map((checkpoint: any) => (
+                    <Fragment key={`checkpoint_${checkpoint.id}`}>
+                      <div className="h-auto bg-white shadow-5 sm:rounded-lg mb-4 text-gray-900">
+                        <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
+                          <h3 className="text-lg leading-6 font-medium uppercase">
+                            {checkpoint.title}
+                          </h3>
+                        </div>
+
+                        <div className="h-full px-4 py-5 sm:px-6">
+                          <div className="grid grid-cols-1 gap-y-4 gap-x-4 sm:grid-cols-6 text-gray-900">
+                            {checkpoint.questions?.items.map((item: any) => (
+                              <Fragment key={item.question.id}>
+                                <div className="sm:col-span-6 p-2 flex items-end">
+                                  <div className="flex flex-col justify-between">
+                                    {item.question.type === 'text' ? (
+                                      <FormInput
+                                        value={
+                                          checkpointData[checkpoint.id]
+                                            ? checkpointData[checkpoint.id][
+                                                item.question.id
+                                              ]
+                                            : ''
+                                        }
+                                        id={item.question.id}
+                                        name=""
+                                        label={item?.question?.question}
+                                        onChange={(e) =>
+                                          onInputChange(
+                                            e,
+                                            checkpoint.id,
+                                            item.question.id
+                                          )
+                                        }
+                                      />
+                                    ) : null}
+                                    {/* Will change it to text box if required. */}
+                                    {item.question.type === 'input' ? (
+                                      <FormInput
+                                        value={
+                                          checkpointData[checkpoint.id]
+                                            ? checkpointData[checkpoint.id][
+                                                item.question.id
+                                              ]
+                                            : ''
+                                        }
+                                        id={item.question.id}
+                                        name=""
+                                        label={item?.question?.question}
+                                        onChange={(e) =>
+                                          onInputChange(
+                                            e,
+                                            checkpoint.id,
+                                            item.question.id
+                                          )
+                                        }
+                                      />
+                                    ) : null}
+                                    {item.question.type === 'link' ? (
+                                      <div className="sm:col-span-3">
+                                        <label
+                                          htmlFor="date picker"
+                                          className="block text-m font-medium leading-5 text-gray-700">
+                                          {item?.question?.question}
+                                        </label>
+                                        <div className="mt-1  border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm">
+                                          <input
+                                            id={item.question.id}
+                                            type="url"
+                                            name="url"
+                                            placeholder="https://example.com"
+                                            pattern="https://.*"
+                                            size={30}
+                                            required
+                                            value={
+                                              checkpointData[checkpoint.id]
+                                                ? checkpointData[checkpoint.id][
+                                                    item.question.id
+                                                  ]
+                                                : ''
+                                            }
+                                            onChange={(e) =>
+                                              onInputChange(
+                                                e,
+                                                checkpoint.id,
+                                                item.question.id
+                                              )
+                                            }
+                                            className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5 text-gray-900"
+                                          />
+                                        </div>
+                                      </div>
+                                    ) : null}
+                                    {item.question.type === 'datePicker' ? (
+                                      <FormInput
+                                        value={
+                                          checkpointData[checkpoint.id]
+                                            ? checkpointData[checkpoint.id][
+                                                item.question.id
+                                              ]
+                                            : ''
+                                        }
+                                        id={item.question.id}
+                                        name=""
+                                        label={item?.question?.question}
+                                        onChange={(e) =>
+                                          onInputChange(
+                                            e,
+                                            checkpoint.id,
+                                            item.question.id
+                                          )
+                                        }
+                                      />
+                                    ) : null}
+                                    {item.question.type === 'selectOne' ? (
+                                      <Fragment>
+                                        <label className="block text-xs font-semibold mb-1 leading-5 text-gray-700">
+                                          {item?.question?.question}
+                                        </label>
+
+                                        <Selector
+                                          selectedItem={
                                             checkpointData[checkpoint.id]
-                                              ? checkpointData[checkpoint.id][
-                                                  item.question.id
-                                                ]
+                                              ? isOther(
+                                                  checkpointData[checkpoint.id][
+                                                    item.question.id
+                                                  ]
+                                                )
+                                                ? 'Other'
+                                                : checkpointData[checkpoint.id][
+                                                    item.question.id
+                                                  ]
                                               : ''
                                           }
-                                          onChange={(e) =>
-                                            onInputChange(
-                                              e,
+                                          placeholder=""
+                                          list={convertToSelectorList(
+                                            item?.question?.options
+                                          )}
+                                          onChange={(value, name, id) =>
+                                            onSingleSelect(
+                                              value,
+                                              name,
+                                              id,
                                               checkpoint.id,
                                               item.question.id
                                             )
                                           }
-                                          className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5 text-gray-900"
                                         />
-                                      </div>
-                                    </div>
-                                  ) : null}
-                                  {item.question.type === 'datePicker' ? (
-                                    <FormInput
-                                      value={
-                                        checkpointData[checkpoint.id]
-                                          ? checkpointData[checkpoint.id][
+                                        {checkpointData[checkpoint.id] &&
+                                          isOther(
+                                            checkpointData[checkpoint.id][
                                               item.question.id
                                             ]
-                                          : ''
-                                      }
-                                      id={item.question.id}
-                                      name=""
-                                      label={item?.question?.question}
-                                      onChange={(e) =>
-                                        onInputChange(e, checkpoint.id, item.question.id)
-                                      }
-                                    />
-                                  ) : null}
-                                  {item.question.type === 'selectOne' ? (
-                                    <Fragment>
-                                      <label className="block text-xs font-semibold mb-1 leading-5 text-gray-700">
-                                        {item?.question?.question}
-                                      </label>
-
-                                      <Selector
-                                        selectedItem={
-                                          checkpointData[checkpoint.id]
-                                            ? isOther(
-                                                checkpointData[checkpoint.id][
-                                                  item.question.id
-                                                ]
-                                              )
-                                              ? 'Other'
-                                              : checkpointData[checkpoint.id][
-                                                  item.question.id
-                                                ]
-                                            : ''
-                                        }
-                                        placeholder=""
-                                        list={convertToSelectorList(
-                                          item?.question?.options
-                                        )}
-                                        onChange={(value, name, id) =>
-                                          onSingleSelect(
-                                            value,
-                                            name,
-                                            id,
-                                            checkpoint.id,
-                                            item.question.id
-                                          )
-                                        }
-                                      />
-                                      {checkpointData[checkpoint.id] &&
-                                        isOther(
-                                          checkpointData[checkpoint.id][item.question.id]
-                                        ) && (
-                                          <div className="col-span-2">
-                                            <FormInput
-                                              value={getValue(
-                                                checkpoint.id,
-                                                item.question.id
-                                              )}
-                                              id={item.question.id}
-                                              placeHolder="Mention other"
-                                              name="other"
-                                              onChange={(e) => {
-                                                onOtherInputChange(
-                                                  e,
+                                          ) && (
+                                            <div className="col-span-2">
+                                              <FormInput
+                                                value={getValue(
                                                   checkpoint.id,
                                                   item.question.id
-                                                );
-                                              }}
-                                            />
-                                          </div>
-                                        )}
-                                    </Fragment>
-                                  ) : null}
-                                  {item.question.type === 'selectMany' ? (
-                                    <Fragment>
-                                      <label className="block text-xs font-semibold mb-1 leading-5 text-gray-700">
-                                        {item?.question?.question}
-                                      </label>
-                                      <MultipleSelector
-                                        list={convertToMultiSelectList(
-                                          item?.question?.options
-                                        )}
-                                        selectedItems={
-                                          checkpointData[checkpoint.id] &&
-                                          checkpointData[checkpoint.id][item.question.id]
-                                            ? selectedMultiOptions(
-                                                checkpointData[checkpoint.id][
-                                                  item.question.id
-                                                ]
-                                              )
-                                            : []
-                                        }
-                                        placeholder=""
-                                        onChange={(id, name, value) =>
-                                          onMultipleSelection(
-                                            id,
-                                            name,
-                                            value,
-                                            checkpoint.id,
-                                            item.question.id
-                                          )
-                                        }
-                                      />
-                                    </Fragment>
-                                  ) : null}
+                                                )}
+                                                id={item.question.id}
+                                                placeHolder="Mention other"
+                                                name="other"
+                                                onChange={(e) => {
+                                                  onOtherInputChange(
+                                                    e,
+                                                    checkpoint.id,
+                                                    item.question.id
+                                                  );
+                                                }}
+                                              />
+                                            </div>
+                                          )}
+                                      </Fragment>
+                                    ) : null}
+                                    {item.question.type === 'selectMany' ? (
+                                      <Fragment>
+                                        <label className="block text-xs font-semibold mb-1 leading-5 text-gray-700">
+                                          {item?.question?.question}
+                                        </label>
+                                        <MultipleSelector
+                                          list={convertToMultiSelectList(
+                                            item?.question?.options
+                                          )}
+                                          selectedItems={
+                                            checkpointData[checkpoint.id] &&
+                                            checkpointData[checkpoint.id][
+                                              item.question.id
+                                            ]
+                                              ? selectedMultiOptions(
+                                                  checkpointData[checkpoint.id][
+                                                    item.question.id
+                                                  ]
+                                                )
+                                              : []
+                                          }
+                                          placeholder=""
+                                          onChange={(id, name, value) =>
+                                            onMultipleSelection(
+                                              id,
+                                              name,
+                                              value,
+                                              checkpoint.id,
+                                              item.question.id
+                                            )
+                                          }
+                                        />
+                                      </Fragment>
+                                    ) : null}
+                                  </div>
                                 </div>
-                              </div>
-                            </Fragment>
-                          ))}
+                              </Fragment>
+                            ))}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </Fragment>
-                ))}
-              </div>
-            )}
+                    </Fragment>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
-        </div>
 
-        <div className="px-4 pt-4 w-full flex justify-end">
-          <Buttons
-            btnClass="py-2 w-2.5/10 px-4 text-xs mr-2"
-            label={UserEditDict[userLanguage]['button']['cancel']}
-            onClick={history.goBack}
-            transparent
-          />
-          <Buttons
-            dataCy="edit-user-save-button"
-            disabled={updating}
-            btnClass="py-2 w-2.5/10 px-4 text-xs ml-2"
-            label={
-              updating
-                ? ButtonDict['SAVING']
-                : UserEditDict[userLanguage]['button']['save']
-            }
-            onClick={onSubmit}
-          />
-        </div>
-      </form>
-    </div>
+          <div className="px-4 pt-4 w-full flex justify-end">
+            <Buttons
+              btnClass="py-2 w-2.5/10 px-4 text-xs mr-2"
+              label={UserEditDict[userLanguage]['button']['cancel']}
+              onClick={history.goBack}
+              transparent
+            />
+            <Buttons
+              dataCy="edit-user-save-button"
+              disabled={updating}
+              btnClass="py-2 w-2.5/10 px-4 text-xs ml-2"
+              label={
+                updating
+                  ? ButtonDict['SAVING']
+                  : UserEditDict[userLanguage]['button']['save']
+              }
+              onClick={onSubmit}
+            />
+          </div>
+        </form>
+      </div>
+      {warnModal.show && (
+        <ModalPopUp
+          closeAction={closeModal}
+          saveAction={warnModal.onSaveAction}
+          saveLabel="Yes"
+          message={warnModal.message}
+        />
+      )}
+    </>
   );
 };
 
