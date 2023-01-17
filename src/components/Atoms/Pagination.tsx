@@ -136,7 +136,7 @@ const Pagination: React.FC<PaginationProps> = (pageProps: PaginationProps) => {
   const {currentPage, lastPage, firstPage, setNext, setPrev, totalPages = 10} = pageProps;
 
   return (
-    <div className="flex gap-x-4 flex-wrap items-center justify-start lg:justify-center">
+    <div className="flex gap-x-4 w-1/3 flex-wrap items-center justify-start lg:justify-center">
       <PageArrows onClick={setPrev} active={currentPage !== 1} isBack={true} />
       {currentPage !== 1 && <Dots />}
       <PageCount

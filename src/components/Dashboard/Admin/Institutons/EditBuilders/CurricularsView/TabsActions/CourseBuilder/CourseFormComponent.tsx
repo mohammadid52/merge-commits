@@ -1,5 +1,7 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {Storage} from '@aws-amplify/storage';
+import Label from '@components/Atoms/Form/Label';
+import ProgressBar from '@components/Lesson/UniversalLessonBuilder/UI/ProgressBar';
 import ModalPopUp from '@components/Molecules/ModalPopUp';
 import {RoomStatus} from 'API';
 import Buttons from 'atoms/Buttons';
@@ -413,19 +415,23 @@ const CourseFormComponent = ({
     setWarnModal({show: false, message: '', onSaveAction: () => {}});
   };
 
-  const selectStatus = (name: RoomStatus) =>
+  const selectStatus = (name: RoomStatus) => {
     setCurricularData({...curricularData, status: name});
+    closeModal();
+  };
 
   const beforeStatusChange = (name: RoomStatus) => {
-    if (name === RoomStatus.INACTIVE) {
-      setWarnModal({
-        show: true,
-        message:
-          'By setting this student to inactive, students will no longer see any courses when they log in (they will continue to have access to their notebooks). Do you wish to continue?',
-        onSaveAction: () => selectStatus(name)
-      });
-    } else {
-      selectStatus(name);
+    if (name !== curricularData.status) {
+      if (name === RoomStatus.INACTIVE) {
+        setWarnModal({
+          show: true,
+          message:
+            'By setting this student to inactive, students will no longer see any courses when they log in (they will continue to have access to their notebooks). Do you wish to continue?',
+          onSaveAction: () => selectStatus(name)
+        });
+      } else {
+        selectStatus(name);
+      }
     }
   };
 
@@ -440,11 +446,13 @@ const CourseFormComponent = ({
     summary
   } = curricularData;
 
+  const [uploadProgress, setUploadProgress] = useState<string | number>(0);
+
   return (
     <div className="">
-      <div className="w-9/10 m-auto">
-        <div className="h-9/10 flex flex-col lg:flex-row">
-          <div className="w-auto p-4 mr-6 flex flex-col text-center items-center">
+      <div className="m-auto">
+        <div className="flex flex-col">
+          {/* <div className="w-auto p-4 mr-6 flex flex-col text-center items-center">
             <button className="group hover:opacity-80 transition-all focus:outline-none focus:opacity-95 flex flex-col items-center mt-4">
               <label className="cursor-pointer flex justify-center">
                 <DroppableMedia
@@ -472,8 +480,36 @@ const CourseFormComponent = ({
               </label>
             </button>
             <p className="text-gray-600 my-4">Click to add curricular image</p>
-          </div>
-          <div className="  grid gap-4 grid-cols-2 py-4">
+          </div> */}
+          <div className="  grid gap-4 grid-cols-2 lg:grid-cols-3 py-4">
+            <div className="">
+              <Label label="Curriculum Image" />
+              <DroppableMedia
+                mediaRef={mediaRef}
+                className="mt-1 w-full"
+                setImage={(img: any, file: any) => {
+                  setUpImage(img);
+                  setFileObj(file);
+                }}
+                toggleCropper={toggleCropper}>
+                <Buttons
+                  btnClass=" w-full"
+                  label={imageUrl ? 'Change image' : 'Upload image'}
+                  transparent
+                  onClick={handleImage}
+                  insideElement={
+                    imageUrl ? (
+                      <img
+                        onClick={handleImage}
+                        className={`profile  w-8 bg-gray-100  border-0 flex flex-shrink-0 rounded-xl theme-card-shadow`}
+                        src={imageUrl}
+                        onLoad={() => setImageLoading(false)}
+                      />
+                    ) : null
+                  }
+                />
+              </DroppableMedia>
+            </div>
             <div className="">
               <FormInput
                 dataCy="curricular-name-input"
@@ -517,7 +553,7 @@ const CourseFormComponent = ({
                 selectedItem={status || UserEditDict[userLanguage]['status']}
               />
             </div>
-            <div className=" col-span-2">
+            <div className=" ">
               <Selector
                 label={CurricularBuilderdict[userLanguage]['TYPE']}
                 placeholder={CurricularBuilderdict[userLanguage]['TYPE']}
@@ -552,7 +588,7 @@ const CourseFormComponent = ({
                 label={CurricularBuilderdict[userLanguage]['DESCRIPTION']}
               />
             </div>
-            <div className="col-span-2">
+            <div className="">
               <FormInput
                 textarea
                 rows={6}
@@ -566,6 +602,12 @@ const CourseFormComponent = ({
           </div>
         </div>
       </div>
+      {imageLoading && uploadProgress !== 'done' && (
+        <ProgressBar
+          status={uploadProgress < 99 ? `Uploading file` : 'Upload Done'}
+          progress={uploadProgress}
+        />
+      )}
       {messages.show ? (
         <div className="py-2 m-auto text-center">
           <p className={`${messages.isError ? 'text-red-600' : 'text-green-600'}`}>

@@ -27,7 +27,7 @@ const PageCountSelector: React.FC<CountProps> = (countProps: CountProps) => {
   const [selectedItem, setSelectedItem] = useState<string>(_list[0].name);
 
   return (
-    <div className={`w-auto`}>
+    <div className={`w-1/3`}>
       <Selector
         onChange={(val: any, name: string) => {
           setSelectedItem(name);

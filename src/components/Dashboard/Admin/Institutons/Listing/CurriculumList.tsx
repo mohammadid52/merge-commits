@@ -396,7 +396,7 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
   // ############################### OUTPUT ############################## //
   // ##################################################################### //
   return (
-    <div className="pt-0 flex m-auto justify-center h-full p-8">
+    <div className="pt-0 flex m-auto justify-center h-full p-4">
       <div className="flex flex-col">
         <SectionTitleV3
           title={InstitueCurriculum[userLanguage]['TITLE']}
