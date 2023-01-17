@@ -2,20 +2,23 @@ import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {Auth} from '@aws-amplify/auth';
 import Loader from 'atoms/Loader';
 import NotesBlock from 'components/Lesson/UniversalLessonBlockComponents/Blocks/Notes/NotesBlock';
-import {GlobalContext, useGlobalContext} from 'contexts/GlobalContext';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import * as mutations from 'graphql/mutations';
 import * as queries from 'graphql/queries';
 import {UniversalJournalData} from 'interfaces/UniversalLessonInterfaces';
-import {getLocalStorageData} from 'utilities/localStorage';
+import {isEmpty} from 'lodash';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import findIndex from 'lodash/findIndex';
-import map from 'lodash/map';
 import forEach from 'lodash/forEach';
+import map from 'lodash/map';
 import {nanoid} from 'nanoid';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useParams} from 'react-router';
-import useStudentDataValue from '@customHooks/studentDataValue';
+import {getLocalStorageData} from 'utilities/localStorage';
+
+let strippedString = (str: string) =>
+  str.replace(/(<([^>]+)>)/gi, '').replace(/&nbsp;/gi, '');
 
 const INITIAL_NOTESDATA: UniversalJournalData = {
   id: '',
@@ -481,14 +484,15 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
       ed?.type?.includes('content-custom')
     );
 
-    let strippedString = (str: string) =>
-      str.replace(/(<([^>]+)>)/gi, '').replace(/&nbsp;/gi, '');
     const mapFixedData = fixedFilteredData.map((m) => {
       // @ts-ignore
       const note = find(allNotes, ['id', m.domID]);
-      if (note && m) {
+      if (!isEmpty(note) && m) {
         // @ts-ignore
         const value = strippedString(m.input.toString());
+
+        console.log(value);
+
         return {
           // @ts-ignore
           id: m.domID,
@@ -504,18 +508,19 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
     const mapCustomData = fixedCustomData.map((m) => {
       let className = m.type.split(' || ')[1];
       const note = find(allNotes, ['id', m.domID]);
-
-      return {
-        id: m.domID,
-        class: className,
-        value: strippedString(m.input.toString()),
-        custom: true,
-        pagePartId: note?.pagePartId,
-        partContentId: note?.partContentId
-      };
+      if (!isEmpty(note)) {
+        return {
+          id: m.domID,
+          class: className,
+          value: strippedString(m.input.toString()),
+          custom: true,
+          pagePartId: note?.pagePartId,
+          partContentId: note?.partContentId
+        };
+      }
     });
 
-    const collectedNotes = [...mapFixedData, ...mapCustomData];
+    const collectedNotes = [...mapFixedData, ...mapCustomData].filter(Boolean);
 
     return (
       <>

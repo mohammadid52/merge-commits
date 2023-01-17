@@ -63,7 +63,11 @@ class ErrorBoundary extends React.Component<PropsInterface> {
 
   public render() {
     if (this.state.hasError) {
-      return this.props.fallback || <div>Oops with {this.props.componentName}</div>;
+      return (
+        this.props.fallback || (
+          <div className="hidden">Oops with {this.props.componentName}</div>
+        )
+      );
     } else {
       return this.props.children;
     }

@@ -330,6 +330,9 @@ const NotesBlock = ({
     {id: 5, name: 'purple'}
   ];
 
+  const buttonIconSize =
+    'h-8 w-8 hover:theme-bg hover:text-white rounded-full transition-all p-1';
+
   if (loading) {
     return (
       <div className="flex items-center overflow-hidden justify-center min-h-32">
@@ -373,16 +376,14 @@ const NotesBlock = ({
           open={showEditModal.show}
           setOpen={modalBtns.edit.cancel}>
           <div className="flex items-center flex-col justify-center">
-            {
-              <textarea
-                onChange={noop}
-                className={`${genSize(
-                  currentSelectedSize
-                )} preview-note bg-gradient-to-t text-gray-900 from-${currentSelectedColor}-500 to-${currentSelectedColor}-300 rounded leading-8 p-6`}
-                id={'note'}
-                value={showEditModal?.value}
-              />
-            }
+            <textarea
+              onChange={noop}
+              className={`${genSize(
+                currentSelectedSize
+              )} preview-note bg-gradient-to-t text-gray-900 from-${currentSelectedColor}-500 to-${currentSelectedColor}-300 rounded leading-8 p-6`}
+              id={'note'}
+              value={showEditModal?.value}
+            />
 
             <div className="border-0 p-2 py-3 my-4 flex items-center justify-around border-gray-200 dark:border-gray-700 rounded-lg ">
               {map(colorList, (color) => (
@@ -461,7 +462,7 @@ const NotesBlock = ({
           </div>
 
           {isInLesson && isStudent && (
-            <div className="w-auto space-y-4 flex items-center flex-col justify-center">
+            <div className="w-auto space-y-4 flex items-center flex-col justify-center theme-border border-0 rounded-full p-2">
               {defaultNotes.length > 0 &&
                 resetDefaultNotes &&
                 typeof resetDefaultNotes === 'function' && (
@@ -469,8 +470,8 @@ const NotesBlock = ({
                     <button
                       data-cy="reset-to-default-button"
                       onClick={resetDefaultNotes}
-                      className="w-auto text-green-600 hover:text-green-500 transition-all">
-                      <VscDebugRestart className="h-10 w-10 " />
+                      className="w-auto theme-text transition-all">
+                      <VscDebugRestart className={buttonIconSize} />
                     </button>
                   </Tooltip>
                 )}
@@ -479,8 +480,8 @@ const NotesBlock = ({
                   data-cy="add-new-note-button"
                   disabled={localNotes.length === 15}
                   onClick={onAddNewNote}
-                  className="w-auto text-red-600 hover:text-red-500 transition-all">
-                  <FiFilePlus className="h-10 w-10 " />
+                  className="w-auto theme-text transition-all">
+                  <FiFilePlus className={buttonIconSize} />
                 </button>
               </Tooltip>
 
@@ -500,8 +501,8 @@ const NotesBlock = ({
                         );
                       }
                     }}
-                    className="w-auto text-yellow-600 hover:text-yellow-500 transition-all">
-                    <BiSave className="h-10 w-10 " />
+                    className="w-auto theme-text transition-all">
+                    <BiSave className={buttonIconSize} />
                   </button>
                 </Tooltip>
               )}

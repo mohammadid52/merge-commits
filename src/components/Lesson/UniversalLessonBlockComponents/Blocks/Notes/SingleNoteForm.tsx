@@ -37,7 +37,7 @@ const SingleNote = ({
             </label>
             <button
               onClick={() => setColorPicker(!colorPicker)}
-              className={`border-0 border-gray-300 w-56 rounded shadow-xs flex items-center justify-start  h-10 px-3`}>
+              className={`border-0 focus:outline-none hover:theme-bg:200 hover:theme-border:400 hover:theme-text:400 focus:ring-2 border-gray-300 rounded-full shadow-sm flex items-center justify-start  h-10 px-3`}>
               <span className={'text-gray-700 w-auto text-sm mr-2 capitalize'}>
                 {singleNoteData.bgColor?.split('-')[0]}{' '}
               </span>
@@ -75,9 +75,10 @@ const SingleNote = ({
             </label>
             <Selector
               width="w-56"
+              dropdownWidth="w-56"
               placeholder="Select size"
               selectedItem={
-                singleNoteData.size !== 'undefined' ? singleNoteData.size : 'medium'
+                singleNoteData.size !== 'undefined' ? singleNoteData.size : 'large'
               }
               onChange={(_, name) => onFieldUpdate('size', name, idx)}
               list={[
