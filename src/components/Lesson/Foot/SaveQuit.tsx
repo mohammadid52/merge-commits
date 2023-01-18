@@ -99,7 +99,13 @@ const SaveQuit = ({invokeRequiredField}: SaveQuitProps) => {
         <Buttons
           dataCy="save-lesson"
           // disabled={!canContinue}
-          label={waiting ? 'Saving your data...' : 'Save Survey Results'}
+          label={
+            waiting
+              ? 'Saving your data...'
+              : lessonState.lessonData.type === 'survey'
+              ? 'Survey Completed'
+              : 'Lesson Completed'
+          }
           Icon={BiSave}
           btnClass="w-full"
           onClick={handleManualSave}></Buttons>

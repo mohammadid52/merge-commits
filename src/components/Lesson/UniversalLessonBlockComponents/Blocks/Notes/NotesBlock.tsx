@@ -156,6 +156,22 @@ const NotesBlock = ({
     }
   }, [notesList]);
 
+  function PosEnd(end: any) {
+    var len = end.value.length;
+
+    // Mostly for Web Browsers
+    if (end.setSelectionRange) {
+      end.focus();
+      end.setSelectionRange(len, len);
+    } else if (end.createTextRange) {
+      var t = end.createTextRange();
+      t.collapse(true);
+      t.moveEnd('character', len);
+      t.moveStart('character', len);
+      t.select();
+    }
+  }
+
   if (jQuery.ready) {
     if (localNotes && localNotes.length > 0) {
       localNotes.forEach((note: {id: any}, idx: number) => {
@@ -163,7 +179,7 @@ const NotesBlock = ({
           const id = `#${note.id} #note-${note.id}`;
 
           $(id).on('click', (e) => {
-            e.target.focus();
+            PosEnd(e.target);
           });
         }
       });
@@ -439,34 +455,16 @@ const NotesBlock = ({
           </div>
         </ThemeModal>
 
-        <div className="relative flex items-start space-x-4">
-          <div id="container" className="sticky-container blackboard">
-            {localNotes &&
-              localNotes.length > 0 &&
-              map(localNotes, (note, idx) => {
-                if (note) {
-                  return (
-                    <Note
-                      custom={note.custom}
-                      updateText={updateText}
-                      setShowEditModal={setShowEditModal}
-                      setShowDeleteModal={setShowDeleteModal}
-                      key={note?.id}
-                      idx={idx}
-                      note={note}
-                      preview={preview}
-                    />
-                  );
-                }
-              })}
-          </div>
-
+        <div className="relative flex flex-col items-start">
           {isInLesson && isStudent && (
-            <div className="w-auto space-y-4 flex items-center flex-col justify-center theme-border border-0 rounded-full p-2">
+            <div className="w-auto flex items-center  justify-center theme-border border-0 rounded-full mb-4 gap-x-4 p-2">
               {defaultNotes.length > 0 &&
                 resetDefaultNotes &&
                 typeof resetDefaultNotes === 'function' && (
-                  <Tooltip text="reset to default">
+                  <Tooltip
+                    placement="top"
+                    additionalClass="flex items-center justify-center"
+                    text="reset to default">
                     <button
                       data-cy="reset-to-default-button"
                       onClick={resetDefaultNotes}
@@ -475,7 +473,10 @@ const NotesBlock = ({
                     </button>
                   </Tooltip>
                 )}
-              <Tooltip text="Add new note">
+              <Tooltip
+                placement="top"
+                additionalClass="flex items-center justify-center"
+                text="Add new note">
                 <button
                   data-cy="add-new-note-button"
                   disabled={localNotes.length === 15}
@@ -486,7 +487,10 @@ const NotesBlock = ({
               </Tooltip>
 
               {!saveInProgress && (
-                <Tooltip text="Save">
+                <Tooltip
+                  placement="top"
+                  additionalClass="flex items-center justify-center"
+                  text="Save">
                   <button
                     data-cy="save-note-button"
                     onClick={() => {
@@ -509,6 +513,26 @@ const NotesBlock = ({
               {saveInProgress && <Loader className="text-yellow-500 text-base" />}
             </div>
           )}
+          <div id="container" className="sticky-container blackboard">
+            {localNotes &&
+              localNotes.length > 0 &&
+              map(localNotes, (note, idx) => {
+                if (note) {
+                  return (
+                    <Note
+                      custom={note.custom}
+                      updateText={updateText}
+                      setShowEditModal={setShowEditModal}
+                      setShowDeleteModal={setShowDeleteModal}
+                      key={note?.id}
+                      idx={idx}
+                      note={note}
+                      preview={preview}
+                    />
+                  );
+                }
+              })}
+          </div>
         </div>
       </>
     );

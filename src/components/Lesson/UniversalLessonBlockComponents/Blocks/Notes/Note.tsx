@@ -62,7 +62,7 @@ const InnerNote = React.memo(
     return (
       <div
         id={note.id}
-        style={{transform: 'rotate(' + angle + 'deg)'}}
+        // style={{transform: 'rotate(' + angle + 'deg)'}}
         className={`_sticky ${genSize(
           size
         )}  group bg-gradient-to-t text-gray-900 from-${bgColor}-500 to-${bgColor}-300 rounded leading-8 p-6`}>

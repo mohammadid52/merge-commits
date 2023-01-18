@@ -491,8 +491,6 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
         // @ts-ignore
         const value = strippedString(m.input.toString());
 
-        console.log(value);
-
         return {
           // @ts-ignore
           id: m.domID,
@@ -524,10 +522,6 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
 
     return (
       <>
-        <div className="text-lg mb-2 text-gray-600">
-          {15 - collectedNotes.length} {collectedNotes.length > 1 ? 'notes' : 'note'}{' '}
-          available
-        </div>
         <div className="flex relative items-center justify-center">
           {collectedNotes.length > 0 && (
             <NotesBlock
