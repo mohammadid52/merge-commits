@@ -328,7 +328,7 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
         item={item}
         setHoveringItem={setHoveringItem}
         hoveringItem={hoveringItem}
-        isLast={finalList.length - 3 <= index}
+        isLast={finalList.length - 1 === index}
         searchTerm={searchInput.value}
         currentSelectedItem={currentSelectedItem}
         isSuperAdmin={isSuperAdmin}

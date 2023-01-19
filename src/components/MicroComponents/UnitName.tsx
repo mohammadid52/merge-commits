@@ -42,7 +42,7 @@ const UnitName = ({
   };
   return (
     <div
-      className="cursor-pointer"
+      className="cursor-pointer hover:underline hover:theme-text:400"
       onClick={() => editCurrentUnit(item.id)}
       onMouseEnter={() => {
         setHoveringItem({name: item.name});
@@ -59,7 +59,7 @@ const UnitName = ({
         show={hoveringItem?.name === item.name && currentSelectedItem}>
         {hoveringItem?.name === item.name && currentSelectedItem && (
           <>
-            <div className="gap-x-4 mt-2 grid grid-cols-3">
+            <div className="bg-white rounded-md py-2 px-4 my-2 gap-x-4 flex items-center justify-between">
               <DataValue
                 title={'Status'}
                 content={
@@ -75,21 +75,25 @@ const UnitName = ({
               />
 
               <DataValue
+                withBg
                 title={'Created date'}
                 content={moment(item.createdAt).format('ll')}
               />
               <DataValue
+                withBg
                 title={'Last update'}
                 content={moment(item.updatedAt).format('ll')}
               />
             </div>
             <DataValue
+              withBg
               title={'Description'}
               content={truncate(currentSelectedItem?.description, {length: 200}) || '--'}
             />
 
             <div className="mt-2">
               <DataValue
+                withBg
                 title={`Attached courses (${getAttachedCourses().length})`}
                 content={<AttachedCourses curricular={curricular} unitId={item.id} />}
               />

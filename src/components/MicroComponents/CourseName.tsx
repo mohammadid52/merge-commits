@@ -58,7 +58,7 @@ const CourseName = ({
       }}
       data-cy={`curriculum-${item.name.split(' ').join('-')}`}
       onClick={() => editCurrentCurricular(item.id)}
-      className="flex cursor-pointer items-center">
+      className="flex hover:underline hover:theme-text:400 cursor-pointer items-center">
       <div className="flex-shrink-0 h-10 w-10 flex items-center">
         {item.image ? (
           <img src={getImageFromS3Static(item.image)} className="h-8 w-8 rounded-full" />
@@ -66,7 +66,7 @@ const CourseName = ({
           <Placeholder name={item.name} size="h-8 w-8" />
         )}
       </div>
-      <div className="ml-2 relative ">
+      <div className="ml-2 relative  ">
         <Highlighted text={item.name} highlight={searchTerm} />
 
         <BriefPopover
@@ -76,7 +76,7 @@ const CourseName = ({
           show={showPopover}>
           {showPopover && (
             <>
-              <div className=" my-2 gap-x-4 flex items-start justify-between">
+              <div className="bg-white rounded-md py-2 px-4 my-2 gap-x-4 flex items-center justify-between">
                 <DataValue
                   title={'Status'}
                   content={
@@ -106,6 +106,7 @@ const CourseName = ({
                 <>
                   <div className="mt-2">
                     <DataValue
+                      withBg
                       title={'Designers'}
                       content={
                         isLoading && !isFetched && designers.length === 0 ? (
@@ -148,6 +149,7 @@ const CourseName = ({
               <div className="mt-2">
                 <DataValue
                   title={'Summary'}
+                  withBg
                   content={truncate(item.summary || '--', {length: 200})}
                 />
               </div>
@@ -156,6 +158,7 @@ const CourseName = ({
               <div className="my-2">
                 <DataValue
                   title={'Description'}
+                  withBg
                   content={truncate(item.description || '--', {length: 200})}
                 />
               </div>
