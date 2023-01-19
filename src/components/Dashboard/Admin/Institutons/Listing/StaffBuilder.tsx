@@ -21,23 +21,21 @@ import * as mutations from 'graphql/mutations';
 import * as queries from 'graphql/queries';
 
 import SearchInput from '@components/Atoms/Form/SearchInput';
-import Highlighted from '@components/Atoms/Highlighted';
-import Placeholder from '@components/Atoms/Placeholder';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import Table from '@components/Molecules/Table';
 import useSearch from '@customHooks/useSearch';
 import AddButton from 'atoms/Buttons/AddButton';
 import Modal from 'atoms/Modal';
 
+import Filters, {SortType} from '@components/Atoms/Filters';
+import StaffBuilderName from '@components/MicroComponents/StaffBuilderName';
+import useAuth from '@customHooks/useAuth';
+import usePagination from '@customHooks/usePagination';
+import {logError} from '@graphql/functions';
 import Tooltip from 'atoms/Tooltip';
 import Registration from 'components/Dashboard/Admin/UserManagement/Registration';
 import {map} from 'lodash';
-import {logError} from '@graphql/functions';
-import useAuth from '@customHooks/useAuth';
-import Filters, {SortType} from '@components/Atoms/Filters';
-import usePagination from '@customHooks/usePagination';
 import {Status} from '../../UserManagement/UserStatus';
-import StaffBuilderName from '@components/MicroComponents/StaffBuilderName';
 
 interface StaffBuilderProps {
   instituteId: String;

@@ -31,7 +31,8 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
     setUniversalLessonDetails,
     universalLessonDetails,
     activeTab,
-    setActiveTab
+    setActiveTab,
+    scanLessonAndFindComplicatedWord
   } = useULBContext();
 
   const [loading, setLoading] = useState<boolean>(false);
@@ -67,7 +68,9 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
         })
       );
       const savedData = result.data.getUniversalLesson;
-      setUniversalLessonDetails(savedData);
+
+      const updatedLessonPlan = scanLessonAndFindComplicatedWord(savedData.lessonPlan);
+      setUniversalLessonDetails({...savedData, lessonPlan: updatedLessonPlan});
       setLessonData(savedData);
 
       const designers = designersList.filter((item: any) =>

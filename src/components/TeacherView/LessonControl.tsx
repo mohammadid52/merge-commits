@@ -1,4 +1,5 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import {useULBContext} from '@contexts/UniversalLessonBuilderContext';
 import {UniversalLessonStudentData as UniversalLessonStudentDataFromAPI} from 'API';
 import {GlobalContext} from 'contexts/GlobalContext';
 import {useNotifications} from 'contexts/NotificationContext';
@@ -67,6 +68,8 @@ const LessonControl = () => {
       return !fullscreen;
     });
   };
+
+  const {scanLessonAndFindComplicatedWord} = useULBContext();
 
   // view: 'lesson' | 'lessonInfo' | 'profile';
   const [rightView, setRightView] = useState<{
@@ -345,8 +348,13 @@ const LessonControl = () => {
           }
         ];
       }, []);
-      setLocalStorageData('lesson_plan', lessonPlan);
-      lessonDispatch({type: 'SET_LESSON_DATA', payload: response});
+
+      const updatedLessonPlan = scanLessonAndFindComplicatedWord(lessonPlan);
+      setLocalStorageData('lesson_plan', updatedLessonPlan);
+      lessonDispatch({
+        type: 'SET_LESSON_DATA',
+        payload: {...response, lessonPlan: updatedLessonPlan}
+      });
     } catch (e) {
       console.error('getSyllabusLesson() - error fetching lesson', e);
     }

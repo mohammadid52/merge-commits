@@ -1,30 +1,28 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import React, {useContext, useEffect, useState} from 'react';
-import {FaQuestionCircle, FaRegEye} from 'react-icons/fa';
-import {IoCardSharp, IoDocumentText} from 'react-icons/io5';
-import {useHistory, useParams, useRouteMatch} from 'react-router-dom';
+import useAuth from '@customHooks/useAuth';
+import {logError} from '@graphql/functions';
+import {RoomStatus, UpdateUniversalLessonInput} from 'API';
+import Loader from 'atoms/Loader';
+import StepComponent, {IStepElementInterface} from 'atoms/StepComponent';
 import {GlobalContext} from 'contexts/GlobalContext';
 import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
 import * as customMutations from 'customGraphql/customMutations';
 import * as customQueries from 'customGraphql/customQueries';
-import * as queries from 'graphql/queries';
 import useDictionary from 'customHooks/dictionary';
 import {useQuery} from 'customHooks/urlParam';
 import * as mutations from 'graphql/mutations';
 import {LessonPlansProps, SavedLessonDetailsProps} from 'interfaces/LessonInterfaces';
+import ModalPopUp from 'molecules/ModalPopUp';
+import React, {useContext, useEffect, useState} from 'react';
+import {FaQuestionCircle, FaRegEye} from 'react-icons/fa';
+import {IoCardSharp, IoDocumentText} from 'react-icons/io5';
+import {useHistory, useParams, useRouteMatch} from 'react-router-dom';
 import {getImageFromS3Static} from 'utilities/services';
 import {languageList, lessonTypeList} from 'utilities/staticData';
-import Loader from 'atoms/Loader';
-import StepComponent, {IStepElementInterface} from 'atoms/StepComponent';
-import ModalPopUp from 'molecules/ModalPopUp';
+import UnitList from '../Institutons/EditBuilders/CurricularsView/TabsActions/Unit/UnitList';
 import AddNewLessonForm from './StepActionComponent/AddNewLessonForm/AddNewLessonForm';
 import LearningEvidence from './StepActionComponent/LearningEvidence/LearningEvidence';
 import LessonActivities from './StepActionComponent/LessonActivities';
-import LessonCourse from './StepActionComponent/LessonCourse/LessonCourse';
-import {logError} from '@graphql/functions';
-import useAuth from '@customHooks/useAuth';
-import {RoomStatus, UpdateUniversalLessonInput} from 'API';
-import UnitList from '../Institutons/EditBuilders/CurricularsView/TabsActions/Unit/UnitList';
 
 export interface InitialData {
   name: string;
@@ -68,7 +66,11 @@ const LessonBuilder = (props: LessonBuilderProps) => {
   const step = params.get('step');
   const lessonIdFromUrl = (useParams() as any).lessonId;
   const {clientKey, userLanguage} = useContext(GlobalContext);
-  const {setUniversalLessonDetails, universalLessonDetails} = useULBContext();
+  const {
+    setUniversalLessonDetails,
+    universalLessonDetails,
+    scanLessonAndFindComplicatedWord
+  } = useULBContext();
   const {AddNewLessonFormDict, LessonBuilderDict} = useDictionary(clientKey);
 
   const initialData = {
@@ -216,7 +218,8 @@ const LessonBuilder = (props: LessonBuilderProps) => {
         })
       );
       const savedData = result.data.getUniversalLesson;
-      setUniversalLessonDetails(savedData);
+      const updatedLessonPlan = scanLessonAndFindComplicatedWord(savedData.lessonPlan);
+      setUniversalLessonDetails({...savedData, lessonPlan: updatedLessonPlan});
 
       if (savedData.institutionID) {
         const institution = await getInstitutionByID(savedData.institutionID);

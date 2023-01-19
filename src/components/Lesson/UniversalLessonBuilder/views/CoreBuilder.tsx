@@ -19,13 +19,13 @@ import {
 } from 'interfaces/UniversalLessonInterfaces';
 import {LessonPageWrapper} from 'lesson/UniversalLessonBlockComponents/LessonPageWrapper';
 import BuilderRowComposer from 'lesson/UniversalLessonBuilder/views/CoreBuilder/BuilderRowComposer';
+import {find, findIndex, findLastIndex, isEmpty, map, remove} from 'lodash';
 import ModalPopUp from 'molecules/ModalPopUp';
-import Toolbar from 'uiComponents/Toolbar';
-import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
-import {find, findLastIndex, map, remove, isEmpty, findIndex} from 'lodash';
 import React, {useContext, useEffect, useState} from 'react';
 import {RiArrowRightSLine} from 'react-icons/ri';
-import {useHistory, useRouteMatch} from 'react-router';
+import {useHistory} from 'react-router';
+import Toolbar from 'uiComponents/Toolbar';
+import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
 import {v4 as uuidv4} from 'uuid';
 
 interface CoreBuilderProps extends ULBSelectionProps {

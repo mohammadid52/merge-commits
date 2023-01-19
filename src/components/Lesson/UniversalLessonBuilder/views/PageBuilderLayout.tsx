@@ -9,7 +9,7 @@ const PageBuilderLayout = ({
   className = '',
   overflowHidden = false,
   dark = true,
-  rounded = 'rounded-lg',
+  rounded = 'rounded-lg'
 }: {
   children: React.ReactNode;
   open: boolean;
@@ -26,7 +26,7 @@ const PageBuilderLayout = ({
       style={{
         zIndex: 9990,
 
-        ...style,
+        ...style
       }}
       id="scrollingDiv"
       className={classNames(

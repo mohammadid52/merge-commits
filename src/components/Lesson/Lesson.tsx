@@ -1,24 +1,25 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import {useULBContext} from '@contexts/UniversalLessonBuilderContext';
+import useAuth from '@customHooks/useAuth';
+import {logError, updatePageState} from '@graphql/functions';
 import {StudentPageInput} from '@interfaces/UniversalLessonInterfaces';
+import {setPageTitle} from '@utilities/functions';
 import {PersonLessonsData, UpdatePersonLessonsDataInput, UserPageState} from 'API';
 import Noticebar from 'components/Noticebar/Noticebar';
 import {GlobalContext} from 'contexts/GlobalContext';
+import * as customMutations from 'customGraphql/customMutations';
+import * as customQueries from 'customGraphql/customQueries';
+import * as customSubscriptions from 'customGraphql/customSubscriptions';
 import useNotifications from 'customHooks/notifications';
+import * as mutations from 'graphql/mutations';
+import * as queries from 'graphql/queries';
 import {isEmpty, update} from 'lodash';
 import React, {useContext, useEffect, useState} from 'react';
 import {useHistory, useParams, useRouteMatch} from 'react-router-dom';
 import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
+import {v4 as uuidV4} from 'uuid';
 import LessonApp from './LessonApp';
 import SurveyApp from './SurveyApp';
-import * as customMutations from 'customGraphql/customMutations';
-import * as customSubscriptions from 'customGraphql/customSubscriptions';
-import * as customQueries from 'customGraphql/customQueries';
-import * as mutations from 'graphql/mutations';
-import * as queries from 'graphql/queries';
-import useAuth from '@customHooks/useAuth';
-import {v4 as uuidV4} from 'uuid';
-import {logError, updatePageState} from '@graphql/functions';
-import {setPageTitle} from '@utilities/functions';
 
 export interface ILessonSurveyApp {
   pageStateUpdated: boolean;
@@ -44,6 +45,8 @@ const Lesson = () => {
   const {notifications} = useNotifications('lesson');
   const {notifications: inputNotifications} = useNotifications('input');
 
+  const {scanLessonAndFindComplicatedWord} = useULBContext();
+
   const urlParams: any = useParams();
 
   // ##################################################################### //
@@ -68,8 +71,12 @@ const Lesson = () => {
             }
           ];
         }, []);
-        setLocalStorageData('lesson_plan', lessonPlan);
-        lessonDispatch({type: 'SET_LESSON_DATA', payload: response});
+        const updatedLessonPlan = scanLessonAndFindComplicatedWord(lessonPlan);
+        setLocalStorageData('lesson_plan', updatedLessonPlan);
+        lessonDispatch({
+          type: 'SET_LESSON_DATA',
+          payload: {...response, lessonPlan: updatedLessonPlan}
+        });
         setLoaded(true);
       }
     } catch (e) {

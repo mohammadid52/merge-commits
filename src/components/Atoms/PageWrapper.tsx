@@ -12,7 +12,7 @@ const PageWrapper: React.FC<PageWrapperProps> = (pageWrapperProps: PageWrapperPr
   const {
     children,
     wrapClass,
-    defaultClass = 'px-4 white_back theme-card-shadow',
+    defaultClass = 'px-4 white_back theme-card-shadow overflow-hidden',
     pageName
   } = pageWrapperProps;
 
