@@ -1,9 +1,10 @@
-import update from 'lodash/update';
-import findIndex from 'lodash/findIndex';
-import React, {useContext, createContext, useState} from 'react';
-import {useHistory} from 'react-router';
-import {UniversalLesson} from 'interfaces/UniversalLessonInterfaces';
+import {UniversalLessonPlan} from 'API';
 import {GlobalContext} from 'contexts/GlobalContext';
+import {UniversalLesson} from 'interfaces/UniversalLessonInterfaces';
+import findIndex from 'lodash/findIndex';
+import update from 'lodash/update';
+import React, {createContext, useContext, useState} from 'react';
+import {useHistory} from 'react-router';
 export const UniversalLessonBuilderContext = createContext(null);
 
 const initialUniversalLessonData: UniversalLesson = {
@@ -164,6 +165,54 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
     }
   };
 
+  const wordsComingFromDB = [];
+
+  //   updateDate:
+  // englishPhrase:
+  // englishDefinition: (optional)
+  // englishAudio: (optional)
+  // translateLanguage:
+  // languageTranslation:
+  // languageDefinition: (optional)
+
+  const scanLessonAndFindComplicatedWord = (lessonPlan: UniversalLessonPlan[]) => {
+    return lessonPlan;
+    // const updated = lessonPlan.map((plan: any) => ({
+    //   ...plan,
+    //   pageContent: plan.pageContent.map((pgContent: any) => ({
+    //     ...pgContent,
+    //     partContent: pgContent.partContent.map((ptContent: any) => ({
+    //       ...ptContent,
+    //       value: ptContent.value.map((value: any) => {
+    //         const split = value.value.split(' ');
+
+    //         let updatedSentence: string[] = [];
+    //         split.forEach((s: string) => {
+    //           const idx = wordsComingFromDB.findIndex((d) => d.word === s);
+
+    //           if (idx !== -1) {
+    //             updatedSentence.push(
+    //               s.replace(
+    //                 s,
+    //                 `<abbr title="${wordsComingFromDB[idx].meaning}">${s}</abbr>`
+    //               )
+    //             );
+    //           } else {
+    //             updatedSentence.push(s);
+    //           }
+    //         });
+
+    //         return {
+    //           ...value,
+    //           value: updatedSentence.join(' ')
+    //         };
+    //       })
+    //     }))
+    //   }))
+    // }));
+    // return updated;
+  };
+
   const [savingStatus, setSavingStatus] = useState<
     'initial' | 'loaded' | 'loading' | 'failed'
   >('initial');
@@ -206,10 +255,12 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
         updateMovableList,
 
         fetchingLessonDetails,
-        setFetchingLessonDetails
+        setFetchingLessonDetails,
+        scanLessonAndFindComplicatedWord
       }}>
       {children}
     </UniversalLessonBuilderContext.Provider>
   );
 };
+
 export const useULBContext = () => useContext(UniversalLessonBuilderContext);

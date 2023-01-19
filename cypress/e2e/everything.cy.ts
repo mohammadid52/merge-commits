@@ -20,7 +20,7 @@ describe(
 
       cy.hoverOnMenuItems('institution-manager', [
         'general-information-item',
-        'staff-item',
+        'staff-manager-item',
         'user-registry-item',
         'register-new-user-item'
       ]);
@@ -75,7 +75,7 @@ describe(
 
       cy.hoverOnMenuItems('institution-manager', [
         'general-information-item',
-        'staff-item',
+        'staff-manager-item',
         'register-new-user-item'
       ]);
     });

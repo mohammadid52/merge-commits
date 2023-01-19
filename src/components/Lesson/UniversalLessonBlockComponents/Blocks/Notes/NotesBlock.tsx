@@ -156,6 +156,22 @@ const NotesBlock = ({
     }
   }, [notesList]);
 
+  function PosEnd(end: any) {
+    var len = end.value.length;
+
+    // Mostly for Web Browsers
+    if (end.setSelectionRange) {
+      end.focus();
+      end.setSelectionRange(len, len);
+    } else if (end.createTextRange) {
+      var t = end.createTextRange();
+      t.collapse(true);
+      t.moveEnd('character', len);
+      t.moveStart('character', len);
+      t.select();
+    }
+  }
+
   if (jQuery.ready) {
     if (localNotes && localNotes.length > 0) {
       localNotes.forEach((note: {id: any}, idx: number) => {
@@ -163,7 +179,7 @@ const NotesBlock = ({
           const id = `#${note.id} #note-${note.id}`;
 
           $(id).on('click', (e) => {
-            e.target.focus();
+            PosEnd(e.target);
           });
         }
       });
@@ -330,6 +346,9 @@ const NotesBlock = ({
     {id: 5, name: 'purple'}
   ];
 
+  const buttonIconSize =
+    'h-8 w-8 hover:theme-bg hover:text-white rounded-full transition-all p-1';
+
   if (loading) {
     return (
       <div className="flex items-center overflow-hidden justify-center min-h-32">
@@ -373,16 +392,14 @@ const NotesBlock = ({
           open={showEditModal.show}
           setOpen={modalBtns.edit.cancel}>
           <div className="flex items-center flex-col justify-center">
-            {
-              <textarea
-                onChange={noop}
-                className={`${genSize(
-                  currentSelectedSize
-                )} preview-note bg-gradient-to-t text-gray-900 from-${currentSelectedColor}-500 to-${currentSelectedColor}-300 rounded leading-8 p-6`}
-                id={'note'}
-                value={showEditModal?.value}
-              />
-            }
+            <textarea
+              onChange={noop}
+              className={`${genSize(
+                currentSelectedSize
+              )} preview-note bg-gradient-to-t text-gray-900 from-${currentSelectedColor}-500 to-${currentSelectedColor}-300 rounded leading-8 p-6`}
+              id={'note'}
+              value={showEditModal?.value}
+            />
 
             <div className="border-0 p-2 py-3 my-4 flex items-center justify-around border-gray-200 dark:border-gray-700 rounded-lg ">
               {map(colorList, (color) => (
@@ -438,7 +455,64 @@ const NotesBlock = ({
           </div>
         </ThemeModal>
 
-        <div className="relative flex items-start space-x-4">
+        <div className="relative flex flex-col items-start">
+          {isInLesson && isStudent && (
+            <div className="w-auto flex items-center  justify-center theme-border border-0 rounded-full mb-4 gap-x-4 p-2">
+              {defaultNotes.length > 0 &&
+                resetDefaultNotes &&
+                typeof resetDefaultNotes === 'function' && (
+                  <Tooltip
+                    placement="top"
+                    additionalClass="flex items-center justify-center"
+                    text="reset to default">
+                    <button
+                      data-cy="reset-to-default-button"
+                      onClick={resetDefaultNotes}
+                      className="w-auto theme-text transition-all">
+                      <VscDebugRestart className={buttonIconSize} />
+                    </button>
+                  </Tooltip>
+                )}
+              <Tooltip
+                placement="top"
+                additionalClass="flex items-center justify-center"
+                text="Add new note">
+                <button
+                  data-cy="add-new-note-button"
+                  disabled={localNotes.length === 15}
+                  onClick={onAddNewNote}
+                  className="w-auto theme-text transition-all">
+                  <FiFilePlus className={buttonIconSize} />
+                </button>
+              </Tooltip>
+
+              {!saveInProgress && (
+                <Tooltip
+                  placement="top"
+                  additionalClass="flex items-center justify-center"
+                  text="Save">
+                  <button
+                    data-cy="save-note-button"
+                    onClick={() => {
+                      if (notesChanged) {
+                        saveData(
+                          notesData,
+                          () => setSaveInProgress(true),
+                          () => {
+                            setNotesChanged(false);
+                            setSaveInProgress(false);
+                          }
+                        );
+                      }
+                    }}
+                    className="w-auto theme-text transition-all">
+                    <BiSave className={buttonIconSize} />
+                  </button>
+                </Tooltip>
+              )}
+              {saveInProgress && <Loader className="text-yellow-500 text-base" />}
+            </div>
+          )}
           <div id="container" className="sticky-container blackboard">
             {localNotes &&
               localNotes.length > 0 &&
@@ -459,55 +533,6 @@ const NotesBlock = ({
                 }
               })}
           </div>
-
-          {isInLesson && isStudent && (
-            <div className="w-auto space-y-4 flex items-center flex-col justify-center">
-              {defaultNotes.length > 0 &&
-                resetDefaultNotes &&
-                typeof resetDefaultNotes === 'function' && (
-                  <Tooltip text="reset to default">
-                    <button
-                      data-cy="reset-to-default-button"
-                      onClick={resetDefaultNotes}
-                      className="w-auto text-green-600 hover:text-green-500 transition-all">
-                      <VscDebugRestart className="h-10 w-10 " />
-                    </button>
-                  </Tooltip>
-                )}
-              <Tooltip text="Add new note">
-                <button
-                  data-cy="add-new-note-button"
-                  disabled={localNotes.length === 15}
-                  onClick={onAddNewNote}
-                  className="w-auto text-red-600 hover:text-red-500 transition-all">
-                  <FiFilePlus className="h-10 w-10 " />
-                </button>
-              </Tooltip>
-
-              {!saveInProgress && (
-                <Tooltip text="Save">
-                  <button
-                    data-cy="save-note-button"
-                    onClick={() => {
-                      if (notesChanged) {
-                        saveData(
-                          notesData,
-                          () => setSaveInProgress(true),
-                          () => {
-                            setNotesChanged(false);
-                            setSaveInProgress(false);
-                          }
-                        );
-                      }
-                    }}
-                    className="w-auto text-yellow-600 hover:text-yellow-500 transition-all">
-                    <BiSave className="h-10 w-10 " />
-                  </button>
-                </Tooltip>
-              )}
-              {saveInProgress && <Loader className="text-yellow-500 text-base" />}
-            </div>
-          )}
         </div>
       </>
     );

@@ -141,7 +141,7 @@ const ListItem = forwardRef<any, IListItem>(
         key={idx}
         {...rest}
         ref={ref}
-        className={`flex justify-between ${
+        className={`flex relative ${item?.markRed ? 'mark-red' : ''} justify-between ${
           config?.dataList?.bgColor
             ? config?.dataList?.bgColor
             : config?.dataList?.pattern === 'striped'
@@ -222,7 +222,7 @@ const Table = ({
 
   return (
     <ErrorBoundary fallback={<div className="hidden"></div>} componentName="Table">
-      <div className="flex flex-col">
+      <div className="flex flex-col mb-2">
         <div className="overflow-x-auto">
           <div className="py-2 align-middle inline-block min-w-full">
             <div

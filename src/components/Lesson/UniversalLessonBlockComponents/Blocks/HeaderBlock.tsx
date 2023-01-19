@@ -20,11 +20,12 @@ export const HeaderBlock = (props: HeaderBlockProps) => {
 
   const composeHeader = (inputID: string, inputValue: any, inputType: string) => {
     return (
-      <h3
+      <div
         id={inputID}
-        className={`relative ${classString} w-full flex font-medium   text-left flex-row items-center ${themeTextColor} mt-4 mb-2"`}>
-        {inputValue.value}
-      </h3>
+        dangerouslySetInnerHTML={{
+          __html: inputValue.value
+        }}
+        className={`relative ${classString} w-full flex font-medium   text-left flex-row items-center ${themeTextColor} mt-4 mb-2"`}></div>
     );
   };
 

@@ -132,12 +132,12 @@ const TabView = ({
   const pickClassContent = () => {
     if (mainSection === 'Class' && sectionRoomID !== '') {
       if (subSection == 'Work') {
-        return removeDuplicates(filteredClassContent);
+        return filteredClassContent;
       } else {
-        return removeDuplicates(filteredJournalContent);
+        return filteredJournalContent;
       }
     } else if (mainSection === 'Private') {
-      return removeDuplicates(filteredJournalContent).filter((t) => t.shared);
+      return filteredJournalContent;
     } else {
       return [];
     }
@@ -154,7 +154,7 @@ const TabView = ({
       subSection={subSection}
       createTemplate={createTemplate}
       currentContentObj={currentContentObj}
-      content={pickClassContent()}
+      content={removeDuplicates(pickClassContent())}
       classNotebook={classNotebook}
       allUniversalJournalData={allUniversalJournalData}
       setAllUniversalJournalData={setAllUniversalJournalData}

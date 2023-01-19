@@ -1708,3 +1708,13 @@ $polka-dot-size: 0.8px;
 .shadowNoneOnFocus:focus {
   box-shadow: none;
 }
+
+.mark-red::before {
+  position: absolute;
+  left: 0;
+  height: 100%;
+  width: 2px;
+  background-color: red;
+  top: 0;
+  content: '';
+}

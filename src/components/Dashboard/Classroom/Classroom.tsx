@@ -12,12 +12,13 @@ import useDictionary from 'customHooks/dictionary';
 import useAuth from 'customHooks/useAuth';
 import * as mutations from 'graphql/mutations';
 import isEmpty from 'lodash/isEmpty';
-import React, {useEffect, useState} from 'react';
+import React, {Fragment, useEffect, useState} from 'react';
 import {useRouteMatch} from 'react-router';
 import {Empty} from '../Admin/LessonsBuilder/StepActionComponent/LearningEvidence/CourseMeasurementsCard';
 import {DashboardProps} from '../Dashboard';
 import DashboardContainer from '../DashboardContainer';
 import DateAndTime from '../DateAndTime/DateAndTime';
+import ClassroomLoader from './ClassroomLoader';
 import SyllabusSwitch from './SyllabusSwitch';
 import Today from './TodayLesson';
 
@@ -509,7 +510,15 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
 
               <div className={`bg-opacity-10`}>
                 <div className={`pb-4 text-xl m-auto`}>
-                  {Boolean(activeRoomInfo?.activeSyllabus) ? (
+                  {!Boolean(activeRoomInfo) ? (
+                    Array(3)
+                      .fill(' ')
+                      .map((_: any, index: number) => (
+                        <Fragment key={index}>
+                          <ClassroomLoader />
+                        </Fragment>
+                      ))
+                  ) : Boolean(activeRoomInfo?.activeSyllabus) ? (
                     <Today
                       activeRoom={state.activeRoom}
                       activeRoomInfo={activeRoomInfo}

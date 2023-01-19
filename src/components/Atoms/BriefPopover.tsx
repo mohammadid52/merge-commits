@@ -1,5 +1,4 @@
 import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
-import {Transition} from '@headlessui/react';
 import React, {useRef} from 'react';
 import ClickAwayListener from 'react-click-away-listener';
 
@@ -9,10 +8,19 @@ interface IBriefPopover {
   isLast: boolean;
   header?: string;
   children: React.ReactNode;
+  idx?: number;
 }
 
-const BriefPopover = ({show, clear, isLast, header, children}: IBriefPopover) => {
+const BriefPopover = ({
+  show,
+  clear,
+  idx = 0,
+  isLast,
+  header,
+  children
+}: IBriefPopover) => {
   const ref = useRef();
+
   return (
     <AnimatedContainer
       className="z-max relative bg-white"
@@ -23,7 +31,7 @@ const BriefPopover = ({show, clear, isLast, header, children}: IBriefPopover) =>
         <ClickAwayListener onClickAway={() => clear()}>
           <div
             style={{
-              top: isLast ? '-15rem' : '0rem',
+              top: isLast ? '-18rem' : '0rem',
               bottom: isLast ? 'unset' : '1.5rem',
               right: '-90%',
               zIndex: 99999999
@@ -31,15 +39,15 @@ const BriefPopover = ({show, clear, isLast, header, children}: IBriefPopover) =>
             className="absolute z-max hidden md:block cursor-pointer select-none text-black">
             <div
               style={{zIndex: 9999}}
-              className="bg-white relative flex flex-col border-gray-200 rounded-xl  customShadow border-0 p-4  min-w-96 max-w-96 w-auto">
+              className="bg-gray-200  relative flex flex-col border-white border-4 rounded-xl  customShadow  min-w-104 max-w-104 w-auto">
               {header && (
-                <>
-                  <h1 className="text-base text-gray-700 mb-2">{header}</h1>
-                  <hr />
-                </>
+                <div className="theme-bg text-white rounded-t-xl px-4 py-2">
+                  <h1 className="text-lg text-center tracking-wider font-medium uppercase text-white">
+                    {header}
+                  </h1>
+                </div>
               )}
-
-              {children}
+              <div className="p-4 z-max">{children}</div>
             </div>
           </div>
         </ClickAwayListener>

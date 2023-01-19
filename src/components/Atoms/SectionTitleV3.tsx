@@ -34,7 +34,7 @@ const SectionTitleV3: React.FC<SectionTitleProps> = (sectProps: SectionTitleProp
         withButton ? 'flex items-center justify-between ' : ''
       } mx-auto m-auto py-4 ${
         borderBottom
-          ? `px-4 border-b-0 border-gray-200 ${
+          ? `px-0 border-b-0 border-gray-200 ${
               shadowOff ? '' : 'customShadow'
             } rounded-t-xl bg-white mb-0`
           : ''

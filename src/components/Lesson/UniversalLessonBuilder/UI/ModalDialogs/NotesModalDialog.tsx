@@ -55,7 +55,7 @@ const NotesModalDialog = (props: NoteModalProps) => {
     id: uuidv4(),
     noteText: '',
     bgColor: 'yellow',
-    size: 'medium',
+    size: 'large',
     error: ''
   };
   const [fields, setFields] = useState([{...initialValues}]);
@@ -112,6 +112,7 @@ const NotesModalDialog = (props: NoteModalProps) => {
       id: list.id,
       lessonPlan: [...list.lessonPlan]
     };
+
     await updateLessonPageToDB(input);
   };
 

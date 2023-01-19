@@ -1,5 +1,5 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
 import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
@@ -7,8 +7,9 @@ import MultipleSelector from 'atoms/Form/MultipleSelector';
 
 import Label from '@components/Atoms/Form/Label';
 import Selector from '@components/Atoms/Form/Selector';
+import ModalPopUp from '@components/Molecules/ModalPopUp';
 import {RoomStatus} from 'API';
-import {GlobalContext} from 'contexts/GlobalContext';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import * as mutations from 'graphql/mutations';
 import {languageList} from 'utilities/staticData';
@@ -62,15 +63,9 @@ const UnitFormComponent = ({
   const [syllabusData, setSyllabusData] = useState<InitialData>(initialData);
 
   const [loading, setIsLoading] = useState(false);
-  const {
-    clientKey,
-    userLanguage,
-    state: {
-      user: {isSuperAdmin}
-    }
-  } = useContext(GlobalContext);
+  const {userLanguage} = useGlobalContext();
 
-  const {AddSyllabusDict, UserEditDict} = useDictionary(clientKey);
+  const {AddSyllabusDict, UserEditDict} = useDictionary();
 
   const [messages, setMessages] = useState({
     show: false,
@@ -218,6 +213,34 @@ const UnitFormComponent = ({
     }
   };
 
+  const [warnModal, setWarnModal] = useState({
+    show: false,
+    message: 'message',
+    onSaveAction: () => {}
+  });
+
+  const closeModal = () => {
+    setWarnModal({show: false, message: '', onSaveAction: () => {}});
+  };
+
+  const selectStatus = (val: RoomStatus) => {
+    setSyllabusData({...syllabusData, status: val});
+    closeModal();
+  };
+
+  const beforeStatusChange = (name: RoomStatus) => {
+    if (name === RoomStatus.INACTIVE) {
+      setWarnModal({
+        show: true,
+        message:
+          'By setting this unit to inactive, students will no longer see the unit lessons when they log in. Do you wish to continue?',
+        onSaveAction: () => selectStatus(name)
+      });
+    } else {
+      selectStatus(name);
+    }
+  };
+
   const {
     name,
     languages,
@@ -230,131 +253,143 @@ const UnitFormComponent = ({
   } = syllabusData;
 
   return (
-    <div className={`overflow-hidden mb-4 p-6`}>
-      <div className="m-auto">
-        <div className="py-4  grid gap-8 grid-cols-2">
-          <div className="col-span-2">
-            <FormInput
-              value={name}
-              id="name"
-              onChange={onInputChange}
-              name="name"
-              label={AddSyllabusDict[userLanguage]['unitname']}
-              isRequired
-            />
-          </div>
-
-          <div>
-            <MultipleSelector
-              label={AddSyllabusDict[userLanguage]['language']}
-              selectedItems={languages}
-              placeholder={AddSyllabusDict[userLanguage]['placeholderlanguage']}
-              list={languageList}
-              onChange={selectLanguage}
-            />
-          </div>
-
-          <div className="">
-            <Selector
-              label={UserEditDict[userLanguage]['status']}
-              placeholder={UserEditDict[userLanguage]['status']}
-              list={RoomStatusList}
-              onChange={(str: any, name: RoomStatus) => {
-                setSyllabusData({...syllabusData, status: name});
-              }}
-              dropdownWidth="w-56"
-              selectedItem={status || UserEditDict[userLanguage]['status']}
-            />
-          </div>
-
-          <div>
-            <FormInput
-              value={description}
-              rows={5}
-              textarea
-              id="description"
-              onChange={onInputChange}
-              name="description"
-              label={AddSyllabusDict[userLanguage]['description']}
-            />
-          </div>
-          <div>
-            <FormInput
-              value={purpose}
-              textarea
-              rows={5}
-              id="purpose"
-              onChange={onInputChange}
-              name="purpose"
-              label={AddSyllabusDict[userLanguage]['purpose']}
-            />
-          </div>
-
-          <div>
-            <FormInput
-              value={priorities}
-              textarea
-              rows={5}
-              id="priorities"
-              onChange={onInputChange}
-              name="priorities"
-              label={AddSyllabusDict[userLanguage]['priority']}
-            />
-          </div>
-          <div>
-            <FormInput
-              value={secondary}
-              textarea
-              rows={5}
-              id="secondary"
-              onChange={onInputChange}
-              name="secondary"
-              label={AddSyllabusDict[userLanguage]['secondary']}
-            />
-          </div>
-          <div>
-            <FormInput
-              value={objectives}
-              textarea
-              rows={5}
-              id="objectives"
-              onChange={onInputChange}
-              name="objectives"
-              label={AddSyllabusDict[userLanguage]['objective']}
-            />
-          </div>
-          {curricular && (
-            <div>
-              <Label label="Attached courses" />
-              <div className="mt-1">
-                <AttachedCourses curricular={curricular} unitId={syllabusDetails.id} />
-              </div>
+    <>
+      <div className={`overflow-hidden mb-4 p-6`}>
+        <div className="m-auto">
+          <div className="py-4  grid gap-8 grid-cols-2">
+            <div className="col-span-2">
+              <FormInput
+                value={name}
+                id="name"
+                onChange={onInputChange}
+                name="name"
+                label={AddSyllabusDict[userLanguage]['unitname']}
+                isRequired
+              />
             </div>
-          )}
+
+            <div>
+              <MultipleSelector
+                label={AddSyllabusDict[userLanguage]['language']}
+                selectedItems={languages}
+                placeholder={AddSyllabusDict[userLanguage]['placeholderlanguage']}
+                list={languageList}
+                onChange={selectLanguage}
+              />
+            </div>
+
+            <div className="">
+              <Selector
+                label={UserEditDict[userLanguage]['status']}
+                placeholder={UserEditDict[userLanguage]['status']}
+                list={RoomStatusList}
+                onChange={(str: any, name: RoomStatus) => {
+                  beforeStatusChange(name);
+                }}
+                dropdownWidth="w-56"
+                selectedItem={status || UserEditDict[userLanguage]['status']}
+              />
+            </div>
+
+            <div>
+              <FormInput
+                value={description}
+                rows={5}
+                textarea
+                id="description"
+                onChange={onInputChange}
+                name="description"
+                label={AddSyllabusDict[userLanguage]['description']}
+              />
+            </div>
+            <div>
+              <FormInput
+                value={purpose}
+                textarea
+                rows={5}
+                id="purpose"
+                onChange={onInputChange}
+                name="purpose"
+                label={AddSyllabusDict[userLanguage]['purpose']}
+              />
+            </div>
+
+            <div>
+              <FormInput
+                value={priorities}
+                textarea
+                rows={5}
+                id="priorities"
+                onChange={onInputChange}
+                name="priorities"
+                label={AddSyllabusDict[userLanguage]['priority']}
+              />
+            </div>
+            <div>
+              <FormInput
+                value={secondary}
+                textarea
+                rows={5}
+                id="secondary"
+                onChange={onInputChange}
+                name="secondary"
+                label={AddSyllabusDict[userLanguage]['secondary']}
+              />
+            </div>
+            <div>
+              <FormInput
+                value={objectives}
+                textarea
+                rows={5}
+                id="objectives"
+                onChange={onInputChange}
+                name="objectives"
+                label={AddSyllabusDict[userLanguage]['objective']}
+              />
+            </div>
+            {curricular && (
+              <div>
+                <Label label="Attached courses" />
+                <div className="mt-1">
+                  <AttachedCourses curricular={curricular} unitId={syllabusDetails.id} />
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+        {messages.show ? (
+          <div className="py-2 m-auto text-center">
+            <p className={`${messages.isError ? 'text-red-600' : 'text-green-600'}`}>
+              {messages.message && messages.message}
+            </p>
+          </div>
+        ) : null}
+
+        <div className="flex my-8 justify-end">
+          <Buttons
+            btnClass="py-3 px-10 text-sm mr-4"
+            label="Cancel"
+            onClick={onCancel}
+            transparent
+          />
+          <Buttons
+            btnClass="py-3 px-10"
+            label={AddSyllabusDict[userLanguage][loading ? 'saving' : 'save']}
+            onClick={saveSyllabusDetails}
+            disabled={loading ? true : false}
+          />
         </div>
       </div>
-      {messages.show ? (
-        <div className="py-2 m-auto text-center">
-          <p className={`${messages.isError ? 'text-red-600' : 'text-green-600'}`}>
-            {messages.message && messages.message}
-          </p>
-        </div>
-      ) : null}
-      <div className="flex my-8 justify-end">
-        <Buttons
-          btnClass="py-3 px-10 text-sm mr-4"
-          label="Cancel"
-          onClick={onCancel}
-          transparent
+
+      {warnModal.show && (
+        <ModalPopUp
+          closeAction={closeModal}
+          saveAction={warnModal.onSaveAction}
+          saveLabel="Yes"
+          message={warnModal.message}
         />
-        <Buttons
-          btnClass="py-3 px-10"
-          label={AddSyllabusDict[userLanguage][loading ? 'saving' : 'save']}
-          onClick={saveSyllabusDetails}
-          disabled={loading ? true : false}
-        />
-      </div>
-    </div>
+      )}
+    </>
   );
 };
 

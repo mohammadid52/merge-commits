@@ -737,7 +737,6 @@ const Dashboard = (props: DashboardProps) => {
         </div>
       </div>
       <div className="relative h-screen flex overflow-hidden container_background ">
-        {/* {isLocalhost && isDev && <SwitchAccount />} */}
         {stateUser?.role === 'ST' && <EmojiFeedback />}
         {/* <ResizablePanels> */}
 

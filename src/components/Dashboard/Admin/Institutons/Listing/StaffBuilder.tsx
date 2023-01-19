@@ -22,21 +22,20 @@ import * as mutations from 'graphql/mutations';
 import * as queries from 'graphql/queries';
 
 import SearchInput from '@components/Atoms/Form/SearchInput';
-import Highlighted from '@components/Atoms/Highlighted';
-import Placeholder from '@components/Atoms/Placeholder';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import Table from '@components/Molecules/Table';
 import useSearch from '@customHooks/useSearch';
 import AddButton from 'atoms/Buttons/AddButton';
 import Modal from 'atoms/Modal';
 
+import Filters, {SortType} from '@components/Atoms/Filters';
+import StaffBuilderName from '@components/MicroComponents/StaffBuilderName';
+import useAuth from '@customHooks/useAuth';
+import usePagination from '@customHooks/usePagination';
+import {logError} from '@graphql/functions';
 import Tooltip from 'atoms/Tooltip';
 import Registration from 'components/Dashboard/Admin/UserManagement/Registration';
 import {map} from 'lodash';
-import {logError} from '@graphql/functions';
-import useAuth from '@customHooks/useAuth';
-import Filters, {SortType} from '@components/Atoms/Filters';
-import usePagination from '@customHooks/usePagination';
 import {Status} from '../../UserManagement/UserStatus';
 
 interface StaffBuilderProps {
@@ -438,27 +437,11 @@ const StaffBuilder = (props: StaffBuilderProps) => {
     id: item.id,
     no: getIndex(index),
     name: (
-      <div
-        className="flex items-center cursor-pointer "
-        onClick={() => gotoProfilePage(item.userId)}>
-        <div className="flex-shrink-0 h-10 w-10 flex items-center">
-          {!item.image ? (
-            <Placeholder size="h-8 w-8" name={item.name} />
-          ) : (
-            <div className="h-8 w-8 rounded-full flex justify-center items-center">
-              <img src={item.image} className="rounded-full" />
-            </div>
-          )}
-        </div>
-        <div className="ml-2">
-          <div className=" text-sm leading-5 font-medium ">
-            <Highlighted text={item?.name} highlight={searchInput.value} />
-          </div>
-          <div className="text-sm leading-5 text-gray-500">
-            <Highlighted text={item.email} highlight={searchInput.value} />
-          </div>
-        </div>
-      </div>
+      <StaffBuilderName
+        item={item}
+        gotoProfilePage={gotoProfilePage}
+        searchTerm={searchInput.value}
+      />
     ),
     instituteName: user.isSuperAdmin && (
       <div

@@ -57,13 +57,11 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
 
   return (
     <div>
-      <div className="h-9/10 flex px-0 2xl:px-4 flex-col">
+      <div className="">
         {/* Profile section */}
-        <div className="flex-col lg:flex-row flex justify-center lg:justify-start w-full">
-          <InstitutionProfile institute={institute} />
-
+        <div className="flex-col flex justify-center lg:justify-start w-full">
           <div className="flex flex-1 overflow-x-hidden">
-            <div className="bg-white border-l-0 border-gray-200 mb-4 flex-1">
+            <div className="mb-4">
               <div className="">
                 {/* {renderElementBySelectedMenu()} */}
                 <NavBarRouter
@@ -74,6 +72,8 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
               </div>
             </div>
           </div>
+
+          <InstitutionProfile institute={institute} />
         </div>
 
         {/* {instProps?.institute?.id && (

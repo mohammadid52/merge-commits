@@ -8,21 +8,21 @@ const ComponentLoading = () => {
   const {clientKey, userLanguage} = useContext(GlobalContext);
   const {appDict} = useDictionary(clientKey);
 
-  useEffect(() => {
-    let tl = gsap.timeline({});
-    tl.fromTo(
-      '.polka-pattern',
-      {
-        backgroundPosition: '0%',
-        duration: 5,
-        ease: 'power1.inOut'
-      },
-      {backgroundPosition: '100%', duration: 5, ease: 'power1.inOut'}
-    );
-    return () => {
-      tl.kill();
-    };
-  }, []);
+  // useEffect(() => {
+  //   let tl = gsap.timeline({});
+  //   tl.fromTo(
+  //     '.polka-pattern',
+  //     {
+  //       backgroundPosition: '0%',
+  //       duration: 5,
+  //       ease: 'power1.inOut'
+  //     },
+  //     {backgroundPosition: '100%', duration: 5, ease: 'power1.inOut'}
+  //   );
+  //   return () => {
+  //     tl.kill();
+  //   };
+  // }, []);
 
   return (
     <div

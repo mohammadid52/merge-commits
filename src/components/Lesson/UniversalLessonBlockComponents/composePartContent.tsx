@@ -13,7 +13,6 @@ import {
   SPACER,
   TABLE
 } from '../UniversalLessonBuilder/UI/common/constants';
-import LinestarterModalDialog from '../UniversalLessonBuilder/UI/ModalDialogs/LinestarterModalDialog';
 import CustomVideoBlock from './Blocks/CustomVideoBlock';
 import DividerBlock from './Blocks/DividerBlock';
 import DownloadBlock from './Blocks/DownloadBlock';
@@ -160,14 +159,12 @@ const composePartContent = (
       notesData &&
       notesData.length > 0 && (
         <ErrorBoundary componentName="NotesContainer">
-          <div id="fab-download">
-            <NotesContainer notes={notesData} />
-          </div>
+          <NotesContainer notes={notesData} />
         </ErrorBoundary>
       )
     );
   } else if (type === 'notes-form' && !isStudent) {
-    const modifiyValues = map(value, (v: any, idx: number) => ({
+    const modifiyValues = map(value, (v: any) => ({
       class: v.class,
       pagePartId: pagePartId,
       partContentId: id,

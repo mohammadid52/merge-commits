@@ -180,7 +180,7 @@ const MainRouter: React.FC = () => {
         ) : (
           <Suspense
             fallback={
-              <div className="min-h-screen polka-pattern w-full flex flex-col justify-center items-center">
+              <div className="min-h-screen __polka-pattern w-full flex flex-col justify-center items-center">
                 <ComponentLoading />
               </div>
             }>

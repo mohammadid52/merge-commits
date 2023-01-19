@@ -25,8 +25,29 @@ const LessonRowComposer = () => {
       ? filter(activePageData.pageContent, (f) => f.id.includes(id))
       : [];
 
+  const getSeparateDataInPartContent = (id: string) => {
+    let result: any[] = [];
+    activePageData &&
+      activePageData.pageContent &&
+      activePageData.pageContent.length > 0 &&
+      activePageData.pageContent.forEach((f) => {
+        f.partContent.forEach((d) => {
+          if (d.type === id) {
+            let newPartContent = f.partContent.filter((_d) => _d.type === id);
+            result.push({
+              ...f,
+              partContent: newPartContent
+            });
+          }
+        });
+      });
+
+    return result;
+  };
+
   const downloadables = getSeparateData('downloadable-files');
   const notes = getSeparateData('notes-container');
+  const notesFromPartContent = getSeparateDataInPartContent('notes-form');
 
   const getRemovedDownloadablesFromlist = useCallback(() => {
     const removeDownloadablesFromlist: any[] = [];
@@ -34,7 +55,6 @@ const LessonRowComposer = () => {
       ? activePageData?.pageContent?.forEach((a) => {
           const objArray: any[] = [];
           a.partContent.forEach((b) => {
-            //  && !b.type.includes('notes-form')
             if (!b.type.includes('Download')) {
               objArray.push(b);
             }
@@ -124,7 +144,7 @@ const LessonRowComposer = () => {
                               idx={idx}
                               idx2={idx2}
                               pagePart={pagePart}
-                              notes={notes}
+                              notes={[...notes, ...notesFromPartContent]}
                             />
                           </div>
                         </div>
@@ -142,17 +162,6 @@ const LessonRowComposer = () => {
       {user.role === 'ST' && (
         <>
           <div className="fab-container space-y-4 w-16  lg:w-18 xl:w-20 z-50 flex flex-col fixed bottom-5 right-8">
-            {/* {notes && notes.length > 0 && (
-              <div id="fab-download">
-                <NotesContainer
-                  notes={notes}
-                  darkMode={currentLesson?.darkMode || true}
-                  pageTitle={activePageData.title}
-                  showNotesModal={showNotesModal}
-                  setShowNotesModal={setShowNotesModal}
-                />
-              </div>
-            )} */}
             {downloadables && downloadables.length > 0 && (
               <div id="fab-notes">
                 <Downloadables

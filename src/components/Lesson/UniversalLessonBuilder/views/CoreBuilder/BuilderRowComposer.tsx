@@ -2,7 +2,7 @@ import {FORM_TYPES} from '@UlbUI/common/constants';
 import Buttons from 'atoms/Buttons';
 import composePartContent from 'components/Lesson/UniversalLessonBlockComponents/composePartContent';
 import EditOverlayBlock from 'components/Lesson/UniversalLessonBlockComponents/UtilityBlocks/EditOverlayBlock';
-import {GlobalContext} from 'contexts/GlobalContext';
+import {GlobalContext, useGlobalContext} from 'contexts/GlobalContext';
 import {usePageBuilderContext} from 'contexts/PageBuilderContext';
 import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
 import {RowComposerProps} from 'interfaces/UniversalLessonBuilderInterfaces';
@@ -30,7 +30,7 @@ const BuilderRowComposer = (props: RowComposerProps) => {
   const [editedID, setEditedID] = useState<string>('');
   const {
     state: {userlessonPage: {themeTextColor = ''} = {}}
-  } = useContext(GlobalContext);
+  } = useGlobalContext();
 
   const handleEditBlockToggle = (dataID: string) => {
     if (dataID) {

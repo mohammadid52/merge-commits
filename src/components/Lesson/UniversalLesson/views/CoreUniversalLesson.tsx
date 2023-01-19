@@ -10,6 +10,7 @@ import useAuth from '@customHooks/useAuth';
 import Buttons from '@components/Atoms/Buttons';
 import {AiOutlineArrowLeft, AiOutlineArrowRight} from 'react-icons/ai';
 import {useHistory, useRouteMatch} from 'react-router';
+import {UniversalLessonPlan} from 'API';
 
 const CoreUniversalLesson = ({
   invokeRequiredField,
@@ -84,8 +85,6 @@ const CoreUniversalLesson = ({
       <div className={`w-full flex flex-row mx-auto`}>
         <LessonPageWrapper>
           <ErrorBoundary
-            authId={authId}
-            email={email}
             componentName="LessonRowComposer"
             fallback={<h1>Error in the LessonRowComposer</h1>}>
             <LessonRowComposer />

@@ -261,7 +261,7 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
         style={
           direction.includes('top')
             ? {
-                bottom: '400%'
+                bottom: '5rem'
               }
             : {}
         }
@@ -271,7 +271,7 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
             className="z-50 absolute mt-1 w-full "
             style={{
               ...style,
-              left: direction === 'left' || direction === 'topleft' ? '-100%' : 'unset'
+              left: direction === 'left' || direction === 'topleft' ? '0rem' : 'unset'
             }}>
             <ul
               role="listbox"

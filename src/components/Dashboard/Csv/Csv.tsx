@@ -26,13 +26,20 @@ const reg = /[,.]/gi;
 
 export const DataValue = ({
   title,
-  content
+  content,
+  withBg = false,
+  className = ''
 }: {
   title: string;
+  className?: string;
   content: string | React.ReactNode;
+  withBg?: boolean;
 }) => {
   return (
-    <div className="w-auto flex mb-2 flex-col items-start justify-start">
+    <div
+      className={` w-auto flex mb-2 flex-col items-start justify-start ${
+        withBg ? 'bg-white rounded-md px-4 py-2' : ''
+      } ${className}`}>
       <span className="text-sm mb-1 text-gray-500">{title}</span>
       <span className="text-dark-gray font-medium text-left w-auto text-sm">
         {content}

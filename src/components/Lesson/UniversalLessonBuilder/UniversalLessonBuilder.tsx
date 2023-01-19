@@ -53,7 +53,8 @@ const UniversalLessonBuilder = ({instId}: UniversalLessonBuilderProps) => {
     setUniversalLessonDetails,
     selectedPageID,
     setFetchingLessonDetails,
-    setSelectedPageID
+    setSelectedPageID,
+    scanLessonAndFindComplicatedWord
   } = useULBContext();
 
   //  INITIALIZE CURRENT PAGE LOCATION
@@ -83,7 +84,8 @@ const UniversalLessonBuilder = ({instId}: UniversalLessonBuilderProps) => {
       );
       const savedData = result.data.getUniversalLesson;
 
-      setUniversalLessonDetails(savedData);
+      const updatedLessonPlan = scanLessonAndFindComplicatedWord(savedData.lessonPlan);
+      setUniversalLessonDetails({...savedData, lessonPlan: updatedLessonPlan});
       setSelectedPageID(pageId);
     } catch {
       setUniversalLessonDetails((prev: any) => ({...prev}));

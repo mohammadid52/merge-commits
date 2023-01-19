@@ -9,26 +9,26 @@ import {BiTrashAlt} from 'react-icons/bi';
 const genSize = (size: string) => {
   switch (size) {
     case 'small':
-      return 'h-40 w-40 ';
+      return 'h-60 w-60  ';
     case 'medium':
-      return 'h-60 w-60 ';
+      return 'h-72 w-72';
     case 'large':
-      return 'h-72 w-72 ';
+      return 'h-80 w-80 ';
     default:
-      return 'h-60 w-60 ';
+      return 'h-80 w-80';
   }
 };
 
 const genFontSize = (size: string) => {
   switch (size) {
     case 'small':
-      return 16;
+      return 22;
     case 'medium':
-      return 22;
-    case 'large':
       return 26;
+    case 'large':
+      return 30;
     default:
-      return 22;
+      return 30;
   }
 };
 
@@ -50,7 +50,15 @@ const InnerNote = React.memo(
 
     const {getDataValue} = useStudentDataValue();
 
-    const value = isInLesson && isStudent ? getDataValue(note.id) : note.value;
+    const defaultValue = getDataValue(note.id)[0];
+
+    const value =
+      isInLesson && isStudent
+        ? defaultValue.length > 0
+          ? defaultValue
+          : note.value
+        : note.value;
+
     return (
       <div
         id={note.id}

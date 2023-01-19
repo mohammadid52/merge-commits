@@ -2,20 +2,23 @@ import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {Auth} from '@aws-amplify/auth';
 import Loader from 'atoms/Loader';
 import NotesBlock from 'components/Lesson/UniversalLessonBlockComponents/Blocks/Notes/NotesBlock';
-import {GlobalContext, useGlobalContext} from 'contexts/GlobalContext';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import * as mutations from 'graphql/mutations';
 import * as queries from 'graphql/queries';
 import {UniversalJournalData} from 'interfaces/UniversalLessonInterfaces';
-import {getLocalStorageData} from 'utilities/localStorage';
+import {isEmpty} from 'lodash';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import findIndex from 'lodash/findIndex';
-import map from 'lodash/map';
 import forEach from 'lodash/forEach';
+import map from 'lodash/map';
 import {nanoid} from 'nanoid';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useParams} from 'react-router';
-import useStudentDataValue from '@customHooks/studentDataValue';
+import {getLocalStorageData} from 'utilities/localStorage';
+
+let strippedString = (str: string) =>
+  str.replace(/(<([^>]+)>)/gi, '').replace(/&nbsp;/gi, '');
 
 const INITIAL_NOTESDATA: UniversalJournalData = {
   id: '',
@@ -169,6 +172,7 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
       };
 
       updateStudentData({domID: `post-it_${newNote.domID}`, input: ['']});
+
       const updateJournalData: any = await API.graphql(
         graphqlOperation(mutations.updateUniversalJournalData, {input})
       );
@@ -481,14 +485,13 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
       ed?.type?.includes('content-custom')
     );
 
-    let strippedString = (str: string) =>
-      str.replace(/(<([^>]+)>)/gi, '').replace(/&nbsp;/gi, '');
     const mapFixedData = fixedFilteredData.map((m) => {
       // @ts-ignore
       const note = find(allNotes, ['id', m.domID]);
-      if (note && m) {
+      if (!isEmpty(note) && m) {
         // @ts-ignore
         const value = strippedString(m.input.toString());
+
         return {
           // @ts-ignore
           id: m.domID,
@@ -515,14 +518,10 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
       };
     });
 
-    const collectedNotes = [...mapFixedData, ...mapCustomData];
+    const collectedNotes = [...mapFixedData, ...mapCustomData].filter(Boolean);
 
     return (
       <>
-        <div className="text-lg mb-2 text-gray-600">
-          {15 - collectedNotes.length} {collectedNotes.length > 1 ? 'notes' : 'note'}{' '}
-          available
-        </div>
         <div className="flex relative items-center justify-center">
           {collectedNotes.length > 0 && (
             <NotesBlock
