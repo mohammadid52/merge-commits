@@ -172,6 +172,7 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
       };
 
       updateStudentData({domID: `post-it_${newNote.domID}`, input: ['']});
+
       const updateJournalData: any = await API.graphql(
         graphqlOperation(mutations.updateUniversalJournalData, {input})
       );
@@ -506,16 +507,15 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
     const mapCustomData = fixedCustomData.map((m) => {
       let className = m.type.split(' || ')[1];
       const note = find(allNotes, ['id', m.domID]);
-      if (!isEmpty(note)) {
-        return {
-          id: m.domID,
-          class: className,
-          value: strippedString(m.input.toString()),
-          custom: true,
-          pagePartId: note?.pagePartId,
-          partContentId: note?.partContentId
-        };
-      }
+
+      return {
+        id: m.domID,
+        class: className,
+        value: strippedString(m.input.toString()),
+        custom: true,
+        pagePartId: note?.pagePartId,
+        partContentId: note?.partContentId
+      };
     });
 
     const collectedNotes = [...mapFixedData, ...mapCustomData].filter(Boolean);
