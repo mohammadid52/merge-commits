@@ -37,6 +37,7 @@ import useAuth from '@customHooks/useAuth';
 import Filters, {SortType} from '@components/Atoms/Filters';
 import usePagination from '@customHooks/usePagination';
 import {Status} from '../../UserManagement/UserStatus';
+import StaffBuilderName from '@components/MicroComponents/StaffBuilderName';
 
 interface StaffBuilderProps {
   instituteId: String;
@@ -437,27 +438,11 @@ const StaffBuilder = (props: StaffBuilderProps) => {
     id: item.id,
     no: getIndex(index),
     name: (
-      <div
-        className="flex items-center cursor-pointer "
-        onClick={() => gotoProfilePage(item.userId)}>
-        <div className="flex-shrink-0 h-10 w-10 flex items-center">
-          {!item.image ? (
-            <Placeholder size="h-8 w-8" name={item.name} />
-          ) : (
-            <div className="h-8 w-8 rounded-full flex justify-center items-center">
-              <img src={item.image} className="rounded-full" />
-            </div>
-          )}
-        </div>
-        <div className="ml-2">
-          <div className=" text-sm leading-5 font-medium ">
-            <Highlighted text={item?.name} highlight={searchInput.value} />
-          </div>
-          <div className="text-sm leading-5 text-gray-500">
-            <Highlighted text={item.email} highlight={searchInput.value} />
-          </div>
-        </div>
-      </div>
+      <StaffBuilderName
+        item={item}
+        gotoProfilePage={gotoProfilePage}
+        searchTerm={searchInput.value}
+      />
     ),
     instituteName: user.isSuperAdmin && (
       <div

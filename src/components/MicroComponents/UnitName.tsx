@@ -47,9 +47,10 @@ const UnitName = ({
       onMouseEnter={() => {
         setHoveringItem({name: item.name});
       }}
-      onMouseLeave={() => {
-        setHoveringItem({});
-      }}>
+      // onMouseLeave={() => {
+      //   setHoveringItem({});
+      // }}
+    >
       <Highlighted text={item.name} highlight={searchTerm} />
 
       <BriefPopover

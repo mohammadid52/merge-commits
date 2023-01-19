@@ -53,9 +53,9 @@ const CourseName = ({
       onMouseEnter={() => {
         setHoveringItem({name: item.name, id: item.id});
       }}
-      onMouseLeave={() => {
-        setHoveringItem({});
-      }}
+      // onMouseLeave={() => {
+      //   setHoveringItem({});
+      // }}
       data-cy={`curriculum-${item.name.split(' ').join('-')}`}
       onClick={() => editCurrentCurricular(item.id)}
       className="flex hover:underline hover:theme-text:400 cursor-pointer items-center">
