@@ -1,24 +1,26 @@
 import useUrlState from '@ahooksjs/use-url-state';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import {Storage} from '@aws-amplify/storage';
+import AddButton from '@components/Atoms/Buttons/AddButton';
+import Placeholder from '@components/Atoms/Placeholder';
+import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import ErrorBoundary from '@components/Error/ErrorBoundary';
+import Table from '@components/Molecules/Table';
+import {uploadImageToS3} from '@graphql/functions';
 import {PersonStatus, Role} from 'API';
-import {getAsset} from 'assets';
 import Buttons from 'atoms/Buttons';
 import Selector from 'atoms/Form/Selector';
 import Loader from 'atoms/Loader';
 import Anthology from 'components/Dashboard/Anthology/Anthology';
-import {GlobalContext} from 'contexts/GlobalContext';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import * as customMutations from 'customGraphql/customMutations';
 import * as customQueries from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import {useQuery} from 'customHooks/urlParam';
-import * as queries from 'graphql/queries';
+import {map} from 'lodash';
 import sortBy from 'lodash/sortBy';
 import DroppableMedia from 'molecules/DroppableMedia';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {BsArrowLeft} from 'react-icons/bs';
-import {FaEdit} from 'react-icons/fa';
 import {IoIosTime} from 'react-icons/io';
 import {
   Route,
@@ -29,7 +31,7 @@ import {
   useRouteMatch
 } from 'react-router-dom';
 import {getImageFromS3} from 'utilities/services';
-import {getUniqItems, initials, stringToHslColor} from 'utilities/strings';
+import {getUniqItems} from 'utilities/strings';
 import LessonLoading from '../../../Lesson/Loading/ComponentLoading';
 import AnimatedContainer from '../../../Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import {useTabs} from '../../../Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/Tabs';
@@ -94,6 +96,64 @@ interface IUserProps {
   onSuccessCallback?: () => void;
 }
 
+const AssociatedClasses = ({list, handleClassRoomClick, setIsTimelineOpen}: any) => {
+  const dataList: any[] = map(list, (room, idx) => {
+    const curriculum = room.curricula;
+    const teacher = room.teacher;
+    return {
+      no: idx + 1,
+      institution: room?.class?.institution?.name,
+      classroom: (
+        <div onClick={() => handleClassRoomClick(room.id)} className="">
+          {room.name}
+        </div>
+      ),
+      teacher: teacher
+        ? `${teacher?.firstName || ''} ${teacher?.lastName || ''}`
+        : 'Not Available',
+      curriculum: curriculum
+        ? `${curriculum?.items[0]?.curriculum?.name}${
+            curriculum?.items[0]?.length > 1 ? '...' : ''
+          }`
+        : 'Not Available'
+    };
+  });
+  const tableConfig = {
+    headers: ['No', 'Institution', 'Classroom', 'Teacher', 'Curriculum'],
+    dataList,
+    config: {
+      dark: false,
+      isLastAction: true,
+      isFirstIndex: true,
+      headers: {textColor: 'text-white'},
+      dataList: {
+        emptyText: 'No associated coursework and attendance',
+        customWidth: {
+          no: 'w-12',
+          classroom: 'w-72',
+          curriculum: 'w-72'
+        },
+        maxHeight: 'max-h-196',
+        pattern: 'striped',
+        patternConfig: {firstColor: 'bg-gray-100', secondColor: 'bg-gray-200'}
+      }
+    }
+  };
+  return (
+    <div className="flex flex-col">
+      <div className="flex justify-end mb-4">
+        <Buttons
+          label={'Timeline'}
+          onClick={() => setIsTimelineOpen(true)}
+          btnClass="mr-4"
+          Icon={IoIosTime}
+        />
+      </div>
+      <Table {...tableConfig} />
+    </div>
+  );
+};
+
 const User = (props: IUserProps) => {
   const {insideModalPopUp, onSuccessCallback, shouldNavigate} = props;
   const history = useHistory();
@@ -102,7 +162,7 @@ const User = (props: IUserProps) => {
   const params = useQuery(location.search);
   const urlParam: any = useParams();
 
-  const {theme, state, userLanguage, dispatch, clientKey} = useContext(GlobalContext);
+  const {theme, state, userLanguage, dispatch, clientKey} = useGlobalContext();
 
   const [status, setStatus] = useState('');
   const [upImage, setUpImage] = useState(null);
@@ -196,27 +256,6 @@ const User = (props: IUserProps) => {
 
   const mediaRef = React.useRef(null);
   const handleImage = () => mediaRef?.current?.click();
-
-  // const breadCrumsList = [
-  //   {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
-  //   {
-  //     title: BreadcrumsTitles[userLanguage]['PEOPLE'],
-  //     url: '/dashboard/manage-users',
-  //     last: false,
-  //   },
-  //   {
-  //     title: [
-  //       user.preferredName ? user.preferredName : user.firstName,
-  //       user.lastName,
-  //     ].join(' '),
-  //     url: `${location.pathname}${location.search}`,
-  //     last: true,
-  //   },
-  // ];
-
-  // ##################################################################### //
-  // ######################### PROFILE QUESTIONS ######################### //
-  // ##################################################################### //
 
   // ~~~~~~~~~~~~ GET RESPONSES ~~~~~~~~~~~~ //
 
@@ -431,33 +470,19 @@ const User = (props: IUserProps) => {
     setShowCropper(!showCropper);
   };
 
-  const uploadImageToS3 = async (file: any, id: string, type: string) => {
-    // Upload file to s3 bucket
-
-    return new Promise((resolve, reject) => {
-      Storage.put(`user_profile_image_${id}`, file, {
-        contentType: type,
-        acl: 'public-read',
-        ContentEncoding: 'base64'
-      })
-        .then((result) => {
-          resolve(true);
-        })
-        .catch((err) => {
-          console.log('Error in uploading file to s3', err);
-          reject(err);
-        });
-    });
-  };
-
   const saveCroppedImage = async (image: string) => {
     setImageLoading(true);
     toggleCropper();
-    await uploadImageToS3(image ? image : fileObj, user.id, 'image/jpeg');
-    const imageUrl: any = await getImageFromS3(`user_profile_image_${user.id}`);
+    const id = user.id;
+    await uploadImageToS3(
+      image ? image : fileObj,
+      `user_profile_image_${id}`,
+      'image/jpeg'
+    );
+    const imageUrl: any = await getImageFromS3(`user_profile_image_${id}`);
     setImageUrl(imageUrl);
-    setUser({...user, image: `user_profile_image_${user.id}`});
-    updateImageParam(`user_profile_image_${user.id}`);
+    setUser({...user, image: `user_profile_image_${id}`});
+    updateImageParam(`user_profile_image_${id}`);
     toggleCropper();
     setImageLoading(false);
   };
@@ -496,66 +521,66 @@ const User = (props: IUserProps) => {
     }
   }, [userId]);
 
-  const [studentData, setStudentData] = useState<AnthologyMapItem[]>([]);
-  const [loading, setLoading] = useState(false);
+  // const [studentData, setStudentData] = useState<AnthologyMapItem[]>([]);
+  // const [loading, setLoading] = useState(false);
 
-  // TOP Function to load student data
-  const listStudentData = async () => {
-    setLoading(true);
-    try {
-      const studentDataFetch: any = await API.graphql(
-        graphqlOperation(queries.listStudentData, {
-          filter: {studentAuthID: {eq: user.authId}}
-        })
-      );
-      const response = await studentDataFetch;
-      const arrayOfResponseObjects = response?.data?.listStudentData?.items;
+  // // TOP Function to load student data
+  // const listStudentData = async () => {
+  //   setLoading(true);
+  //   try {
+  //     const studentDataFetch: any = await API.graphql(
+  //       graphqlOperation(queries.listStudentData, {
+  //         filter: {studentAuthID: {eq: user.authId}}
+  //       })
+  //     );
+  //     const response = await studentDataFetch;
+  //     const arrayOfResponseObjects = response?.data?.listStudentData?.items;
 
-      const reducedAnthologyContent = arrayOfResponseObjects.reduce(
-        (acc: AnthologyMapItem[], contentObj: any) => {
-          if (contentObj.anthologyContent) {
-            const mapIdToItem = contentObj.anthologyContent.map(
-              (contentMapItem: AnthologyContentInterface) => {
-                return {
-                  ...contentMapItem,
-                  status: contentObj.status,
-                  syllabusLessonID: contentObj.syllabusLessonID,
-                  studentID: contentObj.studentID,
-                  studentAuthID: contentObj.studentAuthID,
-                  studentDataID: contentObj.id,
-                  updatedAt: contentObj.updatedAt
-                };
-              }
-            );
-            return [...acc, ...mapIdToItem];
-          } else {
-            return acc;
-          }
-        },
-        []
-      );
+  //     const reducedAnthologyContent = arrayOfResponseObjects.reduce(
+  //       (acc: AnthologyMapItem[], contentObj: any) => {
+  //         if (contentObj.anthologyContent) {
+  //           const mapIdToItem = contentObj.anthologyContent.map(
+  //             (contentMapItem: AnthologyContentInterface) => {
+  //               return {
+  //                 ...contentMapItem,
+  //                 status: contentObj.status,
+  //                 syllabusLessonID: contentObj.syllabusLessonID,
+  //                 studentID: contentObj.studentID,
+  //                 studentAuthID: contentObj.studentAuthID,
+  //                 studentDataID: contentObj.id,
+  //                 updatedAt: contentObj.updatedAt
+  //               };
+  //             }
+  //           );
+  //           return [...acc, ...mapIdToItem];
+  //         } else {
+  //           return acc;
+  //         }
+  //       },
+  //       []
+  //     );
 
-      setStudentData(
-        reducedAnthologyContent.filter(
-          (item: any) => item.content !== '' && item.title !== ''
-        )
-      );
-    } catch (e) {
-      console.error('Anthology student data fetch error: ', e);
-    } finally {
-      setLoading(false);
-    }
-  };
+  //     setStudentData(
+  //       reducedAnthologyContent.filter(
+  //         (item: any) => item.content !== '' && item.title !== ''
+  //       )
+  //     );
+  //   } catch (e) {
+  //     console.error('Anthology student data fetch error: ', e);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   // Useeffect to load student data and process it
-  useEffect(() => {
-    const initializeStudentData = async () => {
-      await listStudentData();
-    };
-    if (!isTeacher && !isAdmin && user.authId) {
-      initializeStudentData();
-    }
-  }, [user.authId]);
+  // useEffect(() => {
+  //   const initializeStudentData = async () => {
+  //     await listStudentData();
+  //   };
+  //   if (!isTeacher && !isAdmin && user.authId) {
+  //     initializeStudentData();
+  //   }
+  // }, [user.authId]);
 
   if (status !== 'done') {
     return insideModalPopUp ? (
@@ -581,85 +606,6 @@ const User = (props: IUserProps) => {
     setIsTimelineOpen(false);
   };
 
-  const AssociatedClasses = ({list}: any) => {
-    return (
-      <div className="flex flex-col">
-        <div className="flex justify-end mb-4">
-          <Buttons
-            label={'Timeline'}
-            onClick={() => setIsTimelineOpen(true)}
-            btnClass="mr-4"
-            Icon={IoIosTime}
-          />
-        </div>
-        <div className="overflow-x-auto">
-          <div className="align-middle inline-block min-w-full">
-            <div className=" overflow-hidden border-b-0 border-gray-200 sm:rounded-lg">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-100">
-                  <tr>
-                    <th
-                      scope="col"
-                      className="px-6 py-3 w-auto text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                      Institution
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-6 py-3 w-auto text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                      Classroom
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-6 py-3 w-auto text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                      Teacher
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-6 py-3 w-auto text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                      Curriculum
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {list.map((room: any, idx: number) => {
-                    const curriculum = room.curricula;
-                    const teacher = room.teacher;
-                    return (
-                      <tr
-                        key={`${room.id}`}
-                        className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-100'}>
-                        <td className="px-6 py-4 w-auto whitespace-nowrap text-sm text-gray-500">
-                          {room?.class?.institution?.name}
-                        </td>
-                        <td
-                          className="px-6 py-4 w-auto whitespace-nowrap text-sm text-gray-500 font-bold cursor-pointer"
-                          onClick={() => handleClassRoomClick(room.id)}>
-                          {room.name}
-                        </td>
-                        <td className="px-6 py-4 w-auto whitespace-nowrap text-sm text-gray-500">
-                          {teacher
-                            ? `${teacher?.firstName || ''} ${teacher?.lastName || ''}`
-                            : 'Not Available'}
-                        </td>
-                        <td className="px-6 py-4 w-auto whitespace-nowrap text-sm text-gray-500">
-                          {curriculum
-                            ? `${curriculum?.items[0]?.curriculum?.name}${
-                                curriculum?.items[0]?.length > 1 ? '...' : ''
-                              }`
-                            : 'Not Available'}
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  };
-
   const statusDate = (dateValue: string) => {
     const date = new Date(dateValue);
     return date.getMonth() + 1 + '/' + date.getDate() + '/' + date.getFullYear();
@@ -674,7 +620,7 @@ const User = (props: IUserProps) => {
     return (
       <>
         <div
-          className={`pl-0 lg:pl-12 ${insideModalPopUp ? 'min-w-256' : ''}`}
+          className={`px-4 ${insideModalPopUp ? 'min-w-256' : ''}`}
           style={insideModalPopUp ? {maxHeight: 'calc(100vh - 150px)'} : {}}>
           {/* <BreadCrums items={breadCrumsList} /> */}
           {params.get('from') && (
@@ -686,18 +632,30 @@ const User = (props: IUserProps) => {
               </span>
               <div className="text-sm">{CommonlyUsedDict[userLanguage]['BACK']}</div>
             </div>
-            // <div className="flex justify-end mb-4">
-            //   <Buttons
-            //     label="Go Back"
-            //     btnClass="mr-4"
-            //     onClick={history.goBack}
-            //     Icon={IoArrowUndoCircleOutline}
-            //   />
-            // </div>
           )}
-          <div className="flex justify-between items-center mb-4 py-4 w-auto">
-            {/* <SectionTitle title={UserDict[userLanguage]['title']} /> */}
 
+          <SectionTitleV3
+            title="User Lookup"
+            fontSize="xl"
+            fontStyle="semibold"
+            extraClass="leading-6 text-gray-900"
+            borderBottom
+            shadowOff
+            withButton={
+              <div className={`w-auto flex gap-x-4 justify-end items-center flex-wrap`}>
+                <AddButton
+                  label={'Edit User'}
+                  disabled={location.pathname.includes('edit')}
+                  onClick={() => {
+                    setCurTab(tabs[0].name);
+                    history.push(`${match.url}/edit${location.search}`);
+                  }}
+                />
+              </div>
+            }
+          />
+
+          <div className="flex justify-between items-center mb-4 py-4 w-auto">
             <UserTabs
               tabs={tabs}
               currentTab={curTab}
@@ -707,226 +665,197 @@ const User = (props: IUserProps) => {
               isAdmin={isAdmin}
               theme={theme}
             />
-
-            {currentPath !== 'edit' && onUserInformationTab && (
-              <div className="flex justify-end w-auto">
-                <Buttons
-                  dataCy="edit-user-button"
-                  btnClass="mr-4 px-6"
-                  label="Edit"
-                  onClick={() => {
-                    setCurTab(tabs[0].name);
-                    history.push(`${match.url}/edit${location.search}`);
-                  }}
-                  Icon={FaEdit}
-                />
-              </div>
-            )}
           </div>
-          <AnimatedContainer className="h-full" show={onUserInformationTab}>
-            {onUserInformationTab && (
-              <div
-                className={`w-full overflow-hidden white_back px-2 lg:px-8 py-8 ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow} mb-8`}>
-                <div className="h-1/2 flex flex-col md:flex-row">
-                  <div className="w-1/4 p-4 flex flex-col text-center items-center">
-                    <div className="cursor-pointer">
-                      {user.image ? (
-                        <button className="group hover:opacity-80 focus:outline-none focus:opacity-95">
-                          {!imageLoading ? (
-                            <>
-                              <label className="cursor-pointer">
-                                <DroppableMedia
-                                  mediaRef={mediaRef}
-                                  setImage={(img: any, file: any) => {
-                                    setUpImage(img);
-                                    setFileObj(file);
-                                  }}
-                                  toggleCropper={toggleCropper}>
-                                  {imageUrl ? (
-                                    <img
-                                      className={`profile w-20 h-20 md:w-30 md:h-30 lg:w-40 lg:h-40 rounded-full  border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light mx-auto`}
-                                      src={imageUrl}
-                                    />
-                                  ) : (
-                                    <div
-                                      className={`profile w-20 h-20 md:w-30 md:h-30 lg:w-40 lg:h-40 rounded-full  border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light mx-auto`}
-                                    />
-                                  )}
-                                </DroppableMedia>
-                              </label>
-                            </>
-                          ) : (
-                            <div className="w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full  border-0 border-gray-400 shadow-elem-light">
-                              <Loader />
-                            </div>
-                          )}
-                        </button>
-                      ) : (
-                        <label className={`flex justify-center items-center mx-auto`}>
-                          {!imageLoading ? (
-                            <DroppableMedia
-                              mediaRef={mediaRef}
-                              setImage={(img: any, file: any) => {
-                                setUpImage(img);
-                                setFileObj(file);
-                              }}
-                              toggleCropper={toggleCropper}>
-                              <div
-                                onClick={handleImage}
-                                className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full  border-0 border-gray-400 shadow-elem-light`}>
-                                <div
-                                  className="h-full w-full flex justify-center items-center text-5xl text-extrabold text-white rounded-full"
-                                  style={{
-                                    /* stylelint-disable */
-                                    background: `${stringToHslColor(
-                                      user.preferredName
-                                        ? user.preferredName
-                                        : user.firstName + ' ' + user.lastName
-                                    )}`,
-                                    textShadow: '0.2rem 0.2rem 3px #423939b3'
-                                  }}>
-                                  {initials(
-                                    user.preferredName
-                                      ? user.preferredName
-                                      : user.firstName,
-                                    user.lastName
-                                  )}
+          <div className="mb-4">
+            <AnimatedContainer className="h-full" show={onUserInformationTab}>
+              {onUserInformationTab && (
+                <div className={`border-0 border-gray-300 rounded-xl p-4 mb-8`}>
+                  <div className="h-1/2 flex flex-col md:flex-row">
+                    <div className="w-1/4 p-4 flex flex-col text-center items-center">
+                      <div className="cursor-pointer">
+                        {user.image ? (
+                          <button className="group hover:opacity-80 focus:outline-none focus:opacity-95">
+                            {!imageLoading ? (
+                              <>
+                                <div className="cursor-pointer">
+                                  <DroppableMedia
+                                    mediaRef={mediaRef}
+                                    setImage={(img: any, file: any) => {
+                                      setUpImage(img);
+                                      setFileObj(file);
+                                    }}
+                                    toggleCropper={toggleCropper}>
+                                    {imageUrl ? (
+                                      <img
+                                        className={`profile w-20 h-20 md:w-30 md:h-30 lg:w-40 lg:h-40 rounded-full  border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light mx-auto`}
+                                        src={imageUrl}
+                                      />
+                                    ) : (
+                                      <div
+                                        className={`profile w-20 h-20 md:w-30 md:h-30 lg:w-40 lg:h-40 rounded-full  border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light mx-auto`}
+                                      />
+                                    )}
+                                  </DroppableMedia>
                                 </div>
+                              </>
+                            ) : (
+                              <div className="w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full  border-0 border-gray-400 shadow-elem-light">
+                                <Loader />
                               </div>
-                            </DroppableMedia>
-                          ) : (
-                            <Loader />
-                          )}
-                        </label>
-                      )}
-                    </div>
-                    <div className={`text-lg md:text-3xl font-bold  text-gray-900 mt-4`}>
-                      {`${user.preferredName ? user.preferredName : user.firstName} ${
-                        user.lastName
-                      }`}
-                      <p className="text-md md:text-lg">{`${
-                        user.institution ? user.institution : ''
-                      }`}</p>
-                    </div>
-                    {user.inactiveStatusDate && (
-                      <div className="sm:col-span-3 p-2 mt-18">
-                        <Selector
-                          selectedItem={statusDate(user.inactiveStatusDate)}
-                          onChange={() => {}}
-                          disabled
-                          arrowHidden={true}
-                          placeholder={'Status'}
-                          label={'Status Date'}
-                          labelTextClass={'text-sm text-justify'}
-                          btnClass={'cursor-not-allowed'}
-                          additionalClass={`w-auto md:w-52 lg:w-48 cursor-not-allowed`}
-                        />
+                            )}
+                          </button>
+                        ) : (
+                          <div className={`flex justify-center items-center mx-auto`}>
+                            {!imageLoading ? (
+                              <DroppableMedia
+                                mediaRef={mediaRef}
+                                setImage={(img: any, file: any) => {
+                                  setUpImage(img);
+                                  setFileObj(file);
+                                }}
+                                toggleCropper={toggleCropper}>
+                                <div
+                                  onClick={handleImage}
+                                  className="w-20 h-20 md:w-40 md:h-40">
+                                  <Placeholder
+                                    textSize="text-5xl"
+                                    firstName={user.firstName}
+                                    lastName={user.lastName}
+                                    size="w-20 h-20 md:w-40 md:h-40"
+                                  />
+                                </div>
+                              </DroppableMedia>
+                            ) : (
+                              <Loader />
+                            )}
+                          </div>
+                        )}
                       </div>
-                    )}
+                      <div
+                        className={`text-lg md:text-3xl font-bold  text-gray-900 mt-4`}>
+                        {`${user.preferredName ? user.preferredName : user.firstName} ${
+                          user.lastName
+                        }`}
+                        <p className="text-md md:text-lg">{`${
+                          user.institution ? user.institution : ''
+                        }`}</p>
+                      </div>
+                      {user.inactiveStatusDate && (
+                        <div className="sm:col-span-3 p-2 mt-18">
+                          <Selector
+                            selectedItem={statusDate(user.inactiveStatusDate)}
+                            onChange={() => {}}
+                            disabled
+                            arrowHidden={true}
+                            placeholder={'Status'}
+                            label={'Status Date'}
+                            labelTextClass={'text-sm text-justify'}
+                            btnClass={'cursor-not-allowed'}
+                            additionalClass={`w-auto md:w-52 lg:w-48 cursor-not-allowed`}
+                          />
+                        </div>
+                      )}
+                    </div>
+                    <Switch>
+                      <Route
+                        path={`${match.url}/edit`}
+                        render={() => (
+                          <ErrorBoundary componentName="UserEdit">
+                            <UserEdit
+                              // tab={stdCheckpoints.length > 0 ? tab : 'p'}
+                              instituteId={props.instituteId}
+                              tab={tab}
+                              setTab={setTab}
+                              onSuccessCallback={onSuccessCallback}
+                              user={user}
+                              shouldNavigate={shouldNavigate}
+                              status={status}
+                              setStatus={setStatus}
+                              getUserById={getUserProfile}
+                              questionData={questionData}
+                              checkpoints={
+                                tab === 'demographics'
+                                  ? demographicCheckpoints
+                                  : tab === 'private'
+                                  ? privateCheckpoints
+                                  : []
+                              }
+                            />
+                          </ErrorBoundary>
+                        )}
+                      />
+                      <Route
+                        path={`${match.url}/`}
+                        render={() => (
+                          <ErrorBoundary componentName="UserInformation">
+                            <UserInformation
+                              // tab={stdCheckpoints.length > 0 ? tab : 'p'}
+                              tab={tab}
+                              setTab={setTab}
+                              questionData={questionData}
+                              checkpoints={
+                                tab === 'demographics'
+                                  ? demographicCheckpoints
+                                  : tab === 'private'
+                                  ? privateCheckpoints
+                                  : []
+                              }
+                              user={user}
+                              status={status}
+                            />
+                          </ErrorBoundary>
+                        )}
+                      />
+                    </Switch>
                   </div>
-                  <Switch>
-                    <Route
-                      path={`${match.url}/edit`}
-                      render={() => (
-                        <ErrorBoundary componentName="UserEdit">
-                          <UserEdit
-                            // tab={stdCheckpoints.length > 0 ? tab : 'p'}
-                            instituteId={props.instituteId}
-                            tab={tab}
-                            setTab={setTab}
-                            onSuccessCallback={onSuccessCallback}
-                            user={user}
-                            shouldNavigate={shouldNavigate}
-                            status={status}
-                            setStatus={setStatus}
-                            getUserById={getUserProfile}
-                            questionData={questionData}
-                            checkpoints={
-                              tab === 'demographics'
-                                ? demographicCheckpoints
-                                : tab === 'private'
-                                ? privateCheckpoints
-                                : []
-                            }
-                          />
-                        </ErrorBoundary>
-                      )}
-                    />
-                    <Route
-                      path={`${match.url}/`}
-                      render={() => (
-                        <ErrorBoundary componentName="UserInformation">
-                          <UserInformation
-                            // tab={stdCheckpoints.length > 0 ? tab : 'p'}
-                            tab={tab}
-                            setTab={setTab}
-                            questionData={questionData}
-                            checkpoints={
-                              tab === 'demographics'
-                                ? demographicCheckpoints
-                                : tab === 'private'
-                                ? privateCheckpoints
-                                : []
-                            }
-                            user={user}
-                            status={status}
-                          />
-                        </ErrorBoundary>
-                      )}
-                    />
-                  </Switch>
                 </div>
-              </div>
-            )}
-          </AnimatedContainer>
-          <AnimatedContainer show={onCATab}>
-            {onCATab && user?.classes?.items.length > 0 && user.role === 'ST' && (
-              <div
-                className={`w-full white_back py-8 px-4 ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow} mb-8`}>
-                {isTimelineOpen ? (
-                  <Attendance
-                    id={userId}
-                    goToClassroom={goToClassroom}
-                    selectedRoomId={selectedRoomId}
-                    role={user.role}
-                  />
-                ) : (
-                  <AssociatedClasses list={user?.rooms} />
-                )}
-              </div>
-            )}
-            {(user.role === 'TR' || user.role === 'FLW') && (
-              <Attendance
-                id={userId}
-                goToClassroom={goToClassroom}
-                selectedRoomId={selectedRoomId}
-                role={user.role}
-              />
-            )}
-          </AnimatedContainer>
-          <AnimatedContainer show={onNotebookTab}>
-            {onNotebookTab && (
-              <Anthology
-                isTeacher={isTeacher}
-                studentID={user.id}
-                studentAuthID={user.authId}
-                studentName={user.firstName}
-                studentEmail={user.email}
-              />
-            )}
-          </AnimatedContainer>
-          <AnimatedContainer show={onSurveyTab}>
-            {onSurveyTab && (
-              <SurveyList studentAuthID={user.authId} studentEmail={user.email} />
-            )}
-          </AnimatedContainer>
-
-          {/* {curTab === 'Timeline' && (
-            <div
-              className={`w-full white_back py-8 px-4 ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow} mb-8`}>
-              <Attendance id={id} goToClassroom={() => switchMainTab(tabs[1].name)} />
-            </div>
-          )} */}
+              )}
+            </AnimatedContainer>
+            <AnimatedContainer show={onCATab}>
+              {onCATab && user?.classes?.items.length > 0 && user.role === 'ST' && (
+                <div className={`border-0 border-gray-300 rounded-xl p-4 mb-8`}>
+                  {isTimelineOpen ? (
+                    <Attendance
+                      id={userId}
+                      goToClassroom={goToClassroom}
+                      selectedRoomId={selectedRoomId}
+                      role={user.role}
+                    />
+                  ) : (
+                    <AssociatedClasses
+                      setIsTimelineOpen={setIsTimelineOpen}
+                      handleClassRoomClick={handleClassRoomClick}
+                      list={user?.rooms}
+                    />
+                  )}
+                </div>
+              )}
+              {(user.role === 'TR' || user.role === 'FLW') && (
+                <Attendance
+                  id={userId}
+                  goToClassroom={goToClassroom}
+                  selectedRoomId={selectedRoomId}
+                  role={user.role}
+                />
+              )}
+            </AnimatedContainer>
+            <AnimatedContainer show={onNotebookTab}>
+              {onNotebookTab && (
+                <Anthology
+                  isTeacher={isTeacher}
+                  studentID={user.id}
+                  studentAuthID={user.authId}
+                  studentName={user.firstName}
+                  studentEmail={user.email}
+                />
+              )}
+            </AnimatedContainer>
+            <AnimatedContainer show={onSurveyTab}>
+              {onSurveyTab && (
+                <SurveyList studentAuthID={user.authId} studentEmail={user.email} />
+              )}
+            </AnimatedContainer>
+          </div>
         </div>
         {showCropper && (
           <ProfileCropModal

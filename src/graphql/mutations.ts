@@ -2571,8 +2571,8 @@ export const deleteRoom = /* GraphQL */ `
     }
   }
 `;
-export const createArchiveSurveyDataSql = /* GraphQL */ `
-  mutation CreateArchiveSurveyDataSql(
+export const createArchiveSurveyDataSQL = /* GraphQL */ `
+  mutation CreateArchiveSurveyDataSQL(
     $input: CreateArchiveSurveyDataSQLInput!
     $condition: ModelArchiveSurveyDataSQLConditionInput
   ) {
@@ -2591,8 +2591,8 @@ export const createArchiveSurveyDataSql = /* GraphQL */ `
     }
   }
 `;
-export const updateArchiveSurveyDataSql = /* GraphQL */ `
-  mutation UpdateArchiveSurveyDataSql(
+export const updateArchiveSurveyDataSQL = /* GraphQL */ `
+  mutation UpdateArchiveSurveyDataSQL(
     $input: UpdateArchiveSurveyDataSQLInput!
     $condition: ModelArchiveSurveyDataSQLConditionInput
   ) {
@@ -2611,8 +2611,8 @@ export const updateArchiveSurveyDataSql = /* GraphQL */ `
     }
   }
 `;
-export const deleteArchiveSurveyDataSql = /* GraphQL */ `
-  mutation DeleteArchiveSurveyDataSql(
+export const deleteArchiveSurveyDataSQL = /* GraphQL */ `
+  mutation DeleteArchiveSurveyDataSQL(
     $input: DeleteArchiveSurveyDataSQLInput!
     $condition: ModelArchiveSurveyDataSQLConditionInput
   ) {
@@ -17992,6 +17992,201 @@ export const deleteErrorLog = /* GraphQL */ `
         updatedAt
       }
       status
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createDicitionary = /* GraphQL */ `
+  mutation CreateDicitionary(
+    $input: CreateDicitionaryInput!
+    $condition: ModelDicitionaryConditionInput
+  ) {
+    createDicitionary(input: $input, condition: $condition) {
+      id
+      authID
+      email
+      person {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        inactiveStatusDate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        onDemand
+        sentiments
+        passcode
+        classes {
+          nextToken
+        }
+        lessons {
+          nextToken
+        }
+        spotlightUser
+        spotlightDate
+        statusReason
+        addedby
+        lastEmotionSubmission
+        pageState
+        lastPageStateUpdate
+        statusChangedBy
+        createdAt
+        updatedAt
+      }
+      englishPhrase
+      englishAudio
+      englishDefinition
+      translation {
+        id
+        translateLanguage
+        languageTranslation
+        languageDefinition
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateDicitionary = /* GraphQL */ `
+  mutation UpdateDicitionary(
+    $input: UpdateDicitionaryInput!
+    $condition: ModelDicitionaryConditionInput
+  ) {
+    updateDicitionary(input: $input, condition: $condition) {
+      id
+      authID
+      email
+      person {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        inactiveStatusDate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        onDemand
+        sentiments
+        passcode
+        classes {
+          nextToken
+        }
+        lessons {
+          nextToken
+        }
+        spotlightUser
+        spotlightDate
+        statusReason
+        addedby
+        lastEmotionSubmission
+        pageState
+        lastPageStateUpdate
+        statusChangedBy
+        createdAt
+        updatedAt
+      }
+      englishPhrase
+      englishAudio
+      englishDefinition
+      translation {
+        id
+        translateLanguage
+        languageTranslation
+        languageDefinition
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteDicitionary = /* GraphQL */ `
+  mutation DeleteDicitionary(
+    $input: DeleteDicitionaryInput!
+    $condition: ModelDicitionaryConditionInput
+  ) {
+    deleteDicitionary(input: $input, condition: $condition) {
+      id
+      authID
+      email
+      person {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        inactiveStatusDate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        onDemand
+        sentiments
+        passcode
+        classes {
+          nextToken
+        }
+        lessons {
+          nextToken
+        }
+        spotlightUser
+        spotlightDate
+        statusReason
+        addedby
+        lastEmotionSubmission
+        pageState
+        lastPageStateUpdate
+        statusChangedBy
+        createdAt
+        updatedAt
+      }
+      englishPhrase
+      englishAudio
+      englishDefinition
+      translation {
+        id
+        translateLanguage
+        languageTranslation
+        languageDefinition
+      }
       createdAt
       updatedAt
     }

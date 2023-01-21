@@ -1,10 +1,11 @@
 import SearchInput from '@components/Atoms/Form/SearchInput';
-import Loader from '@components/Atoms/Loader';
+import Highlighted from '@components/Atoms/Highlighted';
+import Table from '@components/Molecules/Table';
 import {useGlobalContext} from '@contexts/GlobalContext';
 import useGraphqlQuery from '@customHooks/useGraphqlQuery';
 import {setLocalStorageData} from '@utilities/localStorage';
 import {ListPersonLessonsDataQuery, PersonLessonsData} from 'API';
-import moment from 'moment';
+import {map} from 'lodash';
 import React, {useEffect, useState} from 'react';
 
 const SurveyList = ({
@@ -20,7 +21,7 @@ const SurveyList = ({
     roomId: {eq: room.id}
   }));
 
-  const {data, isLoading, isFetched, isError, error} = useGraphqlQuery<
+  const {data, isLoading, isFetched} = useGraphqlQuery<
     any,
     ListPersonLessonsDataQuery['listPersonLessonsData']['items']
   >(
@@ -35,9 +36,9 @@ const SurveyList = ({
       }
     },
     {
-      enabled: roomData?.length > 0,
-      custom: true,
-      onSuccess: (data) => setSurveyList(data)
+      enabled: roomData?.length > 0 && roomIdFilter?.length > 0,
+      onSuccess: (data) => setSurveyList(data),
+      loopOnNextToken: true
     }
   );
 
@@ -73,21 +74,47 @@ const SurveyList = ({
     setSurveyList(searchedData);
   };
 
+  const dataList = map(surveyList, (survey, idx) => ({
+    no: idx + 1,
+    surveyName: <Highlighted text={survey?.lesson?.title} highlight={searchInput} />,
+    classroom: survey?.room?.name,
+    completedAt: new Date(survey.updatedAt).toLocaleDateString(),
+    actions: (
+      <a
+        href={`/lesson/${survey.lessonID}/0?sId=${studentAuthID}&sEmail=${studentEmail}&tab=Completed%20Surveys`}
+        className="iconoclast:text-main curate:text-main hover:underline">
+        View survey
+      </a>
+    )
+  }));
+
+  const tableConfig = {
+    headers: ['No', 'Survey Name', 'Classroom', 'Completed At', 'Actions'],
+    dataList,
+    config: {
+      dark: false,
+      isFirstIndex: true,
+      isLastActions: true,
+      headers: {textColor: 'text-white'},
+      dataList: {
+        loading: isLoading,
+        emptyText: 'No completed surveys found',
+        customWidth: {
+          no: 'w-12',
+          surveyName: 'w-84',
+          classroom: 'w-84',
+          completedAt: 'w-48'
+        },
+        maxHeight: 'max-h-196',
+        pattern: 'striped',
+        patternConfig: {firstColor: 'bg-gray-100', secondColor: 'bg-gray-200'}
+      }
+    }
+  };
+
   return (
     <div className="overflow-x-auto">
       <div className="align-middle inline-block min-w-full">
-        {isLoading && (
-          <div className="overflow-hidden">
-            <Loader />
-          </div>
-        )}
-        {!isLoading && isFetched && isError && (
-          <p className="text-red-500 text-sm text-center">{error}</p>
-        )}
-
-        {!isLoading && isFetched && data.length === 0 && (
-          <p className="text-gray-500 text-sm text-center">No completed surveys found</p>
-        )}
         {haveData && (
           <SearchInput
             value={searchInput}
@@ -97,63 +124,8 @@ const SurveyList = ({
             style={`mr-4 w-full`}
           />
         )}
-        {haveData ? (
-          <div className="mt-8 overflow-hidden border-b-0 border-gray-200 sm:rounded-lg">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-100">
-                <tr>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 w-auto text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                    Survey Name
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 w-auto text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                    Classroom
-                  </th>
-                  <th
-                    scope="col"
-                    className="hidden 2xl:block px-6 py-3 w-auto text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                    Completed At
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 w-auto text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {surveyList &&
-                  surveyList.map((survey, idx: number) => {
-                    return (
-                      <tr
-                        key={`${survey.id}_${idx}`}
-                        className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-100'}>
-                        <td className="px-6 py-4 w-auto whitespace-nowrap text-sm text-gray-500">
-                          {survey?.lesson?.title}
-                        </td>
-                        <td className="px-6 py-4 w-auto whitespace-nowrap text-sm text-gray-500">
-                          {survey?.room?.name}
-                        </td>
-                        <td className="hidden 2xl:block px-6 py-4 w-auto whitespace-nowrap text-sm text-gray-500">
-                          {new Date(survey.updatedAt).toLocaleDateString()}
-                        </td>
-                        <td className="px-6 py-4 w-auto whitespace-nowrap text-sm text-gray-500">
-                          <a
-                            href={`/lesson/${survey.lessonID}/0?sId=${studentAuthID}&sEmail=${studentEmail}&tab=Completed%20Surveys`}
-                            className="iconoclast:text-main curate:text-main hover:underline">
-                            View survey
-                          </a>
-                        </td>
-                      </tr>
-                    );
-                  })}
-              </tbody>
-            </table>
-          </div>
-        ) : null}
+
+        <Table {...tableConfig} />
       </div>
     </div>
   );

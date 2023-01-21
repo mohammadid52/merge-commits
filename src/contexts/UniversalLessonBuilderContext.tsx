@@ -1,6 +1,7 @@
-import {UniversalLessonPlan} from 'API';
+import {Dicitionary, UniversalLessonPlan} from 'API';
 import {GlobalContext} from 'contexts/GlobalContext';
 import {UniversalLesson} from 'interfaces/UniversalLessonInterfaces';
+import {isEmpty} from 'lodash';
 import findIndex from 'lodash/findIndex';
 import update from 'lodash/update';
 import React, {createContext, useContext, useState} from 'react';
@@ -165,52 +166,56 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
     }
   };
 
-  const wordsComingFromDB = [];
+  const scanLessonAndFindComplicatedWord = (
+    lessonPlan: UniversalLessonPlan[],
+    dictionaries: Dicitionary[]
+  ) => {
+    const updated = lessonPlan.map((plan: any) => ({
+      ...plan,
+      pageContent: plan.pageContent.map((pgContent: any) => ({
+        ...pgContent,
+        partContent: pgContent.partContent.map((ptContent: any) => ({
+          ...ptContent,
+          value: ptContent.value.map((value: any, idx: number) => {
+            dictionaries.forEach((word) => {
+              value.value = value.value.replace(
+                word.englishPhrase,
+                `<span class="dictionary-popup"  >
+                <div class="dictionary-popup__container" data-dictionaryId="${word.id}">
+                <span class="dictionary-popup__title">Definition: ${
+                  word.englishDefinition
+                }</span>
+                ${
+                  word?.translation?.length > 0
+                    ? `
+               ${word.translation.map(
+                 (translation) =>
+                   ` <div class="dictionary-popup__languages">
+                <h5>In ${translation.translateLanguage}:</h5>
+                <ul>
+                <li>Definition: ${translation.languageDefinition}</li>
+                <li>Translation: ${translation.languageTranslation}</li>
+                </ul>
+                </div>`
+               )}
+                `
+                    : ``
+                }
+                
+              </div>
+                ${word.englishPhrase}</span>`
+              );
+            });
 
-  //   updateDate:
-  // englishPhrase:
-  // englishDefinition: (optional)
-  // englishAudio: (optional)
-  // translateLanguage:
-  // languageTranslation:
-  // languageDefinition: (optional)
+            return {
+              ...value
+            };
+          })
+        }))
+      }))
+    }));
 
-  const scanLessonAndFindComplicatedWord = (lessonPlan: UniversalLessonPlan[]) => {
-    return lessonPlan;
-    // const updated = lessonPlan.map((plan: any) => ({
-    //   ...plan,
-    //   pageContent: plan.pageContent.map((pgContent: any) => ({
-    //     ...pgContent,
-    //     partContent: pgContent.partContent.map((ptContent: any) => ({
-    //       ...ptContent,
-    //       value: ptContent.value.map((value: any) => {
-    //         const split = value.value.split(' ');
-
-    //         let updatedSentence: string[] = [];
-    //         split.forEach((s: string) => {
-    //           const idx = wordsComingFromDB.findIndex((d) => d.word === s);
-
-    //           if (idx !== -1) {
-    //             updatedSentence.push(
-    //               s.replace(
-    //                 s,
-    //                 `<abbr title="${wordsComingFromDB[idx].meaning}">${s}</abbr>`
-    //               )
-    //             );
-    //           } else {
-    //             updatedSentence.push(s);
-    //           }
-    //         });
-
-    //         return {
-    //           ...value,
-    //           value: updatedSentence.join(' ')
-    //         };
-    //       })
-    //     }))
-    //   }))
-    // }));
-    // return updated;
+    return updated;
   };
 
   const [savingStatus, setSavingStatus] = useState<

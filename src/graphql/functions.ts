@@ -3,7 +3,9 @@ import {Storage} from '@aws-amplify/storage';
 import {formatPageName} from '@components/Dashboard/Admin/UserManagement/List';
 import {setPageTitle} from '@utilities/functions';
 import {CreateErrorLogInput, UserPageState} from 'API';
+import * as queries from 'graphql/queries';
 import * as customMutations from 'customGraphql/customMutations';
+import {setLocalStorageData} from '@utilities/localStorage';
 
 interface S3UploadOptions {
   onSuccess?: (result: Object) => void;
@@ -136,4 +138,22 @@ export const logError = async (
   // } else {
   //   console.error(error);
   // }
+};
+
+export const getDictionaries = async () => {
+  try {
+    const res: any = await API.graphql(graphqlOperation(queries.listDicitionaries));
+
+    const data = res.data.listDicitionaries.items;
+    if (data && data.length > 0) {
+      setLocalStorageData('dictionaries', data);
+      return data;
+    } else {
+      return [];
+    }
+  } catch (error) {
+    console.error(error);
+    return [];
+  } finally {
+  }
 };

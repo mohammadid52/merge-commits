@@ -1,7 +1,7 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {useULBContext} from '@contexts/UniversalLessonBuilderContext';
 import useAuth from '@customHooks/useAuth';
-import {logError, updatePageState} from '@graphql/functions';
+import {getDictionaries, logError, updatePageState} from '@graphql/functions';
 import {StudentPageInput} from '@interfaces/UniversalLessonInterfaces';
 import {setPageTitle} from '@utilities/functions';
 import {PersonLessonsData, UpdatePersonLessonsDataInput, UserPageState} from 'API';
@@ -40,6 +40,7 @@ export interface ILessonSurveyApp {
 const Lesson = () => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
   const gContext = useContext(GlobalContext);
+  const {dictionaries} = gContext.state;
   const lessonState = gContext.lessonState;
   const lessonDispatch = gContext.lessonDispatch;
   const {notifications} = useNotifications('lesson');
@@ -71,7 +72,14 @@ const Lesson = () => {
             }
           ];
         }, []);
-        const updatedLessonPlan = scanLessonAndFindComplicatedWord(lessonPlan);
+
+        const dictionaries = await getDictionaries();
+
+        const updatedLessonPlan = scanLessonAndFindComplicatedWord(
+          lessonPlan,
+          dictionaries
+        );
+
         setLocalStorageData('lesson_plan', updatedLessonPlan);
         lessonDispatch({
           type: 'SET_LESSON_DATA',

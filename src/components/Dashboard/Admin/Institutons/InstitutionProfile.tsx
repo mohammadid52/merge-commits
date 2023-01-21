@@ -14,8 +14,6 @@ import React, {useEffect, useRef, useState} from 'react';
 import {BiCheckbox, BiCheckboxChecked} from 'react-icons/bi';
 import {BsEnvelope} from 'react-icons/bs';
 import {FiPhone} from 'react-icons/fi';
-import {HiPencil} from 'react-icons/hi';
-import {IoIosGlobe} from 'react-icons/io';
 
 const InstitutionProfile = ({institute}: {institute: any}) => {
   // Add image handler
@@ -96,7 +94,7 @@ const InstitutionProfile = ({institute}: {institute: any}) => {
         className={`${
           isPageBuilder
             ? 'hidden'
-            : 'flex justify-between absolute bottom-0.5 right-0 left-0 mx-8 w-auto border-t-0 border-dashed border-gray-400'
+            : 'flex justify-between absolute bottom-0.5 right-0 left-0 mx-8 w-auto '
         }`}
         onClick={() => {}}>
         {isEmpty(institute.name) && (

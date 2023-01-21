@@ -560,7 +560,7 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
         customWidth: {
           name: 'w-72 -ml-12',
           status: 'w-28',
-          flow: 'w-24',
+          flow: 'w-40',
           role: 'w-24',
           location: 'w-24',
           actions: 'w-48'
@@ -595,6 +595,7 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
         <SectionTitleV3
           fontSize="xl"
           fontStyle="semibold"
+          extraContainerClass="px-4"
           extraClass="leading-6 text-gray-900"
           borderBottom
           shadowOff

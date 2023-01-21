@@ -1718,3 +1718,44 @@ $polka-dot-size: 0.8px;
   top: 0;
   content: '';
 }
+
+.dictionary-popup {
+  &__container {
+    position: absolute;
+    top: 30px;
+    left: 0;
+    background-color: $gray-800;
+    border: 1px solid $gray-700;
+    min-height: 100px;
+    z-index: 999999999;
+    max-width: 20rem;
+    border-radius: 12px;
+    color: white;
+    opacity: 0;
+    min-width: 20rem;
+    padding: 0.7rem 1rem;
+    transform: translateY(30px);
+    transition: all 150ms ease-in-out;
+    font-size: 14px;
+    pointer-events: none;
+  }
+
+  &__languages {
+    border-top: 1px solid $gray-700;
+    margin-top: 0.25rem;
+    padding-top: 0.25rem;
+    h5 {
+      font-style: italic;
+    }
+  }
+
+  &:hover &__container {
+    opacity: 1;
+    pointer-events: all;
+    transform: translateY(0px);
+  }
+
+  position: relative;
+  cursor: pointer;
+  text-decoration: underline dotted;
+}

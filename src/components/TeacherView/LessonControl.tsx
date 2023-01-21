@@ -1,5 +1,6 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {useULBContext} from '@contexts/UniversalLessonBuilderContext';
+import {getDictionaries} from '@graphql/functions';
 import {UniversalLessonStudentData as UniversalLessonStudentDataFromAPI} from 'API';
 import {GlobalContext} from 'contexts/GlobalContext';
 import {useNotifications} from 'contexts/NotificationContext';
@@ -11,6 +12,7 @@ import {
   StudentPageInput,
   UniversalLessonStudentData
 } from 'interfaces/UniversalLessonInterfaces';
+import {isEmpty} from 'lodash';
 import React, {Suspense, useContext, useEffect, useState} from 'react';
 import {useParams} from 'react-router';
 import {useHistory, useRouteMatch} from 'react-router-dom';
@@ -41,6 +43,7 @@ const LessonControl = () => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
   const gContext = useContext(GlobalContext);
   const dispatch = gContext.dispatch;
+  const {dictionaries} = gContext.state;
   const lessonState = gContext.lessonState;
   const lessonDispatch = gContext.lessonDispatch;
   const controlState = gContext.controlState;
@@ -349,7 +352,12 @@ const LessonControl = () => {
         ];
       }, []);
 
-      const updatedLessonPlan = scanLessonAndFindComplicatedWord(lessonPlan);
+      const dictionaries = await getDictionaries();
+
+      const updatedLessonPlan = scanLessonAndFindComplicatedWord(
+        lessonPlan,
+        dictionaries
+      );
       setLocalStorageData('lesson_plan', updatedLessonPlan);
       lessonDispatch({
         type: 'SET_LESSON_DATA',

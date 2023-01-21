@@ -1,0 +1,201 @@
+import AddButton from '@components/Atoms/Buttons/AddButton';
+import PageWrapper from '@components/Atoms/PageWrapper';
+import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
+import Table from '@components/Molecules/Table';
+import {useGlobalContext} from '@contexts/GlobalContext';
+import useAuth from '@customHooks/useAuth';
+import useGraphqlMutation from '@customHooks/useGraphqlMutation';
+import useGraphqlQuery from '@customHooks/useGraphqlQuery';
+import {logError} from '@graphql/functions';
+import {setLocalStorageData} from '@utilities/localStorage';
+import {Dicitionary, ListDicitionariesQueryVariables} from 'API';
+import {orderBy} from 'lodash';
+import React, {useState} from 'react';
+import DictionaryMutationModal from './DictionaryMutationModal';
+
+const DictionaryPage = () => {
+  const {checkIfAdmin} = useGlobalContext();
+
+  const {data, setData, isLoading, refetch} = useGraphqlQuery<
+    ListDicitionariesQueryVariables,
+    Dicitionary[]
+  >(
+    'listDicitionaries',
+    {limit: 150},
+    {
+      enabled: checkIfAdmin(),
+      onSuccess: (data) => {
+        if (data.length > 0) {
+          const orderedList = orderBy([...data], ['createdAt'], ['desc']);
+          setData([...orderedList]);
+          setLocalStorageData('dictionaries', orderedList);
+        } else {
+          setData([]);
+        }
+      }
+    }
+  );
+
+  // work on reducer to store dictionaries
+
+  const [showModal, setShowModal] = useState(false);
+
+  const [editDictionary, setEditDictionary] = useState<Dicitionary | null>(null);
+
+  const closeAction = () => {
+    setShowModal(false);
+  };
+
+  const deleteDicitionary = useGraphqlMutation('deleteDicitionary', {
+    onSuccess: () => {
+      refetch();
+    }
+  });
+
+  const {authId, email} = useAuth();
+
+  const onDelete = (dictId: string) => {
+    try {
+      deleteDicitionary.mutate({input: {id: dictId}});
+    } catch (error) {
+      logError(error, {authId, email}, 'DictionaryPage @onDelete');
+      console.error(error);
+    }
+  };
+
+  const dataList: any[] = data.map((dict, idx) => ({
+    no: idx + 1,
+    englishPhrase: <div className="">{dict.englishPhrase}</div>,
+    englishDefinition: <div className="">{dict.englishDefinition}</div>,
+
+    languageTranslation: (
+      <div className="">
+        <ol>
+          {dict.translation.length === 0 ? (
+            <li>N/A</li>
+          ) : (
+            dict.translation.map((translation) => {
+              return (
+                <li key={translation.id}>
+                  <div className="font-medium text-gray-600">
+                    In {translation?.translateLanguage || '--'}:
+                  </div>
+                  <p>{translation?.languageTranslation || '--'}</p>
+                </li>
+              );
+            })
+          )}
+        </ol>
+      </div>
+    ),
+    languageDefinition: (
+      <div className="">
+        <ol>
+          {dict.translation.length === 0 ? (
+            <li>N/A</li>
+          ) : (
+            dict.translation.map((translation) => {
+              return (
+                <li key={translation.id}>
+                  <div className="font-medium text-gray-600">
+                    In {translation?.translateLanguage || '--'}:
+                  </div>
+                  <p>{translation?.languageDefinition || '--'}</p>
+                </li>
+              );
+            })
+          )}
+        </ol>
+      </div>
+    ),
+    actions: (
+      <div className="flex items-center gap-x-4">
+        <div
+          onClick={() => {
+            setShowModal(true);
+            setEditDictionary(dict);
+          }}
+          className="theme-text cursor-pointer hover:underline hover:theme-text:500">
+          Edit
+        </div>
+        <div
+          onClick={() => {
+            onDelete(dict.id);
+          }}
+          className="text-red-500 cursor-pointer hover:text-red-600 hover:underline">
+          Delete
+        </div>
+      </div>
+    )
+  }));
+
+  const tableConfig = {
+    headers: [
+      'No',
+      'English Phrase',
+      'English Definition',
+      'Language Translation',
+      'Language Definition',
+      'Actions'
+    ],
+    dataList,
+    config: {
+      dark: false,
+      headers: {textColor: 'text-white'},
+      dataList: {
+        loading: isLoading,
+        isFirstIndex: true,
+        emptyText: 'No dictionaries found',
+        customWidth: {
+          no: 'w-12',
+          actions: 'w-28'
+        },
+        maxHeight: 'max-h-196',
+        pattern: 'striped',
+        patternConfig: {firstColor: 'bg-gray-100', secondColor: 'bg-gray-200'}
+      }
+    }
+  };
+
+  const onSuccessMutation = () => {
+    refetch();
+  };
+
+  return (
+    <div className="p-4 pt-8">
+      <PageWrapper wrapClass="px-8">
+        <SectionTitleV3
+          title={'Dictionary List'}
+          fontSize="xl"
+          fontStyle="semibold"
+          extraClass="leading-6 text-gray-900"
+          borderBottom
+          shadowOff
+          withButton={
+            <div className={`w-auto flex gap-x-4 justify-end items-center flex-wrap`}>
+              <AddButton
+                label={'Add new dictionary'}
+                onClick={() => {
+                  setEditDictionary(null);
+                  setShowModal(true);
+                }}
+              />
+            </div>
+          }
+        />
+
+        <Table {...tableConfig} />
+
+        {showModal && (
+          <DictionaryMutationModal
+            onSuccessMutation={onSuccessMutation}
+            dictionary={editDictionary}
+            closeAction={closeAction}
+          />
+        )}
+      </PageWrapper>
+    </div>
+  );
+};
+
+export default DictionaryPage;

@@ -1,21 +1,17 @@
+import Buttons from '@components/Atoms/Buttons';
 import Loader from '@components/Atoms/Loader';
 import PageWrapper from '@components/Atoms/PageWrapper';
-import {downloadBlob} from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Downloadables';
 import {useGlobalContext} from '@contexts/GlobalContext';
-import {Storage} from '@aws-amplify/storage';
-import useAuth from '@customHooks/useAuth';
 import useGraphqlQuery from '@customHooks/useGraphqlQuery';
 import {ListUploadLogsQueryVariables, UploadLogs} from 'API';
+import {orderBy} from 'lodash';
 import moment from 'moment';
 import React, {useState} from 'react';
-import {Redirect} from 'react-router';
-import Buttons from '@components/Atoms/Buttons';
 import {BiCloudDownload} from 'react-icons/bi';
-import {orderBy} from 'lodash';
 import {HiChevronDown} from 'react-icons/hi';
+import {Redirect} from 'react-router';
 
 const UploadLogsPage = () => {
-  const {authId, email} = useAuth();
   const {checkIfAdmin} = useGlobalContext();
   if (!checkIfAdmin()) {
     return <Redirect to={'/dashboard/home'} />;

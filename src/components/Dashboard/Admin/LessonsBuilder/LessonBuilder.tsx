@@ -1,6 +1,6 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import useAuth from '@customHooks/useAuth';
-import {logError} from '@graphql/functions';
+import {getDictionaries, logError} from '@graphql/functions';
 import {RoomStatus, UpdateUniversalLessonInput} from 'API';
 import Loader from 'atoms/Loader';
 import StepComponent, {IStepElementInterface} from 'atoms/StepComponent';
@@ -65,7 +65,11 @@ const LessonBuilder = (props: LessonBuilderProps) => {
   const params = useQuery(location.search);
   const step = params.get('step');
   const lessonIdFromUrl = (useParams() as any).lessonId;
-  const {clientKey, userLanguage} = useContext(GlobalContext);
+  const {
+    clientKey,
+    userLanguage,
+    state: {dictionaries}
+  } = useContext(GlobalContext);
   const {
     setUniversalLessonDetails,
     universalLessonDetails,
@@ -218,7 +222,13 @@ const LessonBuilder = (props: LessonBuilderProps) => {
         })
       );
       const savedData = result.data.getUniversalLesson;
-      const updatedLessonPlan = scanLessonAndFindComplicatedWord(savedData.lessonPlan);
+
+      const dictionaries = await getDictionaries();
+
+      const updatedLessonPlan = scanLessonAndFindComplicatedWord(
+        savedData.lessonPlan,
+        dictionaries
+      );
       setUniversalLessonDetails({...savedData, lessonPlan: updatedLessonPlan});
 
       if (savedData.institutionID) {

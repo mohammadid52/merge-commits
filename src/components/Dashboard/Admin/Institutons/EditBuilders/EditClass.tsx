@@ -6,18 +6,15 @@ import {useHistory} from 'react-router-dom';
 
 import {DeleteActionBtn} from 'atoms/Buttons/DeleteActionBtn';
 import SearchSelectorWithAvatar from 'atoms/Form/SearchSelectorWithAvatar';
-import Loader from 'atoms/Loader';
 
 import {getAsset} from 'assets';
 import {getImageFromS3} from 'utilities/services';
-import {
-  createFilterToFetchAllItemsExcept,
-  getInitialsFromString,
-  initials,
-  stringToHslColor
-} from 'utilities/strings';
+import {createFilterToFetchAllItemsExcept} from 'utilities/strings';
 
 import Buttons from '@components/Atoms/Buttons';
+import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
+import StudentName from '@components/MicroComponents/StudentName';
+import Table from '@components/Molecules/Table';
 import {useNotifications} from '@contexts/NotificationContext';
 import {getLocalStorageData} from '@utilities/localStorage';
 import {PersonStatus} from 'API';
@@ -30,14 +27,11 @@ import * as customQueries from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import useAuth from 'customHooks/useAuth';
 import * as mutations from 'graphql/mutations';
+import {map} from 'lodash';
 import ModalPopUp from 'molecules/ModalPopUp';
 import {addName, sortByName} from '../../UserManagement/UserLookup';
-import LocationBadge from './LocationBadge';
-import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
-import {map} from 'lodash';
-import StudentName from '@components/MicroComponents/StudentName';
-import Table from '@components/Molecules/Table';
 import {Status} from '../../UserManagement/UserStatus';
+import LocationBadge from './LocationBadge';
 
 interface EditClassProps {
   instId: string;

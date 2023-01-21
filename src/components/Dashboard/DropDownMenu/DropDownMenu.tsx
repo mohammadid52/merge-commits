@@ -1,4 +1,5 @@
 // import {BsFillInfoCircleFill} from 'react-icons/bs';
+import Placeholder from '@components/Atoms/Placeholder';
 import {useGlobalContext} from '@contexts/GlobalContext';
 import useAuth from '@customHooks/useAuth';
 import {Menu, Transition} from '@headlessui/react';
@@ -7,13 +8,41 @@ import {initials, stringToHslColor} from '@utilities/strings';
 import {Role} from 'API';
 import SignOutButton from 'components/Auth/SignOut';
 import React, {Fragment} from 'react';
+import {AiOutlineBook} from 'react-icons/ai';
 import {FiUser} from 'react-icons/fi';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {VscChecklist} from 'react-icons/vsc';
 import {useHistory} from 'react-router-dom';
 import {getImageFromS3Static} from 'utilities/services';
 import LocationBadge from '../Admin/Institutons/EditBuilders/LocationBadge';
 import UserRole from '../Admin/UserManagement/UserRole';
+
+const Item = ({
+  onClick,
+  _key,
+  Icon,
+  label
+}: {
+  _key: string;
+  label: string;
+  Icon: any;
+  onClick: () => void;
+}) => {
+  return (
+    <Menu.Item key={_key}>
+      <div
+        onClick={onClick}
+        className="flex-shrink-0 mt-2 flex border-t p-2 px-4 hover:iconoclast:bg-400 hover:curate:bg-400 hover:text-white rounded-full">
+        <div className="flex-shrink-0 group block">
+          <div className="flex items-center">
+            <Icon size="24px" className="w-auto mr-1 cursor-pointer" />
+
+            <p className="text-sm ml-2 font-medium">{label}</p>
+          </div>
+        </div>
+      </div>
+    </Menu.Item>
+  );
+};
 
 interface IDropDownMenu {
   firstName: string;
@@ -34,7 +63,7 @@ const DropDownMenu = ({
 }: IDropDownMenu) => {
   const history = useHistory();
 
-  const {onDemand} = useAuth();
+  const {onDemand, isStudent} = useAuth();
   const {checkIfAdmin} = useGlobalContext();
 
   if (firstName && lastName && theme) {
@@ -62,19 +91,11 @@ const DropDownMenu = ({
                         alt=""
                       />
                     ) : (
-                      <div
-                        style={{
-                          /* stylelint-disable */
-                          background: `${
-                            firstName
-                              ? stringToHslColor(firstName + ' ' + lastName)
-                              : '#272730'
-                          }`,
-                          textShadow: '0.1rem 0.1rem 2px #423939b3'
-                        }}
-                        className="rounded-full border-0 theme-border  flex justify-center items-center text-xs text-white h-full font-sans">
-                        {`${initials(firstName, lastName)}`}
-                      </div>
+                      <Placeholder
+                        firstName={firstName}
+                        lastName={lastName}
+                        size="h-6 w-6"
+                      />
                     )}
                   </div>
 
@@ -108,80 +129,43 @@ const DropDownMenu = ({
                       </span>
                     </div>
                   </Menu.Item>
-                  <Menu.Item data-cy="dropdown-item-profile" key={'profile-1'}>
-                    <div
-                      onClick={() => history.push('/dashboard/profile')}
-                      className="mt-2 flex-shrink-0  flex border-t p-2 px-4 hover:iconoclast:bg-400 hover:curate:bg-400 hover:text-white rounded-full">
-                      <div className="flex-shrink-0 group block">
-                        <div className="flex items-center">
-                          <IconContext.Provider
-                            value={{
-                              size: '24px',
-                              className: 'w-auto mr-1'
-                            }}>
-                            <FiUser className="cursor-pointer" />
-                          </IconContext.Provider>
-                          <p className="text-sm ml-2 font-medium">Edit Profile</p>
-                        </div>
-                      </div>
-                    </div>
-                  </Menu.Item>
+
+                  <Item
+                    onClick={() => history.push('/dashboard/profile')}
+                    label="Edit Profile"
+                    _key={'profile-1'}
+                    Icon={FiUser}
+                  />
+
+                  {!isStudent && (
+                    <Item
+                      onClick={() => history.push('/dashboard/dictionary')}
+                      label="Dictionary"
+                      _key={'profile-features'}
+                      Icon={AiOutlineBook}
+                    />
+                  )}
+
                   {checkIfAdmin() && (
                     <>
-                      <Menu.Item key={'profile-2'}>
-                        <div
-                          onClick={() => history.push('/dashboard/test-cases')}
-                          className="flex-shrink-0 mt-2 flex border-t p-2 px-4 hover:iconoclast:bg-400 hover:curate:bg-400 hover:text-white rounded-full">
-                          <div className="flex-shrink-0 group block">
-                            <div className="flex items-center">
-                              <IconContext.Provider
-                                value={{
-                                  size: '24px',
-                                  className: 'w-auto mr-1'
-                                }}>
-                                <VscChecklist className="cursor-pointer" />
-                              </IconContext.Provider>
-                              <p className="text-sm ml-2 font-medium">Test Cases</p>
-                            </div>
-                          </div>
-                        </div>
-                      </Menu.Item>
-                      <Menu.Item key={'profile-3'}>
-                        <div
-                          onClick={() => history.push('/dashboard/errors')}
-                          className="flex-shrink-0 mt-2 flex border-t p-2 px-4 hover:iconoclast:bg-400 hover:curate:bg-400 hover:text-white rounded-full">
-                          <div className="flex-shrink-0 group block">
-                            <div className="flex items-center">
-                              <IconContext.Provider
-                                value={{
-                                  size: '24px',
-                                  className: 'w-auto mr-1'
-                                }}>
-                                <VscChecklist className="cursor-pointer" />
-                              </IconContext.Provider>
-                              <p className="text-sm ml-2 font-medium">Errors</p>
-                            </div>
-                          </div>
-                        </div>
-                      </Menu.Item>
-                      <Menu.Item key={'profile-4'}>
-                        <div
-                          onClick={() => history.push('/dashboard/upload-logs')}
-                          className="flex-shrink-0 mt-2 flex border-t p-2 px-4 hover:iconoclast:bg-400 hover:curate:bg-400 hover:text-white rounded-full">
-                          <div className="flex-shrink-0 group block">
-                            <div className="flex items-center">
-                              <IconContext.Provider
-                                value={{
-                                  size: '24px',
-                                  className: 'w-auto mr-1'
-                                }}>
-                                <VscChecklist className="cursor-pointer" />
-                              </IconContext.Provider>
-                              <p className="text-sm ml-2 font-medium">Upload Logs</p>
-                            </div>
-                          </div>
-                        </div>
-                      </Menu.Item>
+                      <Item
+                        onClick={() => history.push('/dashboard/test-cases')}
+                        label="Test Cases"
+                        _key={'profile-2'}
+                        Icon={VscChecklist}
+                      />
+                      <Item
+                        onClick={() => history.push('/dashboard/errors')}
+                        label="Errors"
+                        _key={'profile-2'}
+                        Icon={VscChecklist}
+                      />
+                      <Item
+                        onClick={() => history.push('/dashboard/upload-logs')}
+                        label="Upload Logs"
+                        _key={'profile-3'}
+                        Icon={VscChecklist}
+                      />
                     </>
                   )}
                   <Menu.Item key={'logout'}>

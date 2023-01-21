@@ -18,6 +18,7 @@ import update from 'lodash/update';
 import {nanoid} from 'nanoid';
 import React, {useContext, useEffect, useState} from 'react';
 import {useHistory, useParams} from 'react-router';
+import {getDictionaries} from '@graphql/functions';
 interface UniversalLessonBuilderProps extends ULBSelectionProps {
   designersList?: {id: string; name: string; value: string}[];
   lessonID?: string;
@@ -44,6 +45,7 @@ const UniversalLessonBuilder = ({instId}: UniversalLessonBuilderProps) => {
   const {lessonId}: any = useParams();
   const pageId = params.get('pageId');
   const {state, dispatch, lessonState} = useContext(GlobalContext);
+  const {dictionaries} = state;
 
   const {selectedComponent} = usePageBuilderContext();
 
@@ -83,8 +85,12 @@ const UniversalLessonBuilder = ({instId}: UniversalLessonBuilderProps) => {
         })
       );
       const savedData = result.data.getUniversalLesson;
+      const dictionaries = await getDictionaries();
 
-      const updatedLessonPlan = scanLessonAndFindComplicatedWord(savedData.lessonPlan);
+      const updatedLessonPlan = scanLessonAndFindComplicatedWord(
+        savedData.lessonPlan,
+        dictionaries
+      );
       setUniversalLessonDetails({...savedData, lessonPlan: updatedLessonPlan});
       setSelectedPageID(pageId);
     } catch {
