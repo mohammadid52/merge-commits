@@ -174,44 +174,54 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
       ...plan,
       pageContent: plan.pageContent.map((pgContent: any) => ({
         ...pgContent,
-        partContent: pgContent.partContent.map((ptContent: any) => ({
-          ...ptContent,
-          value: ptContent.value.map((value: any, idx: number) => {
-            dictionaries.forEach((word) => {
-              value.value = value.value.replace(
-                word.englishPhrase,
-                `<span class="dictionary-popup"  >
-                <div class="dictionary-popup__container" data-dictionaryId="${word.id}">
-                <span class="dictionary-popup__title">Definition: ${
-                  word.englishDefinition
-                }</span>
-                ${
-                  word?.translation?.length > 0
-                    ? `
-               ${word.translation.map(
-                 (translation) =>
-                   ` <div class="dictionary-popup__languages">
-                <h5>In ${translation.translateLanguage}:</h5>
-                <ul>
-                <li>Definition: ${translation.languageDefinition}</li>
-                <li>Translation: ${translation.languageTranslation}</li>
-                </ul>
-                </div>`
-               )}
-                `
-                    : ``
-                }
-                
-              </div>
-                ${word.englishPhrase}</span>`
-              );
-            });
+        partContent: pgContent.partContent.map((ptContent: any) => {
+          if (ptContent.type === 'paragraph') return {...ptContent};
 
-            return {
-              ...value
-            };
-          })
-        }))
+          return {
+            ...ptContent,
+            value: ptContent.value.map((value: any) => {
+              const replaceStr = (word: any) => `<span class="dictionary-popup">
+              <div class="dictionary-popup__container" data-dictionaryId="${word.id}">
+              <span class="dictionary-popup__title">Definition: ${
+                word.englishDefinition
+              }</span>
+              ${
+                word?.translation?.length > 0
+                  ? `
+             ${word.translation.map(
+               (translation: any) => ` <div class="dictionary-popup__languages">
+              <h5>In ${translation.translateLanguage}:</h5>
+              <ul>
+              <li>Definition: ${translation.languageDefinition}</li>
+              <li>Translation: ${translation.languageTranslation}</li>
+              </ul>
+              </div>`
+             )}
+              `
+                  : ``
+              }
+              
+            </div>
+              ${word.englishPhrase}</span>`;
+              dictionaries.forEach((word) => {
+                if (!isEmpty(value.value)) {
+                  value.value = value.value.replace(word.englishPhrase, replaceStr(word));
+                }
+
+                if (!isEmpty(value.label)) {
+                  value.label = value.label.replace(word.englishPhrase, replaceStr(word));
+                }
+              });
+
+              // fixed wierd screen sliding issue
+              // add translation input for students
+
+              return {
+                ...value
+              };
+            })
+          };
+        })
       }))
     }));
 

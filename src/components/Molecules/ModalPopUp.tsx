@@ -51,6 +51,7 @@ const ModalPopUp = (props: ModalProps) => {
     <Modal
       titleButton={titleButton}
       closeOnBackdrop
+      title={'Warning'}
       showHeader={true}
       showHeaderBorder={false}
       showFooter={false}

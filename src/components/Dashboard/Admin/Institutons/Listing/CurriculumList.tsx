@@ -2,9 +2,11 @@ import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import Filters, {SortType} from '@components/Atoms/Filters';
 import Highlighted from '@components/Atoms/Highlighted';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
+import CommonActionsBtns from '@components/MicroComponents/CommonActionsBtns';
 import CourseAction from '@components/MicroComponents/CourseAction';
 import CourseName from '@components/MicroComponents/CourseName';
 import CourseUnits from '@components/MicroComponents/CourseUnits';
+import ModalPopUp from '@components/Molecules/ModalPopUp';
 import Table from '@components/Molecules/Table';
 import useAuth from '@customHooks/useAuth';
 import usePagination from '@customHooks/usePagination';
@@ -344,11 +346,11 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
     courseUnits: <CourseUnits item={item} redirectToUnit={redirectToUnit} />,
     status: <Status useDefault status={item.status} />,
     actions: (
-      <CourseAction
-        onDelete={() => handleToggleDelete(item.id, item)}
-        onView={() => editCurrentCurricular(item.id)}
-        item={item}
-        checkIfRemovable={checkIfRemovable}
+      <CommonActionsBtns
+        button1Label="View"
+        isDeletable={checkIfRemovable(item)}
+        button1Action={() => editCurrentCurricular(item.id)}
+        button2Action={() => handleToggleDelete(item.name, item)}
       />
     )
   }));
@@ -383,7 +385,8 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
             : InstitueCurriculum[userLanguage]['INFO'],
         customWidth: {
           no: 'w-12',
-          courseName: 'w-72'
+          courseName: 'w-72',
+          actions: '-'
         },
         maxHeight: 'max-h-196',
         pattern: 'striped',
@@ -453,6 +456,16 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
         />
 
         <Table {...tableConfig} />
+
+        {deleteModal.show && (
+          <ModalPopUp
+            closeAction={handleToggleDelete}
+            saveAction={deleting ? () => {} : deleteModal.action}
+            saveLabel={deleting ? 'DELETING...' : 'CONFIRM'}
+            cancelLabel="CANCEL"
+            message={deleteModal.message}
+          />
+        )}
       </div>
     </div>
   );

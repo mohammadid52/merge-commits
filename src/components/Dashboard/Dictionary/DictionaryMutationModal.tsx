@@ -1,17 +1,21 @@
 import FormInput from '@components/Atoms/Form/FormInput';
-import Selector from '@components/Atoms/Form/Selector';
 import Modal from '@components/Atoms/Modal';
 import useAuth from '@customHooks/useAuth';
 import useGraphqlMutation from '@customHooks/useGraphqlMutation';
 import {logError} from '@graphql/functions';
-import {CreateDicitionaryInput, Dicitionary, UpdateDicitionaryInput} from 'API';
+import {
+  CreateDicitionaryInput,
+  Dicitionary,
+  TranslationInput,
+  UpdateDicitionaryInput
+} from 'API';
 import {isArray, isEmpty, update} from 'lodash';
 import React, {useEffect, useState} from 'react';
 
 import {v4 as uuidV4} from 'uuid';
 
 interface FormType {
-  translation?: CreateDicitionaryInput['translation'];
+  translation?: TranslationInput[];
   englishPhrase: CreateDicitionaryInput['englishPhrase'];
   englishDefinition: CreateDicitionaryInput['englishDefinition'];
   englishAudio: CreateDicitionaryInput['englishAudio'];
@@ -20,7 +24,15 @@ interface FormType {
 const INITIAL_DATA = {
   englishPhrase: '',
   englishDefinition: '',
-  englishAudio: ''
+  englishAudio: '',
+  translation: [
+    {
+      id: uuidV4(),
+      translateLanguage: 'Spanish',
+      languageTranslation: '',
+      languageDefinition: ''
+    }
+  ]
 };
 
 const DictionaryMutationModal = ({
@@ -139,12 +151,14 @@ const DictionaryMutationModal = ({
       title={isEdit ? 'Edit Dictionary' : 'Add Dictionary'}
       showHeader
       showFooter>
-      <div className="w-132 pb-24">
-        <div className="grid grid-cols-2 gap-x-4 ">
+      <div className="max-w-132  pb-24">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-4 ">
           <div className="mb-4">
             <FormInput
               name="englishPhrase"
               isRequired
+              rows={5}
+              textarea
               value={formData.englishPhrase}
               onChange={onChange}
               label="English Phrase"
@@ -157,21 +171,14 @@ const DictionaryMutationModal = ({
               name="englishDefinition"
               value={formData.englishDefinition}
               onChange={onChange}
+              textarea
               label="English Definition"
+              rows={5}
               placeHolder="Add english definition"
             />
           </div>
-
-          <hr />
-
-          <div className="col-span-2 mt-4 flex items-center justify-end">
-            <Selector
-              list={filteredLangs}
-              placeholder="Add a language"
-              onChange={(_, name) => onLangAdd(name)}
-            />
-          </div>
         </div>
+        <hr />
 
         {formData?.translation?.map((translation, idx) => {
           const {
@@ -181,11 +188,15 @@ const DictionaryMutationModal = ({
           } = translation;
 
           return (
-            <div className="mt-4 grid grid-cols-2 gap-x-4" key={translation.id}>
+            <div
+              className="mt-4 grid grid-cols-1 lg:grid-cols-2 gap-x-4"
+              key={translation.id}>
               <div className="">
                 <FormInput
                   name={'languageDefinition'}
                   isRequired
+                  textarea
+                  rows={5}
                   value={languageDefinition}
                   onChange={(e) => translationChange(idx, e.target.name, e.target.value)}
                   label={`${translateLanguage} Definition`}
@@ -195,6 +206,8 @@ const DictionaryMutationModal = ({
 
               <div className="mb-2">
                 <FormInput
+                  textarea
+                  rows={5}
                   name={'languageTranslation'}
                   value={languageTranslation}
                   onChange={(e) => translationChange(idx, e.target.name, e.target.value)}

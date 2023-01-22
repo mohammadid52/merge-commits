@@ -104,8 +104,8 @@ const LoadingItem = ({headers, config, customWidth, idx}: any) => {
           ? config?.dataList?.bgColor
           : config?.dataList?.pattern === 'striped'
           ? idx % 2 === 0
-            ? `${config?.dataList?.patternConfig.firstColor}`
-            : `${config?.dataList?.patternConfig.secondColor}`
+            ? `${config?.dataList?.patternConfig.firstColor || 'bg-gray-100'}`
+            : `${config?.dataList?.patternConfig.secondColor || 'bg-gray-200'}`
           : 'bg-transparent'
       }`}>
       {map(headers, (header, idx: number) => {
@@ -146,8 +146,8 @@ const ListItem = forwardRef<any, IListItem>(
             ? config?.dataList?.bgColor
             : config?.dataList?.pattern === 'striped'
             ? idx % 2 === 0
-              ? `${config?.dataList?.patternConfig.firstColor}`
-              : `${config?.dataList?.patternConfig.secondColor}`
+              ? `${config?.dataList?.patternConfig.firstColor || 'bg-gray-100'}`
+              : `${config?.dataList?.patternConfig.secondColor || 'bg-gray-200'}`
             : 'bg-transparent'
         }`}>
         {map(headers, (header, _idx) => {
@@ -198,7 +198,7 @@ const ListItem = forwardRef<any, IListItem>(
 const Table = ({
   dataList,
   headers,
-  config = {dark: true, dataList: {customWidth: {}}}
+  config = {dark: false, dataList: {customWidth: {}, pattern: 'striped'}}
 }: {
   config?: IConfig;
   headers: string[];
@@ -238,7 +238,7 @@ const Table = ({
                       const customWidth = _customWidth[lowerHeader];
 
                       const className = `${
-                        config?.headers?.textColor || 'text-gray-500'
+                        config?.headers?.textColor || 'text-white'
                       } px-6 py-3 ${
                         customWidth ||
                         (config?.isFirstIndex && idx === 0

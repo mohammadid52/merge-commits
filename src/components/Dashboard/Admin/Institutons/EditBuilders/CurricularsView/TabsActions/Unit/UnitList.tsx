@@ -12,9 +12,10 @@ import Modal from '@components/Atoms/Modal';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import Tooltip from '@components/Atoms/Tooltip';
 import {Status} from '@components/Dashboard/Admin/UserManagement/UserStatus';
-import CourseAction from '@components/MicroComponents/CourseAction';
+import CommonActionsBtns from '@components/MicroComponents/CommonActionsBtns';
 import UnitName from '@components/MicroComponents/UnitName';
 import Table from '@components/Molecules/Table';
+import usePagination from '@customHooks/usePagination';
 import useSearch from '@customHooks/useSearch';
 import {BUTTONS, InstitueRomms} from '@dictionary/dictionary.iconoclast';
 import {RoomStatus} from 'API';
@@ -25,7 +26,6 @@ import * as customQueries from 'customGraphql/customQueries';
 import {isEmpty, map, orderBy} from 'lodash';
 import ModalPopUp from 'molecules/ModalPopUp';
 import UnitFormComponent from './UnitFormComponent';
-import usePagination from '@customHooks/usePagination';
 
 export const UnitList = ({
   instId,
@@ -511,11 +511,11 @@ export const UnitList = ({
       </div>
     ),
     action: (
-      <CourseAction
-        onDelete={() => handleToggleDelete(item.name, item)}
-        onView={() => handleView(item.id)}
-        item={item}
-        checkIfRemovable={checkIfRemovable}
+      <CommonActionsBtns
+        button1Label="View"
+        isDeletable={checkIfRemovable(item)}
+        button1Action={() => handleView(item.id)}
+        button2Action={() => handleToggleDelete(item.name, item)}
       />
     )
   }));

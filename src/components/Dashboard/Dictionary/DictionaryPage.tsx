@@ -1,6 +1,8 @@
 import AddButton from '@components/Atoms/Buttons/AddButton';
 import PageWrapper from '@components/Atoms/PageWrapper';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
+import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
+import CommonActionsBtns from '@components/MicroComponents/CommonActionsBtns';
 import Table from '@components/Molecules/Table';
 import {useGlobalContext} from '@contexts/GlobalContext';
 import useAuth from '@customHooks/useAuth';
@@ -109,23 +111,15 @@ const DictionaryPage = () => {
       </div>
     ),
     actions: (
-      <div className="flex items-center gap-x-4">
-        <div
-          onClick={() => {
-            setShowModal(true);
-            setEditDictionary(dict);
-          }}
-          className="theme-text cursor-pointer hover:underline hover:theme-text:500">
-          Edit
-        </div>
-        <div
-          onClick={() => {
-            onDelete(dict.id);
-          }}
-          className="text-red-500 cursor-pointer hover:text-red-600 hover:underline">
-          Delete
-        </div>
-      </div>
+      <CommonActionsBtns
+        button1Action={() => {
+          setShowModal(true);
+          setEditDictionary(dict);
+        }}
+        button2Action={() => {
+          onDelete(dict.id);
+        }}
+      />
     )
   }));
 
@@ -140,8 +134,6 @@ const DictionaryPage = () => {
     ],
     dataList,
     config: {
-      dark: false,
-      headers: {textColor: 'text-white'},
       dataList: {
         loading: isLoading,
         isFirstIndex: true,
@@ -150,9 +142,7 @@ const DictionaryPage = () => {
           no: 'w-12',
           actions: 'w-28'
         },
-        maxHeight: 'max-h-196',
-        pattern: 'striped',
-        patternConfig: {firstColor: 'bg-gray-100', secondColor: 'bg-gray-200'}
+        maxHeight: 'max-h-196'
       }
     }
   };

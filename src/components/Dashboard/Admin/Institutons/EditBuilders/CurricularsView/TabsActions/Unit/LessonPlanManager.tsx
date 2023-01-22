@@ -20,6 +20,7 @@ import Selector from 'atoms/Form/Selector';
 import {map} from 'lodash';
 import ModalPopUp from 'molecules/ModalPopUp';
 import {getLessonType, reorder} from 'utilities/strings';
+import CommonActionsBtns from '@components/MicroComponents/CommonActionsBtns';
 
 interface UIMessages {
   show: boolean;
@@ -417,11 +418,11 @@ const LessonPlanManager = ({
             )
           : '-',
       actions: (
-        <CourseAction
-          item={lessonObj}
-          onView={() => gotoLessonBuilder(lessonObj.id, lessonObj.type)}
-          onDelete={() => handleToggleDelete(lessonObj.title, item.id, idx)}
-          checkIfRemovable={(lsnObj: any) => checkIfRemovable(lsnObj, syllabusDetails)}
+        <CommonActionsBtns
+          button1Label="View"
+          isDeletable={checkIfRemovable(lessonObj, syllabusDetails)}
+          button1Action={() => gotoLessonBuilder(lessonObj.id, lessonObj.type)}
+          button2Action={() => handleToggleDelete(lessonObj.title, item.id, idx)}
         />
       )
     };

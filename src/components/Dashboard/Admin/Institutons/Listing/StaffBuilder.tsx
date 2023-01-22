@@ -28,11 +28,11 @@ import AddButton from 'atoms/Buttons/AddButton';
 import Modal from 'atoms/Modal';
 
 import Filters, {SortType} from '@components/Atoms/Filters';
+import CommonActionsBtns from '@components/MicroComponents/CommonActionsBtns';
 import StaffBuilderName from '@components/MicroComponents/StaffBuilderName';
 import useAuth from '@customHooks/useAuth';
 import usePagination from '@customHooks/usePagination';
 import {logError} from '@graphql/functions';
-import Tooltip from 'atoms/Tooltip';
 import Registration from 'components/Dashboard/Admin/UserManagement/Registration';
 import {map} from 'lodash';
 import {Status} from '../../UserManagement/UserStatus';
@@ -468,25 +468,18 @@ const StaffBuilder = (props: StaffBuilderProps) => {
       ) : (
         <Status useDefault status={item.status} />
       ),
-    action: (
-      <div className="">
-        {statusEdit === item.id ? (
-          <span
-            className={`w-6 h-6 flex items-center cursor-pointer ${theme.textColor[themeColor]}`}
-            onClick={() => setStatusEdit('')}>
-            {updateStatus ? 'updating...' : 'Cancel'}
-          </span>
-        ) : (
-          <span
-            className={`w-6 h-6 flex items-center cursor-pointer ${theme.textColor[themeColor]}`}
-            onClick={() => setStatusEdit(item.id)}>
-            <Tooltip text="Click to edit status" placement="left">
-              Edit
-            </Tooltip>
-          </span>
-        )}
-      </div>
-    )
+    actions:
+      statusEdit === item.id ? (
+        <CommonActionsBtns
+          button1Action={() => setStatusEdit('')}
+          button1Label={updateStatus ? 'updating...' : 'Cancel'}
+        />
+      ) : (
+        <CommonActionsBtns
+          button1Label="Edit"
+          button1Action={() => setStatusEdit(item.id)}
+        />
+      )
   }));
 
   const tableConfig = {
@@ -500,10 +493,9 @@ const StaffBuilder = (props: StaffBuilderProps) => {
     ],
     dataList,
     config: {
-      dark: false,
       isFirstIndex: true,
       isLastAction: true,
-      headers: {textColor: 'text-white'},
+
       dataList: {
         loading: dataLoading,
         emptyText: 'No staff found',
@@ -521,9 +513,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
         customWidth: {
           name: 'w-72 -ml-24'
         },
-        maxHeight: 'max-h-196',
-        pattern: 'striped',
-        patternConfig: {firstColor: 'bg-gray-100', secondColor: 'bg-gray-200'}
+        maxHeight: 'max-h-196'
       }
     }
   };
