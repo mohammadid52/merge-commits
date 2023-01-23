@@ -30,6 +30,10 @@ const UserTabs = ({
   };
   // const tabsData = !isTeacher && !isAdmin ? tabs : tabs;
 
+  if (getTabsData().length === 1 && getTabsData()[0].name === 'User Information') {
+    return null;
+  }
+
   return <Tabs3 curTab={currentTab} setCurTab={setCurrentTab} tabs={getTabsData()} />;
 };
 

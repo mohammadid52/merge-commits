@@ -32,6 +32,8 @@ import ModalPopUp from 'molecules/ModalPopUp';
 import {addName, sortByName} from '../../UserManagement/UserLookup';
 import {Status} from '../../UserManagement/UserStatus';
 import LocationBadge from './LocationBadge';
+import CommonActionsBtns from '@components/MicroComponents/CommonActionsBtns';
+import UserLookupLocation from '@components/MicroComponents/UserLookupLocation';
 
 interface EditClassProps {
   instId: string;
@@ -514,30 +516,18 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
       ),
 
       status: <Status useDefault status={item?.student?.status} />,
+      location: <UserLookupLocation item={item} idx={index} />,
       type: <LocationBadge onDemand={item?.student?.onDemand} />,
       dateAdded: item.createAt ? new Date(item.createAt).toLocaleDateString() : '--',
       actions: (
-        <div className="flex cursor-pointer">
-          <DeleteActionBtn
-            dataCy={`delete-user-${index}-button`}
-            handleClick={() => onDelete(item.id)}
-          />
-          {studentIdToEdit === item.id ? (
-            <span
-              className={`ml-2 w-4 h-4 flex items-center cursor-pointer ${
-                theme.textColor[themeColor]
-              } ${updating ? 'animate-spin' : ''}`}
-              onClick={() => setStudentIdToEdit('')}>
-              {updating ? <FaSpinner /> : <FaTimes />}
-            </span>
-          ) : (
-            <span
-              className={`ml-2 w-4 h-4 flex items-center cursor-pointer ${theme.textColor[themeColor]}`}
-              onClick={() => setStudentIdToEdit(item.id)}>
-              <HiPencil />
-            </span>
-          )}
-        </div>
+        <CommonActionsBtns
+          button1Action={() => {
+            user.role !== 'BLD' && setStudentProfileID(item.student.id);
+            user.role !== 'BLD' && setUserModalFormOpen(true);
+            user.role !== 'BLD' && setStudentIdToEdit(item.id);
+          }}
+          button2Action={() => onDelete(item.id)}
+        />
       )
     })
   );
@@ -550,6 +540,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
       dict['NAME'],
       dict['TYPE'],
       dict['STATUS'],
+      dict['LOCATION'],
       dict['DATE'],
       dict['ACTIONS']
     ],
@@ -563,7 +554,10 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
         emptyText: dictionary.NOSTUDENT,
         customWidth: {
           no: 'w-12',
-          participantName: 'w-96 -ml-4',
+          participantName: 'w-96',
+          status: 'w-40',
+          type: 'w-40',
+          location: 'w-40',
           actions: 'w0'
         },
         maxHeight: 'max-h-196',
@@ -689,15 +683,15 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
                   showHeader={true}
                   showHeaderBorder={false}
                   showFooter={false}
+                  maxWidth="min-w-256"
                   scrollHidden={true}
-                  closeAction={() => setUserModalFormOpen(false)}
-                  position={'fixed'}>
+                  closeAction={() => setUserModalFormOpen(false)}>
                   <User
                     shouldNavigate={false}
                     onSuccessCallback={() => setUserModalFormOpen(false)}
                     instituteId={instId}
                     userId={studentProfileID}
-                    insideModalPopUp={false}
+                    insideModalPopUp={true}
                   />
                 </Modal>
               )}

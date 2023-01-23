@@ -16,7 +16,8 @@ const SurveyList = ({
   studentAuthID: string;
 }) => {
   const {state} = useGlobalContext();
-  const roomData = state?.temp?.roomData;
+  const roomData = (state?.temp?.roomData || []).filter(Boolean);
+
   const roomIdFilter = roomData?.map((room: any) => ({
     roomId: {eq: room.id}
   }));

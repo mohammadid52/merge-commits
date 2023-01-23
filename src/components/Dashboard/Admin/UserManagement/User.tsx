@@ -7,7 +7,6 @@ import ErrorBoundary from '@components/Error/ErrorBoundary';
 import Table from '@components/Molecules/Table';
 import {uploadImageToS3} from '@graphql/functions';
 import {PersonStatus, Role} from 'API';
-import Buttons from 'atoms/Buttons';
 import Selector from 'atoms/Form/Selector';
 import Loader from 'atoms/Loader';
 import Anthology from 'components/Dashboard/Anthology/Anthology';
@@ -21,7 +20,6 @@ import sortBy from 'lodash/sortBy';
 import DroppableMedia from 'molecules/DroppableMedia';
 import React, {useEffect, useState} from 'react';
 import {BsArrowLeft} from 'react-icons/bs';
-import {IoIosTime} from 'react-icons/io';
 import {
   Route,
   Switch,
@@ -96,7 +94,7 @@ interface IUserProps {
   onSuccessCallback?: () => void;
 }
 
-const AssociatedClasses = ({list, handleClassRoomClick, setIsTimelineOpen}: any) => {
+const AssociatedClasses = ({list, handleClassRoomClick}: any) => {
   const dataList: any[] = map(list, (room, idx) => {
     const curriculum = room.curricula;
     const teacher = room.teacher;
@@ -104,7 +102,9 @@ const AssociatedClasses = ({list, handleClassRoomClick, setIsTimelineOpen}: any)
       no: idx + 1,
       institution: room?.class?.institution?.name,
       classroom: (
-        <div onClick={() => handleClassRoomClick(room.id)} className="">
+        <div
+          onClick={() => handleClassRoomClick(room.id)}
+          className="hover:underline cursor-pointer hover:theme-text">
           {room.name}
         </div>
       ),
@@ -139,19 +139,8 @@ const AssociatedClasses = ({list, handleClassRoomClick, setIsTimelineOpen}: any)
       }
     }
   };
-  return (
-    <div className="flex flex-col">
-      <div className="flex justify-end mb-4">
-        <Buttons
-          label={'Timeline'}
-          onClick={() => setIsTimelineOpen(true)}
-          btnClass="mr-4"
-          Icon={IoIosTime}
-        />
-      </div>
-      <Table {...tableConfig} />
-    </div>
-  );
+
+  return <Table {...tableConfig} />;
 };
 
 const User = (props: IUserProps) => {
@@ -521,77 +510,6 @@ const User = (props: IUserProps) => {
     }
   }, [userId]);
 
-  // const [studentData, setStudentData] = useState<AnthologyMapItem[]>([]);
-  // const [loading, setLoading] = useState(false);
-
-  // // TOP Function to load student data
-  // const listStudentData = async () => {
-  //   setLoading(true);
-  //   try {
-  //     const studentDataFetch: any = await API.graphql(
-  //       graphqlOperation(queries.listStudentData, {
-  //         filter: {studentAuthID: {eq: user.authId}}
-  //       })
-  //     );
-  //     const response = await studentDataFetch;
-  //     const arrayOfResponseObjects = response?.data?.listStudentData?.items;
-
-  //     const reducedAnthologyContent = arrayOfResponseObjects.reduce(
-  //       (acc: AnthologyMapItem[], contentObj: any) => {
-  //         if (contentObj.anthologyContent) {
-  //           const mapIdToItem = contentObj.anthologyContent.map(
-  //             (contentMapItem: AnthologyContentInterface) => {
-  //               return {
-  //                 ...contentMapItem,
-  //                 status: contentObj.status,
-  //                 syllabusLessonID: contentObj.syllabusLessonID,
-  //                 studentID: contentObj.studentID,
-  //                 studentAuthID: contentObj.studentAuthID,
-  //                 studentDataID: contentObj.id,
-  //                 updatedAt: contentObj.updatedAt
-  //               };
-  //             }
-  //           );
-  //           return [...acc, ...mapIdToItem];
-  //         } else {
-  //           return acc;
-  //         }
-  //       },
-  //       []
-  //     );
-
-  //     setStudentData(
-  //       reducedAnthologyContent.filter(
-  //         (item: any) => item.content !== '' && item.title !== ''
-  //       )
-  //     );
-  //   } catch (e) {
-  //     console.error('Anthology student data fetch error: ', e);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
-  // Useeffect to load student data and process it
-  // useEffect(() => {
-  //   const initializeStudentData = async () => {
-  //     await listStudentData();
-  //   };
-  //   if (!isTeacher && !isAdmin && user.authId) {
-  //     initializeStudentData();
-  //   }
-  // }, [user.authId]);
-
-  if (status !== 'done') {
-    return insideModalPopUp ? (
-      <div className={`pl-0 lg:pl-12 w-256`} style={{height: 'calc(100vh - 150px)'}}>
-        <Loader />
-      </div>
-    ) : (
-      <LessonLoading />
-    );
-  }
-
   const setTab = (value: string) => {
     setUrlState({t: value});
   };
@@ -620,7 +538,7 @@ const User = (props: IUserProps) => {
     return (
       <>
         <div
-          className={`px-4 ${insideModalPopUp ? 'min-w-256' : ''}`}
+          className={`px-4 `}
           style={insideModalPopUp ? {maxHeight: 'calc(100vh - 150px)'} : {}}>
           {/* <BreadCrums items={breadCrumsList} /> */}
           {params.get('from') && (
@@ -636,6 +554,7 @@ const User = (props: IUserProps) => {
 
           <SectionTitleV3
             title="User Lookup"
+            bgColor={insideModalPopUp ? 'bg-gray-200' : 'bg-white'}
             fontSize="xl"
             fontStyle="semibold"
             extraClass="leading-6 text-gray-900"
@@ -813,7 +732,7 @@ const User = (props: IUserProps) => {
             </AnimatedContainer>
             <AnimatedContainer show={onCATab}>
               {onCATab && user?.classes?.items.length > 0 && user.role === 'ST' && (
-                <div className={`border-0 border-gray-300 rounded-xl p-4 mb-8`}>
+                <div className={`mb-8`}>
                   {isTimelineOpen ? (
                     <Attendance
                       id={userId}

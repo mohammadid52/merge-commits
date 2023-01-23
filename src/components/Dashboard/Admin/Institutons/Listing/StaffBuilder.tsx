@@ -458,7 +458,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
       statusEdit === item.id ? (
         <div className="">
           <Selector
-            selectedItem={item.status}
+            selectedItem={item?.status?.toUpperCase()}
             placeholder="Select Status"
             dropdownWidth="w-48"
             list={statusList}
