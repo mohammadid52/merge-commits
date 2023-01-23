@@ -44,8 +44,9 @@ const UniversalLessonBuilder = ({instId}: UniversalLessonBuilderProps) => {
   const params = useQuery(location.search);
   const {lessonId}: any = useParams();
   const pageId = params.get('pageId');
-  const {state, dispatch, lessonState} = useContext(GlobalContext);
-  const {dictionaries} = state;
+  const {state, dispatch, scanLessonAndFindComplicatedWord, lessonState} = useContext(
+    GlobalContext
+  );
 
   const {selectedComponent} = usePageBuilderContext();
 
@@ -55,8 +56,7 @@ const UniversalLessonBuilder = ({instId}: UniversalLessonBuilderProps) => {
     setUniversalLessonDetails,
     selectedPageID,
     setFetchingLessonDetails,
-    setSelectedPageID,
-    scanLessonAndFindComplicatedWord
+    setSelectedPageID
   } = useULBContext();
 
   //  INITIALIZE CURRENT PAGE LOCATION

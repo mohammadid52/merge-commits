@@ -65,16 +65,10 @@ const LessonBuilder = (props: LessonBuilderProps) => {
   const params = useQuery(location.search);
   const step = params.get('step');
   const lessonIdFromUrl = (useParams() as any).lessonId;
-  const {
-    clientKey,
-    userLanguage,
-    state: {dictionaries}
-  } = useContext(GlobalContext);
-  const {
-    setUniversalLessonDetails,
-    universalLessonDetails,
-    scanLessonAndFindComplicatedWord
-  } = useULBContext();
+  const {clientKey, userLanguage, scanLessonAndFindComplicatedWord} = useContext(
+    GlobalContext
+  );
+  const {setUniversalLessonDetails, universalLessonDetails} = useULBContext();
   const {AddNewLessonFormDict, LessonBuilderDict} = useDictionary(clientKey);
 
   const initialData = {

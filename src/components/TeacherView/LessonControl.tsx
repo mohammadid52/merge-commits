@@ -42,8 +42,9 @@ export const checkIfLessonIsCompleted = (roomData: any, lessonID: string) => {
 const LessonControl = () => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
   const gContext = useContext(GlobalContext);
+  const {scanLessonAndFindComplicatedWord} = gContext;
   const dispatch = gContext.dispatch;
-  const {dictionaries} = gContext.state;
+
   const lessonState = gContext.lessonState;
   const lessonDispatch = gContext.lessonDispatch;
   const controlState = gContext.controlState;
@@ -71,8 +72,6 @@ const LessonControl = () => {
       return !fullscreen;
     });
   };
-
-  const {scanLessonAndFindComplicatedWord} = useULBContext();
 
   // view: 'lesson' | 'lessonInfo' | 'profile';
   const [rightView, setRightView] = useState<{

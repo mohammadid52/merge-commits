@@ -1,7 +1,5 @@
-import {Dicitionary, UniversalLessonPlan} from 'API';
 import {GlobalContext} from 'contexts/GlobalContext';
 import {UniversalLesson} from 'interfaces/UniversalLessonInterfaces';
-import {isEmpty} from 'lodash';
 import findIndex from 'lodash/findIndex';
 import update from 'lodash/update';
 import React, {createContext, useContext, useState} from 'react';
@@ -166,79 +164,6 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
     }
   };
 
-  const preferredLang = language;
-
-  const scanLessonAndFindComplicatedWord = (
-    lessonPlan: UniversalLessonPlan[],
-    dictionaries: Dicitionary[]
-  ) => {
-    const updated = lessonPlan.map((plan: any) => ({
-      ...plan,
-      pageContent: plan.pageContent.map((pgContent: any) => ({
-        ...pgContent,
-        partContent: pgContent.partContent.map((ptContent: any) => {
-          if (ptContent.type === 'paragraph') return {...ptContent};
-
-          return {
-            ...ptContent,
-            value: ptContent.value.map((value: any) => {
-              const replaceStr = (word: any) => `<span class="dictionary-popup">
-              <div class="dictionary-popup__container" data-dictionaryId="${word.id}">
-              <span class="dictionary-popup__title"><span class="border-b-2 border-green-500 italic font-medium">Definition:</span> ${
-                word.englishDefinition
-              }</span>
-              ${
-                word?.translation?.length > 0 && preferredLang === 'ES'
-                  ? `
-             ${word.translation.map(
-               (translation: any) => ` <div class="dictionary-popup__languages">
-              <h5>In ${translation.translateLanguage}:</h5>
-              <ul>
-                <li>Translation: ${translation.languageTranslation}</li>
-              </ul>
-              </div>`
-             )}
-              `
-                  : ``
-              }
-              
-            </div>
-              ${word.englishPhrase}</span>`;
-              dictionaries.forEach((word) => {
-                if (!isEmpty(value.value)) {
-                  if (word.englishDefinition) {
-                    value.value = value.value.replace(
-                      word.englishPhrase,
-                      replaceStr(word)
-                    );
-                  }
-                }
-
-                if (!isEmpty(value.label)) {
-                  if (word.englishDefinition) {
-                    value.label = value.label.replace(
-                      word.englishPhrase,
-                      replaceStr(word)
-                    );
-                  }
-                }
-              });
-
-              // fixed wierd screen sliding issue
-              // add translation input for students
-
-              return {
-                ...value
-              };
-            })
-          };
-        })
-      }))
-    }));
-
-    return updated;
-  };
-
   const [savingStatus, setSavingStatus] = useState<
     'initial' | 'loaded' | 'loading' | 'failed'
   >('initial');
@@ -281,8 +206,7 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
         updateMovableList,
 
         fetchingLessonDetails,
-        setFetchingLessonDetails,
-        scanLessonAndFindComplicatedWord
+        setFetchingLessonDetails
       }}>
       {children}
     </UniversalLessonBuilderContext.Provider>

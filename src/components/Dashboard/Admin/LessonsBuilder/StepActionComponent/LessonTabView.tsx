@@ -33,19 +33,16 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
     setUniversalLessonDetails,
     universalLessonDetails,
     activeTab,
-    setActiveTab,
-    scanLessonAndFindComplicatedWord
+    setActiveTab
   } = useULBContext();
 
   const [loading, setLoading] = useState<boolean>(false);
   const [lessonData, setLessonData] = useState<any>();
   const [selectedDesigners, setSelectedDesigners] = useState([]);
 
-  const {
-    clientKey,
-    userLanguage,
-    state: {dictionaries}
-  } = useContext(GlobalContext);
+  const {clientKey, userLanguage, scanLessonAndFindComplicatedWord} = useContext(
+    GlobalContext
+  );
   const {BreadcrumsTitles, LessonBuilderDict, LessonEditDict} = useDictionary(clientKey);
 
   const params = useQuery(location.search);
