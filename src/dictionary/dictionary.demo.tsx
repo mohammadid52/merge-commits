@@ -524,6 +524,7 @@ const editClassDict: any = {
       NAME: 'Participant Name',
       GROUP: 'Group',
       STATUS: 'Status',
+      LOCATION: 'Location',
       TYPE: 'Type',
       DATE: 'Date Added',
       ACTIONS: 'Actions'
@@ -562,6 +563,7 @@ const editClassDict: any = {
       NAME: 'nombre del estudiante',
       GROUP: 'TBD',
       STATUS: 'estado',
+      LOCATION: 'TBD',
       DATE: 'TBD',
       ACTIONS: 'comportamiento'
     }
