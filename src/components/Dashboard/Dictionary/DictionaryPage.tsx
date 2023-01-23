@@ -157,7 +157,7 @@ const DictionaryPage = () => {
     <div className="p-4 pt-8">
       <PageWrapper wrapClass="px-8">
         <SectionTitleV3
-          title={'Dictionary List'}
+          title={'Glossary'}
           fontSize="xl"
           fontStyle="semibold"
           extraClass="leading-6 text-gray-900"
@@ -166,7 +166,7 @@ const DictionaryPage = () => {
           withButton={
             <div className={`w-auto flex gap-x-4 justify-end items-center flex-wrap`}>
               <AddButton
-                label={'Add new dictionary'}
+                label={'New Entry'}
                 onClick={() => {
                   setEditDictionary(null);
                   setShowModal(true);
