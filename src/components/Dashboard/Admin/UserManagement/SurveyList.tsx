@@ -27,6 +27,7 @@ const SurveyList = ({
   >(
     'listPersonLessonsData',
     {
+      limit: 500,
       filter: {
         or: roomIdFilter,
         studentAuthID: {eq: studentAuthID},
