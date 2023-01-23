@@ -460,7 +460,7 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
     try {
       input.map(async (data: any) => {
         const getData: any = await API.graphql(
-          graphqlOperation(queries.getArchiveSurveyDataSql, {
+          graphqlOperation(queries.getArchiveSurveyDataSQL, {
             AuthId: data.AuthId,
             Email: data.Email
           })
@@ -468,7 +468,7 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
         const ArchiveData = getData.data.getArchiveSurveyDataSql;
         if (ArchiveData) {
           await API.graphql(
-            graphqlOperation(mutations.updateArchiveSurveyDataSql, {
+            graphqlOperation(mutations.updateArchiveSurveyDataSQL, {
               input: {
                 id: ArchiveData.id,
                 ...data
@@ -477,7 +477,7 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
           );
         } else {
           await API.graphql(
-            graphqlOperation(mutations.createArchiveSurveyDataSql, {
+            graphqlOperation(mutations.createArchiveSurveyDataSQL, {
               input: {
                 ...data
               }
