@@ -6420,3 +6420,37 @@ export const listCurriculaForLesson = /* GraphQL */ `
     }
   }
 `;
+
+export const listDicitionaries = /* GraphQL */ `
+  query ListDicitionaries(
+    $id: ID
+    $filter: ModelDicitionaryFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listDicitionaries(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        englishPhrase
+        englishAudio
+        englishDefinition
+        translation {
+          id
+          translateLanguage
+          languageTranslation
+          languageDefinition
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;

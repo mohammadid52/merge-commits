@@ -2,7 +2,7 @@ import FormInput from '@components/Atoms/Form/FormInput';
 import Modal from '@components/Atoms/Modal';
 import useAuth from '@customHooks/useAuth';
 import useGraphqlMutation from '@customHooks/useGraphqlMutation';
-import {logError} from '@graphql/functions';
+import {addNewDictionary, logError} from '@graphql/functions';
 import {
   CreateDicitionaryInput,
   Dicitionary,
@@ -64,33 +64,9 @@ const DictionaryMutationModal = ({
 
   const [formData, setFormData] = useState<FormType>(INITIAL_DATA);
 
-  const createDicitionary = useGraphqlMutation('createDicitionary', {
-    onSuccess: onSuccessMutation
-  });
   const _updateDictionary = useGraphqlMutation('updateDicitionary', {
     onSuccess: onSuccessMutation
   });
-
-  const addNewDictionary = async () => {
-    try {
-      const input: CreateDicitionaryInput = {
-        authID: authId,
-        email,
-        id: uuidV4(),
-        englishPhrase: formData.englishPhrase,
-        englishDefinition: formData.englishDefinition,
-        englishAudio: isEmpty(formData.englishAudio) ? formData.englishAudio : '',
-        translation: isEmpty(formData.translation) ? [] : formData.translation
-      };
-
-      createDicitionary.mutate({input: input});
-    } catch (error) {
-      console.error(error);
-      logError(error, {authId, email}, 'DictionaryPage @addNewDictionary');
-    } finally {
-      closeAction();
-    }
-  };
 
   const updateDictionary = async () => {
     try {
@@ -141,9 +117,15 @@ const DictionaryMutationModal = ({
     setFormData({...formData});
   };
 
+  const _addNewDictionary = async () => {
+    await addNewDictionary({...formData, authID: authId, email});
+    closeAction();
+    onSuccessMutation && onSuccessMutation();
+  };
+
   return (
     <Modal
-      saveAction={isEdit ? updateDictionary : addNewDictionary}
+      saveAction={isEdit ? updateDictionary : _addNewDictionary}
       closeAction={() => {
         setFormData(INITIAL_DATA);
         closeAction();

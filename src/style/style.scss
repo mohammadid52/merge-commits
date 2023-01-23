@@ -1760,3 +1760,20 @@ $polka-dot-size: 0.8px;
   cursor: pointer;
   text-decoration: underline dotted;
 }
+
+$translation-fab-height: 50px;
+$translation-fab-width: 50px;
+
+.translation-module__main {
+  height: $translation-fab-height;
+  width: $translation-fab-width;
+  border-radius: 50%;
+  cursor: pointer;
+
+  &.active {
+    cursor: default;
+    min-height: 120px;
+    width: $translation-fab-width * 6;
+    border-radius: 1rem;
+  }
+}
