@@ -43,7 +43,7 @@ const INITIAL_STATE: FieldsInterface = {
 export const UniversalLessonBuilderProvider = ({children}: any) => {
   const {
     state: {
-      user: {isSuperAdmin}
+      user: {isSuperAdmin, language = 'EN'}
     }
   } = useContext(GlobalContext);
   const [newBlockSeqId, setNewBlockSeqId] = useState(null);
@@ -166,6 +166,8 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
     }
   };
 
+  const preferredLang = language;
+
   const scanLessonAndFindComplicatedWord = (
     lessonPlan: UniversalLessonPlan[],
     dictionaries: Dicitionary[]
@@ -182,18 +184,17 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
             value: ptContent.value.map((value: any) => {
               const replaceStr = (word: any) => `<span class="dictionary-popup">
               <div class="dictionary-popup__container" data-dictionaryId="${word.id}">
-              <span class="dictionary-popup__title">Definition: ${
+              <span class="dictionary-popup__title"><span class="border-b-2 border-green-500 italic font-medium">Definition:</span> ${
                 word.englishDefinition
               }</span>
               ${
-                word?.translation?.length > 0
+                word?.translation?.length > 0 && preferredLang === 'ES'
                   ? `
              ${word.translation.map(
                (translation: any) => ` <div class="dictionary-popup__languages">
               <h5>In ${translation.translateLanguage}:</h5>
               <ul>
-              <li>Definition: ${translation.languageDefinition}</li>
-              <li>Translation: ${translation.languageTranslation}</li>
+                <li>Translation: ${translation.languageTranslation}</li>
               </ul>
               </div>`
              )}
@@ -205,11 +206,21 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
               ${word.englishPhrase}</span>`;
               dictionaries.forEach((word) => {
                 if (!isEmpty(value.value)) {
-                  value.value = value.value.replace(word.englishPhrase, replaceStr(word));
+                  if (word.englishDefinition) {
+                    value.value = value.value.replace(
+                      word.englishPhrase,
+                      replaceStr(word)
+                    );
+                  }
                 }
 
                 if (!isEmpty(value.label)) {
-                  value.label = value.label.replace(word.englishPhrase, replaceStr(word));
+                  if (word.englishDefinition) {
+                    value.label = value.label.replace(
+                      word.englishPhrase,
+                      replaceStr(word)
+                    );
+                  }
                 }
               });
 

@@ -11,7 +11,7 @@ import useGraphqlQuery from '@customHooks/useGraphqlQuery';
 import {logError} from '@graphql/functions';
 import {setLocalStorageData} from '@utilities/localStorage';
 import {Dicitionary, ListDicitionariesQueryVariables} from 'API';
-import {orderBy} from 'lodash';
+import {orderBy, truncate} from 'lodash';
 import React, {useState} from 'react';
 import DictionaryMutationModal from './DictionaryMutationModal';
 
@@ -68,7 +68,9 @@ const DictionaryPage = () => {
   const dataList: any[] = data.map((dict, idx) => ({
     no: idx + 1,
     englishPhrase: <div className="">{dict.englishPhrase}</div>,
-    englishDefinition: <div className="">{dict.englishDefinition}</div>,
+    englishDefinition: (
+      <div className="">{truncate(dict.englishDefinition, {length: 200})}</div>
+    ),
 
     languageTranslation: (
       <div className="">

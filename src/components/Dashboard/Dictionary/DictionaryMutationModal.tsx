@@ -148,6 +148,7 @@ const DictionaryMutationModal = ({
         setFormData(INITIAL_DATA);
         closeAction();
       }}
+      closeLabel="Cancel"
       title={isEdit ? 'Edit Dictionary' : 'Add Dictionary'}
       showHeader
       showFooter>
@@ -194,7 +195,6 @@ const DictionaryMutationModal = ({
               <div className="">
                 <FormInput
                   name={'languageDefinition'}
-                  isRequired
                   textarea
                   rows={5}
                   value={languageDefinition}

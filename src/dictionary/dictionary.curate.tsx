@@ -435,7 +435,7 @@ const staffBuilderDict: any = {
     ROLE: 'Role',
     INSTITUTION_NAME: 'Institution Name',
     STATUS: 'Status',
-    ACTION: 'Action',
+    ACTION: 'Actions',
     UPDATING: 'updating...',
     CANCEL: 'Cancel',
     INFO: 'This institute does not have any staff member. Please add new member.',

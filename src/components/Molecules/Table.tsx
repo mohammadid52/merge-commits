@@ -96,16 +96,32 @@ const DroppableList = ({
   );
 };
 
+const getPattern = (config: IConfig) => config?.dataList?.pattern || 'striped';
+const getPatternColor = (config: IConfig) => {
+  const patternConfig = config?.dataList?.patternConfig;
+  if (patternConfig !== undefined) {
+    return {
+      firstColor: patternConfig.firstColor,
+      secondColor: patternConfig.secondColor
+    };
+  } else {
+    return {
+      firstColor: 'bg-gray-100',
+      secondColor: 'bg-gray-200'
+    };
+  }
+};
+
 const LoadingItem = ({headers, config, customWidth, idx}: any) => {
   return (
     <div
       className={`flex justify-between ${
         config?.dataList?.bgColor
           ? config?.dataList?.bgColor
-          : config?.dataList?.pattern === 'striped'
+          : getPattern(config) === 'striped'
           ? idx % 2 === 0
-            ? `${config?.dataList?.patternConfig.firstColor || 'bg-gray-100'}`
-            : `${config?.dataList?.patternConfig.secondColor || 'bg-gray-200'}`
+            ? getPatternColor(config).firstColor
+            : getPatternColor(config).secondColor
           : 'bg-transparent'
       }`}>
       {map(headers, (header, idx: number) => {
@@ -144,10 +160,10 @@ const ListItem = forwardRef<any, IListItem>(
         className={`flex relative ${item?.markRed ? 'mark-red' : ''} justify-between ${
           config?.dataList?.bgColor
             ? config?.dataList?.bgColor
-            : config?.dataList?.pattern === 'striped'
+            : getPattern(config) === 'striped'
             ? idx % 2 === 0
-              ? `${config?.dataList?.patternConfig.firstColor || 'bg-gray-100'}`
-              : `${config?.dataList?.patternConfig.secondColor || 'bg-gray-200'}`
+              ? getPatternColor(config).firstColor
+              : getPatternColor(config).secondColor
             : 'bg-transparent'
         }`}>
         {map(headers, (header, _idx) => {
