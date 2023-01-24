@@ -1,5 +1,6 @@
 import {Storage} from '@aws-amplify/storage';
 import {RoomStatusList} from '@components/Dashboard/Admin/Institutons/EditBuilders/CurricularsView/TabsActions/CourseBuilder/CourseFormComponent';
+import {uploadImageToS3} from '@graphql/functions';
 import Buttons from 'atoms/Buttons';
 import File from 'atoms/File';
 import ULBFileUploader from 'atoms/Form/FileUploader';
@@ -51,33 +52,6 @@ const UploadLessonPlanModal = ({
 
   const [uploadProgress, setUploadProgress] = useState<string | number>(0);
 
-  const uploadImageToS3 = async (file: any, id: string, type: string) => {
-    // Upload file to s3 bucket
-
-    return new Promise((resolve, reject) => {
-      Storage.put(`ULB/${lessonId}/lesson_plan_${id}`, file, {
-        contentType: type,
-        acl: 'public-read',
-        ContentEncoding: 'base64',
-        progressCallback: ({loaded, total}: any) => {
-          const progress = (loaded * 100) / total;
-          setUploadProgress(progress.toFixed(0));
-        }
-      })
-        .then((result: any) => {
-          console.log('File successfully uploaded to s3', result);
-
-          setUploadProgress('done');
-          resolve(true);
-        })
-        .catch((err: any) => {
-          setError('Unable to upload file. Please try again later');
-          console.log('Error in uploading file to s3', err);
-          reject(err);
-        });
-    });
-  };
-
   const {mutate, isLoading: uploading, isSuccess} = useGraphqlMutation(
     'updateUniversalLesson',
     {
@@ -102,8 +76,8 @@ const UploadLessonPlanModal = ({
         .join(' ')
         .replace(new RegExp(/[ +!@#$%^&*().]/g), '_')}.${extension}`;
 
-      await uploadImageToS3(input?.imageData, `${fileName}`, input.imageData.type);
       const key = `ULB/${lessonId}/lesson_plan_${fileName}`;
+      await uploadImageToS3(input?.imageData, key, input.imageData.type);
 
       mutate({
         input: {

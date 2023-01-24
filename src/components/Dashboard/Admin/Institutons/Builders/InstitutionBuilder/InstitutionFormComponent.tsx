@@ -1,8 +1,5 @@
-import React, {useContext, useEffect, useState} from 'react';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import {Storage} from '@aws-amplify/storage';
-import {FaPlus} from 'react-icons/fa';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
+import React, {useContext, useEffect, useState} from 'react';
 import {useHistory} from 'react-router-dom';
 import {v4 as uuidv4} from 'uuid';
 
@@ -11,12 +8,12 @@ import * as customMutations from 'customGraphql/customMutations';
 import useDictionary from 'customHooks/dictionary';
 import {statesList} from 'utilities/staticData';
 
+import UploadImageBtn from '@components/Atoms/Buttons/UploadImageBtn';
+import {uploadImageToS3} from '@graphql/functions';
 import Buttons from 'atoms/Buttons';
 import CheckBox from 'atoms/Form/CheckBox';
 import FormInput from 'atoms/Form/FormInput';
 import Selector from 'atoms/Form/Selector';
-import Loader from 'atoms/Loader';
-import DroppableMedia from 'molecules/DroppableMedia';
 import ProfileCropModal from 'components/Dashboard/Profile/ProfileCropModal';
 import {getImageFromS3} from 'utilities/services';
 
@@ -137,44 +134,29 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
     setShowCropper(!showCropper);
   };
 
-  const uploadImageToS3 = async (file: any, id: string, type: string) => {
-    // Upload file to s3 bucket
+  // const uploadImageToS3 = async (file: any, id: string, type: string) => {
+  //   // Upload file to s3 bucket
 
-    return new Promise((resolve, reject) => {
-      Storage.put(`instituteImages/institute_image_${id}`, file, {
-        contentType: type,
-        acl: 'public-read',
-        ContentEncoding: 'base64'
-      })
-        .then((result) => {
-          console.log('File successfully uploaded to s3', result);
-          resolve(true);
-        })
-        .catch((err) => {
-          setError({
-            show: true,
-            errorMsg: InstitutionBuilderDict[userLanguage]['messages']['uploaderr']
-          });
-          console.error('Error in uploading file to s3', err);
-          reject(err);
-        });
-    });
-  };
-
-  const updateServiceProviders = (item: any) => {
-    setInstituteData((prevData: any) => ({
-      ...prevData,
-      serviceProviders: {
-        ...prevData.serviceProviders,
-        items: [...(prevData.serviceProviders.items || []), item]
-      }
-    }));
-  };
-
-  const deletUserProfile = async () => {
-    setInstituteData({...instituteData, image: ''});
-    setImageUrl(null);
-  };
+  //   return new Promise((resolve, reject) => {
+  //     Storage.put(`instituteImages/institute_image_${id}`, file, {
+  //       contentType: type,
+  //       acl: 'public-read',
+  //       ContentEncoding: 'base64'
+  //     })
+  //       .then((result) => {
+  //         console.log('File successfully uploaded to s3', result);
+  //         resolve(true);
+  //       })
+  //       .catch((err) => {
+  //         setError({
+  //           show: true,
+  //           errorMsg: InstitutionBuilderDict[userLanguage]['messages']['uploaderr']
+  //         });
+  //         console.error('Error in uploading file to s3', err);
+  //         reject(err);
+  //       });
+  //   });
+  // };
 
   const [fileObj, setFileObj] = useState({});
 
@@ -204,7 +186,11 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
       try {
         setSaving(true);
         if (s3Image) {
-          await uploadImageToS3(s3Image, instituteData.id || uuidv4(), 'image/jpeg');
+          await uploadImageToS3(
+            s3Image,
+            `instituteImages/institute_image_${instituteData.id || uuidv4()}`,
+            'image/jpeg'
+          );
         }
         let payload: any = {
           name: instituteData.name,
@@ -292,58 +278,58 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
       {/* Body */}
       <div className="h-9/10 flex flex-col md:flex-row">
         {/* Profile section */}
-        {!id && (
-          <div className="w-auto p-4 mr-6 flex flex-col text-center items-center">
-            {imageUrl ? (
-              <button className="group hover:opacity-80 focus:outline-none focus:opacity-95 flex flex-col items-center mt-4">
-                {!imageLoading ? (
-                  <label className="cursor-pointer flex justify-center">
-                    <DroppableMedia
-                      mediaRef={mediaRef}
-                      setImage={(img: any, file: any) => {
-                        setUpImage(img);
-                        setFileObj(file);
-                      }}
-                      toggleCropper={toggleCropper}>
-                      <img
-                        onClick={handleImage}
-                        className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light`}
-                        src={imageUrl}
-                      />
-                    </DroppableMedia>
-                  </label>
-                ) : (
-                  <div className="w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full  border-0 border-gray-400 shadow-elem-lightI">
-                    <Loader />
-                  </div>
-                )}
-              </button>
-            ) : (
-              <DroppableMedia
-                mediaRef={mediaRef}
-                setImage={(img: any, file: any) => {
-                  setUpImage(img);
-                  setFileObj(file);
-                }}
-                toggleCropper={toggleCropper}>
-                <label
-                  onClick={handleImage}
-                  className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full  border-0 border-gray-400 shadow-elem-light`}>
-                  {!imageLoading ? (
-                    <IconContext.Provider value={{size: '3rem', color: '#4a5568'}}>
-                      <FaPlus />
-                    </IconContext.Provider>
-                  ) : (
-                    <Loader />
-                  )}
+        {/* {!id && ( */}
+        {/* <div className="w-auto p-4 mr-6 flex flex-col text-center items-center">
+          {imageUrl ? (
+            <button className="group hover:opacity-80 focus:outline-none focus:opacity-95 flex flex-col items-center mt-4">
+              {!imageLoading ? (
+                <label className="cursor-pointer flex justify-center">
+                  <DroppableMedia
+                    mediaRef={mediaRef}
+                    setImage={(img: any, file: any) => {
+                      setUpImage(img);
+                      setFileObj(file);
+                    }}
+                    toggleCropper={toggleCropper}>
+                    <img
+                      onClick={handleImage}
+                      className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light`}
+                      src={imageUrl}
+                    />
+                  </DroppableMedia>
                 </label>
-              </DroppableMedia>
-            )}
-            <p className="text-gray-600 my-4">
-              {InstitutionBuilderDict[userLanguage]['INFOA']}
-            </p>
-          </div>
-        )}
+              ) : (
+                <div className="w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full  border-0 border-gray-400 shadow-elem-lightI">
+                  <Loader />
+                </div>
+              )}
+            </button>
+          ) : (
+            <DroppableMedia
+              mediaRef={mediaRef}
+              setImage={(img: any, file: any) => {
+                setUpImage(img);
+                setFileObj(file);
+              }}
+              toggleCropper={toggleCropper}>
+              <label
+                onClick={handleImage}
+                className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full  border-0 border-gray-400 shadow-elem-light`}>
+                {!imageLoading ? (
+                  <IconContext.Provider value={{size: '3rem', color: '#4a5568'}}>
+                    <FaPlus />
+                  </IconContext.Provider>
+                ) : (
+                  <Loader />
+                )}
+              </label>
+            </DroppableMedia>
+          )}
+          <p className="text-gray-600 my-4">
+            {InstitutionBuilderDict[userLanguage]['INFOA']}
+          </p>
+        </div> */}
+        {/* )} */}
 
         <div className={`h-full w-full pt-2`}>
           {/* FORM submit tag */}
@@ -351,8 +337,8 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
             <div className={`h-full bg-white mb-4`}>
               {/* FORM */}
               <div className="grid grid-cols-1 gap-y-4 gap-x-4 sm:grid-cols-6 px-4 py-5">
-                <div className="sm:col-span-6 px-3 py-4">
-                  <div className="w-3/10">
+                <div className="sm:col-span-3 px-3 py-2">
+                  <div className="">
                     <Selector
                       selectedItem={type}
                       label={
@@ -366,6 +352,19 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
                     />
                   </div>
                 </div>
+                <UploadImageBtn
+                  className="sm:col-span-3 px-3 py-2"
+                  label="Insitution Image"
+                  handleImage={handleImage}
+                  mediaRef={mediaRef}
+                  setImageLoading={setImageLoading}
+                  imageUrl={imageUrl}
+                  setImage={(img: any, file: any) => {
+                    setUpImage(img);
+                    setFileObj(file);
+                  }}
+                  toggleCropper={toggleCropper}
+                />
                 <div className="sm:col-span-3 px-3 py-2">
                   <FormInput
                     value={name}
