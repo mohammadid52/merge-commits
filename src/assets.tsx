@@ -126,7 +126,10 @@ export const general: any = {
   },
   file: 'https://iconoclaststorage203627-demosite.s3.amazonaws.com/public/file.png',
   fileImg: 'https://iconoclaststorage203627-demosite.s3.amazonaws.com/public/imgFile.png',
-  bookLoading: 'https://selready.s3.us-east-2.amazonaws.com/clone.gif'
+  bookLoading: 'https://selready.s3.us-east-2.amazonaws.com/clone.gif',
+  teacher:
+    'https://iconoclaststorage143306-dev.s3.amazonaws.com/public/icons/teacher.png',
+  student: 'https://iconoclaststorage143306-dev.s3.amazonaws.com/public/icons/student.png'
 };
 
 export const textEdit: any = {

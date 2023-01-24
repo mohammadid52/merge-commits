@@ -19,6 +19,8 @@ import {DashboardProps} from '../Dashboard';
 import DashboardContainer from '../DashboardContainer';
 import DateAndTime from '../DateAndTime/DateAndTime';
 import ClassroomLoader from './ClassroomLoader';
+
+import FloatingAction from './FloatingActionForTeacherAndStudents';
 import SyllabusSwitch from './SyllabusSwitch';
 import Today from './TodayLesson';
 
@@ -120,7 +122,11 @@ const range = (from: number, to: number, step: number = 1) => {
   return range;
 };
 
-const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
+interface ClassroomProps extends DashboardProps {
+  homeData: any;
+}
+
+const Classroom: React.FC<ClassroomProps> = (props: ClassroomProps) => {
   const {
     setClassroomCurriculum,
     classroomCurriculum,
@@ -132,7 +138,8 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
     lessonLoading,
     syllabusLoading,
     handleRoomSelection,
-    loadingRoomInfo
+    loadingRoomInfo,
+    homeData
   } = props;
 
   // ##################################################################### //
@@ -545,6 +552,15 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
             </>
           </div>
         </div>
+
+        {homeData && homeData.length > 0 && (
+          <div
+            className="fixed w-auto flex flex-col items-center space-y-4 right-0 p-4"
+            style={{bottom: '50%'}}>
+            <FloatingAction homeData={homeData} name="teacher" />
+            <FloatingAction homeData={homeData} name="student" />
+          </div>
+        )}
       </DashboardContainer>
     </>
   );

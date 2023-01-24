@@ -24,14 +24,6 @@ interface DashboardContainerProps {
 const InstitutionName = ({id, courseName}: {id: string; courseName: string}) => {
   const [isLoading, setIsLoading] = useState(true);
   const [institute, setInstitute] = useState(null);
-  const [imageUrl, setImageUrl] = useState();
-
-  useEffect(() => {}, [institute?.image]);
-
-  async function getUrl(image: string) {
-    const imageUrl: any = await getImageFromS3(image);
-    setImageUrl(imageUrl);
-  }
 
   const fetchInfo = async () => {
     try {
@@ -40,7 +32,7 @@ const InstitutionName = ({id, courseName}: {id: string; courseName: string}) => 
         graphqlOperation(customQueries.getInstitutionBasicInfo, {id: id})
       );
       setInstitute(res.data.getInstitution);
-      await getUrl(res.data.getInstitution.image);
+      // await getUrl(res.data.getInstitution.image);
     } catch (error) {
       console.error(error);
     } finally {
@@ -54,21 +46,11 @@ const InstitutionName = ({id, courseName}: {id: string; courseName: string}) => 
     }
   }, [id]);
 
-  if (isLoading && !Boolean(institute)) return null;
+  if (isLoading && !Boolean(institute)) return <div className="py-4" />;
   return (
     <div>
       <div className="flex items-center justify-center">
-        <div className="w-auto">
-          {institute.image && imageUrl ? (
-            <img
-              className="w-8 h-8 border-0 rounded-full border-gray-200 "
-              src={imageUrl}
-            />
-          ) : (
-            <Placeholder name={institute.name} size="w-8 h-8 " />
-          )}
-        </div>
-        <h4 className="w-auto text-sm ml-2">- {institute.name}</h4>
+        <h4 className="w-auto text-sm ml-2">{institute.name}</h4>
         <h4 className="w-auto text-sm ml-2">|| {courseName}</h4>
       </div>
     </div>
@@ -98,8 +80,10 @@ const DashboardContainer = ({
           {showTitleBanner ? (
             <HeaderTextBar>
               <div className="flex items-center justify-center">
-                {institutionId && (
+                {institutionId ? (
                   <InstitutionName courseName={courseName} id={institutionId} />
+                ) : (
+                  <div className="py-4"></div>
                 )}
                 {isTeacher && (
                   <div className="w-auto">

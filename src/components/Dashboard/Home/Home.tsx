@@ -166,7 +166,6 @@ const Home = (props: ClassroomControlProps) => {
     })
   );
 
-  const removedFrom = state.user?.removedFrom || [];
   const getClassList = (): ModifiedListProps[] => {
     let modifiedClassList: ModifiedListProps[] = [];
     let uniqIds: string[] = [];

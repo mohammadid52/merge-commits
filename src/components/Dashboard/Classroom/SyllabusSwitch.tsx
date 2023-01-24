@@ -41,45 +41,44 @@ const SyllabusSwitch = ({
             const isActive = classRoomActiveSyllabus === syllabus.id;
             // const progressPercentage = completedLessons;
             return (
-              <Tooltip
-                key={`testSyllabus_${i}`}
-                placement={i % 2 === 0 ? 'left' : 'right'}
-                text={
-                  isActive ? 'Currently Active' : 'Click on select to activate this unit'
-                }>
-                <div
-                  id={`testSyllabus_${i}`}
-                  className={`${
-                    isActive
-                      ? 'pointer-events-none iconoclast:bg-500 curate:bg-500'
-                      : 'pointer-events-auto bg-white'
-                  } flex relative flex-col transition-all rounded-xl customShadow hover:theme-card-shadow justify-center items-center h-full`}>
-                  <div className={`flex justify-between items-center p-4`}>
-                    <div className="flex items-center">
-                      <span
-                        className={`w-auto ${isActive ? 'text-white' : 'theme-text'} `}>
-                        <FaBook className="w-6 h-6" />
-                      </span>
-                      <span
-                        className={`text-sm 2xl:text-base ${
-                          isActive ? 'text-white' : 'text-gray-900'
-                        } font-medium pl-4`}>
-                        {syllabus.name}
-                      </span>
-                    </div>
-
-                    {!isActive && (
-                      <Buttons
-                        greenBtn={isActive}
-                        loading={syllabusActivating}
-                        btnClass="ml-2"
-                        onClick={() => handleSyllabusActivation(syllabus.id)}
-                        label={'Select'}
-                      />
-                    )}
+              // <Tooltip
+              //   key={`testSyllabus_${i}`}
+              //   placement={i % 2 === 0 ? 'left' : 'right'}
+              //   text={
+              //     isActive ? 'Currently Active' : 'Click on select to activate this unit'
+              //   }>
+              <div
+                id={`testSyllabus_${i}`}
+                className={`${
+                  isActive
+                    ? 'pointer-events-none iconoclast:bg-500 curate:bg-500'
+                    : 'pointer-events-auto bg-white'
+                } flex relative flex-col transition-all rounded-xl customShadow hover:theme-card-shadow justify-center items-center h-full`}>
+                <div className={`flex justify-between items-center p-4`}>
+                  <div className="flex items-center">
+                    <span className={`w-auto ${isActive ? 'text-white' : 'theme-text'} `}>
+                      <FaBook className="w-6 h-6" />
+                    </span>
+                    <span
+                      className={`text-sm 2xl:text-base ${
+                        isActive ? 'text-white' : 'text-gray-900'
+                      } font-medium pl-4`}>
+                      {syllabus.name}
+                    </span>
                   </div>
+
+                  {!isActive && (
+                    <Buttons
+                      greenBtn={isActive}
+                      loading={syllabusActivating}
+                      btnClass="ml-2"
+                      onClick={() => handleSyllabusActivation(syllabus.id)}
+                      label={'Select'}
+                    />
+                  )}
                 </div>
-              </Tooltip>
+              </div>
+              // </Tooltip>
             );
           })}
         </div>
