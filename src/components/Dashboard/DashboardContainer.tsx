@@ -1,6 +1,10 @@
+import Placeholder from '@components/Atoms/Placeholder';
+import {getImageFromS3} from '@utilities/services';
+import {API, graphqlOperation} from 'aws-amplify';
 import InformationalWalkThrough from 'components/Dashboard/Admin/Institutons/InformationalWalkThrough/InformationalWalkThrough';
 import HeaderTextBar from 'components/Dashboard/HeaderTextBar/HeaderTextBar';
-import React, {useState} from 'react';
+import * as customQueries from 'customGraphql/customQueries';
+import React, {useEffect, useState} from 'react';
 import {BsFillInfoCircleFill} from 'react-icons/bs';
 import HeroBanner from '../Header/HeroBanner';
 
@@ -14,16 +18,70 @@ interface DashboardContainerProps {
   children: any;
   label?: string;
   courseName?: string;
+  institutionId?: string;
 }
+
+const InstitutionName = ({id, courseName}: {id: string; courseName: string}) => {
+  const [isLoading, setIsLoading] = useState(true);
+  const [institute, setInstitute] = useState(null);
+  const [imageUrl, setImageUrl] = useState();
+
+  useEffect(() => {}, [institute?.image]);
+
+  async function getUrl(image: string) {
+    const imageUrl: any = await getImageFromS3(image);
+    setImageUrl(imageUrl);
+  }
+
+  const fetchInfo = async () => {
+    try {
+      setIsLoading(true);
+      const res: any = await API.graphql(
+        graphqlOperation(customQueries.getInstitutionBasicInfo, {id: id})
+      );
+      setInstitute(res.data.getInstitution);
+      await getUrl(res.data.getInstitution.image);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (id) {
+      fetchInfo();
+    }
+  }, [id]);
+
+  if (isLoading && !Boolean(institute)) return null;
+  return (
+    <div>
+      <div className="flex items-center justify-center">
+        <div className="w-auto">
+          {institute.image && imageUrl ? (
+            <img
+              className="w-8 h-8 border-0 rounded-full border-gray-200 "
+              src={imageUrl}
+            />
+          ) : (
+            <Placeholder name={institute.name} size="w-8 h-8 " />
+          )}
+        </div>
+        <h4 className="w-auto text-sm ml-2">- {institute.name}</h4>
+        <h4 className="w-auto text-sm ml-2">|| {courseName}</h4>
+      </div>
+    </div>
+  );
+};
 
 const DashboardContainer = ({
   user,
-  theme,
-  clientKey,
+
   bannerTitle,
   bannerImg,
   children,
-  label,
+  institutionId,
   showTitleBanner = true,
   courseName = ''
 }: DashboardContainerProps) => {
@@ -31,24 +89,6 @@ const DashboardContainer = ({
   const isOnDemandStudent = user?.onDemand;
 
   const [openWalkThroughModal, setOpenWalkThroughModal] = useState(false);
-
-  // const userObject = !isEmpty(user)
-  //   ? {firstName: user.firstName, preferredName: user.firstName}
-  //   : null;
-  // const currentUnit = () => {
-  //   if (!isEmpty(state)) {
-  //     const filtered = state.roomData.syllabus?.find(
-  //       (syllabusObj: any) => syllabusObj.active
-  //     );
-  //     if (filtered) {
-  //       return filtered.name;
-  //     } else {
-  //       return null;
-  //     }
-  //   } else {
-  //     return null;
-  //   }
-  // };
 
   return (
     <>
@@ -58,17 +98,9 @@ const DashboardContainer = ({
           {showTitleBanner ? (
             <HeaderTextBar>
               <div className="flex items-center justify-center">
-                <h2 className={`text-sm mr-2 w-auto 2xl:text-xl text-center font-normal`}>
-                  {isTeacher ? (
-                    <span className="font-semibold">{'Classroom Manager'}</span>
-                  ) : isOnDemandStudent ? (
-                    <span className="font-semibold">
-                      {'Classroom Lessons Self-Paced'}
-                    </span>
-                  ) : (
-                    <span className="font-semibold">{`Classroom Lessons - ${courseName}`}</span>
-                  )}
-                </h2>
+                {institutionId && (
+                  <InstitutionName courseName={courseName} id={institutionId} />
+                )}
                 {isTeacher && (
                   <div className="w-auto">
                     <span

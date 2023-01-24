@@ -443,6 +443,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
         user={stateUser}
         theme={theme}
         courseName={courseName}
+        institutionId={activeRoomInfo?.institutionID}
         clientKey={clientKey}
         bannerImg={bannerImg}
         bannerTitle={`${classRoomDict[userLanguage]['TITLE']}`}>

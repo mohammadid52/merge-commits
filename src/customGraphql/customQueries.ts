@@ -5183,6 +5183,7 @@ export const getInstitutionBasicInfo = /* GraphQL */ `
     getInstitution(id: $id) {
       id
       name
+      image
     }
   }
 `;
