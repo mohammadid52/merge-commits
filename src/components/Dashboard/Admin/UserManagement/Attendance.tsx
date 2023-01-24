@@ -58,11 +58,12 @@ const Attendance = ({id, goToClassroom, selectedRoomId, role}: IAttendanceProps)
     curriculum: item.curriculumName,
     lesson: item.lessonName,
     date: new Date(item.date).toLocaleDateString(),
+    type: item.lessonType,
     time: moment(item?.time, 'HH:mm:ss').format('hh:mm A')
   }));
 
   const tableConfig = {
-    headers: ['No', 'ClassName', 'Curriculum', 'Lesson', 'Date', 'Time'],
+    headers: ['No', 'ClassName', 'Curriculum', 'Lesson', 'Type', 'Date', 'Time'],
     dataList,
     config: {
       dark: false,
@@ -117,6 +118,7 @@ const Attendance = ({id, goToClassroom, selectedRoomId, role}: IAttendanceProps)
       const temp = list?.data.attendanceByStudent?.items.map((record: any) => ({
         ...record,
         lessonName: record.lesson?.title,
+        lessonType: record.lesson?.type,
         curriculumName: record.curriculum?.name,
         roomName: record.room?.name
       }));

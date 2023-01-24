@@ -7,7 +7,6 @@ import ErrorBoundary from '@components/Error/ErrorBoundary';
 import Table from '@components/Molecules/Table';
 import {uploadImageToS3} from '@graphql/functions';
 import {PersonStatus, Role} from 'API';
-import Selector from 'atoms/Form/Selector';
 import Loader from 'atoms/Loader';
 import Anthology from 'components/Dashboard/Anthology/Anthology';
 import {useGlobalContext} from 'contexts/GlobalContext';
@@ -20,14 +19,7 @@ import sortBy from 'lodash/sortBy';
 import DroppableMedia from 'molecules/DroppableMedia';
 import React, {useEffect, useState} from 'react';
 import {BsArrowLeft} from 'react-icons/bs';
-import {
-  Route,
-  Switch,
-  useHistory,
-  useLocation,
-  useParams,
-  useRouteMatch
-} from 'react-router-dom';
+import {useHistory, useLocation, useParams, useRouteMatch} from 'react-router-dom';
 import {getImageFromS3} from 'utilities/services';
 import {getUniqItems} from 'utilities/strings';
 import AnimatedContainer from '../../../Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
@@ -108,6 +100,7 @@ const AssociatedClasses = ({list, handleClassRoomClick}: any) => {
           {room.name}
         </div>
       ),
+
       teacher: teacher
         ? `${teacher?.firstName || ''} ${teacher?.lastName || ''}`
         : 'Not Available',
@@ -122,10 +115,9 @@ const AssociatedClasses = ({list, handleClassRoomClick}: any) => {
     headers: ['No', 'Institution', 'Classroom', 'Teacher', 'Curriculum'],
     dataList,
     config: {
-      dark: false,
       isLastAction: true,
       isFirstIndex: true,
-      headers: {textColor: 'text-white'},
+
       dataList: {
         emptyText: 'No associated coursework and attendance',
         customWidth: {
@@ -133,9 +125,7 @@ const AssociatedClasses = ({list, handleClassRoomClick}: any) => {
           classroom: 'w-72',
           curriculum: 'w-72'
         },
-        maxHeight: 'max-h-196',
-        pattern: 'striped',
-        patternConfig: {firstColor: 'bg-gray-100', secondColor: 'bg-gray-200'}
+        maxHeight: 'max-h-196'
       }
     }
   };

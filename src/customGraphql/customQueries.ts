@@ -5141,6 +5141,7 @@ export const attendanceByStudent = /* GraphQL */ `
         lesson {
           id
           title
+          type
         }
         room {
           id
