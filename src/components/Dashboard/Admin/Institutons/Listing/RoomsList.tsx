@@ -269,6 +269,7 @@ const RoomsList = (props: RoomListProps) => {
   const dataList = map(finalList, (item, index) => ({
     markRed: !Boolean(item?.activeSyllabus),
     no: getIndex(index),
+    onClick: () => editCurrentRoom(item.id, item.institutionID),
     classroomName: (
       <div
         onClick={() => editCurrentRoom(item.id, item.institutionID)}
@@ -278,7 +279,6 @@ const RoomsList = (props: RoomListProps) => {
     ),
     institutionName: (
       <div
-        className={'w-auto cursor-pointer'}
         onClick={(e) => {
           e.stopPropagation();
           isSuperAdmin &&
