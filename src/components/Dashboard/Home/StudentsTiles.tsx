@@ -84,7 +84,7 @@ const StudentsTiles = (props: {
     <>
       <SectionTitleV3
         title={title}
-        extraContainerClass="lg:max-w-192 md:max-w-none px-6 2xl:max-w-256 "
+        extraContainerClass="max-w-9/10 px-6"
         fontSize="xl"
         fontStyle="semibold"
         borderBottom
@@ -130,7 +130,7 @@ const StudentsTiles = (props: {
                 </div>
               </div>
             ) : finalList?.length ? (
-              <ul className="grid grid-cols-2 justify-center gap-x-4 gap-y-8 sm:grid-cols-4 md:gap-x-6 lg:max-w-5xl lg:gap-x-8 lg:gap-y-12 xl:grid-cols-6">
+              <ul className="grid grid-cols-2 justify-center gap-x-4 gap-y-8 sm:grid-cols-4 md:gap-x-6 lg:gap-x-8 lg:gap-y-12 xl:grid-cols-8">
                 {finalList &&
                   finalList.length > 0 &&
                   finalList.slice(0, viewMore ? finalList.length - 1 : 12).map(

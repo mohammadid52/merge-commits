@@ -29,7 +29,7 @@ const TeacherRows = (props: {coTeachersList: Teacher[]; teachersList: Teacher[]}
       <div className="overflow-hidden">
         {
           allTeachers && allTeachers.length > 0 ? (
-            <ul className="">
+            <ul className="grid grid-cols-1 lg:grid-cols-2">
               {allTeachers.map((teacher, idx: number) => {
                 return (
                   <li

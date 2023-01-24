@@ -475,7 +475,7 @@ const Community = ({}: {role: string}) => {
         setShowCardsModal={setShowCardsModal}
       />
       {/* ~~~~~~~~~~~~~CARDS MODAL ENDS~~~~~~~~~~~~~~~~~~~~~~~~~~ */}
-      <div className="px-5 2xl:px-0 lg:mx-auto lg:max-w-192 md:max-w-none 2xl:max-w-256">
+      <div className="px-5 2xl:px-0 lg:mx-auto max-w-9/10">
         <div className="flex flex-row my-0 w-full py-0 mb-4 justify-between">
           <BreadCrums items={breadCrumsList} />
         </div>
