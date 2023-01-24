@@ -177,6 +177,10 @@ const ListItem = forwardRef<any, IListItem>(
           const className = `${
             config?.dataList?.textColor || 'text-gray-500'
           } px-6 py-4 ${
+            headers.length - 1 === _idx && header.toLowerCase() === 'actions'
+              ? 'flex items-center justify-end'
+              : ''
+          } ${
             _customWidth ||
             (config?.isFirstIndex && _idx === 0
               ? 'w-20'
@@ -243,7 +247,7 @@ const Table = ({
         <div className="overflow-x-auto">
           <div className="py-2 align-middle inline-block min-w-full">
             <div
-              className={` overflow-hidden border-0 ${
+              className={`  border-0 ${
                 config?.dark ? 'border-gray-700' : 'border-gray-200'
               } sm:rounded-lg`}>
               <table className="min-w-full divide-y-0 divide-gray-700">
@@ -265,6 +269,10 @@ const Table = ({
                           : config?.isLastAction && idx === _headers.length - 1
                           ? 'w-20'
                           : '')
+                      }  ${
+                        _headers.length - 1 === idx && header.toLowerCase() === 'actions'
+                          ? 'flex items-center justify-end'
+                          : ''
                       } text-left text-xs font-medium  uppercase tracking-wider`;
                       return (
                         <th key={header} scope="col" className={className}>

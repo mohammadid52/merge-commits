@@ -11,6 +11,7 @@ import SectionTitleV3 from 'atoms/SectionTitleV3';
 import {ModifiedListProps} from 'components/Dashboard/Home/Home';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
+import {orderBy} from 'lodash';
 import React, {useEffect, useState} from 'react';
 
 const limitDesc = (str: string, len: number = 250): string => {
@@ -136,9 +137,8 @@ const RoomTiles = (props: {
 
   useEffect(() => {
     if (classes.length > 0) {
-      // curriculumName
-
-      setClassList([...classes]);
+      const orderedList = orderBy(classes, ['curriculumName'], 'asc');
+      setClassList([...orderedList]);
     }
   }, [classes]);
 

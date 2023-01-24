@@ -30,7 +30,6 @@ import {
 } from 'react-router-dom';
 import {getImageFromS3} from 'utilities/services';
 import {getUniqItems} from 'utilities/strings';
-import LessonLoading from '../../../Lesson/Loading/ComponentLoading';
 import AnimatedContainer from '../../../Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import {useTabs} from '../../../Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/Tabs';
 import ProfileCropModal from '../../Profile/ProfileCropModal';
@@ -39,6 +38,12 @@ import SurveyList from './SurveyList';
 import UserTabs from './User/UserTabs';
 import UserEdit from './UserEdit';
 import UserInformation from './UserInformation';
+
+const statusDate = (dateValue: string) => {
+  const date = new Date(dateValue);
+  return date.getMonth() + 1 + '/' + date.getDate() + '/' + date.getFullYear();
+};
+
 export interface UserInfo {
   authId: string;
   courses?: string;
@@ -524,10 +529,7 @@ const User = (props: IUserProps) => {
     setIsTimelineOpen(false);
   };
 
-  const statusDate = (dateValue: string) => {
-    const date = new Date(dateValue);
-    return date.getMonth() + 1 + '/' + date.getDate() + '/' + date.getFullYear();
-  };
+  const [isEditMode, setIsEditMode] = useState(false);
 
   const isTeacher =
     state.user.role === 'TR' ||
@@ -564,10 +566,11 @@ const User = (props: IUserProps) => {
               <div className={`w-auto flex gap-x-4 justify-end items-center flex-wrap`}>
                 <AddButton
                   label={'Edit User'}
-                  disabled={location.pathname.includes('edit')}
+                  disabled={isEditMode}
                   onClick={() => {
+                    setIsEditMode(true);
                     setCurTab(tabs[0].name);
-                    history.push(`${match.url}/edit${location.search}`);
+                    // history.push(`${match.url}/edit${location.search}`);
                   }}
                 />
               </div>
@@ -675,57 +678,50 @@ const User = (props: IUserProps) => {
                         </div>
                       )}
                     </div>
-                    <Switch>
-                      <Route
-                        path={`${match.url}/edit`}
-                        render={() => (
-                          <ErrorBoundary componentName="UserEdit">
-                            <UserEdit
-                              // tab={stdCheckpoints.length > 0 ? tab : 'p'}
-                              instituteId={props.instituteId}
-                              tab={tab}
-                              setTab={setTab}
-                              onSuccessCallback={onSuccessCallback}
-                              user={user}
-                              shouldNavigate={shouldNavigate}
-                              status={status}
-                              setStatus={setStatus}
-                              getUserById={getUserProfile}
-                              questionData={questionData}
-                              checkpoints={
-                                tab === 'demographics'
-                                  ? demographicCheckpoints
-                                  : tab === 'private'
-                                  ? privateCheckpoints
-                                  : []
-                              }
-                            />
-                          </ErrorBoundary>
-                        )}
-                      />
-                      <Route
-                        path={`${match.url}/`}
-                        render={() => (
-                          <ErrorBoundary componentName="UserInformation">
-                            <UserInformation
-                              // tab={stdCheckpoints.length > 0 ? tab : 'p'}
-                              tab={tab}
-                              setTab={setTab}
-                              questionData={questionData}
-                              checkpoints={
-                                tab === 'demographics'
-                                  ? demographicCheckpoints
-                                  : tab === 'private'
-                                  ? privateCheckpoints
-                                  : []
-                              }
-                              user={user}
-                              status={status}
-                            />
-                          </ErrorBoundary>
-                        )}
-                      />
-                    </Switch>
+
+                    {isEditMode ? (
+                      <ErrorBoundary componentName="UserEdit">
+                        <UserEdit
+                          // tab={stdCheckpoints.length > 0 ? tab : 'p'}
+                          instituteId={props.instituteId}
+                          tab={tab}
+                          setTab={setTab}
+                          onSuccessCallback={onSuccessCallback}
+                          user={user}
+                          shouldNavigate={shouldNavigate}
+                          status={status}
+                          setStatus={setStatus}
+                          setIsEditMode={setIsEditMode}
+                          getUserById={getUserProfile}
+                          questionData={questionData}
+                          checkpoints={
+                            tab === 'demographics'
+                              ? demographicCheckpoints
+                              : tab === 'private'
+                              ? privateCheckpoints
+                              : []
+                          }
+                        />
+                      </ErrorBoundary>
+                    ) : (
+                      <ErrorBoundary componentName="UserInformation">
+                        <UserInformation
+                          // tab={stdCheckpoints.length > 0 ? tab : 'p'}
+                          tab={tab}
+                          setTab={setTab}
+                          questionData={questionData}
+                          checkpoints={
+                            tab === 'demographics'
+                              ? demographicCheckpoints
+                              : tab === 'private'
+                              ? privateCheckpoints
+                              : []
+                          }
+                          user={user}
+                          status={status}
+                        />
+                      </ErrorBoundary>
+                    )}
                   </div>
                 </div>
               )}

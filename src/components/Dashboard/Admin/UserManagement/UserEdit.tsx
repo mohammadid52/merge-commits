@@ -36,6 +36,7 @@ interface UserInfoProps {
   shouldNavigate?: boolean;
   setTab: Function;
   onSuccessCallback?: () => void;
+  setIsEditMode?: any;
 }
 
 const UserEdit = (props: UserInfoProps) => {
@@ -51,6 +52,7 @@ const UserEdit = (props: UserInfoProps) => {
     shouldNavigate = true,
     checkpoints,
     questionData,
+    setIsEditMode,
     onSuccessCallback
   } = props;
   const [superEdit, setSuperEdit] = useState<boolean>(false);
@@ -978,7 +980,10 @@ const UserEdit = (props: UserInfoProps) => {
             <Buttons
               btnClass="py-2 w-2.5/10 px-4 text-xs mr-2"
               label={UserEditDict[userLanguage]['button']['cancel']}
-              onClick={history.goBack}
+              onClick={() => {
+                setIsEditMode && setIsEditMode(false);
+                history.goBack();
+              }}
               transparent
             />
             <Buttons
