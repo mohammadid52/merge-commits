@@ -43,6 +43,7 @@ export const getDashboardData = /* GraphQL */ `
               institutionID
               classID
               teacherAuthID
+              status
               teacherEmail
               name
               maxPersons
