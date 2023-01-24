@@ -1,10 +1,19 @@
+import Highlighted from '@components/Atoms/Highlighted';
 import Placeholder from '@components/Atoms/Placeholder';
-import Tooltip from '@components/Atoms/Tooltip';
-import {ellipsis} from '@utilities/functions';
 import {getImageFromS3} from '@utilities/services';
 import React, {useEffect, useState} from 'react';
 
-const InstituteName = ({image, name, id}: {image: string; name: string; id: string}) => {
+const InstituteName = ({
+  image,
+  name,
+  searchTerm,
+  id
+}: {
+  image: string;
+  searchTerm: string;
+  name: string;
+  id: string;
+}) => {
   const [imageUrl, setImageUrl] = useState(null);
 
   useEffect(() => {
@@ -28,11 +37,7 @@ const InstituteName = ({image, name, id}: {image: string; name: string; id: stri
         )}
       </div>
       <div className="ml-2">
-        <Tooltip text={name} placement="bottomleft">
-          <div id={id} className="">
-            {ellipsis(name, 22)}
-          </div>
-        </Tooltip>
+        <Highlighted text={name} highlight={searchTerm} />
       </div>
     </div>
   );

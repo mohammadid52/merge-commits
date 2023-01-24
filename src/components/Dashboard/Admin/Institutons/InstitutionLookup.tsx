@@ -16,7 +16,7 @@ import {GlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import {useQuery} from 'customHooks/urlParam';
-import {map} from 'lodash';
+import {map, orderBy} from 'lodash';
 import React, {useContext, useEffect, useState} from 'react';
 import {useHistory, useRouteMatch} from 'react-router-dom';
 
@@ -50,6 +50,7 @@ const InstitutionLookup: React.FC = () => {
     resetPagination,
     setFirstPage,
     setLastPage,
+    getIndex,
     pageCount
   } = usePagination(institutionsData || [], totalInstNum || 0);
 
@@ -134,7 +135,13 @@ const InstitutionLookup: React.FC = () => {
       setTotalNum(instituteList.length);
 
       setTotalInstNum(instituteList.length);
-      setInstitutionsData(instituteList);
+
+      instituteList = instituteList.map((inst: any) => ({
+        ...inst,
+        name: inst.name
+      }));
+
+      setInstitutionsData(orderBy(instituteList, ['name'], 'asc'));
       setStatus('done');
     } catch (error) {
       console.error(error);
@@ -224,9 +231,10 @@ const InstitutionLookup: React.FC = () => {
 
   const dataList = map(currentList, (instituteObject, idx) => ({
     onClick: () => handleInstitutionView(instituteObject.id),
-    no: idx + 1,
+    no: getIndex(idx),
     instituteName: (
       <InstituteName
+        searchTerm={searchInput.value}
         name={instituteObject.name}
         image={instituteObject.image}
         id={instituteObject.id}
@@ -259,13 +267,8 @@ const InstitutionLookup: React.FC = () => {
       isLastAction: true,
 
       dataList: {
-        sort: {
-          sortKey: 'name',
-          sortBy: 'asc'
-        },
         loading: status !== 'done',
         emptyText: dictionary['NORESULT'],
-
         pagination: {
           showPagination: !searchInput.isActive && totalNum > 0,
           config: {

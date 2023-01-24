@@ -22,10 +22,7 @@ interface IConfig {
     customWidth?: {[key: string]: any};
     maxHeight?: string;
     textColor?: string;
-    sort?: {
-      sortKey: string;
-      sortBy: string;
-    };
+
     droppable?: {
       isDroppable: boolean;
       onDragEnd: (result: any) => void;
@@ -239,24 +236,6 @@ const Table = ({
   const paginationConfig = dataListConfig?.pagination?.config;
 
   const showPagination = Boolean(dataListConfig?.pagination?.showPagination);
-  const shouldSort = Boolean(dataListConfig?.sort && dataListConfig?.sort?.sortBy);
-
-  const [sortedList, setSortedList] = useState([]);
-
-  useEffect(() => {
-    if (shouldSort && dataList.length > 0) {
-      setSortedList(
-        orderBy(
-          dataList,
-          [dataListConfig?.sort?.sortKey],
-          // @ts-ignore
-          [dataListConfig?.sort?.sortBy || 'asc']
-        )
-      );
-    }
-  }, [shouldSort, dataList]);
-
-  const finalList = shouldSort ? sortedList : dataList;
 
   return (
     <ErrorBoundary fallback={<div className="hidden"></div>} componentName="Table">
@@ -309,7 +288,7 @@ const Table = ({
                         config={config}
                       />
                     ))
-                  ) : finalList.length === 0 ? (
+                  ) : dataList.length === 0 ? (
                     <p className="text-center text-base w-full h-24 text-gray-500 flex items-center justify-center">
                       {dataListConfig.emptyText}
                     </p>
@@ -319,10 +298,10 @@ const Table = ({
                       headers={_headers}
                       customWidth={_customWidth}
                       config={config}
-                      dataList={finalList}
+                      dataList={dataList}
                     />
                   ) : (
-                    finalList.map((item: any, idx: number) => (
+                    dataList.map((item: any, idx: number) => (
                       <ListItem
                         key={idx}
                         idx={idx}
