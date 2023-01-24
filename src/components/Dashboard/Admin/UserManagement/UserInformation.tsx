@@ -203,7 +203,7 @@ const UserInformation = ({
                         title={`Status changed to inactive on ${statusDate(
                           user.inactiveStatusDate
                         )}`}>
-                        {statusDate(user.inactiveStatusDate)}
+                        ({statusDate(user.inactiveStatusDate)})
                       </span>
                     )}
                   </dd>
