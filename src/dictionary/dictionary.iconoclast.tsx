@@ -874,7 +874,7 @@ const InstitutionDict: any = {
       NAME: 'Institute Name',
       TYPE: 'Type',
       WEBSITE: 'Website',
-      CONTACT: 'Contact No.',
+      CONTACT: 'Contact No',
       ACTION: 'Actions',
       NORESULT: 'No Results'
     },

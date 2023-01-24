@@ -1,7 +1,6 @@
 import AddButton from '@components/Atoms/Buttons/AddButton';
 import PageWrapper from '@components/Atoms/PageWrapper';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
-import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import CommonActionsBtns from '@components/MicroComponents/CommonActionsBtns';
 import Table from '@components/Molecules/Table';
 import {useGlobalContext} from '@contexts/GlobalContext';
@@ -16,8 +15,6 @@ import React, {useState} from 'react';
 import DictionaryMutationModal from './DictionaryMutationModal';
 
 const DictionaryPage = () => {
-  const {checkIfAdmin} = useGlobalContext();
-
   const {data, setData, isLoading, refetch} = useGraphqlQuery<
     ListDicitionariesQueryVariables,
     Dicitionary[]
@@ -25,7 +22,6 @@ const DictionaryPage = () => {
     'listDicitionaries',
     {limit: 150},
     {
-      enabled: checkIfAdmin(),
       onSuccess: (data) => {
         if (data.length > 0) {
           const orderedList = orderBy([...data], ['createdAt'], ['desc']);
@@ -37,8 +33,6 @@ const DictionaryPage = () => {
       }
     }
   );
-
-  // work on reducer to store dictionaries
 
   const [showModal, setShowModal] = useState(false);
 

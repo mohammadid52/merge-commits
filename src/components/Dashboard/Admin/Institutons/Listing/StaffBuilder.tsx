@@ -44,18 +44,17 @@ interface StaffBuilderProps {
 }
 
 const StaffBuilder = (props: StaffBuilderProps) => {
-  const {instName, instituteId} = props;
+  const {instituteId} = props;
 
   // ~~~~~~~~~~ CONTEXT SPLITTING ~~~~~~~~~~ //
   const gContext = useGlobalContext();
   const userLanguage = gContext.userLanguage;
-  const clientKey = gContext.clientKey;
+
   const state = gContext.state;
   const user = gContext.state.user;
-  const theme = gContext.theme;
 
   // ~~~~~~~~~~~~~~~~ OTHER ~~~~~~~~~~~~~~~~ //
-  const themeColor = getAsset(clientKey, 'themeClassName');
+
   const history = useHistory();
   const match = useRouteMatch();
   const {BUTTONS, RegistrationDict, staffBuilderDict} = useDictionary();
@@ -442,7 +441,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
         searchTerm={searchInput.value}
       />
     ),
-    instituteName: user.isSuperAdmin && (
+    institutionName: user.isSuperAdmin && (
       <div
         className="cursor-pointer w-auto"
         onClick={() => redirectToInstitution(item.institution?.id)}>
@@ -511,7 +510,8 @@ const StaffBuilder = (props: StaffBuilderProps) => {
           }
         },
         customWidth: {
-          name: 'w-72 -ml-24'
+          name: 'w-72 -ml-8',
+          no: 'w-20'
         },
         maxHeight: 'max-h-196'
       }
