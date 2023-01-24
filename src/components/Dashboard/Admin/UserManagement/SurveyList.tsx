@@ -10,9 +10,11 @@ import React, {useEffect, useState} from 'react';
 
 const SurveyList = ({
   studentAuthID,
-  studentEmail
+  studentEmail,
+  insideModalPopUp
 }: {
   studentEmail: string;
+  insideModalPopUp?: boolean;
   studentAuthID: string;
 }) => {
   const {state} = useGlobalContext();
@@ -101,12 +103,14 @@ const SurveyList = ({
       dataList: {
         loading: isLoading,
         emptyText: 'No completed surveys found',
-        customWidth: {
-          no: 'w-12',
-          surveyName: 'w-84',
-          classroom: 'w-84',
-          completedAt: 'w-48'
-        },
+        customWidth: insideModalPopUp
+          ? {}
+          : {
+              no: 'w-12',
+              surveyName: 'w-84',
+              classroom: 'w-84',
+              completedAt: 'w-48'
+            },
         maxHeight: 'max-h-196',
         pattern: 'striped',
         patternConfig: {firstColor: 'bg-gray-100', secondColor: 'bg-gray-200'}

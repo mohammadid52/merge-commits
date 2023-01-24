@@ -39,11 +39,6 @@ import UserTabs from './User/UserTabs';
 import UserEdit from './UserEdit';
 import UserInformation from './UserInformation';
 
-const statusDate = (dateValue: string) => {
-  const date = new Date(dateValue);
-  return date.getMonth() + 1 + '/' + date.getDate() + '/' + date.getFullYear();
-};
-
 export interface UserInfo {
   authId: string;
   courses?: string;
@@ -662,21 +657,6 @@ const User = (props: IUserProps) => {
                           user.institution ? user.institution : ''
                         }`}</p>
                       </div>
-                      {user.inactiveStatusDate && (
-                        <div className="sm:col-span-3 p-2 mt-18">
-                          <Selector
-                            selectedItem={statusDate(user.inactiveStatusDate)}
-                            onChange={() => {}}
-                            disabled
-                            arrowHidden={true}
-                            placeholder={'Status'}
-                            label={'Status Date'}
-                            labelTextClass={'text-sm text-justify'}
-                            btnClass={'cursor-not-allowed'}
-                            additionalClass={`w-auto md:w-52 lg:w-48 cursor-not-allowed`}
-                          />
-                        </div>
-                      )}
                     </div>
 
                     {isEditMode ? (
@@ -767,7 +747,11 @@ const User = (props: IUserProps) => {
             </AnimatedContainer>
             <AnimatedContainer show={onSurveyTab}>
               {onSurveyTab && (
-                <SurveyList studentAuthID={user.authId} studentEmail={user.email} />
+                <SurveyList
+                  insideModalPopUp={insideModalPopUp}
+                  studentAuthID={user.authId}
+                  studentEmail={user.email}
+                />
               )}
             </AnimatedContainer>
           </div>

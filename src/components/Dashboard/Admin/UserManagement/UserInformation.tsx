@@ -15,6 +15,10 @@ import {requestResetPassword} from 'utilities/urls';
 import {UserInfo} from './User';
 import UserRole from './UserRole';
 
+const statusDate = (dateValue: string) => {
+  const date = new Date(dateValue);
+  return date.getMonth() + 1 + '/' + date.getDate() + '/' + date.getFullYear();
+};
 interface UserInfoProps {
   user: UserInfo;
   status: string;
@@ -192,9 +196,19 @@ const UserInformation = ({
                     {UserInformationDict[userLanguage]['status']}
                   </dt>
                   <dd className="mt-2 text-base leading-5 text-gray-900">
-                    <Status status={user.status} />
+                    <Status status={user.status} />{' '}
+                    {Boolean(user.inactiveStatusDate) && (
+                      <span
+                        className="text-xs"
+                        title={`Status changed to inactive on ${statusDate(
+                          user.inactiveStatusDate
+                        )}`}>
+                        {statusDate(user.inactiveStatusDate)}
+                      </span>
+                    )}
                   </dd>
                 </div>
+
                 <div className="sm:col-span-1 p-2">
                   <dt className="text-sm leading-5 font-regular text-gray-600">
                     {UserInformationDict[userLanguage]['email']}

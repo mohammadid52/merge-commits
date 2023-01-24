@@ -247,7 +247,7 @@ const Table = ({
         <div className="overflow-x-auto">
           <div className="py-2 align-middle inline-block min-w-full">
             <div
-              className={`  border-0 ${
+              className={` overflow-hidden border-0 ${
                 config?.dark ? 'border-gray-700' : 'border-gray-200'
               } sm:rounded-lg`}>
               <table className="min-w-full divide-y-0 divide-gray-700">
