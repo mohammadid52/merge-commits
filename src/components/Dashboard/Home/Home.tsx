@@ -264,7 +264,7 @@ const Home = (props: ClassroomControlProps) => {
                   extraClass="leading-6 text-gray-900"
                   fontSize="xl"
                   fontStyle="semibold"
-                  extraContainerClass="max-w-9/10 px-6"
+                  extraContainerClass="lg:max-w-192 md:max-w-none 2xl:max-w-256 px-6"
                   borderBottom
                 />
                 <TeacherRows coTeachersList={coTeachersList} teachersList={teacherList} />

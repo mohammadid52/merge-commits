@@ -182,7 +182,7 @@ const RoomTiles = (props: {
   return (
     <>
       <SectionTitleV3
-        extraContainerClass="max-w-9/10 my-8 px-6"
+        extraContainerClass="lg:max-w-192 md:max-w-none 2xl:max-w-256 my-8 px-6"
         title={DashboardDict[userLanguage]['YOUR_CLASSROOMS']}
         withButton={
           classList &&
@@ -214,9 +214,7 @@ const RoomTiles = (props: {
         extraClass="leading-6 text-gray-900"
         borderBottom
       />
-      <ContentCard
-        additionalClass={finalList.length >= 5 ? '' : 'max-w-256'}
-        hasBackground={false}>
+      <ContentCard hasBackground={false}>
         {!isTeacher && isInactive ? (
           <p className="text-gray-500 text-sm text-center py-8 px-4">
             Your account is inactive. If you think this status is incorrect contact our
@@ -232,11 +230,7 @@ const RoomTiles = (props: {
             <div className="relative max-w-7xl mx-auto">
               <div
                 data-cy="classroom-list"
-                className={`mt-0 max-w-lg mx-auto pt-6 pb-6 grid px-6 gap-5 ${
-                  finalList.length >= 5
-                    ? ' lg:grid-cols-5 md:grid-cols-2 '
-                    : `grid-cols-${finalList.length}`
-                } `}>
+                className={`mt-0 max-w-lg mx-auto pt-6 pb-6 grid px-6 gap-5 lg:grid-cols-3 md:grid-cols-2`}>
                 {finalList
                   .slice(0, showMore || searchInput.isActive ? finalList.length : 5)
                   .map((item, idx: number) => {
