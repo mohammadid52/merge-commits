@@ -190,23 +190,11 @@ export const getDashboardDataForTeachers = /* GraphQL */ `
           status
           email
           role
-          type
+          status
           firstName
           preferredName
           lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
           image
-          language
-          filters
-          lastLoggedIn
-          lastLoggedOut
-          createdAt
-          updatedAt
         }
         class {
           id
@@ -264,6 +252,7 @@ export const getDashboardDataForTeachers = /* GraphQL */ `
               lastName
               image
               email
+              status
               role
               phone
             }
@@ -344,6 +333,7 @@ export const getDashboardDataForCoTeachers = /* GraphQL */ `
                 email
                 firstName
                 lastName
+                status
               }
               teacherID
               teacherEmail

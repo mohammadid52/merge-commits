@@ -177,6 +177,8 @@ const RoomTiles = (props: {
 
   const finalList = searchInput.isActive ? filteredList : classList;
 
+  const {isStudent} = useAuth();
+
   return (
     <>
       <SectionTitleV3
@@ -186,7 +188,7 @@ const RoomTiles = (props: {
           classList &&
           classList.length > 3 && (
             <div className="flex w-auto gap-x-4 justify-end">
-              {isTeacher && (
+              {!isStudent && (
                 <SearchInput
                   dataCy="staff-loookup-search"
                   value={searchInput.value}

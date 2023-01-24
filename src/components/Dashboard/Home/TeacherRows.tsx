@@ -1,23 +1,29 @@
 import React from 'react';
 import ContentCard from 'atoms/ContentCard';
 import ImageAlternate from 'atoms/ImageAlternative';
-import {orderBy} from 'lodash';
+import {filter, orderBy} from 'lodash';
+import {PersonStatus} from 'API';
 
 interface Teacher {
   firstName: string;
   lastName: string;
   phone: string;
   email: string;
+  status: PersonStatus;
   image: string | null;
 }
 
 const TeacherRows = (props: {coTeachersList: Teacher[]; teachersList: Teacher[]}) => {
   const {coTeachersList = [], teachersList = []} = props;
   const allTeachers = orderBy(
-    [...teachersList, ...coTeachersList],
+    filter(
+      [...teachersList, ...coTeachersList],
+      (d) => d.status !== PersonStatus.INACTIVE
+    ),
     ['firstName'],
     ['asc']
   );
+
   return (
     <ContentCard hasBackground={false}>
       <div className="overflow-hidden">
