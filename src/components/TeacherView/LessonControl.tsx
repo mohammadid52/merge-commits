@@ -354,10 +354,11 @@ const LessonControl = () => {
       const dictionaries = await getDictionaries();
 
       const updatedLessonPlan = scanLessonAndFindComplicatedWord(
-        lessonPlan,
+        response.lessonPlan,
         dictionaries
       );
-      setLocalStorageData('lesson_plan', updatedLessonPlan);
+
+      setLocalStorageData('lesson_plan', lessonPlan);
       lessonDispatch({
         type: 'SET_LESSON_DATA',
         payload: {...response, lessonPlan: updatedLessonPlan}

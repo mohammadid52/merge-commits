@@ -83,6 +83,7 @@ const Lesson = () => {
           type: 'SET_LESSON_DATA',
           payload: {...response, lessonPlan: updatedLessonPlan}
         });
+
         setLoaded(true);
       }
     } catch (e) {
