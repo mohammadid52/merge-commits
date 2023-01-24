@@ -7,7 +7,6 @@ import ErrorBoundary from '@components/Error/ErrorBoundary';
 import Table from '@components/Molecules/Table';
 import {uploadImageToS3} from '@graphql/functions';
 import {PersonStatus, Role} from 'API';
-import Selector from 'atoms/Form/Selector';
 import Loader from 'atoms/Loader';
 import Anthology from 'components/Dashboard/Anthology/Anthology';
 import {useGlobalContext} from 'contexts/GlobalContext';
@@ -20,17 +19,9 @@ import sortBy from 'lodash/sortBy';
 import DroppableMedia from 'molecules/DroppableMedia';
 import React, {useEffect, useState} from 'react';
 import {BsArrowLeft} from 'react-icons/bs';
-import {
-  Route,
-  Switch,
-  useHistory,
-  useLocation,
-  useParams,
-  useRouteMatch
-} from 'react-router-dom';
+import {useHistory, useLocation, useParams, useRouteMatch} from 'react-router-dom';
 import {getImageFromS3} from 'utilities/services';
 import {getUniqItems} from 'utilities/strings';
-import LessonLoading from '../../../Lesson/Loading/ComponentLoading';
 import AnimatedContainer from '../../../Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import {useTabs} from '../../../Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/Tabs';
 import ProfileCropModal from '../../Profile/ProfileCropModal';
@@ -39,6 +30,7 @@ import SurveyList from './SurveyList';
 import UserTabs from './User/UserTabs';
 import UserEdit from './UserEdit';
 import UserInformation from './UserInformation';
+
 export interface UserInfo {
   authId: string;
   courses?: string;
@@ -108,6 +100,7 @@ const AssociatedClasses = ({list, handleClassRoomClick}: any) => {
           {room.name}
         </div>
       ),
+
       teacher: teacher
         ? `${teacher?.firstName || ''} ${teacher?.lastName || ''}`
         : 'Not Available',
@@ -122,10 +115,9 @@ const AssociatedClasses = ({list, handleClassRoomClick}: any) => {
     headers: ['No', 'Institution', 'Classroom', 'Teacher', 'Curriculum'],
     dataList,
     config: {
-      dark: false,
       isLastAction: true,
       isFirstIndex: true,
-      headers: {textColor: 'text-white'},
+
       dataList: {
         emptyText: 'No associated coursework and attendance',
         customWidth: {
@@ -133,9 +125,7 @@ const AssociatedClasses = ({list, handleClassRoomClick}: any) => {
           classroom: 'w-72',
           curriculum: 'w-72'
         },
-        maxHeight: 'max-h-196',
-        pattern: 'striped',
-        patternConfig: {firstColor: 'bg-gray-100', secondColor: 'bg-gray-200'}
+        maxHeight: 'max-h-196'
       }
     }
   };
@@ -524,10 +514,7 @@ const User = (props: IUserProps) => {
     setIsTimelineOpen(false);
   };
 
-  const statusDate = (dateValue: string) => {
-    const date = new Date(dateValue);
-    return date.getMonth() + 1 + '/' + date.getDate() + '/' + date.getFullYear();
-  };
+  const [isEditMode, setIsEditMode] = useState(false);
 
   const isTeacher =
     state.user.role === 'TR' ||
@@ -564,10 +551,11 @@ const User = (props: IUserProps) => {
               <div className={`w-auto flex gap-x-4 justify-end items-center flex-wrap`}>
                 <AddButton
                   label={'Edit User'}
-                  disabled={location.pathname.includes('edit')}
+                  disabled={isEditMode}
                   onClick={() => {
+                    setIsEditMode(true);
                     setCurTab(tabs[0].name);
-                    history.push(`${match.url}/edit${location.search}`);
+                    // history.push(`${match.url}/edit${location.search}`);
                   }}
                 />
               </div>
@@ -659,73 +647,51 @@ const User = (props: IUserProps) => {
                           user.institution ? user.institution : ''
                         }`}</p>
                       </div>
-                      {user.inactiveStatusDate && (
-                        <div className="sm:col-span-3 p-2 mt-18">
-                          <Selector
-                            selectedItem={statusDate(user.inactiveStatusDate)}
-                            onChange={() => {}}
-                            disabled
-                            arrowHidden={true}
-                            placeholder={'Status'}
-                            label={'Status Date'}
-                            labelTextClass={'text-sm text-justify'}
-                            btnClass={'cursor-not-allowed'}
-                            additionalClass={`w-auto md:w-52 lg:w-48 cursor-not-allowed`}
-                          />
-                        </div>
-                      )}
                     </div>
-                    <Switch>
-                      <Route
-                        path={`${match.url}/edit`}
-                        render={() => (
-                          <ErrorBoundary componentName="UserEdit">
-                            <UserEdit
-                              // tab={stdCheckpoints.length > 0 ? tab : 'p'}
-                              instituteId={props.instituteId}
-                              tab={tab}
-                              setTab={setTab}
-                              onSuccessCallback={onSuccessCallback}
-                              user={user}
-                              shouldNavigate={shouldNavigate}
-                              status={status}
-                              setStatus={setStatus}
-                              getUserById={getUserProfile}
-                              questionData={questionData}
-                              checkpoints={
-                                tab === 'demographics'
-                                  ? demographicCheckpoints
-                                  : tab === 'private'
-                                  ? privateCheckpoints
-                                  : []
-                              }
-                            />
-                          </ErrorBoundary>
-                        )}
-                      />
-                      <Route
-                        path={`${match.url}/`}
-                        render={() => (
-                          <ErrorBoundary componentName="UserInformation">
-                            <UserInformation
-                              // tab={stdCheckpoints.length > 0 ? tab : 'p'}
-                              tab={tab}
-                              setTab={setTab}
-                              questionData={questionData}
-                              checkpoints={
-                                tab === 'demographics'
-                                  ? demographicCheckpoints
-                                  : tab === 'private'
-                                  ? privateCheckpoints
-                                  : []
-                              }
-                              user={user}
-                              status={status}
-                            />
-                          </ErrorBoundary>
-                        )}
-                      />
-                    </Switch>
+
+                    {isEditMode ? (
+                      <ErrorBoundary componentName="UserEdit">
+                        <UserEdit
+                          // tab={stdCheckpoints.length > 0 ? tab : 'p'}
+                          instituteId={props.instituteId}
+                          tab={tab}
+                          setTab={setTab}
+                          onSuccessCallback={onSuccessCallback}
+                          user={user}
+                          shouldNavigate={shouldNavigate}
+                          status={status}
+                          setStatus={setStatus}
+                          setIsEditMode={setIsEditMode}
+                          getUserById={getUserProfile}
+                          questionData={questionData}
+                          checkpoints={
+                            tab === 'demographics'
+                              ? demographicCheckpoints
+                              : tab === 'private'
+                              ? privateCheckpoints
+                              : []
+                          }
+                        />
+                      </ErrorBoundary>
+                    ) : (
+                      <ErrorBoundary componentName="UserInformation">
+                        <UserInformation
+                          // tab={stdCheckpoints.length > 0 ? tab : 'p'}
+                          tab={tab}
+                          setTab={setTab}
+                          questionData={questionData}
+                          checkpoints={
+                            tab === 'demographics'
+                              ? demographicCheckpoints
+                              : tab === 'private'
+                              ? privateCheckpoints
+                              : []
+                          }
+                          user={user}
+                          status={status}
+                        />
+                      </ErrorBoundary>
+                    )}
                   </div>
                 </div>
               )}
@@ -771,7 +737,11 @@ const User = (props: IUserProps) => {
             </AnimatedContainer>
             <AnimatedContainer show={onSurveyTab}>
               {onSurveyTab && (
-                <SurveyList studentAuthID={user.authId} studentEmail={user.email} />
+                <SurveyList
+                  insideModalPopUp={insideModalPopUp}
+                  studentAuthID={user.authId}
+                  studentEmail={user.email}
+                />
               )}
             </AnimatedContainer>
           </div>

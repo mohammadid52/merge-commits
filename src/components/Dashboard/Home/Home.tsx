@@ -173,9 +173,13 @@ const Home = (props: ClassroomControlProps) => {
 
     classList &&
       classList.length > 0 &&
-      classList.forEach(
-        async (item: {room: any; name: string; id: string}, idx: number) => {
-          if (item.room && !removedFrom.includes(item.room.id)) {
+      classList
+        .filter(
+          (item: {room: {status: PersonStatus}}) =>
+            item.room.status !== PersonStatus.INACTIVE
+        )
+        .forEach(async (item: {room: any; name: string; id: string}, idx: number) => {
+          if (item.room) {
             const curriculum = item.room.curricula?.items[0].curriculum;
             if (curriculum !== null) {
               const imagePath = curriculum?.image;
@@ -187,6 +191,7 @@ const Home = (props: ClassroomControlProps) => {
 
               const modifiedItem = {
                 ...item.room,
+                curriculumName: curriculum?.name,
                 roomName: item?.name,
                 bannerImage: image,
                 teacherProfileImg,
@@ -199,8 +204,7 @@ const Home = (props: ClassroomControlProps) => {
               }
             }
           }
-        }
-      );
+        });
 
     return modifiedClassList;
   };

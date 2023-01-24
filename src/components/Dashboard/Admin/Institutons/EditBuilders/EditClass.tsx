@@ -1,10 +1,7 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import React, {Fragment, useEffect, useState} from 'react';
-import {FaSpinner, FaTimes} from 'react-icons/fa';
-import {HiPencil} from 'react-icons/hi';
 import {useHistory} from 'react-router-dom';
 
-import {DeleteActionBtn} from 'atoms/Buttons/DeleteActionBtn';
 import SearchSelectorWithAvatar from 'atoms/Form/SearchSelectorWithAvatar';
 
 import {getAsset} from 'assets';
@@ -12,10 +9,14 @@ import {getImageFromS3} from 'utilities/services';
 import {createFilterToFetchAllItemsExcept} from 'utilities/strings';
 
 import Buttons from '@components/Atoms/Buttons';
+import Filters, {SortType} from '@components/Atoms/Filters';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
+import CommonActionsBtns from '@components/MicroComponents/CommonActionsBtns';
 import StudentName from '@components/MicroComponents/StudentName';
+import UserLookupLocation from '@components/MicroComponents/UserLookupLocation';
 import Table from '@components/Molecules/Table';
 import {useNotifications} from '@contexts/NotificationContext';
+import useSearch from '@customHooks/useSearch';
 import {getLocalStorageData} from '@utilities/localStorage';
 import {PersonStatus} from 'API';
 import Modal from 'atoms/Modal';
@@ -32,8 +33,6 @@ import ModalPopUp from 'molecules/ModalPopUp';
 import {addName, sortByName} from '../../UserManagement/UserLookup';
 import {Status} from '../../UserManagement/UserStatus';
 import LocationBadge from './LocationBadge';
-import CommonActionsBtns from '@components/MicroComponents/CommonActionsBtns';
-import UserLookupLocation from '@components/MicroComponents/UserLookupLocation';
 
 interface EditClassProps {
   instId: string;
@@ -500,37 +499,57 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
     setWarnModal2({...warnModal2, show: false});
   };
 
-  const dataList = map(
-    sortByName(addName(classStudents)),
-    (item: any, index: number) => ({
-      no: index + 1,
-      participantName: (
-        <StudentName
-          item={item}
-          user={user}
-          onClick={() => {
-            user.role !== 'BLD' && setStudentProfileID(item.student.id);
-            user.role !== 'BLD' && setUserModalFormOpen(true);
-          }}
-        />
-      ),
+  const [filters, setFilters] = useState<SortType>();
+  const [filteredList, setFilteredList] = useState([...classStudents]);
 
-      status: <Status useDefault status={item?.student?.status} />,
-      location: <UserLookupLocation item={item} idx={index} />,
-      type: <LocationBadge onDemand={item?.student?.onDemand} />,
-      dateAdded: item.createAt ? new Date(item.createAt).toLocaleDateString() : '--',
-      actions: (
-        <CommonActionsBtns
-          button1Action={() => {
-            user.role !== 'BLD' && setStudentProfileID(item.student.id);
-            user.role !== 'BLD' && setUserModalFormOpen(true);
-            user.role !== 'BLD' && setStudentIdToEdit(item.id);
-          }}
-          button2Action={() => onDelete(item.id)}
-        />
-      )
-    })
-  );
+  const {setSearchInput, searchInput} = useSearch(classStudents, ['name']);
+
+  const updateFilter = (filterName: SortType) => {
+    if (filterName === filters) {
+      setSearchInput({...searchInput, isActive: false});
+      setFilters(null);
+      setFilteredList([]);
+    } else {
+      setSearchInput({...searchInput, isActive: true});
+      const filtered = classStudents.filter(
+        (_d: any) => filterName === _d?.student?.status
+      );
+
+      setFilteredList(filtered);
+      setFilters(filterName);
+    }
+  };
+
+  const finalList = searchInput.isActive ? filteredList : classStudents;
+
+  const dataList = map(sortByName(addName(finalList)), (item: any, index: number) => ({
+    no: index + 1,
+    participantName: (
+      <StudentName
+        item={item}
+        user={user}
+        onClick={() => {
+          user.role !== 'BLD' && setStudentProfileID(item.student.id);
+          user.role !== 'BLD' && setUserModalFormOpen(true);
+        }}
+      />
+    ),
+
+    status: <Status useDefault status={item?.student?.status} />,
+    location: <UserLookupLocation item={item} idx={index} />,
+    type: <LocationBadge onDemand={item?.student?.onDemand} />,
+    dateAdded: item.createAt ? new Date(item.createAt).toLocaleDateString() : '--',
+    actions: (
+      <CommonActionsBtns
+        button1Action={() => {
+          user.role !== 'BLD' && setStudentProfileID(item.student.id);
+          user.role !== 'BLD' && setUserModalFormOpen(true);
+          user.role !== 'BLD' && setStudentIdToEdit(item.id);
+        }}
+        button2Action={() => onDelete(item.id)}
+      />
+    )
+  }));
 
   const dict = dictionary.TABLE;
 
@@ -622,16 +641,25 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
         }
       />
 
+      <Filters
+        loading={loading}
+        list={classStudents}
+        updateFilter={updateFilter}
+        filters={filters}
+      />
+
       {
         <div className="">
-          <div className="flex flex-col items-center justify-center m-auto px-4 mb-4">
-            <div className="py-2">
-              <p className={`${messages.isError ? 'text-red-600' : 'text-green-600'}`}>
-                {addMessage?.message}
-              </p>
+          {addMessage?.message && (
+            <div className="flex flex-col items-center justify-center m-auto px-4 mb-4">
+              <div className="py-2">
+                <p className={`${messages.isError ? 'text-red-600' : 'text-green-600'}`}>
+                  {addMessage?.message}
+                </p>
+              </div>
             </div>
-          </div>
-          {classStudents ? (
+          )}
+          {finalList ? (
             <Fragment>
               <Table {...tableConfig} />
               {messages.show && (

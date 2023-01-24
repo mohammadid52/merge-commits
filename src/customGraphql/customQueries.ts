@@ -43,6 +43,7 @@ export const getDashboardData = /* GraphQL */ `
               institutionID
               classID
               teacherAuthID
+              status
               teacherEmail
               name
               maxPersons
@@ -5140,6 +5141,7 @@ export const attendanceByStudent = /* GraphQL */ `
         lesson {
           id
           title
+          type
         }
         room {
           id
