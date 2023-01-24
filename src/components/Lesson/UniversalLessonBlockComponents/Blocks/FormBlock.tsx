@@ -35,7 +35,8 @@ export const FormLabel = ({
 
   return (
     <label className={`text-base ${themeTextColor}`} htmlFor="label">
-      {numbered && index} {label} <RequiredMark isRequired={required} />
+      {numbered && index} <span dangerouslySetInnerHTML={{__html: label}}></span>{' '}
+      <RequiredMark isRequired={required} />
     </label>
   );
 };

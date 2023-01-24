@@ -168,6 +168,7 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
 
   const getClassList = (): any => {
     let modifiedClassList: any[] = [];
+    let uniqIds: string[] = [];
 
     homeData &&
       homeData.length > 0 &&
@@ -184,15 +185,16 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
           const modifiedItem = {
             ..._item,
             roomName: _item?.name,
+            curriculumName: curriculum?.name,
             bannerImage: image,
             teacherProfileImg,
             roomIndex: index
           };
 
-          // if (!uniqIds.includes(curriculum?.id)) {
-          //   uniqIds.push(curriculum?.id);
-          // }
-          modifiedClassList.push(modifiedItem);
+          if (!uniqIds.includes(curriculum?.id)) {
+            uniqIds.push(curriculum?.id);
+            modifiedClassList.push(modifiedItem);
+          }
         }
       });
 
@@ -267,7 +269,7 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
                   title={`Your Team`}
                   fontSize="lg"
                   fontStyle="semibold"
-                  extraContainerClass="lg:max-w-192 md:max-w-none 2xl:max-w-256"
+                  extraContainerClass="lg:max-w-192 px-6 md:max-w-none 2xl:max-w-256"
                   borderBottom
                   extraClass="leading-6 text-gray-900"
                 />

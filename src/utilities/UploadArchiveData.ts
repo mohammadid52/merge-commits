@@ -436,7 +436,7 @@ const CreateOrUpdateData = async (input: any[]) => {
   try {
     input.map(async (data: any) => {
       const getData: any = await API.graphql(
-        graphqlOperation(queries.getArchiveSurveyDataSql, {
+        graphqlOperation(queries.getArchiveSurveyDataSQL, {
           AuthId: data.AuthId,
           Email: data.Email
         })
@@ -444,7 +444,7 @@ const CreateOrUpdateData = async (input: any[]) => {
       const ArchiveData = getData.data.getArchiveSurveyDataSQL;
       if (ArchiveData) {
         await API.graphql(
-          graphqlOperation(mutations.updateArchiveSurveyDataSql, {
+          graphqlOperation(mutations.updateArchiveSurveyDataSQL, {
             input: {
               id: ArchiveData.id,
               ...data
@@ -453,7 +453,7 @@ const CreateOrUpdateData = async (input: any[]) => {
         );
       } else {
         await API.graphql(
-          graphqlOperation(mutations.createArchiveSurveyDataSql, {
+          graphqlOperation(mutations.createArchiveSurveyDataSQL, {
             input: {
               ...data
             }

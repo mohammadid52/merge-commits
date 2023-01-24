@@ -12,6 +12,7 @@ interface SectionTitleProps {
   withButton?: React.ReactElement;
   borderBottom?: boolean;
   shadowOff?: boolean;
+  bgColor?: string;
 }
 
 const SectionTitleV3: React.FC<SectionTitleProps> = (sectProps: SectionTitleProps) => {
@@ -24,7 +25,8 @@ const SectionTitleV3: React.FC<SectionTitleProps> = (sectProps: SectionTitleProp
     borderBottom = false,
     fontSize = 'lg',
     fontStyle = 'semibold',
-    shadowOff = false
+    shadowOff = false,
+    bgColor = 'bg-white'
   } = sectProps;
   const {theme} = useContext(GlobalContext);
 
@@ -36,7 +38,7 @@ const SectionTitleV3: React.FC<SectionTitleProps> = (sectProps: SectionTitleProp
         borderBottom
           ? `px-0 border-b-0 border-gray-200 ${
               shadowOff ? '' : 'customShadow'
-            } rounded-t-xl bg-white mb-0`
+            } rounded-t-xl ${bgColor} mb-0`
           : ''
       } ${extraContainerClass} `}>
       <div className={`w-auto`}>

@@ -1,12 +1,11 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import {useULBContext} from '@contexts/UniversalLessonBuilderContext';
 import useAuth from '@customHooks/useAuth';
-import {logError, updatePageState} from '@graphql/functions';
+import {getDictionaries, logError, updatePageState} from '@graphql/functions';
 import {StudentPageInput} from '@interfaces/UniversalLessonInterfaces';
 import {setPageTitle} from '@utilities/functions';
 import {PersonLessonsData, UpdatePersonLessonsDataInput, UserPageState} from 'API';
 import Noticebar from 'components/Noticebar/Noticebar';
-import {GlobalContext} from 'contexts/GlobalContext';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import * as customMutations from 'customGraphql/customMutations';
 import * as customQueries from 'customGraphql/customQueries';
 import * as customSubscriptions from 'customGraphql/customSubscriptions';
@@ -14,7 +13,7 @@ import useNotifications from 'customHooks/notifications';
 import * as mutations from 'graphql/mutations';
 import * as queries from 'graphql/queries';
 import {isEmpty, update} from 'lodash';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useHistory, useParams, useRouteMatch} from 'react-router-dom';
 import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
 import {v4 as uuidV4} from 'uuid';
@@ -39,13 +38,12 @@ export interface ILessonSurveyApp {
 
 const Lesson = () => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
-  const gContext = useContext(GlobalContext);
+  const gContext = useGlobalContext();
+
   const lessonState = gContext.lessonState;
   const lessonDispatch = gContext.lessonDispatch;
   const {notifications} = useNotifications('lesson');
   const {notifications: inputNotifications} = useNotifications('input');
-
-  const {scanLessonAndFindComplicatedWord} = useULBContext();
 
   const urlParams: any = useParams();
 
@@ -71,12 +69,20 @@ const Lesson = () => {
             }
           ];
         }, []);
-        const updatedLessonPlan = scanLessonAndFindComplicatedWord(lessonPlan);
-        setLocalStorageData('lesson_plan', updatedLessonPlan);
+
+        // const dictionaries = await getDictionaries();
+
+        // const updatedLessonPlan = scanLessonAndFindComplicatedWord(
+        //   response.lessonPlan,
+        //   dictionaries
+        // );
+
+        setLocalStorageData('lesson_plan', lessonPlan);
         lessonDispatch({
           type: 'SET_LESSON_DATA',
-          payload: {...response, lessonPlan: updatedLessonPlan}
+          payload: {...response, lessonPlan: response.lessonPlan}
         });
+
         setLoaded(true);
       }
     } catch (e) {

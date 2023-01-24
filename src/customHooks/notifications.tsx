@@ -76,7 +76,8 @@ const useLessonControlNotifications = () => {
   const getPageLabel = (pageID: string) => {
     const localLessonPlan = getLocalStorageData('lesson_plan');
     const findPage =
-      localLessonPlan && localLessonPlan.find((pageObj: any) => pageObj.id === pageID);
+      localLessonPlan &&
+      localLessonPlan.find((pageObj: any) => pageObj && pageObj?.id === pageID);
     if (findPage && pageID) {
       return findPage.label;
     }
@@ -250,7 +251,8 @@ const useLessonNotifications = () => {
   const getPageLabel = (pageID: string) => {
     const localLessonPlan = getLocalStorageData('lesson_plan');
     const findPage =
-      localLessonPlan && localLessonPlan.find((pageObj: any) => pageObj.id === pageID);
+      localLessonPlan &&
+      localLessonPlan.find((pageObj: any) => pageObj && pageObj?.id === pageID);
     if (findPage && pageID) {
       return findPage.label;
     }

@@ -84,16 +84,13 @@ const StudentsTiles = (props: {
     <>
       <SectionTitleV3
         title={title}
-        extraContainerClass="lg:max-w-192 md:max-w-none 2xl:max-w-256 px-6"
+        extraContainerClass="lg:max-w-192 md:max-w-none px-6 2xl:max-w-256 "
         fontSize="xl"
         fontStyle="semibold"
         borderBottom
-        extraClass="leading-6 text-gray-900"
+        extraClass="leading-6  text-gray-900"
         withButton={
-          <div
-            className={`flex items-center w-auto justify-${
-              list.length > 12 && isTeacher ? 'end' : 'end'
-            } `}>
+          <div className={`flex items-center w-auto justify-end`}>
             {isTeacher && (
               <div className="w-auto">
                 <SearchInput

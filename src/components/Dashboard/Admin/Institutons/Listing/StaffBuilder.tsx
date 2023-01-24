@@ -29,11 +29,11 @@ import AddButton from 'atoms/Buttons/AddButton';
 import Modal from 'atoms/Modal';
 
 import Filters, {SortType} from '@components/Atoms/Filters';
+import CommonActionsBtns from '@components/MicroComponents/CommonActionsBtns';
 import StaffBuilderName from '@components/MicroComponents/StaffBuilderName';
 import useAuth from '@customHooks/useAuth';
 import usePagination from '@customHooks/usePagination';
 import {logError} from '@graphql/functions';
-import Tooltip from 'atoms/Tooltip';
 import Registration from 'components/Dashboard/Admin/UserManagement/Registration';
 import {map} from 'lodash';
 import {Status} from '../../UserManagement/UserStatus';
@@ -45,18 +45,17 @@ interface StaffBuilderProps {
 }
 
 const StaffBuilder = (props: StaffBuilderProps) => {
-  const {instName, instituteId} = props;
+  const {instituteId} = props;
 
   // ~~~~~~~~~~ CONTEXT SPLITTING ~~~~~~~~~~ //
   const gContext = useGlobalContext();
   const userLanguage = gContext.userLanguage;
-  const clientKey = gContext.clientKey;
+
   const state = gContext.state;
   const user = gContext.state.user;
-  const theme = gContext.theme;
 
   // ~~~~~~~~~~~~~~~~ OTHER ~~~~~~~~~~~~~~~~ //
-  const themeColor = getAsset(clientKey, 'themeClassName');
+
   const history = useHistory();
   const match = useRouteMatch();
   const {BUTTONS, RegistrationDict, staffBuilderDict} = useDictionary();
@@ -443,7 +442,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
         searchTerm={searchInput.value}
       />
     ),
-    instituteName: user.isSuperAdmin && (
+    institutionName: user.isSuperAdmin && (
       <div
         className="cursor-pointer w-auto"
         onClick={() => redirectToInstitution(item.institution?.id)}>
@@ -459,7 +458,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
       statusEdit === item.id ? (
         <div className="">
           <Selector
-            selectedItem={item.status}
+            selectedItem={item?.status?.toUpperCase()}
             placeholder="Select Status"
             dropdownWidth="w-48"
             list={statusList}
@@ -469,25 +468,18 @@ const StaffBuilder = (props: StaffBuilderProps) => {
       ) : (
         <Status useDefault status={item.status} />
       ),
-    action: (
-      <div className="">
-        {statusEdit === item.id ? (
-          <span
-            className={`w-6 h-6 flex items-center cursor-pointer ${theme.textColor[themeColor]}`}
-            onClick={() => setStatusEdit('')}>
-            {updateStatus ? 'updating...' : 'Cancel'}
-          </span>
-        ) : (
-          <span
-            className={`w-6 h-6 flex items-center cursor-pointer ${theme.textColor[themeColor]}`}
-            onClick={() => setStatusEdit(item.id)}>
-            <Tooltip text="Click to edit status" placement="left">
-              Edit
-            </Tooltip>
-          </span>
-        )}
-      </div>
-    )
+    actions:
+      statusEdit === item.id ? (
+        <CommonActionsBtns
+          button1Action={() => setStatusEdit('')}
+          button1Label={updateStatus ? 'updating...' : 'Cancel'}
+        />
+      ) : (
+        <CommonActionsBtns
+          button1Label="Edit"
+          button1Action={() => setStatusEdit(item.id)}
+        />
+      )
   }));
 
   const tableConfig = {
@@ -501,10 +493,9 @@ const StaffBuilder = (props: StaffBuilderProps) => {
     ],
     dataList,
     config: {
-      dark: false,
       isFirstIndex: true,
       isLastAction: true,
-      headers: {textColor: 'text-white'},
+
       dataList: {
         loading: dataLoading,
         emptyText: 'No staff found',
@@ -520,11 +511,10 @@ const StaffBuilder = (props: StaffBuilderProps) => {
           }
         },
         customWidth: {
-          name: 'w-72 -ml-24'
+          name: 'w-72 -ml-8',
+          no: 'w-20'
         },
-        maxHeight: 'max-h-196',
-        pattern: 'striped',
-        patternConfig: {firstColor: 'bg-gray-100', secondColor: 'bg-gray-200'}
+        maxHeight: 'max-h-196'
       }
     }
   };

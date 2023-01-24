@@ -2,8 +2,13 @@ import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {Storage} from '@aws-amplify/storage';
 import {formatPageName} from '@components/Dashboard/Admin/UserManagement/List';
 import {setPageTitle} from '@utilities/functions';
-import {CreateErrorLogInput, UserPageState} from 'API';
+import {CreateDicitionaryInput, CreateErrorLogInput, UserPageState} from 'API';
+import * as mutations from 'graphql/mutations';
+import * as queries from 'graphql/queries';
 import * as customMutations from 'customGraphql/customMutations';
+import {setLocalStorageData} from '@utilities/localStorage';
+import {isEmpty} from 'lodash';
+import {v4 as uuidV4} from 'uuid';
 
 interface S3UploadOptions {
   onSuccess?: (result: Object) => void;
@@ -87,7 +92,7 @@ export const updatePageState = async (
     setPageTitle(formatPageName(pageState));
   }
 
-  if (auth.pageState !== pageState) {
+  if (auth.pageState !== pageState && Boolean(auth?.email && auth?.authId)) {
     try {
       const input = {
         authId: auth.authId,
@@ -136,4 +141,48 @@ export const logError = async (
   // } else {
   //   console.error(error);
   // }
+};
+
+export const addNewDictionary = async (formData: CreateDicitionaryInput) => {
+  try {
+    const input: CreateDicitionaryInput = {
+      authID: formData.authID,
+      email: formData.email,
+      id: uuidV4(),
+      englishPhrase: formData.englishPhrase,
+      englishDefinition: formData.englishDefinition,
+      englishAudio: Boolean(formData?.englishAudio) ? formData.englishAudio : '',
+      translation: isEmpty(formData.translation) ? [] : formData.translation
+    };
+
+    const res: any = await API.graphql(
+      graphqlOperation(mutations.createDicitionary, {input})
+    );
+  } catch (error) {
+    console.error(error);
+    logError(
+      error,
+      {authId: formData.authID, email: formData.email},
+      'functions @addNewDictionary'
+    );
+  } finally {
+  }
+};
+
+export const getDictionaries = async () => {
+  try {
+    const res: any = await API.graphql(graphqlOperation(queries.listDicitionaries));
+
+    const data = res.data.listDicitionaries.items;
+    if (data && data.length > 0) {
+      setLocalStorageData('dictionaries', data);
+      return data;
+    } else {
+      return [];
+    }
+  } catch (error) {
+    console.error(error);
+    return [];
+  } finally {
+  }
 };

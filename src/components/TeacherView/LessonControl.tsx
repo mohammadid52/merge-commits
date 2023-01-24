@@ -1,5 +1,6 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {useULBContext} from '@contexts/UniversalLessonBuilderContext';
+import {getDictionaries} from '@graphql/functions';
 import {UniversalLessonStudentData as UniversalLessonStudentDataFromAPI} from 'API';
 import {GlobalContext} from 'contexts/GlobalContext';
 import {useNotifications} from 'contexts/NotificationContext';
@@ -11,6 +12,7 @@ import {
   StudentPageInput,
   UniversalLessonStudentData
 } from 'interfaces/UniversalLessonInterfaces';
+import {isEmpty} from 'lodash';
 import React, {Suspense, useContext, useEffect, useState} from 'react';
 import {useParams} from 'react-router';
 import {useHistory, useRouteMatch} from 'react-router-dom';
@@ -40,7 +42,9 @@ export const checkIfLessonIsCompleted = (roomData: any, lessonID: string) => {
 const LessonControl = () => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
   const gContext = useContext(GlobalContext);
+
   const dispatch = gContext.dispatch;
+
   const lessonState = gContext.lessonState;
   const lessonDispatch = gContext.lessonDispatch;
   const controlState = gContext.controlState;
@@ -68,8 +72,6 @@ const LessonControl = () => {
       return !fullscreen;
     });
   };
-
-  const {scanLessonAndFindComplicatedWord} = useULBContext();
 
   // view: 'lesson' | 'lessonInfo' | 'profile';
   const [rightView, setRightView] = useState<{
@@ -349,11 +351,17 @@ const LessonControl = () => {
         ];
       }, []);
 
-      const updatedLessonPlan = scanLessonAndFindComplicatedWord(lessonPlan);
-      setLocalStorageData('lesson_plan', updatedLessonPlan);
+      // const dictionaries = await getDictionaries();
+
+      // const updatedLessonPlan = scanLessonAndFindComplicatedWord(
+      //   response.lessonPlan,
+      //   dictionaries
+      // );
+
+      setLocalStorageData('lesson_plan', lessonPlan);
       lessonDispatch({
         type: 'SET_LESSON_DATA',
-        payload: {...response, lessonPlan: updatedLessonPlan}
+        payload: {...response, lessonPlan: response.lessonPlan}
       });
     } catch (e) {
       console.error('getSyllabusLesson() - error fetching lesson', e);

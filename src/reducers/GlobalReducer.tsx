@@ -1,5 +1,5 @@
 // import React from 'react';
-import {PersonStatus, UserPageState} from 'API';
+import {Dicitionary, PersonStatus, UserPageState} from 'API';
 import {globalStateType, globalState} from 'state/GlobalState';
 
 type globalActions =
@@ -118,6 +118,10 @@ type globalActions =
       payload: {
         [key: string]: any;
       };
+    }
+  | {
+      type: 'SET_DICTIONARIES';
+      payload: Dicitionary[];
     };
 
 export const globalReducer = (state: globalStateType, action: globalActions) => {
@@ -129,6 +133,11 @@ export const globalReducer = (state: globalStateType, action: globalActions) => 
           ...state.sidebar,
           [action.payload.section]: action.payload.data
         }
+      };
+    case 'SET_DICTIONARIES':
+      return {
+        ...state,
+        dictionaries: action.payload
       };
     case 'UPDATE_ROOM':
       return {

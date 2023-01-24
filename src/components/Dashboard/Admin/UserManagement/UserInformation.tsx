@@ -1,20 +1,24 @@
+import {getAsset} from 'assets';
 import Buttons from 'atoms/Buttons';
-import Status from 'atoms/Status';
 import Modal from 'atoms/Modal';
+import Status from 'atoms/Status';
+import axios from 'axios';
 import {classNames} from 'components/Lesson/UniversalLessonBuilder/UI/FormElements/TextInput';
-import {GlobalContext} from 'contexts/GlobalContext';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import LessonLoading from 'lesson/Loading/ComponentLoading';
-import {requestResetPassword} from 'utilities/urls';
-import {getAsset} from 'assets';
-import axios from 'axios';
-import React, {Fragment, useContext, useState} from 'react';
+import React, {Fragment, useState} from 'react';
 import {FiAlertCircle} from 'react-icons/fi';
 import {IoLockClosed} from 'react-icons/io5';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
+import {requestResetPassword} from 'utilities/urls';
 import {UserInfo} from './User';
 import UserRole from './UserRole';
 
+const statusDate = (dateValue: string) => {
+  const date = new Date(dateValue);
+  return date.getMonth() + 1 + '/' + date.getDate() + '/' + date.getFullYear();
+};
 interface UserInfoProps {
   user: UserInfo;
   status: string;
@@ -32,8 +36,8 @@ const UserInformation = ({
   tab,
   setTab
 }: UserInfoProps) => {
-  const {theme, userLanguage, clientKey, state} = useContext(GlobalContext);
-  const {UserInformationDict} = useDictionary(clientKey);
+  const {theme, userLanguage, clientKey} = useGlobalContext();
+  const {UserInformationDict} = useDictionary();
   const [loading, setLoading] = useState(false);
   const [resetPasswordServerResponse, setResetPasswordServerResponse] = useState({
     show: false,
@@ -192,9 +196,19 @@ const UserInformation = ({
                     {UserInformationDict[userLanguage]['status']}
                   </dt>
                   <dd className="mt-2 text-base leading-5 text-gray-900">
-                    <Status status={user.status} />
+                    <Status status={user.status} />{' '}
+                    {Boolean(user.inactiveStatusDate) && (
+                      <span
+                        className="text-xs"
+                        title={`Status changed to inactive on ${statusDate(
+                          user.inactiveStatusDate
+                        )}`}>
+                        ({statusDate(user.inactiveStatusDate)})
+                      </span>
+                    )}
                   </dd>
                 </div>
+
                 <div className="sm:col-span-1 p-2">
                   <dt className="text-sm leading-5 font-regular text-gray-600">
                     {UserInformationDict[userLanguage]['email']}
@@ -297,35 +311,6 @@ const UserInformation = ({
             </div>
           </Modal>
         )}
-
-        {/* TODO: NEED TO CONFIRM FOR GIVING ACCESS TO ADMIN ON PROFILE BUILDER. */}
-        {/* <div className="bg-white shadow-5 overflow-hidden sm:rounded-lg">
-              <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
-                <h3 className="text-lg leading-6 font-medium text-gray-900">
-                  Institution Information
-                </h3>
-              </div>
-              <div className="px-4 py-5 sm:px-6">
-                <dl className="grid grid-cols-1 gap-x-4 gap-y-4 sm:grid-cols-2">
-                  <div className="sm:col-span-1 p-2">
-                    <dt className="text-base leading-5 font-medium text-gray-500">
-                      Institution
-                    </dt>
-                    <dd className="mt-2 text-base leading-5 text-gray-900">
-                      {`${user.institution ? user.institution : 'not set'}`}
-                    </dd>
-                  </div>
-                  <div className="sm:col-span-1 p-2">
-                    <dt className="text-base leading-5 font-medium text-gray-500">
-                      Grade
-                    </dt>
-                    <dd className="mt-2 text-base leading-5 text-gray-900">
-                      {`${user.grade ? user.grade : 'not set'}`}
-                    </dd>
-                  </div>
-                </dl>
-              </div>
-            </div> */}
       </div>
     );
   }

@@ -152,7 +152,8 @@ const Modal: React.FC<ModalProps> = (modalProps: ModalProps) => {
               </button>
             </div>
           )}
-          <div className={`${theme.modals[hidePadding ? 'hideBg' : 'content']}`}>
+          <div
+            className={`bg-gray-200  relative flex flex-col border-white border-4 rounded-xl customShadow  w-auto`}>
             {showHeader && (
               <ModalHeader
                 titleButton={titleButton}

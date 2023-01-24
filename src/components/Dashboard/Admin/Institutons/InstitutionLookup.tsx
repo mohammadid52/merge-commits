@@ -1,26 +1,24 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import BreadcrumbsWithBanner from 'atoms/BreadcrumbsWithBanner';
-import {useQuery} from 'customHooks/urlParam';
+import AddButton from '@components/Atoms/Buttons/AddButton';
+import PageWrapper from '@components/Atoms/PageWrapper';
+import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
+import CommonActionsBtns from '@components/MicroComponents/CommonActionsBtns';
+import InstituteName from '@components/MicroComponents/InstituteName';
+import Table from '@components/Molecules/Table';
+import usePagination from '@customHooks/usePagination';
+import {logError} from '@graphql/functions';
 import {XIcon} from '@heroicons/react/outline';
-import React, {Fragment, useContext, useEffect, useState} from 'react';
-import {AiOutlineArrowDown, AiOutlineArrowUp} from 'react-icons/ai';
-import {IoBusinessSharp} from 'react-icons/io5';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
-import {useHistory, useRouteMatch} from 'react-router-dom';
+import {formatPhoneNumber, getHostNameFromUrl} from '@utilities/strings';
 import {getAsset} from 'assets';
+import BreadcrumbsWithBanner from 'atoms/BreadcrumbsWithBanner';
+import SearchInput from 'atoms/Form/SearchInput';
 import {GlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
-import Buttons from 'atoms/Buttons';
-import SearchInput from 'atoms/Form/SearchInput';
-import Selector from 'atoms/Form/Selector';
-import PageCountSelector from 'atoms/PageCountSelector';
-import Pagination from 'atoms/Pagination';
-import InstitutionRow from './InstitutionRow';
-import InstitutionRowLoader from './InstitutionRowLoader';
-import {logError} from '@graphql/functions';
-import ListBottomBar from '@components/Molecules/ListBottomBar';
-import usePagination from '@customHooks/usePagination';
+import {useQuery} from 'customHooks/urlParam';
+import {map, orderBy} from 'lodash';
+import React, {useContext, useEffect, useState} from 'react';
+import {useHistory, useRouteMatch} from 'react-router-dom';
 
 /**
  * This component represents the bulk code of the institutions-lookup/all-institutions page
@@ -41,7 +39,6 @@ const InstitutionLookup: React.FC = () => {
   const [status, setStatus] = useState('');
   const [institutionsData, setInstitutionsData] = useState([]);
 
-  const [userCount, setUserCount] = useState(10);
   const [totalInstNum, setTotalInstNum] = useState(0);
   const [showAlert, setShowAlert] = useState(false);
 
@@ -50,7 +47,11 @@ const InstitutionLookup: React.FC = () => {
     allAsProps,
     setTotalPages,
     setCurrentList,
-    resetPagination
+    resetPagination,
+    setFirstPage,
+    setLastPage,
+    getIndex,
+    pageCount
   } = usePagination(institutionsData || [], totalInstNum || 0);
 
   const [searchInput, setSearchInput] = useState({
@@ -72,16 +73,16 @@ const InstitutionLookup: React.FC = () => {
     }
   ];
 
-  const sortByList = [
-    {id: 1, name: `${InstitutionDict[userLanguage]['TABLE']['NAME']}`, value: 'name'},
-    {id: 2, name: `${InstitutionDict[userLanguage]['TABLE']['TYPE']}`, value: 'type'},
-    {
-      id: 3,
-      name: `${InstitutionDict[userLanguage]['TABLE']['WEBSITE']}`,
-      value: 'website'
-    },
-    {id: 4, name: `${InstitutionDict[userLanguage]['TABLE']['CONTACT']}`, value: 'phone'}
-  ];
+  // const sortByList = [
+  //   {id: 1, name: `${InstitutionDict[userLanguage]['TABLE']['NAME']}`, value: 'name'},
+  //   {id: 2, name: `${InstitutionDict[userLanguage]['TABLE']['TYPE']}`, value: 'type'},
+  //   {
+  //     id: 3,
+  //     name: `${InstitutionDict[userLanguage]['TABLE']['WEBSITE']}`,
+  //     value: 'website'
+  //   },
+  //   {id: 4, name: `${InstitutionDict[userLanguage]['TABLE']['CONTACT']}`, value: 'phone'}
+  // ];
 
   const addNewInstitution = () => {
     history.push(`${match.url}/add`);
@@ -120,14 +121,27 @@ const InstitutionLookup: React.FC = () => {
       } else {
         instituteList = await fetchInstListForAdmin();
       }
-      const totalListPages = Math.floor(instituteList.length / userCount);
+      const totalListPages = Math.floor(instituteList.length / pageCount);
+
       setTotalPages(
-        totalListPages * userCount === instituteList.length
+        totalListPages * pageCount === instituteList.length
           ? totalListPages
           : totalListPages + 1
       );
+
+      setFirstPage(true);
+      setLastPage(!(instituteList.length > pageCount));
+
+      setTotalNum(instituteList.length);
+
       setTotalInstNum(instituteList.length);
-      setInstitutionsData(instituteList);
+
+      instituteList = instituteList.map((inst: any) => ({
+        ...inst,
+        name: inst.name
+      }));
+
+      setInstitutionsData(orderBy(instituteList, ['name'], 'asc'));
       setStatus('done');
     } catch (error) {
       console.error(error);
@@ -163,12 +177,12 @@ const InstitutionLookup: React.FC = () => {
     }
   };
 
-  const toggleSortDimension = () => {
-    setSortingType({
-      ...sortingType,
-      asc: !sortingType.asc
-    });
-  };
+  // const toggleSortDimension = () => {
+  //   setSortingType({
+  //     ...sortingType,
+  //     asc: !sortingType.asc
+  //   });
+  // };
 
   const removeSearchAction = () => {
     resetPagination();
@@ -185,13 +199,13 @@ const InstitutionLookup: React.FC = () => {
     setInstitutionsData(newInstList);
   };
 
-  const setSortingValue = (str: string, name: string) => {
-    setSortingType({
-      ...sortingType,
-      value: str,
-      name: name
-    });
-  };
+  // const setSortingValue = (str: string, name: string) => {
+  //   setSortingType({
+  //     ...sortingType,
+  //     value: str,
+  //     name: name
+  //   });
+  // };
 
   useEffect(() => {
     if (alert) {
@@ -207,142 +221,127 @@ const InstitutionLookup: React.FC = () => {
     fetchSortedList();
   }, [sortingType.value, sortingType.asc]);
 
-  // if (status !== 'done') {
-  //   return <LessonLoading />;
-  // }
-  {
-    return (
-      <div className={`w-full h-full`}>
-        {/* Header section */}
-        <BreadcrumbsWithBanner
-          items={breadCrumbsList}
-          bannerImage={bannerImage}
-          title={'Institutions'}
-        />
-        {/* <BreadCrums items={breadCrumsList} /> */}
-        <div className="px-2 py-8 md:p-8">
-          {/* <div className="flex justify-between"> */}
-          {/* <SectionTitle
+  const [totalNum, setTotalNum] = useState(0);
+
+  const handleInstitutionView = (id: string) => {
+    history.push(`${match.url}/institution/${id}/edit`);
+  };
+
+  const dictionary = InstitutionDict[userLanguage]['TABLE'];
+
+  const dataList = map(currentList, (instituteObject, idx) => ({
+    onClick: () => handleInstitutionView(instituteObject.id),
+    no: getIndex(idx),
+    instituteName: (
+      <InstituteName
+        searchTerm={searchInput.value}
+        name={instituteObject.name}
+        image={instituteObject.image}
+        id={instituteObject.id}
+      />
+    ),
+    name: instituteObject.name,
+    type: instituteObject.type || '--',
+    website: instituteObject.website ? getHostNameFromUrl(instituteObject.website) : '--',
+    contactNo: instituteObject.phone ? formatPhoneNumber(instituteObject.phone) : '--',
+    actions: (
+      <CommonActionsBtns
+        button1Label="Edit"
+        button1Action={() => handleInstitutionView(instituteObject.id)}
+      />
+    )
+  }));
+
+  const tableConfig = {
+    headers: [
+      'No',
+      dictionary['NAME'],
+      dictionary['TYPE'],
+      dictionary['WEBSITE'],
+      dictionary['CONTACT'],
+      dictionary['ACTION']
+    ],
+    dataList,
+    config: {
+      isFirstIndex: true,
+      isLastAction: true,
+
+      dataList: {
+        loading: status !== 'done',
+        emptyText: dictionary['NORESULT'],
+        pagination: {
+          showPagination: !searchInput.isActive && totalNum > 0,
+          config: {
+            allAsProps
+          }
+        },
+        customWidth: {
+          instituteName: 'w-72 -ml-8',
+          no: 'w-20'
+        },
+        maxHeight: 'max-h-196'
+      }
+    }
+  };
+
+  return (
+    <div className={`w-full h-full`}>
+      {/* Header section */}
+      <BreadcrumbsWithBanner
+        items={breadCrumbsList}
+        bannerImage={bannerImage}
+        title={'Institutions'}
+      />
+      {/* <BreadCrums items={breadCrumsList} /> */}
+
+      <div className="flex m-auto justify-center p-8">
+        <PageWrapper>
+          <div className="px-4">
+            <SectionTitleV3
               title={InstitutionDict[userLanguage]['TITLE']}
               subtitle={InstitutionDict[userLanguage]['SUBTITLE']}
-            /> */}
-          <div className="flex justify-end py-4 mb-2">
-            <SearchInput
-              value={searchInput.value}
-              onChange={setSearch}
-              onKeyDown={searchUserFromList}
-              closeAction={removeSearchAction}
-              style="mr-4 w-auto"
-            />
-            <Selector
-              placeholder={InstitutionDict[userLanguage]['SORTBY']}
-              list={sortByList}
-              selectedItem={sortingType.name}
-              onChange={setSortingValue}
-              btnClass="rounded-r-none border-r-none"
-              additionalClass="w-80"
-              arrowHidden={true}
-            />
-            <button
-              className={`w-16 bg-gray-100 mr-4 p-3 border-gray-400 border-0 rounded border-l-none rounded-l-none ${theme.outlineNone} `}
-              onClick={toggleSortDimension}>
-              <IconContext.Provider
-                value={{size: '1.5rem', color: theme.iconColor[themeColor]}}>
-                {sortingType.asc ? <AiOutlineArrowUp /> : <AiOutlineArrowDown />}
-              </IconContext.Provider>
-            </button>
-            {state.user.role === 'SUP' && (
-              <Buttons
-                label={InstitutionDict[userLanguage]['BUTTON']['Add']}
-                onClick={addNewInstitution}
-                btnClass="mr-4"
-                Icon={IoBusinessSharp}
-              />
-            )}
-          </div>
-          {/* </div> */}
-          {showAlert && (
-            <div
-              className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
-              role="alert">
-              <span className="block sm:inline">
-                {'Click on institution to see information'}
-              </span>
-              <span
-                className="absolute top-0 bottom-0 right-0 px-4 py-3 w-auto cursor-pointer"
-                onClick={() => setShowAlert(false)}>
-                <XIcon className="h-6 w-6" aria-hidden="true" />
-              </span>
-            </div>
-          )}
-          {/* List / Table */}
-          <div className="flex flex-col">
-            <div className="-my-2 py-2">
-              <div className="white_back py-4 px-2 lg:px-8 mt-2 mb-8 align-middle rounded-lg border-b-0 border-gray-200 lg:w-full w-screen">
-                <div className="h-8/10 px-4 lg:w-full w-screen overflow-scroll lg:overflow-hidden">
-                  <div className="w-full flex justify-between border-b-0 border-gray-200 bg-gray-50">
-                    <div className="w-3/10 px-2 lg:px-8 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                      <span>{InstitutionDict[userLanguage]['TABLE']['NAME']}</span>
-                    </div>
-                    <div className="w-1.5/10 flex justify-left px-4 lg:px-8 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                      <span className="w-auto">
-                        {InstitutionDict[userLanguage]['TABLE']['TYPE']}
-                      </span>
-                    </div>
-                    <div className="w-3.5/10 flex justify-left px-4 lg:px-8 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                      <span className="w-auto">
-                        {InstitutionDict[userLanguage]['TABLE']['WEBSITE']}
-                      </span>
-                    </div>
-                    <div className="w-1.5/10 flex justify-left px-4 lg:px-8 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                      <span className="w-auto">
-                        {InstitutionDict[userLanguage]['TABLE']['CONTACT']}
-                      </span>
-                    </div>
-                    <div className="w-1/10 px-4 lg:px-8 flex justify-left py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                      {InstitutionDict[userLanguage]['TABLE']['ACTION']}
-                    </div>
-                  </div>
-                  {status !== 'done' ? (
-                    Array(10)
-                      .fill(' ')
-                      .map((_: any, index: number) => (
-                        <Fragment key={index}>
-                          <InstitutionRowLoader />
-                        </Fragment>
-                      ))
-                  ) : currentList?.length ? (
-                    currentList.map((instituteObject, i) => (
-                      <InstitutionRow
-                        key={`instituteRow${i}`}
-                        id={instituteObject.id}
-                        name={instituteObject.name}
-                        image={instituteObject.image}
-                        website={instituteObject.website}
-                        type={instituteObject.type}
-                        phone={instituteObject.phone}
-                      />
-                    ))
-                  ) : (
-                    <div className="flex p-12 mx-auto justify-center">
-                      {InstitutionDict[userLanguage]['TABLE']['NORESULT']}
-                    </div>
-                  )}
-                </div>
+              withButton={
+                <div className="flex w-auto justify-end mb-2">
+                  <SearchInput
+                    value={searchInput.value}
+                    onChange={setSearch}
+                    onKeyDown={searchUserFromList}
+                    closeAction={removeSearchAction}
+                    style="mr-4 w-auto"
+                  />
 
-                {/* Pagination And Counter */}
-                <div className="flex justify-center my-4">
-                  {!searchInput.isActive && Boolean(currentList?.length) && (
-                    <ListBottomBar {...allAsProps} />
+                  {state.user.role === 'SUP' && (
+                    <AddButton
+                      label={InstitutionDict[userLanguage]['BUTTON']['Add']}
+                      onClick={addNewInstitution}
+                    />
                   )}
                 </div>
+              }
+            />
+
+            {/* </div> */}
+            {showAlert && (
+              <div
+                className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+                role="alert">
+                <span className="block sm:inline">
+                  {'Click on institution to see information'}
+                </span>
+                <span
+                  className="absolute top-0 bottom-0 right-0 px-4 py-3 w-auto cursor-pointer"
+                  onClick={() => setShowAlert(false)}>
+                  <XIcon className="h-6 w-6" aria-hidden="true" />
+                </span>
               </div>
-            </div>
+            )}
+            {/* List / Table */}
+            <Table {...tableConfig} />
           </div>
-        </div>
+        </PageWrapper>
       </div>
-    );
-  }
+    </div>
+  );
 };
 
 export default InstitutionLookup;

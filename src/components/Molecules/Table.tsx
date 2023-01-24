@@ -1,8 +1,8 @@
 import ErrorBoundary from '@components/Error/ErrorBoundary';
-import {isEmpty} from 'lodash';
+import {isEmpty, orderBy} from 'lodash';
 import camelCase from 'lodash/camelCase';
 import map from 'lodash/map';
-import React, {forwardRef} from 'react';
+import React, {forwardRef, useEffect, useState} from 'react';
 import {DragDropContext, Draggable, Droppable} from 'react-beautiful-dnd';
 import '../../style/atoms/_table.scss';
 import ListBottomBar, {ListBottomBar as IListBottomBar} from './ListBottomBar';
@@ -22,6 +22,7 @@ interface IConfig {
     customWidth?: {[key: string]: any};
     maxHeight?: string;
     textColor?: string;
+
     droppable?: {
       isDroppable: boolean;
       onDragEnd: (result: any) => void;
@@ -96,16 +97,32 @@ const DroppableList = ({
   );
 };
 
+const getPattern = (config: IConfig) => config?.dataList?.pattern || 'striped';
+const getPatternColor = (config: IConfig) => {
+  const patternConfig = config?.dataList?.patternConfig;
+  if (patternConfig !== undefined) {
+    return {
+      firstColor: patternConfig.firstColor,
+      secondColor: patternConfig.secondColor
+    };
+  } else {
+    return {
+      firstColor: 'bg-gray-100',
+      secondColor: 'bg-gray-200'
+    };
+  }
+};
+
 const LoadingItem = ({headers, config, customWidth, idx}: any) => {
   return (
     <div
       className={`flex justify-between ${
         config?.dataList?.bgColor
           ? config?.dataList?.bgColor
-          : config?.dataList?.pattern === 'striped'
+          : getPattern(config) === 'striped'
           ? idx % 2 === 0
-            ? `${config?.dataList?.patternConfig.firstColor}`
-            : `${config?.dataList?.patternConfig.secondColor}`
+            ? getPatternColor(config).firstColor
+            : getPatternColor(config).secondColor
           : 'bg-transparent'
       }`}>
       {map(headers, (header, idx: number) => {
@@ -144,10 +161,10 @@ const ListItem = forwardRef<any, IListItem>(
         className={`flex relative ${item?.markRed ? 'mark-red' : ''} justify-between ${
           config?.dataList?.bgColor
             ? config?.dataList?.bgColor
-            : config?.dataList?.pattern === 'striped'
+            : getPattern(config) === 'striped'
             ? idx % 2 === 0
-              ? `${config?.dataList?.patternConfig.firstColor}`
-              : `${config?.dataList?.patternConfig.secondColor}`
+              ? getPatternColor(config).firstColor
+              : getPatternColor(config).secondColor
             : 'bg-transparent'
         }`}>
         {map(headers, (header, _idx) => {
@@ -160,6 +177,10 @@ const ListItem = forwardRef<any, IListItem>(
           const className = `${
             config?.dataList?.textColor || 'text-gray-500'
           } px-6 py-4 ${
+            headers.length - 1 === _idx && header.toLowerCase() === 'actions'
+              ? 'flex items-center justify-end'
+              : ''
+          } ${
             _customWidth ||
             (config?.isFirstIndex && _idx === 0
               ? 'w-20'
@@ -198,7 +219,7 @@ const ListItem = forwardRef<any, IListItem>(
 const Table = ({
   dataList,
   headers,
-  config = {dark: true, dataList: {customWidth: {}}}
+  config = {dark: false, dataList: {customWidth: {}, pattern: 'striped'}}
 }: {
   config?: IConfig;
   headers: string[];
@@ -238,7 +259,7 @@ const Table = ({
                       const customWidth = _customWidth[lowerHeader];
 
                       const className = `${
-                        config?.headers?.textColor || 'text-gray-500'
+                        config?.headers?.textColor || 'text-white'
                       } px-6 py-3 ${
                         customWidth ||
                         (config?.isFirstIndex && idx === 0
@@ -248,6 +269,10 @@ const Table = ({
                           : config?.isLastAction && idx === _headers.length - 1
                           ? 'w-20'
                           : '')
+                      }  ${
+                        _headers.length - 1 === idx && header.toLowerCase() === 'actions'
+                          ? 'flex items-center justify-end'
+                          : ''
                       } text-left text-xs font-medium  uppercase tracking-wider`;
                       return (
                         <th key={header} scope="col" className={className}>

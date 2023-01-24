@@ -79,12 +79,17 @@ const useGraphqlQuery = <VariablesType, ReturnType = any[]>(
       );
 
       const data = isGet ? res.data[_queryName] : res.data[_queryName].items;
+
       const theNextToken = isGet ? null : res.data[_queryName]?.nextToken;
       const outputData = isGet ? data : loopArray ? [...loopArray, ...data] : data;
 
       if (theNextToken && loopOnNextToken) {
         await fetch(theNextToken, outputData);
       } else {
+        if (outputData.length === 0) {
+          setData([]);
+        }
+
         if ((isGet && isEmpty(outputData)) || (!isGet && outputData.length > 0)) {
           setIsSuccess(true);
           setData(outputData);

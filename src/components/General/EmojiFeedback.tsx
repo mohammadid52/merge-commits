@@ -1,5 +1,6 @@
 import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import {useNotifications} from '@contexts/NotificationContext';
+import useAuth from '@customHooks/useAuth';
 import useGraphqlMutation from '@customHooks/useGraphqlMutation';
 import '@style/general/EmojiFeedback.scss';
 import {CreatePersonSentimentsInput, UpdatePersonInput} from 'API';
@@ -223,7 +224,7 @@ const EmojiFeedback = () => {
     } else {
       setShowSentimentModal(true);
     }
-  }, []);
+  }, [lastEmotionSubmission]);
 
   let points: any = {
     awful: {
@@ -290,23 +291,27 @@ const EmojiFeedback = () => {
     }
   );
 
+  const {setUser} = useAuth();
   const onSave = async (response: string, backstory?: string) => {
     try {
       setShow({great: false, awful: false, okay: false, bad: false});
       setShowSentimentModal(false);
+
+      const date = getDate();
       const payload = {
         personAuthID: authId,
         personEmail: email,
         time: getTime(),
-        date: getDate(),
+        date,
         responseText: response,
         backstory: backstory || ''
       };
 
+      setUser({lastEmotionSubmission: date});
       createPersonSentiments.mutate({input: payload});
 
       updateLastSubmissionDate.mutate({
-        input: {authId: authId, email: email, lastEmotionSubmission: getDate()}
+        input: {authId: authId, email: email, lastEmotionSubmission: date}
       });
 
       if (response !== 'none') {
@@ -354,8 +359,8 @@ const EmojiFeedback = () => {
         // title={'How are you today?'}
         customTitle={
           <div className="w-auto">
-            <h3 className="text-xl font-medium text-gray-900">How are you today?</h3>
-            <p className="text-sm  text-gray-500">Click on emoji to save emotion</p>
+            <h3 className="text-xl text-white font-medium ">How are you today?</h3>
+            <p className="text-sm  text-gray-200">Click on emoji to save emotion</p>
           </div>
         }
         scrollHidden
@@ -365,12 +370,12 @@ const EmojiFeedback = () => {
         closeAction={onCancel}
         closeOnBackdrop={false}
         hidePadding
-        className="bg-white rounded-b-xl"
+        className=" rounded-b-xl"
         showHeader
         showHeaderBorder
         showFooter={false}>
         <>
-          <div className=" relative rounded-b-xl w-auto grid bg-white grid-cols-2 p-4 gap-4">
+          <div className=" relative rounded-b-xl w-auto grid  grid-cols-2 p-4 gap-4">
             <EmojiCard
               {...commonEmojiProps}
               label="great"

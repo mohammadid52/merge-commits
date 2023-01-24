@@ -1,5 +1,4 @@
-import React, {useContext} from 'react';
-import {GlobalContext} from 'contexts/GlobalContext';
+import React from 'react';
 
 interface PageWrapperProps {
   children?: React.ReactNode;
@@ -8,9 +7,6 @@ interface PageWrapperProps {
 
 export const LessonPageWrapper = (props: PageWrapperProps) => {
   const {children} = props;
-  const {
-    state: {lessonPage: {themeTextColor = ''} = {}}
-  } = useContext(GlobalContext);
 
   return (
     <div className={`w-full  mt-4 flex flex-col justify-between items-center`}>

@@ -1,4 +1,4 @@
-import {PersonStatus, UserPageState} from 'API';
+import {Dicitionary, PersonStatus, UserPageState} from 'API';
 
 export interface globalStateType {
   sidebar: {
@@ -42,6 +42,7 @@ export interface globalStateType {
   lessonsPayload: {
     lessonsData: any[];
   };
+  dictionaries?: Dicitionary[] | null;
   temp: any;
 }
 
@@ -58,6 +59,7 @@ export const globalState: globalStateType = {
     activeSyllabus: '',
     lessons: []
   },
+  dictionaries: [],
   currentPage: '',
   activeRoom: '',
   activeSyllabus: '',
