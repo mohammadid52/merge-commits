@@ -403,7 +403,10 @@ const FloatingAction = ({
   return (
     <ClickAwayListener onClickAway={() => setIsActive(false)}>
       <div
-        onClick={() => setIsActive(!isActive)}
+        onClick={(e) => {
+          e.stopPropagation();
+          setIsActive(!isActive);
+        }}
         title={isActive ? '' : name === 'teacher' ? labelForTeacher : labelForStudent}
         className="theme-bg floating-item  relative p-2 customShadow rounded-full  border-white border-2 hover:theme-bg:500 transition-all cursor-pointer ">
         <div className="text-lg text-white w-auto">
@@ -413,8 +416,9 @@ const FloatingAction = ({
         <AnimatedContainer animationType="sliderInvert" duration="700" show={isActive}>
           {isActive && (
             <div
-              style={{left: '-25rem'}}
-              className="bg-gray-200 cursor-default z-100 top-0 absolute border-2 border-white theme-card-shadow min-w-96 rounded-xl">
+              className={`${
+                name === 'teacher' ? 'teacher-card' : 'student-card'
+              } bg-gray-200 item-open cursor-default z-100 top-0 absolute border-2 border-white theme-card-shadow min-w-96 rounded-xl`}>
               {homeData && homeData.length > 0 ? (
                 //  @ts-ignore
                 isLoaded && <Content {...props} />

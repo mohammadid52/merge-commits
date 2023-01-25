@@ -569,8 +569,8 @@ const Classroom: React.FC<ClassroomProps> = (props: ClassroomProps) => {
         </div>
 
         {homeData && homeData.length > 0 && activeRoomInfo && (
-          <div className="fixed w-auto sm:right-2" style={{bottom: '50%'}}>
-            <div className="floating-wrapper flex  sm:flex-col items-center px-2 py-2 bg-white theme-card-shadow rounded-full space-x-4 sm:space-x-0 sm:space-y-4 ">
+          <div className="fixed floating-wrapper-outer w-auto sm:right-2">
+            <div className="floating-wrapper flex flex-col items-center px-2 py-2 bg-white theme-card-shadow rounded-full space-x-4 sm:space-x-0 sm:space-y-4 ">
               <FloatingAction
                 roomId={activeRoomInfo.id}
                 homeData={homeData}

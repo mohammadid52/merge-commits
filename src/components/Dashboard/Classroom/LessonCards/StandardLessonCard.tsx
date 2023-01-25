@@ -1,14 +1,13 @@
 import React, {useContext, useEffect, useState} from 'react';
 
-import {LessonCardProps} from '../Classroom';
+import useAuth from '@customHooks/useAuth';
 import {GlobalContext} from 'contexts/GlobalContext';
-import SideImage from './StandardLessonCard/SideImage';
+import {LessonCardProps} from '../Classroom';
 import BottomBar from './StandardLessonCard/BottomBar';
 import MainSummary from './StandardLessonCard/MainSummary';
-import Rating from './StandardLessonCard/Rating';
 import ProgressBar from './StandardLessonCard/ProgressBar';
-import useAuth from '@customHooks/useAuth';
-import {logError} from '@graphql/functions';
+import Rating from './StandardLessonCard/Rating';
+import SideImage from './StandardLessonCard/SideImage';
 
 const StandardLessonCard = (props: LessonCardProps) => {
   const {
@@ -33,7 +32,7 @@ const StandardLessonCard = (props: LessonCardProps) => {
   const [isFetched, setIsFetched] = useState(false);
   const [personDataObj, setPersonDataObj] = useState<any>(null);
 
-  const {isStudent, authId, email} = useAuth();
+  const {isStudent} = useAuth();
   useEffect(() => {
     if (!isFetched) {
       checkValueOrNull();
@@ -67,7 +66,7 @@ const StandardLessonCard = (props: LessonCardProps) => {
   return (
     <div
       key={keyProps}
-      className={`relative overflow-hidden bg-white theme-card-shadow rounded-xl flex flex-row  mb-8 ${theme.elem.textDark} `}>
+      className={`relative overflow-hidden bg-white theme-card-shadow rounded-xl flex lesson-card  mb-8 ${theme.elem.textDark} `}>
       {/**
        *  LEFT SECTION IMAGE
        */}
@@ -75,7 +74,7 @@ const StandardLessonCard = (props: LessonCardProps) => {
       {/**
        *  RIGHT SECTION
        */}
-      <div className={`w-7.5/10 flex flex-col rounded-b`}>
+      <div className={`w-7.5/10 lesson-card-summary flex flex-col rounded-b`}>
         <MainSummary
           searchTerm={searchTerm}
           lessonProps={{...lessonProps, isTeacher, accessible}}
