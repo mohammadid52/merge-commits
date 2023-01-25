@@ -341,20 +341,27 @@ const StaffBuilder = (props: StaffBuilderProps) => {
   const onStaffStatusChange = async (
     status: string,
     staffId: string,
-    currentStatus: string
+    currentStatus: string,
+    authId: string,
+    email: string
   ) => {
     if (currentStatus !== status) {
       setUpdateStatus(true);
-      await API.graphql(
-        graphqlOperation(customMutations.updateStaff, {input: {id: staffId, status}})
-      );
       const updatedStaff = activeStaffList.map((staff) => {
         if (staff.id === staffId) {
-          staff.status = status;
+          staff.staffMember.status = status;
         }
         return staff;
       });
       setActiveStaffList(updatedStaff);
+      await API.graphql(
+        graphqlOperation(customMutations.updateStaff, {input: {id: staffId, status}})
+      );
+      await API.graphql(
+        graphqlOperation(customMutations.updatePerson, {
+          input: {authId: authId, email: email, status}
+        })
+      );
       setUpdateStatus(false);
     }
     setStatusEdit('');
@@ -462,7 +469,13 @@ const StaffBuilder = (props: StaffBuilderProps) => {
             dropdownWidth="w-48"
             list={statusList}
             onChange={(val, name, id) =>
-              onStaffStatusChange(val, item.id, item?.staffMember?.status)
+              onStaffStatusChange(
+                val,
+                item.id,
+                item?.staffMember?.status,
+                item?.staffMember?.authId,
+                item?.staffMember?.email
+              )
             }
           />
         </div>
