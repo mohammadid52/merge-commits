@@ -2,12 +2,14 @@ import Placeholder from '@components/Atoms/Placeholder';
 import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import {useGlobalContext} from '@contexts/GlobalContext';
 import {getImageFromS3} from '@utilities/services';
+import {PersonStatus, RoomStatus} from 'API';
 import gsap from 'gsap';
 import React, {useEffect, useState} from 'react';
 import ClickAwayListener from 'react-click-away-listener';
 import {AiOutlineUsergroupDelete} from 'react-icons/ai';
 import {HiOutlineUserGroup} from 'react-icons/hi';
 import {formatPageName} from '../Admin/UserManagement/List';
+import {DataValue} from '../Csv/Csv';
 
 const Content = ({
   list,
@@ -23,6 +25,7 @@ const Content = ({
   let tl = gsap.timeline({});
 
   const showPageState = isTeacher && name === 'student';
+  const showTeacherDetails = name === 'teacher';
 
   useEffect(() => {
     gsap.from('.card-body-header', {
@@ -50,7 +53,12 @@ const Content = ({
       </div>
       <ul className="w-full max-h-72 min-h-72  p-4 overflow-y-auto overflow-x-hidden gap-y-4 flex flex-col">
         {list.map((item, idx) => (
-          <Item idx={idx} showPageState={showPageState} item={item} />
+          <Item
+            idx={idx}
+            showTeacherDetails={showTeacherDetails}
+            showPageState={showPageState}
+            item={item}
+          />
         ))}
       </ul>
     </div>
@@ -60,37 +68,70 @@ const Content = ({
 const Item = ({
   item,
   idx,
-  showPageState
+  showPageState,
+  showTeacherDetails
 }: {
   showPageState: boolean;
+  showTeacherDetails: boolean;
   item: any;
   idx: number;
 }) => {
+  const [showingDetails, setShowingDetails] = useState(false);
+
+  const [contentHeight, setContentHeight] = useState(0);
+  const BUFFER_HEIGHT = 20;
+
+  const onShowDetails = (e: any) => {
+    e.stopPropagation();
+    if (showTeacherDetails && !showingDetails) {
+      setShowingDetails(true);
+
+      const el = document.querySelector('.teacher-details');
+      setContentHeight(el.clientHeight + BUFFER_HEIGHT);
+    } else {
+      setShowingDetails(false);
+    }
+  };
+
+  const name = `${item.firstName + ' ' + item.lastName}`;
+
   return (
-    <div className="flex  whitespace-pre card-list-item items-center bg-white px-4 py-2 rounded-xl">
-      <span className="text-gray-500 text-xs w-auto mr-2">{idx + 1}.</span>
+    <div className="card-list-item flex  flex-col bg-white px-4 py-2 rounded-xl">
+      <div
+        onClick={(e) => onShowDetails(e)}
+        className="flex items-center whitespace-pre ">
+        <span className="text-gray-500 text-xs w-auto mr-2">{idx + 1}.</span>
 
-      {item.image ? (
-        <img className="h-8 w-8 bg-gray-200 rounded-full" src={item?.image} alt="" />
-      ) : (
-        <Placeholder name={item.firstName + ' ' + item.lastName} size="h-8 w-8" />
-      )}
+        {item.image ? (
+          <img className="h-8 w-8 bg-gray-200 rounded-full" src={item?.image} alt="" />
+        ) : (
+          <Placeholder name={name} size="h-8 w-8" />
+        )}
 
-      <div className="ml-2 flex flex-col">
-        <p className="text-sm font-medium theme-text">
-          {item.firstName + ' ' + item.lastName}{' '}
-          {Boolean(showPageState && item?.pageState) ? (
-            <span className="text-xs text-gray-500 w-auto">
-              ({formatPageName(item?.pageState)})
-            </span>
-          ) : null}
-        </p>
-        <p
-          style={{overflowWrap: 'anywhere', whiteSpace: 'break-spaces'}}
-          className="flex items-center text-sm text-gray-500">
-          {item.email}
-        </p>
+        <div className="ml-2 flex flex-col">
+          <p className="text-sm font-medium theme-text">
+            {name}{' '}
+            {Boolean(showPageState && item?.pageState) ? (
+              <span className="text-xs text-gray-500 w-auto">
+                ({formatPageName(item?.pageState)})
+              </span>
+            ) : null}
+          </p>
+          <p
+            style={{overflowWrap: 'anywhere', whiteSpace: 'break-spaces'}}
+            className="flex items-center text-sm text-gray-500">
+            {item.email}
+          </p>
+        </div>
       </div>
+
+      <AnimatedContainer show={showingDetails}>
+        {showingDetails && (
+          <div className="teacher-details mt-2 w-auto text-center transition-all">
+            <h1>Show details here</h1>
+          </div>
+        )}
+      </AnimatedContainer>
     </div>
   );
 };
@@ -161,7 +202,7 @@ const FloatingAction = ({
 
   const getTeacherList = () =>
     homeData && homeData.length > 0
-      ? homeData.reduce((acc: any[], dataObj: any) => {
+      ? filterForCurrentClassroom().reduce((acc: any[], dataObj: any) => {
           if (dataObj?.class?.room) {
             const teacherObj = dataObj?.class?.room?.teacher;
             const teacherIsPresent = acc?.find(
@@ -185,7 +226,7 @@ const FloatingAction = ({
     let uniqIds: string[] = [];
     homeData &&
       homeData.length > 0 &&
-      homeData.forEach((item: any) => {
+      filterForCurrentClassroom().forEach((item: any) => {
         if (item?.class?.room) {
           if (item?.class?.room.coTeachers.items.length > 0) {
             item?.class?.room.coTeachers.items.map((_item: any) => {
@@ -206,7 +247,7 @@ const FloatingAction = ({
     let uniqIds: string[] = [];
     homeData &&
       homeData.length > 0 &&
-      filterStudentsForCurrentClassroom()[0].class?.rooms?.items.forEach((item: any) => {
+      filterForCurrentClassroom()[0].class?.rooms?.items.forEach((item: any) => {
         item?.class?.students?.items.forEach((student: any) => {
           if (!uniqIds.includes(student.student.id)) {
             list.push(student);
@@ -229,12 +270,12 @@ const FloatingAction = ({
       })
     );
 
-  const filterStudentsForCurrentClassroom = () => {
+  const filterForCurrentClassroom = () => {
     if (homeData && homeData.length > 0) {
       if (isTeacher) {
         let result = homeData.map((dataObj: any) => {
           let items = dataObj.class.rooms.items;
-          const filtered = items.filter((d: any) => d.id === roomId);
+          let filtered = items.filter((d: any) => d.id === roomId);
           return {
             ...dataObj,
             class: {
@@ -245,12 +286,56 @@ const FloatingAction = ({
           };
         });
 
+        result = result.map((d) => {
+          let coTeachersList = d.class.rooms.items[0].coTeachers.items.filter(
+            (c: {teacher: {status: PersonStatus}}) =>
+              c.teacher.status !== PersonStatus.INACTIVE &&
+              (d?.class?.room?.status || 'ACTIVE') === RoomStatus.ACTIVE &&
+              c.teacher.status !== PersonStatus.TRAINING
+          );
+
+          return {
+            ...d,
+            class: {
+              rooms: {
+                items: [
+                  {
+                    ...d.class.rooms.items[0],
+                    coTeachers: {
+                      items: coTeachersList
+                    }
+                  }
+                ]
+              }
+            }
+          };
+        });
+
         return result;
       } else {
-        const filtered = homeData.filter(
-          (dataObj: any) => dataObj.class.room.id === roomId
-        );
-        return filtered;
+        let result = homeData.filter((dataObj: any) => dataObj.class.room.id === roomId);
+        result = result.map((d) => {
+          let coTeachersList = d.class.room.coTeachers.items.filter(
+            (c: {teacher: {status: PersonStatus}}) =>
+              c.teacher.status !== PersonStatus.INACTIVE &&
+              d.class.room.status === RoomStatus.ACTIVE &&
+              c.teacher.status !== PersonStatus.TRAINING
+          );
+
+          return {
+            class: {
+              ...d.class,
+              room: {
+                ...d.class.room,
+                coTeachers: {
+                  items: coTeachersList
+                }
+              }
+            }
+          };
+        });
+
+        return result;
       }
     }
     return [];
@@ -258,7 +343,7 @@ const FloatingAction = ({
 
   const getStudentsList = () =>
     homeData && homeData.length > 0
-      ? filterStudentsForCurrentClassroom()
+      ? filterForCurrentClassroom()
           .reduce((acc: any[], dataObj: any) => {
             return [...acc, ...dataObj?.class?.students?.items];
           }, [])

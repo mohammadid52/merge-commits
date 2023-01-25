@@ -64,6 +64,7 @@ export const getDashboardData = /* GraphQL */ `
               currentPage
               teacher {
                 firstName
+                status
                 lastName
                 image
                 email
@@ -75,6 +76,7 @@ export const getDashboardData = /* GraphQL */ `
                 items {
                   teacher {
                     authId
+                    status
                     firstName
                     lastName
                     image
@@ -1166,6 +1168,7 @@ export const listRooms = /* GraphQL */ `
               role
               lastName
               firstName
+              status
             }
           }
         }
@@ -1464,6 +1467,7 @@ export const listRoomsDashboard = /* GraphQL */ `
           id
           status
           firstName
+          status
           preferredName
           lastName
           image
