@@ -106,6 +106,7 @@ export const getDashboardData = /* GraphQL */ `
                 student {
                   authId
                   firstName
+                  pageState
                   lastName
                   image
                   email

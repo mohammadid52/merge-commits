@@ -11,8 +11,9 @@ import * as customQueries from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import useAuth from 'customHooks/useAuth';
 import * as mutations from 'graphql/mutations';
+import gsap from 'gsap';
 import isEmpty from 'lodash/isEmpty';
-import React, {Fragment, useEffect, useState} from 'react';
+import React, {Fragment, useEffect, useRef, useState} from 'react';
 import {useRouteMatch} from 'react-router';
 import {Empty} from '../Admin/LessonsBuilder/StepActionComponent/LearningEvidence/CourseMeasurementsCard';
 import {DashboardProps} from '../Dashboard';
@@ -444,6 +445,18 @@ const Classroom: React.FC<ClassroomProps> = (props: ClassroomProps) => {
 
   const courseName = state?.roomData?.curriculum?.name || '';
 
+  useEffect(() => {
+    if (homeData && homeData.length > 0 && activeRoomInfo) {
+      gsap.from('.floating-wrapper', {
+        duration: 1,
+        ease: 'power2.inOut',
+        x: 100,
+        scale: 0,
+        delay: 1
+      });
+    }
+  }, [homeData, activeRoomInfo]);
+
   return (
     <>
       <DashboardContainer
@@ -553,12 +566,20 @@ const Classroom: React.FC<ClassroomProps> = (props: ClassroomProps) => {
           </div>
         </div>
 
-        {homeData && homeData.length > 0 && (
-          <div
-            className="fixed w-auto flex flex-col items-center space-y-4 right-0 p-4"
-            style={{bottom: '50%'}}>
-            <FloatingAction homeData={homeData} name="teacher" />
-            <FloatingAction homeData={homeData} name="student" />
+        {homeData && homeData.length > 0 && activeRoomInfo && (
+          <div className="fixed w-auto right-2 " style={{bottom: '50%'}}>
+            <div className="floating-wrapper flex flex-col items-center px-2 py-2 bg-white theme-card-shadow rounded-full space-y-4 ">
+              <FloatingAction
+                roomId={activeRoomInfo.id}
+                homeData={homeData}
+                name="teacher"
+              />
+              <FloatingAction
+                roomId={activeRoomInfo.id}
+                homeData={homeData}
+                name="student"
+              />
+            </div>
           </div>
         )}
       </DashboardContainer>

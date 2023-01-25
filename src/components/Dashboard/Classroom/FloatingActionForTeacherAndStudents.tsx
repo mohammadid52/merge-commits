@@ -2,13 +2,27 @@ import Placeholder from '@components/Atoms/Placeholder';
 import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import {useGlobalContext} from '@contexts/GlobalContext';
 import {getImageFromS3} from '@utilities/services';
-import {general} from 'assets';
 import gsap from 'gsap';
 import React, {useEffect, useState} from 'react';
 import ClickAwayListener from 'react-click-away-listener';
+import {AiOutlineUsergroupDelete} from 'react-icons/ai';
+import {HiOutlineUserGroup} from 'react-icons/hi';
+import {formatPageName} from '../Admin/UserManagement/List';
 
-const Content = ({list, header}: {list: any[]; header: string}) => {
+const Content = ({
+  list,
+  header,
+  name,
+  isTeacher
+}: {
+  isTeacher: boolean;
+  name: 'teacher' | 'student';
+  list: any[];
+  header: string;
+}) => {
   let tl = gsap.timeline({});
+
+  const showPageState = isTeacher && name === 'student';
 
   useEffect(() => {
     gsap.from('.card-body-header', {
@@ -36,16 +50,24 @@ const Content = ({list, header}: {list: any[]; header: string}) => {
       </div>
       <ul className="w-full max-h-72 min-h-72  p-4 overflow-y-auto overflow-x-hidden gap-y-4 flex flex-col">
         {list.map((item, idx) => (
-          <Item idx={idx} item={item} />
+          <Item idx={idx} showPageState={showPageState} item={item} />
         ))}
       </ul>
     </div>
   );
 };
 
-const Item = ({item, idx}: {item: any; idx: number}) => {
+const Item = ({
+  item,
+  idx,
+  showPageState
+}: {
+  showPageState: boolean;
+  item: any;
+  idx: number;
+}) => {
   return (
-    <div className="flex card-list-item items-center bg-white px-4 py-2 rounded-xl">
+    <div className="flex  whitespace-pre card-list-item items-center bg-white px-4 py-2 rounded-xl">
       <span className="text-gray-500 text-xs w-auto mr-2">{idx + 1}.</span>
 
       {item.image ? (
@@ -55,10 +77,19 @@ const Item = ({item, idx}: {item: any; idx: number}) => {
       )}
 
       <div className="ml-2 flex flex-col">
-        <p className="text-sm font-medium text-indigo-600">
-          {item.firstName + ' ' + item.lastName}
+        <p className="text-sm font-medium theme-text">
+          {item.firstName + ' ' + item.lastName}{' '}
+          {Boolean(showPageState && item?.pageState) ? (
+            <span className="text-xs text-gray-500 w-auto">
+              ({formatPageName(item?.pageState)})
+            </span>
+          ) : null}
         </p>
-        <p className="mt-1 flex items-center text-sm text-gray-500">{item.email}</p>
+        <p
+          style={{overflowWrap: 'anywhere', whiteSpace: 'break-spaces'}}
+          className="flex items-center text-sm text-gray-500">
+          {item.email}
+        </p>
       </div>
     </div>
   );
@@ -66,10 +97,12 @@ const Item = ({item, idx}: {item: any; idx: number}) => {
 
 const FloatingAction = ({
   homeData,
-  name
+  name,
+  roomId
 }: {
   name: 'teacher' | 'student';
   homeData: any[];
+  roomId: string;
 }) => {
   const [isActive, setIsActive] = useState(false);
 
@@ -173,7 +206,7 @@ const FloatingAction = ({
     let uniqIds: string[] = [];
     homeData &&
       homeData.length > 0 &&
-      homeData[0]?.class?.rooms?.items.forEach((item: any) => {
+      filterStudentsForCurrentClassroom()[0].class?.rooms?.items.forEach((item: any) => {
         item?.class?.students?.items.forEach((student: any) => {
           if (!uniqIds.includes(student.student.id)) {
             list.push(student);
@@ -185,16 +218,6 @@ const FloatingAction = ({
     return list;
   };
 
-  const teacherListWithImages = () =>
-    getTeacherList().length > 0 &&
-    Promise.all(
-      getTeacherList().map(async (teacherObj: any, idx: number) => {
-        return {
-          ...teacherObj,
-          image: await (teacherObj.image ? getImageURL(teacherObj.image) : null)
-        };
-      })
-    );
   const coTeacherListWithImages = () =>
     getCoTeacherList().length > 0 &&
     Promise.all(
@@ -206,9 +229,36 @@ const FloatingAction = ({
       })
     );
 
+  const filterStudentsForCurrentClassroom = () => {
+    if (homeData && homeData.length > 0) {
+      if (isTeacher) {
+        let result = homeData.map((dataObj: any) => {
+          let items = dataObj.class.rooms.items;
+          const filtered = items.filter((d: any) => d.id === roomId);
+          return {
+            ...dataObj,
+            class: {
+              rooms: {
+                items: filtered
+              }
+            }
+          };
+        });
+
+        return result;
+      } else {
+        const filtered = homeData.filter(
+          (dataObj: any) => dataObj.class.room.id === roomId
+        );
+        return filtered;
+      }
+    }
+    return [];
+  };
+
   const getStudentsList = () =>
     homeData && homeData.length > 0
-      ? homeData
+      ? filterStudentsForCurrentClassroom()
           .reduce((acc: any[], dataObj: any) => {
             return [...acc, ...dataObj?.class?.students?.items];
           }, [])
@@ -247,7 +297,7 @@ const FloatingAction = ({
     state: {user}
   } = useGlobalContext();
 
-  const teacherListWithImagesFn = async () => {
+  const teacherListWithImagesForTeachers = async () => {
     let data: any[] = await Promise.all(
       getTeacherListTr().map(async (teacherObj: any) => {
         return {
@@ -260,7 +310,7 @@ const FloatingAction = ({
     setTeacherList(data);
   };
 
-  const coTeacherListWithImagesFn = async () => {
+  const coTeacherListWithImagesForTeachers = async () => {
     let data: any[] = await Promise.all(
       getCoTeacherListTr().map(async (teacherObj: any) => {
         return {
@@ -273,7 +323,7 @@ const FloatingAction = ({
     setCoTeachersList(data);
   };
 
-  const studentsListWithImagesFn = async () => {
+  const studentsListWithImagesForTeachers = async () => {
     const list = user.role === 'ST' ? getStudentsList() : getStudentsListTr();
     const data = await Promise.all(
       list.map(async (studentObj: any) => {
@@ -288,18 +338,20 @@ const FloatingAction = ({
         };
       })
     );
-    setStudentsList(data);
+    return data;
   };
 
-  const fetchAndProcessDashboardDataForTeachers = () => {
+  const fetchAndProcessDashboardDataForTeachers = async () => {
     if (name === 'teacher') {
-      teacherListWithImagesFn();
-      coTeacherListWithImagesFn();
+      teacherListWithImagesForTeachers();
+      coTeacherListWithImagesForTeachers();
     } else {
-      studentsListWithImagesFn();
+      const studentList = await studentsListWithImagesForTeachers();
+      setStudentsList(studentList);
     }
     setIsLoaded(true);
   };
+
   const fetchAndProcessDashboardDataForStudents = async () => {
     if (name === 'student') {
       const studentList = await studentsListWithImages();
@@ -332,13 +384,17 @@ const FloatingAction = ({
   const teacherProps = isLoaded
     ? {
         list: allTeachers,
-        header: `${labelForTeacher} (${allTeachers.length})`
+        header: `${labelForTeacher} (${allTeachers.length})`,
+        isTeacher,
+        name
       }
     : {};
   const studentProps = isLoaded
     ? {
         list: studentsList.map((item) => item.student),
-        header: `${labelForStudent} (${studentsList.length})`
+        header: `${labelForStudent} (${studentsList.length})`,
+        isTeacher,
+        name
       }
     : {};
 
@@ -348,15 +404,17 @@ const FloatingAction = ({
     <ClickAwayListener onClickAway={() => setIsActive(false)}>
       <div
         onClick={() => setIsActive(!isActive)}
-        title={name === 'teacher' ? labelForTeacher : labelForStudent}
-        className="theme-bg:200 relative p-2 rounded-full  border-white border-2 hover:theme-bg:400 transition-all cursor-pointer ">
-        <img className="h-6 w-6" src={general[name]} />
+        title={isActive ? '' : name === 'teacher' ? labelForTeacher : labelForStudent}
+        className="theme-bg floating-item  relative p-2 customShadow rounded-full  border-white border-2 hover:theme-bg:500 transition-all cursor-pointer ">
+        <div className="text-lg text-white w-auto">
+          {name === 'teacher' ? <AiOutlineUsergroupDelete /> : <HiOutlineUserGroup />}
+        </div>
 
         <AnimatedContainer animationType="sliderInvert" duration="700" show={isActive}>
           {isActive && (
             <div
               style={{left: '-25rem'}}
-              className="bg-gray-200 z-100 top-0 absolute border-2 border-white theme-card-shadow min-w-96 rounded-xl">
+              className="bg-gray-200 cursor-default z-100 top-0 absolute border-2 border-white theme-card-shadow min-w-96 rounded-xl">
               {homeData && homeData.length > 0 ? (
                 //  @ts-ignore
                 isLoaded && <Content {...props} />

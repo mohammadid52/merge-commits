@@ -50,8 +50,8 @@ const InstitutionName = ({id, courseName}: {id: string; courseName: string}) => 
   return (
     <div>
       <div className="flex items-center justify-center">
-        <h4 className="w-auto text-sm ml-2">{institute.name}</h4>
-        <h4 className="w-auto text-sm ml-2">|| {courseName}</h4>
+        <h4 className="w-auto text-sm font-medium">{institute.name}</h4>
+        <h4 className="w-auto text-sm font-medium ml-2">|| {courseName}</h4>
       </div>
     </div>
   );
