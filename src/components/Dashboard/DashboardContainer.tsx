@@ -1,9 +1,11 @@
 import Placeholder from '@components/Atoms/Placeholder';
+import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import {getImageFromS3} from '@utilities/services';
 import {API, graphqlOperation} from 'aws-amplify';
 import InformationalWalkThrough from 'components/Dashboard/Admin/Institutons/InformationalWalkThrough/InformationalWalkThrough';
 import HeaderTextBar from 'components/Dashboard/HeaderTextBar/HeaderTextBar';
 import * as customQueries from 'customGraphql/customQueries';
+import gsap from 'gsap';
 import React, {useEffect, useState} from 'react';
 import {BsFillInfoCircleFill} from 'react-icons/bs';
 import HeroBanner from '../Header/HeroBanner';
@@ -23,7 +25,7 @@ interface DashboardContainerProps {
 
 const InstitutionName = ({id, courseName}: {id: string; courseName: string}) => {
   const [isLoading, setIsLoading] = useState(true);
-  const [institute, setInstitute] = useState(null);
+  const [institute, setInstitute] = useState({name: '--'});
 
   const fetchInfo = async () => {
     try {
@@ -46,14 +48,13 @@ const InstitutionName = ({id, courseName}: {id: string; courseName: string}) => 
     }
   }, [id]);
 
-  if (isLoading && !Boolean(institute)) return <div className="py-4" />;
-  return (
-    <div>
-      <div className="flex items-center justify-center">
-        <h4 className="w-auto text-sm font-medium">{institute.name}</h4>
-        <h4 className="w-auto text-sm font-medium ml-2">|| {courseName}</h4>
-      </div>
+  return !isLoading ? (
+    <div className="flex items-center justify-center">
+      <h4 className="w-auto text-sm font-medium">{institute.name || '--'} ||</h4>
+      <h4 className="w-auto text-sm font-medium ml-2">{courseName || '--'}</h4>
     </div>
+  ) : (
+    <div>--</div>
   );
 };
 
@@ -79,7 +80,7 @@ const DashboardContainer = ({
           <HeroBanner imgUrl={bannerImg} title={bannerTitle} />
           {showTitleBanner ? (
             <HeaderTextBar>
-              <div className="flex items-center justify-center">
+              <div className="header-text-bar_inner flex items-center justify-center">
                 {institutionId ? (
                   <InstitutionName courseName={courseName} id={institutionId} />
                 ) : (

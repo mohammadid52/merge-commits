@@ -71,7 +71,7 @@ const Item = ({
       <span className="text-gray-500 text-xs w-auto mr-2">{idx + 1}.</span>
 
       {item.image ? (
-        <img className="h-8 w-8 rounded-full" src={item?.image} alt="" />
+        <img className="h-8 w-8 bg-gray-200 rounded-full" src={item?.image} alt="" />
       ) : (
         <Placeholder name={item.firstName + ' ' + item.lastName} size="h-8 w-8" />
       )}

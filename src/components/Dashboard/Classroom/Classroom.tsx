@@ -1,4 +1,5 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import TranslationModule from '@components/Lesson/UniversalLesson/views/CoreUniversalLesson/TranslationModule';
 import {logError, updatePageState} from '@graphql/functions';
 import {setPageTitle} from '@utilities/functions';
 import {removeLocalStorageData, setLocalStorageData} from '@utilities/localStorage';
@@ -22,6 +23,7 @@ import DateAndTime from '../DateAndTime/DateAndTime';
 import ClassroomLoader from './ClassroomLoader';
 
 import FloatingAction from './FloatingActionForTeacherAndStudents';
+import FloatingActionTranslation from './FloatingActionTranslation';
 import SyllabusSwitch from './SyllabusSwitch';
 import Today from './TodayLesson';
 
@@ -579,6 +581,7 @@ const Classroom: React.FC<ClassroomProps> = (props: ClassroomProps) => {
                 homeData={homeData}
                 name="student"
               />
+              <FloatingActionTranslation />
             </div>
           </div>
         )}
