@@ -457,15 +457,17 @@ const StaffBuilder = (props: StaffBuilderProps) => {
       statusEdit === item.id ? (
         <div className="">
           <Selector
-            selectedItem={item?.status?.toUpperCase()}
+            selectedItem={item?.staffMember?.status?.toUpperCase()}
             placeholder="Select Status"
             dropdownWidth="w-48"
             list={statusList}
-            onChange={(val, name, id) => onStaffStatusChange(val, item.id, item.status)}
+            onChange={(val, name, id) =>
+              onStaffStatusChange(val, item.id, item?.staffMember?.status)
+            }
           />
         </div>
       ) : (
-        <Status useDefault status={item.status} />
+        <Status useDefault status={item?.staffMember?.status} />
       ),
     actions:
       statusEdit === item.id ? (
@@ -528,8 +530,9 @@ const StaffBuilder = (props: StaffBuilderProps) => {
     } else {
       setSearchInput({...searchInput, isActive: true});
       const filtered = activeStaffList.filter(
-        (_d: any) => filterName.toLowerCase() === _d?.status?.toLowerCase()
+        (_d: any) => filterName.toLowerCase() === _d?.staffMember?.status?.toLowerCase()
       );
+      console.log(filtered);
       setFilteredList(filtered);
       setFilters(filterName);
     }
