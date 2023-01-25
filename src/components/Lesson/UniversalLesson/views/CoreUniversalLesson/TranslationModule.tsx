@@ -154,35 +154,54 @@ export const TranslationInsideComponent = ({
   const [isSimilar, setIsSimilar] = useState(null);
 
   return (
-    <div className=" flex space-y-4 flex-col items-center">
-      <input
-        onChange={onSearchInputChange}
-        placeholder="Search meaning..."
-        className={`text-base ${loading ? 'cursor-disabled pointer-events-none' : ''} ${
-          inClassroom ? 'bg-gray-400 text-gray-800' : 'bg-gray-700 text-white'
-        }  outline-none border-none rounded-full px-4 py-2`}
-      />
+    <>
+      {inClassroom && (
+        <div className="card-body-header theme-bg text-white rounded-t-xl px-4 py-2">
+          <h1 className="text-lg text-center tracking-wider font-medium uppercase text-white">
+            Translation
+          </h1>
+        </div>
+      )}
+      <div className={`${inClassroom ? 'p-4' : ''} flex space-y-4 flex-col items-center`}>
+        <input
+          onChange={onSearchInputChange}
+          placeholder="Search meaning..."
+          className={`text-base ${loading ? 'cursor-disabled pointer-events-none' : ''} ${
+            inClassroom
+              ? ' bg-gray-400 border-0 theme-border  text-gray-800'
+              : 'border-none bg-gray-700 text-white'
+          }  outline-none rounded-full px-4 py-2`}
+        />
 
-      <div className="w-auto translation-module__search_results">
-        {loading ? (
-          <ThreeDotsLoading />
-        ) : searchInput.isActive ? (
-          <div className="search-results">
-            {isSimilar && <h5>Similar: {isSimilar}</h5>}
-            <p className={`${inClassroom ? 'text-gray-800' : 'text-white'} text-base`}>
-              {finalSearchResult}
-            </p>
-          </div>
-        ) : null}
+        <div className="translationr-module__search_results">
+          {loading ? (
+            <ThreeDotsLoading />
+          ) : searchInput.isActive ? (
+            <div
+              className={`search-results ${
+                inClassroom && finalSearchResult?.length > 0
+                  ? 'bg-white rounded-xl p-4'
+                  : ''
+              }`}>
+              {isSimilar && <h5>Similar: {isSimilar}</h5>}
+              <p
+                className={`${
+                  inClassroom ? 'text-gray-700 text-sm' : 'text-white text-base'
+                } `}>
+                {finalSearchResult}
+              </p>
+            </div>
+          ) : null}
+        </div>
+        <div
+          className={`${
+            inClassroom ? 'bottom-0.5 right-1' : 'bottom-0 right-0'
+          } absolute  translation-module__actions flex items-center justify-end space-x-4`}>
+          <Buttons size="small" label={'Cancel'} onClick={onCancel} transparent />
+          <Buttons size="small" label={'Search'} onClick={onSearch} />
+        </div>
       </div>
-      <div
-        className={`${
-          inClassroom ? 'bottom-0.5 right-1' : 'bottom-0 right-0'
-        } absolute  translation-module__actions flex items-center justify-end space-x-4`}>
-        <Buttons size="small" label={'Cancel'} onClick={onCancel} transparent />
-        <Buttons size="small" label={'Search'} onClick={onSearch} />
-      </div>
-    </div>
+    </>
   );
 };
 
@@ -199,7 +218,7 @@ const ThreeDotsLoading = () => {
   }, [current]);
 
   return (
-    <div className="flex items-center gap-x-1">
+    <div className="flex items-center w-auto justify-center gap-x-1">
       {[0, 1, 2].map((idx) => (
         <div
           key={idx}
