@@ -8,9 +8,10 @@
       border-radius: 0;
       flex-direction: row;
       justify-content: space-evenly;
-      background: $gray-800;
       .floating-item {
         border: 0;
+        width: auto;
+        background-color: $gray-800 !important;
         .item-open {
           min-width: 23rem;
           border: 0;
@@ -20,11 +21,11 @@
           }
 
           &.teacher-card {
-            left: 0rem;
+            left: -4rem;
             top: -24rem;
           }
           &.student-card {
-            left: -8rem;
+            left: -10rem;
             top: -24rem;
           }
           &.translation {
