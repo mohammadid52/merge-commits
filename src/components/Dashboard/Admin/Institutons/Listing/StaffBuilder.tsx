@@ -464,7 +464,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
       statusEdit === item.id ? (
         <div className="">
           <Selector
-            selectedItem={item?.staffMember?.status?.toUpperCase()}
+            selectedItem={item?.status?.toUpperCase()}
             placeholder="Select Status"
             dropdownWidth="w-48"
             list={statusList}
@@ -472,7 +472,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
               onStaffStatusChange(
                 val,
                 item.id,
-                item?.staffMember?.status,
+                item?.status,
                 item?.staffMember?.authId,
                 item?.staffMember?.email
               )
@@ -480,7 +480,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
           />
         </div>
       ) : (
-        <Status useDefault status={item?.staffMember?.status} />
+        <Status useDefault status={item?.status} />
       ),
     actions:
       statusEdit === item.id ? (
