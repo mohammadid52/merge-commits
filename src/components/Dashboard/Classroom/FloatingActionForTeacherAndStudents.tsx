@@ -4,12 +4,12 @@ import {useGlobalContext} from '@contexts/GlobalContext';
 import {getImageFromS3} from '@utilities/services';
 import {PersonStatus, RoomStatus} from 'API';
 import gsap from 'gsap';
+import {orderBy} from 'lodash';
 import React, {useEffect, useState} from 'react';
 import ClickAwayListener from 'react-click-away-listener';
 import {AiOutlineUsergroupDelete} from 'react-icons/ai';
 import {HiOutlineUserGroup} from 'react-icons/hi';
 import {formatPageName} from '../Admin/UserManagement/List';
-import {DataValue} from '../Csv/Csv';
 
 const Content = ({
   list,
@@ -468,7 +468,7 @@ const FloatingAction = ({
 
   const teacherProps = isLoaded
     ? {
-        list: allTeachers,
+        list: orderBy(allTeachers, ['firstName'], 'asc'),
         header: `${labelForTeacher} (${allTeachers.length})`,
         isTeacher,
         name
@@ -476,7 +476,11 @@ const FloatingAction = ({
     : {};
   const studentProps = isLoaded
     ? {
-        list: studentsList.map((item) => item.student),
+        list: orderBy(
+          studentsList.map((item) => item.student),
+          ['firstName'],
+          'asc'
+        ),
         header: `${labelForStudent} (${studentsList.length})`,
         isTeacher,
         name
