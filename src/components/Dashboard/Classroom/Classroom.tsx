@@ -581,7 +581,7 @@ const Classroom: React.FC<ClassroomProps> = (props: ClassroomProps) => {
                 homeData={homeData}
                 name="student"
               />
-              {/* <FloatingActionTranslation /> */}
+              <FloatingActionTranslation />
             </div>
           </div>
         )}

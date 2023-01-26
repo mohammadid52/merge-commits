@@ -39,6 +39,7 @@ export interface ILessonSurveyApp {
 const Lesson = () => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
   const gContext = useGlobalContext();
+  const {scanLessonAndFindComplicatedWord} = gContext;
 
   const lessonState = gContext.lessonState;
   const lessonDispatch = gContext.lessonDispatch;
@@ -70,17 +71,17 @@ const Lesson = () => {
           ];
         }, []);
 
-        // const dictionaries = await getDictionaries();
+        const dictionaries = await getDictionaries();
 
-        // const updatedLessonPlan = scanLessonAndFindComplicatedWord(
-        //   response.lessonPlan,
-        //   dictionaries
-        // );
+        const updatedLessonPlan = scanLessonAndFindComplicatedWord(
+          response.lessonPlan,
+          dictionaries
+        );
 
         setLocalStorageData('lesson_plan', lessonPlan);
         lessonDispatch({
           type: 'SET_LESSON_DATA',
-          payload: {...response, lessonPlan: response.lessonPlan}
+          payload: {...response, lessonPlan: updatedLessonPlan}
         });
 
         setLoaded(true);

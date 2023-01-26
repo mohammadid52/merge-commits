@@ -19,6 +19,7 @@ import LessonMeasurements from './LessonMeasurements';
 import LessonPlansList from './LessonPlansList';
 import LessonSummaryForm from './LessonSummaryForm';
 import UnitLookup from './UnitLookup';
+import {getDictionaries} from '@graphql/functions';
 
 interface ILessonTabViewProps {
   designersList: any[];
@@ -38,7 +39,9 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
   const [lessonData, setLessonData] = useState<any>();
   const [selectedDesigners, setSelectedDesigners] = useState([]);
 
-  const {clientKey, userLanguage} = useContext(GlobalContext);
+  const {clientKey, userLanguage, scanLessonAndFindComplicatedWord} = useContext(
+    GlobalContext
+  );
   const {BreadcrumsTitles, LessonBuilderDict, LessonEditDict} = useDictionary(clientKey);
 
   const params = useQuery(location.search);
@@ -68,13 +71,13 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
       );
       const savedData = result.data.getUniversalLesson;
 
-      // const dictionaries = await getDictionaries();
+      const dictionaries = await getDictionaries();
 
-      // const updatedLessonPlan = scanLessonAndFindComplicatedWord(
-      //   savedData.lessonPlan,
-      //   dictionaries
-      // );
-      setUniversalLessonDetails({...savedData, lessonPlan: savedData.lessonPlan});
+      const updatedLessonPlan = scanLessonAndFindComplicatedWord(
+        savedData.lessonPlan,
+        dictionaries
+      );
+      setUniversalLessonDetails({...savedData, lessonPlan: updatedLessonPlan});
       setLessonData(savedData);
 
       const designers = designersList.filter((item: any) =>

@@ -12,6 +12,7 @@ import {FORM_TYPES} from '../../../UniversalLessonBuilder/UI/common/constants';
 import Downloadables from '../../../UniversalLessonBuilder/UI/UIComponents/Downloadables';
 import {BuilderRowWrapper} from '../../../UniversalLessonBuilder/views/CoreBuilder/BuilderRowWrapper';
 import LessonModule from './LessonModule';
+import TranslationModule from './TranslationModule';
 
 const LessonRowComposer = () => {
   const gContext = useGlobalContext();
@@ -173,7 +174,7 @@ const LessonRowComposer = () => {
             )}
           </div>
 
-          {/* <TranslationModule /> */}
+          <TranslationModule />
 
           <LessonModule currentLesson={lessonState?.lessonData} />
         </>

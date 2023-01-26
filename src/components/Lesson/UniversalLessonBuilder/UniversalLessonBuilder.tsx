@@ -44,7 +44,9 @@ const UniversalLessonBuilder = ({instId}: UniversalLessonBuilderProps) => {
   const params = useQuery(location.search);
   const {lessonId}: any = useParams();
   const pageId = params.get('pageId');
-  const {state, dispatch, lessonState} = useContext(GlobalContext);
+  const {state, dispatch, scanLessonAndFindComplicatedWord, lessonState} = useContext(
+    GlobalContext
+  );
 
   const {selectedComponent} = usePageBuilderContext();
 
@@ -83,13 +85,13 @@ const UniversalLessonBuilder = ({instId}: UniversalLessonBuilderProps) => {
         })
       );
       const savedData = result.data.getUniversalLesson;
-      // const dictionaries = await getDictionaries();
+      const dictionaries = await getDictionaries();
 
-      // const updatedLessonPlan = scanLessonAndFindComplicatedWord(
-      //   savedData.lessonPlan,
-      //   dictionaries
-      // );
-      setUniversalLessonDetails({...savedData, lessonPlan: savedData.lessonPlan});
+      const updatedLessonPlan = scanLessonAndFindComplicatedWord(
+        savedData.lessonPlan,
+        dictionaries
+      );
+      setUniversalLessonDetails({...savedData, lessonPlan: updatedLessonPlan});
       setSelectedPageID(pageId);
     } catch {
       setUniversalLessonDetails((prev: any) => ({...prev}));
