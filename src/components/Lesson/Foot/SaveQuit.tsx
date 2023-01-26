@@ -73,7 +73,7 @@ const SaveQuit = ({invokeRequiredField}: SaveQuitProps) => {
         // JSX of modal is on LessonHeaderBar.tsx file
       }
     } else {
-      invokeRequiredField();
+      invokeRequiredField && invokeRequiredField();
     }
   };
 

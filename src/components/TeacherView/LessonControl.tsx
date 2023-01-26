@@ -653,7 +653,7 @@ const LessonControl = () => {
                     email={email}
                     componentName="CoreUniversalLesson"
                     fallback={<h1>Error in the Teacher's Lesson</h1>}>
-                    <CoreUniversalLesson />
+                    <CoreUniversalLesson isTeacher />
                   </ErrorBoundary>
                 </Suspense>
               </div>
