@@ -1,8 +1,10 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {Storage} from '@aws-amplify/storage';
+import UploadImageBtn from '@components/Atoms/Buttons/UploadImageBtn';
 import Label from '@components/Atoms/Form/Label';
 import ProgressBar from '@components/Lesson/UniversalLessonBuilder/UI/ProgressBar';
 import ModalPopUp from '@components/Molecules/ModalPopUp';
+import {uploadImageToS3} from '@graphql/functions';
 import {RoomStatus} from 'API';
 import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
@@ -174,7 +176,8 @@ const CourseFormComponent = ({
           input.id = courseId;
           input.image = courseData.image;
           if (s3Image) {
-            await uploadImageToS3(s3Image, courseId, 'image/jpeg');
+            const key = `instituteImages/curricular_image_${courseId}`;
+            await uploadImageToS3(s3Image, key, 'image/jpeg');
             input = {
               ...input,
               image: `instituteImages/curricular_image_${courseId}`
@@ -196,12 +199,14 @@ const CourseFormComponent = ({
           const newCourse: any = response?.data?.createCurriculum;
 
           if (s3Image) {
-            await uploadImageToS3(s3Image, newCourse.id, 'image/jpeg');
+            const key = `instituteImages/curricular_image_${newCourse.id}`;
+            await uploadImageToS3(s3Image, key, 'image/jpeg');
+
             await API.graphql(
               graphqlOperation(mutation.updateCurriculum, {
                 input: {
                   id: newCourse.id,
-                  image: `instituteImages/curricular_image_${newCourse.id}`
+                  image: key
                 }
               })
             );
@@ -317,30 +322,6 @@ const CourseFormComponent = ({
     setImageLoading(false);
   };
 
-  const uploadImageToS3 = async (file: any, id: string, type: string) => {
-    // Upload file to s3 bucket
-
-    return new Promise((resolve, reject) => {
-      Storage.put(`instituteImages/curricular_image_${id}`, file, {
-        contentType: type,
-        acl: 'public-read',
-        ContentEncoding: 'base64'
-      })
-        .then((result) => {
-          console.log('File successfully uploaded to s3', result);
-          resolve(true);
-        })
-        .catch((err) => {
-          setError({
-            show: true,
-            errorMsg: 'Unable to upload image. Please try again later. '
-          });
-          console.error('Error in uploading file to s3', err);
-          reject(err);
-        });
-    });
-  };
-
   useEffect(() => {
     fetchPersonsList();
   }, []);
@@ -452,64 +433,21 @@ const CourseFormComponent = ({
     <div className="">
       <div className="m-auto">
         <div className="flex flex-col">
-          {/* <div className="w-auto p-4 mr-6 flex flex-col text-center items-center">
-            <button className="group hover:opacity-80 transition-all focus:outline-none focus:opacity-95 flex flex-col items-center mt-4">
-              <label className="cursor-pointer flex justify-center">
-                <DroppableMedia
-                  mediaRef={mediaRef}
-                  setImage={(img: any, file: any) => {
-                    setUpImage(img);
-                    setFileObj(file);
-                  }}
-                  toggleCropper={toggleCropper}>
-                  {!imageLoading || imageUrl ? (
-                    <img
-                      onClick={handleImage}
-                      className={`profile  w-120  md:w-120 bg-gray-100  border flex flex-shrink-0 rounded-xl theme-card-shadow`}
-                      src={imageUrl}
-                      onLoad={() => setImageLoading(false)}
-                    />
-                  ) : (
-                    <div
-                      onClick={handleImage}
-                      className={`profile  w-120  md:w-120   border flex flex-shrink-0 rounded-xl theme-card-shadow bg-gray-200`}>
-                      <IoImage className="fill-current text-gray-80" size={32} />
-                    </div>
-                  )}
-                </DroppableMedia>
-              </label>
-            </button>
-            <p className="text-gray-600 my-4">Click to add curricular image</p>
-          </div> */}
           <div className="  grid gap-4 grid-cols-2 lg:grid-cols-3 py-4">
-            <div className="">
-              <Label label="Curriculum Image" />
-              <DroppableMedia
-                mediaRef={mediaRef}
-                className="mt-1 w-full"
-                setImage={(img: any, file: any) => {
-                  setUpImage(img);
-                  setFileObj(file);
-                }}
-                toggleCropper={toggleCropper}>
-                <Buttons
-                  btnClass=" w-full"
-                  label={imageUrl ? 'Change image' : 'Upload image'}
-                  transparent
-                  onClick={handleImage}
-                  insideElement={
-                    imageUrl ? (
-                      <img
-                        onClick={handleImage}
-                        className={`profile  w-8 bg-gray-100  border-0 flex flex-shrink-0 rounded-xl theme-card-shadow`}
-                        src={imageUrl}
-                        onLoad={() => setImageLoading(false)}
-                      />
-                    ) : null
-                  }
-                />
-              </DroppableMedia>
-            </div>
+            <UploadImageBtn
+              className=""
+              label="Curriculum Image"
+              handleImage={handleImage}
+              mediaRef={mediaRef}
+              setImageLoading={setImageLoading}
+              imageUrl={imageUrl}
+              setImage={(img: any, file: any) => {
+                setUpImage(img);
+                setFileObj(file);
+              }}
+              toggleCropper={toggleCropper}
+            />
+
             <div className="">
               <FormInput
                 dataCy="curricular-name-input"
