@@ -195,67 +195,67 @@ export const GlobalContextProvider = ({children}: GlobalProps) => {
       : ``
   }</div>${word.englishPhrase}</span>`;
 
-  const scanLessonAndFindComplicatedWord = (
-    lessonPlan: UniversalLessonPlan[],
-    dictionaries: Dicitionary[]
-  ) => {
-    return lessonPlan;
-    // if (lessonPlan && lessonPlan.length > 0) {
-    //   try {
-    //     const updated = lessonPlan.map((plan: any) => ({
-    //       ...plan,
-    //       pageContent:
-    //         plan?.pageContent?.map((pgContent: any) => {
-    //           return {
-    //             ...pgContent,
-    //             partContent:
-    //               pgContent?.partContent?.map((ptContent: any) => {
-    //                 if (ptContent.type === 'paragraph') return {...ptContent};
+  // const scanLessonAndFindComplicatedWord = (
+  //   lessonPlan: UniversalLessonPlan[],
+  //   dictionaries: Dicitionary[]
+  // ) => {
+  //   return lessonPlan;
+  //   // if (lessonPlan && lessonPlan.length > 0) {
+  //   //   try {
+  //   //     const updated = lessonPlan.map((plan: any) => ({
+  //   //       ...plan,
+  //   //       pageContent:
+  //   //         plan?.pageContent?.map((pgContent: any) => {
+  //   //           return {
+  //   //             ...pgContent,
+  //   //             partContent:
+  //   //               pgContent?.partContent?.map((ptContent: any) => {
+  //   //                 if (ptContent.type === 'paragraph') return {...ptContent};
 
-    //                 return {
-    //                   ...ptContent,
-    //                   value: ptContent.value.map((value: any) => {
-    //                     dictionaries.forEach((word) => {
-    //                       if (!isEmpty(value.value)) {
-    //                         if (word.englishDefinition) {
-    //                           value.value = value.value.replace(
-    //                             word.englishPhrase,
-    //                             replaceStr(word)
-    //                           );
-    //                         }
-    //                       }
+  //   //                 return {
+  //   //                   ...ptContent,
+  //   //                   value: ptContent.value.map((value: any) => {
+  //   //                     dictionaries.forEach((word) => {
+  //   //                       if (!isEmpty(value.value)) {
+  //   //                         if (word.englishDefinition) {
+  //   //                           value.value = value.value.replace(
+  //   //                             word.englishPhrase,
+  //   //                             replaceStr(word)
+  //   //                           );
+  //   //                         }
+  //   //                       }
 
-    //                       if (!isEmpty(value.label)) {
-    //                         if (word.englishDefinition) {
-    //                           value.label = value.label.replace(
-    //                             word.englishPhrase,
-    //                             replaceStr(word)
-    //                           );
-    //                         }
-    //                       }
-    //                     });
+  //   //                       if (!isEmpty(value.label)) {
+  //   //                         if (word.englishDefinition) {
+  //   //                           value.label = value.label.replace(
+  //   //                             word.englishPhrase,
+  //   //                             replaceStr(word)
+  //   //                           );
+  //   //                         }
+  //   //                       }
+  //   //                     });
 
-    //                     // fixed wierd screen sliding issue
-    //                     // add translation input for students
-    //                     return {
-    //                       ...value
-    //                     };
-    //                   })
-    //                 };
-    //               }) || []
-    //           };
-    //         }) || []
-    //     }));
-    //     return updated;
-    //   } catch (error) {
-    //     console.error(error);
+  //   //                     // fixed wierd screen sliding issue
+  //   //                     // add translation input for students
+  //   //                     return {
+  //   //                       ...value
+  //   //                     };
+  //   //                   })
+  //   //                 };
+  //   //               }) || []
+  //   //           };
+  //   //         }) || []
+  //   //     }));
+  //   //     return updated;
+  //   //   } catch (error) {
+  //   //     console.error(error);
 
-    //     return lessonPlan;
-    //   }
-    // } else {
-    //   return lessonPlan;
-    // }
-  };
+  //   //     return lessonPlan;
+  //   //   }
+  //   // } else {
+  //   //   return lessonPlan;
+  //   // }
+  // };
 
   async function updatePersonLocation() {
     const updatedLocation = {
@@ -299,8 +299,8 @@ export const GlobalContextProvider = ({children}: GlobalProps) => {
         checkIfAdmin,
         userLanguage,
         uLang,
-        clientKey,
-        scanLessonAndFindComplicatedWord
+        clientKey
+        // scanLessonAndFindComplicatedWord
       }}>
       {children}
     </GlobalContext.Provider>

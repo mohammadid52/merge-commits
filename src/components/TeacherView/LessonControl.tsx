@@ -42,7 +42,7 @@ export const checkIfLessonIsCompleted = (roomData: any, lessonID: string) => {
 const LessonControl = () => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
   const gContext = useContext(GlobalContext);
-  const {scanLessonAndFindComplicatedWord} = gContext;
+
   const dispatch = gContext.dispatch;
 
   const lessonState = gContext.lessonState;
@@ -351,17 +351,17 @@ const LessonControl = () => {
         ];
       }, []);
 
-      const dictionaries = await getDictionaries();
+      // const dictionaries = await getDictionaries();
 
-      const updatedLessonPlan = scanLessonAndFindComplicatedWord(
-        response.lessonPlan,
-        dictionaries
-      );
+      // const updatedLessonPlan = scanLessonAndFindComplicatedWord(
+      //   response.lessonPlan,
+      //   dictionaries
+      // );
 
       setLocalStorageData('lesson_plan', lessonPlan);
       lessonDispatch({
         type: 'SET_LESSON_DATA',
-        payload: {...response, lessonPlan: updatedLessonPlan}
+        payload: {...response, lessonPlan: response.lessonPlan}
       });
     } catch (e) {
       console.error('getSyllabusLesson() - error fetching lesson', e);
@@ -653,7 +653,7 @@ const LessonControl = () => {
                     email={email}
                     componentName="CoreUniversalLesson"
                     fallback={<h1>Error in the Teacher's Lesson</h1>}>
-                    <CoreUniversalLesson />
+                    <CoreUniversalLesson isTeacher />
                   </ErrorBoundary>
                 </Suspense>
               </div>

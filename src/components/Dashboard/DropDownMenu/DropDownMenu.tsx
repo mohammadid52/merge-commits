@@ -137,14 +137,14 @@ const DropDownMenu = ({
                     Icon={FiUser}
                   />
 
-                  {!isStudent && (
+                  {/* {!isStudent && (
                     <Item
                       onClick={() => history.push('/dashboard/dictionary')}
                       label="Dictionary"
                       _key={'profile-features'}
                       Icon={AiOutlineBook}
                     />
-                  )}
+                  )} */}
 
                   {checkIfAdmin() && (
                     <>

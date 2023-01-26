@@ -16,7 +16,11 @@ export interface CurriculumInfo {
   title: string;
 }
 
-const LessonPlanHome: React.FC<DashboardProps> = (props: DashboardProps) => {
+interface LessonPlanHome extends DashboardProps {
+  homeData: any[];
+}
+
+const LessonPlanHome: React.FC<LessonPlanHome> = (props: LessonPlanHome) => {
   const {
     setClassroomCurriculum,
     classroomCurriculum,
@@ -30,11 +34,13 @@ const LessonPlanHome: React.FC<DashboardProps> = (props: DashboardProps) => {
     setLessonLoading,
     syllabusLoading,
     setSyllabusLoading,
-    handleRoomSelection,
+    homeData,
+    handleRoomSelection
   } = props;
 
   return (
     <Classroom
+      homeData={homeData}
       setClassroomCurriculum={setClassroomCurriculum}
       classroomCurriculum={classroomCurriculum}
       handleRoomSelection={handleRoomSelection}

@@ -36,6 +36,7 @@ interface UserInfoProps {
   shouldNavigate?: boolean;
   setTab: Function;
   onSuccessCallback?: () => void;
+  setIsEditMode?: any;
 }
 
 const UserEdit = (props: UserInfoProps) => {
@@ -51,6 +52,7 @@ const UserEdit = (props: UserInfoProps) => {
     shouldNavigate = true,
     checkpoints,
     questionData,
+    setIsEditMode,
     onSuccessCallback
   } = props;
   const [superEdit, setSuperEdit] = useState<boolean>(false);
@@ -693,6 +695,21 @@ const UserEdit = (props: UserInfoProps) => {
                       items={Status}
                     />
                   </div>
+                  {/* 
+                  {user.inactiveStatusDate && (
+                    <div className="sm:col-span-3">
+                      <Selector
+                        selectedItem={statusDate(user.inactiveStatusDate)}
+                        onChange={() => {}}
+                        arrowHidden={true}
+                        placeholder={'Status'}
+                        label={'Status Date'}
+                        labelTextClass={'text-sm text-justify'}
+                        btnClass={'cursor-not-allowed'}
+                        additionalClass={`w-auto md:w-52 lg:w-48 cursor-not-allowed`}
+                      />
+                    </div>
+                  )} */}
 
                   <div className="sm:col-span-3 p-2">
                     <DropdownForm
@@ -978,7 +995,10 @@ const UserEdit = (props: UserInfoProps) => {
             <Buttons
               btnClass="py-2 w-2.5/10 px-4 text-xs mr-2"
               label={UserEditDict[userLanguage]['button']['cancel']}
-              onClick={history.goBack}
+              onClick={() => {
+                setIsEditMode && setIsEditMode(false);
+                history.goBack();
+              }}
               transparent
             />
             <Buttons

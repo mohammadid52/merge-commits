@@ -1,5 +1,5 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import React, {Fragment, useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {useHistory, useRouteMatch} from 'react-router';
 
 import Filters, {SortType} from '@components/Atoms/Filters';
@@ -7,20 +7,19 @@ import Highlighted from '@components/Atoms/Highlighted';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import Table from '@components/Molecules/Table';
 import useAuth from '@customHooks/useAuth';
+import usePagination from '@customHooks/usePagination';
 import useSearch from '@customHooks/useSearch';
 import {getLocalStorageData} from '@utilities/localStorage';
 import {ModelRoomFilterInput} from 'API';
 import AddButton from 'atoms/Buttons/AddButton';
 import SearchInput from 'atoms/Form/SearchInput';
 import Selector from 'atoms/Form/Selector';
-import Loader from 'atoms/Loader';
 import {GlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import * as queries from 'graphql/queries';
 import {map, orderBy} from 'lodash';
 import {Status} from '../../UserManagement/UserStatus';
-import usePagination from '@customHooks/usePagination';
 
 interface RoomListProps {
   instId: string;
@@ -270,6 +269,7 @@ const RoomsList = (props: RoomListProps) => {
   const dataList = map(finalList, (item, index) => ({
     markRed: !Boolean(item?.activeSyllabus),
     no: getIndex(index),
+    onClick: () => editCurrentRoom(item.id, item.institutionID),
     classroomName: (
       <div
         onClick={() => editCurrentRoom(item.id, item.institutionID)}
@@ -277,9 +277,8 @@ const RoomsList = (props: RoomListProps) => {
         <Highlighted text={item.name} highlight={searchInput.value} />
       </div>
     ),
-    institutionName: (isSuperAdmin || isAdmin || isBuilder) && (
+    institutionName: (
       <div
-        className={'w-auto cursor-pointer'}
         onClick={(e) => {
           e.stopPropagation();
           isSuperAdmin &&
@@ -311,8 +310,8 @@ const RoomsList = (props: RoomListProps) => {
     headers: [
       InstitueRomms[userLanguage]['NO'],
       InstitueRomms[userLanguage]['CLASSROOMS_NAME'],
-      (isSuperAdmin || isAdmin || isBuilder) &&
-        InstitueRomms[userLanguage]['INSTITUTION_NAME'],
+
+      InstitueRomms[userLanguage]['INSTITUTION_NAME'],
       InstitueRomms[userLanguage]['TEACHER'],
       InstitueRomms[userLanguage]['CURRICULUM'],
       InstitueRomms[userLanguage]['STATUS']

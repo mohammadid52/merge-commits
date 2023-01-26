@@ -1,23 +1,24 @@
+import Buttons from '@components/Atoms/Buttons';
+import useAuth from '@customHooks/useAuth';
 import SaveQuit from 'components/Lesson/Foot/SaveQuit';
 import {useGlobalContext} from 'contexts/GlobalContext';
-import {getLocalStorageData} from 'utilities/localStorage';
-import React from 'react';
 import useInLessonCheck from 'customHooks/checkIfInLesson';
+import React from 'react';
+import {AiOutlineArrowLeft, AiOutlineArrowRight} from 'react-icons/ai';
+import {useHistory, useRouteMatch} from 'react-router';
+import {getLocalStorageData} from 'utilities/localStorage';
 import ErrorBoundary from '../../../Error/ErrorBoundary';
 import {LessonPageWrapper} from '../../UniversalLessonBlockComponents/LessonPageWrapper';
 import LessonRowComposer from './CoreUniversalLesson/LessonRowComposer';
-import useAuth from '@customHooks/useAuth';
-import Buttons from '@components/Atoms/Buttons';
-import {AiOutlineArrowLeft, AiOutlineArrowRight} from 'react-icons/ai';
-import {useHistory, useRouteMatch} from 'react-router';
-import {UniversalLessonPlan} from 'API';
 
 const CoreUniversalLesson = ({
   invokeRequiredField,
   canContinue,
-  validateRequired
+  validateRequired,
+  isTeacher
 }: {
   canContinue?: boolean;
+  isTeacher?: boolean;
   validateRequired?: (currentPage: number) => boolean;
   invokeRequiredField?: () => void;
 }) => {
@@ -44,31 +45,47 @@ const CoreUniversalLesson = ({
   const match = useRouteMatch();
 
   const handleForward = (forward = true) => {
-    if (!forward) {
-      handleBack();
-    } else {
-      if (!userAtEnd()) {
-        if (canContinue) {
-          history.push(`${match.url}/${currentPage + 1}`);
-          lessonDispatch({
-            type: 'SET_CURRENT_PAGE',
-            payload: currentPage + 1
-          });
-        } else {
-          invokeRequiredField();
-        }
-      } else if (userAtEnd()) {
-        if (validateRequired && validateRequired(currentPage)) {
-          return;
-        } else {
-          invokeRequiredField();
+    if (!isTeacher) {
+      if (!forward) {
+        handleBack();
+      } else {
+        if (!userAtEnd()) {
+          if (canContinue) {
+            history.push(`${match.url}/${currentPage + 1}`);
+            lessonDispatch({
+              type: 'SET_CURRENT_PAGE',
+              payload: currentPage + 1
+            });
+          } else {
+            invokeRequiredField && invokeRequiredField();
+          }
+        } else if (userAtEnd()) {
+          if (validateRequired && validateRequired(currentPage)) {
+            return;
+          } else {
+            invokeRequiredField && invokeRequiredField();
+          }
         }
       }
+    } else {
+      history.push(`${match.url}/${currentPage + 1}`);
+      lessonDispatch({
+        type: 'SET_CURRENT_PAGE',
+        payload: currentPage + 1
+      });
     }
   };
 
   const handleBack = () => {
-    if (userAtEnd()) {
+    if (!isTeacher) {
+      if (userAtEnd()) {
+        history.push(`${match.url}/${currentPage - 1}`);
+        lessonDispatch({
+          type: 'SET_CURRENT_PAGE',
+          payload: currentPage - 1
+        });
+      }
+    } else {
       history.push(`${match.url}/${currentPage - 1}`);
       lessonDispatch({
         type: 'SET_CURRENT_PAGE',

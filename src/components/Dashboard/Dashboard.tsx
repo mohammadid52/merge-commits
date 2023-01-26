@@ -854,6 +854,7 @@ const Dashboard = (props: DashboardProps) => {
                       classroomCurriculum={curriculumObj}
                       isTeacher={isTeacher}
                       isOnDemandStudent={isOnDemandStudent}
+                      homeData={!isStudent ? homeDataForTeachers : homeData}
                       loadingRoomInfo={loadingRoomInfo}
                       currentPage={currentPage}
                       setCurrentPage={setCurrentPage}
@@ -947,6 +948,7 @@ const Dashboard = (props: DashboardProps) => {
                     <LessonPlanHome
                       setClassroomCurriculum={setCurriculumObj}
                       classroomCurriculum={curriculumObj}
+                      homeData={homeDataForTeachers}
                       handleRoomSelection={handleRoomSelection}
                       currentPage={currentPage}
                       setCurrentPage={setCurrentPage}

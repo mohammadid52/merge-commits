@@ -1,26 +1,24 @@
+import BreadCrums from 'atoms/BreadCrums';
+import Buttons from 'atoms/Buttons';
+import Loader from 'atoms/Loader';
+import SectionTitle from 'atoms/SectionTitle';
 import {API, graphqlOperation} from 'aws-amplify';
-import React, {useContext, useEffect, useState} from 'react';
-import {FaChartLine, FaEdit, FaQuestionCircle, FaUnity} from 'react-icons/fa';
-import {IoArrowUndoCircleOutline, IoCardSharp} from 'react-icons/io5';
-import {useHistory, useRouteMatch, useParams} from 'react-router-dom';
 import {GlobalContext} from 'contexts/GlobalContext';
 import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
 import * as customQueries from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import {useQuery} from 'customHooks/urlParam';
+import React, {useContext, useEffect, useState} from 'react';
+import {FaChartLine, FaEdit, FaQuestionCircle, FaUnity} from 'react-icons/fa';
+import {IoArrowUndoCircleOutline, IoCardSharp} from 'react-icons/io5';
+import {useHistory, useParams, useRouteMatch} from 'react-router-dom';
 import {languageList} from 'utilities/staticData';
-import BreadCrums from 'atoms/BreadCrums';
-import Buttons from 'atoms/Buttons';
-import Loader from 'atoms/Loader';
-import SectionTitle from 'atoms/SectionTitle';
 // import Tooltip from 'atoms/Tooltip';
 import UnderlinedTabs, {ITabElementProps} from 'atoms/UnderlinedTabs';
 import LessonMeasurements from './LessonMeasurements';
 import LessonPlansList from './LessonPlansList';
 import LessonSummaryForm from './LessonSummaryForm';
 import UnitLookup from './UnitLookup';
-import {isEmpty} from 'lodash';
-import {getDictionaries} from '@graphql/functions';
 
 interface ILessonTabViewProps {
   designersList: any[];
@@ -40,9 +38,7 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
   const [lessonData, setLessonData] = useState<any>();
   const [selectedDesigners, setSelectedDesigners] = useState([]);
 
-  const {clientKey, userLanguage, scanLessonAndFindComplicatedWord} = useContext(
-    GlobalContext
-  );
+  const {clientKey, userLanguage} = useContext(GlobalContext);
   const {BreadcrumsTitles, LessonBuilderDict, LessonEditDict} = useDictionary(clientKey);
 
   const params = useQuery(location.search);
@@ -72,13 +68,13 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
       );
       const savedData = result.data.getUniversalLesson;
 
-      const dictionaries = await getDictionaries();
+      // const dictionaries = await getDictionaries();
 
-      const updatedLessonPlan = scanLessonAndFindComplicatedWord(
-        savedData.lessonPlan,
-        dictionaries
-      );
-      setUniversalLessonDetails({...savedData, lessonPlan: updatedLessonPlan});
+      // const updatedLessonPlan = scanLessonAndFindComplicatedWord(
+      //   savedData.lessonPlan,
+      //   dictionaries
+      // );
+      setUniversalLessonDetails({...savedData, lessonPlan: savedData.lessonPlan});
       setLessonData(savedData);
 
       const designers = designersList.filter((item: any) =>

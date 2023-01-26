@@ -92,7 +92,7 @@ export const updatePageState = async (
     setPageTitle(formatPageName(pageState));
   }
 
-  if (auth.pageState !== pageState) {
+  if (auth.pageState !== pageState && Boolean(auth?.email && auth?.authId)) {
     try {
       const input = {
         authId: auth.authId,

@@ -1,6 +1,12 @@
+import Placeholder from '@components/Atoms/Placeholder';
+import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
+import {getImageFromS3} from '@utilities/services';
+import {API, graphqlOperation} from 'aws-amplify';
 import InformationalWalkThrough from 'components/Dashboard/Admin/Institutons/InformationalWalkThrough/InformationalWalkThrough';
 import HeaderTextBar from 'components/Dashboard/HeaderTextBar/HeaderTextBar';
-import React, {useState} from 'react';
+import * as customQueries from 'customGraphql/customQueries';
+import gsap from 'gsap';
+import React, {useEffect, useState} from 'react';
 import {BsFillInfoCircleFill} from 'react-icons/bs';
 import HeroBanner from '../Header/HeroBanner';
 
@@ -14,16 +20,52 @@ interface DashboardContainerProps {
   children: any;
   label?: string;
   courseName?: string;
+  institutionId?: string;
 }
+
+const InstitutionName = ({id, courseName}: {id: string; courseName: string}) => {
+  const [isLoading, setIsLoading] = useState(true);
+  const [institute, setInstitute] = useState({name: '--'});
+
+  const fetchInfo = async () => {
+    try {
+      setIsLoading(true);
+      const res: any = await API.graphql(
+        graphqlOperation(customQueries.getInstitutionBasicInfo, {id: id})
+      );
+      setInstitute(res.data.getInstitution);
+      // await getUrl(res.data.getInstitution.image);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (id) {
+      fetchInfo();
+    }
+  }, [id]);
+
+  return !isLoading ? (
+    <div className="flex items-center flex-col sm:flex-row justify-center">
+      <h4 className="w-auto text-sm font-medium">{institute.name || '--'}</h4>
+      <span className="hidden w-auto sm:block mx-4">•</span>
+      <h4 className="w-auto text-sm font-medium">{courseName || '--'}</h4>
+    </div>
+  ) : (
+    <div>--</div>
+  );
+};
 
 const DashboardContainer = ({
   user,
-  theme,
-  clientKey,
+
   bannerTitle,
   bannerImg,
   children,
-  label,
+  institutionId,
   showTitleBanner = true,
   courseName = ''
 }: DashboardContainerProps) => {
@@ -32,24 +74,6 @@ const DashboardContainer = ({
 
   const [openWalkThroughModal, setOpenWalkThroughModal] = useState(false);
 
-  // const userObject = !isEmpty(user)
-  //   ? {firstName: user.firstName, preferredName: user.firstName}
-  //   : null;
-  // const currentUnit = () => {
-  //   if (!isEmpty(state)) {
-  //     const filtered = state.roomData.syllabus?.find(
-  //       (syllabusObj: any) => syllabusObj.active
-  //     );
-  //     if (filtered) {
-  //       return filtered.name;
-  //     } else {
-  //       return null;
-  //     }
-  //   } else {
-  //     return null;
-  //   }
-  // };
-
   return (
     <>
       <div className={`flex flex-row`}>
@@ -57,18 +81,12 @@ const DashboardContainer = ({
           <HeroBanner imgUrl={bannerImg} title={bannerTitle} />
           {showTitleBanner ? (
             <HeaderTextBar>
-              <div className="flex items-center justify-center">
-                <h2 className={`text-sm mr-2 w-auto 2xl:text-xl text-center font-normal`}>
-                  {isTeacher ? (
-                    <span className="font-semibold">{'Classroom Manager'}</span>
-                  ) : isOnDemandStudent ? (
-                    <span className="font-semibold">
-                      {'Classroom Lessons Self-Paced'}
-                    </span>
-                  ) : (
-                    <span className="font-semibold">{`Classroom Lessons - ${courseName}`}</span>
-                  )}
-                </h2>
+              <div className="header-text-bar_inner flex items-center justify-center">
+                {institutionId ? (
+                  <InstitutionName courseName={courseName} id={institutionId} />
+                ) : (
+                  <div className="py-4"></div>
+                )}
                 {isTeacher && (
                   <div className="w-auto">
                     <span

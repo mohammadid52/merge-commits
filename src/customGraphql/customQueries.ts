@@ -43,6 +43,7 @@ export const getDashboardData = /* GraphQL */ `
               institutionID
               classID
               teacherAuthID
+              status
               teacherEmail
               name
               maxPersons
@@ -63,6 +64,7 @@ export const getDashboardData = /* GraphQL */ `
               currentPage
               teacher {
                 firstName
+                status
                 lastName
                 image
                 email
@@ -74,6 +76,7 @@ export const getDashboardData = /* GraphQL */ `
                 items {
                   teacher {
                     authId
+                    status
                     firstName
                     lastName
                     image
@@ -105,8 +108,10 @@ export const getDashboardData = /* GraphQL */ `
                 student {
                   authId
                   firstName
+                  pageState
                   lastName
                   image
+                  email
                   id
                 }
               }
@@ -189,23 +194,11 @@ export const getDashboardDataForTeachers = /* GraphQL */ `
           status
           email
           role
-          type
+          status
           firstName
           preferredName
           lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
           image
-          language
-          filters
-          lastLoggedIn
-          lastLoggedOut
-          createdAt
-          updatedAt
         }
         class {
           id
@@ -263,6 +256,7 @@ export const getDashboardDataForTeachers = /* GraphQL */ `
               lastName
               image
               email
+              status
               role
               phone
             }
@@ -343,6 +337,7 @@ export const getDashboardDataForCoTeachers = /* GraphQL */ `
                 email
                 firstName
                 lastName
+                status
               }
               teacherID
               teacherEmail
@@ -1173,6 +1168,7 @@ export const listRooms = /* GraphQL */ `
               role
               lastName
               firstName
+              status
             }
           }
         }
@@ -1471,6 +1467,7 @@ export const listRoomsDashboard = /* GraphQL */ `
           id
           status
           firstName
+          status
           preferredName
           lastName
           image
@@ -5140,6 +5137,7 @@ export const attendanceByStudent = /* GraphQL */ `
         lesson {
           id
           title
+          type
         }
         room {
           id
@@ -5191,6 +5189,7 @@ export const getInstitutionBasicInfo = /* GraphQL */ `
     getInstitution(id: $id) {
       id
       name
+      image
     }
   }
 `;

@@ -9,7 +9,7 @@ const SideImage = (props: LessonCardProps) => {
 
   return (
     <div
-      className={`h-auto bg-center  w-2.5/10 ${theme.dashboard.bg} rounded-tl rounded-bl shadow relative`}
+      className={`h-auto lesson-card-image bg-center  w-2.5/10 ${theme.dashboard.bg} rounded-tl rounded-bl shadow relative`}
       style={{
         /* stylelint-disable */
         backgroundImage: `linear-gradient(to top, rgba(0, 0, 0, 0.52), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)),url(${

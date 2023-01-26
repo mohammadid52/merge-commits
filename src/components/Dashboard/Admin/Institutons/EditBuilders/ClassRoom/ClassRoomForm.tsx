@@ -512,14 +512,14 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
         isError: true
       });
       return false;
-    } else if (!roomData.curricular.id) {
+    } else if (!roomData.curricular.id && roomData.status !== RoomStatus.INACTIVE) {
       setMessages({
         show: true,
         message: RoomEDITdict[userLanguage]['messages']['selectCurriculum'],
         isError: true
       });
       return false;
-    } else if (roomData.teacher.id === '') {
+    } else if (roomData.teacher.id === '' && roomData.status !== RoomStatus.INACTIVE) {
       setMessages({
         show: true,
         message: RoomEDITdict[userLanguage]['messages']['selectteacher'],

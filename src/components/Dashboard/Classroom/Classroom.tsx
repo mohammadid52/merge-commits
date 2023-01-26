@@ -1,4 +1,5 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import TranslationModule from '@components/Lesson/UniversalLesson/views/CoreUniversalLesson/TranslationModule';
 import {logError, updatePageState} from '@graphql/functions';
 import {setPageTitle} from '@utilities/functions';
 import {removeLocalStorageData, setLocalStorageData} from '@utilities/localStorage';
@@ -11,14 +12,18 @@ import * as customQueries from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import useAuth from 'customHooks/useAuth';
 import * as mutations from 'graphql/mutations';
+import gsap from 'gsap';
 import isEmpty from 'lodash/isEmpty';
-import React, {Fragment, useEffect, useState} from 'react';
+import React, {Fragment, useEffect, useRef, useState} from 'react';
 import {useRouteMatch} from 'react-router';
 import {Empty} from '../Admin/LessonsBuilder/StepActionComponent/LearningEvidence/CourseMeasurementsCard';
 import {DashboardProps} from '../Dashboard';
 import DashboardContainer from '../DashboardContainer';
 import DateAndTime from '../DateAndTime/DateAndTime';
 import ClassroomLoader from './ClassroomLoader';
+
+import FloatingAction from './FloatingActionForTeacherAndStudents';
+import FloatingActionTranslation from './FloatingActionTranslation';
 import SyllabusSwitch from './SyllabusSwitch';
 import Today from './TodayLesson';
 
@@ -120,7 +125,11 @@ const range = (from: number, to: number, step: number = 1) => {
   return range;
 };
 
-const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
+interface ClassroomProps extends DashboardProps {
+  homeData: any;
+}
+
+const Classroom: React.FC<ClassroomProps> = (props: ClassroomProps) => {
   const {
     setClassroomCurriculum,
     classroomCurriculum,
@@ -132,7 +141,8 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
     lessonLoading,
     syllabusLoading,
     handleRoomSelection,
-    loadingRoomInfo
+    loadingRoomInfo,
+    homeData
   } = props;
 
   // ##################################################################### //
@@ -437,12 +447,25 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
 
   const courseName = state?.roomData?.curriculum?.name || '';
 
+  useEffect(() => {
+    if (homeData && homeData.length > 0 && activeRoomInfo) {
+      gsap.from('.floating-wrapper', {
+        duration: 1,
+        ease: 'power2.inOut',
+        x: 100,
+        scale: 0,
+        delay: 1
+      });
+    }
+  }, [homeData, activeRoomInfo]);
+
   return (
     <>
       <DashboardContainer
         user={stateUser}
         theme={theme}
         courseName={courseName}
+        institutionId={activeRoomInfo?.institutionID}
         clientKey={clientKey}
         bannerImg={bannerImg}
         bannerTitle={`${classRoomDict[userLanguage]['TITLE']}`}>
@@ -544,6 +567,24 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
             </>
           </div>
         </div>
+
+        {homeData && homeData.length > 0 && activeRoomInfo && (
+          <div className="fixed floating-wrapper-outer w-auto sm:right-2">
+            <div className="floating-wrapper flex flex-col items-center px-2 py-2 bg-white theme-card-shadow rounded-full space-x-4 sm:space-x-0 sm:space-y-4 ">
+              <FloatingAction
+                roomId={activeRoomInfo.id}
+                homeData={homeData}
+                name="teacher"
+              />
+              <FloatingAction
+                roomId={activeRoomInfo.id}
+                homeData={homeData}
+                name="student"
+              />
+              {/* <FloatingActionTranslation /> */}
+            </div>
+          </div>
+        )}
       </DashboardContainer>
     </>
   );
