@@ -36,6 +36,7 @@ import {logError} from '@graphql/functions';
 import Registration from 'components/Dashboard/Admin/UserManagement/Registration';
 import {map} from 'lodash';
 import {Status} from '../../UserManagement/UserStatus';
+import UserLookupLocation from '@components/MicroComponents/UserLookupLocation';
 
 interface StaffBuilderProps {
   instituteId: String;
@@ -460,6 +461,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
         {item.role ? getStaffRole(item.role) : ''}
       </span>
     ),
+    location: <UserLookupLocation show item={item.staffMember} idx={index} />,
     status:
       statusEdit === item.id ? (
         <div className="">
@@ -502,6 +504,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
       dictionary['NAME'],
       user.isSuperAdmin && dictionary['INSTITUTION_NAME'],
       dictionary['ROLE'],
+      'Location',
       dictionary['STATUS'],
       dictionary['ACTION']
     ],
@@ -509,7 +512,6 @@ const StaffBuilder = (props: StaffBuilderProps) => {
     config: {
       isFirstIndex: true,
       isLastAction: true,
-
       dataList: {
         loading: dataLoading,
         emptyText: 'No staff found',
@@ -545,7 +547,6 @@ const StaffBuilder = (props: StaffBuilderProps) => {
       const filtered = activeStaffList.filter(
         (_d: any) => filterName.toLowerCase() === _d?.staffMember?.status?.toLowerCase()
       );
-      console.log(filtered);
       setFilteredList(filtered);
       setFilters(filterName);
     }

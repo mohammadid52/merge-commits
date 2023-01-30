@@ -34,7 +34,6 @@ const loopSyllabusLessonIdAndMutate = async (sylLessonIds: any) => {
 };
 
 const mutateSingleSyllabusLesson = async (sylID: string, content: any[]) => {
-  console.log('mutateSingleSyllabusLesson: ', 'start');
   try {
     await API.graphql(
       graphqlOperation(customMutations.updateSyllabusLesson, {
@@ -50,7 +49,6 @@ const mutateSingleSyllabusLesson = async (sylID: string, content: any[]) => {
   } catch (e) {
     console.error('mutateSingleSyllabusLesson: ', e);
   } finally {
-    console.log('mutateSingleSyllabusLesson: ', 'end');
   }
 };
 

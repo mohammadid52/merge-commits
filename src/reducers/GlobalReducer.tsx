@@ -167,7 +167,6 @@ export const globalReducer = (state: globalStateType, action: globalActions) => 
         }
       };
     case 'RESET_ROOMDATA':
-      console.log('RESET_ROOMDATA');
       return {
         ...state,
         currentPage: '',

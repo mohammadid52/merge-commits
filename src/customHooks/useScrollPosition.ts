@@ -4,7 +4,6 @@ const useScrollPosition = () => {
 
   useEffect(() => {
     const updatePosition = () => {
-      console.log('updating...');
       setScrollPosition(window.pageYOffset);
     };
     $(window).on('scroll', updatePosition);
