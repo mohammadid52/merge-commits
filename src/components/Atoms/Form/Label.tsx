@@ -4,7 +4,7 @@ const Label = ({
   label = '',
   className = '',
   isRequired = false,
-  dark = true,
+  dark = false,
   disabled = false
 }: {
   label: string;

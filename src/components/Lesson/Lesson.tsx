@@ -258,12 +258,14 @@ const Lesson = () => {
       if (personLessonData) {
         pages = personLessonData.pages;
       } else {
-        const getLessonRatingDetails: any = await API.graphql(
-          graphqlOperation(queries.getPersonLessonsData, {
-            id: personLessonData.id
-          })
-        );
-        pages = getLessonRatingDetails.data.getPersonLessonsData.pages;
+        if (personLessonData.id) {
+          const getLessonRatingDetails: any = await API.graphql(
+            graphqlOperation(queries.getPersonLessonsData, {
+              id: personLessonData.id
+            })
+          );
+          pages = getLessonRatingDetails.data.getPersonLessonsData.pages;
+        }
       }
 
       const currentPage = JSON.parse(pages).currentPage;
