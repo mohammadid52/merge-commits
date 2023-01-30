@@ -24,7 +24,8 @@ import {findIndex, isEmpty, remove, update} from 'lodash';
 import {nanoid} from 'nanoid';
 import React, {useContext, useEffect, useRef, useState} from 'react';
 import {useHistory, useRouteMatch} from 'react-router';
-
+import CustomRichTextEditor from '@components/Lesson/UniversalLessonBlockComponents/Blocks/HighlighterBlock/CustomRichTextEditor';
+const features: string[] = ['colorPicker', 'inline'];
 const VideoUploadComponent = ({
   customRef,
   closeAction,
@@ -673,7 +674,7 @@ const NewLessonPlanSO = ({
               label="Activity name"
               isRequired
               onChange={onFieldChange}
-              dark={pageDetails?.darkMode}
+              dark
               id="title"
               error={errors?.title}
             />
@@ -684,7 +685,7 @@ const NewLessonPlanSO = ({
               showCharacterUsage
               label="Activity label"
               maxLength={12}
-              dark={pageDetails?.darkMode}
+              dark
               isRequired
               placeHolder="eg. Let's learn what is javascript"
               value={label}
@@ -701,7 +702,7 @@ const NewLessonPlanSO = ({
               label="Add video instructions"
               disabled={isUploadedFromPC}
               onChange={onVideoLinkChange}
-              dark={pageDetails?.darkMode}
+              dark
               id="videoLink"
               error={errors?.videoLink}
             />
@@ -735,7 +736,12 @@ const NewLessonPlanSO = ({
 
           <Block>
             <Label className="mb-1" label={'Activity instructions'} />
-            <RichTextEditor
+            <CustomRichTextEditor
+              withStyles
+              rounded
+              customStyle
+              features={features}
+              dark
               initialValue={instructions}
               onChange={(htmlContent, plainText) =>
                 onEditorStateChange(
