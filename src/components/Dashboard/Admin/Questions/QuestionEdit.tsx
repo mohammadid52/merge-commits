@@ -1,18 +1,18 @@
-import React, {useState, useEffect} from 'react';
-import {useHistory, useLocation} from 'react-router-dom';
-import {IoArrowUndoCircleOutline} from 'react-icons/io5';
 import API, {graphqlOperation} from '@aws-amplify/api';
+import React, {useEffect, useState} from 'react';
+import {IoArrowUndoCircleOutline} from 'react-icons/io5';
+import {useHistory, useLocation} from 'react-router-dom';
 
-import * as queries from 'graphql/queries';
 import * as mutations from 'graphql/mutations';
+import * as queries from 'graphql/queries';
 
-import Buttons from 'atoms/Buttons';
-import Selector from 'atoms/Form/Selector';
-import MultipleSelector from 'atoms/Form/MultipleSelector';
-import FormInput from 'atoms/Form/FormInput';
-import TextArea from 'atoms/Form/TextArea';
+import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import BreadCrums from 'atoms/BreadCrums';
-import SectionTitle from 'atoms/SectionTitle';
+import Buttons from 'atoms/Buttons';
+import FormInput from 'atoms/Form/FormInput';
+import MultipleSelector from 'atoms/Form/MultipleSelector';
+import Selector from 'atoms/Form/Selector';
+import TextArea from 'atoms/Form/TextArea';
 import PageWrapper from 'atoms/PageWrapper';
 
 interface InitialState {
@@ -165,7 +165,7 @@ const QuestionEdit = () => {
       {/* Section Header */}
       <BreadCrums items={breadCrumsList} />
       <div className="flex justify-between">
-        <SectionTitle title="EDIT QUESTION" subtitle="Edit current question" />
+        <SectionTitleV3 title="EDIT QUESTION" subtitle="Edit current question" />
         <div className="flex justify-end py-4 mb-4 w-5/10">
           <Buttons
             label="Go Back"

@@ -1,24 +1,22 @@
-import React, {useState, useEffect, useContext, Fragment} from 'react';
 import API, {graphqlOperation} from '@aws-amplify/api';
-import {useHistory, useRouteMatch} from 'react-router-dom';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
-import {AiOutlineArrowUp, AiOutlineArrowDown} from 'react-icons/ai';
+import React, {useContext, useEffect, useState} from 'react';
+import {AiOutlineArrowDown, AiOutlineArrowUp} from 'react-icons/ai';
 import {IoMdAddCircleOutline} from 'react-icons/io';
+import {IconContext} from 'react-icons/lib/esm/iconContext';
+import {useHistory, useRouteMatch} from 'react-router-dom';
 
 import {GlobalContext} from 'contexts/GlobalContext';
-import LessonLoading from '../../../Lesson/Loading/ComponentLoading';
 import * as queries from 'graphql/queries';
+import LessonLoading from '../../../Lesson/Loading/ComponentLoading';
 import QuestionListRow from './QuestionListRow';
 
-import Buttons from 'atoms/Buttons';
-import Selector from 'atoms/Form/Selector';
-import BreadCrums from 'atoms/BreadCrums';
-import Pagination from 'atoms/Pagination';
-import SearchInput from 'atoms/Form/SearchInput';
-import SectionTitle from 'atoms/SectionTitle';
-import PageCountSelector from 'atoms/PageCountSelector';
-import usePagination from '@customHooks/usePagination';
+import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import ListBottomBar from '@components/Molecules/ListBottomBar';
+import usePagination from '@customHooks/usePagination';
+import BreadCrums from 'atoms/BreadCrums';
+import Buttons from 'atoms/Buttons';
+import SearchInput from 'atoms/Form/SearchInput';
+import Selector from 'atoms/Form/Selector';
 interface QuestionsListProps {}
 
 const QuestionsList = (props: QuestionsListProps) => {
@@ -164,7 +162,7 @@ const QuestionsList = (props: QuestionsListProps) => {
         {/* Header section */}
         <BreadCrums items={breadCrumsList} />
         <div className="flex justify-between">
-          <SectionTitle title="QUESTION BANK" subtitle="All Questions List" />
+          <SectionTitleV3 title="QUESTION BANK" subtitle="All Questions List" />
           <div className="flex justify-end py-4 mb-4">
             <SearchInput
               value={searchInput.value}

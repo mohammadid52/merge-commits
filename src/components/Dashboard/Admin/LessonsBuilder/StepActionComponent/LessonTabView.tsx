@@ -1,7 +1,6 @@
 import BreadCrums from 'atoms/BreadCrums';
 import Buttons from 'atoms/Buttons';
 import Loader from 'atoms/Loader';
-import SectionTitle from 'atoms/SectionTitle';
 import {API, graphqlOperation} from 'aws-amplify';
 import {GlobalContext} from 'contexts/GlobalContext';
 import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
@@ -14,12 +13,13 @@ import {IoArrowUndoCircleOutline, IoCardSharp} from 'react-icons/io5';
 import {useHistory, useParams, useRouteMatch} from 'react-router-dom';
 import {languageList} from 'utilities/staticData';
 // import Tooltip from 'atoms/Tooltip';
+import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
+import {getDictionaries} from '@graphql/functions';
 import UnderlinedTabs, {ITabElementProps} from 'atoms/UnderlinedTabs';
 import LessonMeasurements from './LessonMeasurements';
 import LessonPlansList from './LessonPlansList';
 import LessonSummaryForm from './LessonSummaryForm';
 import UnitLookup from './UnitLookup';
-import {getDictionaries} from '@graphql/functions';
 
 interface ILessonTabViewProps {
   designersList: any[];
@@ -203,7 +203,7 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
       {/* Section Header */}
       <BreadCrums items={breadCrumsList} />
       <div className="flex justify-between">
-        <SectionTitle
+        <SectionTitleV3
           title={LessonEditDict[userLanguage]['TITLE']}
           subtitle={LessonEditDict[userLanguage]['SUBTITLE']}
         />

@@ -235,7 +235,7 @@ const ProfileEdit = (props: UserInfoProps) => {
       firstName: editUser.firstName,
       grade: editUser.grade,
       image: editUser.image,
-      language: editUser.language,
+      language: editUser.language === 'English' ? 'EN' : 'ES',
       lastName: editUser.lastName,
       preferredName: editUser.preferredName,
       role: editUser.role,
@@ -255,9 +255,10 @@ const ProfileEdit = (props: UserInfoProps) => {
         type: 'SET_USER',
         payload: {
           id: state.user.id,
+
           firstName: editUser.firstName,
           lastName: editUser.lastName,
-          language: editUser.language,
+          language: editUser.language === 'English' ? 'EN' : 'ES',
           onBoardSurvey: state.user.onBoardSurvey ? state.user.onBoardSurvey : false,
           role: state.user.role,
           image: state.user.image,
@@ -279,30 +280,20 @@ const ProfileEdit = (props: UserInfoProps) => {
 
   const onChange = (e: any) => {
     const {id, value} = e.target;
-    setEditUser(() => {
-      return {
-        ...editUser,
-        [id]: value
-      };
-    });
-  };
 
-  const handleChangeLanguage = (lang: {name: string; code: string}) => {
-    setEditUser(() => {
-      return {
-        ...editUser,
-        language: lang.code
-      };
+    setEditUser({
+      ...editUser,
+      [id]: value
     });
   };
 
   const Language = [
     {
-      code: 'EN',
+      id: 1,
       name: 'English'
     },
     {
-      code: 'ES',
+      id: 2,
       name: 'Spanish'
     }
   ];
@@ -359,14 +350,6 @@ const ProfileEdit = (props: UserInfoProps) => {
   }
   const extractItemFromArray = (responceArray: any[]) => {
     const answerArray: any = responceArray.map((item: any) => {
-      // const getOtherRespValue = () => {
-      //   const response = item?.response.toString();
-      //   if (response.includes('Other')) {
-      //     return item.otherResponse;
-      //   } else {
-      //     return response;
-      //   }
-      // };
       return {
         [item['qid']]:
           item?.response?.length > 1
@@ -425,6 +408,8 @@ const ProfileEdit = (props: UserInfoProps) => {
     }
   };
 
+  const dictionary = dashboardProfileDict[userLanguage]['EDIT_PROFILE'];
+
   {
     return (
       <div className="h-full w-full md:px-4 pt-4">
@@ -449,61 +434,47 @@ const ProfileEdit = (props: UserInfoProps) => {
                 <div className="grid grid-cols-1 gap-y-4 gap-x-4 sm:grid-cols-6 text-gray-900">
                   <>
                     <div className="sm:col-span-3 p-2">
-                      <label
-                        htmlFor="firstName"
-                        className="block text-sm font-medium leading-5 text-gray-700">
-                        {dashboardProfileDict[userLanguage]['EDIT_PROFILE']['FIRST_NAME']}
-                      </label>
-                      <div className="mt-1 border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm">
-                        <input
-                          id="firstName"
-                          onChange={onChange}
-                          className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5"
-                          defaultValue={user.firstName}
-                        />
-                      </div>
+                      <FormInput
+                        id="firstName"
+                        value={editUser.firstName}
+                        name="firstName"
+                        onChange={onChange}
+                        label={dictionary['FIRST_NAME']}
+                      />
                     </div>
 
                     <div className="sm:col-span-3 p-2">
-                      <label
-                        htmlFor="lastName"
-                        className="block text-sm font-medium leading-5 text-gray-700">
-                        {dashboardProfileDict[userLanguage]['EDIT_PROFILE']['LAST_NAME']}
-                      </label>
-                      <div className="mt-1 border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm">
-                        <input
-                          id="lastName"
-                          onChange={onChange}
-                          className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5"
-                          defaultValue={user.lastName}
-                        />
-                      </div>
+                      <FormInput
+                        id="lastName"
+                        value={editUser.lastName}
+                        onChange={onChange}
+                        label={dictionary['LAST_NAME']}
+                      />
                     </div>
 
                     <div className="sm:col-span-3 p-2">
-                      <label
-                        htmlFor="preferredName"
-                        className="block text-sm font-medium leading-5 text-gray-700">
-                        {dashboardProfileDict[userLanguage]['EDIT_PROFILE']['NICKNAME']}
-                      </label>
-                      <div className="border-0 border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
-                        <input
-                          id="preferredName"
-                          onChange={onChange}
-                          className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5"
-                          defaultValue={user.preferredName}
-                        />
-                      </div>
+                      <FormInput
+                        id="preferredName"
+                        value={editUser.preferredName}
+                        onChange={onChange}
+                        label={dictionary['NICKNAME']}
+                      />
                     </div>
 
                     <div className="sm:col-span-3 p-2">
-                      <DropdownForm
-                        handleChangeLanguage={handleChangeLanguage}
-                        userLanguage={user.language}
-                        label={
-                          dashboardProfileDict[userLanguage]['EDIT_PROFILE']['LANGUAGE']
+                      <Selector
+                        placeholder="Select Language"
+                        dropdownWidth="w-56"
+                        list={Language}
+                        onChange={(c: any, name: string) =>
+                          setEditUser({...editUser, language: name})
                         }
-                        items={Language}
+                        label={dictionary['LANGUAGE']}
+                        selectedItem={
+                          editUser.language === 'EN' || editUser.language === 'English'
+                            ? 'English'
+                            : 'Spanish'
+                        }
                       />
                     </div>
                   </>

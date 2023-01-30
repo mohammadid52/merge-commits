@@ -1,29 +1,28 @@
-import React, {useState, useEffect, useContext} from 'react';
-import {useHistory, useLocation} from 'react-router-dom';
-import {IoArrowUndoCircleOutline} from 'react-icons/io5';
 import API, {graphqlOperation} from '@aws-amplify/api';
-import differenceBy from 'lodash/differenceBy';
+import React, {useContext, useEffect, useState} from 'react';
+import {IoArrowUndoCircleOutline} from 'react-icons/io5';
+import {useHistory, useLocation} from 'react-router-dom';
 
-import * as customQueries from 'customGraphql/customQueries';
 import * as customMutations from 'customGraphql/customMutations';
+import * as customQueries from 'customGraphql/customQueries';
 
-import * as queries from 'graphql/queries';
-import * as mutation from 'graphql/mutations';
-import SectionTitle from 'atoms/SectionTitle';
-import PageWrapper from 'atoms/PageWrapper';
+import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import BreadCrums from 'atoms/BreadCrums';
 import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
-import Selector from 'atoms/Form/Selector';
-import {getFilterORArray} from 'utilities/strings';
-import SelectorWithAvatar from 'atoms/Form/SelectorWithAvatar';
-import {GlobalContext} from 'contexts/GlobalContext';
-import {getImageFromS3} from 'utilities/services';
-import useDictionary from 'customHooks/dictionary';
 import MultipleSelector from 'atoms/Form/MultipleSelector';
+import Selector from 'atoms/Form/Selector';
+import SelectorWithAvatar from 'atoms/Form/SelectorWithAvatar';
+import PageWrapper from 'atoms/PageWrapper';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
 import {LessonEditDict} from 'dictionary/dictionary.iconoclast';
+import * as mutation from 'graphql/mutations';
+import * as queries from 'graphql/queries';
 import ModalPopUp from 'molecules/ModalPopUp';
 import {goBackBreadCrumb} from 'utilities/functions';
+import {getImageFromS3} from 'utilities/services';
+import {getFilterORArray} from 'utilities/strings';
 
 interface EditRoomProps {}
 
@@ -727,7 +726,7 @@ const EditRoom = (props: EditRoomProps) => {
         items={breadCrumsList}
       />
       <div className="flex justify-between">
-        <SectionTitle
+        <SectionTitleV3
           title={RoomEDITdict[userLanguage]['TITLE']}
           subtitle={RoomEDITdict[userLanguage]['SUBTITLE']}
         />

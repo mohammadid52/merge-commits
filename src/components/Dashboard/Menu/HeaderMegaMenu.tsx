@@ -22,22 +22,24 @@ const HeaderMegaMenu = () => {
       ? `/dashboard/manage-institutions/institution/${user.associateInstitute[0].institution.id}`
       : '';
 
+  const TABS = Institute_info[userLanguage]['TABS'];
+
   // ~~~~~~~~~~~~~ MENU SUP/ADM ~~~~~~~~~~~~ //
   const headerMenusForInstitution = [
     {
-      title: Institute_info[userLanguage]['TABS']['INSTITUTION_MANAGER'],
+      title: TABS['INSTITUTION_MANAGER'],
       key: 'institution',
       type: 'dropdown',
       children: [
         {
-          title: Institute_info[userLanguage]['TABS']['GENERAL_INFORMATION'],
+          title: TABS['GENERAL_INFORMATION'],
           key: 'general_information',
           redirectionUrl:
             user.role === 'SUP' ? `${baseUrl}?alert=true` : `${baseUrl}/edit`,
           active: location.pathname.indexOf(`${baseUrl}/edit`) > -1
         },
         {
-          title: Institute_info[userLanguage]['TABS']['STAFF'],
+          title: TABS['STAFF'],
           key: 'staff',
           redirectionUrl: `${baseUrl}/staff`,
           active: location.pathname.indexOf('staff') > -1
@@ -57,30 +59,30 @@ const HeaderMegaMenu = () => {
       ].filter(Boolean)
     },
     {
-      title: Institute_info[userLanguage]['TABS']['COURSE_MANAGER'],
+      title: TABS['COURSE_MANAGER'],
       key: 'course',
       type: 'dropdown',
       children: [
         {
-          title: Institute_info[userLanguage]['TABS']['COURSES'],
+          title: TABS['COURSES'],
           key: 'course',
           redirectionUrl: `${baseUrl}/courses`,
           active: location.pathname.indexOf('course') > -1
         },
         {
-          title: Institute_info[userLanguage]['TABS']['UNITS'],
+          title: TABS['UNITS'],
           key: 'unit',
           redirectionUrl: `${baseUrl}/units`,
           active: location.pathname.indexOf('units') > -1
         },
         {
-          title: Institute_info[userLanguage]['TABS']['LESSONS'],
+          title: TABS['LESSONS'],
           key: 'lessons',
           redirectionUrl: `${baseUrl}/lessons`,
           active: location.pathname.indexOf('lessons') > -1
         },
         {
-          title: Institute_info[userLanguage]['TABS']['GAME_CHANGERS'],
+          title: TABS['GAME_CHANGERS'],
           key: 'game-changers',
           redirectionUrl: `/dashboard/game-changers`,
           active: location.pathname.indexOf('game-changers') > -1
@@ -88,30 +90,30 @@ const HeaderMegaMenu = () => {
       ]
     },
     user.role !== 'BLD' && {
-      title: Institute_info[userLanguage]['TABS']['CLASS_MANAGER'],
+      title: TABS['CLASS_MANAGER'],
       key: 'class',
       type: 'dropdown',
       children: [
         // { user.role !== 'BLD' &&
-        //   title: Institute_info[userLanguage]['TABS']['CLASSES'],
+        //   title: TABS['CLASSES'],
         //   key: 'class',
         //   redirectionUrl: `${baseUrl}/class`,
         //   active: location.pathname.indexOf('class') > -1,
         // },
         {
-          title: Institute_info[userLanguage]['TABS']['CLASSROOMS'],
+          title: TABS['CLASSROOMS'],
           key: 'class_room',
           redirectionUrl: `${baseUrl}/class-rooms`,
           active: location.pathname.indexOf('room') > -1
         },
         (user.role === 'FLW' || user.role === 'TR') && {
-          title: Institute_info[userLanguage]['TABS']['STUDENT_ROASTER'],
+          title: TABS['STUDENT_ROASTER'],
           key: 'roaster',
           redirectionUrl: `${baseUrl}/students`,
           active: location.pathname.indexOf('room') > -1
         },
         (user.role === 'FLW' || user.role === 'TR') && {
-          title: Institute_info[userLanguage]['TABS']['LIVE_CLASS_ROOM'],
+          title: TABS['LIVE_CLASS_ROOM'],
           key: 'live_classroom',
           redirectionUrl: `/dashboard/home`,
           active: location.pathname.indexOf('room') > -1
@@ -119,7 +121,7 @@ const HeaderMegaMenu = () => {
       ].filter(Boolean)
     },
     user.role !== 'BLD' && {
-      title: Institute_info[userLanguage]['TABS']['COMMUNITY_MANAGER'],
+      title: TABS['COMMUNITY_MANAGER'],
       key: 'community',
       type: 'dropdown',
       children: [
@@ -139,7 +141,7 @@ const HeaderMegaMenu = () => {
       ]
     },
     {
-      title: Institute_info[userLanguage]['TABS']['RESEARCH_AND_ANALYTICS'],
+      title: TABS['RESEARCH_AND_ANALYTICS'],
       key: 'research_and_analytics',
       type: 'dropdown',
       children: [
@@ -147,20 +149,20 @@ const HeaderMegaMenu = () => {
           key: 'download_csv',
           redirectionUrl: `${baseUrl}/research-and-analytics`,
           active: false,
-          title: Institute_info[userLanguage]['TABS']['DOWNLOAD_CSV']
+          title: TABS['DOWNLOAD_CSV']
         },
 
         {
           key: 'upload_csv',
           redirectionUrl: `${baseUrl}/research-and-analytics/upload-csv`,
           active: location.pathname.indexOf('research-and-analytics') > -1,
-          title: Institute_info[userLanguage]['TABS']['UPLOAD_CSV']
+          title: TABS['UPLOAD_CSV']
         }
         // {
         //   key: 'analytics_dashboard',
         //   redirectionUrl: `${baseUrl}/research-and-analytics/analytics-dashboard`,
         //   active: location.pathname.indexOf('research-and-analytics') > -1,
-        //   title: Institute_info[userLanguage]['TABS']['UPLOAD_TO_ATHENA'],
+        //   title: TABS['UPLOAD_TO_ATHENA'],
         // },
       ]
     }
@@ -169,7 +171,7 @@ const HeaderMegaMenu = () => {
   // ~~~~~~~~~~~~~ MENU STUDENT ~~~~~~~~~~~~ //
   const headerMenusForStudent = [
     {
-      title: Institute_info[userLanguage]['TABS']['HOME'],
+      title: TABS['HOME'],
       key: 'dashboard',
       redirectionUrl: `${baseUrl}/dashboard/home`,
       active:
@@ -177,19 +179,19 @@ const HeaderMegaMenu = () => {
         location.pathname.indexOf('classroom') > -1
     },
     {
-      title: Institute_info[userLanguage]['TABS']['GAME_CHANGERS'],
+      title: TABS['GAME_CHANGERS'],
       key: 'game-changers',
       redirectionUrl: `${baseUrl}/dashboard/game-changers`,
       active: location.pathname.indexOf('game-changers') > -1
     },
     {
-      title: Institute_info[userLanguage]['TABS']['COMMUNITY'],
+      title: TABS['COMMUNITY'],
       key: 'community',
       redirectionUrl: `${baseUrl}/dashboard/community/front`,
       active: location.pathname.indexOf('community') > -1
     },
     {
-      title: Institute_info[userLanguage]['TABS']['NOTEBOOK'],
+      title: TABS['NOTEBOOK'],
       key: 'notebook',
       redirectionUrl: `${baseUrl}/dashboard/anthology`,
       active: location.pathname.indexOf('anthology') > -1

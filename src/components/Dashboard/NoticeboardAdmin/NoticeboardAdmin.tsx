@@ -1,12 +1,9 @@
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import React, {useContext, useEffect, useState} from 'react';
+import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
+import ContentCard from 'atoms/ContentCard';
 import {GlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
-import * as mutations from 'graphql/mutations';
-import * as queries from 'graphql/queries';
 import {Widget as NoticeboardWidgetMapItem} from 'interfaces/ClassroomComponentsInterfaces';
-import ContentCard from 'atoms/ContentCard';
-import SectionTitle from 'atoms/SectionTitleV2';
+import React, {useContext, useEffect, useState} from 'react';
 import SubSectionTabs from '../Anthology/SubSectionTabs';
 import TopWidgetBar from '../Noticebooard/TopWidgetBar';
 import NoticeboardAdminContent from './NoticeboardAdminContent';
@@ -428,7 +425,7 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
     <>
       <TopWidgetBar />
       <ContentCard additionalClass={`flex-col`}>
-        <SectionTitle
+        <SectionTitleV3
           title={`1. ${noticeboardDict[userLanguage].SECTION_TITLE.ROOM_SELECTOR}`}
         />
 
@@ -443,7 +440,7 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
           setActiveRoomName={setActiveRoomName}
         />
 
-        <SectionTitle
+        <SectionTitleV3
           title={`2. ${noticeboardDict[userLanguage].SECTION_TITLE.WIDGET_MANAGER}`}
         />
 

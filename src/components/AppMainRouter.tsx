@@ -2,6 +2,7 @@
 // import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {Auth} from '@aws-amplify/auth';
+import useDictionary from '@customHooks/dictionary';
 import {UserPageState} from 'API';
 import {getAsset} from 'assets';
 import AuthRoutes from 'components/AppRoutes/AuthRoutes';

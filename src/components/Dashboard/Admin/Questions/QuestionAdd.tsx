@@ -1,18 +1,18 @@
-import React, {useState, useEffect} from 'react';
-import {useHistory} from 'react-router-dom';
-import {IoArrowUndoCircleOutline} from 'react-icons/io5';
 import API, {graphqlOperation} from '@aws-amplify/api';
+import React, {useEffect, useState} from 'react';
+import {IoArrowUndoCircleOutline} from 'react-icons/io5';
+import {useHistory} from 'react-router-dom';
 
 import * as customQueries from 'customGraphql/customQueries';
 import * as mutations from 'graphql/mutations';
 
-import Buttons from 'atoms/Buttons';
-import Selector from 'atoms/Form/Selector';
-import MultipleSelector from 'atoms/Form/MultipleSelector';
-import FormInput from 'atoms/Form/FormInput';
-import TextArea from 'atoms/Form/TextArea';
+import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import BreadCrums from 'atoms/BreadCrums';
-import SectionTitle from 'atoms/SectionTitle';
+import Buttons from 'atoms/Buttons';
+import FormInput from 'atoms/Form/FormInput';
+import MultipleSelector from 'atoms/Form/MultipleSelector';
+import Selector from 'atoms/Form/Selector';
+import TextArea from 'atoms/Form/TextArea';
 import PageWrapper from 'atoms/PageWrapper';
 
 interface QuestionAddProps {}
@@ -192,7 +192,7 @@ const QuestionAdd = (props: QuestionAddProps) => {
       {/* Section Header */}
       <BreadCrums items={breadCrumsList} />
       <div className="flex justify-between">
-        <SectionTitle title="ADD QUESTION" subtitle="Add new question to the list" />
+        <SectionTitleV3 title="ADD QUESTION" subtitle="Add new question to the list" />
         <div className="flex justify-end py-4 mb-4 w-5/10">
           <Buttons
             label="Go Back"

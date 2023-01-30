@@ -9,6 +9,7 @@ import App from 'components/App';
 import 'index.html';
 import 'style/style.css';
 import 'style/style.scss';
+import useDictionary from '@customHooks/dictionary';
 
 require('dotenv').config();
 

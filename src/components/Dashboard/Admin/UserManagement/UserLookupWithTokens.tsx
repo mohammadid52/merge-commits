@@ -1,26 +1,24 @@
-import React, {useState, useEffect, useContext, Fragment} from 'react';
-import {useHistory} from 'react-router-dom';
 import API, {graphqlOperation} from '@aws-amplify/api';
-import {AiOutlineUsergroupAdd, AiOutlineArrowUp} from 'react-icons/ai';
+import React, {useContext, useEffect, useState} from 'react';
+import {AiOutlineArrowUp, AiOutlineUsergroupAdd} from 'react-icons/ai';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
+import {useHistory} from 'react-router-dom';
 
+import {getAsset} from 'assets';
 import {GlobalContext} from 'contexts/GlobalContext';
 import * as queries from 'graphql/queries';
-import {getAsset} from 'assets';
 
-import LessonLoading from '../../../Lesson/Loading/ComponentLoading';
-import ListStudents from './ListStudents';
-import List from './List';
-import Pagination from 'atoms/Pagination';
-import Buttons from 'atoms/Buttons';
+import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
+import ListBottomBar from '@components/Molecules/ListBottomBar';
+import usePagination from '@customHooks/usePagination';
 import BreadCrums from 'atoms/BreadCrums';
-import SectionTitle from 'atoms/SectionTitle';
-import PageCountSelector from 'atoms/PageCountSelector';
+import Buttons from 'atoms/Buttons';
 import SearchInput from 'atoms/Form/SearchInput';
 import Selector from 'atoms/Form/Selector';
 import useDictionary from 'customHooks/dictionary';
-import ListBottomBar from '@components/Molecules/ListBottomBar';
-import usePagination from '@customHooks/usePagination';
+import LessonLoading from '../../../Lesson/Loading/ComponentLoading';
+import List from './List';
+import ListStudents from './ListStudents';
 
 {
   /* 
@@ -217,7 +215,7 @@ const UserLookup = () => {
       <div className={`w-full h-full mt-4`}>
         <BreadCrums items={breadCrumsList} />
         <div className="flex justify-between">
-          <SectionTitle
+          <SectionTitleV3
             title={UserLookupWithTokenDict[userLanguage]['title']}
             subtitle={UserLookupWithTokenDict[userLanguage]['subtitle']}
           />

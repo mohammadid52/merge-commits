@@ -1,19 +1,18 @@
-import React, {useContext, useEffect, useState} from 'react';
-import {useHistory, useParams} from 'react-router';
-import {IoArrowUndoCircleOutline} from 'react-icons/io5';
 import API, {graphqlOperation} from '@aws-amplify/api';
 import BreadCrums from 'atoms/BreadCrums';
-import SectionTitle from 'atoms/SectionTitle';
 import Buttons from 'atoms/Buttons';
-import PageWrapper from 'atoms/PageWrapper';
 import FormInput from 'atoms/Form/FormInput';
 import TextArea from 'atoms/Form/TextArea';
-import Selector from 'atoms/Form/Selector';
+import PageWrapper from 'atoms/PageWrapper';
+import React, {useContext, useEffect, useState} from 'react';
+import {IoArrowUndoCircleOutline} from 'react-icons/io5';
+import {useHistory, useParams} from 'react-router';
 
-import * as mutations from 'graphql/mutations';
-import * as queries from 'graphql/queries';
+import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import {GlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
+import * as mutations from 'graphql/mutations';
+import * as queries from 'graphql/queries';
 interface EditLearningObjectiveProps {}
 
 const EditLearningObjective = (props: EditLearningObjectiveProps) => {
@@ -107,7 +106,7 @@ const EditLearningObjective = (props: EditLearningObjectiveProps) => {
       {/* Section Header */}
       <BreadCrums items={breadCrumsList} />
       <div className="flex justify-between">
-        <SectionTitle
+        <SectionTitleV3
           title={EditLearningObjectiveDict[userLanguage]['title']}
           subtitle={EditLearningObjectiveDict[userLanguage]['subtitle']}
         />

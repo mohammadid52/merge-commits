@@ -1,22 +1,25 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import BreadcrumbsWithBanner from 'atoms/BreadcrumbsWithBanner';
-import {updatePageState, uploadImageToS3} from 'graphql/functions';
-import React, {Fragment, useContext, useEffect, useState} from 'react';
-import {FaEdit, FaPlus} from 'react-icons/fa';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
-import {Route, Switch, useHistory, useRouteMatch} from 'react-router-dom';
+import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
+import ErrorBoundary from '@components/Error/ErrorBoundary';
+import useAuth from '@customHooks/useAuth';
+import {UserPageState} from 'API';
 import {getAsset} from 'assets';
+import BreadcrumbsWithBanner from 'atoms/BreadcrumbsWithBanner';
+import Buttons from 'atoms/Buttons';
+import Loader from 'atoms/Loader';
 import {GlobalContext} from 'contexts/GlobalContext';
 import * as customMutations from 'customGraphql/customMutations';
 import * as customQueries from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
+import {updatePageState, uploadImageToS3} from 'graphql/functions';
+import DroppableMedia from 'molecules/DroppableMedia';
+import React, {Fragment, useContext, useEffect, useState} from 'react';
+import {FaEdit, FaPlus} from 'react-icons/fa';
+import {IconContext} from 'react-icons/lib/esm/iconContext';
+import {Route, Switch, useHistory, useRouteMatch} from 'react-router-dom';
 import {getImageFromS3} from 'utilities/services';
 import {getUniqItems} from 'utilities/strings';
-import Buttons from 'atoms/Buttons';
-import Loader from 'atoms/Loader';
-import SectionTitle from 'atoms/SectionTitle';
 import LessonLoading from '../../Lesson/Loading/ComponentLoading';
-import DroppableMedia from 'molecules/DroppableMedia';
 import AboutMe from './AboutMe';
 import ChangePasscode from './ChangePasscode';
 import ChangePassword from './ChangePassword';
@@ -24,9 +27,6 @@ import ProfileCropModal from './ProfileCropModal';
 import ProfileEdit from './ProfileEdit';
 import ProfileInfo from './ProfileInfo';
 import ProfileVault from './ProfileVault';
-import useAuth from '@customHooks/useAuth';
-import {UserPageState} from 'API';
-import ErrorBoundary from '@components/Error/ErrorBoundary';
 
 export interface UserInfo {
   authId: string;
@@ -333,22 +333,22 @@ const Profile = (props: ProfilePageProps) => {
         <div className={`main_container p-0 mx-auto max-w-256 px-5`}>
           {/* <BreadCrums items={breadCrumsList} /> */}
           <div className="flex justify-between flex-col md:flex-row mt-5">
-            <SectionTitle
+            <SectionTitleV3
+              withButton={
+                currentPath !== 'edit' && currentPath !== 'password' ? (
+                  <div className="w-auto">
+                    <Buttons
+                      dataCy="edit-profile-button"
+                      label="Edit"
+                      onClick={() => history.push(`${match.url}/edit`)}
+                      Icon={FaEdit}
+                    />
+                  </div>
+                ) : null
+              }
               title={dashboardProfileDict[userLanguage]['TITLE']}
               subtitle={dashboardProfileDict[userLanguage]['SUBTITLE']}
             />
-
-            {currentPath !== 'edit' && currentPath !== 'password' ? (
-              <div className="flex justify-end py-2 2xl:py-4 mb-2 2xl:mb-4 w-full md:w-3/5 lg:w-5/10">
-                <Buttons
-                  dataCy="edit-profile-button"
-                  btnClass="ml-6"
-                  label="Edit"
-                  onClick={() => history.push(`${match.url}/edit`)}
-                  Icon={FaEdit}
-                />
-              </div>
-            ) : null}
           </div>
           <div
             className={`w-full m-auto max-w-256 p-2 md:p-4 white_back mb-2 md:mb-8 ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow}`}>
