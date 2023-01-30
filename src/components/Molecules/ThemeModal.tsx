@@ -80,11 +80,7 @@ const ThemeModal = ({
                     dark ? 'border-gray-700' : 'border-gray-200'
                   } modal-header border-b-0 pb-2  `}>
                   <h3 className="dark:text-white text-2xl font-semibold">{header}</h3>
-                  {subHeader && (
-                    <p className="text-sm truncate whitespace-pre text-gray-400">
-                      {subHeader}
-                    </p>
-                  )}
+                  {subHeader && <p className="text-sm  text-gray-400">{subHeader}</p>}
                 </div>
               )}
               <div
