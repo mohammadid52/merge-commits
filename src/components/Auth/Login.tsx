@@ -97,11 +97,13 @@ const Login = ({updateAuthState}: LoginProps) => {
             status: userInfo?.status
           }
         });
+        const time = new Date().toISOString();
         const input = {
           id: userInfo.id,
           authId: user.username,
           email: username,
-          lastLoggedIn: new Date().toISOString(),
+          lastLoggedIn: time,
+          lastPageStateUpdate: time,
           pageState: UserPageState.LOGGED_IN
         };
         await API.graphql(
@@ -293,12 +295,15 @@ const Login = ({updateAuthState}: LoginProps) => {
           status: userInfo?.status
         }
       });
+      const time = new Date().toISOString();
+
       const input = {
         id: userInfo.id,
         authId: user.username,
         email: username,
-        lastLoggedIn: new Date().toISOString(),
-        pageState: UserPageState.LOGGED_IN
+        lastLoggedIn: time,
+        pageState: UserPageState.LOGGED_IN,
+        lastPageStateUpdate: time
       };
       await API.graphql(graphqlOperation(customMutations.updatePersonLoginTime, {input}));
       updateAuthState(true);

@@ -20,11 +20,14 @@ const SignOutButton = (props: SignOutButtonProps) => {
 
   async function SignOut() {
     try {
+      const time = new Date().toISOString();
+
       const input = {
         id: state.user.id,
         authId: state.user.authId,
         email: state.user.email,
-        lastLoggedOut: new Date().toISOString(),
+        lastLoggedOut: time,
+        lastPageStateUpdate: time,
         pageState: UserPageState.NOT_LOGGED_IN
       };
       API.graphql(graphqlOperation(customMutations.updatePersonLogoutTime, {input}));

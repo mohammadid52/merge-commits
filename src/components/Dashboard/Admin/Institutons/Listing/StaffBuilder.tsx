@@ -7,7 +7,6 @@ import Selector from 'atoms/Form/Selector';
 import SelectorWithAvatar from 'atoms/Form/SelectorWithAvatar';
 import {reorder} from 'utilities/strings';
 
-import {getAsset} from 'assets';
 import {getImageFromS3} from 'utilities/services';
 import {statusList} from 'utilities/staticData';
 import {createFilterToFetchSpecificItemsOnly} from 'utilities/strings';
@@ -30,13 +29,13 @@ import Modal from 'atoms/Modal';
 import Filters, {SortType} from '@components/Atoms/Filters';
 import CommonActionsBtns from '@components/MicroComponents/CommonActionsBtns';
 import StaffBuilderName from '@components/MicroComponents/StaffBuilderName';
+import UserLookupLocation from '@components/MicroComponents/UserLookupLocation';
 import useAuth from '@customHooks/useAuth';
 import usePagination from '@customHooks/usePagination';
 import {logError} from '@graphql/functions';
 import Registration from 'components/Dashboard/Admin/UserManagement/Registration';
 import {map} from 'lodash';
 import {Status} from '../../UserManagement/UserStatus';
-import UserLookupLocation from '@components/MicroComponents/UserLookupLocation';
 
 interface StaffBuilderProps {
   instituteId: String;
@@ -305,32 +304,35 @@ const StaffBuilder = (props: StaffBuilderProps) => {
         updateStaffSequence(staffMembersIds);
       }
     }
-    staffLists = staffLists
-      .map((item: any) => {
-        let index = staffSequence.indexOf(item.userId);
-        return {...item, index};
-      })
-      .sort((a: any, b: any) => (a.index > b.index ? 1 : -1));
 
-    setActiveStaffList(staffLists);
+    if (staffLists && staffLists.length > 0) {
+      staffLists = staffLists
+        .map((item: any) => {
+          let index = staffSequence.indexOf(item.userId);
+          return {...item, index};
+        })
+        .sort((a: any, b: any) => (a.index > b.index ? 1 : -1));
 
-    setCurrentList(staffLists);
+      setActiveStaffList(staffLists);
 
-    const totalListPages = Math.floor(staffLists.length / pageCount);
+      setCurrentList(staffLists);
 
-    setTotalPages(
-      totalListPages * pageCount === staffLists.length
-        ? totalListPages
-        : totalListPages + 1
-    );
+      const totalListPages = Math.floor(staffLists.length / pageCount);
 
-    setFirstPage(true);
-    setLastPage(!(staffLists.length > pageCount));
+      setTotalPages(
+        totalListPages * pageCount === staffLists.length
+          ? totalListPages
+          : totalListPages + 1
+      );
 
-    setTotalList(staffLists);
-    setTotalNum(staffLists.length);
+      setFirstPage(true);
+      setLastPage(!(staffLists.length > pageCount));
 
-    setDataLoading(false);
+      setTotalList(staffLists);
+      setTotalNum(staffLists.length);
+
+      setDataLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -461,7 +463,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
         {item.role ? getStaffRole(item.role) : ''}
       </span>
     ),
-    location: <UserLookupLocation show item={item.staffMember} idx={index} />,
+    loginStatus: <UserLookupLocation isStaff show item={item.staffMember} idx={index} />,
     status:
       statusEdit === item.id ? (
         <div className="">
@@ -504,7 +506,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
       dictionary['NAME'],
       user.isSuperAdmin && dictionary['INSTITUTION_NAME'],
       dictionary['ROLE'],
-      'Location',
+      'Login Status',
       dictionary['STATUS'],
       dictionary['ACTION']
     ],

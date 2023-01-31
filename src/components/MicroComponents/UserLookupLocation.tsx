@@ -16,6 +16,7 @@ type LocationInfoType = {
 
   pageState: UserPageState;
   lastPageStateUpdate: string;
+  isStaff?: boolean;
   email: string;
   setShowLocationInfo: React.Dispatch<React.SetStateAction<boolean>>;
 };
@@ -27,7 +28,8 @@ const LocationInfo = ({
   showLocationInfo,
   email,
   pageState,
-  lastPageStateUpdate
+  lastPageStateUpdate,
+  isStaff
 }: LocationInfoType) => {
   let subscribe: any;
 
@@ -62,10 +64,10 @@ const LocationInfo = ({
   };
 
   useEffect(() => {
-    if (inLesson && !isPersonLocationFetched && showLocationInfo) {
+    if (inLesson && !isStaff && !isPersonLocationFetched && showLocationInfo) {
       fetchPersonLocation();
     }
-  }, [inLesson, isPersonLocationFetched, showLocationInfo]);
+  }, [inLesson, isStaff, isPersonLocationFetched, showLocationInfo]);
 
   const subscribeToLocation = () => {
     const personLocationSub = API.graphql(
@@ -116,14 +118,12 @@ const LocationInfo = ({
           <div className="w-auto">
             <dl className="grid grid-cols-1 gap-x-4 gap-y-1">
               <div className="flex w-auto items-end justify-between">
-                <dt className="w-auto text-sm font-medium text-gray-500">Location:</dt>
+                <dt className="w-auto text-sm font-medium text-gray-500">Status:</dt>
                 <dd className="w-auto mt-1 text-sm break-all text-gray-700 font-medium">
                   {loggedIn && !loggedOut ? (
                     <span className="capitalize">
                       {localPageState.pageState === UserPageState.LOGGED_IN
                         ? 'Logged In'
-                        : localPageState.pageState === UserPageState.NOT_LOGGED_IN
-                        ? 'Logged Out'
                         : inLesson
                         ? `in Lesson`
                         : `on ${localPageState.pageState?.toLowerCase()}`}
@@ -134,29 +134,35 @@ const LocationInfo = ({
                 </dd>
               </div>
 
-              {inLesson && isLoading && (
+              {!isStaff && inLesson && isLoading && (
                 <div className="flex items-center justify-center h-full">
                   <Loader className="theme-text text-xs" />
                 </div>
               )}
 
-              {inLesson && !isLoading && isPersonLocationFetched && liveLessonData && (
-                <>
-                  <div className="flex w-auto items-end justify-between">
-                    <dt className="w-auto text-sm font-medium text-gray-500">Lesson:</dt>
-                    <dd className="w-auto mt-1 flex items-center justify-between  text-sm text-gray-700 font-medium">
-                      {liveLessonData?.lesson?.title || '-'}
-                    </dd>
-                  </div>
+              {!isStaff &&
+                inLesson &&
+                !isLoading &&
+                isPersonLocationFetched &&
+                liveLessonData && (
+                  <>
+                    <div className="flex w-auto items-end justify-between">
+                      <dt className="w-auto text-sm font-medium text-gray-500">
+                        Lesson:
+                      </dt>
+                      <dd className="w-auto mt-1 flex items-center justify-between  text-sm text-gray-700 font-medium">
+                        {liveLessonData?.lesson?.title || '-'}
+                      </dd>
+                    </div>
 
-                  <div className="flex w-auto items-end justify-between">
-                    <dt className="w-auto text-sm font-medium text-gray-500">Room:</dt>
-                    <dd className="w-auto mt-1 flex items-center justify-between  text-sm text-gray-700 font-medium">
-                      {liveLessonData?.room?.name || '-'}
-                    </dd>
-                  </div>
-                </>
-              )}
+                    <div className="flex w-auto items-end justify-between">
+                      <dt className="w-auto text-sm font-medium text-gray-500">Room:</dt>
+                      <dd className="w-auto mt-1 flex items-center justify-between  text-sm text-gray-700 font-medium">
+                        {liveLessonData?.room?.name || '-'}
+                      </dd>
+                    </div>
+                  </>
+                )}
 
               {_lastPageStateUpdate !== null && (
                 <span className="border-t-0 theme-border-200 text-gray-600 pt-1 mt-1 text-xs text-center">
@@ -176,10 +182,12 @@ const LocationInfo = ({
 const UserLookupLocation = ({
   item,
   idx,
-  show
+  show,
+  isStaff
 }: {
   item: any;
   idx: number;
+  isStaff?: boolean;
   show?: boolean;
 }) => {
   const [showLocationInfo, setShowLocationInfo] = useState(false);
@@ -200,6 +208,7 @@ const UserLookupLocation = ({
       {shouldShow && item.pageState ? (
         <LocationInfo
           idx={idx}
+          isStaff={isStaff}
           authId={item.authId}
           email={item.email}
           lastPageStateUpdate={item?.lastPageStateUpdate || item?.lastLoggedOut}
