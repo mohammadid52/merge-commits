@@ -1,8 +1,12 @@
+import CustomRichTextEditor from '@components/Lesson/UniversalLessonBlockComponents/Blocks/HighlighterBlock/CustomRichTextEditor';
+import {XIcon} from '@heroicons/react/outline';
+import '@pathofdev/react-tag-input/build/index.css';
+import {getAsset} from 'assets';
 import FormInput from 'atoms/Form/FormInput';
 import Label from 'atoms/Form/Label';
 import Selector from 'atoms/Form/Selector';
 import Modal from 'atoms/Modal';
-import RichTextEditor from 'atoms/RichTextEditor';
+import {API, graphqlOperation} from 'aws-amplify';
 import {UPLOAD_KEYS} from 'components/Lesson/constants';
 import {REGEX} from 'components/Lesson/UniversalLessonBuilder/UI/common/constants';
 import {GlobalContext} from 'contexts/GlobalContext';
@@ -10,22 +14,55 @@ import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
 import * as customMutations from 'customGraphql/customMutations';
 import useDictionary from 'customHooks/dictionary';
 import {useQuery} from 'customHooks/urlParam';
-import {XIcon} from '@heroicons/react/outline';
 import {IFile} from 'interfaces/UniversalLessonInterfaces';
+import {findIndex, isEmpty, remove, update} from 'lodash';
 import ModalPopUp from 'molecules/ModalPopUp';
 import UploadMedia from 'molecules/UploadMedia';
-import '@pathofdev/react-tag-input/build/index.css';
-import {getImageFromS3Static} from 'utilities/services';
-import {estimatedTimeList} from 'utilities/staticData';
-import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
-import {getAsset} from 'assets';
-import {API, graphqlOperation} from 'aws-amplify';
-import {findIndex, isEmpty, remove, update} from 'lodash';
 import {nanoid} from 'nanoid';
 import React, {useContext, useEffect, useRef, useState} from 'react';
 import {useHistory, useRouteMatch} from 'react-router';
-import CustomRichTextEditor from '@components/Lesson/UniversalLessonBlockComponents/Blocks/HighlighterBlock/CustomRichTextEditor';
+import {getImageFromS3Static} from 'utilities/services';
+import {estimatedTimeList} from 'utilities/staticData';
+import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
 const features: string[] = ['colorPicker', 'inline'];
+
+const Checkbox = ({
+  title,
+  label,
+  checked,
+  onChange,
+  id
+}: {
+  checked: boolean;
+  onChange: any;
+  title: string;
+  label: string;
+  id: string;
+}) => {
+  return (
+    <div className="relative flex items-start mb-4">
+      <div className="flex items-center h-5 w-auto">
+        <input
+          id={id}
+          name={id}
+          type="checkbox"
+          checked={checked}
+          onChange={onChange}
+          className="focus:ring-indigo-500 h-4 w-4 theme-text border-gray-400 rounded"
+        />
+      </div>
+      <div className="ml-3 text-sm">
+        <label
+          htmlFor="group"
+          className="whitespace-pre-line font-medium dark:text-gray-300 text-gray-700">
+          {title}
+        </label>
+        <p className="text-sm whitespace-pre-line text-gray-500">{label}</p>
+      </div>
+    </div>
+  );
+};
+
 const VideoUploadComponent = ({
   customRef,
   closeAction,
@@ -344,37 +381,9 @@ const NewLessonPlanSO = ({
       // isValid = true;
     }
 
-    // if (trimmedLen(fields.videoLink) <= 0 && !isUploadedFromPC) {
-    //   errors.videoLink = 'Video Link is mandatory';
-    //   isValid = false;
-    // } else {
-    //   errors.videoLink = '';
-    // }
-
-    // if (!isValidUrl && !isUploadedFromPC) {
-    //   errors.videoLink = 'Invalid video link';
-    //   isValid = false;
-    // } else {
-    //   errors.videoLink = '';
-    // }
-
     setErrors({...errors});
     return isValid;
   };
-
-  // //@ts-ignore
-  // const empty = Object.keys(fields).reduce((truthy: boolean, val: string) => {
-  //   if (truthy) {
-  //     //@ts-ignore
-  //     if (fields[val] === INITIAL_STATE[val]) {
-  //       return true;
-  //     } else {
-  //       return false;
-  //     }
-  //   } else {
-  //     return truthy;
-  //   }
-  // }, true);
 
   const query = useQuery(location.search);
   const router: any = useRouteMatch();
@@ -504,31 +513,6 @@ const NewLessonPlanSO = ({
     interactionType,
     estTime
   } = fields;
-
-  const Checkbox = ({title, label, id}: {title: string; label: string; id: string}) => {
-    return (
-      <div className="relative flex items-start mb-4">
-        <div className="flex items-center h-5 w-auto">
-          <input
-            id={id}
-            name={id}
-            type="checkbox"
-            checked={interactionType?.includes(id)}
-            onChange={handleInteractionType}
-            className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-400 rounded"
-          />
-        </div>
-        <div className="ml-3 text-sm">
-          <label
-            htmlFor="group"
-            className="whitespace-pre-line font-medium dark:text-gray-300 text-gray-700">
-            {title}
-          </label>
-          <p className="text-sm whitespace-pre-line text-gray-500">{label}</p>
-        </div>
-      </div>
-    );
-  };
 
   const [showModal, setShowModal] = useState({show: false, msg: ''});
 
@@ -761,16 +745,22 @@ const NewLessonPlanSO = ({
             <div className="">
               <Checkbox
                 title={'Group'}
+                checked={interactionType?.includes('group')}
+                onChange={handleInteractionType}
                 label={'Working as a class to complete activity'}
                 id={'group'}
               />
               <Checkbox
                 title={'Small Group'}
+                checked={interactionType?.includes('smallGroup')}
+                onChange={handleInteractionType}
                 label={'Working in small groups to complete activity'}
                 id={'smallGroup'}
               />
               <Checkbox
                 title={'Individual'}
+                checked={interactionType?.includes('individual')}
+                onChange={handleInteractionType}
                 label={'Working individually to complete activity'}
                 id={'individual'}
               />

@@ -33,11 +33,11 @@ import {
 } from 'react-icons/ai';
 import {BiTrashAlt} from 'react-icons/bi';
 import {CgSpaceBetweenV} from 'react-icons/cg';
-import {HiOutlineArrowRight} from 'react-icons/hi';
+import {HiOutlineArrowRight, HiSwitchHorizontal} from 'react-icons/hi';
 import {RiPagesLine} from 'react-icons/ri';
 import {useRouteMatch} from 'react-router';
 
-type ActionTypes = 'edit' | 'delete' | 'init';
+type ActionTypes = 'edit' | 'delete' | 'init' | 'replace';
 
 // ======constants===================>>
 const btnClass = `font-semibold hover:text-gray-600 focus:curate:border-500 focus:iconoclast:border-500 transition-all text-xs px-4 py-2 rounded-xl flex items-center justify-center w-auto`;
@@ -419,6 +419,16 @@ const ActionButtons = ({
         label="Edit existing component"
         onClick={() => {
           setActionMode('edit');
+          setShowingPin(true);
+          cleanup();
+        }}
+      />
+      <Item
+        selected={actionMode === 'replace'}
+        Icon={HiSwitchHorizontal}
+        label="Replace component"
+        onClick={() => {
+          setActionMode('replace');
           setShowingPin(true);
           cleanup();
         }}
@@ -826,12 +836,17 @@ const PageBuilderSlideOver = ({
   };
 
   const onInit = actionMode === 'init';
+  const onReplace = actionMode === 'replace';
 
   const onActionCancel = () => {
     setShowMovementBox(false);
   };
 
   const isSurvey = universalLessonDetails?.type === 'survey';
+
+  const handleReplce = () => {
+    setNavState('addContent');
+  };
 
   return (
     <>
@@ -853,6 +868,26 @@ const PageBuilderSlideOver = ({
                     onActionCancel();
                   }}
                   message={`Click on a circle to ${actionMode} component`}
+                />
+              )}
+            </AnimatedContainer>
+            <AnimatedContainer
+              className={`my-6 w-auto`}
+              animationType="opacity"
+              show={!notSelected && onReplace}>
+              {!notSelected && onReplace && (
+                <BottomButtonWithMessage
+                  btns={[
+                    {
+                      label: 'Cancel',
+                      onClick: () => {
+                        onCancel();
+                        onActionCancel();
+                      }
+                    },
+                    {label: 'Replace', onClick: handleReplce, transparent: true}
+                  ]}
+                  message={'Are you sure you want to replace this component?'}
                 />
               )}
             </AnimatedContainer>
@@ -965,7 +1000,9 @@ const PageBuilderSlideOver = ({
             <OverlayHeaderTitle
               onBack={toHome}
               title={
-                activeContentItem
+                onReplace
+                  ? 'Select a component to replace with'
+                  : activeContentItem
                   ? 'Step 2: Where Do You Want To Place Component'
                   : 'Step 1: Select A Component'
               }
@@ -973,7 +1010,7 @@ const PageBuilderSlideOver = ({
             <AddContentDialog
               isSurvey={isSurvey}
               setCurrentHelpStep={setCurrentHelpStep}
-              onItemClick={onContentItemClick}
+              onItemClick={(type, bottom) => onContentItemClick(type, bottom)}
             />
           </div>
         )}

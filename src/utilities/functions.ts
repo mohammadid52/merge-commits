@@ -33,10 +33,11 @@ export const wait = (timeout: number) => {
 };
 
 export const capitalizeFirstLetter = (str: string = '') => {
-  if (str.length > 0) {
+  if (str && str.length > 0) {
     const capitalized = str.charAt(0).toUpperCase() + str.slice(1);
     return capitalized;
   }
+  return '';
 };
 
 export const removeExtension = (filename: string) => {

@@ -116,7 +116,7 @@ const ContentModal: React.FC<ModalProps> = (modalProps: ModalProps) => {
           }}
           className="relative w-auto my-4 mx-auto max-w-9/10">
           <div
-            className={`${modalBodyClass} ${
+            className={`${modalBodyClass} rounded-xl ${
               theme.modals[hidePadding ? 'hideBg' : 'content']
             }`}>
             {showHeader && (

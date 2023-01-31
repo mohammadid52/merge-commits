@@ -54,7 +54,8 @@ const AddContentDialog = ({
     setActiveContentItem,
     showingPin,
     setSelectedType,
-    emotionComponentExists
+    emotionComponentExists,
+    actionMode
   } = usePageBuilderContext();
 
   const {addContentModal} = useOverlayContext();
@@ -279,13 +280,18 @@ const AddContentDialog = ({
     setActiveContentItem(null);
   };
 
+  const handleReplace = (e: any) => {
+    onBottomClick(e);
+  };
+
   const Item = ({content}: {content: any}) => {
     const currentType = activeContentItem && activeContentItem?.type === content.type;
 
     const onFinalStep =
       currentType && !isEmpty(selectedComponent) && !addContentModal.show;
-    const onOptions = currentType && !onFinalStep;
-    const onInit = !currentType && !onFinalStep;
+    const onReplace = currentType && actionMode === 'replace';
+    const onOptions = currentType && !onFinalStep && !onReplace;
+    const onInit = !currentType && !onFinalStep && !onReplace;
 
     const isDisabled = content.type === EMOTIONS && emotionComponentExists;
 
@@ -353,6 +359,17 @@ const AddContentDialog = ({
                 btnClass={btnClass}
                 transparent
                 label="Add to Botom"
+              />
+            </div>
+          )}
+          {onReplace && (
+            <div className="px-2 dark:text-gray-500 flex  flex-col gap-2">
+              <Buttons
+                overrideClass
+                onClick={handleReplace}
+                btnClass={btnClass}
+                transparent
+                label="Replace with selected component"
               />
             </div>
           )}
