@@ -1,5 +1,4 @@
-import {GlobalContext} from 'contexts/GlobalContext';
-import React, {useContext} from 'react';
+import React from 'react';
 import {IoClose} from 'react-icons/io5';
 
 export const CloseButton = ({
@@ -11,10 +10,10 @@ export const CloseButton = ({
 }) => (
   <button
     data-cy={modalCloseId}
-    className={`ml-auto w-auto outline-none}`}
+    className={`ml-auto w-auto outline-none absolute right-1`}
     onClick={onClick}>
-    <span className="w-8 h-8 ml-4 flex cursor-pointer hover:bg-gray-200 items-center justify-center rounded transition-all duration-150">
-      <IoClose size={'1.5rem'} style={{color: '#000000'}} />
+    <span className="w-8 h-8 theme-text:100 hover:theme-bg:400 hover:text-white flex cursor-pointer rounded-xl items-center justify-center  transition-all duration-150">
+      <IoClose size={'1.5rem'} />
     </span>
   </button>
 );
@@ -31,17 +30,18 @@ const ModalHeader = (headerProps: {
     title,
     onClick,
     modalCloseId,
-    showBorder,
+
     customTitle,
     titleButton
   } = headerProps;
-  const {theme} = useContext(GlobalContext);
 
   return (
-    <div className={`${theme.modals.header} ${showBorder ? 'border-b-0' : ''}`}>
+    <div className={`theme-bg flex items-center text-white rounded-t-xl px-4 py-2`}>
       <div className="flex items-center">
         {title ? (
-          <h3 className="w-auto text-sm md:text-xl font-semibold">{title}</h3>
+          <h3 className="text-lg text-center tracking-wider font-medium uppercase text-white">
+            {title}
+          </h3>
         ) : customTitle ? (
           customTitle
         ) : null}

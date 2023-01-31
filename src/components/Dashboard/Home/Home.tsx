@@ -173,9 +173,13 @@ const Home = (props: ClassroomControlProps) => {
 
     classList &&
       classList.length > 0 &&
-      classList.forEach(
-        async (item: {room: any; name: string; id: string}, idx: number) => {
-          if (item.room && !removedFrom.includes(item.room.id)) {
+      classList
+        .filter(
+          (item: {room: {status: PersonStatus}}) =>
+            item.room.status !== PersonStatus.INACTIVE
+        )
+        .forEach(async (item: {room: any; name: string; id: string}, idx: number) => {
+          if (item.room) {
             const curriculum = item.room.curricula?.items[0].curriculum;
             if (curriculum !== null) {
               const imagePath = curriculum?.image;
@@ -187,20 +191,21 @@ const Home = (props: ClassroomControlProps) => {
 
               const modifiedItem = {
                 ...item.room,
+                curriculumName: curriculum?.name,
+                curriculumId: curriculum?.id,
                 roomName: item?.name,
                 bannerImage: image,
                 teacherProfileImg,
                 roomIndex: idx
               };
 
-              modifiedClassList.push(modifiedItem);
               if (!uniqIds.includes(curriculum?.id)) {
                 uniqIds.push(curriculum?.id);
+                modifiedClassList.push(modifiedItem);
               }
             }
           }
-        }
-      );
+        });
 
     return modifiedClassList;
   };
@@ -256,11 +261,11 @@ const Home = (props: ClassroomControlProps) => {
               <div className="my-8">
                 <SectionTitleV3
                   title={DashboardDict[userLanguage]['YOUR_TEACHERS']}
+                  extraClass="leading-6 text-gray-900 px-6"
                   fontSize="xl"
                   fontStyle="semibold"
                   extraContainerClass="lg:max-w-192 md:max-w-none 2xl:max-w-256 px-6"
                   borderBottom
-                  extraClass="leading-6 text-gray-900"
                 />
                 <TeacherRows coTeachersList={coTeachersList} teachersList={teacherList} />
               </div>

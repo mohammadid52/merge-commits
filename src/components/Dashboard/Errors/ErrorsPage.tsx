@@ -17,6 +17,7 @@ import * as customMutations from 'customGraphql/customMutations';
 import {orderBy, update} from 'lodash';
 import moment from 'moment';
 import React, {useEffect, useState} from 'react';
+import {AiOutlineCloseCircle} from 'react-icons/ai';
 import {Redirect} from 'react-router';
 
 const ErrorItem = ({
@@ -91,6 +92,14 @@ const ErrorItem = ({
           className="text-sm underline theme-text:600 w-auto hover:theme-text:500 text-gray-900 font-light ">
           <a href={error.pageUrl}>visit url</a>
         </div>
+        {errorStatus === ErrorStatus.PENDING && (
+          <Buttons
+            onClick={() => updateStatus(error.id, ErrorStatus.CLOSED)}
+            size="small"
+            transparent
+            Icon={AiOutlineCloseCircle}
+          />
+        )}
         <p className="text-xs text-gray-500 font-light italic w-auto">
           {moment(error.errorTime).format('lll')}
         </p>

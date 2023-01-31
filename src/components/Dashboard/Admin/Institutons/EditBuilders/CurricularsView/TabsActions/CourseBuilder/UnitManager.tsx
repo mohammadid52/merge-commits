@@ -23,6 +23,7 @@ import {map} from 'lodash';
 import ModalPopUp from 'molecules/ModalPopUp';
 import {reorder} from 'utilities/strings';
 import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
+import CommonActionsBtns from '@components/MicroComponents/CommonActionsBtns';
 
 interface UIMessages {
   show: boolean;
@@ -378,11 +379,11 @@ const UnitManager = ({
       </div>
     ),
     actions: (
-      <CourseAction
-        item={item}
-        checkIfRemovable={checkIfRemovable}
-        onDelete={() => handleToggleDelete(item.name, item)}
-        onView={() => goToUnitBuilder(item.unitId, item.type)}
+      <CommonActionsBtns
+        button1Label="View"
+        isDeletable={checkIfRemovable(item, courseData)}
+        button1Action={() => goToUnitBuilder(item.unitId, item.type)}
+        button2Action={() => handleToggleDelete(item.name, item)}
       />
     )
   }));

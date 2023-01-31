@@ -60,8 +60,8 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
       <div className="">
         {/* Profile section */}
         <div className="flex-col flex justify-center lg:justify-start w-full">
-          <div className="flex flex-1 overflow-x-hidden">
-            <div className="mb-4">
+          <div className="flex flex-1 overflow-x-hidden mb-8">
+            <div className="">
               <div className="">
                 {/* {renderElementBySelectedMenu()} */}
                 <NavBarRouter

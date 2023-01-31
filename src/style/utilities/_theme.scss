@@ -57,6 +57,9 @@
         .hover\:theme-border\:#{$themeName}:hover {
           border-color: $themeValue !important;
         }
+        .focus\:theme-border\:#{$themeName}:focus {
+          border-color: $themeValue !important;
+        }
       }
     }
 
@@ -160,6 +163,9 @@
           border-color: $themeValue !important;
         }
         .hover\:theme-border\:#{$themeName}:hover {
+          border-color: $themeValue !important;
+        }
+        .focus\:theme-border\:#{$themeName}:focus {
           border-color: $themeValue !important;
         }
       }

@@ -1,5 +1,7 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import {UniversalLessonPlan, Dicitionary} from 'API';
 import * as mutations from 'graphql/mutations';
+import {isEmpty} from 'lodash';
 import React, {useContext, useEffect, useReducer, useRef} from 'react';
 import {globalReducer} from 'reducers/GlobalReducer';
 import {lessonControlReducer} from 'reducers/LessonControlReducer';
@@ -123,7 +125,7 @@ export const standardTheme = {
     header:
       'flex items-center justify-between p-4 border-solid rounded-t-xl bg-gray-100 text-gray-900 border-gray-200',
     footer:
-      'flex items-center justify-end px-4 py-2 gap-x-4 border-t-0 border-solid rounded-b-xl bg-white text-gray-900 border-gray-200',
+      'flex items-center justify-end px-4 py-2 gap-x-4 border-t-0 border-solid rounded-b-xl bg-gray-200 text-gray-900 border-gray-200',
     content:
       'border-0 rounded-lg shadow-lg relative flex flex-col w-full outline-none bg-white text-gray-900',
     hideBg: `border-transparent  rounded-lg shadow-lg relative flex flex-col w-full outline-none bg-transparent text-gray-900`
@@ -172,6 +174,89 @@ export const GlobalContextProvider = ({children}: GlobalProps) => {
     }
   }, [state.user]);
 
+  const preferredLang = userLanguage;
+
+  const replaceStr = (word: any) => `<span class="dictionary-popup">
+  <div class="dictionary-popup__container" data-dictionaryId="${word.id}">
+  <span class="dictionary-popup__title"><span class="border-b-2 border-green-500 italic font-medium">Definition:</span> ${
+    word.englishDefinition
+  }</span>
+  ${
+    word?.translation?.length > 0 && preferredLang === 'ES'
+      ? `
+        ${word.translation.map(
+          (translation: any) => `<div class="dictionary-popup__languages">
+          <h5>In ${translation.translateLanguage}:</h5>
+          <ul>
+            <li>Translation: ${translation.languageTranslation}</li>
+          </ul>
+          </div>`
+        )}`
+      : ``
+  }</div>${word.englishPhrase}</span>`;
+
+  // const scanLessonAndFindComplicatedWord = (
+  //   lessonPlan: UniversalLessonPlan[],
+  //   dictionaries: Dicitionary[]
+  // ) => {
+  //   return lessonPlan;
+  //   // if (lessonPlan && lessonPlan.length > 0) {
+  //   //   try {
+  //   //     const updated = lessonPlan.map((plan: any) => ({
+  //   //       ...plan,
+  //   //       pageContent:
+  //   //         plan?.pageContent?.map((pgContent: any) => {
+  //   //           return {
+  //   //             ...pgContent,
+  //   //             partContent:
+  //   //               pgContent?.partContent?.map((ptContent: any) => {
+  //   //                 if (ptContent.type === 'paragraph') return {...ptContent};
+
+  //   //                 return {
+  //   //                   ...ptContent,
+  //   //                   value: ptContent.value.map((value: any) => {
+  //   //                     dictionaries.forEach((word) => {
+  //   //                       if (!isEmpty(value.value)) {
+  //   //                         if (word.englishDefinition) {
+  //   //                           value.value = value.value.replace(
+  //   //                             word.englishPhrase,
+  //   //                             replaceStr(word)
+  //   //                           );
+  //   //                         }
+  //   //                       }
+
+  //   //                       if (!isEmpty(value.label)) {
+  //   //                         if (word.englishDefinition) {
+  //   //                           value.label = value.label.replace(
+  //   //                             word.englishPhrase,
+  //   //                             replaceStr(word)
+  //   //                           );
+  //   //                         }
+  //   //                       }
+  //   //                     });
+
+  //   //                     // fixed wierd screen sliding issue
+  //   //                     // add translation input for students
+  //   //                     return {
+  //   //                       ...value
+  //   //                     };
+  //   //                   })
+  //   //                 };
+  //   //               }) || []
+  //   //           };
+  //   //         }) || []
+  //   //     }));
+  //   //     return updated;
+  //   //   } catch (error) {
+  //   //     console.error(error);
+
+  //   //     return lessonPlan;
+  //   //   }
+  //   // } else {
+  //   //   return lessonPlan;
+  //   // }
+  // };
+
   async function updatePersonLocation() {
     const updatedLocation = {
       id: state.user.location.length > 0 ? state.user.location[0].id : '',
@@ -215,6 +300,7 @@ export const GlobalContextProvider = ({children}: GlobalProps) => {
         userLanguage,
         uLang,
         clientKey
+        // scanLessonAndFindComplicatedWord
       }}>
       {children}
     </GlobalContext.Provider>

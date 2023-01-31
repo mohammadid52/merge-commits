@@ -435,7 +435,7 @@ const staffBuilderDict: any = {
     ROLE: 'Role',
     INSTITUTION_NAME: 'Institution Name',
     STATUS: 'Status',
-    ACTION: 'Action',
+    ACTION: 'Actions',
     UPDATING: 'updating...',
     CANCEL: 'Cancel',
     INFO: 'This institute does not have any staff member. Please add new member.',
@@ -524,6 +524,7 @@ const editClassDict: any = {
       NAME: 'Participant Name',
       GROUP: 'Group',
       STATUS: 'Status',
+      LOCATION: 'Location',
       TYPE: 'Type',
       DATE: 'Date Added',
       ACTIONS: 'Actions'
@@ -562,6 +563,7 @@ const editClassDict: any = {
       NAME: 'nombre del estudiante',
       GROUP: 'TBD',
       STATUS: 'estado',
+      LOCATION: 'TBD',
       DATE: 'TBD',
       ACTIONS: 'comportamiento'
     }
@@ -872,7 +874,7 @@ const InstitutionDict: any = {
       NAME: 'Institute Name',
       TYPE: 'Type',
       WEBSITE: 'Website',
-      CONTACT: 'Contact No.',
+      CONTACT: 'Contact No',
       ACTION: 'Actions',
       NORESULT: 'No Results'
     },

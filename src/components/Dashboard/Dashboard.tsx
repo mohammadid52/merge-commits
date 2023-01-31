@@ -39,6 +39,9 @@ const Registration = lazy(
   () => import('components/Dashboard/Admin/UserManagement/Registration')
 );
 const ErrorsPage = lazy(() => import('components/Dashboard/Errors/ErrorsPage'));
+const DictionaryPage = lazy(
+  () => import('components/Dashboard/Dictionary/DictionaryPage')
+);
 
 const conditionalRender = (children: JSX.Element, condition: boolean) => {
   if (condition) {
@@ -916,6 +919,14 @@ const Dashboard = (props: DashboardProps) => {
                 render={() => (
                   <ErrorBoundary componentName="Errors">
                     <ErrorsPage />
+                  </ErrorBoundary>
+                )}
+              />
+              <Route
+                path={`${match.url}/dictionary`}
+                render={() => (
+                  <ErrorBoundary componentName="Dictionary">
+                    <DictionaryPage />
                   </ErrorBoundary>
                 )}
               />

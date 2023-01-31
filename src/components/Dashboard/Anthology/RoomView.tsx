@@ -32,9 +32,7 @@ const RoomView = ({
   sectionRoomID,
   sectionTitle,
   handleSectionSelect,
-  roomIdList,
-  studentAuthId,
-  studentEmail
+  roomIdList
 }: IRoomViewProps) => {
   // ##################################################################### //
   // ################## GET NOTEBOOK ROOMS FROM CONTEXT ################## //
@@ -44,32 +42,34 @@ const RoomView = ({
   const [loaded, setLoaded] = useState<boolean>(roomIdList.length === 0);
   const [filteredRooms, setFilteredRooms] = useState<any[]>([]);
 
-  const {state, dispatch} = useGlobalContext();
+  const {state} = useGlobalContext();
 
   const mapData = (responseData: any[]) => {
     const curriculumMap = responseData.map(async (roomObj: any) => {
-      const curriculumFull: any = await API.graphql(
-        graphqlOperation(customQueries.getCurriculumNotebook, {
-          id: roomObj.curricula?.items[0]?.curriculumID
-        })
-      );
-      const curriculumData = curriculumFull.data.getCurriculum;
+      if (roomObj) {
+        const curriculumFull: any = await API.graphql(
+          graphqlOperation(customQueries.getCurriculumNotebook, {
+            id: roomObj.curricula?.items[0]?.curriculumID
+          })
+        );
+        const curriculumData = curriculumFull.data.getCurriculum;
 
-      return {
-        ...roomObj,
-        curricula: {
-          ...roomObj.curricula,
-          items: [
-            {
-              ...roomObj.curricula?.items[0],
-              name: curriculumData?.name,
-              image: curriculumData?.image,
-              summary: curriculumData?.summary,
-              description: curriculumData?.description
-            }
-          ]
-        }
-      };
+        return {
+          ...roomObj,
+          curricula: {
+            ...roomObj.curricula,
+            items: [
+              {
+                ...roomObj.curricula?.items[0],
+                name: curriculumData?.name,
+                image: curriculumData?.image,
+                summary: curriculumData?.summary,
+                description: curriculumData?.description
+              }
+            ]
+          }
+        };
+      }
     });
     Promise.all(curriculumMap)
       .then((responseArray: any[]) => {

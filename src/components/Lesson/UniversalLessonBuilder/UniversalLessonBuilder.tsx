@@ -18,6 +18,7 @@ import update from 'lodash/update';
 import {nanoid} from 'nanoid';
 import React, {useContext, useEffect, useState} from 'react';
 import {useHistory, useParams} from 'react-router';
+import {getDictionaries} from '@graphql/functions';
 interface UniversalLessonBuilderProps extends ULBSelectionProps {
   designersList?: {id: string; name: string; value: string}[];
   lessonID?: string;
@@ -53,8 +54,7 @@ const UniversalLessonBuilder = ({instId}: UniversalLessonBuilderProps) => {
     setUniversalLessonDetails,
     selectedPageID,
     setFetchingLessonDetails,
-    setSelectedPageID,
-    scanLessonAndFindComplicatedWord
+    setSelectedPageID
   } = useULBContext();
 
   //  INITIALIZE CURRENT PAGE LOCATION
@@ -83,9 +83,13 @@ const UniversalLessonBuilder = ({instId}: UniversalLessonBuilderProps) => {
         })
       );
       const savedData = result.data.getUniversalLesson;
+      // const dictionaries = await getDictionaries();
 
-      const updatedLessonPlan = scanLessonAndFindComplicatedWord(savedData.lessonPlan);
-      setUniversalLessonDetails({...savedData, lessonPlan: updatedLessonPlan});
+      // const updatedLessonPlan = scanLessonAndFindComplicatedWord(
+      //   savedData.lessonPlan,
+      //   dictionaries
+      // );
+      setUniversalLessonDetails({...savedData, lessonPlan: savedData.lessonPlan});
       setSelectedPageID(pageId);
     } catch {
       setUniversalLessonDetails((prev: any) => ({...prev}));

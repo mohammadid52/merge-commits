@@ -13,6 +13,7 @@ type User = {
   status?: PersonStatus;
   onDemand?: boolean;
   pageState: UserPageState;
+  lastEmotionSubmission: string;
 };
 
 const useAuth = (): {
@@ -32,10 +33,12 @@ const useAuth = (): {
   user: User;
   onDemand?: boolean;
   pageState: UserPageState;
+  setUser: (user: any) => void;
 } => {
   const context = useGlobalContext();
 
   const user: User = context.state.user;
+  const dispatch = context.dispatch;
 
   const {authId, pageState, role, email, firstName, lastName, image, onDemand} = user;
 
@@ -51,9 +54,19 @@ const useAuth = (): {
       user?.associateInstitute[0]?.institution?.id) ||
     '';
 
+  const setUser = (updatedUserInfo: any) =>
+    dispatch({
+      type: 'SET_USER',
+      payload: {
+        ...user,
+        ...updatedUserInfo
+      }
+    });
+
   return {
     role,
     isStudent,
+    setUser,
     isTeacher,
     isBuilder,
     isAdmin,

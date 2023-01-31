@@ -1179,8 +1179,8 @@ export const listRooms = /* GraphQL */ `
     }
   }
 `;
-export const getArchiveSurveyDataSql = /* GraphQL */ `
-  query GetArchiveSurveyDataSql($Email: String!, $AuthId: String!) {
+export const getArchiveSurveyDataSQL = /* GraphQL */ `
+  query GetArchiveSurveyDataSQL($Email: String!, $AuthId: String!) {
     getArchiveSurveyDataSQL(Email: $Email, AuthId: $AuthId) {
       id
       AuthId
@@ -1196,8 +1196,8 @@ export const getArchiveSurveyDataSql = /* GraphQL */ `
     }
   }
 `;
-export const listArchiveSurveyDataSqls = /* GraphQL */ `
-  query ListArchiveSurveyDataSqls(
+export const listArchiveSurveyDataSQLS = /* GraphQL */ `
+  query ListArchiveSurveyDataSQLS(
     $Email: String
     $AuthId: ModelStringKeyConditionInput
     $filter: ModelArchiveSurveyDataSQLFilterInput
@@ -9115,6 +9115,139 @@ export const listErrorLogs = /* GraphQL */ `
     }
   }
 `;
+export const getDicitionary = /* GraphQL */ `
+  query GetDicitionary($id: ID!) {
+    getDicitionary(id: $id) {
+      id
+      authID
+      email
+      person {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        inactiveStatusDate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        onDemand
+        sentiments
+        passcode
+        classes {
+          nextToken
+        }
+        lessons {
+          nextToken
+        }
+        spotlightUser
+        spotlightDate
+        statusReason
+        addedby
+        lastEmotionSubmission
+        pageState
+        lastPageStateUpdate
+        statusChangedBy
+        createdAt
+        updatedAt
+      }
+      englishPhrase
+      englishAudio
+      englishDefinition
+      translation {
+        id
+        translateLanguage
+        languageTranslation
+        languageDefinition
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listDicitionaries = /* GraphQL */ `
+  query ListDicitionaries(
+    $id: ID
+    $filter: ModelDicitionaryFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listDicitionaries(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        authID
+        email
+        person {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          inactiveStatusDate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          onDemand
+          sentiments
+          passcode
+          spotlightUser
+          spotlightDate
+          statusReason
+          addedby
+          lastEmotionSubmission
+          pageState
+          lastPageStateUpdate
+          statusChangedBy
+          createdAt
+          updatedAt
+        }
+        englishPhrase
+        englishAudio
+        englishDefinition
+        translation {
+          id
+          translateLanguage
+          languageTranslation
+          languageDefinition
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const userById = /* GraphQL */ `
   query UserById(
     $id: ID!
@@ -9338,8 +9471,8 @@ export const lessonsByType2 = /* GraphQL */ `
     }
   }
 `;
-export const messagesByRoomId = /* GraphQL */ `
-  query MessagesByRoomId(
+export const messagesByRoomID = /* GraphQL */ `
+  query MessagesByRoomID(
     $roomID: ID!
     $createdAt: ModelStringKeyConditionInput
     $sortDirection: ModelSortDirection

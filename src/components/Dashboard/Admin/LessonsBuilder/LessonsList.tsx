@@ -3,8 +3,7 @@ import AddButton from '@components/Atoms/Buttons/AddButton';
 import Filters, {SortType} from '@components/Atoms/Filters';
 import Highlighted from '@components/Atoms/Highlighted';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
-import LessonAction from '@components/MicroComponents/LessonAction';
-import ListBottomBar from '@components/Molecules/ListBottomBar';
+import CommonActionsBtns from '@components/MicroComponents/CommonActionsBtns';
 import Table from '@components/Molecules/Table';
 import useAuth from '@customHooks/useAuth';
 import usePagination from '@customHooks/usePagination';
@@ -410,12 +409,11 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
     targetAudience: item.targetAudience || '--',
     lastEditDate: item.updatedAt ? new Date(item.updatedAt).toLocaleDateString() : '--',
     actions: (
-      <LessonAction
-        onCloneLesson={() => onCloneLesson(item.id)}
-        handleLessonsEdit={() => handleLessonsEdit(item.id)}
-        lessonObj={item}
-        handleToggleDelete={handleToggleDelete}
-        checkIfRemovable={checkIfRemovable}
+      <CommonActionsBtns
+        button1Label="Clone Lesson"
+        isDeletable={checkIfRemovable(item)}
+        button1Action={() => onCloneLesson(item.id)}
+        button2Action={() => handleToggleDelete}
       />
     )
   }));
@@ -453,7 +451,8 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
         customWidth: {
           no: 'w-12',
           lessonTitle: 'w-72',
-          lessonPlan: 'w-96'
+          lessonPlan: 'w-96',
+          actions: '-'
         },
         maxHeight: 'max-h-196',
         pattern: 'striped',

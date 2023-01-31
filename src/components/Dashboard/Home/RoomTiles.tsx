@@ -1,5 +1,8 @@
+import SearchInput from '@components/Atoms/Form/SearchInput';
+import Highlighted from '@components/Atoms/Highlighted';
 import Loader from '@components/Atoms/Loader';
 import useAuth from '@customHooks/useAuth';
+import useSearch from '@customHooks/useSearch';
 import {fallbackUrls} from 'assets';
 import Buttons from 'atoms/Buttons';
 import ContentCard from 'atoms/ContentCard';
@@ -8,6 +11,7 @@ import SectionTitleV3 from 'atoms/SectionTitleV3';
 import {ModifiedListProps} from 'components/Dashboard/Home/Home';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
+import {orderBy} from 'lodash';
 import React, {useEffect, useState} from 'react';
 
 const limitDesc = (str: string, len: number = 250): string => {
@@ -26,10 +30,12 @@ const SingleRoomCard = ({
   item,
   handleRoomSelection,
   idx,
-  isTeacher
+  isTeacher,
+  searchTerm
 }: {
   item: any;
   isTeacher: boolean;
+  searchTerm?: string;
   idx: number;
   handleRoomSelection: any;
 }) => {
@@ -54,7 +60,6 @@ const SingleRoomCard = ({
       className="flex customShadow  transition-all room_card flex-col cursor-pointer rounded-lg overflow-hidden ">
       <div className="flex-shrink-0 bg-gray-500">
         <img
-          loading="lazy"
           className="room-image h-48 w-full object-cover hover:scale-105 transform transition-transform duration-300"
           src={bannerImage || fallbackUrls.room}
           alt={`${roomName || ''} banner image`}
@@ -66,9 +71,9 @@ const SingleRoomCard = ({
             {type}
           </p>
           <div data-cy="classroom-cards" className="block mt-2">
-            <p className="text-base room-name tracking-wider font-medium 2xl:text-lg theme-text">
-              {name}
-            </p>
+            <h4 className="text-base room-name tracking-wider font-medium 2xl:text-lg theme-text">
+              <Highlighted text={name} highlight={searchTerm} />
+            </h4>
             <p className="mt-2 room-summary text-xs 2xl:text-sm text-gray-600">
               {limitDesc(summary, 50)}
             </p>
@@ -132,9 +137,47 @@ const RoomTiles = (props: {
 
   useEffect(() => {
     if (classes.length > 0) {
-      setClassList([...classes]);
+      const orderedList = orderBy(classes, ['curriculumName'], 'asc');
+      setClassList([...orderedList]);
     }
   }, [classes]);
+
+  const [filteredList, setFilteredList] = useState([...classList]);
+
+  const {
+    searchInput,
+    setSearch,
+    removeSearchAction,
+    searchAndFilter,
+    checkSearchQueryFromUrl,
+    filterBySearchQuery
+  } = useSearch([...classList], ['curriculumName']);
+
+  useEffect(() => {
+    if (!roomsLoading && classList.length > 0) {
+      const query = checkSearchQueryFromUrl();
+      if (query) {
+        const items = filterBySearchQuery(query);
+        if (Boolean(items)) {
+          setFilteredList(items);
+        }
+      }
+    }
+  }, [roomsLoading]);
+
+  const searchClass = () => {
+    const searched = searchAndFilter(searchInput.value, false);
+
+    if (Boolean(searched)) {
+      setFilteredList(searched);
+    } else {
+      removeSearchAction();
+    }
+  };
+
+  const finalList = searchInput.isActive ? filteredList : classList;
+
+  const {isStudent} = useAuth();
 
   return (
     <>
@@ -144,10 +187,23 @@ const RoomTiles = (props: {
         withButton={
           classList &&
           classList.length > 3 && (
-            <div className="flex w-auto justify-end">
+            <div className="flex w-auto gap-x-4 justify-end">
+              {!isStudent && (
+                <SearchInput
+                  dataCy="staff-loookup-search"
+                  value={searchInput.value}
+                  onChange={setSearch}
+                  disabled={roomsLoading}
+                  onKeyDown={searchClass}
+                  isActive={searchInput.isActive}
+                  closeAction={removeSearchAction}
+                />
+              )}
+
               <Buttons
                 label={!showMore ? 'Show All' : 'Show Few'}
                 onClick={animateOnShowMore}
+                disabled={searchInput.isActive}
                 type="button"
               />
             </div>
@@ -169,24 +225,20 @@ const RoomTiles = (props: {
           <div className="min-h-56 flex items-center justify-center ">
             <Loader className="w-auto text-gray-400" withText="Loading classrooms..." />
           </div>
-        ) : classList.length > 0 ? (
+        ) : finalList.length > 0 ? (
           <div className="relative">
             <div className="relative max-w-7xl mx-auto">
               <div
-                // #ts-ignores
-                style={{
-                  transition: 'width 2s',
-                  transitionTimingFunction: 'cubic-bezier(0.1, 0.7, 1, 0.1)'
-                }}
                 data-cy="classroom-list"
                 className="mt-0 max-w-lg mx-auto pt-6 pb-6 grid px-6 gap-5 lg:grid-cols-3 md:grid-cols-2 lg:max-w-none">
-                {classList
-                  .slice(0, showMore ? classList.length : 3)
+                {finalList
+                  .slice(0, showMore || searchInput.isActive ? finalList.length : 3)
                   .map((item, idx: number) => {
                     return (
                       <SingleRoomCard
                         item={item}
                         idx={idx}
+                        searchTerm={searchInput.value}
                         key={idx}
                         isTeacher={isTeacher}
                         handleRoomSelection={handleRoomSelection}

@@ -43,6 +43,7 @@ export const getDashboardData = /* GraphQL */ `
               institutionID
               classID
               teacherAuthID
+              status
               teacherEmail
               name
               maxPersons
@@ -189,23 +190,11 @@ export const getDashboardDataForTeachers = /* GraphQL */ `
           status
           email
           role
-          type
+          status
           firstName
           preferredName
           lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
           image
-          language
-          filters
-          lastLoggedIn
-          lastLoggedOut
-          createdAt
-          updatedAt
         }
         class {
           id
@@ -263,6 +252,7 @@ export const getDashboardDataForTeachers = /* GraphQL */ `
               lastName
               image
               email
+              status
               role
               phone
             }
@@ -343,6 +333,7 @@ export const getDashboardDataForCoTeachers = /* GraphQL */ `
                 email
                 firstName
                 lastName
+                status
               }
               teacherID
               teacherEmail
@@ -5140,6 +5131,7 @@ export const attendanceByStudent = /* GraphQL */ `
         lesson {
           id
           title
+          type
         }
         room {
           id
@@ -6413,6 +6405,40 @@ export const listCurriculaForLesson = /* GraphQL */ `
         syllabiHistory
         signedOff
         status
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+
+export const listDicitionaries = /* GraphQL */ `
+  query ListDicitionaries(
+    $id: ID
+    $filter: ModelDicitionaryFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listDicitionaries(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        englishPhrase
+        englishAudio
+        englishDefinition
+        translation {
+          id
+          translateLanguage
+          languageTranslation
+          languageDefinition
+        }
         createdAt
         updatedAt
       }

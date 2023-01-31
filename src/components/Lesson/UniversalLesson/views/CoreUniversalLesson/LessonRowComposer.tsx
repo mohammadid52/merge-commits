@@ -172,6 +172,9 @@ const LessonRowComposer = () => {
               </div>
             )}
           </div>
+
+          {/* <TranslationModule /> */}
+
           <LessonModule currentLesson={lessonState?.lessonData} />
         </>
       )}

@@ -1,4 +1,3 @@
-import {UniversalLessonPlan} from 'API';
 import {GlobalContext} from 'contexts/GlobalContext';
 import {UniversalLesson} from 'interfaces/UniversalLessonInterfaces';
 import findIndex from 'lodash/findIndex';
@@ -42,7 +41,7 @@ const INITIAL_STATE: FieldsInterface = {
 export const UniversalLessonBuilderProvider = ({children}: any) => {
   const {
     state: {
-      user: {isSuperAdmin}
+      user: {isSuperAdmin, language = 'EN'}
     }
   } = useContext(GlobalContext);
   const [newBlockSeqId, setNewBlockSeqId] = useState(null);
@@ -165,54 +164,6 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
     }
   };
 
-  const wordsComingFromDB = [];
-
-  //   updateDate:
-  // englishPhrase:
-  // englishDefinition: (optional)
-  // englishAudio: (optional)
-  // translateLanguage:
-  // languageTranslation:
-  // languageDefinition: (optional)
-
-  const scanLessonAndFindComplicatedWord = (lessonPlan: UniversalLessonPlan[]) => {
-    return lessonPlan;
-    // const updated = lessonPlan.map((plan: any) => ({
-    //   ...plan,
-    //   pageContent: plan.pageContent.map((pgContent: any) => ({
-    //     ...pgContent,
-    //     partContent: pgContent.partContent.map((ptContent: any) => ({
-    //       ...ptContent,
-    //       value: ptContent.value.map((value: any) => {
-    //         const split = value.value.split(' ');
-
-    //         let updatedSentence: string[] = [];
-    //         split.forEach((s: string) => {
-    //           const idx = wordsComingFromDB.findIndex((d) => d.word === s);
-
-    //           if (idx !== -1) {
-    //             updatedSentence.push(
-    //               s.replace(
-    //                 s,
-    //                 `<abbr title="${wordsComingFromDB[idx].meaning}">${s}</abbr>`
-    //               )
-    //             );
-    //           } else {
-    //             updatedSentence.push(s);
-    //           }
-    //         });
-
-    //         return {
-    //           ...value,
-    //           value: updatedSentence.join(' ')
-    //         };
-    //       })
-    //     }))
-    //   }))
-    // }));
-    // return updated;
-  };
-
   const [savingStatus, setSavingStatus] = useState<
     'initial' | 'loaded' | 'loading' | 'failed'
   >('initial');
@@ -255,8 +206,7 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
         updateMovableList,
 
         fetchingLessonDetails,
-        setFetchingLessonDetails,
-        scanLessonAndFindComplicatedWord
+        setFetchingLessonDetails
       }}>
       {children}
     </UniversalLessonBuilderContext.Provider>
