@@ -385,7 +385,9 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
             : InstitueCurriculum[userLanguage]['INFO'],
         customWidth: {
           no: 'w-12',
+          courseType: 'w-72',
           courseName: 'w-72',
+          courseUnits: 'w-96',
           actions: '-'
         },
         maxHeight: 'max-h-196',

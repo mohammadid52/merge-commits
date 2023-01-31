@@ -17,13 +17,15 @@ type LocationInfoType = {
   pageState: UserPageState;
   lastPageStateUpdate: string;
   isStaff?: boolean;
+  createdAt: string;
   email: string;
   setShowLocationInfo: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const LocationInfo = ({
+export const LocationInfo = ({
   idx,
   authId,
+  createdAt,
   setShowLocationInfo,
   showLocationInfo,
   email,
@@ -173,7 +175,8 @@ const LocationInfo = ({
           </div>
         }
         setShow={setShowLocationInfo}>
-        {formatPageName(localPageState.pageState) || '--'}
+        {formatPageName(localPageState.pageState) ||
+          `Created on ${moment(createdAt).format('lll')}`}
       </Popover>
     </>
   );
@@ -211,13 +214,21 @@ const UserLookupLocation = ({
           isStaff={isStaff}
           authId={item.authId}
           email={item.email}
+          createdAt={item?.createdAt}
           lastPageStateUpdate={item?.lastPageStateUpdate || item?.lastLoggedOut}
           setShowLocationInfo={setShowLocationInfo}
           showLocationInfo={showLocationInfo}
           pageState={item.pageState}
         />
       ) : (
-        '--'
+        <span className="flex flex-col">
+          <span>Logged Out</span>
+          {item.lastLoggedOut && (
+            <span className="text-gray-600 text-xs">
+              ({moment(item.lastLoggedOut).format('ll')})
+            </span>
+          )}
+        </span>
       )}
     </div>
   );
