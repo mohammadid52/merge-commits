@@ -90,6 +90,7 @@ type Person @model @auth(rules: [{allow: public}]) {
   pageState: UserPageState @default(value: "NOT_LOGGED_IN")
   lastPageStateUpdate: String
   statusChangedBy: String
+  isZoiq: Boolean
 }
 
 type PersonLessonsData @model @auth(rules: [{allow: public}]) {
@@ -190,6 +191,7 @@ type Room @model @auth(rules: [{allow: public}]) {
   lessonImpactLog: [ImpactLogEntry]
   classSentiment: [String]
   type: ClassroomType @default(value: "ONLINE")
+  isZoiq: Boolean
 }
 
 type ArchiveSurveyDataSQL @model @auth(rules: [{allow: public}]) {
