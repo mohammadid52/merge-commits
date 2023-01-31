@@ -9,6 +9,7 @@ import * as customMutations from 'customGraphql/customMutations';
 import {setLocalStorageData} from '@utilities/localStorage';
 import {isEmpty} from 'lodash';
 import {v4 as uuidV4} from 'uuid';
+import {allowedAuthIds} from '@contexts/GlobalContext';
 
 interface S3UploadOptions {
   onSuccess?: (result: Object) => void;
@@ -184,5 +185,29 @@ export const getDictionaries = async () => {
     console.error(error);
     return [];
   } finally {
+  }
+};
+
+export const checkUniqRoomName = async (
+  instituteId: string,
+  roomName: string,
+  authId: string
+) => {
+  try {
+    const zoiqFilter = allowedAuthIds.includes(authId)
+      ? []
+      : [{isZoiq: {eq: false}}, {isZoiq: {attributeExists: false}}];
+    const list: any = await API.graphql(
+      graphqlOperation(queries.listRooms, {
+        filter: {
+          institutionID: {eq: instituteId},
+          name: {eq: roomName},
+          or: [...zoiqFilter]
+        }
+      })
+    );
+    return list.data.listRooms.items.length === 0 ? true : false;
+  } catch (error) {
+    console.error(error);
   }
 };

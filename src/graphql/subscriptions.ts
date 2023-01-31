@@ -60,6 +60,7 @@ export const onCreateUpdatePersonLocationItem = /* GraphQL */ `
         pageState
         lastPageStateUpdate
         statusChangedBy
+        isZoiq
         createdAt
         updatedAt
       }
@@ -138,6 +139,7 @@ export const onCreateUpdatePersonLocationItem = /* GraphQL */ `
           pageState
           lastPageStateUpdate
           statusChangedBy
+          isZoiq
           createdAt
           updatedAt
         }
@@ -181,6 +183,7 @@ export const onCreateUpdatePersonLocationItem = /* GraphQL */ `
         }
         classSentiment
         type
+        isZoiq
         createdAt
         updatedAt
       }
@@ -336,6 +339,7 @@ export const onDeletePersonLocationItem = /* GraphQL */ `
         pageState
         lastPageStateUpdate
         statusChangedBy
+        isZoiq
         createdAt
         updatedAt
       }
@@ -414,6 +418,7 @@ export const onDeletePersonLocationItem = /* GraphQL */ `
           pageState
           lastPageStateUpdate
           statusChangedBy
+          isZoiq
           createdAt
           updatedAt
         }
@@ -457,6 +462,7 @@ export const onDeletePersonLocationItem = /* GraphQL */ `
         }
         classSentiment
         type
+        isZoiq
         createdAt
         updatedAt
       }
@@ -604,6 +610,7 @@ export const onChangeStudentData = /* GraphQL */ `
         pageState
         lastPageStateUpdate
         statusChangedBy
+        isZoiq
         createdAt
         updatedAt
       }
@@ -891,6 +898,7 @@ export const onChangeRoom = /* GraphQL */ `
         pageState
         lastPageStateUpdate
         statusChangedBy
+        isZoiq
         createdAt
         updatedAt
       }
@@ -949,6 +957,7 @@ export const onChangeRoom = /* GraphQL */ `
           conferenceCallLink
           classSentiment
           type
+          isZoiq
           createdAt
           updatedAt
         }
@@ -1007,6 +1016,7 @@ export const onChangeRoom = /* GraphQL */ `
       }
       classSentiment
       type
+      isZoiq
       createdAt
       updatedAt
     }
@@ -1077,6 +1087,7 @@ export const onCreatePerson = /* GraphQL */ `
       pageState
       lastPageStateUpdate
       statusChangedBy
+      isZoiq
       createdAt
       updatedAt
     }
@@ -1147,6 +1158,7 @@ export const onUpdatePerson = /* GraphQL */ `
       pageState
       lastPageStateUpdate
       statusChangedBy
+      isZoiq
       createdAt
       updatedAt
     }
@@ -1217,6 +1229,7 @@ export const onDeletePerson = /* GraphQL */ `
       pageState
       lastPageStateUpdate
       statusChangedBy
+      isZoiq
       createdAt
       updatedAt
     }
@@ -1400,6 +1413,7 @@ export const onCreatePersonLessonsData = /* GraphQL */ `
           pageState
           lastPageStateUpdate
           statusChangedBy
+          isZoiq
           createdAt
           updatedAt
         }
@@ -1443,6 +1457,7 @@ export const onCreatePersonLessonsData = /* GraphQL */ `
         }
         classSentiment
         type
+        isZoiq
         createdAt
         updatedAt
       }
@@ -1629,6 +1644,7 @@ export const onUpdatePersonLessonsData = /* GraphQL */ `
           pageState
           lastPageStateUpdate
           statusChangedBy
+          isZoiq
           createdAt
           updatedAt
         }
@@ -1672,6 +1688,7 @@ export const onUpdatePersonLessonsData = /* GraphQL */ `
         }
         classSentiment
         type
+        isZoiq
         createdAt
         updatedAt
       }
@@ -1858,6 +1875,7 @@ export const onDeletePersonLessonsData = /* GraphQL */ `
           pageState
           lastPageStateUpdate
           statusChangedBy
+          isZoiq
           createdAt
           updatedAt
         }
@@ -1901,6 +1919,7 @@ export const onDeletePersonLessonsData = /* GraphQL */ `
         }
         classSentiment
         type
+        isZoiq
         createdAt
         updatedAt
       }
@@ -1982,6 +2001,7 @@ export const onCreateInstitution = /* GraphQL */ `
           conferenceCallLink
           classSentiment
           type
+          isZoiq
           createdAt
           updatedAt
         }
@@ -2111,6 +2131,7 @@ export const onUpdateInstitution = /* GraphQL */ `
           conferenceCallLink
           classSentiment
           type
+          isZoiq
           createdAt
           updatedAt
         }
@@ -2240,6 +2261,7 @@ export const onDeleteInstitution = /* GraphQL */ `
           conferenceCallLink
           classSentiment
           type
+          isZoiq
           createdAt
           updatedAt
         }
@@ -2497,6 +2519,7 @@ export const onCreateStaff = /* GraphQL */ `
         pageState
         lastPageStateUpdate
         statusChangedBy
+        isZoiq
         createdAt
         updatedAt
       }
@@ -2590,6 +2613,7 @@ export const onUpdateStaff = /* GraphQL */ `
         pageState
         lastPageStateUpdate
         statusChangedBy
+        isZoiq
         createdAt
         updatedAt
       }
@@ -2683,6 +2707,7 @@ export const onDeleteStaff = /* GraphQL */ `
         pageState
         lastPageStateUpdate
         statusChangedBy
+        isZoiq
         createdAt
         updatedAt
       }
@@ -2839,6 +2864,7 @@ export const onCreateRoom = /* GraphQL */ `
         pageState
         lastPageStateUpdate
         statusChangedBy
+        isZoiq
         createdAt
         updatedAt
       }
@@ -2897,6 +2923,7 @@ export const onCreateRoom = /* GraphQL */ `
           conferenceCallLink
           classSentiment
           type
+          isZoiq
           createdAt
           updatedAt
         }
@@ -2955,6 +2982,7 @@ export const onCreateRoom = /* GraphQL */ `
       }
       classSentiment
       type
+      isZoiq
       createdAt
       updatedAt
     }
@@ -3071,6 +3099,7 @@ export const onUpdateRoom = /* GraphQL */ `
         pageState
         lastPageStateUpdate
         statusChangedBy
+        isZoiq
         createdAt
         updatedAt
       }
@@ -3129,6 +3158,7 @@ export const onUpdateRoom = /* GraphQL */ `
           conferenceCallLink
           classSentiment
           type
+          isZoiq
           createdAt
           updatedAt
         }
@@ -3187,6 +3217,7 @@ export const onUpdateRoom = /* GraphQL */ `
       }
       classSentiment
       type
+      isZoiq
       createdAt
       updatedAt
     }
@@ -3303,6 +3334,7 @@ export const onDeleteRoom = /* GraphQL */ `
         pageState
         lastPageStateUpdate
         statusChangedBy
+        isZoiq
         createdAt
         updatedAt
       }
@@ -3361,6 +3393,7 @@ export const onDeleteRoom = /* GraphQL */ `
           conferenceCallLink
           classSentiment
           type
+          isZoiq
           createdAt
           updatedAt
         }
@@ -3419,6 +3452,7 @@ export const onDeleteRoom = /* GraphQL */ `
       }
       classSentiment
       type
+      isZoiq
       createdAt
       updatedAt
     }
@@ -3521,6 +3555,7 @@ export const onCreateClassroomGroupStudents = /* GraphQL */ `
           conferenceCallLink
           classSentiment
           type
+          isZoiq
           createdAt
           updatedAt
         }
@@ -3561,6 +3596,7 @@ export const onCreateClassroomGroupStudents = /* GraphQL */ `
           pageState
           lastPageStateUpdate
           statusChangedBy
+          isZoiq
           createdAt
           updatedAt
         }
@@ -3612,6 +3648,7 @@ export const onCreateClassroomGroupStudents = /* GraphQL */ `
         pageState
         lastPageStateUpdate
         statusChangedBy
+        isZoiq
         createdAt
         updatedAt
       }
@@ -3662,6 +3699,7 @@ export const onUpdateClassroomGroupStudents = /* GraphQL */ `
           conferenceCallLink
           classSentiment
           type
+          isZoiq
           createdAt
           updatedAt
         }
@@ -3702,6 +3740,7 @@ export const onUpdateClassroomGroupStudents = /* GraphQL */ `
           pageState
           lastPageStateUpdate
           statusChangedBy
+          isZoiq
           createdAt
           updatedAt
         }
@@ -3753,6 +3792,7 @@ export const onUpdateClassroomGroupStudents = /* GraphQL */ `
         pageState
         lastPageStateUpdate
         statusChangedBy
+        isZoiq
         createdAt
         updatedAt
       }
@@ -3803,6 +3843,7 @@ export const onDeleteClassroomGroupStudents = /* GraphQL */ `
           conferenceCallLink
           classSentiment
           type
+          isZoiq
           createdAt
           updatedAt
         }
@@ -3843,6 +3884,7 @@ export const onDeleteClassroomGroupStudents = /* GraphQL */ `
           pageState
           lastPageStateUpdate
           statusChangedBy
+          isZoiq
           createdAt
           updatedAt
         }
@@ -3894,6 +3936,7 @@ export const onDeleteClassroomGroupStudents = /* GraphQL */ `
         pageState
         lastPageStateUpdate
         statusChangedBy
+        isZoiq
         createdAt
         updatedAt
       }
@@ -3986,6 +4029,7 @@ export const onCreateClassroomGroups = /* GraphQL */ `
           pageState
           lastPageStateUpdate
           statusChangedBy
+          isZoiq
           createdAt
           updatedAt
         }
@@ -4029,6 +4073,7 @@ export const onCreateClassroomGroups = /* GraphQL */ `
         }
         classSentiment
         type
+        isZoiq
         createdAt
         updatedAt
       }
@@ -4075,6 +4120,7 @@ export const onCreateClassroomGroups = /* GraphQL */ `
         pageState
         lastPageStateUpdate
         statusChangedBy
+        isZoiq
         createdAt
         updatedAt
       }
@@ -4179,6 +4225,7 @@ export const onUpdateClassroomGroups = /* GraphQL */ `
           pageState
           lastPageStateUpdate
           statusChangedBy
+          isZoiq
           createdAt
           updatedAt
         }
@@ -4222,6 +4269,7 @@ export const onUpdateClassroomGroups = /* GraphQL */ `
         }
         classSentiment
         type
+        isZoiq
         createdAt
         updatedAt
       }
@@ -4268,6 +4316,7 @@ export const onUpdateClassroomGroups = /* GraphQL */ `
         pageState
         lastPageStateUpdate
         statusChangedBy
+        isZoiq
         createdAt
         updatedAt
       }
@@ -4372,6 +4421,7 @@ export const onDeleteClassroomGroups = /* GraphQL */ `
           pageState
           lastPageStateUpdate
           statusChangedBy
+          isZoiq
           createdAt
           updatedAt
         }
@@ -4415,6 +4465,7 @@ export const onDeleteClassroomGroups = /* GraphQL */ `
         }
         classSentiment
         type
+        isZoiq
         createdAt
         updatedAt
       }
@@ -4461,6 +4512,7 @@ export const onDeleteClassroomGroups = /* GraphQL */ `
         pageState
         lastPageStateUpdate
         statusChangedBy
+        isZoiq
         createdAt
         updatedAt
       }
@@ -4568,6 +4620,7 @@ export const onCreateRoomCoTeachers = /* GraphQL */ `
           pageState
           lastPageStateUpdate
           statusChangedBy
+          isZoiq
           createdAt
           updatedAt
         }
@@ -4611,6 +4664,7 @@ export const onCreateRoomCoTeachers = /* GraphQL */ `
         }
         classSentiment
         type
+        isZoiq
         createdAt
         updatedAt
       }
@@ -4653,6 +4707,7 @@ export const onCreateRoomCoTeachers = /* GraphQL */ `
         pageState
         lastPageStateUpdate
         statusChangedBy
+        isZoiq
         createdAt
         updatedAt
       }
@@ -4757,6 +4812,7 @@ export const onUpdateRoomCoTeachers = /* GraphQL */ `
           pageState
           lastPageStateUpdate
           statusChangedBy
+          isZoiq
           createdAt
           updatedAt
         }
@@ -4800,6 +4856,7 @@ export const onUpdateRoomCoTeachers = /* GraphQL */ `
         }
         classSentiment
         type
+        isZoiq
         createdAt
         updatedAt
       }
@@ -4842,6 +4899,7 @@ export const onUpdateRoomCoTeachers = /* GraphQL */ `
         pageState
         lastPageStateUpdate
         statusChangedBy
+        isZoiq
         createdAt
         updatedAt
       }
@@ -4946,6 +5004,7 @@ export const onDeleteRoomCoTeachers = /* GraphQL */ `
           pageState
           lastPageStateUpdate
           statusChangedBy
+          isZoiq
           createdAt
           updatedAt
         }
@@ -4989,6 +5048,7 @@ export const onDeleteRoomCoTeachers = /* GraphQL */ `
         }
         classSentiment
         type
+        isZoiq
         createdAt
         updatedAt
       }
@@ -5031,6 +5091,7 @@ export const onDeleteRoomCoTeachers = /* GraphQL */ `
         pageState
         lastPageStateUpdate
         statusChangedBy
+        isZoiq
         createdAt
         updatedAt
       }
@@ -5170,6 +5231,7 @@ export const onCreateClass = /* GraphQL */ `
           pageState
           lastPageStateUpdate
           statusChangedBy
+          isZoiq
           createdAt
           updatedAt
         }
@@ -5213,6 +5275,7 @@ export const onCreateClass = /* GraphQL */ `
         }
         classSentiment
         type
+        isZoiq
         createdAt
         updatedAt
       }
@@ -5355,6 +5418,7 @@ export const onUpdateClass = /* GraphQL */ `
           pageState
           lastPageStateUpdate
           statusChangedBy
+          isZoiq
           createdAt
           updatedAt
         }
@@ -5398,6 +5462,7 @@ export const onUpdateClass = /* GraphQL */ `
         }
         classSentiment
         type
+        isZoiq
         createdAt
         updatedAt
       }
@@ -5540,6 +5605,7 @@ export const onDeleteClass = /* GraphQL */ `
           pageState
           lastPageStateUpdate
           statusChangedBy
+          isZoiq
           createdAt
           updatedAt
         }
@@ -5583,6 +5649,7 @@ export const onDeleteClass = /* GraphQL */ `
         }
         classSentiment
         type
+        isZoiq
         createdAt
         updatedAt
       }
@@ -5672,6 +5739,7 @@ export const onCreateClassStudent = /* GraphQL */ `
           conferenceCallLink
           classSentiment
           type
+          isZoiq
           createdAt
           updatedAt
         }
@@ -5720,6 +5788,7 @@ export const onCreateClassStudent = /* GraphQL */ `
         pageState
         lastPageStateUpdate
         statusChangedBy
+        isZoiq
         createdAt
         updatedAt
       }
@@ -5795,6 +5864,7 @@ export const onUpdateClassStudent = /* GraphQL */ `
           conferenceCallLink
           classSentiment
           type
+          isZoiq
           createdAt
           updatedAt
         }
@@ -5843,6 +5913,7 @@ export const onUpdateClassStudent = /* GraphQL */ `
         pageState
         lastPageStateUpdate
         statusChangedBy
+        isZoiq
         createdAt
         updatedAt
       }
@@ -5918,6 +5989,7 @@ export const onDeleteClassStudent = /* GraphQL */ `
           conferenceCallLink
           classSentiment
           type
+          isZoiq
           createdAt
           updatedAt
         }
@@ -5966,6 +6038,7 @@ export const onDeleteClassStudent = /* GraphQL */ `
         pageState
         lastPageStateUpdate
         statusChangedBy
+        isZoiq
         createdAt
         updatedAt
       }
@@ -7585,6 +7658,7 @@ export const onCreateRoomMsgs = /* GraphQL */ `
         pageState
         lastPageStateUpdate
         statusChangedBy
+        isZoiq
         createdAt
         updatedAt
       }
@@ -7640,6 +7714,7 @@ export const onUpdateRoomMsgs = /* GraphQL */ `
         pageState
         lastPageStateUpdate
         statusChangedBy
+        isZoiq
         createdAt
         updatedAt
       }
@@ -7695,6 +7770,7 @@ export const onDeleteRoomMsgs = /* GraphQL */ `
         pageState
         lastPageStateUpdate
         statusChangedBy
+        isZoiq
         createdAt
         updatedAt
       }
@@ -7750,6 +7826,7 @@ export const onCreateAnthologyComment = /* GraphQL */ `
         pageState
         lastPageStateUpdate
         statusChangedBy
+        isZoiq
         createdAt
         updatedAt
       }
@@ -7814,6 +7891,7 @@ export const onUpdateAnthologyComment = /* GraphQL */ `
         pageState
         lastPageStateUpdate
         statusChangedBy
+        isZoiq
         createdAt
         updatedAt
       }
@@ -7878,6 +7956,7 @@ export const onDeleteAnthologyComment = /* GraphQL */ `
         pageState
         lastPageStateUpdate
         statusChangedBy
+        isZoiq
         createdAt
         updatedAt
       }
@@ -7943,6 +8022,7 @@ export const onCreateQuestionData = /* GraphQL */ `
         pageState
         lastPageStateUpdate
         statusChangedBy
+        isZoiq
         createdAt
         updatedAt
       }
@@ -8009,6 +8089,7 @@ export const onUpdateQuestionData = /* GraphQL */ `
         pageState
         lastPageStateUpdate
         statusChangedBy
+        isZoiq
         createdAt
         updatedAt
       }
@@ -8075,6 +8156,7 @@ export const onDeleteQuestionData = /* GraphQL */ `
         pageState
         lastPageStateUpdate
         statusChangedBy
+        isZoiq
         createdAt
         updatedAt
       }
@@ -8141,6 +8223,7 @@ export const onCreateQuestionDataStudentData = /* GraphQL */ `
           pageState
           lastPageStateUpdate
           statusChangedBy
+          isZoiq
           createdAt
           updatedAt
         }
@@ -8204,6 +8287,7 @@ export const onCreateQuestionDataStudentData = /* GraphQL */ `
           pageState
           lastPageStateUpdate
           statusChangedBy
+          isZoiq
           createdAt
           updatedAt
         }
@@ -8273,6 +8357,7 @@ export const onUpdateQuestionDataStudentData = /* GraphQL */ `
           pageState
           lastPageStateUpdate
           statusChangedBy
+          isZoiq
           createdAt
           updatedAt
         }
@@ -8336,6 +8421,7 @@ export const onUpdateQuestionDataStudentData = /* GraphQL */ `
           pageState
           lastPageStateUpdate
           statusChangedBy
+          isZoiq
           createdAt
           updatedAt
         }
@@ -8405,6 +8491,7 @@ export const onDeleteQuestionDataStudentData = /* GraphQL */ `
           pageState
           lastPageStateUpdate
           statusChangedBy
+          isZoiq
           createdAt
           updatedAt
         }
@@ -8468,6 +8555,7 @@ export const onDeleteQuestionDataStudentData = /* GraphQL */ `
           pageState
           lastPageStateUpdate
           statusChangedBy
+          isZoiq
           createdAt
           updatedAt
         }
@@ -8540,6 +8628,7 @@ export const onCreatePersonLocation = /* GraphQL */ `
         pageState
         lastPageStateUpdate
         statusChangedBy
+        isZoiq
         createdAt
         updatedAt
       }
@@ -8618,6 +8707,7 @@ export const onCreatePersonLocation = /* GraphQL */ `
           pageState
           lastPageStateUpdate
           statusChangedBy
+          isZoiq
           createdAt
           updatedAt
         }
@@ -8661,6 +8751,7 @@ export const onCreatePersonLocation = /* GraphQL */ `
         }
         classSentiment
         type
+        isZoiq
         createdAt
         updatedAt
       }
@@ -8810,6 +8901,7 @@ export const onUpdatePersonLocation = /* GraphQL */ `
         pageState
         lastPageStateUpdate
         statusChangedBy
+        isZoiq
         createdAt
         updatedAt
       }
@@ -8888,6 +8980,7 @@ export const onUpdatePersonLocation = /* GraphQL */ `
           pageState
           lastPageStateUpdate
           statusChangedBy
+          isZoiq
           createdAt
           updatedAt
         }
@@ -8931,6 +9024,7 @@ export const onUpdatePersonLocation = /* GraphQL */ `
         }
         classSentiment
         type
+        isZoiq
         createdAt
         updatedAt
       }
@@ -9080,6 +9174,7 @@ export const onDeletePersonLocation = /* GraphQL */ `
         pageState
         lastPageStateUpdate
         statusChangedBy
+        isZoiq
         createdAt
         updatedAt
       }
@@ -9158,6 +9253,7 @@ export const onDeletePersonLocation = /* GraphQL */ `
           pageState
           lastPageStateUpdate
           statusChangedBy
+          isZoiq
           createdAt
           updatedAt
         }
@@ -9201,6 +9297,7 @@ export const onDeletePersonLocation = /* GraphQL */ `
         }
         classSentiment
         type
+        isZoiq
         createdAt
         updatedAt
       }
@@ -9567,6 +9664,7 @@ export const onCreateAttendance = /* GraphQL */ `
           pageState
           lastPageStateUpdate
           statusChangedBy
+          isZoiq
           createdAt
           updatedAt
         }
@@ -9610,6 +9708,7 @@ export const onCreateAttendance = /* GraphQL */ `
         }
         classSentiment
         type
+        isZoiq
         createdAt
         updatedAt
       }
@@ -9887,6 +9986,7 @@ export const onUpdateAttendance = /* GraphQL */ `
           pageState
           lastPageStateUpdate
           statusChangedBy
+          isZoiq
           createdAt
           updatedAt
         }
@@ -9930,6 +10030,7 @@ export const onUpdateAttendance = /* GraphQL */ `
         }
         classSentiment
         type
+        isZoiq
         createdAt
         updatedAt
       }
@@ -10207,6 +10308,7 @@ export const onDeleteAttendance = /* GraphQL */ `
           pageState
           lastPageStateUpdate
           statusChangedBy
+          isZoiq
           createdAt
           updatedAt
         }
@@ -10250,6 +10352,7 @@ export const onDeleteAttendance = /* GraphQL */ `
         }
         classSentiment
         type
+        isZoiq
         createdAt
         updatedAt
       }
@@ -11838,6 +11941,7 @@ export const onCreateTemporaryDemographicsUploadData = /* GraphQL */ `
           pageState
           lastPageStateUpdate
           statusChangedBy
+          isZoiq
           createdAt
           updatedAt
         }
@@ -11911,6 +12015,7 @@ export const onUpdateTemporaryDemographicsUploadData = /* GraphQL */ `
           pageState
           lastPageStateUpdate
           statusChangedBy
+          isZoiq
           createdAt
           updatedAt
         }
@@ -11984,6 +12089,7 @@ export const onDeleteTemporaryDemographicsUploadData = /* GraphQL */ `
           pageState
           lastPageStateUpdate
           statusChangedBy
+          isZoiq
           createdAt
           updatedAt
         }
@@ -12122,6 +12228,7 @@ export const onCreateUploadLogs = /* GraphQL */ `
         pageState
         lastPageStateUpdate
         statusChangedBy
+        isZoiq
         createdAt
         updatedAt
       }
@@ -12289,6 +12396,7 @@ export const onCreateUploadLogs = /* GraphQL */ `
           pageState
           lastPageStateUpdate
           statusChangedBy
+          isZoiq
           createdAt
           updatedAt
         }
@@ -12332,6 +12440,7 @@ export const onCreateUploadLogs = /* GraphQL */ `
         }
         classSentiment
         type
+        isZoiq
         createdAt
         updatedAt
       }
@@ -12499,6 +12608,7 @@ export const onUpdateUploadLogs = /* GraphQL */ `
         pageState
         lastPageStateUpdate
         statusChangedBy
+        isZoiq
         createdAt
         updatedAt
       }
@@ -12666,6 +12776,7 @@ export const onUpdateUploadLogs = /* GraphQL */ `
           pageState
           lastPageStateUpdate
           statusChangedBy
+          isZoiq
           createdAt
           updatedAt
         }
@@ -12709,6 +12820,7 @@ export const onUpdateUploadLogs = /* GraphQL */ `
         }
         classSentiment
         type
+        isZoiq
         createdAt
         updatedAt
       }
@@ -12876,6 +12988,7 @@ export const onDeleteUploadLogs = /* GraphQL */ `
         pageState
         lastPageStateUpdate
         statusChangedBy
+        isZoiq
         createdAt
         updatedAt
       }
@@ -13043,6 +13156,7 @@ export const onDeleteUploadLogs = /* GraphQL */ `
           pageState
           lastPageStateUpdate
           statusChangedBy
+          isZoiq
           createdAt
           updatedAt
         }
@@ -13086,6 +13200,7 @@ export const onDeleteUploadLogs = /* GraphQL */ `
         }
         classSentiment
         type
+        isZoiq
         createdAt
         updatedAt
       }
@@ -14609,6 +14724,7 @@ export const onCreateStudentConnections = /* GraphQL */ `
         pageState
         lastPageStateUpdate
         statusChangedBy
+        isZoiq
         createdAt
         updatedAt
       }
@@ -14651,6 +14767,7 @@ export const onCreateStudentConnections = /* GraphQL */ `
         pageState
         lastPageStateUpdate
         statusChangedBy
+        isZoiq
         createdAt
         updatedAt
       }
@@ -14709,6 +14826,7 @@ export const onUpdateStudentConnections = /* GraphQL */ `
         pageState
         lastPageStateUpdate
         statusChangedBy
+        isZoiq
         createdAt
         updatedAt
       }
@@ -14751,6 +14869,7 @@ export const onUpdateStudentConnections = /* GraphQL */ `
         pageState
         lastPageStateUpdate
         statusChangedBy
+        isZoiq
         createdAt
         updatedAt
       }
@@ -14809,6 +14928,7 @@ export const onDeleteStudentConnections = /* GraphQL */ `
         pageState
         lastPageStateUpdate
         statusChangedBy
+        isZoiq
         createdAt
         updatedAt
       }
@@ -14851,6 +14971,7 @@ export const onDeleteStudentConnections = /* GraphQL */ `
         pageState
         lastPageStateUpdate
         statusChangedBy
+        isZoiq
         createdAt
         updatedAt
       }
@@ -14906,6 +15027,7 @@ export const onCreatePersonSentiments = /* GraphQL */ `
         pageState
         lastPageStateUpdate
         statusChangedBy
+        isZoiq
         createdAt
         updatedAt
       }
@@ -14964,6 +15086,7 @@ export const onUpdatePersonSentiments = /* GraphQL */ `
         pageState
         lastPageStateUpdate
         statusChangedBy
+        isZoiq
         createdAt
         updatedAt
       }
@@ -15022,6 +15145,7 @@ export const onDeletePersonSentiments = /* GraphQL */ `
         pageState
         lastPageStateUpdate
         statusChangedBy
+        isZoiq
         createdAt
         updatedAt
       }
@@ -15119,6 +15243,7 @@ export const onCreateSentimentTracker = /* GraphQL */ `
         pageState
         lastPageStateUpdate
         statusChangedBy
+        isZoiq
         createdAt
         updatedAt
       }
@@ -15206,6 +15331,7 @@ export const onCreateSentimentTracker = /* GraphQL */ `
           pageState
           lastPageStateUpdate
           statusChangedBy
+          isZoiq
           createdAt
           updatedAt
         }
@@ -15249,6 +15375,7 @@ export const onCreateSentimentTracker = /* GraphQL */ `
         }
         classSentiment
         type
+        isZoiq
         createdAt
         updatedAt
       }
@@ -15374,6 +15501,7 @@ export const onUpdateSentimentTracker = /* GraphQL */ `
         pageState
         lastPageStateUpdate
         statusChangedBy
+        isZoiq
         createdAt
         updatedAt
       }
@@ -15461,6 +15589,7 @@ export const onUpdateSentimentTracker = /* GraphQL */ `
           pageState
           lastPageStateUpdate
           statusChangedBy
+          isZoiq
           createdAt
           updatedAt
         }
@@ -15504,6 +15633,7 @@ export const onUpdateSentimentTracker = /* GraphQL */ `
         }
         classSentiment
         type
+        isZoiq
         createdAt
         updatedAt
       }
@@ -15629,6 +15759,7 @@ export const onDeleteSentimentTracker = /* GraphQL */ `
         pageState
         lastPageStateUpdate
         statusChangedBy
+        isZoiq
         createdAt
         updatedAt
       }
@@ -15716,6 +15847,7 @@ export const onDeleteSentimentTracker = /* GraphQL */ `
           pageState
           lastPageStateUpdate
           statusChangedBy
+          isZoiq
           createdAt
           updatedAt
         }
@@ -15759,6 +15891,7 @@ export const onDeleteSentimentTracker = /* GraphQL */ `
         }
         classSentiment
         type
+        isZoiq
         createdAt
         updatedAt
       }
@@ -15885,6 +16018,7 @@ export const onCreateFeelingTracker = /* GraphQL */ `
         pageState
         lastPageStateUpdate
         statusChangedBy
+        isZoiq
         createdAt
         updatedAt
       }
@@ -15972,6 +16106,7 @@ export const onCreateFeelingTracker = /* GraphQL */ `
           pageState
           lastPageStateUpdate
           statusChangedBy
+          isZoiq
           createdAt
           updatedAt
         }
@@ -16015,6 +16150,7 @@ export const onCreateFeelingTracker = /* GraphQL */ `
         }
         classSentiment
         type
+        isZoiq
         createdAt
         updatedAt
       }
@@ -16075,6 +16211,7 @@ export const onUpdateFeelingTracker = /* GraphQL */ `
         pageState
         lastPageStateUpdate
         statusChangedBy
+        isZoiq
         createdAt
         updatedAt
       }
@@ -16162,6 +16299,7 @@ export const onUpdateFeelingTracker = /* GraphQL */ `
           pageState
           lastPageStateUpdate
           statusChangedBy
+          isZoiq
           createdAt
           updatedAt
         }
@@ -16205,6 +16343,7 @@ export const onUpdateFeelingTracker = /* GraphQL */ `
         }
         classSentiment
         type
+        isZoiq
         createdAt
         updatedAt
       }
@@ -16265,6 +16404,7 @@ export const onDeleteFeelingTracker = /* GraphQL */ `
         pageState
         lastPageStateUpdate
         statusChangedBy
+        isZoiq
         createdAt
         updatedAt
       }
@@ -16352,6 +16492,7 @@ export const onDeleteFeelingTracker = /* GraphQL */ `
           pageState
           lastPageStateUpdate
           statusChangedBy
+          isZoiq
           createdAt
           updatedAt
         }
@@ -16395,6 +16536,7 @@ export const onDeleteFeelingTracker = /* GraphQL */ `
         }
         classSentiment
         type
+        isZoiq
         createdAt
         updatedAt
       }
@@ -16455,6 +16597,7 @@ export const onCreateFeelingsArchive = /* GraphQL */ `
         pageState
         lastPageStateUpdate
         statusChangedBy
+        isZoiq
         createdAt
         updatedAt
       }
@@ -16545,6 +16688,7 @@ export const onCreateFeelingsArchive = /* GraphQL */ `
           pageState
           lastPageStateUpdate
           statusChangedBy
+          isZoiq
           createdAt
           updatedAt
         }
@@ -16588,6 +16732,7 @@ export const onCreateFeelingsArchive = /* GraphQL */ `
         }
         classSentiment
         type
+        isZoiq
         createdAt
         updatedAt
       }
@@ -16737,6 +16882,7 @@ export const onUpdateFeelingsArchive = /* GraphQL */ `
         pageState
         lastPageStateUpdate
         statusChangedBy
+        isZoiq
         createdAt
         updatedAt
       }
@@ -16827,6 +16973,7 @@ export const onUpdateFeelingsArchive = /* GraphQL */ `
           pageState
           lastPageStateUpdate
           statusChangedBy
+          isZoiq
           createdAt
           updatedAt
         }
@@ -16870,6 +17017,7 @@ export const onUpdateFeelingsArchive = /* GraphQL */ `
         }
         classSentiment
         type
+        isZoiq
         createdAt
         updatedAt
       }
@@ -17019,6 +17167,7 @@ export const onDeleteFeelingsArchive = /* GraphQL */ `
         pageState
         lastPageStateUpdate
         statusChangedBy
+        isZoiq
         createdAt
         updatedAt
       }
@@ -17109,6 +17258,7 @@ export const onDeleteFeelingsArchive = /* GraphQL */ `
           pageState
           lastPageStateUpdate
           statusChangedBy
+          isZoiq
           createdAt
           updatedAt
         }
@@ -17152,6 +17302,7 @@ export const onDeleteFeelingsArchive = /* GraphQL */ `
         }
         classSentiment
         type
+        isZoiq
         createdAt
         updatedAt
       }
@@ -17429,6 +17580,7 @@ export const onCreateCommunity = /* GraphQL */ `
         pageState
         lastPageStateUpdate
         statusChangedBy
+        isZoiq
         createdAt
         updatedAt
       }
@@ -17550,6 +17702,7 @@ export const onUpdateCommunity = /* GraphQL */ `
         pageState
         lastPageStateUpdate
         statusChangedBy
+        isZoiq
         createdAt
         updatedAt
       }
@@ -17671,6 +17824,7 @@ export const onDeleteCommunity = /* GraphQL */ `
         pageState
         lastPageStateUpdate
         statusChangedBy
+        isZoiq
         createdAt
         updatedAt
       }
@@ -17805,6 +17959,7 @@ export const onCreateGameChangerLog = /* GraphQL */ `
         pageState
         lastPageStateUpdate
         statusChangedBy
+        isZoiq
         createdAt
         updatedAt
       }
@@ -17874,6 +18029,7 @@ export const onUpdateGameChangerLog = /* GraphQL */ `
         pageState
         lastPageStateUpdate
         statusChangedBy
+        isZoiq
         createdAt
         updatedAt
       }
@@ -17943,6 +18099,7 @@ export const onDeleteGameChangerLog = /* GraphQL */ `
         pageState
         lastPageStateUpdate
         statusChangedBy
+        isZoiq
         createdAt
         updatedAt
       }
@@ -18004,6 +18161,7 @@ export const onCreateCommunityChat = /* GraphQL */ `
         pageState
         lastPageStateUpdate
         statusChangedBy
+        isZoiq
         createdAt
         updatedAt
       }
@@ -18062,6 +18220,7 @@ export const onUpdateCommunityChat = /* GraphQL */ `
         pageState
         lastPageStateUpdate
         statusChangedBy
+        isZoiq
         createdAt
         updatedAt
       }
@@ -18120,6 +18279,7 @@ export const onDeleteCommunityChat = /* GraphQL */ `
         pageState
         lastPageStateUpdate
         statusChangedBy
+        isZoiq
         createdAt
         updatedAt
       }
@@ -18234,6 +18394,7 @@ export const onCreateErrorLog = /* GraphQL */ `
         pageState
         lastPageStateUpdate
         statusChangedBy
+        isZoiq
         createdAt
         updatedAt
       }
@@ -18293,6 +18454,7 @@ export const onUpdateErrorLog = /* GraphQL */ `
         pageState
         lastPageStateUpdate
         statusChangedBy
+        isZoiq
         createdAt
         updatedAt
       }
@@ -18352,6 +18514,7 @@ export const onDeleteErrorLog = /* GraphQL */ `
         pageState
         lastPageStateUpdate
         statusChangedBy
+        isZoiq
         createdAt
         updatedAt
       }
@@ -18408,6 +18571,7 @@ export const onCreateDicitionary = /* GraphQL */ `
         pageState
         lastPageStateUpdate
         statusChangedBy
+        isZoiq
         createdAt
         updatedAt
       }
@@ -18472,6 +18636,7 @@ export const onUpdateDicitionary = /* GraphQL */ `
         pageState
         lastPageStateUpdate
         statusChangedBy
+        isZoiq
         createdAt
         updatedAt
       }
@@ -18536,6 +18701,7 @@ export const onDeleteDicitionary = /* GraphQL */ `
         pageState
         lastPageStateUpdate
         statusChangedBy
+        isZoiq
         createdAt
         updatedAt
       }

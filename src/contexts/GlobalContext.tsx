@@ -10,6 +10,10 @@ import {globalState} from 'state/GlobalState';
 import {lessonControlState} from 'state/LessonControlState';
 import {lessonState as lessonStateObject} from 'state/LessonState';
 import {getClientKey} from 'utilities/strings';
+export const allowedAuthIds = [
+  '6c4dd66f-77d5-4aba-bf5a-46566f8a836d',
+  '22241431-5b44-434a-bba1-6dcb40e7c7fa'
+];
 
 export const standardTheme = {
   bg: 'bg-dark-gray',
@@ -276,12 +280,12 @@ export const GlobalContextProvider = ({children}: GlobalProps) => {
       console.error('update PersonLocation : ', e);
     }
   }
-  const allowedAuthIds = [
-    '6c4dd66f-77d5-4aba-bf5a-46566f8a836d',
-    '22241431-5b44-434a-bba1-6dcb40e7c7fa'
-  ];
 
   const checkIfAdmin = () => allowedAuthIds.includes(state.user.authId);
+
+  const zoiqFilter = checkIfAdmin()
+    ? []
+    : [{isZoiq: {eq: false}}, {isZoiq: {attributeExists: false}}];
 
   return (
     <GlobalContext.Provider
@@ -290,6 +294,7 @@ export const GlobalContextProvider = ({children}: GlobalProps) => {
         state,
         dispatch,
         lessonState,
+        zoiqFilter,
         lessonDispatch,
         saveJournalData,
         controlState,

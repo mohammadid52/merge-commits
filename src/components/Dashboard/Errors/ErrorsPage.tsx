@@ -111,6 +111,7 @@ const ErrorItem = ({
 const ErrorsPage = () => {
   const {authId, email} = useAuth();
   const {checkIfAdmin} = useGlobalContext();
+
   if (!checkIfAdmin()) {
     return <Redirect to={'/dashboard/home'} />;
   }
@@ -120,8 +121,9 @@ const ErrorsPage = () => {
     ErrorLog[]
   >(
     'listErrorLogs',
-    {limit: 150},
+    {limit: 200},
     {
+      loopOnNextToken: true,
       enabled: checkIfAdmin(),
       onSuccess: (data) => {
         const orderedList = orderBy([...data], ['errorTime'], ['desc']);

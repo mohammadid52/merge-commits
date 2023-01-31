@@ -169,7 +169,7 @@ interface ICsvProps {
 }
 
 const Csv = ({institutionId}: ICsvProps) => {
-  const {state, clientKey, userLanguage} = useContext(GlobalContext);
+  const {state, clientKey, userLanguage, zoiqFilter} = useContext(GlobalContext);
   const {CsvDict} = useDictionary(clientKey);
   const [institutions, setInstitutions] = useState([]);
   const [selectedInst, setSelectedInst] = useState(null);
@@ -345,8 +345,10 @@ const Csv = ({institutionId}: ICsvProps) => {
     setClassRoomLoading(true);
     let instCRs: any = [];
 
-    const variablesForTR_FR = {filter: {teacherAuthID: {eq: authId}}};
-    const variablesForBLD_ADM = {};
+    const variablesForTR_FR = {
+      filter: {teacherAuthID: {eq: authId}, or: [...zoiqFilter]}
+    };
+    const variablesForBLD_ADM = {filter: {or: [...zoiqFilter]}};
 
     let classrooms: any = await API.graphql(
       graphqlOperation(

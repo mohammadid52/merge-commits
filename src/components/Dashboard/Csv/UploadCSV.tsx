@@ -134,7 +134,7 @@ const INITIAL_MODAL_STATE: IModal = {
 };
 
 const UploadCsv = ({institutionId}: ICsvProps) => {
-  const {state, userLanguage} = useGlobalContext();
+  const {state, userLanguage, zoiqFilter} = useGlobalContext();
   const {CsvDict, Institute_info} = useDictionary();
 
   const [file, setFile] = useState<any>(null);
@@ -1187,7 +1187,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
           graphqlOperation(customQueries.listRoomsDashboard, {
             filter: {
               teacherAuthID: {eq: authId},
-
+              or: [...zoiqFilter],
               type: {eq: ClassroomType.TRADITIONAL}
             }
           })
@@ -1205,7 +1205,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
       } else {
         classrooms = await API.graphql(
           graphqlOperation(customQueries.listRoomsDashboard, {
-            filter: {type: {eq: ClassroomType.TRADITIONAL}}
+            filter: {type: {eq: ClassroomType.TRADITIONAL}, or: [...zoiqFilter]}
           })
         );
 

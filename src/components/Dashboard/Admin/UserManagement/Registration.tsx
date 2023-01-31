@@ -8,7 +8,6 @@ import BreadCrums from 'atoms/BreadCrums';
 import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
 import Selector from 'atoms/Form/Selector';
-import SectionTitle from 'atoms/SectionTitle';
 import SuccessNote from 'standard/Alert/SuccessNote';
 import DropdownForm from './DropdownForm';
 import ErrorNote from './ErrorNote';
@@ -17,7 +16,9 @@ import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import {createUserUrl} from 'utilities/urls';
 
+import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import useGraphqlMutation from '@customHooks/useGraphqlMutation';
+import {getReverseUserRoleString, getUserRoleString} from '@utilities/strings';
 import {
   CreateClassroomGroupStudentsInput,
   CreateClassStudentInput,
@@ -59,6 +60,7 @@ interface newUserInput {
     name: string;
   };
   isSelfPaced?: boolean;
+  isZoiq?: boolean;
   class: {
     id: string;
     name: string;
@@ -85,7 +87,8 @@ const initialState: newUserInput = {
   institution: {id: '', name: ''},
   class: {id: '', name: '', roomId: ''},
   group: {id: '', name: ''},
-  isSelfPaced: true
+  isSelfPaced: true,
+  isZoiq: false
 };
 
 const Registration = ({
@@ -112,26 +115,29 @@ const Registration = ({
     message: ''
   });
 
-  const {state, userLanguage} = useGlobalContext();
+  const {state, userLanguage, zoiqFilter, checkIfAdmin} = useGlobalContext();
   const {RegistrationDict, BreadcrumsTitles} = useDictionary();
 
   const Roles = [
     state.user.role === Role.SUP && {
-      code: Role.SUP,
-      name: RegistrationDict[userLanguage]['roles']['sup']
+      name: Role.SUP,
+      id: 1,
+      value: RegistrationDict[userLanguage]['roles']['sup']
     },
     (state.user.role === Role.SUP || state.user.role === Role.ADM) && {
-      code: Role.ADM,
-      name: RegistrationDict[userLanguage]['roles']['adm']
+      name: Role.ADM,
+      id: 2,
+      value: RegistrationDict[userLanguage]['roles']['adm']
     },
-    {code: Role.BLD, name: RegistrationDict[userLanguage]['roles']['bld']},
-    {code: Role.FLW, name: RegistrationDict[userLanguage]['roles']['flw']},
-    {code: Role.CRD, name: RegistrationDict[userLanguage]['roles']['crd']},
-    {code: Role.TR, name: RegistrationDict[userLanguage]['roles']['tr']},
+    {name: Role.BLD, id: 3, value: RegistrationDict[userLanguage]['roles']['bld']},
+    {name: Role.FLW, id: 4, value: RegistrationDict[userLanguage]['roles']['flw']},
+    {name: Role.CRD, id: 5, value: RegistrationDict[userLanguage]['roles']['crd']},
+    {name: Role.TR, id: 6, value: RegistrationDict[userLanguage]['roles']['tr']},
     (!isInModalPopup || (isInModalPopup && classId)) &&
       state.user.role !== Role.BLD && {
-        code: Role.ST,
-        name: RegistrationDict[userLanguage]['roles']['st']
+        name: Role.ST,
+        id: 7,
+        value: RegistrationDict[userLanguage]['roles']['st']
       }
   ].filter(Boolean);
 
@@ -249,7 +255,8 @@ const Registration = ({
       grade: newUserInputs.grade,
       language: Language.EN,
       onDemand: newUserInputs.role === 'ST' ? newUserInputs.isSelfPaced : false,
-      addedby: state.user.authId
+      addedby: state.user.authId,
+      isZoiq: newUserInputs.isZoiq
     };
 
     try {
@@ -422,20 +429,11 @@ const Registration = ({
     });
   };
 
-  const handleChangeRole = (item: {name: string; code: Role}) => {
+  const handleCheckbox = (fieldName: string, value: boolean) => {
     setNewUserInputs(() => {
       return {
         ...newUserInputs,
-        role: item.code
-      };
-    });
-  };
-
-  const handleChangeSelfPaced = (value: boolean) => {
-    setNewUserInputs(() => {
-      return {
-        ...newUserInputs,
-        isSelfPaced: value
+        [fieldName]: value
       };
     });
   };
@@ -444,11 +442,11 @@ const Registration = ({
     validation();
   };
 
-  const handleInstituteChange = (item: {name: string; code: string}) => {
+  const handleInstituteChange = (item: {name: string; value: string}) => {
     setNewUserInputs(() => {
       return {
         ...newUserInputs,
-        institution: {id: item.code, name: item.name}
+        institution: {id: item.value, name: item.name}
       };
     });
   };
@@ -462,6 +460,7 @@ const Registration = ({
     try {
       const result: any = await API.graphql(
         graphqlOperation(customQueries.listRooms, {
+          filter: {or: [...zoiqFilter]},
           nextToken: nextToken
         })
       );
@@ -486,7 +485,7 @@ const Registration = ({
 
   const handleClassChange = (item: {
     name: string;
-    code: string;
+    value: string;
     roomId: string;
     classID: string;
     id: string;
@@ -511,7 +510,7 @@ const Registration = ({
       );
       institutions = institutions?.data.listInstitutions?.items || [];
       let list = institutions.map((inst: any) => {
-        return {code: inst.id, name: inst.name};
+        return {value: inst.id, name: inst.name};
       });
       setInstitutions([list[list.length - 1]]);
       setInstitutionsData(institutions);
@@ -526,7 +525,7 @@ const Registration = ({
     if (instId) {
       if (institutionsData.length) {
         handleInstituteChange({
-          code: instId,
+          value: instId,
           name: ''
         });
       } else {
@@ -548,32 +547,29 @@ const Registration = ({
     setNewUserInputs({...newUserInputs, status: {value, name}});
   };
   return (
-    <div
-      className={`w-full h-full ${
-        isInInstitute ? (isInModalPopup ? 'p-4' : 'py-8 px-12') : 'mt-4 p-12'
-      }`}>
+    <div className={`w-full h-full p-4`}>
       {isInInstitute ? (
         !isInModalPopup && (
-          <h3 className="text-sm leading-6 font-bold text-gray-900 w-auto">
-            {RegistrationDict[userLanguage]['title']}
-          </h3>
+          <SectionTitleV3 title={RegistrationDict[userLanguage]['title']} />
         )
       ) : (
         <>
           <BreadCrums items={breadCrumsList} />
           <div className="flex justify-between">
-            <SectionTitle
+            <SectionTitleV3
               title={RegistrationDict[userLanguage]['title']}
+              withButton={
+                <div className="flex justify-end items-center">
+                  <Buttons
+                    label="Go Back"
+                    btnClass="mr-4"
+                    onClick={history.goBack}
+                    Icon={IoArrowUndoCircleOutline}
+                  />
+                </div>
+              }
               subtitle={RegistrationDict[userLanguage]['subtitle']}
             />
-            <div className="flex justify-end py-4 mb-4 w-5/10">
-              <Buttons
-                label="Go Back"
-                btnClass="mr-4"
-                onClick={history.goBack}
-                Icon={IoArrowUndoCircleOutline}
-              />
-            </div>
           </div>
         </>
       )}
@@ -593,17 +589,11 @@ const Registration = ({
               <form>
                 <div
                   className={`h-full ${isInInstitute ? '' : 'px-4 sm:px-6'} pb-5 pt-2`}>
-                  <div className="text-red-500 pb-2 text-right">
-                    * {RegistrationDict[userLanguage]['requiredfield']}
-                  </div>
-
                   <div className="grid grid-cols-1 gap-y-4 gap-x-4 sm:grid-cols-6">
                     <div className="sm:col-span-3 p-2">
-                      <Label
+                      <FormInput
                         label={RegistrationDict[userLanguage]['firstname']}
                         isRequired
-                      />
-                      <FormInput
                         id="firstName"
                         name="firstName"
                         onChange={handleChange}
@@ -614,12 +604,10 @@ const Registration = ({
                     </div>
 
                     <div className="sm:col-span-3 p-2">
-                      <Label
-                        label={RegistrationDict[userLanguage]['lastname']}
-                        isRequired
-                      />
                       <FormInput
                         id="lastName"
+                        isRequired
+                        label={RegistrationDict[userLanguage]['lastname']}
                         name="lastName"
                         onChange={handleChange}
                         className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5"
@@ -629,8 +617,9 @@ const Registration = ({
                     </div>
 
                     <div className="sm:col-span-3 p-2">
-                      <Label label={RegistrationDict[userLanguage]['email']} isRequired />
                       <FormInput
+                        label={RegistrationDict[userLanguage]['email']}
+                        isRequired
                         type="email"
                         id="email"
                         name="email"
@@ -643,17 +632,21 @@ const Registration = ({
 
                     {!classId && (
                       <div className="sm:col-span-3 p-2">
-                        <DropdownForm
-                          dataCy="role"
-                          style={true}
-                          handleChange={handleChangeRole}
-                          userInfo={`${newUserInputs.role}`}
+                        <Selector
+                          placeholder="Select role"
+                          onChange={(c: any, name: any) =>
+                            setNewUserInputs({
+                              ...newUserInputs,
+                              role: getReverseUserRoleString(name) as Role
+                            })
+                          }
                           label={RegistrationDict[userLanguage]['role']}
-                          listClassName="h-28"
-                          id="role"
-                          isRequired
-                          items={Roles}
-                          value={`${newUserInputs.role}`}
+                          dropdownWidth="w-56"
+                          list={Roles.map((d) => ({
+                            ...d,
+                            name: getUserRoleString(d.name)
+                          }))}
+                          selectedItem={getUserRoleString(newUserInputs.role)}
                         />
                       </div>
                     )}
@@ -671,6 +664,18 @@ const Registration = ({
                         }
                       />
                     </div> */}
+
+                    {checkIfAdmin() && (
+                      <CheckBox
+                        dataCy="isZoiq"
+                        label={'ZOIQ'}
+                        className="group:hover:bg-gray-500"
+                        value={newUserInputs.isZoiq}
+                        onChange={(e) => handleCheckbox('isZoiq', e.target.checked)}
+                        name="isZoiq"
+                      />
+                    )}
+
                     {newUserInputs.role &&
                       newUserInputs.role === Role.ST &&
                       newUserInputs.institution.id && (
@@ -680,6 +685,7 @@ const Registration = ({
                               <DropdownForm
                                 dataCy="class"
                                 style={true}
+                                // @ts-ignore
                                 handleChange={handleClassChange}
                                 userInfo={`${newUserInputs.class.name}`}
                                 label={RegistrationDict[userLanguage]['class']}
@@ -715,35 +721,13 @@ const Registration = ({
                                 label={RegistrationDict[userLanguage]['paceCheckBox']}
                                 className="group:hover:bg-gray-500"
                                 value={newUserInputs.isSelfPaced}
-                                onChange={(e) => handleChangeSelfPaced(e.target.checked)}
+                                onChange={(e) =>
+                                  handleCheckbox('isSelfPaced', e.target.checked)
+                                }
                                 name="self-paced"
                               />
                             </div>
                           </div>
-
-                          {/* We are not using this because Teachers are getting confused with this. But we might use this in future. */}
-                          {/* {Boolean(groups?.length) ? (
-                            <div className="sm:col-span-3 p-2">
-                              <Selector
-                                label={'Group'}
-                                selectedItem={newUserInputs?.group?.name}
-                                list={groups || []}
-                                placeholder={
-                                  RegistrationDict[userLanguage].GROUP_PLACEHOLDER
-                                }
-                                onChange={onGroupChange}
-                                noOptionMessage={
-                                  newUserInputs.class.id
-                                    ? RegistrationDict[userLanguage].messages
-                                        .GROUP_NO_OPTION_AFTER_FETCH
-                                    : RegistrationDict[userLanguage].messages
-                                        .GROUP_NO_OPTION
-                                }
-                                labelTextClass="text-m"
-                                loading={groupLoading}
-                              />
-                            </div>
-                          ) : null} */}
                         </>
                       )}
                   </div>

@@ -1,15 +1,7 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import {
-  ClassStudent,
-  RoomStatus,
-  UniversalLesson,
-  UniversalLessonPlan,
-  UniversalLessonStudentData as UniversalLessonStudentDataFromAPI,
-  UpdatePersonLessonsDataInput
-} from 'API';
+import {CreateRoomInput, RoomStatus} from 'API';
 import React, {useEffect, useState} from 'react';
 import {useHistory, useLocation, useParams, useRouteMatch} from 'react-router-dom';
-import {v4 as uuidV4} from 'uuid';
 
 import * as customMutations from 'customGraphql/customMutations';
 import * as customQueries from 'customGraphql/customQueries';
@@ -24,16 +16,17 @@ import SelectorWithAvatar from 'atoms/Form/SelectorWithAvatar';
 import PageWrapper from 'atoms/PageWrapper';
 import ModalPopUp from 'molecules/ModalPopUp';
 
+import CheckBox from '@components/Atoms/Form/CheckBox';
+import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
+import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import {useNotifications} from '@contexts/NotificationContext';
 import useAuth from '@customHooks/useAuth';
 import {LessonEditDict} from '@dictionary/dictionary.iconoclast';
-import {logError} from '@graphql/functions';
+import {checkUniqRoomName, logError} from '@graphql/functions';
 import {ClassroomType} from 'API';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
-import {createFilterToFetchSpecificItemsOnly, getFilterORArray} from 'utilities/strings';
-import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
-import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
+import {getFilterORArray} from 'utilities/strings';
 
 export const fetchSingleCoTeacher = async (roomId: string) => {
   const result: any = await API.graphql(
@@ -62,7 +55,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
   const location = useLocation();
   const match = useRouteMatch();
   const {roomId}: any = useParams();
-  const {userLanguage} = useGlobalContext();
+  const {userLanguage, checkIfAdmin} = useGlobalContext();
 
   const StatusList = [
     {
@@ -149,6 +142,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
     status: '',
     conferenceCallLink: '',
     location: '',
+    isZoiq: false,
     activeUnit: {
       id: '',
       name: ''
@@ -200,11 +194,6 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
       fetchUnits(roomData?.curricular?.id);
     }
   }, [roomData?.curricular?.id]);
-
-  const onModalSave = () => {
-    toggleModal();
-    history.goBack();
-  };
 
   const toggleModal = () => {
     setWarnModal({
@@ -476,27 +465,6 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
     }
   };
 
-  const checkUniqRoomName = async () => {
-    try {
-      const list: any = await API.graphql(
-        graphqlOperation(queries.listRooms, {
-          filter: {
-            institutionID: {eq: roomData.institute.id},
-            name: {eq: roomData.name}
-          }
-        })
-      );
-      return list.data.listRooms.items.length === 0 ? true : false;
-    } catch (err) {
-      console.error(err, 'err inside catch');
-      setMessages({
-        show: true,
-        message: RoomEDITdict[userLanguage]['messages']['errorprocess'],
-        isError: true
-      });
-    }
-  };
-
   const validateForm = async () => {
     if (roomData.name.trim() === '') {
       setMessages({
@@ -527,7 +495,11 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
       });
       return false;
     } else if (roomData.name.trim() !== '' && prevName !== roomData.name) {
-      const isUniq = await checkUniqRoomName();
+      const isUniq = await checkUniqRoomName(
+        roomData.institute.id,
+        roomData.name,
+        authId
+      );
       if (!isUniq) {
         setMessages({
           show: true,
@@ -660,6 +632,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
             type: roomData.type || ClassroomType.ONLINE,
             status: roomData.status || 'ACTIVE',
             location: roomData.location,
+            isZoiq: roomData.isZoiq,
             conferenceCallLink: roomData.conferenceCallLink
           };
           const newRoom: any = await API.graphql(
@@ -683,7 +656,8 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
             });
           }
         } else {
-          const input = {
+          const input: CreateRoomInput = {
+            isZoiq: roomData.isZoiq,
             institutionID: roomData.institute.id,
             activeSyllabus: roomData.curricular.id
               ? await getFirstSyllabus(roomData.curricular.id)
@@ -697,7 +671,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
             ).email,
             name: roomData.name,
             maxPersons: 0,
-            status: roomData.status || 'ACTIVE'
+            status: (roomData.status as RoomStatus) || ('ACTIVE' as RoomStatus)
           };
 
           const newRoom: any = await API.graphql(
@@ -881,6 +855,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
                 name: savedData.institution?.name,
                 value: savedData.institution?.name
               },
+              isZoiq: savedData.isZoiq,
               teacher: {
                 id: savedData.teacher?.id,
                 name: `${savedData.teacher?.firstName || ''} ${
@@ -1385,6 +1360,16 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
                   />
                 </div>
               </div>
+              {checkIfAdmin() && (
+                <CheckBox
+                  dataCy="isZoiq"
+                  label={'ZOIQ'}
+                  className="group:hover:bg-gray-500"
+                  value={roomData.isZoiq}
+                  onChange={(e) => setRoomData({...roomData, isZoiq: e.target.checked})}
+                  name="isZoiq"
+                />
+              )}
             </div>
           </div>
         </div>

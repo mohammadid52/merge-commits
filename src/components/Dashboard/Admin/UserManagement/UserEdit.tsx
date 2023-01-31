@@ -8,7 +8,7 @@ import {useHistory} from 'react-router-dom';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import * as customMutations from 'customGraphql/customMutations';
 import useDictionary from 'customHooks/dictionary';
-import {convertArrayIntoObj} from 'utilities/strings';
+import {convertArrayIntoObj, getUserRoleString} from 'utilities/strings';
 import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
 import MultipleSelector from 'atoms/Form/MultipleSelector';
@@ -19,6 +19,7 @@ import DropdownForm from './DropdownForm';
 import {UserInfo} from './User';
 import {PersonStatus} from 'API';
 import ModalPopUp from '@components/Molecules/ModalPopUp';
+import CheckBox from '@components/Atoms/Form/CheckBox';
 
 function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(' ');
@@ -58,7 +59,7 @@ const UserEdit = (props: UserInfoProps) => {
   const [superEdit, setSuperEdit] = useState<boolean>(false);
   const [updating, setUpdating] = useState<boolean>(false);
   const [editUser, setEditUser] = useState(user);
-  const {state, userLanguage, clientKey} = useGlobalContext();
+  const {state, checkIfAdmin, userLanguage, clientKey} = useGlobalContext();
   const [inactiveDate, setInactiveDate] = useState(
     new Date().getMonth() > 9
       ? new Date().getMonth() +
@@ -80,19 +81,20 @@ const UserEdit = (props: UserInfoProps) => {
   );
   const [checkpointData, setCheckpointData] = useState<any>({});
 
+  const superEditSwitch = (role: string) => {
+    switch (role) {
+      case 'FLW':
+      case 'TR':
+      case 'ADM':
+      case 'SUP':
+        setSuperEdit(true);
+        break;
+      default:
+        setSuperEdit(false);
+    }
+  };
+
   useEffect(() => {
-    const superEditSwitch = (role: string) => {
-      switch (role) {
-        case 'FLW':
-        case 'TR':
-        case 'ADM':
-        case 'SUP':
-          setSuperEdit(true);
-          break;
-        default:
-          setSuperEdit(false);
-      }
-    };
     if (state.user.role) {
       superEditSwitch(state.user.role);
     }
@@ -123,7 +125,8 @@ const UserEdit = (props: UserInfoProps) => {
       phone: editUser.phone,
       birthdate: editUser.birthdate,
       email: editUser.email,
-      onDemand: editUser.onDemand
+      onDemand: editUser.onDemand,
+      isZoiq: editUser.isZoiq
     };
 
     try {
@@ -716,7 +719,7 @@ const UserEdit = (props: UserInfoProps) => {
                       value=""
                       style={false}
                       handleChange={handleChangeRole}
-                      userInfo={editUser.role}
+                      userInfo={getUserRoleString(editUser.role)}
                       label={UserEditDict[userLanguage]['role']}
                       listClassName="h-28"
                       id="role"
@@ -763,6 +766,19 @@ const UserEdit = (props: UserInfoProps) => {
                         />
                       </div>
                     </>
+                  )}
+
+                  {checkIfAdmin() && (
+                    <CheckBox
+                      dataCy="isZoiq"
+                      label={'ZOIQ'}
+                      className="group:hover:bg-gray-500"
+                      value={editUser.isZoiq}
+                      onChange={(e) =>
+                        setEditUser({...editUser, isZoiq: e.target.checked})
+                      }
+                      name="isZoiq"
+                    />
                   )}
                 </div>
               )}

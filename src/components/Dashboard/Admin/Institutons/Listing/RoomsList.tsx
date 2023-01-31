@@ -33,6 +33,7 @@ const RoomsList = (props: RoomListProps) => {
     state: {
       user: {isSuperAdmin, isAdmin, isBuilder, associateInstitute}
     },
+    zoiqFilter,
 
     userLanguage
   } = useContext(GlobalContext);
@@ -99,7 +100,9 @@ const RoomsList = (props: RoomListProps) => {
             }
           : {};
       const assignedRoomsAsTeachers: any = await API.graphql(
-        graphqlOperation(customQueries.listRoomsDashboard, {filter: filter})
+        graphqlOperation(customQueries.listRoomsDashboard, {
+          filter: {...filter, or: [...zoiqFilter]}
+        })
       );
 
       let assignedRoomsAsCoTeacher: any;
