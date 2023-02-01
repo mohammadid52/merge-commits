@@ -175,8 +175,17 @@ export const LocationInfo = ({
           </div>
         }
         setShow={setShowLocationInfo}>
-        {formatPageName(localPageState.pageState) ||
-          `Created on ${moment(createdAt).format('lll')}`}
+        {loggedOut ? (
+          <span className="flex flex-col">
+            <span>Logged Out</span>
+            <span className="text-gray-600 text-xs">
+              (since {moment(lastPageStateUpdate).format('ll')})
+            </span>
+          </span>
+        ) : (
+          formatPageName(localPageState.pageState) ||
+          `Created on ${moment(createdAt).format('lll')}`
+        )}
       </Popover>
     </>
   );
@@ -222,11 +231,15 @@ const UserLookupLocation = ({
         />
       ) : (
         <span className="flex flex-col">
-          <span>Logged Out</span>
-          {item.lastLoggedOut && (
-            <span className="text-gray-600 text-xs">
-              ({moment(item.lastLoggedOut).format('ll')})
-            </span>
+          {item.lastLoggedOut || item.lastLoggedIn ? (
+            <>
+              <span>Logged Out</span>
+              <span className="text-gray-600 text-xs">
+                (since {moment(item?.lastLoggedOut || item?.lastLoggedIn).format('ll')})
+              </span>
+            </>
+          ) : (
+            <span className="">Created On {moment(item?.createdAt).format('ll')}</span>
           )}
         </span>
       )}

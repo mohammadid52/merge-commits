@@ -35,6 +35,7 @@ import usePagination from '@customHooks/usePagination';
 import {logError} from '@graphql/functions';
 import Registration from 'components/Dashboard/Admin/UserManagement/Registration';
 import {map} from 'lodash';
+import {sortByName} from '../../UserManagement/UserLookup';
 import {Status} from '../../UserManagement/UserStatus';
 
 interface StaffBuilderProps {
@@ -243,7 +244,12 @@ const StaffBuilder = (props: StaffBuilderProps) => {
   };
 
   const {authId, email} = useAuth();
-
+  const addName = (data: any[]) =>
+    data.map((item: any) => ({
+      ...item,
+      name: `${item?.staffMember.firstName} ${item?.staffMember.lastName}`,
+      _sortName: `${item?.staffMember.firstName?.toLowerCase()} `
+    }));
   const addStaffMember = async () => {
     try {
       if (newMember && newMember.id) {
@@ -331,9 +337,11 @@ const StaffBuilder = (props: StaffBuilderProps) => {
         })
         .sort((a: any, b: any) => (a.index > b.index ? 1 : -1));
 
-      setActiveStaffList(staffLists);
+      const sortedList = sortByName(addName(staffLists));
 
-      setCurrentList(staffLists);
+      setActiveStaffList(sortedList);
+
+      setCurrentList(sortedList);
 
       const totalListPages = Math.floor(staffLists.length / pageCount);
 
@@ -565,7 +573,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
     } else {
       setSearchInput({...searchInput, isActive: true});
       const filtered = activeStaffList.filter(
-        (_d: any) => filterName.toLowerCase() === _d?.staffMember?.status?.toLowerCase()
+        (_d: any) => filterName.toLowerCase() === _d?.status?.toLowerCase()
       );
       setFilteredList(filtered);
       setFilters(filterName);
