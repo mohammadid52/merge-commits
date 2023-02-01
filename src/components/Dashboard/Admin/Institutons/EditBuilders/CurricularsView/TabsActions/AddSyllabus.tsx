@@ -1,22 +1,22 @@
-import React, {useState, useEffect, useContext} from 'react';
-import {useHistory, useParams} from 'react-router';
-import {IoArrowUndoCircleOutline} from 'react-icons/io5';
 import API, {graphqlOperation} from '@aws-amplify/api';
+import React, {useContext, useEffect, useState} from 'react';
+import {IoArrowUndoCircleOutline} from 'react-icons/io5';
+import {useHistory, useParams} from 'react-router';
 
 import BreadCrums from 'atoms/BreadCrums';
-import SectionTitle from 'atoms/SectionTitle';
 import Buttons from 'atoms/Buttons';
-import PageWrapper from 'atoms/PageWrapper';
 import FormInput from 'atoms/Form/FormInput';
-import TextArea from 'atoms/Form/TextArea';
 import MultipleSelector from 'atoms/Form/MultipleSelector';
+import TextArea from 'atoms/Form/TextArea';
+import PageWrapper from 'atoms/PageWrapper';
 
-import {languageList} from 'utilities/staticData';
-import * as mutations from 'graphql/mutations';
-import * as customQueries from 'customGraphql/customQueries';
-import * as customMutations from 'customGraphql/customMutations';
+import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import {GlobalContext} from 'contexts/GlobalContext';
+import * as customMutations from 'customGraphql/customMutations';
+import * as customQueries from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
+import * as mutations from 'graphql/mutations';
+import {languageList} from 'utilities/staticData';
 import {fetchDesigners} from 'utilities/utils';
 interface AddSyllabusProps {}
 interface InitialData {
@@ -272,7 +272,7 @@ const AddSyllabus = (props: AddSyllabusProps) => {
       {/* Section Header */}
       <BreadCrums items={breadCrumsList} />
       <div className="flex justify-between">
-        <SectionTitle
+        <SectionTitleV3
           title={AddSyllabusDict[userLanguage]['title']}
           subtitle={AddSyllabusDict[userLanguage]['subtitle']}
         />

@@ -4,7 +4,7 @@ const Label = ({
   label = '',
   className = '',
   isRequired = false,
-  dark = true,
+  dark = false,
   disabled = false
 }: {
   label: string;
@@ -15,8 +15,8 @@ const Label = ({
 }) => {
   return (
     <label
-      className={`text-gray-700 ${
-        dark ? 'dark:text-white' : ''
+      className={` ${
+        dark ? 'text-white' : 'text-gray-700'
       }  block text-xs font-semibold leading-5 ${className} ${
         disabled ? 'opacity-80' : ''
       }`}>

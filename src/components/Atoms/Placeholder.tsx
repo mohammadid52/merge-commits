@@ -4,7 +4,7 @@ import React from 'react';
 const Placeholder = ({
   name = ' ',
   size = 'w-10 h-10 md:w-12 md:h-12',
-  textSize = '2xl:text-2xl',
+  textSize = '',
   className,
   firstName = '',
   lastName = ''

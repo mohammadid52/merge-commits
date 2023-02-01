@@ -134,7 +134,6 @@ const useStudentTimer = () => {
     return cleanUpProcess.reduce((truth: boolean, cleanUpFn: any, idx: number) => {
       cleanUpFn();
       if (idx === cleanUpProcess.length - 1) {
-        console.log('update cycle cleared...');
         return true;
       } else {
         return truth;
@@ -204,7 +203,6 @@ const useStudentTimer = () => {
           graphqlOperation(mutations?.updateUniversalSurveyStudentData, {input: data})
         );
         // await filterData();
-        console.log('updateSurveyData - success');
       } catch (e) {
         await API.graphql(
           graphqlOperation(mutations?.createUniversalSurveyStudentData, {input: data})

@@ -207,7 +207,6 @@ export type LessonActions =
 export const lessonReducer = (state: any, action: LessonActions) => {
   switch (action.type) {
     case LESSON_REDUCER_TYPES.TEST:
-      console.log('lessonReducer test...');
       break;
     case 'SET_INITIAL_STATE':
       return {

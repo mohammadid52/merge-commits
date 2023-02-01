@@ -60,7 +60,7 @@ const SingleRoomCard = ({
       className="flex customShadow  transition-all room_card flex-col cursor-pointer rounded-lg overflow-hidden ">
       <div className="flex-shrink-0 bg-gray-500">
         <img
-          className="room-image h-48 w-full object-cover hover:scale-105 transform transition-transform duration-300"
+          className="room-image h-56 w-full object-cover hover:scale-105 transform transition-transform duration-300"
           src={bannerImage || fallbackUrls.room}
           alt={`${roomName || ''} banner image`}
         />
@@ -175,7 +175,7 @@ const RoomTiles = (props: {
     }
   };
 
-  const finalList = searchInput.isActive ? filteredList : classList;
+  let finalList = searchInput.isActive ? filteredList : classList;
 
   const {isStudent} = useAuth();
 
@@ -230,9 +230,9 @@ const RoomTiles = (props: {
             <div className="relative max-w-7xl mx-auto">
               <div
                 data-cy="classroom-list"
-                className="mt-0 max-w-lg mx-auto pt-6 pb-6 grid px-6 gap-5 lg:grid-cols-3 md:grid-cols-2 lg:max-w-none">
+                className={`mt-0 max-w-lg mx-auto pt-6 pb-6 grid px-6 gap-5 lg:grid-cols-3 md:grid-cols-2`}>
                 {finalList
-                  .slice(0, showMore || searchInput.isActive ? finalList.length : 3)
+                  .slice(0, showMore || searchInput.isActive ? finalList.length : 5)
                   .map((item, idx: number) => {
                     return (
                       <SingleRoomCard

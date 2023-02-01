@@ -12,12 +12,12 @@ import Selector from 'atoms/Form/Selector';
 import TextArea from 'atoms/Form/TextArea';
 import Loader from 'atoms/Loader';
 import PageWrapper from 'atoms/PageWrapper';
-import SectionTitle from 'atoms/SectionTitle';
 
 import {languageList} from 'utilities/staticData';
 import {getLessonType, reorder} from 'utilities/strings';
 
 // TODO: Check wether mutations and queries are needed for fetching all the data or not.
+import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import {getAsset} from 'assets';
 import {DeleteActionBtn} from 'atoms/Buttons/DeleteActionBtn';
 import {GlobalContext} from 'contexts/GlobalContext';
@@ -611,7 +611,7 @@ const EditSyllabus = (props: EditSyllabusProps) => {
       />
 
       <div className="flex justify-between">
-        <SectionTitle
+        <SectionTitleV3
           title={EditSyllabusDict[userLanguage]['title']}
           subtitle={EditSyllabusDict[userLanguage]['subtitle']}
         />

@@ -15,23 +15,29 @@ type LocationInfoType = {
   showLocationInfo: boolean;
 
   pageState: UserPageState;
+  lastPageStateUpdate: string;
+  isStaff?: boolean;
+  createdAt: string;
   email: string;
   setShowLocationInfo: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const LocationInfo = ({
+export const LocationInfo = ({
   idx,
   authId,
+  createdAt,
   setShowLocationInfo,
   showLocationInfo,
   email,
-  pageState
+  pageState,
+  lastPageStateUpdate,
+  isStaff
 }: LocationInfoType) => {
   let subscribe: any;
 
   const [localPageState, setLocalPageState] = useState({
     pageState: pageState || UserPageState.NOT_LOGGED_IN,
-    lastPageStateUpdate: new Date().toISOString()
+    lastPageStateUpdate: lastPageStateUpdate || new Date().toISOString()
   });
 
   const inLesson = localPageState.pageState === UserPageState.LESSON;
@@ -60,10 +66,10 @@ const LocationInfo = ({
   };
 
   useEffect(() => {
-    if (inLesson && !isPersonLocationFetched && showLocationInfo) {
+    if (inLesson && !isStaff && !isPersonLocationFetched && showLocationInfo) {
       fetchPersonLocation();
     }
-  }, [inLesson, isPersonLocationFetched, showLocationInfo]);
+  }, [inLesson, isStaff, isPersonLocationFetched, showLocationInfo]);
 
   const subscribeToLocation = () => {
     const personLocationSub = API.graphql(
@@ -74,6 +80,7 @@ const LocationInfo = ({
     ).subscribe({
       next: (locationData: any) => {
         const updatedStudent = locationData.value.data.onUpdatePerson;
+
         if (updatedStudent) {
           setLocalPageState({
             pageState: updatedStudent.pageState,
@@ -97,7 +104,7 @@ const LocationInfo = ({
   const loggedOut = localPageState.pageState === UserPageState.NOT_LOGGED_IN;
   const loggedIn = localPageState.pageState === UserPageState.LOGGED_IN;
 
-  const lastPageStateUpdate = localPageState.lastPageStateUpdate
+  const _lastPageStateUpdate = localPageState.lastPageStateUpdate
     ? moment(localPageState.lastPageStateUpdate).format('lll')
     : null;
 
@@ -113,11 +120,13 @@ const LocationInfo = ({
           <div className="w-auto">
             <dl className="grid grid-cols-1 gap-x-4 gap-y-1">
               <div className="flex w-auto items-end justify-between">
-                <dt className="w-auto text-sm font-medium text-gray-500">Page:</dt>
+                <dt className="w-auto text-sm font-medium text-gray-500">Status:</dt>
                 <dd className="w-auto mt-1 text-sm break-all text-gray-700 font-medium">
                   {loggedIn && !loggedOut ? (
                     <span className="capitalize">
-                      {inLesson
+                      {localPageState.pageState === UserPageState.LOGGED_IN
+                        ? 'Logged In'
+                        : inLesson
                         ? `in Lesson`
                         : `on ${localPageState.pageState?.toLowerCase()}`}
                     </span>
@@ -127,47 +136,67 @@ const LocationInfo = ({
                 </dd>
               </div>
 
-              {inLesson && isLoading && (
+              {!isStaff && inLesson && isLoading && (
                 <div className="flex items-center justify-center h-full">
                   <Loader className="theme-text text-xs" />
                 </div>
               )}
 
-              {inLesson && !isLoading && isPersonLocationFetched && liveLessonData && (
-                <>
-                  <div className="flex w-auto items-end justify-between">
-                    <dt className="w-auto text-sm font-medium text-gray-500">Lesson:</dt>
-                    <dd className="w-auto mt-1 flex items-center justify-between  text-sm text-gray-700 font-medium">
-                      {liveLessonData?.lesson?.title || '-'}
-                    </dd>
-                  </div>
+              {!isStaff &&
+                inLesson &&
+                !isLoading &&
+                isPersonLocationFetched &&
+                liveLessonData && (
+                  <>
+                    <div className="flex w-auto items-end justify-between">
+                      <dt className="w-auto text-sm font-medium text-gray-500">
+                        Lesson:
+                      </dt>
+                      <dd className="w-auto mt-1 flex items-center justify-between  text-sm text-gray-700 font-medium">
+                        {liveLessonData?.lesson?.title || '-'}
+                      </dd>
+                    </div>
 
-                  <div className="flex w-auto items-end justify-between">
-                    <dt className="w-auto text-sm font-medium text-gray-500">Room:</dt>
-                    <dd className="w-auto mt-1 flex items-center justify-between  text-sm text-gray-700 font-medium">
-                      {liveLessonData?.room?.name || '-'}
-                    </dd>
-                  </div>
-                </>
-              )}
+                    <div className="flex w-auto items-end justify-between">
+                      <dt className="w-auto text-sm font-medium text-gray-500">Room:</dt>
+                      <dd className="w-auto mt-1 flex items-center justify-between  text-sm text-gray-700 font-medium">
+                        {liveLessonData?.room?.name || '-'}
+                      </dd>
+                    </div>
+                  </>
+                )}
 
-              {lastPageStateUpdate !== null && (
+              {_lastPageStateUpdate !== null && (
                 <span className="border-t-0 theme-border-200 text-gray-600 pt-1 mt-1 text-xs text-center">
-                  Since {lastPageStateUpdate}
+                  Since {_lastPageStateUpdate}
                 </span>
               )}
             </dl>
           </div>
         }
         setShow={setShowLocationInfo}>
-        {formatPageName(localPageState.pageState) || '--'}
+        {formatPageName(localPageState.pageState) ||
+          `Created on ${moment(createdAt).format('lll')}`}
       </Popover>
     </>
   );
 };
 
-const UserLookupLocation = ({item, idx}: {item: any; idx: number}) => {
+const UserLookupLocation = ({
+  item,
+  idx,
+  show,
+  isStaff
+}: {
+  item: any;
+  idx: number;
+  isStaff?: boolean;
+  show?: boolean;
+}) => {
   const [showLocationInfo, setShowLocationInfo] = useState(false);
+
+  const shouldShow =
+    show || (item.role === 'ST' && item.status !== PersonStatus.INACTIVE);
 
   return (
     <div
@@ -179,17 +208,27 @@ const UserLookupLocation = ({item, idx}: {item: any; idx: number}) => {
       onMouseLeave={() => {
         setShowLocationInfo(false);
       }}>
-      {item.role === 'ST' && item.status !== PersonStatus.INACTIVE && item.pageState ? (
+      {shouldShow && item.pageState ? (
         <LocationInfo
           idx={idx}
+          isStaff={isStaff}
           authId={item.authId}
           email={item.email}
+          createdAt={item?.createdAt}
+          lastPageStateUpdate={item?.lastPageStateUpdate || item?.lastLoggedOut}
           setShowLocationInfo={setShowLocationInfo}
           showLocationInfo={showLocationInfo}
           pageState={item.pageState}
         />
       ) : (
-        '--'
+        <span className="flex flex-col">
+          <span>Logged Out</span>
+          {item.lastLoggedOut && (
+            <span className="text-gray-600 text-xs">
+              ({moment(item.lastLoggedOut).format('ll')})
+            </span>
+          )}
+        </span>
       )}
     </div>
   );

@@ -19,6 +19,7 @@ import SelectorWithAvatar from 'atoms/Form/SelectorWithAvatar';
 import PageWrapper from 'atoms/PageWrapper';
 import SectionTitle from 'atoms/SectionTitle';
 import {useQuery} from '@customHooks/urlParam';
+import {checkUniqRoomName} from '@graphql/functions';
 
 interface RoomBuilderProps {}
 
@@ -36,7 +37,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
     curricular: {id: '', name: '', value: ''},
     maxPersons: ''
   };
-  const {theme, clientKey, userLanguage} = useContext(GlobalContext);
+  const {theme, clientKey, userLanguage, state} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const [roomData, setRoomData] = useState(initialData);
   const [institutionList, setInstitutionList] = useState([]);
@@ -385,26 +386,6 @@ const RoomBuilder = (props: RoomBuilderProps) => {
     }
   };
 
-  const checkUniqRoomName = async () => {
-    try {
-      const list: any = await API.graphql(
-        graphqlOperation(queries.listRooms, {
-          filter: {
-            institutionID: {eq: roomData.institute.id},
-            name: {eq: roomData.name}
-          }
-        })
-      );
-      return list.data.listRooms.items.length === 0 ? true : false;
-    } catch {
-      setMessages({
-        show: true,
-        message: RoomBuilderdict[userLanguage]['messages']['error']['process'],
-        isError: true
-      });
-    }
-  };
-
   const validateForm = async () => {
     if (roomData.name.trim() === '') {
       setMessages({
@@ -451,7 +432,11 @@ const RoomBuilder = (props: RoomBuilderProps) => {
     //   return false;
     // }
     else if (roomData.name.trim() !== '') {
-      const isUniq = await checkUniqRoomName();
+      const isUniq = await checkUniqRoomName(
+        roomData.institute.id,
+        roomData.name,
+        state.user.authId
+      );
       if (!isUniq) {
         setMessages({
           show: true,

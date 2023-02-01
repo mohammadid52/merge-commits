@@ -1,18 +1,18 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import {Storage} from '@aws-amplify/storage';
-import React, {useContext, useState} from 'react';
+import {uploadImageToS3} from '@graphql/functions';
+import {RoomStatus} from 'API';
+import Buttons from 'atoms/Buttons';
+import RichTextEditor from 'atoms/RichTextEditor';
 import {GlobalContext} from 'contexts/GlobalContext';
 import * as customMutations from 'customGraphql/customMutations';
 import useDictionary from 'customHooks/dictionary';
 import * as mutations from 'graphql/mutations';
-import Buttons from 'atoms/Buttons';
-import RichTextEditor from 'atoms/RichTextEditor';
+import React, {useContext, useState} from 'react';
 import ProfileCropModal from '../../../../Profile/ProfileCropModal';
 import {InitialData, InputValueObject} from '../../LessonBuilder';
 import LessonCard from './LessonCard';
 import LessonDetails from './LessonDetails';
 import MaterialsCard from './MaterialsCard';
-import {RoomStatus} from 'API';
 
 interface AddNewLessonFormProps {
   formData: InitialData;
@@ -208,31 +208,6 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
     setFormData({
       ...formData,
       duration: name
-    });
-  };
-
-  const uploadImageToS3 = async (file: any, fileName: string, type: string) => {
-    // Upload file to s3 bucket
-
-    return new Promise((resolve, reject) => {
-      Storage.put(`${fileName}`, file, {
-        contentType: type,
-        acl: 'public-read',
-        ContentEncoding: 'base64'
-      })
-        .then((result: any) => {
-          console.log('File successfully uploaded to s3', result);
-          resolve(true);
-        })
-        .catch((err: any) => {
-          setValidation((prevValidation) => ({
-            ...prevValidation,
-            isError: true,
-            image: 'Unable to upload image. Please try again later. '
-          }));
-          console.log('Error in uploading file to s3', err);
-          reject(err);
-        });
     });
   };
 

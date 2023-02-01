@@ -1,7 +1,6 @@
 import {getAsset} from 'assets';
 import BreadcrumbsWithBanner from 'atoms/BreadcrumbsWithBanner';
 import Buttons from 'atoms/Buttons';
-import SectionTitle from 'atoms/SectionTitle';
 import {GlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import React, {useContext, useEffect, useState} from 'react';
@@ -10,6 +9,7 @@ import {Route, Switch, useHistory, useRouteMatch} from 'react-router-dom';
 import TestCasesInfo from './TestCasesInfo';
 
 // import {listCypressTestings} from 'graphql/queries';
+import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import ErrorBoundary from '@components/Error/ErrorBoundary';
 import LessonLoading from 'components/Lesson/Loading/LessonLoading';
 import TestCasesAdd from './TestCasesAdd';
@@ -82,7 +82,7 @@ const TestCases = () => {
 
         <div className={`main_container p-0 mx-auto w-10/12 px-5`}>
           <div className="flex justify-between flex-col md:flex-row mt-5">
-            <SectionTitle
+            <SectionTitleV3
               title={
                 currentPath === 'add'
                   ? 'Add Test Case'

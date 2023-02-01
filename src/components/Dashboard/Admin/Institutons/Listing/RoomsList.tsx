@@ -33,6 +33,7 @@ const RoomsList = (props: RoomListProps) => {
     state: {
       user: {isSuperAdmin, isAdmin, isBuilder, associateInstitute}
     },
+    zoiqFilter,
 
     userLanguage
   } = useContext(GlobalContext);
@@ -99,7 +100,9 @@ const RoomsList = (props: RoomListProps) => {
             }
           : {};
       const assignedRoomsAsTeachers: any = await API.graphql(
-        graphqlOperation(customQueries.listRoomsDashboard, {filter: filter})
+        graphqlOperation(customQueries.listRoomsDashboard, {
+          filter: {...filter, or: [...zoiqFilter]}
+        })
       );
 
       let assignedRoomsAsCoTeacher: any;
@@ -269,6 +272,7 @@ const RoomsList = (props: RoomListProps) => {
   const dataList = map(finalList, (item, index) => ({
     markRed: !Boolean(item?.activeSyllabus),
     no: getIndex(index),
+    onClick: () => editCurrentRoom(item.id, item.institutionID),
     classroomName: (
       <div
         onClick={() => editCurrentRoom(item.id, item.institutionID)}
@@ -278,7 +282,6 @@ const RoomsList = (props: RoomListProps) => {
     ),
     institutionName: (
       <div
-        className={'w-auto cursor-pointer'}
         onClick={(e) => {
           e.stopPropagation();
           isSuperAdmin &&

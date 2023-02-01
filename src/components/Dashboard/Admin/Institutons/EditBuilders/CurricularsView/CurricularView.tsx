@@ -14,10 +14,10 @@ import {createFilterToFetchSpecificItemsOnly} from 'utilities/strings';
 import BreadCrums from 'atoms/BreadCrums';
 import Modal from 'atoms/Modal';
 import PageWrapper from 'atoms/PageWrapper';
-import SectionTitle from 'atoms/SectionTitle';
 import Tooltip from 'atoms/Tooltip';
 import UnderlinedTabs from 'atoms/UnderlinedTabs';
 
+import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import {RoomStatus} from 'API';
 import {getAsset} from 'assets';
 import {GlobalContext} from 'contexts/GlobalContext';
@@ -275,7 +275,7 @@ const CurricularView = (props: CurricularViewProps) => {
       {/* Section Header */}
       <BreadCrums items={breadCrumsList} />
       <div className="flex justify-between">
-        <SectionTitle
+        <SectionTitleV3
           title={curricularviewdict[userLanguage]['TITLE']}
           subtitle={curricularviewdict[userLanguage]['SUBTITLE']}
         />

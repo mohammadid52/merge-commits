@@ -4,6 +4,7 @@
 
 /* OTHER / GENERAL */
 @import 'general/scrollbars';
+@import 'general/responsive';
 
 /* THEME */
 @import 'utilities/theme';
@@ -1087,7 +1088,7 @@ $polka-dot-size: 0.8px;
 }
 
 .wrapperClassName.dark {
-  background-color: rgba(50, 50, 62, 1);
+  background-color: transparent;
   border: 1px solid rgba(50, 50, 62, 1);
   color: white;
 }

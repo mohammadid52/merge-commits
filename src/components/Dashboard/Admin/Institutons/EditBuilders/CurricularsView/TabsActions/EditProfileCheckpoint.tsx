@@ -1,25 +1,25 @@
-import React, {useState, Fragment, useEffect, useContext} from 'react';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import {useHistory, useParams} from 'react-router';
-import {IoArrowUndoCircleOutline, IoClose, IoOptionsOutline} from 'react-icons/io5';
+import React, {Fragment, useContext, useEffect, useState} from 'react';
+import {IoArrowUndoCircleOutline, IoClose} from 'react-icons/io5';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
+import {useHistory, useParams} from 'react-router';
 
-import {getTypeString} from 'utilities/strings';
-import * as customQueries from 'customGraphql/customQueries';
 import * as customMutations from 'customGraphql/customMutations';
+import * as customQueries from 'customGraphql/customQueries';
+import {getTypeString} from 'utilities/strings';
 
-import MultipleSelector from 'atoms/Form/MultipleSelector';
-import SectionTitle from 'atoms/SectionTitle';
-import PageWrapper from 'atoms/PageWrapper';
-import BreadCrums from 'atoms/BreadCrums';
-import FormInput from 'atoms/Form/FormInput';
-import Selector from 'atoms/Form/Selector';
-import Buttons from 'atoms/Buttons';
-import AddQuestion from './QuestionComponents/AddQuestion';
-import SelectPreviousQuestion from './QuestionComponents/SelectPreviousQuestion';
+import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import {getAsset} from 'assets';
+import BreadCrums from 'atoms/BreadCrums';
+import Buttons from 'atoms/Buttons';
+import FormInput from 'atoms/Form/FormInput';
+import MultipleSelector from 'atoms/Form/MultipleSelector';
+import Selector from 'atoms/Form/Selector';
+import PageWrapper from 'atoms/PageWrapper';
 import {GlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
+import AddQuestion from './QuestionComponents/AddQuestion';
+import SelectPreviousQuestion from './QuestionComponents/SelectPreviousQuestion';
 
 interface EditProfileCheckpointProps {}
 
@@ -375,7 +375,7 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
       {/* Section Header */}
       <BreadCrums items={breadCrumsList} />
       <div className="flex justify-between">
-        <SectionTitle
+        <SectionTitleV3
           title={EditProfileCheckpointDict[userLanguage]['title']}
           subtitle={EditProfileCheckpointDict[userLanguage]['subtitle']}
         />

@@ -1,23 +1,23 @@
-import React, {useState, useEffect, useContext} from 'react';
-import {useRouteMatch, useHistory} from 'react-router-dom';
-import {FaThList, FaFileAlt, FaFileMedical} from 'react-icons/fa';
+import React, {useContext, useEffect, useState} from 'react';
+import {FaFileAlt, FaFileMedical, FaThList} from 'react-icons/fa';
 import {IoArrowUndoCircleOutline} from 'react-icons/io5';
+import {useHistory, useRouteMatch} from 'react-router-dom';
 
-import Buttons from 'atoms/Buttons';
 import BreadCrums from 'atoms/BreadCrums';
-import SectionTitle from 'atoms/SectionTitle';
+import Buttons from 'atoms/Buttons';
 import UnderlinedTabs from 'atoms/UnderlinedTabs';
 
-import useDictionary from 'customHooks/dictionary';
+import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
+import {API, graphqlOperation} from 'aws-amplify';
 import {GlobalContext} from 'contexts/GlobalContext';
-import {useQuery} from 'customHooks/urlParam';
 import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
-import LessonPlanForm from './LessonPlanForm';
-import ExistingPageView from './ExistingPageView';
-import TemplateView from './TemplateView';
-import {UniversalLesson} from 'interfaces/UniversalLessonInterfaces';
-import {graphqlOperation, API} from 'aws-amplify';
 import * as customQueries from 'customGraphql/customQueries';
+import useDictionary from 'customHooks/dictionary';
+import {useQuery} from 'customHooks/urlParam';
+import {UniversalLesson} from 'interfaces/UniversalLessonInterfaces';
+import ExistingPageView from './ExistingPageView';
+import LessonPlanForm from './LessonPlanForm';
+import TemplateView from './TemplateView';
 
 export interface ILessonPlan {
   addNewPageHandler: (content: any) => void;
@@ -140,7 +140,7 @@ const LessonPlan = () => {
       {/* Section Header */}
       <BreadCrums items={breadCrumsList} />
       <div className="flex justify-between">
-        <SectionTitle
+        <SectionTitleV3
           title={LessonBuilderDict[userLanguage]['TITLE']}
           subtitle={LessonBuilderDict[userLanguage]['SUBTITLE']}
         />

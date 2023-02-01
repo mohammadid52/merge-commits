@@ -458,7 +458,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
     return () => {
       setInstitutionList([]);
     };
-  }, [associateInstitute]);
+  }, []);
 
   const setupActiveSection = async () => {
     const activeStep = getLocalStorageData('active_step_section');

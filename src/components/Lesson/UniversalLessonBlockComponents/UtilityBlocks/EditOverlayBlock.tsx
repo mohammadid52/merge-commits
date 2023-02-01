@@ -154,12 +154,12 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
   };
 
   useEffect(() => {
-    if (navState === 'addContent') {
+    if (navState === 'addContent' && actionMode !== 'replace') {
       if (!isEmpty(selectedComponent)) {
         onComponentCreateClick();
       }
     }
-  }, [navState, selectedComponent]);
+  }, [navState, selectedComponent, actionMode]);
 
   const currentComponentSelected =
     !selectedComponent?.block &&

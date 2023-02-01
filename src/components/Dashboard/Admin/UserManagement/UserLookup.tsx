@@ -9,7 +9,7 @@ import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {useHistory} from 'react-router-dom';
 
 import {getAsset} from 'assets';
-import {GlobalContext} from 'contexts/GlobalContext';
+import {GlobalContext, useGlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
 import * as queries from 'graphql/queries';
 
@@ -56,7 +56,14 @@ export const addName = (data: any[]) => {
 };
 
 const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
-  const {state, theme, dispatch, userLanguage, clientKey} = useContext(GlobalContext);
+  const {
+    state,
+    theme,
+    dispatch,
+    userLanguage,
+    zoiqFilter,
+    clientKey
+  } = useGlobalContext();
   const themeColor = getAsset(clientKey, 'themeClassName');
   const history = useHistory();
 
@@ -235,7 +242,10 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
     let resp: any = await API.graphql(
       graphqlOperation(queries.listPeople, {
         limit: 500,
-        filter
+        filter: {
+          ...filter,
+          or: [...zoiqFilter]
+        }
       })
     );
     const users = resp?.data?.listPeople?.items;
@@ -255,7 +265,10 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
         try {
           const dashboardDataFetch: any = await API.graphql(
             graphqlOperation(customQueries.getTeacherLookUp, {
-              filter: {teacherAuthID: {eq: teacherAuthID}}
+              filter: {
+                teacherAuthID: {eq: teacherAuthID},
+                or: [...zoiqFilter]
+              }
             })
           );
 
@@ -306,7 +319,12 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
         const dynamicFilter =
           isTeacher || isBuilder
             ? {
-                or: [{role: {eq: 'ST'}}, {role: {eq: 'TR'}}, ...authIdFilter]
+                or: [
+                  {role: {eq: 'ST'}},
+                  {role: {eq: 'TR'}},
+                  ...zoiqFilter,
+                  ...authIdFilter
+                ]
               }
             : {};
         users = await fetchAllPerson(dynamicFilter);
@@ -337,7 +355,10 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
     try {
       const response: any = await API.graphql(
         graphqlOperation(customQueries.getDashboardDataForTeachers, {
-          filter: {teacherAuthID: {eq: state.user.authId}}
+          filter: {
+            teacherAuthID: {eq: state.user.authId},
+            or: [...zoiqFilter]
+          }
         })
       );
       const assignedRoomsAsCoTeacher: any = await API.graphql(

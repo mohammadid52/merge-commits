@@ -53,6 +53,7 @@ export interface UserInfo {
   phone: string;
   updatedAt: string;
   birthdate?: string;
+  isZoiq?: boolean;
   onDemand?: boolean;
   rooms: any[];
 }
@@ -216,6 +217,7 @@ const User = (props: IUserProps) => {
     updatedAt: '',
     birthdate: null,
     onDemand: false,
+    isZoiq: false,
     rooms: []
   });
 

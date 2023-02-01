@@ -166,7 +166,6 @@ const Home = (props: ClassroomControlProps) => {
     })
   );
 
-  const removedFrom = state.user?.removedFrom || [];
   const getClassList = (): ModifiedListProps[] => {
     let modifiedClassList: ModifiedListProps[] = [];
     let uniqIds: string[] = [];
@@ -261,7 +260,7 @@ const Home = (props: ClassroomControlProps) => {
               <div className="my-8">
                 <SectionTitleV3
                   title={DashboardDict[userLanguage]['YOUR_TEACHERS']}
-                  extraClass="leading-6 text-gray-900 px-6"
+                  extraClass="leading-6 text-gray-900"
                   fontSize="xl"
                   fontStyle="semibold"
                   extraContainerClass="lg:max-w-192 md:max-w-none 2xl:max-w-256 px-6"

@@ -8,46 +8,22 @@ import React, {useEffect, useState} from 'react';
 import {AiOutlineBook} from 'react-icons/ai';
 import {v4 as uuidV4} from 'uuid';
 
-const ThreeDotsLoading = () => {
-  const [current, setCurrent] = useState(0);
-  let interval: any;
-  useEffect(() => {
-    interval = setInterval(() => {
-      setCurrent(current === 2 ? 0 : current + 1);
-    }, 500);
-    return () => {
-      clearInterval(interval);
-    };
-  }, [current]);
-
-  return (
-    <div className="flex items-center gap-x-1">
-      {[0, 1, 2].map((idx) => (
-        <div
-          key={idx}
-          className={`w-1.5 h-1.5 rounded-full ${
-            current === idx ? 'bg-gray-700 ' : 'bg-gray-600 '
-          }`}></div>
-      ))}
-    </div>
-  );
-};
-
-const TranslationModule = () => {
-  const [active, setActive] = useState(false);
-
-  const onModuleOpen = () => {
-    if (!active) {
-      setActive(true);
-    }
-  };
-
+export const TranslationInsideComponent = ({
+  setActive,
+  setLoading = false,
+  finalSearchResult,
+  loading,
+  setContentHeight,
+  setFinalSearchResult,
+  inClassroom = false
+}: any) => {
   const {email, authId} = useAuth();
 
   const onCancel = () => {
     setActive(false);
-    setLoading(false);
-    setFinalSearchResult(null);
+    setLoading && setLoading(false);
+    setContentHeight && setContentHeight(0);
+    setFinalSearchResult && setFinalSearchResult(null);
     setIsSimilar(null);
   };
 
@@ -106,10 +82,6 @@ const TranslationModule = () => {
     setSearchInput({isActive: true, isTyping: true, value: e.target.value});
   };
 
-  const [loading, setLoading] = useState(false);
-
-  const [finalSearchResult, setFinalSearchResult] = useState<string | null>(null);
-
   const _addNewDictionary = async (definition: string, audioUrl?: string) => {
     try {
       await addNewDictionary({
@@ -143,19 +115,22 @@ const TranslationModule = () => {
    */
   const onSearch = async () => {
     try {
-      setLoading(true);
+      setLoading && setLoading(true);
       const fromTable = await searchFromTable();
 
       if (fromTable.length > 0 && fromTable[0]?.englishDefinition) {
-        setIsSimilar(fromTable[0]?.englishPhrase);
-        setFinalSearchResult(fromTable[0]?.englishDefinition || 'No results found');
+        fromTable[0]?.englishPhrase !== searchInput.value &&
+          setIsSimilar(fromTable[0]?.englishPhrase);
+        setFinalSearchResult &&
+          setFinalSearchResult(fromTable[0]?.englishDefinition || 'No results found');
       } else {
         const response = await searchFromApi();
         if (Boolean(response)) {
-          setFinalSearchResult(response.definition || 'No results found');
+          setFinalSearchResult &&
+            setFinalSearchResult(response.definition || 'No results found');
           await _addNewDictionary(response.definition, response.audio);
         } else {
-          setFinalSearchResult('No results found');
+          setFinalSearchResult && setFinalSearchResult('No results found');
         }
       }
     } catch (error) {
@@ -163,7 +138,7 @@ const TranslationModule = () => {
       logError(error, {authId, email}, 'TranslationModule @onSearch');
     } finally {
       setSearchInput({...searchInput, isActive: true, isTyping: false});
-      setLoading(false);
+      setLoading && setLoading(false);
     }
   };
 
@@ -176,9 +151,99 @@ const TranslationModule = () => {
     }
   }, [finalSearchResult, loading, searchInput.isActive]);
 
+  const [isSimilar, setIsSimilar] = useState(null);
+
+  return (
+    <>
+      {inClassroom && (
+        <div className="card-body-header theme-bg text-white rounded-t-xl px-4 py-2">
+          <h1 className="text-lg text-center tracking-wider font-medium uppercase text-white">
+            Translation
+          </h1>
+        </div>
+      )}
+      <div className={`${inClassroom ? 'p-4' : ''} flex space-y-4 flex-col items-center`}>
+        <input
+          onChange={onSearchInputChange}
+          placeholder="Search meaning..."
+          className={`text-base ${loading ? 'cursor-disabled pointer-events-none' : ''} ${
+            inClassroom
+              ? ' bg-gray-400 border-0 theme-border  text-gray-800'
+              : 'border-none bg-gray-700 text-white'
+          }  outline-none rounded-full px-4 py-2`}
+        />
+
+        <div className="translationr-module__search_results">
+          {loading ? (
+            <ThreeDotsLoading />
+          ) : searchInput.isActive ? (
+            <div
+              className={`search-results ${
+                inClassroom && finalSearchResult?.length > 0
+                  ? 'bg-white rounded-xl p-4'
+                  : ''
+              }`}>
+              {isSimilar && <h5>Similar: {isSimilar}</h5>}
+              <p
+                className={`${
+                  inClassroom ? 'text-gray-700 text-sm' : 'text-white text-base'
+                } `}>
+                {finalSearchResult}
+              </p>
+            </div>
+          ) : null}
+        </div>
+        <div
+          className={`${
+            inClassroom ? 'bottom-0.5 right-1' : 'bottom-0 right-0'
+          } absolute  translation-module__actions flex items-center justify-end space-x-4`}>
+          <Buttons size="small" label={'Cancel'} onClick={onCancel} transparent />
+          <Buttons size="small" label={'Search'} onClick={onSearch} />
+        </div>
+      </div>
+    </>
+  );
+};
+
+const ThreeDotsLoading = () => {
+  const [current, setCurrent] = useState(0);
+  let interval: any;
+  useEffect(() => {
+    interval = setInterval(() => {
+      setCurrent(current === 2 ? 0 : current + 1);
+    }, 500);
+    return () => {
+      clearInterval(interval);
+    };
+  }, [current]);
+
+  return (
+    <div className="flex items-center w-auto justify-center gap-x-1">
+      {[0, 1, 2].map((idx) => (
+        <div
+          key={idx}
+          className={`w-1.5 h-1.5 rounded-full ${
+            current === idx ? 'bg-gray-700 ' : 'bg-gray-600 '
+          }`}></div>
+      ))}
+    </div>
+  );
+};
+
+const TranslationModule = () => {
+  const [active, setActive] = useState(false);
+
+  const onModuleOpen = () => {
+    if (!active) {
+      setActive(true);
+    }
+  };
+
   const [contentHeight, setContentHeight] = useState(0);
 
-  const [isSimilar, setIsSimilar] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  const [finalSearchResult, setFinalSearchResult] = useState<string | null>(null);
 
   return (
     // <ClickAwayListener onClickAway={() => setActive(false)}>
@@ -208,30 +273,14 @@ const TranslationModule = () => {
           className="h-full"
           delay={'500ms'}>
           {active && (
-            <div className=" flex space-y-4 flex-col items-center">
-              <input
-                onChange={onSearchInputChange}
-                placeholder="Search meaning..."
-                className={`text-base ${
-                  loading ? 'cursor-disabled pointer-events-none' : ''
-                } bg-gray-700 text-white outline-none border-none rounded-full px-4 py-2`}
-              />
-
-              <div className="w-auto translation-module__search_results">
-                {loading ? (
-                  <ThreeDotsLoading />
-                ) : searchInput.isActive ? (
-                  <div className="search-results">
-                    {isSimilar && <h5>Similar: {isSimilar}</h5>}
-                    <p className="text-white text-base">{finalSearchResult}</p>
-                  </div>
-                ) : null}
-              </div>
-              <div className="absolute bottom-0 right-0 translation-module__actions flex items-center justify-end space-x-4">
-                <Buttons size="small" label={'Cancel'} onClick={onCancel} transparent />
-                <Buttons size="small" label={'Search'} onClick={onSearch} />
-              </div>
-            </div>
+            <TranslationInsideComponent
+              setLoading={setLoading}
+              finalSearchResult={finalSearchResult}
+              loading={loading}
+              setFinalSearchResult={setFinalSearchResult}
+              setContentHeight={setContentHeight}
+              setActive={setActive}
+            />
           )}
         </AnimatedContainer>
       </div>

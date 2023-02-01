@@ -44,9 +44,11 @@ const UniversalLessonBuilder = ({instId}: UniversalLessonBuilderProps) => {
   const params = useQuery(location.search);
   const {lessonId}: any = useParams();
   const pageId = params.get('pageId');
-  const {state, dispatch, lessonState} = useContext(GlobalContext);
+  const {state, dispatch, scanLessonAndFindComplicatedWord, lessonState} = useContext(
+    GlobalContext
+  );
 
-  const {selectedComponent} = usePageBuilderContext();
+  const {selectedComponent, actionMode} = usePageBuilderContext();
 
   const [universalBuilderStep, setUniversalBuilderStep] = useState('BuilderWrapper');
   const {
@@ -83,13 +85,13 @@ const UniversalLessonBuilder = ({instId}: UniversalLessonBuilderProps) => {
         })
       );
       const savedData = result.data.getUniversalLesson;
-      // const dictionaries = await getDictionaries();
+      const dictionaries = await getDictionaries();
 
-      // const updatedLessonPlan = scanLessonAndFindComplicatedWord(
-      //   savedData.lessonPlan,
-      //   dictionaries
-      // );
-      setUniversalLessonDetails({...savedData, lessonPlan: savedData.lessonPlan});
+      const updatedLessonPlan = scanLessonAndFindComplicatedWord(
+        savedData.lessonPlan,
+        dictionaries
+      );
+      setUniversalLessonDetails({...savedData, lessonPlan: updatedLessonPlan});
       setSelectedPageID(pageId);
     } catch {
       setUniversalLessonDetails((prev: any) => ({...prev}));
@@ -285,15 +287,23 @@ const UniversalLessonBuilder = ({instId}: UniversalLessonBuilderProps) => {
     customPageContentId?: string
   ) => {
     const pos = selectedComponent?.partContentIdx;
+
     const lessonPlan: UniversalLessonPage[] = universalLessonDetails.lessonPlan;
 
     const pageContent = lessonPlan[lessonState.currentPage].pageContent;
 
-    if (!isEmpty(selectedComponent) && selectedComponent !== null) {
+    if (
+      (!isEmpty(selectedComponent) && selectedComponent !== null) ||
+      actionMode === 'replace'
+    ) {
       const partContent = pageContent[selectedComponent.pageContentIdx].partContent;
+
+      const bufferPos = actionMode === 'replace' ? 0 : 1;
+      const deleteCount = actionMode === 'replace' ? 1 : 0;
+
       partContent.splice(
-        pos + 1,
-        0,
+        pos + bufferPos,
+        deleteCount,
 
         {
           id: `${nanoid(6)}_${contentType}_1`,

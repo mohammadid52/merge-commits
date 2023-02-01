@@ -1,14 +1,7 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import {Storage} from '@aws-amplify/storage';
-import React, {useContext, useState} from 'react';
-import {FaPlus} from 'react-icons/fa';
-import {IoArrowUndoCircleOutline} from 'react-icons/io5';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
-import {useHistory} from 'react-router-dom';
-import {GlobalContext} from 'contexts/GlobalContext';
-import * as customMutations from 'customGraphql/customMutations';
-import useDictionary from 'customHooks/dictionary';
-import {statesList} from 'utilities/staticData';
+import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
+import useAuth from '@customHooks/useAuth';
+import {uploadImageToS3} from '@graphql/functions';
 import BreadCrums from 'atoms/BreadCrums';
 import Buttons from 'atoms/Buttons';
 import CheckBox from 'atoms/Form/CheckBox';
@@ -16,12 +9,18 @@ import FormInput from 'atoms/Form/FormInput';
 import Selector from 'atoms/Form/Selector';
 import Loader from 'atoms/Loader';
 import PageWrapper from 'atoms/PageWrapper';
-import SectionTitle from 'atoms/SectionTitle';
+import {GlobalContext} from 'contexts/GlobalContext';
+import * as customMutations from 'customGraphql/customMutations';
+import useDictionary from 'customHooks/dictionary';
 import DroppableMedia from 'molecules/DroppableMedia';
+import React, {useContext, useState} from 'react';
+import {FaPlus} from 'react-icons/fa';
+import {IoArrowUndoCircleOutline} from 'react-icons/io5';
+import {IconContext} from 'react-icons/lib/esm/iconContext';
+import {useHistory} from 'react-router-dom';
+import {statesList} from 'utilities/staticData';
 import ProfileCropModal from '../../Profile/ProfileCropModal';
 import ServiceProviders from './Listing/ServiceProviders';
-import {logError, uploadImageToS3} from '@graphql/functions';
-import useAuth from '@customHooks/useAuth';
 
 const InstitutionAdd = () => {
   const history = useHistory();
@@ -262,7 +261,7 @@ const InstitutionAdd = () => {
       {/* Section Header */}
       <BreadCrums items={breadCrumsList} />
       <div className="flex justify-between">
-        <SectionTitle
+        <SectionTitleV3
           title={InstitutionAddDict[userLanguage]['TITLE']}
           subtitle={InstitutionAddDict[userLanguage]['SUBTITLE']}
         />

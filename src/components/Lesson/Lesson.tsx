@@ -39,6 +39,7 @@ export interface ILessonSurveyApp {
 const Lesson = () => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
   const gContext = useGlobalContext();
+  const {scanLessonAndFindComplicatedWord} = gContext;
 
   const lessonState = gContext.lessonState;
   const lessonDispatch = gContext.lessonDispatch;
@@ -70,17 +71,17 @@ const Lesson = () => {
           ];
         }, []);
 
-        // const dictionaries = await getDictionaries();
+        const dictionaries = await getDictionaries();
 
-        // const updatedLessonPlan = scanLessonAndFindComplicatedWord(
-        //   response.lessonPlan,
-        //   dictionaries
-        // );
+        const updatedLessonPlan = scanLessonAndFindComplicatedWord(
+          response.lessonPlan,
+          dictionaries
+        );
 
         setLocalStorageData('lesson_plan', lessonPlan);
         lessonDispatch({
           type: 'SET_LESSON_DATA',
-          payload: {...response, lessonPlan: response.lessonPlan}
+          payload: {...response, lessonPlan: updatedLessonPlan}
         });
 
         setLoaded(true);
@@ -257,12 +258,14 @@ const Lesson = () => {
       if (personLessonData) {
         pages = personLessonData.pages;
       } else {
-        const getLessonRatingDetails: any = await API.graphql(
-          graphqlOperation(queries.getPersonLessonsData, {
-            id: personLessonData.id
-          })
-        );
-        pages = getLessonRatingDetails.data.getPersonLessonsData.pages;
+        if (personLessonData.id) {
+          const getLessonRatingDetails: any = await API.graphql(
+            graphqlOperation(queries.getPersonLessonsData, {
+              id: personLessonData.id
+            })
+          );
+          pages = getLessonRatingDetails.data.getPersonLessonsData.pages;
+        }
       }
 
       const currentPage = JSON.parse(pages).currentPage;

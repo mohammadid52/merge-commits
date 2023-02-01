@@ -344,6 +344,24 @@ export const getUserRoleString = (role: string) => {
       return 'Student';
   }
 };
+export const getReverseUserRoleString = (role: string) => {
+  switch (role) {
+    case 'Super Admin':
+      return 'SUP';
+    case 'Admin':
+      return 'ADM';
+    case 'Builder':
+      return 'BLD';
+    case 'Fellow':
+      return 'FLW';
+    case 'Coordinator':
+      return 'CRD';
+    case 'Teacher':
+      return 'TR';
+    case 'Student':
+      return 'ST';
+  }
+};
 /**
  * Function which returns TRUE if the current string is different
  * from the one preceding it

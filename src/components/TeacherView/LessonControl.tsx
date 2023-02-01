@@ -1,5 +1,4 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import {useULBContext} from '@contexts/UniversalLessonBuilderContext';
 import {getDictionaries} from '@graphql/functions';
 import {UniversalLessonStudentData as UniversalLessonStudentDataFromAPI} from 'API';
 import {GlobalContext} from 'contexts/GlobalContext';
@@ -12,7 +11,6 @@ import {
   StudentPageInput,
   UniversalLessonStudentData
 } from 'interfaces/UniversalLessonInterfaces';
-import {isEmpty} from 'lodash';
 import React, {Suspense, useContext, useEffect, useState} from 'react';
 import {useParams} from 'react-router';
 import {useHistory, useRouteMatch} from 'react-router-dom';
@@ -42,6 +40,7 @@ export const checkIfLessonIsCompleted = (roomData: any, lessonID: string) => {
 const LessonControl = () => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
   const gContext = useContext(GlobalContext);
+  const {scanLessonAndFindComplicatedWord} = gContext;
 
   const dispatch = gContext.dispatch;
 
@@ -351,17 +350,17 @@ const LessonControl = () => {
         ];
       }, []);
 
-      // const dictionaries = await getDictionaries();
+      const dictionaries = await getDictionaries();
 
-      // const updatedLessonPlan = scanLessonAndFindComplicatedWord(
-      //   response.lessonPlan,
-      //   dictionaries
-      // );
+      const updatedLessonPlan = scanLessonAndFindComplicatedWord(
+        response.lessonPlan,
+        dictionaries
+      );
 
       setLocalStorageData('lesson_plan', lessonPlan);
       lessonDispatch({
         type: 'SET_LESSON_DATA',
-        payload: {...response, lessonPlan: response.lessonPlan}
+        payload: {...response, lessonPlan: updatedLessonPlan}
       });
     } catch (e) {
       console.error('getSyllabusLesson() - error fetching lesson', e);
@@ -653,7 +652,7 @@ const LessonControl = () => {
                     email={email}
                     componentName="CoreUniversalLesson"
                     fallback={<h1>Error in the Teacher's Lesson</h1>}>
-                    <CoreUniversalLesson />
+                    <CoreUniversalLesson isTeacher />
                   </ErrorBoundary>
                 </Suspense>
               </div>

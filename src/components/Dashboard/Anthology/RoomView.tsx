@@ -42,7 +42,7 @@ const RoomView = ({
   const [loaded, setLoaded] = useState<boolean>(roomIdList.length === 0);
   const [filteredRooms, setFilteredRooms] = useState<any[]>([]);
 
-  const {state} = useGlobalContext();
+  const {state, zoiqFilter} = useGlobalContext();
 
   const mapData = (responseData: any[]) => {
     const curriculumMap = responseData.map(async (roomObj: any) => {
@@ -97,7 +97,7 @@ const RoomView = ({
       const roomsList: any = await API.graphql(
         graphqlOperation(customQueries.listRoomsNotebook, {
           filter: {
-            ...compoundQuery
+            or: [...compoundQuery.or, ...zoiqFilter]
           }
         })
       );

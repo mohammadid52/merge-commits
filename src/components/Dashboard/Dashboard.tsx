@@ -141,6 +141,7 @@ export interface ClassroomControlProps extends DashboardProps {
 
 const Dashboard = (props: DashboardProps) => {
   const gContext = useContext(GlobalContext);
+  const zoiqFilter = gContext.zoiqFilter;
   const state = gContext.state;
   const dispatch = gContext.dispatch;
   const stateUser = gContext.state.user;
@@ -444,7 +445,7 @@ const Dashboard = (props: DashboardProps) => {
     try {
       const queryObj = {
         name: 'customQueries.listRooms',
-        valueObj: {filter: {teacherAuthID: {eq: teacherAuthID}}}
+        valueObj: {filter: {teacherAuthID: {eq: teacherAuthID}, or: [...zoiqFilter]}}
       };
 
       const classIdFromRoomsFetch: any = await API.graphql(
@@ -854,6 +855,7 @@ const Dashboard = (props: DashboardProps) => {
                       classroomCurriculum={curriculumObj}
                       isTeacher={isTeacher}
                       isOnDemandStudent={isOnDemandStudent}
+                      homeData={!isStudent ? homeDataForTeachers : homeData}
                       loadingRoomInfo={loadingRoomInfo}
                       currentPage={currentPage}
                       setCurrentPage={setCurrentPage}
@@ -947,6 +949,7 @@ const Dashboard = (props: DashboardProps) => {
                     <LessonPlanHome
                       setClassroomCurriculum={setCurriculumObj}
                       classroomCurriculum={curriculumObj}
+                      homeData={homeDataForTeachers}
                       handleRoomSelection={handleRoomSelection}
                       currentPage={currentPage}
                       setCurrentPage={setCurrentPage}

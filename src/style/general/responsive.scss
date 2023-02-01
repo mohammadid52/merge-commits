@@ -1,0 +1,64 @@
+.floating-wrapper-outer {
+  bottom: 50%;
+  @media (max-width: 640px) {
+    bottom: 0;
+    width: 100%;
+
+    .floating-wrapper {
+      border-radius: 0;
+      flex-direction: row;
+      justify-content: space-evenly;
+      .floating-item {
+        border: 0;
+        width: auto;
+        background-color: $gray-800 !important;
+        .item-open {
+          min-width: 23rem;
+          border: 0;
+          background-color: $gray-800;
+          .card-list-item {
+            background-color: $gray-700;
+          }
+
+          &.teacher-card {
+            left: -4rem;
+            top: -24rem;
+          }
+          &.student-card {
+            left: -10rem;
+            top: -24rem;
+          }
+          &.translation {
+            left: -17rem;
+            top: -15rem;
+            input {
+              background-color: $gray-700;
+              border: 0;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .floating-wrapper .floating-item .item-open {
+    left: -25rem;
+  }
+}
+
+.lesson-card {
+  flex-direction: row;
+
+  @media (max-width: 640px) {
+    flex-direction: column;
+
+    .lesson-card-image {
+      height: 12rem;
+      background-position: top;
+      width: 100%;
+    }
+    .lesson-card-summary {
+      width: 100%;
+    }
+  }
+}

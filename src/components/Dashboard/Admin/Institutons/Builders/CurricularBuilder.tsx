@@ -1,15 +1,7 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import {Storage} from '@aws-amplify/storage';
-import React, {useContext, useEffect, useState} from 'react';
-import {IoImage} from 'react-icons/io5';
-import {useHistory, useLocation} from 'react-router-dom';
-import {GlobalContext} from 'contexts/GlobalContext';
-import * as customMutations from 'customGraphql/customMutations';
-import * as customQueries from 'customGraphql/customQueries';
-import useDictionary from 'customHooks/dictionary';
-import * as mutation from 'graphql/mutations';
-import * as queries from 'graphql/queries';
-import {languageList} from 'utilities/staticData';
+import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
+import useAuth from '@customHooks/useAuth';
+import {uploadImageToS3} from '@graphql/functions';
 import BreadCrums from 'atoms/BreadCrums';
 import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
@@ -17,11 +9,18 @@ import MultipleSelector from 'atoms/Form/MultipleSelector';
 import Selector from 'atoms/Form/Selector';
 import TextArea from 'atoms/Form/TextArea';
 import PageWrapper from 'atoms/PageWrapper';
-import SectionTitle from 'atoms/SectionTitle';
+import {GlobalContext} from 'contexts/GlobalContext';
+import * as customMutations from 'customGraphql/customMutations';
+import * as customQueries from 'customGraphql/customQueries';
+import useDictionary from 'customHooks/dictionary';
+import * as mutation from 'graphql/mutations';
+import * as queries from 'graphql/queries';
 import DroppableMedia from 'molecules/DroppableMedia';
+import React, {useContext, useEffect, useState} from 'react';
+import {IoImage} from 'react-icons/io5';
+import {useHistory, useLocation} from 'react-router-dom';
+import {languageList} from 'utilities/staticData';
 import ProfileCropModal from '../../../Profile/ProfileCropModal';
-import {logError, uploadImageToS3} from '@graphql/functions';
-import useAuth from '@customHooks/useAuth';
 
 interface CurricularBuilderProps {}
 interface InitialData {
@@ -418,7 +417,7 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
       {/* Section Header */}
       <BreadCrums items={breadCrumsList} />
       <div className="flex justify-between">
-        <SectionTitle
+        <SectionTitleV3
           title={CurricularBuilderdict[userLanguage]['TITLE']}
           subtitle={CurricularBuilderdict[userLanguage]['SUBTITLE']}
         />

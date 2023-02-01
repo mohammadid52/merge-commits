@@ -296,9 +296,13 @@ const LessonModule = ({currentLesson}: {currentLesson: UniversalLesson}) => {
     dataList,
     config: {
       dark: currentLesson?.darkMode || true,
-      headers: {textColor: 'text-white'},
       dataList: {
         pattern: 'striped',
+        customWidth: {
+          name: 'w-40',
+          time: 'w-40',
+          instructions: 'w-full'
+        },
         patternConfig: {firstColor: 'bg-gray-800', secondColor: 'bg-gray-700'}
       }
     }

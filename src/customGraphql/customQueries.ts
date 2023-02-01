@@ -47,6 +47,7 @@ export const getDashboardData = /* GraphQL */ `
               teacherEmail
               name
               maxPersons
+              isZoiq
               activeSyllabus
               activeLessonId
               activeLessons
@@ -64,6 +65,7 @@ export const getDashboardData = /* GraphQL */ `
               currentPage
               teacher {
                 firstName
+                status
                 lastName
                 image
                 email
@@ -75,6 +77,7 @@ export const getDashboardData = /* GraphQL */ `
                 items {
                   teacher {
                     authId
+                    status
                     firstName
                     lastName
                     image
@@ -106,8 +109,10 @@ export const getDashboardData = /* GraphQL */ `
                 student {
                   authId
                   firstName
+                  pageState
                   lastName
                   image
+                  email
                   id
                 }
               }
@@ -124,7 +129,7 @@ export const getTeacherLookUp = /* GraphQL */ `
     listRooms(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
-
+        isZoiq
         teacherAuthID
         teacher {
           id
@@ -161,7 +166,7 @@ export const getDashboardDataForTeachers = /* GraphQL */ `
         id
         institutionID
         classID
-
+        isZoiq
         teacherAuthID
         teacherEmail
         name
@@ -1049,6 +1054,7 @@ export const listPersons = /* GraphQL */ `
         role
         type
         firstName
+        isZoiq
         preferredName
         lastName
         image
@@ -1079,6 +1085,7 @@ export const fetchPersons = /* GraphQL */ `
         authId
         email
         role
+        isZoiq
         type
         firstName
         preferredName
@@ -1146,7 +1153,7 @@ export const listRooms = /* GraphQL */ `
         institutionID
         classID
         teacherAuthID
-
+        isZoiq
         teacherEmail
         name
         maxPersons
@@ -1164,6 +1171,7 @@ export const listRooms = /* GraphQL */ `
               role
               lastName
               firstName
+              status
             }
           }
         }
@@ -1204,6 +1212,7 @@ export const getRoom = /* GraphQL */ `
       name
       status
       maxPersons
+      isZoiq
       institution {
         id
         name
@@ -1349,7 +1358,7 @@ export const getSingleRoomForCoTeacher = /* GraphQL */ `
       classID
       teacherAuthID
       teacherEmail
-
+      isZoiq
       name
       status
 
@@ -1440,6 +1449,7 @@ export const listRoomsDashboard = /* GraphQL */ `
         name
         maxPersons
         status
+        isZoiq
         institution {
           id
           name
@@ -1462,6 +1472,7 @@ export const listRoomsDashboard = /* GraphQL */ `
           id
           status
           firstName
+          status
           preferredName
           lastName
           image
@@ -4057,6 +4068,7 @@ export const userById = /* GraphQL */ `
         phone
         birthdate
         image
+        isZoiq
         language
         filters
         lastLoggedIn
@@ -4202,6 +4214,7 @@ export const getUserProfile = /* GraphQL */ `
         filters
         statusReason
         lastLoggedIn
+        isZoiq
         lastLoggedOut
         onDemand
         classes {
@@ -5183,6 +5196,7 @@ export const getInstitutionBasicInfo = /* GraphQL */ `
     getInstitution(id: $id) {
       id
       name
+      image
     }
   }
 `;
@@ -5542,6 +5556,7 @@ export const listRoomsNotebook = /* GraphQL */ `
       items {
         id
         institutionID
+        isZoiq
         classID
         teacherAuthID
         teacherEmail
@@ -5650,7 +5665,7 @@ export const listRoomsBasicDetails = /* GraphQL */ `
         classID
         teacherAuthID
         teacherEmail
-
+        isZoiq
         name
         maxPersons
         filters

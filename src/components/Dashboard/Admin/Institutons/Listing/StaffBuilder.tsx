@@ -7,8 +7,6 @@ import Selector from 'atoms/Form/Selector';
 import SelectorWithAvatar from 'atoms/Form/SelectorWithAvatar';
 import {reorder} from 'utilities/strings';
 
-// test
-import {getAsset} from 'assets';
 import {getImageFromS3} from 'utilities/services';
 import {statusList} from 'utilities/staticData';
 import {createFilterToFetchSpecificItemsOnly} from 'utilities/strings';
@@ -31,6 +29,7 @@ import Modal from 'atoms/Modal';
 import Filters, {SortType} from '@components/Atoms/Filters';
 import CommonActionsBtns from '@components/MicroComponents/CommonActionsBtns';
 import StaffBuilderName from '@components/MicroComponents/StaffBuilderName';
+import UserLookupLocation from '@components/MicroComponents/UserLookupLocation';
 import useAuth from '@customHooks/useAuth';
 import usePagination from '@customHooks/usePagination';
 import {logError} from '@graphql/functions';
@@ -305,32 +304,35 @@ const StaffBuilder = (props: StaffBuilderProps) => {
         updateStaffSequence(staffMembersIds);
       }
     }
-    staffLists = staffLists
-      .map((item: any) => {
-        let index = staffSequence.indexOf(item.userId);
-        return {...item, index};
-      })
-      .sort((a: any, b: any) => (a.index > b.index ? 1 : -1));
 
-    setActiveStaffList(staffLists);
+    if (staffLists && staffLists.length > 0) {
+      staffLists = staffLists
+        .map((item: any) => {
+          let index = staffSequence.indexOf(item.userId);
+          return {...item, index};
+        })
+        .sort((a: any, b: any) => (a.index > b.index ? 1 : -1));
 
-    setCurrentList(staffLists);
+      setActiveStaffList(staffLists);
 
-    const totalListPages = Math.floor(staffLists.length / pageCount);
+      setCurrentList(staffLists);
 
-    setTotalPages(
-      totalListPages * pageCount === staffLists.length
-        ? totalListPages
-        : totalListPages + 1
-    );
+      const totalListPages = Math.floor(staffLists.length / pageCount);
 
-    setFirstPage(true);
-    setLastPage(!(staffLists.length > pageCount));
+      setTotalPages(
+        totalListPages * pageCount === staffLists.length
+          ? totalListPages
+          : totalListPages + 1
+      );
 
-    setTotalList(staffLists);
-    setTotalNum(staffLists.length);
+      setFirstPage(true);
+      setLastPage(!(staffLists.length > pageCount));
 
-    setDataLoading(false);
+      setTotalList(staffLists);
+      setTotalNum(staffLists.length);
+
+      setDataLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -342,20 +344,27 @@ const StaffBuilder = (props: StaffBuilderProps) => {
   const onStaffStatusChange = async (
     status: string,
     staffId: string,
-    currentStatus: string
+    currentStatus: string,
+    authId: string,
+    email: string
   ) => {
     if (currentStatus !== status) {
       setUpdateStatus(true);
-      await API.graphql(
-        graphqlOperation(customMutations.updateStaff, {input: {id: staffId, status}})
-      );
       const updatedStaff = activeStaffList.map((staff) => {
         if (staff.id === staffId) {
-          staff.status = status;
+          staff.staffMember.status = status;
         }
         return staff;
       });
       setActiveStaffList(updatedStaff);
+      await API.graphql(
+        graphqlOperation(customMutations.updateStaff, {input: {id: staffId, status}})
+      );
+      await API.graphql(
+        graphqlOperation(customMutations.updatePerson, {
+          input: {authId: authId, email: email, status}
+        })
+      );
       setUpdateStatus(false);
     }
     setStatusEdit('');
@@ -454,6 +463,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
         {item.role ? getStaffRole(item.role) : ''}
       </span>
     ),
+    loginStatus: <UserLookupLocation isStaff show item={item.staffMember} idx={index} />,
     status:
       statusEdit === item.id ? (
         <div className="">
@@ -462,11 +472,19 @@ const StaffBuilder = (props: StaffBuilderProps) => {
             placeholder="Select Status"
             dropdownWidth="w-48"
             list={statusList}
-            onChange={(val, name, id) => onStaffStatusChange(val, item.id, item.status)}
+            onChange={(val, name, id) =>
+              onStaffStatusChange(
+                val,
+                item.id,
+                item?.status,
+                item?.staffMember?.authId,
+                item?.staffMember?.email
+              )
+            }
           />
         </div>
       ) : (
-        <Status useDefault status={item.status} />
+        <Status useDefault status={item?.status} />
       ),
     actions:
       statusEdit === item.id ? (
@@ -488,6 +506,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
       dictionary['NAME'],
       user.isSuperAdmin && dictionary['INSTITUTION_NAME'],
       dictionary['ROLE'],
+      'Login Status',
       dictionary['STATUS'],
       dictionary['ACTION']
     ],
@@ -495,7 +514,6 @@ const StaffBuilder = (props: StaffBuilderProps) => {
     config: {
       isFirstIndex: true,
       isLastAction: true,
-
       dataList: {
         loading: dataLoading,
         emptyText: 'No staff found',
@@ -529,7 +547,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
     } else {
       setSearchInput({...searchInput, isActive: true});
       const filtered = activeStaffList.filter(
-        (_d: any) => filterName.toLowerCase() === _d?.status?.toLowerCase()
+        (_d: any) => filterName.toLowerCase() === _d?.staffMember?.status?.toLowerCase()
       );
       setFilteredList(filtered);
       setFilters(filterName);

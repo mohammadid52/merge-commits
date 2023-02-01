@@ -1,27 +1,27 @@
-import React, {useState, Fragment, useEffect, useContext} from 'react';
-import {useHistory, useParams} from 'react-router';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import React, {Fragment, useContext, useEffect, useState} from 'react';
 import {IoArrowUndoCircleOutline, IoOptionsOutline} from 'react-icons/io5';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import {useHistory, useParams} from 'react-router';
 
-import {getTypeString} from 'utilities/strings';
-import * as customQueries from 'customGraphql/customQueries';
-import * as customMutations from 'customGraphql/customMutations';
 import {getAsset} from 'assets';
 import {GlobalContext} from 'contexts/GlobalContext';
+import * as customMutations from 'customGraphql/customMutations';
+import * as customQueries from 'customGraphql/customQueries';
+import {getTypeString} from 'utilities/strings';
 
-import MultipleSelector from 'atoms/Form/MultipleSelector';
-import SectionTitle from 'atoms/SectionTitle';
-import PageWrapper from 'atoms/PageWrapper';
+import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import BreadCrums from 'atoms/BreadCrums';
-import FormInput from 'atoms/Form/FormInput';
-import Selector from 'atoms/Form/Selector';
 import Buttons from 'atoms/Buttons';
-import AddQuestion from './QuestionComponents/AddQuestion';
-import SelectPreviousQuestion from './QuestionComponents/SelectPreviousQuestion';
+import FormInput from 'atoms/Form/FormInput';
+import MultipleSelector from 'atoms/Form/MultipleSelector';
+import Selector from 'atoms/Form/Selector';
+import PageWrapper from 'atoms/PageWrapper';
 import useDictionary from 'customHooks/dictionary';
 import {goBackBreadCrumb} from 'utilities/functions';
 import {v4 as uuidv4} from 'uuid';
+import AddQuestion from './QuestionComponents/AddQuestion';
+import SelectPreviousQuestion from './QuestionComponents/SelectPreviousQuestion';
 
 interface AddProfileCheckpointProps {}
 
@@ -279,7 +279,7 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
       {/* Section Header */}
       <BreadCrums items={breadCrumsList} />
       <div className="flex justify-between">
-        <SectionTitle
+        <SectionTitleV3
           title={AddProfileCheckpointDict[userLanguage]['title']}
           subtitle={AddProfileCheckpointDict[userLanguage]['subtitle']}
         />

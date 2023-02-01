@@ -199,7 +199,7 @@ const listAllStudents = async (
 
     return combined;
   } catch (error) {
-    console.log(
+    console.error(
       '🚀 ~ file: AnalyticsDashboard.tsx ~ line 24 ~ listAllStudents ~ error',
       error
     );
@@ -264,8 +264,6 @@ const getAllStudentsSurveyQuestionsResponse = async (
    */
   let combined: any = [...studentsAnswersSurveyQuestionsData, ...outArray];
 
-  // console.log('combined - - - -', combined);
-
   if (theNextToken) {
     combined = await getAllStudentsSurveyQuestionsResponse(
       lessonId,
@@ -273,7 +271,6 @@ const getAllStudentsSurveyQuestionsResponse = async (
       combined
     );
   }
-  console.log('fetched from universalSurveyData');
 
   return combined;
 };
