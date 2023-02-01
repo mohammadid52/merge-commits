@@ -703,7 +703,7 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
       </div>
 
       {/* List / Table */}
-      <div className="flex flex-col px-4">
+      <div className="flex flex-col px-4 bg-white">
         <Filters
           loading={loading}
           list={currentList}

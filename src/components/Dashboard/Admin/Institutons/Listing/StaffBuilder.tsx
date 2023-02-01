@@ -48,9 +48,10 @@ const StaffBuilder = (props: StaffBuilderProps) => {
 
   // ~~~~~~~~~~ CONTEXT SPLITTING ~~~~~~~~~~ //
   const gContext = useGlobalContext();
+  const zoiqFilter = gContext.zoiqFilter;
+  const checkIfAdmin = gContext.checkIfAdmin;
   const userLanguage = gContext.userLanguage;
 
-  const state = gContext.state;
   const user = gContext.state.user;
 
   // ~~~~~~~~~~~~~~~~ OTHER ~~~~~~~~~~~~~~~~ //
@@ -118,13 +119,16 @@ const StaffBuilder = (props: StaffBuilderProps) => {
       } else {
         setShowSuperAdmin(false);
       }
+
+      const filter = role
+        ? {role: {eq: role}}
+        : user.role === 'SUP'
+        ? {role: {eq: 'SUP'}}
+        : {and: [{role: {ne: 'ADM'}}, {role: {ne: 'SUP'}}, {role: {ne: 'ST'}}]};
+
       const list: any = await API.graphql(
         graphqlOperation(customQueries.fetchPersons, {
-          filter: role
-            ? {role: {eq: role}}
-            : user.role === 'SUP'
-            ? {role: {eq: 'SUP'}}
-            : {and: [{role: {ne: 'ADM'}}, {role: {ne: 'SUP'}}, {role: {ne: 'ST'}}]},
+          filter: {...filter, or: [...zoiqFilter]},
           limit: 500
         })
       );
@@ -200,6 +204,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
       // remove this staffUserIds logic and add institute name in the oject
       const staffUserIds: Array<string> = [];
       let staffMembers: any = staff.data.listStaff.items;
+
       staffMembers = staffMembers.filter((member: any) => {
         if (member.staffMember && staffUserIds.indexOf(member.staffMember.id) < 0) {
           staffUserIds.push(member.staffMember.id);
@@ -215,6 +220,19 @@ const StaffBuilder = (props: StaffBuilderProps) => {
           return member;
         }
       });
+
+      staffMembers = staffMembers.filter((member: any) => {
+        if (!checkIfAdmin()) {
+          if (member.staffMember.isZoiq) {
+            return false;
+          } else {
+            return true;
+          }
+        } else {
+          return true;
+        }
+      });
+
       return staffMembers;
     } catch (err) {
       console.log(
@@ -567,23 +585,21 @@ const StaffBuilder = (props: StaffBuilderProps) => {
           withButton={
             <div className="flex gap-x-4 w-auto justify-end items-center flex-wrap">
               {!showAddSection ? (
-                !state.user.isSuperAdmin && (
-                  <div className="w-auto flex items-center gap-x-4">
-                    <SearchInput
-                      dataCy="staff-loookup-search"
-                      value={searchInput.value}
-                      onChange={setSearch}
-                      disabled={dataLoading}
-                      onKeyDown={searchStaff}
-                      isActive={searchInput.isActive}
-                      closeAction={removeSearchAction}
-                    />
-                    <AddButton
-                      label={'Staff member'}
-                      onClick={() => showAddStaffSection(!user.isSuperAdmin ? 'SUP' : '')}
-                    />
-                  </div>
-                )
+                <div className="w-auto flex items-center gap-x-4">
+                  <SearchInput
+                    dataCy="staff-loookup-search"
+                    value={searchInput.value}
+                    onChange={setSearch}
+                    disabled={dataLoading}
+                    onKeyDown={searchStaff}
+                    isActive={searchInput.isActive}
+                    closeAction={removeSearchAction}
+                  />
+                  <AddButton
+                    label={'Staff member'}
+                    onClick={() => showAddStaffSection(!user.isSuperAdmin ? 'SUP' : '')}
+                  />
+                </div>
               ) : (
                 <Buttons
                   btnClass="ml-4 py-1"
