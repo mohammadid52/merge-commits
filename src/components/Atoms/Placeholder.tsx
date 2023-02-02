@@ -7,7 +7,8 @@ const Placeholder = ({
   textSize = '',
   className,
   firstName = '',
-  lastName = ''
+  lastName = '',
+  image = null
 }: {
   name?: string;
   textSize?: string;
@@ -15,25 +16,37 @@ const Placeholder = ({
   size?: string;
   firstName?: string;
   lastName?: string;
+  image?: string | null;
 }) => {
-  const [_firstName, _lastName] = name?.split(' ');
-
-  const _f = firstName || _firstName;
-  const _l = lastName || _lastName;
-
-  return (
-    <div
-      className={`${size} flex flex-shrink-0 justify-center items-center rounded-full  border-0 border-gray-400 customShadow cursor-pointer ${className}`}>
-      <div
-        className={`h-full w-full flex justify-center items-center ${textSize} text-extrabold text-white rounded-full text-shadow`}
-        style={{
-          /*  stylelint-disable */
-          background: `${_f ? stringToHslColor(_f + ' ' + _l) : null}`
-        }}>
-        {_f && initials(_f, _l)}
+  if (image) {
+    return (
+      <div className={`${size} rounded-full flex justify-center items-center`}>
+        <img
+          src={image}
+          className="rounded-full border-2 theme-border customShadow bg-gray-500"
+        />
       </div>
-    </div>
-  );
+    );
+  } else {
+    const [_firstName, _lastName] = name?.split(' ');
+
+    const _f = firstName || _firstName;
+    const _l = lastName || _lastName;
+
+    return (
+      <div
+        className={`${size} flex flex-shrink-0 justify-center items-center rounded-full  border-0 border-gray-400 customShadow cursor-pointer ${className}`}>
+        <div
+          className={`h-full w-full flex justify-center items-center ${textSize} text-extrabold text-white rounded-full text-shadow`}
+          style={{
+            /*  stylelint-disable */
+            background: `${_f ? stringToHslColor(_f + ' ' + _l) : null}`
+          }}>
+          {_f && initials(_f, _l)}
+        </div>
+      </div>
+    );
+  }
 };
 
 export default Placeholder;

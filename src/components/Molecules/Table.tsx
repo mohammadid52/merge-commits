@@ -115,7 +115,7 @@ const getPatternColor = (config: IConfig) => {
 
 const LoadingItem = ({headers, config, customWidth, idx}: any) => {
   return (
-    <div
+    <tr
       className={`flex justify-between ${
         config?.dataList?.bgColor
           ? config?.dataList?.bgColor
@@ -143,11 +143,14 @@ const LoadingItem = ({headers, config, customWidth, idx}: any) => {
 
         return (
           <td key={header} className={className}>
-            <div className="bg-gray-400 h-4 flex "></div>
+            <div
+              className={`${
+                idx === 0 ? 'rounded-full' : ''
+              } bg-gray-400 h-4 flex `}></div>
           </td>
         );
       })}
-    </div>
+    </tr>
   );
 };
 
@@ -158,7 +161,9 @@ const ListItem = forwardRef<any, IListItem>(
         key={idx}
         {...rest}
         ref={ref}
-        className={`flex relative ${item?.markRed ? 'mark-red' : ''} justify-between ${
+        className={`flex hover:bg-gray-300 cursor-pointer transition-all relative  items-center ${
+          item?.markRed ? 'mark-red' : ''
+        } justify-between ${
           config?.dataList?.bgColor
             ? config?.dataList?.bgColor
             : getPattern(config) === 'striped'
