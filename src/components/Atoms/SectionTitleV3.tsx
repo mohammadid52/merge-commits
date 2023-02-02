@@ -1,5 +1,8 @@
 import React, {useContext} from 'react';
 import {GlobalContext} from 'contexts/GlobalContext';
+import {useHistory} from 'react-router';
+import {BsArrowLeft} from 'react-icons/bs';
+import useDictionary from '@customHooks/dictionary';
 
 interface SectionTitleProps {
   title: string;
@@ -12,6 +15,7 @@ interface SectionTitleProps {
   withButton?: React.ReactElement;
   borderBottom?: boolean;
   shadowOff?: boolean;
+  backButton?: boolean;
   bgColor?: string;
 }
 
@@ -26,9 +30,12 @@ const SectionTitleV3: React.FC<SectionTitleProps> = (sectProps: SectionTitleProp
     fontSize = 'lg',
     fontStyle = 'semibold',
     shadowOff = false,
-    bgColor = 'bg-white'
+    bgColor = 'bg-white',
+    backButton
   } = sectProps;
-  const {theme} = useContext(GlobalContext);
+  const {userLanguage} = useContext(GlobalContext);
+  const history = useHistory();
+  const {CommonlyUsedDict} = useDictionary();
 
   return (
     <div
@@ -47,6 +54,20 @@ const SectionTitleV3: React.FC<SectionTitleProps> = (sectProps: SectionTitleProp
             {title}
           </h2>
         )}
+
+        {backButton && (
+          <div
+            className="flex items-center mt-1 cursor-pointer text-gray-500 hover:text-gray-700"
+            onClick={() => history.goBack()}>
+            <span className="w-auto mr-2">
+              <BsArrowLeft />
+            </span>
+            <div className="text-sm">
+              {CommonlyUsedDict[userLanguage]['BACK_TO_LIST']}
+            </div>
+          </div>
+        )}
+
         {subtitle && (
           <p className="text-sm mt-2 md:mt-0 2xl:text-base text-gray-500">{subtitle}</p>
         )}

@@ -548,6 +548,7 @@ const User = (props: IUserProps) => {
               title="User Lookup"
               bgColor={insideModalPopUp ? 'bg-gray-200' : 'bg-white'}
               fontSize="xl"
+              backButton
               fontStyle="semibold"
               extraClass="leading-6 text-gray-900"
               borderBottom
