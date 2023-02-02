@@ -27,6 +27,7 @@ import AddButton from 'atoms/Buttons/AddButton';
 import Modal from 'atoms/Modal';
 
 import Filters, {SortType} from '@components/Atoms/Filters';
+import PageWrapper from '@components/Atoms/PageWrapper';
 import CommonActionsBtns from '@components/MicroComponents/CommonActionsBtns';
 import StaffBuilderName from '@components/MicroComponents/StaffBuilderName';
 import UserLookupLocation from '@components/MicroComponents/UserLookupLocation';
@@ -477,13 +478,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
         searchTerm={searchInput.value}
       />
     ),
-    institutionName: user.isSuperAdmin && (
-      <div
-        className="cursor-pointer w-auto"
-        onClick={() => redirectToInstitution(item.institution?.id)}>
-        <span>{item.institution?.name}</span>
-      </div>
-    ),
+
     role: (
       <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-sm font-medium bg-gray-200 text-gray-600 w-auto">
         {item.role ? getStaffRole(item.role) : ''}
@@ -530,10 +525,10 @@ const StaffBuilder = (props: StaffBuilderProps) => {
     headers: [
       dictionary['NO'],
       dictionary['NAME'],
-      user.isSuperAdmin && dictionary['INSTITUTION_NAME'],
+
       dictionary['ROLE'],
-      'Login Status',
       dictionary['STATUS'],
+      'Login Status',
       dictionary['ACTION']
     ],
     dataList,
@@ -556,7 +551,9 @@ const StaffBuilder = (props: StaffBuilderProps) => {
         },
         customWidth: {
           name: 'w-72 -ml-8',
-          no: 'w-20'
+          no: 'w-12',
+          role: 'w-36',
+          loginStatus: 'w-72'
         },
         maxHeight: 'max-h-196'
       }
@@ -581,8 +578,8 @@ const StaffBuilder = (props: StaffBuilderProps) => {
   };
 
   return (
-    <div className="pt-0 flex m-auto justify-center p-8">
-      <div className="">
+    <div className="mb-2">
+      <div className="px-4">
         <SectionTitleV3
           title={dictionary['TITLE']}
           fontSize="xl"

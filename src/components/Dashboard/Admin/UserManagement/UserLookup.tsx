@@ -34,6 +34,7 @@ import {createFilterToFetchSpecificItemsOnly, getUserRoleString} from 'utilities
 import UserLocation from './UserLocation';
 import UserRole from './UserRole';
 import UserStatus from './UserStatus';
+import PageWrapper from '@components/Atoms/PageWrapper';
 
 export const sortByName = (data: any[]) => {
   return data.sort((a: any, b: any) => {
@@ -579,12 +580,13 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
           }
         },
         customWidth: {
-          name: 'w-72 -ml-12',
-          status: 'w-28',
-          flow: 'w-40',
-          role: 'w-24',
-          location: 'w-24',
-          actions: 'w-48'
+          no: 'w-12',
+          name: 'w-72 ',
+          status: 'w-36',
+          flow: 'w-36',
+          role: 'w-36',
+          location: 'w-72',
+          actions: 'w-aut'
         },
         maxHeight: 'max-h-none',
         pattern: 'striped',
@@ -609,7 +611,7 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
   };
 
   return (
-    <div className={`w-full h-full`}>
+    <div className="mb-2">
       {/* Header Section */}
       {!isInInstitute && <BreadCrums items={breadCrumsList} />}
       <div className="">
@@ -617,7 +619,7 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
           fontSize="xl"
           fontStyle="semibold"
           extraContainerClass="px-4"
-          extraClass="leading-6 text-gray-900"
+          extraClass="leading-6 text-gray-900 uppercase"
           borderBottom
           shadowOff
           title={

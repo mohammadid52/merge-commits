@@ -1,6 +1,7 @@
 import useUrlState from '@ahooksjs/use-url-state';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import AddButton from '@components/Atoms/Buttons/AddButton';
+import PageWrapper from '@components/Atoms/PageWrapper';
 import Placeholder from '@components/Atoms/Placeholder';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import ErrorBoundary from '@components/Error/ErrorBoundary';
@@ -526,228 +527,234 @@ const User = (props: IUserProps) => {
   {
     return (
       <>
-        <div
-          className={`px-4 `}
-          style={insideModalPopUp ? {maxHeight: 'calc(100vh - 150px)'} : {}}>
-          {/* <BreadCrums items={breadCrumsList} /> */}
-          {params.get('from') && (
-            <div
-              className="flex items-center mt-1 cursor-pointer text-gray-500 hover:text-gray-700"
-              onClick={history.goBack}>
-              <span className="w-auto mr-2">
-                <BsArrowLeft />
-              </span>
-              <div className="text-sm">{CommonlyUsedDict[userLanguage]['BACK']}</div>
-            </div>
-          )}
-
-          <SectionTitleV3
-            title="User Lookup"
-            bgColor={insideModalPopUp ? 'bg-gray-200' : 'bg-white'}
-            fontSize="xl"
-            fontStyle="semibold"
-            extraClass="leading-6 text-gray-900"
-            borderBottom
-            shadowOff
-            withButton={
-              <div className={`w-auto flex gap-x-4 justify-end items-center flex-wrap`}>
-                <AddButton
-                  label={'Edit User'}
-                  disabled={isEditMode}
-                  onClick={() => {
-                    setIsEditMode(true);
-                    setCurTab(tabs[0].name);
-                    // history.push(`${match.url}/edit${location.search}`);
-                  }}
-                />
+        <PageWrapper>
+          <div
+            className={`px-4 `}
+            style={insideModalPopUp ? {maxHeight: 'calc(100vh - 150px)'} : {}}>
+            {/* <BreadCrums items={breadCrumsList} /> */}
+            {params.get('from') && (
+              <div
+                className="flex items-center mt-1 cursor-pointer text-gray-500 hover:text-gray-700"
+                onClick={history.goBack}>
+                <span className="w-auto mr-2">
+                  <BsArrowLeft />
+                </span>
+                <div className="text-sm">{CommonlyUsedDict[userLanguage]['BACK']}</div>
               </div>
-            }
-          />
+            )}
 
-          <div className="flex justify-between items-center mb-4 py-4 w-auto">
-            <UserTabs
-              tabs={tabs}
-              currentTab={curTab}
-              viewedUser={user}
-              setCurrentTab={setCurTab}
-              isTeacher={isTeacher}
-              isAdmin={isAdmin}
-              theme={theme}
+            <SectionTitleV3
+              title="User Lookup"
+              bgColor={insideModalPopUp ? 'bg-gray-200' : 'bg-white'}
+              fontSize="xl"
+              fontStyle="semibold"
+              extraClass="leading-6 text-gray-900"
+              borderBottom
+              shadowOff
+              withButton={
+                <div className={`w-auto flex gap-x-4 justify-end items-center flex-wrap`}>
+                  <AddButton
+                    label={'Edit User'}
+                    disabled={isEditMode}
+                    onClick={() => {
+                      setIsEditMode(true);
+                      setCurTab(tabs[0].name);
+                      // history.push(`${match.url}/edit${location.search}`);
+                    }}
+                  />
+                </div>
+              }
             />
-          </div>
-          <div className="mb-4">
-            <AnimatedContainer className="h-full" show={onUserInformationTab}>
-              {onUserInformationTab && (
-                <div className={`border-0 border-gray-300 rounded-xl p-4 mb-8`}>
-                  <div className="h-1/2 flex flex-col md:flex-row">
-                    <div className="w-1/4 p-4 flex flex-col text-center items-center">
-                      <div className="cursor-pointer">
-                        {user.image ? (
-                          <button className="group hover:opacity-80 focus:outline-none focus:opacity-95">
-                            {!imageLoading ? (
-                              <>
-                                <div className="cursor-pointer">
-                                  <DroppableMedia
-                                    mediaRef={mediaRef}
-                                    setImage={(img: any, file: any) => {
-                                      setUpImage(img);
-                                      setFileObj(file);
-                                    }}
-                                    toggleCropper={toggleCropper}>
-                                    {imageUrl ? (
-                                      <img
-                                        className={`profile w-20 h-20 md:w-30 md:h-30 lg:w-40 lg:h-40 rounded-full  border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light mx-auto`}
-                                        src={imageUrl}
-                                      />
-                                    ) : (
-                                      <div
-                                        className={`profile w-20 h-20 md:w-30 md:h-30 lg:w-40 lg:h-40 rounded-full  border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light mx-auto`}
-                                      />
-                                    )}
-                                  </DroppableMedia>
+
+            <div className="flex justify-between items-center mb-4 py-4 w-auto">
+              <UserTabs
+                tabs={tabs}
+                currentTab={curTab}
+                viewedUser={user}
+                setCurrentTab={setCurTab}
+                isTeacher={isTeacher}
+                isAdmin={isAdmin}
+                theme={theme}
+              />
+            </div>
+            <div className="mb-4">
+              <AnimatedContainer className="h-full" show={onUserInformationTab}>
+                {onUserInformationTab && (
+                  <div className={`border-0 border-gray-300 rounded-xl p-4 mb-8`}>
+                    <div className="h-1/2 flex flex-col md:flex-row">
+                      <div className="w-1/4 p-4 flex flex-col text-center items-center">
+                        <div className="cursor-pointer">
+                          {user.image ? (
+                            <button className="group hover:opacity-80 focus:outline-none focus:opacity-95">
+                              {!imageLoading ? (
+                                <>
+                                  <div className="cursor-pointer">
+                                    <DroppableMedia
+                                      mediaRef={mediaRef}
+                                      setImage={(img: any, file: any) => {
+                                        setUpImage(img);
+                                        setFileObj(file);
+                                      }}
+                                      toggleCropper={toggleCropper}>
+                                      {imageUrl ? (
+                                        <img
+                                          className={`profile w-20 h-20 md:w-30 md:h-30 lg:w-40 lg:h-40 rounded-full  border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light mx-auto`}
+                                          src={imageUrl}
+                                        />
+                                      ) : (
+                                        <div
+                                          className={`profile w-20 h-20 md:w-30 md:h-30 lg:w-40 lg:h-40 rounded-full  border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light mx-auto`}
+                                        />
+                                      )}
+                                    </DroppableMedia>
+                                  </div>
+                                </>
+                              ) : (
+                                <div className="w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full  border-0 border-gray-400 shadow-elem-light">
+                                  <Loader />
                                 </div>
-                              </>
-                            ) : (
-                              <div className="w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full  border-0 border-gray-400 shadow-elem-light">
+                              )}
+                            </button>
+                          ) : (
+                            <div className={`flex justify-center items-center mx-auto`}>
+                              {!imageLoading ? (
+                                <DroppableMedia
+                                  mediaRef={mediaRef}
+                                  setImage={(img: any, file: any) => {
+                                    setUpImage(img);
+                                    setFileObj(file);
+                                  }}
+                                  toggleCropper={toggleCropper}>
+                                  <div
+                                    onClick={handleImage}
+                                    className="w-20 h-20 md:w-40 md:h-40">
+                                    <Placeholder
+                                      textSize="text-5xl"
+                                      firstName={user.firstName}
+                                      lastName={user.lastName}
+                                      size="w-20 h-20 md:w-40 md:h-40"
+                                    />
+                                  </div>
+                                </DroppableMedia>
+                              ) : (
                                 <Loader />
-                              </div>
-                            )}
-                          </button>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                        <div
+                          className={`text-lg md:text-3xl font-bold  text-gray-900 mt-4`}>
+                          {`${user.preferredName ? user.preferredName : user.firstName} ${
+                            user.lastName
+                          }`}
+                          <p className="text-md md:text-lg">{`${
+                            user.institution ? user.institution : ''
+                          }`}</p>
+                        </div>
+                      </div>
+
+                      {isEditMode ? (
+                        <ErrorBoundary componentName="UserEdit">
+                          <UserEdit
+                            // tab={stdCheckpoints.length > 0 ? tab : 'p'}
+                            instituteId={props.instituteId}
+                            tab={tab}
+                            setTab={setTab}
+                            onSuccessCallback={onSuccessCallback}
+                            user={user}
+                            shouldNavigate={shouldNavigate}
+                            status={status}
+                            setStatus={setStatus}
+                            setIsEditMode={setIsEditMode}
+                            getUserById={getUserProfile}
+                            questionData={questionData}
+                            checkpoints={
+                              tab === 'demographics'
+                                ? demographicCheckpoints
+                                : tab === 'private'
+                                ? privateCheckpoints
+                                : []
+                            }
+                          />
+                        </ErrorBoundary>
+                      ) : (
+                        <ErrorBoundary componentName="UserInformation">
+                          <UserInformation
+                            // tab={stdCheckpoints.length > 0 ? tab : 'p'}
+                            tab={tab}
+                            setTab={setTab}
+                            questionData={questionData}
+                            checkpoints={
+                              tab === 'demographics'
+                                ? demographicCheckpoints
+                                : tab === 'private'
+                                ? privateCheckpoints
+                                : []
+                            }
+                            user={user}
+                            status={status}
+                          />
+                        </ErrorBoundary>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </AnimatedContainer>
+              <AnimatedContainer show={onCATab}>
+                {onCATab && (
+                  <>
+                    {user?.classes?.items.length > 0 && user.role === 'ST' && (
+                      <div className={`mb-8`}>
+                        {isTimelineOpen ? (
+                          <Attendance
+                            id={userId}
+                            goToClassroom={goToClassroom}
+                            selectedRoomId={selectedRoomId}
+                            role={user.role}
+                          />
                         ) : (
-                          <div className={`flex justify-center items-center mx-auto`}>
-                            {!imageLoading ? (
-                              <DroppableMedia
-                                mediaRef={mediaRef}
-                                setImage={(img: any, file: any) => {
-                                  setUpImage(img);
-                                  setFileObj(file);
-                                }}
-                                toggleCropper={toggleCropper}>
-                                <div
-                                  onClick={handleImage}
-                                  className="w-20 h-20 md:w-40 md:h-40">
-                                  <Placeholder
-                                    textSize="text-5xl"
-                                    firstName={user.firstName}
-                                    lastName={user.lastName}
-                                    size="w-20 h-20 md:w-40 md:h-40"
-                                  />
-                                </div>
-                              </DroppableMedia>
-                            ) : (
-                              <Loader />
-                            )}
-                          </div>
+                          <AssociatedClasses
+                            setIsTimelineOpen={setIsTimelineOpen}
+                            handleClassRoomClick={handleClassRoomClick}
+                            list={user?.rooms}
+                          />
                         )}
                       </div>
-                      <div
-                        className={`text-lg md:text-3xl font-bold  text-gray-900 mt-4`}>
-                        {`${user.preferredName ? user.preferredName : user.firstName} ${
-                          user.lastName
-                        }`}
-                        <p className="text-md md:text-lg">{`${
-                          user.institution ? user.institution : ''
-                        }`}</p>
-                      </div>
-                    </div>
-
-                    {isEditMode ? (
-                      <ErrorBoundary componentName="UserEdit">
-                        <UserEdit
-                          // tab={stdCheckpoints.length > 0 ? tab : 'p'}
-                          instituteId={props.instituteId}
-                          tab={tab}
-                          setTab={setTab}
-                          onSuccessCallback={onSuccessCallback}
-                          user={user}
-                          shouldNavigate={shouldNavigate}
-                          status={status}
-                          setStatus={setStatus}
-                          setIsEditMode={setIsEditMode}
-                          getUserById={getUserProfile}
-                          questionData={questionData}
-                          checkpoints={
-                            tab === 'demographics'
-                              ? demographicCheckpoints
-                              : tab === 'private'
-                              ? privateCheckpoints
-                              : []
-                          }
-                        />
-                      </ErrorBoundary>
-                    ) : (
-                      <ErrorBoundary componentName="UserInformation">
-                        <UserInformation
-                          // tab={stdCheckpoints.length > 0 ? tab : 'p'}
-                          tab={tab}
-                          setTab={setTab}
-                          questionData={questionData}
-                          checkpoints={
-                            tab === 'demographics'
-                              ? demographicCheckpoints
-                              : tab === 'private'
-                              ? privateCheckpoints
-                              : []
-                          }
-                          user={user}
-                          status={status}
-                        />
-                      </ErrorBoundary>
                     )}
-                  </div>
-                </div>
-              )}
-            </AnimatedContainer>
-            <AnimatedContainer show={onCATab}>
-              {onCATab && user?.classes?.items.length > 0 && user.role === 'ST' && (
-                <div className={`mb-8`}>
-                  {isTimelineOpen ? (
-                    <Attendance
-                      id={userId}
-                      goToClassroom={goToClassroom}
-                      selectedRoomId={selectedRoomId}
-                      role={user.role}
-                    />
-                  ) : (
-                    <AssociatedClasses
-                      setIsTimelineOpen={setIsTimelineOpen}
-                      handleClassRoomClick={handleClassRoomClick}
-                      list={user?.rooms}
-                    />
-                  )}
-                </div>
-              )}
-              {(user.role === 'TR' || user.role === 'FLW') && (
-                <Attendance
-                  id={userId}
-                  goToClassroom={goToClassroom}
-                  selectedRoomId={selectedRoomId}
-                  role={user.role}
-                />
-              )}
-            </AnimatedContainer>
-            <AnimatedContainer show={onNotebookTab}>
-              {onNotebookTab && (
-                <Anthology
-                  isTeacher={isTeacher}
-                  studentID={user.id}
-                  studentAuthID={user.authId}
-                  studentName={user.firstName}
-                  studentEmail={user.email}
-                />
-              )}
-            </AnimatedContainer>
-            <AnimatedContainer show={onSurveyTab}>
-              {onSurveyTab && (
-                <SurveyList
-                  insideModalPopUp={insideModalPopUp}
-                  studentAuthID={user.authId}
-                  studentEmail={user.email}
-                />
-              )}
-            </AnimatedContainer>
+                    {(user.role === 'TR' || user.role === 'FLW') && (
+                      <Attendance
+                        id={userId}
+                        goToClassroom={goToClassroom}
+                        selectedRoomId={selectedRoomId}
+                        role={user.role}
+                      />
+                    )}
+                  </>
+                )}
+              </AnimatedContainer>
+              <AnimatedContainer show={onNotebookTab}>
+                {onNotebookTab && (
+                  <Anthology
+                    isTeacher={isTeacher}
+                    studentID={user.id}
+                    studentAuthID={user.authId}
+                    studentName={user.firstName}
+                    studentEmail={user.email}
+                  />
+                )}
+              </AnimatedContainer>
+              <AnimatedContainer show={onSurveyTab}>
+                {onSurveyTab && (
+                  <SurveyList
+                    insideModalPopUp={insideModalPopUp}
+                    studentAuthID={user.authId}
+                    studentEmail={user.email}
+                  />
+                )}
+              </AnimatedContainer>
+            </div>
           </div>
-        </div>
+        </PageWrapper>
         {showCropper && (
           <ProfileCropModal
             upImg={upImage}

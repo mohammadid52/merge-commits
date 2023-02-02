@@ -1,11 +1,12 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import PageWrapper from '@components/Atoms/PageWrapper';
 import ErrorBoundary from '@components/Error/ErrorBoundary';
+import useAuth from '@customHooks/useAuth';
 import {getAsset} from 'assets';
 import BreadcrumbsWithBanner from 'atoms/BreadcrumbsWithBanner';
-import PageWrapper from 'atoms/PageWrapper';
-import {GlobalContext} from 'contexts/GlobalContext';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Route, Switch, useLocation, useRouteMatch} from 'react-router-dom';
 import {DashboardProps} from '../../Dashboard';
 import NavBarRouter from '../NavBarRouter';
@@ -22,9 +23,10 @@ import UnitBuilder from './EditBuilders/CurricularsView/TabsActions/Unit/UnitBui
 import Institution from './Institution';
 // Instituttion
 import InstitutionLookup from './InstitutionLookup';
+import InstitutionProfile from './InstitutionProfile';
 
 const InstitutionsHome: React.FC<DashboardProps> = (props: DashboardProps) => {
-  const {clientKey, state, dispatch} = useContext(GlobalContext);
+  const {clientKey, state, dispatch} = useGlobalContext();
   const match = useRouteMatch();
   const {pathname} = useLocation();
 
@@ -71,6 +73,9 @@ const InstitutionsHome: React.FC<DashboardProps> = (props: DashboardProps) => {
       }
     }
   }, [pathname]);
+
+  const {user} = useAuth();
+  const institute = user?.associateInstitute[0]?.institution;
 
   return (
     <div className={`w-full h-full flex justify-center`}>
@@ -173,12 +178,15 @@ const InstitutionsHome: React.FC<DashboardProps> = (props: DashboardProps) => {
           )} // Curricular information view.
         />
         {pathname.indexOf('/manage-institutions/institution') === -1 && (
-          <div className={`w-full h-full`}>
+          <div className="">
             <BreadcrumbsWithBanner forInstitution bannerImage={bannerImage} />
             <div className="px-2 py-8 md:px-4 lg:p-8">
               {/* <PageWrapper> */}
-              <NavBarRouter />
-              {/* </PageWrapper> */}
+              <PageWrapper>
+                <NavBarRouter institute={institute} />
+                {/* </PageWrapper> */}
+                <InstitutionProfile institute={institute} />
+              </PageWrapper>
             </div>
           </div>
         )}

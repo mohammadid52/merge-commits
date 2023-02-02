@@ -5336,6 +5336,15 @@ export const getAssignedInstitutionToStaff = /* GraphQL */ `
         institution {
           id
           name
+          phone
+          image
+          isServiceProvider
+          website
+          address
+          addressLine2
+          city
+          zip
+          district
         }
         staffMember {
           firstName
