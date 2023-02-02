@@ -192,13 +192,14 @@ export const TranslationInsideComponent = ({
       {
         <div className="card-body-header theme-bg text-white rounded-t-xl px-4 py-2">
           <h1 className="text-lg text-center tracking-wider font-medium uppercase text-white">
-            Translation
+            Glossary
           </h1>
         </div>
       }
       <div className={`p-4 flex space-y-4 flex-col items-center`}>
         <input
           onChange={onSearchInputChange}
+          onKeyDown={(e) => e.keyCode === 13 && onSearch()}
           placeholder="Search meaning..."
           className={`text-base ${loading ? 'cursor-disabled pointer-events-none' : ''} ${
             inClassroom
@@ -218,19 +219,24 @@ export const TranslationInsideComponent = ({
                   : ''
               }`}>
               {isSimilar && <h5>Similar: {isSimilar}</h5>}
-              <p
-                className={`${
-                  inClassroom ? 'text-gray-700 text-sm' : 'text-white text-base'
-                } `}>
-                {finalSearchResult}
-              </p>
-
-              {Boolean(spanishResult && isSpanish) && (
-                <div className="mt-2 pt-2 border-t-0 border-gray-700">
-                  <p>
-                    <span>In Spanish: </span>
-                    {spanishResult}
+              {Boolean(finalSearchResult) && (
+                <div className="flex flex-col">
+                  <span className="italic theme-text">Definition: </span>
+                  <p
+                    className={`${
+                      inClassroom ? 'text-gray-700 text-sm' : 'text-white text-base'
+                    } `}>
+                    {finalSearchResult}
                   </p>
+                </div>
+              )}
+              {Boolean(spanishResult && isSpanish) && (
+                <div
+                  className={`${
+                    inClassroom ? 'border-gray-200' : ' border-gray-700'
+                  } flex flex-col mt-2 pt-2 border-t-0`}>
+                  <span className="italic theme-text">Translation: </span>
+                  <p>{spanishResult}</p>
                 </div>
               )}
             </div>
