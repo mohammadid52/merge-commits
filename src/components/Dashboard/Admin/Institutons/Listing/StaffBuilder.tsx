@@ -550,10 +550,12 @@ const StaffBuilder = (props: StaffBuilderProps) => {
           }
         },
         customWidth: {
-          name: 'w-72 -ml-12',
-          no: 'w-12',
-          role: 'w-36',
-          loginStatus: 'w-72'
+          no: 'w-0.5/10',
+          name: 'w-3/10',
+          role: 'w-2/10',
+          status: 'w-2/10',
+          loginStatus: 'w-2/10',
+          actions: 'w-1.5/10'
         },
         maxHeight: 'max-h-196'
       }
