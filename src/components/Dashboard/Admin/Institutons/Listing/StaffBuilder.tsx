@@ -304,7 +304,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
     let part1 = user.isSuperAdmin
       ? '/dashboard/manage-institutions'
       : `/dashboard/manage-institutions/institution/${instituteId}`;
-    let part2 = `/manage-users/${profileId}`;
+    let part2 = `/manage-users/${profileId}/staff`;
     // console.log(`${part1}${part2}`);
     history.push(`${part1}${part2}`);
   };

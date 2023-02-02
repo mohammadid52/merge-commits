@@ -194,6 +194,7 @@ const User = (props: IUserProps) => {
   );
 
   const userId = props.userId || urlParam?.userId;
+  console.log('🚀 ~ file: User.tsx:197 ~ User ~ userId', userId);
 
   const [user, setUser] = useState<UserInfo>({
     id: '',
@@ -527,7 +528,7 @@ const User = (props: IUserProps) => {
   {
     return (
       <>
-        <PageWrapper>
+        <>
           <div
             className={`px-4 `}
             style={insideModalPopUp ? {maxHeight: 'calc(100vh - 150px)'} : {}}>
@@ -754,7 +755,7 @@ const User = (props: IUserProps) => {
               </AnimatedContainer>
             </div>
           </div>
-        </PageWrapper>
+        </>
         {showCropper && (
           <ProfileCropModal
             upImg={upImage}

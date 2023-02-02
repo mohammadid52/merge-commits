@@ -1,5 +1,5 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   AiOutlineArrowDown,
   AiOutlineArrowUp,
@@ -9,7 +9,7 @@ import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {useHistory} from 'react-router-dom';
 
 import {getAsset} from 'assets';
-import {GlobalContext, useGlobalContext} from 'contexts/GlobalContext';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
 import * as queries from 'graphql/queries';
 
@@ -34,7 +34,6 @@ import {createFilterToFetchSpecificItemsOnly, getUserRoleString} from 'utilities
 import UserLocation from './UserLocation';
 import UserRole from './UserRole';
 import UserStatus from './UserStatus';
-import PageWrapper from '@components/Atoms/PageWrapper';
 
 export const sortByName = (data: any[]) => {
   return data.sort((a: any, b: any) => {
@@ -136,14 +135,6 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
       _removeSearchAction();
     }
   };
-
-  useEffect(() => {
-    if (state?.temp?.user?.id)
-      dispatch({
-        type: 'UPDATE_TEMP_USER',
-        payload: {user: null}
-      });
-  }, [state?.temp?.user]);
 
   const setSortingValue = (str: string, name: string) => {
     setSortingType({
