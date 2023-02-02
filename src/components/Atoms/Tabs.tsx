@@ -112,7 +112,6 @@ const DropDownMenu = ({index, menu, onClick}: any) => {
 };
 
 const Tabs = ({tabsData, updateTab, currentTab}: ITabsProps) => {
-  const {theme} = useContext(GlobalContext);
   const isGameChangers = window.location.href.includes('game-changers');
 
   return (
@@ -147,9 +146,9 @@ const Tabs = ({tabsData, updateTab, currentTab}: ITabsProps) => {
                 key={index}
                 data-cy={kebabCase(`${menu.title}-item`)}
                 onClick={() => {
-                  if (currentTab !== menu.title) {
-                    updateTab(menu);
-                  }
+                  // if (currentTab !== menu.title) {
+                  updateTab(menu);
+                  // }
                 }}
                 className={`${
                   menu.active ? 'theme-bg text-white' : 'theme-text:500'

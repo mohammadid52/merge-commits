@@ -38,7 +38,7 @@ const BreadcrumbsWithBanner: React.FC<BreadCrumbProps> = (props: BreadCrumbProps
     bannerImage,
     title
   } = props;
-  const {state, theme, userLanguage, clientKey} = useGlobalContext();
+  const {state, theme, userLanguage, dispatch, clientKey} = useGlobalContext();
 
   const user = state.temp.user;
 
@@ -53,6 +53,18 @@ const BreadcrumbsWithBanner: React.FC<BreadCrumbProps> = (props: BreadCrumbProps
     if (unsavedChanges) {
       toggleModal(url);
     } else {
+      setLessonData({});
+      setRoomData({});
+      setCourseData({});
+      setUnitData({});
+
+      dispatch({
+        type: 'UPDATE_TEMP_USER',
+        payload: {
+          user: null
+        }
+      });
+
       history.push(url);
     }
   };
@@ -245,7 +257,10 @@ const BreadcrumbsWithBanner: React.FC<BreadCrumbProps> = (props: BreadCrumbProps
                       style={{minWidth: 'fit-content'}}
                       key={i}>
                       {!item.goBack ? (
-                        <div onClick={() => goToUrl(item.url)}>
+                        <div
+                          onClick={() =>
+                            item?.goBack === false ? () => {} : goToUrl(item.url)
+                          }>
                           <span
                             className={`mr-1 md:mr-2 cursor-pointer text-sm 2xl:text-base hover:iconoclast:bg-400 hover:curate:bg-400 rounded-xl px-2 text-white`}>
                             {item.title}

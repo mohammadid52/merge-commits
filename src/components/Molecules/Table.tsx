@@ -115,7 +115,7 @@ const getPatternColor = (config: IConfig) => {
 
 const LoadingItem = ({headers, config, customWidth, idx}: any) => {
   return (
-    <div
+    <tr
       className={`flex justify-between ${
         config?.dataList?.bgColor
           ? config?.dataList?.bgColor
@@ -133,21 +133,24 @@ const LoadingItem = ({headers, config, customWidth, idx}: any) => {
         const className = `${config?.dataList?.textColor || 'text-gray-500'} px-6 py-4 ${
           _customWidth ||
           (config?.isFirstIndex && idx === 0
-            ? 'w-20'
+            ? 'w-12'
             : idx === 0
             ? 'w-72'
             : config?.isLastAction && idx === headers.length - 1
-            ? 'w-20'
+            ? 'w-28'
             : '')
         } animate-pulse`;
 
         return (
           <td key={header} className={className}>
-            <div className="bg-gray-400 h-4 flex "></div>
+            <div
+              className={`${
+                idx === 0 ? 'rounded-full' : ''
+              } bg-gray-400 h-4 flex `}></div>
           </td>
         );
       })}
-    </div>
+    </tr>
   );
 };
 
@@ -158,7 +161,9 @@ const ListItem = forwardRef<any, IListItem>(
         key={idx}
         {...rest}
         ref={ref}
-        className={`flex relative ${item?.markRed ? 'mark-red' : ''} justify-between ${
+        className={`flex hover:bg-gray-300 cursor-pointer transition-all relative  items-center ${
+          item?.markRed ? 'mark-red' : ''
+        } justify-between ${
           config?.dataList?.bgColor
             ? config?.dataList?.bgColor
             : getPattern(config) === 'striped'
@@ -177,17 +182,13 @@ const ListItem = forwardRef<any, IListItem>(
           const className = `${
             config?.dataList?.textColor || 'text-gray-500'
           } px-6 py-4 ${
-            headers.length - 1 === _idx && header.toLowerCase() === 'actions'
-              ? 'flex items-center justify-end'
-              : ''
-          } ${
             _customWidth ||
             (config?.isFirstIndex && _idx === 0
-              ? 'w-20'
+              ? 'w-12'
               : _idx === 0
               ? 'w-72'
               : config?.isLastAction && _idx === headers.length - 1
-              ? 'w-20'
+              ? 'w-28'
               : '')
           } text-sm`;
           if (typeof _item === 'string') {
@@ -263,17 +264,13 @@ const Table = ({
                       } px-6 py-3 ${
                         customWidth ||
                         (config?.isFirstIndex && idx === 0
-                          ? 'w-20'
+                          ? 'w-12'
                           : idx === 0
                           ? 'w-72'
                           : config?.isLastAction && idx === _headers.length - 1
-                          ? 'w-20'
+                          ? 'w-28'
                           : '')
-                      }  ${
-                        _headers.length - 1 === idx && header.toLowerCase() === 'actions'
-                          ? 'flex items-center justify-end'
-                          : ''
-                      } text-left text-xs font-medium  uppercase tracking-wider`;
+                      }   text-left text-xs font-medium  uppercase tracking-wider`;
                       return (
                         <th key={header} scope="col" className={className}>
                           {header}

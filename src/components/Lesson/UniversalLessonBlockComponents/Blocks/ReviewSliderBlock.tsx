@@ -80,17 +80,15 @@ const ReviewSliderBlock = (props: ReviewSliderBlockProps) => {
         } h-auto ${values?.rounded || 'rounded-md'} shadow`}>
         <div className="flex items-center justify-between">
           <p
+            dangerouslySetInnerHTML={{__html: label}}
             className={`${
               isDark ? 'text-gray-400' : 'text-gray-600'
-            } block text-lg w-auto font-semibold leading-5 `}>
-            {label}
-          </p>
-          <p
+            } block text-lg w-auto font-semibold leading-5 `}></p>
+          <span
+            dangerouslySetInnerHTML={{__html: value}}
             className={`${
               isDark ? 'text-gray-400' : 'text-gray-600'
-            } block text-lg w-auto font-semibold leading-5 `}>
-            {value}
-          </p>
+            } block text-lg w-auto font-semibold leading-5 `}></span>
         </div>
         <div
           className={`range relative rounded-full bg-${

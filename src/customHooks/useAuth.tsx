@@ -14,6 +14,7 @@ type User = {
   onDemand?: boolean;
   pageState: UserPageState;
   lastEmotionSubmission: string;
+  language: string;
 };
 
 const useAuth = (): {
@@ -26,6 +27,7 @@ const useAuth = (): {
   isFellow: boolean;
   authId: string;
   email: string;
+  language: string;
   firstName: string;
   lastName: string;
   image: string;
@@ -40,7 +42,17 @@ const useAuth = (): {
   const user: User = context.state.user;
   const dispatch = context.dispatch;
 
-  const {authId, pageState, role, email, firstName, lastName, image, onDemand} = user;
+  const {
+    authId,
+    pageState,
+    role,
+    email,
+    firstName,
+    lastName,
+    language,
+    image,
+    onDemand
+  } = user;
 
   const isStudent = role === 'ST';
   const isTeacher = role === 'TR';
@@ -73,6 +85,7 @@ const useAuth = (): {
     isFellow,
     authId,
     email,
+    language,
     firstName,
     pageState,
     lastName,

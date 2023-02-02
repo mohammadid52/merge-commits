@@ -46,15 +46,12 @@ const UserLookupName = ({
     <div className="" onClick={() => handleLink(item.id)}>
       <div className="flex items-center">
         <div className="flex-shrink-0 h-10 w-10">
-          {item.image ? (
-            <img src={imageUrl} className="h-8 w-8 rounded-full" />
-          ) : (
-            <Placeholder
-              lastName={item.lastName}
-              firstName={item.firstName}
-              size="h-8 w-8"
-            />
-          )}
+          <Placeholder
+            image={item.image ? imageUrl : null}
+            lastName={item.lastName}
+            firstName={item.firstName}
+            size="h-8 w-8"
+          />
         </div>
         <div className="ml-2">
           <div

@@ -57,10 +57,12 @@ const KeywordBlock = (props: KeywordBlockProps) => {
                         lessonPageTheme === 'light' ? 'bg-gray-200' : 'bg-light-gray'
                       } border-light-gray`}>
                       <div className={`h-full overflow-ellipsis overflow-hidden ...`}>
-                        <p className={`text-lg font-semibold ${themeTextColor}`}>
-                          {word.label}:
-                        </p>
-                        <p className={`text-sm ${themeTextColor}`}>{word.value}</p>
+                        <p
+                          dangerouslySetInnerHTML={{__html: word.label}}
+                          className={`text-lg font-semibold ${themeTextColor}`}></p>
+                        <p
+                          dangerouslySetInnerHTML={{__html: word.value}}
+                          className={`text-sm ${themeTextColor}`}></p>
                       </div>
                     </div>
                   )

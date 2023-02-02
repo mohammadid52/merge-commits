@@ -1,8 +1,6 @@
-import React, {useContext} from 'react';
-import {RowWrapperProps} from 'interfaces/UniversalLessonBuilderInterfaces';
-import {GlobalContext} from 'contexts/GlobalContext';
 import {LinkPreview} from '@dhaiwat10/react-link-preview';
-import {useEffect} from 'react';
+import {RowWrapperProps} from 'interfaces/UniversalLessonBuilderInterfaces';
+import React from 'react';
 
 interface LinksBlockProps extends RowWrapperProps {
   id?: string;
@@ -12,9 +10,6 @@ interface LinksBlockProps extends RowWrapperProps {
 
 const LinksBlock = (props: LinksBlockProps) => {
   const {id, value} = props;
-  const {
-    state: {lessonPage: {theme: lessonPageTheme = '', themeTextColor = ''} = {}}
-  } = useContext(GlobalContext);
 
   return (
     <div className="h-full w-full flex flex-col items-center rounded-lg">

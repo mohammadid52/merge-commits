@@ -27,6 +27,7 @@ import AddButton from 'atoms/Buttons/AddButton';
 import Modal from 'atoms/Modal';
 
 import Filters, {SortType} from '@components/Atoms/Filters';
+import PageWrapper from '@components/Atoms/PageWrapper';
 import CommonActionsBtns from '@components/MicroComponents/CommonActionsBtns';
 import StaffBuilderName from '@components/MicroComponents/StaffBuilderName';
 import UserLookupLocation from '@components/MicroComponents/UserLookupLocation';
@@ -35,6 +36,7 @@ import usePagination from '@customHooks/usePagination';
 import {logError} from '@graphql/functions';
 import Registration from 'components/Dashboard/Admin/UserManagement/Registration';
 import {map} from 'lodash';
+import {sortByName} from '../../UserManagement/UserLookup';
 import {Status} from '../../UserManagement/UserStatus';
 
 interface StaffBuilderProps {
@@ -48,9 +50,10 @@ const StaffBuilder = (props: StaffBuilderProps) => {
 
   // ~~~~~~~~~~ CONTEXT SPLITTING ~~~~~~~~~~ //
   const gContext = useGlobalContext();
+  const zoiqFilter = gContext.zoiqFilter;
+  const checkIfAdmin = gContext.checkIfAdmin;
   const userLanguage = gContext.userLanguage;
 
-  const state = gContext.state;
   const user = gContext.state.user;
 
   // ~~~~~~~~~~~~~~~~ OTHER ~~~~~~~~~~~~~~~~ //
@@ -118,13 +121,16 @@ const StaffBuilder = (props: StaffBuilderProps) => {
       } else {
         setShowSuperAdmin(false);
       }
+
+      const filter = role
+        ? {role: {eq: role}}
+        : user.role === 'SUP'
+        ? {role: {eq: 'SUP'}}
+        : {and: [{role: {ne: 'ADM'}}, {role: {ne: 'SUP'}}, {role: {ne: 'ST'}}]};
+
       const list: any = await API.graphql(
         graphqlOperation(customQueries.fetchPersons, {
-          filter: role
-            ? {role: {eq: role}}
-            : user.role === 'SUP'
-            ? {role: {eq: 'SUP'}}
-            : {and: [{role: {ne: 'ADM'}}, {role: {ne: 'SUP'}}, {role: {ne: 'ST'}}]},
+          filter: {...filter, or: [...zoiqFilter]},
           limit: 500
         })
       );
@@ -200,6 +206,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
       // remove this staffUserIds logic and add institute name in the oject
       const staffUserIds: Array<string> = [];
       let staffMembers: any = staff.data.listStaff.items;
+
       staffMembers = staffMembers.filter((member: any) => {
         if (member.staffMember && staffUserIds.indexOf(member.staffMember.id) < 0) {
           staffUserIds.push(member.staffMember.id);
@@ -215,6 +222,19 @@ const StaffBuilder = (props: StaffBuilderProps) => {
           return member;
         }
       });
+
+      staffMembers = staffMembers.filter((member: any) => {
+        if (!checkIfAdmin()) {
+          if (member.staffMember.isZoiq) {
+            return false;
+          } else {
+            return true;
+          }
+        } else {
+          return true;
+        }
+      });
+
       return staffMembers;
     } catch (err) {
       console.log(
@@ -225,7 +245,12 @@ const StaffBuilder = (props: StaffBuilderProps) => {
   };
 
   const {authId, email} = useAuth();
-
+  const addName = (data: any[]) =>
+    data.map((item: any) => ({
+      ...item,
+      name: `${item?.staffMember.firstName} ${item?.staffMember.lastName}`,
+      _sortName: `${item?.staffMember.firstName?.toLowerCase()} `
+    }));
   const addStaffMember = async () => {
     try {
       if (newMember && newMember.id) {
@@ -279,7 +304,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
     let part1 = user.isSuperAdmin
       ? '/dashboard/manage-institutions'
       : `/dashboard/manage-institutions/institution/${instituteId}`;
-    let part2 = `/manage-users/${profileId}`;
+    let part2 = `/manage-users/${profileId}/staff`;
     // console.log(`${part1}${part2}`);
     history.push(`${part1}${part2}`);
   };
@@ -313,9 +338,11 @@ const StaffBuilder = (props: StaffBuilderProps) => {
         })
         .sort((a: any, b: any) => (a.index > b.index ? 1 : -1));
 
-      setActiveStaffList(staffLists);
+      const sortedList = sortByName(addName(staffLists));
 
-      setCurrentList(staffLists);
+      setActiveStaffList(sortedList);
+
+      setCurrentList(sortedList);
 
       const totalListPages = Math.floor(staffLists.length / pageCount);
 
@@ -451,13 +478,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
         searchTerm={searchInput.value}
       />
     ),
-    institutionName: user.isSuperAdmin && (
-      <div
-        className="cursor-pointer w-auto"
-        onClick={() => redirectToInstitution(item.institution?.id)}>
-        <span>{item.institution?.name}</span>
-      </div>
-    ),
+
     role: (
       <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-sm font-medium bg-gray-200 text-gray-600 w-auto">
         {item.role ? getStaffRole(item.role) : ''}
@@ -504,10 +525,10 @@ const StaffBuilder = (props: StaffBuilderProps) => {
     headers: [
       dictionary['NO'],
       dictionary['NAME'],
-      user.isSuperAdmin && dictionary['INSTITUTION_NAME'],
+
       dictionary['ROLE'],
-      'Login Status',
       dictionary['STATUS'],
+      'Login Status',
       dictionary['ACTION']
     ],
     dataList,
@@ -529,8 +550,12 @@ const StaffBuilder = (props: StaffBuilderProps) => {
           }
         },
         customWidth: {
-          name: 'w-72 -ml-8',
-          no: 'w-20'
+          no: 'w-0.5/10',
+          name: 'w-3/10',
+          role: 'w-2/10',
+          status: 'w-2/10',
+          loginStatus: 'w-2/10',
+          actions: 'w-1.5/10'
         },
         maxHeight: 'max-h-196'
       }
@@ -547,7 +572,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
     } else {
       setSearchInput({...searchInput, isActive: true});
       const filtered = activeStaffList.filter(
-        (_d: any) => filterName.toLowerCase() === _d?.staffMember?.status?.toLowerCase()
+        (_d: any) => filterName.toLowerCase() === _d?.status?.toLowerCase()
       );
       setFilteredList(filtered);
       setFilters(filterName);
@@ -555,8 +580,8 @@ const StaffBuilder = (props: StaffBuilderProps) => {
   };
 
   return (
-    <div className="pt-0 flex m-auto justify-center p-8">
-      <div className="">
+    <div className="mb-2">
+      <div className="px-4">
         <SectionTitleV3
           title={dictionary['TITLE']}
           fontSize="xl"
@@ -567,23 +592,21 @@ const StaffBuilder = (props: StaffBuilderProps) => {
           withButton={
             <div className="flex gap-x-4 w-auto justify-end items-center flex-wrap">
               {!showAddSection ? (
-                !state.user.isSuperAdmin && (
-                  <div className="w-auto flex items-center gap-x-4">
-                    <SearchInput
-                      dataCy="staff-loookup-search"
-                      value={searchInput.value}
-                      onChange={setSearch}
-                      disabled={dataLoading}
-                      onKeyDown={searchStaff}
-                      isActive={searchInput.isActive}
-                      closeAction={removeSearchAction}
-                    />
-                    <AddButton
-                      label={'Staff member'}
-                      onClick={() => showAddStaffSection(!user.isSuperAdmin ? 'SUP' : '')}
-                    />
-                  </div>
-                )
+                <div className="w-auto flex items-center gap-x-4">
+                  <SearchInput
+                    dataCy="staff-loookup-search"
+                    value={searchInput.value}
+                    onChange={setSearch}
+                    disabled={dataLoading}
+                    onKeyDown={searchStaff}
+                    isActive={searchInput.isActive}
+                    closeAction={removeSearchAction}
+                  />
+                  <AddButton
+                    label={'Staff member'}
+                    onClick={() => showAddStaffSection(!user.isSuperAdmin ? 'SUP' : '')}
+                  />
+                </div>
               ) : (
                 <Buttons
                   btnClass="ml-4 py-1"

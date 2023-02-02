@@ -9,6 +9,7 @@ import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
 import ErrorNote from '../Admin/UserManagement/ErrorNote';
 import SuccessMessage from '../Admin/UserManagement/SuccessMessage';
+import {UserPageState} from 'API';
 
 interface ChangePasscodeProps {
   fromWhere?: string;
@@ -35,12 +36,17 @@ const ChangePasscode = ({fromWhere, handleForgotPasscode}: ChangePasscodeProps) 
   });
 
   async function UpdatePersonPasscode(inputPasscode: string) {
+    const time = new Date().toISOString();
+
     const input = {
       id: state.user.id,
       authId: state.user.authId,
       firstName: state.user.firstName,
       email: state.user.email,
-      passcode: inputPasscode
+      passcode: inputPasscode,
+      lastLoggedIn: time,
+      pageState: UserPageState.LOGGED_IN,
+      lastPageStateUpdate: time
     };
     try {
       const update: any = await API.graphql(

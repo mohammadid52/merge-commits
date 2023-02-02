@@ -1,5 +1,5 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   AiOutlineArrowDown,
   AiOutlineArrowUp,
@@ -9,7 +9,7 @@ import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {useHistory} from 'react-router-dom';
 
 import {getAsset} from 'assets';
-import {GlobalContext, useGlobalContext} from 'contexts/GlobalContext';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
 import * as queries from 'graphql/queries';
 
@@ -135,14 +135,6 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
       _removeSearchAction();
     }
   };
-
-  useEffect(() => {
-    if (state?.temp?.user?.id)
-      dispatch({
-        type: 'UPDATE_TEMP_USER',
-        payload: {user: null}
-      });
-  }, [state?.temp?.user]);
 
   const setSortingValue = (str: string, name: string) => {
     setSortingType({
@@ -579,12 +571,13 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
           }
         },
         customWidth: {
-          name: 'w-72 -ml-12',
-          status: 'w-28',
-          flow: 'w-40',
-          role: 'w-24',
-          location: 'w-24',
-          actions: 'w-48'
+          no: 'w-12',
+          name: 'w-72 ',
+          status: 'w-36',
+          flow: 'w-36',
+          role: 'w-36',
+          location: 'w-72',
+          actions: 'w-aut'
         },
         maxHeight: 'max-h-none',
         pattern: 'striped',
@@ -609,7 +602,7 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
   };
 
   return (
-    <div className={`w-full h-full`}>
+    <div className="mb-2">
       {/* Header Section */}
       {!isInInstitute && <BreadCrums items={breadCrumsList} />}
       <div className="">
@@ -617,7 +610,7 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
           fontSize="xl"
           fontStyle="semibold"
           extraContainerClass="px-4"
-          extraClass="leading-6 text-gray-900"
+          extraClass="leading-6 text-gray-900 uppercase"
           borderBottom
           shadowOff
           title={
@@ -703,7 +696,7 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
       </div>
 
       {/* List / Table */}
-      <div className="flex flex-col px-4">
+      <div className="flex flex-col px-4 bg-white">
         <Filters
           loading={loading}
           list={currentList}

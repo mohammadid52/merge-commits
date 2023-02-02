@@ -31,7 +31,13 @@ export const breadcrumbsRoutes = ({
       {
         title: heroSectionTitle,
         url: `${baseUrl}/staff`,
-        last: true
+        last: !Boolean(otherValues.user)
+      },
+      otherValues?.user && {
+        title: otherValues.user.name,
+        url: `${baseUrl}/manage-users/${otherValues.user.id}/staff`,
+        last: Boolean(otherValues.user),
+        goBack: false
       }
     ];
   } else if (
@@ -48,7 +54,8 @@ export const breadcrumbsRoutes = ({
       otherValues?.user && {
         title: otherValues.user.name,
         url: `${baseUrl}/manage-users/${otherValues.user.id}`,
-        last: Boolean(otherValues.user)
+        last: Boolean(otherValues.user),
+        goBack: false
       }
     ];
   } else if (pathname.indexOf('course') > -1) {

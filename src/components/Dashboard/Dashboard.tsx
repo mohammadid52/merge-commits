@@ -131,6 +131,7 @@ export interface DashboardProps {
   completedLessons?: ICompletedLessons[];
   curriculumName?: string;
   institutionId?: string;
+  institute?: any;
 }
 
 export interface ClassroomControlProps extends DashboardProps {

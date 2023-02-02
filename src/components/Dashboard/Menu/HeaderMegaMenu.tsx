@@ -1,7 +1,7 @@
 import React, {useContext, useState} from 'react';
 import {useHistory} from 'react-router-dom';
 
-import {GlobalContext} from 'contexts/GlobalContext';
+import {GlobalContext, useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 
 import Tabs from 'atoms/Tabs';
@@ -9,11 +9,10 @@ import Tabs from 'atoms/Tabs';
 const HeaderMegaMenu = () => {
   const history = useHistory();
   const {
-    clientKey,
     userLanguage,
     state: {user}
-  } = useContext(GlobalContext);
-  const {Institute_info, CommunityDict} = useDictionary(clientKey);
+  } = useGlobalContext();
+  const {Institute_info, CommunityDict} = useDictionary();
 
   const baseUrl =
     user.role === 'SUP'

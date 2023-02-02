@@ -206,6 +206,14 @@ const NavBarRouter = (instProps: any) => {
         )}
       />
       <Route
+        path={`${match.url}/manage-users/:userId/staff`}
+        render={() => (
+          <ErrorBoundary componentName="User">
+            <User instituteId={instProps?.institute?.id} />
+          </ErrorBoundary>
+        )}
+      />
+      <Route
         path={`${match.url}/course-builder`}
         exact
         render={() => (

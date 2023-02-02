@@ -1,9 +1,9 @@
-import React from 'react';
+import useAuth from '@customHooks/useAuth';
+import {PersonStatus, RoomStatus} from 'API';
 import ContentCard from 'atoms/ContentCard';
 import ImageAlternate from 'atoms/ImageAlternative';
-import {filter, orderBy, remove} from 'lodash';
-import {PersonStatus, RoomStatus} from 'API';
-import useAuth from '@customHooks/useAuth';
+import {filter, orderBy} from 'lodash';
+import React from 'react';
 
 interface Teacher {
   firstName: string;
@@ -53,7 +53,6 @@ const TeacherRows = (props: {coTeachersList: Teacher[]; teachersList: Teacher[]}
         {extraFilter && extraFilter.length > 0 ? (
           <ul className="grid grid-cols-1 ">
             {extraFilter.map((teacher, idx: number) => {
-              console.log(teacher);
               return (
                 <li
                   key={`home__teacher-${idx}`}

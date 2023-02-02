@@ -21,12 +21,15 @@ const PageHeaderBar: React.FC<LinkProps> = (linkProps: LinkProps) => {
 
   async function SignOut() {
     try {
+      const time = new Date().toISOString();
+
       const input = {
         id: state.user.id,
         authId: state.user.authId,
         email: state.user.email,
-        lastLoggedOut: new Date().toISOString(),
-        pageState: UserPageState.NOT_LOGGED_IN
+        lastLoggedOut: time,
+        pageState: UserPageState.NOT_LOGGED_IN,
+        lastPageStateUpdate: time
       };
       API.graphql(graphqlOperation(customMutations.updatePersonLogoutTime, {input}));
       await Auth.signOut();

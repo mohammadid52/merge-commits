@@ -160,12 +160,9 @@ const ConfirmCode = () => {
     let code = confirmInput.code;
     toggleLoading(true);
     try {
-      const confirmRes = await Auth.confirmSignUp(username, code);
-      console.log(confirmRes);
-
+      await Auth.confirmSignUp(username, code);
       const user = await Auth.signIn(username, tempPassword);
-      const changePasswordRes = await Auth.changePassword(user, tempPassword, password);
-      console.log(changePasswordRes);
+      await Auth.changePassword(user, tempPassword, password);
       sessionStorage.setItem('accessToken', user.signInUserSession.accessToken.jwtToken);
       dispatch({type: 'LOG_IN', payload: {email: username, authId: user.username}});
       if (isChecked) {

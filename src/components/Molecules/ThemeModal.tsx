@@ -27,7 +27,7 @@ const ThemeModal = ({
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog
-        style={{zIndex: 3000}}
+        style={{zIndex: 999999999}}
         as="div"
         className={`fixed w-auto inset-0 overflow-y-auto`}
         onClose={setOpen}>
