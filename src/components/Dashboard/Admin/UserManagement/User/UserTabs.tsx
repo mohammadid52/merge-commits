@@ -11,14 +11,7 @@ interface IUserTabsProps {
   theme?: any;
 }
 
-const UserTabs = ({
-  tabs,
-  currentTab,
-  viewedUser,
-  setCurrentTab,
-
-  theme
-}: IUserTabsProps) => {
+const UserTabs = ({tabs, currentTab, viewedUser, setCurrentTab}: IUserTabsProps) => {
   const getTabsData = () => {
     if (viewedUser?.role === 'TR' || viewedUser?.role === 'FLW') {
       return tabs.filter((tabObj: any) => tabObj.name !== 'Notebook');
