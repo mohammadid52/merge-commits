@@ -24,6 +24,7 @@ export const TranslationInsideComponent = ({
     setLoading && setLoading(false);
     setContentHeight && setContentHeight(0);
     setFinalSearchResult && setFinalSearchResult(null);
+    setSpanishResult(null);
     setIsSimilar(null);
   };
 
@@ -58,11 +59,31 @@ export const TranslationInsideComponent = ({
       logError(error, {authId, email}, 'TranslationModule @searchFromTable');
     }
   };
+
+  const [spanishResult, setSpanishResult] = useState(null);
+
   const searchFromApi = async () => {
     try {
       const response = await axios.get(
-        `https://api.dictionaryapi.dev/api/v2/entries/en_US/${searchInput.value}`
+        `https://api.dictionaryapi.dev/api/v2/entries/en/${searchInput.value}`
       );
+
+      let spanishResult: any;
+      if (isSpanish) {
+        const response = await axios.get(
+          `https://api.mymemory.translated.net/get?q=${searchInput.value}&langpair=en|es`
+        );
+
+        if (response.data.responseStatus === 200) {
+          const translation = response.data.responseData.translatedText;
+          spanishResult = translation;
+          setSpanishResult(translation);
+        } else {
+          spanishResult = null;
+          setSpanishResult(null);
+        }
+      }
+
       const data = response.data[0];
       const definition = data.meanings[0]?.definitions[0]?.definition || '';
 
@@ -71,7 +92,7 @@ export const TranslationInsideComponent = ({
           ? data.phonetics.find((d: {audio: any}) => Boolean(d.audio))?.audio
           : '';
 
-      return {definition, audio};
+      return {definition, audio, spanishResult};
     } catch (error) {
       console.error(error);
       logError(error, {authId, email}, 'TranslationModule @searchFromApi');
@@ -82,7 +103,11 @@ export const TranslationInsideComponent = ({
     setSearchInput({isActive: true, isTyping: true, value: e.target.value});
   };
 
-  const _addNewDictionary = async (definition: string, audioUrl?: string) => {
+  const _addNewDictionary = async (
+    definition: string,
+    audioUrl?: string,
+    languageTranslation?: string
+  ) => {
     try {
       await addNewDictionary({
         authID: authId,
@@ -94,7 +119,7 @@ export const TranslationInsideComponent = ({
           {
             id: uuidV4(),
             translateLanguage: 'Spanish',
-            languageTranslation: '',
+            languageTranslation: languageTranslation || '',
             languageDefinition: ''
           }
         ]
@@ -123,12 +148,17 @@ export const TranslationInsideComponent = ({
           setIsSimilar(fromTable[0]?.englishPhrase);
         setFinalSearchResult &&
           setFinalSearchResult(fromTable[0]?.englishDefinition || 'No results found');
+        setSpanishResult(fromTable[0]?.translation[0]?.languageTranslation);
       } else {
         const response = await searchFromApi();
         if (Boolean(response)) {
           setFinalSearchResult &&
             setFinalSearchResult(response.definition || 'No results found');
-          await _addNewDictionary(response.definition, response.audio);
+          await _addNewDictionary(
+            response.definition,
+            response.audio,
+            response.spanishResult
+          );
         } else {
           setFinalSearchResult && setFinalSearchResult('No results found');
         }
@@ -153,16 +183,20 @@ export const TranslationInsideComponent = ({
 
   const [isSimilar, setIsSimilar] = useState(null);
 
+  const {language} = useAuth();
+
+  const isSpanish = language === 'ES';
+
   return (
     <>
-      {inClassroom && (
+      {
         <div className="card-body-header theme-bg text-white rounded-t-xl px-4 py-2">
           <h1 className="text-lg text-center tracking-wider font-medium uppercase text-white">
             Translation
           </h1>
         </div>
-      )}
-      <div className={`${inClassroom ? 'p-4' : ''} flex space-y-4 flex-col items-center`}>
+      }
+      <div className={`p-4 flex space-y-4 flex-col items-center`}>
         <input
           onChange={onSearchInputChange}
           placeholder="Search meaning..."
@@ -190,13 +224,20 @@ export const TranslationInsideComponent = ({
                 } `}>
                 {finalSearchResult}
               </p>
+
+              {Boolean(spanishResult && isSpanish) && (
+                <div className="mt-2 pt-2 border-t-0 border-gray-700">
+                  <p>
+                    <span>In Spanish: </span>
+                    {spanishResult}
+                  </p>
+                </div>
+              )}
             </div>
           ) : null}
         </div>
         <div
-          className={`${
-            inClassroom ? 'bottom-0.5 right-1' : 'bottom-0 right-0'
-          } absolute  translation-module__actions flex items-center justify-end space-x-4`}>
+          className={`bottom-0.5 right-1 absolute  translation-module__actions flex items-center justify-end space-x-4`}>
           <Buttons size="small" label={'Cancel'} onClick={onCancel} transparent />
           <Buttons size="small" label={'Search'} onClick={onSearch} />
         </div>
@@ -252,17 +293,19 @@ const TranslationModule = () => {
         onClick={onModuleOpen}
         style={{
           minHeight: loading
-            ? '140px'
+            ? '170px'
             : active && finalSearchResult
-            ? `${120 + contentHeight}px`
+            ? `${150 + contentHeight}px`
             : active && !finalSearchResult
-            ? '120px'
+            ? '150px'
             : 'unset'
         }}
         className={`${
           active ? 'active' : ' '
-        } translation-module__main  p-4 relative transition-all duration-300 bg-gray-800 border-0 border-gray-700 w-auto`}>
-        <AnimatedContainer show={!active}>
+        } translation-module__main relative transition-all duration-300 bg-gray-800 border-0 border-gray-700 w-auto`}>
+        <AnimatedContainer
+          className={active ? '' : 'h-full flex justify-center items-center'}
+          show={!active}>
           {!active && <AiOutlineBook title="Search meaning" className="text-white" />}
         </AnimatedContainer>
 
