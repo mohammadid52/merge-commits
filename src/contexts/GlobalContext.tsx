@@ -1,5 +1,9 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import {UniversalLessonPlan, Dicitionary} from 'API';
+import {
+  FORM_TYPES,
+  GAME_CHANGERS
+} from '@components/Lesson/UniversalLessonBuilder/UI/common/constants';
+import {Dicitionary, UniversalLessonPlan} from 'API';
 import * as mutations from 'graphql/mutations';
 import {isEmpty} from 'lodash';
 import React, {useContext, useEffect, useReducer, useRef} from 'react';
@@ -190,14 +194,37 @@ export const GlobalContextProvider = ({children}: GlobalProps) => {
       ? `
         ${word.translation.map(
           (translation: any) => `<div class="dictionary-popup__languages">
-          <h5>In ${translation.translateLanguage}:</h5>
-          <ul>
-            <li>Translation: ${translation.languageTranslation}</li>
-          </ul>
+          ${
+            translation.languageTranslation && (
+              <h5>
+                In {translation.translateLanguage}:{' '}
+                <span>{translation.languageTranslation}</span>
+              </h5>
+            )
+          }
           </div>`
         )}`
       : ``
   }</div>${word.englishPhrase}</span>`;
+
+  const ignoreComponents = [
+    'paragraph',
+    'notes-form',
+    FORM_TYPES.DOWNLOAD,
+    FORM_TYPES.DOCS,
+    'square',
+    'keyword',
+    GAME_CHANGERS,
+    'video',
+    'custom_video',
+    'image',
+    'links',
+    'highlighter',
+    FORM_TYPES.WRITING_EXERCISE,
+    `${FORM_TYPES.WRITING_EXERCISE}-content`,
+    `${FORM_TYPES.POEM}-content`,
+    FORM_TYPES.POEM
+  ];
 
   const scanLessonAndFindComplicatedWord = (
     lessonPlan: UniversalLessonPlan[],
@@ -213,7 +240,9 @@ export const GlobalContextProvider = ({children}: GlobalProps) => {
                 ...pgContent,
                 partContent:
                   pgContent?.partContent?.map((ptContent: any) => {
-                    if (ptContent.type === 'paragraph') return {...ptContent};
+                    if (ignoreComponents.includes(ptContent.type)) {
+                      return {...ptContent};
+                    }
 
                     return {
                       ...ptContent,

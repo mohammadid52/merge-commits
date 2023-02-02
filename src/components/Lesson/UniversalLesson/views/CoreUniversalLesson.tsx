@@ -37,25 +37,29 @@ const CoreUniversalLesson = ({
       ? `Go to ${lessonPlan[dir === 'next' ? currentPage + 1 : currentPage - 1].title}`
       : `${dir === 'next' ? 'Next' : 'Prev'}`;
 
-  const {isStudent, authId, email} = useAuth();
+  const {isStudent} = useAuth();
   const getRoomData = getLocalStorageData('room_info');
 
   // ~~~~~~~~~~~~ ARROW BUTTONS ~~~~~~~~~~~~ //
   const history = useHistory();
   const match = useRouteMatch();
 
+  const goNext = () => {
+    history.push(`${match.url}/${currentPage + 1}`);
+    lessonDispatch({
+      type: 'SET_CURRENT_PAGE',
+      payload: currentPage + 1
+    });
+  };
+
   const handleForward = (forward = true) => {
     if (!isTeacher) {
       if (!forward) {
-        handleBack();
+        goBack();
       } else {
         if (!userAtEnd()) {
           if (canContinue) {
-            history.push(`${match.url}/${currentPage + 1}`);
-            lessonDispatch({
-              type: 'SET_CURRENT_PAGE',
-              payload: currentPage + 1
-            });
+            goNext();
           } else {
             invokeRequiredField && invokeRequiredField();
           }
@@ -68,30 +72,16 @@ const CoreUniversalLesson = ({
         }
       }
     } else {
-      history.push(`${match.url}/${currentPage + 1}`);
-      lessonDispatch({
-        type: 'SET_CURRENT_PAGE',
-        payload: currentPage + 1
-      });
+      goNext();
     }
   };
 
-  const handleBack = () => {
-    if (!isTeacher) {
-      if (userAtEnd()) {
-        history.push(`${match.url}/${currentPage - 1}`);
-        lessonDispatch({
-          type: 'SET_CURRENT_PAGE',
-          payload: currentPage - 1
-        });
-      }
-    } else {
-      history.push(`${match.url}/${currentPage - 1}`);
-      lessonDispatch({
-        type: 'SET_CURRENT_PAGE',
-        payload: currentPage - 1
-      });
-    }
+  const goBack = () => {
+    history.push(`${match.url}/${currentPage - 1}`);
+    lessonDispatch({
+      type: 'SET_CURRENT_PAGE',
+      payload: currentPage - 1
+    });
   };
 
   return (

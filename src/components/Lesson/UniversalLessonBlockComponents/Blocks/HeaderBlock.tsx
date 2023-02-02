@@ -1,8 +1,7 @@
-import React, {useContext} from 'react';
-import {GlobalContext} from 'contexts/GlobalContext';
 import {RowWrapperProps} from 'interfaces/UniversalLessonBuilderInterfaces';
-import './styles/HeaderStyles.scss';
+import React from 'react';
 import {ParagraphBlock} from './ParagraphBlock';
+import './styles/HeaderStyles.scss';
 
 interface HeaderBlockProps extends RowWrapperProps {
   id?: string;
@@ -14,10 +13,6 @@ interface HeaderBlockProps extends RowWrapperProps {
 export const HeaderBlock = (props: HeaderBlockProps) => {
   const {id, value, type, classString, pagePartId} = props;
 
-  const {
-    state: {lessonPage: {themeTextColor = ''} = {}}
-  } = useContext(GlobalContext);
-
   const composeHeader = (inputID: string, inputValue: any, inputType: string) => {
     return (
       <div
@@ -25,7 +20,7 @@ export const HeaderBlock = (props: HeaderBlockProps) => {
         dangerouslySetInnerHTML={{
           __html: inputValue.value
         }}
-        className={`relative ${classString} w-full flex font-medium   text-left flex-row items-center ${themeTextColor} mt-4 mb-2"`}></div>
+        className={`relative ${classString} w-full flex font-medium   text-left flex-row items-center  mt-4 mb-2"`}></div>
     );
   };
 

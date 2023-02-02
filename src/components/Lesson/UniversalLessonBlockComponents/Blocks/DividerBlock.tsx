@@ -9,11 +9,10 @@ const DividerBlock = ({value, bgWhite}: {value: any; bgWhite?: boolean}) => {
       <div className="relative flex w-auto justify-center">
         {value && (
           <span
+            dangerouslySetInnerHTML={{__html: value}}
             className={`px-2 w-auto text-sm transition-all duration-200  text-gray-400 bg-white ${
               bgWhite ? 'dark:bg-white' : 'dark:bg-dark-gray'
-            } `}>
-            {value}
-          </span>
+            } `}></span>
         )}
       </div>
     </div>

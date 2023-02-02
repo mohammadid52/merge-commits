@@ -45,20 +45,18 @@ const TableBlock = ({
                 style={{
                   minHeight: getMaxWordLenOfHeader(rowList) >= 20 ? '5rem' : 'unset'
                 }}
-                className={`bg-${tableBg} text-${tableText} uppercase border-b-0 border-${tableBg} px-6 py-3 text-left text-xs font-medium  tracking-wider`}>
-                {rowItem.value || '--'}
-              </h4>
+                dangerouslySetInnerHTML={{__html: rowItem.value || '<p>--</p>'}}
+                className={`bg-${tableBg} text-${tableText} uppercase border-b-0 border-${tableBg} px-6 py-3 text-left text-xs font-medium  tracking-wider`}></h4>
               {map(rowItem.options, (colItem, colIndex: number) => {
                 return (
                   <div
                     key={colItem.id}
+                    dangerouslySetInnerHTML={{__html: colItem.text || '<p>--</p>'}}
                     className={`px-6 py-4 ${genThemeClass(
                       colIndex
                     )} whitespace-nowrap text-sm ${
                       dark ? 'text-white' : 'text-gray-600'
-                    }`}>
-                    {colItem.text || '--'}
-                  </div>
+                    }`}></div>
                 );
               })}
             </div>
