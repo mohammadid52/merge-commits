@@ -44,13 +44,13 @@ const HeaderMegaMenu = () => {
           active: location.pathname.indexOf('staff') > -1
         },
         (user.role === 'SUP' || user.role === 'ADM') && {
-          title: 'User Registry',
+          title: TABS['USER_REGISTRY'],
           key: 'user_registry',
           redirectionUrl: `${baseUrl}/manage-users`,
           active: location.pathname.indexOf('manage-users') > -1
         },
         (user.role === 'ADM' || user.role === 'FLW' || user.role === 'TR') && {
-          title: 'Register New User',
+          title: TABS['REGISTER_NEW_USER'],
           key: 'register',
           redirectionUrl: `${baseUrl}/register-user`,
           active: location.pathname.indexOf('register-user') > -1

@@ -950,7 +950,9 @@ const Institute_info: any = {
     TABS: {
       SERVICE_PROVIDER: 'Service Providers',
       STAFF: 'Staff Manager',
+      USER_REGISTRY: 'User Registry',
       CLASS_MANAGER: 'Classroom Builder',
+      REGISTER_NEW_USER: 'Register New User',
       LIVE_CLASS_ROOM: 'Live Classroom',
       COURSE_MANAGER: 'Course Builder',
       COURSES: 'Course Manager',
@@ -988,6 +990,8 @@ const Institute_info: any = {
       STAFF: 'Staff Manager',
       CLASS_MANAGER: 'Classroom Builder',
       LIVE_CLASS_ROOM: 'Live Classroom',
+      USER_REGISTRY: 'User Registry',
+      REGISTER_NEW_USER: 'Register New User',
       COURSE_MANAGER: 'Course Builder',
       COURSES: 'Course Manager',
       UNITS: 'Unit Manager',
