@@ -1,3 +1,4 @@
+//
 const iconoclast_assets: any = {
   appTitle: 'Iconoclast Artists',
   main_logo:
