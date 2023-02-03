@@ -75,7 +75,8 @@ const InstitutionsHome: React.FC<DashboardProps> = (props: DashboardProps) => {
   }, [pathname]);
 
   const {user} = useAuth();
-  const institute = user?.associateInstitute[0]?.institution;
+  const institute =
+    user && user.associateInstitute && user?.associateInstitute[0]?.institution;
 
   return (
     <div className={`w-full h-full flex justify-center`}>

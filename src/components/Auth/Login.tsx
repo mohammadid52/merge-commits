@@ -70,9 +70,6 @@ const Login = ({updateAuthState}: LoginProps) => {
         );
         userInfo = userInfo.data.getPerson;
 
-        setUser({role: userInfo.role});
-        setMessage({show: false, message: '', type: ''});
-        setIsLoginSuccess(true);
         let instInfo: any = {};
         if (userInfo.role !== 'ST') {
           instInfo = await API.graphql(
@@ -92,8 +89,14 @@ const Login = ({updateAuthState}: LoginProps) => {
           image: userInfo.image,
           lastEmotionSubmission: userInfo?.lastEmotionSubmission,
           removedFrom: userInfo?.removedFrom,
-          status: userInfo?.status
+          status: userInfo?.status,
+          associateInstitute:
+            instInfo?.data?.listStaff?.items.filter((item: any) => item.institution) || []
         };
+
+        setUser({role: userData.role, associateInstitute: userData.associateInstitute});
+        setIsLoginSuccess(true);
+        setMessage({show: false, message: '', type: ''});
 
         dispatch({
           type: 'SET_USER',
@@ -288,10 +291,6 @@ const Login = ({updateAuthState}: LoginProps) => {
       );
       userInfo = userInfo.data.getPerson;
 
-      setUser({role: userInfo.role});
-      setMessage({show: false, message: '', type: ''});
-      setIsLoginSuccess(true);
-
       const userData = {
         id: userInfo.id,
         firstName: userInfo.preferredName || userInfo.firstName,
@@ -304,6 +303,11 @@ const Login = ({updateAuthState}: LoginProps) => {
 
         status: userInfo?.status
       };
+
+      setUser({role: userInfo.role});
+      setMessage({show: false, message: '', type: ''});
+      setIsLoginSuccess(true);
+
       dispatch({
         type: 'SET_USER',
         payload: {...userData}
@@ -359,6 +363,7 @@ const Login = ({updateAuthState}: LoginProps) => {
 
   return (
     <AuthCard
+      showFooter={!isLoginSuccess}
       message={message}
       // title={createPassword ? 'Create your password' : 'Login'}
       subtitle={
@@ -369,7 +374,9 @@ const Login = ({updateAuthState}: LoginProps) => {
           : 'Welcome back!'
       }>
       <AnimatedContainer delay="1s" duration="500" show={Boolean(isLoginSuccess)}>
-        {Boolean(isLoginSuccess) && <QuickTiles user={user} />}
+        {Boolean(isLoginSuccess) && (
+          <QuickTiles updateAuthState={() => updateAuthState(true)} user={user} />
+        )}
       </AnimatedContainer>
 
       <AnimatedContainer show={!isLoginSuccess}>
