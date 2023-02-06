@@ -3,6 +3,7 @@
   "description": "Demo Lesson for Iconoclast Artists @ SELReady",
   "version": "0.0.1",
   "private": true,
+  "type": "module",
   "scripts": {
     "set-dictionary": "cp ./src/dictionary/dictionary.iconoclast.tsx ./src/dictionary/dictionary.demo.tsx && cp ./src/dictionary/dictionary.iconoclast.tsx ./src/dictionary/dictionary.curate.tsx",
     "build": "node --max-old-space-size=8192 ./node_modules/webpack/bin/webpack.js --config webpack.prod.js",
@@ -22,7 +23,7 @@
     "push:pc": "sh ./scripts/push-pc.sh",
     "push": "sh ./scripts/push.sh",
     "pull:uat": "sh ./scripts/pull-uat.sh",
-    "sync-aws": "sh ./scripts/sync-aws.sh" 
+    "sync-aws": "sh ./scripts/sync-aws.sh"
   },
   "devDependencies": {
     "@aws-sdk/client-s3": "^3.37.0",

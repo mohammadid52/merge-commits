@@ -90,6 +90,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
         return 'Builder';
       case 'ADM':
         return 'Admin';
+
       case 'SUP':
         return 'Super Admin';
     }
@@ -411,12 +412,6 @@ const StaffBuilder = (props: StaffBuilderProps) => {
     }
   };
 
-  const redirectToInstitution = (institutionId: string) => {
-    history.push(
-      `/dashboard/manage-institutions/institution/${institutionId}/edit?back=${match.url}`
-    );
-  };
-
   const [filteredList, setFilteredList] = useState([...activeStaffList]);
 
   const {
@@ -481,7 +476,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
 
     role: (
       <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-sm font-medium bg-gray-200 text-gray-600 w-auto">
-        {item.role ? getStaffRole(item.role) : ''}
+        {item.staffMember.role ? getStaffRole(item.staffMember.role) : ''}
       </span>
     ),
     loginStatus: <UserLookupLocation isStaff show item={item.staffMember} idx={index} />,
