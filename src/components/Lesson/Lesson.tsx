@@ -272,11 +272,11 @@ const Lesson = () => {
         }
       }
 
-      const currentPage = JSON.parse(pages).currentPage;
+      const currentPage = JSON.parse(pages)?.currentPage || 0;
       return currentPage;
     } catch (error) {
       console.error(error);
-      logError(error, {authId, email}, 'Lesson @getLessonCurrentPage', error.toString());
+      logError(error, {authId, email}, 'Lesson @getLessonCurrentPage', 'CONFIGURATION');
     }
   };
 

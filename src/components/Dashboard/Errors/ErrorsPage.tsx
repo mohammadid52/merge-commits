@@ -80,7 +80,7 @@ const ErrorItem = ({
       </div>
       <h2 className=" text-sm font-medium text-gray-900">{error.email}</h2>
       <h4 className="text-sm text-red-600 font-light h-24 overflow-auto py-2">
-        {error.errorType}
+        {error.error || error.errorType}
       </h4>
       <h6 className="text-sm text-gray-900 font-light overflow-auto py-2 mb-4">
         {error.componentName}

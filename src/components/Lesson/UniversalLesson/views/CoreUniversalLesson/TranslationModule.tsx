@@ -74,6 +74,11 @@ export const TranslationInsideComponent = ({
           `https://api.mymemory.translated.net/get?q=${searchInput.value}&langpair=en|es`
         );
 
+        if (response.data.responseStatus === 404) {
+          spanishResult = null;
+          setSpanishResult(null);
+        }
+
         if (response.data.responseStatus === 200) {
           const translation = response.data.responseData.translatedText;
           spanishResult = translation;
