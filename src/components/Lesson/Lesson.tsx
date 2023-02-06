@@ -86,9 +86,11 @@ const Lesson = () => {
 
         setLoaded(true);
       }
-    } catch (e) {
+    } catch (error) {
       setLoaded(false);
-      console.error('error getting lesson - ', lessonID, ' ', e);
+      logError(error, {authId, email}, 'Lesson @getSyllabusLesson', error.toString());
+
+      console.error('error getting lesson - ', lessonID, ' ', error);
     }
   };
 
@@ -258,19 +260,22 @@ const Lesson = () => {
       if (personLessonData) {
         pages = personLessonData.pages;
       } else {
-        if (personLessonData.id) {
-          const getLessonRatingDetails: any = await API.graphql(
-            graphqlOperation(queries.getPersonLessonsData, {
-              id: personLessonData.id
-            })
-          );
-          pages = getLessonRatingDetails.data.getPersonLessonsData.pages;
+        if (personLessonData !== null && personLessonData !== undefined) {
+          if (personLessonData.id) {
+            const getLessonRatingDetails: any = await API.graphql(
+              graphqlOperation(queries.getPersonLessonsData, {
+                id: personLessonData.id
+              })
+            );
+            pages = getLessonRatingDetails.data.getPersonLessonsData.pages;
+          }
         }
       }
 
       const currentPage = JSON.parse(pages).currentPage;
       return currentPage;
     } catch (error) {
+      console.error(error);
       logError(error, {authId, email}, 'Lesson @getLessonCurrentPage', error.toString());
     }
   };
@@ -349,8 +354,9 @@ const Lesson = () => {
       const response = getUserLocation.data.getPersonLocation;
 
       return response;
-    } catch (e) {
-      // console.error('createPersonLocation - ', e);
+    } catch (error) {
+      console.error('createPersonLocation - ', error);
+      logError(error, {authId, email}, 'Lesson @getPersonLocation', error.toString());
     } finally {
       setGetted(true);
     }
@@ -399,8 +405,10 @@ const Lesson = () => {
       };
       setPersonLocationObj(newLocationObj);
       setLocalStorageData('person_location', newLocationObj);
-    } catch (e) {
-      console.log('createPersonLocation failed', e, newLocation);
+    } catch (error) {
+      logError(error, {authId, email}, 'Lesson @createPersonLocation', error.toString());
+
+      console.log('createPersonLocation failed', error, newLocation);
       // console.error('createPersonLocation - ', e);
     } finally {
       setCreated(true);
@@ -436,6 +444,7 @@ const Lesson = () => {
         console.log('no existing person location object found.. creating new... ');
         createPersonLocation();
       } else {
+        logError(e, {authId, email}, 'Lesson @updatePersonLocation', e.toString());
         console.error('updatePersonLocation - ', e, locationUpdateProps);
       }
     }
@@ -457,6 +466,8 @@ const Lesson = () => {
         pageState
       });
     } catch (e) {
+      logError(e, {authId, email}, 'Lesson @leaveRoomLocation', e.toString());
+
       console.error('error deleting location record - ', e);
     } finally {
       setCleared(true);
@@ -565,6 +576,8 @@ const Lesson = () => {
         await createPersonLessonsData();
       }
     } catch (e) {
+      logError(e, {authId, email}, 'Lesson @fetchLessonPersonData', e.toString());
+
       console.error('listLessonPersonData: ', e);
     } finally {
       setPersonLoading(false);
@@ -598,6 +611,13 @@ const Lesson = () => {
         }
       }
     } catch (error) {
+      logError(
+        error,
+        {authId, email},
+        'Lesson @handleMutationOnPageChange',
+        error.toString()
+      );
+
       console.error(
         '🚀 ~ file: SurveyApp.tsx ~ line 652 ~ handleSurveyMutateData ~ error',
         error

@@ -82,7 +82,7 @@ const ErrorItem = ({
       <h4 className="text-sm text-red-600 font-light h-24 overflow-auto py-2">
         {error.errorType}
       </h4>
-      <h6 className="text-sm text-gray-900 font-light overflow-auto py-2">
+      <h6 className="text-sm text-gray-900 font-light overflow-auto py-2 mb-4">
         {error.componentName}
       </h6>
 
@@ -116,12 +116,22 @@ const ErrorsPage = () => {
     return <Redirect to={'/dashboard/home'} />;
   }
 
+  let date = new Date();
+  date.setMonth(date.getMonth() - 1);
+
   const {data, setData, isLoading, isFetched} = useGraphqlQuery<
     ListErrorLogsQueryVariables,
     ErrorLog[]
   >(
     'listErrorLogs',
-    {limit: 200},
+    {
+      limit: 200,
+      filter: {
+        errorTime: {
+          gt: date.toISOString()
+        }
+      }
+    },
     {
       loopOnNextToken: true,
       enabled: checkIfAdmin(),
