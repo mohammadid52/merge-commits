@@ -54,10 +54,12 @@ const InstitutionsHome: React.FC<DashboardProps> = (props: DashboardProps) => {
       const splitUrl = pathname.split('/lessons/')?.length
         ? pathname.split('/lessons/')[1]
         : '';
-      if (splitUrl.indexOf('add') === -1) {
+
+      const splitted = splitUrl.split('/');
+      if (splitUrl.indexOf('add') === -1 && splitted.length >= 0) {
         const result: any = await API.graphql(
           graphqlOperation(customQueries.getUniversalLessonBasicDetails, {
-            id: splitUrl.split('/')[0]
+            id: splitted[0]
           })
         );
         setLessonData(result.data?.getUniversalLesson);
@@ -187,17 +189,19 @@ const InstitutionsHome: React.FC<DashboardProps> = (props: DashboardProps) => {
           )} // Curricular information view.
         />
         {pathname.indexOf('/manage-institutions/institution') === -1 && (
-          <div className="">
-            <BreadcrumbsWithBanner forInstitution bannerImage={bannerImage} />
-            <div className="px-2 py-8 md:px-4 lg:p-8">
-              {/* <PageWrapper> */}
-              <PageWrapper>
-                <NavBarRouter institute={institute} />
-                {/* </PageWrapper> */}
-                <InstitutionProfile institute={institute} />
-              </PageWrapper>
+          <ErrorBoundary componentName="InstitutionProfile">
+            <div className="">
+              <BreadcrumbsWithBanner forInstitution bannerImage={bannerImage} />
+              <div className="px-2 py-8 md:px-4 lg:p-8">
+                {/* <PageWrapper> */}
+                <PageWrapper>
+                  <NavBarRouter institute={institute} />
+                  {/* </PageWrapper> */}
+                  <InstitutionProfile institute={institute} />
+                </PageWrapper>
+              </div>
             </div>
-          </div>
+          </ErrorBoundary>
         )}
       </Switch>
     </div>

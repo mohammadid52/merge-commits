@@ -122,7 +122,7 @@ const Lesson = () => {
   useEffect(() => {
     if (!personLoading && !pageStateUpdated) {
       const pages = personLessonData?.pages || '{}';
-      const lessonProgress = JSON.parse(pages).lessonProgress || 0;
+      const lessonProgress = JSON.parse(pages)?.lessonProgress || 0;
 
       if (PAGES) {
         lessonDispatch({
@@ -256,8 +256,8 @@ const Lesson = () => {
 
   const getLessonCurrentPage = async () => {
     try {
-      let pages: any;
-      if (personLessonData) {
+      let pages: any = '{}';
+      if (personLessonData !== null && personLessonData !== undefined) {
         pages = personLessonData.pages;
       } else {
         if (personLessonData !== null && personLessonData !== undefined) {

@@ -61,14 +61,16 @@ const AuthCard = ({
         {/* Left image ends here */}
         {/* Right image starts here */}
         <div className=" bg-white   flex items-center justify-center">
-          <div className="relative h-full transition-all  flex flex-col justify-center items-center p-8 w-8/10">
-            <div className="h-auto mb-4 transition-all ">
-              <img
-                className=""
-                src={getAsset(clientKey, 'login_page_logo')}
-                alt="login_page_logo"
-              />
-            </div>
+          <div className="relative h-full transition-all  flex flex-col justify-center items-center p-8">
+            {showFooter && (
+              <div className="h-auto mb-4 transition-all ">
+                <img
+                  className=""
+                  src={getAsset(clientKey, 'login_page_logo')}
+                  alt="login_page_logo"
+                />
+              </div>
+            )}
             {title && (
               <h3 className="transition-all text-left mt-4 mb-1 leading-5 text-lg  text-black font-medium tracking-wide">
                 {title}

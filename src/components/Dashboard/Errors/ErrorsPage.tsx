@@ -1,6 +1,8 @@
 import Buttons from '@components/Atoms/Buttons';
 import Label from '@components/Atoms/Form/Label';
 import Loader from '@components/Atoms/Loader';
+import PageWrapper from '@components/Atoms/PageWrapper';
+import ModalPopUp from '@components/Molecules/ModalPopUp';
 import DotMenu from '@components/TeacherView/ClassRoster/RosterRow/DotMenu';
 import {useGlobalContext} from '@contexts/GlobalContext';
 import useAuth from '@customHooks/useAuth';
@@ -23,8 +25,10 @@ import {Redirect} from 'react-router';
 const ErrorItem = ({
   error,
   updateStatus,
-  idx
+  idx,
+  setShowModal
 }: {
+  setShowModal: React.Dispatch<React.SetStateAction<{show: boolean; message: string}>>;
   updateStatus: (id: string, status: ErrorStatus) => void;
   error: ErrorLog;
   idx: number;
@@ -43,6 +47,16 @@ const ErrorItem = ({
     }
   };
 
+  const outputError =
+    error.error !== '' && error.error !== '{}' ? error.error : error.errorType;
+
+  const stackItem = {
+    label: 'see stack details',
+    action: () => {
+      setShowModal({show: true, message: outputError});
+    }
+  };
+
   const errorStatus = error.status;
 
   const closedItem = {
@@ -54,7 +68,7 @@ const ErrorItem = ({
 
   const menuItems =
     errorStatus === ErrorStatus.PENDING
-      ? [reviewItem, closedItem]
+      ? [reviewItem, closedItem, stackItem]
       : errorStatus === ErrorStatus.REVIEW
       ? [pendingItem, closedItem]
       : [pendingItem, reviewItem];
@@ -80,7 +94,7 @@ const ErrorItem = ({
       </div>
       <h2 className=" text-sm font-medium text-gray-900">{error.email}</h2>
       <h4 className="text-sm text-red-600 font-light h-24 overflow-auto py-2">
-        {error.error || error.errorType}
+        {outputError}
       </h4>
       <h6 className="text-sm text-gray-900 font-light overflow-auto py-2 mb-4">
         {error.componentName}
@@ -142,6 +156,8 @@ const ErrorsPage = () => {
     }
   );
 
+  const [showModal, setShowModal] = useState({show: false, message: ''});
+
   const [filteredList, setFilteredList] = useState([...data]);
 
   useEffect(() => {
@@ -189,63 +205,75 @@ const ErrorsPage = () => {
     .length;
 
   return (
-    <div className="flex flex-col">
-      <div className="overflow-x-auto">
-        <div className="py-2 my-8 inline-block min-w-full sm:px-6 lg:px-8">
-          <div>
-            <Label label="Filters" />
-            <div className="flex gap-x-4 mb-4 mt-2 items-center">
-              <Buttons
-                onClick={() => updateFilter(ErrorStatus.PENDING)}
-                transparent={filters !== ErrorStatus.PENDING}
-                label={'Pending'}
-              />
-              <Buttons
-                onClick={() => updateFilter(ErrorStatus.CLOSED)}
-                transparent={filters !== ErrorStatus.CLOSED}
-                label={'Closed'}
-              />
-              <Buttons
-                onClick={() => updateFilter(ErrorStatus.REVIEW)}
-                transparent={filters !== ErrorStatus.REVIEW}
-                label={'Review'}
-              />
-            </div>
-          </div>
-
-          <div className="overflow-hidden">
-            {isLoading ? null : (
-              <h5 className="text-base mb-4 text-gray-800">
-                {pendingLength} pending errors - total {data.length} errors
-              </h5>
-            )}
-
-            {isLoading ? (
-              <Loader withText="loading error logs" animation />
-            ) : filteredList.length > 0 ? (
-              <div className="grid grid-cols-2 xl:grid-cols-4 2xl:grid-cols-5 gap-8">
-                {filteredList.map((error, idx) => (
-                  <ErrorItem
-                    idx={idx}
-                    updateStatus={updateStatus}
-                    error={error}
-                    key={idx}
-                  />
-                ))}
+    <>
+      <div className="flex flex-col">
+        <div className="overflow-x-auto">
+          <div className="py-2 my-8 inline-block min-w-full sm:px-6 lg:px-8">
+            <div>
+              <Label label="Filters" />
+              <div className="flex gap-x-4 mb-4 mt-2 items-center">
+                <Buttons
+                  onClick={() => updateFilter(ErrorStatus.PENDING)}
+                  transparent={filters !== ErrorStatus.PENDING}
+                  label={'Pending'}
+                />
+                <Buttons
+                  onClick={() => updateFilter(ErrorStatus.CLOSED)}
+                  transparent={filters !== ErrorStatus.CLOSED}
+                  label={'Closed'}
+                />
+                <Buttons
+                  onClick={() => updateFilter(ErrorStatus.REVIEW)}
+                  transparent={filters !== ErrorStatus.REVIEW}
+                  label={'Review'}
+                />
               </div>
-            ) : (
-              <p className="min-h-56 flex items-center w-full justify-center text-gray-500">
-                {filters !== undefined
-                  ? `No errors found for status - ${filters}`
-                  : 'Woahhh.. no errors.. its good.'}
-              </p>
-            )}
-            {/* </tbody> */}
-            {/* </table> */}
+            </div>
+
+            <div className="overflow-hidden">
+              {isLoading ? null : (
+                <h5 className="text-base mb-4 text-gray-800">
+                  {pendingLength} pending errors - total {data.length} errors
+                </h5>
+              )}
+
+              {isLoading ? (
+                <Loader withText="loading error logs" animation />
+              ) : filteredList.length > 0 ? (
+                <div className="grid grid-cols-2 xl:grid-cols-4 2xl:grid-cols-5 gap-8">
+                  {filteredList.map((error, idx) => (
+                    <ErrorItem
+                      idx={idx}
+                      setShowModal={setShowModal}
+                      updateStatus={updateStatus}
+                      error={error}
+                      key={idx}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <p className="min-h-56 flex items-center w-full justify-center text-gray-500">
+                  {filters !== undefined
+                    ? `No errors found for status - ${filters}`
+                    : 'Woahhh.. no errors.. its good.'}
+                </p>
+              )}
+              {/* </tbody> */}
+              {/* </table> */}
+            </div>
           </div>
         </div>
       </div>
-    </div>
+
+      {showModal.show && (
+        <ModalPopUp
+          closeAction={() => {
+            setShowModal({show: false, message: ''});
+          }}
+          message={showModal.message}
+        />
+      )}
+    </>
   );
 };
 

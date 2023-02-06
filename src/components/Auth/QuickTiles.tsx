@@ -1,3 +1,4 @@
+import {useGlobalContext} from '@contexts/GlobalContext';
 import useDictionary from '@customHooks/dictionary';
 import {general} from 'assets';
 import React from 'react';
@@ -11,6 +12,8 @@ const QuickTiles = ({
   updateAuthState: () => void;
 }) => {
   const {Institute_info, CommunityDict} = useDictionary();
+
+  const {checkIfAdmin} = useGlobalContext();
 
   const TABS = Institute_info[user?.userLanguage || 'EN']['TABS'];
   const TABS2 = CommunityDict[user?.userLanguage || 'EN']['TABS'];
@@ -58,8 +61,20 @@ const QuickTiles = ({
       title: TABS['RESEARCH_AND_ANALYTICS'],
       url: `${baseUrl}/research-and-analytics`,
       imageUrl: general.quickTiles.analyticsManager
+    },
+    checkIfAdmin() && {
+      id: 6,
+      title: TABS['ERRORS'],
+      url: `/dashboard/errors`,
+      imageUrl: general.quickTiles.errors
+    },
+    checkIfAdmin() && {
+      id: 6,
+      title: TABS['UPLOAD_LOGS'],
+      url: `/dashboard/upload-logs`,
+      imageUrl: general.quickTiles.uploadLogs
     }
-  ];
+  ].filter(Boolean);
   const menuForStudents = [
     {
       id: 0,
@@ -97,7 +112,10 @@ const QuickTiles = ({
   const menu = user.role === 'ST' ? menuForStudents : menuForNonStudents;
 
   return (
-    <div className="grid quick-tiles grid-cols-2 gap-6 transition-all min-h-72">
+    <div
+      className={`grid quick-tiles  ${
+        menu.length > 6 ? 'grid-cols-3' : 'grid-cols-2'
+      } gap-6 transition-all min-h-72`}>
       {menu.map((item) => (
         <div
           onClick={() => goTo(item.url)}
