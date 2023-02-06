@@ -1,7 +1,6 @@
 import Buttons from '@components/Atoms/Buttons';
 import Label from '@components/Atoms/Form/Label';
 import Loader from '@components/Atoms/Loader';
-import PageWrapper from '@components/Atoms/PageWrapper';
 import ModalPopUp from '@components/Molecules/ModalPopUp';
 import DotMenu from '@components/TeacherView/ClassRoster/RosterRow/DotMenu';
 import {useGlobalContext} from '@contexts/GlobalContext';
