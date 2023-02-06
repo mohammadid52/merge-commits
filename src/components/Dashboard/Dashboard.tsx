@@ -254,7 +254,7 @@ const Dashboard = (props: DashboardProps) => {
         sessionStorage.removeItem('accessToken');
         updateAuthState(false);
       }
-      logError(error, {authId: userEmail, email: userAuthId}, 'Dashboard @getUser');
+      logError(error, {authId: userAuthId, email: userEmail}, 'Dashboard @getUser');
       console.error('Dashboard - getUser(): ', error);
     }
   }
@@ -367,7 +367,11 @@ const Dashboard = (props: DashboardProps) => {
 
       setHomeDataForTeachers(arrayOfResponseObjects);
     } catch (error) {
-      logError(error, {authId: stateUser?.authId, email: stateUser?.email}, 'Dashboard');
+      logError(
+        error,
+        {authId: stateUser?.authId, email: stateUser?.email},
+        'Dashboard @getDashboardDataForTeachers'
+      );
       console.error('getDashboardDataForTeachers -> ', error);
     } finally {
       // need to do some cleanup
@@ -479,7 +483,11 @@ const Dashboard = (props: DashboardProps) => {
         }
       });
     } catch (e) {
-      logError(e, {authId: stateUser?.authId, email: stateUser?.email}, 'Dashboard');
+      logError(
+        e,
+        {authId: stateUser?.authId, email: stateUser?.email},
+        'Dashboard @listRoomTeacher'
+      );
       console.error('Classes Fetch ERR: ', e);
     }
   };
@@ -523,7 +531,11 @@ const Dashboard = (props: DashboardProps) => {
           setCurriculumObj(arrayOfResponseObjects[0]?.curriculum);
         }
       } catch (e) {
-        logError(e, {authId: stateUser?.authId, email: stateUser?.email}, 'Dashboard');
+        logError(
+          e,
+          {authId: stateUser?.authId, email: stateUser?.email},
+          'Dashboard @listRoomCurriculums'
+        );
         console.error('RoomCurriculums fetch ERR: ', e);
       } finally {
         // console.log('curriciulum ids - ', curriculumIds);
@@ -587,7 +599,11 @@ const Dashboard = (props: DashboardProps) => {
         }
       });
     } catch (e) {
-      logError(e, {authId: stateUser?.authId, email: stateUser?.email}, 'Dashboard');
+      logError(
+        e,
+        {authId: stateUser?.authId, email: stateUser?.email},
+        'Dashboard @listSyllabus'
+      );
       console.error('Curriculum ids ERR: ', e);
       setSyllabusLoading(false);
     } finally {
@@ -646,7 +662,11 @@ const Dashboard = (props: DashboardProps) => {
         }
       });
     } catch (e) {
-      logError(e, {authId: stateUser?.authId, email: stateUser?.email}, 'Dashboard');
+      logError(
+        e,
+        {authId: stateUser?.authId, email: stateUser?.email},
+        'Dashboard @listSyllabusLessons'
+      );
       console.error('syllabus lessons: ', e);
     } finally {
       setLessonLoading(false);

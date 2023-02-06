@@ -2,6 +2,7 @@ import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import PageWrapper from '@components/Atoms/PageWrapper';
 import ErrorBoundary from '@components/Error/ErrorBoundary';
 import useAuth from '@customHooks/useAuth';
+import {logError} from '@graphql/functions';
 import {getAsset} from 'assets';
 import BreadcrumbsWithBanner from 'atoms/BreadcrumbsWithBanner';
 import {useGlobalContext} from 'contexts/GlobalContext';
@@ -63,7 +64,14 @@ const InstitutionsHome: React.FC<DashboardProps> = (props: DashboardProps) => {
       } else {
         setLessonData({});
       }
-    } catch (error) {}
+    } catch (error) {
+      console.error(error);
+      logError(
+        error,
+        {authId: state.user.authId, email: state.user.email},
+        'InstitutionsHome @getLessonData'
+      );
+    }
   };
 
   useEffect(() => {
