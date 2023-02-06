@@ -448,7 +448,7 @@ const appDict: any = {
 
 const staffBuilderDict: any = {
   EN: {
-    TITLE: 'STAFF MEMBERS',
+    TITLE: 'STAFF AND INVITED GUESTS',
     ADD_PLACEHOLDER: 'Add new',
     ADD_SUPER_ADMIN_PLACEHOLDER: 'Add new Super Admin',
     ADD_SUPER_ADMIN: 'Existing Super Admin',
@@ -467,7 +467,7 @@ const staffBuilderDict: any = {
     EDIT: 'Edit'
   },
   ES: {
-    TITLE: 'STAFF MEMBERS',
+    TITLE: 'STAFF AND INVITED GUESTS',
     ADD_PLACEHOLDER: 'Add new',
     ADD_SUPER_ADMIN_PLACEHOLDER: 'Add new Super Admin',
     ADD_SUPER_ADMIN: 'Existing Super Admin',
