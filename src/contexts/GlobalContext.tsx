@@ -240,7 +240,10 @@ export const GlobalContextProvider = ({children}: GlobalProps) => {
                 ...pgContent,
                 partContent:
                   pgContent?.partContent?.map((ptContent: any) => {
-                    if (ignoreComponents.includes(ptContent.type)) {
+                    if (
+                      ignoreComponents.includes(ptContent.type) ||
+                      (ptContent.type === 'header' && ptContent?.value?.length == 2) // <== this line means header and paragraph are tied together. and we don't want to run the below logic to paragraph
+                    ) {
                       return {...ptContent};
                     }
 
