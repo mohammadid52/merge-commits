@@ -159,7 +159,7 @@ const composePartContent = (
       notesData &&
       notesData.length > 0 && (
         <ErrorBoundary componentName="NotesContainer">
-          <NotesContainer notes={notesData} />
+          <NotesContainer id={id} notes={notesData} />
         </ErrorBoundary>
       )
     );

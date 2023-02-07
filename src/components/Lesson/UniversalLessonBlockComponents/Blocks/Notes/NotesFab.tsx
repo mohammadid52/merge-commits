@@ -45,13 +45,16 @@ const INITIAL_NOTESDATA: UniversalJournalData = {
 
 const mapNotesTogether = (notes: any[]) => {
   let res: any[] = [];
+  let ids: any[] = [];
   forEach(notes, (d) => {
     if (d.partContent && d.partContent.length > 0) {
       forEach(d.partContent, (_d) => {
         if (_d.value && _d.value.length > 0) {
           forEach(_d.value, (f) => {
-            if (res.find((d) => d.id === f.id)) return;
-            res.push({...f, pagePartId: d.id, partContentId: _d.id});
+            if (!ids.includes(f.id)) {
+              ids.push(f.id);
+              res.push({...f, pagePartId: d.id, partContentId: _d.id});
+            }
           });
         }
       });
@@ -60,7 +63,7 @@ const mapNotesTogether = (notes: any[]) => {
 
   return res;
 };
-const NotesContainer = ({notes}: {notes: any[]}) => {
+const NotesContainer = ({notes, id}: {id: string; notes: any[]}) => {
   const gContext = useGlobalContext();
 
   const lessonState = gContext.lessonState;
@@ -77,7 +80,7 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
     if (!notesInitialized && allNotes && allNotes.length > 0) {
       getOrCreateJournalData();
     }
-  }, [notesInitialized, allNotes.length]);
+  }, [notesInitialized, id, allNotes.length]);
 
   const [notesData, setNotesData] = useState<UniversalJournalData>(INITIAL_NOTESDATA);
 
@@ -419,6 +422,7 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
 
       const notesData: any = await API.graphql(
         graphqlOperation(queries.listUniversalJournalData, {
+          limit: 500,
           filter: {...listFilter.filter, type: {eq: 'class-note'}}
         })
       );
@@ -464,7 +468,7 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
           studentAuthID: existJournalEntry.studentAuthID,
           studentEmail: existJournalEntry.studentEmail,
           feedbacks: existJournalEntry.feedbacks,
-          entryData: filterOldNotes,
+          entryData: [...existJournalEntry.entryData],
           roomID: getRoomData.id,
           syllabusLessonID: getRoomData.activeSyllabus
         });
