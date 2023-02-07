@@ -34,10 +34,13 @@ export const FormLabel = ({
   const {lessonPage: {theme: themeTextColor = ''} = {}} = gState;
 
   return (
-    <label className={`text-base ${themeTextColor}`} htmlFor="label">
-      {numbered && index} <span dangerouslySetInnerHTML={{__html: label}}></span>{' '}
-      <RequiredMark isRequired={required} />
-    </label>
+    <ErrorBoundary componentName="FormLabel">
+      <label className={`text-base ${themeTextColor}`} htmlFor="label">
+        {numbered && index}{' '}
+        <span dangerouslySetInnerHTML={{__html: label || '<p></p>'}}></span>{' '}
+        <RequiredMark isRequired={required} />
+      </label>
+    </ErrorBoundary>
   );
 };
 
