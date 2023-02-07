@@ -837,11 +837,13 @@ const Csv = ({institutionId}: ICsvProps) => {
 
   // regex match double spaces and replace with single space
   const removeDoubleSpaces = (str: string) => {
+    if (!str) return '';
     return str.replace(/\s{2,}/g, ' ');
   };
 
   // regex match double quotations and replace with single quotations
   const removeDoubleQuotes = (str: string) => {
+    if (!str) return '';
     return str.replace(/\"/g, "'");
   };
 
