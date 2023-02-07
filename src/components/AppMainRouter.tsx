@@ -139,7 +139,6 @@ const MainRouter: React.FC = () => {
 
     document.addEventListener('visibilitychange', function () {
       if (document.visibilityState === 'visible') {
-        console.log('----visible---');
         clearTimeout(timer); //  Clear timer if user comes back to the app.
       } else {
         if (isUserLoggedIn()) {

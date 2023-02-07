@@ -1,5 +1,7 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {Auth} from '@aws-amplify/auth';
+import useAuth from '@customHooks/useAuth';
+import {logError} from '@graphql/functions';
 import Loader from 'atoms/Loader';
 import NotesBlock from 'components/Lesson/UniversalLessonBlockComponents/Blocks/Notes/NotesBlock';
 import {useGlobalContext} from 'contexts/GlobalContext';
@@ -48,12 +50,14 @@ const mapNotesTogether = (notes: any[]) => {
       forEach(d.partContent, (_d) => {
         if (_d.value && _d.value.length > 0) {
           forEach(_d.value, (f) => {
+            if (res.find((d) => d.id === f.id)) return;
             res.push({...f, pagePartId: d.id, partContentId: _d.id});
           });
         }
       });
     }
   });
+
   return res;
 };
 const NotesContainer = ({notes}: {notes: any[]}) => {
@@ -118,6 +122,8 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
       const returnedData = newJournalData.data.createUniversalJournalData;
       return returnedData;
     } catch (e) {
+      logError(e, {authId, email}, 'NotesFab @createJournalData', e.toString());
+
       console.error('error creating journal data - ', e);
     }
   };
@@ -142,6 +148,8 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
               graphqlOperation(mutations.updateUniversalLessonStudentData, {input: data})
             );
           } catch (e) {
+            logError(e, {authId, email}, 'NotesFab @updateStudentData', e.toString());
+
             console.error('update universal student data - ', encodeURI);
           } finally {
             if (idx === lessonState.universalStudentDataID.length - 1) {
@@ -190,7 +198,9 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
         syllabusLessonID: getRoomData.activeSyllabus
       });
     } catch (e) {
-      console.error('error updating journal data - ', e);
+      logError(e, {authId, email}, 'NotesFab @addNewNote', e.toString());
+
+      console.error('error addNewNote journal data - ', e);
     } finally {
       console.log('updated journal data...');
       // if (notesChanged) setNotesChanged(false);
@@ -226,6 +236,8 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
         }));
       }
     } catch (error) {
+      logError(error, {authId, email}, 'NotesFab @saveData', error.toString());
+
       console.error(error);
     } finally {
       if (cb2) {
@@ -234,9 +246,9 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
     }
   };
 
-  saveJournalData.current = () => {
-    saveData(notesData);
-  };
+  // saveJournalData.current = () => {
+  //   saveData(notesData);
+  // };
 
   const updateNotesJournalChange = async (newNotesArr: any[], notesData?: any) => {
     const mapCustomData = newNotesArr.map((m) => ({
@@ -320,6 +332,8 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
     }
   };
 
+  const {authId, email} = useAuth();
+
   const updateJournalData = async (newNoteObj?: any, other?: any) => {
     const _notesData = other?.notesData || notesData;
 
@@ -378,6 +392,7 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
         syllabusLessonID: getRoomData.activeSyllabus
       });
     } catch (e) {
+      logError(e, {authId, email}, 'NotesFab @updateJournalData', e.toString());
       console.error('error updating journal data - ', e);
     } finally {
       console.log('updated journal data...');
@@ -458,14 +473,29 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
         }
       }
     } catch (e) {
+      logError(e, {authId, email}, 'NotesFab @getOrCreateJournalData', e.toString());
+
       console.error('error getting or creating journal data - ', e);
     } finally {
       setNotesInitialized(true);
     }
   };
 
+  const getUniq2 = (entryData: any[]) => {
+    const domIds: string[] = [];
+
+    return entryData.filter((d) => {
+      if (!domIds.includes(d.domID)) {
+        domIds.push(d.domID);
+        return false;
+      } else {
+        return true;
+      }
+    });
+  };
+
   if (notesInitialized) {
-    const fixedFilteredData = filter(notesData?.entryData, (ed) => getUniq(ed));
+    const fixedFilteredData = getUniq2(filter(notesData?.entryData, (ed) => getUniq(ed)));
 
     /**
      * Working case
