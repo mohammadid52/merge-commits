@@ -161,7 +161,9 @@ const ListItem = forwardRef<any, IListItem>(
         key={idx}
         {...rest}
         ref={ref}
-        className={`flex hover:bg-gray-300 cursor-pointer transition-all relative  items-center ${
+        className={`flex ${
+          config.dark ? 'hover:bg-gray-900' : 'hover:bg-gray-300'
+        } cursor-pointer transition-all relative  items-center ${
           item?.markRed ? 'mark-red' : ''
         } justify-between ${
           config?.dataList?.bgColor

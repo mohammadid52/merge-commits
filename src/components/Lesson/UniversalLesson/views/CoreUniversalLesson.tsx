@@ -34,7 +34,9 @@ const CoreUniversalLesson = ({
 
   const getPageName = (dir = 'next'): string =>
     lessonPlan
-      ? `Go to ${lessonPlan[dir === 'next' ? currentPage + 1 : currentPage - 1].title}`
+      ? `Go to ${
+          lessonPlan[dir === 'next' ? currentPage + 1 : currentPage - 1]?.title || ''
+        }`
       : `${dir === 'next' ? 'Next' : 'Prev'}`;
 
   const {isStudent} = useAuth();

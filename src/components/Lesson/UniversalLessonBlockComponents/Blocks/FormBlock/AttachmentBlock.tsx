@@ -1,12 +1,15 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {Storage} from '@aws-amplify/storage';
-import Buttons from 'atoms/Buttons';
-import useStudentDataValue from 'customHooks/studentDataValue';
 import {EditQuestionModalDict} from '@dictionary/dictionary.iconoclast';
 import {Transition} from '@headlessui/react';
+import {getAsset} from 'assets';
+import Buttons from 'atoms/Buttons';
+import Modal from 'atoms/Modal';
+import {GlobalContext} from 'contexts/GlobalContext';
+import useInLessonCheck from 'customHooks/checkIfInLesson';
+import useStudentDataValue from 'customHooks/studentDataValue';
+import * as mutations from 'graphql/mutations';
 import {IFormBlockProps} from 'interfaces/UniversalLessonInterfaces';
-import {removeExtension} from 'utilities/functions';
-import {getImageFromS3Static} from 'utilities/services';
 import {findIndex, map, noop, reject, remove, update} from 'lodash';
 import {nanoid} from 'nanoid';
 import React, {useCallback, useContext, useEffect, useRef, useState} from 'react';
@@ -14,13 +17,11 @@ import ClickAwayListener from 'react-click-away-listener';
 import {useDropzone} from 'react-dropzone';
 import {BiImageAdd} from 'react-icons/bi';
 import {useRouteMatch} from 'react-router';
-import {getAsset} from 'assets';
-import {GlobalContext} from 'contexts/GlobalContext';
-import useInLessonCheck from 'customHooks/checkIfInLesson';
-import * as mutations from 'graphql/mutations';
+import {removeExtension} from 'utilities/functions';
 import {getLocalStorageData} from 'utilities/localStorage';
-import Modal from 'atoms/Modal';
+import {getImageFromS3Static} from 'utilities/services';
 import {UPLOAD_KEYS} from '../../../constants';
+import {FormLabel} from '../FormBlock';
 
 interface IFile {
   _status: 'progress' | 'failed' | 'success' | 'other';
@@ -575,19 +576,19 @@ const AttachmentBlock = ({
         </Modal>
       )}
       <div id={id} key={inputID} className={`mb-4 p-4`}>
-        <label className={`text-base ${themeTextColor}`} htmlFor="label">
-          {numbered && index} {label}{' '}
-          {isUploaded && (
-            <button
-              title={input.toString()}
-              onClick={() => openImg(imageUrl)}
-              className={
-                'italic cursor-pointer hover:text-green-600 w-auto text-sm text-green-500'
-              }>
-              Preview Uploaded File
-            </button>
-          )}
-        </label>
+        <FormLabel label={label} required={required} numbered={numbered} index={index} />
+
+        {isUploaded && (
+          <button
+            title={input.toString()}
+            onClick={() => openImg(imageUrl)}
+            className={
+              'italic cursor-pointer hover:text-green-600 w-auto text-sm text-green-500'
+            }>
+            Preview Uploaded File
+          </button>
+        )}
+
         <div className="mt-2">
           <span
             role="button"

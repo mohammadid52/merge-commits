@@ -1,5 +1,7 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {Auth} from '@aws-amplify/auth';
+import useAuth from '@customHooks/useAuth';
+import {logError} from '@graphql/functions';
 import Loader from 'atoms/Loader';
 import NotesBlock from 'components/Lesson/UniversalLessonBlockComponents/Blocks/Notes/NotesBlock';
 import {useGlobalContext} from 'contexts/GlobalContext';
@@ -43,20 +45,25 @@ const INITIAL_NOTESDATA: UniversalJournalData = {
 
 const mapNotesTogether = (notes: any[]) => {
   let res: any[] = [];
+  let ids: any[] = [];
   forEach(notes, (d) => {
     if (d.partContent && d.partContent.length > 0) {
       forEach(d.partContent, (_d) => {
         if (_d.value && _d.value.length > 0) {
           forEach(_d.value, (f) => {
-            res.push({...f, pagePartId: d.id, partContentId: _d.id});
+            if (!ids.includes(f.id)) {
+              ids.push(f.id);
+              res.push({...f, pagePartId: d.id, partContentId: _d.id});
+            }
           });
         }
       });
     }
   });
+
   return res;
 };
-const NotesContainer = ({notes}: {notes: any[]}) => {
+const NotesContainer = ({notes, id}: {id: string; notes: any[]}) => {
   const gContext = useGlobalContext();
 
   const lessonState = gContext.lessonState;
@@ -73,7 +80,7 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
     if (!notesInitialized && allNotes && allNotes.length > 0) {
       getOrCreateJournalData();
     }
-  }, [notesInitialized]);
+  }, [notesInitialized, id, allNotes.length]);
 
   const [notesData, setNotesData] = useState<UniversalJournalData>(INITIAL_NOTESDATA);
 
@@ -118,6 +125,8 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
       const returnedData = newJournalData.data.createUniversalJournalData;
       return returnedData;
     } catch (e) {
+      logError(e, {authId, email}, 'NotesFab @createJournalData', e.toString());
+
       console.error('error creating journal data - ', e);
     }
   };
@@ -142,6 +151,8 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
               graphqlOperation(mutations.updateUniversalLessonStudentData, {input: data})
             );
           } catch (e) {
+            logError(e, {authId, email}, 'NotesFab @updateStudentData', e.toString());
+
             console.error('update universal student data - ', encodeURI);
           } finally {
             if (idx === lessonState.universalStudentDataID.length - 1) {
@@ -190,7 +201,9 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
         syllabusLessonID: getRoomData.activeSyllabus
       });
     } catch (e) {
-      console.error('error updating journal data - ', e);
+      logError(e, {authId, email}, 'NotesFab @addNewNote', e.toString());
+
+      console.error('error addNewNote journal data - ', e);
     } finally {
       console.log('updated journal data...');
       // if (notesChanged) setNotesChanged(false);
@@ -226,6 +239,8 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
         }));
       }
     } catch (error) {
+      logError(error, {authId, email}, 'NotesFab @saveData', error.toString());
+
       console.error(error);
     } finally {
       if (cb2) {
@@ -234,9 +249,9 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
     }
   };
 
-  saveJournalData.current = () => {
-    saveData(notesData);
-  };
+  // saveJournalData.current = () => {
+  //   saveData(notesData);
+  // };
 
   const updateNotesJournalChange = async (newNotesArr: any[], notesData?: any) => {
     const mapCustomData = newNotesArr.map((m) => ({
@@ -320,6 +335,8 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
     }
   };
 
+  const {authId, email} = useAuth();
+
   const updateJournalData = async (newNoteObj?: any, other?: any) => {
     const _notesData = other?.notesData || notesData;
 
@@ -378,6 +395,7 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
         syllabusLessonID: getRoomData.activeSyllabus
       });
     } catch (e) {
+      logError(e, {authId, email}, 'NotesFab @updateJournalData', e.toString());
       console.error('error updating journal data - ', e);
     } finally {
       console.log('updated journal data...');
@@ -404,6 +422,7 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
 
       const notesData: any = await API.graphql(
         graphqlOperation(queries.listUniversalJournalData, {
+          limit: 500,
           filter: {...listFilter.filter, type: {eq: 'class-note'}}
         })
       );
@@ -418,6 +437,7 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
       const existJournalEntry = isNotesFormCreated ? notesDataRows[notesFormIndex] : [];
 
       const filterOldNotes = filter(existJournalEntry.entryData, (d) => getUniq(d));
+
       const filterNewNotes = filter(
         allNotes,
         (_obj) => _obj && !find(existJournalEntry.entryData, ['domID', _obj.id])
@@ -440,7 +460,7 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
           syllabusLessonID: getRoomData.activeSyllabus
         });
       } else {
-        const existJournalEntry = notesDataRows[notesFormIndex];
+        let existJournalEntry = notesDataRows[notesFormIndex];
 
         setNotesData({
           id: existJournalEntry.id,
@@ -458,14 +478,29 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
         }
       }
     } catch (e) {
+      logError(e, {authId, email}, 'NotesFab @getOrCreateJournalData', e.toString());
+
       console.error('error getting or creating journal data - ', e);
     } finally {
       setNotesInitialized(true);
     }
   };
 
+  const getUniq2 = (entryData: any[]) => {
+    const domIds: string[] = [];
+
+    return entryData.filter((d) => {
+      if (!domIds.includes(d.domID)) {
+        domIds.push(d.domID);
+        return true;
+      } else {
+        return false;
+      }
+    });
+  };
+
   if (notesInitialized) {
-    const fixedFilteredData = filter(notesData?.entryData, (ed) => getUniq(ed));
+    const fixedFilteredData = getUniq2(notesData?.entryData);
 
     /**
      * Working case
@@ -507,15 +542,16 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
     const mapCustomData = fixedCustomData.map((m) => {
       let className = m.type.split(' || ')[1];
       const note = find(allNotes, ['id', m.domID]);
-
-      return {
-        id: m.domID,
-        class: className,
-        value: strippedString(m.input.toString()),
-        custom: true,
-        pagePartId: note?.pagePartId,
-        partContentId: note?.partContentId
-      };
+      if (!isEmpty(note) && m) {
+        return {
+          id: m.domID,
+          class: className,
+          value: strippedString(m.input.toString()),
+          custom: true,
+          pagePartId: note?.pagePartId,
+          partContentId: note?.partContentId
+        };
+      }
     });
 
     const collectedNotes = [...mapFixedData, ...mapCustomData].filter(Boolean);

@@ -1,23 +1,24 @@
-import Loader from 'atoms/Loader';
+import Note from '@UlbBlocks/Notes/Note';
+import '@UlbBlocks/Notes/NoteStyles.scss';
 import Selector from 'atoms/Form/Selector';
+import Loader from 'atoms/Loader';
+import Tooltip from 'atoms/Tooltip';
 import {FORM_TYPES} from 'components/Lesson/UniversalLessonBuilder/UI/common/constants';
-import ThemeModal from 'molecules/ThemeModal';
 import {GlobalContext} from 'contexts/GlobalContext';
 import useInLessonCheck from 'customHooks/checkIfInLesson';
 import useStudentDataValue from 'customHooks/studentDataValue';
-import Note from '@UlbBlocks/Notes/Note';
-import '@UlbBlocks/Notes/NoteStyles.scss';
-import {wait} from 'utilities/functions';
 import gsap from 'gsap';
 import {Draggable} from 'gsap/Draggable';
 import {InertiaPlugin} from 'gsap/InertiaPlugin';
-import {find, findIndex, map, noop, random, remove, update} from 'lodash';
+import {find, findIndex, map, noop, remove, update} from 'lodash';
+import ThemeModal from 'molecules/ThemeModal';
 import React, {useContext, useEffect, useState} from 'react';
 import {BiSave} from 'react-icons/bi';
 import {FiFilePlus} from 'react-icons/fi';
-import {v4 as uuidv4} from 'uuid';
-import Tooltip from 'atoms/Tooltip';
 import {VscDebugRestart} from 'react-icons/vsc';
+import {wait} from 'utilities/functions';
+import {v4 as uuidv4} from 'uuid';
+
 const genSticky = (
   {rows, cols}: {rows?: number; cols?: number},
 
@@ -83,6 +84,7 @@ const genSticky = (
     }
   });
 };
+
 interface INoteBlock {
   notesInitialized?: boolean;
   preview?: boolean;
@@ -143,12 +145,12 @@ const NotesBlock = ({
   const {setDataValue} = useStudentDataValue();
 
   useEffect(() => {
-    if (!isContainerRendered) {
-      setLoading(true);
-      genSticky(grid, () => setIsContainerRendered(true));
-      setLoading(false);
-    }
-  }, [isContainerRendered]);
+    // if (!isContainerRendered) {
+    setLoading(true);
+    genSticky(grid, () => setIsContainerRendered(true));
+    setLoading(false);
+    // }
+  }, [isContainerRendered, localNotes.length]);
 
   useEffect(() => {
     if (notesList && notesList.length > 0) {
@@ -183,22 +185,6 @@ const NotesBlock = ({
           });
         }
       });
-
-      // try {
-      //   localNotes.forEach((note: {id: any; class: string}, idx: number) => {
-      //     const doc = $(`#${note.id}`);
-      //     // const pos = note?.class?.split(' || ')[];
-      //     const xRandom = random(0, 10);
-      //     const yRandom = random(0, 20);
-      //     // const [x = xRandom, y = yRandom] = pos?.split(' ') || ['100', '200'];
-
-      //     gsap.set(doc, {
-      //       left: 250 * idx,
-      //     });
-      //   });
-      // } catch (error) {
-      //   console.error(error);
-      // }
     }
   }
 
@@ -524,7 +510,7 @@ const NotesBlock = ({
                       updateText={updateText}
                       setShowEditModal={setShowEditModal}
                       setShowDeleteModal={setShowDeleteModal}
-                      key={note?.id}
+                      key={`${note?.id}_${idx}_${idx}`}
                       idx={idx}
                       note={note}
                       preview={preview}

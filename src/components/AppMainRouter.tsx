@@ -2,7 +2,6 @@
 // import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {Auth} from '@aws-amplify/auth';
-import useDictionary from '@customHooks/dictionary';
 import {UserPageState} from 'API';
 import {getAsset} from 'assets';
 import AuthRoutes from 'components/AppRoutes/AuthRoutes';
@@ -23,6 +22,8 @@ const MainRouter: React.FC = () => {
   const [cookies, setCookie, removeCookie] = useCookies();
   const [authState, setAuthState] = useState('loading');
 
+  const [readyState, setReadyState] = useState('loading');
+
   useEffect(() => {
     if (authState === 'loggedIn') {
       checkForUserInactivity();
@@ -34,6 +35,9 @@ const MainRouter: React.FC = () => {
   }, [authState]);
 
   useEffect(() => {
+    document.addEventListener('readystatechange', function (ev) {
+      setReadyState(document.readyState);
+    });
     setupAppHeaders();
     checkUserAuthenticated();
   }, []);
@@ -133,7 +137,7 @@ const MainRouter: React.FC = () => {
     let idelTime = 0;
     let timer: any;
 
-    window.addEventListener('visibilitychange', function () {
+    document.addEventListener('visibilitychange', function () {
       if (document.visibilityState === 'visible') {
         clearTimeout(timer); //  Clear timer if user comes back to the app.
       } else {
@@ -174,7 +178,13 @@ const MainRouter: React.FC = () => {
     }
   };
 
-  {
+  if (readyState !== 'complete') {
+    return (
+      <div className="min-h-screen   w-full flex flex-col justify-center items-center">
+        <ComponentLoading />
+      </div>
+    );
+  } else {
     return (
       <div
         className={`iconoclast:bg-50 curate:bg-50 h-screen md:max-w-full md:h-screen w-full overflow-x-hidden ${theme.bg} flex flex-col`}>

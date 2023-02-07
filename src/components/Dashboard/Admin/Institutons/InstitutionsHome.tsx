@@ -2,6 +2,7 @@ import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import PageWrapper from '@components/Atoms/PageWrapper';
 import ErrorBoundary from '@components/Error/ErrorBoundary';
 import useAuth from '@customHooks/useAuth';
+import {logError} from '@graphql/functions';
 import {getAsset} from 'assets';
 import BreadcrumbsWithBanner from 'atoms/BreadcrumbsWithBanner';
 import {useGlobalContext} from 'contexts/GlobalContext';
@@ -53,17 +54,26 @@ const InstitutionsHome: React.FC<DashboardProps> = (props: DashboardProps) => {
       const splitUrl = pathname.split('/lessons/')?.length
         ? pathname.split('/lessons/')[1]
         : '';
-      if (splitUrl.indexOf('add') === -1) {
+
+      const splitted = splitUrl.split('/');
+      if (splitUrl.indexOf('add') === -1 && splitted.length >= 0) {
         const result: any = await API.graphql(
           graphqlOperation(customQueries.getUniversalLessonBasicDetails, {
-            id: splitUrl.split('/')[0]
+            id: splitted[0]
           })
         );
         setLessonData(result.data?.getUniversalLesson);
       } else {
         setLessonData({});
       }
-    } catch (error) {}
+    } catch (error) {
+      console.error(error);
+      logError(
+        error,
+        {authId: state.user.authId, email: state.user.email},
+        'InstitutionsHome @getLessonData'
+      );
+    }
   };
 
   useEffect(() => {
@@ -75,7 +85,8 @@ const InstitutionsHome: React.FC<DashboardProps> = (props: DashboardProps) => {
   }, [pathname]);
 
   const {user} = useAuth();
-  const institute = user?.associateInstitute[0]?.institution;
+  const institute =
+    user && user.associateInstitute && user?.associateInstitute[0]?.institution;
 
   return (
     <div className={`w-full h-full flex justify-center`}>
@@ -178,17 +189,19 @@ const InstitutionsHome: React.FC<DashboardProps> = (props: DashboardProps) => {
           )} // Curricular information view.
         />
         {pathname.indexOf('/manage-institutions/institution') === -1 && (
-          <div className="">
-            <BreadcrumbsWithBanner forInstitution bannerImage={bannerImage} />
-            <div className="px-2 py-8 md:px-4 lg:p-8">
-              {/* <PageWrapper> */}
-              <PageWrapper>
-                <NavBarRouter institute={institute} />
-                {/* </PageWrapper> */}
-                <InstitutionProfile institute={institute} />
-              </PageWrapper>
+          <ErrorBoundary componentName="InstitutionProfile">
+            <div className="">
+              <BreadcrumbsWithBanner forInstitution bannerImage={bannerImage} />
+              <div className="px-2 py-8 md:px-4 lg:p-8">
+                {/* <PageWrapper> */}
+                <PageWrapper>
+                  <NavBarRouter institute={institute} />
+                  {/* </PageWrapper> */}
+                  <InstitutionProfile institute={institute} />
+                </PageWrapper>
+              </div>
             </div>
-          </div>
+          </ErrorBoundary>
         )}
       </Switch>
     </div>

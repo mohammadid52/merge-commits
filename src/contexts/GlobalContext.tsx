@@ -230,63 +230,67 @@ export const GlobalContextProvider = ({children}: GlobalProps) => {
     lessonPlan: UniversalLessonPlan[],
     dictionaries: Dicitionary[]
   ) => {
-    if (lessonPlan && lessonPlan.length > 0) {
-      try {
-        const updated = lessonPlan.map((plan: any) => ({
-          ...plan,
-          pageContent:
-            plan?.pageContent?.map((pgContent: any) => {
-              return {
-                ...pgContent,
-                partContent:
-                  pgContent?.partContent?.map((ptContent: any) => {
-                    if (ignoreComponents.includes(ptContent.type)) {
-                      return {...ptContent};
-                    }
+    return lessonPlan;
+    // if (lessonPlan && lessonPlan.length > 0) {
+    //   try {
+    //     const updated = lessonPlan.map((plan: any) => ({
+    //       ...plan,
+    //       pageContent:
+    //         plan?.pageContent?.map((pgContent: any) => {
+    //           return {
+    //             ...pgContent,
+    //             partContent:
+    //               pgContent?.partContent?.map((ptContent: any) => {
+    //                 if (
+    //                   ignoreComponents.includes(ptContent.type) ||
+    //                   (ptContent.type === 'header' && ptContent?.value?.length == 2) // <== this line means header and paragraph are tied together. and we don't want to run the below logic to paragraph
+    //                 ) {
+    //                   return {...ptContent};
+    //                 }
 
-                    return {
-                      ...ptContent,
-                      value: ptContent.value.map((value: any) => {
-                        dictionaries.forEach((word) => {
-                          if (!isEmpty(value.value)) {
-                            if (word.englishDefinition) {
-                              value.value = value.value.replace(
-                                word.englishPhrase,
-                                replaceStr(word)
-                              );
-                            }
-                          }
+    //                 return {
+    //                   ...ptContent,
+    //                   value: ptContent.value.map((value: any) => {
+    //                     dictionaries.forEach((word) => {
+    //                       if (!isEmpty(value.value)) {
+    //                         if (word.englishDefinition) {
+    //                           value.value = value.value.replace(
+    //                             word.englishPhrase,
+    //                             replaceStr(word)
+    //                           );
+    //                         }
+    //                       }
 
-                          if (!isEmpty(value.label)) {
-                            if (word.englishDefinition) {
-                              value.label = value.label.replace(
-                                word.englishPhrase,
-                                replaceStr(word)
-                              );
-                            }
-                          }
-                        });
+    //                       if (!isEmpty(value.label)) {
+    //                         if (word.englishDefinition) {
+    //                           value.label = value.label.replace(
+    //                             word.englishPhrase,
+    //                             replaceStr(word)
+    //                           );
+    //                         }
+    //                       }
+    //                     });
 
-                        // fixed wierd screen sliding issue
-                        // add translation input for students
-                        return {
-                          ...value
-                        };
-                      })
-                    };
-                  }) || []
-              };
-            }) || []
-        }));
-        return updated;
-      } catch (error) {
-        console.error(error);
+    //                     // fixed wierd screen sliding issue
+    //                     // add translation input for students
+    //                     return {
+    //                       ...value
+    //                     };
+    //                   })
+    //                 };
+    //               }) || []
+    //           };
+    //         }) || []
+    //     }));
+    //     return updated;
+    //   } catch (error) {
+    //     console.error(error);
 
-        return lessonPlan;
-      }
-    } else {
-      return lessonPlan;
-    }
+    //     return lessonPlan;
+    //   }
+    // } else {
+    //   return lessonPlan;
+    // }
   };
 
   async function updatePersonLocation() {

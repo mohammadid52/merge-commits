@@ -1,10 +1,10 @@
 // import {BsFillInfoCircleFill} from 'react-icons/bs';
 import Placeholder from '@components/Atoms/Placeholder';
 import {useGlobalContext} from '@contexts/GlobalContext';
+import useDictionary from '@customHooks/dictionary';
 import useAuth from '@customHooks/useAuth';
 import {Menu, Transition} from '@headlessui/react';
 import {ChevronDownIcon} from '@heroicons/react/solid';
-import {initials, stringToHslColor} from '@utilities/strings';
 import {Role} from 'API';
 import SignOutButton from 'components/Auth/SignOut';
 import React, {Fragment} from 'react';
@@ -64,7 +64,9 @@ const DropDownMenu = ({
   const history = useHistory();
 
   const {onDemand, isStudent} = useAuth();
-  const {checkIfAdmin} = useGlobalContext();
+  const {checkIfAdmin, userLanguage} = useGlobalContext();
+  const {Institute_info} = useDictionary();
+  const TABS = Institute_info[userLanguage]['TABS'];
 
   if (firstName && lastName && theme) {
     return (
@@ -132,7 +134,7 @@ const DropDownMenu = ({
 
                   <Item
                     onClick={() => history.push('/dashboard/profile')}
-                    label="Edit Profile"
+                    label={TABS['EDIT_PROFILE']}
                     _key={'profile-1'}
                     Icon={FiUser}
                   />
@@ -140,8 +142,8 @@ const DropDownMenu = ({
                   {!isStudent && (
                     <Item
                       onClick={() => history.push('/dashboard/dictionary')}
-                      label="Dictionary"
-                      _key={'profile-features'}
+                      label={TABS['DICTIONARY']}
+                      _key={'dictionary'}
                       Icon={AiOutlineBook}
                     />
                   )}
@@ -150,19 +152,19 @@ const DropDownMenu = ({
                     <>
                       <Item
                         onClick={() => history.push('/dashboard/test-cases')}
-                        label="Test Cases"
-                        _key={'profile-2'}
+                        label={TABS['TEST_CASES']}
+                        _key={'test-cases'}
                         Icon={VscChecklist}
                       />
                       <Item
                         onClick={() => history.push('/dashboard/errors')}
-                        label="Errors"
+                        label={TABS['ERRORS']}
                         _key={'profile-2'}
                         Icon={VscChecklist}
                       />
                       <Item
                         onClick={() => history.push('/dashboard/upload-logs')}
-                        label="Upload Logs"
+                        label={TABS['UPLOAD_LOGS']}
                         _key={'profile-3'}
                         Icon={VscChecklist}
                       />

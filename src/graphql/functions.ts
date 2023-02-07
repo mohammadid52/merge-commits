@@ -111,7 +111,7 @@ export const updatePageState = async (
 };
 
 export const logError = async (
-  error: Error | string,
+  error: any,
   auth: {authId: string; email: string},
   componentName: string,
   additionalInfo?: any
@@ -121,7 +121,7 @@ export const logError = async (
     const input: CreateErrorLogInput = {
       authID: auth.authId,
       email: auth.email,
-      error: JSON.stringify(error) || 'Invalid error',
+      error: JSON.stringify(error?.stack) || JSON.stringify(error) || 'Invalid error',
       errorType: JSON.stringify(additionalInfo) || 'Invalid error type',
       errorTime: new Date().toISOString(),
       pageUrl: location.href,

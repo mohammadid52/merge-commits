@@ -950,7 +950,9 @@ const Institute_info: any = {
     TABS: {
       SERVICE_PROVIDER: 'Service Providers',
       STAFF: 'Staff Manager',
+      USER_REGISTRY: 'User Registry',
       CLASS_MANAGER: 'Classroom Builder',
+      REGISTER_NEW_USER: 'Register New User',
       LIVE_CLASS_ROOM: 'Live Classroom',
       COURSE_MANAGER: 'Course Builder',
       COURSES: 'Course Manager',
@@ -966,14 +968,18 @@ const Institute_info: any = {
       RESEARCH_AND_ANALYTICS: 'Analytics Manager',
       DOWNLOAD_SURVEYS: 'Download Surveys',
       UPLOAD_SURVEY: 'Upload Survey',
-
       DOWNLOAD_CSV: 'Download Surveys',
       UPLOAD_CSV: 'Upload Surveys',
       UPLOAD_TO_ATHENA: 'Upload to Athena',
       HOME: 'Dashboard',
       NOTEBOOK: 'Notebook',
       COMMUNITY: 'Community',
-      GAME_CHANGERS: 'Game Changers'
+      GAME_CHANGERS: 'Game Changers',
+      EDIT_PROFILE: 'Edit Profile',
+      DICTIONARY: 'Dictionary',
+      TEST_CASES: 'Test Cases',
+      ERRORS: 'Errors',
+      UPLOAD_LOGS: 'Upload Logs'
     }
   },
   ES: {
@@ -988,6 +994,8 @@ const Institute_info: any = {
       STAFF: 'Staff Manager',
       CLASS_MANAGER: 'Classroom Builder',
       LIVE_CLASS_ROOM: 'Live Classroom',
+      USER_REGISTRY: 'User Registry',
+      REGISTER_NEW_USER: 'Register New User',
       COURSE_MANAGER: 'Course Builder',
       COURSES: 'Course Manager',
       UNITS: 'Unit Manager',
@@ -1009,7 +1017,12 @@ const Institute_info: any = {
       HOME: 'Dashboard',
       NOTEBOOK: 'Notebook',
       COMMUNITY: 'Community',
-      GAME_CHANGERS: 'Game Changers'
+      GAME_CHANGERS: 'Game Changers',
+      EDIT_PROFILE: 'Edit Profile',
+      DICTIONARY: 'Dictionary',
+      TEST_CASES: 'Test Cases',
+      ERRORS: 'Errors',
+      UPLOAD_LOGS: 'Upload Logs'
     }
   }
 };

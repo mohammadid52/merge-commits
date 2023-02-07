@@ -1,6 +1,7 @@
 import Buttons from '@components/Atoms/Buttons';
 import Label from '@components/Atoms/Form/Label';
 import Loader from '@components/Atoms/Loader';
+import ModalPopUp from '@components/Molecules/ModalPopUp';
 import DotMenu from '@components/TeacherView/ClassRoster/RosterRow/DotMenu';
 import {useGlobalContext} from '@contexts/GlobalContext';
 import useAuth from '@customHooks/useAuth';
@@ -13,6 +14,8 @@ import {
   UpdateErrorLogInput
 } from 'API';
 import {API, graphqlOperation} from 'aws-amplify';
+import * as queries from 'graphql/queries';
+import * as mutations from 'graphql/mutations';
 import * as customMutations from 'customGraphql/customMutations';
 import {orderBy, update} from 'lodash';
 import moment from 'moment';
@@ -23,8 +26,12 @@ import {Redirect} from 'react-router';
 const ErrorItem = ({
   error,
   updateStatus,
-  idx
+  idx,
+  setShowModal
 }: {
+  setShowModal: React.Dispatch<
+    React.SetStateAction<{show: boolean; additional?: string; message: string}>
+  >;
   updateStatus: (id: string, status: ErrorStatus) => void;
   error: ErrorLog;
   idx: number;
@@ -43,6 +50,15 @@ const ErrorItem = ({
     }
   };
 
+  const outputError = error.error !== '' && error.error !== '{}' ? error.error : '';
+
+  const stackItem = {
+    label: 'see stack details',
+    action: () => {
+      setShowModal({show: true, message: outputError, additional: error.errorType});
+    }
+  };
+
   const errorStatus = error.status;
 
   const closedItem = {
@@ -54,7 +70,7 @@ const ErrorItem = ({
 
   const menuItems =
     errorStatus === ErrorStatus.PENDING
-      ? [reviewItem, closedItem]
+      ? [reviewItem, closedItem, stackItem]
       : errorStatus === ErrorStatus.REVIEW
       ? [pendingItem, closedItem]
       : [pendingItem, reviewItem];
@@ -80,9 +96,10 @@ const ErrorItem = ({
       </div>
       <h2 className=" text-sm font-medium text-gray-900">{error.email}</h2>
       <h4 className="text-sm text-red-600 font-light h-24 overflow-auto py-2">
-        {error.errorType}
+        {outputError}
       </h4>
-      <h6 className="text-sm text-gray-900 font-light overflow-auto py-2">
+
+      <h6 className="text-sm text-gray-900 font-light overflow-auto py-2 mb-4">
         {error.componentName}
       </h6>
 
@@ -108,6 +125,34 @@ const ErrorItem = ({
   );
 };
 
+const deleteClosedErrors = async () => {
+  try {
+    let date = new Date();
+    date.setDate(date.getDate() - 7);
+    const res: any = await API.graphql(
+      graphqlOperation(queries.listErrorLogs, {
+        limit: 500,
+
+        filter: {
+          errorTime: {lt: date.toISOString()},
+          status: {eq: ErrorStatus.CLOSED}
+        }
+      })
+    );
+    const items = res.data.listErrorLogs.items || [];
+
+    if (items && items.length > 0) {
+      for (const x of items) {
+        await API.graphql(
+          graphqlOperation(mutations.deleteErrorLog, {input: {id: x.id}})
+        );
+      }
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 const ErrorsPage = () => {
   const {authId, email} = useAuth();
   const {checkIfAdmin} = useGlobalContext();
@@ -116,21 +161,34 @@ const ErrorsPage = () => {
     return <Redirect to={'/dashboard/home'} />;
   }
 
+  let date = new Date();
+  date.setMonth(date.getMonth() - 1);
+
   const {data, setData, isLoading, isFetched} = useGraphqlQuery<
     ListErrorLogsQueryVariables,
     ErrorLog[]
   >(
     'listErrorLogs',
-    {limit: 200},
+    {
+      limit: 200,
+      filter: {
+        errorTime: {
+          gt: date.toISOString()
+        }
+      }
+    },
     {
       loopOnNextToken: true,
       enabled: checkIfAdmin(),
       onSuccess: (data) => {
         const orderedList = orderBy([...data], ['errorTime'], ['desc']);
         setData([...orderedList]);
+        deleteClosedErrors();
       }
     }
   );
+
+  const [showModal, setShowModal] = useState({show: false, message: '', additional: ''});
 
   const [filteredList, setFilteredList] = useState([...data]);
 
@@ -179,63 +237,75 @@ const ErrorsPage = () => {
     .length;
 
   return (
-    <div className="flex flex-col">
-      <div className="overflow-x-auto">
-        <div className="py-2 my-8 inline-block min-w-full sm:px-6 lg:px-8">
-          <div>
-            <Label label="Filters" />
-            <div className="flex gap-x-4 mb-4 mt-2 items-center">
-              <Buttons
-                onClick={() => updateFilter(ErrorStatus.PENDING)}
-                transparent={filters !== ErrorStatus.PENDING}
-                label={'Pending'}
-              />
-              <Buttons
-                onClick={() => updateFilter(ErrorStatus.CLOSED)}
-                transparent={filters !== ErrorStatus.CLOSED}
-                label={'Closed'}
-              />
-              <Buttons
-                onClick={() => updateFilter(ErrorStatus.REVIEW)}
-                transparent={filters !== ErrorStatus.REVIEW}
-                label={'Review'}
-              />
-            </div>
-          </div>
-
-          <div className="overflow-hidden">
-            {isLoading ? null : (
-              <h5 className="text-base mb-4 text-gray-800">
-                {pendingLength} pending errors - total {data.length} errors
-              </h5>
-            )}
-
-            {isLoading ? (
-              <Loader withText="loading error logs" animation />
-            ) : filteredList.length > 0 ? (
-              <div className="grid grid-cols-2 xl:grid-cols-4 2xl:grid-cols-5 gap-8">
-                {filteredList.map((error, idx) => (
-                  <ErrorItem
-                    idx={idx}
-                    updateStatus={updateStatus}
-                    error={error}
-                    key={idx}
-                  />
-                ))}
+    <>
+      <div className="flex flex-col">
+        <div className="overflow-x-auto">
+          <div className="py-2 my-8 inline-block min-w-full sm:px-6 lg:px-8">
+            <div>
+              <Label label="Filters" />
+              <div className="flex gap-x-4 mb-4 mt-2 items-center">
+                <Buttons
+                  onClick={() => updateFilter(ErrorStatus.PENDING)}
+                  transparent={filters !== ErrorStatus.PENDING}
+                  label={'Pending'}
+                />
+                <Buttons
+                  onClick={() => updateFilter(ErrorStatus.CLOSED)}
+                  transparent={filters !== ErrorStatus.CLOSED}
+                  label={'Closed'}
+                />
+                <Buttons
+                  onClick={() => updateFilter(ErrorStatus.REVIEW)}
+                  transparent={filters !== ErrorStatus.REVIEW}
+                  label={'Review'}
+                />
               </div>
-            ) : (
-              <p className="min-h-56 flex items-center w-full justify-center text-gray-500">
-                {filters !== undefined
-                  ? `No errors found for status - ${filters}`
-                  : 'Woahhh.. no errors.. its good.'}
-              </p>
-            )}
-            {/* </tbody> */}
-            {/* </table> */}
+            </div>
+
+            <div className="overflow-hidden">
+              {isLoading ? null : (
+                <h5 className="text-base mb-4 text-gray-800">
+                  {pendingLength} pending errors - total {data.length} errors
+                </h5>
+              )}
+
+              {isLoading ? (
+                <Loader withText="loading error logs" animation />
+              ) : filteredList.length > 0 ? (
+                <div className="grid grid-cols-2 xl:grid-cols-4 2xl:grid-cols-5 gap-8">
+                  {filteredList.map((error, idx) => (
+                    <ErrorItem
+                      idx={idx}
+                      setShowModal={setShowModal}
+                      updateStatus={updateStatus}
+                      error={error}
+                      key={idx}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <p className="min-h-56 flex items-center w-full justify-center text-gray-500">
+                  {filters !== undefined
+                    ? `No errors found for status - ${filters}`
+                    : 'Woahhh.. no errors.. its good.'}
+                </p>
+              )}
+              {/* </tbody> */}
+              {/* </table> */}
+            </div>
           </div>
         </div>
       </div>
-    </div>
+
+      {showModal.show && (
+        <ModalPopUp
+          closeAction={() => {
+            setShowModal({show: false, message: '', additional: ''});
+          }}
+          message={showModal.message.concat(`Additional info -> ${showModal.additional}`)}
+        />
+      )}
+    </>
   );
 };
 

@@ -1,10 +1,10 @@
-import {IFormBlockProps, StudentPageInput} from 'interfaces/UniversalLessonInterfaces';
-import React, {useContext, useState} from 'react';
-import RequiredMark from 'atoms/RequiredMark';
+import {FORM_TYPES} from 'components/Lesson/UniversalLessonBuilder/UI/common/constants';
 import {GlobalContext} from 'contexts/GlobalContext';
 import useInLessonCheck from 'customHooks/checkIfInLesson';
-import {FORM_TYPES} from 'components/Lesson/UniversalLessonBuilder/UI/common/constants';
 import useStudentDataValue from 'customHooks/studentDataValue';
+import {IFormBlockProps} from 'interfaces/UniversalLessonInterfaces';
+import React, {useContext, useState} from 'react';
+import {FormLabel} from '../FormBlock';
 
 const SelectMany = ({
   onChange,
@@ -217,9 +217,15 @@ const OptionBlock = (props: IOptionProps) => {
       key={inputID}
       id={`${inputID}_for_error`}
       className={`questionItemChild mb-4 p-4 bg-component-dark rounded-2xl border-0 border-gray-700`}>
-      <label className={`text-sm ${themeTextColor}`} htmlFor="label">
-        {numbered && index} {label} <RequiredMark isRequired={required} />
-      </label>
+      {label && (
+        <FormLabel numbered={numbered} required={required} label={label} index={index} />
+        //* <-- this is the react component that is error free
+      )}
+
+      {/* <label className={`text-sm ${themeTextColor}`} htmlFor="label">
+        {numbered && index} {label} <RequiredMark isRequired={required} /> //! <--- this is plain html that has bug
+      </label> */}
+
       {generateCheckbox(
         options,
         type === FORM_TYPES.MULTIPLE ? true : false,
