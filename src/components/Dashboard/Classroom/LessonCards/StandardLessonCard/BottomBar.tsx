@@ -15,7 +15,7 @@ const BottomBar = (props: LessonCardProps) => {
     accessible,
     lessonType,
     lessonProgress = 0,
-    isCompleted = false
+    isCompleted
   } = props;
 
   const startButtonProps = {
