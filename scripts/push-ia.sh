@@ -16,7 +16,7 @@ branch=$(git symbolic-ref --short HEAD)
 git checkout master
 git pull origin new-dev
 cp ./src/config/aws-exports.ia.js ./src/aws-exports.js
-
+npm run build
 
 echo "Now you are on" ${UNDERLINE}$branch${NONE}
 echo ${RED}"Please make sure the changes are correct before you push to " ${UNDERLINE}$branch ${NONE} "branch"
