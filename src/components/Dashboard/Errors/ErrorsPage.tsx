@@ -14,6 +14,8 @@ import {
   UpdateErrorLogInput
 } from 'API';
 import {API, graphqlOperation} from 'aws-amplify';
+import * as queries from 'graphql/queries';
+import * as mutations from 'graphql/mutations';
 import * as customMutations from 'customGraphql/customMutations';
 import {orderBy, update} from 'lodash';
 import moment from 'moment';
@@ -27,7 +29,9 @@ const ErrorItem = ({
   idx,
   setShowModal
 }: {
-  setShowModal: React.Dispatch<React.SetStateAction<{show: boolean; message: string}>>;
+  setShowModal: React.Dispatch<
+    React.SetStateAction<{show: boolean; additional?: string; message: string}>
+  >;
   updateStatus: (id: string, status: ErrorStatus) => void;
   error: ErrorLog;
   idx: number;
@@ -46,13 +50,12 @@ const ErrorItem = ({
     }
   };
 
-  const outputError =
-    error.error !== '' && error.error !== '{}' ? error.error : error.errorType;
+  const outputError = error.error !== '' && error.error !== '{}' ? error.error : '';
 
   const stackItem = {
     label: 'see stack details',
     action: () => {
-      setShowModal({show: true, message: outputError});
+      setShowModal({show: true, message: outputError, additional: error.errorType});
     }
   };
 
@@ -95,6 +98,7 @@ const ErrorItem = ({
       <h4 className="text-sm text-red-600 font-light h-24 overflow-auto py-2">
         {outputError}
       </h4>
+
       <h6 className="text-sm text-gray-900 font-light overflow-auto py-2 mb-4">
         {error.componentName}
       </h6>
@@ -119,6 +123,34 @@ const ErrorItem = ({
       </div>
     </div>
   );
+};
+
+const deleteClosedErrors = async () => {
+  try {
+    let date = new Date();
+    date.setDate(date.getDate() - 7);
+    const res: any = await API.graphql(
+      graphqlOperation(queries.listErrorLogs, {
+        limit: 500,
+
+        filter: {
+          errorTime: {lt: date.toISOString()},
+          status: {eq: ErrorStatus.CLOSED}
+        }
+      })
+    );
+    const items = res.data.listErrorLogs.items || [];
+
+    if (items && items.length > 0) {
+      for (const x of items) {
+        await API.graphql(
+          graphqlOperation(mutations.deleteErrorLog, {input: {id: x.id}})
+        );
+      }
+    }
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 const ErrorsPage = () => {
@@ -151,11 +183,12 @@ const ErrorsPage = () => {
       onSuccess: (data) => {
         const orderedList = orderBy([...data], ['errorTime'], ['desc']);
         setData([...orderedList]);
+        deleteClosedErrors();
       }
     }
   );
 
-  const [showModal, setShowModal] = useState({show: false, message: ''});
+  const [showModal, setShowModal] = useState({show: false, message: '', additional: ''});
 
   const [filteredList, setFilteredList] = useState([...data]);
 
@@ -267,9 +300,9 @@ const ErrorsPage = () => {
       {showModal.show && (
         <ModalPopUp
           closeAction={() => {
-            setShowModal({show: false, message: ''});
+            setShowModal({show: false, message: '', additional: ''});
           }}
-          message={showModal.message}
+          message={showModal.message.concat(`Additional info -> ${showModal.additional}`)}
         />
       )}
     </>
