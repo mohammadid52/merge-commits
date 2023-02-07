@@ -181,14 +181,12 @@ const EvidenceTab = ({
     list.forEach((curriculum: any): void => {
       curriculum.learningObjectiveData.forEach(
         (objective: {curriculumID: string; associatedTopics: any[]}): void => {
-          console.log(curricula);
           if (
             Boolean(curricula.find((c: {id: string}) => c.id === objective.curriculumID))
           ) {
             objective?.associatedTopics &&
               objective?.associatedTopics.length > 0 &&
               objective?.associatedTopics?.forEach((topic: any) => {
-                console.log('topic->', topic);
                 topic.associatedRubrics.forEach((rubric: {id: string}) => {
                   if (
                     selectedMeasurements.find(
