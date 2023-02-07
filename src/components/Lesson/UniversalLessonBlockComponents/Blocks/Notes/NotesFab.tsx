@@ -77,7 +77,7 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
     if (!notesInitialized && allNotes && allNotes.length > 0) {
       getOrCreateJournalData();
     }
-  }, [notesInitialized]);
+  }, [notesInitialized, allNotes.length]);
 
   const [notesData, setNotesData] = useState<UniversalJournalData>(INITIAL_NOTESDATA);
 
@@ -433,6 +433,7 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
       const existJournalEntry = isNotesFormCreated ? notesDataRows[notesFormIndex] : [];
 
       const filterOldNotes = filter(existJournalEntry.entryData, (d) => getUniq(d));
+
       const filterNewNotes = filter(
         allNotes,
         (_obj) => _obj && !find(existJournalEntry.entryData, ['domID', _obj.id])
@@ -455,7 +456,7 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
           syllabusLessonID: getRoomData.activeSyllabus
         });
       } else {
-        const existJournalEntry = notesDataRows[notesFormIndex];
+        let existJournalEntry = notesDataRows[notesFormIndex];
 
         setNotesData({
           id: existJournalEntry.id,
@@ -463,7 +464,7 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
           studentAuthID: existJournalEntry.studentAuthID,
           studentEmail: existJournalEntry.studentEmail,
           feedbacks: existJournalEntry.feedbacks,
-          entryData: [...existJournalEntry.entryData],
+          entryData: filterOldNotes,
           roomID: getRoomData.id,
           syllabusLessonID: getRoomData.activeSyllabus
         });
@@ -487,15 +488,15 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
     return entryData.filter((d) => {
       if (!domIds.includes(d.domID)) {
         domIds.push(d.domID);
-        return false;
-      } else {
         return true;
+      } else {
+        return false;
       }
     });
   };
 
   if (notesInitialized) {
-    const fixedFilteredData = getUniq2(filter(notesData?.entryData, (ed) => getUniq(ed)));
+    const fixedFilteredData = getUniq2(notesData?.entryData);
 
     /**
      * Working case
@@ -537,15 +538,16 @@ const NotesContainer = ({notes}: {notes: any[]}) => {
     const mapCustomData = fixedCustomData.map((m) => {
       let className = m.type.split(' || ')[1];
       const note = find(allNotes, ['id', m.domID]);
-
-      return {
-        id: m.domID,
-        class: className,
-        value: strippedString(m.input.toString()),
-        custom: true,
-        pagePartId: note?.pagePartId,
-        partContentId: note?.partContentId
-      };
+      if (!isEmpty(note) && m) {
+        return {
+          id: m.domID,
+          class: className,
+          value: strippedString(m.input.toString()),
+          custom: true,
+          pagePartId: note?.pagePartId,
+          partContentId: note?.partContentId
+        };
+      }
     });
 
     const collectedNotes = [...mapFixedData, ...mapCustomData].filter(Boolean);
