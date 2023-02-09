@@ -3913,7 +3913,7 @@ const LessonBuilderDict: any = {
     LESSON_PLAN_COLUMN: {
       ID: 'id',
       PAGE_TITLE: 'Page Name',
-      PLAN_LABEL: 'Activity label',
+      PLAN_LABEL: 'Lesson Page Label',
       DESCRIPTION: 'Instructions',
       TAGS: 'Add Tags',
       ESTIMATED_TIME: 'Scheduled Lesson Time',
@@ -3924,8 +3924,8 @@ const LessonBuilderDict: any = {
       BUTTON: 'Create lesson plan'
     },
     LESSON_CLASSROOM_ACTIVITY_TABLE: {
-      ACTIVITY_LABEL: 'Lesson Page Label',
-      ACTIVITY_NAME: 'Page Name',
+      ACTIVITY_LABEL: 'Activity Label',
+      ACTIVITY_NAME: 'Activity name',
       INTERACTION_TYPE: 'Interaction Type',
       INSTRUCTION: 'Instructions',
       ESTIMATED_TIME: 'Estimated Time',
@@ -4014,8 +4014,8 @@ const LessonBuilderDict: any = {
     },
     LESSON_PLAN_COLUMN: {
       ID: 'id',
-      PAGE_TITLE: 'Activity name',
-      PLAN_LABEL: 'Activity label',
+      PAGE_TITLE: 'Page Name',
+      PLAN_LABEL: 'Lesson Page Label',
       DESCRIPTION: 'Instructions',
       TAGS: 'Add Tags',
       ESTIMATED_TIME: 'Scheduled Lesson Time',

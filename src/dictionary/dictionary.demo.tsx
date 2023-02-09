@@ -3912,8 +3912,8 @@ const LessonBuilderDict: any = {
     },
     LESSON_PLAN_COLUMN: {
       ID: 'id',
-      PAGE_TITLE: 'Activity name',
-      PLAN_LABEL: 'Activity label',
+      PAGE_TITLE: 'Page Name',
+      PLAN_LABEL: 'Lesson Page Label',
       DESCRIPTION: 'Instructions',
       TAGS: 'Add Tags',
       ESTIMATED_TIME: 'Scheduled Lesson Time',
@@ -3931,7 +3931,7 @@ const LessonBuilderDict: any = {
       ESTIMATED_TIME: 'Estimated Time',
       ACTION: 'Actions',
       ADD_NEW_ACTIVITY: 'New Class Activity',
-      HEADING: 'Lesson Plan'
+      HEADING: 'Lesson Plan Builder'
     },
     LESSON_HOMEWORK_ACTIVITY_TABLE: {
       ACTIVITY_LABEL: 'Activity Label',
@@ -4014,8 +4014,8 @@ const LessonBuilderDict: any = {
     },
     LESSON_PLAN_COLUMN: {
       ID: 'id',
-      PAGE_TITLE: 'Activity name',
-      PLAN_LABEL: 'Activity label',
+      PAGE_TITLE: 'Page Name',
+      PLAN_LABEL: 'Lesson Page Label',
       DESCRIPTION: 'Instructions',
       TAGS: 'Add Tags',
       ESTIMATED_TIME: 'Scheduled Lesson Time',
