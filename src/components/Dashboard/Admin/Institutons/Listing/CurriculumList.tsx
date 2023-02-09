@@ -3,7 +3,6 @@ import Filters, {SortType} from '@components/Atoms/Filters';
 import Highlighted from '@components/Atoms/Highlighted';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import CommonActionsBtns from '@components/MicroComponents/CommonActionsBtns';
-import CourseAction from '@components/MicroComponents/CourseAction';
 import CourseName from '@components/MicroComponents/CourseName';
 import CourseUnits from '@components/MicroComponents/CourseUnits';
 import ModalPopUp from '@components/Molecules/ModalPopUp';

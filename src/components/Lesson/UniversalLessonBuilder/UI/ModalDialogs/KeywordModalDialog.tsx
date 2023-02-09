@@ -10,6 +10,8 @@ import {PartContentSub} from 'interfaces/UniversalLessonInterfaces';
 import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
 import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
+import AddButton from '@components/Atoms/Buttons/AddButton';
+import HStack from '@components/Atoms/HStack';
 
 interface KeywordModalDialog extends IContentTypeComponentProps {
   inputObj?: any;
@@ -20,16 +22,13 @@ const initialInputFieldsState = [
   {
     id: 'keyword_1',
     type: '',
-    label: 'Keyword Title',
-    value: 'Keyword description'
+    label: '',
+    value: ''
   }
 ];
 
 const newKeywordObj: PartContentSub = {
-  id: 'keyword_',
-  type: '',
-  label: 'Keyword Title',
-  value: 'Keyword description'
+  ...initialInputFieldsState[0]
 };
 
 const KeywordModalDialog = ({
@@ -144,7 +143,7 @@ const KeywordModalDialog = ({
         <div className="col-span-2">
           {inputFieldsArray.map((inputObj: PartContentSub, idx: number) => {
             return (
-              <div className="my-2" key={`keyword_${idx}`}>
+              <div className="my-2 animate-fadeIn" key={`keyword_${idx}`}>
                 <div className="w-auto flex items-center justify-between">
                   <label
                     htmlFor={'Link'}
@@ -169,7 +168,7 @@ const KeywordModalDialog = ({
                     onChange={(e) => onChange(e, idx)}
                     name={'label'}
                     value={inputFieldsArray[idx]?.label}
-                    placeHolder={inputFieldsArray[idx]?.label}
+                    placeHolder={'Keyword Title'}
                   />
                 </div>
                 <div className="mb-2">
@@ -177,7 +176,7 @@ const KeywordModalDialog = ({
                     onChange={(e) => onChange(e, idx)}
                     value={inputFieldsArray[idx]?.value}
                     name={'value'}
-                    placeHolder={inputFieldsArray[idx]?.value}
+                    placeHolder={'Keyword Description'}
                   />
                 </div>
               </div>
@@ -186,29 +185,27 @@ const KeywordModalDialog = ({
         </div>
       </div>
 
-      <div className="flex mt-4 justify-between px-6 pb-4">
+      <HStack justify="between" className=" mt-4">
         <div className="flex items-center w-auto">
-          <button
+          <AddButton
             onClick={handleAddNewKeyword}
-            className="w-auto mr-4 border-2 focus:text-white focus:border-indigo-600 focus:bg-indigo-400 border-gray-300 p-2 px-4 text-tiny hover:border-gray-500 rounded-md text-dark transition-all duration-300 ">
-            + Add Field
-          </button>
+            label={'Add new keyword title'}
+            transparent
+          />
         </div>
-        <div className="flex items-center w-auto">
+        <HStack>
           <Buttons
-            btnClass="py-1 px-4 text-xs mr-2"
             label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
             onClick={askBeforeClose}
             transparent
           />
 
           <Buttons
-            btnClass="py-1 px-8 text-xs ml-2"
             label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
             onClick={onKeywordCreate}
           />
-        </div>
-      </div>
+        </HStack>
+      </HStack>
     </>
   );
 };
