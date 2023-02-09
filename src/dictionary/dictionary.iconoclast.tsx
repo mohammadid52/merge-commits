@@ -3887,7 +3887,7 @@ const UnitLookupDict: any = {
 
 const LessonBuilderDict: any = {
   EN: {
-    TITLE: 'LESSON PLAN BUILDER',
+    TITLE: 'LESSON MANAGER',
     SUBTITLE: 'Build lessons, surveys or assessments here.',
     OVEVIEW_TITLE: 'Overview',
     OVERVIEW_DESCRIPTION: 'Capture core details of lessons & surveys',
@@ -3930,7 +3930,7 @@ const LessonBuilderDict: any = {
       INSTRUCTION: 'Instructions',
       ESTIMATED_TIME: 'Estimated Time',
       ACTION: 'Actions',
-      ADD_NEW_ACTIVITY: 'New Class Activity',
+      ADD_NEW_ACTIVITY: 'New Page',
       HEADING: 'Lesson Plan Builder'
     },
     LESSON_HOMEWORK_ACTIVITY_TABLE: {
@@ -4032,7 +4032,7 @@ const LessonBuilderDict: any = {
       INSTRUCTION: 'Instructions',
       ESTIMATED_TIME: 'Estimated Time',
       ACTION: 'Actions',
-      ADD_NEW_ACTIVITY: 'New Class Activity',
+      ADD_NEW_ACTIVITY: 'New Page',
       HEADING: 'Create & Edit Lesson/Survey Pages'
     },
     LESSON_HOMEWORK_ACTIVITY_TABLE: {
