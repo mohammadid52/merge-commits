@@ -388,6 +388,7 @@ const Csv = ({institutionId}: ICsvProps) => {
               : null;
 
           !instCRs.find((d: any) => d.name === cr.name) &&
+            curriculum &&
             instCRs.push({id: cr.id, name: cr.name, value: cr.name});
           // institutions.find((d) => d.id === )
 
@@ -404,6 +405,8 @@ const Csv = ({institutionId}: ICsvProps) => {
       })
       .filter(Boolean);
 
+    classrooms = classrooms.filter((d: any) => Boolean(d.curriculum));
+    console.log('🚀 ~ file: Csv.tsx:408 ~ fetchClassRooms ~ classrooms', classrooms);
     setClassRoomsList(classrooms);
     setInstClassRooms(removeDuplicates(instCRs));
     fetchActiveUnits(classrooms);
@@ -461,6 +464,7 @@ const Csv = ({institutionId}: ICsvProps) => {
       setSelectedClassRoom(cr);
       if (!sCR || sCR.id !== cr.id) {
         let classroom = classRoomsList.filter((c) => c.id === cr.id)[0];
+
         // with classroom => class and curriculum are directly selected
         setSelectedClass(classroom.class);
         setSelectedCurriculum(classroom?.curriculum);
@@ -1055,10 +1059,6 @@ const Csv = ({institutionId}: ICsvProps) => {
     hoveringItem?.name &&
     classRoomsList?.find((_c) => _c.name === hoveringItem?.name);
 
-  console.log(
-    '🚀 ~ file: Csv.tsx:1053 ~ Csv ~ currentSelectedClassroomData',
-    currentSelectedClassroomData
-  );
   const currentActiveUnit =
     currentSelectedClassroomData &&
     activeUnits.find((_d) => _d?.id === currentSelectedClassroomData?.activeSyllabus);
