@@ -4203,7 +4203,7 @@ const UniversalBuilderDict: any = {
 
 const CsvDict: any = {
   EN: {
-    TITLE: 'Download Surveys',
+    TITLE: 'Select Survey',
     SELECT_INST: 'Select institute',
     SELECT_CLASSROOM: 'Select classroom',
     SELECT_FILTERS: 'Select Filters',
@@ -4213,7 +4213,7 @@ const CsvDict: any = {
     DESCRIBE_REASON: 'Describe Reason'
   },
   ES: {
-    TITLE: 'Download Surveys',
+    TITLE: 'Select Survey',
     SELECT_INST: 'Select institute',
     SELECT_CLASSROOM: 'Select classroom',
     SELECT_FILTERS: 'Select Filters',
