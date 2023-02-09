@@ -1232,6 +1232,26 @@ const Csv = ({institutionId}: ICsvProps) => {
         </div>
 
         <div className="w-auto  border-t-0 border-b-0 border-gray-400 border-dashed py-4 md:gap-x-4 relative flex items-center">
+          
+        <Buttons
+            disabled={!isCSVDownloadReady && lessonPDFData.length === 0}
+            Icon={BsDownload}
+            size="small"
+            btnClass="px-6"
+            insideElement={
+              <PDFDownloadLink
+                className="w-auto ml-2"
+                document={
+                  <SurveyPDF lessonPDFData={lessonPDFData} clientKey={clientKey} />
+                }
+                fileName={`${selectedSurvey?.name}.pdf`}>
+                Download PDF Survey
+              </PDFDownloadLink>
+            }
+          />
+          
+          
+          
           <Buttons
             disabled={!isCSVDownloadReady}
             Icon={BsDownload}
@@ -1246,7 +1266,7 @@ const Csv = ({institutionId}: ICsvProps) => {
                 filename={`${selectedClassRoom?.name}_${
                   selectedSurvey?.name
                 }_${getTodayDate()}.csv`}>
-                Survey CSV
+                Download Survey Results
               </CSVLink>
             }
           />
@@ -1268,27 +1288,12 @@ const Csv = ({institutionId}: ICsvProps) => {
               </XlsxDownloadLink>
             }
           /> */}
-          <Buttons
-            disabled={!isCSVDownloadReady && lessonPDFData.length === 0}
-            Icon={BsDownload}
-            size="small"
-            btnClass="px-6"
-            insideElement={
-              <PDFDownloadLink
-                className="w-auto ml-2"
-                document={
-                  <SurveyPDF lessonPDFData={lessonPDFData} clientKey={clientKey} />
-                }
-                fileName={`${selectedSurvey?.name}.pdf`}>
-                Survey PDF
-              </PDFDownloadLink>
-            }
-          />
+
         </div>
 
         <div>
           <div className="w-auto my-4">
-            <SectionTitleV3 title={'Survey results'} />
+            <SectionTitleV3 title={'Survey Results'} />
           </div>
           {CSVData.length > 0 ? (
             <div className="max-w-256 2xl:max-w-9/10 flex items-center justify-center ">
