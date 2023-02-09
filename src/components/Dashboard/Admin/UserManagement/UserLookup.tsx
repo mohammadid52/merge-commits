@@ -34,6 +34,7 @@ import {createFilterToFetchSpecificItemsOnly, getUserRoleString} from 'utilities
 import UserLocation from './UserLocation';
 import UserRole from './UserRole';
 import UserStatus from './UserStatus';
+import {withZoiqFilter} from '@utilities/functions';
 
 export const sortByName = (data: any[]) => {
   return data.sort((a: any, b: any) => {
@@ -234,10 +235,8 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
     let resp: any = await API.graphql(
       graphqlOperation(queries.listPeople, {
         limit: 500,
-        filter: {
-          ...filter,
-          or: [...zoiqFilter]
-        }
+
+        filter: withZoiqFilter(filter, zoiqFilter)
       })
     );
     const users = resp?.data?.listPeople?.items;
@@ -257,10 +256,7 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
         try {
           const dashboardDataFetch: any = await API.graphql(
             graphqlOperation(customQueries.getTeacherLookUp, {
-              filter: {
-                teacherAuthID: {eq: teacherAuthID},
-                or: [...zoiqFilter]
-              }
+              filter: withZoiqFilter({teacherAuthID: {eq: teacherAuthID}}, zoiqFilter)
             })
           );
 
@@ -308,17 +304,13 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
         let users: any;
         let response: any;
 
-        const dynamicFilter =
+        let dynamicFilter =
           isTeacher || isBuilder
             ? {
-                or: [
-                  {role: {eq: 'ST'}},
-                  {role: {eq: 'TR'}},
-                  ...zoiqFilter,
-                  ...authIdFilter
-                ]
+                or: [{role: {eq: 'ST'}}, {role: {eq: 'TR'}}, ...authIdFilter]
               }
             : {};
+
         users = await fetchAllPerson(dynamicFilter);
         response = users;
         const usersList = response;
@@ -347,10 +339,7 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
     try {
       const response: any = await API.graphql(
         graphqlOperation(customQueries.getDashboardDataForTeachers, {
-          filter: {
-            teacherAuthID: {eq: state.user.authId},
-            or: [...zoiqFilter]
-          }
+          filter: withZoiqFilter({teacherAuthID: {eq: state.user.authId}}, zoiqFilter)
         })
       );
       const assignedRoomsAsCoTeacher: any = await API.graphql(

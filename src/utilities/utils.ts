@@ -21,3 +21,14 @@ export const fetchDesigners = async () => {
   }
   return designers;
 };
+
+export const getFormatedDate = (date: string) => {
+  if (date) {
+    if (date !== '-') {
+      return date.split(',')[0];
+    } else {
+      return '-';
+    }
+  }
+  return '-';
+};

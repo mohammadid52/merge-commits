@@ -7,9 +7,10 @@ import UploadButton from '@components/Atoms/Form/UploadButton';
 import Modal from '@components/Atoms/Modal';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
+import Table from '@components/Molecules/Table';
 import useAuth from '@customHooks/useAuth';
 import {Transition} from '@headlessui/react';
-import {focusOn, getExtension} from '@utilities/functions';
+import {focusOn, getExtension, withZoiqFilter} from '@utilities/functions';
 import {getImageFromS3} from '@utilities/services';
 import {
   ClassroomType,
@@ -19,9 +20,9 @@ import {
 } from 'API';
 import Selector from 'atoms/Form/Selector';
 import {useGlobalContext} from 'contexts/GlobalContext';
+import * as customMutations from 'customGraphql/customMutations';
 import * as customQueries from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
-import * as customMutations from 'customGraphql/customMutations';
 import * as mutations from 'graphql/mutations';
 import * as queries from 'graphql/queries';
 import {isEmpty, uniqBy} from 'lodash';
@@ -54,7 +55,7 @@ const theadStyles =
   'px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider';
 const tdataStyles = 'px-6 py-4 whitespace-nowrap text-sm text-gray-800';
 
-export const Table = ({CSVData}: {CSVData: any[]}) => {
+export const _Table = ({CSVData}: {CSVData: any[]}) => {
   return (
     <div className="flex flex-col">
       <div className="overflow-x-auto ">
@@ -135,6 +136,7 @@ const INITIAL_MODAL_STATE: IModal = {
 
 const UploadCsv = ({institutionId}: ICsvProps) => {
   const {state, userLanguage, zoiqFilter} = useGlobalContext();
+
   const {CsvDict, Institute_info} = useDictionary();
 
   const [file, setFile] = useState<any>(null);
@@ -1185,11 +1187,10 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
       if (isTeacher || isFellow) {
         classrooms = await API.graphql(
           graphqlOperation(customQueries.listRoomsDashboard, {
-            filter: {
-              teacherAuthID: {eq: authId},
-              or: [...zoiqFilter],
-              type: {eq: ClassroomType.TRADITIONAL}
-            }
+            filter: withZoiqFilter(
+              {teacherAuthID: {eq: authId}, type: {eq: ClassroomType.TRADITIONAL}},
+              zoiqFilter
+            )
           })
         );
 
@@ -1205,7 +1206,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
       } else {
         classrooms = await API.graphql(
           graphqlOperation(customQueries.listRoomsDashboard, {
-            filter: {type: {eq: ClassroomType.TRADITIONAL}, or: [...zoiqFilter]}
+            filter: withZoiqFilter({type: {eq: ClassroomType.TRADITIONAL}}, zoiqFilter)
           })
         );
 
@@ -1358,29 +1359,64 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
     activeUnits.find((_d) => _d?.id === currentSelectedClassroomData?.activeSyllabus);
 
   const getMappedValues = (input: any) => {
-    let result: any[] = [];
+    if (input) {
+      let result: any[] = [];
 
-    const values = input['AuthId'];
+      const values = input['AuthId'];
 
-    values.forEach(() => {
-      let res: any = {};
-      Object.keys(input).forEach((_d) => {
-        res[_d] = '';
-      });
-      result.push(res);
-    });
+      if (values) {
+        values.forEach(() => {
+          let res: any = {};
+          Object.keys(input).forEach((_d) => {
+            res[_d] = '';
+          });
+          result.push(res);
+        });
 
-    let mapped = result.map((_e, idx) => {
-      let final = _e;
+        let mapped = result.map((_e, idx) => {
+          let final = _e;
 
-      Object.keys(_e).forEach((_v) => {
-        final[_v] = input[_v][idx];
-      });
+          Object.keys(_e).forEach((_v) => {
+            final[_v] = input[_v][idx];
+          });
 
-      return final;
-    });
+          return final;
+        });
 
-    return mapped;
+        return mapped;
+      }
+      return [];
+    }
+    return [];
+  };
+
+  const dataList = getMappedValues(parsedObj).map((listItem, idx) => ({
+    no: idx + 1,
+    id: listItem['AuthId'],
+    name: `${listItem['First Name']} ${listItem['Last Name']}`,
+
+    email: listItem['Email'],
+    takenSurvey: listItem['UniversalSurveyStudentID'] === 'Not-taken-yet' ? 'No' : 'Yes'
+  }));
+
+  const tableConfig = {
+    headers: ['No', 'Id', 'Name', 'Email', 'Taken Survey'],
+    dataList,
+    config: {
+      isFirstIndex: true,
+      dataList: {
+        loading: isEmpty(parsedObj),
+
+        emptyText: 'no data found',
+        customWidth: {
+          id: 'w-72',
+          takenSurvey: 'w-48',
+
+          email: 'w-72 break-all'
+        },
+        maxHeight: 'max-h-196'
+      }
+    }
   };
 
   return (
@@ -1402,17 +1438,18 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
       <div className="flex flex-col overflow-h-scroll w-full h-full px-8 py-4">
         <div className="mx-auto w-full">
           <div className="flex flex-row my-0 w-full py-0 justify-start">
-            <div className="w-auto">
+            <div className="">
               <SectionTitleV3
+                textWidth="lg:w-1/3 2xl:w-1/4"
                 withButton={
-                  <div className="w-auto flex items-center gap-x-4 ml-4">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                     <div className="w-auto relative">
                       <Selector
                         dataCy="upload-analytics-classroom"
                         loading={classRoomLoading}
                         selectedItem={selectedClassRoom ? selectedClassRoom.name : ''}
                         placeholder="select classroom"
-                        width="w-64"
+                        width="xl:w-64"
                         setHoveringItem={setHoveringItem}
                         list={instClassRooms}
                         onChange={(value, name, id) => {
@@ -1490,7 +1527,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
                       placeholder="select unit"
                       btnId="upload-analytics-unit"
                       list={units}
-                      width="w-64"
+                      width="xl:w-64"
                       disabled={!selectedCurriculum}
                       onChange={(value, name, id) => {
                         onUnitSelect(id, name, value);
@@ -1502,7 +1539,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
                       dataCy="analytics-survey"
                       btnId="analytics-survey"
                       loading={surveysLoading}
-                      width="w-64"
+                      width="xl:w-64"
                       direction="left"
                       disabled={!selectedUnit}
                       selectedItem={selectedSurvey ? selectedSurvey.name : ''}
@@ -1558,7 +1595,8 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
 
         {!isEmpty(parsedObj) && (
           <div className="2xl:max-w-9/10 max-w-256 flex items-center justify-center ">
-            <Table CSVData={getMappedValues(parsedObj)} />
+            {/* <Table CSVData={getMappedValues(parsedObj)} /> */}
+            <Table {...tableConfig} />
           </div>
         )}
 

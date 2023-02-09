@@ -1,11 +1,7 @@
-import Placeholder from '@components/Atoms/Placeholder';
-import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
-import {getImageFromS3} from '@utilities/services';
 import {API, graphqlOperation} from 'aws-amplify';
 import InformationalWalkThrough from 'components/Dashboard/Admin/Institutons/InformationalWalkThrough/InformationalWalkThrough';
 import HeaderTextBar from 'components/Dashboard/HeaderTextBar/HeaderTextBar';
 import * as customQueries from 'customGraphql/customQueries';
-import gsap from 'gsap';
 import React, {useEffect, useState} from 'react';
 import {BsFillInfoCircleFill} from 'react-icons/bs';
 import HeroBanner from '../Header/HeroBanner';

@@ -1,7 +1,7 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {Storage} from '@aws-amplify/storage';
 import {formatPageName} from '@components/Dashboard/Admin/UserManagement/List';
-import {setPageTitle} from '@utilities/functions';
+import {setPageTitle, withZoiqFilter} from '@utilities/functions';
 import {CreateDicitionaryInput, CreateErrorLogInput, UserPageState} from 'API';
 import * as mutations from 'graphql/mutations';
 import * as queries from 'graphql/queries';
@@ -197,11 +197,10 @@ export const checkUniqRoomName = async (
       : [{isZoiq: {eq: false}}, {isZoiq: {attributeExists: false}}];
     const list: any = await API.graphql(
       graphqlOperation(queries.listRooms, {
-        filter: {
-          institutionID: {eq: instituteId},
-          name: {eq: roomName},
-          or: [...zoiqFilter]
-        }
+        filter: withZoiqFilter(
+          {institutionID: {eq: instituteId}, name: {eq: roomName}},
+          zoiqFilter
+        )
       })
     );
     return list.data.listRooms.items.length === 0 ? true : false;

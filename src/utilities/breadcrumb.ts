@@ -148,9 +148,15 @@ export const breadcrumbsRoutes = ({
   } else if (pathname.indexOf('research-and-analytics') > -1) {
     heroSectionTitle =
       instituteTabTitles['TABS'][
-        pathname.indexOf('upload-csv') ? 'UPLOAD_SURVEY' : 'DOWNLOAD_SURVEYS'
+        pathname.indexOf('upload-csv') > -1 ? 'UPLOAD_SURVEY' : 'DOWNLOAD_SURVEYS'
       ];
+
     breadcrumbPathForSection = [
+      {
+        title: instituteTabTitles['TABS']['RESEARCH_AND_ANALYTICS'],
+        url: `${baseUrl}/research-and-analytics`,
+        last: false
+      },
       {
         title: heroSectionTitle,
         url: `${baseUrl}/research-and-analytics`,
