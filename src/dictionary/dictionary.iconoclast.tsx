@@ -3887,18 +3887,18 @@ const UnitLookupDict: any = {
 
 const LessonBuilderDict: any = {
   EN: {
-    TITLE: 'LESSON PLAN BUILDER',
+    TITLE: 'LESSON MANAGER',
     SUBTITLE: 'Build lessons, surveys or assessments here.',
     OVEVIEW_TITLE: 'Overview',
-    OVERVIEW_DESCRIPTION: 'Capture core details of your lesson',
-    ACTIVITY_TITLE: 'Activities',
-    ACTIVITY_DESCRIPTION: 'Create class and home work here',
+    OVERVIEW_DESCRIPTION: 'Capture core details of lessons & surveys',
+    ACTIVITY_TITLE: 'Lesson Plan',
+    ACTIVITY_DESCRIPTION: 'Create & edit lesson & survey pages ',
     ACTIVITY_TOOLTIP: 'Add overview details in step 1 to continue',
     UNIT_MANAGER_TITLE: 'Unit Manager',
-    UNIT_MANAGER_DESCRIPTION: 'Assign lessons to units',
+    UNIT_MANAGER_DESCRIPTION: 'Assign lesson & surveys to course units',
     UNIT_MANAGER_TOOLTIP: 'Create lesson activities in step 2 to continue',
-    LEARNING_EVIDENCE_TITLE: 'Select measurements applied to lesson',
-    LEARNING_EVIDENCE_DESCRIPTION: 'Link measurements to lesson',
+    LEARNING_EVIDENCE_TITLE: 'Apply measurements lessons & surveys',
+    LEARNING_EVIDENCE_DESCRIPTION: 'Apply measurements to lessons & surveys',
     LEARNING_EVIDENCE_TOOLTIP: 'Assign your lesson to courses in step 3 to continue',
     BUTTON: {
       ADD_PLAN: 'Add new page',
@@ -3912,8 +3912,8 @@ const LessonBuilderDict: any = {
     },
     LESSON_PLAN_COLUMN: {
       ID: 'id',
-      PAGE_TITLE: 'Activity name',
-      PLAN_LABEL: 'Activity label',
+      PAGE_TITLE: 'Page Name',
+      PLAN_LABEL: 'Lesson Page Label',
       DESCRIPTION: 'Instructions',
       TAGS: 'Add Tags',
       ESTIMATED_TIME: 'Scheduled Lesson Time',
@@ -3924,14 +3924,14 @@ const LessonBuilderDict: any = {
       BUTTON: 'Create lesson plan'
     },
     LESSON_CLASSROOM_ACTIVITY_TABLE: {
-      ACTIVITY_LABEL: 'Activity Label',
-      ACTIVITY_NAME: 'Activity name',
+      ACTIVITY_LABEL: 'Page Label',
+      ACTIVITY_NAME: 'Page Name',
       INTERACTION_TYPE: 'Interaction Type',
       INSTRUCTION: 'Instructions',
       ESTIMATED_TIME: 'Estimated Time',
       ACTION: 'Actions',
-      ADD_NEW_ACTIVITY: 'New Class Activity',
-      HEADING: 'Class Activities'
+      ADD_NEW_ACTIVITY: 'New Page',
+      HEADING: 'Lesson Plan Builder'
     },
     LESSON_HOMEWORK_ACTIVITY_TABLE: {
       ACTIVITY_LABEL: 'Activity Label',
@@ -3948,7 +3948,7 @@ const LessonBuilderDict: any = {
       LEAD_INSTRUCTOR: 'Lead Instructor'
     },
     LEARNING_EVIDENCE_COLUMNS: {
-      LEARNING_OBJECTIVE: 'Learning Objective',
+      LEARNING_OBJECTIVE: 'Learning Objectives',
       TOPICS: 'Topics',
       MEASUREMENTS: 'Measurements',
       EVIDENCE_ACTIVITY: 'Evidence Activity(Page)',
@@ -3992,15 +3992,15 @@ const LessonBuilderDict: any = {
     TITLE: 'LESSON PLAN BUILDER',
     SUBTITLE: 'Build lessons, surveys or assessments here.',
     OVEVIEW_TITLE: 'Overview',
-    OVERVIEW_DESCRIPTION: 'Capture core details of your lesson',
-    ACTIVITY_TITLE: 'Activities',
-    ACTIVITY_DESCRIPTION: 'Create class and home work here',
+    OVERVIEW_DESCRIPTION: 'Capture core details of lessons & surveys',
+    ACTIVITY_TITLE: 'Lesson Plan',
+    ACTIVITY_DESCRIPTION: 'Create & edit lesson & survey pages ',
     ACTIVITY_TOOLTIP: 'Add overview details in step 1 to continue',
     UNIT_MANAGER_TITLE: 'Unit Manager',
-    UNIT_MANAGER_DESCRIPTION: 'Assign lessons to units',
+    UNIT_MANAGER_DESCRIPTION: 'Assign lesson & surveys to course units',
     UNIT_MANAGER_TOOLTIP: 'Create lesson activities in step 2 to continue',
-    LEARNING_EVIDENCE_TITLE: 'Select measurements applied to lesson',
-    LEARNING_EVIDENCE_DESCRIPTION: 'Link measurements to lesson',
+    LEARNING_EVIDENCE_TITLE: 'Apply measurements lessons & surveys',
+    LEARNING_EVIDENCE_DESCRIPTION: 'Apply measurements to lessons & surveys',
     LEARNING_EVIDENCE_TOOLTIP: 'Assign your lesson to courses in step 3 to continue',
     BUTTON: {
       ADD_PLAN: 'Add new page',
@@ -4014,8 +4014,8 @@ const LessonBuilderDict: any = {
     },
     LESSON_PLAN_COLUMN: {
       ID: 'id',
-      PAGE_TITLE: 'Activity name',
-      PLAN_LABEL: 'Activity label',
+      PAGE_TITLE: 'Page Name',
+      PLAN_LABEL: 'Lesson Page Label',
       DESCRIPTION: 'Instructions',
       TAGS: 'Add Tags',
       ESTIMATED_TIME: 'Scheduled Lesson Time',
@@ -4032,8 +4032,8 @@ const LessonBuilderDict: any = {
       INSTRUCTION: 'Instructions',
       ESTIMATED_TIME: 'Estimated Time',
       ACTION: 'Actions',
-      ADD_NEW_ACTIVITY: 'New Class Activity',
-      HEADING: 'Class Activities'
+      ADD_NEW_ACTIVITY: 'New Page',
+      HEADING: 'Create & Edit Lesson/Survey Pages'
     },
     LESSON_HOMEWORK_ACTIVITY_TABLE: {
       ACTIVITY_LABEL: 'Activity Label',
