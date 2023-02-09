@@ -17,6 +17,7 @@ interface SectionTitleProps {
   shadowOff?: boolean;
   backButton?: boolean;
   bgColor?: string;
+  textWidth?: string;
 }
 
 const SectionTitleV3: React.FC<SectionTitleProps> = (sectProps: SectionTitleProps) => {
@@ -31,7 +32,8 @@ const SectionTitleV3: React.FC<SectionTitleProps> = (sectProps: SectionTitleProp
     fontStyle = 'semibold',
     shadowOff = false,
     bgColor = 'bg-white',
-    backButton
+    backButton,
+    textWidth = 'w-auto'
   } = sectProps;
   const {userLanguage} = useContext(GlobalContext);
   const history = useHistory();
@@ -40,7 +42,9 @@ const SectionTitleV3: React.FC<SectionTitleProps> = (sectProps: SectionTitleProp
   return (
     <div
       className={`${
-        withButton ? 'flex items-center justify-between ' : ''
+        withButton
+          ? 'flex items-start lg:items-center gap-4 flex-col lg:flex-row  justify-between '
+          : ''
       } mx-auto m-auto py-4 ${
         borderBottom
           ? `px-0 border-b-0 border-gray-200 ${
@@ -48,7 +52,7 @@ const SectionTitleV3: React.FC<SectionTitleProps> = (sectProps: SectionTitleProp
             } rounded-t-xl ${bgColor} mb-0`
           : ''
       } ${extraContainerClass} `}>
-      <div className={`w-auto`}>
+      <div className={`${textWidth}`}>
         {title && (
           <h2 className={`text-lg 2xl:text-${fontSize} font-${fontStyle} ${extraClass}`}>
             {title}

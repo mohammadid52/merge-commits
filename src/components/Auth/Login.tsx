@@ -16,8 +16,6 @@ import AuthCard from 'components/Auth/AuthCard';
 import RememberMe from 'components/Auth/RememberMe';
 import {AiOutlineLock, AiOutlineUser} from 'react-icons/ai';
 import {UserPageState} from 'API';
-import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
-import QuickTiles from './QuickTiles';
 
 interface LoginProps {
   updateAuthState: Function;
@@ -65,11 +63,11 @@ const Login = ({updateAuthState}: LoginProps) => {
       );
       sessionStorage.setItem('accessToken', user.signInUserSession.accessToken.jwtToken);
       if (user) {
+        setIsLoginSuccess(true);
         let userInfo: any = await API.graphql(
           graphqlOperation(queries.getPerson, {email: username, authId: user.username})
         );
         userInfo = userInfo.data.getPerson;
-
         let instInfo: any = {};
         if (userInfo.role !== 'ST') {
           instInfo = await API.graphql(
@@ -79,32 +77,26 @@ const Login = ({updateAuthState}: LoginProps) => {
           );
         }
 
-        const userData = {
-          id: userInfo.id,
-          firstName: userInfo.preferredName || userInfo.firstName,
-          lastName: userInfo.lastName,
-          language: userInfo.language,
-          onBoardSurvey: userInfo.onBoardSurvey ? userInfo.onBoardSurvey : false,
-          role: userInfo.role,
-          image: userInfo.image,
-          lastEmotionSubmission: userInfo?.lastEmotionSubmission,
-          removedFrom: userInfo?.removedFrom,
-          status: userInfo?.status,
-          associateInstitute:
-            instInfo?.data?.listStaff?.items.filter((item: any) => item.institution) || []
-        };
-
-        setUser({role: userData.role, associateInstitute: userData.associateInstitute});
-        setIsLoginSuccess(true);
-        setMessage({show: false, message: '', type: ''});
-
         dispatch({
           type: 'SET_USER',
           payload: {
-            ...userData
+            id: userInfo.id,
+            firstName: userInfo.preferredName || userInfo.firstName,
+            lastName: userInfo.lastName,
+            language: userInfo.language,
+            onBoardSurvey: userInfo.onBoardSurvey ? userInfo.onBoardSurvey : false,
+            role: userInfo.role,
+            image: userInfo.image,
+            associateInstitute:
+              instInfo?.data?.listStaff?.items.filter((item: any) => item.institution) ||
+              [],
+            onDemand: userInfo?.onDemand,
+            lessons: userInfo.lessons,
+            lastEmotionSubmission: userInfo?.lastEmotionSubmission,
+            removedFrom: userInfo?.removedFrom,
+            status: userInfo?.status
           }
         });
-
         const time = new Date().toISOString();
         const input = {
           id: userInfo.id,
@@ -118,7 +110,7 @@ const Login = ({updateAuthState}: LoginProps) => {
           graphqlOperation(customMutations.updatePersonLoginTime, {input})
         );
 
-        // updateAuthState(true);
+        updateAuthState(true);
       }
     } catch (error) {
       console.error('error', error);
@@ -270,8 +262,6 @@ const Login = ({updateAuthState}: LoginProps) => {
     }
   };
 
-  const [user, setUser] = useState(null);
-
   const handleSetPassword = async () => {
     toggleLoading(true);
     let username = input.email;
@@ -290,29 +280,21 @@ const Login = ({updateAuthState}: LoginProps) => {
         graphqlOperation(queries.getPerson, {email: username, authId: user.username})
       );
       userInfo = userInfo.data.getPerson;
-
-      const userData = {
-        id: userInfo.id,
-        firstName: userInfo.preferredName || userInfo.firstName,
-        lastName: userInfo.lastName,
-        language: userInfo.language,
-        onBoardSurvey: userInfo.onBoardSurvey ? userInfo.onBoardSurvey : false,
-        role: userInfo.role,
-        image: userInfo.image,
-        lastEmotionSubmission: userInfo?.lastEmotionSubmission,
-
-        status: userInfo?.status
-      };
-
-      setUser({role: userInfo.role});
-      setMessage({show: false, message: '', type: ''});
-      setIsLoginSuccess(true);
-
       dispatch({
         type: 'SET_USER',
-        payload: {...userData}
+        payload: {
+          id: userInfo.id,
+          firstName: userInfo.preferredName || userInfo.firstName,
+          lastName: userInfo.lastName,
+          language: userInfo.language,
+          onBoardSurvey: userInfo.onBoardSurvey ? userInfo.onBoardSurvey : false,
+          role: userInfo.role,
+          image: userInfo.image,
+          lastEmotionSubmission: userInfo?.lastEmotionSubmission,
+          removedFrom: userInfo?.removedFrom,
+          status: userInfo?.status
+        }
       });
-
       const time = new Date().toISOString();
 
       const input = {
@@ -324,7 +306,7 @@ const Login = ({updateAuthState}: LoginProps) => {
         lastPageStateUpdate: time
       };
       await API.graphql(graphqlOperation(customMutations.updatePersonLoginTime, {input}));
-      // updateAuthState(true);
+      updateAuthState(true);
       toggleLoading(false);
     } catch (error) {
       setMessage({
@@ -363,104 +345,89 @@ const Login = ({updateAuthState}: LoginProps) => {
 
   return (
     <AuthCard
-      showFooter={!isLoginSuccess}
+      isSuccess={isLoginSuccess}
       message={message}
       // title={createPassword ? 'Create your password' : 'Login'}
-      subtitle={
-        isLoginSuccess
-          ? 'Where do you want to go?'
-          : createPassword
-          ? ''
-          : 'Welcome back!'
-      }>
-      <AnimatedContainer delay="1s" duration="500" show={Boolean(isLoginSuccess)}>
-        {Boolean(isLoginSuccess) && (
-          <QuickTiles updateAuthState={() => updateAuthState(true)} user={user} />
-        )}
-      </AnimatedContainer>
+      subtitle={createPassword ? '' : 'Welcome back!'}>
+      {!createPassword ? (
+        <>
+          <div className="h-auto flex-grow flex flex-col justify-center">
+            <FormInput
+              dataCy="email"
+              Icon={AiOutlineUser}
+              // label="Email"
+              className="mb-4"
+              placeHolder="Enter your email"
+              type="email"
+              value={input.email}
+              id="email"
+              onChange={handleChange}
+              onKeyDown={handleEnter}
+            />
 
-      <AnimatedContainer show={!isLoginSuccess}>
-        {!isLoginSuccess &&
-          (!createPassword ? (
-            <>
-              <div className="h-auto flex-grow flex flex-col justify-center">
+            {showPasswordField && (
+              <>
                 <FormInput
-                  dataCy="email"
-                  Icon={AiOutlineUser}
-                  // label="Email"
-                  className="mb-4"
-                  placeHolder="Enter your email"
-                  type="email"
-                  value={input.email}
-                  id="email"
+                  dataCy="password"
+                  // label="Password"
+                  Icon={AiOutlineLock}
+                  placeHolder="Enter your password"
+                  type="password"
+                  id="password"
+                  value={input.password}
                   onChange={handleChange}
                   onKeyDown={handleEnter}
                 />
 
-                {showPasswordField && (
-                  <>
-                    <FormInput
-                      dataCy="password"
-                      // label="Password"
-                      Icon={AiOutlineLock}
-                      placeHolder="Enter your password"
-                      type="password"
-                      id="password"
-                      value={input.password}
-                      onChange={handleChange}
-                      onKeyDown={handleEnter}
-                    />
-
-                    <div className="my-4">
-                      <RememberMe
-                        dataCy="remember"
-                        isChecked={isChecked}
-                        toggleCheckBox={toggleCheckBox}
-                      />
-                    </div>
-                  </>
-                )}
-                <div className="relative flex flex-col justify-center items-center">
-                  <Buttons
-                    dataCy="login-button"
-                    disabled={isToggled}
-                    onClick={handleSubmit}
-                    btnClass="w-full py-3"
-                    loading={isToggled}
-                    label={'Login'}
+                <div className="my-4">
+                  <RememberMe
+                    dataCy="remember"
+                    isChecked={isChecked}
+                    toggleCheckBox={toggleCheckBox}
                   />
                 </div>
-              </div>
-            </>
-          ) : (
-            <>
-              <div className="">
-                <FormInput
-                  dataCy="password"
-                  Icon={AiOutlineLock}
-                  className="mb-4"
-                  placeHolder="Enter new password"
-                  type="password"
-                  value={input.password}
-                  id="password"
-                  onChange={handleChange}
-                  onKeyDown={handleEnterSetPassword}
-                />
+              </>
+            )}
+            <div className="relative flex flex-col justify-center items-center">
+              <Buttons
+                dataCy="login-button"
+                disabled={isToggled}
+                onClick={handleSubmit}
+                btnClass="w-full py-3"
+                loading={isToggled}
+                label={'Login'}
+              />
+            </div>
+          </div>
+        </>
+      ) : (
+        <>
+          <div className="">
+            <FormInput
+              dataCy="password"
+              Icon={AiOutlineLock}
+              className="mb-4"
+              placeHolder="Enter new password"
+              type="password"
+              value={input.password}
+              id="password"
+              onChange={handleChange}
+              onKeyDown={handleEnterSetPassword}
+            />
 
-                <div className="relative flex flex-col justify-center items-center">
-                  <Buttons
-                    dataCy="set-password"
-                    disabled={isToggled}
-                    onClick={handleSetPassword}
-                    btnClass="w-full py-3"
-                    loading={isToggled}
-                    label={isToggled ? 'Loading' : 'Set Password'}
-                  />
-                </div>
-              </div>
-            </>
-          ))}
-      </AnimatedContainer>
+            <div className="relative flex flex-col justify-center items-center">
+              <Buttons
+                dataCy="set-password"
+                disabled={isToggled}
+                onClick={handleSetPassword}
+                btnClass="w-full py-3"
+                loading={isToggled}
+                label={isToggled ? 'Loading' : 'Set Password'}
+              />
+            </div>
+          </div>
+        </>
+      )}
     </AuthCard>
   );
 };

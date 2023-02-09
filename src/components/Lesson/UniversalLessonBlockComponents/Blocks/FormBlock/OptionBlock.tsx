@@ -37,8 +37,8 @@ const SelectMany = ({
               data-key={id}
               data-value={label}
               type="checkbox"
-              className={`w-5 h-5 flex-shrink-0 mx-4  cursor-pointer border-0 ${themePlaceholderColor} ${
-                getCheckValue(id) ? 'bg-blueberry border-white' : 'bg-white border-black '
+              className={`w-5 h-5 flex-shrink-0 mx-4 transition-all cursor-pointer border-0 ${themePlaceholderColor} ${
+                getCheckValue(id) ? 'theme-bg border-white' : 'bg-white border-black '
               }`}
               onChange={onChange}
               checked={getCheckValue(id)}
@@ -85,8 +85,8 @@ const SelectOne = ({
               data-key={id}
               data-value={label}
               type="radio"
-              className={`w-5 h-5 flex-shrink-0 mx-4 rounded-full cursor-pointer border-0 ${themePlaceholderColor} ${
-                getCheckValue(id) ? 'bg-blueberry border-white' : 'bg-white border-black '
+              className={`w-5 h-5 flex-shrink-0 mx-4 transition-all rounded-full cursor-pointer border-0 ${themePlaceholderColor} ${
+                getCheckValue(id) ? 'theme-bg border-white' : 'bg-white border-black '
               }`}
               onChange={(e) => {
                 if (e.target.id.includes('other')) {

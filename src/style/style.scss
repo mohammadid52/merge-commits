@@ -1430,7 +1430,7 @@ $polka-dot-size: 0.8px;
 //  Modal
 
 .modal-body {
-  overflow-y: inherit !important;
+  overflow-y: auto !important;
 }
 
 .sticky-page-builder {

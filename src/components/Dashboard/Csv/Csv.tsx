@@ -1,12 +1,13 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import Buttons from '@components/Atoms/Buttons';
 import Modal from '@components/Atoms/Modal';
+import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
+import Table from '@components/Molecules/Table';
 import {logError} from '@graphql/functions';
 import {Transition} from '@headlessui/react';
 import {PDFDownloadLink} from '@react-pdf/renderer';
 import {RoomStatus} from 'API';
 import Selector from 'atoms/Form/Selector';
-import Loader from 'atoms/Loader';
 import SectionTitleV3 from 'atoms/SectionTitleV3';
 import {GlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
@@ -86,73 +87,6 @@ const getFormatedDate = (date: string) => {
   return '-';
 };
 
-const theadStyles =
-  'px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider';
-const tdataStyles = 'px-6 py-4 whitespace-nowrap text-sm text-gray-800';
-
-export const Table = ({CSVData}: {CSVData: any[]}) => {
-  return (
-    <div className="flex flex-col">
-      <div className="overflow-x-auto ">
-        <div className="py-2 align-middle inline-block min-w-full ">
-          <div className="flex flex-1 shadow inner_card border-b-0 border-gray-200 sm:rounded-lg">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-100">
-                <tr>
-                  <th scope="col" style={{width: '15%'}} className={theadStyles}>
-                    Id
-                  </th>
-                  <th scope="col" style={{width: '20%'}} className={theadStyles}>
-                    first name
-                  </th>
-                  <th scope="col" style={{width: '15%'}} className={theadStyles}>
-                    last Name
-                  </th>
-                  <th scope="col" style={{width: '20%'}} className={theadStyles}>
-                    Email
-                  </th>
-                  <th scope="col" style={{width: '20%'}} className={theadStyles}>
-                    Taken Survey
-                  </th>
-                  <th scope="col" style={{width: '20%'}} className={theadStyles}>
-                    Completed Date
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {CSVData.map(
-                  (listItem, idx): JSX.Element => (
-                    <tr key={idx} className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-100'}>
-                      <td style={{width: '15%'}} className={tdataStyles}>
-                        {listItem?.id}
-                      </td>
-                      <td style={{width: '20%'}} className={tdataStyles}>
-                        {listItem?.firstName}
-                      </td>
-                      <td style={{width: '15%'}} className={tdataStyles}>
-                        {listItem?.lastName}
-                      </td>
-                      <td style={{width: '20%'}} className={tdataStyles}>
-                        {listItem?.email}
-                      </td>
-                      <td style={{width: '20%'}} className={tdataStyles}>
-                        {listItem?.hasTakenSurvey ? 'Yes' : 'No'}
-                      </td>
-                      <td style={{width: '10%'}} className={tdataStyles}>
-                        {getFormatedDate(listItem?.last)}
-                      </td>
-                    </tr>
-                  )
-                )}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
 const Card = ({keyItem, value}: any) => {
   return (
     <div className="flex relative bg-white rounded-lg  justify-center items-center h-20 shadow inner_card">
@@ -175,6 +109,7 @@ const Csv = ({institutionId}: ICsvProps) => {
   const [selectedInst, setSelectedInst] = useState(null);
 
   const [instClassRooms, setInstClassRooms] = useState([]);
+
   const [classRoomsList, setClassRoomsList] = useState([]);
 
   const [selectedClassRoom, setSelectedClassRoom] = useState(null);
@@ -387,11 +322,13 @@ const Csv = ({institutionId}: ICsvProps) => {
               : null;
 
           !instCRs.find((d: any) => d.name === cr.name) &&
+            curriculum &&
             instCRs.push({id: cr.id, name: cr.name, value: cr.name});
+          // institutions.find((d) => d.id === )
 
           return {
             id: cr.id,
-
+            institution: cr?.institution || {},
             name: cr.name,
             value: cr.name,
             class: {...cr.class},
@@ -402,6 +339,8 @@ const Csv = ({institutionId}: ICsvProps) => {
       })
       .filter(Boolean);
 
+    classrooms = classrooms.filter((d: any) => Boolean(d.curriculum));
+    console.log('🚀 ~ file: Csv.tsx:408 ~ fetchClassRooms ~ classrooms', classrooms);
     setClassRoomsList(classrooms);
     setInstClassRooms(removeDuplicates(instCRs));
     fetchActiveUnits(classrooms);
@@ -459,6 +398,7 @@ const Csv = ({institutionId}: ICsvProps) => {
       setSelectedClassRoom(cr);
       if (!sCR || sCR.id !== cr.id) {
         let classroom = classRoomsList.filter((c) => c.id === cr.id)[0];
+
         // with classroom => class and curriculum are directly selected
         setSelectedClass(classroom.class);
         setSelectedCurriculum(classroom?.curriculum);
@@ -554,10 +494,20 @@ const Csv = ({institutionId}: ICsvProps) => {
       })
     );
     let students = classData?.data?.getClass?.students?.items || [];
-    let classStudents = students.map((stu: any) => {
-      return stu.student;
+    let classStudents = students.map((stu: any) => stu.student);
+
+    let uniqIds: any[] = [];
+
+    classStudents = classStudents.filter((stu: any) => {
+      if (!uniqIds.includes(stu.authId)) {
+        uniqIds.push(stu.authId);
+        return true;
+      } else {
+        return false;
+      }
     });
     let studentsEmails = classStudents.map((stu: any) => stu.email);
+
     setClassStudents(classStudents);
     return studentsEmails;
   };
@@ -1007,6 +957,7 @@ const Csv = ({institutionId}: ICsvProps) => {
             '-'
         };
       });
+
       surveyDates = surveyDates.sort(
         // @ts-ignore
         (a: any, b: any) => new Date(b) - new Date(a)
@@ -1081,6 +1032,36 @@ const Csv = ({institutionId}: ICsvProps) => {
 
   const mappedHeaders = getSeparatedHeaders(CSVHeaders);
 
+  const dataList = CSVData.map((listItem, idx) => ({
+    no: idx + 1,
+    id: listItem.id,
+    name: `${listItem.firstName} ${listItem.lastName}`,
+
+    email: listItem.email,
+    takenSurvey: listItem?.hasTakenSurvey ? 'Yes' : 'No',
+    completedDate: getFormatedDate(listItem?.last)
+  }));
+
+  const tableConfig = {
+    headers: ['No', 'Id', 'Name', 'Email', 'Completed Date', 'Taken Survey'],
+    dataList,
+    config: {
+      isFirstIndex: true,
+      dataList: {
+        loading: !isCSVDownloadReady || !isCSVReady,
+
+        emptyText: 'no data found',
+        customWidth: {
+          id: 'w-72',
+          takenSurvey: 'w-48',
+          completedDate: 'w-48',
+          email: 'w-72 break-all'
+        },
+        maxHeight: 'max-h-196'
+      }
+    }
+  };
+
   return (
     <>
       {showWarnModal && (
@@ -1102,25 +1083,27 @@ const Csv = ({institutionId}: ICsvProps) => {
       )}
       <div className="flex flex-col overflow-h-auto w-full h-full px-8 py-4">
         <div className="mx-auto w-full">
-          <div className="flex flex-row my-0 w-full py-0 mb-4 justify-between">
-            <div className="w-auto">
+          <div className="flex flex-row my-0  w-full py-0 mb-4 justify-between">
+            <div className="">
               <SectionTitleV3
+                textWidth="lg:w-1/5 2xl:w-1/4"
                 withButton={
-                  <div className="w-auto flex items-center gap-x-4 ml-4">
-                    {isSuperAdmin && (
-                      <Selector
-                        loading={institutionsLoading}
-                        selectedItem={selectedInst ? selectedInst.name : ''}
-                        placeholder={CsvDict[userLanguage]['SELECT_INST']}
-                        list={institutions}
-                        onChange={(value, name, id) => onInstSelect(id, name, value)}
-                      />
-                    )}
+                  <div className="grid grid-cols-2 lg:grid-cols-4  gap-4">
+                    {/* {isSuperAdmin && ( */}
+                    <Selector
+                      loading={institutionsLoading}
+                      width="lg:w-64"
+                      selectedItem={selectedInst ? selectedInst.name : ''}
+                      placeholder={CsvDict[userLanguage]['SELECT_INST']}
+                      list={institutions}
+                      onChange={(value, name, id) => onInstSelect(id, name, value)}
+                    />
+                    {/* )} */}
 
                     <div className="w-auto relative">
                       <Selector
                         dataCy="analytics-classroom"
-                        width="w-64"
+                        width="lg:w-64"
                         disabled={!selectedInst?.id}
                         setHoveringItem={setHoveringItem}
                         loading={classRoomLoading}
@@ -1147,7 +1130,9 @@ const Csv = ({institutionId}: ICsvProps) => {
                               <DataValue
                                 title={'Institution Name'}
                                 content={
-                                  currentSelectedClassroomData?.institutionName || '--'
+                                  currentSelectedClassroomData?.institutionName ||
+                                  selectedInst?.name ||
+                                  '--'
                                 }
                               />
                               <DataValue
@@ -1206,7 +1191,7 @@ const Csv = ({institutionId}: ICsvProps) => {
                       loading={unitsLoading}
                       selectedItem={selectedUnit ? selectedUnit.name : ''}
                       placeholder="select unit"
-                      width="w-64"
+                      width="lg:w-64"
                       list={units}
                       disabled={!selectedCurriculum}
                       onChange={(value, name, id) => onUnitSelect(id, name, value)}
@@ -1215,7 +1200,7 @@ const Csv = ({institutionId}: ICsvProps) => {
                     <Selector
                       dataCy="analytics-survey"
                       direction="left"
-                      width="w-64"
+                      width="lg:w-64"
                       loading={surveysLoading}
                       disabled={!selectedUnit}
                       selectedItem={selectedSurvey ? selectedSurvey.name : ''}
@@ -1295,55 +1280,43 @@ const Csv = ({institutionId}: ICsvProps) => {
           <div className="w-auto my-4">
             <SectionTitleV3 title={'Survey Results'} />
           </div>
-          {CSVData.length > 0 ? (
-            <div className="max-w-256 2xl:max-w-9/10 flex items-center justify-center ">
-              <Table CSVData={CSVData} />
-            </div>
+          {Boolean(selectedSurvey) ? (
+            <Table {...tableConfig} />
           ) : (
             <div className="bg-white flex justify-center items-center inner_card h-30 overflow-hidden border-b border-gray-200 sm:rounded-lg">
-              {csvGettingReady ? (
-                <div className="py-20 text-center mx-auto flex justify-center items-center w-full h-48">
-                  <div className="w-5/10 p-4">
-                    <Loader
-                      withText="Populating data please wait..."
-                      className="text-gray-500"
-                      animation
-                    />
-                  </div>
+              <div className="py-20 text-center mx-auto flex justify-center items-center w-full h-48">
+                <div className="w-5/10">
+                  <p className="mt-2 text-center text-lg text-gray-500">
+                    Select filters options to populate data
+                  </p>
                 </div>
-              ) : (
-                <div className="py-20 text-center mx-auto flex justify-center items-center w-full h-48">
-                  <div className="w-5/10">
-                    <p className="mt-2 text-center text-lg text-gray-500">
-                      Select filters options to populate data
-                    </p>
-                  </div>
-                </div>
-              )}
+              </div>
             </div>
           )}
         </div>
-        {isCSVDownloadReady && (
-          <div>
-            <div className="w-auto my-4">
-              <SectionTitleV3 title={'Statistics'} />
-            </div>
+        <AnimatedContainer show={isCSVDownloadReady}>
+          {isCSVDownloadReady && (
+            <div>
+              <div className="w-auto my-4">
+                <SectionTitleV3 title={'Statistics'} />
+              </div>
 
-            <div className={`grid grid-cols-2 md:grid-cols-4 gap-6`}>
-              {/* @Aman change the value:{value} */}
-              <Card
-                keyItem="Survey First"
-                value={getFormatedDate(statistics.surveyFirst)}
-              />
-              <Card
-                keyItem="Survey Last"
-                value={getFormatedDate(statistics.surveyLast)}
-              />
-              <Card keyItem="Taken Survey" value={statistics.takenSurvey} />
-              <Card keyItem="Not Taken Survey" value={statistics.notTakenSurvey} />
+              <div className={`grid grid-cols-2 md:grid-cols-4 gap-6`}>
+                {/* @Aman change the value:{value} */}
+                <Card
+                  keyItem="Survey First"
+                  value={getFormatedDate(statistics.surveyFirst)}
+                />
+                <Card
+                  keyItem="Survey Last"
+                  value={getFormatedDate(statistics.surveyLast)}
+                />
+                <Card keyItem="Taken Survey" value={statistics.takenSurvey} />
+                <Card keyItem="Not Taken Survey" value={statistics.notTakenSurvey} />
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </AnimatedContainer>
       </div>
     </>
   );
