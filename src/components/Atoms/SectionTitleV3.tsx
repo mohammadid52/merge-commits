@@ -43,7 +43,7 @@ const SectionTitleV3: React.FC<SectionTitleProps> = (sectProps: SectionTitleProp
     <div
       className={`${
         withButton
-          ? 'flex items-start lg:items-center gap-4 flex-col lg:flex-row  justify-between '
+          ? 'flex items-start xl:items-center gap-4 flex-col xl:flex-row  justify-between '
           : ''
       } mx-auto m-auto py-4 ${
         borderBottom

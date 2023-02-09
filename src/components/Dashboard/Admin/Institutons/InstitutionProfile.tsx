@@ -94,7 +94,7 @@ const InstitutionProfile = ({institute}: {institute: any}) => {
         className={`${
           isPageBuilder
             ? 'hidden'
-            : 'flex justify-between absolute bottom-0.5 right-0 left-0 mx-8 w-auto '
+            : 'hidden xl:flex justify-between absolute bottom-0.5 right-0 left-0 mx-8 w-auto '
         }`}
         onClick={() => {}}>
         {isEmpty(institute.name) && (

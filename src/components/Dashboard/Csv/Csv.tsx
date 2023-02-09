@@ -6,6 +6,7 @@ import Table from '@components/Molecules/Table';
 import {logError} from '@graphql/functions';
 import {Transition} from '@headlessui/react';
 import {PDFDownloadLink} from '@react-pdf/renderer';
+import {getFormatedDate} from '@utilities/utils';
 import {RoomStatus} from 'API';
 import Selector from 'atoms/Form/Selector';
 import SectionTitleV3 from 'atoms/SectionTitleV3';
@@ -74,17 +75,6 @@ export const removeDuplicates = (array: any[]) => {
     }
   });
   return result;
-};
-
-const getFormatedDate = (date: string) => {
-  if (date) {
-    if (date !== '-') {
-      return date.split(',')[0];
-    } else {
-      return '-';
-    }
-  }
-  return '-';
 };
 
 const Card = ({keyItem, value}: any) => {
@@ -159,6 +149,8 @@ const Csv = ({institutionId}: ICsvProps) => {
 
     clearClass();
 
+    setSelectedUnit(null);
+
     setSelectedCurriculum(null);
     setSelectedsurvey(null);
     setSurveyQuestions([]);
@@ -215,28 +207,6 @@ const Csv = ({institutionId}: ICsvProps) => {
       setInstitutionsLoading(false);
     }
   };
-
-  const getBasicInstitutionInfo = async (institutionId: string) => {
-    try {
-      const result: any = await API.graphql(
-        graphqlOperation(customQueries.getInstitutionBasicInfo, {
-          id: institutionId
-        })
-      );
-      setSelectedInst({
-        id: institutionId,
-        name: result?.data?.getInstitution.name,
-        value: result?.data?.getInstitution.name
-      });
-    } catch (error) {}
-  };
-
-  useEffect(() => {
-    if (institutionId) {
-      getBasicInstitutionInfo(institutionId);
-      fetchClassRooms();
-    }
-  }, [institutionId]);
 
   const [curriculumId, setCurriculumId] = useState(null);
 
@@ -1088,11 +1058,11 @@ const Csv = ({institutionId}: ICsvProps) => {
               <SectionTitleV3
                 textWidth="lg:w-1/5 2xl:w-1/4"
                 withButton={
-                  <div className="grid grid-cols-2 lg:grid-cols-4  gap-4">
+                  <div className="grid grid-cols-2 xl:grid-cols-4  gap-4">
                     {/* {isSuperAdmin && ( */}
                     <Selector
                       loading={institutionsLoading}
-                      width="lg:w-64"
+                      width="xl:w-64"
                       selectedItem={selectedInst ? selectedInst.name : ''}
                       placeholder={CsvDict[userLanguage]['SELECT_INST']}
                       list={institutions}
@@ -1103,7 +1073,7 @@ const Csv = ({institutionId}: ICsvProps) => {
                     <div className="w-auto relative">
                       <Selector
                         dataCy="analytics-classroom"
-                        width="lg:w-64"
+                        width="xl:w-64"
                         disabled={!selectedInst?.id}
                         setHoveringItem={setHoveringItem}
                         loading={classRoomLoading}
@@ -1191,7 +1161,7 @@ const Csv = ({institutionId}: ICsvProps) => {
                       loading={unitsLoading}
                       selectedItem={selectedUnit ? selectedUnit.name : ''}
                       placeholder="select unit"
-                      width="lg:w-64"
+                      width="xl:w-64"
                       list={units}
                       disabled={!selectedCurriculum}
                       onChange={(value, name, id) => onUnitSelect(id, name, value)}
@@ -1200,7 +1170,7 @@ const Csv = ({institutionId}: ICsvProps) => {
                     <Selector
                       dataCy="analytics-survey"
                       direction="left"
-                      width="lg:w-64"
+                      width="xl:w-64"
                       loading={surveysLoading}
                       disabled={!selectedUnit}
                       selectedItem={selectedSurvey ? selectedSurvey.name : ''}
@@ -1216,9 +1186,8 @@ const Csv = ({institutionId}: ICsvProps) => {
           </div>
         </div>
 
-        <div className="w-auto  border-t-0 border-b-0 border-gray-400 border-dashed py-4 md:gap-x-4 relative flex items-center">
-          
-        <Buttons
+        <div className="w-auto  border-t-0 border-b-0 border-gray-400 border-dashed py-4 justify-between xl:justify-start md:gap-x-4 relative flex items-center">
+          <Buttons
             disabled={!isCSVDownloadReady && lessonPDFData.length === 0}
             Icon={BsDownload}
             size="small"
@@ -1234,9 +1203,7 @@ const Csv = ({institutionId}: ICsvProps) => {
               </PDFDownloadLink>
             }
           />
-          
-          
-          
+
           <Buttons
             disabled={!isCSVDownloadReady}
             Icon={BsDownload}
@@ -1255,25 +1222,6 @@ const Csv = ({institutionId}: ICsvProps) => {
               </CSVLink>
             }
           />
-
-          {/* <Buttons
-            disabled={!isCSVDownloadReady && lessonPDFData.length === 0}
-            Icon={BsDownload}
-            size="small"
-            btnClass="px-6"
-            insideElement={
-              <XlsxDownloadLink
-                // data={}
-                className="w-auto ml-2"
-                // document={
-                //   <SurveyPDF lessonPDFData={lessonPDFData} clientKey={clientKey} />
-                // }
-                fileName={`${selectedSurvey?.name}.xlsx`}>
-                Survey XLSX
-              </XlsxDownloadLink>
-            }
-          /> */}
-
         </div>
 
         <div>

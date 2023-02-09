@@ -32,6 +32,7 @@ import {
 import CheckBox from 'atoms/Form/CheckBox';
 import Label from 'atoms/Form/Label';
 import * as customQueries from 'customGraphql/customQueries';
+import {withZoiqFilter} from '@utilities/functions';
 
 interface newUserInput {
   key: number;
@@ -460,7 +461,7 @@ const Registration = ({
     try {
       const result: any = await API.graphql(
         graphqlOperation(customQueries.listRooms, {
-          filter: {or: [...zoiqFilter]},
+          filter: withZoiqFilter({}, zoiqFilter),
           nextToken: nextToken
         })
       );

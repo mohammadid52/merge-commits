@@ -1,6 +1,7 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import ComponentLoading from '@components/Lesson/Loading/ComponentLoading';
 import {logError, updatePageState} from '@graphql/functions';
+import {withZoiqFilter} from '@utilities/functions';
 import {PersonStatus, UserPageState} from 'API';
 import {getAsset} from 'assets';
 import Community from 'components/Community/Community';
@@ -450,7 +451,9 @@ const Dashboard = (props: DashboardProps) => {
     try {
       const queryObj = {
         name: 'customQueries.listRooms',
-        valueObj: {filter: {teacherAuthID: {eq: teacherAuthID}, or: [...zoiqFilter]}}
+        valueObj: {
+          filter: withZoiqFilter({teacherAuthID: {eq: teacherAuthID}}, zoiqFilter)
+        }
       };
 
       const classIdFromRoomsFetch: any = await API.graphql(

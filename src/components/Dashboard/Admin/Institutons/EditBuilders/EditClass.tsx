@@ -229,7 +229,17 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
   const fetchStudentList = async (searchQuery: string) => {
     // filter allStudents by searchQuery
 
-    const filteredStudents = allStudents.filter((student: any) => {
+    //"fb4788ad-86fc-4693-b41b-71bad6378980"
+    //"f4c48396-b0ee-41b3-b067-2ebce47c49c7"
+    let _allStudents = allStudents.filter((d) => {
+      return !classStudents.find((e) => e.student.authId === d.authId);
+    });
+    console.log(
+      _allStudents.filter((d: {firstName: string}) => d.firstName.startsWith('J'))
+    );
+
+    //"f0de27e9-3a7f-4fc4-88c9-b52e0fcdc9fe"
+    const filteredStudents = _allStudents.filter((student: any) => {
       const {firstName, lastName, name} = student;
 
       const searchValue = searchQuery.toLowerCase();

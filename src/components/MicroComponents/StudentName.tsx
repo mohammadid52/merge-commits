@@ -1,10 +1,24 @@
 import Placeholder from '@components/Atoms/Placeholder';
 import React from 'react';
 
-const StudentName = ({user, item, onClick}: {item: any; user: any; onClick: any}) => {
+const StudentName = ({
+  user,
+  onHover,
+  item,
+  onClick
+}: {
+  item: any;
+  onHover?: boolean;
+  user?: any;
+  onClick: any;
+}) => {
   return (
     <div
-      className={`flex ${user.role !== 'BLD' ? 'cursor-pointer' : ''} `}
+      className={`flex ${
+        onHover
+          ? 'hover:theme-bg:200 px-4 py-2 hover:theme-border:400 hover:theme-text:400 '
+          : ''
+      } ${user?.role !== 'BLD' ? 'cursor-pointer' : 'cursor-pointer'} `}
       onClick={onClick}>
       <div className="flex-shrink-0 h-10 w-10 flex items-center">
         {item.student.avatar ? (
@@ -20,7 +34,7 @@ const StudentName = ({user, item, onClick}: {item: any; user: any; onClick: any}
       <div className="ml-4">
         <div
           className={`${
-            user.role !== 'BLD' ? 'hover:text-gray-600' : ''
+            onHover ? '' : user?.role !== 'BLD' ? 'hover:text-gray-600' : ''
           } text-sm leading-5 font-medium text-gray-900`}>
           {item.student.name}
         </div>

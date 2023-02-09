@@ -102,3 +102,16 @@ export const focusOn = (id: string) => {
     }, 2000);
   }
 };
+
+export const withZoiqFilter = (generalFilter: any, zoiqFilter: any) => {
+  let filter: any = {};
+  filter =
+    zoiqFilter.length > 0
+      ? {
+          ...generalFilter,
+          or: [generalFilter?.or, generalFilter?.and, ...zoiqFilter].filter(Boolean)
+        }
+      : generalFilter;
+
+  return filter;
+};

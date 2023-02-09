@@ -1,8 +1,10 @@
+import StudentName from '@components/MicroComponents/StudentName';
 import {getAsset} from 'assets';
 import {GlobalContext} from 'contexts/GlobalContext';
 import React, {useContext, useRef, useState} from 'react';
 import {IoIosAdd} from 'react-icons/io';
 import {getInitialsFromString, initials, stringToHslColor} from 'utilities/strings';
+import Placeholder from '../Placeholder';
 import Label from './Label';
 
 interface selectorProps {
@@ -198,63 +200,20 @@ const SearchSelectorWithAvatar = (props: selectorProps) => {
                       item: {name: string; id: any; value: string; avatar?: string},
                       key: number
                     ) => (
-                      <li
-                        data-cy={`${dataCy}-item-${key}`}
-                        key={key}
-                        onClick={() =>
-                          updateSelectedItem(item.value, item.name, item.id, item.avatar)
-                        }
-                        id={item.id}
-                        role="option"
-                        className={`hover:${theme.backGroundLight[themeColor]} hover:text-white flex cursor-pointer select-none relative py-2 px-4`}>
-                        {item.avatar ? (
-                          <img
-                            src={item.avatar}
-                            alt=""
-                            className="flex-shrink-0 h-6 w-6 rounded-full"
-                          />
-                        ) : (
-                          <div
-                            className="h-6 w-6 rounded-full flex flex-shrink-0 justify-center items-center text-white text-xs p-2 text-bold"
-                            style={{
-                              background: `${stringToHslColor(
-                                getInitialsFromString(item.name)[0] +
-                                  ' ' +
-                                  getInitialsFromString(item.name)[1]
-                              )}`,
-                              textShadow: '0.1rem 0.1rem 2px #423939b3'
-                            }}>
-                            {item.name
-                              ? initials(
-                                  getInitialsFromString(item.name)[0],
-                                  getInitialsFromString(item.name)[1]
-                                )
-                              : initials('N', 'A')}
-                          </div>
-                        )}
-                        <span
-                          className={`${
-                            selectedItem.id === item.id ? 'font-semibold' : 'font-normal'
-                          } pl-4 block truncate`}>
-                          {item.name}
-                        </span>
-                        <span
-                          className={`${
-                            selectedItem.id === item.id ? 'display' : 'hidden'
-                          } ${
-                            theme.textColor[themeColor]
-                          } relative w-auto flex items-center`}>
-                          <svg
-                            className="h-5 w-5"
-                            viewBox="0 0 20 20"
-                            fill="currentColor">
-                            <path
-                              fillRule="evenodd"
-                              d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                              clipRule="evenodd"
-                            />
-                          </svg>
-                        </span>
+                      <li className="">
+                        <StudentName
+                          onHover
+                          key={key}
+                          item={{student: item}}
+                          onClick={() =>
+                            updateSelectedItem(
+                              item.value,
+                              item.name,
+                              item.id,
+                              item.avatar
+                            )
+                          }
+                        />
                       </li>
                     )
                   )

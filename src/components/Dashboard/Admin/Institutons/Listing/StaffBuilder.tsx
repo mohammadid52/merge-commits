@@ -38,6 +38,7 @@ import Registration from 'components/Dashboard/Admin/UserManagement/Registration
 import {map} from 'lodash';
 import {sortByName} from '../../UserManagement/UserLookup';
 import {Status} from '../../UserManagement/UserStatus';
+import {withZoiqFilter} from '@utilities/functions';
 
 interface StaffBuilderProps {
   instituteId: String;
@@ -131,7 +132,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
 
       const list: any = await API.graphql(
         graphqlOperation(customQueries.fetchPersons, {
-          filter: {...filter, or: [...zoiqFilter]},
+          filter: withZoiqFilter(filter, zoiqFilter),
           limit: 500
         })
       );

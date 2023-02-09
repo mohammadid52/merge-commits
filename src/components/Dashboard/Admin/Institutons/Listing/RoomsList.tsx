@@ -20,6 +20,7 @@ import useDictionary from 'customHooks/dictionary';
 import * as queries from 'graphql/queries';
 import {map, orderBy} from 'lodash';
 import {Status} from '../../UserManagement/UserStatus';
+import {withZoiqFilter} from '@utilities/functions';
 
 interface RoomListProps {
   instId: string;
@@ -99,9 +100,10 @@ const RoomsList = (props: RoomListProps) => {
               teacherAuthID: {eq: authId}
             }
           : {};
+
       const assignedRoomsAsTeachers: any = await API.graphql(
         graphqlOperation(customQueries.listRoomsDashboard, {
-          filter: {...filter, or: [...zoiqFilter]}
+          filter: withZoiqFilter(filter, zoiqFilter)
         })
       );
 

@@ -94,11 +94,17 @@ const RoomView = ({
     try {
       const compoundQuery = createFilterToFetchSpecificItemsOnly(idList, 'id');
 
+      let filter = {
+        or: [...compoundQuery.or]
+      };
+
+      if (zoiqFilter.length > 0) {
+        filter = {...filter, or: [...filter.or, ...zoiqFilter]};
+      }
+
       const roomsList: any = await API.graphql(
         graphqlOperation(customQueries.listRoomsNotebook, {
-          filter: {
-            or: [...compoundQuery.or, ...zoiqFilter]
-          }
+          filter: filter
         })
       );
       const responseData = roomsList?.data?.listRooms?.items || [];
