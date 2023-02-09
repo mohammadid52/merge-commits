@@ -3924,8 +3924,8 @@ const LessonBuilderDict: any = {
       BUTTON: 'Create lesson plan'
     },
     LESSON_CLASSROOM_ACTIVITY_TABLE: {
-      ACTIVITY_LABEL: 'Activity Label',
-      ACTIVITY_NAME: 'Activity name',
+      ACTIVITY_LABEL: 'Page Label',
+      ACTIVITY_NAME: 'Page Name',
       INTERACTION_TYPE: 'Interaction Type',
       INSTRUCTION: 'Instructions',
       ESTIMATED_TIME: 'Estimated Time',
@@ -3948,7 +3948,7 @@ const LessonBuilderDict: any = {
       LEAD_INSTRUCTOR: 'Lead Instructor'
     },
     LEARNING_EVIDENCE_COLUMNS: {
-      LEARNING_OBJECTIVE: 'Learning Objective',
+      LEARNING_OBJECTIVE: 'Learning Objectives',
       TOPICS: 'Topics',
       MEASUREMENTS: 'Measurements',
       EVIDENCE_ACTIVITY: 'Evidence Activity(Page)',

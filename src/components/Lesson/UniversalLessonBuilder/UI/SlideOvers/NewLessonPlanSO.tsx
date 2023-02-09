@@ -584,6 +584,8 @@ const NewLessonPlanSO = ({
     onSaveClick(undefined);
   };
 
+  const shouldBeDark = !location.search.includes('&step=activities');
+
   return (
     <>
       {showModal.show && (
@@ -658,7 +660,7 @@ const NewLessonPlanSO = ({
               label="Activity name"
               isRequired
               onChange={onFieldChange}
-              dark
+              dark={shouldBeDark}
               id="title"
               error={errors?.title}
             />
@@ -669,7 +671,7 @@ const NewLessonPlanSO = ({
               showCharacterUsage
               label="Activity label"
               maxLength={12}
-              dark
+              dark={shouldBeDark}
               isRequired
               placeHolder="eg. Let's learn what is javascript"
               value={label}
@@ -686,7 +688,7 @@ const NewLessonPlanSO = ({
               label="Add video instructions"
               disabled={isUploadedFromPC}
               onChange={onVideoLinkChange}
-              dark
+              dark={shouldBeDark}
               id="videoLink"
               error={errors?.videoLink}
             />
@@ -725,7 +727,7 @@ const NewLessonPlanSO = ({
               rounded
               customStyle
               features={features}
-              dark
+              dark={shouldBeDark}
               initialValue={instructions}
               onChange={(htmlContent, plainText) =>
                 onEditorStateChange(
