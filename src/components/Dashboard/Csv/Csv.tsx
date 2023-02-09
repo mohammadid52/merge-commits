@@ -1,12 +1,13 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import Buttons from '@components/Atoms/Buttons';
 import Modal from '@components/Atoms/Modal';
+import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
+import Table from '@components/Molecules/Table';
 import {logError} from '@graphql/functions';
 import {Transition} from '@headlessui/react';
 import {PDFDownloadLink} from '@react-pdf/renderer';
 import {RoomStatus} from 'API';
 import Selector from 'atoms/Form/Selector';
-import Loader from 'atoms/Loader';
 import SectionTitleV3 from 'atoms/SectionTitleV3';
 import {GlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
@@ -84,73 +85,6 @@ const getFormatedDate = (date: string) => {
     }
   }
   return '-';
-};
-
-const theadStyles =
-  'px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider';
-const tdataStyles = 'px-6 py-4 whitespace-nowrap text-sm text-gray-800';
-
-export const Table = ({CSVData}: {CSVData: any[]}) => {
-  return (
-    <div className="flex flex-col">
-      <div className="overflow-x-auto ">
-        <div className="py-2 align-middle inline-block min-w-full ">
-          <div className="flex flex-1 shadow inner_card border-b-0 border-gray-200 sm:rounded-lg">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-100">
-                <tr>
-                  <th scope="col" style={{width: '15%'}} className={theadStyles}>
-                    Id
-                  </th>
-                  <th scope="col" style={{width: '20%'}} className={theadStyles}>
-                    first name
-                  </th>
-                  <th scope="col" style={{width: '15%'}} className={theadStyles}>
-                    last Name
-                  </th>
-                  <th scope="col" style={{width: '20%'}} className={theadStyles}>
-                    Email
-                  </th>
-                  <th scope="col" style={{width: '20%'}} className={theadStyles}>
-                    Taken Survey
-                  </th>
-                  <th scope="col" style={{width: '20%'}} className={theadStyles}>
-                    Completed Date
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {CSVData.map(
-                  (listItem, idx): JSX.Element => (
-                    <tr key={idx} className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-100'}>
-                      <td style={{width: '15%'}} className={tdataStyles}>
-                        {listItem?.id}
-                      </td>
-                      <td style={{width: '20%'}} className={tdataStyles}>
-                        {listItem?.firstName}
-                      </td>
-                      <td style={{width: '15%'}} className={tdataStyles}>
-                        {listItem?.lastName}
-                      </td>
-                      <td style={{width: '20%'}} className={tdataStyles}>
-                        {listItem?.email}
-                      </td>
-                      <td style={{width: '20%'}} className={tdataStyles}>
-                        {listItem?.hasTakenSurvey ? 'Yes' : 'No'}
-                      </td>
-                      <td style={{width: '10%'}} className={tdataStyles}>
-                        {getFormatedDate(listItem?.last)}
-                      </td>
-                    </tr>
-                  )
-                )}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
 };
 
 const Card = ({keyItem, value}: any) => {
@@ -1087,6 +1021,41 @@ const Csv = ({institutionId}: ICsvProps) => {
 
   const mappedHeaders = getSeparatedHeaders(CSVHeaders);
 
+  const dataList = CSVData.map((listItem, idx) => ({
+    no: idx + 1,
+    id: listItem.id,
+    firstName: listItem.firstName,
+    lastName: listItem.lastName,
+    email: listItem.email,
+    takenSurvey: listItem?.hasTakenSurvey ? 'Yes' : 'No',
+    completedDate: getFormatedDate(listItem?.last)
+  }));
+
+  const tableConfig = {
+    headers: [
+      'No',
+      'Id',
+      'First Name',
+      'Last Name',
+      'Email',
+      'Taken Survey',
+      'Completed Date'
+    ],
+    dataList,
+    config: {
+      isFirstIndex: true,
+      dataList: {
+        loading: !isCSVDownloadReady || !isCSVReady,
+
+        emptyText: 'no data found',
+        customWidth: {
+          takenSurvey: 'w-12'
+        },
+        maxHeight: 'max-h-196'
+      }
+    }
+  };
+
   return (
     <>
       {showWarnModal && (
@@ -1298,55 +1267,43 @@ const Csv = ({institutionId}: ICsvProps) => {
           <div className="w-auto my-4">
             <SectionTitleV3 title={'Survey results'} />
           </div>
-          {CSVData.length > 0 ? (
-            <div className="max-w-256 2xl:max-w-9/10 flex items-center justify-center ">
-              <Table CSVData={CSVData} />
-            </div>
+          {Boolean(selectedSurvey) ? (
+            <Table {...tableConfig} />
           ) : (
             <div className="bg-white flex justify-center items-center inner_card h-30 overflow-hidden border-b border-gray-200 sm:rounded-lg">
-              {csvGettingReady ? (
-                <div className="py-20 text-center mx-auto flex justify-center items-center w-full h-48">
-                  <div className="w-5/10 p-4">
-                    <Loader
-                      withText="Populating data please wait..."
-                      className="text-gray-500"
-                      animation
-                    />
-                  </div>
+              <div className="py-20 text-center mx-auto flex justify-center items-center w-full h-48">
+                <div className="w-5/10">
+                  <p className="mt-2 text-center text-lg text-gray-500">
+                    Select filters options to populate data
+                  </p>
                 </div>
-              ) : (
-                <div className="py-20 text-center mx-auto flex justify-center items-center w-full h-48">
-                  <div className="w-5/10">
-                    <p className="mt-2 text-center text-lg text-gray-500">
-                      Select filters options to populate data
-                    </p>
-                  </div>
-                </div>
-              )}
+              </div>
             </div>
           )}
         </div>
-        {isCSVDownloadReady && (
-          <div>
-            <div className="w-auto my-4">
-              <SectionTitleV3 title={'Statistics'} />
-            </div>
+        <AnimatedContainer show={isCSVDownloadReady}>
+          {isCSVDownloadReady && (
+            <div>
+              <div className="w-auto my-4">
+                <SectionTitleV3 title={'Statistics'} />
+              </div>
 
-            <div className={`grid grid-cols-2 md:grid-cols-4 gap-6`}>
-              {/* @Aman change the value:{value} */}
-              <Card
-                keyItem="Survey First"
-                value={getFormatedDate(statistics.surveyFirst)}
-              />
-              <Card
-                keyItem="Survey Last"
-                value={getFormatedDate(statistics.surveyLast)}
-              />
-              <Card keyItem="Taken Survey" value={statistics.takenSurvey} />
-              <Card keyItem="Not Taken Survey" value={statistics.notTakenSurvey} />
+              <div className={`grid grid-cols-2 md:grid-cols-4 gap-6`}>
+                {/* @Aman change the value:{value} */}
+                <Card
+                  keyItem="Survey First"
+                  value={getFormatedDate(statistics.surveyFirst)}
+                />
+                <Card
+                  keyItem="Survey Last"
+                  value={getFormatedDate(statistics.surveyLast)}
+                />
+                <Card keyItem="Taken Survey" value={statistics.takenSurvey} />
+                <Card keyItem="Not Taken Survey" value={statistics.notTakenSurvey} />
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </AnimatedContainer>
       </div>
     </>
   );
