@@ -1593,12 +1593,16 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
           {error && <p className={`mt-1 text-red-500 text-xs`}>{error}</p>}
         </AnimatedContainer>
 
-        {!isEmpty(parsedObj) && <Table {...tableConfig} />}
+        {!isEmpty(parsedObj) && (
+          <>
+            <Table {...tableConfig} />
+          </>
+        )}
 
         <div className="flex items-center justify-end mt-3">
           <Buttons
             label={uploadingCSV ? 'Uploading Please wait...' : 'Upload CSV'}
-            disabled={uploadingCSV}
+            disabled={uploadingCSV || isEmpty(parsedObj)}
             onClick={(e) => showModalWhenUploadCsv(e)}
           />
         </div>
