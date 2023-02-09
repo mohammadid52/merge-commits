@@ -1,3 +1,4 @@
+import AddButton from '@components/Atoms/Buttons/AddButton';
 import LessonActivitiesAction from '@components/MicroComponents/LessonActivitiesAction';
 import Table from '@components/Molecules/Table';
 import {getAsset} from 'assets';
@@ -112,8 +113,8 @@ const LessonActivities = ({
   const dataList = map(pages, (page: any) => ({
     id: page.id,
     onClick: () => lessonPagePreview(page.id, false),
-    activityLabel: page.label || '-',
-    activityName: page.title || '-',
+    pageLabel: page.label || '-',
+    pageName: page.title || '-',
     interactionType: page?.interactionType ? page.interactionType.join(', ') : '-',
     instructions: page.description ? (
       <div
@@ -213,15 +214,13 @@ const LessonActivities = ({
                 </p>
               </div>
               <span className="w-auto">
-                <Buttons
-                  btnClass="mx-4"
-                  transparent
-                  size="small"
+                <AddButton
                   label={
                     LessonBuilderDict[userLanguage]['LESSON_CLASSROOM_ACTIVITY_TABLE'][
                       'ADD_NEW_ACTIVITY'
                     ]
                   }
+                  transparent
                   onClick={addNewLessonPlan}
                 />
               </span>
