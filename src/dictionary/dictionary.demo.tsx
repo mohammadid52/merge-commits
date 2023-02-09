@@ -3931,7 +3931,7 @@ const LessonBuilderDict: any = {
       ESTIMATED_TIME: 'Estimated Time',
       ACTION: 'Actions',
       ADD_NEW_ACTIVITY: 'New Class Activity',
-      HEADING: 'Class Activities'
+      HEADING: 'Lesson Plan'
     },
     LESSON_HOMEWORK_ACTIVITY_TABLE: {
       ACTIVITY_LABEL: 'Activity Label',
@@ -4033,7 +4033,7 @@ const LessonBuilderDict: any = {
       ESTIMATED_TIME: 'Estimated Time',
       ACTION: 'Actions',
       ADD_NEW_ACTIVITY: 'New Class Activity',
-      HEADING: 'Class Activities'
+      HEADING: 'Create & Edit Lesson/Survey Pages'
     },
     LESSON_HOMEWORK_ACTIVITY_TABLE: {
       ACTIVITY_LABEL: 'Activity Label',
