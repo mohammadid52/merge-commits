@@ -175,6 +175,7 @@ const Csv = ({institutionId}: ICsvProps) => {
   const [selectedInst, setSelectedInst] = useState(null);
 
   const [instClassRooms, setInstClassRooms] = useState([]);
+
   const [classRoomsList, setClassRoomsList] = useState([]);
 
   const [selectedClassRoom, setSelectedClassRoom] = useState(null);
@@ -388,10 +389,11 @@ const Csv = ({institutionId}: ICsvProps) => {
 
           !instCRs.find((d: any) => d.name === cr.name) &&
             instCRs.push({id: cr.id, name: cr.name, value: cr.name});
+          // institutions.find((d) => d.id === )
 
           return {
             id: cr.id,
-
+            institution: cr?.institution || {},
             name: cr.name,
             value: cr.name,
             class: {...cr.class},
@@ -1053,6 +1055,10 @@ const Csv = ({institutionId}: ICsvProps) => {
     hoveringItem?.name &&
     classRoomsList?.find((_c) => _c.name === hoveringItem?.name);
 
+  console.log(
+    '🚀 ~ file: Csv.tsx:1053 ~ Csv ~ currentSelectedClassroomData',
+    currentSelectedClassroomData
+  );
   const currentActiveUnit =
     currentSelectedClassroomData &&
     activeUnits.find((_d) => _d?.id === currentSelectedClassroomData?.activeSyllabus);
@@ -1103,24 +1109,24 @@ const Csv = ({institutionId}: ICsvProps) => {
       <div className="flex flex-col overflow-h-auto w-full h-full px-8 py-4">
         <div className="mx-auto w-full">
           <div className="flex flex-row my-0 w-full py-0 mb-4 justify-between">
-            <div className="w-auto">
+            <div className="">
               <SectionTitleV3
                 withButton={
-                  <div className="w-auto flex items-center gap-x-4 ml-4">
-                    {isSuperAdmin && (
-                      <Selector
-                        loading={institutionsLoading}
-                        selectedItem={selectedInst ? selectedInst.name : ''}
-                        placeholder={CsvDict[userLanguage]['SELECT_INST']}
-                        list={institutions}
-                        onChange={(value, name, id) => onInstSelect(id, name, value)}
-                      />
-                    )}
+                  <div className="grid grid-cols-2 lg:grid-cols-4  gap-4">
+                    {/* {isSuperAdmin && ( */}
+                    <Selector
+                      loading={institutionsLoading}
+                      selectedItem={selectedInst ? selectedInst.name : ''}
+                      placeholder={CsvDict[userLanguage]['SELECT_INST']}
+                      list={institutions}
+                      onChange={(value, name, id) => onInstSelect(id, name, value)}
+                    />
+                    {/* )} */}
 
                     <div className="w-auto relative">
                       <Selector
                         dataCy="analytics-classroom"
-                        width="w-64"
+                        width="lg:w-64"
                         disabled={!selectedInst?.id}
                         setHoveringItem={setHoveringItem}
                         loading={classRoomLoading}
@@ -1147,7 +1153,9 @@ const Csv = ({institutionId}: ICsvProps) => {
                               <DataValue
                                 title={'Institution Name'}
                                 content={
-                                  currentSelectedClassroomData?.institutionName || '--'
+                                  currentSelectedClassroomData?.institutionName ||
+                                  selectedInst?.name ||
+                                  '--'
                                 }
                               />
                               <DataValue
@@ -1206,7 +1214,7 @@ const Csv = ({institutionId}: ICsvProps) => {
                       loading={unitsLoading}
                       selectedItem={selectedUnit ? selectedUnit.name : ''}
                       placeholder="select unit"
-                      width="w-64"
+                      width="lg:w-64"
                       list={units}
                       disabled={!selectedCurriculum}
                       onChange={(value, name, id) => onUnitSelect(id, name, value)}
@@ -1215,7 +1223,7 @@ const Csv = ({institutionId}: ICsvProps) => {
                     <Selector
                       dataCy="analytics-survey"
                       direction="left"
-                      width="w-64"
+                      width="lg:w-64"
                       loading={surveysLoading}
                       disabled={!selectedUnit}
                       selectedItem={selectedSurvey ? selectedSurvey.name : ''}
