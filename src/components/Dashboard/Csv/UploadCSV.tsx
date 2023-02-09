@@ -1593,12 +1593,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
           {error && <p className={`mt-1 text-red-500 text-xs`}>{error}</p>}
         </AnimatedContainer>
 
-        {!isEmpty(parsedObj) && (
-          <div className="2xl:max-w-9/10 max-w-256 flex items-center justify-center ">
-            {/* <Table CSVData={getMappedValues(parsedObj)} /> */}
-            <Table {...tableConfig} />
-          </div>
-        )}
+        {!isEmpty(parsedObj) && <Table {...tableConfig} />}
 
         <div className="flex items-center justify-end mt-3">
           <Buttons
