@@ -16,8 +16,6 @@ import AuthCard from 'components/Auth/AuthCard';
 import RememberMe from 'components/Auth/RememberMe';
 import {AiOutlineLock, AiOutlineUser} from 'react-icons/ai';
 import {UserPageState} from 'API';
-import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
-import QuickTiles from './QuickTiles';
 
 interface LoginProps {
   updateAuthState: Function;
@@ -28,7 +26,6 @@ const Login = ({updateAuthState}: LoginProps) => {
   const [cookies, setCookie, removeCookie] = useCookies();
 
   const {dispatch} = useGlobalContext();
-  console.log('test');
 
   let [message, setMessage] = useState<{show: boolean; type: string; message: string}>({
     show: false,
@@ -66,11 +63,11 @@ const Login = ({updateAuthState}: LoginProps) => {
       );
       sessionStorage.setItem('accessToken', user.signInUserSession.accessToken.jwtToken);
       if (user) {
+        setIsLoginSuccess(true);
         let userInfo: any = await API.graphql(
           graphqlOperation(queries.getPerson, {email: username, authId: user.username})
         );
         userInfo = userInfo.data.getPerson;
-
         let instInfo: any = {};
         if (userInfo.role !== 'ST') {
           instInfo = await API.graphql(
@@ -80,32 +77,26 @@ const Login = ({updateAuthState}: LoginProps) => {
           );
         }
 
-        const userData = {
-          id: userInfo.id,
-          firstName: userInfo.preferredName || userInfo.firstName,
-          lastName: userInfo.lastName,
-          language: userInfo.language,
-          onBoardSurvey: userInfo.onBoardSurvey ? userInfo.onBoardSurvey : false,
-          role: userInfo.role,
-          image: userInfo.image,
-          lastEmotionSubmission: userInfo?.lastEmotionSubmission,
-          removedFrom: userInfo?.removedFrom,
-          status: userInfo?.status,
-          associateInstitute:
-            instInfo?.data?.listStaff?.items.filter((item: any) => item.institution) || []
-        };
-
-        setUser({role: userData.role, associateInstitute: userData.associateInstitute});
-        setIsLoginSuccess(true);
-        setMessage({show: false, message: '', type: ''});
-
-        // dispatch({
-        //   type: 'SET_USER',
-        //   payload: {
-        //     ...userData
-        //   }
-        // });
-
+        dispatch({
+          type: 'SET_USER',
+          payload: {
+            id: userInfo.id,
+            firstName: userInfo.preferredName || userInfo.firstName,
+            lastName: userInfo.lastName,
+            language: userInfo.language,
+            onBoardSurvey: userInfo.onBoardSurvey ? userInfo.onBoardSurvey : false,
+            role: userInfo.role,
+            image: userInfo.image,
+            associateInstitute:
+              instInfo?.data?.listStaff?.items.filter((item: any) => item.institution) ||
+              [],
+            onDemand: userInfo?.onDemand,
+            lessons: userInfo.lessons,
+            lastEmotionSubmission: userInfo?.lastEmotionSubmission,
+            removedFrom: userInfo?.removedFrom,
+            status: userInfo?.status
+          }
+        });
         const time = new Date().toISOString();
         const input = {
           id: userInfo.id,
@@ -271,8 +262,6 @@ const Login = ({updateAuthState}: LoginProps) => {
     }
   };
 
-  const [user, setUser] = useState(null);
-
   const handleSetPassword = async () => {
     toggleLoading(true);
     let username = input.email;
@@ -291,29 +280,21 @@ const Login = ({updateAuthState}: LoginProps) => {
         graphqlOperation(queries.getPerson, {email: username, authId: user.username})
       );
       userInfo = userInfo.data.getPerson;
-
-      const userData = {
-        id: userInfo.id,
-        firstName: userInfo.preferredName || userInfo.firstName,
-        lastName: userInfo.lastName,
-        language: userInfo.language,
-        onBoardSurvey: userInfo.onBoardSurvey ? userInfo.onBoardSurvey : false,
-        role: userInfo.role,
-        image: userInfo.image,
-        lastEmotionSubmission: userInfo?.lastEmotionSubmission,
-
-        status: userInfo?.status
-      };
-
-      setUser({role: userInfo.role});
-      setMessage({show: false, message: '', type: ''});
-      setIsLoginSuccess(true);
-
-      // dispatch({
-      //   type: 'SET_USER',
-      //   payload: {...userData}
-      // });
-
+      dispatch({
+        type: 'SET_USER',
+        payload: {
+          id: userInfo.id,
+          firstName: userInfo.preferredName || userInfo.firstName,
+          lastName: userInfo.lastName,
+          language: userInfo.language,
+          onBoardSurvey: userInfo.onBoardSurvey ? userInfo.onBoardSurvey : false,
+          role: userInfo.role,
+          image: userInfo.image,
+          lastEmotionSubmission: userInfo?.lastEmotionSubmission,
+          removedFrom: userInfo?.removedFrom,
+          status: userInfo?.status
+        }
+      });
       const time = new Date().toISOString();
 
       const input = {
@@ -364,9 +345,8 @@ const Login = ({updateAuthState}: LoginProps) => {
 
   return (
     <AuthCard
-      showFooter={!isLoginSuccess}
-      message={message}
       isSuccess={isLoginSuccess}
+      message={message}
       // title={createPassword ? 'Create your password' : 'Login'}
       subtitle={createPassword ? '' : 'Welcome back!'}>
       {!createPassword ? (

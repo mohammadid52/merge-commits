@@ -494,10 +494,20 @@ const Csv = ({institutionId}: ICsvProps) => {
       })
     );
     let students = classData?.data?.getClass?.students?.items || [];
-    let classStudents = students.map((stu: any) => {
-      return stu.student;
+    let classStudents = students.map((stu: any) => stu.student);
+
+    let uniqIds: any[] = [];
+
+    classStudents = classStudents.filter((stu: any) => {
+      if (!uniqIds.includes(stu.authId)) {
+        uniqIds.push(stu.authId);
+        return true;
+      } else {
+        return false;
+      }
     });
     let studentsEmails = classStudents.map((stu: any) => stu.email);
+
     setClassStudents(classStudents);
     return studentsEmails;
   };
@@ -947,6 +957,7 @@ const Csv = ({institutionId}: ICsvProps) => {
             '-'
         };
       });
+
       surveyDates = surveyDates.sort(
         // @ts-ignore
         (a: any, b: any) => new Date(b) - new Date(a)
@@ -1024,23 +1035,15 @@ const Csv = ({institutionId}: ICsvProps) => {
   const dataList = CSVData.map((listItem, idx) => ({
     no: idx + 1,
     id: listItem.id,
-    firstName: listItem.firstName,
-    lastName: listItem.lastName,
+    name: `${listItem.firstName} ${listItem.lastName}`,
+
     email: listItem.email,
     takenSurvey: listItem?.hasTakenSurvey ? 'Yes' : 'No',
     completedDate: getFormatedDate(listItem?.last)
   }));
 
   const tableConfig = {
-    headers: [
-      'No',
-      'Id',
-      'First Name',
-      'Last Name',
-      'Email',
-      'Taken Survey',
-      'Completed Date'
-    ],
+    headers: ['No', 'Id', 'Name', 'Email', 'Completed Date', 'Taken Survey'],
     dataList,
     config: {
       isFirstIndex: true,
@@ -1049,7 +1052,10 @@ const Csv = ({institutionId}: ICsvProps) => {
 
         emptyText: 'no data found',
         customWidth: {
-          takenSurvey: 'w-12'
+          id: 'w-72',
+          takenSurvey: 'w-48',
+          completedDate: 'w-48',
+          email: 'w-72 break-all'
         },
         maxHeight: 'max-h-196'
       }
@@ -1077,14 +1083,16 @@ const Csv = ({institutionId}: ICsvProps) => {
       )}
       <div className="flex flex-col overflow-h-auto w-full h-full px-8 py-4">
         <div className="mx-auto w-full">
-          <div className="flex flex-row my-0 w-full py-0 mb-4 justify-between">
+          <div className="flex flex-row my-0  w-full py-0 mb-4 justify-between">
             <div className="">
               <SectionTitleV3
+                textWidth="lg:w-1/5 2xl:w-1/4"
                 withButton={
                   <div className="grid grid-cols-2 lg:grid-cols-4  gap-4">
                     {/* {isSuperAdmin && ( */}
                     <Selector
                       loading={institutionsLoading}
+                      width="lg:w-64"
                       selectedItem={selectedInst ? selectedInst.name : ''}
                       placeholder={CsvDict[userLanguage]['SELECT_INST']}
                       list={institutions}
