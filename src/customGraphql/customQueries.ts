@@ -5072,6 +5072,7 @@ export const getInstListForAdmin = /* GraphQL */ `
         name
         type
         phone
+        isZoiq
         website
         image
         createdAt
@@ -5087,6 +5088,7 @@ export const getInstListForNonAdmin = /* GraphQL */ `
       items {
         id
         institution {
+          isZoiq
           id
           name
           type

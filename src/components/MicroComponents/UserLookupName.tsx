@@ -63,7 +63,7 @@ const UserLookupName = ({
               highlight={searchTerm}
             />
           </div>
-          <div className="text-sm leading-5 text-gray-500 break-all">
+          <div className="text-sm leading-5 text-gray-500">
             <Highlighted text={item.email} highlight={searchTerm} />
           </div>
         </div>

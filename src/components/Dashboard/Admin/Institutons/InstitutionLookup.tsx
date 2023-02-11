@@ -13,12 +13,12 @@ import {formatPhoneNumber, getHostNameFromUrl} from '@utilities/strings';
 import {getAsset} from 'assets';
 import BreadcrumbsWithBanner from 'atoms/BreadcrumbsWithBanner';
 import SearchInput from 'atoms/Form/SearchInput';
-import {GlobalContext} from 'contexts/GlobalContext';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import {useQuery} from 'customHooks/urlParam';
 import {map, orderBy} from 'lodash';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useHistory, useRouteMatch} from 'react-router-dom';
 
 /**
@@ -33,9 +33,8 @@ const InstitutionLookup: React.FC = () => {
   const params = useQuery(location.search);
   const alert = params.get('alert');
 
-  const {theme, clientKey, userLanguage, state} = useContext(GlobalContext);
-  const {InstitutionDict, BreadcrumsTitles} = useDictionary(clientKey);
-  const themeColor = getAsset(clientKey, 'themeClassName');
+  const {clientKey, userLanguage, state} = useGlobalContext();
+  const {InstitutionDict, BreadcrumsTitles} = useDictionary();
   const bannerImage = getAsset(clientKey, 'dashboardBanner1');
   const [status, setStatus] = useState('');
   const [institutionsData, setInstitutionsData] = useState([]);
@@ -231,6 +230,7 @@ const InstitutionLookup: React.FC = () => {
   const dictionary = InstitutionDict[userLanguage]['TABLE'];
 
   const dataList = map(currentList, (instituteObject, idx) => ({
+    markRed: Boolean(instituteObject?.isZoiq),
     onClick: () => handleInstitutionView(instituteObject.id),
     no: getIndex(idx),
     instituteName: (
