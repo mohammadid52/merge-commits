@@ -26,6 +26,7 @@ import * as customQueries from 'customGraphql/customQueries';
 import {isEmpty, map, orderBy} from 'lodash';
 import ModalPopUp from 'molecules/ModalPopUp';
 import UnitFormComponent from './UnitFormComponent';
+import {withZoiqFilter} from '@utilities/functions';
 
 export const UnitList = ({
   instId,
@@ -256,7 +257,9 @@ export const UnitList = ({
   const fetchInstitutions = async () => {
     try {
       const list: any = await API.graphql(
-        graphqlOperation(customQueries.listInstitutionOptions)
+        graphqlOperation(customQueries.listInstitutionOptions, {
+          filter: withZoiqFilter({})
+        })
       );
       setInstitutionList(
         list.data?.listInstitutions?.items.sort((a: any, b: any) =>

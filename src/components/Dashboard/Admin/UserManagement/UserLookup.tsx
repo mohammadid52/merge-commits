@@ -561,7 +561,7 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
         },
         customWidth: {
           no: 'w-12',
-          name: 'w-72 ',
+          name: 'w-72 break-all',
           status: 'w-36',
           flow: 'w-36',
           role: 'w-36',

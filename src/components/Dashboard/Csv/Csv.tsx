@@ -3,7 +3,7 @@ import Buttons from '@components/Atoms/Buttons';
 import Modal from '@components/Atoms/Modal';
 import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import Table from '@components/Molecules/Table';
-import {logError} from '@graphql/functions';
+import {listInstitutions, logError} from '@graphql/functions';
 import {Transition} from '@headlessui/react';
 import {PDFDownloadLink} from '@react-pdf/renderer';
 import {getFormatedDate} from '@utilities/utils';
@@ -179,34 +179,20 @@ const Csv = ({institutionId}: ICsvProps) => {
     setDCQAnswers([]);
   };
 
-  // starting
-  useEffect(() => {
-    listInstitutions();
-  }, []);
-
-  // if this doesn't work.. fuck this function
-  const listInstitutions = async () => {
+  const loadInstitution = async () => {
     try {
-      setInstitutionsLoading(true);
-      let institutions: any = await API.graphql(
-        graphqlOperation(customQueries.getInstitutionsList)
-      );
-      institutions = institutions?.data.listInstitutions?.items || [];
-      institutions = institutions.map((inst: any) => {
-        return {
-          id: inst.id,
-          name: inst.name,
-          value: inst.name
-        };
-      });
-      setInstitutions(institutions);
+      const resp = await listInstitutions(authId, email);
+      if (resp && resp.length > 0) {
+        setInstitutions(resp);
+      }
     } catch (error) {
-      logError(error, {authId, email}, 'Csv @listInstitutions');
-      console.log('🚀 ~ file: Csv.tsx ~ line 122 ~ listInstitutions ~ error', error);
-    } finally {
-      setInstitutionsLoading(false);
+      console.error(error);
     }
   };
+  // starting
+  useEffect(() => {
+    loadInstitution();
+  }, []);
 
   const [curriculumId, setCurriculumId] = useState(null);
 
@@ -245,77 +231,6 @@ const Csv = ({institutionId}: ICsvProps) => {
   };
 
   const {authId, isTeacher, email, isFellow} = useAuth();
-
-  const fetchClassRooms = async () => {
-    setClassRoomLoading(true);
-    let instCRs: any = [];
-
-    const variablesForTR_FR = {
-      filter: {teacherAuthID: {eq: authId}, or: [...zoiqFilter]}
-    };
-    const variablesForBLD_ADM = {filter: {or: [...zoiqFilter]}};
-
-    let classrooms: any = await API.graphql(
-      graphqlOperation(
-        customQueries.listRoomsDashboard,
-        isTeacher || isFellow ? variablesForTR_FR : variablesForBLD_ADM
-      )
-    );
-    let coTeahcerClassrooms: any = await API.graphql(
-      graphqlOperation(
-        customQueries.listRoomCoTeachers,
-        isTeacher || isFellow ? variablesForTR_FR : variablesForBLD_ADM
-      )
-    );
-
-    let coTeachersRooms = coTeahcerClassrooms?.data?.listRoomCoTeachers?.items.map(
-      (item: any) => {
-        if (item && item.room) {
-          return {
-            ...item,
-            name: item.room.name,
-            class: {id: item.room.classID},
-            curricula: item?.curricula || {items: []}
-          };
-        }
-      }
-    );
-    classrooms = [...coTeachersRooms, ...classrooms?.data.listRooms?.items] || [];
-    classrooms = classrooms
-      .map((cr: any) => {
-        if (cr) {
-          let curriculum =
-            cr.curricula?.items &&
-            Array.isArray(cr.curricula?.items) &&
-            cr.curricula?.items.length > 0
-              ? cr.curricula?.items[0].curriculum
-              : null;
-
-          !instCRs.find((d: any) => d.name === cr.name) &&
-            curriculum &&
-            instCRs.push({id: cr.id, name: cr.name, value: cr.name});
-          // institutions.find((d) => d.id === )
-
-          return {
-            id: cr.id,
-            institution: cr?.institution || {},
-            name: cr.name,
-            value: cr.name,
-            class: {...cr.class},
-            curriculum,
-            ...insertExtraDataForClassroom(cr)
-          };
-        }
-      })
-      .filter(Boolean);
-
-    classrooms = classrooms.filter((d: any) => Boolean(d.curriculum));
-    console.log('🚀 ~ file: Csv.tsx:408 ~ fetchClassRooms ~ classrooms', classrooms);
-    setClassRoomsList(classrooms);
-    setInstClassRooms(removeDuplicates(instCRs));
-    fetchActiveUnits(classrooms);
-    setClassRoomLoading(false);
-  };
 
   const onInstSelect = async (id: string, name: string, value: string) => {
     setClassRoomLoading(true);

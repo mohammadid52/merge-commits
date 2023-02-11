@@ -92,6 +92,7 @@ const InstitutionBuilder = ({
     updatedAt: '',
     addressLine2: '',
     phone: '',
+    isZoiq: false,
     isServiceProvider: false,
     classes: {items: [{name: '', id: ''}]},
     serviceProviders: {items: [{id: '', providerID: '', status}]},
@@ -157,21 +158,6 @@ const InstitutionBuilder = ({
       history.push('/dashboard');
     }
   }, [institutionId]);
-
-  const getInstitutionData = async () => {
-    try {
-      const fetchInstitutionData: any = await API.graphql(
-        graphqlOperation(customQueries.GetInstitutionDetails, {id: institutionId})
-      );
-      if (!fetchInstitutionData) {
-        throw new Error('getInstitutionData() fetch : fail!');
-      } else {
-        setInstitutionInfo(fetchInstitutionData.data.getInstitution);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
 
   useEffect(() => {
     if (institute?.id) {

@@ -25,7 +25,7 @@ interface ServiceVendorsProps {
 }
 
 const ServiceVendors = (props: ServiceVendorsProps) => {
-  const {userLanguage, clientKey, theme} = useContext(GlobalContext);
+  const {userLanguage, clientKey, zoiqFilter, theme} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const {spBuilderDict, BUTTONS} = useDictionary(clientKey);
   const dictionary = spBuilderDict[userLanguage];
@@ -72,10 +72,12 @@ const ServiceVendors = (props: ServiceVendorsProps) => {
         graphqlOperation(customQueries.listServiceProviders, {
           filter: {
             isServiceProvider: {eq: true},
+            or: [...zoiqFilter],
             ...createFilterToFetchAllItemsExcept([instId, ...serviceProvidersIds], 'id')
           }
         })
       );
+
       const listItems = list.data.listInstitutions?.items || [];
       // create
       const servProList = listItems

@@ -10,6 +10,7 @@ import LessonBuilder from './LessonBuilder';
 import LessonsList from './LessonsList';
 import LessonTabView from './StepActionComponent/LessonTabView';
 import ErrorBoundary from '@components/Error/ErrorBoundary';
+import {withZoiqFilter} from '@utilities/functions';
 
 interface ILessonBuilderHomeProps {
   instId?: string;
@@ -45,7 +46,11 @@ const LessonsBuilderHome = ({instId}: ILessonBuilderHomeProps) => {
   };
 
   const fetchInstitutionsList = async () => {
-    const result: any = await API.graphql(graphqlOperation(queries.listInstitutions));
+    const result: any = await API.graphql(
+      graphqlOperation(queries.listInstitutions, {
+        filter: withZoiqFilter({})
+      })
+    );
     const savedData = result.data.listInstitutions;
     const updatedList = savedData?.items.map((item: {id: string; name: string}) => ({
       id: item?.id,

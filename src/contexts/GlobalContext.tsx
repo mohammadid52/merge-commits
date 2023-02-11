@@ -314,11 +314,10 @@ export const GlobalContextProvider = ({children}: GlobalProps) => {
     }
   }
 
-  const checkIfAdmin = () => allowedAuthIds.includes(state.user.authId);
+  const checkIfAdmin = () =>
+    allowedAuthIds.includes(state.user.authId) || state.user.role === 'SUP';
 
-  const zoiqFilter = checkIfAdmin()
-    ? []
-    : [{isZoiq: {eq: false}}, {isZoiq: {attributeExists: false}}];
+  const zoiqFilter = checkIfAdmin() ? [] : [{isZoiq: {ne: true}}];
 
   return (
     <GlobalContext.Provider

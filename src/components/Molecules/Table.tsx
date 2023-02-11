@@ -192,7 +192,7 @@ const ListItem = forwardRef<any, IListItem>(
               : config?.isLastAction && _idx === headers.length - 1
               ? 'w-28'
               : '')
-          } text-sm`;
+          } text-sm md:break-all`;
           if (typeof _item === 'string') {
             return (
               <td
@@ -284,7 +284,7 @@ const Table = ({
                 <tbody
                   className={`${
                     dataListConfig?.maxHeight || 'max-h-88 '
-                  } overflow-y-auto ${config.dark ? 'dark-scroll' : ''} `}>
+                  } overflow-y-auto   ${config.dark ? 'dark-scroll' : ''} `}>
                   {dataListConfig.loading ? (
                     [0, 1, 2, 3].map((item: any, idx: number) => (
                       <LoadingItem

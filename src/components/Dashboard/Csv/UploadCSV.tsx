@@ -51,69 +51,6 @@ const DataValue = ({
   );
 };
 
-const theadStyles =
-  'px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider';
-const tdataStyles = 'px-6 py-4 whitespace-nowrap text-sm text-gray-800';
-
-export const _Table = ({CSVData}: {CSVData: any[]}) => {
-  return (
-    <div className="flex flex-col">
-      <div className="overflow-x-auto ">
-        <div className="py-2 align-middle inline-block min-w-full ">
-          <div className="flex flex-1 shadow inner_card  border-b-0 border-gray-200 sm:rounded-lg">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-100">
-                <tr>
-                  <th scope="col" style={{width: '15%'}} className={theadStyles}>
-                    Id
-                  </th>
-                  <th scope="col" style={{width: '20%'}} className={theadStyles}>
-                    first name
-                  </th>
-                  <th scope="col" style={{width: '15%'}} className={theadStyles}>
-                    last Name
-                  </th>
-                  <th scope="col" style={{width: '20%'}} className={theadStyles}>
-                    Email
-                  </th>
-                  <th scope="col" style={{width: '20%'}} className={theadStyles}>
-                    Taken Survey
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {CSVData.map(
-                  (listItem, idx): JSX.Element => (
-                    <tr key={idx} className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-100'}>
-                      <td style={{width: '15%'}} className={tdataStyles}>
-                        {listItem['AuthId']}
-                      </td>
-                      <td style={{width: '20%'}} className={tdataStyles}>
-                        {listItem['First Name']}
-                      </td>
-                      <td style={{width: '15%'}} className={tdataStyles}>
-                        {listItem['Last Name']}
-                      </td>
-                      <td style={{width: '20%'}} className={tdataStyles}>
-                        {listItem['Email']}
-                      </td>
-                      <td style={{width: '20%'}} className={tdataStyles}>
-                        {listItem['UniversalSurveyStudentID'] === 'Not-taken-yet'
-                          ? 'No'
-                          : 'Yes'}
-                      </td>
-                    </tr>
-                  )
-                )}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
 type IModal = {
   show: boolean;
   element: React.ReactNode;
@@ -1131,10 +1068,14 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
       );
       let units = curriculumUnits?.data.listCurriculumUnits?.items || [];
 
-      units = units.map((syl: any) => {
-        let unitData = syl.unit;
-        return {id: unitData.id, name: unitData.name, value: unitData.name};
-      });
+      units = units
+        .map((syl: any) => {
+          let unitData = syl.unit;
+          if (Boolean(unitData)) {
+            return {id: unitData.id, name: unitData.name, value: unitData.name};
+          }
+        })
+        .filter(Boolean);
       // console.log('units', units)
       setUnits(units);
 

@@ -1,9 +1,10 @@
-import React, {useState, useEffect} from 'react';
-import {CSVLink} from 'react-csv';
 import API, {graphqlOperation} from '@aws-amplify/api';
-import * as queries from 'graphql/queries';
-import {logError} from '@graphql/functions';
 import useAuth from '@customHooks/useAuth';
+import {logError} from '@graphql/functions';
+import {withZoiqFilter} from '@utilities/functions';
+import * as queries from 'graphql/queries';
+import React, {useEffect, useState} from 'react';
+import {CSVLink} from 'react-csv';
 
 /**
  * This component represents the feature for extracting institutions list into csv files.
@@ -18,7 +19,9 @@ const ExportToCsv: React.FC = () => {
   const getInstitutionsList = async () => {
     try {
       const fetchInstitutionData: any = await API.graphql(
-        graphqlOperation(queries.listInstitutions)
+        graphqlOperation(queries.listInstitutions, {
+          filter: withZoiqFilter({})
+        })
       );
       if (!fetchInstitutionData) {
         throw new Error('fail!');

@@ -16,16 +16,24 @@ const InstituteName = ({
 }) => {
   const [imageUrl, setImageUrl] = useState(null);
 
-  useEffect(() => {
-    async function getUrl() {
+  const getUrl = async () => {
+    try {
       const imageUrl: any = await getImageFromS3(image);
-      setImageUrl(imageUrl);
-    }
 
-    if (!Boolean(imageUrl)) {
-      getUrl();
+      if (imageUrl) {
+        setImageUrl(imageUrl);
+      }
+    } catch (error) {
+      console.log('error loading image -> ', image);
     }
-  }, [image, imageUrl]);
+  };
+
+  useEffect(() => {
+    if (image !== null) {
+      getUrl();
+    } else {
+    }
+  }, [image, id, imageUrl]);
 
   return (
     <div className="flex hover:underline cursor-pointer hover:theme-text:400  items-center">

@@ -129,8 +129,8 @@ export const getFilterORArray = (arr: any, key: string) => {
  * @param str
  */
 export const initials = (firstName: string, lastName: string) => {
-  let firstInitial = firstName.charAt(0).toUpperCase();
-  let lastInitial = lastName.charAt(0).toUpperCase();
+  let firstInitial = firstName?.charAt(0).toUpperCase() || '';
+  let lastInitial = lastName?.charAt(0).toUpperCase() || '';
   return firstInitial + lastInitial;
 };
 

@@ -27,11 +27,13 @@ const ErrorItem = ({
   error,
   updateStatus,
   idx,
-  setShowModal
+  setShowModal,
+  setMultipleItemsToClose
 }: {
   setShowModal: React.Dispatch<
     React.SetStateAction<{show: boolean; additional?: string; message: string}>
   >;
+  setMultipleItemsToClose: (id: string, callback: () => void) => void;
   updateStatus: (id: string, status: ErrorStatus) => void;
   error: ErrorLog;
   idx: number;
@@ -64,7 +66,7 @@ const ErrorItem = ({
   const closedItem = {
     label: 'set to closed',
     action: () => {
-      updateStatus(error.id, ErrorStatus.CLOSED);
+      setMultipleItemsToClose(error.id, () => updateStatus(error.id, ErrorStatus.CLOSED));
     }
   };
 
@@ -111,7 +113,7 @@ const ErrorItem = ({
         </div>
         {errorStatus === ErrorStatus.PENDING && (
           <Buttons
-            onClick={() => updateStatus(error.id, ErrorStatus.CLOSED)}
+            onClick={() => closedItem.action()}
             size="small"
             transparent
             Icon={AiOutlineCloseCircle}
@@ -220,6 +222,54 @@ const ErrorsPage = () => {
     }
   };
 
+  const INITIAL_MULTIPLE_CLOSE_MODAL = {
+    show: false,
+    message: '',
+    onClose: () => {},
+    onSave: () => {},
+    cancelAction: () => {}
+  };
+  const [multipleCloseModal, setMultipleCloseModal] = useState(
+    INITIAL_MULTIPLE_CLOSE_MODAL
+  );
+
+  const onMultipleCloseModal = () => {
+    setMultipleCloseModal(INITIAL_MULTIPLE_CLOSE_MODAL);
+  };
+
+  const setMultipleItemsToClose = (currentId: string, callback: () => void) => {
+    const currentItem = data && data.find((d: ErrorLog) => d.id === currentId);
+
+    const similarErrorItems =
+      data && currentItem
+        ? data.filter(
+            (d: ErrorLog) =>
+              d.componentName === currentItem.componentName &&
+              d.error === currentItem.error
+          )
+        : [];
+
+    if (similarErrorItems && similarErrorItems.length > 0) {
+      setMultipleCloseModal({
+        show: true,
+        message: `Are you sure you want to close all items related to ${currentItem.componentName}`,
+        onClose: onMultipleCloseModal,
+        onSave: () => {
+          similarErrorItems.forEach((d) => {
+            updateStatus(d.id, ErrorStatus.CLOSED);
+          });
+          onMultipleCloseModal();
+        },
+        cancelAction: () => {
+          updateStatus(currentItem.id, ErrorStatus.CLOSED);
+          onMultipleCloseModal();
+        }
+      });
+    } else {
+      callback();
+    }
+  };
+
   const [filters, setFilters] = useState<ErrorStatus>();
 
   const updateFilter = (filterName: ErrorStatus) => {
@@ -275,6 +325,7 @@ const ErrorsPage = () => {
                 <div className="grid grid-cols-2 xl:grid-cols-4 2xl:grid-cols-5 gap-8">
                   {filteredList.map((error, idx) => (
                     <ErrorItem
+                      setMultipleItemsToClose={setMultipleItemsToClose}
                       idx={idx}
                       setShowModal={setShowModal}
                       updateStatus={updateStatus}
@@ -287,7 +338,7 @@ const ErrorsPage = () => {
                 <p className="min-h-56 flex items-center w-full justify-center text-gray-500">
                   {filters !== undefined
                     ? `No errors found for status - ${filters}`
-                    : 'Woahhh.. no errors.. its good.'}
+                    : 'Woahhh.. no errors.'}
                 </p>
               )}
               {/* </tbody> */}
@@ -303,6 +354,16 @@ const ErrorsPage = () => {
             setShowModal({show: false, message: '', additional: ''});
           }}
           message={showModal.message.concat(`Additional info -> ${showModal.additional}`)}
+        />
+      )}
+      {multipleCloseModal.show && (
+        <ModalPopUp
+          closeAction={multipleCloseModal.onClose}
+          saveAction={multipleCloseModal.onSave}
+          message={multipleCloseModal.message}
+          saveLabel="Close all"
+          cancelLabel="close this one"
+          cancelAction={multipleCloseModal.cancelAction}
         />
       )}
     </>

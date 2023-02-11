@@ -1,25 +1,23 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import {Storage} from '@aws-amplify/storage';
-import React, {useContext, useEffect, useState} from 'react';
-import {FaPlus} from 'react-icons/fa';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
-import {useHistory} from 'react-router-dom';
-import {GlobalContext} from 'contexts/GlobalContext';
-import * as customMutations from 'customGraphql/customMutations';
-import useDictionary from 'customHooks/dictionary';
-import {getImageFromS3} from 'utilities/services';
-import {statesList} from 'utilities/staticData';
+import useAuth from '@customHooks/useAuth';
+import {uploadImageToS3} from '@graphql/functions';
 import Buttons from 'atoms/Buttons';
 import CheckBox from 'atoms/Form/CheckBox';
 import FormInput from 'atoms/Form/FormInput';
 import Selector from 'atoms/Form/Selector';
 import Loader from 'atoms/Loader';
+import {GlobalContext} from 'contexts/GlobalContext';
+import * as customMutations from 'customGraphql/customMutations';
+import useDictionary from 'customHooks/dictionary';
 import DroppableMedia from 'molecules/DroppableMedia';
+import React, {useContext, useEffect, useState} from 'react';
+import {FaPlus} from 'react-icons/fa';
+import {IconContext} from 'react-icons/lib/esm/iconContext';
+import {getImageFromS3} from 'utilities/services';
+import {statesList} from 'utilities/staticData';
 import ProfileCropModal from '../../Profile/ProfileCropModal';
 import InstitutionPopUp from './InstitutionPopUp';
 import ServiceProviders from './Listing/ServiceProviders';
-import {logError, uploadImageToS3} from '@graphql/functions';
-import useAuth from '@customHooks/useAuth';
 
 interface InstitutionEditProps {
   institute: InstInfo;
@@ -39,6 +37,7 @@ interface InstInfo {
   image: string;
   phone: string;
   isServiceProvider: boolean;
+  isZoiq: boolean;
   serviceProviders: {
     items: {id: string; providerID: string; status: string; providerInstitution?: any}[];
   };
@@ -51,7 +50,7 @@ const InstitutionEdit = (instEditProps: InstitutionEditProps) => {
   const [imageLoading, setImageLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [imageUrl, setImageUrl] = useState('');
-  const {clientKey, userLanguage} = useContext(GlobalContext);
+  const {clientKey, checkIfAdmin, userLanguage} = useContext(GlobalContext);
   const {InstitutionEditDict, BUTTONS: ButtonDict} = useDictionary(clientKey);
   const [showModal, setShowModal] = useState({
     warnModal: false,
@@ -66,7 +65,6 @@ const InstitutionEdit = (instEditProps: InstitutionEditProps) => {
     message: '',
     isError: false
   });
-  const history = useHistory();
 
   const institutionTypeList = [
     {
@@ -295,6 +293,7 @@ const InstitutionEdit = (instEditProps: InstitutionEditProps) => {
     state,
     zip,
     phone,
+    isZoiq = false,
     isServiceProvider,
     serviceProviders
   } = editFormValues;
@@ -484,6 +483,24 @@ const InstitutionEdit = (instEditProps: InstitutionEditProps) => {
                   }
                 />
               </div>
+
+              {checkIfAdmin() && (
+                <div className="sm:col-span-3 px-3 py-2 flex items-center">
+                  <CheckBox
+                    name="isZoiq"
+                    dataCy="isZoiq"
+                    label={'ZOIQ'}
+                    className="group:hover:bg-gray-500"
+                    value={isZoiq}
+                    onChange={(e) => {
+                      setEditFormValues({
+                        ...editFormValues,
+                        isZoiq: e.target.checked
+                      });
+                    }}
+                  />
+                </div>
+              )}
             </div>
             {serverMessage.message && (
               <span className="text-sm text-green-600 text-center my-6 mx-3 w-full">

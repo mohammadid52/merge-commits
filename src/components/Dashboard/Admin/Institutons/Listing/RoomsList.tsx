@@ -77,7 +77,9 @@ const RoomsList = (props: RoomListProps) => {
   const fetchInstitutions = async () => {
     try {
       const list: any = await API.graphql(
-        graphqlOperation(customQueries.listInstitutionOptions)
+        graphqlOperation(customQueries.listInstitutionOptions, {
+          filter: withZoiqFilter({})
+        })
       );
       setInstitutionList(
         list.data?.listInstitutions?.items?.sort((a: any, b: any) =>

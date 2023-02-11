@@ -12,6 +12,7 @@ import usePagination from '@customHooks/usePagination';
 import useSearch from '@customHooks/useSearch';
 import {InstitueRomms} from '@dictionary/dictionary.iconoclast';
 import {logError} from '@graphql/functions';
+import {withZoiqFilter} from '@utilities/functions';
 import {RoomStatus} from 'API';
 import AddButton from 'atoms/Buttons/AddButton';
 import SearchInput from 'atoms/Form/SearchInput';
@@ -160,7 +161,9 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
     try {
       setLoading(true);
       const list: any = await API.graphql(
-        graphqlOperation(customQueries.listInstitutionOptions)
+        graphqlOperation(customQueries.listInstitutionOptions, {
+          filter: withZoiqFilter({})
+        })
       );
       setInstitutionList(
         list.data?.listInstitutions?.items?.sort((a: any, b: any) =>

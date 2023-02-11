@@ -7,6 +7,8 @@ import * as customMutations from 'customGraphql/customMutations';
 import * as customQueries from 'customGraphql/customQueries';
 
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
+import useAuth from '@customHooks/useAuth';
+import {getInstitutionList} from '@graphql/functions';
 import BreadCrums from 'atoms/BreadCrums';
 import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
@@ -21,7 +23,6 @@ import * as mutation from 'graphql/mutations';
 import * as queries from 'graphql/queries';
 import ModalPopUp from 'molecules/ModalPopUp';
 import {goBackBreadCrumb} from 'utilities/functions';
-import {getImageFromS3} from 'utilities/services';
 import {getFilterORArray} from 'utilities/strings';
 
 interface EditRoomProps {}
@@ -217,43 +218,55 @@ const EditRoom = (props: EditRoomProps) => {
     }
   };
 
-  const getImageURL = async (uniqKey: string) => {
-    const imageUrl: any = await getImageFromS3(uniqKey);
-    if (imageUrl) {
-      console.log(imageUrl);
-      return imageUrl;
-    } else {
-      return '';
-    }
-  };
-
-  const getInstitutionList = async () => {
+  const {authId, email} = useAuth();
+  const loadInstitution = async () => {
     try {
-      const list: any = await API.graphql(graphqlOperation(queries.listInstitutions));
-      const sortedList = list.data.listInstitutions?.items.sort((a: any, b: any) =>
-        a.name?.toLowerCase() > b.name?.toLowerCase() ? 1 : -1
-      );
-      const InstituteList = sortedList.map((item: any, i: any) => ({
-        id: item.id,
-        name: `${item.name ? item.name : ''}`,
-        value: `${item.name ? item.name : ''}`
-      }));
-      setInstitutionList(InstituteList);
-      if (InstituteList.length === 0) {
+      const res = await getInstitutionList(authId, email);
+      if (res && res.length > 0) {
+        setInstitutionList(res);
+      } else {
         setMessages({
           show: true,
-          message: RoomEDITdict[userLanguage]['messages']['institutebefor'],
+          message: RoomEDITdict[userLanguage]['messages']['error']['institutebefor'],
           isError: true
         });
       }
-    } catch {
+    } catch (error) {
       setMessages({
         show: true,
-        message: RoomEDITdict[userLanguage]['messages']['unabletofetch'],
+        message: RoomEDITdict[userLanguage]['messages']['unablefetch'],
         isError: true
       });
     }
   };
+
+  // const getInstitutionList = async () => {
+  //   try {
+  //     const list: any = await API.graphql(graphqlOperation(queries.listInstitutions));
+  //     const sortedList = list.data.listInstitutions?.items.sort((a: any, b: any) =>
+  //       a.name?.toLowerCase() > b.name?.toLowerCase() ? 1 : -1
+  //     );
+  //     const InstituteList = sortedList.map((item: any, i: any) => ({
+  //       id: item.id,
+  //       name: `${item.name ? item.name : ''}`,
+  //       value: `${item.name ? item.name : ''}`
+  //     }));
+  //     setInstitutionList(InstituteList);
+  //     if (InstituteList.length === 0) {
+  //       setMessages({
+  //         show: true,
+  //         message: RoomEDITdict[userLanguage]['messages']['institutebefor'],
+  //         isError: true
+  //       });
+  //     }
+  //   } catch {
+  //     setMessages({
+  //       show: true,
+  //       message: RoomEDITdict[userLanguage]['messages']['unabletofetch'],
+  //       isError: true
+  //     });
+  //   }
+  // };
 
   const getInstituteInfo = async (instId: string) => {
     try {
@@ -712,7 +725,7 @@ const EditRoom = (props: EditRoomProps) => {
 
   useEffect(() => {
     fetchRoomDetails();
-    getInstitutionList();
+    loadInstitution();
   }, []);
 
   const {name, curricular, classRoom, maxPersons, institute, teacher} = roomData;

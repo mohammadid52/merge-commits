@@ -67,6 +67,7 @@ const Institution = (props: InstitutionProps) => {
     addressLine2: '',
     phone: '',
     isServiceProvider: false,
+    isZoiq: false,
     classes: {items: [{name: '', id: ''}]},
     serviceProviders: {items: [{id: '', providerID: '', status}]},
     curricula: {items: [{name: '', id: ''}]}

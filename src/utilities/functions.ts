@@ -1,3 +1,4 @@
+import {allowedAuthIds} from '@contexts/GlobalContext';
 import {getAsset} from 'assets';
 import {isEmpty} from 'lodash';
 import {getLocalStorageData, setLocalStorageData} from './localStorage';
@@ -103,7 +104,17 @@ export const focusOn = (id: string) => {
   }
 };
 
-export const withZoiqFilter = (generalFilter: any, zoiqFilter: any) => {
+const zoiqFilterFallback = (authId: string) =>
+  allowedAuthIds.includes(authId) ? [] : [{isZoiq: {ne: true}}];
+
+export const withZoiqFilter = (generalFilter: any, _zoiqFilter?: any) => {
+  let zoiqFilter =
+    _zoiqFilter && _zoiqFilter.length > 0
+      ? _zoiqFilter
+      : zoiqFilterFallback && zoiqFilterFallback.length > 0
+      ? zoiqFilterFallback
+      : [];
+
   let filter: any = {};
   filter =
     zoiqFilter.length > 0

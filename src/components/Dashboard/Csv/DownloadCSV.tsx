@@ -1,4 +1,5 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import {withZoiqFilter} from '@utilities/functions';
 import Selector from 'atoms/Form/Selector';
 import * as customQueries from 'customGraphql/customQueries';
 import React, {useEffect, useState} from 'react';
@@ -32,7 +33,7 @@ const DownloadCSV = () => {
 
   const listInstitutions = async () => {
     let institutions: any = await API.graphql(
-      graphqlOperation(customQueries.getInstitutionsList)
+      graphqlOperation(customQueries.getInstitutionsList, {filter: withZoiqFilter({})})
     );
     institutions = institutions?.data.listInstitutions?.items || [];
     institutions = institutions.map((inst: any) => {
