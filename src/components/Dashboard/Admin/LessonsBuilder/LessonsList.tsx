@@ -185,7 +185,7 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
     if (searchValue && institutionId) {
       filteredData = [...lessonsData].filter(
         (item: any) =>
-          item.title?.toLowerCase().includes(searchValue.toLowerCase()) &&
+          item?.title?.toLowerCase().includes(searchValue.toLowerCase()) &&
           item.institution?.id === institutionId
       );
     } else if (institutionId && !searchValue) {
@@ -402,7 +402,7 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
     status: <Status status={item.status} useDefault />,
     lessonTitle: (
       <div onClick={() => handleLessonsEdit(item.id)} className="w-auto cursor-pointer">
-        <Highlighted text={item.title} highlight={searchInput.value} />
+        <Highlighted text={item?.title} highlight={searchInput.value} />
       </div>
     ),
     type: item.type,

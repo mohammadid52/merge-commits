@@ -8,6 +8,7 @@ import Table from '@components/Molecules/Table';
 import usePagination from '@customHooks/usePagination';
 import {logError} from '@graphql/functions';
 import {XIcon} from '@heroicons/react/outline';
+import {withZoiqFilter} from '@utilities/functions';
 import {formatPhoneNumber, getHostNameFromUrl} from '@utilities/strings';
 import {getAsset} from 'assets';
 import BreadcrumbsWithBanner from 'atoms/BreadcrumbsWithBanner';
@@ -92,7 +93,7 @@ const InstitutionLookup: React.FC = () => {
 
   async function fetchInstListForAdmin() {
     const fetchInstitutionData: any = await API.graphql(
-      graphqlOperation(customQueries.getInstListForAdmin)
+      graphqlOperation(customQueries.getInstListForAdmin, {filter: withZoiqFilter({})})
     );
     return fetchInstitutionData.data?.listInstitutions?.items || [];
   }

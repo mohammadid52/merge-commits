@@ -3478,6 +3478,7 @@ export const GetInstitutionDetails = /* GraphQL */ `
       website
       image
       isServiceProvider
+      isZoiq
       serviceProviders {
         items {
           id
@@ -4792,11 +4793,12 @@ export const listFilteredSyllabusLessons = /* GraphQL */ `
 `;
 
 export const getInstitutionsList = /* GraphQL */ `
-  query ListInstitutions($nextToken: String) {
-    listInstitutions(nextToken: $nextToken) {
+  query ListInstitutions($filter: ModelInstitutionFilterInput, $nextToken: String) {
+    listInstitutions(filter: $filter, nextToken: $nextToken) {
       items {
         id
         name
+        isZoiq
         classes {
           items {
             id
@@ -5341,6 +5343,7 @@ export const getAssignedInstitutionToStaff = /* GraphQL */ `
           isServiceProvider
           website
           address
+          isZoiq
           addressLine2
           city
           zip

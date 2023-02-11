@@ -1,7 +1,8 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import useAuth from '@customHooks/useAuth';
-import {uploadImageToS3} from '@graphql/functions';
+import {getInstitutionList, uploadImageToS3} from '@graphql/functions';
+import {withZoiqFilter} from '@utilities/functions';
 import BreadCrums from 'atoms/BreadCrums';
 import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
@@ -210,26 +211,28 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
     }
   };
 
-  const getInstitutionList = async () => {
-    try {
-      const list: any = await API.graphql(graphqlOperation(queries.listInstitutions));
-      const sortedList = list.data.listInstitutions?.items.sort((a: any, b: any) =>
-        a.name?.toLowerCase() > b.name?.toLowerCase() ? 1 : -1
-      );
-      const InstituteList = sortedList.map((item: any, i: any) => ({
-        id: item.id,
-        name: `${item.name ? item.name : ''}`,
-        value: `${item.name ? item.name : ''}`
-      }));
-      setInstitutionList(InstituteList);
-    } catch {
-      setMessages({
-        show: true,
-        message: CurricularBuilderdict[userLanguage]['messages']['error']['fetch'],
-        isError: true
-      });
-    }
-  };
+  // const getInstitutionList = async () => {
+  //   try {
+  //     const list: any = await API.graphql(
+  //       graphqlOperation(queries.listInstitutions, {filter: withZoiqFilter({})})
+  //     );
+  //     const sortedList = list.data.listInstitutions?.items.sort((a: any, b: any) =>
+  //       a.name?.toLowerCase() > b.name?.toLowerCase() ? 1 : -1
+  //     );
+  //     const InstituteList = sortedList.map((item: any, i: any) => ({
+  //       id: item.id,
+  //       name: `${item.name ? item.name : ''}`,
+  //       value: `${item.name ? item.name : ''}`
+  //     }));
+  //     setInstitutionList(InstituteList);
+  //   } catch {
+  //     setMessages({
+  //       show: true,
+  //       message: CurricularBuilderdict[userLanguage]['messages']['error']['fetch'],
+  //       isError: true
+  //     });
+  //   }
+  // };
 
   const fetchPersonsList = async () => {
     try {
@@ -356,6 +359,21 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
     await uploadImageToS3(file, key, type, {auth: {authId, email}});
   };
 
+  const loadInstitution = async () => {
+    try {
+      const res = await getInstitutionList(authId, email);
+      if (res && res.length > 0) {
+        setInstitutionList(res);
+      }
+    } catch (error) {
+      setMessages({
+        show: true,
+        message: CurricularBuilderdict[userLanguage]['messages']['error']['fetch'],
+        isError: true
+      });
+    }
+  };
+
   useEffect(() => {
     const instId = params.get('id');
     if (instId) {
@@ -368,7 +386,7 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
           value: ''
         }
       });
-      getInstitutionList();
+      loadInstitution();
       fetchPersonsList();
     } else {
       history.push('/dashboard/manage-institutions');

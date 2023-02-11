@@ -1,31 +1,29 @@
-import React, {useState, useEffect, useContext} from 'react';
-import {useHistory, useLocation, useParams} from 'react-router-dom';
-import {IoArrowUndoCircleOutline, IoImage} from 'react-icons/io5';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {Storage} from '@aws-amplify/storage';
+import React, {useContext, useEffect, useState} from 'react';
+import {IoImage} from 'react-icons/io5';
+import {useHistory, useLocation, useParams} from 'react-router-dom';
 
-import * as customMutations from 'customGraphql/customMutations';
 import * as customQueries from 'customGraphql/customQueries';
 import * as mutation from 'graphql/mutations';
 import * as queries from 'graphql/queries';
 import ProfileCropModal from '../../../Profile/ProfileCropModal';
 
-import {languageList} from 'utilities/staticData';
-import SectionTitle from 'atoms/SectionTitle';
-import PageWrapper from 'atoms/PageWrapper';
-import BreadCrums from 'atoms/BreadCrums';
+import useAuth from '@customHooks/useAuth';
+import {getInstitutionList} from '@graphql/functions';
 import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
-import Selector from 'atoms/Form/Selector';
 import MultipleSelector from 'atoms/Form/MultipleSelector';
+import Selector from 'atoms/Form/Selector';
 import TextArea from 'atoms/Form/TextArea';
-import {getImageFromS3} from 'utilities/services';
-import useDictionary from 'customHooks/dictionary';
 import {GlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
 import {LessonEditDict} from 'dictionary/dictionary.iconoclast';
+import DroppableMedia from 'molecules/DroppableMedia';
 import ModalPopUp from 'molecules/ModalPopUp';
 import {goBackBreadCrumb} from 'utilities/functions';
-import DroppableMedia from 'molecules/DroppableMedia';
+import {getImageFromS3} from 'utilities/services';
+import {languageList} from 'utilities/staticData';
 
 interface EditCurricularProps {
   closeAction: () => void;
@@ -82,8 +80,10 @@ const EditCurricular = (props: EditCurricularProps) => {
   const params = useQuery();
   const param: any = useParams();
 
-  const {clientKey, userLanguage, theme} = useContext(GlobalContext);
-  const {BreadcrumsTitles, EditCurriculardict} = useDictionary(clientKey);
+  const {clientKey, userLanguage} = useContext(GlobalContext);
+  const {BreadcrumsTitles, EditCurriculardict, RoomBuilderdict} = useDictionary(
+    clientKey
+  );
 
   const [unsavedChanges, setUnsavedChanges] = useState(false);
   const [warnModal, setWarnModal] = useState({
@@ -277,26 +277,28 @@ const EditCurricular = (props: EditCurricularProps) => {
     }
   };
 
-  const getInstitutionList = async () => {
-    try {
-      const list: any = await API.graphql(graphqlOperation(queries.listInstitutions));
-      const sortedList = list.data.listInstitutions?.items.sort((a: any, b: any) =>
-        a.name?.toLowerCase() > b.name?.toLowerCase() ? 1 : -1
-      );
-      const InstituteList = sortedList.map((item: any, i: any) => ({
-        id: item.id,
-        name: `${item.name || ''}`,
-        value: `${item.name || ''}`
-      }));
-      setInstitutionList(InstituteList);
-    } catch {
-      setMessages({
-        show: true,
-        message: EditCurriculardict[userLanguage]['messages']['unablefetch'],
-        isError: true
-      });
-    }
-  };
+  // const getInstitutionList = async () => {
+  //   try {
+  //     const list: any = await API.graphql(
+  //       graphqlOperation(queries.listInstitutions, {filter: withZoiqFilter({})})
+  //     );
+  //     const sortedList = list.data.listInstitutions?.items.sort((a: any, b: any) =>
+  //       a.name?.toLowerCase() > b.name?.toLowerCase() ? 1 : -1
+  //     );
+  //     const InstituteList = sortedList.map((item: any, i: any) => ({
+  //       id: item.id,
+  //       name: `${item.name || ''}`,
+  //       value: `${item.name || ''}`
+  //     }));
+  //     setInstitutionList(InstituteList);
+  //   } catch {
+  //     setMessages({
+  //       show: true,
+  //       message: EditCurriculardict[userLanguage]['messages']['unablefetch'],
+  //       isError: true
+  //     });
+  //   }
+  // };
 
   const checkUniqCurricularName = async () => {
     try {
@@ -406,9 +408,31 @@ const EditCurricular = (props: EditCurricularProps) => {
     }
   };
 
+  const {authId, email} = useAuth();
+  const loadInstitution = async () => {
+    try {
+      const res = await getInstitutionList(authId, email);
+      if (res && res.length > 0) {
+        setInstitutionList(res);
+      } else {
+        setMessages({
+          show: true,
+          message: RoomBuilderdict[userLanguage]['messages']['error']['institutebefor'],
+          isError: true
+        });
+      }
+    } catch (error) {
+      setMessages({
+        show: true,
+        message: EditCurriculardict[userLanguage]['messages']['unablefetch'],
+        isError: true
+      });
+    }
+  };
+
   useEffect(() => {
     // fetchCurricularData();
-    getInstitutionList();
+    loadInstitution();
     fetchPersonsList();
   }, []);
 

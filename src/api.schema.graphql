@@ -121,6 +121,7 @@ type Institution @model @auth(rules: [{allow: public}]) {
   website: String
   image: String
   isServiceProvider: Boolean
+  isZoiq: Boolean
   serviceProviders: [ServiceProvider]
     @hasMany(indexName: "providersByPartner", fields: ["id"])
   staff: [Staff] @hasMany(indexName: "staffByInstitution", fields: ["id"])

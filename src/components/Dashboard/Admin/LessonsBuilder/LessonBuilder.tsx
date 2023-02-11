@@ -241,7 +241,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
           imagePreviewUrl: savedData.cardImage
             ? getImageFromS3Static(savedData.cardImage)
             : '',
-          name: savedData.title,
+          name: savedData?.title || '--',
           type:
             savedData.type &&
             lessonTypeList.find((item: any) => item.value === savedData.type),
@@ -348,7 +348,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
         stage: 'checkpoint',
         type: 'checkpoint',
         label: unSavedCheckPData.label,
-        title: unSavedCheckPData.title,
+        title: unSavedCheckPData?.title || '--',
         subtitle: unSavedCheckPData.subtitle,
         instructionsTitle: unSavedCheckPData.instructionsTitle,
         instructions: unSavedCheckPData.instructionHtml,

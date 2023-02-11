@@ -18,6 +18,7 @@ import {createUserUrl} from 'utilities/urls';
 
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import useGraphqlMutation from '@customHooks/useGraphqlMutation';
+import {withZoiqFilter} from '@utilities/functions';
 import {getReverseUserRoleString, getUserRoleString} from '@utilities/strings';
 import {
   CreateClassroomGroupStudentsInput,
@@ -32,7 +33,6 @@ import {
 import CheckBox from 'atoms/Form/CheckBox';
 import Label from 'atoms/Form/Label';
 import * as customQueries from 'customGraphql/customQueries';
-import {withZoiqFilter} from '@utilities/functions';
 
 interface newUserInput {
   key: number;
@@ -507,7 +507,7 @@ const Registration = ({
   const fetchInstitutions = async () => {
     try {
       let institutions: any = await API.graphql(
-        graphqlOperation(customQueries.getInstitutionsList)
+        graphqlOperation(customQueries.getInstitutionsList, {filter: withZoiqFilter({})})
       );
       institutions = institutions?.data.listInstitutions?.items || [];
       let list = institutions.map((inst: any) => {

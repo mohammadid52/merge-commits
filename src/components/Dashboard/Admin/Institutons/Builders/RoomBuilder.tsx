@@ -1,15 +1,8 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import React, {useContext, useEffect, useState} from 'react';
-import {useHistory, useLocation, useRouteMatch} from 'react-router-dom';
+import {useQuery} from '@customHooks/urlParam';
+import useAuth from '@customHooks/useAuth';
+import {checkUniqRoomName, getInstitutionList} from '@graphql/functions';
 import {getAsset} from 'assets';
-import {GlobalContext} from 'contexts/GlobalContext';
-import * as customMutation from 'customGraphql/customMutations';
-import * as customQueries from 'customGraphql/customQueries';
-import useDictionary from 'customHooks/dictionary';
-import * as mutation from 'graphql/mutations';
-import * as queries from 'graphql/queries';
-import {getImageFromS3} from 'utilities/services';
-import {getFilterORArray} from 'utilities/strings';
 import BreadCrums from 'atoms/BreadCrums';
 import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
@@ -18,8 +11,15 @@ import Selector from 'atoms/Form/Selector';
 import SelectorWithAvatar from 'atoms/Form/SelectorWithAvatar';
 import PageWrapper from 'atoms/PageWrapper';
 import SectionTitle from 'atoms/SectionTitle';
-import {useQuery} from '@customHooks/urlParam';
-import {checkUniqRoomName} from '@graphql/functions';
+import {GlobalContext} from 'contexts/GlobalContext';
+import * as customMutation from 'customGraphql/customMutations';
+import * as customQueries from 'customGraphql/customQueries';
+import useDictionary from 'customHooks/dictionary';
+import * as mutation from 'graphql/mutations';
+import * as queries from 'graphql/queries';
+import React, {useContext, useEffect, useState} from 'react';
+import {useHistory, useLocation, useRouteMatch} from 'react-router-dom';
+import {getFilterORArray} from 'utilities/strings';
 
 interface RoomBuilderProps {}
 
@@ -199,43 +199,35 @@ const RoomBuilder = (props: RoomBuilderProps) => {
     }
   };
 
-  const getImageURL = async (uniqKey: string) => {
-    const imageUrl: any = await getImageFromS3(uniqKey);
-    if (imageUrl) {
-      console.log(imageUrl);
-      return imageUrl;
-    } else {
-      return '';
-    }
-  };
-
-  const getInstitutionList = async () => {
-    try {
-      const list: any = await API.graphql(graphqlOperation(queries.listInstitutions));
-      const sortedList = list.data.listInstitutions?.items.sort((a: any, b: any) =>
-        a.name?.toLowerCase() > b.name?.toLowerCase() ? 1 : -1
-      );
-      const InstituteList = sortedList.map((item: any, i: any) => ({
-        id: item.id,
-        name: `${item.name ? item.name : ''}`,
-        value: `${item.name ? item.name : ''}`
-      }));
-      setInstitutionList(InstituteList);
-      if (InstituteList.length === 0) {
-        setMessages({
-          show: true,
-          message: RoomBuilderdict[userLanguage]['messages']['error']['institutebefor'],
-          isError: true
-        });
-      }
-    } catch {
-      setMessages({
-        show: true,
-        message: RoomBuilderdict[userLanguage]['messages']['error']['institutelist'],
-        isError: true
-      });
-    }
-  };
+  // const getInstitutionList = async () => {
+  //   try {
+  //     const list: any = await API.graphql(
+  //       graphqlOperation(queries.listInstitutions, {filter: withZoiqFilter({})})
+  //     );
+  //     const sortedList = list.data.listInstitutions?.items.sort((a: any, b: any) =>
+  //       a.name?.toLowerCase() > b.name?.toLowerCase() ? 1 : -1
+  //     );
+  //     const InstituteList = sortedList.map((item: any, i: any) => ({
+  //       id: item.id,
+  //       name: `${item.name ? item.name : ''}`,
+  //       value: `${item.name ? item.name : ''}`
+  //     }));
+  //     setInstitutionList(InstituteList);
+  //     if (InstituteList.length === 0) {
+  //       setMessages({
+  //         show: true,
+  //         message: RoomBuilderdict[userLanguage]['messages']['error']['institutebefor'],
+  //         isError: true
+  //       });
+  //     }
+  //   } catch {
+  //     setMessages({
+  //       show: true,
+  //       message: RoomBuilderdict[userLanguage]['messages']['error']['institutelist'],
+  //       isError: true
+  //     });
+  //   }
+  // };
 
   const getInstituteInfo = async (instId: string) => {
     try {
@@ -578,6 +570,29 @@ const RoomBuilder = (props: RoomBuilderProps) => {
     }
   }, [roomData.institute.id]);
 
+  const {authId, email} = useAuth();
+
+  const loadInstitution = async () => {
+    try {
+      const res = await getInstitutionList(authId, email);
+      if (res && res.length > 0) {
+        setInstitutionList(res);
+      } else {
+        setMessages({
+          show: true,
+          message: RoomBuilderdict[userLanguage]['messages']['error']['institutebefor'],
+          isError: true
+        });
+      }
+    } catch (error) {
+      setMessages({
+        show: true,
+        message: RoomBuilderdict[userLanguage]['messages']['error']['institutelist'],
+        isError: true
+      });
+    }
+  };
+
   useEffect(() => {
     const instId = params.get('id');
     if (instId) {
@@ -589,7 +604,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
           value: ''
         }
       });
-      getInstitutionList();
+      loadInstitution();
     } else {
       history.push('/dashboard/manage-institutions');
     }

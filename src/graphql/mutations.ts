@@ -32,6 +32,7 @@ export const batchAddClassStudent = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -382,6 +383,7 @@ export const createPersonLessonsData = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -488,6 +490,7 @@ export const createPersonLessonsData = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -614,6 +617,7 @@ export const updatePersonLessonsData = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -720,6 +724,7 @@ export const updatePersonLessonsData = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -846,6 +851,7 @@ export const deletePersonLessonsData = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -952,6 +958,7 @@ export const deletePersonLessonsData = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -1062,6 +1069,7 @@ export const createInstitution = /* GraphQL */ `
       website
       image
       isServiceProvider
+      isZoiq
       serviceProviders {
         items {
           id
@@ -1193,6 +1201,7 @@ export const updateInstitution = /* GraphQL */ `
       website
       image
       isServiceProvider
+      isZoiq
       serviceProviders {
         items {
           id
@@ -1324,6 +1333,7 @@ export const deleteInstitution = /* GraphQL */ `
       website
       image
       isServiceProvider
+      isZoiq
       serviceProviders {
         items {
           id
@@ -1460,6 +1470,7 @@ export const createServiceProvider = /* GraphQL */ `
         website
         image
         isServiceProvider
+        isZoiq
         serviceProviders {
           nextToken
         }
@@ -1512,6 +1523,7 @@ export const updateServiceProvider = /* GraphQL */ `
         website
         image
         isServiceProvider
+        isZoiq
         serviceProviders {
           nextToken
         }
@@ -1564,6 +1576,7 @@ export const deleteServiceProvider = /* GraphQL */ `
         website
         image
         isServiceProvider
+        isZoiq
         serviceProviders {
           nextToken
         }
@@ -1661,6 +1674,7 @@ export const createStaff = /* GraphQL */ `
         website
         image
         isServiceProvider
+        isZoiq
         serviceProviders {
           nextToken
         }
@@ -1758,6 +1772,7 @@ export const updateStaff = /* GraphQL */ `
         website
         image
         isServiceProvider
+        isZoiq
         serviceProviders {
           nextToken
         }
@@ -1855,6 +1870,7 @@ export const deleteStaff = /* GraphQL */ `
         website
         image
         isServiceProvider
+        isZoiq
         serviceProviders {
           nextToken
         }
@@ -1935,6 +1951,7 @@ export const createRoom = /* GraphQL */ `
         website
         image
         isServiceProvider
+        isZoiq
         serviceProviders {
           nextToken
         }
@@ -2021,6 +2038,7 @@ export const createRoom = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -2173,6 +2191,7 @@ export const updateRoom = /* GraphQL */ `
         website
         image
         isServiceProvider
+        isZoiq
         serviceProviders {
           nextToken
         }
@@ -2259,6 +2278,7 @@ export const updateRoom = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -2411,6 +2431,7 @@ export const deleteRoom = /* GraphQL */ `
         website
         image
         isServiceProvider
+        isZoiq
         serviceProviders {
           nextToken
         }
@@ -2497,6 +2518,7 @@ export const deleteRoom = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -3137,6 +3159,7 @@ export const createClassroomGroups = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -3334,6 +3357,7 @@ export const updateClassroomGroups = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -3531,6 +3555,7 @@ export const deleteClassroomGroups = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -3731,6 +3756,7 @@ export const createRoomCoTeachers = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -3924,6 +3950,7 @@ export const updateRoomCoTeachers = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -4117,6 +4144,7 @@ export const deleteRoomCoTeachers = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -4287,6 +4315,7 @@ export const createClass = /* GraphQL */ `
         website
         image
         isServiceProvider
+        isZoiq
         serviceProviders {
           nextToken
         }
@@ -4347,6 +4376,7 @@ export const createClass = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -4477,6 +4507,7 @@ export const updateClass = /* GraphQL */ `
         website
         image
         isServiceProvider
+        isZoiq
         serviceProviders {
           nextToken
         }
@@ -4537,6 +4568,7 @@ export const updateClass = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -4667,6 +4699,7 @@ export const deleteClass = /* GraphQL */ `
         website
         image
         isServiceProvider
+        isZoiq
         serviceProviders {
           nextToken
         }
@@ -4727,6 +4760,7 @@ export const deleteClass = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -4865,6 +4899,7 @@ export const createClassStudent = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -4991,6 +5026,7 @@ export const updateClassStudent = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -5117,6 +5153,7 @@ export const deleteClassStudent = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -5239,6 +5276,7 @@ export const createCurriculum = /* GraphQL */ `
         website
         image
         isServiceProvider
+        isZoiq
         serviceProviders {
           nextToken
         }
@@ -5327,6 +5365,7 @@ export const updateCurriculum = /* GraphQL */ `
         website
         image
         isServiceProvider
+        isZoiq
         serviceProviders {
           nextToken
         }
@@ -5415,6 +5454,7 @@ export const deleteCurriculum = /* GraphQL */ `
         website
         image
         isServiceProvider
+        isZoiq
         serviceProviders {
           nextToken
         }
@@ -5507,6 +5547,7 @@ export const createTopic = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -5583,6 +5624,7 @@ export const updateTopic = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -5659,6 +5701,7 @@ export const deleteTopic = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -5984,6 +6027,7 @@ export const createRoomCurriculum = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -6046,6 +6090,7 @@ export const updateRoomCurriculum = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -6108,6 +6153,7 @@ export const deleteRoomCurriculum = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -6282,6 +6328,7 @@ export const createCommonCheckpoint = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -6367,6 +6414,7 @@ export const updateCommonCheckpoint = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -6452,6 +6500,7 @@ export const deleteCommonCheckpoint = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -8184,6 +8233,7 @@ export const createPersonLocation = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -8290,6 +8340,7 @@ export const createPersonLocation = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -8458,6 +8509,7 @@ export const updatePersonLocation = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -8564,6 +8616,7 @@ export const updatePersonLocation = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -8732,6 +8785,7 @@ export const deletePersonLocation = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -8838,6 +8892,7 @@ export const deletePersonLocation = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -8951,6 +9006,7 @@ export const createAttendance = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -8994,6 +9050,7 @@ export const createAttendance = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -9038,6 +9095,7 @@ export const createAttendance = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -9144,6 +9202,7 @@ export const createAttendance = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -9274,6 +9333,7 @@ export const updateAttendance = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -9317,6 +9377,7 @@ export const updateAttendance = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -9361,6 +9422,7 @@ export const updateAttendance = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -9467,6 +9529,7 @@ export const updateAttendance = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -9597,6 +9660,7 @@ export const deleteAttendance = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -9640,6 +9704,7 @@ export const deleteAttendance = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -9684,6 +9749,7 @@ export const deleteAttendance = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -9790,6 +9856,7 @@ export const deleteAttendance = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -9906,6 +9973,7 @@ export const createUniversalLesson = /* GraphQL */ `
         website
         image
         isServiceProvider
+        isZoiq
         serviceProviders {
           nextToken
         }
@@ -10034,6 +10102,7 @@ export const updateUniversalLesson = /* GraphQL */ `
         website
         image
         isServiceProvider
+        isZoiq
         serviceProviders {
           nextToken
         }
@@ -10162,6 +10231,7 @@ export const deleteUniversalLesson = /* GraphQL */ `
         website
         image
         isServiceProvider
+        isZoiq
         serviceProviders {
           nextToken
         }
@@ -10294,6 +10364,7 @@ export const createUniversalLessonStudentData = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -10426,6 +10497,7 @@ export const updateUniversalLessonStudentData = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -10558,6 +10630,7 @@ export const deleteUniversalLessonStudentData = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -10693,6 +10766,7 @@ export const createUniversalLessonWritingExcercises = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -10828,6 +10902,7 @@ export const updateUniversalLessonWritingExcercises = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -10963,6 +11038,7 @@ export const deleteUniversalLessonWritingExcercises = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -11821,6 +11897,7 @@ export const createUploadLogs = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -11927,6 +12004,7 @@ export const createUploadLogs = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -12032,6 +12110,7 @@ export const createUploadLogs = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -12202,6 +12281,7 @@ export const updateUploadLogs = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -12308,6 +12388,7 @@ export const updateUploadLogs = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -12413,6 +12494,7 @@ export const updateUploadLogs = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -12583,6 +12665,7 @@ export const deleteUploadLogs = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -12689,6 +12772,7 @@ export const deleteUploadLogs = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -12794,6 +12878,7 @@ export const deleteUploadLogs = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -12867,6 +12952,7 @@ export const createUniversalJournalData = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -12984,6 +13070,7 @@ export const updateUniversalJournalData = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -13101,6 +13188,7 @@ export const deleteUniversalJournalData = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -13202,6 +13290,7 @@ export const createUniversalSyllabus = /* GraphQL */ `
         website
         image
         isServiceProvider
+        isZoiq
         serviceProviders {
           nextToken
         }
@@ -13285,6 +13374,7 @@ export const updateUniversalSyllabus = /* GraphQL */ `
         website
         image
         isServiceProvider
+        isZoiq
         serviceProviders {
           nextToken
         }
@@ -13368,6 +13458,7 @@ export const deleteUniversalSyllabus = /* GraphQL */ `
         website
         image
         isServiceProvider
+        isZoiq
         serviceProviders {
           nextToken
         }
@@ -13454,6 +13545,7 @@ export const createCurriculumUnits = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -13511,6 +13603,7 @@ export const updateCurriculumUnits = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -13568,6 +13661,7 @@ export const deleteCurriculumUnits = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -13633,6 +13727,7 @@ export const createUniversalSyllabusLesson = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -13773,6 +13868,7 @@ export const updateUniversalSyllabusLesson = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -13913,6 +14009,7 @@ export const deleteUniversalSyllabusLesson = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -14889,6 +14986,7 @@ export const createSentimentTracker = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -15148,6 +15246,7 @@ export const updateSentimentTracker = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -15407,6 +15506,7 @@ export const deleteSentimentTracker = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -15667,6 +15767,7 @@ export const createFeelingTracker = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -15861,6 +15962,7 @@ export const updateFeelingTracker = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -16055,6 +16157,7 @@ export const deleteFeelingTracker = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -16252,6 +16355,7 @@ export const createFeelingsArchive = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -16359,6 +16463,7 @@ export const createFeelingsArchive = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -16538,6 +16643,7 @@ export const updateFeelingsArchive = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -16645,6 +16751,7 @@ export const updateFeelingsArchive = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -16824,6 +16931,7 @@ export const deleteFeelingsArchive = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -16931,6 +17039,7 @@ export const deleteFeelingsArchive = /* GraphQL */ `
           website
           image
           isServiceProvider
+          isZoiq
           filters
           setupComplete
           createdAt
@@ -17112,6 +17221,7 @@ export const createCommunity = /* GraphQL */ `
         website
         image
         isServiceProvider
+        isZoiq
         serviceProviders {
           nextToken
         }
@@ -17235,6 +17345,7 @@ export const updateCommunity = /* GraphQL */ `
         website
         image
         isServiceProvider
+        isZoiq
         serviceProviders {
           nextToken
         }
@@ -17358,6 +17469,7 @@ export const deleteCommunity = /* GraphQL */ `
         website
         image
         isServiceProvider
+        isZoiq
         serviceProviders {
           nextToken
         }

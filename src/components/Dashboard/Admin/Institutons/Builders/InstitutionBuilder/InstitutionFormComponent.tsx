@@ -25,6 +25,7 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
     type: '',
     website: '',
     isServiceProvider: false,
+    isZoiq: false,
     address: '',
     addressLine2: '',
     city: '',
@@ -43,7 +44,7 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
   const [imageUrl, setImageUrl] = useState('');
   const [s3Image, setS3Image] = useState(null);
   const [saving, setSaving] = useState(false);
-  const {theme, clientKey, userLanguage} = useContext(GlobalContext);
+  const {theme, clientKey, checkIfAdmin, userLanguage} = useContext(GlobalContext);
   const {InstitutionBuilderDict, BUTTONS: ButtonDict} = useDictionary(clientKey);
   const [error, setError] = useState({
     show: true,
@@ -202,6 +203,7 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
           state: instituteData.state,
           zip: instituteData.zip,
           image: instituteData.image,
+          isZoiq: instituteData.isZoiq,
           phone: instituteData.phone,
           isServiceProvider: instituteData.isServiceProvider
         };
@@ -219,6 +221,7 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
             graphqlOperation(customMutations.createInstitution, {input: payload})
           );
         }
+
         setSaving(false);
         setServerMessage({
           isError: false,
@@ -230,6 +233,9 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
             message: ''
           });
         }, 2000);
+
+        history.goBack();
+
         // history.push(`institution?id=${instituteData.id}`);
       } catch {
         setError({
@@ -477,6 +483,23 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
                     }
                   />
                 </div>
+                {checkIfAdmin() && (
+                  <div className="col-span-6 lg:col-span-3 px-3 py-2 flex items-center">
+                    <CheckBox
+                      name="isZoiq"
+                      dataCy="isZoiq"
+                      label={'ZOIQ'}
+                      className="group:hover:bg-gray-500"
+                      value={instituteData.isZoiq}
+                      onChange={(e) => {
+                        setInstituteData({
+                          ...instituteData,
+                          isZoiq: e.target.checked
+                        });
+                      }}
+                    />
+                  </div>
+                )}
               </div>
               {serverMessage.message && (
                 <span className="text-sm text-green-600 text-center my-6 mx-3 w-full">

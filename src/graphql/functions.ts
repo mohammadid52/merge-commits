@@ -5,6 +5,7 @@ import {setPageTitle, withZoiqFilter} from '@utilities/functions';
 import {CreateDicitionaryInput, CreateErrorLogInput, UserPageState} from 'API';
 import * as mutations from 'graphql/mutations';
 import * as queries from 'graphql/queries';
+import * as customQueries from 'customGraphql/customQueries';
 import * as customMutations from 'customGraphql/customMutations';
 import {setLocalStorageData} from '@utilities/localStorage';
 import {isEmpty} from 'lodash';
@@ -186,25 +187,71 @@ export const getDictionaries = async () => {
   }
 };
 
+const zoiqFilter = (authId: string) =>
+  allowedAuthIds.includes(authId) ? [] : [{isZoiq: {ne: true}}];
+
 export const checkUniqRoomName = async (
   instituteId: string,
   roomName: string,
   authId: string
 ) => {
   try {
-    const zoiqFilter = allowedAuthIds.includes(authId)
-      ? []
-      : [{isZoiq: {eq: false}}, {isZoiq: {attributeExists: false}}];
     const list: any = await API.graphql(
       graphqlOperation(queries.listRooms, {
         filter: withZoiqFilter(
           {institutionID: {eq: instituteId}, name: {eq: roomName}},
-          zoiqFilter
+          zoiqFilter(authId)
         )
       })
     );
     return list.data.listRooms.items.length === 0 ? true : false;
   } catch (error) {
     console.error(error);
+  }
+};
+
+export const listInstitutions = async (authId: string, email: string) => {
+  try {
+    // setInstitutionsLoading(true);
+    let institutions: any = await API.graphql(
+      graphqlOperation(customQueries.getInstitutionsList, {
+        filter: withZoiqFilter({}, zoiqFilter(authId))
+      })
+    );
+    institutions = institutions?.data.listInstitutions?.items || [];
+    institutions = institutions.map((inst: any) => {
+      return {
+        id: inst.id,
+        name: inst.name,
+        value: inst.name
+      };
+    });
+    return institutions;
+  } catch (error) {
+    logError(error, {authId, email}, 'functions @listInstitutions');
+    console.error('🚀 ~ file: Csv.tsx ~ line 122 ~ listInstitutions ~ error', error);
+  } finally {
+    // setInstitutionsLoading(false);
+  }
+};
+
+export const getInstitutionList = async (authId: string, email: string) => {
+  try {
+    const list: any = await API.graphql(
+      graphqlOperation(queries.listInstitutions, {filter: withZoiqFilter({})})
+    );
+    const sortedList = list.data.listInstitutions?.items.sort((a: any, b: any) =>
+      a.name?.toLowerCase() > b.name?.toLowerCase() ? 1 : -1
+    );
+    const InstituteList = sortedList.map((item: any, i: any) => ({
+      id: item.id,
+      name: `${item.name ? item.name : ''}`,
+      value: `${item.name ? item.name : ''}`
+    }));
+
+    return InstituteList;
+  } catch (error) {
+    logError(error, {authId, email}, 'functions @getInstitutionList');
+    console.log('🚀 ~ file: functions.ts:261 ~ getInstitutionList ~ error', error);
   }
 };
