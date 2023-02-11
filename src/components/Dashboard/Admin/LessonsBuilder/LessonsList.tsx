@@ -9,6 +9,7 @@ import useAuth from '@customHooks/useAuth';
 import usePagination from '@customHooks/usePagination';
 import useSearch from '@customHooks/useSearch';
 import {InstitueRomms} from '@dictionary/dictionary.iconoclast';
+import {withZoiqFilter} from '@utilities/functions';
 import {RoomStatus} from 'API';
 import {getAsset} from 'assets';
 import BreadCrums from 'atoms/BreadCrums';
@@ -278,7 +279,9 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
   const fetchInstitutions = async () => {
     try {
       const list: any = await API.graphql(
-        graphqlOperation(customQueries.listInstitutionOptions)
+        graphqlOperation(customQueries.listInstitutionOptions, {
+          filter: withZoiqFilter({})
+        })
       );
       setInstitutionList(
         list.data?.listInstitutions?.items?.sort((a: any, b: any) =>
