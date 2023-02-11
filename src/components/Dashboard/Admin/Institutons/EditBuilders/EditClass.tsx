@@ -4,7 +4,6 @@ import {useHistory} from 'react-router-dom';
 
 import SearchSelectorWithAvatar from 'atoms/Form/SearchSelectorWithAvatar';
 
-import {getAsset} from 'assets';
 import {getImageFromS3} from 'utilities/services';
 import {createFilterToFetchAllItemsExcept} from 'utilities/strings';
 
@@ -68,7 +67,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
   const [studentIdToEdit, setStudentIdToEdit] = useState<string>('');
   const [groups, setGroups] = useState([]);
   const [saving, setSaving] = useState<boolean>(false);
-  const [updating, setUpdating] = useState<boolean>(false);
+
   const [deleting, setDeleting] = useState(false);
   const [loading, setLoading] = useState(true);
   const [adding, setAdding] = useState(false);
@@ -87,15 +86,12 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
   });
 
   const {
-    clientKey,
     userLanguage,
-    state: {user},
-    theme
+    state: {user}
   } = useGlobalContext();
 
   const {isAdmin, isBuilder, isSuperAdmin} = useAuth();
 
-  const themeColor = getAsset(clientKey, 'themeClassName');
   const {editClassDict, RegistrationDict, UserDict} = useDictionary();
   const dictionary = editClassDict[userLanguage];
 
