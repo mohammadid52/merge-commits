@@ -76,7 +76,7 @@ const Start: React.FC<StartProps> = ({
     teachingStyle !== TeachingStyle.PERFORMER
       ? user.role === 'FLW' || user.role === 'TR'
       : false;
-  const isOnDemand = user.onDemand;
+  const isOnDemand = teachingStyle === TeachingStyle.PERFORMER ? true : user.onDemand;
 
   useEffect(() => {
     setIsMounted(true);
