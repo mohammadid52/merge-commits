@@ -18,6 +18,102 @@ export const updatePersonLocation = /* GraphQL */ `
   }
 `;
 
+export const updateRoomCoTeachers = /* GraphQL */ `
+  mutation UpdateRoomCoTeachers(
+    $input: UpdateRoomCoTeachersInput!
+    $condition: ModelRoomCoTeachersConditionInput
+  ) {
+    updateRoomCoTeachers(input: $input, condition: $condition) {
+      id
+      roomID
+      teacherID
+      teacherEmail
+      teacherAuthID
+      room {
+        id
+        institutionID
+        classID
+        teacherAuthID
+        teacherEmail
+        name
+        maxPersons
+        status
+        filters
+        location
+        startDate
+        startTime
+        endDate
+        endTime
+        length
+        repeat
+        notes
+        activeSyllabus
+        frequency
+        teachingStyle
+        createdAt
+        updatedAt
+      }
+      teacher {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        inactiveStatusDate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        onDemand
+        sentiments
+        passcode
+        classes {
+          nextToken
+        }
+        lessons {
+          nextToken
+        }
+        spotlightUser
+        spotlightDate
+        statusReason
+        addedby
+        lastEmotionSubmission
+        pageState
+        lastPageStateUpdate
+        statusChangedBy
+        isZoiq
+        createdAt
+        updatedAt
+      }
+      curricula {
+        items {
+          id
+          roomID
+          curriculumID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      type
+      teachingStyle
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
 export const updateUniversalLesson = /* GraphQL */ `
   mutation UpdateUniversalLesson(
     $input: UpdateUniversalLessonInput!
@@ -755,6 +851,7 @@ export const updateRoom = /* GraphQL */ `
       classID
       teacherAuthID
       teacherEmail
+      teachingStyle
       name
       maxPersons
       activeSyllabus

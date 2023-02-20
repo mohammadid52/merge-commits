@@ -1,5 +1,6 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import useAuth from '@customHooks/useAuth';
+import {TeachingStyle} from 'API';
 import Buttons from 'atoms/Buttons';
 import axios from 'axios';
 import {useGlobalContext} from 'contexts/GlobalContext';
@@ -55,6 +56,8 @@ const Start: React.FC<StartProps> = ({
   const userLanguage = gContext.userLanguage;
   const getRoomData = getLocalStorageData('room_info');
 
+  const teachingStyle = getRoomData.teachingStyle;
+
   const [isMounted, setIsMounted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -69,7 +72,10 @@ const Start: React.FC<StartProps> = ({
     message: 'Do you want to mark these active lessons as completed?'
   });
 
-  const isTeacher = user.role === 'FLW' || user.role === 'TR';
+  const isTeacher =
+    teachingStyle !== TeachingStyle.PERFORMER
+      ? user.role === 'FLW' || user.role === 'TR'
+      : false;
   const isOnDemand = user.onDemand;
 
   useEffect(() => {

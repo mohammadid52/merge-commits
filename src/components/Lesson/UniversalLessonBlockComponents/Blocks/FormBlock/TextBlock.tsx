@@ -8,7 +8,7 @@ import React, {useContext} from 'react';
 import {FormLabel} from '../FormBlock';
 
 const TextBlock = (props: IFormBlockProps) => {
-  const {id, required, numbered, label, mode, index, value, inputID} = props;
+  const {id, required, numbered, label, mode, isStudent, index, value, inputID} = props;
 
   const {
     state: {user, lessonPage: {theme: lessonPageTheme = 'dark', themeTextColor = ''} = {}}
@@ -16,7 +16,6 @@ const TextBlock = (props: IFormBlockProps) => {
   const themePlaceholderColor =
     lessonPageTheme === 'light' ? 'placeholder-gray-800' : 'text-gray-400';
 
-  const isStudent = user.role === 'ST';
   const isInLesson = useInLessonCheck();
 
   const {getDataValue, setDataValue} = useStudentDataValue();

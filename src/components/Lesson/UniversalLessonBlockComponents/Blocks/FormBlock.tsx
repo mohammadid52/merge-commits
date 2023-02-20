@@ -3,6 +3,8 @@ import DatePicker from '@UlbBlocks/FormBlock/DatePicker';
 import TextAreaBlock from '@UlbBlocks/FormBlock/TextAreaBlock';
 import TextBlock from '@UlbBlocks/FormBlock/TextBlock';
 import NotesBlock from '@UlbBlocks/Notes/NotesBlock';
+import {getLocalStorageData} from '@utilities/localStorage';
+import {TeachingStyle} from 'API';
 import RequiredMark from 'atoms/RequiredMark';
 import AttachmentBlock from 'components/Lesson/UniversalLessonBlockComponents/Blocks/FormBlock/AttachmentBlock';
 import OptionBlock from 'components/Lesson/UniversalLessonBlockComponents/Blocks/FormBlock/OptionBlock';
@@ -85,12 +87,17 @@ export const FormBlock = ({
   const {getDataValue, setDataValue} = useStudentDataValue();
 
   // ~~~~~~~~~~~~~~~~ PAGES ~~~~~~~~~~~~~~~~ //
+  const getRoomData = getLocalStorageData('room_info');
 
   // ##################################################################### //
   // ######################## STUDENT DATA CONTEXT ####################### //
   // ##################################################################### //
+  const teachingStyle = getRoomData.teachingStyle;
 
-  const isStudent = user.role === 'ST';
+  const isTeacher = user.role !== 'ST';
+  const isStudent =
+    isTeacher && teachingStyle === TeachingStyle.PERFORMER ? true : user.role === 'ST';
+
   const isInLesson = isStudent ? useInLessonCheck() : false;
 
   const onChange = (e: any) => {
@@ -169,7 +176,8 @@ export const FormBlock = ({
       value,
       required,
       inputID,
-      classString
+      classString,
+      isStudent
     };
     switch (type) {
       case FORM_TYPES.TEXT:

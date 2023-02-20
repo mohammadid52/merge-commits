@@ -139,7 +139,8 @@ const OptionBlock = (props: IOptionProps) => {
     value,
     type,
     options,
-    inputID
+    inputID,
+    isStudent
   } = props;
 
   const gContext = useContext(GlobalContext);
@@ -150,7 +151,6 @@ const OptionBlock = (props: IOptionProps) => {
     lessonPage: {theme: lessonPageTheme = 'dark', themeTextColor = ''} = {}
   } = gState;
 
-  const isStudent = user.role === 'ST';
   const isInLesson = isStudent ? useInLessonCheck() : false;
 
   const {getDataValue, setDataValue} = useStudentDataValue();
@@ -164,6 +164,7 @@ const OptionBlock = (props: IOptionProps) => {
   ) => {
     if (values && Array.isArray(values)) {
       const studentDataValue = getDataValue(inputID) || [];
+
       let selectedOptionList: string[] = [...studentDataValue].filter((d) => d !== '');
 
       const getCheckValue = (id: string): boolean => studentDataValue.includes(id);
@@ -179,6 +180,7 @@ const OptionBlock = (props: IOptionProps) => {
           } else {
             selectedOptionList[0] = id;
           }
+
           setDataValue(inputID, [...selectedOptionList]);
         }
       };
