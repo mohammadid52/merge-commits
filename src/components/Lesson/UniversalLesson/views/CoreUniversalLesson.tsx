@@ -1,5 +1,6 @@
 import Buttons from '@components/Atoms/Buttons';
 import useAuth from '@customHooks/useAuth';
+import {TeachingStyle} from 'API';
 import SaveQuit from 'components/Lesson/Foot/SaveQuit';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useInLessonCheck from 'customHooks/checkIfInLesson';
@@ -39,8 +40,14 @@ const CoreUniversalLesson = ({
         }`
       : `${dir === 'next' ? 'Next' : 'Prev'}`;
 
-  const {isStudent} = useAuth();
+  const {user} = useAuth();
   const getRoomData = getLocalStorageData('room_info');
+  const teachingStyle = getRoomData.teachingStyle;
+
+  const isStudent =
+    user.role !== 'ST' && teachingStyle === TeachingStyle.PERFORMER
+      ? true
+      : user.role === 'ST';
 
   // ~~~~~~~~~~~~ ARROW BUTTONS ~~~~~~~~~~~~ //
   const history = useHistory();

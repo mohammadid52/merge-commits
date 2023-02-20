@@ -1,3 +1,5 @@
+import {getLocalStorageData} from '@utilities/localStorage';
+import {TeachingStyle} from 'API';
 import AllEmotions from 'components/Lesson/AllEmotions';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import {
@@ -20,6 +22,14 @@ const LessonRowComposer = () => {
   const gState = gContext.state;
   const {user, lessonPage} = gState;
   const [activePageData, setActivePageData] = useState<UniversalLessonPage>();
+  const getRoomData = getLocalStorageData('room_info');
+
+  const teachingStyle = getRoomData.teachingStyle;
+
+  const isStudent =
+    user.role !== 'ST' && teachingStyle === TeachingStyle.PERFORMER
+      ? true
+      : user.role === 'ST';
 
   const getSeparateData = (id: string) =>
     activePageData && activePageData.pageContent && activePageData.pageContent.length > 0
@@ -160,7 +170,7 @@ const LessonRowComposer = () => {
         ))}
       {isLastPage && <AllEmotions />}
 
-      {user.role === 'ST' && (
+      {isStudent && (
         <>
           <div className="fab-container space-y-4 w-16  lg:w-18 xl:w-20 z-50 flex flex-col fixed bottom-5 right-8">
             {downloadables && downloadables.length > 0 && (
