@@ -4,7 +4,7 @@ import {TeachingStyle} from 'API';
 import SaveQuit from 'components/Lesson/Foot/SaveQuit';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useInLessonCheck from 'customHooks/checkIfInLesson';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {AiOutlineArrowLeft, AiOutlineArrowRight} from 'react-icons/ai';
 import {useHistory, useRouteMatch} from 'react-router';
 import {getLocalStorageData} from 'utilities/localStorage';
