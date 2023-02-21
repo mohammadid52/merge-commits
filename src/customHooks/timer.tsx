@@ -16,7 +16,8 @@ const useStudentTimer = () => {
 
   const [iAmViewed, setiAmViewed] = useState<boolean>(false);
 
-  const authId = state.user.authId;
+  const user = state.user;
+  const authId = user.authId;
 
   const viewingLogic = async () => {
     if (lessonState.studentViewing) {
@@ -101,22 +102,24 @@ const useStudentTimer = () => {
   const [currentSaveCount, setCurrentSaveCount] = useState<number>(0);
 
   useEffect(() => {
-    if (currentSaveCount < lessonState.saveCount) {
-      setCurrentSaveCount(lessonState.saveCount);
-    }
+    if (user.role === 'ST') {
+      if (currentSaveCount < lessonState.saveCount) {
+        setCurrentSaveCount(lessonState.saveCount);
+      }
 
-    if (iAmViewed) {
-      const viewedUpdate = updateStudentLessonData();
+      if (iAmViewed) {
+        const viewedUpdate = updateStudentLessonData();
 
-      Promise.resolve(viewedUpdate).then((_: void) => {
-        clearUpdateCycle();
-      });
-    } else {
-      const standardUpdate = isSurvey ? updateSurveyData() : updateStudentLessonData();
+        Promise.resolve(viewedUpdate).then((_: void) => {
+          clearUpdateCycle();
+        });
+      } else {
+        const standardUpdate = isSurvey ? updateSurveyData() : updateStudentLessonData();
 
-      Promise.resolve(standardUpdate).then((_: void) => {
-        clearUpdateCycle();
-      });
+        Promise.resolve(standardUpdate).then((_: void) => {
+          clearUpdateCycle();
+        });
+      }
     }
   }, [lessonState.saveCount]);
 

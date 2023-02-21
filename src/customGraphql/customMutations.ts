@@ -1433,6 +1433,104 @@ export const createPersonLessonsData = /* GraphQL */ `
   ) {
     createPersonLessonsData(input: $input, condition: $condition) {
       id
+      studentAuthID
+      studentEmail
+      lessonID
+      lessonType
+      pages
+      ratings
+      isCompleted
+      roomId
+      lesson {
+        id
+        type
+        label
+        title
+        institutionID
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          isZoiq
+          filters
+          setupComplete
+          createdAt
+          updatedAt
+        }
+        language
+        designers
+        objectives
+        lessonPlanAttachment
+        purpose
+        introduction
+        introductionTitle
+        status
+        instructions
+        instructionsTitle
+        summary
+        summaryTitle
+        duration
+        resources
+        notes
+        cardImage
+        cardCaption
+        lessonPlan {
+          id
+          title
+          label
+          description
+          class
+          active
+          disabled
+          displayMode
+          open
+          estTime
+          activityType
+          interactionType
+          tags
+          videoLink
+          notes
+        }
+        homework {
+          id
+          title
+          label
+          description
+          class
+          active
+          disabled
+          displayMode
+          open
+          estTime
+          activityType
+          interactionType
+          tags
+          videoLink
+          notes
+        }
+        darkMode
+        rubrics
+        smallGroup
+        groupSize
+        groupType
+        smallGroupSize
+        smallGroupOption
+        studentMaterials
+        targetAudience
+        isUsed
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
     }
@@ -1990,6 +2088,28 @@ export const _updateRoom = /* GraphQL */ `
       type
       createdAt
       updatedAt
+    }
+  }
+`;
+
+export const deletePersonLocation = /* GraphQL */ `
+  mutation DeletePersonLocation(
+    $input: DeletePersonLocationInput!
+    $condition: ModelPersonLocationConditionInput
+  ) {
+    deletePersonLocation(input: $input, condition: $condition) {
+      id
+    }
+  }
+`;
+
+export const createPersonLocation = /* GraphQL */ `
+  mutation CreatePersonLocation(
+    $input: CreatePersonLocationInput!
+    $condition: ModelPersonLocationConditionInput
+  ) {
+    createPersonLocation(input: $input, condition: $condition) {
+      id
     }
   }
 `;

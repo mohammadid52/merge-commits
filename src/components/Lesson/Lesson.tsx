@@ -263,7 +263,7 @@ const Lesson = () => {
         if (personLessonData !== null && personLessonData !== undefined) {
           if (personLessonData.id) {
             const getLessonRatingDetails: any = await API.graphql(
-              graphqlOperation(queries.getPersonLessonsData, {
+              graphqlOperation(customQueries.getPersonLessonsData, {
                 id: personLessonData.id
               })
             );
@@ -346,7 +346,7 @@ const Lesson = () => {
   const getPersonLocation = async () => {
     try {
       const getUserLocation: any = await API.graphql(
-        graphqlOperation(queries.getPersonLocation, {
+        graphqlOperation(customQueries.getPersonLocation, {
           personEmail: email,
           personAuthID: authId
         })
@@ -395,7 +395,7 @@ const Lesson = () => {
     };
     try {
       const newUserLocation: any = await API.graphql(
-        graphqlOperation(mutations.createPersonLocation, {input: newLocation})
+        graphqlOperation(customMutations.createPersonLocation, {input: newLocation})
       );
       const response = newUserLocation.data.createPersonLocation;
 
@@ -453,7 +453,7 @@ const Lesson = () => {
   const leaveRoomLocation = async (inputAuthId: string, inputEmail: string) => {
     try {
       await API.graphql(
-        graphqlOperation(mutations.deletePersonLocation, {
+        graphqlOperation(customMutations.deletePersonLocation, {
           input: {
             personEmail: inputEmail,
             personAuthID: inputAuthId
@@ -546,7 +546,7 @@ const Lesson = () => {
 
   const createPersonLessonsData = async () => {
     const result: any = await API.graphql(
-      graphqlOperation(mutations.createPersonLessonsData, {
+      graphqlOperation(customMutations.createPersonLessonsData, {
         input: createPersonLessonPayload
       })
     );
