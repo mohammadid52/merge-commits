@@ -488,6 +488,9 @@ const Classroom: React.FC<ClassroomProps> = (props: ClassroomProps) => {
             </div>
           </div>
           <div>
+            {isTeacher && teachingStyle === TeachingStyle.PERFORMER && (
+              <Warning message={'This classroom has Performer mode activated'} />
+            )}
             {isTeacher && (
               <>
                 <SectionTitleV3
@@ -520,10 +523,6 @@ const Classroom: React.FC<ClassroomProps> = (props: ClassroomProps) => {
                   </div>
                 </div>
               </>
-            )}
-
-            {isTeacher && teachingStyle === TeachingStyle.PERFORMER && (
-              <Warning message={'This classroom has Performer mode activated'} />
             )}
 
             <>

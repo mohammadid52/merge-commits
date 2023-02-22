@@ -105,7 +105,10 @@ const LessonSurveyAppWrapper = ({
           setPersonLessonData={setPersonLessonData}
           setisAtEnd={setisAtEnd}
           validateRequired={validateRequired}
-          handleRequiredNotification={handleRequiredNotification}
+          handleRequiredNotification={() => {
+            invokeRequiredField();
+            handleRequiredNotification();
+          }}
         />
       </div>
       <div className={`top-2 lg:top-6 relative lesson-body-container`}>

@@ -4,6 +4,7 @@ import ContentCard from 'atoms/ContentCard';
 import ImageAlternate from 'atoms/ImageAlternative';
 import {filter, orderBy} from 'lodash';
 import React from 'react';
+import {useHistory} from 'react-router';
 
 interface Teacher {
   firstName: string;
@@ -43,13 +44,18 @@ const TeacherRows = (props: {
   const {isStudent, user, instId} = useAuth();
   const extraFilter = isStudent
     ? filter(finalList, (d) => {
-        if (user.status === PersonStatus.ACTIVE) {
-          return d.status === RoomStatus.ACTIVE;
-        } else {
-          return true;
+        if (d.status === RoomStatus.ACTIVE) {
+          if (user.status === PersonStatus.ACTIVE) {
+            return d.status === RoomStatus.ACTIVE;
+          } else {
+            return true;
+          }
         }
+        return true;
       })
     : finalList;
+
+  const history = useHistory();
 
   const getClassesByTeacher = (room: any) => {
     let totalClasses: any[] = [];
@@ -102,7 +108,7 @@ const TeacherRows = (props: {
                           />
                         )}
 
-                        <div className="min-w-0 flex-1 px-4 md:grid md:grid-cols-2 md:gap-4">
+                        <div className="min-w-0 flex-1 px-4">
                           <div>
                             <p className="text-sm font-medium text-indigo-600 truncate">
                               {teacher.firstName + ' ' + teacher.lastName}
@@ -123,7 +129,7 @@ const TeacherRows = (props: {
                         </div>
                       </div>
 
-                      <div className="w-auto -ml-12">
+                      <div className="w-1/2">
                         <h4 className="theme-text ">Classrooms: </h4>
                         <ul
                           className={`w-auto gap-y-2 ${
@@ -135,14 +141,11 @@ const TeacherRows = (props: {
                                 key={d.name}
                                 onClick={(e) => {
                                   e.preventDefault();
-                                  handleRoomSelection(
-                                    d.roomId,
-                                    d.name,
-                                    idx,
-                                    'lesson-planner'
+                                  history.push(
+                                    `/dashboard/manage-institutions/institution/${instId}/room-edit/${d.roomId}`
                                   );
                                 }}
-                                className="text-gray-700  transition-all hover:theme-bg:100 hover:theme-text:500 rounded-md px-2">
+                                className="text-gray-600  transition-all hover:underline hover:theme-text:500 rounded-md px-2">
                                 {d.name}
                               </li>
                             </>

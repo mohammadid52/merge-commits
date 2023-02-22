@@ -173,6 +173,7 @@ export const getDashboardDataForTeachers = /* GraphQL */ `
         classID
         isZoiq
         teacherAuthID
+        status
         teacherEmail
         name
         maxPersons
@@ -308,6 +309,7 @@ export const getDashboardDataForCoTeachers = /* GraphQL */ `
           classID
           teacherAuthID
           teacherEmail
+          status
           name
           maxPersons
           filters
@@ -342,7 +344,6 @@ export const getDashboardDataForCoTeachers = /* GraphQL */ `
               teacher {
                 id
                 authId
-                status
                 email
                 firstName
                 lastName
