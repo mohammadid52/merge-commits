@@ -27,6 +27,7 @@ import {ClassroomType} from 'API';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import {getFilterORArray} from 'utilities/strings';
+import moment from 'moment';
 
 export const methods = [
   {
@@ -162,7 +163,8 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
       name: ''
     },
     activeSyllabus: '',
-    classID: ''
+    classID: '',
+    createdAt: new Date()
   };
   const [roomData, setRoomData] = useState(initialData);
   const [teachersList, setTeachersList] = useState([]);
@@ -893,7 +895,8 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
               maxPersons: savedData.maxPersons,
               status: savedData.status,
               location: savedData.location,
-              conferenceCallLink: savedData.conferenceCallLink
+              conferenceCallLink: savedData.conferenceCallLink,
+              createdAt: savedData.createdAt
             });
             setPrevName(savedData.name);
             setSelectedCurrID(curricularId);
@@ -1240,7 +1243,17 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
       <PageWrapper defaultClass="px-4">
         <div className="w-full m-auto">
           <div className="">
-            <SectionTitleV3 title={RoomEDITdict[userLanguage].HEADING} />
+            <SectionTitleV3
+              // @ts-ignore
+              title={
+                <div className="flex flex-col">
+                  <span className="w-auto">{RoomEDITdict[userLanguage].HEADING}</span>
+                  <span className="text-gray-500 w-auto font-normal mt-2 text-sm">
+                    {moment(roomData.createdAt).format('ll')}
+                  </span>
+                </div>
+              }
+            />
 
             <div className="grid grid-cols-2">
               <div className="px-3 py-4">
@@ -1348,6 +1361,8 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
                   <MultipleSelector
                     label={RoomEDITdict[userLanguage]['CO_TEACHER_LABEL']}
                     withAvatar
+                    disabledText="Classroom inactive"
+                    disabled={status === RoomStatus.INACTIVE}
                     selectedItems={selectedCoTeachers}
                     list={coTeachersList}
                     placeholder={RoomEDITdict[userLanguage]['CO_TEACHER_PLACEHOLDER']}

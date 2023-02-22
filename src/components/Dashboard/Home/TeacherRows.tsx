@@ -2,7 +2,7 @@ import useAuth from '@customHooks/useAuth';
 import {PersonStatus, RoomStatus} from 'API';
 import ContentCard from 'atoms/ContentCard';
 import ImageAlternate from 'atoms/ImageAlternative';
-import {filter, orderBy} from 'lodash';
+import {filter, map, orderBy} from 'lodash';
 import React from 'react';
 import {useHistory} from 'react-router';
 
@@ -18,11 +18,11 @@ interface Teacher {
 }
 
 const TeacherRows = (props: {
-  handleRoomSelection: any;
+  classList: any;
   coTeachersList: Teacher[];
   teachersList: Teacher[];
 }) => {
-  const {coTeachersList = [], handleRoomSelection, teachersList = []} = props;
+  const {coTeachersList = [], teachersList = []} = props;
 
   const allTeachers = [...teachersList, ...coTeachersList];
 
@@ -57,27 +57,38 @@ const TeacherRows = (props: {
 
   const history = useHistory();
 
-  const getClassesByTeacher = (room: any) => {
+  const getClassesByTeacher = (rooms: any[]) => {
     let totalClasses: any[] = [];
 
-    if (Boolean(room)) {
-      const curriculum = room?.curricula?.items[0]?.curriculum;
-      if (Boolean(curriculum)) {
-        totalClasses.push({...curriculum, roomId: room.id});
-      }
+    if (rooms && rooms.length > 0) {
+      rooms.forEach((room) => {
+        const curriculum = room?.curricula?.items[0]?.curriculum;
+
+        if (Boolean(curriculum)) {
+          totalClasses.push({...curriculum, roomId: room.id});
+        }
+      });
     }
 
     return totalClasses;
   };
 
+  const attachedClasses = map(extraFilter, (d) => {
+    const classes = getClassesByTeacher(d.rooms.length > 0 ? d.rooms : [d.room]);
+    if (classes.length > 0) {
+      return {
+        ...d,
+        classes
+      };
+    }
+  }).filter(Boolean);
+
   return (
     <ContentCard hasBackground={false}>
       <div className="overflow-hidden">
-        {extraFilter && extraFilter.length > 0 ? (
+        {attachedClasses && attachedClasses.length > 0 ? (
           <ul className="grid grid-cols-1 ">
-            {extraFilter.map((teacher, idx: number) => {
-              const classes = getClassesByTeacher(teacher.room);
-
+            {attachedClasses.map((teacher, idx: number) => {
               return (
                 <li
                   key={`home__teacher-${idx}`}
@@ -87,7 +98,7 @@ const TeacherRows = (props: {
                       : {}
                   }
                   className={`border-b-0 ${
-                    extraFilter.length - 1 === idx ? 'rounded-b-xl' : ''
+                    attachedClasses.length - 1 === idx ? 'rounded-b-xl' : ''
                   }`}>
                   <a
                     href={`/dashboard/manage-institutions/institution/${instId}/manage-users/${teacher.id}/staff`}
@@ -133,9 +144,9 @@ const TeacherRows = (props: {
                         <h4 className="theme-text ">Classrooms: </h4>
                         <ul
                           className={`w-auto gap-y-2 ${
-                            classes.length > 1 ? 'list-disc' : ''
+                            teacher.classes.length > 1 ? 'list-disc' : ''
                           }`}>
-                          {classes.map((d, idx) => (
+                          {teacher.classes.map((d: any) => (
                             <>
                               <li
                                 key={d.name}

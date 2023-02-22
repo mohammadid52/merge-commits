@@ -1,8 +1,6 @@
 import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
-import {getAsset} from 'assets';
-import {GlobalContext} from 'contexts/GlobalContext';
 import {orderBy} from 'lodash';
-import React, {useContext, useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {getImageFromS3} from 'utilities/services';
 import Placeholder from '../Placeholder';
 import Label from './Label';
@@ -14,6 +12,7 @@ interface MultipleSelectorProps {
   arrowHidden?: boolean;
   noOptionMessage?: string;
   placeholder: string;
+  disabledText?: string;
   onChange: (id: string, name: string, value: string) => void;
   disabled?: boolean;
   withAvatar?: boolean;
@@ -32,15 +31,13 @@ const MultipleSelector = (props: MultipleSelectorProps) => {
     placeholder,
     isRequired,
     onChange,
+    disabledText,
     noOptionMessage,
     label
   } = props;
   const [showList, setShowList] = useState(false);
   const currentRef: any = useRef(null);
   const [modifiedList, setModifiedList] = useState([]);
-
-  const {theme, clientKey} = useContext(GlobalContext);
-  const themeColor = getAsset(clientKey, 'themeClassName');
 
   const handleOutsideClick = (e: any) => {
     const stringElement = e.target.innerHTML;
@@ -110,7 +107,9 @@ const MultipleSelector = (props: MultipleSelectorProps) => {
             btnClass ? btnClass : ''
           }`}>
           <span className="block truncate text-gray-700">
-            {selectedItems.length
+            {disabled
+              ? disabledText
+              : selectedItems.length
               ? selectedItems.length < 3
                 ? selectedItems.map(
                     (item, index) =>
