@@ -17,11 +17,7 @@ interface Teacher {
   image: string | null;
 }
 
-const TeacherRows = (props: {
-  classList: any;
-  coTeachersList: Teacher[];
-  teachersList: Teacher[];
-}) => {
+const TeacherRows = (props: {coTeachersList: Teacher[]; teachersList: Teacher[]}) => {
   const {coTeachersList = [], teachersList = []} = props;
 
   const allTeachers = [...teachersList, ...coTeachersList];

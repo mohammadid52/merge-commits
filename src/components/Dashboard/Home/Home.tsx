@@ -266,11 +266,7 @@ const Home = (props: ClassroomControlProps) => {
                   extraContainerClass="lg:max-w-192 md:max-w-none 2xl:max-w-256 px-6"
                   borderBottom
                 />
-                <TeacherRows
-                  handleRoomSelection={handleRoomSelection}
-                  coTeachersList={coTeachersList}
-                  teachersList={teacherList}
-                />
+                <TeacherRows coTeachersList={coTeachersList} teachersList={teacherList} />
               </div>
             )}
             {/* Classmates Section */}

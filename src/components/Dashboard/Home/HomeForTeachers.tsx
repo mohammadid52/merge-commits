@@ -306,11 +306,7 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
                 borderBottom
                 extraClass="leading-6 text-gray-900"
               />
-              <TeacherRows
-                classList={classList}
-                coTeachersList={coTeachersList}
-                teachersList={teacherList}
-              />
+              <TeacherRows coTeachersList={coTeachersList} teachersList={teacherList} />
             </div>
 
             {/* Classmates Section */}
