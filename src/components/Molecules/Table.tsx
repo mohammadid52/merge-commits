@@ -191,8 +191,8 @@ const ListItem = forwardRef<any, IListItem>(
               ? 'w-72'
               : config?.isLastAction && _idx === headers.length - 1
               ? 'w-28'
-              : '')
-          } text-sm md:break-all`;
+              : 'md:break-all')
+          } text-sm `;
           if (typeof _item === 'string') {
             return (
               <td
