@@ -82,7 +82,7 @@ const Home = (props: ClassroomControlProps) => {
             if (teacherIsPresent) {
               return acc;
             } else {
-              return [...acc, teacherObj];
+              return [...acc, {...teacherObj, room: dataObj}];
             }
           } else {
             return acc;
@@ -101,7 +101,7 @@ const Home = (props: ClassroomControlProps) => {
             item?.class?.room.coTeachers.items.map((_item: any) => {
               if (!uniqIds.includes(_item.teacher.authId)) {
                 uniqIds.push(_item.teacher.authId);
-                coTeachersList.push(_item.teacher);
+                coTeachersList.push({..._item.teacher, room: item});
               }
             });
           }
@@ -266,7 +266,11 @@ const Home = (props: ClassroomControlProps) => {
                   extraContainerClass="lg:max-w-192 md:max-w-none 2xl:max-w-256 px-6"
                   borderBottom
                 />
-                <TeacherRows coTeachersList={coTeachersList} teachersList={teacherList} />
+                <TeacherRows
+                  handleRoomSelection={handleRoomSelection}
+                  coTeachersList={coTeachersList}
+                  teachersList={teacherList}
+                />
               </div>
             )}
             {/* Classmates Section */}

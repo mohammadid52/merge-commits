@@ -72,12 +72,14 @@ export const getDashboardData = /* GraphQL */ `
                 email
                 role
                 phone
+                id
                 authId
               }
               coTeachers {
                 items {
                   teacher {
                     authId
+                    id
                     status
                     firstName
                     lastName
@@ -260,8 +262,10 @@ export const getDashboardDataForTeachers = /* GraphQL */ `
               firstName
               lastName
               image
+              id
               email
               status
+              authId
               role
               phone
             }

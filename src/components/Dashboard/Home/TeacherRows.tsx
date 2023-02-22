@@ -16,8 +16,12 @@ interface Teacher {
   image: string | null;
 }
 
-const TeacherRows = (props: {coTeachersList: Teacher[]; teachersList: Teacher[]}) => {
-  const {coTeachersList = [], teachersList = []} = props;
+const TeacherRows = (props: {
+  handleRoomSelection: any;
+  coTeachersList: Teacher[];
+  teachersList: Teacher[];
+}) => {
+  const {coTeachersList = [], handleRoomSelection, teachersList = []} = props;
 
   const allTeachers = [...teachersList, ...coTeachersList];
 
@@ -36,7 +40,7 @@ const TeacherRows = (props: {coTeachersList: Teacher[]; teachersList: Teacher[]}
 
   const finalList = orderBy(removeSame(), ['firstName'], ['asc']);
 
-  const {isStudent, user} = useAuth();
+  const {isStudent, user, instId} = useAuth();
   const extraFilter = isStudent
     ? filter(finalList, (d) => {
         if (user.status === PersonStatus.ACTIVE) {
@@ -47,12 +51,27 @@ const TeacherRows = (props: {coTeachersList: Teacher[]; teachersList: Teacher[]}
       })
     : finalList;
 
+  const getClassesByTeacher = (room: any) => {
+    let totalClasses: any[] = [];
+
+    if (Boolean(room)) {
+      const curriculum = room?.curricula?.items[0]?.curriculum;
+      if (Boolean(curriculum)) {
+        totalClasses.push({...curriculum, roomId: room.id});
+      }
+    }
+
+    return totalClasses;
+  };
+
   return (
     <ContentCard hasBackground={false}>
       <div className="overflow-hidden">
         {extraFilter && extraFilter.length > 0 ? (
           <ul className="grid grid-cols-1 ">
             {extraFilter.map((teacher, idx: number) => {
+              const classes = getClassesByTeacher(teacher.room);
+
               return (
                 <li
                   key={`home__teacher-${idx}`}
@@ -65,7 +84,7 @@ const TeacherRows = (props: {coTeachersList: Teacher[]; teachersList: Teacher[]}
                     extraFilter.length - 1 === idx ? 'rounded-b-xl' : ''
                   }`}>
                   <a
-                    href="#"
+                    href={`/dashboard/manage-institutions/institution/${instId}/manage-users/${teacher.id}/staff`}
                     className="block hover:bg-gray-200 "
                     style={{borderRadius: 'inherit'}}>
                     <div className="flex items-center px-4 py-4 sm:px-6">
@@ -102,6 +121,33 @@ const TeacherRows = (props: {coTeachersList: Teacher[]; teachersList: Teacher[]}
                             </p>
                           </div>
                         </div>
+                      </div>
+
+                      <div className="w-auto -ml-12">
+                        <h4 className="theme-text ">Classrooms: </h4>
+                        <ul
+                          className={`w-auto gap-y-2 ${
+                            classes.length > 1 ? 'list-disc' : ''
+                          }`}>
+                          {classes.map((d, idx) => (
+                            <>
+                              <li
+                                key={d.name}
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  handleRoomSelection(
+                                    d.roomId,
+                                    d.name,
+                                    idx,
+                                    'lesson-planner'
+                                  );
+                                }}
+                                className="text-gray-700  transition-all hover:theme-bg:100 hover:theme-text:500 rounded-md px-2">
+                                {d.name}
+                              </li>
+                            </>
+                          ))}
+                        </ul>
                       </div>
                     </div>
                   </a>

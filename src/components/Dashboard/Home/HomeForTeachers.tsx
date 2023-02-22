@@ -97,7 +97,7 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
           if (teacherIsPresent) {
             return acc;
           } else {
-            return [...acc, teacherObj];
+            return [...acc, {...teacherObj, room: dataObj}];
           }
         }
         return acc;
@@ -112,7 +112,7 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
         if (item.coTeachers?.items?.length) {
           item.coTeachers.items.forEach((_item: any) => {
             if (!uniqIds.includes(_item.teacher.email)) {
-              coTeachersList.push(_item.teacher);
+              coTeachersList.push({..._item.teacher, room: item});
               uniqIds.push(_item.teacher.email);
             }
           });
@@ -213,6 +213,8 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
     }
   }, [homeData]);
 
+  const classList = getClassList();
+
   return (
     <>
       {homeData ? (
@@ -259,23 +261,27 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
               roomsLoading={roomsLoading}
               isTeacher
               handleRoomSelection={handleRoomSelection}
-              classList={getClassList()}
+              classList={classList}
             />
 
             {/* Teachers Section */}
-            {Boolean(teacherList?.length || coTeachersList?.length) && (
-              <div className="my-6">
-                <SectionTitleV3
-                  title={`Your Team`}
-                  fontSize="lg"
-                  fontStyle="semibold"
-                  extraContainerClass="lg:max-w-192 px-6 md:max-w-none 2xl:max-w-256"
-                  borderBottom
-                  extraClass="leading-6 text-gray-900"
-                />
-                <TeacherRows coTeachersList={coTeachersList} teachersList={teacherList} />
-              </div>
-            )}
+
+            <div className="my-6">
+              <SectionTitleV3
+                title={`Your Team`}
+                fontSize="lg"
+                fontStyle="semibold"
+                extraContainerClass="lg:max-w-192 px-6 md:max-w-none 2xl:max-w-256"
+                borderBottom
+                extraClass="leading-6 text-gray-900"
+              />
+              <TeacherRows
+                handleRoomSelection={handleRoomSelection}
+                coTeachersList={coTeachersList}
+                teachersList={teacherList}
+              />
+            </div>
+
             {/* Classmates Section */}
             <div className="my-6">
               <StudentsTiles

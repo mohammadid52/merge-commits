@@ -1,10 +1,9 @@
 import Buttons from '@components/Atoms/Buttons';
 import useAuth from '@customHooks/useAuth';
-import {TeachingStyle} from 'API';
 import SaveQuit from 'components/Lesson/Foot/SaveQuit';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useInLessonCheck from 'customHooks/checkIfInLesson';
-import React, {useEffect} from 'react';
+import React from 'react';
 import {AiOutlineArrowLeft, AiOutlineArrowRight} from 'react-icons/ai';
 import {useHistory, useRouteMatch} from 'react-router';
 import {getLocalStorageData} from 'utilities/localStorage';
@@ -40,14 +39,8 @@ const CoreUniversalLesson = ({
         }`
       : `${dir === 'next' ? 'Next' : 'Prev'}`;
 
-  const {user} = useAuth();
+  const {isStudent} = useAuth();
   const getRoomData = getLocalStorageData('room_info');
-  const teachingStyle = getRoomData.teachingStyle;
-
-  const isStudent =
-    user.role !== 'ST' && teachingStyle === TeachingStyle.PERFORMER
-      ? true
-      : user.role === 'ST';
 
   // ~~~~~~~~~~~~ ARROW BUTTONS ~~~~~~~~~~~~ //
   const history = useHistory();

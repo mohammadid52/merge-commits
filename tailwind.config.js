@@ -779,8 +779,8 @@ module.exports = {
     textColor: ['dark', 'responsive', 'hover', 'focus'],
     transitionProperty: ['hover', 'focus']
   },
-  // for slide over
 
+  // for slide over
   plugins: [require('@tailwindcss/forms')]
   // plugins: [],
 };
