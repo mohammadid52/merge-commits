@@ -8,6 +8,11 @@ enum ClassroomType {
   TRADITIONAL
 }
 
+enum TeachingStyle {
+  PERFORMER
+  ACADEMIC
+}
+
 enum PersonStatus {
   ACTIVE
   SUSPENDED
@@ -193,6 +198,7 @@ type Room @model @auth(rules: [{allow: public}]) {
   classSentiment: [String]
   type: ClassroomType @default(value: "ONLINE")
   isZoiq: Boolean
+  teachingStyle: TeachingStyle @default(value: "PERFORMER")
 }
 
 type ArchiveSurveyDataSQL @model @auth(rules: [{allow: public}]) {
@@ -274,6 +280,7 @@ type RoomCoTeachers @model @auth(rules: [{allow: public}]) {
   teacher: Person @hasOne(fields: ["teacherEmail", "teacherAuthID"])
   curricula: [RoomCurriculum] @hasMany(indexName: "curriculumByRoom", fields: ["id"])
   type: ClassroomType @default(value: "ONLINE")
+  teachingStyle: TeachingStyle @default(value: "PERFORMER")
 }
 
 type Class @model @auth(rules: [{allow: public}]) {

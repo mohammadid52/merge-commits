@@ -82,7 +82,7 @@ const Home = (props: ClassroomControlProps) => {
             if (teacherIsPresent) {
               return acc;
             } else {
-              return [...acc, teacherObj];
+              return [...acc, {...teacherObj, room: dataObj}];
             }
           } else {
             return acc;
@@ -101,7 +101,7 @@ const Home = (props: ClassroomControlProps) => {
             item?.class?.room.coTeachers.items.map((_item: any) => {
               if (!uniqIds.includes(_item.teacher.authId)) {
                 uniqIds.push(_item.teacher.authId);
-                coTeachersList.push(_item.teacher);
+                coTeachersList.push({..._item.teacher, room: item});
               }
             });
           }

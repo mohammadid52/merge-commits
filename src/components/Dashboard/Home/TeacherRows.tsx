@@ -2,8 +2,9 @@ import useAuth from '@customHooks/useAuth';
 import {PersonStatus, RoomStatus} from 'API';
 import ContentCard from 'atoms/ContentCard';
 import ImageAlternate from 'atoms/ImageAlternative';
-import {filter, orderBy} from 'lodash';
+import {filter, map, orderBy} from 'lodash';
 import React from 'react';
+import {useHistory} from 'react-router';
 
 interface Teacher {
   firstName: string;
@@ -36,23 +37,54 @@ const TeacherRows = (props: {coTeachersList: Teacher[]; teachersList: Teacher[]}
 
   const finalList = orderBy(removeSame(), ['firstName'], ['asc']);
 
-  const {isStudent, user} = useAuth();
+  const {isStudent, user, instId} = useAuth();
   const extraFilter = isStudent
     ? filter(finalList, (d) => {
-        if (user.status === PersonStatus.ACTIVE) {
-          return d.status === RoomStatus.ACTIVE;
-        } else {
-          return true;
+        if (d.status === RoomStatus.ACTIVE) {
+          if (user.status === PersonStatus.ACTIVE) {
+            return d.status === RoomStatus.ACTIVE;
+          } else {
+            return true;
+          }
         }
+        return true;
       })
     : finalList;
+
+  const history = useHistory();
+
+  const getClassesByTeacher = (rooms: any[]) => {
+    let totalClasses: any[] = [];
+
+    if (rooms && rooms.length > 0) {
+      rooms.forEach((room) => {
+        const curriculum = room?.curricula?.items[0]?.curriculum;
+
+        if (Boolean(curriculum)) {
+          totalClasses.push({...curriculum, roomId: room.id});
+        }
+      });
+    }
+
+    return totalClasses;
+  };
+
+  const attachedClasses = map(extraFilter, (d) => {
+    const classes = getClassesByTeacher(d.rooms.length > 0 ? d.rooms : [d.room]);
+    if (classes.length > 0) {
+      return {
+        ...d,
+        classes
+      };
+    }
+  }).filter(Boolean);
 
   return (
     <ContentCard hasBackground={false}>
       <div className="overflow-hidden">
-        {extraFilter && extraFilter.length > 0 ? (
+        {attachedClasses && attachedClasses.length > 0 ? (
           <ul className="grid grid-cols-1 ">
-            {extraFilter.map((teacher, idx: number) => {
+            {attachedClasses.map((teacher, idx: number) => {
               return (
                 <li
                   key={`home__teacher-${idx}`}
@@ -62,10 +94,10 @@ const TeacherRows = (props: {coTeachersList: Teacher[]; teachersList: Teacher[]}
                       : {}
                   }
                   className={`border-b-0 ${
-                    extraFilter.length - 1 === idx ? 'rounded-b-xl' : ''
+                    attachedClasses.length - 1 === idx ? 'rounded-b-xl' : ''
                   }`}>
                   <a
-                    href="#"
+                    href={`/dashboard/manage-institutions/institution/${instId}/manage-users/${teacher.id}/staff`}
                     className="block hover:bg-gray-200 "
                     style={{borderRadius: 'inherit'}}>
                     <div className="flex items-center px-4 py-4 sm:px-6">
@@ -83,7 +115,7 @@ const TeacherRows = (props: {coTeachersList: Teacher[]; teachersList: Teacher[]}
                           />
                         )}
 
-                        <div className="min-w-0 flex-1 px-4 md:grid md:grid-cols-2 md:gap-4">
+                        <div className="min-w-0 flex-1 px-4">
                           <div>
                             <p className="text-sm font-medium text-indigo-600 truncate">
                               {teacher.firstName + ' ' + teacher.lastName}
@@ -102,6 +134,30 @@ const TeacherRows = (props: {coTeachersList: Teacher[]; teachersList: Teacher[]}
                             </p>
                           </div>
                         </div>
+                      </div>
+
+                      <div className="w-1/2">
+                        <h4 className="theme-text ">Classrooms: </h4>
+                        <ul
+                          className={`w-auto gap-y-2 ${
+                            teacher.classes.length > 1 ? 'list-disc' : ''
+                          }`}>
+                          {teacher.classes.map((d: any) => (
+                            <>
+                              <li
+                                key={d.name}
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  history.push(
+                                    `/dashboard/manage-institutions/institution/${instId}/room-edit/${d.roomId}`
+                                  );
+                                }}
+                                className="text-gray-600  transition-all hover:underline hover:theme-text:500 rounded-md px-2">
+                                {d.name}
+                              </li>
+                            </>
+                          ))}
+                        </ul>
                       </div>
                     </div>
                   </a>

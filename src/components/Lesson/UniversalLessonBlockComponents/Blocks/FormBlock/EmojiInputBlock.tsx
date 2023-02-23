@@ -2,8 +2,8 @@
 import {GlobalContext} from 'contexts/GlobalContext';
 import useInLessonCheck from 'customHooks/checkIfInLesson';
 import useStudentDataValue from 'customHooks/studentDataValue';
-import {IFormBlockProps, StudentPageInput} from 'interfaces/UniversalLessonInterfaces';
 import EmojiPicker from 'emoji-picker-react';
+import {IFormBlockProps} from 'interfaces/UniversalLessonInterfaces';
 import noop from 'lodash/noop';
 import React, {useContext, useState} from 'react';
 import ClickAwayListener from 'react-click-away-listener';
@@ -17,6 +17,7 @@ const EmojiInput = ({
 
   numbered,
   index,
+  isStudent,
 
   required
 }: IFormBlockProps) => {
@@ -29,7 +30,6 @@ const EmojiInput = ({
 
   const {getDataValue, setDataValue} = useStudentDataValue();
 
-  const isStudent = user.role === 'ST';
   const isInLesson = useInLessonCheck();
 
   const onChange = (e: any) => {

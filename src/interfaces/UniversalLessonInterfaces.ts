@@ -150,6 +150,7 @@ export interface IFormBlockProps {
   value?: string;
   mode?: string;
   numbered?: boolean;
+  isStudent?: boolean;
   required?: boolean;
   type?: string;
   index?: string;

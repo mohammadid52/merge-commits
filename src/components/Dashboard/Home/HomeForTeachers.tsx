@@ -85,9 +85,34 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
     }
   };
 
+  const findRooms = (teacherAuthID: string, allRooms: any[]) => {
+    let rooms: any[] = [];
+    let roomIds: any[] = [];
+    if (allRooms && allRooms.length > 0) {
+      allRooms.forEach((room: any) => {
+        if (room.teacherAuthID === teacherAuthID && !roomIds.includes(room.id)) {
+          rooms.push(room);
+          roomIds.push(room.id);
+        } else {
+          if (room.coTeachers.items > 0) {
+            const idx = room.coTeachers.items.findIndex(
+              (d: any) => d.teacher.authId === teacherAuthID
+            );
+            if (idx > -1 && !roomIds.includes(room.id)) {
+              rooms.push(room);
+              roomIds.push(room.id);
+            }
+          }
+        }
+      });
+    }
+    return rooms;
+  };
+
   const getTeacherList = homeData?.length
     ? homeData[0]?.class?.rooms?.items.reduce((acc: any[], dataObj: any) => {
         const teacherObj = dataObj?.teacher;
+        const allRooms = homeData[0]?.class?.rooms?.items;
         if (teacherObj) {
           const teacherIsPresent = acc?.find(
             (teacher: any) =>
@@ -97,7 +122,10 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
           if (teacherIsPresent) {
             return acc;
           } else {
-            return [...acc, teacherObj];
+            // find rooms that has this teacher;
+            // it could be a teacher or co teacher
+            const rooms = findRooms(teacherObj.authId, allRooms);
+            return [...acc, {...teacherObj, room: dataObj, rooms}];
           }
         }
         return acc;
@@ -107,12 +135,15 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
   const getCoTeacherList = () => {
     let coTeachersList: any[] = [];
     let uniqIds: string[] = [];
+    const allRooms = homeData[0]?.class?.rooms?.items;
+
     homeData?.length &&
       homeData[0]?.class?.rooms?.items.forEach((item: any) => {
         if (item.coTeachers?.items?.length) {
           item.coTeachers.items.forEach((_item: any) => {
+            const rooms = findRooms(_item.teacher.authId, allRooms);
             if (!uniqIds.includes(_item.teacher.email)) {
-              coTeachersList.push(_item.teacher);
+              coTeachersList.push({..._item.teacher, room: item, rooms});
               uniqIds.push(_item.teacher.email);
             }
           });
@@ -213,6 +244,8 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
     }
   }, [homeData]);
 
+  const classList = getClassList();
+
   return (
     <>
       {homeData ? (
@@ -259,23 +292,23 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
               roomsLoading={roomsLoading}
               isTeacher
               handleRoomSelection={handleRoomSelection}
-              classList={getClassList()}
+              classList={classList}
             />
 
             {/* Teachers Section */}
-            {Boolean(teacherList?.length || coTeachersList?.length) && (
-              <div className="my-6">
-                <SectionTitleV3
-                  title={`Your Team`}
-                  fontSize="lg"
-                  fontStyle="semibold"
-                  extraContainerClass="lg:max-w-192 px-6 md:max-w-none 2xl:max-w-256"
-                  borderBottom
-                  extraClass="leading-6 text-gray-900"
-                />
-                <TeacherRows coTeachersList={coTeachersList} teachersList={teacherList} />
-              </div>
-            )}
+
+            <div className="my-6">
+              <SectionTitleV3
+                title={`Your Team`}
+                fontSize="lg"
+                fontStyle="semibold"
+                extraContainerClass="lg:max-w-192 px-6 md:max-w-none 2xl:max-w-256"
+                borderBottom
+                extraClass="leading-6 text-gray-900"
+              />
+              <TeacherRows coTeachersList={coTeachersList} teachersList={teacherList} />
+            </div>
+
             {/* Classmates Section */}
             <div className="my-6">
               <StudentsTiles

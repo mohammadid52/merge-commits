@@ -7,7 +7,7 @@ import React, {useContext, useState} from 'react';
 import {FormLabel} from '../FormBlock';
 
 const TextAreaBlock = (props: IFormBlockProps) => {
-  const {id, required, numbered, label, mode, index, value, inputID} = props;
+  const {id, required, numbered, label, mode, isStudent, index, value, inputID} = props;
 
   const gContext = useContext(GlobalContext);
   const gState = gContext.state;
@@ -16,7 +16,6 @@ const TextAreaBlock = (props: IFormBlockProps) => {
     lessonPage: {theme: lessonPageTheme = 'dark', themeTextColor = ''} = {}
   } = gState;
 
-  const isStudent = user.role === 'ST';
   const isInLesson = useInLessonCheck();
 
   const {getDataValue, setDataValue} = useStudentDataValue();

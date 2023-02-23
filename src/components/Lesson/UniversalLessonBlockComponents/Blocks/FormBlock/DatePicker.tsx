@@ -68,7 +68,7 @@ const CustomDatePicker = (props: DatePickerProps) => {
 };
 
 const DatePicker = (props: IFormBlockProps) => {
-  const {id, required, numbered, label, mode, index, value, inputID} = props;
+  const {id, required, numbered, isStudent, label, mode, index, value, inputID} = props;
 
   const gContext = useContext(GlobalContext);
   const gState = gContext.state;
@@ -78,7 +78,6 @@ const DatePicker = (props: IFormBlockProps) => {
     lessonPage: {theme: lessonPageTheme = 'dark', themeTextColor = ''} = {}
   } = gState;
 
-  const isStudent = user.role === 'ST';
   const isInLesson = useInLessonCheck();
 
   const {getDataValue, setDataValue} = useStudentDataValue();

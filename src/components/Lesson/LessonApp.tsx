@@ -5,7 +5,6 @@ import 'components/Dashboard/GameChangers/styles/GameChanger.scss';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
 import * as customSubscriptions from 'customGraphql/customSubscriptions';
-import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
 import * as mutations from 'graphql/mutations';
 import {
   PagePart,
@@ -16,16 +15,12 @@ import {
   UniversalLessonPage,
   UniversalLessonStudentData
 } from 'interfaces/UniversalLessonInterfaces';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useParams} from 'react-router-dom';
 import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
 import {v4 as uuidV4} from 'uuid';
-import ErrorBoundary from '../Error/ErrorBoundary';
-import LessonHeaderBar from '../Header/LessonHeaderBar';
-import Foot from './Foot/Foot';
 import {ILessonSurveyApp} from './Lesson';
-import LessonPageLoader from './LessonPageLoader';
-import CoreUniversalLesson from './UniversalLesson/views/CoreUniversalLesson';
+import LessonSurveyAppWrapper from './LessonSurveyAppWrapper';
 
 // ~~~~~~~~~~ FILTER EXTRA PAGES ~~~~~~~~~ //
 export const filterExtraPages = (lessonPlanPages: any[], studentDataRecords: any[]) => {
@@ -189,20 +184,8 @@ export const mergedExerciseData = (
   return differenceData;
 };
 
-const LessonApp = ({
-  personLessonData,
-  canContinue,
-  validateRequired,
-  invokeRequiredField,
-
-  setPersonLessonData,
-
-  updatePageInLocalStorage,
-  pageStateUpdated,
-  leaveRoomLocation,
-  getLessonCurrentPage,
-  handleMutationOnPageChange
-}: ILessonSurveyApp) => {
+const LessonApp = (props: ILessonSurveyApp) => {
+  const {leaveRoomLocation, getLessonCurrentPage} = props;
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
 
   const gContext = useGlobalContext();
@@ -210,7 +193,6 @@ const LessonApp = ({
   const lessonState = gContext.lessonState;
   const displayData = gContext.lessonState.displayData;
   const lessonDispatch = gContext.lessonDispatch;
-  const theme = gContext.theme;
 
   // ~~~~~~~~~~~~~~~~ OTHER ~~~~~~~~~~~~~~~~ //
 
@@ -222,13 +204,7 @@ const LessonApp = ({
   // ######################### BASIC UI CONTROLS ######################### //
   // ##################################################################### //
 
-  const [overlay, setOverlay] = useState<string>('');
-  const [isAtEnd, setisAtEnd] = useState<boolean>(false);
-
   const PAGES = lessonState?.lessonData?.lessonPlan;
-  const LESSON_NAME = lessonState?.lessonData?.title;
-
-  const topLessonRef = useRef();
 
   // ##################################################################### //
   // ######################### SUBSCRIPTION SETUP ######################## //
@@ -687,7 +663,9 @@ const LessonApp = ({
       lessonState.lessonData.lessonPlan &&
       lessonState.lessonData.lessonPlan.length > 0
     ) {
-      initializeStudentData();
+      initializeStudentData().then(() => {
+        lessonDispatch({type: 'LESSON_LOADED', payload: true});
+      });
     }
   }, [lessonState.lessonData.lessonPlan]);
 
@@ -764,18 +742,6 @@ const LessonApp = ({
   // ######################### NAVIGATION CONTROL ######################## //
   // ##################################################################### //
 
-  const [showRequiredNotification, setShowRequiredNotification] = useState<boolean>(
-    false
-  );
-  const handleRequiredNotification = () => {
-    if (!showRequiredNotification) {
-      setShowRequiredNotification(true);
-      setTimeout(() => {
-        setShowRequiredNotification(false);
-      }, 1250);
-    }
-  };
-
   const loopCreateStudentArchiveAndExcerciseData = async (lessonID: string) => {
     const studentDataRows: UniversalLessonStudentDataFromAPI[] = await _loopFetchStudentData();
     const currentPageLocation = await getLessonCurrentPage();
@@ -839,92 +805,93 @@ const LessonApp = ({
     }
   };
 
-  useEffect(() => {
-    handleMutationOnPageChange();
-  }, [lessonState.currentPage]);
-
   // ~~~~~~~~~~~ RESPONSIVE CHECK ~~~~~~~~~~ //
-  const {breakpoint} = useTailwindBreakpoint();
 
   return (
-    <>
-      {/* 
-      TODO: Add this again later
-      */}
-      {/* <FloatingSideMenu /> */}
-      <div
-        id="lesson-app-container"
-        className={`${theme.bg} w-full h-full flex flex-col items-start dark-scroll overflow-y-auto`}
-        ref={topLessonRef}>
-        <div
-          className={`opacity-${
-            showRequiredNotification
-              ? '100 translate-x-0 transform z-100'
-              : '0 translate-x-10 transform'
-          } absolute bottom-5 right-5 w-96 py-4 px-6 rounded-md shadow bg-gray-800 duration-300 transition-all`}>
-          <p className="text-white font-medium tracking-wide">
-            <span className="text-red-500">*</span>Please fill all the required fields
-          </p>
-        </div>
+    <LessonSurveyAppWrapper
+      type="lesson"
+      lessonDataLoaded={lessonDataLoaded}
+      createJournalData={createStudentArchiveData}
+      {...props}
+    />
+    // <ErrorBoundary componentName="LessonApp">
+    //   {/*
+    //   TODO: Add this again later
+    //   */}
+    //   {/* <FloatingSideMenu /> */}
+    //   <div
+    //     id="lesson-app-container"
+    //     className={`${theme.bg} w-full h-full flex flex-col items-start dark-scroll overflow-y-auto`}
+    //     ref={topLessonRef}>
+    //     <div
+    //       className={`opacity-${
+    //         showRequiredNotification
+    //           ? '100 translate-x-0 transform z-100'
+    //           : '0 translate-x-10 transform'
+    //       } absolute bottom-5 right-5 w-96 py-4 px-6 rounded-md shadow bg-gray-800 duration-300 transition-all`}>
+    //       <p className="text-white font-medium tracking-wide">
+    //         <span className="text-red-500">*</span>Please fill all the required fields
+    //       </p>
+    //     </div>
 
-        <div className={`absolute bottom-1 left-0 py-4 px-6 z-max  w-auto `}>
-          <h6 className="text-xs text-shadow text-gray-500">{LESSON_NAME}</h6>
-        </div>
+    //     <div className={`absolute bottom-1 left-0 py-4 px-6 z-max  w-auto `}>
+    //       <h6 className="text-xs text-shadow text-gray-500">{LESSON_NAME}</h6>
+    //     </div>
 
-        <div className="fixed " style={{zIndex: 5000}}>
-          <LessonHeaderBar
-            lessonDataLoaded={lessonDataLoaded}
-            overlay={overlay}
-            setOverlay={setOverlay}
-            pageStateUpdated={pageStateUpdated}
-            personLessonData={personLessonData}
-            updatePageInLocalStorage={updatePageInLocalStorage}
-            setPersonLessonData={setPersonLessonData}
-            createJournalData={createStudentArchiveData}
-            isAtEnd={isAtEnd}
-            canContinue={canContinue}
-            validateRequired={validateRequired}
-            setisAtEnd={setisAtEnd}
-            handleRequiredNotification={handleRequiredNotification}
-          />
-        </div>
-        <div
-          className={`${
-            breakpoint === 'xs' || breakpoint === 'sm' ? 'top-2' : 'top-6'
-          } relative lesson-body-container `}>
-          {!lessonDataLoaded ? (
-            <div className="mt-4 mb-8 lesson-page-container">
-              <LessonPageLoader />
-            </div>
-          ) : (
-            <ErrorBoundary
-              authId={user.authId}
-              email={user.email}
-              componentName="CoreUniversalLesson"
-              fallback={<h1>Error in the Lesson App</h1>}>
-              {/* ADD LESSONWRAPPER HERE */}
-              <div className="mt-4 mb-8 lesson-page-container">
-                <CoreUniversalLesson
-                  invokeRequiredField={() => {
-                    invokeRequiredField();
-                    handleRequiredNotification();
-                  }}
-                  canContinue={canContinue}
-                />
-              </div>
-            </ErrorBoundary>
-          )}
+    //     <div className="fixed " style={{zIndex: 5000}}>
+    //       <LessonHeaderBar
+    //         lessonDataLoaded={lessonDataLoaded}
+    //         overlay={overlay}
+    //         setOverlay={setOverlay}
+    //         pageStateUpdated={pageStateUpdated}
+    //         personLessonData={personLessonData}
+    //         updatePageInLocalStorage={updatePageInLocalStorage}
+    //         setPersonLessonData={setPersonLessonData}
+    //         createJournalData={createStudentArchiveData}
+    //         isAtEnd={isAtEnd}
+    //         canContinue={canContinue}
+    //         validateRequired={validateRequired}
+    //         setisAtEnd={setisAtEnd}
+    //         handleRequiredNotification={handleRequiredNotification}
+    //       />
+    //     </div>
+    //     <div
+    //       className={`${
+    //         breakpoint === 'xs' || breakpoint === 'sm' ? 'top-2' : 'top-6'
+    //       } relative lesson-body-container `}>
+    //       {!lessonDataLoaded ? (
+    //         <div className="mt-4 mb-8 lesson-page-container">
+    //           <LessonPageLoader />
+    //         </div>
+    //       ) : (
+    //         <ErrorBoundary
+    //           authId={user.authId}
+    //           email={user.email}
+    //           componentName="CoreUniversalLesson"
+    //           fallback={<h1>Error in the Lesson App</h1>}>
+    //           {/* ADD LESSONWRAPPER HERE */}
+    //           <div className="mt-4 mb-8 lesson-page-container">
+    //             <CoreUniversalLesson
+    //               invokeRequiredField={() => {
+    //                 invokeRequiredField();
+    //                 handleRequiredNotification();
+    //               }}
+    //               canContinue={canContinue}
+    //             />
+    //           </div>
+    //         </ErrorBoundary>
+    //       )}
 
-          {lessonDataLoaded && (
-            <Foot
-              isAtEnd={isAtEnd}
-              setisAtEnd={setisAtEnd}
-              handleRequiredNotification={handleRequiredNotification}
-            />
-          )}
-        </div>
-      </div>
-    </>
+    //       {lessonDataLoaded && (
+    //         <Foot
+    //           isAtEnd={isAtEnd}
+    //           setisAtEnd={setisAtEnd}
+    //           handleRequiredNotification={handleRequiredNotification}
+    //         />
+    //       )}
+    //     </div>
+    //   </div>
+    // </ErrorBoundary>
   );
 };
 

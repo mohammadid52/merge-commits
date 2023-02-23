@@ -1,7 +1,6 @@
 import useUrlState from '@ahooksjs/use-url-state';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import AddButton from '@components/Atoms/Buttons/AddButton';
-import PageWrapper from '@components/Atoms/PageWrapper';
 import Placeholder from '@components/Atoms/Placeholder';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import ErrorBoundary from '@components/Error/ErrorBoundary';
@@ -19,7 +18,6 @@ import {map} from 'lodash';
 import sortBy from 'lodash/sortBy';
 import DroppableMedia from 'molecules/DroppableMedia';
 import React, {useEffect, useState} from 'react';
-import {BsArrowLeft} from 'react-icons/bs';
 import {useHistory, useLocation, useParams, useRouteMatch} from 'react-router-dom';
 import {getImageFromS3} from 'utilities/services';
 import {getUniqItems} from 'utilities/strings';
@@ -533,16 +531,6 @@ const User = (props: IUserProps) => {
             className={`px-4 `}
             style={insideModalPopUp ? {maxHeight: 'calc(100vh - 150px)'} : {}}>
             {/* <BreadCrums items={breadCrumsList} /> */}
-            {params.get('from') && (
-              <div
-                className="flex items-center mt-1 cursor-pointer text-gray-500 hover:text-gray-700"
-                onClick={history.goBack}>
-                <span className="w-auto mr-2">
-                  <BsArrowLeft />
-                </span>
-                <div className="text-sm">{CommonlyUsedDict[userLanguage]['BACK']}</div>
-              </div>
-            )}
 
             <SectionTitleV3
               title="User Lookup"

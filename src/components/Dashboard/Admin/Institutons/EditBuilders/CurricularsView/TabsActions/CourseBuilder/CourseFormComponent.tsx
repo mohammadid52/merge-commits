@@ -1,7 +1,5 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import {Storage} from '@aws-amplify/storage';
 import UploadImageBtn from '@components/Atoms/Buttons/UploadImageBtn';
-import Label from '@components/Atoms/Form/Label';
 import ProgressBar from '@components/Lesson/UniversalLessonBuilder/UI/ProgressBar';
 import ModalPopUp from '@components/Molecules/ModalPopUp';
 import {uploadImageToS3} from '@graphql/functions';
@@ -17,9 +15,7 @@ import * as customQueries from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import * as mutation from 'graphql/mutations';
 import * as queries from 'graphql/queries';
-import DroppableMedia from 'molecules/DroppableMedia';
 import React, {useContext, useEffect, useState} from 'react';
-import {IoImage} from 'react-icons/io5';
 import {useHistory, useRouteMatch} from 'react-router-dom';
 import {getImageFromS3} from 'utilities/services';
 import {languageList} from 'utilities/staticData';

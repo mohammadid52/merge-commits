@@ -360,6 +360,7 @@ export const getPersonLessonsData = /* GraphQL */ `
         classSentiment
         type
         isZoiq
+        teachingStyle
         createdAt
         updatedAt
       }
@@ -460,6 +461,7 @@ export const listPersonLessonsData = /* GraphQL */ `
           classSentiment
           type
           isZoiq
+          teachingStyle
           createdAt
           updatedAt
         }
@@ -543,6 +545,7 @@ export const getInstitution = /* GraphQL */ `
           classSentiment
           type
           isZoiq
+          teachingStyle
           createdAt
           updatedAt
         }
@@ -859,6 +862,7 @@ export const getRoom = /* GraphQL */ `
           teacherEmail
           teacherAuthID
           type
+          teachingStyle
           createdAt
           updatedAt
         }
@@ -1002,6 +1006,7 @@ export const getRoom = /* GraphQL */ `
           classSentiment
           type
           isZoiq
+          teachingStyle
           createdAt
           updatedAt
         }
@@ -1061,6 +1066,7 @@ export const getRoom = /* GraphQL */ `
       classSentiment
       type
       isZoiq
+      teachingStyle
       createdAt
       updatedAt
     }
@@ -1194,6 +1200,7 @@ export const listRooms = /* GraphQL */ `
         classSentiment
         type
         isZoiq
+        teachingStyle
         createdAt
         updatedAt
       }
@@ -1291,6 +1298,7 @@ export const getClassroomGroupStudents = /* GraphQL */ `
           classSentiment
           type
           isZoiq
+          teachingStyle
           createdAt
           updatedAt
         }
@@ -1593,6 +1601,7 @@ export const getClassroomGroups = /* GraphQL */ `
         classSentiment
         type
         isZoiq
+        teachingStyle
         createdAt
         updatedAt
       }
@@ -1703,6 +1712,7 @@ export const listClassroomGroups = /* GraphQL */ `
           classSentiment
           type
           isZoiq
+          teachingStyle
           createdAt
           updatedAt
         }
@@ -1887,6 +1897,7 @@ export const getRoomCoTeachers = /* GraphQL */ `
         classSentiment
         type
         isZoiq
+        teachingStyle
         createdAt
         updatedAt
       }
@@ -1944,6 +1955,7 @@ export const getRoomCoTeachers = /* GraphQL */ `
         nextToken
       }
       type
+      teachingStyle
       createdAt
       updatedAt
     }
@@ -1993,6 +2005,7 @@ export const listRoomCoTeachers = /* GraphQL */ `
           classSentiment
           type
           isZoiq
+          teachingStyle
           createdAt
           updatedAt
         }
@@ -2037,6 +2050,7 @@ export const listRoomCoTeachers = /* GraphQL */ `
           nextToken
         }
         type
+        teachingStyle
         createdAt
         updatedAt
       }
@@ -2211,6 +2225,7 @@ export const getClass = /* GraphQL */ `
         classSentiment
         type
         isZoiq
+        teachingStyle
         createdAt
         updatedAt
       }
@@ -2297,6 +2312,7 @@ export const listClasses = /* GraphQL */ `
           classSentiment
           type
           isZoiq
+          teachingStyle
           createdAt
           updatedAt
         }
@@ -2377,6 +2393,7 @@ export const getClassStudent = /* GraphQL */ `
           classSentiment
           type
           isZoiq
+          teachingStyle
           createdAt
           updatedAt
         }
@@ -3952,6 +3969,7 @@ export const getPersonLocation = /* GraphQL */ `
         classSentiment
         type
         isZoiq
+        teachingStyle
         createdAt
         updatedAt
       }
@@ -4144,6 +4162,7 @@ export const listPersonLocations = /* GraphQL */ `
           classSentiment
           type
           isZoiq
+          teachingStyle
           createdAt
           updatedAt
         }
@@ -4506,6 +4525,7 @@ export const getAttendance = /* GraphQL */ `
         classSentiment
         type
         isZoiq
+        teachingStyle
         createdAt
         updatedAt
       }
@@ -4637,6 +4657,7 @@ export const listAttendances = /* GraphQL */ `
           classSentiment
           type
           isZoiq
+          teachingStyle
           createdAt
           updatedAt
         }
@@ -5997,6 +6018,7 @@ export const getUploadLogs = /* GraphQL */ `
         classSentiment
         type
         isZoiq
+        teachingStyle
         createdAt
         updatedAt
       }
@@ -6204,6 +6226,7 @@ export const listUploadLogs = /* GraphQL */ `
           classSentiment
           type
           isZoiq
+          teachingStyle
           createdAt
           updatedAt
         }
@@ -7534,6 +7557,7 @@ export const getSentimentTracker = /* GraphQL */ `
         classSentiment
         type
         isZoiq
+        teachingStyle
         createdAt
         updatedAt
       }
@@ -7710,6 +7734,7 @@ export const listSentimentTrackers = /* GraphQL */ `
           classSentiment
           type
           isZoiq
+          teachingStyle
           createdAt
           updatedAt
         }
@@ -7919,6 +7944,7 @@ export const getFeelingTracker = /* GraphQL */ `
         classSentiment
         type
         isZoiq
+        teachingStyle
         createdAt
         updatedAt
       }
@@ -8030,6 +8056,7 @@ export const listFeelingTrackers = /* GraphQL */ `
           classSentiment
           type
           isZoiq
+          teachingStyle
           createdAt
           updatedAt
         }
@@ -8227,6 +8254,7 @@ export const getFeelingsArchive = /* GraphQL */ `
         classSentiment
         type
         isZoiq
+        teachingStyle
         createdAt
         updatedAt
       }
@@ -8422,6 +8450,7 @@ export const listFeelingsArchives = /* GraphQL */ `
           classSentiment
           type
           isZoiq
+          teachingStyle
           createdAt
           updatedAt
         }
@@ -9593,6 +9622,7 @@ export const lessonsByType2 = /* GraphQL */ `
           classSentiment
           type
           isZoiq
+          teachingStyle
           createdAt
           updatedAt
         }
@@ -9762,6 +9792,7 @@ export const personLocationBySyllabusLesson = /* GraphQL */ `
           classSentiment
           type
           isZoiq
+          teachingStyle
           createdAt
           updatedAt
         }
@@ -9941,6 +9972,7 @@ export const attendanceByStudent = /* GraphQL */ `
           classSentiment
           type
           isZoiq
+          teachingStyle
           createdAt
           updatedAt
         }

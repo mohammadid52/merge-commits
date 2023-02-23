@@ -1,9 +1,8 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {useQuery} from '@customHooks/urlParam';
 import useAuth from '@customHooks/useAuth';
-import {CreateUniversalArchiveDataInput, PartInput} from 'API';
+import {CreateUniversalArchiveDataInput, PartInput, TeachingStyle} from 'API';
 import {GlobalContext} from 'contexts/GlobalContext';
-import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
 import * as mutations from 'graphql/mutations';
 import * as queries from 'graphql/queries';
 
@@ -19,27 +18,11 @@ import React, {useContext, useEffect, useRef, useState} from 'react';
 import {useHistory, useParams, useRouteMatch} from 'react-router-dom';
 import {getLocalStorageData} from 'utilities/localStorage';
 import {v4 as uuidV4} from 'uuid';
-import ErrorBoundary from '../Error/ErrorBoundary';
-import LessonHeaderBar from '../Header/LessonHeaderBar';
-import Foot from './Foot/Foot';
 import {ILessonSurveyApp} from './Lesson';
-import LessonPageLoader from './LessonPageLoader';
-import CoreUniversalLesson from './UniversalLesson/views/CoreUniversalLesson';
+import LessonSurveyAppWrapper from './LessonSurveyAppWrapper';
 
-const SurveyApp = ({
-  personLoading,
-  personLessonData,
-  setPersonLessonData,
-  canContinue,
-  setPersonLoading,
-  validateRequired,
-  invokeRequiredField,
-  pageStateUpdated,
-  updatePageInLocalStorage,
-
-  getLessonCurrentPage,
-  handleMutationOnPageChange
-}: ILessonSurveyApp) => {
+const SurveyApp = (props: ILessonSurveyApp) => {
+  const {getLessonCurrentPage} = props;
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
 
   const gContext = useContext(GlobalContext);
@@ -47,10 +30,6 @@ const SurveyApp = ({
   const lessonState = gContext.lessonState;
 
   const lessonDispatch = gContext.lessonDispatch;
-  const theme = gContext.theme;
-
-  const history = useHistory();
-  const match = useRouteMatch();
 
   // ~~~~~~~~~~~~~~~~ OTHER ~~~~~~~~~~~~~~~~ //
 
@@ -62,12 +41,7 @@ const SurveyApp = ({
   // ######################### BASIC UI CONTROLS ######################### //
   // ##################################################################### //
 
-  const [overlay, setOverlay] = useState<string>('');
-  const [isAtEnd, setisAtEnd] = useState<boolean>(false);
-
   const PAGES = lessonState?.lessonData?.lessonPlan;
-
-  const topLessonRef = useRef();
 
   // ~~~~~~~~~~~~~~ GET LESSON ~~~~~~~~~~~~~ //
   useEffect(() => {
@@ -337,7 +311,12 @@ const SurveyApp = ({
     }
   };
 
-  const {isStudent} = useAuth();
+  const teachingStyle = getRoomData.teachingStyle;
+
+  const isStudent =
+    user.role !== 'ST' && teachingStyle === TeachingStyle.PERFORMER
+      ? true
+      : user.role === 'ST';
 
   const params = useQuery(location.search);
 
@@ -410,7 +389,9 @@ const SurveyApp = ({
 
   useEffect(() => {
     if (!lessonState.loaded && PAGES.length > 0) {
-      initializeSurveyData();
+      initializeSurveyData().then(() => {
+        lessonDispatch({type: 'LESSON_LOADED', payload: true});
+      });
     }
   }, [PAGES]);
 
@@ -430,36 +411,9 @@ const SurveyApp = ({
   // ####################### MANAGE PERSON LOCATION ###################### //
   // ##################################################################### //
 
-  useEffect(() => {
-    if (!personLoading) {
-      const pages = personLessonData?.pages || '{}';
-      const lessonProgress = JSON.parse(pages).lessonProgress || 0;
-
-      lessonDispatch({type: 'SET_CURRENT_PAGE', payload: lessonProgress});
-
-      history.push(`${match.url}/${lessonProgress}`);
-    }
-  }, [personLoading]);
-
   // ##################################################################### //
   // ######################### NAVIGATION CONTROL ######################## //
   // ##################################################################### //
-
-  const [showRequiredNotification, setShowRequiredNotification] = useState<boolean>(
-    false
-  );
-  const handleRequiredNotification = () => {
-    if (!showRequiredNotification) {
-      setShowRequiredNotification(true);
-      setTimeout(() => {
-        setShowRequiredNotification(false);
-      }, 1250);
-    }
-  };
-
-  useEffect(() => {
-    handleMutationOnPageChange();
-  }, [lessonState.currentPage]);
 
   const loopCreateStudentArchiveAndExcerciseData = async () => {
     const listFilter = {
@@ -527,96 +481,93 @@ const SurveyApp = ({
     }
   };
 
-  // ~~~~~~~~~~~ RESPONSIVE CHECK ~~~~~~~~~~ //
-  const {breakpoint} = useTailwindBreakpoint();
-
-  const SURVEY_NAME = lessonState?.lessonData?.title;
-
   return (
-    <ErrorBoundary
-      authId={user.authId}
-      email={user.email}
-      componentName="SurveyApp"
-      fallback={<h1>SurveyApp is not working</h1>}>
-      {/* 
-      TODO: Add this again later
-      */}
-      {/* <FloatingSideMenu /> */}
-      <div
-        id="survey-app-container"
-        className={`${theme.bg} w-full h-full flex flex-col items-start dark-scroll overflow-y-auto`}
-        ref={topLessonRef}>
-        <div
-          className={`opacity-${
-            showRequiredNotification
-              ? '100 translate-x-0 transform z-100'
-              : '0 translate-x-10 transform'
-          } absolute bottom-5 right-5 w-96 py-4 px-6 rounded-md shadow bg-gray-800 duration-300 transition-all`}>
-          <p className="text-white font-medium tracking-wide">
-            <span className="text-red-500">*</span>Please fill all the required fields
-          </p>
-        </div>
-        <div className={`absolute bottom-1 left-0 py-4 px-6 z-max  w-auto `}>
-          <h6 className="text-xs text-shadow text-gray-500">{SURVEY_NAME}</h6>
-        </div>
+    <LessonSurveyAppWrapper
+      type="survey"
+      lessonDataLoaded={lessonDataLoaded}
+      createJournalData={createStudentArchiveData}
+      {...props}
+    />
+    // <ErrorBoundary componentName="SurveyApp">
+    //   {/*
+    //   TODO: Add this again later
+    //   */}
+    //   {/* <FloatingSideMenu /> */}
+    //   <div
+    //     id="survey-app-container"
+    //     className={`${theme.bg} w-full h-full flex flex-col items-start dark-scroll overflow-y-auto`}
+    //     ref={topLessonRef}>
+    //     <div
+    //       className={`opacity-${
+    //         showRequiredNotification
+    //           ? '100 translate-x-0 transform z-100'
+    //           : '0 translate-x-10 transform'
+    //       } absolute bottom-5 right-5 w-96 py-4 px-6 rounded-md shadow bg-gray-800 duration-300 transition-all`}>
+    //       <p className="text-white font-medium tracking-wide">
+    //         <span className="text-red-500">*</span>Please fill all the required fields
+    //       </p>
+    //     </div>
+    //     <div className={`absolute bottom-1 left-0 py-4 px-6 z-max  w-auto `}>
+    //       <h6 className="text-xs text-shadow text-gray-500">{SURVEY_NAME}</h6>
+    //     </div>
 
-        <div className="fixed " style={{zIndex: 5000}}>
-          <LessonHeaderBar
-            lessonDataLoaded={lessonDataLoaded}
-            overlay={overlay}
-            pageStateUpdated={pageStateUpdated}
-            createJournalData={createStudentArchiveData}
-            setOverlay={setOverlay}
-            canContinue={canContinue}
-            updatePageInLocalStorage={updatePageInLocalStorage}
-            personLessonData={personLessonData}
-            isAtEnd={isAtEnd}
-            setPersonLessonData={setPersonLessonData}
-            setisAtEnd={setisAtEnd}
-            validateRequired={validateRequired}
-            handleRequiredNotification={handleRequiredNotification}
-          />
-        </div>
-        <div
-          className={`${
-            breakpoint === 'xs' || breakpoint === 'sm' ? 'top-2' : 'top-6'
-          } relative lesson-body-container`}>
-          {!lessonDataLoaded ? (
-            <div className="mt-4 mb-8 lesson-page-container">
-              <LessonPageLoader />
-            </div>
-          ) : (
-            <ErrorBoundary
-              authId={user.authId}
-              email={user.email}
-              componentName="CoreUniversalLesson"
-              fallback={<h1>Error in the Lesson App</h1>}>
-              {/* ADD LESSONWRAPPER HERE */}
-              <div className="mt-4 mb-8 lesson-page-container ">
-                <CoreUniversalLesson
-                  validateRequired={validateRequired}
-                  invokeRequiredField={() => {
-                    invokeRequiredField();
-                    handleRequiredNotification();
-                  }}
-                  canContinue={canContinue}
-                />
-              </div>
-            </ErrorBoundary>
-          )}
+    //     <div className="fixed " style={{zIndex: 5000}}>
+    //       <LessonHeaderBar
+    //         lessonDataLoaded={lessonDataLoaded}
+    //         overlay={overlay}
+    //         pageStateUpdated={pageStateUpdated}
+    //         createJournalData={createStudentArchiveData}
+    //         setOverlay={setOverlay}
+    //         canContinue={canContinue}
+    //         updatePageInLocalStorage={updatePageInLocalStorage}
+    //         personLessonData={personLessonData}
+    //         isAtEnd={isAtEnd}
+    //         setPersonLessonData={setPersonLessonData}
+    //         setisAtEnd={setisAtEnd}
+    //         validateRequired={validateRequired}
+    //         handleRequiredNotification={handleRequiredNotification}
+    //       />
+    //     </div>
+    //     <div
+    //       className={`${
+    //         breakpoint === 'xs' || breakpoint === 'sm' ? 'top-2' : 'top-6'
+    //       } relative lesson-body-container`}>
+    //       {!lessonDataLoaded ? (
+    //         <div className="mt-4 mb-8 lesson-page-container">
+    //           <LessonPageLoader />
+    //         </div>
+    //       ) : (
+    //         <ErrorBoundary
+    //           authId={user.authId}
+    //           email={user.email}
+    //           componentName="CoreUniversalLesson"
+    //           fallback={<h1>Error in the Lesson App</h1>}>
+    //           {/* ADD LESSONWRAPPER HERE */}
+    //           <div className="mt-4 mb-8 lesson-page-container ">
+    //             <CoreUniversalLesson
+    //               validateRequired={validateRequired}
+    //               invokeRequiredField={() => {
+    //                 invokeRequiredField();
+    //                 handleRequiredNotification();
+    //               }}
+    //               canContinue={canContinue}
+    //             />
+    //           </div>
+    //         </ErrorBoundary>
+    //       )}
 
-          {/* <StudentNavigationForMobile /> */}
+    //       {/* <StudentNavigationForMobile /> */}
 
-          {lessonDataLoaded && (
-            <Foot
-              isAtEnd={isAtEnd}
-              setisAtEnd={setisAtEnd}
-              handleRequiredNotification={handleRequiredNotification}
-            />
-          )}
-        </div>
-      </div>
-    </ErrorBoundary>
+    //       {lessonDataLoaded && (
+    //         <Foot
+    //           isAtEnd={isAtEnd}
+    //           setisAtEnd={setisAtEnd}
+    //           handleRequiredNotification={handleRequiredNotification}
+    //         />
+    //       )}
+    //     </div>
+    //   </div>
+    // </ErrorBoundary>
   );
 };
 

@@ -18,6 +18,102 @@ export const updatePersonLocation = /* GraphQL */ `
   }
 `;
 
+export const updateRoomCoTeachers = /* GraphQL */ `
+  mutation UpdateRoomCoTeachers(
+    $input: UpdateRoomCoTeachersInput!
+    $condition: ModelRoomCoTeachersConditionInput
+  ) {
+    updateRoomCoTeachers(input: $input, condition: $condition) {
+      id
+      roomID
+      teacherID
+      teacherEmail
+      teacherAuthID
+      room {
+        id
+        institutionID
+        classID
+        teacherAuthID
+        teacherEmail
+        name
+        maxPersons
+        status
+        filters
+        location
+        startDate
+        startTime
+        endDate
+        endTime
+        length
+        repeat
+        notes
+        activeSyllabus
+        frequency
+        teachingStyle
+        createdAt
+        updatedAt
+      }
+      teacher {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        inactiveStatusDate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        onDemand
+        sentiments
+        passcode
+        classes {
+          nextToken
+        }
+        lessons {
+          nextToken
+        }
+        spotlightUser
+        spotlightDate
+        statusReason
+        addedby
+        lastEmotionSubmission
+        pageState
+        lastPageStateUpdate
+        statusChangedBy
+        isZoiq
+        createdAt
+        updatedAt
+      }
+      curricula {
+        items {
+          id
+          roomID
+          curriculumID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      type
+      teachingStyle
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
 export const updateUniversalLesson = /* GraphQL */ `
   mutation UpdateUniversalLesson(
     $input: UpdateUniversalLessonInput!
@@ -755,6 +851,7 @@ export const updateRoom = /* GraphQL */ `
       classID
       teacherAuthID
       teacherEmail
+      teachingStyle
       name
       maxPersons
       activeSyllabus
@@ -1336,6 +1433,104 @@ export const createPersonLessonsData = /* GraphQL */ `
   ) {
     createPersonLessonsData(input: $input, condition: $condition) {
       id
+      studentAuthID
+      studentEmail
+      lessonID
+      lessonType
+      pages
+      ratings
+      isCompleted
+      roomId
+      lesson {
+        id
+        type
+        label
+        title
+        institutionID
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          isZoiq
+          filters
+          setupComplete
+          createdAt
+          updatedAt
+        }
+        language
+        designers
+        objectives
+        lessonPlanAttachment
+        purpose
+        introduction
+        introductionTitle
+        status
+        instructions
+        instructionsTitle
+        summary
+        summaryTitle
+        duration
+        resources
+        notes
+        cardImage
+        cardCaption
+        lessonPlan {
+          id
+          title
+          label
+          description
+          class
+          active
+          disabled
+          displayMode
+          open
+          estTime
+          activityType
+          interactionType
+          tags
+          videoLink
+          notes
+        }
+        homework {
+          id
+          title
+          label
+          description
+          class
+          active
+          disabled
+          displayMode
+          open
+          estTime
+          activityType
+          interactionType
+          tags
+          videoLink
+          notes
+        }
+        darkMode
+        rubrics
+        smallGroup
+        groupSize
+        groupType
+        smallGroupSize
+        smallGroupOption
+        studentMaterials
+        targetAudience
+        isUsed
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
     }
@@ -1893,6 +2088,28 @@ export const _updateRoom = /* GraphQL */ `
       type
       createdAt
       updatedAt
+    }
+  }
+`;
+
+export const deletePersonLocation = /* GraphQL */ `
+  mutation DeletePersonLocation(
+    $input: DeletePersonLocationInput!
+    $condition: ModelPersonLocationConditionInput
+  ) {
+    deletePersonLocation(input: $input, condition: $condition) {
+      id
+    }
+  }
+`;
+
+export const createPersonLocation = /* GraphQL */ `
+  mutation CreatePersonLocation(
+    $input: CreatePersonLocationInput!
+    $condition: ModelPersonLocationConditionInput
+  ) {
+    createPersonLocation(input: $input, condition: $condition) {
+      id
     }
   }
 `;

@@ -253,7 +253,8 @@ const AttachmentBlock = ({
   index,
   required,
   id,
-  onSuccess
+  onSuccess,
+  isStudent
 }: IAttachmentProps) => {
   const {
     lessonState,
@@ -266,7 +267,7 @@ const AttachmentBlock = ({
   // ##################################################################### //
   // ######################## STUDENT DATA CONTEXT ####################### //
   // ##################################################################### //
-  const isStudent = user.role === 'ST';
+
   const isInLesson = useInLessonCheck();
   const inputOther = useRef(null);
 

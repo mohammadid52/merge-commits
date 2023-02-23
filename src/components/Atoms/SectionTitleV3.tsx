@@ -5,7 +5,7 @@ import {BsArrowLeft} from 'react-icons/bs';
 import useDictionary from '@customHooks/dictionary';
 
 interface SectionTitleProps {
-  title: string;
+  title: string | Element;
   subtitle?: string;
   fontSize?: string;
   fontStyle?: string;

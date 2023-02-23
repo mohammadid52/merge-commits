@@ -1103,10 +1103,14 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
       );
       let units = curriculumUnits?.data.listCurriculumUnits?.items || [];
 
-      units = units.map((syl: any) => {
-        let unitData = syl.unit;
-        return {id: unitData.id, name: unitData.name};
-      });
+      units = units
+        .map((syl: any) => {
+          if (syl.unit) {
+            let unitData = syl.unit;
+            return {id: unitData.id, name: unitData.name};
+          }
+        })
+        .filter(Boolean);
 
       setActiveUnits(units);
     } catch (error) {

@@ -1,9 +1,13 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import TranslationModule from '@components/Lesson/UniversalLesson/views/CoreUniversalLesson/TranslationModule';
+import {Warning} from '@components/Atoms/Alerts/Info';
 import {logError, updatePageState} from '@graphql/functions';
 import {setPageTitle} from '@utilities/functions';
-import {removeLocalStorageData, setLocalStorageData} from '@utilities/localStorage';
-import {UserPageState} from 'API';
+import {
+  getLocalStorageData,
+  removeLocalStorageData,
+  setLocalStorageData
+} from '@utilities/localStorage';
+import {TeachingStyle, UserPageState} from 'API';
 import {getAsset} from 'assets';
 import BreadCrums from 'atoms/BreadCrums';
 import SectionTitleV3 from 'atoms/SectionTitleV3';
@@ -14,7 +18,7 @@ import useAuth from 'customHooks/useAuth';
 import * as mutations from 'graphql/mutations';
 import gsap from 'gsap';
 import isEmpty from 'lodash/isEmpty';
-import React, {Fragment, useEffect, useRef, useState} from 'react';
+import React, {Fragment, useEffect, useState} from 'react';
 import {useRouteMatch} from 'react-router';
 import {Empty} from '../Admin/LessonsBuilder/StepActionComponent/LearningEvidence/CourseMeasurementsCard';
 import {DashboardProps} from '../Dashboard';
@@ -155,6 +159,9 @@ const Classroom: React.FC<ClassroomProps> = (props: ClassroomProps) => {
   const theme = gContext.theme;
   const clientKey = gContext.clientKey;
   const userLanguage = gContext.userLanguage;
+
+  const roomData = getLocalStorageData('room_info');
+  const teachingStyle = roomData.teachingStyle;
 
   const {authId, email, pageState, isStudent, isFellow} = useAuth();
   const match: any = useRouteMatch();
@@ -481,6 +488,9 @@ const Classroom: React.FC<ClassroomProps> = (props: ClassroomProps) => {
             </div>
           </div>
           <div>
+            {isTeacher && teachingStyle === TeachingStyle.PERFORMER && (
+              <Warning message={'This classroom has Performer mode activated'} />
+            )}
             {isTeacher && (
               <>
                 <SectionTitleV3

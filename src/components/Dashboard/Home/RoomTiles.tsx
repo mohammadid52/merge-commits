@@ -116,6 +116,7 @@ const RoomTiles = (props: {
   classList: ModifiedListProps[];
 }) => {
   const {classList: classes, roomsLoading, isTeacher, handleRoomSelection} = props;
+
   const {userLanguage} = useGlobalContext();
   const {DashboardDict} = useDictionary();
 

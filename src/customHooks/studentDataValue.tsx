@@ -2,6 +2,8 @@ import {StudentPageInput} from 'interfaces/UniversalLessonInterfaces';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useInLessonCheck from './checkIfInLesson';
 import useAuth from './useAuth';
+import {TeachingStyle} from 'API';
+import {getLocalStorageData} from '@utilities/localStorage';
 
 const useStudentDataValue = () => {
   // ~~~~~~~~~~~~~~~ CONTEXT ~~~~~~~~~~~~~~~ //
@@ -13,9 +15,16 @@ const useStudentDataValue = () => {
   // ~~~~~~~~~~~~~~~~ PAGES ~~~~~~~~~~~~~~~~ //
   const PAGES = lessonState?.lessonData?.lessonPlan;
   const CURRENT_PAGE = lessonState?.currentPage;
+  const getRoomData = getLocalStorageData('room_info');
+
+  const teachingStyle = getRoomData.teachingStyle;
 
   // ~~~~~~~~~~~~~~ USER ROLES ~~~~~~~~~~~~~ //
-  const {isStudent, isTeacher, isFellow} = useAuth();
+  const {isTeacher, isFellow} = useAuth();
+  const isStudent =
+    user.role !== 'ST' && teachingStyle === TeachingStyle.PERFORMER
+      ? true
+      : user.role === 'ST';
 
   const isInLesson = isStudent ? useInLessonCheck() : false;
 

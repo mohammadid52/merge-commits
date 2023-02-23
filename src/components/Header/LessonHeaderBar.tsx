@@ -1,6 +1,5 @@
 import ErrorBoundary from '@components/Error/ErrorBoundary';
 import useStudentTimer from '@customHooks/timer';
-import useAuth from '@customHooks/useAuth';
 import useGraphqlMutation from '@customHooks/useGraphqlMutation';
 import {UniversalLessonStudentData, UpdatePersonLessonsDataInput} from 'API';
 import Modal from 'atoms/Modal';
@@ -55,16 +54,10 @@ const LessonHeaderBar = ({
 
   // To track user clicks on home button or click next on last page
 
-  const getUrl = () => getLocalStorageData('survey_redirect');
-
-  const {isStudent} = useAuth();
-
   const goToClassRoom = async () => {
     setPersonLessonData(null);
 
-    isStudent
-      ? history.push(`/dashboard/classroom/${getRoomData.id}`)
-      : history.push(`${getUrl()}?tab=Completed%20Surveys` || '/dashboard');
+    history.push(`/dashboard/classroom/${getRoomData.id}`);
     removeLocalStorageData('survey_redirect');
   };
 

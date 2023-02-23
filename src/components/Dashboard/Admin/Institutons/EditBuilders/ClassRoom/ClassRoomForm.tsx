@@ -1,5 +1,5 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import {CreateRoomInput, RoomStatus} from 'API';
+import {RoomStatus, TeachingStyle} from 'API';
 import React, {useEffect, useState} from 'react';
 import {useHistory, useLocation, useParams, useRouteMatch} from 'react-router-dom';
 
@@ -27,6 +27,20 @@ import {ClassroomType} from 'API';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import {getFilterORArray} from 'utilities/strings';
+import moment from 'moment';
+
+export const methods = [
+  {
+    id: 1,
+    name: 'Performer',
+    value: TeachingStyle.PERFORMER
+  },
+  {
+    id: 2,
+    name: 'Academic',
+    value: TeachingStyle.ACADEMIC
+  }
+];
 
 export const fetchSingleCoTeacher = async (roomId: string) => {
   const result: any = await API.graphql(
@@ -143,12 +157,14 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
     conferenceCallLink: '',
     location: '',
     isZoiq: false,
+    teachingStyle: TeachingStyle.PERFORMER,
     activeUnit: {
       id: '',
       name: ''
     },
     activeSyllabus: '',
-    classID: ''
+    classID: '',
+    createdAt: new Date()
   };
   const [roomData, setRoomData] = useState(initialData);
   const [teachersList, setTeachersList] = useState([]);
@@ -633,7 +649,8 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
             status: roomData.status || 'ACTIVE',
             location: roomData.location,
             isZoiq: roomData.isZoiq,
-            conferenceCallLink: roomData.conferenceCallLink
+            conferenceCallLink: roomData.conferenceCallLink,
+            teachingStyle: roomData.teachingStyle
           };
           const newRoom: any = await API.graphql(
             graphqlOperation(customMutations._updateRoom, {input: input})
@@ -656,7 +673,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
             });
           }
         } else {
-          const input: CreateRoomInput = {
+          const input: any = {
             isZoiq: roomData.isZoiq,
             institutionID: roomData.institute.id,
             activeSyllabus: roomData.curricular.id
@@ -671,6 +688,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
             ).email,
             name: roomData.name,
             maxPersons: 0,
+            teachingStyle: roomData.teachingStyle,
             status: (roomData.status as RoomStatus) || ('ACTIVE' as RoomStatus)
           };
 
@@ -803,11 +821,12 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
             savedData = {
               ...savedData,
               coTeachers: savedData?.room?.coTeachers || [],
+              teachingStyle: savedData?.method || TeachingStyle.PERFORMER,
               curricula: {
-                ...savedData.room.curricula
+                ...savedData?.room?.curricula
               },
-              name: savedData.room.name,
-              institution: savedData.room.institution,
+              name: savedData?.room?.name,
+              institution: savedData?.room?.institution,
               activeSyllabus: savedData?.room?.activeSyllabus,
               status: savedData?.room?.status,
               conferenceCallLink: savedData?.room?.conferenceCallLink,
@@ -846,6 +865,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
             setRoomData({
               ...roomData,
               id: savedData.id,
+              teachingStyle: savedData?.teachingStyle || TeachingStyle.PERFORMER,
               name: savedData.name,
               classID: savedData.classID,
               activeSyllabus: savedData?.activeSyllabus,
@@ -875,7 +895,8 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
               maxPersons: savedData.maxPersons,
               status: savedData.status,
               location: savedData.location,
-              conferenceCallLink: savedData.conferenceCallLink
+              conferenceCallLink: savedData.conferenceCallLink,
+              createdAt: savedData.createdAt
             });
             setPrevName(savedData.name);
             setSelectedCurrID(curricularId);
@@ -905,7 +926,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
 
   const fetchOtherList = async () => {
     const items: any = await getInstituteInfo(roomData.institute?.id);
-    const serviceProviders = items.map((item: any) => item.providerID);
+    const serviceProviders = items?.map((item: any) => item.providerID) || [];
     const allInstiId = [...serviceProviders, roomData.institute?.id];
     getTeachersList(allInstiId);
     getCurricularList(allInstiId);
@@ -1222,7 +1243,17 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
       <PageWrapper defaultClass="px-4">
         <div className="w-full m-auto">
           <div className="">
-            <SectionTitleV3 title={RoomEDITdict[userLanguage].HEADING} />
+            <SectionTitleV3
+              // @ts-ignore
+              title={
+                <div className="flex flex-col">
+                  <span className="w-auto">{RoomEDITdict[userLanguage].HEADING}</span>
+                  <span className="text-gray-500 w-auto font-normal mt-2 text-sm">
+                    {moment(roomData.createdAt).format('ll')}
+                  </span>
+                </div>
+              }
+            />
 
             <div className="grid grid-cols-2">
               <div className="px-3 py-4">
@@ -1330,6 +1361,8 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
                   <MultipleSelector
                     label={RoomEDITdict[userLanguage]['CO_TEACHER_LABEL']}
                     withAvatar
+                    disabledText="Classroom inactive"
+                    disabled={status === RoomStatus.INACTIVE}
                     selectedItems={selectedCoTeachers}
                     list={coTeachersList}
                     placeholder={RoomEDITdict[userLanguage]['CO_TEACHER_PLACEHOLDER']}
@@ -1338,7 +1371,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2">
+              <div className="grid grid-cols-3">
                 <div className="px-3 py-4">
                   <FormInput
                     label={RoomEDITdict[userLanguage].CONFERENCE_CALL_LINK_LABEL}
@@ -1357,6 +1390,17 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
                     value={roomLocation}
                     onChange={editInputField}
                     placeHolder={RoomEDITdict[userLanguage].LOCATION_PLACEHOLDER}
+                  />
+                </div>
+                <div className="px-3 py-4">
+                  <Selector
+                    selectedItem={roomData.teachingStyle}
+                    placeholder={RoomEDITdict[userLanguage].METHOD}
+                    label={RoomEDITdict[userLanguage].METHOD}
+                    list={methods}
+                    onChange={(value: TeachingStyle, name, id) =>
+                      setRoomData({...roomData, teachingStyle: value})
+                    }
                   />
                 </div>
               </div>
