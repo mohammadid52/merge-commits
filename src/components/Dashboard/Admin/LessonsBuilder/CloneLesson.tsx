@@ -42,8 +42,8 @@ const CloneLesson = ({setShowCloneModal, getCloneLessonDetails}: Props) => {
       ...cloneLesson,
       id: uuidv4(),
       //@ts-ignore
-      title: `${cloneLesson.title} Cloned`,
-      lessonPlan: map(cloneLesson.lessonPlan, (page) => ({
+      title: `${cloneLesson?.title} Cloned`,
+      lessonPlan: map(cloneLesson?.lessonPlan, (page) => ({
         ...page,
         id: uuidv4(),
         title: 'TBD',
@@ -98,32 +98,34 @@ const CloneLesson = ({setShowCloneModal, getCloneLessonDetails}: Props) => {
   };
 
   const startClone = () => {
-    setCloningStatus('cloning');
-    try {
-      const data = getCloneData();
+    if (Boolean(cloneLesson)) {
+      setCloningStatus('cloning');
+      try {
+        const data = getCloneData();
 
-      // Because this is auto generated
-      delete data.createdAt;
-      delete data.updatedAt;
-      delete data.institution;
-      wait(3000)
-        .then(async () => {
-          const result: any = await API.graphql(
-            graphqlOperation(mutations.createUniversalLesson, {input: data})
-          );
+        // Because this is auto generated
+        delete data.createdAt;
+        delete data.updatedAt;
+        delete data.institution;
+        wait(3000)
+          .then(async () => {
+            const result: any = await API.graphql(
+              graphqlOperation(mutations.createUniversalLesson, {input: data})
+            );
 
-          const newLesson = result.data.createUniversalLesson;
-          setNewLessonId(newLesson?.id);
+            const newLesson = result.data.createUniversalLesson;
+            setNewLessonId(newLesson?.id);
 
-          setCloningStatus('success');
-        })
-        .catch((error) => {
-          setCloningStatus('failed');
-          console.error(error.message);
-        });
-    } catch (error) {
-      setCloningStatus('failed');
-      console.error(error.message);
+            setCloningStatus('success');
+          })
+          .catch((error) => {
+            setCloningStatus('failed');
+            console.error(error.message);
+          });
+      } catch (error) {
+        setCloningStatus('failed');
+        console.error(error.message);
+      }
     }
   };
 
@@ -155,7 +157,7 @@ const CloneLesson = ({setShowCloneModal, getCloneLessonDetails}: Props) => {
                 <dd className="mt-1 text-sm text-gray-800 sm:mt-0 sm:col-span-2">
                   {
                     //@ts-ignore
-                    cloneLesson.title || '--'
+                    cloneLesson?.title || '--'
                   }
                 </dd>
               </div>
@@ -164,19 +166,19 @@ const CloneLesson = ({setShowCloneModal, getCloneLessonDetails}: Props) => {
                 <dd className="mt-1 text-sm text-gray-800 sm:mt-0 sm:col-span-2">
                   {
                     //@ts-ignore
-                    cloneLesson.type || '--'
+                    cloneLesson?.type || '--'
                   }
                 </dd>
               </div>
               <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                 <dt className="text-sm font-medium text-gray-500">Summary</dt>
                 <dd className="mt-1 text-sm text-gray-800 sm:mt-0 sm:col-span-2">
-                  {cloneLesson.summary || '--'}
+                  {cloneLesson?.summary || '--'}
                 </dd>
               </div>
               <p className="text-gray-400 italic mt-2 text-xs font-medium sm:px-6">
-                Found {cloneLesson.lessonPlan.length}{' '}
-                {cloneLesson.lessonPlan.length > 1 ? 'pages' : 'page'} with this lesson
+                Found {cloneLesson?.lessonPlan?.length}{' '}
+                {cloneLesson?.lessonPlan?.length > 1 ? 'pages' : 'page'} with this lesson
               </p>
             </dl>
           </div>

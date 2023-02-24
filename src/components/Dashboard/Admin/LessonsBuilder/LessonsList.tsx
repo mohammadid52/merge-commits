@@ -256,7 +256,7 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
 
   const getCloneLessonDetails = () => {
     if (showCloneModal.show) {
-      return find(currentList, ['id', showCloneModal.lessonId]);
+      return find(lessonsData, ['id', showCloneModal.lessonId]);
     }
   };
 
