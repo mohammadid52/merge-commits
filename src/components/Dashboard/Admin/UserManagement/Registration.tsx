@@ -373,7 +373,7 @@ const Registration = ({
           message: RegistrationDict[userLanguage]['messages']['email']
         };
       }
-      if (!username.includes('@')) {
+      if (!username.includes('@' && '.')) {
         return {
           show: true,
           type: 'error',
