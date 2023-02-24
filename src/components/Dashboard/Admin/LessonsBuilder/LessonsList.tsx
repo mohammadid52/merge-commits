@@ -415,8 +415,14 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
       <CommonActionsBtns
         button1Label="Clone Lesson"
         isDeletable={checkIfRemovable(item)}
-        button1Action={() => onCloneLesson(item.id)}
-        button2Action={() => handleToggleDelete}
+        button1Action={(e) => {
+          e.stopPropagation();
+          onCloneLesson(item.id);
+        }}
+        button2Action={(e) => {
+          e.stopPropagation();
+          handleToggleDelete(item.title, item);
+        }}
       />
     )
   }));
@@ -434,7 +440,6 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
     ],
     dataList,
     config: {
-      dark: false,
       isLastAction: true,
       isFirstIndex: true,
       headers: {textColor: 'text-white'},
@@ -457,9 +462,7 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
           lessonPlan: 'w-96',
           actions: '-'
         },
-        maxHeight: 'max-h-196',
-        pattern: 'striped',
-        patternConfig: {firstColor: 'bg-gray-100', secondColor: 'bg-gray-200'}
+        maxHeight: 'max-h-196'
       }
     }
   };
