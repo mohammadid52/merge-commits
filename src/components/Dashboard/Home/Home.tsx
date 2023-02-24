@@ -11,6 +11,7 @@ import {getImageFromS3} from 'utilities/services';
 import HeroBanner from '../../Header/HeroBanner';
 import {ClassroomControlProps} from '../Dashboard';
 import HeaderTextBar from '../HeaderTextBar/HeaderTextBar';
+import {findRooms} from './HomeForTeachers';
 import RoomTiles from './RoomTiles';
 import StudentsTiles from './StudentsTiles';
 import TeacherRows from './TeacherRows';
@@ -75,6 +76,8 @@ const Home = (props: ClassroomControlProps) => {
       ? homeData.reduce((acc: any[], dataObj: any) => {
           if (dataObj?.class?.room) {
             const teacherObj = dataObj?.class?.room?.teacher;
+            // const allRooms = homeData[0]?.class?.rooms?.items;
+
             const teacherIsPresent = acc?.find(
               (teacher: any) =>
                 teacher?.firstName === teacherObj?.firstName &&
@@ -83,7 +86,7 @@ const Home = (props: ClassroomControlProps) => {
             if (teacherIsPresent) {
               return acc;
             } else {
-              return [...acc, {...teacherObj, room: dataObj}];
+              return [...acc, {...teacherObj}];
             }
           } else {
             return acc;
@@ -102,7 +105,7 @@ const Home = (props: ClassroomControlProps) => {
             item?.class?.room.coTeachers.items.map((_item: any) => {
               if (!uniqIds.includes(_item.teacher.authId)) {
                 uniqIds.push(_item.teacher.authId);
-                coTeachersList.push({..._item.teacher, room: item});
+                coTeachersList.push({..._item.teacher});
               }
             });
           }

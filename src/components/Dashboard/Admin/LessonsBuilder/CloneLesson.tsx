@@ -107,6 +107,8 @@ const CloneLesson = ({setShowCloneModal, getCloneLessonDetails}: Props) => {
         delete data.createdAt;
         delete data.updatedAt;
         delete data.institution;
+        delete data.institutionName;
+        delete data.institutionId;
         wait(3000)
           .then(async () => {
             const result: any = await API.graphql(
@@ -120,11 +122,11 @@ const CloneLesson = ({setShowCloneModal, getCloneLessonDetails}: Props) => {
           })
           .catch((error) => {
             setCloningStatus('failed');
-            console.error(error.message);
+            console.error(error);
           });
       } catch (error) {
         setCloningStatus('failed');
-        console.error(error.message);
+        console.error(error);
       }
     }
   };

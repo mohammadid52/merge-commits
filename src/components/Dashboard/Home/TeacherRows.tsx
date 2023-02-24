@@ -60,10 +60,12 @@ const TeacherRows = (props: {coTeachersList: Teacher[]; teachersList: Teacher[]}
 
     if (rooms && rooms.length > 0) {
       rooms.forEach((room) => {
-        const curriculum = room?.curricula?.items[0]?.curriculum;
+        if (room.status === 'ACTIVE') {
+          const curriculum = room?.curricula?.items[0]?.curriculum;
 
-        if (Boolean(curriculum)) {
-          totalClasses.push({...curriculum, roomId: room.id});
+          if (Boolean(curriculum)) {
+            totalClasses.push({...curriculum, roomId: room.id});
+          }
         }
       });
     }
@@ -72,11 +74,17 @@ const TeacherRows = (props: {coTeachersList: Teacher[]; teachersList: Teacher[]}
   };
 
   const attachedClasses = map(extraFilter, (d) => {
-    const classes = getClassesByTeacher(d?.rooms?.length > 0 ? d.rooms : [d.room]) || [];
-    if (classes.length > 0) {
+    if (!isStudent) {
+      const classes =
+        getClassesByTeacher(d?.rooms?.length > 0 ? d.rooms : [d.room]) || [];
+
       return {
         ...d,
-        classes
+        classes: classes.length > 0 ? classes : []
+      };
+    } else {
+      return {
+        ...d
       };
     }
   }).filter(Boolean);
@@ -138,29 +146,31 @@ const TeacherRows = (props: {coTeachersList: Teacher[]; teachersList: Teacher[]}
                         </div>
                       </div>
 
-                      <div className="w-1/2">
-                        <h4 className="theme-text ">Classrooms: </h4>
-                        <ul
-                          className={`w-auto gap-y-2 ${
-                            teacher.classes.length > 1 ? 'list-disc' : ''
-                          }`}>
-                          {teacher.classes.map((d: any) => (
-                            <>
-                              <li
-                                key={d.name}
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  history.push(
-                                    `/dashboard/manage-institutions/institution/${instId}/room-edit/${d.roomId}`
-                                  );
-                                }}
-                                className="text-gray-600  transition-all hover:underline hover:theme-text:500 rounded-md px-2">
-                                {d.name}
-                              </li>
-                            </>
-                          ))}
-                        </ul>
-                      </div>
+                      {!isStudent && teacher?.classes?.length > 0 && (
+                        <div className="w-1/2">
+                          <h4 className="theme-text ">Classrooms: </h4>
+                          <ul
+                            className={`w-auto gap-y-2 ${
+                              teacher?.classes?.length > 1 ? 'list-disc' : ''
+                            }`}>
+                            {teacher?.classes?.map((d: any) => (
+                              <>
+                                <li
+                                  key={d.name}
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    history.push(
+                                      `/dashboard/manage-institutions/institution/${instId}/room-edit/${d.roomId}`
+                                    );
+                                  }}
+                                  className="text-gray-600  transition-all hover:underline hover:theme-text:500 rounded-md px-2">
+                                  {d.name}
+                                </li>
+                              </>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
                     </div>
                   </a>
                 </li>
