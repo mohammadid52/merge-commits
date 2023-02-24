@@ -26,12 +26,14 @@ const TeacherRows = (props: {coTeachersList: Teacher[]; teachersList: Teacher[]}
     let result: any[] = [];
     let uniq: any[] = [];
 
-    allTeachers.forEach((d) => {
-      if (!uniq.includes(d.authId)) {
-        result.push(d);
-        uniq.push(d.authId);
-      }
-    });
+    if (allTeachers.length > 0) {
+      allTeachers.forEach((d) => {
+        if (!uniq.includes(d.authId)) {
+          result.push(d);
+          uniq.push(d.authId);
+        }
+      });
+    }
     return result;
   };
 
@@ -70,7 +72,7 @@ const TeacherRows = (props: {coTeachersList: Teacher[]; teachersList: Teacher[]}
   };
 
   const attachedClasses = map(extraFilter, (d) => {
-    const classes = getClassesByTeacher(d.rooms.length > 0 ? d.rooms : [d.room]);
+    const classes = getClassesByTeacher(d?.rooms?.length > 0 ? d.rooms : [d.room]) || [];
     if (classes.length > 0) {
       return {
         ...d,

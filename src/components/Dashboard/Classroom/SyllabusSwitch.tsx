@@ -6,7 +6,6 @@ import {useHistory} from 'react-router';
 import {DashboardProps} from '../Dashboard';
 import {Syllabus} from './Classroom';
 
-import Tooltip from '@components/Atoms/Tooltip';
 import Buttons from 'atoms/Buttons';
 // import ProgressBar from './ProgressBar';
 

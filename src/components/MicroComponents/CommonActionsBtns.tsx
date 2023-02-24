@@ -3,8 +3,8 @@ import React from 'react';
 interface ICommonActionBtns {
   button1Label?: string;
   button2Label?: string;
-  button1Action?: () => void;
-  button2Action?: () => void;
+  button1Action?: (e: any) => void;
+  button2Action?: (e: any) => void;
   isDeletable?: boolean;
 }
 

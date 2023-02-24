@@ -67,7 +67,7 @@ class ErrorBoundary extends React.Component<PropsInterface> {
         this.props.fallback || <h1>Something went wrong - {this.props.componentName}</h1>
       );
     } else {
-      return this.props.children;
+      return this.props.children || null;
     }
   }
 }

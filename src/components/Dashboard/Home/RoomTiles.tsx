@@ -233,7 +233,7 @@ const RoomTiles = (props: {
                 data-cy="classroom-list"
                 className={`mt-0 max-w-lg mx-auto pt-6 pb-6 grid px-6 gap-5 lg:grid-cols-3 md:grid-cols-2`}>
                 {finalList
-                  .slice(0, showMore || searchInput.isActive ? finalList.length : 5)
+                  .slice(0, showMore || searchInput.isActive ? finalList.length : 3)
                   .map((item, idx: number) => {
                     return (
                       <SingleRoomCard
