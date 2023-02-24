@@ -1,3 +1,4 @@
+import ErrorBoundary from '@components/Error/ErrorBoundary';
 import {PersonStatus} from 'API';
 import {getAsset} from 'assets';
 import SectionTitleV3 from 'atoms/SectionTitleV3';
@@ -209,14 +210,15 @@ const Home = (props: ClassroomControlProps) => {
     return modifiedClassList;
   };
 
+  const fetchAndProcessDashboardData = async () => {
+    setTeacherList(await teacherListWithImages);
+    const studentList = await studentsListWithImages;
+    setStudentsList(studentList);
+    setLocalStorageData('student_list', studentList);
+    setCoTeachersList(await coTeacherListWithImages);
+  };
+
   useEffect(() => {
-    const fetchAndProcessDashboardData = async () => {
-      setTeacherList(await teacherListWithImages);
-      const studentList = await studentsListWithImages;
-      setStudentsList(studentList);
-      setLocalStorageData('student_list', studentList);
-      setCoTeachersList(await coTeacherListWithImages);
-    };
     if (homeData && homeData.length > 0) {
       fetchAndProcessDashboardData();
     }
@@ -247,39 +249,48 @@ const Home = (props: ClassroomControlProps) => {
 
           {/* Classroom Section */}
           <div className="px-3">
-            <RoomTiles
-              roomsLoading={roomsLoading}
-              handleRoomSelection={handleRoomSelection}
-              classList={
-                state.user.status !== PersonStatus.INACTIVE ? getClassList() : []
-              }
-            />
-
-            {/* Teachers Section */}
-            {teacherList && teacherList.length > 0 && (
-              <div className="my-8">
-                <SectionTitleV3
-                  title={DashboardDict[userLanguage]['YOUR_TEACHERS']}
-                  extraClass="leading-6 text-gray-900"
-                  fontSize="xl"
-                  fontStyle="semibold"
-                  extraContainerClass="lg:max-w-192 md:max-w-none 2xl:max-w-256 px-6"
-                  borderBottom
-                />
-                <TeacherRows coTeachersList={coTeachersList} teachersList={teacherList} />
-              </div>
-            )}
-            {/* Classmates Section */}
-            <div className="my-6">
-              <StudentsTiles
-                title={
-                  DashboardDict[userLanguage][
-                    isTeacher ? 'YOUR_STUDENTS' : 'YOUR_CLASSMATES'
-                  ]
+            <ErrorBoundary componentName="RoomTiles">
+              <RoomTiles
+                roomsLoading={roomsLoading}
+                handleRoomSelection={handleRoomSelection}
+                classList={
+                  state.user.status !== PersonStatus.INACTIVE ? getClassList() : []
                 }
-                studentsList={studentsList}
               />
-            </div>
+            </ErrorBoundary>
+
+            <ErrorBoundary componentName="TeacherRows">
+              {/* Teachers Section */}
+              {teacherList && teacherList.length > 0 && (
+                <div className="my-8">
+                  <SectionTitleV3
+                    title={DashboardDict[userLanguage]['YOUR_TEACHERS']}
+                    extraClass="leading-6 text-gray-900"
+                    fontSize="xl"
+                    fontStyle="semibold"
+                    extraContainerClass="lg:max-w-192 md:max-w-none 2xl:max-w-256 px-6"
+                    borderBottom
+                  />
+                  <TeacherRows
+                    coTeachersList={coTeachersList}
+                    teachersList={teacherList}
+                  />
+                </div>
+              )}
+            </ErrorBoundary>
+            {/* Classmates Section */}
+            <ErrorBoundary componentName="StudentTiles">
+              <div className="my-6">
+                <StudentsTiles
+                  title={
+                    DashboardDict[userLanguage][
+                      isTeacher ? 'YOUR_STUDENTS' : 'YOUR_CLASSMATES'
+                    ]
+                  }
+                  studentsList={studentsList}
+                />
+              </div>
+            </ErrorBoundary>
           </div>
         </>
       ) : null}

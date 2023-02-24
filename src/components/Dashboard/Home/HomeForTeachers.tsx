@@ -58,20 +58,33 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
   const [teacherList, setTeacherList] = useState<any[]>();
   const [coTeachersList, setCoTeachersList] = useState<any[]>();
   const [studentsList, setStudentsList] = useState<any[]>();
+  const [classList, setClassList] = useState([]);
+
+  const fetchAndProcessDashboardData = () => {
+    teacherListWithImages();
+    studentsListWithImages();
+    coTeacherListWithImages();
+    getClassList();
+  };
+
+  useEffect(() => {
+    if (homeData && homeData.length > 0) {
+      fetchAndProcessDashboardData();
+    }
+  }, [homeData]);
 
   const getStudentsList = () => {
     let list: any[] = [];
     let uniqIds: string[] = [];
-    homeData &&
-      homeData.length > 0 &&
-      homeData[0]?.class?.rooms?.items.forEach((item: any) => {
-        item?.class?.students?.items.forEach((student: any) => {
-          if (!uniqIds.includes(student.student.id)) {
-            list.push(student);
-            uniqIds.push(student.student.id);
-          }
-        });
+
+    homeData[0]?.class?.rooms?.items.forEach((item: any) => {
+      item?.class?.students?.items.forEach((student: any) => {
+        if (!uniqIds.includes(student.student.id)) {
+          list.push(student);
+          uniqIds.push(student.student.id);
+        }
       });
+    });
 
     return list;
   };
@@ -137,18 +150,17 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
     let uniqIds: string[] = [];
     const allRooms = homeData[0]?.class?.rooms?.items;
 
-    homeData?.length &&
-      homeData[0]?.class?.rooms?.items.forEach((item: any) => {
-        if (item.coTeachers?.items?.length) {
-          item.coTeachers.items.forEach((_item: any) => {
-            const rooms = findRooms(_item.teacher.authId, allRooms);
-            if (!uniqIds.includes(_item.teacher.email)) {
-              coTeachersList.push({..._item.teacher, room: item, rooms});
-              uniqIds.push(_item.teacher.email);
-            }
-          });
-        }
-      });
+    homeData[0]?.class?.rooms?.items.forEach((item: any) => {
+      if (item.coTeachers?.items?.length) {
+        item.coTeachers.items.forEach((_item: any) => {
+          const rooms = findRooms(_item.teacher.authId, allRooms);
+          if (!uniqIds.includes(_item.teacher.email)) {
+            coTeachersList.push({..._item.teacher, room: item, rooms});
+            uniqIds.push(_item.teacher.email);
+          }
+        });
+      }
+    });
 
     return coTeachersList;
   };
@@ -199,52 +211,37 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
 
   const getClassList = (): any => {
     let modifiedClassList: any[] = [];
+
     let uniqIds: string[] = [];
 
-    homeData &&
-      homeData.length > 0 &&
-      homeData[0].class?.rooms?.items.forEach(async (_item: any, index: number) => {
-        const curriculum = _item.curricula?.items[0]?.curriculum;
-        if (curriculum) {
-          const imagePath = curriculum?.image;
+    homeData[0].class?.rooms?.items.forEach(async (_item: any, index: number) => {
+      const curriculum = _item.curricula?.items[0]?.curriculum;
+      if (curriculum) {
+        const imagePath = curriculum?.image;
 
-          const image = await (imagePath !== null ? getImageFromS3(imagePath) : null);
-          const teacherProfileImg = await (_item.teacher?.image
-            ? getImageFromS3(_item.teacher?.image)
-            : false);
+        const image = await (imagePath !== null ? getImageFromS3(imagePath) : null);
+        const teacherProfileImg = await (_item.teacher?.image
+          ? getImageFromS3(_item.teacher?.image)
+          : false);
 
-          const modifiedItem = {
-            ..._item,
-            roomName: _item?.name,
-            curriculumName: curriculum?.name,
-            bannerImage: image,
-            teacherProfileImg,
-            roomIndex: index
-          };
+        const modifiedItem = {
+          ..._item,
+          roomName: _item?.name,
+          curriculumName: curriculum?.name,
+          bannerImage: image,
+          teacherProfileImg,
+          roomIndex: index
+        };
 
-          if (!uniqIds.includes(curriculum?.id)) {
-            uniqIds.push(curriculum?.id);
-            modifiedClassList.push(modifiedItem);
-          }
+        if (!uniqIds.includes(_item?.id) && _item.status === 'ACTIVE') {
+          modifiedClassList.push(modifiedItem);
+          uniqIds.push(_item?.id);
         }
-      });
+      }
+    });
 
-    return modifiedClassList;
+    setClassList(modifiedClassList);
   };
-
-  const fetchAndProcessDashboardData = () => {
-    teacherListWithImages();
-    studentsListWithImages();
-    coTeacherListWithImages();
-  };
-
-  useEffect(() => {
-    if (homeData && homeData.length > 0) {
-      fetchAndProcessDashboardData();
-    }
-  }, [homeData]);
-
-  const classList = getClassList();
 
   return (
     <>

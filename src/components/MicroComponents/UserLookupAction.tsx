@@ -70,7 +70,7 @@ const UserLookupAction = ({item}: {item: any}) => {
 
   return (
     <div>
-      <div className="flex items-center justify-center">
+      <div className="flex items-center justify-start">
         {showResetPasswordOption(state.user.role, item.role)}
       </div>
       {resetPasswordServerResponse.show && (
