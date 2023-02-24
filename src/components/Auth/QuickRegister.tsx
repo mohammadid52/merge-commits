@@ -89,7 +89,7 @@ const QuickRegister = (props: QuickRegisterProps) => {
       if (id === 'email') {
         return {
           ...newUserInputs,
-          [id]: value.toLowerCase()
+          [id]: value.toLowerCase().trim()
         };
       } else {
         return {
@@ -175,7 +175,7 @@ const QuickRegister = (props: QuickRegisterProps) => {
 
   const cognitoSignUp = async () => {
     let username = newUserInputs.email;
-    username = username.toLowerCase();
+    username = username.toLowerCase().trim();
     try {
       const response = await axios.post(createUserUrl, {
         email: username
@@ -234,7 +234,7 @@ const QuickRegister = (props: QuickRegisterProps) => {
       isValid = false;
       msg.message = `User's email cannot be blank`;
       msg.field = 'email';
-    } else if (!username.includes('@')) {
+    } else if (!username.includes('@' && '.')) {
       isValid = false;
       msg.message = `User's email is not in the expected email address format`;
       msg.field = 'email';

@@ -117,7 +117,7 @@ const Login = ({updateAuthState}: LoginProps) => {
       const errMsg = {show: true, type: 'error'};
       if (!username) {
         setMessage({...errMsg, message: 'Please enter your email'});
-      } else if (!username.includes('@')) {
+      } else if (!username.includes('@' && '.')) {
         setMessage({
           ...errMsg,
           message: 'Your email is not in the expected email address format'
@@ -237,7 +237,7 @@ const Login = ({updateAuthState}: LoginProps) => {
       if (id === 'email') {
         return {
           ...input,
-          [id]: value.toLowerCase()
+          [id]: value.toLowerCase().trim()
         };
       } else {
         return {

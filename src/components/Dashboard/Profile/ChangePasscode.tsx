@@ -82,7 +82,7 @@ const ChangePasscode = ({fromWhere, handleForgotPasscode}: ChangePasscodeProps) 
       const errMsg = {show: true, type: 'error'};
       if (!username) {
         setMessage({...errMsg, message: 'Please enter your email'});
-      } else if (!username.includes('@')) {
+      } else if (!username.includes('@' && '.')) {
         setMessage({
           ...errMsg,
           message: 'Your email is not in the expected email address format'

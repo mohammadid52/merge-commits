@@ -92,7 +92,7 @@ const Reset = () => {
           message: 'Please enter your email'
         };
       }
-      if (!username.includes('@')) {
+      if (!username.includes('@' && '.')) {
         return {
           show: true,
           type: 'error',

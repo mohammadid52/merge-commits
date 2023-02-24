@@ -189,18 +189,6 @@ const RoomTiles = (props: {
           classList &&
           classList.length > 3 && (
             <div className="flex w-auto gap-x-4 justify-end">
-              {!isStudent && (
-                <SearchInput
-                  dataCy="staff-loookup-search"
-                  value={searchInput.value}
-                  onChange={setSearch}
-                  disabled={roomsLoading}
-                  onKeyDown={searchClass}
-                  isActive={searchInput.isActive}
-                  closeAction={removeSearchAction}
-                />
-              )}
-
               <Buttons
                 label={!showMore ? 'Show All' : 'Show Few'}
                 onClick={animateOnShowMore}
@@ -228,10 +216,14 @@ const RoomTiles = (props: {
           </div>
         ) : finalList.length > 0 ? (
           <div className="relative">
-            <div className="relative max-w-7xl mx-auto">
+            <div className="relative max-w-7xl mx-auto  px-6 mt-4">
+              <h6 className="w-auto text-gray-600">
+                Showing {showMore || searchInput.isActive ? finalList.length : 3} out of{' '}
+                {finalList.length}
+              </h6>
               <div
                 data-cy="classroom-list"
-                className={`mt-0 max-w-lg mx-auto pt-6 pb-6 grid px-6 gap-5 lg:grid-cols-3 md:grid-cols-2`}>
+                className={`mt-0 max-w-lg mx-auto pt-6 pb-6 grid gap-5 lg:grid-cols-3 md:grid-cols-2`}>
                 {finalList
                   .slice(0, showMore || searchInput.isActive ? finalList.length : 3)
                   .map((item, idx: number) => {
