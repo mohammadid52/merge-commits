@@ -107,8 +107,14 @@ const TeacherRows = (props: {coTeachersList: Teacher[]; teachersList: Teacher[]}
                     attachedClasses.length - 1 === idx ? 'rounded-b-xl' : ''
                   }`}>
                   <a
-                    href={`/dashboard/manage-institutions/institution/${instId}/manage-users/${teacher.id}/staff`}
-                    className="block hover:bg-gray-200 "
+                    href={
+                      isStudent
+                        ? '#'
+                        : `/dashboard/manage-institutions/institution/${instId}/manage-users/${teacher.id}/staff`
+                    }
+                    className={`block hover:bg-gray-200 ${
+                      isStudent ? 'pointer-events-none' : ''
+                    }`}
                     style={{borderRadius: 'inherit'}}>
                     <div className="flex items-center px-4 py-4 sm:px-6">
                       <div className="min-w-0 flex-1 flex items-center">
