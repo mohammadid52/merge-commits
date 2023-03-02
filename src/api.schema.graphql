@@ -729,6 +729,7 @@ type UniversalLessonWritingExcercises @model @auth(rules: [{allow: public}]) {
   lessonID: ID!
   lesson: UniversalLesson @hasOne(fields: ["lessonID"])
   lessonPageID: ID!
+  fromLesson: Boolean
   lessonName: String
   studentID: ID!
   studentAuthID: ID!
@@ -838,6 +839,7 @@ type UniversalJournalData @model @auth(rules: [{allow: public}]) {
   studentEmail: String!
   type: String!
   lessonName: String
+  fromLesson: Boolean
   entryData: [JournalEntryData]
   feedbacks: [String]
   shared: Boolean

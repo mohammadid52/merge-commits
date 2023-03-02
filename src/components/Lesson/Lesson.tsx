@@ -10,8 +10,6 @@ import * as customMutations from 'customGraphql/customMutations';
 import * as customQueries from 'customGraphql/customQueries';
 import * as customSubscriptions from 'customGraphql/customSubscriptions';
 import useNotifications from 'customHooks/notifications';
-import * as mutations from 'graphql/mutations';
-import * as queries from 'graphql/queries';
 import {isEmpty, update} from 'lodash';
 import React, {useEffect, useState} from 'react';
 import {useHistory, useParams, useRouteMatch} from 'react-router-dom';

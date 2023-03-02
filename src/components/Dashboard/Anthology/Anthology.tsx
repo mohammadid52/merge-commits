@@ -136,6 +136,7 @@ const Anthology = ({
   const getStudentData = async () => {
     try {
       const listFilter = {
+        limit: 500,
         filter: {
           studentAuthID: {eq: studentAuthID},
           hasExerciseData: {eq: true}
@@ -318,6 +319,7 @@ const Anthology = ({
   const listUniversalJournalData = async () => {
     try {
       const listFilter = {
+        limit: 500,
         filter: {
           studentAuthID: {eq: studentAuthID}
         }
@@ -355,7 +357,8 @@ const Anthology = ({
       studentAuthID: journalEntryData.studentAuthID,
       studentEmail: journalEntryData.studentEmail,
       type: journalEntryData.type || 'journal-entry',
-      entryData: journalEntryData.entryData
+      entryData: journalEntryData.entryData,
+      fromLesson: false
     };
     // console.log('create input - ', input);
     try {
@@ -670,6 +673,7 @@ const Anthology = ({
     try {
       const archiveData: any = await API.graphql(
         graphqlOperation(queries.listUniversalArchiveData, {
+          limit: 500,
           filter: {
             studentID: {
               eq: dynamicAuthID
@@ -690,6 +694,7 @@ const Anthology = ({
     try {
       const _allUniversalClassData: any = await API.graphql(
         graphqlOperation(customQueries.listUniversalLessonWritingExcercises, {
+          limit: 500,
           filter: {
             studentID: {
               eq: dynamicAuthID
