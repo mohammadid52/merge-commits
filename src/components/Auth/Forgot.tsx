@@ -39,7 +39,7 @@ const Forgot = () => {
             message: 'Please enter your email'
           };
         }
-        if (!username.includes('@')) {
+        if (!username.includes('@' && '.')) {
           return {
             show: true,
             type: 'error',
@@ -76,7 +76,7 @@ const Forgot = () => {
       if (id === 'email') {
         return {
           ...input,
-          [id]: value.toLowerCase()
+          [id]: value.toLowerCase().trim()
         };
       } else {
         return {

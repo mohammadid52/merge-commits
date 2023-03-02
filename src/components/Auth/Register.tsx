@@ -79,7 +79,7 @@ const Registration = () => {
       if (id === 'email') {
         return {
           ...input,
-          [id]: value.toLowerCase()
+          [id]: value.toLowerCase().trim()
         };
       } else {
         return {
