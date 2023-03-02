@@ -2,7 +2,8 @@ import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import UploadImageBtn from '@components/Atoms/Buttons/UploadImageBtn';
 import ProgressBar from '@components/Lesson/UniversalLessonBuilder/UI/ProgressBar';
 import ModalPopUp from '@components/Molecules/ModalPopUp';
-import {uploadImageToS3} from '@graphql/functions';
+import useAuth from '@customHooks/useAuth';
+import {logError, uploadImageToS3} from '@graphql/functions';
 import {RoomStatus} from 'API';
 import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
@@ -412,6 +413,47 @@ const CourseFormComponent = ({
     }
   };
 
+  const checkIfRemovable = () => {
+    return false;
+  };
+
+  const [deleteModal, setDeleteModal] = useState<any>({
+    show: false,
+    message: '',
+    action: () => {}
+  });
+
+  const handleToggleDelete = (targetString?: string, itemObj?: any) => {
+    if (!deleteModal.show) {
+      setDeleteModal({
+        show: true,
+        message: `Are you sure you want to delete the course "${targetString}"?`,
+        action: () => handleDelete(itemObj)
+      });
+    } else {
+      setDeleteModal({show: false, message: '', action: () => {}});
+    }
+  };
+
+  const [deleting, setDeleting] = useState<boolean>(false);
+  const {authId, email} = useAuth();
+
+  const handleDelete = async (item: any) => {
+    setDeleting(true);
+    try {
+      await API.graphql(
+        graphqlOperation(mutation.deleteCurriculum, {
+          input: {id: item.id}
+        })
+      );
+    } catch (e) {
+      logError(e, {authId, email}, 'CurriculumList @handleDelete');
+    } finally {
+      setDeleting(false);
+      setDeleteModal({show: false, message: '', action: () => {}});
+    }
+  };
+
   const {
     name,
     description,
@@ -559,17 +601,22 @@ const CourseFormComponent = ({
         />
       )}
 
-      <div className="flex my-8 justify-center">
+      <div className="flex my-8 gap-5 justify-center">
         <Buttons
-          btnClass="py-3 px-12 text-sm"
           label={
-            loading
-              ? CurricularBuilderdict[userLanguage]['BUTTON']['SAVING']
-              : CurricularBuilderdict[userLanguage]['BUTTON']['SAVE']
+            CurricularBuilderdict[userLanguage]['BUTTON'][loading ? 'SAVING' : 'SAVE']
           }
           onClick={saveCourse}
           disabled={loading ? true : false}
         />
+        {/* <button
+          onClick={() => handleToggleDelete(courseData.name, courseData)}
+          disabled={checkIfRemovable()}
+          className={`${
+            checkIfRemovable() ? 'text-red-500' : 'pointer-events-none text-gray-500'
+          }  w-auto ml-12 hover:underline text-sm uppercase`}>
+          Delete course
+        </button> */}
       </div>
       {/* Image cropper */}
       {showCropper && (

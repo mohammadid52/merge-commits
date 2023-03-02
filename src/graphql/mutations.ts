@@ -10877,6 +10877,7 @@ export const createUniversalLessonWritingExcercises = /* GraphQL */ `
         updatedAt
       }
       lessonPageID
+      fromLesson
       lessonName
       studentID
       studentAuthID
@@ -11013,6 +11014,7 @@ export const updateUniversalLessonWritingExcercises = /* GraphQL */ `
         updatedAt
       }
       lessonPageID
+      fromLesson
       lessonName
       studentID
       studentAuthID
@@ -11149,6 +11151,7 @@ export const deleteUniversalLessonWritingExcercises = /* GraphQL */ `
         updatedAt
       }
       lessonPageID
+      fromLesson
       lessonName
       studentID
       studentAuthID
@@ -12967,6 +12970,7 @@ export const createUniversalJournalData = /* GraphQL */ `
       studentEmail
       type
       lessonName
+      fromLesson
       entryData {
         domID
         type
@@ -13085,6 +13089,7 @@ export const updateUniversalJournalData = /* GraphQL */ `
       studentEmail
       type
       lessonName
+      fromLesson
       entryData {
         domID
         type
@@ -13203,6 +13208,7 @@ export const deleteUniversalJournalData = /* GraphQL */ `
       studentEmail
       type
       lessonName
+      fromLesson
       entryData {
         domID
         type

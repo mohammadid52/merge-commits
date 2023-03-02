@@ -73,13 +73,20 @@ const WrittenContentTab = (props: ITabViewProps) => {
       }
     );
 
+    // @ts-ignore
+    const lessonName = contentObj?.lessonName || contentObj?.lesson?.title;
+
     return (
       <>
         <div className={`flex mb-2 justify-between items-center`}>
-          <p className={`w-auto text-right text-xs text-gray-500`}>
-            Lesson Name: {/* @ts-ignore */}
-            {contentObj?.lessonName || contentObj?.lesson?.title || 'not available'}
-          </p>
+          {Boolean(lessonName) ? (
+            <p className={`w-auto text-right text-xs text-gray-500`}>
+              Lesson Name: {/* @ts-ignore */}
+              {contentObj?.lessonName || contentObj?.lesson?.title || 'N/A'}
+            </p>
+          ) : (
+            <div className="w-auto" />
+          )}
           <p className={`w-auto text-right text-xs text-gray-500`}>
             Updated: {dateFromServer(contentObj?.updatedAt)}
           </p>

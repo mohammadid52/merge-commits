@@ -5212,6 +5212,7 @@ export const getUniversalLessonWritingExcercises = /* GraphQL */ `
         updatedAt
       }
       lessonPageID
+      fromLesson
       lessonName
       studentID
       studentAuthID
@@ -5301,6 +5302,7 @@ export const listUniversalLessonWritingExcercises = /* GraphQL */ `
           updatedAt
         }
         lessonPageID
+        fromLesson
         lessonName
         studentID
         studentAuthID
@@ -6271,6 +6273,7 @@ export const getUniversalJournalData = /* GraphQL */ `
       studentEmail
       type
       lessonName
+      fromLesson
       entryData {
         domID
         type
@@ -6399,6 +6402,7 @@ export const listUniversalJournalData = /* GraphQL */ `
         studentEmail
         type
         lessonName
+        fromLesson
         entryData {
           domID
           type

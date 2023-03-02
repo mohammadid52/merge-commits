@@ -163,6 +163,7 @@ const RoomView = ({
   const mapNotebookRoomCards = (onSuccess?: (output?: any[]) => void) => {
     const mapped = filteredRooms.map(async (item, idx: number) => {
       const {curricula} = item;
+
       const bannerImage = await (curricula?.items[0]?.image
         ? getImageURL(curricula?.items[0]?.image)
         : null);
@@ -172,10 +173,18 @@ const RoomView = ({
     });
 
     Promise.all(mapped).then((output: any) => {
-      setMappedNotebookRoomCards(output);
-      onSuccess(output);
+      let filtered = output.filter((item: any) =>
+        Boolean(
+          item?.curricula?.items[0]?.curriculum &&
+            item?.curricula?.items[0]?.curriculum?.name
+        )
+      );
+
+      setMappedNotebookRoomCards(filtered);
+      onSuccess(filtered);
     });
   };
+
   const params = useQuery(location.search);
 
   const roomId = params.get('roomId');

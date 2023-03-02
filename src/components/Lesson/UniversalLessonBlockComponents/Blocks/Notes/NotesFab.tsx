@@ -115,7 +115,8 @@ const NotesContainer = ({notes, id}: {id: string; notes: any[]}) => {
         type: 'class-note',
         entryData: entryData,
         roomID: getRoomData.id,
-        syllabusLessonID: getRoomData.activeSyllabus
+        syllabusLessonID: getRoomData.activeSyllabus,
+        fromLesson: false
       };
 
       const newJournalData: any = await API.graphql(

@@ -761,7 +761,8 @@ const LessonApp = (props: ILessonSurveyApp) => {
         pageData: item.pageData,
         hasExerciseData: item.hasExerciseData,
         exerciseData: item.exerciseData,
-        lessonName: lessonState?.lessonData?.title || ''
+        lessonName: lessonState?.lessonData?.title || '',
+        fromLesson: true
       };
       let newStudentData: any;
       let returnedData: any;

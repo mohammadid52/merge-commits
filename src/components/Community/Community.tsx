@@ -16,13 +16,9 @@ import AnimatedContainer from 'components/Lesson/UniversalLessonBuilder/UI/UICom
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 
-import {
-  IAnnouncementInput,
-  ICheckItOutInput,
-  ICommunityCard,
-  IEventInput,
-  ISpotlightInput
-} from 'interfaces/Community.interfaces';
+import ErrorBoundary from '@components/Error/ErrorBoundary';
+import {logError, updatePageState} from '@graphql/functions';
+import {ListCommunitiesQueryVariables, UserPageState} from 'API';
 import {getAsset} from 'assets';
 import {API, graphqlOperation} from 'aws-amplify';
 import 'components/Community/community.scss';
@@ -31,6 +27,13 @@ import useAuth from 'customHooks/useAuth';
 import useGraphqlMutation from 'customHooks/useGraphqlMutation';
 import useGraphqlQuery from 'customHooks/useGraphqlQuery';
 import * as mutations from 'graphql/mutations';
+import {
+  IAnnouncementInput,
+  ICheckItOutInput,
+  ICommunityCard,
+  IEventInput,
+  ISpotlightInput
+} from 'interfaces/Community.interfaces';
 import {findIndex, isEmpty} from 'lodash';
 import filter from 'lodash/filter';
 import orderBy from 'lodash/orderBy';
@@ -41,8 +44,6 @@ import {useHistory, useRouteMatch} from 'react-router';
 import {deleteImageFromS3} from 'utilities/services';
 import {awsFormatDate, dateString} from 'utilities/time';
 import {v4 as uuidV4} from 'uuid';
-import {ListCommunitiesQuery, ListCommunitiesQueryVariables, UserPageState} from 'API';
-import {logError, updatePageState} from '@graphql/functions';
 
 const Community = ({}: {role: string}) => {
   const {clientKey, userLanguage} = useGlobalContext();
@@ -334,50 +335,52 @@ const Community = ({}: {role: string}) => {
         ? list
         : filteredList;
     return (
-      <ContentCard hasBackground={false} additionalClass=" space-y-12 p-6">
-        <div> {<FAB />}</div>
+      <ErrorBoundary componentName="CommonList">
+        <ContentCard hasBackground={false} additionalClass=" space-y-12 p-6">
+          <div> {<FAB />}</div>
 
-        {/* Error--1213 */}
-        <AnimatedContainer show={Boolean(error)}>
-          {error && (
+          {/* Error--1213 */}
+          <AnimatedContainer show={Boolean(error)}>
+            {error && (
+              <div className="flex items-center justify-center">
+                <p className="text-red-500 text-xs">{error}</p>
+              </div>
+            )}
+          </AnimatedContainer>
+
+          {/* Other Cards here */}
+
+          {!Boolean(error) && isLoading && !isFetched && (
             <div className="flex items-center justify-center">
-              <p className="text-red-500 text-xs">{error}</p>
+              <Loader animation withText="Loading cards..." className="w-auto" />
             </div>
           )}
-        </AnimatedContainer>
 
-        {/* Other Cards here */}
+          {!Boolean(error) &&
+            !isLoading &&
+            isFetched &&
+            data &&
+            data.length > 0 &&
+            data.map((card: ICommunityCard, idx: number) => (
+              <Card
+                onCardEdit={onCardEdit}
+                onDelete={onDelete}
+                key={idx}
+                cardDetails={card}
+              />
+            ))}
 
-        {!Boolean(error) && isLoading && !isFetched && (
-          <div className="flex items-center justify-center">
-            <Loader animation withText="Loading cards..." className="w-auto" />
-          </div>
-        )}
-
-        {!Boolean(error) &&
-          !isLoading &&
-          isFetched &&
-          data &&
-          data.length > 0 &&
-          data.map((card: ICommunityCard, idx: number) => (
-            <Card
-              onCardEdit={onCardEdit}
-              onDelete={onDelete}
-              key={idx}
-              cardDetails={card}
-            />
-          ))}
-
-        <AnimatedContainer show={data.length === 0 && isFetched}>
-          {data.length === 0 && isFetched && (
-            <div className="flex items-center justify-center">
-              <p className="text-gray-500 text-sm">
-                No community posts... Be the first to start the conversation
-              </p>
-            </div>
-          )}
-        </AnimatedContainer>
-      </ContentCard>
+          <AnimatedContainer show={data.length === 0 && isFetched}>
+            {data.length === 0 && isFetched && (
+              <div className="flex items-center justify-center">
+                <p className="text-gray-500 text-sm">
+                  No community posts... Be the first to start the conversation
+                </p>
+              </div>
+            )}
+          </AnimatedContainer>
+        </ContentCard>
+      </ErrorBoundary>
     );
   };
 
@@ -454,39 +457,41 @@ const Community = ({}: {role: string}) => {
   }
 
   return (
-    <DashboardContainer
-      showTitleBanner={false}
-      bannerImg={bannerImg}
-      bannerTitle={CommunityDict[userLanguage]['TITLE']}>
-      {/* ~~~~~~~~~~~~~CARDS MODAL STARTS~~~~~~~~~~~~~~~~~~~~~~~~~~ */}
-      <CardsModal
-        navState={navState}
-        setNavState={setNavState}
-        editMode={isCardEditMode}
-        cardDetails={cardForEdit}
-        functions={{
-          onSpotlightSubmit,
-          onAnnouncementSubmit,
-          onEventSubmit,
-          onCheckItOutSubmit
-        }}
-        instId={instId}
-        showCardsModal={showCardsModal}
-        setShowCardsModal={setShowCardsModal}
-      />
-      {/* ~~~~~~~~~~~~~CARDS MODAL ENDS~~~~~~~~~~~~~~~~~~~~~~~~~~ */}
-      <div className="px-5 2xl:px-0 lg:mx-auto lg:max-w-192 md:max-w-none 2xl:max-w-256">
-        <div className="flex flex-row my-0 w-full py-0 mb-4 justify-between">
-          <BreadCrums items={breadCrumsList} />
+    <ErrorBoundary componentName="Community">
+      <DashboardContainer
+        showTitleBanner={false}
+        bannerImg={bannerImg}
+        bannerTitle={CommunityDict[userLanguage]['TITLE']}>
+        {/* ~~~~~~~~~~~~~CARDS MODAL STARTS~~~~~~~~~~~~~~~~~~~~~~~~~~ */}
+        <CardsModal
+          navState={navState}
+          setNavState={setNavState}
+          editMode={isCardEditMode}
+          cardDetails={cardForEdit}
+          functions={{
+            onSpotlightSubmit,
+            onAnnouncementSubmit,
+            onEventSubmit,
+            onCheckItOutSubmit
+          }}
+          instId={instId}
+          showCardsModal={showCardsModal}
+          setShowCardsModal={setShowCardsModal}
+        />
+        {/* ~~~~~~~~~~~~~CARDS MODAL ENDS~~~~~~~~~~~~~~~~~~~~~~~~~~ */}
+        <div className="px-5 2xl:px-0 lg:mx-auto lg:max-w-192 md:max-w-none 2xl:max-w-256">
+          <div className="flex flex-row my-0 w-full py-0 mb-4 justify-between">
+            <BreadCrums items={breadCrumsList} />
+          </div>
         </div>
-      </div>
 
-      <div className="px-10">
-        <TitleBar />
+        <div className="px-10">
+          <TitleBar />
 
-        <CommonList />
-      </div>
-    </DashboardContainer>
+          <CommonList />
+        </div>
+      </DashboardContainer>
+    </ErrorBoundary>
   );
 };
 

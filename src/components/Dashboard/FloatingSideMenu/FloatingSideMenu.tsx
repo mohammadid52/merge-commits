@@ -218,7 +218,8 @@ const FloatingSideMenu = () => {
           }
         }),
         roomID: getRoomData.id,
-        syllabusLessonID: getRoomData.activeSyllabus
+        syllabusLessonID: getRoomData.activeSyllabus,
+        fromLesson: false
       };
 
       const newJournalData: any = await API.graphql(

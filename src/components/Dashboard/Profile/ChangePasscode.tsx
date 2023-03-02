@@ -10,6 +10,7 @@ import FormInput from 'atoms/Form/FormInput';
 import ErrorNote from '../Admin/UserManagement/ErrorNote';
 import SuccessMessage from '../Admin/UserManagement/SuccessMessage';
 import {UserPageState} from 'API';
+import {Error} from '@components/Atoms/Alerts/Info';
 
 interface ChangePasscodeProps {
   fromWhere?: string;
@@ -17,7 +18,6 @@ interface ChangePasscodeProps {
 }
 
 const ChangePasscode = ({fromWhere, handleForgotPasscode}: ChangePasscodeProps) => {
-  const [passToggle, setPassToggle] = useState(false);
   const [loading, setLoading] = useState<boolean>(false);
   const history = useHistory();
 
@@ -196,8 +196,8 @@ const ChangePasscode = ({fromWhere, handleForgotPasscode}: ChangePasscodeProps) 
   return (
     <div className={`h-full w-full ${fromWhere !== 'notebook' ? 'md:px-4 pt-4' : ''}`}>
       <div
-        className={`h-auto bg-white mb-4 ${
-          fromWhere !== 'notebook' ? ' border-l-0 border-gray-200' : ''
+        className={`h-auto  mb-4 ${
+          fromWhere !== 'notebook' ? ' border-l-0 border-gray-200 bg-white' : ''
         }`}>
         {fromWhere !== 'notebook' && (
           <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
@@ -215,10 +215,7 @@ const ChangePasscode = ({fromWhere, handleForgotPasscode}: ChangePasscodeProps) 
             {dashboardProfileDict[userLanguage]['CHANGE_PASSCODE']['INFO']}
           </div>
           <div className="w-full gap-4 h-auto flex flex-col justify-between items-center my-4">
-            <div
-              className={`w-full m-1 ${
-                fromWhere !== 'notebook' ? 'md:w-1/2' : 'md:w-8/12'
-              }`}>
+            <div className={`w-full m-1 ${fromWhere !== 'notebook' ? 'md:w-1/2' : ''}`}>
               <div className="relative">
                 <FormInput
                   label={
@@ -230,6 +227,7 @@ const ChangePasscode = ({fromWhere, handleForgotPasscode}: ChangePasscodeProps) 
                   id="oldPassword"
                   type={'password'}
                   name="password"
+                  className={`w-full`}
                   value={input.oldPassword}
                   onChange={handleChange}
                   onKeyDown={handleEnter}
@@ -237,10 +235,7 @@ const ChangePasscode = ({fromWhere, handleForgotPasscode}: ChangePasscodeProps) 
               </div>
             </div>
 
-            <div
-              className={`w-full m-1 ${
-                fromWhere !== 'notebook' ? 'md:w-1/2' : 'md:w-8/12'
-              }`}>
+            <div className={`w-full m-1 ${fromWhere !== 'notebook' ? 'md:w-1/2' : ''}`}>
               <div className="relative">
                 <FormInput
                   label={
@@ -250,6 +245,7 @@ const ChangePasscode = ({fromWhere, handleForgotPasscode}: ChangePasscodeProps) 
                     dashboardProfileDict[userLanguage]['CHANGE_PASSCODE']['NEW_PASS']
                   }
                   type={'password'}
+                  className={`w-full`}
                   id="newPasscode"
                   name="passcode"
                   value={input.newPasscode}
@@ -263,7 +259,7 @@ const ChangePasscode = ({fromWhere, handleForgotPasscode}: ChangePasscodeProps) 
       <div className="w-full flex justify-center items-center">
         {message?.show && message?.type === 'error' ? (
           <div>
-            <ErrorNote note={message?.message} />
+            <Error message={message?.message} />
           </div>
         ) : null}
         {message?.show && message?.type === 'success' ? (

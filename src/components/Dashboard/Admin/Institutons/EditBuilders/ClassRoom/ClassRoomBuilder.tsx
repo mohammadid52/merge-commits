@@ -284,7 +284,7 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
   }, [roomData?.institute?.id]);
 
   useEffect(() => {
-    if (curricularList.length && selectedCurrID) {
+    if (curricularList && curricularList?.length && selectedCurrID) {
       filterCurricularData(selectedCurrID);
     }
   }, [curricularList]);

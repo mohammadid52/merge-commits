@@ -20,7 +20,7 @@ import {
 import {IoIosJournal} from 'react-icons/io';
 import {IconContext} from 'react-icons/lib';
 import {stringToHslColor} from 'utilities/strings';
-import {filter} from 'lodash';
+import {filter, orderBy} from 'lodash';
 import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 
 export interface ITabParentProps {
@@ -119,13 +119,16 @@ const TabView = ({
       : [];
 
   const filteredClassContent = filter(allExerciseData, ['roomID', sectionRoomID]);
-  const removeDuplicates = (arr: any) => {
+  const removeDuplicatesAndSort = (arr: any) => {
     let result: any[] = [];
     arr.forEach((item: any) => {
       if (!result.find((i: any) => i.id === item.id)) {
         result.push(item);
       }
     });
+
+    result = orderBy(result, ['updatedAt'], 'desc');
+
     return result;
   };
 
@@ -154,7 +157,7 @@ const TabView = ({
       subSection={subSection}
       createTemplate={createTemplate}
       currentContentObj={currentContentObj}
-      content={removeDuplicates(pickClassContent())}
+      content={removeDuplicatesAndSort(pickClassContent())}
       classNotebook={classNotebook}
       allUniversalJournalData={allUniversalJournalData}
       setAllUniversalJournalData={setAllUniversalJournalData}

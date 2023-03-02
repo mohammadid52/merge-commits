@@ -4,6 +4,7 @@ import {BsFillInfoCircleFill} from 'react-icons/bs';
 import {setLocalStorageData} from 'utilities/localStorage';
 
 import useAuth from '@customHooks/useAuth';
+import {logError} from '@graphql/functions';
 import {getAsset} from 'assets';
 import SectionTitleV3 from 'atoms/SectionTitleV3';
 import InformationalWalkThrough from 'components/Dashboard/Admin/Institutons/InformationalWalkThrough/InformationalWalkThrough';
@@ -16,27 +17,32 @@ import StudentsTiles from './StudentsTiles';
 import TeacherRows from './TeacherRows';
 
 export const findRooms = (teacherAuthID: string, allRooms: any[]) => {
-  let rooms: any[] = [];
-  let roomIds: any[] = [];
-  if (allRooms && allRooms.length > 0) {
-    allRooms.forEach((room: any) => {
-      if (room.teacherAuthID === teacherAuthID && !roomIds.includes(room.id)) {
-        rooms.push(room);
-        roomIds.push(room.id);
-      } else {
-        if (room.coTeachers.items > 0) {
-          const idx = room.coTeachers.items.findIndex(
-            (d: any) => d.teacher.authId === teacherAuthID
-          );
-          if (idx > -1 && !roomIds.includes(room.id)) {
-            rooms.push(room);
-            roomIds.push(room.id);
+  try {
+    let rooms: any[] = [];
+    let roomIds: any[] = [];
+
+    if (allRooms && allRooms?.length > 0) {
+      allRooms.forEach((room: any) => {
+        if (room.teacherAuthID === teacherAuthID && !roomIds.includes(room.id)) {
+          rooms.push(room);
+          roomIds.push(room.id);
+        } else {
+          if (room.coTeachers.items > 0) {
+            const idx = room.coTeachers.items.findIndex(
+              (d: any) => d.teacher.authId === teacherAuthID
+            );
+            if (idx > -1 && !roomIds.includes(room.id)) {
+              rooms.push(room);
+              roomIds.push(room.id);
+            }
           }
         }
-      }
-    });
+      });
+    }
+    return rooms;
+  } catch (error) {
+    console.error(error);
   }
-  return rooms;
 };
 
 export interface ModifiedListProps {
@@ -73,7 +79,7 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
       if (state.currentPage !== 'home') {
         // dispatch({ type: 'UPDATE_CURRENTPAGE', payload: { data: 'lesson-planner' } });
       }
-      if (state.activeRoom && state.activeRoom.length > 0) {
+      if (state.activeRoom && state?.activeRoom?.length > 0) {
         dispatch({type: 'UPDATE_ACTIVEROOM', payload: {data: null}});
       }
     }
@@ -137,8 +143,17 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
           } else {
             // find rooms that has this teacher;
             // it could be a teacher or co teacher
-            const rooms = findRooms(teacherObj.authId, allRooms);
-            return [...acc, {...teacherObj, room: dataObj, rooms}];
+            try {
+              const rooms = findRooms(teacherObj.authId, allRooms);
+              return [...acc, {...teacherObj, room: dataObj, rooms}];
+            } catch (error) {
+              console.error(error);
+              logError(
+                error,
+                {authId: teacherObj.authId, email: teacherObj.email},
+                'HomeForTeachers #getTeacherList'
+              );
+            }
           }
         }
         return acc;
@@ -218,7 +233,7 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
 
     let uniqIds: string[] = [];
 
-    homeData[0].class?.rooms?.items.forEach(async (_item: any, index: number) => {
+    homeData[0]?.class?.rooms?.items.forEach(async (_item: any, index: number) => {
       const curriculum = _item.curricula?.items[0]?.curriculum;
       if (curriculum) {
         const imagePath = curriculum?.image;

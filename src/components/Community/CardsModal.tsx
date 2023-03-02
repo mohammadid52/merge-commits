@@ -1,3 +1,4 @@
+import ErrorBoundary from '@components/Error/ErrorBoundary';
 import Modal from 'atoms/Modal';
 import Announcements from 'components/Community/Cards/Announcement';
 import CheckItOut from 'components/Community/Cards/CheckItOut';
@@ -142,82 +143,84 @@ const CardsModal = ({
   };
 
   return (
-    <div style={{zIndex: 99999}}>
-      {showCardsModal && (
-        <Modal
-          showHeader
-          closeAction={onCancel}
-          showFooter={false}
-          title={getModalHeader(navState)}>
-          <div className="">
-            {/* Showing all items in this block */}
-            <AnimatedContainer show={onInit} animationType="translateY">
-              {onInit && (
-                <div
-                  className={`grid grid-cols-1 ${
-                    cardList.length > 1 ? 'sm:grid-cols-2' : ''
-                  } gap-4   px-2 my-4`}>
-                  {cardList.map((content, idx) => (
-                    <Item setNavState={setNavState} key={idx} content={content} />
-                  ))}
-                </div>
-              )}
-            </AnimatedContainer>
-            {/*  up --- Showing all items in this block --- up */}
+    <ErrorBoundary componentName="CardsModal">
+      <div style={{zIndex: 99999}}>
+        {showCardsModal && (
+          <Modal
+            showHeader
+            closeAction={onCancel}
+            showFooter={false}
+            title={getModalHeader(navState)}>
+            <div className="">
+              {/* Showing all items in this block */}
+              <AnimatedContainer show={onInit} animationType="translateY">
+                {onInit && (
+                  <div
+                    className={`grid grid-cols-1 ${
+                      cardList.length > 1 ? 'sm:grid-cols-2' : ''
+                    } gap-4   px-2 my-4`}>
+                    {cardList.map((content, idx) => (
+                      <Item setNavState={setNavState} key={idx} content={content} />
+                    ))}
+                  </div>
+                )}
+              </AnimatedContainer>
+              {/*  up --- Showing all items in this block --- up */}
 
-            <AnimatedContainer show={onSpotlight} animationType="translateY">
-              {onSpotlight && (
-                <div className="">
-                  <Spotlight
-                    onSubmit={(input: ISpotlightInput, cb) =>
-                      functions.onSpotlightSubmit(input, cb)
-                    }
-                    instId={instId}
-                    {...commonProps}
-                  />
-                </div>
-              )}
-            </AnimatedContainer>
-            <AnimatedContainer show={onAnnouncement} animationType="translateY">
-              {onAnnouncement && (
-                <div className="">
-                  <Announcements
-                    onSubmit={(input: IAnnouncementInput, cb) =>
-                      functions.onAnnouncementSubmit(input, cb)
-                    }
-                    {...commonProps}
-                  />
-                </div>
-              )}
-            </AnimatedContainer>
-            <AnimatedContainer show={onEvent} animationType="translateY">
-              {onEvent && (
-                <div className="">
-                  <Event
-                    onSubmit={(input: IEventInput, cb) =>
-                      functions.onEventSubmit(input, cb)
-                    }
-                    {...commonProps}
-                  />
-                </div>
-              )}
-            </AnimatedContainer>
-            <AnimatedContainer show={onCheckItOut} animationType="translateY">
-              {onCheckItOut && (
-                <div className="">
-                  <CheckItOut
-                    onSubmit={(input: IEventInput, cb) =>
-                      functions.onCheckItOutSubmit(input, cb)
-                    }
-                    {...commonProps}
-                  />
-                </div>
-              )}
-            </AnimatedContainer>
-          </div>
-        </Modal>
-      )}
-    </div>
+              <AnimatedContainer show={onSpotlight} animationType="translateY">
+                {onSpotlight && (
+                  <div className="">
+                    <Spotlight
+                      onSubmit={(input: ISpotlightInput, cb) =>
+                        functions.onSpotlightSubmit(input, cb)
+                      }
+                      instId={instId}
+                      {...commonProps}
+                    />
+                  </div>
+                )}
+              </AnimatedContainer>
+              <AnimatedContainer show={onAnnouncement} animationType="translateY">
+                {onAnnouncement && (
+                  <div className="">
+                    <Announcements
+                      onSubmit={(input: IAnnouncementInput, cb) =>
+                        functions.onAnnouncementSubmit(input, cb)
+                      }
+                      {...commonProps}
+                    />
+                  </div>
+                )}
+              </AnimatedContainer>
+              <AnimatedContainer show={onEvent} animationType="translateY">
+                {onEvent && (
+                  <div className="">
+                    <Event
+                      onSubmit={(input: IEventInput, cb) =>
+                        functions.onEventSubmit(input, cb)
+                      }
+                      {...commonProps}
+                    />
+                  </div>
+                )}
+              </AnimatedContainer>
+              <AnimatedContainer show={onCheckItOut} animationType="translateY">
+                {onCheckItOut && (
+                  <div className="">
+                    <CheckItOut
+                      onSubmit={(input: IEventInput, cb) =>
+                        functions.onCheckItOutSubmit(input, cb)
+                      }
+                      {...commonProps}
+                    />
+                  </div>
+                )}
+              </AnimatedContainer>
+            </div>
+          </Modal>
+        )}
+      </div>
+    </ErrorBoundary>
   );
 };
 

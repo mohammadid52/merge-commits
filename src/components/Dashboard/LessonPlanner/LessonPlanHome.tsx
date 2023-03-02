@@ -1,3 +1,4 @@
+import ErrorBoundary from '@components/Error/ErrorBoundary';
 import React from 'react';
 import Classroom from '../Classroom/Classroom';
 import {DashboardProps} from '../Dashboard';
@@ -39,23 +40,25 @@ const LessonPlanHome: React.FC<LessonPlanHome> = (props: LessonPlanHome) => {
   } = props;
 
   return (
-    <Classroom
-      homeData={homeData}
-      setClassroomCurriculum={setClassroomCurriculum}
-      classroomCurriculum={classroomCurriculum}
-      handleRoomSelection={handleRoomSelection}
-      activeRoomInfo={activeRoomInfo}
-      setActiveRoomInfo={setActiveRoomInfo}
-      currentPage={currentPage}
-      setCurrentPage={setCurrentPage}
-      isTeacher={true}
-      visibleLessonGroup={visibleLessonGroup}
-      setVisibleLessonGroup={setVisibleLessonGroup}
-      lessonLoading={lessonLoading}
-      setLessonLoading={setLessonLoading}
-      syllabusLoading={syllabusLoading}
-      setSyllabusLoading={setSyllabusLoading}
-    />
+    <ErrorBoundary componentName="LessonPlanHome">
+      <Classroom
+        homeData={homeData}
+        setClassroomCurriculum={setClassroomCurriculum}
+        classroomCurriculum={classroomCurriculum}
+        handleRoomSelection={handleRoomSelection}
+        activeRoomInfo={activeRoomInfo}
+        setActiveRoomInfo={setActiveRoomInfo}
+        currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
+        isTeacher={true}
+        visibleLessonGroup={visibleLessonGroup}
+        setVisibleLessonGroup={setVisibleLessonGroup}
+        lessonLoading={lessonLoading}
+        setLessonLoading={setLessonLoading}
+        syllabusLoading={syllabusLoading}
+        setSyllabusLoading={setSyllabusLoading}
+      />
+    </ErrorBoundary>
   );
 };
 

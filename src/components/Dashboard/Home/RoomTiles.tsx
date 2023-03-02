@@ -217,10 +217,12 @@ const RoomTiles = (props: {
         ) : finalList.length > 0 ? (
           <div className="relative">
             <div className="relative max-w-7xl mx-auto  px-6 mt-4">
-              <h6 className="w-auto text-gray-600">
-                Showing {showMore || searchInput.isActive ? finalList.length : 3} out of{' '}
-                {finalList.length}
-              </h6>
+              {finalList.length > 3 && (
+                <h6 className="w-auto text-gray-600">
+                  Showing {showMore || searchInput.isActive ? finalList.length : 3} out of{' '}
+                  {finalList.length}
+                </h6>
+              )}
               <div
                 data-cy="classroom-list"
                 className={`mt-0 max-w-lg mx-auto pt-6 pb-6 grid gap-5 lg:grid-cols-3 md:grid-cols-2`}>

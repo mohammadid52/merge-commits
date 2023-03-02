@@ -2,7 +2,6 @@ import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import Filters, {SortType} from '@components/Atoms/Filters';
 import Highlighted from '@components/Atoms/Highlighted';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
-import CommonActionsBtns from '@components/MicroComponents/CommonActionsBtns';
 import CourseName from '@components/MicroComponents/CourseName';
 import CourseUnits from '@components/MicroComponents/CourseUnits';
 import ModalPopUp from '@components/Molecules/ModalPopUp';
@@ -327,6 +326,7 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
 
   const dataList = map(finalList, (item: any, index: number) => ({
     no: index + 1,
+    onClick: () => editCurrentCurricular(item.id),
     courseName: (
       <CourseName
         item={item}
@@ -346,15 +346,15 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
     ),
     courseType: item.type || '-',
     courseUnits: <CourseUnits item={item} redirectToUnit={redirectToUnit} />,
-    status: <Status useDefault status={item.status} />,
-    actions: (
-      <CommonActionsBtns
-        button1Label="View"
-        isDeletable={checkIfRemovable(item)}
-        button1Action={() => editCurrentCurricular(item.id)}
-        button2Action={() => handleToggleDelete(item.name, item)}
-      />
-    )
+    status: <Status useDefault status={item.status} />
+    // actions: (
+    //   <CommonActionsBtns
+    //     button1Label="View"
+    //     isDeletable={checkIfRemovable(item)}
+    //     button1Action={() => editCurrentCurricular(item.id)}
+    //     button2Action={() => handleToggleDelete(item.name, item)}
+    //   />
+    // )
   }));
 
   const tableConfig = {
@@ -364,8 +364,8 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
       isSuperAdmin && InstitueCurriculum[userLanguage]['INSTITUTION_NAME'],
       InstitueCurriculum[userLanguage]['COURSE_TYPE'],
       InstitueCurriculum[userLanguage]['UNITS'],
-      InstitueRomms[userLanguage]['STATUS'],
-      InstitueCurriculum[userLanguage]['ACTION']
+      InstitueRomms[userLanguage]['STATUS']
+      // InstitueCurriculum[userLanguage]['ACTION']
     ],
     dataList,
     config: {

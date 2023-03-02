@@ -69,6 +69,7 @@ const LessonHeaderBar = ({
   >('updatePersonLessonsData');
 
   const handleNotebookSave = () => {
+    console.log('handleNotebookSave');
     createJournalData();
 
     if (isLesson) {

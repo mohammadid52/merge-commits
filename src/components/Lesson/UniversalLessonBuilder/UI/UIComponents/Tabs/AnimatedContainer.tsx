@@ -1,3 +1,4 @@
+import ErrorBoundary from '@components/Error/ErrorBoundary';
 import React from 'react';
 
 const AnimatedContainer = ({
@@ -44,16 +45,18 @@ const AnimatedContainer = ({
     }
   };
   return (
-    <div
-      style={{transitionDelay: delay, ...style}}
-      className={`
+    <ErrorBoundary componentName="AnimatedContainer">
+      <div
+        style={{transitionDelay: delay, ...style}}
+        className={`
         ${genAnimation()}
         transition-all  transform
         duration-${duration}
         ${fixWidth ? (show ? className : 'w-0') : className}
       `}>
-      {children}
-    </div>
+        {children}
+      </div>
+    </ErrorBoundary>
   );
 };
 
