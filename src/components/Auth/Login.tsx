@@ -331,6 +331,7 @@ const Login = ({updateAuthState}: LoginProps) => {
         email: auth.email,
         password: auth.password
       });
+      setShowPasswordField(true);
     }
   };
 

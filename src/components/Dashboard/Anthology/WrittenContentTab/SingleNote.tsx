@@ -163,7 +163,7 @@ const SingleNote = (props: any) => {
               </div>
             ) : (
               <div className="flex items-center justify-between">
-                <div className="w-auto flex items-center justify-start">
+                <div className="w-auto flex gap-2 items-center justify-start">
                   <div
                     className={`${theme.btn[themeColor]}  w-auto py-1 p-2 rounded-md transition-all duration-300 text-sm cursor-pointer mt-4 mb-2`}
                     onClick={() =>

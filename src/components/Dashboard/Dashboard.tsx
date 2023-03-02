@@ -249,6 +249,7 @@ const Dashboard = (props: DashboardProps) => {
 
       setUser(user.data.getPerson);
     } catch (error) {
+      console.log('Removing cookies - Something went wrong');
       if (!userEmail && !userAuthId) {
         removeCookie('auth', {path: '/'});
         dispatch({type: 'CLEANUP'});

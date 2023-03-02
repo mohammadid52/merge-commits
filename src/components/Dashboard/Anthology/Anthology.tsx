@@ -1,4 +1,5 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import {Error} from '@components/Atoms/Alerts/Info';
 import ErrorBoundary from '@components/Error/ErrorBoundary';
 import {useQuery} from '@customHooks/urlParam';
 import useAuth from '@customHooks/useAuth';
@@ -778,33 +779,21 @@ const Anthology = ({
   const previousForgot = usePrevious(forgotPrompt);
 
   const handlePrivateSectionAccess = async () => {
-    if (showPasscodeEntry) {
-      try {
-        setAccessMessage({message: 'Verifying', textClass: 'text-indigo-500'});
-        const personPasscode: any = await API.graphql(
-          graphqlOperation(customQueries.getPersonPasscode, {
-            email: state?.user?.email,
-            authId: state?.user?.authId
-          })
-        );
-        const unset = personPasscode?.data?.getPerson?.passcode === null;
-        const verified = personPasscode?.data?.getPerson?.passcode === passcodeInput;
+    if (passcodeInput) {
+      if (showPasscodeEntry) {
+        try {
+          setAccessMessage({message: 'Verifying', textClass: 'text-indigo-500'});
+          const personPasscode: any = await API.graphql(
+            graphqlOperation(customQueries.getPersonPasscode, {
+              email: state?.user?.email,
+              authId: state?.user?.authId
+            })
+          );
+          const person = personPasscode?.data?.getPerson;
+          const unset = person?.passcode === null;
+          const verified = person?.passcode === passcodeInput;
 
-        if (verified) {
-          setMainSection('Private');
-          setSectionRoomID('private');
-          setSectionTitle(`Private Notebook`);
-          setSubSection('Journal');
-          setTab(0);
-          setShowPasscodeEntry(false);
-          setPasscodeInput('');
-          setAccessMessage({message: '', textClass: ''});
-        } else if (unset) {
-          setAccessMessage({
-            message: 'Please set a passcode!',
-            textClass: 'text-blue-500'
-          });
-          setTimeout(() => {
+          if (verified) {
             setMainSection('Private');
             setSectionRoomID('private');
             setSectionTitle(`Private Notebook`);
@@ -813,15 +802,30 @@ const Anthology = ({
             setShowPasscodeEntry(false);
             setPasscodeInput('');
             setAccessMessage({message: '', textClass: ''});
-          }, 1000);
-        } else {
-          setAccessMessage({message: 'Passcode Incorrect', textClass: 'text-red-500'});
+          } else if (unset) {
+            setAccessMessage({
+              message: 'Please set a passcode!',
+              textClass: 'text-blue-500'
+            });
+            handleForgotPasscode();
+            // setTimeout(() => {
+            //   setMainSection('Private');
+            //   setSectionRoomID('private');
+            //   setSectionTitle(`Private Notebook`);
+            //   setSubSection('Journal');
+            //   setTab(0);
+            //   setShowPasscodeEntry(false);
+            //   setPasscodeInput('');
+            //   setAccessMessage({message: '', textClass: ''});
+            // }, 1000);
+          } else {
+            setAccessMessage({message: 'Passcode Incorrect', textClass: 'text-red-500'});
+          }
+        } catch (e) {
+          console.error('handlePrivateSectionAccess - ', e);
         }
-      } catch (e) {
-        console.error('handlePrivateSectionAccess - ', e);
       }
-    }
-    {
+    } else {
       setAccessMessage({
         message: 'Passcode field cannot be empty',
         textClass: 'text-red-500'
@@ -896,11 +900,16 @@ const Anthology = ({
                   ? 'This Notebook is Passcode Protected'
                   : 'Change Your Passcode!'
               }`}
+              width="w-132"
               showHeader={true}
               showHeaderBorder={false}
               showFooter={false}
               scrollHidden={true}
-              closeAction={() => setShowPasscodeEntry(false)}>
+              closeAction={() => {
+                setShowPasscodeEntry(false);
+                setForgotPrompt(false);
+                setAccessMessage({message: ''});
+              }}>
               <div className=" flex justify-center">
                 {!forgotPrompt ? (
                   <div>
@@ -914,14 +923,12 @@ const Anthology = ({
                       id="passcode"
                       name="passcode"
                       label={'Enter Your Passcode:'}
-                      placeHolder={''}
+                      placeHolder={'****'}
                       className={`w-full my-2`}
                       isRequired
                     />
-                    {accessMessage.message !== '' && (
-                      <p className={`${accessMessage.textClass} text-center text-xs`}>
-                        {accessMessage.message}
-                      </p>
+                    {Boolean(accessMessage.message) && (
+                      <Error message={accessMessage.message} />
                     )}
                     <Buttons
                       dataCy="notebook-passcode-submit"

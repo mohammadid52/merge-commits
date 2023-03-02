@@ -28,9 +28,12 @@ const MainRouter: React.FC = () => {
     if (authState === 'loggedIn') {
       checkForUserInactivity();
     } else {
-      removeCookie('auth', {path: '/'});
-      dispatch({type: 'CLEANUP'});
-      sessionStorage.removeItem('accessToken');
+      if (authState !== 'loading') {
+        console.log('Removing cookies since not logged in');
+        removeCookie('auth', {path: '/'});
+        dispatch({type: 'CLEANUP'});
+        sessionStorage.removeItem('accessToken');
+      }
     }
   }, [authState]);
 
