@@ -11,7 +11,6 @@ import {getImageFromS3} from 'utilities/services';
 import HeroBanner from '../../Header/HeroBanner';
 import {ClassroomControlProps} from '../Dashboard';
 import HeaderTextBar from '../HeaderTextBar/HeaderTextBar';
-import {findRooms} from './HomeForTeachers';
 import RoomTiles from './RoomTiles';
 import StudentsTiles from './StudentsTiles';
 import TeacherRows from './TeacherRows';
@@ -228,7 +227,7 @@ const Home = (props: ClassroomControlProps) => {
   }, [homeData]);
 
   return (
-    <>
+    <ErrorBoundary componentName="Home">
       {homeData ? (
         <>
           <div>
@@ -297,7 +296,7 @@ const Home = (props: ClassroomControlProps) => {
           </div>
         </>
       ) : null}
-    </>
+    </ErrorBoundary>
   );
 };
 

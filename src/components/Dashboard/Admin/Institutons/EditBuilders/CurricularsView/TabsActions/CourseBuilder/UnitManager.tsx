@@ -11,19 +11,16 @@ import * as mutations from 'graphql/mutations';
 
 import Buttons from '@components/Atoms/Buttons';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
-import {Empty} from '@components/Dashboard/Admin/LessonsBuilder/StepActionComponent/LearningEvidence/CourseMeasurementsCard';
-import CourseAction from '@components/MicroComponents/CourseAction';
+import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
+import CommonActionsBtns from '@components/MicroComponents/CommonActionsBtns';
 import Table from '@components/Molecules/Table';
 import {BUTTONS} from '@dictionary/dictionary.iconoclast';
 import {RoomStatus} from 'API';
 import AddButton from 'atoms/Buttons/AddButton';
 import Selector from 'atoms/Form/Selector';
-import Loader from 'atoms/Loader';
 import {map} from 'lodash';
 import ModalPopUp from 'molecules/ModalPopUp';
 import {reorder} from 'utilities/strings';
-import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
-import CommonActionsBtns from '@components/MicroComponents/CommonActionsBtns';
 
 interface UIMessages {
   show: boolean;
@@ -258,7 +255,6 @@ const UnitManager = ({
   };
 
   const handleToggleDelete = (targetString?: string, itemObj?: any) => {
-    console.log('dfdf');
     if (!deleteModal.show) {
       setDeleteModal({
         show: true,

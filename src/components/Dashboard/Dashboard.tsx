@@ -315,16 +315,19 @@ const Dashboard = (props: DashboardProps) => {
           email: email
         }
       };
-      const dashboardDataFetch = await API.graphql(
+      const dashboardDataFetch: any = await API.graphql(
         graphqlOperation(customQueries.getDashboardData, queryObj.valueObj)
       );
 
       // @ts-ignore
-      let arrayOfResponseObjects = await dashboardDataFetch?.data.getPerson.classes.items;
+      let arrayOfResponseObjects =
+        (await dashboardDataFetch?.data?.getPerson?.classes?.items) || [];
 
-      arrayOfResponseObjects = arrayOfResponseObjects.filter(
-        (item: any) => item.class !== null
-      );
+      if (arrayOfResponseObjects && arrayOfResponseObjects.length) {
+        arrayOfResponseObjects = arrayOfResponseObjects.filter(
+          (item: any) => item.class !== null
+        );
+      }
 
       setHomeData(arrayOfResponseObjects);
     } catch (error) {
@@ -719,23 +722,27 @@ const Dashboard = (props: DashboardProps) => {
 
   const HomeSwitch = () =>
     !isStudent ? (
-      <HomeForTeachers
-        homeData={homeDataForTeachers}
-        isTeacher={isTeacher}
-        activeRoomInfo={activeRoomInfo}
-        setActiveRoomInfo={setActiveRoomInfo}
-        handleRoomSelection={handleRoomSelection}
-        roomsLoading={roomsLoading}
-      />
+      <ErrorBoundary componentName="HomeForTeachers">
+        <HomeForTeachers
+          homeData={homeDataForTeachers}
+          isTeacher={isTeacher}
+          activeRoomInfo={activeRoomInfo}
+          setActiveRoomInfo={setActiveRoomInfo}
+          handleRoomSelection={handleRoomSelection}
+          roomsLoading={roomsLoading}
+        />
+      </ErrorBoundary>
     ) : (
-      <Home
-        homeData={homeData}
-        classList={classList}
-        activeRoomInfo={activeRoomInfo}
-        setActiveRoomInfo={setActiveRoomInfo}
-        handleRoomSelection={handleRoomSelection}
-        roomsLoading={roomsLoading}
-      />
+      <ErrorBoundary componentName="Home">
+        <Home
+          homeData={homeData}
+          classList={classList}
+          activeRoomInfo={activeRoomInfo}
+          setActiveRoomInfo={setActiveRoomInfo}
+          handleRoomSelection={handleRoomSelection}
+          roomsLoading={roomsLoading}
+        />
+      </ErrorBoundary>
     );
 
   // check if url contains game-changers

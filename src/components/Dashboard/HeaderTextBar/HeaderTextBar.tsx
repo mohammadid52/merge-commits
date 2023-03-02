@@ -3,11 +3,13 @@ import React, {ReactNode, useEffect} from 'react';
 
 const HeaderTextBar = ({children}: {children: ReactNode}) => {
   useEffect(() => {
-    gsap.from('.header-text-bar', {
-      opacity: 0,
-      delay: 1,
-      duration: 0.5
-    });
+    setTimeout(() => {
+      gsap.from('.header-text-bar', {
+        opacity: 0,
+        delay: 1,
+        duration: 0.5
+      });
+    }, 300);
   }, []);
   return (
     <div

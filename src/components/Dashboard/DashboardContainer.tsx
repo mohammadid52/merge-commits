@@ -1,3 +1,4 @@
+import ErrorBoundary from '@components/Error/ErrorBoundary';
 import {API, graphqlOperation} from 'aws-amplify';
 import InformationalWalkThrough from 'components/Dashboard/Admin/Institutons/InformationalWalkThrough/InformationalWalkThrough';
 import HeaderTextBar from 'components/Dashboard/HeaderTextBar/HeaderTextBar';
@@ -71,7 +72,7 @@ const DashboardContainer = ({
   const [openWalkThroughModal, setOpenWalkThroughModal] = useState(false);
 
   return (
-    <>
+    <ErrorBoundary componentName="DashboardContainer">
       <div className={`flex flex-row`}>
         <div>
           <HeroBanner imgUrl={bannerImg} title={bannerTitle} />
@@ -108,7 +109,7 @@ const DashboardContainer = ({
         open={openWalkThroughModal}
         onCancel={() => setOpenWalkThroughModal(false)}
       />
-    </>
+    </ErrorBoundary>
   );
 };
 

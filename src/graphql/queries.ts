@@ -755,11 +755,7 @@ export const getStaff = /* GraphQL */ `
   }
 `;
 export const listStaff = /* GraphQL */ `
-  query ListStaff(
-    $filter: ModelStaffFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
+  query ListStaff($filter: ModelStaffFilterInput, $limit: Int, $nextToken: String) {
     listStaff(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
@@ -1073,11 +1069,7 @@ export const getRoom = /* GraphQL */ `
   }
 `;
 export const listRooms = /* GraphQL */ `
-  query ListRooms(
-    $filter: ModelRoomFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
+  query ListRooms($filter: ModelRoomFilterInput, $limit: Int, $nextToken: String) {
     listRooms(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
@@ -1408,11 +1400,7 @@ export const listClassroomGroupStudents = /* GraphQL */ `
     $limit: Int
     $nextToken: String
   ) {
-    listClassroomGroupStudents(
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
+    listClassroomGroupStudents(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
         classRoomGroupID
@@ -2249,11 +2237,7 @@ export const getClass = /* GraphQL */ `
   }
 `;
 export const listClasses = /* GraphQL */ `
-  query ListClasses(
-    $filter: ModelClassFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
+  query ListClasses($filter: ModelClassFilterInput, $limit: Int, $nextToken: String) {
     listClasses(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
@@ -3299,11 +3283,7 @@ export const getRoomMsgs = /* GraphQL */ `
   }
 `;
 export const listRoomMsgs = /* GraphQL */ `
-  query ListRoomMsgs(
-    $filter: ModelRoomMsgsFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
+  query ListRoomMsgs($filter: ModelRoomMsgsFilterInput, $limit: Int, $nextToken: String) {
     listRoomMsgs(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
@@ -3601,11 +3581,7 @@ export const listAnthologyComments = /* GraphQL */ `
     $limit: Int
     $nextToken: String
   ) {
-    listAnthologyComments(
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
+    listAnthologyComments(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
         text
@@ -3933,7 +3909,6 @@ export const getPersonLocation = /* GraphQL */ `
           institutionID
           type
           name
-          roomId
           createdAt
           updatedAt
         }
@@ -6835,11 +6810,7 @@ export const listUniversalSyllabusLessons = /* GraphQL */ `
     $limit: Int
     $nextToken: String
   ) {
-    listUniversalSyllabusLessons(
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
+    listUniversalSyllabusLessons(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
         syllabusID
@@ -6994,11 +6965,7 @@ export const listUniversalLessonFeedbacks = /* GraphQL */ `
     $limit: Int
     $nextToken: String
   ) {
-    listUniversalLessonFeedbacks(
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
+    listUniversalLessonFeedbacks(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
         syllabusLessonID
@@ -7132,11 +7099,7 @@ export const listStudentConnections = /* GraphQL */ `
     $limit: Int
     $nextToken: String
   ) {
-    listStudentConnections(
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
+    listStudentConnections(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         fromEmail
         fromAuthID

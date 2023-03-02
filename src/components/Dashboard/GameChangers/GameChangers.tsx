@@ -23,6 +23,7 @@ import {useHistory, useRouteMatch} from 'react-router';
 import {updatePageState} from '@graphql/functions';
 import {UserPageState} from 'API';
 import useAuth from '@customHooks/useAuth';
+import ErrorBoundary from '@components/Error/ErrorBoundary';
 
 const GameChangers = () => {
   const {
@@ -76,69 +77,59 @@ const GameChangers = () => {
   const duration = '1000';
 
   return (
-    <div className="bg-black h-screen w-screen overflow-y-auto">
-      {/* Info tab */}
-      <InfoTab howToList={howToList} infoText={infoText} />
-      {/* Info tab ends >----< */}
+    <ErrorBoundary componentName="GameChangers">
+      <div className="bg-black h-screen w-screen overflow-y-auto">
+        {/* Info tab */}
+        <InfoTab howToList={howToList} infoText={infoText} />
+        {/* Info tab ends >----< */}
 
-      <div className=" w-full flex flex-col items-center justify-center h-full">
-        {/* <AnimatedContainer
-          duration={duration}
-          animationType={'opacity'}
-          show={selectedCard === null}
-          className={`${selectedCard === null ? ' w-auto flex items-center ' : ''} `}>
-          {selectedCard === null && (
-            <h1 className="text-white mt-12 mb-6  w-auto text-xl tracking-wide font-normal">
-              <span className="font-semibold w-auto">Select</span> Game Changer
-            </h1>
-          )}
-        </AnimatedContainer> */}
-
-        <AnimatedContainer
-          duration={'700'}
-          animationType={'scale'}
-          show={selectedCard === null}>
-          {selectedCard === null && (
-            <Flickity
-              className={'carousel'}
-              elementType={'div'}
-              options={{
-                initialIndex: initialIndex,
-                pageDots: false,
-                selectedAttraction: 0.03,
-                friction: 0.15
-              }}
-              disableImagesLoaded={false}>
-              {cardsList.map((card) => (
-                <Card
-                  key={card.id}
-                  selected={selectedCard === card.id}
+        <div className=" w-full flex flex-col items-center justify-center h-full">
+          <AnimatedContainer
+            duration={'700'}
+            animationType={'scale'}
+            show={selectedCard === null}>
+            {selectedCard === null && (
+              <Flickity
+                className={'carousel'}
+                elementType={'div'}
+                options={{
+                  initialIndex: initialIndex,
+                  pageDots: false,
+                  selectedAttraction: 0.03,
+                  friction: 0.15
+                }}
+                disableImagesLoaded={false}>
+                {cardsList.map((card) => (
+                  <Card
+                    key={card.id}
+                    selected={selectedCard === card.id}
+                    onClick={onClick}
+                    card={card}
+                  />
+                ))}
+              </Flickity>
+            )}
+          </AnimatedContainer>
+          <AnimatedContainer
+            duration={duration}
+            animationType={animation}
+            className=""
+            show={selectedCard !== null}>
+            {selectedCard !== null && (
+              <div className="relative w-auto md:h-full flex items-center justify-start   md:justify-center flex-col">
+                <SelectedCard
+                  inLesson={false}
                   onClick={onClick}
-                  card={card}
+                  card={cardsList.find((c) => c.id === selectedCard)}
                 />
-              ))}
-            </Flickity>
-          )}
-        </AnimatedContainer>
-        <AnimatedContainer
-          duration={duration}
-          animationType={animation}
-          className=""
-          show={selectedCard !== null}>
-          {selectedCard !== null && (
-            <div className="relative w-auto md:h-full flex items-center justify-start   md:justify-center flex-col">
-              <SelectedCard
-                inLesson={false}
-                onClick={onClick}
-                card={cardsList.find((c) => c.id === selectedCard)}
-              />
-              <BottomSection />
-            </div>
-          )}
-          <Counter />
-        </AnimatedContainer>
+                <BottomSection />
+              </div>
+            )}
+            <Counter />
+          </AnimatedContainer>
+        </div>
       </div>
-    </div>
+    </ErrorBoundary>
   );
 };
 

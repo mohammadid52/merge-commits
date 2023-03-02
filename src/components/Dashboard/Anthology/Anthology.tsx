@@ -1,4 +1,5 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import ErrorBoundary from '@components/Error/ErrorBoundary';
 import {useQuery} from '@customHooks/urlParam';
 import useAuth from '@customHooks/useAuth';
 import {updatePageState} from '@graphql/functions';
@@ -145,7 +146,8 @@ const Anthology = ({
         graphqlOperation(customQueries.listUniversalLessonStudentDatas, listFilter)
       );
       // existing student rows
-      const studentDataRows = studentData.data.listUniversalLessonStudentData.items;
+      const studentDataRows =
+        studentData?.data.listUniversalLessonStudentData?.items || [];
       if (studentDataRows?.length > 0) {
         setAllStudentData(studentDataRows);
       }
@@ -872,7 +874,7 @@ const Anthology = ({
   const roomId = params.get('roomId');
 
   return (
-    <React.Fragment>
+    <ErrorBoundary componentName="Anthology">
       {!isTeacher && (
         <div>
           <HeroBanner imgUrl={notebookBanner} title={'Notebooks'} />
@@ -1024,7 +1026,7 @@ const Anthology = ({
           </EmptyViewWrapper>
         </div>
       </div>
-    </React.Fragment>
+    </ErrorBoundary>
   );
 };
 

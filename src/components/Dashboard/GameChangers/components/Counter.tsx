@@ -1,12 +1,13 @@
 import {useGameChangers} from 'components/Dashboard/GameChangers/context/GameChangersContext';
 import AnimatedContainer from 'uiComponents/Tabs/AnimatedContainer';
 import React from 'react';
+import ErrorBoundary from '@components/Error/ErrorBoundary';
 
 const Counter = () => {
   const {isActive, countSelected, counter} = useGameChangers();
 
   return (
-    <>
+    <ErrorBoundary componentName="Counter">
       {/* Show 'Starting...' text if animation is not started */}
       <AnimatedContainer
         className="w-auto md:mt-4"
@@ -23,7 +24,7 @@ const Counter = () => {
           </div>
         )}
       </AnimatedContainer>
-    </>
+    </ErrorBoundary>
   );
 };
 

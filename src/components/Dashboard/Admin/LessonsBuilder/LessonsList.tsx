@@ -3,6 +3,7 @@ import AddButton from '@components/Atoms/Buttons/AddButton';
 import Filters, {SortType} from '@components/Atoms/Filters';
 import Highlighted from '@components/Atoms/Highlighted';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
+import ErrorBoundary from '@components/Error/ErrorBoundary';
 import CommonActionsBtns from '@components/MicroComponents/CommonActionsBtns';
 import Table from '@components/Molecules/Table';
 import useAuth from '@customHooks/useAuth';
@@ -421,7 +422,7 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
         }}
         button2Action={(e) => {
           e.stopPropagation();
-          handleToggleDelete(item.title, item);
+          handleToggleDelete(item?.title, item);
         }}
       />
     )
@@ -469,120 +470,126 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
 
   {
     return (
-      <div className={`w-full h-full`}>
-        {showCloneModal.show && (
-          <CloneLesson
-            setShowCloneModal={setShowCloneModal}
-            getCloneLessonDetails={getCloneLessonDetails}
-          />
-        )}
-        {/* Header section */}
-        {!isInInstitution && <BreadCrums items={breadCrumsList} />}
-        <div
-          className={`flex flex-col lg:flex-row justify-start lg:justify-between ${
-            isInInstitution ? 'lg:items-center px-8' : ''
-          }`}>
-          <SectionTitleV3
-            title={LessonsListDict[userLanguage][isInInstitution ? 'HEADING' : 'TITLE']}
-            fontSize="xl"
-            fontStyle="semibold"
-            extraClass="leading-6 text-gray-900"
-            borderBottom
-            shadowOff
-            withButton={
-              <div className={`w-auto flex gap-x-4 justify-end items-center flex-wrap`}>
-                {isSuperAdmin && (
-                  <Selector
-                    placeholder={LessonsListDict[userLanguage]['SELECT_INSTITUTION']}
-                    list={institutionList}
-                    selectedItem={selectedInstitution?.name}
-                    onChange={instituteChange}
-                    arrowHidden={true}
-                    additionalClass={'w-auto lg:w-48'}
-                    isClearable
-                    onClear={onInstitutionSelectionRemove}
-                  />
-                )}
-                {!isInInstitution && (
-                  <>
-                    <Selector
-                      placeholder={LessonsListDict[userLanguage]['SORTBY']}
-                      list={sortByList}
-                      selectedItem={sortingType.name}
-                      onChange={setSortingValue}
-                      btnClass="rounded-r-none  border-r-none "
-                      arrowHidden={true}
-                    />
-                    <button
-                      className={`w-28 bg-gray-100 mr-4 p-3 border-gray-400  border-0 rounded border-l-none rounded-l-none ${theme.outlineNone} `}
-                      onClick={toggleSortDimention}>
-                      <IconContext.Provider
-                        value={{size: '1.5rem', color: theme.iconColor[themeColor]}}>
-                        {sortingType.asc ? <AiOutlineArrowUp /> : <AiOutlineArrowDown />}
-                      </IconContext.Provider>
-                    </button>
-                  </>
-                )}
-                <SearchInput
-                  dataCy="unit-search-input"
-                  value={searchInput.value}
-                  onChange={setSearch}
-                  isActive={searchInput.isActive}
-                  disabled={status !== 'done'}
-                  onKeyDown={searchLesson}
-                  closeAction={removeSearchAction}
-                />
-
-                {!isSuperAdmin && (
-                  <AddButton
-                    label={LessonsListDict[userLanguage]['BUTTON']['ADD']}
-                    onClick={buildLesson}
-                  />
-                )}
-                {params.get('from') ? (
-                  <Buttons
-                    label="Go back"
-                    btnClass="mr-4"
-                    onClick={() => history.goBack()}
-                    Icon={IoArrowUndoCircleOutline}
-                  />
-                ) : null}
-              </div>
-            }
-          />
-        </div>
-        <div className="px-8">
-          <Filters
-            loading={status !== 'done'}
-            list={currentList}
-            updateFilter={updateFilter}
-            filters={filters}
-            showingCount={{
-              currentPage,
-              lastPage: allAsProps.lastPage,
-              totalResults: allAsProps.totalResults,
-              pageCount: allAsProps.pageCount
-            }}
-          />
-        </div>
-
-        {/* List / Table */}
-        <div className={`px-8`}>
-          <Table {...tableConfig} />
-
-          {deleteModal.show && (
-            <ModalPopUp
-              closeAction={handleToggleDelete}
-              saveAction={deleting ? () => {} : deleteModal.action}
-              saveLabel={deleting ? 'DELETING...' : 'CONFIRM'}
-              cancelLabel="CANCEL"
-              message={deleteModal.message}
+      <ErrorBoundary componentName="LessonsList">
+        <div className={`w-full h-full`}>
+          {showCloneModal.show && (
+            <CloneLesson
+              setShowCloneModal={setShowCloneModal}
+              getCloneLessonDetails={getCloneLessonDetails}
             />
           )}
-        </div>
+          {/* Header section */}
+          {!isInInstitution && <BreadCrums items={breadCrumsList} />}
+          <div
+            className={`flex flex-col lg:flex-row justify-start lg:justify-between ${
+              isInInstitution ? 'lg:items-center px-8' : ''
+            }`}>
+            <SectionTitleV3
+              title={LessonsListDict[userLanguage][isInInstitution ? 'HEADING' : 'TITLE']}
+              fontSize="xl"
+              fontStyle="semibold"
+              extraClass="leading-6 text-gray-900"
+              borderBottom
+              shadowOff
+              withButton={
+                <div className={`w-auto flex gap-x-4 justify-end items-center flex-wrap`}>
+                  {isSuperAdmin && (
+                    <Selector
+                      placeholder={LessonsListDict[userLanguage]['SELECT_INSTITUTION']}
+                      list={institutionList}
+                      selectedItem={selectedInstitution?.name}
+                      onChange={instituteChange}
+                      arrowHidden={true}
+                      additionalClass={'w-auto lg:w-48'}
+                      isClearable
+                      onClear={onInstitutionSelectionRemove}
+                    />
+                  )}
+                  {!isInInstitution && (
+                    <>
+                      <Selector
+                        placeholder={LessonsListDict[userLanguage]['SORTBY']}
+                        list={sortByList}
+                        selectedItem={sortingType.name}
+                        onChange={setSortingValue}
+                        btnClass="rounded-r-none  border-r-none "
+                        arrowHidden={true}
+                      />
+                      <button
+                        className={`w-28 bg-gray-100 mr-4 p-3 border-gray-400  border-0 rounded border-l-none rounded-l-none ${theme.outlineNone} `}
+                        onClick={toggleSortDimention}>
+                        <IconContext.Provider
+                          value={{size: '1.5rem', color: theme.iconColor[themeColor]}}>
+                          {sortingType.asc ? (
+                            <AiOutlineArrowUp />
+                          ) : (
+                            <AiOutlineArrowDown />
+                          )}
+                        </IconContext.Provider>
+                      </button>
+                    </>
+                  )}
+                  <SearchInput
+                    dataCy="unit-search-input"
+                    value={searchInput.value}
+                    onChange={setSearch}
+                    isActive={searchInput.isActive}
+                    disabled={status !== 'done'}
+                    onKeyDown={searchLesson}
+                    closeAction={removeSearchAction}
+                  />
 
-        {/* Pagination And Counter */}
-      </div>
+                  {!isSuperAdmin && (
+                    <AddButton
+                      label={LessonsListDict[userLanguage]['BUTTON']['ADD']}
+                      onClick={buildLesson}
+                    />
+                  )}
+                  {params.get('from') ? (
+                    <Buttons
+                      label="Go back"
+                      btnClass="mr-4"
+                      onClick={() => history.goBack()}
+                      Icon={IoArrowUndoCircleOutline}
+                    />
+                  ) : null}
+                </div>
+              }
+            />
+          </div>
+          <div className="px-8">
+            <Filters
+              loading={status !== 'done'}
+              list={currentList}
+              updateFilter={updateFilter}
+              filters={filters}
+              showingCount={{
+                currentPage,
+                lastPage: allAsProps.lastPage,
+                totalResults: allAsProps.totalResults,
+                pageCount: allAsProps.pageCount
+              }}
+            />
+          </div>
+
+          {/* List / Table */}
+          <div className={`px-8`}>
+            <Table {...tableConfig} />
+
+            {deleteModal.show && (
+              <ModalPopUp
+                closeAction={handleToggleDelete}
+                saveAction={deleting ? () => {} : deleteModal.action}
+                saveLabel={deleting ? 'DELETING...' : 'CONFIRM'}
+                cancelLabel="CANCEL"
+                message={deleteModal.message}
+              />
+            )}
+          </div>
+
+          {/* Pagination And Counter */}
+        </div>
+      </ErrorBoundary>
     );
   }
 };

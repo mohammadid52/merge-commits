@@ -161,7 +161,7 @@ const Classroom: React.FC<ClassroomProps> = (props: ClassroomProps) => {
   const userLanguage = gContext.userLanguage;
 
   const roomData = getLocalStorageData('room_info');
-  const teachingStyle = roomData.teachingStyle;
+  const teachingStyle = Boolean(roomData) ? roomData.teachingStyle : '--';
 
   const {authId, email, pageState, isStudent, isFellow} = useAuth();
   const match: any = useRouteMatch();

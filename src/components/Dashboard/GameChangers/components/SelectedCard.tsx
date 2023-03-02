@@ -30,6 +30,7 @@ import Flickity from 'react-flickity-component';
 import Gratitude from './Gratitude';
 import SelectedEmotionsContainer from './SelectedEmotionsContainer';
 import SingingBowl from './SingingBowl';
+import ErrorBoundary from '@components/Error/ErrorBoundary';
 
 // Constants
 
@@ -191,7 +192,7 @@ const SelectedCard = ({
   const showSelectors = !isCompleted && (selectedCard === 0 || selectedCard === 1);
 
   return (
-    <>
+    <ErrorBoundary componentName="SelectedCard">
       <div
         className={`${inLesson ? 'border-0 border-gray-700' : ''} rounded-2xl box ${
           inLesson ? '' : 'm-8'
@@ -357,8 +358,10 @@ const SelectedCard = ({
           </div>
         </div>
       </div>
-      {selectedCard === 3 && selectedEmotions.length > 0 && <SelectedEmotionsContainer />}
-    </>
+      {selectedCard === 3 && selectedEmotions && selectedEmotions?.length > 0 && (
+        <SelectedEmotionsContainer />
+      )}
+    </ErrorBoundary>
   );
 };
 

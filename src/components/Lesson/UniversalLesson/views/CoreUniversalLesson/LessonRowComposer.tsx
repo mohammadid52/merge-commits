@@ -1,4 +1,4 @@
-import {getLocalStorageData} from '@utilities/localStorage';
+import {getLocalStorageData, setLocalStorageData} from '@utilities/localStorage';
 import {TeachingStyle} from 'API';
 import AllEmotions from 'components/Lesson/AllEmotions';
 import {useGlobalContext} from 'contexts/GlobalContext';
@@ -122,6 +122,45 @@ const LessonRowComposer = () => {
     }
   };
 
+  const [shouldShowLessonModule, setShouldShowLessonModule] = useState(false);
+
+  const updateOverviewList = (oldList: any[]) => {
+    const updatedList: any[] =
+      Boolean(oldList) && Array.isArray(oldList) && oldList.length > 0
+        ? [...oldList]
+        : [];
+
+    updatedList.push(lessonState.lessonData.id);
+
+    setLocalStorageData('overviewChecked', updatedList);
+  };
+
+  useEffect(() => {
+    const overviewChecked = getLocalStorageData('overviewChecked');
+
+    // if its null or undefined..  then show module
+    if (Boolean(overviewChecked)) {
+      if (
+        overviewChecked &&
+        Array.isArray(overviewChecked) &&
+        overviewChecked.length > 0
+      ) {
+        if (!overviewChecked.includes(lessonState?.lessonData?.id)) {
+          setShouldShowLessonModule(true);
+          updateOverviewList(overviewChecked);
+        } else {
+          setShouldShowLessonModule(false);
+        }
+      } else {
+        setShouldShowLessonModule(true);
+        updateOverviewList(overviewChecked);
+      }
+    } else {
+      setShouldShowLessonModule(true);
+      updateOverviewList(overviewChecked);
+    }
+  }, []);
+
   return (
     <div>
       {removeDownloadablesFromlist &&
@@ -186,7 +225,9 @@ const LessonRowComposer = () => {
 
           <TranslationModule />
 
-          <LessonModule currentLesson={lessonState?.lessonData} />
+          {shouldShowLessonModule && (
+            <LessonModule currentLesson={lessonState?.lessonData} />
+          )}
         </>
       )}
     </div>
