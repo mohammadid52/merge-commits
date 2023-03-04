@@ -230,7 +230,7 @@ const Csv = ({institutionId}: ICsvProps) => {
     }
   };
 
-  const {authId, isTeacher, email, isFellow} = useAuth();
+  const {authId, email} = useAuth();
 
   const onInstSelect = async (id: string, name: string, value: string) => {
     setClassRoomLoading(true);
@@ -682,7 +682,10 @@ const Csv = ({institutionId}: ICsvProps) => {
     return str.replace(/\"/g, "'");
   };
 
-  const pipeFn = (...fns: any[]) => (arg: any) => fns.reduce((acc, fn) => fn(acc), arg);
+  const pipeFn =
+    (...fns: any[]) =>
+    (arg: any) =>
+      fns.reduce((acc, fn) => fn(acc), arg);
 
   const cleanString = (str: string) => {
     return pipeFn(removeDoubleSpaces, removeDoubleQuotes)(str);

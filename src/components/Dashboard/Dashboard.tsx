@@ -150,7 +150,7 @@ const Dashboard = (props: DashboardProps) => {
   const theme = gContext.theme;
   const clientKey = gContext.clientKey;
 
-  const {updateAuthState} = props;
+  const {updateAuthState} = gContext;
 
   const match = useRouteMatch();
   const history = useHistory();

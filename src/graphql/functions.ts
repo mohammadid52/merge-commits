@@ -11,6 +11,7 @@ import {setLocalStorageData} from '@utilities/localStorage';
 import {isEmpty} from 'lodash';
 import {v4 as uuidV4} from 'uuid';
 import {allowedAuthIds} from '@contexts/GlobalContext';
+import {Auth} from 'aws-amplify';
 
 interface S3UploadOptions {
   onSuccess?: (result: Object) => void;
@@ -255,3 +256,93 @@ export const getInstitutionList = async (authId: string, email: string) => {
     console.log('🚀 ~ file: functions.ts:261 ~ getInstitutionList ~ error', error);
   }
 };
+
+export async function getPerson(email: string, authId: string) {
+  let userInfo: any = await API.graphql(
+    graphqlOperation(queries.getPerson, {email, authId})
+  );
+  userInfo = userInfo.data.getPerson;
+  return userInfo;
+}
+
+export async function getInstInfo(authId: string) {
+  try {
+    let instInfo: any = {};
+
+    instInfo = await API.graphql(
+      graphqlOperation(customQueries.getAssignedInstitutionToStaff, {
+        filter: {staffAuthID: {eq: authId}}
+      })
+    );
+
+    return instInfo;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function updateLoginTime(id: string, authId: string, email: string) {
+  try {
+    const time = new Date().toISOString();
+    const input = {
+      id: id,
+      authId: authId,
+      email: email,
+      lastLoggedIn: time,
+      lastPageStateUpdate: time,
+      pageState: UserPageState.LOGGED_IN
+    };
+    await API.graphql(graphqlOperation(customMutations.updatePersonLoginTime, {input}));
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function signIn(
+  username: string,
+  password: string,
+  cookies: {setCookie: any; removeCookie: any},
+  rememberMe?: boolean
+) {
+  try {
+    const user = await Auth.signIn(username, password);
+
+    if (Boolean(rememberMe)) {
+      if (rememberMe) {
+        cookies.setCookie(
+          'cred',
+          {email: username, checked: Boolean(rememberMe), password},
+          {path: '/'}
+        );
+      } else {
+        cookies.removeCookie('cred');
+      }
+    }
+    cookies.setCookie(
+      'auth',
+      {email: username, authId: user.username},
+      {secure: false, path: '/'}
+    );
+    sessionStorage.setItem('accessToken', user.signInUserSession.accessToken.jwtToken);
+    return user;
+  } catch (error) {
+    console.log('error signing in', error);
+  }
+}
+
+async function resendConfirmationCode(username: string) {
+  try {
+    await Auth.resendSignUp(username);
+    console.log('code resent successfully');
+  } catch (err) {
+    console.log('error resending code: ', err);
+  }
+}
+
+async function confirmSignUp(username: string, code: string) {
+  try {
+    await Auth.confirmSignUp(username, code);
+  } catch (error) {
+    console.log('error confirming sign up', error);
+  }
+}

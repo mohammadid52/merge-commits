@@ -6,7 +6,7 @@ import {
 import {Dicitionary, UniversalLessonPlan} from 'API';
 import * as mutations from 'graphql/mutations';
 import {isEmpty} from 'lodash';
-import React, {useContext, useEffect, useReducer, useRef} from 'react';
+import React, {useContext, useEffect, useReducer, useRef, useState} from 'react';
 import {globalReducer} from 'reducers/GlobalReducer';
 import {lessonControlReducer} from 'reducers/LessonControlReducer';
 import {lessonReducer} from 'reducers/LessonReducer';
@@ -162,6 +162,7 @@ export const GlobalContextProvider = ({children}: GlobalProps) => {
    * lessonState, lessonStateDispatch --> Used in lesson state
    */
 
+  const [authState, setAuthState] = useState('loading');
   const [state, dispatch] = useReducer(globalReducer, globalState);
   const [lessonState, lessonDispatch] = useReducer(lessonReducer, lessonStateObject);
   const [controlState, controlDispatch] = useReducer(
@@ -317,6 +318,14 @@ export const GlobalContextProvider = ({children}: GlobalProps) => {
   const checkIfAdmin = () =>
     allowedAuthIds.includes(state.user.authId) || state.user.role === 'SUP';
 
+  const updateAuthState = (auth: boolean) => {
+    if (auth) {
+      setAuthState('loggedIn');
+    } else {
+      setAuthState('notLoggedIn');
+    }
+  };
+
   const zoiqFilter = checkIfAdmin() ? [] : [{isZoiq: {ne: true}}];
 
   return (
@@ -324,10 +333,12 @@ export const GlobalContextProvider = ({children}: GlobalProps) => {
       value={{
         theme,
         state,
+        authState,
         dispatch,
         lessonState,
         zoiqFilter,
         lessonDispatch,
+        updateAuthState,
         saveJournalData,
         controlState,
         controlDispatch,

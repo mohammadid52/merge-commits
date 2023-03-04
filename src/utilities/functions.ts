@@ -126,3 +126,37 @@ export const withZoiqFilter = (generalFilter: any, _zoiqFilter?: any) => {
 
   return filter;
 };
+
+export const getSignInError = (error: any, onlyEmail: any) => {
+  switch (error.code) {
+    case 'UserNotFoundException':
+      return {
+        show: true,
+        type: 'error',
+        message: 'The email you entered was not found'
+      };
+    case 'NotAuthorizedException':
+      if (!onlyEmail) {
+        return {
+          show: true,
+          type: 'error',
+          message: 'The email or password you entered was not correct'
+        };
+      }
+      return;
+    case 'UserNotConfirmedException':
+      return {
+        show: true,
+        type: 'error',
+        message: 'You need to confirm registered email id, Please check your email.'
+      };
+    // shows valid error message for confirmation error instead of redirecting to confirm-code rout.
+
+    default:
+      return {
+        show: true,
+        type: 'error',
+        message: error.message
+      };
+  }
+};

@@ -5,18 +5,14 @@ import PublicRoute from 'components/Auth/PublicRoute';
 const Login = lazy(() => import('components/Auth/Login'));
 const Forgot = lazy(() => import('components/Auth/Forgot'));
 const PrivacyPolicy = lazy(() => import('components/Auth/PrivacyPolicy'));
-const Registration = lazy(() => import('components/Auth/Register'));
+// const Registration = lazy(() => import('components/Auth/Register'));
 const ConfirmCode = lazy(() => import('components/Auth/ConfirmCode'));
 
-interface UnauthRoutesProps {
-  updateAuthState: Function;
-}
-
-const UnauthRoutes = ({updateAuthState}: UnauthRoutesProps) => {
+const UnauthRoutes = () => {
   return (
     <Switch>
       <PublicRoute path="/login" restricted={true}>
-        <Login updateAuthState={updateAuthState} />
+        <Login />
       </PublicRoute>
       {/* <PublicRoute path="/register" restricted={true}>
         <Registration />

@@ -62,7 +62,8 @@ type globalActions =
       payload: {
         location: any[];
         removedFrom?: any[];
-
+        email: string;
+        authId: string;
         id: string;
         firstName: string;
         lastName: string;
@@ -241,6 +242,8 @@ export const globalReducer = (state: globalStateType, action: globalActions) => 
         user: {
           ...state.user,
           id: action.payload.id,
+          authId: action.payload.authId,
+          email: action.payload.email,
           firstName: action.payload.firstName,
           lastName: action.payload.lastName,
           language: action.payload.language,

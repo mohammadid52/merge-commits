@@ -1,8 +1,15 @@
 import {PersonStatus, Role, UserPageState} from 'API';
+import {Auth} from 'aws-amplify';
 import {useGlobalContext} from 'contexts/GlobalContext';
+import {useCookies} from 'react-cookie';
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import * as customMutations from 'customGraphql/customMutations';
+import {removeLocalStorageData} from '@utilities/localStorage';
 
 type User = {
   authId: string;
+  id: string;
+
   role: Role;
   email: string;
   firstName: string;
@@ -36,10 +43,13 @@ const useAuth = (): {
   onDemand?: boolean;
   pageState: UserPageState;
   setUser: (user: any) => void;
+  signOut: () => void;
+  removeAuthToken: () => void;
 } => {
   const context = useGlobalContext();
 
   const user: User = context.state.user;
+  const {updateAuthState} = context;
   const dispatch = context.dispatch;
 
   const {
@@ -75,10 +85,48 @@ const useAuth = (): {
       }
     });
 
+  const [cookies, setCookie, removeCookie] = useCookies();
+
+  const removeAuthToken = () => {
+    console.log('Removing cookies since not logged in');
+    removeCookie('auth', {path: '/'});
+    sessionStorage.removeItem('accessToken');
+    dispatch({type: 'CLEANUP'});
+  };
+
+  async function signOut() {
+    try {
+      const time = new Date().toISOString();
+
+      const input = {
+        id: user.id,
+        authId: user.authId,
+        email: user.email,
+        lastLoggedOut: time,
+        lastPageStateUpdate: time,
+        pageState: UserPageState.NOT_LOGGED_IN
+      };
+      await API.graphql(
+        graphqlOperation(customMutations.updatePersonLogoutTime, {input})
+      );
+      await Auth.signOut();
+      updateAuthState(false);
+      removeCookie('auth', {path: '/'});
+      sessionStorage.removeItem('accessToken');
+      removeLocalStorageData('active_step_section');
+      removeLocalStorageData('selected_institution');
+      dispatch({type: 'CLEANUP'});
+    } catch (error) {
+      console.error('error signing out: ', error);
+    }
+  }
+
   return {
     role,
     isStudent,
     setUser,
+    signOut,
+    removeAuthToken,
     isTeacher,
     isBuilder,
     isAdmin,

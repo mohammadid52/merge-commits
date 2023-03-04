@@ -2,25 +2,29 @@
 // import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {Auth} from '@aws-amplify/auth';
-import {UserPageState} from 'API';
+import {getPerson} from '@graphql/functions';
 import {getAsset} from 'assets';
 import AuthRoutes from 'components/AppRoutes/AuthRoutes';
 import UnauthRoutes from 'components/AppRoutes/UnauthRoutes';
 import MobileOops from 'components/Error/MobileOops';
 import ComponentLoading from 'components/Lesson/Loading/ComponentLoading';
 import {useGlobalContext} from 'contexts/GlobalContext';
-import * as customMutations from 'customGraphql/customMutations';
 import * as customQueries from 'customGraphql/customQueries';
 import useDeviceDetect from 'customHooks/deviceDetect';
-import * as queries from 'graphql/queries';
 import React, {Suspense, useEffect, useState} from 'react';
 import {useCookies} from 'react-cookie';
 
 const MainRouter: React.FC = () => {
   const deviceDetected = useDeviceDetect();
-  const {state, theme, clientKey, dispatch} = useGlobalContext();
+  const {
+    theme,
+    authState,
+    updateAuthState,
+    clientKey,
+    dispatch,
+    signOut
+  } = useGlobalContext();
   const [cookies, setCookie, removeCookie] = useCookies();
-  const [authState, setAuthState] = useState('loading');
 
   const [readyState, setReadyState] = useState('loading');
 
@@ -80,11 +84,8 @@ const MainRouter: React.FC = () => {
       const user = await Auth.currentAuthenticatedUser();
       if (user) {
         const {email, sub} = user.attributes;
-        let userInfo: any = await API.graphql(
-          graphqlOperation(queries.getPerson, {email: email, authId: sub})
-        );
 
-        userInfo = userInfo.data.getPerson;
+        const userInfo = await getPerson(email, sub);
 
         let instInfo: any = {};
         if (userInfo.role !== 'ST') {
@@ -95,14 +96,13 @@ const MainRouter: React.FC = () => {
           );
         }
         updateAuthState(true);
-        dispatch({
-          type: 'PREV_LOG_IN',
-          payload: {email, authId: sub}
-        });
+
         // SETUP USER
         dispatch({
           type: 'SET_USER',
           payload: {
+            email,
+            authId: sub,
             id: userInfo.id,
             firstName: userInfo.preferredName || userInfo.firstName,
             lastName: userInfo.lastName,
@@ -154,31 +154,12 @@ const MainRouter: React.FC = () => {
 
   const autoLogout = async () => {
     if (isUserLoggedIn()) {
-      const time = new Date().toISOString();
-      const input = {
-        id: state.user.id,
-        authId: state.user.authId,
-        email: state.user.email,
-        lastLoggedOut: time,
-        pageState: UserPageState.NOT_LOGGED_IN,
-        lastPageStateUpdate: time
-      };
-      API.graphql(graphqlOperation(customMutations.updatePersonLogoutTime, {input}));
-      await Auth.signOut();
-      updateAuthState(false);
+      signOut();
     }
   };
 
   const isUserLoggedIn = () => {
     return authState === 'loggedIn';
-  };
-
-  const updateAuthState = (auth: boolean) => {
-    if (auth) {
-      setAuthState('loggedIn');
-    } else {
-      setAuthState('notLoggedIn');
-    }
   };
 
   if (readyState !== 'complete') {
@@ -200,10 +181,8 @@ const MainRouter: React.FC = () => {
                 <ComponentLoading />
               </div>
             }>
-            {authState === 'loggedIn' && <AuthRoutes updateAuthState={updateAuthState} />}
-            {authState === 'notLoggedIn' && (
-              <UnauthRoutes updateAuthState={updateAuthState} />
-            )}
+            {authState === 'loggedIn' && <AuthRoutes />}
+            {authState === 'notLoggedIn' && <UnauthRoutes />}
           </Suspense>
         )}
       </div>

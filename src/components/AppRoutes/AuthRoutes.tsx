@@ -8,16 +8,12 @@ const Lesson = lazy(() => import('components/Lesson/Lesson'));
 const TeacherView = lazy(() => import('components/TeacherView/TeacherView'));
 const Chat = lazy(() => import('components/RoomChat/Chat'));
 const Csv = lazy(() => import('components/Dashboard/Csv/Csv'));
-interface AuthRoutesProps {
-  updateAuthState: Function;
-}
-
-const AuthRoutes = ({updateAuthState}: AuthRoutesProps) => {
+const AuthRoutes = () => {
   return (
     <>
       <Switch>
         <PrivateRoute path="/dashboard">
-          <Dashboard updateAuthState={updateAuthState} />
+          <Dashboard />
         </PrivateRoute>
         <PrivateRoute path="/lesson/:lessonID">
           <Lesson />
@@ -41,8 +37,8 @@ const AuthRoutes = ({updateAuthState}: AuthRoutesProps) => {
           <Chat />
         </PrivateRoute>
         <PrivateRoute path="/csv">
-          <ErrorBoundary  componentName='Csv'>
-          <Csv />
+          <ErrorBoundary componentName="Csv">
+            <Csv />
           </ErrorBoundary>
         </PrivateRoute>
         <Route render={() => <Redirect to="/" />} />
