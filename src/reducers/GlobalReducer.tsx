@@ -106,6 +106,12 @@ type globalActions =
       };
     }
   | {
+      type: 'AUTHENTICATE';
+      payload: {
+        [key: string]: any;
+      };
+    }
+  | {
       type: 'CLEANUP';
     }
   | {
@@ -296,6 +302,12 @@ export const globalReducer = (state: globalStateType, action: globalActions) => 
           email: action.payload.email,
           authId: action.payload.authId
         }
+      };
+    case 'AUTHENTICATE':
+      return {
+        ...state,
+        status: 'logged-in',
+        isAuthenticated: true
       };
     case 'CLEANUP':
       return globalState;

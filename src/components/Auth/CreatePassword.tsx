@@ -8,6 +8,7 @@ import {useFormik} from 'formik';
 import React, {useState} from 'react';
 import {useCookies} from 'react-cookie';
 import {AiOutlineLock} from 'react-icons/ai';
+import {CreatePasswordSchema} from 'Schema';
 
 const CreatePassword = ({
   setIsLoginSuccess,
@@ -28,12 +29,13 @@ const CreatePassword = ({
     setIsToggled(state);
   };
 
-  const {setUser} = useAuth();
+  const {setUser, authenticate} = useAuth();
 
-  const {values, handleChange, handleSubmit} = useFormik({
+  const {values, errors, handleChange, handleSubmit} = useFormik({
     initialValues: {
       password: ''
     },
+    validationSchema: CreatePasswordSchema,
     onSubmit: async (values) => {
       toggleLoading(true);
 
@@ -55,7 +57,7 @@ const CreatePassword = ({
               instInfo?.data?.listStaff?.items.filter((item: any) => item.institution) ||
               []
           });
-
+          authenticate();
           await updateLoginTime(userInfo.id, user.username, email);
 
           updateAuthState(true);
@@ -80,6 +82,7 @@ const CreatePassword = ({
         placeHolder="Enter new password"
         type="password"
         onChange={handleChange}
+        error={errors.password}
         value={values.password}
         id="password"
       />

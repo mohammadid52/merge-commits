@@ -171,7 +171,7 @@ const DropDownMenu = ({
                     </>
                   )}
                   <Menu.Item key={'logout'}>
-                    <SignOutButton updateAuthState={updateAuthState} />
+                    <SignOutButton />
                   </Menu.Item>
                 </div>
               </Menu.Items>

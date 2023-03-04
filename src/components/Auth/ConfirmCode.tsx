@@ -1,20 +1,20 @@
 import {Auth} from '@aws-amplify/auth';
-import {getAsset} from 'assets';
+import Buttons from '@components/Atoms/Buttons';
+import {useQuery} from '@customHooks/urlParam';
+import {signIn} from '@graphql/functions';
 import FormInput from 'atoms/Form/FormInput';
 import AuthCard from 'components/Auth/AuthCard';
 import RememberMe from 'components/Auth/RememberMe';
-import {GlobalContext} from 'contexts/GlobalContext';
-import React, {useContext, useEffect, useState} from 'react';
+import {useFormik} from 'formik';
+import React, {useEffect, useState} from 'react';
 import {useCookies} from 'react-cookie';
-import {AiOutlineLoading3Quarters} from 'react-icons/ai';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {useHistory, useLocation} from 'react-router-dom';
+import {ConfirmCodeSchema} from 'Schema';
 
 const ConfirmCode = () => {
   const history = useHistory();
   const location = useLocation();
 
-  const {dispatch, clientKey} = useContext(GlobalContext);
   const [cookies, setCookie, removeCookie] = useCookies();
   const [message, setMessage] = useState<{show: boolean; type: string; message: string}>({
     show: false,
@@ -25,19 +25,15 @@ const ConfirmCode = () => {
     email: '',
     code: ''
   });
-  const [passwordInput, setPasswordInput] = useState({
-    password: '',
-    match: ''
-  });
+
   const [isLoading, setIsLoading] = useState(false);
-  const [newPassToggle, setNewPassToggle] = useState(false);
-  const [isChecked, setIsChecked] = useState(false);
+
   const [expiredLink, setExpiredLink] = useState(false);
 
   const checkLoginCred = () => {
     const auth = cookies.cred;
-    if (auth?.isChecked) {
-      setIsChecked(auth.isChecked);
+    if (auth?.checked) {
+      setFieldValue('checked', auth.checked);
     }
   };
 
@@ -46,12 +42,8 @@ const ConfirmCode = () => {
     checkLoginCred();
   }, []);
 
-  const useQuery = () => {
-    return new URLSearchParams(location.search);
-  };
-
   const populateCodeAndEmail = () => {
-    const params = useQuery();
+    const params = useQuery(location.search);
     const confirmCode = params.get('code'); // Find a code from params.
     const emailId = params.get('email'); // Find an email from params.
     const isValidCode = confirmCode && /^\d{6}$/gm.test(confirmCode); // validate element to have 6 digit number. e.g. 234567
@@ -73,15 +65,14 @@ const ConfirmCode = () => {
     }
   };
 
-  const resetPassword = async () => {
+  const resetPassword = async (password: string) => {
     let username = confirmInput.email;
-    let password = passwordInput.password;
+
     let code = confirmInput.code;
     toggleLoading(true);
 
     try {
-      const forgot = await Auth.forgotPasswordSubmit(username, code, password);
-      console.log(forgot);
+      await Auth.forgotPasswordSubmit(username, code, password);
       history.push('/login');
     } catch (error) {
       console.error('error signing in', error);
@@ -131,6 +122,7 @@ const ConfirmCode = () => {
             };
         }
       });
+    } finally {
       toggleLoading(false);
     }
   };
@@ -156,31 +148,26 @@ const ConfirmCode = () => {
   const confirmAndLogin = async () => {
     let username = confirmInput.email;
     let tempPassword = 'xIconoclast.5x';
-    let password = passwordInput.password;
+    let password = values.password;
     let code = confirmInput.code;
     toggleLoading(true);
     try {
       await Auth.confirmSignUp(username, code);
-      const user = await Auth.signIn(username, tempPassword);
+      const user = await signIn(
+        username,
+        tempPassword,
+        {setCookie, removeCookie},
+        values.checked
+      );
       await Auth.changePassword(user, tempPassword, password);
-      sessionStorage.setItem('accessToken', user.signInUserSession.accessToken.jwtToken);
-      dispatch({type: 'LOG_IN', payload: {email: username, authId: user.username}});
-      if (isChecked) {
-        setCookie('cred', {
-          email: username,
-          isChecked: isChecked,
-          password: password
-        });
-      } else {
-        removeCookie('cred');
-      }
-      setCookie('auth', {email: username, authId: user.username}, {path: '/'});
+
       history.push('/dashboard');
     } catch (error) {
       // Handle code mismatch and code expiration errors.
 
       if (error.code === 'NotAuthorizedException') {
-        resetPassword();
+        validation();
+        resetPassword(values.password);
       } else {
         setMessage(() => {
           switch (error.code) {
@@ -217,8 +204,7 @@ const ConfirmCode = () => {
     let validated = false;
 
     setMessage(() => {
-      let password = passwordInput.password;
-      if (!password) {
+      if (!values.password) {
         return {
           show: true,
           type: 'error',
@@ -237,90 +223,57 @@ const ConfirmCode = () => {
     });
   };
 
-  const handlePasswordChange = (e: {target: {id: any; value: any}}) => {
-    const {id, value} = e.target;
-    setPasswordInput((input) => {
-      return {
-        ...input,
-        [id]: value
-      };
-    });
-  };
-
   // Added loading state.
   const toggleLoading = (state: boolean) => {
     setIsLoading(state);
   };
 
-  const handleEnter = (e: any) => {
-    if (e.key === 'Enter') {
+  const {values, errors, handleSubmit, handleChange, setFieldValue} = useFormik({
+    initialValues: {
+      password: '',
+      checked: false
+    },
+    validationSchema: ConfirmCodeSchema,
+    onSubmit: async (values) => {
       validation();
-      toggleLoading(true);
+      resetPassword(values.password);
     }
-  };
-
-  const handleSubmit = () => {
-    validation();
-    toggleLoading(true);
-  };
-
-  const toggleCheckBox = () => {
-    setIsChecked(!isChecked);
-  };
+  });
 
   return (
     <AuthCard title="Set New Password" message={message}>
-      <div className=" ">
-        <FormInput
-          label="New Password"
-          placeHolder="Enter new password"
-          type="password"
-          id="password"
-          name="password"
-          value={passwordInput.password}
-          onChange={handlePasswordChange}
-          onKeyDown={handleEnter}
-        />
+      <form onSubmit={handleSubmit}>
+        <div className=" ">
+          <FormInput
+            label="New Password"
+            placeHolder="Enter new password"
+            type="password"
+            id="password"
+            name="password"
+            value={values.password}
+            error={errors.password}
+            onChange={handleChange}
+          />
 
-        <div className="my-3">
-          <RememberMe isChecked={isChecked} toggleCheckBox={toggleCheckBox} />
+          <div className="my-3">
+            <RememberMe
+              isChecked={values.checked}
+              toggleCheckBox={() => setFieldValue('checked', !values.checked)}
+            />
+          </div>
         </div>
-      </div>
 
-      <div className="relative h-4.5/10 flex flex-col justify-center items-center">
-        <button
-          disabled={isLoading}
-          className={`p-3 mb-4 ${getAsset(
-            clientKey,
-            'authButtonColor'
-          )} text-gray-200 rounded-xl font-semibold`}
-          onKeyPress={handleEnter}
-          onClick={handleSubmit}>
-          {isLoading ? (
-            <IconContext.Provider
-              value={{
-                size: '1.5rem',
-                color: '#ffffff',
-                className: 'relative animate-spin'
-              }}>
-              <AiOutlineLoading3Quarters />
-            </IconContext.Provider>
-          ) : (
-            'Login'
-          )}
-        </button>
-
-        {isLoading && (
-          <IconContext.Provider
-            value={{
-              size: '1.5rem',
-              color: '#488AC7',
-              className: 'relative animate-spin'
-            }}>
-            <AiOutlineLoading3Quarters />
-          </IconContext.Provider>
-        )}
-      </div>
+        <div className="relative flex flex-col justify-center items-center">
+          <Buttons
+            disabled={isLoading}
+            dataCy="confirm-button"
+            btnClass="w-full"
+            type="submit"
+            loading={isLoading}
+            label={'Login'}
+          />
+        </div>
+      </form>
     </AuthCard>
   );
 };

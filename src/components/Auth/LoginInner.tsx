@@ -12,6 +12,7 @@ import {useFormik} from 'formik';
 import React, {useEffect, useState} from 'react';
 import {useCookies} from 'react-cookie';
 import {AiOutlineLock, AiOutlineUser} from 'react-icons/ai';
+import {LoginSchema} from 'Schema';
 
 const LoginInner = ({
   setCreatePassword,
@@ -38,12 +39,20 @@ const LoginInner = ({
     setIsToggled(state);
   };
 
-  const {values, handleSubmit, handleChange, setFieldValue, setValues} = useFormik({
+  const {
+    values,
+    errors,
+    handleSubmit,
+    handleChange,
+    setFieldValue,
+    setValues
+  } = useFormik({
     initialValues: {
       email: '',
       password: '',
       checked: false
     },
+    validationSchema: LoginSchema,
     onSubmit: async (values) => {
       const {email, password, checked} = values;
 
@@ -73,7 +82,7 @@ const LoginInner = ({
     checkLoginCred();
   }, []);
 
-  const {setUser} = useAuth();
+  const {setUser, authenticate} = useAuth();
 
   const onShowPassword = async (username: string, password: string, checked: boolean) => {
     try {
@@ -98,6 +107,7 @@ const LoginInner = ({
             instInfo?.data?.listStaff?.items.filter((item: any) => item.institution) || []
         });
 
+        authenticate();
         await updateLoginTime(userInfo.id, user.username, username);
 
         updateAuthState(true);
@@ -176,7 +186,8 @@ const LoginInner = ({
         Icon={AiOutlineUser}
         // label="Email"
         onChange={handleChange}
-        className="mb-4"
+        error={errors.email}
+        wrapperClass="mb-4"
         placeHolder="Enter your email"
         type="email"
         value={email}
@@ -188,6 +199,7 @@ const LoginInner = ({
         <>
           <FormInput
             dataCy="password"
+            error={errors.password}
             // label="Password"
             onChange={handleChange}
             Icon={AiOutlineLock}
@@ -207,6 +219,7 @@ const LoginInner = ({
           </div>
         </>
       )}
+
       <div className="relative flex flex-col justify-center items-center">
         <Buttons
           disabled={isToggled}

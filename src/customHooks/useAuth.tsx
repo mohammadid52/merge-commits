@@ -43,6 +43,7 @@ const useAuth = (): {
   onDemand?: boolean;
   pageState: UserPageState;
   setUser: (user: any) => void;
+  authenticate: () => void;
   signOut: () => void;
   removeAuthToken: () => void;
 } => {
@@ -87,6 +88,10 @@ const useAuth = (): {
 
   const [cookies, setCookie, removeCookie] = useCookies();
 
+  const authenticate = () => {
+    dispatch({type: 'AUTHENTICATE'});
+  };
+
   const removeAuthToken = () => {
     console.log('Removing cookies since not logged in');
     removeCookie('auth', {path: '/'});
@@ -125,6 +130,7 @@ const useAuth = (): {
     role,
     isStudent,
     setUser,
+    authenticate,
     signOut,
     removeAuthToken,
     isTeacher,

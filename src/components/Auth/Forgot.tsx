@@ -1,27 +1,26 @@
-import Auth from '@aws-amplify/auth';
-import {getAsset} from 'assets';
+import {Auth} from 'aws-amplify';
+
+import Buttons from '@components/Atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
 import AuthCard from 'components/Auth/AuthCard';
-import {GlobalContext} from 'contexts/GlobalContext';
-import React, {useContext, useState} from 'react';
+import {useFormik} from 'formik';
+import React, {useState} from 'react';
 import {NavLink} from 'react-router-dom';
+import {ForgotSchema} from 'Schema';
+
 const Forgot = () => {
-  const {clientKey} = useContext(GlobalContext);
-  let [message, setMessage] = useState<{show: boolean; type: string; message: string}>({
+  const [message, setMessage] = useState<{show: boolean; type: string; message: string}>({
     show: false,
     type: '',
     message: ''
   });
-  const [input, setInput] = useState({
-    email: '',
-    password: ''
-  });
 
-  async function forgotPassword() {
-    let username = input.email;
+  const [isLoading, setIsLoading] = useState(false);
 
+  async function forgotPassword(email: string) {
+    setIsLoading(true);
     try {
-      const user = await Auth.forgotPassword(username);
+      await Auth.forgotPassword(email);
       setMessage(() => {
         return {
           show: true,
@@ -32,20 +31,6 @@ const Forgot = () => {
     } catch (error) {
       console.error('error signing in', error);
       setMessage(() => {
-        if (!username) {
-          return {
-            show: true,
-            type: 'error',
-            message: 'Please enter your email'
-          };
-        }
-        if (!username.includes('@' && '.')) {
-          return {
-            show: true,
-            type: 'error',
-            message: 'Your email is not in the expected email address format'
-          };
-        }
         switch (error.code) {
           case 'UserNotFoundException':
             return {
@@ -53,12 +38,7 @@ const Forgot = () => {
               type: 'error',
               message: 'The email you entered was not found'
             };
-          // case "UserNotFoundException":
-          //         return {
-          //                     show: true,
-          //                     type: 'error',
-          //                     message: 'Email was not found',
-          //                 }
+
           default:
             return {
               show: true,
@@ -67,69 +47,53 @@ const Forgot = () => {
             };
         }
       });
+    } finally {
+      setIsLoading(false);
     }
   }
 
-  const handleChange = (e: {target: {id: any; value: any}}) => {
-    const {id, value} = e.target;
-    setInput((input) => {
-      if (id === 'email') {
-        return {
-          ...input,
-          [id]: value.toLowerCase().trim()
-        };
-      } else {
-        return {
-          ...input,
-          [id]: value
-        };
-      }
-    });
-  };
-
-  const handleEnter = (e: any) => {
-    if (e.key === 'Enter') {
-      forgotPassword();
+  const {values, handleChange} = useFormik({
+    initialValues: {
+      email: ''
+    },
+    validationSchema: ForgotSchema,
+    onSubmit: async (values) => {
+      const {email} = values;
+      await forgotPassword(email);
     }
-  };
-
-  const handleSubmit = () => {
-    forgotPassword();
-  };
+  });
 
   return (
-    <AuthCard title="Forgot Password">
-      <div className="">
-        <FormInput
-          label="Email"
-          className="mb-4"
-          placeHolder="Enter your email"
-          type="email"
-          value={input.email}
-          id="email"
-          onChange={handleChange}
-        />
-        <div className="w-auto ml-2 leading-5 text-xs text-gray-600 text-center">
-          Enter your email to reset your password
+    <AuthCard message={message} title="Forgot Password">
+      <form>
+        <div className="">
+          <FormInput
+            label="Email"
+            className="mb-4"
+            placeHolder="Enter your email"
+            type="email"
+            value={values.email}
+            id="email"
+            onChange={handleChange}
+          />
         </div>
-      </div>
 
-      <div className="">
-        <button
-          className={`p-3 my-4 ${getAsset(
-            clientKey,
-            'authButtonColor'
-          )} text-gray-200 rounded-xl font-semibold`}
-          onKeyPress={handleEnter}
-          onClick={handleSubmit}>
-          Submit
-        </button>
-        <NavLink to="/login">
-          <div className="text-center text-sm text-blueberry hover:text-blue-500">
-            Go back to login!
-          </div>
-        </NavLink>
-      </div>
+        <div className="">
+          <Buttons
+            disabled={isLoading}
+            dataCy="forgot-button"
+            btnClass="w-full"
+            type="submit"
+            loading={isLoading}
+            label={'Submit'}
+          />
+          <NavLink to="/login">
+            <div className="text-center text-sm text-blueberry hover:text-blue-500">
+              Go back to login!
+            </div>
+          </NavLink>
+        </div>
+      </form>
     </AuthCard>
   );
 };

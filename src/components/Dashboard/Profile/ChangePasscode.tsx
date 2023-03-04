@@ -1,16 +1,15 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {Auth} from '@aws-amplify/auth';
-import React, {useContext, useState} from 'react';
-import {useHistory} from 'react-router-dom';
+import {Error} from '@components/Atoms/Alerts/Info';
+import {UserPageState} from 'API';
+import Buttons from 'atoms/Buttons';
+import FormInput from 'atoms/Form/FormInput';
 import {GlobalContext} from 'contexts/GlobalContext';
 import * as customMutations from 'customGraphql/customMutations';
 import useDictionary from 'customHooks/dictionary';
-import Buttons from 'atoms/Buttons';
-import FormInput from 'atoms/Form/FormInput';
-import ErrorNote from '../Admin/UserManagement/ErrorNote';
+import React, {useContext, useState} from 'react';
+import {useHistory} from 'react-router-dom';
 import SuccessMessage from '../Admin/UserManagement/SuccessMessage';
-import {UserPageState} from 'API';
-import {Error} from '@components/Atoms/Alerts/Info';
 
 interface ChangePasscodeProps {
   fromWhere?: string;

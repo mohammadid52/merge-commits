@@ -31,6 +31,7 @@ interface FormInputProps {
   resize?: boolean;
   inputRef?: any;
   maxWidth?: string;
+  wrapperClass?: string;
   className?: string;
   Icon?: any;
 }
@@ -62,6 +63,7 @@ const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
     dataCy,
     Icon,
     maxWidth = 'max-w-256',
+    wrapperClass = '',
     resize = false
   } = inputProps;
 
@@ -80,7 +82,7 @@ const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
 
   const transition = 'all 300ms ease-in-out';
   return (
-    <Fragment>
+    <div className={wrapperClass}>
       {label && (
         <Label disabled={disabled} dark={dark} label={label} isRequired={isRequired} />
       )}
@@ -167,15 +169,15 @@ const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
           leave="transition duration-300"
           leaveFrom="opacity-100 transform translate-y-0"
           leaveTo="opacity-0 transform -translate-y-6">
-          <p className="text-red-500 text-xs">{error}</p>
+          <p className="text-red-500 mt-1 text-xs">{error}</p>
         </Transition>
         {showCharacterUsage && (
-          <div className="text-right text-gray-400">
+          <div className="text-right mt-1 text-gray-400">
             {value.length} of {maxLength}
           </div>
         )}
       </div>
-    </Fragment>
+    </div>
   );
 };
 
