@@ -1,7 +1,8 @@
 import {Auth} from '@aws-amplify/auth';
 import Buttons from '@components/Atoms/Buttons';
 import {useQuery} from '@customHooks/urlParam';
-import {signIn} from '@graphql/functions';
+import {getPerson, signIn} from '@graphql/functions';
+import {setCredCookies} from '@utilities/functions';
 import FormInput from 'atoms/Form/FormInput';
 import AuthCard from 'components/Auth/AuthCard';
 import RememberMe from 'components/Auth/RememberMe';
@@ -160,6 +161,18 @@ const ConfirmCode = () => {
         values.checked
       );
       await Auth.changePassword(user, tempPassword, password);
+
+      const userInfo = await getPerson(username, user.username);
+
+      setCredCookies(
+        values.checked,
+        {setCookie, removeCookie},
+        {
+          email: username,
+          password,
+          name: `${userInfo?.firstName || ''} ${userInfo?.lastName || ''}`
+        }
+      );
 
       history.push('/dashboard');
     } catch (error) {

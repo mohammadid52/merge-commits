@@ -1,30 +1,21 @@
 // import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 // import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {Auth} from '@aws-amplify/auth';
-import {getPerson} from '@graphql/functions';
+import useAuth from '@customHooks/useAuth';
+import {getInstInfo, getPerson} from '@graphql/functions';
+import {getUserInfo} from '@utilities/functions';
 import {getAsset} from 'assets';
 import AuthRoutes from 'components/AppRoutes/AuthRoutes';
 import UnauthRoutes from 'components/AppRoutes/UnauthRoutes';
 import MobileOops from 'components/Error/MobileOops';
 import ComponentLoading from 'components/Lesson/Loading/ComponentLoading';
 import {useGlobalContext} from 'contexts/GlobalContext';
-import * as customQueries from 'customGraphql/customQueries';
 import useDeviceDetect from 'customHooks/deviceDetect';
 import React, {Suspense, useEffect, useState} from 'react';
-import {useCookies} from 'react-cookie';
 
 const MainRouter: React.FC = () => {
   const deviceDetected = useDeviceDetect();
-  const {
-    theme,
-    authState,
-    updateAuthState,
-    clientKey,
-    dispatch,
-    signOut
-  } = useGlobalContext();
-  const [cookies, setCookie, removeCookie] = useCookies();
+  const {theme, authState, updateAuthState, clientKey} = useGlobalContext();
 
   const [readyState, setReadyState] = useState('loading');
 
@@ -33,10 +24,7 @@ const MainRouter: React.FC = () => {
       checkForUserInactivity();
     } else {
       if (authState !== 'loading') {
-        console.log('Removing cookies since not logged in');
-        removeCookie('auth', {path: '/'});
-        dispatch({type: 'CLEANUP'});
-        sessionStorage.removeItem('accessToken');
+        removeAuthToken();
       }
     }
   }, [authState]);
@@ -79,6 +67,8 @@ const MainRouter: React.FC = () => {
       .classList.add(clientKey === 'demo' ? 'curate' : clientKey);
   };
 
+  const {setUser, removeAuthToken, signOut} = useAuth();
+
   const checkUserAuthenticated = async () => {
     try {
       const user = await Auth.currentAuthenticatedUser();
@@ -87,41 +77,19 @@ const MainRouter: React.FC = () => {
 
         const userInfo = await getPerson(email, sub);
 
-        let instInfo: any = {};
-        if (userInfo.role !== 'ST') {
-          instInfo = await API.graphql(
-            graphqlOperation(customQueries.getAssignedInstitutionToStaff, {
-              filter: {staffAuthID: {eq: sub}}
-            })
-          );
-        }
+        let instInfo: any = userInfo.role !== 'ST' ? await getInstInfo(sub) : {};
+
         updateAuthState(true);
 
         // SETUP USER
-        dispatch({
-          type: 'SET_USER',
-          payload: {
-            email,
-            authId: sub,
-            id: userInfo.id,
-            firstName: userInfo.preferredName || userInfo.firstName,
-            lastName: userInfo.lastName,
-            language: userInfo.language,
-            onBoardSurvey: userInfo.onBoardSurvey ? userInfo.onBoardSurvey : false,
-            role: userInfo.role,
-            image: userInfo.image,
-            location: userInfo?.location?.items,
-            lastLoggedIn: userInfo.lastLoggedIn,
-            lastLoggedOut: userInfo.lastLoggedOut,
-            associateInstitute:
-              instInfo?.data?.listStaff?.items.filter((item: any) => item.institution) ||
-              [],
-            onDemand: userInfo?.onDemand,
-            lessons: userInfo.lessons,
-            lastEmotionSubmission: userInfo?.lastEmotionSubmission,
-            removedFrom: userInfo?.removedFrom,
-            status: userInfo?.status
-          }
+        setUser({
+          email,
+          authId: sub,
+
+          associateInstitute:
+            instInfo?.data?.listStaff?.items.filter((item: any) => item.institution) ||
+            [],
+          ...getUserInfo(userInfo)
         });
       } else {
         updateAuthState(false);
@@ -135,7 +103,6 @@ const MainRouter: React.FC = () => {
       updateAuthState(false);
     }
   };
-
   const checkForUserInactivity = () => {
     let idelTime = 0;
     let timer: any;
@@ -154,7 +121,8 @@ const MainRouter: React.FC = () => {
 
   const autoLogout = async () => {
     if (isUserLoggedIn()) {
-      signOut();
+      console.log('Auto Logout');
+      await signOut();
     }
   };
 

@@ -127,7 +127,7 @@ const SideMenu: React.FC<SideMenuProps> = ({children, ...props}: SideMenuProps) 
                   />
                 </nav>
               </div>
-              <SignOutButton updateAuthState={updateAuthState} />
+              <SignOutButton />
             </div>
           </div>
         )}

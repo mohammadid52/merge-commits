@@ -3,7 +3,7 @@ import FormInput from '@components/Atoms/Form/FormInput';
 import {useGlobalContext} from '@contexts/GlobalContext';
 import useAuth from '@customHooks/useAuth';
 import {getInstInfo, getPerson, signIn, updateLoginTime} from '@graphql/functions';
-import {getSignInError} from '@utilities/functions';
+import {getSignInError, getUserInfo, setCredCookies} from '@utilities/functions';
 import {createUserUrl} from '@utilities/urls';
 import {Auth} from 'aws-amplify';
 import axios from 'axios';
@@ -19,9 +19,11 @@ const LoginInner = ({
   setMessage,
   setIsLoginSuccess,
   setEmail,
-  setNewUser
+  setNewUser,
+  setSubtitle
 }: {
   setCreatePassword: any;
+  setSubtitle: any;
   setNewUser: any;
   setIsLoginSuccess: any;
   setEmail: any;
@@ -68,6 +70,7 @@ const LoginInner = ({
     const auth = cookies.cred;
 
     if (auth?.checked) {
+      setSubtitle(`Welcome Back ${auth?.name || ''} !`);
       setValues({
         email: auth.email,
         password: auth.password,
@@ -99,12 +102,25 @@ const LoginInner = ({
         setIsLoginSuccess(true);
         const authId = user.username;
         const userInfo = await getPerson(username, authId);
-        let instInfo: any = userInfo.role !== 'ST' ? getInstInfo(authId) : {};
+        let instInfo: any = userInfo.role !== 'ST' ? await getInstInfo(authId) : {};
+        setCredCookies(
+          checked,
+          {setCookie, removeCookie},
+          {
+            email: username,
+            password,
+            name: `${userInfo?.firstName || ''} ${userInfo?.lastName || ''}`
+          }
+        );
 
         setUser({
-          ...userInfo,
+          email,
+          authId,
+
           associateInstitute:
-            instInfo?.data?.listStaff?.items.filter((item: any) => item.institution) || []
+            instInfo?.data?.listStaff?.items.filter((item: any) => item.institution) ||
+            [],
+          ...getUserInfo(userInfo)
         });
 
         authenticate();
@@ -185,7 +201,10 @@ const LoginInner = ({
         dataCy="email"
         Icon={AiOutlineUser}
         // label="Email"
-        onChange={handleChange}
+        onChange={(e) => {
+          setSubtitle(`Welcome Back!`);
+          handleChange(e);
+        }}
         error={errors.email}
         wrapperClass="mb-4"
         placeHolder="Enter your email"

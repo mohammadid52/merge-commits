@@ -307,17 +307,6 @@ export async function signIn(
   try {
     const user = await Auth.signIn(username, password);
 
-    if (Boolean(rememberMe)) {
-      if (rememberMe) {
-        cookies.setCookie(
-          'cred',
-          {email: username, checked: Boolean(rememberMe), password},
-          {path: '/'}
-        );
-      } else {
-        cookies.removeCookie('cred');
-      }
-    }
     cookies.setCookie(
       'auth',
       {email: username, authId: user.username},

@@ -16,17 +16,20 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [newUser, setNewUser] = useState(false);
 
+  const [subtitle, setSubtitle] = useState('Welcome Back!');
+
   return (
     <AuthCard
       isSuccess={isLoginSuccess}
       message={message}
-      subtitle={createPassword ? '' : 'Welcome back!'}>
+      subtitle={createPassword ? '' : subtitle}>
       {!createPassword ? (
         <>
           <LoginInner
             setEmail={setEmail}
             setMessage={setMessage}
             setNewUser={setNewUser}
+            setSubtitle={setSubtitle}
             setIsLoginSuccess={setIsLoginSuccess}
             setCreatePassword={setCreatePassword}
           />

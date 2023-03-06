@@ -15,6 +15,7 @@ interface DropdownProps {
   value: string;
   noOptionMessage?: string;
   dataCy?: string;
+  name?: string;
 }
 
 // TODO: Need to make this component
@@ -31,7 +32,8 @@ const DropdownForm = (props: DropdownProps) => {
     isRequired,
     style,
     noOptionMessage,
-    dataCy
+    dataCy,
+    name
   } = props;
 
   const componentRef = useRef(null);
@@ -49,10 +51,7 @@ const DropdownForm = (props: DropdownProps) => {
 
   const [showItems, setShowItems] = useState(false);
 
-  let [selectItem, setItem] = useState(userInfo);
-
   const selection = (item: any) => {
-    setItem(item.name);
     setShowItems(!showItems);
     handleChange(item);
   };

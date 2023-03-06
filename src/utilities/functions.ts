@@ -160,3 +160,50 @@ export const getSignInError = (error: any, onlyEmail: any) => {
       };
   }
 };
+
+export const getUserInfo = (userInfo: any) => ({
+  id: userInfo.id,
+  firstName: userInfo.preferredName || userInfo.firstName,
+  lastName: userInfo.lastName,
+  language: userInfo.language,
+  onBoardSurvey: userInfo.onBoardSurvey ? userInfo.onBoardSurvey : false,
+  role: userInfo.role,
+  image: userInfo.image,
+  location: userInfo?.location?.items,
+  lastLoggedIn: userInfo.lastLoggedIn,
+  lastLoggedOut: userInfo.lastLoggedOut,
+
+  onDemand: userInfo?.onDemand,
+  lessons: userInfo.lessons,
+  lastEmotionSubmission: userInfo?.lastEmotionSubmission,
+  removedFrom: userInfo?.removedFrom,
+  status: userInfo?.status
+});
+
+export const setCredCookies = (
+  rememberMe: boolean,
+  cookies: {setCookie: any; removeCookie: any},
+  auth: {
+    name: string;
+    email: string;
+    password: string;
+  }
+) => {
+  if (Boolean(rememberMe)) {
+    if (rememberMe) {
+      if (Boolean(auth.email && auth.password && auth.name))
+        cookies.setCookie(
+          'cred',
+          {
+            email: auth.email,
+            checked: Boolean(rememberMe),
+            password: auth.password,
+            name: auth.name
+          },
+          {path: '/'}
+        );
+    } else {
+      cookies.removeCookie('cred');
+    }
+  }
+};

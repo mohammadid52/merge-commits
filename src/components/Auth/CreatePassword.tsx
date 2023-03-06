@@ -3,6 +3,7 @@ import FormInput from '@components/Atoms/Form/FormInput';
 import {useGlobalContext} from '@contexts/GlobalContext';
 import useAuth from '@customHooks/useAuth';
 import {getInstInfo, getPerson, signIn, updateLoginTime} from '@graphql/functions';
+import {getUserInfo} from '@utilities/functions';
 import {Auth} from 'aws-amplify';
 import {useFormik} from 'formik';
 import React, {useState} from 'react';
@@ -49,13 +50,15 @@ const CreatePassword = ({
           setIsLoginSuccess(true);
           const authId = user.username;
           const userInfo = await getPerson(email, authId);
-          let instInfo: any = userInfo.role !== 'ST' ? getInstInfo(authId) : {};
+          let instInfo: any = userInfo.role !== 'ST' ? await getInstInfo(authId) : {};
 
           setUser({
-            ...userInfo,
+            email,
+            authId,
             associateInstitute:
               instInfo?.data?.listStaff?.items.filter((item: any) => item.institution) ||
-              []
+              [],
+            ...getUserInfo(userInfo)
           });
           authenticate();
           await updateLoginTime(userInfo.id, user.username, email);

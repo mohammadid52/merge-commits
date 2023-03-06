@@ -1,4 +1,5 @@
 import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
+import {Transition} from '@headlessui/react';
 import {ExclamationCircleIcon} from '@heroicons/react/outline';
 import {getAsset} from 'assets';
 import Label from 'atoms/Form/Label';
@@ -167,7 +168,7 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
       {label && <Label dark={false} label={label} isRequired={isRequired} />}
       <span
         title={capitalizeFirstLetter(selectedItem ? selectedItem : placeholder)}
-        className="inline-block w-full h-full rounded-full shadow-sm">
+        className="inline-block w-full h-full rounded-full">
         <button
           data-cy={`${dataCy}-button`}
           disabled={disabled || loading}
@@ -218,43 +219,54 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
                   </span>
                 )}
               </AnimatedContainer>
-
-              {error.length > 0 && (
-                <ExclamationCircleIcon
-                  className={`h-5 relative mr-4 w-5 text-red-500 ${
-                    error.length === 0 ? 'hidden' : ''
-                  }`}
-                  aria-hidden="true"
-                />
-              )}
             </div>
           ) : null}
 
-          <span
-            className={`relative justify-end w-auto inset-y-0 pr-2 right-0 items-center pointer-events-none ${
-              arrowHidden ? 'hidden' : 'flex'
-            }`}>
-            {loading ? (
-              <FaSpinner
-                size={'1.2rem'}
-                className={`relative mr-2 w-auto animate-spin ${theme.textColor[themeColor]}`}
+          <div className="w-auto flex items-center">
+            {error.length > 0 && (
+              <ExclamationCircleIcon
+                className={`h-5 relative mr-2 w-5 text-red-500 ${
+                  error.length === 0 ? 'hidden' : ''
+                }`}
+                aria-hidden="true"
               />
-            ) : (
-              <svg
-                className="h-5 w-5 text-gray-400"
-                viewBox="0 0 20 20"
-                fill="none"
-                stroke="currentColor">
-                <path
-                  d="M7 7l3-3 3 3m0 6l-3 3-3-3"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
             )}
-          </span>
+            <span
+              className={`relative justify-end w-auto inset-y-0 pr-2 right-0 items-center pointer-events-none ${
+                arrowHidden ? 'hidden' : 'flex'
+              }`}>
+              {loading ? (
+                <FaSpinner
+                  size={'1.2rem'}
+                  className={`relative mr-2 w-auto animate-spin ${theme.textColor[themeColor]}`}
+                />
+              ) : (
+                <svg
+                  className="h-5 w-5 text-gray-400"
+                  viewBox="0 0 20 20"
+                  fill="none"
+                  stroke="currentColor">
+                  <path
+                    d="M7 7l3-3 3 3m0 6l-3 3-3-3"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              )}
+            </span>
+          </div>
         </button>
+        <Transition
+          show={error.length > 0}
+          enter="transition duration-300"
+          enterFrom="opacity-0 transform -translate-y-6"
+          enterTo="opacity-100 transform translate-y-0"
+          leave="transition duration-300"
+          leaveFrom="opacity-100 transform translate-y-0"
+          leaveTo="opacity-0 transform -translate-y-6">
+          <p className="text-red-500 mt-1 text-xs">{error}</p>
+        </Transition>
       </span>
       <AnimatedContainer
         className="z-50 absolute w-full "

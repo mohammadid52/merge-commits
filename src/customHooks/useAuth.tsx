@@ -94,8 +94,11 @@ const useAuth = (): {
 
   const removeAuthToken = () => {
     console.log('Removing cookies since not logged in');
+    updateAuthState(false);
     removeCookie('auth', {path: '/'});
     sessionStorage.removeItem('accessToken');
+    removeLocalStorageData('active_step_section');
+    removeLocalStorageData('selected_institution');
     dispatch({type: 'CLEANUP'});
   };
 
@@ -115,12 +118,8 @@ const useAuth = (): {
         graphqlOperation(customMutations.updatePersonLogoutTime, {input})
       );
       await Auth.signOut();
-      updateAuthState(false);
-      removeCookie('auth', {path: '/'});
-      sessionStorage.removeItem('accessToken');
-      removeLocalStorageData('active_step_section');
-      removeLocalStorageData('selected_institution');
-      dispatch({type: 'CLEANUP'});
+
+      removeAuthToken();
     } catch (error) {
       console.error('error signing out: ', error);
     }
