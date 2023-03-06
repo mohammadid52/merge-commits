@@ -32,6 +32,7 @@ interface FormInputProps {
   inputRef?: any;
   maxWidth?: string;
   wrapperClass?: string;
+  autocomplete?: string;
   className?: string;
   Icon?: any;
 }
@@ -46,6 +47,7 @@ const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
     id,
     name,
     placeHolder,
+    autocomplete,
     type = 'text',
     error = '',
     textarea = false,
@@ -128,6 +130,7 @@ const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
             max={type === 'number' ? max : undefined}
             ref={inputRef}
             id={id}
+            autocomplete={autocomplete}
             maxLength={maxLength}
             name={name}
             onChange={onChange}

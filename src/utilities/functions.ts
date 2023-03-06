@@ -189,21 +189,19 @@ export const setCredCookies = (
     password: string;
   }
 ) => {
-  if (Boolean(rememberMe)) {
-    if (rememberMe) {
-      if (Boolean(auth.email && auth.password && auth.name))
-        cookies.setCookie(
-          'cred',
-          {
-            email: auth.email,
-            checked: Boolean(rememberMe),
-            password: auth.password,
-            name: auth.name
-          },
-          {path: '/'}
-        );
-    } else {
-      cookies.removeCookie('cred');
-    }
+  console.log('rememberMe', rememberMe);
+  if (rememberMe && Boolean(auth.email && auth.password && auth.name)) {
+    cookies.setCookie(
+      'cred',
+      {
+        email: auth.email,
+        checked: Boolean(rememberMe),
+        password: auth.password,
+        name: auth.name
+      },
+      {path: '/'}
+    );
+  } else {
+    cookies.removeCookie('cred');
   }
 };

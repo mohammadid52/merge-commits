@@ -33,6 +33,7 @@ import Label from 'atoms/Form/Label';
 import * as customQueries from 'customGraphql/customQueries';
 import {useFormik} from 'formik';
 import {UserRegisterSchema} from 'Schema';
+import SuccessMessage from './SuccessMessage';
 
 const initialValues = {
   firstName: '',
@@ -60,6 +61,8 @@ const Registration = ({
   const history = useHistory();
 
   const [instClasses, setInstClasses] = useState([]);
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const [message, setMessage] = useState<{show: boolean; type: string; message: string}>({
     show: false,
@@ -206,6 +209,7 @@ const Registration = ({
       if (isInModalPopup) {
         postMutation();
       }
+      resetForm();
     } catch (error) {
       console.error('error registering user:', error);
       handleMessage('error', error.message);
@@ -215,6 +219,7 @@ const Registration = ({
   async function signUp() {
     let username = values.email;
     try {
+      setIsLoading(true);
       const response = await axios.post(createUserUrl, {email: username});
       const user = response.data.User;
 
@@ -232,6 +237,8 @@ const Registration = ({
         setMessage({show: true, type: 'error', message: er.message});
         handleMessage('error', error.message);
       }
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -275,7 +282,8 @@ const Registration = ({
     setFieldError,
     handleSubmit,
     handleChange,
-    setFieldValue
+    setFieldValue,
+    resetForm
   } = useFormik({
     initialValues: initialValues,
     validateOnBlur: false,
@@ -466,6 +474,8 @@ const Registration = ({
                 <div>
                   {message.type === 'error' ? (
                     <Error message={message.message} />
+                  ) : message.type === 'success' ? (
+                    <SuccessMessage note={message.message} />
                   ) : message.type === 'loading' ? (
                     <div className="my-2 text-sm leading-5 text-gray-900">
                       {messageDict['loading']}
@@ -480,16 +490,8 @@ const Registration = ({
         <div className={`${isInModalPopup ? '' : ' w-1.5/10'} ml-auto`}>
           <Buttons
             btnClass=" w-full"
-            loading={
-              createPersonMutation.isLoading ||
-              createClassStudentMutation.isLoading ||
-              createStaffMutation.isLoading
-            }
-            disabled={
-              createPersonMutation.isLoading ||
-              createClassStudentMutation.isLoading ||
-              createStaffMutation.isLoading
-            }
+            loading={isLoading}
+            disabled={isLoading}
             label={RegistrationDict[userLanguage]['button']['submit']}
             type="submit"
           />

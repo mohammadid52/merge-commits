@@ -304,19 +304,15 @@ export async function signIn(
   cookies: {setCookie: any; removeCookie: any},
   rememberMe?: boolean
 ) {
-  try {
-    const user = await Auth.signIn(username, password);
+  const user = await Auth.signIn(username, password);
 
-    cookies.setCookie(
-      'auth',
-      {email: username, authId: user.username},
-      {secure: false, path: '/'}
-    );
-    sessionStorage.setItem('accessToken', user.signInUserSession.accessToken.jwtToken);
-    return user;
-  } catch (error) {
-    console.log('error signing in', error);
-  }
+  cookies.setCookie(
+    'auth',
+    {email: username, authId: user.username},
+    {secure: false, path: '/'}
+  );
+  sessionStorage.setItem('accessToken', user.signInUserSession.accessToken.jwtToken);
+  return user;
 }
 
 async function resendConfirmationCode(username: string) {

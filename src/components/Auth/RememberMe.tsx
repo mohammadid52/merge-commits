@@ -8,7 +8,7 @@ interface RememberMeProps {
 
 const RememberMe = ({isChecked, toggleCheckBox, dataCy}: RememberMeProps) => {
   return (
-    <div>
+    <div className="w-auto">
       <label className="flex items-center justify-end">
         <input
           data-cy={dataCy}

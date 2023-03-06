@@ -33,8 +33,6 @@ const LoginInner = ({
   const {updateAuthState} = useGlobalContext();
   const [cookies, setCookie, removeCookie] = useCookies();
 
-  const [showPasswordField, setShowPasswordField] = useState(false);
-
   const [isToggled, setIsToggled] = useState<boolean>(false);
 
   const toggleLoading = (state: boolean) => {
@@ -45,24 +43,25 @@ const LoginInner = ({
     values,
     errors,
     handleSubmit,
+    setFieldError,
     handleChange,
     setFieldValue,
-    setValues
+    setValues,
+    getFieldMeta,
+    validateForm
   } = useFormik({
     initialValues: {
       email: '',
       password: '',
       checked: false
     },
+    validateOnChange: false,
+    validateOnBlur: false,
     validationSchema: LoginSchema,
     onSubmit: async (values) => {
       const {email, password, checked} = values;
 
-      if (showPasswordField) {
-        await onShowPassword(email, password, checked);
-      } else {
-        await onDefaultView(email);
-      }
+      await onShowPassword(email, password, checked);
     }
   });
 
@@ -76,8 +75,6 @@ const LoginInner = ({
         password: auth.password,
         checked: Boolean(auth?.checked)
       });
-
-      setShowPasswordField(true);
     }
   };
 
@@ -86,6 +83,84 @@ const LoginInner = ({
   }, []);
 
   const {setUser, authenticate} = useAuth();
+
+  const handleError = (error: any, onlyEmail?: boolean) => {
+    setMessage(() => {
+      switch (error.code) {
+        case 'UserNotFoundException':
+          setFieldError('email', 'The email you entered was not found');
+          return {
+            show: true,
+            type: 'error',
+            message: 'The email you entered was not found'
+          };
+        case 'NotAuthorizedException':
+          if (!onlyEmail) {
+            console.log('The email or password you entered was not correct');
+            return {
+              show: true,
+              type: 'error',
+              message: 'The email or password you entered was not correct'
+            };
+          }
+
+        case 'UserNotConfirmedException':
+          return {
+            show: true,
+            type: 'error',
+            message: 'You need to confirm registered email id, Please check your email.'
+          };
+        // shows valid error message for confirmation error instead of redirecting to confirm-code rout.
+
+        default:
+          return {
+            show: true,
+            type: 'error',
+            message: error.message
+          };
+      }
+    });
+  };
+
+  const getUser = async () => {
+    const user = await Auth.signIn(values.email, 'xIconoclast.5x');
+    return user;
+  };
+
+  const onSetPassword = async () => {
+    validateForm(values);
+
+    if (!getFieldMeta('email').error) {
+      try {
+        toggleLoading(true);
+        const user = await Auth.signIn(values.email, 'xIconoclast.5x');
+
+        if (user.challengeName === 'NEW_PASSWORD_REQUIRED') {
+          setNewUser(user);
+          setCreatePassword(true);
+          setEmail(values.email);
+          setMessage({
+            show: false,
+            type: '',
+            message: ''
+          });
+        } else {
+          setFieldError('password', 'You already have setup password');
+        }
+        toggleLoading(false);
+      } catch (error) {
+        if (error.code === 'NotAuthorizedException') {
+          toggleLoading(false);
+          setFieldError('password', 'You already have setup password');
+        } else {
+          handleError(error);
+        }
+        console.error(error);
+      }
+    } else {
+      setFieldError('email', getFieldMeta('email').error);
+    }
+  };
 
   const onShowPassword = async (username: string, password: string, checked: boolean) => {
     try {
@@ -129,31 +204,23 @@ const LoginInner = ({
         updateAuthState(true);
       }
     } catch (error) {
-      setMessage(getSignInError(error, true));
-    } finally {
-      toggleLoading(false);
-    }
-  };
+      console.error(error);
 
-  const onDefaultView = async (username: string) => {
-    try {
-      toggleLoading(true);
-      const user = await Auth.signIn(username, 'xIconoclast.5x');
-
-      if (user.challengeName === 'NEW_PASSWORD_REQUIRED') {
-        setNewUser(user);
-        setCreatePassword(true);
-        setEmail(values.email);
-        setMessage({
-          show: false,
-          type: '',
-          message: ''
-        });
-      }
-    } catch (error) {
       if (error.code === 'NotAuthorizedException') {
         if (error.message === 'Incorrect username or password.') {
-          setShowPasswordField(true);
+          const user = await getUser();
+
+          if (user.challengeName === 'NEW_PASSWORD_REQUIRED') {
+            setNewUser(user);
+            setCreatePassword(true);
+            setEmail(values.email);
+          } else {
+            setMessage({
+              show: true,
+              type: 'error',
+              message: error.message
+            });
+          }
         } else if (
           error.message ===
           'Temporary password has expired and must be reset by an administrator.'
@@ -200,7 +267,7 @@ const LoginInner = ({
       <FormInput
         dataCy="email"
         Icon={AiOutlineUser}
-        // label="Email"
+        label="Email"
         onChange={(e) => {
           setSubtitle(`Welcome Back!`);
           handleChange(e);
@@ -208,36 +275,41 @@ const LoginInner = ({
         error={errors.email}
         wrapperClass="mb-4"
         placeHolder="Enter your email"
+        autocomplete="chrome-off"
         type="email"
         value={email}
         id="email"
         name="email"
       />
 
-      {showPasswordField && (
-        <>
-          <FormInput
-            dataCy="password"
-            error={errors.password}
-            // label="Password"
-            onChange={handleChange}
-            Icon={AiOutlineLock}
-            placeHolder="Enter your password"
-            type="password"
-            id="password"
-            name="password"
-            value={password}
-          />
+      <>
+        <FormInput
+          dataCy="password"
+          error={errors.password}
+          autocomplete="chrome-off"
+          label="Password"
+          onChange={handleChange}
+          Icon={AiOutlineLock}
+          placeHolder="Enter your password"
+          type="password"
+          id="password"
+          name="password"
+          value={password}
+        />
 
-          <div className="my-4">
-            <RememberMe
-              dataCy="remember"
-              isChecked={checked}
-              toggleCheckBox={() => setFieldValue('checked', !checked)}
-            />
-          </div>
-        </>
-      )}
+        <div className="my-4 flex items-center justify-between">
+          <p
+            onClick={onSetPassword}
+            className="w-auto text-gray-600 hover:underline cursor-pointer">
+            set password
+          </p>
+          <RememberMe
+            dataCy="remember"
+            isChecked={checked}
+            toggleCheckBox={() => setFieldValue('checked', !checked)}
+          />
+        </div>
+      </>
 
       <div className="relative flex flex-col justify-center items-center">
         <Buttons
