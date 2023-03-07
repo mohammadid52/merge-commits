@@ -119,7 +119,7 @@ const Forgot = () => {
   return (
     <AuthCard
       message={message}
-      subtitle="Because our users comes from various walks of life, passwords can only be set if your account has default settings in the system. If you are new user or need to set your password again, please contact our team if account is not at the default settings.">
+      subtitle="New users, and users who have asked our team to reset their password, please update the below fields to continue. If you forgot your existing password, contact our team to reset your security settings so you can set a new password.">
       <form onSubmit={handleSubmit}>
         <div className="">
           <FormInput
