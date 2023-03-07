@@ -1,4 +1,6 @@
+import LogoutAfterInactivity from '@components/Auth/LogoutAfterInactivity';
 import ErrorBoundary from '@components/Error/ErrorBoundary';
+import useAuth from '@customHooks/useAuth';
 import PrivateRoute from 'components/Auth/PrivateRoute';
 import React, {lazy} from 'react';
 import {Redirect, Route, Switch} from 'react-router-dom';
@@ -9,8 +11,14 @@ const TeacherView = lazy(() => import('components/TeacherView/TeacherView'));
 const Chat = lazy(() => import('components/RoomChat/Chat'));
 const Csv = lazy(() => import('components/Dashboard/Csv/Csv'));
 const AuthRoutes = () => {
+  const {signOut} = useAuth();
   return (
     <>
+      <LogoutAfterInactivity
+        logout={() => {
+          signOut();
+        }}
+      />
       <Switch>
         <PrivateRoute path="/dashboard">
           <Dashboard />

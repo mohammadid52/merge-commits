@@ -297,12 +297,7 @@ const LoginInner = ({
           value={password}
         />
 
-        <div className="my-4 flex items-center justify-between">
-          <p
-            onClick={onSetPassword}
-            className="w-auto text-gray-600 hover:underline cursor-pointer">
-            set password
-          </p>
+        <div className="my-4">
           <RememberMe
             dataCy="remember"
             isChecked={checked}
@@ -321,6 +316,11 @@ const LoginInner = ({
           label={'Login'}
         />
       </div>
+      <p
+        onClick={onSetPassword}
+        className="w-auto text-gray-600 hover:underline cursor-pointer text-right mt-2">
+        set password
+      </p>
     </form>
   );
 };
