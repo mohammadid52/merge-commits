@@ -4,9 +4,10 @@ import Buttons from '@components/Atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
 import AuthCard from 'components/Auth/AuthCard';
 import {useFormik} from 'formik';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {NavLink} from 'react-router-dom';
 import {ForgotSchema} from 'Schema';
+import {useQuery} from '@customHooks/urlParam';
 
 const Forgot = () => {
   const [message, setMessage] = useState<{show: boolean; type: string; message: string}>({
@@ -52,7 +53,30 @@ const Forgot = () => {
     }
   }
 
-  const {values, handleChange} = useFormik({
+  useEffect(() => {
+    populateCodeAndEmail();
+  }, []);
+
+  const populateCodeAndEmail = () => {
+    const params = useQuery(location.search);
+
+    const emailId = params.get('email'); // Find an email from params.
+
+    const isValidEmail =
+      emailId && /([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi.test(emailId); // validate email id.
+
+    if (isValidEmail) {
+      setFieldValue('email', emailId);
+    } else {
+      setMessage({
+        show: true,
+        type: 'error',
+        message: 'Invalid account confirmation URL. Please check your email'
+      });
+    }
+  };
+
+  const {values, handleChange, setFieldValue} = useFormik({
     initialValues: {
       email: ''
     },
@@ -64,7 +88,7 @@ const Forgot = () => {
   });
 
   return (
-    <AuthCard message={message} title="Forgot Password">
+    <AuthCard message={message} subtitle="Forgot Password">
       <form>
         <div className="">
           <FormInput
@@ -88,7 +112,7 @@ const Forgot = () => {
             label={'Submit'}
           />
           <NavLink to="/login">
-            <div className="text-center text-sm text-blueberry hover:text-blue-500">
+            <div className="mt-2 text-center text-sm text-blueberry hover:text-blue-500">
               Go back to login!
             </div>
           </NavLink>

@@ -12,6 +12,7 @@ import {useFormik} from 'formik';
 import React, {useEffect, useState} from 'react';
 import {useCookies} from 'react-cookie';
 import {AiOutlineLock, AiOutlineUser} from 'react-icons/ai';
+import {useHistory} from 'react-router';
 import {LoginSchema} from 'Schema';
 
 const LoginInner = ({
@@ -127,39 +128,42 @@ const LoginInner = ({
     return user;
   };
 
+  const history = useHistory();
+
   const onSetPassword = async () => {
-    validateForm(values);
+    history.push(`/forgot-password?email=${values.email}`);
+    // validateForm(values);
 
-    if (!getFieldMeta('email').error) {
-      try {
-        toggleLoading(true);
-        const user = await Auth.signIn(values.email, 'xIconoclast.5x');
+    // if (!getFieldMeta('email').error) {
+    //   try {
+    //     toggleLoading(true);
+    //     const user = await Auth.signIn(values.email, 'xIconoclast.5x');
 
-        if (user.challengeName === 'NEW_PASSWORD_REQUIRED') {
-          setNewUser(user);
-          setCreatePassword(true);
-          setEmail(values.email);
-          setMessage({
-            show: false,
-            type: '',
-            message: ''
-          });
-        } else {
-          setFieldError('password', 'You already have setup password');
-        }
-        toggleLoading(false);
-      } catch (error) {
-        if (error.code === 'NotAuthorizedException') {
-          toggleLoading(false);
-          setFieldError('password', 'You already have setup password');
-        } else {
-          handleError(error);
-        }
-        console.error(error);
-      }
-    } else {
-      setFieldError('email', getFieldMeta('email').error);
-    }
+    //     if (user.challengeName === 'NEW_PASSWORD_REQUIRED') {
+    //       setNewUser(user);
+    //       setCreatePassword(true);
+    //       setEmail(values.email);
+    //       setMessage({
+    //         show: false,
+    //         type: '',
+    //         message: ''
+    //       });
+    //     } else {
+    //       setFieldError('password', 'You already have setup password');
+    //     }
+    //     toggleLoading(false);
+    //   } catch (error) {
+    //     if (error.code === 'NotAuthorizedException') {
+    //       toggleLoading(false);
+    //       setFieldError('password', 'You already have setup password');
+    //     } else {
+    //       handleError(error);
+    //     }
+    //     console.error(error);
+    //   }
+    // } else {
+    //   setFieldError('email', getFieldMeta('email').error);
+    // }
   };
 
   const onShowPassword = async (username: string, password: string, checked: boolean) => {
