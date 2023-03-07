@@ -59,7 +59,7 @@ const Forgot = () => {
             return {
               show: true,
               type: 'error',
-              message: 'Your password has not be reset by the team...'
+              message: 'Your password has not be reset by the team'
             };
           case 'UserNotFoundException':
             return {
