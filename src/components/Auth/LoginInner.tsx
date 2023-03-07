@@ -184,7 +184,7 @@ const LoginInner = ({
           {
             email: username,
             password,
-            name: `${userInfo?.firstName || ''} ${userInfo?.lastName || ''}`
+            name: `${userInfo?.preferredName || userInfo?.firstName || ''} `
           }
         );
 
