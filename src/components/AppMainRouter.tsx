@@ -21,7 +21,7 @@ const MainRouter: React.FC = () => {
 
   useEffect(() => {
     if (authState === 'loggedIn') {
-      checkForUserInactivity();
+      //  do nothing
     } else {
       if (authState !== 'loading') {
         removeAuthToken();
@@ -67,7 +67,7 @@ const MainRouter: React.FC = () => {
       .classList.add(clientKey === 'demo' ? 'curate' : clientKey);
   };
 
-  const {setUser, removeAuthToken, signOut} = useAuth();
+  const {setUser, removeAuthToken} = useAuth();
 
   const checkUserAuthenticated = async () => {
     try {
@@ -102,32 +102,6 @@ const MainRouter: React.FC = () => {
       // );
       updateAuthState(false);
     }
-  };
-  const checkForUserInactivity = () => {
-    let idelTime = 0;
-    let timer: any;
-
-    document.addEventListener('visibilitychange', function () {
-      if (document.visibilityState === 'visible') {
-        clearTimeout(timer); //  Clear timer if user comes back to the app.
-      } else {
-        if (isUserLoggedIn()) {
-          idelTime = 30 * 60 * 1000; // Timer for 30 mins to count if user not using the app.
-          timer = setTimeout(autoLogout, idelTime);
-        }
-      }
-    });
-  };
-
-  const autoLogout = async () => {
-    if (isUserLoggedIn()) {
-      console.log('Auto Logout');
-      await signOut();
-    }
-  };
-
-  const isUserLoggedIn = () => {
-    return authState === 'loggedIn';
   };
 
   if (readyState !== 'complete') {
