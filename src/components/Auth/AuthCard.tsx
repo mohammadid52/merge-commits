@@ -77,7 +77,10 @@ const AuthCard = ({
               </h3>
             )}
             {subtitle && (
-              <h6 className="transition-all mb-4 text-sm text-center text-gray-500">
+              <h6
+                className={`px-2 transition-all mb-4 text-sm  ${
+                  subtitle.split(' ').length > 10 ? 'text-left' : 'text-center'
+                } text-gray-500`}>
                 {subtitle}
               </h6>
             )}

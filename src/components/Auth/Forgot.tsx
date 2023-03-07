@@ -5,7 +5,7 @@ import FormInput from 'atoms/Form/FormInput';
 import AuthCard from 'components/Auth/AuthCard';
 import {useFormik} from 'formik';
 import React, {useEffect, useState} from 'react';
-import {NavLink} from 'react-router-dom';
+import {NavLink, useHistory} from 'react-router-dom';
 import {ForgotSchema} from 'Schema';
 import {useQuery} from '@customHooks/urlParam';
 
@@ -18,21 +18,49 @@ const Forgot = () => {
 
   const [isLoading, setIsLoading] = useState(false);
 
+  const history = useHistory();
+
   async function forgotPassword(email: string) {
     setIsLoading(true);
     try {
-      await Auth.forgotPassword(email);
-      setMessage(() => {
-        return {
-          show: true,
-          type: 'success',
-          message: 'Please check your email for further instructions.'
-        };
-      });
+      const user = await Auth.signIn(email, 'xIconoclast.5x');
+      if (user.challengeName === 'NEW_PASSWORD_REQUIRED') {
+        try {
+          const newPasswordUser = await Auth.completeNewPassword(user, values.password);
+          if (newPasswordUser) {
+            setMessage({
+              show: true,
+              type: 'success',
+              message: 'Password set successfully'
+            });
+            setTimeout(() => {
+              history.push('/login');
+            }, 3000);
+          }
+        } catch (error) {
+          console.error('error setting password', error);
+        }
+      } else {
+        await Auth.forgotPassword(email);
+
+        setMessage(() => {
+          return {
+            show: true,
+            type: 'success',
+            message: 'Please check your email for further instructions.'
+          };
+        });
+      }
     } catch (error) {
       console.error('error signing in', error);
       setMessage(() => {
         switch (error.code) {
+          case 'NotAuthorizedException':
+            return {
+              show: true,
+              type: 'error',
+              message: 'Your password has not be reset by the team...'
+            };
           case 'UserNotFoundException':
             return {
               show: true,
@@ -76,9 +104,10 @@ const Forgot = () => {
     }
   };
 
-  const {values, handleChange, setFieldValue} = useFormik({
+  const {values, handleChange, handleSubmit, setFieldValue} = useFormik({
     initialValues: {
-      email: ''
+      email: '',
+      password: ''
     },
     validationSchema: ForgotSchema,
     onSubmit: async (values) => {
@@ -88,8 +117,10 @@ const Forgot = () => {
   });
 
   return (
-    <AuthCard message={message} subtitle="Forgot Password">
-      <form>
+    <AuthCard
+      message={message}
+      subtitle="Because our users comes from various walks of life, passwords can only be set if your account has default settings in the system. If you are new user or need to set your password again, please contact our team if account is not at the default settings.">
+      <form onSubmit={handleSubmit}>
         <div className="">
           <FormInput
             label="Email"
@@ -98,6 +129,18 @@ const Forgot = () => {
             type="email"
             value={values.email}
             id="email"
+            onChange={handleChange}
+          />
+        </div>
+        <div className="">
+          <FormInput
+            label="Set Password"
+            className="mb-4"
+            placeHolder="Set your password"
+            type="password"
+            name="password"
+            value={values.password}
+            id="password"
             onChange={handleChange}
           />
         </div>
@@ -112,9 +155,9 @@ const Forgot = () => {
             label={'Submit'}
           />
           <NavLink to="/login">
-            <div className="mt-2 text-center text-sm text-blueberry hover:text-blue-500">
-              Go back to login!
-            </div>
+            <p className="w-auto text-gray-600 hover:underline cursor-pointer text-right mt-2">
+              return to login
+            </p>
           </NavLink>
         </div>
       </form>
