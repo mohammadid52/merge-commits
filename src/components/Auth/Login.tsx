@@ -16,7 +16,7 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [newUser, setNewUser] = useState(false);
 
-  const [subtitle, setSubtitle] = useState('Welcome Back!');
+  const [subtitle, setSubtitle] = useState('Welcome to our app');
 
   return (
     <AuthCard

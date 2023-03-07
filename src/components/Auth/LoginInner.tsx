@@ -69,7 +69,7 @@ const LoginInner = ({
     const auth = cookies.cred;
 
     if (auth?.checked) {
-      setSubtitle(`Welcome Back ${auth?.name || ''} !`);
+      setSubtitle(`Welcome back, ${auth?.name|| ''}!`);
       setValues({
         email: auth.email,
         password: auth.password,
