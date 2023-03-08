@@ -31,7 +31,7 @@ const Forgot = () => {
             setMessage({
               show: true,
               type: 'success',
-              message: 'Password set successfully'
+              message: 'Your password was successfully updated.'
             });
             setTimeout(() => {
               history.push('/login');
@@ -49,13 +49,13 @@ const Forgot = () => {
             return {
               show: true,
               type: 'error',
-              message: 'Your password has not be reset by the team'
+              message: 'Your password was not updated.  Contact our team to reset your default settings before continuing.'
             };
           case 'UserNotFoundException':
             return {
               show: true,
               type: 'error',
-              message: 'The email you entered was not found'
+              message: 'The email you entered was not found.'
             };
 
           default:
@@ -98,7 +98,7 @@ const Forgot = () => {
   return (
     <AuthCard
       message={message}
-      subtitle="New users, and users who have asked our team to reset their password, please update the below fields to continue. If you forgot your existing password, contact our team to reset your security settings so you can set a new password.">
+      subtitle="Only new users and users who have asked our team to reset their password can update their password without logging into the app. If you forgot your existing password, contact our team to reset your security settings so you can set a new password.">
       <form onSubmit={handleSubmit}>
         <div className="">
           <FormInput
