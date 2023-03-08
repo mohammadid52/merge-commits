@@ -40,16 +40,6 @@ const Forgot = () => {
         } catch (error) {
           console.error('error setting password', error);
         }
-      } else {
-        await Auth.forgotPassword(email);
-
-        setMessage(() => {
-          return {
-            show: true,
-            type: 'success',
-            message: 'Please check your email for further instructions.'
-          };
-        });
       }
     } catch (error) {
       console.error('error signing in', error);
@@ -90,18 +80,7 @@ const Forgot = () => {
 
     const emailId = params.get('email'); // Find an email from params.
 
-    const isValidEmail =
-      emailId && /([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi.test(emailId); // validate email id.
-
-    if (isValidEmail) {
-      setFieldValue('email', emailId);
-    } else {
-      setMessage({
-        show: true,
-        type: 'error',
-        message: 'Invalid account confirmation URL. Please check your email'
-      });
-    }
+    setFieldValue('email', emailId);
   };
 
   const {values, handleChange, handleSubmit, setFieldValue} = useFormik({
