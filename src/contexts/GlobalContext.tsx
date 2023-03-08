@@ -5,7 +5,6 @@ import {
 } from '@components/Lesson/UniversalLessonBuilder/UI/common/constants';
 import {Dicitionary, UniversalLessonPlan} from 'API';
 import * as mutations from 'graphql/mutations';
-import {isEmpty} from 'lodash';
 import React, {useContext, useEffect, useReducer, useRef, useState} from 'react';
 import {globalReducer} from 'reducers/GlobalReducer';
 import {lessonControlReducer} from 'reducers/LessonControlReducer';
