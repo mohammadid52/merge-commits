@@ -137,6 +137,7 @@ const Lesson = () => {
   const data: PersonLessonsData[] = getLocalStorageData('lessonPersonData');
 
   useEffect(() => {
+    lessonDispatch({type: 'RESET_TIMER_FOR_PAGE'});
     setListPersonData(data);
     if (isEmpty(personLessonData)) {
       if (data && data?.length > 0) {

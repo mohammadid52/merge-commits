@@ -1,6 +1,7 @@
 import SearchInput from '@components/Atoms/Form/SearchInput';
 import Highlighted from '@components/Atoms/Highlighted';
 import Loader from '@components/Atoms/Loader';
+import Empty from '@components/Atoms/Text/Empty';
 import useAuth from '@customHooks/useAuth';
 import useSearch from '@customHooks/useSearch';
 import {fallbackUrls} from 'assets';
@@ -244,9 +245,7 @@ const RoomTiles = (props: {
             </div>
           </div>
         ) : (
-          <div className="flex justify-center text-gray-500 items-center p-12">
-            No classrooms found
-          </div>
+          <Empty>No classrooms found</Empty>
         )}
       </ContentCard>
     </>

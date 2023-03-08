@@ -1,5 +1,6 @@
 import SearchInput from '@components/Atoms/Form/SearchInput';
 import Highlighted from '@components/Atoms/Highlighted';
+import Empty from '@components/Atoms/Text/Empty';
 import useAuth from '@customHooks/useAuth';
 import useSearch from '@customHooks/useSearch';
 import Buttons from 'atoms/Buttons';
@@ -188,9 +189,7 @@ const StudentsTiles = (props: {
                   )}
               </ul>
             ) : (
-              <div className="grid justify-center text-gray-500 items-center">
-                {StudentDict[userLanguage].NO_STUDENT}
-              </div>
+              <Empty>{StudentDict[userLanguage].NO_STUDENT}</Empty>
             )}
           </div>
         </div>
