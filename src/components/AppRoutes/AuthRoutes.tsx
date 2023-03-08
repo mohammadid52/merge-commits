@@ -10,6 +10,7 @@ const Lesson = lazy(() => import('components/Lesson/Lesson'));
 const TeacherView = lazy(() => import('components/TeacherView/TeacherView'));
 const Chat = lazy(() => import('components/RoomChat/Chat'));
 const Csv = lazy(() => import('components/Dashboard/Csv/Csv'));
+
 const AuthRoutes = () => {
   const {signOut} = useAuth();
   return (

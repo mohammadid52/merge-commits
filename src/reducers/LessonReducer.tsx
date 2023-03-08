@@ -38,7 +38,9 @@ const LESSON_REDUCER_TYPES = {
   SET_LESSON_PAYLOAD: 'SET_LESSON_PAYLOAD',
   SET_PERSON_LESSON_DATA: 'SET_PERSON_LESSON_DATA',
   SET_LEAVE_MODAL_VISIBLE_STATE: 'SET_LEAVE_MODAL_VISIBLE_STATE',
-  SET_IS_VALID: 'SET_IS_VALID'
+  SET_IS_VALID: 'SET_IS_VALID',
+  UPDATE_TIMER_FOR_PAGE: 'UPDATE_TIMER_FOR_PAGE',
+  RESET_TIMER_FOR_PAGE: 'RESET_TIMER_FOR_PAGE'
 };
 
 export type LessonActions =
@@ -202,6 +204,17 @@ export type LessonActions =
       payload?: {
         lessonPayload?: any;
       };
+    }
+  | {
+      type: 'RESET_TIMER_FOR_PAGE';
+      payload?: any;
+    }
+  | {
+      type: 'UPDATE_TIMER_FOR_PAGE';
+      payload?: {
+        currentPage?: any;
+        remainingTime?: number;
+      };
     };
 
 export const lessonReducer = (state: any, action: LessonActions) => {
@@ -218,6 +231,33 @@ export const lessonReducer = (state: any, action: LessonActions) => {
       return {
         ...state,
         isLastPage: action.payload
+      };
+    case LESSON_REDUCER_TYPES.UPDATE_TIMER_FOR_PAGE:
+      const payload = action.payload;
+      let pageTimers = state.pageTimers;
+
+      const {currentPage} = payload;
+
+      const currentPageObjIdx = pageTimers.findIndex(
+        (t: {currentPage: any}) => t.currentPage === currentPage
+      );
+
+      if (currentPageObjIdx > -1) {
+        pageTimers[currentPageObjIdx] = {
+          ...payload
+        };
+      } else {
+        pageTimers.push({...payload});
+      }
+
+      return {
+        ...state,
+        pageTimers
+      };
+    case LESSON_REDUCER_TYPES.RESET_TIMER_FOR_PAGE:
+      return {
+        ...state,
+        pageTimers: []
       };
     case LESSON_REDUCER_TYPES.SET_UPDATE_STATE:
       return {
@@ -237,7 +277,7 @@ export const lessonReducer = (state: any, action: LessonActions) => {
     case LESSON_REDUCER_TYPES.SET_ROOM_SUBSCRIPTION_DATA:
       const havePagesChanged = Object.keys(action.payload).includes('ClosedPages');
       const mappedClosedPages = havePagesChanged
-        ? state.lessonData.lessonPlan.map((page: UniversalLessonPage, idx: number) => {
+        ? state.lessonData.lessonPlan.map((page: UniversalLessonPage) => {
             if (action.payload.ClosedPages?.includes(page.id)) {
               return {...page, open: false};
             } else {

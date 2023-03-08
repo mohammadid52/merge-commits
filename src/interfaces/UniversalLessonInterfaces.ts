@@ -62,7 +62,7 @@ export interface PagePart {
 
 export interface PartContent {
   id: string;
-  type?: string;
+  type: string;
   value: PartContentSub[];
   label?: string; // its not correct. There is no property like label in API.ts
   class?: string;

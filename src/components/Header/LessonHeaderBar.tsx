@@ -93,6 +93,8 @@ const LessonHeaderBar = ({
       .catch((err) => {
         console.error('Error updating current lesson/survey complete status', err);
       });
+
+    lessonDispatch({type: 'RESET_TIMER_FOR_PAGE'});
   };
 
   useEffect(() => {

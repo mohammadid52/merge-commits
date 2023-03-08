@@ -172,7 +172,7 @@ const emotionData = {
   }
 };
 
-const AllEmotions = () => {
+const AllEmotions = (): React.ReactElement => {
   const {authId, isStudent} = useAuth();
 
   const router: any = useRouteMatch();
@@ -200,7 +200,7 @@ const AllEmotions = () => {
   const pageColumn = {
     id: nanoid(24),
     value: 'Page',
-    options: data.map((em) => {
+    options: data.map((em: any) => {
       const pageId: number = 0;
       // Number(em.sentimentType) >= 0 ? Number(em.sentimentType) : null;
 
@@ -208,7 +208,7 @@ const AllEmotions = () => {
         pageId !== null
           ? !em?.lesson || isStudent
             ? PAGES[pageId].title
-            : em?.lesson?.lessonPlan[pageId].label
+            : em?.lesson?.lessonPlan[pageId]?.label
           : 'unknown';
       return {
         id: nanoid(24),
@@ -234,12 +234,16 @@ const AllEmotions = () => {
   const nameColumn = {
     id: nanoid(24),
     value: 'Emotion Name',
-    options: data.map((em) => {
-      return {
-        id: nanoid(24),
-        text: em.sentimentName.length > 0 ? addEmojiToName(em.sentimentName) : ''
-      };
-    })
+    options: data
+      .map((em: any) => {
+        if (em) {
+          return {
+            id: nanoid(24),
+            text: em?.sentimentName?.length > 0 ? addEmojiToName(em?.sentimentName) : ''
+          };
+        }
+      })
+      .filter(Boolean)
   };
 
   const timeColumn = {
@@ -254,23 +258,22 @@ const AllEmotions = () => {
   const themePlaceholderColor =
     lessonPageTheme === 'light' ? 'placeholder-gray-800' : 'text-gray-400';
 
-  return (
-    data &&
-    data.length > 0 && (
-      <div
-        className={`w-full py-2 px-4  ${themeTextColor} mt-2 rounded-xl bg-component-dark border-0 border-gray-700  ${themePlaceholderColor}`}>
-        {isLoading ? (
-          <div className="flex items-center justify-center h-32">
-            <Loader color="#fff" />
-          </div>
-        ) : (
-          <TableBlock
-            classString="blue-500 || white || dark"
-            value={[pageColumn, nameColumn, timeColumn]}
-          />
-        )}
-      </div>
-    )
+  return data && data.length > 0 ? (
+    <div
+      className={`w-full py-2 px-4  ${themeTextColor} mt-2 rounded-xl bg-component-dark border-0 border-gray-700  ${themePlaceholderColor}`}>
+      {isLoading ? (
+        <div className="flex items-center justify-center h-32">
+          <Loader color="#fff" />
+        </div>
+      ) : (
+        <TableBlock
+          classString="blue-500 || white || dark"
+          value={[pageColumn, nameColumn, timeColumn]}
+        />
+      )}
+    </div>
+  ) : (
+    <div />
   );
 };
 
