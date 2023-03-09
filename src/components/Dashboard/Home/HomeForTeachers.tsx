@@ -109,9 +109,9 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
 
     homeData[0]?.class?.rooms?.items.forEach((item: any) => {
       item?.class?.students?.items.forEach((student: any) => {
-        if (!uniqIds.includes(student?.student?.id)) {
+        if (!uniqIds.includes(student.student.id)) {
           list.push(student);
-          uniqIds.push(student?.student?.id);
+          uniqIds.push(student.student.id);
         }
       });
     });

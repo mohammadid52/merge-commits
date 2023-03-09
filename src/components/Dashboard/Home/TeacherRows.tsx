@@ -1,4 +1,3 @@
-import Empty from '@components/Atoms/Text/Empty';
 import useAuth from '@customHooks/useAuth';
 import {PersonStatus, RoomStatus} from 'API';
 import ContentCard from 'atoms/ContentCard';
@@ -185,7 +184,7 @@ const TeacherRows = (props: {coTeachersList: Teacher[]; teachersList: Teacher[]}
             })}
           </ul>
         ) : (
-          <Empty>No teachers found</Empty>
+          <div className="flex justify-center items-center p-12">No teachers found</div>
         )}
       </div>
     </ContentCard>
