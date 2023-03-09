@@ -3,7 +3,7 @@ import {
   StudentPageInput
 } from 'interfaces/UniversalLessonInterfaces';
 
-export interface lessonStateType {
+export interface LessonStateType {
   loaded?: boolean;
   universalLessonID?: string;
   universalLessonPageID?: string;
@@ -38,7 +38,7 @@ export interface lessonStateType {
   };
 }
 
-export const lessonState: lessonStateType = {
+export const lessonState: LessonStateType = {
   loaded: false,
   universalLessonID: '',
   universalLessonPageID: '',

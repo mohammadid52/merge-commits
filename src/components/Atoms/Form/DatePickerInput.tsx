@@ -1,11 +1,10 @@
-import React, {forwardRef, useRef, useContext} from 'react';
-import {useEffect} from 'react';
+import {getAsset} from 'assets';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import {forwardRef, useEffect, useRef} from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import {IconContext} from 'react-icons';
 import {IoIosCalendar} from 'react-icons/io';
-import {getAsset} from 'assets';
-import {GlobalContext} from 'contexts/GlobalContext';
 
 const DatePickerInput = ({
   focus,
@@ -19,13 +18,14 @@ const DatePickerInput = ({
 
   useEffect(() => {
     if (focus) {
-      const datepickerElement = datepickerRef.current;
-      datepickerElement.focus();
+      const datepickerElement: any = datepickerRef.current;
+
+      datepickerElement?.focus();
     }
   }, [focus]);
-  const {theme, clientKey} = useContext(GlobalContext);
+  const {theme, clientKey} = useGlobalContext();
   const themeColor = getAsset(clientKey, 'themeClassName');
-  const DateCustomInput = forwardRef(({value, onClick, ...rest}: any, ref: any) => (
+  const DateCustomInput = forwardRef(({value, onClick, ...rest}: any) => (
     <div
       className={`flex w-auto py-2 px-3 rounded-full  ${theme.formSelect} ${theme.outlineNone}`}
       onClick={onClick}>
