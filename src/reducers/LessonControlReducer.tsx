@@ -1,6 +1,6 @@
-import {lessonControlStateType} from 'state/LessonControlState';
+import {LessonControlStateType} from 'state/LessonControlState';
 
-type lessonControlActions =
+export type LessonControlActions =
   | {
       type: 'SET_INITIAL_CONTROL_STATE';
       payload: any;
@@ -35,8 +35,8 @@ type lessonControlActions =
     };
 
 export const lessonControlReducer = (
-  state: lessonControlStateType,
-  action: lessonControlActions
+  state: LessonControlStateType,
+  action: LessonControlActions
 ) => {
   switch (action.type) {
     case 'CLEANUP':
