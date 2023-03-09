@@ -6,7 +6,7 @@ import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import * as customMutations from 'customGraphql/customMutations';
 import {removeLocalStorageData} from '@utilities/localStorage';
 
-type User = {
+export type User = {
   authId: string;
   id: string;
 
@@ -14,11 +14,14 @@ type User = {
   email: string;
   firstName: string;
   lastName: string;
+  location: any[];
   image: string;
   associateInstitute: any[];
   removedFrom: any[];
   status?: PersonStatus;
   onDemand?: boolean;
+  lastLoggedIn: string;
+  lastLoggedOut: string;
   pageState: UserPageState;
   lastEmotionSubmission: string;
   language: string;
@@ -49,7 +52,7 @@ const useAuth = (): {
 } => {
   const context = useGlobalContext();
 
-  const user: User = context.state.user;
+  const user = context.state.user;
   const {updateAuthState} = context;
   const dispatch = context.dispatch;
 
@@ -86,10 +89,10 @@ const useAuth = (): {
       }
     });
 
-  const [cookies, setCookie, removeCookie] = useCookies();
+  const [, , removeCookie] = useCookies();
 
   const authenticate = () => {
-    dispatch({type: 'AUTHENTICATE'});
+    dispatch({type: 'AUTHENTICATE', payload: {}});
   };
 
   const removeAuthToken = () => {

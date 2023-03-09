@@ -40,12 +40,12 @@ const LessonRowComposer = () => {
   const getSeparateDataInPartContent = (id: string) => {
     let result: any[] = [];
     activePageData &&
-      activePageData.pageContent &&
-      activePageData.pageContent.length > 0 &&
-      activePageData.pageContent.forEach((f) => {
-        f.partContent.forEach((d) => {
-          if (d.type === id) {
-            let newPartContent = f.partContent.filter((_d) => _d.type === id);
+      activePageData?.pageContent &&
+      activePageData?.pageContent?.length > 0 &&
+      activePageData?.pageContent?.forEach((f) => {
+        f?.partContent?.forEach((d) => {
+          if (d?.type === id) {
+            let newPartContent = f?.partContent?.filter((_d) => _d.type === id);
             result.push({
               ...f,
               partContent: newPartContent
@@ -211,6 +211,7 @@ const LessonRowComposer = () => {
             </div>
           </div>
         ))}
+
       {isLastPage && <AllEmotions />}
 
       {isStudent && (

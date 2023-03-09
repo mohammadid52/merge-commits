@@ -4,7 +4,7 @@ import {
   UniversalLesson,
   UniversalLessonPage
 } from 'interfaces/UniversalLessonInterfaces';
-import {lessonState as initialLessonState} from 'state/LessonState';
+import {lessonState as initialLessonState, LessonStateType} from 'state/LessonState';
 
 const LESSON_REDUCER_TYPES = {
   TEST: 'TEST',
@@ -211,7 +211,7 @@ export type LessonActions =
     }
   | {
       type: 'UPDATE_TIMER_FOR_PAGE';
-      payload?: {
+      payload: {
         currentPage?: any;
         remainingTime?: number;
       };
