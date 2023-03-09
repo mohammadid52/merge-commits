@@ -8,7 +8,7 @@ import {Auth} from '@aws-amplify/auth';
 import {lessonReducerOLD} from 'reducers/LessonReducerOLD';
 import {lessonStateOLD} from 'state/LessonStateOLD';
 import {getClientKey} from 'utilities/strings';
-import {standardTheme} from 'contexts/GlobalContext';
+import {standardTheme} from 'state/GlobalState';
 
 interface LessonProps {
   children: React.ReactNode;

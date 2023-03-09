@@ -5,15 +5,15 @@ import React, {useContext, useEffect, useReducer, useRef, useState} from 'react'
 import {GlobalActions, globalReducer} from 'reducers/GlobalReducer';
 import {LessonControlActions, lessonControlReducer} from 'reducers/LessonControlReducer';
 import {LessonActions, lessonReducer} from 'reducers/LessonReducer';
-import {
-  allowedAuthIds,
-  globalState,
-  GlobalStateType,
-  standardTheme
-} from 'state/GlobalState';
+import {globalState, GlobalStateType, standardTheme} from 'state/GlobalState';
 import {lessonControlState, LessonControlStateType} from 'state/LessonControlState';
 import {lessonState as lessonStateObject, LessonStateType} from 'state/LessonState';
 import {getClientKey} from 'utilities/strings';
+
+export const allowedAuthIds = [
+  '6c4dd66f-77d5-4aba-bf5a-46566f8a836d',
+  '22241431-5b44-434a-bba1-6dcb40e7c7fa'
+];
 
 interface GlobalProps {
   children: React.ReactNode;
@@ -48,7 +48,7 @@ interface GlobalContextTypes {
 
 const theme = standardTheme;
 
-export const GlobalContext = React.createContext<GlobalContextTypes>({
+export const GlobalContext = React.createContext<any>({
   theme,
   state: globalState,
   authState: 'loading',
@@ -261,4 +261,4 @@ export const GlobalContextProvider = ({children}: GlobalProps) => {
   );
 };
 
-export const useGlobalContext = (): GlobalContextTypes => useContext(GlobalContext);
+export const useGlobalContext = (): any => useContext(GlobalContext);
