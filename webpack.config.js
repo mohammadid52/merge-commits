@@ -70,7 +70,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.tsx?$/,
+        test: /.(ts|tsx)$/,
         exclude: '/node_modules/',
         loaders: 'ts-loader'
       },
@@ -147,17 +147,7 @@ module.exports = {
           }
         ]
       },
-      {
-        test: /.(ts|tsx)$/,
-        use: [
-          {
-            loader: require.resolve('ts-loader'),
-            options: {
-              allowTsInNodeModules: true
-            }
-          }
-        ]
-      },
+
       {
         test: /\.(png|jpe?g|svg|gif)$/,
         use: [
