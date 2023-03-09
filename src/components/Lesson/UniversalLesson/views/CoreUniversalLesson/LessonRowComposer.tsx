@@ -1,4 +1,3 @@
-import PageTimer from '@components/Lesson/Components/PageTimer';
 import {getLocalStorageData, setLocalStorageData} from '@utilities/localStorage';
 import {TeachingStyle} from 'API';
 import AllEmotions from 'components/Lesson/AllEmotions';
@@ -67,7 +66,7 @@ const LessonRowComposer = () => {
       ? activePageData?.pageContent?.forEach((a) => {
           const objArray: any[] = [];
           a.partContent.forEach((b) => {
-            if (!b?.type?.includes('Download')) {
+            if (!b.type.includes('Download')) {
               objArray.push(b);
             }
           });
@@ -101,9 +100,6 @@ const LessonRowComposer = () => {
   const PAGES = lessonState?.lessonData?.lessonPlan || [];
 
   const isLastPage = PAGES?.length - 1 === lessonState.currentPage;
-
-  const estTime = Number(PAGES[lessonState.currentPage]?.estTime || 1); // unit of time here is minutes
-  const estTimeInSeconds = estTime * 60;
 
   useEffect(() => {
     if (PAGES) {
@@ -228,14 +224,13 @@ const LessonRowComposer = () => {
             )}
           </div>
 
+          <TranslationModule />
+
           {shouldShowLessonModule && (
             <LessonModule currentLesson={lessonState?.lessonData} />
           )}
         </>
       )}
-
-      {user.role === 'ST' && <TranslationModule />}
-      {isStudent && <PageTimer startTime={estTimeInSeconds} />}
     </div>
   );
 };

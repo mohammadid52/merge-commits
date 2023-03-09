@@ -9,7 +9,6 @@ const Dashboard = lazy(() => import('components/Dashboard/Dashboard'));
 const Lesson = lazy(() => import('components/Lesson/Lesson'));
 const TeacherView = lazy(() => import('components/TeacherView/TeacherView'));
 const Csv = lazy(() => import('components/Dashboard/Csv/Csv'));
-
 const AuthRoutes = () => {
   const {signOut} = useAuth();
   return (

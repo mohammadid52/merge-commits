@@ -28,7 +28,6 @@ export interface LessonStateType {
   studentViewing?: string;
   isLastPage?: boolean;
   isValid?: boolean;
-  pageTimers: [];
   misc?: {
     leaveModalVisible?: boolean;
     personLessonData?: {
@@ -42,7 +41,6 @@ export const lessonState: LessonStateType = {
   loaded: false,
   universalLessonID: '',
   universalLessonPageID: '',
-  pageTimers: [],
   universalStudentDataID: [],
   studentAuthID: '',
   studentUsername: '',

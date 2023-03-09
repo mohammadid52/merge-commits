@@ -1,6 +1,9 @@
 import * as Yup from 'yup';
-import YupPassword from 'yup-password';
-YupPassword(Yup);
+
+export const LoginSchema = Yup.object().shape({
+  email: Yup.string().email('Invalid email').required('Email cannot be empty'),
+  password: Yup.string().min(4, 'Too Short!').max(15, 'Too Long!')
+});
 
 const helper = {
   min: (field: string, minValue?: number) =>
@@ -8,11 +11,6 @@ const helper = {
   max: (field: string, maxValue?: number) =>
     field + ` cannot be more than ${maxValue || 20} characters`
 };
-
-export const LoginSchema = Yup.object().shape({
-  email: Yup.string().email('Invalid email').required('Email cannot be empty'),
-  password: Yup.string().min(8, 'Too Short!').max(20, 'Too Long!')
-});
 
 export const UserRegisterSchema = Yup.object().shape({
   email: LoginSchema.fields.email,
@@ -32,21 +30,11 @@ export const UserRegisterSchema = Yup.object().shape({
 });
 
 export const CreatePasswordSchema = Yup.object().shape({
-  password: Yup.string()
-    .required()
-    .min(
-      8,
-      'password must contain 8 or more characters with at least one of each: uppercase, lowercase, number and special'
-    )
-    .max(20, helper.max('Password'))
-    .minLowercase(1, 'password must contain at least 1 lower case letter')
-    .minUppercase(1, 'password must contain at least 1 upper case letter')
-    .minNumbers(1, 'password must contain at least 1 number')
-    .minSymbols(1, 'password must contain at least 1 special character')
+  password: LoginSchema.fields.password
 });
 
 export const ConfirmCodeSchema = Yup.object().shape({
-  password: CreatePasswordSchema.fields.password
+  password: LoginSchema.fields.password
 });
 
 export const ForgotSchema = Yup.object().shape({

@@ -261,4 +261,4 @@ export const GlobalContextProvider = ({children}: GlobalProps) => {
   );
 };
 
-export const useGlobalContext = (): any => useContext(GlobalContext);
+export const useGlobalContext = () => useContext(GlobalContext);
