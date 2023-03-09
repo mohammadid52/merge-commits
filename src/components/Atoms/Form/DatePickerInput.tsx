@@ -4,6 +4,7 @@ import {forwardRef, useEffect, useRef} from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import {IconContext} from 'react-icons';
+import React from 'react';
 import {IoIosCalendar} from 'react-icons/io';
 
 const DatePickerInput = ({

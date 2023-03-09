@@ -1,6 +1,7 @@
 const path = require('path');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const Unused = require('./plugins/unused-code');
 
 module.exports = {
   context: path.join(__dirname, './'),
@@ -15,6 +16,7 @@ module.exports = {
     usedExports: true
   },
   plugins: [
+    new Unused(),
     new HtmlWebpackPlugin({
       inject: 'body',
       templateContent: `

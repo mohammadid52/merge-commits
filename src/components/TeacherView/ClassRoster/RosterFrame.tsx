@@ -95,8 +95,6 @@ const RosterFrame = ({
         ref={frameRef}
         className={`absolute bg-white w-full h-full lg:w-2.5/10 max-w-128 flex flex-col items-center z-100`}
         style={{display: breakpoint === 'xl' || breakpoint === '2xl' ? 'block' : 'none'}}>
-        {/* <LessonInfoTitleBar /> */}
-
         <LessonDetails
           rightView={rightView}
           hidden={breakpoint !== 'xl' && breakpoint !== '2xl'}

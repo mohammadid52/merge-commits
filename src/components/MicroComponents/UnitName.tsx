@@ -36,7 +36,7 @@ const UnitName = ({
       }
       return [];
     } catch (error) {
-      logError(error, {authId, email}, 'UnitListRow @getAttachedCourses');
+      logError(error, {authId, email}, 'UnitName @getAttachedCourses');
       return [];
     }
   };
