@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "ES6",
+    "target": "es5",
 
     "lib": ["dom", "dom.iterable", "esnext"],
 
@@ -32,14 +32,11 @@
     "strict": false,
     "forceConsistentCasingInFileNames": true,
     "experimentalDecorators": true,
-    "noUnusedParameters": true,
     "module": "esnext",
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "noImplicitAny": true,
-    "jsx": "react",
-    "strictNullChecks": true,
-    "noUnusedLocals": true
+    "jsx": "react"
   },
   "include": [
     "./src/**/*",
