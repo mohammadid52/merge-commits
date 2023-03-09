@@ -1,6 +1,6 @@
 {
-  "name": "iconoclast",
-  "description": "Lesson for Iconoclast Artists @ SELReady",
+  "name": "iconoclast-lesson-demo",
+  "description": "Demo Lesson for Iconoclast Artists @ SELReady",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -10,7 +10,7 @@
     "build:prod": "NODE_ENV=production webpack --config webpack.prod.js ",
     "watch": "npm run build:dev && node --max-old-space-size=8192 ./node_modules/webpack/bin/webpack.js --watch --inline --hot --progress --config webpack.dev.js",
     "start": "npx servor public index.html 8085 --reload",
-    "analysis": "webpack  --max-old-space-size=8192 --config webpack.analysis.js",
+    "analysis": "webpack --config webpack.analysis.js",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run --record --key 975c7f2a-e638-48b2-a46c-cd2fce404e69",
     "cypress:run-everything": "cypress run --spec ./cypress/e2e/everything.cy.ts --record --key 975c7f2a-e638-48b2-a46c-cd2fce404e69",
@@ -168,7 +168,6 @@
     "uuid": "^8.3.2",
     "webpack-dev-server": "^3.11.0",
     "xlsx": "^0.15.1",
-    "fast-glob": "^3.2.12",
     "yup": "^1.0.2",
     "yup-password": "^0.2.2"
   },
