@@ -11,18 +11,18 @@ module.exports = smp.wrap(
     mode: 'development',
     plugins: [
       new webpack.DefinePlugin({
-        'process.env.NODE_ENV': JSON.stringify('development'),
-      }),
+        'process.env.NODE_ENV': JSON.stringify('development')
+      })
       // new BundleAnalyzerPlugin(),
     ],
     devServer: {
-      watchContentBase: true,
+      watchContentBase: true
     },
     watch: true,
     watchOptions: {
       aggregateTimeout: 1000,
       poll: 2000,
-      ignored: [/node_modules/, 'node_modules'],
-    },
+      ignored: [/node_modules/, 'node_modules']
+    }
   })
 );

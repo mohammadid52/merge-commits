@@ -136,8 +136,6 @@ const LessonSurveyAppWrapper = ({
           </ErrorBoundary>
         )}
 
-        {/* <StudentNavigationForMobile /> */}
-
         {lessonDataLoaded && (
           <Foot
             isAtEnd={isAtEnd}

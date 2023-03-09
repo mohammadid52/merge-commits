@@ -15,7 +15,7 @@ import useUnsavedChanges from 'lesson/UniversalLessonBuilder/hooks/useUnsavedCha
 import {CoreBuilder} from 'lesson/UniversalLessonBuilder/views/CoreBuilder';
 import {Accordion} from 'uiComponents/Accordian';
 import AddContentDialog from '@UlbModals/AddContentDialog';
-import CheckpointComponent from '@UlbModals/CheckpointFormDialog';
+import CheckpointFormDialog from '@UlbModals/CheckpointFormDialog';
 import DividerModal from '@UlbModals/DividerModal';
 import DownloadModal from '@UlbModals/DownloadModal';
 import HeaderModalComponent from '@UlbModals/HeaderFormDialog';
@@ -345,7 +345,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
           <HeaderModalComponent classString={selectedContentClass} {...commonProps} />
         );
       case 'questions':
-        return <CheckpointComponent {...commonProps} />;
+        return <CheckpointFormDialog {...commonProps} />;
       case 'image':
         return (
           <ImageFormComponent

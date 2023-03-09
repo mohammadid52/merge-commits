@@ -1,10 +1,10 @@
 import ErrorBoundary from '@components/Error/ErrorBoundary';
-import {isEmpty, orderBy} from 'lodash';
+import {isEmpty} from 'lodash';
 import camelCase from 'lodash/camelCase';
 import map from 'lodash/map';
-import React, {forwardRef, useEffect, useState} from 'react';
+import React, {forwardRef} from 'react';
 import {DragDropContext, Draggable, Droppable} from 'react-beautiful-dnd';
-import '../../style/atoms/_table.scss';
+import '../../style/_table.scss';
 import ListBottomBar, {ListBottomBar as IListBottomBar} from './ListBottomBar';
 
 interface IDataListItem {

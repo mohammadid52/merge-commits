@@ -1,6 +1,5 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {useQuery} from '@customHooks/urlParam';
-import useAuth from '@customHooks/useAuth';
 import {CreateUniversalArchiveDataInput, PartInput, TeachingStyle} from 'API';
 import {GlobalContext} from 'contexts/GlobalContext';
 import * as mutations from 'graphql/mutations';
@@ -14,8 +13,8 @@ import {
   UniversalLessonPage,
   UniversalLessonStudentData
 } from 'interfaces/UniversalLessonInterfaces';
-import React, {useContext, useEffect, useRef, useState} from 'react';
-import {useHistory, useParams, useRouteMatch} from 'react-router-dom';
+import React, {useContext, useEffect, useState} from 'react';
+import {useParams} from 'react-router-dom';
 import {getLocalStorageData} from 'utilities/localStorage';
 import {v4 as uuidV4} from 'uuid';
 import {ILessonSurveyApp} from './Lesson';
@@ -488,86 +487,6 @@ const SurveyApp = (props: ILessonSurveyApp) => {
       createJournalData={createStudentArchiveData}
       {...props}
     />
-    // <ErrorBoundary componentName="SurveyApp">
-    //   {/*
-    //   TODO: Add this again later
-    //   */}
-    //   {/* <FloatingSideMenu /> */}
-    //   <div
-    //     id="survey-app-container"
-    //     className={`${theme.bg} w-full h-full flex flex-col items-start dark-scroll overflow-y-auto`}
-    //     ref={topLessonRef}>
-    //     <div
-    //       className={`opacity-${
-    //         showRequiredNotification
-    //           ? '100 translate-x-0 transform z-100'
-    //           : '0 translate-x-10 transform'
-    //       } absolute bottom-5 right-5 w-96 py-4 px-6 rounded-md shadow bg-gray-800 duration-300 transition-all`}>
-    //       <p className="text-white font-medium tracking-wide">
-    //         <span className="text-red-500">*</span>Please fill all the required fields
-    //       </p>
-    //     </div>
-    //     <div className={`absolute bottom-1 left-0 py-4 px-6 z-max  w-auto `}>
-    //       <h6 className="text-xs text-shadow text-gray-500">{SURVEY_NAME}</h6>
-    //     </div>
-
-    //     <div className="fixed " style={{zIndex: 5000}}>
-    //       <LessonHeaderBar
-    //         lessonDataLoaded={lessonDataLoaded}
-    //         overlay={overlay}
-    //         pageStateUpdated={pageStateUpdated}
-    //         createJournalData={createStudentArchiveData}
-    //         setOverlay={setOverlay}
-    //         canContinue={canContinue}
-    //         updatePageInLocalStorage={updatePageInLocalStorage}
-    //         personLessonData={personLessonData}
-    //         isAtEnd={isAtEnd}
-    //         setPersonLessonData={setPersonLessonData}
-    //         setisAtEnd={setisAtEnd}
-    //         validateRequired={validateRequired}
-    //         handleRequiredNotification={handleRequiredNotification}
-    //       />
-    //     </div>
-    //     <div
-    //       className={`${
-    //         breakpoint === 'xs' || breakpoint === 'sm' ? 'top-2' : 'top-6'
-    //       } relative lesson-body-container`}>
-    //       {!lessonDataLoaded ? (
-    //         <div className="mt-4 mb-8 lesson-page-container">
-    //           <LessonPageLoader />
-    //         </div>
-    //       ) : (
-    //         <ErrorBoundary
-    //           authId={user.authId}
-    //           email={user.email}
-    //           componentName="CoreUniversalLesson"
-    //           fallback={<h1>Error in the Lesson App</h1>}>
-    //           {/* ADD LESSONWRAPPER HERE */}
-    //           <div className="mt-4 mb-8 lesson-page-container ">
-    //             <CoreUniversalLesson
-    //               validateRequired={validateRequired}
-    //               invokeRequiredField={() => {
-    //                 invokeRequiredField();
-    //                 handleRequiredNotification();
-    //               }}
-    //               canContinue={canContinue}
-    //             />
-    //           </div>
-    //         </ErrorBoundary>
-    //       )}
-
-    //       {/* <StudentNavigationForMobile /> */}
-
-    //       {lessonDataLoaded && (
-    //         <Foot
-    //           isAtEnd={isAtEnd}
-    //           setisAtEnd={setisAtEnd}
-    //           handleRequiredNotification={handleRequiredNotification}
-    //         />
-    //       )}
-    //     </div>
-    //   </div>
-    // </ErrorBoundary>
   );
 };
 

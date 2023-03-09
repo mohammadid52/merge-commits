@@ -1,4 +1,3 @@
-import {Storage} from '@aws-amplify/storage';
 import {RoomStatusList} from '@components/Dashboard/Admin/Institutons/EditBuilders/CurricularsView/TabsActions/CourseBuilder/CourseFormComponent';
 import {uploadImageToS3} from '@graphql/functions';
 import Buttons from 'atoms/Buttons';
