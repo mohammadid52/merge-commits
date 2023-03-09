@@ -1,7 +1,9 @@
 {
   "compilerOptions": {
-    "target": "ES2016",
+    "target": "ES6",
+
     "lib": ["dom", "dom.iterable", "esnext"],
+
     "outDir": "build",
     "baseUrl": "src",
     "paths": {
@@ -23,23 +25,21 @@
       "@dictionary/*": ["dictionary/*"],
       "reducers/*": ["reducers/*"]
     },
-    "module": "ESNext",
-    "jsx": "react",
-    "sourceMap": true,
-    "removeComments": true,
-    "noEmitOnError": true,
+    "allowJs": true,
+    "skipLibCheck": true,
     "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": false,
     "forceConsistentCasingInFileNames": true,
-
-    /* Type Checking */
-    "strict": true,
-    "noImplicitAny": true,
-    "noUnusedLocals": true,
+    "experimentalDecorators": true,
     "noUnusedParameters": true,
-    "noImplicitReturns": true,
-
-    /* Completeness */
-    "skipLibCheck": true
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "noImplicitAny": true,
+    "jsx": "react",
+    "strictNullChecks": true,
+    "noUnusedLocals": true
   },
   "include": [
     "./src/**/*",
