@@ -1,8 +1,8 @@
 // import React from 'react';
 import {Dicitionary, PersonStatus, UserPageState} from 'API';
-import {globalStateType, globalState} from 'state/GlobalState';
+import {globalState, GlobalStateType} from 'state/GlobalState';
 
-type globalActions =
+export type GlobalActions =
   | {
       type: 'UPDATE_SIDEBAR';
       payload: {
@@ -131,7 +131,7 @@ type globalActions =
       payload: Dicitionary[];
     };
 
-export const globalReducer = (state: globalStateType, action: globalActions) => {
+export const globalReducer = (state: any, action: GlobalActions) => {
   switch (action.type) {
     case 'UPDATE_SIDEBAR':
       return {

@@ -1,5 +1,3 @@
-import {UniversalLessonStudentData} from 'interfaces/UniversalLessonInterfaces';
-
 export type studentObject = {
   personAuthID: string;
   id: string;
@@ -20,7 +18,7 @@ export type studentObject = {
   };
 };
 
-export interface lessonControlStateType {
+export interface LessonControlStateType {
   status: string;
   currentPage: number;
   roster: Array<studentObject>;
@@ -32,7 +30,7 @@ export interface lessonControlStateType {
   studentViewing: string;
 }
 
-export const lessonControlState: lessonControlStateType = {
+export const lessonControlState: LessonControlStateType = {
   status: '',
   currentPage: 0,
   roster: [],
