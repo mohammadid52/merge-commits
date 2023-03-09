@@ -10,8 +10,9 @@ import * as customMutations from 'customGraphql/customMutations';
 import {setLocalStorageData} from '@utilities/localStorage';
 import {isEmpty} from 'lodash';
 import {v4 as uuidV4} from 'uuid';
-import {allowedAuthIds} from '@contexts/GlobalContext';
+
 import {Auth} from 'aws-amplify';
+import {allowedAuthIds} from 'state/GlobalState';
 
 interface S3UploadOptions {
   onSuccess?: (result: Object) => void;
@@ -46,7 +47,7 @@ export const uploadImageToS3 = async (
       ContentEncoding: 'base64',
       progressCallback: ({loaded, total}: any) => {
         const progress = (loaded * 100) / total;
-        options?.progressCallback({progress, loaded, total});
+        options?.progressCallback?.({progress, loaded, total});
       }
     });
 
@@ -55,14 +56,16 @@ export const uploadImageToS3 = async (
     }
     return result;
   } catch (error) {
-    logError(
-      error,
-      {authId: options.auth.authId, email: options.auth.email},
-      'uploadImageToS3'
-    );
+    if (options?.auth) {
+      logError(
+        error,
+        {authId: options.auth.authId, email: options.auth.email},
+        'uploadImageToS3'
+      );
+    }
     if (options && options?.onError && typeof options?.onError === 'function') {
       // if there is a error callback, call the onError function
-      options.onError(error);
+      options.onError(error as Error);
     } else {
       // otherwise throw the error to console
       console.error(error);
@@ -195,7 +198,7 @@ export const checkUniqRoomName = async (
   instituteId: string,
   roomName: string,
   authId: string
-) => {
+): Promise<boolean> => {
   try {
     const list: any = await API.graphql(
       graphqlOperation(queries.listRooms, {
@@ -208,6 +211,7 @@ export const checkUniqRoomName = async (
     return list.data.listRooms.items.length === 0 ? true : false;
   } catch (error) {
     console.error(error);
+    return false;
   }
 };
 
@@ -313,21 +317,4 @@ export async function signIn(
   );
   sessionStorage.setItem('accessToken', user.signInUserSession.accessToken.jwtToken);
   return user;
-}
-
-async function resendConfirmationCode(username: string) {
-  try {
-    await Auth.resendSignUp(username);
-    console.log('code resent successfully');
-  } catch (err) {
-    console.log('error resending code: ', err);
-  }
-}
-
-async function confirmSignUp(username: string, code: string) {
-  try {
-    await Auth.confirmSignUp(username, code);
-  } catch (error) {
-    console.log('error confirming sign up', error);
-  }
 }

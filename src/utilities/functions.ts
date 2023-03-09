@@ -1,6 +1,6 @@
-import {allowedAuthIds} from '@contexts/GlobalContext';
 import {getAsset} from 'assets';
 import {isEmpty} from 'lodash';
+import {allowedAuthIds} from 'state/GlobalState';
 import {getLocalStorageData, setLocalStorageData} from './localStorage';
 import {getClientKey} from './strings';
 
@@ -55,6 +55,7 @@ export const ellipsis = (text: string, len: number): string => {
       return `${text.substring(0, len)}...`;
     }
   }
+  return '';
 };
 
 export const randomNumber = (min: number, max: number): number => {
