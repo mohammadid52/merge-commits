@@ -9,8 +9,8 @@ PURPLE='\033[01;35m'
 NONE='\033[00m'
 
 commit (){
-      git add ./src/aws-exports.js
-      git commit -m "update aws-exports.js"
+      git add ./src/aws-exports.ts
+      git commit -m "update aws-exports.ts"
 
 }
 
@@ -20,22 +20,22 @@ commit (){
 case $branch in
     "new-dev")
           echo ${PURPLE}"Changing environment to Iconoclast production because you are in new-dev branch"${NONE}
-          cp ./src/config/aws-exports.ia.js ./src/aws-exports.js
+          cp ./src/config/aws-exports.ia.js ./src/aws-exports.ts
           commit
         ;;
     "master")
           echo ${PURPLE}"Changing environment to Iconoclast production because you are in master branch"${NONE}
-          cp ./src/config/aws-exports.ia.js ./src/aws-exports.js
+          cp ./src/config/aws-exports.ia.js ./src/aws-exports.ts
           commit
         ;;
     "master-curate")
           echo ${PURPLE}"Changing environment to Project Curate production because you are in master-curate branch"${NONE}
-          cp ./src/config/aws-exports.pc.js ./src/aws-exports.js
+          cp ./src/config/aws-exports.pc.js ./src/aws-exports.ts
           commit
         ;;
     *)
           echo ${PURPLE}"Changing environment to Development"${NONE}
-          cp ./src/config/aws-exports.uatenv.js ./src/aws-exports.js
+          cp ./src/config/aws-exports.uatenv.js ./src/aws-exports.ts
           commit
           
 esac
