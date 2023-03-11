@@ -1,28 +1,31 @@
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import useAuth from '@customHooks/useAuth';
-import {getDictionaries, logError} from '@graphql/functions';
-import {RoomStatus, UpdateUniversalLessonInput} from 'API';
-import Loader from 'atoms/Loader';
-import StepComponent, {IStepElementInterface} from 'atoms/StepComponent';
-import {GlobalContext} from 'contexts/GlobalContext';
-import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
-import * as customMutations from 'customGraphql/customMutations';
-import * as customQueries from 'customGraphql/customQueries';
-import useDictionary from 'customHooks/dictionary';
-import {useQuery} from 'customHooks/urlParam';
-import * as mutations from 'graphql/mutations';
-import {LessonPlansProps, SavedLessonDetailsProps} from 'interfaces/LessonInterfaces';
-import ModalPopUp from 'molecules/ModalPopUp';
-import React, {useContext, useEffect, useState} from 'react';
-import {FaQuestionCircle, FaRegEye} from 'react-icons/fa';
-import {IoCardSharp, IoDocumentText} from 'react-icons/io5';
-import {useHistory, useParams, useRouteMatch} from 'react-router-dom';
-import {getImageFromS3Static} from 'utilities/services';
-import {languageList, lessonTypeList} from 'utilities/staticData';
-import UnitList from '../Institutons/EditBuilders/CurricularsView/TabsActions/Unit/UnitList';
-import AddNewLessonForm from './StepActionComponent/AddNewLessonForm/AddNewLessonForm';
-import LearningEvidence from './StepActionComponent/LearningEvidence/LearningEvidence';
-import LessonActivities from './StepActionComponent/LessonActivities';
+import { GraphQLAPI as API, graphqlOperation } from "@aws-amplify/api-graphql";
+import useAuth from "@customHooks/useAuth";
+import { logError } from "@graphql/functions";
+import { RoomStatus, UpdateUniversalLessonInput } from "API";
+import Loader from "atoms/Loader";
+import StepComponent, { IStepElementInterface } from "atoms/StepComponent";
+import { useGlobalContext } from "contexts/GlobalContext";
+import { useULBContext } from "contexts/UniversalLessonBuilderContext";
+import * as customMutations from "customGraphql/customMutations";
+import * as customQueries from "customGraphql/customQueries";
+import useDictionary from "customHooks/dictionary";
+import { useQuery } from "customHooks/urlParam";
+import * as mutations from "graphql/mutations";
+import {
+  LessonPlansProps,
+  SavedLessonDetailsProps,
+} from "interfaces/LessonInterfaces";
+import ModalPopUp from "molecules/ModalPopUp";
+import { useEffect, useState } from "react";
+import { FaQuestionCircle, FaRegEye } from "react-icons/fa";
+import { IoCardSharp, IoDocumentText } from "react-icons/io5";
+import { useHistory, useParams, useRouteMatch } from "react-router-dom";
+import { getImageFromS3Static } from "utilities/services";
+import { languageList, lessonTypeList } from "utilities/staticData";
+import UnitList from "../Institutons/EditBuilders/CurricularsView/TabsActions/Unit/UnitList";
+import AddNewLessonForm from "./StepActionComponent/AddNewLessonForm/AddNewLessonForm";
+import LearningEvidence from "./StepActionComponent/LearningEvidence/LearningEvidence";
+import LessonActivities from "./StepActionComponent/LessonActivities";
 
 export interface InitialData {
   name: string;
@@ -37,7 +40,7 @@ export interface InitialData {
   status: RoomStatus;
   notes?: string;
   notesHtml?: string;
-  languages: {id: string; name: string; value: string}[];
+  languages: { id: string; name: string; value: string }[];
   institution?: InputValueObject;
   language: string[];
   imageCaption?: string;
@@ -59,90 +62,89 @@ interface LessonBuilderProps {
 }
 
 const LessonBuilder = (props: LessonBuilderProps) => {
-  const {institutionList, instId} = props;
+  const { institutionList, instId } = props;
   const history = useHistory();
   const match = useRouteMatch();
   const params = useQuery(location.search);
-  const step = params.get('step');
+  const step = params.get("step");
   const lessonIdFromUrl = (useParams() as any).lessonId;
-  const {clientKey, userLanguage, scanLessonAndFindComplicatedWord} = useContext(
-    GlobalContext
-  );
-  const {setUniversalLessonDetails, universalLessonDetails} = useULBContext();
-  const {AddNewLessonFormDict, LessonBuilderDict} = useDictionary(clientKey);
+  const { userLanguage, scanLessonAndFindComplicatedWord } = useGlobalContext();
+  const { setUniversalLessonDetails, universalLessonDetails } = useULBContext();
+  const { AddNewLessonFormDict, LessonBuilderDict } = useDictionary();
 
   const initialData = {
-    name: '',
+    name: "",
     status: RoomStatus.ACTIVE,
-    id: '',
-    type: {id: '', name: '', value: ''},
-    duration: '1',
-    purpose: '',
-    purposeHtml: '<p></p>',
-    studentMaterials: '<p></p>',
-    objective: '',
-    objectiveHtml: '<p></p>',
-    notes: '',
-    notesHtml: '<p></p>',
-    languages: [{id: '1', name: 'English', value: 'EN'}],
-    institution: {id: instId, name: '', value: instId},
-    language: [''],
-    imageUrl: '',
-    imageCaption: '',
-    studentSummary: '',
+    id: "",
+    type: { id: "", name: "", value: "" },
+    duration: "1",
+    purpose: "",
+    purposeHtml: "<p></p>",
+    studentMaterials: "<p></p>",
+    objective: "",
+    objectiveHtml: "<p></p>",
+    notes: "",
+    notesHtml: "<p></p>",
+    languages: [{ id: "1", name: "English", value: "EN" }],
+    institution: { id: instId, name: "", value: instId },
+    language: [""],
+    imageUrl: "",
+    imageCaption: "",
+    studentSummary: "",
     lessonPlan: [{}],
-    targetAudience: ''
+    targetAudience: "",
   };
   const instructionInitialState = {
-    introductionTitle: '',
-    instructionsTitle: '',
-    summaryTitle: '',
-    introduction: '',
-    instructions: '',
-    summary: ''
+    introductionTitle: "",
+    instructionsTitle: "",
+    summaryTitle: "",
+    introduction: "",
+    instructions: "",
+    summary: "",
   };
 
   const assessmentScrollerStep = [
-    {name: 'Overview', icon: <IoCardSharp />},
-    {name: 'Instructions', icon: <IoDocumentText />, isDisabled: true},
-    {name: 'Builder', icon: <FaQuestionCircle />, isDisabled: true},
-    {name: 'Preview Details', icon: <FaRegEye />, isDisabled: true}
+    { name: "Overview", icon: <IoCardSharp /> },
+    { name: "Instructions", icon: <IoDocumentText />, isDisabled: true },
+    { name: "Builder", icon: <FaQuestionCircle />, isDisabled: true },
+    { name: "Preview Details", icon: <FaRegEye />, isDisabled: true },
   ];
   const lessonScrollerStep = [
-    {name: 'Overview', icon: <IoCardSharp />},
-    {name: 'Preview Details', icon: <FaRegEye />, isDisabled: true}
+    { name: "Overview", icon: <IoCardSharp /> },
+    { name: "Preview Details", icon: <FaRegEye />, isDisabled: true },
   ];
 
-  const [designersList, setDesignersList] = useState([]);
+  const [designersList, setDesignersList] = useState<any[]>([]);
   const [designerListLoading, setDesignersListLoading] = useState(false);
   const [loading, setLoading] = useState(false);
   const [updating, setUpdating] = useState(false);
-  const [curriculumLoading, setCurriculumLoading] = useState(false);
-  const [formData, setFormData] = useState<InitialData>(initialData);
-  const [measurementList, setMeasurementList] = useState([]);
-  const [selectedMeasurements, setSelectedMeasurements] = useState([]);
-  const [savedLessonDetails, setSavedLessonDetails] = useState<SavedLessonDetailsProps>({
-    lessonPlans: null,
-    lessonInstructions: instructionInitialState
-  });
-  const [selectedDesigners, setSelectedDesigners] = useState([]);
-  const [curriculumList, setCurriculumList] = useState([]);
 
-  const [selectedCurriculumList, setSelectedCurriculumList] = useState([]);
-  const [addedSyllabus, setAddedSyllabus] = useState([]);
-  const [lessonId, setLessonId] = useState('');
-  const [activeStep, setActiveStep] = useState('overview');
-  const [lessonBuilderSteps, setLessonBuilderSteps] = useState(lessonScrollerStep);
-  const [institutionData, setInstitutionData] = useState<any>(null);
+  const [formData, setFormData] = useState<InitialData>(initialData);
+
+  const [selectedMeasurements, setSelectedMeasurements] = useState<any[]>([]);
+  const [savedLessonDetails, setSavedLessonDetails] =
+    useState<SavedLessonDetailsProps>({
+      lessonPlans: null,
+      lessonInstructions: instructionInitialState,
+    });
+  const [selectedDesigners, setSelectedDesigners] = useState<any[]>([]);
+  const [curriculumList, setCurriculumList] = useState<any[]>([]);
+
+  const [addedSyllabus, setAddedSyllabus] = useState<any[]>([]);
+  const [lessonId, setLessonId] = useState("");
+  const [activeStep, setActiveStep] = useState("overview");
+  const [lessonBuilderSteps, setLessonBuilderSteps] =
+    useState(lessonScrollerStep);
+
   const [unsavedChanges, setUnsavedChanges] = useState(false);
   const [warnModal, setWarnModal] = useState({
     show: false,
-    message: LessonBuilderDict[userLanguage]['MESSAGES']['UNSAVE'],
-    url: ''
+    message: LessonBuilderDict[userLanguage]["MESSAGES"]["UNSAVE"],
+    url: "",
   });
   const [serverMessage, setServerMessage] = useState({
     isError: false,
-    message: ''
+    message: "",
   });
 
   const fetchStaffByInstitution = async (institutionID: string) => {
@@ -151,14 +153,18 @@ const LessonBuilder = (props: LessonBuilderProps) => {
       setDesignersListLoading(true);
       const staffList: any = await API.graphql(
         graphqlOperation(customQueries.getStaffsForInstitution, {
-          filter: {institutionID: {eq: institutionID}}
+          filter: { institutionID: { eq: institutionID } },
         })
       );
       const listStaffs = staffList.data.listStaff;
       const updatedList = listStaffs?.items.map((item: any) => ({
         id: item?.id,
-        name: `${item?.staffMember?.firstName || ''} ${item?.staffMember.lastName || ''}`,
-        value: `${item?.staffMember?.firstName || ''} ${item?.staffMember.lastName || ''}`
+        name: `${item?.staffMember?.firstName || ""} ${
+          item?.staffMember.lastName || ""
+        }`,
+        value: `${item?.staffMember?.firstName || ""} ${
+          item?.staffMember.lastName || ""
+        }`,
       }));
       setDesignersList(updatedList);
       setDesignersListLoading(false);
@@ -168,34 +174,31 @@ const LessonBuilder = (props: LessonBuilderProps) => {
   };
 
   const changeLessonType = (type: string) => {
-    if (type === 'lesson') {
+    if (type === "lesson") {
       setLessonBuilderSteps(lessonScrollerStep);
     } else {
       setLessonBuilderSteps(assessmentScrollerStep);
     }
   };
   const [warnModal2, setWarnModal2] = useState({
-    stepOnHold: '',
+    stepOnHold: "",
     show: false,
-    message: ''
+    message: "",
   });
 
   const [unSavedCheckPData, setUnsavedCheckPData] = useState<any>({});
   const [checkpQuestions, setCheckpQuestions] = useState<any>([]);
-  const [selDesigners, setSelDesigners] = useState<any>([]);
-  const [showModal, setShowModal] = useState(false);
+
   const [savingUnsavedCP, setSavingUnsavedCP] = useState(false);
-  const [individualFieldEmpty, setIndividualFieldEmpty] = useState(false);
-  const [institutionCollection, setInstitutionCollection] = useState([]);
 
   const getInstitutionByID = async (id: string) => {
     try {
       const inst: any = await API.graphql(
-        graphqlOperation(customQueries.getInstitution, {id})
+        graphqlOperation(customQueries.getInstitution, { id })
       );
       return inst.data.getInstitution;
     } catch (error) {
-      console.error('@getInstitutionByID: ', error);
+      console.error("@getInstitutionByID: ", error);
     }
   };
 
@@ -203,7 +206,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     return rubrics.map((id) => {
       return {
         rubricID: id,
-        checked: true
+        checked: true,
       };
     });
   };
@@ -212,24 +215,23 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     try {
       const result: any = await API.graphql(
         graphqlOperation(customQueries.getUniversalLesson, {
-          id: lessonId
+          id: lessonId,
         })
       );
       const savedData = result.data.getUniversalLesson;
 
-      const dictionaries = await getDictionaries();
-
       const updatedLessonPlan = scanLessonAndFindComplicatedWord(
-        savedData.lessonPlan,
-        dictionaries
+        savedData.lessonPlan
       );
-      setUniversalLessonDetails({...savedData, lessonPlan: updatedLessonPlan});
+      setUniversalLessonDetails({
+        ...savedData,
+        lessonPlan: updatedLessonPlan,
+      });
 
       if (savedData.institutionID) {
         const institution = await getInstitutionByID(savedData.institutionID);
 
-        setInstitutionData(institution);
-        setSelectedMeasurements(getRubricsData(savedData?.rubrics || []));
+        setSelectedMeasurements(getRubricsData?.(savedData?.rubrics || []));
         setFormData({
           ...formData,
           ...savedData,
@@ -240,15 +242,17 @@ const LessonBuilder = (props: LessonBuilderProps) => {
           imageUrl: savedData.cardImage,
           imagePreviewUrl: savedData.cardImage
             ? getImageFromS3Static(savedData.cardImage)
-            : '',
-          name: savedData?.title || '--',
+            : "",
+          name: savedData?.title || "--",
           type:
             savedData.type &&
             lessonTypeList.find((item: any) => item.value === savedData.type),
-          purposeHtml: savedData?.purpose ? savedData.purpose : '',
-          notesHtml: savedData?.notes ? savedData.notes : '',
-          studentMaterials: savedData?.studentMaterials ? savedData.studentMaterials : '',
-          objectiveHtml: savedData.objectives ? savedData.objectives[0] : '',
+          purposeHtml: savedData?.purpose ? savedData.purpose : "",
+          notesHtml: savedData?.notes ? savedData.notes : "",
+          studentMaterials: savedData?.studentMaterials
+            ? savedData.studentMaterials
+            : "",
+          objectiveHtml: savedData.objectives ? savedData.objectives[0] : "",
           languages: savedData.language.map((it: any) =>
             languageList.find((it2: any) => it2.value === it)
           ),
@@ -257,8 +261,8 @@ const LessonBuilder = (props: LessonBuilderProps) => {
           institution: {
             id: institution?.id,
             name: institution?.name,
-            value: institution?.name
-          }
+            value: institution?.name,
+          },
         });
         fetchStaffByInstitution(savedData.institutionID);
       }
@@ -269,8 +273,10 @@ const LessonBuilder = (props: LessonBuilderProps) => {
       setLoading(false);
     } catch (error) {
       console.error(error.message);
-      console.log('Error while fetching lesson data');
-      history.push(`/dashboard/manage-institutions/institution/${instId}/lessons`);
+      console.log("Error while fetching lesson data");
+      history.push(
+        `/dashboard/manage-institutions/institution/${instId}/lessons`
+      );
     }
   };
 
@@ -278,8 +284,8 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     const result: any = await API.graphql(
       graphqlOperation(customQueries.listUniversalSyllabusLessons, {
         filter: {
-          lessonID: {eq: lessonId}
-        }
+          lessonID: { eq: lessonId },
+        },
       })
     );
     const assignedSyllabus = result?.data?.listUniversalSyllabusLessons.items;
@@ -294,12 +300,12 @@ const LessonBuilder = (props: LessonBuilderProps) => {
       fetchUniversalSyllabus();
     } else {
       setUniversalLessonDetails({
-        id: '',
-        summary: '',
-        designers: [''],
-        teachers: [''],
-        categories: [''],
-        lessonPlan: []
+        id: "",
+        summary: "",
+        designers: [""],
+        teachers: [""],
+        categories: [""],
+        lessonPlan: [],
       });
     }
   }, [lessonId]);
@@ -325,12 +331,16 @@ const LessonBuilder = (props: LessonBuilderProps) => {
       const input = {
         checkpointID: checkpointID,
         questionID: quesId,
-        required: required ? required : false
+        required: required ? required : false,
       };
-      const questions: any = await API.graphql(
-        graphqlOperation(customMutations.createCheckpointQuestions, {input: input})
+      await API.graphql(
+        graphqlOperation(customMutations.createCheckpointQuestions, {
+          input: input,
+        })
       );
-    } catch {
+    } catch (error) {
+      console.error(error);
+
       // setValidation({
       //   title: '',
       //   label: '',
@@ -341,14 +351,16 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     }
   };
 
+  const selDesigners: any[] = [];
+
   const saveNewCheckPoint = async () => {
     setSavingUnsavedCP(true);
     try {
       const input = {
-        stage: 'checkpoint',
-        type: 'checkpoint',
+        stage: "checkpoint",
+        type: "checkpoint",
         label: unSavedCheckPData.label,
-        title: unSavedCheckPData?.title || '--',
+        title: unSavedCheckPData?.title || "--",
         subtitle: unSavedCheckPData.subtitle,
         instructionsTitle: unSavedCheckPData.instructionsTitle,
         instructions: unSavedCheckPData.instructionHtml,
@@ -356,60 +368,65 @@ const LessonBuilder = (props: LessonBuilderProps) => {
         objectives: unSavedCheckPData.objectiveHtml,
         designers: selDesigners.map((item: any) => item.id),
         language: unSavedCheckPData.language.value,
-        estTime: unSavedCheckPData.estTime ? parseInt(unSavedCheckPData.estTime) : 0
+        estTime: unSavedCheckPData.estTime
+          ? parseInt(unSavedCheckPData.estTime)
+          : 0,
       };
       const results: any = await API.graphql(
-        graphqlOperation(customMutations.createCheckpoint, {input: input})
+        graphqlOperation(customMutations.createCheckpoint, { input: input })
       );
       const newCheckpoint = results?.data?.createCheckpoint;
       if (newCheckpoint) {
         let lessonCheckpointInput = {
           lessonID: lessonId,
           checkpointID: newCheckpoint.id,
-          position: 0
+          position: 0,
         };
         let lessonPlansInput = !savedLessonDetails.lessonPlans?.length
           ? [
               {
-                type: 'checkpoint',
+                type: "checkpoint",
                 LessonComponentID: newCheckpoint.id,
                 sequence: 0,
-                stage: 'checkpoint'
-              }
+                stage: "checkpoint",
+              },
             ]
           : [
               ...savedLessonDetails.lessonPlans,
               {
-                type: 'checkpoint',
+                type: "checkpoint",
                 LessonComponentID: newCheckpoint.id,
                 sequence: savedLessonDetails.lessonPlans.length,
-                stage: 'checkpoint'
-              }
+                stage: "checkpoint",
+              },
             ];
-        let [lessonCheckpoint, lesson]: any = await Promise.all([
+        let [_, lesson]: any = await Promise.all([
           await API.graphql(
             graphqlOperation(customMutations.createLessonCheckpoint, {
-              input: lessonCheckpointInput
+              input: lessonCheckpointInput,
             })
           ),
           await API.graphql(
             graphqlOperation(customMutations.updateLesson, {
               input: {
                 id: lessonId,
-                lessonPlan: lessonPlansInput
-              }
+                lessonPlan: lessonPlansInput,
+              },
             })
-          )
+          ),
         ]);
-        let questions = Promise.all(
+        Promise.all(
           checkpQuestions.map(async (item: any) =>
             addCheckpointQuestions(item.id, newCheckpoint.id, item.required)
           )
         );
         let checkpQuestionsIds = checkpQuestions.map((item: any) => item.id);
-        let seqItem: any = await API.graphql(
+        await API.graphql(
           graphqlOperation(mutations.createCSequences, {
-            input: {id: `Ch_Ques_${newCheckpoint.id}`, sequence: checkpQuestionsIds}
+            input: {
+              id: `Ch_Ques_${newCheckpoint.id}`,
+              sequence: checkpQuestionsIds,
+            },
           })
         );
 
@@ -418,7 +435,6 @@ const LessonBuilder = (props: LessonBuilderProps) => {
       } else {
       }
       onCheckpointModalClose(false);
-      setShowModal(false);
     } catch (error) {
       console.error(error);
     } finally {
@@ -432,7 +448,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
 
       setWarnModal2({
         ...warnModal2,
-        show: false
+        show: false,
       });
     } else {
       // clicked on no button
@@ -440,25 +456,24 @@ const LessonBuilder = (props: LessonBuilderProps) => {
       setActiveStep(warnModal2.stepOnHold);
 
       setWarnModal2({
-        stepOnHold: '',
+        stepOnHold: "",
         show: false,
-        message: ''
+        message: "",
       });
-      setShowModal(false);
+
       setUnsavedChanges(false);
       setUnsavedCheckPData({});
       setCheckpQuestions([]);
     }
   };
 
-  const fetchCurriculum = async (assignedSyllabus: any = addedSyllabus) => {
+  const fetchCurriculum = async (_: any = addedSyllabus) => {
     try {
-      setCurriculumLoading(true);
       const list: any = await API.graphql(
         graphqlOperation(customQueries.listCurriculaForLesson, {
           filter: {
-            institutionID: {eq: formData?.institution?.id}
-          }
+            institutionID: { eq: formData?.institution?.id },
+          },
         })
       );
 
@@ -482,13 +497,11 @@ const LessonBuilder = (props: LessonBuilderProps) => {
               curriculumId: item3?.curriculum?.id,
               curriculumName: item3?.curriculum?.name,
               roomName: item2.name,
-              roomId: item2.id
+              roomId: item2.id,
             });
           });
         });
       });
-
-      setInstitutionCollection(curriculumIds);
 
       // let selectedCurriculums: any = [];
 
@@ -508,9 +521,8 @@ const LessonBuilder = (props: LessonBuilderProps) => {
       //   }
       // });
       // setSelectedCurriculumList(selectedCurriculums);
-      setCurriculumLoading(false);
     } catch (error) {
-      setCurriculumLoading(false);
+      console.error(error);
     }
   };
 
@@ -518,13 +530,13 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     const redirectionUrl = `${match.url}?lessonId=${lessonId}&step=${step}`;
     setServerMessage({
       isError: false,
-      message: ''
+      message: "",
     });
     if (unsavedChanges) {
       setWarnModal({
         show: true,
-        message: 'Do you want to save changes before going?',
-        url: redirectionUrl
+        message: "Do you want to save changes before going?",
+        url: redirectionUrl,
       });
     } else {
       setUnsavedChanges(false);
@@ -532,8 +544,9 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     }
   };
 
-  const {authId, email} = useAuth();
-  const updateMeasurementList = async (rubrics: any[] | null) => {
+  const { authId, email } = useAuth();
+
+  const updateMeasurementList = async (rubrics: any[]) => {
     try {
       setUpdating(true);
 
@@ -548,29 +561,35 @@ const LessonBuilder = (props: LessonBuilderProps) => {
 
       const input: UpdateUniversalLessonInput = {
         id: formData.id,
-        rubrics: rubrics.map((d) => d?.rubricID).filter(Boolean)
+        rubrics: rubrics.map((d) => d?.rubricID).filter(Boolean),
       };
 
       await API.graphql(
-        graphqlOperation(customMutations.updateUniversalLesson, {input: input})
+        graphqlOperation(customMutations.updateUniversalLesson, {
+          input: input,
+        })
       );
     } catch (error) {
-      logError(error, {authId, email}, 'LessonBuilder @updateMeasurementList');
+      logError(
+        error,
+        { authId, email },
+        "LessonBuilder @updateMeasurementList"
+      );
       console.error(
-        '🚀 ~ file: LessonBuilder.tsx ~ line 561 ~ updateMeasurementList ~ error',
+        "🚀 ~ file: LessonBuilder.tsx ~ line 561 ~ updateMeasurementList ~ error",
         error
       );
       setUpdating(false);
       setServerMessage({
         isError: true,
-        message: AddNewLessonFormDict[userLanguage]['MESSAGES']['UPDATEERR']
+        message: AddNewLessonFormDict[userLanguage]["MESSAGES"]["UPDATEERR"],
       });
     }
   };
 
   const currentStepComp = (currentStep: string) => {
     switch (currentStep) {
-      case 'overview':
+      case "overview":
         return (
           <AddNewLessonForm
             lessonId={lessonId}
@@ -583,13 +602,13 @@ const LessonBuilder = (props: LessonBuilderProps) => {
             selectedDesigners={selectedDesigners}
             setSelectedDesigners={setSelectedDesigners}
             postLessonCreation={postLessonCreation}
-            allMeasurement={measurementList}
+            allMeasurement={[]}
             institutionList={institutionList}
             setUnsavedChanges={setUnsavedChanges}
             fetchStaffByInstitution={fetchStaffByInstitution}
           />
         );
-      case 'activities':
+      case "activities":
         return (
           <LessonActivities
             loading={loading}
@@ -598,22 +617,22 @@ const LessonBuilder = (props: LessonBuilderProps) => {
             universalLessonDetails={universalLessonDetails}
           />
         );
-      case 'courses':
+      case "courses":
         return (
           <UnitList
             curricular={curriculumList}
-            instId={formData?.institution.id}
-            instName={formData?.institution.name}
+            instId={formData?.institution?.id}
+            instName={formData?.institution?.name}
             addedSyllabus={addedSyllabus}
             isFromLesson
             setAddedSyllabus={setAddedSyllabus}
           />
         );
-      case 'learning-evidence':
+      case "learning-evidence":
         return (
           <LearningEvidence
             fetchLessonRubrics={fetchLessonRubrics}
-            institutionId={formData?.institution?.id}
+            institutionId={formData?.institution?.id || ""}
             lessonId={lessonId}
             selectedMeasurements={selectedMeasurements}
             setSelectedMeasurements={setSelectedMeasurements}
@@ -623,21 +642,41 @@ const LessonBuilder = (props: LessonBuilderProps) => {
             updateMeasurementList={updateMeasurementList}
           />
         );
+
+      default:
+        return (
+          <AddNewLessonForm
+            lessonId={lessonId}
+            lessonPlanAttachment={universalLessonDetails?.lessonPlanAttachment}
+            changeLessonType={changeLessonType}
+            formData={formData}
+            setFormData={setFormData}
+            designerListLoading={designerListLoading}
+            designersList={designersList}
+            selectedDesigners={selectedDesigners}
+            setSelectedDesigners={setSelectedDesigners}
+            postLessonCreation={postLessonCreation}
+            allMeasurement={[]}
+            institutionList={institutionList}
+            setUnsavedChanges={setUnsavedChanges}
+            fetchStaffByInstitution={fetchStaffByInstitution}
+          />
+        );
     }
   };
 
   const saveBeforeLeave = async () => {
-    if (activeStep === 'learning-evidence') {
+    if (activeStep === "learning-evidence") {
       await updateMeasurementList(selectedMeasurements);
       setServerMessage({
         isError: false,
-        message: ''
+        message: "",
       });
       discardChanges();
     } else {
       setWarnModal({
         ...warnModal,
-        show: !warnModal.show
+        show: !warnModal.show,
       });
     }
   };
@@ -646,48 +685,34 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     history.push(warnModal.url);
     setWarnModal({
       ...warnModal,
-      show: !warnModal.show
+      show: !warnModal.show,
     });
     setUnsavedChanges(false);
   };
 
   const fetchLessonRubrics = async () => {
     try {
-      // const result: any = await API.graphql(
-      //   graphqlOperation(customQueries.listLessonRubricss, {
-      //     filter: {
-      //       lessonID: {eq: lessonId},
-      //     },
-      //   })
-      // );
-      // const rubricList = result.data?.listLessonRubricss.items.map((rubric: any) => ({
-      //   ...rubric,
-      //   checked: true,
-      // }));
-      // setSelectedMeasurements(rubricList);
     } catch (error) {}
   };
 
   const postLessonCreation = (lessonId: string, action?: string) => {
     const currentSteps = [...lessonBuilderSteps];
-    const updatedState = currentSteps.map((item) => ({...item, isDisabled: false}));
+    const updatedState = currentSteps.map((item) => ({
+      ...item,
+      isDisabled: false,
+    }));
     setLessonBuilderSteps(updatedState);
     setLessonId(lessonId);
-    if (action === 'add') {
+    if (action === "add") {
       const redirectionUrl = `${match.url}?lessonId=${lessonId}&step=activities`;
       history.push(redirectionUrl);
     }
-    // if (formData.type?.id === '1') {
-    //   setActiveStep('Preview Details');
-    // } else {
-    //   setActiveStep('Instructions');
-    // }
   };
 
   const updateLessonPlan = (lessonPlan: LessonPlansProps[]) => {
     setSavedLessonDetails({
       ...savedLessonDetails,
-      lessonPlans: lessonPlan
+      lessonPlans: lessonPlan,
     });
   };
   useEffect(() => {
@@ -704,48 +729,53 @@ const LessonBuilder = (props: LessonBuilderProps) => {
 
   const steps: IStepElementInterface[] = [
     {
-      title: LessonBuilderDict[userLanguage]['OVEVIEW_TITLE'],
-      description: LessonBuilderDict[userLanguage]['OVERVIEW_DESCRIPTION'],
-      stepValue: 'overview',
+      title: LessonBuilderDict[userLanguage]["OVEVIEW_TITLE"],
+      description: LessonBuilderDict[userLanguage]["OVERVIEW_DESCRIPTION"],
+      stepValue: "overview",
       icon: <IoCardSharp />,
-      isComplete: true
+      isComplete: true,
     },
     {
-      title: LessonBuilderDict[userLanguage]['ACTIVITY_TITLE'],
-      description: LessonBuilderDict[userLanguage]['ACTIVITY_DESCRIPTION'],
-      stepValue: 'activities',
+      title: LessonBuilderDict[userLanguage]["ACTIVITY_TITLE"],
+      description: LessonBuilderDict[userLanguage]["ACTIVITY_DESCRIPTION"],
+      stepValue: "activities",
       icon: <FaQuestionCircle />,
       disabled: !Boolean(lessonId),
       isComplete: false,
-      tooltipText: LessonBuilderDict[userLanguage]['ACTIVITY_TOOLTIP']
+      tooltipText: LessonBuilderDict[userLanguage]["ACTIVITY_TOOLTIP"],
     },
     {
-      title: LessonBuilderDict[userLanguage]['UNIT_MANAGER_TITLE'],
-      description: LessonBuilderDict[userLanguage]['UNIT_MANAGER_DESCRIPTION'],
-      stepValue: 'courses',
+      title: LessonBuilderDict[userLanguage]["UNIT_MANAGER_TITLE"],
+      description: LessonBuilderDict[userLanguage]["UNIT_MANAGER_DESCRIPTION"],
+      stepValue: "courses",
       icon: <FaQuestionCircle />,
-      disabled: !(universalLessonDetails && universalLessonDetails.lessonPlan?.length),
+      disabled: !(
+        universalLessonDetails && universalLessonDetails.lessonPlan?.length
+      ),
       isComplete: false,
-      tooltipText: LessonBuilderDict[userLanguage]['UNIT_MANAGER_TOOLTIP']
+      tooltipText: LessonBuilderDict[userLanguage]["UNIT_MANAGER_TOOLTIP"],
     },
     {
       title:
-        LessonBuilderDict[userLanguage]['LEARNING_EVIDENCE_COLUMNS'][
-          'LEARNING_OBJECTIVE'
+        LessonBuilderDict[userLanguage]["LEARNING_EVIDENCE_COLUMNS"][
+          "LEARNING_OBJECTIVE"
         ],
-      description: LessonBuilderDict[userLanguage]['LEARNING_EVIDENCE_DESCRIPTION'],
-      stepValue: 'learning-evidence',
+      description:
+        LessonBuilderDict[userLanguage]["LEARNING_EVIDENCE_DESCRIPTION"],
+      stepValue: "learning-evidence",
       icon: <FaQuestionCircle />,
-      disabled: !(Boolean(selectedMeasurements?.length) || Boolean(addedSyllabus.length)),
+      disabled: !(
+        Boolean(selectedMeasurements?.length) || Boolean(addedSyllabus.length)
+      ),
       isComplete: false,
-      tooltipText: LessonBuilderDict[userLanguage]['LEARNING_EVIDENCE_TOOLTIP']
-    }
+      tooltipText: LessonBuilderDict[userLanguage]["LEARNING_EVIDENCE_TOOLTIP"],
+    },
   ];
 
   return (
     <div className="w-full h-full">
       <h3 className="text-lg leading-6 uppercase text-gray-600 w-auto px-8 pb-8">
-        {LessonBuilderDict[userLanguage]['TITLE']}
+        {LessonBuilderDict[userLanguage]["TITLE"]}
       </h3>
       <div className="w-full m-auto">
         <StepComponent
@@ -791,18 +821,19 @@ const LessonBuilder = (props: LessonBuilderProps) => {
           loading={savingUnsavedCP}
           saveTooltip={`Save this checkpoint go to ${warnModal2.stepOnHold}`}
           noTooltip={`Just go to ${warnModal2.stepOnHold} and don't save anything`}
-          cancelTooltip={'Continue Editing'}
+          cancelTooltip={"Continue Editing"}
         />
       )}
-      {warnModal2.show && warnModal2.message.includes('required fields') && (
+      {warnModal2.show && warnModal2.message.includes("required fields") && (
         <ModalPopUp
           closeAction={() => {
             setActiveStep(warnModal2.stepOnHold);
 
-            setWarnModal2({show: false, message: '', stepOnHold: ''});
-            setIndividualFieldEmpty(false);
+            setWarnModal2({ show: false, message: "", stepOnHold: "" });
           }}
-          saveAction={() => setWarnModal2({show: false, message: '', stepOnHold: ''})}
+          saveAction={() =>
+            setWarnModal2({ show: false, message: "", stepOnHold: "" })
+          }
           saveLabel="Sure"
           saveTooltip="Fill up required fields"
           cancelTooltip={`Just go to ${warnModal2.stepOnHold}`}

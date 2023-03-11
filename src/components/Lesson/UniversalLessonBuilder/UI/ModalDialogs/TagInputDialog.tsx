@@ -1,10 +1,10 @@
-import React, {useContext, useEffect, useState} from 'react';
-import {GlobalContext} from 'contexts/GlobalContext';
-import {EditQuestionModalDict} from 'dictionary/dictionary.iconoclast';
-import {IContentTypeComponentProps} from 'interfaces/UniversalLessonBuilderInterfaces';
-import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
-import Buttons from 'atoms/Buttons';
-import FormTagInput from 'atoms/Form/FormTagInput';
+import Buttons from "atoms/Buttons";
+import FormTagInput from "atoms/Form/FormTagInput";
+import { useGlobalContext } from "contexts/GlobalContext";
+import { EditQuestionModalDict } from "dictionary/dictionary.iconoclast";
+import { IContentTypeComponentProps } from "interfaces/UniversalLessonBuilderInterfaces";
+import { useEffect, useState } from "react";
+import { updateLessonPageToDB } from "utilities/updateLessonPageToDB";
 
 interface IVideoInput {
   url: string;
@@ -21,16 +21,16 @@ const TagInputDialog = ({
   closeAction,
   updateBlockContentULBHandler,
   askBeforeClose,
-  setUnsavedChanges
+  setUnsavedChanges,
 }: IVideoDialogProps) => {
-  const {userLanguage} = useContext(GlobalContext);
-  const [tags, setTags] = useState<IVideoInput['tags']>([]);
+  const { userLanguage } = useGlobalContext();
+  const [tags, setTags] = useState<IVideoInput["tags"]>([]);
 
   const handleChange = (tags: any) => {
     setUnsavedChanges(true);
     setTags(tags);
   };
-  const [error, setError] = useState<string>('');
+  const [error, setError] = useState<string>("");
 
   useEffect(() => {
     if (inputObj && inputObj.tags) {
@@ -43,7 +43,7 @@ const TagInputDialog = ({
 
     const input = {
       id: list.id,
-      lessonPlan: [...list.lessonPlan]
+      lessonPlan: [...list.lessonPlan],
     };
 
     await updateLessonPageToDB(input);
@@ -51,10 +51,12 @@ const TagInputDialog = ({
   const onSave = async (e: any) => {
     e.preventDefault();
     if (!tags.length) {
-      setError('Please enter atleast one tag');
+      setError("Please enter atleast one tag");
       return;
     }
-    const updatedInput = updateBlockContentULBHandler('', 'pageContent', '', {tags});
+    const updatedInput = updateBlockContentULBHandler("", "pageContent", "", {
+      tags,
+    });
 
     await addToDB(updatedInput);
 
@@ -66,20 +68,24 @@ const TagInputDialog = ({
       <form onSubmit={onSave}>
         <div className={`grid grid-cols-1 gap-2`}>
           <div className={`col-span-2`}>
-            <FormTagInput tags={tags} handleChange={handleChange} error={error} />
+            <FormTagInput
+              tags={tags}
+              handleChange={handleChange}
+              error={error}
+            />
           </div>
         </div>
         <div className="flex mt-8 justify-center px-6 pb-4">
           <div className="flex justify-end">
             <Buttons
               btnClass="py-1 px-4 text-xs mr-2"
-              label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
+              label={EditQuestionModalDict[userLanguage]["BUTTON"]["CANCEL"]}
               onClick={askBeforeClose}
               transparent
             />
             <Buttons
               btnClass="py-1 px-8 text-xs ml-2"
-              label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
+              label={EditQuestionModalDict[userLanguage]["BUTTON"]["SAVE"]}
               type="submit"
               onClick={onSave}
             />

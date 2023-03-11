@@ -1,25 +1,25 @@
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import AddButton from '@components/Atoms/Buttons/AddButton';
-import PageWrapper from '@components/Atoms/PageWrapper';
-import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
-import CommonActionsBtns from '@components/MicroComponents/CommonActionsBtns';
-import InstituteName from '@components/MicroComponents/InstituteName';
-import Table from '@components/Molecules/Table';
-import usePagination from '@customHooks/usePagination';
-import {logError} from '@graphql/functions';
-import {XIcon} from '@heroicons/react/outline';
-import {withZoiqFilter} from '@utilities/functions';
-import {formatPhoneNumber, getHostNameFromUrl} from '@utilities/strings';
-import {getAsset} from 'assets';
-import BreadcrumbsWithBanner from 'atoms/BreadcrumbsWithBanner';
-import SearchInput from 'atoms/Form/SearchInput';
-import {useGlobalContext} from 'contexts/GlobalContext';
-import * as customQueries from 'customGraphql/customQueries';
-import useDictionary from 'customHooks/dictionary';
-import {useQuery} from 'customHooks/urlParam';
-import {map, orderBy} from 'lodash';
-import React, {useEffect, useState} from 'react';
-import {useHistory, useRouteMatch} from 'react-router-dom';
+import { API, graphqlOperation } from "aws-amplify";
+import AddButton from "@components/Atoms/Buttons/AddButton";
+import PageWrapper from "@components/Atoms/PageWrapper";
+import SectionTitleV3 from "@components/Atoms/SectionTitleV3";
+import CommonActionsBtns from "@components/MicroComponents/CommonActionsBtns";
+import InstituteName from "@components/MicroComponents/InstituteName";
+import Table from "@components/Molecules/Table";
+import usePagination from "@customHooks/usePagination";
+import { logError } from "@graphql/functions";
+import { XIcon } from "@heroicons/react/outline";
+import { withZoiqFilter } from "@utilities/functions";
+import { formatPhoneNumber, getHostNameFromUrl } from "@utilities/strings";
+import { getAsset } from "assets";
+import BreadcrumbsWithBanner from "atoms/BreadcrumbsWithBanner";
+import SearchInput from "atoms/Form/SearchInput";
+import { useGlobalContext } from "contexts/GlobalContext";
+import * as customQueries from "customGraphql/customQueries";
+import useDictionary from "customHooks/dictionary";
+import { useQuery } from "customHooks/urlParam";
+import { map, orderBy } from "lodash";
+import React, { useEffect, useState } from "react";
+import { useHistory, useRouteMatch } from "react-router-dom";
 
 /**
  * This component represents the bulk code of the institutions-lookup/all-institutions page
@@ -31,13 +31,13 @@ const InstitutionLookup: React.FC = () => {
   const history = useHistory();
 
   const params = useQuery(location.search);
-  const alert = params.get('alert');
+  const alert = params.get("alert");
 
-  const {clientKey, userLanguage, state} = useGlobalContext();
-  const {InstitutionDict, BreadcrumsTitles} = useDictionary();
-  const bannerImage = getAsset(clientKey, 'dashboardBanner1');
-  const [status, setStatus] = useState('');
-  const [institutionsData, setInstitutionsData] = useState([]);
+  const { clientKey, userLanguage, state } = useGlobalContext();
+  const { InstitutionDict, BreadcrumsTitles } = useDictionary();
+  const bannerImage = getAsset(clientKey, "dashboardBanner1");
+  const [status, setStatus] = useState("");
+  const [institutionsData, setInstitutionsData] = useState<any[]>([]);
 
   const [totalInstNum, setTotalInstNum] = useState(0);
   const [showAlert, setShowAlert] = useState(false);
@@ -51,26 +51,30 @@ const InstitutionLookup: React.FC = () => {
     setFirstPage,
     setLastPage,
     getIndex,
-    pageCount
+    pageCount,
   } = usePagination(institutionsData || [], totalInstNum || 0);
 
   const [searchInput, setSearchInput] = useState({
-    value: '',
-    isActive: false
+    value: "",
+    isActive: false,
   });
-  const [sortingType, setSortingType] = useState({
-    value: '',
-    name: '',
-    asc: true
+  const [sortingType] = useState({
+    value: "",
+    name: "",
+    asc: true,
   });
 
   const breadCrumbsList = [
-    {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
     {
-      title: BreadcrumsTitles[userLanguage]['INSTITUTION_MANAGEMENT'],
+      title: BreadcrumsTitles[userLanguage]["HOME"],
+      url: "/dashboard",
+      last: false,
+    },
+    {
+      title: BreadcrumsTitles[userLanguage]["INSTITUTION_MANAGEMENT"],
       url: `${match.url}`,
-      last: true
-    }
+      last: true,
+    },
   ];
 
   // const sortByList = [
@@ -88,11 +92,13 @@ const InstitutionLookup: React.FC = () => {
     history.push(`${match.url}/add`);
   };
 
-  const isTeacher = state.user.role === 'TR' || state.user.role === 'FLW';
+  const isTeacher = state.user.role === "TR" || state.user.role === "FLW";
 
   async function fetchInstListForAdmin() {
     const fetchInstitutionData: any = await API.graphql(
-      graphqlOperation(customQueries.getInstListForAdmin, {filter: withZoiqFilter({})})
+      graphqlOperation(customQueries.getInstListForAdmin, {
+        filter: withZoiqFilter({}),
+      })
     );
     return fetchInstitutionData.data?.listInstitutions?.items || [];
   }
@@ -101,10 +107,10 @@ const InstitutionLookup: React.FC = () => {
     const fetchInstitutionData: any = await API.graphql(
       graphqlOperation(customQueries.getInstListForNonAdmin, {
         filter: {
-          staffAuthID: {eq: state.user.authId},
-          staffEmail: {eq: state.user.email},
-          status: {eq: 'Active'}
-        }
+          staffAuthID: { eq: state.user.authId },
+          staffEmail: { eq: state.user.email },
+          status: { eq: "Active" },
+        },
       })
     );
     let userInstitutes: any = fetchInstitutionData.data?.listStaff?.items;
@@ -138,17 +144,17 @@ const InstitutionLookup: React.FC = () => {
 
       instituteList = instituteList.map((inst: any) => ({
         ...inst,
-        name: inst.name
+        name: inst.name,
       }));
 
-      setInstitutionsData(orderBy(instituteList, ['name'], 'asc'));
-      setStatus('done');
+      setInstitutionsData(orderBy(instituteList, ["name"], "asc"));
+      setStatus("done");
     } catch (error) {
       console.error(error);
       logError(
         error,
-        {authId: state.user.authId, email: state.user.email},
-        'InstitutionLookup'
+        { authId: state.user.authId, email: state.user.email },
+        "InstitutionLookup"
       );
     }
   }
@@ -156,7 +162,7 @@ const InstitutionLookup: React.FC = () => {
   const setSearch = (str: string) => {
     setSearchInput({
       ...searchInput,
-      value: str
+      value: str,
     });
   };
 
@@ -169,7 +175,7 @@ const InstitutionLookup: React.FC = () => {
       });
       setSearchInput({
         ...searchInput,
-        isActive: true
+        isActive: true,
       });
       setCurrentList(newList);
     } else {
@@ -186,13 +192,13 @@ const InstitutionLookup: React.FC = () => {
 
   const removeSearchAction = () => {
     resetPagination();
-    setSearchInput({value: '', isActive: false});
+    setSearchInput({ value: "", isActive: false });
   };
 
   const fetchSortedList = () => {
     const newInstList = [...institutionsData].sort((a, b) =>
-      a[sortingType.value]?.toLowerCase() > b[sortingType.value]?.toLowerCase() &&
-      sortingType.asc
+      a[sortingType.value]?.toLowerCase() >
+        b[sortingType.value]?.toLowerCase() && sortingType.asc
         ? 1
         : -1
     );
@@ -227,7 +233,7 @@ const InstitutionLookup: React.FC = () => {
     history.push(`${match.url}/institution/${id}/edit`);
   };
 
-  const dictionary = InstitutionDict[userLanguage]['TABLE'];
+  const dictionary = InstitutionDict[userLanguage]["TABLE"];
 
   const dataList = map(currentList, (instituteObject, idx) => ({
     markRed: Boolean(instituteObject?.isZoiq),
@@ -242,25 +248,29 @@ const InstitutionLookup: React.FC = () => {
       />
     ),
     name: instituteObject.name,
-    type: instituteObject.type || '--',
-    website: instituteObject.website ? getHostNameFromUrl(instituteObject.website) : '--',
-    contactNo: instituteObject.phone ? formatPhoneNumber(instituteObject.phone) : '--',
+    type: instituteObject.type || "--",
+    website: instituteObject.website
+      ? getHostNameFromUrl(instituteObject.website)
+      : "--",
+    contactNo: instituteObject.phone
+      ? formatPhoneNumber(instituteObject.phone)
+      : "--",
     actions: (
       <CommonActionsBtns
         button1Label="Edit"
         button1Action={() => handleInstitutionView(instituteObject.id)}
       />
-    )
+    ),
   }));
 
   const tableConfig = {
     headers: [
-      'No',
-      dictionary['NAME'],
-      dictionary['TYPE'],
-      dictionary['WEBSITE'],
-      dictionary['CONTACT'],
-      dictionary['ACTION']
+      "No",
+      dictionary["NAME"],
+      dictionary["TYPE"],
+      dictionary["WEBSITE"],
+      dictionary["CONTACT"],
+      dictionary["ACTION"],
     ],
     dataList,
     config: {
@@ -268,21 +278,21 @@ const InstitutionLookup: React.FC = () => {
       isLastAction: true,
 
       dataList: {
-        loading: status !== 'done',
-        emptyText: dictionary['NORESULT'],
+        loading: status !== "done",
+        emptyText: dictionary["NORESULT"],
         pagination: {
           showPagination: !searchInput.isActive && totalNum > 0,
           config: {
-            allAsProps
-          }
+            allAsProps,
+          },
         },
         customWidth: {
-          instituteName: 'w-72 -ml-8',
-          no: 'w-20'
+          instituteName: "w-72 -ml-8",
+          no: "w-20",
         },
-        maxHeight: 'max-h-196'
-      }
-    }
+        maxHeight: "max-h-196",
+      },
+    },
   };
 
   return (
@@ -291,7 +301,7 @@ const InstitutionLookup: React.FC = () => {
       <BreadcrumbsWithBanner
         items={breadCrumbsList}
         bannerImage={bannerImage}
-        title={'Institutions'}
+        title={"Institutions"}
       />
       {/* <BreadCrums items={breadCrumsList} /> */}
 
@@ -299,8 +309,8 @@ const InstitutionLookup: React.FC = () => {
         <PageWrapper>
           <div className="px-4">
             <SectionTitleV3
-              title={InstitutionDict[userLanguage]['TITLE']}
-              subtitle={InstitutionDict[userLanguage]['SUBTITLE']}
+              title={InstitutionDict[userLanguage]["TITLE"]}
+              subtitle={InstitutionDict[userLanguage]["SUBTITLE"]}
               withButton={
                 <div className="flex w-auto justify-end mb-2">
                   <SearchInput
@@ -311,9 +321,9 @@ const InstitutionLookup: React.FC = () => {
                     style="mr-4 w-auto"
                   />
 
-                  {state.user.role === 'SUP' && (
+                  {state.user.role === "SUP" && (
                     <AddButton
-                      label={InstitutionDict[userLanguage]['BUTTON']['Add']}
+                      label={InstitutionDict[userLanguage]["BUTTON"]["Add"]}
                       onClick={addNewInstitution}
                     />
                   )}
@@ -325,13 +335,15 @@ const InstitutionLookup: React.FC = () => {
             {showAlert && (
               <div
                 className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
-                role="alert">
+                role="alert"
+              >
                 <span className="block sm:inline">
-                  {'Click on institution to see information'}
+                  {"Click on institution to see information"}
                 </span>
                 <span
                   className="absolute top-0 bottom-0 right-0 px-4 py-3 w-auto cursor-pointer"
-                  onClick={() => setShowAlert(false)}>
+                  onClick={() => setShowAlert(false)}
+                >
                   <XIcon className="h-6 w-6" aria-hidden="true" />
                 </span>
               </div>

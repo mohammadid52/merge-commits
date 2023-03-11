@@ -1,21 +1,19 @@
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import orderBy from 'lodash/orderBy';
-import moment from 'moment';
-import React, {forwardRef, useContext, useEffect, useState} from 'react';
-import DatePicker from 'react-datepicker';
-import {IconContext} from 'react-icons';
-import {FaArrowDown, FaArrowUp} from 'react-icons/fa';
-import {IoIosCalendar, IoMdArrowBack} from 'react-icons/io';
+import { API, graphqlOperation } from "aws-amplify";
+import moment from "moment";
+import { forwardRef, useEffect, useState } from "react";
+import DatePicker from "react-datepicker";
+import { IconContext } from "react-icons";
+import { IoIosCalendar, IoMdArrowBack } from "react-icons/io";
 
-import {GlobalContext} from 'contexts/GlobalContext';
-import * as customQueries from 'customGraphql/customQueries';
+import { useGlobalContext } from "contexts/GlobalContext";
+import * as customQueries from "customGraphql/customQueries";
 
-import Buttons from 'atoms/Buttons';
+import Buttons from "atoms/Buttons";
 
-import Table from '@components/Molecules/Table';
-import {getAsset} from 'assets';
-import {map} from 'lodash';
-import 'react-datepicker/dist/react-datepicker.css';
+import Table from "@components/Molecules/Table";
+import { getAsset } from "assets";
+import { map } from "lodash";
+import "react-datepicker/dist/react-datepicker.css";
 
 const pad = (num: any) => {
   return `0${num}`.slice(-2);
@@ -30,21 +28,20 @@ interface IAttendanceProps {
   role: string;
 }
 
-const Attendance = ({id, goToClassroom, selectedRoomId, role}: IAttendanceProps) => {
-  const {theme, clientKey} = useContext(GlobalContext);
-  const themeColor = getAsset(clientKey, 'themeClassName');
+const Attendance = ({
+  id,
+  goToClassroom,
+  selectedRoomId,
+  role,
+}: IAttendanceProps) => {
+  const { theme, clientKey } = useGlobalContext();
+  const themeColor = getAsset(clientKey, "themeClassName");
 
   const [loading, setLoading] = useState<boolean>(false);
   const [attendanceList, setAttendanceList] = useState<any>([]);
-  const [date, setDate] = useState(null);
-  const [sortConfig, setSortConfig] = useState<{
-    fieldName: string;
-    order: boolean | 'desc' | 'asc';
-  }>({
-    fieldName: '',
-    order: false
-  });
-  const [nextToken, setNextToken] = useState<string>('');
+  const [date, setDate] = useState<null | Date>(null);
+
+  const [nextToken, setNextToken] = useState<string>("");
 
   useEffect(() => {
     if (id) {
@@ -59,30 +56,41 @@ const Attendance = ({id, goToClassroom, selectedRoomId, role}: IAttendanceProps)
     lesson: item.lessonName,
     date: new Date(item.date).toLocaleDateString(),
     type: item.lessonType,
-    time: moment(item?.time, 'HH:mm:ss').format('hh:mm A')
+    time: moment(item?.time, "HH:mm:ss").format("hh:mm A"),
   }));
 
   const tableConfig = {
-    headers: ['No', 'ClassName', 'Curriculum', 'Lesson', 'Type', 'Date', 'Time'],
+    headers: [
+      "No",
+      "ClassName",
+      "Curriculum",
+      "Lesson",
+      "Type",
+      "Date",
+      "Time",
+    ],
     dataList,
     config: {
       dark: false,
       isFirstIndex: true,
-      headers: {textColor: 'text-white'},
+      headers: { textColor: "text-white" },
       dataList: {
         loading,
-        emptyText: 'No records found',
+        emptyText: "No records found",
         customWidth: {
-          no: 'w-12',
-          classname: 'w-76',
-          curriculum: 'w-72',
-          lesson: 'w-72'
+          no: "w-12",
+          classname: "w-76",
+          curriculum: "w-72",
+          lesson: "w-72",
         },
-        maxHeight: 'max-h-196',
-        pattern: 'striped',
-        patternConfig: {firstColor: 'bg-gray-100', secondColor: 'bg-gray-200'}
-      }
-    }
+        maxHeight: "max-h-196",
+        pattern: "striped",
+        patternConfig: {
+          firstColor: "bg-gray-100",
+          secondColor: "bg-gray-200",
+        },
+      },
+    },
   };
 
   const fetchAttendance = async (
@@ -93,15 +101,15 @@ const Attendance = ({id, goToClassroom, selectedRoomId, role}: IAttendanceProps)
       setLoading(true);
       let payload: any = {
         studentID: id,
-        sortDirection: 'DESC',
+        sortDirection: "DESC",
         date,
-        limit
+        limit,
       };
       if (nextToken) {
         payload.nextToken = nextToken;
       }
       if (selectedRoomId) {
-        payload.filter = {roomID: {eq: selectedRoomId}};
+        payload.filter = { roomID: { eq: selectedRoomId } };
       }
       if (date) {
         const dayNumber = date.getDate();
@@ -109,7 +117,7 @@ const Attendance = ({id, goToClassroom, selectedRoomId, role}: IAttendanceProps)
         const year = date.getFullYear();
 
         payload.date = {
-          eq: `${year}-${pad(monthNumber + 1)}-${pad(dayNumber)}`
+          eq: `${year}-${pad(monthNumber + 1)}-${pad(dayNumber)}`,
         };
       }
       const list: any = await API.graphql(
@@ -120,12 +128,15 @@ const Attendance = ({id, goToClassroom, selectedRoomId, role}: IAttendanceProps)
         lessonName: record.lesson?.title,
         lessonType: record.lesson?.type,
         curriculumName: record.curriculum?.name,
-        roomName: record.room?.name
+        roomName: record.room?.name,
       }));
       if (fetchNewRecords) {
         setAttendanceList(temp);
       } else {
-        setAttendanceList((prevAttendance: any) => [...prevAttendance, ...temp]);
+        setAttendanceList((prevAttendance: any) => [
+          ...prevAttendance,
+          ...temp,
+        ]);
       }
       setNextToken(list?.data.attendanceByStudent?.nextToken);
       setLoading(false);
@@ -143,52 +154,20 @@ const Attendance = ({id, goToClassroom, selectedRoomId, role}: IAttendanceProps)
     fetchAttendance(date, true);
   };
 
-  const handleOrderBy = (fieldName: string, order: boolean | 'desc' | 'asc') => {
-    setSortConfig({
-      fieldName,
-      order
-    });
-    setAttendanceList(orderBy(attendanceList, [fieldName], [order]));
-  };
-
-  const withOrderBy = (columnName: string, fieldName: string) => {
-    return (
-      <span className="flex items-center">
-        <span className="w-auto">{columnName}</span>
-        <span className="inline-flex items-center ml-1 cursor-pointer">
-          <span
-            className={`w-auto ${
-              fieldName === sortConfig.fieldName && sortConfig.order === 'desc'
-                ? 'text-dark-gray'
-                : ''
-            }`}>
-            <FaArrowDown className="w-2" />
-          </span>
-          <span
-            className={`w-auto ${
-              fieldName === sortConfig.fieldName && sortConfig.order === 'asc'
-                ? 'text-dark-gray'
-                : ''
-            }`}>
-            <FaArrowUp className="w-2" />
-          </span>
-        </span>
-      </span>
-    );
-  };
-
-  const DateCustomInput = forwardRef(({value, onClick, ...rest}: any, ref: any) => (
+  const DateCustomInput = forwardRef(({ value, onClick, ...rest }: any) => (
     <div
       className={`flex w-auto py-2 px-4 focus:theme-border:500 transition-all rounded-full  ${theme.formSelect} ${theme.outlineNone}`}
-      onClick={onClick}>
+      onClick={onClick}
+    >
       <span className="w-6 mr-4 cursor-pointer">
         <IconContext.Provider
-          value={{size: '1.5rem', color: theme.iconColor[themeColor]}}>
+          value={{ size: "1.5rem", color: theme.iconColor[themeColor] }}
+        >
           <IoIosCalendar />
         </IconContext.Provider>
       </span>
       <input
-        placeholder={'Search by date...'}
+        placeholder={"Search by date..."}
         id="searchInput"
         className={`text-sm ${theme.outlineNone}`}
         value={value}
@@ -201,12 +180,14 @@ const Attendance = ({id, goToClassroom, selectedRoomId, role}: IAttendanceProps)
     <div className="">
       <div
         className={`flex ${
-          role === 'ST' ? 'justify-between' : 'justify-end'
-        } items-center mb-4`}>
-        {role === 'ST' && (
+          role === "ST" ? "justify-between" : "justify-end"
+        } items-center mb-4`}
+      >
+        {role === "ST" && (
           <div
             className="theme-text hover:underline hover:theme-text:500 flex cursor-pointer w-auto"
-            onClick={goToClassroom}>
+            onClick={goToClassroom}
+          >
             <span className="w-auto inline-flex items-center mr-2">
               <IoMdArrowBack className="w-4 h-4" />
             </span>
@@ -215,9 +196,9 @@ const Attendance = ({id, goToClassroom, selectedRoomId, role}: IAttendanceProps)
         )}
         <div className="w-56 relative ulb-datepicker">
           <DatePicker
-            dateFormat={'dd/MM/yyyy'}
+            dateFormat={"dd/MM/yyyy"}
             selected={date}
-            placeholderText={'Search by date'}
+            placeholderText={"Search by date"}
             onChange={handleDateChange}
             customInput={<DateCustomInput />}
             isClearable={true}
@@ -229,7 +210,7 @@ const Attendance = ({id, goToClassroom, selectedRoomId, role}: IAttendanceProps)
       {nextToken ? (
         <div className="flex justify-center w-full">
           <Buttons
-            label={loading ? 'loading' : 'Load more'}
+            label={loading ? "loading" : "Load more"}
             btnClass="text-center my-2"
             disabled={loading}
             onClick={onLoadMore}

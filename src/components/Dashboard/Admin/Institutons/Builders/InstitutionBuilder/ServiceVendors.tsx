@@ -1,53 +1,60 @@
-import React, {useEffect, useState, useContext} from 'react';
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import { GraphQLAPI as API, graphqlOperation } from "@aws-amplify/api-graphql";
+import { useEffect, useState } from "react";
 
-import Selector from 'atoms/Form/Selector';
-import Tooltip from 'atoms/Tooltip';
-import AddButton from 'atoms/Buttons/AddButton';
+import AddButton from "atoms/Buttons/AddButton";
+import Selector from "atoms/Form/Selector";
+import Tooltip from "atoms/Tooltip";
 
-import {GlobalContext} from 'contexts/GlobalContext';
-import useDictionary from 'customHooks/dictionary';
-import * as customQueries from 'customGraphql/customQueries';
-import * as customMutations from 'customGraphql/customMutations';
-import * as mutations from 'graphql/mutations';
+import * as customMutations from "customGraphql/customMutations";
+import * as customQueries from "customGraphql/customQueries";
+import useDictionary from "customHooks/dictionary";
+import * as mutations from "graphql/mutations";
 
-import {createFilterToFetchAllItemsExcept} from 'utilities/strings';
-import {statusList} from 'utilities/staticData';
-import {getAsset} from 'assets';
+import { useGlobalContext } from "@contexts/GlobalContext";
+import { getAsset } from "assets";
+import { statusList } from "utilities/staticData";
+import { createFilterToFetchAllItemsExcept } from "utilities/strings";
 
 interface ServiceVendorsProps {
   instId: string;
   serviceProviders: {
-    items: {id: string; providerID: string; status: string; providerInstitution?: any}[];
+    items: {
+      id: string;
+      providerID: string;
+      status: string;
+      providerInstitution?: any;
+    }[];
   };
   updateServiceProviders: Function;
   instName: string;
 }
 
 const ServiceVendors = (props: ServiceVendorsProps) => {
-  const {userLanguage, clientKey, zoiqFilter, theme} = useContext(GlobalContext);
-  const themeColor = getAsset(clientKey, 'themeClassName');
-  const {spBuilderDict, BUTTONS} = useDictionary(clientKey);
+  const { userLanguage, clientKey, zoiqFilter, theme } = useGlobalContext();
+  const themeColor = getAsset(clientKey, "themeClassName");
+  const { spBuilderDict, BUTTONS } = useDictionary();
   const dictionary = spBuilderDict[userLanguage];
 
-  const {instId, serviceProviders, instName} = props;
-  const [availableServiceProviders, setAvailableServiceProviders] = useState([]);
+  const { instId, serviceProviders } = props;
+  const [availableServiceProviders, setAvailableServiceProviders] = useState(
+    []
+  );
   const [partners, setPartners] = useState<any>([]);
-  const [showModal, setShowModal] = useState<{show: boolean; item: any}>({
-    show: false,
-    item: {}
-  });
-  const [newServPro, setNewServPro] = useState({id: '', name: '', value: ''});
-  const [statusEdit, setStatusEdit] = useState('');
+
+  const [newServPro, setNewServPro] = useState({ id: "", name: "", value: "" });
+  const [statusEdit, setStatusEdit] = useState("");
   const [updateStatus, setUpdateStatus] = useState(false);
 
   useEffect(() => {
-    if (!partners.length && serviceProviders.items?.filter((item) => item.id).length) {
+    if (
+      !partners.length &&
+      serviceProviders.items?.filter((item) => item.id).length
+    ) {
       setPartners(
         serviceProviders.items.map((item: any) => ({
           id: item.id,
           status: item.status,
-          partner: {...item.providerInstitution}
+          partner: { ...item.providerInstitution },
         }))
       );
     }
@@ -57,41 +64,44 @@ const ServiceVendors = (props: ServiceVendorsProps) => {
     setNewServPro({
       id: id,
       name: name,
-      value: val
+      value: val,
     });
   };
 
   const fetchAvailableServiceProviders = async () => {
     try {
       const {
-        serviceProviders: {items}
+        serviceProviders: { items },
       } = props;
       const serviceProvidersIds = items.map((sp: any) => sp.providerID);
       // fetch list of service providers expect the self and partner institutes
       const list: any = await API.graphql(
         graphqlOperation(customQueries.listServiceProviders, {
           filter: {
-            isServiceProvider: {eq: true},
+            isServiceProvider: { eq: true },
             or: [...zoiqFilter],
-            ...createFilterToFetchAllItemsExcept([instId, ...serviceProvidersIds], 'id')
-          }
+            ...createFilterToFetchAllItemsExcept(
+              [instId, ...serviceProvidersIds],
+              "id"
+            ),
+          },
         })
       );
 
       const listItems = list.data.listInstitutions?.items || [];
       // create
       const servProList = listItems
-        .map((item: any, i: any) => ({
+        .map((item: any) => ({
           id: item.id,
-          name: item.name || '',
-          value: item.name || ''
+          name: item.name || "",
+          value: item.name || "",
         }))
         .sort((a: any, b: any) =>
           a.name?.toLowerCase() > b.name?.toLowerCase() ? 1 : -1
         );
       setAvailableServiceProviders(servProList);
     } catch (err) {
-      console.error('Error while fetching service providers lists', err);
+      console.error("Error while fetching service providers lists", err);
     }
   };
 
@@ -108,32 +118,37 @@ const ServiceVendors = (props: ServiceVendorsProps) => {
         const input = {
           partnerID: instId,
           providerID: newServPro.id,
-          status: 'Active'
+          status: "Active",
         };
         const addedPartner: any = await API.graphql(
-          graphqlOperation(mutations.createServiceProvider, {input: input})
+          graphqlOperation(mutations.createServiceProvider, { input: input })
         );
         const item = addedPartner.data.createServiceProvider;
         props.updateServiceProviders(item);
         const updatedPartners = [
           ...partners,
-          {id: item.id, status: 'Active', partner: {...item.providerInstitution}}
+          {
+            id: item.id,
+            status: "Active",
+            partner: { ...item.providerInstitution },
+          },
         ];
 
-        const updatedAvailableServiceProviders = availableServiceProviders.filter(
-          (item: any) => item.id !== newServPro.id
-        );
-        setNewServPro({id: '', name: '', value: ''});
+        const updatedAvailableServiceProviders =
+          availableServiceProviders.filter(
+            (item: any) => item.id !== newServPro.id
+          );
+        setNewServPro({ id: "", name: "", value: "" });
         setPartners(updatedPartners);
         setAvailableServiceProviders(updatedAvailableServiceProviders);
       } else {
         // TODO: Add the validation msg or error msg on UI for the service provider.
         // or disable add button if newServPro is not selected
-        console.log('select a service provider to add.');
+        console.log("select a service provider to add.");
       }
     } catch (err) {
       console.log(
-        'Error: Add partner, service provider builder: Could not add new partner in institution',
+        "Error: Add partner, service provider builder: Could not add new partner in institution",
         err
       );
     }
@@ -148,7 +163,7 @@ const ServiceVendors = (props: ServiceVendorsProps) => {
       setUpdateStatus(true);
       await API.graphql(
         graphqlOperation(customMutations.updateServiceProviderStatus, {
-          input: {id, status}
+          input: { id, status },
         })
       );
       const updatedPartners = partners.map((sp: any) => {
@@ -160,7 +175,7 @@ const ServiceVendors = (props: ServiceVendorsProps) => {
       setPartners(updatedPartners);
       setUpdateStatus(false);
     }
-    setStatusEdit('');
+    setStatusEdit("");
   };
 
   return (
@@ -210,12 +225,13 @@ const ServiceVendors = (props: ServiceVendorsProps) => {
                 {partners.map((item: any, index: number) => (
                   <div
                     key={index}
-                    className="flex justify-between w-full px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
+                    className="flex justify-between w-full px-8 py-4 whitespace-nowrap border-b-0 border-gray-200"
+                  >
                     <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4 font-medium ">
                       {index + 1}.
                     </div>
                     <div className="flex w-4/10 items-center px-8 py-3 text-left text-s leading-4 font-medium whitespace-normal">
-                      {item.partner.name || ''}
+                      {item.partner.name || ""}
                     </div>
 
                     {statusEdit === item.id ? (
@@ -224,7 +240,7 @@ const ServiceVendors = (props: ServiceVendorsProps) => {
                           selectedItem={item.status}
                           placeholder="Select Status"
                           list={statusList}
-                          onChange={(val, name, id) =>
+                          onChange={(val) =>
                             onPartnerStatusChange(val, item.id, item.status)
                           }
                         />
@@ -233,13 +249,14 @@ const ServiceVendors = (props: ServiceVendorsProps) => {
                       <div className="w-4/10 flex items-center px-8 py-3 text-left text-s leading-4">
                         <span
                           className={`inline-flex items-center px-2.5 py-0.5 rounded-md text-sm font-medium  w-auto ${
-                            item.status === 'Inactive'
-                              ? 'bg-yellow-100 text-yellow-800'
-                              : item.status === 'Dropped'
-                              ? 'bg-red-100 text-red-800'
-                              : 'bg-green-100 text-green-800'
-                          }`}>
-                          {item.status || 'Active'}
+                            item.status === "Inactive"
+                              ? "bg-yellow-100 text-yellow-800"
+                              : item.status === "Dropped"
+                              ? "bg-red-100 text-red-800"
+                              : "bg-green-100 text-green-800"
+                          }`}
+                        >
+                          {item.status || "Active"}
                         </span>
                       </div>
                     )}
@@ -247,13 +264,17 @@ const ServiceVendors = (props: ServiceVendorsProps) => {
                       {statusEdit === item.id ? (
                         <span
                           className={`w-6 h-6 flex items-center cursor-pointer ${theme.textColor[themeColor]}`}
-                          onClick={() => setStatusEdit('')}>
-                          {updateStatus ? dictionary.UPDATING : dictionary.CANCEL}
+                          onClick={() => setStatusEdit("")}
+                        >
+                          {updateStatus
+                            ? dictionary.UPDATING
+                            : dictionary.CANCEL}
                         </span>
                       ) : (
                         <span
                           className={`w-6 h-6 flex items-center cursor-pointer ${theme.textColor[themeColor]}`}
-                          onClick={() => setStatusEdit(item.id)}>
+                          onClick={() => setStatusEdit(item.id)}
+                        >
                           <Tooltip text="Click to edit status" placement="left">
                             {BUTTONS[userLanguage].EDIT}
                           </Tooltip>

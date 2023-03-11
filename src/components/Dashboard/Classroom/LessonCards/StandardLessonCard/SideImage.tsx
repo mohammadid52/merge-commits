@@ -1,11 +1,10 @@
-import React, {useContext} from 'react';
-import {GlobalContext} from 'contexts/GlobalContext';
-import {getImageFromS3Static} from 'utilities/services';
-import {LessonCardProps} from '../../Classroom';
+import { useGlobalContext } from "contexts/GlobalContext";
+import { getImageFromS3Static } from "utilities/services";
+import { LessonCardProps } from "../../Classroom";
 
 const SideImage = (props: LessonCardProps) => {
-  const {lessonProps, getImageFromS3 = true} = props;
-  const {theme} = useContext(GlobalContext);
+  const { lessonProps, getImageFromS3 = true } = props;
+  const { theme } = useGlobalContext();
 
   return (
     <div
@@ -19,14 +18,16 @@ const SideImage = (props: LessonCardProps) => {
               : lessonProps.lesson?.cardImage
             : null
         })`,
-        backgroundSize: 'cover'
-      }}>
+        backgroundSize: "cover",
+      }}
+    >
       {lessonProps?.lesson?.cardCaption && (
         <div className="">
           <div className="flex flex-row-reverse ">
             <h2
               className={`first w-full text-base 2xl:text-xl text-right font-bold tracking-widest absolute bottom-1 px-3 text-gray-200`}
-              style={{textShadow: '1px 1px black'}}>
+              style={{ textShadow: "1px 1px black" }}
+            >
               {lessonProps?.lesson?.cardCaption}
             </h2>
           </div>

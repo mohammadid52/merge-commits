@@ -1,60 +1,60 @@
-import Buttons from 'atoms/Buttons';
-import FormInput from 'atoms/Form/FormInput';
-import Modal from 'atoms/Modal';
-import Popover from 'atoms/Popover';
-import {API, graphqlOperation} from 'aws-amplify';
-import Comments from 'components/Community/Components/Comments';
-import HandleMedia from 'components/Community/Components/HandleMedia';
+import Buttons from "atoms/Buttons";
+import FormInput from "atoms/Form/FormInput";
+import Modal from "atoms/Modal";
+import Popover from "atoms/Popover";
+import { API, graphqlOperation } from "aws-amplify";
+import Comments from "components/Community/Components/Comments";
+import HandleMedia from "components/Community/Components/HandleMedia";
 import {
   communityTypes,
-  COMMUNITY_UPLOAD_KEY
-} from 'components/Community/constants.community';
-import * as customQueries from 'customGraphql/customQueries';
-import useAuth from 'customHooks/useAuth';
-import useGraphqlMutation from 'customHooks/useGraphqlMutation';
-import {IChat, ICommunityCard} from 'interfaces/Community.interfaces';
-import {getImageFromS3Static} from 'utilities/services';
+  COMMUNITY_UPLOAD_KEY,
+} from "components/Community/constants.community";
+import * as customQueries from "customGraphql/customQueries";
+import useAuth from "customHooks/useAuth";
+import useGraphqlMutation from "customHooks/useGraphqlMutation";
+import { IChat, ICommunityCard } from "interfaces/Community.interfaces";
+import { getImageFromS3Static } from "utilities/services";
 
-import Placeholder from '@components/Atoms/Placeholder';
-import {logError} from '@graphql/functions';
-import {orderBy, remove, update} from 'lodash';
-import moment from 'moment';
-import React, {useEffect, useState} from 'react';
-import {AiOutlineHeart} from 'react-icons/ai';
-import {BiDotsVerticalRounded} from 'react-icons/bi';
-import {v4 as uuidV4} from 'uuid';
+import Placeholder from "@components/Atoms/Placeholder";
+import { logError } from "@graphql/functions";
+import { orderBy, remove, update } from "lodash";
+import moment from "moment";
+import React, { useEffect, useState } from "react";
+import { AiOutlineHeart } from "react-icons/ai";
+import { BiDotsVerticalRounded } from "react-icons/bi";
+import { v4 as uuidV4 } from "uuid";
 
 const BottomSection = ({
   setShowComments,
   showComments,
   cardDetails,
   chatCount,
-  authId
+  authId,
 }: {
   cardDetails: ICommunityCard;
   showComments: boolean;
   chatCount: number;
-  authId?: string;
+  authId: string;
   setShowComments: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   let copyLikes = cardDetails.likes || [];
   const likeIdx = copyLikes?.findIndex((d) => d === authId);
   const isLiked = likeIdx !== -1;
 
-  const community = useGraphqlMutation('updateCommunity');
+  const community = useGraphqlMutation("updateCommunity");
   const likeAction = () => {
-    let payload: any = {id: cardDetails.id};
+    let payload: any = { id: cardDetails.id };
     if (isLiked) {
       // dislike
       copyLikes.splice(likeIdx, 1);
-      payload = {...payload, likes: copyLikes};
+      payload = { ...payload, likes: copyLikes };
     } else {
       // like
       copyLikes.push(authId);
-      payload = {...payload, likes: copyLikes};
+      payload = { ...payload, likes: copyLikes };
     }
     update(cardDetails, `likes`, () => copyLikes);
-    community.mutate({input: payload});
+    community.mutate({ input: payload });
   };
 
   return (
@@ -64,7 +64,7 @@ const BottomSection = ({
           <div className="flex text-gray-700 font-normal text-sm rounded-md mb-2 mr-4 items-center">
             Comments:
             <div className="ml-1 text-gray-500 font-medium text-sm">
-              {' '}
+              {" "}
               {chatCount || 0}
             </div>
           </div>
@@ -77,16 +77,18 @@ const BottomSection = ({
               onClick={() => likeAction()}
               className={`${
                 isLiked
-                  ? 'bg-pink-500 text-white'
-                  : 'bg-pink-100 hover:bg-pink-200 text-pink-500'
-              } rounded-full p-2 mr-2 w-auto cursor-pointer z-100 transition-all`}>
+                  ? "bg-pink-500 text-white"
+                  : "bg-pink-100 hover:bg-pink-200 text-pink-500"
+              } rounded-full p-2 mr-2 w-auto cursor-pointer z-100 transition-all`}
+            >
               <AiOutlineHeart className=" text-xl " />
             </div>
-            Likes:{' '}
+            Likes:{" "}
             <div
               data-cy="likes-count"
-              className="ml-1 text-gray-500 w-auto font-medium text-sm">
-              {' '}
+              className="ml-1 text-gray-500 w-auto font-medium text-sm"
+            >
+              {" "}
               {cardDetails?.likes?.length || 0}
             </div>
           </div>
@@ -96,8 +98,9 @@ const BottomSection = ({
       <button
         data-cy="show-comments-button"
         onClick={() => setShowComments(!showComments)}
-        className={`text-blue-500 hover:underline text-sm w-auto mx-5`}>
-        {showComments ? 'hide' : 'show'} comments
+        className={`text-blue-500 hover:underline text-sm w-auto mx-5`}
+      >
+        {showComments ? "hide" : "show"} comments
       </button>
     </>
   );
@@ -109,7 +112,7 @@ const PostComment = ({
   setChats,
   setShowComments,
   chatCount,
-  setChatCount
+  setChatCount,
 }: {
   cardDetails: ICommunityCard;
   setShowComments: React.Dispatch<React.SetStateAction<boolean>>;
@@ -118,43 +121,44 @@ const PostComment = ({
   chatCount: number;
   setChatCount: React.Dispatch<React.SetStateAction<number>>;
 }) => {
-  const [postText, setPostText] = useState('');
-  const {authId: personAuthID, email: personEmail, user} = useAuth();
+  const [postText, setPostText] = useState("");
+  const { authId: personAuthID, email: personEmail, user } = useAuth();
 
-  const community = useGraphqlMutation('updateCommunity');
+  const community = useGraphqlMutation("updateCommunity");
 
-  const {mutate} = useGraphqlMutation('createCommunityChat', {
+  const { mutate } = useGraphqlMutation("createCommunityChat", {
     onSuccess: () => {
       let updatedCount = chatCount + 1;
       community.mutate({
-        input: {id: cardDetails.id, chatCount: updatedCount}
+        input: { id: cardDetails.id, chatCount: updatedCount },
       });
       setChatCount(updatedCount);
-    }
+    },
   });
 
   const onPost = async () => {
-    setPostText('');
+    setPostText("");
     const chatObject = {
       id: uuidV4(),
       communityId: cardDetails.id,
       personAuthID: personAuthID,
       msg: postText,
       personEmail: personEmail,
-      person: user
+      person: user,
     };
     chats.push(chatObject);
     setChats([...chats]);
     setShowComments(true);
 
-    let payload = {...chatObject};
-    delete payload.person;
+    let payload = { ...chatObject };
+    // @ts-ignore
+    delete payload?.person;
     mutate({
-      input: {...payload}
+      input: { ...payload },
     });
   };
 
-  const {image, firstName, lastName} = useAuth();
+  const { image, firstName, lastName } = useAuth();
 
   return (
     <div className="relative flex items-center self-center w-full max-w-xl p-4 overflow-hidden text-gray-600 focus-within:text-gray-400">
@@ -175,13 +179,15 @@ const PostComment = ({
       <span className="absolute inset-y-0 right-0 flex items-center pr-6 w-auto">
         <button
           type="submit"
-          className="p-1 focus:outline-none focus:shadow-none hover:text-blue-500">
+          className="p-1 focus:outline-none focus:shadow-none hover:text-blue-500"
+        >
           <svg
             className="w-6 h-6 transition ease-out duration-300 hover:text-blue-500 text-gray-400"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
-            stroke="currentColor">
+            stroke="currentColor"
+          >
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -199,7 +205,7 @@ const PostComment = ({
         autoComplete="off"
         value={postText}
         onKeyDown={(e) => {
-          if (e.key === 'Enter') {
+          if (e.key === "Enter") {
             onPost();
           }
         }}
@@ -212,18 +218,18 @@ const PostComment = ({
 const Menu = ({
   showMenu,
   setShowMenu,
-  onDelete,
+  onDelete = () => {},
   cardId,
-  fileKey,
+  fileKey = "",
   onCardEdit,
-  cardDetails
+  cardDetails,
 }: {
   showMenu: boolean;
   cardId: string;
-  fileKey: string;
+  fileKey?: string;
   cardDetails: ICommunityCard;
   onCardEdit?: (cardDetails: ICommunityCard) => void;
-  onDelete?: (cardId: string, fileKey?: string) => void;
+  onDelete: (cardId: string, fileKey?: string) => void;
   setShowMenu: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   return (
@@ -231,7 +237,7 @@ const Menu = ({
       <Popover
         show={showMenu}
         bottom={0.6}
-        dir={'top'}
+        dir={"top"}
         minWidth={48}
         minHeight={16}
         rounded="lg"
@@ -240,24 +246,28 @@ const Menu = ({
           <dl className="grid grid-cols-1 gap-y-3">
             <div className="col-span-1">
               <dt
-                onClick={() => onCardEdit(cardDetails)}
-                className={`cursor-pointer text-gray-900  transition-all `}>
+                onClick={() => onCardEdit?.(cardDetails)}
+                className={`cursor-pointer text-gray-900  transition-all `}
+              >
                 Edit
               </dt>
             </div>
             <div className="col-span-1">
               <dt
                 data-cy="card-delete-button"
-                onClick={() => onDelete(cardId, fileKey)}
-                className={`cursor-pointer text-red-500 transition-all`}>
+                onClick={() => onDelete?.(cardId, fileKey)}
+                className={`cursor-pointer text-red-500 transition-all`}
+              >
                 Delete
               </dt>
             </div>
           </dl>
-        }>
+        }
+      >
         <span
           data-cy="popover-button"
-          className="h-6 w-6 flex items-center justify-center p-1 hover:bg-gray-200 transition-all cursor-pointer rounded-full">
+          className="h-6 w-6 flex items-center justify-center p-1 hover:bg-gray-200 transition-all cursor-pointer rounded-full"
+        >
           <BiDotsVerticalRounded
             title="show menu"
             className="h-full w-full text-lg text-gray-500"
@@ -268,7 +278,7 @@ const Menu = ({
   );
 };
 
-const MainCard = ({cardDetails}: {cardDetails: ICommunityCard}) => {
+const MainCard = ({ cardDetails }: { cardDetails: ICommunityCard }) => {
   const person = cardDetails?.person;
 
   const UploadDate = () => {
@@ -282,7 +292,9 @@ const MainCard = ({cardDetails}: {cardDetails: ICommunityCard}) => {
   const media = React.useMemo(
     () =>
       cardDetails?.cardImageLink
-        ? getImageFromS3Static(COMMUNITY_UPLOAD_KEY + cardDetails?.cardImageLink)
+        ? getImageFromS3Static(
+            COMMUNITY_UPLOAD_KEY + cardDetails?.cardImageLink
+          )
         : null,
     [cardDetails?.cardImageLink]
   );
@@ -309,13 +321,18 @@ const MainCard = ({cardDetails}: {cardDetails: ICommunityCard}) => {
         )}
         <div
           dangerouslySetInnerHTML={{
-            __html: cardDetails.summaryHtml ? cardDetails?.summaryHtml : '<p></p>'
+            __html: cardDetails.summaryHtml
+              ? cardDetails?.summaryHtml
+              : "<p></p>",
           }}
-          className=" text-sm mb-2 mx-3 px-2"></div>
+          className=" text-sm mb-2 mx-3 px-2"
+        ></div>
       </div>
     );
   } else if (cardDetails.cardType === communityTypes.EVENT) {
-    const [date, address] = cardDetails?.additionalInfo.split(' || ');
+    const info = cardDetails?.additionalInfo?.split(" || ");
+    const date = info && info[0] ? info[0] : new Date();
+    const address = info && info[1] ? info[1] : "";
 
     return (
       <div className="flex-col relative max-w-xl bg-gray-100 rounded-lg  mx-auto">
@@ -325,7 +342,8 @@ const MainCard = ({cardDetails}: {cardDetails: ICommunityCard}) => {
         <div className=" w-full lg:max-w-full lg:flex">
           <div
             className="h-48 bg-center lg:h-auto lg:w-48 flex-none bg-cover rounded-t lg:rounded-t-none lg:rounded-l text-center overflow-hidden"
-            style={{backgroundImage: `url(${media})`}}></div>
+            style={{ backgroundImage: `url(${media})` }}
+          ></div>
           <div className="border-r-0 border-b-0 border-l-0 border-gray-400 lg:border-l-none lg:border-t-0 lg:border-gray-400 bg-white rounded-b lg:rounded-b-none lg:rounded-r p-4 flex flex-col justify-between leading-normal">
             <div className="mb-8">
               {cardDetails?.cardName && (
@@ -335,36 +353,39 @@ const MainCard = ({cardDetails}: {cardDetails: ICommunityCard}) => {
               )}
               <div
                 dangerouslySetInnerHTML={{
-                  __html: cardDetails.summaryHtml ? cardDetails?.summaryHtml : '<p></p>'
+                  __html: cardDetails.summaryHtml
+                    ? cardDetails?.summaryHtml
+                    : "<p></p>",
                 }}
-                className=" text-base"></div>
+                className=" text-base"
+              ></div>
             </div>
             <div className="flex items-center justify-between">
               <div className="text-sm w-auto">
                 <p className="text-gray-600 leading-none">
-                  Date:{' '}
+                  Date:{" "}
                   <span className="w-auto text-gray-700 font-medium">
-                    {moment(date).format('DD MMM')}
+                    {moment(date).format("DD MMM")}
                   </span>
                 </p>
                 <p className="text-gray-600">
-                  Address:{' '}
+                  Address:{" "}
                   <span className="w-auto text-gray-700 font-medium">
-                    {address || '--'}
+                    {address || "--"}
                   </span>
                 </p>
               </div>
               <div className="text-sm w-auto">
                 <p className="text-gray-600 leading-none">
-                  Start time:{' '}
+                  Start time:{" "}
                   <span className="w-auto text-gray-700 font-medium">
-                    {moment(cardDetails.startTime).format('LT')}
+                    {moment(cardDetails.startTime).format("LT")}
                   </span>
                 </p>
                 <p className="text-gray-600">
-                  End time:{' '}
+                  End time:{" "}
                   <span className="w-auto text-gray-700 font-medium">
-                    {moment(cardDetails.endTime).format('LT')}
+                    {moment(cardDetails.endTime).format("LT")}
                   </span>
                 </p>
               </div>
@@ -381,8 +402,8 @@ const MainCard = ({cardDetails}: {cardDetails: ICommunityCard}) => {
             <div className="w-full">
               <div className="text-gray-600 font-semibold flex items-center text-lg my-2 mx-3 px-2">
                 {cardDetails.cardType === communityTypes.SPOTLIGHT
-                  ? 'Spotlight'
-                  : 'Check It Out'}
+                  ? "Spotlight"
+                  : "Check It Out"}
                 <UploadDate />
               </div>
               {cardDetails.cardType === communityTypes.CHECK_IT_OUT && (
@@ -391,12 +412,14 @@ const MainCard = ({cardDetails}: {cardDetails: ICommunityCard}) => {
                     <img
                       className="w-12 h-12 object-cover rounded-full shadow cursor-pointer"
                       alt="User avatar"
-                      src={getImageFromS3Static(person?.image)}
+                      src={
+                        person?.image ? getImageFromS3Static(person?.image) : ""
+                      }
                     />
                   </div>
                   <div className="flex flex-col mb-2 ml-4 mt-1">
                     <div className="text-gray-600 text-sm font-semibold">
-                      {person.firstName} {person.lastName}
+                      {person?.firstName} {person?.lastName}
                     </div>
                     <div className="flex  mt-1">
                       <div className="text-gray-500 font-thin w-auto text-xs">
@@ -419,9 +442,12 @@ const MainCard = ({cardDetails}: {cardDetails: ICommunityCard}) => {
                 )}
                 <div
                   dangerouslySetInnerHTML={{
-                    __html: cardDetails.summaryHtml ? cardDetails?.summaryHtml : '<p></p>'
+                    __html: cardDetails.summaryHtml
+                      ? cardDetails?.summaryHtml
+                      : "<p></p>",
                   }}
-                  className="text-gray-600 text-sm"></div>
+                  className="text-gray-600 text-sm"
+                ></div>
               </div>
             </div>
           </div>
@@ -432,23 +458,25 @@ const MainCard = ({cardDetails}: {cardDetails: ICommunityCard}) => {
 
 const Card = ({
   cardDetails,
-  onDelete,
-  onCardEdit
+  onDelete = () => {},
+  onCardEdit,
 }: {
   cardDetails: ICommunityCard;
   onDelete: (cardId: string, fileKey: string) => void;
   onCardEdit?: (cardDetails: ICommunityCard) => void;
 }): JSX.Element => {
-  const [chats, setChats] = useState([]);
+  const [chats, setChats] = useState<any[]>([]);
 
-  const {mutate} = useGraphqlMutation('deleteCommunityChat');
-  const community = useGraphqlMutation('updateCommunity');
+  const { mutate } = useGraphqlMutation("deleteCommunityChat");
+  const community = useGraphqlMutation("updateCommunity");
 
   const onChatDelete = (chatId: string) => {
-    remove(chats, ['id', chatId]);
+    remove(chats, ["id", chatId]);
     setChats([...chats]);
-    mutate({input: {id: chatId}});
-    community.mutate({input: {id: cardDetails.id, chatCount: chatCount - 1}});
+    mutate({ input: { id: chatId } });
+    community.mutate({
+      input: { id: cardDetails.id, chatCount: chatCount - 1 },
+    });
     setChatCount((prev) => prev - 1);
   };
 
@@ -456,7 +484,7 @@ const Card = ({
   const [isLoading, setIsLoading] = useState(false);
   const [showComments, setShowComments] = useState(false);
 
-  const [error, setError] = useState('');
+  const [_, setError] = useState("");
 
   const fetchChats = async () => {
     try {
@@ -464,17 +492,17 @@ const Card = ({
 
       const res: any = await API.graphql(
         graphqlOperation(customQueries.listCommunityChats, {
-          filter: {communityId: {eq: cardDetails.id}}
+          filter: { communityId: { eq: cardDetails.id } },
         })
       );
       const data = res.data.listCommunityChats.items;
       if (data.length > 0) {
-        let orderedList = orderBy(data, ['createdAt'], 'desc');
+        let orderedList = orderBy(data, ["createdAt"], "desc");
 
         setChats([...orderedList]);
       }
     } catch (error) {
-      logError(error, {authId: authId, email: email}, 'Card @fetchChats');
+      logError(error, { authId: authId, email: email }, "Card @fetchChats");
       console.error(error);
       setError(error.message);
     } finally {
@@ -490,21 +518,22 @@ const Card = ({
   }, [isFetched, showComments]);
 
   const [showMenu, setShowMenu] = useState(false);
-  const {authId, email} = useAuth();
+  const { authId, email } = useAuth();
   const iAmOwnerOfTheCard = cardDetails.personAuthID === authId;
 
-  const [chatConfig, setChatConfig] = useState({chatId: '', chatValue: ''});
+  const [chatConfig, setChatConfig] = useState({ chatId: "", chatValue: "" });
 
   const [chatEditModal, setChatEditModal] = useState(false);
   const onEditChat = (chatId: string, chatValue: string) => {
     setChatEditModal(true);
-    setChatConfig({...chatConfig, chatId, chatValue});
+    setChatConfig({ ...chatConfig, chatId, chatValue });
   };
 
   const MenuOptions = iAmOwnerOfTheCard && (
     <Menu
       cardDetails={cardDetails}
       fileKey={cardDetails?.cardImageLink}
+      // @ts-ignore
       onDelete={onDelete}
       onCardEdit={onCardEdit}
       cardId={cardDetails.id}
@@ -516,51 +545,62 @@ const Card = ({
   const EditChatModal = () => {
     const closeAction = () => {
       setChatEditModal(false);
-      setValue('');
+      setValue("");
     };
-    const [value, setValue] = useState(chatConfig.chatValue ? chatConfig.chatValue : '');
+    const [value, setValue] = useState(
+      chatConfig.chatValue ? chatConfig.chatValue : ""
+    );
 
     const onEditedChatSave = () => {
-      mutate({input: {id: chatConfig.chatId, msg: value, isEditedChat: true}});
+      mutate({
+        input: { id: chatConfig.chatId, msg: value, isEditedChat: true },
+      });
     };
 
-    const {mutate, isLoading} = useGraphqlMutation('updateCommunityChat', {
+    const { mutate, isLoading } = useGraphqlMutation("updateCommunityChat", {
       onSuccess: () => {
         const idx = chats.findIndex((c) => c.id === chatConfig.chatId);
         update(chats[idx], `msg`, () => value);
         update(chats[idx], `isEditedChat`, () => true);
         setChats([...chats]);
         closeAction();
-      }
+      },
     });
 
     const disableSaveBtn =
       chatConfig.chatValue === value || value.length === 0 || isLoading;
 
-    return (
-      chatEditModal && (
-        <Modal title="Edit Chat" showHeader showFooter={false} closeAction={closeAction}>
-          <div className="min-w-132">
-            <FormInput
-              label="Comment"
-              value={value}
-              onChange={(e) => setValue(e.target.value)}
-            />
-          </div>
-          <div className="flex mt-8 justify-end">
-            <Buttons
-              btnClass="py-1 px-8 text-xs ml-2"
-              disabled={disableSaveBtn}
-              label={'Save'}
-              onClick={onEditedChatSave}
-            />
-          </div>
-        </Modal>
-      )
+    return chatEditModal ? (
+      <Modal
+        title="Edit Chat"
+        showHeader
+        showFooter={false}
+        closeAction={closeAction}
+      >
+        <div className="min-w-132">
+          <FormInput
+            label="Comment"
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+          />
+        </div>
+        <div className="flex mt-8 justify-end">
+          <Buttons
+            btnClass="py-1 px-8 text-xs ml-2"
+            disabled={disableSaveBtn}
+            label={"Save"}
+            onClick={onEditedChatSave}
+          />
+        </div>
+      </Modal>
+    ) : (
+      <div className="hidden w-auto" />
     );
   };
 
-  const [chatCount, setChatCount] = useState(cardDetails.chatCount);
+  const [chatCount, setChatCount] = useState<number>(
+    cardDetails?.chatCount || 0
+  );
 
   return (
     <div className="relative max-w-xl bg-gray-100 shadow-md rounded-lg overflow-hidden mx-auto">

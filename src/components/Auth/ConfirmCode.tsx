@@ -1,40 +1,42 @@
-import {Auth} from '@aws-amplify/auth';
-import Buttons from '@components/Atoms/Buttons';
-import {useQuery} from '@customHooks/urlParam';
-import {getPerson, signIn} from '@graphql/functions';
-import {setCredCookies} from '@utilities/functions';
-import FormInput from 'atoms/Form/FormInput';
-import AuthCard from 'components/Auth/AuthCard';
-import RememberMe from 'components/Auth/RememberMe';
-import {useFormik} from 'formik';
-import React, {useEffect, useState} from 'react';
-import {useCookies} from 'react-cookie';
-import {useHistory, useLocation} from 'react-router-dom';
-import {ConfirmCodeSchema} from 'Schema';
+import { Auth } from "aws-amplify";
+import Buttons from "@components/Atoms/Buttons";
+import { useQuery } from "@customHooks/urlParam";
+import { getPerson, signIn } from "@graphql/functions";
+import { setCredCookies } from "@utilities/functions";
+import FormInput from "atoms/Form/FormInput";
+import AuthCard from "components/Auth/AuthCard";
+import RememberMe from "components/Auth/RememberMe";
+import { useFormik } from "formik";
+import React, { useEffect, useState } from "react";
+import { useCookies } from "react-cookie";
+import { useHistory, useLocation } from "react-router-dom";
+import { ConfirmCodeSchema } from "Schema";
 
 const ConfirmCode = () => {
   const history = useHistory();
   const location = useLocation();
 
   const [cookies, setCookie, removeCookie] = useCookies();
-  const [message, setMessage] = useState<{show: boolean; type: string; message: string}>({
+  const [message, setMessage] = useState<{
+    show: boolean;
+    type: string;
+    message: string;
+  }>({
     show: false,
-    type: '',
-    message: ''
+    type: "",
+    message: "",
   });
   const [confirmInput, setConfirmInput] = useState({
-    email: '',
-    code: ''
+    email: "",
+    code: "",
   });
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const [expiredLink, setExpiredLink] = useState(false);
-
   const checkLoginCred = () => {
     const auth = cookies.cred;
     if (auth?.checked) {
-      setFieldValue('checked', auth.checked);
+      setFieldValue("checked", auth.checked);
     }
   };
 
@@ -45,23 +47,24 @@ const ConfirmCode = () => {
 
   const populateCodeAndEmail = () => {
     const params = useQuery(location.search);
-    const confirmCode = params.get('code'); // Find a code from params.
-    const emailId = params.get('email'); // Find an email from params.
+    const confirmCode = params.get("code"); // Find a code from params.
+    const emailId = params.get("email"); // Find an email from params.
     const isValidCode = confirmCode && /^\d{6}$/gm.test(confirmCode); // validate element to have 6 digit number. e.g. 234567
     const isValidEmail =
-      emailId && /([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi.test(emailId); // validate email id.
+      emailId &&
+      /([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi.test(emailId); // validate email id.
 
     if (isValidCode && isValidEmail) {
       setConfirmInput({
         ...confirmInput,
         code: confirmCode,
-        email: emailId
+        email: emailId,
       });
     } else {
       setMessage({
         show: true,
-        type: 'error',
-        message: 'Invalid account confirmation URL. Please check your email'
+        type: "error",
+        message: "Invalid account confirmation URL. Please check your email",
       });
     }
   };
@@ -74,52 +77,53 @@ const ConfirmCode = () => {
 
     try {
       await Auth.forgotPasswordSubmit(username, code, password);
-      history.push('/login');
+      history.push("/login");
     } catch (error) {
-      console.error('error signing in', error);
+      console.error("error signing in", error);
       setMessage(() => {
         switch (error.code) {
-          case 'InvalidPasswordException':
+          case "InvalidPasswordException":
             return {
               show: true,
-              type: 'error',
+              type: "error",
               message:
-                'Password must be at least 8 characters, include uppercase, lowercase and numbers'
+                "Password must be at least 8 characters, include uppercase, lowercase and numbers",
             };
-          case 'InvalidParameterException':
+          case "InvalidParameterException":
             return {
               show: true,
-              type: 'error',
+              type: "error",
               message:
-                'Password must be at least 8 characters, include uppercase, lowercase and numbers'
+                "Password must be at least 8 characters, include uppercase, lowercase and numbers",
             };
-          case 'UserNotFoundException':
+          case "UserNotFoundException":
             return {
               show: true,
-              type: 'error',
+              type: "error",
               message:
-                'Invalid account confirmation URL. Please check your email or Register first'
+                "Invalid account confirmation URL. Please check your email or Register first",
             };
-          case 'CodeMismatchException':
+          case "CodeMismatchException":
             return {
               show: true,
-              type: 'error',
-              message: 'Invalid account confirmation URL. Please check your email'
+              type: "error",
+              message:
+                "Invalid account confirmation URL. Please check your email",
             };
-          case 'ExpiredCodeException': {
-            setExpiredLink(true);
+          case "ExpiredCodeException": {
             sendNewCode(username);
             return {
               show: true,
-              type: 'error',
-              message: 'The link has expired. A new link is sent to your email.'
+              type: "error",
+              message:
+                "The link has expired. A new link is sent to your email.",
             };
           }
           default:
             return {
               show: true,
-              type: 'error',
-              message: error.message
+              type: "error",
+              message: error.message,
             };
         }
       });
@@ -139,8 +143,8 @@ const ConfirmCode = () => {
       setMessage(() => {
         return {
           show: true,
-          type: 'error',
-          message: error.message
+          type: "error",
+          message: error.message,
         };
       });
     }
@@ -148,63 +152,67 @@ const ConfirmCode = () => {
 
   const confirmAndLogin = async () => {
     let username = confirmInput.email;
-    let tempPassword = 'xIconoclast.5x';
+    let tempPassword = "xIconoclast.5x";
     let password = values.password;
     let code = confirmInput.code;
     toggleLoading(true);
     try {
       await Auth.confirmSignUp(username, code);
-      const user = await signIn(
-        username,
-        tempPassword,
-        {setCookie, removeCookie},
-        values.checked
-      );
+      const user = await signIn(username, tempPassword, {
+        setCookie,
+        removeCookie,
+      });
       await Auth.changePassword(user, tempPassword, password);
 
       const userInfo = await getPerson(username, user.username);
 
       setCredCookies(
         values.checked,
-        {setCookie, removeCookie},
+        { setCookie, removeCookie },
         {
           email: username,
           password,
-          name: `${userInfo?.preferredName || userInfo?.firstName || ''} `
+          name: `${userInfo?.preferredName || userInfo?.firstName || ""} `,
         }
       );
 
-      history.push('/dashboard');
+      history.push("/dashboard");
     } catch (error) {
       // Handle code mismatch and code expiration errors.
 
-      if (error.code === 'NotAuthorizedException') {
+      if (error.code === "NotAuthorizedException") {
         validation();
         resetPassword(values.password);
       } else {
         setMessage(() => {
           switch (error.code) {
-            case 'CodeMismatchException':
+            case "CodeMismatchException":
               return {
                 show: true,
-                type: 'error',
+                type: "error",
                 message:
-                  'Invalid account confirmation URL. Please check your email or try again.'
+                  "Invalid account confirmation URL. Please check your email or try again.",
               };
-            case 'UserNotFoundException':
+            case "UserNotFoundException":
               return {
                 show: true,
-                type: 'error',
+                type: "error",
                 message:
-                  'Invalid account confirmation URL. Please check your email or Register first'
+                  "Invalid account confirmation URL. Please check your email or Register first",
               };
-            case 'ExpiredCodeException':
-              setExpiredLink(true);
+            case "ExpiredCodeException":
               sendNewCode(username, true);
               return {
                 show: true,
-                type: 'error',
-                message: 'The link has expired. A new link is sent to your email.'
+                type: "error",
+                message:
+                  "The link has expired. A new link is sent to your email.",
+              };
+            default:
+              return {
+                show: true,
+                type: "error",
+                message: error.message,
               };
           }
         });
@@ -220,8 +228,8 @@ const ConfirmCode = () => {
       if (!values.password) {
         return {
           show: true,
-          type: 'error',
-          message: 'Please enter your new password'
+          type: "error",
+          message: "Please enter your new password",
         };
       }
       validated = true;
@@ -230,8 +238,8 @@ const ConfirmCode = () => {
       }
       return {
         show: false,
-        type: 'success',
-        message: 'success'
+        type: "success",
+        message: "success",
       };
     });
   };
@@ -241,17 +249,18 @@ const ConfirmCode = () => {
     setIsLoading(state);
   };
 
-  const {values, errors, handleSubmit, handleChange, setFieldValue} = useFormik({
-    initialValues: {
-      password: '',
-      checked: false
-    },
-    validationSchema: ConfirmCodeSchema,
-    onSubmit: async (values) => {
-      validation();
-      resetPassword(values.password);
-    }
-  });
+  const { values, errors, handleSubmit, handleChange, setFieldValue } =
+    useFormik({
+      initialValues: {
+        password: "",
+        checked: false,
+      },
+      validationSchema: ConfirmCodeSchema,
+      onSubmit: async (values) => {
+        validation();
+        resetPassword(values.password);
+      },
+    });
 
   return (
     <AuthCard title="Set New Password" message={message}>
@@ -271,7 +280,7 @@ const ConfirmCode = () => {
           <div className="my-3">
             <RememberMe
               isChecked={values.checked}
-              toggleCheckBox={() => setFieldValue('checked', !values.checked)}
+              toggleCheckBox={() => setFieldValue("checked", !values.checked)}
             />
           </div>
         </div>
@@ -283,7 +292,7 @@ const ConfirmCode = () => {
             btnClass="w-full"
             type="submit"
             loading={isLoading}
-            label={'Login'}
+            label={"Login"}
           />
         </div>
       </form>

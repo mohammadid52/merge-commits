@@ -1,14 +1,14 @@
-import BriefPopover from '@components/Atoms/BriefPopover';
-import Highlighted from '@components/Atoms/Highlighted';
-import Placeholder from '@components/Atoms/Placeholder';
-import {DataValue} from '@components/Dashboard/Csv/Csv';
-import useGraphqlQuery from '@customHooks/useGraphqlQuery';
-import {getImageFromS3Static} from '@utilities/services';
-import {createFilterToFetchSpecificItemsOnly} from '@utilities/strings';
-import {ModelPersonFilterInput, Role, PersonStatus, RoomStatus} from 'API';
-import {truncate} from 'lodash';
-import moment from 'moment';
-import React, {useState} from 'react';
+import BriefPopover from "@components/Atoms/BriefPopover";
+import Highlighted from "@components/Atoms/Highlighted";
+import Placeholder from "@components/Atoms/Placeholder";
+import { DataValue } from "@components/Dashboard/Csv/Csv";
+import useGraphqlQuery from "@customHooks/useGraphqlQuery";
+import { getImageFromS3Static } from "@utilities/services";
+import { createFilterToFetchSpecificItemsOnly } from "@utilities/strings";
+import { ModelPersonFilterInput, Role, PersonStatus, RoomStatus } from "API";
+import { truncate } from "lodash";
+import moment from "moment";
+import React, { useState } from "react";
 
 const CourseName = ({
   item,
@@ -17,51 +17,58 @@ const CourseName = ({
   editCurrentCurricular,
   setHoveringItem,
   hoveringItem,
-  currentSelectedItem
+  currentSelectedItem,
 }: any) => {
   const showPopover = hoveringItem?.id === item.id && currentSelectedItem;
 
   const filter: ModelPersonFilterInput = {
     role: {
-      ne: Role.ST
+      ne: Role.ST,
     },
     status: {
-      ne: PersonStatus.INACTIVE
+      ne: PersonStatus.INACTIVE,
     },
-    ...createFilterToFetchSpecificItemsOnly(item?.designers || [], 'id')
+    ...createFilterToFetchSpecificItemsOnly(item?.designers || [], "id"),
   };
-  const [designers, setDesigners] = useState([]);
+  const [designers, setDesigners] = useState<any[]>([]);
 
-  const {isLoading, isFetched} = useGraphqlQuery(
-    'fetchPersons',
+  const { isLoading, isFetched } = useGraphqlQuery(
+    "fetchPersons",
     {
       filter: filter,
-      limit: 50
+      limit: 50,
     },
     {
       custom: true,
-      originalName: 'listPeople',
+      originalName: "listPeople",
       onSuccess: (data: any) => {
         setDesigners(data);
       },
       enabled:
-        showPopover && item && item?.designers?.length > 0 && designers.length === 0
+        showPopover &&
+        item &&
+        item?.designers?.length > 0 &&
+        designers.length === 0,
     }
   );
   return (
     <div
       onMouseEnter={() => {
-        setHoveringItem({name: item.name, id: item.id});
+        setHoveringItem({ name: item.name, id: item.id });
       }}
       // onMouseLeave={() => {
       //   setHoveringItem({});
       // }}
-      data-cy={`curriculum-${item.name.split(' ').join('-')}`}
+      data-cy={`curriculum-${item.name.split(" ").join("-")}`}
       onClick={() => editCurrentCurricular(item.id)}
-      className="flex hover:underline hover:theme-text:400 cursor-pointer items-center">
+      className="flex hover:underline hover:theme-text:400 cursor-pointer items-center"
+    >
       <div className="flex-shrink-0 h-10 w-10 flex items-center">
         {item.image ? (
-          <img src={getImageFromS3Static(item.image)} className="h-8 w-8 rounded-full" />
+          <img
+            src={getImageFromS3Static(item.image)}
+            className="h-8 w-8 rounded-full"
+          />
         ) : (
           <Placeholder name={item.name} size="h-8 w-8" />
         )}
@@ -73,30 +80,32 @@ const CourseName = ({
           header="Course Details"
           isLast={isLast}
           clear={() => setHoveringItem({})}
-          show={showPopover}>
+          show={showPopover}
+        >
           {showPopover && (
             <>
               <div className="bg-white rounded-md py-2 px-4 my-2 gap-x-4 flex items-center justify-between">
                 <DataValue
-                  title={'Status'}
+                  title={"Status"}
                   content={
                     <p
                       className={`${
                         currentSelectedItem.status === RoomStatus.ACTIVE
-                          ? 'text-green-500'
-                          : 'text-yellow-500'
-                      } uppercase`}>
+                          ? "text-green-500"
+                          : "text-yellow-500"
+                      } uppercase`}
+                    >
                       {currentSelectedItem.status || RoomStatus.ACTIVE}
                     </p>
                   }
                 />
                 <DataValue
-                  title={'Created date'}
-                  content={moment(item.createdAt).format('ll')}
+                  title={"Created date"}
+                  content={moment(item.createdAt).format("ll")}
                 />
                 <DataValue
-                  title={'Last update'}
-                  content={moment(item.updatedAt).format('ll')}
+                  title={"Last update"}
+                  content={moment(item.updatedAt).format("ll")}
                 />
               </div>
 
@@ -107,7 +116,7 @@ const CourseName = ({
                   <div className="mt-2">
                     <DataValue
                       withBg
-                      title={'Designers'}
+                      title={"Designers"}
                       content={
                         isLoading && !isFetched && designers.length === 0 ? (
                           <p className="text-xs text-gray-400">loading...</p>
@@ -115,7 +124,10 @@ const CourseName = ({
                           <ul className="grid grid-cols-2 gap-x-4">
                             {designers.map((person) => {
                               return (
-                                <li key={person.authId} className="flex items-center">
+                                <li
+                                  key={person.authId}
+                                  className="flex items-center"
+                                >
                                   <div className="flex-shrink-0 h-8 w-8 flex items-center">
                                     {person.image ? (
                                       <img
@@ -148,18 +160,18 @@ const CourseName = ({
 
               <div className="mt-2">
                 <DataValue
-                  title={'Summary'}
+                  title={"Summary"}
                   withBg
-                  content={truncate(item.summary || '--', {length: 200})}
+                  content={truncate(item.summary || "--", { length: 200 })}
                 />
               </div>
               <hr />
 
               <div className="my-2">
                 <DataValue
-                  title={'Description'}
+                  title={"Description"}
                   withBg
-                  content={truncate(item.description || '--', {length: 200})}
+                  content={truncate(item.description || "--", { length: 200 })}
                 />
               </div>
             </>

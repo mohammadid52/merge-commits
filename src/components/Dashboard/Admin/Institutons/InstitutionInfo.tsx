@@ -1,7 +1,6 @@
-import {Storage} from '@aws-amplify/storage';
-import React, {useEffect, useState} from 'react';
-import NavBarRouter from '../NavBarRouter';
-import InstitutionProfile from './InstitutionProfile';
+import { useEffect, useState } from "react";
+import NavBarRouter from "../NavBarRouter";
+import InstitutionProfile from "./InstitutionProfile";
 
 interface InstitutionInfoProps {
   institute?: InstInfo;
@@ -11,7 +10,7 @@ interface InstitutionInfoProps {
   toggleUpdateState?: () => void;
   postInfoUpdate?: (data: any) => void;
 }
-interface InstInfo {
+export interface InstInfo {
   id: string;
   name: string;
   type: string;
@@ -20,19 +19,25 @@ interface InstInfo {
   addressLine2: string;
   city: string;
   state: string;
+
   zip: string;
   image: string;
   phone: string;
-  classes: {items: {name?: string; id: string}[]};
-  curricula: {items: {name?: string; id: string}[]};
+  classes: { items: { name?: string; id: string }[] };
+  curricula: { items: { name?: string; id: string }[] };
   isServiceProvider: boolean;
   serviceProviders?: {
-    items: {id: string; providerID: string; status: string; providerInstitution?: any}[];
+    items: {
+      id: string;
+      providerID: string;
+      status: string;
+      providerInstitution?: any;
+    }[];
   };
 }
 
 const InstitutionInfo = (instProps: InstitutionInfoProps) => {
-  const {institute} = instProps;
+  const { institute } = instProps;
 
   // ~~~~~~~~~~~ CURRICULAR LIST ~~~~~~~~~~~ //
   const [curricular, setCurricular] = useState<any>({});
@@ -47,7 +52,7 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
       ...curricular,
       items: curricular.items.filter(
         (curriculumObj: any) => curriculumObj.id !== itemObj.id
-      )
+      ),
     });
   };
 

@@ -1,36 +1,33 @@
-import Tooltip from 'atoms/Tooltip';
-import {GlobalContext} from 'contexts/GlobalContext';
-import {useOverlayContext} from 'contexts/OverlayContext';
-import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
-import useOnScreen from 'customHooks/useOnScreen';
-import {UniversalLesson} from 'interfaces/UniversalLessonInterfaces';
-import React, {useContext, useEffect, useRef} from 'react';
+import Tooltip from "atoms/Tooltip";
+import { useOverlayContext } from "contexts/OverlayContext";
+import { useULBContext } from "contexts/UniversalLessonBuilderContext";
+import useOnScreen from "customHooks/useOnScreen";
+import React, { useEffect, useRef } from "react";
 import {
   AiOutlineCopy,
   AiOutlineDelete,
-  AiOutlineEdit,
   AiOutlineEye,
   AiOutlineEyeInvisible,
-  AiOutlineFileAdd
-} from 'react-icons/ai';
-import {IconType} from 'react-icons/lib';
+  AiOutlineFileAdd,
+} from "react-icons/ai";
+import { IconType } from "react-icons/lib";
 
 const Button = ({
   onClick,
   icon: Icon,
-  text = '',
-  tooltip = '',
+  text = "",
+  tooltip = "",
   invert = false,
-  color = 'text-white',
-  tooltipPlacement = 'bottom',
-  top = false
+  color = "text-white",
+  tooltipPlacement = "bottom",
+  top = false,
 }: {
   onClick?: () => void;
   icon?: IconType;
   tooltip?: string;
   text?: string;
   color?: string;
-  tooltipPlacement?: 'bottom' | 'top' | 'left' | 'right' | 'bottomleft';
+  tooltipPlacement?: "bottom" | "top" | "left" | "right" | "bottomleft";
   invert?: boolean;
   top?: boolean;
 }) => {
@@ -38,14 +35,21 @@ const Button = ({
     <Tooltip
       show={!text && tooltip.length > 0}
       text={tooltip}
-      placement={tooltipPlacement}>
+      placement={tooltipPlacement}
+    >
       <button
         onClick={onClick}
         type="button"
         className={`${
-          invert ? 'bg-indigo-600' : 'bg-transparent'
-        } ${color} mx-1 2xl:mx-2 w-auto inline-flex justify-center items-center px-1 2xl:px-2 py-1 border border-transparent rounded-md  transition-all hover:text-gray-500`}>
-        {Icon && <Icon className={`h-7 w-7 ${top ? 'mr-2 ' : ''}`} aria-hidden="true" />}
+          invert ? "theme-bg" : "bg-transparent"
+        } ${color} mx-1 2xl:mx-2 w-auto inline-flex justify-center items-center px-1 2xl:px-2 py-1 border border-transparent rounded-md  transition-all hover:text-gray-500`}
+      >
+        {Icon && (
+          <Icon
+            className={`h-7 w-7 ${top ? "mr-2 " : ""}`}
+            aria-hidden="true"
+          />
+        )}
         <span className="hidden text-xs 2xl:text-sm xl:block">{text}</span>
       </button>
     </Tooltip>
@@ -57,7 +61,7 @@ const Toolbar = ({
   setEditMode,
   setFields,
   setNewLessonPlanShow,
-  newLessonPlanShow
+  newLessonPlanShow,
 }: {
   deleteLesson: () => void;
   newLessonPlanShow: boolean;
@@ -70,20 +74,17 @@ const Toolbar = ({
     setPreviewMode,
 
     setToolbarOnTop,
-    toolbarOnTop
+    toolbarOnTop,
   } = useULBContext();
 
-  const {
-    state: {lessonPage: {theme = 'dark', themeTextColor = ''} = {}}
-  } = useContext(GlobalContext);
-  const toolbarRef = useRef();
+  const toolbarRef = useRef<any>(null);
   const isVisible = useOnScreen(toolbarRef);
 
   useEffect(() => {
     setToolbarOnTop(isVisible);
   }, [isVisible]);
 
-  const {setShowDataForCopyClone} = useOverlayContext();
+  const { setShowDataForCopyClone } = useOverlayContext();
 
   return (
     <>
@@ -93,11 +94,14 @@ const Toolbar = ({
         // style={{transform: previewMode ? 'translateX(35em)' : 'translateX(0rem)'}}
         className={` ${
           !toolbarOnTop
-            ? 'opacity-0 -translate-y-12 scale-90'
-            : 'opacity-100 scale-100 translate-y-0'
+            ? "opacity-0 -translate-y-12 scale-90"
+            : "opacity-100 scale-100 translate-y-0"
         } customShadow transform ${
-          previewMode ? `fixed bottom-3 ${newLessonPlanShow ? 'left-7' : 'right-7'}` : ''
-        } rounded-lg toolbar bg-white dark:bg-gray-700 z-10 ease-out transition-all duration-200  w-auto p-2`}>
+          previewMode
+            ? `fixed bottom-3 ${newLessonPlanShow ? "left-7" : "right-7"}`
+            : ""
+        } rounded-lg toolbar bg-white dark:bg-gray-700 z-10 ease-out transition-all duration-200  w-auto p-2`}
+      >
         <div className="flex items-center">
           <div className="flex items-center w-auto">
             <Button
@@ -105,16 +109,17 @@ const Toolbar = ({
               tooltip="Preview"
               text="Preview"
               top
-              color={themeTextColor}
+              color={"theme-text"}
               icon={previewMode ? AiOutlineEyeInvisible : AiOutlineEye}
             />
 
             <div
               className={`${
                 previewMode
-                  ? 'scale-0 opacity-80'
-                  : 'scale-100 opacity-100 ml-2 2xl:ml-6 '
-              } space-x-2 2xl:space-x-6 transition-all transform flex`}>
+                  ? "scale-0 opacity-80"
+                  : "scale-100 opacity-100 ml-2 2xl:ml-6 "
+              } space-x-2 2xl:space-x-6 transition-all transform flex`}
+            >
               {!previewMode && (
                 <>
                   <Button
@@ -125,29 +130,29 @@ const Toolbar = ({
                     }}
                     tooltip="Copy / Clone"
                     text="Copy / Clone"
-                    color={themeTextColor}
+                    color={"theme-text"}
                     top
                     icon={AiOutlineCopy}
                   />
 
                   <Button
                     text="Add New Page"
-                    color={themeTextColor}
+                    color={"theme-text"}
                     top
                     tooltip="Add New Page"
                     onClick={() => {
                       setNewLessonPlanShow(true);
                       setEditMode(false);
                       setFields({
-                        title: '',
-                        label: '',
-                        instructions: '',
-                        instructionsHtml: '',
-                        description: '', // ignore this field
+                        title: "",
+                        label: "",
+                        instructions: "",
+                        instructionsHtml: "",
+                        description: "", // ignore this field
                         interactionType: [],
                         tags: [],
-                        estTime: '1 min',
-                        classwork: true
+                        estTime: "1 min",
+                        classwork: true,
                       });
                     }}
                     icon={AiOutlineFileAdd}

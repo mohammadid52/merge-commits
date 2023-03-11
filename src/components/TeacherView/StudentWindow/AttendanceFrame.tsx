@@ -1,16 +1,12 @@
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import {getAsset} from 'assets';
-import {GlobalContext} from 'contexts/GlobalContext';
-import * as customQueries from 'customGraphql/customQueries';
-import orderBy from 'lodash/orderBy';
-import React, {forwardRef, useContext, useEffect, useRef, useState} from 'react';
-import {IconContext} from 'react-icons';
-import {FaArrowDown, FaArrowUp} from 'react-icons/fa';
-import {IoIosCalendar} from 'react-icons/io';
+import { API, graphqlOperation } from "aws-amplify";
+import * as customQueries from "customGraphql/customQueries";
+import orderBy from "lodash/orderBy";
+import { useEffect, useRef, useState } from "react";
+import { FaArrowDown, FaArrowUp } from "react-icons/fa";
 
-import Modal from 'atoms/Modal';
-import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
-import AttendanceList from './AttendanceFrame/AttendanceList';
+import Modal from "atoms/Modal";
+import useTailwindBreakpoint from "customHooks/tailwindBreakpoint";
+import AttendanceList from "./AttendanceFrame/AttendanceList";
 
 const pad = (num: any) => {
   return `0${num}`.slice(-2);
@@ -22,7 +18,7 @@ interface IAttendanceProps {
   selectedRoomId?: string;
   role?: string;
   visible?: boolean;
-  rightView?: {view: string; option?: string};
+  rightView?: { view: string; option?: string };
   setRightView?: any;
   studentID?: string;
   roster?: any[];
@@ -32,14 +28,11 @@ const Attendance = ({
   selectedRoomId,
   role,
   visible,
-  rightView,
+
   setRightView,
   studentID,
-  roster
+  roster,
 }: IAttendanceProps) => {
-  const {theme, clientKey} = useContext(GlobalContext);
-  const themeColor = getAsset(clientKey, 'themeClassName');
-
   // ##################################################################### //
   // ############################ LOADING USER ########################### //
   // ##################################################################### //
@@ -61,15 +54,15 @@ const Attendance = ({
   // ##################################################################### //
   const [loading, setLoading] = useState<boolean>(false);
   const [attendanceList, setAttendanceList] = useState<any>([]);
-  const [date, setDate] = useState(null);
+  const [date, setDate] = useState<Date | null>(null);
   const [sortConfig, setSortConfig] = useState<{
     fieldName: string;
-    order: boolean | 'desc' | 'asc';
+    order: boolean | "desc" | "asc";
   }>({
-    fieldName: '',
-    order: false
+    fieldName: "",
+    order: false,
   });
-  const [nextToken, setNextToken] = useState<string>('');
+  const [nextToken, setNextToken] = useState<string>("");
 
   useEffect(() => {
     if (studentID) {
@@ -86,15 +79,15 @@ const Attendance = ({
       let payload: any = {
         studentID: studentID,
         roomID: selectedRoomId,
-        sortDirection: 'DESC',
+        sortDirection: "DESC",
         date,
-        limit
+        limit,
       };
       if (nextToken) {
         payload.nextToken = nextToken;
       }
       if (selectedRoomId) {
-        payload.filter = {roomID: {eq: selectedRoomId}};
+        payload.filter = { roomID: { eq: selectedRoomId } };
       }
       if (date) {
         const dayNumber = date.getDate();
@@ -102,7 +95,7 @@ const Attendance = ({
         const year = date.getFullYear();
 
         payload.date = {
-          eq: `${year}-${pad(monthNumber + 1)}-${pad(dayNumber)}`
+          eq: `${year}-${pad(monthNumber + 1)}-${pad(dayNumber)}`,
         };
       }
       const list: any = await API.graphql(
@@ -112,12 +105,15 @@ const Attendance = ({
         ...record,
         lessonName: record.lesson?.title,
         curriculumName: record.curriculum?.name,
-        roomName: record.room?.name
+        roomName: record.room?.name,
       }));
       if (fetchNewRecords) {
         setAttendanceList(temp);
       } else {
-        setAttendanceList((prevAttendance: any) => [...prevAttendance, ...temp]);
+        setAttendanceList((prevAttendance: any) => [
+          ...prevAttendance,
+          ...temp,
+        ]);
       }
       setNextToken(list?.data.attendanceByStudent?.nextToken);
       setLoading(false);
@@ -135,10 +131,13 @@ const Attendance = ({
     fetchAttendance(date, true);
   };
 
-  const handleOrderBy = (fieldName: string, order: boolean | 'desc' | 'asc') => {
+  const handleOrderBy = (
+    fieldName: string,
+    order: boolean | "desc" | "asc"
+  ) => {
     setSortConfig({
       fieldName,
-      order
+      order,
     });
     setAttendanceList(orderBy(attendanceList, [fieldName], [order]));
   };
@@ -150,18 +149,20 @@ const Attendance = ({
         <span className="w-auto inline-flex items-center ml-1 cursor-pointer">
           <span
             className={`w-auto ${
-              fieldName === sortConfig.fieldName && sortConfig.order === 'desc'
-                ? 'text-dark-gray'
-                : ''
-            }`}>
+              fieldName === sortConfig.fieldName && sortConfig.order === "desc"
+                ? "text-dark-gray"
+                : ""
+            }`}
+          >
             <FaArrowDown className="w-2" />
           </span>
           <span
             className={`w-auto ${
-              fieldName === sortConfig.fieldName && sortConfig.order === 'asc'
-                ? 'text-dark-gray'
-                : ''
-            }`}>
+              fieldName === sortConfig.fieldName && sortConfig.order === "asc"
+                ? "text-dark-gray"
+                : ""
+            }`}
+          >
             <FaArrowUp className="w-2" />
           </span>
         </span>
@@ -169,56 +170,41 @@ const Attendance = ({
     );
   };
 
-  const DateCustomInput = forwardRef(({value, onClick, ...rest}: any, ref: any) => (
-    <div
-      className={`flex w-auto py-3 px-4 rounded  ${theme.formSelect} ${theme.outlineNone}`}
-      onClick={onClick}>
-      <span className="w-6 mr-4 cursor-pointer">
-        <IconContext.Provider
-          value={{size: '1.5rem', color: theme.iconColor[themeColor]}}>
-          <IoIosCalendar />
-        </IconContext.Provider>
-      </span>
-      <input
-        placeholder={'Search by date...'}
-        id="searchInput"
-        className={`${theme.outlineNone}`}
-        value={value}
-        {...rest}
-      />
-    </div>
-  ));
-
   // ##################################################################### //
   // ########################### ANIMATION REF ########################### //
   // ##################################################################### //
-  const frameRef = useRef();
+  const frameRef = useRef<any>(null);
 
   // ##################################################################### //
   // ############################# RESPONSIVE ############################ //
   // ##################################################################### //
-  const {breakpoint} = useTailwindBreakpoint();
+  const { breakpoint } = useTailwindBreakpoint();
 
   const name = user?.firstName
     ? `${user?.firstName} ${user?.lastName}`
-    : user?.preferredName || '';
+    : user?.preferredName || "";
 
   return (
     <div
       ref={frameRef}
       style={{
-        width: breakpoint === 'xl' || breakpoint === '2xl' ? '75%' : 'calc(100% - 36px)'
+        width:
+          breakpoint === "xl" || breakpoint === "2xl"
+            ? "75%"
+            : "calc(100% - 36px)",
       }}
-      className={`absolute mr-0 top-0 right-0 h-full flex flex-col items-center z-50`}>
+      className={`absolute mr-0 top-0 right-0 h-full flex flex-col items-center z-50`}
+    >
       {visible && (
         <Modal
-          customTitle={user ? `Attendance for ${name}` : 'Attendance'}
+          customTitle={user ? `Attendance for ${name}` : "Attendance"}
           showHeader={true}
           showHeaderBorder={false}
           showFooter={false}
           scrollHidden={true}
-          closeAction={() => setRightView({view: 'lesson', option: ''})}
-          position={'absolute'}>
+          closeAction={() => setRightView({ view: "lesson", option: "" })}
+          position={"absolute"}
+        >
           <AttendanceList
             loading={loading}
             attendanceList={attendanceList}

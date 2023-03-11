@@ -1,4 +1,4 @@
-import {useEffect, useRef} from 'react';
+import { useEffect, useRef } from "react";
 
 /**
  *
@@ -10,7 +10,7 @@ import {useEffect, useRef} from 'react';
 const useUpdateEffect = (callback: any, dependencies: any[]) => {
   const called = useRef(false);
   useEffect(() => {
-    if (!called) {
+    if (!called?.current) {
       called.current = true;
       return;
     } else {

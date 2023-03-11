@@ -1,45 +1,33 @@
-import {GlobalContext} from 'contexts/GlobalContext';
-import React, {useContext, useEffect, useRef} from 'react';
-import {IconContext} from 'react-icons';
+import { useGlobalContext } from "contexts/GlobalContext";
+import { useEffect, useRef } from "react";
+import { IconContext } from "react-icons";
 import {
   AiOutlineArrowLeft,
   AiOutlineClose,
   AiOutlineHome,
-  AiOutlineSave,
-  AiOutlineVideoCamera
-} from 'react-icons/ai';
-import {useHistory} from 'react-router';
+  AiOutlineVideoCamera,
+} from "react-icons/ai";
 
-import {gsap} from 'gsap/all';
-import usePrevious from 'customHooks/previousProps';
-import {getAsset} from 'assets';
-import {UniversalLessonPage} from 'interfaces/UniversalLessonInterfaces';
-import {ISideMenuProps} from 'interfaces/LessonComponentsInterfaces';
+import { getAsset } from "assets";
+import usePrevious from "customHooks/previousProps";
+import { gsap } from "gsap/all";
+import { ISideMenuProps } from "interfaces/LessonComponentsInterfaces";
 
 const SideMenu = ({
   isOpen,
-  overlay,
+
   setOverlay,
   videoLink,
   handleVideoLinkPopup,
-  videoLinkModalVisible,
+
   handleBack,
-  handleForward,
+
   handlePopup,
-  isAtEnd,
-  setisAtEnd,
-  handleRequiredNotification,
-  pages,
-  canContinue
 }: ISideMenuProps) => {
   // ~~~~~~~~~~ CONTEXT SPLITTING ~~~~~~~~~~ //
-  const gContext = useContext(GlobalContext);
-  const user = gContext.state.user;
-  const lessonState = gContext.lessonState;
-  const theme = gContext.theme;
-  const clientKey = gContext.clientKey;
-  const history = useHistory();
-  const themeColor = getAsset(clientKey, 'themeClassName');
+  const { clientKey, theme } = useGlobalContext();
+
+  const themeColor = getAsset(clientKey, "themeClassName");
 
   // ##################################################################### //
   // ############################# ANIMATION ############################# //
@@ -49,24 +37,24 @@ const SideMenu = ({
 
   // ~~~~~~~~~~~~~~ WHOLE MENU ~~~~~~~~~~~~~ //
 
-  const sidemenuContainerRef = useRef();
+  const sidemenuContainerRef = useRef<any>(null);
 
   const handleOpenAnimation = () => {
     return gsap.to(sidemenuContainerRef.current, {
-      x: '0%',
+      x: "0%",
       opacity: 1,
       duration: ANIMATION_DURATION,
-      ease: 'power2'
+      ease: "power2",
     });
   };
 
   const handleCloseAnimation = () => {
     return gsap.to(sidemenuContainerRef.current, {
-      x: '-100%',
+      x: "-100%",
       opacity: 0,
       duration: ANIMATION_DURATION,
       delay: ANIMATION_DURATION / 2,
-      ease: 'power2'
+      ease: "power2",
     });
   };
 
@@ -88,22 +76,21 @@ const SideMenu = ({
 
   // ~~~~~~~~~~~~~~~ CLICKING ~~~~~~~~~~~~~~ //
 
-  const closeButtonRef = useRef();
-  const backButtonRef = useRef();
-  const homeButtonRef = useRef();
-  const videoButtonRef = useRef();
-  const saveQuitButtonRef = useRef();
+  const closeButtonRef = useRef<any>(null);
+  const backButtonRef = useRef<any>(null);
+  const homeButtonRef = useRef<any>(null);
+  const videoButtonRef = useRef<any>(null);
 
   const handleClickAnimation = (targetRef: any) => {
     return gsap.fromTo(
       targetRef.current,
-      {scaleX: 0.8, scaleY: 0.8},
+      { scaleX: 0.8, scaleY: 0.8 },
       {
         scaleX: 1,
         scaleY: 1,
-        transformOrigin: 'center center',
+        transformOrigin: "center center",
         duration: ANIMATION_DURATION,
-        ease: 'elastic.out(1, 0.3)'
+        ease: "elastic.out(1, 0.3)",
       }
     );
   };
@@ -114,47 +101,51 @@ const SideMenu = ({
 
   const handleClose = () => {
     handleClickAnimation(closeButtonRef);
-    setOverlay('');
+    setOverlay?.("");
   };
 
-  const handleMenuBack = (inputRef?: any) => {
+  const handleMenuBack = (_?: any) => {
     handleClickAnimation(backButtonRef);
-    handleBack();
-    setOverlay('');
+    handleBack?.();
+    setOverlay?.("");
   };
-  const handleMenuHome = (inputRef?: any) => {
+  const handleMenuHome = (_?: any) => {
     handleClickAnimation(homeButtonRef);
-    handlePopup(false);
-    setOverlay('');
+    handlePopup?.(false);
+    setOverlay?.("");
   };
-  const handleMenuVideoLink = (inputRef?: any) => {
+  const handleMenuVideoLink = (_?: any) => {
     handleClickAnimation(videoButtonRef);
     if (videoLink) {
-      handleVideoLinkPopup();
+      handleVideoLinkPopup?.();
     }
-    setOverlay('');
+    setOverlay?.("");
   };
-  const handleMenuSaveAndQuit = (inputRef?: any) => {};
 
   return (
     <div
       ref={sidemenuContainerRef}
-      style={{transform: `translateX(-100%)`}}
-      className={`${theme.backGround[themeColor]} fixed w-full h-full z-100`}>
-      <div className={`w-full flex justify-center items-center content-center py-2 px-6`}>
+      style={{ transform: `translateX(-100%)` }}
+      className={`${theme.backGround[themeColor]} fixed w-full h-full z-100`}
+    >
+      <div
+        className={`w-full flex justify-center items-center content-center py-2 px-6`}
+      >
         <div className="w-full flex flex-col items-center justify-between">
           <div className="text-lg font-medium">
             <div className="w-auto p-4 mb-4 flex flex-row justify-end">
               <span
                 ref={closeButtonRef}
                 className={`my-auto text-sm flex justify-between items-center rounded-full w-8 h-8 z-30 cursor-pointer`}
-                onPointerDown={() => handleClose()}>
+                onPointerDown={() => handleClose()}
+              >
                 <IconContext.Provider
                   value={{
-                    size: '1.5rem',
-                    style: {width: '32px'},
-                    className: `text-white`
-                  }}>
+                    size: "1.5rem",
+                    style: { width: "32px" },
+                    className: `text-white`,
+                  }}
+                >
                   <AiOutlineClose />
                 </IconContext.Provider>
               </span>
@@ -163,15 +154,18 @@ const SideMenu = ({
             <div
               ref={backButtonRef}
               className="p-4 mb-4 flex flex-row cursor-pointer hover:underline"
-              onPointerDown={() => handleMenuBack()}>
+              onPointerDown={() => handleMenuBack()}
+            >
               <span
-                className={`pointer-events-none my-auto mr-4 text-sm flex justify-between items-center rounded-full w-8 h-8 z-30`}>
+                className={`pointer-events-none my-auto mr-4 text-sm flex justify-between items-center rounded-full w-8 h-8 z-30`}
+              >
                 <IconContext.Provider
                   value={{
-                    size: '1.5rem',
-                    style: {width: '32px'},
-                    className: `text-white`
-                  }}>
+                    size: "1.5rem",
+                    style: { width: "32px" },
+                    className: `text-white`,
+                  }}
+                >
                   <AiOutlineArrowLeft />
                 </IconContext.Provider>
               </span>
@@ -180,15 +174,18 @@ const SideMenu = ({
             <div
               ref={homeButtonRef}
               className="p-4 mb-4 flex flex-row cursor-pointer hover:underline"
-              onPointerDown={() => handleMenuHome()}>
+              onPointerDown={() => handleMenuHome()}
+            >
               <span
-                className={`pointer-events-none my-auto mr-4 text-sm flex justify-between items-center rounded-full w-8 h-8 z-30`}>
+                className={`pointer-events-none my-auto mr-4 text-sm flex justify-between items-center rounded-full w-8 h-8 z-30`}
+              >
                 <IconContext.Provider
                   value={{
-                    size: '1.5rem',
-                    style: {width: '32px'},
-                    className: `text-white`
-                  }}>
+                    size: "1.5rem",
+                    style: { width: "32px" },
+                    className: `text-white`,
+                  }}
+                >
                   <AiOutlineHome />
                 </IconContext.Provider>
               </span>
@@ -197,15 +194,18 @@ const SideMenu = ({
             <div
               ref={videoButtonRef}
               className="p-4 mb-4 flex flex-row cursor-pointer hover:underline"
-              onPointerDown={() => handleMenuVideoLink()}>
+              onPointerDown={() => handleMenuVideoLink()}
+            >
               <span
-                className={`pointer-events-none my-auto mr-4 text-sm flex justify-between items-center rounded-full w-8 h-8 z-30`}>
+                className={`pointer-events-none my-auto mr-4 text-sm flex justify-between items-center rounded-full w-8 h-8 z-30`}
+              >
                 <IconContext.Provider
                   value={{
-                    size: '1.5rem',
-                    style: {width: '32px'},
-                    className: `text-white`
-                  }}>
+                    size: "1.5rem",
+                    style: { width: "32px" },
+                    className: `text-white`,
+                  }}
+                >
                   <AiOutlineVideoCamera />
                 </IconContext.Provider>
               </span>
@@ -214,7 +214,7 @@ const SideMenu = ({
             {/* <div
               ref={saveQuitButtonRef}
               className="p-4 mb-4 flex flex-row cursor-pointer hover:underline"
-              onPointerDown={() => setOverlay('')}>
+              onPointerDown={() => setOverlay?.('')}>
               <span
                 className={`pointer-events-none my-auto mr-4 text-sm flex justify-between items-center rounded-full w-8 h-8 z-30`}>
                 <IconContext.Provider

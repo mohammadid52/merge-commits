@@ -1,21 +1,21 @@
-import ErrorBoundary from '@components/Error/ErrorBoundary';
-import LessonHeaderBar from '@components/Header/LessonHeaderBar';
-import {useGlobalContext} from '@contexts/GlobalContext';
-import React, {useEffect, useRef, useState} from 'react';
-import {useHistory, useRouteMatch} from 'react-router';
-import Foot from './Foot/Foot';
-import {ILessonSurveyApp} from './Lesson';
-import LessonPageLoader from './LessonPageLoader';
-import CoreUniversalLesson from './UniversalLesson/views/CoreUniversalLesson';
+import ErrorBoundary from "@components/Error/ErrorBoundary";
+import LessonHeaderBar from "@components/Header/LessonHeaderBar";
+import { useGlobalContext } from "@contexts/GlobalContext";
+import React, { useEffect, useRef, useState } from "react";
+import { useHistory, useRouteMatch } from "react-router";
+import Foot from "./Foot/Foot";
+import { ILessonSurveyApp } from "./Lesson";
+import LessonPageLoader from "./LessonPageLoader";
+import CoreUniversalLesson from "./UniversalLesson/views/CoreUniversalLesson";
 
 interface LessonSurveyAppWrapper extends ILessonSurveyApp {
-  type: 'survey' | 'lesson';
+  type: "survey" | "lesson";
   lessonDataLoaded: boolean;
   createJournalData: () => void;
 }
 
 const LessonSurveyAppWrapper = ({
-  type = 'lesson',
+  type = "lesson",
   pageStateUpdated,
 
   handleMutationOnPageChange,
@@ -27,22 +27,21 @@ const LessonSurveyAppWrapper = ({
   personLessonData,
   setPersonLessonData,
   updatePageInLocalStorage,
-  lessonDataLoaded
+  lessonDataLoaded,
 }: LessonSurveyAppWrapper) => {
   const {
     lessonState,
     theme,
     lessonDispatch,
-    state: {user}
+    state: { user },
   } = useGlobalContext();
 
-  const [showRequiredNotification, setShowRequiredNotification] = useState<boolean>(
-    false
-  );
-  const [overlay, setOverlay] = useState<string>('');
+  const [showRequiredNotification, setShowRequiredNotification] =
+    useState<boolean>(false);
+  const [overlay, setOverlay] = useState<string>("");
   const [isAtEnd, setisAtEnd] = useState<boolean>(false);
 
-  const topLessonRef = useRef();
+  const topLessonRef = useRef<any>(null);
   const history = useHistory();
   const match = useRouteMatch();
 
@@ -52,10 +51,10 @@ const LessonSurveyAppWrapper = ({
 
   useEffect(() => {
     if (!personLoading) {
-      const pages = personLessonData?.pages || '{}';
+      const pages = personLessonData?.pages || "{}";
       const lessonProgress = JSON.parse(pages).lessonProgress || 0;
 
-      lessonDispatch({type: 'SET_CURRENT_PAGE', payload: lessonProgress});
+      lessonDispatch({ type: "SET_CURRENT_PAGE", payload: lessonProgress });
 
       history.push(`${match.url}/${lessonProgress}`);
     }
@@ -74,24 +73,27 @@ const LessonSurveyAppWrapper = ({
 
   return (
     <div
-      id={type === 'survey' ? 'survey-app-container' : 'lesson-app-container'}
+      id={type === "survey" ? "survey-app-container" : "lesson-app-container"}
       className={`${theme.bg} w-full h-full flex flex-col items-start dark-scroll overflow-y-auto`}
-      ref={topLessonRef}>
+      ref={topLessonRef}
+    >
       <div
         className={`opacity-${
           showRequiredNotification
-            ? '100 translate-x-0 transform z-100'
-            : '0 translate-x-10 transform'
-        } absolute bottom-5 right-5 w-96 py-4 px-6 rounded-md shadow bg-gray-800 duration-300 transition-all`}>
+            ? "100 translate-x-0 transform z-100"
+            : "0 translate-x-10 transform"
+        } absolute bottom-5 right-5 w-96 py-4 px-6 rounded-md shadow bg-gray-800 duration-300 transition-all`}
+      >
         <p className="text-white font-medium tracking-wide">
-          <span className="text-red-500">*</span>Please fill all the required fields
+          <span className="text-red-500">*</span>Please fill all the required
+          fields
         </p>
       </div>
       <div className={`absolute bottom-1 left-0 py-4 px-6 z-max  w-auto `}>
         <h6 className="text-xs text-shadow text-gray-500">{NAME}</h6>
       </div>
 
-      <div className="fixed " style={{zIndex: 5000}}>
+      <div className="fixed " style={{ zIndex: 5000 }}>
         <LessonHeaderBar
           lessonDataLoaded={lessonDataLoaded}
           overlay={overlay}
@@ -106,7 +108,7 @@ const LessonSurveyAppWrapper = ({
           setisAtEnd={setisAtEnd}
           validateRequired={validateRequired}
           handleRequiredNotification={() => {
-            invokeRequiredField();
+            invokeRequiredField?.();
             handleRequiredNotification();
           }}
         />
@@ -121,13 +123,14 @@ const LessonSurveyAppWrapper = ({
             authId={user.authId}
             email={user.email}
             componentName="CoreUniversalLesson"
-            fallback={<h1>Error in the Lesson App</h1>}>
+            fallback={<h1>Error in the Lesson App</h1>}
+          >
             {/* ADD LESSONWRAPPER HERE */}
             <div className="mt-4 mb-8 lesson-page-container ">
               <CoreUniversalLesson
                 validateRequired={validateRequired}
                 invokeRequiredField={() => {
-                  invokeRequiredField();
+                  invokeRequiredField?.();
                   handleRequiredNotification();
                 }}
                 canContinue={canContinue}

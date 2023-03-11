@@ -1,12 +1,13 @@
-import React, {useEffect, useState} from 'react';
+import { NotificationListItem } from "@interfaces/GlobalInfoComponentsInterfaces";
+import React, { useEffect, useState } from "react";
 
 interface INoticebarProps {
-  notifications: any[];
+  notifications: NotificationListItem[] | null;
 }
 
-const Noticebar = ({notifications}: INoticebarProps) => {
+const Noticebar = ({ notifications }: INoticebarProps) => {
   // ~~~~~~ INDEX OF DISPLAYED NOTICE ~~~~~~ //
-  const [noticeIndex, setNoticeIndex] = useState<number>(null);
+  const [noticeIndex, setNoticeIndex] = useState<number | null>(null);
   useEffect(() => {
     if (notifications && notifications.length > 0 && noticeIndex === null) {
       setNoticeIndex(notifications.length - 1);
@@ -38,7 +39,7 @@ const Noticebar = ({notifications}: INoticebarProps) => {
         <span onClick={() => prevFn()} className="cursor-pointer mr-1">
           &#9664;
         </span>
-        <span>{startingNumber + '/' + totalNr}</span>
+        <span>{startingNumber + "/" + totalNr}</span>
         <span onClick={() => nextFn()} className="cursor-pointer ml-1">
           &#9654;
         </span>
@@ -50,16 +51,16 @@ const Noticebar = ({notifications}: INoticebarProps) => {
   const bgStyle = (currentNr: number, noticeList: any[]) => {
     const notificationType = noticeList[currentNr]?.notification?.type;
     switch (notificationType) {
-      case 'info':
-        return 'iconoclast:bg-main curate:bg-main';
-      case 'positive':
-        return 'bg-green-400';
-      case 'alert':
-        return 'bg-orange-400';
-      case 'error':
-        return 'bg-red-400';
+      case "info":
+        return "iconoclast:bg-main curate:bg-main";
+      case "positive":
+        return "bg-green-400";
+      case "alert":
+        return "bg-orange-400";
+      case "error":
+        return "bg-red-400";
       default:
-        return 'bg-dark-gray';
+        return "bg-dark-gray";
     }
   };
 
@@ -69,7 +70,9 @@ const Noticebar = ({notifications}: INoticebarProps) => {
   return (
     <>
       {notifications && notifications.length > 0 && noticeIndex !== null && (
-        <div className={`w-full h-10 p-2 ${bgStyle(noticeIndex, notifications)}`}>
+        <div
+          className={`w-full h-10 p-2 ${bgStyle(noticeIndex, notifications)}`}
+        >
           <div className={`h-full flex flex-row items-center content-center`}>
             <div className={`px-2 flex flex-row ${basicStyle}`}>
               <span className={`w-auto`}>
@@ -79,7 +82,8 @@ const Noticebar = ({notifications}: INoticebarProps) => {
               </span>
               <span
                 className={`w-auto mx-2 ${linkColor}`}
-                onClick={notifications[noticeIndex].action}>
+                onClick={notifications[noticeIndex].action}
+              >
                 {notifications[noticeIndex].notification.cta}
               </span>
             </div>

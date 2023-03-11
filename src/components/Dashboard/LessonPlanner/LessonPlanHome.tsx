@@ -1,7 +1,7 @@
-import ErrorBoundary from '@components/Error/ErrorBoundary';
-import React from 'react';
-import Classroom from '../Classroom/Classroom';
-import {DashboardProps} from '../Dashboard';
+import ErrorBoundary from "@components/Error/ErrorBoundary";
+import React from "react";
+import Classroom from "../Classroom/Classroom";
+import { DashboardProps } from "../Dashboard";
 
 export interface Artist {
   id: string;
@@ -26,7 +26,7 @@ const LessonPlanHome: React.FC<LessonPlanHome> = (props: LessonPlanHome) => {
     setClassroomCurriculum,
     classroomCurriculum,
     currentPage,
-    setCurrentPage,
+
     activeRoomInfo,
     setActiveRoomInfo,
     visibleLessonGroup,
@@ -36,7 +36,7 @@ const LessonPlanHome: React.FC<LessonPlanHome> = (props: LessonPlanHome) => {
     syllabusLoading,
     setSyllabusLoading,
     homeData,
-    handleRoomSelection
+    handleRoomSelection,
   } = props;
 
   return (
@@ -49,7 +49,6 @@ const LessonPlanHome: React.FC<LessonPlanHome> = (props: LessonPlanHome) => {
         activeRoomInfo={activeRoomInfo}
         setActiveRoomInfo={setActiveRoomInfo}
         currentPage={currentPage}
-        setCurrentPage={setCurrentPage}
         isTeacher={true}
         visibleLessonGroup={visibleLessonGroup}
         setVisibleLessonGroup={setVisibleLessonGroup}

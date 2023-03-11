@@ -1,31 +1,31 @@
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import Loader from '@components/Atoms/Loader';
-import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
-import {Empty} from '@components/Dashboard/Admin/LessonsBuilder/StepActionComponent/LearningEvidence/CourseMeasurementsCard';
-import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
-import {RoomStatus} from 'API';
-import Buttons from 'atoms/Buttons';
-import Modal from 'atoms/Modal';
-import PageWrapper from 'atoms/PageWrapper';
-import {useGlobalContext} from 'contexts/GlobalContext';
-import * as customQueries from 'customGraphql/customQueries';
-import useDictionary from 'customHooks/dictionary';
-import * as mutations from 'graphql/mutations';
-import * as queries from 'graphql/queries';
-import {isEmpty} from 'lodash';
-import ModalPopUp from 'molecules/ModalPopUp';
-import React, {Fragment, useEffect, useState} from 'react';
-import {HiOutlineTrash, HiPencil} from 'react-icons/hi';
-import {IoIosAdd} from 'react-icons/io';
-import AddLearningObjective from '../AddLearningObjective';
-import AddMeasurement from '../AddMeasurement';
-import AddTopic from '../AddTopic';
+import { API, graphqlOperation } from "aws-amplify";
+import Loader from "@components/Atoms/Loader";
+import SectionTitleV3 from "@components/Atoms/SectionTitleV3";
+import { Empty } from "@components/Dashboard/Admin/LessonsBuilder/StepActionComponent/LearningEvidence/CourseMeasurementsCard";
+import AnimatedContainer from "@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer";
+import { RoomStatus } from "API";
+import Buttons from "atoms/Buttons";
+import Modal from "atoms/Modal";
+import PageWrapper from "atoms/PageWrapper";
+import { useGlobalContext } from "contexts/GlobalContext";
+import * as customQueries from "customGraphql/customQueries";
+import useDictionary from "customHooks/dictionary";
+import * as mutations from "graphql/mutations";
+import * as queries from "graphql/queries";
+import { isEmpty } from "lodash";
+import ModalPopUp from "molecules/ModalPopUp";
+import React, { Fragment, useEffect, useState } from "react";
+import { HiOutlineTrash, HiPencil } from "react-icons/hi";
+import { IoIosAdd } from "react-icons/io";
+import AddLearningObjective from "../AddLearningObjective";
+import AddMeasurement from "../AddMeasurement";
+import AddTopic from "../AddTopic";
 
 const ActionBtns = ({
   actionOne,
   actionTwo,
   titleOne,
-  titleTwo
+  titleTwo,
 }: {
   actionOne: () => void;
   actionTwo: () => void;
@@ -34,8 +34,9 @@ const ActionBtns = ({
 }) => {
   return (
     <span
-      style={{transform: 'scale(0.7)'}}
-      className="w-auto inline-flex gap-x-2 items-center cursor-pointer">
+      style={{ transform: "scale(0.7)" }}
+      className="w-auto inline-flex gap-x-2 items-center cursor-pointer"
+    >
       {actionOne && (
         <Buttons
           title={titleOne}
@@ -67,7 +68,7 @@ const Topic = ({
   learning,
   deleteModal,
   editCurrentMeasurement,
-  editCurrentTopic
+  editCurrentTopic,
 }: {
   topic: any;
   topicIndex: number;
@@ -78,8 +79,8 @@ const Topic = ({
   deleteModal: (id: string, type: string) => void;
   editCurrentMeasurement: (rubric: any, learningId: string) => void;
 }) => {
-  const {userLanguage} = useGlobalContext();
-  const {AddMeasurementDict} = useDictionary();
+  const { userLanguage } = useGlobalContext();
+  const { AddMeasurementDict } = useDictionary();
 
   return (
     <div className=" w-auto">
@@ -91,10 +92,11 @@ const Topic = ({
 
           <div className="w-auto flex actions">
             <span
-              style={{transform: 'scale(0.7)'}}
-              className="w-auto inline-flex gap-x-2 items-center cursor-pointer">
+              style={{ transform: "scale(0.7)" }}
+              className="w-auto inline-flex gap-x-2 items-center cursor-pointer"
+            >
               <Buttons
-                title={'Edit topic'}
+                title={"Edit topic"}
                 onClick={() => editCurrentTopic(topic)}
                 Icon={HiPencil}
                 size="small"
@@ -102,16 +104,16 @@ const Topic = ({
               />
 
               <Buttons
-                onClick={() => deleteModal(topic?.id, 'topic')}
+                onClick={() => deleteModal(topic?.id, "topic")}
                 Icon={HiOutlineTrash}
-                title={'Delete topic'}
+                title={"Delete topic"}
                 size="small"
                 transparent
                 redBtn
               />
 
               <Buttons
-                title={AddMeasurementDict[userLanguage]['title']}
+                title={AddMeasurementDict[userLanguage]["title"]}
                 onClick={() => createNewMeasurement(topic.id, learning.id)}
                 Icon={IoIosAdd}
                 size="small"
@@ -126,7 +128,8 @@ const Topic = ({
               {topic.rubrics.map((rubric: any, rubricIndex: number) => (
                 <li
                   className="flex show-action-on-hover justify-between items-center py-1 truncate"
-                  key={rubric.id}>
+                  key={rubric.id}
+                >
                   <span className="pr-2 text-gray-600 text-base truncate">
                     {topicIndex + 1}.{rubricIndex + 1} {rubric.name}
                   </span>
@@ -135,8 +138,10 @@ const Topic = ({
                     <ActionBtns
                       titleOne="Edit measurement"
                       titleTwo="Delete measurement"
-                      actionOne={() => editCurrentMeasurement(rubric, learning.id)}
-                      actionTwo={() => deleteModal(rubric?.id, 'measurement')}
+                      actionOne={() =>
+                        editCurrentMeasurement(rubric, learning.id)
+                      }
+                      actionTwo={() => deleteModal(rubric?.id, "measurement")}
                     />
                   </div>
                 </li>
@@ -170,34 +175,34 @@ interface LearningObjectiveProps {
 }
 
 const LearningObjective = (props: LearningObjectiveProps) => {
-  const {curricularId, status} = props;
+  const { curricularId, status } = props;
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState(false);
   const [selectedObjectiveData, setSelectedObjectiveData] = useState<any>({});
-  const [learnings, setLearnings] = useState([]);
-  const [learningIds, setLearningIds] = useState([]);
+  const [learnings, setLearnings] = useState<any[]>([]);
+  const [learningIds, setLearningIds] = useState<any[]>([]);
   const [openMeasurementModal, setOpenMeasurementModal] = useState(false);
   const [selectedRubricData, setSelectedRubricData] = useState<any>({});
   const [openTopicModal, setTopicModal] = useState(false);
   const [selectedTopicData, setSelectedTopicData] = useState<any>({});
   const [warnModal, setWarnModal] = useState({
     show: false,
-    section: '',
-    id: '',
-    message: "Are you sure? This can't be undone."
+    section: "",
+    id: "",
+    message: "Are you sure? This can't be undone.",
   });
-  const {userLanguage} = useGlobalContext();
+  const { userLanguage } = useGlobalContext();
 
   const [
     createOrEditLearningObjectiveModal,
-    setCreateOrEditLearningObjectiveModal
+    setCreateOrEditLearningObjectiveModal,
   ] = useState(false);
 
   const {
     AddMeasurementDict,
     AddTopicDict,
     LEARINGOBJECTIVEDICT,
-    TOPICLISTDICT
+    TOPICLISTDICT,
   } = useDictionary();
 
   const createLearningObjective = () => {
@@ -221,12 +226,12 @@ const LearningObjective = (props: LearningObjectiveProps) => {
     let [list, seq]: any = await Promise.all([
       await API.graphql(
         graphqlOperation(queries.listLearningObjectives, {
-          filter: {curriculumID: {eq: curricularId}}
+          filter: { curriculumID: { eq: curricularId } },
         })
       ),
       await API.graphql(
-        graphqlOperation(queries.getCSequences, {id: `l_${curricularId}`})
-      )
+        graphqlOperation(queries.getCSequences, { id: `l_${curricularId}` })
+      ),
     ]);
     seq = seq?.data?.getCSequences?.sequence || [];
     list = list?.data?.listLearningObjectives?.items || [];
@@ -238,7 +243,7 @@ const LearningObjective = (props: LearningObjectiveProps) => {
         objective.index = seq.indexOf(objective.id);
         const topicsData: any = await API.graphql(
           graphqlOperation(customQueries.listTopics, {
-            filter: {learningObjectiveID: {eq: objective.id}}
+            filter: { learningObjectiveID: { eq: objective.id } },
           })
         );
         objective.topics = await Promise.all(
@@ -249,7 +254,7 @@ const LearningObjective = (props: LearningObjectiveProps) => {
             .map(async (t: any) => {
               const measurementData: any = await API.graphql(
                 graphqlOperation(customQueries.listRubrics, {
-                  filter: {topicID: {eq: t.id}}
+                  filter: { topicID: { eq: t.id } },
                 })
               );
               t.rubrics =
@@ -265,10 +270,10 @@ const LearningObjective = (props: LearningObjectiveProps) => {
     setLearningIds(seq);
     setLoading(false);
     if (listLength && !sequenceLength) {
-      let learningsID = list.map((item: {id: string}) => item.id);
+      let learningsID = list.map((item: { id: string }) => item.id);
       let seqItem: any = await API.graphql(
         graphqlOperation(mutations.createCSequences, {
-          input: {id: `l_${curricularId}`, sequence: learningsID}
+          input: { id: `l_${curricularId}`, sequence: learningsID },
         })
       );
       seqItem = seqItem.data.createCSequences;
@@ -283,7 +288,7 @@ const LearningObjective = (props: LearningObjectiveProps) => {
   const createNewTopic = (learningObjectiveID: string) => {
     setTopicModal(true);
     setSelectedTopicData({
-      learningObjectiveID
+      learningObjectiveID,
     });
   };
 
@@ -301,7 +306,7 @@ const LearningObjective = (props: LearningObjectiveProps) => {
     setOpenMeasurementModal(true);
     setSelectedRubricData({
       topicId,
-      objectiveId
+      objectiveId,
     });
   };
 
@@ -310,7 +315,7 @@ const LearningObjective = (props: LearningObjectiveProps) => {
     setSelectedRubricData({
       ...rubricData,
       topicId: rubricData.topicID,
-      objectiveId
+      objectiveId,
     });
   };
 
@@ -327,20 +332,25 @@ const LearningObjective = (props: LearningObjectiveProps) => {
       learnings[index] = {
         ...learnings[index],
         name: data.name,
-        description: data.description
+        description: data.description,
       };
       setLearnings(learnings);
     } else {
-      setLearnings((prevLearnings) => [...prevLearnings, {...data, topics: []}]);
+      setLearnings((prevLearnings) => [
+        ...prevLearnings,
+        { ...data, topics: [] },
+      ]);
     }
     handleCancel();
   };
 
   const postMeasurementChange = (data: any) => {
-    const {objectiveId, topicId} = selectedRubricData;
+    const { objectiveId, topicId } = selectedRubricData;
     let temp = [...learnings];
     const index = temp.findIndex((objective) => objective.id === objectiveId);
-    const topicIndex = temp[index].topics.findIndex((topic: any) => topic.id === topicId);
+    const topicIndex = temp[index].topics.findIndex(
+      (topic: any) => topic.id === topicId
+    );
     if (selectedRubricData?.id) {
       const rubricIndex = temp[index].topics[topicIndex].rubrics.findIndex(
         (rubric: any) => rubric.id === selectedRubricData.id
@@ -358,11 +368,11 @@ const LearningObjective = (props: LearningObjectiveProps) => {
                     : {
                         ...rubric,
                         name: data.name,
-                        criteria: data.criteria
+                        criteria: data.criteria,
                       }
-                )
+                ),
               }
-        )
+        ),
       };
       setLearnings(temp);
     } else {
@@ -373,9 +383,9 @@ const LearningObjective = (props: LearningObjectiveProps) => {
             ? topic
             : {
                 ...topic,
-                rubrics: [...(topic.rubrics || []), data]
+                rubrics: [...(topic.rubrics || []), data],
               }
-        )
+        ),
       };
       setLearnings(temp);
     }
@@ -383,9 +393,11 @@ const LearningObjective = (props: LearningObjectiveProps) => {
   };
 
   const postTopicChange = (data: any) => {
-    const {learningObjectiveID} = selectedTopicData;
+    const { learningObjectiveID } = selectedTopicData;
     let temp = [...learnings];
-    const index = temp.findIndex((objective) => objective.id === learningObjectiveID);
+    const index = temp.findIndex(
+      (objective) => objective.id === learningObjectiveID
+    );
     if (selectedTopicData?.id) {
       const topicIndex = temp[index].topics.findIndex(
         (topic: any) => topic.id === selectedTopicData.id
@@ -397,15 +409,15 @@ const LearningObjective = (props: LearningObjectiveProps) => {
             ? topic
             : {
                 ...topic,
-                ...data
+                ...data,
               }
-        )
+        ),
       };
       setLearnings(temp);
     } else {
       temp[index] = {
         ...temp[index],
-        topics: [...temp[index].topics, data]
+        topics: [...temp[index].topics, data],
       };
       setLearnings(temp);
     }
@@ -417,30 +429,30 @@ const LearningObjective = (props: LearningObjectiveProps) => {
       show: true,
       id,
       section,
-      message: `Are you sure you want to delete ${section}?. This action cannot be undone. `
+      message: `Are you sure you want to delete ${section}?. This action cannot be undone. `,
     });
   };
 
   const onCancel = () => {
     setWarnModal((prevValues) => ({
       ...prevValues,
-      id: '',
-      message: '',
-      section: '',
-      show: false
+      id: "",
+      message: "",
+      section: "",
+      show: false,
     }));
   };
 
   const onSaveAction = () => {
-    const {section} = warnModal;
+    const { section } = warnModal;
     switch (section) {
-      case 'objective':
+      case "objective":
         deleteLearningObjective();
         break;
-      case 'topic':
+      case "topic":
         deleteTopic();
         break;
-      case 'measurement':
+      case "measurement":
         deleteRubric();
         break;
       default:
@@ -453,15 +465,15 @@ const LearningObjective = (props: LearningObjectiveProps) => {
       setDeleting(true);
       await API.graphql(
         graphqlOperation(mutations.deleteLearningObjective, {
-          input: {id: warnModal.id}
+          input: { id: warnModal.id },
         })
       );
       await API.graphql(
         graphqlOperation(mutations.updateCSequences, {
           input: {
             id: `l_${curricularId}`,
-            sequence: learningIds.filter((item) => item !== warnModal.id)
-          }
+            sequence: learningIds.filter((item) => item !== warnModal.id),
+          },
         })
       );
       setLearnings((prevLearnings) =>
@@ -480,7 +492,7 @@ const LearningObjective = (props: LearningObjectiveProps) => {
       setDeleting(true);
       const result: any = await API.graphql(
         graphqlOperation(mutations.deleteTopic, {
-          input: {id: warnModal.id}
+          input: { id: warnModal.id },
         })
       );
       const objectiveId = result?.data.deleteTopic.learningObjectiveID;
@@ -488,7 +500,9 @@ const LearningObjective = (props: LearningObjectiveProps) => {
       const index = temp.findIndex((objective) => objective.id === objectiveId);
       temp[index] = {
         ...temp[index],
-        topics: temp[index].topics.filter((topic: any) => topic.id !== warnModal.id)
+        topics: temp[index].topics.filter(
+          (topic: any) => topic.id !== warnModal.id
+        ),
       };
       setLearnings(temp);
       setDeleting(false);
@@ -501,7 +515,7 @@ const LearningObjective = (props: LearningObjectiveProps) => {
       setDeleting(true);
       const result: any = await API.graphql(
         graphqlOperation(mutations.deleteRubric, {
-          input: {id: warnModal.id}
+          input: { id: warnModal.id },
         })
       );
       const objectiveId = result?.data.deleteRubric?.topic.learningObjectiveID;
@@ -518,9 +532,11 @@ const LearningObjective = (props: LearningObjectiveProps) => {
             ? topic
             : {
                 ...topic,
-                rubrics: topic.rubrics.filter((rubric: any) => rubric.id !== warnModal.id)
+                rubrics: topic.rubrics.filter(
+                  (rubric: any) => rubric.id !== warnModal.id
+                ),
               }
-        )
+        ),
       };
       setLearnings(temp);
       setDeleting(false);
@@ -539,15 +555,15 @@ const LearningObjective = (props: LearningObjectiveProps) => {
               Boolean(learnings?.length) && (
                 <Buttons
                   disabled={loading || isInactive}
-                  label={LEARINGOBJECTIVEDICT[userLanguage]['BUTTON']['ADD']}
+                  label={LEARINGOBJECTIVEDICT[userLanguage]["BUTTON"]["ADD"]}
                   Icon={IoIosAdd}
                   iconBeforeLabel
                   onClick={createLearningObjective}
                 />
               )
             }
-            subtitle={!loading ? 'hover on items for action' : ''}
-            title={LEARINGOBJECTIVEDICT[userLanguage]['TITLE']}
+            subtitle={!loading ? "hover on items for action" : ""}
+            title={LEARINGOBJECTIVEDICT[userLanguage]["TITLE"]}
           />
           {!loading ? (
             <Fragment>
@@ -556,7 +572,8 @@ const LearningObjective = (props: LearningObjectiveProps) => {
                   {learnings.map((learning: any) => (
                     <div
                       className="flex customShadow hover:theme-card-shadow flex-col bg-white rounded-xl overflow-hidden"
-                      key={learning.id}>
+                      key={learning.id}
+                    >
                       <div className="flex-shrink-0">
                         <div className="p-4">
                           <div className=" topic-header text-center w-auto py-2">
@@ -577,12 +594,14 @@ const LearningObjective = (props: LearningObjectiveProps) => {
                                 size="small"
                                 type="submit"
                                 onClick={() => createNewTopic(learning.id)}
-                                title={TOPICLISTDICT[userLanguage]['ADD']}
+                                title={TOPICLISTDICT[userLanguage]["ADD"]}
                                 iconBeforeLabel
                                 Icon={IoIosAdd}
                               />
                               <Buttons
-                                onClick={() => deleteModal(learning?.id, 'objective')}
+                                onClick={() =>
+                                  deleteModal(learning?.id, "objective")
+                                }
                                 iconSize="w-4 h-6"
                                 Icon={HiOutlineTrash}
                                 size="small"
@@ -595,20 +614,26 @@ const LearningObjective = (props: LearningObjectiveProps) => {
 
                           <div className="py-5 h-48 p-4 overflow-y-auto">
                             {learning.topics?.length ? (
-                              learning.topics.map((topic: any, topicIndex: number) => {
-                                return (
-                                  <Topic
-                                    topic={topic}
-                                    key={topic?.id}
-                                    topicIndex={topicIndex}
-                                    editCurrentMeasurement={editCurrentMeasurement}
-                                    createNewMeasurement={createNewMeasurement}
-                                    editCurrentTopic={editCurrentTopic}
-                                    deleteModal={deleteModal}
-                                    learning={learning}
-                                  />
-                                );
-                              })
+                              learning.topics.map(
+                                (topic: any, topicIndex: number) => {
+                                  return (
+                                    <Topic
+                                      topic={topic}
+                                      key={topic?.id}
+                                      topicIndex={topicIndex}
+                                      editCurrentMeasurement={
+                                        editCurrentMeasurement
+                                      }
+                                      createNewMeasurement={
+                                        createNewMeasurement
+                                      }
+                                      editCurrentTopic={editCurrentTopic}
+                                      deleteModal={deleteModal}
+                                      learning={learning}
+                                    />
+                                  );
+                                }
+                              )
                             ) : (
                               <Empty text="No topics found" />
                             )}
@@ -624,12 +649,14 @@ const LearningObjective = (props: LearningObjectiveProps) => {
                   <div className="flex justify-center mt-8">
                     <Buttons
                       btnClass="mx-4"
-                      label={LEARINGOBJECTIVEDICT[userLanguage]['BUTTON']['ADD']}
+                      label={
+                        LEARINGOBJECTIVEDICT[userLanguage]["BUTTON"]["ADD"]
+                      }
                       onClick={createLearningObjective}
                     />
                   </div>
                   <p className="text-center p-16">
-                    {LEARINGOBJECTIVEDICT[userLanguage]['INFO']}
+                    {LEARINGOBJECTIVEDICT[userLanguage]["INFO"]}
                   </p>
                 </Fragment>
               )}
@@ -637,7 +664,7 @@ const LearningObjective = (props: LearningObjectiveProps) => {
           ) : (
             <div className="py-12 my-12 m-auto text-center">
               <Loader
-                withText={LEARINGOBJECTIVEDICT[userLanguage]['FETCH']}
+                withText={LEARINGOBJECTIVEDICT[userLanguage]["FETCH"]}
                 animation
                 className="text-gray-500"
               />
@@ -657,10 +684,11 @@ const LearningObjective = (props: LearningObjectiveProps) => {
         {openMeasurementModal && (
           <Modal
             showHeader={true}
-            title={AddMeasurementDict[userLanguage]['title']}
+            title={AddMeasurementDict[userLanguage]["title"]}
             showHeaderBorder={true}
             showFooter={false}
-            closeAction={onMeasurementClose}>
+            closeAction={onMeasurementClose}
+          >
             <AddMeasurement
               curricularId={curricularId}
               onCancel={onMeasurementClose}
@@ -675,13 +703,14 @@ const LearningObjective = (props: LearningObjectiveProps) => {
           <Modal
             showHeader={true}
             title={
-              LEARINGOBJECTIVEDICT[userLanguage]['BUTTON'][
-                isEmpty(selectedObjectiveData) ? 'ADD' : 'EDIT'
+              LEARINGOBJECTIVEDICT[userLanguage]["BUTTON"][
+                isEmpty(selectedObjectiveData) ? "ADD" : "EDIT"
               ]
             }
             showHeaderBorder={true}
             showFooter={false}
-            closeAction={handleCancel}>
+            closeAction={handleCancel}
+          >
             <AddLearningObjective
               curricularId={curricularId}
               handleCancel={handleCancel}
@@ -694,7 +723,8 @@ const LearningObjective = (props: LearningObjectiveProps) => {
         <AnimatedContainer show={isInactive}>
           {isInactive && (
             <p className="text-gray-500 text-sm text-center">
-              This course is inactive. Adding units to this course has been disabled
+              This course is inactive. Adding units to this course has been
+              disabled
             </p>
           )}
         </AnimatedContainer>
@@ -702,10 +732,11 @@ const LearningObjective = (props: LearningObjectiveProps) => {
         {openTopicModal && (
           <Modal
             showHeader={true}
-            title={AddTopicDict[userLanguage]['heading']}
+            title={AddTopicDict[userLanguage]["heading"]}
             showHeaderBorder={true}
             showFooter={false}
-            closeAction={onTopicModalClose}>
+            closeAction={onTopicModalClose}
+          >
             <AddTopic
               curricularId={curricularId}
               onCancel={onTopicModalClose}

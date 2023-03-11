@@ -1,14 +1,14 @@
-import React, {useContext} from 'react';
-import {GlobalContext} from 'contexts/GlobalContext';
-
 export interface ITabComponentProps {
-  tabs: {name: string; section: string}[];
+  tabs: { name: string; section: string }[];
   activeTab: string;
   handleTabSwitch: (tab: string) => void;
 }
 
-const TabComponent = ({tabs, activeTab, handleTabSwitch}: ITabComponentProps) => {
-  const {theme} = useContext(GlobalContext);
+const TabComponent = ({
+  tabs,
+  activeTab,
+  handleTabSwitch,
+}: ITabComponentProps) => {
   return (
     <div className="w-full bg-gray-200 rounded-lg p-2">
       <div className="sm:hidden">
@@ -19,7 +19,8 @@ const TabComponent = ({tabs, activeTab, handleTabSwitch}: ITabComponentProps) =>
           id="tabs"
           name="tabs"
           className="block w-full focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md"
-          defaultValue={activeTab}>
+          defaultValue={activeTab}
+        >
           {tabs.map((tab: any) => (
             <option className="transition-all" key={tab.section}>
               {tab.name}
@@ -35,11 +36,10 @@ const TabComponent = ({tabs, activeTab, handleTabSwitch}: ITabComponentProps) =>
               onClick={() => {
                 handleTabSwitch(tab.section);
               }}
-              className={`px-3 ${
-                theme === 'iconoclastIndigo' ? 'iconoclastIndigo' : 'curateBlue'
-              } py-2 cursor-pointer font-medium tab text-sm rounded-md ${
-                tab.section === activeTab ? 'active' : ''
-              }`}>
+              className={`px-3 theme-bg py-2 cursor-pointer font-medium tab text-sm rounded-md ${
+                tab.section === activeTab ? "active" : ""
+              }`}
+            >
               {tab.name}
             </div>
           ))}

@@ -1,18 +1,14 @@
-import Buttons from '@components/Atoms/Buttons';
-import {classNames} from 'components/Lesson/UniversalLessonBuilder/UI/FormElements/TextInput';
-import AnimatedContainer from 'components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
-import React from 'react';
+import Buttons from "@components/Atoms/Buttons";
+import AnimatedContainer from "components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer";
 
 interface NextButtonProps {
   onClick: () => void;
   countSelected: number;
 }
 
-const NextButton = ({onClick, countSelected}: NextButtonProps) => {
-  const commonBtnClass = 'w-auto cursor-pointer  transition-all ';
-
+const NextButton = ({ onClick, countSelected }: NextButtonProps) => {
   return (
-    <div className={'flex items-center gap-x-6 justify-center'}>
+    <div className={"flex items-center gap-x-6 justify-center"}>
       <AnimatedContainer className="w-auto" show={countSelected === null}>
         {countSelected === null && (
           <Buttons

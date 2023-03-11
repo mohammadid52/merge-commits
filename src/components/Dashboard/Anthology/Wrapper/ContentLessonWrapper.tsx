@@ -1,15 +1,18 @@
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import ContentCard from 'atoms/ContentCard';
-import * as customQueries from 'customGraphql/customQueries';
-import React, {useEffect, useState} from 'react';
+import { API, graphqlOperation } from "aws-amplify";
+import ContentCard from "atoms/ContentCard";
+import * as customQueries from "customGraphql/customQueries";
+import React, { useEffect, useState } from "react";
 
 interface IContentLessonWrapper {
   children?: React.ReactNode;
   lessonID: string;
 }
 
-const ContentLessonWrapper = ({children, lessonID}: IContentLessonWrapper) => {
-  const [wrapperTitle, setWrapperTitle] = useState<string>('');
+const ContentLessonWrapper = ({
+  children,
+  lessonID,
+}: IContentLessonWrapper) => {
+  const [wrapperTitle, setWrapperTitle] = useState<string>("");
 
   const getMinimumLessonInfo = async () => {
     // const user = await Auth.currentAuthenticatedUser();
@@ -17,17 +20,19 @@ const ContentLessonWrapper = ({children, lessonID}: IContentLessonWrapper) => {
 
     try {
       const minimumLessonInfo: any = await API.graphql(
-        graphqlOperation(customQueries.getUniversalLessonMinimum, {id: lessonID})
+        graphqlOperation(customQueries.getUniversalLessonMinimum, {
+          id: lessonID,
+        })
       );
       // existing student rows
       const response = minimumLessonInfo.data.getUniversalLesson;
       if (response !== null) {
         setWrapperTitle(response?.title);
       } else {
-        setWrapperTitle('Lesson does not exist');
+        setWrapperTitle("Lesson does not exist");
       }
     } catch (e) {
-      console.error('getMinimumLessonInfo - ', e);
+      console.error("getMinimumLessonInfo - ", e);
     } finally {
     }
   };

@@ -1,54 +1,54 @@
-import React, {useEffect, useState, useContext} from 'react';
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import {useHistory} from 'react-router-dom';
+import { GraphQLAPI as API, graphqlOperation } from "@aws-amplify/api-graphql";
+import { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
 
-import Buttons from 'atoms/Buttons';
-import Selector from 'atoms/Form/Selector';
-import Loader from 'atoms/Loader';
+import Buttons from "atoms/Buttons";
+import Selector from "atoms/Form/Selector";
+import Loader from "atoms/Loader";
 
-import * as customQueries from 'customGraphql/customQueries';
-import * as customMutations from 'customGraphql/customMutations';
-import {GlobalContext} from 'contexts/GlobalContext';
-import useDictionary from 'customHooks/dictionary';
-import {statusList} from 'utilities/staticData';
+import { useGlobalContext } from "contexts/GlobalContext";
+import * as customMutations from "customGraphql/customMutations";
+import * as customQueries from "customGraphql/customQueries";
+import useDictionary from "customHooks/dictionary";
+import { statusList } from "utilities/staticData";
 
-import {getAsset} from 'assets';
+import { getAsset } from "assets";
 
 interface UnitLookupProps {
   lessonName: string;
   lessonId: string;
-  institution: {id: string; name: string; value: string};
+  institution: { id: string; name: string; value: string };
   lessonType: string;
   lessonPlans: any;
 }
 
 const UnitLookup = (props: UnitLookupProps) => {
-  const {lessonName, lessonId, institution, lessonType, lessonPlans} = props;
+  const { lessonId, institution, lessonType, lessonPlans } = props;
 
-  const {clientKey, theme, userLanguage} = useContext(GlobalContext);
-  const themeColor = getAsset(clientKey, 'themeClassName');
-  const {BUTTONS, UnitLookupDict} = useDictionary(clientKey);
+  const { clientKey, theme, userLanguage } = useGlobalContext();
+  const themeColor = getAsset(clientKey, "themeClassName");
+  const { UnitLookupDict } = useDictionary();
   const history = useHistory();
 
   const initialData: any = {
-    curriculum: {name: '', value: '', id: ''},
-    unit: {name: '', value: '', id: ''}
+    curriculum: { name: "", value: "", id: "" },
+    unit: { name: "", value: "", id: "" },
   };
 
   const [formState, setFormState] = useState<any>(initialData);
 
-  const [curriculaList, setCurriclaList] = useState([]);
-  const [unitsList, setUnitsList] = useState([]);
-  const [selectedUnitsList, setSelectedUnitsList] = useState([]);
+  const [curriculaList, setCurriclaList] = useState<any[]>([]);
+  const [unitsList, setUnitsList] = useState<any[]>([]);
+  const [selectedUnitsList, setSelectedUnitsList] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [editState, setEditState] = useState<{id: string; action?: string}>({
-    id: '',
-    action: ''
+  const [editState, setEditState] = useState<{ id: string; action?: string }>({
+    id: "",
+    action: "",
   });
   const [message, setMessage] = useState({
-    msg: '',
-    isError: false
+    msg: "",
+    isError: false,
   });
 
   const gotoCurricularUnit = (syllabusId: string, curricularId: string) => {
@@ -57,18 +57,23 @@ const UnitLookup = (props: UnitLookupProps) => {
     );
   };
 
-  const onSelectorChange = (val: string, name: string, id: string, field: string) => {
+  const onSelectorChange = (
+    val: string,
+    name: string,
+    id: string,
+    field: string
+  ) => {
     setFormState({
       ...formState,
-      [field]: {id, name, value: val}
+      [field]: { id, name, value: val },
     });
   };
   const editCurrentUnit = (id: string) => {
-    setEditState({id});
+    setEditState({ id });
   };
 
   const cancelEdit = () => {
-    setEditState({id: '', action: ''});
+    setEditState({ id: "", action: "" });
   };
   const updateStatusOnTable = (uniqId: string, status: string) => {
     let updatedList = [...selectedUnitsList];
@@ -77,28 +82,28 @@ const UnitLookup = (props: UnitLookupProps) => {
   };
   const onStatusChange = async (
     val: string,
-    name: string,
-    id: string,
+    _: string,
+    __: string,
     uniqId: string
   ) => {
     try {
-      setEditState({...editState, action: 'updating...'});
+      setEditState({ ...editState, action: "updating..." });
       const input = {
         id: uniqId,
-        status: val
+        status: val,
       };
       const result: any = await API.graphql(
-        graphqlOperation(customMutations.updateSyllabusLesson, {input: input})
+        graphqlOperation(customMutations.updateSyllabusLesson, { input: input })
       );
       const newLesson = result.data.updateSyllabusLesson;
-      setEditState({id: ''});
+      setEditState({ id: "" });
       updateStatusOnTable(newLesson.id, newLesson.status);
     } catch {
       setMessage({
-        msg: 'Error while updating unit status please try later.',
-        isError: true
+        msg: "Error while updating unit status please try later.",
+        isError: true,
       });
-      setEditState({id: '', action: ''});
+      setEditState({ id: "", action: "" });
     }
   };
 
@@ -109,25 +114,25 @@ const UnitLookup = (props: UnitLookupProps) => {
         lessonPlans.map((item: any) => {
           return {
             disabled: false,
-            open: lessonType !== 'lesson' ? true : false,
-            active: lessonType !== 'lesson' ? true : false,
+            open: lessonType !== "lesson" ? true : false,
+            active: lessonType !== "lesson" ? true : false,
             stage: `checkpoint?id=${item.LessonComponentID}`,
-            type: 'survey',
-            displayMode: 'SELF'
+            type: "survey",
+            displayMode: "SELF",
           };
         });
       const input = {
         syllabusID: formState.unit.id,
         lessonID: lessonId,
         displayData: {
-          breakdownComponent: lessonType
+          breakdownComponent: lessonType,
         },
         lessonPlan: lessonComponentPlan?.length > 0 ? lessonComponentPlan : [],
-        status: 'Active'
+        status: "Active",
       };
       setSaving(true);
       const result: any = await API.graphql(
-        graphqlOperation(customMutations.createSyllabusLesson, {input: input})
+        graphqlOperation(customMutations.createSyllabusLesson, { input: input })
       );
       const newLesson = result.data?.createSyllabusLesson;
       if (newLesson?.id) {
@@ -135,7 +140,7 @@ const UnitLookup = (props: UnitLookupProps) => {
           ...newLesson,
           curricularName: formState?.curriculum?.name,
           curricularId: formState?.curriculum?.id,
-          syllabusName: formState?.unit?.name
+          syllabusName: formState?.unit?.name,
         };
         const updatedList: any = curriculaList.map((curricular: any) => {
           if (curricular?.curricularId === formState?.curriculum?.id) {
@@ -144,7 +149,7 @@ const UnitLookup = (props: UnitLookupProps) => {
             );
             return {
               ...curricular,
-              unitList: updatedUnitList
+              unitList: updatedUnitList,
             };
           } else {
             return curricular;
@@ -154,14 +159,14 @@ const UnitLookup = (props: UnitLookupProps) => {
         setSelectedUnitsList([...selectedUnitsList, newItem]);
         setFormState({
           ...formState,
-          curriculum: {name: '', value: '', id: ''},
-          unit: {name: '', value: '', id: ''}
+          curriculum: { name: "", value: "", id: "" },
+          unit: { name: "", value: "", id: "" },
         });
         setUnitsList([]);
         setMessage({
           ...message,
           isError: false,
-          msg: UnitLookupDict[userLanguage]['MESSAGES']['ADDED']
+          msg: UnitLookupDict[userLanguage]["MESSAGES"]["ADDED"],
         });
         setSaving(false);
       }
@@ -169,7 +174,7 @@ const UnitLookup = (props: UnitLookupProps) => {
       setMessage({
         ...message,
         isError: true,
-        msg: UnitLookupDict[userLanguage]['MESSAGES']['ADDERR']
+        msg: UnitLookupDict[userLanguage]["MESSAGES"]["ADDERR"],
       });
     }
   };
@@ -179,40 +184,42 @@ const UnitLookup = (props: UnitLookupProps) => {
     Promise.all([
       await API.graphql(
         graphqlOperation(customQueries.getInstitutionCurriculars, {
-          id: institution?.id
+          id: institution?.id,
         })
       ),
       await API.graphql(
         graphqlOperation(customQueries.listFilteredSyllabusLessons, {
-          filter: {lessonID: {eq: lessonId}}
+          filter: { lessonID: { eq: lessonId } },
         })
-      )
+      ),
     ])
       .then(([res1, res2]: any) => {
         const previouslySelectedUnits: any =
           res2?.data?.listUniversalSyllabusLessons?.items;
-        const curricularsList: any = res1?.data?.getInstitution?.curricula?.items;
+        const curricularsList: any =
+          res1?.data?.getInstitution?.curricula?.items;
 
         const selectedSyllabusId: any = previouslySelectedUnits?.map(
           (item: any) => item.syllabusID
         );
         const selectedList: any = previouslySelectedUnits.map((item: any) => {
-          let syllabusName = '-';
-          const relatedCurricular: any = curricularsList.find((curricular: any) =>
-            curricular?.syllabi?.items.find((unit: any) => {
-              if (item.syllabusID === unit?.id) {
-                syllabusName = unit.name;
-                return true;
-              } else {
-                return false;
-              }
-            })
+          let syllabusName = "-";
+          const relatedCurricular: any = curricularsList.find(
+            (curricular: any) =>
+              curricular?.syllabi?.items.find((unit: any) => {
+                if (item.syllabusID === unit?.id) {
+                  syllabusName = unit.name;
+                  return true;
+                } else {
+                  return false;
+                }
+              })
           );
           return {
             ...item,
-            curricularName: relatedCurricular?.name || '-',
+            curricularName: relatedCurricular?.name || "-",
             curricularId: relatedCurricular?.id || null,
-            syllabusName: syllabusName
+            syllabusName: syllabusName,
           };
         });
         const filteredList: any = curricularsList.map((item: any) => {
@@ -224,18 +231,18 @@ const UnitLookup = (props: UnitLookupProps) => {
             curricularId: item?.id,
             name: item?.name,
             value: item?.name,
-            unitList: result?.length ? [...result] : []
+            unitList: result?.length ? [...result] : [],
           };
         });
         setSelectedUnitsList([...selectedList]);
         setCurriclaList([...filteredList]);
         setLoading(false);
       })
-      .catch((err) => {
+      .catch(() => {
         setMessage({
           ...message,
           isError: true,
-          msg: UnitLookupDict[userLanguage]['MESSAGES']['FETCHERR']
+          msg: UnitLookupDict[userLanguage]["MESSAGES"]["FETCHERR"],
         });
         setLoading(false);
       });
@@ -244,19 +251,20 @@ const UnitLookup = (props: UnitLookupProps) => {
   useEffect(() => {
     if (formState?.curriculum?.id) {
       const selectedItem = curriculaList?.find(
-        (curricular: any) => curricular.curricularId === formState?.curriculum?.id
+        (curricular: any) =>
+          curricular.curricularId === formState?.curriculum?.id
       );
       if (selectedItem) {
         const syllabusList: any = selectedItem?.unitList?.map((item: any) => ({
           id: item.id,
           name: item.name,
-          value: item.name
+          value: item.name,
         }));
         setUnitsList([...syllabusList]);
       }
       setFormState({
         ...formState,
-        unit: {id: '', name: '', value: ''}
+        unit: { id: "", name: "", value: "" },
       });
     }
   }, [formState?.curriculum?.id]);
@@ -267,7 +275,7 @@ const UnitLookup = (props: UnitLookupProps) => {
     }
   }, [institution?.id]);
 
-  const {curriculum, unit} = formState;
+  const { curriculum, unit } = formState;
   return (
     <div className="bg-white shadow-5 overflow-hidden sm:rounded-lg mb-4">
       {/* <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
@@ -283,7 +291,9 @@ const UnitLookup = (props: UnitLookupProps) => {
               selectedItem={curriculum.name}
               list={curriculaList}
               placeholder="Select Curriculumn"
-              onChange={(val, name, id) => onSelectorChange(val, name, id, 'curriculum')}
+              onChange={(val, name, id) =>
+                onSelectorChange(val, name, id, "curriculum")
+              }
             />
           </div>
           <div className="col-span-2 flex items-center">
@@ -291,9 +301,13 @@ const UnitLookup = (props: UnitLookupProps) => {
               selectedItem={unit.name}
               list={unitsList}
               placeholder="Select Unit"
-              onChange={(val, name, id) => onSelectorChange(val, name, id, 'unit')}
+              onChange={(val, name, id) =>
+                onSelectorChange(val, name, id, "unit")
+              }
               noOptionMessage={
-                curriculum.name ? 'No Results' : 'Please select curricular first'
+                curriculum.name
+                  ? "No Results"
+                  : "Please select curricular first"
               }
             />
           </div>
@@ -314,19 +328,19 @@ const UnitLookup = (props: UnitLookupProps) => {
         <div className="px-4">
           <div className="flex justify-between w-full m-auto px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
             <div className="w-.5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-              <span>{UnitLookupDict[userLanguage]['NO']}</span>
+              <span>{UnitLookupDict[userLanguage]["NO"]}</span>
             </div>
             <div className="w-3/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-              <span>{UnitLookupDict[userLanguage]['CURRICULUMNAME']}</span>
+              <span>{UnitLookupDict[userLanguage]["CURRICULUMNAME"]}</span>
             </div>
             <div className="w-2.5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-              <span>{UnitLookupDict[userLanguage]['UNITNAME']}</span>
+              <span>{UnitLookupDict[userLanguage]["UNITNAME"]}</span>
             </div>
             <div className="w-3/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-              <span>{UnitLookupDict[userLanguage]['STATUS']}</span>
+              <span>{UnitLookupDict[userLanguage]["STATUS"]}</span>
             </div>
             <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-              <span>{UnitLookupDict[userLanguage]['ACTION']}</span>
+              <span>{UnitLookupDict[userLanguage]["ACTION"]}</span>
             </div>
           </div>
           <div className="mb-8 w-full m-auto max-h-88 overflow-y-auto">
@@ -338,7 +352,8 @@ const UnitLookup = (props: UnitLookupProps) => {
               selectedUnitsList?.map((item: any, index: number) => (
                 <div
                   key={index}
-                  className="flex justify-between items-center w-full px-8 py-4 whitespace-nowrap border-b-0 border-gray-200 cursor-pointer">
+                  className="flex justify-between items-center w-full px-8 py-4 whitespace-nowrap border-b-0 border-gray-200 cursor-pointer"
+                >
                   <div className="flex w-.5/10 items-center px-8 py-3 text-left text-s leading-4">
                     {index + 1}.
                   </div>
@@ -346,22 +361,24 @@ const UnitLookup = (props: UnitLookupProps) => {
                     className="flex w-3/10 items-center px-8 py-3 text-left text-s leading-4 font-medium whitespace-normal cursor-pointer"
                     onClick={() =>
                       gotoCurricularUnit(item.syllabusID, item.curricularId)
-                    }>
-                    {item.curricularName ? item.curricularName : ''}
+                    }
+                  >
+                    {item.curricularName ? item.curricularName : ""}
                   </div>
                   <div
                     className="flex w-2.5/10 items-center px-8 py-3 text-left text-s leading-4 font-medium whitespace-normal cursor-pointer"
                     onClick={() =>
                       gotoCurricularUnit(item.syllabusID, item.curricularId)
-                    }>
-                    {item.syllabusName ? item.syllabusName : ''}
+                    }
+                  >
+                    {item.syllabusName ? item.syllabusName : ""}
                   </div>
                   <div className="flex w-3/10 items-center px-8 py-3 text-left text-s leading-4 font-medium ">
                     {editState.id !== item.id ? (
                       item.status ? (
                         item.status
                       ) : (
-                        '--'
+                        "--"
                       )
                     ) : (
                       <div className="text-gray-900">
@@ -379,14 +396,16 @@ const UnitLookup = (props: UnitLookupProps) => {
                   {editState.id !== item.id ? (
                     <span
                       className={`w-1/10 flex items-center text-left cursor-pointer px-8 py-3 ${theme.textColor[themeColor]}`}
-                      onClick={() => editCurrentUnit(item.id)}>
+                      onClick={() => editCurrentUnit(item.id)}
+                    >
                       Edit
                     </span>
                   ) : (
                     <span
                       className={`w-1/10 flex items-center text-left px-8 py-3 ${theme.textColor[themeColor]}`}
-                      onClick={cancelEdit}>
-                      {editState.action ? editState.action : 'Cancel'}
+                      onClick={cancelEdit}
+                    >
+                      {editState.action ? editState.action : "Cancel"}
                     </span>
                   )}
                 </div>
@@ -394,7 +413,7 @@ const UnitLookup = (props: UnitLookupProps) => {
             ) : (
               <div className="text-center p-16 mt-4">
                 <p className="text-gray-600 font-medium">
-                  {UnitLookupDict[userLanguage]['NOTADDED']}
+                  {UnitLookupDict[userLanguage]["NOTADDED"]}
                 </p>
               </div>
             )}

@@ -1,22 +1,22 @@
-import API, {graphqlOperation} from '@aws-amplify/api';
-import React, {useContext, useEffect, useState} from 'react';
-import {AiOutlineArrowDown, AiOutlineArrowUp} from 'react-icons/ai';
-import {IoMdAddCircleOutline} from 'react-icons/io';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
-import {useHistory, useRouteMatch} from 'react-router-dom';
+import { API, graphqlOperation } from "aws-amplify";
+import { useEffect, useState } from "react";
+import { AiOutlineArrowDown, AiOutlineArrowUp } from "react-icons/ai";
+import { IoMdAddCircleOutline } from "react-icons/io";
+import { IconContext } from "react-icons/lib/esm/iconContext";
+import { useHistory, useRouteMatch } from "react-router-dom";
 
-import {GlobalContext} from 'contexts/GlobalContext';
-import * as queries from 'graphql/queries';
-import LessonLoading from '../../../Lesson/Loading/ComponentLoading';
-import QuestionListRow from './QuestionListRow';
+import { useGlobalContext } from "contexts/GlobalContext";
+import * as queries from "graphql/queries";
+import LessonLoading from "../../../Lesson/Loading/ComponentLoading";
+import QuestionListRow from "./QuestionListRow";
 
-import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
-import ListBottomBar from '@components/Molecules/ListBottomBar';
-import usePagination from '@customHooks/usePagination';
-import BreadCrums from 'atoms/BreadCrums';
-import Buttons from 'atoms/Buttons';
-import SearchInput from 'atoms/Form/SearchInput';
-import Selector from 'atoms/Form/Selector';
+import SectionTitleV3 from "@components/Atoms/SectionTitleV3";
+import ListBottomBar from "@components/Molecules/ListBottomBar";
+import usePagination from "@customHooks/usePagination";
+import BreadCrums from "atoms/BreadCrums";
+import Buttons from "atoms/Buttons";
+import SearchInput from "atoms/Form/SearchInput";
+import Selector from "atoms/Form/Selector";
 interface QuestionsListProps {}
 
 const QuestionsList = (props: QuestionsListProps) => {
@@ -24,11 +24,11 @@ const QuestionsList = (props: QuestionsListProps) => {
   const match = useRouteMatch();
   const history = useHistory();
 
-  const {theme} = useContext(GlobalContext);
+  const { theme } = useGlobalContext();
 
-  const [status, setStatus] = useState('');
+  const [status, setStatus] = useState("");
 
-  const [questionsData, setQuestionsData] = useState([]);
+  const [questionsData, setQuestionsData] = useState<any[]>([]);
 
   const [totalQuesNum, setTotalQuesNum] = useState(0);
 
@@ -39,31 +39,31 @@ const QuestionsList = (props: QuestionsListProps) => {
     pageCount,
     setCurrentList,
     currentList,
-    resetPagination
+    resetPagination,
   } = usePagination(questionsData, totalQuesNum);
 
   const [searchInput, setSearchInput] = useState({
-    value: '',
-    isActive: false
+    value: "",
+    isActive: false,
   });
 
   const [sortingType, setSortingType] = useState({
-    value: '',
-    name: '',
-    asc: true
+    value: "",
+    name: "",
+    asc: true,
   });
 
   const breadCrumsList = [
-    {title: 'Home', url: '/dashboard', last: false},
-    {title: 'Question Bank', url: '/dashboard/question-bank', last: true}
+    { title: "Home", url: "/dashboard", last: false },
+    { title: "Question Bank", url: "/dashboard/question-bank", last: true },
   ];
 
   const sortByList = [
-    {id: 1, name: 'Type', value: 'type'},
-    {id: 2, name: 'Label', value: 'label'},
-    {id: 3, name: 'Source', value: 'sourceId'},
+    { id: 1, name: "Type", value: "type" },
+    { id: 2, name: "Label", value: "label" },
+    { id: 3, name: "Source", value: "sourceId" },
     // { id: 3, name: 'Topics', value: '' },
-    {id: 4, name: 'Language', value: 'language'}
+    { id: 4, name: "Language", value: "language" },
   ];
 
   const addNewQuestion = () => {
@@ -76,7 +76,7 @@ const QuestionsList = (props: QuestionsListProps) => {
         graphqlOperation(queries.listQuestions)
       );
       if (!fetchQuestionsData) {
-        throw new Error('fail!');
+        throw new Error("fail!");
       } else {
         const QuestionsList = fetchQuestionsData.data?.listQuestions?.items;
         const totalListPages = Math.floor(QuestionsList.length / pageCount);
@@ -87,7 +87,7 @@ const QuestionsList = (props: QuestionsListProps) => {
         }
         setQuestionsData(QuestionsList);
         setTotalQuesNum(QuestionsList.length);
-        setStatus('done');
+        setStatus("done");
       }
     } catch (error) {
       console.error(error);
@@ -97,7 +97,7 @@ const QuestionsList = (props: QuestionsListProps) => {
   const setSearch = (str: string) => {
     setSearchInput({
       ...searchInput,
-      value: str
+      value: str,
     });
   };
 
@@ -110,7 +110,7 @@ const QuestionsList = (props: QuestionsListProps) => {
       });
       setSearchInput({
         ...searchInput,
-        isActive: true
+        isActive: true,
       });
       setCurrentList(newList);
     } else {
@@ -120,18 +120,18 @@ const QuestionsList = (props: QuestionsListProps) => {
   const toggleSortDimention = () => {
     setSortingType({
       ...sortingType,
-      asc: !sortingType.asc
+      asc: !sortingType.asc,
     });
   };
   const removeSearchAction = () => {
     resetPagination();
-    setSearchInput({value: '', isActive: false});
+    setSearchInput({ value: "", isActive: false });
   };
 
   const fetchSortedList = () => {
     const newQuestList = [...questionsData].sort((a, b) =>
-      a[sortingType.value]?.toLowerCase() > b[sortingType.value]?.toLowerCase() &&
-      sortingType.asc
+      a[sortingType.value]?.toLowerCase() >
+        b[sortingType.value]?.toLowerCase() && sortingType.asc
         ? 1
         : -1
     );
@@ -142,7 +142,7 @@ const QuestionsList = (props: QuestionsListProps) => {
     setSortingType({
       ...sortingType,
       value: str,
-      name: name
+      name: name,
     });
   };
   useEffect(() => {
@@ -153,7 +153,7 @@ const QuestionsList = (props: QuestionsListProps) => {
     fetchSortedList();
   }, [sortingType.value, sortingType.asc]);
 
-  if (status !== 'done') {
+  if (status !== "done") {
     return <LessonLoading />;
   }
   {
@@ -181,9 +181,16 @@ const QuestionsList = (props: QuestionsListProps) => {
             />
             <button
               className={`w-28 bg-gray-100 mr-4 p-3 border-gray-400  border-0 rounded border-l-0 rounded-l-none ${theme.outlineNone} `}
-              onClick={toggleSortDimention}>
-              <IconContext.Provider value={{size: '1.5rem', color: '#667eea'}}>
-                {sortingType.asc ? <AiOutlineArrowUp /> : <AiOutlineArrowDown />}
+              onClick={toggleSortDimention}
+            >
+              <IconContext.Provider
+                value={{ size: "1.5rem", color: "#667eea" }}
+              >
+                {sortingType.asc ? (
+                  <AiOutlineArrowUp />
+                ) : (
+                  <AiOutlineArrowDown />
+                )}
               </IconContext.Provider>
             </button>
             <Buttons
@@ -237,12 +244,14 @@ const QuestionsList = (props: QuestionsListProps) => {
                       label={questionObject.label}
                       type={questionObject.type}
                       source={questionObject.sourceId}
-                      topics={''}
+                      topics={""}
                       language={questionObject.language}
                     />
                   ))
                 ) : (
-                  <div className="flex p-12 mx-auto justify-center">No Results</div>
+                  <div className="flex p-12 mx-auto justify-center">
+                    No Results
+                  </div>
                 )}
               </div>
 

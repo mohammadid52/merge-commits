@@ -1,12 +1,12 @@
-import React, {useContext, useState, useEffect} from 'react';
-import {IContentTypeComponentProps} from 'interfaces/UniversalLessonBuilderInterfaces';
-import FormInput from 'atoms/Form/FormInput';
-import {v4 as uuidv4} from 'uuid';
-import {DIVIDER} from '../common/constants';
-import {GlobalContext} from 'contexts/GlobalContext';
-import useDictionary from 'customHooks/dictionary';
-import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
-import Buttons from 'atoms/Buttons';
+import Buttons from "atoms/Buttons";
+import FormInput from "atoms/Form/FormInput";
+import { useGlobalContext } from "contexts/GlobalContext";
+import useDictionary from "customHooks/dictionary";
+import { IContentTypeComponentProps } from "interfaces/UniversalLessonBuilderInterfaces";
+import React, { useEffect, useState } from "react";
+import { updateLessonPageToDB } from "utilities/updateLessonPageToDB";
+import { v4 as uuidv4 } from "uuid";
+import { DIVIDER } from "../common/constants";
 
 interface Divider extends IContentTypeComponentProps {
   inputObj?: any;
@@ -20,15 +20,15 @@ const DividerModal = (props: Divider) => {
     createNewBlockULBHandler,
     updateBlockContentULBHandler,
     askBeforeClose,
-    setUnsavedChanges
+    setUnsavedChanges,
   } = props;
-  const {userLanguage, clientKey} = useContext(GlobalContext);
-  const {EditQuestionModalDict} = useDictionary(clientKey);
+  const { userLanguage } = useGlobalContext();
+  const { EditQuestionModalDict } = useDictionary();
   const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
 
   const onChange = (e: React.FormEvent) => {
     setUnsavedChanges(true);
-    const {value, name} = e.target as HTMLFormElement;
+    const { value } = e.target as HTMLFormElement;
     setDividerText(value);
   };
 
@@ -39,14 +39,14 @@ const DividerModal = (props: Divider) => {
     }
   }, [inputObj]);
 
-  const [dividerText, setDividerText] = useState('');
+  const [dividerText, setDividerText] = useState("");
 
   const addToDB = async (list: any) => {
     closeAction();
 
     const input = {
       id: list.id,
-      lessonPlan: [...list.lessonPlan]
+      lessonPlan: [...list.lessonPlan],
     };
     await updateLessonPageToDB(input);
   };
@@ -56,29 +56,29 @@ const DividerModal = (props: Divider) => {
       {
         id: uuidv4().toString(),
         type: DIVIDER,
-        label: '',
-        value: dividerText
-      }
+        label: "",
+        value: dividerText,
+      },
     ];
 
     if (isEditingMode) {
       const updatedList = updateBlockContentULBHandler(
-        '',
-        '',
+        "",
+        "",
         DIVIDER,
         dividerData,
         0,
-        'px-4'
+        "px-4"
       );
       await addToDB(updatedList);
     } else {
       const updatedList = createNewBlockULBHandler(
-        '',
-        '',
+        "",
+        "",
         DIVIDER,
         dividerData,
         0,
-        'px-4'
+        "px-4"
       );
       await addToDB(updatedList);
     }
@@ -88,18 +88,19 @@ const DividerModal = (props: Divider) => {
     <div>
       <div className="grid grid-cols-3 my-2 gap-4">
         <div className="col-span-3">
-          <div className={'my-2'}>
+          <div className={"my-2"}>
             <div className="mb-2">
               <FormInput
-                label={'Enter divider text'}
+                label={"Enter divider text"}
                 onChange={onChange}
-                name={'dividerText'}
+                name={"dividerText"}
                 value={dividerText}
-                placeHolder={'eg. to be continued'}
+                placeHolder={"eg. to be continued"}
               />
             </div>
             <p className="text-gray-400 text-sm italic">
-              {isEditingMode ? 'Remove' : 'Skip'} this if you want to add plain divider
+              {isEditingMode ? "Remove" : "Skip"} this if you want to add plain
+              divider
             </p>
           </div>
         </div>
@@ -108,14 +109,14 @@ const DividerModal = (props: Divider) => {
         <div className="flex items-center w-auto">
           <Buttons
             btnClass="py-1 px-4 text-xs mr-2"
-            label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
+            label={EditQuestionModalDict[userLanguage]["BUTTON"]["CANCEL"]}
             onClick={askBeforeClose}
             transparent
           />
 
           <Buttons
             btnClass="py-1 px-8 text-xs ml-2"
-            label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
+            label={EditQuestionModalDict[userLanguage]["BUTTON"]["SAVE"]}
             onClick={onDividerCreate}
           />
         </div>

@@ -1,7 +1,6 @@
-import React, {useContext} from 'react';
-import {useHistory, useRouteMatch} from 'react-router-dom';
-import {GlobalContext} from 'contexts/GlobalContext';
-import {UniversalLessonPage} from 'interfaces/UniversalLessonInterfaces';
+import { useGlobalContext } from "contexts/GlobalContext";
+import { UniversalLessonPage } from "interfaces/UniversalLessonInterfaces";
+import { useHistory, useRouteMatch } from "react-router-dom";
 
 interface StageButtonProps {
   iconID?: number;
@@ -20,13 +19,13 @@ interface StageButtonProps {
 
 const StageButton = (props: StageButtonProps) => {
   const {
-    iconID,
+    iconID = 0,
 
     handlePageChange,
 
-    page
+    page,
   } = props;
-  const {lessonState, controlDispatch} = useContext(GlobalContext);
+  const { lessonState } = useGlobalContext();
 
   const match = useRouteMatch();
   const history = useHistory();
@@ -38,7 +37,7 @@ const StageButton = (props: StageButtonProps) => {
   const stageIsClosed = PAGES[iconID].open === false;
 
   const handleView = () => {
-    controlDispatch({type: 'QUIT_STUDENT_VIEWING'});
+    // controlDispatch({type: 'QUIT_STUDENT_VIEWING'});
 
     /**
      *
@@ -62,19 +61,21 @@ const StageButton = (props: StageButtonProps) => {
             preserveAspectRatio="none"
             fill="currentColor"
             xmlns="http://www.w3.org/2000/svg"
-            aria-hidden="true">
+            aria-hidden="true"
+          >
             <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
           </svg>
 
           <a
-            href={page.href}
+            href={page?.href}
             className={` ${
               stageIsViewed && !stageIsClosed && !stageIsDisabled
-                ? 'border-b-0 border-indigo-400 text-indigo-600 hover:text-indigo-700'
+                ? "border-b-0 border-indigo-400 text-indigo-600 hover:text-indigo-700"
                 : null
-            }    ${stageIsDisabled ? null : 'text-gray-500 '}
-      ml-4 cursor-pointer w-auto text-sm font-medium transform hover:scale-110 transition-transform duration-150`}>
-            {page.label}
+            }    ${stageIsDisabled ? null : "text-gray-500 "}
+      ml-4 cursor-pointer w-auto text-sm font-medium transform hover:scale-110 transition-transform duration-150`}
+          >
+            {page?.label}
           </a>
         </div>
       );
@@ -87,26 +88,30 @@ const StageButton = (props: StageButtonProps) => {
             preserveAspectRatio="none"
             fill="currentColor"
             xmlns="http://www.w3.org/2000/svg"
-            aria-hidden="true">
+            aria-hidden="true"
+          >
             <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
           </svg>
 
           <a
-            href={page.href}
+            href={page?.href}
             className={`${
-              stageIsDisabled || stageIsClosed ? 'line-through text-gray-500' : null
+              stageIsDisabled || stageIsClosed
+                ? "line-through text-gray-500"
+                : null
             }
       
-      ${stageIsClosed ? 'hover:underline' : null}
-      ${stageIsViewed && stageIsClosed ? 'font-bold underline' : null}
-      ${!stageIsClosed && !stageIsDisabled ? 'text-gray-500 ' : null}
+      ${stageIsClosed ? "hover:underline" : null}
+      ${stageIsViewed && stageIsClosed ? "font-bold underline" : null}
+      ${!stageIsClosed && !stageIsDisabled ? "text-gray-500 " : null}
       ${
         stageIsViewed && !stageIsClosed && !stageIsDisabled
-          ? 'border-b-0 border-indigo-400 text-indigo-600 hover:text-indigo-700'
+          ? "border-b-0 border-indigo-400 text-indigo-600 hover:text-indigo-700"
           : null
       }
-      ml-4 cursor-pointer w-auto text-sm font-medium transform hover:scale-110 transition-transform duration-150`}>
-            {page.label}
+      ml-4 cursor-pointer w-auto text-sm font-medium transform hover:scale-110 transition-transform duration-150`}
+          >
+            {page?.label}
           </a>
         </div>
       );
@@ -119,22 +124,24 @@ const StageButton = (props: StageButtonProps) => {
             preserveAspectRatio="none"
             fill="currentColor"
             xmlns="http://www.w3.org/2000/svg"
-            aria-hidden="true">
+            aria-hidden="true"
+          >
             <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
           </svg>
 
           <a
-            href={page.href}
+            href={page?.href}
             className={`${
               stageIsViewed && !stageIsClosed && !stageIsDisabled
-                ? 'border-b-0 border-indigo-400 text-indigo-600 hover:text-indigo-700'
+                ? "border-b-0 border-indigo-400 text-indigo-600 hover:text-indigo-700"
                 : null
             } ${
               stageIsDisabled || stageIsClosed
-                ? 'line-through text-gray-500'
-                : 'text-gray-500'
-            } ml-4 cursor-pointer w-auto text-sm font-medium transform hover:scale-110 transition-transform duration-150`}>
-            {page.label}
+                ? "line-through text-gray-500"
+                : "text-gray-500"
+            } ml-4 cursor-pointer w-auto text-sm font-medium transform hover:scale-110 transition-transform duration-150`}
+          >
+            {page?.label}
           </a>
         </div>
       );
@@ -146,7 +153,8 @@ const StageButton = (props: StageButtonProps) => {
       onClick={() => {
         handleView();
       }}
-      className="relative flex w-auto">
+      className="relative flex w-auto"
+    >
       {stageButtonChoice()}
     </li>
   );

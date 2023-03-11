@@ -1,41 +1,39 @@
-import React, {useContext, useEffect, useState} from 'react';
-import {API, graphqlOperation} from 'aws-amplify';
+import { API, graphqlOperation } from "aws-amplify";
+import { useEffect, useState } from "react";
 
-import {IconContext} from 'react-icons/lib/cjs';
-import {FaTrash} from 'react-icons/fa';
+import { FaTrash } from "react-icons/fa";
+import { IconContext } from "react-icons/lib/cjs";
 
-import {GeneralInformationDict} from 'dictionary/dictionary.curate';
-import useDictionary from 'customHooks/dictionary';
-import {GlobalContext} from 'contexts/GlobalContext';
-import * as customQueries from 'customGraphql/customQueries';
-import * as customMutations from 'customGraphql/customMutations';
+import { useGlobalContext } from "contexts/GlobalContext";
+import * as customMutations from "customGraphql/customMutations";
+import useDictionary from "customHooks/dictionary";
+import { GeneralInformationDict } from "dictionary/dictionary.curate";
 
-import Selector from 'atoms/Form/Selector';
-import Buttons from 'atoms/Buttons';
-import Loader from 'atoms/Loader';
-import ModalPopUp from 'molecules/ModalPopUp';
+import Buttons from "atoms/Buttons";
+import Selector from "atoms/Form/Selector";
+import Loader from "atoms/Loader";
+import ModalPopUp from "molecules/ModalPopUp";
 
-const LessonMeasurements = ({lessonId}: any) => {
-  const {clientKey, userLanguage} = useContext(GlobalContext);
-  const {AddNewLessonFormDict} = useDictionary(clientKey);
+const LessonMeasurements = ({ lessonId }: any) => {
+  const { userLanguage } = useGlobalContext();
+  const { AddNewLessonFormDict } = useDictionary();
 
-  const [measurementList, setMeasurementList] = useState([]);
-  const [measurementOptions, setMeasurementOptions] = useState([]);
-  const [lessonMeasurements, setLessonMeasurements] = useState([]);
+  const [measurementOptions, setMeasurementOptions] = useState<any[]>([]);
+  const [lessonMeasurements, setLessonMeasurements] = useState<any[]>([]);
   const [selectedMeasurement, setSelectedMeasurement] = useState({
-    id: '',
-    name: '',
-    value: ''
+    id: "",
+    name: "",
+    value: "",
   });
   const [showDeleteModal, setShowDeleteModal] = useState({
-    id: '',
+    id: "",
     state: false,
-    message: AddNewLessonFormDict[userLanguage]['MESSAGES']['REMOVE']
+    message: AddNewLessonFormDict[userLanguage]["MESSAGES"]["REMOVE"],
   });
   const [messages, setMessages] = useState({
-    measurementError: '',
-    serverError: '',
-    addSuccess: ''
+    measurementError: "",
+    serverError: "",
+    addSuccess: "",
   });
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -45,6 +43,8 @@ const LessonMeasurements = ({lessonId}: any) => {
     fetchMeasurementList();
     fetchRubricsList();
   }, []);
+
+  const measurementList: any[] = [];
 
   useEffect(() => {
     if (measurementList.length && lessonMeasurements.length) {
@@ -60,34 +60,12 @@ const LessonMeasurements = ({lessonId}: any) => {
 
   const fetchRubricsList = async () => {
     try {
-      // const [results, topics]: any = await Promise.all([
-      //   await API.graphql(
-      //     graphqlOperation(customQueries.listLessonRubricss, {
-      //       filter: {
-      //         lessonID: {eq: lessonId},
-      //       },
-      //     })
-      //   ),
-      //   await API.graphql(graphqlOperation(customQueries.listTopics)),
-      // ]);
-      // const topicsList = topics.data?.listTopics?.items;
-      // const lessonRubrics = results.data?.listLessonRubricss?.items?.map((item: any) => {
-      //   return {
-      //     id: item.id,
-      //     rubricID: item.rubricID,
-      //     measurement: item?.rubric?.name,
-      //     topic:
-      //       topicsList.find((topic: any) => topic.id === item.rubric.topicID)?.name || '',
-      //     curriculumId: item?.rubric?.curriculumID,
-      //   };
-      // });
-      // setLessonMeasurements([...lessonRubrics]);
-      //setLoading(false);
     } catch {
       setMessages({
-        measurementError: '',
-        serverError: GeneralInformationDict[userLanguage]['MESSAGES']['FETCHERR'],
-        addSuccess: ''
+        measurementError: "",
+        serverError:
+          GeneralInformationDict[userLanguage]["MESSAGES"]["FETCHERR"],
+        addSuccess: "",
       });
       setLoading(false);
     }
@@ -95,21 +73,8 @@ const LessonMeasurements = ({lessonId}: any) => {
 
   const fetchMeasurementList = async () => {
     try {
-      // let list: any = await API.graphql(graphqlOperation(customQueries.listRubrics));
-      // list = list.data.listRubrics?.items || [];
-      // const measuList = list.sort((a: any, b: any) =>
-      //   a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1
-      // );
-      // const filteredList = measuList.map((item: any) => {
-      //   return {
-      //     id: item.id,
-      //     name: item.name,
-      //     value: item.name,
-      //   };
-      // });
-      // setMeasurementList(filteredList);
     } catch {
-      console.log('Error while fetching lesson data');
+      console.log("Error while fetching lesson data");
     }
   };
 
@@ -117,11 +82,11 @@ const LessonMeasurements = ({lessonId}: any) => {
     try {
       const input = {
         lessonID: lessonId,
-        rubricID: selectedMeasurement.id
+        rubricID: selectedMeasurement.id,
       };
       setSaving(true);
       const results: any = await API.graphql(
-        graphqlOperation(customMutations.createLessonRubrics, {input: input})
+        graphqlOperation(customMutations.createLessonRubrics, { input: input })
       );
       const lessonRubric = results.data.createLessonRubrics;
       if (lessonRubric?.id) {
@@ -132,17 +97,17 @@ const LessonMeasurements = ({lessonId}: any) => {
             rubricID: lessonRubric.rubricID,
             measurement: selectedMeasurement.name,
             topic: lessonRubric?.rubric?.topic?.name,
-            curriculumId: lessonRubric?.rubric?.curriculumID
-          }
+            curriculumId: lessonRubric?.rubric?.curriculumID,
+          },
         ]);
-        setSelectedMeasurement({id: '', name: '', value: ''});
+        setSelectedMeasurement({ id: "", name: "", value: "" });
       }
       setSaving(false);
     } catch {
       setMessages({
-        measurementError: '',
-        serverError: GeneralInformationDict[userLanguage]['MESSAGES']['ADDERR'],
-        addSuccess: ''
+        measurementError: "",
+        serverError: GeneralInformationDict[userLanguage]["MESSAGES"]["ADDERR"],
+        addSuccess: "",
       });
     }
   };
@@ -150,60 +115,40 @@ const LessonMeasurements = ({lessonId}: any) => {
   const toggleModal = (id?: string) => {
     setShowDeleteModal({
       ...showDeleteModal,
-      id: id ? id : '',
-      state: !showDeleteModal.state
+      id: id ? id : "",
+      state: !showDeleteModal.state,
     });
   };
 
   const deleteMeasurement = async () => {
     try {
       const input = {
-        id: showDeleteModal.id
+        id: showDeleteModal.id,
       };
       const results: any = await API.graphql(
-        graphqlOperation(customMutations.deleteLessonRubrics, {input: input})
+        graphqlOperation(customMutations.deleteLessonRubrics, { input: input })
       );
       const lessonRubric = results.data.deleteLessonRubrics;
       if (lessonRubric?.id) {
         setLessonMeasurements((prevLessonMeasurements: any) =>
-          prevLessonMeasurements.filter((item: any) => item.id !== lessonRubric?.id)
+          prevLessonMeasurements.filter(
+            (item: any) => item.id !== lessonRubric?.id
+          )
         );
       }
       toggleModal();
     } catch {
       setMessages({
-        measurementError: '',
-        serverError: GeneralInformationDict[userLanguage]['MESSAGES']['DELETEERR'],
-        addSuccess: ''
-      });
-    }
-  };
-  const saveMeasurements = async (lessonId: string, rubricsId: string) => {
-    try {
-      const input = {
-        lessonID: lessonId,
-        rubricID: rubricsId
-      };
-      await API.graphql(
-        graphqlOperation(customMutations.createLessonRubrics, {input: input})
-      );
-      setMessages({
-        measurementError: '',
-        serverError: '',
-        addSuccess:
-          AddNewLessonFormDict[userLanguage]['MESSAGES']['MEASUREMENTADDSUCCESS']
-      });
-    } catch {
-      setMessages({
-        measurementError: '',
-        serverError: AddNewLessonFormDict[userLanguage]['ADDERR'],
-        addSuccess: ''
+        measurementError: "",
+        serverError:
+          GeneralInformationDict[userLanguage]["MESSAGES"]["DELETEERR"],
+        addSuccess: "",
       });
     }
   };
 
   const handleSelectMeasurement = (val: string, name: string, id: string) => {
-    setSelectedMeasurement({id, name, value: val});
+    setSelectedMeasurement({ id, name, value: val });
   };
 
   // const handleSave = () => {
@@ -235,7 +180,9 @@ const LessonMeasurements = ({lessonId}: any) => {
                 <Selector
                   selectedItem={selectedMeasurement.name}
                   list={measurementOptions}
-                  placeholder={AddNewLessonFormDict[userLanguage]['SELECTMEASURE']}
+                  placeholder={
+                    AddNewLessonFormDict[userLanguage]["SELECTMEASURE"]
+                  }
                   onChange={handleSelectMeasurement}
                 />
               </div>
@@ -249,7 +196,9 @@ const LessonMeasurements = ({lessonId}: any) => {
               </div>
             </div>
             {messages.measurementError && (
-              <p className={'w-6/10 m-auto text-red-600'}>{messages.measurementError}</p>
+              <p className={"w-6/10 m-auto text-red-600"}>
+                {messages.measurementError}
+              </p>
             )}
           </div>
           <div>
@@ -258,16 +207,18 @@ const LessonMeasurements = ({lessonId}: any) => {
                 {/* Table header */}
                 <div className="flex justify-between w-full px-8 py-4 mx-auto whitespace-nowrap border-b-0 border-gray-200">
                   <div className="w-.5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                    <span>{AddNewLessonFormDict[userLanguage]['NO']}</span>
+                    <span>{AddNewLessonFormDict[userLanguage]["NO"]}</span>
                   </div>
                   <div className="w-4.5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                    <span>{AddNewLessonFormDict[userLanguage]['MEASUREMENT']}</span>
+                    <span>
+                      {AddNewLessonFormDict[userLanguage]["MEASUREMENT"]}
+                    </span>
                   </div>
                   <div className="w-3/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                    <span>{AddNewLessonFormDict[userLanguage]['TOPIC']}</span>
+                    <span>{AddNewLessonFormDict[userLanguage]["TOPIC"]}</span>
                   </div>
                   <div className="w-2/10 px-8 py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                    <span>{AddNewLessonFormDict[userLanguage]['ACTION']}</span>
+                    <span>{AddNewLessonFormDict[userLanguage]["ACTION"]}</span>
                   </div>
                   {/** <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                       <span>Action</span>
@@ -279,24 +230,27 @@ const LessonMeasurements = ({lessonId}: any) => {
                   {lessonMeasurements.map((item: any, index: number) => (
                     <div
                       key={item.id}
-                      className="flex justify-between w-full  px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
+                      className="flex justify-between w-full  px-8 py-4 whitespace-nowrap border-b-0 border-gray-200"
+                    >
                       <div className="flex w-.5/10 items-center px-8 py-3 text-left text-s leading-4">
-                        {' '}
+                        {" "}
                         {index + 1}.
                       </div>
                       <div className="flex w-4.5/10 px-8 py-3 items-center text-left text-s leading-4 font-medium whitespace-normal">
-                        {' '}
-                        {item.measurement}{' '}
+                        {" "}
+                        {item.measurement}{" "}
                       </div>
                       <div className="flex w-3/10 px-8 py-3 text-left text-s leading-4 items-center whitespace-normal">
-                        {item.topic ? item.topic : '--'}
+                        {item.topic ? item.topic : "--"}
                       </div>
                       <div className="flex w-2/10 px-8 py-3 text-s leading-4 items-center justify-center">
                         <div
                           className="w-6 h-6 cursor-pointer"
-                          onClick={() => toggleModal(item.id)}>
+                          onClick={() => toggleModal(item.id)}
+                        >
                           <IconContext.Provider
-                            value={{size: '1rem', className: 'text-red-700'}}>
+                            value={{ size: "1rem", className: "text-red-700" }}
+                          >
                             <FaTrash />
                           </IconContext.Provider>
                         </div>
@@ -308,7 +262,11 @@ const LessonMeasurements = ({lessonId}: any) => {
             ) : (
               <div className="py-12 my-6 text-center">
                 <p className="text-gray-600 font-medium">
-                  {AddNewLessonFormDict[userLanguage]['MESSAGES']['LESSONNOTHAVE']}
+                  {
+                    AddNewLessonFormDict[userLanguage]["MESSAGES"][
+                      "LESSONNOTHAVE"
+                    ]
+                  }
                 </p>
               </div>
             )}
@@ -329,7 +287,11 @@ const LessonMeasurements = ({lessonId}: any) => {
       )}
       {(messages.serverError || messages.addSuccess) && (
         <div className="py-2 m-auto mt-2 text-center">
-          <p className={`${messages.serverError ? 'text-red-600' : 'text-green-600'}`}>
+          <p
+            className={`${
+              messages.serverError ? "text-red-600" : "text-green-600"
+            }`}
+          >
             {messages.serverError || messages.addSuccess}
           </p>
         </div>

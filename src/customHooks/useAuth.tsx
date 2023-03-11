@@ -1,10 +1,10 @@
-import {PersonStatus, Role, UserPageState} from 'API';
-import {Auth} from 'aws-amplify';
-import {useGlobalContext} from 'contexts/GlobalContext';
-import {useCookies} from 'react-cookie';
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import * as customMutations from 'customGraphql/customMutations';
-import {removeLocalStorageData} from '@utilities/localStorage';
+import { PersonStatus, Role, UserPageState } from "API";
+import { Auth } from "aws-amplify";
+import { useGlobalContext } from "contexts/GlobalContext";
+import { useCookies } from "react-cookie";
+import { API, graphqlOperation } from "aws-amplify";
+import * as customMutations from "customGraphql/customMutations";
+import { removeLocalStorageData } from "@utilities/localStorage";
 
 export type User = {
   authId: string;
@@ -12,6 +12,7 @@ export type User = {
 
   role: Role;
   email: string;
+  preferredName?: string;
   firstName: string;
   lastName: string;
   location: any[];
@@ -24,6 +25,7 @@ export type User = {
   lastLoggedOut: string;
   pageState: UserPageState;
   lastEmotionSubmission: string;
+  lastPageStateUpdate?: string;
   language: string;
 };
 
@@ -45,6 +47,7 @@ const useAuth = (): {
   user: User;
   onDemand?: boolean;
   pageState: UserPageState;
+
   setUser: (user: any) => void;
   authenticate: () => void;
   signOut: () => void;
@@ -53,7 +56,7 @@ const useAuth = (): {
   const context = useGlobalContext();
 
   const user = context.state.user;
-  const {updateAuthState} = context;
+  const { updateAuthState } = context;
   const dispatch = context.dispatch;
 
   const {
@@ -65,44 +68,44 @@ const useAuth = (): {
     lastName,
     language,
     image,
-    onDemand
+    onDemand,
   } = user;
 
-  const isStudent = role === 'ST';
-  const isTeacher = role === 'TR';
-  const isBuilder = role === 'BLD';
-  const isAdmin = role === 'ADM';
-  const isSuperAdmin = role === 'SUP';
-  const isFellow = role === 'FLW';
+  const isStudent = role === "ST";
+  const isTeacher = role === "TR";
+  const isBuilder = role === "BLD";
+  const isAdmin = role === "ADM";
+  const isSuperAdmin = role === "SUP";
+  const isFellow = role === "FLW";
   const instId =
     (user &&
       user?.associateInstitute?.length > 0 &&
       user?.associateInstitute[0]?.institution?.id) ||
-    '';
+    "";
 
   const setUser = (updatedUserInfo: any) =>
     dispatch({
-      type: 'SET_USER',
+      type: "SET_USER",
       payload: {
         ...user,
-        ...updatedUserInfo
-      }
+        ...updatedUserInfo,
+      },
     });
 
   const [, , removeCookie] = useCookies();
 
   const authenticate = () => {
-    dispatch({type: 'AUTHENTICATE', payload: {}});
+    dispatch({ type: "AUTHENTICATE", payload: {} });
   };
 
   const removeAuthToken = () => {
-    console.log('Removing cookies since not logged in');
+    console.log("Removing cookies since not logged in");
     updateAuthState(false);
-    removeCookie('auth', {path: '/'});
-    sessionStorage.removeItem('accessToken');
-    removeLocalStorageData('active_step_section');
-    removeLocalStorageData('selected_institution');
-    dispatch({type: 'CLEANUP'});
+    removeCookie("auth", { path: "/" });
+    sessionStorage.removeItem("accessToken");
+    removeLocalStorageData("active_step_section");
+    removeLocalStorageData("selected_institution");
+    dispatch({ type: "CLEANUP" });
   };
 
   async function signOut() {
@@ -115,16 +118,16 @@ const useAuth = (): {
         email: user.email,
         lastLoggedOut: time,
         lastPageStateUpdate: time,
-        pageState: UserPageState.NOT_LOGGED_IN
+        pageState: UserPageState.NOT_LOGGED_IN,
       };
       await API.graphql(
-        graphqlOperation(customMutations.updatePersonLogoutTime, {input})
+        graphqlOperation(customMutations.updatePersonLogoutTime, { input })
       );
       await Auth.signOut();
 
       removeAuthToken();
     } catch (error) {
-      console.error('error signing out: ', error);
+      console.error("error signing out: ", error);
     }
   }
 
@@ -150,7 +153,7 @@ const useAuth = (): {
     isSuperAdmin,
     user,
 
-    onDemand
+    onDemand,
   };
 };
 

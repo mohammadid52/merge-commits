@@ -1,8 +1,8 @@
-import React, {useContext, useState, useEffect} from 'react';
+import { useEffect, useState } from "react";
 
-import {GlobalContext} from 'contexts/GlobalContext';
+import { useGlobalContext } from "contexts/GlobalContext";
 
-import {RowWrapperProps} from 'interfaces/UniversalLessonBuilderInterfaces';
+import { RowWrapperProps } from "interfaces/UniversalLessonBuilderInterfaces";
 
 interface KeywordBlockProps extends RowWrapperProps {
   id?: string;
@@ -12,16 +12,18 @@ interface KeywordBlockProps extends RowWrapperProps {
 
 const KeywordBlock = (props: KeywordBlockProps) => {
   const {
-    state: {lessonPage: {theme: lessonPageTheme = '', themeTextColor = ''} = {}}
-  } = useContext(GlobalContext);
-  const {id, value} = props;
-  const keywords: any = [];
+    state: {
+      lessonPage: { theme: lessonPageTheme = "", themeTextColor = "" } = {},
+    },
+  } = useGlobalContext();
+  const { id, value } = props;
+
   const [mappedKeywords, setMappedKeywords] = useState<any[]>([]);
 
   useEffect(() => {
     const abc = (inarr: any, inc: number, out: [any[], any[], any[]]): any => {
       const [head, ...tail] = inarr;
-      if (typeof head === 'undefined') {
+      if (typeof head === "undefined") {
         return out;
       }
       switch (inc) {
@@ -40,7 +42,10 @@ const KeywordBlock = (props: KeywordBlockProps) => {
   }, [value]);
 
   return (
-    <div id={id} className={`flex flex-col md:w-full ${themeTextColor} rounded-r-lg`}>
+    <div
+      id={id}
+      className={`flex flex-col md:w-full ${themeTextColor} rounded-r-lg`}
+    >
       <div className={`flex flex-row p-2 pt-4`}>
         {mappedKeywords.length > 0 &&
           mappedKeywords.map((row: any[], i0: number) => (
@@ -48,21 +53,33 @@ const KeywordBlock = (props: KeywordBlockProps) => {
               {row.length > 0 &&
                 row.map(
                   (
-                    word: {id: string; type: string; label: string; value: string},
+                    word: {
+                      id: string;
+                      type: string;
+                      label: string;
+                      value: string;
+                    },
                     idx: number
                   ) => (
                     <div
                       key={`cardKW_${idx}`}
                       className={`pb-4 pt-4 px-4 mb-4 h-32 hover:h-64 hover:min-h-32 transition-height duration-500 ease-in-out overflow-ellipsis overflow-hidden ... rounded-lg ${
-                        lessonPageTheme === 'light' ? 'bg-gray-200' : 'bg-light-gray'
-                      } border-light-gray`}>
-                      <div className={`h-full overflow-ellipsis overflow-hidden ...`}>
+                        lessonPageTheme === "light"
+                          ? "bg-gray-200"
+                          : "bg-light-gray"
+                      } border-light-gray`}
+                    >
+                      <div
+                        className={`h-full overflow-ellipsis overflow-hidden ...`}
+                      >
                         <p
-                          dangerouslySetInnerHTML={{__html: word.label}}
-                          className={`text-lg font-semibold ${themeTextColor}`}></p>
+                          dangerouslySetInnerHTML={{ __html: word.label }}
+                          className={`text-lg font-semibold ${themeTextColor}`}
+                        ></p>
                         <p
-                          dangerouslySetInnerHTML={{__html: word.value}}
-                          className={`text-sm ${themeTextColor}`}></p>
+                          dangerouslySetInnerHTML={{ __html: word.value }}
+                          className={`text-sm ${themeTextColor}`}
+                        ></p>
                       </div>
                     </div>
                   )

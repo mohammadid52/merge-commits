@@ -1,14 +1,20 @@
-import Placeholder from '@components/Atoms/Placeholder';
-import Tooltip from '@components/Atoms/Tooltip';
-import useAuth from '@customHooks/useAuth';
-import {logError} from '@graphql/functions';
-import {getImageFromS3Static} from '@utilities/services';
-import {orderBy} from 'lodash';
-import React from 'react';
-import {useHistory} from 'react-router';
+import Placeholder from "@components/Atoms/Placeholder";
+import Tooltip from "@components/Atoms/Tooltip";
+import useAuth from "@customHooks/useAuth";
+import { logError } from "@graphql/functions";
+import { getImageFromS3Static } from "@utilities/services";
+import { orderBy } from "lodash";
+import React from "react";
+import { useHistory } from "react-router";
 
-const AttachedCourses = ({curricular, unitId}: {curricular: any; unitId: string}) => {
-  const {email, authId} = useAuth();
+const AttachedCourses = ({
+  curricular,
+  unitId,
+}: {
+  curricular: any;
+  unitId: string;
+}) => {
+  const { email, authId } = useAuth();
   const getAttachedCourses = (): any[] => {
     try {
       if (curricular) {
@@ -20,13 +26,13 @@ const AttachedCourses = ({curricular, unitId}: {curricular: any; unitId: string}
           }
         });
 
-        const sorted = orderBy(filtered, ['name'], ['asc']);
+        const sorted = orderBy(filtered, ["name"], ["asc"]);
 
         return sorted;
       }
       return [];
     } catch (error) {
-      logError(error, {authId, email}, 'AttachedCourses @getAttachedCourses');
+      logError(error, { authId, email }, "AttachedCourses @getAttachedCourses");
       return [];
     }
   };
@@ -34,7 +40,7 @@ const AttachedCourses = ({curricular, unitId}: {curricular: any; unitId: string}
   const attachedCourses: any[] = getAttachedCourses();
 
   const history = useHistory();
-  const {isSuperAdmin, instId} = useAuth();
+  const { isSuperAdmin, instId } = useAuth();
   const redirectToCourse = (id: string) => {
     history.push(
       isSuperAdmin
@@ -52,7 +58,8 @@ const AttachedCourses = ({curricular, unitId}: {curricular: any; unitId: string}
               <Tooltip
                 key={curricula.id}
                 placement="left"
-                text={`Go to ${curricula.name}`}>
+                text={`Go to ${curricula.name}`}
+              >
                 <li key={curricula.id} className="flex items-center gap-y-2">
                   <div className="flex-shrink-0 h-8 w-8 flex items-center">
                     {curricula.image ? (
@@ -66,13 +73,15 @@ const AttachedCourses = ({curricular, unitId}: {curricular: any; unitId: string}
                   </div>
                   <h4
                     onClick={() => redirectToCourse(curricula.id)}
-                    className="text-gray-700 cursor-pointer hover:underline hover:theme-text:400 text-sm">
+                    className="text-gray-700 cursor-pointer hover:underline hover:theme-text:400 text-sm"
+                  >
                     {curricula.name}
                   </h4>
                 </li>
               </Tooltip>
             );
           }
+          return <div className="w-auto hidden" />;
         })
       ) : (
         <p className="text-gray-600 text-xs">no attached course found</p>

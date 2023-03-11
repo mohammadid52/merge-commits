@@ -1,18 +1,18 @@
-import Buttons from 'atoms/Buttons';
-import NotesBlock from 'components/Lesson/UniversalLessonBlockComponents/Blocks/Notes/NotesBlock';
-import {FORM_TYPES} from 'components/Lesson/UniversalLessonBuilder/UI/common/constants';
-import {GlobalContext} from 'contexts/GlobalContext';
-import useDictionary from 'customHooks/dictionary';
-import {IOnChange} from 'interfaces/index';
-import {IContentTypeComponentProps} from 'interfaces/UniversalLessonBuilderInterfaces';
-import AnimatedContainer from 'uiComponents/Tabs/AnimatedContainer';
-import {Tabs3, useTabs} from 'uiComponents/Tabs/Tabs';
-import SingleNote from '@UlbBlocks/Notes/SingleNoteForm';
-import PreviewLayout from '@UlbUI/Preview/Layout/PreviewLayout';
-import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
-import {map, remove, update} from 'lodash';
-import React, {useContext, useEffect, useState} from 'react';
-import {v4 as uuidv4} from 'uuid';
+import SingleNote from "@UlbBlocks/Notes/SingleNoteForm";
+import PreviewLayout from "@UlbUI/Preview/Layout/PreviewLayout";
+import Buttons from "atoms/Buttons";
+import NotesBlock from "components/Lesson/UniversalLessonBlockComponents/Blocks/Notes/NotesBlock";
+import { FORM_TYPES } from "components/Lesson/UniversalLessonBuilder/UI/common/constants";
+import { useGlobalContext } from "contexts/GlobalContext";
+import useDictionary from "customHooks/dictionary";
+import { IOnChange } from "interfaces/index";
+import { IContentTypeComponentProps } from "interfaces/UniversalLessonBuilderInterfaces";
+import { map, remove, update } from "lodash";
+import { useEffect, useState } from "react";
+import AnimatedContainer from "uiComponents/Tabs/AnimatedContainer";
+import { Tabs3, useTabs } from "uiComponents/Tabs/Tabs";
+import { updateLessonPageToDB } from "utilities/updateLessonPageToDB";
+import { v4 as uuidv4 } from "uuid";
 
 interface NoteModalProps extends IContentTypeComponentProps {
   inputObj?: any;
@@ -26,25 +26,25 @@ const NotesModalDialog = (props: NoteModalProps) => {
     createNewBlockULBHandler,
     updateBlockContentULBHandler,
     askBeforeClose,
-    setUnsavedChanges
+    setUnsavedChanges,
   } = props;
 
-  const {userLanguage, clientKey} = useContext(GlobalContext);
-  const {EditQuestionModalDict} = useDictionary(clientKey);
+  const { userLanguage } = useGlobalContext();
+  const { EditQuestionModalDict } = useDictionary();
 
   // set all values to local state
   useEffect(() => {
     if (inputObj && inputObj.length) {
       setIsEditingMode(true);
       const modifiedFields = map(inputObj, (d) => {
-        const bgColor = d.class?.split(' ')[0];
-        const size = d.class?.split(' ')[1];
+        const bgColor = d.class?.split(" ")[0];
+        const size = d.class?.split(" ")[1];
         return {
           ...d,
           noteText: d.value,
           bgColor: bgColor,
           size: size,
-          error: ''
+          error: "",
         };
       });
       setFields([...modifiedFields]);
@@ -53,18 +53,18 @@ const NotesModalDialog = (props: NoteModalProps) => {
 
   const initialValues = {
     id: uuidv4(),
-    noteText: '',
-    bgColor: 'yellow',
-    size: 'large',
-    error: ''
+    noteText: "",
+    bgColor: "yellow",
+    size: "large",
+    error: "",
   };
-  const [fields, setFields] = useState([{...initialValues}]);
+  const [fields, setFields] = useState([{ ...initialValues }]);
 
   const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
 
   const onChange = (e: IOnChange, idx: number) => {
     setUnsavedChanges(true);
-    update(fields[idx], 'noteText', () => e.target.value);
+    update(fields[idx], "noteText", () => e.target.value);
     setFields([...fields]);
   };
 
@@ -75,12 +75,12 @@ const NotesModalDialog = (props: NoteModalProps) => {
   };
 
   const colorList = [
-    {id: 0, name: 'red'},
-    {id: 1, name: 'green'},
-    {id: 2, name: 'blue'},
-    {id: 3, name: 'yellow'},
-    {id: 4, name: 'indigo'},
-    {id: 5, name: 'purple'}
+    { id: 0, name: "red" },
+    { id: 1, name: "green" },
+    { id: 2, name: "blue" },
+    { id: 3, name: "yellow" },
+    { id: 4, name: "indigo" },
+    { id: 5, name: "purple" },
   ];
 
   const addNewNoteField = () => {
@@ -88,7 +88,11 @@ const NotesModalDialog = (props: NoteModalProps) => {
     setUnsavedChanges(true);
 
     const randomColor = colorList[randomIdx].name;
-    const newNoteField = {...initialValues, bgColor: randomColor, id: uuidv4()};
+    const newNoteField = {
+      ...initialValues,
+      bgColor: randomColor,
+      id: uuidv4(),
+    };
     setFields([...fields, newNoteField]);
   };
 
@@ -101,7 +105,7 @@ const NotesModalDialog = (props: NoteModalProps) => {
     type: FORM_TYPES.NOTES,
     value: f.noteText,
     class: `${f.bgColor} ${f.size}`,
-    id: f.id
+    id: f.id,
   }));
 
   // common stuff for adding data to db
@@ -110,34 +114,34 @@ const NotesModalDialog = (props: NoteModalProps) => {
     setUnsavedChanges(false);
     const input = {
       id: list.id,
-      lessonPlan: [...list.lessonPlan]
+      lessonPlan: [...list.lessonPlan],
     };
 
     await updateLessonPageToDB(input);
   };
 
   const onSubmit = async () => {
-    const parentKey = 'notes-container';
+    const parentKey = "notes-container";
     if (isEditingMode) {
       const updatedList = updateBlockContentULBHandler(
-        '',
-        '',
+        "",
+        "",
         `notes-form`,
         notesList,
         0,
-        '',
+        "",
         parentKey
       );
 
       await addToDB(updatedList);
     } else {
       const updatedList = createNewBlockULBHandler(
-        '',
-        '',
+        "",
+        "",
         `notes-form`,
         notesList,
         0,
-        '',
+        "",
 
         parentKey
       );
@@ -146,7 +150,7 @@ const NotesModalDialog = (props: NoteModalProps) => {
     }
   };
 
-  const {curTab, setCurTab, helpers} = useTabs();
+  const { curTab, setCurTab, helpers } = useTabs();
   const [onSetupTab, onPreviewTab] = helpers;
 
   return (
@@ -170,7 +174,7 @@ const NotesModalDialog = (props: NoteModalProps) => {
             </div>
             <Buttons
               btnClass="py-1 px-4 text-xs mr-2"
-              label={'Add another note'}
+              label={"Add another note"}
               onClick={addNewNoteField}
               transparent
             />
@@ -178,13 +182,15 @@ const NotesModalDialog = (props: NoteModalProps) => {
               <div className="flex items-center w-auto">
                 <Buttons
                   btnClass="py-1 px-4 text-xs mr-2"
-                  label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
+                  label={
+                    EditQuestionModalDict[userLanguage]["BUTTON"]["CANCEL"]
+                  }
                   onClick={askBeforeClose}
                   transparent
                 />
                 <Buttons
                   btnClass="py-1 px-8 text-xs ml-2"
-                  label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
+                  label={EditQuestionModalDict[userLanguage]["BUTTON"]["SAVE"]}
                   onClick={() => onSubmit()}
                 />
               </div>
@@ -197,10 +203,17 @@ const NotesModalDialog = (props: NoteModalProps) => {
           <div className="">
             <PreviewLayout
               notAvailable={
-                notesList.length === 0 ? 'Please add notes to see preview' : false
-              }>
+                notesList.length === 0
+                  ? "Please add notes to see preview"
+                  : false
+              }
+            >
               {/* @ts-ignore */}
-              <NotesBlock preview grid={{cols: 2, rows: 2}} value={notesList} />
+              <NotesBlock
+                preview
+                grid={{ cols: 2, rows: 2 }}
+                value={notesList}
+              />
             </PreviewLayout>
           </div>
         )}

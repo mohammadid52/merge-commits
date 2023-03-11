@@ -1,19 +1,18 @@
-import API, {graphqlOperation} from '@aws-amplify/api';
-import BreadCrums from 'atoms/BreadCrums';
-import Buttons from 'atoms/Buttons';
-import FormInput from 'atoms/Form/FormInput';
-import TextArea from 'atoms/Form/TextArea';
-import PageWrapper from 'atoms/PageWrapper';
-import React, {useContext, useEffect, useState} from 'react';
-import {IoArrowUndoCircleOutline} from 'react-icons/io5';
-import {useHistory, useParams} from 'react-router';
+import BreadCrums from "atoms/BreadCrums";
+import Buttons from "atoms/Buttons";
+import FormInput from "atoms/Form/FormInput";
+import TextArea from "atoms/Form/TextArea";
+import PageWrapper from "atoms/PageWrapper";
+import { API, graphqlOperation } from "aws-amplify";
+import { useEffect, useState } from "react";
+import { IoArrowUndoCircleOutline } from "react-icons/io5";
+import { useHistory, useParams } from "react-router";
 
-import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
-import {GlobalContext} from 'contexts/GlobalContext';
-import * as customMutations from 'customGraphql/customMutations';
-import * as customQueries from 'customGraphql/customQueries';
-import useDictionary from 'customHooks/dictionary';
-import * as queries from 'graphql/queries';
+import SectionTitleV3 from "@components/Atoms/SectionTitleV3";
+import { useGlobalContext } from "contexts/GlobalContext";
+import * as customMutations from "customGraphql/customMutations";
+import * as customQueries from "customGraphql/customQueries";
+import useDictionary from "customHooks/dictionary";
 
 interface EditMeasurementProps {}
 
@@ -24,81 +23,68 @@ const EditMeasurement = (props: EditMeasurementProps) => {
   const measurementId = urlParams.id;
   const history = useHistory();
   const [loading, setLoading] = useState(false);
-  const [validation, setValidation] = useState({name: '', topic: ''});
-  const [topics, setTopics] = useState([]);
-  const {theme, clientKey, userLanguage} = useContext(GlobalContext);
-  const {EditMeasurementDict, BreadcrumsTitles} = useDictionary(clientKey);
+  const [validation, setValidation] = useState({ name: "", topic: "" });
+
+  const { userLanguage } = useGlobalContext();
+  const { EditMeasurementDict, BreadcrumsTitles } = useDictionary();
   const [measurement, setMeasurement] = useState({
     id: measurementId,
-    name: '',
+    name: "",
     curriculumID: curricularId,
-    topic: {id: '', name: '', value: ''},
-    criteria: ''
+    topic: { id: "", name: "", value: "" },
+    criteria: "",
   });
 
   const breadCrumsList = [
-    {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
+    {
+      title: BreadcrumsTitles[userLanguage]["HOME"],
+      url: "/dashboard",
+      last: false,
+    },
     {
       title: measurement.topic.value,
       url: `/dashboard/manage-institutions/:instituteID/curricular?id=${curricularId}`,
       last: false,
-      goBack: true
+      goBack: true,
     },
     {
-      title: BreadcrumsTitles[userLanguage]['EditMeasurement'],
+      title: BreadcrumsTitles[userLanguage]["EditMeasurement"],
       url: `/dashboard/curricular/${curricularId}/measurement/edit/${measurementId}'}`,
-      last: true
-    }
+      last: true,
+    },
   ];
 
   const onInputChange = (e: any) => {
     const value = e.target.value;
-    if (e.target.name === 'name') {
-      setMeasurement({...measurement, name: value});
-      if (value.length && validation.name) setValidation({...validation, name: ''});
+    if (e.target.name === "name") {
+      setMeasurement({ ...measurement, name: value });
+      if (value.length && validation.name)
+        setValidation({ ...validation, name: "" });
     } else {
-      setMeasurement({...measurement, [e.target.name]: value});
+      setMeasurement({ ...measurement, [e.target.name]: value });
     }
-  };
-
-  const selectTopic = (val: string, name: string, id: string) => {
-    if (validation.topic) {
-      setValidation({...validation, topic: ''});
-    }
-    setMeasurement({...measurement, topic: {...measurement.topic, id, name, value: val}});
-  };
-
-  const fetchTopics = async () => {
-    let list: any = await API.graphql(
-      graphqlOperation(queries.listTopics, {
-        filter: {curriculumID: {eq: curricularId}}
-      })
-    );
-    list = list.data.listTopics?.items || [];
-    list = list.map((item: any) => ({
-      id: item.id,
-      name: item.name,
-      value: item.name
-    }));
-    setTopics(list);
   };
 
   const fetchMeasurement = async () => {
     setLoading(true);
     let item: any = await API.graphql(
-      graphqlOperation(customQueries.getRubric, {id: measurementId})
+      graphqlOperation(customQueries.getRubric, { id: measurementId })
     );
     item = item.data.getRubric;
     if (item?.curriculumID === curricularId) {
       setMeasurement({
         ...measurement,
         name: item.name,
-        topic: {id: item.topic.id, name: item.topic.name, value: item.topic.name},
-        criteria: item.criteria
+        topic: {
+          id: item.topic.id,
+          name: item.topic.name,
+          value: item.topic.name,
+        },
+        criteria: item.criteria,
       });
       setLoading(false);
     } else {
-      console.error('wrong cr');
+      console.error("wrong cr");
       setLoading(false);
     }
   };
@@ -108,17 +94,18 @@ const EditMeasurement = (props: EditMeasurementProps) => {
     const msgs = validation;
     if (!measurement.name.length) {
       isValid = false;
-      msgs.name = EditMeasurementDict[userLanguage]['messages']['namerequired'];
+      msgs.name = EditMeasurementDict[userLanguage]["messages"]["namerequired"];
     } else {
-      msgs.name = '';
+      msgs.name = "";
     }
     if (!measurement.topic.id) {
       isValid = false;
-      msgs.topic = EditMeasurementDict[userLanguage]['messages']['topicrequired'];
+      msgs.topic =
+        EditMeasurementDict[userLanguage]["messages"]["topicrequired"];
     } else {
-      msgs.topic = '';
+      msgs.topic = "";
     }
-    setValidation({...msgs});
+    setValidation({ ...msgs });
     return isValid;
   };
 
@@ -130,22 +117,21 @@ const EditMeasurement = (props: EditMeasurementProps) => {
         name: measurement.name,
         criteria: measurement.criteria,
         topicID: measurement.topic.id,
-        curriculumID: curricularId
+        curriculumID: curricularId,
       };
       const item: any = await API.graphql(
-        graphqlOperation(customMutations.updateRubric, {input})
+        graphqlOperation(customMutations.updateRubric, { input })
       );
       const updatedItem = item.data.updateRubric;
       if (updatedItem) {
         history.goBack();
       } else {
-        console.error('Could not update topic');
+        console.error("Could not update topic");
       }
     }
   };
 
   useEffect(() => {
-    fetchTopics();
     fetchMeasurement();
   }, []);
 
@@ -155,8 +141,8 @@ const EditMeasurement = (props: EditMeasurementProps) => {
       <BreadCrums items={breadCrumsList} />
       <div className="flex justify-between">
         <SectionTitleV3
-          title={EditMeasurementDict[userLanguage]['title']}
-          subtitle={EditMeasurementDict[userLanguage]['subtitle']}
+          title={EditMeasurementDict[userLanguage]["title"]}
+          subtitle={EditMeasurementDict[userLanguage]["subtitle"]}
         />
         <div className="flex justify-end py-4 mb-4 w-5/10">
           <Buttons
@@ -172,7 +158,7 @@ const EditMeasurement = (props: EditMeasurementProps) => {
       <PageWrapper>
         <div className="w-6/10 m-auto">
           <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">
-            {EditMeasurementDict[userLanguage]['heading']}
+            {EditMeasurementDict[userLanguage]["heading"]}
           </h3>
         </div>
         {!loading ? (
@@ -185,7 +171,7 @@ const EditMeasurement = (props: EditMeasurementProps) => {
                     value={measurement.name}
                     onChange={onInputChange}
                     name="name"
-                    label={EditMeasurementDict[userLanguage]['labelmeasur']}
+                    label={EditMeasurementDict[userLanguage]["labelmeasur"]}
                     isRequired
                   />
                 </div>
@@ -211,7 +197,7 @@ const EditMeasurement = (props: EditMeasurementProps) => {
                     value={measurement.criteria}
                     onChange={onInputChange}
                     name="criteria"
-                    label={EditMeasurementDict[userLanguage]['criteria']}
+                    label={EditMeasurementDict[userLanguage]["criteria"]}
                   />
                 </div>
               </div>
@@ -219,20 +205,20 @@ const EditMeasurement = (props: EditMeasurementProps) => {
             <div className="flex my-8 justify-center">
               <Buttons
                 btnClass="py-3 px-10 mr-4"
-                label={EditMeasurementDict[userLanguage]['button']['cancel']}
+                label={EditMeasurementDict[userLanguage]["button"]["cancel"]}
                 onClick={history.goBack}
                 transparent
               />
               <Buttons
                 btnClass="py-3 px-10 ml-4"
-                label={EditMeasurementDict[userLanguage]['button']['save']}
+                label={EditMeasurementDict[userLanguage]["button"]["save"]}
                 onClick={saveMeasurementDetails}
               />
             </div>
           </>
         ) : (
           <div className="py-12 my-12 m-auto text-center">
-            {EditMeasurementDict[userLanguage]['fetching']}
+            {EditMeasurementDict[userLanguage]["fetching"]}
           </div>
         )}
       </PageWrapper>

@@ -1,14 +1,12 @@
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import * as queries from 'graphql/queries';
-import React, {useCallback, useEffect, useState} from 'react';
-import {IconContext} from 'react-icons';
-import {FaSpinner} from 'react-icons/fa';
-import EmptyViewWrapper from './EmptyViewWrapper';
-import {ITabParentProps} from './TabView';
-import SingleUpload from './UploadsTab/UploadCard';
-import ContentLessonWrapper from './Wrapper/ContentLessonWrapper';
-
-const LIMIT = 100;
+import { API, graphqlOperation } from "aws-amplify";
+import * as queries from "graphql/queries";
+import React, { useCallback, useEffect, useState } from "react";
+import { IconContext } from "react-icons";
+import { FaSpinner } from "react-icons/fa";
+import EmptyViewWrapper from "./EmptyViewWrapper";
+import { ITabParentProps } from "./TabView";
+import SingleUpload from "./UploadsTab/UploadCard";
+import ContentLessonWrapper from "./Wrapper/ContentLessonWrapper";
 
 export interface IUploadCardProps extends ITabParentProps {
   personAuthID?: string;
@@ -35,7 +33,7 @@ const UploadsTab = ({
   themeColor,
   mainSection,
   subSection,
-  onCancel
+  onCancel,
 }: IUploadCardProps) => {
   // ##################################################################### //
   // ############################ CRUD UPLOADS ########################### //
@@ -51,16 +49,17 @@ const UploadsTab = ({
     try {
       const listFilter = {
         filter: {
-          personEmail: {eq: personEmail},
-          personAuthID: {eq: personAuthID},
-          roomID: {eq: sectionRoomID}
-        }
+          personEmail: { eq: personEmail },
+          personAuthID: { eq: personAuthID },
+          roomID: { eq: sectionRoomID },
+        },
       };
 
       const personLessonFiles: any = await API.graphql(
         graphqlOperation(queries.listPersonFiles, listFilter)
       );
-      const personLessonFilesRows = personLessonFiles.data.listPersonFiles.items;
+      const personLessonFilesRows =
+        personLessonFiles.data.listPersonFiles.items;
 
       if (personLessonFilesRows?.length > 0) {
         setAllPersonLessonFiles(personLessonFilesRows);
@@ -77,11 +76,11 @@ const UploadsTab = ({
         setFilteredLessonIds(filterUniqueLessonIds);
         setLoaded(true);
       } else {
-        console.log('anthology - NO personLessonFiles');
+        console.log("anthology - NO personLessonFiles");
         setLoaded(true);
       }
     } catch (e) {
-      console.error('error listing personLessonFilesa - ', e);
+      console.error("error listing personLessonFilesa - ", e);
       setLoaded(true);
     } finally {
     }
@@ -103,10 +102,13 @@ const UploadsTab = ({
    *                      FILES                       *
    ****************************************************/
 
-  const updateLoadedFilesList = async (personFilesID: string, filesArray: any[]) => {
+  const updateLoadedFilesList = async (
+    personFilesID: string,
+    filesArray: any[]
+  ) => {
     const updated = allPersonLessonFiles.map((contentObj: any) => {
       if (contentObj.id === personFilesID) {
-        return {...contentObj, files: filesArray};
+        return { ...contentObj, files: filesArray };
       } else {
         return contentObj;
       }
@@ -128,7 +130,7 @@ const UploadsTab = ({
         return acc;
       }
     }, []);
-    console.log('output - ', output);
+    console.log("output - ", output);
     return output;
   };
 
@@ -136,35 +138,35 @@ const UploadsTab = ({
   // ######################## TOGGLE EDITING CARDS ####################### //
   // ##################################################################### //
 
-  const [editID, setEditID] = useState<string>('');
-  const [editMode, setEditMode] = useState<string>('');
+  const [editID, setEditID] = useState<string>("");
+  const [editMode, setEditMode] = useState<string>("");
   const handleEdit = (editedID: string) => {
-    if (editMode !== 'edit') {
-      setEditMode('edit');
+    if (editMode !== "edit") {
+      setEditMode("edit");
     }
     if (editID !== editedID) {
       setEditID(editedID);
     }
   };
   const handleSave = () => {
-    setEditMode('');
-    setEditID('');
+    setEditMode("");
+    setEditID("");
   };
   const handleDelete = (deletableID: string) => {
-    if (editMode !== 'delete') {
-      setEditMode('delete');
+    if (editMode !== "delete") {
+      setEditMode("delete");
     }
     if (editID !== deletableID) {
       setEditID(deletableID);
     }
   };
   const handleConfirm = () => {
-    setEditMode('');
-    setEditID('');
+    setEditMode("");
+    setEditID("");
   };
   const handleCancel = () => {
-    setEditMode('');
-    setEditID('');
+    setEditMode("");
+    setEditID("");
   };
 
   // ##################################################################### //
@@ -179,17 +181,20 @@ const UploadsTab = ({
         fallbackContents={
           <IconContext.Provider
             value={{
-              size: '1.2rem',
+              size: "1.2rem",
               style: {},
-              className: `relative mr-4 animate-spin ${themeColor}`
-            }}>
+              className: `relative mr-4 animate-spin ${themeColor}`,
+            }}
+          >
             <FaSpinner />
           </IconContext.Provider>
-        }>
+        }
+      >
         {filteredLessonIds && filteredLessonIds.length > 0 ? (
           filteredLessonIds.map((idString: string) => (
             <ContentLessonWrapper lessonID={idString}>
-              {filterFilesListByLessonID(idString, allPersonLessonFiles).length > 0 &&
+              {filterFilesListByLessonID(idString, allPersonLessonFiles)
+                .length > 0 &&
                 filterFilesListByLessonID(idString, allPersonLessonFiles).map(
                   (lessonFileObj: any, idx: number) => {
                     return (
@@ -200,13 +205,15 @@ const UploadsTab = ({
                         fallbackContents={
                           <IconContext.Provider
                             value={{
-                              size: '1.2rem',
+                              size: "1.2rem",
                               style: {},
-                              className: `relative mr-4 animate-spin ${themeColor}`
-                            }}>
+                              className: `relative mr-4 animate-spin ${themeColor}`,
+                            }}
+                          >
                             <FaSpinner />
                           </IconContext.Provider>
-                        }>
+                        }
+                      >
                         <SingleUpload
                           idx={idx}
                           mainSection={mainSection}

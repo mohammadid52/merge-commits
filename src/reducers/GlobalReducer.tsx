@@ -1,24 +1,24 @@
 // import React from 'react';
-import {Dicitionary, PersonStatus, UserPageState} from 'API';
-import {globalState, GlobalStateType} from 'state/GlobalState';
+import { Dicitionary, PersonStatus, UserPageState } from "API";
+import { globalState } from "state/GlobalState";
 
 export type GlobalActions =
   | {
-      type: 'UPDATE_SIDEBAR';
+      type: "UPDATE_SIDEBAR";
       payload: {
         section: string;
         data: any;
       };
     }
   | {
-      type: 'UPDATE_ROOM';
+      type: "UPDATE_ROOM";
       payload: {
         property: string;
         data: any;
       };
     }
   | {
-      type: 'UPDATE_ROOM_MULTI';
+      type: "UPDATE_ROOM_MULTI";
       payload: {
         rooms?: any[];
         activeSyllabus?: any;
@@ -28,37 +28,44 @@ export type GlobalActions =
       };
     }
   | {
-      type: 'RESET_ROOMDATA';
+      type: "RESET_ROOMDATA";
       payload: any;
     }
   | {
-      type: 'UPDATE_CURRENTPAGE';
+      type: "UPDATE_CURRENTPAGE";
       payload: {
         data: string;
       };
     }
   | {
-      type: 'UPDATE_ACTIVEROOM';
+      type: "UPDATE_ACTIVEROOM";
       payload: {
         roomID: string;
         syllabusID: string;
       };
     }
   | {
-      type: 'TOGGLE_LESSON';
+      type: "TOGGLE_LESSON";
       payload: {
         property: string;
         data: any;
       };
     }
   | {
-      type: 'UPDATE_LESSON_PAGE_THEME';
+      type: "UPDATE_LESSON_PAGE_THEME";
       payload: {
-        theme: 'light' | 'dark';
+        theme: "light" | "dark";
       };
     }
   | {
-      type: 'SET_USER';
+      type: "UPDATE_PAGE_STATE";
+      payload: {
+        pageState: UserPageState;
+        lastPageStateUpdate: string;
+      };
+    }
+  | {
+      type: "SET_USER";
       payload: {
         location: any[];
         removedFrom?: any[];
@@ -87,74 +94,74 @@ export type GlobalActions =
       };
     }
   | {
-      type: 'LOG_IN';
+      type: "LOG_IN";
       payload: {
         email: string;
         authId: string;
       };
     }
   | {
-      type: 'LESSON_PAYLOAD';
+      type: "LESSON_PAYLOAD";
       payload: {
         lessonsData: any[];
       };
     }
   | {
-      type: 'PREV_LOG_IN';
+      type: "PREV_LOG_IN";
       payload: {
         [key: string]: any;
       };
     }
   | {
-      type: 'AUTHENTICATE';
+      type: "AUTHENTICATE";
       payload: {
         [key: string]: any;
       };
     }
   | {
-      type: 'CLEANUP';
+      type: "CLEANUP";
     }
   | {
-      type: 'UPDATE_TEMP';
+      type: "UPDATE_TEMP";
       payload: {
         [key: string]: any;
       };
     }
   | {
-      type: 'UPDATE_TEMP_USER';
+      type: "UPDATE_TEMP_USER";
       payload: {
         [key: string]: any;
       };
     }
   | {
-      type: 'SET_DICTIONARIES';
+      type: "SET_DICTIONARIES";
       payload: Dicitionary[];
     };
 
 export const globalReducer = (state: any, action: GlobalActions) => {
   switch (action.type) {
-    case 'UPDATE_SIDEBAR':
+    case "UPDATE_SIDEBAR":
       return {
         ...state,
         sidebar: {
           ...state.sidebar,
-          [action.payload.section]: action.payload.data
-        }
+          [action.payload.section]: action.payload.data,
+        },
       };
-    case 'SET_DICTIONARIES':
+    case "SET_DICTIONARIES":
       return {
         ...state,
-        dictionaries: action.payload
+        dictionaries: action.payload,
       };
-    case 'UPDATE_ROOM':
+    case "UPDATE_ROOM":
       return {
         ...state,
         roomData: {
           ...state.roomData,
-          [action.payload.property]: action.payload.data
-        }
+          [action.payload.property]: action.payload.data,
+        },
       };
-    case 'UPDATE_ROOM_MULTI':
+    case "UPDATE_ROOM_MULTI":
       return {
         ...state,
         roomData: {
@@ -164,87 +171,102 @@ export const globalReducer = (state: any, action: GlobalActions) => {
           curriculum: action.payload.curriculum
             ? action.payload.curriculum
             : state.roomData.curriculum,
-          rooms: action.payload.rooms ? action.payload.rooms : state.roomData.rooms,
+          rooms: action.payload.rooms
+            ? action.payload.rooms
+            : state.roomData.rooms,
           lessons: action.payload.lessons
             ? action.payload.lessons
             : state.roomData.lessons,
           syllabus: action.payload.syllabus
             ? action.payload.syllabus
-            : state.roomData.syllabus
-        }
+            : state.roomData.syllabus,
+        },
       };
-    case 'RESET_ROOMDATA':
+    case "RESET_ROOMDATA":
       return {
         ...state,
-        currentPage: '',
-        activeRoom: 'asdsad',
-        activeSyllabus: '',
+        currentPage: "",
+        activeRoom: "asdsad",
+        activeSyllabus: "",
         roomData: {
           rooms: state.roomData.rooms ? state.roomData.rooms : [],
-          activeSyllabus: '',
+          activeSyllabus: "",
           curriculum: {},
           syllabus: [],
-          lessons: []
-        }
+          lessons: [],
+        },
       };
-    case 'UPDATE_CURRENTPAGE':
+    case "UPDATE_CURRENTPAGE":
       return {
         ...state,
-        currentPage: action.payload.data
+        currentPage: action.payload.data,
       };
-    case 'UPDATE_ACTIVEROOM':
+    case "UPDATE_ACTIVEROOM":
       return {
         ...state,
         activeRoom: action.payload.roomID,
         activeSyllabus: action.payload.syllabusID,
         roomData: {
           ...state.roomData,
-          syllabus: []
-        }
+          syllabus: [],
+        },
       };
-    case 'TOGGLE_LESSON':
+    case "TOGGLE_LESSON":
       return {
         ...state,
         roomData: {
           ...state.roomData,
-          [action.payload.property]: action.payload.data
-        }
+          [action.payload.property]: action.payload.data,
+        },
       };
-    case 'UPDATE_TEMP':
+    case "UPDATE_TEMP":
       return {
         ...state,
         temp: {
           ...state.temp,
           authId: action.payload.authId,
-          redirectUrlToUserSurveysTab: action.payload.redirectUrlToUserSurveysTab,
-          roomData: action?.payload?.roomData || state.temp.roomData
-        }
+          redirectUrlToUserSurveysTab:
+            action.payload.redirectUrlToUserSurveysTab,
+          roomData: action?.payload?.roomData || state.temp.roomData,
+        },
       };
-    case 'UPDATE_TEMP_USER':
+    case "UPDATE_TEMP_USER":
       return {
         ...state,
         temp: {
           ...state.temp,
-          user: action.payload.user
-        }
+          user: action.payload.user,
+        },
       };
-    case 'UPDATE_LESSON_PAGE_THEME':
+    case "UPDATE_LESSON_PAGE_THEME":
       return {
         ...state,
         lessonPage: {
           theme: action.payload.theme,
           themeTextColor:
-            action.payload.theme === 'light' ? 'text-dark-gray' : 'text-white',
+            action.payload.theme === "light" ? "text-dark-gray" : "text-white",
           themeBackgroundColor:
-            action.payload.theme === 'light' ? 'bg-white' : 'bg-dark-gray',
+            action.payload.theme === "light" ? "bg-white" : "bg-dark-gray",
           themeSecBackgroundColor:
-            action.payload.theme === 'light' ? 'bg-white' : 'bg-gray-700'
-        }
+            action.payload.theme === "light" ? "bg-white" : "bg-gray-700",
+        },
       };
-    case 'SET_USER':
+
+    case "UPDATE_PAGE_STATE":
       return {
         ...state,
-        status: 'done',
+        user: {
+          ...state.user,
+          lastPageStateUpdate:
+            action?.payload?.lastPageStateUpdate ||
+            state.user.lastPageStateUpdate,
+          pageState: action?.payload?.pageState || state.user.pageState,
+        },
+      };
+    case "SET_USER":
+      return {
+        ...state,
+        status: "done",
         user: {
           ...state.user,
           id: action.payload.id,
@@ -254,11 +276,11 @@ export const globalReducer = (state: any, action: GlobalActions) => {
           lastName: action.payload.lastName,
           language: action.payload.language,
           role: action.payload.role,
-          isSuperAdmin: action.payload.role === 'SUP',
-          isAdmin: action.payload.role === 'ADM',
-          isBuilder: action.payload.role === 'BLD',
-          isTeacher: action.payload.role === 'TR',
-          isStudent: action.payload.role === 'ST',
+          isSuperAdmin: action.payload.role === "SUP",
+          isAdmin: action.payload.role === "ADM",
+          isBuilder: action.payload.role === "BLD",
+          isTeacher: action.payload.role === "TR",
+          isStudent: action.payload.role === "ST",
           onBoardSurvey: action.payload.onBoardSurvey,
           image: action.payload.image,
           location: action.payload.location,
@@ -269,47 +291,48 @@ export const globalReducer = (state: any, action: GlobalActions) => {
           lessons: action.payload?.lessons,
           lastEmotionSubmission: action.payload?.lastEmotionSubmission,
           pageState: action.payload.pageState,
+
           status: action.payload?.status,
-          removedFrom: action.payload?.removedFrom || []
-        }
+          removedFrom: action.payload?.removedFrom || [],
+        },
       };
-    case 'LOG_IN':
+    case "LOG_IN":
       return {
         ...state,
-        status: 'logged-in',
+        status: "logged-in",
         isAuthenticated: true,
         user: {
           ...state.user,
           email: action.payload.email,
-          authId: action.payload.authId
-        }
+          authId: action.payload.authId,
+        },
       };
-    case 'LESSON_PAYLOAD':
+    case "LESSON_PAYLOAD":
       return {
         ...state,
         lessonsPayload: {
-          lessonsData: action.payload.lessonsData
-        }
+          lessonsData: action.payload.lessonsData,
+        },
       };
 
-    case 'PREV_LOG_IN':
+    case "PREV_LOG_IN":
       return {
         ...state,
-        status: 'logged-in',
+        status: "logged-in",
         isAuthenticated: true,
         user: {
           ...state.user,
           email: action.payload.email,
-          authId: action.payload.authId
-        }
+          authId: action.payload.authId,
+        },
       };
-    case 'AUTHENTICATE':
+    case "AUTHENTICATE":
       return {
         ...state,
-        status: 'logged-in',
-        isAuthenticated: true
+        status: "logged-in",
+        isAuthenticated: true,
       };
-    case 'CLEANUP':
+    case "CLEANUP":
       return globalState;
     default:
       return state;

@@ -1,22 +1,20 @@
-import API, {graphqlOperation} from '@aws-amplify/api';
-import BreadCrums from 'atoms/BreadCrums';
-import Buttons from 'atoms/Buttons';
-import FormInput from 'atoms/Form/FormInput';
-import TextArea from 'atoms/Form/TextArea';
-import PageWrapper from 'atoms/PageWrapper';
-import React, {useContext, useEffect, useState} from 'react';
-import {IoArrowUndoCircleOutline} from 'react-icons/io5';
-import {useHistory, useParams} from 'react-router';
+import BreadCrums from "atoms/BreadCrums";
+import Buttons from "atoms/Buttons";
+import FormInput from "atoms/Form/FormInput";
+import TextArea from "atoms/Form/TextArea";
+import PageWrapper from "atoms/PageWrapper";
+import { API, graphqlOperation } from "aws-amplify";
+import { useEffect, useState } from "react";
+import { IoArrowUndoCircleOutline } from "react-icons/io5";
+import { useHistory, useParams } from "react-router";
 
-import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
-import {GlobalContext} from 'contexts/GlobalContext';
-import useDictionary from 'customHooks/dictionary';
-import * as mutations from 'graphql/mutations';
-import * as queries from 'graphql/queries';
-interface EditLearningObjectiveProps {}
+import SectionTitleV3 from "@components/Atoms/SectionTitleV3";
+import { useGlobalContext } from "contexts/GlobalContext";
+import useDictionary from "customHooks/dictionary";
+import * as mutations from "graphql/mutations";
+import * as queries from "graphql/queries";
 
-const EditLearningObjective = (props: EditLearningObjectiveProps) => {
-  const {} = props;
+const EditLearningObjective = () => {
   const urlParams: any = useParams();
   const curricularId = urlParams.curricularId;
   const institutionId = urlParams.institutionId;
@@ -26,74 +24,86 @@ const EditLearningObjective = (props: EditLearningObjectiveProps) => {
   const [loading, setLoading] = useState(false);
   const [learning, setLearning] = useState({
     id: learningId,
-    name: '',
-    description: '',
-    curriculumID: curricularId
+    name: "",
+    description: "",
+    curriculumID: curricularId,
   });
-  const [validation, setValidation] = useState({isValid: true, msg: ''});
-  const {theme, clientKey, userLanguage} = useContext(GlobalContext);
-  const {EditLearningObjectiveDict, BreadcrumsTitles} = useDictionary(clientKey);
+  const [validation, setValidation] = useState({ isValid: true, msg: "" });
+  const { userLanguage } = useGlobalContext();
+  const { EditLearningObjectiveDict, BreadcrumsTitles } = useDictionary();
 
   const breadCrumsList = [
-    {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
     {
-      title: BreadcrumsTitles[userLanguage]['CURRICULUMBUILDER'],
-      url: `/dashboard/manage-institutions/${institutionId}/curricular?id=${curricularId}`,
-      last: false
+      title: BreadcrumsTitles[userLanguage]["HOME"],
+      url: "/dashboard",
+      last: false,
     },
     {
-      title: BreadcrumsTitles[userLanguage]['EditLearningObj'],
+      title: BreadcrumsTitles[userLanguage]["CURRICULUMBUILDER"],
+      url: `/dashboard/manage-institutions/${institutionId}/curricular?id=${curricularId}`,
+      last: false,
+    },
+    {
+      title: BreadcrumsTitles[userLanguage]["EditLearningObj"],
       url: `/dashboard/manage-institutions/curricular/${curricularId}/learning-objective/edit/${learningId}`,
-      last: true
-    }
+      last: true,
+    },
   ];
 
   const onInputChange = (e: any) => {
     const value = e.target.value;
-    if (e.target.name === 'name') {
-      setLearning({...learning, name: value});
-      if (!validation.isValid && value.length) setValidation({isValid: true, msg: ''});
+    if (e.target.name === "name") {
+      setLearning({ ...learning, name: value });
+      if (!validation.isValid && value.length)
+        setValidation({ isValid: true, msg: "" });
     }
-    if (e.target.name === 'description') setLearning({...learning, description: value});
+    if (e.target.name === "description")
+      setLearning({ ...learning, description: value });
   };
 
   const savelearning = async () => {
     if (!learning.name) {
       setValidation({
         isValid: false,
-        msg: EditLearningObjectiveDict[userLanguage]['messages']['namerequired']
+        msg: EditLearningObjectiveDict[userLanguage]["messages"][
+          "namerequired"
+        ],
       });
       return;
     }
-    if (!validation.isValid) setValidation({isValid: true, msg: ''});
+    if (!validation.isValid) setValidation({ isValid: true, msg: "" });
     const input = {
       id: learningId,
       name: learning.name,
-      description: learning.description
+      description: learning.description,
     };
     const item: any = await API.graphql(
-      graphqlOperation(mutations.updateLearningObjective, {input})
+      graphqlOperation(mutations.updateLearningObjective, { input })
     );
     const updatedItem = item?.data?.updateLearningObjective;
     if (updatedItem) {
       history.goBack();
     } else {
-      console.error('Could not update learning objective');
+      console.error("Could not update learning objective");
     }
   };
 
   const fetchLearningObjective = async () => {
-    console.log('In here for query');
+    console.log("In here for query");
     setLoading(true);
     let item: any = await API.graphql(
-      graphqlOperation(queries.getLearningObjective, {id: learningId})
+      graphqlOperation(queries.getLearningObjective, { id: learningId })
     );
     item = item.data.getLearningObjective;
     if (item.curriculumID === curricularId) {
-      setLearning({...learning, name: item.name, description: item.description});
+      setLearning({
+        ...learning,
+        name: item.name,
+        description: item.description,
+      });
       setLoading(false);
     } else {
-      console.error('wrong cr');
+      console.error("wrong cr");
       setLoading(false);
     }
   };
@@ -107,8 +117,8 @@ const EditLearningObjective = (props: EditLearningObjectiveProps) => {
       <BreadCrums items={breadCrumsList} />
       <div className="flex justify-between">
         <SectionTitleV3
-          title={EditLearningObjectiveDict[userLanguage]['title']}
-          subtitle={EditLearningObjectiveDict[userLanguage]['subtitle']}
+          title={EditLearningObjectiveDict[userLanguage]["title"]}
+          subtitle={EditLearningObjectiveDict[userLanguage]["subtitle"]}
         />
         <div className="flex justify-end py-4 mb-4 w-5/10">
           <Buttons
@@ -124,7 +134,7 @@ const EditLearningObjective = (props: EditLearningObjectiveProps) => {
       <PageWrapper>
         <div className="w-6/10 m-auto">
           <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">
-            {EditLearningObjectiveDict[userLanguage]['heading']}
+            {EditLearningObjectiveDict[userLanguage]["heading"]}
           </h3>
         </div>
         {!loading ? (
@@ -137,7 +147,9 @@ const EditLearningObjective = (props: EditLearningObjectiveProps) => {
                     value={learning.name}
                     onChange={onInputChange}
                     name="name"
-                    label={EditLearningObjectiveDict[userLanguage]['learningname']}
+                    label={
+                      EditLearningObjectiveDict[userLanguage]["learningname"]
+                    }
                     isRequired
                   />
                   {!validation.isValid ? (
@@ -156,7 +168,9 @@ const EditLearningObjective = (props: EditLearningObjectiveProps) => {
                     value={learning.description}
                     onChange={onInputChange}
                     name="description"
-                    label={EditLearningObjectiveDict[userLanguage]['description']}
+                    label={
+                      EditLearningObjectiveDict[userLanguage]["description"]
+                    }
                   />
                 </div>
               </div>
@@ -164,20 +178,24 @@ const EditLearningObjective = (props: EditLearningObjectiveProps) => {
             <div className="flex my-8 justify-center">
               <Buttons
                 btnClass="py-3 px-10 mr-4"
-                label={EditLearningObjectiveDict[userLanguage]['button']['cancel']}
+                label={
+                  EditLearningObjectiveDict[userLanguage]["button"]["cancel"]
+                }
                 onClick={history.goBack}
                 transparent
               />
               <Buttons
                 btnClass="py-3 px-10 ml-4"
-                label={EditLearningObjectiveDict[userLanguage]['button']['save']}
+                label={
+                  EditLearningObjectiveDict[userLanguage]["button"]["save"]
+                }
                 onClick={savelearning}
               />
             </div>
           </>
         ) : (
           <div className="py-12 my-12 m-auto text-center">
-            {EditLearningObjectiveDict[userLanguage]['fetching']}
+            {EditLearningObjectiveDict[userLanguage]["fetching"]}
           </div>
         )}
       </PageWrapper>

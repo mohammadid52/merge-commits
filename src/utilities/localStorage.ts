@@ -1,5 +1,6 @@
 export const getLocalStorageData = (key: string) => {
-  return JSON.parse(window.localStorage.getItem(key));
+  const toParse = window?.localStorage?.getItem?.(key) || "{}";
+  return JSON.parse(toParse);
 };
 
 export const setLocalStorageData = (key: string, dataObj: any) => {

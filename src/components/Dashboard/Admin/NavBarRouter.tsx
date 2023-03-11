@@ -1,32 +1,31 @@
-import React from 'react';
-import {Route, Switch, useRouteMatch} from 'react-router-dom';
+import { Route, Switch, useRouteMatch } from "react-router-dom";
 
-import {UniversalLessonBuilderProvider} from 'contexts/UniversalLessonBuilderContext';
+import { UniversalLessonBuilderProvider } from "contexts/UniversalLessonBuilderContext";
 
-import ErrorBoundary from '@components/Error/ErrorBoundary';
-import InstitutionBuilder from 'components/Dashboard/Admin/Institutons/Builders/InstitutionBuilder/InstitutionBuilder';
-import ClassRoomBuilder from 'components/Dashboard/Admin/Institutons/EditBuilders/ClassRoom/ClassRoomBuilder';
-import AddProfileCheckpoint from 'components/Dashboard/Admin/Institutons/EditBuilders/CurricularsView/TabsActions/AddProfileCheckpoint';
-import CourseBuilder from 'components/Dashboard/Admin/Institutons/EditBuilders/CurricularsView/TabsActions/CourseBuilder/CourseBuilder';
-import EditProfileCheckpoint from 'components/Dashboard/Admin/Institutons/EditBuilders/CurricularsView/TabsActions/EditProfileCheckpoint';
-import ProfileCheckpointlookup from 'components/Dashboard/Admin/Institutons/EditBuilders/CurricularsView/TabsActions/ProfileCheckpointlookup';
-import UnitBuilder from 'components/Dashboard/Admin/Institutons/EditBuilders/CurricularsView/TabsActions/Unit/UnitBuilder';
-import UnitList from 'components/Dashboard/Admin/Institutons/EditBuilders/CurricularsView/TabsActions/Unit/UnitList';
-import ClassList from 'components/Dashboard/Admin/Institutons/Listing/ClassList';
-import CurriculumList from 'components/Dashboard/Admin/Institutons/Listing/CurriculumList';
-import RoomsList from 'components/Dashboard/Admin/Institutons/Listing/RoomsList';
-import StaffBuilder from 'components/Dashboard/Admin/Institutons/Listing/StaffBuilder';
-import Students from 'components/Dashboard/Admin/Institutons/Students';
-import LessonsBuilderHome from 'components/Dashboard/Admin/LessonsBuilder/LessonsBuilderHome';
-import Registration from 'components/Dashboard/Admin/UserManagement/Registration';
-import User from 'components/Dashboard/Admin/UserManagement/User';
-import UserLookup from 'components/Dashboard/Admin/UserManagement/UserLookup';
-import AnalyticsDashboard from '../Csv/AnalyticsDashboard';
-import Csv from '../Csv/Csv';
-import UploadCsv from '../Csv/UploadCSV';
+import ErrorBoundary from "@components/Error/ErrorBoundary";
+import InstitutionBuilder from "components/Dashboard/Admin/Institutons/Builders/InstitutionBuilder/InstitutionBuilder";
+import ClassRoomBuilder from "components/Dashboard/Admin/Institutons/EditBuilders/ClassRoom/ClassRoomBuilder";
+import AddProfileCheckpoint from "components/Dashboard/Admin/Institutons/EditBuilders/CurricularsView/TabsActions/AddProfileCheckpoint";
+import CourseBuilder from "components/Dashboard/Admin/Institutons/EditBuilders/CurricularsView/TabsActions/CourseBuilder/CourseBuilder";
+import EditProfileCheckpoint from "components/Dashboard/Admin/Institutons/EditBuilders/CurricularsView/TabsActions/EditProfileCheckpoint";
+import ProfileCheckpointlookup from "components/Dashboard/Admin/Institutons/EditBuilders/CurricularsView/TabsActions/ProfileCheckpointlookup";
+import UnitBuilder from "components/Dashboard/Admin/Institutons/EditBuilders/CurricularsView/TabsActions/Unit/UnitBuilder";
+import UnitList from "components/Dashboard/Admin/Institutons/EditBuilders/CurricularsView/TabsActions/Unit/UnitList";
+import ClassList from "components/Dashboard/Admin/Institutons/Listing/ClassList";
+import CurriculumList from "components/Dashboard/Admin/Institutons/Listing/CurriculumList";
+import RoomsList from "components/Dashboard/Admin/Institutons/Listing/RoomsList";
+import StaffBuilder from "components/Dashboard/Admin/Institutons/Listing/StaffBuilder";
+import Students from "components/Dashboard/Admin/Institutons/Students";
+import LessonsBuilderHome from "components/Dashboard/Admin/LessonsBuilder/LessonsBuilderHome";
+import Registration from "components/Dashboard/Admin/UserManagement/Registration";
+import User from "components/Dashboard/Admin/UserManagement/User";
+import UserLookup from "components/Dashboard/Admin/UserManagement/UserLookup";
+import AnalyticsDashboard from "../Csv/AnalyticsDashboard";
+import Csv from "../Csv/Csv";
+import UploadCsv from "../Csv/UploadCSV";
 
 const NavBarRouter = (instProps: any) => {
-  const {institute = {}, updateCurricularList, curricular} = instProps;
+  const { institute = {}, updateCurricularList, curricular } = instProps;
   const match = useRouteMatch();
 
   return (
@@ -128,7 +127,10 @@ const NavBarRouter = (instProps: any) => {
         path={`${match.url}/units/:unitId/edit`}
         render={() => (
           <ErrorBoundary componentName="UnitBuilder">
-            <UnitBuilder curricular={curricular && curricular} instId={institute?.id} />
+            <UnitBuilder
+              curricular={curricular && curricular}
+              instId={institute?.id}
+            />
           </ErrorBoundary>
         )}
       />
@@ -137,7 +139,7 @@ const NavBarRouter = (instProps: any) => {
         exact
         render={() => (
           <ErrorBoundary componentName="Csv">
-            <Csv institutionId={institute?.id} />
+            <Csv />
           </ErrorBoundary>
         )}
       />
@@ -155,7 +157,7 @@ const NavBarRouter = (instProps: any) => {
         exact
         render={() => (
           <ErrorBoundary componentName="AnalyticsDashboard">
-            <AnalyticsDashboard institutionId={institute?.id} />
+            <AnalyticsDashboard />
           </ErrorBoundary>
         )}
       />
@@ -243,7 +245,7 @@ const NavBarRouter = (instProps: any) => {
         path={`${match.url}/course-builder/:courseId/checkpoint/addPrevious`}
         render={() => (
           <ErrorBoundary componentName="ProfileCheckpointlookup">
-            <ProfileCheckpointlookup instId={institute?.id} />
+            <ProfileCheckpointlookup />
           </ErrorBoundary>
         )} // Edit course
       />

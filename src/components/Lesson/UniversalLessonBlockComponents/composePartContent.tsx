@@ -1,35 +1,35 @@
-import {GameChangerProvider} from 'components/Dashboard/GameChangers/context/GameChangersContext';
-import ErrorBoundary from 'components/Error/ErrorBoundary';
-import ActivityBlock from 'components/Lesson/UniversalLessonBlockComponents/Blocks/Activities/ActivityBlock';
-import DocsBlock from 'components/Lesson/UniversalLessonBlockComponents/Blocks/DocsBlock';
-import NotesBlock from 'components/Lesson/UniversalLessonBlockComponents/Blocks/Notes/NotesBlock';
-import NotesContainer from 'components/Lesson/UniversalLessonBlockComponents/Blocks/Notes/NotesFab';
-import map from 'lodash/map';
-import React from 'react';
+import { GameChangerProvider } from "components/Dashboard/GameChangers/context/GameChangersContext";
+import ErrorBoundary from "components/Error/ErrorBoundary";
+import ActivityBlock from "components/Lesson/UniversalLessonBlockComponents/Blocks/Activities/ActivityBlock";
+import DocsBlock from "components/Lesson/UniversalLessonBlockComponents/Blocks/DocsBlock";
+import NotesBlock from "components/Lesson/UniversalLessonBlockComponents/Blocks/Notes/NotesBlock";
+import NotesContainer from "components/Lesson/UniversalLessonBlockComponents/Blocks/Notes/NotesFab";
+import map from "lodash/map";
+import React from "react";
 import {
   DIVIDER,
   FORM_TYPES,
   GAME_CHANGERS,
   SPACER,
-  TABLE
-} from '../UniversalLessonBuilder/UI/common/constants';
-import CustomVideoBlock from './Blocks/CustomVideoBlock';
-import DividerBlock from './Blocks/DividerBlock';
-import DownloadBlock from './Blocks/DownloadBlock';
-import {FormBlock} from './Blocks/FormBlock';
-import {HeaderBlock} from './Blocks/HeaderBlock';
-import HighlighterBlock from './Blocks/HighlighterBlock';
-import {ImageBlock} from './Blocks/ImageBlock';
-import {JumbotronBlock} from './Blocks/JumbotronBlock';
-import KeywordBlock from './Blocks/KeywordBlock';
-import LinksBlock from './Blocks/LinksBlock';
-import {ParagraphBlock} from './Blocks/ParagraphBlock';
-import {StringifyBlock} from './Blocks/StringifyBlock';
-import TableBlock from './Blocks/TableBlock';
-import {VideoBlock} from './Blocks/VideoBlock';
+  TABLE,
+} from "../UniversalLessonBuilder/UI/common/constants";
+import CustomVideoBlock from "./Blocks/CustomVideoBlock";
+import DividerBlock from "./Blocks/DividerBlock";
+import DownloadBlock from "./Blocks/DownloadBlock";
+import { FormBlock } from "./Blocks/FormBlock";
+import { HeaderBlock } from "./Blocks/HeaderBlock";
+import HighlighterBlock from "./Blocks/HighlighterBlock";
+import { ImageBlock } from "./Blocks/ImageBlock";
+import { JumbotronBlock } from "./Blocks/JumbotronBlock";
+import KeywordBlock from "./Blocks/KeywordBlock";
+import LinksBlock from "./Blocks/LinksBlock";
+import { ParagraphBlock } from "./Blocks/ParagraphBlock";
+import { StringifyBlock } from "./Blocks/StringifyBlock";
+import TableBlock from "./Blocks/TableBlock";
+import { VideoBlock } from "./Blocks/VideoBlock";
 
 const Spacer = (props: any) => {
-  return <div style={{margin: `${props.value[0].value || 32}px 0px`}} />;
+  return <div style={{ margin: `${props.value[0].value || 32}px 0px` }} />;
 };
 
 const composePartContent = (
@@ -37,32 +37,34 @@ const composePartContent = (
   type: string,
   value: any,
   inputKey: string,
-  classString: string = '',
+  classString: string = "",
   pagePartId: string,
-  mode?: 'building' | 'viewing' | 'lesson',
+  mode?: "building" | "viewing" | "lesson",
   updateBlockContentULBHandler?: any,
   position?: number,
   notesData?: any,
   isStudent: boolean = true
 ): JSX.Element => {
+  const _mode = mode || "lesson";
+
   const commonBlockProps = {
     classString,
     id,
     type,
     value,
-    mode
+    mode: _mode,
   };
 
-  if (type.includes('jumbotron')) {
+  if (type.includes("jumbotron")) {
     return (
       <ErrorBoundary componentName="ActivityBlock">
         <JumbotronBlock {...commonBlockProps} />
       </ErrorBoundary>
     );
-  } else if (type.includes('keyword')) {
+  } else if (type.includes("keyword")) {
     return (
       <ErrorBoundary componentName="KeywordBlock">
-        <KeywordBlock id={id} type={type} value={value} mode={mode} />
+        <KeywordBlock id={id} type={type} value={value} mode={_mode} />
       </ErrorBoundary>
     );
   } else if (type.includes(SPACER)) {
@@ -71,7 +73,7 @@ const composePartContent = (
         <Spacer id={id} type={type} value={value} mode={mode} />
       </ErrorBoundary>
     );
-  } else if (type.includes('highlighter')) {
+  } else if (type.includes("highlighter")) {
     return (
       <ErrorBoundary componentName="HighlighterBlock">
         <HighlighterBlock
@@ -82,26 +84,26 @@ const composePartContent = (
         />
       </ErrorBoundary>
     );
-  } else if (type.includes('links')) {
+  } else if (type.includes("links")) {
     return (
       <ErrorBoundary componentName="LinksBlock">
         <LinksBlock {...commonBlockProps} />
       </ErrorBoundary>
     );
-  } else if (type.includes('header')) {
+  } else if (type.includes("header")) {
     return (
       <ErrorBoundary componentName="HeaderBlock">
         <HeaderBlock pagePartId={pagePartId} {...commonBlockProps} />
       </ErrorBoundary>
     );
-  } else if (type.includes('paragraph')) {
+  } else if (type.includes("paragraph")) {
     return (
       <ErrorBoundary componentName="HighlighterBlock">
         <ParagraphBlock pagePartId={pagePartId} {...commonBlockProps} />
       </ErrorBoundary>
     );
   } else if (
-    (type.includes('form') && type !== 'notes-form') ||
+    (type.includes("form") && type !== "notes-form") ||
     type.includes(FORM_TYPES.POEM) ||
     type.includes(FORM_TYPES.WRITING_EXERCISE)
   ) {
@@ -109,18 +111,22 @@ const composePartContent = (
       <ErrorBoundary componentName="FormBlock">
         <FormBlock
           pagePartId={pagePartId}
-          numbered={type === 'form-numbered'}
+          numbered={type === "form-numbered"}
           {...commonBlockProps}
         />
       </ErrorBoundary>
     );
-  } else if (type.includes('image')) {
+  } else if (type.includes("image")) {
     return (
       <ErrorBoundary componentName="ImageBlock">
-        <ImageBlock key={inputKey} dataIdAttribute={inputKey} {...commonBlockProps} />
+        <ImageBlock
+          key={inputKey}
+          dataIdAttribute={inputKey}
+          {...commonBlockProps}
+        />
       </ErrorBoundary>
     );
-  } else if (type.includes('custom_video')) {
+  } else if (type.includes("custom_video")) {
     return (
       <ErrorBoundary componentName="CustomVideoBlock">
         <CustomVideoBlock
@@ -130,10 +136,14 @@ const composePartContent = (
         />
       </ErrorBoundary>
     );
-  } else if (type.includes('video')) {
+  } else if (type.includes("video")) {
     return (
       <ErrorBoundary componentName="VideoBlock">
-        <VideoBlock key={inputKey} dataIdAttribute={inputKey} {...commonBlockProps} />
+        <VideoBlock
+          key={inputKey}
+          dataIdAttribute={inputKey}
+          {...commonBlockProps}
+        />
       </ErrorBoundary>
     );
   } else if (type === DIVIDER) {
@@ -154,7 +164,7 @@ const composePartContent = (
         <DownloadBlock value={value} />
       </ErrorBoundary>
     );
-  } else if (type === 'notes-form' && isStudent) {
+  } else if (type === "notes-form" && isStudent) {
     return (
       notesData &&
       notesData.length > 0 && (
@@ -163,18 +173,18 @@ const composePartContent = (
         </ErrorBoundary>
       )
     );
-  } else if (type === 'notes-form' && !isStudent) {
+  } else if (type === "notes-form" && !isStudent) {
     const modifiyValues = map(value, (v: any) => ({
       class: v.class,
       pagePartId: pagePartId,
       partContentId: id,
       id: v.id,
-      value: v.value
+      value: v.value,
     }));
 
     return (
       <ErrorBoundary componentName="NotesBlock">
-        <NotesBlock preview grid={{cols: 4, rows: 3}} value={modifiyValues} />
+        <NotesBlock preview grid={{ cols: 4, rows: 3 }} value={modifiyValues} />
       </ErrorBoundary>
     );
   } else if (type.includes(FORM_TYPES.DOCS)) {
@@ -183,19 +193,22 @@ const composePartContent = (
         <DocsBlock value={value} />
       </ErrorBoundary>
     );
-  } else if (type.includes(GAME_CHANGERS) || type === 'square') {
+  } else if (type.includes(GAME_CHANGERS) || type === "square") {
     return (
       <GameChangerProvider>
         <ErrorBoundary
           componentName="ActivityBlock"
-          fallback={<h1>Something wrong with activity</h1>}>
+          fallback={<h1>Something wrong with activity</h1>}
+        >
           <ActivityBlock value={value} />
         </ErrorBoundary>
       </GameChangerProvider>
     );
   } else {
-    console.log('Unidentified component type: => ', type);
-    return <StringifyBlock key={inputKey} id={id} anyObj={value} mode={mode} />;
+    console.log("Unidentified component type: => ", type);
+    return (
+      <StringifyBlock key={inputKey} id={id} anyObj={value} mode={_mode} />
+    );
   }
 };
 

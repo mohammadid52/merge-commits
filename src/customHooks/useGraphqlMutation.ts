@@ -1,9 +1,9 @@
-import * as customMutations from 'customGraphql/customMutations';
-import * as mutations from 'graphql/mutations';
-import {API, graphqlOperation} from 'aws-amplify';
-import {useCallback, useState} from 'react';
-import {logError} from '@graphql/functions';
-import useAuth from './useAuth';
+import * as customMutations from "customGraphql/customMutations";
+import * as mutations from "graphql/mutations";
+import { API, graphqlOperation } from "aws-amplify";
+import { useCallback, useState } from "react";
+import { logError } from "@graphql/functions";
+import useAuth from "./useAuth";
 
 interface Options {
   custom?: boolean;
@@ -11,7 +11,10 @@ interface Options {
   onSuccess?: (data: any) => void;
 }
 
-const allMutationNames = [...Object.keys(mutations), ...Object.keys(customMutations)];
+const allMutationNames = [
+  ...Object.keys(mutations),
+  ...Object.keys(customMutations),
+];
 
 type MutationType = typeof allMutationNames[number];
 
@@ -19,17 +22,20 @@ const useGraphqlMutation = <VariablesType, ReturnType>(
   mutationName: MutationType,
   options?: Options
 ): {
-  mutate: (variables: VariablesType, successCallback?: () => void) => Promise<ReturnType>;
+  mutate: (
+    variables: VariablesType,
+    successCallback?: () => void
+  ) => Promise<ReturnType | boolean | undefined>;
   isLoading: boolean;
   isError: boolean;
   isSuccess: boolean;
   error: string;
 } => {
-  const {custom = false, onCancel = () => {}, onSuccess} = options || {};
+  const { custom = false, onCancel = () => {}, onSuccess } = options || {};
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   const action = custom ? customMutations : mutations;
 
@@ -38,13 +44,13 @@ const useGraphqlMutation = <VariablesType, ReturnType>(
       `Mutation ${mutationName} does not exist. Please check the spelling and try again.`
     );
   }
-  const {authId, email} = useAuth();
+  const { authId, email } = useAuth();
 
   const mutate = useCallback(
     async (
       variables: VariablesType,
       successCallback?: () => void
-    ): Promise<ReturnType> => {
+    ): Promise<ReturnType | undefined | boolean> => {
       setIsLoading(true);
       try {
         const res: any = await API.graphql(
@@ -53,10 +59,10 @@ const useGraphqlMutation = <VariablesType, ReturnType>(
         );
 
         const data: ReturnType = res.data[mutationName];
-        if (onSuccess && typeof onSuccess === 'function') {
+        if (onSuccess && typeof onSuccess === "function") {
           onSuccess(data);
           setIsSuccess(true);
-          if (successCallback && typeof successCallback === 'function') {
+          if (successCallback && typeof successCallback === "function") {
             successCallback();
           }
         }
@@ -66,19 +72,22 @@ const useGraphqlMutation = <VariablesType, ReturnType>(
         setIsSuccess(false);
         setError(error.message);
         console.error(error);
-        logError(error, {authId, email}, 'useGraphqlMutation');
+        logError(error, { authId, email }, "useGraphqlMutation");
+        return false;
       } finally {
-        if (onCancel && typeof onCancel === 'function') {
+        if (onCancel && typeof onCancel === "function") {
           onCancel();
         }
 
         setIsLoading(false);
+
+        return false;
       }
     },
     []
   );
 
-  return {mutate, isLoading, isError, error, isSuccess};
+  return { mutate, isLoading, isError, error, isSuccess };
 };
 
 export default useGraphqlMutation;

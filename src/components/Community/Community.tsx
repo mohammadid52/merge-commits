@@ -1,59 +1,59 @@
-import BreadCrums from 'atoms/BreadCrums';
-import ContentCard from 'atoms/ContentCard';
-import Selector from 'atoms/Form/Selector';
-import Loader from 'atoms/Loader';
-import SectionTitleV3 from 'atoms/SectionTitleV3';
-import Card from 'components/Community/Card';
-import CardsModal from 'components/Community/CardsModal';
+import BreadCrums from "atoms/BreadCrums";
+import ContentCard from "atoms/ContentCard";
+import Selector from "atoms/Form/Selector";
+import Loader from "atoms/Loader";
+import SectionTitleV3 from "atoms/SectionTitleV3";
+import Card from "components/Community/Card";
+import CardsModal from "components/Community/CardsModal";
 import {
   CardType,
   COMMUNITY_UPLOAD_KEY,
-  NavStateTypes
-} from 'components/Community/constants.community';
-import DashboardContainer from 'components/Dashboard/DashboardContainer';
-import HeroBanner from 'components/Header/HeroBanner';
-import AnimatedContainer from 'components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
-import {useGlobalContext} from 'contexts/GlobalContext';
-import useDictionary from 'customHooks/dictionary';
+  NavStateTypes,
+} from "components/Community/constants.community";
+import DashboardContainer from "components/Dashboard/DashboardContainer";
+import HeroBanner from "components/Header/HeroBanner";
+import AnimatedContainer from "components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer";
+import { useGlobalContext } from "contexts/GlobalContext";
+import useDictionary from "customHooks/dictionary";
 
-import ErrorBoundary from '@components/Error/ErrorBoundary';
-import {logError, updatePageState} from '@graphql/functions';
-import {ListCommunitiesQueryVariables, UserPageState} from 'API';
-import {getAsset} from 'assets';
-import {API, graphqlOperation} from 'aws-amplify';
-import 'components/Community/community.scss';
-import HeaderTextBar from 'components/Dashboard/HeaderTextBar/HeaderTextBar';
-import useAuth from 'customHooks/useAuth';
-import useGraphqlMutation from 'customHooks/useGraphqlMutation';
-import useGraphqlQuery from 'customHooks/useGraphqlQuery';
-import * as mutations from 'graphql/mutations';
+import ErrorBoundary from "@components/Error/ErrorBoundary";
+import { logError, updatePageState } from "@graphql/functions";
+import { ListCommunitiesQueryVariables, UserPageState } from "API";
+import { getAsset } from "assets";
+import { API, graphqlOperation } from "aws-amplify";
+import "components/Community/community.scss";
+import HeaderTextBar from "components/Dashboard/HeaderTextBar/HeaderTextBar";
+import useAuth from "customHooks/useAuth";
+import useGraphqlMutation from "customHooks/useGraphqlMutation";
+import useGraphqlQuery from "customHooks/useGraphqlQuery";
+import * as mutations from "graphql/mutations";
 import {
   IAnnouncementInput,
   ICheckItOutInput,
   ICommunityCard,
   IEventInput,
-  ISpotlightInput
-} from 'interfaces/Community.interfaces';
-import {findIndex, isEmpty} from 'lodash';
-import filter from 'lodash/filter';
-import orderBy from 'lodash/orderBy';
-import remove from 'lodash/remove';
-import React, {useEffect, useState} from 'react';
-import {BsCardHeading} from 'react-icons/bs';
-import {useHistory, useRouteMatch} from 'react-router';
-import {deleteImageFromS3} from 'utilities/services';
-import {awsFormatDate, dateString} from 'utilities/time';
-import {v4 as uuidV4} from 'uuid';
+  ISpotlightInput,
+} from "interfaces/Community.interfaces";
+import { findIndex, isEmpty } from "lodash";
+import filter from "lodash/filter";
+import orderBy from "lodash/orderBy";
+import remove from "lodash/remove";
+import React, { useEffect, useState } from "react";
+import { BsCardHeading } from "react-icons/bs";
+import { useHistory, useRouteMatch } from "react-router";
+import { deleteImageFromS3 } from "utilities/services";
+import { awsFormatDate, dateString } from "utilities/time";
+import { v4 as uuidV4 } from "uuid";
 
-const Community = ({}: {role: string}) => {
-  const {clientKey, userLanguage} = useGlobalContext();
+const Community = ({}: { role: string }) => {
+  const { clientKey, userLanguage } = useGlobalContext();
 
   const {
     authId: personAuthID,
     email: personEmail,
     instId,
     isStudent,
-    pageState
+    pageState,
   } = useAuth();
 
   const route: any = useRouteMatch();
@@ -62,7 +62,7 @@ const Community = ({}: {role: string}) => {
   const [showCardsModal, setShowCardsModal] = useState(false);
 
   useEffect(() => {
-    if (action === 'builder' && !isStudent) {
+    if (action === "builder" && !isStudent) {
       if (!showCardsModal) {
         setShowCardsModal(true);
       }
@@ -70,23 +70,30 @@ const Community = ({}: {role: string}) => {
   }, [action, showCardsModal]);
 
   useEffect(() => {
-    if ((!showCardsModal && action === 'builder') || (isStudent && !showCardsModal)) {
+    if (
+      (!showCardsModal && action === "builder") ||
+      (isStudent && !showCardsModal)
+    ) {
       history.push(`/dashboard/community/front`);
     }
   }, [showCardsModal, isStudent, action]);
 
   const history = useHistory();
 
-  const bannerImg = getAsset(clientKey, 'dashboardBanner1');
-  const {CommunityDict, BreadcrumsTitles} = useDictionary(clientKey);
+  const bannerImg = getAsset(clientKey, "dashboardBanner1");
+  const { CommunityDict, BreadcrumsTitles } = useDictionary();
 
   const breadCrumsList = [
-    {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
     {
-      title: BreadcrumsTitles[userLanguage]['COMMUNTIY'],
+      title: BreadcrumsTitles[userLanguage]["HOME"],
+      url: "/dashboard",
+      last: false,
+    },
+    {
+      title: BreadcrumsTitles[userLanguage]["COMMUNTIY"],
       url: `/dashboard/`,
-      last: true
-    }
+      last: true,
+    },
   ];
   const payloadForCommunities = {};
 
@@ -96,15 +103,15 @@ const Community = ({}: {role: string}) => {
     refetch,
     error,
     isFetched,
-    isLoading
+    isLoading,
   } = useGraphqlQuery<ListCommunitiesQueryVariables, any[]>(
-    'listCommunities',
+    "listCommunities",
     payloadForCommunities,
     {
       onSuccess: (data, cb) => {
-        const orderedList = orderBy(data, ['createdAt'], 'desc');
-        cb(orderedList);
-      }
+        const orderedList = orderBy(data, ["createdAt"], "desc");
+        cb?.(orderedList);
+      },
     }
   );
 
@@ -113,22 +120,22 @@ const Community = ({}: {role: string}) => {
       updatePageState(UserPageState.COMMUNITY, {
         authId: personAuthID,
         email: personEmail,
-        pageState
+        pageState,
       });
     }
   }, [isStudent]);
 
-  const [navState, setNavState] = useState<NavStateTypes>('init');
-  const [filteredList, setFilteredList] = useState([]);
+  const [navState, setNavState] = useState<NavStateTypes>("init");
+  const [filteredList, setFilteredList] = useState<any[]>([]);
 
   const onCancel = (): void => {
     setShowCardsModal(false);
-    setNavState('init');
+    setNavState("init");
   };
 
   const [isCardEditMode, setIsCardEditMode] = useState(false);
 
-  const [cardForEdit, setCardForEdit] = useState(null);
+  const [cardForEdit, setCardForEdit] = useState<any>(null);
 
   const onCardEdit = (cardDetails: ICommunityCard) => {
     // @ts-ignore
@@ -150,60 +157,66 @@ const Community = ({}: {role: string}) => {
   } => ({
     id: uuidV4(),
     institutionID: instId,
-    cardDate: awsFormatDate(dateString('-', 'WORLD')),
+    cardDate: awsFormatDate(dateString("-", "WORLD")),
     cardType: cardType,
     personAuthID,
-    personEmail
+    personEmail,
   });
 
-  const createCommunity = useGraphqlMutation('createCommunity', {
+  const createCommunity = useGraphqlMutation("createCommunity", {
     onCancel,
     onSuccess: (data: any) => {
       if (data) {
         // @ts-ignore
-        list.unshift({...data});
-        setList([...list]);
+        list.unshift({ ...data });
+        setList?.([...list]);
       }
-    }
+    },
   });
-  const updateCommunity = useGraphqlMutation('updateCommunity', {
+  const updateCommunity = useGraphqlMutation("updateCommunity", {
     onCancel,
     onSuccess: (data: ICommunityCard) => {
       let listCopy = [...list];
-      const cardIdx = findIndex(list, (item: ICommunityCard) => item.id === data.id);
+      const cardIdx = findIndex(
+        list,
+        (item: ICommunityCard) => item.id === data.id
+      );
 
       listCopy[cardIdx] = data;
-      setList(listCopy);
-    }
+      setList?.(listCopy);
+    },
   });
 
   const onSpotlightSubmit = async (
     spotlightDetails: ISpotlightInput,
     successCallback?: () => void
   ) => {
-    const commonInput = getCommonInput('spotlight');
+    const commonInput = getCommonInput("spotlight");
 
     const input = {
       ...spotlightDetails,
-      ...commonInput
+      ...commonInput,
     };
 
     if (isCardEditMode) {
-      updateCommunity.mutate({input: {...input, id: cardForEdit.id}}, successCallback);
+      updateCommunity.mutate(
+        { input: { ...input, id: cardForEdit.id } },
+        successCallback
+      );
     } else {
-      createCommunity.mutate({input}, successCallback);
+      createCommunity.mutate({ input }, successCallback);
     }
 
     try {
       await refetch();
-      console.log('Community list updated');
+      console.log("Community list updated");
     } catch (error) {
       logError(
         error,
-        {authId: personAuthID, email: personEmail},
-        'Community @onSpotlightSubmit'
+        { authId: personAuthID, email: personEmail },
+        "Community @onSpotlightSubmit"
       );
-      console.error('Error while updating community list', error);
+      console.error("Error while updating community list", error);
     }
   };
 
@@ -211,29 +224,32 @@ const Community = ({}: {role: string}) => {
     announcementDetails: IAnnouncementInput,
     successCallback?: () => void
   ) => {
-    const commonInput = getCommonInput('announcement');
+    const commonInput = getCommonInput("announcement");
 
     const input = {
       ...announcementDetails,
-      ...commonInput
+      ...commonInput,
     };
 
     if (isCardEditMode) {
-      updateCommunity.mutate({input: {...input, id: cardForEdit.id}}, successCallback);
+      updateCommunity.mutate(
+        { input: { ...input, id: cardForEdit.id } },
+        successCallback
+      );
     } else {
-      createCommunity.mutate({input}, successCallback);
+      createCommunity.mutate({ input }, successCallback);
     }
 
     try {
       await refetch();
-      console.log('Community list updated');
+      console.log("Community list updated");
     } catch (error) {
       logError(
         error,
-        {authId: personAuthID, email: personEmail},
-        'Community @onAnnouncementSubmit'
+        { authId: personAuthID, email: personEmail },
+        "Community @onAnnouncementSubmit"
       );
-      console.error('Error while updating community list', error);
+      console.error("Error while updating community list", error);
     }
   };
 
@@ -241,29 +257,32 @@ const Community = ({}: {role: string}) => {
     eventDetails: IEventInput,
     successCallback?: () => void
   ) => {
-    const commonInput = getCommonInput('event');
+    const commonInput = getCommonInput("event");
 
     const input = {
       ...eventDetails,
-      ...commonInput
+      ...commonInput,
     };
 
     if (isCardEditMode) {
-      updateCommunity.mutate({input: {...input, id: cardForEdit.id}}, successCallback);
+      updateCommunity.mutate(
+        { input: { ...input, id: cardForEdit.id } },
+        successCallback
+      );
     } else {
-      createCommunity.mutate({input}, successCallback);
+      createCommunity.mutate({ input }, successCallback);
     }
 
     try {
       await refetch();
-      console.log('Community list updated');
+      console.log("Community list updated");
     } catch (error) {
       logError(
         error,
-        {authId: personAuthID, email: personEmail},
-        'Community @onEventSubmit'
+        { authId: personAuthID, email: personEmail },
+        "Community @onEventSubmit"
       );
-      console.error('Error while updating community list', error);
+      console.error("Error while updating community list", error);
     }
   };
 
@@ -271,29 +290,32 @@ const Community = ({}: {role: string}) => {
     checkItOutDetails: ICheckItOutInput,
     successCallback?: () => void
   ) => {
-    const commonInput = getCommonInput('check_it_out');
+    const commonInput = getCommonInput("check_it_out");
 
     const input = {
       ...checkItOutDetails,
-      ...commonInput
+      ...commonInput,
     };
 
     if (isCardEditMode) {
-      updateCommunity.mutate({input: {...input, id: cardForEdit.id}}, successCallback);
+      updateCommunity.mutate(
+        { input: { ...input, id: cardForEdit.id } },
+        successCallback
+      );
     } else {
-      createCommunity.mutate({input}, successCallback);
+      createCommunity.mutate({ input }, successCallback);
     }
 
     try {
       await refetch();
-      console.log('Community list updated');
+      console.log("Community list updated");
     } catch (error) {
       logError(
         error,
-        {authId: personAuthID, email: personEmail},
-        'Community @onCheckItOutSubmit'
+        { authId: personAuthID, email: personEmail },
+        "Community @onCheckItOutSubmit"
       );
-      console.error('Error while updating community list', error);
+      console.error("Error while updating community list", error);
     }
   };
 
@@ -302,7 +324,8 @@ const Community = ({}: {role: string}) => {
       <div
         data-cy="open-builder-button"
         onClick={() => setShowCardsModal(true)}
-        className="fixed z-100 bottom-8 md:bottom-5 cursor-pointer flex items-center justify-center right-2 md:right-5 h-14 w-14  rounded-full iconoclast:bg-main curate:bg-main">
+        className="fixed z-100 bottom-8 md:bottom-5 cursor-pointer flex items-center justify-center right-2 md:right-5 h-14 w-14  rounded-full iconoclast:bg-main curate:bg-main"
+      >
         <BsCardHeading className="text-white text-lg" />
       </div>
     );
@@ -314,16 +337,20 @@ const Community = ({}: {role: string}) => {
 
   const onDelete = async (cardId: string, fileKey?: string) => {
     try {
-      remove(list, ['id', cardId]);
-      setList([...list]);
+      remove(list, ["id", cardId]);
+      setList?.([...list]);
       if (fileKey) {
         await deleteImage(fileKey);
       }
-      const res: any = await API.graphql(
-        graphqlOperation(mutations.deleteCommunity, {input: {id: cardId}})
+      await API.graphql(
+        graphqlOperation(mutations.deleteCommunity, { input: { id: cardId } })
       );
     } catch (error) {
-      logError(error, {authId: personAuthID, email: personEmail}, 'Community @onDelete');
+      logError(
+        error,
+        { authId: personAuthID, email: personEmail },
+        "Community @onDelete"
+      );
       console.error(error);
     } finally {
     }
@@ -331,7 +358,7 @@ const Community = ({}: {role: string}) => {
 
   const CommonList = () => {
     let data =
-      isEmpty(selectedFilterType) || selectedFilterType.value === 'all'
+      isEmpty(selectedFilterType) || selectedFilterType.value === "all"
         ? list
         : filteredList;
     return (
@@ -352,7 +379,11 @@ const Community = ({}: {role: string}) => {
 
           {!Boolean(error) && isLoading && !isFetched && (
             <div className="flex items-center justify-center">
-              <Loader animation withText="Loading cards..." className="w-auto" />
+              <Loader
+                animation
+                withText="Loading cards..."
+                className="w-auto"
+              />
             </div>
           )}
 
@@ -370,7 +401,7 @@ const Community = ({}: {role: string}) => {
               />
             ))}
 
-          <AnimatedContainer show={data.length === 0 && isFetched}>
+          <AnimatedContainer show={Boolean(data.length === 0 && isFetched)}>
             {data.length === 0 && isFetched && (
               <div className="flex items-center justify-center">
                 <p className="text-gray-500 text-sm">
@@ -385,30 +416,30 @@ const Community = ({}: {role: string}) => {
   };
 
   const changeFilter = (val: string, name: string, id: string) => {
-    if (val !== 'all') {
+    if (val !== "all") {
       const filtered = filter(list, (d: ICommunityCard) => {
         return d.cardType === val;
       });
 
       setFilteredList([...filtered]);
     }
-    setSelectedFilterType({id: id, name: name, value: val});
+    setSelectedFilterType({ id: id, name: name, value: val });
   };
 
   const [selectedFilterType, setSelectedFilterType] = useState<any>({});
 
   const filterList = [
-    {id: 1434, name: 'All', value: 'all'},
-    {id: 1, name: 'Spotlight', value: 'spotlight'},
-    {id: 2, name: 'Announcement', value: 'announcement'},
-    {id: 3, name: 'Event', value: 'event'},
-    {id: 4, name: 'Check It Out', value: 'check_it_out'}
+    { id: 1434, name: "All", value: "all" },
+    { id: 1, name: "Spotlight", value: "spotlight" },
+    { id: 2, name: "Announcement", value: "announcement" },
+    { id: 3, name: "Event", value: "event" },
+    { id: 4, name: "Check It Out", value: "check_it_out" },
   ];
 
   const TitleBar = () => (
     <SectionTitleV3
       extraContainerClass="mx-auto md:max-w-none lg:max-w-192 2xl:max-w-256 my-8 px-6 sticky top-0 z-1000"
-      title={'Community'}
+      title={"Community"}
       fontSize="xl"
       fontStyle="semibold"
       extraClass="leading-6 text-gray-900"
@@ -420,7 +451,7 @@ const Community = ({}: {role: string}) => {
             selectedItem={selectedFilterType.name}
             list={filterList}
             additionalClass="md:w-56"
-            placeholder={'All '}
+            placeholder={"All "}
             onChange={changeFilter}
           />
         </div>
@@ -432,7 +463,7 @@ const Community = ({}: {role: string}) => {
     return (
       <div>
         <div>
-          <HeroBanner imgUrl={bannerImg} title={'Community'} />
+          <HeroBanner imgUrl={bannerImg} title={"Community"} />
         </div>
 
         <HeaderTextBar>Here is what is happening today</HeaderTextBar>
@@ -443,7 +474,7 @@ const Community = ({}: {role: string}) => {
             editMode={isCardEditMode}
             setNavState={setNavState}
             functions={{
-              onCheckItOutSubmit
+              onCheckItOutSubmit,
             }}
             instId={instId}
             showCardsModal={showCardsModal}
@@ -461,7 +492,8 @@ const Community = ({}: {role: string}) => {
       <DashboardContainer
         showTitleBanner={false}
         bannerImg={bannerImg}
-        bannerTitle={CommunityDict[userLanguage]['TITLE']}>
+        bannerTitle={CommunityDict[userLanguage]["TITLE"]}
+      >
         {/* ~~~~~~~~~~~~~CARDS MODAL STARTS~~~~~~~~~~~~~~~~~~~~~~~~~~ */}
         <CardsModal
           navState={navState}
@@ -472,7 +504,7 @@ const Community = ({}: {role: string}) => {
             onSpotlightSubmit,
             onAnnouncementSubmit,
             onEventSubmit,
-            onCheckItOutSubmit
+            onCheckItOutSubmit,
           }}
           instId={instId}
           showCardsModal={showCardsModal}

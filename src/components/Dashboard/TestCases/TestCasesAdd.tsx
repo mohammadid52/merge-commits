@@ -1,43 +1,29 @@
-import React, {useContext, useState} from 'react';
-import {useHistory} from 'react-router-dom';
+import { useState } from "react";
+import { useHistory } from "react-router-dom";
 
-import Buttons from 'atoms/Buttons';
-import {GlobalContext} from 'contexts/GlobalContext';
-import useDictionary from 'customHooks/dictionary';
-import DropdownForm from '../Profile/DropdownForm';
+import Buttons from "atoms/Buttons";
+import { useGlobalContext } from "contexts/GlobalContext";
+import useDictionary from "customHooks/dictionary";
+import DropdownForm from "../Profile/DropdownForm";
 
-interface UserInfoProps {
-  status: string;
-  setStatus: React.Dispatch<React.SetStateAction<string>>;
-}
-
-const TestCasesAdd = (props: UserInfoProps) => {
+const TestCasesAdd = () => {
   const history = useHistory();
-  const {userLanguage, clientKey} = useContext(GlobalContext);
-  const {dashboardTestCasesDict} = useDictionary(clientKey);
+  const { userLanguage } = useGlobalContext();
+  const { dashboardTestCasesDict } = useDictionary();
   // const {status, setStatus} = props;
   const [test, setTest] = useState<any>({
-    id: '',
-    name: '',
-    type: '',
-    steps: '',
-    data: '',
-    expResults: '',
-    edgeCases: ''
+    id: "",
+    name: "",
+    type: "",
+    steps: "",
+    data: "",
+    expResults: "",
+    edgeCases: "",
   });
 
   async function createTestCase() {
     try {
-      console.log({test});
-      const input = {
-        testID: test.id,
-        testName: test.name,
-        testData: test.data,
-        testExpResults: test.expResults,
-        testSteps: test.steps,
-        testType: test.type
-        // testEdgeCases: test.edgeCases
-      };
+      console.log({ test });
 
       // const results: any = await API.graphql(
       //   graphqlOperation(createCypressTesting, {input: input})
@@ -50,24 +36,24 @@ const TestCasesAdd = (props: UserInfoProps) => {
     }
   }
 
-  const handleChangeType = (type: {name: string; code: string}) => {
+  const handleChangeType = (type: { name: string; code: string }) => {
     setTest(() => {
       return {
         ...test,
-        type: type.code
+        type: type.code,
       };
     });
   };
 
   const TYPE = [
     {
-      code: 'realtime',
-      name: 'Realtime'
+      code: "realtime",
+      name: "Realtime",
     },
     {
-      code: 'stub',
-      name: 'Stub'
-    }
+      code: "stub",
+      name: "Stub",
+    },
   ];
 
   // if (status !== 'done') {
@@ -77,11 +63,11 @@ const TestCasesAdd = (props: UserInfoProps) => {
   // ⬆️ Ends here ⬆️
 
   const onChange = (e: any) => {
-    const {id, value} = e.target;
+    const { id, value } = e.target;
     setTest(() => {
       return {
         ...test,
-        [id]: value
+        [id]: value,
       };
     });
   };
@@ -98,11 +84,12 @@ const TestCasesAdd = (props: UserInfoProps) => {
                     <div className="sm:col-span-3 p-2">
                       <label
                         htmlFor="id"
-                        className="block text-sm font-medium leading-5 text-gray-700">
+                        className="block text-sm font-medium leading-5 text-gray-700"
+                      >
                         {
-                          dashboardTestCasesDict[userLanguage]['EDIT_TEST_CASES'][
-                            'TEST_ID'
-                          ]
+                          dashboardTestCasesDict[userLanguage][
+                            "EDIT_TEST_CASES"
+                          ]["TEST_ID"]
                         }
                       </label>
                       <div className="mt-1 border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm">
@@ -118,11 +105,12 @@ const TestCasesAdd = (props: UserInfoProps) => {
                     <div className="sm:col-span-3 p-2">
                       <label
                         htmlFor="name"
-                        className="block text-sm font-medium leading-5 text-gray-700">
+                        className="block text-sm font-medium leading-5 text-gray-700"
+                      >
                         {
-                          dashboardTestCasesDict[userLanguage]['EDIT_TEST_CASES'][
-                            'TEST_NAME'
-                          ]
+                          dashboardTestCasesDict[userLanguage][
+                            "EDIT_TEST_CASES"
+                          ]["TEST_NAME"]
                         }
                       </label>
                       <div className="mt-1 border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm">
@@ -138,11 +126,12 @@ const TestCasesAdd = (props: UserInfoProps) => {
                     <div className="sm:col-span-3 p-2">
                       <label
                         htmlFor="steps"
-                        className="block text-sm font-medium leading-5 text-gray-700">
+                        className="block text-sm font-medium leading-5 text-gray-700"
+                      >
                         {
-                          dashboardTestCasesDict[userLanguage]['EDIT_TEST_CASES'][
-                            'TEST_STEPS'
-                          ]
+                          dashboardTestCasesDict[userLanguage][
+                            "EDIT_TEST_CASES"
+                          ]["TEST_STEPS"]
                         }
                       </label>
                       <div className="border-0 border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
@@ -158,11 +147,12 @@ const TestCasesAdd = (props: UserInfoProps) => {
                     <div className="sm:col-span-3 p-2">
                       <label
                         htmlFor="data"
-                        className="block text-sm font-medium leading-5 text-gray-700">
+                        className="block text-sm font-medium leading-5 text-gray-700"
+                      >
                         {
-                          dashboardTestCasesDict[userLanguage]['EDIT_TEST_CASES'][
-                            'TEST_DATA'
-                          ]
+                          dashboardTestCasesDict[userLanguage][
+                            "EDIT_TEST_CASES"
+                          ]["TEST_DATA"]
                         }
                       </label>
                       <div className="border-0 border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
@@ -178,11 +168,11 @@ const TestCasesAdd = (props: UserInfoProps) => {
                     <div className="sm:col-span-3 p-2">
                       <DropdownForm
                         handleChangeLanguage={handleChangeType}
-                        userLanguage={'Select Type'}
+                        userLanguage={"Select Type"}
                         label={
-                          dashboardTestCasesDict[userLanguage]['EDIT_TEST_CASES'][
-                            'TEST_TYPE'
-                          ]
+                          dashboardTestCasesDict[userLanguage][
+                            "EDIT_TEST_CASES"
+                          ]["TEST_TYPE"]
                         }
                         items={TYPE}
                       />
@@ -191,11 +181,12 @@ const TestCasesAdd = (props: UserInfoProps) => {
                     <div className="sm:col-span-3 p-2">
                       <label
                         htmlFor="expResults"
-                        className="block text-sm font-medium leading-5 text-gray-700">
+                        className="block text-sm font-medium leading-5 text-gray-700"
+                      >
                         {
-                          dashboardTestCasesDict[userLanguage]['EDIT_TEST_CASES'][
-                            'TEST_EXP_RESULTS'
-                          ]
+                          dashboardTestCasesDict[userLanguage][
+                            "EDIT_TEST_CASES"
+                          ]["TEST_EXP_RESULTS"]
                         }
                       </label>
                       <div className="border-0 border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
@@ -211,11 +202,12 @@ const TestCasesAdd = (props: UserInfoProps) => {
                     <div className="sm:col-span-3 p-2">
                       <label
                         htmlFor="edgeCases"
-                        className="block text-sm font-medium leading-5 text-gray-700">
+                        className="block text-sm font-medium leading-5 text-gray-700"
+                      >
                         {
-                          dashboardTestCasesDict[userLanguage]['EDIT_TEST_CASES'][
-                            'TEST_EDGE_CASES'
-                          ]
+                          dashboardTestCasesDict[userLanguage][
+                            "EDIT_TEST_CASES"
+                          ]["TEST_EDGE_CASES"]
                         }
                       </label>
                       <div className="border-0 border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
@@ -237,13 +229,21 @@ const TestCasesAdd = (props: UserInfoProps) => {
             <div className="flex justify-center">
               <Buttons
                 btnClass="py-1 px-4 text-xs mr-2"
-                label={dashboardTestCasesDict[userLanguage]['EDIT_TEST_CASES']['CANCEL']}
+                label={
+                  dashboardTestCasesDict[userLanguage]["EDIT_TEST_CASES"][
+                    "CANCEL"
+                  ]
+                }
                 onClick={() => history.push(`/dashboard/test-cases`)}
                 transparent
               />
               <Buttons
                 btnClass="py-1 px-8 text-xs ml-2"
-                label={dashboardTestCasesDict[userLanguage]['EDIT_TEST_CASES']['SAVE']}
+                label={
+                  dashboardTestCasesDict[userLanguage]["EDIT_TEST_CASES"][
+                    "SAVE"
+                  ]
+                }
                 onClick={() => createTestCase()}
                 disabled={false}
               />

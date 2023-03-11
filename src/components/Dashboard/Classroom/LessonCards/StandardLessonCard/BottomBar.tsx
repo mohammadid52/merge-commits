@@ -1,8 +1,8 @@
-import React from 'react';
-import {AiOutlineClockCircle, AiOutlineUser} from 'react-icons/ai';
-import {MinutesToHHMM} from 'utilities/time';
-import {LessonCardProps} from '../../Classroom';
-import Start from '../../Start';
+import React from "react";
+import { AiOutlineClockCircle, AiOutlineUser } from "react-icons/ai";
+import { MinutesToHHMM } from "utilities/time";
+import { LessonCardProps } from "../../Classroom";
+import Start from "../../Start";
 
 const BottomBar = (props: LessonCardProps) => {
   const {
@@ -15,45 +15,54 @@ const BottomBar = (props: LessonCardProps) => {
     accessible,
     lessonType,
     lessonProgress = 0,
-    isCompleted
+    isCompleted,
   } = props;
 
   const startButtonProps = {
     preview: preview,
-    roomID: roomID,
-    isTeacher: isTeacher,
+    roomID: roomID || "",
+    isTeacher: Boolean(isTeacher),
     lessonKey: lessonProps ? lessonProps.lessonID : null,
     isActive: activeRoomInfo?.activeLessons?.includes(lessonProps?.lessonID),
-    open: lessonProps && lessonProps?.status?.toLowerCase() === 'active' ? true : false,
-    isCompleted: isCompleted,
-    accessible: accessible,
+    open:
+      lessonProps && lessonProps?.status?.toLowerCase() === "active"
+        ? true
+        : false,
+    isCompleted: Boolean(isCompleted),
+    accessible: Boolean(accessible),
     type: lessonProps.lesson.type,
     activeRoomInfo: activeRoomInfo,
     lessonProps: lessonProps?.lesson,
     syllabusProps: syllabusProps,
     isUsed: lessonProps?.lesson?.isUsed,
-    lessonProgress
+    lessonProgress,
   };
 
   return (
     <div>
       <div
         className={`bg-transparent relative border-t-0 border-gray-200 flex justify-between text-base p-2 px-3 ${
-          lessonType === 'survey' ? 'rounded-b' : 'rounded-br'
-        }`}>
+          lessonType === "survey" ? "rounded-b" : "rounded-br"
+        }`}
+      >
         {/* TIME */}
-        <div className={`flex justify-center items-center sm:w-3/10 w-2/5 text-gray-500`}>
+        <div
+          className={`flex justify-center items-center sm:w-3/10 w-2/5 text-gray-500`}
+        >
           <div className="w-auto text-gray-500">
             <AiOutlineClockCircle className="w-4 h-4 sm:w-6 sm:h-6" />
           </div>
           <div
-            className={`w-auto mx-1 sm:mx-2 text-sm whitespace-pre 2xl:text-base text-gray-500`}>
+            className={`w-auto mx-1 sm:mx-2 text-sm whitespace-pre 2xl:text-base text-gray-500`}
+          >
             {MinutesToHHMM(lessonProps.lesson?.totalEstTime)}
           </div>
         </div>
 
         {/* TEACHER */}
-        <div className={`flex justify-center items-center md:w-5/10 w-auto md:mr-2`}>
+        <div
+          className={`flex justify-center items-center md:w-5/10 w-auto md:mr-2`}
+        >
           <div className="w-auto text-gray-500">
             <AiOutlineUser className="w-4 h-4 sm:w-6 sm:h-6" />
           </div>
@@ -71,10 +80,12 @@ const BottomBar = (props: LessonCardProps) => {
           {/*
            * SHOW TEACHER NAME
            */}
-          {typeof activeRoomInfo !== 'undefined' ? (
+          {typeof activeRoomInfo !== "undefined" ? (
             <div
-              className={`w-auto mx-1 sm:mx-2 text-sm whitespace-pre 2xl:text-base text-gray-500`}>
-              {activeRoomInfo?.teacher?.firstName} {activeRoomInfo?.teacher?.lastName}
+              className={`w-auto mx-1 sm:mx-2 text-sm whitespace-pre 2xl:text-base text-gray-500`}
+            >
+              {activeRoomInfo?.teacher?.firstName}{" "}
+              {activeRoomInfo?.teacher?.lastName}
             </div>
           ) : null}
         </div>

@@ -1,6 +1,6 @@
-import ModalHeader from 'molecules/ModalHeader';
-import {useGlobalContext} from 'contexts/GlobalContext';
-import React, {useEffect} from 'react';
+import ModalHeader from "molecules/ModalHeader";
+import { useGlobalContext } from "contexts/GlobalContext";
+import React, { useEffect } from "react";
 
 interface ModalProps {
   showHeader: boolean;
@@ -31,24 +31,27 @@ const ModalBody = (bodyProps: {
 
     closeOnBackdrop,
 
-    scrollHidden,
-    hidePadding
+    hidePadding,
   } = bodyProps;
 
   return (
     <div
       className={`relative ${
-        hidePadding ? 'p-0' : `${closeOnBackdrop ? 'p-2' : 'p-4'}`
+        hidePadding ? "p-0" : `${closeOnBackdrop ? "p-2" : "p-4"}`
       } flex-auto modal-body`}
-      style={{maxHeight: 'calc(100vh - 150px)'}}>
+      style={{ maxHeight: "calc(100vh - 150px)" }}
+    >
       {children}
     </div>
   );
 };
 
-const ModalFooter = (footerProps: {onSave?: () => void; onClose?: () => void}) => {
-  const {onSave, onClose} = footerProps;
-  const {theme} = useGlobalContext();
+const ModalFooter = (footerProps: {
+  onSave?: () => void;
+  onClose?: () => void;
+}) => {
+  const { onSave, onClose } = footerProps;
+  const { theme } = useGlobalContext();
 
   return (
     <div className={`${theme.modals.footer}`}>
@@ -58,7 +61,8 @@ const ModalFooter = (footerProps: {onSave?: () => void; onClose?: () => void}) =
       <button
         className="btn btn-default btn-green btn-rounded"
         type="button"
-        onClick={onSave}>
+        onClick={onSave}
+      >
         Save Changes
       </button>
     </div>
@@ -73,52 +77,56 @@ const ContentModal: React.FC<ModalProps> = (modalProps: ModalProps) => {
     showFooter,
     children,
     intenseOpacity = false,
-    modalBodyClass = '',
+    modalBodyClass = "",
     closeAction,
     saveAction,
     closeOnBackdrop = false,
     titleButton,
     hidePadding = false,
     scrollHidden = false,
-    customTitle
+    customTitle,
   } = modalProps;
-  const {theme} = useGlobalContext();
+  const { theme } = useGlobalContext();
 
   useEffect(() => {
     const close = (e: any) => {
       // close modal on ESC press
       if (e.keyCode === 27) {
-        closeAction();
+        closeAction?.();
       }
     };
-    document.addEventListener('keydown', close);
-    return () => document.removeEventListener('keydown', close);
+    document.addEventListener("keydown", close);
+    return () => document.removeEventListener("keydown", close);
   });
 
   return (
     <>
       <div
-        style={{zIndex: 9999}}
+        style={{ zIndex: 9999 }}
         className={`${
-          intenseOpacity ? 'dark-backdrop' : 'backdrop fade-in'
-        } fixed  inset-0 bg-black`}></div>
+          intenseOpacity ? "dark-backdrop" : "backdrop fade-in"
+        } fixed  inset-0 bg-black`}
+      ></div>
       <div
-        style={{zIndex: 10000}}
-        onClick={() => closeOnBackdrop && closeAction()}
+        style={{ zIndex: 10000 }}
+        onClick={() => closeOnBackdrop && closeAction?.()}
         className={
-          'fixed modal dark-scroll transition-all bg-black bg-opacity-80 duration-500 show justify-center items-center flex overflow-x-hidden overflow-y-auto inset-0 outline-none focus:outline-none py-24'
-        }>
+          "fixed modal dark-scroll transition-all bg-black bg-opacity-80 duration-500 show justify-center items-center flex overflow-x-hidden overflow-y-auto inset-0 outline-none focus:outline-none py-24"
+        }
+      >
         <div
           onClick={(e) => {
             if (closeOnBackdrop) {
               e.stopPropagation();
             }
           }}
-          className="relative w-auto my-4 mx-auto max-w-9/10">
+          className="relative w-auto my-4 mx-auto max-w-9/10"
+        >
           <div
             className={`${modalBodyClass} rounded-xl ${
-              theme.modals[hidePadding ? 'hideBg' : 'content']
-            }`}>
+              theme.modals[hidePadding ? "hideBg" : "content"]
+            }`}
+          >
             {showHeader && (
               <ModalHeader
                 titleButton={titleButton}
@@ -131,10 +139,13 @@ const ContentModal: React.FC<ModalProps> = (modalProps: ModalProps) => {
             <ModalBody
               scrollHidden={scrollHidden}
               hidePadding={hidePadding}
-              closeOnBackdrop={closeOnBackdrop}>
+              closeOnBackdrop={closeOnBackdrop}
+            >
               {children}
             </ModalBody>
-            {showFooter && <ModalFooter onSave={saveAction} onClose={closeAction} />}
+            {showFooter && (
+              <ModalFooter onSave={saveAction} onClose={closeAction} />
+            )}
           </div>
         </div>
       </div>

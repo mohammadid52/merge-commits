@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 interface IShowingCount {
   totalResults: number;
@@ -11,7 +11,7 @@ const ShowingCount = ({
   currentPage,
   pageCount,
   lastPage,
-  totalResults
+  totalResults,
 }: IShowingCount) => {
   return (
     <div className="w-auto flex items-center justify-end">

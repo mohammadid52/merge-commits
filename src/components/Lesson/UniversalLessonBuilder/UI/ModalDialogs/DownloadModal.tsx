@@ -1,20 +1,20 @@
-import {Storage} from '@aws-amplify/storage';
-import {GlobalContext} from 'contexts/GlobalContext';
-import useDictionary from 'customHooks/dictionary';
-import {Transition} from '@headlessui/react';
-import {IContentTypeComponentProps} from 'interfaces/UniversalLessonBuilderInterfaces';
-import {removeExtension} from 'utilities/functions';
-import {getImageFromS3Static} from 'utilities/services';
-import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
-import {getAsset} from 'assets';
-import {findIndex, map, reject, remove, update} from 'lodash';
-import {nanoid} from 'nanoid';
-import React, {useCallback, useContext, useEffect, useRef, useState} from 'react';
-import ClickAwayListener from 'react-click-away-listener';
-import {useDropzone} from 'react-dropzone';
-import Buttons from 'atoms/Buttons';
-import {UPLOAD_KEYS} from '../../../constants';
-import {FORM_TYPES} from '../common/constants';
+import { Storage } from "@aws-amplify/storage";
+import { Transition } from "@headlessui/react";
+import { getAsset } from "assets";
+import Buttons from "atoms/Buttons";
+import { useGlobalContext } from "contexts/GlobalContext";
+import useDictionary from "customHooks/dictionary";
+import { IContentTypeComponentProps } from "interfaces/UniversalLessonBuilderInterfaces";
+import { findIndex, map, reject, remove, update } from "lodash";
+import { nanoid } from "nanoid";
+import { useCallback, useEffect, useRef, useState } from "react";
+import ClickAwayListener from "react-click-away-listener";
+import { useDropzone } from "react-dropzone";
+import { removeExtension } from "utilities/functions";
+import { getImageFromS3Static } from "utilities/services";
+import { updateLessonPageToDB } from "utilities/updateLessonPageToDB";
+import { UPLOAD_KEYS } from "../../../constants";
+import { FORM_TYPES } from "../common/constants";
 
 interface IDownloadDialogProps extends IContentTypeComponentProps {
   inputObj?: any;
@@ -22,16 +22,13 @@ interface IDownloadDialogProps extends IContentTypeComponentProps {
 }
 
 interface IFile {
-  _status: 'progress' | 'failed' | 'success' | 'other';
+  _status: "progress" | "failed" | "success" | "other";
   progress: number | string | null;
-  file: File;
+  file: File | null;
   id?: string;
   fileKey?: string;
   fileName?: string;
 }
-
-const btnClass = (color: string) =>
-  `cursor-pointer transition-all border-transparent border-2 hover:border-${color}-300 rounded-full p-1 flex items-center h-6 w-6 justify-center bg-${color}-200`;
 
 interface IFileComponent extends IFile {
   deleteImage: (imgId: string) => void;
@@ -43,7 +40,7 @@ const deletImageFromS3 = (key: string) => {
   return new Promise((resolve, reject) => {
     Storage.remove(key)
       .then((result) => {
-        console.log('deleted: ', key);
+        console.log("deleted: ", key);
         resolve(result);
       })
       .catch((err) => {
@@ -65,20 +62,20 @@ const File = ({
   fileKey,
   file,
   updateFilename,
-  id
+  id = "",
 }: IFileComponent) => {
   const genStatus = () => {
     switch (_status) {
-      case 'progress':
-        return 'Uploading...';
-      case 'success':
-        return 'Completed';
-      case 'failed':
-        return 'Failed';
-      case 'other':
-        return '';
+      case "progress":
+        return "Uploading...";
+      case "success":
+        return "Completed";
+      case "failed":
+        return "Failed";
+      case "other":
+        return "";
       default:
-        return 'Failed';
+        return "Failed";
     }
   };
 
@@ -100,28 +97,28 @@ const File = ({
 
   const onImageClick = (e: any) => {
     e.stopPropagation();
-    window.open(imageUrl, '_blank');
+    window.open(imageUrl, "_blank");
   };
 
   const genColor = () => {
     switch (_status) {
-      case 'progress':
-        return 'blue';
-      case 'success':
-        return 'green';
-      case 'failed':
-        return 'red';
-      case 'other':
-        return 'gray';
+      case "progress":
+        return "blue";
+      case "success":
+        return "green";
+      case "failed":
+        return "red";
+      case "other":
+        return "gray";
       default:
-        return 'red';
+        return "red";
     }
   };
 
   const Btn = ({
     label,
     onClick,
-    color = 'green'
+    color = "green",
   }: {
     label: string;
     color?: string;
@@ -129,90 +126,104 @@ const File = ({
   }) => (
     <span
       onClick={onClick}
-      className={`inline-flex w-auto border-2 items-center px-2 py-0.5 rounded text-xs font-medium border-${color}-200 ml-2 hover:border-${color}-300 cursor-pointer transition-all text-${color}-800`}>
+      className={`inline-flex w-auto border-2 items-center px-2 py-0.5 rounded text-xs font-medium border-${color}-200 ml-2 hover:border-${color}-300 cursor-pointer transition-all text-${color}-800`}
+    >
       {label}
     </span>
   );
 
-  const [_fileName, setFileName] = useState(fileName || '');
+  const [_fileName, setFileName] = useState(fileName || "");
   const [editingFilename, setEditingFilename] = useState(false);
 
   const onFileNameSave = () => {
-    updateFilename(id, removeExtension(_fileName));
-    setEditingFilename(false);
+    if (id) {
+      updateFilename(id, removeExtension(_fileName));
+      setEditingFilename(false);
+    }
   };
 
   return (
     <div
-      className={` px-6 py-4 border-2 border-${genColor()}-200 bg-${genColor()}-100 rounded-lg`}>
+      className={` px-6 py-4 border-2 border-${genColor()}-200 bg-${genColor()}-100 rounded-lg`}
+    >
       <div className="flex items-center justify-between">
         <div className="w-auto flex flex-col items-start">
           <div className="text-blue-800 flex items-center font-semibold text-sm w-auto tracking-wide">
             <p className="w-auto">
-              {_status === 'success' || _status === 'other'
+              {_status === "success" || _status === "other"
                 ? !fileName
-                  ? file.name
+                  ? file?.name
                   : fileName
                 : genStatus()}
-            </p>{' '}
-            {(_status === 'success' || _status === 'other') && !editingFilename && (
-              <Btn
-                onClick={() => setEditingFilename(true)}
-                label={_fileName ? 'Change file label' : 'Add file label'}
-              />
-            )}
-            {(_status === 'success' || _status === 'other') && editingFilename && (
-              <div className="ml-2 w-auto flex items-center space-x-2">
-                <input
-                  className={`w-auto px-2 py-0.5 border-2 bg-transparent text-${
-                    _status === 'other' ? 'gray' : 'green'
-                  }-800 border-${
-                    _status === 'other' ? 'gray' : 'green'
-                  }-200 focus:border-${
-                    _status === 'other' ? 'gray' : 'green'
-                  }-300 rounded`}
-                  value={_fileName}
-                  onChange={(e) => setFileName(e.target.value)}
-                  placeholder={'file name'}
-                />
-                <Btn onClick={onFileNameSave} label={'save'} />
+            </p>{" "}
+            {(_status === "success" || _status === "other") &&
+              !editingFilename && (
                 <Btn
-                  color="red"
-                  onClick={() => {
-                    setFileName(fileName);
-                    setEditingFilename(false);
-                  }}
-                  label={'Cancel'}
+                  onClick={() => setEditingFilename(true)}
+                  label={_fileName ? "Change file label" : "Add file label"}
                 />
-              </div>
-            )}
+              )}
+            {(_status === "success" || _status === "other") &&
+              editingFilename && (
+                <div className="ml-2 w-auto flex items-center space-x-2">
+                  <input
+                    className={`w-auto px-2 py-0.5 border-2 bg-transparent text-${
+                      _status === "other" ? "gray" : "green"
+                    }-800 border-${
+                      _status === "other" ? "gray" : "green"
+                    }-200 focus:border-${
+                      _status === "other" ? "gray" : "green"
+                    }-300 rounded`}
+                    value={_fileName}
+                    onChange={(e) => setFileName(e.target.value)}
+                    placeholder={"file name"}
+                  />
+                  <Btn onClick={onFileNameSave} label={"save"} />
+                  <Btn
+                    color="red"
+                    onClick={() => {
+                      setFileName(fileName || "");
+                      setEditingFilename(false);
+                    }}
+                    label={"Cancel"}
+                  />
+                </div>
+              )}
           </div>
-          {_status === 'progress' && progress && (
+          {_status === "progress" && progress && (
             <span
-              className={`text-${genColor()}-400 font-medium text-xs w-auto tracking-normal`}>
+              className={`text-${genColor()}-400 font-medium text-xs w-auto tracking-normal`}
+            >
               {progress}%
             </span>
           )}
         </div>
-        {(_status === 'success' || _status === 'other') && (
+        {(_status === "success" || _status === "other") && (
           <div className="flex items-center gap-x-6 w-auto">
             <div
-              onClick={() => deleteImage(fileKey)}
-              className="w-auto cursor-pointer font-medium text-red-500 hover:text-red-800">
+              onClick={() => fileKey && deleteImage(fileKey)}
+              className="w-auto cursor-pointer font-medium text-red-500 hover:text-red-800"
+            >
               Delete
             </div>
             <ClickAwayListener onClickAway={() => setShowMenu(false)}>
-              <div onClick={() => setShowMenu(!showMenu)} className={`relative `}>
+              <div
+                onClick={() => setShowMenu(!showMenu)}
+                className={`relative `}
+              >
                 <div className="iconoclast:text-400 curate:text-400 hover:iconoclast:text-600 hover:curate:text-600 cursor-pointer font-medium">
                   Preview
                 </div>
                 <Transition
-                  style={{bottom: '1.5rem'}}
+                  style={{ bottom: "1.5rem" }}
                   className="w-auto bg-white cursor-pointer select-none rounded-xl customShadow absolute right-1 border-0 border-gray-200 min-h-32 min-w-56 p-4"
-                  show={showMenu}>
+                  show={showMenu}
+                >
                   <dl className="grid grid-cols-1 gap-x-4 gap-y-4">
                     <div className="sm:col-span-1">
-                      <dt className="text-sm font-medium text-gray-500">File preview</dt>
+                      <dt className="text-sm font-medium text-gray-500">
+                        File preview
+                      </dt>
                       <img
                         onClick={onImageClick}
                         src={imageUrl}
@@ -222,7 +233,9 @@ const File = ({
                     </div>
                     {(file?.name || fileName) && (
                       <div className="sm:col-span-1">
-                        <dt className="text-sm font-medium text-gray-500">File name</dt>
+                        <dt className="text-sm font-medium text-gray-500">
+                          File name
+                        </dt>
                         <dd className="mt-1 text-sm break-all text-gray-700 font-medium">
                           {file?.name || fileName}
                         </dd>
@@ -230,7 +243,9 @@ const File = ({
                     )}
                     {file?.size && (
                       <div className="sm:col-span-1">
-                        <dt className="text-sm font-medium text-gray-500">Size</dt>
+                        <dt className="text-sm font-medium text-gray-500">
+                          Size
+                        </dt>
                         <dd className="mt-1 flex items-center justify-between  text-sm text-gray-700 font-medium">
                           <p className="w-auto">{getSizeInBytes(file?.size)}</p>
                         </dd>
@@ -245,11 +260,12 @@ const File = ({
       </div>
 
       <div className="transition-all duration-300">
-        {_status === 'progress' && progress && (
+        {_status === "progress" && progress && (
           <div className="overflow-hidden w-auto h-1 mt-2 text-xs flex rounded bg-transparent">
             <div
-              style={{width: `${progress}%`}}
-              className="shadow-none bg-gradient-to-r from-blue-300 to-blue-500 flex transition-all duration-500 rounded-r-full flex-col text-center whitespace-nowrap text-white justify-center"></div>
+              style={{ width: `${progress}%` }}
+              className="shadow-none bg-gradient-to-r from-blue-300 to-blue-500 flex transition-all duration-500 rounded-r-full flex-col text-center whitespace-nowrap text-white justify-center"
+            ></div>
           </div>
         )}
       </div>
@@ -264,7 +280,7 @@ const DownloadModal = (props: IDownloadDialogProps) => {
     createNewBlockULBHandler,
     updateBlockContentULBHandler,
     askBeforeClose,
-    setUnsavedChanges
+    setUnsavedChanges,
   } = props;
 
   const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
@@ -274,14 +290,13 @@ const DownloadModal = (props: IDownloadDialogProps) => {
     if (inputObj && inputObj.length > 0) {
       setIsEditingMode(true);
       const f: IFile[] = map(inputObj, (d) => {
-        console.log('<<---', d);
         return {
           id: d.id,
           fileKey: d.value,
           fileName: d.label,
-          _status: 'other',
+          _status: "other",
           progress: null,
-          file: null
+          file: null,
         };
       });
       setFilesUploading(f);
@@ -294,11 +309,11 @@ const DownloadModal = (props: IDownloadDialogProps) => {
       const fakeInitProgress = Math.floor(Math.random() * 10) + 1;
 
       const initState: IFile = {
-        _status: 'progress',
+        _status: "progress",
         progress: fakeInitProgress.toString(),
         file,
         fileName: file.name,
-        id
+        id,
       };
       filesUploading.push(initState);
 
@@ -310,23 +325,25 @@ const DownloadModal = (props: IDownloadDialogProps) => {
     if (filesUploading.length > 0) {
       const notUploadedFiles = reject(
         filesUploading,
-        (f) => f._status === 'success' || f._status === 'other'
+        (f) => f._status === "success" || f._status === "other"
       );
 
       for (const file of notUploadedFiles) {
-        let temp = file.file.name.split('.');
-        const extension = temp.pop();
-        const fileName = `${Date.now()}_${temp
-          .join(' ')
-          .replace(new RegExp(/[ +!@#$%^&*().]/g), '_')}.${extension}`;
-        updateImgId(file, fileName);
-        await uploadImageToS3(file.file, fileName, file.file.type, file);
+        if (file.file) {
+          let temp = file.file.name.split(".");
+          const extension = temp.pop();
+          const fileName = `${Date.now()}_${temp
+            .join(" ")
+            .replace(new RegExp(/[ +!@#$%^&*().]/g), "_")}.${extension}`;
+          updateImgId(file, fileName);
+          await uploadImageToS3(file.file, fileName, file.file.type, file);
+        }
       }
     }
   };
 
   const uploadFile = useCallback(
-    async (acceptedFiles) => {
+    async (acceptedFiles: any) => {
       setUnsavedChanges(true);
 
       mapNewFiles(acceptedFiles);
@@ -335,19 +352,19 @@ const DownloadModal = (props: IDownloadDialogProps) => {
     [filesUploading]
   );
 
-  const {getRootProps, getInputProps, isDragActive} = useDropzone({
-    onDrop: uploadFile
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop: uploadFile,
   });
 
-  const {userLanguage, clientKey} = useContext(GlobalContext);
+  const { userLanguage } = useGlobalContext();
 
-  const updateProgress = (file: IFile, progress: IFile['progress']) => {
+  const updateProgress = (file: IFile, progress: IFile["progress"]) => {
     const idx = getId(file);
     update(filesUploading[idx], `progress`, () => progress);
     setFilesUploading([...filesUploading]);
   };
 
-  const updateStatus = (file: IFile, _status: IFile['_status']) => {
+  const updateStatus = (file: IFile, _status: IFile["_status"]) => {
     const idx = getId(file);
     update(filesUploading[idx], `_status`, () => _status);
     setFilesUploading([...filesUploading]);
@@ -369,37 +386,38 @@ const DownloadModal = (props: IDownloadDialogProps) => {
     return new Promise((resolve, reject) => {
       Storage.put(`${UPLOAD_KEY}${id}`, file, {
         contentType: type,
-        acl: 'public-read',
-        ContentEncoding: 'base64',
-        progressCallback: ({loaded, total}: any) => {
+        acl: "public-read",
+        contentEncoding: "base64",
+        progressCallback: ({ loaded, total }: any) => {
           const progress = (loaded * 100) / total;
 
-          updateStatus(currentFile, 'progress');
+          updateStatus(currentFile, "progress");
 
           updateProgress(currentFile, progress.toFixed(0));
-        }
+        },
       })
         .then((result) => {
-          updateStatus(currentFile, 'success');
+          updateStatus(currentFile, "success");
           updateProgress(currentFile, null);
 
-          console.log('File successfully uploaded to s3', result);
+          console.log("File successfully uploaded to s3", result);
 
           resolve(true);
         })
         .catch((err) => {
-          updateStatus(currentFile, 'failed');
+          updateStatus(currentFile, "failed");
           updateProgress(currentFile, null);
 
-          console.log('Error in uploading file to s3', err);
+          console.log("Error in uploading file to s3", err);
           reject(err);
         });
     });
   };
 
-  const getId = (file: IFile) => findIndex(filesUploading, (f) => f.id === file.id);
+  const getId = (file: IFile) =>
+    findIndex(filesUploading, (f) => f.id === file.id);
 
-  const updateImgId = (file: IFile, fileKey: IFile['fileKey']) => {
+  const updateImgId = (file: IFile, fileKey: IFile["fileKey"]) => {
     const idx = getId(file);
     update(filesUploading[idx], `fileKey`, () => fileKey);
     setFilesUploading([...filesUploading]);
@@ -417,20 +435,20 @@ const DownloadModal = (props: IDownloadDialogProps) => {
     }
   };
 
-  const inputOther = useRef(null);
+  const inputOther = useRef<any>(null);
 
-  const fileIcon = getAsset('general', 'file');
+  const fileIcon = getAsset("general", "file");
 
-  const openFilesExplorer = () => inputOther.current.click();
+  const openFilesExplorer = () => inputOther?.current?.click?.();
 
-  const {EditQuestionModalDict} = useDictionary(clientKey);
+  const { EditQuestionModalDict } = useDictionary();
 
   const addToDB = async (list: any) => {
     closeAction();
 
     const input = {
       id: list.id,
-      lessonPlan: [...list.lessonPlan]
+      lessonPlan: [...list.lessonPlan],
     };
 
     await updateLessonPageToDB(input);
@@ -438,35 +456,38 @@ const DownloadModal = (props: IDownloadDialogProps) => {
 
   const onDownloadCreate = async () => {
     const _files = map(filesUploading, (f) => {
-      return {
-        id: f.id,
-        label: removeExtension(f.fileName) || removeExtension(f.file.name),
-        value: f.fileKey
-      };
-    });
+      if (f) {
+        return {
+          id: f.id,
+          label: removeExtension(f.fileName || f?.file?.name || "") || "",
+          value: f.fileKey,
+        };
+      }
+      return null;
+    }).filter(Boolean);
 
-    const parentKey = 'downloadable-files';
+    const parentKey = "downloadable-files";
     if (isEditingMode) {
       const updatedList: any = updateBlockContentULBHandler(
-        '',
-        '',
+        "",
+        "",
         FORM_TYPES.DOWNLOAD,
         _files,
         0,
-        '',
+        "",
         parentKey
       );
 
       await addToDB(updatedList);
     } else {
       const updatedList: any = createNewBlockULBHandler(
-        '',
-        '',
+        "",
+        "",
         FORM_TYPES.DOWNLOAD,
 
         _files,
         0,
-        '',
+        "",
         parentKey
       );
       await addToDB(updatedList);
@@ -478,8 +499,9 @@ const DownloadModal = (props: IDownloadDialogProps) => {
       <div
         {...getRootProps()}
         className={`border-${
-          isDragActive ? 'blue' : 'gray'
-        }-400 border-2 transition-all duration-300 flex items-center flex-col justify-center border-dashed rounded-xl h-56`}>
+          isDragActive ? "blue" : "gray"
+        }-400 border-2 transition-all duration-300 flex items-center flex-col justify-center border-dashed rounded-xl h-56`}
+      >
         <input
           {...getInputProps()}
           ref={inputOther}
@@ -495,8 +517,11 @@ const DownloadModal = (props: IDownloadDialogProps) => {
           </p>
         ) : (
           <p className="text-blue-800 text-center font-semibold w-auto tracking-normal">
-            Drag 'n' drop your files here, or{' '}
-            <span onClick={openFilesExplorer} className="text-blue-500 cursor-pointer">
+            Drag 'n' drop your files here, or{" "}
+            <span
+              onClick={openFilesExplorer}
+              className="text-blue-500 cursor-pointer"
+            >
               browse
             </span>
           </p>
@@ -510,7 +535,8 @@ const DownloadModal = (props: IDownloadDialogProps) => {
         leave="transition-opacity duration-500"
         leaveFrom="opacity-100"
         leaveTo="opacity-0"
-        className="mt-4 flex flex-col  gap-y-6">
+        className="mt-4 flex flex-col  gap-y-6"
+      >
         {map(filesUploading, (file: IFile) => {
           return (
             <File
@@ -530,13 +556,13 @@ const DownloadModal = (props: IDownloadDialogProps) => {
         <div className="flex justify-end">
           <Buttons
             btnClass="py-1 px-4 text-xs mr-2"
-            label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
+            label={EditQuestionModalDict[userLanguage]["BUTTON"]["CANCEL"]}
             onClick={askBeforeClose}
             transparent
           />
           <Buttons
             btnClass="py-1 px-8 text-xs ml-2"
-            label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
+            label={EditQuestionModalDict[userLanguage]["BUTTON"]["SAVE"]}
             onClick={onDownloadCreate}
           />
         </div>

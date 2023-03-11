@@ -1,25 +1,26 @@
-import React, {useEffect, useState} from 'react';
-import {useWindowSize} from './windowSize';
+import { useEffect, useState } from "react";
+import { useWindowSize } from "./windowSize";
 
 const useTailwindBreakpoint = () => {
-  const {width, height} = useWindowSize();
-  const [TWBreakpoint, setTWBreakpoint] = useState<string>('');
+  const { width } = useWindowSize();
+  const [TWBreakpoint, setTWBreakpoint] = useState<string | undefined>("");
   useEffect(() => {
     setTWBreakpoint(getBreakpoint(width));
   }, [width]);
 
   const getBreakpoint = (width: number) => {
     if (width <= 640) {
-      return 'sm';
+      return "sm";
     } else if (width > 640 && width <= 768) {
-      return 'md';
+      return "md";
     } else if (width > 768 && width <= 1024) {
-      return 'lg';
+      return "lg";
     } else if (width > 1024 && width <= 1280) {
-      return 'xl';
+      return "xl";
     } else if (width > 1280) {
-      return '2xl';
+      return "2xl";
     }
+    return "md";
   };
 
   return {

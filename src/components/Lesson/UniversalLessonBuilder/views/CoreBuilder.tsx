@@ -1,35 +1,36 @@
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import Tooltip from 'atoms/Tooltip';
-import CopyCloneSlideOver from 'components/Lesson/UniversalLessonBuilder/UI/SlideOvers/CopyCloneSlideOver';
-import NewLessonPlanSO from 'components/Lesson/UniversalLessonBuilder/UI/SlideOvers/NewLessonPlanSO';
-import PageBuilderSlideOver from 'components/Lesson/UniversalLessonBuilder/UI/SlideOvers/PageBuilderSlideOver';
-import PageLoader from 'components/Lesson/UniversalLessonBuilder/views/CoreBuilder/PageLoader';
-import PageBuilderLayout from 'components/Lesson/UniversalLessonBuilder/views/PageBuilderLayout';
-import {GlobalContext} from 'contexts/GlobalContext';
-import {useOverlayContext} from 'contexts/OverlayContext';
-import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
-import * as customQueries from 'customGraphql/customQueries';
-import useDictionary from 'customHooks/dictionary';
-import {useQuery} from 'customHooks/urlParam';
-import {ULBSelectionProps} from 'interfaces/UniversalLessonBuilderInterfaces';
+import { GraphQLAPI as API, graphqlOperation } from "@aws-amplify/api-graphql";
+import useAuth from "@customHooks/useAuth";
+import Tooltip from "atoms/Tooltip";
+import CopyCloneSlideOver from "components/Lesson/UniversalLessonBuilder/UI/SlideOvers/CopyCloneSlideOver";
+import NewLessonPlanSO from "components/Lesson/UniversalLessonBuilder/UI/SlideOvers/NewLessonPlanSO";
+import PageBuilderSlideOver from "components/Lesson/UniversalLessonBuilder/UI/SlideOvers/PageBuilderSlideOver";
+import PageLoader from "components/Lesson/UniversalLessonBuilder/views/CoreBuilder/PageLoader";
+import PageBuilderLayout from "components/Lesson/UniversalLessonBuilder/views/PageBuilderLayout";
+import { useGlobalContext } from "contexts/GlobalContext";
+import { useOverlayContext } from "contexts/OverlayContext";
+import { useULBContext } from "contexts/UniversalLessonBuilderContext";
+import * as customQueries from "customGraphql/customQueries";
+import useDictionary from "customHooks/dictionary";
+import { useQuery } from "customHooks/urlParam";
+import { ULBSelectionProps } from "interfaces/UniversalLessonBuilderInterfaces";
 import {
   PartContent,
   UniversalLesson,
-  UniversalLessonPage
-} from 'interfaces/UniversalLessonInterfaces';
-import {LessonPageWrapper} from 'lesson/UniversalLessonBlockComponents/LessonPageWrapper';
-import BuilderRowComposer from 'lesson/UniversalLessonBuilder/views/CoreBuilder/BuilderRowComposer';
-import {find, findIndex, findLastIndex, isEmpty, map, remove} from 'lodash';
-import ModalPopUp from 'molecules/ModalPopUp';
-import React, {useContext, useEffect, useState} from 'react';
-import {RiArrowRightSLine} from 'react-icons/ri';
-import {useHistory} from 'react-router';
-import Toolbar from 'uiComponents/Toolbar';
-import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
-import {v4 as uuidv4} from 'uuid';
+  UniversalLessonPage,
+} from "interfaces/UniversalLessonInterfaces";
+import { LessonPageWrapper } from "lesson/UniversalLessonBlockComponents/LessonPageWrapper";
+import BuilderRowComposer from "lesson/UniversalLessonBuilder/views/CoreBuilder/BuilderRowComposer";
+import { find, findIndex, findLastIndex, isEmpty, map, remove } from "lodash";
+import ModalPopUp from "molecules/ModalPopUp";
+import { useEffect, useState } from "react";
+import { RiArrowRightSLine } from "react-icons/ri";
+import { useHistory } from "react-router";
+import Toolbar from "uiComponents/Toolbar";
+import { updateLessonPageToDB } from "utilities/updateLessonPageToDB";
+import { v4 as uuidv4 } from "uuid";
 
 interface CoreBuilderProps extends ULBSelectionProps {
-  mode: 'building' | 'viewing' | 'lesson';
+  mode: "building" | "viewing" | "lesson";
   universalLessonDetails: UniversalLesson;
   selectedPageDetails?: UniversalLessonPage;
   galleryVisible?: boolean;
@@ -73,7 +74,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
     handleModalPopToggle,
     handleTagModalOpen,
     activePageData,
-    instId
+    instId,
   } = props;
   const {
     setUniversalLessonDetails,
@@ -83,19 +84,12 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
     setEditMode,
     previewMode,
     pushUserToThisId,
-    editMode,
 
     getCurrentPage,
-    newLessonPlanShow
+    newLessonPlanShow,
   } = useULBContext();
 
-  const {
-    clientKey,
-    state: {
-      user: {isSuperAdmin}
-    },
-    userLanguage
-  } = useContext(GlobalContext);
+  const { userLanguage } = useGlobalContext();
 
   const LessonSlideover = () => {
     return (
@@ -104,7 +98,8 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
           setNewLessonPlanShow(true);
           setEditMode(true);
         }}
-        className={`not-collapse-right absolute flex items-center right-0 justify-start bg-gray-700 h-10 w-6 cursor-pointer animate__sidebar-btn rounded-l-lg top-2 z-100`}>
+        className={`not-collapse-right absolute flex items-center right-0 justify-start bg-gray-700 h-10 w-6 cursor-pointer animate__sidebar-btn rounded-l-lg top-2 z-100`}
+      >
         <Tooltip placement="left" text="Show Activity Panel">
           <div className="w-auto transform rotate-180 mr-1">
             <RiArrowRightSLine color="#fff" size={24} />
@@ -114,10 +109,10 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
     );
   };
 
-  const {lessonDispatch} = useContext(GlobalContext);
+  const { lessonDispatch } = useGlobalContext();
   const params = useQuery(location.search);
 
-  const pageId = params.get('pageId');
+  const pageId = params.get("pageId");
 
   useEffect(() => {
     if (!isEmpty(universalLessonDetails) && pageId) {
@@ -125,10 +120,13 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
         universalLessonDetails.lessonPlan,
         (plan: UniversalLessonPage) => plan.id === pageId
       );
-      lessonDispatch({type: 'SET_CURRENT_PAGE', payload: pageIdx >= 0 ? pageIdx : 0});
       lessonDispatch({
-        type: 'SET_LAST_PAGE',
-        payload: universalLessonDetails.lessonPlan.length - 1 === pageIdx
+        type: "SET_CURRENT_PAGE",
+        payload: pageIdx >= 0 ? pageIdx : 0,
+      });
+      lessonDispatch({
+        type: "SET_LAST_PAGE",
+        payload: universalLessonDetails.lessonPlan.length - 1 === pageIdx,
       });
     }
   }, [universalLessonDetails, pageId]);
@@ -137,7 +135,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
     showLessonEditOverlay,
     setShowLessonEditOverlay,
     setCollapseSidebarOverlay,
-    showDataForCopyClone
+    showDataForCopyClone,
   } = useOverlayContext();
 
   useEffect(() => {
@@ -157,13 +155,14 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
   }, [newLessonPlanShow, previewMode, showDataForCopyClone]);
 
   useEffect(() => {
-    if (pageId === 'open-overlay') {
+    if (pageId === "open-overlay") {
       setNewLessonPlanShow(true);
       setEditMode(false);
     }
   }, [pageId]);
 
-  const {LessonBuilderDict} = useDictionary(clientKey);
+  const { LessonBuilderDict } = useDictionary();
+  const { isSuperAdmin } = useAuth();
 
   const goToLessonPlan = () => {
     history.push(
@@ -179,7 +178,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
     saveAction?: () => void;
   }>({
     show: false,
-    message: ''
+    message: "",
   });
 
   /**
@@ -188,18 +187,18 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
   const onDeleteButtonClick = () => {
     setConfirmationConfig({
       message:
-        'Are you sure you want to delete the this page? All of your data will be permanently removed. This action cannot be undone.',
-      show: true
+        "Are you sure you want to delete the this page? All of your data will be permanently removed. This action cannot be undone.",
+      show: true,
     });
   };
   const closeAction = () => {
     setConfirmationConfig({
-      message: '',
-      show: false
+      message: "",
+      show: false,
     });
   };
 
-  const {message = '', show = false} = confirmationConfig;
+  const { message = "", show = false } = confirmationConfig;
 
   /**
    * @param id - pageId - string
@@ -207,19 +206,20 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
    */
   const deleteLessonPlan = async (id: string) => {
     remove(universalLessonDetails.lessonPlan, (item: any) => item.id === id);
-    setUniversalLessonDetails({...universalLessonDetails});
+    setUniversalLessonDetails({ ...universalLessonDetails });
     const input = {
       id: lessonId,
-      lessonPlan: [...universalLessonDetails.lessonPlan]
+      lessonPlan: [...universalLessonDetails.lessonPlan],
     };
     closeAction();
     await updateLessonPageToDB(input);
     const lastIndex = findLastIndex(universalLessonDetails.lessonPlan);
     if (lastIndex > -1) {
       const pageID: string =
-        universalLessonDetails.lessonPlan[universalLessonDetails.lessonPlan.length - 1]
-          .id;
-      setSelectedPageID(pageID);
+        universalLessonDetails.lessonPlan[
+          universalLessonDetails.lessonPlan.length - 1
+        ].id;
+      setSelectedPageID?.(pageID);
       pushUserToThisId(universalLessonDetails.id, pageID);
     } else {
       goToLessonPlan();
@@ -236,9 +236,11 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
     // First collect all page ids of current lesson
     const ids = map(universalLessonDetails.lessonPlan, (page) => page.id);
     // then check if current pageId is in the `ids` or not
-    if (ids && ids.length > 0 && !ids.includes(selectedPageID)) {
-      setSelectedPageID(ids[0]);
-      pushUserToThisId(universalLessonDetails.id, ids[0]);
+    if (selectedPageID) {
+      if (ids && ids.length > 0 && !ids.includes(selectedPageID)) {
+        setSelectedPageID?.(ids[0]);
+        pushUserToThisId(universalLessonDetails.id, ids[0]);
+      }
     }
   };
 
@@ -251,7 +253,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
   const getLessonById = async (lessonId: string) => {
     try {
       const res: any = await API.graphql(
-        graphqlOperation(customQueries.getUniversalLesson, {id: lessonId})
+        graphqlOperation(customQueries.getUniversalLesson, { id: lessonId })
       );
       return res.data.getUniversalLesson;
     } catch (error) {
@@ -269,6 +271,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
       );
       return selectedPage;
     }
+    return null;
   };
 
   const getCloneData = async (lessonId: string, pageId: string) => {
@@ -277,14 +280,15 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
     const replaceAllExistingIds: UniversalLessonPage = {
       ...selectedPage,
       id: uuidv4(),
-      title: 'TBD',
+      title: "TBD",
       estTime: 1,
       tags: [],
       interactionType: [],
-      description: '',
-      class: '',
+      description: "",
+      class: "",
+      // @ts-ignore
       pageContent:
-        selectedPage.pageContent && selectedPage.pageContent.length > 0
+        selectedPage?.pageContent && selectedPage.pageContent.length > 0
           ? map(selectedPage.pageContent, (pgContent) => ({
               ...pgContent,
 
@@ -303,15 +307,15 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
                                 ptValue.options && ptValue.options.length > 0
                                   ? map(ptValue.options, (opt) => ({
                                       ...opt,
-                                      id: uuidv4()
+                                      id: uuidv4(),
                                     }))
-                                  : null
+                                  : null,
                             }))
-                          : []
+                          : [],
                     }))
-                  : []
+                  : [],
             }))
-          : []
+          : [],
     };
 
     return replaceAllExistingIds;
@@ -324,8 +328,9 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
       ...selectedPage,
       id: uuidv4(),
 
+      // @ts-ignore
       pageContent:
-        selectedPage.pageContent && selectedPage.pageContent.length > 0
+        selectedPage?.pageContent && selectedPage.pageContent.length > 0
           ? map(selectedPage.pageContent, (pgContent) => ({
               ...pgContent,
 
@@ -341,26 +346,29 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
                           ? map(ptContent.value, (ptValue) => ({
                               ...ptValue,
                               id: uuidv4(),
-                              label: ptContent.type !== 'jumbotron' ? '' : ptValue.label,
+                              label:
+                                ptContent.type !== "jumbotron"
+                                  ? ""
+                                  : ptValue.label,
                               value:
-                                ptContent.type === 'jumbotron' ||
-                                ptContent.type === 'links'
+                                ptContent.type === "jumbotron" ||
+                                ptContent.type === "links"
                                   ? ptValue.value
-                                  : '-',
+                                  : "-",
                               options:
                                 ptValue.options && ptValue.options.length > 0
                                   ? map(ptValue.options, (opt) => ({
                                       ...opt,
-                                      text: '-',
-                                      id: uuidv4()
+                                      text: "-",
+                                      id: uuidv4(),
                                     }))
-                                  : null
+                                  : null,
                             }))
-                          : []
+                          : [],
                     }))
-                  : []
+                  : [],
             }))
-          : []
+          : [],
     };
 
     return replaceAllExistingIds;
@@ -374,12 +382,14 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
         <ModalPopUp
           message={message}
           closeAction={closeAction}
-          saveLabel={LessonBuilderDict[userLanguage]['BUTTON']['DELETE']}
+          saveLabel={LessonBuilderDict[userLanguage]["BUTTON"]["DELETE"]}
           saveAction={() => deleteLessonPlan(activePageData.id)}
         />
       )}
-      <PageBuilderLayout open={newLessonPlanShow && pathname.includes('page-builder')}>
-        {pathname.includes('page-builder') && (
+      <PageBuilderLayout
+        open={newLessonPlanShow && pathname.includes("page-builder")}
+      >
+        {pathname.includes("page-builder") && (
           <div className="p-4 2xl:p-8">
             <NewLessonPlanSO
               instId={instId}
@@ -393,7 +403,8 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
       <PageBuilderLayout
         className="overflow-hidden"
         overflowHidden
-        open={showLessonEditOverlay}>
+        open={showLessonEditOverlay}
+      >
         {showLessonEditOverlay && (
           <div className="p-6 2xl:p-8">
             <PageBuilderSlideOver
@@ -407,14 +418,18 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
           </div>
         )}
       </PageBuilderLayout>
-      <CopyCloneSlideOver getCopyData={getCopyData} getCloneData={getCloneData} />
+      <CopyCloneSlideOver
+        getCopyData={getCopyData}
+        getCloneData={getCloneData}
+      />
 
       <div
         id="core-builder"
-        style={{minHeight: '100vh', maxHeight: '100vh'}}
+        style={{ minHeight: "100vh", maxHeight: "100vh" }}
         className={`relative rounded-lg  grid gap-4 p-4 grid-cols-5 h-full overflow-hidden overflow-y-scroll dark:bg-dark-gray transition-all duration-200 bg-white ${
-          activePageData && activePageData.class ? activePageData.class : ''
-        }`}>
+          activePageData && activePageData.class ? activePageData.class : ""
+        }`}
+      >
         <LessonSlideover />
 
         <div
@@ -423,8 +438,11 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
           //     ? '-ml-48 2xl:-ml-60 '
           //     : ''
           className={`col-start-2 ${
-            showLessonEditOverlay || newLessonPlanShow ? '-ml-60 lg:-ml-40 md:ml-0' : ''
-          } items-center col-end-5 w-full h-full col-span-3 transition-all flex flex-col mx-auto `}>
+            showLessonEditOverlay || newLessonPlanShow
+              ? "-ml-60 lg:-ml-40 md:ml-0"
+              : ""
+          } items-center col-end-5 w-full h-full col-span-3 transition-all flex flex-col mx-auto `}
+        >
           {!fetchingLessonDetails && (
             <Toolbar
               newLessonPlanShow={newLessonPlanShow}

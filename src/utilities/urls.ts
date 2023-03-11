@@ -8,42 +8,52 @@
 
 export const getCorrectUrl = (clientKey: string) => {
   switch (clientKey) {
-    case 'iconoclast':
+    case "iconoclast":
       return {
         createUserUrl:
-          'https://9jk0le8cae.execute-api.us-east-1.amazonaws.com/prod-create-user',
+          "https://9jk0le8cae.execute-api.us-east-1.amazonaws.com/prod-create-user",
         requestResetPassword:
-          'https://eogdfg6pj0.execute-api.us-east-1.amazonaws.com/prod-request-reset-password',
+          "https://eogdfg6pj0.execute-api.us-east-1.amazonaws.com/prod-request-reset-password",
         tableCleanupUrl:
-          'https://3spj78f25e.execute-api.us-east-1.amazonaws.com/UniversalLessonIconoclast'
+          "https://3spj78f25e.execute-api.us-east-1.amazonaws.com/UniversalLessonIconoclast",
       };
-      break;
-    case 'demo':
+
+    case "demo":
       return {
         createUserUrl:
-          'https://9jk0le8cae.execute-api.us-east-1.amazonaws.com/createUser-efprod',
+          "https://9jk0le8cae.execute-api.us-east-1.amazonaws.com/createUser-efprod",
         requestResetPassword:
-          'https://eogdfg6pj0.execute-api.us-east-1.amazonaws.com/requestResetPassword-efprod',
-        tableCleanupUrl: ''
+          "https://eogdfg6pj0.execute-api.us-east-1.amazonaws.com/requestResetPassword-efprod",
+        tableCleanupUrl: "",
       };
-      break;
-    case 'curate':
+
+    case "curate":
       return {
         createUserUrl:
-          'https://9jk0le8cae.execute-api.us-east-1.amazonaws.com/demosite-create-user',
+          "https://9jk0le8cae.execute-api.us-east-1.amazonaws.com/demosite-create-user",
         requestResetPassword:
-          'https://eogdfg6pj0.execute-api.us-east-1.amazonaws.com/demosite-request-reset-password',
-        tableCleanupUrl: ''
+          "https://eogdfg6pj0.execute-api.us-east-1.amazonaws.com/demosite-request-reset-password",
+        tableCleanupUrl: "",
       };
-      break;
-    case 'localhost':
+
+    case "localhost":
       return {
         createUserUrl:
-          'https://9jk0le8cae.execute-api.us-east-1.amazonaws.com/create-user',
+          "https://9jk0le8cae.execute-api.us-east-1.amazonaws.com/create-user",
         requestResetPassword:
-          'https://eogdfg6pj0.execute-api.us-east-1.amazonaws.com/uatenv-request-reset-password',
+          "https://eogdfg6pj0.execute-api.us-east-1.amazonaws.com/uatenv-request-reset-password",
         tableCleanupUrl:
-          'https://3spj78f25e.execute-api.us-east-1.amazonaws.com/universalLesson'
+          "https://3spj78f25e.execute-api.us-east-1.amazonaws.com/universalLesson",
+      };
+
+    default:
+      return {
+        createUserUrl:
+          "https://9jk0le8cae.execute-api.us-east-1.amazonaws.com/prod-create-user",
+        requestResetPassword:
+          "https://eogdfg6pj0.execute-api.us-east-1.amazonaws.com/prod-request-reset-password",
+        tableCleanupUrl:
+          "https://3spj78f25e.execute-api.us-east-1.amazonaws.com/UniversalLessonIconoclast",
       };
   }
 };
@@ -54,25 +64,26 @@ export const getCorrectUrl = (clientKey: string) => {
  * @returns
  */
 
-import * as awsconfig2 from '../aws-exports';
+import * as awsconfig2 from "../aws-exports";
 
 export const getBackendKey = (input: any) => {
   if (input) {
     //@ts-ignore
-    let configJson = input['default'];
-    let s3BucketName = configJson['aws_user_files_s3_bucket'];
+    let configJson = input["default"];
+    let s3BucketName = configJson["aws_user_files_s3_bucket"];
 
     if (/(-demosite)/.test(s3BucketName)) {
-      return 'curate';
+      return "curate";
     } else if (/(-dev)/.test(s3BucketName)) {
-      return 'iconoclast';
+      return "iconoclast";
     } else if (/(-efprod)/.test(s3BucketName)) {
-      return 'demo';
+      return "demo";
     } else if (/(-uatenv)/.test(s3BucketName)) {
-      return 'localhost';
+      return "localhost";
     }
+    return "localhost";
   } else {
-    return 'localhost';
+    return "localhost";
   }
 };
 

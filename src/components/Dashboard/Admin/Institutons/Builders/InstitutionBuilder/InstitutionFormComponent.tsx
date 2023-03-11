@@ -1,102 +1,97 @@
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import React, {useContext, useEffect, useState} from 'react';
-import {useHistory} from 'react-router-dom';
-import {v4 as uuidv4} from 'uuid';
+import { GraphQLAPI as API, graphqlOperation } from "@aws-amplify/api-graphql";
+import React, { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
+import { v4 as uuidv4 } from "uuid";
 
-import {GlobalContext} from 'contexts/GlobalContext';
-import * as customMutations from 'customGraphql/customMutations';
-import useDictionary from 'customHooks/dictionary';
-import {statesList} from 'utilities/staticData';
+import * as customMutations from "customGraphql/customMutations";
+import useDictionary from "customHooks/dictionary";
+import { statesList } from "utilities/staticData";
 
-import UploadImageBtn from '@components/Atoms/Buttons/UploadImageBtn';
-import {uploadImageToS3} from '@graphql/functions';
-import Buttons from 'atoms/Buttons';
-import CheckBox from 'atoms/Form/CheckBox';
-import FormInput from 'atoms/Form/FormInput';
-import Selector from 'atoms/Form/Selector';
-import ProfileCropModal from 'components/Dashboard/Profile/ProfileCropModal';
-import {getImageFromS3} from 'utilities/services';
+import UploadImageBtn from "@components/Atoms/Buttons/UploadImageBtn";
+import { uploadImageToS3 } from "@graphql/functions";
+import Buttons from "atoms/Buttons";
+import CheckBox from "atoms/Form/CheckBox";
+import FormInput from "atoms/Form/FormInput";
+import Selector from "atoms/Form/Selector";
+import ProfileCropModal from "components/Dashboard/Profile/ProfileCropModal";
+import { getImageFromS3 } from "utilities/services";
+import { useGlobalContext } from "@contexts/GlobalContext";
 
-const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
+const InstitutionFormComponent = ({ institutionInfo, postMutation }: any) => {
   const history = useHistory();
   const initialState: any = {
     id: null,
-    name: '',
-    type: '',
-    website: '',
+    name: "",
+    type: "",
+    website: "",
     isServiceProvider: false,
     isZoiq: false,
-    address: '',
-    addressLine2: '',
-    city: '',
-    state: '',
-    zip: '',
-    phone: '',
-    image: '',
+    address: "",
+    addressLine2: "",
+    city: "",
+    state: "",
+    zip: "",
+    phone: "",
+    image: "",
     serviceProviders: {
-      items: []
-    }
+      items: [],
+    },
   };
   const [instituteData, setInstituteData] = useState(initialState);
   const [showCropper, setShowCropper] = useState(false);
-  const [upImage, setUpImage] = useState(null);
-  const [imageLoading, setImageLoading] = useState(false);
-  const [imageUrl, setImageUrl] = useState('');
-  const [s3Image, setS3Image] = useState(null);
+  const [upImage, setUpImage] = useState<string | null>(null);
+  const [_, setImageLoading] = useState(false);
+  const [imageUrl, setImageUrl] = useState("");
+  const [s3Image, setS3Image] = useState<any>(null);
   const [saving, setSaving] = useState(false);
-  const {theme, clientKey, checkIfAdmin, userLanguage} = useContext(GlobalContext);
-  const {InstitutionBuilderDict, BUTTONS: ButtonDict} = useDictionary(clientKey);
+  const { checkIfAdmin, userLanguage } = useGlobalContext();
+  const { InstitutionBuilderDict, BUTTONS: ButtonDict } = useDictionary();
   const [error, setError] = useState({
     show: true,
-    errorMsg: ''
+    errorMsg: "",
   });
   const [serverMessage, setServerMessage] = useState({
-    message: '',
-    isError: false
+    message: "",
+    isError: false,
   });
 
   const institutionTypeList = [
     {
       id: 1,
-      name: InstitutionBuilderDict[userLanguage]['INSTITUTION_TYPE']['SCHOOL'],
-      value: 'School'
+      name: InstitutionBuilderDict[userLanguage]["INSTITUTION_TYPE"]["SCHOOL"],
+      value: "School",
     },
     {
       id: 2,
-      name: InstitutionBuilderDict[userLanguage]['INSTITUTION_TYPE']['AFTERSCHOOL'],
-      value: 'After School'
+      name: InstitutionBuilderDict[userLanguage]["INSTITUTION_TYPE"][
+        "AFTERSCHOOL"
+      ],
+      value: "After School",
     },
     {
       id: 3,
-      name: InstitutionBuilderDict[userLanguage]['INSTITUTION_TYPE']['DAYCAMP'],
-      value: 'Day Camp'
+      name: InstitutionBuilderDict[userLanguage]["INSTITUTION_TYPE"]["DAYCAMP"],
+      value: "Day Camp",
     },
     {
       id: 4,
-      name: InstitutionBuilderDict[userLanguage]['INSTITUTION_TYPE']['SUMMERCAMP'],
-      value: 'Summer Camp'
+      name: InstitutionBuilderDict[userLanguage]["INSTITUTION_TYPE"][
+        "SUMMERCAMP"
+      ],
+      value: "Summer Camp",
     },
     {
       id: 5,
-      name: InstitutionBuilderDict[userLanguage]['INSTITUTION_TYPE']['C3'],
-      value: '501C3'
-    }
+      name: InstitutionBuilderDict[userLanguage]["INSTITUTION_TYPE"]["C3"],
+      value: "501C3",
+    },
   ];
 
   const removeErrorMSg = () => {
     if (error.show) {
       setError({
         show: false,
-        errorMsg: ''
-      });
-    }
-  };
-
-  const formValidator = () => {
-    if (!instituteData.name) {
-      setError({
-        show: true,
-        errorMsg: InstitutionBuilderDict[userLanguage]['messages']['namerequired']
+        errorMsg: "",
       });
     }
   };
@@ -105,29 +100,29 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
     removeErrorMSg();
     setInstituteData({
       ...instituteData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
-  const onTypeSelect = (str: string, name: string) => {
+  const onTypeSelect = (str: string) => {
     removeErrorMSg();
     setInstituteData({
       ...instituteData,
-      type: str
+      type: str,
     });
   };
-  const onStateSelect = (str: string, name: string) => {
+  const onStateSelect = (str: string) => {
     removeErrorMSg();
     setInstituteData({
       ...instituteData,
-      state: str
+      state: str,
     });
   };
 
   const handdleCheckBox = () => {
     setInstituteData({
       ...instituteData,
-      isServiceProvider: !instituteData.isServiceProvider
+      isServiceProvider: !instituteData.isServiceProvider,
     });
   };
 
@@ -162,7 +157,6 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
   const [fileObj, setFileObj] = useState({});
 
   const saveCroppedImage = async (image: string) => {
-    setImageLoading(true);
     toggleCropper();
     setS3Image(image ? image : fileObj);
     // @ts-ignore
@@ -170,7 +164,7 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
     setImageUrl(imageUrl);
     setInstituteData({
       ...instituteData,
-      image: `instituteImages/institute_image_${instituteData.id}`
+      image: `instituteImages/institute_image_${instituteData.id}`,
     });
     toggleCropper();
     setImageLoading(false);
@@ -180,7 +174,8 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
     if (!instituteData.name) {
       setError({
         show: true,
-        errorMsg: InstitutionBuilderDict[userLanguage]['messages']['namerequired']
+        errorMsg:
+          InstitutionBuilderDict[userLanguage]["messages"]["namerequired"],
       });
     } else {
       removeErrorMSg();
@@ -190,7 +185,7 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
           await uploadImageToS3(
             s3Image,
             `instituteImages/institute_image_${instituteData.id || uuidv4()}`,
-            'image/jpeg'
+            "image/jpeg"
           );
         }
         let payload: any = {
@@ -205,32 +200,36 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
           image: instituteData.image,
           isZoiq: instituteData.isZoiq,
           phone: instituteData.phone,
-          isServiceProvider: instituteData.isServiceProvider
+          isServiceProvider: instituteData.isServiceProvider,
         };
         if (instituteData.id) {
           payload = {
             ...payload,
-            id: instituteData.id
+            id: instituteData.id,
           };
           const result: any = await API.graphql(
-            graphqlOperation(customMutations.updateInstitution, {input: payload})
+            graphqlOperation(customMutations.updateInstitution, {
+              input: payload,
+            })
           );
           postMutation(result.data?.updateInstitution);
         } else {
-          const newInstitute: any = await API.graphql(
-            graphqlOperation(customMutations.createInstitution, {input: payload})
+          await API.graphql(
+            graphqlOperation(customMutations.createInstitution, {
+              input: payload,
+            })
           );
         }
 
         setSaving(false);
         setServerMessage({
           isError: false,
-          message: InstitutionBuilderDict[userLanguage]['messages']['saveMsg']
+          message: InstitutionBuilderDict[userLanguage]["messages"]["saveMsg"],
         });
         setTimeout(() => {
           setServerMessage({
             isError: false,
-            message: ''
+            message: "",
           });
         }, 2000);
 
@@ -240,7 +239,7 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
       } catch {
         setError({
           show: true,
-          errorMsg: InstitutionBuilderDict[userLanguage]['messages']['adderr']
+          errorMsg: InstitutionBuilderDict[userLanguage]["messages"]["adderr"],
         });
       }
     }
@@ -248,7 +247,7 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
   useEffect(() => {
     if (institutionInfo?.id) {
       setInstituteData({
-        ...institutionInfo
+        ...institutionInfo,
       });
     }
   }, [institutionInfo]);
@@ -261,11 +260,10 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
     getUrl();
   }, [institutionInfo.image]);
 
-  const mediaRef = React.useRef(null);
+  const mediaRef = React.useRef<any>(null);
   const handleImage = () => mediaRef?.current?.click();
 
   const {
-    id,
     name,
     type,
     website,
@@ -275,7 +273,7 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
     state,
     zip,
     phone,
-    isServiceProvider
+    isServiceProvider,
   } = instituteData;
 
   return (
@@ -283,60 +281,6 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
       {/* Section Header */}
       {/* Body */}
       <div className="h-9/10 flex flex-col md:flex-row">
-        {/* Profile section */}
-        {/* {!id && ( */}
-        {/* <div className="w-auto p-4 mr-6 flex flex-col text-center items-center">
-          {imageUrl ? (
-            <button className="group hover:opacity-80 focus:outline-none focus:opacity-95 flex flex-col items-center mt-4">
-              {!imageLoading ? (
-                <label className="cursor-pointer flex justify-center">
-                  <DroppableMedia
-                    mediaRef={mediaRef}
-                    setImage={(img: any, file: any) => {
-                      setUpImage(img);
-                      setFileObj(file);
-                    }}
-                    toggleCropper={toggleCropper}>
-                    <img
-                      onClick={handleImage}
-                      className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light`}
-                      src={imageUrl}
-                    />
-                  </DroppableMedia>
-                </label>
-              ) : (
-                <div className="w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full  border-0 border-gray-400 shadow-elem-lightI">
-                  <Loader />
-                </div>
-              )}
-            </button>
-          ) : (
-            <DroppableMedia
-              mediaRef={mediaRef}
-              setImage={(img: any, file: any) => {
-                setUpImage(img);
-                setFileObj(file);
-              }}
-              toggleCropper={toggleCropper}>
-              <label
-                onClick={handleImage}
-                className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full  border-0 border-gray-400 shadow-elem-light`}>
-                {!imageLoading ? (
-                  <IconContext.Provider value={{size: '3rem', color: '#4a5568'}}>
-                    <FaPlus />
-                  </IconContext.Provider>
-                ) : (
-                  <Loader />
-                )}
-              </label>
-            </DroppableMedia>
-          )}
-          <p className="text-gray-600 my-4">
-            {InstitutionBuilderDict[userLanguage]['INFOA']}
-          </p>
-        </div> */}
-        {/* )} */}
-
         <div className={`h-full w-full pt-2`}>
           {/* FORM submit tag */}
           <form>
@@ -348,10 +292,14 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
                     <Selector
                       selectedItem={type}
                       label={
-                        InstitutionBuilderDict[userLanguage]['FORM']['INSTITUTION_TYPE']
+                        InstitutionBuilderDict[userLanguage]["FORM"][
+                          "INSTITUTION_TYPE"
+                        ]
                       }
                       placeholder={
-                        InstitutionBuilderDict[userLanguage]['FORM']['INSTITUTION_TYPE']
+                        InstitutionBuilderDict[userLanguage]["FORM"][
+                          "INSTITUTION_TYPE"
+                        ]
                       }
                       list={institutionTypeList}
                       onChange={onTypeSelect}
@@ -378,11 +326,13 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
                     id="name"
                     name="name"
                     label={
-                      InstitutionBuilderDict[userLanguage]['FORM']['NAME_INPUT_LABEL']
+                      InstitutionBuilderDict[userLanguage]["FORM"][
+                        "NAME_INPUT_LABEL"
+                      ]
                     }
                     placeHolder={
-                      InstitutionBuilderDict[userLanguage]['FORM'][
-                        'NAME_INPUT_PLACEHOLDER'
+                      InstitutionBuilderDict[userLanguage]["FORM"][
+                        "NAME_INPUT_PLACEHOLDER"
                       ]
                     }
                     isRequired
@@ -395,11 +345,13 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
                     id="website"
                     name="website"
                     label={
-                      InstitutionBuilderDict[userLanguage]['FORM']['WEBSITE_INPUT_LABEL']
+                      InstitutionBuilderDict[userLanguage]["FORM"][
+                        "WEBSITE_INPUT_LABEL"
+                      ]
                     }
                     placeHolder={
-                      InstitutionBuilderDict[userLanguage]['FORM'][
-                        'WEBSITE_INPUT_PLACEHOLDER'
+                      InstitutionBuilderDict[userLanguage]["FORM"][
+                        "WEBSITE_INPUT_PLACEHOLDER"
                       ]
                     }
                   />
@@ -411,7 +363,9 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
                     onChange={onInputChange}
                     name="address"
                     label={
-                      InstitutionBuilderDict[userLanguage]['FORM']['ADDRESS_INPUT_LABEL']
+                      InstitutionBuilderDict[userLanguage]["FORM"][
+                        "ADDRESS_INPUT_LABEL"
+                      ]
                     }
                   />
                 </div>
@@ -423,7 +377,9 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
                     onChange={onInputChange}
                     name="addressLine2"
                     label={
-                      InstitutionBuilderDict[userLanguage]['FORM']['ADDRESS2_INPUT_LABEL']
+                      InstitutionBuilderDict[userLanguage]["FORM"][
+                        "ADDRESS2_INPUT_LABEL"
+                      ]
                     }
                   />
                 </div>
@@ -434,17 +390,25 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
                     id="city"
                     onChange={onInputChange}
                     name="city"
-                    label={InstitutionBuilderDict[userLanguage]['FORM']['CITY_LABEL']}
+                    label={
+                      InstitutionBuilderDict[userLanguage]["FORM"]["CITY_LABEL"]
+                    }
                   />
                 </div>
 
                 <div className="sm:col-span-3 px-3 py-2">
                   <label className="block text-xs font-semibold mb-1  leading-5 text-gray-700">
-                    {InstitutionBuilderDict[userLanguage]['FORM']['STATE_LABEL']}
+                    {
+                      InstitutionBuilderDict[userLanguage]["FORM"][
+                        "STATE_LABEL"
+                      ]
+                    }
                   </label>
                   <Selector
                     selectedItem={state}
-                    placeholder={InstitutionBuilderDict[userLanguage]['FORM']['state']}
+                    placeholder={
+                      InstitutionBuilderDict[userLanguage]["FORM"]["state"]
+                    }
                     list={statesList}
                     onChange={onStateSelect}
                   />
@@ -456,7 +420,9 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
                     id="zip"
                     onChange={onInputChange}
                     name="zip"
-                    label={InstitutionBuilderDict[userLanguage]['FORM']['ZIP_LABEL']}
+                    label={
+                      InstitutionBuilderDict[userLanguage]["FORM"]["ZIP_LABEL"]
+                    }
                   />
                 </div>
 
@@ -466,7 +432,11 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
                     id="phone"
                     onChange={onInputChange}
                     name="phone"
-                    label={InstitutionBuilderDict[userLanguage]['FORM']['PHONE_LABEL']}
+                    label={
+                      InstitutionBuilderDict[userLanguage]["FORM"][
+                        "PHONE_LABEL"
+                      ]
+                    }
                   />
                 </div>
                 <div className="col-span-6 lg:col-span-3 px-3 py-2 flex items-center">
@@ -476,9 +446,9 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
                     name="isServiceProvider"
                     label={
                       name
-                        ? `${name} ${InstitutionBuilderDict[userLanguage]['FORM']['SERVICEPROVIDER_LABEL_WITH_NAME']}`
-                        : InstitutionBuilderDict[userLanguage]['FORM'][
-                            'SERVICEPROVIDER_LABEL_WITHOUT_NAME'
+                        ? `${name} ${InstitutionBuilderDict[userLanguage]["FORM"]["SERVICEPROVIDER_LABEL_WITH_NAME"]}`
+                        : InstitutionBuilderDict[userLanguage]["FORM"][
+                            "SERVICEPROVIDER_LABEL_WITHOUT_NAME"
                           ]
                     }
                   />
@@ -488,13 +458,13 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
                     <CheckBox
                       name="isZoiq"
                       dataCy="isZoiq"
-                      label={'ZOIQ'}
+                      label={"ZOIQ"}
                       className="group:hover:bg-gray-500"
                       value={instituteData.isZoiq}
                       onChange={(e) => {
                         setInstituteData({
                           ...instituteData,
-                          isZoiq: e.target.checked
+                          isZoiq: e.target.checked,
                         });
                       }}
                     />
@@ -509,7 +479,9 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
               <div className="px-4 w-full flex justify-end">
                 <div className="flex justify-end w-auto pb-4">
                   <Buttons
-                    label={InstitutionBuilderDict[userLanguage]['BUTTON']['CANCEL']}
+                    label={
+                      InstitutionBuilderDict[userLanguage]["BUTTON"]["CANCEL"]
+                    }
                     btnClass="w-full px-6 py-4 mr-2"
                     onClick={history.goBack}
                     transparent
@@ -517,8 +489,8 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
                   <Buttons
                     label={
                       saving
-                        ? ButtonDict[userLanguage]['SAVING']
-                        : InstitutionBuilderDict[userLanguage]['BUTTON']['SAVE']
+                        ? ButtonDict[userLanguage]["SAVING"]
+                        : InstitutionBuilderDict[userLanguage]["BUTTON"]["SAVE"]
                     }
                     btnClass="w-full px-6 py-4 ml-2"
                     onClick={addNewInstitution}
@@ -529,32 +501,16 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
             </div>
 
             {error.show ? (
-              <span className="text-sm text-red-600 my-6 mx-3">{error.errorMsg}</span>
+              <span className="text-sm text-red-600 my-6 mx-3">
+                {error.errorMsg}
+              </span>
             ) : null}
-
-            {/* Cancel-save buttons */}
-            {/* <div className="px-4 w-full flex justify-end">
-                <div className="flex w-4/10">
-                  <Buttons
-                    label={InstitutionBuilderDict[userLanguage]['BUTTON']['CANCEL']}
-                    btnClass="w-full px-6 py-4 mr-2"
-                    onClick={history.goBack}
-                    transparent
-                  />
-                  <Buttons
-                    label={InstitutionBuilderDict[userLanguage]['BUTTON']['SAVE']}
-                    btnClass="w-full px-6 py-4 ml-2"
-                    onClick={addNewInstitution}
-                  />
-                </div>
-              </div>
-             */}
           </form>
 
           {/* Image cropper */}
           {showCropper && (
             <ProfileCropModal
-              upImg={upImage}
+              upImg={upImage || ""}
               saveCroppedImage={(img: string) => saveCroppedImage(img)}
               closeAction={toggleCropper}
             />

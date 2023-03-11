@@ -1,8 +1,8 @@
-import Tooltip from 'atoms/Tooltip';
-import {useGlobalContext} from 'contexts/GlobalContext';
-import {getAsset} from 'assets';
-import React from 'react';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
+import Tooltip from "atoms/Tooltip";
+import { useGlobalContext } from "contexts/GlobalContext";
+import { getAsset } from "assets";
+import React from "react";
+import { IconContext } from "react-icons/lib/esm/iconContext";
 
 export interface ITabElementProps {
   id?: string;
@@ -12,7 +12,7 @@ export interface ITabElementProps {
   icon?: React.ReactNode;
   disabled?: boolean;
   tooltipText?: string;
-  tooltipPlacement?: 'bottom' | 'top' | 'left' | 'right' | 'bottomleft';
+  tooltipPlacement?: "bottom" | "top" | "left" | "right" | "bottomleft";
 }
 
 interface TabsProps {
@@ -25,12 +25,12 @@ interface TabsProps {
 }
 
 const UnderlinedTabs = (props: TabsProps) => {
-  const {tabs, activeTab, hideTooltip, handleTabSelect} = props;
-  const {theme, clientKey} = useGlobalContext();
-  const themeColor = getAsset(clientKey, 'themeClassName');
+  const { tabs, activeTab, hideTooltip, handleTabSelect } = props;
+  const { theme, clientKey } = useGlobalContext();
+  const themeColor = getAsset(clientKey, "themeClassName");
 
   const changeActiveTab = (tab: number) => {
-    handleTabSelect(tab, tabs[tab].id);
+    handleTabSelect?.(tab, tabs[tab]?.id || "");
   };
 
   const renderButtonText = (tab: any) => {
@@ -39,7 +39,8 @@ const UnderlinedTabs = (props: TabsProps) => {
         {tab.icon && (
           <span className="w-8 h-8 flex items-center mr-4">
             <IconContext.Provider
-              value={{size: '1.5rem', color: theme.iconColor[themeColor]}}>
+              value={{ size: "1.5rem", color: theme.iconColor[themeColor] }}
+            >
               {tab.icon}
             </IconContext.Provider>
           </span>
@@ -54,28 +55,32 @@ const UnderlinedTabs = (props: TabsProps) => {
         {tabs.map((tab, key) => (
           <div key={key} className="relative">
             <button
-              onClick={(e) => {
+              onClick={(_) => {
                 changeActiveTab(tab.index);
               }}
               id={tab.id}
               className={`font-bold uppercase bg-white text-xs p-3 px-8 sm:px-4 border-b-2 flex items-center h-full justify-center ${
                 tab.disabled
-                  ? 'cursor-not-allowed opacity-50 bg-gray-500 text-gray-200 border'
-                  : `hover:${theme.borderColor[themeColor]} ${theme.outlineNone} ${
+                  ? "cursor-not-allowed opacity-50 bg-gray-500 text-gray-200 border"
+                  : `hover:${theme.borderColor[themeColor]} ${
+                      theme.outlineNone
+                    } ${
                       activeTab === tab.index
                         ? `bg-gray-100 ${theme.borderColor[themeColor]}`
-                        : ''
+                        : ""
                     }`
               }`}
               disabled={tab.disabled}
-              type="button">
+              type="button"
+            >
               {!hideTooltip ? (
                 tab.tooltipText ? (
                   <Tooltip
                     id={tab.id}
                     key={tab.id}
                     text={tab.tooltipText}
-                    placement={tab.tooltipPlacement}>
+                    placement={tab.tooltipPlacement}
+                  >
                     {renderButtonText(tab)}
                   </Tooltip>
                 ) : (
@@ -86,7 +91,11 @@ const UnderlinedTabs = (props: TabsProps) => {
                   {tab.icon && (
                     <span className="w-8 h-8 flex items-center mr-4">
                       <IconContext.Provider
-                        value={{size: '1.5rem', color: theme.iconColor[themeColor]}}>
+                        value={{
+                          size: "1.5rem",
+                          color: theme.iconColor[themeColor],
+                        }}
+                      >
                         {tab.icon}
                       </IconContext.Provider>
                     </span>
@@ -101,7 +110,10 @@ const UnderlinedTabs = (props: TabsProps) => {
       {tabs.map((tab, key) => (
         <div
           key={key}
-          className={`w-full p-4 ${activeTab !== tab.index ? 'hidden' : 'block'}`}>
+          className={`w-full p-4 ${
+            activeTab !== tab.index ? "hidden" : "block"
+          }`}
+        >
           {activeTab === tab.index ? <>{tab.content}</> : null}
         </div>
       ))}

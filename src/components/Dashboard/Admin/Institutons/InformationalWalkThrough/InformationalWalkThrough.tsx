@@ -1,83 +1,82 @@
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import {Dialog} from '@headlessui/react';
-import {XIcon} from '@heroicons/react/outline';
-import React, {useContext, useEffect, useRef, useState} from 'react';
-import {BsCircleFill} from 'react-icons/bs';
-import {HiOutlineRefresh} from 'react-icons/hi';
-import {IoIosCheckmarkCircle} from 'react-icons/io';
-import {useHistory} from 'react-router';
+import { Dialog } from "@headlessui/react";
+import { XIcon } from "@heroicons/react/outline";
+import { API, graphqlOperation } from "aws-amplify";
+import { useEffect, useRef, useState } from "react";
+import { BsCircleFill } from "react-icons/bs";
+import { HiOutlineRefresh } from "react-icons/hi";
+import { IoIosCheckmarkCircle } from "react-icons/io";
+import { useHistory } from "react-router";
 
-import * as customQueries from 'customGraphql/customQueries';
-import * as queries from 'graphql/queries';
+import * as customQueries from "customGraphql/customQueries";
+import * as queries from "graphql/queries";
 
-import {GlobalContext} from 'contexts/GlobalContext';
-import {ContextMenuProvider} from 'contexts/TreeContext';
+import { useGlobalContext } from "contexts/GlobalContext";
+import { ContextMenuProvider } from "contexts/TreeContext";
 import {
   getLocalStorageData,
   removeLocalStorageData,
-  setLocalStorageData
-} from 'utilities/localStorage';
+  setLocalStorageData,
+} from "utilities/localStorage";
 
-import Selector from 'atoms/Form/Selector';
-import Loader from 'atoms/Loader';
+import Selector from "atoms/Form/Selector";
+import Loader from "atoms/Loader";
 
-import {Tree} from '../../../../TreeView/Tree';
+import { Tree } from "../../../../TreeView/Tree";
 
-const InformationalWalkThrough = ({open, onCancel}: any) => {
-  const {state: {user: {associateInstitute = [], role = ''} = {}} = {}} = useContext(
-    GlobalContext
-  );
+const InformationalWalkThrough = ({ open, onCancel }: any) => {
+  const { state: { user: { associateInstitute = [], role = "" } = {} } = {} } =
+    useGlobalContext();
   const history = useHistory();
-  const cancelButtonRef = useRef();
+  const cancelButtonRef = useRef<any>(null);
   const [alertConfig, setAlertConfig] = useState({
     show: false,
-    message: ''
+    message: "",
   });
   const [loading, setLoading] = useState(
-    role === 'ADM' || role === 'SUP' || role === 'BLD'
+    role === "ADM" || role === "SUP" || role === "BLD"
   );
   const [sectionDetailsLoading, setSectionDetailsLoading] = useState(true);
   const [instListLoading, setInstListLoading] = useState(
-    role === 'ADM' || role === 'SUP' || role === 'BLD'
+    role === "ADM" || role === "SUP" || role === "BLD"
   );
   const [activeSection, setActiveSection] = useState<any>({
-    id: 'inst',
-    title: 'Institution Setup'
+    id: "inst",
+    title: "Institution Setup",
   });
   const [selectedInstitution, setSelectedInstitution] = useState<any>({});
   const [institutionList, setInstitutionList] = useState<any>([]);
 
   const baseUrl =
-    role === 'SUP'
-      ? '/dashboard/manage-institutions'
-      : '/dashboard/manage-institutions/institution/{institutionId}';
+    role === "SUP"
+      ? "/dashboard/manage-institutions"
+      : "/dashboard/manage-institutions/institution/{institutionId}";
 
   const pageId = activeSection?.data?.universalLessons[0].lessonPlan[0].id;
   const institutionId = selectedInstitution?.institution?.id;
   const data: any = {
-    title: 'root',
+    title: "root",
     children: [
-      (role === 'ADM' || role === 'SUP' || role === 'BLD') && {
+      (role === "ADM" || role === "SUP" || role === "BLD") && {
         title: `Institution Setup`,
-        type: 'menu',
-        id: 'inst',
+        type: "menu",
+        id: "inst",
         redirectionUrl: selectedInstitution?.institution?.id
           ? `${baseUrl}/edit`
-          : '/dashboard/manage-institutions',
+          : "/dashboard/manage-institutions",
         children: [
           {
-            title: 'General Info',
-            type: 'list',
+            title: "General Info",
+            type: "list",
             children: [],
-            id: 'inst_general_info',
-            redirectionUrl: `${baseUrl}/edit`
+            id: "inst_general_info",
+            redirectionUrl: `${baseUrl}/edit`,
           },
           {
-            title: 'Staff',
-            type: 'list',
+            title: "Staff",
+            type: "list",
             children: [],
-            id: 'inst_staff',
-            redirectionUrl: `${baseUrl}/staff`
+            id: "inst_staff",
+            redirectionUrl: `${baseUrl}/staff`,
           },
           // {
           //   title: 'Classes',
@@ -100,196 +99,196 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
           //   redirectionUrl: `${baseUrl}/class`,
           // },
           {
-            title: 'Courses',
-            type: 'menu',
-            id: 'inst_curriculum',
+            title: "Courses",
+            type: "menu",
+            id: "inst_curriculum",
             redirectionUrl: `${baseUrl}/courses`,
             children: [
               {
-                title: 'Add Curriculum Information',
-                type: 'list',
-                id: 'inst_curriculum_general_info',
-                redirectionUrl: `${baseUrl}/course-builder`
+                title: "Add Curriculum Information",
+                type: "list",
+                id: "inst_curriculum_general_info",
+                redirectionUrl: `${baseUrl}/course-builder`,
               },
               {
-                title: 'Create Learning Objectives',
-                type: 'list',
+                title: "Create Learning Objectives",
+                type: "list",
                 children: [],
-                id: 'inst_curriculum_learning_objectives',
-                redirectionUrl: `${baseUrl}/course-builder/{curriculumId}?step=learning_objectives`
+                id: "inst_curriculum_learning_objectives",
+                redirectionUrl: `${baseUrl}/course-builder/{curriculumId}?step=learning_objectives`,
               },
               {
-                title: 'Create Units',
-                type: 'menu',
+                title: "Create Units",
+                type: "menu",
                 children: [
                   {
-                    title: 'General Information',
-                    type: 'list',
-                    id: 'inst_curriculum_units_general_info',
-                    redirectionUrl: `${baseUrl}/units/{syllabusId}/edit?step=overview`
+                    title: "General Information",
+                    type: "list",
+                    id: "inst_curriculum_units_general_info",
+                    redirectionUrl: `${baseUrl}/units/{syllabusId}/edit?step=overview`,
                   },
                   {
-                    title: 'Lesson Plan Manager',
-                    type: 'list',
-                    id: 'inst_curriculum_units_lesson_plan_manager',
-                    redirectionUrl: `${baseUrl}/units/{syllabusId}/edit?step=lessons`
-                  }
+                    title: "Lesson Plan Manager",
+                    type: "list",
+                    id: "inst_curriculum_units_lesson_plan_manager",
+                    redirectionUrl: `${baseUrl}/units/{syllabusId}/edit?step=lessons`,
+                  },
                 ],
-                id: 'inst_curriculum_units',
-                redirectionUrl: `${baseUrl}/units/add`
+                id: "inst_curriculum_units",
+                redirectionUrl: `${baseUrl}/units/add`,
               },
               {
-                title: 'Demographics & Information',
-                type: 'list',
+                title: "Demographics & Information",
+                type: "list",
                 children: [],
-                id: 'inst_curriculum_demographic_information',
-                redirectionUrl: `${baseUrl}/research-and-analytics`
-              }
-            ]
+                id: "inst_curriculum_demographic_information",
+                redirectionUrl: `${baseUrl}/research-and-analytics`,
+              },
+            ],
           },
           {
-            title: 'Classroom',
-            type: 'menu',
+            title: "Classroom",
+            type: "menu",
             children: [
               {
-                title: 'Class Details',
-                type: 'list',
-                id: 'inst_classroom_class_detail',
-                redirectionUrl: `${baseUrl}/room-edit/{roomId}?step=overview`
+                title: "Class Details",
+                type: "list",
+                id: "inst_classroom_class_detail",
+                redirectionUrl: `${baseUrl}/room-edit/{roomId}?step=overview`,
               },
               {
-                title: 'Unit Planner',
-                type: 'list',
+                title: "Unit Planner",
+                type: "list",
                 children: [],
-                id: 'inst_classroom_unit_planner',
-                redirectionUrl: `${baseUrl}/room-edit/{roomId}?step=unit-planner`
+                id: "inst_classroom_unit_planner",
+                redirectionUrl: `${baseUrl}/room-edit/{roomId}?step=unit-planner`,
               },
               {
-                title: 'Class Dynamics (Optional)',
-                type: 'list',
-                id: 'inst_classroom_class_dynamics',
+                title: "Class Dynamics (Optional)",
+                type: "list",
+                id: "inst_classroom_class_dynamics",
                 children: [],
-                redirectionUrl: `${baseUrl}/room-edit/{roomId}?step=class-dynamics`
-              }
+                redirectionUrl: `${baseUrl}/room-edit/{roomId}?step=class-dynamics`,
+              },
             ],
-            id: 'inst_classroom',
-            redirectionUrl: `${baseUrl}/room-creation`
-          }
-        ]
+            id: "inst_classroom",
+            redirectionUrl: `${baseUrl}/room-creation`,
+          },
+        ],
       },
-      (role === 'ADM' || role === 'SUP' || role === 'BLD') && {
+      (role === "ADM" || role === "SUP" || role === "BLD") && {
         title: `Lesson Builder`,
-        type: 'menu',
-        id: 'lesson_builder',
+        type: "menu",
+        id: "lesson_builder",
         redirectionUrl: `${baseUrl}/lessons`,
         children: [
           {
-            title: 'Create new lesson',
-            type: 'list',
-            id: 'lesson_builder_list_create_new_lesson',
-            redirectionUrl: `${baseUrl}/lessons/add`
+            title: "Create new lesson",
+            type: "list",
+            id: "lesson_builder_list_create_new_lesson",
+            redirectionUrl: `${baseUrl}/lessons/add`,
           },
           {
-            title: 'Lesson Editor',
-            type: 'menu',
-            id: 'lesson_builder_editor',
+            title: "Lesson Editor",
+            type: "menu",
+            id: "lesson_builder_editor",
             children: [
               {
-                title: 'Overview',
-                type: 'list',
-                id: 'lesson_builder_overview',
+                title: "Overview",
+                type: "list",
+                id: "lesson_builder_overview",
                 children: [],
-                redirectionUrl: `${baseUrl}/lessons/{lessonId}`
+                redirectionUrl: `${baseUrl}/lessons/{lessonId}`,
               },
               {
-                title: 'Activities',
-                type: 'menu',
-                id: 'lesson_builder_activities',
+                title: "Activities",
+                type: "menu",
+                id: "lesson_builder_activities",
                 children: [
                   {
-                    title: 'Lesson Planner',
-                    type: 'list',
-                    id: 'lesson_builder_activities_lesson_planner',
-                    redirectionUrl: `${baseUrl}/lessons/{lessonId}?step=activities`
+                    title: "Lesson Planner",
+                    type: "list",
+                    id: "lesson_builder_activities_lesson_planner",
+                    redirectionUrl: `${baseUrl}/lessons/{lessonId}?step=activities`,
                   },
                   {
-                    title: 'Overlay',
-                    type: 'list',
-                    id: 'lesson_builder_activities_overlay',
-                    redirectionUrl: `${baseUrl}/lessons/{lessonId}?step=activities`
-                  }
+                    title: "Overlay",
+                    type: "list",
+                    id: "lesson_builder_activities_overlay",
+                    redirectionUrl: `${baseUrl}/lessons/{lessonId}?step=activities`,
+                  },
                 ],
-                redirectionUrl: `${baseUrl}/lessons/{lessonId}?step=activities`
+                redirectionUrl: `${baseUrl}/lessons/{lessonId}?step=activities`,
               },
               {
-                title: 'Lesson Plan Builder',
-                type: 'menu',
-                id: 'lesson_builder_plan',
+                title: "Lesson Plan Builder",
+                type: "menu",
+                id: "lesson_builder_plan",
                 children: [
                   {
-                    title: 'Blocks & Components',
-                    type: 'list',
-                    id: 'lesson_builder_plan_block_and_component',
-                    redirectionUrl: `${baseUrl}/lessons/{lessonId}/page-builder?pageId=${pageId}`
+                    title: "Blocks & Components",
+                    type: "list",
+                    id: "lesson_builder_plan_block_and_component",
+                    redirectionUrl: `${baseUrl}/lessons/{lessonId}/page-builder?pageId=${pageId}`,
                   },
                   {
-                    title: 'Lesson Plan Manager',
-                    type: 'list',
-                    id: 'lesson_builder_plan_manager',
-                    redirectionUrl: `${baseUrl}/lessons/{lessonId}page-builder?pageId=${pageId}`
+                    title: "Lesson Plan Manager",
+                    type: "list",
+                    id: "lesson_builder_plan_manager",
+                    redirectionUrl: `${baseUrl}/lessons/{lessonId}page-builder?pageId=${pageId}`,
                   },
                   {
-                    title: 'Homework & Challenges (Coming Soon)',
-                    type: 'list',
-                    id: 'lesson_builder_plan_homework_and_challenges',
-                    redirectionUrl: `${baseUrl}/lessons/{lessonId}`
-                  }
+                    title: "Homework & Challenges (Coming Soon)",
+                    type: "list",
+                    id: "lesson_builder_plan_homework_and_challenges",
+                    redirectionUrl: `${baseUrl}/lessons/{lessonId}`,
+                  },
                 ],
-                redirectionUrl: `${baseUrl}/lessons/{lessonId}/page-builder?pageId=${pageId}`
+                redirectionUrl: `${baseUrl}/lessons/{lessonId}/page-builder?pageId=${pageId}`,
               },
               {
-                title: 'Courses',
-                type: 'list',
-                id: 'lesson_builder_courses',
+                title: "Courses",
+                type: "list",
+                id: "lesson_builder_courses",
                 children: [],
-                redirectionUrl: `${baseUrl}/lessons/{lessonId}?step=courses`
+                redirectionUrl: `${baseUrl}/lessons/{lessonId}?step=courses`,
               },
               {
-                title: 'Learning Evidence',
-                type: 'list',
-                id: 'lesson_builder_learning_evidence',
+                title: "Learning Evidence",
+                type: "list",
+                id: "lesson_builder_learning_evidence",
                 children: [],
-                redirectionUrl: `${baseUrl}/lessons/{lessonId}?step=learning-evidence`
-              }
+                redirectionUrl: `${baseUrl}/lessons/{lessonId}?step=learning-evidence`,
+              },
             ],
-            redirectionUrl: `${baseUrl}/lessons/add`
-          }
-        ]
+            redirectionUrl: `${baseUrl}/lessons/add`,
+          },
+        ],
       },
-      (role === 'ADM' || role === 'SUP' || role === 'BLD') && {
+      (role === "ADM" || role === "SUP" || role === "BLD") && {
         title: `Service Provider`,
-        type: 'menu',
-        id: 'service_provider',
+        type: "menu",
+        id: "service_provider",
         children: [
           {
-            title: 'Provide service to another organization',
-            type: 'list',
-            id: 'service_provider_provide_service',
-            redirectionUrl: `${baseUrl}/edit`
+            title: "Provide service to another organization",
+            type: "list",
+            id: "service_provider_provide_service",
+            redirectionUrl: `${baseUrl}/edit`,
           },
           {
-            title: 'Request service from another organization',
-            type: 'list',
-            id: 'service_provider_request_service',
-            redirectionUrl: `${baseUrl}/edit`
-          }
+            title: "Request service from another organization",
+            type: "list",
+            id: "service_provider_request_service",
+            redirectionUrl: `${baseUrl}/edit`,
+          },
         ],
-        redirectionUrl: `${baseUrl}/edit`
+        redirectionUrl: `${baseUrl}/edit`,
       },
-      (role === 'ADM' || role === 'SUP' || role === 'BLD') && {
+      (role === "ADM" || role === "SUP" || role === "BLD") && {
         title: `Research & Analytics`,
-        type: 'list',
-        id: 'research_and_analytics',
+        type: "list",
+        id: "research_and_analytics",
         // children: [
         //   {
         //     title: 'Survey Download',
@@ -298,155 +297,157 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
         //     redirectionUrl: `${baseUrl}/research-and-analytics`,
         //   },
         // ],
-        redirectionUrl: `${baseUrl}/research-and-analytics`
+        redirectionUrl: `${baseUrl}/research-and-analytics`,
       },
-      (role === 'FLW' || role === 'TR') && {
-        title: 'Dashboard',
-        type: 'menu',
-        id: 'dashboard',
+      (role === "FLW" || role === "TR") && {
+        title: "Dashboard",
+        type: "menu",
+        id: "dashboard",
         children: [
           {
-            title: 'Your Classrooms',
-            type: 'list',
-            id: 'dashboard_classroom',
-            redirectionUrl: `/dashboard/home`
+            title: "Your Classrooms",
+            type: "list",
+            id: "dashboard_classroom",
+            redirectionUrl: `/dashboard/home`,
           },
           {
-            title: 'Your Students',
-            type: 'list',
-            id: 'dashboard_student',
-            redirectionUrl: `/dashboard/home`
-          }
+            title: "Your Students",
+            type: "list",
+            id: "dashboard_student",
+            redirectionUrl: `/dashboard/home`,
+          },
         ],
-        redirectionUrl: `/dashboard/home`
+        redirectionUrl: `/dashboard/home`,
       },
-      (role === 'FLW' || role === 'TR') && {
-        title: 'Classroom',
-        type: 'menu',
-        id: 'classroom',
+      (role === "FLW" || role === "TR") && {
+        title: "Classroom",
+        type: "menu",
+        id: "classroom",
         children: [
           {
-            title: 'Lesson Planner',
-            type: 'list',
-            id: 'classroom_lesson_planner',
-            redirectionUrl: `/dashboard/lesson-planner`
+            title: "Lesson Planner",
+            type: "list",
+            id: "classroom_lesson_planner",
+            redirectionUrl: `/dashboard/lesson-planner`,
           },
           {
-            title: 'Live Lesson',
-            type: 'list',
-            id: 'live_classroom_lesson',
-            redirectionUrl: `/dashboard/home`
-          }
+            title: "Live Lesson",
+            type: "list",
+            id: "live_classroom_lesson",
+            redirectionUrl: `/dashboard/home`,
+          },
         ],
-        redirectionUrl: `/dashboard/manage-institutions/institution?id=${institutionId}`
+        redirectionUrl: `/dashboard/manage-institutions/institution?id=${institutionId}`,
       },
-      (role === 'FLW' || role === 'TR') && {
-        title: 'Student Profile',
-        type: 'list',
-        id: 'live_classroom',
+      (role === "FLW" || role === "TR") && {
+        title: "Student Profile",
+        type: "list",
+        id: "live_classroom",
         children: [
           {
-            title: 'Demographics & Information',
-            type: 'list',
-            id: 'live_classroom_roaster',
-            redirectionUrl: `${baseUrl}/research-and-analytics`
+            title: "Demographics & Information",
+            type: "list",
+            id: "live_classroom_roaster",
+            redirectionUrl: `${baseUrl}/research-and-analytics`,
           },
           {
-            title: 'Attendance',
-            type: 'list',
-            id: 'live_classroom_lesson_pace_SEtter',
-            redirectionUrl: `${baseUrl}/research-and-analytics`
+            title: "Attendance",
+            type: "list",
+            id: "live_classroom_lesson_pace_SEtter",
+            redirectionUrl: `${baseUrl}/research-and-analytics`,
           },
           {
-            title: 'Notebooks',
-            type: 'list',
-            id: 'live_classroom_view_student_page',
-            redirectionUrl: `${baseUrl}/research-and-analytics`
-          }
+            title: "Notebooks",
+            type: "list",
+            id: "live_classroom_view_student_page",
+            redirectionUrl: `${baseUrl}/research-and-analytics`,
+          },
         ],
-        redirectionUrl: `/dashboard/manage-institutions/institution?id=${institutionId}`
+        redirectionUrl: `/dashboard/manage-institutions/institution?id=${institutionId}`,
       },
-      role === 'ST' && {
-        title: 'Dashboard',
-        type: 'list',
-        id: 'dashboard',
+      role === "ST" && {
+        title: "Dashboard",
+        type: "list",
+        id: "dashboard",
         children: [],
-        redirectionUrl: `/dashboard/manage-institutions/institution?id={institutionId}`
+        redirectionUrl: `/dashboard/manage-institutions/institution?id={institutionId}`,
       },
-      role === 'ST' && {
-        title: 'Live Classroom',
-        type: 'list',
-        id: 'live_classroom',
+      role === "ST" && {
+        title: "Live Classroom",
+        type: "list",
+        id: "live_classroom",
         children: [
           {
-            title: 'Survey Download',
-            type: 'list',
-            id: 'research_and_analytics_survey_download',
-            redirectionUrl: `${baseUrl}/research-and-analytics`
-          }
+            title: "Survey Download",
+            type: "list",
+            id: "research_and_analytics_survey_download",
+            redirectionUrl: `${baseUrl}/research-and-analytics`,
+          },
         ],
-        redirectionUrl: `/dashboard/manage-institutions/institution?id={institutionId}`
+        redirectionUrl: `/dashboard/manage-institutions/institution?id={institutionId}`,
       },
-      role === 'ST' && {
-        title: 'Notebooks',
-        type: 'menu',
-        id: 'notebooks',
+      role === "ST" && {
+        title: "Notebooks",
+        type: "menu",
+        id: "notebooks",
         children: [
           {
-            title: 'Class Notebooks',
-            type: 'list',
-            id: 'class_notebooks',
-            redirectionUrl: `${baseUrl}/research-and-analytics`
+            title: "Class Notebooks",
+            type: "list",
+            id: "class_notebooks",
+            redirectionUrl: `${baseUrl}/research-and-analytics`,
           },
           {
-            title: 'Private Notebooks',
-            type: 'menu',
-            id: 'private_notebooks',
+            title: "Private Notebooks",
+            type: "menu",
+            id: "private_notebooks",
             children: [
               {
-                title: 'Sentiment Tracking',
-                type: 'list',
-                id: 'class_notebooks',
-                redirectionUrl: `${baseUrl}/research-and-analytics`
+                title: "Sentiment Tracking",
+                type: "list",
+                id: "class_notebooks",
+                redirectionUrl: `${baseUrl}/research-and-analytics`,
               },
               {
-                title: 'Class work',
-                type: 'list',
-                id: 'class_notebooks',
-                redirectionUrl: `${baseUrl}/research-and-analytics`
+                title: "Class work",
+                type: "list",
+                id: "class_notebooks",
+                redirectionUrl: `${baseUrl}/research-and-analytics`,
               },
               {
-                title: 'Class notes',
-                type: 'list',
-                id: 'class_notebooks',
-                redirectionUrl: `${baseUrl}/research-and-analytics`
+                title: "Class notes",
+                type: "list",
+                id: "class_notebooks",
+                redirectionUrl: `${baseUrl}/research-and-analytics`,
               },
               {
-                title: 'Attachments',
-                type: 'list',
-                id: 'class_notebooks',
-                redirectionUrl: `${baseUrl}/research-and-analytics`
-              }
+                title: "Attachments",
+                type: "list",
+                id: "class_notebooks",
+                redirectionUrl: `${baseUrl}/research-and-analytics`,
+              },
             ],
-            redirectionUrl: `${baseUrl}/research-and-analytics`
-          }
+            redirectionUrl: `${baseUrl}/research-and-analytics`,
+          },
         ],
-        redirectionUrl: `${baseUrl}/staff`
-      }
-    ].filter(Boolean)
+        redirectionUrl: `${baseUrl}/staff`,
+      },
+    ].filter(Boolean),
   };
 
   useEffect(() => {
-    const selected_institution: any = getLocalStorageData('selected_institution');
+    const selected_institution: any = getLocalStorageData(
+      "selected_institution"
+    );
     if (associateInstitute?.length) {
       if (!selected_institution?.institution?.id) {
-        setLocalStorageData('selected_institution', selected_institution);
+        setLocalStorageData("selected_institution", selected_institution);
       }
       setInstitutionList(
         associateInstitute.map((item: any) => ({
           ...item,
           name: item.institution.name,
-          id: item.institution.id
+          id: item.institution.id,
         }))
       );
       setInstListLoading(false);
@@ -461,15 +462,17 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
   }, []);
 
   const setupActiveSection = async () => {
-    const activeStep = getLocalStorageData('active_step_section');
-    const selected_institution: any = getLocalStorageData('selected_institution');
+    const activeStep = getLocalStorageData("active_step_section");
+    const selected_institution: any = getLocalStorageData(
+      "selected_institution"
+    );
     if (activeStep) {
       setSectionDetailsLoading(true);
       const data = await fetchDataOfActiveSection(
         activeStep.id,
         selected_institution?.institution?.id
       );
-      setActiveSection({...activeStep, data});
+      setActiveSection({ ...activeStep, data });
       setSectionDetailsLoading(false);
     }
     setSectionDetailsLoading(false);
@@ -499,8 +502,8 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
         ...item,
         institution: {
           id: item.id,
-          name: item.name
-        }
+          name: item.name,
+        },
       })) || []
     );
     setInstListLoading(false);
@@ -511,7 +514,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
     redirectionUrl: string;
     title: string;
   }) => {
-    setLocalStorageData('active_step_section', section);
+    setLocalStorageData("active_step_section", section);
     // setActiveSection((prevSection: any) => ({
     //   ...prevSection,
     //   ...section,
@@ -519,7 +522,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
     if (alertConfig.show) {
       setAlertConfig({
         show: false,
-        message: ''
+        message: "",
       });
     }
     let data = {};
@@ -532,26 +535,29 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
       );
       setSectionDetailsLoading(false);
     } else {
-      if (role === 'ADM' || role === 'SUP' || role === 'BLD') {
+      if (role === "ADM" || role === "SUP" || role === "BLD") {
         setAlertConfig({
           show: true,
-          message: 'Please select institution before continuing'
+          message: "Please select institution before continuing",
         });
       }
       return;
     }
     setActiveSection((prevSection: any) => ({
       ...section,
-      data: {...prevSection.data, ...data}
+      data: { ...prevSection.data, ...data },
     }));
   };
 
-  const redirectToSelectedSection = (redirectionUrl: string, replaceObject?: any) => {
+  const redirectToSelectedSection = (
+    redirectionUrl: string,
+    replaceObject?: any
+  ) => {
     let url = redirectionUrl;
     for (const key in replaceObject) {
       if (replaceObject.hasOwnProperty(key)) {
         const val = replaceObject[key];
-        url = url.replace(new RegExp(`{${key}}`, 'g'), val);
+        url = url.replace(new RegExp(`{${key}}`, "g"), val);
       }
     }
     history.push(url);
@@ -563,21 +569,21 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
     redirectionUrl?: string
   ) => {
     let replaceObject: any = {
-      institutionId: selectedInstitution?.institution?.id
+      institutionId: selectedInstitution?.institution?.id,
     };
 
     switch (id) {
-      case 'inst': {
+      case "inst": {
         if (redirectionUrl) {
           redirectToSelectedSection(redirectionUrl, replaceObject);
         }
       }
-      case 'inst_general_info': {
+      case "inst_general_info": {
         try {
           if (instId) {
             const result: any = await API.graphql(
               graphqlOperation(customQueries.getBasicDetailsOfInstitution, {
-                id: instId
+                id: instId,
               })
             );
             if (redirectionUrl) {
@@ -587,10 +593,10 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
           }
           return null;
         } catch (error) {
-          console.log(error, 'error');
+          console.log(error, "error");
         }
       }
-      case 'inst_staff': {
+      case "inst_staff": {
         try {
           if (instId) {
             const result: any = await API.graphql(
@@ -598,10 +604,10 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                 filter: {
                   or: [
                     {
-                      institutionID: {eq: instId}
-                    }
-                  ]
-                }
+                      institutionID: { eq: instId },
+                    },
+                  ],
+                },
               })
             );
             if (redirectionUrl) {
@@ -609,85 +615,91 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
             }
             return {
               staff: result.data.listStaff.items.filter(
-                (member: any) => member.staffMember.role === 'TR'
-              )
+                (member: any) => member.staffMember.role === "TR"
+              ),
             };
           }
           return null;
         } catch (error) {
-          console.log(error, 'error');
+          console.log(error, "error");
         }
       }
-      case 'inst_classes':
-      case 'inst_classes_add_student':
-      case 'inst_curriculum':
-      case 'inst_curriculum_units':
-      case 'inst_classroom':
-      case 'inst_curriculum_demographic_information': {
+      case "inst_classes":
+      case "inst_classes_add_student":
+      case "inst_curriculum":
+      case "inst_curriculum_units":
+      case "inst_classroom":
+      case "inst_curriculum_demographic_information": {
         if (instId && redirectionUrl) {
           redirectToSelectedSection(redirectionUrl, replaceObject);
         }
         return;
       }
-      case 'service_provider': {
+      case "service_provider": {
         setAlertConfig({
           show: true,
           message:
-            'Select whether you want to provide or request a service as an organization in one of the steps provided'
+            "Select whether you want to provide or request a service as an organization in one of the steps provided",
         });
         return;
       }
-      case 'lesson_builder':
-      case 'lesson_builder_list':
-      case 'lesson_builder_editor':
-      case 'research_and_analytics': {
+      case "lesson_builder":
+      case "lesson_builder_list":
+      case "lesson_builder_editor":
+      case "research_and_analytics": {
         if (redirectionUrl) {
           redirectToSelectedSection(redirectionUrl, replaceObject);
         }
         return;
       }
-      case 'inst_classes_create': {
+      case "inst_classes_create": {
         try {
           if (instId) {
             const result: any = await API.graphql(
-              graphqlOperation(customQueries.GetInstitutionClasses, {id: instId})
+              graphqlOperation(customQueries.GetInstitutionClasses, {
+                id: instId,
+              })
             );
             if (redirectionUrl) {
               redirectToSelectedSection(redirectionUrl, replaceObject);
             }
-            return {classes: result.data?.getInstitution?.classes.items};
+            return { classes: result.data?.getInstitution?.classes.items };
           }
           if (instId && redirectionUrl) {
             redirectToSelectedSection(redirectionUrl, replaceObject);
           }
           return null;
         } catch (error) {
-          console.log(error, 'error');
+          console.log(error, "error");
         }
       }
-      case 'inst_curriculum_general_info': {
+      case "inst_curriculum_general_info": {
         try {
           if (instId) {
             const result: any = await API.graphql(
-              graphqlOperation(customQueries.getInstitutionCurriculums, {id: instId})
+              graphqlOperation(customQueries.getInstitutionCurriculums, {
+                id: instId,
+              })
             );
             if (redirectionUrl) {
               redirectToSelectedSection(redirectionUrl, replaceObject);
             }
-            return {curriculum: result.data?.getInstitution?.curricula.items};
+            return { curriculum: result.data?.getInstitution?.curricula.items };
           }
           return null;
         } catch (error) {
-          console.log(error, 'error');
+          console.log(error, "error");
         }
       }
-      case 'inst_curriculum_learning_objectives': {
+      case "inst_curriculum_learning_objectives": {
         try {
           if (instId) {
             let curriculums: any = activeSection?.data?.curriculum;
             if (!curriculums) {
               const result: any = await API.graphql(
-                graphqlOperation(customQueries.getInstitutionCurriculums, {id: instId})
+                graphqlOperation(customQueries.getInstitutionCurriculums, {
+                  id: instId,
+                })
               );
               curriculums = result.data?.getInstitution?.curricula.items;
             }
@@ -695,87 +707,92 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
             if (curriculums?.length) {
               const filter = {
                 or: curriculums.map((curriculum: any) => ({
-                  curriculumID: {eq: curriculum.id}
-                }))
+                  curriculumID: { eq: curriculum.id },
+                })),
               };
               let learningObjectives: any = await API.graphql(
                 graphqlOperation(queries.listLearningObjectives, {
-                  filter
+                  filter,
                 })
               );
               learningObjectives =
                 learningObjectives?.data?.listLearningObjectives?.items || [];
-              console.log(learningObjectives, 'learningObjectives');
+              console.log(learningObjectives, "learningObjectives");
               let topics: any = await API.graphql(
                 graphqlOperation(queries.listTopics, {
-                  filter
+                  filter,
                 })
               );
               topics = topics?.data?.listTopics?.items || [];
-              console.log(topics, 'topics');
+              console.log(topics, "topics");
               let rubrics: any = await API.graphql(
                 graphqlOperation(queries.listRubrics, {
-                  filter
+                  filter,
                 })
               );
               rubrics = rubrics?.data?.listRubrics?.items || [];
               if (redirectionUrl) {
                 redirectToSelectedSection(redirectionUrl, {
                   ...replaceObject,
-                  curriculumId: curriculums[0].id
+                  curriculumId: curriculums[0].id,
                 });
               }
               return {
                 curriculum: curriculums,
                 learningObjectives,
                 topics,
-                rubrics
+                rubrics,
               };
             }
             redirectToSelectedSection(`${baseUrl}/course-builder`);
           }
           return null;
         } catch (error) {
-          console.log(error, 'error');
+          console.log(error, "error");
         }
       }
-      case 'inst_curriculum_units_lesson_plan_manager':
-      case 'inst_curriculum_units_general_info': {
+      case "inst_curriculum_units_lesson_plan_manager":
+      case "inst_curriculum_units_general_info": {
         try {
           if (instId) {
             let universalSyllabus: any = await API.graphql(
               graphqlOperation(queries.listUniversalSyllabi, {
                 filter: {
-                  institutionID: {eq: instId}
-                }
+                  institutionID: { eq: instId },
+                },
               })
             );
-            universalSyllabus = universalSyllabus?.data?.listUniversalSyllabi?.items;
+            universalSyllabus =
+              universalSyllabus?.data?.listUniversalSyllabi?.items;
             if (redirectionUrl) {
               if (universalSyllabus?.length) {
                 redirectToSelectedSection(redirectionUrl, {
                   ...replaceObject,
-                  syllabusId: universalSyllabus[0].id
+                  syllabusId: universalSyllabus[0].id,
                 });
               } else {
-                redirectToSelectedSection(`${baseUrl}/course-builder?id={institutionId}`);
+                redirectToSelectedSection(
+                  `${baseUrl}/course-builder?id={institutionId}`
+                );
               }
             }
-            return {universalSyllabus};
+            return { universalSyllabus };
           }
-          redirectToSelectedSection(`${baseUrl}/course-builder?id={institutionId}`);
+          redirectToSelectedSection(
+            `${baseUrl}/course-builder?id={institutionId}`
+          );
         } catch (error) {
-          console.log(error, 'error');
+          console.log(error, "error");
         }
       }
-      case 'inst_classroom_unit_planner':
-      case 'inst_classroom_class_detail':
-      case 'inst_classroom_class_dynamics': {
+      case "inst_classroom_unit_planner":
+      case "inst_classroom_class_detail":
+      case "inst_classroom_class_dynamics": {
         try {
           if (instId) {
             const result: any = await API.graphql(
               graphqlOperation(customQueries.listRoomsBasicDetails, {
-                filter: {institutionID: {eq: instId}}
+                filter: { institutionID: { eq: instId } },
               })
             );
             const rooms = result.data?.listRooms?.items;
@@ -783,174 +800,184 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
               if (rooms.length) {
                 redirectToSelectedSection(redirectionUrl, {
                   ...replaceObject,
-                  roomId: rooms[0].id
+                  roomId: rooms[0].id,
                 });
               } else {
                 redirectToSelectedSection(
-                  '/dashboard/manage-institutions/room-creation?id=${institutionId}',
+                  "/dashboard/manage-institutions/room-creation?id=${institutionId}",
                   replaceObject
                 );
               }
             }
-            return {classRooms: result.data?.listRooms?.items};
+            return { classRooms: result.data?.listRooms?.items };
           }
         } catch (error) {
-          console.log(error, 'error');
+          console.log(error, "error");
         }
       }
-      case 'lesson_builder_list_create_new_lesson':
-      case 'lesson_builder_activities':
-      case 'lesson_builder_activities_lesson_planner':
-      case 'lesson_builder_activities_overlay':
-      case 'lesson_builder_plan':
-      case 'lesson_builder_plan_block_and_component':
-      case 'lesson_builder_overview': {
+      case "lesson_builder_list_create_new_lesson":
+      case "lesson_builder_activities":
+      case "lesson_builder_activities_lesson_planner":
+      case "lesson_builder_activities_overlay":
+      case "lesson_builder_plan":
+      case "lesson_builder_plan_block_and_component":
+      case "lesson_builder_overview": {
         try {
           let universalLessons = activeSection?.data?.universalLessons?.length;
           if (instId && !universalLessons?.length) {
             const result: any = await API.graphql(
-              graphqlOperation(customQueries.listUniversalLessonsForInstitution, {
-                filter: {institutionID: {eq: instId}}
-              })
+              graphqlOperation(
+                customQueries.listUniversalLessonsForInstitution,
+                {
+                  filter: { institutionID: { eq: instId } },
+                }
+              )
             );
             universalLessons = result.data?.listUniversalLessons?.items;
             if (redirectionUrl) {
               if (universalLessons.length) {
-                const lessonPlanWithBlock = universalLessons?.find((lesson: any) =>
-                  lesson.lessonPlan?.find((plan: any) =>
-                    plan.pageContent?.find((page: any) => page?.partContent?.length)
-                  )
+                const lessonPlanWithBlock = universalLessons?.find(
+                  (lesson: any) =>
+                    lesson.lessonPlan?.find((plan: any) =>
+                      plan.pageContent?.find(
+                        (page: any) => page?.partContent?.length
+                      )
+                    )
                 );
                 if (lessonPlanWithBlock) {
                   replaceObject = {
                     ...replaceObject,
-                    pageId: lessonPlanWithBlock.lessonPlan[0].id
+                    pageId: lessonPlanWithBlock.lessonPlan[0].id,
                   };
                 }
                 redirectToSelectedSection(redirectionUrl, {
                   ...replaceObject,
-                  lessonId: universalLessons[0].id
+                  lessonId: universalLessons[0].id,
                 });
               } else {
-                redirectToSelectedSection('${baseUrl}/lessons/lesson/add');
+                redirectToSelectedSection("${baseUrl}/lessons/lesson/add");
               }
             }
-            return {universalLessons};
+            return { universalLessons };
           }
           if (redirectionUrl) {
             if (universalLessons.length) {
-              const lessonPlanWithBlock = universalLessons?.find((lesson: any) =>
-                lesson.lessonPlan?.find((plan: any) =>
-                  plan.pageContent?.find((page: any) => page?.partContent?.length)
-                )
+              const lessonPlanWithBlock = universalLessons?.find(
+                (lesson: any) =>
+                  lesson.lessonPlan?.find((plan: any) =>
+                    plan.pageContent?.find(
+                      (page: any) => page?.partContent?.length
+                    )
+                  )
               );
               if (lessonPlanWithBlock) {
                 replaceObject = {
                   ...replaceObject,
-                  pageId: lessonPlanWithBlock.lessonPlan[0].id
+                  pageId: lessonPlanWithBlock.lessonPlan[0].id,
                 };
               }
               redirectToSelectedSection(redirectionUrl, {
                 ...replaceObject,
-                lessonId: universalLessons[0].id
+                lessonId: universalLessons[0].id,
               });
             } else {
-              redirectToSelectedSection('${baseUrl}/lessons/lesson/add');
+              redirectToSelectedSection("${baseUrl}/lessons/lesson/add");
             }
           }
         } catch (error) {
-          console.log(error, 'error');
+          console.log(error, "error");
         }
       }
-      case 'lesson_builder_courses': {
+      case "lesson_builder_courses": {
         try {
           if (instId) {
             let universalLessonsList = activeSection?.data?.universalLessons;
             if (!universalLessonsList) {
               const result: any = await API.graphql(
-                graphqlOperation(customQueries.listUniversalLessonsForInstitution, {
-                  filter: {institutionID: {eq: instId}}
-                })
+                graphqlOperation(
+                  customQueries.listUniversalLessonsForInstitution,
+                  {
+                    filter: { institutionID: { eq: instId } },
+                  }
+                )
               );
               universalLessonsList = result.data?.listUniversalLessons?.items;
             }
             const list: any = await API.graphql(
               graphqlOperation(queries.listCurricula, {
                 filter: {
-                  institutionID: {eq: instId}
-                }
+                  institutionID: { eq: instId },
+                },
               })
             );
             const curriculums = list.data?.listCurriculums?.items;
-            const lessonIds = universalLessonsList?.map((lesson: any) => lesson.id);
+            const lessonIds = universalLessonsList?.map(
+              (lesson: any) => lesson.id
+            );
             let isCourseAdded = false;
             curriculums.map((curriculum: any) => {
               if (!isCourseAdded) {
-                const assignedSyllabi = curriculum.universalSyllabus?.items.filter(
-                  (syllabus: any) =>
-                    syllabus.lessons?.items.filter((lesson: any) =>
-                      lessonIds.includes(lesson.lessonID)
-                    ).length
-                );
+                const assignedSyllabi =
+                  curriculum.universalSyllabus?.items.filter(
+                    (syllabus: any) =>
+                      syllabus.lessons?.items.filter((lesson: any) =>
+                        lessonIds.includes(lesson.lessonID)
+                      ).length
+                  );
                 isCourseAdded = Boolean(assignedSyllabi.length);
               }
             });
             if (universalLessonsList.length) {
-              redirectToSelectedSection(redirectionUrl, {
-                ...replaceObject,
-                lessonId: universalLessonsList[0].id
-              });
+              redirectionUrl &&
+                redirectToSelectedSection(redirectionUrl, {
+                  ...replaceObject,
+                  lessonId: universalLessonsList[0].id,
+                });
             } else {
-              redirectToSelectedSection('${baseUrl}/lessons/lesson/add');
+              redirectToSelectedSection("${baseUrl}/lessons/lesson/add");
             }
-            return {isCourseAdded, universalLessons: universalLessonsList};
+            return { isCourseAdded, universalLessons: universalLessonsList };
           }
         } catch (error) {
-          console.log(error, 'error');
+          console.log(error, "error");
         }
       }
-      case 'lesson_builder_learning_evidence': {
+      case "lesson_builder_learning_evidence": {
         try {
           if (instId) {
             let universalLessonsList = activeSection?.data?.universalLessons;
             if (!universalLessonsList) {
               const result: any = await API.graphql(
-                graphqlOperation(customQueries.listUniversalLessonsForInstitution, {
-                  filter: {institutionID: {eq: instId}}
-                })
+                graphqlOperation(
+                  customQueries.listUniversalLessonsForInstitution,
+                  {
+                    filter: { institutionID: { eq: instId } },
+                  }
+                )
               );
               universalLessonsList = result.data?.listUniversalLessons?.items;
             }
-            const filter = {
-              or: universalLessonsList.map((lesson: any) => ({
-                lessonID: {eq: lesson.id}
-              }))
-            };
-            // const result: any = await API.graphql(
-            //   graphqlOperation(customQueries.listLessonRubricss, {
-            //     filter,
-            //     limit: 1,
-            //   })
-            // );
+
             if (universalLessonsList.length) {
-              redirectToSelectedSection(redirectionUrl, {
-                ...replaceObject,
-                lessonId: universalLessonsList[0].id
-              });
+              redirectionUrl &&
+                redirectToSelectedSection(redirectionUrl, {
+                  ...replaceObject,
+                  lessonId: universalLessonsList[0].id,
+                });
             } else {
-              redirectToSelectedSection('${baseUrl}/lessons/lesson/add');
+              redirectToSelectedSection("${baseUrl}/lessons/lesson/add");
             }
             return {
               // lessonRubrics: result?.data?.listLessonRubricss?.items,
-              universalLessons: universalLessonsList
+              universalLessons: universalLessonsList,
             };
           }
         } catch (error) {
-          console.log(error, 'error');
+          console.log(error, "error");
         }
       }
-      case 'service_provider_provide_service':
-      case 'service_provider_request_service': {
+      case "service_provider_provide_service":
+      case "service_provider_request_service": {
         if (instId && redirectionUrl) {
           redirectToSelectedSection(redirectionUrl, replaceObject);
         }
@@ -958,14 +985,16 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
     }
   };
 
-  const onInstituteChange = async (_: string, name: string, id: string) => {
-    const selectedData = institutionList.find((item: any) => item.institution?.id === id);
+  const onInstituteChange = async (_: string, __: string, id: string) => {
+    const selectedData = institutionList.find(
+      (item: any) => item.institution?.id === id
+    );
     setSelectedInstitution(selectedData);
-    setLocalStorageData('selected_institution', selectedData);
+    setLocalStorageData("selected_institution", selectedData);
     if (alertConfig.show) {
       setAlertConfig({
         show: false,
-        message: ''
+        message: "",
       });
     }
     if (activeSection) {
@@ -973,7 +1002,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
         activeSection.id,
         selectedData?.institution?.id
       );
-      setActiveSection((prevData: any) => ({...prevData, data}));
+      setActiveSection((prevData: any) => ({ ...prevData, data }));
     }
   };
 
@@ -992,17 +1021,17 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
   const stepsOfActiveSection = () => {
     const institutionId = selectedInstitution?.institution?.id;
     const baseUrl =
-      role === 'SUP'
-        ? '/dashboard/manage-institutions'
+      role === "SUP"
+        ? "/dashboard/manage-institutions"
         : `/dashboard/manage-institutions/institution/${institutionId}`;
 
     switch (activeSection?.id) {
-      case 'inst':
+      case "inst":
         return (
           <div className="mt-6">
             <div className="mb-4">
-              Welcome to the institution setup section. There are 5 areas we will cover
-              which are the following:
+              Welcome to the institution setup section. There are 5 areas we
+              will cover which are the following:
             </div>
 
             <ul className="mb-4">
@@ -1014,127 +1043,140 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
             </ul>
 
             <div className="mb-4">
-              All sections need to be completed for the app to work properly.{' '}
+              All sections need to be completed for the app to work properly.{" "}
             </div>
 
             <div className="mb-4">
-              Note: We will cover Service Providers in another section for those who are
-              lending or using their curriculum or teachers to another institution.
+              Note: We will cover Service Providers in another section for those
+              who are lending or using their curriculum or teachers to another
+              institution.
             </div>
           </div>
         );
-      case 'inst_general_info':
+      case "inst_general_info":
         return (
           <div className="mt-6">
             <div className="mb-4">
               <div className="text-base flex item-center">
                 <span
                   className="cursor-pointer w-auto font-bold"
-                  onClick={() => history.push(`${baseUrl}/edit`)}>
+                  onClick={() => history.push(`${baseUrl}/edit`)}
+                >
                   1. Add Your Institution's Avatar
                 </span>
                 {progressIndicator(activeSection?.data?.image)}
               </div>
               <div className="my-1 ml-3 italic">
-                Click the avatar circle to upload your organization's logo. SVG or PNG
-                file extensions are recommended but jpg will work as well.
+                Click the avatar circle to upload your organization's logo. SVG
+                or PNG file extensions are recommended but jpg will work as
+                well.
               </div>
             </div>
             <div className="mb-4">
               <div className="text-base flex item-center">
                 <span
                   className="w-auto text-base font-bold cursor-pointer"
-                  onClick={() => history.push(`${baseUrl}/edit`)}>
+                  onClick={() => history.push(`${baseUrl}/edit`)}
+                >
                   2. Enter your Institution's contact information
                 </span>
                 {progressIndicator(activeSection?.data?.address)}
               </div>
               <div className="my-1 ml-3 italic">
-                Update the address, contact number and website of your organization. The
-                service provider checkbox will be covered later.
+                Update the address, contact number and website of your
+                organization. The service provider checkbox will be covered
+                later.
               </div>
             </div>
           </div>
         );
 
-      case 'inst_staff':
+      case "inst_staff":
         return (
           <div className="mt-6">
             <div className="mb-4">
               <div className="text-base flex item-center">
                 <span
                   className="cursor-pointer w-auto font-bold"
-                  onClick={() => history.push(`${baseUrl}/staff`)}>
-                  1. Add at least one teacher or fellow to your institution (required)
+                  onClick={() => history.push(`${baseUrl}/staff`)}
+                >
+                  1. Add at least one teacher or fellow to your institution
+                  (required)
                 </span>
                 {progressIndicator(activeSection?.data?.staff?.length)}
               </div>
               <div className="my-1 ml-3 italic">
                 <div>- A teacher is someone who works at one organization.</div>
-                <div>- A fellow is someone who works at several organizations</div>
+                <div>
+                  - A fellow is someone who works at several organizations
+                </div>
               </div>
             </div>
             <div className="mb-4">
               <div className="text-base flex item-center">
                 <span
                   className="w-auto text-base font-bold cursor-pointer"
-                  onClick={() => history.push(`${baseUrl}/staff`)}>
+                  onClick={() => history.push(`${baseUrl}/staff`)}
+                >
                   2. Add a builder (optional)
                 </span>
               </div>
               <div className="my-1 ml-3 italic">
-                A builder is someone who works creates curriculum and does analysis on
-                lesson results but is not assigned classrooms or interacts with students.
+                A builder is someone who works creates curriculum and does
+                analysis on lesson results but is not assigned classrooms or
+                interacts with students.
               </div>
             </div>
           </div>
         );
-      case 'inst_classes_create':
+      case "inst_classes_create":
         return (
           <div className="mt-6">
             <div className="mb-4">
               <div className="text-base flex item-center">
                 <span
                   className="cursor-pointer w-auto font-bold"
-                  onClick={() => history.push(`${baseUrl}/class-creation`)}>
+                  onClick={() => history.push(`${baseUrl}/class-creation`)}
+                >
                   Create a class for your institution
                 </span>
                 {progressIndicator(activeSection?.data?.classes?.length)}
               </div>
               <div className="my-1 ml-3 italic">
-                Add a class name and click save. We will add students to the class in the
-                next step.
+                Add a class name and click save. We will add students to the
+                class in the next step.
               </div>
             </div>
           </div>
         );
-      case 'inst_classes_add_student':
+      case "inst_classes_add_student":
         return (
           <div className="mt-6">
             <div className="mb-4">
               <div className="text-base flex item-center">
                 <span
                   className="cursor-pointer w-auto font-bold"
-                  onClick={() => history.push(`/dashboard/registration`)}>
+                  onClick={() => history.push(`/dashboard/registration`)}
+                >
                   Add students to your class
                 </span>
                 {progressIndicator(false)}
               </div>
               <div className="my-1 ml-3 italic">
-                Click the button to add a new person Add their name, email and select the
-                student role.
+                Click the button to add a new person Add their name, email and
+                select the student role.
               </div>
               <div className="my-1 ml-3 italic">
                 Select the institute and the class you just created.
               </div>
               <div className="my-1 ml-3 italic">
-                The group field is optional. This is if you want to add a level of
-                classification for the group.
+                The group field is optional. This is if you want to add a level
+                of classification for the group.
               </div>
             </div>
           </div>
         );
-      case 'inst_curriculum_general_info':
+      case "inst_curriculum_general_info":
         return (
           <div className="mt-6">
             <div className="mb-4">
@@ -1142,8 +1184,11 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                 <span
                   className="cursor-pointer w-auto font-bold"
                   onClick={() =>
-                    history.push(`${baseUrl}/course-builder?id=${institutionId}`)
-                  }>
+                    history.push(
+                      `${baseUrl}/course-builder?id=${institutionId}`
+                    )
+                  }
+                >
                   1. Add curriculum image
                 </span>
                 {progressIndicator(
@@ -1155,8 +1200,8 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                 )}
               </div>
               <div className="my-1 ml-3 italic">
-                Click the avatar square. SVG or PNG files are recommended but jpg files
-                will work as well.
+                Click the avatar square. SVG or PNG files are recommended but
+                jpg files will work as well.
               </div>
             </div>
             <div className="mb-4">
@@ -1164,8 +1209,11 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                 <span
                   className="cursor-pointer w-auto font-bold"
                   onClick={() =>
-                    history.push(`${baseUrl}/course-builder?id=${institutionId}`)
-                  }>
+                    history.push(
+                      `${baseUrl}/course-builder?id=${institutionId}`
+                    )
+                  }
+                >
                   2. Name your curriculum
                 </span>
                 {progressIndicator(
@@ -1177,7 +1225,8 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                 )}
               </div>
               <div className="my-1 ml-3 italic">
-                For multi-lingual classrooms, you can have more than one lesson languages.
+                For multi-lingual classrooms, you can have more than one lesson
+                languages.
               </div>
             </div>
             <div className="mb-4">
@@ -1185,8 +1234,11 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                 <span
                   className="cursor-pointer w-auto font-bold"
                   onClick={() =>
-                    history.push(`${baseUrl}/course-builder?id=${institutionId}`)
-                  }>
+                    history.push(
+                      `${baseUrl}/course-builder?id=${institutionId}`
+                    )
+                  }
+                >
                   3. Select the language(s) of your lessons
                 </span>
                 {progressIndicator(
@@ -1203,9 +1255,13 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                 <span
                   className="cursor-pointer w-auto font-bold"
                   onClick={() =>
-                    history.push(`${baseUrl}/course-builder?id=${institutionId}`)
-                  }>
-                  4. Add the people who contributed to the design of the curriculum
+                    history.push(
+                      `${baseUrl}/course-builder?id=${institutionId}`
+                    )
+                  }
+                >
+                  4. Add the people who contributed to the design of the
+                  curriculum
                 </span>
                 {progressIndicator(
                   Boolean(
@@ -1223,10 +1279,13 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
               <div className="text-base flex item-center">
                 <span
                   className="cursor-pointer w-auto font-bold"
-                  onClick={() => history.push(`${baseUrl}/course-builder`)}>
+                  onClick={() => history.push(`${baseUrl}/course-builder`)}
+                >
                   5. Select the audience of your curriculum
                 </span>
-                {progressIndicator(Boolean(activeSection?.data?.curriculum?.length))}
+                {progressIndicator(
+                  Boolean(activeSection?.data?.curriculum?.length)
+                )}
               </div>
               {/* <div className="my-1 ml-3 italic">
                 Add a class name and click save. We will add students to the class in the
@@ -1237,7 +1296,8 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
               <div className="text-base flex item-center">
                 <span
                   className="cursor-pointer w-auto font-bold"
-                  onClick={() => history.push(`${baseUrl}/course-builder`)}>
+                  onClick={() => history.push(`${baseUrl}/course-builder`)}
+                >
                   6. Add the purpose, description and objective of the course
                 </span>
                 {progressIndicator(
@@ -1258,7 +1318,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
             </div>
           </div>
         );
-      case 'inst_curriculum_learning_objectives': {
+      case "inst_curriculum_learning_objectives": {
         const redirectionPath = activeSection?.data?.curriculum?.length
           ? `${baseUrl}/course-builder/${activeSection?.data?.curriculum[0].id}`
           : `${baseUrl}/course-builder`;
@@ -1268,10 +1328,13 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
               <div className="text-base flex item-center">
                 <span
                   className="cursor-pointer w-auto font-bold"
-                  onClick={() => history.push(redirectionPath)}>
+                  onClick={() => history.push(redirectionPath)}
+                >
                   1. Click on Add Learning Objective button
                 </span>
-                {progressIndicator(activeSection?.data?.learningObjectives?.length)}
+                {progressIndicator(
+                  activeSection?.data?.learningObjectives?.length
+                )}
               </div>
               {/* <div className="my-1 ml-3 italic">
                 Click the avatar square. SVG or PNG files are recommended but jpg files
@@ -1282,7 +1345,8 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
               <div className="text-base flex item-center">
                 <span
                   className="cursor-pointer w-auto font-bold"
-                  onClick={() => history.push(redirectionPath)}>
+                  onClick={() => history.push(redirectionPath)}
+                >
                   2. Create Learning Objective and add a description
                 </span>
                 {progressIndicator(false)}
@@ -1295,7 +1359,8 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
               <div className="text-base flex item-center">
                 <span
                   className="cursor-pointer w-auto font-bold"
-                  onClick={() => history.push(redirectionPath)}>
+                  onClick={() => history.push(redirectionPath)}
+                >
                   3. Add a topic to the Learning Objective
                 </span>
                 {progressIndicator(activeSection?.data?.topics?.length)}
@@ -1305,7 +1370,8 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
               <div className="text-base flex item-center">
                 <span
                   className="cursor-pointer w-auto font-bold"
-                  onClick={() => history.push(redirectionPath)}>
+                  onClick={() => history.push(redirectionPath)}
+                >
                   4. Add description and rubric to your topic
                 </span>
                 {progressIndicator(false)}
@@ -1318,7 +1384,8 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
               <div className="text-base flex item-center">
                 <span
                   className="cursor-pointer w-auto font-bold"
-                  onClick={() => history.push(redirectionPath)}>
+                  onClick={() => history.push(redirectionPath)}
+                >
                   5. Add at least one measurements to your topic
                 </span>
                 {progressIndicator(activeSection?.data?.rubrics?.length)}
@@ -1331,7 +1398,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
           </div>
         );
       }
-      case 'inst_curriculum_units_general_info': {
+      case "inst_curriculum_units_general_info": {
         const activeSyllabus = activeSection?.data?.universalSyllabus.length
           ? activeSection?.data?.universalSyllabus[0]
           : {};
@@ -1344,10 +1411,13 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
               <div className="text-base flex item-center">
                 <span
                   className="cursor-pointer w-auto font-bold"
-                  onClick={() => history.push(redirectionPath)}>
+                  onClick={() => history.push(redirectionPath)}
+                >
                   1. Enter name of unit
                 </span>
-                {progressIndicator(activeSection?.data?.universalSyllabus?.length)}
+                {progressIndicator(
+                  activeSection?.data?.universalSyllabus?.length
+                )}
               </div>
               {/* <div className="my-1 ml-3 italic">
                 Click the avatar square. SVG or PNG files are recommended but jpg files
@@ -1358,7 +1428,8 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
               <div className="text-base flex item-center">
                 <span
                   className="cursor-pointer w-auto font-bold"
-                  onClick={() => history.push(redirectionPath)}>
+                  onClick={() => history.push(redirectionPath)}
+                >
                   2. Select the languages of the lessons
                 </span>
                 {progressIndicator(false)}
@@ -1371,9 +1442,10 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
               <div className="text-base flex item-center">
                 <span
                   className="cursor-pointer w-auto font-bold"
-                  onClick={() => history.push(redirectionPath)}>
-                  3. Add the description, objectives, policies, purpose and methodologies
-                  of the unit
+                  onClick={() => history.push(redirectionPath)}
+                >
+                  3. Add the description, objectives, policies, purpose and
+                  methodologies of the unit
                 </span>
                 {progressIndicator(
                   activeSyllabus?.description &&
@@ -1387,14 +1459,15 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
           </div>
         );
       }
-      case 'inst_curriculum_units_lesson_plan_manager':
+      case "inst_curriculum_units_lesson_plan_manager":
         return (
           <div className="mt-6">
             <div className="mb-4">
               <div className="text-base flex item-center">
                 <span
                   className="cursor-pointer w-auto font-bold"
-                  onClick={() => history.push(`${baseUrl}/lessons`)}>
+                  onClick={() => history.push(`${baseUrl}/lessons`)}
+                >
                   1. Click on the New Lesson button
                 </span>
                 {progressIndicator(activeSection?.data?.universalLessons)}
@@ -1405,7 +1478,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
             </div>
           </div>
         );
-      case 'inst_classroom_class_detail':
+      case "inst_classroom_class_detail":
         return (
           <div className="mt-6">
             <div className="mb-4">
@@ -1418,14 +1491,16 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                         ? `${baseUrl}/room-edit/${activeSection?.data?.classRooms[0].id}?step=overview`
                         : `${baseUrl}/room-creation`
                     )
-                  }>
+                  }
+                >
                   1. Enter classroom name, select curriculum, select teachers &
-                  co-teachers, add class, conference call link and location objectives,
-                  policies, purpose and methodologies of the unit
+                  co-teachers, add class, conference call link and location
+                  objectives, policies, purpose and methodologies of the unit
                 </span>
                 {progressIndicator(
-                  activeSection?.data?.classRooms?.filter((item: any) => item.startDate)
-                    .length
+                  activeSection?.data?.classRooms?.filter(
+                    (item: any) => item.startDate
+                  ).length
                 )}
               </div>
               {/* <div className="my-1 ml-3 italic">
@@ -1434,7 +1509,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
             </div>
           </div>
         );
-      case 'inst_classroom_unit_planner':
+      case "inst_classroom_unit_planner":
         return (
           <div className="mt-6">
             <div className="mb-4">
@@ -1447,12 +1522,14 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                         ? `${baseUrl}/room-edit/${activeSection?.data?.classRooms[0].id}?step=unit-planner`
                         : `${baseUrl}/room-creation`
                     )
-                  }>
+                  }
+                >
                   1. Set up schedule details
                 </span>
                 {progressIndicator(
-                  activeSection?.data?.classRooms?.filter((item: any) => item.startDate)
-                    .length
+                  activeSection?.data?.classRooms?.filter(
+                    (item: any) => item.startDate
+                  ).length
                 )}
               </div>
               <div className="my-1 ml-3 italic">
@@ -1469,7 +1546,8 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                         ? `${baseUrl}/room-edit/${activeSection?.data?.classRooms[0].id}?step=class-dynamics`
                         : `${baseUrl}/room-creation`
                     )
-                  }>
+                  }
+                >
                   2. Add any details which impact the schedule
                 </span>
                 {progressIndicator(
@@ -1479,15 +1557,16 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                 )}
               </div>
               <div className="my-1 ml-3 italic">
-                This area is to record events which will impact your lessons or lesson
-                dates. Push means you will push the next lesson to the following project
-                date. Compact means that you will continue with the lesson but will need
-                to abbreviate the lesson coursework to meet schedule
+                This area is to record events which will impact your lessons or
+                lesson dates. Push means you will push the next lesson to the
+                following project date. Compact means that you will continue
+                with the lesson but will need to abbreviate the lesson
+                coursework to meet schedule
               </div>
             </div>
           </div>
         );
-      case 'inst_classroom_class_dynamics': {
+      case "inst_classroom_class_dynamics": {
         const redirectionPath = activeSection?.data?.classRooms?.length
           ? `${baseUrl}/room-edit/${activeSection?.data?.classRooms[0].id}?step=class-dynamics`
           : `${baseUrl}/room-creation`;
@@ -1498,8 +1577,11 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                 <span
                   className="cursor-pointer w-auto font-bold"
                   onClick={() =>
-                    history.push(`${redirectionPath}&sub-step=subject-proficiency`)
-                  }>
+                    history.push(
+                      `${redirectionPath}&sub-step=subject-proficiency`
+                    )
+                  }
+                >
                   1. Create subject proficiency groups
                 </span>
               </div>
@@ -1513,28 +1595,33 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                   className="cursor-pointer w-auto font-bold"
                   onClick={() =>
                     history.push(`${redirectionPath}&sub-step=course-partners`)
-                  }>
+                  }
+                >
                   2. Create course partner groups
                 </span>
               </div>
               <div className="my-1 ml-3 italic">
-                Put students into course study groups if applicable for your material
+                Put students into course study groups if applicable for your
+                material
               </div>
             </div>
           </div>
         );
       }
-      case 'lesson_builder_list_create_new_lesson':
+      case "lesson_builder_list_create_new_lesson":
         return (
           <div className="mt-6">
             <div className="mb-4">
               <div className="text-base flex item-center">
                 <span
                   className="cursor-pointer w-auto font-bold"
-                  onClick={() => history.push(`${baseUrl}/lessons`)}>
+                  onClick={() => history.push(`${baseUrl}/lessons`)}
+                >
                   1. Click Create New Lesson button
                 </span>
-                {progressIndicator(activeSection?.data?.universalLessons?.length)}
+                {progressIndicator(
+                  activeSection?.data?.universalLessons?.length
+                )}
               </div>
               {/* <div className="my-1 ml-3 italic">Click Create New Lesson from scratch</div> */}
             </div>
@@ -1552,63 +1639,70 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
             </div> */}
           </div>
         );
-      case 'lesson_builder_overview':
+      case "lesson_builder_overview":
         return (
           <div className="mt-6">
             <div className="mb-4">
               <div className="text-base flex item-center">
                 <span
                   className="cursor-pointer w-auto font-bold"
-                  onClick={() => history.push(`${baseUrl}/lessons/add`)}>
+                  onClick={() => history.push(`${baseUrl}/lessons/add`)}
+                >
                   1. Enter the core details of your lesson
                 </span>
-                {progressIndicator(activeSection?.data?.universalLessons?.length)}
+                {progressIndicator(
+                  activeSection?.data?.universalLessons?.length
+                )}
               </div>
               <div className="my-1 ml-3 italic">
-                a. a <b>lesson</b> is a list of activities for learning, a <b>survey</b>{' '}
-                are questions with no answer key and an <b> assessment </b> is a set of
-                questions that have an answer key.
+                a. a <b>lesson</b> is a list of activities for learning, a{" "}
+                <b>survey</b> are questions with no answer key and an{" "}
+                <b> assessment </b> is a set of questions that have an answer
+                key.
               </div>
               <div className="my-1 ml-3 italic">
-                b. Duration is the number of time periods the lesson will be taught over.
-                Fractional times mean you will use two or more lesson blocks in one time
-                period.
+                b. Duration is the number of time periods the lesson will be
+                taught over. Fractional times mean you will use two or more
+                lesson blocks in one time period.
               </div>
               <div className="my-1 ml-3 italic">
-                c. Institution is the organization who is the intellectual owner of the
-                material
+                c. Institution is the organization who is the intellectual owner
+                of the material
               </div>
             </div>
             <div className="mb-4">
               <div className="text-base flex item-center">
                 <span
                   className="cursor-pointer w-auto font-bold"
-                  onClick={() => history.push(`${baseUrl}/lessons/add`)}>
+                  onClick={() => history.push(`${baseUrl}/lessons/add`)}
+                >
                   2. Create a lesson card for your classroom page
                 </span>
               </div>
               <div className="my-1 ml-3 italic">
-                Materials has two tabs. One is a reminder for the educator, the second tab
-                is to notify participants if they need to bring materials to class.
+                Materials has two tabs. One is a reminder for the educator, the
+                second tab is to notify participants if they need to bring
+                materials to class.
               </div>
             </div>
             <div className="mb-4">
               <div className="text-base flex item-center">
                 <span
                   className="cursor-pointer w-auto font-bold"
-                  onClick={() => history.push(`${baseUrl}/lessons/add`)}>
-                  3. List any materials for instructor and/or participant to bring for the
-                  lesson
+                  onClick={() => history.push(`${baseUrl}/lessons/add`)}
+                >
+                  3. List any materials for instructor and/or participant to
+                  bring for the lesson
                 </span>
               </div>
               <div className="my-1 ml-3 italic">
-                Add an image, put some text over the image and provide a quick overview to
-                the lessons for the participants
+                Add an image, put some text over the image and provide a quick
+                overview to the lessons for the participants
               </div>
             </div>
           </div>
         );
-      case 'lesson_builder_activities_lesson_planner':
+      case "lesson_builder_activities_lesson_planner":
         return (
           <div className="mt-6">
             <div className="mb-4">
@@ -1621,7 +1715,8 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                         ? `${baseUrl}/lessons/${activeSection?.data?.universalLessons[0].id}?step=activities`
                         : `${baseUrl}/lessons/add`
                     )
-                  }>
+                  }
+                >
                   1. Click on Add New Class Activity button
                 </span>
                 {/* {progressIndicator(
@@ -1647,8 +1742,9 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                 )}
               </div>
               <div className="my-1 ml-3 italic">
-                c. Activity Instructions (not required, but this shows up on the lesson
-                plan for students so it is highly suggested to complete this section)
+                c. Activity Instructions (not required, but this shows up on the
+                lesson plan for students so it is highly suggested to complete
+                this section)
               </div>
               <div className="my-1 ml-3 italic">
                 d. Interaction type (Group, Small Group, Individual)
@@ -1657,8 +1753,9 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                 d. Interaction type (Group, Small Group, Individual)
               </div>
               <div className="my-1 ml-3 italic">
-                e. Estimated Time (not required, but this shows up on the lesson plan for
-                students so it is highly suggested to complete this section)
+                e. Estimated Time (not required, but this shows up on the lesson
+                plan for students so it is highly suggested to complete this
+                section)
               </div>
               <div className="my-1 ml-3 italic">
                 f. Tags (future functionality. not required)
@@ -1666,7 +1763,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
             </div>
           </div>
         );
-      case 'lesson_builder_activities_overlay':
+      case "lesson_builder_activities_overlay":
         return (
           <div className="mt-6">
             <div className="mb-4">
@@ -1679,13 +1776,15 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                         ? `${baseUrl}/lessons/${
                             activeSection?.data?.universalLessons[0].id
                           }/page-builder${
-                            activeSection?.data?.universalLessons[0]?.lessonPlan.length
+                            activeSection?.data?.universalLessons[0]?.lessonPlan
+                              .length
                               ? `?pageId=${activeSection?.data?.universalLessons[0].lessonPlan[0].id}`
-                              : ''
+                              : ""
                           }`
                         : `${baseUrl}/lessons/add`
                     )
-                  }>
+                  }
+                >
                   1. Click on View icon on top right-hand corner of editor
                 </span>
                 {progressIndicator(
@@ -1709,7 +1808,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
             </div>
           </div>
         );
-      case 'lesson_builder_plan_block_and_component': {
+      case "lesson_builder_plan_block_and_component": {
         const lessonPlanWithBlock = activeSection?.data?.universalLessons?.find(
           (lesson: any) =>
             lesson.lessonPlan?.find((plan: any) =>
@@ -1728,32 +1827,35 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                         ? `${baseUrl}/lessons/${lessonPlanWithBlock.id}/page-builder?pageId=${lessonPlanWithBlock.lessonPlan[0].id}`
                         : `${baseUrl}/lessons/add`
                     )
-                  }>
+                  }
+                >
                   1. Click on Add New Block section
                 </span>
                 {progressIndicator(Boolean(lessonPlanWithBlock))}
               </div>
               <div className="my-1 ml-3 italic">
-                a. Text Content is information you are pushing to participants but do not
-                want a response from this content.
+                a. Text Content is information you are pushing to participants
+                but do not want a response from this content.
               </div>
               <div className="my-1 ml-3 italic">
-                b. Media are the various ways to interact with participants outside
-                written content
+                b. Media are the various ways to interact with participants
+                outside written content
               </div>
               <div className="my-1 ml-3 italic">
-                c. User Interaction is content where you want a response or a participant
-                to create something in the activity
+                c. User Interaction is content where you want a response or a
+                participant to create something in the activity
               </div>
               <div className="mt-3 italic">
                 A block is one or more components that create a single idea
               </div>
-              <div className="italic">A component is a single unit of content</div>
+              <div className="italic">
+                A component is a single unit of content
+              </div>
             </div>
           </div>
         );
       }
-      case 'lesson_builder_plan_manager': {
+      case "lesson_builder_plan_manager": {
         const lessonPlanWithBlock = activeSection?.data?.universalLessons?.find(
           (lesson: any) =>
             lesson.lessonPlan?.find((plan: any) =>
@@ -1772,21 +1874,25 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                         ? `${baseUrl}/lessons/${lessonPlanWithBlock.id}/page-builder?pageId=${lessonPlanWithBlock.lessonPlan[0].id}`
                         : `${baseUrl}/lessons/add`
                     )
-                  }>
-                  1. Move your activities around so they are in the order you want to
-                  teach them and set the initial dark/light mode of your lessons
+                  }
+                >
+                  1. Move your activities around so they are in the order you
+                  want to teach them and set the initial dark/light mode of your
+                  lessons
                 </span>
               </div>
               <div className="mt-1 ml-3 italic">
                 <b>Try this out: </b>
               </div>
               <div className="ml-3 italic">
-                1. Move an activity to a different order (you can always move it back)
+                1. Move an activity to a different order (you can always move it
+                back)
               </div>
               <div className="my-1 ml-3 italic">
-                2. Click on the dark/light mode to see the different views of your lesson
-                plan (be sure to check this. Participants can change their views in the
-                classroom so make sure both views work for your class!)
+                2. Click on the dark/light mode to see the different views of
+                your lesson plan (be sure to check this. Participants can change
+                their views in the classroom so make sure both views work for
+                your class!)
               </div>
               <div className="my-3 ml-3 italic">
                 3. Create homework and challenges for lesson (coming soon)
@@ -1795,7 +1901,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
           </div>
         );
       }
-      case 'lesson_builder_plan_homework_and_challenges': {
+      case "lesson_builder_plan_homework_and_challenges": {
         const lessonPlanWithBlock = activeSection?.data?.universalLessons?.find(
           (lesson: any) =>
             lesson.lessonPlan?.find((plan: any) =>
@@ -1814,22 +1920,23 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                         ? `${baseUrl}/lessons/${lessonPlanWithBlock.id}/page-builder?pageId=${lessonPlanWithBlock.lessonPlan[0].id}`
                         : `${baseUrl}/lessons/add`
                     )
-                  }>
-                  <b> Coming Soon </b> You will be able to add homework and challenges to
-                  lesson plans soon
+                  }
+                >
+                  <b> Coming Soon </b> You will be able to add homework and
+                  challenges to lesson plans soon
                 </span>
               </div>
               <div className="my-1 ml-3 italic">
-                a. Text Content is information you are pushing to participants but do not
-                want a response from this content.
+                a. Text Content is information you are pushing to participants
+                but do not want a response from this content.
               </div>
               <div className="my-1 ml-3 italic">
-                b. Media are the various ways to interact with participants outside
-                written content
+                b. Media are the various ways to interact with participants
+                outside written content
               </div>
               <div className="my-1 ml-3 italic">
-                c. User Interaction is content where you want a response or a participant
-                to create something in the activity
+                c. User Interaction is content where you want a response or a
+                participant to create something in the activity
               </div>
               <div className="my-3 ml-3 italic">
                 A block is one or more components that create a single idea
@@ -1841,7 +1948,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
           </div>
         );
       }
-      case 'lesson_builder_courses':
+      case "lesson_builder_courses":
         return (
           <div className="mt-6">
             <div className="mb-4">
@@ -1854,7 +1961,8 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                         ? `${baseUrl}/lessons/${activeSection?.data?.universalLessons[0].id}?step=courses`
                         : `${baseUrl}/lessons/add`
                     )
-                  }>
+                  }
+                >
                   Click Add Lesson to Syllabus button
                 </span>
                 {progressIndicator(activeSection?.data?.isCourseAdded)}
@@ -1865,7 +1973,7 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
             </div>
           </div>
         );
-      case 'lesson_builder_learning_evidence':
+      case "lesson_builder_learning_evidence":
         return (
           <div className="mt-6">
             <div className="mb-4">
@@ -1878,87 +1986,95 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                         ? `${baseUrl}/lessons/${activeSection?.data?.universalLessons[0].id}?step=learning-evidence`
                         : `${baseUrl}/lessons/add`
                     )
-                  }>
-                  Check all learning evidences which are applicable for each selected
-                  curriculum
+                  }
+                >
+                  Check all learning evidences which are applicable for each
+                  selected curriculum
                 </span>
                 {progressIndicator(activeSection?.data?.lessonRubrics?.length)}
               </div>
             </div>
           </div>
         );
-      case 'service_provider_provide_service':
+      case "service_provider_provide_service":
         return (
           <div className="mt-6">
             <div className="mb-4">
               <div className="text-base flex item-center">
                 <span
                   className="cursor-pointer w-auto font-bold"
-                  onClick={() => history.push(`${baseUrl}/edit`)}>
+                  onClick={() => history.push(`${baseUrl}/edit`)}
+                >
                   Toggle service provider to be true
                 </span>
               </div>
               <div className="my-1 ml-3 italic">
-                As a service provider you can make your curriculum, teachers and fellows
-                available to other organizations
+                As a service provider you can make your curriculum, teachers and
+                fellows available to other organizations
               </div>
             </div>
           </div>
         );
-      case 'service_provider_request_service':
+      case "service_provider_request_service":
         return (
           <div className="mt-6">
             <div className="mb-4">
               <div className="text-base flex item-center">
                 <span
                   className="cursor-pointer w-auto font-bold"
-                  onClick={() => history.push(`${baseUrl}/edit`)}>
+                  onClick={() => history.push(`${baseUrl}/edit`)}
+                >
                   Select service provider from list
                 </span>
               </div>
               <div className="my-1 ml-3 italic">
-                Service providers make their curriculum, teachers and fellows available
-                for you to add to your own classrooms
+                Service providers make their curriculum, teachers and fellows
+                available for you to add to your own classrooms
               </div>
             </div>
           </div>
         );
-      case 'research_and_analytics':
+      case "research_and_analytics":
         return (
           <div className="mt-6">
             <div className="mb-4">
               <div className="text-base flex item-center">
                 <span
                   className="cursor-pointer w-auto font-bold"
-                  onClick={() => history.push(`${baseUrl}/research-and-analytics`)}>
+                  onClick={() =>
+                    history.push(`${baseUrl}/research-and-analytics`)
+                  }
+                >
                   Select classroom, unit and survey to download
                 </span>
               </div>
             </div>
           </div>
         );
-      case 'dashboard_classroom':
+      case "dashboard_classroom":
         return (
           <div className="mt-6">
             <div className="mb-4">
               <div className="text-base flex item-center">
                 <span
                   className="cursor-pointer w-auto font-bold"
-                  onClick={() => history.push(`/dashboard/home`)}>
+                  onClick={() => history.push(`/dashboard/home`)}
+                >
                   Select classroom, unit and survey to download
                 </span>
               </div>
             </div>
           </div>
         );
-      case 'dashboard_student':
+      case "dashboard_student":
         return (
           <div className="mt-6">
             <div className="mb-4">
               <div className="text-base flex item-center">
                 <span
                   className="cursor-pointer w-auto font-bold"
-                  onClick={() => history.push(`/dashboard/home`)}>
+                  onClick={() => history.push(`/dashboard/home`)}
+                >
                   1. Click on student to see the following details:
                 </span>
               </div>
@@ -1972,14 +2088,15 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
             </ul>
           </div>
         );
-      case 'classroom_lesson_planner':
+      case "classroom_lesson_planner":
         return (
           <div className="mt-6">
             <div className="mb-4">
               <div className="text-base flex item-center">
                 <span
                   className="cursor-pointer w-auto font-bold"
-                  onClick={() => history.push(`/dashboard/home`)}>
+                  onClick={() => history.push(`/dashboard/home`)}
+                >
                   1. Activate lesson unit
                 </span>
               </div>
@@ -1988,21 +2105,23 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
               <div className="text-base flex item-center">
                 <span
                   className="cursor-pointer w-auto font-bold"
-                  onClick={() => history.push(`/dashboard/home`)}>
+                  onClick={() => history.push(`/dashboard/home`)}
+                >
                   2. Click on lesson to teach
                 </span>
               </div>
             </div>
           </div>
         );
-      case 'live_classroom_lesson':
+      case "live_classroom_lesson":
         return (
           <div className="mt-6">
             <div className="mb-4">
               <div className="text-base flex item-center">
                 <span
                   className="cursor-pointer w-auto font-bold"
-                  onClick={() => history.push(`/dashboard/home`)}>
+                  onClick={() => history.push(`/dashboard/home`)}
+                >
                   1. Live classroom has the following areas:
                 </span>
               </div>
@@ -2012,15 +2131,15 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
           </div>
         );
       default:
-        break;
+        return null;
     }
   };
 
   const resetData = () => {
-    setActiveSection({id: 'inst', title: 'Institution Setup'});
+    setActiveSection({ id: "inst", title: "Institution Setup" });
     setSelectedInstitution({});
-    removeLocalStorageData('active_step_section');
-    removeLocalStorageData('selected_institution');
+    removeLocalStorageData("active_step_section");
+    removeLocalStorageData("selected_institution");
   };
 
   return (
@@ -2030,11 +2149,16 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
       className={`
             fixed inset-0 transition-all ease-in-out duration-300 
             z-100
-            ${open ? 'w-auto' : 'w-0 opacity-0 overflow-hidden bg-black bg-opacity-50'}
+            ${
+              open
+                ? "w-auto"
+                : "w-0 opacity-0 overflow-hidden bg-black bg-opacity-50"
+            }
 `}
       initialFocus={cancelButtonRef}
       open={open}
-      onClose={onCancel}>
+      onClose={onCancel}
+    >
       <div className="absolute inset-0 overflow-hidden">
         <Dialog.Overlay className="absolute inset-0 w-auto" />
 
@@ -2042,8 +2166,9 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
           className={` 
               fixed w-auto inset-y-0 right-0 pl-10 max-w-full flex sm:pl-16
               transform transition ease-in-out duration-500 sm:duration-700
-              ${open ? 'translate-x-0' : 'translate-x-full'}
-              `}>
+              ${open ? "translate-x-0" : "translate-x-full"}
+              `}
+        >
           <div className="w-auto max-w-2xl">
             <div className="h-full flex flex-col bg-white shadow-xl overflow-y-scroll">
               <div className="flex-1">
@@ -2054,21 +2179,26 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                       <div className="flex justify-between">
                         <Dialog.Title className="text-lg font-medium text-gray-900">
                           {`${
-                            selectedInstitution?.institution?.name || ''
+                            selectedInstitution?.institution?.name || ""
                           } Set-Up Navigator`}
                         </Dialog.Title>
-                        {(role === 'ADM' || role === 'SUP') &&
+                        {(role === "ADM" || role === "SUP") &&
                         (!associateInstitute?.length ||
                           associateInstitute?.length > 1) ? (
                           selectedInstitution?.institution?.id ? (
-                            <span className="w-auto cursor-pointer" onClick={resetData}>
+                            <span
+                              className="w-auto cursor-pointer"
+                              onClick={resetData}
+                            >
                               <HiOutlineRefresh className="w-6 h-6" />
                             </span>
                           ) : (
                             <Selector
-                              selectedItem={selectedInstitution?.institution?.name}
-                              label={''}
-                              placeholder={'Select institution'}
+                              selectedItem={
+                                selectedInstitution?.institution?.name
+                              }
+                              label={""}
+                              placeholder={"Select institution"}
                               list={institutionList}
                               onChange={onInstituteChange}
                             />
@@ -2078,13 +2208,17 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                       {alertConfig.show && (
                         <div
                           className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
-                          role="alert">
+                          role="alert"
+                        >
                           <span className="block sm:inline text-xs 2xl:text-sm">
                             {alertConfig.message}
                           </span>
                           <span
                             className="absolute top-0 bottom-0 right-0 px-4 py-3 w-auto cursor-pointer"
-                            onClick={() => setAlertConfig({show: false, message: ''})}>
+                            onClick={() =>
+                              setAlertConfig({ show: false, message: "" })
+                            }
+                          >
                             <XIcon className="h-6 w-6" aria-hidden="true" />
                           </span>
                         </div>
@@ -2095,7 +2229,8 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                         ref={cancelButtonRef}
                         type="button"
                         className="w-auto bg-white rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                        onClick={onCancel}>
+                        onClick={onCancel}
+                      >
                         <span className="sr-only">Close panel</span>
                         <XIcon className="h-6 w-6" aria-hidden="true" />
                       </button>
@@ -2110,20 +2245,24 @@ const InformationalWalkThrough = ({open, onCancel}: any) => {
                   </div>
                 ) : (
                   <div
-                    style={{minHeight: 'calc(100vh - 76px)'}}
-                    className={'w-196 2xl:w-256 flex'}>
+                    style={{ minHeight: "calc(100vh - 76px)" }}
+                    className={"w-196 2xl:w-256 flex"}
+                  >
                     {/* <div
                     className="grid grid-cols-2"
                     style={{height: 'calc(100vh - 76px)'}}> */}
                     <div
                       className="bg-indigo-100 p-4 w-2/5 text-sm 2xl:text-base overflow-y-scroll"
-                      style={{height: 'calc(100vh - 76px)'}}>
-                      <div className="text-base 2xl:text-xl font-bold mb-4">Sections</div>
+                      style={{ height: "calc(100vh - 76px)" }}
+                    >
+                      <div className="text-base 2xl:text-xl font-bold mb-4">
+                        Sections
+                      </div>
                       <ContextMenuProvider>
                         <Tree
                           root={data}
-                          hoverClassName={'bg-indigo-200'}
-                          textClassName={'text-gray-900 font-medium'}
+                          hoverClassName={"bg-indigo-200"}
+                          textClassName={"text-gray-900 font-medium"}
                           onItemClick={onItemClick}
                           activeSectionId={activeSection?.id}
                         />

@@ -1,7 +1,7 @@
-import React, {useContext} from 'react';
-import {getAsset} from 'assets';
-import {GlobalContext} from 'contexts/GlobalContext';
-import Tooltip from 'atoms/Tooltip';
+import { getAsset } from "assets";
+import Tooltip from "atoms/Tooltip";
+import { useGlobalContext } from "contexts/GlobalContext";
+import React from "react";
 
 export interface IStepElementInterface {
   description?: string;
@@ -11,7 +11,7 @@ export interface IStepElementInterface {
   stepValue?: string;
   title: string;
   tooltipText?: string;
-  tooltipPlacement?: 'bottom' | 'top' | 'left' | 'right' | 'bottomleft';
+  tooltipPlacement?: "bottom" | "top" | "left" | "right" | "bottomleft";
 }
 
 export interface IStepComponentInterface {
@@ -25,46 +25,49 @@ const StepComponent = ({
   activeStep,
   handleTabSwitch,
   steps,
-  dataCy
+  dataCy,
 }: IStepComponentInterface) => {
-  const context = useContext(GlobalContext);
-  const {clientKey, theme} = context || {};
-  const themeColor = getAsset(clientKey, 'themeClassName');
+  const context = useGlobalContext();
+  const { clientKey, theme } = context || {};
+  const themeColor = getAsset(clientKey, "themeClassName");
 
   const renderStepElement = (
-    {description, disabled, isComplete, title, stepValue}: any,
+    { description, disabled, title, stepValue }: any,
     index: number
   ) => {
     return (
       <div
         className={`h-full border border-gray-200 ${
-          stepValue === activeStep ? '' : 'border-b-0'
+          stepValue === activeStep ? "" : "border-b-0"
         } border-b lg:border ${
           index === 0
-            ? 'lg:border-r-none'
+            ? "lg:border-r-none"
             : index !== steps.length - 1
-            ? 'lg:border-r-none lg:border-l-none'
-            : 'lg:border-l-none'
-        }`}>
+            ? "lg:border-r-none lg:border-l-none"
+            : "lg:border-l-none"
+        }`}
+      >
         <div className="group">
           <span className="px-6 py-5 flex items-start text-sm font-medium">
             <span className="flex-shrink-0 w-auto">
               <span
                 className={`w-6 h-6 flex items-center justify-center border-2 ${
-                  disabled ? 'bg-gray-600' : ''
+                  disabled ? "bg-gray-600" : ""
                 } ${
                   stepValue === activeStep
                     ? theme.borderColor[themeColor]
-                    : 'border-gray-300'
-                } rounded-full`}>
+                    : "border-gray-300"
+                } rounded-full`}
+              >
                 <span
                   className={`${
                     stepValue === activeStep
                       ? theme.textColor[themeColor]
                       : disabled
-                      ? 'text-white'
-                      : 'text-gray-500'
-                  } w-auto`}>
+                      ? "text-white"
+                      : "text-gray-500"
+                  } w-auto`}
+                >
                   {index + 1}
                 </span>
               </span>
@@ -72,12 +75,15 @@ const StepComponent = ({
             <span className="mt-0.5 ml-4 min-w-0 w-auto flex flex-col">
               <span
                 className={`text-xs font-semibold ${
-                  stepValue === activeStep ? theme.textColor[themeColor] : ''
-                } tracking-wide uppercase`}>
+                  stepValue === activeStep ? theme.textColor[themeColor] : ""
+                } tracking-wide uppercase`}
+              >
                 {title}
               </span>
               {description ? (
-                <span className="text-sm font-medium text-gray-500">{description}</span>
+                <span className="text-sm font-medium text-gray-500">
+                  {description}
+                </span>
               ) : null}
             </span>
           </span>
@@ -85,12 +91,14 @@ const StepComponent = ({
         {index ? (
           <div
             className="hidden absolute top-0 left-0 w-3 inset-0 lg:block"
-            aria-hidden="true">
+            aria-hidden="true"
+          >
             <svg
               className="h-full w-full text-gray-600"
               viewBox="0 0 12 82"
               fill="none"
-              preserveAspectRatio="none">
+              preserveAspectRatio="none"
+            >
               <path
                 d="M0.5 0V31L10.5 41L0.5 51V82"
                 stroke="currentcolor"
@@ -110,17 +118,23 @@ const StepComponent = ({
             <li
               data-cy={`${dataCy}-step-${index}`}
               className={`relative hover:theme-text:500 lg:flex-1 ${
-                step.disabled ? 'bg-gray-300 cursor-not-allowed' : 'cursor-pointer'
+                step.disabled
+                  ? "bg-gray-300 cursor-not-allowed"
+                  : "cursor-pointer"
               }`}
               key={index}
               onClick={() =>
-                !step.disabled ? handleTabSwitch(step.stepValue || step.title) : null
-              }>
+                !step.disabled
+                  ? handleTabSwitch(step.stepValue || step.title)
+                  : null
+              }
+            >
               {step.disabled ? (
                 <Tooltip
                   additionalClass="h-full"
                   text={step.tooltipText}
-                  placement={step.tooltipPlacement || 'top'}>
+                  placement={step.tooltipPlacement || "top"}
+                >
                   {renderStepElement(step, index)}
                 </Tooltip>
               ) : (

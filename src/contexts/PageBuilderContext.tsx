@@ -1,27 +1,29 @@
-import React, {createContext, useContext, useState} from 'react';
-const PageBuilderContext = createContext(null);
+import React, { createContext, useContext, useState } from "react";
+const PageBuilderContext = createContext<any>(null);
 
 // TYPES
-type ActionTypes = 'edit' | 'delete' | 'init';
-type MoveDirTypes = 'up' | 'down';
-type NavState = 'home' | 'addContent' | 'space';
+type ActionTypes = "edit" | "delete" | "init";
+type MoveDirTypes = "up" | "down";
+type NavState = "home" | "addContent" | "space";
 
-export const PageBuilderProvider = ({children}: any) => {
+export const PageBuilderProvider = ({ children }: any) => {
   const [showingPin, setShowingPin] = useState(false);
-  const [selectedComponent, setSelectedComponent] = useState(null);
-  const [actionMode, setActionMode] = useState<ActionTypes>('init');
-  const [moveDir, setMoveDir] = useState<MoveDirTypes>('down');
+  const [selectedComponent, setSelectedComponent] = useState<any | null>(null);
+  const [actionMode, setActionMode] = useState<ActionTypes>("init");
+  const [moveDir, setMoveDir] = useState<MoveDirTypes>("down");
   const [showMovementBox, setShowMovementBox] = useState(false);
-  const [navState, setNavState] = useState<NavState>('home');
-  const [activeContentItem, setActiveContentItem] = useState(null); // content type
+  const [navState, setNavState] = useState<NavState>("home");
+  const [activeContentItem, setActiveContentItem] = useState<any | null>(null); // content type
   const [showLocationIcon, setShowLocationIcon] = useState(false);
-  const [selectedType, setSelectedType] = useState(null);
+  const [selectedType, setSelectedType] = useState<any | null>(null);
   const [showingBlockPin, setShowingBlockPin] = useState(false);
 
   // Disable Game Changers - Emotion Component is one already exists on current page -> Here i am saving local state for that
   const [emotionComponentExists, setEmotionComponentExists] = useState(false);
 
-  const [emotionComponentData, setEmotionComponentData] = useState(null);
+  const [emotionComponentData, setEmotionComponentData] = useState<any | null>(
+    null
+  );
 
   const [showMessage, setShowMessage] = useState(false);
 
@@ -54,7 +56,8 @@ export const PageBuilderProvider = ({children}: any) => {
         setShowMessage,
         emotionComponentExists,
         setEmotionComponentExists,
-      }}>
+      }}
+    >
       {children}
     </PageBuilderContext.Provider>
   );

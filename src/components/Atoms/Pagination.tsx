@@ -1,11 +1,6 @@
-import React, {useState, useEffect, useContext} from 'react';
-import {IconContext} from 'react-icons';
-import {FaAngleRight, FaAngleLeft} from 'react-icons/fa';
-import {GlobalContext} from 'contexts/GlobalContext';
-import {getAsset} from 'assets';
-import {RiArrowLeftSLine, RiArrowRightSLine} from 'react-icons/ri';
-import Buttons from './Buttons';
-import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
+import React, { useEffect, useState } from "react";
+import { RiArrowLeftSLine, RiArrowRightSLine } from "react-icons/ri";
+import Buttons from "./Buttons";
 
 interface PaginationProps {
   currentPage: number;
@@ -23,10 +18,11 @@ interface PageArrowsProps {
   onClick: () => void;
 }
 
-const Active = (activeProps: {page: number}) => {
+const Active = (activeProps: { page: number }) => {
   return (
     <button
-      className={`inline-flex w-auto transition-all items-center border-t-2 theme-border:500 px-4 pt-4 text-sm font-medium theme-text:600`}>
+      className={`inline-flex w-auto transition-all items-center border-t-2 theme-border:500 px-4 pt-4 text-sm font-medium theme-text:600`}
+    >
       {activeProps.page}
     </button>
   );
@@ -38,12 +34,13 @@ const Inactive = (InActiveProps: {
   setNext: () => void;
   setPrev: () => void;
 }) => {
-  const {currentPage, setNext, setPrev, page} = InActiveProps;
+  const { currentPage, setNext, setPrev, page } = InActiveProps;
 
   return (
     <button
       onClick={currentPage < page ? setNext : setPrev}
-      className="inline-flex w-auto transition-all items-center border-t-2 border-transparent px-4 pt-4 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700">
+      className="inline-flex w-auto transition-all items-center border-t-2 border-transparent px-4 pt-4 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700"
+    >
       {page}
     </button>
   );
@@ -55,7 +52,7 @@ const PageNo = (pageNoProps: {
   setNext: () => void;
   setPrev: () => void;
 }) => {
-  const {page, currentPage, setNext, setPrev} = pageNoProps;
+  const { page, currentPage, setNext, setPrev } = pageNoProps;
 
   return (
     <>
@@ -80,8 +77,8 @@ const PageCount = (pageCountProps: {
   setNext: () => void;
   setPrev: () => void;
 }) => {
-  const {currentPage, lastPage, firstPage, setNext, setPrev} = pageCountProps;
-  const [showNumbers, setShowNumbers] = useState([]);
+  const { currentPage, lastPage, firstPage, setNext, setPrev } = pageCountProps;
+  const [showNumbers, setShowNumbers] = useState<any[]>([]);
 
   useEffect(() => {
     if (currentPage !== 1 && currentPage !== 0) {
@@ -111,7 +108,7 @@ const PageCount = (pageCountProps: {
 };
 
 const PageArrows: React.FC<PageArrowsProps> = (pageProps: PageArrowsProps) => {
-  const {active, onClick, isBack} = pageProps;
+  const { active, onClick, isBack } = pageProps;
 
   return (
     <Buttons
@@ -133,7 +130,7 @@ const Dots = () => (
 );
 
 const Pagination: React.FC<PaginationProps> = (pageProps: PaginationProps) => {
-  const {currentPage, lastPage, firstPage, setNext, setPrev, totalPages = 10} = pageProps;
+  const { currentPage, lastPage, firstPage, setNext, setPrev } = pageProps;
 
   return (
     <div className="flex gap-x-4 w-1/3 flex-wrap items-center justify-start lg:justify-center">

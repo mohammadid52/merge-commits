@@ -1,21 +1,21 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, { useState } from "react";
 
-import useDictionary from 'customHooks/dictionary';
-import {GlobalContext} from 'contexts/GlobalContext';
+import { useGlobalContext } from "contexts/GlobalContext";
+import useDictionary from "customHooks/dictionary";
 
-import RichTextEditor from 'atoms/RichTextEditor';
-import FormInput from 'atoms/Form/FormInput';
-import Selector from 'atoms/Form/Selector';
-import Buttons from 'atoms/Buttons';
-import {graphqlOperation, API} from 'aws-amplify';
-import * as customMutations from 'customGraphql/customMutations';
+import Buttons from "atoms/Buttons";
+import FormInput from "atoms/Form/FormInput";
+import Selector from "atoms/Form/Selector";
+import RichTextEditor from "atoms/RichTextEditor";
+import { API, graphqlOperation } from "aws-amplify";
+import * as customMutations from "customGraphql/customMutations";
 
 const periodOptions = [
-  {id: 1, name: '1'},
-  {id: 2, name: '2'},
-  {id: 3, name: '3'},
-  {id: 4, name: '4'},
-  {id: 5, name: '5'}
+  { id: 1, name: "1" },
+  { id: 2, name: "2" },
+  { id: 3, name: "3" },
+  { id: 4, name: "4" },
+  { id: 5, name: "5" },
 ];
 
 interface FormDataInterface {
@@ -32,10 +32,10 @@ interface LessonSummaryFormInterface {
 }
 
 const LessonSummaryForm = (props: LessonSummaryFormInterface) => {
-  const {formData, setFormData, lessonId} = props;
+  const { formData, setFormData, lessonId } = props;
 
-  const {clientKey, userLanguage} = useContext(GlobalContext);
-  const {AddNewLessonFormDict, LessonBuilderDict} = useDictionary(clientKey);
+  const { userLanguage } = useGlobalContext();
+  const { AddNewLessonFormDict, LessonBuilderDict } = useDictionary();
 
   const [loading, setLoading] = useState(false);
 
@@ -47,14 +47,14 @@ const LessonSummaryForm = (props: LessonSummaryFormInterface) => {
         label: formData.label,
         resources: formData.resources,
         notes: formData.notes,
-        duration: Number(formData.duration)
+        duration: Number(formData.duration),
       };
-      const res: any = await API.graphql(
-        graphqlOperation(customMutations.updateUniversalLesson, {input})
+      await API.graphql(
+        graphqlOperation(customMutations.updateUniversalLesson, { input })
       );
     } catch (error) {
       console.error(error.message);
-      console.log('error saving data');
+      console.log("error saving data");
     } finally {
       setLoading(false);
     }
@@ -62,11 +62,11 @@ const LessonSummaryForm = (props: LessonSummaryFormInterface) => {
 
   const onInputChange = (e: any) => {
     const {
-      target: {name, value}
+      target: { name, value },
     } = e;
     setFormData((prevFormData) => ({
       ...prevFormData,
-      [name]: value
+      [name]: value,
     }));
     // setValidation((prevValidation) => ({
     //   ...prevValidation,
@@ -77,30 +77,35 @@ const LessonSummaryForm = (props: LessonSummaryFormInterface) => {
   const onSelectOption = (_: any, name: string) => {
     setFormData((prevFormData) => ({
       ...prevFormData,
-      duration: name
+      duration: name,
     }));
   };
 
   const onEditorStateChange = (
-    html: string,
+    _: string,
     text: string,
-    fieldHtml: string,
+    __: string,
     field: string
   ) => {
     setFormData({
       ...formData,
       // [fieldHtml]: html,
-      [field]: text
+      [field]: text,
     });
   };
-  const {label = '', duration = '1', resources = '', notes = ''} = formData || {};
+  const {
+    label = "",
+    duration = "1",
+    resources = "",
+    notes = "",
+  } = formData || {};
   return (
     <div>
       <div className="p-4">
         <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
           <div>
             <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
-              {LessonBuilderDict[userLanguage]['LESSON_PLAN_LABEL']}{' '}
+              {LessonBuilderDict[userLanguage]["LESSON_PLAN_LABEL"]}{" "}
               <span className="text-red-500"> * </span>
             </label>
             <FormInput
@@ -114,12 +119,12 @@ const LessonSummaryForm = (props: LessonSummaryFormInterface) => {
           </div>
           <div>
             <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
-              {LessonBuilderDict[userLanguage]['DURATION']}{' '}
+              {LessonBuilderDict[userLanguage]["DURATION"]}{" "}
               <span className="text-red-500"> * </span>
             </label>
             <Selector
-              selectedItem={duration.toString() || ''}
-              placeholder={LessonBuilderDict[userLanguage]['DURATION']}
+              selectedItem={duration.toString() || ""}
+              placeholder={LessonBuilderDict[userLanguage]["DURATION"]}
               list={periodOptions}
               onChange={onSelectOption}
             />
@@ -129,23 +134,28 @@ const LessonSummaryForm = (props: LessonSummaryFormInterface) => {
         <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
           <div>
             <label className="block text-m font-medium leading-5 text-gray-700 mb-3">
-              {LessonBuilderDict[userLanguage]['RESOURCES']}
+              {LessonBuilderDict[userLanguage]["RESOURCES"]}
             </label>
             <RichTextEditor
               initialValue={resources}
               onChange={(htmlContent, plainText) =>
-                onEditorStateChange(htmlContent, plainText, 'resourceHtml', 'resources')
+                onEditorStateChange(
+                  htmlContent,
+                  plainText,
+                  "resourceHtml",
+                  "resources"
+                )
               }
             />
           </div>
           <div>
             <label className="block text-m font-medium leading-5 text-gray-700 mb-3">
-              {LessonBuilderDict[userLanguage]['NOTES']}
+              {LessonBuilderDict[userLanguage]["NOTES"]}
             </label>
             <RichTextEditor
               initialValue={notes}
               onChange={(htmlContent, plainText) =>
-                onEditorStateChange(htmlContent, plainText, 'noteHtml', 'notes')
+                onEditorStateChange(htmlContent, plainText, "noteHtml", "notes")
               }
             />
           </div>
@@ -155,8 +165,8 @@ const LessonSummaryForm = (props: LessonSummaryFormInterface) => {
             btnClass="py-3 px-10"
             label={
               false
-                ? AddNewLessonFormDict[userLanguage]['SAVING']
-                : AddNewLessonFormDict[userLanguage]['SAVE']
+                ? AddNewLessonFormDict[userLanguage]["SAVING"]
+                : AddNewLessonFormDict[userLanguage]["SAVE"]
             }
             onClick={saveFormData}
             disabled={loading}

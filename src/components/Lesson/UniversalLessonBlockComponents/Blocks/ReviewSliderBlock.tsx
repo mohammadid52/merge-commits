@@ -1,7 +1,6 @@
-import React, {useContext, useState} from 'react';
-import {GlobalContext} from 'contexts/GlobalContext';
-import {FormControlProps} from './FormBlock';
-import './styles/ReviewSliderStyles.scss';
+import { useGlobalContext } from "contexts/GlobalContext";
+import { FormControlProps } from "./FormBlock";
+import "./styles/ReviewSliderStyles.scss";
 
 /**
  *
@@ -12,15 +11,16 @@ import './styles/ReviewSliderStyles.scss';
 
 const genSlideStyle = (value: number | string, max: number | string) => {
   let val = Number(max) === 10 ? Number(value) / 2 : Number(value);
-  let updatedVal = Number(max) === 5 ? (val === 1 ? 0 : val) : val === 0.5 ? 0 : val;
+  let updatedVal =
+    Number(max) === 5 ? (val === 1 ? 0 : val) : val === 0.5 ? 0 : val;
 
   return {
     point: {
-      left: `calc(${updatedVal * 20}% - ${5 + 3 * updatedVal}px)`
+      left: `calc(${updatedVal * 20}% - ${5 + 3 * updatedVal}px)`,
     },
     range: {
-      width: `${updatedVal * 20}%`
-    }
+      width: `${updatedVal * 20}%`,
+    },
   };
 };
 interface ReviewSliderBlockProps extends FormControlProps {
@@ -33,7 +33,8 @@ interface ReviewSliderBlockProps extends FormControlProps {
  * @param splitBy specify the pattern by which you want to split the element
  * @returns splitted values
  */
-export const getFirstLastValue = (el: string, splitBy: string) => el.split(splitBy);
+export const getFirstLastValue = (el: string, splitBy: string) =>
+  el.split(splitBy);
 
 /**
  * @return extracted values from classString like min-max, background color and foreground color.
@@ -42,10 +43,12 @@ export const extractValuesFromClassString = (
   classString: string = `1-5 || gray-700 || gray-800 || gray-700 || rounded-lg`
 ) => {
   if (classString) {
-    let [minMax, bgColor, fgColor, cardBgColor, rounded] = classString.split(' || ');
-    let [min, max] = getFirstLastValue(minMax, '-');
-    return {min, max, bgColor, fgColor, cardBgColor, rounded};
+    let [minMax, bgColor, fgColor, cardBgColor, rounded] =
+      classString.split(" || ");
+    let [min, max] = getFirstLastValue(minMax, "-");
+    return { min, max, bgColor, fgColor, cardBgColor, rounded };
   }
+  return {};
 };
 
 const ReviewSliderBlock = (props: ReviewSliderBlockProps) => {
@@ -56,50 +59,54 @@ const ReviewSliderBlock = (props: ReviewSliderBlockProps) => {
     onChange,
     inputID,
     classString = `1-5 || gray-700 || gray-800 || dark-gray || rounded-lg`,
-    label
+    label,
   } = props;
 
-  const {state} = useContext(GlobalContext);
+  const { state } = useGlobalContext();
 
   const values = extractValuesFromClassString(classString);
 
-  const isDark = state.lessonPage.theme === 'dark';
+  const isDark = state.lessonPage.theme === "dark";
 
-  const slideStyle = genSlideStyle(value, values?.max);
+  const slideStyle = genSlideStyle(value, values?.max || 5);
 
   return (
     <div className="py-4" id={id} key={id}>
       {/* */}
       <div
         style={{
-          border: !isDark ? '1px solid #ececec' : 'none',
-          boxShadow: '0 10px 20px 0 rgba(0, 0, 0, 0.05)'
+          border: !isDark ? "1px solid #ececec" : "none",
+          boxShadow: "0 10px 20px 0 rgba(0, 0, 0, 0.05)",
         }}
         className={`review-slider-container p-6 w-auto  flex flex-col items-start justify-center bg-${
-          values?.cardBgColor || 'gray-800'
-        } h-auto ${values?.rounded || 'rounded-md'} shadow`}>
+          values?.cardBgColor || "gray-800"
+        } h-auto ${values?.rounded || "rounded-md"} shadow`}
+      >
         <div className="flex items-center justify-between">
           <p
-            dangerouslySetInnerHTML={{__html: label}}
+            dangerouslySetInnerHTML={{ __html: label || "" }}
             className={`${
-              isDark ? 'text-gray-400' : 'text-gray-600'
-            } block text-lg w-auto font-semibold leading-5 `}></p>
+              isDark ? "text-gray-400" : "text-gray-600"
+            } block text-lg w-auto font-semibold leading-5 `}
+          ></p>
           <span
-            dangerouslySetInnerHTML={{__html: value}}
+            dangerouslySetInnerHTML={{ __html: value }}
             className={`${
-              isDark ? 'text-gray-400' : 'text-gray-600'
-            } block text-lg w-auto font-semibold leading-5 `}></span>
+              isDark ? "text-gray-400" : "text-gray-600"
+            } block text-lg w-auto font-semibold leading-5 `}
+          ></span>
         </div>
         <div
           className={`range relative rounded-full bg-${
-            values?.bgColor || 'gray-800'
-          } mt-4`}>
+            values?.bgColor || "gray-800"
+          } mt-4`}
+        >
           <span
-            className={`range-value bg-${values?.fgColor || 'gray-900'}`}
+            className={`range-value bg-${values?.fgColor || "gray-900"}`}
             style={slideStyle.range}
           />
           <span
-            className={`circle bg-${values?.fgColor || 'indigo-500'}`}
+            className={`circle bg-${values?.fgColor || "indigo-500"}`}
             style={slideStyle.point}
           />
           <input

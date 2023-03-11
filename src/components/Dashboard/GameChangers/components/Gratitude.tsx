@@ -1,43 +1,46 @@
-import Buttons from 'atoms/Buttons';
-import RichTextEditor from 'atoms/RichTextEditor';
-import {GRATITUDE} from 'components/Lesson/UniversalLessonBuilder/UI/common/constants';
-import AnimatedContainer from 'components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
-import useAuth from 'customHooks/useAuth';
-import useGraphqlMutation from 'customHooks/useGraphqlMutation';
-import {awsFormatDate, dateString} from 'utilities/time';
-import {CreateGameChangerInput, CreateGameChangerLogInput, GameChangerLog} from 'API';
-import gsap from 'gsap';
-import {nanoid} from 'nanoid';
-import React, {useEffect, useState} from 'react';
-import {useGameChangers} from '../context/GameChangersContext';
-import {getAsset} from 'assets';
-import {useGlobalContext} from '@contexts/GlobalContext';
-import CustomRichTextEditor from '@components/Lesson/UniversalLessonBlockComponents/Blocks/HighlighterBlock/CustomRichTextEditor';
+import CustomRichTextEditor from "@components/Lesson/UniversalLessonBlockComponents/Blocks/HighlighterBlock/CustomRichTextEditor";
+import { useGlobalContext } from "@contexts/GlobalContext";
+import {
+  CreateGameChangerInput,
+  CreateGameChangerLogInput,
+  GameChangerLog,
+} from "API";
+import { getAsset } from "assets";
+import Buttons from "atoms/Buttons";
+import { GRATITUDE } from "components/Lesson/UniversalLessonBuilder/UI/common/constants";
+import AnimatedContainer from "components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer";
+import useAuth from "customHooks/useAuth";
+import useGraphqlMutation from "customHooks/useGraphqlMutation";
+import { nanoid } from "nanoid";
+import { useState } from "react";
+import { awsFormatDate, dateString } from "utilities/time";
+import { useGameChangers } from "../context/GameChangersContext";
 
 const Gratitude = () => {
-  const {email, authId} = useAuth();
-  const {clientKey} = useGlobalContext();
+  const { email, authId } = useAuth();
+  const { clientKey } = useGlobalContext();
 
-  const [error, setError] = useState('');
+  const [_, setError] = useState("");
 
-  const {setIsCompleted, isCompleted} = useGameChangers();
+  const { setIsCompleted, isCompleted } = useGameChangers();
   const [fields, setFields] = useState({
-    summary: '',
-    summaryHtml: '<p>1.</p>\n<p>2.</p>\n<p>3.</p>\n'
+    summary: "",
+    summaryHtml: "<p>1.</p>\n<p>2.</p>\n<p>3.</p>\n",
   });
 
   const mutationLog = useGraphqlMutation<
-    {input: CreateGameChangerLogInput},
+    { input: CreateGameChangerLogInput },
     GameChangerLog
-  >('createGameChangerLog', {
+  >("createGameChangerLog", {
     onSuccess: () => {
       setIsCompleted(true);
-    }
+    },
   });
 
-  const mutation = useGraphqlMutation<{input: CreateGameChangerInput}, GameChangerLog>(
-    'createGameChanger'
-  );
+  const mutation = useGraphqlMutation<
+    { input: CreateGameChangerInput },
+    GameChangerLog
+  >("createGameChanger");
 
   const onEditorStateChange = (
     html: string,
@@ -45,8 +48,8 @@ const Gratitude = () => {
     fieldHtml: string,
     field: string
   ) => {
-    setError('');
-    setFields({...fields, [field]: text, [fieldHtml]: html});
+    setError("");
+    setFields({ ...fields, [field]: text, [fieldHtml]: html });
   };
 
   const onSave = () => {
@@ -56,8 +59,8 @@ const Gratitude = () => {
       input: {
         id: gameChangerID,
         gameChangerName: GRATITUDE,
-        objective: fields.summaryHtml
-      }
+        objective: fields.summaryHtml,
+      },
     });
 
     mutationLog.mutate({
@@ -66,8 +69,8 @@ const Gratitude = () => {
         gameChangerID,
         personAuthID: authId,
         personEmail: email,
-        startTime: awsFormatDate(dateString('-', 'WORLD'))
-      }
+        startTime: awsFormatDate(dateString("-", "WORLD")),
+      },
     });
   };
 
@@ -83,8 +86,8 @@ const Gratitude = () => {
   //     {height: 'auto', opacity: 1, delay: 1}
   //   );
   // }, []);
-  const themeColor = getAsset(clientKey, 'themeClassName');
-  const features: string[] = ['colorPicker', 'inline'];
+  const themeColor = getAsset(clientKey, "themeClassName");
+  const features: string[] = ["colorPicker", "inline"];
 
   return (
     <>
@@ -104,14 +107,23 @@ const Gratitude = () => {
                 dark
                 initialValue={fields.summaryHtml}
                 onChange={(htmlContent, plainText) =>
-                  onEditorStateChange(htmlContent, plainText, 'summaryHtml', 'summary')
+                  onEditorStateChange(
+                    htmlContent,
+                    plainText,
+                    "summaryHtml",
+                    "summary"
+                  )
                 }
               />
 
               <div className="w-auto flex items-center justify-end mt-4">
                 <Buttons
                   onClick={onSave}
-                  label={mutationLog.isLoading || mutation.isLoading ? 'saving' : 'save'}
+                  label={
+                    mutationLog.isLoading || mutation.isLoading
+                      ? "saving"
+                      : "save"
+                  }
                 />
               </div>
             </div>

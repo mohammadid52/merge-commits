@@ -1,10 +1,10 @@
-import React from 'react';
-import {useDropzone} from 'react-dropzone';
+import React from "react";
+import { useDropzone } from "react-dropzone";
 
 const DroppableMedia = ({
   children,
   mediaRef,
-  className = 'w-auto',
+  className = "w-auto",
   setImage,
   toggleCropper,
 }: {
@@ -20,7 +20,7 @@ const DroppableMedia = ({
       setImage(fileReader.result, file);
     };
     fileReader.readAsDataURL(file);
-    if (typeof toggleCropper === 'function') {
+    if (typeof toggleCropper === "function") {
       toggleCropper();
     }
   };
@@ -44,7 +44,7 @@ const DroppableMedia = ({
     }
   };
 
-  const {getRootProps, getInputProps, isDragActive} = useDropzone({
+  const { getRootProps, getInputProps } = useDropzone({
     onDrop: (files) => cropSelectedImage(undefined, files),
   });
 
@@ -57,7 +57,7 @@ const DroppableMedia = ({
         ref={mediaRef}
         className="hidden"
         onChange={(e: any) => cropSelectedImage(e, undefined)}
-        onClick={(e: any) => (e.target.value = '')}
+        onClick={(e: any) => (e.target.value = "")}
         accept="image/*"
         multiple={false}
       />

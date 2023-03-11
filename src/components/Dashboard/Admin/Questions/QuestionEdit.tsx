@@ -1,19 +1,19 @@
-import API, {graphqlOperation} from '@aws-amplify/api';
-import React, {useEffect, useState} from 'react';
-import {IoArrowUndoCircleOutline} from 'react-icons/io5';
-import {useHistory, useLocation} from 'react-router-dom';
+import { API, graphqlOperation } from "aws-amplify";
+import React, { useEffect, useState } from "react";
+import { IoArrowUndoCircleOutline } from "react-icons/io5";
+import { useHistory, useLocation } from "react-router-dom";
 
-import * as mutations from 'graphql/mutations';
-import * as queries from 'graphql/queries';
+import * as mutations from "graphql/mutations";
+import * as queries from "graphql/queries";
 
-import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
-import BreadCrums from 'atoms/BreadCrums';
-import Buttons from 'atoms/Buttons';
-import FormInput from 'atoms/Form/FormInput';
-import MultipleSelector from 'atoms/Form/MultipleSelector';
-import Selector from 'atoms/Form/Selector';
-import TextArea from 'atoms/Form/TextArea';
-import PageWrapper from 'atoms/PageWrapper';
+import SectionTitleV3 from "@components/Atoms/SectionTitleV3";
+import BreadCrums from "atoms/BreadCrums";
+import Buttons from "atoms/Buttons";
+import FormInput from "atoms/Form/FormInput";
+import MultipleSelector from "atoms/Form/MultipleSelector";
+import Selector from "atoms/Form/Selector";
+import TextArea from "atoms/Form/TextArea";
+import PageWrapper from "atoms/PageWrapper";
 
 interface InitialState {
   question: string;
@@ -26,16 +26,16 @@ const QuestionEdit = () => {
   const location = useLocation();
 
   const initialState = {
-    question: '',
-    notes: '',
-    label: ''
+    question: "",
+    notes: "",
+    label: "",
   };
   const [questionData, setQuestionData] = useState<InitialState>(initialState);
   const [validation, setValidation] = useState({
-    question: '',
-    label: '',
-    message: '',
-    isError: true
+    question: "",
+    label: "",
+    message: "",
+    isError: true,
   });
   const [loading, setLoading] = useState(false);
   const [disabled, setDisabled] = useState(false);
@@ -43,15 +43,15 @@ const QuestionEdit = () => {
     return new URLSearchParams(location.search);
   };
   const params = useQuery();
-  const questionId = params.get('id');
+  const questionId = params.get("id");
   const breadCrumsList = [
-    {title: 'Home', url: '/dashboard', last: false},
-    {title: 'Question Bank', url: '/dashboard/question-bank', last: false},
+    { title: "Home", url: "/dashboard", last: false },
+    { title: "Question Bank", url: "/dashboard/question-bank", last: false },
     {
-      title: 'Edit Question',
+      title: "Edit Question",
       url: `/dashboard/question-bank/question/edit?id=${questionId}`,
-      last: true
-    } //add ID in route
+      last: true,
+    }, //add ID in route
   ];
   const selectedDesigners: any = [];
   const designersList: any = [];
@@ -59,13 +59,13 @@ const QuestionEdit = () => {
   const sourceList: any = [];
   const typeList: any = [];
   const languageList = [
-    {id: 1, name: 'English', value: 'EN'},
-    {id: 2, name: 'Spanish', value: 'ES'}
+    { id: 1, name: "English", value: "EN" },
+    { id: 2, name: "Spanish", value: "ES" },
   ];
   const onInputChange = (e: any) => {
     setQuestionData({
       ...questionData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
@@ -78,18 +78,18 @@ const QuestionEdit = () => {
     const msgs = validation;
     if (!questionData.question?.trim().length) {
       isValid = false;
-      msgs.question = 'Question is required';
+      msgs.question = "Question is required";
     } else {
-      msgs.question = '';
+      msgs.question = "";
     }
     if (!questionData.label?.trim().length) {
       isValid = false;
-      msgs.label = 'Label is required';
+      msgs.label = "Label is required";
     } else {
-      msgs.label = '';
+      msgs.label = "";
     }
     // TODO: Add validation for repeating questions.
-    setValidation({...msgs});
+    setValidation({ ...msgs });
     return isValid;
   };
 
@@ -102,27 +102,27 @@ const QuestionEdit = () => {
           id: questionId,
           question: questionData.question,
           label: questionData.label,
-          note: questionData.notes
+          note: questionData.notes,
         };
         const results: any = await API.graphql(
-          graphqlOperation(mutations.updateQuestion, {input: input})
+          graphqlOperation(mutations.updateQuestion, { input: input })
         );
         const savedData = results?.data?.updateQuestion;
         if (savedData) {
           setValidation({
-            question: '',
-            label: '',
-            message: 'Question details updated successfully.',
-            isError: false
+            question: "",
+            label: "",
+            message: "Question details updated successfully.",
+            isError: false,
           });
         }
         setLoading(false);
       } catch {
         setValidation({
-          question: '',
-          label: '',
-          message: 'Unable to save Question details, Please try again later.',
-          isError: true
+          question: "",
+          label: "",
+          message: "Unable to save Question details, Please try again later.",
+          isError: true,
         });
         setLoading(false);
       }
@@ -132,20 +132,20 @@ const QuestionEdit = () => {
   const fetchQuestionData = async () => {
     try {
       const results: any = await API.graphql(
-        graphqlOperation(queries.getQuestion, {id: questionId})
+        graphqlOperation(queries.getQuestion, { id: questionId })
       );
       const savedData = results?.data?.getQuestion;
       setQuestionData({
         question: savedData.question,
         notes: savedData.note,
-        label: savedData.label
+        label: savedData.label,
       });
     } catch {
       setValidation({
-        question: '',
-        label: '',
-        message: 'Unable to fetch Question details, Please try again later.',
-        isError: true
+        question: "",
+        label: "",
+        message: "Unable to fetch Question details, Please try again later.",
+        isError: true,
       });
       setDisabled(true);
     }
@@ -155,17 +155,20 @@ const QuestionEdit = () => {
     if (questionId) {
       fetchQuestionData();
     } else {
-      history.push('/dashboard/question-bank');
+      history.push("/dashboard/question-bank");
     }
   }, []);
 
-  const {question, notes, label} = questionData;
+  const { question, notes, label } = questionData;
   return (
     <div className="w-9/10 h-full p-4">
       {/* Section Header */}
       <BreadCrums items={breadCrumsList} />
       <div className="flex justify-between">
-        <SectionTitleV3 title="EDIT QUESTION" subtitle="Edit current question" />
+        <SectionTitleV3
+          title="EDIT QUESTION"
+          subtitle="Edit current question"
+        />
         <div className="flex justify-end py-4 mb-4 w-5/10">
           <Buttons
             label="Go Back"
@@ -229,7 +232,7 @@ const QuestionEdit = () => {
                   Select Topics
                 </label>
                 <Selector
-                  selectedItem={''}
+                  selectedItem={""}
                   placeholder="Topics"
                   list={topicsList}
                   onChange={selectTopic}
@@ -243,7 +246,7 @@ const QuestionEdit = () => {
                   Select Source
                 </label>
                 <Selector
-                  selectedItem={''}
+                  selectedItem={""}
                   placeholder="Source"
                   list={sourceList}
                   onChange={selectLanguage}
@@ -254,7 +257,7 @@ const QuestionEdit = () => {
                   Select Type
                 </label>
                 <Selector
-                  selectedItem={''}
+                  selectedItem={""}
                   placeholder="Type"
                   list={typeList}
                   onChange={selectLanguage}
@@ -268,7 +271,7 @@ const QuestionEdit = () => {
                   Select Language
                 </label>
                 <Selector
-                  selectedItem={''}
+                  selectedItem={""}
                   placeholder="Language"
                   list={languageList}
                   onChange={selectLanguage}
@@ -290,7 +293,11 @@ const QuestionEdit = () => {
         </div>
         {validation.message && (
           <div className="py-2 m-auto mt-2 text-center">
-            <p className={`${validation.isError ? 'text-red-600' : 'text-green-600'}`}>
+            <p
+              className={`${
+                validation.isError ? "text-red-600" : "text-green-600"
+              }`}
+            >
               {validation.message}
             </p>
           </div>
@@ -298,7 +305,7 @@ const QuestionEdit = () => {
         <div className="flex mb-8 mt-4 justify-center">
           <Buttons
             btnClass="py-3 px-10"
-            label={loading ? 'Saving...' : 'Save'}
+            label={loading ? "Saving..." : "Save"}
             onClick={saveQuestion}
             disabled={loading || disabled ? true : false}
           />

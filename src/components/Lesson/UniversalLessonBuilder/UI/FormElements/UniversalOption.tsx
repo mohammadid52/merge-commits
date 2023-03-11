@@ -1,20 +1,21 @@
-import {isEmpty} from '@aws-amplify/core';
-import {Switch} from '@headlessui/react';
-import {filter, map, remove, update} from 'lodash';
-import React, {useContext, useEffect, useState} from 'react';
-import {v4 as uuidv4} from 'uuid';
-import {getAsset} from 'assets';
-import {GlobalContext} from 'contexts/GlobalContext';
-import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
-import {EditQuestionModalDict} from 'dictionary/dictionary.iconoclast';
-import {optionResponses} from 'utilities/staticData';
-import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
-import Buttons from 'atoms/Buttons';
-import FormInput from 'atoms/Form/FormInput';
-import {FORM_TYPES, SELECT_MANY, SELECT_ONE} from '../common/constants';
-import AnimatedContainer from '../UIComponents/Tabs/AnimatedContainer';
-import {useTabs, Tabs3} from '../UIComponents/Tabs/Tabs';
-import {classNames} from './TextInput';
+import { isEmpty } from "lodash";
+
+import { useGlobalContext } from "@contexts/GlobalContext";
+import { Switch } from "@headlessui/react";
+import { getAsset } from "assets";
+import Buttons from "atoms/Buttons";
+import FormInput from "atoms/Form/FormInput";
+import { useULBContext } from "contexts/UniversalLessonBuilderContext";
+import { EditQuestionModalDict } from "dictionary/dictionary.iconoclast";
+import { filter, map, remove, update } from "lodash";
+import { useEffect, useState } from "react";
+import { optionResponses } from "utilities/staticData";
+import { updateLessonPageToDB } from "utilities/updateLessonPageToDB";
+import { v4 as uuidv4 } from "uuid";
+import { FORM_TYPES, SELECT_MANY, SELECT_ONE } from "../common/constants";
+import AnimatedContainer from "../UIComponents/Tabs/AnimatedContainer";
+import { Tabs3, useTabs } from "../UIComponents/Tabs/Tabs";
+import { classNames } from "./TextInput";
 
 const InputContainer = ({
   shouldShowActions,
@@ -34,7 +35,7 @@ const InputContainer = ({
   setSuggestionModal,
   changeBool,
   changeValue,
-  removeItemFromList
+  removeItemFromList,
 }: any) => {
   const [selForm, setSelForm] = useState(selectedForm);
 
@@ -44,7 +45,7 @@ const InputContainer = ({
         <div className="mb-2">
           <FormInput
             onChange={(e) => onChange(e, idx)}
-            label={`${numbered ? `${idx + 1}. ` : ''}Label`}
+            label={`${numbered ? `${idx + 1}. ` : ""}Label`}
             isRequired
             value={input.label}
             id={`formField_${input.id}`}
@@ -59,16 +60,19 @@ const InputContainer = ({
               return (
                 <div
                   key={index.toLocaleString()}
-                  className="flex w-9/10 mx-auto flex-col mt-4">
+                  className="flex w-9/10 mx-auto flex-col mt-4"
+                >
                   <div className="flex items-center">
                     <div className="w-8/10">
                       <FormInput
-                        disabled={item.label === 'other' || item.label === 'noneOfAbove'}
+                        disabled={
+                          item.label === "other" || item.label === "noneOfAbove"
+                        }
                         value={item.text}
                         className={`${
-                          item.label === 'other' || item.label === 'noneOfAbove'
-                            ? 'text-gray-600'
-                            : ''
+                          item.label === "other" || item.label === "noneOfAbove"
+                            ? "text-gray-600"
+                            : ""
                         }`}
                         id={`formFieldRadioOption_${idx}_${index}`}
                         onChange={(e) => onOptionInputChange(idx, index, e)}
@@ -81,15 +85,19 @@ const InputContainer = ({
                         <button
                           onClick={() => onOptionAdd(idx, index)}
                           className={`text-center w-20 transition-all duration-200 ${getColor(
-                            themeColor === 'iconoclastIndigo' ? 'indigo' : 'blue'
-                          )} text-xs font-semibold text-gray-400 border-gray-200 px-2 py-1 cursor-pointer rounded  border-2 hover:text-gray-600`}>
+                            themeColor === "iconoclastIndigo"
+                              ? "indigo"
+                              : "blue"
+                          )} text-xs font-semibold text-gray-400 border-gray-200 px-2 py-1 cursor-pointer rounded  border-2 hover:text-gray-600`}
+                        >
                           Add
                         </button>
                       </div>
                       <div className="flex items-center justify-end w-auto ml-3">
                         <button
                           onClick={() => onOptionRemove(idx, item.id)}
-                          className={`text-center focus:outline-none focus:bg-red-200 focus:border-transparent w-20 transition-all duration-200 hover:bg-red-200 text-xs font-semibold text-red-400 border-red-200 px-2 py-1 cursor-pointer rounded border-2 hover:text-red-600`}>
+                          className={`text-center focus:outline-none focus:bg-red-200 focus:border-transparent w-20 transition-all duration-200 hover:bg-red-200 text-xs font-semibold text-red-400 border-red-200 px-2 py-1 cursor-pointer rounded border-2 hover:text-red-600`}
+                        >
                           Remove
                         </button>
                       </div>
@@ -101,18 +109,25 @@ const InputContainer = ({
                         onClick={() => {
                           if (
                             input.options.find(
-                              (item: any) => item.label === 'noneOfAbove'
+                              (item: any) => item.label === "noneOfAbove"
                             )
                           ) {
-                            removeExtraOption(idx, 'noneOfAbove');
+                            removeExtraOption(idx, "noneOfAbove");
                           } else {
-                            addExtraOption(idx, 'noneOfAbove', 'None of the above');
+                            addExtraOption(
+                              idx,
+                              "noneOfAbove",
+                              "None of the above"
+                            );
                           }
                         }}
-                        className="w-auto mr-4 hover:text-indigo-500 hover:bg-indigo-100 px-3 py-1 transition-all duration-200 cursor-pointer rounded-lg">
-                        {input.options.find((item: any) => item.label === 'noneOfAbove')
-                          ? 'Remove'
-                          : 'Add'}{' '}
+                        className="w-auto mr-4 hover:text-indigo-500 hover:bg-indigo-100 px-3 py-1 transition-all duration-200 cursor-pointer rounded-lg"
+                      >
+                        {input.options.find(
+                          (item: any) => item.label === "noneOfAbove"
+                        )
+                          ? "Remove"
+                          : "Add"}{" "}
                         none of the above option
                       </p>
                       {/* <p
@@ -146,15 +161,15 @@ const InputContainer = ({
                     !isEmpty(suggestionModal) &&
                     suggestionModal?.idx === idx &&
                     suggestionModal?.selectedResponse?.length > 0
-                      ? 'Change Options'
-                      : 'Add Suggested Options'
+                      ? "Change Options"
+                      : "Add Suggested Options"
                   }
                   onClick={() =>
                     setSuggestionModal({
                       ...suggestionModal,
                       idx,
                       data: optionResponses,
-                      show: true
+                      show: true,
                     })
                   }
                 />
@@ -171,7 +186,7 @@ const InputContainer = ({
                 <Toggle
                   checked={input.inLine}
                   onClick={() => {
-                    changeBool(idx, 'inLine', input.inLine);
+                    changeBool(idx, "inLine", input.inLine);
                   }}
                 />
                 Inline
@@ -181,7 +196,7 @@ const InputContainer = ({
                 Make this required
                 <Toggle
                   checked={input.required}
-                  onClick={() => changeBool(idx, 'required', input.required)}
+                  onClick={() => changeBool(idx, "required", input.required)}
                 />
               </div>
               <span className="w-auto text-gray-500 text-xl mx-4">|</span>
@@ -190,10 +205,12 @@ const InputContainer = ({
                 <Toggle
                   checked={input.type === SELECT_MANY}
                   onClick={() => {
-                    setSelForm(input.type === SELECT_MANY ? SELECT_ONE : SELECT_MANY);
+                    setSelForm(
+                      input.type === SELECT_MANY ? SELECT_ONE : SELECT_MANY
+                    );
                     changeValue(
                       idx,
-                      'type',
+                      "type",
                       input.type === SELECT_MANY ? SELECT_ONE : SELECT_MANY
                     );
                   }}
@@ -204,7 +221,8 @@ const InputContainer = ({
 
             <button
               onClick={() => removeItemFromList(input.id)}
-              className={`text-center transition-all duration-200 hover:bg-red-200 text-xs font-semibold text-red-400 border-red-200 px-2 py-1 cursor-pointer rounded mt-2 border-2 hover:text-red-600 w-auto`}>
+              className={`text-center transition-all duration-200 hover:bg-red-200 text-xs font-semibold text-red-400 border-red-200 px-2 py-1 cursor-pointer rounded mt-2 border-2 hover:text-red-600 w-auto`}
+            >
               Remove Field
             </button>
           </div>
@@ -214,7 +232,7 @@ const InputContainer = ({
               List
               <Toggle
                 checked={input.inLine}
-                onClick={() => changeBool(idx, 'inLine', input.inLine)}
+                onClick={() => changeBool(idx, "inLine", input.inLine)}
               />
               Inline
             </div>
@@ -223,7 +241,7 @@ const InputContainer = ({
               Make this required
               <Toggle
                 checked={input.required}
-                onClick={() => changeBool(idx, 'required', input.required)}
+                onClick={() => changeBool(idx, "required", input.required)}
               />
             </div>
 
@@ -233,11 +251,13 @@ const InputContainer = ({
               <Toggle
                 checked={input.type === SELECT_MANY}
                 onClick={() => {
-                  setSelForm(input.type === SELECT_MANY ? SELECT_ONE : SELECT_MANY);
+                  setSelForm(
+                    input.type === SELECT_MANY ? SELECT_ONE : SELECT_MANY
+                  );
 
                   changeValue(
                     idx,
-                    'type',
+                    "type",
                     input.type === SELECT_MANY ? SELECT_ONE : SELECT_MANY
                   );
                 }}
@@ -254,12 +274,13 @@ const InputContainer = ({
   );
 };
 
-const Toggle = ({checked, onClick}: {checked: boolean; onClick: any}) => {
+const Toggle = ({ checked, onClick }: { checked: boolean; onClick: any }) => {
   return (
     <Switch
       checked={checked}
       onChange={onClick}
-      className="mx-3 flex-shrink-0 group relative rounded-full inline-flex items-center justify-center h-5 w-10 cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+      className="mx-3 flex-shrink-0 group relative rounded-full inline-flex items-center justify-center h-5 w-10 cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+    >
       <span className="sr-only">Text response type</span>
       <span
         aria-hidden="true"
@@ -268,15 +289,15 @@ const Toggle = ({checked, onClick}: {checked: boolean; onClick: any}) => {
       <span
         aria-hidden="true"
         className={classNames(
-          checked ? 'bg-indigo-600' : 'bg-gray-200',
-          'pointer-events-none absolute h-4 w-9 mx-auto rounded-full transition-colors ease-in-out duration-200'
+          checked ? "bg-indigo-600" : "bg-gray-200",
+          "pointer-events-none absolute h-4 w-9 mx-auto rounded-full transition-colors ease-in-out duration-200"
         )}
       />
       <span
         aria-hidden="true"
         className={classNames(
-          checked ? 'translate-x-5' : 'translate-x-0',
-          'pointer-events-none absolute left-0 inline-block h-5 w-5 border border-gray-200 rounded-full bg-white shadow transform ring-0 transition-transform ease-in-out duration-200'
+          checked ? "translate-x-5" : "translate-x-0",
+          "pointer-events-none absolute left-0 inline-block h-5 w-5 border border-gray-200 rounded-full bg-white shadow transform ring-0 transition-transform ease-in-out duration-200"
         )}
       />
     </Switch>
@@ -294,15 +315,17 @@ const UniversalOption = ({
   updateContent,
   setUnsavedChanges,
   askBeforeClose,
-  createNewContent
+  createNewContent,
 }: any) => {
   const {
     clientKey,
     userLanguage,
-    state: {lessonPage: {theme: lessonPageTheme = 'dark', themeTextColor = ''} = {}}
-  } = useContext(GlobalContext);
-  const themeColor = getAsset(clientKey, 'themeClassName');
-  const {suggestionModal, setSuggestionModal} = useULBContext();
+    state: {
+      lessonPage: { theme: lessonPageTheme = "dark", themeTextColor = "" } = {},
+    },
+  } = useGlobalContext();
+  const themeColor = getAsset(clientKey, "themeClassName");
+  const { suggestionModal, setSuggestionModal } = useULBContext();
 
   const onOptionInputChange = (idx: number, idx2: number, e: any) => {
     update(list[idx], `options[${idx2}].text`, () => e.target.value);
@@ -311,8 +334,8 @@ const UniversalOption = ({
 
   const onChange = (e: any, idx: number) => {
     setUnsavedChanges(true);
-    const {value} = e.target;
-    update(list[idx], 'label', () => value);
+    const { value } = e.target;
+    update(list[idx], "label", () => value);
     setList([...list]);
   };
 
@@ -324,12 +347,12 @@ const UniversalOption = ({
         required: false,
         inLine: true,
         type: selectedForm,
-        label: '',
+        label: "",
         options: [
-          {label: '1', text: '', id: uuidv4()},
-          {label: '2', text: '', id: uuidv4()}
-        ]
-      }
+          { label: "1", text: "", id: uuidv4() },
+          { label: "2", text: "", id: uuidv4() },
+        ],
+      },
     ]);
   };
   const addToDB = async (list: any) => {
@@ -337,7 +360,7 @@ const UniversalOption = ({
 
     const input = {
       id: list.id,
-      lessonPlan: [...list.lessonPlan]
+      lessonPlan: [...list.lessonPlan],
     };
 
     await updateLessonPageToDB(input);
@@ -352,17 +375,19 @@ const UniversalOption = ({
         isRequired: d.required,
         options: d.options,
         class: `${
-          d.inLine ? 'flex-row items-center py-2' : 'flex-col items-start space-y-4 py-4'
-        }`
+          d.inLine
+            ? "flex-row items-center py-2"
+            : "flex-col items-start space-y-4 py-4"
+        }`,
       }));
 
-      const type: string = `form-${numbered ? 'numbered' : 'default'}`;
+      const type: string = `form-${numbered ? "numbered" : "default"}`;
       if (isEditingMode) {
-        const updatedList = updateContent('', '', type, inputObjArray);
+        const updatedList = updateContent("", "", type, inputObjArray);
 
         await addToDB(updatedList);
       } else {
-        const updatedList = createNewContent('', '', type, inputObjArray);
+        const updatedList = createNewContent("", "", type, inputObjArray);
 
         await addToDB(updatedList);
       }
@@ -373,22 +398,22 @@ const UniversalOption = ({
       setList([
         {
           id: uuidv4(),
-          label: '',
+          label: "",
           required: false,
           inLine: true,
           type: selectedForm,
           options: [
-            {label: '1', text: '', id: uuidv4()},
-            {label: '2', text: '', id: uuidv4()}
-          ]
-        }
+            { label: "1", text: "", id: uuidv4() },
+            { label: "2", text: "", id: uuidv4() },
+          ],
+        },
       ]);
 
       setSuggestionModal({
         show: false,
-        data: [{title: '', content: [{id: '', text: ''}]}],
+        data: [{ title: "", content: [{ id: "", text: "" }] }],
         selectedResponse: [],
-        idx: 0
+        idx: 0,
       });
     }
   };
@@ -400,7 +425,11 @@ const UniversalOption = ({
 
   const onOptionAdd = (idx: number, idx2: number) => {
     const currentOptions = [...list[idx].options];
-    const newItem = {label: (idx2 + 2).toString(), text: '', id: uuidv4().toString()};
+    const newItem = {
+      label: (idx2 + 2).toString(),
+      text: "",
+      id: uuidv4().toString(),
+    };
     currentOptions.splice(idx2 + 1, 0, newItem);
     let updatedOptions = currentOptions.map((item, i) => {
       if (i > idx2 + 1) {
@@ -427,19 +456,23 @@ const UniversalOption = ({
     let _options = options.map((o: any) => ({
       label: o.text,
       text: o.text,
-      id: o.id
+      id: o.id,
     }));
     update(list[idx], `options`, () => _options);
     setList([...list]);
   };
 
-  const addExtraOption = (idx: number, optionName: string, optionValue: string) => {
+  const addExtraOption = (
+    idx: number,
+    optionName: string,
+    optionValue: string
+  ) => {
     const options = list[idx].options;
 
     options.push({
       label: optionName,
       text: optionValue,
-      id: `${optionName}__${uuidv4()}`
+      id: `${optionName}__${uuidv4()}`,
     });
 
     setList([...list]);
@@ -473,26 +506,31 @@ const UniversalOption = ({
     return `hover:bg-${color}-200 text-${color}-400 border-${color}-200 hover:text-${color}-600 focus:outline-none focus:bg-${color}-200 focus:border-transparent`;
   };
 
-  const RequiredMark = ({isRequired}: {isRequired: boolean}) => (
-    <span className="text-red-500"> {isRequired ? '*' : null}</span>
+  const RequiredMark = ({ isRequired }: { isRequired: boolean }) => (
+    <span className="text-red-500"> {isRequired ? "*" : null}</span>
   );
   const SelectMany = ({
     item,
     checked,
-    onChange
+    onChange,
   }: {
     checked: boolean;
     onChange: (e: any) => void;
-    item: {text: string; label: string; id: string};
+    item: { text: string; label: string; id: string };
   }) => {
-    const {label, text, id} = item;
+    const { label, text, id } = item;
     const {
       theme,
-      state: {lessonPage: {theme: lessonPageTheme = 'dark', themeTextColor = ''} = {}}
-    } = useContext(GlobalContext);
+      state: {
+        lessonPage: {
+          theme: lessonPageTheme = "dark",
+          themeTextColor = "",
+        } = {},
+      },
+    } = useGlobalContext();
 
     const themePlaceholderColor =
-      lessonPageTheme === 'light' ? 'placeholder-gray-800' : '';
+      lessonPageTheme === "light" ? "placeholder-gray-800" : "";
     return (
       <div className={`flex my-2 w-auto justify-center items-center mr-8`}>
         <input
@@ -501,13 +539,15 @@ const UniversalOption = ({
           data-value={label}
           type="checkbox"
           className={`w-5 h-5 flex-shrink-0 mx-4  cursor-pointer border-0 ${themePlaceholderColor} ${
-            checked ? 'bg-blueberry border-white' : 'bg-white border-black '
+            checked ? "bg-blueberry border-white" : "bg-white border-black "
           }`}
           onChange={onChange}
           checked={checked}
         />
 
-        <span className={`ml-2 ${theme.elem.text} ${themeTextColor}`}>{text}</span>
+        <span className={`ml-2 ${theme.elem.text} ${themeTextColor}`}>
+          {text}
+        </span>
       </div>
     );
   };
@@ -515,17 +555,17 @@ const UniversalOption = ({
   const SelectOne = ({
     item,
     onChange,
-    checked
+    checked,
   }: {
     onChange: (e: any) => void;
     checked: boolean;
 
-    item: {text: string; label: string; id: string};
+    item: { text: string; label: string; id: string };
   }) => {
-    const {label, text, id} = item;
+    const { label, text, id } = item;
 
     const themePlaceholderColor =
-      lessonPageTheme === 'light' ? 'placeholder-gray-800' : '';
+      lessonPageTheme === "light" ? "placeholder-gray-800" : "";
     return (
       <div className={`w-auto flex justify-center items-center mr-8 `}>
         <input
@@ -534,7 +574,7 @@ const UniversalOption = ({
           data-value={label}
           type="radio"
           className={`w-5 h-5 flex-shrink-0 mx-4 rounded-full cursor-pointer border-0 ${themePlaceholderColor} ${
-            checked ? 'bg-blueberry border-white' : 'bg-white border-black '
+            checked ? "bg-blueberry border-white" : "bg-white border-black "
           }`}
           onChange={onChange}
           checked={checked}
@@ -547,7 +587,7 @@ const UniversalOption = ({
 
   // ~~~~~~~~ SELECTMANY CHECKBOXES ~~~~~~~~ //
   const generateCheckbox = (
-    values: {label: string; text: string; id: string}[],
+    values: { label: string; text: string; id: string }[],
     selectMany: boolean,
     inputID: string,
     inLine: boolean
@@ -556,10 +596,13 @@ const UniversalOption = ({
       return (
         <div
           className={`mt-2 flex flex-wrap ${themeTextColor} ${
-            lessonPageTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'
+            lessonPageTheme === "light" ? "bg-gray-200" : "bg-darker-gray"
           } py-2 px-4 rounded-xl ${
-            inLine ? 'flex-row items-center' : 'flex-col items-start space-y-4 py-4'
-          }`}>
+            inLine
+              ? "flex-row items-center"
+              : "flex-col items-start space-y-4 py-4"
+          }`}
+        >
           {values.map((item, idx: number) =>
             selectMany ? (
               <SelectMany
@@ -580,10 +623,11 @@ const UniversalOption = ({
         </div>
       );
     }
+    return <div className="w-auto hidden" />;
   };
 
   const filterCompleteQuestions = filter(list, (q) => q.label.length > 0);
-  const {curTab, setCurTab, helpers, goTo} = useTabs();
+  const { curTab, setCurTab, helpers, goTo } = useTabs();
   const [onSetupTab, onPreviewTab] = helpers;
   const [_, toPreviewTab] = goTo;
 
@@ -626,34 +670,39 @@ const UniversalOption = ({
               <div className="flex items-center w-auto">
                 <button
                   onClick={addOneLinkField}
-                  className="w-auto mr-4 border-2 focus:text-white focus:border-indigo-600 focus:bg-indigo-400 border-gray-300 p-2 px-4 text-tiny hover:border-gray-500 rounded-md text-dark transition-all duration-300 ">
+                  className="w-auto mr-4 border-2 focus:text-white focus:border-indigo-600 focus:bg-indigo-400 border-gray-300 p-2 px-4 text-tiny hover:border-gray-500 rounded-md text-dark transition-all duration-300 "
+                >
                   + Add Field
                 </button>
                 <button
                   onClick={() => setNumbered(!numbered)}
                   className={`${
                     numbered
-                      ? 'border-indigo-500 text-white bg-indigo-400'
-                      : 'border-gray-300 text-dark'
-                  } w-auto p-2 px-4 focus:border-indigo-600 text-tiny border-2 hover:border-gray-500 rounded-md  transition-all duration-300 mr-4`}>
-                  {numbered ? 'Numbered' : 'Unnumbered'}
+                      ? "border-indigo-500 text-white bg-indigo-400"
+                      : "border-gray-300 text-dark"
+                  } w-auto p-2 px-4 focus:border-indigo-600 text-tiny border-2 hover:border-gray-500 rounded-md  transition-all duration-300 mr-4`}
+                >
+                  {numbered ? "Numbered" : "Unnumbered"}
                 </button>
                 <button
                   onClick={() => setCurTab(toPreviewTab)}
-                  className={` text-white bg-indigo-600 w-auto p-2 px-4  text-tiny rounded-md  transition-all duration-300 mr-4`}>
+                  className={` text-white bg-indigo-600 w-auto p-2 px-4  text-tiny rounded-md  transition-all duration-300 mr-4`}
+                >
                   See the preview
                 </button>
               </div>
               <div className="flex items-center w-auto">
                 <Buttons
                   btnClass="py-1 px-4 text-xs mr-2"
-                  label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
+                  label={
+                    EditQuestionModalDict[userLanguage]["BUTTON"]["CANCEL"]
+                  }
                   onClick={askBeforeClose}
                   transparent
                 />
                 <Buttons
                   btnClass="py-1 px-8 text-xs ml-2"
-                  label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
+                  label={EditQuestionModalDict[userLanguage]["BUTTON"]["SAVE"]}
                   onClick={onRadioCreate}
                 />
               </div>
@@ -675,17 +724,21 @@ const UniversalOption = ({
                       required: boolean;
                       inLine: boolean;
                       type: string;
-                      options: {id: string; label: string; text: string}[];
+                      options: { id: string; label: string; text: string }[];
                     },
                     index: number
                   ) => {
                     return (
                       <div
                         id={question.id}
-                        key={'preview_question_439i3u4u23'}
-                        className={`mb-4 px-4`}>
-                        <label className={`text-sm ${themeTextColor}`} htmlFor="label">
-                          {numbered && `${index + 1}.`} {question.label}{' '}
+                        key={"preview_question_439i3u4u23"}
+                        className={`mb-4 px-4`}
+                      >
+                        <label
+                          className={`text-sm ${themeTextColor}`}
+                          htmlFor="label"
+                        >
+                          {numbered && `${index + 1}.`} {question.label}{" "}
                           <RequiredMark isRequired={question.required} />
                         </label>
                         {generateCheckbox(
@@ -710,13 +763,15 @@ const UniversalOption = ({
               <div className="flex items-center w-auto">
                 <Buttons
                   btnClass="py-1 px-4 text-xs mr-2"
-                  label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
+                  label={
+                    EditQuestionModalDict[userLanguage]["BUTTON"]["CANCEL"]
+                  }
                   onClick={askBeforeClose}
                   transparent
                 />
                 <Buttons
                   btnClass="py-1 px-8 text-xs ml-2"
-                  label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
+                  label={EditQuestionModalDict[userLanguage]["BUTTON"]["SAVE"]}
                   onClick={onRadioCreate}
                 />
               </div>

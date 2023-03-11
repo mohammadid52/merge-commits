@@ -1,15 +1,13 @@
-import StudentName from '@components/MicroComponents/StudentName';
-import {getAsset} from 'assets';
-import {GlobalContext} from 'contexts/GlobalContext';
-import React, {useContext, useRef, useState} from 'react';
-import {IoIosAdd} from 'react-icons/io';
-import {getInitialsFromString, initials, stringToHslColor} from 'utilities/strings';
-import Placeholder from '../Placeholder';
-import Label from './Label';
+import StudentName from "@components/MicroComponents/StudentName";
+import { getAsset } from "assets";
+import { useGlobalContext } from "contexts/GlobalContext";
+import React, { useRef, useState } from "react";
+import { IoIosAdd } from "react-icons/io";
+import Label from "./Label";
 
 interface selectorProps {
-  list?: {id: number; name: string; avatar?: string}[];
-  selectedItem?: {value?: string; id?: string};
+  list?: { id: number; name: string; value?: string; avatar?: string }[];
+  selectedItem?: { value?: string; id?: string };
   btnClass?: string;
   arrowHidden?: boolean;
   placeholder: string;
@@ -32,14 +30,14 @@ const SearchSelectorWithAvatar = (props: selectorProps) => {
   const {
     list,
     label,
-    width = 'w-full',
+    width = "w-full",
     selectedItem,
     btnClass,
     arrowHidden,
     placeholder,
     onChange,
     isRequired = false,
-    imageFromS3 = true,
+
     fetchStudentList,
     clearFilteredStudents,
     searchStatus,
@@ -47,27 +45,33 @@ const SearchSelectorWithAvatar = (props: selectorProps) => {
     creatable,
     creatableLabel,
     onCreate,
-    dataCy
+    dataCy,
   } = props;
 
   const countdownTimer = 200;
-  const [countdownEnabled, setCountdownEnabled] = useState(undefined);
-  const [searchTerm, setSearchTerm] = useState<string>(undefined);
+  const [countdownEnabled, setCountdownEnabled] =
+    useState<null | NodeJS.Timeout>(null);
+  const [searchTerm, setSearchTerm] = useState<string>("");
 
   const [showList, setShowList] = useState(false);
-  const currentRef: any = useRef(null);
-  const {theme, clientKey} = useContext(GlobalContext);
-  const themeColor = getAsset(clientKey, 'themeClassName');
+  const currentRef: any = useRef<any>(null);
+  const { theme, clientKey } = useGlobalContext();
+  const themeColor = getAsset(clientKey, "themeClassName");
 
-  const updateSelectedItem = (str: string, name: string, id: string, avatar: string) => {
+  const updateSelectedItem = (
+    str: string,
+    name: string,
+    id: string,
+    avatar: string
+  ) => {
     setShowList(!showList);
     onChange(str, name, id, avatar);
-    window.removeEventListener('click', handleOutsideClick, false);
+    window.removeEventListener("click", handleOutsideClick, false);
   };
 
   const onFocus = () => {
     if (!showList) {
-      window.addEventListener('click', handleOutsideClick, false);
+      window.addEventListener("click", handleOutsideClick, false);
       setShowList(true);
     }
   };
@@ -75,17 +79,21 @@ const SearchSelectorWithAvatar = (props: selectorProps) => {
   const handleOutsideClick = (e: any) => {
     const stringElement = e.target.innerHTML;
     const id = e.target.id;
-    if (id !== 'searchForStudent') {
-      if (!stringElement || currentRef.current.outerHTML.indexOf(stringElement) === -1) {
-        window.removeEventListener('click', handleOutsideClick, false);
+    if (id !== "searchForStudent") {
+      if (
+        !stringElement ||
+        currentRef.current.outerHTML.indexOf(stringElement) === -1
+      ) {
+        window.removeEventListener("click", handleOutsideClick, false);
         setShowList(false);
       }
     }
   };
 
   const handleSearchChange = (e: any) => {
-    const {value} = e.target as HTMLInputElement;
-    const firstLetterCapitalized = value.charAt(0).toUpperCase() + value.slice(1);
+    const { value } = e.target as HTMLInputElement;
+    const firstLetterCapitalized =
+      value.charAt(0).toUpperCase() + value.slice(1);
     setSearchTerm(firstLetterCapitalized);
 
     if (countdownEnabled) {
@@ -93,20 +101,22 @@ const SearchSelectorWithAvatar = (props: selectorProps) => {
     }
 
     if (value.length > 0) {
-      if (!searchStatus) searchCallback(true);
+      if (!searchStatus) searchCallback?.(true);
     } else {
-      if (searchStatus) searchCallback(false);
+      if (searchStatus) searchCallback?.(false);
     }
 
     if (value.length < 2) {
-      clearFilteredStudents();
+      clearFilteredStudents?.();
     } else {
-      setCountdownEnabled(
-        setTimeout(() => {
-          fetchStudentList(searchTerm);
-          clearTimeout(countdownEnabled);
-        }, countdownTimer)
-      );
+      const timer = setTimeout(() => {
+        fetchStudentList?.(searchTerm);
+        countdownEnabled && clearTimeout(countdownEnabled);
+      }, countdownTimer);
+
+      if (Boolean(timer)) {
+        setCountdownEnabled(timer);
+      }
     }
   };
 
@@ -121,10 +131,11 @@ const SearchSelectorWithAvatar = (props: selectorProps) => {
           aria-expanded="true"
           aria-labelledby="listbox-label"
           className={` flex focus:outline-none hover:theme-bg:200 hover:theme-border:400 hover:theme-text:400 focus:ring-2 focus:ring-${
-            themeColor === 'iconoclastIndigo' ? 'indigo' : 'blue'
+            themeColor === "iconoclastIndigo" ? "indigo" : "blue"
           }-600 focus:border-transparent  relative items-center cursor-pointer ${width} h-full rounded-full  border-0 bg-white px-4 pr-0 py-2 justify-between text-left transition ease-in-out duration-150 sm:text-sm sm:leading-5 ${
-            btnClass ? btnClass : ''
-          }`}>
+            btnClass ? btnClass : ""
+          }`}
+        >
           {/* TOGGLE SEARCH FIELD */}
           {showList ? (
             <input
@@ -135,8 +146,10 @@ const SearchSelectorWithAvatar = (props: selectorProps) => {
               onChange={handleSearchChange}
               id={`searchForStudent`}
               type={`text`}
-              value={searchTerm ? searchTerm : ''}
-              placeholder={selectedItem?.value ? selectedItem.value : placeholder}
+              value={searchTerm ? searchTerm : ""}
+              placeholder={
+                selectedItem?.value ? selectedItem.value : placeholder
+              }
             />
           ) : (
             <span className="block truncate text-gray-700">
@@ -146,14 +159,16 @@ const SearchSelectorWithAvatar = (props: selectorProps) => {
 
           <span
             className={`relative justify-end inset-y-0 right-0 items-center pr-2 pointer-events-none ${
-              arrowHidden ? 'hidden' : 'flex'
-            } w-auto`}>
+              arrowHidden ? "hidden" : "flex"
+            } w-auto`}
+          >
             {/* UPDOWN ARROW */}
             <svg
               className="h-5 w-5 text-gray-400"
               viewBox="0 0 20 20"
               fill="none"
-              stroke="currentColor">
+              stroke="currentColor"
+            >
               <path
                 d="M7 7l3-3 3 3m0 6l-3 3-3-3"
                 strokeWidth="1.5"
@@ -171,11 +186,14 @@ const SearchSelectorWithAvatar = (props: selectorProps) => {
             role="listbox"
             aria-labelledby="listbox-label"
             aria-activedescendant="listbox-item-3"
-            className="max-h-60 rounded-xl py-1 text-base leading-6 ring-1 ring-black ring-opacity-10 overflow-auto focus:outline-none sm:text-sm sm:leading-5">
+            className="max-h-60 rounded-xl py-1 text-base leading-6 ring-1 ring-black ring-opacity-10 overflow-auto focus:outline-none sm:text-sm sm:leading-5"
+          >
             {searchStatus ? (
               <li className="flex justify-center relative py-2 px-4">
                 <span className="font-normal">
-                  {searchTerm.length > 2 ? 'Searching...' : 'type atleast 2 letters'}{' '}
+                  {searchTerm.length > 2
+                    ? "Searching..."
+                    : "type atleast 2 letters"}{" "}
                 </span>
               </li>
             ) : (
@@ -184,33 +202,40 @@ const SearchSelectorWithAvatar = (props: selectorProps) => {
                   <li
                     onClick={onCreate}
                     role="option"
-                    className={`flex cursor-pointer select-none relative py-2 px-4 ${theme.textColor[themeColor]}`}>
+                    className={`flex cursor-pointer select-none relative py-2 px-4 ${theme.textColor[themeColor]}`}
+                  >
                     <div
-                      className={`w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center`}>
+                      className={`w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center`}
+                    >
                       <IoIosAdd className="w-auto" />
                     </div>
                     <span className={`pl-4 block truncate`}>
-                      {creatableLabel || 'Add new'}
+                      {creatableLabel || "Add new"}
                     </span>
                   </li>
                 )}
-                {list.length ? (
-                  list.map(
+                {list?.length ? (
+                  list?.map(
                     (
-                      item: {name: string; id: any; value: string; avatar?: string},
+                      item: {
+                        name: string;
+                        id: any;
+                        value?: string;
+                        avatar?: string;
+                      },
                       key: number
                     ) => (
                       <li className="">
                         <StudentName
                           onHover
                           key={key}
-                          item={{student: item}}
+                          item={{ student: item }}
                           onClick={() =>
                             updateSelectedItem(
-                              item.value,
+                              item?.value || "",
                               item.name,
                               item.id,
-                              item.avatar
+                              item?.avatar || ""
                             )
                           }
                         />
@@ -219,7 +244,7 @@ const SearchSelectorWithAvatar = (props: selectorProps) => {
                   )
                 ) : (
                   <li className="flex justify-center relative py-2 px-4">
-                    <span className="font-normal"> No Results</span>
+                    <span className="font-normal">No Results</span>
                   </li>
                 )}
               </>

@@ -1,6 +1,6 @@
-import {PersonLessonsData} from 'API';
-import {UniversalLessonPage} from 'interfaces/UniversalLessonInterfaces';
-import React, {SetStateAction} from 'react';
+import { PersonLessonsData } from "API";
+import { UniversalLessonPage } from "interfaces/UniversalLessonInterfaces";
+import React, { SetStateAction } from "react";
 
 export interface LessonComponentsInterface {
   isTeacher?: boolean;
@@ -38,8 +38,8 @@ export interface LessonHeaderBarProps extends LessonComponentsInterface {
 
 export interface ISideMenuProps {
   isOpen: boolean;
-  overlay: string;
-  setOverlay: (overlay: string) => void;
+
+  setOverlay?: React.Dispatch<SetStateAction<string>>;
   handleHome?: () => void;
   handleBack?: () => void;
   handleVideoLink?: () => void;

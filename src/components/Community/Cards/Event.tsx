@@ -1,33 +1,48 @@
-import FormInput from 'atoms/Form/FormInput';
-import Label from 'atoms/Form/Label';
-import Buttons from 'atoms/Buttons';
-import RichTextEditor from 'atoms/RichTextEditor';
-import Media from 'components/Community/Components/Media';
-import {COMMUNITY_UPLOAD_KEY, IFile} from 'components/Community/constants.community';
-import {ICommunityCardProps, IEventInput} from 'interfaces/Community.interfaces';
-import AnimatedContainer from 'uiComponents/Tabs/AnimatedContainer';
-import {getImageFromS3Static} from 'utilities/services';
-import isEmpty from 'lodash/isEmpty';
-import React, {useEffect, useState} from 'react';
-import DatePicker from 'react-datepicker';
+import FormInput from "atoms/Form/FormInput";
+import Label from "atoms/Form/Label";
+import Buttons from "atoms/Buttons";
+import RichTextEditor from "atoms/RichTextEditor";
+import Media from "components/Community/Components/Media";
+import {
+  COMMUNITY_UPLOAD_KEY,
+  IFile,
+} from "components/Community/constants.community";
+import {
+  ICommunityCardProps,
+  IEventInput,
+} from "interfaces/Community.interfaces";
+import AnimatedContainer from "uiComponents/Tabs/AnimatedContainer";
+import { getImageFromS3Static } from "utilities/services";
+import isEmpty from "lodash/isEmpty";
+import React, { useEffect, useState } from "react";
+import DatePicker from "react-datepicker";
 
-const Event = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardProps) => {
-  const [file, setFile] = useState<IFile>();
-  const [overlayText, setOverlayText] = useState('');
-  const [unsavedChanges, setUnsavedChanges] = useState(false);
+const Event = ({
+  onCancel,
+  onSubmit,
+  editMode,
+  cardDetails,
+}: ICommunityCardProps) => {
+  const [file, setFile] = useState<IFile | any>();
+  const [overlayText, setOverlayText] = useState("");
+  const [_, setUnsavedChanges] = useState(false);
 
   const [details, setDetails] = useState({
-    startTime: null,
-    endTime: null,
-    date: null,
-    address: ''
+    startTime: new Date().toISOString(),
+    endTime: new Date().toISOString(),
+    date: new Date().toISOString(),
+    address: "",
   });
 
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
-  const [fields, setFields] = useState<{summary: string; summaryHtml: string}>({
-    summary: editMode && !isEmpty(cardDetails) ? cardDetails?.summary : '',
-    summaryHtml: editMode && !isEmpty(cardDetails) ? cardDetails?.summaryHtml : ''
+  const [fields, setFields] = useState<{
+    summary: string;
+    summaryHtml: string;
+  }>({
+    summary: editMode && !isEmpty(cardDetails) ? cardDetails?.summary : "",
+    summaryHtml:
+      editMode && !isEmpty(cardDetails) ? cardDetails?.summaryHtml || "" : "",
   });
 
   const onEditorStateChange = (
@@ -36,29 +51,31 @@ const Event = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardProps)
     fieldHtml: string,
     field: string
   ) => {
-    setError('');
+    setError("");
     setUnsavedChanges(true);
-    setFields({...fields, [field]: text, [fieldHtml]: html});
+    setFields({ ...fields, [field]: text, [fieldHtml]: html });
   };
 
-  const [tempData, setTempData] = useState(null);
+  const [tempData, setTempData] = useState<any>(null);
 
   useEffect(() => {
     if (editMode && !isEmpty(cardDetails)) {
       setTempData({
-        image: cardDetails.cardImageLink
+        image: cardDetails.cardImageLink,
       });
 
-      setOverlayText(cardDetails?.cardName);
+      cardDetails?.cardName && setOverlayText(cardDetails?.cardName);
 
-      const [date, address] = cardDetails?.additionalInfo.split(' || ');
+      const info = cardDetails?.additionalInfo?.split(" || ");
+      const date = info?.[0] || new Date().toISOString();
+      const address = info?.[1] || "";
 
       setDetails({
         ...details,
-        startTime: new Date(cardDetails?.startTime),
-        endTime: new Date(cardDetails?.endTime),
-        date: new Date(date),
-        address: address
+        startTime: new Date(cardDetails?.startTime).toISOString(),
+        endTime: new Date(cardDetails?.endTime).toISOString(),
+        date: new Date(date).toISOString(),
+        address: address,
       });
     }
   }, [editMode, cardDetails]);
@@ -78,11 +95,11 @@ const Event = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardProps)
         summaryHtml: fields.summaryHtml,
         summary: fields.summary,
         cardName: overlayText,
-        startTime: details.startTime,
-        endTime: details.endTime,
+        startTime: details?.startTime || new Date().toISOString(),
+        endTime: details.endTime || new Date().toISOString(),
         additionalInfo: `${details.date} || ${details.address}`,
         id: cardDetails?.id,
-        isEditedCard: editMode
+        isEditedCard: editMode,
       };
       if (!editMode) {
         delete eventDetails.id;
@@ -92,32 +109,32 @@ const Event = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardProps)
   };
 
   const handleDateChange = (data: any, type: string) => {
-    setError('');
+    setError("");
 
-    if (type === 'startTime') {
-      setDetails({...details, startTime: data});
-    } else if (type === 'endTime') {
-      setDetails({...details, endTime: data});
-    } else if (type === 'date') {
-      setDetails({...details, date: data});
+    if (type === "startTime") {
+      setDetails({ ...details, startTime: data });
+    } else if (type === "endTime") {
+      setDetails({ ...details, endTime: data });
+    } else if (type === "date") {
+      setDetails({ ...details, date: data });
     } else {
-      setDetails({...details, address: data});
+      setDetails({ ...details, address: data });
     }
   };
 
   const validateFields = () => {
     let isValid = true;
     if (!editMode && isEmpty(file)) {
-      setError('Image or video not found');
+      setError("Image or video not found");
       isValid = false;
     } else if (!overlayText) {
-      setError('Overlay text not found');
+      setError("Overlay text not found");
       isValid = false;
     } else if (!fields.summary) {
-      setError('Description not found');
+      setError("Description not found");
       isValid = false;
     } else {
-      setError('');
+      setError("");
       isValid = true;
     }
     return isValid;
@@ -130,7 +147,7 @@ const Event = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardProps)
           <Media
             initialImage={getImageFromS3Static(
               COMMUNITY_UPLOAD_KEY +
-                (!isEmpty(file) && file?._status === 'success'
+                (!isEmpty(file) && file?._status === "success"
                   ? file?.fileKey
                   : tempData?.image)
             )}
@@ -142,9 +159,9 @@ const Event = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardProps)
       ) : (
         <Media
           initialImage={
-            !isEmpty(file) && file?._status === 'success'
+            !isEmpty(file) && file?._status === "success"
               ? getImageFromS3Static(COMMUNITY_UPLOAD_KEY + file?.fileKey)
-              : null
+              : ""
           }
           setError={setError}
           setFile={setFile}
@@ -159,7 +176,7 @@ const Event = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardProps)
             label="Step 2: Add overlay text"
             placeHolder="Overlay text"
             onChange={(e) => {
-              setError('');
+              setError("");
               setOverlayText(e.target.value);
             }}
             value={overlayText}
@@ -174,15 +191,22 @@ const Event = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardProps)
             rounded
             customStyle
             placeholder={
-              'Why do you want people in the community to know about the event'
+              "Why do you want people in the community to know about the event"
             }
             initialValue={fields.summary}
             onChange={(htmlContent, plainText) =>
-              onEditorStateChange(htmlContent, plainText, 'summaryHtml', 'summary')
+              onEditorStateChange(
+                htmlContent,
+                plainText,
+                "summaryHtml",
+                "summary"
+              )
             }
           />
 
-          <div className="text-right text-gray-400">{fields.summary.length} of 750</div>
+          <div className="text-right text-gray-400">
+            {fields.summary.length} of 750
+          </div>
         </div>
       </div>
 
@@ -193,13 +217,14 @@ const Event = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardProps)
           <div className="relative event-details-datepicker">
             <Label label="Start Time" />
             <DatePicker
+              // @ts-ignore
               selected={details.startTime}
-              onChange={(date) => handleDateChange(date, 'startTime')}
+              onChange={(date) => handleDateChange(date, "startTime")}
               showTimeSelect
               showTimeSelectOnly
               timeIntervals={15}
               timeCaption="Time"
-              placeholderText={'Start Time'}
+              placeholderText={"Start Time"}
               isClearable={true}
               dateFormat="h:mm aa"
             />
@@ -208,10 +233,11 @@ const Event = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardProps)
             <Label label="Date" />
 
             <DatePicker
-              dateFormat={'dd/MM/yyyy'}
+              dateFormat={"dd/MM/yyyy"}
+              // @ts-ignore
               selected={details.date}
-              placeholderText={'Date'}
-              onChange={(date: any) => handleDateChange(date, 'date')}
+              placeholderText={"Date"}
+              onChange={(date: any) => handleDateChange(date, "date")}
               isClearable={true}
             />
           </div>
@@ -219,11 +245,12 @@ const Event = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardProps)
             <Label label="End Time" />
 
             <DatePicker
+              // @ts-ignore
               selected={details.endTime}
-              onChange={(date) => handleDateChange(date, 'endTime')}
+              onChange={(date) => handleDateChange(date, "endTime")}
               showTimeSelect
               showTimeSelectOnly
-              placeholderText={'End Time'}
+              placeholderText={"End Time"}
               timeIntervals={15}
               timeCaption="Time"
               isClearable={true}
@@ -240,7 +267,7 @@ const Event = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardProps)
         <div className="flex justify-end">
           <Buttons
             btnClass="py-1 px-4 text-xs mr-2"
-            label={'Cancel'}
+            label={"Cancel"}
             onClick={onCancel}
             transparent
           />
@@ -248,8 +275,8 @@ const Event = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardProps)
             dataCy="save-event-button"
             loading={isLoading}
             btnClass="py-1 px-8 text-xs ml-2"
-            disabled={!editMode && isEmpty(file) && file?._status !== 'success'}
-            label={'Save'}
+            disabled={!editMode && isEmpty(file) && file?._status !== "success"}
+            label={"Save"}
             onClick={_onSubmit}
           />
         </div>

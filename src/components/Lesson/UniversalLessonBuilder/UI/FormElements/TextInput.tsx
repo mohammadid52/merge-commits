@@ -1,28 +1,28 @@
-import {map, remove, update} from 'lodash';
-import React, {useContext} from 'react';
-import {BiCheckbox, BiCheckboxChecked} from 'react-icons/bi';
-import {GlobalContext} from 'contexts/GlobalContext';
-import {EditQuestionModalDict} from 'dictionary/dictionary.iconoclast';
-import Buttons from 'atoms/Buttons';
-import FormInput from 'atoms/Form/FormInput';
-import {v4 as uuidv4} from 'uuid';
-import {FORM_TYPES} from '../common/constants';
-import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
+import Buttons from "atoms/Buttons";
+import FormInput from "atoms/Form/FormInput";
+import { useGlobalContext } from "contexts/GlobalContext";
+import { EditQuestionModalDict } from "dictionary/dictionary.iconoclast";
+import { map, remove, update } from "lodash";
+import { updateLessonPageToDB } from "utilities/updateLessonPageToDB";
+import { v4 as uuidv4 } from "uuid";
+import { FORM_TYPES } from "../common/constants";
 
-import {Switch} from '@headlessui/react';
+import { Switch } from "@headlessui/react";
 
 /**
  * @param classes multipple classes separeted bt comma
  * @returns multiple classes into a single class
  * */
-export const classNames = (...classes: any[]) => classes.filter(Boolean).join(' ');
+export const classNames = (...classes: any[]) =>
+  classes.filter(Boolean).join(" ");
 
-const Toggle = ({checked, onClick}: {checked: boolean; onClick: any}) => {
+const Toggle = ({ checked, onClick }: { checked: boolean; onClick: any }) => {
   return (
     <Switch
       checked={checked}
       onChange={onClick}
-      className="mx-3 flex-shrink-0 group relative rounded-full inline-flex items-center justify-center h-5 w-10 cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+      className="mx-3 flex-shrink-0 group relative rounded-full inline-flex items-center justify-center h-5 w-10 cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+    >
       <span className="sr-only">Text response type</span>
       <span
         aria-hidden="true"
@@ -31,15 +31,15 @@ const Toggle = ({checked, onClick}: {checked: boolean; onClick: any}) => {
       <span
         aria-hidden="true"
         className={classNames(
-          checked ? 'bg-indigo-600' : 'bg-gray-200',
-          'pointer-events-none absolute h-4 w-9 mx-auto rounded-full transition-colors ease-in-out duration-200'
+          checked ? "bg-indigo-600" : "bg-gray-200",
+          "pointer-events-none absolute h-4 w-9 mx-auto rounded-full transition-colors ease-in-out duration-200"
         )}
       />
       <span
         aria-hidden="true"
         className={classNames(
-          checked ? 'translate-x-5' : 'translate-x-0',
-          'pointer-events-none absolute left-0 inline-block h-5 w-5 border border-gray-200 rounded-full bg-white shadow transform ring-0 transition-transform ease-in-out duration-200'
+          checked ? "translate-x-5" : "translate-x-0",
+          "pointer-events-none absolute left-0 inline-block h-5 w-5 border border-gray-200 rounded-full bg-white shadow transform ring-0 transition-transform ease-in-out duration-200"
         )}
       />
     </Switch>
@@ -56,24 +56,29 @@ const TextInput = ({
   updateContent,
   setUnsavedChanges,
   askBeforeClose,
-  createNewContent
+  createNewContent,
 }: any) => {
-  const {userLanguage} = useContext(GlobalContext);
+  const { userLanguage } = useGlobalContext();
 
   const addOneInputField = () => {
-    const newItem = {id: uuidv4(), textArea: false, title: '', placeholder: ''};
+    const newItem = {
+      id: uuidv4(),
+      textArea: false,
+      title: "",
+      placeholder: "",
+    };
     setList([...list, newItem]);
   };
 
   const changeCheckboxValue = (idx: number, currentValue: boolean) => {
-    update(list[idx], 'textArea', () => !currentValue);
+    update(list[idx], "textArea", () => !currentValue);
     setList([...list]);
   };
 
   const onChange = (e: any, idx: number, placeholder: boolean = false) => {
     setUnsavedChanges(true);
-    const {value} = e.target;
-    update(list[idx], placeholder ? `placeholder` : 'title', () => value);
+    const { value } = e.target;
+    update(list[idx], placeholder ? `placeholder` : "title", () => value);
     setList([...list]);
   };
 
@@ -87,7 +92,7 @@ const TextInput = ({
 
     const input = {
       id: list.id,
-      lessonPlan: [...list.lessonPlan]
+      lessonPlan: [...list.lessonPlan],
     };
 
     await updateLessonPageToDB(input);
@@ -102,15 +107,15 @@ const TextInput = ({
         type: d.textArea ? FORM_TYPES.TEXTAREA : FORM_TYPES.TEXT,
         label: d.title,
         value: d.placeholder,
-        isRequired: d.required
+        isRequired: d.required,
       };
     });
-    const type: string = `form-${numbered ? 'numbered' : 'default'}`;
+    const type: string = `form-${numbered ? "numbered" : "default"}`;
     if (isEditingMode) {
-      const updatedList = updateContent('', '', type, inputObjArray);
+      const updatedList = updateContent("", "", type, inputObjArray);
       await addToDB(updatedList);
     } else {
-      const updatedList = createNewContent('', '', type, inputObjArray);
+      const updatedList = createNewContent("", "", type, inputObjArray);
       await addToDB(updatedList);
     }
     // close modal after saving
@@ -129,7 +134,7 @@ const TextInput = ({
                 <div className="mb-2 ">
                   <FormInput
                     onChange={(e) => onChange(e, idx, false)}
-                    label={`${numbered ? `${idx + 1}. ` : ''}Label`}
+                    label={`${numbered ? `${idx + 1}. ` : ""}Label`}
                     isRequired
                     value={input.title}
                     id={`formFieldInput_${input.id}`}
@@ -139,7 +144,7 @@ const TextInput = ({
                 <div>
                   <FormInput
                     onChange={(e) => onChange(e, idx, true)}
-                    label={'Placeholder'}
+                    label={"Placeholder"}
                     value={input.placeholder}
                     id={`placeholder_${input.id}`}
                     placeHolder={`Briefly explain how user should respond`}
@@ -158,7 +163,8 @@ const TextInput = ({
 
                     <button
                       onClick={() => removeItemFromList(input.id)}
-                      className={`text-center transition-all duration-200 hover:bg-red-200 text-xs font-semibold text-red-400 border-red-200 px-2 py-1 cursor-pointer rounded mt-2 border-2 hover:text-red-600 w-auto`}>
+                      className={`text-center transition-all duration-200 hover:bg-red-200 text-xs font-semibold text-red-400 border-red-200 px-2 py-1 cursor-pointer rounded mt-2 border-2 hover:text-red-600 w-auto`}
+                    >
                       Remove
                     </button>
                   </div>
@@ -195,29 +201,31 @@ const TextInput = ({
         <div className="flex items-center w-auto">
           <button
             onClick={addOneInputField}
-            className="w-auto mr-4 border-2 focus:text-white focus:border-indigo-600 focus:bg-indigo-400 border-gray-300 p-2 px-4 text-tiny hover:border-gray-500 rounded-md text-dark transition-all duration-300 ">
+            className="w-auto mr-4 border-2 focus:text-white focus:border-indigo-600 focus:bg-indigo-400 border-gray-300 p-2 px-4 text-tiny hover:border-gray-500 rounded-md text-dark transition-all duration-300 "
+          >
             + Add Field
           </button>
           <button
             onClick={() => setNumbered(!numbered)}
             className={`${
               numbered
-                ? 'border-indigo-500 text-white bg-indigo-400'
-                : 'border-gray-300 text-dark'
-            } w-auto p-2 px-4 focus:border-indigo-600 text-tiny border-2 hover:border-gray-500 rounded-md  transition-all duration-300 mr-4`}>
-            {numbered ? 'Numbered' : 'Unnumbered'}
+                ? "border-indigo-500 text-white bg-indigo-400"
+                : "border-gray-300 text-dark"
+            } w-auto p-2 px-4 focus:border-indigo-600 text-tiny border-2 hover:border-gray-500 rounded-md  transition-all duration-300 mr-4`}
+          >
+            {numbered ? "Numbered" : "Unnumbered"}
           </button>
         </div>
         <div className="flex items-center w-auto">
           <Buttons
             btnClass="py-1 px-4 text-xs mr-2"
-            label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
+            label={EditQuestionModalDict[userLanguage]["BUTTON"]["CANCEL"]}
             onClick={askBeforeClose}
             transparent
           />
           <Buttons
             btnClass="py-1 px-8 text-xs ml-2"
-            label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
+            label={EditQuestionModalDict[userLanguage]["BUTTON"]["SAVE"]}
             onClick={onFormCreate}
           />
         </div>

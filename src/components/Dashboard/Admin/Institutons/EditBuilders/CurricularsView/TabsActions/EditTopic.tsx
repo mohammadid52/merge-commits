@@ -1,19 +1,19 @@
-import API, {graphqlOperation} from '@aws-amplify/api';
-import BreadCrums from 'atoms/BreadCrums';
-import Buttons from 'atoms/Buttons';
-import FormInput from 'atoms/Form/FormInput';
-import TextArea from 'atoms/Form/TextArea';
-import PageWrapper from 'atoms/PageWrapper';
-import React, {useContext, useEffect, useState} from 'react';
-import {IoArrowUndoCircleOutline} from 'react-icons/io5';
-import {useHistory, useParams} from 'react-router';
+import BreadCrums from "atoms/BreadCrums";
+import Buttons from "atoms/Buttons";
+import FormInput from "atoms/Form/FormInput";
+import TextArea from "atoms/Form/TextArea";
+import PageWrapper from "atoms/PageWrapper";
+import { API, graphqlOperation } from "aws-amplify";
+import { useEffect, useState } from "react";
+import { IoArrowUndoCircleOutline } from "react-icons/io5";
+import { useHistory, useParams } from "react-router";
 
-import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
-import {GlobalContext} from 'contexts/GlobalContext';
-import * as customMutations from 'customGraphql/customMutations';
-import * as customQueries from 'customGraphql/customQueries';
-import useDictionary from 'customHooks/dictionary';
-import * as queries from 'graphql/queries';
+import SectionTitleV3 from "@components/Atoms/SectionTitleV3";
+import { useGlobalContext } from "contexts/GlobalContext";
+import * as customMutations from "customGraphql/customMutations";
+import * as customQueries from "customGraphql/customQueries";
+import useDictionary from "customHooks/dictionary";
+import * as queries from "graphql/queries";
 
 interface EditTopicProps {}
 
@@ -27,45 +27,51 @@ const EditTopic = (props: EditTopicProps) => {
   const [loading, setLoading] = useState(false);
   const [topic, setTopic] = useState({
     id: topicId,
-    name: '',
-    description: '',
-    distinguished: '',
-    excelled: '',
-    adequite: '',
-    basic: '',
+    name: "",
+    description: "",
+    distinguished: "",
+    excelled: "",
+    adequite: "",
+    basic: "",
     curriculumID: curricularId,
-    learning: {id: '', name: '', value: ''}
+    learning: { id: "", name: "", value: "" },
   });
-  const [learnings, setLearnings] = useState([]);
-  const [validation, setValidation] = useState({name: '', learning: ''});
-  const {clientKey, theme, userLanguage} = useContext(GlobalContext);
-  const {EditTopicDict, BreadcrumsTitles} = useDictionary(clientKey);
+  const [_, setLearnings] = useState<any[]>([]);
+  const [validation, setValidation] = useState({ name: "", learning: "" });
+  const { userLanguage } = useGlobalContext();
+  const { EditTopicDict, BreadcrumsTitles } = useDictionary();
 
   const breadCrumsList = [
-    {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
+    {
+      title: BreadcrumsTitles[userLanguage]["HOME"],
+      url: "/dashboard",
+      last: false,
+    },
     {
       title: topic?.learning?.value,
       url: `/dashboard/manage-institutions/:instituteID/curricular?id=${curricularId}`,
       last: false,
-      goBack: true
+      goBack: true,
     },
     {
-      title: BreadcrumsTitles[userLanguage]['EditTopic'],
+      title: BreadcrumsTitles[userLanguage]["EditTopic"],
       url: `/dashboard/curricular/${curricularId}/topic/edit/${topicId}`,
-      last: true
-    }
+      last: true,
+    },
   ];
 
   const onInputChange = (e: any) => {
     const value = e.target.value;
-    if (e.target.name === 'name') {
-      setTopic({...topic, name: value});
-      if (value.length && validation.name) setValidation({...validation, name: ''});
-    } else if (e.target.name === 'description') setTopic({...topic, description: value});
+    if (e.target.name === "name") {
+      setTopic({ ...topic, name: value });
+      if (value.length && validation.name)
+        setValidation({ ...validation, name: "" });
+    } else if (e.target.name === "description")
+      setTopic({ ...topic, description: value });
     else {
       setTopic({
         ...topic,
-        [e.target.name]: e.target.value
+        [e.target.name]: e.target.value,
       });
     }
   };
@@ -75,17 +81,17 @@ const EditTopic = (props: EditTopicProps) => {
     const msgs = validation;
     if (!topic.name.length) {
       isValid = false;
-      msgs.name = EditTopicDict[userLanguage]['messages']['namerequired'];
+      msgs.name = EditTopicDict[userLanguage]["messages"]["namerequired"];
     } else {
-      msgs.name = '';
+      msgs.name = "";
     }
     if (!topic.learning.id) {
       isValid = false;
-      msgs.learning = EditTopicDict[userLanguage]['messages']['learningobj'];
+      msgs.learning = EditTopicDict[userLanguage]["messages"]["learningobj"];
     } else {
-      msgs.learning = '';
+      msgs.learning = "";
     }
-    setValidation({...msgs});
+    setValidation({ ...msgs });
     return isValid;
   };
 
@@ -100,31 +106,24 @@ const EditTopic = (props: EditTopicProps) => {
         distinguished: topic.distinguished,
         excelled: topic.excelled,
         adequite: topic.adequite,
-        basic: topic.basic
+        basic: topic.basic,
       };
       const item: any = await API.graphql(
-        graphqlOperation(customMutations.updateTopic, {input})
+        graphqlOperation(customMutations.updateTopic, { input })
       );
       const updatedItem = item.data.updateTopic;
       if (updatedItem) {
         history.goBack();
       } else {
-        console.error('Could not update topic');
+        console.error("Could not update topic");
       }
     }
-  };
-
-  const selectLearning = (val: string, name: string, id: string) => {
-    if (validation.learning) {
-      setValidation({...validation, learning: ''});
-    }
-    setTopic({...topic, learning: {...topic.learning, id, name, value: val}});
   };
 
   const fetchTopic = async () => {
     setLoading(true);
     let item: any = await API.graphql(
-      graphqlOperation(customQueries.getTopicDetails, {id: topicId})
+      graphqlOperation(customQueries.getTopicDetails, { id: topicId })
     );
     item = item.data.getTopic;
     if (item.curriculumID === curricularId) {
@@ -137,28 +136,28 @@ const EditTopic = (props: EditTopicProps) => {
         adequite: item.adequite,
         basic: item.basic,
         learning: {
-          id: item.learningObjective?.id || '',
-          name: item.learningObjective?.name || '',
-          value: item.learningObjective?.name || ''
-        }
+          id: item.learningObjective?.id || "",
+          name: item.learningObjective?.name || "",
+          value: item.learningObjective?.name || "",
+        },
       });
       setLoading(false);
     } else {
-      console.error('wrong cr');
+      console.error("wrong cr");
       setLoading(false);
     }
   };
   const fetchLearningObjectives = async () => {
     let list: any = await API.graphql(
       graphqlOperation(queries.listLearningObjectives, {
-        filter: {curriculumID: {eq: curricularId}}
+        filter: { curriculumID: { eq: curricularId } },
       })
     );
     list = list.data.listLearningObjectives?.items || [];
     list = list.map((item: any) => ({
       id: item.id,
       name: item.name,
-      value: item.name
+      value: item.name,
     }));
     setLearnings(list);
   };
@@ -174,8 +173,8 @@ const EditTopic = (props: EditTopicProps) => {
       <BreadCrums items={breadCrumsList} />
       <div className="flex justify-between">
         <SectionTitleV3
-          title={EditTopicDict[userLanguage]['title']}
-          subtitle={EditTopicDict[userLanguage]['subtitle']}
+          title={EditTopicDict[userLanguage]["title"]}
+          subtitle={EditTopicDict[userLanguage]["subtitle"]}
         />
         <div className="flex justify-end py-4 mb-4 w-5/10">
           <Buttons
@@ -191,7 +190,7 @@ const EditTopic = (props: EditTopicProps) => {
       <PageWrapper>
         <div className="w-6/10 m-auto">
           <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">
-            {EditTopicDict[userLanguage]['heading']}
+            {EditTopicDict[userLanguage]["heading"]}
           </h3>
         </div>
         {!loading ? (
@@ -204,10 +203,12 @@ const EditTopic = (props: EditTopicProps) => {
                     id="name"
                     onChange={onInputChange}
                     name="name"
-                    label={EditTopicDict[userLanguage]['topicname']}
+                    label={EditTopicDict[userLanguage]["topicname"]}
                     isRequired
                   />
-                  {validation.name && <p className="text-red-600">{validation.name}</p>}
+                  {validation.name && (
+                    <p className="text-red-600">{validation.name}</p>
+                  )}
                 </div>
 
                 {/* <div className="px-3 py-4">
@@ -233,7 +234,7 @@ const EditTopic = (props: EditTopicProps) => {
                     value={topic.description}
                     onChange={onInputChange}
                     name="description"
-                    label={EditTopicDict[userLanguage]['desc']}
+                    label={EditTopicDict[userLanguage]["desc"]}
                   />
                 </div>
 
@@ -243,7 +244,7 @@ const EditTopic = (props: EditTopicProps) => {
                     value={topic.distinguished}
                     onChange={onInputChange}
                     name="distinguished"
-                    label={EditTopicDict[userLanguage]['Distinguished']}
+                    label={EditTopicDict[userLanguage]["Distinguished"]}
                   />
                 </div>
                 <div className="px-3 py-4">
@@ -252,7 +253,7 @@ const EditTopic = (props: EditTopicProps) => {
                     value={topic.excelled}
                     onChange={onInputChange}
                     name="excelled"
-                    label={EditTopicDict[userLanguage]['Excelled']}
+                    label={EditTopicDict[userLanguage]["Excelled"]}
                   />
                 </div>
                 <div className="px-3 py-4">
@@ -261,7 +262,7 @@ const EditTopic = (props: EditTopicProps) => {
                     value={topic.adequite}
                     onChange={onInputChange}
                     name="adequite"
-                    label={EditTopicDict[userLanguage]['Adequate']}
+                    label={EditTopicDict[userLanguage]["Adequate"]}
                   />
                 </div>
                 <div className="px-3 py-4">
@@ -270,7 +271,7 @@ const EditTopic = (props: EditTopicProps) => {
                     value={topic.basic}
                     onChange={onInputChange}
                     name="basic"
-                    label={EditTopicDict[userLanguage]['Basic']}
+                    label={EditTopicDict[userLanguage]["Basic"]}
                   />
                 </div>
               </div>
@@ -278,20 +279,20 @@ const EditTopic = (props: EditTopicProps) => {
             <div className="flex my-8 justify-center">
               <Buttons
                 btnClass="py-3 px-10 mr-4"
-                label={EditTopicDict[userLanguage]['button']['cancel']}
+                label={EditTopicDict[userLanguage]["button"]["cancel"]}
                 onClick={history.goBack}
                 transparent
               />
               <Buttons
                 btnClass="py-3 px-10 ml-4"
-                label={EditTopicDict[userLanguage]['button']['save']}
+                label={EditTopicDict[userLanguage]["button"]["save"]}
                 onClick={saveTopicDetails}
               />
             </div>
           </>
         ) : (
           <div className="py-12 my-12 m-auto text-center">
-            {EditTopicDict[userLanguage]['fetching']}
+            {EditTopicDict[userLanguage]["fetching"]}
           </div>
         )}
       </PageWrapper>

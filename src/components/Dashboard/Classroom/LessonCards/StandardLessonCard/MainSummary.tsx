@@ -1,15 +1,15 @@
-import Highlighted from '@components/Atoms/Highlighted';
-import {GlobalContext} from 'contexts/GlobalContext';
-import React, {useContext} from 'react';
-import {LessonCardProps} from '../../Classroom';
+import Highlighted from "@components/Atoms/Highlighted";
+import { useGlobalContext } from "contexts/GlobalContext";
+import { LessonCardProps } from "../../Classroom";
 
 const MainSummary = (props: LessonCardProps) => {
-  const {theme} = useContext(GlobalContext);
-  const {lessonProps, searchTerm} = props;
+  const { theme } = useGlobalContext();
+  const { lessonProps, searchTerm } = props;
 
   return (
     <div
-      className={`sm:min-h-48 relative p-5 px-5 flex flex-col justify-start items-center`}>
+      className={`sm:min-h-48 relative p-5 px-5 flex flex-col justify-start items-center`}
+    >
       <h1 className={`${theme.lessonCard.title}  w-full font-medium`}>
         <span className="w-full">
           <Highlighted
@@ -34,8 +34,9 @@ const MainSummary = (props: LessonCardProps) => {
             __html:
               lessonProps.lesson && lessonProps.lesson?.summary
                 ? lessonProps.lesson?.summary
-                : ''
-          }}></p>
+                : "",
+          }}
+        ></p>
       </div>
     </div>
   );

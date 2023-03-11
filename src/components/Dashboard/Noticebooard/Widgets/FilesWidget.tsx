@@ -1,17 +1,16 @@
-import {Link, Widget} from 'interfaces/ClassroomComponentsInterfaces';
+import { useGlobalContext } from "contexts/GlobalContext";
+import useDictionary from "customHooks/dictionary";
+import { Link, Widget } from "interfaces/ClassroomComponentsInterfaces";
 import {
   AiOutlineDropbox,
   AiOutlineFile,
   AiOutlineFileExcel,
   AiOutlineFileWord,
-  AiOutlineFileZip
-} from 'react-icons/ai';
-import {FaRegFilePowerpoint, ImOnedrive} from 'react-icons/all';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
-import React, {useContext} from 'react';
-import {responsiveClass} from '../Widgets';
-import {GlobalContext} from 'contexts/GlobalContext';
-import useDictionary from 'customHooks/dictionary';
+  AiOutlineFileZip,
+} from "react-icons/ai";
+import { FaRegFilePowerpoint, ImOnedrive } from "react-icons/all";
+import { IconContext } from "react-icons/lib/esm/iconContext";
+import { responsiveClass } from "../Widgets";
 
 export const FileLinkWidget = (props: {
   title: string;
@@ -20,52 +19,52 @@ export const FileLinkWidget = (props: {
   classProp?: string;
   widgetObj?: Widget;
 }) => {
-  const {title, links, classProp, widgetObj} = props;
-  const {clientKey, userLanguage} = useContext(GlobalContext);
-  const {noticeboardDict} = useDictionary(clientKey);
+  const { title, links, widgetObj } = props;
+  const { userLanguage } = useGlobalContext();
+  const { noticeboardDict } = useDictionary();
 
   const getFileInfo = (url: string) => {
-    if (url.includes('document') || url.includes('word')) {
+    if (url.includes("document") || url.includes("word")) {
       return {
-        iconLabel: 'Document',
+        iconLabel: "Document",
         icon: <AiOutlineFileWord size={24} />,
-        downloadLabel: noticeboardDict[userLanguage].DOWNLOAD
+        downloadLabel: noticeboardDict[userLanguage].DOWNLOAD,
       };
-    } else if (url.includes('spreadsheet') || url.includes('excel')) {
+    } else if (url.includes("spreadsheet") || url.includes("excel")) {
       return {
-        iconLabel: 'Spreadsheet',
+        iconLabel: "Spreadsheet",
         icon: <AiOutlineFileExcel size={24} />,
-        downloadLabel: noticeboardDict[userLanguage].DOWNLOAD
+        downloadLabel: noticeboardDict[userLanguage].DOWNLOAD,
       };
-    } else if (url.includes('powerpoint') || url.includes('presentation')) {
+    } else if (url.includes("powerpoint") || url.includes("presentation")) {
       return {
-        iconLabel: 'Spreadsheet',
+        iconLabel: "Spreadsheet",
         icon: <FaRegFilePowerpoint size={24} />,
-        downloadLabel: noticeboardDict[userLanguage].DOWNLOAD
+        downloadLabel: noticeboardDict[userLanguage].DOWNLOAD,
       };
-    } else if (url.includes('.zip')) {
+    } else if (url.includes(".zip")) {
       return {
-        iconLabel: 'Archive',
+        iconLabel: "Archive",
         icon: <AiOutlineFileZip size={24} />,
-        downloadLabel: noticeboardDict[userLanguage].DOWNLOAD
+        downloadLabel: noticeboardDict[userLanguage].DOWNLOAD,
       };
-    } else if (url.includes('1drv') || url.includes('onedrive')) {
+    } else if (url.includes("1drv") || url.includes("onedrive")) {
       return {
-        iconLabel: 'Onedrive',
+        iconLabel: "Onedrive",
         icon: <ImOnedrive size={24} />,
-        downloadLabel: noticeboardDict[userLanguage].DOWNLOAD
+        downloadLabel: noticeboardDict[userLanguage].DOWNLOAD,
       };
-    } else if (url.includes('dropbox')) {
+    } else if (url.includes("dropbox")) {
       return {
-        iconLabel: 'Dropbox',
+        iconLabel: "Dropbox",
         icon: <AiOutlineDropbox size={24} />,
-        downloadLabel: noticeboardDict[userLanguage].DOWNLOAD
+        downloadLabel: noticeboardDict[userLanguage].DOWNLOAD,
       };
     } else {
       return {
-        iconLabel: 'File',
+        iconLabel: "File",
         icon: <AiOutlineFile size={24} />,
-        downloadLabel: noticeboardDict[userLanguage].DOWNLOAD
+        downloadLabel: noticeboardDict[userLanguage].DOWNLOAD,
       };
     }
   };
@@ -73,23 +72,26 @@ export const FileLinkWidget = (props: {
   return (
     <div>
       <div className={`${responsiveClass} mb-2`}>
-        <span className={`text-gray-400 w-full font-semibold text-sm`}>{title}</span>
+        <span className={`text-gray-400 w-full font-semibold text-sm`}>
+          {title}
+        </span>
       </div>
       <div className="p-3 bg-white shadow rounded-lg flex items-center justify-center">
-        <div className={`${widgetObj.placement === 'sidebar' ? '' : 'flex'}`}>
+        <div className={`${widgetObj?.placement === "sidebar" ? "" : "flex"}`}>
           {links &&
             links.length > 0 &&
             links.map((link: Link, idx: number) => (
               <div
-                key={`${widgetObj.id}_${idx}`}
+                key={`${widgetObj?.id}_${idx}`}
                 className={`
             ${
-              idx < links.length - 1 && widgetObj.placement === 'sidebar'
-                ? 'border-b border-dark-gray border-opacity-10'
-                : ''
+              idx < links.length - 1 && widgetObj?.placement === "sidebar"
+                ? "border-b border-dark-gray border-opacity-10"
+                : ""
             } 
               max-w-1/3
-            `}>
+            `}
+              >
                 {/**
                  * MOBILE VERSION WIDGET ICON
                  */}
@@ -101,14 +103,19 @@ export const FileLinkWidget = (props: {
                     id={`links_${links.id}_mini`}
                     className={`text-xs font-semibold text-blueberry hover:underline`}
                     href={link.url}
-                    target={`_blank`}>
-                    {getFileInfo(link.url)?.icon === null ? (
-                      <IconContext.Provider value={{className: 'mx-auto my-2'}}>
+                    target={`_blank`}
+                  >
+                    {getFileInfo(link?.url || "")?.icon === null ? (
+                      <IconContext.Provider
+                        value={{ className: "mx-auto my-2" }}
+                      >
                         <AiOutlineFile size={24} />
                       </IconContext.Provider>
                     ) : (
-                      <IconContext.Provider value={{className: 'mx-auto my-2'}}>
-                        {getFileInfo(link.url)?.icon}
+                      <IconContext.Provider
+                        value={{ className: "mx-auto my-2" }}
+                      >
+                        {getFileInfo(link?.url || "")?.icon}
                       </IconContext.Provider>
                     )}
                   </a>

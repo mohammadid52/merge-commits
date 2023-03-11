@@ -1,31 +1,31 @@
-import Note from '@UlbBlocks/Notes/Note';
-import '@UlbBlocks/Notes/NoteStyles.scss';
-import Selector from 'atoms/Form/Selector';
-import Loader from 'atoms/Loader';
-import Tooltip from 'atoms/Tooltip';
-import {FORM_TYPES} from 'components/Lesson/UniversalLessonBuilder/UI/common/constants';
-import {GlobalContext} from 'contexts/GlobalContext';
-import useInLessonCheck from 'customHooks/checkIfInLesson';
-import useStudentDataValue from 'customHooks/studentDataValue';
-import gsap from 'gsap';
-import {Draggable} from 'gsap/Draggable';
-import {InertiaPlugin} from 'gsap/InertiaPlugin';
-import {find, findIndex, map, noop, remove, update} from 'lodash';
-import ThemeModal from 'molecules/ThemeModal';
-import React, {useContext, useEffect, useState} from 'react';
-import {BiSave} from 'react-icons/bi';
-import {FiFilePlus} from 'react-icons/fi';
-import {VscDebugRestart} from 'react-icons/vsc';
-import {wait} from 'utilities/functions';
-import {v4 as uuidv4} from 'uuid';
+import Note from "@UlbBlocks/Notes/Note";
+import "@UlbBlocks/Notes/NoteStyles.scss";
+import Selector from "atoms/Form/Selector";
+import Loader from "atoms/Loader";
+import Tooltip from "atoms/Tooltip";
+import { FORM_TYPES } from "components/Lesson/UniversalLessonBuilder/UI/common/constants";
+import { useGlobalContext } from "contexts/GlobalContext";
+import useInLessonCheck from "customHooks/checkIfInLesson";
+import useStudentDataValue from "customHooks/studentDataValue";
+import gsap from "gsap";
+import { Draggable } from "gsap/Draggable";
+import { InertiaPlugin } from "gsap/InertiaPlugin";
+import { find, findIndex, map, noop, remove, update } from "lodash";
+import ThemeModal from "molecules/ThemeModal";
+import React, { useEffect, useState } from "react";
+import { BiSave } from "react-icons/bi";
+import { FiFilePlus } from "react-icons/fi";
+import { VscDebugRestart } from "react-icons/vsc";
+import { wait } from "utilities/functions";
+import { v4 as uuidv4 } from "uuid";
 
 const genSticky = (
-  {rows, cols}: {rows?: number; cols?: number},
+  { rows, cols }: { rows?: number; cols?: number },
 
   cb?: any
 ) => {
   wait(50).then(() => {
-    var $container = $('#container'),
+    var $container = $("#container"),
       gridWidth = 250,
       gridHeight = 250,
       gridRows = rows || 2,
@@ -37,13 +37,13 @@ const genSticky = (
     for (i = 0; i < gridRows * gridColumns; i++) {
       y = Math.floor(i / gridColumns) * gridHeight;
       x = (i * gridWidth) % (gridColumns * gridWidth);
-      $('<span/>')
+      $("<span/>")
         .css({
-          position: 'absolute',
+          position: "absolute",
           width: gridWidth - 1,
           height: gridHeight - 1,
           top: y,
-          left: x
+          left: x,
         })
         .prependTo($container);
     }
@@ -56,30 +56,34 @@ const genSticky = (
     //   height: gridHeight,
     // });
 
-    Draggable.create('._sticky', {
+    Draggable.create("._sticky", {
       bounds: $container,
       edgeResistance: 0.065,
       throwProps: true,
-      type: 'x,y',
+      type: "x,y",
       inertia: true,
-      onDragEnd: (e) => {},
+      // onDragEnd: (e) => {},
       // @ts-ignore
       autoScroll: true,
 
       snap: {
         x: function (endValue) {
           const landOnGrid = false;
-          return landOnGrid ? Math.round(endValue / gridWidth) * gridWidth : endValue;
+          return landOnGrid
+            ? Math.round(endValue / gridWidth) * gridWidth
+            : endValue;
         },
         y: function (endValue) {
           const landOnGrid = false;
 
-          return landOnGrid ? Math.round(endValue / gridHeight) * gridHeight : endValue;
-        }
-      }
+          return landOnGrid
+            ? Math.round(endValue / gridHeight) * gridHeight
+            : endValue;
+        },
+      },
     });
 
-    if (cb && typeof cb === 'function') {
+    if (cb && typeof cb === "function") {
       cb();
     }
   });
@@ -88,7 +92,7 @@ const genSticky = (
 interface INoteBlock {
   notesInitialized?: boolean;
   preview?: boolean;
-  grid?: {cols?: number; rows?: number};
+  grid?: { cols?: number; rows?: number };
   value: any[];
   addNew?: (newNoteObj: any, notesData?: any) => void;
   saveData?: (notesData: any, cb?: any, cb2?: any) => void;
@@ -102,14 +106,14 @@ interface INoteBlock {
 
 const genSize = (size: string) => {
   switch (size) {
-    case 'small':
-      return 'h-40 w-40 text-sm';
-    case 'medium':
-      return 'h-60 w-60 text-base';
-    case 'large':
-      return 'h-72 w-72 text-lg';
+    case "small":
+      return "h-40 w-40 text-sm";
+    case "medium":
+      return "h-60 w-60 text-base";
+    case "large":
+      return "h-72 w-72 text-lg";
     default:
-      return 'h-60 w-60';
+      return "h-60 w-60";
   }
 };
 
@@ -121,28 +125,28 @@ const NotesBlock = ({
   addNew,
   notesInitialized,
   noteDelete,
-  grid,
+  grid = {},
 
   saveData,
   updateJournalData,
   preview = false,
-  defaultNotes = []
+  defaultNotes = [],
 }: INoteBlock) => {
   const {
-    state: {user},
-    lessonDispatch
-  } = useContext(GlobalContext);
-  const isStudent = user.role === 'ST';
+    state: { user },
+    lessonDispatch,
+  } = useGlobalContext();
+  const isStudent = user.role === "ST";
   const isInLesson = useInLessonCheck();
 
-  const [localNotes, setLocalNotes] = useState([]);
+  const [localNotes, setLocalNotes] = useState<any[]>([]);
 
   gsap.registerPlugin(InertiaPlugin, Draggable);
   gsap.ticker.fps(60);
   const [loading, setLoading] = useState(true);
 
   const [isContainerRendered, setIsContainerRendered] = useState(false);
-  const {setDataValue} = useStudentDataValue();
+  const { setDataValue } = useStudentDataValue();
 
   useEffect(() => {
     // if (!isContainerRendered) {
@@ -168,19 +172,20 @@ const NotesBlock = ({
     } else if (end.createTextRange) {
       var t = end.createTextRange();
       t.collapse(true);
-      t.moveEnd('character', len);
-      t.moveStart('character', len);
+      t.moveEnd("character", len);
+      t.moveStart("character", len);
       t.select();
     }
   }
 
+  // @ts-ignore
   if (jQuery.ready) {
     if (localNotes && localNotes.length > 0) {
-      localNotes.forEach((note: {id: any}, idx: number) => {
+      localNotes.forEach((note: { id: any }) => {
         if (note) {
           const id = `#${note.id} #note-${note.id}`;
 
-          $(id).on('click', (e) => {
+          $(id).on("click", (e) => {
             PosEnd(e.target);
           });
         }
@@ -194,10 +199,10 @@ const NotesBlock = ({
   // window.onbeforeunload = onUnload;
 
   const updateNotesContent = (html: string, noteId: string) => {
-    const idx = findIndex(notesData.entryData, ['domID', noteId]);
+    const idx = findIndex(notesData.entryData, ["domID", noteId]);
 
     update(notesData, `entryData[${idx}].input`, () => html);
-    setNotesData({...notesData});
+    setNotesData?.({ ...notesData });
     if (!notesChanged) setNotesChanged(true);
   };
 
@@ -208,16 +213,17 @@ const NotesBlock = ({
 
   const onNoteDelete = async () => {
     const note: any =
-      showDeleteModal.id && find(localNotes, (d) => d.id === showDeleteModal.id);
+      showDeleteModal.id &&
+      find(localNotes, (d) => d.id === showDeleteModal.id);
 
     setNotesChanged(true);
-    setShowDeleteModal({...showDeleteModal, show: false});
+    setShowDeleteModal({ ...showDeleteModal, show: false });
 
-    remove(notesData.entryData, ['domID', note.id]);
+    remove(notesData.entryData, ["domID", note.id]);
 
-    setNotesData({...notesData});
+    setNotesData?.({ ...notesData });
 
-    noteDelete(notesData);
+    noteDelete?.(notesData);
   };
 
   const onAddNewNote = () => {
@@ -226,35 +232,35 @@ const NotesBlock = ({
     const newNoteObj = {
       ...localNotes[0],
       id: uuidv4(),
-      class: 'yellow medium',
-      value: '',
-      type: FORM_TYPES.NOTES
+      class: "yellow medium",
+      value: "",
+      type: FORM_TYPES.NOTES,
     };
     localNotes.push(newNoteObj);
     setLocalNotes([...localNotes]);
 
     const domID = `post-it_${newNoteObj.id}`;
 
-    addNew(
+    addNew?.(
       {
         domID,
-        type: 'content-custom || yellow medium',
-        input: ''
+        type: "content-custom || yellow medium",
+        input: "",
       },
       notesData
     );
 
     lessonDispatch({
-      type: 'ADD_NEW_INPUT',
+      type: "ADD_NEW_INPUT",
       payload: {
         domID,
-        input: ['']
-      }
+        input: [""],
+      },
     });
   };
 
   const onNoteEdit = async () => {
-    setShowEditModal({...showEditModal, show: false});
+    setShowEditModal({ ...showEditModal, show: false });
     setNotesChanged(true);
 
     const note = find(localNotes, (d) => d.id === showEditModal.id);
@@ -268,7 +274,7 @@ const NotesBlock = ({
     );
     setLocalNotes([...localNotes]);
 
-    const idx = findIndex(notesData.entryData, ['domID', note.id]);
+    const idx = findIndex(notesData.entryData, ["domID", note.id]);
 
     update(
       notesData,
@@ -276,26 +282,37 @@ const NotesBlock = ({
       () => `content-custom || ${currentSelectedColor} ${currentSelectedSize}`
     );
 
-    setNotesData({...notesData});
+    setNotesData?.({ ...notesData });
     await updateJournalData();
 
     setCurrentSelectedColor(null);
-    setCurrentSelectedSize(null);
+    setCurrentSelectedSize(undefined);
   };
 
-  const [showDeleteModal, setShowDeleteModal] = useState({show: false, id: ''});
+  const [showDeleteModal, setShowDeleteModal] = useState({
+    show: false,
+    id: "",
+  });
 
-  const [showEditModal, setShowEditModal] = useState({show: false, id: '', value: ''});
+  const [showEditModal, setShowEditModal] = useState({
+    show: false,
+    id: "",
+    value: "",
+  });
 
-  const [currentSelectedColor, setCurrentSelectedColor] = useState(null);
-  const [currentSelectedSize, setCurrentSelectedSize] = useState(null);
+  const [currentSelectedColor, setCurrentSelectedColor] = useState<
+    string | null
+  >(null);
+  const [currentSelectedSize, setCurrentSelectedSize] = useState<
+    string | undefined
+  >(undefined);
 
   useEffect(() => {
     if (showEditModal && showEditModal.id) {
       const currentNote = find(localNotes, (d) => d.id === showEditModal.id);
       if (currentNote.class) {
-        const bgColor = currentNote.class?.split(' ')[0] || 'yellow';
-        const size = currentNote.class?.split(' ')[1] || 'medium';
+        const bgColor = currentNote.class?.split(" ")[0] || "yellow";
+        const size = currentNote.class?.split(" ")[1] || "medium";
         if (!currentSelectedColor) {
           setCurrentSelectedColor(bgColor);
         }
@@ -309,47 +326,53 @@ const NotesBlock = ({
   const modalBtns = {
     delete: {
       save: onNoteDelete,
-      cancel: () => setShowDeleteModal({show: false, id: ''})
+      cancel: () => setShowDeleteModal({ show: false, id: "" }),
     },
     edit: {
       save: onNoteEdit,
-      cancel: () => setShowEditModal({show: false, id: '', value: ''})
-    }
+      cancel: () => setShowEditModal({ show: false, id: "", value: "" }),
+    },
   };
 
   const resetDefaultNotes = () => {
-    allNotes.map((note) => {
-      updateText({target: {value: note.value}}, note.id);
-    });
+    allNotes &&
+      allNotes.length > 0 &&
+      allNotes.map((note) => {
+        updateText({ target: { value: note.value } }, note.id);
+      });
   };
 
   const colorList = [
-    {id: 0, name: 'red'},
-    {id: 1, name: 'green'},
-    {id: 2, name: 'blue'},
-    {id: 3, name: 'yellow'},
-    {id: 4, name: 'indigo'},
-    {id: 5, name: 'purple'}
+    { id: 0, name: "red" },
+    { id: 1, name: "green" },
+    { id: 2, name: "blue" },
+    { id: 3, name: "yellow" },
+    { id: 4, name: "indigo" },
+    { id: 5, name: "purple" },
   ];
 
   const buttonIconSize =
-    'h-8 w-8 hover:theme-bg hover:text-white rounded-full transition-all p-1';
+    "h-8 w-8 hover:theme-bg hover:text-white rounded-full transition-all p-1";
 
   if (loading) {
     return (
       <div className="flex items-center overflow-hidden justify-center min-h-32">
-        <Loader withText="Loading Notes..." className="text-gray-500 flex-col text-lg" />
+        <Loader
+          withText="Loading Notes..."
+          className="text-gray-500 flex-col text-lg"
+        />
       </div>
     );
   } else
     return (
       <>
         <ThemeModal
-          max={{w: 132}}
+          max={{ w: 132 }}
           dark={true}
           header={`Delete Note`}
           open={showDeleteModal.show}
-          setOpen={modalBtns.delete.cancel}>
+          setOpen={modalBtns.delete.cancel}
+        >
           <div className="">
             <p className="text-gray-900 dark:text-white mb-4">
               Are you sure you want to delete this note?
@@ -358,32 +381,35 @@ const NotesBlock = ({
               <button
                 onClick={modalBtns.delete.cancel}
                 type="button"
-                className="w-auto inline-flex items-center px-2.5 py-1.5 border-0 border-gray-300 shadow-sm text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                className="w-auto inline-flex items-center px-2.5 py-1.5 border-0 border-gray-300 shadow-sm text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              >
                 Cancel
               </button>
               <button
                 data-cy="delete-note-button"
                 onClick={modalBtns.delete.save}
                 type="button"
-                className="w-auto inline-flex items-center px-2.5 py-1.5 border-0 border-transparent text-xs font-medium rounded shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                className="w-auto inline-flex items-center px-2.5 py-1.5 border-0 border-transparent text-xs font-medium rounded shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+              >
                 Delete
               </button>
             </div>
           </div>
         </ThemeModal>
         <ThemeModal
-          max={{w: 132}}
+          max={{ w: 132 }}
           dark={true}
           header={`Edit Note`}
           open={showEditModal.show}
-          setOpen={modalBtns.edit.cancel}>
+          setOpen={modalBtns.edit.cancel}
+        >
           <div className="flex items-center flex-col justify-center">
             <textarea
               onChange={noop}
               className={`${genSize(
-                currentSelectedSize
+                currentSelectedSize || "medium"
               )} preview-note bg-gradient-to-t text-gray-900 from-${currentSelectedColor}-500 to-${currentSelectedColor}-300 rounded leading-8 p-6`}
-              id={'note'}
+              id={"note"}
               value={showEditModal?.value}
             />
 
@@ -391,13 +417,13 @@ const NotesBlock = ({
               {map(colorList, (color) => (
                 <div
                   key={color.id}
-                  onClick={() => setCurrentSelectedColor(color.name)}
+                  onClick={() => setCurrentSelectedColor(color?.name || "")}
                   className={`rounded-full cursor-pointer transition-all h-4 w-4 bg-${
                     color.name
                   }-500 border-2 ${
                     currentSelectedColor === color.name
-                      ? ' border-white'
-                      : 'border-transparent'
+                      ? " border-white"
+                      : "border-transparent"
                   }`}
                 />
               ))}
@@ -405,8 +431,9 @@ const NotesBlock = ({
 
             <div className="mb-4">
               <label
-                htmlFor={'size'}
-                className="mb-2 block text-xs font-semibold leading-5 text-gray-400">
+                htmlFor={"size"}
+                className="mb-2 block text-xs font-semibold leading-5 text-gray-400"
+              >
                 Select size
               </label>
               <Selector
@@ -414,9 +441,9 @@ const NotesBlock = ({
                 selectedItem={currentSelectedSize}
                 onChange={(_, name) => setCurrentSelectedSize(name)}
                 list={[
-                  {id: 0, name: 'small'},
-                  {id: 1, name: 'medium'},
-                  {id: 2, name: 'large'}
+                  { id: 0, name: "small" },
+                  { id: 1, name: "medium" },
+                  { id: 2, name: "large" },
                 ]}
               />
             </div>
@@ -425,7 +452,8 @@ const NotesBlock = ({
               <button
                 onClick={modalBtns.edit.cancel}
                 type="button"
-                className="w-auto inline-flex items-center px-2.5 py-1.5 border-0 border-gray-300 shadow-sm text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                className="w-auto inline-flex items-center px-2.5 py-1.5 border-0 border-gray-300 shadow-sm text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              >
                 Cancel
               </button>
               <button
@@ -433,8 +461,9 @@ const NotesBlock = ({
                 onClick={modalBtns.edit.save}
                 type="button"
                 className={`${
-                  saveInProgress ? 'opacity-50' : 'opacity-100'
-                } w-auto inline-flex items-center px-2.5 py-1.5 border-0 border-transparent text-xs font-medium rounded shadow-sm text-white iconoclast:bg-main curate:bg-main  hover:iconoclast:bg-600 hover:curate:bg-600 `}>
+                  saveInProgress ? "opacity-50" : "opacity-100"
+                } w-auto inline-flex items-center px-2.5 py-1.5 border-0 border-transparent text-xs font-medium rounded shadow-sm text-white iconoclast:bg-main curate:bg-main  hover:iconoclast:bg-600 hover:curate:bg-600 `}
+              >
                 Save
               </button>
             </div>
@@ -446,15 +475,17 @@ const NotesBlock = ({
             <div className="w-auto flex items-center  justify-center theme-border border-0 rounded-full mb-4 gap-x-4 p-2">
               {defaultNotes.length > 0 &&
                 resetDefaultNotes &&
-                typeof resetDefaultNotes === 'function' && (
+                typeof resetDefaultNotes === "function" && (
                   <Tooltip
                     placement="top"
                     additionalClass="flex items-center justify-center"
-                    text="reset to default">
+                    text="reset to default"
+                  >
                     <button
                       data-cy="reset-to-default-button"
                       onClick={resetDefaultNotes}
-                      className="w-auto theme-text transition-all">
+                      className="w-auto theme-text transition-all"
+                    >
                       <VscDebugRestart className={buttonIconSize} />
                     </button>
                   </Tooltip>
@@ -462,12 +493,14 @@ const NotesBlock = ({
               <Tooltip
                 placement="top"
                 additionalClass="flex items-center justify-center"
-                text="Add new note">
+                text="Add new note"
+              >
                 <button
                   data-cy="add-new-note-button"
                   disabled={localNotes.length === 15}
                   onClick={onAddNewNote}
-                  className="w-auto theme-text transition-all">
+                  className="w-auto theme-text transition-all"
+                >
                   <FiFilePlus className={buttonIconSize} />
                 </button>
               </Tooltip>
@@ -476,12 +509,13 @@ const NotesBlock = ({
                 <Tooltip
                   placement="top"
                   additionalClass="flex items-center justify-center"
-                  text="Save">
+                  text="Save"
+                >
                   <button
                     data-cy="save-note-button"
                     onClick={() => {
                       if (notesChanged) {
-                        saveData(
+                        saveData?.(
                           notesData,
                           () => setSaveInProgress(true),
                           () => {
@@ -491,12 +525,15 @@ const NotesBlock = ({
                         );
                       }
                     }}
-                    className="w-auto theme-text transition-all">
+                    className="w-auto theme-text transition-all"
+                  >
                     <BiSave className={buttonIconSize} />
                   </button>
                 </Tooltip>
               )}
-              {saveInProgress && <Loader className="text-yellow-500 text-base" />}
+              {saveInProgress && (
+                <Loader className="text-yellow-500 text-base" />
+              )}
             </div>
           )}
           <div id="container" className="sticky-container blackboard">
@@ -517,6 +554,7 @@ const NotesBlock = ({
                     />
                   );
                 }
+                return <div className="hidden w-auto" />;
               })}
           </div>
         </div>

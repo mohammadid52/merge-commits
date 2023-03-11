@@ -1,5 +1,6 @@
 export const getSessionStorageData = (key: string) => {
-  return JSON.parse(window.sessionStorage.getItem(key));
+  const toParse = window?.sessionStorage?.getItem?.(key) || "";
+  return JSON.parse(toParse);
 };
 
 export const setSessionStorageData = (key: string, dataObj: any) => {

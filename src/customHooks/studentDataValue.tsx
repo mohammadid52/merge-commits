@@ -1,9 +1,9 @@
-import {StudentPageInput} from 'interfaces/UniversalLessonInterfaces';
-import {useGlobalContext} from 'contexts/GlobalContext';
-import useInLessonCheck from './checkIfInLesson';
-import useAuth from './useAuth';
-import {TeachingStyle} from 'API';
-import {getLocalStorageData} from '@utilities/localStorage';
+import { StudentPageInput } from "interfaces/UniversalLessonInterfaces";
+import { useGlobalContext } from "contexts/GlobalContext";
+import useInLessonCheck from "./checkIfInLesson";
+import useAuth from "./useAuth";
+import { TeachingStyle } from "API";
+import { getLocalStorageData } from "@utilities/localStorage";
 
 const useStudentDataValue = () => {
   // ~~~~~~~~~~~~~~~ CONTEXT ~~~~~~~~~~~~~~~ //
@@ -15,37 +15,31 @@ const useStudentDataValue = () => {
   // ~~~~~~~~~~~~~~~~ PAGES ~~~~~~~~~~~~~~~~ //
   const PAGES = lessonState?.lessonData?.lessonPlan;
   const CURRENT_PAGE = lessonState?.currentPage;
-  const getRoomData = getLocalStorageData('room_info');
+  const getRoomData = getLocalStorageData("room_info");
 
   const teachingStyle = getRoomData.teachingStyle;
 
   // ~~~~~~~~~~~~~~ USER ROLES ~~~~~~~~~~~~~ //
-  const {isTeacher, isFellow} = useAuth();
+  const { isTeacher, isFellow } = useAuth();
   const isStudent =
-    user.role !== 'ST' && teachingStyle === TeachingStyle.PERFORMER
+    user.role !== "ST" && teachingStyle === TeachingStyle.PERFORMER
       ? true
-      : user.role === 'ST';
+      : user.role === "ST";
 
   const isInLesson = isStudent ? useInLessonCheck() : false;
 
   // ~~~~~~~~~~~ CHECK IF SURVEY ~~~~~~~~~~~ //
-  const isSurvey = lessonState && lessonState.lessonData?.type === 'survey';
+  const isSurvey = lessonState && lessonState.lessonData?.type === "survey";
 
-  // ~~~~~~~~~~~~~ DATA SOURCE ~~~~~~~~~~~~~ //
-  /**********************************************
-   * STUDENT'S LESSON INPUT DATA IS STORED LIKE *
-   *    [[{}], [{}]] AKA.AN ARRAY OF ARRAYS     *
-   * STUDENT'S SURVEY INPUT DATA IS STORED LIKE *
-   *        [{},{},{}] AKA. MUCH FLATTER        *
-   **********************************************/
   const originalStudentData = isSurvey
-    ? lessonState.studentData
-    : lessonState.studentData[lessonState.currentPage];
+    ? lessonState?.studentData
+    : lessonState?.studentData?.[lessonState.currentPage];
   const sharedData = lessonState.sharedData;
 
   // ~~~~~~~~~~~~ SHARING STATUS ~~~~~~~~~~~ //
-  const isOtherStudent = lessonState.displayData[0]?.studentAuthID !== user.authId;
-  const sharingActive = lessonState.displayData[0]?.studentAuthID !== '';
+  const isOtherStudent =
+    lessonState.displayData[0]?.studentAuthID !== user.authId;
+  const sharingActive = lessonState.displayData[0]?.studentAuthID !== "";
   const sharedDataFromSamePage =
     PAGES &&
     PAGES.length > 0 &&
@@ -56,23 +50,28 @@ const useStudentDataValue = () => {
   // ##################################################################### //
   const getStudentDataValue = (domID: string) => {
     const getInput = originalStudentData
-      ? originalStudentData.find((inputObj: StudentPageInput) => inputObj.domID === domID)
+      ? // @ts-ignore
+        originalStudentData.find(
+          (inputObj: StudentPageInput) => inputObj.domID === domID
+        )
       : undefined;
     if (getInput !== undefined) {
       return getInput.input;
     } else {
-      return [''];
+      return [""];
     }
   };
 
   const getDisplayDataStudentValue = (domID: string) => {
     const getInput = sharedData
-      ? sharedData.find((inputObj: StudentPageInput) => inputObj.domID === domID)
+      ? sharedData.find(
+          (inputObj: StudentPageInput) => inputObj.domID === domID
+        )
       : undefined;
     if (getInput !== undefined) {
       return getInput.input;
     } else {
-      return [''];
+      return [""];
     }
   };
 
@@ -86,12 +85,13 @@ const useStudentDataValue = () => {
     } else {
       return getStudentDataValue(domID);
     }
+    return [""];
   };
 
   const removeBlinkError = (domID: string) => {
-    lessonDispatch({type: 'SET_IS_VALID', payload: true});
+    lessonDispatch({ type: "SET_IS_VALID", payload: { isValid: true } });
     const element = document.getElementById(`${domID}_for_error`);
-    element && element.classList.remove('blink-error');
+    element && element.classList.remove("blink-error");
   };
 
   // ##################################################################### //
@@ -102,24 +102,24 @@ const useStudentDataValue = () => {
       removeBlinkError(domID);
       if (!isSurvey) {
         lessonDispatch({
-          type: 'UPDATE_STUDENT_DATA',
+          type: "UPDATE_STUDENT_DATA",
           payload: {
             pageIdx: lessonState.currentPage,
             data: {
               domID: domID,
-              input: input
-            }
-          }
+              input: input,
+            },
+          },
         });
       } else {
         lessonDispatch({
-          type: 'UPDATE_SURVEY_DATA',
+          type: "UPDATE_SURVEY_DATA",
           payload: {
             data: {
               domID: domID,
-              input: input
-            }
-          }
+              input: input,
+            },
+          },
         });
       }
     }
@@ -133,7 +133,7 @@ const useStudentDataValue = () => {
 
   return {
     getDataValue: getDataValue,
-    setDataValue: setDataValue
+    setDataValue: setDataValue,
   };
 };
 

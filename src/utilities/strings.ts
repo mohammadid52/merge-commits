@@ -16,23 +16,23 @@ export const formatPattern = (
   outputPattern: string
 ) => {
   if (
-    typeof pattern === 'undefined' ||
-    typeof separator === 'undefined' ||
-    typeof inputPattern === 'undefined' ||
-    typeof outputPattern === 'undefined'
+    typeof pattern === "undefined" ||
+    typeof separator === "undefined" ||
+    typeof inputPattern === "undefined" ||
+    typeof outputPattern === "undefined"
   ) {
-    return 'param undefined...';
+    return "param undefined...";
   }
 
   const patternStringObject = pattern.split(separator);
   const originalTime = inputPattern
     .split(separator)
     .reduce((acc: PatternObject, val: string, i: number) => {
-      return {...acc, [`${val}`]: patternStringObject[i]};
+      return { ...acc, [`${val}`]: patternStringObject[i] };
     }, {});
   const outputTime = outputPattern
     .split(separator)
-    .map((val: string, i: number) => originalTime[val]);
+    .map((val: string) => originalTime[val]);
 
   return outputTime.join(separator);
 };
@@ -43,10 +43,10 @@ export const formatPattern = (
  * @param inputText
  */
 export const parseBlankLines = (inputText: string) => {
-  if (typeof inputText !== 'undefined') {
-    return inputText.replace(/(\n)+/g, '<br/>');
+  if (typeof inputText !== "undefined") {
+    return inputText.replace(/(\n)+/g, "<br/>");
   } else {
-    return 'No input text...';
+    return "No input text...";
   }
 };
 
@@ -64,11 +64,11 @@ export const lc = (inputText: string): string => {
  * @param str
  */
 export const firstInitialFunc = (str: string) => {
-  if (typeof str !== 'string' || str === '') {
-    return 'Profile';
+  if (typeof str !== "string" || str === "") {
+    return "Profile";
   }
   let firstInitial = str.charAt(0);
-  firstInitial = firstInitial.toUpperCase() + '.';
+  firstInitial = firstInitial.toUpperCase() + ".";
   return firstInitial;
 };
 
@@ -78,18 +78,18 @@ export const firstInitialFunc = (str: string) => {
  * @param str
  */
 export const keywordParser = (str: string) => {
-  if (typeof str !== 'string') {
+  if (typeof str !== "string") {
     return null;
   }
-  let tempWord = '';
+  let tempWord = "";
   let initialArray = Array.from(str);
   let finalArray = [];
   initialArray.forEach((letter) => {
-    if (letter !== ',') {
+    if (letter !== ",") {
       tempWord = tempWord + letter;
     } else {
-      finalArray.push(tempWord + ',');
-      tempWord = '';
+      finalArray.push(tempWord + ",");
+      tempWord = "";
     }
   });
 
@@ -113,8 +113,8 @@ export const getFilterORArray = (arr: any, key: string) => {
   let newArray = arr.map((item: any) => {
     return {
       [key]: {
-        eq: item
-      }
+        eq: item,
+      },
     };
   });
   return newArray;
@@ -129,8 +129,8 @@ export const getFilterORArray = (arr: any, key: string) => {
  * @param str
  */
 export const initials = (firstName: string, lastName: string) => {
-  let firstInitial = firstName?.charAt(0).toUpperCase() || '';
-  let lastInitial = lastName?.charAt(0).toUpperCase() || '';
+  let firstInitial = firstName?.charAt(0).toUpperCase() || "";
+  let lastInitial = lastName?.charAt(0).toUpperCase() || "";
   return firstInitial + lastInitial;
 };
 
@@ -139,15 +139,15 @@ export const getInitialsFromString = (str: string) => {
    * This will retun first two initials from string of multiple words
    * or first two characters of single word.
    */
-  const splitedWords = str.split(' ');
+  const splitedWords = str.split(" ");
   if (splitedWords.length > 1) {
     return splitedWords;
   } else {
-    return str.split('');
+    return str.split("");
   }
 };
 
-export const stringToHslColor = (str: string) => {
+export const stringToHslColor = (str: string = "") => {
   let hash = 0;
   let i;
   for (i = 0; i < str.length; i++) {
@@ -155,7 +155,7 @@ export const stringToHslColor = (str: string) => {
   }
 
   let h = hash % 360;
-  return 'hsl(' + h + ', 70%, 72%)';
+  return "hsl(" + h + ", 70%, 72%)";
 };
 
 /**
@@ -182,13 +182,13 @@ export const getHostNameFromUrl = (url: string) => {
 
 export const formatPhoneNumber = (str: string) => {
   //Filter only numbers from the input
-  let cleaned = ('' + str).replace(/\D/g, '');
+  let cleaned = ("" + str).replace(/\D/g, "");
 
   //Check if the input is of correct length
   let match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/);
 
   if (match) {
-    return '(' + match[1] + ') ' + match[2] + '-' + match[3];
+    return "(" + match[1] + ") " + match[2] + "-" + match[3];
   }
 
   return str;
@@ -205,11 +205,11 @@ export const createFilterToFetchSpecificItemsOnly = (arr: any, key: string) => {
     let newArray = arr.map((item: any) => {
       return {
         [key]: {
-          eq: item
-        }
+          eq: item,
+        },
       };
     });
-    return {or: newArray};
+    return { or: newArray };
   }
   return {};
 };
@@ -225,11 +225,11 @@ export const createFilterToFetchAllItemsExcept = (arr: any, key: string) => {
     let newArray = arr.map((item: any) => {
       return {
         [key]: {
-          ne: item
-        }
+          ne: item,
+        },
       };
     });
-    return {and: newArray};
+    return { and: newArray };
   }
   return {};
 };
@@ -251,12 +251,12 @@ export const reorder = (list: any, startIndex: number, endIndex: number) => {
 export const getClientKey = () => {
   const url = new URL(window.location.href);
   let hostname = url.hostname;
-  if (hostname.indexOf('localhost') >= 0) return 'iconoclast';
-  if (hostname.indexOf('lms') >= 0) return 'demo';
-  if (hostname.indexOf('demo') >= 0) return 'demo';
-  if (hostname.indexOf('iconoclast') >= 0) return 'iconoclast';
-  if (hostname.indexOf('curate') >= 0) return 'curate';
-  else return 'demo';
+  if (hostname.indexOf("localhost") >= 0) return "iconoclast";
+  if (hostname.indexOf("lms") >= 0) return "demo";
+  if (hostname.indexOf("demo") >= 0) return "demo";
+  if (hostname.indexOf("iconoclast") >= 0) return "iconoclast";
+  if (hostname.indexOf("curate") >= 0) return "curate";
+  else return "iconoclast";
 };
 
 /**
@@ -283,83 +283,92 @@ export const convertArrayIntoObj = (answerArray: any[]) => {
   }, {});
 };
 
-export const getLanguageString = (language: string) => {
+export const getLanguageString = (language: string): "English" | "Spanish" => {
   switch (language) {
-    case 'EN':
-      return 'English';
-    case 'ES':
-      return 'Spanish';
+    case "EN":
+      return "English";
+    case "ES":
+      return "Spanish";
+
+    default:
+      return "English";
   }
 };
 
 export const getTypeString = (type: string) => {
   switch (type) {
-    case 'text':
-      return 'Text';
-    case 'input':
-      return 'Input';
-    case 'selectMany':
-      return 'Select Many';
-    case 'selectOne':
-      return 'Select One';
-    case 'datePicker':
-      return 'Date Picker';
-    case 'link':
-      return 'link';
-    case 'emoji':
-      return 'Emoji';
-    case 'attachments':
-      return 'Attachments';
+    case "text":
+      return "Text";
+    case "input":
+      return "Input";
+    case "selectMany":
+      return "Select Many";
+    case "selectOne":
+      return "Select One";
+    case "datePicker":
+      return "Date Picker";
+    case "link":
+      return "link";
+    case "emoji":
+      return "Emoji";
+    case "attachments":
+      return "Attachments";
     default:
-      return 'Text';
+      return "Text";
   }
 };
 
-export const getLessonType = (type: string) => {
+export const getLessonType = (type: string): string => {
   switch (type) {
-    case 'lesson':
-      return 'Lesson';
-    case 'survey':
-      return 'Survey';
-    case 'assessment':
-      return 'Assessment';
+    case "lesson":
+      return "Lesson";
+    case "survey":
+      return "Survey";
+    case "assessment":
+      return "Assessment";
+    default:
+      return "Lesson";
   }
 };
 
-export const getUserRoleString = (role: string) => {
+export const getUserRoleString = (role: string): string => {
   switch (role) {
-    case 'SUP':
-      return 'Super Admin';
-    case 'ADM':
-      return 'Admin';
-    case 'BLD':
-      return 'Builder';
-    case 'FLW':
-      return 'Fellow';
-    case 'CRD':
-      return 'Coordinator';
-    case 'TR':
-      return 'Teacher';
-    case 'ST':
-      return 'Student';
+    case "SUP":
+      return "Super Admin";
+    case "ADM":
+      return "Admin";
+    case "BLD":
+      return "Builder";
+    case "FLW":
+      return "Fellow";
+    case "CRD":
+      return "Coordinator";
+    case "TR":
+      return "Teacher";
+    case "ST":
+      return "Student";
+    default:
+      return "Student";
   }
 };
-export const getReverseUserRoleString = (role: string) => {
+export const getReverseUserRoleString = (role: string): string => {
   switch (role) {
-    case 'Super Admin':
-      return 'SUP';
-    case 'Admin':
-      return 'ADM';
-    case 'Builder':
-      return 'BLD';
-    case 'Fellow':
-      return 'FLW';
-    case 'Coordinator':
-      return 'CRD';
-    case 'Teacher':
-      return 'TR';
-    case 'Student':
-      return 'ST';
+    case "Super Admin":
+      return "SUP";
+    case "Admin":
+      return "ADM";
+    case "Builder":
+      return "BLD";
+    case "Fellow":
+      return "FLW";
+    case "Coordinator":
+      return "CRD";
+    case "Teacher":
+      return "TR";
+    case "Student":
+      return "ST";
+    default:
+      return "ST";
   }
 };
 /**
@@ -382,9 +391,9 @@ export const checkIfFirstNewInSequence = (
   if (notSameAsBefore && sameAsAfter) {
     return true;
   } else {
-    if (typeof before === 'undefined') {
+    if (typeof before === "undefined") {
       return true;
-    } else if (notSameAsBefore && typeof after === 'undefined') {
+    } else if (notSameAsBefore && typeof after === "undefined") {
       return true;
     } else {
       return false;
@@ -393,7 +402,7 @@ export const checkIfFirstNewInSequence = (
 };
 
 export const stripStyleFromHTML = (str: string) => {
-  if (typeof str === 'string') {
+  if (typeof str === "string") {
     return str.replace(/style="(.*?)"/g, 'style=""');
   } else {
     return str;
@@ -404,7 +413,7 @@ export const replaceAll = (content: string, replaceObj: any) => {
   for (const key in replaceObj) {
     if (replaceObj.hasOwnProperty(key)) {
       const val = replaceObj[key];
-      content = content.replace(new RegExp(`{${key}}`, 'g'), val);
+      content = content.replace(new RegExp(`{${key}}`, "g"), val);
     }
   }
   return content;

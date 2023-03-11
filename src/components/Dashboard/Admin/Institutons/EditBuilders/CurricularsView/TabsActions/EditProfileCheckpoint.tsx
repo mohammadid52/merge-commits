@@ -1,25 +1,25 @@
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import React, {Fragment, useContext, useEffect, useState} from 'react';
-import {IoArrowUndoCircleOutline, IoClose} from 'react-icons/io5';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
-import {useHistory, useParams} from 'react-router';
+import { GraphQLAPI as API, graphqlOperation } from "@aws-amplify/api-graphql";
+import { Fragment, useEffect, useState } from "react";
+import { IoArrowUndoCircleOutline, IoClose } from "react-icons/io5";
+import { IconContext } from "react-icons/lib/esm/iconContext";
+import { useHistory, useParams } from "react-router";
 
-import * as customMutations from 'customGraphql/customMutations';
-import * as customQueries from 'customGraphql/customQueries';
-import {getTypeString} from 'utilities/strings';
+import * as customMutations from "customGraphql/customMutations";
+import * as customQueries from "customGraphql/customQueries";
+import { getTypeString } from "utilities/strings";
 
-import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
-import {getAsset} from 'assets';
-import BreadCrums from 'atoms/BreadCrums';
-import Buttons from 'atoms/Buttons';
-import FormInput from 'atoms/Form/FormInput';
-import MultipleSelector from 'atoms/Form/MultipleSelector';
-import Selector from 'atoms/Form/Selector';
-import PageWrapper from 'atoms/PageWrapper';
-import {GlobalContext} from 'contexts/GlobalContext';
-import useDictionary from 'customHooks/dictionary';
-import AddQuestion from './QuestionComponents/AddQuestion';
-import SelectPreviousQuestion from './QuestionComponents/SelectPreviousQuestion';
+import SectionTitleV3 from "@components/Atoms/SectionTitleV3";
+import { getAsset } from "assets";
+import BreadCrums from "atoms/BreadCrums";
+import Buttons from "atoms/Buttons";
+import FormInput from "atoms/Form/FormInput";
+import MultipleSelector from "atoms/Form/MultipleSelector";
+import Selector from "atoms/Form/Selector";
+import PageWrapper from "atoms/PageWrapper";
+import { useGlobalContext } from "contexts/GlobalContext";
+import useDictionary from "customHooks/dictionary";
+import AddQuestion from "./QuestionComponents/AddQuestion";
+import SelectPreviousQuestion from "./QuestionComponents/SelectPreviousQuestion";
 
 interface EditProfileCheckpointProps {}
 
@@ -27,66 +27,76 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
   const {} = props;
   const history = useHistory();
   const urlParams: any = useParams();
-  const {theme, clientKey, userLanguage} = useContext(GlobalContext);
-  const themeColor = getAsset(clientKey, 'themeClassName');
-  const {EditProfileCheckpointDict, BreadcrumsTitles} = useDictionary(clientKey);
+  const { theme, clientKey, userLanguage } = useGlobalContext();
+  const themeColor = getAsset(clientKey, "themeClassName");
+  const { EditProfileCheckpointDict, BreadcrumsTitles } = useDictionary();
   const curricularId = urlParams.curricularId;
   const institutionId = urlParams.institutionId;
   const checkpointId = urlParams.id;
   const initialData = {
-    id: '',
-    title: '',
-    label: '',
-    language: {id: '1', name: 'English', value: 'EN'},
-    scope: ''
+    id: "",
+    title: "",
+    label: "",
+    language: { id: "1", name: "English", value: "EN" },
+    scope: "",
   };
   const [checkpointData, setCheckpointData] = useState(initialData);
 
-  const [designersList, setDesignersList] = useState([]);
-  const [selectedDesigners, setSelectedDesigner] = useState([]);
-  const [checkpQuestions, setCheckpQuestions] = useState([]);
-  const [qSequence, setQSequence] = useState([]);
-  const [previouslySelectedId, setPreviouslySelectedId] = useState([]);
-  const [checkpQuestionId, setCheckpQuestionId] = useState([]);
-  const [questionOptions, setQuestionOptions] = useState({quesId: '', options: []});
-  const [currentState, setCurrentState] = useState('checkpoint');
+  const [designersList, setDesignersList] = useState<any[]>([]);
+  const [selectedDesigners, setSelectedDesigner] = useState<any[]>([]);
+  const [checkpQuestions, setCheckpQuestions] = useState<any[]>([]);
+  const [qSequence, setQSequence] = useState<any[]>([]);
+  const [previouslySelectedId, setPreviouslySelectedId] = useState<any[]>([]);
+  const [checkpQuestionId, setCheckpQuestionId] = useState<any[]>([]);
+  const [questionOptions, setQuestionOptions] = useState<{
+    quesId: string;
+    options: any[];
+  }>({
+    quesId: "",
+    options: [],
+  });
+  const [currentState, setCurrentState] = useState("checkpoint");
   const [loading, setLoading] = useState(false);
   const [validation, setValidation] = useState({
-    title: '',
-    label: '',
-    message: '',
-    isError: true
+    title: "",
+    label: "",
+    message: "",
+    isError: true,
   });
 
   const breadCrumsList = [
-    {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
     {
-      title: BreadcrumsTitles[userLanguage]['CURRICULUMBUILDER'],
-      url: `/dashboard/manage-institutions/${institutionId}/curricular?id=${curricularId}`,
-      last: false
+      title: BreadcrumsTitles[userLanguage]["HOME"],
+      url: "/dashboard",
+      last: false,
     },
     {
-      title: BreadcrumsTitles[userLanguage]['AddChekpoint'],
+      title: BreadcrumsTitles[userLanguage]["CURRICULUMBUILDER"],
+      url: `/dashboard/manage-institutions/${institutionId}/curricular?id=${curricularId}`,
+      last: false,
+    },
+    {
+      title: BreadcrumsTitles[userLanguage]["AddChekpoint"],
       url: `/dashboard/curricular/${curricularId}/checkpoint/addNew`,
-      last: true
-    }
+      last: true,
+    },
   ];
 
   const languageList = [
-    {id: 1, name: 'English', value: 'EN'},
-    {id: 2, name: 'Spanish', value: 'ES'}
+    { id: 1, name: "English", value: "EN" },
+    { id: 2, name: "Spanish", value: "ES" },
   ];
 
   const onInputChange = (e: any) => {
     setCheckpointData({
       ...checkpointData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
     if (validation.title || validation.label) {
       setValidation({
         ...validation,
-        title: '',
-        label: ''
+        title: "",
+        label: "",
       });
     }
   };
@@ -97,8 +107,8 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
       language: {
         id,
         name,
-        value
-      }
+        value,
+      },
     });
   };
 
@@ -107,7 +117,7 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
     const currentDesigners = selectedDesigners;
     const selectedItem = currentDesigners.find((item) => item.id === id);
     if (!selectedItem) {
-      updatedList = [...currentDesigners, {id, name, value}];
+      updatedList = [...currentDesigners, { id, name, value }];
     } else {
       updatedList = currentDesigners.filter((item) => item.id !== id);
     }
@@ -116,14 +126,14 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
 
   const showOptions = (quesId: string, options: any[]) => {
     if (questionOptions.quesId !== quesId) {
-      setQuestionOptions({quesId, options});
+      setQuestionOptions({ quesId, options });
     } else {
-      setQuestionOptions({quesId: '', options: []});
+      setQuestionOptions({ quesId: "", options: [] });
     }
   };
 
   const backToInitials = () => {
-    setCurrentState('checkpoint');
+    setCurrentState("checkpoint");
   };
   const addQuesToCheckpoint = (obj: any) => {
     setCheckpQuestions([...checkpQuestions, obj]);
@@ -142,12 +152,6 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
     setQSequence(newSequence);
   }, [checkpQuestions]);
 
-  const getSequence = async () => {};
-
-  const createSequence = async () => {};
-
-  const updateSequence = async () => {};
-
   // Add new checkpoint to the curricular
   const addCheckpointQuestions = async (
     quesId: string,
@@ -158,17 +162,19 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
       const input = {
         checkpointID: checkpointID,
         questionID: quesId,
-        required: required ? required : false
+        required: required ? required : false,
       };
-      const questions: any = await API.graphql(
-        graphqlOperation(customMutations.createCheckpointQuestions, {input: input})
+      await API.graphql(
+        graphqlOperation(customMutations.createCheckpointQuestions, {
+          input: input,
+        })
       );
     } catch {
       setValidation({
-        title: '',
-        label: '',
-        message: EditProfileCheckpointDict[userLanguage]['messages']['saveerr'],
-        isError: true
+        title: "",
+        label: "",
+        message: EditProfileCheckpointDict[userLanguage]["messages"]["saveerr"],
+        isError: true,
       });
     }
   };
@@ -176,22 +182,25 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
   // Removed question from checkpoint
   const removeCheckpointQuestion = async (quesId: string, cb?: Function) => {
     const deletedQuestions: any = [...checkpQuestionId];
-    const deletedQuesID = deletedQuestions.find((item: any) => item.questionID === quesId)
-      ?.id;
+    const deletedQuesID = deletedQuestions.find(
+      (item: any) => item.questionID === quesId
+    )?.id;
     try {
       const input = {
-        id: deletedQuesID
+        id: deletedQuesID,
       };
-      const result: any = await API.graphql(
-        graphqlOperation(customMutations.deleteCheckpointQuestions, {input: input})
+      await API.graphql(
+        graphqlOperation(customMutations.deleteCheckpointQuestions, {
+          input: input,
+        })
       );
       if (cb) cb();
     } catch {
       setValidation({
-        title: '',
-        label: '',
-        message: EditProfileCheckpointDict[userLanguage]['messages']['saveerr'],
-        isError: true
+        title: "",
+        label: "",
+        message: EditProfileCheckpointDict[userLanguage]["messages"]["saveerr"],
+        isError: true,
       });
     }
   };
@@ -201,23 +210,24 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
     const msgs = validation;
     if (!checkpointData.title?.trim().length) {
       isValid = false;
-      msgs.title = EditProfileCheckpointDict[userLanguage]['messages']['title'];
+      msgs.title = EditProfileCheckpointDict[userLanguage]["messages"]["title"];
     } else {
-      msgs.title = '';
+      msgs.title = "";
     }
     if (!checkpointData.label?.trim().length) {
       isValid = false;
-      msgs.label = EditProfileCheckpointDict[userLanguage]['messages']['label'];
+      msgs.label = EditProfileCheckpointDict[userLanguage]["messages"]["label"];
     } else {
-      msgs.label = '';
+      msgs.label = "";
     }
     if (checkpQuestions?.length <= 0) {
       isValid = false;
-      msgs.message = EditProfileCheckpointDict[userLanguage]['messages']['onequestion'];
+      msgs.message =
+        EditProfileCheckpointDict[userLanguage]["messages"]["onequestion"];
     } else {
-      msgs.message = '';
+      msgs.message = "";
     }
-    setValidation({...msgs});
+    setValidation({ ...msgs });
     return isValid;
   };
 
@@ -233,10 +243,10 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
           designers: selectedDesigners.map((item: any) => item.id),
           language: checkpointData.language.value,
           scope: checkpointData.scope,
-          questionSeq: qSequence
+          questionSeq: qSequence,
         };
         const results: any = await API.graphql(
-          graphqlOperation(customMutations.updateCheckpoint, {input: input})
+          graphqlOperation(customMutations.updateCheckpoint, { input: input })
         );
         const newCheckpoint = results?.data?.updateCheckpoint;
         const newQuestions: any = checkpQuestions.filter(
@@ -247,18 +257,18 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
           return !newArrayOfId.includes(queId);
         });
 
-        console.log('modified checkpoint - ', newQuestions);
+        console.log("modified checkpoint - ", newQuestions);
 
         if (newCheckpoint) {
           if (newQuestions.length > 0) {
-            let newAddedQuestions = await Promise.all(
+            await Promise.all(
               newQuestions.map(async (item: any) =>
                 addCheckpointQuestions(item.id, newCheckpoint.id, item.required)
               )
             );
           }
           if (deletedQuestions.length > 0) {
-            let removedQuestions = await Promise.all(
+            await Promise.all(
               deletedQuestions.map(async (quesId: any) =>
                 removeCheckpointQuestion(quesId)
               )
@@ -267,10 +277,11 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
           history.goBack();
         } else {
           setValidation({
-            title: '',
-            label: '',
-            message: EditProfileCheckpointDict[userLanguage]['messages']['saveerr'],
-            isError: true
+            title: "",
+            label: "",
+            message:
+              EditProfileCheckpointDict[userLanguage]["messages"]["saveerr"],
+            isError: true,
           });
         }
         setLoading(false);
@@ -278,10 +289,11 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
         // TODO: Redirect to previous step on success.
       } catch {
         setValidation({
-          title: '',
-          label: '',
-          message: EditProfileCheckpointDict[userLanguage]['messages']['saveerr'],
-          isError: true
+          title: "",
+          label: "",
+          message:
+            EditProfileCheckpointDict[userLanguage]["messages"]["saveerr"],
+          isError: true,
         });
         setLoading(false);
       }
@@ -293,25 +305,26 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
       const [savedCheckpointData, personsList]: any = await Promise.all([
         await API.graphql(
           graphqlOperation(customQueries.getCheckpointDetails, {
-            id: checkpointId
+            id: checkpointId,
           })
         ),
         await API.graphql(
           graphqlOperation(customQueries.listPersons, {
-            filter: {or: [{role: {eq: 'TR'}}, {role: {eq: 'BLD'}}]}
+            filter: { or: [{ role: { eq: "TR" } }, { role: { eq: "BLD" } }] },
           })
-        )
+        ),
       ]);
-      const sortedDesignersList: any = personsList?.data?.listPeople?.items?.map(
-        (item: {id: string; firstName: string; lastName: string}) => ({
-          id: item?.id,
-          name: `${item?.firstName || ''} ${item.lastName || ''}`,
-          value: `${item?.firstName || ''} ${item.lastName || ''}`
-        })
-      );
+      const sortedDesignersList: any =
+        personsList?.data?.listPeople?.items?.map(
+          (item: { id: string; firstName: string; lastName: string }) => ({
+            id: item?.id,
+            name: `${item?.firstName || ""} ${item.lastName || ""}`,
+            value: `${item?.firstName || ""} ${item.lastName || ""}`,
+          })
+        );
 
       if (!savedCheckpointData) {
-        throw new Error('fail!');
+        throw new Error("fail!");
       } else {
         const results = savedCheckpointData.data?.getCheckpoint;
 
@@ -324,19 +337,21 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
         const checkpointQuestions: any = results?.questions?.items;
         const checkpQuestionsId: any = checkpointQuestions.map((item: any) => ({
           id: item.id,
-          questionID: item.questionID
+          questionID: item.questionID,
         })); // Saving checkpoint question id.
         const savedQuestionsId: any = checkpointQuestions.map(
           (item: any) => item.questionID
         ); // Saving previously selected question ids .
-        const questionsList: any = checkpointQuestions.map((item: any) => item?.question); // Saving questions list.
+        const questionsList: any = checkpointQuestions.map(
+          (item: any) => item?.question
+        ); // Saving questions list.
         setCheckpointData({
           ...checkpointData,
           id: checkpointId,
           title: results.title,
           label: results.label,
           language: selectedLanguage,
-          scope: results.scope
+          scope: results.scope,
         });
         setDesignersList([...sortedDesignersList]);
         setSelectedDesigner(designers);
@@ -347,10 +362,11 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
       setLoading(false);
     } catch (error) {
       setValidation({
-        title: '',
-        label: '',
-        message: EditProfileCheckpointDict[userLanguage]['messages']['fetcherr'],
-        isError: true
+        title: "",
+        label: "",
+        message:
+          EditProfileCheckpointDict[userLanguage]["messages"]["fetcherr"],
+        isError: true,
       });
       setLoading(false);
     }
@@ -361,23 +377,23 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
   }, []);
 
   const scopeList = [
-    {id: 0, name: 'public'},
-    {id: 1, name: 'private'}
+    { id: 0, name: "public", value: "public" },
+    { id: 1, name: "private", value: "private" },
   ];
 
   const handleRemoveQuestionFromCheckpoint = (questionID: string) => {
     removeCheckpointQuestion(questionID, fetchCheckpointDetails);
   };
 
-  const {title, language, label} = checkpointData;
+  const { title, language, label } = checkpointData;
   return (
     <div className="w-full h-full">
       {/* Section Header */}
       <BreadCrums items={breadCrumsList} />
       <div className="flex justify-between">
         <SectionTitleV3
-          title={EditProfileCheckpointDict[userLanguage]['title']}
-          subtitle={EditProfileCheckpointDict[userLanguage]['subtitle']}
+          title={EditProfileCheckpointDict[userLanguage]["title"]}
+          subtitle={EditProfileCheckpointDict[userLanguage]["subtitle"]}
         />
         <div className="flex justify-end py-4 mb-4 w-5/10">
           <Buttons
@@ -391,15 +407,15 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
 
       {/* Body section */}
       <PageWrapper>
-        {currentState !== 'checkpoint' ? (
+        {currentState !== "checkpoint" ? (
           <Fragment>
-            {currentState === 'addQuestion' && (
+            {currentState === "addQuestion" && (
               <AddQuestion
                 goBackToPreviousStep={backToInitials}
                 addNewQuestion={addQuesToCheckpoint}
               />
             )}
-            {currentState === 'questionsList' && (
+            {currentState === "questionsList" && (
               <SelectPreviousQuestion
                 selectedList={checkpQuestions}
                 goBackToPreviousStep={backToInitials}
@@ -411,7 +427,7 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
           <Fragment>
             <div className="md:w-full lg:w-8/10 m-auto">
               <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">
-                {EditProfileCheckpointDict[userLanguage]['heading']}
+                {EditProfileCheckpointDict[userLanguage]["heading"]}
               </h3>
             </div>
             <div className="md:w-full lg:w-8/10 m-auto">
@@ -423,7 +439,7 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
                       id="title"
                       onChange={onInputChange}
                       name="title"
-                      label={EditProfileCheckpointDict[userLanguage]['ltitle']}
+                      label={EditProfileCheckpointDict[userLanguage]["ltitle"]}
                       isRequired
                     />
                     {validation.title && (
@@ -436,7 +452,9 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
                       id="label"
                       onChange={onInputChange}
                       name="label"
-                      label={EditProfileCheckpointDict[userLanguage]['checklabel']}
+                      label={
+                        EditProfileCheckpointDict[userLanguage]["checklabel"]
+                      }
                       isRequired
                     />
                     {validation.label && (
@@ -448,7 +466,7 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
                 <div className="py-4 grid gap-x-6 grid-cols-3">
                   <div>
                     <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
-                      {EditProfileCheckpointDict[userLanguage]['designer']}
+                      {EditProfileCheckpointDict[userLanguage]["designer"]}
                     </label>
                     <MultipleSelector
                       selectedItems={selectedDesigners}
@@ -462,21 +480,23 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
                       Select Scope
                     </label>
                     <Selector
-                      selectedItem={checkpointData.scope || 'public'}
+                      selectedItem={checkpointData.scope || "public"}
                       placeholder="Update scope"
                       list={scopeList}
-                      onChange={(c, name) =>
-                        setCheckpointData({...checkpointData, scope: name})
+                      onChange={(_, name) =>
+                        setCheckpointData({ ...checkpointData, scope: name })
                       }
                     />
                   </div>
                   <div>
                     <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
-                      {EditProfileCheckpointDict[userLanguage]['language']}
+                      {EditProfileCheckpointDict[userLanguage]["language"]}
                     </label>
                     <Selector
                       selectedItem={language.name}
-                      placeholder={EditProfileCheckpointDict[userLanguage]['planguage']}
+                      placeholder={
+                        EditProfileCheckpointDict[userLanguage]["planguage"]
+                      }
                       list={languageList}
                       onChange={selectLanguage}
                     />
@@ -486,24 +506,28 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
                 {/* Question table */}
                 <div className="p-6 inner_card my-4">
                   <p className="text-m font-medium leading-5 text-gray-700 my-2 text-center">
-                    {EditProfileCheckpointDict[userLanguage]['checkpoint']}:{' '}
+                    {EditProfileCheckpointDict[userLanguage]["checkpoint"]}:{" "}
                   </p>
                   {!checkpQuestions?.length ? (
                     <div className="my-8">
                       <p className="text-center p-8">
-                        {' '}
-                        {EditProfileCheckpointDict[userLanguage]['addquestion']}
+                        {" "}
+                        {EditProfileCheckpointDict[userLanguage]["addquestion"]}
                       </p>
                       <div className="flex w-full mx-auto p-8 justify-center ">
                         <Buttons
                           btnClass="mr-4"
-                          onClick={() => setCurrentState('questionsList')}
-                          label={EditProfileCheckpointDict[userLanguage]['addexist']}
+                          onClick={() => setCurrentState("questionsList")}
+                          label={
+                            EditProfileCheckpointDict[userLanguage]["addexist"]
+                          }
                         />
                         <Buttons
                           btnClass="ml-4"
-                          onClick={() => setCurrentState('addQuestion')}
-                          label={EditProfileCheckpointDict[userLanguage]['addnew']}
+                          onClick={() => setCurrentState("addQuestion")}
+                          label={
+                            EditProfileCheckpointDict[userLanguage]["addnew"]
+                          }
                         />
                       </div>
                     </div>
@@ -512,19 +536,31 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
                       <div className="max-h-112 overflow-auto">
                         <div className="flex justify-between w-full px-8 py-4 mx-auto whitespace-nowrap border-b-0 border-gray-200">
                           <div className="w-.5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                            <span>{EditProfileCheckpointDict[userLanguage]['no']}</span>
+                            <span>
+                              {EditProfileCheckpointDict[userLanguage]["no"]}
+                            </span>
                           </div>
                           <div className="w-6/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                             <span>
-                              {EditProfileCheckpointDict[userLanguage]['question']}
+                              {
+                                EditProfileCheckpointDict[userLanguage][
+                                  "question"
+                                ]
+                              }
                             </span>
                           </div>
                           <div className="w-2/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                            <span>{EditProfileCheckpointDict[userLanguage]['type']}</span>
+                            <span>
+                              {EditProfileCheckpointDict[userLanguage]["type"]}
+                            </span>
                           </div>
                           <div className="w-1.5/10 px-8 py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                             <span>
-                              {EditProfileCheckpointDict[userLanguage]['option']}
+                              {
+                                EditProfileCheckpointDict[userLanguage][
+                                  "option"
+                                ]
+                              }
                             </span>
                           </div>
                         </div>
@@ -536,26 +572,30 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
                                 <div
                                   onClick={() => {
                                     if (
-                                      item.type === 'selectMany' ||
-                                      item.type === 'selectOne'
+                                      item.type === "selectMany" ||
+                                      item.type === "selectOne"
                                     ) {
                                       showOptions(item.id, item.options);
                                     }
                                   }}
                                   key={item.id}
                                   className={`flex cursor-pointer justify-between w-full  px-8 py-4 whitespace-nowrap border-b-0 border-gray-200 ${
-                                    questionOptions.quesId === item.id && 'bg-gray-200'
-                                  }`}>
+                                    questionOptions.quesId === item.id &&
+                                    "bg-gray-200"
+                                  }`}
+                                >
                                   <div className="flex w-.5/10 items-center px-8 py-3 text-left text-s leading-4">
-                                    {' '}
+                                    {" "}
                                     {index + 1}.
                                   </div>
                                   <div className="flex w-6/10 px-8 py-3 items-center text-left text-s leading-4 font-medium whitespace-normal">
-                                    {' '}
-                                    {item.question}{' '}
+                                    {" "}
+                                    {item.question}{" "}
                                   </div>
                                   <div className="flex w-2/10 px-8 py-3 text-left text-s leading-4 items-center whitespace-normal">
-                                    {item.type ? getTypeString(item.type) : '--'}
+                                    {item.type
+                                      ? getTypeString(item.type)
+                                      : "--"}
                                   </div>
                                   {/* <div className="flex w-1.5/10 px-6 py-3 text-s leading-4 items-center justify-center">
                                       <span className="cursor-pointer">
@@ -565,13 +605,16 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
                                   <div className="flex w-1.5/10 px-6 py-1 text-s leading-4 items-center justify-center">
                                     <IconContext.Provider
                                       value={{
-                                        size: '1.5rem',
-                                        color: theme.iconColor[themeColor]
-                                      }}>
+                                        size: "1.5rem",
+                                        color: theme.iconColor[themeColor],
+                                      }}
+                                    >
                                       <IoClose
                                         onClick={(e) => {
                                           e.stopPropagation();
-                                          handleRemoveQuestionFromCheckpoint(item.id);
+                                          handleRemoveQuestionFromCheckpoint(
+                                            item.id
+                                          );
                                         }}
                                       />
                                     </IconContext.Provider>
@@ -580,13 +623,23 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
                                 {questionOptions.quesId === item.id && (
                                   <div className="px-16 py-4 flex flex-col text-gray-700 font-medium text-sm border-b-0 border-gray-200">
                                     <p className="text-gray-900 px-2 py-2 text-base">
-                                      {EditProfileCheckpointDict[userLanguage]['option']}:
+                                      {
+                                        EditProfileCheckpointDict[userLanguage][
+                                          "option"
+                                        ]
+                                      }
+                                      :
                                     </p>
-                                    {questionOptions.options?.map((item, index) => (
-                                      <span className="px-12 py-2" key={item.label}>
-                                        {index + 1}. {item.text}
-                                      </span>
-                                    ))}
+                                    {questionOptions.options?.map(
+                                      (item, index) => (
+                                        <span
+                                          className="px-12 py-2"
+                                          key={item.label}
+                                        >
+                                          {index + 1}. {item.text}
+                                        </span>
+                                      )
+                                    )}
                                   </div>
                                 )}
                               </Fragment>
@@ -594,8 +647,12 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
                           ) : (
                             <div className="py-12 my-6 text-center">
                               <p>
-                                {' '}
-                                {EditProfileCheckpointDict[userLanguage]['noquestion']}
+                                {" "}
+                                {
+                                  EditProfileCheckpointDict[userLanguage][
+                                    "noquestion"
+                                  ]
+                                }
                               </p>
                             </div>
                           )}
@@ -604,13 +661,17 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
                       <div className="flex w-full mx-auto p-8 justify-center ">
                         <Buttons
                           btnClass="mr-4"
-                          onClick={() => setCurrentState('questionsList')}
-                          label={EditProfileCheckpointDict[userLanguage]['addexist']}
+                          onClick={() => setCurrentState("questionsList")}
+                          label={
+                            EditProfileCheckpointDict[userLanguage]["addexist"]
+                          }
                         />
                         <Buttons
                           btnClass="ml-4"
-                          onClick={() => setCurrentState('addQuestion')}
-                          label={EditProfileCheckpointDict[userLanguage]['addnew']}
+                          onClick={() => setCurrentState("addQuestion")}
+                          label={
+                            EditProfileCheckpointDict[userLanguage]["addnew"]
+                          }
                         />
                       </div>
                     </Fragment>
@@ -621,7 +682,10 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
             {validation.message && (
               <div className="py-4 m-auto mt-2 text-center">
                 <p
-                  className={`${validation.isError ? 'text-red-600' : 'text-green-600'}`}>
+                  className={`${
+                    validation.isError ? "text-red-600" : "text-green-600"
+                  }`}
+                >
                   {validation.message}
                 </p>
               </div>
@@ -637,8 +701,8 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
                 btnClass="py-3 px-10 ml-4"
                 label={
                   loading
-                    ? EditProfileCheckpointDict[userLanguage]['saving']
-                    : EditProfileCheckpointDict[userLanguage]['save']
+                    ? EditProfileCheckpointDict[userLanguage]["saving"]
+                    : EditProfileCheckpointDict[userLanguage]["save"]
                 }
                 onClick={saveNewCheckpoint}
                 disabled={loading ? true : false}

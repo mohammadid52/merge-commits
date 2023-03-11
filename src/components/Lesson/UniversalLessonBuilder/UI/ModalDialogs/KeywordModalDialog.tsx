@@ -1,17 +1,17 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, { useEffect, useState } from "react";
 
-import {remove} from 'lodash';
-import {nanoid} from 'nanoid';
-import {FaTrashAlt} from 'react-icons/fa';
-import {GlobalContext} from 'contexts/GlobalContext';
-import {EditQuestionModalDict} from 'dictionary/dictionary.iconoclast';
-import {IContentTypeComponentProps} from 'interfaces/UniversalLessonBuilderInterfaces';
-import {PartContentSub} from 'interfaces/UniversalLessonInterfaces';
-import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
-import Buttons from 'atoms/Buttons';
-import FormInput from 'atoms/Form/FormInput';
-import AddButton from '@components/Atoms/Buttons/AddButton';
-import HStack from '@components/Atoms/HStack';
+import AddButton from "@components/Atoms/Buttons/AddButton";
+import HStack from "@components/Atoms/HStack";
+import Buttons from "atoms/Buttons";
+import FormInput from "atoms/Form/FormInput";
+import { useGlobalContext } from "contexts/GlobalContext";
+import { EditQuestionModalDict } from "dictionary/dictionary.iconoclast";
+import { IContentTypeComponentProps } from "interfaces/UniversalLessonBuilderInterfaces";
+import { PartContentSub } from "interfaces/UniversalLessonInterfaces";
+import { remove } from "lodash";
+import { nanoid } from "nanoid";
+import { FaTrashAlt } from "react-icons/fa";
+import { updateLessonPageToDB } from "utilities/updateLessonPageToDB";
 
 interface KeywordModalDialog extends IContentTypeComponentProps {
   inputObj?: any;
@@ -20,15 +20,15 @@ interface KeywordModalDialog extends IContentTypeComponentProps {
 
 const initialInputFieldsState = [
   {
-    id: 'keyword_1',
-    type: '',
-    label: '',
-    value: ''
-  }
+    id: "keyword_1",
+    type: "",
+    label: "",
+    value: "",
+  },
 ];
 
 const newKeywordObj: PartContentSub = {
-  ...initialInputFieldsState[0]
+  ...initialInputFieldsState[0],
 };
 
 const KeywordModalDialog = ({
@@ -37,9 +37,9 @@ const KeywordModalDialog = ({
   createNewBlockULBHandler,
   askBeforeClose,
   setUnsavedChanges,
-  updateBlockContentULBHandler
+  updateBlockContentULBHandler,
 }: KeywordModalDialog) => {
-  const {userLanguage} = useContext(GlobalContext);
+  const { userLanguage } = useGlobalContext();
   const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
 
   //////////////////////////
@@ -60,7 +60,7 @@ const KeywordModalDialog = ({
 
     const input = {
       id: list.id,
-      lessonPlan: [...list.lessonPlan]
+      lessonPlan: [...list.lessonPlan],
     };
 
     await updateLessonPageToDB(input);
@@ -73,7 +73,7 @@ const KeywordModalDialog = ({
     const newInputFieldsArray = inputFieldsArray.map(
       (inputObj: PartContentSub, inputObjIdx: number) => {
         if (inputObjIdx === idx) {
-          return {...inputObj, [`${name}`]: value};
+          return { ...inputObj, [`${name}`]: value };
         } else {
           return inputObj;
         }
@@ -85,16 +85,9 @@ const KeywordModalDialog = ({
   const handleAddNewKeyword = () => {
     const longerInputFieldsArray: PartContentSub[] = [
       ...inputFieldsArray,
-      {...newKeywordObj, id: `${newKeywordObj.id}${nanoid(4)}`}
+      { ...newKeywordObj, id: `${newKeywordObj.id}${nanoid(4)}` },
     ];
     setInputFieldsArray(longerInputFieldsArray);
-  };
-
-  const handleDeleteKeyword = (keywordIdx: number) => {
-    const shorterInputFieldsArray: PartContentSub[] = inputFieldsArray.filter(
-      (inputObj: PartContentSub, idx: number) => idx !== keywordIdx
-    );
-    setInputFieldsArray(shorterInputFieldsArray);
   };
 
   //////////////////////////
@@ -102,25 +95,25 @@ const KeywordModalDialog = ({
   //////////////////////////
   const onChange = (e: React.FormEvent, idx: number) => {
     setUnsavedChanges(true);
-    const {id, value, name} = e.target as HTMLFormElement;
+    const { value, name } = e.target as HTMLFormElement;
     handleUpdateInputFields(value, name, idx);
   };
 
   const onKeywordCreate = async () => {
     if (isEditingMode) {
       const updatedList = updateBlockContentULBHandler(
-        '',
-        '',
-        'keywords',
+        "",
+        "",
+        "keywords",
         inputFieldsArray,
         0
       );
       await addToDB(updatedList);
     } else {
       const updatedList = createNewBlockULBHandler(
-        '',
-        '',
-        'keywords',
+        "",
+        "",
+        "keywords",
         inputFieldsArray,
         0
       );
@@ -146,16 +139,18 @@ const KeywordModalDialog = ({
               <div className="my-2 animate-fadeIn" key={`keyword_${idx}`}>
                 <div className="w-auto flex items-center justify-between">
                   <label
-                    htmlFor={'Link'}
-                    className="mb-2 w-auto block text-xs font-semibold leading-5 text-gray-700">
+                    htmlFor={"Link"}
+                    className="mb-2 w-auto block text-xs font-semibold leading-5 text-gray-700"
+                  >
                     Word Tile {idx + 1}:
                   </label>
                   {idx !== 0 ? (
                     <span
-                      onClick={() => removeItemFromList(inputObj.id)}
+                      onClick={() => removeItemFromList(inputObj.id || "")}
                       className="w-auto text-center transition-all duration-200  text-xs font-semibold text-red-400  cursor-pointer hover:text-red-600
                     mb-2
-                  ">
+                  "
+                    >
                       <FaTrashAlt />
                     </span>
                   ) : (
@@ -166,17 +161,17 @@ const KeywordModalDialog = ({
                 <div className="mb-2">
                   <FormInput
                     onChange={(e) => onChange(e, idx)}
-                    name={'label'}
+                    name={"label"}
                     value={inputFieldsArray[idx]?.label}
-                    placeHolder={'Keyword Title'}
+                    placeHolder={"Keyword Title"}
                   />
                 </div>
                 <div className="mb-2">
                   <FormInput
                     onChange={(e) => onChange(e, idx)}
                     value={inputFieldsArray[idx]?.value}
-                    name={'value'}
-                    placeHolder={'Keyword Description'}
+                    name={"value"}
+                    placeHolder={"Keyword Description"}
                   />
                 </div>
               </div>
@@ -189,19 +184,19 @@ const KeywordModalDialog = ({
         <div className="flex items-center w-auto">
           <AddButton
             onClick={handleAddNewKeyword}
-            label={'Add new keyword title'}
+            label={"Add new keyword title"}
             transparent
           />
         </div>
         <HStack>
           <Buttons
-            label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
+            label={EditQuestionModalDict[userLanguage]["BUTTON"]["CANCEL"]}
             onClick={askBeforeClose}
             transparent
           />
 
           <Buttons
-            label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
+            label={EditQuestionModalDict[userLanguage]["BUTTON"]["SAVE"]}
             onClick={onKeywordCreate}
           />
         </HStack>

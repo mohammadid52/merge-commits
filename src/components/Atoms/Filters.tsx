@@ -1,11 +1,11 @@
-import ErrorBoundary from '@components/Error/ErrorBoundary';
-import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
-import ShowingCount from '@components/MicroComponents/ShowingCount';
-import {isEmpty} from 'lodash';
-import React from 'react';
-import Buttons from './Buttons';
+import ErrorBoundary from "@components/Error/ErrorBoundary";
+import AnimatedContainer from "@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer";
+import ShowingCount from "@components/MicroComponents/ShowingCount";
+import { isEmpty } from "lodash";
+import React from "react";
+import Buttons from "./Buttons";
 
-export type SortType = 'ACTIVE' | 'TRAINING' | 'INACTIVE';
+export type SortType = "ACTIVE" | "TRAINING" | "INACTIVE";
 
 const Filters = ({
   updateFilter,
@@ -13,11 +13,11 @@ const Filters = ({
   filters,
   list,
   showingCount,
-  customFilters
+  customFilters,
 }: {
   loading: boolean;
   updateFilter: any;
-  filters: SortType;
+  filters: SortType | null;
   list?: any[];
   customFilters?: string[];
   showingCount?: {
@@ -25,12 +25,12 @@ const Filters = ({
     currentPage: number;
     lastPage: boolean;
     pageCount: number;
-  };
+  } | null;
 }) => {
   const getLen = (status: SortType) =>
-    list.filter((_d: {status: SortType}) => _d.status === status).length;
+    list?.filter((_d: { status: SortType }) => _d.status === status).length;
 
-  const defaultFilterMapping = ['ACTIVE', 'INACTIVE', 'TRAINING'];
+  const defaultFilterMapping = ["ACTIVE", "INACTIVE", "TRAINING"];
   const filter = customFilters ? customFilters : defaultFilterMapping;
 
   return (
@@ -49,16 +49,21 @@ const Filters = ({
           ))}
         </div>
 
-        <AnimatedContainer duration="500" animationType="slideIn" show={!loading}>
+        <AnimatedContainer
+          duration="500"
+          animationType="slideIn"
+          show={!loading}
+        >
           {!loading && !isEmpty(filters) ? (
             <h5 className="text-sm text-gray-700 text-right w-auto">
               {filters !== undefined && filters !== null
                 ? `${getLen(filters)} ${filters?.toLocaleLowerCase()} items - `
-                : ''}{' '}
-              Total {list.length} items
+                : ""}{" "}
+              Total {list?.length || 0} items
             </h5>
           ) : (
-            Boolean(showingCount) && <ShowingCount {...showingCount} />
+            Boolean(showingCount) &&
+            showingCount?.totalResults && <ShowingCount {...showingCount} />
           )}
         </AnimatedContainer>
       </div>

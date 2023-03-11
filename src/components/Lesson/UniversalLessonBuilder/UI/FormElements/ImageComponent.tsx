@@ -1,26 +1,26 @@
-import Buttons from 'atoms/Buttons';
-import ULBFileUploader from 'atoms/Form/FileUploader';
-import FormInput from 'atoms/Form/FormInput';
-import {Storage} from '@aws-amplify/storage';
-import Label from 'atoms/Form/Label';
-import ToggleForModal from 'components/Lesson/UniversalLessonBuilder/UI/common/ToggleForModals';
-import DummyContent from 'components/Lesson/UniversalLessonBuilder/UI/Preview/DummyContent';
-import PreviewLayout from 'components/Lesson/UniversalLessonBuilder/UI/Preview/Layout/PreviewLayout';
-import AnimatedContainer from 'components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
-import {
-  Tabs3,
-  useTabs
-} from 'components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/Tabs';
-import {GlobalContext} from 'contexts/GlobalContext';
 import {
   EditQuestionModalDict,
-  UniversalBuilderDict
-} from '@dictionary/dictionary.iconoclast';
-import {IContentTypeComponentProps} from 'interfaces/UniversalLessonBuilderInterfaces';
-import {getImageFromS3Static} from 'utilities/services';
-import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
-import React, {useCallback, useContext, useEffect, useRef, useState} from 'react';
-import ProgressBar from '../ProgressBar';
+  UniversalBuilderDict,
+} from "@dictionary/dictionary.iconoclast";
+import Buttons from "atoms/Buttons";
+import ULBFileUploader from "atoms/Form/FileUploader";
+import FormInput from "atoms/Form/FormInput";
+import Label from "atoms/Form/Label";
+import { Storage } from "aws-amplify";
+import ToggleForModal from "components/Lesson/UniversalLessonBuilder/UI/common/ToggleForModals";
+import DummyContent from "components/Lesson/UniversalLessonBuilder/UI/Preview/DummyContent";
+import PreviewLayout from "components/Lesson/UniversalLessonBuilder/UI/Preview/Layout/PreviewLayout";
+import AnimatedContainer from "components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer";
+import {
+  Tabs3,
+  useTabs,
+} from "components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/Tabs";
+import { useGlobalContext } from "contexts/GlobalContext";
+import { IContentTypeComponentProps } from "interfaces/UniversalLessonBuilderInterfaces";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { getImageFromS3Static } from "utilities/services";
+import { updateLessonPageToDB } from "utilities/updateLessonPageToDB";
+import ProgressBar from "../ProgressBar";
 
 interface IImageInput {
   value: string;
@@ -46,28 +46,28 @@ const ImageFormComponent = ({
   setUnsavedChanges,
   customVideo = false,
   askBeforeClose,
-  selectedImageFromGallery
+  selectedImageFromGallery,
 }: IImageFormComponentProps) => {
   const {
     userLanguage,
-    state: {user}
-  } = useContext(GlobalContext);
+    state: { user },
+  } = useGlobalContext();
 
   const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
   const [imageInputs, setImageInputs] = useState<IImageInput>({
-    value: '',
+    value: "",
     imageData: null,
-    width: 'auto',
-    height: 'auto',
-    caption: ''
+    width: "auto",
+    height: "auto",
+    caption: "",
   });
   const imageInputsRef = useRef<IImageInput>(imageInputs);
 
   const [uploadProgress, setUploadProgress] = useState<string | number>(0);
   const [errors, setErrors] = useState<IImageInput>({
-    value: '',
-    width: '',
-    height: ''
+    value: "",
+    width: "",
+    height: "",
   });
   const [loading, setIsLoading] = useState<boolean>(false);
 
@@ -86,21 +86,25 @@ const ImageFormComponent = ({
       setImageInputs((prevValues) => ({
         ...prevValues,
         value: selectedImageFromGallery,
-        imageData: null
+        imageData: null,
       }));
     }
   }, [selectedImageFromGallery]);
 
   const updateFileUrl = (previewUrl: string, imageData: File | null) => {
-    setImageInputs((prevValues) => ({...prevValues, value: previewUrl, imageData}));
-    setErrors((prevValues) => ({...prevValues, value: ''}));
+    setImageInputs((prevValues) => ({
+      ...prevValues,
+      value: previewUrl,
+      imageData,
+    }));
+    setErrors((prevValues) => ({ ...prevValues, value: "" }));
   };
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setUnsavedChanges(true);
     const name: string = (event.target as HTMLInputElement).name;
     const value: string = (event.target as HTMLInputElement).value;
-    setImageInputs((prevValues) => ({...prevValues, [name]: value}));
-    setErrors((prevValues) => ({...prevValues, [name]: ''}));
+    setImageInputs((prevValues) => ({ ...prevValues, [name]: value }));
+    setErrors((prevValues) => ({ ...prevValues, [name]: "" }));
   };
 
   const addToDB = async (list: any) => {
@@ -108,7 +112,7 @@ const ImageFormComponent = ({
 
     const input = {
       id: list.id,
-      lessonPlan: [...list.lessonPlan]
+      lessonPlan: [...list.lessonPlan],
     };
 
     await updateLessonPageToDB(input);
@@ -121,7 +125,7 @@ const ImageFormComponent = ({
       if (imageInputsRef.current) {
         if (!initialInputs || !currentInputs) {
           console.error(
-            'filterUpdatedInputs: initialInputs or currentInputs is undefined'
+            "filterUpdatedInputs: initialInputs or currentInputs is undefined"
           );
           return [];
         } else {
@@ -141,7 +145,7 @@ const ImageFormComponent = ({
           }, []);
         }
       } else {
-        console.log('filterUpdatedInputs: imageInputsRef is undefined');
+        console.log("filterUpdatedInputs: imageInputsRef is undefined");
         return [];
       }
     },
@@ -151,30 +155,31 @@ const ImageFormComponent = ({
   const onSave = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const isValid: boolean = validateFormFields();
-    console.log('@onSave line 154 -> ', imageInputsRef.current, imageInputs);
-    const updatedInputs = filterUpdatedInputs(imageInputsRef.current, imageInputs);
-    const imageWasUpdated = updatedInputs.indexOf('imageData') > -1;
+    console.log("@onSave line 154 -> ", imageInputsRef.current, imageInputs);
+    const updatedInputs = filterUpdatedInputs(
+      imageInputsRef.current,
+      imageInputs
+    );
+    const imageWasUpdated = updatedInputs.indexOf("imageData") > -1;
     const styles = getStyles();
-    let {imageData, ...payload} = imageInputs;
-
-    console.log('updatedInputs', updatedInputs);
+    let { imageData, ...payload } = imageInputs;
 
     if (isValid) {
       setIsLoading(true);
 
       // logic for if new image is uploaded
-      if (imageWasUpdated) {
-        let temp = imageData.name.split('.');
+      if (imageWasUpdated && imageData?.name) {
+        let temp = imageData?.name?.split(".");
         const extension = temp.pop();
         const fileName = `${Date.now()}_${temp
-          .join(' ')
-          .replace(new RegExp(/[ +!@#$%^&*().]/g), '_')}.${extension}`;
+          .join(" ")
+          .replace(new RegExp(/[ +!@#$%^&*().]/g), "_")}.${extension}`;
 
-        await uploadImageToS3(imageData, `${fileName}`, 'image/jpeg');
+        await uploadImageToS3(imageData, `${fileName}`, "image/jpeg");
 
         payload = {
           ...payload,
-          value: `ULB/${user.id}/content_image_${fileName}`
+          value: `ULB/${user.id}/content_image_${fileName}`,
         };
       }
 
@@ -182,59 +187,59 @@ const ImageFormComponent = ({
       // if in edit mode, update the block content
       if (isEditingMode) {
         const updatedList = updateBlockContentULBHandler(
-          '',
-          '',
-          customVideo ? 'custom_video' : 'image',
+          "",
+          "",
+          customVideo ? "custom_video" : "image",
           [payload],
           0,
           styles
         );
 
         await addToDB(updatedList);
-        setUploadProgress('done');
+        setUploadProgress("done");
       } else {
         const updatedList = createNewBlockULBHandler(
-          '',
-          '',
-          customVideo ? 'custom_video' : 'image',
+          "",
+          "",
+          customVideo ? "custom_video" : "image",
           [payload],
           0,
           styles
         );
 
         await addToDB(updatedList);
-        setUploadProgress('done');
+        setUploadProgress("done");
       }
 
       setIsLoading(false);
       setUnsavedChanges(false);
     } else {
-      console.log('imageComponent: onSave: error validating form fields');
+      console.log("imageComponent: onSave: error validating form fields");
     }
   };
 
   const validateFormFields = () => {
-    const {value = '', width = '', height = ''} = imageInputs;
+    const { value = "", width = "", height = "" } = imageInputs;
     let isValid = true;
     let errorMsgs = {
-      value: '',
-      width: '',
-      height: ''
+      value: "",
+      width: "",
+      height: "",
     };
     if (!value) {
       isValid = false;
       errorMsgs.value =
-        UniversalBuilderDict[userLanguage]['FORMS_ERROR_MSG']['IMAGE_REQUIRED'];
+        UniversalBuilderDict[userLanguage]["FORMS_ERROR_MSG"]["IMAGE_REQUIRED"];
     }
-    if (!width || (width !== 'auto' && !Number(width))) {
+    if (!width || (width !== "auto" && !Number(width))) {
       isValid = false;
       errorMsgs.width =
-        UniversalBuilderDict[userLanguage]['FORMS_ERROR_MSG']['IMAGE_WIDTH'];
+        UniversalBuilderDict[userLanguage]["FORMS_ERROR_MSG"]["IMAGE_WIDTH"];
     }
-    if (!height || (height !== 'auto' && !Number(height))) {
+    if (!height || (height !== "auto" && !Number(height))) {
       isValid = false;
       errorMsgs.height =
-        UniversalBuilderDict[userLanguage]['FORMS_ERROR_MSG']['IMAGE_HEIGHT'];
+        UniversalBuilderDict[userLanguage]["FORMS_ERROR_MSG"]["IMAGE_HEIGHT"];
     }
     setErrors(errorMsgs);
     return isValid;
@@ -246,25 +251,25 @@ const ImageFormComponent = ({
     return new Promise((resolve, reject) => {
       Storage.put(`ULB/${user.id}/content_image_${id}`, file, {
         contentType: type,
-        acl: 'public-read',
-        ContentEncoding: 'base64',
-        progressCallback: ({loaded, total}: any) => {
+        acl: "public-read",
+        contentEncoding: "base64",
+        progressCallback: ({ loaded, total }: any) => {
           const progress = (loaded * 100) / total;
           setUploadProgress(progress.toFixed(0));
-        }
+        },
       })
         .then((result: any) => {
-          console.log('File successfully uploaded to s3', result);
+          console.log("File successfully uploaded to s3", result);
 
-          setUploadProgress('done');
+          setUploadProgress("done");
           resolve(true);
         })
         .catch((err: any) => {
           setErrors((prevValues) => ({
             ...prevValues,
-            value: 'Unable to upload image. Please try again later. '
+            value: "Unable to upload image. Please try again later. ",
           }));
-          console.log('Error in uploading file to s3', err);
+          console.log("Error in uploading file to s3", err);
           reject(err);
         });
     });
@@ -273,36 +278,36 @@ const ImageFormComponent = ({
   // ~~~~~~~~~~~ END SAVE RELATED ~~~~~~~~~~ //
 
   useEffect(() => {
-    if (uploadProgress === 'done') {
+    if (uploadProgress === "done") {
       closeAction();
     }
   }, [uploadProgress]);
 
-  const {caption = '', value = '', imageData} = imageInputs;
+  const { caption = "", value = "", imageData } = imageInputs;
 
-  const {curTab, setCurTab, helpers} = useTabs();
+  const { curTab, setCurTab, helpers } = useTabs();
   const [onSetupTab, onPreviewTab] = helpers;
 
   const [selectedStyles, setSelectedStyles] = useState({
     isRounded: true,
-    isBorder: false
+    isBorder: false,
   });
   const getStyles = () => {
-    let styles = '';
+    let styles = "";
     if (selectedStyles.isBorder) {
-      styles = styles + ' border-2 dark:border-gray-600 border-gray-400';
+      styles = styles + " border-2 dark:border-gray-600 border-gray-400";
     }
     if (selectedStyles.isRounded) {
-      styles = styles + ' rounded-2xl';
+      styles = styles + " rounded-2xl";
     }
 
     return styles;
   };
 
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   useEffect(() => {
     if (value && error) {
-      setError('');
+      setError("");
     }
   }, [value]);
 
@@ -316,10 +321,11 @@ const ImageFormComponent = ({
             <div className={`grid grid-cols-2 gap-6`}>
               <div
                 className={
-                  ' col-span-2 border-0 border-dashed border-gray-400 rounded-lg h-35 cursor-pointer p-2'
-                }>
+                  " col-span-2 border-0 border-dashed border-gray-400 rounded-lg h-35 cursor-pointer p-2"
+                }
+              >
                 <ULBFileUploader
-                  acceptedFilesFormat={customVideo ? 'video/*' : 'image/*'}
+                  acceptedFilesFormat={customVideo ? "video/*" : "image/*"}
                   updateFileUrl={updateFileUrl}
                   fileUrl={value}
                   error={errors?.value}
@@ -338,12 +344,14 @@ const ImageFormComponent = ({
                       onClick={() => {
                         if (!value) {
                           setError(
-                            `Please select an ${customVideo ? 'video' : 'image'} first`
+                            `Please select an ${
+                              customVideo ? "video" : "image"
+                            } first`
                           );
                         } else {
                           setSelectedStyles({
                             ...selectedStyles,
-                            isRounded: !selectedStyles.isRounded
+                            isRounded: !selectedStyles.isRounded,
                           });
                         }
                       }}
@@ -355,22 +363,24 @@ const ImageFormComponent = ({
 
               <div className="col-span-1">
                 <FormInput
-                  value={caption || ''}
+                  value={caption || ""}
                   id="caption"
                   onChange={handleInputChange}
                   name="caption"
-                  label={'Caption'}
-                  placeHolder={`Enter ${customVideo ? 'video' : 'image'} caption here`}
+                  label={"Caption"}
+                  placeHolder={`Enter ${
+                    customVideo ? "video" : "image"
+                  } caption here`}
                 />
               </div>
             </div>
 
-            {loading && uploadProgress !== 'done' && (
+            {loading && uploadProgress !== "done" && (
               <ProgressBar
                 status={
                   uploadProgress < 99
-                    ? `Uploading ${customVideo ? 'Video' : 'Image'}`
-                    : 'Upload Done'
+                    ? `Uploading ${customVideo ? "Video" : "Image"}`
+                    : "Upload Done"
                 }
                 progress={uploadProgress}
               />
@@ -380,7 +390,9 @@ const ImageFormComponent = ({
               <div className="flex justify-end">
                 <Buttons
                   btnClass="py-1 px-4 text-xs mr-2"
-                  label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
+                  label={
+                    EditQuestionModalDict[userLanguage]["BUTTON"]["CANCEL"]
+                  }
                   onClick={askBeforeClose}
                   transparent
                 />
@@ -388,8 +400,8 @@ const ImageFormComponent = ({
                   btnClass="py-1 px-8 text-xs ml-2"
                   label={
                     loading
-                      ? EditQuestionModalDict[userLanguage]['BUTTON']['SAVING']
-                      : EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']
+                      ? EditQuestionModalDict[userLanguage]["BUTTON"]["SAVING"]
+                      : EditQuestionModalDict[userLanguage]["BUTTON"]["SAVE"]
                   }
                   type="submit"
                   onClick={onSave}
@@ -405,14 +417,16 @@ const ImageFormComponent = ({
           <div>
             <PreviewLayout
               notAvailable={
-                !value ? `No ${customVideo ? 'video' : 'image'} found` : false
-              }>
+                !value ? `No ${customVideo ? "video" : "image"} found` : false
+              }
+            >
               {customVideo ? (
                 <div className="w-auto h-auto mx-auto mt-6">
                   <video
                     controls
                     className={`${getStyles()} mx-auto`}
-                    src={imageData ? value : getImageFromS3Static(value)}>
+                    src={imageData ? value : getImageFromS3Static(value)}
+                  >
                     <source />
                     Your browser does not support the video tag.
                   </video>

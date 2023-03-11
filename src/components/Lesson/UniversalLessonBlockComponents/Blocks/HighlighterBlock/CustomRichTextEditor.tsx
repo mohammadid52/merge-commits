@@ -1,15 +1,15 @@
-import {useNotifications} from 'contexts/NotificationContext';
-import useAuth from 'customHooks/useAuth';
-import useMultiKeypress from 'customHooks/useMultiKeypress';
-import {textEdit} from 'assets';
-import {ContentState, convertToRaw, EditorState} from 'draft-js';
-import draftToHtml from 'draftjs-to-html';
-import htmlToDraft from 'html-to-draftjs';
-import React, {useEffect, useState} from 'react';
-import {Editor} from 'react-draft-wysiwyg';
-import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
-import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
-import useInLessonCheck from 'customHooks/checkIfInLesson';
+import { useNotifications } from "contexts/NotificationContext";
+import useAuth from "customHooks/useAuth";
+import useMultiKeypress from "customHooks/useMultiKeypress";
+import { textEdit } from "assets";
+import { ContentState, convertToRaw, EditorState } from "draft-js";
+import draftToHtml from "draftjs-to-html";
+import htmlToDraft from "html-to-draftjs";
+import React, { useEffect, useState } from "react";
+import { Editor } from "react-draft-wysiwyg";
+import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import { useULBContext } from "contexts/UniversalLessonBuilderContext";
+import useInLessonCheck from "customHooks/checkIfInLesson";
 
 // const ColorPicker = (props: {
 //   currentState?: any;
@@ -50,7 +50,7 @@ interface RichTextEditorProps {
   onChange: (html: string, text: string) => void;
   initialValue: string;
   dynamicInput?: string;
-  theme?: 'iconoclastIndigo' | 'curate';
+  theme?: "iconoclastIndigo" | "curate";
   fullWHOverride?: boolean;
   rounded?: boolean;
   placeholder?: string;
@@ -65,10 +65,10 @@ interface RichTextEditorProps {
    * Don't use this if the content is serious
    */
   withStyles?: boolean;
-  fetchTeacherValue?: () => string;
+  fetchTeacherValue?: () => string | undefined;
 }
 
-const DEFAULT_INLINE_OPTIONS = ['bold', 'italic', 'underline'];
+const DEFAULT_INLINE_OPTIONS = ["bold", "italic", "underline"];
 
 const CustomRichTextEditor = (props: RichTextEditorProps) => {
   const {
@@ -83,15 +83,15 @@ const CustomRichTextEditor = (props: RichTextEditorProps) => {
     features = [],
     withStyles = false,
     theme,
-    placeholder = '',
+    placeholder = "",
     inlineOptions = DEFAULT_INLINE_OPTIONS,
-    fetchTeacherValue
+    fetchTeacherValue,
   } = props;
 
   const initialState: any = EditorState.createEmpty();
   const [editorState, setEditorState] = useState(initialState);
 
-  const [changesArr, setChangesArr] = useState([]);
+  const [changesArr, setChangesArr] = useState<any[]>([]);
 
   /**
    * Please don't do this:
@@ -106,24 +106,26 @@ const CustomRichTextEditor = (props: RichTextEditorProps) => {
   const previewMode = isInLesson ? false : switchContext?.previewMode;
 
   const options: string[] = [
-    'inline',
-    'blockType',
-    'fontSize',
-    'fontFamily',
-    'list',
-    'textAlign',
-    'colorPicker',
-    'link',
-    'emoji',
-    'remove',
-    'history'
+    "inline",
+    "blockType",
+    "fontSize",
+    "fontFamily",
+    "list",
+    "textAlign",
+    "colorPicker",
+    "link",
+    "emoji",
+    "remove",
+    "history",
   ];
 
   const onEditorStateChange = (editorState: any) => {
     const editorStateHtml: string = draftToHtml(
       convertToRaw(editorState.getCurrentContent())
     );
-    const editorStatePlainText: string = editorState.getCurrentContent().getPlainText();
+    const editorStatePlainText: string = editorState
+      .getCurrentContent()
+      .getPlainText();
     onChange(editorStateHtml, editorStatePlainText);
     setEditorState(editorState);
 
@@ -131,17 +133,19 @@ const CustomRichTextEditor = (props: RichTextEditorProps) => {
       changesArr.length === 0 ||
       editorStateHtml !== changesArr[changesArr.length - 1].editorStateHtml
     ) {
-      changesArr.push({editorStateHtml, editorStatePlainText});
+      changesArr.push({ editorStateHtml, editorStatePlainText });
       setChangesArr([...changesArr]);
     }
   };
 
   const onInit = (value: any) => {
-    const html = value ? value : '<p></p>';
+    const html = value ? value : "<p></p>";
     const contentBlock = htmlToDraft(html);
 
     if (contentBlock) {
-      const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
+      const contentState = ContentState.createFromBlockArray(
+        contentBlock.contentBlocks
+      );
       setEditorState(EditorState.createWithContent(contentState));
     } else {
       setEditorState(EditorState.createEmpty());
@@ -154,7 +158,7 @@ const CustomRichTextEditor = (props: RichTextEditorProps) => {
    *  when incoming props are updated
    */
 
-  const {isStudent} = useAuth();
+  const { isStudent } = useAuth();
 
   const deps = !isStudent ? [initialValue] : [initialValue];
 
@@ -171,17 +175,17 @@ const CustomRichTextEditor = (props: RichTextEditorProps) => {
     }
   }, deps);
 
-  const editorRef = React.useRef();
+  const editorRef = React.useRef<any>(null);
 
   useEffect(() => {
     if (editorRef && editorRef?.current && withStyles) {
       // @ts-ignore
-      editorRef?.current?.editor.editor.addEventListener('paste', function (e) {
+      editorRef?.current?.editor.editor.addEventListener("paste", function (e) {
         // cancel paste
         e.preventDefault();
 
         // get text representation of clipboard
-        var text = (e.originalEvent || e).clipboardData.getData('text/plain');
+        var text = (e.originalEvent || e).clipboardData.getData("text/plain");
         // insert text manually
         // this is also not the recommended way to add text but not the worst idea.
         // If you find better way or in future draftjs provides a feature for this
@@ -194,35 +198,39 @@ const CustomRichTextEditor = (props: RichTextEditorProps) => {
 
   const toolbarClassName = `${
     customStyle
-      ? `${dark ? 'dark' : 'light'} ${
-          mediumDark ? 'mediumDark' : ''
-        } toolbarClassName customStyles ${previewMode ? 'previewMode' : ''} text-black`
-      : 'toolbarClassName'
+      ? `${dark ? "dark" : "light"} ${
+          mediumDark ? "mediumDark" : ""
+        } toolbarClassName customStyles ${
+          previewMode ? "previewMode" : ""
+        } text-black`
+      : "toolbarClassName"
   }`;
   const wrapperClassName = `${
     customStyle
-      ? `${theme} ${dark ? 'dark' : 'light'} ${
-          mediumDark ? 'mediumDark' : ''
-        } wrapperClassName ${previewMode ? 'previewMode' : ''}  ${
-          fullWHOverride ? 'flex flex-col' : ''
+      ? `${theme} ${dark ? "dark" : "light"} ${
+          mediumDark ? "mediumDark" : ""
+        } wrapperClassName ${previewMode ? "previewMode" : ""}  ${
+          fullWHOverride ? "flex flex-col" : ""
         }`
-      : 'wrapperClassName '
+      : "wrapperClassName "
   }`;
   const editorClassName = `${
     customStyle
-      ? `${dark ? 'dark' : 'light'} editorClassName ${
-          previewMode ? 'previewMode' : ''
-        }  ${fullWHOverride ? 'flex-1' : ''}`
-      : 'editorClassName'
+      ? `${dark ? "dark" : "light"} editorClassName ${
+          previewMode ? "previewMode" : ""
+        }  ${fullWHOverride ? "flex-1" : ""}`
+      : "editorClassName"
   }`;
 
   //rdw-colorpicker-modal-header
 
   useEffect(() => {
-    $('.rdw-colorpicker-wrapper').on('click', (e) => {
+    $(".rdw-colorpicker-wrapper").on("click", (e) => {
       setTimeout(() => {
-        if (!e.target.classList.contains('rdw-colorpicker-modal-style-label')) {
-          $('.rdw-colorpicker-modal-header').find('span:last-child').trigger('click');
+        if (!e.target.classList.contains("rdw-colorpicker-modal-style-label")) {
+          $(".rdw-colorpicker-modal-header")
+            .find("span:last-child")
+            .trigger("click");
         }
       }, 50);
     });
@@ -238,40 +246,40 @@ const CustomRichTextEditor = (props: RichTextEditorProps) => {
     }
   };
 
-  const {clearNotification, setNotification} = useNotifications();
+  const { clearNotification, setNotification } = useNotifications();
 
   const resetHandler = () => {
     if (changesArr.length > 1) {
       clearNotification();
       resetText();
     } else {
-      setNotification({title: 'No changes were made', show: true});
+      setNotification({ title: "No changes were made", show: true });
     }
   };
 
   useEffect(() => {
     // rdw-editor-toolbar
     if (!clearButtonLoaded) {
-      if ($('.rdw-editor-toolbar').find('#highlight-input-btns').length === 0) {
+      if ($(".rdw-editor-toolbar").find("#highlight-input-btns").length === 0) {
         const elem = `
        <div id="highlight-input-btns"  class="flex items-center clear-editor-text-btn">
        <div id="highlight-reset-btn"  title="Reset text" class=" rdw-option-wrapper iconoclastIndigo dark text-black toolItemClassName  toolbarCustomIcon">
        <img src=${textEdit.previous} alt="">
        </div>
        <div  id="highlight-hard-reset-btn-${id}" data-inputId=${id} title="Hard Reset"  class="${
-          fetchTeacherValue === undefined ? 'hidden' : 'rdw-option-wrapper'
+          fetchTeacherValue === undefined ? "hidden" : "rdw-option-wrapper"
         }  iconoclastIndigo dark text-black toolItemClassName  toolbarCustomIcon">
      <img src=${textEdit.reset} alt="">
        </div>
        </div>`;
-        $('.rdw-editor-toolbar').append(elem);
+        $(".rdw-editor-toolbar").append(elem);
 
         setClearButtonLoaded(true);
       }
     }
   }, []);
 
-  const ctrlZPressed = useMultiKeypress('z');
+  const ctrlZPressed = useMultiKeypress("z");
 
   useEffect(() => {
     if (ctrlZPressed) {
@@ -280,13 +288,13 @@ const CustomRichTextEditor = (props: RichTextEditorProps) => {
   }, [ctrlZPressed]);
 
   useEffect(() => {
-    $('#highlight-reset-btn').on('click', () => {
+    $("#highlight-reset-btn").on("click", () => {
       resetHandler();
     });
   }, [changesArr]);
 
   useEffect(() => {
-    $(`#highlight-hard-reset-btn-${id}`).on('click', () => {
+    $(`#highlight-hard-reset-btn-${id}`).on("click", () => {
       fetchTeacherValue && onInit(fetchTeacherValue());
     });
   }, []);
@@ -309,59 +317,71 @@ const CustomRichTextEditor = (props: RichTextEditorProps) => {
             className: `toolItemClassName`,
             bold: {
               icon: textEdit.bold,
-              className: 'toolbarCustomIcon'
+              className: "toolbarCustomIcon",
             },
             italic: {
               icon: textEdit.italic,
-              className: 'toolbarCustomIcon'
+              className: "toolbarCustomIcon",
             },
             underline: {
               icon: textEdit.underline,
-              className: 'toolbarCustomIcon'
+              className: "toolbarCustomIcon",
             },
             superscript: {
               icon: textEdit.superscript,
-              className: 'toolbarCustomIcon'
+              className: "toolbarCustomIcon",
             },
             subscript: {
               icon: textEdit.subscript,
-              className: 'toolbarCustomIcon'
-            }
+              className: "toolbarCustomIcon",
+            },
           },
 
           remove: {
             icon: textEdit.remove,
-            className: 'toolbarCustomIcon'
+            className: "toolbarCustomIcon",
           },
-          list: {inDropdown: true, className: 'dropdownClassName toolbarCustomIcon'},
-          textAlign: {inDropdown: true, className: 'dropdownClassName toolbarCustomIcon'},
-          link: {inDropdown: true, className: 'dropdownClassName toolbarCustomIcon'},
-          history: {inDropdown: true, className: 'dropdownClassName toolbarCustomIcon'},
+          list: {
+            inDropdown: true,
+            className: "dropdownClassName toolbarCustomIcon",
+          },
+          textAlign: {
+            inDropdown: true,
+            className: "dropdownClassName toolbarCustomIcon",
+          },
+          link: {
+            inDropdown: true,
+            className: "dropdownClassName toolbarCustomIcon",
+          },
+          history: {
+            inDropdown: true,
+            className: "dropdownClassName toolbarCustomIcon",
+          },
           fontFamily: {
             options: [
-              'Arial',
-              'Georgia',
-              'Impact',
-              'Courier',
-              'Times New Roman',
-              'Helvetica'
+              "Arial",
+              "Georgia",
+              "Impact",
+              "Courier",
+              "Times New Roman",
+              "Helvetica",
             ],
-            className: 'plainText dropdownBlockClassName toolbarCustomIcon'
+            className: "plainText dropdownBlockClassName toolbarCustomIcon",
           },
           blockType: {
-            className: 'plainText dropdownBlockClassName toolbarCustomIcon'
+            className: "plainText dropdownBlockClassName toolbarCustomIcon",
           },
           fontSize: {
-            className: 'plainText dropdownClassName toolbarCustomIcon'
+            className: "plainText dropdownClassName toolbarCustomIcon",
           },
           colorPicker: {
             icon: textEdit.colorPick,
             className: `
           ${theme}
-          ${customStyle ? `${dark ? 'dark' : 'light'} text-black` : ''}  
+          ${customStyle ? `${dark ? "dark" : "light"} text-black` : ""}  
           toolbarNestedDropdown toolItemClassName  toolbarCustomIcon`,
-            colors: ['#DC2626', '#34D399', '#fff']
-          }
+            colors: ["#DC2626", "#34D399", "#fff"],
+          },
         }}
       />
     </>

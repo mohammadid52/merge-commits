@@ -1,26 +1,31 @@
-import ErrorBoundary from '@components/Error/ErrorBoundary';
-import {PersonStatus} from 'API';
-import {getAsset} from 'assets';
-import SectionTitleV3 from 'atoms/SectionTitleV3';
-import {GlobalContext} from 'contexts/GlobalContext';
-import useDictionary from 'customHooks/dictionary';
-import isEmpty from 'lodash/isEmpty';
-import React, {useContext, useEffect, useState} from 'react';
-import {setLocalStorageData} from 'utilities/localStorage';
-import {getImageFromS3} from 'utilities/services';
-import HeroBanner from '../../Header/HeroBanner';
-import {ClassroomControlProps} from '../Dashboard';
-import HeaderTextBar from '../HeaderTextBar/HeaderTextBar';
-import RoomTiles from './RoomTiles';
-import StudentsTiles from './StudentsTiles';
-import TeacherRows from './TeacherRows';
+import ErrorBoundary from "@components/Error/ErrorBoundary";
+import { PersonStatus } from "API";
+import { getAsset } from "assets";
+import SectionTitleV3 from "atoms/SectionTitleV3";
+import { useGlobalContext } from "contexts/GlobalContext";
+import useDictionary from "customHooks/dictionary";
+import isEmpty from "lodash/isEmpty";
+import { useEffect, useState } from "react";
+import { setLocalStorageData } from "utilities/localStorage";
+import { getImageFromS3 } from "utilities/services";
+import HeroBanner from "../../Header/HeroBanner";
+import { ClassroomControlProps } from "../Dashboard";
+import HeaderTextBar from "../HeaderTextBar/HeaderTextBar";
+import RoomTiles from "./RoomTiles";
+import StudentsTiles from "./StudentsTiles";
+import TeacherRows from "./TeacherRows";
 
 export interface ModifiedListProps {
   id: any;
   name: any;
   teacherProfileImg: string;
   bannerImage: string;
-  teacher: {email: string; firstName: string; lastName: string; image: string};
+  teacher: {
+    email: string;
+    firstName: string;
+    lastName: string;
+    image: string;
+  };
   curricula: {
     items: {
       curriculum: {
@@ -35,24 +40,33 @@ export interface ModifiedListProps {
 }
 
 const Home = (props: ClassroomControlProps) => {
-  const {homeData, classList, handleRoomSelection, isTeacher, roomsLoading} = props;
+  const {
+    homeData,
+    classList,
+    handleRoomSelection = () => {},
+    isTeacher,
+    roomsLoading,
+  } = props;
 
-  const {state, dispatch, userLanguage, clientKey} = useContext(GlobalContext);
-  const dashboardBanner1 = getAsset(clientKey, 'dashboardBanner1');
+  const { state, dispatch, userLanguage, clientKey } = useGlobalContext();
+  const dashboardBanner1 = getAsset(clientKey, "dashboardBanner1");
 
-  const {DashboardDict} = useDictionary();
+  const { DashboardDict } = useDictionary();
 
   const user = !isEmpty(state)
-    ? {firstName: state.user.firstName, preferredName: state.user.firstName}
+    ? { firstName: state.user.firstName, preferredName: state.user.firstName }
     : null;
 
   useEffect(() => {
-    if (state.user.role === 'ST') {
-      if (state.currentPage !== 'home') {
+    if (state.user.role === "ST") {
+      if (state.currentPage !== "home") {
         // dispatch({ type: 'UPDATE_CURRENTPAGE', payload: { data: 'home' } });
       }
       if (state.activeRoom && state.activeRoom.length > 0) {
-        dispatch({type: 'UPDATE_ACTIVEROOM', payload: {roomID: '', syllabusID: ''}});
+        dispatch({
+          type: "UPDATE_ACTIVEROOM",
+          payload: { roomID: "", syllabusID: "" },
+        });
       }
     }
   }, [state.user.role]);
@@ -66,7 +80,7 @@ const Home = (props: ClassroomControlProps) => {
     if (imageUrl) {
       return imageUrl;
     } else {
-      return '';
+      return "";
     }
   };
 
@@ -85,7 +99,7 @@ const Home = (props: ClassroomControlProps) => {
             if (teacherIsPresent) {
               return acc;
             } else {
-              return [...acc, {...teacherObj}];
+              return [...acc, { ...teacherObj }];
             }
           } else {
             return acc;
@@ -104,7 +118,7 @@ const Home = (props: ClassroomControlProps) => {
             item?.class?.room.coTeachers.items.map((_item: any) => {
               if (!uniqIds.includes(_item.teacher.authId)) {
                 uniqIds.push(_item.teacher.authId);
-                coTeachersList.push({..._item.teacher});
+                coTeachersList.push({ ..._item.teacher });
               }
             });
           }
@@ -115,25 +129,32 @@ const Home = (props: ClassroomControlProps) => {
   };
 
   const teacherListWithImages =
-    getTeacherList.length > 0 &&
-    Promise.all(
-      getTeacherList.map(async (teacherObj: any, idx: number) => {
-        return {
-          ...teacherObj,
-          image: await (teacherObj.image ? getImageURL(teacherObj.image) : null)
-        };
-      })
-    );
+    getTeacherList.length > 0
+      ? Promise.all(
+          getTeacherList.map(async (teacherObj: any) => {
+            return {
+              ...teacherObj,
+              image: await (teacherObj.image
+                ? getImageURL(teacherObj.image)
+                : null),
+            };
+          })
+        )
+      : [];
+
   const coTeacherListWithImages =
-    getCoTeacherList().length > 0 &&
-    Promise.all(
-      getCoTeacherList().map(async (teacherObj: any, idx: number) => {
-        return {
-          ...teacherObj,
-          image: await (teacherObj.image ? getImageURL(teacherObj.image) : null)
-        };
-      })
-    );
+    getCoTeacherList().length > 0
+      ? Promise.all(
+          getCoTeacherList().map(async (teacherObj: any) => {
+            return {
+              ...teacherObj,
+              image: await (teacherObj.image
+                ? getImageURL(teacherObj.image)
+                : null),
+            };
+          })
+        )
+      : [];
 
   const getStudentsList =
     homeData && homeData.length > 0
@@ -144,7 +165,8 @@ const Home = (props: ClassroomControlProps) => {
           .reduce((acc: any[], studentObj: any) => {
             const studentIsPresent = acc.find(
               (studentObj2: any) =>
-                studentObj2?.student?.firstName === studentObj?.student?.firstName &&
+                studentObj2?.student?.firstName ===
+                  studentObj?.student?.firstName &&
                 studentObj2?.student?.lastName === studentObj?.student?.lastName
             );
             if (studentIsPresent) {
@@ -156,15 +178,15 @@ const Home = (props: ClassroomControlProps) => {
       : [];
 
   const studentsListWithImages = Promise.all(
-    getStudentsList.map(async (studentObj: any, idx: number) => {
+    getStudentsList.map(async (studentObj: any) => {
       return {
         ...studentObj,
         student: {
           ...studentObj?.student,
           image: await (studentObj?.student?.image
             ? getImageURL(studentObj?.student?.image)
-            : null)
-        }
+            : null),
+        },
       };
     })
   );
@@ -177,37 +199,44 @@ const Home = (props: ClassroomControlProps) => {
       classList.length > 0 &&
       classList
         .filter(
-          (item: {room: {status: PersonStatus}}) =>
+          (item: { room: { status: PersonStatus } }) =>
             item.room.status !== PersonStatus.INACTIVE
         )
-        .forEach(async (item: {room: any; name: string; id: string}, idx: number) => {
-          if (item.room) {
-            const curriculum = item.room.curricula?.items[0].curriculum;
-            if (curriculum !== null) {
-              const imagePath = curriculum?.image;
+        .forEach(
+          async (
+            item: { room: any; name: string; id: string },
+            idx: number
+          ) => {
+            if (item.room) {
+              const curriculum = item.room.curricula?.items[0].curriculum;
+              if (curriculum !== null) {
+                const imagePath = curriculum?.image;
 
-              const image = await (imagePath !== null ? getImageFromS3(imagePath) : null);
-              const teacherProfileImg = await (item.room.teacher.image
-                ? getImageFromS3(item.room.teacher.image)
-                : false);
+                const image = await (imagePath !== null
+                  ? getImageFromS3(imagePath)
+                  : null);
+                const teacherProfileImg = await (item.room.teacher.image
+                  ? getImageFromS3(item.room.teacher.image)
+                  : false);
 
-              const modifiedItem = {
-                ...item.room,
-                curriculumName: curriculum?.name,
-                curriculumId: curriculum?.id,
-                roomName: item?.name,
-                bannerImage: image,
-                teacherProfileImg,
-                roomIndex: idx
-              };
+                const modifiedItem = {
+                  ...item.room,
+                  curriculumName: curriculum?.name,
+                  curriculumId: curriculum?.id,
+                  roomName: item?.name,
+                  bannerImage: image,
+                  teacherProfileImg,
+                  roomIndex: idx,
+                };
 
-              if (!uniqIds.includes(curriculum?.id)) {
-                uniqIds.push(curriculum?.id);
-                modifiedClassList.push(modifiedItem);
+                if (!uniqIds.includes(curriculum?.id)) {
+                  uniqIds.push(curriculum?.id);
+                  modifiedClassList.push(modifiedItem);
+                }
               }
             }
           }
-        });
+        );
 
     return modifiedClassList;
   };
@@ -216,7 +245,7 @@ const Home = (props: ClassroomControlProps) => {
     setTeacherList(await teacherListWithImages);
     const studentList = await studentsListWithImages;
     setStudentsList(studentList);
-    setLocalStorageData('student_list', studentList);
+    setLocalStorageData("student_list", studentList);
     setCoTeachersList(await coTeacherListWithImages);
   };
 
@@ -231,19 +260,19 @@ const Home = (props: ClassroomControlProps) => {
       {homeData ? (
         <>
           <div>
-            <HeroBanner imgUrl={dashboardBanner1} title={'Dashboard'} />
+            <HeroBanner imgUrl={dashboardBanner1} title={"Dashboard"} />
           </div>
           {/* Header */}
           {user && (
             <HeaderTextBar>
-              Welcome,{' '}
+              Welcome,{" "}
               <span className="font-semibold">
                 {user.preferredName ? user.preferredName : user.firstName}
               </span>
-              .{' '}
+              .{" "}
               {
                 DashboardDict[userLanguage][
-                  isTeacher ? 'GREETINGS_TEACHER' : 'GREETINGS_STUDENT'
+                  isTeacher ? "GREETINGS_TEACHER" : "GREETINGS_STUDENT"
                 ]
               }
             </HeaderTextBar>
@@ -256,7 +285,9 @@ const Home = (props: ClassroomControlProps) => {
                 roomsLoading={roomsLoading}
                 handleRoomSelection={handleRoomSelection}
                 classList={
-                  state.user.status !== PersonStatus.INACTIVE ? getClassList() : []
+                  state.user.status !== PersonStatus.INACTIVE
+                    ? getClassList()
+                    : []
                 }
               />
             </ErrorBoundary>
@@ -266,7 +297,7 @@ const Home = (props: ClassroomControlProps) => {
               {teacherList && teacherList.length > 0 && (
                 <div className="my-8">
                   <SectionTitleV3
-                    title={DashboardDict[userLanguage]['YOUR_TEACHERS']}
+                    title={DashboardDict[userLanguage]["YOUR_TEACHERS"]}
                     extraClass="leading-6 text-gray-900"
                     fontSize="xl"
                     fontStyle="semibold"
@@ -274,7 +305,7 @@ const Home = (props: ClassroomControlProps) => {
                     borderBottom
                   />
                   <TeacherRows
-                    coTeachersList={coTeachersList}
+                    coTeachersList={coTeachersList || []}
                     teachersList={teacherList}
                   />
                 </div>
@@ -286,7 +317,7 @@ const Home = (props: ClassroomControlProps) => {
                 <StudentsTiles
                   title={
                     DashboardDict[userLanguage][
-                      isTeacher ? 'YOUR_STUDENTS' : 'YOUR_CLASSMATES'
+                      isTeacher ? "YOUR_STUDENTS" : "YOUR_CLASSMATES"
                     ]
                   }
                   studentsList={studentsList}

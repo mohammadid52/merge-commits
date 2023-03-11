@@ -1,11 +1,9 @@
-import React from 'react';
-import {AiOutlineUser} from 'react-icons/ai';
-import {HiPencil} from 'react-icons/hi';
-import {IoLocationOutline} from 'react-icons/io5';
-import {useHistory} from 'react-router';
-import {getImageFromS3Static} from 'utilities/services';
-import {initials} from 'utilities/strings';
-import {DeleteActionBtn} from 'atoms/Buttons/DeleteActionBtn';
+import { DeleteActionBtn } from "atoms/Buttons/DeleteActionBtn";
+import { AiOutlineUser } from "react-icons/ai";
+import { HiPencil } from "react-icons/hi";
+import { IoLocationOutline } from "react-icons/io5";
+import { getImageFromS3Static } from "utilities/services";
+import { initials } from "utilities/strings";
 
 interface IGroupCardProps {
   group: any;
@@ -18,7 +16,7 @@ const GroupCard = ({
   group,
   handleDelete,
   handleEditClick,
-  redirectToUserPage
+  redirectToUserPage,
 }: IGroupCardProps) => {
   const stringToHslColor = (str: string) => {
     let hash = 0;
@@ -28,7 +26,7 @@ const GroupCard = ({
     }
 
     let h = hash % 360;
-    return 'hsl(' + h + ', 70%, 72%)';
+    return "hsl(" + h + ", 70%, 72%)";
   };
 
   return (
@@ -40,7 +38,8 @@ const GroupCard = ({
               {group.groupName}
               <span
                 className="w-auto cursor-pointer"
-                onClick={() => handleEditClick(group)}>
+                onClick={() => handleEditClick(group)}
+              >
                 <HiPencil className="w-6 h-6 pl-2" />
               </span>
               <DeleteActionBtn handleClick={handleDelete} />
@@ -51,7 +50,9 @@ const GroupCard = ({
               <div className="w-auto">
                 <AiOutlineUser className="w-6 h-6" />
               </div>
-              <div className="w-auto text-lg mx-2">{`${group.groupAdvisor?.lastName}, ${
+              <div className="w-auto text-lg mx-2">{`${
+                group.groupAdvisor?.lastName
+              }, ${
                 group.groupAdvisor?.preferredName
                   ? group.groupAdvisor?.preferredName
                   : group.groupAdvisor?.firstName
@@ -74,7 +75,8 @@ const GroupCard = ({
                 <div
                   key={student.id}
                   className="w-full p-2 cursor-pointer hover:bg-gray-200 rounded-md"
-                  onClick={() => redirectToUserPage(student.id)}>
+                  onClick={() => redirectToUserPage(student.id)}
+                >
                   <div className="w-full">
                     <div className="flex items-center justify-center">
                       <div className="flex-shrink-0 h-10 w-10 lg:w-14 lg:h-14">
@@ -89,11 +91,12 @@ const GroupCard = ({
                             style={{
                               background: `${stringToHslColor(
                                 student.student?.firstName +
-                                  ' ' +
+                                  " " +
                                   student.student?.lastName
                               )}`,
-                              textShadow: '0.1rem 0.1rem 2px #423939b3'
-                            }}>
+                              textShadow: "0.1rem 0.1rem 2px #423939b3",
+                            }}
+                          >
                             {initials(
                               student.student?.preferredName
                                 ? student.student?.preferredName

@@ -1,19 +1,19 @@
-import {useGlobalContext} from 'contexts/GlobalContext';
-import {getAsset, textEdit} from 'assets';
-import {ContentState, convertToRaw, EditorState} from 'draft-js';
-import draftToHtml from 'draftjs-to-html';
-import htmlToDraft from 'html-to-draftjs';
-import React, {useEffect} from 'react';
-import {Editor} from 'react-draft-wysiwyg';
-import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+import { useGlobalContext } from "contexts/GlobalContext";
+import { getAsset, textEdit } from "assets";
+import { ContentState, convertToRaw, EditorState } from "draft-js";
+import draftToHtml from "draftjs-to-html";
+import htmlToDraft from "html-to-draftjs";
+import React, { useEffect } from "react";
+import { Editor } from "react-draft-wysiwyg";
+import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 
 const WritingExerciseEditor = ({
   editorState,
   setEditorState,
   onChangeCallback,
-  initialValue,
+  initialValue = "",
   minHeight,
-  isStudentViewing
+  isStudentViewing,
 }: {
   editorState: any;
   initialValue?: string;
@@ -23,22 +23,26 @@ const WritingExerciseEditor = ({
   onChangeCallback: (html: string, text: string) => void;
 }) => {
   const onInit = (val: string) => {
-    const html = val ? val : '<p></p>';
+    const html = val ? val : "<p></p>";
     const contentBlock = htmlToDraft(html);
 
     if (contentBlock) {
-      const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
+      const contentState = ContentState.createFromBlockArray(
+        contentBlock.contentBlocks
+      );
       setEditorState(EditorState.createWithContent(contentState));
     } else {
       setEditorState(EditorState.createEmpty());
     }
   };
   const onInitCopy = (val: string) => {
-    const html = val ? val : '<p></p>';
+    const html = val ? val : "<p></p>";
     const contentBlock = htmlToDraft(html);
 
     if (contentBlock) {
-      const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
+      const contentState = ContentState.createFromBlockArray(
+        contentBlock.contentBlocks
+      );
       setEditorState(EditorState.createWithContent(contentState));
     } else {
       setEditorState(EditorState.createEmpty());
@@ -57,35 +61,39 @@ const WritingExerciseEditor = ({
     const editorStateHtml: string = draftToHtml(
       convertToRaw(editorState.getCurrentContent())
     );
-    const editorStatePlainText: string = editorState.getCurrentContent().getPlainText();
+    const editorStatePlainText: string = editorState
+      .getCurrentContent()
+      .getPlainText();
     setEditorState(value);
     onChangeCallback(editorStateHtml, editorStatePlainText);
   };
 
   const toolbarClassName = `${
     true
-      ? `${true ? 'dark' : 'light'} toolbarClassName customStyles text-black`
-      : 'toolbarClassName'
+      ? `${true ? "dark" : "light"} toolbarClassName customStyles text-black`
+      : "toolbarClassName"
   }`;
 
-  const {clientKey} = useGlobalContext();
+  const { clientKey } = useGlobalContext();
 
-  const themeColor = getAsset(clientKey, 'themeClassName');
+  const themeColor = getAsset(clientKey, "themeClassName");
 
   const wrapperClassName = `${
-    true ? ` border-none dark  wrapperClassName` : 'wrapperClassName '
+    true ? ` border-none dark  wrapperClassName` : "wrapperClassName "
   } ${themeColor}`;
-  const editorClassName = `${true ? `dark editorClassName` : 'editorClassName'}`;
+  const editorClassName = `${
+    true ? `dark editorClassName` : "editorClassName"
+  }`;
 
-  const options: string[] = ['inline', 'colorPicker'];
-  const DEFAULT_INLINE_OPTIONS = ['bold', 'italic'];
+  const options: string[] = ["inline", "colorPicker"];
+  const DEFAULT_INLINE_OPTIONS = ["bold", "italic"];
   useEffect(() => {
-    if (minHeight !== undefined && typeof minHeight === 'number') {
-      const editors = document.querySelectorAll('.rdw-editor-main');
+    if (minHeight !== undefined && typeof minHeight === "number") {
+      const editors = document.querySelectorAll(".rdw-editor-main");
 
       editors.forEach((editor) => {
         if (editor) {
-          editor.setAttribute('style', `min-height:${minHeight}px`);
+          editor.setAttribute("style", `min-height:${minHeight}px`);
         }
       });
     }
@@ -111,12 +119,12 @@ const WritingExerciseEditor = ({
             className: `toolItemClassName`,
             bold: {
               icon: textEdit.bold,
-              className: 'toolbarCustomIcon'
+              className: "toolbarCustomIcon",
             },
             italic: {
               icon: textEdit.italic,
-              className: 'toolbarCustomIcon'
-            }
+              className: "toolbarCustomIcon",
+            },
           },
 
           colorPicker: {
@@ -124,10 +132,10 @@ const WritingExerciseEditor = ({
             className: `
 
           ${
-            true ? `dark text-black` : ''
+            true ? `dark text-black` : ""
           } toolbarNestedDropdown toolItemClassName  toolbarCustomIcon`,
-            colors: ['#DC2626', '#34D399']
-          }
+            colors: ["#DC2626", "#34D399"],
+          },
         }}
       />
     </div>

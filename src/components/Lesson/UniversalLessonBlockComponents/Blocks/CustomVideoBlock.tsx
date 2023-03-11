@@ -1,7 +1,7 @@
-import React, {useEffect, useState} from 'react';
-import useOnScreen from 'customHooks/useOnScreen';
-import {RowWrapperProps} from 'interfaces/UniversalLessonBuilderInterfaces';
-import {getImageFromS3Static} from 'utilities/services';
+import React, { useEffect, useState } from "react";
+import useOnScreen from "customHooks/useOnScreen";
+import { RowWrapperProps } from "interfaces/UniversalLessonBuilderInterfaces";
+import { getImageFromS3Static } from "utilities/services";
 
 interface ImageBlockProps extends RowWrapperProps {
   id: string;
@@ -10,14 +10,18 @@ interface ImageBlockProps extends RowWrapperProps {
 }
 
 export const CustomVideoBlock = (props: ImageBlockProps) => {
-  const {id, dataIdAttribute, value} = props;
+  const { id, dataIdAttribute, value } = props;
 
-  const {value: url, width = '', height = '', caption = ''} =
-    Array.isArray(value) && value?.length ? value[0] : value;
+  const {
+    value: url,
+    width = "",
+    height = "",
+    caption = "",
+  } = Array.isArray(value) && value?.length ? value[0] : value;
 
   const [isPlaying, setIsPlaying] = useState(false);
 
-  const videoRef = React.useRef(null);
+  const videoRef = React.useRef<any>(null);
   const isVideoOnScreen = useOnScreen(videoRef);
 
   const [showPIP, setShowPIP] = useState(false);
@@ -52,15 +56,15 @@ export const CustomVideoBlock = (props: ImageBlockProps) => {
 
   useEffect(() => {
     if (videoRef.current) {
-      videoRef.current.addEventListener('playing', () => {
+      videoRef.current.addEventListener("playing", () => {
         setIsPlaying(true);
       });
-      videoRef.current.addEventListener('pause', () => {
+      videoRef.current.addEventListener("pause", () => {
         setIsPlaying(false);
       });
     }
 
-    return videoRef.current.addEventListener('pause', () => {
+    return videoRef.current.addEventListener("pause", () => {
       setIsPlaying(false);
     });
   }, [videoRef.current]);
@@ -73,7 +77,8 @@ export const CustomVideoBlock = (props: ImageBlockProps) => {
         height={height}
         controls
         className="rounded-lg"
-        src={getImageFromS3Static(url)}>
+        src={getImageFromS3Static(url)}
+      >
         <source />
         Your browser does not support the video tag.
       </video>

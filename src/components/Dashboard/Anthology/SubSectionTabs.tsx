@@ -1,7 +1,6 @@
-import React, {useContext, useEffect} from 'react';
-import {GlobalContext} from 'contexts/GlobalContext';
-import useDictionary from 'customHooks/dictionary';
-import SubSectionTab from 'atoms/SubSectionTab';
+import { useGlobalContext } from "@contexts/GlobalContext";
+import SubSectionTab from "atoms/SubSectionTab";
+import React from "react";
 
 interface SubSectionTabs {
   isTeacher?: boolean;
@@ -9,7 +8,7 @@ interface SubSectionTabs {
   subSectionList: string[];
   handleTabClick: (e: React.MouseEvent<Element>) => void;
   translations?: string[];
-  widgetTypeCount?: {sidebar: number; topbar: number};
+  widgetTypeCount?: { sidebar: number; topbar: number };
 }
 
 const SubSectionTabs = (props: SubSectionTabs) => {
@@ -18,25 +17,29 @@ const SubSectionTabs = (props: SubSectionTabs) => {
     subSectionList,
     handleTabClick,
     widgetTypeCount,
-    translations
+    translations,
   } = props;
-  const {theme} = useContext(GlobalContext);
+  const { theme } = useGlobalContext();
 
   const getLabel = (inputLabel: string, translationIndex: number) => {
-    if (inputLabel.includes('Widgets')) {
-      if (inputLabel === 'Top Widgets') {
-        return 'Topbar Widgets';
+    if (inputLabel.includes("Widgets")) {
+      if (inputLabel === "Top Widgets") {
+        return "Topbar Widgets";
       } else {
-        return 'Sidebar Widgets';
+        return "Sidebar Widgets";
       }
     } else {
-      return translations[translationIndex];
+      return translations?.[translationIndex] || "Topbar Widgets";
     }
   };
 
   return (
     <div className={`${theme.section} text-xl`}>
-      <div id={`subSectionTabs`} className={`flex flex-row`} onClick={handleTabClick}>
+      <div
+        id={`subSectionTabs`}
+        className={`flex flex-row`}
+        onClick={handleTabClick}
+      >
         {subSectionList &&
           subSectionList.map((listItem: string, index: number) => (
             <SubSectionTab
@@ -45,7 +48,7 @@ const SubSectionTabs = (props: SubSectionTabs) => {
               selectedCondition={subSection === listItem}
               label={getLabel(listItem, index)}
               counter={
-                listItem.includes('Side')
+                listItem.includes("Side")
                   ? widgetTypeCount?.sidebar
                   : widgetTypeCount?.topbar
               }

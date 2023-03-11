@@ -1,8 +1,8 @@
-import CheckBox from 'atoms/Form/CheckBox';
-import Loader from 'atoms/Loader';
-import {GlobalContext} from 'contexts/GlobalContext';
-import useDictionary from 'customHooks/dictionary';
-import React, {useContext} from 'react';
+import CheckBox from "atoms/Form/CheckBox";
+import Loader from "atoms/Loader";
+import { useGlobalContext } from "contexts/GlobalContext";
+import useDictionary from "customHooks/dictionary";
+import React from "react";
 
 interface IMeasurementList {
   setAddModalShow?: any;
@@ -19,10 +19,10 @@ const MeasurementsList = ({
   handleCheckboxChange,
   learningEvidenceList,
   loading,
-  selectedMeasurements
+  selectedMeasurements,
 }: IMeasurementList) => {
-  const {clientKey, userLanguage} = useContext(GlobalContext);
-  const {LessonBuilderDict} = useDictionary(clientKey);
+  const { userLanguage } = useGlobalContext();
+  const { LessonBuilderDict } = useDictionary();
 
   return (
     <>
@@ -30,25 +30,37 @@ const MeasurementsList = ({
         <div className="w-6/10 px-4 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
           <span>
             {
-              LessonBuilderDict[userLanguage]['LEARNING_EVIDENCE_COLUMNS'][
-                'LEARNING_OBJECTIVE'
+              LessonBuilderDict[userLanguage]["LEARNING_EVIDENCE_COLUMNS"][
+                "LEARNING_OBJECTIVE"
               ]
             }
           </span>
         </div>
         <div className="w-4/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
           <span>
-            {LessonBuilderDict[userLanguage]['LEARNING_EVIDENCE_COLUMNS']['TOPICS']}
+            {
+              LessonBuilderDict[userLanguage]["LEARNING_EVIDENCE_COLUMNS"][
+                "TOPICS"
+              ]
+            }
           </span>
         </div>
         <div className="w-4/10 px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
           <span>
-            {LessonBuilderDict[userLanguage]['LEARNING_EVIDENCE_COLUMNS']['MEASUREMENTS']}
+            {
+              LessonBuilderDict[userLanguage]["LEARNING_EVIDENCE_COLUMNS"][
+                "MEASUREMENTS"
+              ]
+            }
           </span>
         </div>
         <div className="w-2/10 px-8 py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
           <span>
-            {LessonBuilderDict[userLanguage]['LEARNING_EVIDENCE_COLUMNS']['MEASURED']}
+            {
+              LessonBuilderDict[userLanguage]["LEARNING_EVIDENCE_COLUMNS"][
+                "MEASURED"
+              ]
+            }
           </span>
         </div>
       </div>
@@ -58,11 +70,15 @@ const MeasurementsList = ({
         </div>
       ) : (
         learningEvidenceList?.map((item: any, index: number) => (
-          <div className="w-full m-auto max-h-88 overflow-y-auto" key={item.rubricId}>
+          <div
+            className="w-full m-auto max-h-88 overflow-y-auto"
+            key={item.rubricId}
+          >
             <div
               className={`flex justify-between bg-white w-full border-b-0 ${
-                index % 2 === 0 ? 'bg-white' : 'bg-gray-100'
-              }`}>
+                index % 2 === 0 ? "bg-white" : "bg-gray-100"
+              }`}
+            >
               <div className="w-6/10 flex items-center px-4 py-3 hover:text-gray-600 cursor-pointer text-sm leading-5 font-medium text-gray-900 whitespace-normal">
                 <span>{item.learningObjectiveName}</span>
               </div>
@@ -76,7 +92,8 @@ const MeasurementsList = ({
                 <CheckBox
                   value={
                     selectedMeasurements.find(
-                      (measurement: any) => measurement.rubricID === item.rubricId
+                      (measurement: any) =>
+                        measurement.rubricID === item.rubricId
                     )?.checked
                   }
                   onChange={(e) => handleCheckboxChange(e, item.rubricId)}

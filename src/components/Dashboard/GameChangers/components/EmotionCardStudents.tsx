@@ -1,16 +1,16 @@
-import {FeelingsArchive, ListFeelingsArchivesQueryVariables} from 'API';
-import Loader from 'atoms/Loader';
-import AnimatedContainer from 'components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
-import {useGlobalContext} from 'contexts/GlobalContext';
-import useInGC from 'customHooks/checkIfGameChanges';
-import useAuth from 'customHooks/useAuth';
-import useGraphqlQuery from 'customHooks/useGraphqlQuery';
-import React, {useEffect, useState} from 'react';
-import {useHistory, useRouteMatch} from 'react-router';
-import {useGameChangers} from '../context/GameChangersContext';
-import BubbleVersion from './BubbleVersion';
+import { FeelingsArchive, ListFeelingsArchivesQueryVariables } from "API";
+import Loader from "atoms/Loader";
+import AnimatedContainer from "components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer";
+import { useGlobalContext } from "contexts/GlobalContext";
+import useInGC from "customHooks/checkIfGameChanges";
+import useAuth from "customHooks/useAuth";
+import useGraphqlQuery from "customHooks/useGraphqlQuery";
+import React, { useEffect, useState } from "react";
+import { useHistory, useRouteMatch } from "react-router";
+import { useGameChangers } from "../context/GameChangersContext";
+import BubbleVersion from "./BubbleVersion";
 
-const EmotionCard = ({inLesson}: {inLesson: boolean}) => {
+const EmotionCard = ({ inLesson }: { inLesson: boolean }) => {
   // For Mobile
 
   const {
@@ -20,11 +20,11 @@ const EmotionCard = ({inLesson}: {inLesson: boolean}) => {
     setShowFinalStep,
     setPrimaryEmotion,
     setSecondaryEmotion,
-    setSelectedEmotions
+    setSelectedEmotions,
   } = useGameChangers();
-  const [changesSaved, setChangesSaved] = useState(false);
+  const [changesSaved] = useState(false);
 
-  const checkChanges = (changes: boolean) => {
+  const checkChanges = (_: boolean) => {
     // if (!changes) {
     //   window.addEventListener('beforeunload', beforeunload);
     // } else {
@@ -35,46 +35,44 @@ const EmotionCard = ({inLesson}: {inLesson: boolean}) => {
   const history = useHistory();
 
   goBackCallback.current = () => {
-    history.push('/dashboard/game-changers');
+    history.push("/dashboard/game-changers");
     setSelectedCard(null);
-    setPrimaryEmotion('');
+    setPrimaryEmotion("");
     checkChanges(changesSaved);
-    setSecondaryEmotion('');
+    setSecondaryEmotion("");
     setSelectedEmotions([]);
     if (inGC && showFinalStep) {
       setShowFinalStep(false);
     }
   };
 
-  const beforeunload = (event: BeforeUnloadEvent) =>
-    (event.returnValue = 'Please save the changes');
-
   useEffect(() => {
     checkChanges(changesSaved);
   }, [changesSaved]);
 
-  const {authId} = useAuth();
+  const { authId } = useAuth();
 
-  const {lessonState} = useGlobalContext();
+  const { lessonState } = useGlobalContext();
   const router: any = useRouteMatch();
 
-  const lessonId = router.params.lessonID || '999';
+  const lessonId = router.params.lessonID || "999";
 
-  const {data = [], isLoading: listLoading, isSuccess} = useGraphqlQuery<
-    ListFeelingsArchivesQueryVariables,
-    FeelingsArchive[]
-  >(
-    'listFeelingsArchives',
+  const {
+    data = [],
+    isLoading: listLoading,
+    isSuccess,
+  } = useGraphqlQuery<ListFeelingsArchivesQueryVariables, FeelingsArchive[]>(
+    "listFeelingsArchives",
     {
       filter: {
-        personAuthID: {eq: authId},
-        lessonID: {eq: lessonId},
-        comments: {eq: lessonState.currentPage.toString()}
-      }
+        personAuthID: { eq: authId },
+        lessonID: { eq: lessonId },
+        comments: { eq: lessonState.currentPage.toString() },
+      },
     },
     //  custom means use query from customQueries file.
     // enabled allows conditinational fetching. if it is enabled then only the query will be fetched. Default is true
-    {custom: true, enabled: inLesson}
+    { custom: true, enabled: inLesson }
   );
 
   const [isSubmitted, setIsSubmitted] = useState(false);

@@ -1,38 +1,39 @@
-import useUrlState from '@ahooksjs/use-url-state';
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import AddButton from '@components/Atoms/Buttons/AddButton';
-import Placeholder from '@components/Atoms/Placeholder';
-import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
-import ErrorBoundary from '@components/Error/ErrorBoundary';
-import Table from '@components/Molecules/Table';
-import {uploadImageToS3} from '@graphql/functions';
-import {PersonStatus, Role} from 'API';
-import Loader from 'atoms/Loader';
-import Anthology from 'components/Dashboard/Anthology/Anthology';
-import {useGlobalContext} from 'contexts/GlobalContext';
-import * as customMutations from 'customGraphql/customMutations';
-import * as customQueries from 'customGraphql/customQueries';
-import useDictionary from 'customHooks/dictionary';
-import {useQuery} from 'customHooks/urlParam';
-import {map} from 'lodash';
-import sortBy from 'lodash/sortBy';
-import DroppableMedia from 'molecules/DroppableMedia';
-import React, {useEffect, useState} from 'react';
-import {useHistory, useLocation, useParams, useRouteMatch} from 'react-router-dom';
-import {getImageFromS3} from 'utilities/services';
-import {getUniqItems} from 'utilities/strings';
-import AnimatedContainer from '../../../Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
-import {useTabs} from '../../../Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/Tabs';
-import ProfileCropModal from '../../Profile/ProfileCropModal';
-import Attendance from './Attendance';
-import SurveyList from './SurveyList';
-import UserTabs from './User/UserTabs';
-import UserEdit from './UserEdit';
-import UserInformation from './UserInformation';
+import useUrlState from "@ahooksjs/use-url-state";
+import { GraphQLAPI as API, graphqlOperation } from "@aws-amplify/api-graphql";
+import AddButton from "@components/Atoms/Buttons/AddButton";
+import Placeholder from "@components/Atoms/Placeholder";
+import SectionTitleV3 from "@components/Atoms/SectionTitleV3";
+import ErrorBoundary from "@components/Error/ErrorBoundary";
+import Table from "@components/Molecules/Table";
+import { uploadImageToS3 } from "@graphql/functions";
+import { PersonStatus, Role } from "API";
+import Loader from "atoms/Loader";
+import Anthology from "components/Dashboard/Anthology/Anthology";
+import { useGlobalContext } from "contexts/GlobalContext";
+import * as customMutations from "customGraphql/customMutations";
+import * as customQueries from "customGraphql/customQueries";
+import { map } from "lodash";
+import sortBy from "lodash/sortBy";
+import DroppableMedia from "molecules/DroppableMedia";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { getImageFromS3 } from "utilities/services";
+import { getUniqItems } from "utilities/strings";
+import AnimatedContainer from "../../../Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer";
+import {
+  ITab,
+  useTabs,
+} from "../../../Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/Tabs";
+import ProfileCropModal from "../../Profile/ProfileCropModal";
+import Attendance from "./Attendance";
+import SurveyList from "./SurveyList";
+import UserTabs from "./User/UserTabs";
+import UserEdit from "./UserEdit";
+import UserInformation from "./UserInformation";
 
 export interface UserInfo {
   authId: string;
-  courses?: string;
+  courses?: string | null;
   createdAt: string;
   email: string;
   externalId?: string;
@@ -40,7 +41,7 @@ export interface UserInfo {
   firstName: string;
   grade?: string;
   id: string;
-  image?: string;
+  image?: string | null;
   institution?: string;
   language: string;
   lastName: string;
@@ -86,139 +87,136 @@ interface IUserProps {
   onSuccessCallback?: () => void;
 }
 
-const AssociatedClasses = ({list, handleClassRoomClick}: any) => {
+const AssociatedClasses = ({ list, handleClassRoomClick }: any) => {
   const dataList: any[] = map(list, (room, idx) => {
     const curriculum = room.curricula;
-    const teacher = room.teacher;
+    const teacher: any = room.teacher;
     return {
       no: idx + 1,
       institution: room?.class?.institution?.name,
       classroom: (
         <div
           onClick={() => handleClassRoomClick(room.id)}
-          className="hover:underline cursor-pointer hover:theme-text">
+          className="hover:underline cursor-pointer hover:theme-text"
+        >
           {room.name}
         </div>
       ),
 
       teacher: teacher
-        ? `${teacher?.firstName || ''} ${teacher?.lastName || ''}`
-        : 'Not Available',
+        ? `${teacher?.firstName || ""} ${teacher?.lastName || ""}`
+        : "Not Available",
       curriculum: curriculum
         ? `${curriculum?.items[0]?.curriculum?.name}${
-            curriculum?.items[0]?.length > 1 ? '...' : ''
+            curriculum?.items[0]?.length > 1 ? "..." : ""
           }`
-        : 'Not Available'
+        : "Not Available",
     };
   });
   const tableConfig = {
-    headers: ['No', 'Institution', 'Classroom', 'Teacher', 'Curriculum'],
+    headers: ["No", "Institution", "Classroom", "Teacher", "Curriculum"],
     dataList,
     config: {
       isLastAction: true,
       isFirstIndex: true,
 
       dataList: {
-        emptyText: 'No associated coursework and attendance',
+        emptyText: "No associated coursework and attendance",
         customWidth: {
-          no: 'w-12',
-          classroom: 'w-72',
-          curriculum: 'w-72'
+          no: "w-12",
+          classroom: "w-72",
+          curriculum: "w-72",
         },
-        maxHeight: 'max-h-196'
-      }
-    }
+        maxHeight: "max-h-196",
+      },
+    },
   };
 
   return <Table {...tableConfig} />;
 };
 
 const User = (props: IUserProps) => {
-  const {insideModalPopUp, onSuccessCallback, shouldNavigate} = props;
-  const history = useHistory();
-  const match = useRouteMatch();
-  const location = useLocation();
-  const params = useQuery(location.search);
+  const { insideModalPopUp, onSuccessCallback, shouldNavigate } = props;
+
   const urlParam: any = useParams();
 
-  const {theme, state, userLanguage, dispatch, clientKey} = useGlobalContext();
+  const { theme, state, dispatch } = useGlobalContext();
 
-  const [status, setStatus] = useState('');
-  const [upImage, setUpImage] = useState(null);
+  const [status, setStatus] = useState("");
+  const [upImage, setUpImage] = useState<any | null>(null);
   const [fileObj, setFileObj] = useState({});
   const [showCropper, setShowCropper] = useState(false);
   const [imageLoading, setImageLoading] = useState(false);
   const [isTimelineOpen, setIsTimelineOpen] = useState(false);
-  const [selectedRoomId, setSelectedRoomId] = useState<string>('');
+  const [selectedRoomId, setSelectedRoomId] = useState<string>("");
 
   const getDashboardData = async (authId: string, email: string) => {
     try {
       const queryObj = {
-        name: 'customQueries.getDashboardData',
+        name: "customQueries.getDashboardData",
         valueObj: {
           authId: authId,
-          email: email
-        }
+          email: email,
+        },
       };
       const dashboardDataFetch = await API.graphql(
         graphqlOperation(customQueries.getDashboardData, queryObj.valueObj)
       );
 
       // @ts-ignore
-      let arrayOfResponseObjects = await dashboardDataFetch?.data?.getPerson?.classes
-        ?.items;
+      let arrayOfResponseObjects = await dashboardDataFetch?.data?.getPerson
+        ?.classes?.items;
 
       arrayOfResponseObjects =
         arrayOfResponseObjects
           ?.filter((item: any) => item.class !== null)
           ?.map((item: any) => item?.class?.room) || [];
       dispatch({
-        type: 'UPDATE_TEMP',
-        payload: {roomData: arrayOfResponseObjects, authId}
+        type: "UPDATE_TEMP",
+        payload: { roomData: arrayOfResponseObjects, authId },
       });
 
       // mapData(arrayOfResponseObjects);
       return arrayOfResponseObjects;
     } catch (e) {
-      console.error('getDashbaordData -> ', e);
+      console.error("getDashbaordData -> ", e);
     }
   };
 
-  const [questionData, setQuestionData] = useState([]);
+  const [questionData, setQuestionData] = useState<any[]>([]);
 
   const [urlState, setUrlState] = useUrlState(
-    {id: '', t: 'p'},
-    {navigateMode: 'replace'}
+    { id: "", t: "p" },
+    { navigateMode: "replace" }
   );
 
   const userId = props.userId || urlParam?.userId;
-  console.log('🚀 ~ file: User.tsx:197 ~ User ~ userId', userId);
 
   const [user, setUser] = useState<UserInfo>({
-    id: '',
-    authId: '',
+    id: "",
+    authId: "",
     courses: null,
-    createdAt: '',
-    email: '',
-    externalId: null,
-    firstName: '',
-    inactiveStatusDate: '',
-    statusReason: '',
-    grade: null,
+    createdAt: "",
+    email: "",
+    externalId: "",
+    firstName: "",
+    inactiveStatusDate: "",
+    statusReason: "",
+    grade: "null",
     image: null,
-    institution: null,
-    language: '',
-    lastName: '',
-    preferredName: null,
+    institution: "",
+    language: "",
+    lastName: "",
+    preferredName: "",
     classes: null,
-    role: '',
+    role: "",
     status: PersonStatus.ACTIVE,
-    phone: '',
-    updatedAt: '',
-    birthdate: null,
+    phone: "",
+    updatedAt: "",
+    birthdate: "",
     onDemand: false,
     isZoiq: false,
-    rooms: []
+    rooms: [],
   });
 
   useEffect(() => {
@@ -227,15 +225,11 @@ const User = (props: IUserProps) => {
     }
   }, [user.authId, user.email]);
 
-  const [imageUrl, setImageUrl] = useState('');
-  const pathName = location.pathname.replace(/\/$/, '');
-  const currentPath = pathName.substring(pathName.lastIndexOf('/') + 1);
+  const [imageUrl, setImageUrl] = useState("");
 
-  const {id, t: tab} = urlState;
+  const { t: tab } = urlState;
 
-  const {CommonlyUsedDict} = useDictionary(clientKey);
-
-  const mediaRef = React.useRef(null);
+  const mediaRef = React.useRef<any>(null);
   const handleImage = () => mediaRef?.current?.click();
 
   // ~~~~~~~~~~~~ GET RESPONSES ~~~~~~~~~~~~ //
@@ -244,22 +238,22 @@ const User = (props: IUserProps) => {
     const checkpointIDFilter: any = checkpointIDs.map((item: any) => {
       return {
         checkpointID: {
-          eq: item
-        }
+          eq: item,
+        },
       };
     });
     const filter = {
       and: [
-        {email: {eq: user.email}},
-        {authID: {eq: user.authId}},
-        {syllabusLessonID: {eq: '999999'}},
+        { email: { eq: user.email } },
+        { authID: { eq: user.authId } },
+        { syllabusLessonID: { eq: "999999" } },
         {
-          or: [...checkpointIDFilter]
-        }
-      ]
+          or: [...checkpointIDFilter],
+        },
+      ],
     };
     const results: any = await API.graphql(
-      graphqlOperation(customQueries.listQuestionDatas, {filter: filter})
+      graphqlOperation(customQueries.listQuestionDatas, { filter: filter })
     );
     const questionData: any = results.data.listQuestionData?.items;
     setQuestionData(questionData);
@@ -271,33 +265,43 @@ const User = (props: IUserProps) => {
 
   // ~~~~~~~~~~~~~~~ STORAGE ~~~~~~~~~~~~~~~ //
 
-  const [demographicCheckpoints, setDemographicCheckpoints] = useState([]);
-  const [privateCheckpoints, setPrivateCheckpoints] = useState([]);
+  const [demographicCheckpoints, setDemographicCheckpoints] = useState<any[]>(
+    []
+  );
+  const [privateCheckpoints, setPrivateCheckpoints] = useState<any[]>([]);
 
   async function getUserProfile(id: string) {
     try {
       const result: any = await API.graphql(
-        graphqlOperation(customQueries.getUserProfile, {id: id})
+        graphqlOperation(customQueries.getUserProfile, { id: id })
       );
       const userData = result.data.userById.items.pop();
 
       dispatch({
-        type: 'UPDATE_TEMP_USER',
+        type: "UPDATE_TEMP_USER",
         payload: {
-          user: {id: userData.id, name: `${userData.firstName} ${userData.lastName}`}
-        }
+          user: {
+            id: userData.id,
+            name: `${userData.firstName} ${userData.lastName}`,
+          },
+        },
       });
 
-      let studentClasses: any = userData.classes?.items.map((item: any) => item?.class);
+      let studentClasses: any = userData.classes?.items.map(
+        (item: any) => item?.class
+      );
       studentClasses = studentClasses.filter((d: any) => d !== null);
 
-      const studentRooms: any = studentClasses?.reduce((roomAcc: any[], item: any) => {
-        if (item?.room) {
-          return [...roomAcc, item.room];
-        } else {
-          return roomAcc;
-        }
-      }, []);
+      const studentRooms: any = studentClasses?.reduce(
+        (roomAcc: any[], item: any) => {
+          if (item?.room) {
+            return [...roomAcc, item.room];
+          } else {
+            return roomAcc;
+          }
+        },
+        []
+      );
 
       userData.rooms = studentRooms;
 
@@ -312,7 +316,7 @@ const User = (props: IUserProps) => {
         studentCurriculars.length > 0
           ? getUniqItems(
               studentCurriculars.filter((d: any) => d !== null),
-              'curriculumID'
+              "curriculumID"
             )
           : [];
       // console.log('uniqCurriculars', uniqCurriculars);
@@ -339,7 +343,10 @@ const User = (props: IUserProps) => {
         if (item) sCheckpoints.push(item);
       });
 
-      sCheckpoints = sortBy(sCheckpoints, (item: any) => item.scope === 'private');
+      sCheckpoints = sortBy(
+        sCheckpoints,
+        (item: any) => item.scope === "private"
+      );
 
       /***********************
        *   DEMOGRAPHIC AND   *
@@ -347,67 +354,77 @@ const User = (props: IUserProps) => {
        ***********************/
 
       // ~~~~~~~~~~~~~~~~ UNIQUE ~~~~~~~~~~~~~~~ //
-      const uniqCheckpoints: any = sCheckpoints ? getUniqItems(sCheckpoints, 'id') : [];
-      const uniqCheckpointIDs: any = uniqCheckpoints.map((item: any) => item?.id);
+      const uniqCheckpoints: any = sCheckpoints
+        ? getUniqItems(sCheckpoints, "id")
+        : [];
+      const uniqCheckpointIDs: any = uniqCheckpoints.map(
+        (item: any) => item?.id
+      );
 
       // ~~~~~~~~~~~~~~ SPLIT OUT ~~~~~~~~~~~~~~ //
       const demographicCheckpoints = uniqCheckpoints
-        .filter((checkpoint: any) => checkpoint.scope !== 'private')
+        .filter((checkpoint: any) => checkpoint.scope !== "private")
         .map((checkpoint: any) => {
           if (checkpoint?.questionSeq) {
             return {
               ...checkpoint,
               questions: {
-                items: checkpoint.questionSeq.reduce((acc: any[], seqString: string) => {
-                  let findQ = checkpoint.questions.items.find(
-                    (item: any) => item.question.id === seqString
-                  );
-                  if (findQ) {
-                    return [...acc, findQ];
-                  } else {
-                    return acc;
-                  }
-                }, [])
-              }
+                items: checkpoint.questionSeq.reduce(
+                  (acc: any[], seqString: string) => {
+                    let findQ = checkpoint.questions.items.find(
+                      (item: any) => item.question.id === seqString
+                    );
+                    if (findQ) {
+                      return [...acc, findQ];
+                    } else {
+                      return acc;
+                    }
+                  },
+                  []
+                ),
+              },
             };
           } else {
             return checkpoint;
           }
         });
       const privateCheckpoints = uniqCheckpoints
-        .filter((checkpoint: any) => checkpoint.scope === 'private')
+        .filter((checkpoint: any) => checkpoint.scope === "private")
         .map((checkpoint: any) => {
           if (checkpoint?.questionSeq) {
             return {
               ...checkpoint,
               questions: {
-                items: checkpoint.questionSeq.reduce((acc: any[], seqString: string) => {
-                  let findQ = checkpoint.questions.items.find(
-                    (item: any) => item.question.id === seqString
-                  );
-                  if (findQ) {
-                    return [...acc, findQ];
-                  } else {
-                    return acc;
-                  }
-                }, [])
-              }
+                items: checkpoint.questionSeq.reduce(
+                  (acc: any[], seqString: string) => {
+                    let findQ = checkpoint.questions.items.find(
+                      (item: any) => item.question.id === seqString
+                    );
+                    if (findQ) {
+                      return [...acc, findQ];
+                    } else {
+                      return acc;
+                    }
+                  },
+                  []
+                ),
+              },
             };
           } else {
             return checkpoint;
           }
         });
 
-      const personalInfo: any = {...userData};
+      const personalInfo: any = { ...userData };
 
       delete personalInfo.classes;
 
       setDemographicCheckpoints(demographicCheckpoints);
       setPrivateCheckpoints(privateCheckpoints);
 
-      setStatus('done');
+      setStatus("done");
       setUser(() => {
-        if (typeof userData === 'object') {
+        if (typeof userData === "object") {
           return userData;
         }
         return user;
@@ -422,14 +439,14 @@ const User = (props: IUserProps) => {
   }
 
   let tabs = [
-    {name: 'User Information', current: true},
-    {name: 'Coursework & Attendance', current: false},
-    user.role === 'ST' && {name: 'Notebook', current: false},
-    user.role === 'ST' && {name: 'Completed Surveys', current: false}
+    { name: "User Information", current: true },
+    { name: "Coursework & Attendance", current: false },
+    user.role === "ST" && { name: "Notebook", current: false },
+    user.role === "ST" && { name: "Completed Surveys", current: false },
   ];
   tabs = tabs.filter(Boolean);
 
-  const {curTab, setCurTab, helpers} = useTabs(tabs);
+  const { curTab, setCurTab, helpers } = useTabs(tabs as ITab[]);
 
   const [onUserInformationTab, onCATab, onNotebookTab, onSurveyTab] = helpers;
 
@@ -437,12 +454,14 @@ const User = (props: IUserProps) => {
   // ########################### PROFILE IMAGE ########################### //
   // ##################################################################### //
 
-  const isAdmin = state.user.role === 'ADM' || state.user.role === 'SUP';
+  const isAdmin = state.user.role === "ADM" || state.user.role === "SUP";
 
   useEffect(() => {
     async function getUrl() {
-      const imageUrl: any = await getImageFromS3(user.image);
-      setImageUrl(imageUrl);
+      if (user.image) {
+        const imageUrl: any = await getImageFromS3(user.image);
+        setImageUrl(imageUrl);
+      }
     }
     getUrl();
   }, [user.image]);
@@ -458,11 +477,11 @@ const User = (props: IUserProps) => {
     await uploadImageToS3(
       image ? image : fileObj,
       `user_profile_image_${id}`,
-      'image/jpeg'
+      "image/jpeg"
     );
     const imageUrl: any = await getImageFromS3(`user_profile_image_${id}`);
     setImageUrl(imageUrl);
-    setUser({...user, image: `user_profile_image_${id}`});
+    setUser({ ...user, image: `user_profile_image_${id}` });
     updateImageParam(`user_profile_image_${id}`);
     toggleCropper();
     setImageLoading(false);
@@ -481,18 +500,18 @@ const User = (props: IUserProps) => {
       role: user.role,
       firstName: user.firstName,
       lastName: user.lastName,
-      language: user.language
+      language: user.language,
     };
 
     try {
-      const update: any = await API.graphql(
-        graphqlOperation(customMutations.updatePerson, {input: input})
+      await API.graphql(
+        graphqlOperation(customMutations.updatePerson, { input: input })
       );
       setUser({
-        ...user
+        ...user,
       });
     } catch (error) {
-      console.error('Error updating image on graphql', error);
+      console.error("Error updating image on graphql", error);
     }
   }
 
@@ -503,7 +522,7 @@ const User = (props: IUserProps) => {
   }, [userId]);
 
   const setTab = (value: string) => {
-    setUrlState({t: value});
+    setUrlState({ t: value });
   };
 
   const handleClassRoomClick = (roomId: string) => {
@@ -512,29 +531,30 @@ const User = (props: IUserProps) => {
   };
 
   const goToClassroom = () => {
-    setSelectedRoomId('');
+    setSelectedRoomId("");
     setIsTimelineOpen(false);
   };
 
   const [isEditMode, setIsEditMode] = useState(false);
 
   const isTeacher =
-    state.user.role === 'TR' ||
-    state.user.role === 'FLW' ||
-    state.user.role === 'ADM' ||
-    state.user.role === 'SUP';
+    state.user.role === "TR" ||
+    state.user.role === "FLW" ||
+    state.user.role === "ADM" ||
+    state.user.role === "SUP";
   {
     return (
       <>
         <>
           <div
             className={`px-4 `}
-            style={insideModalPopUp ? {maxHeight: 'calc(100vh - 150px)'} : {}}>
+            style={insideModalPopUp ? { maxHeight: "calc(100vh - 150px)" } : {}}
+          >
             {/* <BreadCrums items={breadCrumsList} /> */}
 
             <SectionTitleV3
               title="User Lookup"
-              bgColor={insideModalPopUp ? 'bg-gray-200' : 'bg-white'}
+              bgColor={insideModalPopUp ? "bg-gray-200" : "bg-white"}
               fontSize="xl"
               backButton
               fontStyle="semibold"
@@ -542,13 +562,15 @@ const User = (props: IUserProps) => {
               borderBottom
               shadowOff
               withButton={
-                <div className={`w-auto flex gap-x-4 justify-end items-center flex-wrap`}>
+                <div
+                  className={`w-auto flex gap-x-4 justify-end items-center flex-wrap`}
+                >
                   <AddButton
-                    label={'Edit User'}
+                    label={"Edit User"}
                     disabled={isEditMode}
                     onClick={() => {
                       setIsEditMode(true);
-                      setCurTab(tabs[0].name);
+                      tabs[0] && setCurTab(tabs[0]?.name);
                       // history.push(`${match.url}/edit${location.search}`);
                     }}
                   />
@@ -570,7 +592,9 @@ const User = (props: IUserProps) => {
             <div className="mb-4">
               <AnimatedContainer className="h-full" show={onUserInformationTab}>
                 {onUserInformationTab && (
-                  <div className={`border-0 border-gray-300 rounded-xl p-4 mb-8`}>
+                  <div
+                    className={`border-0 border-gray-300 rounded-xl p-4 mb-8`}
+                  >
                     <div className="h-1/2 flex flex-col md:flex-row">
                       <div className="w-1/4 p-4 flex flex-col text-center items-center">
                         <div className="cursor-pointer">
@@ -585,7 +609,8 @@ const User = (props: IUserProps) => {
                                         setUpImage(img);
                                         setFileObj(file);
                                       }}
-                                      toggleCropper={toggleCropper}>
+                                      toggleCropper={toggleCropper}
+                                    >
                                       {imageUrl ? (
                                         <img
                                           className={`profile w-20 h-20 md:w-30 md:h-30 lg:w-40 lg:h-40 rounded-full  border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light mx-auto`}
@@ -606,7 +631,9 @@ const User = (props: IUserProps) => {
                               )}
                             </button>
                           ) : (
-                            <div className={`flex justify-center items-center mx-auto`}>
+                            <div
+                              className={`flex justify-center items-center mx-auto`}
+                            >
                               {!imageLoading ? (
                                 <DroppableMedia
                                   mediaRef={mediaRef}
@@ -614,10 +641,12 @@ const User = (props: IUserProps) => {
                                     setUpImage(img);
                                     setFileObj(file);
                                   }}
-                                  toggleCropper={toggleCropper}>
+                                  toggleCropper={toggleCropper}
+                                >
                                   <div
                                     onClick={handleImage}
-                                    className="w-20 h-20 md:w-40 md:h-40">
+                                    className="w-20 h-20 md:w-40 md:h-40"
+                                  >
                                     <Placeholder
                                       textSize="text-5xl"
                                       firstName={user.firstName}
@@ -633,12 +662,15 @@ const User = (props: IUserProps) => {
                           )}
                         </div>
                         <div
-                          className={`text-lg md:text-3xl font-bold  text-gray-900 mt-4`}>
-                          {`${user.preferredName ? user.preferredName : user.firstName} ${
-                            user.lastName
-                          }`}
+                          className={`text-lg md:text-3xl font-bold  text-gray-900 mt-4`}
+                        >
+                          {`${
+                            user.preferredName
+                              ? user.preferredName
+                              : user.firstName
+                          } ${user.lastName}`}
                           <p className="text-md md:text-lg">{`${
-                            user.institution ? user.institution : ''
+                            user.institution ? user.institution : ""
                           }`}</p>
                         </div>
                       </div>
@@ -659,9 +691,9 @@ const User = (props: IUserProps) => {
                             getUserById={getUserProfile}
                             questionData={questionData}
                             checkpoints={
-                              tab === 'demographics'
+                              tab === "demographics"
                                 ? demographicCheckpoints
-                                : tab === 'private'
+                                : tab === "private"
                                 ? privateCheckpoints
                                 : []
                             }
@@ -675,9 +707,9 @@ const User = (props: IUserProps) => {
                             setTab={setTab}
                             questionData={questionData}
                             checkpoints={
-                              tab === 'demographics'
+                              tab === "demographics"
                                 ? demographicCheckpoints
-                                : tab === 'private'
+                                : tab === "private"
                                 ? privateCheckpoints
                                 : []
                             }
@@ -693,7 +725,7 @@ const User = (props: IUserProps) => {
               <AnimatedContainer show={onCATab}>
                 {onCATab && (
                   <>
-                    {user?.classes?.items.length > 0 && user.role === 'ST' && (
+                    {user?.classes?.items.length > 0 && user.role === "ST" && (
                       <div className={`mb-8`}>
                         {isTimelineOpen ? (
                           <Attendance
@@ -711,7 +743,7 @@ const User = (props: IUserProps) => {
                         )}
                       </div>
                     )}
-                    {(user.role === 'TR' || user.role === 'FLW') && (
+                    {(user.role === "TR" || user.role === "FLW") && (
                       <Attendance
                         id={userId}
                         goToClassroom={goToClassroom}
@@ -747,7 +779,7 @@ const User = (props: IUserProps) => {
         </>
         {showCropper && (
           <ProfileCropModal
-            upImg={upImage}
+            upImg={upImage || ""}
             saveCroppedImage={(img: string) => {
               saveCroppedImage(img);
             }}

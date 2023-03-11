@@ -1,10 +1,10 @@
-import useInGC from 'customHooks/checkIfGameChanges';
-import React, {useEffect, useState} from 'react';
-import {useHistory} from 'react-router';
-import {useGameChangers} from '../context/GameChangersContext';
-import BubbleVersion from './BubbleVersion';
+import useInGC from "customHooks/checkIfGameChanges";
+import React, { useEffect, useState } from "react";
+import { useHistory } from "react-router";
+import { useGameChangers } from "../context/GameChangersContext";
+import BubbleVersion from "./BubbleVersion";
 
-const EmotionCard = ({}: {inLesson: boolean}) => {
+const EmotionCard = ({}: { inLesson: boolean }) => {
   // For Mobile
 
   const {
@@ -14,37 +14,31 @@ const EmotionCard = ({}: {inLesson: boolean}) => {
     setPrimaryEmotion,
     setSelectedEmotions,
     showFinalStep,
-    setShowFinalStep
+    setShowFinalStep,
   } = useGameChangers();
-  const [changesSaved, setChangesSaved] = useState(false);
+  const [changesSaved] = useState(false);
 
-  const checkChanges = (changes: boolean) => {};
+  const checkChanges = (_: boolean) => {};
 
   const inGC = useInGC();
   const history = useHistory();
 
   goBackCallback.current = () => {
-    history.push('/dashboard/game-changers');
+    history.push("/dashboard/game-changers");
 
     setSelectedCard(null);
-    setPrimaryEmotion('');
+    setPrimaryEmotion("");
     checkChanges(changesSaved);
-    setSecondaryEmotion('');
+    setSecondaryEmotion("");
     setSelectedEmotions([]);
     if (inGC && showFinalStep) {
       setShowFinalStep(false);
     }
   };
-  const beforeunload = (event: BeforeUnloadEvent) =>
-    (event.returnValue = 'Please save the changes');
 
   useEffect(() => {
     checkChanges(changesSaved);
   }, [changesSaved]);
-
-  const goBack = () => {
-    setSelectedCard(null);
-  };
 
   return <BubbleVersion />;
 };

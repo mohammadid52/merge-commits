@@ -1,16 +1,14 @@
-// import Amplify from 'aws-amplify';
-import {Amplify} from '@aws-amplify/core';
-import React, {useEffect} from 'react';
-import 'react-datepicker/dist/react-datepicker.css';
-import ReactDOM from 'react-dom';
-import 'react-image-crop/lib/ReactCrop.scss';
-import awsconfig from 'aws-exports';
-import App from 'components/App';
-import 'index.html';
-import 'style/style.css';
-import 'style/style.scss';
+import { Amplify } from "aws-amplify";
+// import "react-datepicker/dist/react-datepicker.css";
+// import "react-image-crop/lib/ReactCrop.scss";
+import App from "components/App";
+import awsconfig from "aws-exports";
+// import "index.html";
+import { createRoot } from "react-dom/client";
+import "style/style.css";
+import "style/style.scss";
 
-require('dotenv').config();
+// config();
 
 // Amplify.configure(awsconfig);
 // test
@@ -25,24 +23,16 @@ Amplify.configure({
     identityPoolId: awsconfig.aws_cognito_identity_pool_id,
     region: awsconfig.aws_cognito_region,
     userPoolId: awsconfig.aws_user_pools_id,
-    userPoolWebClientId: awsconfig.aws_user_pools_web_client_id
+    userPoolWebClientId: awsconfig.aws_user_pools_web_client_id,
   },
   Storage: {
     AWSS3: {
       bucket: awsconfig.aws_user_files_s3_bucket,
-      region: awsconfig.aws_user_files_s3_bucket_region
-    }
-  }
+      region: awsconfig.aws_user_files_s3_bucket_region,
+    },
+  },
 });
 
-const Page: React.FC = () => {
-  useEffect(() => {
-    // console.log('createUserUrl = ', createUserUrl);
-    // console.log('requestResetPassword = ', requestResetPassword);
-    // console.log('tableCleanupUrl = ', tableCleanupUrl);
-    // console.log('Auth.configure()', Auth.configure());
-  }, []);
-  return <App />;
-};
+const root = createRoot(document.getElementById("app")!);
 
-ReactDOM.render(<Page />, document.getElementById('app'));
+root.render(<App />);

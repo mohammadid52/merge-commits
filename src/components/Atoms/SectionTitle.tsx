@@ -1,14 +1,16 @@
-import React, {useContext} from 'react';
-import {GlobalContext} from 'contexts/GlobalContext';
+import { useGlobalContext } from "contexts/GlobalContext";
+import React from "react";
 
 interface SectionTitleProps {
   title: string;
   subtitle?: string;
 }
 
-const SectionTitle: React.FC<SectionTitleProps> = (sectProps: SectionTitleProps) => {
-  const {title, subtitle} = sectProps;
-  const {theme} = useContext(GlobalContext);
+const SectionTitle: React.FC<SectionTitleProps> = (
+  sectProps: SectionTitleProps
+) => {
+  const { title, subtitle } = sectProps;
+  const { theme } = useGlobalContext();
 
   return (
     <div className="flex flex-col py-2 2xl:py-4 mb-0 md:mb-4">
@@ -16,7 +18,7 @@ const SectionTitle: React.FC<SectionTitleProps> = (sectProps: SectionTitleProps)
         {title.toUpperCase()}
       </h1>
       <h2 className={`text-xs 2xl:text-sm ${theme.text.secondary} font-bold`}>
-        {subtitle ? subtitle : ''}
+        {subtitle ? subtitle : ""}
       </h2>
     </div>
   );

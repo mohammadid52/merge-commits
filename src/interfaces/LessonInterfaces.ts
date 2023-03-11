@@ -1,7 +1,3 @@
-interface LessonEditProps {
-  designersList: any[];
-}
-
 export interface InstructionInitialState {
   introductionTitle: string;
   instructionsTitle: string;

@@ -1,37 +1,39 @@
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import {getDictionaries} from '@graphql/functions';
-import {UniversalLessonStudentData as UniversalLessonStudentDataFromAPI} from 'API';
-import {GlobalContext} from 'contexts/GlobalContext';
-import {useNotifications} from 'contexts/NotificationContext';
-import * as customQueries from 'customGraphql/customQueries';
-import * as customSubscriptions from 'customGraphql/customSubscriptions';
-import useLessonControls from 'customHooks/lessonControls';
-import useAuth from 'customHooks/useAuth';
+import { UniversalLessonStudentData as UniversalLessonStudentDataFromAPI } from "API";
+import { API, graphqlOperation } from "aws-amplify";
+import { useGlobalContext } from "contexts/GlobalContext";
+import { useNotifications } from "contexts/NotificationContext";
+import * as customQueries from "customGraphql/customQueries";
+import * as customSubscriptions from "customGraphql/customSubscriptions";
+import useLessonControls from "customHooks/lessonControls";
+import useAuth from "customHooks/useAuth";
 import {
   StudentPageInput,
-  UniversalLessonStudentData
-} from 'interfaces/UniversalLessonInterfaces';
-import React, {Suspense, useContext, useEffect, useState} from 'react';
-import {useParams} from 'react-router';
-import {useHistory, useRouteMatch} from 'react-router-dom';
-import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
-import ErrorBoundary from '../Error/ErrorBoundary';
-import PositiveAlert from '../General/Popup';
-import ComponentLoading from '../Lesson/Loading/ComponentLoading';
-import CoreUniversalLesson from '../Lesson/UniversalLesson/views/CoreUniversalLesson';
-import ClassRoster from './ClassRoster';
-import RosterFrame from './ClassRoster/RosterFrame';
-import Frame from './Frame';
-import AttendanceFrame from './StudentWindow/AttendanceFrame';
+  UniversalLessonStudentData,
+} from "interfaces/UniversalLessonInterfaces";
+import { Suspense, useEffect, useState } from "react";
+import { useParams } from "react-router";
+import { useHistory, useRouteMatch } from "react-router-dom";
+import {
+  getLocalStorageData,
+  setLocalStorageData,
+} from "utilities/localStorage";
+import ErrorBoundary from "../Error/ErrorBoundary";
+import PositiveAlert from "../General/Popup";
+import ComponentLoading from "../Lesson/Loading/ComponentLoading";
+import CoreUniversalLesson from "../Lesson/UniversalLesson/views/CoreUniversalLesson";
+import ClassRoster from "./ClassRoster";
+import RosterFrame from "./ClassRoster/RosterFrame";
+import Frame from "./Frame";
+import AttendanceFrame from "./StudentWindow/AttendanceFrame";
 // import AttendanceFrame from './StudentWindow/AttendanceFrame';
-import LessonFrame from './StudentWindow/LessonFrame';
-import LessonInfoFrame from './StudentWindow/LessonInfoFrame';
-import ProfileFrame from './StudentWindow/ProfileFrame';
+import LessonFrame from "./StudentWindow/LessonFrame";
+import LessonInfoFrame from "./StudentWindow/LessonInfoFrame";
+import ProfileFrame from "./StudentWindow/ProfileFrame";
 
 export const checkIfLessonIsCompleted = (roomData: any, lessonID: string) => {
   return (
     roomData?.completedLessons?.findIndex(
-      (item: {lessonID?: string | null; time?: string | null}) =>
+      (item: { lessonID?: string | null; time?: string | null }) =>
         item.lessonID === lessonID
     ) > -1
   );
@@ -39,29 +41,26 @@ export const checkIfLessonIsCompleted = (roomData: any, lessonID: string) => {
 
 const LessonControl = () => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
-  const gContext = useContext(GlobalContext);
-  const {scanLessonAndFindComplicatedWord} = gContext;
-
-  const dispatch = gContext.dispatch;
+  const gContext = useGlobalContext();
+  const { scanLessonAndFindComplicatedWord } = gContext;
 
   const lessonState = gContext.lessonState;
   const lessonDispatch = gContext.lessonDispatch;
   const controlState = gContext.controlState;
   const roster = controlState.roster;
   const theme = gContext.theme;
-  const clientKey = gContext.clientKey;
 
   const match = useRouteMatch();
   const history = useHistory();
   const urlParams: any = useParams();
-  const getRoomData = getLocalStorageData('room_info');
+  const getRoomData = getLocalStorageData("room_info");
 
   // ##################################################################### //
   // ######################### BASIC UI CONTROLS ######################### //
   // ##################################################################### //
 
   const handlePageChange = (pageNr: number) => {
-    lessonDispatch({type: 'SET_CURRENT_PAGE', payload: pageNr});
+    lessonDispatch({ type: "SET_CURRENT_PAGE", payload: pageNr });
     history.push(`${match.url}/${pageNr}`);
   };
 
@@ -76,7 +75,7 @@ const LessonControl = () => {
   const [rightView, setRightView] = useState<{
     view: string;
     option?: string;
-  }>({view: 'lesson', option: ''});
+  }>({ view: "lesson", option: "" });
 
   // ##################################################################### //
   // ######################### SUBSCRIPTION SETUP ######################## //
@@ -88,14 +87,14 @@ const LessonControl = () => {
   // ----------- 1 ---------- //
 
   const subscribeToStudent = () => {
-    const {lessonID} = urlParams;
+    const { lessonID } = urlParams;
     const syllabusID = getRoomData.activeSyllabus; // in the table this is called SyllabusLessonID, but it's just the syllabusID
 
     const studentDataSubscription = API.graphql(
       graphqlOperation(customSubscriptions.onChangeUniversalLessonStudentData, {
         studentAuthID: lessonState.studentViewing,
         syllabusLessonID: syllabusID,
-        lessonID: lessonID
+        lessonID: lessonID,
       })
       //@ts-ignore
     ).subscribe({
@@ -104,7 +103,7 @@ const LessonControl = () => {
           studentData.value.data.onChangeUniversalLessonStudentData;
 
         setSubscriptionData(updatedStudentData);
-      }
+      },
     });
 
     return studentDataSubscription;
@@ -118,8 +117,8 @@ const LessonControl = () => {
     )?.pageIdx;
     const getPageData = subscriptionData.pageData;
     lessonDispatch({
-      type: 'LOAD_STUDENT_SUBSCRIPTION_DATA',
-      payload: {stDataIdx: getPageIdx, subData: getPageData}
+      type: "LOAD_STUDENT_SUBSCRIPTION_DATA",
+      payload: { stDataIdx: getPageIdx, subData: getPageData },
     });
   };
 
@@ -138,14 +137,14 @@ const LessonControl = () => {
   // ~~~~~ CREATE DB DATA ID REFERENCES ~~~~ //
   const studentDataIdArray = (studentDataArray: any[]) => {
     const idArr = studentDataArray
-      .reduce((acc: any[], dataObj: any, idx: number) => {
+      .reduce((acc: any[], dataObj: any) => {
         const idObj = {
           id: dataObj.id,
           pageIdx: PAGES.findIndex(
             (lessonPlanObj: any) => lessonPlanObj.id === dataObj.lessonPageID
           ),
           lessonPageID: dataObj.lessonPageID,
-          update: false
+          update: false,
         };
         return [...acc, idObj];
       }, [])
@@ -156,22 +155,29 @@ const LessonControl = () => {
         if (dataID1.pageIdx > dataID2.pageIdx) {
           return 1;
         }
+        return 1;
       });
     return idArr;
   };
 
   // ~~~~~~ FILTER STUDENT DATA ARRAYS ~~~~~ //
-  const filterStudentData = (studentDataIdArray: any[], studentDataArray: any[]) => {
-    return studentDataIdArray.reduce((acc: StudentPageInput[], dataIdObj: any) => {
-      const findPageData = studentDataArray.find(
-        (dataObj: UniversalLessonStudentData) => dataObj.id === dataIdObj.id
-      )?.pageData;
-      if (Array.isArray(findPageData)) {
-        return [...acc, findPageData];
-      } else {
-        return [];
-      }
-    }, []);
+  const filterStudentData = (
+    studentDataIdArray: any[],
+    studentDataArray: any[]
+  ) => {
+    return studentDataIdArray.reduce(
+      (acc: StudentPageInput[], dataIdObj: any) => {
+        const findPageData = studentDataArray.find(
+          (dataObj: UniversalLessonStudentData) => dataObj.id === dataIdObj.id
+        )?.pageData;
+        if (Array.isArray(findPageData)) {
+          return [...acc, findPageData];
+        } else {
+          return [];
+        }
+      },
+      []
+    );
   };
 
   // ~~~~~~~~~~~ THE MAIN FUNTION ~~~~~~~~~~ //
@@ -192,11 +198,13 @@ const LessonControl = () => {
         let studentData: any = await API.graphql(
           graphqlOperation(customQueries.listUniversalLessonStudentDatas, {
             ...filterObj,
-            nextToken: nextToken
+            nextToken: nextToken,
           })
         );
-        let studentDataRows = studentData.data.listUniversalLessonStudentData.items;
-        let theNextToken = studentData.data.listUniversalLessonStudentData?.nextToken;
+        let studentDataRows =
+          studentData.data.listUniversalLessonStudentData.items;
+        let theNextToken =
+          studentData.data.listUniversalLessonStudentData?.nextToken;
 
         /**
          * combination of last fetch results
@@ -211,37 +219,39 @@ const LessonControl = () => {
           return combined;
         }
       } catch (e) {
-        console.error('loopFetchStudentData - ', e);
+        console.error("loopFetchStudentData - ", e);
         return [];
       }
+      return [];
     } else {
       return [];
     }
   };
 
-  const [lessonDataLoaded, setLessonDataLoaded] = useState<boolean>(false);
   const PAGES = lessonState?.lessonData?.lessonPlan;
 
-  const _loopFetchStudentData = async (): Promise<UniversalLessonStudentDataFromAPI[]> =>
+  const _loopFetchStudentData = async (): Promise<
+    UniversalLessonStudentDataFromAPI[]
+  > =>
     new Promise(async (resolve) => {
       try {
-        const {lessonID} = urlParams;
+        const { lessonID } = urlParams;
 
-        setLessonDataLoaded(false);
         // fetch by pages
 
         let result: any = [];
 
         await Promise.all(
-          PAGES.map(async (page: any, idx: number) => {
+          PAGES.map(async (page: any) => {
             let studentData: any = await API.graphql(
               graphqlOperation(customQueries.getUniversalLessonStudentData, {
-                id: `${lessonState.studentViewing}-${getRoomData.id}-${lessonID}-${page.id}`
+                id: `${lessonState.studentViewing}-${getRoomData.id}-${lessonID}-${page.id}`,
                 // filter: {...filterObj.filter, lessonPageID: {eq: page.id}}
               })
             );
 
-            let studentDataObject = studentData.data.getUniversalLessonStudentData;
+            let studentDataObject =
+              studentData.data.getUniversalLessonStudentData;
             result.push(studentDataObject);
           })
         );
@@ -251,18 +261,19 @@ const LessonControl = () => {
          * && current fetch results
          */
 
-        lessonDispatch({type: 'LESSON_LOADED', payload: true});
+        lessonDispatch({ type: "LESSON_LOADED", payload: true });
 
         // console.log('no more - ', combined);
-        setLessonDataLoaded(true);
+
         resolve(result);
       } catch (e) {
-        console.error('loopFetchStudentData - ', e);
+        console.error("loopFetchStudentData - ", e);
         return [];
       }
+      return [];
     });
 
-  const getStudentData = async (studentAuthId: string) => {
+  const getStudentData = async () => {
     try {
       // existing student rows
       const studentDataRows: UniversalLessonStudentDataFromAPI[] = await (
@@ -273,17 +284,20 @@ const LessonControl = () => {
         subscription = subscribeToStudent();
 
         const existStudentDataIdArray = studentDataIdArray(studentDataRows);
-        const filteredData = filterStudentData(existStudentDataIdArray, studentDataRows);
+        const filteredData = filterStudentData(
+          existStudentDataIdArray,
+          studentDataRows
+        );
 
         lessonDispatch({
-          type: 'LOAD_STUDENT_DATA',
+          type: "LOAD_STUDENT_DATA",
           payload: {
             dataIdReferences: existStudentDataIdArray,
-            filteredStudentData: filteredData
-          }
+            filteredStudentData: filteredData,
+          },
         });
       } else {
-        throw 'No student data records for this lesson...';
+        throw "No student data records for this lesson...";
       }
     } catch (err) {
       console.error(err);
@@ -293,26 +307,26 @@ const LessonControl = () => {
   // ~~~~~~~~~~~~~~~ CLEAN UP ~~~~~~~~~~~~~~ //
 
   const clearStudentData = async () => {
-    lessonDispatch({type: 'UNLOAD_STUDENT_DATA'});
+    lessonDispatch({ type: "UNLOAD_STUDENT_DATA", payload: {} });
   };
 
   useEffect(() => {
-    if (lessonState.lessonData?.type !== 'survey') {
-      if (lessonState.studentViewing === '') {
-        lessonDispatch({type: 'UNLOAD_STUDENT_DATA'});
+    if (lessonState.lessonData?.type !== "survey") {
+      if (lessonState.studentViewing === "") {
+        lessonDispatch({ type: "UNLOAD_STUDENT_DATA", payload: {} });
       }
 
-      if (lessonState.studentViewing !== '') {
+      if (lessonState.studentViewing !== "") {
         clearStudentData().then((_: void) =>
-          getStudentData(lessonState.studentViewing).then((_: void) =>
-            console.log('getStudentData teacher - ', 'getted')
+          getStudentData().then((_: void) =>
+            console.log("getStudentData teacher - ", "getted")
           )
         );
       }
     } else {
       console.log(
-        'lesson control - ',
-        'not doing anything on view student because survey...'
+        "lesson control - ",
+        "not doing anything on view student because survey..."
       );
     }
   }, [lessonState.studentViewing]);
@@ -321,12 +335,10 @@ const LessonControl = () => {
   // ################## STUDENT SHARE AND VIEW CONTROLS ################## //
   // ##################################################################### //
   const handleQuitShare = () => {
-    dispatch({type: 'QUIT_SHARE_MODE'});
     setIsSameStudentShared(false);
   };
 
   const handleQuitViewing = () => {
-    dispatch({type: 'QUIT_STUDENT_VIEWING'});
     setIsSameStudentShared(false);
   };
 
@@ -337,7 +349,7 @@ const LessonControl = () => {
     // lessonID will be undefined for testing
     try {
       const universalLesson: any = await API.graphql(
-        graphqlOperation(customQueries.getUniversalLesson, {id: lessonID})
+        graphqlOperation(customQueries.getUniversalLesson, { id: lessonID })
       );
       const response = universalLesson.data.getUniversalLesson;
       const lessonPlan = response.lessonPlan.reduce((acc: any[], page: any) => {
@@ -345,33 +357,30 @@ const LessonControl = () => {
           ...acc,
           {
             id: page.id,
-            label: page.label
-          }
+            label: page.label,
+          },
         ];
       }, []);
 
-      const dictionaries = await getDictionaries();
-
       const updatedLessonPlan = scanLessonAndFindComplicatedWord(
-        response.lessonPlan,
-        dictionaries
+        response.lessonPlan
       );
 
-      setLocalStorageData('lesson_plan', lessonPlan);
+      setLocalStorageData("lesson_plan", lessonPlan);
       lessonDispatch({
-        type: 'SET_LESSON_DATA',
-        payload: {...response, lessonPlan: updatedLessonPlan}
+        type: "SET_LESSON_DATA",
+        payload: { ...response, lessonPlan: updatedLessonPlan },
       });
     } catch (e) {
-      console.error('getSyllabusLesson() - error fetching lesson', e);
+      console.error("getSyllabusLesson() - error fetching lesson", e);
     }
   };
 
-  const {clearNotification, setNotification} = useNotifications();
+  const { clearNotification, setNotification } = useNotifications();
 
   // ~~~~~~~~~~~~~~ GET LESSON ~~~~~~~~~~~~~ //
   useEffect(() => {
-    const {lessonID} = urlParams;
+    const { lessonID } = urlParams;
 
     if (lessonID) {
       const isCompleted = checkIfLessonIsCompleted(getRoomData, lessonID);
@@ -380,22 +389,22 @@ const LessonControl = () => {
         clearNotification();
 
         lessonDispatch({
-          type: 'SET_INITIAL_STATE',
-          payload: {universalLessonID: lessonID}
+          type: "SET_INITIAL_STATE",
+          payload: { universalLessonID: lessonID },
         });
         getSyllabusLesson(lessonID).then((_: void) =>
-          console.log('Lesson Mount - ', 'Lesson fetched!')
+          console.log("Lesson Mount - ", "Lesson fetched!")
         );
       } else {
-        setNotification({title: 'Lesson/Survey is closed', show: true});
-        history.push('/');
+        setNotification({ title: "Lesson/Survey is closed", show: true });
+        history.push("/");
       }
     }
     return () => {
       if (subscription) {
         subscription.unsubscribe();
       }
-      lessonDispatch({type: 'CLEANUP'});
+      lessonDispatch({ type: "CLEANUP" });
     };
   }, []);
 
@@ -403,7 +412,7 @@ const LessonControl = () => {
   // ~~~~~~~~~~~~~ LESSON SETUP ~~~~~~~~~~~~ //
 
   useEffect(() => {
-    const {lessonID} = urlParams;
+    const { lessonID } = urlParams;
 
     const isCompleted = checkIfLessonIsCompleted(getRoomData, lessonID);
     if (!isCompleted || !isTeacher) {
@@ -411,16 +420,19 @@ const LessonControl = () => {
         // lessonDispatch({type: 'SET_CURRENT_PAGE', payload: 0});
         // history.push(`${match.url}/${0}`);
 
-        const getRoomData = getLocalStorageData('room_info');
-        setLocalStorageData('room_info', {...getRoomData, studentViewing: ''});
+        const getRoomData = getLocalStorageData("room_info");
+        setLocalStorageData("room_info", {
+          ...getRoomData,
+          studentViewing: "",
+        });
 
         if (PAGES && PAGES.length > 0) {
           lessonDispatch({
-            type: 'SET_ROOM_SUBSCRIPTION_DATA',
+            type: "SET_ROOM_SUBSCRIPTION_DATA",
             payload: {
               ClosedPages: getRoomData.ClosedPages,
-              studentViewing: getRoomData.studentViewing
-            }
+              studentViewing: getRoomData.studentViewing,
+            },
           });
         }
       }
@@ -431,12 +443,12 @@ const LessonControl = () => {
   // ################### OTHER SHARING / VIEWING LOGIC ################### //
   // ##################################################################### //
 
-  const {resetViewAndShare, handleRoomUpdate} = useLessonControls();
+  const { resetViewAndShare, handleRoomUpdate } = useLessonControls();
 
   // ~~~~~~ AUTO PAGE NAVIGATION LOGIC ~~~~~ //
   useEffect(() => {
-    if (lessonState.displayData[0].studentAuthID === '') {
-      if (lessonState.studentViewing !== '') {
+    if (lessonState.displayData[0].studentAuthID === "") {
+      if (lessonState.studentViewing !== "") {
         const viewedStudentLocation = controlState.rosterActive.find(
           (student: any) => student.personAuthID === lessonState.studentViewing
         );
@@ -444,15 +456,17 @@ const LessonControl = () => {
         let numbered = Number(viewedStudentLocation?.currentLocation) || 0;
 
         if (numbered !== undefined) {
-          lessonDispatch({type: 'SET_CURRENT_PAGE', payload: numbered});
+          lessonDispatch({ type: "SET_CURRENT_PAGE", payload: numbered });
           history.push(`${match.url}/${numbered}`);
         } else {
           lessonDispatch({
-            type: 'SET_CURRENT_PAGE',
-            payload: lessonState?.currentPage ? lessonState.currentPage : 0
+            type: "SET_CURRENT_PAGE",
+            payload: lessonState?.currentPage ? lessonState.currentPage : 0,
           });
           history.push(
-            `${match.url}/${lessonState?.currentPage ? lessonState.currentPage : 0}`
+            `${match.url}/${
+              lessonState?.currentPage ? lessonState.currentPage : 0
+            }`
           );
 
           /**********************************
@@ -496,20 +510,20 @@ const LessonControl = () => {
   // ~~~~~~~~~~~ POPUP NAVIGATION ~~~~~~~~~~ //
 
   const handleGoToUserManagement = () => {
-    history.push('/dashboard/manage-users');
+    history.push("/dashboard/manage-users");
   };
 
   const handleHome = async () => {
-    await handleRoomUpdate({id: getRoomData.id, studentViewing: ''});
+    await handleRoomUpdate({ id: getRoomData.id, studentViewing: "" });
     history.push(`/dashboard/lesson-planner/${getRoomData.id}`);
   };
 
   // ~~~~~~~~~~~~ SHARING CHECK ~~~~~~~~~~~~ //
-  const anyoneIsViewed = lessonState.studentViewing !== '';
-  const anyoneIsShared = lessonState.displayData[0].studentAuthID !== '';
+  const anyoneIsViewed = lessonState.studentViewing !== "";
+  const anyoneIsShared = lessonState.displayData[0].studentAuthID !== "";
   const isPresenting = lessonState.displayData[0].isTeacher === true;
 
-  const {isTeacher, email, authId} = useAuth();
+  const { isTeacher, email, authId } = useAuth();
 
   useEffect(() => {
     if (isPresenting && !fullscreen) {
@@ -526,7 +540,7 @@ const LessonControl = () => {
   // ##################################################################### //
   // ############################### OUTPUT ############################## //
   // ##################################################################### //
-  const {notification} = useNotifications();
+  const { notification } = useNotifications();
 
   return (
     <div className={`w-full h-screen bg-gray-200 overflow-hidden`}>
@@ -537,21 +551,24 @@ const LessonControl = () => {
           <div
             className={`opacity-${
               notification.show
-                ? '100 translate-x-0 transform z-100'
-                : '0 translate-x-10 transform'
-            } absolute bottom-5 right-5 w-96 py-4 px-6 rounded-md shadow bg-gray-800 duration-300 transition-all`}>
-            <p className="text-white font-medium tracking-wide">{notification.title}</p>
+                ? "100 translate-x-0 transform z-100"
+                : "0 translate-x-10 transform"
+            } absolute bottom-5 right-5 w-96 py-4 px-6 rounded-md shadow bg-gray-800 duration-300 transition-all`}
+          >
+            <p className="text-white font-medium tracking-wide">
+              {notification.title}
+            </p>
           </div>
         )}
 
         {/* USER MANAGEMENT */}
         <div
-          className={`${leavePopup ? 'absolute z-100 h-full' : 'hidden'}`}
-          onClick={handleLeavePopup}>
+          className={`${leavePopup ? "absolute z-100 h-full" : "hidden"}`}
+          onClick={handleLeavePopup}
+        >
           <PositiveAlert
-            identifier={''}
+            identifier={""}
             alert={leavePopup}
-            setAlert={setLeavePopup}
             header="Are you sure you want to leave the Teacher View?"
             button1="Go to student management"
             button2="Cancel"
@@ -564,12 +581,12 @@ const LessonControl = () => {
         </div>
         {/* HANDLE GO  HOME */}
         <div
-          className={`${homePopup ? 'absolute z-100 h-full' : 'hidden'}`}
-          onClick={handleHomePopup}>
+          className={`${homePopup ? "absolute z-100 h-full" : "hidden"}`}
+          onClick={handleHomePopup}
+        >
           <PositiveAlert
-            identifier={''}
+            identifier={""}
             alert={homePopup}
-            setAlert={setHomePopup}
             header="Are you sure you want to leave the Teacher View?"
             button1="Go to the dashboard"
             button2="Cancel"
@@ -581,11 +598,12 @@ const LessonControl = () => {
           />
         </div>
         {/* USER HAS LEFT NOTIFICATION */}
-        <div className={`${userHasLeftPopup ? 'absolute z-100 h-full' : 'hidden'}`}>
+        <div
+          className={`${userHasLeftPopup ? "absolute z-100 h-full" : "hidden"}`}
+        >
           <PositiveAlert
-            identifier={''}
+            identifier={""}
             alert={userHasLeftPopup}
-            setAlert={setUserHasLeftPopup}
             header="The student you were viewing has left the room."
             button1="Close"
             svg="question"
@@ -595,20 +613,23 @@ const LessonControl = () => {
           />
         </div>
 
-        <div className={`relative w-full h-full flex flex-col lg:flex-row rounded-lg`}>
+        <div
+          className={`relative w-full h-full flex flex-col lg:flex-row rounded-lg`}
+        >
           {/* LEFT SECTION */}
 
           <RosterFrame
             fullscreen={fullscreen}
             theme={theme}
-            clientKey={clientKey}
             rightView={rightView}
-            setRightView={setRightView}>
+            setRightView={setRightView}
+          >
             <ErrorBoundary
               authId={authId}
               email={email}
               componentName="Classroster"
-              fallback={<h1>Error in the Classroster</h1>}>
+              fallback={<h1>Error in the Classroster</h1>}
+            >
               <ClassRoster
                 isSameStudentShared={isSameStudentShared}
                 handleQuitShare={handleQuitShare}
@@ -636,22 +657,26 @@ const LessonControl = () => {
               handleQuitViewing={handleQuitViewing}
               handlePageChange={handlePageChange}
               handleLeavePopup={handleLeavePopup}
-              handleHomePopup={handleHomePopup}>
+              handleHomePopup={handleHomePopup}
+            >
               <div
                 className={`${
                   theme && theme.bg
-                } relative w-full h-full border-t-2 border-black overflow-y-scroll overflow-x-hidden z-50`}>
+                } relative w-full h-full border-t-2 border-black overflow-y-scroll overflow-x-hidden z-50`}
+              >
                 <Suspense
                   fallback={
                     <div className="min-h-screen w-full flex flex-col justify-center items-center">
                       <ComponentLoading />
                     </div>
-                  }>
+                  }
+                >
                   <ErrorBoundary
                     authId={authId}
                     email={email}
                     componentName="CoreUniversalLesson"
-                    fallback={<h1>Error in the Teacher's Lesson</h1>}>
+                    fallback={<h1>Error in the Teacher's Lesson</h1>}
+                  >
                     <CoreUniversalLesson isTeacher />
                   </ErrorBoundary>
                 </Suspense>
@@ -662,17 +687,20 @@ const LessonControl = () => {
 
           {/* RIGHT SECTION */}
 
-          <Frame visible={rightView.view === 'lessonInfo'} additionalClass="z-50">
+          <Frame
+            visible={rightView.view === "lessonInfo"}
+            additionalClass="z-50"
+          >
             <LessonInfoFrame
-              visible={rightView.view === 'lessonInfo'}
+              visible={rightView.view === "lessonInfo"}
               rightView={rightView}
               setRightView={setRightView}
             />
           </Frame>
 
-          <Frame visible={rightView.view === 'profile'} additionalClass="z-50">
+          <Frame visible={rightView.view === "profile"} additionalClass="z-50">
             <ProfileFrame
-              visible={rightView.view === 'profile'}
+              visible={rightView.view === "profile"}
               rightView={rightView}
               setRightView={setRightView}
               personAuthID={rightView.option}
@@ -680,10 +708,13 @@ const LessonControl = () => {
             />
           </Frame>
 
-          <Frame visible={rightView.view === 'attendance'} additionalClass="z-50">
+          <Frame
+            visible={rightView.view === "attendance"}
+            additionalClass="z-50"
+          >
             <AttendanceFrame
               selectedRoomId={getRoomData.id}
-              visible={rightView.view === 'attendance'}
+              visible={rightView.view === "attendance"}
               rightView={rightView}
               setRightView={setRightView}
               studentID={rightView.option}

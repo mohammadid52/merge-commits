@@ -1,7 +1,7 @@
-import {fallbackUrls} from 'assets';
-import React from 'react';
-import {IoKeyOutline} from 'react-icons/io5';
-import {stringToHslColor} from 'utilities/strings';
+import { fallbackUrls } from "assets";
+import React from "react";
+import { IoKeyOutline } from "react-icons/io5";
+import { stringToHslColor } from "utilities/strings";
 
 interface IRoomViewCardProps {
   handleSectionSelect?: (
@@ -22,47 +22,51 @@ interface IRoomViewCardProps {
 
 const RoomViewCard = ({
   handleSectionSelect,
-  roomID,
+  roomID = "",
   mainSection,
   sectionRoomID,
   sectionTitle,
   curriculumName,
   bannerImage,
-  type,
-  name
+  type = "",
+  name,
 }: IRoomViewCardProps) => {
-  const noneSelected = mainSection === '' && sectionRoomID === '' && sectionTitle === '';
+  const noneSelected =
+    mainSection === "" && sectionRoomID === "" && sectionTitle === "";
   return (
     <div
       className={`relative animate-fadeIn ${
         noneSelected
-          ? 'z-50'
-          : roomID !== '' && sectionRoomID !== '' && roomID === sectionRoomID
-          ? 'z-50'
-          : 'z-40'
-      }`}>
+          ? "z-50"
+          : roomID !== "" && sectionRoomID !== "" && roomID === sectionRoomID
+          ? "z-50"
+          : "z-40"
+      }`}
+    >
       {/* FRONT PAGE */}
       <div
         data-cy="room-view-card"
         className={`relative z-50 md:h-56 lg:h-60 lg:w-40 flex flex-row rounded-r-lg transition-all transform origin-left ease-in-out duration-250 sm:h-full
       ${
         noneSelected
-          ? 'customShadow scale-90'
-          : roomID !== '' && sectionRoomID !== '' && roomID === sectionRoomID
-          ? 'scale-90 -skew-y-6 theme-card-shadow'
-          : 'shadow-lg  scale-90'
+          ? "customShadow scale-90"
+          : roomID !== "" && sectionRoomID !== "" && roomID === sectionRoomID
+          ? "scale-90 -skew-y-6 theme-card-shadow"
+          : "shadow-lg  scale-90"
       }
-      `}>
+      `}
+      >
         {/* SIDE BORDER */}
         <div
-          style={{backgroundColor: stringToHslColor(roomID)}}
+          style={{ backgroundColor: stringToHslColor(roomID) }}
           className={`h-full w-3`}
         />
         {/* BOOK COVER */}
         <div
           data-cy={roomID}
-          onClick={() => handleSectionSelect(type, roomID, curriculumName)}
-          className={`flex flex-col rounded-r-lg cursor-pointer md:h-56 lg:h-60  lg:w-40 overflow-hidden`}>
+          onClick={() => handleSectionSelect?.(type, roomID, curriculumName)}
+          className={`flex flex-col rounded-r-lg cursor-pointer md:h-56 lg:h-60  lg:w-40 overflow-hidden`}
+        >
           {/* START - IMAGE AND LABEL */}
 
           <div className="flex h-full w-full items-center align-center flex-shrink-0 relative">
@@ -78,7 +82,9 @@ const RoomViewCard = ({
                     (curriculumName && (
                       <p className="text-sm font-medium text-gray-900">
                         {name && <span className="">{name} </span>}
-                        {curriculumName && <span className="">{curriculumName}</span>}
+                        {curriculumName && (
+                          <span className="">{curriculumName}</span>
+                        )}
                       </p>
                     ))}
                 </div>
@@ -86,16 +92,17 @@ const RoomViewCard = ({
             </div>
 
             {/* BANNER IMAGE */}
-            {roomID !== 'private' ? (
+            {roomID !== "private" ? (
               <img
                 className="h-full w-full object-cover hover:scale-105 transform transition-transform duration-500 z-40"
                 src={bannerImage || fallbackUrls.room}
-                alt={bannerImage ? 'notebook cover' : 'default notebook cover'}
+                alt={bannerImage ? "notebook cover" : "default notebook cover"}
               />
             ) : (
-              roomID === 'private' && (
+              roomID === "private" && (
                 <div
-                  className={`h-full w-full relative profile justify-center items-center content-center  bg-gray-800 flex border-gray-400 z-40`}>
+                  className={`h-full w-full relative profile justify-center items-center content-center  bg-gray-800 flex border-gray-400 z-40`}
+                >
                   <IoKeyOutline
                     className="absolute w-auto h-auto top-1 right-1 fill-current text-blue-500"
                     size={32}
@@ -108,22 +115,26 @@ const RoomViewCard = ({
         </div>
       </div>
 
-      {roomID !== '' && sectionRoomID !== '' && roomID === sectionRoomID && (
+      {roomID !== "" && sectionRoomID !== "" && roomID === sectionRoomID && (
         <div
           className="dynamicShadow"
-          style={{backgroundImage: `url('${bannerImage || fallbackUrls.room}')`}}></div>
+          style={{
+            backgroundImage: `url('${bannerImage || fallbackUrls.room}')`,
+          }}
+        ></div>
       )}
       {/* BACK PAGE */}
       <div
         className={`absolute h-72  z-40 top-0 md:h-56 lg:h-60  lg:w-40 flex flex-row rounded-r-lg bg-gray-200 transition-all transform origin-left ease-in-out duration-250 
       ${
         noneSelected
-          ? 'shadow-lg scale-90'
-          : roomID !== '' && sectionRoomID !== '' && roomID === sectionRoomID
-          ? ' scale-90 skew-y-6 shadow-lg'
-          : 'shadow-lg scale-90'
+          ? "shadow-lg scale-90"
+          : roomID !== "" && sectionRoomID !== "" && roomID === sectionRoomID
+          ? " scale-90 skew-y-6 shadow-lg"
+          : "shadow-lg scale-90"
       }
-      `}></div>
+      `}
+      ></div>
     </div>
   );
 };

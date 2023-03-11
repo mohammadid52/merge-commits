@@ -1,18 +1,19 @@
-import {GlobalContext} from 'contexts/GlobalContext';
-import {UniversalLesson} from 'interfaces/UniversalLessonInterfaces';
-import findIndex from 'lodash/findIndex';
-import update from 'lodash/update';
-import React, {createContext, useContext, useState} from 'react';
-import {useHistory} from 'react-router';
-export const UniversalLessonBuilderContext = createContext(null);
+import useAuth from "@customHooks/useAuth";
+import { UniversalLesson } from "interfaces/UniversalLessonInterfaces";
+import findIndex from "lodash/findIndex";
+import update from "lodash/update";
+import { createContext, useContext, useState } from "react";
+import { useHistory } from "react-router";
+
+export const UniversalLessonBuilderContext = createContext<any>(null);
 
 const initialUniversalLessonData: UniversalLesson = {
-  id: '',
-  summary: '',
-  designers: [''],
-  teachers: [''],
-  categories: [''],
-  lessonPlan: []
+  id: "",
+  summary: "",
+  designers: [""],
+  teachers: [""],
+  categories: [""],
+  lessonPlan: [],
 };
 
 interface FieldsInterface {
@@ -27,30 +28,24 @@ interface FieldsInterface {
   classwork: boolean;
 }
 const INITIAL_STATE: FieldsInterface = {
-  title: '',
-  label: '',
-  instructions: '',
-  instructionsHtml: '',
-  description: '', // ignore this field
+  title: "",
+  label: "",
+  instructions: "",
+  instructionsHtml: "",
+  description: "", // ignore this field
   interactionType: [],
   tags: [],
-  estTime: '1 min',
-  classwork: true
+  estTime: "1 min",
+  classwork: true,
 };
 
-export const UniversalLessonBuilderProvider = ({children}: any) => {
-  const {
-    state: {
-      user: {isSuperAdmin, language = 'EN'}
-    }
-  } = useContext(GlobalContext);
-  const [newBlockSeqId, setNewBlockSeqId] = useState(null);
+export const UniversalLessonBuilderProvider = ({ children }: any) => {
+  const [newBlockSeqId, setNewBlockSeqId] = useState<any | null>(null);
 
-  const [universalLessonDetails, setUniversalLessonDetails] = useState<UniversalLesson>(
-    initialUniversalLessonData
-  );
+  const [universalLessonDetails, setUniversalLessonDetails] =
+    useState<UniversalLesson>(initialUniversalLessonData);
 
-  const [selectedPageID, setSelectedPageID] = useState<string>('page_2');
+  const [selectedPageID, setSelectedPageID] = useState<string>("page_2");
 
   const [lessonPlanFields, setLessonPlanFields] = useState(INITIAL_STATE);
 
@@ -61,16 +56,15 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
 
   const updateMovableList = (
     items: any,
-    section: string = 'pageContent',
+    section: string = "pageContent",
     pageId?: string,
-    pageContentId?: string,
-    partContentId?: string
+    pageContentId?: string
   ) => {
     switch (section) {
-      case 'page':
-        update(universalLessonDetails, 'lessonPlan', () => items);
+      case "page":
+        update(universalLessonDetails, "lessonPlan", () => items);
         break;
-      case 'pageContent':
+      case "pageContent":
         const pageIdx = findIndex(
           universalLessonDetails.lessonPlan,
           (item: any) => item.id === pageId
@@ -86,7 +80,7 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
         break;
     }
 
-    setUniversalLessonDetails({...universalLessonDetails});
+    setUniversalLessonDetails({ ...universalLessonDetails });
   };
 
   const addNewPageHandler = (content: any) => {
@@ -98,11 +92,11 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
           enabled: true,
           open: true,
           active: true,
-          class: '',
-          displayMode: 'SELF',
-          ...content
-        }
-      ]
+          class: "",
+          displayMode: "SELF",
+          ...content,
+        },
+      ],
     }));
   };
 
@@ -114,9 +108,9 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
     inputObj?: any;
     isEditingMode?: boolean;
   }>({
-    section: 'pageContent',
+    section: "pageContent",
     position: 0,
-    targetId: ''
+    targetId: "",
   });
 
   const [activeTab, setActiveTab] = useState<number>(0);
@@ -128,22 +122,23 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
    */
   const [newLessonPlanShow, setNewLessonPlanShow] = useState(false);
   const [editMode, setEditMode] = useState(false);
-  const [selID, setSelID] = useState({pageContentID: '', partContentID: ''});
+  const [selID, setSelID] = useState({ pageContentID: "", partContentID: "" });
   const [selIDForHover, setSelIDForHover] = useState({
-    pageContentID: '',
-    partContentID: ''
+    pageContentID: "",
+    partContentID: "",
   });
 
   const [toolbarOnTop, setToolbarOnTop] = useState(true);
 
   const [suggestionModal, setSuggestionModal] = useState({
     show: false,
-    data: [{title: '', content: [{id: '', text: ''}]}],
+    data: [{ title: "", content: [{ id: "", text: "" }] }],
     selectedResponse: [],
-    idx: 0
+    idx: 0,
   });
 
   const history = useHistory();
+  const { isSuperAdmin } = useAuth();
 
   /**
    *
@@ -154,19 +149,21 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
   const pushUserToThisId = (lessonId: string, pageId: string) => {
     try {
       const baseUrl = isSuperAdmin
-        ? '/dashboard/manage-institutions'
+        ? "/dashboard/manage-institutions"
         : `/dashboard/manage-institutions/institution/${universalLessonDetails.institutionID}`;
-      history.push(`${baseUrl}/lessons/${lessonId}/page-builder?pageId=${pageId}`);
+      history.push(
+        `${baseUrl}/lessons/${lessonId}/page-builder?pageId=${pageId}`
+      );
     } catch (error) {
       console.log(
-        '@pushUserToThisId: Error while navigating user to other page: ' + error
+        "@pushUserToThisId: Error while navigating user to other page: " + error
       );
     }
   };
 
   const [savingStatus, setSavingStatus] = useState<
-    'initial' | 'loaded' | 'loading' | 'failed'
-  >('initial');
+    "initial" | "loaded" | "loading" | "failed"
+  >("initial");
 
   return (
     <UniversalLessonBuilderContext.Provider
@@ -206,8 +203,9 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
         updateMovableList,
 
         fetchingLessonDetails,
-        setFetchingLessonDetails
-      }}>
+        setFetchingLessonDetails,
+      }}
+    >
       {children}
     </UniversalLessonBuilderContext.Provider>
   );

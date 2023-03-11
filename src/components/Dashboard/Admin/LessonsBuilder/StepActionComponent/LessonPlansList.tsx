@@ -1,15 +1,16 @@
-import React, {Fragment, useContext} from 'react';
-import {useHistory} from 'react-router';
-import {DragDropContext, Draggable, Droppable} from 'react-beautiful-dnd';
-import {UniversalLessonPage} from 'interfaces/UniversalLessonInterfaces';
-import PageWrapper from 'atoms/PageWrapper';
-import Buttons from 'atoms/Buttons';
+import Buttons from "atoms/Buttons";
+import PageWrapper from "atoms/PageWrapper";
+import { UniversalLessonPage } from "interfaces/UniversalLessonInterfaces";
+import { Fragment } from "react";
+import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import { useHistory } from "react-router";
 
-import {getAsset} from 'assets';
-import {GlobalContext} from 'contexts/GlobalContext';
-import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
-import useDictionary from 'customHooks/dictionary';
-import Loader from 'atoms/Loader';
+import useAuth from "@customHooks/useAuth";
+import { getAsset } from "assets";
+import Loader from "atoms/Loader";
+import { useGlobalContext } from "contexts/GlobalContext";
+import { useULBContext } from "contexts/UniversalLessonBuilderContext";
+import useDictionary from "customHooks/dictionary";
 
 interface LessonPlansListProps {
   lessonId: string;
@@ -23,20 +24,20 @@ interface LessonPlansListProps {
 const LessonPlansList = ({
   lessonId,
   loading,
-  universalLessonDetails
+  universalLessonDetails,
 }: LessonPlansListProps) => {
   const history = useHistory();
   const {
     clientKey,
-    state: {
-      user: {isSuperAdmin}
-    },
+
     theme,
-    userLanguage
-  } = useContext(GlobalContext);
-  const themeColor = getAsset(clientKey, 'themeClassName');
-  const {BUTTONS, LessonBuilderDict} = useDictionary(clientKey);
-  const {setPreviewMode, updateMovableList} = useULBContext();
+    userLanguage,
+  } = useGlobalContext();
+  const themeColor = getAsset(clientKey, "themeClassName");
+  const { BUTTONS, LessonBuilderDict } = useDictionary();
+  const { setPreviewMode, updateMovableList } = useULBContext();
+
+  const { isSuperAdmin } = useAuth();
 
   const pages = universalLessonDetails.lessonPlan;
 
@@ -60,7 +61,7 @@ const LessonPlansList = ({
   const lessonPagePreview = (id: string) => {
     setPreviewMode(true);
     const baseUrl = isSuperAdmin
-      ? '/dashboard/manage-institutions'
+      ? "/dashboard/manage-institutions"
       : `/dashboard/manage-institutions/institution/${universalLessonDetails.institutionID}`;
     history.push(`${baseUrl}/lessons/${lessonId}/page-builder?pageId=${id}`);
   };
@@ -71,7 +72,7 @@ const LessonPlansList = ({
 
     const [reorderedItem] = items.splice(result.source.index, 1);
     items.splice(result.destination.index, 0, reorderedItem);
-    updateMovableList(items, 'page');
+    updateMovableList(items, "page");
   };
 
   return (
@@ -96,43 +97,63 @@ const LessonPlansList = ({
               <div className="flex justify-end w-full m-auto ">
                 <Buttons
                   btnClass="mx-4"
-                  label={LessonBuilderDict[userLanguage]['BUTTON']['ADD_PLAN']}
+                  label={LessonBuilderDict[userLanguage]["BUTTON"]["ADD_PLAN"]}
                   onClick={addNewLessonPlan}
                 />
               </div>
               <div className="w-full flex justify-between border-b-0 border-gray-200 mt-8">
                 <div className="w-1/10 px-4 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>
-                    {LessonBuilderDict[userLanguage]['LESSON_PLAN_COLUMN']['ID']}
+                    {
+                      LessonBuilderDict[userLanguage]["LESSON_PLAN_COLUMN"][
+                        "ID"
+                      ]
+                    }
                   </span>
                 </div>
                 <div className="w-6/10 px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>
-                    {LessonBuilderDict[userLanguage]['LESSON_PLAN_COLUMN']['PAGE_TITLE']}
-                  </span>
-                </div>
-                <div className="w-3/10 px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>
-                    {LessonBuilderDict[userLanguage]['LESSON_PLAN_COLUMN']['PLAN_LABEL']}
-                  </span>
-                </div>
-                <div className="w-3/10 px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>
-                    {LessonBuilderDict[userLanguage]['LESSON_PLAN_COLUMN']['DESCRIPTION']}
+                    {
+                      LessonBuilderDict[userLanguage]["LESSON_PLAN_COLUMN"][
+                        "PAGE_TITLE"
+                      ]
+                    }
                   </span>
                 </div>
                 <div className="w-3/10 px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>
                     {
-                      LessonBuilderDict[userLanguage]['LESSON_PLAN_COLUMN'][
-                        'ESTIMATED_TIME'
+                      LessonBuilderDict[userLanguage]["LESSON_PLAN_COLUMN"][
+                        "PLAN_LABEL"
+                      ]
+                    }
+                  </span>
+                </div>
+                <div className="w-3/10 px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                  <span>
+                    {
+                      LessonBuilderDict[userLanguage]["LESSON_PLAN_COLUMN"][
+                        "DESCRIPTION"
+                      ]
+                    }
+                  </span>
+                </div>
+                <div className="w-3/10 px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                  <span>
+                    {
+                      LessonBuilderDict[userLanguage]["LESSON_PLAN_COLUMN"][
+                        "ESTIMATED_TIME"
                       ]
                     }
                   </span>
                 </div>
                 <div className="w-2/10 px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>
-                    {LessonBuilderDict[userLanguage]['LESSON_PLAN_COLUMN']['ACTION']}
+                    {
+                      LessonBuilderDict[userLanguage]["LESSON_PLAN_COLUMN"][
+                        "ACTION"
+                      ]
+                    }
                   </span>
                 </div>
               </div>
@@ -145,41 +166,50 @@ const LessonPlansList = ({
                           <Draggable
                             draggableId={`${page.id}`}
                             index={index}
-                            key={`${page.id}`}>
+                            key={`${page.id}`}
+                          >
                             {(provided) => (
                               <div
                                 key={index}
                                 className="flex justify-between bg-white w-full border-b-0 border-gray-200"
                                 ref={provided.innerRef}
                                 {...provided.draggableProps}
-                                {...provided.dragHandleProps}>
+                                {...provided.dragHandleProps}
+                              >
                                 <div className="w-1/10 flex items-center px-4 py-4 whitespace-normal text-left text-sm leading-5 font-medium">
-                                  {'-'}
+                                  {"-"}
                                 </div>
                                 <div className="flex w-6/10 truncate items-center px-8 py-3 text-s leading-4 font-medium whitespace-normal">
-                                  {page.title || '-'}
+                                  {page.title || "-"}
                                 </div>
                                 <div className="flex w-3/10 items-center px-8 py-3 text-s leading-4 font-medium whitespace-normal">
-                                  {page.label || '-'}
+                                  {page.label || "-"}
                                 </div>
 
                                 <div className="flex w-3/10 items-center px-8 py-3 text-s leading-4 font-medium whitespace-normal">
-                                  {'-'}
+                                  {"-"}
                                 </div>
 
                                 <div className="flex w-3/10 items-center px-8 py-3 text-s leading-4 font-medium whitespace-normal">
                                   45 Min
                                 </div>
                                 <span
-                                  className={`w-2/10 flex items-center px-8 py-3 cursor-pointer ${theme.textColor[themeColor]}`}>
-                                  <span onClick={() => lessonPagePreview(page.id)}>
-                                    {LessonBuilderDict[userLanguage]['BUTTON']['PREVIEW']}
+                                  className={`w-2/10 flex items-center px-8 py-3 cursor-pointer ${theme.textColor[themeColor]}`}
+                                >
+                                  <span
+                                    onClick={() => lessonPagePreview(page.id)}
+                                  >
+                                    {
+                                      LessonBuilderDict[userLanguage]["BUTTON"][
+                                        "PREVIEW"
+                                      ]
+                                    }
                                   </span>
                                   <span className="flex justify-center">
                                     &nbsp;|&nbsp;
                                   </span>
                                   <span onClick={() => editLessonPage(page.id)}>
-                                    {BUTTONS[userLanguage]['DELETE']}
+                                    {BUTTONS[userLanguage]["DELETE"]}
                                   </span>
                                 </span>
                               </div>
@@ -201,7 +231,7 @@ const LessonPlansList = ({
               <div className="flex justify-center my-4">
                 <Buttons
                   btnClass="mx-4"
-                  label={LessonBuilderDict[userLanguage]['BUTTON']['ADD_PLAN']}
+                  label={LessonBuilderDict[userLanguage]["BUTTON"]["ADD_PLAN"]}
                   onClick={addNewLessonPlan}
                 />
               </div>

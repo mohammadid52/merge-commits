@@ -1,20 +1,20 @@
-import isEmpty from 'lodash/isEmpty';
-import React, {useEffect, useState} from 'react';
-import {BsFillInfoCircleFill} from 'react-icons/bs';
-import {setLocalStorageData} from 'utilities/localStorage';
+import isEmpty from "lodash/isEmpty";
+import { useEffect, useState } from "react";
+import { BsFillInfoCircleFill } from "react-icons/bs";
+import { setLocalStorageData } from "utilities/localStorage";
 
-import useAuth from '@customHooks/useAuth';
-import {logError} from '@graphql/functions';
-import {getAsset} from 'assets';
-import SectionTitleV3 from 'atoms/SectionTitleV3';
-import InformationalWalkThrough from 'components/Dashboard/Admin/Institutons/InformationalWalkThrough/InformationalWalkThrough';
-import {useGlobalContext} from 'contexts/GlobalContext';
-import {getImageFromS3} from 'utilities/services';
-import {ClassroomControlProps} from '../Dashboard';
-import HeaderTextBar from '../HeaderTextBar/HeaderTextBar';
-import RoomTiles from './RoomTiles';
-import StudentsTiles from './StudentsTiles';
-import TeacherRows from './TeacherRows';
+import useAuth from "@customHooks/useAuth";
+import { logError } from "@graphql/functions";
+import { getAsset } from "assets";
+import SectionTitleV3 from "atoms/SectionTitleV3";
+import InformationalWalkThrough from "components/Dashboard/Admin/Institutons/InformationalWalkThrough/InformationalWalkThrough";
+import { useGlobalContext } from "contexts/GlobalContext";
+import { getImageFromS3 } from "utilities/services";
+import { ClassroomControlProps } from "../Dashboard";
+import HeaderTextBar from "../HeaderTextBar/HeaderTextBar";
+import RoomTiles from "./RoomTiles";
+import StudentsTiles from "./StudentsTiles";
+import TeacherRows, { Teacher } from "./TeacherRows";
 
 export const findRooms = (teacherAuthID: string, allRooms: any[]) => {
   try {
@@ -23,7 +23,10 @@ export const findRooms = (teacherAuthID: string, allRooms: any[]) => {
 
     if (allRooms && allRooms?.length > 0) {
       allRooms.forEach((room: any) => {
-        if (room.teacherAuthID === teacherAuthID && !roomIds.includes(room.id)) {
+        if (
+          room.teacherAuthID === teacherAuthID &&
+          !roomIds.includes(room.id)
+        ) {
           rooms.push(room);
           roomIds.push(room.id);
         } else {
@@ -42,6 +45,7 @@ export const findRooms = (teacherAuthID: string, allRooms: any[]) => {
     return rooms;
   } catch (error) {
     console.error(error);
+    return [];
   }
 };
 
@@ -50,7 +54,12 @@ export interface ModifiedListProps {
   name: any;
   teacherProfileImg: string;
   bannerImage: string;
-  teacher: {email: string; firstName: string; lastName: string; image: string};
+  teacher: {
+    email: string;
+    firstName: string;
+    lastName: string;
+    image: string;
+  };
   curricula: {
     items: {
       curriculum: {
@@ -65,30 +74,21 @@ export interface ModifiedListProps {
 }
 
 const HomeForTeachers = (props: ClassroomControlProps) => {
-  const {homeData, handleRoomSelection, roomsLoading} = props;
+  const { homeData, handleRoomSelection, roomsLoading } = props;
 
-  const {state, dispatch, clientKey} = useGlobalContext();
-  const dashboardBanner1 = getAsset(clientKey, 'dashboardBanner2');
+  const { state, clientKey } = useGlobalContext();
+  const dashboardBanner1 = getAsset(clientKey, "dashboardBanner2");
   const [openWalkThroughModal, setOpenWalkThroughModal] = useState(false);
-  const {firstName, isTeacher, isFellow} = useAuth();
+  const { firstName } = useAuth();
 
-  const user = !isEmpty(state) ? {firstName: firstName, preferredName: firstName} : null;
+  const user = !isEmpty(state)
+    ? { firstName: firstName, preferredName: firstName }
+    : null;
 
-  useEffect(() => {
-    if (isTeacher || isFellow) {
-      if (state.currentPage !== 'home') {
-        // dispatch({ type: 'UPDATE_CURRENTPAGE', payload: { data: 'lesson-planner' } });
-      }
-      if (state.activeRoom && state?.activeRoom?.length > 0) {
-        dispatch({type: 'UPDATE_ACTIVEROOM', payload: {data: null}});
-      }
-    }
-  }, [isTeacher, isFellow]);
-
-  const [teacherList, setTeacherList] = useState<any[]>();
-  const [coTeachersList, setCoTeachersList] = useState<any[]>();
-  const [studentsList, setStudentsList] = useState<any[]>();
-  const [classList, setClassList] = useState([]);
+  const [teacherList, setTeacherList] = useState<Teacher[]>([]);
+  const [coTeachersList, setCoTeachersList] = useState<Teacher[]>([]);
+  const [studentsList, setStudentsList] = useState<any[]>([]);
+  const [classList, setClassList] = useState<any[]>([]);
 
   const fetchAndProcessDashboardData = () => {
     teacherListWithImages();
@@ -124,7 +124,7 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
     if (imageUrl) {
       return imageUrl;
     } else {
-      return '';
+      return "";
     }
   };
 
@@ -145,13 +145,13 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
             // it could be a teacher or co teacher
             try {
               const rooms = findRooms(teacherObj.authId, allRooms);
-              return [...acc, {...teacherObj, room: dataObj, rooms}];
+              return [...acc, { ...teacherObj, room: dataObj, rooms }];
             } catch (error) {
               console.error(error);
               logError(
                 error,
-                {authId: teacherObj.authId, email: teacherObj.email},
-                'HomeForTeachers #getTeacherList'
+                { authId: teacherObj.authId, email: teacherObj.email },
+                "HomeForTeachers #getTeacherList"
               );
             }
           }
@@ -173,7 +173,7 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
             coTeachersList.push({
               ..._item.teacher,
               room: item,
-              rooms
+              rooms,
             });
             uniqIds.push(_item.teacher.email);
           }
@@ -189,7 +189,9 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
       getTeacherList.map(async (teacherObj: any) => {
         return {
           ...teacherObj,
-          image: await (teacherObj?.image ? getImageURL(teacherObj?.image) : null)
+          image: await (teacherObj?.image
+            ? getImageURL(teacherObj?.image)
+            : null),
         };
       })
     );
@@ -202,7 +204,9 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
       getCoTeacherList().map(async (teacherObj: any) => {
         return {
           ...teacherObj,
-          image: await (teacherObj?.image ? getImageURL(teacherObj?.image) : null)
+          image: await (teacherObj?.image
+            ? getImageURL(teacherObj?.image)
+            : null),
         };
       })
     );
@@ -219,13 +223,13 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
             ...studentObj?.student,
             image: await (studentObj?.student?.image
               ? getImageURL(studentObj?.student?.image)
-              : null)
-          }
+              : null),
+          },
         };
       })
     );
     setStudentsList(data);
-    setLocalStorageData('student_list', data);
+    setLocalStorageData("student_list", data);
   };
 
   const getClassList = (): any => {
@@ -233,31 +237,35 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
 
     let uniqIds: string[] = [];
 
-    homeData[0]?.class?.rooms?.items.forEach(async (_item: any, index: number) => {
-      const curriculum = _item.curricula?.items[0]?.curriculum;
-      if (curriculum) {
-        const imagePath = curriculum?.image;
+    homeData[0]?.class?.rooms?.items.forEach(
+      async (_item: any, index: number) => {
+        const curriculum = _item.curricula?.items[0]?.curriculum;
+        if (curriculum) {
+          const imagePath = curriculum?.image;
 
-        const image = await (imagePath !== null ? getImageFromS3(imagePath) : null);
-        const teacherProfileImg = await (_item.teacher?.image
-          ? getImageFromS3(_item.teacher?.image)
-          : false);
+          const image = await (imagePath !== null
+            ? getImageFromS3(imagePath)
+            : null);
+          const teacherProfileImg = await (_item.teacher?.image
+            ? getImageFromS3(_item.teacher?.image)
+            : false);
 
-        const modifiedItem = {
-          ..._item,
-          roomName: _item?.name,
-          curriculumName: curriculum?.name,
-          bannerImage: image,
-          teacherProfileImg,
-          roomIndex: index
-        };
+          const modifiedItem = {
+            ..._item,
+            roomName: _item?.name,
+            curriculumName: curriculum?.name,
+            bannerImage: image,
+            teacherProfileImg,
+            roomIndex: index,
+          };
 
-        if (!uniqIds.includes(_item?.id) && _item.status === 'ACTIVE') {
-          modifiedClassList.push(modifiedItem);
-          uniqIds.push(_item?.id);
+          if (!uniqIds.includes(_item?.id) && _item.status === "ACTIVE") {
+            modifiedClassList.push(modifiedItem);
+            uniqIds.push(_item?.id);
+          }
         }
       }
-    });
+    );
 
     setClassList(modifiedClassList);
   };
@@ -286,7 +294,7 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
           {user && (
             <HeaderTextBar>
               <p className={`text-sm 2xl:text-base text-center font-normal`}>
-                Welcome,{' '}
+                Welcome,{" "}
                 <span className="font-semibold">
                   {user.preferredName ? user.preferredName : user.firstName}
                 </span>
@@ -295,7 +303,8 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
               <div className="absolute z-100 w-6 top-0 right-1">
                 <span
                   className="w-auto cursor-pointer"
-                  onClick={() => setOpenWalkThroughModal(true)}>
+                  onClick={() => setOpenWalkThroughModal(true)}
+                >
                   <BsFillInfoCircleFill className={`h-5 w-5 text-white`} />
                 </span>
               </div>
@@ -322,7 +331,10 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
                 borderBottom
                 extraClass="leading-6 text-gray-900"
               />
-              <TeacherRows coTeachersList={coTeachersList} teachersList={teacherList} />
+              <TeacherRows
+                coTeachersList={coTeachersList}
+                teachersList={teacherList}
+              />
             </div>
 
             {/* Classmates Section */}

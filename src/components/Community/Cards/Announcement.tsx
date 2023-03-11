@@ -1,48 +1,64 @@
-import FormInput from 'atoms/Form/FormInput';
-import Buttons from 'atoms/Buttons';
-import Label from 'atoms/Form/Label';
-import RichTextEditor from 'atoms/RichTextEditor';
-import Media from 'components/Community/Components/Media';
-import {COMMUNITY_UPLOAD_KEY, IFile} from 'components/Community/constants.community';
-import {REGEX} from 'components/Lesson/UniversalLessonBuilder/UI/common/constants';
-import {IAnnouncementInput, ICommunityCardProps} from 'interfaces/Community.interfaces';
-import AnimatedContainer from 'uiComponents/Tabs/AnimatedContainer';
-import {getImageFromS3Static} from 'utilities/services';
-import isEmpty from 'lodash/isEmpty';
-import React, {useEffect, useState} from 'react';
+import FormInput from "atoms/Form/FormInput";
+import Buttons from "atoms/Buttons";
+import Label from "atoms/Form/Label";
+import RichTextEditor from "atoms/RichTextEditor";
+import Media from "components/Community/Components/Media";
+import {
+  COMMUNITY_UPLOAD_KEY,
+  IFile,
+} from "components/Community/constants.community";
+import { REGEX } from "components/Lesson/UniversalLessonBuilder/UI/common/constants";
+import {
+  IAnnouncementInput,
+  ICommunityCardProps,
+} from "interfaces/Community.interfaces";
+import AnimatedContainer from "uiComponents/Tabs/AnimatedContainer";
+import { getImageFromS3Static } from "utilities/services";
+import isEmpty from "lodash/isEmpty";
+import React, { useEffect, useState } from "react";
 
 const Announcements = ({
   onCancel,
   onSubmit,
   editMode,
-  cardDetails
+  cardDetails,
 }: ICommunityCardProps) => {
-  const [file, setFile] = useState<IFile>();
-  const [overlayText, setOverlayText] = useState('');
-  const [unsavedChanges, setUnsavedChanges] = useState(false);
-  const [fields, setFields] = useState<{summary: string; summaryHtml: string}>({
-    summary: editMode && !isEmpty(cardDetails) ? cardDetails?.summary : '',
-    summaryHtml: editMode && !isEmpty(cardDetails) ? cardDetails?.summaryHtml : ''
+  const [file, setFile] = useState<IFile | any>({ _status: "other" });
+  const [overlayText, setOverlayText] = useState("");
+  const [_, setUnsavedChanges] = useState(false);
+  const [fields, setFields] = useState<{
+    summary: string;
+    summaryHtml: string;
+  }>({
+    summary:
+      editMode && !isEmpty(cardDetails) ? cardDetails?.summary || "" : "",
+    summaryHtml:
+      editMode && !isEmpty(cardDetails) ? cardDetails?.summaryHtml || "" : "",
   });
 
-  const [tempData, setTempData] = useState(null);
+  const [tempData, setTempData] = useState<null | { image: string | null }>(
+    null
+  );
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (editMode && !isEmpty(cardDetails)) {
       setTempData({
-        image: cardDetails?.cardImageLink
+        image: cardDetails?.cardImageLink || "",
       });
 
-      if (cardDetails?.additionalLinks?.length > 0) {
+      if (
+        cardDetails?.additionalLinks &&
+        cardDetails?.additionalLinks?.length > 0
+      ) {
         setYoutubeVideoLink(cardDetails.additionalLinks[0]);
       }
 
-      setOverlayText(cardDetails?.cardName);
+      cardDetails?.cardName && setOverlayText(cardDetails?.cardName);
     }
   }, [editMode, cardDetails]);
 
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   const onEditorStateChange = (
     html: string,
@@ -51,8 +67,8 @@ const Announcements = ({
     field: string
   ) => {
     setUnsavedChanges(true);
-    setError('');
-    setFields({...fields, [field]: text, [fieldHtml]: html});
+    setError("");
+    setFields({ ...fields, [field]: text, [fieldHtml]: html });
   };
 
   const _onSubmit = () => {
@@ -69,7 +85,7 @@ const Announcements = ({
             : cardDetails?.cardImageLink
           : file?.fileKey,
         id: cardDetails?.id,
-        isEditedCard: editMode
+        isEditedCard: editMode,
       };
 
       if (!editMode) {
@@ -78,8 +94,8 @@ const Announcements = ({
       if (youtubeVideoLink) {
         announcementsDetails = {
           ...announcementsDetails,
-          cardImageLink: null,
-          additionalLinks: [youtubeVideoLink]
+          cardImageLink: "",
+          additionalLinks: [youtubeVideoLink],
         };
       }
 
@@ -90,13 +106,13 @@ const Announcements = ({
   const validateFields = () => {
     let isValid = true;
     if (!editMode && !youtubeVideoLink && isEmpty(file)) {
-      setError('Image or video not found');
+      setError("Image or video not found");
       isValid = false;
     } else if (!overlayText) {
-      setError('Overlay text not found');
+      setError("Overlay text not found");
       isValid = false;
     } else if (!fields.summary) {
-      setError('Please add description');
+      setError("Please add description");
       isValid = false;
     } else if (
       !youtubeVideoLink &&
@@ -104,51 +120,57 @@ const Announcements = ({
       !youtubeVideoLink &&
       isEmpty(file)
     ) {
-      setError('Please add youtube/vimeo link or image');
+      setError("Please add youtube/vimeo link or image");
       isValid = false;
     } else if (youtubeVideoLink && !REGEX.Youtube.test(youtubeVideoLink)) {
-      setError('Invalid Url');
+      setError("Invalid Url");
       isValid = false;
     } else {
-      setError('');
+      setError("");
       isValid = true;
     }
     return isValid;
   };
 
-  const [youtubeVideoLink, setYoutubeVideoLink] = useState('');
+  const [youtubeVideoLink, setYoutubeVideoLink] = useState("");
 
   const mediaProps = {
     videoLink: youtubeVideoLink,
     setVideoLink: setYoutubeVideoLink,
     setError: setError,
     setFile: setFile,
-    file: file
+    file: file,
   };
 
   return (
     <div className="">
       {tempData && tempData?.image ? (
         <div>
-          <Media
-            initialImage={getImageFromS3Static(
-              COMMUNITY_UPLOAD_KEY +
-                (!isEmpty(file) && file?._status === 'success'
-                  ? file?.fileKey
-                  : tempData?.image)
-            )}
-            {...mediaProps}
-          />
+          {file && (
+            // @ts-ignore
+            <Media
+              initialImage={getImageFromS3Static(
+                COMMUNITY_UPLOAD_KEY +
+                  (!isEmpty(file) && file?._status === "success"
+                    ? file?.fileKey
+                    : tempData?.image)
+              )}
+              {...mediaProps}
+            />
+          )}
         </div>
       ) : (
-        <Media
-          initialImage={
-            !isEmpty(file) && file?._status === 'success'
-              ? getImageFromS3Static(COMMUNITY_UPLOAD_KEY + file?.fileKey)
-              : null
-          }
-          {...mediaProps}
-        />
+        file && (
+          // @ts-ignore
+          <Media
+            initialImage={
+              !isEmpty(file) && file?._status === "success"
+                ? getImageFromS3Static(COMMUNITY_UPLOAD_KEY + file?.fileKey)
+                : undefined
+            }
+            {...mediaProps}
+          />
+        )
       )}
 
       <div className="px-3 py-4">
@@ -157,10 +179,10 @@ const Announcements = ({
             dataCy="announcement-overlay-input"
             label="Step 2: Add overlay text"
             onChange={(e) => {
-              setError('');
+              setError("");
               setOverlayText(e.target.value);
             }}
-            placeHolder={'Overlay Text'}
+            placeHolder={"Overlay Text"}
             value={overlayText}
           />
         </div>
@@ -171,17 +193,24 @@ const Announcements = ({
         <div>
           <RichTextEditor
             placeholder={
-              'Why do you want people in the community to know about what is happening'
+              "Why do you want people in the community to know about what is happening"
             }
             rounded
             customStyle
             initialValue={fields.summary}
             onChange={(htmlContent, plainText) =>
-              onEditorStateChange(htmlContent, plainText, 'summaryHtml', 'summary')
+              onEditorStateChange(
+                htmlContent,
+                plainText,
+                "summaryHtml",
+                "summary"
+              )
             }
           />
 
-          <div className="text-right text-gray-400">{fields.summary.length} of 750</div>
+          <div className="text-right text-gray-400">
+            {fields.summary.length} of 750
+          </div>
         </div>
       </div>
 
@@ -193,16 +222,16 @@ const Announcements = ({
         <div className="flex justify-end">
           <Buttons
             btnClass="py-1 px-4 text-xs mr-2"
-            label={'Cancel'}
+            label={"Cancel"}
             onClick={onCancel}
             transparent
           />
           <Buttons
             dataCy="save-announcement-button"
             loading={isLoading}
-            disabled={!editMode && isEmpty(file) && file?._status !== 'success'}
+            disabled={!editMode && isEmpty(file) && file?._status !== "success"}
             btnClass="py-1 px-8 text-xs ml-2"
-            label={'Save'}
+            label={"Save"}
             onClick={_onSubmit}
           />
         </div>

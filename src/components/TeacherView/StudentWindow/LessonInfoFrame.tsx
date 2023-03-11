@@ -1,22 +1,19 @@
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import {getAsset} from 'assets';
-import Buttons from 'atoms/Buttons';
-import Loader from 'atoms/Loader';
-import Modal from 'atoms/Modal';
-import {GlobalContext} from 'contexts/GlobalContext';
-import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
-import * as queries from 'graphql/queries';
-import React, {useContext, useEffect, useRef, useState} from 'react';
-import {AiOutlineStop} from 'react-icons/ai';
-import {
-  createFilterToFetchSpecificItemsOnly,
-  keywordCapitilizer
-} from 'utilities/strings';
+import { getAsset } from "assets";
+import Buttons from "atoms/Buttons";
+import Loader from "atoms/Loader";
+import Modal from "atoms/Modal";
+import { API, graphqlOperation } from "aws-amplify";
+import { useGlobalContext } from "contexts/GlobalContext";
+import useTailwindBreakpoint from "customHooks/tailwindBreakpoint";
+import * as queries from "graphql/queries";
+import React, { useEffect, useRef, useState } from "react";
+import { AiOutlineStop } from "react-icons/ai";
+import { keywordCapitilizer } from "utilities/strings";
 
 interface ILessonInfoFrame {
   children?: React.ReactNode;
   visible?: boolean;
-  rightView?: {view: string; option?: string};
+  rightView?: { view: string; option?: string };
   setRightView?: any;
 }
 
@@ -26,21 +23,25 @@ const SENTIMENT_TEMPLATE = {
   okay: 0,
   bad: 0,
   awful: 0,
-  total: 0
+  total: 0,
 };
 
-const EMOJIS = getAsset('general', 'emoji');
+const EMOJIS = getAsset("general", "emoji");
 
-const LessonInfoFrame = ({visible, rightView, setRightView}: ILessonInfoFrame) => {
+const LessonInfoFrame = ({
+  visible,
+  rightView,
+  setRightView,
+}: ILessonInfoFrame) => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
-  const gContext = useContext(GlobalContext);
+  const gContext = useGlobalContext();
   const user = gContext.state.user;
   const roster = gContext.controlState.roster;
 
   let studentAuthIDArray = roster.map((st: any) => st.personAuthID);
 
   let lastLoggedIn = user?.lastLoggedIn;
-  let dateString = lastLoggedIn ? lastLoggedIn.match(DATE_REGEX) : '';
+  let dateString = lastLoggedIn ? lastLoggedIn.match(DATE_REGEX) : "";
   // let dateString: any = undefined;
 
   // ##################################################################### //
@@ -48,8 +49,6 @@ const LessonInfoFrame = ({visible, rightView, setRightView}: ILessonInfoFrame) =
   // ##################################################################### //
   const [loading, setLoading] = useState<boolean>(false);
   const [sentimentStore, setSentimentStore] = useState<any>({});
-
-  const [notLoggedInCount, setNotLoggedInCount] = useState(0);
 
   const getOverallSentimentResult = async (dateString: string) => {
     let result: any[] = [];
@@ -61,8 +60,8 @@ const LessonInfoFrame = ({visible, rightView, setRightView}: ILessonInfoFrame) =
             limit: 100,
             personAuthID: authID,
             date: {
-              eq: dateString
-            }
+              eq: dateString,
+            },
           })
         );
         let data = response?.data?.listPersonSentiments?.items || [];
@@ -83,11 +82,13 @@ const LessonInfoFrame = ({visible, rightView, setRightView}: ILessonInfoFrame) =
 
     if (thereAreStudents && validDate) {
       try {
-        let result: any[] = (await getOverallSentimentResult(dateString)) || [[]];
+        let result: any[] = (await getOverallSentimentResult(dateString)) || [
+          [],
+        ];
 
         return result;
       } catch (e) {
-        console.error('fetchStudentSentiments - ', e);
+        console.error("fetchStudentSentiments - ", e);
         return [];
       } finally {
         setLoading(false);
@@ -107,27 +108,30 @@ const LessonInfoFrame = ({visible, rightView, setRightView}: ILessonInfoFrame) =
       ...sentimentObjTemplate,
       did_not_answered: 0,
       not_logged_in: 0,
-      total: rosterArr.length
+      total: rosterArr.length,
     };
-    let response = sentimentArr.reduce((sentimentAcc: any, sentimentStr: string) => {
-      let sentiment = sentimentStr.toLowerCase();
+    let response = sentimentArr.reduce(
+      (sentimentAcc: any, sentimentStr: string) => {
+        let sentiment = sentimentStr.toLowerCase();
 
-      if (sentiment === 'none') {
-        return {
-          ...sentimentAcc,
-          did_not_answered: (sentimentAcc['did_not_answered'] += 1) || 0
-        };
-      } else {
-        return {
-          ...sentimentAcc,
-          [sentiment]: (sentimentAcc[sentiment] += 1)
-        };
-      }
-    }, prepare);
+        if (sentiment === "none") {
+          return {
+            ...sentimentAcc,
+            did_not_answered: (sentimentAcc["did_not_answered"] += 1) || 0,
+          };
+        } else {
+          return {
+            ...sentimentAcc,
+            [sentiment]: (sentimentAcc[sentiment] += 1),
+          };
+        }
+      },
+      prepare
+    );
 
     response = {
       ...response,
-      not_logged_in: notLoggedInCount
+      not_logged_in: notLoggedInCount,
     };
 
     return response;
@@ -145,7 +149,8 @@ const LessonInfoFrame = ({visible, rightView, setRightView}: ILessonInfoFrame) =
 
         let filteredResult = fetchResults.filter((r: any) => r.length > 0);
 
-        let not_logged_in_count = fetchResults.length - filteredResult.length || 0;
+        let not_logged_in_count =
+          fetchResults.length - filteredResult.length || 0;
 
         let flatten = fetchResults.flat();
 
@@ -174,13 +179,6 @@ const LessonInfoFrame = ({visible, rightView, setRightView}: ILessonInfoFrame) =
   }, [visible]);
 
   // ##################################################################### //
-  // ######################### TOGGLE SENTIMENTS ######################### //
-  // ##################################################################### //
-  const handleSentimentToggle = () => {
-    setRightView({view: 'lesson', option: ''});
-  };
-
-  // ##################################################################### //
   // ############################## OTHER UI ############################# //
   // ##################################################################### //
   const customTitle = () => {
@@ -195,26 +193,28 @@ const LessonInfoFrame = ({visible, rightView, setRightView}: ILessonInfoFrame) =
   // ##################################################################### //
   // ############################# ANIMATION ############################# //
   // ##################################################################### //
-  const frameRef = useRef();
+  const frameRef = useRef<any>(null);
 
   // ##################################################################### //
   // ############################# RESPONSIVE ############################ //
   // ##################################################################### //
-  const {breakpoint} = useTailwindBreakpoint();
+  const { breakpoint } = useTailwindBreakpoint();
 
   const tableOrder = [
-    'great',
-    'okay',
-    'bad',
-    'awful',
-    'did_not_answered',
-    'not_logged_in',
-    'total'
+    "great",
+    "okay",
+    "bad",
+    "awful",
+    "did_not_answered",
+    "not_logged_in",
+    "total",
   ];
 
   const getPercentage = (sentimentKey: string) =>
     Math.ceil(
-      Number(((sentimentStore[sentimentKey] / sentimentStore.total) * 100).toFixed(0))
+      Number(
+        ((sentimentStore[sentimentKey] / sentimentStore.total) * 100).toFixed(0)
+      )
     );
 
   return (
@@ -222,10 +222,14 @@ const LessonInfoFrame = ({visible, rightView, setRightView}: ILessonInfoFrame) =
       <div
         ref={frameRef}
         style={{
-          width: breakpoint === 'xl' || breakpoint === '2xl' ? '75%' : 'calc(100% - 36px)'
+          width:
+            breakpoint === "xl" || breakpoint === "2xl"
+              ? "75%"
+              : "calc(100% - 36px)",
         }}
-        className={`absolute mr-0 top-0 right-0 h-full flex flex-col items-center z-50`}>
-        {rightView.view === 'lessonInfo' && (
+        className={`absolute mr-0 top-0 right-0 h-full flex flex-col items-center z-50`}
+      >
+        {rightView?.view === "lessonInfo" && (
           <>
             <div className="absolute w-full h-full bg-gray-800 bg-opacity-50 z-40"></div>
             <Modal
@@ -234,10 +238,11 @@ const LessonInfoFrame = ({visible, rightView, setRightView}: ILessonInfoFrame) =
               showHeaderBorder={false}
               showFooter={false}
               scrollHidden
-              closeAction={() => setRightView({view: 'lesson', option: ''})}
+              closeAction={() => setRightView({ view: "lesson", option: "" })}
               position="absolute"
               width="w-full"
-              maxWidth="max-w-128">
+              maxWidth="max-w-128"
+            >
               <ul className="rounded border-0 border-gray-400 border-opacity-20">
                 {roster && roster.length < 5 && (
                   <li className="w-full p-2 flex flex-row text-center bg-white rounded mb-2 text-sm text-gray-600">
@@ -248,7 +253,8 @@ const LessonInfoFrame = ({visible, rightView, setRightView}: ILessonInfoFrame) =
                 {loading ? (
                   <li
                     key={`sentimentRow_loading`}
-                    className="w-full h-8 flex flex-row items-center bg-white rounded mb-2 text-sm text-gray-600">
+                    className="w-full h-8 flex flex-row items-center bg-white rounded mb-2 text-sm text-gray-600"
+                  >
                     <Loader />
                   </li>
                 ) : roster && roster.length > 0 && sentimentStore ? (
@@ -257,23 +263,24 @@ const LessonInfoFrame = ({visible, rightView, setRightView}: ILessonInfoFrame) =
                       <li
                         key={`sentimentRow_${idx}`}
                         className={`${
-                          idx % 2 === 0 ? 'bg-gray-200' : 'bg-gray-50'
-                        } w-full h-8 p-4 flex flex-row items-center text-sm text-gray-600`}>
+                          idx % 2 === 0 ? "bg-gray-200" : "bg-gray-50"
+                        } w-full h-8 p-4 flex flex-row items-center text-sm text-gray-600`}
+                      >
                         <span className="w-2.5/10 h-auto flex justify-center">
                           {EMOJIS[sentimentKey] ? (
                             <img
                               src={EMOJIS[sentimentKey]}
                               className="w-auto h-8 object-contain"
                             />
-                          ) : sentimentKey === 'did_not_answered' ? (
-                            <AiOutlineStop size={'1.5rem'} />
+                          ) : sentimentKey === "did_not_answered" ? (
+                            <AiOutlineStop size={"1.5rem"} />
                           ) : null}
                         </span>
                         <span className="w-2.5/10 text-left whitespace-pre overflow-hidden">
-                          {sentimentKey === 'did_not_answered'
-                            ? 'Did not answered'
-                            : sentimentKey === 'not_logged_in'
-                            ? 'Not logged in yet'
+                          {sentimentKey === "did_not_answered"
+                            ? "Did not answered"
+                            : sentimentKey === "not_logged_in"
+                            ? "Not logged in yet"
                             : keywordCapitilizer(sentimentKey)}
                           :
                         </span>
