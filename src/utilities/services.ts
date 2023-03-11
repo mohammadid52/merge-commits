@@ -1,6 +1,7 @@
 // import AWS from 'aws-sdk';
-import { Storage } from "@aws-amplify/storage";
-import awsconfig from "../aws-exports";
+import {Storage} from '@aws-amplify/storage';
+// @ts-ignore
+import awsconfig from '../aws-exports.js';
 
 // ~~~~~~~ OPTIMIZED MODULE IMPORTS ~~~~~~ //
 
@@ -23,12 +24,12 @@ export const getImageFromS3 = (key: string, isPrivate?: boolean) => {
           resolve(result);
         })
         .catch((err) => {
-          console.error("Error in fetching file to s3", err);
+          console.error('Error in fetching file to s3', err);
           reject(err);
         });
     });
   }
-  return "";
+  return '';
 };
 
 export const deleteImageFromS3 = (key: string) => {
@@ -36,7 +37,7 @@ export const deleteImageFromS3 = (key: string) => {
   return new Promise((resolve, reject) => {
     Storage.remove(key)
       .then((result) => {
-        console.log("deleted: ", key);
+        console.log('deleted: ', key);
         resolve(result);
       })
       .catch((err) => {
@@ -47,10 +48,7 @@ export const deleteImageFromS3 = (key: string) => {
   });
 };
 
-export const getImageFromS3Static = (
-  key: string,
-  isPrivate?: boolean
-): string => {
+export const getImageFromS3Static = (key: string, isPrivate?: boolean): string => {
   if (key) {
     // Needs to fetch full URL to support image editing without refresh.
 
@@ -62,5 +60,5 @@ export const getImageFromS3Static = (
       }
     }
   }
-  return "";
+  return '';
 };
