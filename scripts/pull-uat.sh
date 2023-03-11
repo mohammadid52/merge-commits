@@ -2,4 +2,4 @@
 
 git pull origin stagingdevelopment
 git pull origin new-dev
-cp ./src/config/aws-exports.uatenv.js ./src/aws-exports.ts
+cp ./src/config/aws-exports.uatenv.js ./src/aws-exports.js

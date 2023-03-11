@@ -23,7 +23,7 @@ remove () {
 }
 
 copy_aws_keys_txt(){
-    cp ./src/aws-exports.ts ./src/aws-exports.txt
+    cp ./src/aws-exports.js ./src/aws-exports.txt
     echo ${GREEN}"<---Copied all contents from aws-exports.js to aws-exports.txt --->"${NONE}
 }
 
