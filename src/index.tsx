@@ -1,4 +1,4 @@
-import Amplify, {Auth} from 'aws-amplify';
+import {Amplify, Auth} from 'aws-amplify';
 // @ts-ignore
 import awsconfig from 'aws-exports';
 import App from 'components/App';
@@ -6,7 +6,7 @@ import {createRoot} from 'react-dom/client';
 import 'style/style.css';
 import 'style/style.scss';
 
-Amplify.Amplify.configure(awsconfig);
+Amplify.configure(awsconfig);
 
 Auth.configure({
   aws_appsync_region: awsconfig.aws_appsync_region,
