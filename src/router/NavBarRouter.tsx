@@ -1,31 +1,73 @@
-import { Route, Switch, useRouteMatch } from "react-router-dom";
+import {Route, Switch, useRouteMatch} from 'react-router-dom';
 
-import { UniversalLessonBuilderProvider } from "contexts/UniversalLessonBuilderContext";
+import {UniversalLessonBuilderProvider} from 'contexts/UniversalLessonBuilderContext';
 
-import ErrorBoundary from "@components/Error/ErrorBoundary";
-import InstitutionBuilder from "components/Dashboard/Admin/Institutons/Builders/InstitutionBuilder/InstitutionBuilder";
-import ClassRoomBuilder from "components/Dashboard/Admin/Institutons/EditBuilders/ClassRoom/ClassRoomBuilder";
-import AddProfileCheckpoint from "components/Dashboard/Admin/Institutons/EditBuilders/CurricularsView/TabsActions/AddProfileCheckpoint";
-import CourseBuilder from "components/Dashboard/Admin/Institutons/EditBuilders/CurricularsView/TabsActions/CourseBuilder/CourseBuilder";
-import EditProfileCheckpoint from "components/Dashboard/Admin/Institutons/EditBuilders/CurricularsView/TabsActions/EditProfileCheckpoint";
-import ProfileCheckpointlookup from "components/Dashboard/Admin/Institutons/EditBuilders/CurricularsView/TabsActions/ProfileCheckpointlookup";
-import UnitBuilder from "components/Dashboard/Admin/Institutons/EditBuilders/CurricularsView/TabsActions/Unit/UnitBuilder";
-import UnitList from "components/Dashboard/Admin/Institutons/EditBuilders/CurricularsView/TabsActions/Unit/UnitList";
-import ClassList from "components/Dashboard/Admin/Institutons/Listing/ClassList";
-import CurriculumList from "components/Dashboard/Admin/Institutons/Listing/CurriculumList";
-import RoomsList from "components/Dashboard/Admin/Institutons/Listing/RoomsList";
-import StaffBuilder from "components/Dashboard/Admin/Institutons/Listing/StaffBuilder";
-import Students from "components/Dashboard/Admin/Institutons/Students";
-import LessonsBuilderHome from "components/Dashboard/Admin/LessonsBuilder/LessonsBuilderHome";
-import Registration from "components/Dashboard/Admin/UserManagement/Registration";
-import User from "components/Dashboard/Admin/UserManagement/User";
-import UserLookup from "components/Dashboard/Admin/UserManagement/UserLookup";
-import AnalyticsDashboard from "../Csv/AnalyticsDashboard";
-import Csv from "../Csv/Csv";
-import UploadCsv from "../Csv/UploadCSV";
+import ErrorBoundary from 'components/Error/ErrorBoundary';
+import {lazy} from 'react';
+const InstitutionBuilder = lazy(
+  () =>
+    import('dashboard/Admin/Institutons/Builders/InstitutionBuilder/InstitutionBuilder')
+);
+const ClassRoomBuilder = lazy(
+  () => import('dashboard/Admin/Institutons/EditBuilders/ClassRoom/ClassRoomBuilder')
+);
+const AddProfileCheckpoint = lazy(
+  () =>
+    import(
+      'dashboard/Admin/Institutons/EditBuilders/CurricularsView/TabsActions/AddProfileCheckpoint'
+    )
+);
+const CourseBuilder = lazy(
+  () =>
+    import(
+      'dashboard/Admin/Institutons/EditBuilders/CurricularsView/TabsActions/CourseBuilder/CourseBuilder'
+    )
+);
+const EditProfileCheckpoint = lazy(
+  () =>
+    import(
+      'dashboard/Admin/Institutons/EditBuilders/CurricularsView/TabsActions/EditProfileCheckpoint'
+    )
+);
+const ProfileCheckpointlookup = lazy(
+  () =>
+    import(
+      'dashboard/Admin/Institutons/EditBuilders/CurricularsView/TabsActions/ProfileCheckpointlookup'
+    )
+);
+const UnitBuilder = lazy(
+  () =>
+    import(
+      'dashboard/Admin/Institutons/EditBuilders/CurricularsView/TabsActions/Unit/UnitBuilder'
+    )
+);
+const UnitList = lazy(
+  () =>
+    import(
+      'dashboard/Admin/Institutons/EditBuilders/CurricularsView/TabsActions/Unit/UnitList'
+    )
+);
+const ClassList = lazy(() => import('dashboard/Admin/Institutons/Listing/ClassList'));
+const CurriculumList = lazy(
+  () => import('dashboard/Admin/Institutons/Listing/CurriculumList')
+);
+const RoomsList = lazy(() => import('dashboard/Admin/Institutons/Listing/RoomsList'));
+const StaffBuilder = lazy(
+  () => import('dashboard/Admin/Institutons/Listing/StaffBuilder')
+);
+const Students = lazy(() => import('dashboard/Admin/Institutons/Students'));
+const LessonsBuilderHome = lazy(
+  () => import('dashboard/Admin/LessonsBuilder/LessonsBuilderHome')
+);
+const Registration = lazy(() => import('dashboard/Admin/UserManagement/Registration'));
+const User = lazy(() => import('dashboard/Admin/UserManagement/User'));
+const UserLookup = lazy(() => import('dashboard/Admin/UserManagement/UserLookup'));
+const AnalyticsDashboard = lazy(() => import('dashboard/Csv/AnalyticsDashboard'));
+const Csv = lazy(() => import('dashboard/Csv/Csv'));
+const UploadCsv = lazy(() => import('dashboard/Csv/UploadCSV'));
 
 const NavBarRouter = (instProps: any) => {
-  const { institute = {}, updateCurricularList, curricular } = instProps;
+  const {institute = {}, updateCurricularList, curricular} = instProps;
   const match = useRouteMatch();
 
   return (
@@ -127,10 +169,7 @@ const NavBarRouter = (instProps: any) => {
         path={`${match.url}/units/:unitId/edit`}
         render={() => (
           <ErrorBoundary componentName="UnitBuilder">
-            <UnitBuilder
-              curricular={curricular && curricular}
-              instId={institute?.id}
-            />
+            <UnitBuilder curricular={curricular && curricular} instId={institute?.id} />
           </ErrorBoundary>
         )}
       />

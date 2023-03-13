@@ -2,10 +2,11 @@ import React from 'react';
 import {Page, Text, View, Document, Image, StyleSheet} from '@react-pdf/renderer';
 import Html from 'react-pdf-html';
 import {PagePart, PartContent} from 'interfaces/UniversalLessonInterfaces';
-import {GlobalContextProvider} from 'contexts/GlobalContext';
+import {GlobalContextProvider, useGlobalContext} from 'contexts/GlobalContext';
 import {getAsset} from 'assets';
 
-const SurveyPDF = ({lessonPDFData, clientKey}: any) => {
+const SurveyPDF = ({lessonPDFData}: any) => {
+  const {clientKey} = useGlobalContext();
   const styles = StyleSheet.create({
     body: {
       padding: 24

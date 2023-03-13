@@ -1,13 +1,14 @@
-import { useEffect, useState } from "react";
+import {useEffect, useState} from 'react';
 
-import useAuth from "@customHooks/useAuth";
-import { useGlobalContext } from "contexts/GlobalContext";
-import { LessonCardProps } from "../Classroom";
-import BottomBar from "./StandardLessonCard/BottomBar";
-import MainSummary from "./StandardLessonCard/MainSummary";
-import ProgressBar from "./StandardLessonCard/ProgressBar";
-import Rating from "./StandardLessonCard/Rating";
-import SideImage from "./StandardLessonCard/SideImage";
+import useAuth from '@customHooks/useAuth';
+import {useGlobalContext} from 'contexts/GlobalContext';
+
+import BottomBar from './StandardLessonCard/BottomBar';
+import MainSummary from './StandardLessonCard/MainSummary';
+import ProgressBar from './StandardLessonCard/ProgressBar';
+import Rating from './StandardLessonCard/Rating';
+import SideImage from './StandardLessonCard/SideImage';
+import {LessonCardProps} from '@interfaces/ClassroomInterface';
 
 const StandardLessonCard = (props: LessonCardProps) => {
   const {
@@ -23,16 +24,16 @@ const StandardLessonCard = (props: LessonCardProps) => {
     getLessonRating,
     getImageFromS3 = true,
     searchTerm,
-    preview = false,
+    preview = false
   } = props;
 
-  const { theme, lessonDispatch } = useGlobalContext();
+  const {theme, lessonDispatch} = useGlobalContext();
   const [existsOrNot, setexistsOrNot] = useState<boolean>(false);
 
   const [isFetched, setIsFetched] = useState(false);
   const [personDataObj, setPersonDataObj] = useState<any>(null);
 
-  const { isStudent } = useAuth();
+  const {isStudent} = useAuth();
   useEffect(() => {
     if (!isFetched) {
       checkValueOrNull();
@@ -47,13 +48,13 @@ const StandardLessonCard = (props: LessonCardProps) => {
         user.authId
       );
 
-      if (typeof value === "undefined") setexistsOrNot(true);
+      if (typeof value === 'undefined') setexistsOrNot(true);
 
       if (value) {
         setPersonDataObj(value);
         lessonDispatch({
-          type: "SET_CURRENT_PAGE",
-          payload: value.lessonProgress,
+          type: 'SET_CURRENT_PAGE',
+          payload: value.lessonProgress
         });
       }
       return;
@@ -66,15 +67,14 @@ const StandardLessonCard = (props: LessonCardProps) => {
 
   const _isCompleted =
     activeRoomInfo?.completedLessons?.findIndex(
-      (item: { lessonID?: string | null; time?: string | null }) =>
+      (item: {lessonID?: string | null; time?: string | null}) =>
         item.lessonID === lessonProps.lessonID
     ) > -1 || personDataObj?.isCompleted;
 
   return (
     <div
       key={keyProps}
-      className={`relative overflow-hidden bg-white theme-card-shadow rounded-xl flex lesson-card  mb-8 ${theme.elem.textDark} `}
-    >
+      className={`relative overflow-hidden bg-white theme-card-shadow rounded-xl flex lesson-card  mb-8 ${theme.elem.textDark} `}>
       {/**
        *  LEFT SECTION IMAGE
        */}
@@ -85,15 +85,12 @@ const StandardLessonCard = (props: LessonCardProps) => {
       <div className={`w-7.5/10 lesson-card-summary flex flex-col rounded-b`}>
         <MainSummary
           searchTerm={searchTerm}
-          lessonProps={{ ...lessonProps, isTeacher, accessible }}
+          lessonProps={{...lessonProps, isTeacher, accessible}}
         />
         {isStudent && (
-          <ProgressBar
-            _isCompleted={_isCompleted}
-            personDataObj={personDataObj}
-          />
+          <ProgressBar _isCompleted={_isCompleted} personDataObj={personDataObj} />
         )}
-        {lessonProps.lesson.type !== "survey" &&
+        {lessonProps.lesson.type !== 'survey' &&
         !existsOrNot &&
         personDataObj?.isCompleted ? (
           <Rating

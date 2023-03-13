@@ -1,17 +1,17 @@
-import { GraphQLAPI as API, graphqlOperation } from "@aws-amplify/api-graphql";
-import Loader from "atoms/Loader";
-import StepComponent, { IStepElementInterface } from "atoms/StepComponent";
-import { useGlobalContext } from "contexts/GlobalContext";
-import * as customQueries from "customGraphql/customQueries";
-import useDictionary from "customHooks/dictionary";
-import { useQuery } from "customHooks/urlParam";
-import { useEffect, useState } from "react";
-import { BsArrowLeft } from "react-icons/bs";
-import { Switch, useHistory, useParams, useRouteMatch } from "react-router";
-import CheckpointList from "../../TabsListing/CheckpointList";
-import CourseFormComponent from "./CourseFormComponent";
-import LearningObjective from "./LearningObjective";
-import UnitManager from "./UnitManager";
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import Loader from 'atoms/Loader';
+import StepComponent, {IStepElementInterface} from 'atoms/StepComponent';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import * as customQueries from 'customGraphql/customQueries';
+import useDictionary from 'customHooks/dictionary';
+import {useQuery} from 'customHooks/urlParam';
+import {useEffect, useState} from 'react';
+import {BsArrowLeft} from 'react-icons/bs';
+import {useHistory, useParams, useRouteMatch} from 'react-router';
+import CheckpointList from '../../TabsListing/CheckpointList';
+import CourseFormComponent from './CourseFormComponent';
+import LearningObjective from './LearningObjective';
+import UnitManager from './UnitManager';
 
 interface IUIMessages {
   show: boolean;
@@ -24,33 +24,33 @@ interface ICourseBuilderProps {
   instId: string;
 }
 
-const CourseBuilder = ({ instId }: ICourseBuilderProps) => {
+const CourseBuilder = ({instId}: ICourseBuilderProps) => {
   const history = useHistory();
   const match = useRouteMatch();
   const urlParams: any = useParams();
 
-  const { courseId } = urlParams;
+  const {courseId} = urlParams;
   const params = useQuery(location.search);
-  const step = params.get("step");
+  const step = params.get('step');
 
-  const { state, userLanguage } = useGlobalContext();
-  const { CommonlyUsedDict, CourseBuilderDict } = useDictionary();
-  const isSuperAdmin: any = state.user.role === "SUP";
-  const [activeStep, setActiveStep] = useState("overview");
+  const {state, userLanguage} = useGlobalContext();
+  const {CommonlyUsedDict, CourseBuilderDict} = useDictionary();
+  const isSuperAdmin: any = state.user.role === 'SUP';
+  const [activeStep, setActiveStep] = useState('overview');
   const [fetchingDetails, setFetchingDetails] = useState(false);
   const [savedSyllabusList, setSavedSyllabusList] = useState<any[]>([]);
   const [syllabusIds, setSyllabusIds] = useState<any[]>([]);
   const [_, setMessages] = useState<IUIMessages>({
     show: false,
-    message: "",
+    message: '',
     isError: false,
-    lessonError: false,
+    lessonError: false
   });
   const [courseData, setCourseData] = useState<any>({
     institution: {
       id: instId,
-      name: "",
-    },
+      name: ''
+    }
   });
 
   useEffect(() => {
@@ -80,18 +80,18 @@ const CourseBuilder = ({ instId }: ICourseBuilderProps) => {
       try {
         const [curriculumResult, curriculumUnits]: any = await Promise.all([
           await API.graphql(
-            graphqlOperation(customQueries.getCurriculum, { id: courseId })
+            graphqlOperation(customQueries.getCurriculum, {id: courseId})
           ),
           await API.graphql(
             graphqlOperation(customQueries.listCurriculumUnitss, {
-              filter: { curriculumId: { eq: courseId } },
+              filter: {curriculumId: {eq: courseId}}
             })
-          ),
+          )
         ]);
         const savedData = curriculumResult.data.getCurriculum;
 
         const sortedSyllabusList = [
-          ...curriculumUnits?.data.listCurriculumUnits?.items,
+          ...curriculumUnits?.data.listCurriculumUnits?.items
         ].filter((d) => d.unit !== null);
 
         const updatedSeq = savedData.universalSyllabusSeq.filter((id: any) => {
@@ -103,7 +103,7 @@ const CourseBuilder = ({ instId }: ICourseBuilderProps) => {
         const mapped = sortedSyllabusList
           .map((t: any) => {
             let index = updatedSeq.indexOf(t.unitId);
-            return { ...t, index };
+            return {...t, index};
           })
           .sort((a: any, b: any) => (a.index > b.index ? 1 : -1));
         setCourseData(savedData);
@@ -114,9 +114,8 @@ const CourseBuilder = ({ instId }: ICourseBuilderProps) => {
       } catch {
         setMessages({
           show: true,
-          message:
-            CourseBuilderDict[userLanguage]["MESSAGES"]["FETCH_COURSE_ERR"],
-          isError: true,
+          message: CourseBuilderDict[userLanguage]['MESSAGES']['FETCH_COURSE_ERR'],
+          isError: true
         });
         setFetchingDetails(false);
       }
@@ -126,53 +125,53 @@ const CourseBuilder = ({ instId }: ICourseBuilderProps) => {
   const getBasicInstitutionInfo = async (instituteId: any) => {
     const result: any = await API.graphql(
       graphqlOperation(customQueries.getInstitutionBasicInfo, {
-        id: instituteId,
+        id: instituteId
       })
     );
     setCourseData((prevData: any) => ({
       ...prevData,
       institution: {
         ...prevData.institution,
-        name: result?.data?.getInstitution.name,
-      },
+        name: result?.data?.getInstitution.name
+      }
     }));
   };
 
   const steps: IStepElementInterface[] = [
     {
-      title: "General Information",
-      description: "Capture core details of your Unit",
-      stepValue: "overview",
-      isComplete: true,
+      title: 'General Information',
+      description: 'Capture core details of your Unit',
+      stepValue: 'overview',
+      isComplete: true
     },
     {
-      title: "Unit manager",
-      description: "Assign units to course",
-      stepValue: "unit_manager",
+      title: 'Unit manager',
+      description: 'Assign units to course',
+      stepValue: 'unit_manager',
       disabled: !Boolean(courseId),
       isComplete: false,
-      tooltipText: "Add overview details in step 1 to continue",
+      tooltipText: 'Add overview details in step 1 to continue'
     },
     {
-      title: "Learning Objectives",
-      description: "",
-      stepValue: "learning_objectives",
+      title: 'Learning Objectives',
+      description: '',
+      stepValue: 'learning_objectives',
       disabled: !Boolean(courseId),
       isComplete: false,
-      tooltipText: "Add overview details in step 1 to continue",
+      tooltipText: 'Add overview details in step 1 to continue'
     },
     {
-      title: "Demographics & information(Optional)",
-      description: "",
-      stepValue: "demographics",
+      title: 'Demographics & information(Optional)',
+      description: '',
+      stepValue: 'demographics',
       disabled: !Boolean(courseId),
       isComplete: false,
-      tooltipText: "Add overview details in step 1 to continue",
-    },
+      tooltipText: 'Add overview details in step 1 to continue'
+    }
   ];
   const currentStepComp = (currentStep: string) => {
     switch (currentStep) {
-      case "overview":
+      case 'overview':
         return (
           <CourseFormComponent
             setCourseData={setCourseData}
@@ -180,7 +179,7 @@ const CourseBuilder = ({ instId }: ICourseBuilderProps) => {
             courseData={courseData}
           />
         );
-      case "unit_manager":
+      case 'unit_manager':
         return (
           <UnitManager
             courseId={courseId}
@@ -192,7 +191,7 @@ const CourseBuilder = ({ instId }: ICourseBuilderProps) => {
             setSyllabusIds={setSyllabusIds}
           />
         );
-      case "learning_objectives":
+      case 'learning_objectives':
         return (
           <LearningObjective
             status={courseData.status}
@@ -200,7 +199,7 @@ const CourseBuilder = ({ instId }: ICourseBuilderProps) => {
             institutionId={instId}
           />
         );
-      case "demographics":
+      case 'demographics':
         return (
           <CheckpointList
             status={courseData.status}
@@ -239,14 +238,11 @@ const CourseBuilder = ({ instId }: ICourseBuilderProps) => {
                 ? `/dashboard/manage-institutions/courses`
                 : `/dashboard/manage-institutions/institution/${instId}/courses`
             )
-          }
-        >
+          }>
           <span className="w-auto mr-2">
             <BsArrowLeft />
           </span>
-          <div className="text-sm">
-            {CommonlyUsedDict[userLanguage]["BACK_TO_LIST"]}
-          </div>
+          <div className="text-sm">{CommonlyUsedDict[userLanguage]['BACK_TO_LIST']}</div>
         </div>
       </div>
 
@@ -272,7 +268,6 @@ const CourseBuilder = ({ instId }: ICourseBuilderProps) => {
           )}
         </div>
       </div>
-      <Switch></Switch>
     </div>
   );
 };

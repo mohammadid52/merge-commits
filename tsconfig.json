@@ -55,16 +55,11 @@
       "atoms/*": ["components/Atoms/*"],
       "molecules/*": ["components/Molecules/*"],
       "lesson/*": ["components/Lesson/*"],
-      "uiComponents/*": [
-        "components/Lesson/UniversalLessonBuilder/UI/UIComponents/*"
-      ],
+      "dashboard/*": ["components/Dashboard/*"],
+      "uiComponents/*": ["components/Lesson/UniversalLessonBuilder/UI/UIComponents/*"],
       "@UlbUI/*": ["components/Lesson/UniversalLessonBuilder/UI/*"],
-      "@UlbModals/*": [
-        "components/Lesson/UniversalLessonBuilder/UI/ModalDialogs/*"
-      ],
-      "@UlbBlocks/*": [
-        "components/Lesson/UniversalLessonBlockComponents/Blocks/*"
-      ],
+      "@UlbModals/*": ["components/Lesson/UniversalLessonBuilder/UI/ModalDialogs/*"],
+      "@UlbBlocks/*": ["components/Lesson/UniversalLessonBlockComponents/Blocks/*"],
       "@dictionary/*": ["dictionary/*"],
       "reducers/*": ["reducers/*"]
     },
@@ -134,14 +129,6 @@
     "**/*.ts",
     "cypress/component/Everything.cy.tsx"
   ],
-  "exclude": [
-    "build",
-    "cypress",
-    "amplify",
-    "bin",
-    "routes",
-    "public",
-    "node_modules"
-  ],
+  "exclude": ["build", "cypress", "amplify", "bin", "routes", "public", "node_modules"],
   "types": ["cypress", "@testing-library/cypress"]
 }

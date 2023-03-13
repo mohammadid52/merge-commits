@@ -1,44 +1,50 @@
-import { API, graphqlOperation } from "aws-amplify";
-import Buttons from "@components/Atoms/Buttons";
-import { logError, uploadImageToS3 } from "@graphql/functions";
-import { XLSX_TO_CSV_URL } from "assets";
+import {API, graphqlOperation} from 'aws-amplify';
+import Buttons from '@components/Atoms/Buttons';
+import {logError, uploadImageToS3} from '@graphql/functions';
+import {XLSX_TO_CSV_URL} from 'assets';
 
-import UploadButton from "@components/Atoms/Form/UploadButton";
-import Modal from "@components/Atoms/Modal";
-import SectionTitleV3 from "@components/Atoms/SectionTitleV3";
-import AnimatedContainer from "@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer";
-import Table from "@components/Molecules/Table";
-import useAuth from "@customHooks/useAuth";
-import { Transition } from "@headlessui/react";
-import { focusOn, getExtension, withZoiqFilter } from "@utilities/functions";
-import { getImageFromS3 } from "@utilities/services";
+import UploadButton from '@components/Atoms/Form/UploadButton';
+import Modal from '@components/Atoms/Modal';
+import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
+import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
+import Table from '@components/Molecules/Table';
+import useAuth from '@customHooks/useAuth';
+import {Transition} from '@headlessui/react';
+import {
+  focusOn,
+  getExtension,
+  insertExtraDataForClassroom,
+  removeDuplicates,
+  withZoiqFilter
+} from '@utilities/functions';
+import {getImageFromS3} from '@utilities/services';
 import {
   ClassroomType,
   CreateUniversalArchiveDataInput,
   CreateUploadLogsInput,
-  UpdateUniversalArchiveDataInput,
-} from "API";
-import Selector from "atoms/Form/Selector";
-import { useGlobalContext } from "contexts/GlobalContext";
-import * as customMutations from "customGraphql/customMutations";
-import * as customQueries from "customGraphql/customQueries";
-import useDictionary from "customHooks/dictionary";
-import * as mutations from "graphql/mutations";
-import * as queries from "graphql/queries";
-import { isEmpty, uniqBy } from "lodash";
-import Papa from "papaparse";
-import React, { useEffect, useRef, useState } from "react";
-import ClickAwayListener from "react-click-away-listener";
-import { RiErrorWarningLine } from "react-icons/ri";
-import { v4 as uuidv4 } from "uuid";
-import { insertExtraDataForClassroom, removeDuplicates } from "./Csv";
+  UpdateUniversalArchiveDataInput
+} from 'API';
+import Selector from 'atoms/Form/Selector';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import * as customMutations from 'customGraphql/customMutations';
+import * as customQueries from 'customGraphql/customQueries';
+import useDictionary from 'customHooks/dictionary';
+import * as mutations from 'graphql/mutations';
+import * as queries from 'graphql/queries';
+import {isEmpty, uniqBy} from 'lodash';
+import Papa from 'papaparse';
+import React, {useEffect, useRef, useState} from 'react';
+import ClickAwayListener from 'react-click-away-listener';
+import {RiErrorWarningLine} from 'react-icons/ri';
+import {v4 as uuidv4} from 'uuid';
+
 interface ICsvProps {
   institutionId?: string;
 }
 
 const DataValue = ({
   title,
-  content,
+  content
 }: {
   title: string;
   content: string | React.ReactNode;
@@ -46,9 +52,7 @@ const DataValue = ({
   return (
     <div className="w-auto flex mb-2 flex-col items-start justify-start">
       <p className="text-sm text-gray-500">{title}</p>
-      <div className="text-dark-gray font-medium text-left w-auto text-sm">
-        {content}
-      </div>
+      <div className="text-dark-gray font-medium text-left w-auto text-sm">{content}</div>
     </div>
   );
 };
@@ -66,17 +70,17 @@ type IModal = {
 const INITIAL_MODAL_STATE: IModal = {
   show: false,
   element: <div />,
-  title: "",
+  title: '',
   saveAction: () => {},
-  saveLabel: "",
-  closeLabel: "",
-  saveElement: null,
+  saveLabel: '',
+  closeLabel: '',
+  saveElement: null
 };
 
-const UploadCsv = ({ institutionId }: ICsvProps) => {
-  const { state, userLanguage, zoiqFilter } = useGlobalContext();
+const UploadCsv = ({institutionId}: ICsvProps) => {
+  const {state, userLanguage, zoiqFilter} = useGlobalContext();
 
-  const { CsvDict, Institute_info } = useDictionary();
+  const {CsvDict, Institute_info} = useDictionary();
 
   const [file, setFile] = useState<any>(null);
 
@@ -87,13 +91,11 @@ const UploadCsv = ({ institutionId }: ICsvProps) => {
     value: string;
   }>({
     id: 0,
-    name: "",
-    value: "",
+    name: '',
+    value: ''
   });
   const [surveyData, setSurveyData] = useState<any[]>([]);
-  const [newUniversalSurveyData, setNewUniversalSurveyData] = useState<
-    string[]
-  >([]);
+  const [newUniversalSurveyData, setNewUniversalSurveyData] = useState<string[]>([]);
   const [demographicsData, setDemographicsData] = useState<any[]>([]);
   const [newDemographicsData, setNewDemographicsData] = useState<string[]>([]);
   const [selectedSurvey, setSelectedSurvey] = useState<any | null>(null);
@@ -107,9 +109,7 @@ const UploadCsv = ({ institutionId }: ICsvProps) => {
   const [showModal, setShowModal] = useState(INITIAL_MODAL_STATE);
 
   const [selectedClassRoom, setSelectedClassRoom] = useState<any | null>(null);
-  const [selectedCurriculum, setSelectedCurriculum] = useState<any | null>(
-    null
-  );
+  const [selectedCurriculum, setSelectedCurriculum] = useState<any | null>(null);
 
   const [selectedUnit, setSelectedUnit] = useState<any | null>(null);
   const [activeUnits, setActiveUnits] = useState<any[]>([]);
@@ -122,7 +122,7 @@ const UploadCsv = ({ institutionId }: ICsvProps) => {
 
   const [parsedObj, setParsedObj] = useState({});
 
-  const { authId, isTeacher, isFellow, email, firstName, lastName } = useAuth();
+  const {authId, isTeacher, isFellow, email, firstName, lastName} = useAuth();
 
   const fileReader = new FileReader();
 
@@ -131,21 +131,21 @@ const UploadCsv = ({ institutionId }: ICsvProps) => {
   const reasonDropdown = [
     {
       id: 1,
-      name: "Paper Survey",
-      value: "paper-survey",
+      name: 'Paper Survey',
+      value: 'paper-survey'
     },
     {
       id: 2,
-      name: "User Update Survey",
-      value: "user-update",
-    },
+      name: 'User Update Survey',
+      value: 'user-update'
+    }
   ];
 
   const listQuestions = async (lessonId: string) => {
     try {
       let universalLesson: any = await API.graphql(
         graphqlOperation(customQueries.getUniversalLesson, {
-          id: lessonId,
+          id: lessonId
         })
       );
       let lessonObject = universalLesson.data.getUniversalLesson;
@@ -161,8 +161,8 @@ const UploadCsv = ({ institutionId }: ICsvProps) => {
                 id: item.questionID,
                 question: item.questionString,
                 type: item.type,
-                options: item.options,
-              },
+                options: item.options
+              }
             });
           });
         });
@@ -170,8 +170,8 @@ const UploadCsv = ({ institutionId }: ICsvProps) => {
 
       return questions;
     } catch (err) {
-      logError(err, { authId, email }, "UploadCSV @listQuestions");
-      console.log("list questions error", err);
+      logError(err, {authId, email}, 'UploadCSV @listQuestions');
+      console.log('list questions error', err);
     }
   };
 
@@ -192,7 +192,7 @@ const UploadCsv = ({ institutionId }: ICsvProps) => {
               },
               pagePart: any
             ) => {
-              if (pagePart.hasOwnProperty("partContent")) {
+              if (pagePart.hasOwnProperty('partContent')) {
                 const partInputs = pagePart.partContent.reduce(
                   (
                     partInputAcc: {
@@ -207,10 +207,7 @@ const UploadCsv = ({ institutionId }: ICsvProps) => {
                     // -------- IF FORM ------- //
                     if (isForm) {
                       const formSubInputs = partContent.value.reduce(
-                        (
-                          subPartAcc: { pgInput: any[] },
-                          partContentSub: any
-                        ) => {
+                        (subPartAcc: {pgInput: any[]}, partContentSub: any) => {
                           return {
                             ...subPartAcc,
 
@@ -220,19 +217,19 @@ const UploadCsv = ({ institutionId }: ICsvProps) => {
                                 questionID: partContentSub.id,
                                 type: partContentSub.type,
                                 questionString: partContentSub.label,
-                                options: partContentSub.options,
-                              },
-                            ],
+                                options: partContentSub.options
+                              }
+                            ]
                           };
                         },
-                        { pgInput: [] }
+                        {pgInput: []}
                       );
 
                       return {
                         pageInputAcc: [
                           ...partInputAcc.pageInputAcc,
-                          ...formSubInputs.pgInput,
-                        ],
+                          ...formSubInputs.pgInput
+                        ]
                       };
                     }
                     // ---- IF OTHER INPUT ---- //
@@ -244,52 +241,45 @@ const UploadCsv = ({ institutionId }: ICsvProps) => {
                             questionID: partContent.id,
                             type: partContent.type,
                             questionString: partContent.label,
-                            options: partContent.options,
-                          },
-                        ],
+                            options: partContent.options
+                          }
+                        ]
                       };
                     } else {
                       return partInputAcc;
                     }
                   },
-                  { pageInputAcc: [] }
+                  {pageInputAcc: []}
                 );
 
                 return {
                   pageInputAcc: [
                     ...pageInputsAcc.pageInputAcc,
-                    ...partInputs.pageInputAcc,
-                  ],
+                    ...partInputs.pageInputAcc
+                  ]
                 };
               } else {
                 return pageInputsAcc;
               }
             },
-            { pageInputAcc: [] }
+            {pageInputAcc: []}
           );
 
           return {
-            questionList: [
-              ...inputs.questionList,
-              reducedPageInputs.pageInputAcc,
-            ],
+            questionList: [...inputs.questionList, reducedPageInputs.pageInputAcc]
           };
         },
 
-        { questionList: [] }
+        {questionList: []}
       );
       return mappedPages;
     }
   };
 
   const customParse = (data: any[]) => {
-    if (data[0][0] === "") {
-      setError(
-        "Invalid formatted header.. Make sure column headers are not changed"
-      );
-      console.error(
-        "Invalid formatted header.. Make sure header has valid values"
-      );
+    if (data[0][0] === '') {
+      setError('Invalid formatted header.. Make sure column headers are not changed');
+      console.error('Invalid formatted header.. Make sure header has valid values');
       return;
     } else {
       const headers: any = {};
@@ -302,12 +292,9 @@ const UploadCsv = ({ institutionId }: ICsvProps) => {
 
       data.slice(1, data.length).forEach((row) => {
         row.forEach((value: string, index2: number) => {
-          if (typeof value === "string" || typeof value === "number") {
+          if (typeof value === 'string' || typeof value === 'number') {
             let updateValue = value.toString().trim();
-            headers[keys[index2]] = [
-              ...headers[keys[index2]],
-              updateValue || "-",
-            ];
+            headers[keys[index2]] = [...headers[keys[index2]], updateValue || '-'];
           } else {
             return false;
           }
@@ -329,52 +316,49 @@ const UploadCsv = ({ institutionId }: ICsvProps) => {
   ) => {
     const getUniversalSurveyStudent: any = await API.graphql(
       graphqlOperation(queries.getUniversalSurveyStudentData, {
-        id: value,
+        id: value
       })
     );
-    const returnedData =
-      getUniversalSurveyStudent.data.getUniversalSurveyStudentData;
+    const returnedData = getUniversalSurveyStudent.data.getUniversalSurveyStudentData;
     let input: any = {
-      lessonID: "",
-      studentAuthID: "",
-      studentEmail: "",
-      syllabusLessonID: "",
-      UniversalSurveyStudentID: "",
-      surveyData: [],
+      lessonID: '',
+      studentAuthID: '',
+      studentEmail: '',
+      syllabusLessonID: '',
+      UniversalSurveyStudentID: '',
+      surveyData: []
     };
 
     Object.keys(parsed).forEach((keyName) => {
-      let surveyDomId = keyName?.split("-s-")[1];
+      let surveyDomId = keyName?.split('-s-')[1];
 
       if (surveyDomId) {
         const findSurveyDatabasedonDomId = returnedData.surveyData.filter(
           (item: any) => item && item?.domID === surveyDomId
         );
 
-        const updateSurveyInput = findSurveyDatabasedonDomId.find(
-          (item: any) => {
-            if (item) {
-              let selectedOption = surveyQuestionOptions[surveyDomId].filter(
-                (option: any) => {
-                  return option.text === value;
-                }
-              );
-
-              if (selectedOption.length > 0 && item.domID === surveyDomId) {
-                return (item.input = [selectedOption[0].id]);
-              } else {
-                return (item.input = [value]);
+        const updateSurveyInput = findSurveyDatabasedonDomId.find((item: any) => {
+          if (item) {
+            let selectedOption = surveyQuestionOptions[surveyDomId].filter(
+              (option: any) => {
+                return option.text === value;
               }
+            );
+
+            if (selectedOption.length > 0 && item.domID === surveyDomId) {
+              return (item.input = [selectedOption[0].id]);
+            } else {
+              return (item.input = [value]);
             }
-            return null;
           }
-        );
+          return null;
+        });
 
         input = {
           UniversalSurveyStudentID: returnedData.id,
-          lessonID: parsed["SurveyID"][index],
-          syllabusLessonID: parsed["SurveyID"][index],
-          surveyData: [...input.surveyData, updateSurveyInput],
+          lessonID: parsed['SurveyID'][index],
+          syllabusLessonID: parsed['SurveyID'][index],
+          surveyData: [...input.surveyData, updateSurveyInput]
         };
 
         setSurveyData((prev: any) => {
@@ -392,38 +376,35 @@ const UploadCsv = ({ institutionId }: ICsvProps) => {
     _: string
   ) => {
     let input: any = {
-      lessonID: "",
-      studentAuthID: "",
-      studentEmail: "",
-      syllabusLessonID: "",
-      surveyData: [],
+      lessonID: '',
+      studentAuthID: '',
+      studentEmail: '',
+      syllabusLessonID: '',
+      surveyData: []
     };
 
     Object.keys(parsed).forEach((keyName) => {
-      let surveyDomId = keyName?.split("-s-")[1];
+      let surveyDomId = keyName?.split('-s-')[1];
 
       if (surveyDomId) {
-        let selectedOption = surveyQuestionOptions[surveyDomId].filter(
-          (option: any) => {
-            return option.text === value;
-          }
-        );
+        let selectedOption = surveyQuestionOptions[surveyDomId].filter((option: any) => {
+          return option.text === value;
+        });
 
         input = {
-          lessonID: parsed["SurveyID"][index],
-          studentAuthID: parsed["AuthId"][index],
-          studentEmail: parsed["Email"][index],
-          syllabusLessonID: parsed["UnitID"][index],
+          lessonID: parsed['SurveyID'][index],
+          studentAuthID: parsed['AuthId'][index],
+          studentEmail: parsed['Email'][index],
+          syllabusLessonID: parsed['UnitID'][index],
           surveyData: [
             ...input.surveyData,
             {
               domID: surveyDomId,
-              input:
-                selectedOption.length > 0 ? [selectedOption[0].id] : [value],
+              input: selectedOption.length > 0 ? [selectedOption[0].id] : [value],
               options: null,
-              hasTakenSurvey: !value ? false : true,
-            },
-          ],
+              hasTakenSurvey: !value ? false : true
+            }
+          ]
         };
       }
     });
@@ -433,45 +414,38 @@ const UploadCsv = ({ institutionId }: ICsvProps) => {
     });
   };
 
-  const ddIDAndDemographicData = async (
-    value: string,
-    parsed: any,
-    _: number
-  ) => {
+  const ddIDAndDemographicData = async (value: string, parsed: any, _: number) => {
     const getDemographicsData: any = await API.graphql(
       graphqlOperation(queries.getQuestionData, {
-        id: value,
+        id: value
       })
     );
     let input: any = {
-      questionDataId: "",
-      responseObject: [],
+      questionDataId: '',
+      responseObject: []
     };
     const returnedData = getDemographicsData.data.getQuestionData;
 
     Object.keys(parsed).forEach((keyName) => {
-      let demographicsQuesId = keyName.split("-d-")[1]?.split(" ")[0];
+      let demographicsQuesId = keyName.split('-d-')[1]?.split(' ')[0];
 
       if (demographicsQuesId) {
-        const findDemographicsQuesIdResponse =
-          returnedData.responseObject.filter(
-            (item: any) => item && item.qid === demographicsQuesId
-          );
-        const updateDemographicsQuesResponse =
-          findDemographicsQuesIdResponse.find((item: any) => {
+        const findDemographicsQuesIdResponse = returnedData.responseObject.filter(
+          (item: any) => item && item.qid === demographicsQuesId
+        );
+        const updateDemographicsQuesResponse = findDemographicsQuesIdResponse.find(
+          (item: any) => {
             if (item && item.qid === demographicsQuesId) {
               item.response = [value];
               return true;
             }
             return false;
-          });
+          }
+        );
 
         input = {
           questionDataId: returnedData.id,
-          responseObject: [
-            ...input.responseObject,
-            updateDemographicsQuesResponse,
-          ],
+          responseObject: [...input.responseObject, updateDemographicsQuesResponse]
         };
 
         setDemographicsData((prev: any) => {
@@ -488,26 +462,26 @@ const UploadCsv = ({ institutionId }: ICsvProps) => {
     _: number
   ) => {
     let input: any = {
-      authId: "",
-      email: "",
-      syllabusLessonID: "",
-      responseObject: [],
+      authId: '',
+      email: '',
+      syllabusLessonID: '',
+      responseObject: []
     };
     Object.keys(parsed).forEach((keyName) => {
-      let demographicsQuesId = keyName.split("-d-")[1]?.split(" ")[0];
+      let demographicsQuesId = keyName.split('-d-')[1]?.split(' ')[0];
       if (demographicsQuesId) {
         input = {
-          authId: parsed["AuthId"][index],
-          email: parsed["Email"][index],
-          syllabusLessonID: parsed["UnitID"][index],
+          authId: parsed['AuthId'][index],
+          email: parsed['Email'][index],
+          syllabusLessonID: parsed['UnitID'][index],
           responseObject: [
             ...input.responseObject,
             {
               qid: demographicsQuesId,
               response: [value],
-              demographicsUpdated: !value ? false : true,
-            },
-          ],
+              demographicsUpdated: !value ? false : true
+            }
+          ]
         };
       }
     });
@@ -527,10 +501,10 @@ const UploadCsv = ({ institutionId }: ICsvProps) => {
   const removeBlankAuthIds = (obj: any): any => {
     // record which index has blank auth_id
     let indexOfBlankAuthId: number[] = [];
-    let authIdArr = obj["AuthId"];
+    let authIdArr = obj['AuthId'];
 
     authIdArr.forEach((_d: string, index: number) => {
-      if (_d === "-") {
+      if (_d === '-') {
         indexOfBlankAuthId.push(index);
       }
     });
@@ -552,7 +526,7 @@ const UploadCsv = ({ institutionId }: ICsvProps) => {
     const file = e.target.files[0];
     const ext = getExtension(file.name);
 
-    if (ext === "csv") {
+    if (ext === 'csv') {
       clearModal();
       try {
         setCheckingCsvFile(true);
@@ -562,33 +536,33 @@ const UploadCsv = ({ institutionId }: ICsvProps) => {
           const result: any = Papa.parse(event.target.result);
 
           let parsed = customParse(result.data);
-          if (typeof parsed === "boolean" && !parsed) {
+          if (typeof parsed === 'boolean' && !parsed) {
             resetFile();
             setIsMapping(false);
             setShowModal({
               show: true,
-              title: "Confirm File",
+              title: 'Confirm File',
               element: (
                 <div>
                   <p className="p-4 text-sm text-gray-700">
-                    please check your input file, You are trying to import
-                    unapproved response types
+                    please check your input file, You are trying to import unapproved
+                    response types
                   </p>
                 </div>
               ),
 
               saveAction: () => {},
-              saveLabel: "",
-              closeLabel: "",
+              saveLabel: '',
+              closeLabel: ''
             });
             return;
           }
 
           parsed = removeBlankAuthIds(parsed);
 
-          const surveyID = parsed["SurveyID"][0];
-          const unitID = parsed["UnitID"][0];
-          const classroomName = parsed["Classroom"][0];
+          const surveyID = parsed['SurveyID'][0];
+          const unitID = parsed['UnitID'][0];
+          const classroomName = parsed['Classroom'][0];
 
           if (
             surveyID !== selectedSurvey?.id ||
@@ -599,7 +573,7 @@ const UploadCsv = ({ institutionId }: ICsvProps) => {
             setIsMapping(false);
             setShowModal({
               show: true,
-              title: "Confirm File",
+              title: 'Confirm File',
               element: (
                 <div>
                   <p className="p-4 text-sm text-gray-700">
@@ -609,8 +583,8 @@ const UploadCsv = ({ institutionId }: ICsvProps) => {
               ),
 
               saveAction: () => {},
-              saveLabel: "",
-              closeLabel: "",
+              saveLabel: '',
+              closeLabel: ''
             });
             return;
           } else if (surveyID && unitID && classroomName) {
@@ -623,20 +597,16 @@ const UploadCsv = ({ institutionId }: ICsvProps) => {
             listOptionsId &&
               listOptionsId.length > 0 &&
               listOptionsId.forEach((ques: any) => {
-                return (surveyQuestionOptions[ques.question.id] =
-                  ques.question.options);
+                return (surveyQuestionOptions[ques.question.id] = ques.question.options);
               });
 
-            focusOn("reason-button");
+            focusOn('reason-button');
 
             Object.keys(parsed).forEach((keyName, index2: number) => {
               const valueArray = parsed[keyName];
 
               valueArray.forEach(async (value: string, index: number) => {
-                if (
-                  keyName === "UniversalSurveyStudentID" &&
-                  value !== "Not-taken-yet"
-                ) {
+                if (keyName === 'UniversalSurveyStudentID' && value !== 'Not-taken-yet') {
                   //
                   ussIDAndTakenSurvey(
                     value,
@@ -646,8 +616,8 @@ const UploadCsv = ({ institutionId }: ICsvProps) => {
                     keyName
                   );
                 } else if (
-                  keyName === "UniversalSurveyStudentID" &&
-                  value === "Not-taken-yet"
+                  keyName === 'UniversalSurveyStudentID' &&
+                  value === 'Not-taken-yet'
                 ) {
                   //
                   ussIdAndNotTakenSurvey(
@@ -658,14 +628,14 @@ const UploadCsv = ({ institutionId }: ICsvProps) => {
                     keyName
                   );
                 } else if (
-                  keyName === "DemographicsDataID" &&
-                  value !== "No-demographics-data"
+                  keyName === 'DemographicsDataID' &&
+                  value !== 'No-demographics-data'
                 ) {
                   ddIDAndDemographicData(value, parsed, index2);
                   // }
                 } else if (
-                  keyName === "DemographicsDataID" &&
-                  value === "No-demographics-data"
+                  keyName === 'DemographicsDataID' &&
+                  value === 'No-demographics-data'
                 ) {
                   ddIDAndNotDemographicData(value, parsed, index, index2);
                 }
@@ -677,22 +647,19 @@ const UploadCsv = ({ institutionId }: ICsvProps) => {
         };
         fileReader.readAsText(file);
       } catch (error) {
-        logError(error, { authId, email }, "UploadCSV @handleUpload");
+        logError(error, {authId, email}, 'UploadCSV @handleUpload');
 
-        setError("Something went wrong!");
+        setError('Something went wrong!');
 
-        console.error(
-          "🚀 ~ file: UploadCSV.tsx ~ line 39 ~ handleUpload ~ error",
-          error
-        );
+        console.error('🚀 ~ file: UploadCSV.tsx ~ line 39 ~ handleUpload ~ error', error);
       } finally {
         setCheckingCsvFile(false);
       }
-    } else if (ext === "xlsx") {
+    } else if (ext === 'xlsx') {
       setShowModal({
         show: true,
-        title: "Not supported",
-        closeLabel: "Cancel",
+        title: 'Not supported',
+        closeLabel: 'Cancel',
         saveAction: () => {},
         saveElement: (
           <a
@@ -700,86 +667,70 @@ const UploadCsv = ({ institutionId }: ICsvProps) => {
             onClick={() => clearModal()}
             target="_blank"
             rel="no-referrer"
-            className=""
-          >
+            className="">
             Convert to csv
           </a>
         ),
         element: (
           <div className="flex flex-col justify-center items-center gap-y-4">
-            <RiErrorWarningLine
-              fontSize={"4rem"}
-              className="text-yellow-500 animate-y"
-            />
+            <RiErrorWarningLine fontSize={'4rem'} className="text-yellow-500 animate-y" />
             <p className="text-gray-600 pt-0 p-4 text-center">
-              xlsx file is not supported. Please convert it to csv file and then
-              try again.
+              xlsx file is not supported. Please convert it to csv file and then try
+              again.
             </p>
           </div>
-        ),
+        )
       });
     }
   };
 
-  const createTempSurveyData = async (
-    SurveyId: string,
-    surveyData: string[]
-  ) => {
+  const createTempSurveyData = async (SurveyId: string, surveyData: string[]) => {
     try {
       const value = {
         id: uuidv4(),
         updatedUserId: state.user.authId,
         universalSurveyId: SurveyId,
-        surveyData: surveyData,
+        surveyData: surveyData
       };
 
       const newSurveyData: any = await API.graphql(
         graphqlOperation(mutations.createTemporaryUniversalUploadSurveyData, {
-          input: value,
+          input: value
         })
       );
 
-      const returnedData =
-        newSurveyData.data.createTemporaryUniversalUploadSurveyData;
+      const returnedData = newSurveyData.data.createTemporaryUniversalUploadSurveyData;
 
       return returnedData;
     } catch (e) {
-      logError(e, { authId, email }, "UploadCSV @createTempSurveyData");
-      console.error("error creating survey data - ", e);
+      logError(e, {authId, email}, 'UploadCSV @createTempSurveyData');
+      console.error('error creating survey data - ', e);
       return {};
     }
   };
 
-  const createTempDemographicsData = async (
-    demoTempID: any,
-    responseObject: any[]
-  ) => {
+  const createTempDemographicsData = async (demoTempID: any, responseObject: any[]) => {
     try {
       const value = {
         id: uuidv4(),
         updatedUserId: state.user.authId,
         questionDataID: demoTempID,
-        responseObject: responseObject,
+        responseObject: responseObject
       };
 
       const newDemographicsData: any = await API.graphql(
         graphqlOperation(mutations.createTemporaryDemographicsUploadData, {
-          input: value,
+          input: value
         })
       );
 
-      const returnedData =
-        newDemographicsData.data.createTemporaryDemographicsUploadData;
+      const returnedData = newDemographicsData.data.createTemporaryDemographicsUploadData;
 
       return returnedData;
     } catch (error) {
-      logError(
-        error,
-        { authId, email },
-        "UploadCSV @createTempDemographicsData"
-      );
+      logError(error, {authId, email}, 'UploadCSV @createTempDemographicsData');
       console.error(
-        "🚀 ~ file: UploadCSV.tsx ~ line 447 ~ createTempDemographicsData ~ error",
+        '🚀 ~ file: UploadCSV.tsx ~ line 447 ~ createTempDemographicsData ~ error',
         error
       );
     }
@@ -793,7 +744,7 @@ const UploadCsv = ({ institutionId }: ICsvProps) => {
         User_id: state.user.authId,
         Unit_id: selectedUnit.id,
         lesson_id: selectedSurvey.id,
-        Date: new Date().toISOString().split("T")[0],
+        Date: new Date().toISOString().split('T')[0],
         UploadType: selectedReason.value,
         room_id: selectedClassRoom.id,
         urlLink: csvUrl,
@@ -802,12 +753,12 @@ const UploadCsv = ({ institutionId }: ICsvProps) => {
         surveyName: selectedSurvey.name,
         roomName: selectedReason.name,
         personName: `${firstName} ${lastName}`,
-        unitName: selectedUnit.name,
+        unitName: selectedUnit.name
       };
 
       const newUploadLogs: any = await API.graphql(
         graphqlOperation(customMutations.createUploadLogs, {
-          input: input,
+          input: input
         })
       );
 
@@ -815,8 +766,8 @@ const UploadCsv = ({ institutionId }: ICsvProps) => {
 
       return returnedData;
     } catch (e) {
-      console.error("error creating upload logs - ", e);
-      logError(e, { authId, email }, "UploadCSV @createUploadLogs");
+      console.error('error creating upload logs - ', e);
+      logError(e, {authId, email}, 'UploadCSV @createUploadLogs');
       return {};
     }
   };
@@ -833,27 +784,20 @@ const UploadCsv = ({ institutionId }: ICsvProps) => {
       }
 
       data.forEach(async (item: any) => {
-        await createTempSurveyData(
-          item.UniversalSurveyStudentID,
-          item.surveyData
-        );
+        await createTempSurveyData(item.UniversalSurveyStudentID, item.surveyData);
         await API.graphql(
           graphqlOperation(mutations.updateUniversalArchiveData, {
             input: {
               id: item.UniversalSurveyStudentID,
-              surveyData: item.surveyData,
-            } as UpdateUniversalArchiveDataInput,
+              surveyData: item.surveyData
+            } as UpdateUniversalArchiveDataInput
           })
         );
       });
     } catch (error) {
-      logError(
-        error,
-        { authId, email },
-        "UploadCSV @handleSurveyExistingUpload"
-      );
+      logError(error, {authId, email}, 'UploadCSV @handleSurveyExistingUpload');
       console.error(
-        "🚀 ~ file: UploadCSV.tsx ~ line 169 ~ handleExistingUpload ~ error",
+        '🚀 ~ file: UploadCSV.tsx ~ line 169 ~ handleExistingUpload ~ error',
         error
       );
     }
@@ -870,17 +814,17 @@ const UploadCsv = ({ institutionId }: ICsvProps) => {
       changedSurveyData.forEach(async (item: any) => {
         const input: CreateUniversalArchiveDataInput = {
           id: uuidv4(),
-          lessonPageID: "999",
+          lessonPageID: '999',
           lessonID: item.lessonID,
           studentAuthID: item.studentAuthID,
           studentEmail: item.studentEmail,
           studentID: item.studentAuthID,
           syllabusLessonID: item.syllabusLessonID,
-          surveyData: item.surveyData,
+          surveyData: item.surveyData
         };
         const createData: any = await API.graphql(
           graphqlOperation(mutations.createUniversalArchiveData, {
-            input,
+            input
           })
         );
         if (createData) {
@@ -891,13 +835,9 @@ const UploadCsv = ({ institutionId }: ICsvProps) => {
         }
       });
     } catch (error) {
-      logError(
-        error,
-        { authId, email },
-        "UploadCSV @handleNewSurveyUniversalUpload"
-      );
+      logError(error, {authId, email}, 'UploadCSV @handleNewSurveyUniversalUpload');
       console.error(
-        "🚀 ~ file: UploadCSV.tsx ~ line 172 ~ handleUniversalUpload ~ error",
+        '🚀 ~ file: UploadCSV.tsx ~ line 172 ~ handleUniversalUpload ~ error',
         error
       );
     }
@@ -915,29 +855,22 @@ const UploadCsv = ({ institutionId }: ICsvProps) => {
       }
 
       data.forEach(async (item: any) => {
-        await createTempDemographicsData(
-          item.questionDataId,
-          item.responseObject
-        );
+        await createTempDemographicsData(item.questionDataId, item.responseObject);
         // createTempDemographicsDataResult &&
 
         await API.graphql(
           graphqlOperation(mutations.updateQuestionData, {
             input: {
               id: item.questionDataId,
-              responseObject: item.responseObject,
-            },
+              responseObject: item.responseObject
+            }
           })
         );
       });
     } catch (error) {
-      logError(
-        error,
-        { authId, email },
-        "UploadCSV @handleDemographicsExistingUpload"
-      );
+      logError(error, {authId, email}, 'UploadCSV @handleDemographicsExistingUpload');
       console.error(
-        "🚀 ~ file: UploadCSV.tsx ~ line 575 ~ handleDemographicsExistingUpload ~ error",
+        '🚀 ~ file: UploadCSV.tsx ~ line 575 ~ handleDemographicsExistingUpload ~ error',
         error
       );
     }
@@ -945,23 +878,21 @@ const UploadCsv = ({ institutionId }: ICsvProps) => {
 
   const handleDemographicsNewUpload = async () => {
     try {
-      const changedDemographicsUpdatedData = newDemographicsData.filter(
-        (data: any) => {
-          return data.responseObject.some((dData: any) => {
-            return dData.demographicsUpdated === true;
-          });
-        }
-      );
+      const changedDemographicsUpdatedData = newDemographicsData.filter((data: any) => {
+        return data.responseObject.some((dData: any) => {
+          return dData.demographicsUpdated === true;
+        });
+      });
 
       changedDemographicsUpdatedData.forEach(async (item: any) => {
         const createCheckpointData: any = await API.graphql(
           graphqlOperation(mutations.createCheckpoint, {
             input: {
-              label: "IA1",
-              type: "profile",
-              title: "Profile Details",
-              stage: "checkpoint",
-            },
+              label: 'IA1',
+              type: 'profile',
+              title: 'Profile Details',
+              stage: 'checkpoint'
+            }
           })
         );
         if (createCheckpointData) {
@@ -972,8 +903,8 @@ const UploadCsv = ({ institutionId }: ICsvProps) => {
                 checkpointID: createCheckpointData.data.createCheckpoint.id,
                 email: item.email,
                 responseObject: item.responseObject,
-                syllabusLessonID: "999999",
-              },
+                syllabusLessonID: '999999'
+              }
             })
           );
           if (createDemographicsQuestionData) {
@@ -986,13 +917,9 @@ const UploadCsv = ({ institutionId }: ICsvProps) => {
         }
       });
     } catch (error) {
-      logError(
-        error,
-        { authId, email },
-        "UploadCSV @handleDemographicsNewUpload"
-      );
+      logError(error, {authId, email}, 'UploadCSV @handleDemographicsNewUpload');
       console.error(
-        "🚀 ~ file: UploadCSV.tsx ~ line 575 ~ handleDemographicsNewUpload ~ error",
+        '🚀 ~ file: UploadCSV.tsx ~ line 575 ~ handleDemographicsNewUpload ~ error',
         error
       );
     }
@@ -1001,7 +928,7 @@ const UploadCsv = ({ institutionId }: ICsvProps) => {
   const showModalWhenUploadCsv = (e: any) => {
     setShowModal({
       show: true,
-      title: "Confirmation",
+      title: 'Confirmation',
       element: (
         <div>
           <p className="text-gray-700 text-sm p-4">
@@ -1009,16 +936,16 @@ const UploadCsv = ({ institutionId }: ICsvProps) => {
           </p>
         </div>
       ),
-      saveLabel: "Confirm",
-      closeLabel: "Cancel",
+      saveLabel: 'Confirm',
+      closeLabel: 'Cancel',
       saveAction: () => {
         clearModal();
         handleSubmit(e);
-      },
+      }
     });
   };
 
-  const CSV_KEY = "CSV";
+  const CSV_KEY = 'CSV';
 
   const uploadCsvToS3 = async () => {
     try {
@@ -1031,14 +958,14 @@ const UploadCsv = ({ institutionId }: ICsvProps) => {
           fileType
         );
 
-        const fileUrl = (await getImageFromS3(fileUpload.key)) || "";
+        const fileUrl = (await getImageFromS3(fileUpload.key)) || '';
 
         return fileUrl as string;
       }
       return null;
     } catch (error) {
       console.error(error);
-      logError(error, { authId, email }, "UploadCSV @uploadCsvToS3");
+      logError(error, {authId, email}, 'UploadCSV @uploadCsvToS3');
       return null;
     }
   };
@@ -1049,24 +976,20 @@ const UploadCsv = ({ institutionId }: ICsvProps) => {
         graphqlOperation(queries.listTemporaryUniversalUploadSurveyData)
       );
 
-      const list: any[] =
-        res.data.listTemporaryUniversalUploadSurveyData.items || [];
+      const list: any[] = res.data.listTemporaryUniversalUploadSurveyData.items || [];
 
       if (list.length > 0) {
         list.forEach(async (item) => {
           await API.graphql(
-            graphqlOperation(
-              mutations.deleteTemporaryUniversalUploadSurveyData,
-              {
-                input: { id: item.id },
-              }
-            )
+            graphqlOperation(mutations.deleteTemporaryUniversalUploadSurveyData, {
+              input: {id: item.id}
+            })
           );
         });
       }
     } catch (error) {
       console.error(error);
-      logError(error, { authId, email }, "UploadCSV @deletePrevTempData");
+      logError(error, {authId, email}, 'UploadCSV @deletePrevTempData');
     }
   };
 
@@ -1076,21 +999,20 @@ const UploadCsv = ({ institutionId }: ICsvProps) => {
         graphqlOperation(queries.listTemporaryDemographicsUploadData)
       );
 
-      const list: any[] =
-        res.data.listTemporaryDemographicsUploadData.items || [];
+      const list: any[] = res.data.listTemporaryDemographicsUploadData.items || [];
 
       if (list.length > 0) {
         list.forEach(async (item) => {
           await API.graphql(
             graphqlOperation(mutations.deleteTemporaryDemographicsUploadData, {
-              input: { id: item.id },
+              input: {id: item.id}
             })
           );
         });
       }
     } catch (error) {
       console.error(error);
-      logError(error, { authId, email }, "UploadCSV @deletePrevTempData");
+      logError(error, {authId, email}, 'UploadCSV @deletePrevTempData');
     }
   };
 
@@ -1119,12 +1041,12 @@ const UploadCsv = ({ institutionId }: ICsvProps) => {
 
         setSelectedReason({
           id: 0,
-          name: "",
-          value: "",
+          name: '',
+          value: ''
         });
 
         if (csvInputRef.current && csvInputRef?.current?.value !== null) {
-          csvInputRef.current.value = "";
+          csvInputRef.current.value = '';
         }
         setFile(null);
 
@@ -1134,24 +1056,21 @@ const UploadCsv = ({ institutionId }: ICsvProps) => {
         }, 4500);
       }
     } catch (error) {
-      logError(error, { authId, email }, "UploadCSV @handleSubmit");
-      console.error(
-        "🚀 ~ file: UploadCSV.tsx ~ line 38 ~ handleSubmit ~ error",
-        error
-      );
+      logError(error, {authId, email}, 'UploadCSV @handleSubmit');
+      console.error('🚀 ~ file: UploadCSV.tsx ~ line 38 ~ handleSubmit ~ error', error);
     } finally {
       setUploadingCSV(false);
     }
   };
 
   const onReasonSelected = (id: any, name: string, value: string) => {
-    let reasonDropdownValue = { id, name, value };
+    let reasonDropdownValue = {id, name, value};
     setSelectedReason(reasonDropdownValue);
   };
 
   const onChangeSurvey = (id: any, name: string, value: string) => {
     resetFile();
-    let reasonDropdownValue = { id, name, value };
+    let reasonDropdownValue = {id, name, value};
     setSelectedSurvey(reasonDropdownValue);
   };
 
@@ -1160,7 +1079,7 @@ const UploadCsv = ({ institutionId }: ICsvProps) => {
       setUnitsLoading(true);
       let curriculumUnits: any = await API.graphql(
         graphqlOperation(customQueries.listUnits, {
-          filter: { curriculumId: { eq: curriculumId } },
+          filter: {curriculumId: {eq: curriculumId}}
         })
       );
       let units = curriculumUnits?.data.listCurriculumUnits?.items || [];
@@ -1172,7 +1091,7 @@ const UploadCsv = ({ institutionId }: ICsvProps) => {
             return {
               id: unitData.id,
               name: unitData.name,
-              value: unitData.name,
+              value: unitData.name
             };
           }
           return null;
@@ -1183,8 +1102,8 @@ const UploadCsv = ({ institutionId }: ICsvProps) => {
 
       // here we have curricularCheckpoints and use syllabusLessonId 999999 to fetch list of question data
     } catch (err) {
-      console.error("fetch units (syllabus) error", err);
-      logError(err, { authId, email }, "UploadCSV @fetchUnits");
+      console.error('fetch units (syllabus) error', err);
+      logError(err, {authId, email}, 'UploadCSV @fetchUnits');
     } finally {
       setUnitsLoading(false);
     }
@@ -1192,9 +1111,9 @@ const UploadCsv = ({ institutionId }: ICsvProps) => {
 
   const fetchActiveUnits = async (crList: any) => {
     const arrayOfActiveUnits = crList
-      ?.filter((_c: { activeSyllabus: any }) => Boolean(_c?.activeSyllabus))
-      .map((_c: { activeSyllabus: string | null }) => {
-        if (_c?.activeSyllabus) return { unitId: { eq: _c.activeSyllabus } };
+      ?.filter((_c: {activeSyllabus: any}) => Boolean(_c?.activeSyllabus))
+      .map((_c: {activeSyllabus: string | null}) => {
+        if (_c?.activeSyllabus) return {unitId: {eq: _c.activeSyllabus}};
         return null;
       })
       .filter(Boolean);
@@ -1202,7 +1121,7 @@ const UploadCsv = ({ institutionId }: ICsvProps) => {
     try {
       let curriculumUnits: any = await API.graphql(
         graphqlOperation(customQueries.listUnits, {
-          filter: { or: arrayOfActiveUnits },
+          filter: {or: arrayOfActiveUnits}
         })
       );
       let units = curriculumUnits?.data.listCurriculumUnits?.items || [];
@@ -1211,7 +1130,7 @@ const UploadCsv = ({ institutionId }: ICsvProps) => {
         .map((syl: any) => {
           if (syl.unit) {
             let unitData = syl.unit;
-            return { id: unitData.id, name: unitData.name };
+            return {id: unitData.id, name: unitData.name};
           }
           return null;
         })
@@ -1219,8 +1138,8 @@ const UploadCsv = ({ institutionId }: ICsvProps) => {
 
       setActiveUnits(units);
     } catch (error) {
-      console.error("error at fetchActiveUnits Csv.tsx", error);
-      logError(error, { authId, email }, "UploadCSV @fetchActiveUnits");
+      console.error('error at fetchActiveUnits Csv.tsx', error);
+      logError(error, {authId, email}, 'UploadCSV @fetchActiveUnits');
     }
   };
 
@@ -1239,55 +1158,50 @@ const UploadCsv = ({ institutionId }: ICsvProps) => {
           graphqlOperation(customQueries.listRoomsDashboard, {
             filter: withZoiqFilter(
               {
-                teacherAuthID: { eq: authId },
-                type: { eq: ClassroomType.TRADITIONAL },
+                teacherAuthID: {eq: authId},
+                type: {eq: ClassroomType.TRADITIONAL}
               },
               zoiqFilter
-            ),
+            )
           })
         );
 
         coTeahcerClassrooms = await API.graphql(
           graphqlOperation(customQueries.listRoomCoTeachers, {
             filter: {
-              teacherAuthID: { eq: authId },
+              teacherAuthID: {eq: authId},
 
-              type: { eq: ClassroomType.TRADITIONAL },
-            },
+              type: {eq: ClassroomType.TRADITIONAL}
+            }
           })
         );
       } else {
         classrooms = await API.graphql(
           graphqlOperation(customQueries.listRoomsDashboard, {
-            filter: withZoiqFilter(
-              { type: { eq: ClassroomType.TRADITIONAL } },
-              zoiqFilter
-            ),
+            filter: withZoiqFilter({type: {eq: ClassroomType.TRADITIONAL}}, zoiqFilter)
           })
         );
 
         coTeahcerClassrooms = await API.graphql(
           graphqlOperation(customQueries.listRoomCoTeachers, {
-            filter: { type: { eq: ClassroomType.TRADITIONAL } },
+            filter: {type: {eq: ClassroomType.TRADITIONAL}}
           })
         );
       }
 
-      let coTeachersRooms =
-        coTeahcerClassrooms?.data?.listRoomCoTeachers?.items.map(
-          (item: any) => {
-            if (item && item.room) {
-              return {
-                ...item,
-                name: item.room.name,
-                class: { id: item.room.classID },
-                curricula: item?.curricula || { items: [] },
-              };
-            }
+      let coTeachersRooms = coTeahcerClassrooms?.data?.listRoomCoTeachers?.items.map(
+        (item: any) => {
+          if (item && item.room) {
+            return {
+              ...item,
+              name: item.room.name,
+              class: {id: item.room.classID},
+              curricula: item?.curricula || {items: []}
+            };
           }
-        );
-      classrooms =
-        [...coTeachersRooms, ...classrooms?.data.listRooms?.items] || [];
+        }
+      );
+      classrooms = [...coTeachersRooms, ...classrooms?.data.listRooms?.items] || [];
       classrooms = classrooms
         .map((cr: any) => {
           if (cr) {
@@ -1299,16 +1213,16 @@ const UploadCsv = ({ institutionId }: ICsvProps) => {
                 : null;
 
             !instCRs.find((d: any) => d.name === cr.name) &&
-              instCRs.push({ id: cr.id, name: cr.name, value: cr.name });
+              instCRs.push({id: cr.id, name: cr.name, value: cr.name});
 
             return {
               id: cr.id,
 
               name: cr.name,
               value: cr.name,
-              class: { ...cr.class },
+              class: {...cr.class},
               curriculum,
-              ...insertExtraDataForClassroom(cr),
+              ...insertExtraDataForClassroom(cr)
             };
           }
           return null;
@@ -1320,7 +1234,7 @@ const UploadCsv = ({ institutionId }: ICsvProps) => {
       fetchActiveUnits(classrooms);
     } catch (error) {
       console.error(error);
-      logError(error, { authId, email }, "UploadCSV @fetchClassRooms");
+      logError(error, {authId, email}, 'UploadCSV @fetchClassRooms');
     } finally {
       setClassRoomLoading(false);
       setIsFetchedClassroom(true);
@@ -1338,34 +1252,33 @@ const UploadCsv = ({ institutionId }: ICsvProps) => {
     try {
       let syllabusLessons: any = await API.graphql(
         graphqlOperation(customQueries.listSurveys, {
-          id: unitId,
+          id: unitId
         })
       );
-      syllabusLessons =
-        syllabusLessons?.data.getUniversalSyllabus?.lessons?.items || [];
+      syllabusLessons = syllabusLessons?.data.getUniversalSyllabus?.lessons?.items || [];
       let surveys: any = [];
       let syllabusLessonsData: any = [];
       syllabusLessons.filter((les: any) => {
-        if (les.lesson && les.lesson.type === "survey") {
+        if (les.lesson && les.lesson.type === 'survey') {
           syllabusLessonsData.push({
             syllabusLessonID: les.id,
             lessonID: les.lessonID,
-            lesson: les.lesson,
+            lesson: les.lesson
           });
           surveys.push({
             id: les.lesson.id,
             name: les.lesson.title,
-            value: les.lesson.title,
+            value: les.lesson.title
           });
           return les.lesson;
         }
       });
 
-      setSurveys(uniqBy(surveys, "id"));
+      setSurveys(uniqBy(surveys, 'id'));
       setSurveysLoading(false);
     } catch (err) {
-      console.error("fetch surveys list error", err);
-      logError(err, { authId, email }, "UploadCSV @fetchSurveys");
+      console.error('fetch surveys list error', err);
+      logError(err, {authId, email}, 'UploadCSV @fetchSurveys');
     } finally {
       setSurveysLoading(false);
     }
@@ -1374,7 +1287,7 @@ const UploadCsv = ({ institutionId }: ICsvProps) => {
   const onClassRoomSelect = async (id: string, name: string, value: string) => {
     try {
       let sCR = selectedClassRoom;
-      let cr = { id, name, value };
+      let cr = {id, name, value};
       resetFile();
       setSelectedClassRoom(cr);
       setUnits([]);
@@ -1390,16 +1303,16 @@ const UploadCsv = ({ institutionId }: ICsvProps) => {
         }
         // units (syllabus fetched)
       } else {
-        console.log("classroom already selected");
+        console.log('classroom already selected');
       }
     } catch (err) {
-      console.log("on class room select", err);
-      logError(err, { authId, email }, "UploadCSV @onClassRoomSelect");
+      console.log('on class room select', err);
+      logError(err, {authId, email}, 'UploadCSV @onClassRoomSelect');
     }
   };
 
   const onUnitSelect = (id: string, name: string, value: string) => {
-    let unit = { id, name, value };
+    let unit = {id, name, value};
     resetFile();
     setSelectedUnit(unit);
     fetchSurveys(unit.id);
@@ -1407,7 +1320,7 @@ const UploadCsv = ({ institutionId }: ICsvProps) => {
     setSelectedSurvey(null);
   };
 
-  const [hoveringItem, setHoveringItem] = useState<{ name?: string }>({});
+  const [hoveringItem, setHoveringItem] = useState<{name?: string}>({});
 
   const currentSelectedClassroomData =
     hoveringItem &&
@@ -1416,21 +1329,19 @@ const UploadCsv = ({ institutionId }: ICsvProps) => {
 
   const currentActiveUnit =
     currentSelectedClassroomData &&
-    activeUnits.find(
-      (_d) => _d?.id === currentSelectedClassroomData?.activeSyllabus
-    );
+    activeUnits.find((_d) => _d?.id === currentSelectedClassroomData?.activeSyllabus);
 
   const getMappedValues = (input: any) => {
     if (input) {
       let result: any[] = [];
 
-      const values = input["AuthId"];
+      const values = input['AuthId'];
 
       if (values) {
         values.forEach(() => {
           let res: any = {};
           Object.keys(input).forEach((_d) => {
-            res[_d] = "";
+            res[_d] = '';
           });
           result.push(res);
         });
@@ -1454,32 +1365,31 @@ const UploadCsv = ({ institutionId }: ICsvProps) => {
 
   const dataList = getMappedValues(parsedObj).map((listItem, idx) => ({
     no: idx + 1,
-    id: listItem["AuthId"],
-    name: `${listItem["First Name"]} ${listItem["Last Name"]}`,
+    id: listItem['AuthId'],
+    name: `${listItem['First Name']} ${listItem['Last Name']}`,
 
-    email: listItem["Email"],
-    takenSurvey:
-      listItem["UniversalSurveyStudentID"] === "Not-taken-yet" ? "No" : "Yes",
+    email: listItem['Email'],
+    takenSurvey: listItem['UniversalSurveyStudentID'] === 'Not-taken-yet' ? 'No' : 'Yes'
   }));
 
   const tableConfig = {
-    headers: ["No", "Id", "Name", "Email", "Taken Survey"],
+    headers: ['No', 'Id', 'Name', 'Email', 'Taken Survey'],
     dataList,
     config: {
       isFirstIndex: true,
       dataList: {
         loading: isEmpty(parsedObj),
 
-        emptyText: "no data found",
+        emptyText: 'no data found',
         customWidth: {
-          id: "w-72",
-          takenSurvey: "w-48",
+          id: 'w-72',
+          takenSurvey: 'w-48',
 
-          email: "w-72 break-all",
+          email: 'w-72 break-all'
         },
-        maxHeight: "max-h-196",
-      },
-    },
+        maxHeight: 'max-h-196'
+      }
+    }
   };
 
   return (
@@ -1494,8 +1404,7 @@ const UploadCsv = ({ institutionId }: ICsvProps) => {
           saveElement={showModal?.saveElement}
           closeLabel={showModal.closeLabel}
           saveLabel={showModal?.saveLabel}
-          showFooter={Boolean(showModal.closeLabel)}
-        >
+          showFooter={Boolean(showModal.closeLabel)}>
           {showModal.element}
         </Modal>
       )}
@@ -1511,9 +1420,7 @@ const UploadCsv = ({ institutionId }: ICsvProps) => {
                       <Selector
                         dataCy="upload-analytics-classroom"
                         loading={classRoomLoading}
-                        selectedItem={
-                          selectedClassRoom ? selectedClassRoom.name : ""
-                        }
+                        selectedItem={selectedClassRoom ? selectedClassRoom.name : ''}
                         placeholder="select classroom"
                         width="xl:w-64"
                         setHoveringItem={setHoveringItem}
@@ -1521,81 +1428,65 @@ const UploadCsv = ({ institutionId }: ICsvProps) => {
                         onChange={(value, name, id) => {
                           setHoveringItem({});
                           onClassRoomSelect(id, name, value);
-                          focusOn("upload-analytics-unit");
+                          focusOn('upload-analytics-unit');
                         }}
                       />
                       {currentSelectedClassroomData && (
-                        <ClickAwayListener
-                          onClickAway={() => setHoveringItem({})}
-                        >
+                        <ClickAwayListener onClickAway={() => setHoveringItem({})}>
                           <Transition
                             style={{
-                              top: "0rem",
-                              bottom: "1.5rem",
-                              right: "-110%",
-                              zIndex: 999999,
+                              top: '0rem',
+                              bottom: '1.5rem',
+                              right: '-110%',
+                              zIndex: 999999
                             }}
                             className="hidden md:block cursor-pointer select-none  absolute right-1 text-black "
-                            show={Boolean(hoveringItem && hoveringItem.name)}
-                          >
+                            show={Boolean(hoveringItem && hoveringItem.name)}>
                             <div className="bg-white flex flex-col border-gray-200 rounded-xl  customShadow border-0 p-4  min-w-70 max-w-70 w-auto">
                               <DataValue
-                                title={"Institution Name"}
-                                content={
-                                  currentSelectedClassroomData?.institutionName
-                                }
+                                title={'Institution Name'}
+                                content={currentSelectedClassroomData?.institutionName}
                               />
                               <DataValue
-                                title={"Clasroom Name"}
+                                title={'Clasroom Name'}
                                 content={currentSelectedClassroomData?.name}
                               />
                               <DataValue
-                                title={"Status"}
+                                title={'Status'}
                                 content={
                                   <p
                                     className={`${
-                                      currentSelectedClassroomData.status ===
-                                      "ACTIVE"
-                                        ? "text-green-500"
-                                        : "text-yellow-500"
-                                    } lowercase`}
-                                  >
+                                      currentSelectedClassroomData.status === 'ACTIVE'
+                                        ? 'text-green-500'
+                                        : 'text-yellow-500'
+                                    } lowercase`}>
                                     {currentSelectedClassroomData.status}
                                   </p>
                                 }
                               />
                               <DataValue
-                                title={"Teacher"}
+                                title={'Teacher'}
                                 content={
                                   <div className="flex items-center justify-center w-auto">
                                     <span className="w-auto">
                                       <img
-                                        src={
-                                          currentSelectedClassroomData.teacher
-                                            .image
-                                        }
+                                        src={currentSelectedClassroomData.teacher.image}
                                         className="h-6 w-6 rounded-full"
                                       />
                                     </span>
                                     <p className="w-auto ml-2">
-                                      {
-                                        currentSelectedClassroomData.teacher
-                                          .name
-                                      }
+                                      {currentSelectedClassroomData.teacher.name}
                                     </p>
                                   </div>
                                 }
                               />
                               <DataValue
-                                title={"Course Name"}
-                                content={
-                                  currentSelectedClassroomData?.courseName ||
-                                  "--"
-                                }
+                                title={'Course Name'}
+                                content={currentSelectedClassroomData?.courseName || '--'}
                               />
                               <DataValue
-                                title={"Active Unit"}
-                                content={currentActiveUnit?.name || "--"}
+                                title={'Active Unit'}
+                                content={currentActiveUnit?.name || '--'}
                               />
                             </div>
                           </Transition>
@@ -1605,7 +1496,7 @@ const UploadCsv = ({ institutionId }: ICsvProps) => {
                     <Selector
                       dataCy="upload-analytics-unit"
                       loading={unitsLoading}
-                      selectedItem={selectedUnit ? selectedUnit.name : ""}
+                      selectedItem={selectedUnit ? selectedUnit.name : ''}
                       placeholder="select unit"
                       btnId="upload-analytics-unit"
                       list={units}
@@ -1613,7 +1504,7 @@ const UploadCsv = ({ institutionId }: ICsvProps) => {
                       disabled={!selectedCurriculum}
                       onChange={(value, name, id) => {
                         onUnitSelect(id, name, value);
-                        focusOn("analytics-survey");
+                        focusOn('analytics-survey');
                       }}
                     />
 
@@ -1624,16 +1515,14 @@ const UploadCsv = ({ institutionId }: ICsvProps) => {
                       width="xl:w-64"
                       direction="left"
                       disabled={!selectedUnit}
-                      selectedItem={selectedSurvey ? selectedSurvey.name : ""}
+                      selectedItem={selectedSurvey ? selectedSurvey.name : ''}
                       placeholder="select survey"
                       list={surveys}
-                      onChange={(value, name, id) =>
-                        onChangeSurvey(id, name, value)
-                      }
+                      onChange={(value, name, id) => onChangeSurvey(id, name, value)}
                     />
                   </div>
                 }
-                title={Institute_info[userLanguage]["TABS"]["UPLOAD_SURVEY"]}
+                title={Institute_info[userLanguage]['TABS']['UPLOAD_SURVEY']}
               />
             </div>
           </div>
@@ -1642,7 +1531,7 @@ const UploadCsv = ({ institutionId }: ICsvProps) => {
         <div className="flex items-center justify-start  gap-x-4 border-t-0 border-gray-400 border-dashed py-4 mb-4">
           <UploadButton
             disabled={isMapping || !Boolean(selectedSurvey)}
-            label={file ? "Change file" : "Choose file"}
+            label={file ? 'Change file' : 'Choose file'}
             acceptedFilesFormat=".csv, .xlsx"
             ref={csvInputRef}
             id="upload-csv-button"
@@ -1651,29 +1540,25 @@ const UploadCsv = ({ institutionId }: ICsvProps) => {
 
           <Selector
             additionalClass="w-auto"
-            btnClass={!file ? "cursor-not-allowed" : ""}
+            btnClass={!file ? 'cursor-not-allowed' : ''}
             disabled={!file}
             dropdownWidth="w-96"
             btnId="reason-button"
-            selectedItem={selectedReason ? selectedReason.name : ""}
-            placeholder={CsvDict[userLanguage]["SELECT_REASON"]}
+            selectedItem={selectedReason ? selectedReason.name : ''}
+            placeholder={CsvDict[userLanguage]['SELECT_REASON']}
             list={reasonDropdown}
             onChange={(value, name, id) => onReasonSelected(id, name, value)}
           />
         </div>
         <AnimatedContainer show={checkingCsvFile} animationType="translateY">
           {checkingCsvFile && (
-            <p className={`mt-1 text-gray-500 text-xs`}>
-              Checking file information...
-            </p>
+            <p className={`mt-1 text-gray-500 text-xs`}>Checking file information...</p>
           )}
         </AnimatedContainer>
 
         <AnimatedContainer show={success} animationType="translateY">
           {success && (
-            <p className={`mt-1 text-green-500 text-xs`}>
-              Successfully Uploaded!
-            </p>
+            <p className={`mt-1 text-green-500 text-xs`}>Successfully Uploaded!</p>
           )}
         </AnimatedContainer>
 
@@ -1689,7 +1574,7 @@ const UploadCsv = ({ institutionId }: ICsvProps) => {
 
         <div className="flex items-center justify-end mt-3">
           <Buttons
-            label={uploadingCSV ? "Uploading Please wait..." : "Upload CSV"}
+            label={uploadingCSV ? 'Uploading Please wait...' : 'Upload CSV'}
             disabled={uploadingCSV || isEmpty(parsedObj)}
             onClick={(e) => showModalWhenUploadCsv(e)}
           />

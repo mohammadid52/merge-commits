@@ -1,33 +1,18 @@
-import { API, graphqlOperation } from "aws-amplify";
-import { UniversalLessonPlan } from "API";
-import * as mutations from "graphql/mutations";
-import React, {
-  useContext,
-  useEffect,
-  useReducer,
-  useRef,
-  useState,
-} from "react";
-import { GlobalActions, globalReducer } from "reducers/GlobalReducer";
-import {
-  LessonControlActions,
-  lessonControlReducer,
-} from "reducers/LessonControlReducer";
-import { LessonActions, lessonReducer } from "reducers/LessonReducer";
-import { globalState, GlobalStateType, standardTheme } from "state/GlobalState";
-import {
-  lessonControlState,
-  LessonControlStateType,
-} from "state/LessonControlState";
-import {
-  lessonState as lessonStateObject,
-  LessonStateType,
-} from "state/LessonState";
-import { getClientKey } from "utilities/strings";
+import {API, graphqlOperation} from 'aws-amplify';
+import {UniversalLessonPlan} from 'API';
+import * as mutations from 'graphql/mutations';
+import React, {useContext, useEffect, useReducer, useRef, useState} from 'react';
+import {GlobalActions, globalReducer} from 'reducers/GlobalReducer';
+import {LessonControlActions, lessonControlReducer} from 'reducers/LessonControlReducer';
+import {LessonActions, lessonReducer} from 'reducers/LessonReducer';
+import {globalState, GlobalStateType, standardTheme} from 'state/GlobalState';
+import {lessonControlState, LessonControlStateType} from 'state/LessonControlState';
+import {lessonState as lessonStateObject, LessonStateType} from 'state/LessonState';
+import {getClientKey} from 'utilities/strings';
 
 export const allowedAuthIds = [
-  "6c4dd66f-77d5-4aba-bf5a-46566f8a836d",
-  "22241431-5b44-434a-bba1-6dcb40e7c7fa",
+  '6c4dd66f-77d5-4aba-bf5a-46566f8a836d',
+  '22241431-5b44-434a-bba1-6dcb40e7c7fa'
 ];
 
 interface GlobalProps {
@@ -35,14 +20,14 @@ interface GlobalProps {
 }
 
 interface GlobalContextTypes {
-  theme: { [key: string]: any };
+  theme: {[key: string]: any};
   state: GlobalStateType;
-  authState: string;
+  authState: AuthState;
   dispatch: React.Dispatch<GlobalActions>;
   lessonState: LessonStateType;
   checkIfAdmin: () => boolean;
   userLanguage: string;
-  clientKey: "iconoclast" | "demo" | "curate";
+  clientKey: 'iconoclast' | 'demo' | 'curate';
 
   updateAuthState: (auth: boolean) => void;
   saveJournalData?: React.MutableRefObject<any>;
@@ -54,6 +39,7 @@ interface GlobalContextTypes {
       }[]
     | {}[];
   lessonDispatch: React.Dispatch<LessonActions>;
+  setAuthState: React.Dispatch<React.SetStateAction<AuthState>>;
   controlState: LessonControlStateType;
   controlDispatch: React.Dispatch<LessonControlActions>;
   scanLessonAndFindComplicatedWord: (
@@ -66,41 +52,41 @@ const theme = standardTheme;
 export const GlobalContext = React.createContext<GlobalContextTypes>({
   theme,
   state: globalState,
-  authState: "loading",
+  authState: 'notLoggedIn',
   dispatch: () => {},
   controlDispatch: () => {},
   lessonDispatch: () => {},
   updateAuthState: () => {},
+  setAuthState: () => {},
   lessonState: lessonStateObject,
   checkIfAdmin: () => false,
-  clientKey: "iconoclast",
+  clientKey: 'iconoclast',
   controlState: lessonControlState,
-  userLanguage: "EN",
+  userLanguage: 'EN',
   scanLessonAndFindComplicatedWord: () => [],
-  zoiqFilter: [{}],
+  zoiqFilter: [{}]
 });
 
-export const GlobalContextProvider = ({ children }: GlobalProps) => {
+type AuthState = 'loggedIn' | 'notLoggedIn' | 'loading';
+
+export const GlobalContextProvider = ({children}: GlobalProps) => {
   /**
    * state,dispatch --> Used in dashboard etc.
    * lessonState, lessonStateDispatch --> Used in lesson state
    */
 
-  const [authState, setAuthState] = useState("loading");
+  const [authState, setAuthState] = useState<AuthState>('loading');
   const [state, dispatch] = useReducer(globalReducer, globalState);
-  const [lessonState, lessonDispatch] = useReducer(
-    lessonReducer,
-    lessonStateObject
-  );
+  const [lessonState, lessonDispatch] = useReducer(lessonReducer, lessonStateObject);
   const [controlState, controlDispatch] = useReducer(
     lessonControlReducer,
     lessonControlState
   );
 
   const user = state.user;
-  const { location, language, authId, role } = user;
+  const {location, language, authId, role} = user;
 
-  const userLanguage = language || "EN";
+  const userLanguage = language || 'EN';
 
   const clientKey = getClientKey();
 
@@ -225,36 +211,36 @@ export const GlobalContextProvider = ({ children }: GlobalProps) => {
 
   async function updatePersonLocation() {
     const updatedLocation = {
-      id: location.length > 0 ? location?.[0].id : "",
-      personAuthID: location.length > 0 ? location?.[0].personAuthID : "",
-      personEmail: location.length > 0 ? location?.[0].personEmail : "",
-      syllabusLessonID: "dashboard",
-      roomID: "0",
-      currentLocation: "",
-      lessonProgress: "",
+      id: location.length > 0 ? location?.[0].id : '',
+      personAuthID: location.length > 0 ? location?.[0].personAuthID : '',
+      personEmail: location.length > 0 ? location?.[0].personEmail : '',
+      syllabusLessonID: 'dashboard',
+      roomID: '0',
+      currentLocation: '',
+      lessonProgress: ''
     };
     try {
       await API.graphql(
         graphqlOperation(mutations.updatePersonLocation, {
-          input: updatedLocation,
+          input: updatedLocation
         })
       );
     } catch (e) {
-      console.error("update PersonLocation : ", e);
+      console.error('update PersonLocation : ', e);
     }
   }
 
-  const checkIfAdmin = () => allowedAuthIds.includes(authId) || role === "SUP";
+  const checkIfAdmin = () => allowedAuthIds.includes(authId) || role === 'SUP';
 
   const updateAuthState = (auth: boolean) => {
     if (auth) {
-      setAuthState("loggedIn");
+      setAuthState('loggedIn');
     } else {
-      setAuthState("notLoggedIn");
+      setAuthState('notLoggedIn');
     }
   };
 
-  const zoiqFilter = checkIfAdmin() ? [{}] : [{ isZoiq: { ne: true } }];
+  const zoiqFilter = checkIfAdmin() ? [{}] : [{isZoiq: {ne: true}}];
 
   return (
     <GlobalContext.Provider
@@ -272,11 +258,10 @@ export const GlobalContextProvider = ({ children }: GlobalProps) => {
         controlDispatch,
         checkIfAdmin,
         userLanguage,
-
+        setAuthState,
         clientKey,
-        scanLessonAndFindComplicatedWord,
-      }}
-    >
+        scanLessonAndFindComplicatedWord
+      }}>
       {children}
     </GlobalContext.Provider>
   );

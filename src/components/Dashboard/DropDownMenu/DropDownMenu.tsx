@@ -1,26 +1,25 @@
 // import {BsFillInfoCircleFill} from 'react-icons/bs';
-import Placeholder from "@components/Atoms/Placeholder";
-import { useGlobalContext } from "@contexts/GlobalContext";
-import useDictionary from "@customHooks/dictionary";
-import useAuth from "@customHooks/useAuth";
-import { Menu, Transition } from "@headlessui/react";
-import { ChevronDownIcon } from "@heroicons/react/solid";
-import { Role } from "API";
-import SignOutButton from "components/Auth/SignOut";
-import React, { Fragment } from "react";
-import { AiOutlineBook } from "react-icons/ai";
-import { FiUser } from "react-icons/fi";
-import { VscChecklist } from "react-icons/vsc";
-import { useHistory } from "react-router-dom";
-import { getImageFromS3Static } from "utilities/services";
-import LocationBadge from "../Admin/Institutons/EditBuilders/LocationBadge";
-import UserRole from "../Admin/UserManagement/UserRole";
+import Placeholder from '@components/Atoms/Placeholder';
+import {useGlobalContext} from '@contexts/GlobalContext';
+import useDictionary from '@customHooks/dictionary';
+import useAuth from '@customHooks/useAuth';
+import {Menu, Transition} from '@headlessui/react';
+import {ChevronDownIcon} from '@heroicons/react/solid';
+import SignOutButton from 'components/Auth/SignOut';
+import React, {Fragment} from 'react';
+import {AiOutlineBook} from 'react-icons/ai';
+import {FiUser} from 'react-icons/fi';
+import {VscChecklist} from 'react-icons/vsc';
+import {useHistory} from 'react-router-dom';
+import {getImageFromS3Static} from 'utilities/services';
+import LocationBadge from '../Admin/Institutons/EditBuilders/LocationBadge';
+import UserRole from '../Admin/UserManagement/UserRole';
 
 const Item = ({
   onClick,
   _key,
   Icon,
-  label,
+  label
 }: {
   _key: string;
   label: string;
@@ -31,8 +30,7 @@ const Item = ({
     <Menu.Item key={_key}>
       <div
         onClick={onClick}
-        className="flex-shrink-0 mt-2 flex border-t p-2 px-4 hover:iconoclast:bg-400 hover:curate:bg-400 hover:text-white rounded-full"
-      >
+        className="flex-shrink-0 mt-2 flex border-t p-2 px-4 hover:iconoclast:bg-400 hover:curate:bg-400 hover:text-white rounded-full">
         <div className="flex-shrink-0 group block">
           <div className="flex items-center">
             <Icon size="24px" className="w-auto mr-1 cursor-pointer" />
@@ -45,36 +43,27 @@ const Item = ({
   );
 };
 
-interface IDropDownMenu {
-  firstName: string;
-  lastName: string;
-  role: Role | string;
-  image: string;
-}
-
-const DropDownMenu = ({ firstName, lastName, role, image }: IDropDownMenu) => {
+const DropDownMenu = () => {
   const history = useHistory();
 
-  const { onDemand, isStudent } = useAuth();
-  const { checkIfAdmin, userLanguage } = useGlobalContext();
-  const { Institute_info } = useDictionary();
-  const TABS = Institute_info[userLanguage]["TABS"];
+  const {onDemand, isStudent, firstName, lastName, image, role} = useAuth();
+  const {checkIfAdmin, userLanguage} = useGlobalContext();
+  const {Institute_info} = useDictionary();
+  const TABS = Institute_info[userLanguage]['TABS'];
 
   if (firstName && lastName) {
     return (
       <Menu
         as="div"
         data-cy="dropdown-button"
-        className="relative inline-block text-left w-auto"
-      >
-        {({ open }) => (
+        className="relative inline-block text-left w-auto">
+        {({open}) => (
           <>
             <div>
               <Menu.Button
-                className={`${open ? "active" : ""} ${
-                  open ? "theme-bg" : ""
-                } theme-border:500 border-0 hover:theme-bg:500 theme-bg:200 theme-text:600 hover:text-gray-700 inline-flex justify-center w-full px-2 text-sm font-medium rounded-full  focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 transition duration-150 drop-down-group ease-in-out transform  `}
-              >
+                className={`${open ? 'active' : ''} ${
+                  open ? 'theme-bg' : ''
+                } theme-border:500 border-0 hover:theme-bg:500 theme-bg:200 theme-text:600 hover:text-gray-700 inline-flex justify-center w-full px-2 text-sm font-medium rounded-full  focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 transition duration-150 drop-down-group ease-in-out transform  `}>
                 <div className="w-auto my-1 inline-flex items-center">
                   <div className="w-6 h-6">
                     {image ? (
@@ -108,19 +97,18 @@ const DropDownMenu = ({ firstName, lastName, role, image }: IDropDownMenu) => {
               enterTo="transform opacity-100 scale-100"
               leave="transition ease-in duration-75"
               leaveFrom="transform opacity-100 scale-100"
-              leaveTo="transform opacity-0 scale-95"
-            >
+              leaveTo="transform opacity-0 scale-95">
               <Menu.Items className="absolute right-1 w-56 mt-1 origin-top-right bg-white divide-y divide-gray-100 rounded-xl customShadow focus:outline-none cursor-pointer z-max">
                 <div className="px-2 py-1 customShadow">
-                  <Menu.Item key={"role"}>
+                  <Menu.Item key={'role'}>
                     <div className="p-4 border-b-0 border-gray-400">
                       <span>
-                        {[firstName, lastName].join(" ")}
+                        {[firstName, lastName].join(' ')}
                         <br />
                         <div className="w-auto mb-1">
                           <UserRole role={role} />
                         </div>
-                        {role === "ST" ? (
+                        {isStudent ? (
                           <LocationBadge onDemand={Boolean(onDemand)} />
                         ) : null}
                       </span>
@@ -128,17 +116,17 @@ const DropDownMenu = ({ firstName, lastName, role, image }: IDropDownMenu) => {
                   </Menu.Item>
 
                   <Item
-                    onClick={() => history.push("/dashboard/profile")}
-                    label={TABS["EDIT_PROFILE"]}
-                    _key={"profile-1"}
+                    onClick={() => history.push('/dashboard/profile')}
+                    label={TABS['EDIT_PROFILE']}
+                    _key={'profile-1'}
                     Icon={FiUser}
                   />
 
                   {!isStudent && (
                     <Item
-                      onClick={() => history.push("/dashboard/dictionary")}
-                      label={TABS["DICTIONARY"]}
-                      _key={"dictionary"}
+                      onClick={() => history.push('/dashboard/dictionary')}
+                      label={TABS['DICTIONARY']}
+                      _key={'dictionary'}
                       Icon={AiOutlineBook}
                     />
                   )}
@@ -146,26 +134,26 @@ const DropDownMenu = ({ firstName, lastName, role, image }: IDropDownMenu) => {
                   {checkIfAdmin() && (
                     <>
                       <Item
-                        onClick={() => history.push("/dashboard/test-cases")}
-                        label={TABS["TEST_CASES"]}
-                        _key={"test-cases"}
+                        onClick={() => history.push('/dashboard/test-cases')}
+                        label={TABS['TEST_CASES']}
+                        _key={'test-cases'}
                         Icon={VscChecklist}
                       />
                       <Item
-                        onClick={() => history.push("/dashboard/errors")}
-                        label={TABS["ERRORS"]}
-                        _key={"profile-2"}
+                        onClick={() => history.push('/dashboard/errors')}
+                        label={TABS['ERRORS']}
+                        _key={'profile-2'}
                         Icon={VscChecklist}
                       />
                       <Item
-                        onClick={() => history.push("/dashboard/upload-logs")}
-                        label={TABS["UPLOAD_LOGS"]}
-                        _key={"profile-3"}
+                        onClick={() => history.push('/dashboard/upload-logs')}
+                        label={TABS['UPLOAD_LOGS']}
+                        _key={'profile-3'}
                         Icon={VscChecklist}
                       />
                     </>
                   )}
-                  <Menu.Item key={"logout"}>
+                  <Menu.Item key={'logout'}>
                     <SignOutButton />
                   </Menu.Item>
                 </div>

@@ -1,22 +1,17 @@
-import ErrorBoundary from "@components/Error/ErrorBoundary";
-import useAuth from "@customHooks/useAuth";
-import { logError } from "@graphql/functions";
-import { getAsset } from "assets";
-import BreadcrumbsWithBanner from "atoms/BreadcrumbsWithBanner";
-import PageWrapper from "atoms/PageWrapper";
-import { API, graphqlOperation } from "aws-amplify";
-import { useGlobalContext } from "contexts/GlobalContext";
-import * as customQueries from "customGraphql/customQueries";
-import queryString from "query-string";
-import { useEffect, useState } from "react";
-import {
-  Route,
-  Switch,
-  useLocation,
-  useParams,
-  useRouteMatch,
-} from "react-router-dom";
-import InstitutionInfo, { InstInfo } from "./InstitutionInfo";
+import ErrorBoundary from '@components/Error/ErrorBoundary';
+import useAuth from '@customHooks/useAuth';
+import {logError} from '@graphql/functions';
+import {InstInfo} from '@interfaces/InstitutionInterface';
+import {getAsset} from 'assets';
+import BreadcrumbsWithBanner from 'atoms/BreadcrumbsWithBanner';
+import PageWrapper from 'atoms/PageWrapper';
+import {API, graphqlOperation} from 'aws-amplify';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import * as customQueries from 'customGraphql/customQueries';
+import queryString from 'query-string';
+import {lazy, useEffect, useState} from 'react';
+import {Route, Switch, useLocation, useParams, useRouteMatch} from 'react-router-dom';
+const InstitutionInfo = lazy(() => import('dashboard/Admin/Institutons/InstitutionInfo'));
 
 interface InstitutionProps {
   tabProps?: any;
@@ -31,7 +26,7 @@ export interface InstitutionInfo {
   city?: string;
   state?: string;
   zip?: string;
-  contact?: { name: string; email: string; phone: string };
+  contact?: {name: string; email: string; phone: string};
   website?: string;
   phone?: string;
   type?: string;
@@ -40,8 +35,8 @@ export interface InstitutionInfo {
   updatedAt?: string;
   addressLine2?: any;
   isServiceProvider?: boolean;
-  classes?: { items: { name?: string; id: string }[] };
-  curricula?: { items: { name?: string; id: string }[] };
+  classes?: {items: {name?: string; id: string}[]};
+  curricula?: {items: {name?: string; id: string}[]};
   serviceProviders?: {
     items: {
       id: string;
@@ -68,30 +63,30 @@ interface IInstitution extends InstInfo {
 }
 
 const Institution = (props: InstitutionProps) => {
-  const { institutionId }: any = useParams();
+  const {institutionId}: any = useParams();
   const [fetchingDetails, setFetchingDetails] = useState(false);
   const [institutionData, setInstitutionData] = useState<IInstitution>({
     id: institutionId,
-    name: "",
-    institutionTypeId: "",
+    name: '',
+    institutionTypeId: '',
     institutionType: null,
-    address: "",
-    city: "",
-    state: "",
-    zip: "",
-    contact: { name: "", email: "", phone: "" },
-    website: "",
-    type: "",
-    image: "",
-    createdAt: "",
-    updatedAt: "",
-    addressLine2: "",
-    phone: "",
+    address: '',
+    city: '',
+    state: '',
+    zip: '',
+    contact: {name: '', email: '', phone: ''},
+    website: '',
+    type: '',
+    image: '',
+    createdAt: '',
+    updatedAt: '',
+    addressLine2: '',
+    phone: '',
     isServiceProvider: false,
     isZoiq: false,
-    classes: { items: [{ name: "", id: "" }] },
-    serviceProviders: { items: [{ id: "", providerID: "", status }] },
-    curricula: { items: [{ name: "", id: "" }] },
+    classes: {items: [{name: '', id: ''}]},
+    serviceProviders: {items: [{id: '', providerID: '', status}]},
+    curricula: {items: [{name: '', id: ''}]}
   });
 
   const [isNewUpdate, setISNewUpdate] = useState(false);
@@ -100,9 +95,9 @@ const Institution = (props: InstitutionProps) => {
   const location = useLocation();
 
   const urlQueryParams = queryString.parse(location.search);
-  const { clientKey } = useGlobalContext();
+  const {clientKey} = useGlobalContext();
 
-  const bannerImage = getAsset(clientKey, "dashboardBanner1");
+  const bannerImage = getAsset(clientKey, 'dashboardBanner1');
 
   const toggleUpdateState = () => {
     setISNewUpdate((prevNewUpdate) => !prevNewUpdate);
@@ -111,11 +106,11 @@ const Institution = (props: InstitutionProps) => {
   const postInfoUpdate = (data: any) => {
     setInstitutionData((prevData) => ({
       ...prevData,
-      ...data,
+      ...data
     }));
   };
 
-  const { authId, email } = useAuth();
+  const {authId, email} = useAuth();
 
   async function getInstitutionData() {
     try {
@@ -128,13 +123,13 @@ const Institution = (props: InstitutionProps) => {
            * in ' InstitutionRow.tsx '
            */
           graphqlOperation(customQueries.GetInstitutionDetails, {
-            id: institutionId,
+            id: institutionId
           })
         );
         if (!fetchInstitutionData) {
-          throw new Error("getInstitutionData() fetch : fail!");
+          throw new Error('getInstitutionData() fetch : fail!');
         } else {
-          setInstitutionData({ ...fetchInstitutionData.data.getInstitution });
+          setInstitutionData({...fetchInstitutionData.data.getInstitution});
         }
         setFetchingDetails(false);
         setISNewUpdate(false);
@@ -142,7 +137,7 @@ const Institution = (props: InstitutionProps) => {
         // history.push('/dashboard/manage-institutions');
       }
     } catch (error) {
-      logError(error, { authId: authId, email: email }, "Institution");
+      logError(error, {authId: authId, email: email}, 'Institution');
       console.error(error);
     }
   }
@@ -152,10 +147,10 @@ const Institution = (props: InstitutionProps) => {
   }, [institutionId]);
 
   useEffect(() => {
-    const { tab } = urlQueryParams;
+    const {tab} = urlQueryParams;
     props.tabProps.setTabsData({
       ...props.tabProps.tabsData,
-      inst: tab || "staff",
+      inst: tab || 'staff'
     });
   }, [urlQueryParams.tab]);
 

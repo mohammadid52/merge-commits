@@ -1,19 +1,19 @@
-import ErrorBoundary from "@components/Error/ErrorBoundary";
-import { PersonStatus } from "API";
-import { getAsset } from "assets";
-import SectionTitleV3 from "atoms/SectionTitleV3";
-import { useGlobalContext } from "contexts/GlobalContext";
-import useDictionary from "customHooks/dictionary";
-import isEmpty from "lodash/isEmpty";
-import { useEffect, useState } from "react";
-import { setLocalStorageData } from "utilities/localStorage";
-import { getImageFromS3 } from "utilities/services";
-import HeroBanner from "../../Header/HeroBanner";
-import { ClassroomControlProps } from "../Dashboard";
-import HeaderTextBar from "../HeaderTextBar/HeaderTextBar";
-import RoomTiles from "./RoomTiles";
-import StudentsTiles from "./StudentsTiles";
-import TeacherRows from "./TeacherRows";
+import ErrorBoundary from '@components/Error/ErrorBoundary';
+import useAuth from '@customHooks/useAuth';
+import {PersonStatus} from 'API';
+import {getAsset} from 'assets';
+import SectionTitleV3 from 'atoms/SectionTitleV3';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import {useEffect, useState} from 'react';
+import {setLocalStorageData} from 'utilities/localStorage';
+import {getImageFromS3} from 'utilities/services';
+import HeroBanner from '../../Header/HeroBanner';
+import {ClassroomControlProps} from '../Dashboard';
+import HeaderTextBar from '../HeaderTextBar/HeaderTextBar';
+import RoomTiles from './RoomTiles';
+import StudentsTiles from './StudentsTiles';
+import TeacherRows from './TeacherRows';
 
 export interface ModifiedListProps {
   id: any;
@@ -40,36 +40,50 @@ export interface ModifiedListProps {
 }
 
 const Home = (props: ClassroomControlProps) => {
-  const {
-    homeData,
-    classList,
-    handleRoomSelection = () => {},
-    isTeacher,
-    roomsLoading,
-  } = props;
+  const {roomsLoading, homeData = [], handleRoomSelection = () => {}} = props;
 
-  const { state, dispatch, userLanguage, clientKey } = useGlobalContext();
-  const dashboardBanner1 = getAsset(clientKey, "dashboardBanner1");
+  const [classList, setClassList] = useState<any[]>([]);
 
-  const { DashboardDict } = useDictionary();
+  const {user, isStudent} = useAuth();
 
-  const user = !isEmpty(state)
-    ? { firstName: state.user.firstName, preferredName: state.user.firstName }
-    : null;
+  const getRooms = () => {
+    let rooms = homeData.map(
+      (dataObj: {class: {name: any; room: any; students: any}}) => ({
+        name: dataObj?.class?.name,
+        room: dataObj?.class?.room,
+        students: dataObj?.class?.students
+      })
+    );
+
+    setClassList(rooms);
+  };
 
   useEffect(() => {
-    if (state.user.role === "ST") {
-      if (state.currentPage !== "home") {
+    if (homeData && classList.length === 0) {
+      getRooms();
+    }
+  }, [homeData]);
+
+  const {state, dispatch, userLanguage, clientKey} = useGlobalContext();
+  const dashboardBanner1 = getAsset(clientKey, 'dashboardBanner1');
+
+  const {DashboardDict} = useDictionary();
+
+  const {currentPage, activeRoom} = state;
+
+  useEffect(() => {
+    if (isStudent) {
+      if (currentPage !== 'home') {
         // dispatch({ type: 'UPDATE_CURRENTPAGE', payload: { data: 'home' } });
       }
-      if (state.activeRoom && state.activeRoom.length > 0) {
+      if (activeRoom && activeRoom.length > 0) {
         dispatch({
-          type: "UPDATE_ACTIVEROOM",
-          payload: { roomID: "", syllabusID: "" },
+          type: 'UPDATE_ACTIVEROOM',
+          payload: {roomID: '', syllabusID: '', name: ''}
         });
       }
     }
-  }, [state.user.role]);
+  }, [isStudent]);
 
   const [teacherList, setTeacherList] = useState<any[]>();
   const [coTeachersList, setCoTeachersList] = useState<any[]>();
@@ -80,7 +94,7 @@ const Home = (props: ClassroomControlProps) => {
     if (imageUrl) {
       return imageUrl;
     } else {
-      return "";
+      return '';
     }
   };
 
@@ -99,7 +113,7 @@ const Home = (props: ClassroomControlProps) => {
             if (teacherIsPresent) {
               return acc;
             } else {
-              return [...acc, { ...teacherObj }];
+              return [...acc, {...teacherObj}];
             }
           } else {
             return acc;
@@ -118,7 +132,7 @@ const Home = (props: ClassroomControlProps) => {
             item?.class?.room.coTeachers.items.map((_item: any) => {
               if (!uniqIds.includes(_item.teacher.authId)) {
                 uniqIds.push(_item.teacher.authId);
-                coTeachersList.push({ ..._item.teacher });
+                coTeachersList.push({..._item.teacher});
               }
             });
           }
@@ -134,9 +148,7 @@ const Home = (props: ClassroomControlProps) => {
           getTeacherList.map(async (teacherObj: any) => {
             return {
               ...teacherObj,
-              image: await (teacherObj.image
-                ? getImageURL(teacherObj.image)
-                : null),
+              image: await (teacherObj.image ? getImageURL(teacherObj.image) : null)
             };
           })
         )
@@ -148,9 +160,7 @@ const Home = (props: ClassroomControlProps) => {
           getCoTeacherList().map(async (teacherObj: any) => {
             return {
               ...teacherObj,
-              image: await (teacherObj.image
-                ? getImageURL(teacherObj.image)
-                : null),
+              image: await (teacherObj.image ? getImageURL(teacherObj.image) : null)
             };
           })
         )
@@ -165,8 +175,7 @@ const Home = (props: ClassroomControlProps) => {
           .reduce((acc: any[], studentObj: any) => {
             const studentIsPresent = acc.find(
               (studentObj2: any) =>
-                studentObj2?.student?.firstName ===
-                  studentObj?.student?.firstName &&
+                studentObj2?.student?.firstName === studentObj?.student?.firstName &&
                 studentObj2?.student?.lastName === studentObj?.student?.lastName
             );
             if (studentIsPresent) {
@@ -185,8 +194,8 @@ const Home = (props: ClassroomControlProps) => {
           ...studentObj?.student,
           image: await (studentObj?.student?.image
             ? getImageURL(studentObj?.student?.image)
-            : null),
-        },
+            : null)
+        }
       };
     })
   );
@@ -199,44 +208,37 @@ const Home = (props: ClassroomControlProps) => {
       classList.length > 0 &&
       classList
         .filter(
-          (item: { room: { status: PersonStatus } }) =>
+          (item: {room: {status: PersonStatus}}) =>
             item.room.status !== PersonStatus.INACTIVE
         )
-        .forEach(
-          async (
-            item: { room: any; name: string; id: string },
-            idx: number
-          ) => {
-            if (item.room) {
-              const curriculum = item.room.curricula?.items[0].curriculum;
-              if (curriculum !== null) {
-                const imagePath = curriculum?.image;
+        .forEach(async (item: {room: any; name: string; id: string}, idx: number) => {
+          if (item.room) {
+            const curriculum = item.room.curricula?.items[0].curriculum;
+            if (curriculum !== null) {
+              const imagePath = curriculum?.image;
 
-                const image = await (imagePath !== null
-                  ? getImageFromS3(imagePath)
-                  : null);
-                const teacherProfileImg = await (item.room.teacher.image
-                  ? getImageFromS3(item.room.teacher.image)
-                  : false);
+              const image = await (imagePath !== null ? getImageFromS3(imagePath) : null);
+              const teacherProfileImg = await (item.room.teacher.image
+                ? getImageFromS3(item.room.teacher.image)
+                : false);
 
-                const modifiedItem = {
-                  ...item.room,
-                  curriculumName: curriculum?.name,
-                  curriculumId: curriculum?.id,
-                  roomName: item?.name,
-                  bannerImage: image,
-                  teacherProfileImg,
-                  roomIndex: idx,
-                };
+              const modifiedItem = {
+                ...item.room,
+                curriculumName: curriculum?.name,
+                curriculumId: curriculum?.id,
+                roomName: item?.name,
+                bannerImage: image,
+                teacherProfileImg,
+                roomIndex: idx
+              };
 
-                if (!uniqIds.includes(curriculum?.id)) {
-                  uniqIds.push(curriculum?.id);
-                  modifiedClassList.push(modifiedItem);
-                }
+              if (!uniqIds.includes(curriculum?.id)) {
+                uniqIds.push(curriculum?.id);
+                modifiedClassList.push(modifiedItem);
               }
             }
           }
-        );
+        });
 
     return modifiedClassList;
   };
@@ -245,7 +247,7 @@ const Home = (props: ClassroomControlProps) => {
     setTeacherList(await teacherListWithImages);
     const studentList = await studentsListWithImages;
     setStudentsList(studentList);
-    setLocalStorageData("student_list", studentList);
+    setLocalStorageData('student_list', studentList);
     setCoTeachersList(await coTeacherListWithImages);
   };
 
@@ -258,23 +260,18 @@ const Home = (props: ClassroomControlProps) => {
   return (
     <ErrorBoundary componentName="Home">
       {homeData ? (
-        <>
+        <div>
           <div>
-            <HeroBanner imgUrl={dashboardBanner1} title={"Dashboard"} />
+            <HeroBanner imgUrl={dashboardBanner1} title={'Dashboard'} />
           </div>
           {/* Header */}
           {user && (
             <HeaderTextBar>
-              Welcome,{" "}
+              Welcome,{' '}
               <span className="font-semibold">
                 {user.preferredName ? user.preferredName : user.firstName}
               </span>
-              .{" "}
-              {
-                DashboardDict[userLanguage][
-                  isTeacher ? "GREETINGS_TEACHER" : "GREETINGS_STUDENT"
-                ]
-              }
+              . {DashboardDict[userLanguage]['GREETINGS_STUDENT']}
             </HeaderTextBar>
           )}
 
@@ -284,11 +281,7 @@ const Home = (props: ClassroomControlProps) => {
               <RoomTiles
                 roomsLoading={roomsLoading}
                 handleRoomSelection={handleRoomSelection}
-                classList={
-                  state.user.status !== PersonStatus.INACTIVE
-                    ? getClassList()
-                    : []
-                }
+                classList={user.status !== PersonStatus.INACTIVE ? getClassList() : []}
               />
             </ErrorBoundary>
 
@@ -297,7 +290,7 @@ const Home = (props: ClassroomControlProps) => {
               {teacherList && teacherList.length > 0 && (
                 <div className="my-8">
                   <SectionTitleV3
-                    title={DashboardDict[userLanguage]["YOUR_TEACHERS"]}
+                    title={DashboardDict[userLanguage]['YOUR_TEACHERS']}
                     extraClass="leading-6 text-gray-900"
                     fontSize="xl"
                     fontStyle="semibold"
@@ -305,6 +298,7 @@ const Home = (props: ClassroomControlProps) => {
                     borderBottom
                   />
                   <TeacherRows
+                    loading={Boolean(roomsLoading)}
                     coTeachersList={coTeachersList || []}
                     teachersList={teacherList}
                   />
@@ -315,17 +309,14 @@ const Home = (props: ClassroomControlProps) => {
             <ErrorBoundary componentName="StudentTiles">
               <div className="my-6">
                 <StudentsTiles
-                  title={
-                    DashboardDict[userLanguage][
-                      isTeacher ? "YOUR_STUDENTS" : "YOUR_CLASSMATES"
-                    ]
-                  }
+                  title={DashboardDict[userLanguage]['YOUR_CLASSMATES']}
                   studentsList={studentsList}
+                  loading={Boolean(roomsLoading)}
                 />
               </div>
             </ErrorBoundary>
           </div>
-        </>
+        </div>
       ) : null}
     </ErrorBoundary>
   );

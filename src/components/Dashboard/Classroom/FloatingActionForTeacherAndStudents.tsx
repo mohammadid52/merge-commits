@@ -1,46 +1,46 @@
-import Placeholder from "@components/Atoms/Placeholder";
-import AnimatedContainer from "@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer";
-import { useGlobalContext } from "@contexts/GlobalContext";
-import { getImageFromS3 } from "@utilities/services";
-import { PersonStatus, RoomStatus } from "API";
-import gsap from "gsap";
-import { orderBy } from "lodash";
-import React, { useEffect, useState } from "react";
-import ClickAwayListener from "react-click-away-listener";
-import { AiOutlineUsergroupDelete } from "react-icons/ai";
-import { HiOutlineUserGroup } from "react-icons/hi";
-import { formatPageName } from "../Admin/UserManagement/List";
+import Placeholder from '@components/Atoms/Placeholder';
+import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
+import {useGlobalContext} from '@contexts/GlobalContext';
+import {getImageFromS3} from '@utilities/services';
+import {PersonStatus, RoomStatus} from 'API';
+import gsap from 'gsap';
+import {orderBy} from 'lodash';
+import React, {useEffect, useState} from 'react';
+import ClickAwayListener from 'react-click-away-listener';
+import {AiOutlineUsergroupDelete} from 'react-icons/ai';
+import {HiOutlineUserGroup} from 'react-icons/hi';
+import {formatPageName} from '../Admin/UserManagement/List';
 
 const Content = ({
   list,
   header,
   name,
-  isTeacher,
+  isTeacher
 }: {
   isTeacher: boolean;
-  name: "teacher" | "student";
+  name: 'teacher' | 'student';
   list: any[];
   header: string;
 }) => {
   let tl = gsap.timeline({});
 
-  const showPageState = isTeacher && name === "student";
-  const showTeacherDetails = name === "teacher";
+  const showPageState = isTeacher && name === 'student';
+  const showTeacherDetails = name === 'teacher';
 
   useEffect(() => {
-    gsap.from(".card-body-header", {
+    gsap.from('.card-body-header', {
       y: -100,
       opacity: 0.5,
-      duration: 0.3,
+      duration: 0.3
     });
-    gsap.from(".card-list-item", {
+    gsap.from('.card-list-item', {
       stagger: {
-        each: 0.1,
+        each: 0.1
       },
-      ease: "power2.inOut",
+      ease: 'power2.inOut',
       duration: 0.3,
       x: -50,
-      opacity: 0,
+      opacity: 0
     });
   }, [tl]);
 
@@ -69,7 +69,7 @@ const Item = ({
   item,
   idx,
   showPageState,
-  showTeacherDetails,
+  showTeacherDetails
 }: {
   showPageState: boolean;
   showTeacherDetails: boolean;
@@ -87,29 +87,24 @@ const Item = ({
     }
   };
 
-  const name = `${item.firstName + " " + item.lastName}`;
+  const name = `${item.firstName + ' ' + item.lastName}`;
 
   return (
     <div className="card-list-item flex  flex-col bg-white px-4 py-2 rounded-xl">
       <div
         onClick={(e) => onShowDetails(e)}
-        className="flex items-center whitespace-pre "
-      >
+        className="flex items-center whitespace-pre ">
         <span className="text-gray-500 text-xs w-auto mr-2">{idx + 1}.</span>
 
         {item.image ? (
-          <img
-            className="h-8 w-8 bg-gray-200 rounded-full"
-            src={item?.image}
-            alt=""
-          />
+          <img className="h-8 w-8 bg-gray-200 rounded-full" src={item?.image} alt="" />
         ) : (
           <Placeholder name={name} size="h-8 w-8" />
         )}
 
         <div className="ml-2 flex flex-col">
           <p className="text-sm font-medium theme-text">
-            {name}{" "}
+            {name}{' '}
             {Boolean(showPageState && item?.pageState) ? (
               <span className="text-xs text-gray-500 w-auto">
                 ({formatPageName(item?.pageState)})
@@ -117,9 +112,8 @@ const Item = ({
             ) : null}
           </p>
           <p
-            style={{ overflowWrap: "anywhere", whiteSpace: "break-spaces" }}
-            className="flex items-center text-sm text-gray-500"
-          >
+            style={{overflowWrap: 'anywhere', whiteSpace: 'break-spaces'}}
+            className="flex items-center text-sm text-gray-500">
             {item.email}
           </p>
         </div>
@@ -139,9 +133,9 @@ const Item = ({
 const FloatingAction = ({
   homeData,
   name,
-  roomId,
+  roomId
 }: {
-  name: "teacher" | "student";
+  name: 'teacher' | 'student';
   homeData: any[];
   roomId: string;
 }) => {
@@ -158,7 +152,7 @@ const FloatingAction = ({
     if (imageUrl) {
       return imageUrl;
     } else {
-      return "";
+      return '';
     }
   };
 
@@ -247,16 +241,14 @@ const FloatingAction = ({
     let uniqIds: string[] = [];
     homeData &&
       homeData.length > 0 &&
-      filterForCurrentClassroom()[0].class?.rooms?.items.forEach(
-        (item: any) => {
-          item?.class?.students?.items.forEach((student: any) => {
-            if (!uniqIds.includes(student.student.id)) {
-              list.push(student);
-              uniqIds.push(student.student.id);
-            }
-          });
-        }
-      );
+      filterForCurrentClassroom()[0].class?.rooms?.items.forEach((item: any) => {
+        item?.class?.students?.items.forEach((student: any) => {
+          if (!uniqIds.includes(student.student.id)) {
+            list.push(student);
+            uniqIds.push(student.student.id);
+          }
+        });
+      });
 
     return list;
   };
@@ -267,9 +259,7 @@ const FloatingAction = ({
           getCoTeacherList().map(async (teacherObj: any) => {
             return {
               ...teacherObj,
-              image: await (teacherObj.image
-                ? getImageURL(teacherObj.image)
-                : null),
+              image: await (teacherObj.image ? getImageURL(teacherObj.image) : null)
             };
           })
         )
@@ -285,18 +275,18 @@ const FloatingAction = ({
             ...dataObj,
             class: {
               rooms: {
-                items: filtered,
-              },
-            },
+                items: filtered
+              }
+            }
           };
         });
 
         result = result.map((d) => {
-          let coTeachersList = d.class.rooms.items[0].coTeachers.items.filter(
-            (c: { teacher: { status: PersonStatus } }) =>
-              c.teacher.status !== PersonStatus.INACTIVE &&
-              (d?.class?.room?.status || "ACTIVE") === RoomStatus.ACTIVE &&
-              c.teacher.status !== PersonStatus.TRAINING
+          let coTeachersList = d?.class?.rooms?.items[0]?.coTeachers?.items?.filter(
+            (c: {teacher: {status: PersonStatus}}) =>
+              c?.teacher?.status !== PersonStatus.INACTIVE &&
+              (d?.class?.room?.status || 'ACTIVE') === RoomStatus.ACTIVE &&
+              c?.teacher?.status !== PersonStatus.TRAINING
           );
 
           return {
@@ -307,23 +297,21 @@ const FloatingAction = ({
                   {
                     ...d.class.rooms.items[0],
                     coTeachers: {
-                      items: coTeachersList,
-                    },
-                  },
-                ],
-              },
-            },
+                      items: coTeachersList || []
+                    }
+                  }
+                ]
+              }
+            }
           };
         });
 
         return result;
       } else {
-        let result = homeData.filter(
-          (dataObj: any) => dataObj.class.room.id === roomId
-        );
+        let result = homeData.filter((dataObj: any) => dataObj.class.room.id === roomId);
         result = result.map((d) => {
           let coTeachersList = d.class.room.coTeachers.items.filter(
-            (c: { teacher: { status: PersonStatus } }) =>
+            (c: {teacher: {status: PersonStatus}}) =>
               c.teacher.status !== PersonStatus.INACTIVE &&
               d.class.room.status === RoomStatus.ACTIVE &&
               c.teacher.status !== PersonStatus.TRAINING
@@ -335,10 +323,10 @@ const FloatingAction = ({
               room: {
                 ...d.class.room,
                 coTeachers: {
-                  items: coTeachersList,
-                },
-              },
-            },
+                  items: coTeachersList
+                }
+              }
+            }
           };
         });
 
@@ -357,8 +345,7 @@ const FloatingAction = ({
           .reduce((acc: any[], studentObj: any) => {
             const studentIsPresent = acc.find(
               (studentObj2: any) =>
-                studentObj2?.student?.firstName ===
-                  studentObj?.student?.firstName &&
+                studentObj2?.student?.firstName === studentObj?.student?.firstName &&
                 studentObj2?.student?.lastName === studentObj?.student?.lastName
             );
             if (studentIsPresent) {
@@ -379,15 +366,15 @@ const FloatingAction = ({
                 ...studentObj?.student,
                 image: await (studentObj?.student?.image
                   ? getImageURL(studentObj?.student?.image)
-                  : null),
-              },
+                  : null)
+              }
             };
           })
         )
       : [];
 
   const {
-    state: { user },
+    state: {user}
   } = useGlobalContext();
 
   const teacherListWithImagesForTeachers = async () => {
@@ -395,9 +382,7 @@ const FloatingAction = ({
       getTeacherListTr().map(async (teacherObj: any) => {
         return {
           ...teacherObj,
-          image: await (teacherObj?.image
-            ? getImageURL(teacherObj?.image)
-            : null),
+          image: await (teacherObj?.image ? getImageURL(teacherObj?.image) : null)
         };
       })
     );
@@ -410,9 +395,7 @@ const FloatingAction = ({
       getCoTeacherListTr().map(async (teacherObj: any) => {
         return {
           ...teacherObj,
-          image: await (teacherObj?.image
-            ? getImageURL(teacherObj?.image)
-            : null),
+          image: await (teacherObj?.image ? getImageURL(teacherObj?.image) : null)
         };
       })
     );
@@ -421,7 +404,7 @@ const FloatingAction = ({
   };
 
   const studentsListWithImagesForTeachers = async () => {
-    const list = user.role === "ST" ? getStudentsList() : getStudentsListTr();
+    const list = user.role === 'ST' ? getStudentsList() : getStudentsListTr();
     const data = await Promise.all(
       list.map(async (studentObj: any) => {
         return {
@@ -430,8 +413,8 @@ const FloatingAction = ({
             ...studentObj?.student,
             image: await (studentObj?.student?.image
               ? getImageURL(studentObj?.student?.image)
-              : null),
-          },
+              : null)
+          }
         };
       })
     );
@@ -439,7 +422,7 @@ const FloatingAction = ({
   };
 
   const fetchAndProcessDashboardDataForTeachers = async () => {
-    if (name === "teacher") {
+    if (name === 'teacher') {
       teacherListWithImagesForTeachers();
       coTeacherListWithImagesForTeachers();
     } else {
@@ -450,7 +433,7 @@ const FloatingAction = ({
   };
 
   const fetchAndProcessDashboardDataForStudents = async () => {
-    if (name === "student") {
+    if (name === 'student') {
       const studentList = await studentsListWithImages();
       setStudentsList(studentList);
     } else {
@@ -463,7 +446,7 @@ const FloatingAction = ({
 
   useEffect(() => {
     if (homeData && homeData.length > 0) {
-      if (user.role === "ST") {
+      if (user.role === 'ST') {
         fetchAndProcessDashboardDataForStudents();
       } else {
         fetchAndProcessDashboardDataForTeachers();
@@ -473,33 +456,33 @@ const FloatingAction = ({
 
   const allTeachers = [...teacherList, ...coTeachersList];
 
-  const isTeacher = user.role !== "ST";
+  const isTeacher = user.role !== 'ST';
 
-  const labelForTeacher = isTeacher ? "Your Team" : "Your Teachers";
-  const labelForStudent = isTeacher ? "Your Students" : "Your Classmates";
+  const labelForTeacher = isTeacher ? 'Your Team' : 'Your Teachers';
+  const labelForStudent = isTeacher ? 'Your Students' : 'Your Classmates';
 
   const teacherProps = isLoaded
     ? {
-        list: orderBy(allTeachers, ["firstName"], "asc"),
+        list: orderBy(allTeachers, ['firstName'], 'asc'),
         header: `${labelForTeacher} (${allTeachers.length})`,
         isTeacher,
-        name,
+        name
       }
     : {};
   const studentProps = isLoaded
     ? {
         list: orderBy(
           studentsList.map((item) => item.student),
-          ["firstName"],
-          "asc"
+          ['firstName'],
+          'asc'
         ),
         header: `${labelForStudent} (${studentsList.length})`,
         isTeacher,
-        name,
+        name
       }
     : {};
 
-  const props = name === "teacher" ? { ...teacherProps } : { ...studentProps };
+  const props = name === 'teacher' ? {...teacherProps} : {...studentProps};
 
   return (
     <ClickAwayListener onClickAway={() => setIsActive(false)}>
@@ -508,30 +491,18 @@ const FloatingAction = ({
           e.stopPropagation();
           setIsActive(!isActive);
         }}
-        title={
-          isActive ? "" : name === "teacher" ? labelForTeacher : labelForStudent
-        }
-        className="theme-bg floating-item  relative p-2 customShadow rounded-full  border-white border-2 hover:theme-bg:500 transition-all cursor-pointer "
-      >
+        title={isActive ? '' : name === 'teacher' ? labelForTeacher : labelForStudent}
+        className="theme-bg floating-item  relative p-2 customShadow rounded-full  border-white border-2 hover:theme-bg:500 transition-all cursor-pointer ">
         <div className="text-lg text-white w-auto">
-          {name === "teacher" ? (
-            <AiOutlineUsergroupDelete />
-          ) : (
-            <HiOutlineUserGroup />
-          )}
+          {name === 'teacher' ? <AiOutlineUsergroupDelete /> : <HiOutlineUserGroup />}
         </div>
 
-        <AnimatedContainer
-          animationType="sliderInvert"
-          duration="700"
-          show={isActive}
-        >
+        <AnimatedContainer animationType="sliderInvert" duration="700" show={isActive}>
           {isActive && (
             <div
               className={`${
-                name === "teacher" ? "teacher-card" : "student-card"
-              } bg-gray-200 item-open cursor-default z-100 top-0 absolute border-2 border-white theme-card-shadow min-w-96 rounded-xl`}
-            >
+                name === 'teacher' ? 'teacher-card' : 'student-card'
+              } bg-gray-200 item-open cursor-default z-100 top-0 absolute border-2 border-white theme-card-shadow min-w-96 rounded-xl`}>
               {homeData && homeData.length > 0 ? (
                 //  @ts-ignore
                 isLoaded && <Content {...props} />

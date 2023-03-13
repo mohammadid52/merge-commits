@@ -1,8 +1,10 @@
-import { allowedAuthIds } from "@contexts/GlobalContext";
-import { getAsset } from "assets";
-import { isEmpty } from "lodash";
-import { getLocalStorageData, setLocalStorageData } from "./localStorage";
-import { getClientKey } from "./strings";
+import {allowedAuthIds} from '@contexts/GlobalContext';
+import {RoomStatus} from 'API';
+import {getAsset} from 'assets';
+import {isEmpty} from 'lodash';
+import {getLocalStorageData, setLocalStorageData} from './localStorage';
+import {getImageFromS3Static} from './services';
+import {getClientKey} from './strings';
 
 export const goBackBreadCrumb = (list: any[], history: any) => {
   const lastSecondIdx = list.length - 2;
@@ -19,7 +21,7 @@ export const doResize = (textbox: any) => {
   var txt = textbox.value;
   var cols = textbox.cols;
 
-  var arraytxt: any = txt.split("\n");
+  var arraytxt: any = txt.split('\n');
   var rows = arraytxt.length;
 
   for (let i = 0; i < arraytxt.length; i++)
@@ -33,21 +35,21 @@ export const wait = (timeout: number) => {
   return new Promise((resolve) => setTimeout(resolve, timeout));
 };
 
-export const capitalizeFirstLetter = (str: string = "") => {
+export const capitalizeFirstLetter = (str: string = '') => {
   if (str && str.length > 0) {
     const capitalized = str.charAt(0).toUpperCase() + str.slice(1);
     return capitalized;
   }
-  return "";
+  return '';
 };
 
 export const removeExtension = (filename: string) => {
   if (filename.length > 0) {
-    const lastDotPosition = filename.lastIndexOf(".");
+    const lastDotPosition = filename.lastIndexOf('.');
     if (lastDotPosition === -1) return filename;
     else return filename.substr(0, lastDotPosition);
   }
-  return "";
+  return '';
 };
 
 export const ellipsis = (text: string, len: number): string => {
@@ -58,7 +60,7 @@ export const ellipsis = (text: string, len: number): string => {
       return `${text.substring(0, len)}...`;
     }
   }
-  return "";
+  return '';
 };
 
 export const randomNumber = (min: number, max: number): number => {
@@ -79,19 +81,19 @@ export const getJSON = async (url: string): Promise<string> => {
 };
 
 export const paginationPage = (lang: string, page: number, total: number) => {
-  if (lang === "EN") return `Showing Page ${page + 1} of ${total} pages`;
-  if (lang === "ES") return `Mostrando página ${page + 1} de ${total} páginas`;
-  return "";
+  if (lang === 'EN') return `Showing Page ${page + 1} of ${total} pages`;
+  if (lang === 'ES') return `Mostrando página ${page + 1} de ${total} páginas`;
+  return '';
 };
 
 export const setPageTitle = (title: string) => {
   if (title) {
-    document.title = `${title} | `.concat(getAsset(getClientKey(), "appTitle"));
+    document.title = `${title} | `.concat(getAsset(getClientKey(), 'appTitle'));
   }
 };
 
 export const getExtension = (str: string) => {
-  let temp = str.split(".");
+  let temp = str.split('.');
 
   const extension = temp.pop();
   return extension;
@@ -101,15 +103,15 @@ export const focusOn = (id: string) => {
   const el = document.getElementById(id);
 
   if (el) {
-    el.classList.add("blink");
+    el.classList.add('blink');
     setTimeout(() => {
-      el.classList.remove("blink");
+      el.classList.remove('blink');
     }, 2000);
   }
 };
 
 const zoiqFilterFallback = (authId: string) =>
-  allowedAuthIds.includes(authId) ? [] : [{ isZoiq: { ne: true } }];
+  allowedAuthIds.includes(authId) ? [] : [{isZoiq: {ne: true}}];
 
 export const withZoiqFilter = (generalFilter: any, _zoiqFilter?: any) => {
   let zoiqFilter =
@@ -124,9 +126,7 @@ export const withZoiqFilter = (generalFilter: any, _zoiqFilter?: any) => {
     zoiqFilter?.length > 0
       ? {
           ...generalFilter,
-          or: [generalFilter?.or, generalFilter?.and, ...zoiqFilter].filter(
-            Boolean
-          ),
+          or: [generalFilter?.or, generalFilter?.and, ...zoiqFilter].filter(Boolean)
         }
       : generalFilter;
 
@@ -135,35 +135,34 @@ export const withZoiqFilter = (generalFilter: any, _zoiqFilter?: any) => {
 
 export const getSignInError = (error: any, onlyEmail: any) => {
   switch (error.code) {
-    case "UserNotFoundException":
+    case 'UserNotFoundException':
       return {
         show: true,
-        type: "error",
-        message: "The email you entered was not found",
+        type: 'error',
+        message: 'The email you entered was not found'
       };
-    case "NotAuthorizedException":
+    case 'NotAuthorizedException':
       if (!onlyEmail) {
         return {
           show: true,
-          type: "error",
-          message: "The email or password you entered was not correct",
+          type: 'error',
+          message: 'The email or password you entered was not correct'
         };
       }
       return;
-    case "UserNotConfirmedException":
+    case 'UserNotConfirmedException':
       return {
         show: true,
-        type: "error",
-        message:
-          "You need to confirm registered email id, Please check your email.",
+        type: 'error',
+        message: 'You need to confirm registered email id, Please check your email.'
       };
     // shows valid error message for confirmation error instead of redirecting to confirm-code rout.
 
     default:
       return {
         show: true,
-        type: "error",
-        message: error.message,
+        type: 'error',
+        message: error.message
       };
   }
 };
@@ -184,12 +183,12 @@ export const getUserInfo = (userInfo: any) => ({
   lessons: userInfo.lessons,
   lastEmotionSubmission: userInfo?.lastEmotionSubmission,
   removedFrom: userInfo?.removedFrom,
-  status: userInfo?.status,
+  status: userInfo?.status
 });
 
 export const setCredCookies = (
   rememberMe: boolean,
-  cookies: { setCookie: any; removeCookie: any },
+  cookies: {setCookie: any; removeCookie: any},
   auth: {
     name: string;
     email: string;
@@ -198,16 +197,108 @@ export const setCredCookies = (
 ) => {
   if (rememberMe && Boolean(auth.email && auth.password && auth.name)) {
     cookies.setCookie(
-      "cred",
+      'cred',
       {
         email: auth.email,
         checked: Boolean(rememberMe),
         password: auth.password,
-        name: auth.name,
+        name: auth.name
       },
-      { path: "/" }
+      {path: '/'}
     );
   } else {
-    cookies.removeCookie("cred");
+    cookies.removeCookie('cred');
   }
+};
+
+export const reorderSyllabus = (syllabusArray: any[], sequenceArray: any[]) => {
+  const filteredSyllabusArray = syllabusArray.filter((d) => d.unit !== null);
+
+  let getSyllabusInSequence =
+    sequenceArray && sequenceArray.length > 0
+      ? sequenceArray?.reduce((acc: any[], syllabusID: string) => {
+          return [
+            ...acc,
+            filteredSyllabusArray.find((syllabus: any) => syllabus.unitId === syllabusID)
+          ];
+        }, [])
+      : filteredSyllabusArray;
+
+  let mapSyllabusToSequence =
+    sequenceArray && sequenceArray.length > 0
+      ? getSyllabusInSequence
+          ?.map((syllabus: any) => {
+            return {
+              ...syllabus,
+              ...syllabus.unit,
+              lessons: {
+                ...syllabus?.unit?.lessons,
+                items:
+                  syllabus?.unit.lessons?.items?.length > 0
+                    ? syllabus?.unit.lessons.items
+                        .map((t: any) => {
+                          let index = syllabus?.universalLessonsSeq?.indexOf(t.id);
+                          return {...t, index};
+                        })
+                        .sort((a: any, b: any) => (a.index > b.index ? 1 : -1))
+                    : []
+              }
+            };
+          })
+          .map(({unit, ...rest}: any) => rest)
+      : getSyllabusInSequence;
+
+  return mapSyllabusToSequence;
+};
+
+export const getTodayDate = () => {
+  let today: any = new Date();
+  let dd = String(today.getDate()).padStart(2, '0');
+  let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+  let yyyy = today.getFullYear();
+  today = mm + '-' + dd + '-' + yyyy;
+  return today;
+};
+
+export const insertExtraDataForClassroom = (cr: any) => {
+  const teacherImage = getImageFromS3Static(cr?.teacher?.image);
+  return {
+    institutionName: cr?.institution?.name || '',
+    teacher: {
+      name: `${cr?.teacher?.firstName} ${cr?.teacher?.lastName}`,
+      image: teacherImage
+    },
+    courseName: cr?.curricula?.items[0]?.curriculum?.name || '',
+    status: cr?.status || RoomStatus.ACTIVE,
+    activeSyllabus: cr?.activeSyllabus
+  };
+};
+
+export const removeDuplicates = (array: any[]) => {
+  let ids: any[] = [];
+
+  let result: any[] = [];
+  array.forEach((item) => {
+    if (!ids.includes(item?.id)) {
+      result.push(item);
+      ids.push(item.id);
+    }
+  });
+  return result;
+};
+
+export const getSeparatedHeaders = (arr: any[]) => {
+  let reg = /[,.]/gi;
+
+  if (arr && arr.length > 0) {
+    let result = arr.map((i) => {
+      return {
+        ...i,
+        label: i.label.replaceAll(reg, '')
+      };
+    });
+
+    return result;
+  }
+  return arr;
 };
