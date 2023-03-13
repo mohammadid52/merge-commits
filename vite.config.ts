@@ -9,6 +9,7 @@ export default defineConfig({
   root: process.cwd(),
 
   build: {
+    chunkSizeWarningLimit: 2000,
     outDir: path.join(process.cwd(), 'public'),
     rollupOptions: {
       plugins: [
