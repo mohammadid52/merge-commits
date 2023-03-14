@@ -47,7 +47,8 @@ const LoginInner = ({
 
     handleChange,
     setFieldValue,
-    setValues
+    setValues,
+    setFieldError
   } = useFormik({
     initialValues: {
       email: '',
@@ -135,21 +136,23 @@ const LoginInner = ({
       }
     } catch (error) {
       console.error(error);
-
       if (error.code === 'NotAuthorizedException') {
-        if (error.message === 'Incorrect username or password.') {
-          const user = await getUser();
+        if (error.message?.toLowerCase().includes('incorrect username or password')) {
+          try {
+            const user = await getUser();
 
-          if (user.challengeName === 'NEW_PASSWORD_REQUIRED') {
-            setNewUser(user);
-            setCreatePassword(true);
-            setEmail(values.email);
-          } else {
-            setMessage({
-              show: true,
-              type: 'error',
-              message: error.message
-            });
+            if (user.challengeName === 'NEW_PASSWORD_REQUIRED') {
+              setNewUser(user);
+              setCreatePassword(true);
+              setEmail(values.email);
+            }
+          } catch (error) {
+            setFieldError('password', 'Incorrect username or password');
+            // setMessage({
+            //   show: true,
+            //   type: 'error',
+            //   message: error.message
+            // });
           }
         } else if (
           error.message ===
@@ -167,7 +170,7 @@ const LoginInner = ({
                 'Your account has been activated by the admin. Please click on enter or login and create you password to continue.'
             });
           } catch (err) {
-            console.error('Error temporary password could not be reset');
+            console.error(err, 'Error temporary password could not be reset');
           }
         }
       } else if (error.code === 'UserNotConfirmedException') {
@@ -184,7 +187,7 @@ const LoginInner = ({
           });
           // confirm user, set password, and sign in which should ask them to create a new password.
         } catch (err) {
-          console.error('Error in resetting unconfirmed user.');
+          console.error(err, 'Error in resetting unconfirmed user.');
         }
       } else {
         getSignInError(error, true);

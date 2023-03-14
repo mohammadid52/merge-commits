@@ -14,6 +14,16 @@ export default defineConfig({
 
     outDir: path.join(process.cwd(), 'public'),
     rollupOptions: {
+      maxParallelFileOps: 2,
+      output: {
+        sourcemap: true,
+        // @ts-ignore
+        manualChunks: (id) => {
+          if (id.includes('node_modules')) {
+            return 'vendor';
+          }
+        }
+      },
       cache: false,
       plugins: [
         // Enable rollup polyfills plugin
