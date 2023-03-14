@@ -10,8 +10,11 @@ export default defineConfig({
 
   build: {
     chunkSizeWarningLimit: 2000,
+    sourcemap: false,
+
     outDir: path.join(process.cwd(), 'public'),
     rollupOptions: {
+      cache: false,
       plugins: [
         // Enable rollup polyfills plugin
         // used during production bundling
