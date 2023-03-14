@@ -1,5 +1,4 @@
 import react from '@vitejs/plugin-react';
-import rollupNodePolyFill from 'rollup-plugin-node-polyfills';
 
 import path from 'path';
 import {defineConfig} from 'vite';
@@ -14,23 +13,23 @@ export default defineConfig({
 
     outDir: path.join(process.cwd(), 'public'),
     rollupOptions: {
-      external: ['@react-pdf'],
-      maxParallelFileOps: 2,
-      output: {
-        sourcemap: true,
-        // @ts-ignore
-        manualChunks: (id) => {
-          if (id.includes('node_modules')) {
-            return 'vendor';
-          }
-        }
-      },
-      cache: false,
+      external: ['@react-pdf', '@react-pdf/pdfkit'],
+      // maxParallelFileOps: 2,
+      // output: {
+      //   sourcemap: true,
+      //   // @ts-ignore
+      //   manualChunks: (id) => {
+      //     if (id.includes('node_modules')) {
+      //       return 'vendor';
+      //     }
+      //   }
+      // },
+      // cache: false,
       plugins: [
         // Enable rollup polyfills plugin
         // used during production bundling
         // @ts-ignore
-        rollupNodePolyFill()
+        // rollupNodePolyFill()
       ]
     }
   },
@@ -46,7 +45,7 @@ export default defineConfig({
       punycode: 'rollup-plugin-node-polyfills/polyfills/punycode',
       url: 'rollup-plugin-node-polyfills/polyfills/url',
       string_decoder: 'rollup-plugin-node-polyfills/polyfills/string-decoder',
-      // buffer: "rollup-plugin-node-polyfills/polyfills/buffer-es6",
+      buffer: 'rollup-plugin-node-polyfills/polyfills/buffer-es6',
       process: 'rollup-plugin-node-polyfills/polyfills/process-es6',
       http: 'rollup-plugin-node-polyfills/polyfills/http',
       https: 'rollup-plugin-node-polyfills/polyfills/http',
