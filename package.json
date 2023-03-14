@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "start": "vite",
-    "build": "set NODE_OPTIONS=--max_old_space_size=8500 && tsc && vite build ",
+    "build": "set NODE_OPTIONS=--max_old_space_size=16314 && tsc && vite build ",
     "preview": "vite preview",
     "set-dictionary": "cp ./src/dictionary/dictionary.iconoclast.tsx ./src/dictionary/dictionary.demo.tsx && cp ./src/dictionary/dictionary.iconoclast.tsx ./src/dictionary/dictionary.curate.tsx",
     "push:ia": "sh ./scripts/push-ia.sh",

@@ -14,6 +14,7 @@ export default defineConfig({
 
     outDir: path.join(process.cwd(), 'public'),
     rollupOptions: {
+      external: ['@react-pdf'],
       maxParallelFileOps: 2,
       output: {
         sourcemap: true,
@@ -78,15 +79,5 @@ export default defineConfig({
     host: true,
     port: 8085,
     hmr: {host: 'localhost'}
-  },
-
-  optimizeDeps: {
-    exclude: [
-      'amplify',
-      'cypress',
-      'src/api.schema.graphql',
-      'cypress.config.js',
-      'scripts'
-    ]
   }
 });
