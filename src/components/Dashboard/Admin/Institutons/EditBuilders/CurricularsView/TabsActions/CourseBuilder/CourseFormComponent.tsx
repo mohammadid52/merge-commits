@@ -1,41 +1,41 @@
-import { GraphQLAPI as API, graphqlOperation } from "@aws-amplify/api-graphql";
-import UploadImageBtn from "@components/Atoms/Buttons/UploadImageBtn";
-import ProgressBar from "@components/Lesson/UniversalLessonBuilder/UI/ProgressBar";
-import ModalPopUp from "@components/Molecules/ModalPopUp";
-import { checkUniqCurricularName, uploadImageToS3 } from "@graphql/functions";
-import { RoomStatus } from "API";
-import Buttons from "atoms/Buttons";
-import FormInput from "atoms/Form/FormInput";
-import MultipleSelector from "atoms/Form/MultipleSelector";
-import Selector from "atoms/Form/Selector";
-import ProfileCropModal from "components/Dashboard/Profile/ProfileCropModal";
-import { useGlobalContext } from "contexts/GlobalContext";
-import * as customMutations from "customGraphql/customMutations";
-import * as customQueries from "customGraphql/customQueries";
-import useDictionary from "customHooks/dictionary";
-import * as mutation from "graphql/mutations";
-import React, { useEffect, useState } from "react";
-import { useHistory, useRouteMatch } from "react-router-dom";
-import { getImageFromS3 } from "utilities/services";
-import { languageList } from "utilities/staticData";
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import UploadImageBtn from '@components/Atoms/Buttons/UploadImageBtn';
+import ProgressBar from '@components/Lesson/UniversalLessonBuilder/UI/ProgressBar';
+import ModalPopUp from '@components/Molecules/ModalPopUp';
+import {checkUniqCurricularName, uploadImageToS3} from '@graphql/functions';
+import {RoomStatus} from 'API';
+import Buttons from 'atoms/Buttons';
+import FormInput from 'atoms/Form/FormInput';
+import MultipleSelector from 'atoms/Form/MultipleSelector';
+import Selector from 'atoms/Form/Selector';
+import ProfileCropModal from 'components/Dashboard/Profile/ProfileCropModal';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import * as customMutations from 'customGraphql/customMutations';
+import * as customQueries from 'customGraphql/customQueries';
+import useDictionary from 'customHooks/dictionary';
+import * as mutation from 'graphql/mutations';
+import React, {useEffect, useState} from 'react';
+import {useHistory, useRouteMatch} from 'react-router-dom';
+import {getImageFromS3} from 'utilities/services';
+import {languageList} from 'utilities/staticData';
 
 export const RoomStatusList = [
   {
     name: RoomStatus.ACTIVE,
     id: 1,
-    value: RoomStatus.ACTIVE,
+    value: RoomStatus.ACTIVE
   },
 
   {
     name: RoomStatus.INACTIVE,
     id: 3,
-    value: RoomStatus.INACTIVE,
+    value: RoomStatus.INACTIVE
   },
   {
     name: RoomStatus.TRAINING,
     id: 4,
-    value: RoomStatus.TRAINING,
-  },
+    value: RoomStatus.TRAINING
+  }
 ];
 interface CourseBuilderProps {
   courseId: string;
@@ -49,7 +49,7 @@ interface ICourseForm {
   summary: string;
   objectives: string;
   type?: string;
-  languages: { id: string; name: string; value: string }[];
+  languages: {id: string; name: string; value: string}[];
   institute: {
     id: string;
   };
@@ -58,19 +58,19 @@ interface ICourseForm {
 const CourseFormComponent = ({
   courseId,
   courseData,
-  setCourseData,
+  setCourseData
 }: CourseBuilderProps) => {
   const initialData: ICourseForm = {
-    name: "",
-    description: "",
-    objectives: "",
+    name: '',
+    description: '',
+    objectives: '',
     status: RoomStatus.ACTIVE,
-    summary: "",
-    type: "",
-    languages: [{ id: "1", name: "English", value: "EN" }],
+    summary: '',
+    type: '',
+    languages: [{id: '1', name: 'English', value: 'EN'}],
     institute: {
-      id: "",
-    },
+      id: ''
+    }
   };
   const history = useHistory();
 
@@ -78,35 +78,34 @@ const CourseFormComponent = ({
 
   const [designersList, setDesignersList] = useState<any[]>([]);
   const [selectedDesigners, setSelectedDesigners] = useState<any[]>([]);
-  const [curricularData, setCurricularData] =
-    useState<ICourseForm>(initialData);
+  const [curricularData, setCurricularData] = useState<ICourseForm>(initialData);
   const [fileObj, setFileObj] = useState({});
 
   const [showCropper, setShowCropper] = useState(false);
   const [upImage, setUpImage] = useState<any | null>(null);
   const [imageLoading, setImageLoading] = useState(false);
-  const [imageUrl, setImageUrl] = useState("");
+  const [imageUrl, setImageUrl] = useState('');
   const [s3Image, setS3Image] = useState<any | null>(null);
 
   const [loading, setIsLoading] = useState(false);
-  const { userLanguage } = useGlobalContext();
-  const { CurricularBuilderdict, UserEditDict } = useDictionary();
+  const {userLanguage} = useGlobalContext();
+  const {CurricularBuilderdict, UserEditDict} = useDictionary();
   const [messages, setMessages] = useState({
     show: false,
-    message: "",
-    isError: false,
+    message: '',
+    isError: false
   });
 
   const onChange = (e: any) => {
     setCurricularData({
       ...curricularData,
-      [e.target.name]: e.target.value,
+      [e.target.name]: e.target.value
     });
     if (messages.show) {
       setMessages({
         show: false,
-        message: "",
-        isError: false,
+        message: '',
+        isError: false
       });
     }
   };
@@ -114,10 +113,10 @@ const CourseFormComponent = ({
   // Temporary List
   //*******//
   const typeList = [
-    { id: 0, name: "In-School Programming" },
-    { id: 1, name: "After-School Programming" },
-    { id: 2, name: "Summer Intensives (2 week programming)" },
-    { id: 3, name: "Writer's Retreat" },
+    {id: 0, name: 'In-School Programming'},
+    {id: 1, name: 'After-School Programming'},
+    {id: 2, name: 'Summer Intensives (2 week programming)'},
+    {id: 3, name: "Writer's Retreat"}
   ];
   //*****//
 
@@ -126,13 +125,13 @@ const CourseFormComponent = ({
     const currentLanguages = curricularData.languages;
     const selectedItem = currentLanguages.find((item) => item.id === id);
     if (!selectedItem) {
-      updatedList = [...currentLanguages, { id, name, value }];
+      updatedList = [...currentLanguages, {id, name, value}];
     } else {
       updatedList = currentLanguages.filter((item) => item.id !== id);
     }
     setCurricularData({
       ...curricularData,
-      languages: updatedList,
+      languages: updatedList
     });
   };
   const selectDesigner = (id: string, name: string, value: string) => {
@@ -140,7 +139,7 @@ const CourseFormComponent = ({
     const currentDesigners = selectedDesigners;
     const selectedItem = currentDesigners.find((item) => item.id === id);
     if (!selectedItem) {
-      updatedList = [...currentDesigners, { id, name, value }];
+      updatedList = [...currentDesigners, {id, name, value}];
     } else {
       updatedList = currentDesigners.filter((item) => item.id !== id);
     }
@@ -153,7 +152,7 @@ const CourseFormComponent = ({
     if (isValid) {
       try {
         const languagesCode = curricularData.languages.map(
-          (item: { value: string }) => item.value
+          (item: {value: string}) => item.value
         );
         const designers = selectedDesigners.map((item) => item.id);
         let input: any = {
@@ -166,44 +165,44 @@ const CourseFormComponent = ({
           languages: languagesCode,
           designers,
           image: null as any,
-          status: curricularData.status,
+          status: curricularData.status
         };
         if (courseId) {
           input.id = courseId;
           input.image = courseData.image;
           if (s3Image) {
             const key = `instituteImages/curricular_image_${courseId}`;
-            await uploadImageToS3(s3Image, key, "image/jpeg");
+            await uploadImageToS3(s3Image, key, 'image/jpeg');
             input = {
               ...input,
-              image: `instituteImages/curricular_image_${courseId}`,
+              image: `instituteImages/curricular_image_${courseId}`
             };
           }
 
           const response: any = await API.graphql(
-            graphqlOperation(mutation.updateCurriculum, { input })
+            graphqlOperation(mutation.updateCurriculum, {input})
           );
           const data = response.data.updateCurriculum;
           history.push(
             `${match.url}?step=unit_manager&institutionId=${curricularData.institute.id}`
           );
-          setCourseData({ ...data });
+          setCourseData({...data});
         } else {
           const response: any = await API.graphql(
-            graphqlOperation(customMutations.createCurriculum, { input: input })
+            graphqlOperation(customMutations.createCurriculum, {input: input})
           );
           const newCourse: any = response?.data?.createCurriculum;
 
           if (s3Image) {
             const key = `instituteImages/curricular_image_${newCourse.id}`;
-            await uploadImageToS3(s3Image, key, "image/jpeg");
+            await uploadImageToS3(s3Image, key, 'image/jpeg');
 
             await API.graphql(
               graphqlOperation(mutation.updateCurriculum, {
                 input: {
                   id: newCourse.id,
-                  image: key,
-                },
+                  image: key
+                }
               })
             );
           }
@@ -212,12 +211,11 @@ const CourseFormComponent = ({
           );
         }
       } catch (error) {
-        console.error(error, "inside catch");
+        console.error(error, 'inside catch');
         setMessages({
           show: true,
-          message:
-            CurricularBuilderdict[userLanguage]["messages"]["error"]["save"],
-          isError: true,
+          message: CurricularBuilderdict[userLanguage]['messages']['error']['save'],
+          isError: true
         });
       }
     }
@@ -227,51 +225,45 @@ const CourseFormComponent = ({
     try {
       const result: any = await API.graphql(
         graphqlOperation(customQueries.listPersons, {
-          filter: { or: [{ role: { eq: "TR" } }, { role: { eq: "BLD" } }] },
+          filter: {or: [{role: {eq: 'TR'}}, {role: {eq: 'BLD'}}]}
         })
       );
       const savedData = result.data.listPeople;
       const updatedList = savedData?.items.map(
-        (item: { id: string; firstName: string; lastName: string }) => ({
+        (item: {id: string; firstName: string; lastName: string}) => ({
           id: item?.id,
-          name: `${item?.firstName || ""} ${item.lastName || ""}`,
-          value: `${item?.firstName || ""} ${item.lastName || ""}`,
+          name: `${item?.firstName || ''} ${item.lastName || ''}`,
+          value: `${item?.firstName || ''} ${item.lastName || ''}`
         })
       );
       setDesignersList(updatedList);
     } catch {
       setMessages({
         show: true,
-        message:
-          CurricularBuilderdict[userLanguage]["messages"]["error"][
-            "designerlist"
-          ],
-        isError: true,
+        message: CurricularBuilderdict[userLanguage]['messages']['error']['designerlist'],
+        isError: true
       });
     }
   };
 
   const validateForm = async () => {
-    if (curricularData.name.trim() === "") {
+    if (curricularData.name.trim() === '') {
       setMessages({
         show: true,
-        message:
-          CurricularBuilderdict[userLanguage]["messages"]["validation"]["name"],
-        isError: true,
+        message: CurricularBuilderdict[userLanguage]['messages']['validation']['name'],
+        isError: true
       });
       return false;
-    } else if (curricularData.institute.id === "") {
+    } else if (curricularData.institute.id === '') {
       setMessages({
         show: true,
         message:
-          CurricularBuilderdict[userLanguage]["messages"]["validation"][
-            "institute"
-          ],
-        isError: true,
+          CurricularBuilderdict[userLanguage]['messages']['validation']['institute'],
+        isError: true
       });
       return false;
     } else if (
-      curricularData.name.trim() !== "" &&
+      curricularData.name.trim() !== '' &&
       courseData.name !== curricularData.name
     ) {
       const isUniq = await checkUniqCurricularName(
@@ -282,10 +274,8 @@ const CourseFormComponent = ({
         setMessages({
           show: true,
           message:
-            CurricularBuilderdict[userLanguage]["messages"]["validation"][
-              "curricular"
-            ],
-          isError: true,
+            CurricularBuilderdict[userLanguage]['messages']['validation']['curricular'],
+          isError: true
         });
         return false;
       } else {
@@ -327,7 +317,7 @@ const CourseFormComponent = ({
             const personObj = {
               id: personData?.id,
               name: personData?.name,
-              value: personData?.name,
+              value: personData?.name
             };
             return personObj;
           }
@@ -352,18 +342,18 @@ const CourseFormComponent = ({
           status: courseData?.status || RoomStatus.ACTIVE,
           objectives: courseData.objectives[0],
           institute: {
-            id: courseData.institution.id,
+            id: courseData.institution.id
           },
           languages: languageList.filter((item) =>
             courseData.languages.includes(item.value)
-          ),
+          )
         });
       } else {
         setCurricularData((prevData) => ({
           ...prevData,
           institute: {
-            id: courseData.institution.id,
-          },
+            id: courseData.institution.id
+          }
         }));
       }
       const imageUrl: any = courseData.image
@@ -379,16 +369,16 @@ const CourseFormComponent = ({
 
   const [warnModal, setWarnModal] = useState({
     show: false,
-    message: "message",
-    onSaveAction: () => {},
+    message: 'message',
+    onSaveAction: () => {}
   });
 
   const closeModal = () => {
-    setWarnModal({ show: false, message: "", onSaveAction: () => {} });
+    setWarnModal({show: false, message: '', onSaveAction: () => {}});
   };
 
   const selectStatus = (name: RoomStatus) => {
-    setCurricularData({ ...curricularData, status: name });
+    setCurricularData({...curricularData, status: name});
     closeModal();
   };
 
@@ -398,8 +388,8 @@ const CourseFormComponent = ({
         setWarnModal({
           show: true,
           message:
-            "By setting this student to inactive, students will no longer see any courses when they log in (they will continue to have access to their notebooks). Do you wish to continue?",
-          onSaveAction: () => selectStatus(name),
+            'By setting this student to inactive, students will no longer see any courses when they log in (they will continue to have access to their notebooks). Do you wish to continue?',
+          onSaveAction: () => selectStatus(name)
         });
       } else {
         selectStatus(name);
@@ -415,7 +405,7 @@ const CourseFormComponent = ({
     type,
 
     status = RoomStatus.ACTIVE,
-    summary,
+    summary
   } = curricularData;
 
   const [uploadProgress] = useState<string | number>(0);
@@ -446,16 +436,16 @@ const CourseFormComponent = ({
                 id="curricularName"
                 onChange={onChange}
                 name="name"
-                label={CurricularBuilderdict[userLanguage]["NAME"]}
+                label={CurricularBuilderdict[userLanguage]['NAME']}
                 isRequired
               />
             </div>
 
             <div className="">
               <MultipleSelector
-                label={CurricularBuilderdict[userLanguage]["LANGUAGE"]}
+                label={CurricularBuilderdict[userLanguage]['LANGUAGE']}
                 selectedItems={languages}
-                placeholder={CurricularBuilderdict[userLanguage]["LANGUAGE"]}
+                placeholder={CurricularBuilderdict[userLanguage]['LANGUAGE']}
                 list={languageList}
                 onChange={selectLanguage}
               />
@@ -463,37 +453,35 @@ const CourseFormComponent = ({
 
             <div className="">
               <MultipleSelector
-                label={CurricularBuilderdict[userLanguage]["DESIGNER"]}
+                label={CurricularBuilderdict[userLanguage]['DESIGNER']}
                 selectedItems={selectedDesigners}
-                placeholder={CurricularBuilderdict[userLanguage]["DESIGNER"]}
+                placeholder={CurricularBuilderdict[userLanguage]['DESIGNER']}
                 list={designersList}
                 onChange={selectDesigner}
               />
             </div>
             <div className="">
               <Selector
-                label={UserEditDict[userLanguage]["status"]}
-                placeholder={UserEditDict[userLanguage]["status"]}
+                label={UserEditDict[userLanguage]['status']}
+                placeholder={UserEditDict[userLanguage]['status']}
                 list={RoomStatusList}
                 // @ts-ignore
                 onChange={(_: any, name: RoomStatus) => {
                   beforeStatusChange(name);
                 }}
                 dropdownWidth="w-56"
-                selectedItem={status || UserEditDict[userLanguage]["status"]}
+                selectedItem={status || UserEditDict[userLanguage]['status']}
               />
             </div>
             <div className=" ">
               <Selector
-                label={CurricularBuilderdict[userLanguage]["TYPE"]}
-                placeholder={CurricularBuilderdict[userLanguage]["TYPE"]}
+                label={CurricularBuilderdict[userLanguage]['TYPE']}
+                placeholder={CurricularBuilderdict[userLanguage]['TYPE']}
                 list={typeList}
                 onChange={(_: any, name: string) => {
-                  setCurricularData({ ...curricularData, type: name });
+                  setCurricularData({...curricularData, type: name});
                 }}
-                selectedItem={
-                  type || CurricularBuilderdict[userLanguage]["TYPE"]
-                }
+                selectedItem={type || CurricularBuilderdict[userLanguage]['TYPE']}
               />
             </div>
 
@@ -505,7 +493,7 @@ const CourseFormComponent = ({
                 id="summary"
                 onChange={onChange}
                 name="summary"
-                label={CurricularBuilderdict[userLanguage]["SUMMARY"]}
+                label={CurricularBuilderdict[userLanguage]['SUMMARY']}
               />
             </div>
 
@@ -517,7 +505,7 @@ const CourseFormComponent = ({
                 id="description"
                 onChange={onChange}
                 name="description"
-                label={CurricularBuilderdict[userLanguage]["DESCRIPTION"]}
+                label={CurricularBuilderdict[userLanguage]['DESCRIPTION']}
               />
             </div>
             <div className="">
@@ -528,25 +516,21 @@ const CourseFormComponent = ({
                 id="objectives"
                 onChange={onChange}
                 name="objectives"
-                label={CurricularBuilderdict[userLanguage]["OBJECT"]}
+                label={CurricularBuilderdict[userLanguage]['OBJECT']}
               />
             </div>
           </div>
         </div>
       </div>
-      {imageLoading && uploadProgress !== "done" && (
+      {imageLoading && uploadProgress !== 'done' && (
         <ProgressBar
-          status={uploadProgress < 99 ? `Uploading file` : "Upload Done"}
+          status={uploadProgress < 99 ? `Uploading file` : 'Upload Done'}
           progress={uploadProgress}
         />
       )}
       {messages.show ? (
         <div className="py-2 m-auto text-center">
-          <p
-            className={`${
-              messages.isError ? "text-red-600" : "text-green-600"
-            }`}
-          >
+          <p className={`${messages.isError ? 'text-red-600' : 'text-green-600'}`}>
             {messages.message && messages.message}
           </p>
         </div>
@@ -564,9 +548,7 @@ const CourseFormComponent = ({
       <div className="flex my-8 gap-5 justify-center">
         <Buttons
           label={
-            CurricularBuilderdict[userLanguage]["BUTTON"][
-              loading ? "SAVING" : "SAVE"
-            ]
+            CurricularBuilderdict[userLanguage]['BUTTON'][loading ? 'SAVING' : 'SAVE']
           }
           onClick={saveCourse}
           disabled={loading ? true : false}
@@ -583,8 +565,8 @@ const CourseFormComponent = ({
       {/* Image cropper */}
       {showCropper && (
         <ProfileCropModal
-          upImg={upImage || ""}
-          customCropProps={{ x: 25, y: 25, width: 480, height: 320 }}
+          upImg={upImage || ''}
+          customCropProps={{x: 25, y: 25, width: 480, height: 320}}
           locked
           saveCroppedImage={(img: string) => saveCroppedImage(img)}
           closeAction={toggleCropper}
