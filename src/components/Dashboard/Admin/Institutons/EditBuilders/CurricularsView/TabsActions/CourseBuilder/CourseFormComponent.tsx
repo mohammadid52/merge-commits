@@ -306,9 +306,9 @@ const CourseFormComponent = ({
 
   useEffect(() => {
     if (
-      courseData.designers !== null &&
+      courseData?.designers !== null &&
       designersList?.length &&
-      courseData.designers?.length
+      courseData?.designers?.length
     ) {
       const designers = [...courseData.designers]
         .map((desID: string) => {

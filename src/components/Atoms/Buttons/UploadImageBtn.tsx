@@ -30,22 +30,23 @@ const UploadImageBtn = ({
         className="mt-1 w-full"
         setImage={setImage}
         toggleCropper={toggleCropper}>
-        <Buttons
-          btnClass=" w-full"
-          label={imageUrl ? 'Change image' : 'Upload image'}
-          transparent
-          onClick={handleImage}
-          insideElement={
-            imageUrl ? (
-              <img
-                className={`profile  w-6 h-6 theme-border bg-gray-100  border-0 flex flex-shrink-0 rounded-xl theme-card-shadow`}
-                src={imageUrl}
-                onLoad={() => setImageLoading(false)}
-              />
-            ) : null
-          }
-        />
+        <></>
       </DroppableMedia>
+      <Buttons
+        btnClass=" w-full"
+        label={imageUrl ? 'Change image' : 'Upload image'}
+        transparent
+        onClick={handleImage}
+        insideElement={
+          imageUrl ? (
+            <img
+              className={`profile  w-6 h-6 theme-border bg-gray-100  border-0 flex flex-shrink-0 rounded-xl theme-card-shadow`}
+              src={imageUrl}
+              onLoad={() => setImageLoading(false)}
+            />
+          ) : null
+        }
+      />
     </div>
   );
 };
