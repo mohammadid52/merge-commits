@@ -10,7 +10,6 @@ import * as customQueries from 'customGraphql/customQueries';
 import Buttons from 'atoms/Buttons';
 
 import Table from '@components/Molecules/Table';
-import {getAsset} from 'assets';
 import {map} from 'lodash';
 import 'react-datepicker/dist/react-datepicker.css';
 
@@ -28,8 +27,7 @@ interface IAttendanceProps {
 }
 
 const Attendance = ({id, goToClassroom, selectedRoomId, role}: IAttendanceProps) => {
-  const {theme, clientKey} = useGlobalContext();
-  const themeColor = getAsset(clientKey, 'themeClassName');
+  const {theme} = useGlobalContext();
 
   const [loading, setLoading] = useState<boolean>(false);
   const [attendanceList, setAttendanceList] = useState<any>([]);
@@ -193,125 +191,6 @@ const Attendance = ({id, goToClassroom, selectedRoomId, role}: IAttendanceProps)
           />
         </div>
       ) : null}
-
-      {/* <div className="flex flex-col">
-        <div className="overflow-x-auto">
-          <div className="align-middle inline-block min-w-full">
-            <div className="overflow-hidden border-b-0 border-gray-200 sm:rounded-lg">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-100">
-                  <tr>
-                    <th
-                      scope="col"
-                      className="px-6 py-3 w-auto text-left text-xs font-semibold text-gray-500 uppercase tracking-wider"
-                      onClick={() =>
-                        handleOrderBy(
-                          'roomName',
-                          sortConfig.fieldName === 'roomName'
-                            ? sortConfig.order === 'desc'
-                              ? 'asc'
-                              : 'desc'
-                            : 'desc'
-                        )
-                      }>
-                      {withOrderBy('ClassName', 'roomName')}
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-6 py-3 w-auto text-left text-xs font-semibold text-gray-500 uppercase tracking-wider"
-                      onClick={() =>
-                        handleOrderBy(
-                          'curriculumName',
-                          sortConfig.fieldName === 'curriculumName'
-                            ? sortConfig.order === 'desc'
-                              ? 'asc'
-                              : 'desc'
-                            : 'desc'
-                        )
-                      }>
-                      {withOrderBy('Curriculum', 'curriculumName')}
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-6 py-3 w-auto text-left text-xs font-semibold text-gray-500 uppercase tracking-wider"
-                      onClick={() =>
-                        handleOrderBy(
-                          'lessonName',
-                          sortConfig.fieldName === 'lessonName'
-                            ? sortConfig.order === 'desc'
-                              ? 'asc'
-                              : 'desc'
-                            : 'desc'
-                        )
-                      }>
-                      {withOrderBy('Lesson', 'lessonName')}
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-6 py-3 w-auto text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                      Date
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-6 py-3 w-auto text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                      Time
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {loading && !attendanceList.length ? (
-                    <tr>
-                      <td colSpan={5} className="py-4">
-                        <Loader />
-                      </td>
-                    </tr>
-                  ) : attendanceList.length ? (
-                    attendanceList.map((item: any, idx: number) => {
-                      return (
-                        <tr
-                          key={`${item.class?.name}_${idx}`}
-                          className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-100'}>
-                          <td className="px-6 py-4 w-auto whitespace-nowrap text-left text-sm font-bold text-gray-600">
-                            {item.roomName || '-'}
-                          </td>
-                          <td className="px-6 py-4 w-auto whitespace-nowrap text-left text-sm text-gray-500">
-                            {item.curriculumName || '-'}
-                          </td>
-                          <td className="px-6 py-4 w-auto whitespace-nowrap text-left text-sm text-gray-500">
-                            {item.lessonName || '-'}
-                          </td>
-                          <td className="px-6 py-4 w-auto whitespace-nowrap text-left text-sm text-gray-500">
-                            {new Date(item.date).toLocaleDateString()}
-                          </td>
-                          <td className="px-6 py-4 w-auto whitespace-nowrap text-left text-sm text-gray-500">
-                            {moment(item?.time, 'HH:mm:ss').format('hh:mm A')}
-                          </td>
-                        </tr>
-                      );
-                    })
-                  ) : (
-                    <tr>
-                      <td colSpan={5} className="py-4 text-dark-gray text-center">
-                        No records found
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-              {nextToken ? (
-                <div className="flex justify-center w-full">
-                  <Buttons
-                    label={loading ? 'loading' : 'Load more'}
-                    btnClass="text-center my-2"
-                    disabled={loading}
-                    onClick={onLoadMore}
-                  />
-                </div>
-              ) : null}
-            </div>
-          </div>
-        </div>
-      </div> */}
     </div>
   );
 };

@@ -1,5 +1,5 @@
 import {Dicitionary, PersonStatus, UserPageState} from 'API';
-import {globalState, GlobalStateType} from 'state/GlobalState';
+import {globalState} from 'state/GlobalState';
 
 export type GlobalActions =
   | {

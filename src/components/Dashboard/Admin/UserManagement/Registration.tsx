@@ -93,7 +93,6 @@ const Registration = ({
     },
     {name: Role.BLD, id: 3, value: rolesDict['bld']},
     {name: Role.FLW, id: 4, value: rolesDict['flw']},
-    {name: Role.CRD, id: 5, value: rolesDict['crd']},
     {name: Role.TR, id: 6, value: rolesDict['tr']},
     (!isInModalPopup || (isInModalPopup && classId)) &&
       state.user.role !== Role.BLD && {
@@ -161,14 +160,10 @@ const Registration = ({
     let userData: CreatePersonInput = {
       authId: authId,
       status: values.status.toLocaleUpperCase() as PersonStatus,
-      role: role as Role,
+      role: role,
       email,
       firstName: values.firstName,
       lastName: values.lastName,
-      phone: '',
-      birthdate: '1960-01-01',
-      externalId: '',
-      grade: '',
       language: Language.EN,
       onDemand: role === Role.ST ? values.isSelfPaced : false,
       addedby: state.user.authId,

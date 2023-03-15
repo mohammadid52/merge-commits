@@ -34,7 +34,7 @@ const WrittenContentTab = (props: ITabViewProps) => {
     setAllUniversalClassData
   } = props;
 
-  const {theme, userLanguage, clientKey} = useGlobalContext();
+  const {theme, userLanguage} = useGlobalContext();
   const {anthologyDict} = useDictionary();
 
   const handleInputFieldUpdate = (e: any, domID?: string) => {

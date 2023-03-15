@@ -3,7 +3,7 @@ import {Role} from 'API';
 import React from 'react';
 import {Status} from './UserStatus';
 
-// type Role = 'ADM' | 'BLD' | 'FLW' | 'CRD' | 'TR' | 'ST';
+// type Role = 'ADM' | 'BLD' | 'FLW' |  'TR' | 'ST';
 
 type RoleProps = {
   role: Role | string;

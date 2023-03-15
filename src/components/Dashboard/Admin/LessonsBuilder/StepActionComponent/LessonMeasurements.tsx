@@ -34,7 +34,7 @@ const LessonMeasurements = ({lessonId}: any) => {
     serverError: '',
     addSuccess: ''
   });
-  const [loading, setLoading] = useState(false);
+  const [loading] = useState(false);
   const [saving, setSaving] = useState(false);
 
   const measurementList: any[] = [];

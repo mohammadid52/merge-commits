@@ -1,10 +1,10 @@
+import {UniversalLesson} from 'API';
 import {
   StudentExerciseData,
   StudentPageInput,
-  UniversalLesson,
   UniversalLessonPage
 } from 'interfaces/UniversalLessonInterfaces';
-import {lessonState as initialLessonState, LessonStateType} from 'state/LessonState';
+import {lessonState as initialLessonState} from 'state/LessonState';
 
 const LESSON_REDUCER_TYPES = {
   TEST: 'TEST',

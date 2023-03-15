@@ -120,7 +120,7 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
   } = selectorProps;
   const [showList, setShowList] = useState(false);
   const currentRef: any = useRef<any>(null);
-  const {theme, clientKey} = useGlobalContext();
+  const {clientKey} = useGlobalContext();
   const themeColor = getAsset(clientKey, 'themeClassName');
 
   const sortedList = disableSort ? list : orderBy(list, ['name'], ['asc']);

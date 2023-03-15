@@ -341,8 +341,7 @@ export const getUserRoleString = (role: string): string => {
       return 'Builder';
     case 'FLW':
       return 'Fellow';
-    case 'CRD':
-      return 'Coordinator';
+
     case 'TR':
       return 'Teacher';
     case 'ST':
@@ -361,8 +360,6 @@ export const getReverseUserRoleString = (role: string): string => {
       return 'BLD';
     case 'Fellow':
       return 'FLW';
-    case 'Coordinator':
-      return 'CRD';
     case 'Teacher':
       return 'TR';
     case 'Student':

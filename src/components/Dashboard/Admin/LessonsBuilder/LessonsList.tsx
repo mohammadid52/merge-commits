@@ -13,7 +13,6 @@ import useSearch from '@customHooks/useSearch';
 import {InstitueRomms} from '@dictionary/dictionary.iconoclast';
 import {withZoiqFilter} from '@utilities/functions';
 import {RoomStatus} from 'API';
-import {getAsset} from 'assets';
 import BreadCrums from 'atoms/BreadCrums';
 import Buttons from 'atoms/Buttons';
 import SearchInput from 'atoms/Form/SearchInput';
@@ -44,8 +43,8 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
   const history = useHistory();
   const params = useQuery(location.search);
 
-  const {theme, clientKey, state, userLanguage} = useGlobalContext();
-  const themeColor = getAsset(clientKey, 'themeClassName');
+  const {theme, state, userLanguage} = useGlobalContext();
+
   const {BreadcrumsTitles, CommonlyUsedDict, LessonsListDict} = useDictionary();
 
   const [status, setStatus] = useState('');

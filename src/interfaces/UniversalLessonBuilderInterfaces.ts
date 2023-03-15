@@ -1,4 +1,4 @@
-import { PagePart, UniversalLesson } from "./UniversalLessonInterfaces";
+import {PagePart, UniversalLesson} from './UniversalLessonInterfaces';
 
 export interface ModalProps {
   saveAction?: () => void;
@@ -23,8 +23,8 @@ export interface ULBSelectionProps {
     propertyToTarget: string,
     replacementValue?: string
   ) => void;
-  createNewBlockULBHandler?: IContentTypeComponentProps["createNewBlockULBHandler"];
-  updateBlockContentULBHandler?: IContentTypeComponentProps["updateBlockContentULBHandler"];
+  createNewBlockULBHandler?: IContentTypeComponentProps['createNewBlockULBHandler'];
+  updateBlockContentULBHandler?: IContentTypeComponentProps['updateBlockContentULBHandler'];
   selectedPageID?: string;
   setSelectedPageID?: React.Dispatch<React.SetStateAction<string>>;
   targetID?: string;
@@ -37,7 +37,7 @@ export interface ULBSelectionProps {
 }
 
 export interface RowComposerProps extends ULBSelectionProps {
-  mode: "building" | "viewing" | "lesson";
+  mode: 'building' | 'viewing' | 'lesson';
   contentID?: string;
   dataIdAttribute?: string;
   handleEditBlockContent?: (

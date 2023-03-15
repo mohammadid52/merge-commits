@@ -71,14 +71,14 @@ const BuilderRowComposer = (props: RowComposerProps) => {
               <EditOverlayBlock
                 mode={mode}
                 isPagePart={true}
-                classString={pagePart.class}
+                classString={pagePart?.class || ''}
                 createNewBlockULBHandler={createNewBlockULBHandler}
                 deleteFromULBHandler={deleteFromULBHandler}
                 updateFromULBHandler={updateFromULBHandler}
                 contentID={`${pagePart.id}`}
-                pageContentID={pagePart.id}
+                pageContentID={pagePart?.id || ''}
                 editedID={editedID}
-                handleEditBlockToggle={() => handleEditBlockToggle(pagePart.id)}
+                handleEditBlockToggle={() => handleEditBlockToggle(pagePart?.id || '')}
                 section="pageContent">
                 <BuilderRowWrapper
                   mode={mode}

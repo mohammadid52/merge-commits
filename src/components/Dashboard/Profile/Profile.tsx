@@ -3,7 +3,7 @@ import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import ErrorBoundary from '@components/Error/ErrorBoundary';
 import {useGlobalContext} from '@contexts/GlobalContext';
 import useAuth from '@customHooks/useAuth';
-import {UserPageState} from 'API';
+import {Language, PersonStatus, Role, UserPageState} from 'API';
 import {getAsset} from 'assets';
 import BreadcrumbsWithBanner from 'atoms/BreadcrumbsWithBanner';
 import Buttons from 'atoms/Buttons';
@@ -32,9 +32,8 @@ export interface UserInfo {
   courses?: string;
   createdAt: string;
   email: string;
-  externalId?: string;
+
   firstName: string;
-  grade?: string;
   id: string;
   image?: string;
   institution?: string;
@@ -43,31 +42,25 @@ export interface UserInfo {
   preferredName?: string;
   role: string;
   status: string;
-  phone: string;
+
   updatedAt: string;
-  birthdate?: string;
 }
 
 const Profile = () => {
   const [person, setPerson] = useState<UserInfo>({
     id: '',
     authId: '',
-    courses: '',
     createdAt: '',
     email: '',
-    externalId: '',
     firstName: '',
-    grade: '',
+
     image: '',
-    institution: '',
-    language: '',
+    language: Language.EN,
     lastName: '',
     preferredName: '',
-    role: '',
-    status: '',
-    phone: '',
-    updatedAt: '',
-    birthdate: ''
+    role: Role.ST,
+    status: PersonStatus.ACTIVE,
+    updatedAt: ''
   });
 
   const {state, theme, userLanguage, clientKey, dispatch} = useGlobalContext();
@@ -152,14 +145,13 @@ const Profile = () => {
       id: person.id,
       image: imageKey,
       authId: person.authId,
-      grade: person.grade,
+
       language: person.language,
       lastName: person.lastName,
       preferredName: person.preferredName,
       role: person.role,
       status: person.status,
-      phone: person.phone,
-      birthdate: person.birthdate,
+
       email: person.email,
       firstName: person.firstName
     };
@@ -255,8 +247,6 @@ const Profile = () => {
 
       const uniqCheckpoints: any = getUniqItems(sCheckpoints, 'id');
 
-      // console.log('uniqCheckpoints - ', uniqCheckpoints);
-
       const sortedCheckpointQ = uniqCheckpoints.map((checkpointObj: any) => {
         return {
           ...checkpointObj,
@@ -271,7 +261,6 @@ const Profile = () => {
           }
         };
       });
-      // console.log('sorted ', sortedCheckpointQ);
 
       const uniqCheckpointIDs: any = sortedCheckpointQ.map((item: any) => item?.id);
       const personalInfo: any = {...userData};
@@ -402,7 +391,6 @@ const Profile = () => {
                   {`${person.preferredName ? person.preferredName : person.firstName} ${
                     person.lastName
                   }`}
-                  <p className="text-md md:text-lg">{person.institution}</p>
                 </div>
               </div>
 

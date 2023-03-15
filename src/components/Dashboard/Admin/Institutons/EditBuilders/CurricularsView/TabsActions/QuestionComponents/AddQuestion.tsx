@@ -7,7 +7,6 @@ import CheckBox from 'atoms/Form/CheckBox';
 import FormInput from 'atoms/Form/FormInput';
 import Selector from 'atoms/Form/Selector';
 
-import {getAsset} from 'assets';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import * as mutations from 'graphql/mutations';
@@ -37,8 +36,8 @@ interface InputValue {
 
 const AddQuestion = (props: AddQuestionProps) => {
   const {goBackToPreviousStep, addNewQuestion} = props;
-  const {theme, clientKey, userLanguage} = useGlobalContext();
-  const themeColor = getAsset(clientKey, 'themeClassName');
+  const {userLanguage} = useGlobalContext();
+
   const {addQuestionDict} = useDictionary();
 
   const initialState = {

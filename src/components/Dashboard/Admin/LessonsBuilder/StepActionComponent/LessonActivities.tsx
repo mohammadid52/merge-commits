@@ -1,23 +1,25 @@
-import AddButton from "@components/Atoms/Buttons/AddButton";
-import LessonActivitiesAction from "@components/MicroComponents/LessonActivitiesAction";
-import Table from "@components/Molecules/Table";
-import useAuth from "@customHooks/useAuth";
-import { getAsset } from "assets";
-import Buttons from "atoms/Buttons";
-import Loader from "atoms/Loader";
-import PageWrapper from "atoms/PageWrapper";
-import NewLessonPlanSO from "components/Lesson/UniversalLessonBuilder/UI/SlideOvers/NewLessonPlanSO";
-import PageBuilderLayout from "components/Lesson/UniversalLessonBuilder/views/PageBuilderLayout";
-import { useGlobalContext } from "contexts/GlobalContext";
-import { useULBContext } from "contexts/UniversalLessonBuilderContext";
-import useDictionary from "customHooks/dictionary";
-import { UniversalLessonPage } from "interfaces/UniversalLessonInterfaces";
-import { map, remove } from "lodash";
-import ModalPopUp from "molecules/ModalPopUp";
-import { Fragment, useState } from "react";
-import { FaTasks } from "react-icons/fa";
-import { useHistory } from "react-router";
-import { updateLessonPageToDB } from "utilities/updateLessonPageToDB";
+import AddButton from '@components/Atoms/Buttons/AddButton';
+import LessonActivitiesAction from '@components/MicroComponents/LessonActivitiesAction';
+import Table from '@components/Molecules/Table';
+import useAuth from '@customHooks/useAuth';
+import {UniversalLessonPage} from '@interfaces/UniversalLessonInterfaces';
+
+import {getAsset} from 'assets';
+import Buttons from 'atoms/Buttons';
+import Loader from 'atoms/Loader';
+import PageWrapper from 'atoms/PageWrapper';
+import NewLessonPlanSO from 'components/Lesson/UniversalLessonBuilder/UI/SlideOvers/NewLessonPlanSO';
+import PageBuilderLayout from 'components/Lesson/UniversalLessonBuilder/views/PageBuilderLayout';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
+import useDictionary from 'customHooks/dictionary';
+
+import {map, remove} from 'lodash';
+import ModalPopUp from 'molecules/ModalPopUp';
+import {Fragment, useState} from 'react';
+import {FaTasks} from 'react-icons/fa';
+import {useHistory} from 'react-router';
+import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
 
 interface LessonPlansListProps {
   lessonId: string;
@@ -33,14 +35,14 @@ const LessonActivities = ({
   lessonId,
 
   loading,
-  universalLessonDetails,
+  universalLessonDetails
 }: LessonPlansListProps) => {
   const history = useHistory();
-  const { clientKey, theme, userLanguage } = useGlobalContext();
+  const {clientKey, theme, userLanguage} = useGlobalContext();
 
-  const { isSuperAdmin } = useAuth();
-  const themeColor = getAsset(clientKey, "themeClassName");
-  const { LessonBuilderDict } = useDictionary();
+  const {isSuperAdmin} = useAuth();
+  const themeColor = getAsset(clientKey, 'themeClassName');
+  const {LessonBuilderDict} = useDictionary();
   const {
     newLessonPlanShow,
     setNewLessonPlanShow,
@@ -48,10 +50,10 @@ const LessonActivities = ({
     setUniversalLessonDetails,
     setEditMode,
     updateMovableList,
-    setLessonPlanFields,
+    setLessonPlanFields
   } = useULBContext();
   const [showDeleteModal, setShowDeleteModal] = useState<Boolean>(false);
-  const [idToBeRemoved, setIdToBeRemoved] = useState<string>("");
+  const [idToBeRemoved, setIdToBeRemoved] = useState<string>('');
 
   const pages = universalLessonDetails.lessonPlan;
 
@@ -63,15 +65,15 @@ const LessonActivities = ({
     setNewLessonPlanShow(!newLessonPlanShow);
     setEditMode(false);
     setLessonPlanFields({
-      title: "",
-      label: "",
-      instructions: "",
-      instructionsHtml: "",
-      description: "", // ignore this field
+      title: '',
+      label: '',
+      instructions: '',
+      instructionsHtml: '',
+      description: '', // ignore this field
       interactionType: [],
       tags: [],
-      estTime: "1 min",
-      classwork: true,
+      estTime: '1 min',
+      classwork: true
     });
   };
 
@@ -90,102 +92,94 @@ const LessonActivities = ({
 
     const [reorderedItem] = items.splice(result.source.index, 1);
     items.splice(result.destination.index, 0, reorderedItem);
-    updateMovableList(items, "page");
+    updateMovableList(items, 'page');
   };
 
   const toggleDeleteModal = (show: boolean, id?: string) => {
     setShowDeleteModal(show);
-    setIdToBeRemoved(id || "");
+    setIdToBeRemoved(id || '');
   };
 
   const deleteLessonPlan = async (id: string) => {
     remove(universalLessonDetails.lessonPlan, (item: any) => item.id === id);
-    setUniversalLessonDetails({ ...universalLessonDetails });
+    setUniversalLessonDetails({...universalLessonDetails});
     const input = {
       id: lessonId,
-      lessonPlan: [...universalLessonDetails.lessonPlan],
+      lessonPlan: [...universalLessonDetails.lessonPlan]
     };
     toggleDeleteModal(false);
     await updateLessonPageToDB(input);
   };
 
-  const { selectedPageID, getCurrentPage } = useULBContext();
+  const {selectedPageID, getCurrentPage} = useULBContext();
   const pathname = window.location.pathname;
 
   const dataList = map(pages, (page: any) => ({
     id: page.id,
     onClick: () => lessonPagePreview(page.id, false),
-    pageLabel: page.label || "-",
-    pageName: page.title || "-",
-    interactionType: page?.interactionType
-      ? page.interactionType.join(", ")
-      : "-",
+    pageLabel: page.label || '-',
+    pageName: page.title || '-',
+    interactionType: page?.interactionType ? page.interactionType.join(', ') : '-',
     instructions: page.description ? (
       <div
         className="custom-editor-description"
-        dangerouslySetInnerHTML={{ __html: page.description }}
+        dangerouslySetInnerHTML={{__html: page.description}}
       />
     ) : (
-      "-"
+      '-'
     ),
-    estimatedTime: page.estTime ? `${page.estTime} min` : "",
+    estimatedTime: page.estTime ? `${page.estTime} min` : '',
     actions: (
       <LessonActivitiesAction
         id={page.id}
         lessonPagePreview={lessonPagePreview}
         toggleDeleteModal={toggleDeleteModal}
       />
-    ),
+    )
   }));
 
   const tableConfig = {
     headers: [
-      LessonBuilderDict[userLanguage]["LESSON_CLASSROOM_ACTIVITY_TABLE"][
-        "ACTIVITY_LABEL"
+      LessonBuilderDict[userLanguage]['LESSON_CLASSROOM_ACTIVITY_TABLE'][
+        'ACTIVITY_LABEL'
       ],
-      LessonBuilderDict[userLanguage]["LESSON_CLASSROOM_ACTIVITY_TABLE"][
-        "ACTIVITY_NAME"
-      ],
+      LessonBuilderDict[userLanguage]['LESSON_CLASSROOM_ACTIVITY_TABLE']['ACTIVITY_NAME'],
       isSuperAdmin &&
-        LessonBuilderDict[userLanguage]["LESSON_CLASSROOM_ACTIVITY_TABLE"][
-          "INTERACTION_TYPE"
+        LessonBuilderDict[userLanguage]['LESSON_CLASSROOM_ACTIVITY_TABLE'][
+          'INTERACTION_TYPE'
         ],
-      LessonBuilderDict[userLanguage]["LESSON_CLASSROOM_ACTIVITY_TABLE"][
-        "INSTRUCTION"
-      ],
-      LessonBuilderDict[userLanguage]["LESSON_CLASSROOM_ACTIVITY_TABLE"][
-        "ESTIMATED_TIME"
+      LessonBuilderDict[userLanguage]['LESSON_CLASSROOM_ACTIVITY_TABLE']['INSTRUCTION'],
+      LessonBuilderDict[userLanguage]['LESSON_CLASSROOM_ACTIVITY_TABLE'][
+        'ESTIMATED_TIME'
       ],
 
-      LessonBuilderDict[userLanguage]["LESSON_CLASSROOM_ACTIVITY_TABLE"][
-        "ACTION"
-      ],
+      LessonBuilderDict[userLanguage]['LESSON_CLASSROOM_ACTIVITY_TABLE']['ACTION']
     ],
     dataList,
     config: {
       dark: false,
       isLastAction: true,
-      headers: { textColor: "text-white" },
+      headers: {textColor: 'text-white'},
       dataList: {
         emptyText: "You don't have any classroom activity yet.",
         loading,
         droppable: {
           isDroppable: true,
           onDragEnd: handleOnDragEnd,
-          droppableId: "partContent",
+          droppableId: 'partContent'
         },
         customWidth: {
-          activityName: "w-72",
-          activityLabel: "w-40",
+          activityName: 'w-72',
+          activityLabel: 'w-40'
         },
-        maxHeight: "max-h-196",
-        pattern: "striped",
+        maxHeight: 'max-h-196',
+        pattern: 'striped',
         patternConfig: {
-          firstColor: "bg-gray-100",
-          secondColor: "bg-gray-200",
-        },
-      },
-    },
+          firstColor: 'bg-gray-100',
+          secondColor: 'bg-gray-200'
+        }
+      }
+    }
   };
 
   return (
@@ -194,11 +188,10 @@ const LessonActivities = ({
         rounded="_"
         dark={false}
         overflowHidden={false}
-        open={newLessonPlanShow && !pathname.includes("page-builder")}
-      >
-        {newLessonPlanShow && !pathname.includes("page-builder") && (
+        open={newLessonPlanShow && !pathname.includes('page-builder')}>
+        {newLessonPlanShow && !pathname.includes('page-builder') && (
           <NewLessonPlanSO
-            instId={universalLessonDetails?.institutionID || ""}
+            instId={universalLessonDetails?.institutionID || ''}
             dark={false}
             pageDetails={selectedPageID ? getCurrentPage(selectedPageID) : {}} // don't send unwanted page details if not editing
             open={newLessonPlanShow}
@@ -220,9 +213,9 @@ const LessonActivities = ({
                   </span>
                   <span>
                     {
-                      LessonBuilderDict[userLanguage][
-                        "LESSON_CLASSROOM_ACTIVITY_TABLE"
-                      ]["HEADING"]
+                      LessonBuilderDict[userLanguage]['LESSON_CLASSROOM_ACTIVITY_TABLE'][
+                        'HEADING'
+                      ]
                     }
                   </span>
                 </p>
@@ -230,9 +223,9 @@ const LessonActivities = ({
               <span className="w-auto">
                 <AddButton
                   label={
-                    LessonBuilderDict[userLanguage][
-                      "LESSON_CLASSROOM_ACTIVITY_TABLE"
-                    ]["ADD_NEW_ACTIVITY"]
+                    LessonBuilderDict[userLanguage]['LESSON_CLASSROOM_ACTIVITY_TABLE'][
+                      'ADD_NEW_ACTIVITY'
+                    ]
                   }
                   transparent
                   onClick={addNewLessonPlan}
@@ -248,9 +241,7 @@ const LessonActivities = ({
                 <div className="flex justify-center my-4">
                   <Buttons
                     btnClass="mx-4"
-                    label={
-                      LessonBuilderDict[userLanguage]["BUTTON"]["ADD_PLAN"]
-                    }
+                    label={LessonBuilderDict[userLanguage]['BUTTON']['ADD_PLAN']}
                     onClick={addNewLessonPlan}
                   />
                 </div>
@@ -260,9 +251,7 @@ const LessonActivities = ({
                 <Table {...tableConfig} />
               </Fragment>
             )}
-            <div
-              className={`border-b-0 pb-2 pl-2 ${theme.borderColor[themeColor]}`}
-            />
+            <div className={`border-b-0 pb-2 pl-2 ${theme.borderColor[themeColor]}`} />
             {loading ? (
               <div className="py-20 text-center mx-auto flex justify-center items-center w-full">
                 <div className="items-center flex justify-center flex-col">
@@ -283,8 +272,8 @@ const LessonActivities = ({
                       <span>
                         {
                           LessonBuilderDict[userLanguage][
-                            "LESSON_HOMEWORK_ACTIVITY_TABLE"
-                          ]["HEADING"]
+                            'LESSON_HOMEWORK_ACTIVITY_TABLE'
+                          ]['HEADING']
                         }
                       </span>
                     </p>
@@ -294,9 +283,9 @@ const LessonActivities = ({
                       btnClass="mx-4"
                       disabled={true}
                       label={
-                        LessonBuilderDict[userLanguage][
-                          "LESSON_HOMEWORK_ACTIVITY_TABLE"
-                        ]["ADD_NEW_ACTIVITY"]
+                        LessonBuilderDict[userLanguage]['LESSON_HOMEWORK_ACTIVITY_TABLE'][
+                          'ADD_NEW_ACTIVITY'
+                        ]
                       }
                     />
                   </span>
@@ -306,8 +295,8 @@ const LessonActivities = ({
                     <span>
                       {
                         LessonBuilderDict[userLanguage][
-                          "LESSON_CLASSROOM_ACTIVITY_TABLE"
-                        ]["ACTIVITY_LABEL"]
+                          'LESSON_CLASSROOM_ACTIVITY_TABLE'
+                        ]['ACTIVITY_LABEL']
                       }
                     </span>
                   </div>
@@ -315,8 +304,8 @@ const LessonActivities = ({
                     <span>
                       {
                         LessonBuilderDict[userLanguage][
-                          "LESSON_CLASSROOM_ACTIVITY_TABLE"
-                        ]["ACTIVITY_NAME"]
+                          'LESSON_CLASSROOM_ACTIVITY_TABLE'
+                        ]['ACTIVITY_NAME']
                       }
                     </span>
                   </div>
@@ -324,8 +313,8 @@ const LessonActivities = ({
                     <span>
                       {
                         LessonBuilderDict[userLanguage][
-                          "LESSON_CLASSROOM_ACTIVITY_TABLE"
-                        ]["INTERACTION_TYPE"]
+                          'LESSON_CLASSROOM_ACTIVITY_TABLE'
+                        ]['INTERACTION_TYPE']
                       }
                     </span>
                   </div>
@@ -333,8 +322,8 @@ const LessonActivities = ({
                     <span>
                       {
                         LessonBuilderDict[userLanguage][
-                          "LESSON_CLASSROOM_ACTIVITY_TABLE"
-                        ]["INSTRUCTION"]
+                          'LESSON_CLASSROOM_ACTIVITY_TABLE'
+                        ]['INSTRUCTION']
                       }
                     </span>
                   </div>
@@ -342,8 +331,8 @@ const LessonActivities = ({
                     <span>
                       {
                         LessonBuilderDict[userLanguage][
-                          "LESSON_CLASSROOM_ACTIVITY_TABLE"
-                        ]["ESTIMATED_TIME"]
+                          'LESSON_CLASSROOM_ACTIVITY_TABLE'
+                        ]['ESTIMATED_TIME']
                       }
                     </span>
                   </div>
@@ -351,8 +340,8 @@ const LessonActivities = ({
                     <span>
                       {
                         LessonBuilderDict[userLanguage][
-                          "LESSON_CLASSROOM_ACTIVITY_TABLE"
-                        ]["ACTION"]
+                          'LESSON_CLASSROOM_ACTIVITY_TABLE'
+                        ]['ACTION']
                       }
                     </span>
                   </div>
@@ -370,9 +359,7 @@ const LessonActivities = ({
                 <div className="flex justify-center my-4">
                   <Buttons
                     btnClass="mx-4"
-                    label={
-                      LessonBuilderDict[userLanguage]["BUTTON"]["ADD_PLAN"]
-                    }
+                    label={LessonBuilderDict[userLanguage]['BUTTON']['ADD_PLAN']}
                     onClick={addNewLessonPlan}
                   />
                 </div>
@@ -382,10 +369,10 @@ const LessonActivities = ({
           {showDeleteModal && (
             <ModalPopUp
               message={
-                "Are you sure you want to delete the this page? All of your data will be permanently removed. This action cannot be undone."
+                'Are you sure you want to delete the this page? All of your data will be permanently removed. This action cannot be undone.'
               }
               closeAction={() => toggleDeleteModal(false)}
-              saveLabel={LessonBuilderDict[userLanguage]["BUTTON"]["DELETE"]}
+              saveLabel={LessonBuilderDict[userLanguage]['BUTTON']['DELETE']}
               saveAction={() => deleteLessonPlan(idToBeRemoved)}
             />
           )}

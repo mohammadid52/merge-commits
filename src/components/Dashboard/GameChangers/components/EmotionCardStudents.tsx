@@ -24,13 +24,7 @@ const EmotionCard = ({inLesson}: {inLesson: boolean}) => {
   } = useGameChangers();
   const [changesSaved] = useState(false);
 
-  const checkChanges = (_: boolean) => {
-    // if (!changes) {
-    //   window.addEventListener('beforeunload', beforeunload);
-    // } else {
-    //   window.removeEventListener('beforeunload', beforeunload);
-    // }
-  };
+  const checkChanges = (_: boolean) => {};
   const inGC = useInGC();
   const history = useHistory();
 

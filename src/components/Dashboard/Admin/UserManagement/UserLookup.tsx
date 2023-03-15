@@ -7,7 +7,6 @@ import {
 } from 'react-icons/ai';
 import {useHistory} from 'react-router-dom';
 
-import {getAsset} from 'assets';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
 import * as queries from 'graphql/queries';
@@ -56,8 +55,8 @@ export const addName = (data: any[]) => {
 };
 
 const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
-  const {state, theme, userLanguage, zoiqFilter, clientKey} = useGlobalContext();
-  const themeColor = getAsset(clientKey, 'themeClassName');
+  const {state, theme, userLanguage, zoiqFilter} = useGlobalContext();
+
   const history = useHistory();
 
   const [loading, setLoading] = useState<boolean>(false);

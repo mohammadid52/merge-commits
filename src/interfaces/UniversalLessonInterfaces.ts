@@ -1,7 +1,7 @@
 // ##################################################################### //
 // #################### UNIVERSAL LESSON INTERFACES #################### //
 
-import { UniversalLessonWritingExcercises } from "API";
+import {UniversalLessonWritingExcercises} from 'API';
 
 // ##################################################################### //
 export interface UniversalLesson {
@@ -47,7 +47,7 @@ export interface UniversalLessonPage {
 
 export interface PagePart {
   id: string;
-  partType: "component" | "default" | string;
+  partType: 'component' | 'default' | string;
   class: string;
   partContent: PartContent[];
   [key: string]: any;
@@ -106,7 +106,7 @@ export interface StudentPageInput {
 
 export interface StudentExerciseData {
   id: string;
-  entryData?: { domID: string; input: string }[];
+  entryData?: {domID: string; input: string}[];
   feedbacks?: string[];
   shared?: boolean;
 }
@@ -127,7 +127,7 @@ export interface UniversalJournalData {
   type?: string;
   feedbacks?: string[];
   shared?: boolean;
-  entryData?: { domID: string; type: string; input: string }[];
+  entryData?: {domID: string; type: string; input: string}[];
   roomID?: string;
   syllabusLessonID?: string;
   updatedAt?: any;
@@ -151,7 +151,7 @@ export interface IFormBlockProps {
   classString?: string;
 }
 export interface IFile {
-  _status: "progress" | "failed" | "success" | "other";
+  _status: 'progress' | 'failed' | 'success' | 'other';
   progress: number | string | null;
   file: File;
   id?: string;

@@ -38,7 +38,7 @@ export const updateRoomCoTeachers = /* GraphQL */ `
         name
         maxPersons
         status
-        filters
+
         location
         startDate
         startTime
@@ -63,16 +63,10 @@ export const updateRoomCoTeachers = /* GraphQL */ `
         firstName
         preferredName
         lastName
-        externalId
-        grade
-        onBoardSurvey
-        offBoardSurvey
-        phone
-        birthdate
         inactiveStatusDate
         image
         language
-        filters
+
         lastLoggedIn
         lastLoggedOut
         onDemand
@@ -234,9 +228,6 @@ export const updatePerson = /* GraphQL */ `
       firstName
       preferredName
       lastName
-      grade
-      phone
-      birthdate
       image
 
       language
@@ -286,105 +277,6 @@ export const updatePersonLogoutTime = /* GraphQL */ `
       lastLoggedIn
       pageState
       lastPageStateUpdate
-    }
-  }
-`;
-
-export const createStudentData = /* GraphQL */ `
-  mutation CreateStudentData(
-    $input: CreateStudentDataInput!
-    $condition: ModelStudentDataConditionInput
-  ) {
-    createStudentData(input: $input, condition: $condition) {
-      id
-      lessonProgress
-      currentLocation
-      status
-      saveType
-      syllabusLessonID
-      studentID
-      studentAuthID
-      student {
-        id
-        authId
-        email
-        firstName
-        preferredName
-        lastName
-        language
-        role
-      }
-      warmupData {
-        story
-        title
-        additional {
-          name
-          input
-        }
-        truthGame {
-          id
-          label
-          isLie
-          text
-        }
-        poll {
-          id
-          question
-          option {
-            id
-          }
-        }
-      }
-      corelessonData {
-        selected {
-          anchor
-          color
-          content {
-            id
-            text
-          }
-          focus
-          id
-        }
-        rawSelected {
-          color
-          selected
-        }
-        selectGroup
-      }
-      activityData {
-        editInput
-        editMode
-        lines {
-          example
-          id
-          menuOpen
-          text
-        }
-        title
-      }
-      doFirstData {
-        items {
-          id
-          studentDataID
-          questionDataID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      checkpointData {
-        items {
-          id
-          studentDataID
-          questionDataID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
     }
   }
 `;
@@ -644,7 +536,6 @@ export const updateSurveyStatus = /* GraphQL */ `
       id
       authId
       email
-      onBoardSurvey
     }
   }
 `;
@@ -680,7 +571,7 @@ export const createInstitution = /* GraphQL */ `
       city
       state
       zip
-      phone
+
       website
       image
       isServiceProvider
@@ -705,7 +596,7 @@ export const updateInstitution = /* GraphQL */ `
       city
       state
       zip
-      phone
+
       website
       image
       isServiceProvider
@@ -1457,12 +1348,12 @@ export const createPersonLessonsData = /* GraphQL */ `
           city
           state
           zip
-          phone
+
           website
           image
           isServiceProvider
           isZoiq
-          filters
+
           setupComplete
           createdAt
           updatedAt
@@ -1870,7 +1761,7 @@ export const _updateRoom = /* GraphQL */ `
       name
       maxPersons
       status
-      filters
+
       location
       startDate
       startTime
@@ -1904,7 +1795,7 @@ export const _updateRoom = /* GraphQL */ `
         city
         state
         zip
-        phone
+
         website
         image
         isServiceProvider
@@ -1923,7 +1814,7 @@ export const _updateRoom = /* GraphQL */ `
         classes {
           nextToken
         }
-        filters
+
         checkpoints {
           nextToken
         }
@@ -1940,17 +1831,11 @@ export const _updateRoom = /* GraphQL */ `
         type
         firstName
         preferredName
-        lastName
-        externalId
-        grade
-        onBoardSurvey
-        offBoardSurvey
-        phone
-        birthdate
+        lastNam
         inactiveStatusDate
         image
         language
-        filters
+
         lastLoggedIn
         lastLoggedOut
         onDemand
@@ -1989,11 +1874,11 @@ export const _updateRoom = /* GraphQL */ `
           city
           state
           zip
-          phone
+
           website
           image
           isServiceProvider
-          filters
+
           setupComplete
           createdAt
           updatedAt
@@ -2007,7 +1892,7 @@ export const _updateRoom = /* GraphQL */ `
           name
           maxPersons
           status
-          filters
+
           location
           startDate
           startTime

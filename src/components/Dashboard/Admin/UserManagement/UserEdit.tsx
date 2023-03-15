@@ -1,5 +1,4 @@
 import React, {Fragment, useEffect, useState} from 'react';
-// import { API, graphqlOperation } from 'aws-amplify';
 import CheckBox from '@components/Atoms/Form/CheckBox';
 import ModalPopUp from '@components/Molecules/ModalPopUp';
 import {PersonStatus} from 'API';
@@ -106,7 +105,7 @@ const UserEdit = (props: UserInfoProps) => {
       id: editUser.id,
       authId: editUser.authId,
       firstName: editUser.firstName,
-      grade: editUser.grade,
+
       image: editUser.image,
       language: editUser.language,
       lastName: editUser.lastName,
@@ -115,12 +114,11 @@ const UserEdit = (props: UserInfoProps) => {
         inactiveStatusDate: moment(inactiveDate).format('YYYY-MM-DD')
       }),
       role: editUser.role,
-      ...((editUser.status === 'INACTIVE' || editUser.status === 'SUSPENDED') && {
+      ...(editUser.status === 'INACTIVE' && {
         statusReason: editUser.statusReason
       }),
       status: editUser.status,
-      phone: editUser.phone,
-      birthdate: editUser.birthdate,
+
       email: editUser.email,
       onDemand: editUser.onDemand,
       isZoiq: editUser.isZoiq
@@ -129,7 +127,6 @@ const UserEdit = (props: UserInfoProps) => {
     try {
       await API.graphql(graphqlOperation(customMutations.updatePerson, {input: input}));
       setUpdating(false);
-      // setStatus('loading');
 
       if (shouldNavigate) {
         history.push(
@@ -281,13 +278,12 @@ const UserEdit = (props: UserInfoProps) => {
     setUpdating(true);
     await saveAllCheckpointData();
     await updatePerson();
-    await getUserById(editUser.id);
-    onSuccessCallback && onSuccessCallback();
+    getUserById(editUser.id);
+    onSuccessCallback?.();
   }
 
   const onSubmit = () => {
     setPerson();
-    // e.preventDefault();
   };
 
   const onChange = (e: any) => {
@@ -445,10 +441,7 @@ const UserEdit = (props: UserInfoProps) => {
       code: 'ACTIVE',
       name: 'ACTIVE'
     },
-    {
-      code: 'SUSPENDED',
-      name: 'SUSPENDED'
-    },
+
     {
       code: 'INACTIVE',
       name: 'INACTIVE'
@@ -480,10 +473,7 @@ const UserEdit = (props: UserInfoProps) => {
       code: 'FLW',
       name: 'Fellow'
     },
-    {
-      code: 'CRD',
-      name: 'Coordinator'
-    },
+
     {
       code: 'TR',
       name: 'Teacher'
@@ -728,8 +718,7 @@ const UserEdit = (props: UserInfoProps) => {
                       />
                     </div>
                   )}
-                  {(editUser.status === 'SUSPENDED' ||
-                    editUser.status === 'INACTIVE') && (
+                  {editUser.status === 'INACTIVE' && (
                     <>
                       <div className="sm:col-span-3 p-2">
                         <FormInput

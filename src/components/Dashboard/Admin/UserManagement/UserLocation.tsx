@@ -1,10 +1,7 @@
-import React from 'react';
 import LocationBadge from '../Institutons/EditBuilders/LocationBadge';
 
-// type Role = 'ADM' | 'BLD' | 'FLW' | 'CRD' | 'TR' | 'ST';
-
 type UserLocationProps = {
-  role: 'ADM' | 'SUP' | 'BLD' | 'FLW' | 'CRD' | 'TR' | 'ST';
+  role: 'ADM' | 'SUP' | 'BLD' | 'FLW' | 'TR' | 'ST';
   onDemand: boolean;
 };
 
