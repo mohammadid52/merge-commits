@@ -1,6 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import ErrorBoundary from '@components/Error/ErrorBoundary';
 import {CreateGameChangerLogInput} from 'API';
+import {lazy, useEffect, useState} from 'react';
+
 const AnimatedFlower = lazy(
   () => import('dashboard/GameChangers/components/AnimatedFlower')
 );
@@ -42,7 +44,6 @@ import map from 'lodash/map';
 import times from 'lodash/times';
 import moment from 'moment';
 import {nanoid} from 'nanoid';
-import {lazy, useEffect, useState} from 'react';
 import Flickity from 'react-flickity-component';
 
 // Constants

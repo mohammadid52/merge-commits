@@ -547,7 +547,7 @@ export const UnitList = ({
           no: 'w-12',
           unitName: 'w-96',
           lessonPlan: 'w-96',
-          action: 'w0'
+          action: 'w-auto'
         },
         maxHeight: 'max-h-196',
         pattern: 'striped',

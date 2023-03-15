@@ -91,20 +91,21 @@ const MainRouter: React.FC = () => {
   return (
     <div
       className={`iconoclast:bg-50 curate:bg-50 h-screen md:max-w-full md:h-screen w-full overflow-x-hidden ${theme.bg} flex flex-col`}>
-      {deviceDetected.mobile ? (
+      <Suspense
+        fallback={
+          <div className="min-h-screen __polka-pattern w-full flex flex-col justify-center items-center">
+            <ComponentLoading />
+          </div>
+        }>
+        {authState === 'loading' && <ComponentLoading />}
+        {authState === 'loggedIn' && <AuthRoutes />}
+        {authState === 'notLoggedIn' && <UnauthRoutes />}
+      </Suspense>
+      {/* {deviceDetected.mobile ? (
         <MobileOops userAgent={deviceDetected.device} />
       ) : (
-        <Suspense
-          fallback={
-            <div className="min-h-screen __polka-pattern w-full flex flex-col justify-center items-center">
-              <ComponentLoading />
-            </div>
-          }>
-          {authState === 'loading' && <ComponentLoading />}
-          {authState === 'loggedIn' && <AuthRoutes />}
-          {authState === 'notLoggedIn' && <UnauthRoutes />}
-        </Suspense>
-      )}
+       
+      )} */}
     </div>
   );
 };

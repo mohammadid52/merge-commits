@@ -27,9 +27,9 @@ const ListBottomBar = ({
   setPageCount
 }: ListBottomBar) => {
   return (
-    <div className="flex justify-center  bg-white my-4">
-      <div className="flex justify-between items-center  flex-col lg:flex-row">
-        <div className="w-1/3"></div>
+    <div className="flex justify-center bg-white my-4">
+      <div className="flex justify-between items-center gap-4  flex-col sm:flex-row">
+        <div className="hidden sm:block sm:w-1/3"></div>
         <Pagination
           currentPage={currentPage + 1}
           setNext={goNextPage}

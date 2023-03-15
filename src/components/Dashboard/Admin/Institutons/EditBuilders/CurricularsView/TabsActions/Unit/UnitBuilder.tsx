@@ -1,22 +1,22 @@
-import { GraphQLAPI as API, graphqlOperation } from "@aws-amplify/api-graphql";
-import { useEffect, useState } from "react";
-import { useHistory, useParams, useRouteMatch } from "react-router";
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import {useEffect, useState} from 'react';
+import {useHistory, useParams, useRouteMatch} from 'react-router';
 
-import { useGlobalContext } from "contexts/GlobalContext";
-import * as customQueries from "customGraphql/customQueries";
-import useDictionary from "customHooks/dictionary";
-import { useQuery } from "customHooks/urlParam";
-import { languageList } from "utilities/staticData";
+import {useGlobalContext} from 'contexts/GlobalContext';
+import * as customQueries from 'customGraphql/customQueries';
+import useDictionary from 'customHooks/dictionary';
+import {useQuery} from 'customHooks/urlParam';
+import {languageList} from 'utilities/staticData';
 
-import Loader from "atoms/Loader";
-import StepComponent, { IStepElementInterface } from "atoms/StepComponent";
+import Loader from 'atoms/Loader';
+import StepComponent, {IStepElementInterface} from 'atoms/StepComponent';
 
-import AnimatedContainer from "@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer";
-import useAuth from "@customHooks/useAuth";
-import { RoomStatus } from "API";
-import { BsArrowLeft } from "react-icons/bs";
-import LessonPlanManager from "./LessonPlanManager";
-import UnitFormComponent from "./UnitFormComponent";
+import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
+import useAuth from '@customHooks/useAuth';
+import {RoomStatus} from 'API';
+import {BsArrowLeft} from 'react-icons/bs';
+import LessonPlanManager from './LessonPlanManager';
+import UnitFormComponent from './UnitFormComponent';
 
 interface IUnitData {
   id: string;
@@ -30,7 +30,7 @@ interface IUnitData {
   secondary: string;
   priorities: string;
   objectives: string;
-  languages: { id: string; name: string; value: string }[];
+  languages: {id: string; name: string; value: string}[];
   lessonHistory: any;
 }
 
@@ -41,43 +41,43 @@ interface IUIMessages {
   lessonError?: boolean;
 }
 
-const UnitBuilder = ({ instId, curricular }: any) => {
+const UnitBuilder = ({instId, curricular}: any) => {
   const history = useHistory();
   const match = useRouteMatch();
   const params = useQuery(location.search);
-  const step = params.get("step");
-  const { unitId }: any = useParams();
+  const step = params.get('step');
+  const {unitId}: any = useParams();
 
-  const { userLanguage } = useGlobalContext();
-  const { CommonlyUsedDict, SyllabusDict } = useDictionary();
-  const [activeStep, setActiveStep] = useState("overview");
+  const {userLanguage} = useGlobalContext();
+  const {CommonlyUsedDict, SyllabusDict} = useDictionary();
+  const [activeStep, setActiveStep] = useState('overview');
   const [fetchingDetails, setFetchingDetails] = useState(false);
   const [savedLessonsList, setSavedLessonsList] = useState<any[]>([]);
   const [lessonsIds, setLessonsIds] = useState<any[]>([]);
   const [_, setMessages] = useState<IUIMessages>({
     show: false,
-    message: "",
+    message: '',
     isError: false,
-    lessonError: false,
+    lessonError: false
   });
 
   const initialData: IUnitData = {
-    id: "",
-    name: "",
-    description: "",
-    methodology: "",
-    policies: "",
-    priorities: "",
-    secondary: "",
+    id: '',
+    name: '',
+    description: '',
+    methodology: '',
+    policies: '',
+    priorities: '',
+    secondary: '',
 
-    purpose: "",
+    purpose: '',
     status: RoomStatus.ACTIVE,
-    objectives: "",
-    languages: [{ id: "1", name: "English", value: "EN" }],
-    lessonHistory: undefined,
+    objectives: '',
+    languages: [{id: '1', name: 'English', value: 'EN'}],
+    lessonHistory: undefined
   };
 
-  const { isSuperAdmin } = useAuth();
+  const {isSuperAdmin} = useAuth();
 
   const [syllabusData, setSyllabusData] = useState<IUnitData>(initialData);
 
@@ -107,7 +107,7 @@ const UnitBuilder = ({ instId, curricular }: any) => {
       try {
         const result: any = await API.graphql(
           graphqlOperation(customQueries.getUniversalSyllabus, {
-            id: unitId,
+            id: unitId
           })
         );
         const savedData = result.data.getUniversalSyllabus;
@@ -126,9 +126,9 @@ const UnitBuilder = ({ instId, curricular }: any) => {
           methodology: savedData.methodology,
           policies: savedData.policies,
           lessonHistory: savedData.lessonHistory,
-          secondary: savedData.secondary || "",
+          secondary: savedData.secondary || '',
           priorities: savedData.priorities,
-          status: savedData.status || RoomStatus.ACTIVE,
+          status: savedData.status || RoomStatus.ACTIVE
         });
         setLessonsIds(savedData.universalLessonsSeq || []);
 
@@ -136,18 +136,18 @@ const UnitBuilder = ({ instId, curricular }: any) => {
 
           .map((t: any) => {
             let index = savedData.universalLessonsSeq.indexOf(t.id);
-            return { ...t, index };
+            return {...t, index};
           })
           .sort((a: any, b: any) => (a.index > b.index ? 1 : -1));
 
         setSavedLessonsList(sortedLessonsList);
         setFetchingDetails(false);
       } catch (err) {
-        console.error("err", err);
+        console.error('err', err);
         setMessages({
           show: true,
-          message: SyllabusDict[userLanguage]["MESSAGES"]["fetcher"],
-          isError: true,
+          message: SyllabusDict[userLanguage]['MESSAGES']['fetcher'],
+          isError: true
         });
         setFetchingDetails(false);
       }
@@ -156,26 +156,26 @@ const UnitBuilder = ({ instId, curricular }: any) => {
 
   const steps: IStepElementInterface[] = [
     {
-      title: "General Information",
-      description: "Capture core details of your Unit",
-      stepValue: "overview",
-      isComplete: true,
+      title: 'General Information',
+      description: 'Capture core details of your Unit',
+      stepValue: 'overview',
+      isComplete: true
     },
     {
-      title: "Lesson Plan manager",
-      description: "Assign lessons to Unit",
-      stepValue: "lessons",
+      title: 'Lesson Plan manager',
+      description: 'Assign lessons to Unit',
+      stepValue: 'lessons',
       disabled: !Boolean(unitId),
       isComplete: false,
-      tooltipText: "Add overview details in step 1 to continue",
-    },
+      tooltipText: 'Add overview details in step 1 to continue'
+    }
   ];
   const currentStepComp = (currentStep: string) => {
     switch (currentStep) {
-      case "overview":
+      case 'overview':
         return (
-          <AnimatedContainer show={currentStep === "overview"}>
-            {currentStep === "overview" && (
+          <AnimatedContainer show={currentStep === 'overview'}>
+            {currentStep === 'overview' && (
               <UnitFormComponent
                 instId={instId}
                 syllabusDetails={syllabusData}
@@ -193,7 +193,7 @@ const UnitBuilder = ({ instId, curricular }: any) => {
             )}
           </AnimatedContainer>
         );
-      case "lessons":
+      case 'lessons':
         return (
           <LessonPlanManager
             syllabusId={unitId}
@@ -207,8 +207,8 @@ const UnitBuilder = ({ instId, curricular }: any) => {
         );
       default:
         return (
-          <AnimatedContainer show={currentStep === "overview"}>
-            {currentStep === "overview" && (
+          <AnimatedContainer show={currentStep === 'overview'}>
+            {currentStep === 'overview' && (
               <UnitFormComponent
                 instId={instId}
                 syllabusDetails={syllabusData}
@@ -230,7 +230,7 @@ const UnitBuilder = ({ instId, curricular }: any) => {
   };
 
   return (
-    <div className="w-full h-full p-4">
+    <div className="">
       {/* Section Header */}
 
       <div className="px-8 pb-4">
@@ -246,14 +246,11 @@ const UnitBuilder = ({ instId, curricular }: any) => {
                 ? `/dashboard/manage-institutions/units`
                 : `/dashboard/manage-institutions/institution/${instId}/units`
             )
-          }
-        >
+          }>
           <span className="w-auto mr-2">
             <BsArrowLeft />
           </span>
-          <div className="text-sm">
-            {CommonlyUsedDict[userLanguage]["BACK_TO_LIST"]}
-          </div>
+          <div className="text-sm">{CommonlyUsedDict[userLanguage]['BACK_TO_LIST']}</div>
         </div>
       </div>
       {/* Body */}
@@ -263,14 +260,11 @@ const UnitBuilder = ({ instId, curricular }: any) => {
           activeStep={activeStep}
           handleTabSwitch={handleTabSwitch}
         />
-        <div className="grid grid-cols-1 divide-x-0 divide-gray-400 px-8 mb-8">
+        <div className="grid grid-cols-1 divide-x-0 divide-gray-400 mb-8">
           {fetchingDetails ? (
             <div className="h-100 flex justify-center items-center">
               <div className="w-5/10">
-                <Loader
-                  animation
-                  withText="Fetching syllabus details please wait..."
-                />
+                <Loader animation withText="Fetching syllabus details please wait..." />
               </div>
             </div>
           ) : (
