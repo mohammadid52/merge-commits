@@ -84,7 +84,7 @@ const DropDownMenu = ({index, menu, onClick}: any) => {
               className="absolute left-0 w-60 my-2 mb-4 mt-4 origin-top-right bg-white divide-y divide-gray-100 rounded-xl customShadow focus:outline-none cursor-pointer z-100"
               static>
               <div
-                className="p-2 customShadow"
+                className="p-2 rounded-xl customShadow"
                 ref={dropdownRef}
                 onMouseEnter={() => onMouseEnter()}
                 onMouseLeave={() => onMouseLeave(open)}>

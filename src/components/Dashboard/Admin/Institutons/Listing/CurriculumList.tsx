@@ -1,18 +1,18 @@
-import Filters, {SortType} from '@components/Atoms/Filters';
-import Highlighted from '@components/Atoms/Highlighted';
-import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
-import CommonActionsBtns from '@components/MicroComponents/CommonActionsBtns';
-import CourseName from '@components/MicroComponents/CourseName';
-import CourseUnits from '@components/MicroComponents/CourseUnits';
-import ModalPopUp from '@components/Molecules/ModalPopUp';
-import Table from '@components/Molecules/Table';
-import {useGlobalContext} from '@contexts/GlobalContext';
-import useAuth from '@customHooks/useAuth';
-import usePagination from '@customHooks/usePagination';
-import useSearch from '@customHooks/useSearch';
-import {InstitueRomms} from '@dictionary/dictionary.iconoclast';
-import {logError} from '@graphql/functions';
-import {withZoiqFilter} from '@utilities/functions';
+import Filters, {SortType} from 'components/Atoms/Filters';
+import Highlighted from 'components/Atoms/Highlighted';
+import SectionTitleV3 from 'components/Atoms/SectionTitleV3';
+import CommonActionsBtns from 'components/MicroComponents/CommonActionsBtns';
+import CourseName from 'components/MicroComponents/CourseName';
+import CourseUnits from 'components/MicroComponents/CourseUnits';
+import ModalPopUp from 'components/Molecules/ModalPopUp';
+import Table from 'components/Molecules/Table';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import useAuth from 'customHooks/useAuth';
+import usePagination from 'customHooks/usePagination';
+import useSearch from 'customHooks/useSearch';
+import {InstitueRomms} from 'dictionary/dictionary.iconoclast';
+import {logError} from 'graphql/functions';
+import {withZoiqFilter} from 'utilities/functions';
 import {RoomStatus} from 'API';
 import AddButton from 'atoms/Buttons/AddButton';
 import SearchInput from 'atoms/Form/SearchInput';
@@ -231,12 +231,19 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
     );
   };
 
-  const redirectToUnit = (institutionId: string, unitId: string) => {
+  const redirectToUnit = (
+    institutionId: string,
+    unitId: string,
+    courseId: string,
+    courseName: string
+  ) => {
     const baseUrl = '/dashboard/manage-institutions';
+    const suffix = `/units/${unitId}/edit?courseId=${courseId}&courseName=${courseName}`;
+
     history.push(
       isSuperAdmin
-        ? `${baseUrl}/units/${unitId}/edit`
-        : `${baseUrl}/institution/${institutionId}/units/${unitId}/edit`
+        ? `${baseUrl}${suffix}`
+        : `${baseUrl}/institution/${institutionId}${suffix}`
     );
   };
 
@@ -245,7 +252,6 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
     setFirstPage,
     setLastPage,
     setTotalPages,
-
     currentList,
     allAsProps,
     setCurrentList
@@ -350,7 +356,14 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
       </div>
     ),
     courseType: item.type || '-',
-    courseUnits: <CourseUnits item={item} redirectToUnit={redirectToUnit} />,
+    courseUnits: (
+      <CourseUnits
+        courseName={item.name}
+        courseId={item.id}
+        item={item}
+        redirectToUnit={redirectToUnit}
+      />
+    ),
     status: <Status useDefault status={item.status} />,
     actions: (
       <CommonActionsBtns

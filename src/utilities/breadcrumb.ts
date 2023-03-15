@@ -1,71 +1,101 @@
-import { BreadCrumb } from "@components/Atoms/BreadcrumbsWithBanner";
+import {BreadCrumb} from '@components/Atoms/BreadcrumbsWithBanner';
+import {useQuery} from '@customHooks/urlParam';
 
 export const breadcrumbsRoutes = ({
   breadcrumbsTitles,
   instituteTabTitles,
   pathname,
   baseUrl,
-  otherValues,
+  otherValues
 }: any) => {
   const {
     courseData = {},
     lessonData = {},
     roomData = {},
-    unitData = {},
+    unitData = {}
   } = otherValues || {};
+
   let heroSectionTitle,
     breadcrumbPathForSection: BreadCrumb[] = [];
 
-  if (pathname.indexOf("unit") > -1) {
-    heroSectionTitle = breadcrumbsTitles["UNITS"];
+  if (location.search.indexOf('courseName') > -1) {
+    const paths = useQuery(location.search);
+
+    breadcrumbPathForSection = [
+      {
+        title: instituteTabTitles['TABS']['COURSES'],
+        url: `${baseUrl}/courses`,
+        last: false
+      },
+      {
+        title: paths.get('courseName'),
+        url: `${baseUrl}/course-builder/${paths.get('courseId')}`,
+        last: false
+      },
+      {
+        title: instituteTabTitles['TABS']['UNITS'],
+        url: `${baseUrl}/units`,
+        last: false
+      },
+      unitData && {
+        title: unitData?.name,
+        url: `${baseUrl}/units/${unitData?.id}/edit?courseId=${paths.get(
+          'courseId'
+        )}&courseName=${paths.get('courseName')}`,
+        last: true,
+        goBack: false
+      }
+    ];
+  } else if (pathname.indexOf('unit') > -1) {
+    heroSectionTitle = breadcrumbsTitles['UNITS'];
     breadcrumbPathForSection = [
       {
         title: heroSectionTitle,
         url: `${baseUrl}/units`,
-        last: true,
-      },
+        last: true
+      }
     ];
-  } else if (pathname.indexOf("staff") > -1) {
+  } else if (pathname.indexOf('staff') > -1) {
     heroSectionTitle = breadcrumbsTitles.STAFF;
     breadcrumbPathForSection = [
       {
         title: heroSectionTitle,
         url: `${baseUrl}/staff`,
-        last: !Boolean(otherValues.user),
+        last: !Boolean(otherValues.user)
       },
       otherValues?.user && {
         title: otherValues.user.name,
         url: `${baseUrl}/manage-users/${otherValues.user.id}/staff`,
         last: Boolean(otherValues.user),
-        goBack: false,
-      },
+        goBack: false
+      }
     ];
   } else if (
-    pathname.indexOf("manage-users") > -1 ||
-    pathname.indexOf("register-user") > -1
+    pathname.indexOf('manage-users') > -1 ||
+    pathname.indexOf('register-user') > -1
   ) {
     heroSectionTitle = breadcrumbsTitles.USERS;
     breadcrumbPathForSection = [
       {
         title: heroSectionTitle,
         url: `${baseUrl}/manage-users`,
-        last: !Boolean(otherValues.user),
+        last: !Boolean(otherValues.user)
       },
       otherValues?.user && {
         title: otherValues.user.name,
         url: `${baseUrl}/manage-users/${otherValues.user.id}`,
         last: Boolean(otherValues.user),
-        goBack: false,
-      },
+        goBack: false
+      }
     ];
-  } else if (pathname.indexOf("course") > -1) {
-    heroSectionTitle = instituteTabTitles["TABS"]["COURSES"];
+  } else if (pathname.indexOf('course') > -1) {
+    heroSectionTitle = instituteTabTitles['TABS']['COURSES'];
     breadcrumbPathForSection = [
       {
         title: heroSectionTitle,
         url: `${baseUrl}/courses`,
-        last: !courseData?.id,
-      },
+        last: !courseData?.id
+      }
     ];
     if (courseData?.id) {
       breadcrumbPathForSection = [
@@ -73,47 +103,47 @@ export const breadcrumbsRoutes = ({
         {
           title: courseData?.name,
           url: `${baseUrl}/course-builder/${courseData?.id}`,
-          last: true,
-        },
+          last: true
+        }
       ];
     }
-  } else if (pathname.indexOf("students") > -1) {
-    heroSectionTitle = instituteTabTitles["TABS"]["STUDENT_ROASTER"];
+  } else if (pathname.indexOf('students') > -1) {
+    heroSectionTitle = instituteTabTitles['TABS']['STUDENT_ROASTER'];
     breadcrumbPathForSection = [
       {
         title: heroSectionTitle,
         url: `${baseUrl}/students`,
-        last: true,
-      },
+        last: true
+      }
     ];
-  } else if (pathname.indexOf("units") > -1) {
-    heroSectionTitle = instituteTabTitles["TABS"]["UNITS"];
+  } else if (pathname.indexOf('units') > -1) {
+    heroSectionTitle = instituteTabTitles['TABS']['UNITS'];
     breadcrumbPathForSection = [
       {
         title: heroSectionTitle,
         url: `${baseUrl}/units`,
-        last: true,
-      },
+        last: true
+      }
     ];
     // for edit
     if (unitData?.id) {
       breadcrumbPathForSection = [
         ...breadcrumbPathForSection,
         {
-          title: unitData?.title,
-          url: `${baseUrl}/units/${unitData?.id}`,
-          last: !unitData?.id,
-        },
+          title: unitData?.name,
+          url: `${baseUrl}/units/${unitData?.id}/edit`,
+          last: !unitData?.id
+        }
       ];
     }
-  } else if (pathname.indexOf("lessons") > -1) {
-    heroSectionTitle = instituteTabTitles["TABS"]["LESSONS"];
+  } else if (pathname.indexOf('lessons') > -1) {
+    heroSectionTitle = instituteTabTitles['TABS']['LESSONS'];
     breadcrumbPathForSection = [
       {
         title: heroSectionTitle,
         url: `${baseUrl}/lessons`,
-        last: lessonData?.id ? false : true,
-      },
+        last: lessonData?.id ? false : true
+      }
     ];
     // for edit
     if (lessonData?.id) {
@@ -122,21 +152,18 @@ export const breadcrumbsRoutes = ({
         {
           title: lessonData?.title,
           url: `${baseUrl}/lessons/${lessonData?.id}`,
-          last: true,
-        },
+          last: true
+        }
       ];
     }
-  } else if (
-    pathname.indexOf("room") > -1 ||
-    pathname.indexOf("room-edit") > -1
-  ) {
-    heroSectionTitle = instituteTabTitles["TABS"]["CLASSROOMS"];
+  } else if (pathname.indexOf('room') > -1 || pathname.indexOf('room-edit') > -1) {
+    heroSectionTitle = instituteTabTitles['TABS']['CLASSROOMS'];
     breadcrumbPathForSection = [
       {
         title: heroSectionTitle,
         url: `${baseUrl}/class-rooms`,
-        last: !roomData?.id,
-      },
+        last: !roomData?.id
+      }
     ];
     if (roomData?.id) {
       breadcrumbPathForSection = [
@@ -144,39 +171,37 @@ export const breadcrumbsRoutes = ({
         {
           title: roomData?.name,
           url: `${baseUrl}/room-edit/${roomData?.id}`,
-          last: true,
-        },
+          last: true
+        }
       ];
     }
-  } else if (pathname.indexOf("research-and-analytics") > -1) {
+  } else if (pathname.indexOf('research-and-analytics') > -1) {
     heroSectionTitle =
-      instituteTabTitles["TABS"][
-        pathname.indexOf("upload-csv") > -1
-          ? "UPLOAD_SURVEY"
-          : "DOWNLOAD_SURVEYS"
+      instituteTabTitles['TABS'][
+        pathname.indexOf('upload-csv') > -1 ? 'UPLOAD_SURVEY' : 'DOWNLOAD_SURVEYS'
       ];
 
     breadcrumbPathForSection = [
       {
-        title: instituteTabTitles["TABS"]["RESEARCH_AND_ANALYTICS"],
+        title: instituteTabTitles['TABS']['RESEARCH_AND_ANALYTICS'],
         url: `${baseUrl}/research-and-analytics`,
-        last: false,
+        last: false
       },
       {
         title: heroSectionTitle,
         url: `${baseUrl}/research-and-analytics`,
-        last: true,
-      },
+        last: true
+      }
     ];
-  } else if (pathname.indexOf("edit") > -1) {
-    heroSectionTitle = breadcrumbsTitles["INSTITUTION_GENERAL_INFO"];
+  } else if (pathname.indexOf('edit') > -1) {
+    heroSectionTitle = breadcrumbsTitles['INSTITUTION_GENERAL_INFO'];
     breadcrumbPathForSection = [
       {
         title: heroSectionTitle,
         url: `${baseUrl}/edit`,
-        last: true,
-      },
+        last: true
+      }
     ];
   }
-  return { heroSectionTitle, breadcrumbPathForSection };
+  return {heroSectionTitle, breadcrumbPathForSection};
 };

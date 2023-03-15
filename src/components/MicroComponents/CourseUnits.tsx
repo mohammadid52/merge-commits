@@ -1,7 +1,7 @@
 import Tooltip from '@components/Atoms/Tooltip';
 import React from 'react';
 
-const CourseUnits = ({item, redirectToUnit}: any) => {
+const CourseUnits = ({item, redirectToUnit, courseName, courseId}: any) => {
   const units = item.universalSyllabus?.items.filter((d: any) => d.unit !== null);
 
   return (
@@ -12,7 +12,9 @@ const CourseUnits = ({item, redirectToUnit}: any) => {
             <li
               className="mb-2 cursor-pointer hover:underline hover:theme-text:400"
               key={unit.unit.id}
-              onClick={() => redirectToUnit(item.institution.id, unit.unit.id)}>
+              onClick={() =>
+                redirectToUnit(item.institution.id, unit.unit.id, courseId, courseName)
+              }>
               {unit.unit.name}
             </li>
           </Tooltip>
