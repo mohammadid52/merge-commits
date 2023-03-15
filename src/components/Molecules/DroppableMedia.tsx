@@ -12,7 +12,7 @@ const DroppableMedia = ({
   setImage?: any;
   className?: string;
   toggleCropper?: () => void;
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }) => {
   const _setImage = (file: any) => {
     const fileReader = new FileReader();
@@ -20,9 +20,8 @@ const DroppableMedia = ({
       setImage(fileReader.result, file);
     };
     fileReader.readAsDataURL(file);
-    if (typeof toggleCropper === 'function') {
-      toggleCropper();
-    }
+
+    toggleCropper?.();
   };
 
   const cropSelectedImage = async (e: any, files: any) => {
@@ -52,7 +51,6 @@ const DroppableMedia = ({
     <div className={className} {...getRootProps()}>
       {children}
       <input
-        {...getInputProps()}
         type="file"
         ref={mediaRef}
         className="hidden"
@@ -60,6 +58,7 @@ const DroppableMedia = ({
         onClick={(e: any) => (e.target.value = '')}
         accept="image/*"
         multiple={false}
+        {...getInputProps()}
       />
     </div>
   );
