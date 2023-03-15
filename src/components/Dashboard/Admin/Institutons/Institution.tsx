@@ -63,7 +63,10 @@ interface IInstitution extends InstInfo {
 }
 
 const Institution = (props: InstitutionProps) => {
-  const {institutionId}: any = useParams();
+  // const {institutionId}: any = useParams();
+
+  const {instId: institutionId} = useAuth();
+
   const [fetchingDetails, setFetchingDetails] = useState(false);
   const [institutionData, setInstitutionData] = useState<IInstitution>({
     id: institutionId,
