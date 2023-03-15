@@ -1,6 +1,5 @@
-// import React from 'react';
 import {Dicitionary, PersonStatus, UserPageState} from 'API';
-import {globalState} from 'state/GlobalState';
+import {globalState, GlobalStateType} from 'state/GlobalState';
 
 export type GlobalActions =
   | {
@@ -155,6 +154,7 @@ export const globalReducer = (state: any, action: GlobalActions) => {
         dictionaries: action.payload
       };
     case 'UPDATE_ROOM':
+    case 'TOGGLE_LESSON':
       return {
         ...state,
         roomData: {
@@ -211,14 +211,7 @@ export const globalReducer = (state: any, action: GlobalActions) => {
           syllabus: []
         }
       };
-    case 'TOGGLE_LESSON':
-      return {
-        ...state,
-        roomData: {
-          ...state.roomData,
-          [action.payload.property]: action.payload.data
-        }
-      };
+
     case 'UPDATE_TEMP':
       return {
         ...state,
@@ -295,6 +288,7 @@ export const globalReducer = (state: any, action: GlobalActions) => {
         }
       };
     case 'LOG_IN':
+    case 'PREV_LOG_IN':
       return {
         ...state,
         status: 'logged-in',
@@ -313,17 +307,6 @@ export const globalReducer = (state: any, action: GlobalActions) => {
         }
       };
 
-    case 'PREV_LOG_IN':
-      return {
-        ...state,
-        status: 'logged-in',
-        isAuthenticated: true,
-        user: {
-          ...state.user,
-          email: action.payload.email,
-          authId: action.payload.authId
-        }
-      };
     case 'AUTHENTICATE':
       return {
         ...state,

@@ -83,11 +83,6 @@ const MainRouter: React.FC = () => {
         removeAuthToken();
       }
     } catch (err) {
-      // logError(
-      //   err,
-      //   {authId: state.user.authId, email: state.user.email},
-      //   'AppMainRouter @checkUserAuthenticated'
-      // );
       removeAuthToken();
       setAuthState('notLoggedIn');
     }

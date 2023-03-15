@@ -148,11 +148,6 @@ const LoginInner = ({
             }
           } catch (error) {
             setFieldError('password', 'Incorrect username or password');
-            // setMessage({
-            //   show: true,
-            //   type: 'error',
-            //   message: error.message
-            // });
           }
         } else if (
           error.message ===

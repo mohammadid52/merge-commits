@@ -1,14 +1,13 @@
-import { getAsset } from "assets";
-import { useGlobalContext } from "contexts/GlobalContext";
-import { LessonHeaderBarProps } from "interfaces/LessonComponentsInterfaces";
-import { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
-import { getLocalStorageData } from "utilities/localStorage";
-import { useOutsideAlerter } from "../../General/hooks/outsideAlerter";
-import PositiveAlert from "../../General/Popup";
+import {getAsset} from 'assets';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import {useEffect, useState} from 'react';
+import {useHistory} from 'react-router-dom';
+import {getLocalStorageData} from 'utilities/localStorage';
+import {useOutsideAlerter} from '../../General/hooks/outsideAlerter';
+import PositiveAlert from '../../General/Popup';
 
-const Foot = ({}: LessonHeaderBarProps) => {
-  const { lessonState, clientKey } = useGlobalContext();
+const Foot = () => {
+  const {lessonState, clientKey} = useGlobalContext();
   const history = useHistory();
 
   // ##################################################################### //
@@ -19,7 +18,7 @@ const Foot = ({}: LessonHeaderBarProps) => {
   // ################## LOGIC FOR RETURNING TO CLASSROOM ################# //
   // ##################################################################### //
 
-  const getRoomData = getLocalStorageData("room_info");
+  const getRoomData = getLocalStorageData('room_info');
   const [waiting, setWaiting] = useState<boolean>(false);
   const [safeToLeave, setSafeToLeave] = useState<any>(null);
 
@@ -54,7 +53,7 @@ const Foot = ({}: LessonHeaderBarProps) => {
 
   // ------ POPUP MODAL ----- //
 
-  const { visible, setVisible } = useOutsideAlerter(false);
+  const {visible, setVisible} = useOutsideAlerter(false);
   const handlePopup = () => {
     setVisible((prevState: any) => !prevState);
   };
@@ -62,10 +61,7 @@ const Foot = ({}: LessonHeaderBarProps) => {
   return (
     <>
       <div className="mt-auto mb-0 bg-darker-gray flex-row justify-center items-center">
-        <div
-          className={`${visible ? "absolute z-100" : "hidden"}`}
-          onClick={handlePopup}
-        >
+        <div className={`${visible ? 'absolute z-100' : 'hidden'}`} onClick={handlePopup}>
           <PositiveAlert
             alert={visible}
             header="Are you sure you want to leave the Lesson?"
@@ -80,8 +76,7 @@ const Foot = ({}: LessonHeaderBarProps) => {
         </div>
 
         <div
-          className={`w-full lg:w-256 h-auto mx-auto bg-darker-gray py-8 flex flex-row justify-center items-start text-center`}
-        >
+          className={`w-full lg:w-256 h-auto mx-auto bg-darker-gray py-8 flex flex-row justify-center items-start text-center`}>
           {/* BACK BUTTON */}
 
           <div className="w-3.3/10 flex justify-center items-center">
@@ -101,7 +96,7 @@ const Foot = ({}: LessonHeaderBarProps) => {
             {/* <NavLink to="/dashboard"> */}
             <img
               className="h-20 px-4"
-              src={getAsset(clientKey, "main_logo")}
+              src={getAsset(clientKey, 'main_logo')}
               alt="Logo"
             />
             {/* </NavLink> */}

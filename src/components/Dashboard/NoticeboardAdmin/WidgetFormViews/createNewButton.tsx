@@ -1,19 +1,13 @@
-import Buttons from "atoms/Buttons";
-import { useGlobalContext } from "contexts/GlobalContext";
-import useDictionary from "customHooks/dictionary";
-import {
-  AiFillPlusCircle,
-  AiOutlineSave,
-  AiOutlineStop,
-} from "react-icons/all";
-import { IconContext } from "react-icons/lib/esm/iconContext";
-import { NoticeboardFormProps } from "../NoticeboardAdminContent";
+import Buttons from 'atoms/Buttons';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import {AiFillPlusCircle, AiOutlineSave, AiOutlineStop} from 'react-icons/all';
+import {NoticeboardFormProps} from '../NoticeboardAdminContent';
 
 const CreateNewButton = (props: NoticeboardFormProps) => {
-  const { viewEditMode, handleEditToggle, widgetObj, resetNewWidgetData } =
-    props;
-  const { userLanguage } = useGlobalContext();
-  const { anthologyDict } = useDictionary();
+  const {viewEditMode, handleEditToggle, widgetObj, resetNewWidgetData} = props;
+  const {userLanguage} = useGlobalContext();
+  const {anthologyDict} = useDictionary();
 
   const handleCancel = () => {
     resetNewWidgetData?.();
@@ -21,14 +15,12 @@ const CreateNewButton = (props: NoticeboardFormProps) => {
 
   const handleCreateNew = () => {
     resetNewWidgetData?.();
-    handleEditToggle?.("create", widgetObj?.widgetID);
+    handleEditToggle?.('create', widgetObj?.widgetID);
   };
 
   return (
-    <div
-      className={`flex p-2 ${viewEditMode?.mode === "create" ? "mt-2" : ""}`}
-    >
-      {viewEditMode?.mode === "create" &&
+    <div className={`flex p-2 ${viewEditMode?.mode === 'create' ? 'mt-2' : ''}`}>
+      {viewEditMode?.mode === 'create' &&
       viewEditMode?.widgetID === widgetObj?.widgetID ? (
         <Buttons
           onClick={handleCancel}
@@ -40,27 +32,22 @@ const CreateNewButton = (props: NoticeboardFormProps) => {
       ) : (
         <div
           className={`flex flex-row w-auto mr-0 cursor-pointer`}
-          onClick={handleCreateNew}
-        >
-          <p
-            className={`w-auto mr-2 cursor-pointer font-semibold text-blueberry`}
-          >
+          onClick={handleCreateNew}>
+          <p className={`w-auto mr-2 cursor-pointer font-semibold text-blueberry`}>
             {anthologyDict[userLanguage].ACTIONS.CREATE}
           </p>
-          <IconContext.Provider
-            value={{ className: "w-auto text-blueberry pointer-events-none " }}
-          >
-            <AiFillPlusCircle size={24} />
-          </IconContext.Provider>
+
+          <AiFillPlusCircle
+            className="w-auto text-blueberry pointer-events-none "
+            size={24}
+          />
         </div>
       )}
-      {viewEditMode?.mode === "create" &&
+      {viewEditMode?.mode === 'create' &&
       viewEditMode?.widgetID === widgetObj?.widgetID ? (
         <>
           <Buttons
-            onClick={() =>
-              widgetObj?.id && handleEditToggle?.("savenew", widgetObj?.id)
-            }
+            onClick={() => widgetObj?.id && handleEditToggle?.('savenew', widgetObj?.id)}
             label={anthologyDict[userLanguage].ACTIONS.SAVE}
             type={`button`}
             Icon={AiOutlineSave}

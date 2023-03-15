@@ -1,17 +1,16 @@
-import { GraphQLAPI as API, graphqlOperation } from "@aws-amplify/api-graphql";
-import { Fragment, useEffect, useState } from "react";
-import { IoMdAddCircleOutline, IoMdRemoveCircleOutline } from "react-icons/io";
-import { IconContext } from "react-icons/lib/esm/iconContext";
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import {Fragment, useEffect, useState} from 'react';
+import {IoMdAddCircleOutline, IoMdRemoveCircleOutline} from 'react-icons/io';
 
-import Buttons from "atoms/Buttons";
-import CheckBox from "atoms/Form/CheckBox";
-import FormInput from "atoms/Form/FormInput";
-import Selector from "atoms/Form/Selector";
+import Buttons from 'atoms/Buttons';
+import CheckBox from 'atoms/Form/CheckBox';
+import FormInput from 'atoms/Form/FormInput';
+import Selector from 'atoms/Form/Selector';
 
-import { getAsset } from "assets";
-import { useGlobalContext } from "contexts/GlobalContext";
-import useDictionary from "customHooks/dictionary";
-import * as mutations from "graphql/mutations";
+import {getAsset} from 'assets';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import * as mutations from 'graphql/mutations';
 
 interface AddQuestionProps {
   goBackToPreviousStep: () => void;
@@ -25,7 +24,7 @@ interface InitialState {
   type: InputValue;
   language: InputValue;
   isRequired: boolean;
-  options: { label: string; text: string }[] | null;
+  options: {label: string; text: string}[] | null;
   otherOpt: boolean;
   noneOfAbove: boolean;
 }
@@ -37,81 +36,81 @@ interface InputValue {
 }
 
 const AddQuestion = (props: AddQuestionProps) => {
-  const { goBackToPreviousStep, addNewQuestion } = props;
-  const { theme, clientKey, userLanguage } = useGlobalContext();
-  const themeColor = getAsset(clientKey, "themeClassName");
-  const { addQuestionDict } = useDictionary();
+  const {goBackToPreviousStep, addNewQuestion} = props;
+  const {theme, clientKey, userLanguage} = useGlobalContext();
+  const themeColor = getAsset(clientKey, 'themeClassName');
+  const {addQuestionDict} = useDictionary();
 
   const initialState = {
-    question: "",
-    notes: "",
-    label: "",
-    type: { id: "", name: "", value: "" },
-    language: { id: "1", name: "English", value: "EN" },
+    question: '',
+    notes: '',
+    label: '',
+    type: {id: '', name: '', value: ''},
+    language: {id: '1', name: 'English', value: 'EN'},
     isRequired: false,
     options: [
-      { label: "1", text: "" },
-      { label: "2", text: "" },
+      {label: '1', text: ''},
+      {label: '2', text: ''}
     ],
     otherOpt: false,
-    noneOfAbove: false,
+    noneOfAbove: false
   };
   const [questionData, setQuestionData] = useState<InitialState>(initialState);
   // const [selectedDesigners, setSelectedDesigners] = useState<any[]>([]);
 
   const [validation, setValidation] = useState({
-    question: "",
-    label: "",
-    type: "",
-    options: "",
-    message: "",
-    isError: true,
+    question: '',
+    label: '',
+    type: '',
+    options: '',
+    message: '',
+    isError: true
   });
   const typeList: any = [
-    { id: "1", name: "Text", value: "text" },
-    { id: "2", name: "Input", value: "input" },
-    { id: "3", name: "Select Many", value: "selectMany" },
-    { id: "4", name: "Select One", value: "selectOne" },
-    { id: "5", name: "Date Picker", value: "datePicker" },
-    { id: "6", name: "Emoji", value: "emoji" },
-    { id: "7", name: "Attachments", value: "attachments" },
-    { id: "8", name: "Link", value: "link" },
+    {id: '1', name: 'Text', value: 'text'},
+    {id: '2', name: 'Input', value: 'input'},
+    {id: '3', name: 'Select Many', value: 'selectMany'},
+    {id: '4', name: 'Select One', value: 'selectOne'},
+    {id: '5', name: 'Date Picker', value: 'datePicker'},
+    {id: '6', name: 'Emoji', value: 'emoji'},
+    {id: '7', name: 'Attachments', value: 'attachments'},
+    {id: '8', name: 'Link', value: 'link'}
   ];
 
   const languageList = [
-    { id: 1, name: "English", value: "EN" },
-    { id: 2, name: "Spanish", value: "ES" },
+    {id: 1, name: 'English', value: 'EN'},
+    {id: 2, name: 'Spanish', value: 'ES'}
   ];
 
   const selectOneOptions = [
     {
-      label: "1",
-      text: "Very Difficult",
+      label: '1',
+      text: 'Very Difficult'
     },
     {
-      label: "2",
-      text: "Difficult",
+      label: '2',
+      text: 'Difficult'
     },
     {
-      label: "3",
-      text: "Easy",
+      label: '3',
+      text: 'Easy'
     },
     {
-      label: "4",
-      text: "Very Easy",
-    },
+      label: '4',
+      text: 'Very Easy'
+    }
   ];
 
   const onInputChange = (e: any) => {
     setQuestionData({
       ...questionData,
-      [e.target.name]: e.target.value,
+      [e.target.name]: e.target.value
     });
   };
   const toggleCheckBoxState = (field: string, value: boolean) => {
     setQuestionData({
       ...questionData,
-      [field]: !value,
+      [field]: !value
     });
   };
   const optionInputChange = (index: number, e: any) => {
@@ -120,13 +119,13 @@ const AddQuestion = (props: AddQuestionProps) => {
     currentOptions[index].text = e.target.value;
     setQuestionData({
       ...questionData,
-      options: currentOptions,
+      options: currentOptions
     });
   };
   const onOptionAdd = (index: number) => {
     // adding new option field after selected options index.
     const currentOptions = [...questionData.options];
-    const newItem = { label: (index + 2).toString(), text: "" };
+    const newItem = {label: (index + 2).toString(), text: ''};
     currentOptions.splice(index + 1, 0, newItem);
     let updatedOptions = currentOptions.map((item, i) => {
       if (i > index + 1) {
@@ -138,7 +137,7 @@ const AddQuestion = (props: AddQuestionProps) => {
     });
     setQuestionData({
       ...questionData,
-      options: updatedOptions,
+      options: updatedOptions
     });
   };
   const onOptionRemove = (index: number) => {
@@ -157,32 +156,27 @@ const AddQuestion = (props: AddQuestionProps) => {
       });
       setQuestionData({
         ...questionData,
-        options: updatedOptions,
+        options: updatedOptions
       });
     }
   };
-  const onSelectOption = (
-    val: string,
-    name: string,
-    id: string,
-    field: string
-  ) => {
+  const onSelectOption = (val: string, name: string, id: string, field: string) => {
     setQuestionData({
       ...questionData,
       [field]: {
         id: id,
         name: name,
-        value: val,
-      },
+        value: val
+      }
     });
   };
-  const filteredOptions = (options: { label: string; text: string }[]) => {
+  const filteredOptions = (options: {label: string; text: string}[]) => {
     let optionsObj = [...options];
     if (questionData.otherOpt) {
-      optionsObj.push({ label: "other", text: "Other" });
+      optionsObj.push({label: 'other', text: 'Other'});
     }
     if (questionData.noneOfAbove) {
-      optionsObj.push({ label: "none", text: "None of the above" });
+      optionsObj.push({label: 'none', text: 'None of the above'});
     }
     return optionsObj;
   };
@@ -192,23 +186,23 @@ const AddQuestion = (props: AddQuestionProps) => {
     const msgs = validation;
     if (!questionData.question?.trim().length) {
       isValid = false;
-      msgs.question = addQuestionDict[userLanguage]["messages"]["qrequired"];
+      msgs.question = addQuestionDict[userLanguage]['messages']['qrequired'];
     } else {
-      msgs.question = "";
+      msgs.question = '';
     }
     if (!questionData.type.value?.trim().length) {
       isValid = false;
-      msgs.type = addQuestionDict[userLanguage]["messages"]["qtyperequired"];
+      msgs.type = addQuestionDict[userLanguage]['messages']['qtyperequired'];
     } else {
-      msgs.type = "";
+      msgs.type = '';
     }
     if (!questionData.label?.trim().length) {
       isValid = false;
-      msgs.label = addQuestionDict[userLanguage]["messages"]["qlabelrequired"];
+      msgs.label = addQuestionDict[userLanguage]['messages']['qlabelrequired'];
     } else {
-      msgs.label = "";
+      msgs.label = '';
     }
-    setValidation({ ...msgs });
+    setValidation({...msgs});
     return isValid;
   };
 
@@ -223,62 +217,61 @@ const AddQuestion = (props: AddQuestionProps) => {
           question: questionData.question,
           // designers: selectedDesigners.map(item => item.id),
           language: questionData.language.value,
-          options: questOptions ? filteredOptions(questOptions) : [],
+          options: questOptions ? filteredOptions(questOptions) : []
         };
         const results: any = await API.graphql(
-          graphqlOperation(mutations.createQuestion, { input: input })
+          graphqlOperation(mutations.createQuestion, {input: input})
         );
         const newQuestion = results?.data?.createQuestion;
         if (newQuestion.id) {
           newQuestion.required = questionData.isRequired;
           setValidation({
-            question: "",
-            type: "",
-            label: "",
-            options: "",
-            message: addQuestionDict[userLanguage]["messages"]["qdetailsave"],
-            isError: false,
+            question: '',
+            type: '',
+            label: '',
+            options: '',
+            message: addQuestionDict[userLanguage]['messages']['qdetailsave'],
+            isError: false
           });
           addNewQuestion(newQuestion);
           goBackToPreviousStep();
         }
       } catch {
         setValidation({
-          question: "",
-          type: "",
-          label: "",
-          options: "",
-          message: addQuestionDict[userLanguage]["messages"]["unabletosave"],
-          isError: true,
+          question: '',
+          type: '',
+          label: '',
+          options: '',
+          message: addQuestionDict[userLanguage]['messages']['unabletosave'],
+          isError: true
         });
       }
     }
   };
 
   useEffect(() => {
-    if (questionData.type?.value === "selectOne") {
+    if (questionData.type?.value === 'selectOne') {
       setQuestionData({
         ...questionData,
-        options: selectOneOptions,
+        options: selectOneOptions
       });
-    } else if (questionData.type?.value === "selectMany") {
+    } else if (questionData.type?.value === 'selectMany') {
       setQuestionData({
         ...questionData,
         options: [
-          { label: "1", text: "" },
-          { label: "2", text: "" },
-        ],
+          {label: '1', text: ''},
+          {label: '2', text: ''}
+        ]
       });
     }
   }, [questionData.type]);
 
-  const { question, label, type, language, options, otherOpt, noneOfAbove } =
-    questionData;
+  const {question, label, type, language, options, otherOpt, noneOfAbove} = questionData;
   return (
     <Fragment>
       <div className="w-8/10 m-auto">
         <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">
-          {addQuestionDict[userLanguage]["heading"]}
+          {addQuestionDict[userLanguage]['heading']}
         </h3>
       </div>
       <div className="w-8/10 m-auto">
@@ -290,7 +283,7 @@ const AddQuestion = (props: AddQuestionProps) => {
                 id="question"
                 onChange={onInputChange}
                 name="question"
-                label={addQuestionDict[userLanguage]["q"]}
+                label={addQuestionDict[userLanguage]['q']}
                 isRequired
               />
               {validation.question && (
@@ -303,7 +296,7 @@ const AddQuestion = (props: AddQuestionProps) => {
                 id="Label"
                 onChange={onInputChange}
                 name="label"
-                label={addQuestionDict[userLanguage]["qlabel"]}
+                label={addQuestionDict[userLanguage]['qlabel']}
                 isRequired
               />
               {validation.label && (
@@ -315,45 +308,40 @@ const AddQuestion = (props: AddQuestionProps) => {
           <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
             <div>
               <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
-                {addQuestionDict[userLanguage]["selecttype"]}{" "}
+                {addQuestionDict[userLanguage]['selecttype']}{' '}
                 <span className="text-red-500">*</span>
               </label>
               <Selector
                 selectedItem={type.name}
-                placeholder={addQuestionDict[userLanguage]["selectpl"]}
+                placeholder={addQuestionDict[userLanguage]['selectpl']}
                 list={typeList}
-                onChange={(val, name, id) =>
-                  onSelectOption(val, name, id, "type")
-                }
+                onChange={(val, name, id) => onSelectOption(val, name, id, 'type')}
               />
-              {/* {validation.type && <p className="text-red-600 text-sm">{validation.type}</p>} */}
             </div>
             <div>
               <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
-                {addQuestionDict[userLanguage]["selectlang"]}
+                {addQuestionDict[userLanguage]['selectlang']}
               </label>
               <Selector
                 selectedItem={language.name}
-                placeholder={addQuestionDict[userLanguage]["selectlanpl"]}
+                placeholder={addQuestionDict[userLanguage]['selectlanpl']}
                 list={languageList}
-                onChange={(val, name, id) =>
-                  onSelectOption(val, name, id, "language")
-                }
+                onChange={(val, name, id) => onSelectOption(val, name, id, 'language')}
               />
             </div>
           </div>
 
-          {(type.value === "selectOne" || type.value === "selectMany") && (
+          {(type.value === 'selectOne' || type.value === 'selectMany') && (
             <div className="p-6">
               <div className="p-6 border-gray-400  border-0 border-dashed">
                 <p className="text-m font-medium leading-5 text-gray-700 mb-1">
-                  {addQuestionDict[userLanguage]["addOption"]}:{" "}
+                  {addQuestionDict[userLanguage]['addOption']}:{' '}
                 </p>
 
                 {/* Options input fields */}
                 {options?.length &&
                   options.map((item, index) => (
-                    <div className="flex w-9/10 mx-auto mt-4">
+                    <div key={item.text} className="flex w-9/10 mx-auto mt-4">
                       <div className="w-8/10">
                         <FormInput
                           value={item.text}
@@ -365,29 +353,13 @@ const AddQuestion = (props: AddQuestionProps) => {
                       <div className="w-1/10 flex items-center">
                         <span
                           className="w-auto cursor-pointer"
-                          onClick={() => onOptionAdd(index)}
-                        >
-                          <IconContext.Provider
-                            value={{
-                              size: "2rem",
-                              color: theme.iconColor[themeColor],
-                            }}
-                          >
-                            <IoMdAddCircleOutline />
-                          </IconContext.Provider>
+                          onClick={() => onOptionAdd(index)}>
+                          <IoMdAddCircleOutline className="theme-text" size="2rem" />
                         </span>
                         <span
                           className="w-auto cursor-pointer"
-                          onClick={() => onOptionRemove(index)}
-                        >
-                          <IconContext.Provider
-                            value={{
-                              size: "2rem",
-                              color: theme.iconColor[themeColor],
-                            }}
-                          >
-                            <IoMdRemoveCircleOutline />
-                          </IconContext.Provider>
+                          onClick={() => onOptionRemove(index)}>
+                          <IoMdRemoveCircleOutline className="theme-text" size="2rem" />
                         </span>
                       </div>
                     </div>
@@ -398,19 +370,17 @@ const AddQuestion = (props: AddQuestionProps) => {
                   <div className="w-2/4 flex items-center">
                     <CheckBox
                       value={otherOpt}
-                      onChange={() => toggleCheckBoxState("otherOpt", otherOpt)}
+                      onChange={() => toggleCheckBoxState('otherOpt', otherOpt)}
                       name="otherOpt"
-                      label={addQuestionDict[userLanguage]["otheropt"]}
+                      label={addQuestionDict[userLanguage]['otheropt']}
                     />
                   </div>
                   <div className="w-2/4 flex items-center">
                     <CheckBox
                       value={noneOfAbove}
-                      onChange={() =>
-                        toggleCheckBoxState("noneOfAbove", noneOfAbove)
-                      }
+                      onChange={() => toggleCheckBoxState('noneOfAbove', noneOfAbove)}
                       name="noneOfAbove"
-                      label={addQuestionDict[userLanguage]["nonefabove"]}
+                      label={addQuestionDict[userLanguage]['nonefabove']}
                     />
                   </div>
                 </div>
@@ -420,24 +390,20 @@ const AddQuestion = (props: AddQuestionProps) => {
 
           {validation.message && (
             <div className="py-4 m-auto mt-2 text-center">
-              <p
-                className={`${
-                  validation.isError ? "text-red-600" : "text-green-600"
-                }`}
-              >
+              <p className={`${validation.isError ? 'text-red-600' : 'text-green-600'}`}>
                 {validation.message}
               </p>
             </div>
           )}
           <div className="flex justify-center mt-16 w-5/10 mx-auto">
             <Buttons
-              label={addQuestionDict[userLanguage]["Button"]["cancel"]}
+              label={addQuestionDict[userLanguage]['Button']['cancel']}
               btnClass="px-8 py-3 mr-4"
               onClick={goBackToPreviousStep}
               transparent
             />
             <Buttons
-              label={addQuestionDict[userLanguage]["Button"]["save"]}
+              label={addQuestionDict[userLanguage]['Button']['save']}
               btnClass="px-10 py-3 ml-4"
               onClick={saveNewQuestion}
             />

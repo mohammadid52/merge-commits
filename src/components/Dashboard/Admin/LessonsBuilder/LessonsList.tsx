@@ -1,56 +1,54 @@
-import { GraphQLAPI as API, graphqlOperation } from "@aws-amplify/api-graphql";
-import AddButton from "@components/Atoms/Buttons/AddButton";
-import Filters, { SortType } from "@components/Atoms/Filters";
-import Highlighted from "@components/Atoms/Highlighted";
-import SectionTitleV3 from "@components/Atoms/SectionTitleV3";
-import ErrorBoundary from "@components/Error/ErrorBoundary";
-import CommonActionsBtns from "@components/MicroComponents/CommonActionsBtns";
-import Table from "@components/Molecules/Table";
-import { useGlobalContext } from "@contexts/GlobalContext";
-import useAuth from "@customHooks/useAuth";
-import usePagination from "@customHooks/usePagination";
-import useSearch from "@customHooks/useSearch";
-import { InstitueRomms } from "@dictionary/dictionary.iconoclast";
-import { withZoiqFilter } from "@utilities/functions";
-import { RoomStatus } from "API";
-import { getAsset } from "assets";
-import BreadCrums from "atoms/BreadCrums";
-import Buttons from "atoms/Buttons";
-import SearchInput from "atoms/Form/SearchInput";
-import Selector from "atoms/Form/Selector";
-import * as customQueries from "customGraphql/customQueries";
-import useDictionary from "customHooks/dictionary";
-import { useQuery } from "customHooks/urlParam";
-import * as mutations from "graphql/mutations";
-import { find, map, orderBy } from "lodash";
-import ModalPopUp from "molecules/ModalPopUp";
-import { useEffect, useState } from "react";
-import { AiOutlineArrowDown, AiOutlineArrowUp } from "react-icons/ai";
-import { IoArrowUndoCircleOutline } from "react-icons/io5";
-import { IconContext } from "react-icons/lib/esm/iconContext";
-import { useHistory, useRouteMatch } from "react-router-dom";
-import { Status } from "../UserManagement/UserStatus";
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import AddButton from '@components/Atoms/Buttons/AddButton';
+import Filters, {SortType} from '@components/Atoms/Filters';
+import Highlighted from '@components/Atoms/Highlighted';
+import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
+import ErrorBoundary from '@components/Error/ErrorBoundary';
+import CommonActionsBtns from '@components/MicroComponents/CommonActionsBtns';
+import Table from '@components/Molecules/Table';
+import {useGlobalContext} from '@contexts/GlobalContext';
+import useAuth from '@customHooks/useAuth';
+import usePagination from '@customHooks/usePagination';
+import useSearch from '@customHooks/useSearch';
+import {InstitueRomms} from '@dictionary/dictionary.iconoclast';
+import {withZoiqFilter} from '@utilities/functions';
+import {RoomStatus} from 'API';
+import {getAsset} from 'assets';
+import BreadCrums from 'atoms/BreadCrums';
+import Buttons from 'atoms/Buttons';
+import SearchInput from 'atoms/Form/SearchInput';
+import Selector from 'atoms/Form/Selector';
+import * as customQueries from 'customGraphql/customQueries';
+import useDictionary from 'customHooks/dictionary';
+import {useQuery} from 'customHooks/urlParam';
+import * as mutations from 'graphql/mutations';
+import {find, map, orderBy} from 'lodash';
+import ModalPopUp from 'molecules/ModalPopUp';
+import {useEffect, useState} from 'react';
+import {AiOutlineArrowDown, AiOutlineArrowUp} from 'react-icons/ai';
+import {IoArrowUndoCircleOutline} from 'react-icons/io5';
+import {useHistory, useRouteMatch} from 'react-router-dom';
+import {Status} from '../UserManagement/UserStatus';
 
-import CloneLesson from "./CloneLesson";
+import CloneLesson from './CloneLesson';
 
 interface LessonListProps {
   isInInstitution?: boolean; // props for managing lesson tab inside institution
   title?: string;
   instId?: string;
 }
-const getSortedList = (list: any[]) => orderBy(list, ["title"], ["asc"]);
+const getSortedList = (list: any[]) => orderBy(list, ['title'], ['asc']);
 
-const LessonsList = ({ isInInstitution, instId }: LessonListProps) => {
+const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
   const match = useRouteMatch();
   const history = useHistory();
   const params = useQuery(location.search);
 
-  const { theme, clientKey, state, userLanguage } = useGlobalContext();
-  const themeColor = getAsset(clientKey, "themeClassName");
-  const { BreadcrumsTitles, CommonlyUsedDict, LessonsListDict } =
-    useDictionary();
+  const {theme, clientKey, state, userLanguage} = useGlobalContext();
+  const themeColor = getAsset(clientKey, 'themeClassName');
+  const {BreadcrumsTitles, CommonlyUsedDict, LessonsListDict} = useDictionary();
 
-  const [status, setStatus] = useState("");
+  const [status, setStatus] = useState('');
   const [lessonsData, setLessonsData] = useState<any[]>([]);
   const [totalLessonNum, setTotalLessonNum] = useState(0);
 
@@ -63,15 +61,15 @@ const LessonsList = ({ isInInstitution, instId }: LessonListProps) => {
 
     currentList: _currentList,
     allAsProps,
-    setCurrentList,
+    setCurrentList
   } = usePagination(getSortedList(lessonsData) || [], totalLessonNum || 0);
 
   const currentList = getSortedList(_currentList);
 
   const [sortingType, setSortingType] = useState({
-    value: "",
-    name: "",
-    asc: true,
+    value: '',
+    name: '',
+    asc: true
   });
 
   const [institutionList, setInstitutionList] = useState<any>([]);
@@ -79,27 +77,27 @@ const LessonsList = ({ isInInstitution, instId }: LessonListProps) => {
 
   const breadCrumsList = [
     {
-      title: BreadcrumsTitles[userLanguage]["HOME"],
-      url: "/dashboard",
-      last: false,
+      title: BreadcrumsTitles[userLanguage]['HOME'],
+      url: '/dashboard',
+      last: false
     },
     {
-      title: BreadcrumsTitles[userLanguage]["LESSONS"],
-      url: "/dashboard/lesson-builder",
-      last: true,
-    },
+      title: BreadcrumsTitles[userLanguage]['LESSONS'],
+      url: '/dashboard/lesson-builder',
+      last: true
+    }
   ];
 
   const sortByList = [
-    { id: 1, name: "Title", value: "title" },
-    { id: 2, name: "Type", value: "type" },
+    {id: 1, name: 'Title', value: 'title'},
+    {id: 2, name: 'Type', value: 'type'}
   ];
 
   const buildLesson = () => {
     history.push(`${match.url}/add`);
   };
 
-  const getFilteredList = (data: [{ designers: string[] }], target: string) => {
+  const getFilteredList = (data: [{designers: string[]}], target: string) => {
     const list: any[] = [];
     data.forEach((lesson) => {
       if (
@@ -117,7 +115,7 @@ const LessonsList = ({ isInInstitution, instId }: LessonListProps) => {
     return list;
   };
 
-  const isTeacher = state.user.role === "TR";
+  const isTeacher = state.user.role === 'TR';
 
   const getLessonsList = async () => {
     try {
@@ -125,15 +123,15 @@ const LessonsList = ({ isInInstitution, instId }: LessonListProps) => {
       if (instId && !isSuperAdmin) {
         condition = {
           filter: {
-            institutionID: { eq: instId },
-          },
+            institutionID: {eq: instId}
+          }
         };
       }
       const fetchUList: any = await API.graphql(
         graphqlOperation(customQueries.listUniversalLessons, condition)
       );
       if (!fetchUList) {
-        throw new Error("fail!");
+        throw new Error('fail!');
       } else {
         let data = fetchUList?.data?.listUniversalLessons.items;
 
@@ -143,19 +141,16 @@ const LessonsList = ({ isInInstitution, instId }: LessonListProps) => {
             ...lesson,
             institutionName: lesson?.institution?.name,
             institutionId: lesson?.institution?.id,
-            status: lesson?.status || RoomStatus.ACTIVE,
+            status: lesson?.status || RoomStatus.ACTIVE
           };
         });
         data = data.map(
-          (lesson: {
-            status: RoomStatus;
-            institution: { name: any; id: any };
-          }) => {
+          (lesson: {status: RoomStatus; institution: {name: any; id: any}}) => {
             return {
               ...lesson,
               institutionName: lesson?.institution?.name,
               institutionId: lesson?.institution?.id,
-              status: status || RoomStatus.ACTIVE,
+              status: status || RoomStatus.ACTIVE
             };
           }
         );
@@ -176,7 +171,7 @@ const LessonsList = ({ isInInstitution, instId }: LessonListProps) => {
 
         setTotalLessonNum(isTeacher ? filteredList.length : data.length);
 
-        setStatus("done");
+        setStatus('done');
       }
     } catch (error) {
       console.error(error);
@@ -186,7 +181,7 @@ const LessonsList = ({ isInInstitution, instId }: LessonListProps) => {
   const toggleSortDimention = () => {
     setSortingType({
       ...sortingType,
-      asc: !sortingType.asc,
+      asc: !sortingType.asc
     });
   };
 
@@ -219,19 +214,19 @@ const LessonsList = ({ isInInstitution, instId }: LessonListProps) => {
   };
 
   const instituteChange = (_: string, name: string, value: string) => {
-    setSelectedInstitution({ name, id: value });
+    setSelectedInstitution({name, id: value});
     onSearch(searchInput.value, value);
   };
 
   const onInstitutionSelectionRemove = () => {
     setSelectedInstitution({});
-    onSearch(searchInput.value, "");
+    onSearch(searchInput.value, '');
   };
 
   const fetchSortedList = () => {
     const newLessonsList = [...lessonsData].sort((a, b) =>
-      a[sortingType.value]?.toLowerCase() >
-        b[sortingType.value]?.toLowerCase() && sortingType.asc
+      a[sortingType.value]?.toLowerCase() > b[sortingType.value]?.toLowerCase() &&
+      sortingType.asc
         ? 1
         : -1
     );
@@ -242,7 +237,7 @@ const LessonsList = ({ isInInstitution, instId }: LessonListProps) => {
     setSortingType({
       ...sortingType,
       value: str,
-      name: name,
+      name: name
     });
   };
 
@@ -255,18 +250,14 @@ const LessonsList = ({ isInInstitution, instId }: LessonListProps) => {
     fetchSortedList();
   }, [sortingType.value, sortingType.asc]);
 
-  // if (status !== 'done') {
-  //   return <LessonLoading />;
-  // }
-
   const [showCloneModal, setShowCloneModal] = useState<{
     show: boolean;
     lessonId: string;
-  }>({ show: false, lessonId: "" });
+  }>({show: false, lessonId: ''});
 
   const getCloneLessonDetails = () => {
     if (showCloneModal.show) {
-      return find(lessonsData, ["id", showCloneModal.lessonId]);
+      return find(lessonsData, ['id', showCloneModal.lessonId]);
     }
   };
 
@@ -280,8 +271,8 @@ const LessonsList = ({ isInInstitution, instId }: LessonListProps) => {
   const [deleting, setDeleting] = useState<boolean>(false);
   const [deleteModal, setDeleteModal] = useState<any>({
     show: false,
-    message: "",
-    action: () => {},
+    message: '',
+    action: () => {}
   });
 
   const checkIfRemovable = (lessonObj: any) => !lessonObj?.isUsed;
@@ -290,7 +281,7 @@ const LessonsList = ({ isInInstitution, instId }: LessonListProps) => {
     try {
       const list: any = await API.graphql(
         graphqlOperation(customQueries.listInstitutionOptions, {
-          filter: withZoiqFilter({}),
+          filter: withZoiqFilter({})
         })
       );
       setInstitutionList(
@@ -308,42 +299,40 @@ const LessonsList = ({ isInInstitution, instId }: LessonListProps) => {
       setDeleteModal({
         show: true,
         message: `Are you sure you want to delete the lesson "${targetString}"?`,
-        action: () => handleDelete(itemObj),
+        action: () => handleDelete(itemObj)
       });
     } else {
-      setDeleteModal({ show: false, message: "", action: () => {} });
+      setDeleteModal({show: false, message: '', action: () => {}});
     }
   };
 
   const handleDelete = async (item: any) => {
     setDeleting(true);
     try {
-      console.log("deleting...");
+      console.log('deleting...');
       await API.graphql(
         graphqlOperation(mutations.deleteUniversalLesson, {
-          input: { id: item.id },
+          input: {id: item.id}
         })
       );
       updateLessonList(item);
     } catch (e) {
-      console.error("error deleting...", e);
+      console.error('error deleting...', e);
     } finally {
       setDeleting(false);
-      setDeleteModal({ show: false, message: "", action: () => {} });
+      setDeleteModal({show: false, message: '', action: () => {}});
     }
   };
 
   const updateLessonList = (lessonObj: any) => {
     setCurrentList(
       getSortedList(
-        currentList.filter(
-          (lessonListObj: any) => lessonListObj.id !== lessonObj.id
-        )
+        currentList.filter((lessonListObj: any) => lessonListObj.id !== lessonObj.id)
       )
     );
   };
 
-  const { isSuperAdmin } = useAuth();
+  const {isSuperAdmin} = useAuth();
 
   const {
     searchInput,
@@ -352,13 +341,13 @@ const LessonsList = ({ isInInstitution, instId }: LessonListProps) => {
     filterBySearchQuery,
     removeSearchAction,
     setSearchInput,
-    searchAndFilter,
-  } = useSearch([...(lessonsData || [])], ["title"]);
+    searchAndFilter
+  } = useSearch([...(lessonsData || [])], ['title']);
 
   const [filteredList, setFilteredList] = useState([...lessonsData]);
 
   useEffect(() => {
-    if (status === "done" && currentList?.length > 0) {
+    if (status === 'done' && currentList?.length > 0) {
       const query = checkSearchQueryFromUrl();
       if (query) {
         const items = filterBySearchQuery(query);
@@ -378,22 +367,18 @@ const LessonsList = ({ isInInstitution, instId }: LessonListProps) => {
     }
   };
 
-  const finalList = getSortedList(
-    searchInput.isActive ? filteredList : currentList
-  );
+  const finalList = getSortedList(searchInput.isActive ? filteredList : currentList);
 
   const [filters, setFilters] = useState<SortType | null>(null);
 
   const updateFilter = (filterName: SortType) => {
     if (filterName === filters) {
-      setSearchInput({ ...searchInput, isActive: false });
+      setSearchInput({...searchInput, isActive: false});
       setFilters(null);
       setFilteredList([]);
     } else {
-      setSearchInput({ ...searchInput, isActive: true });
-      const filtered = currentList.filter(
-        (_d: any) => filterName === _d.status
-      );
+      setSearchInput({...searchInput, isActive: true});
+      const filtered = currentList.filter((_d: any) => filterName === _d.status);
       setFilteredList(filtered);
       setFilters(filterName);
       setSelectedInstitution({});
@@ -405,7 +390,7 @@ const LessonsList = ({ isInInstitution, instId }: LessonListProps) => {
   };
 
   const onCloneLesson = (id: string) => {
-    setShowCloneModal({ show: true, lessonId: id });
+    setShowCloneModal({show: true, lessonId: id});
   };
 
   const dataList = map(finalList, (item: any, index: number) => ({
@@ -414,18 +399,13 @@ const LessonsList = ({ isInInstitution, instId }: LessonListProps) => {
     instituteName: isSuperAdmin && item.institution.name,
     status: <Status status={item.status} useDefault />,
     lessonTitle: (
-      <div
-        onClick={() => handleLessonsEdit(item.id)}
-        className="w-auto cursor-pointer"
-      >
+      <div onClick={() => handleLessonsEdit(item.id)} className="w-auto cursor-pointer">
         <Highlighted text={item?.title} highlight={searchInput.value} />
       </div>
     ),
     type: item.type,
-    targetAudience: item.targetAudience || "--",
-    lastEditDate: item.updatedAt
-      ? new Date(item.updatedAt).toLocaleDateString()
-      : "--",
+    targetAudience: item.targetAudience || '--',
+    lastEditDate: item.updatedAt ? new Date(item.updatedAt).toLocaleDateString() : '--',
     actions: (
       <CommonActionsBtns
         button1Label="Clone Lesson"
@@ -439,47 +419,47 @@ const LessonsList = ({ isInInstitution, instId }: LessonListProps) => {
           handleToggleDelete(item?.title, item);
         }}
       />
-    ),
+    )
   }));
 
   const tableConfig = {
     headers: [
-      LessonsListDict[userLanguage]["NO"],
-      LessonsListDict[userLanguage]["LESSONTITLE"],
-      isSuperAdmin && LessonsListDict[userLanguage]["INSTITUTION_NAME"],
-      LessonsListDict[userLanguage]["TYPE"],
-      LessonsListDict[userLanguage]["TARGET_AUDIENCE"],
-      InstitueRomms[userLanguage]["STATUS"],
-      "Last Edit Date",
-      LessonsListDict[userLanguage]["ACTION"],
+      LessonsListDict[userLanguage]['NO'],
+      LessonsListDict[userLanguage]['LESSONTITLE'],
+      isSuperAdmin && LessonsListDict[userLanguage]['INSTITUTION_NAME'],
+      LessonsListDict[userLanguage]['TYPE'],
+      LessonsListDict[userLanguage]['TARGET_AUDIENCE'],
+      InstitueRomms[userLanguage]['STATUS'],
+      'Last Edit Date',
+      LessonsListDict[userLanguage]['ACTION']
     ],
     dataList,
     config: {
       isLastAction: true,
       isFirstIndex: true,
-      headers: { textColor: "text-white" },
+      headers: {textColor: 'text-white'},
       dataList: {
-        loading: status !== "done",
+        loading: status !== 'done',
         pagination: {
           showPagination: true,
           config: {
             allAsProps,
-            totalNum: totalLessonNum,
-          },
+            totalNum: totalLessonNum
+          }
         },
         emptyText:
           searchInput?.value || selectedInstitution?.id
-            ? CommonlyUsedDict[userLanguage]["NO_SEARCH_RESULT"]
-            : LessonsListDict[userLanguage]["NORESULT"],
+            ? CommonlyUsedDict[userLanguage]['NO_SEARCH_RESULT']
+            : LessonsListDict[userLanguage]['NORESULT'],
         customWidth: {
-          no: "w-12",
-          lessonTitle: "w-72",
-          lessonPlan: "w-96",
-          actions: "-",
+          no: 'w-12',
+          lessonTitle: 'w-72',
+          lessonPlan: 'w-96',
+          actions: '-'
         },
-        maxHeight: "max-h-196",
-      },
-    },
+        maxHeight: 'max-h-196'
+      }
+    }
   };
 
   {
@@ -496,34 +476,25 @@ const LessonsList = ({ isInInstitution, instId }: LessonListProps) => {
           {!isInInstitution && <BreadCrums items={breadCrumsList} />}
           <div
             className={`flex flex-col lg:flex-row justify-start lg:justify-between ${
-              isInInstitution ? "lg:items-center px-8" : ""
-            }`}
-          >
+              isInInstitution ? 'lg:items-center px-8' : ''
+            }`}>
             <SectionTitleV3
-              title={
-                LessonsListDict[userLanguage][
-                  isInInstitution ? "HEADING" : "TITLE"
-                ]
-              }
+              title={LessonsListDict[userLanguage][isInInstitution ? 'HEADING' : 'TITLE']}
               fontSize="xl"
               fontStyle="semibold"
               extraClass="leading-6 text-gray-900"
               borderBottom
               shadowOff
               withButton={
-                <div
-                  className={`w-auto flex gap-x-4 justify-end items-center flex-wrap`}
-                >
+                <div className={`w-auto flex gap-x-4 justify-end items-center flex-wrap`}>
                   {isSuperAdmin && (
                     <Selector
-                      placeholder={
-                        LessonsListDict[userLanguage]["SELECT_INSTITUTION"]
-                      }
+                      placeholder={LessonsListDict[userLanguage]['SELECT_INSTITUTION']}
                       list={institutionList}
                       selectedItem={selectedInstitution?.name}
                       onChange={instituteChange}
                       arrowHidden={true}
-                      additionalClass={"w-auto lg:w-48"}
+                      additionalClass={'w-auto lg:w-48'}
                       isClearable
                       onClear={onInstitutionSelectionRemove}
                     />
@@ -531,7 +502,7 @@ const LessonsList = ({ isInInstitution, instId }: LessonListProps) => {
                   {!isInInstitution && (
                     <>
                       <Selector
-                        placeholder={LessonsListDict[userLanguage]["SORTBY"]}
+                        placeholder={LessonsListDict[userLanguage]['SORTBY']}
                         list={sortByList}
                         selectedItem={sortingType.name}
                         onChange={setSortingValue}
@@ -540,20 +511,12 @@ const LessonsList = ({ isInInstitution, instId }: LessonListProps) => {
                       />
                       <button
                         className={`w-28 bg-gray-100 mr-4 p-3 border-gray-400  border-0 rounded border-l-none rounded-l-none ${theme.outlineNone} `}
-                        onClick={toggleSortDimention}
-                      >
-                        <IconContext.Provider
-                          value={{
-                            size: "1.5rem",
-                            color: theme.iconColor[themeColor],
-                          }}
-                        >
-                          {sortingType.asc ? (
-                            <AiOutlineArrowUp />
-                          ) : (
-                            <AiOutlineArrowDown />
-                          )}
-                        </IconContext.Provider>
+                        onClick={toggleSortDimention}>
+                        {sortingType.asc ? (
+                          <AiOutlineArrowUp className="theme-text" size="1.5rem" />
+                        ) : (
+                          <AiOutlineArrowDown className="theme-text" size="1.5rem" />
+                        )}
                       </button>
                     </>
                   )}
@@ -562,18 +525,18 @@ const LessonsList = ({ isInInstitution, instId }: LessonListProps) => {
                     value={searchInput.value}
                     onChange={setSearch}
                     isActive={searchInput.isActive}
-                    disabled={status !== "done"}
+                    disabled={status !== 'done'}
                     onKeyDown={searchLesson}
                     closeAction={removeSearchAction}
                   />
 
                   {!isSuperAdmin && (
                     <AddButton
-                      label={LessonsListDict[userLanguage]["BUTTON"]["ADD"]}
+                      label={LessonsListDict[userLanguage]['BUTTON']['ADD']}
                       onClick={buildLesson}
                     />
                   )}
-                  {params.get("from") ? (
+                  {params.get('from') ? (
                     <Buttons
                       label="Go back"
                       btnClass="mr-4"
@@ -587,7 +550,7 @@ const LessonsList = ({ isInInstitution, instId }: LessonListProps) => {
           </div>
           <div className="px-8">
             <Filters
-              loading={status !== "done"}
+              loading={status !== 'done'}
               list={currentList}
               updateFilter={updateFilter}
               filters={filters}
@@ -595,7 +558,7 @@ const LessonsList = ({ isInInstitution, instId }: LessonListProps) => {
                 currentPage,
                 lastPage: allAsProps.lastPage,
                 totalResults: allAsProps.totalResults,
-                pageCount: allAsProps.pageCount,
+                pageCount: allAsProps.pageCount
               }}
             />
           </div>
@@ -608,7 +571,7 @@ const LessonsList = ({ isInInstitution, instId }: LessonListProps) => {
               <ModalPopUp
                 closeAction={handleToggleDelete}
                 saveAction={deleting ? () => {} : deleteModal.action}
-                saveLabel={deleting ? "DELETING..." : "CONFIRM"}
+                saveLabel={deleting ? 'DELETING...' : 'CONFIRM'}
                 cancelLabel="CANCEL"
                 message={deleteModal.message}
               />

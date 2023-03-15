@@ -47,7 +47,7 @@ const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
     id,
     name,
     placeHolder,
-    autoComplete,
+    autoComplete = 'chrome-off',
     type = 'text',
     error = '',
     textarea = false,

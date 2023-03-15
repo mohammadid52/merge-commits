@@ -1,28 +1,27 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, {Fragment, useEffect, useState} from 'react';
 // import { API, graphqlOperation } from 'aws-amplify';
-import { API, graphqlOperation } from "aws-amplify";
-import moment from "moment";
-import { IoLockClosed } from "react-icons/io5";
-import { IconContext } from "react-icons/lib/esm/iconContext";
-import { useHistory } from "react-router-dom";
-import { useGlobalContext } from "contexts/GlobalContext";
-import * as customMutations from "customGraphql/customMutations";
-import useDictionary from "customHooks/dictionary";
-import { convertArrayIntoObj, getUserRoleString } from "utilities/strings";
-import Buttons from "atoms/Buttons";
-import FormInput from "atoms/Form/FormInput";
-import MultipleSelector from "atoms/Form/MultipleSelector";
-import Selector from "atoms/Form/Selector";
-import TextArea from "atoms/Form/TextArea";
-import LessonLoading from "../../../Lesson/Loading/ComponentLoading";
-import DropdownForm from "./DropdownForm";
-import { UserInfo } from "./User";
-import { PersonStatus } from "API";
-import ModalPopUp from "@components/Molecules/ModalPopUp";
-import CheckBox from "@components/Atoms/Form/CheckBox";
+import CheckBox from '@components/Atoms/Form/CheckBox';
+import ModalPopUp from '@components/Molecules/ModalPopUp';
+import {PersonStatus} from 'API';
+import Buttons from 'atoms/Buttons';
+import FormInput from 'atoms/Form/FormInput';
+import MultipleSelector from 'atoms/Form/MultipleSelector';
+import Selector from 'atoms/Form/Selector';
+import TextArea from 'atoms/Form/TextArea';
+import {API, graphqlOperation} from 'aws-amplify';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import * as customMutations from 'customGraphql/customMutations';
+import useDictionary from 'customHooks/dictionary';
+import moment from 'moment';
+import {IoLockClosed} from 'react-icons/io5';
+import {useHistory} from 'react-router-dom';
+import {convertArrayIntoObj, getUserRoleString} from 'utilities/strings';
+import LessonLoading from '../../../Lesson/Loading/ComponentLoading';
+import DropdownForm from './DropdownForm';
+import {UserInfo} from './User';
 
 function classNames(...classes: any[]) {
-  return classes.filter(Boolean).join(" ");
+  return classes.filter(Boolean).join(' ');
 }
 
 interface UserInfoProps {
@@ -54,41 +53,37 @@ const UserEdit = (props: UserInfoProps) => {
     checkpoints,
     questionData,
     setIsEditMode,
-    onSuccessCallback,
+    onSuccessCallback
   } = props;
   const [superEdit, setSuperEdit] = useState<boolean>(false);
   const [updating, setUpdating] = useState<boolean>(false);
   const [editUser, setEditUser] = useState(user);
-  const { state, checkIfAdmin, userLanguage } = useGlobalContext();
+  const {state, checkIfAdmin, userLanguage} = useGlobalContext();
   const [inactiveDate, setInactiveDate] = useState(
     new Date().getMonth() > 9
       ? new Date().getMonth() +
           1 +
-          "/" +
+          '/' +
           new Date().getDate() +
-          "/" +
+          '/' +
           new Date().getFullYear()
-      : "0" +
+      : '0' +
           (new Date().getMonth() + 1) +
-          "/" +
+          '/' +
           new Date().getDate() +
-          "/" +
+          '/' +
           new Date().getFullYear()
   );
-  const isSuperAdmin = state.user.role === "SUP";
-  const {
-    UserEditDict,
-    BUTTONS: ButtonDict,
-    UserInformationDict,
-  } = useDictionary();
+  const isSuperAdmin = state.user.role === 'SUP';
+  const {UserEditDict, BUTTONS: ButtonDict, UserInformationDict} = useDictionary();
   const [checkpointData, setCheckpointData] = useState<any>({});
 
   const superEditSwitch = (role: string) => {
     switch (role) {
-      case "FLW":
-      case "TR":
-      case "ADM":
-      case "SUP":
+      case 'FLW':
+      case 'TR':
+      case 'ADM':
+      case 'SUP':
         setSuperEdit(true);
         break;
       default:
@@ -116,26 +111,23 @@ const UserEdit = (props: UserInfoProps) => {
       language: editUser.language,
       lastName: editUser.lastName,
       preferredName: editUser.preferredName,
-      ...(editUser.status === "INACTIVE" && {
-        inactiveStatusDate: moment(inactiveDate).format("YYYY-MM-DD"),
+      ...(editUser.status === 'INACTIVE' && {
+        inactiveStatusDate: moment(inactiveDate).format('YYYY-MM-DD')
       }),
       role: editUser.role,
-      ...((editUser.status === "INACTIVE" ||
-        editUser.status === "SUSPENDED") && {
-        statusReason: editUser.statusReason,
+      ...((editUser.status === 'INACTIVE' || editUser.status === 'SUSPENDED') && {
+        statusReason: editUser.statusReason
       }),
       status: editUser.status,
       phone: editUser.phone,
       birthdate: editUser.birthdate,
       email: editUser.email,
       onDemand: editUser.onDemand,
-      isZoiq: editUser.isZoiq,
+      isZoiq: editUser.isZoiq
     };
 
     try {
-      await API.graphql(
-        graphqlOperation(customMutations.updatePerson, { input: input })
-      );
+      await API.graphql(graphqlOperation(customMutations.updatePerson, {input: input}));
       setUpdating(false);
       // setStatus('loading');
 
@@ -153,10 +145,10 @@ const UserEdit = (props: UserInfoProps) => {
 
   const extractItemFromArray = (responseArray: any[]) => {
     const answerArray: any = responseArray.map((item: any) => ({
-      [item["qid"]]:
+      [item['qid']]:
         item?.response?.length > 1
           ? [...selectedMultiOptions(item.response)]
-          : item?.response?.join(""),
+          : item?.response?.join('')
     }));
     return convertArrayIntoObj(answerArray);
   };
@@ -164,11 +156,11 @@ const UserEdit = (props: UserInfoProps) => {
   useEffect(() => {
     if (questionData?.length > 0) {
       const updatedListArray: any = questionData.map((item: any) => ({
-        [item["checkpointID"]]: extractItemFromArray(item.responseObject),
+        [item['checkpointID']]: extractItemFromArray(item.responseObject)
       }));
       const updatedListObj: any = convertArrayIntoObj(updatedListArray);
       setCheckpointData({
-        ...updatedListObj,
+        ...updatedListObj
       });
     }
   }, [questionData]);
@@ -178,29 +170,29 @@ const UserEdit = (props: UserInfoProps) => {
       // Code for Other Field
 
       const val = responseObj.responseObject.map((resp: any) => {
-        if (hasOther(resp.response, "Other")) {
+        if (hasOther(resp.response, 'Other')) {
           return {
             ...resp,
             response: checkpointData[checkpointID][resp.qid],
             otherResponse: checkpointData[checkpointID][resp.qid]
               .toString()
-              .split(" || ")[1],
+              .split(' || ')[1]
           };
         } else {
-          return { ...resp };
+          return {...resp};
         }
       });
 
-      const modifiedResponseObj = { ...responseObj, responseObject: val };
+      const modifiedResponseObj = {...responseObj, responseObject: val};
       // Ends here
 
       // if wants to quick revert - change {input:modifiedResponseObj} value to {input:responseObj}
       await API.graphql(
         graphqlOperation(customMutations.updateQuestionData, {
-          input: modifiedResponseObj,
+          input: modifiedResponseObj
         })
       );
-      console.log("Question data updated");
+      console.log('Question data updated');
     } catch (err) {
       console.error(err);
     }
@@ -213,7 +205,7 @@ const UserEdit = (props: UserInfoProps) => {
   ) => {
     let responseObject = {
       id: questionDataId,
-      responseObject: questions,
+      responseObject: questions
     };
     updateQuestionData(responseObject, checkpointID);
   };
@@ -222,10 +214,10 @@ const UserEdit = (props: UserInfoProps) => {
     try {
       await API.graphql(
         graphqlOperation(customMutations.createQuestionData, {
-          input: responseObj,
+          input: responseObj
         })
       );
-      console.log("Question data updated");
+      console.log('Question data updated');
     } catch (err) {
       console.error(err);
     }
@@ -236,22 +228,19 @@ const UserEdit = (props: UserInfoProps) => {
     return keys.map((item: any) => ({
       qid: item,
       response:
-        typeof obj[item] === "string"
+        typeof obj[item] === 'string'
           ? [obj[item]]
-          : [...obj[item].map((op: any) => op.name)],
+          : [...obj[item].map((op: any) => op.name)]
     }));
   };
 
-  const savePersonCheckpointData = async (
-    checkpointId: string,
-    questions: any[]
-  ) => {
+  const savePersonCheckpointData = async (checkpointId: string, questions: any[]) => {
     let responseObject = {
-      syllabusLessonID: "999999", //Dummy syllabus id since it's required, at least for now.
+      syllabusLessonID: '999999', //Dummy syllabus id since it's required, at least for now.
       checkpointID: checkpointId,
       authID: editUser.authId,
       email: editUser.email,
-      responseObject: questions,
+      responseObject: questions
     };
     createQuestionData(responseObject);
   };
@@ -260,7 +249,7 @@ const UserEdit = (props: UserInfoProps) => {
     const checkpId = Object.keys(checkpointData);
     const allCheckpoints = checkpId.map((itemID) => ({
       checkpointId: itemID,
-      questions: checkpointData ? getQuestionArray(checkpointData[itemID]) : [],
+      questions: checkpointData ? getQuestionArray(checkpointData[itemID]) : []
     }));
     if (questionData?.length === 0) {
       Promise.all(
@@ -302,11 +291,11 @@ const UserEdit = (props: UserInfoProps) => {
   };
 
   const onChange = (e: any) => {
-    const { id, value } = e.target;
+    const {id, value} = e.target;
     setEditUser(() => {
       return {
         ...editUser,
-        [id]: value,
+        [id]: value
       };
     });
   };
@@ -316,22 +305,18 @@ const UserEdit = (props: UserInfoProps) => {
       ...checkpointData,
       [checkpointID]: {
         ...checkpointData[checkpointID],
-        [questionID]: e.target.value,
-      },
+        [questionID]: e.target.value
+      }
     });
   };
 
-  const onOtherInputChange = (
-    e: any,
-    checkpointID: string,
-    questionID: string
-  ) => {
+  const onOtherInputChange = (e: any, checkpointID: string, questionID: string) => {
     setCheckpointData({
       ...checkpointData,
       [checkpointID]: {
         ...checkpointData[checkpointID],
-        [questionID]: `Other || ${e.target.value}`,
-      },
+        [questionID]: `Other || ${e.target.value}`
+      }
     });
   };
 
@@ -347,31 +332,29 @@ const UserEdit = (props: UserInfoProps) => {
       : [];
 
     if (selectedQuestion?.length > 0) {
-      if (typeof selectedQuestion === "string") {
+      if (typeof selectedQuestion === 'string') {
         setCheckpointData({
           ...checkpointData,
           [checkpointID]: {
             ...checkpointData[checkpointID],
-            [questionID]: [],
-          },
+            [questionID]: []
+          }
         });
       }
-      const selectedOption: any = selectedQuestion?.find(
-        (item: any) => item.id === id
-      );
+      const selectedOption: any = selectedQuestion?.find((item: any) => item.id === id);
       let updatedList;
       if (selectedOption) {
         const newList = selectedQuestion.filter((item: any) => item.id !== id);
         updatedList = [...newList];
       } else {
-        updatedList = [...selectedQuestion, { id, name, value }];
+        updatedList = [...selectedQuestion, {id, name, value}];
       }
       setCheckpointData({
         ...checkpointData,
         [checkpointID]: {
           ...checkpointData[checkpointID],
-          [questionID]: [...updatedList],
-        },
+          [questionID]: [...updatedList]
+        }
       });
     } else {
       setCheckpointData({
@@ -382,10 +365,10 @@ const UserEdit = (props: UserInfoProps) => {
             {
               id,
               name,
-              value,
-            },
-          ],
-        },
+              value
+            }
+          ]
+        }
       });
     }
   };
@@ -401,16 +384,16 @@ const UserEdit = (props: UserInfoProps) => {
       ...checkpointData,
       [checkpointID]: {
         ...checkpointData[checkpointID],
-        [questionID]: name,
-      },
+        [questionID]: name
+      }
     });
   };
 
-  const handleChangeStatus = (item: { name: string; code: string }) => {
+  const handleChangeStatus = (item: {name: string; code: string}) => {
     setEditUser(() => {
       return {
         ...editUser,
-        status: item.code as PersonStatus,
+        status: item.code as PersonStatus
       };
     });
     closeModal();
@@ -418,62 +401,62 @@ const UserEdit = (props: UserInfoProps) => {
 
   const [warnModal, setWarnModal] = useState({
     show: false,
-    message: "message",
-    onSaveAction: () => {},
+    message: 'message',
+    onSaveAction: () => {}
   });
 
   const closeModal = () => {
-    setWarnModal({ show: false, message: "", onSaveAction: () => {} });
+    setWarnModal({show: false, message: '', onSaveAction: () => {}});
   };
 
-  const beforeStatusChange = (item: { name: string; code: string }) => {
+  const beforeStatusChange = (item: {name: string; code: string}) => {
     if (item.name === PersonStatus.INACTIVE) {
       setWarnModal({
         show: true,
         message:
-          "By setting this student to inactive, students will no longer see any courses when they log in (they will continue to have access to their notebooks). Do you wish to continue?",
-        onSaveAction: () => handleChangeStatus(item),
+          'By setting this student to inactive, students will no longer see any courses when they log in (they will continue to have access to their notebooks). Do you wish to continue?',
+        onSaveAction: () => handleChangeStatus(item)
       });
     } else {
       handleChangeStatus(item);
     }
   };
 
-  const handleChangeRole = (item: { name: string; code: string }) => {
+  const handleChangeRole = (item: {name: string; code: string}) => {
     setEditUser(() => {
       return {
         ...editUser,
-        role: item.code,
+        role: item.code
       };
     });
   };
 
-  const handleChangeOnDemand = (item: { name: string; code: boolean }) => {
+  const handleChangeOnDemand = (item: {name: string; code: boolean}) => {
     setEditUser(() => {
       return {
         ...editUser,
-        onDemand: item.code,
+        onDemand: item.code
       };
     });
   };
 
   const Status = [
     {
-      code: "ACTIVE",
-      name: "ACTIVE",
+      code: 'ACTIVE',
+      name: 'ACTIVE'
     },
     {
-      code: "SUSPENDED",
-      name: "SUSPENDED",
+      code: 'SUSPENDED',
+      name: 'SUSPENDED'
     },
     {
-      code: "INACTIVE",
-      name: "INACTIVE",
+      code: 'INACTIVE',
+      name: 'INACTIVE'
     },
     {
-      code: "TRAINING",
-      name: "TRAINING",
-    },
+      code: 'TRAINING',
+      name: 'TRAINING'
+    }
     // {
     //   code: 'HOLD',
     //   name: 'Hold',
@@ -481,48 +464,48 @@ const UserEdit = (props: UserInfoProps) => {
   ];
 
   const Role = [
-    state.user.role === "SUP" && {
-      code: "SUP",
-      name: "Super Admin",
+    state.user.role === 'SUP' && {
+      code: 'SUP',
+      name: 'Super Admin'
     },
     {
-      code: "ADM",
-      name: "Admin",
+      code: 'ADM',
+      name: 'Admin'
     },
     {
-      code: "BLD",
-      name: "Builder",
+      code: 'BLD',
+      name: 'Builder'
     },
     {
-      code: "FLW",
-      name: "Fellow",
+      code: 'FLW',
+      name: 'Fellow'
     },
     {
-      code: "CRD",
-      name: "Coordinator",
+      code: 'CRD',
+      name: 'Coordinator'
     },
     {
-      code: "TR",
-      name: "Teacher",
-    },
+      code: 'TR',
+      name: 'Teacher'
+    }
   ].filter(Boolean);
 
   const OnDemand = [
     {
       code: false,
-      name: "No",
+      name: 'No'
     },
     {
       code: true,
-      name: "Yes",
-    },
+      name: 'Yes'
+    }
   ];
 
   const convertToSelectorList = (options: any) => {
     const newArr: any = options.map((item: any, index: number) => ({
       id: index,
       name: item.text,
-      value: item.text,
+      value: item.text
     }));
     return newArr;
   };
@@ -530,7 +513,7 @@ const UserEdit = (props: UserInfoProps) => {
     const newArr: any = options.map((item: any, index: number) => ({
       id: index.toString(),
       name: item.text,
-      value: item.text,
+      value: item.text
     }));
     return newArr;
   };
@@ -540,14 +523,14 @@ const UserEdit = (props: UserInfoProps) => {
   // -----
 
   const selectedMultiOptions = (options: any[]) => {
-    if (typeof options === "string") {
-      return [{ id: "0", name: options, value: options }];
+    if (typeof options === 'string') {
+      return [{id: '0', name: options, value: options}];
     }
-    if (options && typeof options[0] === "string") {
+    if (options && typeof options[0] === 'string') {
       const newArr: any = options?.map((option: any, index: number) => ({
         id: index.toString(),
         name: option,
-        value: option,
+        value: option
       }));
       return [...newArr];
     } else {
@@ -555,7 +538,7 @@ const UserEdit = (props: UserInfoProps) => {
     }
   };
 
-  if (status !== "done") {
+  if (status !== 'done') {
     return <LessonLoading />;
   }
 
@@ -566,7 +549,7 @@ const UserEdit = (props: UserInfoProps) => {
   };
 
   const isOther = (val: any) => {
-    if (hasOther(val, "Other")) {
+    if (hasOther(val, 'Other')) {
       return true;
     } else return false;
   };
@@ -578,22 +561,22 @@ const UserEdit = (props: UserInfoProps) => {
       const currentQuestionResponse = checkpointData[checkpointId][questionId];
 
       return currentQuestionResponse
-        ? currentQuestionResponse.split(" || ").length === 2
-          ? currentQuestionResponse.split(" || ")[1]
-          : ""
-        : "";
+        ? currentQuestionResponse.split(' || ').length === 2
+          ? currentQuestionResponse.split(' || ')[1]
+          : ''
+        : '';
     }
   };
 
   const onDateChange = (e: any) => {
     e.persist();
     setInactiveDate(e.target.value);
-    let result = moment(e.target.value, "MM/DD/YYYY", true).isValid();
+    let result = moment(e.target.value, 'MM/DD/YYYY', true).isValid();
     if (result) {
       setEditUser(() => {
         return {
           ...editUser,
-          inactiveStatusDate: e.target.value,
+          inactiveStatusDate: e.target.value
         };
       });
     }
@@ -604,7 +587,7 @@ const UserEdit = (props: UserInfoProps) => {
     setEditUser(() => {
       return {
         ...editUser,
-        statusReason: e.target.value,
+        statusReason: e.target.value
       };
     });
   };
@@ -617,68 +600,61 @@ const UserEdit = (props: UserInfoProps) => {
             <div className="border-b-0 border-gray-200">
               <nav
                 className="-mb-px flex space-x-8 overflow-x-auto custom-scrollbar"
-                aria-label="Tabs"
-              >
+                aria-label="Tabs">
                 <a
-                  onClick={() => setTab("p")}
+                  onClick={() => setTab('p')}
                   key="personal_information"
                   className={classNames(
-                    tab === "p"
-                      ? "border-indigo-500 text-indigo-600"
-                      : "border-transparent  cursor-pointer text-gray-500 hover:text-gray-700 hover:border-gray-200",
-                    "whitespace-nowrap justify-center flex py-4 px-1 border-b-2 font-medium text-sm"
-                  )}
-                >
-                  {UserEditDict[userLanguage]["heading"]}
+                    tab === 'p'
+                      ? 'border-indigo-500 text-indigo-600'
+                      : 'border-transparent  cursor-pointer text-gray-500 hover:text-gray-700 hover:border-gray-200',
+                    'whitespace-nowrap justify-center flex py-4 px-1 border-b-2 font-medium text-sm'
+                  )}>
+                  {UserEditDict[userLanguage]['heading']}
                 </a>
                 <a
-                  onClick={() => setTab("demographics")}
+                  onClick={() => setTab('demographics')}
                   key="demographics"
                   className={`${
-                    tab === "demographics"
-                      ? "border-indigo-500 text-indigo-600"
-                      : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-200"
-                  } whitespace-nowrap flex justify-center cursor-pointer py-4 px-1 border-b-2 font-medium text-sm`}
-                >
-                  {UserInformationDict[userLanguage]["demographics"]}
+                    tab === 'demographics'
+                      ? 'border-indigo-500 text-indigo-600'
+                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-200'
+                  } whitespace-nowrap flex justify-center cursor-pointer py-4 px-1 border-b-2 font-medium text-sm`}>
+                  {UserInformationDict[userLanguage]['demographics']}
                 </a>
                 <a
-                  onClick={() => setTab("private")}
+                  onClick={() => setTab('private')}
                   key="private"
                   className={`${
-                    tab === "private"
-                      ? "border-indigo-500 text-indigo-600"
-                      : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-200"
-                  } whitespace-nowrap flex justify-center cursor-pointer py-4 px-1 border-b-2 font-medium text-sm`}
-                >
-                  {UserInformationDict[userLanguage]["private"]}
-                  <IconContext.Provider
-                    value={{
-                      size: "0.8rem",
-                      className: `
+                    tab === 'private'
+                      ? 'border-indigo-500 text-indigo-600'
+                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-200'
+                  } whitespace-nowrap flex justify-center cursor-pointer py-4 px-1 border-b-2 font-medium text-sm`}>
+                  {UserInformationDict[userLanguage]['private']}
+
+                  <IoLockClosed
+                    className={`
                       ${
-                        tab === "private"
-                          ? "text-indigo-500"
-                          : "text-gray-400 group-hover:text-gray-500"
+                        tab === 'private'
+                          ? 'text-indigo-500'
+                          : 'text-gray-400 group-hover:text-gray-500'
                       }
                       ml-2 h-5 w-5
-                    `,
-                    }}
-                  >
-                    <IoLockClosed />
-                  </IconContext.Provider>
+                    `}
+                    size="0.8rem"
+                  />
                 </a>
               </nav>
             </div>
 
             <div className="h-full px-4 py-5 sm:px-6">
-              {tab === "p" && (
+              {tab === 'p' && (
                 <div className="grid grid-cols-1 gap-y-4 gap-x-4 sm:grid-cols-6 text-gray-900">
                   <div className="sm:col-span-3 p-2">
                     <FormInput
                       value={editUser.firstName}
-                      id={"firstName"}
-                      label={UserEditDict[userLanguage]["firstname"]}
+                      id={'firstName'}
+                      label={UserEditDict[userLanguage]['firstname']}
                       placeHolder=""
                       name="firstName"
                       onChange={onChange}
@@ -688,8 +664,8 @@ const UserEdit = (props: UserInfoProps) => {
                   <div className="sm:col-span-3 p-2">
                     <FormInput
                       value={editUser.lastName}
-                      id={"lastName"}
-                      label={UserEditDict[userLanguage]["lastname"]}
+                      id={'lastName'}
+                      label={UserEditDict[userLanguage]['lastname']}
                       placeHolder=""
                       name="lastName"
                       onChange={onChange}
@@ -699,8 +675,8 @@ const UserEdit = (props: UserInfoProps) => {
                   <div className="sm:col-span-3 p-2">
                     <FormInput
                       value={editUser.preferredName}
-                      id={"preferredName"}
-                      label={UserEditDict[userLanguage]["nickname"]}
+                      id={'preferredName'}
+                      label={UserEditDict[userLanguage]['nickname']}
                       placeHolder=""
                       name="preferredName"
                       onChange={onChange}
@@ -714,27 +690,12 @@ const UserEdit = (props: UserInfoProps) => {
                       // @ts-ignore
                       handleChange={beforeStatusChange}
                       userInfo={editUser.status}
-                      label={UserEditDict[userLanguage]["status"]}
+                      label={UserEditDict[userLanguage]['status']}
                       id="status"
                       isRequired
                       items={Status}
                     />
                   </div>
-                  {/* 
-                  {user.inactiveStatusDate && (
-                    <div className="sm:col-span-3">
-                      <Selector
-                        selectedItem={statusDate(user.inactiveStatusDate)}
-                        onChange={() => {}}
-                        arrowHidden={true}
-                        placeholder={'Status'}
-                        label={'Status Date'}
-                        labelTextClass={'text-sm text-justify'}
-                        btnClass={'cursor-not-allowed'}
-                        additionalClass={`w-auto md:w-52 lg:w-48 cursor-not-allowed`}
-                      />
-                    </div>
-                  )} */}
 
                   <div className="sm:col-span-3 p-2">
                     <DropdownForm
@@ -743,7 +704,7 @@ const UserEdit = (props: UserInfoProps) => {
                       // @ts-ignore
                       handleChange={handleChangeRole}
                       userInfo={getUserRoleString(editUser.role)}
-                      label={UserEditDict[userLanguage]["role"]}
+                      label={UserEditDict[userLanguage]['role']}
                       listClassName="h-28"
                       id="role"
                       isRequired
@@ -751,7 +712,7 @@ const UserEdit = (props: UserInfoProps) => {
                     />
                   </div>
 
-                  {superEdit && user.role === "ST" && (
+                  {superEdit && user.role === 'ST' && (
                     <div className="sm:col-span-3 p-2">
                       <DropdownForm
                         dataCy="ondemand"
@@ -759,22 +720,22 @@ const UserEdit = (props: UserInfoProps) => {
                         style={false}
                         // @ts-ignore
                         handleChange={handleChangeOnDemand}
-                        userInfo={editUser?.onDemand ? "Yes" : "No"}
-                        label={UserEditDict[userLanguage]["ondemand"]}
+                        userInfo={editUser?.onDemand ? 'Yes' : 'No'}
+                        label={UserEditDict[userLanguage]['ondemand']}
                         id="ondemand"
                         isRequired
                         items={OnDemand}
                       />
                     </div>
                   )}
-                  {(editUser.status === "SUSPENDED" ||
-                    editUser.status === "INACTIVE") && (
+                  {(editUser.status === 'SUSPENDED' ||
+                    editUser.status === 'INACTIVE') && (
                     <>
                       <div className="sm:col-span-3 p-2">
                         <FormInput
                           value={inactiveDate}
-                          id={"inactive_date"}
-                          label={UserEditDict[userLanguage]["inactive_date"]}
+                          id={'inactive_date'}
+                          label={UserEditDict[userLanguage]['inactive_date']}
                           placeHolder="MM/DD/YYYY"
                           name="inactive_date"
                           onChange={onDateChange}
@@ -786,7 +747,7 @@ const UserEdit = (props: UserInfoProps) => {
                           id="statusReason"
                           onChange={onStatusReasonChange}
                           name="statusReason"
-                          label={UserEditDict[userLanguage]["status_reason"]}
+                          label={UserEditDict[userLanguage]['status_reason']}
                         />
                       </div>
                     </>
@@ -795,18 +756,18 @@ const UserEdit = (props: UserInfoProps) => {
                   {checkIfAdmin() && (
                     <CheckBox
                       dataCy="isZoiq"
-                      label={"ZOIQ"}
+                      label={'ZOIQ'}
                       className="group:hover:bg-gray-500"
                       value={Boolean(editUser.isZoiq)}
                       onChange={(e) =>
-                        setEditUser({ ...editUser, isZoiq: e.target.checked })
+                        setEditUser({...editUser, isZoiq: e.target.checked})
                       }
                       name="isZoiq"
                     />
                   )}
                 </div>
               )}
-              {tab !== "p" && checkpoints.length > 0 && (
+              {tab !== 'p' && checkpoints.length > 0 && (
                 <div className="text-gray-900">
                   {checkpoints.map((checkpoint: any) => (
                     <Fragment key={`checkpoint_${checkpoint.id}`}>
@@ -823,14 +784,14 @@ const UserEdit = (props: UserInfoProps) => {
                               <Fragment key={item.question.id}>
                                 <div className="sm:col-span-6 p-2 flex items-end">
                                   <div className="flex flex-col justify-between">
-                                    {item.question.type === "text" ? (
+                                    {item.question.type === 'text' ? (
                                       <FormInput
                                         value={
                                           checkpointData[checkpoint.id]
                                             ? checkpointData[checkpoint.id][
                                                 item.question.id
                                               ]
-                                            : ""
+                                            : ''
                                         }
                                         id={item.question.id}
                                         name=""
@@ -845,14 +806,14 @@ const UserEdit = (props: UserInfoProps) => {
                                       />
                                     ) : null}
                                     {/* Will change it to text box if required. */}
-                                    {item.question.type === "input" ? (
+                                    {item.question.type === 'input' ? (
                                       <FormInput
                                         value={
                                           checkpointData[checkpoint.id]
                                             ? checkpointData[checkpoint.id][
                                                 item.question.id
                                               ]
-                                            : ""
+                                            : ''
                                         }
                                         id={item.question.id}
                                         name=""
@@ -866,12 +827,11 @@ const UserEdit = (props: UserInfoProps) => {
                                         }
                                       />
                                     ) : null}
-                                    {item.question.type === "link" ? (
+                                    {item.question.type === 'link' ? (
                                       <div className="sm:col-span-3">
                                         <label
                                           htmlFor="date picker"
-                                          className="block text-m font-medium leading-5 text-gray-700"
-                                        >
+                                          className="block text-m font-medium leading-5 text-gray-700">
                                           {item?.question?.question}
                                         </label>
                                         <div className="mt-1  border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm">
@@ -888,7 +848,7 @@ const UserEdit = (props: UserInfoProps) => {
                                                 ? checkpointData[checkpoint.id][
                                                     item.question.id
                                                   ]
-                                                : ""
+                                                : ''
                                             }
                                             onChange={(e) =>
                                               onInputChange(
@@ -902,14 +862,14 @@ const UserEdit = (props: UserInfoProps) => {
                                         </div>
                                       </div>
                                     ) : null}
-                                    {item.question.type === "datePicker" ? (
+                                    {item.question.type === 'datePicker' ? (
                                       <FormInput
                                         value={
                                           checkpointData[checkpoint.id]
                                             ? checkpointData[checkpoint.id][
                                                 item.question.id
                                               ]
-                                            : ""
+                                            : ''
                                         }
                                         id={item.question.id}
                                         name=""
@@ -923,7 +883,7 @@ const UserEdit = (props: UserInfoProps) => {
                                         }
                                       />
                                     ) : null}
-                                    {item.question.type === "selectOne" ? (
+                                    {item.question.type === 'selectOne' ? (
                                       <Fragment>
                                         <label className="block text-xs font-semibold mb-1 leading-5 text-gray-700">
                                           {item?.question?.question}
@@ -937,11 +897,11 @@ const UserEdit = (props: UserInfoProps) => {
                                                     item.question.id
                                                   ]
                                                 )
-                                                ? "Other"
+                                                ? 'Other'
                                                 : checkpointData[checkpoint.id][
                                                     item.question.id
                                                   ]
-                                              : ""
+                                              : ''
                                           }
                                           placeholder=""
                                           list={convertToSelectorList(
@@ -984,7 +944,7 @@ const UserEdit = (props: UserInfoProps) => {
                                           )}
                                       </Fragment>
                                     ) : null}
-                                    {item.question.type === "selectMany" ? (
+                                    {item.question.type === 'selectMany' ? (
                                       <Fragment>
                                         <label className="block text-xs font-semibold mb-1 leading-5 text-gray-700">
                                           {item?.question?.question}
@@ -1035,7 +995,7 @@ const UserEdit = (props: UserInfoProps) => {
           <div className="px-4 pt-4 w-full flex justify-end">
             <Buttons
               btnClass="py-2 w-2.5/10 px-4 text-xs mr-2"
-              label={UserEditDict[userLanguage]["button"]["cancel"]}
+              label={UserEditDict[userLanguage]['button']['cancel']}
               onClick={() => {
                 setIsEditMode && setIsEditMode(false);
                 history.goBack();
@@ -1048,8 +1008,8 @@ const UserEdit = (props: UserInfoProps) => {
               btnClass="py-2 w-2.5/10 px-4 text-xs ml-2"
               label={
                 updating
-                  ? ButtonDict["SAVING"]
-                  : UserEditDict[userLanguage]["button"]["save"]
+                  ? ButtonDict['SAVING']
+                  : UserEditDict[userLanguage]['button']['save']
               }
               onClick={onSubmit}
             />

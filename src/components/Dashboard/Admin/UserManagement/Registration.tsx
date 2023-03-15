@@ -205,15 +205,6 @@ const Registration = ({
             };
             createClassStudentMutation.mutate({input});
           }
-
-          // if (newUserInputs.group?.id) {
-          //   const input: CreateClassroomGroupStudentsInput = {
-          //     classRoomGroupID: newUserInputs.group.id,
-          //     studentEmail: email,
-          //     studentAuthId: authId
-          //   };
-          //   createClassroomGroupStudentsMutation.mutate({input});
-          // }
         }
       }
 
@@ -241,10 +232,7 @@ const Registration = ({
       const er = error.response.data;
       console.error('error signing up:', error);
 
-      if (
-        er.code === 'UsernameExistsException' ||
-        er.code === 'UsernameExistsException'
-      ) {
+      if (er.code === 'UsernameExistsException') {
         setFieldError('email', messageDict['existemail']);
       } else {
         setMessage({show: true, type: 'error', message: er.message});
@@ -256,10 +244,10 @@ const Registration = ({
   }
 
   useEffect(() => {
-    listAllRooms(undefined, []);
+    listAllRooms([]);
   }, []);
 
-  const listAllRooms = async (nextToken = null, outArray: any[]): Promise<any> => {
+  const listAllRooms = async (outArray: any[], nextToken = null): Promise<any> => {
     let combined;
     try {
       const result: any = await API.graphql(
@@ -274,7 +262,7 @@ const Registration = ({
       combined = [...outArray, ...returnedData];
 
       if (NextToken) {
-        combined = await listAllRooms(NextToken, combined);
+        combined = await listAllRooms(combined, NextToken);
       }
       setInstClasses(combined.map((d: any) => ({...d, value: d.classID, roomId: d.id})));
 

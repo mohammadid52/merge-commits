@@ -1,6 +1,5 @@
-import React, { useState } from "react";
-import { IconContext } from "react-icons/lib/esm/iconContext";
-import { AiOutlineRead } from "react-icons/ai";
+import React, {useState} from 'react';
+import {AiOutlineRead} from 'react-icons/ai';
 
 interface QuoteBlockProps {
   title?: string;
@@ -12,9 +11,9 @@ interface QuoteBlockProps {
 }
 
 const CustomizedQuoteBlock = (props: QuoteBlockProps) => {
-  const { title, subtitle, bgClass, textClass, description } = props;
+  const {title, subtitle, bgClass, textClass, description} = props;
   const [heroIsActive, setHeroIsActive] = useState<boolean>(false);
-  const [isToggled, setIsToggled] = useState<string[]>([""]);
+  const [isToggled, setIsToggled] = useState<string[]>(['']);
   const [showReadMe, setShowReadMe] = useState<boolean>(true);
 
   /**
@@ -23,7 +22,7 @@ const CustomizedQuoteBlock = (props: QuoteBlockProps) => {
    */
   const toggleHeroDescription = (e: React.MouseEvent) => {
     const t = e.currentTarget as HTMLElement;
-    const targetWordID = t.id || "";
+    const targetWordID = t.id || '';
 
     if (!heroIsActive) {
       setHeroIsActive(true);
@@ -42,9 +41,7 @@ const CustomizedQuoteBlock = (props: QuoteBlockProps) => {
 
     setTimeout(() => {
       setIsToggled(
-        isToggled.filter(
-          (targetString: string) => targetString !== targetWordID
-        )
+        isToggled.filter((targetString: string) => targetString !== targetWordID)
       );
     }, 300);
   };
@@ -53,28 +50,13 @@ const CustomizedQuoteBlock = (props: QuoteBlockProps) => {
     <div
       className={`relative ${bgClass} w-full md:h-96 flex flex-grow items-center rounded text-gray-200`}
       onMouseEnter={toggleHeroDescription}
-      onMouseLeave={toggleHeroDescription}
-    >
+      onMouseLeave={toggleHeroDescription}>
       {/* READ ICON */}
       {description ? (
         <div
           id="read-icon"
-          className="absolute top-1 right-1 w-auto h-auto flex flex-row text-gray-200 z-50"
-        >
-          <IconContext.Provider
-            value={{
-              size: "2rem",
-              style: { width: "auto", cursor: "pointer" },
-            }}
-          >
-            <AiOutlineRead
-              style={{
-                MozUserSelect: "none",
-                WebkitUserSelect: "none",
-                msUserSelect: "none",
-              }}
-            />
-          </IconContext.Provider>
+          className="absolute top-1 right-1 w-auto h-auto flex flex-row text-gray-200 z-50">
+          <AiOutlineRead className="w-auto cursor-pointer" size={'2rem'} />
         </div>
       ) : null}
 
@@ -84,17 +66,15 @@ const CustomizedQuoteBlock = (props: QuoteBlockProps) => {
           className={`
           ${
             heroIsActive
-              ? "visible opacity-100 bg-black50 overflow-y-auto"
-              : "invisible opacity-0"
+              ? 'visible opacity-100 bg-black50 overflow-y-auto'
+              : 'invisible opacity-0'
           } 
-          h-full w-full flex flex-col justify-start  p-4 transition-all duration-500 ease-in-out overflow-hidden rounded-lg`}
-        >
+          h-full w-full flex flex-col justify-start  p-4 transition-all duration-500 ease-in-out overflow-hidden rounded-lg`}>
           <p className="w-full text-xl leading-7 font-semibold">{title}</p>
           {description ? (
             <div
-              dangerouslySetInnerHTML={{ __html: `"${description}"` }}
-              className="header-font font-light"
-            ></div>
+              dangerouslySetInnerHTML={{__html: `"${description}"`}}
+              className="header-font font-light"></div>
           ) : null}
         </div>
 
@@ -103,20 +83,16 @@ const CustomizedQuoteBlock = (props: QuoteBlockProps) => {
         <div
           className={`
           ${
-            heroIsActive ? "opacity-0" : `opacity-100`
-          } absolute bottom-0 opacity-100 h-full flex flex-col justify-end transition-all duration-500 ease-in-out`}
-        >
+            heroIsActive ? 'opacity-0' : `opacity-100`
+          } absolute bottom-0 opacity-100 h-full flex flex-col justify-end transition-all duration-500 ease-in-out`}>
           <div
-            className={`${textClass} absolute bottom-0 left-0 px-4 pb-4 h-auto mb-0 flex flex-col bg-gradient-to-r from-black20 rounded-b-lg  `}
-          >
+            className={`${textClass} absolute bottom-0 left-0 px-4 pb-4 h-auto mb-0 flex flex-col bg-gradient-to-r from-black20 rounded-b-lg  `}>
             <div
-              dangerouslySetInnerHTML={{ __html: title || "" }}
-              className="text-4.5xl header-font font-light"
-            ></div>
+              dangerouslySetInnerHTML={{__html: title || ''}}
+              className="text-4.5xl header-font font-light"></div>
             <div
-              dangerouslySetInnerHTML={{ __html: subtitle || "" }}
-              className="w-full text-xl leading-none font-light"
-            ></div>
+              dangerouslySetInnerHTML={{__html: subtitle || ''}}
+              className="w-full text-xl leading-none font-light"></div>
           </div>
         </div>
       </div>

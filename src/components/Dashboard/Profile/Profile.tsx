@@ -15,7 +15,6 @@ import {updatePageState, uploadImageToS3} from 'graphql/functions';
 import DroppableMedia from 'molecules/DroppableMedia';
 import React, {Fragment, lazy, useEffect, useState} from 'react';
 import {FaEdit, FaPlus} from 'react-icons/fa';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {Route, Switch, useHistory, useRouteMatch} from 'react-router-dom';
 import {getImageFromS3} from 'utilities/services';
 import {getUniqItems} from 'utilities/strings';
@@ -379,9 +378,7 @@ const Profile = () => {
                     <label
                       className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full  border-0 border-gray-400 shadow-elem-light mx-auto`}>
                       {!imageLoading ? (
-                        <IconContext.Provider value={{size: '3rem', color: '#4a5568'}}>
-                          <FaPlus />
-                        </IconContext.Provider>
+                        <FaPlus color="#4a5568" size={'3rem'} />
                       ) : (
                         <Loader />
                       )}

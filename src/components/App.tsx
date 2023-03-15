@@ -1,4 +1,3 @@
-// import {AudioProvider} from 'contexts/AudioContext';
 import MainRouter from 'components/AppMainRouter';
 import {GlobalContextProvider} from 'contexts/GlobalContext';
 import NotificationContextProvider from 'contexts/NotificationContext';
@@ -38,5 +37,3 @@ const App: React.FC = () => {
 };
 
 export default App;
-// test push
-// test push 30-08-2021

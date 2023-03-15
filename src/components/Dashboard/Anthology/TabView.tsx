@@ -1,30 +1,29 @@
-import { FaEdit } from "react-icons/fa";
+import {FaEdit} from 'react-icons/fa';
 
-import { useGlobalContext } from "contexts/GlobalContext";
-import useDictionary from "customHooks/dictionary";
+import {useGlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
 
-import Buttons from "atoms/Buttons";
+import Buttons from 'atoms/Buttons';
 
-import AnimatedContainer from "@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer";
-import { getAsset } from "assets";
-import { ViewEditMode } from "components/Dashboard/Anthology/Anthology";
-import AnthologyUnderlinedTabs from "components/Dashboard/Anthology/AnthologyUnderlinedTabs";
-import SentimentTab from "components/Dashboard/Anthology/SentimentTab";
-import UploadsTab from "components/Dashboard/Anthology/UploadsTab";
-import WrittenContentTab from "components/Dashboard/Anthology/WrittenContentTab";
+import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
+import {getAsset} from 'assets';
+import {ViewEditMode} from 'components/Dashboard/Anthology/Anthology';
+import AnthologyUnderlinedTabs from 'components/Dashboard/Anthology/AnthologyUnderlinedTabs';
+import SentimentTab from 'components/Dashboard/Anthology/SentimentTab';
+import UploadsTab from 'components/Dashboard/Anthology/UploadsTab';
+import WrittenContentTab from 'components/Dashboard/Anthology/WrittenContentTab';
 import {
   UniversalClassData,
   UniversalJournalData,
-  UniversalLessonStudentData,
-} from "interfaces/UniversalLessonInterfaces";
-import { filter, orderBy } from "lodash";
-import { IoIosJournal } from "react-icons/io";
-import { IconContext } from "react-icons/lib";
-import { stringToHslColor } from "utilities/strings";
+  UniversalLessonStudentData
+} from 'interfaces/UniversalLessonInterfaces';
+import {filter, orderBy} from 'lodash';
+import {IoIosJournal} from 'react-icons/io';
+import {stringToHslColor} from 'utilities/strings';
 
 export interface ITabParentProps {
   handleEditToggle?: (
-    editMode: "view" | "edit" | "save" | "create" | "savenew" | "delete" | "",
+    editMode: 'view' | 'edit' | 'save' | 'create' | 'savenew' | 'delete' | '',
     dataID: string,
     option?: number | 0,
     recordID?: string
@@ -83,13 +82,13 @@ const TabView = ({
   setAllUniversalJournalData,
   classNotebook,
   allUniversalClassData,
-  setAllUniversalClassData,
+  setAllUniversalClassData
 }: ITabViewProps) => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
-  const { clientKey, state, userLanguage, theme } = useGlobalContext();
+  const {clientKey, state, userLanguage, theme} = useGlobalContext();
 
-  const themeColor = getAsset(clientKey, "themeClassName");
-  const { anthologyDict } = useDictionary();
+  const themeColor = getAsset(clientKey, 'themeClassName');
+  const {anthologyDict} = useDictionary();
 
   // ~~~~~~~~~~~~~~~ CONTENT ~~~~~~~~~~~~~~~ //
 
@@ -97,11 +96,11 @@ const TabView = ({
     allUniversalJournalData && allUniversalJournalData?.length > 0
       ? allUniversalJournalData.reduce(
           (acc: UniversalJournalData[], data: UniversalJournalData) => {
-            if (subSection === "Journal" && data.type === "journal-entry") {
+            if (subSection === 'Journal' && data.type === 'journal-entry') {
               return [...acc, data];
             } else if (
-              subSection === "Notes" &&
-              data.type === "class-note" &&
+              subSection === 'Notes' &&
+              data.type === 'class-note' &&
               data.roomID === sectionRoomID
             ) {
               return [...acc, data];
@@ -113,10 +112,7 @@ const TabView = ({
         )
       : [];
 
-  const filteredClassContent = filter(allExerciseData, [
-    "roomID",
-    sectionRoomID,
-  ]);
+  const filteredClassContent = filter(allExerciseData, ['roomID', sectionRoomID]);
   const removeDuplicatesAndSort = (arr: any) => {
     let result: any[] = [];
     arr.forEach((item: any) => {
@@ -125,19 +121,19 @@ const TabView = ({
       }
     });
 
-    result = orderBy(result, ["updatedAt"], "desc");
+    result = orderBy(result, ['updatedAt'], 'desc');
 
     return result;
   };
 
   const pickClassContent = () => {
-    if (mainSection === "Class" && sectionRoomID !== "") {
-      if (subSection == "Work") {
+    if (mainSection === 'Class' && sectionRoomID !== '') {
+      if (subSection == 'Work') {
         return filteredClassContent;
       } else {
         return filteredJournalContent;
       }
-    } else if (mainSection === "Private") {
+    } else if (mainSection === 'Private') {
       return filteredJournalContent;
     } else {
       return [];
@@ -171,19 +167,19 @@ const TabView = ({
     {
       index: 0,
       title: anthologyDict[userLanguage].TABS.B,
-      id: "Work",
-      content: WrittenContent,
+      id: 'Work',
+      content: WrittenContent
     },
     {
       index: 1,
       title: anthologyDict[userLanguage].TABS.C,
-      id: "Notes",
-      content: WrittenContent,
+      id: 'Notes',
+      content: WrittenContent
     },
     {
       index: 2,
       title: anthologyDict[userLanguage].TABS.D,
-      id: "Uploads",
+      id: 'Uploads',
       content: (
         <UploadsTab
           personAuthID={state?.user?.authId}
@@ -196,23 +192,23 @@ const TabView = ({
           mainSection={mainSection}
           subSection={subSection}
         />
-      ),
-    },
+      )
+    }
   ];
 
   const JOURNAL_TABS = [
     {
       index: 0,
-      title: "Check-In",
-      id: "checkIn",
-      content: <SentimentTab />,
+      title: 'Check-In',
+      id: 'checkIn',
+      content: <SentimentTab />
     },
     {
       index: 1,
       title: anthologyDict[userLanguage].TABS.A,
-      id: "Journal",
-      content: WrittenContent,
-    },
+      id: 'Journal',
+      content: WrittenContent
+    }
   ];
 
   const handleTabSelect = (index: number, tabSubSection: string) => {
@@ -221,9 +217,9 @@ const TabView = ({
   };
 
   const getTitle = () => {
-    if (sectionTitle !== "") {
-      if (mainSection === "Class") {
-        return sectionTitle + " " + anthologyDict[userLanguage].TITLE;
+    if (sectionTitle !== '') {
+      if (mainSection === 'Class') {
+        return sectionTitle + ' ' + anthologyDict[userLanguage].TITLE;
       } else {
         return sectionTitle;
       }
@@ -234,55 +230,44 @@ const TabView = ({
 
   return (
     <>
-      {subSection !== "none" && (
+      {subSection !== 'none' && (
         <div className="w-auto" id="anthology_tabs">
           <div
-            className={`w-full h-14 leading-6 text-gray-900 flex flex-row justify-between items-center`}
-          >
+            className={`w-full h-14 leading-6 text-gray-900 flex flex-row justify-between items-center`}>
             <div
-              className={`border-b-0 border-gray-200 shadow px-4 w-auto bg-white rounded-t-lg h-full flex flex-row justify-start items-center`}
-            >
-              <IconContext.Provider
-                value={{
-                  className: `relative`,
-                }}
-              >
-                <IoIosJournal
-                  style={{ color: stringToHslColor(sectionRoomID) }}
-                  className="absolute my-auto mr-2 w-auto h-auto fill-current"
-                  size={24}
-                />
-              </IconContext.Provider>
+              className={`relative border-b-0 border-gray-200 shadow px-4 w-auto bg-white rounded-t-lg h-full flex flex-row justify-start items-center`}>
+              <IoIosJournal
+                style={{color: stringToHslColor(sectionRoomID)}}
+                className="absolute my-auto mr-2 w-auto h-auto fill-current"
+                size={24}
+              />
 
               <h2
-                className={`text-sm md:text-lg 2xl:text-xl font-semibold leading-6 text-gray-900`}
-              >
+                className={`text-sm md:text-lg 2xl:text-xl font-semibold leading-6 text-gray-900`}>
                 {getTitle()}
               </h2>
             </div>
             <AnimatedContainer
               className="w-auto"
-              show={subSection === "Journal" && tab === 1}
-            >
-              {subSection === "Journal" && tab === 1 && (
+              show={subSection === 'Journal' && tab === 1}>
+              {subSection === 'Journal' && tab === 1 && (
                 <Buttons
                   Icon={FaEdit}
                   btnClass="mb-2 px-8"
                   label={anthologyDict[userLanguage].ACTIONS.CREATE}
-                  onClick={() => handleEditToggle?.("create", "")}
+                  onClick={() => handleEditToggle?.('create', '')}
                   type="button"
                 />
               )}
             </AnimatedContainer>
           </div>
           <div
-            className={`w-full min-h-48 pb-4 overflow-hidden bg-white rounded-b-lg shadow mb-12`}
-          >
+            className={`w-full min-h-48 pb-4 overflow-hidden bg-white rounded-b-lg shadow mb-12`}>
             <AnthologyUnderlinedTabs
               hideTooltip
               activeTab={tab}
               mainSection={mainSection}
-              tabs={mainSection === "Class" ? CLASS_TABS : JOURNAL_TABS}
+              tabs={mainSection === 'Class' ? CLASS_TABS : JOURNAL_TABS}
               handleTabSelect={handleTabSelect}
             />
           </div>

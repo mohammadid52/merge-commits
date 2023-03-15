@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import Spinner from '@components/Atoms/Spinner';
+import React, {useEffect, useState} from 'react';
 
 interface IEmptyViewWrapper {
   children?: React.ReactNode;
@@ -10,10 +11,10 @@ interface IEmptyViewWrapper {
 
 const EmptyViewWrapper = ({
   children,
-  fallbackContents,
+  fallbackContents = <Spinner />,
   revealContents,
   timedRevealInt,
-  wrapperClass,
+  wrapperClass
 }: IEmptyViewWrapper) => {
   const [timeToReveal, setTimeToReveal] = useState<boolean>(false);
 
@@ -34,18 +35,16 @@ const EmptyViewWrapper = ({
           ? `${
               wrapperClass
                 ? wrapperClass
-                : "min-h-48 pb-4 overflow-hidden bg-white rounded-lg shadow mb-4"
+                : 'min-h-48 pb-4 overflow-hidden bg-white rounded-lg shadow mb-4'
             }`
-          : ""
-      }`}
-    >
+          : ''
+      }`}>
       <div
         className={`flex flex-center items-center transition duration-500 ease-in-out overflow-hidden ${
           !revealContents && timedRevealInt === undefined
-            ? "p-12 h-full w-full opacity-100"
-            : "h-0 opacity-0"
-        }`}
-      >
+            ? 'p-12 h-full w-full opacity-100'
+            : 'h-0 opacity-0'
+        }`}>
         {fallbackContents ? (
           fallbackContents
         ) : (
@@ -57,11 +56,8 @@ const EmptyViewWrapper = ({
 
       <div
         className={`transition duration-500 ease-in-out overflow-hidden ${
-          revealContents || timeToReveal
-            ? "h-auto w-full opacity-100"
-            : "h-0 opacity-0"
-        }`}
-      >
+          revealContents || timeToReveal ? 'h-auto w-full opacity-100' : 'h-0 opacity-0'
+        }`}>
         {children}
       </div>
     </div>

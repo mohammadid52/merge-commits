@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react';
 import path from 'path';
 import {defineConfig} from 'vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
+import rollupNodePolyFill from 'rollup-plugin-node-polyfills';
 
 export default defineConfig({
   root: process.cwd(),
@@ -14,22 +15,12 @@ export default defineConfig({
     outDir: path.join(process.cwd(), 'public'),
     rollupOptions: {
       external: ['@react-pdf', '@react-pdf/pdfkit'],
-      // maxParallelFileOps: 2,
-      // output: {
-      //   sourcemap: true,
-      //   // @ts-ignore
-      //   manualChunks: (id) => {
-      //     if (id.includes('node_modules')) {
-      //       return 'vendor';
-      //     }
-      //   }
-      // },
-      // cache: false,
+
       plugins: [
         // Enable rollup polyfills plugin
         // used during production bundling
         // @ts-ignore
-        // rollupNodePolyFill()
+        rollupNodePolyFill()
       ]
     }
   },

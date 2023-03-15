@@ -1,20 +1,19 @@
-import { Auth } from "@aws-amplify/auth";
-import { API, graphqlOperation } from "aws-amplify";
-import { useState } from "react";
-import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
-import { FaKey } from "react-icons/fa";
-import { IconContext } from "react-icons/lib/esm/iconContext";
-import { useHistory } from "react-router-dom";
+import {Auth} from '@aws-amplify/auth';
+import {API, graphqlOperation} from 'aws-amplify';
+import {useState} from 'react';
+import {AiOutlineEye, AiOutlineEyeInvisible} from 'react-icons/ai';
+import {FaKey} from 'react-icons/fa';
+import {useHistory} from 'react-router-dom';
 
-import Buttons from "atoms/Buttons";
-import { useGlobalContext } from "contexts/GlobalContext";
-import useDictionary from "customHooks/dictionary";
-import ModalPopUp from "molecules/ModalPopUp";
-import ErrorNote from "../Admin/UserManagement/ErrorNote";
+import Buttons from 'atoms/Buttons';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import ModalPopUp from 'molecules/ModalPopUp';
+import ErrorNote from '../Admin/UserManagement/ErrorNote';
 
-import { UserPageState } from "API";
-import FormInput from "atoms/Form/FormInput";
-import * as customMutations from "customGraphql/customMutations";
+import {UserPageState} from 'API';
+import FormInput from 'atoms/Form/FormInput';
+import * as customMutations from 'customGraphql/customMutations';
 
 const ChangePassword = () => {
   const [oldPassToggle, setOldPassToggle] = useState(false);
@@ -23,13 +22,13 @@ const ChangePassword = () => {
 
   const history = useHistory();
 
-  const { userLanguage, updateAuthState, state } = useGlobalContext();
-  const { dashboardProfileDict } = useDictionary();
+  const {userLanguage, updateAuthState, state} = useGlobalContext();
+  const {dashboardProfileDict} = useDictionary();
   const dictionary = dashboardProfileDict[userLanguage];
 
   const [warningModal, setWarningModal] = useState({
     show: false,
-    message: dictionary["CHANGE_PASSWORD"]["WARN_MSG"],
+    message: dictionary['CHANGE_PASSWORD']['WARN_MSG']
   });
 
   const [message, setMessage] = useState<{
@@ -38,19 +37,19 @@ const ChangePassword = () => {
     message: string;
   }>({
     show: false,
-    type: "",
-    message: "",
+    type: '',
+    message: ''
   });
   const [input, setInput] = useState({
-    oldPassword: "",
-    newPassword: "",
-    match: "",
+    oldPassword: '',
+    newPassword: '',
+    match: ''
   });
 
   const toggleModal = () => {
     setWarningModal({
       ...warningModal,
-      show: !warningModal.show,
+      show: !warningModal.show
     });
   };
   const gotoPasswordReset = async () => {
@@ -63,16 +62,14 @@ const ChangePassword = () => {
         email: state.user.email,
         lastLoggedOut: time,
         lastPageStateUpdate: time,
-        pageState: UserPageState.NOT_LOGGED_IN,
+        pageState: UserPageState.NOT_LOGGED_IN
       };
-      API.graphql(
-        graphqlOperation(customMutations.updatePersonLogoutTime, { input })
-      );
+      API.graphql(graphqlOperation(customMutations.updatePersonLogoutTime, {input}));
       await Auth.signOut();
       updateAuthState(false);
-      history.push("/forgot-password");
+      history.push('/forgot-password');
     } catch (error) {
-      console.log("error signing out: ", error);
+      console.log('error signing out: ', error);
     }
   };
   async function change() {
@@ -82,37 +79,37 @@ const ChangePassword = () => {
     try {
       const user = await Auth.currentAuthenticatedUser();
       await Auth.changePassword(user, oldPassword, newPassword);
-      history.push("/dashboard/profile");
+      history.push('/dashboard/profile');
     } catch (error) {
-      console.error("error signing in", error);
+      console.error('error signing in', error);
       setMessage(() => {
         switch (error.code) {
-          case "InvalidPasswordException":
+          case 'InvalidPasswordException':
             return {
               show: true,
-              type: "error",
+              type: 'error',
               message:
-                "Password must be at least 8 characters, include uppercase, lowercase and numbers",
+                'Password must be at least 8 characters, include uppercase, lowercase and numbers'
             };
-          case "NotAuthorizedException":
+          case 'NotAuthorizedException':
             return {
               show: true,
-              type: "error",
-              message: "Your old password is incorrect",
+              type: 'error',
+              message: 'Your old password is incorrect'
             };
-          case "LimitExceededException":
+          case 'LimitExceededException':
             return {
               show: true,
-              type: "error",
+              type: 'error',
               message:
-                "The amount of attempts to change your password has been exceeded, please try again after some time",
+                'The amount of attempts to change your password has been exceeded, please try again after some time'
             };
           default:
             return {
               show: true,
-              type: "error",
+              type: 'error',
               message:
-                "Make sure your old password is correct and that your new password is at least 8 characters, including uppercase, lowercase and numbers",
+                'Make sure your old password is correct and that your new password is at least 8 characters, including uppercase, lowercase and numbers'
             };
         }
       });
@@ -128,29 +125,29 @@ const ChangePassword = () => {
       if (!oldPassword) {
         return {
           show: true,
-          type: "error",
-          message: dictionary["CHANGE_PASSWORD"]["ERRORS"]["NO_OLD_PASS"],
+          type: 'error',
+          message: dictionary['CHANGE_PASSWORD']['ERRORS']['NO_OLD_PASS']
         };
       }
       if (!newPassword) {
         return {
           show: true,
-          type: "error",
-          message: dictionary["CHANGE_PASSWORD"]["ERRORS"]["NO_NEW_PASS"],
+          type: 'error',
+          message: dictionary['CHANGE_PASSWORD']['ERRORS']['NO_NEW_PASS']
         };
       }
       if (!input.match) {
         return {
           show: true,
-          type: "error",
-          message: dictionary["CHANGE_PASSWORD"]["ERRORS"]["NO_CONFIRM_PASS"],
+          type: 'error',
+          message: dictionary['CHANGE_PASSWORD']['ERRORS']['NO_CONFIRM_PASS']
         };
       }
       if (input.newPassword !== input.match) {
         return {
           show: true,
-          type: "error",
-          message: dictionary["CHANGE_PASSWORD"]["ERRORS"]["NOT_MATCH"],
+          type: 'error',
+          message: dictionary['CHANGE_PASSWORD']['ERRORS']['NOT_MATCH']
         };
       }
       validated = true;
@@ -159,24 +156,24 @@ const ChangePassword = () => {
       }
       return {
         show: false,
-        type: "success",
-        message: "success",
+        type: 'success',
+        message: 'success'
       };
     });
   };
 
-  const handleChange = (e: { target: { id: any; value: any } }) => {
-    const { id, value } = e.target;
+  const handleChange = (e: {target: {id: any; value: any}}) => {
+    const {id, value} = e.target;
     setInput((input) => {
       return {
         ...input,
-        [id]: value,
+        [id]: value
       };
     });
   };
 
   const handleEnter = (e: any) => {
-    if (e.key === "Enter") {
+    if (e.key === 'Enter') {
       change();
     }
   };
@@ -190,13 +187,13 @@ const ChangePassword = () => {
       <div className="h-auto bg-white border-l-0 border-gray-200 mb-4">
         <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
           <h3 className="text-lg leading-6 font-medium text-gray-900">
-            {dictionary["CHANGE_PASSWORD"]["TITLE"]}
+            {dictionary['CHANGE_PASSWORD']['TITLE']}
           </h3>
         </div>
 
         <div className="h-full px-4 py-5 sm:px-6 text-gray-800">
           <div className="text-center text-sm">
-            {dictionary["CHANGE_PASSWORD"]["INFO"]}
+            {dictionary['CHANGE_PASSWORD']['INFO']}
           </div>
           <div className="w-full h-auto flex flex-col justify-between items-center my-4">
             <div className="w-full md:w-1/2 m-1">
@@ -204,40 +201,27 @@ const ChangePassword = () => {
                 <div className="absolute right-1 w-auto mr-2">
                   <div
                     onClick={() => setOldPassToggle(!oldPassToggle)}
-                    className="text-gray-500 cursor-pointer hover:text-grayscale transform translate-y-1/2 mt-1"
-                  >
+                    className="text-gray-500 cursor-pointer hover:text-grayscale transform translate-y-1/2 mt-1">
                     {oldPassToggle ? (
-                      <IconContext.Provider
-                        value={{ size: "1rem", style: { width: "auto" } }}
-                      >
-                        <AiOutlineEye />
-                      </IconContext.Provider>
+                      <AiOutlineEye size="1rem" className="w-auto" />
                     ) : (
-                      <IconContext.Provider
-                        value={{ size: "1rem", style: { width: "auto" } }}
-                      >
-                        <AiOutlineEyeInvisible />
-                      </IconContext.Provider>
+                      <AiOutlineEyeInvisible size="1rem" className="w-auto" />
                     )}
                   </div>
                 </div>
                 <div className="absolute left-1 w-auto mr-2">
                   <div className="text-gray-500 transform translate-y-1/2 mt-1">
-                    <IconContext.Provider
-                      value={{ size: "0.8rem", style: { width: "auto" } }}
-                    >
-                      <FaKey />
-                    </IconContext.Provider>
+                    <FaKey className="w-auto" size="0.8rem" />
                   </div>
                 </div>
                 <label className="hidden" htmlFor="oldPassword">
-                  {dictionary["CHANGE_PASSWORD"]["OLD_PASS"]}
+                  {dictionary['CHANGE_PASSWORD']['OLD_PASS']}
                 </label>
                 <FormInput
                   dataCy="old-password-input"
                   className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5 pl-10 mb-1"
-                  placeHolder={dictionary["CHANGE_PASSWORD"]["OLD_PASS"]}
-                  type={oldPassToggle ? "text" : "password"}
+                  placeHolder={dictionary['CHANGE_PASSWORD']['OLD_PASS']}
+                  type={oldPassToggle ? 'text' : 'password'}
                   id="oldPassword"
                   name="password"
                   value={input.oldPassword}
@@ -252,40 +236,27 @@ const ChangePassword = () => {
                 <div className="absolute right-1 w-auto mr-2">
                   <div
                     onClick={() => setPassToggle(!passToggle)}
-                    className="text-gray-500 cursor-pointer hover:text-grayscale transform translate-y-1/2 mt-1"
-                  >
+                    className="text-gray-500 cursor-pointer hover:text-grayscale transform translate-y-1/2 mt-1">
                     {passToggle ? (
-                      <IconContext.Provider
-                        value={{ size: "1rem", style: { width: "auto" } }}
-                      >
-                        <AiOutlineEye />
-                      </IconContext.Provider>
+                      <AiOutlineEye size="1rem" className="w-auto" />
                     ) : (
-                      <IconContext.Provider
-                        value={{ size: "1rem", style: { width: "auto" } }}
-                      >
-                        <AiOutlineEyeInvisible />
-                      </IconContext.Provider>
+                      <AiOutlineEyeInvisible size="1rem" className="w-auto" />
                     )}
                   </div>
                 </div>
                 <div className="w-auto absolute left-1 mr-2">
                   <div className="text-gray-500 transform translate-y-1/2 mt-1">
-                    <IconContext.Provider
-                      value={{ size: "0.8rem", style: { width: "auto" } }}
-                    >
-                      <FaKey />
-                    </IconContext.Provider>
+                    <FaKey className="w-auto" size="0.8rem" />
                   </div>
                 </div>
                 <label className="hidden" htmlFor="password">
-                  {dictionary["CHANGE_PASSWORD"]["NEW_PASS"]}
+                  {dictionary['CHANGE_PASSWORD']['NEW_PASS']}
                 </label>
                 <FormInput
                   dataCy="new-password-input"
                   className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5 pl-10 mb-1"
-                  placeHolder={dictionary["CHANGE_PASSWORD"]["NEW_PASS"]}
-                  type={passToggle ? "text" : "password"}
+                  placeHolder={dictionary['CHANGE_PASSWORD']['NEW_PASS']}
+                  type={passToggle ? 'text' : 'password'}
                   id="newPassword"
                   name="password"
                   value={input.newPassword}
@@ -299,40 +270,27 @@ const ChangePassword = () => {
                 <div className="absolute right-1 w-auto mr-2">
                   <div
                     onClick={() => setPassMatchToggle(!passMatchToggle)}
-                    className="text-gray-500 cursor-pointer hover:text-grayscale transform translate-y-1/2 mt-1"
-                  >
+                    className="text-gray-500 cursor-pointer hover:text-grayscale transform translate-y-1/2 mt-1">
                     {passMatchToggle ? (
-                      <IconContext.Provider
-                        value={{ size: "1rem", style: { width: "auto" } }}
-                      >
-                        <AiOutlineEye />
-                      </IconContext.Provider>
+                      <AiOutlineEye size="1rem" className="w-auto" />
                     ) : (
-                      <IconContext.Provider
-                        value={{ size: "1rem", style: { width: "auto" } }}
-                      >
-                        <AiOutlineEyeInvisible />
-                      </IconContext.Provider>
+                      <AiOutlineEyeInvisible size="1rem" className="w-auto" />
                     )}
                   </div>
                 </div>
                 <div className="w-auto absolute left-1">
                   <div className="text-gray-500 transform translate-y-1/2 mt-1">
-                    <IconContext.Provider
-                      value={{ size: "0.8rem", style: { width: "auto" } }}
-                    >
-                      <FaKey />
-                    </IconContext.Provider>
+                    <FaKey className="w-auto" size="0.8rem" />
                   </div>
                 </div>
                 <label className="hidden" htmlFor="match">
-                  {dictionary["CHANGE_PASSWORD"]["CONFIRM_PASS"]}
+                  {dictionary['CHANGE_PASSWORD']['CONFIRM_PASS']}
                 </label>
                 <FormInput
                   dataCy="match-password-input"
                   className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5 pl-10 mb-1"
-                  placeHolder={dictionary["CHANGE_PASSWORD"]["CONFIRM_PASS"]}
-                  type={passMatchToggle ? "text" : "password"}
+                  placeHolder={dictionary['CHANGE_PASSWORD']['CONFIRM_PASS']}
+                  type={passMatchToggle ? 'text' : 'password'}
                   id="match"
                   name="match"
                   value={input.match}
@@ -343,17 +301,14 @@ const ChangePassword = () => {
           </div>
 
           <div className="w-auto text-sm text-center text-gray-600 ">
-            <p
-              className={`hover:text-blue-500 cursor-pointer`}
-              onClick={toggleModal}
-            >
-              {dictionary["CHANGE_PASSWORD"]["FORGOT_PASS_LINK"]}
+            <p className={`hover:text-blue-500 cursor-pointer`} onClick={toggleModal}>
+              {dictionary['CHANGE_PASSWORD']['FORGOT_PASS_LINK']}
             </p>
             {warningModal.show && (
               <ModalPopUp
                 closeAction={toggleModal}
                 saveAction={gotoPasswordReset}
-                saveLabel={dictionary["CHANGE_PASSWORD"]["CONTINUE_BTN"]}
+                saveLabel={dictionary['CHANGE_PASSWORD']['CONTINUE_BTN']}
                 message={warningModal.message}
               />
             )}
@@ -371,14 +326,14 @@ const ChangePassword = () => {
       <div className="px-4 pt-4 w-full flex justify-center">
         <Buttons
           btnClass="py-2 w-auto md:w-2.5/10 px-4 text-xs mr-2"
-          label={dictionary["CHANGE_PASSWORD"]["CANCEL"]}
+          label={dictionary['CHANGE_PASSWORD']['CANCEL']}
           onClick={() => history.goBack()}
           transparent
         />
         <Buttons
           dataCy="change-password-save-button"
           btnClass="py-2 w-auto px-4 text-xs ml-2"
-          label={dictionary["CHANGE_PASSWORD"]["SAVE"]}
+          label={dictionary['CHANGE_PASSWORD']['SAVE']}
           onClick={handleSubmit}
         />
       </div>

@@ -1,7 +1,6 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { IconContext } from "react-icons";
-import { AiOutlineFile } from "react-icons/ai";
-import { getImageFromS3 } from "utilities/services";
+import React, {useCallback, useEffect, useState} from 'react';
+import {AiOutlineFile} from 'react-icons/ai';
+import {getImageFromS3} from 'utilities/services';
 
 interface IFileListItem {
   fileIdx: number;
@@ -24,13 +23,13 @@ const FileListItem = ({
   handleToggleDelete,
   handleConfirmDelete,
   deleting,
-  uploadKey,
+  uploadKey
 }: IFileListItem) => {
   // ##################################################################### //
   // ######################## HANDLE IMAGE LOADING ####################### //
   // ##################################################################### //
 
-  const [imageUrl, setImageUrl] = useState<string>("");
+  const [imageUrl, setImageUrl] = useState<string>('');
 
   const isImage = (filenameStr: string) => {
     return /\.(gif|jpe?g|tiff?|png|webp|bmp)$/i.test(filenameStr);
@@ -42,7 +41,7 @@ const FileListItem = ({
       if (imageUrl) {
         return `${imageUrl}`;
       } else {
-        return "";
+        return '';
       }
     },
     [fileKey]
@@ -60,24 +59,15 @@ const FileListItem = ({
   return (
     <li
       className={`pr-4 mb-2 border-b-0 border-gray-200 ${
-        fileIdx % 2 === 0 ? "bg-gray-50" : ""
-      }`}
-    >
+        fileIdx % 2 === 0 ? 'bg-gray-50' : ''
+      }`}>
       <div className="flex items-center space-x-4">
         <div className="flex flex-shrink-0 min-w-16 w-16 h-16">
           <span className="flex justify-center items-center rounded border-0 border-gray-400  bg-gray-200 overflow-hidden">
             {isImage(fileName) ? (
-              <img
-                className="w-auto h-full object-cover"
-                src={imageUrl}
-                alt={fileName}
-              />
+              <img className="w-auto h-full object-cover" src={imageUrl} alt={fileName} />
             ) : (
-              <IconContext.Provider
-                value={{ size: "32px", color: "gray-400", className: "p-2" }}
-              >
-                <AiOutlineFile />
-              </IconContext.Provider>
+              <AiOutlineFile className="text-gray-400 p-2" size={'32px'} />
             )}
           </span>
         </div>
@@ -98,30 +88,26 @@ const FileListItem = ({
             <>
               <a
                 onClick={() => handleToggleDelete(fileKey)}
-                className="bg-red-500 cursor-pointer inline-flex items-center shadow-sm px-2.5 py-0.5 border border-gray-300 text-sm leading-5 font-medium rounded-full text-white hover:bg-red-400"
-              >
+                className="bg-red-500 cursor-pointer inline-flex items-center shadow-sm px-2.5 py-0.5 border border-gray-300 text-sm leading-5 font-medium rounded-full text-white hover:bg-red-400">
                 Cancel
               </a>
               <a
                 onClick={() => handleConfirmDelete()}
-                className="ml-2 bg-green-500 cursor-pointer inline-flex items-center shadow-sm px-2.5 py-0.5 border border-gray-300 text-sm leading-5 font-medium rounded-full text-white hover:bg-green-400"
-              >
-                {!deleting ? "Confirm" : "Deleting..."}
+                className="ml-2 bg-green-500 cursor-pointer inline-flex items-center shadow-sm px-2.5 py-0.5 border border-gray-300 text-sm leading-5 font-medium rounded-full text-white hover:bg-green-400">
+                {!deleting ? 'Confirm' : 'Deleting...'}
               </a>
             </>
           ) : (
             <>
               <a
                 onClick={() => handleToggleDelete(fileKey)}
-                className=" cursor-pointer inline-flex items-center shadow-sm px-2.5 py-0.5 border border-gray-300 text-sm leading-5 font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50"
-              >
+                className=" cursor-pointer inline-flex items-center shadow-sm px-2.5 py-0.5 border border-gray-300 text-sm leading-5 font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50">
                 Delete
               </a>
               <a
                 target="_blank"
                 href={imageUrl}
-                className="ml-2 cursor-pointer inline-flex items-center shadow-sm px-2.5 py-0.5 border border-gray-300 text-sm leading-5 font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50"
-              >
+                className="ml-2 cursor-pointer inline-flex items-center shadow-sm px-2.5 py-0.5 border border-gray-300 text-sm leading-5 font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50">
                 View
               </a>
             </>

@@ -1,13 +1,9 @@
-import React, { Fragment, useState } from "react";
-import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
-import {
-  IoCaretDownCircleOutline,
-  IoCaretUpCircleOutline,
-} from "react-icons/io5";
-import { IconContext } from "react-icons/lib/esm/iconContext";
+import React, {Fragment, useState} from 'react';
+import {DragDropContext, Draggable, Droppable} from 'react-beautiful-dnd';
+import {IoCaretDownCircleOutline, IoCaretUpCircleOutline} from 'react-icons/io5';
 
-import { getAsset } from "assets";
-import { useGlobalContext } from "@contexts/GlobalContext";
+import {useGlobalContext} from '@contexts/GlobalContext';
+import {getAsset} from 'assets';
 
 interface DragableAccordionProps {
   titleList: {
@@ -23,16 +19,16 @@ interface DragableAccordionProps {
 }
 
 const DragableAccordion = (props: DragableAccordionProps) => {
-  const { theme, clientKey } = useGlobalContext();
-  const themeColor = getAsset(clientKey, "themeClassName");
-  const { titleList, showEdit, onItemEdit, onDragEnd } = props;
-  const [selectedItem, setSelectedItem] = useState("");
+  const {theme, clientKey} = useGlobalContext();
+  const themeColor = getAsset(clientKey, 'themeClassName');
+  const {titleList, showEdit, onItemEdit, onDragEnd} = props;
+  const [selectedItem, setSelectedItem] = useState('');
 
   const changeView = (step: string) => {
     if (selectedItem !== step) {
       setSelectedItem(step);
     } else {
-      setSelectedItem("");
+      setSelectedItem('');
     }
   };
 
@@ -61,86 +57,70 @@ const DragableAccordion = (props: DragableAccordionProps) => {
                     <Fragment key={item.id}>
                       <li
                         className={`relative border-b-0 border-gray-200 ${
-                          selectedItem === item.id ? "rounded-lg" : ""
-                        }`}
-                      >
-                        <Draggable
-                          key={item.id}
-                          draggableId={item.id}
-                          index={index}
-                        >
+                          selectedItem === item.id ? 'rounded-lg' : ''
+                        }`}>
+                        <Draggable key={item.id} draggableId={item.id} index={index}>
                           {(provided) => (
                             <div
                               ref={provided.innerRef}
                               {...provided.draggableProps}
-                              {...provided.dragHandleProps}
-                            >
+                              {...provided.dragHandleProps}>
                               <div
                                 className={`w-full px-8 py-2 2xl:py-6 text-left ${
                                   theme.outlineNone
                                 } ${
                                   selectedItem === item.id
                                     ? `border-0 rounded-lg ${theme.borderColorLight[themeColor]}`
-                                    : ""
-                                }`}
-                              >
+                                    : ''
+                                }`}>
                                 <div className="flex items-center justify-between">
                                   <span
                                     className={`text-xs md:text-base font-medium cursor-pointer flex ${
                                       selectedItem === item.id &&
                                       theme.textColor[themeColor]
                                     } `}
-                                    onClick={() => changeView(item.id)}
-                                  >
+                                    onClick={() => changeView(item.id)}>
                                     <div className="w-auto">
-                                      <span className="mr-4">
-                                        {index + 1}.{" "}
-                                      </span>
+                                      <span className="mr-4">{index + 1}. </span>
                                     </div>
                                     <div>
                                       <span>
-                                        {item.title}{" "}
-                                        {item.scope === "private" && (
+                                        {item.title}{' '}
+                                        {item.scope === 'private' && (
                                           <span
-                                            className={`inline-flex items-center px-2.5 py-0.5 rounded-md text-sm font-medium  w-auto bg-gray-100 text-gray-800`}
-                                          >
+                                            className={`inline-flex items-center px-2.5 py-0.5 rounded-md text-sm font-medium  w-auto bg-gray-100 text-gray-800`}>
                                             private
                                           </span>
                                         )}
                                       </span>
                                       <br />
                                       <span className="text-sm leading-6 text-gray-500">
-                                        {item.subtitle ? item.subtitle : ""}
+                                        {item.subtitle ? item.subtitle : ''}
                                       </span>
                                     </div>
                                   </span>
                                   {showEdit && (
                                     <div
-                                      className={`w-auto text-xs md:text-base mx-16 cursor-pointer ${theme.textColor[themeColor]} `}
-                                    >
-                                      <span
-                                        onClick={() => onItemEdit?.(item.id)}
-                                      >
+                                      className={`w-auto text-xs md:text-base mx-16 cursor-pointer ${theme.textColor[themeColor]} `}>
+                                      <span onClick={() => onItemEdit?.(item.id)}>
                                         Edit
                                       </span>
                                     </div>
                                   )}
                                   <span
                                     className="w-8 h-8 flex items-center cursor-pointer"
-                                    onClick={() => changeView(item.id)}
-                                  >
-                                    <IconContext.Provider
-                                      value={{
-                                        size: "2rem",
-                                        color: theme.iconColor[themeColor],
-                                      }}
-                                    >
-                                      {selectedItem === item.id ? (
-                                        <IoCaretUpCircleOutline />
-                                      ) : (
-                                        <IoCaretDownCircleOutline />
-                                      )}
-                                    </IconContext.Provider>
+                                    onClick={() => changeView(item.id)}>
+                                    {selectedItem === item.id ? (
+                                      <IoCaretUpCircleOutline
+                                        className="theme-text"
+                                        size={'2rem'}
+                                      />
+                                    ) : (
+                                      <IoCaretDownCircleOutline
+                                        className="theme-text"
+                                        size={'2rem'}
+                                      />
+                                    )}
                                   </span>
                                 </div>
                               </div>
