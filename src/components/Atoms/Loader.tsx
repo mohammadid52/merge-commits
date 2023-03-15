@@ -12,6 +12,19 @@ interface LoadingProps {
   animation?: boolean;
 }
 
+const Animation = () => {
+  const [json, setJson] = useState<string | null>(null);
+  useEffect(() => {
+    getJSON(ANIMATIONS.loading).then((data) => {
+      setJson(data);
+    });
+  }, []);
+  if (json) {
+    return <Lottie style={{height: 100, width: 100}} animationData={json} />;
+  }
+  return null;
+};
+
 const Loader: React.FC<LoadingProps> = (loadingProps: LoadingProps) => {
   const {
     className = 'text-gray-500',
@@ -20,19 +33,6 @@ const Loader: React.FC<LoadingProps> = (loadingProps: LoadingProps) => {
     animation,
     withText = false
   } = loadingProps;
-
-  const Animation = () => {
-    const [json, setJson] = useState<string | null>(null);
-    useEffect(() => {
-      getJSON(ANIMATIONS.loading).then((data) => {
-        setJson(data);
-      });
-    }, []);
-    if (json) {
-      return <Lottie style={{height: 100, width: 100}} animationData={json} />;
-    }
-    return null;
-  };
 
   return withText ? (
     <div

@@ -93,8 +93,10 @@ const UnderlinedTabs = ({updateTab, tabs, activeTab = 0, hideTooltip}: TabsProps
           </div>
         ))}
       </div>
-      {tabs.map((tab, key) => (
-        <div key={key} className={`w-full ${openTab !== tab.index ? 'hidden' : 'block'}`}>
+      {tabs.map((tab) => (
+        <div
+          key={tab.title}
+          className={`w-full ${openTab !== tab.index ? 'hidden' : 'block'}`}>
           {openTab === tab.index ? <>{tab.content}</> : null}
         </div>
       ))}
