@@ -382,7 +382,6 @@ const getDashboardDataForTeachers = async (authId: string, email: string) => {
     arrayOfResponseObjects = arrayOfResponseObjects.map(() => {
       return {class: {rooms: {items: arrayOfResponseObjects}}};
     });
-    // console.log('dashboard data teachers - ', arrayOfResponseObjects);
 
     return arrayOfResponseObjects;
   } catch (error) {

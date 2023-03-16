@@ -1411,7 +1411,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
       <div className="flex flex-col overflow-h-scroll w-full h-full px-8 py-4">
         <div className="mx-auto w-full">
           <div className="flex flex-row my-0 w-full py-0 justify-start">
-            <div className="">
+            <div className="w-full">
               <SectionTitleV3
                 textWidth="lg:w-1/3 2xl:w-1/4"
                 withButton={

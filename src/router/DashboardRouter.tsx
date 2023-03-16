@@ -122,7 +122,7 @@ const DashboardRouter = () => {
               <ErrorBoundary
                 componentName="Community"
                 fallback={<h1>Community Page is not working</h1>}>
-                <Community role={user.role} />
+                <Community />
               </ErrorBoundary>
             )}
           />

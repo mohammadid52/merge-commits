@@ -1,21 +1,20 @@
-import { GraphQLAPI as API, graphqlOperation } from "@aws-amplify/api-graphql";
-import { Fragment, useEffect, useState } from "react";
-import { useHistory } from "react-router";
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import {Fragment, useEffect, useState} from 'react';
+import {useHistory} from 'react-router';
 
-// import { reorder } from 'utilities/strings';
-import * as customMutations from "customGraphql/customMutations";
-import * as customQueries from "customGraphql/customQueries";
+import * as customMutations from 'customGraphql/customMutations';
+import * as customQueries from 'customGraphql/customQueries';
 
-import Loader from "@components/Atoms/Loader";
-import SectionTitleV3 from "@components/Atoms/SectionTitleV3";
-import AnimatedContainer from "@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer";
-import { RoomStatus } from "API";
-import Buttons from "atoms/Buttons";
-import DragableAccordion from "atoms/DragableAccordion";
-import PageWrapper from "atoms/PageWrapper";
-import { useGlobalContext } from "contexts/GlobalContext";
-import useDictionary from "customHooks/dictionary";
-import CheckpointQueTable from "../../../../LessonsBuilder/StepActionComponent/CheckPointSteps/CheckpointQueTable";
+import Loader from '@components/Atoms/Loader';
+import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
+import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
+import {RoomStatus} from 'API';
+import Buttons from 'atoms/Buttons';
+import DragableAccordion from 'atoms/DragableAccordion';
+import PageWrapper from 'atoms/PageWrapper';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import CheckpointQueTable from '../../../../LessonsBuilder/StepActionComponent/CheckPointSteps/CheckpointQueTable';
 
 interface CheckpointListProps {
   curricularId: string;
@@ -24,13 +23,13 @@ interface CheckpointListProps {
 }
 
 const CheckpointList = (props: CheckpointListProps) => {
-  const { curricularId, institutionId, status } = props;
+  const {curricularId, institutionId, status} = props;
   const history = useHistory();
 
   const [checkPoints, setCheckPoints] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
-  const { userLanguage } = useGlobalContext();
-  const { CHECKPOINTSDICT } = useDictionary();
+  const {userLanguage} = useGlobalContext();
+  const {CHECKPOINTSDICT} = useDictionary();
 
   const createNewCheckpoint = () => {
     history.push(
@@ -47,11 +46,10 @@ const CheckpointList = (props: CheckpointListProps) => {
       `/dashboard/manage-institutions/institution/${institutionId}/course-builder/${curricularId}/checkpoint/edit/${id}`
     );
   };
-  const changeStep = () => {};
-  const DeleteCheckpoint = async (
-    checkpointId: string,
-    checkpointList: any
-  ) => {
+  const changeStep = () => {
+    // do something
+  };
+  const DeleteCheckpoint = async (checkpointId: string, checkpointList: any) => {
     const commonCheckpointId: string = [...checkpointList].find(
       (item: any) => item.id === checkpointId
     )?.commonCheckpointId;
@@ -59,8 +57,8 @@ const CheckpointList = (props: CheckpointListProps) => {
       await API.graphql(
         graphqlOperation(customMutations.deleteCommonCheckpoint, {
           input: {
-            id: commonCheckpointId,
-          },
+            id: commonCheckpointId
+          }
         })
       );
       const updatedList: any = [...checkpointList].filter(
@@ -74,11 +72,10 @@ const CheckpointList = (props: CheckpointListProps) => {
     setLoading(true);
     const result: any = await API.graphql(
       graphqlOperation(customQueries.getCurriculumCheckpoints, {
-        id: curricularId,
+        id: curricularId
       })
     );
-    const curricularCheckp: any =
-      result.data?.getCurriculum?.checkpoints?.items;
+    const curricularCheckp: any = result.data?.getCurriculum?.checkpoints?.items;
     if (curricularCheckp.length > 0) {
       let checkpointList = curricularCheckp.map((item: any) => {
         return {
@@ -93,7 +90,7 @@ const CheckpointList = (props: CheckpointListProps) => {
               editCheckPoint={editCheckPoint}
               showActionIcons
             />
-          ),
+          )
         };
       });
       setCheckPoints([...checkpointList]);
@@ -115,18 +112,18 @@ const CheckpointList = (props: CheckpointListProps) => {
             withButton={
               <div className="flex w-auto justify-end gap-x-4">
                 <Buttons
-                  label={CHECKPOINTSDICT[userLanguage]["BUTTON"]["ADDEXISTING"]}
+                  label={CHECKPOINTSDICT[userLanguage]['BUTTON']['ADDEXISTING']}
                   onClick={addExistingCheckpoint}
                   disabled={isInactive}
                 />
                 <Buttons
-                  label={CHECKPOINTSDICT[userLanguage]["BUTTON"]["ADDNEW"]}
+                  label={CHECKPOINTSDICT[userLanguage]['BUTTON']['ADDNEW']}
                   onClick={createNewCheckpoint}
                   disabled={isInactive}
                 />
               </div>
             }
-            title={CHECKPOINTSDICT[userLanguage]["TITLE"]}
+            title={CHECKPOINTSDICT[userLanguage]['TITLE']}
           />
 
           {!loading ? (
@@ -138,14 +135,12 @@ const CheckpointList = (props: CheckpointListProps) => {
                 <div className="flex justify-center w-9/10 m-auto">
                   <Buttons
                     btnClass="mr-3"
-                    label={
-                      CHECKPOINTSDICT[userLanguage]["BUTTON"]["ADDEXISTING"]
-                    }
+                    label={CHECKPOINTSDICT[userLanguage]['BUTTON']['ADDEXISTING']}
                     onClick={addExistingCheckpoint}
                   />
                   <Buttons
                     btnClass="ml-3"
-                    label={CHECKPOINTSDICT[userLanguage]["BUTTON"]["ADDNEW"]}
+                    label={CHECKPOINTSDICT[userLanguage]['BUTTON']['ADDNEW']}
                     onClick={createNewCheckpoint}
                   />
                 </div>
@@ -153,14 +148,14 @@ const CheckpointList = (props: CheckpointListProps) => {
             ) : (
               <Fragment>
                 <p className="text-gray-500 p-16 text-sm text-center">
-                  {CHECKPOINTSDICT[userLanguage]["INFO"]}
+                  {CHECKPOINTSDICT[userLanguage]['INFO']}
                 </p>
               </Fragment>
             )
           ) : (
             <div className="py-12 my-12 m-auto text-center">
               <Loader
-                withText={CHECKPOINTSDICT[userLanguage]["FETCH"]}
+                withText={CHECKPOINTSDICT[userLanguage]['FETCH']}
                 animation
                 className="text-gray-500"
               />
@@ -172,8 +167,8 @@ const CheckpointList = (props: CheckpointListProps) => {
               <>
                 <hr />
                 <p className="mt-4 text-gray-500 text-sm text-center">
-                  This course is inactive. Adding demographics and information
-                  to this course has been disabled
+                  This course is inactive. Adding demographics and information to this
+                  course has been disabled
                 </p>
               </>
             )}

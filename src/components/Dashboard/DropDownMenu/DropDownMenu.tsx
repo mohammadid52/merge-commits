@@ -1,4 +1,3 @@
-// import {BsFillInfoCircleFill} from 'react-icons/bs';
 import Placeholder from '@components/Atoms/Placeholder';
 import {useGlobalContext} from '@contexts/GlobalContext';
 import useDictionary from '@customHooks/dictionary';

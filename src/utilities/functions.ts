@@ -17,12 +17,12 @@ export const goBackBreadCrumb = (list: any[], history: any) => {
 };
 
 export const doResize = (textbox: any) => {
-  var maxrows = 50;
-  var txt = textbox.value;
-  var cols = textbox.cols;
+  const maxrows = 50;
+  const txt = textbox.value;
+  const cols = textbox.cols;
 
-  var arraytxt: any = txt.split('\n');
-  var rows = arraytxt.length;
+  const arraytxt: any = txt.split('\n');
+  const rows = arraytxt.length;
 
   for (let i = 0; i < arraytxt.length; i++)
     // @ts-ignore

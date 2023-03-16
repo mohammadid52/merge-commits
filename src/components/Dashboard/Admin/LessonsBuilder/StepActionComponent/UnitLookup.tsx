@@ -330,7 +330,7 @@ const UnitLookup = (props: UnitLookupProps) => {
             ) : selectedUnitsList.length ? (
               selectedUnitsList?.map((item: any, index: number) => (
                 <div
-                  key={index}
+                  key={item.curricularId}
                   className="flex justify-between items-center w-full px-8 py-4 whitespace-nowrap border-b-0 border-gray-200 cursor-pointer">
                   <div className="flex w-.5/10 items-center px-8 py-3 text-left text-s leading-4">
                     {index + 1}.

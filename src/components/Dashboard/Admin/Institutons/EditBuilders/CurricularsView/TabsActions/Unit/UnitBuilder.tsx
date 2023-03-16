@@ -206,26 +206,7 @@ const UnitBuilder = ({instId, curricular}: any) => {
           />
         );
       default:
-        return (
-          <AnimatedContainer show={currentStep === 'overview'}>
-            {currentStep === 'overview' && (
-              <UnitFormComponent
-                instId={instId}
-                syllabusDetails={syllabusData}
-                postAddSyllabus={postAddSyllabus}
-                curricular={curricular}
-                setSyllabusDataParent={setSyllabusData}
-                onCancel={() => {
-                  history.push(
-                    isSuperAdmin
-                      ? `/dashboard/manage-institutions/units`
-                      : `/dashboard/manage-institutions/institution/${instId}/units`
-                  );
-                }}
-              />
-            )}
-          </AnimatedContainer>
-        );
+        return null;
     }
   };
 

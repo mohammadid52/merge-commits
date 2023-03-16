@@ -1,23 +1,23 @@
-import SectionTitleV3 from "@components/Atoms/SectionTitleV3";
-import { getSelectedCurriculum } from "@components/Lesson/UniversalLesson/views/CoreUniversalLesson/LessonModule";
-import { LEARINGOBJECTIVEDICT } from "@dictionary/dictionary.iconoclast";
-import Buttons from "atoms/Buttons";
-import Loader from "atoms/Loader";
-import Modal from "atoms/Modal";
-import PageWrapper from "atoms/PageWrapper";
-import { API, graphqlOperation } from "aws-amplify";
-import AddLearningObjective from "components/Dashboard/Admin/Institutons/EditBuilders/CurricularsView/TabsActions/AddLearningObjective";
-import AddMeasurement from "components/Dashboard/Admin/Institutons/EditBuilders/CurricularsView/TabsActions/AddMeasurement";
-import AddTopic from "components/Dashboard/Admin/Institutons/EditBuilders/CurricularsView/TabsActions/AddTopic";
-import { useGlobalContext } from "contexts/GlobalContext";
-import * as customQueries from "customGraphql/customQueries";
-import useDictionary from "customHooks/dictionary";
-import * as queries from "graphql/queries";
-import React, { useEffect, useState } from "react";
-import { IoIosAdd } from "react-icons/io";
-import AddEvidence from "./AddEvidence";
-import CourseMeasurementsCard from "./CourseMeasurementsCard";
-import MeasurementsList from "./MeasurementsList";
+import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
+import {getSelectedCurriculum} from '@components/Lesson/UniversalLesson/views/CoreUniversalLesson/LessonModule';
+import {LEARINGOBJECTIVEDICT} from '@dictionary/dictionary.iconoclast';
+import Buttons from 'atoms/Buttons';
+import Loader from 'atoms/Loader';
+import Modal from 'atoms/Modal';
+import PageWrapper from 'atoms/PageWrapper';
+import {API, graphqlOperation} from 'aws-amplify';
+import AddLearningObjective from 'components/Dashboard/Admin/Institutons/EditBuilders/CurricularsView/TabsActions/AddLearningObjective';
+import AddMeasurement from 'components/Dashboard/Admin/Institutons/EditBuilders/CurricularsView/TabsActions/AddMeasurement';
+import AddTopic from 'components/Dashboard/Admin/Institutons/EditBuilders/CurricularsView/TabsActions/AddTopic';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import * as customQueries from 'customGraphql/customQueries';
+import useDictionary from 'customHooks/dictionary';
+import * as queries from 'graphql/queries';
+import React, {useEffect, useState} from 'react';
+import {IoIosAdd} from 'react-icons/io';
+import AddEvidence from './AddEvidence';
+import CourseMeasurementsCard from './CourseMeasurementsCard';
+import MeasurementsList from './MeasurementsList';
 
 interface ILearningEvidence {
   fetchLessonRubrics: () => void;
@@ -43,21 +43,14 @@ const LearningEvidence = ({
   setUnsavedChanges,
   selectedMeasurements = [],
   setSelectedMeasurements,
-  updateMeasurementList,
+  updateMeasurementList
 }: ILearningEvidence) => {
-  const { userLanguage } = useGlobalContext();
-  const {
-    AddNewLessonFormDict,
-    LearningEvidenceDict,
-    AddMeasurementDict,
-    AddTopicDict,
-  } = useDictionary();
+  const {userLanguage} = useGlobalContext();
+  const {AddNewLessonFormDict, LearningEvidenceDict, AddMeasurementDict, AddTopicDict} =
+    useDictionary();
   const [addModalShow, setAddModalShow] = useState(false);
-  const [selectedCurriculumList, setSelectedCurriculumList] = useState<any[]>(
-    []
-  );
+  const [selectedCurriculumList, setSelectedCurriculumList] = useState<any[]>([]);
 
-  // const [selectedMeasurements, setSelectedMeasurements] = useState<any>([]);
   const [loading, setLoading] = useState(false);
   const [evidenceListLoading, setEvidenceListLoading] = useState(false);
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -74,11 +67,8 @@ const LearningEvidence = ({
     setSelectedRubricData({
       ...rubricData,
       topicId: rubricData.topicID,
-      objectiveId,
+      objectiveId
     });
-    // history.push(
-    //   `/dashboard/manage-institutions/curricular/${curricularId}/measurement/edit/${id}`
-    // );
   };
 
   const createLearningObjective = () => {
@@ -94,7 +84,7 @@ const LearningEvidence = ({
   const addLearningObjective = (curricularId: string) => {
     setIsFormOpen(true);
     setSelectedObjectiveData({
-      curricularId,
+      curricularId
     });
   };
 
@@ -110,7 +100,7 @@ const LearningEvidence = ({
     topicIdx: number
   ) => {
     setTopicModal(true);
-    setSelectedTopicData({ ...topicData, curIdx, objectiveIdx, topicIdx });
+    setSelectedTopicData({...topicData, curIdx, objectiveIdx, topicIdx});
   };
 
   const onTopicModalClose = () => {
@@ -128,23 +118,15 @@ const LearningEvidence = ({
     fetchLessonRubrics();
   }, []);
 
-  // useEffect(() => {
-  //   // setSelectedMeasurements(rubrics);
-  // }, [rubrics]);
-
   const fetchObjectives = async (curricularId: string) => {
     const learningEvidenceList: any[] = [];
-    // const activeIndex = selectedCurriculumList.findIndex(
-    //   (item) => item.id === curricularId
-    // );
-    // const temp = [...selectedCurriculumList];
-    // if (!temp[activeIndex].learningEvidenceList) {
+
     setEvidenceListLoading(true);
     let rubricList: any = await API.graphql(
       graphqlOperation(customQueries.listRubrics, {
         filter: {
-          curriculumID: { eq: curricularId },
-        },
+          curriculumID: {eq: curricularId}
+        }
       })
     );
     rubricList = rubricList.data.listRubrics?.items || [];
@@ -153,20 +135,20 @@ const LearningEvidence = ({
       await API.graphql(
         graphqlOperation(queries.listLearningObjectives, {
           filter: {
-            curriculumID: { eq: curricularId },
-          },
+            curriculumID: {eq: curricularId}
+          }
         })
       ),
       await API.graphql(
-        graphqlOperation(queries.getCSequences, { id: `l_${curricularId}` })
+        graphqlOperation(queries.getCSequences, {id: `l_${curricularId}`})
       ),
       await API.graphql(
         graphqlOperation(customQueries.listTopics, {
           filter: {
-            curriculumID: { eq: curricularId },
-          },
+            curriculumID: {eq: curricularId}
+          }
         })
-      ),
+      )
     ]);
 
     const topicsList = topics.data?.listTopics?.items;
@@ -187,7 +169,7 @@ const LearningEvidence = ({
               learningObjectiveName: objective.name,
               topicName: topic.name,
               measurementName: rubric.name,
-              rubricId: rubric.id,
+              rubricId: rubric.id
             });
           });
           return topic;
@@ -196,13 +178,12 @@ const LearningEvidence = ({
       return objective;
     });
     setEvidenceListLoading(false);
+    const sortInner = (a: any, b: any) =>
+      a.measurementName.toLowerCase() > b.measurementName.toLowerCase() ? 1 : -1;
+    const sorted = learningEvidenceList.sort(sortInner);
     return {
       learningObjectiveData,
-      learningEvidenceList: learningEvidenceList.sort((a: any, b: any) =>
-        a.measurementName.toLowerCase() > b.measurementName.toLowerCase()
-          ? 1
-          : -1
-      ),
+      learningEvidenceList: sorted
     };
   };
 
@@ -212,8 +193,8 @@ const LearningEvidence = ({
       const list: any = await API.graphql(
         graphqlOperation(customQueries.listCurricula, {
           filter: {
-            institutionID: { eq: institutionId },
-          },
+            institutionID: {eq: institutionId}
+          }
         })
       );
       const curriculums = list.data?.listCurricula?.items;
@@ -221,8 +202,9 @@ const LearningEvidence = ({
       let selectedCurriculums = getSelectedCurriculum(curriculums, lessonId);
 
       for (const curriculum of selectedCurriculums) {
-        const { learningObjectiveData, learningEvidenceList } =
-          await fetchObjectives(curriculum.id);
+        const {learningObjectiveData, learningEvidenceList} = await fetchObjectives(
+          curriculum.id
+        );
         curriculum.learningObjectiveData = learningObjectiveData;
         curriculum.learningEvidenceList = learningEvidenceList;
       }
@@ -251,21 +233,17 @@ const LearningEvidence = ({
     if (index > -1) {
       rubrics[index] = {
         ...rubrics[index],
-        checked,
+        checked
       };
     } else {
       rubrics.push({
         rubricID: rubricId,
-        checked,
+        checked
       });
     }
     setSelectedMeasurements(rubrics);
     updateMeasurementList(rubrics);
   };
-
-  // const onSubmit = () => {
-  //   updateMeasurementList(selectedMeasurements);
-  // };
 
   const postLearningObjectiveChange = (data: any) => {
     setSelectedCurriculumList((prevList) =>
@@ -275,11 +253,9 @@ const LearningEvidence = ({
               ...item,
               learningObjectiveData: selectedObjectiveData?.id
                 ? item.learningObjectiveData.map((objective: any) =>
-                    objective.id === data.id
-                      ? { ...objective, ...data }
-                      : objective
+                    objective.id === data.id ? {...objective, ...data} : objective
                   )
-                : [...item.learningObjectiveData, data],
+                : [...item.learningObjectiveData, data]
             }
           : item
       )
@@ -304,13 +280,13 @@ const LearningEvidence = ({
     id: index,
     title: curriculum.name,
     content: renderTableView(curriculum.learningEvidenceList),
-    uniqueId: curriculum.id,
+    uniqueId: curriculum.id
   }));
 
   const [learnings, setLearnings] = useState<any[]>([]);
 
   const postMeasurementChange = (data: any) => {
-    const { objectiveId, topicId } = selectedRubricData;
+    const {objectiveId, topicId} = selectedRubricData;
 
     let index = selectedCurriculumList.findIndex(
       (item) => item.id === selectedRubricData.curriculumID
@@ -337,18 +313,17 @@ const LearningEvidence = ({
             ? topic
             : {
                 ...topic,
-                associatedRubrics: topic.associatedRubrics.map(
-                  (rubric: any, i: number) =>
-                    i !== rubricIndex
-                      ? rubric
-                      : {
-                          ...rubric,
-                          name: data.name,
-                          criteria: data.criteria,
-                        }
-                ),
+                associatedRubrics: topic.associatedRubrics.map((rubric: any, i: number) =>
+                  i !== rubricIndex
+                    ? rubric
+                    : {
+                        ...rubric,
+                        name: data.name,
+                        criteria: data.criteria
+                      }
+                )
               }
-        ),
+        )
       };
     } else {
       temp[index].learningObjectiveData[selObjIdx] = {
@@ -358,9 +333,9 @@ const LearningEvidence = ({
             ? topic
             : {
                 ...topic,
-                associatedRubrics: [...(topic.associatedRubrics || []), data],
+                associatedRubrics: [...(topic.associatedRubrics || []), data]
               }
-        ),
+        )
       };
     }
 
@@ -372,13 +347,12 @@ const LearningEvidence = ({
   };
 
   const postTopicChange = (data: any) => {
-    const { curIdx = -1, objectiveIdx = -1, topicIdx = -1 } = selectedTopicData;
+    const {curIdx = -1, objectiveIdx = -1, topicIdx = -1} = selectedTopicData;
     let temp: any[] = [...selectedCurriculumList];
 
     if (curIdx === -1) return;
 
-    let topics =
-      temp[curIdx].learningObjectiveData[objectiveIdx].associatedTopics;
+    let topics = temp[curIdx].learningObjectiveData[objectiveIdx].associatedTopics;
 
     if (selectedTopicData?.id) {
       temp[curIdx].learningObjectiveData[objectiveIdx] = {
@@ -388,14 +362,14 @@ const LearningEvidence = ({
             ? topic
             : {
                 ...topic,
-                ...data,
+                ...data
               }
-        ),
+        )
       };
     } else {
       temp[curIdx].learningObjectiveData[objectiveIdx] = {
         ...temp[curIdx].learningObjectiveData[objectiveIdx],
-        associatedTopics: [...topics, data],
+        associatedTopics: [...topics, data]
       };
     }
     setTimeout(() => {
@@ -415,15 +389,15 @@ const LearningEvidence = ({
                 <Buttons
                   disabled={loading}
                   btnClass=""
-                  label={LEARINGOBJECTIVEDICT[userLanguage]["BUTTON"]["ADD"]}
-                  labelClass={"leading-6"}
+                  label={LEARINGOBJECTIVEDICT[userLanguage]['BUTTON']['ADD']}
+                  labelClass={'leading-6'}
                   Icon={IoIosAdd}
                   iconBeforeLabel
                   onClick={createLearningObjective}
                 />
               )
             }
-            title={LearningEvidenceDict[userLanguage]["TITLE"]}
+            title={LearningEvidenceDict[userLanguage]['TITLE']}
           />
 
           {loading ? (
@@ -455,9 +429,8 @@ const LearningEvidence = ({
                 <div className="py-2 m-auto mt-2 text-center">
                   <p
                     className={`${
-                      serverMessage.isError ? "text-red-600" : "text-green-600"
-                    }`}
-                  >
+                      serverMessage.isError ? 'text-red-600' : 'text-green-600'
+                    }`}>
                     {serverMessage.message}
                   </p>
                 </div>
@@ -466,11 +439,7 @@ const LearningEvidence = ({
           ) : (
             <div className="py-12 my-6 text-center">
               <p className="text-gray-600 font-medium">
-                {
-                  AddNewLessonFormDict[userLanguage]["MESSAGES"][
-                    "LESSONNOTHAVE"
-                  ]
-                }
+                {AddNewLessonFormDict[userLanguage]['MESSAGES']['LESSONNOTHAVE']}
               </p>
             </div>
           )}
@@ -480,10 +449,9 @@ const LearningEvidence = ({
             showHeader
             showFooter={false}
             showHeaderBorder
-            title={"Add Evidence"}
+            title={'Add Evidence'}
             closeOnBackdrop
-            closeAction={() => setAddModalShow(false)}
-          >
+            closeAction={() => setAddModalShow(false)}>
             <div className="min-w-256">
               <AddEvidence />
             </div>
@@ -494,10 +462,9 @@ const LearningEvidence = ({
             showHeader
             showFooter={false}
             showHeaderBorder
-            title={"Learning Objective"}
+            title={'Learning Objective'}
             closeOnBackdrop
-            closeAction={handleCancel}
-          >
+            closeAction={handleCancel}>
             <div className="min-w-120">
               <AddLearningObjective
                 curricularId={selectedObjectiveData.curricularId}
@@ -511,11 +478,10 @@ const LearningEvidence = ({
         {openMeasurementModal && (
           <Modal
             showHeader={true}
-            title={AddMeasurementDict[userLanguage]["heading"]}
+            title={AddMeasurementDict[userLanguage]['heading']}
             showHeaderBorder={true}
             showFooter={false}
-            closeAction={onMeasurementClose}
-          >
+            closeAction={onMeasurementClose}>
             <AddMeasurement
               curricularId={selectedRubricData.curriculumID}
               onCancel={onMeasurementClose}
@@ -529,11 +495,10 @@ const LearningEvidence = ({
         {openTopicModal && (
           <Modal
             showHeader={true}
-            title={AddTopicDict[userLanguage]["heading"]}
+            title={AddTopicDict[userLanguage]['heading']}
             showHeaderBorder={true}
             showFooter={false}
-            closeAction={onTopicModalClose}
-          >
+            closeAction={onTopicModalClose}>
             <AddTopic
               curricularId={selectedTopicData.curriculumID}
               onCancel={onTopicModalClose}

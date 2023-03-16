@@ -17,6 +17,26 @@ const pad = (num: any) => {
   return `0${num}`.slice(-2);
 };
 
+const DateCustomInput = forwardRef(({value, onClick, ...rest}: any) => {
+  const {theme} = useGlobalContext();
+  return (
+    <div
+      className={`flex w-auto py-2 px-4 focus:theme-border:500 transition-all rounded-full  ${theme.formSelect} ${theme.outlineNone}`}
+      onClick={onClick}>
+      <span className="w-6 mr-4 cursor-pointer">
+        <IoIosCalendar className="theme-text" size="1.5rem" />
+      </span>
+      <input
+        placeholder={'Search by date...'}
+        id="searchInput"
+        className={`text-sm ${theme.outlineNone}`}
+        value={value}
+        {...rest}
+      />
+    </div>
+  );
+});
+
 const limit: number = 10;
 
 interface IAttendanceProps {
@@ -134,23 +154,6 @@ const Attendance = ({id, goToClassroom, selectedRoomId, role}: IAttendanceProps)
     setDate(date);
     fetchAttendance(date, true);
   };
-
-  const DateCustomInput = forwardRef(({value, onClick, ...rest}: any) => (
-    <div
-      className={`flex w-auto py-2 px-4 focus:theme-border:500 transition-all rounded-full  ${theme.formSelect} ${theme.outlineNone}`}
-      onClick={onClick}>
-      <span className="w-6 mr-4 cursor-pointer">
-        <IoIosCalendar className="theme-text" size="1.5rem" />
-      </span>
-      <input
-        placeholder={'Search by date...'}
-        id="searchInput"
-        className={`text-sm ${theme.outlineNone}`}
-        value={value}
-        {...rest}
-      />
-    </div>
-  ));
 
   return (
     <div className="">

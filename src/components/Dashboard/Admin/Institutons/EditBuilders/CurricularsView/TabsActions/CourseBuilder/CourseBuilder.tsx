@@ -208,24 +208,12 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
           />
         );
       default:
-        return (
-          <CourseFormComponent
-            setCourseData={setCourseData}
-            courseId={courseId}
-            courseData={courseData}
-          />
-        );
+        return null;
     }
   };
 
   return (
     <div className="w-full h-full">
-      {/* Section Header */}
-      {/* <BreadCrums
-        items={breadCrumsList}
-        // unsavedChanges={unsavedChanges}
-        // toggleModal={toggleUnSaveModal}
-      /> */}
       <div className="px-8 py-4">
         <h3 className="text-lg leading-6 font-medium text-gray-900 w-auto capitalize">
           {courseData?.name}

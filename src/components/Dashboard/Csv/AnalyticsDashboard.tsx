@@ -1,16 +1,16 @@
-import { GraphQLAPI as API, graphqlOperation } from "@aws-amplify/api-graphql";
-import Loader from "atoms/Loader";
-import { useGlobalContext } from "contexts/GlobalContext";
-import * as customQueries from "customGraphql/customQueries";
-import useDictionary from "customHooks/dictionary";
-import * as mutations from "graphql/mutations";
-import * as queries from "graphql/queries";
-import React, { useEffect, useState } from "react";
-import DateAndTime from "../DateAndTime/DateAndTime";
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import Loader from 'atoms/Loader';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import * as customQueries from 'customGraphql/customQueries';
+import useDictionary from 'customHooks/dictionary';
+import * as mutations from 'graphql/mutations';
+import * as queries from 'graphql/queries';
+import React, {useEffect, useState} from 'react';
+import DateAndTime from '../DateAndTime/DateAndTime';
 
 const AnalyticsDashboard = () => {
-  const { userLanguage } = useGlobalContext();
-  const { CsvDict } = useDictionary();
+  const {userLanguage} = useGlobalContext();
+  const {CsvDict} = useDictionary();
   const [loading, setLoading] = useState<boolean>(false);
   const [surveyQues, setSurveyQues] = useState<any[]>([]);
   const [surveyData, setSurveyData] = useState<any[]>([]);
@@ -23,7 +23,7 @@ const AnalyticsDashboard = () => {
 
   // regex match double spaces and replace with single space
   const removeDoubleSpaces = (str: string) => {
-    return str.replace(/\s{2,}/g, " ");
+    return str.replace(/\s{2,}/g, ' ');
   };
 
   // regex match double quotations and replace with single quotations
@@ -57,7 +57,7 @@ const AnalyticsDashboard = () => {
               },
               pagePart: any
             ) => {
-              if (pagePart.hasOwnProperty("partContent")) {
+              if (pagePart.hasOwnProperty('partContent')) {
                 const partInputs = pagePart.partContent.reduce(
                   (
                     partInputAcc: {
@@ -72,10 +72,7 @@ const AnalyticsDashboard = () => {
                     // -------- IF FORM ------- //
                     if (isForm) {
                       const formSubInputs = partContent.value.reduce(
-                        (
-                          subPartAcc: { pgInput: any[] },
-                          partContentSub: any
-                        ) => {
+                        (subPartAcc: {pgInput: any[]}, partContentSub: any) => {
                           return {
                             ...subPartAcc,
 
@@ -85,19 +82,19 @@ const AnalyticsDashboard = () => {
                                 questionID: partContentSub.id,
                                 type: partContentSub.type,
                                 questionString: partContentSub.label,
-                                options: partContentSub.options,
-                              },
-                            ],
+                                options: partContentSub.options
+                              }
+                            ]
                           };
                         },
-                        { pgInput: [] }
+                        {pgInput: []}
                       );
 
                       return {
                         pageInputAcc: [
                           ...partInputAcc.pageInputAcc,
-                          ...formSubInputs.pgInput,
-                        ],
+                          ...formSubInputs.pgInput
+                        ]
                       };
                     }
                     // ---- IF OTHER INPUT ---- //
@@ -109,39 +106,36 @@ const AnalyticsDashboard = () => {
                             questionID: partContent.id,
                             type: partContent.type,
                             questionString: partContent.label,
-                            options: partContent.options,
-                          },
-                        ],
+                            options: partContent.options
+                          }
+                        ]
                       };
                     } else {
                       return partInputAcc;
                     }
                   },
-                  { pageInputAcc: [] }
+                  {pageInputAcc: []}
                 );
 
                 return {
                   pageInputAcc: [
                     ...pageInputsAcc.pageInputAcc,
-                    ...partInputs.pageInputAcc,
-                  ],
+                    ...partInputs.pageInputAcc
+                  ]
                 };
               } else {
                 return pageInputsAcc;
               }
             },
-            { pageInputAcc: [] }
+            {pageInputAcc: []}
           );
 
           return {
-            questionList: [
-              ...inputs.questionList,
-              reducedPageInputs.pageInputAcc,
-            ],
+            questionList: [...inputs.questionList, reducedPageInputs.pageInputAcc]
           };
         },
 
-        { questionList: [] }
+        {questionList: []}
       );
 
       return mappedPages;
@@ -171,8 +165,8 @@ const AnalyticsDashboard = () => {
           return [
             ...prev,
             {
-              ...survey,
-            },
+              ...survey
+            }
           ];
         });
       });
@@ -185,15 +179,15 @@ const AnalyticsDashboard = () => {
         graphqlOperation(queries.listUniversalLessons, {
           filter: {
             type: {
-              eq: "survey",
-            },
-          },
+              eq: 'survey'
+            }
+          }
         })
       );
       const returnedData = surveyList.data.listUniversalLessons.items;
       return returnedData;
     } catch (err) {
-      console.log("getAllSurvey error", err);
+      console.log('getAllSurvey error', err);
     }
   };
 
@@ -206,8 +200,8 @@ const AnalyticsDashboard = () => {
     try {
       const result: any = await API.graphql(
         graphqlOperation(queries.listPeople, {
-          filter: { role: { eq: peopleType } },
-          nextToken: nextToken,
+          filter: {role: {eq: peopleType}},
+          nextToken: nextToken
         })
       );
 
@@ -223,7 +217,7 @@ const AnalyticsDashboard = () => {
       return combined;
     } catch (error) {
       console.log(
-        "🚀 ~ file: AnalyticsDashboard.tsx ~ line 24 ~ listAllStudents ~ error",
+        '🚀 ~ file: AnalyticsDashboard.tsx ~ line 24 ~ listAllStudents ~ error',
         error
       );
     }
@@ -233,7 +227,7 @@ const AnalyticsDashboard = () => {
     try {
       let universalLesson: any = await API.graphql(
         graphqlOperation(customQueries.getUniversalLesson, {
-          id: lessonId,
+          id: lessonId
         })
       );
       let lessonObject = universalLesson.data.getUniversalLesson;
@@ -248,8 +242,8 @@ const AnalyticsDashboard = () => {
                 id: item.questionID,
                 question: item.questionString,
                 type: item.type,
-                options: item.options,
-              },
+                options: item.options
+              }
             });
           });
         });
@@ -261,7 +255,7 @@ const AnalyticsDashboard = () => {
         });
       });
     } catch (err) {
-      console.log("list questions error", err);
+      console.log('list questions error', err);
     }
   };
 
@@ -275,9 +269,9 @@ const AnalyticsDashboard = () => {
         nextToken: nextToken,
         filter: {
           lessonID: {
-            eq: lessonId,
-          },
-        },
+            eq: lessonId
+          }
+        }
       })
     );
     let studentsAnswersSurveyQuestionsData =
@@ -291,8 +285,6 @@ const AnalyticsDashboard = () => {
      */
     let combined: any = [...studentsAnswersSurveyQuestionsData, ...outArray];
 
-    // console.log('combined - - - -', combined);
-
     if (theNextToken) {
       combined = await getAllStudentsSurveyQuestionsResponse(
         lessonId,
@@ -300,7 +292,7 @@ const AnalyticsDashboard = () => {
         combined
       );
     }
-    console.log("fetched from universalSurveyData");
+    console.log('fetched from universalSurveyData');
 
     return combined;
   };
@@ -318,22 +310,22 @@ const AnalyticsDashboard = () => {
         surveyQuestionOptions[ques.question.id] = ques.question.options;
         return {
           label: `${ques.question.question}-s-${ques.question.id}`,
-          key: `${ques.question.id}`,
+          key: `${ques.question.id}`
         };
       });
 
       let Headers = [
-        { label: "AuthId", key: "authId" },
-        { label: "Email", key: "email" },
-        { label: "UniversalSurveyStudentID", key: "universalSurveyStudentID" },
-        ...surveyQuestionHeaders,
+        {label: 'AuthId', key: 'authId'},
+        {label: 'Email', key: 'email'},
+        {label: 'UniversalSurveyStudentID', key: 'universalSurveyStudentID'},
+        ...surveyQuestionHeaders
       ];
 
       let data = students.map((stu: any) => {
         let surveyAnswerDates: any = [];
         let studentAnswers: any = {};
         let hasTakenSurvey = false;
-        let universalSurveyStudentID = "";
+        let universalSurveyStudentID = '';
 
         surveyData.map((answerArray: any) => {
           if (answerArray.studentID === stu.authId) {
@@ -354,32 +346,28 @@ const AnalyticsDashboard = () => {
                     singleAnswer.input.length &&
                     singleAnswer.input[0].length
                   ) {
-                    let selectedOption = surveyQuestionOptions[
-                      singleAnswer.domID
-                    ].filter((option: any) => {
-                      return option.id === singleAnswer.input[0];
-                    });
-                    if (
-                      Array.isArray(selectedOption) &&
-                      selectedOption.length
-                    ) {
+                    let selectedOption = surveyQuestionOptions[singleAnswer.domID].filter(
+                      (option: any) => {
+                        return option.id === singleAnswer.input[0];
+                      }
+                    );
+                    if (Array.isArray(selectedOption) && selectedOption.length) {
                       // cleanup here
                       studentAnswers[singleAnswer.domID] = cleanString(
                         selectedOption[0].text
                       );
                     } else {
-                      studentAnswers[singleAnswer.domID] = "";
+                      studentAnswers[singleAnswer.domID] = '';
                     }
                   } else {
-                    studentAnswers[singleAnswer.domID] = "";
+                    studentAnswers[singleAnswer.domID] = '';
                   }
                 } else {
                   // cleanup here
                   studentAnswers[singleAnswer.domID] =
-                    Array.isArray(singleAnswer.input) &&
-                    singleAnswer.input.length
+                    Array.isArray(singleAnswer.input) && singleAnswer.input.length
                       ? cleanString(singleAnswer.input[0])
-                      : "";
+                      : '';
                 }
               }
             });
@@ -395,19 +383,19 @@ const AnalyticsDashboard = () => {
           ...stu,
           universalSurveyStudentID: universalSurveyStudentID
             ? universalSurveyStudentID
-            : "Not-taken-yet",
+            : 'Not-taken-yet',
           ...studentAnswers,
           hasTakenSurvey,
           first:
             (surveyAnswerDates[surveyAnswerDates.length - 1] &&
-              new Date(
-                surveyAnswerDates[surveyAnswerDates.length - 1]
-              ).toLocaleString("en-US")) ||
-            "-",
+              new Date(surveyAnswerDates[surveyAnswerDates.length - 1]).toLocaleString(
+                'en-US'
+              )) ||
+            '-',
           last:
             (surveyAnswerDates[0] &&
-              new Date(surveyAnswerDates[0]).toLocaleString("en-US")) ||
-            "-",
+              new Date(surveyAnswerDates[0]).toLocaleString('en-US')) ||
+            '-'
         };
       });
       surveyDates = surveyDates.sort(
@@ -416,29 +404,27 @@ const AnalyticsDashboard = () => {
       );
       return {
         SurveyHeaders: Headers,
-        SurveyData: data,
+        SurveyData: data
       };
     } catch (err) {
-      console.log("error", err);
+      console.log('error', err);
       return {
         SurveyHeaders: [],
-        SurveyData: [],
+        SurveyData: []
       };
     }
   };
 
   const filterData = async () => {
-    const { SurveyHeaders, SurveyData } = await getCSVData();
-    let filteredData = SurveyData.filter(
-      (csvD: { [x: string]: string }): any => {
-        return SurveyHeaders.find(({ key }: any) => {
-          if (csvD[key] === "") {
-            return true;
-          }
-          return false;
-        });
-      }
-    );
+    const {SurveyHeaders, SurveyData} = await getCSVData();
+    let filteredData = SurveyData.filter((csvD: {[x: string]: string}): any => {
+      return SurveyHeaders.find(({key}: any) => {
+        if (csvD[key] === '') {
+          return true;
+        }
+        return false;
+      });
+    });
     let input: any[] = [];
     filteredData.map((csvD: any) => {
       input = [
@@ -452,12 +438,12 @@ const AnalyticsDashboard = () => {
               return {
                 QuestionId: header.key,
                 QuestionLabel: header.label,
-                QuestionResponse: csvD[header.key],
+                QuestionResponse: csvD[header.key]
               };
             }
             return {};
-          }).filter(Boolean),
-        },
+          }).filter(Boolean)
+        }
       ];
     });
     await CreateOrUpdateData(input);
@@ -469,7 +455,7 @@ const AnalyticsDashboard = () => {
         const getData: any = await API.graphql(
           graphqlOperation(queries.getArchiveSurveyDataSQL, {
             AuthId: data.AuthId,
-            Email: data.Email,
+            Email: data.Email
           })
         );
         const ArchiveData = getData.data.getArchiveSurveyDataSql;
@@ -478,16 +464,16 @@ const AnalyticsDashboard = () => {
             graphqlOperation(mutations.updateArchiveSurveyDataSQL, {
               input: {
                 id: ArchiveData.id,
-                ...data,
-              },
+                ...data
+              }
             })
           );
         } else {
           await API.graphql(
             graphqlOperation(mutations.createArchiveSurveyDataSQL, {
               input: {
-                ...data,
-              },
+                ...data
+              }
             })
           );
         }
@@ -499,7 +485,7 @@ const AnalyticsDashboard = () => {
       }, 3000);
     } catch (err) {
       console.log(
-        "🚀 ~ file: AnalyticsDashboard.tsx ~ line 532 ~ UploadDataToAthena ~ err",
+        '🚀 ~ file: AnalyticsDashboard.tsx ~ line 532 ~ UploadDataToAthena ~ err',
         err
       );
     }
@@ -510,7 +496,7 @@ const AnalyticsDashboard = () => {
       <div className="mx-auto w-full">
         <div className="flex flex-row my-0 w-full py-0 mb-8 justify-between">
           <h3 className="text-lg leading-6 text-gray-600 w-auto">
-            {CsvDict[userLanguage]["TITLE"]}
+            {CsvDict[userLanguage]['TITLE']}
           </h3>
           {/* <div className={`border-l-6 pl-4 ${theme.verticalBorder[themeColor]}`}>
             <span>{CsvDict[userLanguage]['TITLE']}</span>
@@ -544,8 +530,7 @@ const AnalyticsDashboard = () => {
                 onClick={filterData}
                 type="button"
                 disabled={loading}
-                className={`col-end-5 w-1/3 mt-5  inline-flex justify-center h-9 border-0 border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:ring-indigo transition duration-150 ease-in-out items-center`}
-              >
+                className={`col-end-5 w-1/3 mt-5  inline-flex justify-center h-9 border-0 border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:ring-indigo transition duration-150 ease-in-out items-center`}>
                 Export data to Athena
               </button>
             </>

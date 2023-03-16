@@ -1,20 +1,20 @@
-import { API, graphqlOperation } from "aws-amplify";
-import React, { useEffect, useState } from "react";
+import {API, graphqlOperation} from 'aws-amplify';
+import React, {useEffect, useState} from 'react';
 
-import Buttons from "atoms/Buttons";
-import FormInput from "atoms/Form/FormInput";
-import MultipleSelector from "atoms/Form/MultipleSelector";
+import Buttons from 'atoms/Buttons';
+import FormInput from 'atoms/Form/FormInput';
+import MultipleSelector from 'atoms/Form/MultipleSelector';
 
-import Label from "@components/Atoms/Form/Label";
-import Selector from "@components/Atoms/Form/Selector";
-import ModalPopUp from "@components/Molecules/ModalPopUp";
-import { RoomStatus } from "API";
-import { useGlobalContext } from "contexts/GlobalContext";
-import useDictionary from "customHooks/dictionary";
-import * as mutations from "graphql/mutations";
-import { languageList } from "utilities/staticData";
-import { RoomStatusList } from "../CourseBuilder/CourseFormComponent";
-import AttachedCourses from "./AttachedCourses";
+import Label from '@components/Atoms/Form/Label';
+import Selector from '@components/Atoms/Form/Selector';
+import ModalPopUp from '@components/Molecules/ModalPopUp';
+import {RoomStatus} from 'API';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import * as mutations from 'graphql/mutations';
+import {languageList} from 'utilities/staticData';
+import {RoomStatusList} from '../CourseBuilder/CourseFormComponent';
+import AttachedCourses from './AttachedCourses';
 
 interface AddSyllabusProps {
   syllabusDetails?: any;
@@ -36,7 +36,7 @@ interface InitialData {
   secondary: string;
   status: RoomStatus;
 
-  languages: { id: string; name: string; value: string }[];
+  languages: {id: string; name: string; value: string}[];
 }
 
 const UnitFormComponent = ({
@@ -45,31 +45,31 @@ const UnitFormComponent = ({
   syllabusDetails,
   instId,
   setSyllabusDataParent,
-  curricular,
+  curricular
 }: AddSyllabusProps) => {
   const initialData = {
-    name: "",
-    description: "",
-    methodology: "",
-    policies: "",
-    purpose: "",
-    objectives: "",
-    priorities: "",
-    secondary: "",
+    name: '',
+    description: '',
+    methodology: '',
+    policies: '',
+    purpose: '',
+    objectives: '',
+    priorities: '',
+    secondary: '',
     status: RoomStatus.ACTIVE,
-    languages: [{ id: "1", name: "English", value: "EN" }],
+    languages: [{id: '1', name: 'English', value: 'EN'}]
   };
   const [syllabusData, setSyllabusData] = useState<InitialData>(initialData);
 
   const [loading, setIsLoading] = useState(false);
-  const { userLanguage } = useGlobalContext();
+  const {userLanguage} = useGlobalContext();
 
-  const { AddSyllabusDict, UserEditDict } = useDictionary();
+  const {AddSyllabusDict, UserEditDict} = useDictionary();
 
   const [messages, setMessages] = useState({
     show: false,
-    message: "",
-    isError: false,
+    message: '',
+    isError: false
   });
 
   useEffect(() => {
@@ -86,7 +86,7 @@ const UnitFormComponent = ({
         methodology: syllabusDetails?.methodology,
         policies: syllabusDetails?.policies,
         priorities: syllabusDetails?.priorities,
-        status: syllabusDetails?.status || RoomStatus.ACTIVE,
+        status: syllabusDetails?.status || RoomStatus.ACTIVE
       });
     }
   }, [syllabusDetails]);
@@ -94,13 +94,13 @@ const UnitFormComponent = ({
   const onInputChange = (e: any) => {
     setSyllabusData({
       ...syllabusData,
-      [e.target.name]: e.target.value,
+      [e.target.name]: e.target.value
     });
     if (messages.show) {
       setMessages({
         show: false,
-        message: "",
-        isError: false,
+        message: '',
+        isError: false
       });
     }
   };
@@ -110,13 +110,13 @@ const UnitFormComponent = ({
     const currentLanguages = syllabusData.languages;
     const selectedItem = currentLanguages.find((item) => item.id === id);
     if (!selectedItem) {
-      updatedList = [...currentLanguages, { id, name, value }];
+      updatedList = [...currentLanguages, {id, name, value}];
     } else {
       updatedList = currentLanguages.filter((item) => item.id !== id);
     }
     setSyllabusData({
       ...syllabusData,
-      languages: updatedList,
+      languages: updatedList
     });
   };
 
@@ -126,7 +126,7 @@ const UnitFormComponent = ({
       try {
         setIsLoading(true);
         const languagesCode = syllabusData.languages.map(
-          (item: { value: string }) => item.value
+          (item: {value: string}) => item.value
         );
         const input: any = {
           institutionID: instId,
@@ -139,14 +139,14 @@ const UnitFormComponent = ({
           languages: languagesCode,
           universalLessonsSeq: [],
           priorities: syllabusData?.priorities,
-          secondary: syllabusData?.secondary || "",
+          secondary: syllabusData?.secondary || '',
 
-          status: syllabusData?.status || RoomStatus.ACTIVE,
+          status: syllabusData?.status || RoomStatus.ACTIVE
         };
         if (syllabusDetails?.id) {
           const res: any = await API.graphql(
             graphqlOperation(mutations.updateUniversalSyllabus, {
-              input: { ...input, id: syllabusDetails?.id },
+              input: {...input, id: syllabusDetails?.id}
             })
           );
           const savedData = res.data.updateUniversalSyllabus;
@@ -165,44 +165,44 @@ const UnitFormComponent = ({
               methodology: savedData.methodology,
               policies: savedData.policies,
               lessonHistory: savedData.lessonHistory,
-              secondary: savedData.secondary || "",
+              secondary: savedData.secondary || '',
               priorities: savedData.priorities,
-              status: savedData.status || RoomStatus.ACTIVE,
+              status: savedData.status || RoomStatus.ACTIVE
             });
           setMessages({
             show: true,
-            message: AddSyllabusDict[userLanguage]["messages"]["unitupdate"],
-            isError: false,
+            message: AddSyllabusDict[userLanguage]['messages']['unitupdate'],
+            isError: false
           });
           setIsLoading(false);
         } else {
           const newSyllabus: any = await API.graphql(
-            graphqlOperation(mutations.createUniversalSyllabus, { input })
+            graphqlOperation(mutations.createUniversalSyllabus, {input})
           );
           const newItem = newSyllabus.data.createUniversalSyllabus;
 
           if (newItem) {
             postAddSyllabus(newItem.id);
           } else {
-            console.error("Could not add unit");
+            console.error('Could not add unit');
           }
         }
       } catch {
         setMessages({
           show: true,
-          message: AddSyllabusDict[userLanguage]["messages"]["unablesave"],
-          isError: true,
+          message: AddSyllabusDict[userLanguage]['messages']['unablesave'],
+          isError: true
         });
       }
     }
   };
 
   const validateForm = async () => {
-    if (syllabusData.name.trim() === "") {
+    if (syllabusData.name.trim() === '') {
       setMessages({
         show: true,
-        message: AddSyllabusDict[userLanguage]["messages"]["namerequired"],
-        isError: true,
+        message: AddSyllabusDict[userLanguage]['messages']['namerequired'],
+        isError: true
       });
       return false;
     }
@@ -214,16 +214,16 @@ const UnitFormComponent = ({
 
   const [warnModal, setWarnModal] = useState({
     show: false,
-    message: "message",
-    onSaveAction: () => {},
+    message: 'message',
+    onSaveAction: () => {}
   });
 
   const closeModal = () => {
-    setWarnModal({ show: false, message: "", onSaveAction: () => {} });
+    setWarnModal({show: false, message: '', onSaveAction: () => {}});
   };
 
   const selectStatus = (val: RoomStatus) => {
-    setSyllabusData({ ...syllabusData, status: val });
+    setSyllabusData({...syllabusData, status: val});
     closeModal();
   };
 
@@ -232,8 +232,8 @@ const UnitFormComponent = ({
       setWarnModal({
         show: true,
         message:
-          "By setting this unit to inactive, students will no longer see the unit lessons when they log in. Do you wish to continue?",
-        onSaveAction: () => selectStatus(name),
+          'By setting this unit to inactive, students will no longer see the unit lessons when they log in. Do you wish to continue?',
+        onSaveAction: () => selectStatus(name)
       });
     } else {
       selectStatus(name);
@@ -248,7 +248,7 @@ const UnitFormComponent = ({
     status,
     priorities,
     objectives,
-    secondary,
+    secondary
   } = syllabusData;
 
   return (
@@ -262,18 +262,16 @@ const UnitFormComponent = ({
                 id="name"
                 onChange={onInputChange}
                 name="name"
-                label={AddSyllabusDict[userLanguage]["unitname"]}
+                label={AddSyllabusDict[userLanguage]['unitname']}
                 isRequired
               />
             </div>
 
             <div>
               <MultipleSelector
-                label={AddSyllabusDict[userLanguage]["language"]}
+                label={AddSyllabusDict[userLanguage]['language']}
                 selectedItems={languages}
-                placeholder={
-                  AddSyllabusDict[userLanguage]["placeholderlanguage"]
-                }
+                placeholder={AddSyllabusDict[userLanguage]['placeholderlanguage']}
                 list={languageList}
                 onChange={selectLanguage}
               />
@@ -281,15 +279,15 @@ const UnitFormComponent = ({
 
             <div className="">
               <Selector
-                label={UserEditDict[userLanguage]["status"]}
-                placeholder={UserEditDict[userLanguage]["status"]}
+                label={UserEditDict[userLanguage]['status']}
+                placeholder={UserEditDict[userLanguage]['status']}
                 list={RoomStatusList}
                 // @ts-ignore
                 onChange={(_: any, name: RoomStatus) => {
                   beforeStatusChange(name);
                 }}
                 dropdownWidth="w-56"
-                selectedItem={status || UserEditDict[userLanguage]["status"]}
+                selectedItem={status || UserEditDict[userLanguage]['status']}
               />
             </div>
 
@@ -301,7 +299,7 @@ const UnitFormComponent = ({
                 id="description"
                 onChange={onInputChange}
                 name="description"
-                label={AddSyllabusDict[userLanguage]["description"]}
+                label={AddSyllabusDict[userLanguage]['description']}
               />
             </div>
             <div>
@@ -312,7 +310,7 @@ const UnitFormComponent = ({
                 id="purpose"
                 onChange={onInputChange}
                 name="purpose"
-                label={AddSyllabusDict[userLanguage]["purpose"]}
+                label={AddSyllabusDict[userLanguage]['purpose']}
               />
             </div>
 
@@ -324,7 +322,7 @@ const UnitFormComponent = ({
                 id="priorities"
                 onChange={onInputChange}
                 name="priorities"
-                label={AddSyllabusDict[userLanguage]["priority"]}
+                label={AddSyllabusDict[userLanguage]['priority']}
               />
             </div>
             <div>
@@ -335,7 +333,7 @@ const UnitFormComponent = ({
                 id="secondary"
                 onChange={onInputChange}
                 name="secondary"
-                label={AddSyllabusDict[userLanguage]["secondary"]}
+                label={AddSyllabusDict[userLanguage]['secondary']}
               />
             </div>
             <div>
@@ -346,17 +344,14 @@ const UnitFormComponent = ({
                 id="objectives"
                 onChange={onInputChange}
                 name="objectives"
-                label={AddSyllabusDict[userLanguage]["objective"]}
+                label={AddSyllabusDict[userLanguage]['objective']}
               />
             </div>
             {curricular && (
               <div>
                 <Label label="Attached courses" />
                 <div className="mt-1">
-                  <AttachedCourses
-                    curricular={curricular}
-                    unitId={syllabusDetails.id}
-                  />
+                  <AttachedCourses curricular={curricular} unitId={syllabusDetails.id} />
                 </div>
               </div>
             )}
@@ -364,12 +359,8 @@ const UnitFormComponent = ({
         </div>
         {messages.show ? (
           <div className="py-2 m-auto text-center">
-            <p
-              className={`${
-                messages.isError ? "text-red-600" : "text-green-600"
-              }`}
-            >
-              {messages.message && messages.message}
+            <p className={`${messages.isError ? 'text-red-600' : 'text-green-600'}`}>
+              {messages.message ? messages.message : ''}
             </p>
           </div>
         ) : null}
@@ -383,7 +374,7 @@ const UnitFormComponent = ({
           />
           <Buttons
             btnClass="py-3 px-10"
-            label={AddSyllabusDict[userLanguage][loading ? "saving" : "save"]}
+            label={AddSyllabusDict[userLanguage][loading ? 'saving' : 'save']}
             onClick={saveSyllabusDetails}
             disabled={loading ? true : false}
           />

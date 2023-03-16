@@ -259,8 +259,8 @@ const UserInformation = ({
                   </div>
                   <div className="px-4 py-5 sm:px-6">
                     <dl className="grid grid-cols-1 gap-x-4 gap-y-4 sm:grid-cols-2">
-                      {checkpoint.questions?.items.map((item: any, index: number) => (
-                        <div key={index} className="sm:col-span-1 p-2">
+                      {checkpoint.questions?.items.map((item: any) => (
+                        <div key={item.question.id} className="sm:col-span-1 p-2">
                           <dt className="text-sm leading-5 font-medium text-gray-500">
                             {item.question.question}
                           </dt>

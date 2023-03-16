@@ -285,7 +285,6 @@ const Csv = () => {
         {questionList: []}
       );
 
-      // console.log(JSON.stringify(mappedPages));
       return mappedPages;
     }
   };
@@ -474,7 +473,7 @@ const Csv = () => {
           lessonPDFData={lessonPDFData}
         />
 
-        <div>
+        <div className="w-full">
           <div className="w-auto my-4">
             <SectionTitleV3 title={'Survey Results'} />
           </div>
@@ -494,7 +493,7 @@ const Csv = () => {
         </div>
         <AnimatedContainer show={isCSVDownloadReady}>
           {isCSVDownloadReady && (
-            <div>
+            <div className="w-full">
               <div className="w-auto my-4">
                 <SectionTitleV3 title={'Statistics'} />
               </div>

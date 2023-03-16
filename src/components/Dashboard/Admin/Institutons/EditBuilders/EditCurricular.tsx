@@ -1,26 +1,26 @@
-import { GraphQLAPI as API, graphqlOperation } from "@aws-amplify/api-graphql";
-import { Storage } from "@aws-amplify/storage";
-import React, { useEffect, useState } from "react";
-import { IoImage } from "react-icons/io5";
-import { useHistory } from "react-router-dom";
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import {Storage} from '@aws-amplify/storage';
+import React, {useEffect, useState} from 'react';
+import {IoImage} from 'react-icons/io5';
+import {useHistory} from 'react-router-dom';
 
-import * as customQueries from "customGraphql/customQueries";
-import * as mutation from "graphql/mutations";
-import ProfileCropModal from "../../../Profile/ProfileCropModal";
+import * as customQueries from 'customGraphql/customQueries';
+import * as mutation from 'graphql/mutations';
+import ProfileCropModal from '../../../Profile/ProfileCropModal';
 
-import { useGlobalContext } from "@contexts/GlobalContext";
-import { checkUniqCurricularName } from "@graphql/functions";
-import Buttons from "atoms/Buttons";
-import FormInput from "atoms/Form/FormInput";
-import MultipleSelector from "atoms/Form/MultipleSelector";
-import Selector from "atoms/Form/Selector";
-import TextArea from "atoms/Form/TextArea";
-import useDictionary from "customHooks/dictionary";
-import { LessonEditDict } from "dictionary/dictionary.iconoclast";
-import DroppableMedia from "molecules/DroppableMedia";
-import ModalPopUp from "molecules/ModalPopUp";
-import { getImageFromS3 } from "utilities/services";
-import { languageList } from "utilities/staticData";
+import {useGlobalContext} from '@contexts/GlobalContext';
+import {checkUniqCurricularName} from '@graphql/functions';
+import Buttons from 'atoms/Buttons';
+import FormInput from 'atoms/Form/FormInput';
+import MultipleSelector from 'atoms/Form/MultipleSelector';
+import Selector from 'atoms/Form/Selector';
+import TextArea from 'atoms/Form/TextArea';
+import useDictionary from 'customHooks/dictionary';
+import {LessonEditDict} from 'dictionary/dictionary.iconoclast';
+import DroppableMedia from 'molecules/DroppableMedia';
+import ModalPopUp from 'molecules/ModalPopUp';
+import {getImageFromS3} from 'utilities/services';
+import {languageList} from 'utilities/staticData';
 
 interface EditCurricularProps {
   closeAction: () => void;
@@ -29,20 +29,20 @@ interface EditCurricularProps {
 }
 
 const EditCurricular = (props: EditCurricularProps) => {
-  const { closeAction, curricularDetails, postUpdateDetails } = props;
+  const {closeAction, curricularDetails, postUpdateDetails} = props;
   const initialData = {
-    id: "",
-    name: "",
-    description: "",
-    summary: "",
-    type: "",
-    languages: [{ id: "1", name: "English", value: "EN" }],
-    objectives: "",
+    id: '',
+    name: '',
+    description: '',
+    summary: '',
+    type: '',
+    languages: [{id: '1', name: 'English', value: 'EN'}],
+    objectives: '',
     institute: {
-      id: "",
-      name: "",
-      value: "",
-    },
+      id: '',
+      name: '',
+      value: ''
+    }
   };
   const history = useHistory();
 
@@ -50,33 +50,33 @@ const EditCurricular = (props: EditCurricularProps) => {
   const [designerIds, setDesignerIds] = useState<any[]>([]);
   const [designersList, setDesignersList] = useState<any[]>([]);
   const [selectedDesigners, setSelectedDesigners] = useState<any[]>([]);
-  const [previousName, setPreviousName] = useState("");
+  const [previousName, setPreviousName] = useState('');
   const [messages, setMessages] = useState({
     show: false,
-    message: "",
-    isError: false,
+    message: '',
+    isError: false
   });
   const [showCropper, setShowCropper] = useState(false);
   const [upImage, setUpImage] = useState<any | null>(null);
   const [_1, setImageLoading] = useState(false);
-  const [imageUrl, setImageUrl] = useState("");
+  const [imageUrl, setImageUrl] = useState('');
   const [s3Image, setS3Image] = useState<any | null>(null);
   const [fileObj, setFileObj] = useState({});
 
   const [_2, setError] = useState({
     show: true,
-    errorMsg: "",
+    errorMsg: ''
   });
 
   const [saving, setSaving] = useState(false);
 
-  const { userLanguage } = useGlobalContext();
-  const { EditCurriculardict } = useDictionary();
+  const {userLanguage} = useGlobalContext();
+  const {EditCurriculardict} = useDictionary();
 
   const [_, setUnsavedChanges] = useState(false);
   const [warnModal, setWarnModal] = useState({
     show: false,
-    message: LessonEditDict[userLanguage]["MESSAGES"]["UNSAVE"],
+    message: LessonEditDict[userLanguage]['MESSAGES']['UNSAVE']
   });
 
   const onModalSave = () => {
@@ -87,21 +87,21 @@ const EditCurricular = (props: EditCurricularProps) => {
   const toggleModal = () => {
     setWarnModal({
       ...warnModal,
-      show: !warnModal.show,
+      show: !warnModal.show
     });
   };
 
   const onChange = (e: any) => {
     setCurricularData({
       ...curricularData,
-      [e.target.name]: e.target.value,
+      [e.target.name]: e.target.value
     });
     setUnsavedChanges(true);
     if (messages.show) {
       setMessages({
         show: false,
-        message: "",
-        isError: false,
+        message: '',
+        isError: false
       });
     }
   };
@@ -110,7 +110,7 @@ const EditCurricular = (props: EditCurricularProps) => {
     const currentLanguages = curricularData.languages;
     const selectedItem = currentLanguages.find((item) => item.id === id);
     if (!selectedItem) {
-      updatedList = [...currentLanguages, { id, name, value }];
+      updatedList = [...currentLanguages, {id, name, value}];
     } else {
       updatedList = currentLanguages.filter((item) => item.id !== id);
     }
@@ -118,7 +118,7 @@ const EditCurricular = (props: EditCurricularProps) => {
 
     setCurricularData({
       ...curricularData,
-      languages: updatedList,
+      languages: updatedList
     });
   };
 
@@ -127,7 +127,7 @@ const EditCurricular = (props: EditCurricularProps) => {
     const currentDesigners = selectedDesigners;
     const selectedItem = currentDesigners.find((item) => item.id === id);
     if (!selectedItem) {
-      updatedList = [...currentDesigners, { id, name, value }];
+      updatedList = [...currentDesigners, {id, name, value}];
     } else {
       updatedList = currentDesigners.filter((item) => item.id !== id);
     }
@@ -140,23 +140,23 @@ const EditCurricular = (props: EditCurricularProps) => {
     try {
       const result: any = await API.graphql(
         graphqlOperation(customQueries.listPersons, {
-          filter: { or: [{ role: { eq: "TR" } }, { role: { eq: "BLD" } }] },
+          filter: {or: [{role: {eq: 'TR'}}, {role: {eq: 'BLD'}}]}
         })
       );
       const savedData = result.data.listPeople;
       const updatedList = savedData?.items.map(
-        (item: { id: string; firstName: string; lastName: string }) => ({
+        (item: {id: string; firstName: string; lastName: string}) => ({
           id: item?.id,
-          name: `${item?.firstName || ""} ${item.lastName || ""}`,
-          value: `${item?.firstName || ""} ${item.lastName || ""}`,
+          name: `${item?.firstName || ''} ${item.lastName || ''}`,
+          value: `${item?.firstName || ''} ${item.lastName || ''}`
         })
       );
       setDesignersList(updatedList);
     } catch {
       setMessages({
         show: true,
-        message: EditCurriculardict[userLanguage]["messages"]["fetcherr"],
-        isError: true,
+        message: EditCurriculardict[userLanguage]['messages']['fetcherr'],
+        isError: true
       });
     }
   };
@@ -166,7 +166,7 @@ const EditCurricular = (props: EditCurricularProps) => {
       setSaving(true);
       try {
         const languagesCode = curricularData.languages.map(
-          (item: { value: string }) => item.value
+          (item: {value: string}) => item.value
         );
         const designers = selectedDesigners.map((item) => item.id);
         let input = {
@@ -179,26 +179,25 @@ const EditCurricular = (props: EditCurricularProps) => {
           objectives: [curricularData.objectives],
           languages: languagesCode,
           designers: designers,
-          image: curricularDetails.image,
+          image: curricularDetails.image
         };
 
         if (s3Image) {
-          await uploadImageToS3(s3Image, curricularData.id, "image/jpeg");
+          await uploadImageToS3(s3Image, curricularData.id, 'image/jpeg');
           input = {
             ...input,
-            image: `instituteImages/curricular_image_${curricularData.id}`,
+            image: `instituteImages/curricular_image_${curricularData.id}`
           };
         }
 
         const newCurricular: any = await API.graphql(
-          graphqlOperation(mutation.updateCurriculum, { input: input })
+          graphqlOperation(mutation.updateCurriculum, {input: input})
         );
 
         setMessages({
           show: true,
-          message:
-            EditCurriculardict[userLanguage]["messages"]["curricularchange"],
-          isError: false,
+          message: EditCurriculardict[userLanguage]['messages']['curricularchange'],
+          isError: false
         });
         setSaving(false);
         setUnsavedChanges(false);
@@ -207,54 +206,30 @@ const EditCurricular = (props: EditCurricularProps) => {
         setSaving(false);
         setMessages({
           show: true,
-          message: EditCurriculardict[userLanguage]["messages"]["updateerror"],
-          isError: true,
+          message: EditCurriculardict[userLanguage]['messages']['updateerror'],
+          isError: true
         });
       }
     }
   };
 
-  // const getInstitutionList = async () => {
-  //   try {
-  //     const list: any = await API.graphql(
-  //       graphqlOperation(queries.listInstitutions, {filter: withZoiqFilter({})})
-  //     );
-  //     const sortedList = list.data.listInstitutions?.items.sort((a: any, b: any) =>
-  //       a.name?.toLowerCase() > b.name?.toLowerCase() ? 1 : -1
-  //     );
-  //     const InstituteList = sortedList.map((item: any, i: any) => ({
-  //       id: item.id,
-  //       name: `${item.name || ''}`,
-  //       value: `${item.name || ''}`
-  //     }));
-  //     setInstitutionList(InstituteList);
-  //   } catch {
-  //     setMessages({
-  //       show: true,
-  //       message: EditCurriculardict[userLanguage]['messages']['unablefetch'],
-  //       isError: true
-  //     });
-  //   }
-  // };
-
   const validateForm = async () => {
-    if (curricularData.name.trim() === "") {
+    if (curricularData.name.trim() === '') {
       setMessages({
         show: true,
-        message: EditCurriculardict[userLanguage]["messages"]["namerequired"],
-        isError: true,
+        message: EditCurriculardict[userLanguage]['messages']['namerequired'],
+        isError: true
       });
       return false;
-    } else if (curricularData.institute.id === "") {
+    } else if (curricularData.institute.id === '') {
       setMessages({
         show: true,
-        message:
-          EditCurriculardict[userLanguage]["messages"]["selectinstitute"],
-        isError: true,
+        message: EditCurriculardict[userLanguage]['messages']['selectinstitute'],
+        isError: true
       });
       return false;
     } else if (
-      curricularData.name.trim() !== "" &&
+      curricularData.name.trim() !== '' &&
       previousName !== curricularData.name
     ) {
       const isUniq = await checkUniqCurricularName(
@@ -264,8 +239,8 @@ const EditCurricular = (props: EditCurricularProps) => {
       if (!isUniq) {
         setMessages({
           show: true,
-          message: EditCurriculardict[userLanguage]["messages"]["nameexist"],
-          isError: true,
+          message: EditCurriculardict[userLanguage]['messages']['nameexist'],
+          isError: true
         });
         return false;
       } else {
@@ -280,8 +255,6 @@ const EditCurricular = (props: EditCurricularProps) => {
   // will create parent for curricular view and this edit page.
 
   useEffect(() => {
-    // fetchCurricularData();
-    // loadInstitution();
     fetchPersonsList();
   }, []);
 
@@ -296,13 +269,11 @@ const EditCurricular = (props: EditCurricularProps) => {
         institute: curricularDetails.institute,
         description: curricularDetails.description,
         objectives: curricularDetails.objectives[0],
-        languages: curricularDetails.languages,
+        languages: curricularDetails.languages
       });
       // Load from response value
       const imageUrl: any = curricularDetails.image
-        ? await getImageFromS3(
-            `instituteImages/curricular_image_${curricularDetails.id}`
-          )
+        ? await getImageFromS3(`instituteImages/curricular_image_${curricularDetails.id}`)
         : null;
       setImageUrl(imageUrl);
 
@@ -319,17 +290,13 @@ const EditCurricular = (props: EditCurricularProps) => {
   }, [curricularDetails]);
 
   useEffect(() => {
-    if (
-      designersList &&
-      Array.isArray(designersList) &&
-      designersList.length > 0
-    ) {
+    if (designersList && Array.isArray(designersList) && designersList.length > 0) {
       const designers = [...designerIds].map((desID: string) => {
         const personData = designersList.find((per) => per.id === desID);
         const personObj = {
           id: personData?.id,
           name: personData?.name,
-          value: personData?.name,
+          value: personData?.name
         };
         return personObj;
       });
@@ -357,19 +324,19 @@ const EditCurricular = (props: EditCurricularProps) => {
     return new Promise((resolve, reject) => {
       Storage.put(`instituteImages/curricular_image_${id}`, file, {
         contentType: type,
-        acl: "public-read",
-        contentEncoding: "base64",
+        acl: 'public-read',
+        contentEncoding: 'base64'
       })
         .then((result) => {
-          console.log("File successfully uploaded to s3", result);
+          console.log('File successfully uploaded to s3', result);
           resolve(true);
         })
         .catch((err) => {
           setError({
             show: true,
-            errorMsg: "Unable to upload image. Please try again later. ",
+            errorMsg: 'Unable to upload image. Please try again later. '
           });
-          console.error("Error in uploading file to s3", err);
+          console.error('Error in uploading file to s3', err);
           reject(err);
         });
     });
@@ -381,35 +348,17 @@ const EditCurricular = (props: EditCurricularProps) => {
   // Temporary List
   //*******//
   const typeList = [
-    { id: 0, name: "In-School Programming" },
-    { id: 1, name: "After-School Programming" },
-    { id: 2, name: "Summer Intensives (2 week programming)" },
-    { id: 3, name: "Writer's Retreat" },
+    {id: 0, name: 'In-School Programming'},
+    {id: 1, name: 'After-School Programming'},
+    {id: 2, name: 'Summer Intensives (2 week programming)'},
+    {id: 3, name: "Writer's Retreat"}
   ];
   //*****//
 
-  const { name, description, objectives, type, languages, summary } =
-    curricularData;
+  const {name, description, objectives, type, languages, summary} = curricularData;
   return (
     <div className="min-w-256">
-      {/* Section Header */}
-      {/* <BreadCrums unsavedChanges={unsavedChanges} toggleModal={toggleModal} items={breadCrumsList} />
-      <div className="flex justify-between">
-        <SectionTitle
-          title={EditCurriculardict[userLanguage]['TITLE']}
-          subtitle={EditCurriculardict[userLanguage]['SUBTITLE']}
-        />
-        <div className="flex justify-end py-4 mb-4 w-5/10">
-          <Buttons label="Go Back" btnClass="mr-4" onClick={goBack} Icon={IoArrowUndoCircleOutline} />
-        </div>
-      </div> */}
-
-      {/* Body section */}
-      {/* <PageWrapper> */}
       <div className="w-full m-auto">
-        {/* <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">
-          {EditCurriculardict[userLanguage]['HEADING']}
-        </h3> */}
         <div className="h-9/10 flex flex-col md:flex-row">
           <div className="w-auto p-4 mr-6 flex flex-col text-center items-center">
             <button className="group hover:opacity-80 focus:outline-none focus:opacity-95 flex flex-col items-center mt-4">
@@ -420,8 +369,7 @@ const EditCurricular = (props: EditCurricularProps) => {
                     setUpImage(img);
                     setFileObj(file);
                   }}
-                  toggleCropper={toggleCropper}
-                >
+                  toggleCropper={toggleCropper}>
                   {imageUrl ? (
                     <img
                       onClick={handleImage}
@@ -431,20 +379,14 @@ const EditCurricular = (props: EditCurricularProps) => {
                   ) : (
                     <div
                       onClick={handleImage}
-                      className={`profile justify-center align-center items-center content-center w-80 h-80 md:w-80 md:h-80 bg-gray-100 border flex-shrink-0 flex border-gray-400`}
-                    >
-                      <IoImage
-                        className="fill-current text-gray-80"
-                        size={32}
-                      />
+                      className={`profile justify-center align-center items-center content-center w-80 h-80 md:w-80 md:h-80 bg-gray-100 border flex-shrink-0 flex border-gray-400`}>
+                      <IoImage className="fill-current text-gray-80" size={32} />
                     </div>
                   )}
                 </DroppableMedia>
               </label>
             </button>
-            <p className="text-sm text-gray-600 my-4">
-              Click to edit curricular image
-            </p>
+            <p className="text-sm text-gray-600 my-4">Click to edit curricular image</p>
           </div>
           <div className="h-6/10 md:flex-row">
             <div className="px-3 py-4">
@@ -453,29 +395,18 @@ const EditCurricular = (props: EditCurricularProps) => {
                 id="curricularName"
                 onChange={onChange}
                 name="name"
-                label={EditCurriculardict[userLanguage]["NAME"]}
+                label={EditCurriculardict[userLanguage]['NAME']}
                 isRequired
               />
             </div>
-            {/*
-             **
-             * Hide institution drop down since all the things are tied to the
-             * Institute, will add this later if need to add builders saperately.
-             */}
-            {/* <div className="px-3 py-4">
-              <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
-                Institute
-              </label>
-              <Selector selectedItem={institute.value} placeholder="Select Institute" list={institutionList} onChange={selectInstitute} />
-            </div> */}
 
             <div className="px-3 py-4">
               <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
-                {EditCurriculardict[userLanguage]["LANGUAGE"]}
+                {EditCurriculardict[userLanguage]['LANGUAGE']}
               </label>
               <MultipleSelector
                 selectedItems={languages}
-                placeholder={EditCurriculardict[userLanguage]["LANGUAGE"]}
+                placeholder={EditCurriculardict[userLanguage]['LANGUAGE']}
                 list={languageList}
                 onChange={selectLanguage}
               />
@@ -483,28 +414,26 @@ const EditCurricular = (props: EditCurricularProps) => {
             <div className="grid grid-cols-2">
               <div className="px-3 py-4">
                 <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
-                  {EditCurriculardict[userLanguage]["DESIGNER"]}
+                  {EditCurriculardict[userLanguage]['DESIGNER']}
                 </label>
                 <MultipleSelector
                   selectedItems={selectedDesigners}
-                  placeholder={EditCurriculardict[userLanguage]["DESIGNER"]}
+                  placeholder={EditCurriculardict[userLanguage]['DESIGNER']}
                   list={designersList}
                   onChange={selectDesigner}
                 />
               </div>
               <div className="px-3 py-4">
                 <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
-                  {EditCurriculardict[userLanguage]["TYPE"]}
+                  {EditCurriculardict[userLanguage]['TYPE']}
                 </label>
                 <Selector
-                  placeholder={EditCurriculardict[userLanguage]["TYPE"]}
+                  placeholder={EditCurriculardict[userLanguage]['TYPE']}
                   list={typeList}
                   onChange={(_: any, name: string) => {
-                    setCurricularData({ ...curricularData, type: name });
+                    setCurricularData({...curricularData, type: name});
                   }}
-                  selectedItem={
-                    type || EditCurriculardict[userLanguage]["TYPE"]
-                  }
+                  selectedItem={type || EditCurriculardict[userLanguage]['TYPE']}
                 />
               </div>
             </div>
@@ -517,7 +446,7 @@ const EditCurricular = (props: EditCurricularProps) => {
             id="summary"
             onChange={onChange}
             name="summary"
-            label={EditCurriculardict[userLanguage]["SUMMARY"]}
+            label={EditCurriculardict[userLanguage]['SUMMARY']}
             rows={3}
           />
         </div>
@@ -528,7 +457,7 @@ const EditCurricular = (props: EditCurricularProps) => {
               id="description"
               onChange={onChange}
               name="description"
-              label={EditCurriculardict[userLanguage]["DESCRIPTION"]}
+              label={EditCurriculardict[userLanguage]['DESCRIPTION']}
             />
           </div>
           <div className="px-3 py-4">
@@ -537,19 +466,15 @@ const EditCurricular = (props: EditCurricularProps) => {
               id="objectives"
               onChange={onChange}
               name="objectives"
-              label={EditCurriculardict[userLanguage]["OBJECTIVE"]}
+              label={EditCurriculardict[userLanguage]['OBJECTIVE']}
             />
           </div>
         </div>
       </div>
       {messages.show ? (
         <div className="py-2 m-auto text-center">
-          <p
-            className={`${
-              messages.isError ? "text-red-600" : "text-green-600"
-            }`}
-          >
-            {messages.message && messages.message}
+          <p className={`${messages.isError ? 'text-red-600' : 'text-green-600'}`}>
+            {messages.message ? messages.message : ''}
           </p>
         </div>
       ) : null}
@@ -564,18 +489,16 @@ const EditCurricular = (props: EditCurricularProps) => {
           disabled={saving ? true : false}
           btnClass="py-3 px-12 text-sm ml-4"
           label={
-            saving
-              ? "Saving..."
-              : EditCurriculardict[userLanguage]["BUTTON"]["SAVE"]
+            saving ? 'Saving...' : EditCurriculardict[userLanguage]['BUTTON']['SAVE']
           }
           onClick={saveCurriculum}
         />
       </div>
       {showCropper && (
         <ProfileCropModal
-          upImg={upImage || ""}
+          upImg={upImage || ''}
           locked
-          customCropProps={{ x: 25, y: 25, width: 480, height: 320 }}
+          customCropProps={{x: 25, y: 25, width: 480, height: 320}}
           saveCroppedImage={(img: string) => saveCroppedImage(img)}
           closeAction={toggleCropper}
         />

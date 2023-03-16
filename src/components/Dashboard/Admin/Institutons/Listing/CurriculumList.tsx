@@ -86,7 +86,7 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
 
   const instituteChange = (_: string, name: string, value: string) => {
     setSelectedInstitution({name, id: value});
-    // onSearch(searchInput, value);
+
     updateRoomList(value);
   };
 
@@ -425,7 +425,7 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
   // ##################################################################### //
   return (
     <div className="pt-0 flex m-auto justify-center h-full p-4">
-      <div className="flex flex-col">
+      <div className="flex flex-col w-full">
         <SectionTitleV3
           title={InstitueCurriculum[userLanguage]['TITLE']}
           fontSize="xl"

@@ -2,7 +2,6 @@ import useAuth from '@customHooks/useAuth';
 import {logError} from '@graphql/functions';
 import {getAsset} from 'assets';
 import SectionTitleV3 from 'atoms/SectionTitleV3';
-import InformationalWalkThrough from 'components/Dashboard/Admin/Institutons/InformationalWalkThrough/InformationalWalkThrough';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import {useEffect, useState} from 'react';
 import {BsFillInfoCircleFill} from 'react-icons/bs';
@@ -310,10 +309,10 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
           </div>
         </>
       ) : null}
-      <InformationalWalkThrough
+      {/* <InformationalWalkThrough
         open={openWalkThroughModal}
         onCancel={() => setOpenWalkThroughModal(false)}
-      />
+      /> */}
     </>
   );
 };

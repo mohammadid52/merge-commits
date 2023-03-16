@@ -129,12 +129,7 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
 
     if (listLength && !sequenceLength) {
       let learningsID = list.map((item: {id: string}) => item.id);
-      let seqItem: any = await API.graphql(
-        graphqlOperation(mutations.createCSequences, {
-          input: {id: `l_${curricularId}`, sequence: learningsID}
-        })
-      );
-      seqItem = seqItem.data.createCSequences;
+
       setLearningIds(learningsID);
     }
     setLoading(false);

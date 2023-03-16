@@ -3,9 +3,8 @@
 @tailwind utilities;
 
 * {
-  width: 100%;
-
-  font-family: "Poppins", sans-serif;
+  /* width: 100%; */
+  font-family: 'Poppins', sans-serif;
 }
 
 *:focus {
@@ -34,32 +33,6 @@
   list-style: inherit;
   list-style-position: inside;
 }
-
-/* .pagetitle-container {
-  @apply my-4 p-4;
-}
-
-.page-heading {
-  @apply text-lg border-l-6 border-indigo-700 pl-4;
-}
-
-.purpule-button {
-  @apply font-medium rounded-md text-white bg-indigo-600 transition duration-150 ease-in-out w-auto p-4;
-}
-
-.purpule-button:focus {
-  @apply outline-none border-indigo-700 ring;
-}
-
-.purpule-button:hover {
-  @apply border-indigo-500;
-}
-
-.purpule-button:active {
-  @apply border-indigo-700;
-} */
-
-/*** MODAL STYLES ***/
 
 .backdrop.fade-in {
   opacity: 0.25;

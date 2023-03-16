@@ -16,6 +16,41 @@ interface AddQuestionProps {
   addNewQuestion: (obj: any) => void;
 }
 
+const typeList: any = [
+  {id: '1', name: 'Text', value: 'text'},
+  {id: '2', name: 'Input', value: 'input'},
+  {id: '3', name: 'Select Many', value: 'selectMany'},
+  {id: '4', name: 'Select One', value: 'selectOne'},
+  {id: '5', name: 'Date Picker', value: 'datePicker'},
+  {id: '6', name: 'Emoji', value: 'emoji'},
+  {id: '7', name: 'Attachments', value: 'attachments'},
+  {id: '8', name: 'Link', value: 'link'}
+];
+
+const languageList = [
+  {id: 1, name: 'English', value: 'EN'},
+  {id: 2, name: 'Spanish', value: 'ES'}
+];
+
+const selectOneOptions = [
+  {
+    label: '1',
+    text: 'Very Difficult'
+  },
+  {
+    label: '2',
+    text: 'Difficult'
+  },
+  {
+    label: '3',
+    text: 'Easy'
+  },
+  {
+    label: '4',
+    text: 'Very Easy'
+  }
+];
+
 interface InitialState {
   question: string;
   notes: string;
@@ -65,40 +100,6 @@ const AddQuestion = (props: AddQuestionProps) => {
     message: '',
     isError: true
   });
-  const typeList: any = [
-    {id: '1', name: 'Text', value: 'text'},
-    {id: '2', name: 'Input', value: 'input'},
-    {id: '3', name: 'Select Many', value: 'selectMany'},
-    {id: '4', name: 'Select One', value: 'selectOne'},
-    {id: '5', name: 'Date Picker', value: 'datePicker'},
-    {id: '6', name: 'Emoji', value: 'emoji'},
-    {id: '7', name: 'Attachments', value: 'attachments'},
-    {id: '8', name: 'Link', value: 'link'}
-  ];
-
-  const languageList = [
-    {id: 1, name: 'English', value: 'EN'},
-    {id: 2, name: 'Spanish', value: 'ES'}
-  ];
-
-  const selectOneOptions = [
-    {
-      label: '1',
-      text: 'Very Difficult'
-    },
-    {
-      label: '2',
-      text: 'Difficult'
-    },
-    {
-      label: '3',
-      text: 'Easy'
-    },
-    {
-      label: '4',
-      text: 'Very Easy'
-    }
-  ];
 
   const onInputChange = (e: any) => {
     setQuestionData({
@@ -123,17 +124,20 @@ const AddQuestion = (props: AddQuestionProps) => {
   };
   const onOptionAdd = (index: number) => {
     // adding new option field after selected options index.
+    // @ts-ignore
     const currentOptions = [...questionData.options];
     const newItem = {label: (index + 2).toString(), text: ''};
     currentOptions.splice(index + 1, 0, newItem);
-    let updatedOptions = currentOptions.map((item, i) => {
-      if (i > index + 1) {
-        item.label = (i + 1).toString();
-        return item;
-      } else {
-        return item;
-      }
-    });
+    let updatedOptions = currentOptions
+      .map((item, i) => {
+        if (i > index + 1) {
+          item.label = (i + 1).toString();
+          return item;
+        } else {
+          return null;
+        }
+      })
+      .filter(Boolean);
     setQuestionData({
       ...questionData,
       options: updatedOptions
@@ -145,14 +149,16 @@ const AddQuestion = (props: AddQuestionProps) => {
     if (questionData?.options?.length > 1) {
       const currentOptions = [...questionData.options];
       currentOptions.splice(index, 1);
-      let updatedOptions = currentOptions.map((item, i) => {
-        if (i >= index) {
-          item.label = (i + 1).toString();
-          return item;
-        } else {
-          return item;
-        }
-      });
+      let updatedOptions = currentOptions
+        .map((item, i) => {
+          if (i >= index) {
+            item.label = (i + 1).toString();
+            return item;
+          } else {
+            return null;
+          }
+        })
+        .filter(Boolean);
       setQuestionData({
         ...questionData,
         options: updatedOptions

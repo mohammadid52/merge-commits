@@ -531,7 +531,7 @@ const CourseFormComponent = ({
       {messages.show ? (
         <div className="py-2 m-auto text-center">
           <p className={`${messages.isError ? 'text-red-600' : 'text-green-600'}`}>
-            {messages.message && messages.message}
+            {messages.message ? messages.message : ''}
           </p>
         </div>
       ) : null}

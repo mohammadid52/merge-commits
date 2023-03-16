@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react';
 import {CgNotes} from 'react-icons/cg';
 import {FiAlertCircle, FiClock, FiRefreshCw} from 'react-icons/fi';
 import {IoIosCalendar} from 'react-icons/io';
-// import {IoGlobeOutline, IoLocation} from 'react-icons/io5';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import moment from 'moment';
 import {FaCalendarDay} from 'react-icons/fa';
@@ -248,11 +247,6 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
 
   return (
     <div className="p-4">
-      {/* <div className="pb-3">
-        <span className="font-bold text-lg">
-          {classRoomName} {CourseScheduleDict[userLanguage].HEADING}
-        </span>
-      </div> */}
       <div className="grid grid-cols-1 lg:grid-cols-2">
         <div className="mt-3">
           <div className="text-lg font-medium mb-4">
@@ -349,35 +343,7 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
                 </div>
               </div>
             </div>
-            {/* <div className="flex mt-4">
-              <span className="w-auto inline-flex items-center">
-                <IoGlobeOutline className="w-6 h-6 mr-2" />
-              </span>
-              <div className="w-full 2xl:w-140 mr-2 2xl:mr-0">
-                <FormInput
-                  name="conferenceCallLink"
-                  value={scheduleData.conferenceCallLink}
-                  onChange={handleInputChange}
-                  placeHolder={
-                    CourseScheduleDict[userLanguage].PLACEHOLDERS.CONFERENCE_CALL_LINK
-                  }
-                />
-              </div>
-            </div>
-            <div className="flex mt-4">
-              <span className="w-auto inline-flex items-center">
-                <IoLocation className="w-6 h-6 mr-2" />
-              </span>
-              <div className="w-full 2xl:w-140 mr-2 2xl:mr-0">
-                <FormInput
-                  name="location"
-                  value={scheduleData.location}
-                  onChange={handleInputChange}
-                  placeHolder={CourseScheduleDict[userLanguage].PLACEHOLDERS.LOCATION}
-                />
-              </div>
-            </div>
-             */}
+
             <div className="flex mt-4">
               <span className="w-auto inline-flex">
                 <CgNotes className="w-6 h-6 mr-2" />
@@ -396,20 +362,6 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
               </div>
             </div>
           </div>
-          {/* <div className="flex my-8 justify-end w-full 2xl:w-148 mr-2 2xl:mr-0">
-            <Buttons
-              btnClass="py-3 px-12 text-sm mr-4"
-              label={BUTTONS[userLanguage]['CANCEL']}
-              // onClick={history.goBack}
-              transparent
-            />
-            <Buttons
-              // disabled={loading}
-              btnClass="py-3 px-12 text-sm ml-4"
-              label={false ? 'Saving...' : BUTTONS[userLanguage]['SAVE']}
-              onClick={saveRoomDetails}
-            />
-          </div> */}
         </div>
         <div className="mt-3">
           <ClassRoomHolidays
@@ -453,20 +405,7 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
           </p>
         </div>
       )}
-      {/* <div className="flex my-8 justify-end w-full mr-2 2xl:mr-0">
-        <Buttons
-          btnClass="py-3 px-12 text-sm mr-4"
-          label={BUTTONS[userLanguage]['CANCEL']}
-          // onClick={history.goBack}
-          transparent
-        />
-        <Buttons
-          // disabled={loading}
-          btnClass="py-3 px-12 text-sm ml-4"
-          label={false ? 'Saving...' : BUTTONS[userLanguage]['SAVE']}
-          onClick={saveRoomDetails}
-        />
-      </div> */}
+
       {showAlert && (
         <Modal
           showHeader={false}

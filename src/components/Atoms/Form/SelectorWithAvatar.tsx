@@ -7,7 +7,7 @@ import Placeholder from '../Placeholder';
 import Spinner from '../Spinner';
 import Label from './Label';
 
-interface selectorProps {
+interface SelectorProps {
   list?: {id: number; name: string; avatar?: string}[];
   selectedItem?: {value?: string; id?: string};
   btnClass?: string;
@@ -22,7 +22,7 @@ interface selectorProps {
   label?: string;
 }
 
-const SelectorWithAvatar = (props: selectorProps) => {
+const SelectorWithAvatar = (props: SelectorProps) => {
   const {
     list,
     selectedItem,
@@ -159,7 +159,7 @@ const SelectorWithAvatar = (props: selectorProps) => {
                 ) => (
                   <li
                     data-cy={`selector-item-${dataCy}-${key}`}
-                    key={key}
+                    key={item.id}
                     onClick={() =>
                       updateSelectedItem(
                         item.value,

@@ -1,4 +1,3 @@
-// import AWS from 'aws-sdk';
 import {Storage} from '@aws-amplify/storage';
 // @ts-ignore
 import awsconfig from '../aws-exports.js';

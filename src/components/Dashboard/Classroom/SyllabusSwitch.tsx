@@ -7,7 +7,6 @@ import {DashboardProps} from '../Dashboard';
 
 import Buttons from 'atoms/Buttons';
 import {Syllabus} from '@interfaces/ClassroomInterface';
-// import ProgressBar from './ProgressBar';
 
 const SyllabusSwitch = ({
   classRoomActiveSyllabus,
@@ -38,14 +37,8 @@ const SyllabusSwitch = ({
         <div className={`grid grid-cols-1 md:grid-cols-2 gap-2`}>
           {state.roomData.syllabus.map((syllabus: Syllabus, i: number) => {
             const isActive = classRoomActiveSyllabus === syllabus.id;
-            // const progressPercentage = completedLessons;
+
             return (
-              // <Tooltip
-              //   key={`testSyllabus_${i}`}
-              //   placement={i % 2 === 0 ? 'left' : 'right'}
-              //   text={
-              //     isActive ? 'Currently Active' : 'Click on select to activate this unit'
-              //   }>
               <div
                 id={`testSyllabus_${i}`}
                 className={`${

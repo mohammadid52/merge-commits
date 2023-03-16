@@ -52,7 +52,7 @@ const LessonActivities = ({
     updateMovableList,
     setLessonPlanFields
   } = useULBContext();
-  const [showDeleteModal, setShowDeleteModal] = useState<Boolean>(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [idToBeRemoved, setIdToBeRemoved] = useState<string>('');
 
   const pages = universalLessonDetails.lessonPlan;

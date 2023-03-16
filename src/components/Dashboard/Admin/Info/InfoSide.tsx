@@ -1,12 +1,12 @@
 import React from 'react';
 import {FaGraduationCap} from 'react-icons/fa';
 
-interface InfoSide {
+interface IInfoSide {
   children?: React.ReactNode;
   subtitle?: string;
 }
 
-const InfoSide: React.FC<InfoSide> = (iSidePrps: InfoSide) => {
+const InfoSide: React.FC<IInfoSide> = (iSidePrps: IInfoSide) => {
   return (
     <>
       <div className="w-auto p-4 flex flex-col text-center items-center">

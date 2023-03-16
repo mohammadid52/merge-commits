@@ -291,7 +291,7 @@ const Registration = ({
   });
 
   return (
-    <div className={`""`}>
+    <div className={`px-4`}>
       {isInInstitute ? (
         !isInModalPopup && (
           <SectionTitleV3 title={RegistrationDict[userLanguage]['title']} />

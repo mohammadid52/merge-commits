@@ -1,19 +1,19 @@
-import { useEffect, useState } from "react";
-import { BsArrowLeft } from "react-icons/bs";
-import { IoArrowUndoCircleOutline } from "react-icons/io5";
-import { useHistory, useRouteMatch } from "react-router";
+import {useEffect, useState} from 'react';
+import {BsArrowLeft} from 'react-icons/bs';
+import {IoArrowUndoCircleOutline} from 'react-icons/io5';
+import {useHistory, useRouteMatch} from 'react-router';
 
-import { getAsset } from "assets";
-import BreadcrumbsWithBanner from "atoms/BreadcrumbsWithBanner";
-import Buttons from "atoms/Buttons";
-import Loader from "atoms/Loader";
-import PageWrapper from "atoms/PageWrapper";
-import StepComponent, { IStepElementInterface } from "atoms/StepComponent";
-import { useGlobalContext } from "contexts/GlobalContext";
-import useDictionary from "customHooks/dictionary";
-import { useQuery } from "customHooks/urlParam";
-import InstitutionFormComponent from "./InstitutionFormComponent";
-import ServiceVendors from "./ServiceVendors";
+import {getAsset} from 'assets';
+import BreadcrumbsWithBanner from 'atoms/BreadcrumbsWithBanner';
+import Buttons from 'atoms/Buttons';
+import Loader from 'atoms/Loader';
+import PageWrapper from 'atoms/PageWrapper';
+import StepComponent, {IStepElementInterface} from 'atoms/StepComponent';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import {useQuery} from 'customHooks/urlParam';
+import InstitutionFormComponent from './InstitutionFormComponent';
+import ServiceVendors from './ServiceVendors';
 
 interface InstitutionBuilderProps {
   institutionId?: string;
@@ -33,7 +33,7 @@ export interface InstitutionInfo {
   city?: string;
   state?: string;
   zip?: string;
-  contact?: { name: string; email: string; phone: string };
+  contact?: {name: string; email: string; phone: string};
   website?: string;
   phone?: string;
   type?: string;
@@ -42,8 +42,8 @@ export interface InstitutionInfo {
   updatedAt?: string;
   addressLine2?: any;
   isServiceProvider?: boolean;
-  classes?: { items: { name?: string; id: string }[] };
-  curricula?: { items: { name?: string; id: string }[] };
+  classes?: {items: {name?: string; id: string}[]};
+  curricula?: {items: {name?: string; id: string}[]};
   serviceProviders?: {
     items: {
       id: string;
@@ -58,101 +58,87 @@ const InstitutionBuilder = ({
   institutionId,
   institute,
   loading,
-  postInfoUpdate,
+  postInfoUpdate
 }: InstitutionBuilderProps) => {
   const history = useHistory();
   const match = useRouteMatch();
   const params = useQuery(location.search);
-  const step = params.get("step");
-  const back = params.get("back");
+  const step = params.get('step');
+  const back = params.get('back');
 
   const {
     clientKey,
-    state: { user },
+    state: {user},
 
-    userLanguage,
+    userLanguage
   } = useGlobalContext();
 
-  const bannerImage = getAsset(clientKey, "dashboardBanner1");
-  const { BreadcrumsTitles, CommonlyUsedDict, InstitutionBuilderDict } =
-    useDictionary();
-  const [activeStep, setActiveStep] = useState("overview");
+  const bannerImage = getAsset(clientKey, 'dashboardBanner1');
+  const {BreadcrumsTitles, CommonlyUsedDict, InstitutionBuilderDict} = useDictionary();
+  const [activeStep, setActiveStep] = useState('overview');
   const [institutionInfo, setInstitutionInfo] = useState({
-    id: institutionId || "",
-    name: "",
-    institutionTypeId: "",
+    id: institutionId || '',
+    name: '',
+    institutionTypeId: '',
     institutionType: null,
-    address: "",
-    city: "",
-    state: "",
-    zip: "",
-    contact: { name: "", email: "", phone: "" },
-    website: "",
+    address: '',
+    city: '',
+    state: '',
+    zip: '',
+    contact: {name: '', email: '', phone: ''},
+    website: '',
     type: null,
-    image: "",
-    createdAt: "",
-    updatedAt: "",
-    addressLine2: "",
-    phone: "",
+    image: '',
+    createdAt: '',
+    updatedAt: '',
+    addressLine2: '',
+    phone: '',
     isZoiq: false,
     isServiceProvider: false,
-    classes: { items: [{ name: "", id: "" }] },
-    serviceProviders: { items: [{ id: "", providerID: "", status }] },
-    curricula: { items: [{ name: "", id: "" }] },
+    classes: {items: [{name: '', id: ''}]},
+    serviceProviders: {items: [{id: '', providerID: '', status}]},
+    curricula: {items: [{name: '', id: ''}]}
   });
 
   const breadCrumbsList = [
     {
-      title: BreadcrumsTitles[userLanguage]["HOME"],
-      url: "/dashboard",
-      last: false,
+      title: BreadcrumsTitles[userLanguage]['HOME'],
+      url: '/dashboard',
+      last: false
     },
     {
-      title: BreadcrumsTitles[userLanguage]["INSTITUTION_MANAGEMENT"],
-      url: "/dashboard/manage-institutions",
-      last: false,
+      title: BreadcrumsTitles[userLanguage]['INSTITUTION_MANAGEMENT'],
+      url: '/dashboard/manage-institutions',
+      last: false
     },
     {
-      title:
-        institutionInfo.name ||
-        BreadcrumsTitles[userLanguage]["ADD_INSTITUTION"],
+      title: institutionInfo.name || BreadcrumsTitles[userLanguage]['ADD_INSTITUTION'],
       url: `/dashboard/manage-institutions/add`,
-      last: true,
-    },
+      last: true
+    }
   ];
   const steps: IStepElementInterface[] = [
     {
-      title: "General Information",
-      description: "Capture core details of your institution",
-      stepValue: "overview",
-      isComplete: true,
+      title: 'General Information',
+      description: 'Capture core details of your institution',
+      stepValue: 'overview',
+      isComplete: true
     },
     {
-      title: "Service Vendors (Optional)",
-      description: "",
-      stepValue: "service_vendors",
+      title: 'Service Vendors (Optional)',
+      description: '',
+      stepValue: 'service_vendors',
       disabled: !Boolean(institutionInfo.id),
       isComplete: false,
       tooltipText:
-        "You have to complete the first step before the second step is activated",
-    },
+        'You have to complete the first step before the second step is activated'
+    }
   ];
 
   const handleTabSwitch = (step: string) => {
     const redirectionUrl = `${match.url}?step=${step}&id=${institutionInfo.id}`;
     history.push(redirectionUrl);
   };
-
-  // useEffect(() => {
-  //   async function deleteInstitution() {
-  //     await API.graphql(
-  //       graphqlOperation(mutations.deleteInstitution, {
-  //         input: {id: 'd995bb46-46c1-4f13-b003-1d4e4aa8737a'},
-  //       })
-  //     );
-  //   }
-  //   deleteInstitution();
-  // });
 
   useEffect(() => {
     if (step) {
@@ -162,8 +148,8 @@ const InstitutionBuilder = ({
 
   useEffect(() => {
     // For checking Authorized user is trying to access add institution or not
-    if (user.role !== "SUP" && !institutionId) {
-      history.push("/dashboard");
+    if (user.role !== 'SUP' && !institutionId) {
+      history.push('/dashboard');
     }
   }, [institutionId]);
 
@@ -176,7 +162,7 @@ const InstitutionBuilder = ({
   const postMutation = (data: any) => {
     setInstitutionInfo((prevData) => ({
       ...prevData,
-      ...data,
+      ...data
     }));
     postInfoUpdate?.(data);
   };
@@ -186,66 +172,58 @@ const InstitutionBuilder = ({
       ...prevData,
       serviceProviders: {
         ...prevData.serviceProviders,
-        items: [...(prevData.serviceProviders.items || []), item],
-      },
+        items: [...(prevData.serviceProviders.items || []), item]
+      }
     }));
   };
 
   const currentStepComp = (currentStep: string) => {
     switch (currentStep) {
-      case "overview":
+      case 'overview':
         return (
           <InstitutionFormComponent
             institutionInfo={institutionInfo}
             postMutation={postMutation}
           />
         );
-      case "service_vendors":
+      case 'service_vendors':
         return (
           <ServiceVendors
             serviceProviders={institutionInfo.serviceProviders}
             instId={institutionInfo.id}
             updateServiceProviders={updateServiceProviders}
-            instName={"name"}
+            instName={'name'}
           />
         );
 
       default:
-        return (
-          <InstitutionFormComponent
-            institutionInfo={institutionInfo}
-            postMutation={postMutation}
-          />
-        );
+        return null;
     }
   };
 
-  const isEditPage = location.pathname.indexOf("edit") > -1;
+  const isEditPage = location.pathname.indexOf('edit') > -1;
 
   return (
-    <div className={`w-full h-full ${isEditPage ? "" : "pt-0"} px-0`}>
+    <div className={`w-full h-full ${isEditPage ? '' : 'pt-0'} px-0`}>
       {back && (
         <div
           className="px-8 flex items-center mt-1 cursor-pointer text-gray-500 hover:text-gray-700"
-          onClick={() => history.push(back)}
-        >
+          onClick={() => history.push(back)}>
           <span className="w-auto mr-2">
             <BsArrowLeft />
           </span>
-          <div className="text-sm">
-            {CommonlyUsedDict[userLanguage]["BACK"]}
-          </div>
+          <div className="text-sm">{CommonlyUsedDict[userLanguage]['BACK']}</div>
         </div>
       )}
       {isEditPage ? (
         <h3 className="text-lg leading-6 font-medium text-gray-900 w-auto capitalize py-4 px-12">
-          {InstitutionBuilderDict[userLanguage]["GENERAL_INFORMATION"]}
+          {InstitutionBuilderDict[userLanguage]['GENERAL_INFORMATION']}
         </h3>
       ) : (
         <BreadcrumbsWithBanner
           items={breadCrumbsList}
           bannerImage={bannerImage}
-          title={InstitutionBuilderDict[userLanguage]["TITLE"]}
+          title={InstitutionBuilderDict[userLanguage]['TITLE']}
         />
       )}
       {/* <div className={'flex justify-between px-8'}>
@@ -269,9 +247,7 @@ const InstitutionBuilder = ({
         </div>
       )}
       <div className="px-4">
-        <PageWrapper
-          defaultClass={isEditPage ? "px-0 -mt-8" : "px-4 white_back"}
-        >
+        <PageWrapper defaultClass={isEditPage ? 'px-0 -mt-8' : 'px-4 white_back'}>
           <div className="w-full m-auto">
             <StepComponent
               steps={steps}
@@ -279,8 +255,7 @@ const InstitutionBuilder = ({
               handleTabSwitch={handleTabSwitch}
             />
             <div
-              className={`grid grid-cols-1 divide-x-0 divide-gray-400 px-2 lg:px-8 mt-4 lg:mt-0`}
-            >
+              className={`grid grid-cols-1 divide-x-0 divide-gray-400 px-2 lg:px-8 mt-4 lg:mt-0`}>
               {loading ? (
                 <div className="h-100 flex justify-center items-center">
                   <div className="w-5/10">

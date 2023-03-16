@@ -1,10 +1,10 @@
-import React, { Fragment, useEffect, useState } from "react";
-import { graphqlOperation } from "aws-amplify";
-import * as customQueries from "customGraphql/customQueries";
-import { getUniqItems } from "utilities/strings";
-import { API } from "aws-amplify";
-import { sortBy } from "lodash";
-import Loader from "atoms/Loader";
+import React, {Fragment, useEffect, useState} from 'react';
+import {graphqlOperation} from 'aws-amplify';
+import * as customQueries from 'customGraphql/customQueries';
+import {getUniqItems} from 'utilities/strings';
+import {API} from 'aws-amplify';
+import {sortBy} from 'lodash';
+import Loader from 'atoms/Loader';
 
 interface IProfileFrameDemographicsProps {
   studentID?: any;
@@ -13,7 +13,7 @@ interface IProfileFrameDemographicsProps {
 
 const ProfileFrameDemographics = ({
   studentID,
-  currentTab,
+  currentTab
 }: IProfileFrameDemographicsProps) => {
   const [loading, setLoading] = useState(false);
 
@@ -27,25 +27,20 @@ const ProfileFrameDemographics = ({
     setLoading(true);
     try {
       const result: any = await API.graphql(
-        graphqlOperation(customQueries.getUserProfile, { id: id })
+        graphqlOperation(customQueries.getUserProfile, {id: id})
       );
       const userData = result.data.userById.items.pop();
 
-      let studentClasses: any = userData.classes?.items.map(
-        (item: any) => item?.class
-      );
+      let studentClasses: any = userData.classes?.items.map((item: any) => item?.class);
       studentClasses = studentClasses.filter((d: any) => d !== null);
 
-      const studentRooms: any = studentClasses?.reduce(
-        (roomAcc: any[], item: any) => {
-          if (item?.room) {
-            return [...roomAcc, item.room];
-          } else {
-            return roomAcc;
-          }
-        },
-        []
-      );
+      const studentRooms: any = studentClasses?.reduce((roomAcc: any[], item: any) => {
+        if (item?.room) {
+          return [...roomAcc, item.room];
+        } else {
+          return roomAcc;
+        }
+      }, []);
 
       userData.rooms = studentRooms;
 
@@ -60,7 +55,7 @@ const ProfileFrameDemographics = ({
         studentCurriculars.length > 0
           ? getUniqItems(
               studentCurriculars.filter((d: any) => d !== null),
-              "curriculumID"
+              'curriculumID'
             )
           : [];
       // console.log('uniqCurriculars', uniqCurriculars);
@@ -87,10 +82,7 @@ const ProfileFrameDemographics = ({
         if (item) sCheckpoints.push(item);
       });
 
-      sCheckpoints = sortBy(
-        sCheckpoints,
-        (item: any) => item.scope === "private"
-      );
+      sCheckpoints = sortBy(sCheckpoints, (item: any) => item.scope === 'private');
 
       /***********************
        *   DEMOGRAPHIC AND   *
@@ -98,68 +90,58 @@ const ProfileFrameDemographics = ({
        ***********************/
 
       // ~~~~~~~~~~~~~~~~ UNIQUE ~~~~~~~~~~~~~~~ //
-      const uniqCheckpoints: any = sCheckpoints
-        ? getUniqItems(sCheckpoints, "id")
-        : [];
-      const uniqCheckpointIDs: any = uniqCheckpoints.map(
-        (item: any) => item?.id
-      );
+      const uniqCheckpoints: any = sCheckpoints ? getUniqItems(sCheckpoints, 'id') : [];
+      const uniqCheckpointIDs: any = uniqCheckpoints.map((item: any) => item?.id);
 
       // ~~~~~~~~~~~~~~ SPLIT OUT ~~~~~~~~~~~~~~ //
       const demographicCheckpoints = uniqCheckpoints
-        .filter((checkpoint: any) => checkpoint.scope !== "private")
+        .filter((checkpoint: any) => checkpoint.scope !== 'private')
         .map((checkpoint: any) => {
           if (checkpoint?.questionSeq) {
             return {
               ...checkpoint,
               questions: {
-                items: checkpoint.questionSeq.reduce(
-                  (acc: any[], seqString: string) => {
-                    let findQ = checkpoint.questions.items.find(
-                      (item: any) => item.question.id === seqString
-                    );
-                    if (findQ) {
-                      return [...acc, findQ];
-                    } else {
-                      return acc;
-                    }
-                  },
-                  []
-                ),
-              },
+                items: checkpoint.questionSeq.reduce((acc: any[], seqString: string) => {
+                  let findQ = checkpoint.questions.items.find(
+                    (item: any) => item.question.id === seqString
+                  );
+                  if (findQ) {
+                    return [...acc, findQ];
+                  } else {
+                    return acc;
+                  }
+                }, [])
+              }
             };
           } else {
             return checkpoint;
           }
         });
       const privateCheckpoints = uniqCheckpoints
-        .filter((checkpoint: any) => checkpoint.scope === "private")
+        .filter((checkpoint: any) => checkpoint.scope === 'private')
         .map((checkpoint: any) => {
           if (checkpoint?.questionSeq) {
             return {
               ...checkpoint,
               questions: {
-                items: checkpoint.questionSeq.reduce(
-                  (acc: any[], seqString: string) => {
-                    let findQ = checkpoint.questions.items.find(
-                      (item: any) => item.question.id === seqString
-                    );
-                    if (findQ) {
-                      return [...acc, findQ];
-                    } else {
-                      return acc;
-                    }
-                  },
-                  []
-                ),
-              },
+                items: checkpoint.questionSeq.reduce((acc: any[], seqString: string) => {
+                  let findQ = checkpoint.questions.items.find(
+                    (item: any) => item.question.id === seqString
+                  );
+                  if (findQ) {
+                    return [...acc, findQ];
+                  } else {
+                    return acc;
+                  }
+                }, [])
+              }
             };
           } else {
             return checkpoint;
           }
         });
 
-      const personalInfo: any = { ...userData };
+      const personalInfo: any = {...userData};
 
       delete personalInfo.classes;
 
@@ -167,7 +149,7 @@ const ProfileFrameDemographics = ({
       setPrivateCheckpoints(privateCheckpoints);
 
       setProfileUser(() => {
-        if (typeof userData === "object") {
+        if (typeof userData === 'object') {
           return userData;
         }
         return profileUser;
@@ -196,9 +178,7 @@ const ProfileFrameDemographics = ({
   // ##################################################################### //
 
   const [questionData, setQuestionData] = useState<any[]>([]);
-  const [demographicCheckpoints, setDemographicCheckpoints] = useState<any[]>(
-    []
-  );
+  const [demographicCheckpoints, setDemographicCheckpoints] = useState<any[]>([]);
   const [privateCheckpoints, setPrivateCheckpoints] = useState<any[]>([]);
 
   // ~~~~~~~~~~ GET QUESTION DATA ~~~~~~~~~~ //
@@ -206,22 +186,22 @@ const ProfileFrameDemographics = ({
     const checkpointIDFilter: any = checkpointIDs.map((item: any) => {
       return {
         checkpointID: {
-          eq: item,
-        },
+          eq: item
+        }
       };
     });
     const filter = {
       and: [
-        { email: { eq: user.email } },
-        { authID: { eq: user.authId } },
-        { syllabusLessonID: { eq: "999999" } },
+        {email: {eq: user.email}},
+        {authID: {eq: user.authId}},
+        {syllabusLessonID: {eq: '999999'}},
         {
-          or: [...checkpointIDFilter],
-        },
-      ],
+          or: [...checkpointIDFilter]
+        }
+      ]
     };
     const results: any = await API.graphql(
-      graphqlOperation(customQueries.listQuestionDatas, { filter: filter })
+      graphqlOperation(customQueries.listQuestionDatas, {filter: filter})
     );
     const questionData: any = results.data.listQuestionData?.items;
     setQuestionData(questionData);
@@ -240,13 +220,13 @@ const ProfileFrameDemographics = ({
       if (questionResponce) {
         const stringedResponse = questionResponce.toString();
 
-        if (stringedResponse.includes("Other")) {
-          const splitAnswer = stringedResponse.split(" || "); // this will return ["Other", "answer"]
+        if (stringedResponse.includes('Other')) {
+          const splitAnswer = stringedResponse.split(' || '); // this will return ["Other", "answer"]
           const answer = splitAnswer[1];
           if (answer) return answer;
-          else return "Other";
+          else return 'Other';
         } else {
-          return questionResponce ? questionResponce.join(",") : "--";
+          return questionResponce ? questionResponce.join(',') : '--';
         }
       }
     }
@@ -257,9 +237,9 @@ const ProfileFrameDemographics = ({
   // ##################################################################### //
 
   const checkpoints =
-    currentTab === "Demographics"
+    currentTab === 'Demographics'
       ? demographicCheckpoints
-      : currentTab === "Private"
+      : currentTab === 'Private'
       ? privateCheckpoints
       : [];
 
@@ -288,36 +268,24 @@ const ProfileFrameDemographics = ({
               </div>
               <div className="px-4 py-5 sm:px-6">
                 <dl className="grid grid-cols-1 gap-x-4 gap-y-4 sm:grid-cols-2">
-                  {checkpoint.questions?.items.map(
-                    (item: any, index: number) => (
-                      <div key={index} className="sm:col-span-1 p-2">
-                        <dt className="text-sm leading-5 font-medium text-gray-500">
-                          {item.question.question}
-                        </dt>
-                        <dd className="mt-1 text-sm leading-5 text-gray-900">
-                          {item.question.type !== "link" ? (
-                            getQuestionResponse(
-                              checkpoint.id,
-                              item.question.id
-                            ) || "--"
-                          ) : (
-                            <a
-                              className="text-blue-400 hover:text-blue-600 transition-all"
-                              href={getQuestionResponse(
-                                checkpoint.id,
-                                item.question.id
-                              )}
-                            >
-                              {getQuestionResponse(
-                                checkpoint.id,
-                                item.question.id
-                              )}
-                            </a>
-                          )}
-                        </dd>
-                      </div>
-                    )
-                  )}
+                  {checkpoint.questions?.items.map((item: any) => (
+                    <div key={item.question.id} className="sm:col-span-1 p-2">
+                      <dt className="text-sm leading-5 font-medium text-gray-500">
+                        {item.question.question}
+                      </dt>
+                      <dd className="mt-1 text-sm leading-5 text-gray-900">
+                        {item.question.type !== 'link' ? (
+                          getQuestionResponse(checkpoint.id, item.question.id) || '--'
+                        ) : (
+                          <a
+                            className="text-blue-400 hover:text-blue-600 transition-all"
+                            href={getQuestionResponse(checkpoint.id, item.question.id)}>
+                            {getQuestionResponse(checkpoint.id, item.question.id)}
+                          </a>
+                        )}
+                      </dd>
+                    </div>
+                  ))}
                 </dl>
               </div>
             </div>

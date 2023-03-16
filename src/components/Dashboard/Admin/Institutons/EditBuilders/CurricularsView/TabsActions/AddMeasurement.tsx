@@ -1,10 +1,10 @@
-import { GraphQLAPI as API, graphqlOperation } from "@aws-amplify/api-graphql";
-import Buttons from "atoms/Buttons";
-import FormInput from "atoms/Form/FormInput";
-import { useGlobalContext } from "contexts/GlobalContext";
-import * as customMutations from "customGraphql/customMutations";
-import useDictionary from "customHooks/dictionary";
-import { useEffect, useState } from "react";
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import Buttons from 'atoms/Buttons';
+import FormInput from 'atoms/Form/FormInput';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import * as customMutations from 'customGraphql/customMutations';
+import useDictionary from 'customHooks/dictionary';
+import {useEffect, useState} from 'react';
 
 interface AddMeasurementProps {
   curricularId: string;
@@ -15,17 +15,17 @@ interface AddMeasurementProps {
 }
 
 const AddMeasurement = (props: AddMeasurementProps) => {
-  const { curricularId, onCancel, postMutation, rubricData, topicId } = props;
+  const {curricularId, onCancel, postMutation, rubricData, topicId} = props;
 
   const [loading, setLoading] = useState(false);
-  const [name, setName] = useState("");
-  const [criteria, setCriteria] = useState("");
+  const [name, setName] = useState('');
+  const [criteria, setCriteria] = useState('');
 
-  const [validation, setValidation] = useState({ name: "", topic: "" });
+  const [validation, setValidation] = useState({name: '', topic: ''});
 
-  const { userLanguage } = useGlobalContext();
+  const {userLanguage} = useGlobalContext();
 
-  const { AddMeasurementDict } = useDictionary();
+  const {AddMeasurementDict} = useDictionary();
 
   useEffect(() => {
     if (rubricData?.id) {
@@ -36,39 +36,24 @@ const AddMeasurement = (props: AddMeasurementProps) => {
 
   const onInputChange = (e: any) => {
     const value = e.target.value;
-    if (e.target.name === "name") {
+    if (e.target.name === 'name') {
       setName(value);
-      if (value.length && validation.name)
-        setValidation({ ...validation, name: "" });
+      if (value.length && validation.name) setValidation({...validation, name: ''});
     }
-    if (e.target.name === "criteria") setCriteria(value);
+    if (e.target.name === 'criteria') setCriteria(value);
   };
-
-  // const fetchMeasurementSequence = async (topicId: string) => {
-  //   let item: any = await API.graphql(graphqlOperation(queries.getCSequences,
-  //     { id: `m_${topicId}` }))
-  //   item = item?.data.getCSequences?.sequence || []
-  //   if (item) {
-  //     setMeasurementIds(item)
-  //   }
-  // }
 
   const validateForm = () => {
     let isValid = true;
     const msgs = validation;
     if (!name.length) {
       isValid = false;
-      msgs.name = AddMeasurementDict[userLanguage]["messages"]["namerequired"];
+      msgs.name = AddMeasurementDict[userLanguage]['messages']['namerequired'];
     } else {
-      msgs.name = "";
+      msgs.name = '';
     }
-    // if (!topic.id) {
-    //   isValid = false;
-    //   msgs.topic = AddMeasurementDict[userLanguage]['messages']['topicrequired'];
-    // } else {
-    //   msgs.topic = ''
-    // }
-    setValidation({ ...msgs });
+
+    setValidation({...msgs});
     return isValid;
   };
 
@@ -80,12 +65,12 @@ const AddMeasurement = (props: AddMeasurementProps) => {
         name,
         topicID: topicId,
         criteria,
-        curriculumID: curricularId,
+        curriculumID: curricularId
       };
       if (rubricData?.id) {
         const item: any = await API.graphql(
           graphqlOperation(customMutations.updateRubric, {
-            input: { ...input, id: rubricData?.id },
+            input: {...input, id: rubricData?.id}
           })
         );
         const updatedItem = item.data.updateRubric;
@@ -96,7 +81,7 @@ const AddMeasurement = (props: AddMeasurementProps) => {
         }
       } else {
         const item: any = await API.graphql(
-          graphqlOperation(customMutations.createRubric, { input })
+          graphqlOperation(customMutations.createRubric, {input})
         );
         const addedItem = item.data.createRubric;
         if (addedItem) {
@@ -118,12 +103,10 @@ const AddMeasurement = (props: AddMeasurementProps) => {
               value={name}
               onChange={onInputChange}
               name="name"
-              label={AddMeasurementDict[userLanguage]["mlabel"]}
+              label={AddMeasurementDict[userLanguage]['mlabel']}
               isRequired
             />
-            {validation.name && (
-              <p className="text-red-600">{validation.name}</p>
-            )}
+            {validation.name && <p className="text-red-600">{validation.name}</p>}
           </div>
 
           <div className="px-3 py-4">
@@ -134,7 +117,7 @@ const AddMeasurement = (props: AddMeasurementProps) => {
               value={criteria}
               onChange={onInputChange}
               name="criteria"
-              label={AddMeasurementDict[userLanguage]["criterialabel"]}
+              label={AddMeasurementDict[userLanguage]['criterialabel']}
             />
           </div>
         </div>
@@ -142,13 +125,13 @@ const AddMeasurement = (props: AddMeasurementProps) => {
       <div className="flex my-8 justify-center">
         <Buttons
           btnClass="py-3 px-10 mr-4"
-          label={AddMeasurementDict[userLanguage]["button"]["cancel"]}
+          label={AddMeasurementDict[userLanguage]['button']['cancel']}
           onClick={onCancel}
           transparent
         />
         <Buttons
           btnClass="py-3 px-10 ml-4"
-          label={AddMeasurementDict[userLanguage]["button"]["save"]}
+          label={AddMeasurementDict[userLanguage]['button']['save']}
           onClick={saveMeasurementDetails}
           disabled={loading}
         />

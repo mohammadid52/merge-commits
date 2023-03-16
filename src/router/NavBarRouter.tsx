@@ -169,7 +169,7 @@ const NavBarRouter = (instProps: any) => {
         path={`${match.url}/units/:unitId/edit`}
         render={() => (
           <ErrorBoundary componentName="UnitBuilder">
-            <UnitBuilder curricular={curricular && curricular} instId={institute?.id} />
+            <UnitBuilder curricular={curricular} instId={institute?.id} />
           </ErrorBoundary>
         )}
       />

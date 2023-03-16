@@ -151,7 +151,7 @@ const Dashboard = () => {
         {/* <ResizablePanels> */}
 
         <div
-          className={`h-full ${
+          className={`h-full w-full ${
             window.location.pathname.includes('game-changers')
               ? 'overflow-hidden'
               : 'overflow-y-auto'

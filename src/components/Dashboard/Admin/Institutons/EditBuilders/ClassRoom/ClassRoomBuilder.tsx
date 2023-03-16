@@ -315,28 +315,6 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
 
   return (
     <div className="">
-      {/* Section Header */}
-      {/* <BreadCrums
-        unsavedChanges={unsavedChanges}
-        toggleModal={toggleModal}
-        items={breadCrumsList}
-      /> */}
-      {/* <div className="flex justify-between">
-        <SectionTitle
-          title={RoomEDITdict[userLanguage]['TITLE']}
-          subtitle={RoomEDITdict[userLanguage]['SUBTITLE']}
-        />
-        {params.get('from') ? (
-          <div className="flex justify-end py-4 mb-4 w-5/10">
-            <Buttons
-              label="Go Back"
-              btnClass="mr-4"
-              onClick={goBack}
-              Icon={IoArrowUndoCircleOutline}
-            />
-          </div>
-        ) : null}
-      </div> */}
       <div className="px-8 py-4">
         <h3 className="text-lg leading-6 font-medium text-gray-900 w-auto capitalize">
           {roomId ? RoomEDITdict[userLanguage]['TITLE'] : 'Add Classroom'}
@@ -375,7 +353,7 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
         {messages.show ? (
           <div className="py-2 m-auto text-center">
             <p className={`${messages.isError ? 'text-red-600' : 'text-green-600'}`}>
-              {messages.message && messages.message}
+              {messages?.message ? messages.message : ''}
             </p>
           </div>
         ) : null}

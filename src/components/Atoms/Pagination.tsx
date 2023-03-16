@@ -92,13 +92,13 @@ const PageCount = (pageCountProps: {
 
   return (
     <>
-      {showNumbers.map((i, index) => (
+      {showNumbers.map((i) => (
         <PageNo
           page={i}
           setPrev={setPrev}
           setNext={setNext}
           currentPage={currentPage}
-          key={index}
+          key={i}
         />
       ))}
     </>

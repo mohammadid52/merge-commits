@@ -185,10 +185,7 @@ const Classroom: React.FC<ClassroomProps> = (props: ClassroomProps) => {
    * 3. LIST CURRICULUMS BY ROOM ID *
    **********************************/
   const listRoomCurriculums = async () => {
-    // removeLocalStorageData('curriculum_id');
-
     try {
-      // const roomCurriculumsFetch = await handleFetchAndCache(queryObj);
       const roomCurriculumsFetch = await API.graphql(
         graphqlOperation(customQueries.listRoomCurriculums, {
           filter: {
@@ -212,8 +209,6 @@ const Classroom: React.FC<ClassroomProps> = (props: ClassroomProps) => {
     } catch (e) {
       logError(e, {authId: authId, email: email}, 'Dashboard @listRoomCurriculums');
       console.error('RoomCurriculums fetch ERR: ', e);
-    } finally {
-      // console.log('curriciulum ids - ', curriculumIds);
     }
   };
 
@@ -683,8 +678,8 @@ const Classroom: React.FC<ClassroomProps> = (props: ClassroomProps) => {
                   {!Boolean(activeRoomInfo) ? (
                     Array(3)
                       .fill(' ')
-                      .map((_: any, index: number) => (
-                        <Fragment key={index}>
+                      .map((_: any) => (
+                        <Fragment key={_}>
                           <ClassroomLoader />
                         </Fragment>
                       ))

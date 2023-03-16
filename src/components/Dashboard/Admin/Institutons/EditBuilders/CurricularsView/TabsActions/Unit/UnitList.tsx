@@ -6,20 +6,20 @@ import * as mutations from 'graphql/mutations';
 import {useEffect, useState} from 'react';
 import {useHistory, useRouteMatch} from 'react-router';
 
-import Buttons from '@components/Atoms/Buttons';
-import Filters, {SortType} from '@components/Atoms/Filters';
-import Modal from '@components/Atoms/Modal';
-import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
-import Tooltip from '@components/Atoms/Tooltip';
-import {Status} from '@components/Dashboard/Admin/UserManagement/UserStatus';
-import CommonActionsBtns from '@components/MicroComponents/CommonActionsBtns';
-import UnitName from '@components/MicroComponents/UnitName';
-import Table from '@components/Molecules/Table';
-import useAuth from '@customHooks/useAuth';
-import usePagination from '@customHooks/usePagination';
-import useSearch from '@customHooks/useSearch';
-import {BUTTONS, InstitueRomms} from '@dictionary/dictionary.iconoclast';
-import {withZoiqFilter} from '@utilities/functions';
+import Buttons from 'components/Atoms/Buttons';
+import Filters, {SortType} from 'components/Atoms/Filters';
+import Modal from 'components/Atoms/Modal';
+import SectionTitleV3 from 'components/Atoms/SectionTitleV3';
+import Tooltip from 'components/Atoms/Tooltip';
+import {Status} from 'components/Dashboard/Admin/UserManagement/UserStatus';
+import CommonActionsBtns from 'components/MicroComponents/CommonActionsBtns';
+import UnitName from 'components/MicroComponents/UnitName';
+import Table from 'components/Molecules/Table';
+import useAuth from 'customHooks/useAuth';
+import usePagination from 'customHooks/usePagination';
+import useSearch from 'customHooks/useSearch';
+import {BUTTONS, InstitueRomms} from 'dictionary/dictionary.iconoclast';
+import {withZoiqFilter} from 'utilities/functions';
 import {RoomStatus} from 'API';
 import SearchInput from 'atoms/Form/SearchInput';
 import Selector from 'atoms/Form/Selector';
@@ -284,7 +284,6 @@ export const UnitList = ({
 
   const onInstitutionSelectionRemove = () => {
     setSelectedInstitution({});
-    // onSearch(searchInput, '');
   };
 
   const redirectToLesson = (institutionId: string, lessonId: string) => {
@@ -496,7 +495,7 @@ export const UnitList = ({
                     </Tooltip>
                   );
                 }
-                return <div className="hidden w-auto" />;
+                return <div key="dfdmf" className="hidden w-auto" />;
               }
             )}
           </ol>
@@ -565,7 +564,7 @@ export const UnitList = ({
 
   return (
     <div className="pt-0 flex m-auto justify-center h-full p-4">
-      <div className="flex flex-col">
+      <div className="flex flex-col w-full">
         <SectionTitleV3
           title={'Unit List'}
           fontSize="xl"

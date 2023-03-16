@@ -204,7 +204,7 @@ const UnitManager = ({
       const sortedList = savedData?.items?.sort((a: any, b: any) =>
         a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1
       );
-      // setDropdownSyllabusList([...updatedList]);
+
       setAllSyllabusList([...sortedList]);
       setLoading(false);
     } catch {
@@ -292,33 +292,6 @@ const UnitManager = ({
     }
   };
 
-  // const onDelete = (item: any) => {
-  //   const onDrop = async () => {
-  //     setDeleting(true);
-  //     await API.graphql(
-  //       graphqlOperation(customMutations.deleteCurriculumUnits, {
-  //         input: {id: item.id},
-  //       })
-  //     );
-  //     await updateSyllabusSequence(
-  //       syllabusIds.filter((unitId: any) => unitId !== item.unitId)
-  //     );
-  //     setSelectedSyllabusList((list: any) =>
-  //       list.filter((_item: any) => _item.id !== item.id)
-  //     );
-  //     setSavedSyllabusList((prevList: any) =>
-  //       prevList.filter((syllabus: any) => syllabus.id !== item.id)
-  //     );
-  //     setDeleting(false);
-  //     closeLessonAction();
-  //   };
-  //   setWarnModal2({
-  //     show: true,
-  //     message: `Are you sure you want to remove ${item.name} from course?`,
-  //     action: onDrop,
-  //   });
-  // };
-
   // ~~~~~~~~~~~~~~ DRAG & NAV ~~~~~~~~~~~~~ //
   const onDragEnd = async (result: any) => {
     if (result.source.index !== result.destination.index) {
@@ -353,7 +326,6 @@ const UnitManager = ({
         show: !warnModal.show,
         lessonEdit: true
       });
-      // setEditLesson({type, id});
     } else {
       history.push(
         `/dashboard/manage-institutions/institution/${institutionId}/units/${id}/edit`
@@ -464,7 +436,7 @@ const UnitManager = ({
         {messages.show && messages.lessonError ? (
           <div className="py-2 mb-4 m-auto text-center">
             <p className={`${messages.isError ? 'text-red-600' : 'text-green-600'}`}>
-              {messages.message && messages.message}
+              {messages.message ? messages.message : ''}
             </p>
           </div>
         ) : null}

@@ -1,32 +1,26 @@
-import Buttons from "atoms/Buttons";
-import SelectorWithAvatar from "atoms/Form/SelectorWithAvatar";
-import RichTextEditor from "atoms/RichTextEditor";
-import { API, graphqlOperation } from "aws-amplify";
-import Media from "components/Community/Components/Media";
-import {
-  COMMUNITY_UPLOAD_KEY,
-  IFile,
-} from "components/Community/constants.community";
-import { REGEX } from "components/Lesson/UniversalLessonBuilder/UI/common/constants";
-import AnimatedContainer from "components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer";
-import * as customQueries from "customGraphql/customQueries";
-import useAuth from "customHooks/useAuth";
-import * as queries from "graphql/queries";
-import {
-  ICommunityCardProps,
-  ISpotlightInput,
-} from "interfaces/Community.interfaces";
-import isEmpty from "lodash/isEmpty";
-import { useEffect, useState } from "react";
-import { getImageFromS3Static } from "utilities/services";
-import { getFilterORArray } from "utilities/strings";
+import Buttons from 'atoms/Buttons';
+import SelectorWithAvatar from 'atoms/Form/SelectorWithAvatar';
+import RichTextEditor from 'atoms/RichTextEditor';
+import {API, graphqlOperation} from 'aws-amplify';
+import Media from 'components/Community/Components/Media';
+import {COMMUNITY_UPLOAD_KEY, IFile} from 'components/Community/constants.community';
+import {REGEX} from 'components/Lesson/UniversalLessonBuilder/UI/common/constants';
+import AnimatedContainer from 'components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
+import * as customQueries from 'customGraphql/customQueries';
+import useAuth from 'customHooks/useAuth';
+import * as queries from 'graphql/queries';
+import {ICommunityCardProps, ISpotlightInput} from 'interfaces/Community.interfaces';
+import isEmpty from 'lodash/isEmpty';
+import {useEffect, useState} from 'react';
+import {getImageFromS3Static} from 'utilities/services';
+import {getFilterORArray} from 'utilities/strings';
 
 const Spotlight = ({
   instId,
   onCancel,
   onSubmit,
   editMode,
-  cardDetails,
+  cardDetails
 }: ICommunityCardProps) => {
   const [teachersList, setTeachersList] = useState<any[]>([]);
   const [loadingTeachers, setLoadingTeachers] = useState(false);
@@ -52,15 +46,12 @@ const Spotlight = ({
         setSelectedPerson(teacher);
       }
 
-      if (
-        cardDetails?.additionalLinks &&
-        cardDetails?.additionalLinks?.length > 1
-      ) {
+      if (cardDetails?.additionalLinks && cardDetails?.additionalLinks?.length > 1) {
         setYoutubeVideoLink(cardDetails.additionalLinks[1]);
       }
 
       setTempData({
-        image: cardDetails.cardImageLink,
+        image: cardDetails.cardImageLink
       });
 
       if (
@@ -89,9 +80,8 @@ const Spotlight = ({
     summary: string;
     summaryHtml: string;
   }>({
-    summary: editMode && !isEmpty(cardDetails) ? cardDetails?.summary : "",
-    summaryHtml:
-      editMode && !isEmpty(cardDetails) ? cardDetails?.summaryHtml || "" : "",
+    summary: editMode && !isEmpty(cardDetails) ? cardDetails?.summary : '',
+    summaryHtml: editMode && !isEmpty(cardDetails) ? cardDetails?.summaryHtml || '' : ''
   });
 
   const onEditorStateChange = (
@@ -101,56 +91,54 @@ const Spotlight = ({
     field: string
   ) => {
     setUnsavedChanges(true);
-    setFields({ ...fields, [field]: text, [fieldHtml]: html });
+    setFields({...fields, [field]: text, [fieldHtml]: html});
   };
 
   const [isLoading, setIsLoading] = useState(false);
 
   const initialData = {
-    id: "",
-    name: "",
-    institute: { id: instId, name: "", value: "" },
-    teacher: { id: "", name: "", value: "" },
+    id: '',
+    name: '',
+    institute: {id: instId, name: '', value: ''},
+    teacher: {id: '', name: '', value: ''}
   };
   const [roomData, setRoomData] = useState(initialData);
 
   const [selectedPerson, setSelectedPerson] = useState({
-    id: "",
-    name: "",
-    value: "",
+    id: '',
+    name: '',
+    value: ''
   });
 
   const selectPerson = (val: string, name: string, id: string) => {
-    setSelectedPerson({ id: id, name: name, value: val });
+    setSelectedPerson({id: id, name: name, value: val});
   };
 
   useEffect(() => {
     fetchStudentList();
   }, []);
 
-  const { authId } = useAuth();
+  const {authId} = useAuth();
 
   const fetchStudentList = async () => {
     setLoadingStudents(true);
     const response: any = await API.graphql(
       graphqlOperation(customQueries.getDashboardDataForTeachers, {
-        filter: { teacherAuthID: { eq: authId } },
+        filter: {teacherAuthID: {eq: authId}}
       })
     );
     const assignedRoomsAsCoTeacher: any = await API.graphql(
       graphqlOperation(customQueries.getDashboardDataForCoTeachers, {
-        filter: { teacherAuthID: { eq: authId } },
+        filter: {teacherAuthID: {eq: authId}}
       })
     );
     const data = [
       ...response?.data?.listRooms?.items,
-      ...assignedRoomsAsCoTeacher?.data?.listRoomCoTeachers?.items?.map(
-        (item: any) => ({
-          ...item,
-          ...item.room,
-          teacher: item.room?.teacher,
-        })
-      ),
+      ...assignedRoomsAsCoTeacher?.data?.listRoomCoTeachers?.items?.map((item: any) => ({
+        ...item,
+        ...item.room,
+        teacher: item.room?.teacher
+      }))
     ];
 
     let list: any[] = [];
@@ -164,7 +152,7 @@ const Spotlight = ({
               id: student.student.id,
               name: `${student.student.firstName} ${student.student.lastName}`,
               image: student?.student?.image,
-              value: `${student.student.firstName} ${student.student.lastName}`,
+              value: `${student.student.firstName} ${student.student.lastName}`
             });
             uniqIds.push(student.student.id);
           }
@@ -181,18 +169,17 @@ const Spotlight = ({
     try {
       const list: any = await API.graphql(
         graphqlOperation(customQueries.getInstitution, {
-          id: instId,
+          id: instId
         })
       );
       setRoomData((prevData) => ({
         ...prevData,
         institute: {
           ...prevData.institute,
-          name: list.data.getInstitution?.name,
-        },
+          name: list.data.getInstitution?.name
+        }
       }));
-      const serviceProviders =
-        list.data.getInstitution?.serviceProviders?.items;
+      const serviceProviders = list.data.getInstitution?.serviceProviders?.items;
       return serviceProviders;
     } catch {}
   };
@@ -216,13 +203,12 @@ const Spotlight = ({
     try {
       const list: any = await API.graphql(
         graphqlOperation(queries.listStaff, {
-          filter: { or: getFilterORArray(allInstiId, "institutionID") },
+          filter: {or: getFilterORArray(allInstiId, 'institutionID')}
         })
       );
       const listStaffs = list.data.listStaff.items;
 
-      if (listStaffs?.length === 0) {
-      } else {
+      if (listStaffs?.length > 0) {
         const sortedList = listStaffs.sort((a: any, b: any) =>
           a.staffMember?.firstName?.toLowerCase() >
           b.staffMember?.firstName?.toLowerCase()
@@ -231,24 +217,23 @@ const Spotlight = ({
         );
         const filterByRole = sortedList.filter(
           (teacher: any) =>
-            teacher.staffMember?.role === "TR" ||
-            teacher.staffMember?.role === "FLW"
+            teacher.staffMember?.role === 'TR' || teacher.staffMember?.role === 'FLW'
         );
         const staffList = filterByRole.map((item: any) => ({
           id: item.staffMember?.id,
-          name: `${item.staffMember?.firstName || ""} ${
-            item.staffMember?.lastName || ""
+          name: `${item.staffMember?.firstName || ''} ${
+            item.staffMember?.lastName || ''
           }`,
-          value: `${item.staffMember?.firstName || ""} ${
-            item.staffMember?.lastName || ""
+          value: `${item.staffMember?.firstName || ''} ${
+            item.staffMember?.lastName || ''
           }`,
-          email: item.staffMember?.email ? item.staffMember?.email : "",
-          authId: item.staffMember?.authId ? item.staffMember?.authId : "",
-          image: item.staffMember?.image,
+          email: item.staffMember?.email ? item.staffMember?.email : '',
+          authId: item.staffMember?.authId ? item.staffMember?.authId : '',
+          image: item.staffMember?.image
         }));
         // Removed duplicates from staff list.
         const uniqIDs: string[] = [];
-        const filteredArray = staffList.filter((member: { id: string }) => {
+        const filteredArray = staffList.filter((member: {id: string}) => {
           const duplicate = uniqIDs.includes(member.id);
           uniqIDs.push(member.id);
           return !duplicate;
@@ -262,21 +247,21 @@ const Spotlight = ({
     }
   };
 
-  const { teacher } = roomData;
+  const {teacher} = roomData;
 
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
 
   const validateFields = () => {
     let isValid = true;
 
     if (teacher === undefined) {
-      setError("Please select person");
+      setError('Please select person');
       isValid = false;
     } else if (!editMode && !youtubeVideoLink && isEmpty(file)) {
-      setError("Image or video not found");
+      setError('Image or video not found');
       isValid = false;
     } else if (!fields.summary) {
-      setError("Please add description");
+      setError('Please add description');
       isValid = false;
     } else if (
       !youtubeVideoLink &&
@@ -284,14 +269,13 @@ const Spotlight = ({
       !youtubeVideoLink &&
       isEmpty(file)
     ) {
-      setError("Please add youtube/vimeo link");
+      setError('Please add youtube/vimeo link');
       isValid = false;
     } else if (youtubeVideoLink && !REGEX.Youtube.test(youtubeVideoLink)) {
-      setError("Invalid Url");
+      setError('Invalid Url');
       isValid = false;
     } else {
-      setError("");
-      isValid = true;
+      setError('');
     }
     return isValid;
   };
@@ -310,7 +294,7 @@ const Spotlight = ({
             : cardDetails?.cardImageLink
           : file?.fileKey,
         id: cardDetails?.id,
-        isEditedCard: editMode,
+        isEditedCard: editMode
       };
 
       if (!editMode) {
@@ -319,8 +303,8 @@ const Spotlight = ({
       if (youtubeVideoLink) {
         spotlightDetails = {
           ...spotlightDetails,
-          cardImageLink: "",
-          additionalLinks: [youtubeVideoLink, selectedPerson.id],
+          cardImageLink: '',
+          additionalLinks: [youtubeVideoLink, selectedPerson.id]
         };
       }
 
@@ -328,13 +312,13 @@ const Spotlight = ({
     }
   };
 
-  const [youtubeVideoLink, setYoutubeVideoLink] = useState("");
+  const [youtubeVideoLink, setYoutubeVideoLink] = useState('');
   const mediaProps = {
     videoLink: youtubeVideoLink,
     setVideoLink: setYoutubeVideoLink,
     setError: setError,
     setFile: setFile,
-    file: file,
+    file: file
   };
 
   return (
@@ -351,7 +335,7 @@ const Spotlight = ({
           list={[...teachersList, ...studentsList]}
           imageFromS3
           loading={loadingStudents || loadingTeachers}
-          placeholder={"Select Person"}
+          placeholder={'Select Person'}
           onChange={selectPerson}
         />
       </div>
@@ -361,7 +345,7 @@ const Spotlight = ({
           <Media
             initialImage={getImageFromS3Static(
               COMMUNITY_UPLOAD_KEY +
-                (!isEmpty(file) && file?._status === "success"
+                (!isEmpty(file) && file?._status === 'success'
                   ? file?.fileKey
                   : tempData?.image)
             )}
@@ -372,9 +356,9 @@ const Spotlight = ({
         // @ts-ignore
         <Media
           initialImage={
-            !isEmpty(file) && file?._status === "success"
+            !isEmpty(file) && file?._status === 'success'
               ? getImageFromS3Static(COMMUNITY_UPLOAD_KEY + file?.fileKey)
-              : "null"
+              : 'null'
           }
           {...mediaProps}
         />
@@ -387,25 +371,16 @@ const Spotlight = ({
         </label>
         <div>
           <RichTextEditor
-            placeholder={
-              "Why do you want to put this person in the community spotlight?"
-            }
+            placeholder={'Why do you want to put this person in the community spotlight?'}
             rounded
             customStyle
             initialValue={fields.summary}
             onChange={(htmlContent, plainText) =>
-              onEditorStateChange(
-                htmlContent,
-                plainText,
-                "summaryHtml",
-                "summary"
-              )
+              onEditorStateChange(htmlContent, plainText, 'summaryHtml', 'summary')
             }
           />
 
-          <div className="text-right text-gray-400">
-            {fields.summary.length} of 750
-          </div>
+          <div className="text-right text-gray-400">{fields.summary.length} of 750</div>
         </div>
       </div>
       <AnimatedContainer show={Boolean(error)}>
@@ -416,14 +391,14 @@ const Spotlight = ({
         <div className="flex justify-end">
           <Buttons
             btnClass="py-1 px-4 text-xs mr-2"
-            label={"Cancel"}
+            label={'Cancel'}
             onClick={onCancel}
             transparent
           />
           <Buttons
             btnClass="py-1 px-8 text-xs ml-2"
             dataCy="save-spotlight-button"
-            label={"Save"}
+            label={'Save'}
             loading={isLoading}
             // disabled={
             //   (!editMode && isEmpty(file) && file?._status !== 'success') ||

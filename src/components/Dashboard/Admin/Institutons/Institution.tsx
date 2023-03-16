@@ -10,7 +10,7 @@ import {useGlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
 import queryString from 'query-string';
 import {lazy, useEffect, useState} from 'react';
-import {Route, Switch, useLocation, useParams, useRouteMatch} from 'react-router-dom';
+import {Route, Switch, useLocation, useRouteMatch} from 'react-router-dom';
 const InstitutionInfo = lazy(() => import('dashboard/Admin/Institutons/InstitutionInfo'));
 
 interface InstitutionProps {

@@ -16,7 +16,7 @@ interface ITabsProps {
   currentTab?: string;
 }
 
-const DropDownMenu = ({index, menu, onClick}: any) => {
+const DropDownMenu = ({menu, onClick}: any) => {
   const buttonRef = useRef<any>(null);
   const dropdownRef = useRef<any>(null);
   const timeoutDuration = 100;
@@ -88,10 +88,10 @@ const DropDownMenu = ({index, menu, onClick}: any) => {
                 ref={dropdownRef}
                 onMouseEnter={() => onMouseEnter()}
                 onMouseLeave={() => onMouseLeave(open)}>
-                {menu.children.map((item: any, menuIndex: number) => (
+                {menu.children.map((item: any) => (
                   <Menu.Item
                     data-cy={kebabCase(`${item.title}-item`)}
-                    key={`${index}_${menuIndex}`}
+                    key={`${item.title}`}
                     // @ts-ignore
                     onClick={() => onClick?.(item)}>
                     <div className="hover:iconoclast:bg-400 hover:curate:bg-400 hover:text-white rounded-full p-2 px-4 text-xs 2xl:text-base">
@@ -126,24 +126,30 @@ const Tabs = ({tabsData, updateTab, currentTab}: ITabsProps) => {
             updateTab(tab);
           }}
           className="block w-full text-xs md:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-full">
-          {tabsData.map((tab: ITabElements, index: number) => (
-            <option value={tab.title} className="transition-all" key={index}>
+          {tabsData.map((tab: ITabElements) => (
+            <option value={tab.title} className="transition-all" key={tab.title}>
               {tab.title}
             </option>
           ))}
         </select>
       </div>
       <div className="hidden sm:block">
-        <nav className="flex user__profile-tabs space-x-3" aria-label="Tabs">
+        <nav
+          className="flex user__profile-tabs gap-4 justify-between px-4"
+          aria-label="Tabs">
           {tabsData.map((menu: any, index: number) =>
             menu.type === 'dropdown' ? (
-              <DropDownMenu menu={menu} onClick={updateTab} index={index} key={index} />
+              <DropDownMenu
+                menu={menu}
+                onClick={updateTab}
+                index={index}
+                key={menu.title}
+              />
             ) : (
               <button
-                key={index}
+                key={menu.title}
                 data-cy={kebabCase(`${menu.title}-item`)}
                 onClick={() => {
-                  // if (currentTab !== menu.title) {
                   updateTab(menu);
                   // }
                 }}

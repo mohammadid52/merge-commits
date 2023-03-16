@@ -59,16 +59,6 @@ const BottomBar = (props: LessonCardProps) => {
             <AiOutlineUser className="w-4 h-4 sm:w-6 sm:h-6" />
           </div>
 
-          {/* {isTeacher && (
-            <p className="overflow-ellipsis overflow-hidden text-base text-left">
-              Status:
-              {accessible ? (
-                <span className="ml-2 text-base font-semibold text-green-400">Open</span>
-              ) : (
-                <span className="ml-2 text-base font-semibold text-red-600">Closed</span>
-              )}
-            </p>
-          )} */}
           {/*
            * SHOW TEACHER NAME
            */}

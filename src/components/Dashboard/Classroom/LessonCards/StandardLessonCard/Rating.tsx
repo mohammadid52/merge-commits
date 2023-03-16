@@ -1,13 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect} from 'react';
 
 interface RatingCard {
   lessonProps: any;
   user: any;
-  getLessonRating?: (
-    lessonId: string,
-    userEmail: string,
-    userAuthId: string
-  ) => any;
+  getLessonRating?: (lessonId: string, userEmail: string, userAuthId: string) => any;
   handleLessonMutationRating?: (lessonID: string, ratingValue: string) => void;
 }
 
@@ -15,7 +11,7 @@ const StarRating = ({
   lessonProps,
   user,
   handleLessonMutationRating,
-  getLessonRating,
+  getLessonRating
 }: RatingCard) => {
   const [rating, setRating] = useState<any>();
   const [hover, setHover] = useState<any>();
@@ -41,12 +37,11 @@ const StarRating = ({
         return (
           <button
             type="button"
-            key={index}
-            className={index <= (hover || rating) ? "rating on" : "rating off"}
+            key={_}
+            className={index <= (hover || rating) ? 'rating on' : 'rating off'}
             onClick={() => setRating(index)}
             onMouseEnter={() => setHover(index)}
-            onMouseLeave={() => setHover(rating)}
-          >
+            onMouseLeave={() => setHover(rating)}>
             <span className="star">&#9733;</span>
           </button>
         );

@@ -1,23 +1,23 @@
-import ErrorBoundary from "@components/Error/ErrorBoundary";
-import { withZoiqFilter } from "@utilities/functions";
-import { API, graphqlOperation } from "aws-amplify";
-import { useGlobalContext } from "contexts/GlobalContext";
-import * as customQueries from "customGraphql/customQueries";
-import * as queries from "graphql/queries";
-import { useEffect, useState } from "react";
-import { Route, Switch, useRouteMatch } from "react-router-dom";
-import LessonPlan from "../../../Lesson/UniversalLessonBuilder/UI/LessonPlan/LessonPlan";
-import UniversalLessonBuilder from "../../../Lesson/UniversalLessonBuilder/UniversalLessonBuilder";
-import LessonBuilder from "./LessonBuilder";
-import LessonsList from "./LessonsList";
-import LessonTabView from "./StepActionComponent/LessonTabView";
+import ErrorBoundary from '@components/Error/ErrorBoundary';
+import {withZoiqFilter} from '@utilities/functions';
+import {API, graphqlOperation} from 'aws-amplify';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import * as customQueries from 'customGraphql/customQueries';
+import * as queries from 'graphql/queries';
+import {useEffect, useState} from 'react';
+import {Route, Switch, useRouteMatch} from 'react-router-dom';
+import LessonPlan from '../../../Lesson/UniversalLessonBuilder/UI/LessonPlan/LessonPlan';
+import UniversalLessonBuilder from '../../../Lesson/UniversalLessonBuilder/UniversalLessonBuilder';
+import LessonBuilder from './LessonBuilder';
+import LessonsList from './LessonsList';
+import LessonTabView from './StepActionComponent/LessonTabView';
 
 interface ILessonBuilderHomeProps {
   instId?: string;
 }
 
-const LessonsBuilderHome = ({ instId = "" }: ILessonBuilderHomeProps) => {
-  const { dispatch } = useGlobalContext();
+const LessonsBuilderHome = ({instId = ''}: ILessonBuilderHomeProps) => {
+  const {dispatch} = useGlobalContext();
 
   const match = useRouteMatch();
 
@@ -26,8 +26,8 @@ const LessonsBuilderHome = ({ instId = "" }: ILessonBuilderHomeProps) => {
 
   useEffect(() => {
     dispatch({
-      type: "UPDATE_CURRENTPAGE",
-      payload: { data: "lesson-builder" },
+      type: 'UPDATE_CURRENTPAGE',
+      payload: {data: 'lesson-builder'}
     });
   }, []);
 
@@ -35,20 +35,16 @@ const LessonsBuilderHome = ({ instId = "" }: ILessonBuilderHomeProps) => {
     const result: any = await API.graphql(
       graphqlOperation(customQueries.listPersons, {
         filter: {
-          or: [
-            { role: { eq: "TR" } },
-            { role: { eq: "BLD" } },
-            { role: { eq: "FLW" } },
-          ],
-        },
+          or: [{role: {eq: 'TR'}}, {role: {eq: 'BLD'}}, {role: {eq: 'FLW'}}]
+        }
       })
     );
     const savedData = result.data.listPeople;
     const updatedList = savedData?.items.map(
-      (item: { id: string; firstName: string; lastName: string }) => ({
+      (item: {id: string; firstName: string; lastName: string}) => ({
         id: item?.id,
-        name: `${item?.firstName || ""} ${item.lastName || ""}`,
-        value: `${item?.firstName || ""} ${item.lastName || ""}`,
+        name: `${item?.firstName || ''} ${item.lastName || ''}`,
+        value: `${item?.firstName || ''} ${item.lastName || ''}`
       })
     );
     setDesignersList(updatedList);
@@ -57,17 +53,15 @@ const LessonsBuilderHome = ({ instId = "" }: ILessonBuilderHomeProps) => {
   const fetchInstitutionsList = async () => {
     const result: any = await API.graphql(
       graphqlOperation(queries.listInstitutions, {
-        filter: withZoiqFilter({}),
+        filter: withZoiqFilter({})
       })
     );
     const savedData = result.data.listInstitutions;
-    const updatedList = savedData?.items.map(
-      (item: { id: string; name: string }) => ({
-        id: item?.id,
-        name: item?.name || "",
-        value: item?.name || "",
-      })
-    );
+    const updatedList = savedData?.items.map((item: {id: string; name: string}) => ({
+      id: item?.id,
+      name: item?.name || '',
+      value: item?.name || ''
+    }));
     setInstitutionList(updatedList);
   };
 
@@ -81,19 +75,6 @@ const LessonsBuilderHome = ({ instId = "" }: ILessonBuilderHomeProps) => {
    *  This was the most logical place to put it
    *  as it needs to overlay several of the components below
    */
-
-  // const NewLessonPlanModal = (_:any) =>
-  // <div className={`col-span-1`}>
-  //   <NewLessonPlanSO
-  //     editMode={editMode}
-  //     setEditMode={setEditMode}
-  //     pageDetails={editMode ? activePageData : {}} // don't send unwanted page details if not editing
-  //     open={newLessonPlanShow}
-  //     setOpen={setNewLessonPlanShow}
-  //     activePageData={activePageData}
-  //   />
-  // </div>
-  // }
 
   return (
     <>

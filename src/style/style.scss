@@ -1,30 +1,27 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap");
-@import "@pathofdev/react-tag-input/build/index.css";
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap');
+@import '@pathofdev/react-tag-input/build/index.css';
 
 // Variables
-@import "variables";
+@import 'variables';
 
 /* OTHER / GENERAL */
-@import "general/scrollbars";
-@import "general/responsive";
+@import 'general/scrollbars';
+@import 'general/responsive';
 
 /* THEME */
-@import "utilities/theme";
+@import 'utilities/theme';
 
 /* MAIN PARTS */
-@import "lessons";
+@import 'lessons';
 
 $polka-dot-size: 0.8px;
 
 .polka-pattern {
   background-color: $background;
   opacity: 0.8;
-  background-image: radial-gradient(
-      $theme-500 $polka-dot-size,
-      transparent 0.5px
-    ),
+  background-image: radial-gradient($theme-500 $polka-dot-size, transparent 0.5px),
     radial-gradient($theme-500 $polka-dot-size, $background 0.5px);
   background-size: 20px 20px;
   background-position: 0 0, 10px 10px;
@@ -425,15 +422,13 @@ $polka-dot-size: 0.8px;
     visibility: hidden;
     display: none;
     opacity: 0;
-    transition: opacity 0.3s ease-out, visibility 0.3s ease-in,
-      display 0.3s ease-out;
+    transition: opacity 0.3s ease-out, visibility 0.3s ease-in, display 0.3s ease-out;
   }
 
   &.show {
     visibility: visible;
     opacity: 1;
-    transition: opacity 0.3s ease-out, visibility 0.3s ease-in,
-      display 0.3s ease-in;
+    transition: opacity 0.3s ease-out, visibility 0.3s ease-in, display 0.3s ease-in;
   }
 }
 
@@ -565,7 +560,7 @@ $polka-dot-size: 0.8px;
 
 /* Tooltip arrow */
 [data-tooltip]::after {
-  content: "";
+  content: '';
   border-style: solid;
   border-width: 5px 5px 0 5px; /* CSS triangle */
   border-color: rgba(55, 64, 70, 0.9) transparent transparent transparent;
@@ -597,97 +592,97 @@ $polka-dot-size: 0.8px;
 /* LEFT */
 // Tooltip + arrow
 
-[data-tooltip-location="left"]::before,
-[data-tooltip-location="left"]::after {
+[data-tooltip-location='left']::before,
+[data-tooltip-location='left']::after {
   left: auto;
   right: calc(100% + 5px);
   bottom: 50%;
 }
 
 /* Tooltip */
-[data-tooltip-location="left"]::before {
+[data-tooltip-location='left']::before {
   transform: translate(-5px, 50%) scale(0.5);
 }
 
-[data-tooltip-location="left"]:hover::before {
+[data-tooltip-location='left']:hover::before {
   transform: translate(-5px, 50%) scale(1);
 }
 
 /* Arrow */
-[data-tooltip-location="left"]::after {
+[data-tooltip-location='left']::after {
   border-width: 5px 0 5px 5px;
   border-color: transparent transparent transparent rgba(55, 64, 70, 0.9);
   transform-origin: left;
   transform: translateY(50%) scaleX(0);
 }
 
-[data-tooltip-location="left"]:hover::after {
+[data-tooltip-location='left']:hover::after {
   transform: translateY(50%) scaleX(1);
 }
 
 /* RIGHT */
-[data-tooltip-location="right"]::before,
-[data-tooltip-location="right"]::after {
+[data-tooltip-location='right']::before,
+[data-tooltip-location='right']::after {
   left: calc(100% + 5px);
   bottom: 50%;
 }
 
-[data-tooltip-location="right"]::before {
+[data-tooltip-location='right']::before {
   transform: translate(5px, 50%) scale(0.5);
 }
 
-[data-tooltip-location="right"]:hover::before {
+[data-tooltip-location='right']:hover::before {
   transform: translate(5px, 50%) scale(1);
 }
 
-[data-tooltip-location="right"]::after {
+[data-tooltip-location='right']::after {
   border-width: 5px 5px 5px 0;
   border-color: transparent rgba(55, 64, 70, 0.9) transparent transparent;
   transform-origin: right;
   transform: translateY(50%) scaleX(0);
 }
 
-[data-tooltip-location="right"]:hover::after {
+[data-tooltip-location='right']:hover::after {
   transform: translateY(50%) scaleX(1);
 }
 
 /* BOTTOM */
-[data-tooltip-location="bottom"]::before,
-[data-tooltip-location="bottom"]::after {
+[data-tooltip-location='bottom']::before,
+[data-tooltip-location='bottom']::after {
   top: calc(100% + 5px);
   bottom: auto;
 }
 
-[data-tooltip-location="bottom"]::before {
+[data-tooltip-location='bottom']::before {
   transform: translate(-50%, 5px) scale(0.5);
 }
 
-[data-tooltip-location="bottom"]:hover::before {
+[data-tooltip-location='bottom']:hover::before {
   transform: translate(-50%, 5px) scale(1);
 }
 
-[data-tooltip-location="bottom"]::after {
+[data-tooltip-location='bottom']::after {
   border-width: 0 5px 5px 5px;
   border-color: transparent transparent rgba(55, 64, 70, 0.9) transparent;
   transform-origin: bottom;
 }
 
 /* BOTTOM LEFT */
-[data-tooltip-location="bottomleft"]::before,
-[data-tooltip-location="bottomleft"]::after {
+[data-tooltip-location='bottomleft']::before,
+[data-tooltip-location='bottomleft']::after {
   top: calc(100% + 5px);
   bottom: auto;
 }
 
-[data-tooltip-location="bottomleft"]::before {
+[data-tooltip-location='bottomleft']::before {
   transform: translate(-50%, 5px) scale(0.5);
 }
 
-[data-tooltip-location="bottomleft"]:hover::before {
+[data-tooltip-location='bottomleft']:hover::before {
   transform: translate(-50%, 5px) scale(1);
 }
 
-[data-tooltip-location="bottomleft"]::after {
+[data-tooltip-location='bottomleft']::after {
   border-width: 0 5px 5px 5px;
   border-color: transparent transparent rgba(55, 64, 70, 0.9) transparent;
   transform-origin: bottom;
@@ -695,7 +690,7 @@ $polka-dot-size: 0.8px;
 }
 
 .animate__border::after {
-  content: "";
+  content: '';
   position: absolute;
   height: 2px;
   width: 100%;
@@ -1078,8 +1073,8 @@ $polka-dot-size: 0.8px;
     font-size: 0.875rem;
     border: 1px solid rgba(226, 232, 240, 1);
     --tw-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-    box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000),
-      var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+    box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000),
+      var(--tw-shadow);
     margin-top: 0.25rem;
   }
   .react-datepicker__close-icon {
@@ -1422,7 +1417,7 @@ $polka-dot-size: 0.8px;
     --tw-gradient-from: #818cf8;
     --tw-gradient-stops: var(--tw-gradient-from),
       var(--tw-gradient-to, rgba(239, 68, 68, 0));
-    content: "";
+    content: '';
     position: absolute;
     bottom: -3px;
 
@@ -1480,12 +1475,7 @@ $polka-dot-size: 0.8px;
 }
 
 .happy_card {
-  background: linear-gradient(
-    131.97deg,
-    #6b83c1 13.18%,
-    #737db8 14.14%,
-    #e8222b 89.82%
-  );
+  background: linear-gradient(131.97deg, #6b83c1 13.18%, #737db8 14.14%, #e8222b 89.82%);
 }
 
 .angry_card {
@@ -1505,12 +1495,7 @@ $polka-dot-size: 0.8px;
 }
 
 .surprised_card {
-  background: linear-gradient(
-    29.93deg,
-    #f397b9 17.57%,
-    #eae5f2 97.66%,
-    #eae5f2 97.66%
-  );
+  background: linear-gradient(29.93deg, #f397b9 17.57%, #eae5f2 97.66%, #eae5f2 97.66%);
 }
 
 .disgusted_card {
@@ -1666,7 +1651,7 @@ $polka-dot-size: 0.8px;
       height: 2px;
       width: 0%;
       position: absolute;
-      content: "";
+      content: '';
       background-color: $iconoclast;
       border-radius: 50%;
       bottom: -8px;
@@ -1736,7 +1721,7 @@ $polka-dot-size: 0.8px;
   width: 2px;
   background-color: red;
   top: 0;
-  content: "";
+  content: '';
 }
 
 .dictionary-popup {

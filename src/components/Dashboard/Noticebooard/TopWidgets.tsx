@@ -1,24 +1,4 @@
-import React, { useEffect, useState } from "react";
-
-/*const quotes = [
-  {
-    quote: 'The principles of restorative justice ask us to look at who has a stake in a given offense and to regard these people with full consideration of their humanity.',
-    source: 'Aremisia Solstice',
-  },
-  {
-    quote: 'I think it is healing behavior, to look at something so broken and see the possibility and wholeness in it.',
-    source: 'adrienne maree brown ',
-  },
-  {
-    quote: 'First forget inspiration. Habit is more dependable. Habit will sustain you whether youre inspired or not. Habit will help you finish and polish your stories. Inspiration wont. Habit is persistence in practice.',
-    source: 'Octavia Butler',
-  },
-
-  {
-    quote: 'The denunciation of injustice implies the rejection of the use of Christianity to legitimize the established order',
-    source: 'Gustavo Gutierrez ',
-  },
-];*/
+import React, {useEffect, useState} from 'react';
 
 export const QuoteWidget = (props: {
   quotes: any[];
@@ -26,12 +6,12 @@ export const QuoteWidget = (props: {
   card?: boolean;
   placement: string;
 }) => {
-  const { quotes, placement } = props;
+  const {quotes, placement} = props;
   const [widgetQuote, setWidgetQuote] = useState<{
     text: string;
     author: string;
   }>();
-  const [twClass, setTWClass] = useState<string>("opacity-100");
+  const [twClass, setTWClass] = useState<string>('opacity-100');
 
   useEffect(() => {
     if (!widgetQuote) setWidgetQuote(quotes[0]);
@@ -41,13 +21,13 @@ export const QuoteWidget = (props: {
     let quoteTimer = setInterval(() => {
       const randomNumber = Math.floor(Math.random() * quotes.length);
       setTimeout(() => {
-        setTWClass("opacity-0");
+        setTWClass('opacity-0');
       }, 0);
       setTimeout(() => {
         setWidgetQuote(quotes[randomNumber]);
       }, 1000);
       setTimeout(() => {
-        setTWClass("opacity-100");
+        setTWClass('opacity-100');
       }, 1200);
     }, 6000);
     return () => clearInterval(quoteTimer);
@@ -56,17 +36,14 @@ export const QuoteWidget = (props: {
   return (
     <div>
       <div className={`mb-2`}>
-        <span className={`text-gray-400 w-full font-semibold text-sm`}>
-          Other
-        </span>
+        <span className={`text-gray-400 w-full font-semibold text-sm`}>Other</span>
       </div>
       <div
         style={{
           minHeight: 90,
-          minWidth: placement === "topbar" ? 300 : "unset",
+          minWidth: placement === 'topbar' ? 300 : 'unset'
         }}
-        className={`text-sm text-center italic p-3 bg-white shadow rounded-lg flex items-center justify-center`}
-      >
+        className={`text-sm text-center italic p-3 bg-white shadow rounded-lg flex items-center justify-center`}>
         {widgetQuote && (
           <div className={`${twClass} transition duration-1000 ease-in-out`}>
             <h2>"{widgetQuote.text}"</h2>

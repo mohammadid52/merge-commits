@@ -106,8 +106,8 @@ const Today: React.FC<LessonProps> = ({
       {lessonLoading ? (
         Array(3)
           .fill(' ')
-          .map((_: any, index: number) => (
-            <Fragment key={index}>
+          .map((_: any) => (
+            <Fragment key={_}>
               <ClassroomLoader />
             </Fragment>
           ))
@@ -124,8 +124,8 @@ const Today: React.FC<LessonProps> = ({
               closeAction={removeSearchAction}
             />
           </div>
-          {lessonsBySession.map((session: any, index: number) => (
-            <Fragment key={index}>
+          {lessonsBySession.map((session: any) => (
+            <Fragment key={session.sessionHeading}>
               {isNumber(session.sessionHeading) && (
                 <div className="relative mb-2">
                   <div className="absolute inset-0 flex items-center" aria-hidden="true">

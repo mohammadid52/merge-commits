@@ -24,6 +24,70 @@ import {AiOutlineHeart} from 'react-icons/ai';
 import {BiDotsVerticalRounded} from 'react-icons/bi';
 import {v4 as uuidV4} from 'uuid';
 
+const EditChatModal = ({
+  chatConfig,
+  chatEditModal,
+  setChatEditModal,
+  chats,
+  setChats
+}: {
+  chatConfig: {
+    chatId: string;
+    chatValue: string;
+  };
+  chatEditModal: boolean;
+  setChatEditModal: React.Dispatch<React.SetStateAction<boolean>>;
+  setChats: React.Dispatch<React.SetStateAction<IChat[]>>;
+  chats: IChat[];
+}) => {
+  const closeAction = () => {
+    setChatEditModal(false);
+    setValue('');
+  };
+  const [value, setValue] = useState(chatConfig.chatValue ? chatConfig.chatValue : '');
+
+  const onEditedChatSave = () => {
+    mutate({
+      input: {id: chatConfig.chatId, msg: value, isEditedChat: true}
+    });
+  };
+
+  const {mutate, isLoading} = useGraphqlMutation('updateCommunityChat', {
+    onSuccess: () => {
+      const idx = chats.findIndex((c) => c.id === chatConfig.chatId);
+      update(chats[idx], `msg`, () => value);
+      update(chats[idx], `isEditedChat`, () => true);
+      setChats([...chats]);
+      closeAction();
+    }
+  });
+
+  const disableSaveBtn =
+    chatConfig.chatValue === value || value.length === 0 || isLoading;
+
+  return chatEditModal ? (
+    <Modal title="Edit Chat" showHeader showFooter={false} closeAction={closeAction}>
+      <div className="min-w-132">
+        <FormInput
+          label="Comment"
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+        />
+      </div>
+      <div className="flex mt-8 justify-end">
+        <Buttons
+          btnClass="py-1 px-8 text-xs ml-2"
+          disabled={disableSaveBtn}
+          label={'Save'}
+          onClick={onEditedChatSave}
+        />
+      </div>
+    </Modal>
+  ) : (
+    <div className="hidden w-auto" />
+  );
+};
+
 const BottomSection = ({
   setShowComments,
   showComments,
@@ -518,62 +582,18 @@ const Card = ({
       setShowMenu={setShowMenu}
     />
   );
-
-  const EditChatModal = () => {
-    const closeAction = () => {
-      setChatEditModal(false);
-      setValue('');
-    };
-    const [value, setValue] = useState(chatConfig.chatValue ? chatConfig.chatValue : '');
-
-    const onEditedChatSave = () => {
-      mutate({
-        input: {id: chatConfig.chatId, msg: value, isEditedChat: true}
-      });
-    };
-
-    const {mutate, isLoading} = useGraphqlMutation('updateCommunityChat', {
-      onSuccess: () => {
-        const idx = chats.findIndex((c) => c.id === chatConfig.chatId);
-        update(chats[idx], `msg`, () => value);
-        update(chats[idx], `isEditedChat`, () => true);
-        setChats([...chats]);
-        closeAction();
-      }
-    });
-
-    const disableSaveBtn =
-      chatConfig.chatValue === value || value.length === 0 || isLoading;
-
-    return chatEditModal ? (
-      <Modal title="Edit Chat" showHeader showFooter={false} closeAction={closeAction}>
-        <div className="min-w-132">
-          <FormInput
-            label="Comment"
-            value={value}
-            onChange={(e) => setValue(e.target.value)}
-          />
-        </div>
-        <div className="flex mt-8 justify-end">
-          <Buttons
-            btnClass="py-1 px-8 text-xs ml-2"
-            disabled={disableSaveBtn}
-            label={'Save'}
-            onClick={onEditedChatSave}
-          />
-        </div>
-      </Modal>
-    ) : (
-      <div className="hidden w-auto" />
-    );
-  };
-
   const [chatCount, setChatCount] = useState<number>(cardDetails?.chatCount || 0);
 
   return (
     <div className="relative max-w-xl bg-gray-100 shadow-md rounded-lg overflow-hidden mx-auto">
       {MenuOptions}
-      <EditChatModal />
+      <EditChatModal
+        chatConfig={chatConfig}
+        setChatEditModal={setChatEditModal}
+        chatEditModal={chatEditModal}
+        setChats={setChats}
+        chats={chats}
+      />
       <MainCard cardDetails={cardDetails} />
       <div className="w-auto">
         <BottomSection

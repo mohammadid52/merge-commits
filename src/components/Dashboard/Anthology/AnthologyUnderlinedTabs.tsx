@@ -36,8 +36,8 @@ const UnderlinedTabs = (props: TabsProps) => {
   return (
     <div className="flex flex-wrap flex-col w-full h-full">
       <div className="flex flex-nowrap overflow-hidden sm:overflow-x-auto flex-row mr-2 bg-white">
-        {tabs.map((tab, key) => (
-          <div key={key} className="relative">
+        {tabs.map((tab) => (
+          <div key={tab.id} className="relative">
             <button
               onClick={(_) => {
                 changeActiveTab(tab.index);

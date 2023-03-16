@@ -104,7 +104,7 @@ const InstitutionsHome: React.FC = () => {
         : '';
 
       const splitted = splitUrl.split('/');
-      if (splitUrl.indexOf('add') === -1 && splitted.length >= 0) {
+      if (splitUrl.indexOf('add') === -1 && splitted.length > 0) {
         const result: any = await API.graphql(
           graphqlOperation(customQueries.getUniversalLessonBasicDetails, {
             id: splitted[0]

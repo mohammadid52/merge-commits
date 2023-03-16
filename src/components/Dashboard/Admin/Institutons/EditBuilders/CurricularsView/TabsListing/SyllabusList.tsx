@@ -1,17 +1,17 @@
-import { API, graphqlOperation } from "aws-amplify";
-import { Fragment, useEffect, useState } from "react";
-import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
-import { useHistory } from "react-router";
+import {API, graphqlOperation} from 'aws-amplify';
+import {Fragment, useEffect, useState} from 'react';
+import {DragDropContext, Draggable, Droppable} from 'react-beautiful-dnd';
+import {useHistory} from 'react-router';
 
-import { getAsset } from "assets";
-import Buttons from "atoms/Buttons";
-import AddButton from "atoms/Buttons/AddButton";
-import PageWrapper from "atoms/PageWrapper";
-import Tooltip from "atoms/Tooltip";
-import { useGlobalContext } from "contexts/GlobalContext";
-import * as customMutations from "customGraphql/customMutations";
-import useDictionary from "customHooks/dictionary";
-import { reorder } from "utilities/strings";
+import {getAsset} from 'assets';
+import Buttons from 'atoms/Buttons';
+import AddButton from 'atoms/Buttons/AddButton';
+import PageWrapper from 'atoms/PageWrapper';
+import Tooltip from 'atoms/Tooltip';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import * as customMutations from 'customGraphql/customMutations';
+import useDictionary from 'customHooks/dictionary';
+import {reorder} from 'utilities/strings';
 
 interface SyllabusListProps {
   curricularId?: string;
@@ -24,15 +24,9 @@ interface SyllabusListProps {
 const SyllabusList = (props: SyllabusListProps) => {
   const history = useHistory();
 
-  const {
-    curricularId,
-    institutionId,
-    loading,
-    syllabusList,
-    syllabusSequence,
-  } = props;
-  const { clientKey, theme, userLanguage } = useGlobalContext();
-  const themeColor = getAsset(clientKey, "themeClassName");
+  const {curricularId, institutionId, loading, syllabusList, syllabusSequence} = props;
+  const {clientKey, theme, userLanguage} = useGlobalContext();
+  const themeColor = getAsset(clientKey, 'themeClassName');
   const SyllabusDict = useDictionary().SYLLABUS;
   const [list, setList] = useState<any>(syllabusList);
 
@@ -50,22 +44,18 @@ const SyllabusList = (props: SyllabusListProps) => {
   const onDragEnd = async (result: any) => {
     if (result.source.index !== result.destination.index) {
       const seq = list.map((sy: any) => sy.id);
-      console.log("seq", seq);
-      const reorderedList = reorder(
-        seq,
-        result.source.index,
-        result.destination.index
-      );
+      console.log('seq', seq);
+      const reorderedList = reorder(seq, result.source.index, result.destination.index);
       try {
         let data = updateSyllabusListorder(syllabusList, reorderedList);
         setList(data);
         await API.graphql(
           graphqlOperation(customMutations.updateCurriculumSyllabusSequence, {
-            input: { id: curricularId, universalSyllabusSeq: reorderedList },
+            input: {id: curricularId, universalSyllabusSeq: reorderedList}
           })
         );
       } catch (err) {
-        console.log("Could not update syllabus list sequence");
+        console.log('Could not update syllabus list sequence');
       }
     }
   };
@@ -74,7 +64,7 @@ const SyllabusList = (props: SyllabusListProps) => {
     let data = syllabusList
       .map((t: any) => {
         let index = sequence?.indexOf(t.id);
-        return { ...t, index };
+        return {...t, index};
       })
       .sort((a: any, b: any) => (a.index > b.index ? 1 : -1));
     return data;
@@ -94,13 +84,10 @@ const SyllabusList = (props: SyllabusListProps) => {
       <div className="">
         <PageWrapper>
           <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">
-            {SyllabusDict[userLanguage]["TITLE"]}
+            {SyllabusDict[userLanguage]['TITLE']}
           </h3>
           {loading && (
-            <p className="text-center p-16">
-              {" "}
-              {SyllabusDict[userLanguage]["FETCH"]}
-            </p>
+            <p className="text-center p-16"> {SyllabusDict[userLanguage]['FETCH']}</p>
           )}
           {!loading && (
             <Fragment>
@@ -109,7 +96,7 @@ const SyllabusList = (props: SyllabusListProps) => {
                   <div className="flex justify-end w-8/10 m-auto ">
                     <AddButton
                       className="mx-4"
-                      label={SyllabusDict[userLanguage]["ADDNEW"]}
+                      label={SyllabusDict[userLanguage]['ADDNEW']}
                       onClick={createNewSyllabus}
                     />
                   </div>
@@ -117,13 +104,13 @@ const SyllabusList = (props: SyllabusListProps) => {
                     {/* Table Headers */}
                     <div className="flex justify-between w-full  px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
                       <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                        <span>{SyllabusDict[userLanguage]["NO"]}</span>
+                        <span>{SyllabusDict[userLanguage]['NO']}</span>
                       </div>
                       <div className="w-7/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                        <span>{SyllabusDict[userLanguage]["NAME"]}</span>
+                        <span>{SyllabusDict[userLanguage]['NAME']}</span>
                       </div>
                       <div className="w-2/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                        <span>{SyllabusDict[userLanguage]["ACTION"]}</span>
+                        <span>{SyllabusDict[userLanguage]['ACTION']}</span>
                       </div>
                     </div>
                     {/* Table data */}
@@ -132,43 +119,32 @@ const SyllabusList = (props: SyllabusListProps) => {
                       <DragDropContext onDragEnd={onDragEnd}>
                         <Droppable droppableId="droppable">
                           {(provided) => (
-                            <div
-                              {...provided.droppableProps}
-                              ref={provided.innerRef}
-                            >
+                            <div {...provided.droppableProps} ref={provided.innerRef}>
                               {list.map((item: any, index: number) => (
                                 <Draggable
                                   key={item.id}
                                   draggableId={item.id}
-                                  index={index}
-                                >
+                                  index={index}>
                                   {(provided) => (
                                     <div
                                       ref={provided.innerRef}
                                       {...provided.draggableProps}
-                                      {...provided.dragHandleProps}
-                                    >
+                                      {...provided.dragHandleProps}>
                                       <div
-                                        key={index}
                                         className="flex justify-between w-full px-8 py-4 whitespace-nowrap border-b-0 border-gray-200 cursor-pointer"
-                                        onClick={() =>
-                                          editCurrentSyllabus(item.id)
-                                        }
-                                      >
+                                        onClick={() => editCurrentSyllabus(item.id)}>
                                         <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4">
                                           {index + 1}.
                                         </div>
                                         <div className="flex w-7/10 items-center px-8 py-3 text-left text-s leading-4 font-medium ">
-                                          {item.name ? item.name : ""}
+                                          {item.name ? item.name : ''}
                                         </div>
                                         <span
-                                          className={`w-2/10 flex items-center text-left px-8 py-3 cursor-pointer ${theme.textColor[themeColor]} `}
-                                        >
+                                          className={`w-2/10 flex items-center text-left px-8 py-3 cursor-pointer ${theme.textColor[themeColor]} `}>
                                           <Tooltip
                                             placement="left"
-                                            text={`Click to edit`}
-                                          >
-                                            {SyllabusDict[userLanguage]["EDIT"]}
+                                            text={`Click to edit`}>
+                                            {SyllabusDict[userLanguage]['EDIT']}
                                           </Tooltip>
                                         </span>
                                       </div>
@@ -195,8 +171,8 @@ const SyllabusList = (props: SyllabusListProps) => {
                     />
                   </div>
                   <p className="text-center p-16">
-                    {" "}
-                    {SyllabusDict[userLanguage]["INFO"]}
+                    {' '}
+                    {SyllabusDict[userLanguage]['INFO']}
                   </p>
                 </Fragment>
               )}

@@ -1,18 +1,17 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import React, {useEffect, useState} from 'react';
 import {BsFillInfoCircleFill} from 'react-icons/bs';
-import {useHistory, useRouteMatch} from 'react-router';
+import {useHistory} from 'react-router';
 
 import {useGlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
 
+import useAuth from '@customHooks/useAuth';
+import {logError} from '@graphql/functions';
 import {getAsset} from 'assets';
-import InformationalWalkThrough from 'components/Dashboard/Admin/Institutons/InformationalWalkThrough/InformationalWalkThrough';
 import HeroBanner from 'components/Header/HeroBanner';
 import useDictionary from 'customHooks/dictionary';
 import {breadcrumbsRoutes} from 'utilities/breadcrumb';
-import useAuth from '@customHooks/useAuth';
-import {logError} from '@graphql/functions';
 
 export type BreadCrumb = {
   title: string;
@@ -245,7 +244,7 @@ const BreadcrumbsWithBanner: React.FC<BreadCrumbProps> = (props: BreadCrumbProps
     <>
       <div className="relative">
         <HeroBanner imgUrl={bannerImage} title={heroSectionTitle || title} />
-        <div className={`absolute ${theme.backGround[themeColor]} bottom-0 z-20`}>
+        <div className={`absolute theme-bg w-full bottom-0 z-20`}>
           <div
             className={`${
               separateGoBackButton ? 'justify-between' : ''
@@ -258,11 +257,11 @@ const BreadcrumbsWithBanner: React.FC<BreadCrumbProps> = (props: BreadCrumbProps
                 <ol className="list-none flex items-center justify-start">
                   {finalList &&
                     finalList?.length > 0 &&
-                    finalList?.map((item, i) => (
+                    finalList?.map((item) => (
                       <li
                         className="flex items-center w-auto mr-1 md:mr-2"
                         style={{minWidth: 'fit-content'}}
-                        key={i}>
+                        key={item.title}>
                         {!item.goBack ? (
                           <div
                             onClick={() =>
@@ -271,7 +270,6 @@ const BreadcrumbsWithBanner: React.FC<BreadCrumbProps> = (props: BreadCrumbProps
                             <span
                               className={`mr-1 md:mr-2 cursor-pointer text-sm 2xl:text-base hover:iconoclast:bg-400 hover:curate:bg-400 rounded-xl px-2 text-white`}>
                               {item.title}
-                              {/* {i === 0 ? item.title.toUpperCase() : item.title} */}
                             </span>
                           </div>
                         ) : (
@@ -281,7 +279,6 @@ const BreadcrumbsWithBanner: React.FC<BreadCrumbProps> = (props: BreadCrumbProps
                               unsavedChanges ? toggleModal() : history.goBack()
                             }>
                             {item.title}
-                            {/* {i === 0 ? item.title.toUpperCase() : item.title} */}
                           </span>
                         )}
                         {!item.last && (
@@ -314,10 +311,10 @@ const BreadcrumbsWithBanner: React.FC<BreadCrumbProps> = (props: BreadCrumbProps
           </div>
         </div>
       </div>
-      <InformationalWalkThrough
+      {/* <InformationalWalkThrough
         open={openWalkThroughModal}
         onCancel={() => setOpenWalkThroughModal(false)}
-      />
+      /> */}
     </>
   );
 };

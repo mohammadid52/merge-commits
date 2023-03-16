@@ -1,11 +1,11 @@
-import { GraphQLAPI as API, graphqlOperation } from "@aws-amplify/api-graphql";
-import Buttons from "atoms/Buttons";
-import FormInput from "atoms/Form/FormInput";
-import { useGlobalContext } from "contexts/GlobalContext";
-import useDictionary from "customHooks/dictionary";
-import * as mutations from "graphql/mutations";
-import * as queries from "graphql/queries";
-import { useEffect, useState } from "react";
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import Buttons from 'atoms/Buttons';
+import FormInput from 'atoms/Form/FormInput';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import * as mutations from 'graphql/mutations';
+import * as queries from 'graphql/queries';
+import {useEffect, useState} from 'react';
 
 interface AddLearningObjectiveProps {
   curricularId: string;
@@ -15,16 +15,15 @@ interface AddLearningObjectiveProps {
 }
 
 const AddLearningObjective = (props: AddLearningObjectiveProps) => {
-  const { curricularId, handleCancel, learningObjectiveData, postMutation } =
-    props;
+  const {curricularId, handleCancel, learningObjectiveData, postMutation} = props;
 
   const [loading, setLoading] = useState(false);
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [validation, setValidation] = useState({ isValid: true, msg: "" });
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
+  const [validation, setValidation] = useState({isValid: true, msg: ''});
   const [learningsIds, setLearningsIds] = useState<any[]>([]);
-  const { userLanguage } = useGlobalContext();
-  const { ADDLEARINGOBJDICT } = useDictionary();
+  const {userLanguage} = useGlobalContext();
+  const {ADDLEARINGOBJDICT} = useDictionary();
 
   useEffect(() => {
     if (learningObjectiveData?.id) {
@@ -34,28 +33,27 @@ const AddLearningObjective = (props: AddLearningObjectiveProps) => {
   }, [learningObjectiveData?.id]);
 
   const onInputChange = (e: any) => {
-    if (e.target.name === "name") {
+    if (e.target.name === 'name') {
       const value = e.target.value;
       setName(value);
-      if (!validation.isValid && value.length)
-        setValidation({ isValid: true, msg: "" });
+      if (!validation.isValid && value.length) setValidation({isValid: true, msg: ''});
     }
-    if (e.target.name === "description") setDescription(e.target.value);
+    if (e.target.name === 'description') setDescription(e.target.value);
   };
 
   const saveLearningObjectiveDetails = async () => {
     if (!name.length) {
       setValidation({
         isValid: false,
-        msg: ADDLEARINGOBJDICT[userLanguage]["VALIDATION"],
+        msg: ADDLEARINGOBJDICT[userLanguage]['VALIDATION']
       });
       return;
     }
-    setValidation({ isValid: true, msg: "" });
+    setValidation({isValid: true, msg: ''});
     const input = {
       name,
       description,
-      curriculumID: curricularId,
+      curriculumID: curricularId
     };
     setLoading(true);
     if (learningObjectiveData?.id) {
@@ -63,35 +61,35 @@ const AddLearningObjective = (props: AddLearningObjectiveProps) => {
         graphqlOperation(mutations.updateLearningObjective, {
           input: {
             ...input,
-            id: learningObjectiveData?.id,
-          },
+            id: learningObjectiveData?.id
+          }
         })
       );
       postMutation(item.data?.updateLearningObjective);
     } else {
       const item: any = await API.graphql(
-        graphqlOperation(mutations.createLearningObjective, { input })
+        graphqlOperation(mutations.createLearningObjective, {input})
       );
       const addedItem = item.data.createLearningObjective;
       if (!learningsIds.length) {
         let seqItem: any = await API.graphql(
           graphqlOperation(mutations.createCSequences, {
-            input: { id: `l_${curricularId}`, sequence: [addedItem.id] },
+            input: {id: `l_${curricularId}`, sequence: [addedItem.id]}
           })
         );
         seqItem = seqItem.data.createCSequences;
-        console.log("seqItem", seqItem);
+        console.log('seqItem', seqItem);
       } else {
         let seqItem: any = await API.graphql(
           graphqlOperation(mutations.updateCSequences, {
             input: {
               id: `l_${curricularId}`,
-              sequence: [...learningsIds, addedItem.id],
-            },
+              sequence: [...learningsIds, addedItem.id]
+            }
           })
         );
         seqItem = seqItem.data.updateCSequences;
-        console.log("seqItem", seqItem);
+        console.log('seqItem', seqItem);
       }
       if (addedItem) {
         postMutation(addedItem);
@@ -99,16 +97,11 @@ const AddLearningObjective = (props: AddLearningObjectiveProps) => {
         setLoading(false);
       }
     }
-    // if (addedItem) {
-    //   history.goBack();
-    // } else {
-    //   console.log('Could not add learning objective');
-    // }
   };
 
   const fetchLOSequence = async () => {
     let item: any = await API.graphql(
-      graphqlOperation(queries.getCSequences, { id: `l_${curricularId}` })
+      graphqlOperation(queries.getCSequences, {id: `l_${curricularId}`})
     );
     item = item?.data.getCSequences?.sequence || [];
     if (item) {
@@ -130,7 +123,7 @@ const AddLearningObjective = (props: AddLearningObjectiveProps) => {
               id="name"
               onChange={onInputChange}
               name="name"
-              label={ADDLEARINGOBJDICT[userLanguage]["NAME"]}
+              label={ADDLEARINGOBJDICT[userLanguage]['NAME']}
               isRequired
               maxLength={30}
               showCharacterUsage
@@ -149,7 +142,7 @@ const AddLearningObjective = (props: AddLearningObjectiveProps) => {
               rows={5}
               onChange={onInputChange}
               name="description"
-              label={ADDLEARINGOBJDICT[userLanguage]["DESC"]}
+              label={ADDLEARINGOBJDICT[userLanguage]['DESC']}
             />
           </div>
         </div>
@@ -157,13 +150,13 @@ const AddLearningObjective = (props: AddLearningObjectiveProps) => {
       <div className="flex my-4 justify-end">
         <Buttons
           btnClass="py-3 px-2 2xl:px-10 mr-2"
-          label={"Cancel"}
+          label={'Cancel'}
           onClick={handleCancel}
           transparent
         />
         <Buttons
           btnClass="py-3 px-2 2xl:px-10 px-10"
-          label={ADDLEARINGOBJDICT[userLanguage]["SAVE"]}
+          label={ADDLEARINGOBJDICT[userLanguage]['SAVE']}
           onClick={saveLearningObjectiveDetails}
           disabled={loading}
         />

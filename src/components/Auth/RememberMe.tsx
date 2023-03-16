@@ -13,7 +13,7 @@ const RememberMe = ({isChecked, toggleCheckBox, dataCy}: RememberMeProps) => {
         <input
           data-cy={dataCy}
           type="checkbox"
-          className="form-checkbox w-4 h-4"
+          className="form-checkbox cursor-pointer transition-all rounded-md w-4 h-4"
           checked={isChecked}
           onChange={toggleCheckBox}
         />

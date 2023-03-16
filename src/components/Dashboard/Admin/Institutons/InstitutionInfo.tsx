@@ -33,32 +33,17 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
         {/* Profile section */}
         <div className="flex-col flex justify-center lg:justify-start w-full">
           <div className="flex flex-1 overflow-x-hidden mb-8">
-            <div className="">
-              <div className="">
-                {/* {renderElementBySelectedMenu()} */}
-                <NavBarRouter
-                  {...instProps}
-                  updateCurricularList={updateCurricularList}
-                  curricular={curricular}
-                />
-              </div>
+            <div className="w-full">
+              <NavBarRouter
+                {...instProps}
+                updateCurricularList={updateCurricularList}
+                curricular={curricular}
+              />
             </div>
           </div>
 
           <InstitutionProfile institute={institute} />
         </div>
-
-        {/* {instProps?.institute?.id && (
-          <div className="overflow-hidden sm:rounded-lg">
-            <div className="">
-              <UnderlinedTabs
-                tabs={tabs}
-                activeTab={tabProps.tabsData.inst}
-                updateTab={updateTab}
-              />
-            </div>
-          </div>
-        )} */}
       </div>
     </div>
   );

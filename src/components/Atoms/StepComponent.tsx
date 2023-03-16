@@ -112,7 +112,7 @@ const StepComponent = ({
               className={`relative hover:theme-text:500 lg:flex-1 ${
                 step.disabled ? 'bg-gray-300 cursor-not-allowed' : 'cursor-pointer'
               }`}
-              key={index}
+              key={step.title}
               onClick={() =>
                 !step.disabled ? handleTabSwitch(step.stepValue || step.title) : null
               }>

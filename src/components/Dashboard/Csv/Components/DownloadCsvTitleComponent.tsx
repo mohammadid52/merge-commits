@@ -136,8 +136,6 @@ const DownloadCsvTitleComponent = ({
         setClassRoomsList(classrooms);
         setInstClassRooms(removeDuplicates(instCRs));
         setClassRoomLoading(false);
-      } else {
-        // console.log('institution already selected');
       }
     } catch (err) {
       console.log('inst select, fetch classrooms err', err);
@@ -298,7 +296,7 @@ const DownloadCsvTitleComponent = ({
   return (
     <div className="mx-auto w-full">
       <div className="flex flex-row my-0  w-full py-0 mb-4 justify-between">
-        <div className="">
+        <div className="w-full">
           <SectionTitleV3
             textWidth="lg:w-1/5 2xl:w-1/4"
             withButton={

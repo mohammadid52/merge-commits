@@ -167,7 +167,7 @@ const useCsv = ({
         );
 
         /* Enable this code if demographics questions */
-        DCQAnswers.map((ans: any) => {
+        DCQAnswers.forEach((ans: any) => {
           if (ans.person.id === stu.id) {
             demographicsDataID = ans.id;
             ans.responseObject.map((resp: any) => {

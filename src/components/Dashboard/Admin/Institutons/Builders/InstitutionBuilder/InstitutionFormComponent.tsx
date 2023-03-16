@@ -126,30 +126,6 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
     setShowCropper(!showCropper);
   };
 
-  // const uploadImageToS3 = async (file: any, id: string, type: string) => {
-  //   // Upload file to s3 bucket
-
-  //   return new Promise((resolve, reject) => {
-  //     Storage.put(`instituteImages/institute_image_${id}`, file, {
-  //       contentType: type,
-  //       acl: 'public-read',
-  //       ContentEncoding: 'base64'
-  //     })
-  //       .then((result) => {
-  //         console.log('File successfully uploaded to s3', result);
-  //         resolve(true);
-  //       })
-  //       .catch((err) => {
-  //         setError({
-  //           show: true,
-  //           errorMsg: InstitutionBuilderDict[userLanguage]['messages']['uploaderr']
-  //         });
-  //         console.error('Error in uploading file to s3', err);
-  //         reject(err);
-  //       });
-  //   });
-  // };
-
   const [fileObj, setFileObj] = useState({});
 
   const saveCroppedImage = async (image: string) => {
@@ -229,8 +205,6 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
         }, 2000);
 
         history.goBack();
-
-        // history.push(`institution?id=${instituteData.id}`);
       } catch {
         setError({
           show: true,

@@ -29,11 +29,6 @@ const StudentsTiles = (props: {
   const [viewMore, setViewMore] = useState(false);
   const history = useHistory();
 
-  // const [searchInput, setSearchInput] = useState({
-  //   value: '',
-  //   isActive: false
-  // });
-
   const [list, setList] = useState<any[]>([]);
 
   useEffect(() => {

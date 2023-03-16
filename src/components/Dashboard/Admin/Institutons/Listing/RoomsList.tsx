@@ -1,26 +1,26 @@
-import { GraphQLAPI as API, graphqlOperation } from "@aws-amplify/api-graphql";
-import { useEffect, useState } from "react";
-import { useHistory, useRouteMatch } from "react-router";
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import {useEffect, useState} from 'react';
+import {useHistory, useRouteMatch} from 'react-router';
 
-import Filters, { SortType } from "@components/Atoms/Filters";
-import Highlighted from "@components/Atoms/Highlighted";
-import SectionTitleV3 from "@components/Atoms/SectionTitleV3";
-import Table from "@components/Molecules/Table";
-import useAuth from "@customHooks/useAuth";
-import usePagination from "@customHooks/usePagination";
-import useSearch from "@customHooks/useSearch";
-import { withZoiqFilter } from "@utilities/functions";
-import { getLocalStorageData } from "@utilities/localStorage";
-import { ModelRoomFilterInput } from "API";
-import AddButton from "atoms/Buttons/AddButton";
-import SearchInput from "atoms/Form/SearchInput";
-import Selector from "atoms/Form/Selector";
-import { useGlobalContext } from "contexts/GlobalContext";
-import * as customQueries from "customGraphql/customQueries";
-import useDictionary from "customHooks/dictionary";
-import * as queries from "graphql/queries";
-import { map, orderBy } from "lodash";
-import { Status } from "../../UserManagement/UserStatus";
+import Filters, {SortType} from '@components/Atoms/Filters';
+import Highlighted from '@components/Atoms/Highlighted';
+import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
+import Table from '@components/Molecules/Table';
+import useAuth from '@customHooks/useAuth';
+import usePagination from '@customHooks/usePagination';
+import useSearch from '@customHooks/useSearch';
+import {withZoiqFilter} from '@utilities/functions';
+import {getLocalStorageData} from '@utilities/localStorage';
+import {ModelRoomFilterInput} from 'API';
+import AddButton from 'atoms/Buttons/AddButton';
+import SearchInput from 'atoms/Form/SearchInput';
+import Selector from 'atoms/Form/Selector';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import * as customQueries from 'customGraphql/customQueries';
+import useDictionary from 'customHooks/dictionary';
+import * as queries from 'graphql/queries';
+import {map, orderBy} from 'lodash';
+import {Status} from '../../UserManagement/UserStatus';
 
 interface RoomListProps {
   instId: string;
@@ -28,18 +28,18 @@ interface RoomListProps {
 }
 
 const RoomsList = (props: RoomListProps) => {
-  const { instId } = props;
+  const {instId} = props;
   const {
     state: {
-      user: { associateInstitute },
+      user: {associateInstitute}
     },
     zoiqFilter,
 
-    userLanguage,
+    userLanguage
   } = useGlobalContext();
 
   const history = useHistory();
-  const { InstitueRomms } = useDictionary();
+  const {InstitueRomms} = useDictionary();
 
   const [roomList, setRoomList] = useState<any[]>([]);
   const [totalNum, setTotalNum] = useState(0);
@@ -51,8 +51,8 @@ const RoomsList = (props: RoomListProps) => {
 
   const [messages, setMessages] = useState({
     show: false,
-    message: InstitueRomms[userLanguage]["messages"]["nothaveclass"],
-    isError: false,
+    message: InstitueRomms[userLanguage]['messages']['nothaveclass'],
+    isError: false
   });
   const createNewRoom = () => {
     history.push(
@@ -62,7 +62,7 @@ const RoomsList = (props: RoomListProps) => {
     );
   };
 
-  const roomData = getLocalStorageData("room_info");
+  const roomData = getLocalStorageData('room_info');
   const editCurrentRoom = (id: string, instId: string) => {
     history.push(
       isSuperAdmin
@@ -77,7 +77,7 @@ const RoomsList = (props: RoomListProps) => {
     try {
       const list: any = await API.graphql(
         graphqlOperation(customQueries.listInstitutionOptions, {
-          filter: withZoiqFilter({}),
+          filter: withZoiqFilter({})
         })
       );
       setInstitutionList(
@@ -91,21 +91,20 @@ const RoomsList = (props: RoomListProps) => {
     }
   };
 
-  const { authId, isFellow, isTeacher, isSuperAdmin, isAdmin, isBuilder } =
-    useAuth();
+  const {authId, isFellow, isTeacher, isSuperAdmin, isAdmin, isBuilder} = useAuth();
 
   const fetchRoomList = async () => {
     try {
       const filter: ModelRoomFilterInput =
         isFellow || isTeacher
           ? {
-              teacherAuthID: { eq: authId },
+              teacherAuthID: {eq: authId}
             }
           : {};
 
       const assignedRoomsAsTeachers: any = await API.graphql(
         graphqlOperation(customQueries.listRoomsDashboard, {
-          filter: withZoiqFilter(filter, zoiqFilter),
+          filter: withZoiqFilter(filter, zoiqFilter)
         })
       );
 
@@ -114,7 +113,7 @@ const RoomsList = (props: RoomListProps) => {
       if (isFellow || isTeacher) {
         assignedRoomsAsCoTeacher = await API.graphql(
           graphqlOperation(queries.listRoomCoTeachers, {
-            filter: filter,
+            filter: filter
           })
         );
       }
@@ -127,12 +126,12 @@ const RoomsList = (props: RoomListProps) => {
 
       // cause co teachers list return different data structure
       const updatedCoTeachersList = coTeachersList.map((coTeacher: any) => {
-        const { room, teacher } = coTeacher;
+        const {room, teacher} = coTeacher;
         return {
           ...coTeacher,
-          name: room?.name || "",
-          status: teacher?.status || "",
-          isCoteacher: true,
+          name: room?.name || '',
+          status: teacher?.status || '',
+          isCoteacher: true
         };
       });
 
@@ -142,16 +141,14 @@ const RoomsList = (props: RoomListProps) => {
         return {
           ...room,
           institutionId: room.institution?.id,
-          institutionName: room.institution?.name,
+          institutionName: room.institution?.name
         };
       });
 
       const totalListPages = Math.floor(merged.length / pageCount);
 
       setTotalPages(
-        totalListPages * pageCount === merged.length
-          ? totalListPages
-          : totalListPages + 1
+        totalListPages * pageCount === merged.length ? totalListPages : totalListPages + 1
       );
 
       setTotalNum(merged.length);
@@ -166,8 +163,8 @@ const RoomsList = (props: RoomListProps) => {
       console.error(e);
       setMessages({
         show: true,
-        message: InstitueRomms[userLanguage]["messages"]["fetcherr"],
-        isError: true,
+        message: InstitueRomms[userLanguage]['messages']['fetcherr'],
+        isError: true
       });
       setLoading(false);
     }
@@ -187,7 +184,7 @@ const RoomsList = (props: RoomListProps) => {
   }, [isSuperAdmin]);
 
   const instituteChange = (_: string, name: string, value: string) => {
-    setSelectedInstitution({ name, id: value });
+    setSelectedInstitution({name, id: value});
     updateRoomList(value);
     setFilters(null);
   };
@@ -199,8 +196,8 @@ const RoomsList = (props: RoomListProps) => {
     filterBySearchQuery,
     removeSearchAction,
     searchAndFilter,
-    setSearchInput,
-  } = useSearch([...roomList], ["name", "institutionName"]);
+    setSearchInput
+  } = useSearch([...roomList], ['name', 'institutionName']);
 
   const {
     pageCount,
@@ -209,7 +206,7 @@ const RoomsList = (props: RoomListProps) => {
     setTotalPages,
     currentList,
     allAsProps,
-    getIndex,
+    getIndex
   } = usePagination(roomList, loading ? 0 : totalNum);
 
   const [filteredList, setFilteredList] = useState([...roomList]);
@@ -227,13 +224,11 @@ const RoomsList = (props: RoomListProps) => {
   }, [loading]);
 
   const updateRoomList = (institutionId: string) => {
-    const filteredByInstitution = filterBySearchQuery(institutionId, [
-      "institutionId",
-    ]);
+    const filteredByInstitution = filterBySearchQuery(institutionId, ['institutionId']);
 
     if (Boolean(filteredByInstitution)) {
       setFilteredList(filteredByInstitution);
-      setSearchInput({ ...searchInput, isActive: true });
+      setSearchInput({...searchInput, isActive: true});
     } else {
       removeSearchAction();
     }
@@ -252,8 +247,8 @@ const RoomsList = (props: RoomListProps) => {
 
   const finalList = orderBy(
     searchInput.isActive ? filteredList : currentList,
-    ["name", "institutionName"],
-    ["asc"]
+    ['name', 'institutionName'],
+    ['asc']
   );
 
   const onInstitutionSelectionRemove = () => {
@@ -263,11 +258,11 @@ const RoomsList = (props: RoomListProps) => {
 
   const updateFilter = (filterName: SortType) => {
     if (filterName === filters) {
-      setSearchInput({ ...searchInput, isActive: false });
+      setSearchInput({...searchInput, isActive: false});
       setFilters(null);
       setFilteredList([]);
     } else {
-      setSearchInput({ ...searchInput, isActive: true });
+      setSearchInput({...searchInput, isActive: true});
       const filtered = roomList.filter((_d: any) => filterName === _d.status);
       setFilteredList(filtered);
       setFilters(filterName);
@@ -284,8 +279,7 @@ const RoomsList = (props: RoomListProps) => {
     classroomName: (
       <div
         onClick={() => editCurrentRoom(item.id, item.institutionID)}
-        className="w-auto  cursor-pointer"
-      >
+        className="w-auto  cursor-pointer">
         <Highlighted text={item.name} highlight={searchInput.value} />
       </div>
     ),
@@ -297,101 +291,92 @@ const RoomsList = (props: RoomListProps) => {
             history.push(
               `/dashboard/manage-institutions/institution/${item.institution?.id}/edit?back=${match.url}`
             );
-        }}
-      >
-        <Highlighted
-          text={item.institutionName}
-          highlight={searchInput.value}
-        />
+        }}>
+        <Highlighted text={item.institutionName} highlight={searchInput.value} />
       </div>
     ),
-    teacher: `${item.teacher?.firstName || ""} ${item.teacher?.lastName || ""}`,
+    teacher: `${item.teacher?.firstName || ''} ${item.teacher?.lastName || ''}`,
     course: (
       <div
         className="w-auto"
         onClick={() =>
           !item?.isCoteacher && editCurrentRoom(item.id, item.institutionID)
-        }
-      >
+        }>
         {item?.curricula?.items
           ?.map((d: any) => {
             return d?.curriculum?.name;
           })
-          .join(",") || "-"}
+          .join(',') || '-'}
       </div>
     ),
-    status: <Status useDefault status={item.status} />,
+    status: <Status useDefault status={item.status} />
   }));
 
   const tableConfig = {
     headers: [
-      InstitueRomms[userLanguage]["NO"],
-      InstitueRomms[userLanguage]["CLASSROOMS_NAME"],
+      InstitueRomms[userLanguage]['NO'],
+      InstitueRomms[userLanguage]['CLASSROOMS_NAME'],
 
-      InstitueRomms[userLanguage]["INSTITUTION_NAME"],
-      InstitueRomms[userLanguage]["TEACHER"],
-      InstitueRomms[userLanguage]["CURRICULUM"],
-      InstitueRomms[userLanguage]["STATUS"],
+      InstitueRomms[userLanguage]['INSTITUTION_NAME'],
+      InstitueRomms[userLanguage]['TEACHER'],
+      InstitueRomms[userLanguage]['CURRICULUM'],
+      InstitueRomms[userLanguage]['STATUS']
     ],
     dataList,
     config: {
       dark: false,
 
-      headers: { textColor: "text-white" },
+      headers: {textColor: 'text-white'},
       dataList: {
         loading,
         emptyText:
           searchInput.isActive && !searchInput.typing
-            ? "no data"
+            ? 'no data'
             : searchInput.isActive && searchInput.typing
             ? `Hit enter to search for ${searchInput.value}`
-            : "",
+            : '',
         pagination: {
           showPagination: true,
           config: {
-            allAsProps,
-          },
+            allAsProps
+          }
         },
         customWidth: {
-          no: "w-12",
+          no: 'w-12'
         },
-        maxHeight: "--",
-        pattern: "striped",
+        maxHeight: '--',
+        pattern: 'striped',
         patternConfig: {
-          firstColor: "bg-gray-100",
-          secondColor: "bg-gray-200",
-        },
-      },
-    },
+          firstColor: 'bg-gray-100',
+          secondColor: 'bg-gray-200'
+        }
+      }
+    }
   };
 
   return (
-    <div className="flex m-auto justify-center p-4 pt-0 pl-md-12">
-      <div className="">
+    <div className="flex m-auto justify-center p-4 pt-0">
+      <div className="w-full">
         <div className="flex flex-col lg:flex-row justify-start lg:justify-between items-center">
           <SectionTitleV3
-            title={InstitueRomms[userLanguage]["TITLE"]}
+            title={InstitueRomms[userLanguage]['TITLE']}
             fontSize="xl"
             fontStyle="semibold"
             extraClass="leading-6 text-gray-900"
             borderBottom
             shadowOff
             withButton={
-              <div
-                className={`w-auto flex gap-x-4 justify-end items-center flex-wrap`}
-              >
+              <div className={`w-auto flex gap-x-4 justify-end items-center flex-wrap`}>
                 {(isSuperAdmin || isAdmin || isBuilder) && (
                   <Selector
                     dataCy="classroom-institution"
-                    placeholder={
-                      InstitueRomms[userLanguage]["SELECT_INSTITUTION"]
-                    }
+                    placeholder={InstitueRomms[userLanguage]['SELECT_INSTITUTION']}
                     list={institutionList}
                     selectedItem={selectedInstitution?.name}
                     onChange={instituteChange}
                     arrowHidden={true}
                     additionalClass={`w-60 ${
-                      isSuperAdmin || isAdmin || isBuilder ? "mr-4" : ""
+                      isSuperAdmin || isAdmin || isBuilder ? 'mr-4' : ''
                     }`}
                     isClearable
                     onClear={onInstitutionSelectionRemove}
@@ -424,7 +409,7 @@ const RoomsList = (props: RoomListProps) => {
                 {/* </div> */}
                 {(!isSuperAdmin || !isAdmin || !isBuilder) && (
                   <AddButton
-                    label={InstitueRomms[userLanguage]["BUTTON"]["ADD"]}
+                    label={InstitueRomms[userLanguage]['BUTTON']['ADD']}
                     onClick={createNewRoom}
                   />
                 )}
@@ -442,18 +427,14 @@ const RoomsList = (props: RoomListProps) => {
             currentPage: allAsProps.currentPage,
             lastPage: allAsProps.lastPage,
             totalResults: allAsProps.totalResults,
-            pageCount: allAsProps.pageCount,
+            pageCount: allAsProps.pageCount
           }}
         />
 
         <Table {...tableConfig} />
 
         {messages.isError && (
-          <p
-            className={`text-center p-16 ${
-              messages.isError ? "text-red-600" : ""
-            }`}
-          >
+          <p className={`text-center p-16 ${messages.isError ? 'text-red-600' : ''}`}>
             {messages.message}
           </p>
         )}

@@ -11,7 +11,6 @@ import {useGlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
 import * as queries from 'graphql/queries';
 
-// import LessonLoading from '../../../Lesson/Loading/ComponentLoading';
 import Filters from '@components/Atoms/Filters';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import UserLookupAction from '@components/MicroComponents/UserLookupAction';

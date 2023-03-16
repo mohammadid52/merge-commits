@@ -150,7 +150,6 @@ const LessonPlansList = ({
                             key={`${page.id}`}>
                             {(provided) => (
                               <div
-                                key={index}
                                 className="flex justify-between bg-white w-full border-b-0 border-gray-200"
                                 ref={provided.innerRef}
                                 {...provided.draggableProps}

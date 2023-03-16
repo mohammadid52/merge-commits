@@ -3,6 +3,26 @@ import {AiOutlineFileZip, AiOutlinePhone} from 'react-icons/ai';
 import {GoTextSize} from 'react-icons/go';
 import {GrBlockQuote} from 'react-icons/gr';
 
+const iconProps = {
+  size: '1rem',
+  color: 'darkgrey'
+};
+
+const switchIcon = (type: string) => {
+  switch (type) {
+    case 'call':
+      return <AiOutlinePhone {...iconProps} />;
+    case 'quote':
+      return <GrBlockQuote {...iconProps} />;
+    case 'default':
+      return <GoTextSize {...iconProps} />;
+    case 'file':
+      return <AiOutlineFileZip {...iconProps} />;
+    default:
+      return null;
+  }
+};
+
 function ContentCardTitle(props: {
   icon?: boolean;
   icontype?: string;
@@ -10,26 +30,6 @@ function ContentCardTitle(props: {
   theme: any;
   widgetObj: Widget;
 }) {
-  const iconProps = {
-    size: '1rem',
-    color: 'darkgrey'
-  };
-
-  const switchIcon = (type: string) => {
-    switch (type) {
-      case 'call':
-        return <AiOutlinePhone {...iconProps} />;
-      case 'quote':
-        return <GrBlockQuote {...iconProps} />;
-      case 'default':
-        return <GoTextSize {...iconProps} />;
-      case 'file':
-        return <AiOutlineFileZip {...iconProps} />;
-      default:
-        return null;
-    }
-  };
-
   return (
     <div>
       <h2
