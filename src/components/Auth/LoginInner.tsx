@@ -185,7 +185,7 @@ const LoginInner = ({
           console.error(err, 'Error in resetting unconfirmed user.');
         }
       } else {
-        getSignInError(error, true);
+        setMessage(getSignInError(error, true));
       }
     } finally {
       toggleLoading(false);

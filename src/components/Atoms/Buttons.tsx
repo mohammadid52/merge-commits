@@ -71,6 +71,7 @@ const Buttons: React.FC<ButtonProps> = (btnProps: ButtonProps): React.ReactEleme
     <Button
       loading={loading}
       danger={redBtn}
+      htmlType={type}
       size={size}
       type={transparent ? 'default' : variant === 'primary' ? 'primary' : 'default'}
       disabled={disabled}

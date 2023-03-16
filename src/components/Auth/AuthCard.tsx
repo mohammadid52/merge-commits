@@ -54,7 +54,7 @@ const AuthCard = ({
       <div className="w-full z-100 auth-card m-8 md:max-w-256  max-w-9/10 sm:max-w-100 h-full max-h-160 flex flex-row  customShadow rounded-xl overflow-hidden">
         {/* Left image starts here */}
         <div
-          className={` hidden  md:block min-w-sm max-w-sm bg-gray-200  pr-0 ${getAsset(
+          className={` hidden  w-full md:block min-w-sm max-w-sm bg-gray-200  pr-0 ${getAsset(
             clientKey,
             'authBackground'
           )} bg-cover bg-center`}></div>
@@ -84,7 +84,7 @@ const AuthCard = ({
                 {subtitle}
               </h6>
             )}
-            <div>{children}</div>
+            <div className="w-full">{children}</div>
             {message && (
               <p
                 className={`my-2 text-xs text-center ${
