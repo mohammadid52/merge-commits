@@ -110,12 +110,12 @@ const Community = () => {
   const breadCrumsList = [
     {
       title: BreadcrumsTitles[userLanguage]['HOME'],
-      url: '/dashboard',
+      href: '/dashboard',
       last: false
     },
     {
       title: BreadcrumsTitles[userLanguage]['COMMUNTIY'],
-      url: `/dashboard/`,
+      href: `/dashboard/`,
       last: true
     }
   ];
@@ -362,11 +362,11 @@ const Community = () => {
   const [selectedFilterType, setSelectedFilterType] = useState<any>({});
 
   const filterList = [
-    {id: 1434, name: 'All', value: 'all'},
-    {id: 1, name: 'Spotlight', value: 'spotlight'},
-    {id: 2, name: 'Announcement', value: 'announcement'},
-    {id: 3, name: 'Event', value: 'event'},
-    {id: 4, name: 'Check It Out', value: 'check_it_out'}
+    {id: 1434, label: 'All', value: 'all'},
+    {id: 1, label: 'Spotlight', value: 'spotlight'},
+    {id: 2, label: 'Announcement', value: 'announcement'},
+    {id: 3, label: 'Event', value: 'event'},
+    {id: 4, label: 'Check It Out', value: 'check_it_out'}
   ];
 
   if (isStudent) {

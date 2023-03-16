@@ -106,6 +106,8 @@ export const globalState: GlobalStateType = {
 };
 
 export const standardTheme = {
+  iconoclast: '#667eea',
+  curate: '#0081cb',
   bg: 'bg-dark-gray',
   underline: 'border-b border-white border-opacity-10 pb-1 mb-1',
   gradient: {

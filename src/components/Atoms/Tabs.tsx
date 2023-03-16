@@ -1,10 +1,12 @@
 import {Menu, Transition} from '@headlessui/react';
 import {ChevronDownIcon, ChevronUpIcon} from '@heroicons/react/solid';
+import {Dropdown, Space} from 'antd';
 import {kebabCase} from 'lodash';
 import {Fragment, useRef} from 'react';
+import {BsChevronDown} from 'react-icons/bs';
 
 export interface ITabElements {
-  title: string;
+  label: string;
   key: string;
   content?: JSX.Element;
 }
@@ -49,7 +51,7 @@ const DropDownMenu = ({menu, onClick}: any) => {
           <div
             onClick={openMenu}
             onMouseEnter={() => onMouseEnter(!open)}
-            data-cy={kebabCase(menu.title)}
+            data-cy={kebabCase(menu.label)}
             onMouseLeave={() => onMouseLeave(open)}>
             <Menu.Button
               ref={buttonRef}
@@ -58,7 +60,7 @@ const DropDownMenu = ({menu, onClick}: any) => {
                   ? 'theme-bg:200 theme-text:600'
                   : ''
               } hover:bg-gray-400 hover:text-gray-700 inline-flex justify-center w-full px-1 xl:px-2 2xl:px-4 py-2 text-xs 2xl:text-base   rounded-full bg-opacity-20 hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 transition duration-150 ease-in-out transform  text-gray-700 font-bold`}>
-              {menu.title}
+              {menu.label}
               {open ? (
                 <ChevronUpIcon
                   className={`w-5 h-5 ml-2 -mr-1 text-violet-200 hover:text-violet-100`}
@@ -90,12 +92,12 @@ const DropDownMenu = ({menu, onClick}: any) => {
                 onMouseLeave={() => onMouseLeave(open)}>
                 {menu.children.map((item: any) => (
                   <Menu.Item
-                    data-cy={kebabCase(`${item.title}-item`)}
-                    key={`${item.title}`}
+                    data-cy={kebabCase(`${item.label}-item`)}
+                    key={`${item.label}`}
                     // @ts-ignore
                     onClick={() => onClick?.(item)}>
                     <div className="hover:iconoclast:bg-400 hover:curate:bg-400 hover:text-white rounded-full p-2 px-4 text-xs 2xl:text-base">
-                      {item.title}
+                      {item.label}
                     </div>
                   </Menu.Item>
                 ))}
@@ -122,13 +124,13 @@ const Tabs = ({tabsData, updateTab, currentTab}: ITabsProps) => {
           name="tabs"
           value={currentTab}
           onChange={(e) => {
-            const tab = tabsData.find((_d) => _d.title === e.target.value);
+            const tab = tabsData.find((_d) => _d.label === e.target.value);
             updateTab(tab);
           }}
           className="block w-full text-xs md:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-full">
           {tabsData.map((tab: ITabElements) => (
-            <option value={tab.title} className="transition-all" key={tab.title}>
-              {tab.title}
+            <option value={tab.label} className="transition-all" key={tab.label}>
+              {tab.label}
             </option>
           ))}
         </select>
@@ -137,18 +139,23 @@ const Tabs = ({tabsData, updateTab, currentTab}: ITabsProps) => {
         <nav
           className="flex user__profile-tabs gap-4 justify-between px-4"
           aria-label="Tabs">
-          {tabsData.map((menu: any, index: number) =>
+          {tabsData.map((menu: any) =>
             menu.type === 'dropdown' ? (
-              <DropDownMenu
-                menu={menu}
-                onClick={updateTab}
-                index={index}
-                key={menu.title}
-              />
+              <Dropdown
+                arrow={{pointAtCenter: false}}
+                placement="top"
+                menu={{items: menu.children}}>
+                <a className="cursor-pointer" onClick={(e) => e.preventDefault()}>
+                  <Space>
+                    {menu.label}
+                    <BsChevronDown />
+                  </Space>
+                </a>
+              </Dropdown>
             ) : (
               <button
-                key={menu.title}
-                data-cy={kebabCase(`${menu.title}-item`)}
+                key={menu.label}
+                data-cy={kebabCase(`${menu.label}-item`)}
                 onClick={() => {
                   updateTab(menu);
                   // }
@@ -156,7 +163,7 @@ const Tabs = ({tabsData, updateTab, currentTab}: ITabsProps) => {
                 className={`${
                   menu.active ? 'theme-bg text-white' : 'theme-text:500'
                 } theme-border:300 border-0 hover:theme-bg:500 bg-transparent  hover-text-white  inline-flex justify-center w-full px-1 xl:px-2 2xl:px-4 py-2 text-xs 2xl:text-base  rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 transition duration-150 ease-in-out transform font-medium`}>
-                {menu.title}
+                {menu.label}
               </button>
             )
           )}

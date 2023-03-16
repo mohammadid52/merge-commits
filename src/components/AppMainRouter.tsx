@@ -1,6 +1,8 @@
 import useAuth from '@customHooks/useAuth';
+import useTheme from '@customHooks/useTheme';
 import {getInstInfo, getPerson} from '@graphql/functions';
 import {getUserInfo} from '@utilities/functions';
+import {ConfigProvider} from 'antd';
 import {getAsset} from 'assets';
 import {Auth} from 'aws-amplify';
 import MobileOops from 'components/Error/MobileOops';
@@ -16,7 +18,7 @@ const UnauthRoutes = lazy(() => import('components/AppRoutes/UnauthRoutes'));
 const MainRouter: React.FC = () => {
   const deviceDetected = useDeviceDetect();
 
-  const {theme, authState, setAuthState, clientKey} = useGlobalContext();
+  const {authState, setAuthState, clientKey} = useGlobalContext();
 
   useEffect(() => {
     setupAppHeaders();
@@ -88,24 +90,33 @@ const MainRouter: React.FC = () => {
     }
   };
 
+  const theme = useTheme();
+
   return (
-    <div
-      className={`iconoclast:bg-50 curate:bg-50 h-screen md:max-w-full md:h-screen w-full overflow-x-hidden ${theme.bg} flex flex-col`}>
-      {deviceDetected.mobile ? (
-        <MobileOops userAgent={deviceDetected.device} />
-      ) : (
-        <Suspense
-          fallback={
-            <div className="min-h-screen __polka-pattern w-full flex flex-col justify-center items-center">
-              <ComponentLoading />
-            </div>
-          }>
-          {authState === 'loading' && <ComponentLoading />}
-          {authState === 'loggedIn' && <AuthRoutes />}
-          {authState === 'notLoggedIn' && <UnauthRoutes />}
-        </Suspense>
-      )}
-    </div>
+    <ConfigProvider
+      theme={{
+        token: {
+          colorPrimary: clientKey === 'iconoclast' ? theme.iconoclast : theme.curate
+        }
+      }}>
+      <div
+        className={`iconoclast:bg-50 curate:bg-50 h-screen md:max-w-full md:h-screen w-full overflow-x-hidden ${theme.bg} flex flex-col`}>
+        {deviceDetected.mobile ? (
+          <MobileOops userAgent={deviceDetected.device} />
+        ) : (
+          <Suspense
+            fallback={
+              <div className="min-h-screen __polka-pattern w-full flex flex-col justify-center items-center">
+                <ComponentLoading />
+              </div>
+            }>
+            {authState === 'loading' && <ComponentLoading />}
+            {authState === 'loggedIn' && <AuthRoutes />}
+            {authState === 'notLoggedIn' && <UnauthRoutes />}
+          </Suspense>
+        )}
+      </div>
+    </ConfigProvider>
   );
 };
 

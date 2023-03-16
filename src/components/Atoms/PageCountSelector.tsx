@@ -14,34 +14,34 @@ const PageCountSelector: React.FC<CountProps> = (countProps: CountProps) => {
   const nearestNum = [10, 25, 50, 100, 500, 1000].filter((d) => d > totalResults)[0];
 
   const list = [
-    {value: 10, name: 'show 10', id: 1},
-    {value: 25, name: 'show 25', id: 2},
-    {value: 50, name: 'show 50', id: 3},
-    {value: 100, name: 'show 100', id: 4},
-    {value: 500, name: 'show 500', id: 5},
-    {value: 1000, name: 'show 1000', id: 6}
+    {value: 10, label: '10 / page'},
+    {value: 25, label: '25 / page'},
+    {value: 50, label: '50 / page'},
+    {value: 100, label: '100 / page'},
+    {value: 500, label: '500 / page'},
+    {value: 1000, label: '1000 / page'}
   ].filter((selector) => selector.value <= nearestNum);
 
   const _list =
     list.length > 0
       ? list.map((d) => ({...d, value: d.value.toString()}))
-      : [{value: '10', name: 'show 10', id: 1}];
+      : [{value: '10', label: '10 / page'}];
 
-  const [selectedItem, setSelectedItem] = useState<string>(_list[0].name);
+  const [selectedItem, setSelectedItem] = useState<string>(_list[0].label);
 
   return (
-    <div className={`w-full sm:w-1/3`}>
+    <div className="ml-8">
       <Selector
-        onChange={(val: any, name: string) => {
-          setSelectedItem(name);
+        size="middle"
+        onChange={(val: any) => {
+          setSelectedItem(val);
           setPageSize(Number(val));
         }}
         disableSort
         dropdownWidth="w-48"
-        direction="topleft"
         selectedItem={selectedItem}
         list={_list}
-        placeholder="Show pages"
+        placeholder="pages"
       />
     </div>
   );

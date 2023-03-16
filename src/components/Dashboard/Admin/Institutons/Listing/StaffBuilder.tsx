@@ -483,7 +483,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
             placeholder="Select Status"
             dropdownWidth="w-48"
             list={statusList}
-            onChange={(val, _, __) =>
+            onChange={(val) =>
               onStaffStatusChange(
                 val,
                 item.id,

@@ -1,34 +1,35 @@
-import Buttons from "@components/Atoms/Buttons";
-import Label from "@components/Atoms/Form/Label";
-import Loader from "@components/Atoms/Loader";
-import ModalPopUp from "@components/Molecules/ModalPopUp";
-import DotMenu from "@components/TeacherView/ClassRoster/RosterRow/DotMenu";
-import { useGlobalContext } from "@contexts/GlobalContext";
-import useAuth from "@customHooks/useAuth";
-import useGraphqlQuery from "@customHooks/useGraphqlQuery";
-import { logError } from "@graphql/functions";
+import Buttons from '@components/Atoms/Buttons';
+import Label from '@components/Atoms/Form/Label';
+import Loader from '@components/Atoms/Loader';
+import ModalPopUp from '@components/Molecules/ModalPopUp';
+import DotMenu from '@components/TeacherView/ClassRoster/RosterRow/DotMenu';
+import {useGlobalContext} from '@contexts/GlobalContext';
+import useAuth from '@customHooks/useAuth';
+import useGraphqlQuery from '@customHooks/useGraphqlQuery';
+import {logError} from '@graphql/functions';
 import {
   ErrorLog,
   ErrorStatus,
   ListErrorLogsQueryVariables,
-  UpdateErrorLogInput,
-} from "API";
-import { API, graphqlOperation } from "aws-amplify";
-import * as queries from "graphql/queries";
-import * as mutations from "graphql/mutations";
-import * as customMutations from "customGraphql/customMutations";
-import { orderBy, update } from "lodash";
-import moment from "moment";
-import React, { useEffect, useState } from "react";
-import { AiOutlineCloseCircle } from "react-icons/ai";
-import { Redirect } from "react-router";
+  UpdateErrorLogInput
+} from 'API';
+import {API, graphqlOperation} from 'aws-amplify';
+import * as queries from 'graphql/queries';
+import * as mutations from 'graphql/mutations';
+import * as customMutations from 'customGraphql/customMutations';
+import {orderBy, update} from 'lodash';
+import moment from 'moment';
+import React, {useEffect, useState} from 'react';
+import {AiOutlineCloseCircle} from 'react-icons/ai';
+import {Redirect} from 'react-router';
+import {Button} from 'antd';
 
 const ErrorItem = ({
   error,
   updateStatus,
 
   setShowModal,
-  setMultipleItemsToClose,
+  setMultipleItemsToClose
 }: {
   setShowModal: React.Dispatch<
     React.SetStateAction<{
@@ -43,42 +44,39 @@ const ErrorItem = ({
   idx: number;
 }) => {
   const pendingItem = {
-    label: "set to pending",
+    label: 'set to pending',
     action: () => {
       updateStatus(error.id, ErrorStatus.PENDING);
-    },
+    }
   };
 
   const reviewItem = {
-    label: "set to review",
+    label: 'set to review',
     action: () => {
       updateStatus(error.id, ErrorStatus.REVIEW);
-    },
+    }
   };
 
-  const outputError =
-    error.error !== "" && error.error !== "{}" ? error.error : "";
+  const outputError = error.error !== '' && error.error !== '{}' ? error.error : '';
 
   const stackItem = {
-    label: "see stack details",
+    label: 'see stack details',
     action: () => {
       setShowModal({
         show: true,
         message: outputError,
-        additional: error.errorType,
+        additional: error.errorType
       });
-    },
+    }
   };
 
   const errorStatus = error.status;
 
   const closedItem = {
-    label: "set to closed",
+    label: 'set to closed',
     action: () => {
-      setMultipleItemsToClose(error.id, () =>
-        updateStatus(error.id, ErrorStatus.CLOSED)
-      );
-    },
+      setMultipleItemsToClose(error.id, () => updateStatus(error.id, ErrorStatus.CLOSED));
+    }
   };
 
   const menuItems =
@@ -91,21 +89,19 @@ const ErrorItem = ({
   const statusBorder = () => {
     switch (errorStatus) {
       case ErrorStatus.PENDING:
-        return "border-indigo-500";
+        return 'border-indigo-500';
       case ErrorStatus.REVIEW:
-        return "border-blue-500";
+        return 'border-blue-500';
       case ErrorStatus.CLOSED:
-        return "border-green-500";
+        return 'border-green-500';
 
       default:
-        return "border-indigo-500";
+        return 'border-indigo-500';
     }
   };
 
   return (
-    <div
-      className={`white_back p-4 pb-8 relative border-l-6 ${statusBorder()}`}
-    >
+    <div className={`white_back p-4 pb-8 relative border-l-6 ${statusBorder()}`}>
       <div className="absolute top-0 w-auto p-4 right-0">
         <DotMenu menuItems={[...menuItems]} />
       </div>
@@ -120,10 +116,9 @@ const ErrorItem = ({
 
       <div className="absolute left-0  bottom-0 border-t-0 pt-1 border-gray-200 flex items-center justify-between px-4 py-2">
         <div
-          title={error?.pageUrl || ""}
-          className="text-sm underline theme-text:600 w-auto hover:theme-text:500 text-gray-900 font-light "
-        >
-          <a href={error?.pageUrl || ""}>visit url</a>
+          title={error?.pageUrl || ''}
+          className="text-sm underline theme-text:600 w-auto hover:theme-text:500 text-gray-900 font-light ">
+          <a href={error?.pageUrl || ''}>visit url</a>
         </div>
         {errorStatus === ErrorStatus.PENDING && (
           <Buttons
@@ -134,7 +129,7 @@ const ErrorItem = ({
           />
         )}
         <p className="text-xs text-gray-500 font-light italic w-auto">
-          {moment(error.errorTime).format("lll")}
+          {moment(error.errorTime).format('lll')}
         </p>
       </div>
     </div>
@@ -150,9 +145,9 @@ const deleteClosedErrors = async () => {
         limit: 500,
 
         filter: {
-          errorTime: { lt: date.toISOString() },
-          status: { eq: ErrorStatus.CLOSED },
-        },
+          errorTime: {lt: date.toISOString()},
+          status: {eq: ErrorStatus.CLOSED}
+        }
       })
     );
     const items = res.data.listErrorLogs.items || [];
@@ -160,7 +155,7 @@ const deleteClosedErrors = async () => {
     if (items && items.length > 0) {
       for (const x of items) {
         await API.graphql(
-          graphqlOperation(mutations.deleteErrorLog, { input: { id: x.id } })
+          graphqlOperation(mutations.deleteErrorLog, {input: {id: x.id}})
         );
       }
     }
@@ -170,44 +165,44 @@ const deleteClosedErrors = async () => {
 };
 
 const ErrorsPage = () => {
-  const { authId, email } = useAuth();
-  const { checkIfAdmin } = useGlobalContext();
+  const {authId, email} = useAuth();
+  const {checkIfAdmin} = useGlobalContext();
 
   if (!checkIfAdmin()) {
-    return <Redirect to={"/dashboard/home"} />;
+    return <Redirect to={'/dashboard/home'} />;
   }
 
   let date = new Date();
   date.setMonth(date.getMonth() - 1);
 
-  const { data, setData, isLoading, isFetched } = useGraphqlQuery<
+  const {data, setData, isLoading, isFetched} = useGraphqlQuery<
     ListErrorLogsQueryVariables,
     ErrorLog[]
   >(
-    "listErrorLogs",
+    'listErrorLogs',
     {
       limit: 200,
       filter: {
         errorTime: {
-          gt: date.toISOString(),
-        },
-      },
+          gt: date.toISOString()
+        }
+      }
     },
     {
       loopOnNextToken: true,
       enabled: checkIfAdmin(),
       onSuccess: (data) => {
-        const orderedList = orderBy([...data], ["errorTime"], ["desc"]);
+        const orderedList = orderBy([...data], ['errorTime'], ['desc']);
         setData([...orderedList]);
         deleteClosedErrors();
-      },
+      }
     }
   );
 
   const [showModal, setShowModal] = useState({
     show: false,
-    message: "",
-    additional: "",
+    message: '',
+    additional: ''
   });
 
   const [filteredList, setFilteredList] = useState([...data]);
@@ -223,29 +218,27 @@ const ErrorsPage = () => {
       setFilters(null);
 
       const _idx = data.findIndex((_d: ErrorLog) => _d.id === id);
-      update(data[_idx], "status", () => status);
+      update(data[_idx], 'status', () => status);
 
       setData([...data]);
       setFilteredList([...data]);
 
       const input: UpdateErrorLogInput = {
         id,
-        status,
+        status
       };
-      await API.graphql(
-        graphqlOperation(customMutations.updateErrorLog, { input })
-      );
+      await API.graphql(graphqlOperation(customMutations.updateErrorLog, {input}));
     } catch (error) {
-      logError(error, { email, authId }, "@updateStatus");
+      logError(error, {email, authId}, '@updateStatus');
     }
   };
 
   const INITIAL_MULTIPLE_CLOSE_MODAL = {
     show: false,
-    message: "",
+    message: '',
     onClose: () => {},
     onSave: () => {},
-    cancelAction: () => {},
+    cancelAction: () => {}
   };
   const [multipleCloseModal, setMultipleCloseModal] = useState(
     INITIAL_MULTIPLE_CLOSE_MODAL
@@ -271,7 +264,7 @@ const ErrorsPage = () => {
       setMultipleCloseModal({
         show: true,
         message: `Are you sure you want to close all items related to ${
-          (currentItem && currentItem.componentName) || ""
+          (currentItem && currentItem.componentName) || ''
         }`,
         onClose: onMultipleCloseModal,
         onSave: () => {
@@ -283,7 +276,7 @@ const ErrorsPage = () => {
         cancelAction: () => {
           currentItem?.id && updateStatus(currentItem?.id, ErrorStatus.CLOSED);
           onMultipleCloseModal();
-        },
+        }
       });
     } else {
       callback();
@@ -318,20 +311,22 @@ const ErrorsPage = () => {
                 <Buttons
                   onClick={() => updateFilter(ErrorStatus.PENDING)}
                   transparent={filters !== ErrorStatus.PENDING}
-                  label={"Pending"}
+                  label={'Pending'}
                 />
                 <Buttons
                   onClick={() => updateFilter(ErrorStatus.CLOSED)}
                   transparent={filters !== ErrorStatus.CLOSED}
-                  label={"Closed"}
+                  label={'Closed'}
                 />
                 <Buttons
                   onClick={() => updateFilter(ErrorStatus.REVIEW)}
                   transparent={filters !== ErrorStatus.REVIEW}
-                  label={"Review"}
+                  label={'Review'}
                 />
               </div>
             </div>
+
+            <Button type="primary">Hello</Button>
 
             <div className="overflow-hidden">
               {isLoading ? null : (
@@ -359,7 +354,7 @@ const ErrorsPage = () => {
                 <p className="min-h-56 flex items-center w-full justify-center text-gray-500">
                   {filters !== undefined
                     ? `No errors found for status - ${filters}`
-                    : "Woahhh.. no errors."}
+                    : 'Woahhh.. no errors.'}
                 </p>
               )}
               {/* </tbody> */}
@@ -372,11 +367,9 @@ const ErrorsPage = () => {
       {showModal.show && (
         <ModalPopUp
           closeAction={() => {
-            setShowModal({ show: false, message: "", additional: "" });
+            setShowModal({show: false, message: '', additional: ''});
           }}
-          message={showModal.message.concat(
-            `Additional info -> ${showModal.additional}`
-          )}
+          message={showModal.message.concat(`Additional info -> ${showModal.additional}`)}
         />
       )}
       {multipleCloseModal.show && (

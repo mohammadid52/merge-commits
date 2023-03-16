@@ -24,23 +24,23 @@ export const breadcrumbsRoutes = ({
     breadcrumbPathForSection = [
       {
         title: instituteTabTitles['TABS']['COURSES'],
-        url: `${baseUrl}/courses`,
+        href: `${baseUrl}/courses`,
         last: false
       },
       {
         title: paths.get('courseName'),
-        url: `${baseUrl}/course-builder/${paths.get('courseId')}`,
+        href: `${baseUrl}/course-builder/${paths.get('courseId')}`,
         last: false
       },
       {
         title: instituteTabTitles['TABS']['UNITS'],
-        url: `${baseUrl}/units`,
+        href: `${baseUrl}/units`,
 
         last: false
       },
       unitData && {
         title: unitData?.name,
-        url: `${baseUrl}/units/${unitData?.id}/edit?courseId=${paths.get(
+        href: `${baseUrl}/units/${unitData?.id}/edit?courseId=${paths.get(
           'courseId'
         )}&courseName=${paths.get('courseName')}`,
         last: true,
@@ -52,7 +52,7 @@ export const breadcrumbsRoutes = ({
     breadcrumbPathForSection = [
       {
         title: heroSectionTitle,
-        url: `${baseUrl}/units`,
+        href: `${baseUrl}/units`,
         last: true
       }
     ];
@@ -61,12 +61,12 @@ export const breadcrumbsRoutes = ({
     breadcrumbPathForSection = [
       {
         title: heroSectionTitle,
-        url: `${baseUrl}/staff`,
+        href: `${baseUrl}/staff`,
         last: !Boolean(otherValues.user)
       },
       otherValues?.user && {
         title: otherValues.user.name,
-        url: `${baseUrl}/manage-users/${otherValues.user.id}/staff`,
+        href: `${baseUrl}/manage-users/${otherValues.user.id}/staff`,
         last: Boolean(otherValues.user),
         goBack: false
       }
@@ -79,12 +79,12 @@ export const breadcrumbsRoutes = ({
     breadcrumbPathForSection = [
       {
         title: heroSectionTitle,
-        url: `${baseUrl}/manage-users`,
+        href: `${baseUrl}/manage-users`,
         last: !Boolean(otherValues.user)
       },
       otherValues?.user && {
         title: otherValues.user.name,
-        url: `${baseUrl}/manage-users/${otherValues.user.id}`,
+        href: `${baseUrl}/manage-users/${otherValues.user.id}`,
         last: Boolean(otherValues.user),
         goBack: false
       }
@@ -94,7 +94,7 @@ export const breadcrumbsRoutes = ({
     breadcrumbPathForSection = [
       {
         title: heroSectionTitle,
-        url: `${baseUrl}/courses`,
+        href: `${baseUrl}/courses`,
         last: !courseData?.id
       }
     ];
@@ -103,7 +103,7 @@ export const breadcrumbsRoutes = ({
         ...breadcrumbPathForSection,
         {
           title: courseData?.name,
-          url: `${baseUrl}/course-builder/${courseData?.id}`,
+          href: `${baseUrl}/course-builder/${courseData?.id}`,
           last: true
         }
       ];
@@ -113,7 +113,7 @@ export const breadcrumbsRoutes = ({
     breadcrumbPathForSection = [
       {
         title: heroSectionTitle,
-        url: `${baseUrl}/students`,
+        href: `${baseUrl}/students`,
         last: true
       }
     ];
@@ -122,7 +122,7 @@ export const breadcrumbsRoutes = ({
     breadcrumbPathForSection = [
       {
         title: heroSectionTitle,
-        url: `${baseUrl}/units`,
+        href: `${baseUrl}/units`,
         last: true
       }
     ];
@@ -132,7 +132,7 @@ export const breadcrumbsRoutes = ({
         ...breadcrumbPathForSection,
         {
           title: unitData?.name,
-          url: `${baseUrl}/units/${unitData?.id}/edit`,
+          href: `${baseUrl}/units/${unitData?.id}/edit`,
           last: !unitData?.id
         }
       ];
@@ -142,7 +142,7 @@ export const breadcrumbsRoutes = ({
     breadcrumbPathForSection = [
       {
         title: heroSectionTitle,
-        url: `${baseUrl}/lessons`,
+        href: `${baseUrl}/lessons`,
         last: lessonData?.id ? false : true
       }
     ];
@@ -152,7 +152,7 @@ export const breadcrumbsRoutes = ({
         ...breadcrumbPathForSection,
         {
           title: lessonData?.title,
-          url: `${baseUrl}/lessons/${lessonData?.id}`,
+          href: `${baseUrl}/lessons/${lessonData?.id}`,
           last: true
         }
       ];
@@ -162,7 +162,7 @@ export const breadcrumbsRoutes = ({
     breadcrumbPathForSection = [
       {
         title: heroSectionTitle,
-        url: `${baseUrl}/class-rooms`,
+        href: `${baseUrl}/class-rooms`,
         last: !roomData?.id
       }
     ];
@@ -171,7 +171,7 @@ export const breadcrumbsRoutes = ({
         ...breadcrumbPathForSection,
         {
           title: roomData?.name,
-          url: `${baseUrl}/room-edit/${roomData?.id}`,
+          href: `${baseUrl}/room-edit/${roomData?.id}`,
           last: true
         }
       ];
@@ -185,12 +185,12 @@ export const breadcrumbsRoutes = ({
     breadcrumbPathForSection = [
       {
         title: instituteTabTitles['TABS']['RESEARCH_AND_ANALYTICS'],
-        url: `${baseUrl}/research-and-analytics`,
+        href: `${baseUrl}/research-and-analytics`,
         last: false
       },
       {
         title: heroSectionTitle,
-        url: `${baseUrl}/research-and-analytics`,
+        href: `${baseUrl}/research-and-analytics`,
         last: true
       }
     ];
@@ -199,7 +199,7 @@ export const breadcrumbsRoutes = ({
     breadcrumbPathForSection = [
       {
         title: heroSectionTitle,
-        url: `${baseUrl}/edit`,
+        href: `${baseUrl}/edit`,
         last: true
       }
     ];

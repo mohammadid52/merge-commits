@@ -19,7 +19,7 @@ import {useGlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import * as queries from 'graphql/queries';
-import {map, orderBy} from 'lodash';
+import {map, orderBy, uniqBy} from 'lodash';
 import {Status} from '../../UserManagement/UserStatus';
 
 interface RoomListProps {
@@ -80,18 +80,26 @@ const RoomsList = (props: RoomListProps) => {
           filter: withZoiqFilter({})
         })
       );
+
+      const institutions = list?.data?.listInstitutions?.items;
+
       setInstitutionList(
-        list.data?.listInstitutions?.items?.sort((a: any, b: any) =>
-          a.name?.toLowerCase() > b.name?.toLowerCase() ? 1 : -1
-        )
+        uniqBy(institutions, 'name').map((d: any) => ({
+          id: d.id,
+          label: d.name,
+          value: d.name
+        }))
       );
+
       setLoading(false);
     } catch (error) {
+      console.error(error);
+
       setLoading(false);
     }
   };
 
-  const {authId, isFellow, isTeacher, isSuperAdmin, isAdmin, isBuilder} = useAuth();
+  const {authId, isFellow, isTeacher, role, isSuperAdmin, isAdmin, isBuilder} = useAuth();
 
   const fetchRoomList = async () => {
     try {
@@ -181,10 +189,10 @@ const RoomsList = (props: RoomListProps) => {
       fetchInstitutions();
       fetchRoomList();
     }
-  }, [isSuperAdmin]);
+  }, [role]);
 
-  const instituteChange = (_: string, name: string, value: string) => {
-    setSelectedInstitution({name, id: value});
+  const instituteChange = (value: string) => {
+    setSelectedInstitution({value});
     updateRoomList(value);
     setFilters(null);
   };
@@ -366,20 +374,16 @@ const RoomsList = (props: RoomListProps) => {
             borderBottom
             shadowOff
             withButton={
-              <div className={`w-auto flex gap-x-4 justify-end items-center flex-wrap`}>
+              <div className={`w-auto flex gap-x-4 justify-end items-center`}>
                 {(isSuperAdmin || isAdmin || isBuilder) && (
                   <Selector
-                    dataCy="classroom-institution"
+                    width={300}
+                    showSearch
                     placeholder={InstitueRomms[userLanguage]['SELECT_INSTITUTION']}
                     list={institutionList}
-                    selectedItem={selectedInstitution?.name}
+                    selectedItem={selectedInstitution?.label}
                     onChange={instituteChange}
-                    arrowHidden={true}
-                    additionalClass={`w-60 ${
-                      isSuperAdmin || isAdmin || isBuilder ? 'mr-4' : ''
-                    }`}
-                    isClearable
-                    onClear={onInstitutionSelectionRemove}
+                    disableSort={false}
                   />
                 )}
                 <SearchInput

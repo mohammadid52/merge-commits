@@ -21,7 +21,7 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
   const history = useHistory();
   const initialState: any = {
     id: null,
-    name: '',
+    label: '',
     type: '',
     website: '',
     isServiceProvider: false,
@@ -58,27 +58,27 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
   const institutionTypeList = [
     {
       id: 1,
-      name: InstitutionBuilderDict[userLanguage]['INSTITUTION_TYPE']['SCHOOL'],
+      label: InstitutionBuilderDict[userLanguage]['INSTITUTION_TYPE']['SCHOOL'],
       value: 'School'
     },
     {
       id: 2,
-      name: InstitutionBuilderDict[userLanguage]['INSTITUTION_TYPE']['AFTERSCHOOL'],
+      label: InstitutionBuilderDict[userLanguage]['INSTITUTION_TYPE']['AFTERSCHOOL'],
       value: 'After School'
     },
     {
       id: 3,
-      name: InstitutionBuilderDict[userLanguage]['INSTITUTION_TYPE']['DAYCAMP'],
+      label: InstitutionBuilderDict[userLanguage]['INSTITUTION_TYPE']['DAYCAMP'],
       value: 'Day Camp'
     },
     {
       id: 4,
-      name: InstitutionBuilderDict[userLanguage]['INSTITUTION_TYPE']['SUMMERCAMP'],
+      label: InstitutionBuilderDict[userLanguage]['INSTITUTION_TYPE']['SUMMERCAMP'],
       value: 'Summer Camp'
     },
     {
       id: 5,
-      name: InstitutionBuilderDict[userLanguage]['INSTITUTION_TYPE']['C3'],
+      label: InstitutionBuilderDict[userLanguage]['INSTITUTION_TYPE']['C3'],
       value: '501C3'
     }
   ];
@@ -160,7 +160,7 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
           );
         }
         let payload: any = {
-          name: instituteData.name,
+          label: instituteData.name,
           type: instituteData.type,
           website: instituteData.website,
           address: instituteData.address,

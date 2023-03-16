@@ -1782,3 +1782,15 @@ $translation-fab-width: 50px;
     border-radius: 1rem;
   }
 }
+
+.ant-breadcrumb {
+  & a,
+  .ant-breadcrumb-separator {
+    color: white;
+  }
+  & a {
+    &:hover {
+      color: white;
+    }
+  }
+}

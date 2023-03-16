@@ -12,10 +12,12 @@ import {getAsset} from 'assets';
 import HeroBanner from 'components/Header/HeroBanner';
 import useDictionary from 'customHooks/dictionary';
 import {breadcrumbsRoutes} from 'utilities/breadcrumb';
+import {Breadcrumb} from 'antd';
+import {AiOutlineHome} from 'react-icons/ai';
 
 export type BreadCrumb = {
   title: string;
-  url: string;
+  href: string;
   last: boolean;
   goBack?: boolean;
 };
@@ -55,9 +57,9 @@ const BreadcrumbsWithBanner: React.FC<BreadCrumbProps> = (props: BreadCrumbProps
   const history = useHistory();
   const [openWalkThroughModal, setOpenWalkThroughModal] = useState(false);
 
-  const goToUrl = (url: string) => {
+  const goToUrl = (href: string) => {
     if (unsavedChanges) {
-      toggleModal(url);
+      toggleModal(href);
     } else {
       setLessonData({});
       setRoomData({});
@@ -71,7 +73,7 @@ const BreadcrumbsWithBanner: React.FC<BreadCrumbProps> = (props: BreadCrumbProps
         }
       });
 
-      history.push(url);
+      history.push(href);
     }
   };
 
@@ -222,14 +224,14 @@ const BreadcrumbsWithBanner: React.FC<BreadCrumbProps> = (props: BreadCrumbProps
 
   const breadCrumbsList: BreadCrumb[] = [
     {
-      title: BreadcrumsTitles[userLanguage]['HOME'],
-      url: '/dashboard',
+      title: <AiOutlineHome />,
+      href: '/dashboard',
       last: false
     },
 
     institutionId && {
       title: institutionData?.name,
-      url:
+      href:
         currentPath === 'edit'
           ? `${location.pathname}${location.search}`
           : `/dashboard/manage-institutions/institution/${institutionId}/edit`,
@@ -244,8 +246,15 @@ const BreadcrumbsWithBanner: React.FC<BreadCrumbProps> = (props: BreadCrumbProps
     <>
       <div className="relative">
         <HeroBanner imgUrl={bannerImage} title={heroSectionTitle || title} />
-        <div className={`absolute theme-bg w-full bottom-0 z-20`}>
-          <div
+        {/* <div className={`absolute theme-bg w-full bottom-0 z-20`}> */}
+        <div className="">
+          <Breadcrumb
+            className="px-8 py-2  theme-bg:500 "
+            separator=">"
+            items={finalList}
+          />
+        </div>
+        {/* <div
             className={`${
               separateGoBackButton ? 'justify-between' : ''
             } flex flex-row my-0 py-2`}>
@@ -308,9 +317,9 @@ const BreadcrumbsWithBanner: React.FC<BreadCrumbProps> = (props: BreadCrumbProps
                 <BsFillInfoCircleFill className={`h-5 w-5 text-white`} />
               </span>
             </div>
-          </div>
-        </div>
+          </div> */}
       </div>
+      {/* </div> */}
       {/* <InformationalWalkThrough
         open={openWalkThroughModal}
         onCancel={() => setOpenWalkThroughModal(false)}

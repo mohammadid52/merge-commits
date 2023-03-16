@@ -1,8 +1,8 @@
-import { ListBottomBar } from "@components/Molecules/ListBottomBar";
-import { useEffect, useState } from "react";
+import {ListBottomBar} from '@components/Molecules/ListBottomBar';
+import {useEffect, useState} from 'react';
 
 const usePagination = (data: any[], totalResults: number) => {
-  const [currentPage, setCurrentPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
 
   const [lastPage, setLastPage] = useState(false);
@@ -10,8 +10,7 @@ const usePagination = (data: any[], totalResults: number) => {
   const [pageCount, setPageCount] = useState(10);
   const [currentList, setCurrentList] = useState<any[]>([]);
 
-  const getIndex = (idx: number) =>
-    idx + 1 + (currentPage === 0 ? 0 : pageCount * currentPage);
+  const getIndex = (idx: number) => idx + 1 + pageCount * (currentPage - 1);
 
   const goNextPage = () => {
     const pageHigherLimit = totalPages - 1;
@@ -35,7 +34,7 @@ const usePagination = (data: any[], totalResults: number) => {
   };
 
   const resetPagination = () => {
-    setCurrentPage(0);
+    setCurrentPage(1);
     currentPageData();
     setFirstPage(true);
     if (totalPages === 1) {
@@ -46,13 +45,13 @@ const usePagination = (data: any[], totalResults: number) => {
   };
 
   const currentPageData = () => {
-    const initialItem = currentPage * pageCount;
+    const initialItem = (currentPage - 1) * pageCount;
+
     const updatedList = data.slice(initialItem, initialItem + pageCount) || [];
     setCurrentList(updatedList);
   };
 
   useEffect(() => {
-    setCurrentPage(0);
     setFirstPage(true);
     setLastPage(false);
     const totalListPages = Math.floor(totalResults / pageCount);
@@ -91,6 +90,7 @@ const usePagination = (data: any[], totalResults: number) => {
     lastPage,
     setPageCount,
     resetPagination,
+    setCurrentPage
   };
 
   return {
@@ -110,7 +110,7 @@ const usePagination = (data: any[], totalResults: number) => {
     firstPage,
     currentList,
     getIndex,
-    currentPage,
+    currentPage
   };
 };
 

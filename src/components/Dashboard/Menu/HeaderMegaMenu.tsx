@@ -26,31 +26,31 @@ const HeaderMegaMenu = () => {
   // ~~~~~~~~~~~~~ MENU SUP/ADM ~~~~~~~~~~~~ //
   const headerMenusForInstitution = [
     {
-      title: TABS['INSTITUTION_MANAGER'],
+      label: TABS['INSTITUTION_MANAGER'],
       key: 'institution',
       type: 'dropdown',
       children: [
         {
-          title: TABS['GENERAL_INFORMATION'],
+          label: TABS['GENERAL_INFORMATION'],
           key: 'general_information',
           redirectionUrl:
             user.role === 'SUP' ? `${baseUrl}?alert=true` : `${baseUrl}/edit`,
           active: location.pathname.indexOf(`${baseUrl}/edit`) > -1
         },
         {
-          title: TABS['STAFF'],
+          label: TABS['STAFF'],
           key: 'staff',
           redirectionUrl: `${baseUrl}/staff`,
           active: location.pathname.indexOf('staff') > -1
         },
         (user.role === 'SUP' || user.role === 'ADM') && {
-          title: TABS['USER_REGISTRY'],
+          label: TABS['USER_REGISTRY'],
           key: 'user_registry',
           redirectionUrl: `${baseUrl}/manage-users`,
           active: location.pathname.indexOf('manage-users') > -1
         },
         (user.role === 'ADM' || user.role === 'FLW' || user.role === 'TR') && {
-          title: TABS['REGISTER_NEW_USER'],
+          label: TABS['REGISTER_NEW_USER'],
           key: 'register',
           redirectionUrl: `${baseUrl}/register-user`,
           active: location.pathname.indexOf('register-user') > -1
@@ -58,30 +58,30 @@ const HeaderMegaMenu = () => {
       ].filter(Boolean)
     },
     {
-      title: TABS['COURSE_MANAGER'],
+      label: TABS['COURSE_MANAGER'],
       key: 'course',
       type: 'dropdown',
       children: [
         {
-          title: TABS['COURSES'],
+          label: TABS['COURSES'],
           key: 'course',
           redirectionUrl: `${baseUrl}/courses`,
           active: location.pathname.indexOf('course') > -1
         },
         {
-          title: TABS['UNITS'],
+          label: TABS['UNITS'],
           key: 'unit',
           redirectionUrl: `${baseUrl}/units`,
           active: location.pathname.indexOf('units') > -1
         },
         {
-          title: TABS['LESSONS'],
+          label: TABS['LESSONS'],
           key: 'lessons',
           redirectionUrl: `${baseUrl}/lessons`,
           active: location.pathname.indexOf('lessons') > -1
         },
         {
-          title: TABS['GAME_CHANGERS'],
+          label: TABS['GAME_CHANGERS'],
           key: 'game-changers',
           redirectionUrl: `/dashboard/game-changers`,
           active: location.pathname.indexOf('game-changers') > -1
@@ -89,30 +89,30 @@ const HeaderMegaMenu = () => {
       ]
     },
     user.role !== 'BLD' && {
-      title: TABS['CLASS_MANAGER'],
+      label: TABS['CLASS_MANAGER'],
       key: 'class',
       type: 'dropdown',
       children: [
         // { user.role !== 'BLD' &&
-        //   title: TABS['CLASSES'],
+        //   label: TABS['CLASSES'],
         //   key: 'class',
         //   redirectionUrl: `${baseUrl}/class`,
         //   active: location.pathname.indexOf('class') > -1,
         // },
         {
-          title: TABS['CLASSROOMS'],
+          label: TABS['CLASSROOMS'],
           key: 'class_room',
           redirectionUrl: `${baseUrl}/class-rooms`,
           active: location.pathname.indexOf('room') > -1
         },
         (user.role === 'FLW' || user.role === 'TR') && {
-          title: TABS['STUDENT_ROASTER'],
+          label: TABS['STUDENT_ROASTER'],
           key: 'roaster',
           redirectionUrl: `${baseUrl}/students`,
           active: location.pathname.indexOf('room') > -1
         },
         (user.role === 'FLW' || user.role === 'TR') && {
-          title: TABS['LIVE_CLASS_ROOM'],
+          label: TABS['LIVE_CLASS_ROOM'],
           key: 'live_classroom',
           redirectionUrl: `/dashboard/home`,
           active: location.pathname.indexOf('room') > -1
@@ -120,7 +120,7 @@ const HeaderMegaMenu = () => {
       ].filter(Boolean)
     },
     user.role !== 'BLD' && {
-      title: TABS['COMMUNITY_MANAGER'],
+      label: TABS['COMMUNITY_MANAGER'],
       key: 'community',
       type: 'dropdown',
       children: [
@@ -128,19 +128,19 @@ const HeaderMegaMenu = () => {
           key: 'community_builder',
           redirectionUrl: `/dashboard/community/builder`,
           active: false,
-          title: CommunityDict[userLanguage]['TABS']['COMMUNITY_BUILDER']
+          label: CommunityDict[userLanguage]['TABS']['COMMUNITY_BUILDER']
         },
 
         {
           key: 'front_page',
           redirectionUrl: `/dashboard/community/front`,
           active: location.pathname.indexOf('community') > -1,
-          title: CommunityDict[userLanguage]['TABS']['FRONT_PAGE']
+          label: CommunityDict[userLanguage]['TABS']['FRONT_PAGE']
         }
       ]
     },
     {
-      title: TABS['RESEARCH_AND_ANALYTICS'],
+      label: TABS['RESEARCH_AND_ANALYTICS'],
       key: 'research_and_analytics',
       type: 'dropdown',
       children: [
@@ -148,20 +148,20 @@ const HeaderMegaMenu = () => {
           key: 'download_csv',
           redirectionUrl: `${baseUrl}/research-and-analytics`,
           active: false,
-          title: TABS['DOWNLOAD_CSV']
+          label: TABS['DOWNLOAD_CSV']
         },
 
         {
           key: 'upload_csv',
           redirectionUrl: `${baseUrl}/research-and-analytics/upload-csv`,
           active: location.pathname.indexOf('research-and-analytics') > -1,
-          title: TABS['UPLOAD_CSV']
+          label: TABS['UPLOAD_CSV']
         }
         // {
         //   key: 'analytics_dashboard',
         //   redirectionUrl: `${baseUrl}/research-and-analytics/analytics-dashboard`,
         //   active: location.pathname.indexOf('research-and-analytics') > -1,
-        //   title: TABS['UPLOAD_TO_ATHENA'],
+        //   label: TABS['UPLOAD_TO_ATHENA'],
         // },
       ]
     }
@@ -170,7 +170,7 @@ const HeaderMegaMenu = () => {
   // ~~~~~~~~~~~~~ MENU STUDENT ~~~~~~~~~~~~ //
   const headerMenusForStudent = [
     {
-      title: TABS['HOME'],
+      label: TABS['HOME'],
       key: 'dashboard',
       redirectionUrl: `${baseUrl}/dashboard/home`,
       active:
@@ -178,19 +178,19 @@ const HeaderMegaMenu = () => {
         location.pathname.indexOf('classroom') > -1
     },
     {
-      title: TABS['GAME_CHANGERS'],
+      label: TABS['GAME_CHANGERS'],
       key: 'game-changers',
       redirectionUrl: `${baseUrl}/dashboard/game-changers`,
       active: location.pathname.indexOf('game-changers') > -1
     },
     {
-      title: TABS['COMMUNITY'],
+      label: TABS['COMMUNITY'],
       key: 'community',
       redirectionUrl: `${baseUrl}/dashboard/community/front`,
       active: location.pathname.indexOf('community') > -1
     },
     {
-      title: TABS['NOTEBOOK'],
+      label: TABS['NOTEBOOK'],
       key: 'notebook',
       redirectionUrl: `${baseUrl}/dashboard/anthology`,
       active: location.pathname.indexOf('anthology') > -1
@@ -202,20 +202,32 @@ const HeaderMegaMenu = () => {
     role === 'ST' ? headerMenusForStudent : headerMenusForInstitution;
 
   const [currentTab, setCurrentTab] = useState(
-    headerMenusForStudent?.find((d) => d.active)?.title || headerMenusForStudent[0]?.title
+    headerMenusForStudent?.find((d) => d.active)?.label || headerMenusForStudent[0]?.label
   );
 
-  const updateTab = ({redirectionUrl, title}: typeof headerMenusForStudent[0]) => {
-    setCurrentTab(title);
+  const updateTab = ({redirectionUrl, label}: typeof headerMenusForStudent[0]) => {
+    setCurrentTab(label);
     if (redirectionUrl) {
       history.push(redirectionUrl);
     }
   };
 
+  const mappedTabs = getMenuByRole(user?.role).map((tab: any) => {
+    if (tab?.children?.length > 0) {
+      tab.children = tab.children.map((child: any) => {
+        if (child?.redirectionUrl) {
+          child.label = <a href={child.redirectionUrl}>{child.label}</a>;
+        }
+        return child;
+      });
+    }
+    return tab;
+  });
+
   return (
     <Tabs
       currentTab={currentTab}
-      tabsData={getMenuByRole(user?.role) as ITabElements[]}
+      tabsData={mappedTabs as ITabElements[]}
       updateTab={updateTab}
       tabWithNumbers
     />

@@ -22,7 +22,7 @@ export const doResize = (textbox: any) => {
   const cols = textbox.cols;
 
   const arraytxt: any = txt.split('\n');
-  const rows = arraytxt.length;
+  let rows = arraytxt.length;
 
   for (let i = 0; i < arraytxt.length; i++)
     // @ts-ignore
@@ -114,23 +114,27 @@ const zoiqFilterFallback = (authId: string) =>
   allowedAuthIds.includes(authId) ? [] : [{isZoiq: {ne: true}}];
 
 export const withZoiqFilter = (generalFilter: any, _zoiqFilter?: any) => {
-  let zoiqFilter =
-    _zoiqFilter && _zoiqFilter?.length > 0
-      ? _zoiqFilter
-      : zoiqFilterFallback && zoiqFilterFallback.length > 0
-      ? zoiqFilterFallback
-      : [];
+  try {
+    let zoiqFilter =
+      _zoiqFilter && _zoiqFilter?.length > 0
+        ? _zoiqFilter
+        : zoiqFilterFallback && zoiqFilterFallback.length > 0
+        ? zoiqFilterFallback
+        : [];
 
-  let filter: any = {};
-  filter =
-    zoiqFilter?.length > 0
-      ? {
-          ...generalFilter,
-          or: [generalFilter?.or, generalFilter?.and, ...zoiqFilter].filter(Boolean)
-        }
-      : generalFilter;
+    let filter: any = {};
+    filter =
+      zoiqFilter?.length > 0
+        ? {
+            ...generalFilter,
+            or: [generalFilter?.or, generalFilter?.and, ...zoiqFilter].filter(Boolean)
+          }
+        : generalFilter;
 
-  return filter;
+    return filter;
+  } catch (error) {
+    return generalFilter;
+  }
 };
 
 export const getSignInError = (error: any, onlyEmail: any) => {

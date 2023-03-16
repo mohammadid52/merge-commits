@@ -11,13 +11,13 @@ const Highlighted = ({text = '', highlight = ''}) => {
     <span>
       {parts
         .filter((part) => part)
-        .map((part) =>
+        .map((part, idx) =>
           regex.test(part) ? (
-            <mark className="iconoclast:bg-main text-white curate:bg-main" key={part}>
+            <mark className="iconoclast:bg-main text-white curate:bg-main" key={idx}>
               {part}
             </mark>
           ) : (
-            <span key={part}>{part}</span>
+            <span key={idx}>{part}</span>
           )
         )}
     </span>
