@@ -1,26 +1,26 @@
-import { GraphQLAPI as API, graphqlOperation } from "@aws-amplify/api-graphql";
-import React, { useEffect, useState } from "react";
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import React, {useEffect, useState} from 'react';
 
-import Buttons from "atoms/Buttons";
-import DatePickerInput from "atoms/Form/DatePickerInput";
-import FormInput from "atoms/Form/FormInput";
-import Selector from "atoms/Form/Selector";
-import { useGlobalContext } from "contexts/GlobalContext";
-import useDictionary from "customHooks/dictionary";
+import Buttons from 'atoms/Buttons';
+import DatePickerInput from 'atoms/Form/DatePickerInput';
+import FormInput from 'atoms/Form/FormInput';
+import Selector from 'atoms/Form/Selector';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
 
-import * as mutation from "graphql/mutations";
-import { awsFormatDate, dateString } from "utilities/time";
+import * as mutation from 'graphql/mutations';
+import {awsFormatDate, dateString} from 'utilities/time';
 
 const durationOptions = [
-  { id: 1, name: ".25" },
-  { id: 2, name: ".5" },
-  { id: 3, name: ".75" },
-  { id: 4, name: "1" },
+  {id: 1, label: '.25', value: '.25'},
+  {id: 2, label: '.5', value: '.5'},
+  {id: 3, label: '.75', value: '.75'},
+  {id: 4, label: '1', value: '1'}
 ];
 
 const adjustmentOptions = [
-  { id: 1, name: "Push" },
-  { id: 2, name: "Compact" },
+  {id: 1, label: 'Push', value: 'Push'},
+  {id: 2, label: 'Compact', value: 'Compact'}
 ];
 
 interface IImpactLog {
@@ -48,44 +48,44 @@ const HolidayFormComponent = ({
   handleCancel,
   lessonImpactLogs = [],
   postMutation,
-  roomId,
+  roomId
 }: IHolidayFormComponentProps) => {
-  const { userLanguage } = useGlobalContext();
-  const { BUTTONS } = useDictionary();
+  const {userLanguage} = useGlobalContext();
+  const {BUTTONS} = useDictionary();
 
   const [loading, setLoading] = useState<boolean>(false);
   const [formValues, setFormValues] = useState<IImpactLog>({
     impactDate: null,
-    reasonComment: "",
-    lessonImpact: "1",
-    adjustment: "Push",
+    reasonComment: '',
+    lessonImpact: '1',
+    adjustment: 'Push'
   });
   const [serverSideLog, setServerSideLog] = useState({
-    message: "",
-    isError: false,
+    message: '',
+    isError: false
   });
   const [errors, setErrors] = useState({
-    impactDate: "",
+    impactDate: ''
   });
 
   useEffect(() => {
     if (activeIndex !== null) {
       if (lessonImpactLogs[activeIndex]) {
-        const { impactDate, reasonComment, lessonImpact, adjustment } =
+        const {impactDate, reasonComment, lessonImpact, adjustment} =
           lessonImpactLogs[activeIndex];
         setFormValues({
           impactDate: impactDate ? new Date(impactDate) : null,
           reasonComment,
           lessonImpact: lessonImpact?.toString(),
-          adjustment,
+          adjustment
         });
       }
     } else {
       setFormValues({
         impactDate: null,
-        reasonComment: "",
-        lessonImpact: "1",
-        adjustment: "Push",
+        reasonComment: '',
+        lessonImpact: '1',
+        adjustment: 'Push'
       });
     }
   }, [activeIndex, lessonImpactLogs]);
@@ -93,13 +93,13 @@ const HolidayFormComponent = ({
   const handleDateChange = (date: Date | null) => {
     setFormValues((prevData) => ({
       ...prevData,
-      impactDate: date,
+      impactDate: date
     }));
   };
   const handleSelection = (value: string, fieldName: string) => {
     setFormValues((prevData) => ({
       ...prevData,
-      [fieldName]: value,
+      [fieldName]: value
     }));
   };
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -108,7 +108,7 @@ const HolidayFormComponent = ({
 
     setFormValues((prevData) => ({
       ...prevData,
-      [name]: value,
+      [name]: value
     }));
   };
 
@@ -116,7 +116,7 @@ const HolidayFormComponent = ({
     const errorMessages: any = {};
     let isValid: boolean = true;
     if (!formValues.impactDate) {
-      errorMessages.impactDate = "Date is required";
+      errorMessages.impactDate = 'Date is required';
       isValid = false;
     }
     setErrors(errorMessages);
@@ -130,11 +130,11 @@ const HolidayFormComponent = ({
         setLoading(true);
         const payload = {
           impactDate: awsFormatDate(
-            dateString("-", "WORLD", formValues?.impactDate || new Date())
+            dateString('-', 'WORLD', formValues?.impactDate || new Date())
           ),
           reasonComment: formValues.reasonComment,
           lessonImpact: Number(formValues.lessonImpact),
-          adjustment: formValues.adjustment,
+          adjustment: formValues.adjustment
         };
         const input = {
           id: roomId,
@@ -143,17 +143,17 @@ const HolidayFormComponent = ({
               ? lessonImpactLogs.map((log: any, index: number) =>
                   activeIndex === index ? payload : log
                 )
-              : [...lessonImpactLogs, payload],
+              : [...lessonImpactLogs, payload]
         };
         const result: any = await API.graphql(
-          graphqlOperation(mutation.updateRoom, { input: input })
+          graphqlOperation(mutation.updateRoom, {input: input})
         );
         setLoading(false);
         postMutation(result?.data?.updateRoom.lessonImpactLog);
       } catch (error) {
         setServerSideLog({
-          message: "Error while updating logs",
-          isError: true,
+          message: 'Error while updating logs',
+          isError: true
         });
       }
     }
@@ -165,16 +165,12 @@ const HolidayFormComponent = ({
         <div className="">
           <div className="grid grid-cols-2">
             <div className="px-3 py-4">
-              <label
-                className={
-                  "text-gray-700 block text-xs font-semibold leading-5"
-                }
-              >
+              <label className={'text-gray-700 block text-xs font-semibold leading-5'}>
                 Date<span className="text-red-500">*</span>
               </label>
               <DatePickerInput
                 date={formValues.impactDate}
-                placeholder={"Date"}
+                placeholder={'Date'}
                 onChange={(date: Date | null) => handleDateChange(date)}
               />
               <div className="text-red-500">{errors.impactDate}</div>
@@ -184,55 +180,47 @@ const HolidayFormComponent = ({
                 value={formValues.reasonComment}
                 onChange={handleInputChange}
                 name="reasonComment"
-                label={"Reason"}
+                label={'Reason'}
               />
             </div>
           </div>
           <div className="grid grid-cols-2">
             <div className="px-3 py-4">
               <Selector
-                onChange={(_: string, name: string) =>
-                  handleSelection(name, "lessonImpact")
-                }
+                onChange={(name: string) => handleSelection(name, 'lessonImpact')}
                 selectedItem={formValues.lessonImpact}
                 list={durationOptions}
-                label={"Time Impact"}
-                placeholder={"Select time impact"}
+                label={'Time Impact'}
+                placeholder={'Select time impact'}
               />
             </div>
             <div className="px-3 py-4">
               <Selector
-                onChange={(_: string, name: string) =>
-                  handleSelection(name, "adjustment")
-                }
+                onChange={(name: string) => handleSelection(name, 'adjustment')}
                 selectedItem={formValues.adjustment}
                 list={adjustmentOptions}
-                label={"Adjustment"}
-                placeholder={"Select adjustment"}
+                label={'Adjustment'}
+                placeholder={'Select adjustment'}
               />
             </div>
           </div>
         </div>
       </div>
       <div className="py-2 m-auto text-center">
-        <p
-          className={`${
-            serverSideLog.isError ? "text-red-600" : "text-green-600"
-          }`}
-        >
+        <p className={`${serverSideLog.isError ? 'text-red-600' : 'text-green-600'}`}>
           {serverSideLog.message}
         </p>
       </div>
       <div className="flex my-8 justify-center">
         <Buttons
           btnClass="py-3 px-10 mr-4"
-          label={BUTTONS[userLanguage]["CANCEL"]}
+          label={BUTTONS[userLanguage]['CANCEL']}
           onClick={handleCancel}
           transparent
         />
         <Buttons
           btnClass="py-3 px-10 ml-4"
-          label={BUTTONS[userLanguage]["SAVE"]}
+          label={BUTTONS[userLanguage]['SAVE']}
           onClick={handleSubmit}
           disabled={loading}
         />

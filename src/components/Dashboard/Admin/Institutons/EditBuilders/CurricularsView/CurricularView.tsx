@@ -37,7 +37,7 @@ interface InitialData {
   status: RoomStatus;
   summary: string;
   objectives: string;
-  languages: {id: string; name: string; value: string}[];
+  languages: {label: string; value: string}[];
   institute: {
     id: string;
     name: string;
@@ -77,7 +77,7 @@ const CurricularView = (props: CurricularViewProps) => {
     syllabusSequence: [] as any,
     description: '',
     summary: '',
-    languages: [{id: '1', name: 'English', value: 'EN'}],
+    languages: [{label: 'English', value: 'EN'}],
     objectives: '',
     type: '',
     designers: [] as any
@@ -95,27 +95,27 @@ const CurricularView = (props: CurricularViewProps) => {
   const breadCrumsList = [
     {
       title: BreadcrumsTitles[userLanguage]['HOME'],
-      url: '/dashboard',
+      href: '/dashboard',
       last: false
     },
     {
       title: BreadcrumsTitles[userLanguage]['INSTITUTION_MANAGEMENT'],
-      url: '/dashboard/manage-institutions',
+      href: '/dashboard/manage-institutions',
       last: false
     },
     {
       title: curricularData.institute?.name,
-      url: `/dashboard/manage-institutions/institution/${institutionId}`,
+      href: `/dashboard/manage-institutions/institution/${institutionId}`,
       last: false
     },
     {
       title: BreadcrumsTitles[userLanguage]['CURRICULUM'],
-      url: `/dashboard/manage-institutions/institution/${institutionId}/course`,
+      href: `/dashboard/manage-institutions/institution/${institutionId}/course`,
       last: false
     },
     {
       title: curricularData?.name,
-      url: `/dashboard/manage-institutions/${institutionId}/curricular?id=${params.get(
+      href: `/dashboard/manage-institutions/${institutionId}/curricular?id=${params.get(
         'id'
       )}`,
       last: true
@@ -343,7 +343,7 @@ const CurricularView = (props: CurricularViewProps) => {
                       {languages && languages.length > 0
                         ? languages.map(
                             (item, index) =>
-                              item.name +
+                              item.label +
                               `${languages.length - 1 === index ? '.' : ',' + ' '}`
                           )
                         : '--'}

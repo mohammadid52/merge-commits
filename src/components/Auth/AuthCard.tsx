@@ -1,13 +1,13 @@
+import Buttons from '@components/Atoms/Buttons';
+import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
+import {getAsset} from 'assets';
 import BrowserAlert from 'components/General/BrowserAlert';
 import {MessageProps} from 'components/Message/Message';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDeviceDetect from 'customHooks/deviceDetect';
-import {getAsset} from 'assets';
-import React, {ReactNode, useEffect, useState} from 'react';
-import {NavLink, useHistory} from 'react-router-dom';
 import gsap from 'gsap';
-import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
-import Buttons from '@components/Atoms/Buttons';
+import {ReactNode, useEffect, useState} from 'react';
+import {useHistory} from 'react-router-dom';
 
 interface AuthCardProps {
   children: ReactNode;

@@ -41,18 +41,18 @@ const EditTopic = () => {
   const breadCrumsList = [
     {
       title: BreadcrumsTitles[userLanguage]['HOME'],
-      url: '/dashboard',
+      href: '/dashboard',
       last: false
     },
     {
       title: topic?.learning?.value,
-      url: `/dashboard/manage-institutions/:instituteID/curricular?id=${curricularId}`,
+      href: `/dashboard/manage-institutions/:instituteID/curricular?id=${curricularId}`,
       last: false,
       goBack: true
     },
     {
       title: BreadcrumsTitles[userLanguage]['EditTopic'],
-      url: `/dashboard/curricular/${curricularId}/topic/edit/${topicId}`,
+      href: `/dashboard/curricular/${curricularId}/topic/edit/${topicId}`,
       last: true
     }
   ];

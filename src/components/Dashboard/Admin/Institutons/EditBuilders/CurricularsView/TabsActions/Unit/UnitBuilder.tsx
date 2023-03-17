@@ -30,7 +30,7 @@ interface IUnitData {
   secondary: string;
   priorities: string;
   objectives: string;
-  languages: {id: string; name: string; value: string}[];
+  languages: {id?: string; label: string; value: string}[];
   lessonHistory: any;
 }
 
@@ -73,7 +73,7 @@ const UnitBuilder = ({instId, curricular}: any) => {
     purpose: '',
     status: RoomStatus.ACTIVE,
     objectives: '',
-    languages: [{id: '1', name: 'English', value: 'EN'}],
+    languages: [{id: '1', label: 'English', value: 'EN'}],
     lessonHistory: undefined
   };
 
@@ -158,16 +158,13 @@ const UnitBuilder = ({instId, curricular}: any) => {
     {
       title: 'General Information',
       description: 'Capture core details of your Unit',
-      stepValue: 'overview',
-      isComplete: true
+      stepValue: 'overview'
     },
     {
       title: 'Lesson Plan manager',
       description: 'Assign lessons to Unit',
       stepValue: 'lessons',
-      disabled: !Boolean(unitId),
-      isComplete: false,
-      tooltipText: 'Add overview details in step 1 to continue'
+      disabled: !Boolean(unitId)
     }
   ];
   const currentStepComp = (currentStep: string) => {

@@ -18,10 +18,12 @@ import MaterialsCard from './MaterialsCard';
 interface AddNewLessonFormProps {
   formData: InitialData;
   designerListLoading: boolean;
+
   designersList: InputValueObject[];
   selectedDesigners: InputValueObject[];
   changeLessonType: (type: string) => void;
   setFormData: React.Dispatch<React.SetStateAction<InitialData>>;
+
   setSelectedDesigners: (designer: InputValueObject[]) => void;
   postLessonCreation: (lessonId: string, action?: string) => void;
   allMeasurement: {id: number; name: string; value: string; topic?: string}[];
@@ -114,19 +116,8 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
       lessonPlan.reduce((total: number, obj: any) => Number(obj.estTime) + total, 0) / 5
     ) * 5;
 
-  const selectLanguage = (id: string, name: string, value: string) => {
-    let updatedList;
-    const currentLanguages = formData.languages;
-    const selectedItem = currentLanguages.find((item) => item.id === id);
-    if (!selectedItem) {
-      updatedList = [...currentLanguages, {id, name, value}];
-    } else {
-      updatedList = currentLanguages.filter((item) => item.id !== id);
-    }
-    setFormData({
-      ...formData,
-      languages: updatedList
-    });
+  const selectLanguage = (item: string[], option: any) => {
+    setFormData({...formData, languages: option});
     setValidation({
       ...validation,
       languages: ''
@@ -134,16 +125,8 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
     setUnsavedChanges(true);
   };
 
-  const selectDesigner = (id: string, name: string, value: string) => {
-    let updatedList;
-    const currentDesigners = selectedDesigners;
-    const selectedItem = currentDesigners.find((item) => item.id === id);
-    if (!selectedItem) {
-      updatedList = [...currentDesigners, {id, name, value}];
-    } else {
-      updatedList = currentDesigners.filter((item) => item.id !== id);
-    }
-    setSelectedDesigners(updatedList);
+  const selectDesigner = (item: string[], option: any[]) => {
+    setSelectedDesigners(option);
   };
 
   const setEditorContent = (
@@ -350,7 +333,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
     name,
     type,
     duration = '1',
-    languages,
+    languages = [],
     purposeHtml,
     status = RoomStatus.ACTIVE,
     objectiveHtml,

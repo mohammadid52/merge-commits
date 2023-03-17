@@ -21,6 +21,7 @@ import {goBackBreadCrumb} from 'utilities/functions';
 import {v4 as uuidv4} from 'uuid';
 import AddQuestion from './QuestionComponents/AddQuestion';
 import SelectPreviousQuestion from './QuestionComponents/SelectPreviousQuestion';
+import {languageList, scopeList} from '@utilities/staticData';
 
 const AddProfileCheckpoint = () => {
   const history = useHistory();
@@ -61,39 +62,29 @@ const AddProfileCheckpoint = () => {
   const breadCrumsList = [
     {
       title: BreadcrumsTitles[userLanguage]['HOME'],
-      url: '/dashboard',
+      href: '/dashboard',
       last: false
     },
     {
       title: BreadcrumsTitles[userLanguage]['INSTITUTION_MANAGEMENT'],
-      url: '/dashboard/manage-institutions',
+      href: '/dashboard/manage-institutions',
       last: false
     },
     {
       title: BreadcrumsTitles[userLanguage]['INSTITUTION_INFO'],
-      url: `/dashboard/manage-institutions/institution/${institutionId}/staff`,
+      href: `/dashboard/manage-institutions/institution/${institutionId}/staff`,
       last: false
     },
     {
       title: BreadcrumsTitles[userLanguage]['CURRICULUMBUILDER'],
-      url: `/dashboard/manage-institutions/${institutionId}/curricular?id=${courseId}`,
+      href: `/dashboard/manage-institutions/${institutionId}/curricular?id=${courseId}`,
       last: false
     },
     {
       title: BreadcrumsTitles[userLanguage]['AddCheckpint'],
-      url: `/dashboard/manage-institutions/curricular/${courseId}/checkpoint/addNew`,
+      href: `/dashboard/manage-institutions/curricular/${courseId}/checkpoint/addNew`,
       last: true
     }
-  ];
-
-  const languageList = [
-    {id: 1, name: 'English', value: 'EN'},
-    {id: 2, name: 'Spanish', value: 'ES'}
-  ];
-
-  const scopeList = [
-    {id: 0, name: 'public'},
-    {id: 1, name: 'private'}
   ];
 
   const onInputChange = (e: any) => {
@@ -110,27 +101,19 @@ const AddProfileCheckpoint = () => {
     }
   };
 
-  const selectLanguage = (value: string, name: string, id: string) => {
+  const selectLanguage = (value: string, option: any) => {
     setCheckpointData({
       ...checkpointData,
       language: {
-        id,
-        name,
+        id: option.id,
+        name: option.label,
         value
       }
     });
   };
 
-  const selectDesigner = (id: string, name: string, value: string) => {
-    let updatedList;
-    const currentDesigners = selectedDesigners;
-    const selectedItem = currentDesigners.find((item: {id: string}) => item.id === id);
-    if (!selectedItem) {
-      updatedList = [...currentDesigners, {id, name, value}];
-    } else {
-      updatedList = currentDesigners.filter((item: {id: string}) => item.id !== id);
-    }
-    setSelectedDesigner(updatedList);
+  const selectDesigner = (_: string[], option: any[]) => {
+    setSelectedDesigner(option);
   };
 
   const showOptions = (quesId: string, options: any[]) => {
@@ -375,7 +358,7 @@ const AddProfileCheckpoint = () => {
                         AddProfileCheckpointDict[userLanguage]['typePlaceholder']
                       }
                       list={scopeList}
-                      onChange={(_, name) =>
+                      onChange={(name) =>
                         setCheckpointData({
                           ...checkpointData,
                           scope: name

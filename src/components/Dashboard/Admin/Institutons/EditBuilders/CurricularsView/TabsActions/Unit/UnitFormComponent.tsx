@@ -105,18 +105,10 @@ const UnitFormComponent = ({
     }
   };
 
-  const selectLanguage = (id: string, name: string, value: string) => {
-    let updatedList;
-    const currentLanguages = syllabusData.languages;
-    const selectedItem = currentLanguages.find((item) => item.id === id);
-    if (!selectedItem) {
-      updatedList = [...currentLanguages, {id, name, value}];
-    } else {
-      updatedList = currentLanguages.filter((item) => item.id !== id);
-    }
+  const selectLanguage = (_: string[], option: any[]) => {
     setSyllabusData({
       ...syllabusData,
-      languages: updatedList
+      languages: option
     });
   };
 
@@ -365,15 +357,9 @@ const UnitFormComponent = ({
           </div>
         ) : null}
 
-        <div className="flex my-8 justify-end">
+        <div className="flex gap-4 my-8 justify-end">
+          <Buttons label="Cancel" onClick={onCancel} transparent />
           <Buttons
-            btnClass="py-3 px-10 text-sm mr-4"
-            label="Cancel"
-            onClick={onCancel}
-            transparent
-          />
-          <Buttons
-            btnClass="py-3 px-10"
             label={AddSyllabusDict[userLanguage][loading ? 'saving' : 'save']}
             onClick={saveSyllabusDetails}
             disabled={loading ? true : false}

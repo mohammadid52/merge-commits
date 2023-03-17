@@ -14,7 +14,7 @@ import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import CommonActionsBtns from '@components/MicroComponents/CommonActionsBtns';
 import Table from '@components/Molecules/Table';
-import {BUTTONS} from '@dictionary/dictionary.iconoclast';
+
 import {RoomStatus} from 'API';
 import AddButton from 'atoms/Buttons/AddButton';
 import Selector from 'atoms/Form/Selector';
@@ -41,7 +41,7 @@ const UnitManager = ({
   const history = useHistory();
 
   const {userLanguage} = useGlobalContext();
-  const {CourseBuilderDict} = useDictionary();
+  const {CourseBuilderDict, BUTTONS} = useDictionary();
 
   // ~~~~~~~~~~~~~~~~ STATE ~~~~~~~~~~~~~~~~ //
   const [loading, setLoading] = useState(false);
@@ -95,8 +95,8 @@ const UnitManager = ({
     history.push(`/dashboard/manage-institutions/institution/${institutionId}/units/add`);
   };
 
-  const handleSelectSyllabus = (value: string, name: string, id: string) => {
-    setSelectedSyllabus({id, name, value});
+  const handleSelectSyllabus = (value: string, option: any) => {
+    setSelectedSyllabus({id: option.id, name: value, value});
   };
 
   const addNewSyllabusToCourse = async () => {

@@ -1804,12 +1804,12 @@ $translation-fab-width: 50px;
 }
 
 .ant-input-group .ant-input-affix-wrapper:not(:last-child) {
-  border-start-start-radius: 99px !important;
-  border-end-start-radius: 99px !important;
+  // border-start-start-radius: 99px !important;
+  // border-end-start-radius: 99px !important;
 }
 
 .ant-select-selector {
-  border-radius: 99px !important;
+  // border-radius: 99px !important;
 }
 
 .ant-btn {
@@ -1844,6 +1844,6 @@ $translation-fab-width: 50px;
   font-weight: 500;
 }
 
-textarea.ant-input {
-  border-radius: 9999px;
-}
+// textarea.ant-input {
+//   border-radius: 9999px;
+// }

@@ -24,7 +24,7 @@ const DownloadCsvButtons = ({
   CSVData
 }: DownloadCsvButtonsInterface) => {
   return (
-    <div className="w-auto  border-t-0 border-b-0 border-gray-400 border-dashed py-4 justify-between xl:justify-start md:gap-x-4 relative flex items-center">
+    <div className="w-auto   py-4 justify-between xl:justify-start md:gap-x-4 relative flex items-center">
       <Buttons
         disabled={!isCSVDownloadReady && lessonPDFData.length === 0}
         Icon={BsDownload}

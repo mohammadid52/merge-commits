@@ -1,10 +1,11 @@
-import { useGlobalContext } from "contexts/GlobalContext";
-import { UniversalBuilderDict } from "dictionary/dictionary.iconoclast";
-import { useCallback } from "react";
-import { useDropzone } from "react-dropzone";
-import { FaCloudUploadAlt } from "react-icons/fa";
-import { getImageFromS3Static } from "utilities/services";
-import { replaceAll } from "utilities/strings";
+import useDictionary from '@customHooks/dictionary';
+import {useGlobalContext} from 'contexts/GlobalContext';
+
+import {useCallback} from 'react';
+import {useDropzone} from 'react-dropzone';
+import {FaCloudUploadAlt} from 'react-icons/fa';
+import {getImageFromS3Static} from 'utilities/services';
+import {replaceAll} from 'utilities/strings';
 
 interface IULBFileUploader {
   acceptedFilesFormat?: string;
@@ -27,9 +28,11 @@ const ULBFileUploader = ({
   showPreview = true,
   updateFileUrl,
   customVideo = false,
-  isEditingMode = false,
+  isEditingMode = false
 }: IULBFileUploader) => {
-  const { userLanguage } = useGlobalContext();
+  const {userLanguage} = useGlobalContext();
+
+  const {UniversalBuilderDict} = useDictionary();
   const otherProps: any = {};
   if (acceptedFilesFormat) {
     otherProps.accept = acceptedFilesFormat;
@@ -37,8 +40,8 @@ const ULBFileUploader = ({
   const onDrop = useCallback((acceptedFiles: (File | null)[]) => {
     acceptedFiles.forEach((file: File | null) => {
       const reader = new FileReader();
-      reader.onabort = () => console.log("file reading was aborted");
-      reader.onerror = () => console.log("file reading has failed");
+      reader.onabort = () => console.log('file reading was aborted');
+      reader.onerror = () => console.log('file reading has failed');
       reader.onload = () => {
         // Do whatever you want with the file contents
         // const binaryStr = reader.result;
@@ -47,16 +50,16 @@ const ULBFileUploader = ({
       file && reader.readAsArrayBuffer(file);
     });
   }, []);
-  const { getRootProps, getInputProps, fileRejections } = useDropzone({
+  const {getRootProps, getInputProps, fileRejections} = useDropzone({
     onDrop,
     multiple,
-    ...otherProps,
+    ...otherProps
   });
-  const label: string = multiple ? "some files" : "file";
+  const label: string = multiple ? 'some files' : 'file';
 
   const getImageFile = (fileUrl: any) =>
     isEditingMode
-      ? fileUrl.includes("blob")
+      ? fileUrl.includes('blob')
         ? fileUrl
         : getImageFromS3Static(fileUrl)
       : fileUrl;
@@ -64,7 +67,7 @@ const ULBFileUploader = ({
   return (
     <div {...getRootProps()} className={classString}>
       <input {...getInputProps()} />
-      <div className={"flex flex-col items-center justify-center h-full"}>
+      <div className={'flex flex-col items-center justify-center h-full'}>
         {showPreview && fileUrl ? (
           customVideo ? (
             <div className="w-56 h-auto mx-auto rounded">
@@ -85,8 +88,8 @@ const ULBFileUploader = ({
             <FaCloudUploadAlt size="50" className="text-gray-400" />
             <p className="text-center mt-2 text-gray-400">
               {replaceAll(
-                UniversalBuilderDict[userLanguage]["FORMS"]["FILE_UPLOAD_TEXT"],
-                { label }
+                UniversalBuilderDict[userLanguage]['FORMS']['FILE_UPLOAD_TEXT'],
+                {label}
               )}
             </p>
           </div>
@@ -97,7 +100,7 @@ const ULBFileUploader = ({
           ? fileRejections[0].errors[0].message
           : error
           ? error
-          : ""}
+          : ''}
       </p>
     </div>
   );

@@ -122,8 +122,8 @@ const LessonPlanManager = ({
     );
   };
 
-  const selectLesson = (value: string, name: string, id: string) => {
-    setSelectedLesson({id, name, value});
+  const selectLesson = (value: string, option: any) => {
+    setSelectedLesson({id: option.id, name: value, value});
   };
 
   const closeLessonAction = () => {

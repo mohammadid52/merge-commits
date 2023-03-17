@@ -4,6 +4,7 @@ import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UICo
 import Table from '@components/Molecules/Table';
 import {logError} from '@graphql/functions';
 import {getFormatedDate} from '@utilities/utils';
+import {Divider} from 'antd';
 import SectionTitleV3 from 'atoms/SectionTitleV3';
 import * as customQueries from 'customGraphql/customQueries';
 import useAuth from 'customHooks/useAuth';
@@ -464,6 +465,8 @@ const Csv = () => {
           clearCSVData={clearCSVData}
         />
 
+        <Divider />
+
         <DownloadCsvButtons
           isCSVDownloadReady={isCSVDownloadReady}
           selectedSurvey={selectedSurvey}
@@ -472,7 +475,7 @@ const Csv = () => {
           mappedHeaders={mappedHeaders}
           lessonPDFData={lessonPDFData}
         />
-
+        <Divider />
         <div className="w-full">
           <div className="w-auto my-4">
             <SectionTitleV3 title={'Survey Results'} />

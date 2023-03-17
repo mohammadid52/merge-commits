@@ -1,19 +1,16 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import React, {useEffect, useState} from 'react';
-import {BsFillInfoCircleFill} from 'react-icons/bs';
-import {useHistory} from 'react-router';
 
 import {useGlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
 
 import useAuth from '@customHooks/useAuth';
 import {logError} from '@graphql/functions';
-import {getAsset} from 'assets';
+import {Breadcrumb} from 'antd';
 import HeroBanner from 'components/Header/HeroBanner';
 import useDictionary from 'customHooks/dictionary';
-import {breadcrumbsRoutes} from 'utilities/breadcrumb';
-import {Breadcrumb} from 'antd';
 import {AiOutlineHome} from 'react-icons/ai';
+import {breadcrumbsRoutes} from 'utilities/breadcrumb';
 
 export type BreadCrumb = {
   title: string;
@@ -40,42 +37,17 @@ const BreadcrumbsWithBanner: React.FC<BreadCrumbProps> = (props: BreadCrumbProps
     institutionId,
     institutionData,
     items = [],
-    separateGoBackButton = '',
-    unsavedChanges = false,
-    toggleModal,
+
     bannerImage,
     title
   } = props;
-  const {state, theme, userLanguage, dispatch, clientKey} = useGlobalContext();
+  const {state, userLanguage} = useGlobalContext();
 
   const user = state.temp.user;
 
   const {BreadcrumsTitles, Institute_info} = useDictionary();
   const pathname = location.pathname.replace(/\/$/, '');
   const currentPath = pathname.substring(pathname.lastIndexOf('/') + 1);
-  const themeColor = getAsset(clientKey, 'themeClassName');
-  const history = useHistory();
-  const [openWalkThroughModal, setOpenWalkThroughModal] = useState(false);
-
-  const goToUrl = (href: string) => {
-    if (unsavedChanges) {
-      toggleModal(href);
-    } else {
-      setLessonData({});
-      setRoomData({});
-      setCourseData({});
-      setUnitData({});
-
-      dispatch({
-        type: 'UPDATE_TEMP_USER',
-        payload: {
-          user: null
-        }
-      });
-
-      history.push(href);
-    }
-  };
 
   const [lessonData, setLessonData] = useState<{
     id?: string;

@@ -1,4 +1,4 @@
-import {RoomStatus, TeachingStyle, ClassroomType} from 'API';
+import {ClassroomType, RoomStatus, TeachingStyle} from 'API';
 import {API, graphqlOperation} from 'aws-amplify';
 import {useEffect, useState} from 'react';
 import {useHistory, useLocation, useParams, useRouteMatch} from 'react-router-dom';
@@ -21,14 +21,14 @@ import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import {useNotifications} from '@contexts/NotificationContext';
 import useAuth from '@customHooks/useAuth';
-import {LessonEditDict} from '@dictionary/dictionary.iconoclast';
+
+import {useQuery} from '@customHooks/urlParam';
 import {checkUniqRoomName, listInstitutions, logError} from '@graphql/functions';
+import {methods, statusList, typeList} from '@utilities/staticData';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import moment from 'moment';
 import {getFilterORArray} from 'utilities/strings';
-import {methods, statusList, typeList} from '@utilities/staticData';
-import {useQuery} from '@customHooks/urlParam';
 
 export const fetchSingleCoTeacher = async (roomId: string) => {
   const result: any = await API.graphql(
@@ -151,7 +151,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
   >([]);
   const [allInstitutions, setAllInstitutions] = useState<any[]>([]);
 
-  const {RoomBuilderdict, RoomEDITdict} = useDictionary();
+  const {RoomBuilderdict, RoomEDITdict, LessonEditDict} = useDictionary();
 
   const params = useQuery(location.search);
 
@@ -207,20 +207,8 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
     setRoomData({...roomData, type: name});
   };
 
-  const selectCoTeacher = (id: string, name: string, value: string) => {
-    let updatedList;
-    const currentCoTeachers = selectedCoTeachers;
-    const selectedItem = currentCoTeachers.find((item) => item.id === id);
-
-    if (!selectedItem) {
-      const selectedItem = coTeachersList.find((item) => item.id === id);
-      updatedList = [...currentCoTeachers, {id, name, value, ...selectedItem}];
-    } else {
-      updatedList = currentCoTeachers.filter((item) => item.id !== id);
-    }
-    setUnsavedChanges(true);
-
-    setSelectedCoTeachers(updatedList);
+  const selectCoTeacher = (_: string[], option: any[]) => {
+    setSelectedCoTeachers(option);
   };
 
   const editInputField = (e: any) => {
@@ -1062,6 +1050,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
                     withAvatar
                     disabledText="Classroom inactive"
                     disabled={status === RoomStatus.INACTIVE}
+                    // @ts-ignore
                     selectedItems={selectedCoTeachers}
                     list={coTeachersList}
                     placeholder={RoomEDITdict[userLanguage]['CO_TEACHER_PLACEHOLDER']}

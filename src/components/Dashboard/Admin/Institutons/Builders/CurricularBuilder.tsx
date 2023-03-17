@@ -22,7 +22,7 @@ import DroppableMedia from 'molecules/DroppableMedia';
 import React, {useEffect, useState} from 'react';
 import {IoImage} from 'react-icons/io5';
 import {useHistory, useLocation} from 'react-router-dom';
-import {languageList} from 'utilities/staticData';
+import {languageList, schooltypeList} from 'utilities/staticData';
 import ProfileCropModal from 'components/Dashboard/Profile/ProfileCropModal';
 
 interface InitialData {
@@ -118,46 +118,17 @@ const CurricularBuilder = () => {
 
   // Temporary List
   //*******//
-  const typeList = [
-    {id: 0, value: 'In-School Programming', name: 'In-School Programming'},
-    {
-      id: 1,
-      value: 'After-School Programming',
-      name: 'After-School Programming'
-    },
-    {
-      id: 2,
-      value: 'Summer Intensives (2 week programming)',
-      name: 'Summer Intensives (2 week programming)'
-    },
-    {id: 3, value: "Writer's Retreat", name: "Writer's Retreat"}
-  ];
+
   //*****//
 
-  const selectLanguage = (id: string, name: string, value: string) => {
-    let updatedList;
-    const currentLanguages = curricularData.languages;
-    const selectedItem = currentLanguages.find((item) => item.id === id);
-    if (!selectedItem) {
-      updatedList = [...currentLanguages, {id, name, value}];
-    } else {
-      updatedList = currentLanguages.filter((item) => item.id !== id);
-    }
+  const selectLanguage = (_: string[], option: any) => {
     setCurricularData({
       ...curricularData,
-      languages: updatedList
+      languages: option
     });
   };
-  const selectDesigner = (id: string, name: string, value: string) => {
-    let updatedList;
-    const currentDesigners = selectedDesigners;
-    const selectedItem = currentDesigners.find((item) => item.id === id);
-    if (!selectedItem) {
-      updatedList = [...currentDesigners, {id, name, value}];
-    } else {
-      updatedList = currentDesigners.filter((item) => item.id !== id);
-    }
-    setSelectedDesigners(updatedList);
+  const selectDesigner = (_: string[], option: any) => {
+    setSelectedDesigners(option);
   };
 
   const saveCurriculum = async () => {
@@ -430,10 +401,8 @@ const CurricularBuilder = () => {
               </div>
 
               <div className="px-3 py-4">
-                <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
-                  {CurricularBuilderdict[userLanguage]['LANGUAGE']}
-                </label>
                 <MultipleSelector
+                  label={CurricularBuilderdict[userLanguage]['LANGUAGE']}
                   selectedItems={languages}
                   placeholder={CurricularBuilderdict[userLanguage]['LANGUAGE']}
                   list={languageList}
@@ -442,10 +411,8 @@ const CurricularBuilder = () => {
               </div>
 
               <div className="px-3 py-4">
-                <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
-                  {CurricularBuilderdict[userLanguage]['DESIGNER']}
-                </label>
                 <MultipleSelector
+                  label={CurricularBuilderdict[userLanguage]['DESIGNER']}
                   selectedItems={selectedDesigners}
                   placeholder={CurricularBuilderdict[userLanguage]['DESIGNER']}
                   list={designersList}
@@ -458,9 +425,9 @@ const CurricularBuilder = () => {
                 </label>
                 <Selector
                   placeholder={CurricularBuilderdict[userLanguage]['TYPE']}
-                  list={typeList}
-                  onChange={(_: any, name: string) => {
-                    setCurricularData({...curricularData, type: name});
+                  list={schooltypeList}
+                  onChange={(value: string) => {
+                    setCurricularData({...curricularData, type: value});
                   }}
                   selectedItem={type || CurricularBuilderdict[userLanguage]['TYPE']}
                 />

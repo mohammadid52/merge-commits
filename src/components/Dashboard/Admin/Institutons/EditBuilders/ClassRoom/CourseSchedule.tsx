@@ -285,9 +285,7 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
               </span>
               <div className="mr-2 w-64">
                 <Selector
-                  onChange={(_: string, name: string) =>
-                    handleSelection(name, 'startTime')
-                  }
+                  onChange={(name: string) => handleSelection(name, 'startTime')}
                   selectedItem={scheduleData.startTime}
                   list={timeIntervalOptions}
                   placeholder={CourseScheduleDict[userLanguage].PLACEHOLDERS.START_TIME}
@@ -299,7 +297,7 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
               <span className="w-auto inline-flex items-center ml-2 mr-4">to</span>
               <div className="mr-2 w-64">
                 <Selector
-                  onChange={(_: string, name: string) => handleSelection(name, 'endTime')}
+                  onChange={(name: string) => handleSelection(name, 'endTime')}
                   selectedItem={scheduleData.endTime}
                   list={timeIntervalOptions}
                   placeholder={CourseScheduleDict[userLanguage].PLACEHOLDERS.END_TIME}
@@ -314,9 +312,7 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
                 </span>
                 <div className="2xl:w-64 w-full mr-2 2xl:mr-0">
                   <Selector
-                    onChange={(_: string, name: string) =>
-                      handleSelection(name, 'frequency')
-                    }
+                    onChange={(name: string) => handleSelection(name, 'frequency')}
                     selectedItem={scheduleData.frequency}
                     list={frequencyOptions}
                     placeholder={CourseScheduleDict[userLanguage].PLACEHOLDERS.FREQUENCY}
@@ -329,9 +325,7 @@ const CourseSchedule = ({roomData}: ICourseScheduleProps) => {
                 </span>
                 <div className="2xl:w-64 w-full mr-2 2xl:mr-0">
                   <Selector
-                    onChange={(_: string, name: string) =>
-                      handleSelection(name, 'weekDay')
-                    }
+                    onChange={(name: string) => handleSelection(name, 'weekDay')}
                     selectedItem={scheduleData.weekDay}
                     list={weekdaysOption}
                     placeholder={CourseScheduleDict[userLanguage].PLACEHOLDERS.WEEK_DAY}

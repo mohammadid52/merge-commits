@@ -303,28 +303,30 @@ const DownloadCsvTitleComponent = ({
               <div className="grid grid-cols-2 xl:grid-cols-4  gap-4">
                 {/* {isSuperAdmin && ( */}
                 <Selector
-                  loading={institutionsLoading}
-                  width="xl:w-64"
-                  selectedItem={selectedInst ? selectedInst.name : ''}
+                  width={250}
+                  showSearch
                   placeholder={CsvDict[userLanguage]['SELECT_INST']}
                   list={institutions}
-                  onChange={(value, name, id) => onInstSelect(id, name, value)}
+                  loading={institutionsLoading}
+                  selectedItem={selectedInst ? selectedInst.label : ''}
+                  onChange={(value, option: any) => onInstSelect(option.id, value, value)}
                 />
                 {/* )} */}
 
                 <div className="w-auto relative">
                   <Selector
+                    showSearch
                     dataCy="analytics-classroom"
-                    width="xl:w-64"
+                    width={250}
                     disabled={!selectedInst?.id}
                     setHoveringItem={setHoveringItem}
                     loading={classRoomLoading}
-                    selectedItem={selectedClassRoom ? selectedClassRoom.name : ''}
+                    selectedItem={selectedClassRoom ? selectedClassRoom.label : ''}
                     placeholder="select classroom"
                     list={instClassRooms}
-                    onChange={(value, name, id) => {
+                    onChange={(value, option: any) => {
                       setHoveringItem({});
-                      onClassRoomSelect(id, name, value);
+                      onClassRoomSelect(option.id, value, value);
                     }}
                   />
                   {currentSelectedClassroomData && (
@@ -401,24 +403,28 @@ const DownloadCsvTitleComponent = ({
                 <Selector
                   dataCy="analytics-unit"
                   loading={unitsLoading}
-                  selectedItem={selectedUnit ? selectedUnit.name : ''}
+                  showSearch
+                  selectedItem={selectedUnit ? selectedUnit.label : ''}
                   placeholder="select unit"
-                  width="xl:w-64"
+                  width={250}
                   list={units}
                   disabled={!selectedCurriculum}
-                  onChange={(value, name, id) => onUnitSelect(id, name, value)}
+                  onChange={(value, option: any) => onUnitSelect(option.id, value, value)}
                 />
 
                 <Selector
                   dataCy="analytics-survey"
                   direction="left"
-                  width="xl:w-64"
+                  width={250}
+                  showSearch
                   loading={surveysLoading}
                   disabled={!selectedUnit}
-                  selectedItem={selectedSurvey ? selectedSurvey.name : ''}
+                  selectedItem={selectedSurvey ? selectedSurvey.label : ''}
                   placeholder="select survey"
                   list={surveys}
-                  onChange={(value, name, id) => onSurveySelect(id, name, value)}
+                  onChange={(value, option: any) =>
+                    onSurveySelect(option.id, value, value)
+                  }
                 />
               </div>
             }

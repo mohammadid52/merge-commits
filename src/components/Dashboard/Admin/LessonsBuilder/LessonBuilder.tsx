@@ -12,6 +12,7 @@ import useDictionary from 'customHooks/dictionary';
 import {useQuery} from 'customHooks/urlParam';
 import * as mutations from 'graphql/mutations';
 import {LessonPlansProps, SavedLessonDetailsProps} from 'interfaces/LessonInterfaces';
+import {uniqBy} from 'lodash';
 import ModalPopUp from 'molecules/ModalPopUp';
 import {useEffect, useState} from 'react';
 import {FaQuestionCircle, FaRegEye} from 'react-icons/fa';
@@ -37,7 +38,7 @@ export interface InitialData {
   status: RoomStatus;
   notes?: string;
   notesHtml?: string;
-  languages: {id: string; name: string; value: string}[];
+  languages: {label: string; value: string}[];
   institution?: InputValueObject;
   language: string[];
   imageCaption?: string;
@@ -49,7 +50,7 @@ export interface InitialData {
 }
 export interface InputValueObject {
   id: string;
-  name: string;
+  label: string;
   value: string;
 }
 interface LessonBuilderProps {
@@ -73,7 +74,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     name: '',
     status: RoomStatus.ACTIVE,
     id: '',
-    type: {id: '', name: 'Lesson', value: ''},
+    type: {id: '', label: 'Lesson', value: ''},
     duration: '1',
     purpose: '',
     purposeHtml: '<p></p>',
@@ -82,8 +83,8 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     objectiveHtml: '<p></p>',
     notes: '',
     notesHtml: '<p></p>',
-    languages: [{id: '1', name: 'English', value: 'EN'}],
-    institution: {id: instId, name: '', value: instId},
+    languages: [{label: 'English', value: 'EN'}],
+    institution: {id: instId, label: '', value: instId},
     language: [''],
     imageUrl: '',
     imageCaption: '',
@@ -151,13 +152,25 @@ const LessonBuilder = (props: LessonBuilderProps) => {
           filter: {institutionID: {eq: institutionID}}
         })
       );
-      const listStaffs = staffList.data.listStaff;
-      const updatedList = listStaffs?.items.map((item: any) => ({
-        id: item?.id,
-        name: `${item?.staffMember?.firstName || ''} ${item?.staffMember.lastName || ''}`,
-        value: `${item?.staffMember?.firstName || ''} ${item?.staffMember.lastName || ''}`
-      }));
-      setDesignersList(updatedList);
+      const listStaffs = staffList.data.listStaff?.items || [];
+      const updatedList = listStaffs
+        ?.map((item: any) => {
+          if (Boolean(item?.staffMember)) {
+            return {
+              id: item?.id,
+              label: `${item?.staffMember?.firstName || ''} ${
+                item?.staffMember.lastName || ''
+              }`,
+              value: `${item?.staffMember?.firstName || ''} ${
+                item?.staffMember.lastName || ''
+              }`
+            };
+          }
+          return null;
+        })
+        .filter(Boolean);
+
+      setDesignersList(uniqBy(updatedList, 'label'));
       setDesignersListLoading(false);
     } catch (error) {
       setDesignersListLoading(false);
@@ -574,7 +587,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
           <UnitList
             curricular={curriculumList}
             instId={formData?.institution?.id}
-            instName={formData?.institution?.name}
+            instName={formData?.institution?.label}
             addedSyllabus={addedSyllabus}
             isFromLesson
             setAddedSyllabus={setAddedSyllabus}

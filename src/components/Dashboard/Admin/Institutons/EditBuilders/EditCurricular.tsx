@@ -16,11 +16,11 @@ import MultipleSelector from 'atoms/Form/MultipleSelector';
 import Selector from 'atoms/Form/Selector';
 import TextArea from 'atoms/Form/TextArea';
 import useDictionary from 'customHooks/dictionary';
-import {LessonEditDict} from 'dictionary/dictionary.iconoclast';
+
 import DroppableMedia from 'molecules/DroppableMedia';
 import ModalPopUp from 'molecules/ModalPopUp';
 import {getImageFromS3} from 'utilities/services';
-import {languageList} from 'utilities/staticData';
+import {languageList, schooltypeList} from 'utilities/staticData';
 
 interface EditCurricularProps {
   closeAction: () => void;
@@ -71,7 +71,7 @@ const EditCurricular = (props: EditCurricularProps) => {
   const [saving, setSaving] = useState(false);
 
   const {userLanguage} = useGlobalContext();
-  const {EditCurriculardict} = useDictionary();
+  const {EditCurriculardict, LessonEditDict} = useDictionary();
 
   const [_, setUnsavedChanges] = useState(false);
   const [warnModal, setWarnModal] = useState({
@@ -105,35 +105,19 @@ const EditCurricular = (props: EditCurricularProps) => {
       });
     }
   };
-  const selectLanguage = (id: string, name: string, value: string) => {
-    let updatedList;
-    const currentLanguages = curricularData.languages;
-    const selectedItem = currentLanguages.find((item) => item.id === id);
-    if (!selectedItem) {
-      updatedList = [...currentLanguages, {id, name, value}];
-    } else {
-      updatedList = currentLanguages.filter((item) => item.id !== id);
-    }
+  const selectLanguage = (_: string[], option: any[]) => {
     setUnsavedChanges(true);
 
     setCurricularData({
       ...curricularData,
-      languages: updatedList
+      languages: option
     });
   };
 
-  const selectDesigner = (id: string, name: string, value: string) => {
-    let updatedList;
-    const currentDesigners = selectedDesigners;
-    const selectedItem = currentDesigners.find((item) => item.id === id);
-    if (!selectedItem) {
-      updatedList = [...currentDesigners, {id, name, value}];
-    } else {
-      updatedList = currentDesigners.filter((item) => item.id !== id);
-    }
+  const selectDesigner = (_: string[], option: any[]) => {
     setUnsavedChanges(true);
 
-    setSelectedDesigners(updatedList);
+    setSelectedDesigners(option);
   };
 
   const fetchPersonsList = async () => {
@@ -345,14 +329,6 @@ const EditCurricular = (props: EditCurricularProps) => {
   const mediaRef = React.useRef<any>(null);
   const handleImage = () => mediaRef?.current?.click();
 
-  // Temporary List
-  //*******//
-  const typeList = [
-    {id: 0, name: 'In-School Programming'},
-    {id: 1, name: 'After-School Programming'},
-    {id: 2, name: 'Summer Intensives (2 week programming)'},
-    {id: 3, name: "Writer's Retreat"}
-  ];
   //*****//
 
   const {name, description, objectives, type, languages, summary} = curricularData;
@@ -401,10 +377,8 @@ const EditCurricular = (props: EditCurricularProps) => {
             </div>
 
             <div className="px-3 py-4">
-              <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
-                {EditCurriculardict[userLanguage]['LANGUAGE']}
-              </label>
               <MultipleSelector
+                label={EditCurriculardict[userLanguage]['LANGUAGE']}
                 selectedItems={languages}
                 placeholder={EditCurriculardict[userLanguage]['LANGUAGE']}
                 list={languageList}
@@ -413,10 +387,8 @@ const EditCurricular = (props: EditCurricularProps) => {
             </div>
             <div className="grid grid-cols-2">
               <div className="px-3 py-4">
-                <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
-                  {EditCurriculardict[userLanguage]['DESIGNER']}
-                </label>
                 <MultipleSelector
+                  label={EditCurriculardict[userLanguage]['DESIGNER']}
                   selectedItems={selectedDesigners}
                   placeholder={EditCurriculardict[userLanguage]['DESIGNER']}
                   list={designersList}
@@ -424,14 +396,12 @@ const EditCurricular = (props: EditCurricularProps) => {
                 />
               </div>
               <div className="px-3 py-4">
-                <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
-                  {EditCurriculardict[userLanguage]['TYPE']}
-                </label>
                 <Selector
+                  label={EditCurriculardict[userLanguage]['TYPE']}
                   placeholder={EditCurriculardict[userLanguage]['TYPE']}
-                  list={typeList}
-                  onChange={(_: any, name: string) => {
-                    setCurricularData({...curricularData, type: name});
+                  list={schooltypeList}
+                  onChange={(value: string) => {
+                    setCurricularData({...curricularData, type: value});
                   }}
                   selectedItem={type || EditCurriculardict[userLanguage]['TYPE']}
                 />

@@ -267,10 +267,10 @@ const LessonDetails = ({
             label={AddNewLessonFormDict[userLanguage]['NAME']}
             inputRef={inputRef}
             id="name"
+            error={validation.name}
             onChange={onInputChange}
             name="name"
           />
-          {validation.name && <p className="text-red-600 text-sm">{validation.name}</p>}
         </div>
 
         <div className="">
@@ -278,12 +278,12 @@ const LessonDetails = ({
             disabled={lessonId !== ''}
             isRequired
             label={AddNewLessonFormDict[userLanguage]['SELECTTYPE']}
-            selectedItem={type.name}
+            selectedItem={type.label}
+            error={validation.type}
             placeholder={AddNewLessonFormDict[userLanguage]['TYPE']}
             list={lessonTypeList}
             onChange={(val, option: any) => onSelectOption(val, val, option.id, 'type')}
           />
-          {validation.type && <p className="text-red-600 text-sm">{validation.type}</p>}
         </div>
         <div className="">
           <Selector
@@ -306,12 +306,12 @@ const LessonDetails = ({
         </div>
         <div className="">
           <MultipleSelector
-            // disabled={lessonId !== ''}
             isRequired
             label={AddNewLessonFormDict[userLanguage]['SELECTLANG']}
-            selectedItems={languages}
             placeholder={AddNewLessonFormDict[userLanguage]['LANGUAGE']}
             list={languageList}
+            width="100%"
+            selectedItems={languages}
             onChange={selectLanguage}
           />
         </div>
@@ -320,6 +320,7 @@ const LessonDetails = ({
           <MultipleSelector
             label={AddNewLessonFormDict[userLanguage]['SELECTDESIGNER']}
             selectedItems={selectedDesigners}
+            width="100%"
             placeholder={AddNewLessonFormDict[userLanguage]['DESIGNER']}
             list={designersList}
             onChange={selectDesigner}

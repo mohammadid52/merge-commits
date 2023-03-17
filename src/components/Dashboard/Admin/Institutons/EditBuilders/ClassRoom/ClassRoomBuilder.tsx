@@ -9,7 +9,6 @@ import {getLocalStorageData} from '@utilities/localStorage';
 import StepComponent, {IStepElementInterface} from 'atoms/StepComponent';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
-import {LessonEditDict} from 'dictionary/dictionary.iconoclast';
 import * as queries from 'graphql/queries';
 import ModalPopUp from 'molecules/ModalPopUp';
 import {BsArrowLeft} from 'react-icons/bs';
@@ -46,7 +45,7 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
     isError: false
   });
 
-  const {CommonlyUsedDict, RoomEDITdict} = useDictionary();
+  const {CommonlyUsedDict, LessonEditDict, RoomEDITdict} = useDictionary();
 
   const [warnModal, setWarnModal] = useState({
     show: false,

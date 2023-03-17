@@ -383,7 +383,6 @@ const RoomsList = (props: RoomListProps) => {
                     list={institutionList}
                     selectedItem={selectedInstitution?.label}
                     onChange={instituteChange}
-                    disableSort={false}
                   />
                 )}
                 <SearchInput
@@ -396,21 +395,8 @@ const RoomsList = (props: RoomListProps) => {
                   closeAction={() => {
                     removeSearchAction();
                   }}
-                  // style={`mr-4 w-auto md:w-40 lg:w-48 mb-8`}
                 />
-                {/* <Selector
-                placeholder={InstitueRomms[userLanguage]['SELECT_STAFF']}
-                list={staffList}
-                selectedItem={selectedStaff?.name}
-                onChange={handleStaffChange}
-                arrowHidden={true}
-                additionalClass={`w-auto md:w-52 lg:w-48 ${
-                  isSuperAdmin || isAdmin || isBuilder ? 'mr-4' : ''
-                }`}
-                isClearable
-                onClear={onStaffSelectionRemove}
-              /> */}
-                {/* </div> */}
+
                 {(!isSuperAdmin || !isAdmin || !isBuilder) && (
                   <AddButton
                     label={InstitueRomms[userLanguage]['BUTTON']['ADD']}

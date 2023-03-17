@@ -1,6 +1,6 @@
 import {Select} from 'antd';
 import {SizeType} from 'antd/es/config-provider/SizeContext';
-import {orderBy} from 'lodash';
+import {orderBy, uniqBy} from 'lodash';
 import React from 'react';
 import Label from './Label';
 
@@ -18,7 +18,7 @@ interface SelectorProps {
   arrowHidden?: boolean;
   placeholder: string;
   placement?: 'bottomLeft' | 'bottomRight' | 'topLeft' | 'topRight' | undefined;
-  onChange: (value: string, option: Item | Item[]) => void;
+  onChange: (value: string, option: Item) => void;
   disabled?: boolean;
   disableSort?: boolean;
   isRequired?: boolean;
@@ -54,7 +54,7 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
     showSearch = false,
     loading = false,
     size = 'large',
-    width = 250,
+    width = '100%',
     disableSort = false,
     placement,
     label,
@@ -67,18 +67,18 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
     <div>
       {label && <Label dark={false} label={label} isRequired={isRequired} />}
       <Select
-        defaultValue={selectedItem}
-        value={selectedItem}
         placeholder={placeholder}
+        value={selectedItem}
         status={error.length === 0 ? '' : 'error'}
         style={{width, borderRadius: 99}}
         disabled={disabled}
         showSearch={showSearch}
         size={size}
         loading={loading}
+        // @ts-ignore
         onChange={onChange}
         placement={placement}
-        options={sortedList}
+        options={uniqBy(sortedList, 'label')}
       />
     </div>
   );

@@ -36,14 +36,29 @@ export const emojiList = [
 ];
 
 export const languageList = [
-  {id: '1', label: 'English', value: 'EN'},
-  {id: '2', label: 'Spanish', value: 'ES'}
+  {label: 'English', value: 'EN'},
+  {label: 'Spanish', value: 'ES'}
 ];
 
 export const lessonTypeList: any = [
   {id: '1', label: 'Lesson', value: 'lesson'},
   {id: '2', label: 'Assessment', value: 'assessment'},
   {id: '3', label: 'Survey', value: 'survey'}
+];
+
+export const schooltypeList = [
+  {id: 0, value: 'In-School Programming', label: 'In-School Programming'},
+  {
+    id: 1,
+    value: 'After-School Programming',
+    label: 'After-School Programming'
+  },
+  {
+    id: 2,
+    value: 'Summer Intensives (2 week programming)',
+    label: 'Summer Intensives (2 week programming)'
+  },
+  {id: 3, value: "Writer's Retreat", label: "Writer's Retreat"}
 ];
 
 export const tinting: any = [
@@ -542,4 +557,9 @@ export const methods = [
     label: 'Academic',
     value: TeachingStyle.ACADEMIC
   }
+];
+
+export const scopeList = [
+  {id: 0, label: 'Public', value: 'public'},
+  {id: 1, label: 'Private', value: 'private'}
 ];

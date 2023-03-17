@@ -73,7 +73,7 @@ const FormInput: React.FC<FormInputProps> = ({
     maxLength,
     minLength: min,
     size: 'large' as SizeType,
-    className: 'rounded-full',
+    className: '',
     placeholder: placeHolder,
     status: error ? 'error' : '',
     prefix: error ? <BiErrorCircle /> : Icon ? <Icon /> : undefined,
@@ -87,7 +87,7 @@ const FormInput: React.FC<FormInputProps> = ({
         <Label disabled={disabled} dark={dark} label={label} isRequired={isRequired} />
       )}
       {textarea ? (
-        <TextArea rows={rows} className="rounded-full" autoSize {...inputProps} />
+        <TextArea rows={rows} {...inputProps} />
       ) : type === 'password' ? (
         <Tooltip trigger={['focus']} placement="topLeft">
           <Password

@@ -61,6 +61,7 @@ const TitleBar = ({
     withButton={
       <div className="w-auto">
         <Selector
+          width={250}
           selectedItem={selectedFilterType.name}
           list={filterList}
           additionalClass="md:w-56"

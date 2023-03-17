@@ -35,18 +35,18 @@ const EditMeasurement = () => {
   const breadCrumsList = [
     {
       title: BreadcrumsTitles[userLanguage]['HOME'],
-      url: '/dashboard',
+      href: '/dashboard',
       last: false
     },
     {
       title: measurement.topic.value,
-      url: `/dashboard/manage-institutions/:instituteID/curricular?id=${curricularId}`,
+      href: `/dashboard/manage-institutions/:instituteID/curricular?id=${curricularId}`,
       last: false,
       goBack: true
     },
     {
       title: BreadcrumsTitles[userLanguage]['EditMeasurement'],
-      url: `/dashboard/curricular/${curricularId}/measurement/edit/${measurementId}'}`,
+      href: `/dashboard/curricular/${curricularId}/measurement/edit/${measurementId}'}`,
       last: true
     }
   ];
