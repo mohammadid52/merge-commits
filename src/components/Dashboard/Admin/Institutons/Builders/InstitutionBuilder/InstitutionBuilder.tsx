@@ -103,35 +103,31 @@ const InstitutionBuilder = ({
   const breadCrumbsList = [
     {
       title: BreadcrumsTitles[userLanguage]['HOME'],
-      url: '/dashboard',
+      href: '/dashboard',
       last: false
     },
     {
       title: BreadcrumsTitles[userLanguage]['INSTITUTION_MANAGEMENT'],
-      url: '/dashboard/manage-institutions',
+      href: '/dashboard/manage-institutions',
       last: false
     },
     {
       title: institutionInfo.name || BreadcrumsTitles[userLanguage]['ADD_INSTITUTION'],
-      url: `/dashboard/manage-institutions/add`,
+      href: `/dashboard/manage-institutions/add`,
       last: true
     }
   ];
   const steps: IStepElementInterface[] = [
     {
       title: 'General Information',
-      description: 'Capture core details of your institution',
-      stepValue: 'overview',
-      isComplete: true
+      subTitle: 'Capture core details of your institution',
+      stepValue: 'overview'
     },
     {
       title: 'Service Vendors (Optional)',
       description: '',
       stepValue: 'service_vendors',
-      disabled: !Boolean(institutionInfo.id),
-      isComplete: false,
-      tooltipText:
-        'You have to complete the first step before the second step is activated'
+      disabled: !Boolean(institutionInfo.id)
     }
   ];
 

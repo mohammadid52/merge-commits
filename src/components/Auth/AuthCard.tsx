@@ -4,9 +4,10 @@ import {useGlobalContext} from 'contexts/GlobalContext';
 import useDeviceDetect from 'customHooks/deviceDetect';
 import {getAsset} from 'assets';
 import React, {ReactNode, useEffect, useState} from 'react';
-import {NavLink} from 'react-router-dom';
+import {NavLink, useHistory} from 'react-router-dom';
 import gsap from 'gsap';
 import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
+import Buttons from '@components/Atoms/Buttons';
 
 interface AuthCardProps {
   children: ReactNode;
@@ -48,6 +49,8 @@ const AuthCard = ({
       // }, 4000);
     }
   }, [isSuccess]);
+
+  const history = useHistory();
 
   return (
     <div className="w-full  h-screen flex flex-row items-center justify-center text-sm md:bg-none sm:bg-cover sm:bg-center">
@@ -100,15 +103,14 @@ const AuthCard = ({
 
             <AnimatedContainer className="absolute bottom-0" show={showFooter}>
               {showFooter && (
-                <div className={` text-center mb-4 leading-5 text-xs text-gray-600`}>
+                <div className={`text-center mb-4 leading-5 text-xs text-gray-600`}>
                   <p>© Copyright {new Date().getFullYear()}</p>
-                  <p>
-                    <NavLink
-                      className="underline text-xs hover:text-blue-500"
-                      to="/privacy-policy">
-                      Privacy Policy
-                    </NavLink>
-                  </p>
+                  <Buttons
+                    label={'Privacy Policy'}
+                    variant="link"
+                    size="small"
+                    onClick={() => history.push('/privacy-policy')}
+                  />
                 </div>
               )}
             </AnimatedContainer>

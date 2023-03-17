@@ -5,6 +5,7 @@ import useAuth from '@customHooks/useAuth';
 import {getInstInfo, getPerson, signIn, updateLoginTime} from '@graphql/functions';
 import {getSignInError, getUserInfo, setCredCookies} from '@utilities/functions';
 import {createUserUrl} from '@utilities/urls';
+import {Checkbox} from 'antd';
 import {Auth} from 'aws-amplify';
 import axios from 'axios';
 import RememberMe from 'components/Auth/RememberMe';
@@ -198,24 +199,24 @@ const LoginInner = ({
     <form
       onSubmit={handleSubmit}
       className="h-auto flex-grow flex flex-col justify-center">
-      <FormInput
-        dataCy="email"
-        Icon={AiOutlineUser}
-        label="Email"
-        onChange={(e) => {
-          setSubtitle(`Welcome Back!`);
-          handleChange(e);
-        }}
-        error={errors.email}
-        wrapperClass="mb-4"
-        placeHolder="Enter your email"
-        type="email"
-        value={email}
-        id="email"
-        name="email"
-      />
+      <div className="gap-2 flex flex-col">
+        <FormInput
+          dataCy="email"
+          Icon={AiOutlineUser}
+          label="Email"
+          onChange={(e) => {
+            setSubtitle(`Welcome Back!`);
+            handleChange(e);
+          }}
+          error={errors.email}
+          wrapperClass="mb-4"
+          placeHolder="Enter your email"
+          type="email"
+          value={email}
+          id="email"
+          name="email"
+        />
 
-      <>
         <FormInput
           dataCy="password"
           error={errors.password}
@@ -228,31 +229,31 @@ const LoginInner = ({
           name="password"
           value={password}
         />
+      </div>
 
-        <div className="my-4">
-          <RememberMe
-            dataCy="remember"
-            isChecked={checked}
-            toggleCheckBox={() => setFieldValue('checked', !checked)}
-          />
-        </div>
-      </>
+      <div className="my-4">
+        <Checkbox checked={checked} onChange={() => setFieldValue('checked', !checked)}>
+          Remember me
+        </Checkbox>
+      </div>
 
       <div className="relative flex flex-col justify-center items-center">
         <Buttons
           disabled={isToggled}
           dataCy="login-button"
-          btnClass="w-full"
           type="submit"
           loading={isToggled}
           label={'Login'}
+          className="w-full"
+        />
+        <Buttons
+          disabled={isToggled}
+          size="small"
+          className="mt-2 self-end"
+          variant="dashed"
+          label={'set password'}
         />
       </div>
-      <p
-        onClick={onSetPassword}
-        className="w-auto text-gray-600 hover:underline cursor-pointer text-right mt-2">
-        set password
-      </p>
     </form>
   );
 };

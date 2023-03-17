@@ -295,8 +295,8 @@ $polka-dot-size: 0.8px;
 
 .white_back {
   background-color: white;
-  border-radius: 1rem;
-  box-shadow: 1px 1px 10px 1px #e0e0e0;
+  // border-radius: 1rem;
+  // box-shadow: 1px 1px 10px 1px #e0e0e0;
 
   @media screen and (max-width: 767px) {
     padding: 1rem;
@@ -1783,6 +1783,8 @@ $translation-fab-width: 50px;
   }
 }
 
+// Ant Design Overwrite styles
+
 .ant-breadcrumb {
   & a,
   .ant-breadcrumb-separator {
@@ -1793,4 +1795,33 @@ $translation-fab-width: 50px;
       color: white;
     }
   }
+}
+
+.ant-input-group .ant-input-affix-wrapper:not(:last-child) {
+  border-start-start-radius: 99px !important;
+  border-end-start-radius: 99px !important;
+}
+
+.ant-select-selector {
+  border-radius: 99px !important;
+}
+
+.ant-btn {
+  svg {
+    margin-right: 0.25rem;
+  }
+}
+
+.ant-breadcrumb-link {
+  display: flex;
+  align-items: center;
+}
+
+.ant-steps-item-description {
+  max-width: unset !important;
+}
+
+.ant-steps-item-container {
+  padding-left: 2rem;
+  padding-right: 2rem;
 }

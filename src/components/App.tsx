@@ -1,3 +1,4 @@
+import 'antd/dist/reset.css';
 import MainRouter from 'components/AppMainRouter';
 import {GlobalContextProvider} from 'contexts/GlobalContext';
 import NotificationContextProvider from 'contexts/NotificationContext';
@@ -7,8 +8,6 @@ import React from 'react';
 import {CookiesProvider} from 'react-cookie';
 import {QueryClient, QueryClientProvider} from 'react-query';
 import {BrowserRouter as Router} from 'react-router-dom';
-import 'antd/dist/reset.css';
-import {ConfigProvider} from 'antd';
 // This is the main component that wraps all other components
 // It is the entry point for the application
 

@@ -279,22 +279,19 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
       title: RoomEDITdict[userLanguage].CLASS_STUDENT_TAB_HEADING,
       description: RoomEDITdict[userLanguage].CLASS_STUDENT_TAB_DESCRIPTION,
       stepValue: 'students',
-      disabled: !roomId,
-      tooltipText: RoomEDITdict[userLanguage].TAB_DISABLED_TOOLTIP_TEXT
+      disabled: !roomId
     },
     {
       title: RoomEDITdict[userLanguage].CLASS_UNIT_PLANNER_TAB_HEADING,
       description: RoomEDITdict[userLanguage].CLASS_UNIT_PLANNER_TAB_DESCRIPTION,
       stepValue: 'unit-planner',
-      disabled: !roomId,
-      tooltipText: RoomEDITdict[userLanguage].TAB_DISABLED_TOOLTIP_TEXT
+      disabled: !roomId
     },
     {
       title: RoomEDITdict[userLanguage].CLASS_DYNAMICS_TAB_HEADING,
       description: RoomEDITdict[userLanguage].CLASS_DYNAMICS_TAB_DESCRIPTION,
       stepValue: 'class-dynamics',
-      disabled: !roomId,
-      tooltipText: RoomEDITdict[userLanguage].TAB_DISABLED_TOOLTIP_TEXT
+      disabled: !roomId
     }
   ];
 
@@ -339,7 +336,6 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
       <div className="">
         <div className="w-full m-auto">
           <StepComponent
-            dataCy="classroom-builder"
             steps={steps}
             activeStep={activeStep}
             handleTabSwitch={handleTabSwitch}

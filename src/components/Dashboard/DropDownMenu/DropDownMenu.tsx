@@ -69,7 +69,7 @@ const DropDownMenu = () => {
         </span>
       }>
       <Buttons
-        variant="secondary"
+        variant="link"
         insideElement={
           <div className="w-6 h-6">
             {image ? (

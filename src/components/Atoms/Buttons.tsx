@@ -1,7 +1,5 @@
-import {useGlobalContext} from '@contexts/GlobalContext';
 import {Button} from 'antd';
 import {SizeType} from 'antd/es/config-provider/SizeContext';
-import {getAsset} from 'assets';
 import React from 'react';
 
 interface ButtonProps {
@@ -25,57 +23,43 @@ interface ButtonProps {
   dataCy?: string;
   size?: SizeType;
   iconSize?: string;
-  variant?: 'primary' | 'secondary';
+  variant?: 'link' | 'text' | 'default' | 'primary' | 'ghost' | 'dashed';
+  className?: string;
 }
 
 const Buttons: React.FC<ButtonProps> = (btnProps: ButtonProps): React.ReactElement => {
   const {
     label,
     Icon,
-    title,
-    greenBtn,
+
     redBtn,
     variant = 'primary',
-    iconBeforeLabel,
+
     transparent,
     type = 'button',
     onClick,
-    btnClass,
-    overrideClass,
-    labelClass,
-    disabled,
-    customStyles,
-    loading = false,
-    loadingText = 'Loading...',
-    insideElement = null,
-    dataCy,
-    iconSize,
-    size = 'large'
-  } = btnProps;
-  const {theme, clientKey} = useGlobalContext();
-  const themeColor = getAsset(clientKey, 'themeClassName');
 
-  const _Icon = () => {
-    const color =
-      redBtn && transparent ? 'text-red-500' : transparent ? 'theme-text' : 'text-white';
-    return (
-      <span className="w-auto">
-        <Icon
-          className={`${size === 'small' ? 'w-4 h-6' : iconSize || 'w-6 h-6'} ${color}`}
-        />
-      </span>
-    );
-  };
+    disabled,
+
+    loading = false,
+
+    insideElement = null,
+
+    size = 'large',
+    className
+  } = btnProps;
 
   return (
     <Button
       loading={loading}
       danger={redBtn}
+      className={`${className} flex items-center justify-center`}
       htmlType={type}
       size={size}
-      type={transparent ? 'default' : variant === 'primary' ? 'primary' : 'default'}
+      style={{borderRadius: 999}}
+      type={transparent ? 'default' : variant}
       disabled={disabled}
-      icon={Icon}
+      icon={Icon ? <Icon /> : undefined}
       onClick={onClick}>
       {label}
       {insideElement}

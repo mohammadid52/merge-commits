@@ -1,3 +1,4 @@
+import {TeachingStyle} from 'API';
 import {v4 as uuidv4} from 'uuid';
 
 export const emojiList = [
@@ -515,4 +516,30 @@ export const periodOptions = [
   {id: 8, label: '3'},
   {id: 9, label: '4'},
   {id: 10, label: '5'}
+];
+
+export const typeList = [
+  {
+    id: 1,
+    label: 'ONLINE',
+    value: 'ONLINE'
+  },
+  {
+    id: 2,
+    label: 'TRADITIONAL',
+    value: 'TRADITIONAL'
+  }
+];
+
+export const methods = [
+  {
+    id: 1,
+    label: 'Performer',
+    value: TeachingStyle.PERFORMER
+  },
+  {
+    id: 2,
+    label: 'Academic',
+    value: TeachingStyle.ACADEMIC
+  }
 ];

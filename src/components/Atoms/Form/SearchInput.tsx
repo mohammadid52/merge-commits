@@ -37,7 +37,7 @@ const SearchInput: React.FC<SearchProps> = (searchProps: SearchProps) => {
       placeholder={liveSearch ? 'Type atleaset 3 characters...' : 'Search...'}
       onChange={(e: any) => onChange?.(e.target.value)}
       onSearch={search}
-      style={{width}}
+      style={{width, borderRadius: 99}}
       allowClear
       value={value || ''}
       enterButton

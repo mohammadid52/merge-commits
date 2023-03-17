@@ -223,7 +223,7 @@ export const listInstitutions = async (authId: string, email: string) => {
     institutions = institutions.map((inst: any) => {
       return {
         id: inst.id,
-        name: inst.name,
+        label: inst.name,
         value: inst.name
       };
     });

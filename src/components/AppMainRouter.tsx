@@ -15,46 +15,46 @@ import React, {lazy, Suspense, useEffect} from 'react';
 const AuthRoutes = lazy(() => import('components/AppRoutes/AuthRoutes'));
 const UnauthRoutes = lazy(() => import('components/AppRoutes/UnauthRoutes'));
 
+const setupAppHeaders = async (clientKey: string) => {
+  document.title = getAsset(clientKey, 'appTitle');
+  const favicon: any = document.getElementById('faviconDefault');
+  const favicon32x32: any = document.getElementById('favicon32x32');
+  const favicon16x16: any = document.getElementById('favicon16x16');
+  const manifest: any = document.getElementById('manifest');
+  const maskIcon: any = document.getElementById('maskIcon');
+  favicon.href = getAsset(clientKey, 'faviconDefault');
+  favicon32x32.href = getAsset(clientKey, 'favicon32x32');
+  favicon16x16.href = getAsset(clientKey, 'favicon16x16');
+  manifest.href = getAsset(clientKey, 'manifest');
+  maskIcon.href = getAsset(clientKey, 'maskIcon');
+
+  const metaTags = [
+    {name: 'apple-mobile-web-app-title', content: 'webAppTitle'},
+    {name: 'application-name', content: 'appName'},
+    {name: 'msapplication-TileImage', content: 'tileImage'},
+    {name: 'msapplication-config', content: 'msapplicationConfig'}
+  ];
+
+  forEach(metaTags, (meta) => {
+    if (document !== null) {
+      const element = document?.querySelector(`meta[name="${meta.name}"]`);
+      element?.setAttribute('content', getAsset(clientKey, meta.content));
+    }
+  });
+
+  const html = document?.querySelector('html');
+  html?.classList?.add?.(clientKey === 'demo' ? 'curate' : clientKey);
+};
+
 const MainRouter: React.FC = () => {
   const deviceDetected = useDeviceDetect();
 
   const {authState, setAuthState, clientKey} = useGlobalContext();
 
   useEffect(() => {
-    setupAppHeaders();
+    setupAppHeaders(clientKey);
     checkUserAuthenticated();
-  }, []);
-
-  const setupAppHeaders = async () => {
-    document.title = getAsset(clientKey, 'appTitle');
-    const favicon: any = document.getElementById('faviconDefault');
-    const favicon32x32: any = document.getElementById('favicon32x32');
-    const favicon16x16: any = document.getElementById('favicon16x16');
-    const manifest: any = document.getElementById('manifest');
-    const maskIcon: any = document.getElementById('maskIcon');
-    favicon.href = getAsset(clientKey, 'faviconDefault');
-    favicon32x32.href = getAsset(clientKey, 'favicon32x32');
-    favicon16x16.href = getAsset(clientKey, 'favicon16x16');
-    manifest.href = getAsset(clientKey, 'manifest');
-    maskIcon.href = getAsset(clientKey, 'maskIcon');
-
-    const metaTags = [
-      {name: 'apple-mobile-web-app-title', content: 'webAppTitle'},
-      {name: 'application-name', content: 'appName'},
-      {name: 'msapplication-TileImage', content: 'tileImage'},
-      {name: 'msapplication-config', content: 'msapplicationConfig'}
-    ];
-
-    forEach(metaTags, (meta) => {
-      if (document !== null) {
-        const element = document?.querySelector(`meta[name="${meta.name}"]`);
-        element?.setAttribute('content', getAsset(clientKey, meta.content));
-      }
-    });
-
-    const html = document?.querySelector('html');
-    html?.classList?.add?.(clientKey === 'demo' ? 'curate' : clientKey);
-  };
+  }, [clientKey]);
 
   const {setUser, removeAuthToken} = useAuth();
 

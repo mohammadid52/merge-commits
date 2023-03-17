@@ -13,7 +13,7 @@ const SignOutButton = () => {
         label="Sign Out"
         size="small"
         onClick={signOut}
-        variant="secondary"
+        variant="default"
       />
     </>
   );
