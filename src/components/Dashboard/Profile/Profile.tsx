@@ -1,4 +1,5 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import Placeholder from '@components/Atoms/Placeholder';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import ErrorBoundary from '@components/Error/ErrorBoundary';
 import {useGlobalContext} from '@contexts/GlobalContext';
@@ -81,12 +82,12 @@ const Profile = () => {
   const breadCrumsList = [
     {
       title: BreadcrumsTitles[userLanguage]['HOME'],
-      url: '/dashboard',
+      href: '/dashboard',
       last: false
     },
     {
       title: BreadcrumsTitles[userLanguage]['PROFILE'],
-      url: '/dashboard/profile',
+      href: '/dashboard/profile',
       last: true
     }
   ];
@@ -332,37 +333,28 @@ const Profile = () => {
               <div className="w-auto p-2 md:p-4 flex flex-col text-center items-center px-8">
                 <div className="relative">
                   {person.image ? (
-                    <button className="group hover:opacity-80 focus:outline-none focus:opacity-95">
+                    <div className="group hover:opacity-80 focus:outline-none focus:opacity-95">
                       {!imageLoading ? (
                         <Fragment>
-                          <label className="cursor-pointer">
-                            <DroppableMedia
-                              setImage={(img: any, file: any) => {
-                                setUpImage(img);
-                                setFileObj(file);
-                              }}
-                              toggleCropper={toggleCropper}
-                              mediaRef={mediaRef}>
-                              {imageUrl ? (
-                                <img
-                                  data-cy="profile-image"
-                                  className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full  border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light mx-auto`}
-                                  src={imageUrl}
-                                />
-                              ) : (
-                                <div
-                                  className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full  border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light mx-auto`}
-                                />
-                              )}
-                            </DroppableMedia>
-                          </label>
+                          <DroppableMedia
+                            setImage={(img: any, file: any) => {
+                              setUpImage(img);
+                              setFileObj(file);
+                            }}
+                            toggleCropper={toggleCropper}
+                            mediaRef={mediaRef}>
+                            <Placeholder
+                              size="w-20 h-20 md:w-40 md:h-40"
+                              image={imageUrl}
+                            />
+                          </DroppableMedia>
                         </Fragment>
                       ) : (
                         <div className="w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full  border-0 border-gray-400 shadow-elem-lightI">
                           <Loader />
                         </div>
                       )}
-                    </button>
+                    </div>
                   ) : (
                     <label
                       className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full  border-0 border-gray-400 shadow-elem-light mx-auto`}>

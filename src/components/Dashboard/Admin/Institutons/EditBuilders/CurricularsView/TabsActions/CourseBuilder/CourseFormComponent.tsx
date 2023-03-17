@@ -21,18 +21,18 @@ import {languageList} from 'utilities/staticData';
 
 export const RoomStatusList = [
   {
-    name: RoomStatus.ACTIVE,
+    label: RoomStatus.ACTIVE,
     id: 1,
     value: RoomStatus.ACTIVE
   },
 
   {
-    name: RoomStatus.INACTIVE,
+    label: RoomStatus.INACTIVE,
     id: 3,
     value: RoomStatus.INACTIVE
   },
   {
-    name: RoomStatus.TRAINING,
+    label: RoomStatus.TRAINING,
     id: 4,
     value: RoomStatus.TRAINING
   }

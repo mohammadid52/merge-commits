@@ -10,7 +10,7 @@ import {useGlobalContext} from '@contexts/GlobalContext';
 import useAuth from '@customHooks/useAuth';
 import usePagination from '@customHooks/usePagination';
 import useSearch from '@customHooks/useSearch';
-import {InstitueRomms} from '@dictionary/dictionary.iconoclast';
+
 import {withZoiqFilter} from '@utilities/functions';
 import {RoomStatus} from 'API';
 import BreadCrums from 'atoms/BreadCrums';
@@ -45,7 +45,8 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
 
   const {theme, state, userLanguage} = useGlobalContext();
 
-  const {BreadcrumsTitles, CommonlyUsedDict, LessonsListDict} = useDictionary();
+  const {BreadcrumsTitles, CommonlyUsedDict, InstitueRomms, LessonsListDict} =
+    useDictionary();
 
   const [status, setStatus] = useState('');
   const [lessonsData, setLessonsData] = useState<any[]>([]);
@@ -77,19 +78,19 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
   const breadCrumsList = [
     {
       title: BreadcrumsTitles[userLanguage]['HOME'],
-      url: '/dashboard',
+      href: '/dashboard',
       last: false
     },
     {
       title: BreadcrumsTitles[userLanguage]['LESSONS'],
-      url: '/dashboard/lesson-builder',
+      href: '/dashboard/lesson-builder',
       last: true
     }
   ];
 
   const sortByList = [
-    {id: 1, name: 'Title', value: 'title'},
-    {id: 2, name: 'Type', value: 'type'}
+    {id: 1, label: 'Title', value: 'title'},
+    {id: 2, label: 'Type', value: 'type'}
   ];
 
   const buildLesson = () => {
@@ -212,8 +213,8 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
     setLastPage(!(filteredData.length > pageCount));
   };
 
-  const instituteChange = (_: string, name: string, value: string) => {
-    setSelectedInstitution({name, id: value});
+  const instituteChange = (value: string, option: any) => {
+    setSelectedInstitution({name: value, id: option.id});
     onSearch(searchInput.value, value);
   };
 
@@ -232,10 +233,10 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
     setLessonsData(newLessonsList);
   };
 
-  const setSortingValue = (str: string, name: string) => {
+  const setSortingValue = (name: string) => {
     setSortingType({
       ...sortingType,
-      value: str,
+      value: name,
       name: name
     });
   };

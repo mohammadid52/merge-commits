@@ -31,7 +31,7 @@ const UploadImageBtn = ({
         setImage={setImage}
         toggleCropper={toggleCropper}>
         <Buttons
-          btnClass=" w-full"
+          className=" w-full"
           label={imageUrl ? 'Change image' : 'Upload image'}
           transparent
           onClick={handleImage}

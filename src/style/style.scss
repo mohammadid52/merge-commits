@@ -27,6 +27,12 @@ $polka-dot-size: 0.8px;
   background-position: 0 0, 10px 10px;
 }
 
+button,
+img {
+  background: transparent;
+  border: transparent;
+}
+
 .sentiment-table-view {
   & thead tr th:first-child,
   & tbody tr td:first-child {
@@ -109,8 +115,8 @@ $polka-dot-size: 0.8px;
 
 .white_container {
   background-color: white;
-  border-radius: 1rem;
-  // box-shadow: 1px 1px 10px 1px #e0e0e0;
+  // border-radius: 1rem;
+  box-shadow: 1px 1px 10px 1px #e0e0e0;
 
   @media screen and (max-width: 767px) {
     padding: 1rem;
@@ -296,7 +302,7 @@ $polka-dot-size: 0.8px;
 .white_back {
   background-color: white;
   // border-radius: 1rem;
-  // box-shadow: 1px 1px 10px 1px #e0e0e0;
+  box-shadow: 1px 1px 10px 1px #e0e0e0;
 
   @media screen and (max-width: 767px) {
     padding: 1rem;
@@ -1824,4 +1830,20 @@ $translation-fab-width: 50px;
 .ant-steps-item-container {
   padding-left: 2rem;
   padding-right: 2rem;
+}
+
+.ant-input-search
+  > .ant-input-group
+  > .ant-input-group-addon:last-child
+  .ant-input-search-button {
+  border-start-end-radius: 99px !important;
+  border-end-end-radius: 99px !important;
+}
+
+.ant-card .ant-card-head {
+  font-weight: 500;
+}
+
+textarea.ant-input {
+  border-radius: 9999px;
 }

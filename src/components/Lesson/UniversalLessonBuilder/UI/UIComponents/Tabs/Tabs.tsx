@@ -1,9 +1,9 @@
-import { setState } from "interfaces";
-import React, { useState } from "react";
-import { classNames } from "../../FormElements/UniversalInput";
+import {setState} from 'interfaces';
+import React, {useState} from 'react';
+import {classNames} from '../../FormElements/UniversalInput';
 const _tabs = [
-  { name: "Component Details", current: true },
-  { name: "Preview", current: false },
+  {name: 'Component Details', current: true},
+  {name: 'Preview', current: false}
 ];
 export interface ITab {
   name: string;
@@ -15,7 +15,7 @@ export const useTabs = (tabs: ITab[] = _tabs) => {
 
   const helpers = [...tabs.map((tab) => curTab === tab.name)];
   const goTo = [...tabs.map((tab) => tab.name)];
-  return { curTab, setCurTab, helpers, goTo };
+  return {curTab, setCurTab, helpers, goTo};
 };
 
 /**
@@ -25,9 +25,9 @@ export const useTabs = (tabs: ITab[] = _tabs) => {
 export const Tabs2 = ({
   tabs = _tabs,
   curTab,
-  setCurTab,
+  setCurTab
 }: {
-  tabs?: { name: string; current?: boolean }[];
+  tabs?: {name: string; current?: boolean}[];
   curTab: string;
   setCurTab: React.Dispatch<React.SetStateAction<string>>;
 }) => {
@@ -41,15 +41,14 @@ export const Tabs2 = ({
           id="tabs"
           name="tabs"
           className="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:iconoclast:border-500 focus:curate:border-500 sm:text-sm rounded-md"
-          defaultValue={tabs.find((tab) => tab.current)?.name}
-        >
+          defaultValue={tabs.find((tab) => tab.current)?.name}>
           {tabs.map((tab) => (
             <option key={tab.name}>{tab.name}</option>
           ))}
         </select>
       </div>
       <div className="hidden sm:block">
-        <div className="border-b-0 border-gray-200">
+        <div className="border-b-2 border-gray-200">
           <nav className="-mb-px flex space-x-8" aria-label="Tabs">
             {tabs.map((tab) => (
               <button
@@ -58,15 +57,14 @@ export const Tabs2 = ({
                   setCurTab(tab.name);
                 }}
                 className={classNames(
-                  tabs.length >= 4 ? "text-xs" : "text-sm",
+                  tabs.length >= 4 ? 'text-xs' : 'text-sm',
 
                   tab.name === curTab
-                    ? "iconoclast:border-600 curate:border-600"
-                    : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300",
-                  "whitespace-nowrap py-4 px-1 w-auto border-b-2 font-medium"
+                    ? 'theme-border:600'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300',
+                  'whitespace-nowrap cursor-pointer py-4 px-1 w-auto border-b-2 font-medium'
                 )}
-                aria-current={tab.current ? "page" : undefined}
-              >
+                aria-current={tab.current ? 'page' : undefined}>
                 {tab.name}
               </button>
             ))}
@@ -85,9 +83,9 @@ export const Tabs2 = ({
 const Tabs = ({
   tabs = _tabs,
   curTab,
-  setCurTab,
+  setCurTab
 }: {
-  tabs?: { name: string; current: boolean }[];
+  tabs?: {name: string; current: boolean}[];
   curTab: string;
 
   setCurTab: React.Dispatch<React.SetStateAction<string>>;
@@ -102,8 +100,7 @@ const Tabs = ({
           id="tabs"
           name="tabs"
           className="block w-full focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md"
-          defaultValue={tabs.find((tab) => tab?.current)?.name}
-        >
+          defaultValue={tabs.find((tab) => tab?.current)?.name}>
           {tabs.map((tab) => (
             <option key={tab.name}>{tab.name}</option>
           ))}
@@ -119,15 +116,14 @@ const Tabs = ({
                   setCurTab(tab.name);
                 }}
                 className={classNames(
-                  tabs.length >= 4 ? "text-xs" : "text-sm",
+                  tabs.length >= 4 ? 'text-xs' : 'text-sm',
                   curTab === tab.name
                     ? `iconoclast:text-main curate:text-main 
                       iconoclast:border-main curate:border-main `
-                    : "border-transparent focus:outline-none text-gray-500 hover:text-gray-700 hover:border-gray-300",
-                  "py-4 cursor-pointer px-1 text-center border-b-3 font-medium "
+                    : 'border-transparent focus:outline-none text-gray-500 hover:text-gray-700 hover:border-gray-300',
+                  'py-4 cursor-pointer px-1 text-center border-b-3 font-medium '
                 )}
-                aria-current={curTab === tab.name ? "page" : undefined}
-              >
+                aria-current={curTab === tab.name ? 'page' : undefined}>
                 {tab.name}
               </button>
             ))}
@@ -149,13 +145,13 @@ export const Tabs3 = ({
   tabs = _tabs,
   curTab,
   setCurTab,
-  config = { fullColor: false },
-  numbered = false,
+  config = {fullColor: false},
+  numbered = false
 }: {
   tabs?: ITab[];
   curTab: string;
-  config?: { fullColor?: boolean };
-  setCurTab: setState["string"];
+  config?: {fullColor?: boolean};
+  setCurTab: setState['string'];
   numbered?: boolean;
 }) => {
   return (
@@ -168,8 +164,7 @@ export const Tabs3 = ({
           id="tabs"
           name="tabs"
           className="block w-full focus:ring-indigo-500 focus:border-indigo-500 border-0 border-gray-300 rounded-md"
-          defaultValue={tabs?.find((tab) => tab?.current)?.name}
-        >
+          defaultValue={tabs?.find((tab) => tab?.current)?.name}>
           {tabs.map((tab) => (
             <option key={tab.name}>{tab.name}</option>
           ))}
@@ -185,18 +180,17 @@ export const Tabs3 = ({
               key={tab.name}
               role="button"
               className={classNames(
-                tabs.length >= 4 ? "text-xs" : "text-sm",
+                tabs.length >= 4 ? 'text-xs' : 'text-sm',
 
                 tab.name === curTab
                   ? config.fullColor
-                    ? "theme-bg theme-card-shadow border-0 theme-border text-white"
-                    : "theme-bg text-white"
-                  : "theme-text hover:theme-bg border-0  hover-text-white theme-border bg-transparent",
-                "px-3 text-center cursor-pointer transition-all py-2 font-medium  rounded-full"
+                    ? 'theme-bg theme-card-shadow border-0 theme-border text-white'
+                    : 'theme-bg text-white'
+                  : 'theme-text hover:theme-bg border-0  hover-text-white theme-border bg-transparent',
+                'px-3 text-center cursor-pointer transition-all py-2 font-medium  rounded-full'
               )}
-              aria-current={tab.current ? "page" : undefined}
-            >
-              {numbered ? `${idx + 1}. ` : ""}
+              aria-current={tab.current ? 'page' : undefined}>
+              {numbered ? `${idx + 1}. ` : ''}
               {tab.name}
             </div>
           ))}

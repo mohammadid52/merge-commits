@@ -87,7 +87,7 @@ const FormInput: React.FC<FormInputProps> = ({
         <Label disabled={disabled} dark={dark} label={label} isRequired={isRequired} />
       )}
       {textarea ? (
-        <TextArea rows={rows} autoSize {...inputProps} />
+        <TextArea rows={rows} className="rounded-full" autoSize {...inputProps} />
       ) : type === 'password' ? (
         <Tooltip trigger={['focus']} placement="topLeft">
           <Password

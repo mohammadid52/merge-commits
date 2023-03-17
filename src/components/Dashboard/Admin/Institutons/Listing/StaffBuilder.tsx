@@ -38,6 +38,7 @@ import Registration from 'components/Dashboard/Admin/UserManagement/Registration
 import {map} from 'lodash';
 import {sortByName} from '../../UserManagement/UserLookup';
 import {Status} from '../../UserManagement/UserStatus';
+import {Tag} from 'antd';
 
 interface StaffBuilderProps {
   instituteId: String;
@@ -470,9 +471,9 @@ const StaffBuilder = (props: StaffBuilderProps) => {
     ),
 
     role: (
-      <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-sm font-medium bg-gray-200 text-gray-600 w-auto">
+      <Tag color="default">
         {item.staffMember.role ? getUserRoleString(item.staffMember.role) : ''}
-      </span>
+      </Tag>
     ),
     loginStatus: <UserLookupLocation isStaff show item={item.staffMember} idx={index} />,
     status:

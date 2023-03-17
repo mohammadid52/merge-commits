@@ -14,6 +14,7 @@ import useDictionary from 'customHooks/dictionary';
 import {convertArrayIntoObj} from 'utilities/strings';
 import LessonLoading from '../../Lesson/Loading/ComponentLoading';
 import {UserInfo} from './Profile';
+import {languageList} from 'utilities/staticData';
 
 interface UserInfoProps {
   user: UserInfo;
@@ -107,9 +108,8 @@ const ProfileEdit = (props: UserInfoProps) => {
     }
   };
   const onSingleSelect = (
-    _1: string,
     name: string,
-    _2: string,
+
     checkpointID: string,
     questionID: string
   ) => {
@@ -281,17 +281,6 @@ const ProfileEdit = (props: UserInfoProps) => {
     });
   };
 
-  const Language = [
-    {
-      id: 1,
-      name: 'English'
-    },
-    {
-      id: 2,
-      name: 'Spanish'
-    }
-  ];
-
   const convertToSelectorList = (options: any) => {
     const newArr: any = options.map((item: any, index: number) => ({
       id: index,
@@ -395,18 +384,16 @@ const ProfileEdit = (props: UserInfoProps) => {
         <form>
           <div>
             <div className="h-auto bg-white border-l-0 border-gray-200 mb-4">
-              <div className="px-4 py-1 md:py-5 border-b-0 border-gray-200 sm:px-6">
+              <div className="px-4 py-1 md:py-5 flex items-center justify-between border-b-0 border-gray-200 sm:px-6">
                 <h3 className="text-sm md:text-lg leading-6 font-medium text-gray-900 uppercase">
                   {dashboardProfileDict[userLanguage]['EDIT_PROFILE']['TITLE']}
-                  <NavLink
-                    data-cy="edit-password-link"
-                    className="text-gray-500 lowercase text-center mt-2 md:mt-0 md:text-right md:float-right w-auto"
-                    to={path}>
-                    <p className="font-medium text-sm md:text-base">
-                      Click here to edit password
-                    </p>
-                  </NavLink>
                 </h3>
+                <Buttons
+                  variant="dashed"
+                  size="small"
+                  label={'Click here to edit password'}
+                  onClick={() => history.push(path)}
+                />
               </div>
 
               <div className="h-full px-4 py-5 sm:px-6">
@@ -443,10 +430,10 @@ const ProfileEdit = (props: UserInfoProps) => {
                     <div className="sm:col-span-3 p-2">
                       <Selector
                         placeholder="Select Language"
-                        dropdownWidth="w-56"
-                        list={Language}
-                        onChange={(_: any, name) =>
-                          setEditUser({...editUser, language: name as Language})
+                        list={languageList}
+                        width="100%"
+                        onChange={(value) =>
+                          setEditUser({...editUser, language: value as Language})
                         }
                         label={dictionary['LANGUAGE']}
                         selectedItem={editUser.language === 'EN' ? 'English' : 'Spanish'}
@@ -580,11 +567,10 @@ const ProfileEdit = (props: UserInfoProps) => {
                                       list={convertToSelectorList(
                                         item?.question?.options
                                       )}
-                                      onChange={(value, name, id) =>
+                                      onChange={(value) =>
                                         onSingleSelect(
                                           value,
-                                          name,
-                                          id,
+
                                           checkpoint.id,
                                           item.question.id
                                         )
@@ -660,15 +646,13 @@ const ProfileEdit = (props: UserInfoProps) => {
           ) : null}
 
           <div className="px-4 pt-4 w-full flex justify-end">
-            <div className="flex justify-center">
+            <div className="flex justify-center gap-4">
               <Buttons
-                btnClass="py-1 px-4 text-xs mr-2"
                 label={dashboardProfileDict[userLanguage]['EDIT_PROFILE']['CANCEL']}
                 onClick={gobackToPreviousStep}
                 transparent
               />
               <Buttons
-                btnClass="py-1 px-8 text-xs ml-2"
                 label={
                   loading
                     ? 'Updating...'

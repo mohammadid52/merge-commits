@@ -8,9 +8,8 @@ import {createUserUrl} from '@utilities/urls';
 import {Checkbox} from 'antd';
 import {Auth} from 'aws-amplify';
 import axios from 'axios';
-import RememberMe from 'components/Auth/RememberMe';
 import {useFormik} from 'formik';
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {useCookies} from 'react-cookie';
 import {AiOutlineLock, AiOutlineUser} from 'react-icons/ai';
 import {useHistory} from 'react-router';
@@ -249,6 +248,7 @@ const LoginInner = ({
         <Buttons
           disabled={isToggled}
           size="small"
+          onClick={onSetPassword}
           className="mt-2 self-end"
           variant="dashed"
           label={'set password'}

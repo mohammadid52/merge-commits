@@ -237,6 +237,8 @@ const UserInformation = ({
                         ? UserInformationDict[userLanguage]['RESETTING_PASSWORD']
                         : UserInformationDict[userLanguage]['RESET_PASSWORD']
                     }
+                    variant="dashed"
+                    size="small"
                     onClick={resetPassword}
                     disabled={loading}
                   />

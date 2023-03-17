@@ -1,9 +1,10 @@
 import ErrorBoundary from '@components/Error/ErrorBoundary';
 import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import ShowingCount from '@components/MicroComponents/ShowingCount';
+import {Radio} from 'antd';
+import {RadioChangeEvent} from 'antd/es/radio';
 import {isEmpty} from 'lodash';
-import React from 'react';
-import Buttons from './Buttons';
+import {useState} from 'react';
 
 export type SortType = 'ACTIVE' | 'TRAINING' | 'INACTIVE';
 
@@ -33,21 +34,24 @@ const Filters = ({
   const defaultFilterMapping = ['ACTIVE', 'INACTIVE', 'TRAINING'];
   const filter = customFilters ? customFilters : defaultFilterMapping;
 
+  const [mode, setMode] = useState(filter[0]);
+
+  const handleModeChange = (e: RadioChangeEvent) => {
+    const mode = e.target.value;
+    setMode(mode);
+    updateFilter(mode);
+  };
+
   return (
     <ErrorBoundary componentName="Filters">
       <div className="flex items-center justify-between">
-        <div className="flex gap-x-4 my-4 items-center">
+        <Radio.Group onChange={handleModeChange} value={mode} style={{marginBottom: 8}}>
           {filter.map((filterName) => (
-            <Buttons
-              key={filterName}
-              onClick={() => updateFilter(filterName)}
-              transparent={filters !== filterName}
-              size="small"
-              disabled={loading}
-              label={filterName}
-            />
+            <Radio.Button key={filterName} value={filterName}>
+              {filterName}
+            </Radio.Button>
           ))}
-        </div>
+        </Radio.Group>
 
         <AnimatedContainer duration="500" animationType="slideIn" show={!loading}>
           {!loading && !isEmpty(filters) ? (

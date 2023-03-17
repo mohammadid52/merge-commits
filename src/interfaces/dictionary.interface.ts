@@ -152,7 +152,7 @@ interface DashboardProfileDictCommon {
   CHANGE_PASSCODE: ChangePasscode;
   CHANGE_PASSWORD: ChangePassword;
 }
-export interface DashboardProfileDict {
+export interface DashboardProfileDictInterface {
   EN: DashboardProfileDictCommon;
   ES: DashboardProfileDictCommon;
 }

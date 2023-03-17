@@ -87,20 +87,20 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
   const breadCrumsList = [
     {
       title: BreadcrumsTitles[userLanguage]['HOME'],
-      url: '/dashboard',
+      href: '/dashboard',
       last: false
     },
     {
       title: BreadcrumsTitles[userLanguage]['PEOPLE'],
-      url: '/dashboard/manage-users',
+      href: '/dashboard/manage-users',
       last: true
     }
   ];
 
   const sortByList = [
-    {id: 1, name: 'Name', value: 'lastName'},
-    {id: 2, name: 'Role', value: 'role'},
-    {id: 4, name: 'Status', value: 'status'}
+    {id: 1, label: 'Name', value: 'lastName'},
+    {id: 2, label: 'Role', value: 'role'},
+    {id: 4, label: 'Status', value: 'status'}
   ];
 
   const handleLink = () => {
@@ -131,11 +131,11 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
     }
   };
 
-  const setSortingValue = (str: string, name: string) => {
+  const setSortingValue = (value: string) => {
     setSortingType({
       ...sortingType,
-      value: str,
-      name: name
+      value: value,
+      name: value
     });
   };
 
@@ -435,7 +435,7 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
       return {
         id: idx,
         value: item.id,
-        name: item.name
+        label: item.name
       };
     });
   };
@@ -464,16 +464,16 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
     }
   };
 
-  const setSelectedClassValue = (str: string, name: string) => {
-    if (selectedClass === null || selectedClass?.value !== str) {
+  const setSelectedClassValue = (name: string) => {
+    if (selectedClass === null || selectedClass?.value !== name) {
       setSelectedClass({
         ...selectedClass,
-        value: str,
+        value: name,
         name: name
       });
 
       removeSearchAction();
-      fetchClassStudents(str).then(() => {});
+      fetchClassStudents(name).then(() => {});
     }
   };
 

@@ -29,7 +29,7 @@ const pickRandomColor = () => {
 const Placeholder = ({
   name = ' ',
   size = 'w-10 h-10 md:w-12 md:h-12',
-
+  textSize,
   firstName = '',
   lastName = '',
   image = null
@@ -56,7 +56,9 @@ const Placeholder = ({
 
     const color = pickRandomColor();
     return (
-      <Avatar style={{background: color.bg, color: color.text}}>
+      <Avatar
+        className={`${size} ${textSize} flex items-center justify-center`}
+        style={{background: color.bg, color: color.text}}>
         {_f && initials(_f, _l)}
       </Avatar>
     );

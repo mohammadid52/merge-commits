@@ -1,5 +1,6 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {uploadImageToS3} from '@graphql/functions';
+import {Card} from 'antd';
 import {RoomStatus} from 'API';
 import Buttons from 'atoms/Buttons';
 import RichTextEditor from 'atoms/RichTextEditor';
@@ -30,32 +31,6 @@ interface AddNewLessonFormProps {
   fetchStaffByInstitution: (institutionID: string) => void;
   lessonPlanAttachment?: any;
 }
-
-const Card = ({
-  cardTitle,
-  className = '',
-  children,
-  rightSide
-}: {
-  cardTitle: string;
-  className?: string;
-  children: React.ReactNode;
-  rightSide?: React.ReactNode;
-}) => {
-  return (
-    <div
-      className={`${className} w-auto min-h-56 min-w-56 customShadow p-4 bg-white rounded-lg my-2 lg:my-0`}>
-      <div className="px-3 mb-2 flex items-center justify-between">
-        <h4 className="half-border relative  w-auto  text-lg font-medium tracking-wide ">
-          {cardTitle}
-        </h4>
-        {rightSide}
-      </div>
-
-      {children}
-    </div>
-  );
-};
 
 const AddNewLessonForm = (props: AddNewLessonFormProps) => {
   const {
@@ -125,7 +100,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
     }
   };
 
-  const onSelectTargetAudience = (_: string, name: string, __: string) => {
+  const onSelectTargetAudience = (name: string) => {
     setFormData((prevData: InitialData) => ({
       ...prevData,
       targetAudience: name
@@ -203,7 +178,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
     toggleCropper();
   };
 
-  const onDurationSelect = (_: any, name: string) => {
+  const onDurationSelect = (name: string) => {
     setFormData({
       ...formData,
       duration: name
@@ -403,12 +378,13 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
       <div className="">
         <div className="h-9/10 lg:grid lg:grid-cols-2 gap-6 p-4">
           <Card
-            cardTitle={'Lesson Details'}
-            rightSide={
+            title={'Lesson Details'}
+            extra={
               <Buttons
                 btnClass="py-3 px-10"
                 label={`${lessonPlanAttachment ? '' : 'Upload'} lesson plan`}
-                // onClick={saveFormData}
+                size="small"
+                variant="default"
                 onClick={() => setShowUploadModal(true)}
               />
             }>
@@ -436,7 +412,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
               validation={validation}
             />
           </Card>
-          <Card cardTitle="Lesson Objectives">
+          <Card title="Lesson Objectives">
             <div className="max-h-96 px-4 py-6">
               <RichTextEditor
                 maxHeight={'max-h-96'}
@@ -448,14 +424,14 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
               />
             </div>
           </Card>
-          <Card cardTitle="Materials">
+          <Card title="Materials">
             <MaterialsCard
               purposeHtml={purposeHtml}
               studentMaterials={formData.studentMaterials}
               setEditorContent={setEditorContent}
             />
           </Card>
-          <Card cardTitle="Reminder & Notes">
+          <Card title="Reminder & Notes">
             <div className="max-h-96 px-4 py-6">
               <RichTextEditor
                 initialValue={notesHtml || ''}
@@ -466,22 +442,20 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
               />
             </div>
           </Card>
-          <Card cardTitle="Lesson Card" className="col-span-2">
-            <div className="p-4">
-              <LessonCard
-                cardCaption={formData?.imageCaption || ''}
-                studentSummary={studentSummary}
-                onInputChange={onInputChange}
-                imageCaption={imageCaption || ''}
-                setImage={setImageData}
-                validation={validation}
-                setFileObj={setFileObj}
-                imagePreviewUrl={imagePreviewUrl}
-                totalEstTime={totalEstTime}
-                toggleCropper={toggleCropper}
-                lessonType={formData.type.value}
-              />
-            </div>
+          <Card title="Lesson Card" className="col-span-2">
+            <LessonCard
+              cardCaption={formData?.imageCaption || ''}
+              studentSummary={studentSummary}
+              onInputChange={onInputChange}
+              imageCaption={imageCaption || ''}
+              setImage={setImageData}
+              validation={validation}
+              setFileObj={setFileObj}
+              imagePreviewUrl={imagePreviewUrl}
+              totalEstTime={totalEstTime}
+              toggleCropper={toggleCropper}
+              lessonType={formData.type.value}
+            />
           </Card>
         </div>
         {validation.message && (

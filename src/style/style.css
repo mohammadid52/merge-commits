@@ -2,9 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
-* {
-  /* width: 100%; */
-  font-family: 'Poppins', sans-serif;
+*,
+input,
+button,
+textarea,
+select {
+  font-family: 'Poppins', sans-serif !important;
 }
 
 *:focus {

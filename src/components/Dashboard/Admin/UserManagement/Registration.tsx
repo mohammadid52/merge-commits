@@ -34,6 +34,7 @@ import * as customQueries from 'customGraphql/customQueries';
 import {useFormik} from 'formik';
 import {UserRegisterSchema} from 'Schema';
 import SuccessMessage from './SuccessMessage';
+import {Checkbox} from 'antd';
 
 const initialValues = {
   firstName: '',
@@ -82,21 +83,21 @@ const Registration = ({
 
   const Roles = [
     state.user.role === Role.SUP && {
-      name: Role.SUP,
+      label: Role.SUP,
       id: 1,
       value: rolesDict['sup']
     },
     (state.user.role === Role.SUP || state.user.role === Role.ADM) && {
-      name: Role.ADM,
+      label: Role.ADM,
       id: 2,
       value: rolesDict['adm']
     },
-    {name: Role.BLD, id: 3, value: rolesDict['bld']},
-    {name: Role.FLW, id: 4, value: rolesDict['flw']},
-    {name: Role.TR, id: 6, value: rolesDict['tr']},
+    {label: Role.BLD, id: 3, value: rolesDict['bld']},
+    {label: Role.FLW, id: 4, value: rolesDict['flw']},
+    {label: Role.TR, id: 6, value: rolesDict['tr']},
     (!isInModalPopup || (isInModalPopup && classId)) &&
       state.user.role !== Role.BLD && {
-        name: Role.ST,
+        label: Role.ST,
         id: 7,
         value: rolesDict['st']
       }
@@ -105,17 +106,17 @@ const Registration = ({
   const breadCrumsList = [
     {
       title: BreadcrumsTitles[userLanguage]['HOME'],
-      url: '/dashboard',
+      href: '/dashboard',
       last: false
     },
     {
       title: BreadcrumsTitles[userLanguage]['PeopleManagment'],
-      url: '/dashboard/manage-users',
+      href: '/dashboard/manage-users',
       last: false
     },
     {
       title: BreadcrumsTitles[userLanguage]['AddNewUser'],
-      url: `/dashboard/registration`,
+      href: `/dashboard/registration`,
       last: true
     }
   ];
@@ -283,6 +284,7 @@ const Registration = ({
   } = useFormik({
     initialValues: initialValues,
     validateOnBlur: false,
+    validateOnChange: false,
 
     validationSchema: UserRegisterSchema,
     onSubmit: async () => {
@@ -378,7 +380,7 @@ const Registration = ({
                       <div className="sm:col-span-3 p-2">
                         <Selector
                           placeholder="Select role"
-                          onChange={(_: any, name: any) =>
+                          onChange={(name: any) =>
                             setFieldValue('role', getReverseUserRoleString(name))
                           }
                           label={RegistrationDict[userLanguage]['role']}
@@ -386,7 +388,7 @@ const Registration = ({
                           dropdownWidth="w-56"
                           list={Roles.map((d) => ({
                             ...d,
-                            name: getUserRoleString(d.name)
+                            label: getUserRoleString(d.name)
                           }))}
                           selectedItem={getUserRoleString(values.role)}
                         />
@@ -395,14 +397,11 @@ const Registration = ({
 
                     {checkIfAdmin() && (
                       <div className="sm:col-span-6">
-                        <CheckBox
-                          dataCy="isZoiq"
-                          label={'ZOIQ'}
-                          className="group:hover:bg-gray-500"
-                          value={values.isZoiq}
-                          onChange={(e) => setFieldValue('isZoiq', e.target.checked)}
-                          name="isZoiq"
-                        />
+                        <Checkbox
+                          checked={values.isZoiq}
+                          onChange={(e) => setFieldValue('isZoiq', e.target.checked)}>
+                          ZOIQ
+                        </Checkbox>
                       </div>
                     )}
 
@@ -415,11 +414,11 @@ const Registration = ({
                               selectedItem={values.class.name}
                               list={instClasses}
                               placeholder={'Select a class'}
-                              onChange={(c: any, name: any, id: string) =>
+                              onChange={(value: any, option: any) =>
                                 setFieldValue('class', {
-                                  id: c,
-                                  name: name,
-                                  roomId: id
+                                  id: value,
+                                  name: value,
+                                  roomId: option.id
                                 })
                               }
                             />
@@ -435,28 +434,20 @@ const Registration = ({
                               placeholder={
                                 RegistrationDict[userLanguage]['statusPlaceholder']
                               }
-                              onChange={(_: any, name: any) =>
-                                setFieldValue('status', name)
-                              }
+                              onChange={(name: any) => setFieldValue('status', name)}
                               labelTextClass="text-m"
                             />
                           </div>
                         </div>
 
                         <div className="sm:col-span-3 p-2">
-                          <div>
-                            <Label label={RegistrationDict[userLanguage]['paceLabel']} />
-                            <CheckBox
-                              dataCy="self-paced"
-                              label={RegistrationDict[userLanguage]['paceCheckBox']}
-                              className="group:hover:bg-gray-500"
-                              value={values.isSelfPaced}
-                              onChange={(e) =>
-                                setFieldValue('isSelfPaced', e.target.checked)
-                              }
-                              name="self-paced"
-                            />
-                          </div>
+                          <Checkbox
+                            checked={values.isSelfPaced}
+                            onChange={(e) =>
+                              setFieldValue('isSelfPaced', e.target.checked)
+                            }>
+                            {RegistrationDict[userLanguage]['paceLabel']}
+                          </Checkbox>
                         </div>
                       </>
                     )}

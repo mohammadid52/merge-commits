@@ -5,7 +5,7 @@ import {
   BreadcrumbsTitlesInterface,
   ButtonInterface,
   ClassroomDictInterface,
-  DashboardProfileDict,
+  DashboardProfileDictInterface,
   DashboardTestCasesDictInterface,
   EditClassDictInterface,
   InstitutionAddDictInterface,
@@ -157,7 +157,7 @@ const BreadcrumsTitles: BreadcrumbsTitlesInterface = {
   }
 };
 
-const dashboardProfileDict: DashboardProfileDict = {
+const dashboardProfileDict: DashboardProfileDictInterface = {
   EN: {
     PROFILE: 'Profile',
     TITLE: 'USER PROFILE',
