@@ -1,14 +1,13 @@
 import {API, graphqlOperation} from 'aws-amplify';
-import React, {Fragment, useEffect, useState} from 'react';
+import {Fragment, useEffect, useState} from 'react';
 import {useHistory} from 'react-router-dom';
 
-import SearchSelectorWithAvatar from 'atoms/Form/SearchSelectorWithAvatar';
-
 import {getImageFromS3} from 'utilities/services';
-import {createFilterToFetchAllItemsExcept} from 'utilities/strings';
 
+import {PlusCircleOutlined} from '@ant-design/icons';
 import Buttons from '@components/Atoms/Buttons';
 import Filters, {SortType} from '@components/Atoms/Filters';
+import Selector from '@components/Atoms/Form/Selector';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import CommonActionsBtns from '@components/MicroComponents/CommonActionsBtns';
 import StudentName from '@components/MicroComponents/StudentName';
@@ -17,6 +16,7 @@ import Table from '@components/Molecules/Table';
 import {useNotifications} from '@contexts/NotificationContext';
 import useSearch from '@customHooks/useSearch';
 import {getLocalStorageData} from '@utilities/localStorage';
+import {Divider} from 'antd';
 import {PersonStatus, Role} from 'API';
 import Modal from 'atoms/Modal';
 import Registration from 'components/Dashboard/Admin/UserManagement/Registration';
@@ -32,9 +32,6 @@ import ModalPopUp from 'molecules/ModalPopUp';
 import {addName, sortByName} from '../../UserManagement/UserLookup';
 import {Status} from '../../UserManagement/UserStatus';
 import LocationBadge from './LocationBadge';
-import Selector from '@components/Atoms/Form/Selector';
-import {Divider} from 'antd';
-import {PlusCircleOutlined} from '@ant-design/icons';
 
 interface EditClassProps {
   instId: string;
