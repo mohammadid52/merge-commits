@@ -35,7 +35,11 @@ interface SelectorProps {
   onClear?: () => void;
   setHoveringItem?: React.Dispatch<React.SetStateAction<{}>>;
   setSelectedItem?: React.Dispatch<React.SetStateAction<{}>>;
-
+  dropdownRender?:
+    | ((
+        menu: React.ReactElement<any, string | React.JSXElementConstructor<any>>
+      ) => React.ReactElement<any, string | React.JSXElementConstructor<any>>)
+    | undefined;
   dataCy?: string;
   dropdownWidth?: string;
   showSearch?: boolean;
@@ -58,10 +62,12 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
     disableSort = false,
     placement,
     label,
-    isRequired
+    isRequired,
+    dropdownRender
   } = selectorProps;
 
-  const sortedList = disableSort ? list : orderBy(list, ['label'], ['asc']);
+  const uniqKey = list && list.length > 0 && list[0]?.label ? 'label' : 'name';
+  const sortedList = disableSort ? list : orderBy(list, [uniqKey], ['asc']);
 
   return (
     <div>
@@ -74,11 +80,12 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
         disabled={disabled}
         showSearch={showSearch}
         size={size}
+        dropdownRender={dropdownRender}
         loading={loading}
         // @ts-ignore
         onChange={onChange}
         placement={placement}
-        options={uniqBy(sortedList, 'label')}
+        options={uniqBy(sortedList, uniqKey)}
       />
     </div>
   );

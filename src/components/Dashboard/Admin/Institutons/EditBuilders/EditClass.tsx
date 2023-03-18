@@ -17,7 +17,7 @@ import Table from '@components/Molecules/Table';
 import {useNotifications} from '@contexts/NotificationContext';
 import useSearch from '@customHooks/useSearch';
 import {getLocalStorageData} from '@utilities/localStorage';
-import {PersonStatus} from 'API';
+import {PersonStatus, Role} from 'API';
 import Modal from 'atoms/Modal';
 import Registration from 'components/Dashboard/Admin/UserManagement/Registration';
 import User from 'components/Dashboard/Admin/UserManagement/User';
@@ -32,6 +32,9 @@ import ModalPopUp from 'molecules/ModalPopUp';
 import {addName, sortByName} from '../../UserManagement/UserLookup';
 import {Status} from '../../UserManagement/UserStatus';
 import LocationBadge from './LocationBadge';
+import Selector from '@components/Atoms/Form/Selector';
+import {Divider} from 'antd';
+import {PlusCircleOutlined} from '@ant-design/icons';
 
 interface EditClassProps {
   instId: string;
@@ -49,7 +52,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
   };
   const defaultNewMember = {
     id: '',
-    name: '',
+    label: '',
     value: '',
     avatar: '',
     group: {id: '', name: ''}
@@ -66,9 +69,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
   const [classStudents, setClassStudents] = useState<any[]>([]);
   const [allStudents, setAllStudents] = useState<any[]>([]);
 
-  const [searching, setSearching] = useState<boolean>(false);
   const [userModalOpen, setUserModalFormOpen] = useState<boolean>(false);
-  const [filteredStudents, setFilteredStudents] = useState<any[]>([]);
 
   const [studentProfileID, setStudentProfileID] = useState('');
   const [newMember, setNewMember] = useState(defaultNewMember);
@@ -139,23 +140,19 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
     }
   };
 
-  const recursiveFetchAllStudents = async (
-    neqList: any[],
-    outArray: any[],
-    nextToken: string | null
-  ) => {
+  const recursiveFetchAllStudents = async (outArray: any[], nextToken: string | null) => {
     try {
       let combined: any[] = [];
       let studentsFromAPI: any = await API.graphql(
         graphqlOperation(customQueries.fetchPersons, {
           limit: 500,
           filter: {
-            role: {eq: 'ST'},
+            role: {eq: Role.ST},
             or: [
               {status: {eq: PersonStatus.ACTIVE}},
               {status: {eq: PersonStatus.TRAINING}}
-            ],
-            ...createFilterToFetchAllItemsExcept(neqList, 'id')
+            ]
+            // ...createFilterToFetchAllItemsExcept(neqList, 'id')
           },
           nextToken
         })
@@ -173,6 +170,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
   };
 
   const fetchClassData = async (classId: string) => {
+    setClassStudentsLoading(true);
     try {
       const classFilter = {
         filter: {
@@ -184,36 +182,37 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
 
       const result = await getAllClassStudentByClassId(classFilter, undefined, []);
 
-      const selectedStudentsIds: any = [];
+      // const selectedStudentsIds: any = [];
       const selectedStudents = result?.map((stu: any) => {
-        selectedStudentsIds.push(stu.student.id);
+        // selectedStudentsIds.push(stu.student.id);
         return {
           id: stu.id,
           group: {name: stu.group, id: ''},
           status: stu.status,
           createAt: stu.createdAt,
           studentAuthID: stu.studentAuthID,
-          name: `${stu.student.firstName || ''} ${stu.student.lastName || ''}`,
+          name: `${stu?.student?.firstName || ''} ${stu?.student?.lastName || ''}`,
           student: {
             ...stu.student,
-            email: stu.studentEmail,
-            name: `${stu.student.firstName || ''} ${stu.student.lastName || ''}`,
-            avatar: stu.student.image ? getImageFromS3(stu.student.image) : ''
+            email: stu?.studentEmail,
+            name: `${stu?.student?.firstName || ''} ${stu?.student?.lastName || ''}`,
+            avatar: stu?.student?.image ? getImageFromS3(stu?.student?.image) : ''
           }
         };
       });
 
-      let students: any = await recursiveFetchAllStudents(selectedStudentsIds, [], null);
+      let students: any = await recursiveFetchAllStudents([], null);
+
       students = students.map((item: any) => ({
-        id: item.id,
-        name: `${item.firstName || ''} ${item.lastName || ''}`,
-        value: `${item.firstName || ''} ${item.lastName || ''}`,
-        avatar: item.image ? getImageFromS3(item.image) : '',
-        status: item.status || 'Inactive',
-        email: item.email || '',
-        authId: item.authId || '',
-        firstName: item.firstName || '',
-        lastName: item.lastName || ''
+        id: item?.id,
+        name: `${item?.firstName || ''} ${item?.lastName || ''}`,
+        value: `${item?.firstName || ''} ${item?.lastName || ''}`,
+        avatar: item?.image ? getImageFromS3(item?.image) : '',
+        status: item?.status || 'Inactive',
+        email: item?.email || '',
+        authId: item?.authId || '',
+        firstName: item?.firstName || '',
+        lastName: item?.lastName || ''
       }));
       await getClassRoomGroups(roomData.id || room.id);
       setClassStudents(sortStudents(selectedStudents));
@@ -227,37 +226,9 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
         isError: true
       });
     } finally {
+      setClassStudentsLoading(false);
       setLoading(false);
     }
-  };
-
-  const fetchStudentList = async (searchQuery: string) => {
-    // filter allStudents by searchQuery
-
-    //"fb4788ad-86fc-4693-b41b-71bad6378980"
-    //"f4c48396-b0ee-41b3-b067-2ebce47c49c7"
-    let _allStudents = allStudents.filter((d) => {
-      return !classStudents.find((e) => e.student.authId === d.authId);
-    });
-    console.log(
-      _allStudents.filter((d: {firstName: string}) => d.firstName.startsWith('J'))
-    );
-
-    //"f0de27e9-3a7f-4fc4-88c9-b52e0fcdc9fe"
-    const filteredStudents = _allStudents.filter((student: any) => {
-      const {firstName, lastName, name} = student;
-
-      const searchValue = searchQuery.toLowerCase();
-
-      return (
-        firstName?.toLowerCase().includes(searchValue) ||
-        lastName?.toLowerCase().includes(searchValue) ||
-        name?.toLowerCase().includes(searchValue)
-      );
-    });
-
-    setFilteredStudents(sortStudents(filteredStudents));
-    setSearching(false);
   };
 
   const sortStudents = (studentList: any) => {
@@ -267,7 +238,9 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
   };
 
   const room = getLocalStorageData('room_info');
-  const withbackupClassId = classId || room.classID;
+  const withbackupClassId = classId;
+
+  const [classStudentsLoading, setClassStudentsLoading] = useState(false);
 
   const getClassRoomGroups = async (roomId: string) => {
     try {
@@ -288,16 +261,9 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
     } catch (error) {}
   };
 
-  const clearFilteredStudents = () => {
-    setFilteredStudents([]);
-  };
-
-  const onStudentSelect = (str: string, name: string, id: string, avatar: string) => {
+  const onStudentSelect = (_: string, option: any) => {
     setNewMember({
-      id: id,
-      name: name,
-      value: str,
-      avatar: avatar,
+      ...option,
       group: {id: '', name: ''}
     });
     if (addMessage.message) {
@@ -318,7 +284,6 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
       await saveClassStudent(id);
       setNewMember(defaultNewMember);
     }
-    setFilteredStudents([]);
   };
 
   const {setNotification} = useNotifications();
@@ -366,9 +331,6 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
       classStudents.push(updatedStudent);
 
       setClassStudents([...classStudents]);
-      setAllStudents((prevStudents) =>
-        prevStudents.filter((student) => student.id !== newMember.id)
-      );
 
       setAdding(false);
 
@@ -499,7 +461,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
     fetchClassData(withbackupClassId);
   };
 
-  const DiscardChanges = () => {
+  const discardChanges = () => {
     if (warnModal.goBack) {
       history.goBack();
     } else if (warnModal.profile) {
@@ -591,7 +553,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
       isFirstIndex: true,
       headers: {textColor: 'text-white'},
       dataList: {
-        loading: loading,
+        loading: classStudentsLoading || loading,
         emptyText: dictionary.NOSTUDENT,
         customWidth: {
           no: 'w-12',
@@ -611,6 +573,34 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
     }
   };
 
+  /**
+   * Takes allStudents and classStudents arrays and returns a new array of students, with a new `disabled` property added.
+   *
+   * @returns {Array} - An array of student objects. Each object has an added 'disabled' property which is a boolean indicating whether or not the student is already in the classStudents array.
+   */
+
+  const addDisablePropertyToAlreadySelectedStudents = () => {
+    if (
+      allStudents && // check if allStudents is not null
+      classStudents && // check if classStudents is not null
+      allStudents.length > 0 && // check if allStudents is not empty
+      classStudents.length > 0 // check if classStudents is not empty
+    ) {
+      const isStudentAlreadyAdded = (student: any) =>
+        classStudents.find(
+          (classStudent) => classStudent.student.authId === student.authId
+        );
+      return allStudents.map((student) => {
+        return {
+          ...student,
+          disabled: Boolean(isStudentAlreadyAdded(student))
+        };
+      });
+    } else {
+      return [];
+    }
+  };
+
   return (
     <div className="">
       {addStudentModal && (
@@ -622,7 +612,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
           }}
           showHeader={false}
           showFooter={false}>
-          <p>Do you want to add {newMember.name}?</p>
+          <p>Do you want to add {newMember.label}?</p>
           <div className="w-full flex items-center justify-end gap-4 mt-2">
             <Buttons
               label={'Cancel'}
@@ -646,21 +636,31 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
         title={roomData.name}
         withButton={
           <div className={`w-auto flex gap-x-4 justify-end items-center`}>
-            <SearchSelectorWithAvatar
+            <Selector
+              width={300}
               dataCy="edit-class"
-              width="w-96"
-              selectedItem={newMember}
-              list={filteredStudents.length > 0 ? filteredStudents : allStudents}
+              selectedItem={newMember.label}
+              showSearch
+              disabled={classStudentsLoading || loading}
+              list={addDisablePropertyToAlreadySelectedStudents()}
               placeholder={dictionary.ADD_STUDENT_PLACEHOLDER}
               onChange={onStudentSelect}
-              fetchStudentList={fetchStudentList}
-              clearFilteredStudents={clearFilteredStudents}
-              searchStatus={searching}
-              searchCallback={setSearching}
-              imageFromS3={false}
-              creatable
-              creatableLabel={'Add students from register to class'}
-              onCreate={() => setShowRegistrationForm(true)}
+              dropdownRender={(menu) => {
+                return (
+                  <>
+                    {menu}
+                    <Divider style={{margin: '8px 0'}} />
+                    <Buttons
+                      onClick={() => setShowRegistrationForm(true)}
+                      label={'Add students from register to class'}
+                      className="w-full"
+                      size="middle"
+                      Icon={PlusCircleOutlined}
+                      variant="dashed"
+                    />
+                  </>
+                );
+              }}
             />
           </div>
         }
@@ -697,7 +697,7 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
               )}
               {warnModal.show && (
                 <ModalPopUp
-                  closeAction={DiscardChanges}
+                  closeAction={discardChanges}
                   saveAction={saveAndMove}
                   saveLabel="SAVE"
                   cancelLabel="DISCARD"
