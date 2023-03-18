@@ -38,7 +38,7 @@ const UploadImageBtn = ({
           insideElement={
             imageUrl ? (
               <img
-                className={`profile  w-6 h-6 theme-border bg-gray-100  border-0 flex flex-shrink-0 rounded-xl theme-card-shadow`}
+                className={`profile  w-6 h-6 theme-border bg-gray-100  border-0 flex flex-shrink-0 rounded-xl `}
                 src={imageUrl}
                 onLoad={() => setImageLoading(false)}
               />

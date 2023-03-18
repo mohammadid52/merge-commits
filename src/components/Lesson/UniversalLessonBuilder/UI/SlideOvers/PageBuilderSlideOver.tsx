@@ -301,7 +301,7 @@ const OverlayHeaderTitle = ({
 
       <h4
         id="page_builder_overlay--header-title"
-        className="dark:text-white text-gray-900 font-semibold tracking-wide text-lg 2xl:text-xl text-center">
+        className=" text-white font-medium tracking-wide text-lg 2xl:text-xl text-center">
         {title}
       </h4>
     </div>
@@ -317,7 +317,7 @@ const Item = ({
   label = '',
   Icon,
   subTitle = '',
-
+  className,
   deleteBtn = false,
   selected = false,
   RightIcon = HiOutlineArrowRight
@@ -334,18 +334,18 @@ const Item = ({
   return (
     <div
       onClick={onClick}
-      className={`${
+      className={`${className} ${
         selected
           ? 'iconoclast:border-500 curate:border-500'
-          : `border-gray-300 dark:border-gray-700 hover:curate:border-500 hover:iconoclast:border-500`
-      } relative my-6 2xl:my-8 cursor-pointer form-button mt-3 2xl:mt-4 form-button rounded-lg border-0 dark:bg-gray-800 bg-white shadow-sm flex items-center space-x-3  group   transition-all focus-within:ring-1 p-3 2xl:p-5`}>
+          : `border-gray-700 hover:curate:border-500 hover:iconoclast:border-500`
+      } w-full relative my-6 2xl:my-8 cursor-pointer form-button 2xl:mt-4  rounded-lg border-0 bg-dark-blue shadow-sm flex items-center space-x-3  group   transition-all focus-within:ring-1 p-3 2xl:p-5`}>
       {Icon && (
         <span className={classNames('rounded-lg inline-flex w-auto')}>
           <Icon
             className={classNames(
               deleteBtn
                 ? 'text-red-500'
-                : 'group-hover:iconoclast:text-500 dark:text-white text-gray-900 group-hover:curate:text-500',
+                : 'group-hover:iconoclast:text-500 text-white group-hover:curate:text-500',
               'xl:h-6 h-2 w-4 xl:w-6  transition-all'
             )}
             aria-hidden="true"
@@ -355,8 +355,8 @@ const Item = ({
       <div className="flex-1 min-w-0 focus:outline-none flex items-center justify-start">
         <p
           className={`${
-            deleteBtn ? 'text-red-500' : 'text-gray-900 dark:text-white'
-          } xl:text-sm text-xs font-medium w-auto `}>
+            deleteBtn ? 'text-red-500' : 'text-white'
+          } xl:text-sm text-xs font-medium mb-0 w-auto `}>
           {label}
         </p>
         {subTitle && (
@@ -417,7 +417,7 @@ const ActionButtons = ({
       <Item
         selected={actionMode === 'edit'}
         Icon={AiOutlineEdit}
-        label="Edit existing component"
+        label="Edit component"
         onClick={() => {
           setActionMode('edit');
           setShowingPin(true);
@@ -438,7 +438,7 @@ const ActionButtons = ({
         selected={actionMode === 'delete'}
         deleteBtn
         Icon={BiTrashAlt}
-        label="Delete existing component"
+        label="Delete component"
         onClick={() => {
           setActionMode('delete');
           setShowingPin(true);
@@ -494,7 +494,7 @@ const PageBuilderSlideOver = ({
   open: boolean;
   handleModalPopToggle?: (
     dialogToToggle: string,
-    position?: Number,
+    position?: number,
     section?: string,
     targetID?: string
   ) => void;
@@ -1034,6 +1034,7 @@ const PageBuilderSlideOver = ({
         <Item
           Icon={RiPagesLine}
           label="Page details"
+          className="mt-12"
           onClick={() => {
             setNewLessonPlanShow(true);
             setEditMode(true);

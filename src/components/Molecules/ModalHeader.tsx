@@ -1,9 +1,9 @@
-import React from "react";
-import { IoClose } from "react-icons/io5";
+import React from 'react';
+import {IoClose} from 'react-icons/io5';
 
 export const CloseButton = ({
   onClick,
-  modalCloseId = "",
+  modalCloseId = ''
 }: {
   onClick: () => void;
   modalCloseId?: string;
@@ -11,10 +11,9 @@ export const CloseButton = ({
   <button
     data-cy={modalCloseId}
     className={`ml-auto w-auto outline-none absolute right-1`}
-    onClick={onClick}
-  >
+    onClick={onClick}>
     <span className="w-8 h-8 theme-text:100 hover:theme-bg:400 hover:text-white flex cursor-pointer rounded-xl items-center justify-center  transition-all duration-150">
-      <IoClose size={"1.5rem"} />
+      <IoClose size={'1.5rem'} />
     </span>
   </button>
 );
@@ -33,16 +32,14 @@ const ModalHeader = (headerProps: {
     modalCloseId,
 
     customTitle,
-    titleButton,
+    titleButton
   } = headerProps;
 
   return (
-    <div
-      className={`theme-bg flex items-center text-white rounded-t-xl px-4 py-2`}
-    >
+    <div className={`theme-bg flex items-center text-white rounded-t-xl px-4 py-2`}>
       <div className="flex items-center">
         {title ? (
-          <h3 className="text-lg text-center tracking-wider font-medium uppercase text-white">
+          <h3 className="text-lg mb-0 text-center tracking-wider font-medium uppercase text-white">
             {title}
           </h3>
         ) : customTitle ? (

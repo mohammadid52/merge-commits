@@ -50,7 +50,7 @@ export interface RowComposerProps extends ULBSelectionProps {
   ) => void;
   handleModalPopToggle?: (
     dialogToToggle: string,
-    position?: Number,
+    position?: number,
     section?: string,
     targetID?: string
   ) => void;

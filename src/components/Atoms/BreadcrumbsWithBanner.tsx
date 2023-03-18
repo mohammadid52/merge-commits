@@ -219,12 +219,8 @@ const BreadcrumbsWithBanner: React.FC<BreadCrumbProps> = (props: BreadCrumbProps
       <div className="relative">
         <HeroBanner imgUrl={bannerImage} title={heroSectionTitle || title} />
         {/* <div className={`absolute theme-bg w-full bottom-0 z-20`}> */}
-        <div className="">
-          <Breadcrumb
-            className="px-8 py-2  theme-bg:500 "
-            separator=">"
-            items={finalList}
-          />
+        <div className="px-2 pt-8 md:px-4 lg:px-8 mb-[-1rem]">
+          <Breadcrumb items={finalList} />
         </div>
         {/* <div
             className={`${

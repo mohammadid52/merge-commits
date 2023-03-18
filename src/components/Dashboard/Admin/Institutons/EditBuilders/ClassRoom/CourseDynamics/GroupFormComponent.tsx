@@ -12,6 +12,8 @@ import useDictionary from 'customHooks/dictionary';
 import CheckBox from 'atoms/Form/CheckBox';
 import FormInput from 'atoms/Form/FormInput';
 import Selector from 'atoms/Form/Selector';
+import Buttons from '@components/Atoms/Buttons';
+import {Divider} from 'antd';
 
 interface IClassroomStudents {
   id?: string;
@@ -313,25 +315,16 @@ const GroupFormComponent = ({
 
                 {/* Divider container */}
                 <div style={{minHeight: 'calc(100vh - 170px)'}}>
-                  <div className="py-6 space-y-6 sm:py-0 sm:space-y-0 sm:divide-y sm:divide-gray-200">
-                    <div
-                      className={
-                        'space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-4 sm:px-6 sm:py-5'
-                      }>
-                      <div>
-                        <label
-                          htmlFor="name"
-                          className="block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2">
-                          {GroupFormDict[userLanguage]['LABELS']['GROUP_NAME']}{' '}
-                          <span className="text-red-500">*</span>
-                        </label>
-                      </div>
+                  <div className="p-6 gap-6 flex flex-col sm:py-0 sm:space-y-0 sm:divide-y sm:divide-gray-200">
+                    <div className={'space-y-1  sm:space-y-0 sm:grid sm:grid-cols-4 '}>
                       <div className="sm:col-span-3">
                         <FormInput
                           name="groupName"
                           placeHolder={
                             GroupFormDict[userLanguage]['PLACEHOLDERS']['GROUP_NAME']
                           }
+                          isRequired
+                          label={GroupFormDict[userLanguage]['LABELS']['GROUP_NAME']}
                           value={formValues.groupName}
                           onChange={handleInputChange}
                           id="name"
@@ -339,17 +332,11 @@ const GroupFormComponent = ({
                         />
                       </div>
                     </div>
-                    <div className="space-y-1 px-6 sm:space-y-0 sm:grid sm:grid-cols-4 sm:px-10 sm:py-5">
-                      <div>
-                        <label
-                          htmlFor="project-name"
-                          className="block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2">
-                          {GroupFormDict[userLanguage]['LABELS']['ADVISOR']}{' '}
-                          <span className="text-red-500">*</span>
-                        </label>
-                      </div>
+                    <div className="space-y-1 sm:space-y-0 sm:grid sm:grid-cols-4 ">
                       <div className="sm:col-span-3">
                         <Selector
+                          label={GroupFormDict[userLanguage]['LABELS']['ADVISOR']}
+                          isRequired
                           onChange={handleAdvisorChange}
                           selectedItem={formValues.groupAdvisor?.name}
                           list={advisorOptions}
@@ -361,19 +348,10 @@ const GroupFormComponent = ({
                       </div>
                     </div>
 
-                    <div
-                      className={
-                        'space-y-1 px-6 sm:space-y-0 sm:grid sm:grid-cols-4 sm:px-10 sm:py-5'
-                      }>
-                      <div>
-                        <label
-                          htmlFor="location"
-                          className="block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2">
-                          {GroupFormDict[userLanguage]['LABELS']['LOCATION']}
-                        </label>
-                      </div>
+                    <div className={'space-y-1  sm:space-y-0 sm:grid sm:grid-cols-4 '}>
                       <div className="sm:col-span-3">
                         <FormInput
+                          label={GroupFormDict[userLanguage]['LABELS']['LOCATION']}
                           name="groupLocation"
                           placeHolder={
                             GroupFormDict[userLanguage]['PLACEHOLDERS']['LOCATION']
@@ -434,25 +412,26 @@ const GroupFormComponent = ({
                     </div>
                   </div>
                 </div>
-                <hr className="my-2 text-gray-500" />
+                <Divider />
 
                 {/* Action buttons */}
                 <div className="flex-shrink-0 px-4 border-t border-gray-200 py-5 sm:px-6">
                   <div className="space-x-3 flex justify-end">
-                    <button
-                      type="button"
-                      className="w-auto bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                      onClick={onCancel}>
-                      {BUTTONS[userLanguage]['CANCEL']}
-                    </button>
-                    <button
+                    <Buttons
+                      label={BUTTONS[userLanguage]['CANCEL']}
+                      onClick={onCancel}
                       disabled={saving}
+                      variant="default"
+                    />
+                    <Buttons
+                      disabled={saving}
+                      label={
+                        saving
+                          ? BUTTONS[userLanguage]['SAVING']
+                          : BUTTONS[userLanguage]['SAVE']
+                      }
                       onClick={handleSubmit}
-                      className="w-auto inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                      {saving
-                        ? BUTTONS[userLanguage]['SAVING']
-                        : BUTTONS[userLanguage]['SAVE']}
-                    </button>
+                    />
                   </div>
                 </div>
               </div>

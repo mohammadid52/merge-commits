@@ -511,7 +511,7 @@ const NotesBlock = ({
               {saveInProgress && <Loader className="text-yellow-500 text-base" />}
             </div>
           )}
-          <div id="container" className="sticky-container blackboard">
+          <div id="container" className="sticky-container blackboard w-full text-white">
             {localNotes &&
               localNotes.length > 0 &&
               map(localNotes, (note, idx) => {

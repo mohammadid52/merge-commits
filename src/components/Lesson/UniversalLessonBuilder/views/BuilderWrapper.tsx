@@ -1,24 +1,24 @@
-import AddContentDialog from "@UlbModals/AddContentDialog";
-import CheckpointFormDialog from "@UlbModals/CheckpointFormDialog";
-import DividerModal from "@UlbModals/DividerModal";
-import DownloadModal from "@UlbModals/DownloadModal";
-import HeaderModalComponent from "@UlbModals/HeaderFormDialog";
-import HighlighterFormDialog from "@UlbModals/HighlighterFormDialog";
-import InputModalComponent from "@UlbModals/InputFormDialog";
-import JumbotronFormDialog from "@UlbModals/JumbotronModalDialog";
-import KeywordModalDialog from "@UlbModals/KeywordModalDialog";
-import LinestarterModalDialog from "@UlbModals/LinestarterModalDialog";
-import LinksModalDialog from "@UlbModals/LinksModalDialog";
-import NewPageDialog from "@UlbModals/NewPageDialog";
-import NotesModalDialog from "@UlbModals/NotesModalDialog";
-import ParaModalComponent from "@UlbModals/ParaFormDialog";
-import ReviewSliderModal from "@UlbModals/ReviewSliderModal";
-import TableModal from "@UlbModals/TableModal";
-import TagInputDialog from "@UlbModals/TagInputDialog";
-import UniversalInputDialog from "@UlbModals/UniversalInputDialog";
-import UniversalOptionDialog from "@UlbModals/UniversalOptionDialog";
-import WritingExerciseModal from "@UlbModals/WritingExerciseModal";
-import YouTubeMediaDialog from "@UlbModals/YouTubeMediaDialog";
+import AddContentDialog from '@UlbModals/AddContentDialog';
+import CheckpointFormDialog from '@UlbModals/CheckpointFormDialog';
+import DividerModal from '@UlbModals/DividerModal';
+import DownloadModal from '@UlbModals/DownloadModal';
+import HeaderModalComponent from '@UlbModals/HeaderFormDialog';
+import HighlighterFormDialog from '@UlbModals/HighlighterFormDialog';
+import InputModalComponent from '@UlbModals/InputFormDialog';
+import JumbotronFormDialog from '@UlbModals/JumbotronModalDialog';
+import KeywordModalDialog from '@UlbModals/KeywordModalDialog';
+import LinestarterModalDialog from '@UlbModals/LinestarterModalDialog';
+import LinksModalDialog from '@UlbModals/LinksModalDialog';
+import NewPageDialog from '@UlbModals/NewPageDialog';
+import NotesModalDialog from '@UlbModals/NotesModalDialog';
+import ParaModalComponent from '@UlbModals/ParaFormDialog';
+import ReviewSliderModal from '@UlbModals/ReviewSliderModal';
+import TableModal from '@UlbModals/TableModal';
+import TagInputDialog from '@UlbModals/TagInputDialog';
+import UniversalInputDialog from '@UlbModals/UniversalInputDialog';
+import UniversalOptionDialog from '@UlbModals/UniversalOptionDialog';
+import WritingExerciseModal from '@UlbModals/WritingExerciseModal';
+import YouTubeMediaDialog from '@UlbModals/YouTubeMediaDialog';
 import {
   ATTACHMENTS,
   DATE_PICKER,
@@ -36,34 +36,34 @@ import {
   SINGING_BOWL,
   SQUARE,
   TABLE,
-  THINK_ABOUT_IT,
-} from "@UlbUI/common/constants";
-import ImageFormComponent from "@UlbUI/FormElements/ImageComponent";
-import LessonPlanNavigation from "@UlbUI/LessonPlanNavigation";
-import Info from "atoms/Alerts/Info";
-import Buttons from "atoms/Buttons";
-import Modal from "atoms/Modal";
-import ActivityModal from "components/Lesson/UniversalLessonBuilder/UI/ModalDialogs/ActivityModal";
-import ContentModal from "components/Lesson/UniversalLessonBuilder/UI/ModalDialogs/ContentModal";
-import DocsModal from "components/Lesson/UniversalLessonBuilder/UI/ModalDialogs/DocsModal";
-import { useOverlayContext } from "contexts/OverlayContext";
-import { usePageBuilderContext } from "contexts/PageBuilderContext";
-import { useULBContext } from "contexts/UniversalLessonBuilderContext";
+  THINK_ABOUT_IT
+} from '@UlbUI/common/constants';
+import ImageFormComponent from '@UlbUI/FormElements/ImageComponent';
+import LessonPlanNavigation from '@UlbUI/LessonPlanNavigation';
+import Info from 'atoms/Alerts/Info';
+import Buttons from 'atoms/Buttons';
+import Modal from 'atoms/Modal';
+import ActivityModal from 'components/Lesson/UniversalLessonBuilder/UI/ModalDialogs/ActivityModal';
+import ContentModal from 'components/Lesson/UniversalLessonBuilder/UI/ModalDialogs/ContentModal';
+import DocsModal from 'components/Lesson/UniversalLessonBuilder/UI/ModalDialogs/DocsModal';
+import {useOverlayContext} from 'contexts/OverlayContext';
+import {usePageBuilderContext} from 'contexts/PageBuilderContext';
+import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
 import {
   IContentTypeComponentProps,
-  ULBSelectionProps,
-} from "interfaces/UniversalLessonBuilderInterfaces";
-import { PartContent } from "interfaces/UniversalLessonInterfaces";
-import useUnsavedChanges from "lesson/UniversalLessonBuilder/hooks/useUnsavedChanges";
-import { CoreBuilder } from "lesson/UniversalLessonBuilder/views/CoreBuilder";
-import isEmpty from "lodash/isEmpty";
-import React, { useEffect, useState } from "react";
-import { useRouteMatch } from "react-router";
-import { Accordion } from "uiComponents/Accordian";
-import { capitalizeFirstLetter, wait } from "utilities/functions";
+  ULBSelectionProps
+} from 'interfaces/UniversalLessonBuilderInterfaces';
+import {PartContent} from 'interfaces/UniversalLessonInterfaces';
+import useUnsavedChanges from 'lesson/UniversalLessonBuilder/hooks/useUnsavedChanges';
+import {CoreBuilder} from 'lesson/UniversalLessonBuilder/views/CoreBuilder';
+import isEmpty from 'lodash/isEmpty';
+import React, {useEffect, useState} from 'react';
+import {useRouteMatch} from 'react-router';
+import {Accordion} from 'uiComponents/Accordian';
+import {capitalizeFirstLetter, wait} from 'utilities/functions';
 
 interface ExistingLessonTemplateProps extends ULBSelectionProps {
-  mode: "building" | "viewing" | "lesson";
+  mode: 'building' | 'viewing' | 'lesson';
   universalBuilderStep?: string;
   setUniversalBuilderStep?: React.Dispatch<React.SetStateAction<string>>;
   universalBuilderTemplates?: any[];
@@ -80,7 +80,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     deleteFromULBHandler,
     updateFromULBHandler,
     initialUniversalLessonPagePartContent,
-    instId,
+    instId
   } = props;
 
   const {
@@ -93,7 +93,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     suggestionModal,
     setSuggestionModal,
 
-    setSavingStatus,
+    setSavingStatus
   } = useULBContext();
 
   // const isNewPage = params.get('isNewPage');
@@ -112,11 +112,11 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     addContentModal,
     setAddContentModal,
     modalPopVisible,
-    setModalPopVisible,
+    setModalPopVisible
   } = useOverlayContext();
 
   useEffect(() => {
-    if (isNewPage === "true") {
+    if (isNewPage === 'true') {
       handleModalPopToggle(dialogLabelList.NEW_PAGE);
     }
   }, []);
@@ -137,22 +137,22 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
 
   const hideAllModals = () => {
     setModalPopVisible(false);
-    setAddContentModal({ type: "", show: false });
-    setCurrentModalDialog("");
+    setAddContentModal({type: '', show: false});
+    setCurrentModalDialog('');
   };
   const {
     setSelectedComponent,
     selectedComponent,
     setShowLocationIcon,
 
-    setActiveContentItem,
+    setActiveContentItem
   } = usePageBuilderContext();
 
   useEffect(() => {
     if (!isEmpty(selectedComponent)) {
       setBlockConfig({
         ...blockConfig,
-        position: selectedComponent.partContentIdx,
+        position: selectedComponent.partContentIdx
       });
     }
   }, [selectedComponent]);
@@ -160,7 +160,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
   const handleModalPopToggle = (
     _: string,
     position?: number,
-    section: string = "pageContent",
+    section: string = 'pageContent',
     targetId?: string
   ) => {
     // Hide all UI Menus
@@ -171,7 +171,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       section,
       position,
       targetId,
-      isEditingMode: false,
+      isEditingMode: false
     });
     // Toggle Which Dialog is Shown
     // if (currentModalDialog !== dialogToToggle) {
@@ -181,20 +181,17 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
 
   const handleEditBlockContent = (
     type: string,
-    section: string = "pageContent",
+    section: string = 'pageContent',
     inputObj: any,
     targetContainerId: string, // Parent id of element like page id in case of page content and page_content id in case of page part editing
     indexToUpdate: number,
-    classString: string = ""
+    classString: string = ''
   ) => {
     // Hide all UI Menus
     hideAllUIMenus();
     setAddContentModal({
-      type:
-        type === `${FORM_TYPES.REVIEW_SLIDER}-form`
-          ? FORM_TYPES.REVIEW_SLIDER
-          : type,
-      show: true,
+      type: type === `${FORM_TYPES.REVIEW_SLIDER}-form` ? FORM_TYPES.REVIEW_SLIDER : type,
+      show: true
     });
 
     setBlockConfig({
@@ -203,7 +200,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       targetId: targetContainerId,
       classString,
       inputObj,
-      isEditingMode: true,
+      isEditingMode: true
     });
     // if (type !== 'video' && type !== 'image') {
     //   setInputFields((prevInputFields: any) => ({
@@ -214,22 +211,22 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
   };
 
   const handleTagModalOpen = (targetId: string, inputObj: any) => {
-    setAddContentModal({ type: "tag", show: true });
+    setAddContentModal({type: 'tag', show: true});
     setBlockConfig({
-      section: "pageContent",
+      section: 'pageContent',
       position: 0,
       targetId,
-      classString: "",
+      classString: '',
       inputObj: inputObj,
-      isEditingMode: false,
+      isEditingMode: false
     });
   };
 
   const dialogLabelList = {
-    VIEW_PAGES: "VIEW_PAGES",
-    NEW_PAGE: "NEW_PAGE",
-    ADD_CONTENT: "ADD_CONTENT",
-    USE_TEMPLATE: "USE_TEMPLATE",
+    VIEW_PAGES: 'VIEW_PAGES',
+    NEW_PAGE: 'NEW_PAGE',
+    ADD_CONTENT: 'ADD_CONTENT',
+    USE_TEMPLATE: 'USE_TEMPLATE'
   };
 
   const modalDialogSwitch = (dialogLabel: string) => {
@@ -243,11 +240,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         );
 
       case dialogLabelList.ADD_CONTENT:
-        return (
-          <AddContentDialog
-            isSurvey={universalLessonDetails.type === "survey"}
-          />
-        );
+        return <AddContentDialog isSurvey={universalLessonDetails.type === 'survey'} />;
 
       default:
         return null;
@@ -255,7 +248,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
   };
 
   const closeAction = (showPopup: boolean = false) => {
-    setAddContentModal({ type: "", show: false });
+    setAddContentModal({type: '', show: false});
     setSelectedComponent(null);
     setShowLocationIcon(false);
 
@@ -265,11 +258,11 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       // setActionMode('init');
 
       wait(700).then(() => {
-        setSavingStatus("loading");
+        setSavingStatus('loading');
         wait(1000).then(() => {
-          setSavingStatus("loaded");
+          setSavingStatus('loaded');
           wait(1500).then(() => {
-            setSavingStatus("initial");
+            setSavingStatus('initial');
           });
         });
       });
@@ -284,9 +277,9 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
 
   const modalByType = (type: string) => {
     const {
-      section = "pageContent",
+      section = 'pageContent',
       inputObj = {},
-      classString: selectedContentClass = "",
+      classString: selectedContentClass = ''
     } = blockConfig;
 
     const updateBlockContent = (
@@ -334,36 +327,29 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       updateBlockContentULBHandler: updateBlockContent,
       setUnsavedChanges,
       askBeforeClose: () => closeAction(false),
-      setSavingStatus,
+      setSavingStatus
     };
 
     switch (type) {
-      case "header":
-      case "header-section":
+      case 'header':
+      case 'header-section':
         return (
-          <HeaderModalComponent
-            classString={selectedContentClass}
-            {...commonProps}
-          />
+          <HeaderModalComponent classString={selectedContentClass} {...commonProps} />
         );
-      case "questions":
+      case 'questions':
         return <CheckpointFormDialog {...commonProps} />;
-      case "image":
-        return (
-          <ImageFormComponent {...commonProps} selectedImageFromGallery={""} />
-        );
+      case 'image':
+        return <ImageFormComponent {...commonProps} selectedImageFromGallery={''} />;
       case PARAGRAPH:
         return <ParaModalComponent {...commonProps} />;
       case DIVIDER:
         return <DividerModal {...commonProps} />;
       case TABLE:
-        return (
-          <TableModal classString={selectedContentClass} {...commonProps} />
-        );
+        return <TableModal classString={selectedContentClass} {...commonProps} />;
       // Interactive component modals starts here
-      case "input":
-      case "form-numbered":
-      case "form-default":
+      case 'input':
+      case 'form-numbered':
+      case 'form-default':
         return <InputModalComponent {...commonProps} contentType={type} />;
       case FORM_TYPES.VIDEO:
         return <YouTubeMediaDialog {...commonProps} />;
@@ -372,26 +358,23 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
           <ImageFormComponent
             {...commonProps}
             customVideo
-            selectedImageFromGallery={""}
+            selectedImageFromGallery={''}
           />
         );
       case FORM_TYPES.TAG:
         return <TagInputDialog {...commonProps} />;
-      case "notes-form":
+      case 'notes-form':
         return <NotesModalDialog {...commonProps} />;
       case FORM_TYPES.JUMBOTRON:
         return (
-          <JumbotronFormDialog
-            classString={selectedContentClass}
-            {...commonProps}
-          />
+          <JumbotronFormDialog classString={selectedContentClass} {...commonProps} />
         );
       case FORM_TYPES.HIGHLIGHTER:
         return <HighlighterFormDialog {...commonProps} />;
       case FORM_TYPES.DOWNLOAD:
         return <DownloadModal {...commonProps} />;
       case FORM_TYPES.POEM:
-      case "poem-form-default":
+      case 'poem-form-default':
         return <LinestarterModalDialog {...commonProps} />;
       case FORM_TYPES.KEYWORDS:
         return <KeywordModalDialog {...commonProps} />;
@@ -401,10 +384,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       case FORM_TYPES.WRITING_EXERCISE:
       case `writing-exercise-form-default`:
         return (
-          <WritingExerciseModal
-            classString={selectedContentClass}
-            {...commonProps}
-          />
+          <WritingExerciseModal classString={selectedContentClass} {...commonProps} />
         );
 
       case FORM_TYPES.ATTACHMENTS:
@@ -482,49 +462,49 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
   const getTitleByType = (dialogLabel: string) => {
     switch (dialogLabel) {
       case dialogLabelList.ADD_CONTENT:
-        return "Add Content";
+        return 'Add Content';
       case dialogLabelList.NEW_PAGE:
-        return "Add New Page";
+        return 'Add New Page';
       case dialogLabelList.VIEW_PAGES:
-        return "Lesson Pages";
+        return 'Lesson Pages';
       case dialogLabelList.USE_TEMPLATE:
-        return "Use Template";
+        return 'Use Template';
 
       default:
-        return "Title";
+        return 'Title';
     }
   };
 
   const getComponentTitle = (type: string) => {
     switch (type) {
       case FORM_TYPES.TEXT:
-        return "Input Component";
+        return 'Input Component';
       case FORM_TYPES.EMOJI:
-        return "Emoji Component";
+        return 'Emoji Component';
       case FORM_TYPES.RADIO:
-        return "Single Option Component";
+        return 'Single Option Component';
       case FORM_TYPES.MULTIPLE:
-        return "Multiple Options Component";
+        return 'Multiple Options Component';
       case FORM_TYPES.DATE_PICKER:
-        return "Date Picker Component";
+        return 'Date Picker Component';
       case FORM_TYPES.CUSTOM_VIDEO:
-        return "Video Component";
+        return 'Video Component';
       case FORM_TYPES.HIGHLIGHTER:
-        return "Highlighter Component";
+        return 'Highlighter Component';
       case FORM_TYPES.POEM:
-      case "poem-form-default":
-        return "Poem Component";
+      case 'poem-form-default':
+        return 'Poem Component';
       case FORM_TYPES.LINK:
-        return "Link Component";
+        return 'Link Component';
       case FORM_TYPES.REVIEW_SLIDER:
-        return "Review Slider Component";
-      case "notes-form":
-        return "Notes Component";
+        return 'Review Slider Component';
+      case 'notes-form':
+        return 'Notes Component';
       case FORM_TYPES.WRITING_EXERCISE:
-      case "writing-exercise-form-default":
-        return "Writing Exercise Component";
+      case 'writing-exercise-form-default':
+        return 'Writing Exercise Component';
       case EMOTIONS:
-        return "Emotion Component";
+        return 'Emotion Component';
       default:
         return `${capitalizeFirstLetter(type)} Component`;
     }
@@ -533,21 +513,18 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
   const {
     askBeforeClose,
 
-    setUnsavedChanges,
+    setUnsavedChanges
   } = useUnsavedChanges(closeAction);
 
   const [optionsCollapse, setOptionsCollapse] = useState(true);
 
   return (
-    <div
-      id={`builderWrapper`}
-      className="relative h-full bg-white shadow-5 sm:rounded-lg flex flex-col"
-    >
-      <LessonPlanNavigation
+    <div id={`builderWrapper`} className="relative  bg-dark-blue sm:rounded-lg">
+      {/* <LessonPlanNavigation
         selectedPageID={selectedPageID}
         setSelectedPageID={setSelectedPageID}
         universalLessonDetails={universalLessonDetails}
-      />
+      /> */}
 
       {modalPopVisible && (
         <Modal
@@ -556,11 +533,8 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
           showHeaderBorder
           title={getTitleByType(currentModalDialog)}
           closeOnBackdrop
-          closeAction={hideAllModals}
-        >
-          <div className="min-w-256">
-            {modalDialogSwitch(currentModalDialog)}
-          </div>
+          closeAction={hideAllModals}>
+          <div className="min-w-256">{modalDialogSwitch(currentModalDialog)}</div>
         </Modal>
       )}
       {addContentModal.show && (
@@ -582,18 +556,17 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       {suggestionModal.show && (
         <Modal
           showHeader={true}
-          title={"Option Suggestions"}
+          title={'Option Suggestions'}
           showHeaderBorder={true}
           showFooter={false}
           closeAction={() =>
             setSuggestionModal({
               ...suggestionModal,
-              data: [{ title: "", content: [{ id: "", text: "" }] }],
-              show: false,
+              data: [{title: '', content: [{id: '', text: ''}]}],
+              show: false
             })
-          }
-        >
-          <div style={{ minWidth: "30rem" }} className="bg-white ">
+          }>
+          <div style={{minWidth: '30rem'}} className="bg-white ">
             <Info text="Click on value to see options" />
             <div className="max-h-132 overflow-y-scroll overflow-x-hidden">
               {suggestionModal.data.map((item: any) => (
@@ -604,7 +577,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
                     setSuggestionModal({
                       ...suggestionModal,
                       show: false,
-                      selectedResponse: r,
+                      selectedResponse: r
                     });
                   }}
                   title={item.title}
@@ -614,27 +587,12 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
             </div>
             <Buttons
               btnClass="mt-4"
-              label={`${
-                optionsCollapse ? "Show all options" : "Collapse all options"
-              } `}
+              label={`${optionsCollapse ? 'Show all options' : 'Collapse all options'} `}
               onClick={() => setOptionsCollapse(!optionsCollapse)}
             />
           </div>
         </Modal>
       )}
-
-      {/* {openGallery && (
-        <Modal
-          showHeader={true}
-          title={`Select from gallery`}
-          showHeaderBorder={true}
-          showFooter={false}
-          closeAction={handleGalleryModal}>
-          <div className="min-w-256">
-            <ImageGallery basePath={`ULB/${user.id}`} onSelectImage={onSelectImage} />
-          </div>
-        </Modal>
-      )} */}
 
       <CoreBuilder
         mode={mode}
@@ -648,9 +606,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         lessonId={lessonId}
         selectedPageID={selectedPageID}
         setSelectedPageID={setSelectedPageID}
-        initialUniversalLessonPagePartContent={
-          initialUniversalLessonPagePartContent
-        }
+        initialUniversalLessonPagePartContent={initialUniversalLessonPagePartContent}
         handleEditBlockContent={handleEditBlockContent}
         handleModalPopToggle={handleModalPopToggle}
         handleTagModalOpen={handleTagModalOpen}

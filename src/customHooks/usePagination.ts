@@ -52,6 +52,7 @@ const usePagination = (data: any[], totalResults: number) => {
   };
 
   useEffect(() => {
+    resetPagination();
     setFirstPage(true);
     setLastPage(false);
     const totalListPages = Math.floor(totalResults / pageCount);

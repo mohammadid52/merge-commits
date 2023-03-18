@@ -420,7 +420,6 @@ const LessonBuilder = (props: LessonBuilderProps) => {
 
         const newLessonPlans = lesson?.data?.updateLesson?.lessonPlan;
         updateLessonPlan(newLessonPlans);
-      } else {
       }
       onCheckpointModalClose(false);
     } catch (error) {
@@ -518,11 +517,6 @@ const LessonBuilder = (props: LessonBuilderProps) => {
   const updateMeasurementList = async (rubrics: any[]) => {
     try {
       setUpdating(true);
-
-      // setServerMessage({
-      //   isError: false,
-      //   message: AddNewLessonFormDict[userLanguage]['MESSAGES']['MEASUREMENTADDSUCCESS']
-      // });
 
       setUnsavedChanges(false);
       setUpdating(false);
@@ -639,8 +633,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
   };
 
   const fetchLessonRubrics = async () => {
-    try {
-    } catch (error) {}
+    // do something
   };
 
   const postLessonCreation = (lessonId: string, action?: string) => {

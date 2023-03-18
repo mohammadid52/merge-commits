@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap');
-@import '@pathofdev/react-tag-input/build/index.css';
+// @import '@pathofdev/react-tag-input/build/index.css';
 
 // Variables
 @import 'variables';
@@ -31,6 +31,13 @@ button,
 img {
   background: transparent;
   border: transparent;
+}
+
+ul,
+ol,
+dl {
+  margin: 0 !important;
+  list-style-type: none;
 }
 
 .sentiment-table-view {
@@ -1791,17 +1798,17 @@ $translation-fab-width: 50px;
 
 // Ant Design Overwrite styles
 
-.ant-breadcrumb {
-  & a,
-  .ant-breadcrumb-separator {
-    color: white;
-  }
-  & a {
-    &:hover {
-      color: white;
-    }
-  }
-}
+// .ant-breadcrumb {
+//   & a,
+//   .ant-breadcrumb-separator {
+//     color: white;
+//   }
+//   & a {
+//     &:hover {
+//       color: white;
+//     }
+//   }
+// }
 
 .ant-input-group .ant-input-affix-wrapper:not(:last-child) {
   // border-start-start-radius: 99px !important;

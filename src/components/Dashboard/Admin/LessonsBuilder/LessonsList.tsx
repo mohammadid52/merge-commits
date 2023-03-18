@@ -61,7 +61,8 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
 
     currentList: _currentList,
     allAsProps,
-    setCurrentList
+    setCurrentList,
+    getIndex
   } = usePagination(getSortedList(lessonsData) || [], totalLessonNum || 0);
 
   const currentList = getSortedList(_currentList);
@@ -394,7 +395,7 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
   };
 
   const dataList = map(finalList, (item: any, index: number) => ({
-    no: index + 1 + (currentPage === 0 ? 0 : pageCount * currentPage),
+    no: getIndex(index),
     onClick: () => handleLessonsEdit(item.id),
     instituteName: isSuperAdmin && item.institution.name,
     status: <Status status={item.status} useDefault />,
