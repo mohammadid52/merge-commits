@@ -276,7 +276,9 @@ const UnitLookup = (props: UnitLookupProps) => {
               selectedItem={curriculum.name}
               list={curriculaList}
               placeholder="Select Curriculumn"
-              onChange={(val, name, id) => onSelectorChange(val, name, id, 'curriculum')}
+              onChange={(val, option: any) =>
+                onSelectorChange(val, val, option.id, 'curriculum')
+              }
             />
           </div>
           <div className="col-span-2 flex items-center">
@@ -284,7 +286,9 @@ const UnitLookup = (props: UnitLookupProps) => {
               selectedItem={unit.name}
               list={unitsList}
               placeholder="Select Unit"
-              onChange={(val, name, id) => onSelectorChange(val, name, id, 'unit')}
+              onChange={(val, option: any) =>
+                onSelectorChange(val, val, option.id, 'unit')
+              }
               noOptionMessage={
                 curriculum.name ? 'No Results' : 'Please select curricular first'
               }
@@ -362,8 +366,8 @@ const UnitLookup = (props: UnitLookupProps) => {
                           selectedItem={item.status}
                           placeholder="Select Status"
                           list={statusList}
-                          onChange={(val, name, id) =>
-                            onStatusChange(val, name, id, item.id)
+                          onChange={(val, option: any) =>
+                            onStatusChange(val, val, option.id, item.id)
                           }
                         />
                       </div>

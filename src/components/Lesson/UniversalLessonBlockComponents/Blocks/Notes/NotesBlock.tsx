@@ -426,9 +426,9 @@ const NotesBlock = ({
                 selectedItem={currentSelectedSize}
                 onChange={(name) => setCurrentSelectedSize(name)}
                 list={[
-                  {id: 0, name: 'small'},
-                  {id: 1, name: 'medium'},
-                  {id: 2, name: 'large'}
+                  {id: 0, label: 'small', value: 'small'},
+                  {id: 1, label: 'medium', value: 'medium'},
+                  {id: 2, label: 'large', value: 'large'}
                 ]}
               />
             </div>

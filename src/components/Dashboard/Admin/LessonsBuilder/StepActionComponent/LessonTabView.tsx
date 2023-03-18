@@ -44,17 +44,17 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
   const breadCrumsList = [
     {
       title: BreadcrumsTitles[userLanguage]['HOME'],
-      url: '/dashboard',
+      href: '/dashboard',
       last: false
     },
     {
       title: BreadcrumsTitles[userLanguage]['LESSONS'],
-      url: '/dashboard/lesson-builder',
+      href: '/dashboard/lesson-builder',
       last: false
     },
     {
       title: BreadcrumsTitles[userLanguage]['LESSONPLANBUILDER'],
-      url: `${match.url}?${lessonId ? `lessonId=${lessonId}}` : ``}`,
+      href: `${match.url}?${lessonId ? `lessonId=${lessonId}}` : ``}`,
       last: true
     }
   ];

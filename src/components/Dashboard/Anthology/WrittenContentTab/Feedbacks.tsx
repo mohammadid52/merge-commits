@@ -538,9 +538,7 @@ const Feedbacks = ({
                         id="picker-wrapper"
                         className="picker-wrapper absolute bottom-1 left-5">
                         <EmojiPicker
-                          onEmojiClick={(_: any, emoji: any) =>
-                            onEmojiSelect(emoji, true)
-                          }
+                          onEmojiClick={(emoji: any) => onEmojiSelect(emoji, true)}
                         />
                       </div>
                     )}
@@ -725,7 +723,7 @@ const Feedbacks = ({
                       id="picker-wrapper"
                       className="picker-wrapper absolute bottom-5 left-5">
                       <EmojiPicker
-                        onEmojiClick={(_: any, emoji: any) => onEmojiSelect(emoji, false)}
+                        onEmojiClick={(emoji: any) => onEmojiSelect(emoji, false)}
                       />
                     </div>
                   )}

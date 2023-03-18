@@ -24,11 +24,11 @@ interface ReviewProps extends IContentTypeComponentProps {
 }
 
 const roundedCornerList = [
-  {id: 0, name: 'None', value: 'rounded-none'},
-  {id: 1, name: 'Small', value: 'rounded-sm'},
-  {id: 2, name: 'Medium', value: 'rounded'},
-  {id: 3, name: 'Large', value: 'rounded-lg'},
-  {id: 4, name: 'Extra large', value: 'rounded-xl'}
+  {id: 0, label: 'None', value: 'rounded-none'},
+  {id: 1, label: 'Small', value: 'rounded-sm'},
+  {id: 2, label: 'Medium', value: 'rounded'},
+  {id: 3, label: 'Large', value: 'rounded-lg'},
+  {id: 4, label: 'Extra large', value: 'rounded-xl'}
 ];
 
 // remove value from property from list
@@ -62,8 +62,8 @@ const ReviewSliderModal = ({
       } = values || {};
 
       const roundedParsedValue =
-        find(roundedCornerList, (item) => item?.value === rounded)?.name ||
-        roundedCornerList[3].name;
+        find(roundedCornerList, (item) => item?.value === rounded)?.label ||
+        roundedCornerList[3].label;
 
       setReviewFields({
         ...reviewFields,
@@ -87,7 +87,7 @@ const ReviewSliderModal = ({
     bgColor: 'gray-700',
     fgColor: 'gray-800',
     cardBgColor: 'gray-700',
-    cardCorners: roundedCornerList[3].name
+    cardCorners: roundedCornerList[3].label
   });
 
   const [errors, setErrors] = useState({label: ''});
@@ -124,7 +124,7 @@ const ReviewSliderModal = ({
 
   const getClassValue = (): string => {
     const rounded =
-      find(roundedCornerList, (item) => item.name === reviewFields.cardCorners)?.value ||
+      find(roundedCornerList, (item) => item.label === reviewFields.cardCorners)?.value ||
       'rounded-lg';
     return `${reviewFields.range} || ${reviewFields.bgColor} || ${reviewFields.fgColor} || ${reviewFields.cardBgColor} || ${rounded}`;
   };
@@ -179,8 +179,8 @@ const ReviewSliderModal = ({
   const getColorDensity = (value: string | number) => `${(Number(value) * 10) / 100}%`;
 
   const tabs = [
-    {name: 'Component Details', current: true},
-    {name: 'Preview', current: false}
+    {name: 'Component Details', value: 'Component Details', current: true},
+    {name: 'Preview', value: 'Preview', current: false}
   ];
 
   const {curTab, setCurTab, helpers, goTo} = useTabs();
@@ -223,8 +223,8 @@ const ReviewSliderModal = ({
                 selectedItem={reviewFields.range}
                 onChange={(name) => setReviewFields({...reviewFields, range: name})}
                 list={[
-                  {id: 0, name: '1-5'},
-                  {id: 1, name: '1-10'}
+                  {id: 0, value: '1-5', label: '1-5'},
+                  {id: 1, value: '1-10', label: '1-10'}
                 ]}
               />
             </div>

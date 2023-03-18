@@ -84,8 +84,8 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
     }
   }, [isSuperAdmin]);
 
-  const instituteChange = (_: string, name: string, value: string) => {
-    setSelectedInstitution({name, id: value});
+  const instituteChange = (value: string) => {
+    setSelectedInstitution({name: value, id: value});
 
     updateRoomList(value);
   };

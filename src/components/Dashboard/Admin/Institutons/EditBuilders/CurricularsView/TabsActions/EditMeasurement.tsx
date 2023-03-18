@@ -90,7 +90,7 @@ const EditMeasurement = () => {
     const msgs = validation;
     if (!measurement.name.length) {
       isValid = false;
-      msgs.name = EditMeasurementDict[userLanguage]['messages']['namerequired'];
+      msgs.name = EditMeasurementDict[userLanguage]['messages']['namerequierd'];
     } else {
       msgs.name = '';
     }

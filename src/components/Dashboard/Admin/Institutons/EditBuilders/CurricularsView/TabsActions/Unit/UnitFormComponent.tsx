@@ -275,7 +275,7 @@ const UnitFormComponent = ({
                 placeholder={UserEditDict[userLanguage]['status']}
                 list={RoomStatusList}
                 // @ts-ignore
-                onChange={(_: any, name: RoomStatus) => {
+                onChange={(name: RoomStatus) => {
                   beforeStatusChange(name);
                 }}
                 dropdownWidth="w-56"

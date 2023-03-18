@@ -80,12 +80,6 @@ export const getJSON = async (url: string): Promise<string> => {
   }
 };
 
-export const paginationPage = (lang: string, page: number, total: number) => {
-  if (lang === 'EN') return `Showing Page ${page + 1} of ${total} pages`;
-  if (lang === 'ES') return `Mostrando página ${page + 1} de ${total} páginas`;
-  return '';
-};
-
 export const setPageTitle = (title: string) => {
   if (title) {
     document.title = `${title} | `.concat(getAsset(getClientKey(), 'appTitle'));

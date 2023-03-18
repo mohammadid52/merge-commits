@@ -116,7 +116,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
       lessonPlan.reduce((total: number, obj: any) => Number(obj.estTime) + total, 0) / 5
     ) * 5;
 
-  const selectLanguage = (item: string[], option: any) => {
+  const selectLanguage = (_: string[], option: any) => {
     setFormData({...formData, languages: option});
     setValidation({
       ...validation,
@@ -125,7 +125,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
     setUnsavedChanges(true);
   };
 
-  const selectDesigner = (item: string[], option: any[]) => {
+  const selectDesigner = (_: string[], option: any[]) => {
     setSelectedDesigners(option);
   };
 

@@ -53,7 +53,7 @@ const ProgressBar = ({
    ************************************************/
 
   const nextRequiredIdx = pages
-    ? pages.reduce((nextIdx: number, _: any, currIdx: number) => {
+    ? pages.reduce((nextIdx: number, currIdx: number) => {
         if (nextIdx === null) {
           if (validateRequired?.(currIdx)) {
             return nextIdx;

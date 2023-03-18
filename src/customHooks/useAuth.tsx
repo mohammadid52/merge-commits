@@ -26,7 +26,7 @@ export type User = {
   pageState: UserPageState;
   lastEmotionSubmission: string;
   lastPageStateUpdate?: string;
-  language: string;
+  language: 'EN' | 'ES';
 };
 
 const useAuth = (): {

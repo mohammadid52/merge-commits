@@ -67,12 +67,12 @@ const InstitutionLookup: React.FC = () => {
   const breadCrumbsList = [
     {
       title: BreadcrumsTitles[userLanguage]['HOME'],
-      url: '/dashboard',
+      href: '/dashboard',
       last: false
     },
     {
       title: BreadcrumsTitles[userLanguage]['INSTITUTION_MANAGEMENT'],
-      url: `${match.url}`,
+      href: `${match.url}`,
       last: true
     }
   ];

@@ -531,12 +531,11 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
       'no',
       dict['name'],
       dict['flow'],
-
       dict['role'],
       dict['status'],
       dict['location'],
       state.user.role !== 'ST' && state.user.role !== 'BLD' && dict['action']
-    ],
+    ] as string[],
     dataList,
     config: {
       dark: false,

@@ -259,11 +259,6 @@ const RoomsList = (props: RoomListProps) => {
     ['asc']
   );
 
-  const onInstitutionSelectionRemove = () => {
-    setSelectedInstitution({});
-    removeSearchAction();
-  };
-
   const updateFilter = (filterName: SortType) => {
     if (filterName === filters) {
       setSearchInput({...searchInput, isActive: false});

@@ -131,12 +131,12 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
   const reasonDropdown = [
     {
       id: 1,
-      name: 'Paper Survey',
+      label: 'Paper Survey',
       value: 'paper-survey'
     },
     {
       id: 2,
-      name: 'User Update Survey',
+      label: 'User Update Survey',
       value: 'user-update'
     }
   ];
@@ -1425,9 +1425,9 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
                         width="xl:w-64"
                         setHoveringItem={setHoveringItem}
                         list={instClassRooms}
-                        onChange={(value, name, id) => {
+                        onChange={(value, option: any) => {
                           setHoveringItem({});
-                          onClassRoomSelect(id, name, value);
+                          onClassRoomSelect(option.id, value, value);
                           focusOn('upload-analytics-unit');
                         }}
                       />
@@ -1502,8 +1502,8 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
                       list={units}
                       width="xl:w-64"
                       disabled={!selectedCurriculum}
-                      onChange={(value, name, id) => {
-                        onUnitSelect(id, name, value);
+                      onChange={(value, option: any) => {
+                        onUnitSelect(option.id, value, value);
                         focusOn('analytics-survey');
                       }}
                     />
@@ -1518,7 +1518,9 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
                       selectedItem={selectedSurvey ? selectedSurvey.name : ''}
                       placeholder="select survey"
                       list={surveys}
-                      onChange={(value, name, id) => onChangeSurvey(id, name, value)}
+                      onChange={(value, option: any) =>
+                        onChangeSurvey(option.id, value, value)
+                      }
                     />
                   </div>
                 }
@@ -1547,7 +1549,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
             selectedItem={selectedReason ? selectedReason.name : ''}
             placeholder={CsvDict[userLanguage]['SELECT_REASON']}
             list={reasonDropdown}
-            onChange={(value, name, id) => onReasonSelected(id, name, value)}
+            onChange={(value, option: any) => onReasonSelected(option.id, value, value)}
           />
         </div>
         <AnimatedContainer show={checkingCsvFile} animationType="translateY">

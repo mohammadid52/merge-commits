@@ -277,8 +277,8 @@ export const UnitList = ({
     }
   };
 
-  const instituteChange = (_: string, name: string, value: string) => {
-    setSelectedInstitution({name, id: value});
+  const instituteChange = (value: string, option: any) => {
+    setSelectedInstitution({name: value, id: option.id});
     updateRoomList(value);
   };
 
@@ -516,7 +516,7 @@ export const UnitList = ({
 
   const tableConfig = {
     headers: [
-      UnitLookupDict[userLanguage]['NO'],
+      UnitLookupDict[userLanguage].NO,
       UnitLookupDict[userLanguage]['NAME'],
       isSuperAdmin && UnitLookupDict[userLanguage]['INSTITUTION_NAME'],
       UnitLookupDict[userLanguage]['LESSONS'],
@@ -593,7 +593,9 @@ export const UnitList = ({
                     selectedItem={unitInput.name}
                     list={units}
                     placeholder="Select Unit"
-                    onChange={(_, name, id) => setUnitInput({name, id})}
+                    onChange={(name: string, option: any) =>
+                      setUnitInput({name, id: option.id})
+                    }
                   />
                   <Buttons
                     label={BUTTONS[userLanguage]['ADD']}

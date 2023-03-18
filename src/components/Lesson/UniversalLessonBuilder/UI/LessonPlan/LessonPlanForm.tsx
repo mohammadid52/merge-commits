@@ -1,16 +1,16 @@
-import Buttons from "atoms/Buttons";
-import FormInput from "atoms/Form/FormInput";
-import Selector from "atoms/Form/Selector";
-import TextArea from "atoms/Form/TextArea";
-import { API, graphqlOperation } from "aws-amplify";
-import { useGlobalContext } from "contexts/GlobalContext";
-import { useULBContext } from "contexts/UniversalLessonBuilderContext";
-import * as customMutations from "customGraphql/customMutations";
-import useDictionary from "customHooks/dictionary";
-import React, { useState } from "react";
-import { useHistory, useRouteMatch } from "react-router";
-import { estimatedTimeList } from "utilities/staticData";
-import { v4 as uuidV4 } from "uuid";
+import Buttons from 'atoms/Buttons';
+import FormInput from 'atoms/Form/FormInput';
+import Selector from 'atoms/Form/Selector';
+import TextArea from 'atoms/Form/TextArea';
+import {API, graphqlOperation} from 'aws-amplify';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
+import * as customMutations from 'customGraphql/customMutations';
+import useDictionary from 'customHooks/dictionary';
+import React, {useState} from 'react';
+import {useHistory, useRouteMatch} from 'react-router';
+import {estimatedTimeList} from 'utilities/staticData';
+import {v4 as uuidV4} from 'uuid';
 
 interface ILessonInputs {
   id: string;
@@ -22,15 +22,15 @@ interface ILessonInputs {
 
 const LessonPlanForm = () => {
   const history = useHistory();
-  const { userLanguage } = useGlobalContext();
-  const { BUTTONS, LessonBuilderDict } = useDictionary();
-  const { universalLessonDetails, setActiveTab } = useULBContext();
+  const {userLanguage} = useGlobalContext();
+  const {BUTTONS, LessonBuilderDict} = useDictionary();
+  const {universalLessonDetails, setActiveTab} = useULBContext();
   const [inputObj, setInputObj] = useState<ILessonInputs>({
-    id: "",
-    label: "",
-    title: "",
-    description: "",
-    estTime: "1 min",
+    id: '',
+    label: '',
+    title: '',
+    description: '',
+    estTime: '1 min'
   });
   const [errors, setErrors] = useState<any>({});
   const [loading, setLoading] = useState<boolean>(false);
@@ -46,11 +46,11 @@ const LessonPlanForm = () => {
     const value: string = (event.target as HTMLInputElement).value;
     setInputObj((prevInputs: ILessonInputs) => ({
       ...prevInputs,
-      [name]: value,
+      [name]: value
     }));
     setErrors((errors: any) => ({
       ...errors,
-      [name]: "",
+      [name]: ''
     }));
   };
 
@@ -69,13 +69,13 @@ const LessonPlanForm = () => {
               label: inputObj.label,
               description: inputObj.description,
               pageContent: [],
-              estTime: Number(inputObj.estTime?.split(" ")[0]),
-            },
-          ],
+              estTime: Number(inputObj.estTime?.split(' ')[0])
+            }
+          ]
         };
         const res: any = await API.graphql(
           graphqlOperation(customMutations.updateUniversalLesson, {
-            input,
+            input
           })
         );
         const data = res.data.updateUniversalLesson;
@@ -96,26 +96,26 @@ const LessonPlanForm = () => {
   };
 
   const validateForm = () => {
-    const { label = "", title = "" } = inputObj;
+    const {label = '', title = ''} = inputObj;
     let isValid = true,
       formErrors: any = {};
 
     if (!label) {
       isValid = false;
-      formErrors.label = "Label is required";
+      formErrors.label = 'Label is required';
     }
     if (!title) {
       isValid = false;
-      formErrors.title = "Title is required";
+      formErrors.title = 'Title is required';
     }
     setErrors(formErrors);
     return isValid;
   };
 
-  const onSelectOption = (_: any, name: string) => {
+  const onSelectOption = (name: string) => {
     setInputObj((prevInputs: ILessonInputs) => ({
       ...prevInputs,
-      estTime: name,
+      estTime: name
     }));
   };
 
@@ -127,12 +127,10 @@ const LessonPlanForm = () => {
             <div className="grid grid-cols-3">
               <div className="p-2">
                 <FormInput
-                  label={
-                    LessonBuilderDict[userLanguage]["LESSON_PLAN_FORM"].LABEL
-                  }
+                  label={LessonBuilderDict[userLanguage]['LESSON_PLAN_FORM'].LABEL}
                   value={inputObj.label}
                   onChange={onInputChange}
-                  name={"label"}
+                  name={'label'}
                   isRequired={true}
                   error={errors.label}
                   maxLength={12}
@@ -141,12 +139,10 @@ const LessonPlanForm = () => {
               </div>
               <div className="p-2">
                 <FormInput
-                  label={
-                    LessonBuilderDict[userLanguage]["LESSON_PLAN_FORM"].TITLE
-                  }
+                  label={LessonBuilderDict[userLanguage]['LESSON_PLAN_FORM'].TITLE}
                   value={inputObj.title}
                   onChange={onInputChange}
-                  name={"title"}
+                  name={'title'}
                   isRequired={true}
                   error={errors.title}
                 />
@@ -154,10 +150,9 @@ const LessonPlanForm = () => {
               <div className="p-2">
                 <Selector
                   label={
-                    LessonBuilderDict[userLanguage]["LESSON_PLAN_FORM"]
-                      .ESTIMATED_TIME
+                    LessonBuilderDict[userLanguage]['LESSON_PLAN_FORM'].ESTIMATED_TIME
                   }
-                  placeholder={"Select estimate time"}
+                  placeholder={'Select estimate time'}
                   list={estimatedTimeList}
                   selectedItem={inputObj.estTime}
                   onChange={onSelectOption}
@@ -167,11 +162,8 @@ const LessonPlanForm = () => {
             <div className="p-2">
               <TextArea
                 error={errors.description}
-                label={
-                  LessonBuilderDict[userLanguage]["LESSON_PLAN_FORM"]
-                    .DESCRIPTION
-                }
-                name={"description"}
+                label={LessonBuilderDict[userLanguage]['LESSON_PLAN_FORM'].DESCRIPTION}
+                name={'description'}
                 onChange={onInputChange}
                 rows={2}
                 value={inputObj.description}
@@ -185,8 +177,8 @@ const LessonPlanForm = () => {
                 disabled={loading}
                 label={
                   loading
-                    ? BUTTONS[userLanguage]["SAVING"]
-                    : BUTTONS[userLanguage]["SAVE"]
+                    ? BUTTONS[userLanguage]['SAVING']
+                    : BUTTONS[userLanguage]['SAVE']
                 }
                 type="submit"
                 onClick={createPage}

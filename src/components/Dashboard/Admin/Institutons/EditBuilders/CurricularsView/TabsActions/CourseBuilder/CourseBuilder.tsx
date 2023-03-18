@@ -114,7 +114,8 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
       } catch {
         setMessages({
           show: true,
-          message: CourseBuilderDict[userLanguage]['MESSAGES']['FETCH_COURSE_ERR'],
+          message:
+            CourseBuilderDict[userLanguage]['MESSAGES']['ERROR']['FETCH_COURSE_ERR'],
           isError: true
         });
         setFetchingDetails(false);

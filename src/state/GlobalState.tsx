@@ -83,7 +83,7 @@ export const globalState: GlobalStateType = {
     email: '',
     firstName: '',
     lastName: '',
-    language: '',
+    language: 'EN',
     role: Role.ST,
     image: '',
     preferredName: '',

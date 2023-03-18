@@ -1,13 +1,11 @@
-import ErrorBoundary from "@components/Error/ErrorBoundary";
-import { isEmpty } from "lodash";
-import camelCase from "lodash/camelCase";
-import map from "lodash/map";
-import { forwardRef } from "react";
-import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
-import "../../style/_table.scss";
-import ListBottomBar, {
-  ListBottomBar as IListBottomBar,
-} from "./ListBottomBar";
+import ErrorBoundary from '@components/Error/ErrorBoundary';
+import {isEmpty} from 'lodash';
+import camelCase from 'lodash/camelCase';
+import map from 'lodash/map';
+import {forwardRef} from 'react';
+import {DragDropContext, Draggable, Droppable} from 'react-beautiful-dnd';
+import '../../style/_table.scss';
+import ListBottomBar, {ListBottomBar as IListBottomBar} from './ListBottomBar';
 
 interface IDataListItem {
   [key: string]: any;
@@ -17,11 +15,11 @@ interface IConfig {
   isLastAction?: boolean;
   isFirstIndex?: boolean;
   dark?: boolean;
-  headers?: { textColor?: string; bgColor?: string };
+  headers?: {textColor?: string; bgColor?: string};
   dataList?: {
     loading?: boolean;
     emptyText?: string;
-    customWidth?: { [key: string]: any };
+    customWidth?: {[key: string]: any};
     maxHeight?: string;
     textColor?: string;
 
@@ -43,23 +41,23 @@ interface IConfig {
     };
     bgColor?: string;
     pattern?: string;
-    patternConfig?: { firstColor?: string; secondColor?: string };
+    patternConfig?: {firstColor?: string; secondColor?: string};
   };
 }
 interface IDroppableList {
   config: IConfig;
   dataList: IDataListItem[];
-  customWidth?: { [key: string]: any };
+  customWidth?: {[key: string]: any};
   headers: string[];
   // @ts-ignore
-  droppableConfig: IConfig["dataList"]["droppable"];
+  droppableConfig: IConfig['dataList']['droppable'];
 }
 
 interface IListItem {
   config: IConfig;
   idx: number;
   headers: string[];
-  customWidth?: { [key: string]: any };
+  customWidth?: {[key: string]: any};
   item: IDataListItem;
 }
 
@@ -68,7 +66,7 @@ const DroppableList = ({
   headers,
   config,
   customWidth,
-  droppableConfig,
+  droppableConfig
 }: IDroppableList) => {
   return (
     <DragDropContext onDragEnd={droppableConfig.onDragEnd}>
@@ -100,60 +98,56 @@ const DroppableList = ({
   );
 };
 
-const getPattern = (config: IConfig) => config?.dataList?.pattern || "striped";
+const getPattern = (config: IConfig) => config?.dataList?.pattern || 'striped';
 const getPatternColor = (config: IConfig) => {
   const patternConfig = config?.dataList?.patternConfig;
   if (patternConfig !== undefined) {
     return {
       firstColor: patternConfig.firstColor,
-      secondColor: patternConfig.secondColor,
+      secondColor: patternConfig.secondColor
     };
   } else {
     return {
-      firstColor: "bg-gray-100",
-      secondColor: "bg-gray-200",
+      firstColor: 'bg-gray-100',
+      secondColor: 'bg-gray-200'
     };
   }
 };
 
-const LoadingItem = ({ headers, config, customWidth, idx }: any) => {
+const LoadingItem = ({headers, config, customWidth, idx}: any) => {
   return (
     <tr
       className={`flex justify-between ${
         config?.dataList?.bgColor
           ? config?.dataList?.bgColor
-          : getPattern(config) === "striped"
+          : getPattern(config) === 'striped'
           ? idx % 2 === 0
             ? getPatternColor(config).firstColor
             : getPatternColor(config).secondColor
-          : "bg-transparent"
-      }`}
-    >
+          : 'bg-transparent'
+      }`}>
       {map(headers, (header, idx: number) => {
         let lowerHeader = camelCase(header.toLowerCase());
 
         const _customWidth = customWidth[lowerHeader];
 
-        const className = `${
-          config?.dataList?.textColor || "text-gray-500"
-        } px-6 py-4 ${
+        const className = `${config?.dataList?.textColor || 'text-gray-500'} px-6 py-4 ${
           _customWidth ||
           (config?.isFirstIndex && idx === 0
-            ? "w-12"
+            ? 'w-12'
             : idx === 0
-            ? "w-72"
+            ? 'w-72'
             : config?.isLastAction && idx === headers.length - 1
-            ? "w-28"
-            : "")
+            ? 'w-28'
+            : '')
         } animate-pulse`;
 
         return (
           <td key={header} className={className}>
             <div
               className={`${
-                idx === 0 ? "rounded-full" : ""
-              } bg-gray-400 h-4 flex `}
-            ></div>
+                idx === 0 ? 'rounded-full' : ''
+              } bg-gray-400 h-4 flex `}></div>
           </td>
         );
       })}
@@ -162,63 +156,60 @@ const LoadingItem = ({ headers, config, customWidth, idx }: any) => {
 };
 
 const ListItem = forwardRef<any, IListItem>(
-  ({ config, idx, headers, item, customWidth, ...rest }, ref) => {
+  ({config, idx, headers, item, customWidth, ...rest}, ref) => {
     return (
       <tr
         key={idx}
         {...rest}
         ref={ref}
         className={`flex ${
-          config.dark ? "hover:bg-gray-900" : "hover:bg-gray-300"
+          config.dark ? 'hover:bg-gray-900' : 'hover:bg-gray-300'
         } cursor-pointer transition-all relative  items-center ${
-          item?.markRed ? "mark-red" : ""
+          item?.markRed ? 'mark-red' : ''
         } justify-between ${
           config?.dataList?.bgColor
             ? config?.dataList?.bgColor
-            : getPattern(config) === "striped"
+            : getPattern(config) === 'striped'
             ? idx % 2 === 0
               ? getPatternColor(config).firstColor
               : getPatternColor(config).secondColor
-            : "bg-transparent"
-        }`}
-      >
+            : 'bg-transparent'
+        }`}>
         {map(headers, (header, _idx) => {
           let lowerHeader = camelCase(header.toLowerCase());
 
           let _item = item[lowerHeader];
           const _customWidth = customWidth?.[lowerHeader];
-          const onClick = item["onClick"];
+          const onClick = item['onClick'];
 
           const className = `${
-            config?.dataList?.textColor || "text-gray-500"
+            config?.dataList?.textColor || 'text-gray-500'
           } px-6 py-4 ${
             _customWidth ||
             (config?.isFirstIndex && _idx === 0
-              ? "w-12"
+              ? 'w-12'
               : _idx === 0
-              ? "w-72"
+              ? 'w-72'
               : config?.isLastAction && _idx === headers.length - 1
-              ? "w-28"
-              : "md:break-all")
+              ? 'w-28'
+              : 'md:break-all')
           } text-sm `;
-          if (typeof _item === "string") {
+          if (typeof _item === 'string') {
             return (
               <td
-                onClick={typeof onClick === "function" ? onClick : () => {}}
-                key={item.id + "-" + header}
+                onClick={typeof onClick === 'function' ? onClick : () => {}}
+                key={item.id + '-' + header}
                 className={className}
                 dangerouslySetInnerHTML={{
-                  __html: _item,
-                }}
-              ></td>
+                  __html: _item
+                }}></td>
             );
           } else {
             return (
               <td
-                onClick={typeof onClick === "function" ? onClick : () => {}}
-                key={item.id + "-" + header}
-                className={className}
-              >
+                onClick={typeof onClick === 'function' ? onClick : () => {}}
+                key={item.id + '-' + header}
+                className={className}>
                 {_item}
               </td>
             );
@@ -232,13 +223,13 @@ const ListItem = forwardRef<any, IListItem>(
 const Table = ({
   dataList,
   headers,
-  config = { dark: false, dataList: { customWidth: {}, pattern: "striped" } },
+  config = {dark: false, dataList: {customWidth: {}, pattern: 'striped'}}
 }: {
   config?: IConfig;
-  headers: string[];
+  headers: (string | false)[];
   dataList: IDataListItem[];
 }) => {
-  const _headers = headers.filter(Boolean);
+  const _headers = headers.filter(Boolean) as string[];
 
   const dataListConfig = config.dataList || {};
   const droppableConfig = dataListConfig.droppable;
@@ -248,27 +239,23 @@ const Table = ({
     !isEmpty(droppableConfig) &&
     droppableConfig.isDroppable &&
     droppableConfig.droppableId &&
-    typeof droppableConfig.onDragEnd === "function";
+    typeof droppableConfig.onDragEnd === 'function';
 
   const paginationConfig = dataListConfig?.pagination?.config;
 
   const showPagination = Boolean(dataListConfig?.pagination?.showPagination);
 
   return (
-    <ErrorBoundary
-      fallback={<div className="hidden"></div>}
-      componentName="Table"
-    >
+    <ErrorBoundary fallback={<div className="hidden"></div>} componentName="Table">
       <div className="flex flex-col mb-2">
         <div className="overflow-x-auto">
           <div className="py-2 align-middle inline-block min-w-full">
             <div
               className={`overflow-x-auto 2xl:overflow-hidden border-0 ${
-                config?.dark ? "border-gray-700" : "border-gray-200"
-              } sm:rounded-lg`}
-            >
+                config?.dark ? 'border-gray-700' : 'border-gray-200'
+              } sm:rounded-lg`}>
               <table className="min-w-full divide-y-0 divide-gray-700">
-                <thead className={`${config?.headers?.bgColor || "theme-bg"} `}>
+                <thead className={`${config?.headers?.bgColor || 'theme-bg'} `}>
                   <tr className="flex justify-between">
                     {map(_headers, (header, idx) => {
                       let lowerHeader = camelCase(header.toLowerCase());
@@ -276,16 +263,16 @@ const Table = ({
                       const customWidth = _customWidth[lowerHeader];
 
                       const className = `${
-                        config?.headers?.textColor || "text-white"
+                        config?.headers?.textColor || 'text-white'
                       } px-6 py-3 ${
                         customWidth ||
                         (config?.isFirstIndex && idx === 0
-                          ? "w-12"
+                          ? 'w-12'
                           : idx === 0
-                          ? "w-72"
+                          ? 'w-72'
                           : config?.isLastAction && idx === _headers.length - 1
-                          ? "w-28"
-                          : "")
+                          ? 'w-28'
+                          : '')
                       }   text-left text-xs font-medium  uppercase tracking-wider`;
                       return (
                         <th key={header} scope="col" className={className}>
@@ -297,9 +284,8 @@ const Table = ({
                 </thead>
                 <tbody
                   className={`${
-                    dataListConfig?.maxHeight || "max-h-88 "
-                  } overflow-y-auto   ${config.dark ? "dark-scroll" : ""} `}
-                >
+                    dataListConfig?.maxHeight || 'max-h-88 '
+                  } overflow-y-auto   ${config.dark ? 'dark-scroll' : ''} `}>
                   {dataListConfig.loading ? (
                     [0, 1, 2, 3].map((item: any) => (
                       <LoadingItem

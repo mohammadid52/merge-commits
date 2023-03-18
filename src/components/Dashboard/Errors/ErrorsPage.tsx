@@ -118,20 +118,6 @@ const ErrorItem = ({
       ? [pendingItem, closedItem]
       : [pendingItem, reviewItem];
 
-  const statusBorder = () => {
-    switch (errorStatus) {
-      case ErrorStatus.PENDING:
-        return 'border-indigo-500';
-      case ErrorStatus.REVIEW:
-        return 'border-blue-500';
-      case ErrorStatus.CLOSED:
-        return 'border-green-500';
-
-      default:
-        return 'border-indigo-500';
-    }
-  };
-
   const history = useHistory();
 
   const INITIAL_MULTIPLE_CLOSE_MODAL = {

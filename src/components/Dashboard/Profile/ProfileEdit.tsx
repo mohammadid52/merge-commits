@@ -1,6 +1,6 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import React, {Fragment, useEffect, useState} from 'react';
-import {NavLink, useHistory} from 'react-router-dom';
+import {useHistory} from 'react-router-dom';
 
 import useAuth from '@customHooks/useAuth';
 import {Language} from 'API';
@@ -11,10 +11,10 @@ import Selector from 'atoms/Form/Selector';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import * as customMutations from 'customGraphql/customMutations';
 import useDictionary from 'customHooks/dictionary';
+import {languageList} from 'utilities/staticData';
 import {convertArrayIntoObj} from 'utilities/strings';
 import LessonLoading from '../../Lesson/Loading/ComponentLoading';
 import {UserInfo} from './Profile';
-import {languageList} from 'utilities/staticData';
 
 interface UserInfoProps {
   user: UserInfo;
@@ -56,9 +56,7 @@ const ProfileEdit = (props: UserInfoProps) => {
   };
 
   const onMultipleSelection = (
-    id: string,
-    name: string,
-    value: string,
+    option: any[],
     checkpointID: string,
     questionID: string
   ) => {
@@ -76,19 +74,12 @@ const ProfileEdit = (props: UserInfoProps) => {
           }
         });
       }
-      const selectedOption: any = selectedQuestion?.find((item: any) => item.id === id);
-      let updatedList;
-      if (selectedOption) {
-        const newList = selectedQuestion.filter((item: any) => item.id !== id);
-        updatedList = [...newList];
-      } else {
-        updatedList = [...selectedQuestion, {id, name, value}];
-      }
+
       setCheckpointData({
         ...checkpointData,
         [checkpointID]: {
           ...checkpointData[checkpointID],
-          [questionID]: [...updatedList]
+          [questionID]: [...option]
         }
       });
     } else {
@@ -96,13 +87,7 @@ const ProfileEdit = (props: UserInfoProps) => {
         ...checkpointData,
         [checkpointID]: {
           ...checkpointData[checkpointID],
-          [questionID]: [
-            {
-              id,
-              name,
-              value
-            }
-          ]
+          [questionID]: [...option]
         }
       });
     }
@@ -621,11 +606,9 @@ const ProfileEdit = (props: UserInfoProps) => {
                                           : []
                                       }
                                       placeholder=""
-                                      onChange={(id, name, value) =>
+                                      onChange={(_, option) =>
                                         onMultipleSelection(
-                                          id,
-                                          name,
-                                          value,
+                                          option,
                                           checkpoint.id,
                                           item.question.id
                                         )

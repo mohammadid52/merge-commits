@@ -1,22 +1,22 @@
-import { useEffect, useState } from "react";
-import { FaFileAlt, FaFileMedical, FaThList } from "react-icons/fa";
-import { IoArrowUndoCircleOutline } from "react-icons/io5";
-import { useHistory, useRouteMatch } from "react-router-dom";
+import {useEffect, useState} from 'react';
+import {FaFileAlt, FaFileMedical, FaThList} from 'react-icons/fa';
+import {IoArrowUndoCircleOutline} from 'react-icons/io5';
+import {useHistory, useRouteMatch} from 'react-router-dom';
 
-import BreadCrums from "atoms/BreadCrums";
-import Buttons from "atoms/Buttons";
-import UnderlinedTabs from "atoms/UnderlinedTabs";
+import BreadCrums from 'atoms/BreadCrums';
+import Buttons from 'atoms/Buttons';
+import UnderlinedTabs from 'atoms/UnderlinedTabs';
 
-import SectionTitleV3 from "@components/Atoms/SectionTitleV3";
-import { API, graphqlOperation } from "aws-amplify";
-import { useGlobalContext } from "contexts/GlobalContext";
-import { useULBContext } from "contexts/UniversalLessonBuilderContext";
-import * as customQueries from "customGraphql/customQueries";
-import useDictionary from "customHooks/dictionary";
-import { UniversalLesson } from "interfaces/UniversalLessonInterfaces";
-import ExistingPageView from "./ExistingPageView";
-import LessonPlanForm from "./LessonPlanForm";
-import TemplateView from "./TemplateView";
+import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
+import {API, graphqlOperation} from 'aws-amplify';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
+import * as customQueries from 'customGraphql/customQueries';
+import useDictionary from 'customHooks/dictionary';
+import {UniversalLesson} from 'interfaces/UniversalLessonInterfaces';
+import ExistingPageView from './ExistingPageView';
+import LessonPlanForm from './LessonPlanForm';
+import TemplateView from './TemplateView';
 
 export interface ILessonPlan {
   addNewPageHandler: (content: any) => void;
@@ -31,13 +31,10 @@ const LessonPlan = () => {
   // this is nested tab state holder
   const [activeTab, setActiveTab] = useState<number>(0);
 
-  const { userLanguage } = useGlobalContext();
-  const { BreadcrumsTitles, LessonBuilderDict } = useDictionary();
-  const {
-    addNewPageHandler,
-    universalLessonDetails,
-    setUniversalLessonDetails,
-  } = useULBContext();
+  const {userLanguage} = useGlobalContext();
+  const {BreadcrumsTitles, LessonBuilderDict} = useDictionary();
+  const {addNewPageHandler, universalLessonDetails, setUniversalLessonDetails} =
+    useULBContext();
 
   // const lessonId = params.get('lessonId');
   const route: any = useRouteMatch();
@@ -46,45 +43,45 @@ const LessonPlan = () => {
 
   const breadCrumsList = [
     {
-      title: BreadcrumsTitles[userLanguage]["HOME"],
-      url: "/dashboard",
-      last: false,
+      title: BreadcrumsTitles[userLanguage]['HOME'],
+      href: '/dashboard',
+      last: false
     },
     {
-      title: BreadcrumsTitles[userLanguage]["LESSONS"],
-      url: "/dashboard/lesson-builder",
-      last: false,
+      title: BreadcrumsTitles[userLanguage]['LESSONS'],
+      href: '/dashboard/lesson-builder',
+      last: false
     },
     {
-      title: BreadcrumsTitles[userLanguage]["LESSONPLANBUILDER"],
-      url: `${match.url}?${lessonId ? `lessonId=${lessonId}}` : ``}`,
-      last: false,
+      title: BreadcrumsTitles[userLanguage]['LESSONPLANBUILDER'],
+      href: `${match.url}?${lessonId ? `lessonId=${lessonId}}` : ``}`,
+      last: false
     },
     {
-      title: BreadcrumsTitles[userLanguage]["ADD_NEW_LESSON_PLAN"],
-      url: `${match.url}/lesson/add/lesson-plan?lessonId=${lessonId}`,
-      last: true,
-    },
+      title: BreadcrumsTitles[userLanguage]['ADD_NEW_LESSON_PLAN'],
+      href: `${match.url}/lesson/add/lesson-plan?lessonId=${lessonId}`,
+      last: true
+    }
   ];
 
   const fetchUniversalLessonDetails = async () => {
     try {
       const result: any = await API.graphql(
         graphqlOperation(customQueries.getUniversalLesson, {
-          id: lessonId,
+          id: lessonId
         })
       );
       const savedData = result.data.getUniversalLesson;
       setUniversalLessonDetails(savedData);
     } catch {
-      console.log("Error while fetching lesson data");
+      console.log('Error while fetching lesson data');
       history.push(`/dashboard/lesson-builder`);
     }
   };
 
   const checkValidUrl = async () => {
     if (!lessonId) {
-      console.log("@LessonPlan: Invalid url");
+      console.log('@LessonPlan: Invalid url');
       history.push(`/dashboard/lesson-builder`);
     }
   };
@@ -97,9 +94,9 @@ const LessonPlan = () => {
 
   const currentTabComp = (activeTab: string) => {
     switch (activeTab) {
-      case "0":
+      case '0':
         return <LessonPlanForm />;
-      case "1":
+      case '1':
         return (
           <ExistingPageView
             addNewPageHandler={addNewPageHandler}
@@ -107,7 +104,7 @@ const LessonPlan = () => {
             universalLessonDetails={universalLessonDetails}
           />
         );
-      case "2":
+      case '2':
         return <TemplateView />;
       default:
         return <LessonPlanForm />;
@@ -117,22 +114,22 @@ const LessonPlan = () => {
   const tabs = [
     {
       index: 0,
-      title: "New plan from scratch",
+      title: 'New plan from scratch',
       icon: <FaFileMedical />,
-      content: currentTabComp(`${activeTab}`),
+      content: currentTabComp(`${activeTab}`)
     },
     {
       index: 1,
-      title: "Use Existing Page",
+      title: 'Use Existing Page',
       icon: <FaThList />,
-      content: currentTabComp(`${activeTab}`),
+      content: currentTabComp(`${activeTab}`)
     },
     {
       index: 2,
-      title: "Page from Template",
+      title: 'Page from Template',
       icon: <FaFileAlt />,
-      content: currentTabComp(`${activeTab}`),
-    },
+      content: currentTabComp(`${activeTab}`)
+    }
   ];
 
   const updateTab = (tab: number) => {
@@ -145,8 +142,8 @@ const LessonPlan = () => {
       <BreadCrums items={breadCrumsList} />
       <div className="flex justify-between">
         <SectionTitleV3
-          title={LessonBuilderDict[userLanguage]["TITLE"]}
-          subtitle={LessonBuilderDict[userLanguage]["SUBTITLE"]}
+          title={LessonBuilderDict[userLanguage]['TITLE']}
+          subtitle={LessonBuilderDict[userLanguage]['SUBTITLE']}
         />
         <div className="flex justify-end py-4 mb-4 w-5/10">
           <Buttons
@@ -161,15 +158,11 @@ const LessonPlan = () => {
         <div className="bg-white border-gray-200 shadow-5 sm:rounded-lg  mb-4">
           <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
             <h3 className="text-lg leading-6 font-medium text-gray-900">
-              {LessonBuilderDict[userLanguage]["LESSON_PLAN_FORM"].HEADING}
+              {LessonBuilderDict[userLanguage]['LESSON_PLAN_FORM'].HEADING}
             </h3>
           </div>
           <div className="">
-            <UnderlinedTabs
-              tabs={tabs}
-              activeTab={activeTab}
-              updateTab={updateTab}
-            />
+            <UnderlinedTabs tabs={tabs} activeTab={activeTab} updateTab={updateTab} />
           </div>
         </div>
       </div>

@@ -19,6 +19,7 @@ import useGraphqlMutation from '@customHooks/useGraphqlMutation';
 import {withZoiqFilter} from '@utilities/functions';
 import {statusList} from '@utilities/staticData';
 import {getReverseUserRoleString, getUserRoleString} from '@utilities/strings';
+import {Checkbox} from 'antd';
 import {
   CreateClassStudentInput,
   CreatePersonInput,
@@ -28,13 +29,10 @@ import {
   PersonStatus,
   Role
 } from 'API';
-import CheckBox from 'atoms/Form/CheckBox';
-import Label from 'atoms/Form/Label';
 import * as customQueries from 'customGraphql/customQueries';
 import {useFormik} from 'formik';
 import {UserRegisterSchema} from 'Schema';
 import SuccessMessage from './SuccessMessage';
-import {Checkbox} from 'antd';
 
 const initialValues = {
   firstName: '',

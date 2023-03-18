@@ -9,7 +9,7 @@ const useNewDictionary = (): {
   AuthDict: any;
   CommunityDict: any;
   CsvDict: any;
-  paginationPage: (lang: string, page: number, total: number) => string;
+
   BUTTONS: any;
   General: any;
   BreadcrumsTitles: any;

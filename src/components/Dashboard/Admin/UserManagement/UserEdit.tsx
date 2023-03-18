@@ -317,9 +317,7 @@ const UserEdit = (props: UserInfoProps) => {
   };
 
   const onMultipleSelection = (
-    id: string,
-    name: string,
-    value: string,
+    option: any[],
     checkpointID: string,
     questionID: string
   ) => {
@@ -337,19 +335,12 @@ const UserEdit = (props: UserInfoProps) => {
           }
         });
       }
-      const selectedOption: any = selectedQuestion?.find((item: any) => item.id === id);
-      let updatedList;
-      if (selectedOption) {
-        const newList = selectedQuestion.filter((item: any) => item.id !== id);
-        updatedList = [...newList];
-      } else {
-        updatedList = [...selectedQuestion, {id, name, value}];
-      }
+
       setCheckpointData({
         ...checkpointData,
         [checkpointID]: {
           ...checkpointData[checkpointID],
-          [questionID]: [...updatedList]
+          [questionID]: [...option]
         }
       });
     } else {
@@ -357,13 +348,7 @@ const UserEdit = (props: UserInfoProps) => {
         ...checkpointData,
         [checkpointID]: {
           ...checkpointData[checkpointID],
-          [questionID]: [
-            {
-              id,
-              name,
-              value
-            }
-          ]
+          [questionID]: [...option]
         }
       });
     }
@@ -896,11 +881,11 @@ const UserEdit = (props: UserInfoProps) => {
                                           list={convertToSelectorList(
                                             item?.question?.options
                                           )}
-                                          onChange={(value, name, id) =>
+                                          onChange={(value, option: any) =>
                                             onSingleSelect(
                                               value,
-                                              name,
-                                              id,
+                                              value,
+                                              option.id,
                                               checkpoint.id,
                                               item.question.id
                                             )
@@ -955,11 +940,9 @@ const UserEdit = (props: UserInfoProps) => {
                                               : []
                                           }
                                           placeholder=""
-                                          onChange={(id, name, value) =>
+                                          onChange={(_, option: any[]) =>
                                             onMultipleSelection(
-                                              id,
-                                              name,
-                                              value,
+                                              option,
                                               checkpoint.id,
                                               item.question.id
                                             )
@@ -997,7 +980,7 @@ const UserEdit = (props: UserInfoProps) => {
               btnClass="py-2 w-2.5/10 px-4 text-xs ml-2"
               label={
                 updating
-                  ? ButtonDict['SAVING']
+                  ? ButtonDict[userLanguage]['SAVING']
                   : UserEditDict[userLanguage]['button']['save']
               }
               onClick={onSubmit}

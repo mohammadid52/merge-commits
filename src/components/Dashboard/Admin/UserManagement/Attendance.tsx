@@ -47,8 +47,6 @@ interface IAttendanceProps {
 }
 
 const Attendance = ({id, goToClassroom, selectedRoomId, role}: IAttendanceProps) => {
-  const {theme} = useGlobalContext();
-
   const [loading, setLoading] = useState<boolean>(false);
   const [attendanceList, setAttendanceList] = useState<any>([]);
   const [date, setDate] = useState<null | Date>(null);

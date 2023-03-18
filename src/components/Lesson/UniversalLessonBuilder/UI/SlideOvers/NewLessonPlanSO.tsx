@@ -1,37 +1,37 @@
-import CustomRichTextEditor from "@components/Lesson/UniversalLessonBlockComponents/Blocks/HighlighterBlock/CustomRichTextEditor";
-import useAuth from "@customHooks/useAuth";
-import { XIcon } from "@heroicons/react/outline";
-import { getAsset } from "assets";
-import FormInput from "atoms/Form/FormInput";
-import Label from "atoms/Form/Label";
-import Selector from "atoms/Form/Selector";
-import Modal from "atoms/Modal";
-import { API, graphqlOperation } from "aws-amplify";
-import { UPLOAD_KEYS } from "components/Lesson/constants";
-import { REGEX } from "components/Lesson/UniversalLessonBuilder/UI/common/constants";
-import { useGlobalContext } from "contexts/GlobalContext";
-import { useULBContext } from "contexts/UniversalLessonBuilderContext";
-import * as customMutations from "customGraphql/customMutations";
-import useDictionary from "customHooks/dictionary";
-import { useQuery } from "customHooks/urlParam";
-import { IFile } from "interfaces/UniversalLessonInterfaces";
-import { findIndex, isEmpty, remove, update } from "lodash";
-import ModalPopUp from "molecules/ModalPopUp";
-import UploadMedia from "molecules/UploadMedia";
-import { nanoid } from "nanoid";
-import React, { useEffect, useRef, useState } from "react";
-import { useHistory, useRouteMatch } from "react-router";
-import { getImageFromS3Static } from "utilities/services";
-import { estimatedTimeList } from "utilities/staticData";
-import { updateLessonPageToDB } from "utilities/updateLessonPageToDB";
-const features: string[] = ["colorPicker", "inline"];
+import CustomRichTextEditor from '@components/Lesson/UniversalLessonBlockComponents/Blocks/HighlighterBlock/CustomRichTextEditor';
+import useAuth from '@customHooks/useAuth';
+import {XIcon} from '@heroicons/react/outline';
+import {getAsset} from 'assets';
+import FormInput from 'atoms/Form/FormInput';
+import Label from 'atoms/Form/Label';
+import Selector from 'atoms/Form/Selector';
+import Modal from 'atoms/Modal';
+import {API, graphqlOperation} from 'aws-amplify';
+import {UPLOAD_KEYS} from 'components/Lesson/constants';
+import {REGEX} from 'components/Lesson/UniversalLessonBuilder/UI/common/constants';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
+import * as customMutations from 'customGraphql/customMutations';
+import useDictionary from 'customHooks/dictionary';
+import {useQuery} from 'customHooks/urlParam';
+import {IFile} from 'interfaces/UniversalLessonInterfaces';
+import {findIndex, isEmpty, remove, update} from 'lodash';
+import ModalPopUp from 'molecules/ModalPopUp';
+import UploadMedia from 'molecules/UploadMedia';
+import {nanoid} from 'nanoid';
+import React, {useEffect, useRef, useState} from 'react';
+import {useHistory, useRouteMatch} from 'react-router';
+import {getImageFromS3Static} from 'utilities/services';
+import {estimatedTimeList} from 'utilities/staticData';
+import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
+const features: string[] = ['colorPicker', 'inline'];
 
 const Checkbox = ({
   title,
   label,
   checked,
   onChange,
-  id,
+  id
 }: {
   checked: boolean;
   onChange: any;
@@ -54,8 +54,7 @@ const Checkbox = ({
       <div className="ml-3 text-sm">
         <label
           htmlFor="group"
-          className="whitespace-pre-line font-medium dark:text-gray-300 text-gray-700"
-        >
+          className="whitespace-pre-line font-medium dark:text-gray-300 text-gray-700">
           {title}
         </label>
         <p className="text-sm whitespace-pre-line text-gray-500">{label}</p>
@@ -69,7 +68,7 @@ const VideoUploadComponent = ({
   closeAction,
   file,
   setFile,
-  setFields,
+  setFields
 }: {
   customRef: any;
   closeAction: () => void;
@@ -77,21 +76,19 @@ const VideoUploadComponent = ({
   setFields: any;
   setFile: React.Dispatch<React.SetStateAction<IFile | null>>;
 }) => {
-  const [error, setError] = useState("");
-  const showCloseButton =
-    isEmpty(file) || (!isEmpty(file) && file._status === "success");
+  const [error, setError] = useState('');
+  const showCloseButton = isEmpty(file) || (!isEmpty(file) && file._status === 'success');
 
   return (
     <Modal
       closeAction={showCloseButton ? closeAction : () => {}}
       showHeader={showCloseButton}
-      showFooter={false}
-    >
+      showFooter={false}>
       <div>
         <UploadMedia
           file={file}
           onSuccess={() => {
-            setFields((prev: any) => ({ ...prev, videoLink: "" }));
+            setFields((prev: any) => ({...prev, videoLink: ''}));
           }}
           uploadKey={UPLOAD_KEYS.ULB}
           setFile={setFile}
@@ -108,7 +105,7 @@ const VideoUploadComponent = ({
 
 const InputTag = ({
   tags = [],
-  setTags,
+  setTags
 }: {
   tags: string[];
   // setTags: React.Dispatch<React.SetStateAction<string[]>>;
@@ -124,40 +121,35 @@ const InputTag = ({
 
   const inputKeyDown = (e: any) => {
     const val = e.target.value;
-    if (e.key === "Enter" && val) {
+    if (e.key === 'Enter' && val) {
       if (tags.find((tag) => tag.toLowerCase() === val.toLowerCase())) {
         return;
       }
       setTags([...tags, val]);
       tagInput.value = null;
-    } else if (e.key === "Backspace" && !val) {
+    } else if (e.key === 'Backspace' && !val) {
       removeTag(tags.length - 1);
     }
   };
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-md flex-wrap">
-      <ul
-        className="inline-flex flex-wrap m-0 p-1 w-full"
-        style={{ maxWidth: "36rem" }}
-      >
+      <ul className="inline-flex flex-wrap m-0 p-1 w-full" style={{maxWidth: '36rem'}}>
         {tags.map((tag, i) => (
           <li
             className={
-              "items-center bg-indigo-600 rounded-md text-white font-light list-none mb-1.5 mr-1.5 py-1.5 px-2.5 w-auto"
+              'items-center bg-indigo-600 rounded-md text-white font-light list-none mb-1.5 mr-1.5 py-1.5 px-2.5 w-auto'
             }
-            key={tag}
-          >
+            key={tag}>
             {tag}
             <button
               className={
-                "items-center appearance-none bg-gray-700 border-none text-white rounded-full cursor-pointer inline-flex text-xs h-4 justify-center ml-2 p-0 transform rotate-45 w-4"
+                'items-center appearance-none bg-gray-700 border-none text-white rounded-full cursor-pointer inline-flex text-xs h-4 justify-center ml-2 p-0 transform rotate-45 w-4'
               }
               type="button"
               onClick={() => {
                 removeTag(i);
-              }}
-            >
+              }}>
               +
             </button>
           </li>
@@ -208,30 +200,30 @@ interface ErrorInterface {
 }
 
 const INITIAL_STATE: FieldsInterface = {
-  title: "",
-  label: "",
-  instructions: "",
-  instructionsHtml: "",
-  description: "", // ignore this field
+  title: '',
+  label: '',
+  instructions: '',
+  instructionsHtml: '',
+  description: '', // ignore this field
   interactionType: [],
   tags: [],
-  estTime: "1 min",
+  estTime: '1 min',
   classwork: true,
-  videoLink: "",
+  videoLink: ''
 };
 
 const ERROR_INITIAL_STATE: ErrorInterface = {
-  empty: "",
-  title: "",
-  label: "",
-  videoLink: "",
+  empty: '',
+  title: '',
+  label: '',
+  videoLink: ''
 };
 
-const Block = ({ children }: { children: React.ReactNode }) => {
+const Block = ({children}: {children: React.ReactNode}) => {
   return <div>{children}</div>;
 };
 
-const Container = ({ children }: { children: React.ReactNode }) => {
+const Container = ({children}: {children: React.ReactNode}) => {
   return <div className="flex flex-col space-y-6 p-6">{children}</div>;
 };
 
@@ -239,17 +231,17 @@ const NewLessonPlanSO = ({
   instId,
   open,
   setOpen,
-  pageDetails,
+  pageDetails
 }: NewLessonPlanSOInterface) => {
   const {
     clientKey,
 
-    userLanguage,
+    userLanguage
   } = useGlobalContext();
-  const themeColor = getAsset(clientKey, "themeClassName");
+  const themeColor = getAsset(clientKey, 'themeClassName');
 
-  const { isSuperAdmin } = useAuth();
-  const { BUTTONS } = useDictionary();
+  const {isSuperAdmin} = useAuth();
+  const {BUTTONS} = useDictionary();
 
   const [fields, setFields] = useState<FieldsInterface>(INITIAL_STATE);
 
@@ -261,7 +253,7 @@ const NewLessonPlanSO = ({
     setSelectedPageID,
 
     setNewLessonPlanShow,
-    setUniversalLessonDetails,
+    setUniversalLessonDetails
   } = useULBContext();
 
   const [unsavedChanges, setUnsavedChanges] = useState(false);
@@ -277,7 +269,7 @@ const NewLessonPlanSO = ({
         estTime: `${pageDetails.estTime} min`, //
         interactionType: pageDetails.interactionType || [],
         classwork: true,
-        videoLink: pageDetails?.videoLink || "",
+        videoLink: pageDetails?.videoLink || ''
       });
     } else {
       setFields(INITIAL_STATE);
@@ -286,51 +278,51 @@ const NewLessonPlanSO = ({
 
   const params = useQuery(location.search);
 
-  const pageId = params.get("pageId");
-  const hideCloseButtons = pageId === "open-overlay";
+  const pageId = params.get('pageId');
+  const hideCloseButtons = pageId === 'open-overlay';
 
   const handleAddTags = (tags: string[]) => {
     setUnsavedChanges(true);
-    setFields((prevInputs) => ({ ...prevInputs, tags }));
+    setFields((prevInputs) => ({...prevInputs, tags}));
   };
 
   const onFieldChange = (e: any) => {
-    const { id, value } = e.target;
+    const {id, value} = e.target;
     setUnsavedChanges(true);
 
     setFields((prevInputs: any) => ({
       ...prevInputs,
-      [id]: value,
+      [id]: value
     }));
   };
 
   const onVideoLinkChange = (e: any) => {
-    const { id, value = "" } = e.target;
+    const {id, value = ''} = e.target;
     setUnsavedChanges(true);
 
     setFields((prevInputs: any) => ({
       ...prevInputs,
-      [id]: value,
+      [id]: value
     }));
     const isValidUrl = REGEX.Youtube.test(value);
     if (isValidUrl) {
-      setErrors((prev) => ({ ...prev, videoLink: "" }));
+      setErrors((prev) => ({...prev, videoLink: ''}));
     } else {
-      setErrors((prev) => ({ ...prev, videoLink: "Invalid url" }));
+      setErrors((prev) => ({...prev, videoLink: 'Invalid url'}));
     }
   };
 
-  const onSelectOption = (_: any, name: string) => {
+  const onSelectOption = (value: string) => {
     setUnsavedChanges(true);
 
     setFields((prevInputs: any) => ({
       ...prevInputs,
-      estTime: name,
+      estTime: value
     }));
   };
 
   const handleInteractionType = (e: any) => {
-    const { id } = e.target;
+    const {id} = e.target;
 
     if (!interactionType.includes(id)) {
       interactionType.push(id);
@@ -339,7 +331,7 @@ const NewLessonPlanSO = ({
     }
     setUnsavedChanges(true);
 
-    setFields({ ...fields });
+    setFields({...fields});
   };
 
   const onEditorStateChange = (
@@ -353,7 +345,7 @@ const NewLessonPlanSO = ({
     setFields({
       ...fields,
       [fieldHtml]: html,
-      [field]: text,
+      [field]: text
     });
   };
 
@@ -362,7 +354,7 @@ const NewLessonPlanSO = ({
   const [file, setFile] = useState<IFile | null>(null);
 
   const uploadedVideoLink =
-    !isEmpty(file) && file._status === "success"
+    !isEmpty(file) && file._status === 'success'
       ? getImageFromS3Static(UPLOAD_KEYS.ULB + file.fileKey)
       : null;
   const isUploadedFromPC = Boolean(uploadedVideoLink);
@@ -373,27 +365,27 @@ const NewLessonPlanSO = ({
     let isValid = true;
 
     if (trimmedLen(title) <= 0) {
-      errors.title = "Title is mandatory";
+      errors.title = 'Title is mandatory';
       isValid = false;
     } else {
-      errors.title = "";
+      errors.title = '';
       // isValid = true;
     }
     if (trimmedLen(label) <= 0) {
-      errors.label = "Label is mandatory";
+      errors.label = 'Label is mandatory';
       isValid = false;
     } else {
-      errors.label = "";
+      errors.label = '';
       // isValid = true;
     }
 
-    setErrors({ ...errors });
+    setErrors({...errors});
     return isValid;
   };
 
   const query = useQuery(location.search);
   const router: any = useRouteMatch();
-  const lessonId = query.get("lessonId") || router.params.lessonId;
+  const lessonId = query.get('lessonId') || router.params.lessonId;
   const classworkPages = universalLessonDetails?.lessonPlan;
   const homeworkPages = universalLessonDetails?.homework || [];
 
@@ -402,14 +394,14 @@ const NewLessonPlanSO = ({
   const onUnload = () => {
     if (unsavedChanges) {
       onTopRightButtonClick();
-      return "You have unsaved changes on this page.";
+      return 'You have unsaved changes on this page.';
     }
-    return "";
+    return '';
   };
 
   useEffect(() => {
     if (unsavedChanges) {
-      window.addEventListener("beforeunload", () => {
+      window.addEventListener('beforeunload', () => {
         onUnload();
       });
     }
@@ -435,29 +427,27 @@ const NewLessonPlanSO = ({
             title: fields.title,
             description: fields.instructionsHtml,
             label: fields.label,
-            estTime: Number(fields.estTime?.split(" ")[0]),
+            estTime: Number(fields.estTime?.split(' ')[0]),
             tags: fields.tags,
             videoLink: uploadedVideoLink || fields.videoLink,
             interactionType: fields.interactionType || [],
-            activityType: classwork ? "classwork" : "homework",
+            activityType: classwork ? 'classwork' : 'homework'
           };
 
           update(universalLessonDetails, PATH_TO_PAGECONTENT, () => {
             return updatedObject;
           });
 
-          setUniversalLessonDetails({ ...universalLessonDetails });
+          setUniversalLessonDetails({...universalLessonDetails});
 
           const input = {
             id: lessonId,
-            lessonPlan: [...universalLessonDetails.lessonPlan],
+            lessonPlan: [...universalLessonDetails.lessonPlan]
           };
 
           await updateLessonPageToDB(input);
         } else {
-          const prevPages = classwork
-            ? [...classworkPages]
-            : [...homeworkPages];
+          const prevPages = classwork ? [...classworkPages] : [...homeworkPages];
           const pageId = nanoid(24);
           const input = {
             id: lessonId,
@@ -469,26 +459,26 @@ const NewLessonPlanSO = ({
                 tags: fields.tags,
                 label: fields.label,
                 description: fields.instructions,
-                estTime: Number(fields.estTime?.split(" ")[0]),
+                estTime: Number(fields.estTime?.split(' ')[0]),
                 interactionType: fields.interactionType || [],
-                activityType: classwork ? "classwork" : "homework",
+                activityType: classwork ? 'classwork' : 'homework',
                 pageContent: [],
                 videoLink: uploadedVideoLink || fields.videoLink,
                 disabled: false,
-                open: true,
-              },
-            ],
+                open: true
+              }
+            ]
           };
 
           const res: any = await API.graphql(
             graphqlOperation(customMutations.updateUniversalLesson, {
-              input,
+              input
             })
           );
 
           const data = res.data.updateUniversalLesson;
 
-          setUniversalLessonDetails({ ...data });
+          setUniversalLessonDetails({...data});
 
           setSelectedPageID(pageId);
           setEditMode(true);
@@ -520,10 +510,10 @@ const NewLessonPlanSO = ({
     classwork,
 
     interactionType,
-    estTime,
+    estTime
   } = fields;
 
-  const [showModal, setShowModal] = useState({ show: false, msg: "" });
+  const [showModal, setShowModal] = useState({show: false, msg: ''});
 
   useEffect(() => {
     if (!open) {
@@ -537,9 +527,9 @@ const NewLessonPlanSO = ({
 
   const onTopRightButtonClick = () => {
     if (unsavedChanges) {
-      setShowModal({ show: true, msg: "Do you want to save changes?" });
+      setShowModal({show: true, msg: 'Do you want to save changes?'});
     } else {
-      setShowModal({ show: false, msg: "" });
+      setShowModal({show: false, msg: ''});
       setOpen(false);
       setErrors(ERROR_INITIAL_STATE);
       setNewLessonPlanShow(false);
@@ -573,12 +563,12 @@ const NewLessonPlanSO = ({
           instructionsHtml: pageDetails.description,
           estTime: `${pageDetails.estTime} min`,
           interactionType: pageDetails.interactionType || [],
-          classwork: true,
+          classwork: true
         });
-        setErrors({ ...errors });
+        setErrors({...errors});
       }
     }
-    setShowModal({ show: false, msg: "" });
+    setShowModal({show: false, msg: ''});
     setOpen(false);
     setNewLessonPlanShow(false);
   };
@@ -593,12 +583,12 @@ const NewLessonPlanSO = ({
     onSaveClick(undefined);
   };
 
-  const shouldBeDark = !location.search.includes("&step=activities");
+  const shouldBeDark = !location.search.includes('&step=activities');
 
   return (
     <>
       {showModal.show && (
-        <div className={`${showModal.show ? "z-1000" : ""}`}>
+        <div className={`${showModal.show ? 'z-1000' : ''}`}>
           <ModalPopUp
             noButton="No"
             noTooltip="Continue Activity"
@@ -608,7 +598,7 @@ const NewLessonPlanSO = ({
             noButtonAction={onModalCancelClick}
             message={showModal.msg}
             closeAction={() => {
-              setShowModal({ show: false, msg: "" });
+              setShowModal({show: false, msg: ''});
             }}
             cancelAction={onModalYesClick}
           />
@@ -628,21 +618,20 @@ const NewLessonPlanSO = ({
         <div className="px-4 py-6 dark:bg-gray-800 bg-gray-50 sm:px-6">
           <div
             onClick={onTopRightButtonClick}
-            className="cursor-pointer hover:underline text-right text-sm mb-2 text-gray-500"
-          >
+            className="cursor-pointer hover:underline text-right text-sm mb-2 text-gray-500">
             return to editor
           </div>
           <div className="flex items-start justify-between space-x-3">
             <div className="space-y-1 dark:text-white">
               Activity Details
               <p className="text-sm my-2 text-gray-500">
-                Get started by filling in the information below to create your
-                new lesson plan.
+                Get started by filling in the information below to create your new lesson
+                plan.
               </p>
               <div
-                style={{ height: 1 }}
+                style={{height: 1}}
                 className={`mt-2 w-full bg-${
-                  themeColor === "iconoclastIndigo" ? "indigo" : "blue"
+                  themeColor === 'iconoclastIndigo' ? 'indigo' : 'blue'
                 }-500`}
               />
             </div>
@@ -653,8 +642,7 @@ const NewLessonPlanSO = ({
                 className="w-auto bg-white dark:bg-gray-800 rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 onClick={() => {
                   onTopRightButtonClick();
-                }}
-              >
+                }}>
                 <span className="sr-only">Close panel</span>
                 <XIcon className="h-6 w-6" aria-hidden="true" />
               </button>
@@ -706,8 +694,7 @@ const NewLessonPlanSO = ({
             {!isUploadedFromPC ? (
               <div
                 className="text-gray-200 cursor-pointer hover:underline mt-1 text-sm"
-                onClick={() => setVideoUploadModal(true)}
-              >
+                onClick={() => setVideoUploadModal(true)}>
                 Or upload from your pc
               </div>
             ) : (
@@ -718,17 +705,15 @@ const NewLessonPlanSO = ({
                     const imageUrl = file
                       ? getImageFromS3Static(UPLOAD_KEYS.ULB + file?.fileKey)
                       : null;
-                    imageUrl && window.open(imageUrl, "_blank");
-                  }}
-                >
+                    imageUrl && window.open(imageUrl, '_blank');
+                  }}>
                   See video
                 </div>
                 <div
                   className="text-gray-200 cursor-pointer hover:underline mt-1 text-sm"
                   onClick={() => {
                     setFile(null);
-                  }}
-                >
+                  }}>
                   Clear
                 </div>
               </div>
@@ -737,7 +722,7 @@ const NewLessonPlanSO = ({
           {/* Activity Instructions */}
 
           <Block>
-            <Label className="mb-1" label={"Activity instructions"} />
+            <Label className="mb-1" label={'Activity instructions'} />
             <CustomRichTextEditor
               withStyles
               rounded
@@ -749,8 +734,8 @@ const NewLessonPlanSO = ({
                 onEditorStateChange(
                   htmlContent,
                   plainText,
-                  "instructionsHtml",
-                  "instructions"
+                  'instructionsHtml',
+                  'instructions'
                 )
               }
             />
@@ -758,29 +743,29 @@ const NewLessonPlanSO = ({
 
           {/* Interaction Type */}
           <Block>
-            <Label className="mb-1" label={"Interaction type"} />
+            <Label className="mb-1" label={'Interaction type'} />
 
             <div className="">
               <Checkbox
-                title={"Group"}
-                checked={interactionType?.includes("group")}
+                title={'Group'}
+                checked={interactionType?.includes('group')}
                 onChange={handleInteractionType}
-                label={"Working as a class to complete activity"}
-                id={"group"}
+                label={'Working as a class to complete activity'}
+                id={'group'}
               />
               <Checkbox
-                title={"Small Group"}
-                checked={interactionType?.includes("smallGroup")}
+                title={'Small Group'}
+                checked={interactionType?.includes('smallGroup')}
                 onChange={handleInteractionType}
-                label={"Working in small groups to complete activity"}
-                id={"smallGroup"}
+                label={'Working in small groups to complete activity'}
+                id={'smallGroup'}
               />
               <Checkbox
-                title={"Individual"}
-                checked={interactionType?.includes("individual")}
+                title={'Individual'}
+                checked={interactionType?.includes('individual')}
                 onChange={handleInteractionType}
-                label={"Working individually to complete activity"}
-                id={"individual"}
+                label={'Working individually to complete activity'}
+                id={'individual'}
               />
 
               <hr className="border-gray-200 dark:border-gray-700" />
@@ -790,11 +775,11 @@ const NewLessonPlanSO = ({
           {/* Estimated time */}
 
           <Block>
-            <Label className="mb-1" isRequired label={"Estimated time"} />
+            <Label className="mb-1" isRequired label={'Estimated time'} />
 
             <div className="">
               <Selector
-                placeholder={"Select estimate time"}
+                placeholder={'Select estimate time'}
                 list={estimatedTimeList}
                 selectedItem={estTime}
                 onChange={onSelectOption}
@@ -804,14 +789,13 @@ const NewLessonPlanSO = ({
           {/* Tags */}
 
           <Block>
-            <Label className="mb-1" label={"Tags"} />
+            <Label className="mb-1" label={'Tags'} />
 
             <div className="sm:col-span-4">
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
-                }}
-              >
+                }}>
                 <InputTag tags={tags || []} setTags={handleAddTags} />
               </form>
             </div>
@@ -828,19 +812,17 @@ const NewLessonPlanSO = ({
                 <button
                   type="button"
                   className="w-auto bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                  onClick={() => onTopRightButtonClick()}
-                >
+                  onClick={() => onTopRightButtonClick()}>
                   Cancel
                 </button>
               )}
               <button
                 disabled={loading}
                 onClick={(e) => onSaveClick(e)}
-                className="w-auto inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-              >
+                className="w-auto inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                 {loading
-                  ? BUTTONS[userLanguage][editMode ? "SAVING" : "CREATING"]
-                  : BUTTONS[userLanguage][editMode ? "SAVE" : "CREATE"]}
+                  ? BUTTONS[userLanguage][editMode ? 'SAVING' : 'CREATING']
+                  : BUTTONS[userLanguage][editMode ? 'SAVE' : 'CREATE']}
               </button>
             </div>
           </div>

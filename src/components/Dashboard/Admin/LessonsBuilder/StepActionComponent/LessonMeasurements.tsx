@@ -117,8 +117,8 @@ const LessonMeasurements = ({lessonId}: any) => {
     }
   };
 
-  const handleSelectMeasurement = (val: string, name: string, id: string) => {
-    setSelectedMeasurement({id, name, value: val});
+  const handleSelectMeasurement = (val: string, option: any) => {
+    setSelectedMeasurement({id: option.id, name: val, value: val});
   };
 
   return (

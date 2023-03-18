@@ -60,7 +60,7 @@ const UnitManager = ({
     show: false,
     lessonPlan: false,
     lessonEdit: false,
-    message: CourseBuilderDict[userLanguage]['MESSAGES']['wantsave']
+    message: ''
   });
   const [warnModal2, setWarnModal2] = useState({
     show: false,
@@ -126,7 +126,7 @@ const UnitManager = ({
       setAddingSyllabus(false);
       setMessages({
         show: true,
-        message: CourseBuilderDict[userLanguage]['MESSAGES']['UPDATE_ERROR'],
+        message: CourseBuilderDict[userLanguage]['MESSAGES']['ERROR']['UPDATE_ERROR'],
         isError: true,
         lessonError: true
       });
@@ -210,7 +210,7 @@ const UnitManager = ({
     } catch {
       setMessages({
         show: true,
-        message: CourseBuilderDict[userLanguage]['MESSAGES']['fetchlist'],
+        message: CourseBuilderDict[userLanguage]['MESSAGES']['ERROR']['fetchlist'],
         isError: true,
         lessonError: true
       });

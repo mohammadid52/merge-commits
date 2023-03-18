@@ -4,7 +4,6 @@ import {getAsset} from 'assets';
 import SectionTitleV3 from 'atoms/SectionTitleV3';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import {useEffect, useState} from 'react';
-import {BsFillInfoCircleFill} from 'react-icons/bs';
 import {setLocalStorageData} from 'utilities/localStorage';
 import {getImageFromS3} from 'utilities/services';
 import {ClassroomControlProps} from '../Dashboard';
@@ -52,7 +51,6 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
 
   const {state, clientKey} = useGlobalContext();
   const dashboardBanner1 = getAsset(clientKey, 'dashboardBanner2');
-  const [openWalkThroughModal, setOpenWalkThroughModal] = useState(false);
 
   const [teacherList, setTeacherList] = useState<Teacher[]>([]);
   const [coTeachersList, setCoTeachersList] = useState<Teacher[]>([]);
@@ -261,13 +259,13 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
                 </span>
                 . What do you want to teach today?
               </p>
-              <div className="absolute z-100 w-6 top-0 right-1">
+              {/* <div className="absolute z-100 w-6 top-0 right-1">
                 <span
                   className="w-auto cursor-pointer"
                   onClick={() => setOpenWalkThroughModal(true)}>
                   <BsFillInfoCircleFill className={`h-5 w-5 text-white`} />
                 </span>
-              </div>
+              </div> */}
             </HeaderTextBar>
           )}
           <div className="px-5">

@@ -6,7 +6,7 @@ import {useHistory} from 'react-router';
 
 interface SectionTitleProps {
   title: React.ReactNode;
-  subtitle?: string;
+  subtitle?: string | null;
   fontSize?: string;
   fontStyle?: string;
   extraClass?: string;

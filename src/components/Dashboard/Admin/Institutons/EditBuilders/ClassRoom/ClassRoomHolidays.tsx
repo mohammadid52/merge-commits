@@ -67,7 +67,8 @@ const ClassRoomHolidays = ({
   const onDelete = (index: number) => {
     const onDrop = async () => {
       setDeleting(true);
-      const dateToUpdate = lessonImpactLogs.filter((_: any, i: number) => index !== i);
+      // @ts-ignore
+      const dateToUpdate = lessonImpactLogs.filter((i: number) => index !== i);
       const result: any = await API.graphql(
         graphqlOperation(mutation.updateRoom, {
           input: {

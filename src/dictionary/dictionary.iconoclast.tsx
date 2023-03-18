@@ -1,21 +1,88 @@
 import {
+  ADDLEARINGOBJDICTInterface,
+  AddMeasurementDictInterface,
+  AddNewCheckPointDictInterface,
+  AddNewLessonFormDictInterface,
+  AddNewQuestionDictInterface,
+  AddProfileCheckpointDictInterface,
+  addQuestionDictInterface,
+  AddQuestionModalDictInterface,
+  AddSyllabusDictInterface,
+  AddTopicDictInterface,
   AnthologyDictInterface,
   AppDictInterface,
+  AssessmentInstuctionsDictInterface,
   AuthDictInterface,
   BreadcrumbsTitlesInterface,
   ButtonInterface,
+  CheckpointLookupDictInterface,
+  CheckpointQueTableDictInterface,
+  CHECKPOINTSDICTInterface,
+  ClassBuilderdictInterface,
   ClassroomDictInterface,
+  CommonlyUsedDictInterface,
+  CommunityDictInterface,
+  CourseBuilderDictInterface,
+  CourseScheduleDictInterface,
+  CsvDictInterface,
+  CurricularBuilderdictInterface,
+  CurricularViewInterface,
+  DashboardDictInterface,
   DashboardProfileDictInterface,
   DashboardTestCasesDictInterface,
+  EditCheckPointDictInterface,
   EditClassDictInterface,
+  EditCurriculardictInterface,
+  EditLearningObjectiveDictInterface,
+  EditMeasurementDictInterface,
+  EditProfileCheckpointDictInterface,
+  EditQuestionDictInterface,
+  EditQuestionModalDictInterface,
+  EditSyllabusDictInterface,
+  EditTopicDictInterface,
+  GeneralInformationDictInterface,
+  GeneralInterface,
+  GroupFormDictInterface,
+  InstitueRommsInterface,
+  InstituteClassInterface,
+  InstituteCurriculumInterface,
   InstitutionAddDictInterface,
+  InstitutionBuilderDictInterface,
+  InstitutionDictInterface,
+  InstitutionEditDictInterface,
+  InstitutionInfoInterface,
+  LEARINGOBJECTIVEDICTInterface,
+  LearningEvidenceDictInterface,
+  LessonBuilderDictInterface,
   LessonDictInterface,
+  LessonEditDictInterface,
   LessonPlannerDictInterface,
+  LessonsListDictInterface,
   ManageUsersDictInterface,
+  MeasurementDictInterface,
   NoticeboardDictInterface,
+  PreviousQuestionsDictInterface,
+  ProfileCheckpointlookupDictInterface,
+  QuestionBuilderDictInterface,
+  RegistrationDictInterface,
+  RoomBuilderdictInterface,
+  RoomDetailsDictInterface,
+  RoomEDITdictInterface,
+  SelectedCheckPointsListDictInterface,
+  SelectPreviousQuestionDictInterface,
   SideBarLinksDictInterface,
   SpBuilderDictInterface,
-  StaffBuilderDictInterface
+  StaffBuilderDictInterface,
+  StudentDictInterface,
+  SyllabusDictInterface,
+  SYLLABUSInterface,
+  TOPICLISTDICTInterface,
+  UnitLookupDictInterface,
+  UniversalBuilderDictInterface,
+  UserDictInterface,
+  UserEditDictInterface,
+  UserInformationDictInterface,
+  UserLookupDictInterface
 } from '@interfaces/dictionary.interface';
 
 const AuthDict: AuthDictInterface = {
@@ -864,7 +931,7 @@ const lessonPlannerDict: LessonPlannerDictInterface = {
   }
 };
 
-const InstitutionDict = {
+const InstitutionDict: InstitutionDictInterface = {
   EN: {
     TITLE: 'INSTITUTIONS MANAGEMENT',
     SUBTITLE: 'Institutions List',
@@ -907,7 +974,7 @@ const InstitutionDict = {
   }
 };
 
-const Institute_info = {
+const Institute_info: InstitutionInfoInterface = {
   EN: {
     TITLE: 'General Information',
     ADDRESS: 'Address',
@@ -995,10 +1062,9 @@ const Institute_info = {
   }
 };
 
-const InstitutionEditDict = {
+const InstitutionEditDict: InstitutionEditDictInterface = {
   EN: {
     INFO: 'Click the circle above to update institution image.',
-
     FORM: {
       TITLE: 'General Information and Vendor Management',
       INSTITUTION_TYPE: 'Institution Type',
@@ -1163,7 +1229,7 @@ const InstitutionAddDict: InstitutionAddDictInterface = {
   }
 };
 
-const InstitutionBuilderDict = {
+const InstitutionBuilderDict: InstitutionBuilderDictInterface = {
   EN: {
     GENERAL_INFORMATION: 'General Information',
     INFOA: 'Click circle to manage your avatar.',
@@ -1250,7 +1316,7 @@ const InstitutionBuilderDict = {
   }
 };
 
-const Institute_class = {
+const Institute_class: InstituteClassInterface = {
   EN: {
     TITLE: 'INSTITUTE CLASSES',
     NO: 'No.',
@@ -1274,7 +1340,7 @@ const Institute_class = {
     }
   }
 };
-const InstitueCurriculum = {
+const InstitueCurriculum: InstituteCurriculumInterface = {
   EN: {
     TITLE: 'Course List',
     BUTTON: {
@@ -1311,7 +1377,7 @@ const InstitueCurriculum = {
   }
 };
 
-const InstitueRomms = {
+const InstitueRomms: InstitueRommsInterface = {
   EN: {
     TITLE: 'Classroom List',
     NO: 'No.',
@@ -1364,7 +1430,7 @@ const InstitueRomms = {
   }
 };
 
-const classBuilderdict = {
+const classBuilderdict: ClassBuilderdictInterface = {
   EN: {
     TITLE: 'Create New Class',
     SUBTITLE: 'Add new class to the list',
@@ -1439,7 +1505,7 @@ const classBuilderdict = {
   }
 };
 
-const CourseBuilderDict = {
+const CourseBuilderDict: CourseBuilderDictInterface = {
   EN: {
     TITLE: 'Create New Course',
     SUBTITLE: 'Add new course to the list',
@@ -1469,8 +1535,10 @@ const CourseBuilderDict = {
         process: 'Error while processing please Try again later.',
         invalid:
           'Invalid path please go back to institution selection page to select your institute.',
+        fetchlist: 'Error while fetching course list, please try again later.',
         FETCH_COURSE_ERR: 'Error while fetching course data, please try again later.',
-        FETCH_UNIT_ERR: 'Error while fetching units, please try again later.'
+        FETCH_UNIT_ERR: 'Error while fetching units, please try again later.',
+        UPDATE_ERROR: 'Error while updating course, please try again later.'
       },
       validation: {
         name: 'Course name is required please enter name.',
@@ -1513,8 +1581,10 @@ const CourseBuilderDict = {
         fetch: 'Unable to fetch institution list pleas try later.',
         designerlist: 'Error while fetching Designers list Please try again later.',
         process: 'Error while processing please Try again later.',
+        fetchlist: 'Error while fetching course list, please try again later.',
         invalid:
           'Invalid path please go back to institution selection page to select your institute.',
+        UPDATE_ERROR: 'Error while updating course, please try again later.',
         FETCH_COURSE_ERR: 'Error while fetching course data, please try again later.',
         FETCH_UNIT_ERR: 'Error while fetching units, please try again later.'
       },
@@ -1534,7 +1604,7 @@ const CourseBuilderDict = {
   }
 };
 
-const CurricularBuilderdict = {
+const CurricularBuilderdict: CurricularBuilderdictInterface = {
   EN: {
     TITLE: 'Create New Course',
     SUBTITLE: 'Add new course to the list',
@@ -1604,7 +1674,7 @@ const CurricularBuilderdict = {
     }
   }
 };
-const RoomBuilderdict = {
+const RoomBuilderdict: RoomBuilderdictInterface = {
   EN: {
     TITLE: 'Create New Classroom',
     SUBTITLE: 'Add new Classroom to the list',
@@ -1630,6 +1700,7 @@ const RoomBuilderdict = {
       SAVING: 'Saving...'
     },
     messages: {
+      errupdatingclass: 'Error while updating classroom. Please try again later.',
       error: {
         institutebefor: 'Please create an institute before creating Classroom.',
         institutelist: 'Unable to fetch institution list. Please try again later.',
@@ -1684,6 +1755,7 @@ const RoomBuilderdict = {
       SAVING: 'Saving...'
     },
     messages: {
+      errupdatingclass: 'Error while updating classroom. Please try again later.',
       error: {
         institutebefor: 'Please create an institute before creating Classroom.',
         institutelist: 'Unable to fetch institution list. Please try again later.',
@@ -1715,7 +1787,7 @@ const RoomBuilderdict = {
   }
 };
 
-const EditCurriculardict = {
+const EditCurriculardict: EditCurriculardictInterface = {
   EN: {
     TITLE: 'Edit Course',
     SUBTITLE: 'Update course information',
@@ -1772,7 +1844,7 @@ const EditCurriculardict = {
   }
 };
 
-const RoomEDITdict = {
+const RoomEDITdict: RoomEDITdictInterface = {
   EN: {
     TITLE: 'Edit Classroom',
     SUBTITLE: 'Edit Classroom information',
@@ -1913,7 +1985,7 @@ const RoomEDITdict = {
   }
 };
 
-const RoomDetailsDict = {
+const RoomDetailsDict: RoomDetailsDictInterface = {
   EN: {
     COURSE_DETAILS: 'Course Details',
     COURSE_FREQUENCY: 'Course Schedule',
@@ -1928,7 +2000,7 @@ const RoomDetailsDict = {
   }
 };
 
-const GroupFormDict = {
+const GroupFormDict: GroupFormDictInterface = {
   EN: {
     HEADING: 'Group Details',
     LABELS: {
@@ -1967,7 +2039,7 @@ const GroupFormDict = {
   }
 };
 
-const CourseScheduleDict = {
+const CourseScheduleDict: CourseScheduleDictInterface = {
   EN: {
     HEADING: 'Schedule Details',
     PLACEHOLDERS: {
@@ -2012,7 +2084,7 @@ const CourseScheduleDict = {
   }
 };
 
-const curricularviewdict = {
+const curricularviewdict: CurricularViewInterface = {
   EN: {
     TITLE: 'Course Builder',
     SUBTITLE: 'Build course, units and lesson plans here',
@@ -2047,7 +2119,7 @@ const curricularviewdict = {
   }
 };
 
-const CHECKPOINTSDICT = {
+const CHECKPOINTSDICT: CHECKPOINTSDICTInterface = {
   EN: {
     TITLE: 'Demographics & Information (Course)',
     INFO: 'This course does not have any checkpoints yet. Please create a new one.',
@@ -2068,7 +2140,7 @@ const CHECKPOINTSDICT = {
   }
 };
 
-const LEARINGOBJECTIVEDICT = {
+const LEARINGOBJECTIVEDICT: LEARINGOBJECTIVEDICTInterface = {
   EN: {
     TITLE: 'LEARNING OBJECTIVES',
     INFO: 'This course does not have any learning objectives yet. Please create a new one.',
@@ -2089,7 +2161,7 @@ const LEARINGOBJECTIVEDICT = {
   }
 };
 
-const SYLLABUS = {
+const SYLLABUS: SYLLABUSInterface = {
   EN: {
     TITLE: 'COURSE UNITS',
     NO: 'No.',
@@ -2112,7 +2184,7 @@ const SYLLABUS = {
   }
 };
 
-const Measurementdict = {
+const Measurementdict: MeasurementDictInterface = {
   EN: {
     NO: 'No.',
     MEASUREMENT: 'Measurements',
@@ -2133,7 +2205,7 @@ const Measurementdict = {
   }
 };
 
-const TOPICLISTDICT = {
+const TOPICLISTDICT: TOPICLISTDICTInterface = {
   EN: {
     TOPIC: 'Topics',
     EDIT: 'Edit',
@@ -2152,7 +2224,7 @@ const TOPICLISTDICT = {
   }
 };
 
-const ADDLEARINGOBJDICT = {
+const ADDLEARINGOBJDICT: ADDLEARINGOBJDICTInterface = {
   EN: {
     TITLE: 'Add learning objective',
     SUBTITLE: 'Add new learning objective.',
@@ -2173,7 +2245,7 @@ const ADDLEARINGOBJDICT = {
   }
 };
 
-const addQuestionDict = {
+const addQuestionDict: addQuestionDictInterface = {
   EN: {
     heading: 'ADD NEW CHECKPOINT QUESTION',
     q: 'Question',
@@ -2222,7 +2294,7 @@ const addQuestionDict = {
   }
 };
 
-const SelectPreviousQuestionDict = {
+const SelectPreviousQuestionDict: SelectPreviousQuestionDictInterface = {
   EN: {
     heading: 'SELECT NEW CHECKPOINT QUESTION',
     qselectd: 'Questions Selected',
@@ -2255,10 +2327,9 @@ const SelectPreviousQuestionDict = {
   }
 };
 
-const AddMeasurementDict = {
+const AddMeasurementDict: AddMeasurementDictInterface = {
   EN: {
     title: 'Add Measurement',
-
     subtitle: 'Add new measurement to course.',
     heading: 'Measurement Information',
     mlabel: 'Measurement Name',
@@ -2302,7 +2373,7 @@ const AddMeasurementDict = {
   }
 };
 
-const AddProfileCheckpointDict = {
+const AddProfileCheckpointDict: AddProfileCheckpointDictInterface = {
   EN: {
     title: 'Add Checkpoint',
     subtitle: 'Add new checkpoint to course.',
@@ -2371,7 +2442,7 @@ const AddProfileCheckpointDict = {
   }
 };
 
-const SyllabusDict = {
+const SyllabusDict: SyllabusDictInterface = {
   EN: {
     TITLE: 'Unit Builder',
     LESSON_PLAN: 'LESSON PLAN MANAGER',
@@ -2388,6 +2459,7 @@ const SyllabusDict = {
       ACTION: 'Actions'
     },
     MESSAGES: {
+      fetcher: 'Error while fetching lessons list data.',
       wantsave: 'Do you want to save changes before moving forward?',
       fetchlist: 'Error while fetching lessons list data.',
       fetchdesign: 'Error while fetching Designers list Please try again later.',
@@ -2410,6 +2482,7 @@ const SyllabusDict = {
       ACTION: 'Actions'
     },
     MESSAGES: {
+      fetcher: 'Error while fetching lessons list data.',
       wantsave: 'Do you want to save changes before moving forward?',
       fetchlist: 'Error while fetching lessons list data.',
       fetchdesign: 'Error while fetching Designers list Please try again later.',
@@ -2418,7 +2491,7 @@ const SyllabusDict = {
   }
 };
 
-const AddSyllabusDict = {
+const AddSyllabusDict: AddSyllabusDictInterface = {
   EN: {
     title: 'Unit Builder',
     subtitle: 'Create course units here.',
@@ -2471,7 +2544,7 @@ const AddSyllabusDict = {
   }
 };
 
-const AddTopicDict = {
+const AddTopicDict: AddTopicDictInterface = {
   EN: {
     title: 'Add Topic',
     subtitle: 'Add new topic to the course.',
@@ -2508,7 +2581,7 @@ const AddTopicDict = {
   }
 };
 
-const EditLearningObjectiveDict = {
+const EditLearningObjectiveDict: EditLearningObjectiveDictInterface = {
   EN: {
     title: 'Edit Learning objective',
     subtitle: 'Edit course Learning objective.',
@@ -2541,7 +2614,7 @@ const EditLearningObjectiveDict = {
   }
 };
 
-const EditMeasurementDict = {
+const EditMeasurementDict: EditMeasurementDictInterface = {
   EN: {
     title: 'Edit Measurement',
     subtitle: 'Edit course measurement.',
@@ -2588,7 +2661,7 @@ const EditMeasurementDict = {
   }
 };
 
-const EditProfileCheckpointDict = {
+const EditProfileCheckpointDict: EditProfileCheckpointDictInterface = {
   EN: {
     title: 'Add Checkpoint',
     subtitle: 'Add new checkpoint to course.',
@@ -2647,7 +2720,7 @@ const EditProfileCheckpointDict = {
   }
 };
 
-const EditSyllabusDict = {
+const EditSyllabusDict: EditSyllabusDictInterface = {
   EN: {
     title: 'Unit Builder',
     subtitle: 'Update curriculum units here.',
@@ -2722,7 +2795,7 @@ const EditSyllabusDict = {
   }
 };
 
-const EditTopicDict = {
+const EditTopicDict: EditTopicDictInterface = {
   EN: {
     title: 'Edit Topic',
     subtitle: 'Edit course topic.',
@@ -2769,7 +2842,7 @@ const EditTopicDict = {
   }
 };
 
-const ProfileCheckpointlookupDict = {
+const ProfileCheckpointlookupDict: ProfileCheckpointlookupDictInterface = {
   EN: {
     title: 'Select Checkpoint',
     subtitle: 'Select checkpoint for course.',
@@ -2808,7 +2881,7 @@ const ProfileCheckpointlookupDict = {
   }
 };
 
-const RegistrationDict = {
+const RegistrationDict: RegistrationDictInterface = {
   EN: {
     title: 'Register New User',
     subtitle: 'Add new user to the list',
@@ -2899,7 +2972,7 @@ const RegistrationDict = {
   }
 };
 
-const UserDict = {
+const UserDict: UserDictInterface = {
   EN: {
     title: 'USER INFORMATION'
   },
@@ -2908,7 +2981,7 @@ const UserDict = {
   }
 };
 
-const UserEditDict = {
+const UserEditDict: UserEditDictInterface = {
   EN: {
     heading: 'Edit Personal Information',
     firstname: 'First Name',
@@ -2943,7 +3016,7 @@ const UserEditDict = {
   }
 };
 
-const UserInformationDict = {
+const UserInformationDict: UserInformationDictInterface = {
   EN: {
     heading: 'Personal Information',
     demographics: 'Demographics',
@@ -2990,7 +3063,7 @@ const UserInformationDict = {
   }
 };
 
-const UserLookupDict = {
+const UserLookupDict: UserLookupDictInterface = {
   EN: {
     title: 'USER MANAGEMENT',
     subtitle: "People's List",
@@ -3023,7 +3096,7 @@ const UserLookupDict = {
   }
 };
 
-const UserLookupWithTokenDict = {
+const UserLookupWithTokenDict: UserLookupDictInterface = {
   EN: {
     title: 'USER MANAGEMENT',
     subtitle: "People's List",
@@ -3054,7 +3127,7 @@ const UserLookupWithTokenDict = {
   }
 };
 
-const AddQuestionModalDict = {
+const AddQuestionModalDict: AddQuestionModalDictInterface = {
   EN: {
     TITLE: 'ADD QUESTION',
     HEADING: '*Click here to add Question, directly from previously created questions.',
@@ -3093,7 +3166,7 @@ const AddQuestionModalDict = {
   }
 };
 
-const EditQuestionModalDict = {
+const EditQuestionModalDict: EditQuestionModalDictInterface = {
   EN: {
     TITLE: 'Edit QUESTION',
     HEADING: '*Click here to add Question, directly from previously created questions.',
@@ -3154,7 +3227,7 @@ const EditQuestionModalDict = {
   }
 };
 
-const AddNewCheckPointDict = {
+const AddNewCheckPointDict: AddNewCheckPointDictInterface = {
   EN: {
     BUILDER: 'Builder',
     CREATENEW: 'Create New Checkpoint',
@@ -3228,7 +3301,7 @@ const AddNewCheckPointDict = {
     }
   }
 };
-const AddNewQuestionDict = {
+const AddNewQuestionDict: AddNewQuestionDictInterface = {
   EN: {
     BUILDER: 'Builder',
     CHECKPOINT: 'Checkpoints',
@@ -3286,7 +3359,7 @@ const AddNewQuestionDict = {
     }
   }
 };
-const CheckpointLookupDict = {
+const CheckpointLookupDict: CheckpointLookupDictInterface = {
   EN: {
     BUILDER: 'Builder',
     PREVIOUSCHECKPOINT: 'Previous Checkpoints',
@@ -3312,7 +3385,7 @@ const CheckpointLookupDict = {
     }
   }
 };
-const CheckpointQueTableDict = {
+const CheckpointQueTableDict: CheckpointQueTableDictInterface = {
   EN: {
     NO: 'No.',
     QUESTION: 'Question',
@@ -3341,7 +3414,7 @@ const CheckpointQueTableDict = {
   }
 };
 
-const EditCheckPointDict = {
+const EditCheckPointDict: EditCheckPointDictInterface = {
   EN: {
     BUILDER: 'Builder',
     EDITCHECKPOINT: 'Edit Checkpoint',
@@ -3417,7 +3490,7 @@ const EditCheckPointDict = {
     }
   }
 };
-const EditQuestionDict = {
+const EditQuestionDict: EditQuestionDictInterface = {
   EN: {
     ASSESSMENTBUILDER: 'Assessment Builder',
     CHECKPOINT: 'Checkpoints',
@@ -3509,7 +3582,8 @@ const QuestionLookupDict = {
     }
   }
 };
-const SelectedCheckPointsListDict = {
+
+const SelectedCheckPointsListDict: SelectedCheckPointsListDictInterface = {
   EN: {
     BUILDER: 'Builder',
     ADDCHECKPOINT: 'Please add checkpoints to',
@@ -3527,7 +3601,7 @@ const SelectedCheckPointsListDict = {
     }
   }
 };
-const AddNewLessonFormDict = {
+const AddNewLessonFormDict: AddNewLessonFormDictInterface = {
   EN: {
     TITLE: 'Lesson Overview',
     NAME: 'Lesson Name',
@@ -3637,7 +3711,7 @@ const AddNewLessonFormDict = {
     SAVING: 'Saving...'
   }
 };
-const AssessmentInstuctionsDict = {
+const AssessmentInstuctionsDict: AssessmentInstuctionsDictInterface = {
   EN: {
     INSTRUCTION: 'Instructions',
     HEADING: 'INSTRUCTIONS: Complete the following to provide information about your',
@@ -3659,7 +3733,7 @@ const AssessmentInstuctionsDict = {
     }
   }
 };
-const GeneralInformationDict = {
+const GeneralInformationDict: GeneralInformationDictInterface = {
   EN: {
     HEADING: 'Lesson Overview',
     NAME: 'Name',
@@ -3734,7 +3808,7 @@ const GeneralInformationDict = {
   }
 };
 
-const PreviousQuestionsDict = {
+const PreviousQuestionsDict: PreviousQuestionsDictInterface = {
   EN: {
     HEADING: 'Previously Used Questions',
     NO: 'No.',
@@ -3762,7 +3836,7 @@ const PreviousQuestionsDict = {
     ADD: 'Add'
   }
 };
-const QuestionBuilderDict = {
+const QuestionBuilderDict: QuestionBuilderDictInterface = {
   EN: {
     HEADING: 'Assessment Questions',
     NOTE: 'NOTE: You can drag and drop questions to change the sequence.',
@@ -3789,7 +3863,7 @@ const QuestionBuilderDict = {
   }
 };
 
-const UnitLookupDict = {
+const UnitLookupDict: UnitLookupDictInterface = {
   EN: {
     HEADING: 'Assign Module',
     NOTE: 'NOTE: Please select course and then modules to add current session to that module.',
@@ -3842,7 +3916,7 @@ const UnitLookupDict = {
   }
 };
 
-const LessonBuilderDict = {
+const LessonBuilderDict: LessonBuilderDictInterface = {
   EN: {
     TITLE: 'LESSON MANAGER',
     SUBTITLE: 'Build lessons, surveys or assessments here.',
@@ -4049,7 +4123,7 @@ const LessonBuilderDict = {
   }
 };
 
-const LessonEditDict = {
+const LessonEditDict: LessonEditDictInterface = {
   EN: {
     TITLE: 'LESSON PLAN BUILDER',
     SUBTITLE: 'Build lessons, surveys or assessments here.',
@@ -4066,7 +4140,7 @@ const LessonEditDict = {
   }
 };
 
-const LessonsListDict = {
+const LessonsListDict: LessonsListDictInterface = {
   EN: {
     TITLE: 'LESSON LIST',
     HEADING: 'Lesson List',
@@ -4111,7 +4185,7 @@ const LessonsListDict = {
   }
 };
 
-const UniversalBuilderDict = {
+const UniversalBuilderDict: UniversalBuilderDictInterface = {
   EN: {
     FETCHING: 'Fetching lesson pages...',
     GALLERY: {
@@ -4158,7 +4232,7 @@ const UniversalBuilderDict = {
   }
 };
 
-const CsvDict = {
+const CsvDict: CsvDictInterface = {
   EN: {
     TITLE: 'Select Survey',
     SELECT_INST: 'Select institute',
@@ -4181,7 +4255,7 @@ const CsvDict = {
   }
 };
 
-const DashboardDict = {
+const DashboardDict: DashboardDictInterface = {
   EN: {
     YOUR_TEACHERS: 'Your Teachers',
     YOUR_CLASSROOMS: 'Your Classrooms',
@@ -4200,7 +4274,7 @@ const DashboardDict = {
   }
 };
 
-const LearningEvidenceDict = {
+const LearningEvidenceDict: LearningEvidenceDictInterface = {
   EN: {
     TITLE: 'Add Measurements to Lesson'
   },
@@ -4209,7 +4283,7 @@ const LearningEvidenceDict = {
   }
 };
 
-const CommonlyUsedDict = {
+const CommonlyUsedDict: CommonlyUsedDictInterface = {
   EN: {
     BACK: 'Back',
     BACK_TO_LIST: 'Back to list',
@@ -4222,7 +4296,7 @@ const CommonlyUsedDict = {
   }
 };
 
-const General = {
+const General: GeneralInterface = {
   EN: {
     SENTIMENT: {
       TITLE: "How you've been?",
@@ -4253,7 +4327,7 @@ const General = {
   }
 };
 
-const StudentDict = {
+const StudentDict: StudentDictInterface = {
   EN: {
     NO_STUDENT: 'No Student Found'
   },
@@ -4262,7 +4336,7 @@ const StudentDict = {
   }
 };
 
-const CommunityDict = {
+const CommunityDict: CommunityDictInterface = {
   EN: {
     TITLE: 'Community',
     HEADER: 'Here is what is happening today',
@@ -4280,18 +4354,11 @@ const CommunityDict = {
     }
   }
 };
-
-function paginationPage(lang: string, page: number, total: number) {
-  if (lang === 'EN') return `Showing Page ${page + 1} of ${total} pages`;
-  if (lang === 'ES') return `Mostrando página ${page + 1} de ${total} páginas`;
-  return '';
-}
 
 export {
   AuthDict,
   CommunityDict,
   CsvDict,
-  paginationPage,
   BUTTONS,
   General,
   BreadcrumsTitles,

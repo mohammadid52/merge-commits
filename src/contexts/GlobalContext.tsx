@@ -29,7 +29,7 @@ interface GlobalContextTypes {
   dispatch: React.Dispatch<GlobalActions>;
   lessonState: LessonStateType;
   checkIfAdmin: () => boolean;
-  userLanguage: string;
+  userLanguage: 'ES' | 'EN';
   clientKey: ClientKey;
 
   updateAuthState: (auth: boolean) => void;

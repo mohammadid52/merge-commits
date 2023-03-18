@@ -6,7 +6,7 @@ interface LocationBadgeProps {
   style?: any;
 }
 
-const LocationBadge = ({onDemand, customText, style}: LocationBadgeProps) => {
+const LocationBadge = ({onDemand, customText}: LocationBadgeProps) => {
   return (
     <Tag color={onDemand ? 'yellow' : 'blue'}>
       {customText ? customText : onDemand ? 'Self Paced' : 'Classroom'}

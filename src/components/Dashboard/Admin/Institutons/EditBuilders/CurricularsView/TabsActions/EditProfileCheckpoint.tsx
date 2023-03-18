@@ -204,7 +204,7 @@ const EditProfileCheckpoint = () => {
     }
     if (checkpQuestions?.length <= 0) {
       isValid = false;
-      msgs.message = EditProfileCheckpointDict[userLanguage]['messages']['onequestion'];
+      msgs.message = EditProfileCheckpointDict[userLanguage]['messages'].onequetion;
     } else {
       msgs.message = '';
     }
