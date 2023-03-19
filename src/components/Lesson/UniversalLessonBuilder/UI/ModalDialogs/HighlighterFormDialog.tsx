@@ -1,11 +1,11 @@
-import Buttons from "atoms/Buttons";
-import RichTextEditor from "atoms/RichTextEditor";
-import { useGlobalContext } from "contexts/GlobalContext";
-import { EditQuestionModalDict } from "dictionary/dictionary.iconoclast";
-import { IContentTypeComponentProps } from "interfaces/UniversalLessonBuilderInterfaces";
-import { useEffect, useState } from "react";
-import { updateLessonPageToDB } from "utilities/updateLessonPageToDB";
-import { v4 as uuidv4 } from "uuid";
+import Buttons from 'atoms/Buttons';
+import RichTextEditor from 'atoms/RichTextEditor';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import {EditQuestionModalDict} from 'dictionary/dictionary.iconoclast';
+import {IContentTypeComponentProps} from 'interfaces/UniversalLessonBuilderInterfaces';
+import {useEffect, useState} from 'react';
+import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
+import {v4 as uuidv4} from 'uuid';
 interface IHighlighterFormDialogProps extends IContentTypeComponentProps {
   inputObj?: any;
   selectedPageID?: string;
@@ -17,18 +17,18 @@ const HighlighterFormDialog = ({
   createNewBlockULBHandler,
   updateBlockContentULBHandler,
   askBeforeClose,
-  setUnsavedChanges,
+  setUnsavedChanges
 }: IHighlighterFormDialogProps) => {
-  const { userLanguage } = useGlobalContext();
+  const {userLanguage} = useGlobalContext();
   const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
 
   //////////////////////////
   //  DATA STORAG         //
   //////////////////////////
-  const [inputFieldValue, setInputFieldValue] = useState<string>("");
+  const [inputFieldValue, setInputFieldValue] = useState<string>('');
 
   useEffect(() => {
-    setInputFieldValue("Enter your lyrics here...");
+    setInputFieldValue('Enter your lyrics here...');
   }, []);
 
   useEffect(() => {
@@ -43,7 +43,7 @@ const HighlighterFormDialog = ({
 
     const input = {
       id: list.id,
-      lessonPlan: [...list.lessonPlan],
+      lessonPlan: [...list.lessonPlan]
     };
 
     await updateLessonPageToDB(input);
@@ -52,20 +52,20 @@ const HighlighterFormDialog = ({
   const onHighlighterBlockCreate = async () => {
     if (isEditingMode) {
       const updatedList = updateBlockContentULBHandler(
-        "",
-        "",
-        "highlighter-input",
-        [{ id: uuidv4().toString(), value: inputFieldValue }],
+        '',
+        '',
+        'highlighter-input',
+        [{id: uuidv4().toString(), value: inputFieldValue}],
         0
       );
 
       await addToDB(updatedList);
     } else {
       const updatedList = createNewBlockULBHandler(
-        "",
-        "",
-        "highlighter-input",
-        [{ id: uuidv4().toString(), value: inputFieldValue }],
+        '',
+        '',
+        'highlighter-input',
+        [{id: uuidv4().toString(), value: inputFieldValue}],
 
         0
       );
@@ -73,7 +73,7 @@ const HighlighterFormDialog = ({
     }
 
     // clear fields
-    setInputFieldValue("");
+    setInputFieldValue('');
     setUnsavedChanges(false);
   };
 
@@ -87,7 +87,7 @@ const HighlighterFormDialog = ({
         <div className="col-span-2">
           {inputFieldValue && (
             <RichTextEditor
-              initialValue={inputFieldValue ? inputFieldValue : ""}
+              initialValue={inputFieldValue ? inputFieldValue : ''}
               onChange={(htmlContent, plainText) => {
                 setUnsavedChanges(true);
                 setEditorContent(htmlContent, plainText);
@@ -97,19 +97,21 @@ const HighlighterFormDialog = ({
         </div>
       </div>
 
-      <div className="flex mt-8 justify-center px-6 pb-4">
-        <div className="flex justify-end">
+      <div className="flex mt-8 justify-end px-6 pb-4">
+        <div className="flex justify-end gap-4">
           <Buttons
             btnClass="py-1 px-4 text-xs mr-2"
-            label={EditQuestionModalDict[userLanguage]["BUTTON"]["CANCEL"]}
+            label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
             onClick={askBeforeClose}
             transparent
+            size="middle"
           />
 
           <Buttons
             btnClass="py-1 px-8 text-xs ml-2"
-            label={EditQuestionModalDict[userLanguage]["BUTTON"]["SAVE"]}
+            label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
             onClick={onHighlighterBlockCreate}
+            size="middle"
           />
         </div>
       </div>

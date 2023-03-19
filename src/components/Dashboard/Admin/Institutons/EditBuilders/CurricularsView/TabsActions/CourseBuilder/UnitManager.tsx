@@ -444,15 +444,15 @@ const UnitManager = ({
         {/* *************** SYLLABUS LIST ************ */}
         <Table {...tableConfig} />
       </div>
-      {deleteModal.show && (
-        <ModalPopUp
-          closeAction={handleToggleDelete}
-          saveAction={deleting ? () => {} : deleteModal.action}
-          saveLabel={deleting ? 'DELETING...' : 'CONFIRM'}
-          cancelLabel="CANCEL"
-          message={deleteModal.message}
-        />
-      )}
+
+      <ModalPopUp
+        open={deleteModal.show}
+        closeAction={handleToggleDelete}
+        saveAction={deleting ? () => {} : deleteModal.action}
+        saveLabel={deleting ? 'DELETING...' : 'CONFIRM'}
+        cancelLabel="CANCEL"
+        message={deleteModal.message}
+      />
 
       <AnimatedContainer show={isInactive}>
         {isInactive && (
@@ -461,15 +461,15 @@ const UnitManager = ({
           </p>
         )}
       </AnimatedContainer>
-      {warnModal2.show && (
-        <ModalPopUp
-          closeAction={closeLessonAction}
-          saveAction={warnModal2.action}
-          saveLabel="Yes"
-          message={warnModal2.message}
-          loading={deleting}
-        />
-      )}
+
+      <ModalPopUp
+        open={warnModal2.show}
+        closeAction={closeLessonAction}
+        saveAction={warnModal2.action}
+        saveLabel="Yes"
+        message={warnModal2.message}
+        loading={deleting}
+      />
     </div>
   );
 };

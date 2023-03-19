@@ -482,15 +482,14 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
 
         <Table {...tableConfig} />
 
-        {deleteModal.show && (
-          <ModalPopUp
-            closeAction={handleToggleDelete}
-            saveAction={deleting ? () => {} : deleteModal.action}
-            saveLabel={deleting ? 'DELETING...' : 'CONFIRM'}
-            cancelLabel="CANCEL"
-            message={deleteModal.message}
-          />
-        )}
+        <ModalPopUp
+          open={deleteModal.show}
+          closeAction={handleToggleDelete}
+          saveAction={deleting ? () => {} : deleteModal.action}
+          saveLabel={deleting ? 'DELETING...' : 'CONFIRM'}
+          cancelLabel="CANCEL"
+          message={deleteModal.message}
+        />
       </div>
     </div>
   );

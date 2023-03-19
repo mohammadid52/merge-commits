@@ -417,7 +417,7 @@ const CreateQuestion = ({
               <p className={`text-red-600`}>{message.msg}</p>
             </div>
           )}
-          <div className="flex justify-center mt-6">
+          <div className="flex justify-center mt-6 gap-4">
             <Buttons
               btnClass="py-1 px-4 text-xs mr-2"
               label={AddNewQuestionDict[userLanguage]['BUTTON']['CANCEL']}
@@ -619,7 +619,7 @@ const ExistingQuestionList = ({
           </Fragment>
         </div>
         <div className="flex mt-8 justify-center px-6 pb-4">
-          <div className="flex justify-center my-6">
+          <div className="flex justify-center my-6 gap-4">
             <Buttons
               btnClass="py-1 px-4 text-xs mr-2"
               label={QuestionLookupDict[userLanguage]['BUTTON']['CANCEL']}

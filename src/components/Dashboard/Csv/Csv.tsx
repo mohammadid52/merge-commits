@@ -420,23 +420,23 @@ const Csv = () => {
 
   return (
     <>
-      {showWarnModal && (
-        <Modal
-          closeAction={() => setShowWarnModal(false)}
-          closeOnBackdrop
-          showFooter={false}
-          showHeader={true}
-          title="Csv Download">
-          <div className="flex flex-col justify-center items-center gap-y-4">
-            <RiErrorWarningLine fontSize={'4rem'} className="text-yellow-500 animate-y" />
-            <hr />
-            <p className="text-gray-600 pt-0 p-4 text-center">
-              If you will be using this file to upload results to the app, please do not
-              change column header or tab names
-            </p>
-          </div>
-        </Modal>
-      )}
+      <Modal
+        open={showWarnModal}
+        closeAction={() => setShowWarnModal(false)}
+        closeOnBackdrop
+        showFooter={false}
+        showHeader={true}
+        title="Csv Download">
+        <div className="flex flex-col justify-center items-center gap-y-4">
+          <RiErrorWarningLine fontSize={'4rem'} className="text-yellow-500 animate-y" />
+          <hr />
+          <p className="text-gray-600 pt-0 p-4 text-center">
+            If you will be using this file to upload results to the app, please do not
+            change column header or tab names
+          </p>
+        </div>
+      </Modal>
+
       <div className="flex flex-col overflow-h-auto w-full h-full px-8 py-4">
         <DownloadCsvTitleComponent
           setSCQAnswers={setSCQAnswers}

@@ -728,45 +728,46 @@ const LessonBuilder = (props: LessonBuilderProps) => {
           )}
         </div>
       </div>
-      {warnModal.show && (
-        <ModalPopUp
-          closeAction={discardChanges}
-          saveAction={saveBeforeLeave}
-          saveLabel="Yes"
-          message={warnModal.message}
-          loading={updating}
-        />
-      )}
-      {warnModal2.show && (
-        <ModalPopUp
-          noButton="No"
-          noButtonAction={() => onCheckpointModalClose(false)}
-          closeAction={onCheckpointModalClose}
-          saveAction={saveNewCheckPoint}
-          saveLabel="Yes"
-          cancelLabel="Cancel"
-          message={warnModal2.message}
-          loading={savingUnsavedCP}
-          saveTooltip={`Save this checkpoint go to ${warnModal2.stepOnHold}`}
-          noTooltip={`Just go to ${warnModal2.stepOnHold} and don't save anything`}
-          cancelTooltip={'Continue Editing'}
-        />
-      )}
-      {warnModal2.show && warnModal2.message.includes('required fields') && (
-        <ModalPopUp
-          closeAction={() => {
-            setActiveStep(warnModal2.stepOnHold);
 
-            setWarnModal2({show: false, message: '', stepOnHold: ''});
-          }}
-          saveAction={() => setWarnModal2({show: false, message: '', stepOnHold: ''})}
-          saveLabel="Sure"
-          saveTooltip="Fill up required fields"
-          cancelTooltip={`Just go to ${warnModal2.stepOnHold}`}
-          cancelLabel="Discard"
-          message={warnModal2.message}
-        />
-      )}
+      <ModalPopUp
+        open={warnModal.show}
+        closeAction={discardChanges}
+        saveAction={saveBeforeLeave}
+        saveLabel="Yes"
+        message={warnModal.message}
+        loading={updating}
+      />
+
+      <ModalPopUp
+        open={warnModal2.show}
+        noButton="No"
+        noButtonAction={() => onCheckpointModalClose(false)}
+        closeAction={onCheckpointModalClose}
+        saveAction={saveNewCheckPoint}
+        saveLabel="Yes"
+        cancelLabel="Cancel"
+        message={warnModal2.message}
+        loading={savingUnsavedCP}
+        saveTooltip={`Save this checkpoint go to ${warnModal2.stepOnHold}`}
+        noTooltip={`Just go to ${warnModal2.stepOnHold} and don't save anything`}
+        cancelTooltip={'Continue Editing'}
+      />
+
+      <ModalPopUp
+        open={warnModal2.show && warnModal2.message.includes('required fields')}
+        closeAction={() => {
+          setActiveStep(warnModal2.stepOnHold);
+
+          setWarnModal2({show: false, message: '', stepOnHold: ''});
+        }}
+        saveAction={() => setWarnModal2({show: false, message: '', stepOnHold: ''})}
+        saveLabel="Sure"
+        saveTooltip="Fill up required fields"
+        cancelTooltip={`Just go to ${warnModal2.stepOnHold}`}
+        cancelLabel="Discard"
+        message={warnModal2.message}
+      />
+
       {/* </PageWrapper> */}
     </div>
   );

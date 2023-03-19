@@ -732,15 +732,15 @@ const User = (props: IUserProps) => {
             </div>
           </div>
         </>
-        {showCropper && (
-          <ProfileCropModal
-            upImg={upImage || ''}
-            saveCroppedImage={(img: string) => {
-              saveCroppedImage(img);
-            }}
-            closeAction={toggleCropper}
-          />
-        )}
+
+        <ProfileCropModal
+          open={showCropper}
+          upImg={upImage || ''}
+          saveCroppedImage={(img: string) => {
+            saveCroppedImage(img);
+          }}
+          closeAction={toggleCropper}
+        />
       </>
     );
   }

@@ -1,30 +1,30 @@
-import ErrorBoundary from "@components/Error/ErrorBoundary";
-import DatePicker from "@UlbBlocks/FormBlock/DatePicker";
-import TextAreaBlock from "@UlbBlocks/FormBlock/TextAreaBlock";
-import TextBlock from "@UlbBlocks/FormBlock/TextBlock";
-import NotesBlock from "@UlbBlocks/Notes/NotesBlock";
-import { getLocalStorageData } from "@utilities/localStorage";
-import { TeachingStyle } from "API";
-import RequiredMark from "atoms/RequiredMark";
-import AttachmentBlock from "components/Lesson/UniversalLessonBlockComponents/Blocks/FormBlock/AttachmentBlock";
-import OptionBlock from "components/Lesson/UniversalLessonBlockComponents/Blocks/FormBlock/OptionBlock";
-import StarRatingBlock from "components/Lesson/UniversalLessonBlockComponents/Blocks/FormBlock/StarRatingBlock";
-import WritingExerciseBlock from "components/Lesson/UniversalLessonBlockComponents/Blocks/FormBlock/WritingExerciseBlock";
-import ReviewSliderBlock from "components/Lesson/UniversalLessonBlockComponents/Blocks/ReviewSliderBlock";
-import { useGlobalContext } from "contexts/GlobalContext";
-import useInLessonCheck from "customHooks/checkIfInLesson";
-import useStudentDataValue from "customHooks/studentDataValue";
-import { RowWrapperProps } from "interfaces/UniversalLessonBuilderInterfaces";
-import { map, noop } from "lodash";
-import React from "react";
-import { FORM_TYPES } from "../../UniversalLessonBuilder/UI/common/constants";
-import EmojiInput from "./FormBlock/EmojiInputBlock";
+import ErrorBoundary from '@components/Error/ErrorBoundary';
+import DatePicker from '@UlbBlocks/FormBlock/DatePicker';
+import TextAreaBlock from '@UlbBlocks/FormBlock/TextAreaBlock';
+import TextBlock from '@UlbBlocks/FormBlock/TextBlock';
+import NotesBlock from '@UlbBlocks/Notes/NotesBlock';
+import {getLocalStorageData} from '@utilities/localStorage';
+import {TeachingStyle} from 'API';
+import RequiredMark from 'atoms/RequiredMark';
+import AttachmentBlock from 'components/Lesson/UniversalLessonBlockComponents/Blocks/FormBlock/AttachmentBlock';
+import OptionBlock from 'components/Lesson/UniversalLessonBlockComponents/Blocks/FormBlock/OptionBlock';
+import StarRatingBlock from 'components/Lesson/UniversalLessonBlockComponents/Blocks/FormBlock/StarRatingBlock';
+import WritingExerciseBlock from 'components/Lesson/UniversalLessonBlockComponents/Blocks/FormBlock/WritingExerciseBlock';
+import ReviewSliderBlock from 'components/Lesson/UniversalLessonBlockComponents/Blocks/ReviewSliderBlock';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import useInLessonCheck from 'customHooks/checkIfInLesson';
+import useStudentDataValue from 'customHooks/studentDataValue';
+import {RowWrapperProps} from 'interfaces/UniversalLessonBuilderInterfaces';
+import {map, noop} from 'lodash';
+import React from 'react';
+import {FORM_TYPES} from '../../UniversalLessonBuilder/UI/common/constants';
+import EmojiInput from './FormBlock/EmojiInputBlock';
 
 export const FormLabel = ({
   numbered = false,
-  index = "0",
-  label = "",
-  required = false,
+  index = '0',
+  label = '',
+  required = false
 }: {
   index: string;
   numbered: boolean;
@@ -33,13 +33,13 @@ export const FormLabel = ({
 }) => {
   const gContext = useGlobalContext();
   const gState = gContext.state;
-  const { lessonPage: { theme: themeTextColor = "" } = {} } = gState;
+  const {lessonPage: {theme: themeTextColor = ''} = {}} = gState;
 
   return (
     <ErrorBoundary componentName="FormLabel">
       <label className={`text-base ${themeTextColor}`} htmlFor="label">
-        {numbered && index}{" "}
-        <span dangerouslySetInnerHTML={{ __html: label || "<p></p>" }}></span>{" "}
+        {numbered && index}{' '}
+        <span dangerouslySetInnerHTML={{__html: label || '<p></p>'}}></span>{' '}
         <RequiredMark isRequired={required} />
       </label>
     </ErrorBoundary>
@@ -51,7 +51,7 @@ interface FormBlockProps extends RowWrapperProps {
   type?: string;
   pagePartId?: string;
   numbered?: boolean;
-  value?: { id: string; type: string; label: string; value: string }[];
+  value?: {id: string; type: string; label: string; value: string}[];
 }
 
 export interface FormControlProps {
@@ -76,34 +76,32 @@ export const FormBlock = ({
   numbered,
   type: formType,
   value,
-  pagePartId,
+  pagePartId
 }: FormBlockProps) => {
   const {
-    state: { user, lessonPage: { theme: lessonPageTheme = "dark" } = {} },
+    state: {user, lessonPage: {theme: lessonPageTheme = 'dark'} = {}}
   } = useGlobalContext();
   const themePlaceholderColor =
-    lessonPageTheme === "light" ? "placeholder-gray-800" : "text-gray-400";
+    lessonPageTheme === 'light' ? 'placeholder-gray-800' : 'text-gray-400';
 
-  const { getDataValue, setDataValue } = useStudentDataValue();
+  const {getDataValue, setDataValue} = useStudentDataValue();
 
   // ~~~~~~~~~~~~~~~~ PAGES ~~~~~~~~~~~~~~~~ //
-  const getRoomData = getLocalStorageData("room_info");
+  const getRoomData = getLocalStorageData('room_info');
 
   // ##################################################################### //
   // ######################## STUDENT DATA CONTEXT ####################### //
   // ##################################################################### //
   const teachingStyle = getRoomData.teachingStyle;
 
-  const isTeacher = user.role !== "ST";
+  const isTeacher = user.role !== 'ST';
   const isStudent =
-    isTeacher && teachingStyle === TeachingStyle.PERFORMER
-      ? true
-      : user.role === "ST";
+    isTeacher && teachingStyle === TeachingStyle.PERFORMER ? true : user.role === 'ST';
 
   const isInLesson = isStudent ? useInLessonCheck() : false;
 
   const onChange = (e: any) => {
-    const { id, value } = e.target;
+    const {id, value} = e.target;
 
     setDataValue(id, [value]);
   };
@@ -129,7 +127,7 @@ export const FormBlock = ({
     value,
     required,
     numbered,
-    index,
+    index
   }: FormControlProps) => {
     return (
       <div id={`${inputID}_for_error`} key={id} className={`mb-4 p-4`}>
@@ -137,18 +135,18 @@ export const FormBlock = ({
           label={label}
           required={Boolean(required)}
           numbered={Boolean(numbered)}
-          index={index?.toString() || ""}
+          index={index?.toString() || ''}
         />
         <input
           id={inputID}
-          disabled={mode === "building"}
+          disabled={mode === 'building'}
           pattern="https://.*"
           className={`w-full py-2 px-4 mt-2 rounded-xl ${themePlaceholderColor} ${
-            lessonPageTheme === "light" ? "bg-gray-200" : "bg-darker-gray"
+            lessonPageTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'
           }`}
           name="url"
           type="text"
-          defaultValue={value.length > 0 ? value : "Please input..."}
+          defaultValue={value.length > 0 ? value : 'Please input...'}
           onChange={isInLesson && isStudent ? (e) => onChange(e) : () => {}}
           value={isInLesson ? getDataValue(inputID) : value}
         />
@@ -162,7 +160,7 @@ export const FormBlock = ({
   const composeInput = (
     inputID: string,
     type?: string,
-    label = "",
+    label = '',
     value?: any,
     options?: any,
     isInLesson?: boolean,
@@ -179,12 +177,12 @@ export const FormBlock = ({
       mode,
       type,
       index,
-      label: "",
+      label,
       value,
       required,
       inputID,
       classString,
-      isStudent,
+      isStudent
     };
     switch (type) {
       case FORM_TYPES.TEXT:
@@ -192,7 +190,7 @@ export const FormBlock = ({
       case FORM_TYPES.DATE_PICKER:
         return <DatePicker {...formBlockProps} />;
       case FORM_TYPES.TEXTAREA:
-        return <TextAreaBlock {...formBlockProps} />;
+        return <TextBlock textarea {...formBlockProps} />;
       case FORM_TYPES.RADIO:
       case FORM_TYPES.MULTIPLE:
         return <OptionBlock options={options} {...formBlockProps} />;
@@ -209,9 +207,7 @@ export const FormBlock = ({
             numbered={numbered}
             index={index}
             isInLesson={isInLesson}
-            handleUpdateStudentData={
-              isStudent && isInLesson ? setDataValue : () => {}
-            }
+            handleUpdateStudentData={isStudent && isInLesson ? setDataValue : () => {}}
             getStudentDataValue={getValue}
           />
         );
@@ -241,11 +237,11 @@ export const FormBlock = ({
           <ReviewSliderBlock
             inputID={inputID}
             id={id}
-            disabled={mode === "building"}
+            disabled={mode === 'building'}
             classString={classString}
             label={label}
             onChange={isInLesson && isStudent ? (e) => onChange(e) : noop}
-            value={isInLesson ? getValue?.(inputID || "") : value}
+            value={isInLesson ? getValue?.(inputID || '') : value}
           />
         );
 
@@ -255,20 +251,19 @@ export const FormBlock = ({
           <div
             className={`border-0 border-gray-700 ${
               type === FORM_TYPES.WRITING_EXERCISE
-                ? "border-b-none rounded-b-none"
-                : "border-t-none rounded-t-none"
-            } p-4 rounded-2xl bg-component-dark`}
-          >
+                ? 'border-b-none rounded-b-none'
+                : 'border-t-none rounded-t-none'
+            } p-4 rounded-2xl bg-component-dark`}>
             <WritingExerciseBlock
               title={type === FORM_TYPES.WRITING_EXERCISE}
-              value={isInLesson ? getValue?.(inputID || "") : value}
+              value={isInLesson ? getValue?.(inputID || '') : value}
               onChange={isInLesson && isStudent ? (e) => onChange(e) : noop}
               id={id}
               type={type}
               label={label}
               options={options}
               inputID={inputID}
-              disabled={mode === "building"}
+              disabled={mode === 'building'}
               classString={classString}
             />
           </div>
@@ -280,14 +275,14 @@ export const FormBlock = ({
           <div className={`mt-4  rounded-2xl`}>
             <WritingExerciseBlock
               title={false}
-              value={isInLesson ? getValue?.(inputID || "") : value}
+              value={isInLesson ? getValue?.(inputID || '') : value}
               onChange={isInLesson && isStudent ? (e) => onChange(e) : noop}
               id={id}
               type={type}
               label={label}
               options={options}
               inputID={inputID}
-              disabled={mode === "building"}
+              disabled={mode === 'building'}
               classString={classString}
             />
           </div>
@@ -298,16 +293,16 @@ export const FormBlock = ({
     }
   };
 
-  if (formType === "notes-form" && !isStudent) {
+  if (formType === 'notes-form' && !isStudent) {
     const modifiyValues = map(value, (v: any) => ({
       class: v.class,
       pagePartId: pagePartId,
       partContentId: id,
       id: v.id,
-      value: v.value,
+      value: v.value
     }));
 
-    return <NotesBlock grid={{ cols: 4, rows: 3 }} value={modifiyValues} />;
+    return <NotesBlock grid={{cols: 4, rows: 3}} value={modifiyValues} />;
   }
 
   return (

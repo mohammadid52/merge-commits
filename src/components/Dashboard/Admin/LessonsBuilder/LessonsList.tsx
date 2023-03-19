@@ -467,12 +467,12 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
     return (
       <ErrorBoundary componentName="LessonsList">
         <div className={`w-full h-full`}>
-          {showCloneModal.show && (
-            <CloneLesson
-              setShowCloneModal={setShowCloneModal}
-              getCloneLessonDetails={getCloneLessonDetails}
-            />
-          )}
+          <CloneLesson
+            open={showCloneModal.show}
+            setShowCloneModal={setShowCloneModal}
+            getCloneLessonDetails={getCloneLessonDetails}
+          />
+
           {/* Header section */}
           {!isInInstitution && <BreadCrums items={breadCrumsList} />}
           <div
@@ -568,15 +568,14 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
           <div className={`px-8`}>
             <Table {...tableConfig} />
 
-            {deleteModal.show && (
-              <ModalPopUp
-                closeAction={handleToggleDelete}
-                saveAction={deleting ? () => {} : deleteModal.action}
-                saveLabel={deleting ? 'DELETING...' : 'CONFIRM'}
-                cancelLabel="CANCEL"
-                message={deleteModal.message}
-              />
-            )}
+            <ModalPopUp
+              open={deleteModal.show}
+              closeAction={handleToggleDelete}
+              saveAction={deleting ? () => {} : deleteModal.action}
+              saveLabel={deleting ? 'DELETING...' : 'CONFIRM'}
+              cancelLabel="CANCEL"
+              message={deleteModal.message}
+            />
           </div>
 
           {/* Pagination And Counter */}

@@ -444,69 +444,68 @@ const LearningEvidence = ({
             </div>
           )}
         </PageWrapper>
-        {addModalShow && (
-          <Modal
-            showHeader
-            showFooter={false}
-            showHeaderBorder
-            title={'Add Evidence'}
-            closeOnBackdrop
-            closeAction={() => setAddModalShow(false)}>
-            <div className="min-w-256">
-              <AddEvidence />
-            </div>
-          </Modal>
-        )}
-        {isFormOpen && (
-          <Modal
-            showHeader
-            showFooter={false}
-            showHeaderBorder
-            title={'Learning Objective'}
-            closeOnBackdrop
-            closeAction={handleCancel}>
-            <div className="min-w-120">
-              <AddLearningObjective
-                curricularId={selectedObjectiveData.curricularId}
-                handleCancel={handleCancel}
-                learningObjectiveData={selectedObjectiveData}
-                postMutation={postLearningObjectiveChange}
-              />
-            </div>
-          </Modal>
-        )}
-        {openMeasurementModal && (
-          <Modal
-            showHeader={true}
-            title={AddMeasurementDict[userLanguage]['heading']}
-            showHeaderBorder={true}
-            showFooter={false}
-            closeAction={onMeasurementClose}>
-            <AddMeasurement
-              curricularId={selectedRubricData.curriculumID}
-              onCancel={onMeasurementClose}
-              postMutation={postMeasurementChange}
-              rubricData={selectedRubricData}
-              topicId={selectedRubricData.topicId}
-            />
-          </Modal>
-        )}
 
-        {openTopicModal && (
-          <Modal
-            showHeader={true}
-            title={AddTopicDict[userLanguage]['heading']}
-            showHeaderBorder={true}
-            showFooter={false}
-            closeAction={onTopicModalClose}>
-            <AddTopic
-              curricularId={selectedTopicData.curriculumID}
-              onCancel={onTopicModalClose}
-              postMutation={postTopicChange}
-              topicData={selectedTopicData}
+        <Modal
+          open={addModalShow}
+          showHeader
+          showFooter={false}
+          showHeaderBorder
+          title={'Add Evidence'}
+          closeOnBackdrop
+          closeAction={() => setAddModalShow(false)}>
+          <div className="min-w-256">
+            <AddEvidence />
+          </div>
+        </Modal>
+
+        <Modal
+          open={isFormOpen}
+          showHeader
+          showFooter={false}
+          showHeaderBorder
+          title={'Learning Objective'}
+          closeOnBackdrop
+          closeAction={handleCancel}>
+          <div className="min-w-120">
+            <AddLearningObjective
+              curricularId={selectedObjectiveData.curricularId}
+              handleCancel={handleCancel}
+              learningObjectiveData={selectedObjectiveData}
+              postMutation={postLearningObjectiveChange}
             />
-          </Modal>
-        )}
+          </div>
+        </Modal>
+
+        <Modal
+          open={openMeasurementModal}
+          showHeader={true}
+          title={AddMeasurementDict[userLanguage]['heading']}
+          showHeaderBorder={true}
+          showFooter={false}
+          closeAction={onMeasurementClose}>
+          <AddMeasurement
+            curricularId={selectedRubricData.curriculumID}
+            onCancel={onMeasurementClose}
+            postMutation={postMeasurementChange}
+            rubricData={selectedRubricData}
+            topicId={selectedRubricData.topicId}
+          />
+        </Modal>
+
+        <Modal
+          open={openTopicModal}
+          showHeader={true}
+          title={AddTopicDict[userLanguage]['heading']}
+          showHeaderBorder={true}
+          showFooter={false}
+          closeAction={onTopicModalClose}>
+          <AddTopic
+            curricularId={selectedTopicData.curriculumID}
+            onCancel={onTopicModalClose}
+            postMutation={postTopicChange}
+            topicData={selectedTopicData}
+          />
+        </Modal>
       </div>
     </div>
   );

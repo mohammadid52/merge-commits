@@ -65,8 +65,13 @@ const EditChatModal = ({
   const disableSaveBtn =
     chatConfig.chatValue === value || value.length === 0 || isLoading;
 
-  return chatEditModal ? (
-    <Modal title="Edit Chat" showHeader showFooter={false} closeAction={closeAction}>
+  return (
+    <Modal
+      open={chatEditModal}
+      title="Edit Chat"
+      showHeader
+      showFooter={false}
+      closeAction={closeAction}>
       <div className="min-w-132">
         <FormInput
           label="Comment"
@@ -83,8 +88,6 @@ const EditChatModal = ({
         />
       </div>
     </Modal>
-  ) : (
-    <div className="hidden w-auto" />
   );
 };
 

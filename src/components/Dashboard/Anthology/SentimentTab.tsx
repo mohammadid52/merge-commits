@@ -104,8 +104,9 @@ const EditBackstory = ({
     }
   };
 
-  return show ? (
+  return (
     <Modal
+      open={show}
       title={General[userLanguage]['SENTIMENT']['MODAL_TITLE']}
       closeAction={() => setShow(false)}
       showHeader={true}
@@ -139,8 +140,6 @@ const EditBackstory = ({
         </div>
       </div>
     </Modal>
-  ) : (
-    <div className="hidden w-auto" />
   );
 };
 

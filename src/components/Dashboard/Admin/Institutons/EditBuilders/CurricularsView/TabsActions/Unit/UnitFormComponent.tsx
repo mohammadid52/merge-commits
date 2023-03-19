@@ -367,14 +367,13 @@ const UnitFormComponent = ({
         </div>
       </div>
 
-      {warnModal.show && (
-        <ModalPopUp
-          closeAction={closeModal}
-          saveAction={warnModal.onSaveAction}
-          saveLabel="Yes"
-          message={warnModal.message}
-        />
-      )}
+      <ModalPopUp
+        open={warnModal.show}
+        closeAction={closeModal}
+        saveAction={warnModal.onSaveAction}
+        saveLabel="Yes"
+        message={warnModal.message}
+      />
     </>
   );
 };

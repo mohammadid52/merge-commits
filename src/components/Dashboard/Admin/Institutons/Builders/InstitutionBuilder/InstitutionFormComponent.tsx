@@ -406,13 +406,13 @@ const InstitutionFormComponent = ({institutionInfo, postMutation}: any) => {
           </form>
 
           {/* Image cropper */}
-          {showCropper && (
-            <ProfileCropModal
-              upImg={upImage || ''}
-              saveCroppedImage={(img: string) => saveCroppedImage(img)}
-              closeAction={toggleCropper}
-            />
-          )}
+
+          <ProfileCropModal
+            open={showCropper}
+            upImg={upImage || ''}
+            saveCroppedImage={(img: string) => saveCroppedImage(img)}
+            closeAction={toggleCropper}
+          />
         </div>
       </div>
     </div>

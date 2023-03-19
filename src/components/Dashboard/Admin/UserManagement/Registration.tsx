@@ -258,7 +258,9 @@ const Registration = ({
       if (NextToken) {
         combined = await listAllRooms(combined, NextToken);
       }
-      setInstClasses(combined.map((d: any) => ({...d, value: d.classID, roomId: d.id})));
+      setInstClasses(
+        combined.map((d: any) => ({...d, label: d?.name, value: d.classID, roomId: d.id}))
+      );
 
       return combined;
     } catch (error) {

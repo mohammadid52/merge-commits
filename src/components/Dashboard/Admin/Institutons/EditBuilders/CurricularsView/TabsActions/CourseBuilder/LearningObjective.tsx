@@ -633,52 +633,51 @@ const LearningObjective = (props: LearningObjectiveProps) => {
             </div>
           )}
         </PageWrapper>
-        {warnModal.show && (
-          <ModalPopUp
-            closeAction={onCancel}
-            saveAction={onSaveAction}
-            saveLabel="Yes"
-            cancelLabel="No"
-            loading={deleting}
-            message={warnModal.message}
-          />
-        )}
-        {openMeasurementModal && (
-          <Modal
-            showHeader={true}
-            title={AddMeasurementDict[userLanguage]['title']}
-            showHeaderBorder={true}
-            showFooter={false}
-            closeAction={onMeasurementClose}>
-            <AddMeasurement
-              curricularId={curricularId}
-              onCancel={onMeasurementClose}
-              postMutation={postMeasurementChange}
-              rubricData={selectedRubricData}
-              topicId={selectedRubricData.topicId}
-            />
-          </Modal>
-        )}
 
-        {createOrEditLearningObjectiveModal && (
-          <Modal
-            showHeader={true}
-            title={
-              LEARINGOBJECTIVEDICT[userLanguage]['BUTTON'][
-                isEmpty(selectedObjectiveData) ? 'ADD' : 'EDIT'
-              ]
-            }
-            showHeaderBorder={true}
-            showFooter={false}
-            closeAction={handleCancel}>
-            <AddLearningObjective
-              curricularId={curricularId}
-              handleCancel={handleCancel}
-              learningObjectiveData={selectedObjectiveData}
-              postMutation={postLearningObjectiveChange}
-            />
-          </Modal>
-        )}
+        <ModalPopUp
+          open={warnModal.show}
+          closeAction={onCancel}
+          saveAction={onSaveAction}
+          saveLabel="Yes"
+          cancelLabel="No"
+          loading={deleting}
+          message={warnModal.message}
+        />
+
+        <Modal
+          open={openMeasurementModal}
+          showHeader={true}
+          title={AddMeasurementDict[userLanguage]['title']}
+          showHeaderBorder={true}
+          showFooter={false}
+          closeAction={onMeasurementClose}>
+          <AddMeasurement
+            curricularId={curricularId}
+            onCancel={onMeasurementClose}
+            postMutation={postMeasurementChange}
+            rubricData={selectedRubricData}
+            topicId={selectedRubricData.topicId}
+          />
+        </Modal>
+
+        <Modal
+          open={createOrEditLearningObjectiveModal}
+          showHeader={true}
+          title={
+            LEARINGOBJECTIVEDICT[userLanguage]['BUTTON'][
+              isEmpty(selectedObjectiveData) ? 'ADD' : 'EDIT'
+            ]
+          }
+          showHeaderBorder={true}
+          showFooter={false}
+          closeAction={handleCancel}>
+          <AddLearningObjective
+            curricularId={curricularId}
+            handleCancel={handleCancel}
+            learningObjectiveData={selectedObjectiveData}
+            postMutation={postLearningObjectiveChange}
+          />
+        </Modal>
 
         <AnimatedContainer show={isInactive}>
           {isInactive && (
@@ -688,21 +687,20 @@ const LearningObjective = (props: LearningObjectiveProps) => {
           )}
         </AnimatedContainer>
 
-        {openTopicModal && (
-          <Modal
-            showHeader={true}
-            title={AddTopicDict[userLanguage]['heading']}
-            showHeaderBorder={true}
-            showFooter={false}
-            closeAction={onTopicModalClose}>
-            <AddTopic
-              curricularId={curricularId}
-              onCancel={onTopicModalClose}
-              postMutation={postTopicChange}
-              topicData={selectedTopicData}
-            />
-          </Modal>
-        )}
+        <Modal
+          open={openTopicModal}
+          showHeader={true}
+          title={AddTopicDict[userLanguage]['heading']}
+          showHeaderBorder={true}
+          showFooter={false}
+          closeAction={onTopicModalClose}>
+          <AddTopic
+            curricularId={curricularId}
+            onCancel={onTopicModalClose}
+            postMutation={postTopicChange}
+            topicData={selectedTopicData}
+          />
+        </Modal>
       </div>
     </div>
   );

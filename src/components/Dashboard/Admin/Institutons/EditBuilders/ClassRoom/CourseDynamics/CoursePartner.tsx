@@ -181,15 +181,14 @@ const CoursePartner = ({roomData}: ICoursePartnerProps) => {
         roomData={roomData}
       />
 
-      {warnModal.show && (
-        <ModalPopUp
-          closeAction={closeDeleteModal}
-          saveAction={warnModal.action}
-          saveLabel="Yes"
-          message={warnModal.message}
-          loading={deleting}
-        />
-      )}
+      <ModalPopUp
+        open={warnModal.show}
+        closeAction={closeDeleteModal}
+        saveAction={warnModal.action}
+        saveLabel="Yes"
+        message={warnModal.message}
+        loading={deleting}
+      />
     </div>
   );
 };

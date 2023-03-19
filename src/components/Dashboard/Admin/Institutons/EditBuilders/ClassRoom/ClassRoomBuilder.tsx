@@ -352,14 +352,14 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
             </p>
           </div>
         ) : null}
-        {warnModal.show && (
-          <ModalPopUp
-            closeAction={toggleModal}
-            saveAction={onModalSave}
-            saveLabel="Yes"
-            message={warnModal.message}
-          />
-        )}
+
+        <ModalPopUp
+          open={warnModal.show}
+          closeAction={toggleModal}
+          saveAction={onModalSave}
+          saveLabel="Yes"
+          message={warnModal.message}
+        />
       </div>
     </div>
   );

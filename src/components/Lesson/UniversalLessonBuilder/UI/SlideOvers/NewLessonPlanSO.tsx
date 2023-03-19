@@ -67,11 +67,13 @@ const VideoUploadComponent = ({
   closeAction,
   file,
   setFile,
-  setFields
+  setFields,
+  open
 }: {
   customRef: any;
   closeAction: () => void;
   file: IFile;
+  open: boolean;
   setFields: any;
   setFile: React.Dispatch<React.SetStateAction<IFile | null>>;
 }) => {
@@ -80,6 +82,7 @@ const VideoUploadComponent = ({
 
   return (
     <Modal
+      open={open}
       closeAction={showCloseButton ? closeAction : () => {}}
       showHeader={showCloseButton}
       showFooter={false}>
@@ -577,7 +580,7 @@ const NewLessonPlanSO = ({
     onSaveClick(undefined);
   };
 
-  const shouldBeDark = !location.search.includes('&step=activities');
+  const shouldBeDark = false;
   const onClose = () => {
     setOpen(false);
   };
@@ -588,7 +591,7 @@ const NewLessonPlanSO = ({
         title={'Activity Details'}
         width={400}
         onClose={onClose}
-        open={open && !location.pathname.includes('page-builder')}
+        open={open}
         bodyStyle={{paddingBottom: 80}}
         extra={
           <Space>
@@ -603,32 +606,31 @@ const NewLessonPlanSO = ({
             />
           </Space>
         }>
-        {showModal.show && (
-          <div className={`${showModal.show ? 'z-1000' : ''}`}>
-            <ModalPopUp
-              noButton="No"
-              noTooltip="Continue Activity"
-              cancelLabel="Yes"
-              className=""
-              cancelTooltip="Discard changes and go back"
-              noButtonAction={onModalCancelClick}
-              message={showModal.msg}
-              closeAction={() => {
-                setShowModal({show: false, msg: ''});
-              }}
-              cancelAction={onModalYesClick}
-            />
-          </div>
-        )}
-        {videoUploadModal && file && (
-          <VideoUploadComponent
-            setFields={setFields}
-            closeAction={() => closeVideoUploadModal()}
-            file={file}
-            setFile={setFile}
-            customRef={customRef}
-          />
-        )}
+        <ModalPopUp
+          open={showModal.show}
+          noButton="No"
+          noTooltip="Continue Activity"
+          cancelLabel="Yes"
+          className=""
+          cancelTooltip="Discard changes and go back"
+          noButtonAction={onModalCancelClick}
+          message={showModal.msg}
+          closeAction={() => {
+            setShowModal({show: false, msg: ''});
+          }}
+          cancelAction={onModalYesClick}
+        />
+
+        <VideoUploadComponent
+          setFields={setFields}
+          closeAction={() => closeVideoUploadModal()}
+          // @ts-ignore
+          file={file}
+          open={Boolean(videoUploadModal && file)}
+          setFile={setFile}
+          customRef={customRef}
+        />
+
         <div className="flex-1">
           {/* Header */}
 

@@ -18,9 +18,10 @@ interface Props {
   setShowCloneModal?: React.Dispatch<
     React.SetStateAction<{show: boolean; lessonId: string}>
   >;
+  open: boolean;
 }
 
-const CloneLesson = ({setShowCloneModal, getCloneLessonDetails}: Props) => {
+const CloneLesson = ({setShowCloneModal, open, getCloneLessonDetails}: Props) => {
   const onCloneModalClose = () => {
     setShowCloneModal?.({show: false, lessonId: ''});
   };
@@ -139,6 +140,7 @@ const CloneLesson = ({setShowCloneModal, getCloneLessonDetails}: Props) => {
 
   return (
     <Modal
+      open={open}
       title={
         cloningStatus !== 'success'
           ? 'Please confirm you want to clone this lesson'

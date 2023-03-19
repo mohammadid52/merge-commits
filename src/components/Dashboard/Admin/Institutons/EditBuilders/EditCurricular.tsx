@@ -464,23 +464,24 @@ const EditCurricular = (props: EditCurricularProps) => {
           onClick={saveCurriculum}
         />
       </div>
-      {showCropper && (
-        <ProfileCropModal
-          upImg={upImage || ''}
-          locked
-          customCropProps={{x: 25, y: 25, width: 480, height: 320}}
-          saveCroppedImage={(img: string) => saveCroppedImage(img)}
-          closeAction={toggleCropper}
-        />
-      )}
-      {warnModal.show && (
-        <ModalPopUp
-          closeAction={toggleModal}
-          saveAction={onModalSave}
-          saveLabel="Yes"
-          message={warnModal.message}
-        />
-      )}
+
+      <ProfileCropModal
+        open={showCropper}
+        upImg={upImage || ''}
+        locked
+        customCropProps={{x: 25, y: 25, width: 480, height: 320}}
+        saveCroppedImage={(img: string) => saveCroppedImage(img)}
+        closeAction={toggleCropper}
+      />
+
+      <ModalPopUp
+        open={warnModal.show}
+        closeAction={toggleModal}
+        saveAction={onModalSave}
+        saveLabel="Yes"
+        message={warnModal.message}
+      />
+
       {/* </PageWrapper> */}
     </div>
   );

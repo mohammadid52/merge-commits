@@ -514,14 +514,13 @@ const CourseFormComponent = ({
         </div>
       ) : null}
 
-      {warnModal.show && (
-        <ModalPopUp
-          closeAction={closeModal}
-          saveAction={warnModal.onSaveAction}
-          saveLabel="Yes"
-          message={warnModal.message}
-        />
-      )}
+      <ModalPopUp
+        open={warnModal.show}
+        closeAction={closeModal}
+        saveAction={warnModal.onSaveAction}
+        saveLabel="Yes"
+        message={warnModal.message}
+      />
 
       <div className="flex my-8 gap-5 justify-center">
         <Buttons
@@ -541,15 +540,16 @@ const CourseFormComponent = ({
         </button> */}
       </div>
       {/* Image cropper */}
-      {showCropper && (
-        <ProfileCropModal
-          upImg={upImage || ''}
-          customCropProps={{x: 25, y: 25, width: 480, height: 320}}
-          locked
-          saveCroppedImage={(img: string) => saveCroppedImage(img)}
-          closeAction={toggleCropper}
-        />
-      )}
+
+      <ProfileCropModal
+        open={showCropper}
+        upImg={upImage || ''}
+        customCropProps={{x: 25, y: 25, width: 480, height: 320}}
+        locked
+        saveCroppedImage={(img: string) => saveCroppedImage(img)}
+        closeAction={toggleCropper}
+      />
+
       {/* </PageWrapper> */}
     </div>
   );

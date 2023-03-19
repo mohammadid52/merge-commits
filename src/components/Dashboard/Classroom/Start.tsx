@@ -395,16 +395,16 @@ const Start: React.FC<StartProps> = ({
           (isActive && isTeacher && isLesson)
         }
       />
-      {warnModal.show && (
-        <ModalPopUp
-          closeAction={onCloseModal}
-          cancelAction={discardChanges}
-          saveAction={handleMarkAsCompleteClick}
-          saveLabel={isLoading ? 'Processing...' : 'Yes'}
-          cancelLabel="No"
-          message={warnModal.message}
-        />
-      )}
+
+      <ModalPopUp
+        open={warnModal.show}
+        closeAction={onCloseModal}
+        cancelAction={discardChanges}
+        saveAction={handleMarkAsCompleteClick}
+        saveLabel={isLoading ? 'Processing...' : 'Yes'}
+        cancelLabel="No"
+        message={warnModal.message}
+      />
     </div>
   );
 };

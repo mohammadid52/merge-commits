@@ -1,17 +1,15 @@
-import { FORM_TYPES } from "components/Lesson/UniversalLessonBuilder/UI/common/constants";
-import { useGlobalContext } from "contexts/GlobalContext";
-import useInLessonCheck from "customHooks/checkIfInLesson";
-import useStudentDataValue from "customHooks/studentDataValue";
-import { IFormBlockProps } from "interfaces/UniversalLessonInterfaces";
-import { useState } from "react";
-import { FormLabel } from "../FormBlock";
+import Label from '@components/Atoms/Form/Label';
+import {Checkbox, Radio} from 'antd';
+import {FORM_TYPES} from 'components/Lesson/UniversalLessonBuilder/UI/common/constants';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import useInLessonCheck from 'customHooks/checkIfInLesson';
+import useStudentDataValue from 'customHooks/studentDataValue';
+import {IFormBlockProps} from 'interfaces/UniversalLessonInterfaces';
 
 const SelectMany = ({
   onChange,
-  getCheckValue,
 
-  classString,
-  value,
+  value
 }: {
   onChange: (e: any) => void;
 
@@ -19,43 +17,45 @@ const SelectMany = ({
   classString: string;
   value: any;
 }) => {
-  const {
-    theme,
-    state: {
-      lessonPage: { theme: lessonPageTheme = "dark", themeTextColor = "" } = {},
-    },
-  } = useGlobalContext();
-  const themePlaceholderColor =
-    lessonPageTheme === "light" ? "placeholder-gray-800" : "";
+  // map id into value and text as label and return new array
+  const mappedOptions = value.map((item: {text: any; id: any}) => {
+    const {text, id} = item;
+    return {
+      label: text,
+      value: id
+    };
+  });
 
   return (
-    <div className={classString}>
-      {value.map((item: any) => {
-        const { label, text, id } = item;
+    <Checkbox.Group
+      options={mappedOptions}
+      defaultValue={['Apple']}
+      onChange={onChange}
+    />
 
-        return (
-          <div className={`flex my-2 w-auto justify-center items-center mr-8 `}>
-            <input
-              id={id}
-              data-key={id}
-              data-value={label}
-              type="checkbox"
-              className={`w-5 h-5 flex-shrink-0 mx-4 transition-all cursor-pointer border-0 ${themePlaceholderColor} ${
-                getCheckValue(id)
-                  ? "theme-bg border-white"
-                  : "bg-white border-black "
-              }`}
-              onChange={onChange}
-              checked={getCheckValue(id)}
-            />
+    // <div className={classString}>
+    //   {value.map((item: any) => {
+    //     const {label, text, id} = item;
 
-            <span className={`ml-2 ${theme.elem.text} ${themeTextColor}`}>
-              {text}
-            </span>
-          </div>
-        );
-      })}
-    </div>
+    //     return (
+    //       <div className={`flex my-2 w-auto justify-center items-center mr-8 `}>
+    //         <input
+    //           id={id}
+    //           data-key={id}
+    //           data-value={label}
+    //           type="checkbox"
+    //           className={`w-5 h-5 flex-shrink-0 mx-4 transition-all cursor-pointer border-0 ${themePlaceholderColor} ${
+    //             getCheckValue(id) ? 'theme-bg border-white' : 'bg-white border-black '
+    //           }`}
+    //           onChange={onChange}
+    //           checked={getCheckValue(id)}
+    //         />
+
+    //         <span className={`ml-2 ${theme.elem.text} ${themeTextColor}`}>{text}</span>
+    //       </div>
+    //     );
+    //   })}
+    // </div>
   );
 };
 
@@ -64,7 +64,7 @@ const SelectOne = ({
   getCheckValue,
 
   classString,
-  value,
+  value
 }: {
   onChange: (e: any) => void;
   getCheckValue: (id: string) => boolean;
@@ -73,67 +73,68 @@ const SelectOne = ({
   classString: string;
   value: any;
 }) => {
-  const {
-    state: {
-      lessonPage: { theme: lessonPageTheme = "dark", themeTextColor = "" } = {},
-    },
-  } = useGlobalContext();
-  const [otherOptSel, setOtherOptSel] = useState(false);
-
-  const [other, setOther] = useState("");
-  const themePlaceholderColor =
-    lessonPageTheme === "light" ? "placeholder-gray-800" : "";
   return (
-    <div className={classString}>
-      {value.map((item: any) => {
-        const { label, text, id } = item;
+    <Radio.Group>
+      {value.map((item: {text: any; id: any}) => {
+        const {text, id} = item;
         return (
-          <div
+          <Radio
             key={id}
-            className={`w-auto flex justify-center items-center mr-8 my-2`}
-          >
-            <input
-              id={id}
-              data-key={id}
-              data-value={label}
-              type="radio"
-              className={`w-5 h-5 flex-shrink-0 mx-4 transition-all rounded-full cursor-pointer border-0 ${themePlaceholderColor} ${
-                getCheckValue(id)
-                  ? "theme-bg border-white"
-                  : "bg-white border-black "
-              }`}
-              onChange={(e) => {
-                if (e.target.id.includes("other")) {
-                  setOtherOptSel(true);
-                } else {
-                  setOther("");
-                  setOtherOptSel(false);
-                }
-                onChange(e);
-              }}
-              checked={getCheckValue(id)}
-            />
-
-            <span className={`w-auto`}>{text}</span>
-          </div>
+            onChange={(e) => {
+              onChange(e);
+            }}
+            checked={getCheckValue(id)}
+            value={id}>
+            {text}
+          </Radio>
         );
       })}
+    </Radio.Group>
+    // <div className={classString}>
+    //   {value.map((item: any) => {
+    //     const {label, text, id} = item;
+    //     return (
+    //       <div key={id} className={`w-auto flex justify-center items-center mr-8 my-2`}>
+    //         <input
+    //           id={id}
+    //           data-key={id}
+    //           data-value={label}
+    //           type="radio"
+    //           className={`w-5 h-5 flex-shrink-0 mx-4 transition-all rounded-full cursor-pointer border-0 ${themePlaceholderColor} ${
+    //             getCheckValue(id) ? 'theme-bg border-white' : 'bg-white border-black '
+    //           }`}
+    //           onChange={(e) => {
+    //             if (e.target.id.includes('other')) {
+    //               setOtherOptSel(true);
+    //             } else {
+    //               setOther('');
+    //               setOtherOptSel(false);
+    //             }
+    //             onChange(e);
+    //           }}
+    //           checked={getCheckValue(id)}
+    //         />
 
-      {otherOptSel && (
-        <div key={`question_}`} className={`w-auto ml-4  my-4`}>
-          <input
-            id={"sdsd"}
-            className={`${themePlaceholderColor} ${themeTextColor} ${
-              lessonPageTheme === "light" ? "bg-gray-200" : "bg-darker-gray"
-            } w-full rounded-xl`}
-            type="text"
-            name={"Other"}
-            value={other}
-            onChange={(e) => setOther(e.target.value)}
-          />
-        </div>
-      )}
-    </div>
+    //         <span className={`w-auto`}>{text}</span>
+    //       </div>
+    //     );
+    //   })}
+
+    //   {otherOptSel && (
+    //     <div key={`question_}`} className={`w-auto ml-4  my-4`}>
+    //       <input
+    //         id={'sdsd'}
+    //         className={`${themePlaceholderColor} ${themeTextColor} ${
+    //           lessonPageTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'
+    //         } w-full rounded-xl`}
+    //         type="text"
+    //         name={'Other'}
+    //         value={other}
+    //         onChange={(e) => setOther(e.target.value)}
+    //       />
+    //     </div>
+    //   )}
+    // </div>
   );
 };
 
@@ -143,34 +144,33 @@ interface IOptionProps extends IFormBlockProps {
 
 const OptionBlock = (props: IOptionProps) => {
   const {
-    id = "",
+    id = '',
     required = false,
     numbered = false,
     label,
 
-    classString = "",
-    index = "",
+    classString = '',
+    index = '',
 
     type,
     options,
-    inputID = "",
-    isStudent,
+    inputID = '',
+    isStudent
   } = props;
 
   const gContext = useGlobalContext();
 
   const gState = gContext.state;
-  const {
-    lessonPage: { theme: lessonPageTheme = "dark", themeTextColor = "" } = {},
-  } = gState;
+  const {lessonPage: {theme: lessonPageTheme = 'dark', themeTextColor = ''} = {}} =
+    gState;
 
   const isInLesson = isStudent ? useInLessonCheck() : false;
 
-  const { getDataValue, setDataValue } = useStudentDataValue();
+  const {getDataValue, setDataValue} = useStudentDataValue();
 
   // ~~~~~~~~ SELECTMANY CHECKBOXES ~~~~~~~~ //
   const generateCheckbox = (
-    values: { label: string; text: string; id: string }[],
+    values: {label: string; text: string; id: string}[],
     selectMany: boolean,
     inputID: string,
     classString: string
@@ -178,14 +178,11 @@ const OptionBlock = (props: IOptionProps) => {
     if (values && Array.isArray(values)) {
       const studentDataValue = getDataValue(inputID) || [];
 
-      let selectedOptionList: string[] = [...studentDataValue].filter(
-        (d) => d !== ""
-      );
+      let selectedOptionList: string[] = [...studentDataValue].filter((d) => d !== '');
 
-      const getCheckValue = (id: string): boolean =>
-        studentDataValue.includes(id);
+      const getCheckValue = (id: string): boolean => studentDataValue.includes(id);
       const onChange = (e: any) => {
-        const { id } = e.target;
+        const {id} = e.target;
         if (isInLesson) {
           if (selectMany) {
             if (selectedOptionList.includes(id)) {
@@ -205,7 +202,7 @@ const OptionBlock = (props: IOptionProps) => {
           {selectMany ? (
             <SelectMany
               classString={`mt-2 py-2 flex flex-wrap ${themeTextColor} ${
-                lessonPageTheme === "light" ? "bg-gray-200" : "bg-darker-gray"
+                lessonPageTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'
               } px-4 rounded-xl ${classString}`}
               onChange={isStudent && isInLesson ? onChange : () => {}}
               key={`question_${id}`}
@@ -215,7 +212,7 @@ const OptionBlock = (props: IOptionProps) => {
           ) : (
             <SelectOne
               classString={`mt-2 py-2 flex flex-wrap ${themeTextColor} ${
-                lessonPageTheme === "light" ? "bg-gray-200" : "bg-darker-gray"
+                lessonPageTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'
               } px-4 rounded-xl ${classString}`}
               onChange={isStudent && isInLesson ? onChange : () => {}}
               key={`question_${id}`}
@@ -235,21 +232,8 @@ const OptionBlock = (props: IOptionProps) => {
     <div
       key={inputID}
       id={`${inputID}_for_error`}
-      className={`questionItemChild mb-4 p-4 bg-component-dark rounded-2xl border-0 border-gray-700`}
-    >
-      {label && (
-        <FormLabel
-          numbered={numbered}
-          required={required}
-          label={label}
-          index={index}
-        />
-        //* <-- this is the react component that is error free
-      )}
-
-      {/* <label className={`text-sm ${themeTextColor}`} htmlFor="label">
-        {numbered && index} {label} <RequiredMark isRequired={required} /> //! <--- this is plain html that has bug
-      </label> */}
+      className={`questionItemChild lesson-form-block`}>
+      {label && <Label isRequired={required} label={label} />}
 
       {generateCheckbox(
         options,

@@ -13,8 +13,6 @@ import NewPageDialog from '@UlbModals/NewPageDialog';
 import NotesModalDialog from '@UlbModals/NotesModalDialog';
 import ParaModalComponent from '@UlbModals/ParaFormDialog';
 import ReviewSliderModal from '@UlbModals/ReviewSliderModal';
-import TableModal from '@UlbModals/TableModal';
-import TagInputDialog from '@UlbModals/TagInputDialog';
 import UniversalInputDialog from '@UlbModals/UniversalInputDialog';
 import UniversalOptionDialog from '@UlbModals/UniversalOptionDialog';
 import WritingExerciseModal from '@UlbModals/WritingExerciseModal';
@@ -35,16 +33,14 @@ import {
   SELECT_ONE,
   SINGING_BOWL,
   SQUARE,
-  TABLE,
   THINK_ABOUT_IT
 } from '@UlbUI/common/constants';
 import ImageFormComponent from '@UlbUI/FormElements/ImageComponent';
-import LessonPlanNavigation from '@UlbUI/LessonPlanNavigation';
+import {Modal} from 'antd';
 import Info from 'atoms/Alerts/Info';
 import Buttons from 'atoms/Buttons';
-import Modal from 'atoms/Modal';
+// import Modal from 'atoms/Modal';
 import ActivityModal from 'components/Lesson/UniversalLessonBuilder/UI/ModalDialogs/ActivityModal';
-import ContentModal from 'components/Lesson/UniversalLessonBuilder/UI/ModalDialogs/ContentModal';
 import DocsModal from 'components/Lesson/UniversalLessonBuilder/UI/ModalDialogs/DocsModal';
 import {useOverlayContext} from 'contexts/OverlayContext';
 import {usePageBuilderContext} from 'contexts/PageBuilderContext';
@@ -229,24 +225,6 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     USE_TEMPLATE: 'USE_TEMPLATE'
   };
 
-  const modalDialogSwitch = (dialogLabel: string) => {
-    switch (dialogLabel) {
-      case dialogLabelList.NEW_PAGE:
-        return (
-          <NewPageDialog
-            universalLessonDetails={universalLessonDetails}
-            closeAction={hideAllModals}
-          />
-        );
-
-      case dialogLabelList.ADD_CONTENT:
-        return <AddContentDialog isSurvey={universalLessonDetails.type === 'survey'} />;
-
-      default:
-        return null;
-    }
-  };
-
   const closeAction = (showPopup: boolean = false) => {
     setAddContentModal({type: '', show: false});
     setSelectedComponent(null);
@@ -344,8 +322,8 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         return <ParaModalComponent {...commonProps} />;
       case DIVIDER:
         return <DividerModal {...commonProps} />;
-      case TABLE:
-        return <TableModal classString={selectedContentClass} {...commonProps} />;
+      // case TABLE:
+      // return <TableModal classString={selectedContentClass} {...commonProps} />;
       // Interactive component modals starts here
       case 'input':
       case 'form-numbered':
@@ -361,8 +339,8 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
             selectedImageFromGallery={''}
           />
         );
-      case FORM_TYPES.TAG:
-        return <TagInputDialog {...commonProps} />;
+      // case FORM_TYPES.TAG:
+      //   return <TagInputDialog {...commonProps} />;
       case 'notes-form':
         return <NotesModalDialog {...commonProps} />;
       case FORM_TYPES.JUMBOTRON:
@@ -526,7 +504,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         universalLessonDetails={universalLessonDetails}
       /> */}
 
-      {modalPopVisible && (
+      {/* {modalPopVisible && (
         <Modal
           showHeader
           showFooter={false}
@@ -536,63 +514,55 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
           closeAction={hideAllModals}>
           <div className="min-w-256">{modalDialogSwitch(currentModalDialog)}</div>
         </Modal>
-      )}
-      {addContentModal.show && (
-        <ContentModal
-          showHeader={true}
-          title={getComponentTitle(addContentModal.type)}
-          showHeaderBorder={true}
-          showFooter={false}
-          closeAction={closeAction}
-          // modalBodyClass="overflow-y-auto 2xl:overflow-y-hidden"
-        >
-          <div className="transition-all xl:min-w-256 md:min-w-80vw ">
-            <>{modalByType(addContentModal.type)}</>
-          </div>
-          {/* <UnsavedModal /> */}
-        </ContentModal>
-      )}
+      )} */}
 
-      {suggestionModal.show && (
-        <Modal
-          showHeader={true}
-          title={'Option Suggestions'}
-          showHeaderBorder={true}
-          showFooter={false}
-          closeAction={() =>
-            setSuggestionModal({
-              ...suggestionModal,
-              data: [{title: '', content: [{id: '', text: ''}]}],
-              show: false
-            })
-          }>
-          <div style={{minWidth: '30rem'}} className="bg-white ">
-            <Info text="Click on value to see options" />
-            <div className="max-h-132 overflow-y-scroll overflow-x-hidden">
-              {suggestionModal.data.map((item: any) => (
-                <Accordion
-                  overrideBool={optionsCollapse}
-                  onResponseSelect={(r: any) => {
-                    setOptionsCollapse(true);
-                    setSuggestionModal({
-                      ...suggestionModal,
-                      show: false,
-                      selectedResponse: r
-                    });
-                  }}
-                  title={item.title}
-                  content={item.content}
-                />
-              ))}
-            </div>
-            <Buttons
-              btnClass="mt-4"
-              label={`${optionsCollapse ? 'Show all options' : 'Collapse all options'} `}
-              onClick={() => setOptionsCollapse(!optionsCollapse)}
-            />
+      <Modal
+        title={getComponentTitle(addContentModal.type)}
+        onCancel={() => closeAction(false)}
+        footer={null}
+        open={addContentModal.show}>
+        <div className="">
+          <>{modalByType(addContentModal.type)}</>
+        </div>
+      </Modal>
+
+      <Modal
+        onCancel={() =>
+          setSuggestionModal({
+            ...suggestionModal,
+            data: [{title: '', content: [{id: '', text: ''}]}],
+            show: false
+          })
+        }
+        open={suggestionModal.show}
+        title={'Option Suggestions'}
+        footer={null}>
+        <div style={{minWidth: '30rem'}} className="bg-white ">
+          <Info text="Click on value to see options" />
+          <div className="max-h-132 overflow-y-scroll overflow-x-hidden">
+            {suggestionModal.data.map((item: any) => (
+              <Accordion
+                overrideBool={optionsCollapse}
+                onResponseSelect={(r: any) => {
+                  setOptionsCollapse(true);
+                  setSuggestionModal({
+                    ...suggestionModal,
+                    show: false,
+                    selectedResponse: r
+                  });
+                }}
+                title={item.title}
+                content={item.content}
+              />
+            ))}
           </div>
-        </Modal>
-      )}
+          <Buttons
+            btnClass="mt-4"
+            label={`${optionsCollapse ? 'Show all options' : 'Collapse all options'} `}
+            onClick={() => setOptionsCollapse(!optionsCollapse)}
+          />
+        </div>
+      </Modal>
 
       <CoreBuilder
         mode={mode}

@@ -15,34 +15,6 @@
   }
 }
 
-// .first {
-//     p::first-letter {
-//         color: red;
-//       }
-// }
-
-// .classroom {
-//     height: 25rem;
-
-//     .block3 {
-//         .flex_column {
-//             display: flex;
-//             flex-direction: column;
-//             align-items: center;
-//         }
-//     }
-// }
-
-// .border_tb {
-//     border-top: 3px solid white;
-//     border-bottom: 3px solid white;
-//     @media screen and (max-width: 767px) {
-//         border-top: none;
-//         border-bottom: 1px solid white;
-//     }
-
-// }
-
 .quote {
   border-left: 7px solid #ca2222;
 
@@ -225,3 +197,48 @@
     transform: translateX(-5px);
   }
 }
+
+.lesson-form-block {
+  textarea,
+  input {
+    background-color: $lesson-form-block-bg;
+    color: $lesson-form-block-color;
+    border-color: $lesson-form-block-border;
+  }
+  label {
+    color: $lesson-form-block-label;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+  }
+}
+
+.review-icon-wrapper {
+  background-color: $lesson-form-block-bg;
+  border-radius: 8px;
+  position: relative;
+  padding: 12px 30px;
+  // display: flex;
+  // align-items: center;
+}
+
+// .review-icon-wrapper .anticon {
+//   position: absolute;
+//   width: 16px;
+//   height: 16px;
+//   color: $lesson-form-block-label;
+//   font-size: 16px;
+//   line-height: 1;
+// }
+
+// .review-icon-wrapper .icon-wrapper-active {
+//   color: $lesson-form-block-color;
+// }
+
+// .review-icon-wrapper .anticon:first-child {
+//   left: 0;
+// }
+
+// .review-icon-wrapper .anticon:last-child {
+//   right: 0;
+// }

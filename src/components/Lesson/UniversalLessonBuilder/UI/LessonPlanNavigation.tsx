@@ -8,7 +8,6 @@ import {nanoid} from 'nanoid';
 import React, {useEffect, useState} from 'react';
 import {DragDropContext, Draggable, Droppable} from 'react-beautiful-dnd';
 import {useHistory, useRouteMatch} from 'react-router';
-import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
 import {EMOTIONS, GAME_CHANGERS} from './common/constants';
 
 interface ILessonPlanNavigationProps {
@@ -114,31 +113,6 @@ const LessonPlanNavigation = ({
     }
   }, [universalLessonDetails, fetchingLessonDetails]);
 
-  const wait = (timeout: number) => {
-    return new Promise((resolve) => setTimeout(resolve, timeout));
-  };
-
-  const updateTheme = () => {
-    const parentContainer = document.querySelector('html');
-
-    if (parentContainer) {
-      if (settings.darkMode) {
-        parentContainer.classList.remove('dark');
-      } else {
-        parentContainer.classList.add('dark');
-      }
-    }
-    setSettings({...settings, darkMode: !settings.darkMode});
-    handleThemeChange(!settings.darkMode);
-    wait(1000).then(async () => {
-      const input = {
-        id: lessonId,
-        darkMode: !settings.darkMode
-      };
-      await updateLessonPageToDB(input);
-    });
-  };
-
   const handleThemeChange = (val: boolean) => {
     dispatch({
       type: 'UPDATE_LESSON_PAGE_THEME',
@@ -157,7 +131,7 @@ const LessonPlanNavigation = ({
           <nav
             ref={provided.innerRef}
             {...provided.droppableProps}
-            className={`border-gray-200 flex overflow-x-auto`}
+            className={`border-gray-200 flex overflow-x-auto overflow-y-hidden`}
             aria-label="Breadcrumb">
             <ol
               key={nanoid(4)}
@@ -170,7 +144,7 @@ const LessonPlanNavigation = ({
                 </a>
               </li>
               {fetchingLessonDetails ? (
-                <p className="text-gray-600 hover:text-gray-700 font-medium">
+                <p className="text-gray-600 mb-0 ml-4 hover:text-gray-700 font-light">
                   Loading...
                 </p>
               ) : (
@@ -184,23 +158,15 @@ const LessonPlanNavigation = ({
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}>
                         <div className="flex items-center w-auto group">
-                          <svg
-                            className="flex-shrink-0 w-6 h-full text-gray-300 group-hover:text-gray-400 transition-all duration-150 "
-                            viewBox="0 0 24 44"
-                            preserveAspectRatio="none"
-                            fill="currentColor"
-                            xmlns="http://www.w3.org/2000/svg"
-                            aria-hidden="true">
-                            <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
-                          </svg>
+                          <span className="text-gray-500">/</span>
 
                           <a
                             href={page.href}
                             className={` ${
                               selectedPageID === page.id
-                                ? 'border-b-0 border-indigo-400 text-indigo-600 hover:text-indigo-700'
+                                ? 'border-b- theme-border:400 theme-text:600 hover:theme-text:700'
                                 : 'text-gray-600 hover:text-gray-700'
-                            }   ml-4 cursor-pointer w-auto text-xs 2xl:text-base font-medium transform hover:scale-110 transition-transform duration-150`}>
+                            }   ml-4 cursor-pointer w-auto text-sm 2xl:text-base font-light transition-transform duration-150`}>
                             {page.label}
                           </a>
                         </div>

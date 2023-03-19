@@ -649,21 +649,20 @@ const StaffBuilder = (props: StaffBuilderProps) => {
 
         <Table {...tableConfig} />
 
-        {showRegistrationForm && (
-          <Modal
-            showHeader={true}
-            title={RegistrationDict[userLanguage]['title']}
-            showHeaderBorder={true}
-            showFooter={false}
-            closeAction={() => setShowRegistrationForm(false)}>
-            <Registration
-              isInInstitute
-              isInModalPopup
-              postMutation={postMutation}
-              instId={instituteId}
-            />
-          </Modal>
-        )}
+        <Modal
+          open={showRegistrationForm}
+          showHeader={true}
+          title={RegistrationDict[userLanguage]['title']}
+          showHeaderBorder={true}
+          showFooter={false}
+          closeAction={() => setShowRegistrationForm(false)}>
+          <Registration
+            isInInstitute
+            isInModalPopup
+            postMutation={postMutation}
+            instId={instituteId}
+          />
+        </Modal>
       </div>
     </div>
   );

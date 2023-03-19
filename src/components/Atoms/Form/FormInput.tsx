@@ -34,6 +34,7 @@ interface FormInputProps {
   wrapperClass?: string;
   autoComplete?: string;
   className?: string;
+  tooltip?: string;
   Icon?: any;
   suffix?: React.ReactNode;
 }
@@ -54,12 +55,13 @@ const FormInput: React.FC<FormInputProps> = ({
   error = '',
   textarea = false,
   rows = 1,
-
+  className,
   maxLength = 99999,
   showCharacterUsage = false,
   suffix,
   dark = false,
   min,
+  tooltip,
 
   Icon
 }: FormInputProps) => {
@@ -73,7 +75,7 @@ const FormInput: React.FC<FormInputProps> = ({
     maxLength,
     minLength: min,
     size: 'large' as SizeType,
-    className: '',
+    // className: className,
     placeholder: placeHolder,
     status: error ? 'error' : '',
     prefix: error ? <BiErrorCircle /> : Icon ? <Icon /> : undefined,
@@ -82,24 +84,24 @@ const FormInput: React.FC<FormInputProps> = ({
   };
 
   return (
-    <div>
+    <div className={className}>
       {label && (
         <Label disabled={disabled} dark={dark} label={label} isRequired={isRequired} />
       )}
-      {textarea ? (
-        <TextArea rows={rows} {...inputProps} />
-      ) : type === 'password' ? (
-        <Tooltip trigger={['focus']} placement="topLeft">
+      <Tooltip title={tooltip}>
+        {textarea ? (
+          <TextArea rows={rows} {...inputProps} />
+        ) : type === 'password' ? (
           <Password
             {...inputProps}
             iconRender={(visible) =>
               visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
             }
           />
-        </Tooltip>
-      ) : (
-        <Input {...inputProps} />
-      )}
+        ) : (
+          <Input {...inputProps} />
+        )}
+      </Tooltip>
 
       <Transition
         show={error.length > 0}

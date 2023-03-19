@@ -370,18 +370,20 @@ const ReviewSliderModal = ({
         ) : (
           <div className="w-auto" />
         )}
-        <div className="flex items-center w-auto">
+        <div className="flex items-center justify-end w-auto gap-4">
           <Buttons
             btnClass="py-1 px-4 text-xs mr-2"
             label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
             onClick={askBeforeClose}
             transparent
+            size="middle"
           />
 
           <Buttons
             btnClass="py-1 px-8 text-xs ml-2"
             label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
             onClick={onReviewSliderCreate}
+            size="middle"
           />
         </div>
       </div>

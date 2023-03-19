@@ -25,11 +25,13 @@ import {
 const UploadLessonPlanModal = ({
   onClose,
   lessonId,
+  open,
   lessonPlanAttachment
 }: {
   lessonId: string;
   onClose: () => void;
   lessonPlanAttachment?: any;
+  open: boolean;
 }) => {
   const [input, setInput] = useState<{
     imageData: File | null;
@@ -121,6 +123,7 @@ const UploadLessonPlanModal = ({
 
   return (
     <Modal
+      open={open}
       title={'Upload Lesson Plan'}
       showHeaderBorder
       closeAction={onClose}
@@ -253,13 +256,13 @@ const LessonDetails = ({
 
   return (
     <div className="px-3">
-      {showUploadModal && (
-        <UploadLessonPlanModal
-          lessonPlanAttachment={lessonPlanAttachment}
-          lessonId={lessonId}
-          onClose={onClose}
-        />
-      )}
+      <UploadLessonPlanModal
+        lessonPlanAttachment={lessonPlanAttachment}
+        lessonId={lessonId}
+        onClose={onClose}
+        open={showUploadModal}
+      />
+
       <div className="grid grid-cols-2 gap-4 gap-y-8">
         <div className="col-span-2">
           <FormInput

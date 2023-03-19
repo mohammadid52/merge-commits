@@ -304,14 +304,14 @@ const ChangePassword = () => {
             <p className={`hover:text-blue-500 cursor-pointer`} onClick={toggleModal}>
               {dictionary['CHANGE_PASSWORD']['FORGOT_PASS_LINK']}
             </p>
-            {warningModal.show && (
-              <ModalPopUp
-                closeAction={toggleModal}
-                saveAction={gotoPasswordReset}
-                saveLabel={dictionary['CHANGE_PASSWORD']['CONTINUE_BTN']}
-                message={warningModal.message}
-              />
-            )}
+
+            <ModalPopUp
+              open={warningModal.show}
+              closeAction={toggleModal}
+              saveAction={gotoPasswordReset}
+              saveLabel={dictionary['CHANGE_PASSWORD']['CONTINUE_BTN']}
+              message={warningModal.message}
+            />
           </div>
         </div>
       </div>

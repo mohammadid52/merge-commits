@@ -236,6 +236,7 @@ const ProfileFrame = ({
             className="absolute cursor-pointer w-full h-full bg-gray-800 bg-opacity-50 z-40"></div>
 
           <Modal
+            open={rightView?.view === 'profile'}
             customTitle={user ? getTitle(user.preferredName, isEditing) : ''}
             showHeader={true}
             showHeaderBorder={false}

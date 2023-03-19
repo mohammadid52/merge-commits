@@ -463,17 +463,17 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
         </div>
       </div>
       {/* Image cropper */}
-      {showCropper && (
-        <ProfileCropModal
-          upImg={imageData}
-          cardLayout
-          customCropProps={{x: 25, y: 25, width: 384, height: 180}}
-          locked={false}
-          imageClassName={`w-full h-48 md:h-auto sm:w-2.5/10 } rounded-tl rounded-bl shadow`}
-          saveCroppedImage={(img: string) => saveCroppedImage(img)}
-          closeAction={toggleCropper}
-        />
-      )}
+
+      <ProfileCropModal
+        upImg={imageData}
+        open={showCropper}
+        cardLayout
+        customCropProps={{x: 25, y: 25, width: 384, height: 180}}
+        locked={false}
+        imageClassName={`w-full h-48 md:h-auto sm:w-2.5/10 } rounded-tl rounded-bl shadow`}
+        saveCroppedImage={(img: string) => saveCroppedImage(img)}
+        closeAction={toggleCropper}
+      />
     </div>
   );
 };

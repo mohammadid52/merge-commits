@@ -1,11 +1,7 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import useAuth from '@customHooks/useAuth';
-import Tooltip from 'atoms/Tooltip';
 import CopyCloneSlideOver from 'components/Lesson/UniversalLessonBuilder/UI/SlideOvers/CopyCloneSlideOver';
-import NewLessonPlanSO from 'components/Lesson/UniversalLessonBuilder/UI/SlideOvers/NewLessonPlanSO';
-import PageBuilderSlideOver from 'components/Lesson/UniversalLessonBuilder/UI/SlideOvers/PageBuilderSlideOver';
 import PageLoader from 'components/Lesson/UniversalLessonBuilder/views/CoreBuilder/PageLoader';
-import PageBuilderLayout from 'components/Lesson/UniversalLessonBuilder/views/PageBuilderLayout';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import {useOverlayContext} from 'contexts/OverlayContext';
 import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
@@ -18,14 +14,11 @@ import {
   UniversalLesson,
   UniversalLessonPage
 } from 'interfaces/UniversalLessonInterfaces';
-import {LessonPageWrapper} from 'lesson/UniversalLessonBlockComponents/LessonPageWrapper';
 import BuilderRowComposer from 'lesson/UniversalLessonBuilder/views/CoreBuilder/BuilderRowComposer';
 import {find, findIndex, findLastIndex, isEmpty, map, remove} from 'lodash';
 import ModalPopUp from 'molecules/ModalPopUp';
 import {useEffect, useState} from 'react';
-import {RiArrowRightSLine} from 'react-icons/ri';
 import {useHistory} from 'react-router';
-import Toolbar from 'uiComponents/Toolbar';
 import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
 import {v4 as uuidv4} from 'uuid';
 
@@ -73,40 +66,21 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
     handleEditBlockContent,
     handleModalPopToggle,
     handleTagModalOpen,
-    activePageData,
-    instId
+    activePageData
   } = props;
   const {
     setUniversalLessonDetails,
     setNewLessonPlanShow,
     fetchingLessonDetails,
-    setLessonPlanFields,
+
     setEditMode,
     previewMode,
     pushUserToThisId,
 
-    getCurrentPage,
     newLessonPlanShow
   } = useULBContext();
 
   const {userLanguage} = useGlobalContext();
-
-  const LessonSlideover = () => {
-    return (
-      <div
-        onClick={() => {
-          setNewLessonPlanShow(true);
-          setEditMode(true);
-        }}
-        className={`not-collapse-right absolute flex items-center right-0 justify-start bg-gray-700 h-10 w-6 cursor-pointer animate__sidebar-btn rounded-l-lg top-2 z-100`}>
-        <Tooltip placement="left" text="Show Activity Panel">
-          <div className="w-auto transform rotate-180 mr-1">
-            <RiArrowRightSLine color="#fff" size={24} />
-          </div>
-        </Tooltip>
-      </div>
-    );
-  };
 
   const {lessonDispatch} = useGlobalContext();
   const params = useQuery(location.search);
@@ -130,12 +104,8 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
     }
   }, [universalLessonDetails, pageId]);
 
-  const {
-    showLessonEditOverlay,
-    setShowLessonEditOverlay,
-    setCollapseSidebarOverlay,
-    showDataForCopyClone
-  } = useOverlayContext();
+  const {setShowLessonEditOverlay, setCollapseSidebarOverlay, showDataForCopyClone} =
+    useOverlayContext();
 
   useEffect(() => {
     setCollapseSidebarOverlay(true);
@@ -180,16 +150,6 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
     message: ''
   });
 
-  /**
-   * @void trigger delete modal
-   */
-  const onDeleteButtonClick = () => {
-    setConfirmationConfig({
-      message:
-        'Are you sure you want to delete the this page? All of your data will be permanently removed. This action cannot be undone.',
-      show: true
-    });
-  };
   const closeAction = () => {
     setConfirmationConfig({
       message: '',
@@ -373,14 +333,14 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
 
   return (
     <div className="relative">
-      {activePageData && show && (
-        <ModalPopUp
-          message={message}
-          closeAction={closeAction}
-          saveLabel={LessonBuilderDict[userLanguage]['BUTTON']['DELETE']}
-          saveAction={() => deleteLessonPlan(activePageData.id)}
-        />
-      )}
+      <ModalPopUp
+        open={Boolean(show && activePageData)}
+        message={message}
+        closeAction={closeAction}
+        saveLabel={LessonBuilderDict[userLanguage]['BUTTON']['DELETE']}
+        saveAction={() => deleteLessonPlan(activePageData.id)}
+      />
+
       {/* <PageBuilderLayout
         title="New Lesson Plan"
         setOpen={setNewLessonPlanShow}

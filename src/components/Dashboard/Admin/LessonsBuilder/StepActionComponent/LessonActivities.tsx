@@ -356,16 +356,16 @@ const LessonActivities = ({
             </Fragment>
           )}
         </PageWrapper>
-        {showDeleteModal && (
-          <ModalPopUp
-            message={
-              'Are you sure you want to delete the this page? All of your data will be permanently removed. This action cannot be undone.'
-            }
-            closeAction={() => toggleDeleteModal(false)}
-            saveLabel={LessonBuilderDict[userLanguage]['BUTTON']['DELETE']}
-            saveAction={() => deleteLessonPlan(idToBeRemoved)}
-          />
-        )}
+
+        <ModalPopUp
+          open={showDeleteModal}
+          message={
+            'Are you sure you want to delete the this page? All of your data will be permanently removed. This action cannot be undone.'
+          }
+          closeAction={() => toggleDeleteModal(false)}
+          saveLabel={LessonBuilderDict[userLanguage]['BUTTON']['DELETE']}
+          saveAction={() => deleteLessonPlan(idToBeRemoved)}
+        />
       </div>
     </>
   );

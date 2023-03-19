@@ -823,66 +823,65 @@ const Anthology = ({
       <div className="px-10">
         {!isTeacher && <HeaderTextBar>All your work in place</HeaderTextBar>}
 
-        {showPasscodeEntry && (
-          <div className={'z-100 flex justify-center items-center'}>
-            <Modal
-              title={`${
-                !forgotPrompt
-                  ? 'This Notebook is Passcode Protected'
-                  : 'Change Your Passcode!'
-              }`}
-              width="w-132"
-              showHeader={true}
-              showHeaderBorder={false}
-              showFooter={false}
-              scrollHidden={true}
-              closeAction={() => {
-                setShowPasscodeEntry(false);
-                setForgotPrompt(false);
-                setAccessMessage({message: ''});
-              }}>
-              <div className=" flex justify-center">
-                {!forgotPrompt ? (
-                  <div>
-                    <FormInput
-                      dataCy="notebook-passcode-input"
-                      value={passcodeInput}
-                      type={'password'}
-                      onChange={(e) => {
-                        setPasscodeInput(e.target.value);
-                      }}
-                      id="passcode"
-                      name="passcode"
-                      label={'Enter Your Passcode:'}
-                      placeHolder={'****'}
-                      className={`w-full my-2`}
-                      isRequired
-                    />
-                    {Boolean(accessMessage.message) && (
-                      <Error message={accessMessage.message} />
-                    )}
-                    <Buttons
-                      dataCy="notebook-passcode-submit"
-                      label={'Submit'}
-                      btnClass="w-full mt-2"
-                      onClick={handlePrivateSectionAccess}
-                    />
-                    <p
-                      onClick={() => handleForgotPasscode()}
-                      className={`cursor-pointer hover:underline hover:iconoclast:text-500 hover:curate:text-500 mt-4 mb-2 text-center text-xs iconoclast:text-main curate:text-main`}>
-                      Forgot Passcode?
-                    </p>
-                  </div>
-                ) : (
-                  <ChangePasscode
-                    fromWhere={'notebook'}
-                    handleForgotPasscode={handleForgotPasscode}
+        <div className={'z-100 flex justify-center items-center'}>
+          <Modal
+            open={showPasscodeEntry}
+            title={`${
+              !forgotPrompt
+                ? 'This Notebook is Passcode Protected'
+                : 'Change Your Passcode!'
+            }`}
+            width="w-132"
+            showHeader={true}
+            showHeaderBorder={false}
+            showFooter={false}
+            scrollHidden={true}
+            closeAction={() => {
+              setShowPasscodeEntry(false);
+              setForgotPrompt(false);
+              setAccessMessage({message: ''});
+            }}>
+            <div className=" flex justify-center">
+              {!forgotPrompt ? (
+                <div>
+                  <FormInput
+                    dataCy="notebook-passcode-input"
+                    value={passcodeInput}
+                    type={'password'}
+                    onChange={(e) => {
+                      setPasscodeInput(e.target.value);
+                    }}
+                    id="passcode"
+                    name="passcode"
+                    label={'Enter Your Passcode:'}
+                    placeHolder={'****'}
+                    className={`w-full my-2`}
+                    isRequired
                   />
-                )}
-              </div>
-            </Modal>
-          </div>
-        )}
+                  {Boolean(accessMessage.message) && (
+                    <Error message={accessMessage.message} />
+                  )}
+                  <Buttons
+                    dataCy="notebook-passcode-submit"
+                    label={'Submit'}
+                    btnClass="w-full mt-2"
+                    onClick={handlePrivateSectionAccess}
+                  />
+                  <p
+                    onClick={() => handleForgotPasscode()}
+                    className={`cursor-pointer hover:underline hover:iconoclast:text-500 hover:curate:text-500 mt-4 mb-2 text-center text-xs iconoclast:text-main curate:text-main`}>
+                    Forgot Passcode?
+                  </p>
+                </div>
+              ) : (
+                <ChangePasscode
+                  fromWhere={'notebook'}
+                  handleForgotPasscode={handleForgotPasscode}
+                />
+              )}
+            </div>
+          </Modal>
+        </div>
 
         <div className="mx-auto md:max-w-none lg:max-w-192 2xl:max-w-256">
           <div className="my-8">

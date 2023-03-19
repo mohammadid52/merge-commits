@@ -7,7 +7,6 @@ import Buttons from 'atoms/Buttons';
 import ULBFileUploader from 'atoms/Form/FileUploader';
 import FormInput from 'atoms/Form/FormInput';
 import Selector from 'atoms/Form/Selector';
-import Loader from 'atoms/Loader';
 import {Storage} from 'aws-amplify';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import {IContentTypeComponentProps} from 'interfaces/UniversalLessonBuilderInterfaces';
@@ -618,23 +617,20 @@ const JumbotronModalDialog = ({
           <div className="w-auto" />
         )}
 
-        <div className="flex items-center w-auto">
+        <div className="flex items-center justify-end w-auto gap-4">
           <Buttons
             btnClass="py-1 px-4 text-xs mr-2"
             label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
             onClick={askBeforeClose}
             transparent
+            size="middle"
           />
 
           <Buttons
             btnClass="py-1 px-8 text-xs ml-2"
-            label={
-              !loading ? (
-                EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']
-              ) : (
-                <Loader />
-              )
-            }
+            label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
+            loading={loading}
+            size="middle"
             onClick={onJumbotronCreate}
             disabled={loading}
           />

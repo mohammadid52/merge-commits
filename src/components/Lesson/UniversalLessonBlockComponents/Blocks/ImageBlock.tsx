@@ -1,5 +1,6 @@
-import React, {useEffect, useState} from 'react';
+import {Image} from 'antd';
 import {RowWrapperProps} from 'interfaces/UniversalLessonBuilderInterfaces';
+import {useEffect, useState} from 'react';
 import {getImageFromS3Static} from 'utilities/services';
 
 interface ImageBlockProps extends RowWrapperProps {
@@ -9,7 +10,7 @@ interface ImageBlockProps extends RowWrapperProps {
 }
 
 export const ImageBlock = (props: ImageBlockProps) => {
-  const {id, dataIdAttribute, value, classString = ''} = props;
+  const {id, dataIdAttribute, value} = props;
   const [imageState, setImageState] = useState<{
     url: string;
     width: string;
@@ -35,23 +36,8 @@ export const ImageBlock = (props: ImageBlockProps) => {
   };
 
   return (
-    <div
-      id={id}
-      data-id={dataIdAttribute}
-      className={`px-4 py-5 rounded-2xl border-0 border-gray-700 bg-component-dark sm:p-6`}>
-      {imageState.url && (
-        <img
-          className={`${classString.replace(
-            'rounded-2xl',
-            ''
-          )} mx-auto h-96 xl:h-132 2xl:h-156`}
-          style={styleAttribute}
-          // width={imageState.width}
-          // height={imageState.height}
-          src={getImageFromS3Static(imageState.url)}
-          alt=""
-        />
-      )}
+    <div id={id} data-id={dataIdAttribute} className={``}>
+      <Image style={styleAttribute} src={getImageFromS3Static(imageState.url)} />
 
       {imageState.caption && <p className="text-left mt-2">{imageState.caption}</p>}
     </div>

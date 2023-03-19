@@ -1,28 +1,9 @@
-import { useGlobalContext } from "contexts/GlobalContext";
-import { FormControlProps } from "./FormBlock";
-import "./styles/ReviewSliderStyles.scss";
+import Label from '@components/Atoms/Form/Label';
+import {Slider, Tooltip} from 'antd';
+import {useState} from 'react';
+import {FormControlProps} from './FormBlock';
+import './styles/ReviewSliderStyles.scss';
 
-/**
- *
- * @param value the range value
- * @param max maximum numer for value
- * @returns dynamic style object for  slider
- */
-
-const genSlideStyle = (value: number | string, max: number | string) => {
-  let val = Number(max) === 10 ? Number(value) / 2 : Number(value);
-  let updatedVal =
-    Number(max) === 5 ? (val === 1 ? 0 : val) : val === 0.5 ? 0 : val;
-
-  return {
-    point: {
-      left: `calc(${updatedVal * 20}% - ${5 + 3 * updatedVal}px)`,
-    },
-    range: {
-      width: `${updatedVal * 20}%`,
-    },
-  };
-};
 interface ReviewSliderBlockProps extends FormControlProps {
   onChange: (e: any) => void;
   disabled: boolean;
@@ -33,8 +14,7 @@ interface ReviewSliderBlockProps extends FormControlProps {
  * @param splitBy specify the pattern by which you want to split the element
  * @returns splitted values
  */
-export const getFirstLastValue = (el: string, splitBy: string) =>
-  el.split(splitBy);
+export const getFirstLastValue = (el: string, splitBy: string) => el.split(splitBy);
 
 /**
  * @return extracted values from classString like min-max, background color and foreground color.
@@ -43,10 +23,9 @@ export const extractValuesFromClassString = (
   classString: string = `1-5 || gray-700 || gray-800 || gray-700 || rounded-lg`
 ) => {
   if (classString) {
-    let [minMax, bgColor, fgColor, cardBgColor, rounded] =
-      classString.split(" || ");
-    let [min, max] = getFirstLastValue(minMax, "-");
-    return { min, max, bgColor, fgColor, cardBgColor, rounded };
+    let [minMax, bgColor, fgColor, cardBgColor, rounded] = classString.split(' || ');
+    let [min, max] = getFirstLastValue(minMax, '-');
+    return {min, max, bgColor, fgColor, cardBgColor, rounded};
   }
   return {};
 };
@@ -57,73 +36,33 @@ const ReviewSliderBlock = (props: ReviewSliderBlockProps) => {
     disabled,
     id,
     onChange,
-    inputID,
-    classString = `1-5 || gray-700 || gray-800 || dark-gray || rounded-lg`,
-    label,
-  } = props;
 
-  const { state } = useGlobalContext();
+    classString = `1-5 || gray-700 || gray-800 || dark-gray || rounded-lg`,
+    label
+  } = props;
 
   const values = extractValuesFromClassString(classString);
 
-  const isDark = state.lessonPage.theme === "dark";
-
-  const slideStyle = genSlideStyle(value, values?.max || 5);
+  const min = Number(values?.min) || 1;
+  const max = Number(values?.max) || 5;
+  const [sliderValue, setSliderValue] = useState(value || 1);
 
   return (
-    <div className="py-4" id={id} key={id}>
-      {/* */}
-      <div
-        style={{
-          border: !isDark ? "1px solid #ececec" : "none",
-          boxShadow: "0 10px 20px 0 rgba(0, 0, 0, 0.05)",
-        }}
-        className={`review-slider-container p-6 w-auto  flex flex-col items-start justify-center bg-${
-          values?.cardBgColor || "gray-800"
-        } h-auto ${values?.rounded || "rounded-md"} shadow`}
-      >
-        <div className="flex items-center justify-between">
-          <p
-            dangerouslySetInnerHTML={{ __html: label || "" }}
-            className={`${
-              isDark ? "text-gray-400" : "text-gray-600"
-            } block text-lg w-auto font-semibold leading-5 `}
-          ></p>
-          <span
-            dangerouslySetInnerHTML={{ __html: value }}
-            className={`${
-              isDark ? "text-gray-400" : "text-gray-600"
-            } block text-lg w-auto font-semibold leading-5 `}
-          ></span>
-        </div>
-        <div
-          className={`range relative rounded-full bg-${
-            values?.bgColor || "gray-800"
-          } mt-4`}
-        >
-          <span
-            className={`range-value bg-${values?.fgColor || "gray-900"}`}
-            style={slideStyle.range}
-          />
-          <span
-            className={`circle bg-${values?.fgColor || "indigo-500"}`}
-            style={slideStyle.point}
-          />
-          <input
-            className={`range-slide`}
-            name="range"
-            type="range"
-            id={inputID}
-            min={values?.min || 1}
-            max={values?.max || 5}
-            disabled={disabled}
-            value={value}
-            step="1"
-            onChange={onChange}
-          />
-        </div>
+    <Tooltip title={disabled ? 'Disabled in building mode' : undefined}>
+      <div className="review-icon-wrapper lesson-form-block">
+        {label && <Label disabled={disabled} label={label} />}
+        <Slider
+          min={min}
+          disabled={disabled}
+          max={max}
+          onChange={(sliderValue) => {
+            setSliderValue(sliderValue);
+            onChange({target: {id, value: sliderValue}});
+          }}
+          value={Number(sliderValue)}
+        />
       </div>
-    </div>
+    </Tooltip>
   );
 };
 

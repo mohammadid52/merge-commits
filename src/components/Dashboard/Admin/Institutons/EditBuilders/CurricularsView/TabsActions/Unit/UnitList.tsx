@@ -655,38 +655,37 @@ export const UnitList = ({
 
         <Table {...tableConfig} />
 
-        {addModalShow && (
-          <Modal
-            showHeader
-            showFooter={false}
-            showHeaderBorder
-            title={'Add Lesson to Syllabus'}
-            closeOnBackdrop
-            closeAction={onAddModalClose}>
-            <div
-              className="min-w-180 lg:min-w-256"
-              style={{
-                height: 'calc(100vh - 150px)'
-              }}>
-              <UnitFormComponent
-                isInModal={true}
-                instId={instId}
-                postAddSyllabus={postAddSyllabus}
-                onCancel={() => setAddModalShow(false)}
-              />
-            </div>
-          </Modal>
-        )}
-        {deleteModal.show && (
-          <ModalPopUp
-            closeAction={handleToggleDelete}
-            saveAction={deleting ? () => {} : deleteModal.action}
-            saveLabel={deleting ? 'DELETING...' : 'CONFIRM'}
-            cancelLabel="CANCEL"
-            loading={deleting}
-            message={deleteModal.message}
-          />
-        )}
+        <Modal
+          open={addModalShow}
+          showHeader
+          showFooter={false}
+          showHeaderBorder
+          title={'Add Lesson to Syllabus'}
+          closeOnBackdrop
+          closeAction={onAddModalClose}>
+          <div
+            className="min-w-180 lg:min-w-256"
+            style={{
+              height: 'calc(100vh - 150px)'
+            }}>
+            <UnitFormComponent
+              isInModal={true}
+              instId={instId}
+              postAddSyllabus={postAddSyllabus}
+              onCancel={() => setAddModalShow(false)}
+            />
+          </div>
+        </Modal>
+
+        <ModalPopUp
+          open={deleteModal.show}
+          closeAction={handleToggleDelete}
+          saveAction={deleting ? () => {} : deleteModal.action}
+          saveLabel={deleting ? 'DELETING...' : 'CONFIRM'}
+          cancelLabel="CANCEL"
+          loading={deleting}
+          message={deleteModal.message}
+        />
       </div>
     </div>
   );

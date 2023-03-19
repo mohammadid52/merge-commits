@@ -1,13 +1,13 @@
-import { useEffect, useState } from "react";
+import {useEffect, useState} from 'react';
 
-import Buttons from "atoms/Buttons";
-import RichTextEditor from "atoms/RichTextEditor";
-import { useGlobalContext } from "contexts/GlobalContext";
-import { EditQuestionModalDict } from "dictionary/dictionary.iconoclast";
-import { IContentTypeComponentProps } from "interfaces/UniversalLessonBuilderInterfaces";
-import { isEmpty } from "lodash";
-import { updateLessonPageToDB } from "utilities/updateLessonPageToDB";
-import { v4 as uuidv4 } from "uuid";
+import Buttons from 'atoms/Buttons';
+import RichTextEditor from 'atoms/RichTextEditor';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import {EditQuestionModalDict} from 'dictionary/dictionary.iconoclast';
+import {IContentTypeComponentProps} from 'interfaces/UniversalLessonBuilderInterfaces';
+import {isEmpty} from 'lodash';
+import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
+import {v4 as uuidv4} from 'uuid';
 
 interface IParaModalComponentProps extends IContentTypeComponentProps {
   inputObj?: any;
@@ -22,19 +22,19 @@ const ParaModalComponent = ({
   setUnsavedChanges,
   askBeforeClose,
   createNewBlockULBHandler,
-  updateBlockContentULBHandler,
+  updateBlockContentULBHandler
 }: IParaModalComponentProps) => {
-  const { userLanguage } = useGlobalContext();
+  const {userLanguage} = useGlobalContext();
 
   const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
 
-  const FIELD_ID = "paragraph";
+  const FIELD_ID = 'paragraph';
   const [fields, setFields] = useState<{
     paragraph: string;
     paragraphHtml: string;
   }>({
-    paragraph: !isEmpty(inputObj) ? inputObj[0].value : "",
-    paragraphHtml: !isEmpty(inputObj) ? inputObj[0].value : "",
+    paragraph: !isEmpty(inputObj) ? inputObj[0].value : '',
+    paragraphHtml: !isEmpty(inputObj) ? inputObj[0].value : ''
   });
 
   useEffect(() => {
@@ -48,7 +48,7 @@ const ParaModalComponent = ({
 
     const input = {
       id: list.id,
-      lessonPlan: [...list.lessonPlan],
+      lessonPlan: [...list.lessonPlan]
     };
 
     await updateLessonPageToDB(input);
@@ -56,19 +56,19 @@ const ParaModalComponent = ({
 
   const onParaCreate = async () => {
     if (isEditingMode) {
-      const updatedList = updateBlockContentULBHandler("", "", FIELD_ID, [
-        { id: uuidv4().toString(), value: fields["paragraphHtml"] },
+      const updatedList = updateBlockContentULBHandler('', '', FIELD_ID, [
+        {id: uuidv4().toString(), value: fields['paragraphHtml']}
       ]);
       await addToDB(updatedList);
     } else {
-      const updatedList = createNewBlockULBHandler("", "", FIELD_ID, [
-        { id: uuidv4().toString(), value: fields["paragraphHtml"] },
+      const updatedList = createNewBlockULBHandler('', '', FIELD_ID, [
+        {id: uuidv4().toString(), value: fields['paragraphHtml']}
       ]);
       await addToDB(updatedList);
     }
 
     // clear fields
-    setFields({ paragraph: "", paragraphHtml: "" });
+    setFields({paragraph: '', paragraphHtml: ''});
   };
   const onEditorStateChange = (
     html: string,
@@ -77,10 +77,10 @@ const ParaModalComponent = ({
     field: string
   ) => {
     setUnsavedChanges(true);
-    setFields({ ...fields, [`${field}`]: text, [`${fieldHtml}`]: html });
+    setFields({...fields, [`${field}`]: text, [`${fieldHtml}`]: html});
   };
 
-  const { paragraph } = fields;
+  const {paragraph} = fields;
 
   return (
     <div>
@@ -90,27 +90,24 @@ const ParaModalComponent = ({
             withStyles
             initialValue={paragraph}
             onChange={(htmlContent, plainText) =>
-              onEditorStateChange(
-                htmlContent,
-                plainText,
-                "paragraphHtml",
-                "paragraph"
-              )
+              onEditorStateChange(htmlContent, plainText, 'paragraphHtml', 'paragraph')
             }
           />
         </div>
       </div>
-      <div className="flex mt-8 justify-center px-6 pb-4">
-        <div className="flex justify-end">
+      <div className="flex mt-8 justify-end px-6 pb-4">
+        <div className="flex justify-end gap-4">
           <Buttons
+            size="middle"
             btnClass="py-1 px-4 text-xs mr-2"
-            label={EditQuestionModalDict[userLanguage]["BUTTON"]["CANCEL"]}
+            label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
             onClick={askBeforeClose}
             transparent
           />
           <Buttons
+            size="middle"
             btnClass="py-1 px-8 text-xs ml-2"
-            label={EditQuestionModalDict[userLanguage]["BUTTON"]["SAVE"]}
+            label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
             onClick={onParaCreate}
           />
         </div>

@@ -1,13 +1,7 @@
-import {
-  UserOutlined,
-  VideoCameraOutlined,
-  UploadOutlined,
-  MenuUnfoldOutlined,
-  MenuFoldOutlined
-} from '@ant-design/icons';
+import {MenuFoldOutlined, MenuUnfoldOutlined} from '@ant-design/icons';
 import {useOverlayContext} from '@contexts/OverlayContext';
-import {Layout, Menu, Tooltip} from 'antd';
-import {Header, Content} from 'antd/es/layout/layout';
+import {Layout, Tooltip} from 'antd';
+import {Content, Header} from 'antd/es/layout/layout';
 import Sider from 'antd/es/layout/Sider';
 import {API, graphqlOperation} from 'aws-amplify';
 import {useGlobalContext} from 'contexts/GlobalContext';
@@ -23,10 +17,10 @@ import BuilderWrapper from 'lesson/UniversalLessonBuilder/views/BuilderWrapper';
 import {isEmpty} from 'lodash';
 import update from 'lodash/update';
 import {nanoid} from 'nanoid';
-import React from 'react';
-import {useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useParams} from 'react-router';
 import LessonPlanNavigation from './UI/LessonPlanNavigation';
+import NewLessonPlanSO from './UI/SlideOvers/NewLessonPlanSO';
 import PageBuilderSlideOver from './UI/SlideOvers/PageBuilderSlideOver';
 import Toolbar from './UI/UIComponents/Toolbar';
 interface UniversalLessonBuilderProps extends ULBSelectionProps {
@@ -394,81 +388,90 @@ const UniversalLessonBuilder = ({instId}: UniversalLessonBuilderProps) => {
      *
      */
 
-    <Layout>
-      <Sider
-        trigger={null}
-        width={300}
-        collapsedWidth={0}
-        className={`p-4 ${builderMenuCollapsed ? '!bg-white' : 'unset'}`}
-        collapsible
-        collapsed={builderMenuCollapsed}>
-        <PageBuilderSlideOver
-          deleteFromULBHandler={deleteULBHandler}
-          setEditMode={setEditMode}
-          setNewLessonPlanShow={setNewLessonPlanShow}
-          open={showLessonEditOverlay}
-          // handleEditBlockContent={handleEditBlockContent}
-          // handleModalPopToggle={handleModalPopToggle}
-        />
-      </Sider>
-      <Layout className="site-layout">
-        <Header
-          className="flex items-center justify-between"
-          style={{padding: 0, background: 'white'}}>
-          <div className="flex">
-            <Tooltip
-              placement="right"
-              title={builderMenuCollapsed ? 'Show builder' : 'Hide builder'}>
-              {React.createElement(
-                builderMenuCollapsed ? MenuUnfoldOutlined : MenuFoldOutlined,
-                {
-                  className: 'ml-4',
-                  onClick: () => setBuilderMenuCollapsed(!builderMenuCollapsed)
-                }
-              )}
-            </Tooltip>
+    <>
+      <NewLessonPlanSO
+        instId={instId}
+        pageDetails={selectedPageID ? getCurrentPage(selectedPageID) : {}} // don't send unwanted page details if not editing
+        open={newLessonPlanShow}
+        setOpen={setNewLessonPlanShow}
+      />
 
-            <LessonPlanNavigation
+      <Layout>
+        <Sider
+          trigger={null}
+          width={300}
+          collapsedWidth={0}
+          className={`p-4 ${builderMenuCollapsed ? '!bg-white' : 'unset'}`}
+          collapsible
+          collapsed={builderMenuCollapsed}>
+          <PageBuilderSlideOver
+            deleteFromULBHandler={deleteULBHandler}
+            setEditMode={setEditMode}
+            setNewLessonPlanShow={setNewLessonPlanShow}
+            open={showLessonEditOverlay}
+            // handleEditBlockContent={handleEditBlockContent}
+            // handleModalPopToggle={handleModalPopToggle}
+          />
+        </Sider>
+        <Layout className="site-layout">
+          <Header
+            className="flex items-center justify-between"
+            style={{padding: 0, background: 'white'}}>
+            <div className="flex">
+              <Tooltip
+                placement="right"
+                title={builderMenuCollapsed ? 'Show builder' : 'Hide builder'}>
+                {React.createElement(
+                  builderMenuCollapsed ? MenuUnfoldOutlined : MenuFoldOutlined,
+                  {
+                    className: 'ml-4',
+                    onClick: () => setBuilderMenuCollapsed(!builderMenuCollapsed)
+                  }
+                )}
+              </Tooltip>
+
+              <LessonPlanNavigation
+                selectedPageID={selectedPageID}
+                setSelectedPageID={setSelectedPageID}
+                universalLessonDetails={universalLessonDetails}
+              />
+            </div>
+
+            <Toolbar
+              newLessonPlanShow={newLessonPlanShow}
+              setFields={setLessonPlanFields}
+              setEditMode={setEditMode}
+              deleteLesson={() => {}}
+              setNewLessonPlanShow={setNewLessonPlanShow}
+            />
+          </Header>
+          <Content
+            style={{
+              margin: '24px 16px',
+              padding: 24,
+              minHeight: 280
+            }}
+            className="bg-dark-blue overflow-x-hidden overflow-y-auto max-h-screen">
+            <BuilderWrapper
+              mode={`building`}
+              instId={instId}
+              deleteFromULBHandler={deleteULBHandler}
+              updateFromULBHandler={updateULBHandler}
+              createNewBlockULBHandler={createNewBlockULBHandler}
+              updateBlockContentULBHandler={updateBlockContentULBHandler}
+              universalLessonDetails={universalLessonDetails}
+              universalBuilderStep={universalBuilderStep}
+              setUniversalBuilderStep={setUniversalBuilderStep}
               selectedPageID={selectedPageID}
               setSelectedPageID={setSelectedPageID}
-              universalLessonDetails={universalLessonDetails}
+              initialUniversalLessonPagePartContent={
+                initialUniversalLessonPagePartContent
+              }
             />
-          </div>
-
-          <Toolbar
-            newLessonPlanShow={newLessonPlanShow}
-            setFields={setLessonPlanFields}
-            setEditMode={setEditMode}
-            deleteLesson={() => {}}
-            setNewLessonPlanShow={setNewLessonPlanShow}
-          />
-        </Header>
-        <Content
-          style={{
-            margin: '24px 16px',
-            padding: 24,
-            minHeight: 280,
-            maxHeight: '100vh',
-            overflowY: 'auto'
-          }}
-          className="bg-dark-blue ">
-          <BuilderWrapper
-            mode={`building`}
-            instId={instId}
-            deleteFromULBHandler={deleteULBHandler}
-            updateFromULBHandler={updateULBHandler}
-            createNewBlockULBHandler={createNewBlockULBHandler}
-            updateBlockContentULBHandler={updateBlockContentULBHandler}
-            universalLessonDetails={universalLessonDetails}
-            universalBuilderStep={universalBuilderStep}
-            setUniversalBuilderStep={setUniversalBuilderStep}
-            selectedPageID={selectedPageID}
-            setSelectedPageID={setSelectedPageID}
-            initialUniversalLessonPagePartContent={initialUniversalLessonPagePartContent}
-          />
-        </Content>
+          </Content>
+        </Layout>
       </Layout>
-    </Layout>
+    </>
   );
 };
 

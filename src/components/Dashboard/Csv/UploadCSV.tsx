@@ -1394,20 +1394,20 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
 
   return (
     <>
-      {showModal.show && (
-        <Modal
-          showHeader
-          title={showModal.title}
-          closeAction={clearModal}
-          saveAction={showModal.saveAction}
-          closeOnBackdrop
-          saveElement={showModal?.saveElement}
-          closeLabel={showModal.closeLabel}
-          saveLabel={showModal?.saveLabel}
-          showFooter={Boolean(showModal.closeLabel)}>
-          {showModal.element}
-        </Modal>
-      )}
+      <Modal
+        open={showModal.show}
+        showHeader
+        title={showModal.title}
+        closeAction={clearModal}
+        saveAction={showModal.saveAction}
+        closeOnBackdrop
+        saveElement={showModal?.saveElement}
+        closeLabel={showModal.closeLabel}
+        saveLabel={showModal?.saveLabel}
+        showFooter={Boolean(showModal.closeLabel)}>
+        {showModal.element}
+      </Modal>
+
       <div className="flex flex-col overflow-h-scroll w-full h-full px-8 py-4">
         <div className="mx-auto w-full">
           <div className="flex flex-row my-0 w-full py-0 justify-start">

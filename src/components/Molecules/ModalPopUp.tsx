@@ -23,6 +23,7 @@ interface ModalProps {
   className?: string;
   smallText?: string;
   dataCy?: string;
+  open: boolean;
 }
 
 const ModalPopUp = (props: ModalProps) => {
@@ -45,10 +46,12 @@ const ModalPopUp = (props: ModalProps) => {
     smallText,
     titleButton,
     className = 'w-168',
-    dataCy
+    dataCy,
+    open
   } = props;
   return (
     <Modal
+      open={open}
       titleButton={titleButton}
       closeOnBackdrop
       title={'Warning'}

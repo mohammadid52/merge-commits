@@ -173,13 +173,12 @@ const DictionaryPage = () => {
 
         <Table {...tableConfig} />
 
-        {showModal && (
-          <DictionaryMutationModal
-            onSuccessMutation={onSuccessMutation}
-            dictionary={editDictionary}
-            closeAction={closeAction}
-          />
-        )}
+        <DictionaryMutationModal
+          open={showModal}
+          onSuccessMutation={onSuccessMutation}
+          dictionary={editDictionary}
+          closeAction={closeAction}
+        />
       </PageWrapper>
     </div>
   );

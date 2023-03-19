@@ -600,29 +600,28 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
 
   return (
     <div className="">
-      {addStudentModal && (
-        <Modal
-          saveAction={addStudentInClass}
-          closeAction={() => {
-            setAddStudentModal(false);
-            setNewMember(defaultNewMember);
-          }}
-          showHeader={false}
-          showFooter={false}>
-          <p>Do you want to add {newMember.label}?</p>
-          <div className="w-full flex items-center justify-end gap-4 mt-2">
-            <Buttons
-              label={'Cancel'}
-              transparent
-              onClick={() => {
-                setAddStudentModal(false);
-                setNewMember(defaultNewMember);
-              }}
-            />
-            <Buttons label={'Add'} onClick={addStudentInClass} />
-          </div>
-        </Modal>
-      )}
+      <Modal
+        open={addStudentModal}
+        saveAction={addStudentInClass}
+        closeAction={() => {
+          setAddStudentModal(false);
+          setNewMember(defaultNewMember);
+        }}
+        showHeader={false}
+        showFooter={false}>
+        <p>Do you want to add {newMember.label}?</p>
+        <div className="w-full flex items-center justify-end gap-4 mt-2">
+          <Buttons
+            label={'Cancel'}
+            transparent
+            onClick={() => {
+              setAddStudentModal(false);
+              setNewMember(defaultNewMember);
+            }}
+          />
+          <Buttons label={'Add'} onClick={addStudentInClass} />
+        </div>
+      </Modal>
 
       <SectionTitleV3
         fontSize="xl"
@@ -692,62 +691,62 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
                   </p>
                 </div>
               )}
-              {warnModal.show && (
-                <ModalPopUp
-                  closeAction={discardChanges}
-                  saveAction={saveAndMove}
-                  saveLabel="SAVE"
-                  cancelLabel="DISCARD"
-                  message={warnModal.message}
+
+              <ModalPopUp
+                open={warnModal.show}
+                closeAction={discardChanges}
+                saveAction={saveAndMove}
+                saveLabel="SAVE"
+                cancelLabel="DISCARD"
+                message={warnModal.message}
+              />
+
+              <ModalPopUp
+                open={warnModal2.show}
+                dataCy="edit-class-delete-student-modal"
+                closeAction={closeDeleteModal}
+                saveAction={warnModal2.action}
+                saveLabel="Yes"
+                message={warnModal2.message}
+                loading={deleting}
+              />
+
+              <Modal
+                open={showRegistrationForm}
+                showHeader={true}
+                title={RegistrationDict[userLanguage]['title']}
+                showHeaderBorder={true}
+                showFooter={false}
+                closeAction={() => setShowRegistrationForm(false)}>
+                <Registration
+                  classData={{
+                    classId: withbackupClassId,
+                    roomId: roomData.id
+                  }}
+                  isInInstitute
+                  isInModalPopup
+                  postMutation={postMutation}
+                  instId={instId}
                 />
-              )}
-              {warnModal2.show && (
-                <ModalPopUp
-                  dataCy="edit-class-delete-student-modal"
-                  closeAction={closeDeleteModal}
-                  saveAction={warnModal2.action}
-                  saveLabel="Yes"
-                  message={warnModal2.message}
-                  loading={deleting}
+              </Modal>
+
+              <Modal
+                open={userModalOpen}
+                title={UserDict[userLanguage]['title']}
+                showHeader={true}
+                showHeaderBorder={false}
+                showFooter={false}
+                maxWidth="min-w-256"
+                scrollHidden={true}
+                closeAction={() => setUserModalFormOpen(false)}>
+                <User
+                  shouldNavigate={false}
+                  onSuccessCallback={() => setUserModalFormOpen(false)}
+                  instituteId={instId}
+                  userId={studentProfileID}
+                  insideModalPopUp={true}
                 />
-              )}
-              {showRegistrationForm && (
-                <Modal
-                  showHeader={true}
-                  title={RegistrationDict[userLanguage]['title']}
-                  showHeaderBorder={true}
-                  showFooter={false}
-                  closeAction={() => setShowRegistrationForm(false)}>
-                  <Registration
-                    classData={{
-                      classId: withbackupClassId,
-                      roomId: roomData.id
-                    }}
-                    isInInstitute
-                    isInModalPopup
-                    postMutation={postMutation}
-                    instId={instId}
-                  />
-                </Modal>
-              )}
-              {userModalOpen && (
-                <Modal
-                  title={UserDict[userLanguage]['title']}
-                  showHeader={true}
-                  showHeaderBorder={false}
-                  showFooter={false}
-                  maxWidth="min-w-256"
-                  scrollHidden={true}
-                  closeAction={() => setUserModalFormOpen(false)}>
-                  <User
-                    shouldNavigate={false}
-                    onSuccessCallback={() => setUserModalFormOpen(false)}
-                    instituteId={instId}
-                    userId={studentProfileID}
-                    insideModalPopUp={true}
-                  />
-                </Modal>
-              )}
+              </Modal>
             </Fragment>
           ) : null}
         </div>

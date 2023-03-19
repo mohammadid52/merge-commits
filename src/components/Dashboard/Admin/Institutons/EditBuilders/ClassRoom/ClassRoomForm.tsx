@@ -1134,14 +1134,13 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
           )}
         </AnimatedContainer>
 
-        {warnModal.show && (
-          <ModalPopUp
-            closeAction={toggleModal}
-            saveAction={warnModal.onSaveAction}
-            saveLabel="Yes"
-            message={warnModal.message}
-          />
-        )}
+        <ModalPopUp
+          open={warnModal.show}
+          closeAction={toggleModal}
+          saveAction={warnModal.onSaveAction}
+          saveLabel="Yes"
+          message={warnModal.message}
+        />
       </PageWrapper>
     </div>
   );

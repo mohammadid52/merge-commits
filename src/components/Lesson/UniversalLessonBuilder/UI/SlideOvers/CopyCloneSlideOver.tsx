@@ -2,6 +2,7 @@ import useAuth from '@customHooks/useAuth';
 import {Dialog, Transition} from '@headlessui/react';
 import {XIcon} from '@heroicons/react/outline';
 import {CheckCircleIcon} from '@heroicons/react/solid';
+import {Drawer, Empty} from 'antd';
 import {UniversalLesson} from 'API';
 import Info from 'atoms/Alerts/Info';
 import Buttons from 'atoms/Buttons';
@@ -236,25 +237,33 @@ const CopyCloneSlideOver = ({
   };
 
   return (
-    <Slideover open={showDataForCopyClone} setOpen={setShowDataForCopyClone}>
+    <Drawer
+      title={'Select Page to copy / clone'}
+      width={400}
+      onClose={() => setShowDataForCopyClone(false)}
+      open={showDataForCopyClone}
+      bodyStyle={{paddingBottom: 80}}>
       <div className="flex flex-col items-center space-y-2 mb-2">
-        <Info text="Lessons are case sensitive" className="my-2 mb-4" />
+        <Info text="Lessons are case sensitive" className="my-2 mb-4 w-full" />
         {searchStatus === 'success' && status === 'none' && (
-          <Info text="Click on a page to select for copy / clone" className="my-2 mb-4" />
+          <Info
+            text="Click on a page to select for copy / clone"
+            className="w-full my-2 mb-4"
+          />
         )}
-        <div className="flex items-center space-x-2">
-          <div className="">
-            <FormInput
-              value={searchQuery}
-              onKeyDown={(e) => {
-                if (e.keyCode === 13) {
-                  loadLessonsOnSearch();
-                }
-              }}
-              onChange={onSearchChange}
-              placeHolder="Search lessons"
-            />
-          </div>
+        <div className="flex items-center w-full  space-x-2">
+          <FormInput
+            value={searchQuery}
+            onKeyDown={(e) => {
+              if (e.keyCode === 13) {
+                loadLessonsOnSearch();
+              }
+            }}
+            className="w-full"
+            onChange={onSearchChange}
+            placeHolder="Search lessons"
+          />
+
           <Buttons onClick={loadLessonsOnSearch} label="Search" />
         </div>
       </div>
@@ -279,17 +288,14 @@ const CopyCloneSlideOver = ({
         ) : searchStatus === 'error' ? (
           <div>Oops! Something went wrong.</div>
         ) : searchStatus === 'no_results' ? (
-          <div className="w-auto flex items-center flex-col justify-center">
-            <img
-              src={'https://image.flaticon.com/icons/png/512/5319/5319100.png'}
-              alt="no results found"
-              className="h-32 w-32 mb-4 text-gray-400"
-            />
-            <p className="w-auto text-center block text-gray-500 text-base">
-              Oops! No results found matching '{searchQuery}'.
-              <br /> Please check spellings or try another one.
-            </p>
-          </div>
+          <Empty
+            description={
+              <>
+                Oops! No results found matching '{searchQuery}'.
+                <br /> Please check spellings or try another one.
+              </>
+            }
+          />
         ) : (
           <div className="self-start">
             <Transition
@@ -384,7 +390,7 @@ const CopyCloneSlideOver = ({
           </div>
         )}
       </div>
-    </Slideover>
+    </Drawer>
   );
 };
 

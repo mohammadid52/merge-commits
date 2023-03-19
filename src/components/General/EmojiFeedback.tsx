@@ -349,8 +349,9 @@ const EmojiFeedback = () => {
     onSave
   };
 
-  return showSentimentModal ? (
+  return (
     <Modal
+      open={showSentimentModal}
       // title={'How are you today?'}
       customTitle={
         <div className="w-auto">
@@ -401,8 +402,6 @@ const EmojiFeedback = () => {
         </div>
       </>
     </Modal>
-  ) : (
-    <div className="w-auto hidden" />
   );
 };
 

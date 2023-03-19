@@ -224,15 +224,15 @@ const LessonMeasurements = ({lessonId}: any) => {
           </p>
         </div>
       )}
-      {showDeleteModal.state && (
-        <ModalPopUp
-          deleteModal
-          deleteLabel="Remove"
-          closeAction={toggleModal}
-          saveAction={deleteMeasurement}
-          message={showDeleteModal.message}
-        />
-      )}
+
+      <ModalPopUp
+        open={showDeleteModal.state}
+        deleteModal
+        deleteLabel="Remove"
+        closeAction={toggleModal}
+        saveAction={deleteMeasurement}
+        message={showDeleteModal.message}
+      />
     </div>
   );
 };

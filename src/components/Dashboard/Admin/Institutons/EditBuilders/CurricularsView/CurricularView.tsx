@@ -372,20 +372,20 @@ const CurricularView = (props: CurricularViewProps) => {
           </div>
         </div>
       </PageWrapper>
-      {curricularModal && (
-        <Modal
-          showHeader={true}
-          title={EditCurriculardict[userLanguage]['TITLE']}
-          showHeaderBorder={true}
-          showFooter={false}
-          closeAction={closeCurricularModal}>
-          <EditCurricular
-            curricularDetails={curricularData}
-            postUpdateDetails={postUpdateDetails}
-            closeAction={closeCurricularModal}
-          />
-        </Modal>
-      )}
+
+      <Modal
+        open={curricularModal}
+        showHeader={true}
+        title={EditCurriculardict[userLanguage]['TITLE']}
+        showHeaderBorder={true}
+        showFooter={false}
+        closeAction={closeCurricularModal}>
+        <EditCurricular
+          curricularDetails={curricularData}
+          postUpdateDetails={postUpdateDetails}
+          closeAction={closeCurricularModal}
+        />
+      </Modal>
     </div>
   );
 };

@@ -1,15 +1,15 @@
-import Buttons from "atoms/Buttons";
-import FormInput from "atoms/Form/FormInput";
-import { useGlobalContext } from "contexts/GlobalContext";
-import { EditQuestionModalDict } from "dictionary/dictionary.iconoclast";
-import { IContentTypeComponentProps } from "interfaces/UniversalLessonBuilderInterfaces";
-import { Options, PartContentSub } from "interfaces/UniversalLessonInterfaces";
-import { remove } from "lodash";
-import { nanoid } from "nanoid";
-import React, { useEffect, useState } from "react";
-import { FaTrashAlt } from "react-icons/fa";
-import { updateLessonPageToDB } from "utilities/updateLessonPageToDB";
-import { FORM_TYPES } from "../common/constants";
+import Buttons from 'atoms/Buttons';
+import FormInput from 'atoms/Form/FormInput';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import {EditQuestionModalDict} from 'dictionary/dictionary.iconoclast';
+import {IContentTypeComponentProps} from 'interfaces/UniversalLessonBuilderInterfaces';
+import {Options, PartContentSub} from 'interfaces/UniversalLessonInterfaces';
+import {remove} from 'lodash';
+import {nanoid} from 'nanoid';
+import React, {useEffect, useState} from 'react';
+import {FaTrashAlt} from 'react-icons/fa';
+import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
+import {FORM_TYPES} from '../common/constants';
 
 interface ILinestarterModalDialogProps extends IContentTypeComponentProps {
   inputObj?: any;
@@ -19,36 +19,36 @@ interface ILinestarterModalDialogProps extends IContentTypeComponentProps {
 
 const initialInputFieldsState = [
   {
-    id: "line_1",
+    id: 'line_1',
 
-    label: "",
-    text: "Poem line starter one",
+    label: '',
+    text: 'Poem line starter one'
   },
   {
-    id: "line_2",
+    id: 'line_2',
 
-    label: "",
-    text: "Poem line starter two",
+    label: '',
+    text: 'Poem line starter two'
   },
   {
-    id: "line_3",
+    id: 'line_3',
 
-    label: "",
-    text: "Poem line starter three",
+    label: '',
+    text: 'Poem line starter three'
   },
   {
-    id: "line_4",
+    id: 'line_4',
 
-    label: "",
-    text: "Poem line starter four",
-  },
+    label: '',
+    text: 'Poem line starter four'
+  }
 ];
 
 const newLinestarterObj: Options = {
-  id: "line_",
+  id: 'line_',
 
-  label: "",
-  text: "New linestarter...",
+  label: '',
+  text: 'New linestarter...'
 };
 
 const LinestarterModalDialog = ({
@@ -57,9 +57,9 @@ const LinestarterModalDialog = ({
   createNewBlockULBHandler,
   updateBlockContentULBHandler,
   askBeforeClose,
-  setUnsavedChanges,
+  setUnsavedChanges
 }: ILinestarterModalDialogProps) => {
-  const { userLanguage } = useGlobalContext();
+  const {userLanguage} = useGlobalContext();
   const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
 
   //////////////////////////
@@ -85,7 +85,7 @@ const LinestarterModalDialog = ({
   const handleUpdateInputFields = (id: string, value: any) => {
     const newInputFieldsArray = inputFieldsArray.map((inputObj: Options) => {
       if (inputObj.id === id) {
-        return { ...inputObj, text: value };
+        return {...inputObj, text: value};
       } else {
         return inputObj;
       }
@@ -96,7 +96,7 @@ const LinestarterModalDialog = ({
   const handleAddNewLinestarter = () => {
     const longerInputFieldsArray: PartContentSub[] = [
       ...inputFieldsArray,
-      { ...newLinestarterObj, id: `${newLinestarterObj.id}${nanoid(4)}` },
+      {...newLinestarterObj, id: `${newLinestarterObj.id}${nanoid(4)}`}
     ];
     setInputFieldsArray(longerInputFieldsArray);
   };
@@ -106,7 +106,7 @@ const LinestarterModalDialog = ({
   //////////////////////////
   const onChange = (e: React.FormEvent) => {
     setUnsavedChanges(true);
-    const { id, value } = e.target as HTMLFormElement;
+    const {id, value} = e.target as HTMLFormElement;
     handleUpdateInputFields(id, value);
   };
 
@@ -115,7 +115,7 @@ const LinestarterModalDialog = ({
 
     const input = {
       id: list.id,
-      lessonPlan: [...list.lessonPlan],
+      lessonPlan: [...list.lessonPlan]
     };
 
     await updateLessonPageToDB(input);
@@ -153,13 +153,13 @@ const LinestarterModalDialog = ({
       id: `${FORM_TYPES.POEM}-content-${nanoid(6)}`,
       type: `${FORM_TYPES.POEM}-content`,
       options: inputFieldsArray,
-      value: "",
+      value: ''
     };
 
     if (isEditingMode) {
       const updatedList = updateBlockContentULBHandler(
-        "",
-        "",
+        '',
+        '',
         `poem-form-default`,
 
         [lineStarterObject],
@@ -168,8 +168,8 @@ const LinestarterModalDialog = ({
       await addToDB(updatedList);
     } else {
       const updatedList = createNewBlockULBHandler(
-        "",
-        "",
+        '',
+        '',
         `poem-form-default`,
 
         [lineStarterObject],
@@ -196,9 +196,8 @@ const LinestarterModalDialog = ({
             return (
               <div className="mb-2" key={`linestarter_${idx}`}>
                 <label
-                  htmlFor={"Link"}
-                  className="mb-2 block text-xs font-semibold leading-5 text-gray-700"
-                >
+                  htmlFor={'Link'}
+                  className="mb-2 block text-xs font-semibold leading-5 text-gray-700">
                   Line-starter {idx + 1}:
                 </label>
                 <div className="mb-2 relative">
@@ -212,10 +211,9 @@ const LinestarterModalDialog = ({
                   />
 
                   <span
-                    onClick={() => removeItemFromList(inputObj?.id || "")}
+                    onClick={() => removeItemFromList(inputObj?.id || '')}
                     className="w-auto absolute right-0 top-0 pr-3 pt-3 text-center transition-all duration-200  text-xs font-semibold text-red-400  cursor-pointer hover:text-red-600
-                  "
-                  >
+                  ">
                     <FaTrashAlt />
                   </span>
                 </div>
@@ -226,7 +224,7 @@ const LinestarterModalDialog = ({
         <div className="col-span-2 mt-1 mb-4 flex items-center justify-between">
           <Buttons
             btnClass="py-1 px-4 text-xs mr-2 self-end"
-            label={"+ Add field"}
+            label={'+ Add field'}
             onClick={handleAddNewLinestarter}
             transparent
           />
@@ -234,18 +232,20 @@ const LinestarterModalDialog = ({
       </div>
 
       <div className="flex mt-4 justify-end px-6 pb-4">
-        <div className="flex items-center w-auto">
+        <div className="flex items-center w-auto gap-4">
           <Buttons
             btnClass="py-1 px-4 text-xs mr-2"
-            label={EditQuestionModalDict[userLanguage]["BUTTON"]["CANCEL"]}
+            label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
             onClick={askBeforeClose}
             transparent
+            size="middle"
           />
 
           <Buttons
             btnClass="py-1 px-8 text-xs ml-2"
-            label={EditQuestionModalDict[userLanguage]["BUTTON"]["SAVE"]}
+            label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
             onClick={onLineCreate}
+            size="middle"
           />
         </div>
       </div>

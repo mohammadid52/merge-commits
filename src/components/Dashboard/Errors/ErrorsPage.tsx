@@ -393,14 +393,13 @@ const ErrorsPage = () => {
         </div>
       </div>
 
-      {showModal.show && (
-        <ModalPopUp
-          closeAction={() => {
-            setShowModal({show: false, message: '', additional: ''});
-          }}
-          message={showModal.message.concat(`Additional info -> ${showModal.additional}`)}
-        />
-      )}
+      <ModalPopUp
+        open={showModal.show}
+        closeAction={() => {
+          setShowModal({show: false, message: '', additional: ''});
+        }}
+        message={showModal.message.concat(`Additional info -> ${showModal.additional}`)}
+      />
     </>
   );
 };
