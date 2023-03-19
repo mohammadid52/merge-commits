@@ -1017,7 +1017,11 @@ const Institute_info: InstitutionInfoInterface = {
       DICTIONARY: 'Dictionary',
       TEST_CASES: 'Test Cases',
       ERRORS: 'Errors',
-      UPLOAD_LOGS: 'Upload Logs'
+      UPLOAD_LOGS: 'Upload Logs',
+      ADD_NEW_COURSE: 'Add new course',
+      ADD_NEW_UNIT: 'Add new unit',
+      ADD_NEW_LESSON: 'Add new lesson',
+      ADD_NEW_ROOM: 'Add new classroom'
     }
   },
   ES: {
@@ -1060,7 +1064,11 @@ const Institute_info: InstitutionInfoInterface = {
       DICTIONARY: 'Diccionario',
       TEST_CASES: 'Casos de Prueba',
       ERRORS: 'Errores',
-      UPLOAD_LOGS: 'Subir Registros'
+      UPLOAD_LOGS: 'Subir Registros',
+      ADD_NEW_COURSE: 'Agregar nuevo curso',
+      ADD_NEW_UNIT: 'Agregar nueva unidad',
+      ADD_NEW_LESSON: 'Agregar nueva lección',
+      ADD_NEW_ROOM: 'Agregar nuevo salón de clases'
     }
   }
 };
