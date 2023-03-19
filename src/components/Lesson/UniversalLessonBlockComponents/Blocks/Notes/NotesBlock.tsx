@@ -145,11 +145,9 @@ const NotesBlock = ({
   const {setDataValue} = useStudentDataValue();
 
   useEffect(() => {
-    // if (!isContainerRendered) {
     setLoading(true);
     genSticky(grid, () => setIsContainerRendered(true));
     setLoading(false);
-    // }
   }, [isContainerRendered, localNotes.length]);
 
   useEffect(() => {
@@ -158,15 +156,15 @@ const NotesBlock = ({
     }
   }, [notesList]);
 
-  function PosEnd(end: any) {
-    var len = end.value.length;
+  function posEnd(end: any) {
+    let len = end.value.length;
 
     // Mostly for Web Browsers
     if (end.setSelectionRange) {
       end.focus();
       end.setSelectionRange(len, len);
     } else if (end.createTextRange) {
-      var t = end.createTextRange();
+      let t = end.createTextRange();
       t.collapse(true);
       t.moveEnd('character', len);
       t.moveStart('character', len);
@@ -182,7 +180,7 @@ const NotesBlock = ({
           const id = `#${note.id} #note-${note.id}`;
 
           $(id).on('click', (e) => {
-            PosEnd(e.target);
+            posEnd(e.target);
           });
         }
       });

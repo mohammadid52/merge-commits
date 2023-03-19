@@ -1,4 +1,5 @@
 import ErrorBoundary from '@components/Error/ErrorBoundary';
+import {Empty} from 'antd';
 import {isEmpty} from 'lodash';
 import camelCase from 'lodash/camelCase';
 import map from 'lodash/map';
@@ -253,7 +254,7 @@ const Table = ({
             <div
               className={`overflow-x-auto 2xl:overflow-hidden border-0 ${
                 config?.dark ? 'border-gray-700' : 'border-gray-200'
-              } sm:rounded-lg`}>
+              } `}>
               <table className="min-w-full divide-y-0 divide-gray-700">
                 <thead className={`${config?.headers?.bgColor || 'theme-bg'} `}>
                   <tr className="flex justify-between">
@@ -297,9 +298,9 @@ const Table = ({
                       />
                     ))
                   ) : dataList.length === 0 ? (
-                    <p className="text-center text-base w-full h-24 text-gray-500 flex items-center justify-center">
-                      {dataListConfig.emptyText}
-                    </p>
+                    <div className="my-4">
+                      <Empty description={dataListConfig.emptyText} />
+                    </div>
                   ) : goodForDroppable ? (
                     <DroppableList
                       droppableConfig={droppableConfig}

@@ -447,7 +447,9 @@ const UniversalLessonBuilder = ({instId}: UniversalLessonBuilderProps) => {
           style={{
             margin: '24px 16px',
             padding: 24,
-            minHeight: 280
+            minHeight: 280,
+            maxHeight: '100vh',
+            overflowY: 'auto'
           }}
           className="bg-dark-blue ">
           <BuilderWrapper

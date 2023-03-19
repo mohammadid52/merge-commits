@@ -1,19 +1,13 @@
 import ErrorBoundary from '@components/Error/ErrorBoundary';
-import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
-import ShowingCount from '@components/MicroComponents/ShowingCount';
 import {Radio} from 'antd';
 import {RadioChangeEvent} from 'antd/es/radio';
-import {isEmpty} from 'lodash';
 import {useState} from 'react';
 
 export type SortType = 'ACTIVE' | 'TRAINING' | 'INACTIVE';
 
 const Filters = ({
   updateFilter,
-  loading,
-  filters,
-  list,
-  showingCount,
+
   customFilters
 }: {
   loading: boolean;
@@ -28,9 +22,6 @@ const Filters = ({
     pageCount: number;
   } | null;
 }) => {
-  const getLen = (status: SortType) =>
-    list?.filter((_d: {status: SortType}) => _d.status === status).length;
-
   const defaultFilterMapping = ['ACTIVE', 'INACTIVE', 'TRAINING'];
   const filter = customFilters ? customFilters : defaultFilterMapping;
 
@@ -53,7 +44,7 @@ const Filters = ({
           ))}
         </Radio.Group>
 
-        <AnimatedContainer duration="500" animationType="slideIn" show={!loading}>
+        {/* <AnimatedContainer duration="500" animationType="slideIn" show={!loading}>
           {!loading && !isEmpty(filters) ? (
             <h5 className="text-sm text-gray-700 text-right w-auto">
               {filters !== undefined && filters !== null
@@ -65,7 +56,7 @@ const Filters = ({
             Boolean(showingCount) &&
             showingCount?.totalResults && <ShowingCount {...showingCount} />
           )}
-        </AnimatedContainer>
+        </AnimatedContainer> */}
       </div>
     </ErrorBoundary>
   );
