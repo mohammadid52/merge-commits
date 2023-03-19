@@ -77,7 +77,7 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
         value={selectedItem}
         status={error.length === 0 ? '' : 'error'}
         style={{width, borderRadius: 99}}
-        disabled={disabled}
+        disabled={loading || disabled}
         showSearch={showSearch}
         size={size}
         dropdownRender={dropdownRender}

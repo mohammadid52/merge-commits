@@ -39,6 +39,7 @@ const BottomBar = (props: LessonCardProps) => {
   return (
     <div>
       <div
+        style={{borderTop: '1px solid rgba(237, 242, 247,1)'}}
         className={`bg-transparent relative border-t-0 border-gray-200 flex justify-between text-base p-2 px-3 ${
           lessonType === 'survey' ? 'rounded-b' : 'rounded-br'
         }`}>

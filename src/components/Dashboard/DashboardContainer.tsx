@@ -44,9 +44,9 @@ const InstitutionName = ({id, courseName}: {id: string; courseName: string}) => 
 
   return !isLoading ? (
     <div className="flex items-center flex-col sm:flex-row justify-center">
-      <h4 className="w-auto text-sm font-medium">{institute.name || '--'}</h4>
-      <span className="hidden w-auto sm:block mx-4">•</span>
-      <h4 className="w-auto text-sm font-medium">{courseName || '--'}</h4>
+      <h4 className=" mb-0 w-auto text-sm font-medium">{institute.name || '--'}</h4>
+      <span className=" mb-0 hidden w-auto sm:block mx-4">•</span>
+      <h4 className=" mb-0 w-auto text-sm font-medium">{courseName || '--'}</h4>
     </div>
   ) : (
     <div>--</div>

@@ -386,10 +386,7 @@ const Registration = ({
                           label={RegistrationDict[userLanguage]['role']}
                           error={errors.role}
                           dropdownWidth="w-56"
-                          list={Roles.map((d) => ({
-                            ...d,
-                            label: getUserRoleString(d.name)
-                          }))}
+                          list={Roles}
                           selectedItem={getUserRoleString(values.role)}
                         />
                       </div>

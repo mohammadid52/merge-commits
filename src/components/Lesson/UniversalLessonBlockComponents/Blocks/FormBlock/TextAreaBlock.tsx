@@ -56,7 +56,7 @@ const TextAreaBlock = (props: IFormBlockProps) => {
     // <div
     //   id={`${inputID}_for_error`}
     //   key={id}
-    //   className={`questionItemChild mb-4 p-4 bg-component-dark rounded-2xl border-0 border-gray-700`}
+    //   className={`questionItemChild mb-4 p-4 dark-blue rounded-2xl border-0 border-gray-700`}
     // >
     //   <FormLabel
     //     label={label}

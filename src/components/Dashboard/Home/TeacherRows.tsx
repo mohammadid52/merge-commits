@@ -1,5 +1,6 @@
 import Loader from '@components/Atoms/Loader';
 import useAuth from '@customHooks/useAuth';
+import {Empty} from 'antd';
 import {PersonStatus, RoomStatus} from 'API';
 import ContentCard from 'atoms/ContentCard';
 import ImageAlternate from 'atoms/ImageAlternative';
@@ -193,7 +194,7 @@ const TeacherRows = (props: {
             <Loader className="w-auto text-gray-400" withText="Loading teachers..." />
           </div>
         ) : (
-          <div className="flex justify-center items-center p-12">No teachers found</div>
+          <Empty description={'No teachers found'} />
         )}
       </div>
     </ContentCard>

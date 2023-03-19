@@ -1,5 +1,5 @@
-export const getLocalStorageData = (key: string) => {
-  const toParse = window?.localStorage?.getItem?.(key) || "{}";
+export const getLocalStorageData = (key: string, defaultReturn = '{}') => {
+  const toParse = window?.localStorage?.getItem?.(key) || defaultReturn;
   return JSON.parse(toParse);
 };
 

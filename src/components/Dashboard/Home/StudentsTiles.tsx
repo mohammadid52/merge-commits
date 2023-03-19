@@ -2,6 +2,7 @@ import SearchInput from '@components/Atoms/Form/SearchInput';
 import Highlighted from '@components/Atoms/Highlighted';
 import useAuth from '@customHooks/useAuth';
 import useSearch from '@customHooks/useSearch';
+import {Empty} from 'antd';
 import Buttons from 'atoms/Buttons';
 import ContentCard from 'atoms/ContentCard';
 import ImageAlternate from 'atoms/ImageAlternative';
@@ -10,7 +11,7 @@ import SectionTitleV3 from 'atoms/SectionTitleV3';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import {orderBy} from 'lodash';
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {useHistory} from 'react-router-dom';
 
 const StudentsTiles = (props: {
@@ -181,9 +182,7 @@ const StudentsTiles = (props: {
                 <Loader className="w-auto text-gray-400" withText="Loading students..." />
               </div>
             ) : (
-              <div className="grid justify-center text-gray-500 items-center">
-                {StudentDict[userLanguage].NO_STUDENT}
-              </div>
+              <Empty description={StudentDict[userLanguage].NO_STUDENT} />
             )}
           </div>
         </div>

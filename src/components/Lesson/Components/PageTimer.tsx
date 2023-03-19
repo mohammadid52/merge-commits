@@ -1,8 +1,8 @@
-import { useGlobalContext } from "@contexts/GlobalContext";
-import gsap from "gsap";
-import React, { useEffect, useState } from "react";
+import {useGlobalContext} from '@contexts/GlobalContext';
+import {getLocalStorageData, setLocalStorageData} from '@utilities/localStorage';
+import {useEffect, useState} from 'react';
 
-const PageTimer = ({ startTime }: { startTime: any }) => {
+const PageTimer = ({startTime}: {startTime: any}) => {
   // * Logic of the timer
   // first get the current page from state
   // then get the current timer of the page from local storage
@@ -15,10 +15,10 @@ const PageTimer = ({ startTime }: { startTime: any }) => {
   // if the timer is lesson than 10% of estimated timer.. show red background
   // use moment for time calculations
 
-  const { lessonState, lessonDispatch } = useGlobalContext();
-  const { currentPage } = lessonState;
+  const {lessonState, lessonDispatch} = useGlobalContext();
+  const {currentPage} = lessonState;
 
-  const existingTimer = lessonState?.pageTimers?.find(
+  const existingTimer = lessonState.pageTimers?.find(
     (t: any) => t?.currentPage === currentPage
   )?.remainingTime;
 
@@ -28,27 +28,27 @@ const PageTimer = ({ startTime }: { startTime: any }) => {
 
   const updateTimerToLessonState = (updatedTime: number) => {
     lessonDispatch({
-      type: "UPDATE_TIMER_FOR_PAGE",
+      type: 'UPDATE_TIMER_FOR_PAGE',
       payload: {
         currentPage,
-        remainingTime: updatedTime,
-      },
+        remainingTime: updatedTime
+      }
     });
   };
 
   useEffect(() => {
     setTimeRemaining(startFromThisTime);
     updateTimerToLessonState(startFromThisTime);
-    animateTimer();
+    // animateTimer();
   }, [currentPage]);
 
-  const animateTimer = () => {
-    gsap.from(".page_timer", {
-      x: 100,
-      opacity: 0,
-      duration: 0.5,
-    });
-  };
+  // const animateTimer = () => {
+  //   gsap.from('.page_timer', {
+  //     x: 100,
+  //     opacity: 0,
+  //     duration: 0.5
+  //   });
+  // };
 
   useEffect(() => {
     if (timeRemaining === 0) return;
@@ -72,25 +72,24 @@ const PageTimer = ({ startTime }: { startTime: any }) => {
     const percent = percentageOfTime();
 
     if (percent <= 100 && percent >= 50) {
-      return "bg-green-600";
+      return 'bg-green-600';
     } else if (percent >= 11 && percent < 50) {
-      return "bg-yellow-600";
+      return 'bg-yellow-600';
     } else if (percent <= 10) {
-      return "bg-red-600";
+      return 'bg-red-600';
     }
-    return "bg-yellow-600";
+    return 'bg-yellow-600';
   };
 
   return (
-    <div className="page_timer fixed top-10 w-auto right-2 xl:right-8">
+    <div className="page_timer absolute right-[150px] z-100  w-auto ">
       <div
-        className={`${getBackgroundColor()} transition-all px-2 py-1 rounded-full text-xs`}
-      >
+        className={`${getBackgroundColor()} transition-all px-2 py-1 rounded-full text-xs`}>
         {timeRemaining === 0 ? (
           <span>Timer finished</span>
         ) : (
           <span>
-            {minutesLeft}:{secondsLeft < 10 ? "0" : ""}
+            {minutesLeft}:{secondsLeft < 10 ? '0' : ''}
             {secondsLeft} left
           </span>
         )}

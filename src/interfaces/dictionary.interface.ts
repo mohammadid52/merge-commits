@@ -630,6 +630,10 @@ interface InstitutionInfoCommon {
     TEST_CASES: string;
     ERRORS: string;
     UPLOAD_LOGS: string;
+    ADD_NEW_COURSE: string;
+    ADD_NEW_UNIT: string;
+    ADD_NEW_LESSON: string;
+    ADD_NEW_ROOM: string;
   };
 }
 

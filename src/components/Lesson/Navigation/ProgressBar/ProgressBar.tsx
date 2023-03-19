@@ -119,7 +119,7 @@ const ProgressBar = ({
       aria-label="Breadcrumb">
       {isTeacherPresenting && !isOnDemand && <Disabled />}
       {isClosed && isClosedLocalStorage && <Disabled />}
-      <ol className="max-w-screen-xl w-full mx-auto px-4 flex space-x-4  items-center justify-center sm:px-6 lg:px-8">
+      <ol className="max-w-screen-xl mb-0 w-full mx-auto px-4 flex space-x-4  items-center justify-center sm:px-6 lg:px-8">
         {/* 1 */}
         {pages &&
           pages.map((page: UniversalLessonPage, key: number) => {
@@ -156,15 +156,7 @@ const ProgressBar = ({
         {breakpoint !== 'xs' && breakpoint !== 'sm' && (
           <li className="flex w-auto">
             <div onClick={handleHome} className="flex items-center w-auto group">
-              <svg
-                className="flex-shrink-0 w-6 h-full text-gray-200 group-hover:text-gray-300 transition-all duration-150 "
-                viewBox="0 0 24 44"
-                preserveAspectRatio="none"
-                fill="currentColor"
-                xmlns="http://www.w3.org/2000/svg"
-                aria-hidden="true">
-                <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
-              </svg>
+              <span className="text-gray-500">/</span>
               <a
                 // href="#"
                 className="flex flex-row text-red-500 cursor-pointer transform hover:scale-110 transition-transform duration-150   ml-4">

@@ -253,7 +253,7 @@ export const FormBlock = ({
               type === FORM_TYPES.WRITING_EXERCISE
                 ? 'border-b-none rounded-b-none'
                 : 'border-t-none rounded-t-none'
-            } p-4 rounded-2xl bg-component-dark`}>
+            } p-4 rounded-2xl dark-blue`}>
             <WritingExerciseBlock
               title={type === FORM_TYPES.WRITING_EXERCISE}
               value={isInLesson ? getValue?.(inputID || '') : value}

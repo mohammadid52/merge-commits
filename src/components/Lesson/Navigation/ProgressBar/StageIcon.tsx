@@ -94,7 +94,7 @@ const StageIcon = ({
   const clickedLesson = active
     ? 'font-bold border-b-0 border-indigo-400 text-indigo-200 hover:text-indigo-300'
     : lessonProgress >= pageNr
-    ? 'text-gray-700'
+    ? 'text-gray-600'
     : '';
 
   const Button = ({showArrow, last}: {showArrow?: boolean; last?: boolean}) => {
@@ -106,15 +106,7 @@ const StageIcon = ({
         ${clickable ? 'cursor-pointer' : 'cursor-default'}
         flex items-center w-auto group`}>
         {showArrow && breakpoint !== 'xs' && breakpoint !== 'sm' && (
-          <svg
-            className={`flex-shrink-0 w-6 h-full text-gray-200 group-hover:text-gray-300 transition-all duration-150    `}
-            viewBox="0 0 24 44"
-            preserveAspectRatio="none"
-            fill="currentColor"
-            xmlns="http://www.w3.org/2000/svg"
-            aria-hidden="true">
-            <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
-          </svg>
+          <span className="text-gray-500">/</span>
         )}
 
         <a
@@ -130,7 +122,7 @@ const StageIcon = ({
             breakpoint !== 'xs' && breakpoint !== 'sm' ? 'ml-4' : ''
           } cursor-pointer w-auto  text-sm font-medium transform hover:scale-110 transition-transform duration-150
           flex flex-row`}>
-          <p className="flex-shrink-0">{label}</p>
+          <p className="flex-shrink-0 mb-0">{label}</p>
         </a>
       </div>
     );

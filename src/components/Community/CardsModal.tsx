@@ -78,7 +78,7 @@ const Item = ({
               } text-sm font-medium text-gray-900 `}>
               {content.name}
             </p>
-            <p className="text-sm text-gray-500  truncate">{content.subtitle}</p>
+            <p className="text-sm text-gray-500">{content.subtitle}</p>
           </div>
         </div>
 

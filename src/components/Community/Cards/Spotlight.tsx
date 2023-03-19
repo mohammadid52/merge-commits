@@ -388,7 +388,7 @@ const Spotlight = ({
       </AnimatedContainer>
 
       <div className="flex mt-8 justify-center px-6 pb-4">
-        <div className="flex justify-end">
+        <div className="flex justify-end gap-4">
           <Buttons
             btnClass="py-1 px-4 text-xs mr-2"
             label={'Cancel'}

@@ -41,6 +41,7 @@ const SectionTitleV3: React.FC<SectionTitleProps> = (sectProps: SectionTitleProp
 
   return (
     <div
+      style={{borderBottom: `1px solid rgba(237, 242, 247,1)`}}
       className={`${
         withButton
           ? 'flex items-start xl:items-center gap-4 flex-col xl:flex-row  justify-between '

@@ -74,7 +74,7 @@ const StandardLessonCard = (props: LessonCardProps) => {
   return (
     <div
       key={keyProps}
-      className={`relative overflow-hidden bg-white theme-card-shadow rounded-xl flex lesson-card  mb-8 ${theme.elem.textDark} `}>
+      className={`relative overflow-hidden bg-white theme-card-shadow rounded-lg flex lesson-card  mb-8 ${theme.elem.textDark} `}>
       {/**
        *  LEFT SECTION IMAGE
        */}
@@ -82,7 +82,7 @@ const StandardLessonCard = (props: LessonCardProps) => {
       {/**
        *  RIGHT SECTION
        */}
-      <div className={`w-7.5/10 lesson-card-summary flex flex-col rounded-b`}>
+      <div className={`w-7.5/10 lesson-card-summary flex flex-col rounded-b-lg`}>
         <MainSummary
           searchTerm={searchTerm}
           lessonProps={{...lessonProps, isTeacher, accessible}}

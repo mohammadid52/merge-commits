@@ -66,19 +66,61 @@ const HeaderMegaMenu = () => {
           label: TABS['COURSES'],
           key: 'course',
           redirectionUrl: `${baseUrl}/courses`,
-          active: location.pathname.indexOf('course') > -1
+          active: location.pathname.indexOf('course') > -1,
+          children: [
+            {
+              label: (
+                <a
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href={`${baseUrl}/course-builder`}>
+                  {TABS['ADD_NEW_COURSE']}
+                </a>
+              ),
+              key: 'new-course-add'
+              // redirectionUrl: `${baseUrl}/course-builder`
+            }
+          ]
         },
         {
           label: TABS['UNITS'],
           key: 'unit',
           redirectionUrl: `${baseUrl}/units`,
-          active: location.pathname.indexOf('units') > -1
+          active: location.pathname.indexOf('units') > -1,
+          children: [
+            {
+              label: (
+                <a
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href={`${baseUrl}/units/add`}>
+                  {TABS['ADD_NEW_UNIT']}
+                </a>
+              ),
+              key: 'new-unit-add'
+              // redirectionUrl: `${baseUrl}/units/add`
+            }
+          ]
         },
         {
           label: TABS['LESSONS'],
           key: 'lessons',
           redirectionUrl: `${baseUrl}/lessons`,
-          active: location.pathname.indexOf('lessons') > -1
+          active: location.pathname.indexOf('lessons') > -1,
+          children: [
+            {
+              label: (
+                <a
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href={`${baseUrl}/lessons/add`}>
+                  {TABS['ADD_NEW_LESSON']}
+                </a>
+              ),
+              key: 'new-lesson-add'
+              // redirectionUrl: `${baseUrl}/lessons/add`
+            }
+          ]
         },
         {
           label: TABS['GAME_CHANGERS'],
@@ -103,7 +145,21 @@ const HeaderMegaMenu = () => {
           label: TABS['CLASSROOMS'],
           key: 'class_room',
           redirectionUrl: `${baseUrl}/class-rooms`,
-          active: location.pathname.indexOf('room') > -1
+          active: location.pathname.indexOf('room') > -1,
+          children: [
+            {
+              label: (
+                <a
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href={`${baseUrl}/room-creation`}>
+                  {TABS['ADD_NEW_ROOM']}
+                </a>
+              ),
+              key: 'new-room-add'
+              // redirectionUrl: `${baseUrl}/room-creation`
+            }
+          ]
         },
         (user.role === 'FLW' || user.role === 'TR') && {
           label: TABS['STUDENT_ROASTER'],

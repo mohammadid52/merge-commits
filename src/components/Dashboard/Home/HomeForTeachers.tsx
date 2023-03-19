@@ -135,7 +135,7 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
     homeData[0]?.class?.rooms?.items.forEach((item: any) => {
       if (item.coTeachers?.items?.length) {
         item.coTeachers.items.forEach((_item: any) => {
-          const rooms = findRooms(_item.teacher.authId, allRooms);
+          const rooms = findRooms(_item?.teacher?.authId, allRooms);
           if (!uniqIds.includes(_item.teacher.email)) {
             coTeachersList.push({
               ..._item.teacher,

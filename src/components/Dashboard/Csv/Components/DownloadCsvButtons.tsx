@@ -1,7 +1,6 @@
 import Buttons from '@components/Atoms/Buttons';
 import {PDFDownloadLink} from '@react-pdf/renderer';
 import {getTodayDate} from '@utilities/functions';
-import React from 'react';
 import {CSVLink} from 'react-csv';
 import {BsDownload} from 'react-icons/bs';
 import SurveyPDF from '../SurveyPDF';
@@ -32,7 +31,11 @@ const DownloadCsvButtons = ({
         btnClass="px-6"
         insideElement={
           <PDFDownloadLink
-            className="w-auto ml-2"
+            className={`${
+              !isCSVDownloadReady && lessonPDFData.length === 0
+                ? ' pointer-events-none'
+                : ''
+            } w-auto ml-2`}
             document={<SurveyPDF lessonPDFData={lessonPDFData} />}
             fileName={`${selectedSurvey?.name}.pdf`}>
             Download PDF Survey
@@ -48,7 +51,7 @@ const DownloadCsvButtons = ({
         insideElement={
           <CSVLink
             data={CSVData}
-            className="w-auto ml-2"
+            className={`${!isCSVDownloadReady ? ' pointer-events-none' : ''} w-auto ml-2`}
             id="csv-download-button"
             headers={mappedHeaders}
             filename={`${selectedClassRoom?.name}_${

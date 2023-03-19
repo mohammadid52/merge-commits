@@ -2,6 +2,7 @@ import Highlighted from '@components/Atoms/Highlighted';
 import Loader from '@components/Atoms/Loader';
 import useAuth from '@customHooks/useAuth';
 import useSearch from '@customHooks/useSearch';
+import {Empty} from 'antd';
 import {fallbackUrls} from 'assets';
 import Buttons from 'atoms/Buttons';
 import ContentCard from 'atoms/ContentCard';
@@ -196,10 +197,10 @@ const RoomTiles = (props: {
           <div className="relative">
             <div className="relative max-w-7xl mx-auto  px-6 mt-4">
               {finalList.length > 3 && (
-                <h6 className="w-auto text-gray-600">
+                <h4 className="w-auto text-gray-600">
                   Showing {showMore || searchInput.isActive ? finalList.length : 3} out of{' '}
                   {finalList.length}
-                </h6>
+                </h4>
               )}
               <div
                 data-cy="classroom-list"
@@ -222,9 +223,7 @@ const RoomTiles = (props: {
             </div>
           </div>
         ) : (
-          <div className="flex justify-center text-gray-500 items-center p-12">
-            No classrooms found
-          </div>
+          <Empty description={'No classrooms found'} />
         )}
       </ContentCard>
     </>

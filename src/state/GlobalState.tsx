@@ -9,7 +9,7 @@ export interface GlobalStateType {
   roomData: {
     id: string;
     name: string;
-    teachingStyle: TeachingStyle;
+    teachingStyle?: TeachingStyle;
     curriculum: any;
     rooms: any[];
     syllabus: any[];
@@ -52,7 +52,7 @@ export const globalState: GlobalStateType = {
   roomData: {
     id: '',
     name: '',
-    teachingStyle: TeachingStyle.PERFORMER,
+    teachingStyle: undefined,
     widgets: [],
     curriculum: {},
     rooms: [],

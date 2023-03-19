@@ -12,7 +12,6 @@ import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
 import MultipleSelector from 'atoms/Form/MultipleSelector';
 import Selector from 'atoms/Form/Selector';
-import SelectorWithAvatar from 'atoms/Form/SelectorWithAvatar';
 import PageWrapper from 'atoms/PageWrapper';
 import ModalPopUp from 'molecules/ModalPopUp';
 
@@ -70,7 +69,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
         .map((item: any) => {
           return {
             id: item?.unit?.id,
-            name: item?.unit?.name,
+            label: item?.unit?.name,
             value: item?.unit?.id,
             index: seq.indexOf(item?.unit?.id)
           };
@@ -85,12 +84,12 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
         if (activeUnit) {
           setRoomData({
             ...roomData,
-            activeUnit: {id: activeUnit.id, name: activeUnit.name}
+            activeUnit: {id: activeUnit.id, label: activeUnit.label}
           });
         } else {
           setRoomData({
             ...roomData,
-            activeUnit: {id: '', name: ''}
+            activeUnit: {id: '', label: ''}
           });
         }
       }
@@ -105,20 +104,20 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
     id: '',
     name: '',
     type: ClassroomType.ONLINE,
-    institute: {id: instId, name: '', value: ''},
-    teacher: {id: '', name: '', value: ''},
+    institute: {id: instId, label: '', value: ''},
+    teacher: {id: '', label: '', value: ''},
     coTeachers: [{}],
-    classRoom: {id: '', name: '', value: ''},
-    curricular: {id: '', name: '', value: ''},
+    classRoom: {id: '', label: '', value: ''},
+    curricular: {id: '', label: '', value: ''},
     maxPersons: '',
-    status: '',
+    status: RoomStatus.ACTIVE,
     conferenceCallLink: '',
     location: '',
     isZoiq: false,
     teachingStyle: TeachingStyle.PERFORMER,
     activeUnit: {
       id: '',
-      name: ''
+      label: ''
     },
     activeSyllabus: '',
     classID: '',
@@ -185,22 +184,22 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
     });
   };
 
-  const selectTeacher = (val: string, name: string, id: string) => {
+  const selectTeacher = (val: string, option: any) => {
     setRoomData({
       ...roomData,
       teacher: {
-        id: id,
-        name: name,
+        id: option.id,
+        label: val,
         value: val
       }
     });
 
     const filteredDefaultTeacher: object[] = teachersList.filter(
-      (coTeacher: any) => coTeacher.id !== id
+      (coTeacher: any) => coTeacher.id !== option.id
     );
     setUnsavedChanges(true);
     setCoTeachersList(filteredDefaultTeacher);
-    setSelectedCoTeachers((list: any) => list.filter((d: any) => d.id !== id));
+    setSelectedCoTeachers((list: any) => list.filter((d: any) => d.id !== option.id));
   };
 
   const selectClassroomType = (_: string, name: ClassroomType, _2: string) => {
@@ -225,7 +224,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
       ...roomData,
       curricular: {
         id: option.id,
-        name: val,
+        label: val,
         value: val
       }
     });
@@ -733,7 +732,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
       ...roomData,
       curricular: {
         id: selectedCurr?.id,
-        name: selectedCurr?.name,
+        label: selectedCurr?.label,
         value: selectedCurr?.value
       }
     });
@@ -806,13 +805,13 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
               type: savedData?.type || ClassroomType.ONLINE,
               institute: {
                 id: savedData.institution?.id,
-                name: savedData.institution?.name,
+                label: savedData.institution?.name,
                 value: savedData.institution?.name
               },
               isZoiq: savedData.isZoiq,
               teacher: {
                 id: savedData.teacher?.id,
-                name: `${savedData.teacher?.firstName || ''} ${
+                label: `${savedData.teacher?.firstName || ''} ${
                   savedData.teacher?.lastName || ''
                 }`,
                 value: `${savedData.teacher?.firstName || ''} ${
@@ -821,7 +820,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
               },
               classRoom: {
                 id: savedData.class?.id,
-                name: savedData.class?.name,
+                label: savedData.class?.name,
                 value: savedData.class?.name
               },
               // ***** UNCOMMENT THIS ******
@@ -851,7 +850,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
         ...roomData,
         institute: {
           id: params.get('id') || '',
-          name: '',
+          label: '',
           value: ''
         }
       });
@@ -898,7 +897,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
       ...roomData,
       institute: {
         id: institute.id,
-        name: institute.name,
+        label: institute.name,
         value: institute.name
       }
     });
@@ -911,7 +910,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
       ...roomData,
       activeUnit: {
         id: unit.id,
-        name: unit.name
+        label: unit.name
       }
     });
   };
@@ -937,14 +936,14 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
               <div className="px-3 py-4">
                 <Selector
                   width={'100%'}
+                  showSearch
                   selectedItem={institute.value}
                   placeholder={RoomEDITdict[userLanguage]['INSTITUTION_PLACEHOLDER']}
                   label={RoomEDITdict[userLanguage]['INSTITUTION_LABEL']}
                   list={allInstitutions}
                   isRequired
-                  onChange={(value) => {
-                    let institute = {value};
-                    selectInstitute(institute);
+                  onChange={(_, option: any) => {
+                    selectInstitute(option);
                   }}
                 />
               </div>
@@ -992,7 +991,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
                       ? 'Classroom inactive'
                       : curricular.value
                   }
-                  width={'100%'}
+                  showSearch
                   placeholder={RoomEDITdict[userLanguage]['CURRICULUM_PLACEHOLDER']}
                   label={RoomEDITdict[userLanguage]['CURRICULUM_LABEL']}
                   disabled={loadingCurricular || status === RoomStatus.INACTIVE}
@@ -1008,8 +1007,9 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
                   selectedItem={
                     status === RoomStatus.INACTIVE
                       ? 'Classroom inactive'
-                      : roomData.activeUnit.name
+                      : roomData.activeUnit.label
                   }
+                  showSearch
                   width={'100%'}
                   placeholder={RoomEDITdict[userLanguage]['ACTIVE_UNIT_PLACEHOLDER']}
                   label={RoomEDITdict[userLanguage]['ACTIVE_UNIT_LABEL']}
@@ -1030,14 +1030,11 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
             <div>
               <div className="grid grid-cols-3">
                 <div className="px-3 py-4">
-                  <SelectorWithAvatar
+                  <Selector
                     label={RoomEDITdict[userLanguage]['TEACHER_LABEL']}
+                    showSearch
                     isRequired
-                    selectedItem={
-                      status === RoomStatus.INACTIVE
-                        ? {value: 'Classroom inactive'}
-                        : teacher
-                    }
+                    selectedItem={teacher.label}
                     list={teachersList}
                     disabled={status === RoomStatus.INACTIVE}
                     placeholder={RoomEDITdict[userLanguage]['TEACHER_PLACEHOLDER']}
@@ -1055,6 +1052,7 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
                     list={coTeachersList}
                     placeholder={RoomEDITdict[userLanguage]['CO_TEACHER_PLACEHOLDER']}
                     onChange={selectCoTeacher}
+                    showSearch
                   />
                 </div>
                 <div className="px-3 py-4">

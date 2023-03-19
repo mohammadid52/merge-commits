@@ -45,7 +45,7 @@ const ModalPopUp = (props: ModalProps) => {
     saveTooltip = '',
     smallText,
     titleButton,
-    className = 'w-168',
+
     dataCy,
     open
   } = props;
@@ -59,7 +59,7 @@ const ModalPopUp = (props: ModalProps) => {
       showHeaderBorder={false}
       showFooter={false}
       closeAction={closeAction}>
-      <div className={`${className} text-center my-8`}>
+      <div className={` text-center my-8`}>
         <p className="my-4 px-6 text-gray-800 text-lg font-medium leading-8">{message}</p>
         {smallText && (
           <p className="my-4 px-6 text-gray-700 text-xs font-medium leading-8">

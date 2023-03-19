@@ -1,6 +1,5 @@
 import Selector from '@components/Atoms/Form/Selector';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
-import {useGlobalContext} from '@contexts/GlobalContext';
 import useDictionary from '@customHooks/dictionary';
 import useAuth from '@customHooks/useAuth';
 import {listInstitutions} from '@graphql/functions';
@@ -8,11 +7,11 @@ import {listInstitutions} from '@graphql/functions';
 import {Transition} from '@headlessui/react';
 import {insertExtraDataForClassroom, removeDuplicates} from '@utilities/functions';
 import {API, graphqlOperation} from 'aws-amplify';
-import React, {useEffect, useState} from 'react';
-import ClickAwayListener from 'react-click-away-listener';
-import {DataValue} from '../Csv';
 import * as customQueries from 'customGraphql/customQueries';
 import {uniqBy} from 'lodash';
+import {useEffect, useState} from 'react';
+import ClickAwayListener from 'react-click-away-listener';
+import {DataValue} from '../Csv';
 
 const DownloadCsvTitleComponent = ({
   selectedUnit,
@@ -104,7 +103,7 @@ const DownloadCsvTitleComponent = ({
     setClassRoomLoading(true);
     try {
       let sInst = selectedInst;
-      let inst = {id, name, value};
+      let inst = {id, label: name, value};
       setSelectedInst(inst);
       if (!sInst || sInst.id !== inst.id) {
         reset();
@@ -125,7 +124,7 @@ const DownloadCsvTitleComponent = ({
             instCRs.push({id: cr.id, name: cr.name, value: cr.name});
           return {
             id: cr.id,
-            name: cr.name,
+            label: cr.name,
 
             value: cr.name,
             class: {...cr.class},
@@ -170,7 +169,7 @@ const DownloadCsvTitleComponent = ({
   const onClassRoomSelect = async (id: string, name: string, value: string) => {
     try {
       let sCR = selectedClassRoom;
-      let cr = {id, name, value};
+      let cr = {id, label: name, value};
       setSelectedClassRoom(cr);
       if (!sCR || sCR.id !== cr.id) {
         let classroom = classRoomsList.filter((c) => c.id === cr.id)[0];
@@ -205,7 +204,7 @@ const DownloadCsvTitleComponent = ({
 
       units = units.map((syl: any) => {
         let unitData = syl.unit;
-        return {id: unitData.id, name: unitData.name, value: unitData.name};
+        return {id: unitData.id, label: unitData.name, value: unitData.name};
       });
       // console.log('units', units)
       setUnits(units);
@@ -240,7 +239,7 @@ const DownloadCsvTitleComponent = ({
   };
 
   const onUnitSelect = (id: string, name: string, value: string) => {
-    let unit = {id, name, value};
+    let unit = {id, label: name, value};
     setSelectedUnit(unit);
     fetchSurveys(unit.id);
   };
@@ -260,7 +259,7 @@ const DownloadCsvTitleComponent = ({
         if (les.lesson && les.lesson.type === 'survey') {
           surveys.push({
             id: les.lesson.id,
-            name: les.lesson.title,
+            label: les.lesson.title,
             value: les.lesson.title
           });
           return les.lesson;
@@ -291,8 +290,7 @@ const DownloadCsvTitleComponent = ({
     loadInstitution();
   }, []);
 
-  const {userLanguage} = useGlobalContext();
-  const {CsvDict} = useDictionary();
+  const {CsvDict, userLanguage} = useDictionary();
   return (
     <div className="mx-auto w-full">
       <div className="flex flex-row my-0  w-full py-0 mb-4 justify-between">

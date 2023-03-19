@@ -1530,10 +1530,6 @@ $polka-dot-size: 0.8px;
   }
 }
 
-.bg-component-dark {
-  background-color: $dark-component-bg !important;
-}
-
 .border-none {
   border-color: transparent !important;
 }
@@ -1825,4 +1821,8 @@ $translation-fab-width: 50px;
   border-color: $gray-500;
   color: $gray-500;
   font-weight: 400;
+}
+
+.dark-blue {
+  background-color: $lesson-form-block-bg;
 }

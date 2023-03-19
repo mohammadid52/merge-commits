@@ -60,7 +60,7 @@ const Foot = () => {
 
   return (
     <>
-      <div className="mt-auto mb-0 bg-darker-gray flex-row justify-center items-center">
+      <div className="mt-auto mb-0 bg-dark-blue flex-row justify-center items-center">
         <div className={`${visible ? 'absolute z-100' : 'hidden'}`} onClick={handlePopup}>
           <PositiveAlert
             alert={visible}
@@ -76,7 +76,7 @@ const Foot = () => {
         </div>
 
         <div
-          className={`w-full lg:w-256 h-auto mx-auto bg-darker-gray py-8 flex flex-row justify-center items-start text-center`}>
+          className={`w-full lg:w-256 h-auto mx-auto  py-8 flex flex-row justify-center items-start text-center`}>
           {/* BACK BUTTON */}
 
           <div className="w-3.3/10 flex justify-center items-center">

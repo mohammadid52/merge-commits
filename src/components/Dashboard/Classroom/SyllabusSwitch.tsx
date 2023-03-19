@@ -63,7 +63,7 @@ const SyllabusSwitch = ({
                     <Buttons
                       greenBtn={isActive}
                       loading={syllabusActivating}
-                      btnClass="ml-2"
+                      className="ml-2"
                       onClick={() => handleSyllabusActivation?.(syllabus.id)}
                       label={'Select'}
                     />

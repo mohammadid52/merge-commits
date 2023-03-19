@@ -373,6 +373,7 @@ const Start: React.FC<StartProps> = ({
   return (
     <div data-cy="survey-button">
       <Buttons
+        size="middle"
         title={showNotebookBtn ? `See your notebook` : updateBtnText()}
         type="submit"
         onClick={!preview ? handleLink : noop}

@@ -12,8 +12,6 @@ import {useHistory, useRouteMatch} from 'react-router-dom';
 import {getLocalStorageData, removeLocalStorageData} from 'utilities/localStorage';
 import PositiveAlert from '../General/Popup';
 import LessonTopMenu from '../Lesson/Navigation/LessonTopMenu';
-import SideMenu from '../Lesson/Navigation/SideMenu';
-import VideoWidget from '../Lesson/Navigation/Widgets/VideoWidget';
 
 const LessonHeaderBar = ({
   overlay,
@@ -360,7 +358,7 @@ const LessonHeaderBar = ({
          *
          */}
 
-        {breakpoint !== 'xs' && breakpoint !== 'sm' ? (
+        {/* {breakpoint !== 'xs' && breakpoint !== 'sm' ? (
           <VideoWidget
             videoLink={videoLink}
             videoLinkModalVisible={videoLinkModalVisible}
@@ -382,7 +380,7 @@ const LessonHeaderBar = ({
             handleBack={handleBack}
             handleForward={handleForward}
           />
-        )}
+        )} */}
       </div>
     </ErrorBoundary>
   );
