@@ -1,20 +1,16 @@
-import isEmpty from 'lodash/isEmpty';
-import React, {useEffect, useState} from 'react';
-import {BsFillInfoCircleFill} from 'react-icons/bs';
-import {setLocalStorageData} from 'utilities/localStorage';
-
 import useAuth from '@customHooks/useAuth';
 import {logError} from '@graphql/functions';
 import {getAsset} from 'assets';
 import SectionTitleV3 from 'atoms/SectionTitleV3';
-import InformationalWalkThrough from 'components/Dashboard/Admin/Institutons/InformationalWalkThrough/InformationalWalkThrough';
 import {useGlobalContext} from 'contexts/GlobalContext';
+import {useEffect, useState} from 'react';
+import {setLocalStorageData} from 'utilities/localStorage';
 import {getImageFromS3} from 'utilities/services';
 import {ClassroomControlProps} from '../Dashboard';
 import HeaderTextBar from '../HeaderTextBar/HeaderTextBar';
 import RoomTiles from './RoomTiles';
 import StudentsTiles from './StudentsTiles';
-import TeacherRows from './TeacherRows';
+import TeacherRows, {Teacher} from './TeacherRows';
 
 export const findRooms = (teacherAuthID: string, allRooms: any[]) => {
   try {
@@ -42,53 +38,24 @@ export const findRooms = (teacherAuthID: string, allRooms: any[]) => {
     return rooms;
   } catch (error) {
     console.error(error);
+    return [];
   }
 };
 
-export interface ModifiedListProps {
-  id: any;
-  name: any;
-  teacherProfileImg: string;
-  bannerImage: string;
-  teacher: {email: string; firstName: string; lastName: string; image: string};
-  curricula: {
-    items: {
-      curriculum: {
-        name: string;
-        description?: string;
-        id: string;
-        summary?: string;
-        type?: string;
-      };
-    }[];
-  };
-}
-
 const HomeForTeachers = (props: ClassroomControlProps) => {
-  const {homeData, handleRoomSelection, roomsLoading} = props;
+  const {handleRoomSelection, roomsLoading, homeData} = props;
 
-  const {state, dispatch, clientKey} = useGlobalContext();
+  const {user} = useAuth();
+
+  // Fetch home data for teachers
+
+  const {state, clientKey} = useGlobalContext();
   const dashboardBanner1 = getAsset(clientKey, 'dashboardBanner2');
-  const [openWalkThroughModal, setOpenWalkThroughModal] = useState(false);
-  const {firstName, isTeacher, isFellow} = useAuth();
 
-  const user = !isEmpty(state) ? {firstName: firstName, preferredName: firstName} : null;
-
-  useEffect(() => {
-    if (isTeacher || isFellow) {
-      if (state.currentPage !== 'home') {
-        // dispatch({ type: 'UPDATE_CURRENTPAGE', payload: { data: 'lesson-planner' } });
-      }
-      if (state.activeRoom && state?.activeRoom?.length > 0) {
-        dispatch({type: 'UPDATE_ACTIVEROOM', payload: {data: null}});
-      }
-    }
-  }, [isTeacher, isFellow]);
-
-  const [teacherList, setTeacherList] = useState<any[]>();
-  const [coTeachersList, setCoTeachersList] = useState<any[]>();
-  const [studentsList, setStudentsList] = useState<any[]>();
-  const [classList, setClassList] = useState([]);
+  const [teacherList, setTeacherList] = useState<Teacher[]>([]);
+  const [coTeachersList, setCoTeachersList] = useState<Teacher[]>([]);
+  const [studentsList, setStudentsList] = useState<any[]>([]);
+  const [classList, setClassList] = useState<any[]>([]);
 
   const fetchAndProcessDashboardData = () => {
     teacherListWithImages();
@@ -168,7 +135,7 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
     homeData[0]?.class?.rooms?.items.forEach((item: any) => {
       if (item.coTeachers?.items?.length) {
         item.coTeachers.items.forEach((_item: any) => {
-          const rooms = findRooms(_item.teacher.authId, allRooms);
+          const rooms = findRooms(_item?.teacher?.authId, allRooms);
           if (!uniqIds.includes(_item.teacher.email)) {
             coTeachersList.push({
               ..._item.teacher,
@@ -292,13 +259,13 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
                 </span>
                 . What do you want to teach today?
               </p>
-              <div className="absolute z-100 w-6 top-0 right-1">
+              {/* <div className="absolute z-100 w-6 top-0 right-1">
                 <span
                   className="w-auto cursor-pointer"
                   onClick={() => setOpenWalkThroughModal(true)}>
                   <BsFillInfoCircleFill className={`h-5 w-5 text-white`} />
                 </span>
-              </div>
+              </div> */}
             </HeaderTextBar>
           )}
           <div className="px-5">
@@ -306,7 +273,6 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
 
             <RoomTiles
               roomsLoading={roomsLoading}
-              isTeacher
               handleRoomSelection={handleRoomSelection}
               classList={classList}
             />
@@ -322,13 +288,18 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
                 borderBottom
                 extraClass="leading-6 text-gray-900"
               />
-              <TeacherRows coTeachersList={coTeachersList} teachersList={teacherList} />
+              <TeacherRows
+                loading={Boolean(roomsLoading)}
+                coTeachersList={coTeachersList}
+                teachersList={teacherList}
+              />
             </div>
 
             {/* Classmates Section */}
             <div className="my-6">
               <StudentsTiles
                 isTeacher
+                loading={Boolean(roomsLoading)}
                 title={`Your Students`}
                 studentsList={studentsList}
               />
@@ -336,10 +307,10 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
           </div>
         </>
       ) : null}
-      <InformationalWalkThrough
+      {/* <InformationalWalkThrough
         open={openWalkThroughModal}
         onCancel={() => setOpenWalkThroughModal(false)}
-      />
+      /> */}
     </>
   );
 };

@@ -6,28 +6,26 @@ import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import ErrorBoundary from '@components/Error/ErrorBoundary';
 import CommonActionsBtns from '@components/MicroComponents/CommonActionsBtns';
 import Table from '@components/Molecules/Table';
+import {useGlobalContext} from '@contexts/GlobalContext';
 import useAuth from '@customHooks/useAuth';
 import usePagination from '@customHooks/usePagination';
 import useSearch from '@customHooks/useSearch';
-import {InstitueRomms} from '@dictionary/dictionary.iconoclast';
+
 import {withZoiqFilter} from '@utilities/functions';
 import {RoomStatus} from 'API';
-import {getAsset} from 'assets';
 import BreadCrums from 'atoms/BreadCrums';
 import Buttons from 'atoms/Buttons';
 import SearchInput from 'atoms/Form/SearchInput';
 import Selector from 'atoms/Form/Selector';
-import {GlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import {useQuery} from 'customHooks/urlParam';
 import * as mutations from 'graphql/mutations';
 import {find, map, orderBy} from 'lodash';
 import ModalPopUp from 'molecules/ModalPopUp';
-import React, {useContext, useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {AiOutlineArrowDown, AiOutlineArrowUp} from 'react-icons/ai';
 import {IoArrowUndoCircleOutline} from 'react-icons/io5';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {useHistory, useRouteMatch} from 'react-router-dom';
 import {Status} from '../UserManagement/UserStatus';
 
@@ -45,12 +43,13 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
   const history = useHistory();
   const params = useQuery(location.search);
 
-  const {theme, clientKey, state, userLanguage} = useContext(GlobalContext);
-  const themeColor = getAsset(clientKey, 'themeClassName');
-  const {BreadcrumsTitles, CommonlyUsedDict, LessonsListDict} = useDictionary(clientKey);
+  const {theme, state, userLanguage} = useGlobalContext();
+
+  const {BreadcrumsTitles, CommonlyUsedDict, InstitueRomms, LessonsListDict} =
+    useDictionary();
 
   const [status, setStatus] = useState('');
-  const [lessonsData, setLessonsData] = useState([]);
+  const [lessonsData, setLessonsData] = useState<any[]>([]);
   const [totalLessonNum, setTotalLessonNum] = useState(0);
 
   const {
@@ -62,7 +61,8 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
 
     currentList: _currentList,
     allAsProps,
-    setCurrentList
+    setCurrentList,
+    getIndex
   } = usePagination(getSortedList(lessonsData) || [], totalLessonNum || 0);
 
   const currentList = getSortedList(_currentList);
@@ -77,17 +77,21 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
   const [selectedInstitution, setSelectedInstitution] = useState<any>({});
 
   const breadCrumsList = [
-    {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
+    {
+      title: BreadcrumsTitles[userLanguage]['HOME'],
+      href: '/dashboard',
+      last: false
+    },
     {
       title: BreadcrumsTitles[userLanguage]['LESSONS'],
-      url: '/dashboard/lesson-builder',
+      href: '/dashboard/lesson-builder',
       last: true
     }
   ];
 
   const sortByList = [
-    {id: 1, name: 'Title', value: 'title'},
-    {id: 2, name: 'Type', value: 'type'}
+    {id: 1, label: 'Title', value: 'title'},
+    {id: 2, label: 'Type', value: 'type'}
   ];
 
   const buildLesson = () => {
@@ -117,7 +121,7 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
   const getLessonsList = async () => {
     try {
       let condition = {};
-      if (instId && !state.user.isSuperAdmin) {
+      if (instId && !isSuperAdmin) {
         condition = {
           filter: {
             institutionID: {eq: instId}
@@ -210,8 +214,8 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
     setLastPage(!(filteredData.length > pageCount));
   };
 
-  const instituteChange = (_: string, name: string, value: string) => {
-    setSelectedInstitution({name, id: value});
+  const instituteChange = (value: string, option: any) => {
+    setSelectedInstitution({name: value, id: option.id});
     onSearch(searchInput.value, value);
   };
 
@@ -230,10 +234,10 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
     setLessonsData(newLessonsList);
   };
 
-  const setSortingValue = (str: string, name: string) => {
+  const setSortingValue = (name: string) => {
     setSortingType({
       ...sortingType,
-      value: str,
+      value: name,
       name: name
     });
   };
@@ -247,13 +251,10 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
     fetchSortedList();
   }, [sortingType.value, sortingType.asc]);
 
-  // if (status !== 'done') {
-  //   return <LessonLoading />;
-  // }
-
-  const [showCloneModal, setShowCloneModal] = useState<{show: boolean; lessonId: string}>(
-    {show: false, lessonId: ''}
-  );
+  const [showCloneModal, setShowCloneModal] = useState<{
+    show: boolean;
+    lessonId: string;
+  }>({show: false, lessonId: ''});
 
   const getCloneLessonDetails = () => {
     if (showCloneModal.show) {
@@ -332,12 +333,6 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
     );
   };
 
-  const redirectToInstitution = (institutionId: string) => {
-    history.push(
-      `/dashboard/manage-institutions/institution/${institutionId}/edit?back=${match.url}`
-    );
-  };
-
   const {isSuperAdmin} = useAuth();
 
   const {
@@ -375,7 +370,7 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
 
   const finalList = getSortedList(searchInput.isActive ? filteredList : currentList);
 
-  const [filters, setFilters] = useState<SortType>();
+  const [filters, setFilters] = useState<SortType | null>(null);
 
   const updateFilter = (filterName: SortType) => {
     if (filterName === filters) {
@@ -400,7 +395,7 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
   };
 
   const dataList = map(finalList, (item: any, index: number) => ({
-    no: index + 1 + (currentPage === 0 ? 0 : pageCount * currentPage),
+    no: getIndex(index),
     onClick: () => handleLessonsEdit(item.id),
     instituteName: isSuperAdmin && item.institution.name,
     status: <Status status={item.status} useDefault />,
@@ -472,12 +467,12 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
     return (
       <ErrorBoundary componentName="LessonsList">
         <div className={`w-full h-full`}>
-          {showCloneModal.show && (
-            <CloneLesson
-              setShowCloneModal={setShowCloneModal}
-              getCloneLessonDetails={getCloneLessonDetails}
-            />
-          )}
+          <CloneLesson
+            open={showCloneModal.show}
+            setShowCloneModal={setShowCloneModal}
+            getCloneLessonDetails={getCloneLessonDetails}
+          />
+
           {/* Header section */}
           {!isInInstitution && <BreadCrums items={breadCrumsList} />}
           <div
@@ -518,14 +513,11 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
                       <button
                         className={`w-28 bg-gray-100 mr-4 p-3 border-gray-400  border-0 rounded border-l-none rounded-l-none ${theme.outlineNone} `}
                         onClick={toggleSortDimention}>
-                        <IconContext.Provider
-                          value={{size: '1.5rem', color: theme.iconColor[themeColor]}}>
-                          {sortingType.asc ? (
-                            <AiOutlineArrowUp />
-                          ) : (
-                            <AiOutlineArrowDown />
-                          )}
-                        </IconContext.Provider>
+                        {sortingType.asc ? (
+                          <AiOutlineArrowUp className="theme-text" size="1.5rem" />
+                        ) : (
+                          <AiOutlineArrowDown className="theme-text" size="1.5rem" />
+                        )}
                       </button>
                     </>
                   )}
@@ -576,15 +568,14 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
           <div className={`px-8`}>
             <Table {...tableConfig} />
 
-            {deleteModal.show && (
-              <ModalPopUp
-                closeAction={handleToggleDelete}
-                saveAction={deleting ? () => {} : deleteModal.action}
-                saveLabel={deleting ? 'DELETING...' : 'CONFIRM'}
-                cancelLabel="CANCEL"
-                message={deleteModal.message}
-              />
-            )}
+            <ModalPopUp
+              open={deleteModal.show}
+              closeAction={handleToggleDelete}
+              saveAction={deleting ? () => {} : deleteModal.action}
+              saveLabel={deleting ? 'DELETING...' : 'CONFIRM'}
+              cancelLabel="CANCEL"
+              message={deleteModal.message}
+            />
           </div>
 
           {/* Pagination And Counter */}

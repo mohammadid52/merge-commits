@@ -1,12 +1,8 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {Warning} from '@components/Atoms/Alerts/Info';
-import {logError, updatePageState} from '@graphql/functions';
-import {setPageTitle} from '@utilities/functions';
-import {
-  getLocalStorageData,
-  removeLocalStorageData,
-  setLocalStorageData
-} from '@utilities/localStorage';
+import {handleLessonMutationRating, logError, updatePageState} from '@graphql/functions';
+import {reorderSyllabus, setPageTitle, withZoiqFilter} from '@utilities/functions';
+import {removeLocalStorageData, setLocalStorageData} from '@utilities/localStorage';
 import {TeachingStyle, UserPageState} from 'API';
 import {getAsset} from 'assets';
 import BreadCrums from 'atoms/BreadCrums';
@@ -31,92 +27,6 @@ import FloatingActionTranslation from './FloatingActionTranslation';
 import SyllabusSwitch from './SyllabusSwitch';
 import Today from './TodayLesson';
 
-interface Artist {
-  id: string;
-  images: [];
-  name: string;
-  type: string;
-}
-
-export interface CurriculumInfo {
-  artist: Artist;
-  language: string;
-  summary: string;
-  title: string;
-}
-
-export interface Syllabus {
-  id: string;
-  name: string;
-  [key: string]: any;
-}
-
-export interface Lesson {
-  id: string;
-  open?: boolean;
-  status?: string;
-  openedAt?: string;
-  closedAt?: string;
-  complete?: boolean;
-  roster?: string[];
-  viewing?: any;
-  startDate?: string;
-  endDate?: string;
-  SELStructure?: string;
-  courseID?: string;
-  lessonID?: string;
-  lesson?: {
-    id?: string;
-    type?: string;
-    title?: string;
-    artist?: any;
-    language?: string;
-    summary?: string;
-    purpose?: string;
-    duration?: number | null;
-    cardImage?: string | null;
-    cardCaption?: string;
-    totalEstTime?: number;
-  };
-  session?: number;
-  sessionHeading?: string;
-  createdAt?: string;
-  updatedAt?: string;
-}
-
-export interface LessonProps extends DashboardProps {
-  lessons: Lesson[];
-  syllabus?: any;
-  searchTerm?: string;
-  handleLessonMutationRating: (lessonID: string, ratingValue: string) => void;
-  getLessonRating: (lessonId: string, userEmail: string, userAuthId: string) => any;
-}
-
-export interface LessonCardProps {
-  isCompleted?: boolean;
-
-  isTeacher?: boolean;
-  searchTerm?: string;
-  keyProps?: string;
-  activeRoomInfo?: any;
-  lessonProps?: any;
-  syllabusProps?: any;
-
-  accessible?: boolean;
-  openCards?: string;
-  lessonProgress?: number;
-  setOpenCards?: React.Dispatch<React.SetStateAction<string>>;
-  lessonType?: string;
-  pageNumber?: number;
-  handleLessonMutationRating?: (lessonID: string, ratingValue: string) => void;
-  getLessonRating?: (lessonId: string, userEmail: string, userAuthId: string) => any;
-  getLessonByType?: (type: string, lessonID: string) => any;
-  roomID?: string;
-  getImageFromS3?: boolean;
-  preview?: boolean;
-  user?: any;
-}
-
 const range = (from: number, to: number, step: number = 1) => {
   let i = from;
   const range = [];
@@ -134,39 +44,22 @@ interface ClassroomProps extends DashboardProps {
 }
 
 const Classroom: React.FC<ClassroomProps> = (props: ClassroomProps) => {
-  const {
-    setClassroomCurriculum,
-    classroomCurriculum,
-    isTeacher,
-    isOnDemandStudent,
-    currentPage,
-    activeRoomInfo,
-    setActiveRoomInfo,
-    lessonLoading,
-    syllabusLoading,
-    handleRoomSelection,
-    loadingRoomInfo,
-    homeData
-  } = props;
+  const {homeData} = props;
 
   // ##################################################################### //
   // ############################ BASIC STATE ############################ //
   // ##################################################################### //
-  const gContext = useGlobalContext();
-  const state = gContext.state;
-  const dispatch = gContext.dispatch;
-  const stateUser = gContext.stateUser;
-  const theme = gContext.theme;
-  const clientKey = gContext.clientKey;
-  const userLanguage = gContext.userLanguage;
+  const {state, zoiqFilter, dispatch, theme, userLanguage, clientKey} =
+    useGlobalContext();
 
-  const roomData = getLocalStorageData('room_info');
+  const {activeRoom, roomData} = state;
+
   const teachingStyle = Boolean(roomData) ? roomData.teachingStyle : '--';
 
-  const {authId, email, pageState, isStudent, isFellow} = useAuth();
+  const {authId, email, isTeacher, role, pageState, isStudent, onDemand} = useAuth();
   const match: any = useRouteMatch();
   const bannerImg = getAsset(clientKey, 'dashboardBanner1');
-  const {classRoomDict, BreadcrumsTitles} = useDictionary(clientKey);
+  const {classRoomDict, BreadcrumsTitles} = useDictionary();
 
   // ##################################################################### //
   // ########################### ROOM SWITCHING ########################## //
@@ -175,10 +68,13 @@ const Classroom: React.FC<ClassroomProps> = (props: ClassroomProps) => {
     if (isStudent) {
       dispatch({type: 'UPDATE_CURRENTPAGE', payload: {data: 'classroom'}});
     }
-    if (isTeacher || isFellow) {
-      dispatch({type: 'UPDATE_CURRENTPAGE', payload: {data: 'lesson-planner'}});
+    if (isTeacher) {
+      dispatch({
+        type: 'UPDATE_CURRENTPAGE',
+        payload: {data: 'lesson-planner'}
+      });
     }
-  }, [stateUser?.role]);
+  }, [role]);
 
   const roomId = match?.params?.roomId;
 
@@ -187,7 +83,7 @@ const Classroom: React.FC<ClassroomProps> = (props: ClassroomProps) => {
       const roomIndex = state.roomData.rooms.findIndex((d: any) => d.id === roomId);
       const room = state.roomData.rooms[roomIndex];
       const name = room?.name;
-      handleRoomSelection(roomId, name, roomIndex);
+      initUpdateActiveRoom();
 
       name && setPageTitle(name);
 
@@ -199,10 +95,15 @@ const Classroom: React.FC<ClassroomProps> = (props: ClassroomProps) => {
             email: email,
             pageState: pageState
           },
-          dispatch({
-            type: 'SET_USER',
-            payload: {...state.user, pageState: UserPageState.CLASS}
-          })
+          () => {
+            dispatch({
+              type: 'UPDATE_PAGE_STATE',
+              payload: {
+                pageState: UserPageState.CLASS,
+                lastPageStateUpdate: new Date().toISOString()
+              }
+            });
+          }
         );
       }
     }
@@ -213,11 +114,248 @@ const Classroom: React.FC<ClassroomProps> = (props: ClassroomProps) => {
 
   const [settingLessons, setSettingLessons] = useState<boolean>(true);
 
+  const [syllabusLoading, setSyllabusLoading] = useState<boolean>(true);
+  const [lessonLoading, setLessonLoading] = useState<boolean>(true);
+
+  const [curriculumId, setCurriculumId] = useState<string>('');
+  const [curriculumObj, setCurriculumObj] = useState<any>({});
+  const [activeRoomInfo, setActiveRoomInfo] = useState<any>({});
+
+  /******************************************
+   * 2.1 LIST TEACHER ROOMS                 *
+   ******************************************/
+  /***********************************************
+   *    THIS FUNCTION CAN ACTUALLY BE REMOVED    *
+   * IT'S ACTUALLY RETURNING THE SAME (BUT LESS) *
+   *    DATA AS GETDASHBOARDDATAFORTEACHERS()    *
+   *    AND ESSENTIALLY USING THE SAME QUERY     *
+   ***********************************************/
+
+  const listRoomTeacher = async (teacherAuthID: string) => {
+    try {
+      const queryObj = {
+        name: 'customQueries.listRooms',
+        valueObj: {
+          filter: withZoiqFilter({teacherAuthID: {eq: teacherAuthID}}, zoiqFilter)
+        }
+      };
+
+      const classIdFromRoomsFetch: any = await API.graphql(
+        graphqlOperation(customQueries.listRooms, queryObj.valueObj)
+      );
+      const assignedRoomsAsCoTeacher: any = await API.graphql(
+        graphqlOperation(customQueries.getDashboardDataForCoTeachers, {
+          filter: {teacherAuthID: {eq: teacherAuthID}}
+        })
+      );
+      //@ts-ignore
+      const arrayOfResponseObjects = [
+        ...classIdFromRoomsFetch?.data?.listRooms?.items,
+        ...assignedRoomsAsCoTeacher?.data?.listRoomCoTeachers?.items?.map(
+          (item: any) => ({
+            ...item,
+            ...item.room,
+            teacher: item.room?.teacher
+          })
+        )
+      ];
+
+      setLocalStorageData('room_list', arrayOfResponseObjects);
+
+      dispatch({
+        type: 'UPDATE_ROOM',
+        payload: {
+          property: 'rooms',
+          data: arrayOfResponseObjects
+        }
+      });
+    } catch (e) {
+      logError(e, {authId: authId, email: email}, 'Dashboard @listRoomTeacher');
+      console.error('Classes Fetch ERR: ', e);
+    }
+  };
+
+  useEffect(() => {
+    if (isTeacher) {
+      listRoomTeacher(authId);
+    }
+  }, [isTeacher]);
+
+  /**********************************
+   * 3. LIST CURRICULUMS BY ROOM ID *
+   **********************************/
+  const listRoomCurriculums = async () => {
+    try {
+      const roomCurriculumsFetch = await API.graphql(
+        graphqlOperation(customQueries.listRoomCurriculums, {
+          filter: {
+            roomID: {eq: activeRoom}
+          }
+        })
+      );
+
+      const response = roomCurriculumsFetch;
+      // @ts-ignore
+      const arrayOfResponseObjects = response?.data?.listRoomCurricula?.items;
+      console.log(
+        '🚀 ~ file: Classroom.tsx:293 ~ listRoomCurriculums ~ arrayOfResponseObjects:',
+        arrayOfResponseObjects
+      );
+
+      if (arrayOfResponseObjects.length > 0) {
+        setCurriculumId(arrayOfResponseObjects[0]?.curriculumID);
+        setCurriculumObj(arrayOfResponseObjects[0]?.curriculum);
+      }
+    } catch (e) {
+      logError(e, {authId: authId, email: email}, 'Dashboard @listRoomCurriculums');
+      console.error('RoomCurriculums fetch ERR: ', e);
+    }
+  };
+
+  useEffect(() => {
+    if (roomData?.rooms?.length > 0 && Boolean(activeRoom)) {
+      listRoomCurriculums();
+    }
+  }, [roomData?.rooms, activeRoom]);
+
+  const [loadingRoomInfo, setLoadingRoomInfo] = useState(true);
+
+  // Save info of selected room to cookie
+  useEffect(() => {
+    setLoadingRoomInfo(true);
+    const getRoomFromState = roomData?.rooms?.find((room: any) => room.id === activeRoom);
+
+    if (getRoomFromState) {
+      setLocalStorageData('room_info', getRoomFromState);
+
+      setActiveRoomInfo(getRoomFromState);
+    }
+    setLoadingRoomInfo(false);
+  }, [activeRoom]);
+
+  // ##################################################################### //
+  // ######################### SCHEDULE AND TIMES ######################## //
+  // ##################################################################### //
+
+  /********************
+   * 5. LIST SYLLABUS *
+   ********************/
+
+  const listSyllabus = async () => {
+    setSyllabusLoading(true);
+
+    try {
+      // ~~~~~~~~~~~~~~ CURRICULUM ~~~~~~~~~~~~~ //
+      let getCurriculum = await API.graphql(
+        graphqlOperation(customQueries.getCurriculumForClasses, {
+          id: curriculumId
+        })
+      );
+      // @ts-ignore
+      let response = getCurriculum.data.getCurriculum;
+
+      let syllabi = response.universalSyllabus.items;
+      let sequence = response.universalSyllabusSeq;
+
+      let mappedResponseObjects = reorderSyllabus(syllabi, sequence);
+
+      //TODO: combine these dispatches
+      dispatch({
+        type: 'UPDATE_ROOM_MULTI',
+        payload: {
+          syllabus: mappedResponseObjects,
+          curriculum: {id: response.id, name: response.name}
+        }
+      });
+    } catch (e) {
+      logError(e, {authId: authId, email: email}, 'Dashboard @listSyllabus');
+      console.error('Curriculum ids ERR: ', e);
+    } finally {
+      setSyllabusLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    const getSyllabusAndSchedule = async () => {
+      await listSyllabus();
+    };
+    if (curriculumId !== '' && activeRoom) {
+      getSyllabusAndSchedule();
+    }
+  }, [activeRoom, curriculumId]);
+
+  /******************************************
+   * 6.1 LIST ALL THE SYLLABUS LESSON       *
+   *      - LESSONS                         *
+   ******************************************/
+
+  const listSyllabusLessons = async (syllabusID: string) => {
+    dispatch({
+      type: 'UPDATE_ROOM',
+      payload: {
+        property: 'lessons',
+        data: []
+      }
+    });
+
+    /**
+     * IF there are any syllabus active, do a fetch for lessons
+     */
+
+    try {
+      setLessonLoading(true);
+      const syllabusLessonFetch = await API.graphql(
+        graphqlOperation(customQueries.getUniversalSyllabus, {
+          id: syllabusID
+        })
+      );
+      //@ts-ignore
+      const response = await syllabusLessonFetch.data.getUniversalSyllabus;
+      const lessons = response?.lessons.items
+        .map((t: any) => {
+          let index = response?.universalLessonsSeq?.indexOf(t.id);
+          return {...t, index};
+        })
+        .sort((a: any, b: any) => (a.index > b.index ? 1 : -1));
+
+      dispatch({
+        type: 'UPDATE_ROOM_MULTI',
+        payload: {
+          activeSyllabus: response,
+          lessons: lessons
+        }
+      });
+    } catch (e) {
+      logError(e, {authId: authId, email: email}, 'Dashboard @listSyllabusLessons');
+      console.error('syllabus lessons: ', e);
+    } finally {
+      setLessonLoading(false);
+    }
+  };
+
+  // ~~~~~~~~ TRIGGER LESSON LOADING ~~~~~~~ //
+  useEffect(() => {
+    if (activeRoomInfo?.activeSyllabus) {
+      listSyllabusLessons(activeRoomInfo.activeSyllabus);
+    }
+  }, [activeRoomInfo]);
+
   useEffect(() => {
     if (lessonLoading) {
       setLessonData([]);
     }
   }, [lessonLoading]);
+
+  const initUpdateActiveRoom = () => {
+    dispatch({
+      type: 'UPDATE_ACTIVEROOM',
+      payload: {
+        roomID: roomId,
+        syllabusID: roomData?.activeSyllabus?.id,
+        name: roomData.name
+      }
+    });
+  };
 
   // ~~~~~~~~~~~~~ SET SYLLABUS ~~~~~~~~~~~~ //
 
@@ -232,7 +370,7 @@ const Classroom: React.FC<ClassroomProps> = (props: ClassroomProps) => {
         setSyllabusData(foundSyllabus);
       }
     }
-  }, [state.roomData?.syllabus]);
+  }, [state.activeSyllabus]);
 
   // ~~~~~~~~~~~~~~ SETLESSONS ~~~~~~~~~~~~~ //
 
@@ -334,39 +472,43 @@ const Classroom: React.FC<ClassroomProps> = (props: ClassroomProps) => {
         graphqlOperation(mutations.updateUniversalSyllabus, {input: input2})
       );
 
-      if (classroomCurriculum) {
+      if (curriculumObj) {
         const input3 = {
-          id: classroomCurriculum.id,
-          syllabiHistory: classroomCurriculum.syllabiHistory
-            ? classroomCurriculum.syllabiHistory.includes(syllabusID)
-              ? classroomCurriculum.syllabiHistory
-              : [...classroomCurriculum.syllabiHistory, syllabusID]
+          id: curriculumObj.id,
+          syllabiHistory: curriculumObj.syllabiHistory
+            ? curriculumObj.syllabiHistory.includes(syllabusID)
+              ? curriculumObj.syllabiHistory
+              : [...curriculumObj.syllabiHistory, syllabusID]
             : [syllabusID]
         };
         const updateCurriculum: any = await API.graphql(
           graphqlOperation(mutations.updateCurriculum, {input: input3})
         );
-        setClassroomCurriculum(updateCurriculum.data.updateCurriculum);
+        setCurriculumObj(updateCurriculum.data.updateCurriculum);
       }
     } catch (e) {
       console.error('handleSyllabusActivation: ', e);
       logError(e, {authId, email}, 'Classroom @handleSyllabusActivation');
     } finally {
       setSyllabusActivating(false);
-      setActiveRoomInfo({...activeRoomInfo, activeSyllabus: syllabusID});
+      setActiveRoomInfo?.({...activeRoomInfo, activeSyllabus: syllabusID});
     }
   };
 
   const breadCrumsList = [
-    {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
+    {
+      title: BreadcrumsTitles[userLanguage]['HOME'],
+      href: '/dashboard',
+      last: false
+    },
     {
       title: BreadcrumsTitles[userLanguage]['CLASSROOM'],
-      url: `/dashboard/classroom/${roomId}`,
+      href: `/dashboard/classroom/${roomId}`,
       last: true
     }
   ];
 
-  const [listPersonData, setListPersonData] = useState([]);
+  const [listPersonData, setListPersonData] = useState<any[]>([]);
 
   const [fetchingPersonData, setFetchingPersonData] = useState(true);
 
@@ -395,11 +537,7 @@ const Classroom: React.FC<ClassroomProps> = (props: ClassroomProps) => {
     }
   };
 
-  const getLessonRating = async (
-    lessonId: string,
-    userEmail: string,
-    userAuthId: string
-  ) => {
+  const getLessonRating = async (lessonId: string, _: string, __: string) => {
     try {
       const data = listPersonData.find((pd) => pd.lessonID === lessonId);
       if (!isEmpty(data)) {
@@ -422,33 +560,17 @@ const Classroom: React.FC<ClassroomProps> = (props: ClassroomProps) => {
     }
   };
 
-  const handleLessonMutationRating = async (lessonID: string, ratingValue: string) => {
-    if (!fetchingPersonData) {
-      const id = listPersonData.find((pd) => pd.lessonID === lessonID)?.id;
-      try {
-        await API.graphql(
-          graphqlOperation(mutations.updatePersonLessonsData, {
-            input: {
-              id,
-              lessonID: lessonID,
-              ratings: ratingValue
-            }
-          })
-        );
-      } catch (error) {
-        logError(error, {authId, email}, 'Classroom @handleLessonMutationRating');
-      }
-    }
-  };
-
   useEffect(() => {
     if (listPersonData.length === 0) {
       fetchLessonPersonData();
     }
-  }, []);
+  }, [listPersonData.length]);
 
   const addTitle = (data: any[]) =>
-    data.map((item: any) => ({...item, lessonTitle: item?.lesson?.title || ''}));
+    data.map((item: any) => ({
+      ...item,
+      lessonTitle: item?.lesson?.title || ''
+    }));
 
   const withTitle = lessonData ? addTitle(lessonData) : [];
 
@@ -466,10 +588,21 @@ const Classroom: React.FC<ClassroomProps> = (props: ClassroomProps) => {
     }
   }, [homeData, activeRoomInfo]);
 
+  const _handleLessonMutationRating = (lessonID: string, ratingValue: string) => {
+    if (!fetchingPersonData) {
+      try {
+        const id = listPersonData.find((pd) => pd.lessonID === lessonID)?.id;
+        handleLessonMutationRating(id, lessonID, ratingValue);
+      } catch (error) {
+        logError(error, {authId, email}, 'Classroom @handleLessonMutationRating');
+      }
+    }
+  };
+
   return (
     <>
       <DashboardContainer
-        user={stateUser}
+        user={state.user}
         theme={theme}
         courseName={courseName}
         institutionId={activeRoomInfo?.institutionID}
@@ -514,7 +647,6 @@ const Classroom: React.FC<ClassroomProps> = (props: ClassroomProps) => {
                       syllabusActivating={syllabusActivating}
                       classRoomActiveSyllabus={activeRoomInfo?.activeSyllabus}
                       completedLessons={activeRoomInfo?.completedLessons}
-                      currentPage={currentPage}
                       curriculumName={state.roomData?.curriculum?.name}
                       handleSyllabusActivation={handleSyllabusActivation}
                       institutionId={activeRoomInfo?.institutionID}
@@ -535,7 +667,7 @@ const Classroom: React.FC<ClassroomProps> = (props: ClassroomProps) => {
                 subtitle={
                   isTeacher
                     ? classRoomDict[userLanguage]['LESSON_SUB_TITLE']
-                    : isOnDemandStudent
+                    : onDemand
                     ? classRoomDict[userLanguage]['LESSON_SUB_TITLE_ASYNC']
                     : 'To enter classroom, select open lesson for this week'
                 }
@@ -546,8 +678,8 @@ const Classroom: React.FC<ClassroomProps> = (props: ClassroomProps) => {
                   {!Boolean(activeRoomInfo) ? (
                     Array(3)
                       .fill(' ')
-                      .map((_: any, index: number) => (
-                        <Fragment key={index}>
+                      .map((_: any) => (
+                        <Fragment key={_}>
                           <ClassroomLoader />
                         </Fragment>
                       ))
@@ -564,9 +696,11 @@ const Classroom: React.FC<ClassroomProps> = (props: ClassroomProps) => {
                       }
                       lessons={withTitle}
                       syllabus={syllabusData}
-                      handleLessonMutationRating={handleLessonMutationRating}
+                      handleLessonMutationRating={_handleLessonMutationRating}
                       getLessonRating={
-                        listPersonData && listPersonData.length > 0 && getLessonRating
+                        listPersonData && listPersonData.length > 0
+                          ? getLessonRating
+                          : () => {}
                       }
                     />
                   ) : (

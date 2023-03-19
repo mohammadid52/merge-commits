@@ -29,9 +29,7 @@ import {
 import {isEmpty} from 'lodash';
 import update from 'lodash/update';
 import {nanoid} from 'nanoid';
-import React, {useEffect, useState} from 'react';
-import {FaSpinner} from 'react-icons/fa';
-import {IconContext} from 'react-icons/lib';
+import {useEffect, useState} from 'react';
 import {v4 as uuidV4} from 'uuid';
 import HeroBanner from '../../Header/HeroBanner';
 import HeaderTextBar from '../HeaderTextBar/HeaderTextBar';
@@ -57,23 +55,18 @@ export interface ViewEditMode {
 }
 
 const Anthology = ({
-  studentID,
   studentAuthID,
   studentEmail,
   studentName,
   isTeacher
 }: IAnthologyProps) => {
   // ~~~~~~~~~~ CONTEXT SEPARATION ~~~~~~~~~ //
-  // const {state, dispatch, userLanguage, theme, clientKey} = useContext(GlobalContext);
-  const gContext = useGlobalContext();
-  const state = gContext.state;
-  const dispatch = gContext.dispatch;
-  const userLanguage = gContext.userLanguage;
-  const theme = gContext.theme;
-  const clientKey = gContext.clientKey;
+  // const {state, dispatch, userLanguage, theme, clientKey} = useGlobalContext();
+  const {clientKey, state, dispatch, userLanguage} = useGlobalContext();
+
   // other
-  const {anthologyDict} = useDictionary(clientKey);
-  const themeColor = getAsset(clientKey, 'themeClassName');
+  const {anthologyDict} = useDictionary();
+
   const notebookBanner = getAsset(clientKey, 'dashboardBanner1');
 
   // ##################################################################### //
@@ -157,14 +150,13 @@ const Anthology = ({
     } catch (e) {
       //
       setStudentDataLoaded(true);
-    } finally {
     }
   };
 
   const reduceRoomExerciseData = (roomID: string) => {
     const allExerciseEntryData = allUniversalClassData.reduce((acc: any[], val) => {
       if (val.roomID === roomID) {
-        const adaptedExerciseEntries = val.exerciseData.map((exercise: any) => {
+        const adaptedExerciseEntries: any = val?.exerciseData?.map((exercise: any) => {
           if (!isEmpty(exercise?.entryData)) {
             return {
               id: exercise.id,
@@ -187,7 +179,9 @@ const Anthology = ({
               lessonName: val.lessonName
             };
           }
+          return {};
         });
+
         return [...acc, ...adaptedExerciseEntries];
       } else {
         return acc;
@@ -203,7 +197,7 @@ const Anthology = ({
 
     if (!isEmpty(selectStudentDataRecord)) {
       const newExerciseData = {
-        exerciseData: selectStudentDataRecord.exerciseData.map((exercise: any) => {
+        exerciseData: selectStudentDataRecord?.exerciseData?.map((exercise: any) => {
           if (exercise.id === journalEntryData.id) {
             return {...exercise, entryData: journalEntryData.entryData};
           } else {
@@ -221,7 +215,7 @@ const Anthology = ({
       });
 
       try {
-        let updatedStudentData: any = await API.graphql(
+        await API.graphql(
           graphqlOperation(mutations.updateUniversalLessonStudentData, {
             input: {
               id: selectStudentDataRecord.id,
@@ -238,59 +232,11 @@ const Anthology = ({
     }
   };
 
-  // const updateStudentDataForClassWork = async () => {
-  //   const selectStudentDataRecord = allUniversalClassData.find(
-  //     (record: any) => record.id === journalEntryData.recordID
-  //   );
-
-  //   if (!isEmpty(selectStudentDataRecord)) {
-  //     const newExerciseData = {
-  //       exerciseData: selectStudentDataRecord.exerciseData.map((exercise: any) => {
-  //         if (exercise.id === journalEntryData.id) {
-  //           return {...exercise, entryData: journalEntryData.entryData};
-  //         } else {
-  //           return exercise;
-  //         }
-  //       })
-  //     };
-
-  //     const mergedStudentData = allUniversalClassData.map((dataRecord: any) => {
-  //       if (dataRecord.id === selectStudentDataRecord.id) {
-  //         return {...dataRecord, exerciseData: newExerciseData.exerciseData};
-  //       } else {
-  //         return dataRecord;
-  //       }
-  //     });
-
-  //     try {
-  //       let updatedStudentData: any = await API.graphql(
-  //         graphqlOperation(mutations.updateUniversalLessonStudentData, {
-  //           input: {
-  //             id: selectStudentDataRecord.id,
-  //             exerciseData: newExerciseData.exerciseData
-  //           }
-  //         })
-  //       );
-  //       setAllUniversalClassData(mergedStudentData);
-  //     } catch (e) {
-  //       console.error('error updating writing exercise - ', e);
-  //     } finally {
-  //       //
-  //     }
-  //   }
-  // };
-
-  // ##################################################################### //
-  // ##################### CRUD JOURNAL & CLASS NOTES #################### //
-  // ##################################################################### //
-
-  // ~~~~~~~~ LIVE JOURNAL EDIT DATA ~~~~~~~ //
-
   const DEFAULT_JOURNAL_ENTRY: UniversalJournalData = {
     id: '',
-    studentID: studentAuthID,
-    studentAuthID: studentAuthID,
-    studentEmail: studentEmail,
+    studentID: studentAuthID || '',
+    studentAuthID: studentAuthID || '',
+    studentEmail: studentEmail || '',
     type: 'journal-entry',
     feedbacks: [''],
     shared: false,
@@ -308,14 +254,12 @@ const Anthology = ({
     ]
   };
 
-  const [journalEntryData, setJournalEntryData] = useState<UniversalJournalData>(
-    DEFAULT_JOURNAL_ENTRY
-  );
+  const [journalEntryData, setJournalEntryData] =
+    useState<UniversalJournalData>(DEFAULT_JOURNAL_ENTRY);
 
   // ~~~~~~~~~~~~ GET OR CREATE ~~~~~~~~~~~~ //
-  const [universalJournalDataLoaded, setUniversalJournalDataLoaded] = useState<boolean>(
-    false
-  );
+  const [universalJournalDataLoaded, setUniversalJournalDataLoaded] =
+    useState<boolean>(false);
 
   const listUniversalJournalData = async () => {
     try {
@@ -323,12 +267,6 @@ const Anthology = ({
         limit: 500,
         filter: {
           studentAuthID: {eq: studentAuthID}
-        }
-      };
-      const listFilterIfTeacher = {
-        filter: {
-          studentAuthID: {eq: studentAuthID},
-          shared: {eq: true}
         }
       };
 
@@ -347,7 +285,6 @@ const Anthology = ({
     } catch (e) {
       console.error('error listing journal data - ', e);
       setUniversalJournalDataLoaded(true);
-    } finally {
     }
   };
 
@@ -361,7 +298,7 @@ const Anthology = ({
       entryData: journalEntryData.entryData,
       fromLesson: false
     };
-    // console.log('create input - ', input);
+
     try {
       const newJournalData: any = await API.graphql(
         graphqlOperation(mutations.createUniversalJournalData, {input})
@@ -397,14 +334,14 @@ const Anthology = ({
         entryData: journalEntryData.entryData
       };
       try {
-        const res: any = await API.graphql(
+        await API.graphql(
           graphqlOperation(customMutations.updateUniversalJournalData, {
             input
           })
         );
       } catch (error) {
         // if we are getting null. it means that data is missing. so we need to create a new data object
-        const newJournalData = await createJournalData();
+        await createJournalData();
       }
 
       setAllUniversalJournalData(mergedJournalData);
@@ -420,7 +357,7 @@ const Anthology = ({
     );
 
     const newExerciseData = {
-      exerciseData: selectStudentDataRecord.exerciseData.map((exercise: any) => {
+      exerciseData: selectStudentDataRecord?.exerciseData?.map((exercise: any) => {
         if (exercise.id === journalEntryData.id) {
           return {...exercise, entryData: journalEntryData.entryData};
         } else {
@@ -444,16 +381,16 @@ const Anthology = ({
 
     try {
       const input: UpdateUniversalLessonWritingExcercisesInput = {
-        id: journalEntryData.recordID,
+        id: journalEntryData.recordID || '',
         exerciseData: newExerciseData.exerciseData
       };
       try {
-        const classDataIdx = allUniversalClassData.findIndex(
-          (d) => d.id === journalEntryData.recordID
-        );
-        const exerciseIdx = allUniversalClassData[classDataIdx].exerciseData.findIndex(
-          (d) => d.id === journalEntryData.id
-        );
+        const classDataIdx =
+          allUniversalClassData?.findIndex((d) => d.id === journalEntryData.recordID) ||
+          0;
+        const exerciseIdx = allUniversalClassData?.[
+          classDataIdx
+        ]?.exerciseData?.findIndex((d) => d?.id === journalEntryData.id);
         const updated = update(
           allUniversalClassData[classDataIdx],
           `exerciseData[${exerciseIdx}].entryData`,
@@ -463,7 +400,7 @@ const Anthology = ({
 
         setAllUniversalClassData(allUniversalClassData);
 
-        const res: any = await API.graphql(
+        await API.graphql(
           graphqlOperation(mutations.updateUniversalLessonWritingExcercises, {
             input
           })
@@ -494,7 +431,7 @@ const Anthology = ({
     );
 
     try {
-      const deleteJournalData: any = await API.graphql(
+      await API.graphql(
         graphqlOperation(mutations.deleteUniversalJournalData, {
           input: {id: viewEditMode.dataID}
         })
@@ -537,7 +474,7 @@ const Anthology = ({
     } else {
       const updatedNotesData = {
         ...journalEntryData,
-        entryData: journalEntryData.entryData.map((entryObj: any) => {
+        entryData: journalEntryData?.entryData?.map((entryObj: any) => {
           if (entryObj.type === targetType) {
             return {...entryObj, input: html};
           } else {
@@ -546,7 +483,6 @@ const Anthology = ({
         })
       };
 
-      // console.log('input - ', html);
       setJournalEntryData(updatedNotesData);
     }
   };
@@ -618,7 +554,6 @@ const Anthology = ({
             await updateStudentData();
             await updateJournalData();
           } else {
-            // await updateStudentDataForClassWork();
             await updateJournalDataForClassWork();
           }
         } else if (viewEditMode.mode === '') {
@@ -645,7 +580,7 @@ const Anthology = ({
   useEffect(() => {
     const notebookSwitchProcess = async () => {
       if (switchReady) {
-        await setSwitchReady(false);
+        setSwitchReady(false);
         setTimeout(() => {
           setSwitchReady(true);
         }, 250);
@@ -716,7 +651,7 @@ const Anthology = ({
         return {
           ...item,
           entryData:
-            item?.exerciseData[0]?.entryData?.map((entryObj: any) => {
+            item?.exerciseData?.[0]?.entryData?.map((entryObj: any) => {
               return {
                 ...entryObj,
                 type: entryObj.domID.includes('title') ? 'header' : 'content'
@@ -736,7 +671,7 @@ const Anthology = ({
 
   // ~~~~~~~~~~~~~~ ROOM CARDS ~~~~~~~~~~~~~ //
 
-  const [notebookLoaded, setNotebookLoaded] = useState<boolean>(false);
+  const [_, setNotebookLoaded] = useState<boolean>(false);
   useEffect(() => {
     if (studentDataLoaded && universalJournalDataLoaded) {
       setNotebookLoaded(true);
@@ -766,7 +701,6 @@ const Anthology = ({
       if (uniqueIds?.length > 0) {
         setRoomCardIds(uniqueIds);
       }
-    } else {
     }
   }, [allStudentData, allUniversalJournalData, classNotebook, allUniversalClassData]);
 
@@ -774,15 +708,20 @@ const Anthology = ({
 
   const [showPasscodeEntry, setShowPasscodeEntry] = useState<boolean>(false);
   const [passcodeInput, setPasscodeInput] = useState<string>('');
-  const [accessMessage, setAccessMessage] = useState<any>({message: '', textClass: ''});
+  const [accessMessage, setAccessMessage] = useState<any>({
+    message: '',
+    textClass: ''
+  });
   const [forgotPrompt, setForgotPrompt] = useState<boolean>(false);
-  const previousForgot = usePrevious(forgotPrompt);
 
   const handlePrivateSectionAccess = async () => {
     if (passcodeInput) {
       if (showPasscodeEntry) {
         try {
-          setAccessMessage({message: 'Verifying', textClass: 'text-indigo-500'});
+          setAccessMessage({
+            message: 'Verifying',
+            textClass: 'text-indigo-500'
+          });
           const personPasscode: any = await API.graphql(
             graphqlOperation(customQueries.getPersonPasscode, {
               email: state?.user?.email,
@@ -808,18 +747,11 @@ const Anthology = ({
               textClass: 'text-blue-500'
             });
             handleForgotPasscode();
-            // setTimeout(() => {
-            //   setMainSection('Private');
-            //   setSectionRoomID('private');
-            //   setSectionTitle(`Private Notebook`);
-            //   setSubSection('Journal');
-            //   setTab(0);
-            //   setShowPasscodeEntry(false);
-            //   setPasscodeInput('');
-            //   setAccessMessage({message: '', textClass: ''});
-            // }, 1000);
           } else {
-            setAccessMessage({message: 'Passcode Incorrect', textClass: 'text-red-500'});
+            setAccessMessage({
+              message: 'Passcode Incorrect',
+              textClass: 'text-red-500'
+            });
           }
         } catch (e) {
           console.error('handlePrivateSectionAccess - ', e);
@@ -835,8 +767,7 @@ const Anthology = ({
 
   // ~~~~~~~~~~~ FORGOT CODE LINK ~~~~~~~~~~ //
 
-  const handleForgotPasscode = (success?: boolean) => {
-    // history.push('/dashboard/profile/passcode');
+  const handleForgotPasscode = (__?: boolean) => {
     if (forgotPrompt === false) {
       setForgotPrompt(true);
       setAccessMessage({message: '', textClass: ''});
@@ -854,7 +785,7 @@ const Anthology = ({
     if (section === 'Class Notebook') {
       setMainSection('Class');
       setSectionRoomID(roomIdString);
-      setSectionTitle(roomName);
+      roomName && setSectionTitle(roomName);
       setSubSection('Work');
       setTab(0);
       setShowPasscodeEntry(false);
@@ -892,66 +823,65 @@ const Anthology = ({
       <div className="px-10">
         {!isTeacher && <HeaderTextBar>All your work in place</HeaderTextBar>}
 
-        {showPasscodeEntry && (
-          <div className={'z-100 flex justify-center items-center'}>
-            <Modal
-              title={`${
-                !forgotPrompt
-                  ? 'This Notebook is Passcode Protected'
-                  : 'Change Your Passcode!'
-              }`}
-              width="w-132"
-              showHeader={true}
-              showHeaderBorder={false}
-              showFooter={false}
-              scrollHidden={true}
-              closeAction={() => {
-                setShowPasscodeEntry(false);
-                setForgotPrompt(false);
-                setAccessMessage({message: ''});
-              }}>
-              <div className=" flex justify-center">
-                {!forgotPrompt ? (
-                  <div>
-                    <FormInput
-                      dataCy="notebook-passcode-input"
-                      value={passcodeInput}
-                      type={'password'}
-                      onChange={(e) => {
-                        setPasscodeInput(e.target.value);
-                      }}
-                      id="passcode"
-                      name="passcode"
-                      label={'Enter Your Passcode:'}
-                      placeHolder={'****'}
-                      className={`w-full my-2`}
-                      isRequired
-                    />
-                    {Boolean(accessMessage.message) && (
-                      <Error message={accessMessage.message} />
-                    )}
-                    <Buttons
-                      dataCy="notebook-passcode-submit"
-                      label={'Submit'}
-                      btnClass="w-full mt-2"
-                      onClick={handlePrivateSectionAccess}
-                    />
-                    <p
-                      onClick={() => handleForgotPasscode()}
-                      className={`cursor-pointer hover:underline hover:iconoclast:text-500 hover:curate:text-500 mt-4 mb-2 text-center text-xs iconoclast:text-main curate:text-main`}>
-                      Forgot Passcode?
-                    </p>
-                  </div>
-                ) : (
-                  <ChangePasscode
-                    fromWhere={'notebook'}
-                    handleForgotPasscode={handleForgotPasscode}
+        <div className={'z-100 flex justify-center items-center'}>
+          <Modal
+            open={showPasscodeEntry}
+            title={`${
+              !forgotPrompt
+                ? 'This Notebook is Passcode Protected'
+                : 'Change Your Passcode!'
+            }`}
+            width="w-132"
+            showHeader={true}
+            showHeaderBorder={false}
+            showFooter={false}
+            scrollHidden={true}
+            closeAction={() => {
+              setShowPasscodeEntry(false);
+              setForgotPrompt(false);
+              setAccessMessage({message: ''});
+            }}>
+            <div className=" flex justify-center">
+              {!forgotPrompt ? (
+                <div>
+                  <FormInput
+                    dataCy="notebook-passcode-input"
+                    value={passcodeInput}
+                    type={'password'}
+                    onChange={(e) => {
+                      setPasscodeInput(e.target.value);
+                    }}
+                    id="passcode"
+                    name="passcode"
+                    label={'Enter Your Passcode:'}
+                    placeHolder={'****'}
+                    className={`w-full my-2`}
+                    isRequired
                   />
-                )}
-              </div>
-            </Modal>
-          </div>
-        )}
+                  {Boolean(accessMessage.message) && (
+                    <Error message={accessMessage.message} />
+                  )}
+                  <Buttons
+                    dataCy="notebook-passcode-submit"
+                    label={'Submit'}
+                    btnClass="w-full mt-2"
+                    onClick={handlePrivateSectionAccess}
+                  />
+                  <p
+                    onClick={() => handleForgotPasscode()}
+                    className={`cursor-pointer hover:underline hover:iconoclast:text-500 hover:curate:text-500 mt-4 mb-2 text-center text-xs iconoclast:text-main curate:text-main`}>
+                    Forgot Passcode?
+                  </p>
+                </div>
+              ) : (
+                <ChangePasscode
+                  fromWhere={'notebook'}
+                  handleForgotPasscode={handleForgotPasscode}
+                />
+              )}
+            </div>
+          </Modal>
+        </div>
 
         <div className="mx-auto md:max-w-none lg:max-w-192 2xl:max-w-256">
           <div className="my-8">
@@ -971,7 +901,9 @@ const Anthology = ({
                       Go back to classroom
                     </a>
                   </div>
-                ) : null
+                ) : (
+                  false
+                )
               }
               fontStyle="semibold"
               extraContainerClass="px-6"
@@ -980,17 +912,7 @@ const Anthology = ({
             />
             <EmptyViewWrapper
               wrapperClass={`min-h-24 pb-4 overflow-hidden bg-white rounded-b-lg shadow mb-4`}
-              revealContents={true}
-              fallbackContents={
-                <IconContext.Provider
-                  value={{
-                    size: '1.2rem',
-                    style: {},
-                    className: `relative mr-4 animate-spin ${theme.textColor[themeColor]}`
-                  }}>
-                  <FaSpinner />
-                </IconContext.Provider>
-              }>
+              revealContents={true}>
               <RoomView
                 studentAuthId={studentAuthID}
                 studentEmail={studentEmail}

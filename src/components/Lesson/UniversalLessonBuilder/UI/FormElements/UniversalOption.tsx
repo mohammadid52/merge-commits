@@ -1,19 +1,20 @@
-import {isEmpty} from '@aws-amplify/core';
+import {isEmpty} from 'lodash';
+
+import {useGlobalContext} from '@contexts/GlobalContext';
 import {Switch} from '@headlessui/react';
-import {filter, map, remove, update} from 'lodash';
-import React, {useContext, useEffect, useState} from 'react';
-import {v4 as uuidv4} from 'uuid';
 import {getAsset} from 'assets';
-import {GlobalContext} from 'contexts/GlobalContext';
-import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
-import {EditQuestionModalDict} from 'dictionary/dictionary.iconoclast';
-import {optionResponses} from 'utilities/staticData';
-import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
 import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
+import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
+import {EditQuestionModalDict} from 'dictionary/dictionary.iconoclast';
+import {filter, map, remove, update} from 'lodash';
+import {useEffect, useState} from 'react';
+import {optionResponses} from 'utilities/staticData';
+import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
+import {v4 as uuidv4} from 'uuid';
 import {FORM_TYPES, SELECT_MANY, SELECT_ONE} from '../common/constants';
 import AnimatedContainer from '../UIComponents/Tabs/AnimatedContainer';
-import {useTabs, Tabs3} from '../UIComponents/Tabs/Tabs';
+import {Tabs3, useTabs} from '../UIComponents/Tabs/Tabs';
 import {classNames} from './TextInput';
 
 const InputContainer = ({
@@ -300,7 +301,7 @@ const UniversalOption = ({
     clientKey,
     userLanguage,
     state: {lessonPage: {theme: lessonPageTheme = 'dark', themeTextColor = ''} = {}}
-  } = useContext(GlobalContext);
+  } = useGlobalContext();
   const themeColor = getAsset(clientKey, 'themeClassName');
   const {suggestionModal, setSuggestionModal} = useULBContext();
 
@@ -400,7 +401,11 @@ const UniversalOption = ({
 
   const onOptionAdd = (idx: number, idx2: number) => {
     const currentOptions = [...list[idx].options];
-    const newItem = {label: (idx2 + 2).toString(), text: '', id: uuidv4().toString()};
+    const newItem = {
+      label: (idx2 + 2).toString(),
+      text: '',
+      id: uuidv4().toString()
+    };
     currentOptions.splice(idx2 + 1, 0, newItem);
     let updatedOptions = currentOptions.map((item, i) => {
       if (i > idx2 + 1) {
@@ -489,7 +494,7 @@ const UniversalOption = ({
     const {
       theme,
       state: {lessonPage: {theme: lessonPageTheme = 'dark', themeTextColor = ''} = {}}
-    } = useContext(GlobalContext);
+    } = useGlobalContext();
 
     const themePlaceholderColor =
       lessonPageTheme === 'light' ? 'placeholder-gray-800' : '';
@@ -580,6 +585,7 @@ const UniversalOption = ({
         </div>
       );
     }
+    return <div className="w-auto hidden" />;
   };
 
   const filterCompleteQuestions = filter(list, (q) => q.label.length > 0);
@@ -644,15 +650,17 @@ const UniversalOption = ({
                   See the preview
                 </button>
               </div>
-              <div className="flex items-center w-auto">
+              <div className="flex items-center justify-end w-auto gap-4">
                 <Buttons
                   btnClass="py-1 px-4 text-xs mr-2"
+                  size="middle"
                   label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
                   onClick={askBeforeClose}
                   transparent
                 />
                 <Buttons
                   btnClass="py-1 px-8 text-xs ml-2"
+                  size="middle"
                   label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
                   onClick={onRadioCreate}
                 />

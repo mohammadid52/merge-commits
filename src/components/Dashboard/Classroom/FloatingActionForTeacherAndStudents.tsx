@@ -78,16 +78,10 @@ const Item = ({
 }) => {
   const [showingDetails, setShowingDetails] = useState(false);
 
-  const [contentHeight, setContentHeight] = useState(0);
-  const BUFFER_HEIGHT = 20;
-
   const onShowDetails = (e: any) => {
     e.stopPropagation();
     if (showTeacherDetails && !showingDetails) {
       setShowingDetails(true);
-
-      const el = document.querySelector('.teacher-details');
-      setContentHeight(el.clientHeight + BUFFER_HEIGHT);
     } else {
       setShowingDetails(false);
     }
@@ -260,15 +254,16 @@ const FloatingAction = ({
   };
 
   const coTeacherListWithImages = () =>
-    getCoTeacherList().length > 0 &&
-    Promise.all(
-      getCoTeacherList().map(async (teacherObj: any, idx: number) => {
-        return {
-          ...teacherObj,
-          image: await (teacherObj.image ? getImageURL(teacherObj.image) : null)
-        };
-      })
-    );
+    getCoTeacherList().length > 0
+      ? Promise.all(
+          getCoTeacherList().map(async (teacherObj: any) => {
+            return {
+              ...teacherObj,
+              image: await (teacherObj.image ? getImageURL(teacherObj.image) : null)
+            };
+          })
+        )
+      : [];
 
   const filterForCurrentClassroom = () => {
     if (homeData && homeData.length > 0) {
@@ -287,11 +282,11 @@ const FloatingAction = ({
         });
 
         result = result.map((d) => {
-          let coTeachersList = d.class.rooms.items[0].coTeachers.items.filter(
+          let coTeachersList = d?.class?.rooms?.items[0]?.coTeachers?.items?.filter(
             (c: {teacher: {status: PersonStatus}}) =>
-              c.teacher.status !== PersonStatus.INACTIVE &&
+              c?.teacher?.status !== PersonStatus.INACTIVE &&
               (d?.class?.room?.status || 'ACTIVE') === RoomStatus.ACTIVE &&
-              c.teacher.status !== PersonStatus.TRAINING
+              c?.teacher?.status !== PersonStatus.TRAINING
           );
 
           return {
@@ -302,7 +297,7 @@ const FloatingAction = ({
                   {
                     ...d.class.rooms.items[0],
                     coTeachers: {
-                      items: coTeachersList
+                      items: coTeachersList || []
                     }
                   }
                 ]
@@ -362,21 +357,21 @@ const FloatingAction = ({
       : [];
 
   const studentsListWithImages = () =>
-    homeData &&
-    homeData.length > 0 &&
-    Promise.all(
-      getStudentsList().map(async (studentObj: any, idx: number) => {
-        return {
-          ...studentObj,
-          student: {
-            ...studentObj?.student,
-            image: await (studentObj?.student?.image
-              ? getImageURL(studentObj?.student?.image)
-              : null)
-          }
-        };
-      })
-    );
+    homeData && homeData.length > 0
+      ? Promise.all(
+          getStudentsList().map(async (studentObj: any) => {
+            return {
+              ...studentObj,
+              student: {
+                ...studentObj?.student,
+                image: await (studentObj?.student?.image
+                  ? getImageURL(studentObj?.student?.image)
+                  : null)
+              }
+            };
+          })
+        )
+      : [];
 
   const {
     state: {user}
@@ -442,7 +437,7 @@ const FloatingAction = ({
       const studentList = await studentsListWithImages();
       setStudentsList(studentList);
     } else {
-      setTeacherList(await getTeacherList());
+      setTeacherList(getTeacherList());
 
       setCoTeachersList(await coTeacherListWithImages());
     }

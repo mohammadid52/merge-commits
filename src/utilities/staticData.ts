@@ -1,3 +1,4 @@
+import {TeachingStyle} from 'API';
 import {v4 as uuidv4} from 'uuid';
 
 export const emojiList = [
@@ -5,61 +6,76 @@ export const emojiList = [
     emoji: '😠',
     link: 'angry',
     id: uuidv4(),
-    name: 'Awful'
+    label: 'Awful'
   },
   {
     emoji: '😞',
     link: 'sad',
     id: uuidv4(),
-    name: 'Bad'
+    label: 'Bad'
   },
   {
     emoji: '😐',
     link: 'neutral',
     id: uuidv4(),
-    name: 'Okay'
+    label: 'Okay'
   },
 
   {
     emoji: '🙂',
     link: 'happy',
     id: uuidv4(),
-    name: 'Good'
+    label: 'Good'
   },
   {
     emoji: '🤩',
     link: 'excited',
     id: uuidv4(),
-    name: 'Great'
+    label: 'Great'
   }
 ];
 
 export const languageList = [
-  {id: '1', name: 'English', value: 'EN'},
-  {id: '2', name: 'Spanish', value: 'ES'}
+  {label: 'English', value: 'EN'},
+  {label: 'Spanish', value: 'ES'}
 ];
 
 export const lessonTypeList: any = [
-  {id: '1', name: 'Lesson', value: 'lesson'},
-  {id: '2', name: 'Assessment', value: 'assessment'},
-  {id: '3', name: 'Survey', value: 'survey'}
+  {id: '1', label: 'Lesson', value: 'lesson'},
+  {id: '2', label: 'Assessment', value: 'assessment'},
+  {id: '3', label: 'Survey', value: 'survey'}
+];
+
+export const schooltypeList = [
+  {id: 0, value: 'In-School Programming', label: 'In-School Programming'},
+  {
+    id: 1,
+    value: 'After-School Programming',
+    label: 'After-School Programming'
+  },
+  {
+    id: 2,
+    value: 'Summer Intensives (2 week programming)',
+    label: 'Summer Intensives (2 week programming)'
+  },
+  {id: 3, value: "Writer's Retreat", label: "Writer's Retreat"}
 ];
 
 export const tinting: any = [
-  {id: '1', name: 'None'},
-  {id: '2', name: 'Light'},
-  {id: '3', name: 'Medium'},
-  {id: '4', name: 'Dark'}
+  {id: '1', label: 'None'},
+  {id: '2', label: 'Light'},
+  {id: '3', label: 'Medium'},
+  {id: '4', label: 'Dark'}
 ];
 export const blur: any = [
-  {id: '1', name: 'Low'},
-  {id: '2', name: 'Medium'},
-  {id: '3', name: 'High'}
+  {id: '1', label: 'Low'},
+  {id: '2', label: 'Medium'},
+  {id: '3', label: 'High'}
 ];
 export const scrim: any = [
-  {id: '1', name: 'Bottom'},
-  {id: '2', name: 'Center'},
-  {id: '3', name: 'Top'}
+  {id: '1', label: 'Bottom'},
+  {id: '2', label: 'Center'},
+  {id: '3', label: 'Top'}
 ];
 
 /**
@@ -181,301 +197,301 @@ export const estimatedTimeList = Array(30)
   .fill({})
   .map((_, index: number) => ({
     id: index + 1,
-    name: `${index + 1} min`,
-    value: index + 1
+    label: `${index + 1} min`,
+    value: (index + 1).toString()
   }));
 
 export const statusList = [
-  {id: 1, name: 'ACTIVE', value: 'ACTIVE'},
-  {id: 2, name: 'INACTIVE', value: 'INACTIVE'},
-  {id: 3, name: 'TRAINING', value: 'TRAINING'}
+  {id: 1, label: 'ACTIVE', value: 'ACTIVE'},
+  {id: 2, label: 'INACTIVE', value: 'INACTIVE'},
+  {id: 3, label: 'TRAINING', value: 'TRAINING'}
 ];
 
 export const statesList = [
   {
     id: 1,
-    name: 'Alabama',
+    label: 'Alabama',
     value: 'Alabama'
   },
   {
     id: 2,
-    name: 'Alaska',
+    label: 'Alaska',
     value: 'Alaska'
   },
   {
     id: 4,
-    name: 'Arizona',
+    label: 'Arizona',
     value: 'Arizona'
   },
   {
     id: 5,
-    name: 'Arkansas',
+    label: 'Arkansas',
     value: 'Arkansas'
   },
   {
     id: 6,
-    name: 'California',
+    label: 'California',
     value: 'California'
   },
   {
     id: 8,
-    name: 'Colorado',
+    label: 'Colorado',
     value: 'Colorado'
   },
   {
     id: 9,
-    name: 'Connecticut',
+    label: 'Connecticut',
     value: 'Connecticut'
   },
   {
     id: 10,
-    name: 'Delaware',
+    label: 'Delaware',
     value: 'Delaware'
   },
   {
     id: 11,
-    name: 'District of Columbia',
+    label: 'District of Columbia',
     value: 'District of Columbia'
   },
   {
     id: 12,
-    name: 'Florida',
+    label: 'Florida',
     value: 'Florida'
   },
   {
     id: 13,
-    name: 'Georgia',
+    label: 'Georgia',
     value: 'Georgia'
   },
   {
     id: 15,
-    name: 'Hawaii',
+    label: 'Hawaii',
     value: 'Hawaii'
   },
   {
     id: 16,
-    name: 'Idaho',
+    label: 'Idaho',
     value: 'Idaho'
   },
   {
     id: 17,
-    name: 'Illinois',
+    label: 'Illinois',
     value: 'Illinois'
   },
   {
     id: 18,
-    name: 'Indiana',
+    label: 'Indiana',
     value: 'Indiana'
   },
   {
     id: 19,
-    name: 'Iowa',
+    label: 'Iowa',
     value: 'Iowa'
   },
   {
     id: 20,
-    name: 'Kansas',
+    label: 'Kansas',
     value: 'Kansas'
   },
   {
     id: 21,
-    name: 'Kentucky',
+    label: 'Kentucky',
     value: 'Kentucky'
   },
   {
     id: 22,
-    name: 'Louisiana',
+    label: 'Louisiana',
     value: 'Louisiana'
   },
   {
     id: 23,
-    name: 'Maine',
+    label: 'Maine',
     value: 'Maine'
   },
   {
     id: 24,
-    name: 'Maryland',
+    label: 'Maryland',
     value: 'Maryland'
   },
   {
     id: 25,
-    name: 'Massachusetts',
+    label: 'Massachusetts',
     value: 'Massachusetts'
   },
   {
     id: 26,
-    name: 'Michigan',
+    label: 'Michigan',
     value: 'Michigan'
   },
   {
     id: 27,
-    name: 'Minnesota',
+    label: 'Minnesota',
     value: 'Minnesota'
   },
   {
     id: 28,
-    name: 'Mississippi',
+    label: 'Mississippi',
     value: 'Mississippi'
   },
   {
     id: 29,
-    name: 'Missouri',
+    label: 'Missouri',
     value: 'Missouri'
   },
   {
     id: 30,
-    name: 'Montana',
+    label: 'Montana',
     value: 'Montana'
   },
   {
     id: 31,
-    name: 'Nebraska',
+    label: 'Nebraska',
     value: 'Nebraska'
   },
   {
     id: 32,
-    name: 'Nevada',
+    label: 'Nevada',
     value: 'Nevada'
   },
   {
     id: 33,
-    name: 'New Hampshire',
+    label: 'New Hampshire',
     value: 'New Hampshire'
   },
   {
     id: 34,
-    name: 'New Jersey',
+    label: 'New Jersey',
     value: 'New Jersey'
   },
   {
     id: 35,
-    name: 'New Mexico',
+    label: 'New Mexico',
     value: 'New Mexico'
   },
   {
     id: 36,
-    name: 'New York',
+    label: 'New York',
     value: 'New York'
   },
   {
     id: 37,
-    name: 'North Carolina',
+    label: 'North Carolina',
     value: 'North Carolina'
   },
   {
     id: 38,
-    name: 'North Dakota',
+    label: 'North Dakota',
     value: 'North Dakota'
   },
   {
     id: 39,
-    name: 'Ohio',
+    label: 'Ohio',
     value: 'Ohio'
   },
   {
     id: 40,
-    name: 'Oklahoma',
+    label: 'Oklahoma',
     value: 'Oklahoma'
   },
   {
     id: 41,
-    name: 'Oregon',
+    label: 'Oregon',
     value: 'Oregon'
   },
   {
     id: 42,
-    name: 'Pennsylvania',
+    label: 'Pennsylvania',
     value: 'Pennsylvania'
   },
   {
     id: 72,
-    name: 'Puerto Rico',
+    label: 'Puerto Rico',
     value: 'Puerto Rico'
   },
   {
     id: 44,
-    name: 'Rhode Island',
+    label: 'Rhode Island',
     value: 'Rhode Island'
   },
   {
     id: 45,
-    name: 'South Carolina',
+    label: 'South Carolina',
     value: 'South Carolina'
   },
   {
     id: 46,
-    name: 'South Dakota',
+    label: 'South Dakota',
     value: 'South Dakota'
   },
   {
     id: 47,
-    name: 'Tennessee',
+    label: 'Tennessee',
     value: 'Tennessee'
   },
   {
     id: 48,
-    name: 'Texas',
+    label: 'Texas',
     value: 'Texas'
   },
   {
     id: 49,
-    name: 'Utah',
+    label: 'Utah',
     value: 'Utah'
   },
   {
     id: 50,
-    name: 'Vermont',
+    label: 'Vermont',
     value: 'Vermont'
   },
   {
     id: 51,
-    name: 'Virginia',
+    label: 'Virginia',
     value: 'Virginia'
   },
   {
     id: 78,
-    name: 'Virgin Islands',
+    label: 'Virgin Islands',
     value: 'Virgin Islands'
   },
   {
     id: 53,
-    name: 'Washington',
+    label: 'Washington',
     value: 'Washington'
   },
   {
     id: 54,
-    name: 'West Virginia',
+    label: 'West Virginia',
     value: 'West Virginia'
   },
   {
     id: 55,
-    name: 'Wisconsin',
+    label: 'Wisconsin',
     value: 'Wisconsin'
   },
   {
     id: 56,
-    name: 'Wyoming',
+    label: 'Wyoming',
     value: 'Wyoming'
   }
 ];
 
 export const groupOptions: any = [
-  {id: 1, name: 'Blue'},
-  {id: 2, name: 'Black'},
-  {id: 3, name: 'Red'}
+  {id: 1, label: 'Blue'},
+  {id: 2, label: 'Black'},
+  {id: 3, label: 'Red'}
 ];
 
 export const frequencyOptions: any = [
-  {id: 1, name: 'One Time'},
-  {id: 2, name: 'Daily'},
-  {id: 3, name: 'Weekly'},
-  {id: 4, name: 'Bi-weekly'},
-  {id: 9, name: 'M/W/F'},
-  {id: 10, name: 'Tu/Th'},
-  {id: 5, name: 'Monthly'},
-  {id: 6, name: 'Trimestral'},
-  {id: 7, name: 'Quarterly'},
-  {id: 8, name: 'Semestral'}
+  {id: 1, label: 'One Time'},
+  {id: 2, label: 'Daily'},
+  {id: 3, label: 'Weekly'},
+  {id: 4, label: 'Bi-weekly'},
+  {id: 9, label: 'M/W/F'},
+  {id: 10, label: 'Tu/Th'},
+  {id: 5, label: 'Monthly'},
+  {id: 6, label: 'Trimestral'},
+  {id: 7, label: 'Quarterly'},
+  {id: 8, label: 'Semestral'}
 ];
 
 export const frequencyMapping: {[key: string]: {unit: any; step: number}} = {
@@ -491,28 +507,59 @@ export const frequencyMapping: {[key: string]: {unit: any; step: number}} = {
 };
 
 export const weekdaysOption: any = [
-  {id: 1, name: 'Monday'},
-  {id: 2, name: 'Tuesday'},
-  {id: 3, name: 'Wednesday'},
-  {id: 4, name: 'Thursday'},
-  {id: 5, name: 'Friday'}
+  {id: 1, label: 'Monday'},
+  {id: 2, label: 'Tuesday'},
+  {id: 3, label: 'Wednesday'},
+  {id: 4, label: 'Thursday'},
+  {id: 5, label: 'Friday'}
 ];
 
 export const targetAudienceForIconoclast = [
-  {id: 1, name: 'Middle School'},
-  {id: 2, name: 'High School'},
-  {id: 3, name: 'All'}
+  {id: 1, label: 'Middle School', value: 'Middle School'},
+  {id: 2, label: 'High School', value: 'High School'},
+  {id: 3, label: 'All', value: 'All'}
 ];
 
 export const periodOptions = [
-  {id: 1, name: '.25'},
-  {id: 2, name: '.33'},
-  {id: 3, name: '.5'},
-  {id: 4, name: '.66'},
-  {id: 5, name: '.75'},
-  {id: 6, name: '1'},
-  {id: 7, name: '2'},
-  {id: 8, name: '3'},
-  {id: 9, name: '4'},
-  {id: 10, name: '5'}
+  {id: 1, label: '.25', value: '.25'},
+  {id: 2, label: '.33', value: '.33'},
+  {id: 3, label: '.5', value: '.5'},
+  {id: 4, label: '.66', value: '.66'},
+  {id: 5, label: '.75', value: '.75'},
+  {id: 6, label: '1', value: '1'},
+  {id: 7, label: '2', value: '2'},
+  {id: 8, label: '3', value: '3'},
+  {id: 9, label: '4', value: '4'},
+  {id: 10, label: '5', value: '5'}
+];
+
+export const typeList = [
+  {
+    id: 1,
+    label: 'ONLINE',
+    value: 'ONLINE'
+  },
+  {
+    id: 2,
+    label: 'TRADITIONAL',
+    value: 'TRADITIONAL'
+  }
+];
+
+export const methods = [
+  {
+    id: 1,
+    label: 'Performer',
+    value: TeachingStyle.PERFORMER
+  },
+  {
+    id: 2,
+    label: 'Academic',
+    value: TeachingStyle.ACADEMIC
+  }
+];
+
+export const scopeList = [
+  {id: 0, label: 'Public', value: 'public'},
+  {id: 1, label: 'Private', value: 'private'}
 ];

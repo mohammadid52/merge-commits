@@ -1,4 +1,4 @@
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import {API, graphqlOperation} from 'aws-amplify';
 import AddButton from '@components/Atoms/Buttons/AddButton';
 import PageWrapper from '@components/Atoms/PageWrapper';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
@@ -37,7 +37,7 @@ const InstitutionLookup: React.FC = () => {
   const {InstitutionDict, BreadcrumsTitles} = useDictionary();
   const bannerImage = getAsset(clientKey, 'dashboardBanner1');
   const [status, setStatus] = useState('');
-  const [institutionsData, setInstitutionsData] = useState([]);
+  const [institutionsData, setInstitutionsData] = useState<any[]>([]);
 
   const [totalInstNum, setTotalInstNum] = useState(0);
   const [showAlert, setShowAlert] = useState(false);
@@ -58,31 +58,24 @@ const InstitutionLookup: React.FC = () => {
     value: '',
     isActive: false
   });
-  const [sortingType, setSortingType] = useState({
+  const [sortingType] = useState({
     value: '',
     name: '',
     asc: true
   });
 
   const breadCrumbsList = [
-    {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
+    {
+      title: BreadcrumsTitles[userLanguage]['HOME'],
+      href: '/dashboard',
+      last: false
+    },
     {
       title: BreadcrumsTitles[userLanguage]['INSTITUTION_MANAGEMENT'],
-      url: `${match.url}`,
+      href: `${match.url}`,
       last: true
     }
   ];
-
-  // const sortByList = [
-  //   {id: 1, name: `${InstitutionDict[userLanguage]['TABLE']['NAME']}`, value: 'name'},
-  //   {id: 2, name: `${InstitutionDict[userLanguage]['TABLE']['TYPE']}`, value: 'type'},
-  //   {
-  //     id: 3,
-  //     name: `${InstitutionDict[userLanguage]['TABLE']['WEBSITE']}`,
-  //     value: 'website'
-  //   },
-  //   {id: 4, name: `${InstitutionDict[userLanguage]['TABLE']['CONTACT']}`, value: 'phone'}
-  // ];
 
   const addNewInstitution = () => {
     history.push(`${match.url}/add`);
@@ -92,7 +85,9 @@ const InstitutionLookup: React.FC = () => {
 
   async function fetchInstListForAdmin() {
     const fetchInstitutionData: any = await API.graphql(
-      graphqlOperation(customQueries.getInstListForAdmin, {filter: withZoiqFilter({})})
+      graphqlOperation(customQueries.getInstListForAdmin, {
+        filter: withZoiqFilter({})
+      })
     );
     return fetchInstitutionData.data?.listInstitutions?.items || [];
   }
@@ -177,13 +172,6 @@ const InstitutionLookup: React.FC = () => {
     }
   };
 
-  // const toggleSortDimension = () => {
-  //   setSortingType({
-  //     ...sortingType,
-  //     asc: !sortingType.asc
-  //   });
-  // };
-
   const removeSearchAction = () => {
     resetPagination();
     setSearchInput({value: '', isActive: false});
@@ -198,14 +186,6 @@ const InstitutionLookup: React.FC = () => {
     );
     setInstitutionsData(newInstList);
   };
-
-  // const setSortingValue = (str: string, name: string) => {
-  //   setSortingType({
-  //     ...sortingType,
-  //     value: str,
-  //     name: name
-  //   });
-  // };
 
   useEffect(() => {
     if (alert) {

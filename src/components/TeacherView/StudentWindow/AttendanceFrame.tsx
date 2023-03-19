@@ -1,12 +1,8 @@
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import {getAsset} from 'assets';
-import {GlobalContext} from 'contexts/GlobalContext';
+import {API, graphqlOperation} from 'aws-amplify';
 import * as customQueries from 'customGraphql/customQueries';
 import orderBy from 'lodash/orderBy';
-import React, {forwardRef, useContext, useEffect, useRef, useState} from 'react';
-import {IconContext} from 'react-icons';
+import {useEffect, useRef, useState} from 'react';
 import {FaArrowDown, FaArrowUp} from 'react-icons/fa';
-import {IoIosCalendar} from 'react-icons/io';
 
 import Modal from 'atoms/Modal';
 import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
@@ -32,14 +28,11 @@ const Attendance = ({
   selectedRoomId,
   role,
   visible,
-  rightView,
+
   setRightView,
   studentID,
   roster
 }: IAttendanceProps) => {
-  const {theme, clientKey} = useContext(GlobalContext);
-  const themeColor = getAsset(clientKey, 'themeClassName');
-
   // ##################################################################### //
   // ############################ LOADING USER ########################### //
   // ##################################################################### //
@@ -61,7 +54,7 @@ const Attendance = ({
   // ##################################################################### //
   const [loading, setLoading] = useState<boolean>(false);
   const [attendanceList, setAttendanceList] = useState<any>([]);
-  const [date, setDate] = useState(null);
+  const [date, setDate] = useState<Date | null>(null);
   const [sortConfig, setSortConfig] = useState<{
     fieldName: string;
     order: boolean | 'desc' | 'asc';
@@ -169,30 +162,10 @@ const Attendance = ({
     );
   };
 
-  const DateCustomInput = forwardRef(({value, onClick, ...rest}: any, ref: any) => (
-    <div
-      className={`flex w-auto py-3 px-4 rounded  ${theme.formSelect} ${theme.outlineNone}`}
-      onClick={onClick}>
-      <span className="w-6 mr-4 cursor-pointer">
-        <IconContext.Provider
-          value={{size: '1.5rem', color: theme.iconColor[themeColor]}}>
-          <IoIosCalendar />
-        </IconContext.Provider>
-      </span>
-      <input
-        placeholder={'Search by date...'}
-        id="searchInput"
-        className={`${theme.outlineNone}`}
-        value={value}
-        {...rest}
-      />
-    </div>
-  ));
-
   // ##################################################################### //
   // ########################### ANIMATION REF ########################### //
   // ##################################################################### //
-  const frameRef = useRef();
+  const frameRef = useRef<any>(null);
 
   // ##################################################################### //
   // ############################# RESPONSIVE ############################ //
@@ -210,28 +183,27 @@ const Attendance = ({
         width: breakpoint === 'xl' || breakpoint === '2xl' ? '75%' : 'calc(100% - 36px)'
       }}
       className={`absolute mr-0 top-0 right-0 h-full flex flex-col items-center z-50`}>
-      {visible && (
-        <Modal
-          customTitle={user ? `Attendance for ${name}` : 'Attendance'}
-          showHeader={true}
-          showHeaderBorder={false}
-          showFooter={false}
-          scrollHidden={true}
-          closeAction={() => setRightView({view: 'lesson', option: ''})}
-          position={'absolute'}>
-          <AttendanceList
-            loading={loading}
-            attendanceList={attendanceList}
-            nextToken={nextToken}
-            role={role}
-            onLoadMore={onLoadMore}
-            handleDateChange={handleDateChange}
-            handleOrderBy={handleOrderBy}
-            withOrderBy={withOrderBy}
-            sortConfig={sortConfig}
-          />
-        </Modal>
-      )}
+      <Modal
+        open={Boolean(visible)}
+        customTitle={user ? `Attendance for ${name}` : 'Attendance'}
+        showHeader={true}
+        showHeaderBorder={false}
+        showFooter={false}
+        scrollHidden={true}
+        closeAction={() => setRightView({view: 'lesson', option: ''})}
+        position={'absolute'}>
+        <AttendanceList
+          loading={loading}
+          attendanceList={attendanceList}
+          nextToken={nextToken}
+          role={role}
+          onLoadMore={onLoadMore}
+          handleDateChange={handleDateChange}
+          handleOrderBy={handleOrderBy}
+          withOrderBy={withOrderBy}
+          sortConfig={sortConfig}
+        />
+      </Modal>
       ;
     </div>
   );

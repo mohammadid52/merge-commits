@@ -1,12 +1,12 @@
-import ToggleForModal from 'components/Lesson/UniversalLessonBuilder/UI/common/ToggleForModals';
-import {map, remove, update} from 'lodash';
-import React, {useContext, useEffect} from 'react';
-import {v4 as uuidv4} from 'uuid';
-import {GlobalContext} from 'contexts/GlobalContext';
-import {EditQuestionModalDict} from 'dictionary/dictionary.iconoclast';
-import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
 import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
+import ToggleForModal from 'components/Lesson/UniversalLessonBuilder/UI/common/ToggleForModals';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import {EditQuestionModalDict} from 'dictionary/dictionary.iconoclast';
+import {map, remove, update} from 'lodash';
+import {useEffect} from 'react';
+import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
+import {v4 as uuidv4} from 'uuid';
 import {
   ATTACHMENTS,
   DATE_PICKER,
@@ -38,7 +38,7 @@ const UniversalInput = (props: any) => {
     inputObj
   } = props;
 
-  const {userLanguage} = useContext(GlobalContext);
+  const {userLanguage} = useGlobalContext();
 
   useEffect(() => {
     if (inputObj && inputObj.length > 0) {
@@ -239,15 +239,17 @@ const UniversalInput = (props: any) => {
         ) : (
           <div className="w-auto" />
         )}
-        <div className="flex items-center w-auto">
+        <div className="flex items-center justify-end w-auto gap-4">
           <Buttons
             btnClass="py-1 px-4 text-xs mr-2"
+            size="middle"
             label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
             onClick={askBeforeClose}
             transparent
           />
           <Buttons
             btnClass="py-1 px-8 text-xs ml-2"
+            size="middle"
             label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
             onClick={onFormCreate}
           />

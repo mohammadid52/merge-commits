@@ -1,17 +1,17 @@
+import SingleNote from '@UlbBlocks/Notes/SingleNoteForm';
+import PreviewLayout from '@UlbUI/Preview/Layout/PreviewLayout';
 import Buttons from 'atoms/Buttons';
 import NotesBlock from 'components/Lesson/UniversalLessonBlockComponents/Blocks/Notes/NotesBlock';
 import {FORM_TYPES} from 'components/Lesson/UniversalLessonBuilder/UI/common/constants';
-import {GlobalContext} from 'contexts/GlobalContext';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import {IOnChange} from 'interfaces/index';
 import {IContentTypeComponentProps} from 'interfaces/UniversalLessonBuilderInterfaces';
+import {map, remove, update} from 'lodash';
+import {useEffect, useState} from 'react';
 import AnimatedContainer from 'uiComponents/Tabs/AnimatedContainer';
 import {Tabs3, useTabs} from 'uiComponents/Tabs/Tabs';
-import SingleNote from '@UlbBlocks/Notes/SingleNoteForm';
-import PreviewLayout from '@UlbUI/Preview/Layout/PreviewLayout';
 import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
-import {map, remove, update} from 'lodash';
-import React, {useContext, useEffect, useState} from 'react';
 import {v4 as uuidv4} from 'uuid';
 
 interface NoteModalProps extends IContentTypeComponentProps {
@@ -29,8 +29,8 @@ const NotesModalDialog = (props: NoteModalProps) => {
     setUnsavedChanges
   } = props;
 
-  const {userLanguage, clientKey} = useContext(GlobalContext);
-  const {EditQuestionModalDict} = useDictionary(clientKey);
+  const {userLanguage} = useGlobalContext();
+  const {EditQuestionModalDict} = useDictionary();
 
   // set all values to local state
   useEffect(() => {
@@ -88,7 +88,11 @@ const NotesModalDialog = (props: NoteModalProps) => {
     setUnsavedChanges(true);
 
     const randomColor = colorList[randomIdx].name;
-    const newNoteField = {...initialValues, bgColor: randomColor, id: uuidv4()};
+    const newNoteField = {
+      ...initialValues,
+      bgColor: randomColor,
+      id: uuidv4()
+    };
     setFields([...fields, newNoteField]);
   };
 
@@ -175,7 +179,7 @@ const NotesModalDialog = (props: NoteModalProps) => {
               transparent
             />
             <div className="flex mt-8 justify-end px-6 pl-0 pb-4">
-              <div className="flex items-center w-auto">
+              <div className="flex items-center w-auto gap-4">
                 <Buttons
                   btnClass="py-1 px-4 text-xs mr-2"
                   label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}

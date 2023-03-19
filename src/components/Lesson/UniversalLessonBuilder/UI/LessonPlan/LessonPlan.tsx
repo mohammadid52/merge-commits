@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {FaFileAlt, FaFileMedical, FaThList} from 'react-icons/fa';
 import {IoArrowUndoCircleOutline} from 'react-icons/io5';
 import {useHistory, useRouteMatch} from 'react-router-dom';
@@ -9,11 +9,10 @@ import UnderlinedTabs from 'atoms/UnderlinedTabs';
 
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import {API, graphqlOperation} from 'aws-amplify';
-import {GlobalContext} from 'contexts/GlobalContext';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
 import * as customQueries from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
-import {useQuery} from 'customHooks/urlParam';
 import {UniversalLesson} from 'interfaces/UniversalLessonInterfaces';
 import ExistingPageView from './ExistingPageView';
 import LessonPlanForm from './LessonPlanForm';
@@ -32,35 +31,35 @@ const LessonPlan = () => {
   // this is nested tab state holder
   const [activeTab, setActiveTab] = useState<number>(0);
 
-  const {clientKey, userLanguage} = useContext(GlobalContext);
-  const {BreadcrumsTitles, LessonBuilderDict} = useDictionary(clientKey);
-  const {
-    addNewPageHandler,
-    universalLessonDetails,
-    setUniversalLessonDetails
-  } = useULBContext();
+  const {userLanguage} = useGlobalContext();
+  const {BreadcrumsTitles, LessonBuilderDict} = useDictionary();
+  const {addNewPageHandler, universalLessonDetails, setUniversalLessonDetails} =
+    useULBContext();
 
-  const params = useQuery(location.search);
   // const lessonId = params.get('lessonId');
   const route: any = useRouteMatch();
 
   const lessonId = route.params.lessonId;
 
   const breadCrumsList = [
-    {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
+    {
+      title: BreadcrumsTitles[userLanguage]['HOME'],
+      href: '/dashboard',
+      last: false
+    },
     {
       title: BreadcrumsTitles[userLanguage]['LESSONS'],
-      url: '/dashboard/lesson-builder',
+      href: '/dashboard/lesson-builder',
       last: false
     },
     {
       title: BreadcrumsTitles[userLanguage]['LESSONPLANBUILDER'],
-      url: `${match.url}?${lessonId ? `lessonId=${lessonId}}` : ``}`,
+      href: `${match.url}?${lessonId ? `lessonId=${lessonId}}` : ``}`,
       last: false
     },
     {
       title: BreadcrumsTitles[userLanguage]['ADD_NEW_LESSON_PLAN'],
-      url: `${match.url}/lesson/add/lesson-plan?lessonId=${lessonId}`,
+      href: `${match.url}/lesson/add/lesson-plan?lessonId=${lessonId}`,
       last: true
     }
   ];
@@ -107,6 +106,8 @@ const LessonPlan = () => {
         );
       case '2':
         return <TemplateView />;
+      default:
+        return <LessonPlanForm />;
     }
   };
 

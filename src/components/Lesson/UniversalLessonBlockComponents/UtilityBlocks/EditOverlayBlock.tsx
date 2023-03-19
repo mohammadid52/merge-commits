@@ -39,7 +39,7 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
     handleEditBlockContent
   } = props;
 
-  const {previewMode, universalLessonDetails, selectedPageID} = useULBContext();
+  const {previewMode, universalLessonDetails} = useULBContext();
   const {
     showingPin,
     setSelectedComponent,
@@ -92,19 +92,19 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
   };
 
   const onEditClick = () => {
-    handleEditBlockContent();
+    handleEditBlockContent?.();
 
     // setActionMode('init');
   };
   // This function will select component position, for adding new component
   const onComponentSelect = (block = false) => {
-    if ($currentPage) {
+    if ($currentPage && currentPage?.pageContent) {
       const pageContentIdx = findIndex(
         $currentPage?.pageContent,
         (d: any) => d.id === pageContentID
       );
 
-      const pageContent = $currentPage.pageContent[pageContentIdx];
+      const pageContent = $currentPage?.pageContent?.[pageContentIdx];
       const partContentIdx = findIndex(
         pageContent?.partContent,
         (d) => d.id === partContentID
@@ -123,7 +123,7 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
           value: contentValue
         },
         isEmotionComponentSelected:
-          contentType === GAME_CHANGERS && contentValue[0].value === 'emotion'
+          contentType === GAME_CHANGERS && contentValue?.[0]?.value === 'emotion'
       };
 
       if (deleteMode) {
@@ -142,7 +142,12 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
         } else {
           extras.splice(exists, 1);
         }
-        setSelectedComponent({...obj, extras, pageContentID: null, partContentID: null});
+        setSelectedComponent({
+          ...obj,
+          extras,
+          pageContentID: null,
+          partContentID: null
+        });
       } else {
         setSelectedComponent({...obj, extras: null});
       }
@@ -179,11 +184,7 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
         relative  
         ${section === 'partContent' ? 'h-full' : 'h-auto'} 
         flex items-center rowWrapper
-        ${
-          isComponent && !previewMode
-            ? 'border-b-0 border-dashed border-gray-400 pb-1'
-            : ''
-        }
+        ${isComponent && !previewMode ? '  pb-1' : ''}
         `}>
           {!deleteMode &&
             isComponent &&
@@ -270,7 +271,7 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
               </div>
             )}
 
-          <div>{children}</div>
+          <div className="w-full">{children}</div>
         </div>
       ) : (
         children

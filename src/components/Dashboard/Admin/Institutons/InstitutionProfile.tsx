@@ -1,4 +1,4 @@
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import {API, graphqlOperation} from 'aws-amplify';
 import Loader from '@components/Atoms/Loader';
 import ProfileCropModal from '@components/Dashboard/Profile/ProfileCropModal';
 import DroppableMedia from '@components/Molecules/DroppableMedia';
@@ -19,7 +19,7 @@ const InstitutionProfile = ({institute}: {institute: any}) => {
   // Add image handler
 
   const [imageUrl, setImageUrl] = useState();
-  const [upImage, setUpImage] = useState(null);
+  const [upImage, setUpImage] = useState<any | null>(null);
   const [fileObj, setFileObj] = useState({});
   const [imageLoading, setImageLoading] = useState(false);
 
@@ -27,7 +27,7 @@ const InstitutionProfile = ({institute}: {institute: any}) => {
   const {userLanguage} = useGlobalContext();
 
   const {Institute_info} = useDictionary();
-  const mediaRef = useRef(null);
+  const mediaRef = useRef<any>(null);
 
   useEffect(() => {
     getUrl();
@@ -47,7 +47,7 @@ const InstitutionProfile = ({institute}: {institute: any}) => {
     state = '',
     zip = '',
     phone = '',
-    website = '',
+
     isServiceProvider = false
   } = institute;
 
@@ -83,13 +83,13 @@ const InstitutionProfile = ({institute}: {institute: any}) => {
 
   return (
     <>
-      {showCropper && (
-        <ProfileCropModal
-          upImg={upImage}
-          saveCroppedImage={(img: string) => saveCroppedImage(img)}
-          closeAction={toggleCropper}
-        />
-      )}
+      <ProfileCropModal
+        open={showCropper}
+        upImg={upImage || ''}
+        saveCroppedImage={(img: string) => saveCroppedImage(img)}
+        closeAction={toggleCropper}
+      />
+
       <div
         className={`${
           isPageBuilder

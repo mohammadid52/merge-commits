@@ -1,6 +1,6 @@
-import {useState} from 'react';
-import {useHistory, useRouteMatch} from 'react-router';
-import {useQuery} from './urlParam';
+import { useState } from "react";
+import { useHistory, useRouteMatch } from "react-router";
+import { useQuery } from "./urlParam";
 
 /**
  *
@@ -14,9 +14,9 @@ const useSearch = (
   relatedSearchField?: string
 ) => {
   const [searchInput, setSearchInput] = useState({
-    value: '',
+    value: "",
     isActive: false,
-    typing: false
+    typing: false,
   });
 
   const history = useHistory();
@@ -26,7 +26,7 @@ const useSearch = (
     setSearchInput({
       ...searchInput,
       value: str,
-      typing: true
+      typing: true,
     });
   };
 
@@ -43,12 +43,13 @@ const useSearch = (
       });
       return newList;
     }
+    return [];
   };
 
   const findRelatedSearch = (searchQuery: string) => {
     if (relatedSearchField) {
       let clone = [...list];
-      let arrOfSearchQuery = searchQuery.split('');
+      let arrOfSearchQuery = searchQuery.split("");
 
       let withCount = clone.map((_c) => {
         let count = 0;
@@ -59,38 +60,47 @@ const useSearch = (
             count++;
           }
         });
-        return {..._c, count: count > 4 ? count : 0, test};
+        return { ..._c, count: count > 4 ? count : 0, test };
       });
 
       return withCount.sort((a, b) => b.count - a.count)[0];
     } else {
-      console.error('add relatedSearchField to useSearch hook');
-      return {[relatedSearchField]: ''};
+      console.error("add relatedSearchField to useSearch hook");
+      if (typeof relatedSearchField === "string") {
+        return { [relatedSearchField]: "" };
+      }
     }
   };
 
-  const removeSearchAction = (cb?: () => void, navigateSearchQuery: boolean = true) => {
-    if (cb && typeof cb === 'function') {
-      cb();
+  const removeSearchAction = (
+    cb?: () => void | null,
+    navigateSearchQuery: boolean = true
+  ) => {
+    if (cb && typeof cb === "function") {
+      cb?.();
     }
     navigateSearchQuery && history.push(`${match.url}`);
-    setSearchInput({value: '', isActive: false, typing: false});
+    setSearchInput({ value: "", isActive: false, typing: false });
   };
 
   const checkSearchQueryFromUrl = () => {
     const searchParams = useQuery(location.search);
-    const searchQuery = searchParams.get('search');
+    const searchQuery = searchParams.get("search");
     if (searchQuery) {
       setSearchInput({
         value: searchQuery,
         isActive: true,
-        typing: false
+        typing: false,
       });
       return searchQuery;
     }
+    return "";
   };
 
-  const searchAndFilter = (searchQuery: string, navigateSearchQuery: boolean = true) => {
+  const searchAndFilter = (
+    searchQuery: string,
+    navigateSearchQuery: boolean = true
+  ) => {
     const query = searchQuery || searchInput.value;
     if (query) {
       navigateSearchQuery && history.push(`${match.url}?search=${query}`);
@@ -98,11 +108,12 @@ const useSearch = (
       setSearchInput({
         ...searchInput,
         isActive: true,
-        typing: false
+        typing: false,
       });
       return filterBySearchQuery(query);
     } else {
       removeSearchAction();
+      return [];
     }
   };
 
@@ -114,7 +125,7 @@ const useSearch = (
     setSearchInput,
     setSearch,
     searchAndFilter,
-    findRelatedSearch
+    findRelatedSearch,
   };
 };
 

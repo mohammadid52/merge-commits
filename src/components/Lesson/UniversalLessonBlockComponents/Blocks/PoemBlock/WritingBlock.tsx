@@ -1,12 +1,11 @@
-import useStudentDataValue from 'customHooks/studentDataValue';
-import React, {useContext, useState} from 'react';
-import {AiOutlinePlus} from 'react-icons/ai';
-import {GlobalContext} from 'contexts/GlobalContext';
+import { useGlobalContext } from "contexts/GlobalContext";
+import useStudentDataValue from "customHooks/studentDataValue";
 import {
   Options,
   PartContentSub,
-  StudentPageInput
-} from 'interfaces/UniversalLessonInterfaces';
+  StudentPageInput,
+} from "interfaces/UniversalLessonInterfaces";
+import React, { useState } from "react";
 
 interface WritingBlockProps {
   id?: string;
@@ -16,30 +15,32 @@ interface WritingBlockProps {
   setPoemWriting?: React.Dispatch<React.SetStateAction<string>>;
   saveAndEdit?: boolean;
   setSaveAndEdit?: React.Dispatch<React.SetStateAction<boolean>>;
-  fields?: {poemHtml: string; poemText: string};
-  setFields?: React.Dispatch<React.SetStateAction<{poemHtml: string; poemText: string}>>;
+  fields?: { poemHtml: string; poemText: string };
+  setFields?: React.Dispatch<
+    React.SetStateAction<{ poemHtml: string; poemText: string }>
+  >;
   sendTextToEditor?: any;
 }
 
 const WritingBlock = (props: WritingBlockProps) => {
-  const {id, linestarters, sendTextToEditor} = props;
+  const { id = "", linestarters, sendTextToEditor } = props;
 
   const {
-    state: {lessonPage: {themeTextColor = ''} = {}}
-  } = useContext(GlobalContext);
+    state: { lessonPage: { themeTextColor = "" } = {} },
+  } = useGlobalContext();
 
-  const {setDataValue} = useStudentDataValue();
+  const { setDataValue } = useStudentDataValue();
 
   const onAddClick = (value: string) => {
     sendTextToEditor(`${value} `, () => setDataValue(id, [value]));
   };
 
   const [selectedLS, setSelectedLS] = useState({
-    text: ''
+    text: "",
   });
 
   const onLineSelect = (e: any) => {
-    setSelectedLS({...selectedLS, text: e.target.value});
+    setSelectedLS({ ...selectedLS, text: e.target.value });
     onAddClick(e.target.value);
   };
 
@@ -50,15 +51,18 @@ const WritingBlock = (props: WritingBlockProps) => {
           <select
             value={selectedLS.text}
             onChange={onLineSelect}
-            className={`iconoclast:bg-500 curate:bg-500  cursor-pointer block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm ${themeTextColor} rounded-2xl`}>
-            <option value={''} disabled>
+            className={`iconoclast:bg-500 curate:bg-500  cursor-pointer block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm ${themeTextColor} rounded-2xl`}
+          >
+            <option value={""} disabled>
               Select a line starter
             </option>
-            {linestarters.map((line: Options, idx2: number) => (
-              <option value={line.text} key={`line_${idx2}`}>
-                {line.text}
-              </option>
-            ))}
+            {linestarters &&
+              linestarters.length > 0 &&
+              linestarters?.map((line: Options, idx2: number) => (
+                <option value={line.text} key={`line_${idx2}`}>
+                  {line.text}
+                </option>
+              ))}
           </select>
         </div>
       </div>

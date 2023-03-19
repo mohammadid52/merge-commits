@@ -4,7 +4,7 @@ import Selector from 'atoms/Form/Selector';
 import Loader from 'atoms/Loader';
 import Tooltip from 'atoms/Tooltip';
 import {FORM_TYPES} from 'components/Lesson/UniversalLessonBuilder/UI/common/constants';
-import {GlobalContext} from 'contexts/GlobalContext';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import useInLessonCheck from 'customHooks/checkIfInLesson';
 import useStudentDataValue from 'customHooks/studentDataValue';
 import gsap from 'gsap';
@@ -12,7 +12,7 @@ import {Draggable} from 'gsap/Draggable';
 import {InertiaPlugin} from 'gsap/InertiaPlugin';
 import {find, findIndex, map, noop, remove, update} from 'lodash';
 import ThemeModal from 'molecules/ThemeModal';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {BiSave} from 'react-icons/bi';
 import {FiFilePlus} from 'react-icons/fi';
 import {VscDebugRestart} from 'react-icons/vsc';
@@ -62,7 +62,7 @@ const genSticky = (
       throwProps: true,
       type: 'x,y',
       inertia: true,
-      onDragEnd: (e) => {},
+      // onDragEnd: (e) => {},
       // @ts-ignore
       autoScroll: true,
 
@@ -121,7 +121,7 @@ const NotesBlock = ({
   addNew,
   notesInitialized,
   noteDelete,
-  grid,
+  grid = {},
 
   saveData,
   updateJournalData,
@@ -131,11 +131,11 @@ const NotesBlock = ({
   const {
     state: {user},
     lessonDispatch
-  } = useContext(GlobalContext);
+  } = useGlobalContext();
   const isStudent = user.role === 'ST';
   const isInLesson = useInLessonCheck();
 
-  const [localNotes, setLocalNotes] = useState([]);
+  const [localNotes, setLocalNotes] = useState<any[]>([]);
 
   gsap.registerPlugin(InertiaPlugin, Draggable);
   gsap.ticker.fps(60);
@@ -145,11 +145,9 @@ const NotesBlock = ({
   const {setDataValue} = useStudentDataValue();
 
   useEffect(() => {
-    // if (!isContainerRendered) {
     setLoading(true);
     genSticky(grid, () => setIsContainerRendered(true));
     setLoading(false);
-    // }
   }, [isContainerRendered, localNotes.length]);
 
   useEffect(() => {
@@ -158,15 +156,15 @@ const NotesBlock = ({
     }
   }, [notesList]);
 
-  function PosEnd(end: any) {
-    var len = end.value.length;
+  function posEnd(end: any) {
+    let len = end.value.length;
 
     // Mostly for Web Browsers
     if (end.setSelectionRange) {
       end.focus();
       end.setSelectionRange(len, len);
     } else if (end.createTextRange) {
-      var t = end.createTextRange();
+      let t = end.createTextRange();
       t.collapse(true);
       t.moveEnd('character', len);
       t.moveStart('character', len);
@@ -174,14 +172,15 @@ const NotesBlock = ({
     }
   }
 
+  // @ts-ignore
   if (jQuery.ready) {
     if (localNotes && localNotes.length > 0) {
-      localNotes.forEach((note: {id: any}, idx: number) => {
+      localNotes.forEach((note: {id: any}) => {
         if (note) {
           const id = `#${note.id} #note-${note.id}`;
 
           $(id).on('click', (e) => {
-            PosEnd(e.target);
+            posEnd(e.target);
           });
         }
       });
@@ -197,7 +196,7 @@ const NotesBlock = ({
     const idx = findIndex(notesData.entryData, ['domID', noteId]);
 
     update(notesData, `entryData[${idx}].input`, () => html);
-    setNotesData({...notesData});
+    setNotesData?.({...notesData});
     if (!notesChanged) setNotesChanged(true);
   };
 
@@ -215,9 +214,9 @@ const NotesBlock = ({
 
     remove(notesData.entryData, ['domID', note.id]);
 
-    setNotesData({...notesData});
+    setNotesData?.({...notesData});
 
-    noteDelete(notesData);
+    noteDelete?.(notesData);
   };
 
   const onAddNewNote = () => {
@@ -235,7 +234,7 @@ const NotesBlock = ({
 
     const domID = `post-it_${newNoteObj.id}`;
 
-    addNew(
+    addNew?.(
       {
         domID,
         type: 'content-custom || yellow medium',
@@ -276,19 +275,28 @@ const NotesBlock = ({
       () => `content-custom || ${currentSelectedColor} ${currentSelectedSize}`
     );
 
-    setNotesData({...notesData});
+    setNotesData?.({...notesData});
     await updateJournalData();
 
     setCurrentSelectedColor(null);
-    setCurrentSelectedSize(null);
+    setCurrentSelectedSize(undefined);
   };
 
-  const [showDeleteModal, setShowDeleteModal] = useState({show: false, id: ''});
+  const [showDeleteModal, setShowDeleteModal] = useState({
+    show: false,
+    id: ''
+  });
 
-  const [showEditModal, setShowEditModal] = useState({show: false, id: '', value: ''});
+  const [showEditModal, setShowEditModal] = useState({
+    show: false,
+    id: '',
+    value: ''
+  });
 
-  const [currentSelectedColor, setCurrentSelectedColor] = useState(null);
-  const [currentSelectedSize, setCurrentSelectedSize] = useState(null);
+  const [currentSelectedColor, setCurrentSelectedColor] = useState<string | null>(null);
+  const [currentSelectedSize, setCurrentSelectedSize] = useState<string | undefined>(
+    undefined
+  );
 
   useEffect(() => {
     if (showEditModal && showEditModal.id) {
@@ -318,9 +326,11 @@ const NotesBlock = ({
   };
 
   const resetDefaultNotes = () => {
-    allNotes.map((note) => {
-      updateText({target: {value: note.value}}, note.id);
-    });
+    allNotes &&
+      allNotes.length > 0 &&
+      allNotes.map((note) => {
+        updateText({target: {value: note.value}}, note.id);
+      });
   };
 
   const colorList = [
@@ -381,7 +391,7 @@ const NotesBlock = ({
             <textarea
               onChange={noop}
               className={`${genSize(
-                currentSelectedSize
+                currentSelectedSize || 'medium'
               )} preview-note bg-gradient-to-t text-gray-900 from-${currentSelectedColor}-500 to-${currentSelectedColor}-300 rounded leading-8 p-6`}
               id={'note'}
               value={showEditModal?.value}
@@ -391,7 +401,7 @@ const NotesBlock = ({
               {map(colorList, (color) => (
                 <div
                   key={color.id}
-                  onClick={() => setCurrentSelectedColor(color.name)}
+                  onClick={() => setCurrentSelectedColor(color?.name || '')}
                   className={`rounded-full cursor-pointer transition-all h-4 w-4 bg-${
                     color.name
                   }-500 border-2 ${
@@ -412,11 +422,11 @@ const NotesBlock = ({
               <Selector
                 placeholder="Select size"
                 selectedItem={currentSelectedSize}
-                onChange={(_, name) => setCurrentSelectedSize(name)}
+                onChange={(name) => setCurrentSelectedSize(name)}
                 list={[
-                  {id: 0, name: 'small'},
-                  {id: 1, name: 'medium'},
-                  {id: 2, name: 'large'}
+                  {id: 0, label: 'small', value: 'small'},
+                  {id: 1, label: 'medium', value: 'medium'},
+                  {id: 2, label: 'large', value: 'large'}
                 ]}
               />
             </div>
@@ -481,7 +491,7 @@ const NotesBlock = ({
                     data-cy="save-note-button"
                     onClick={() => {
                       if (notesChanged) {
-                        saveData(
+                        saveData?.(
                           notesData,
                           () => setSaveInProgress(true),
                           () => {
@@ -499,7 +509,7 @@ const NotesBlock = ({
               {saveInProgress && <Loader className="text-yellow-500 text-base" />}
             </div>
           )}
-          <div id="container" className="sticky-container blackboard">
+          <div id="container" className="sticky-container blackboard w-full text-white">
             {localNotes &&
               localNotes.length > 0 &&
               map(localNotes, (note, idx) => {
@@ -517,6 +527,7 @@ const NotesBlock = ({
                     />
                   );
                 }
+                return <div className="hidden w-auto" />;
               })}
           </div>
         </div>

@@ -1,5 +1,5 @@
 //--------------NEW ARCHITECTURE INTERFACES--------------//
-import {UniversalLessonStudentData} from './UniversalLessonInterfaces';
+import { UniversalLessonStudentData } from "./UniversalLessonInterfaces";
 
 /**
  * Planner would replace need for SyllabusLesson/LiveClassroom
@@ -28,11 +28,13 @@ export interface Quote {
   text: string;
   author?: string;
 }
+
 export interface Link {
   [key: string]: any;
   text?: string;
   url?: string;
 }
+
 export interface Widget {
   [key: string]: any;
   id?: string;

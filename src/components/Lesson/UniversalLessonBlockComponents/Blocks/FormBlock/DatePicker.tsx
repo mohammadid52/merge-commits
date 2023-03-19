@@ -1,12 +1,10 @@
-import {GlobalContext} from 'contexts/GlobalContext';
-import {noop} from 'lodash';
-import React, {useContext} from 'react';
-import {IFormBlockProps, StudentPageInput} from 'interfaces/UniversalLessonInterfaces';
-import {IoClose} from 'react-icons/io5';
 import Tooltip from 'atoms/Tooltip';
-import RequiredMark from 'atoms/RequiredMark';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import useInLessonCheck from 'customHooks/checkIfInLesson';
 import useStudentDataValue from 'customHooks/studentDataValue';
+import {IFormBlockProps} from 'interfaces/UniversalLessonInterfaces';
+import {noop} from 'lodash';
+import {IoClose} from 'react-icons/io5';
 import {FormLabel} from '../FormBlock';
 
 interface DatePickerProps {
@@ -24,7 +22,6 @@ interface DatePickerProps {
 
 const CustomDatePicker = (props: DatePickerProps) => {
   const {
-    id,
     inputID,
     mode,
     themeTextColor,
@@ -68,15 +65,23 @@ const CustomDatePicker = (props: DatePickerProps) => {
 };
 
 const DatePicker = (props: IFormBlockProps) => {
-  const {id, required, numbered, isStudent, label, mode, index, value, inputID} = props;
+  const {
+    id,
+    required = false,
+    numbered = false,
+    isStudent,
+    label = '',
+    mode,
+    index = '',
+    value,
+    inputID = ''
+  } = props;
 
-  const gContext = useContext(GlobalContext);
+  const gContext = useGlobalContext();
   const gState = gContext.state;
 
-  const {
-    user,
-    lessonPage: {theme: lessonPageTheme = 'dark', themeTextColor = ''} = {}
-  } = gState;
+  const {lessonPage: {theme: lessonPageTheme = 'dark', themeTextColor = ''} = {}} =
+    gState;
 
   const isInLesson = useInLessonCheck();
 
@@ -95,7 +100,7 @@ const DatePicker = (props: IFormBlockProps) => {
     <div
       id={`${inputID}_for_error`}
       key={id}
-      className={`questionItemChild mb-4 p-4 bg-component-dark rounded-2xl border-0 border-gray-700`}>
+      className={`questionItemChild mb-4 p-4 dark-blue rounded-2xl border-0 border-gray-700`}>
       <FormLabel label={label} required={required} numbered={numbered} index={index} />
 
       <div className={`w-auto datePickerWrapper ${lessonPageTheme}`}>

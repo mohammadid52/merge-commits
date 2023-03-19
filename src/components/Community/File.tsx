@@ -49,7 +49,7 @@ const File = ({
             <p className="w-auto">
               {_status === 'success' || _status === 'other'
                 ? !fileName
-                  ? file.name
+                  ? file?.name
                   : fileName
                 : genStatus(_status)}
             </p>{' '}

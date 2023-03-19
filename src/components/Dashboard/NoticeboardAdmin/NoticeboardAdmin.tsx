@@ -1,95 +1,81 @@
-import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
-import ContentCard from 'atoms/ContentCard';
-import {GlobalContext} from 'contexts/GlobalContext';
-import useDictionary from 'customHooks/dictionary';
-import {Widget as NoticeboardWidgetMapItem} from 'interfaces/ClassroomComponentsInterfaces';
-import React, {useContext, useEffect, useState} from 'react';
-import SubSectionTabs from '../Anthology/SubSectionTabs';
-import TopWidgetBar from '../Noticebooard/TopWidgetBar';
-import NoticeboardAdminContent from './NoticeboardAdminContent';
-import RoomSwitch from './RoomSwitch';
+import SectionTitleV3 from "@components/Atoms/SectionTitleV3";
+import ContentCard from "atoms/ContentCard";
+import { useGlobalContext } from "contexts/GlobalContext";
+import useDictionary from "customHooks/dictionary";
+import { Widget as NoticeboardWidgetMapItem } from "interfaces/ClassroomComponentsInterfaces";
+import React, { useEffect, useState } from "react";
+import SubSectionTabs from "../Anthology/SubSectionTabs";
+import TopWidgetBar from "../Noticebooard/TopWidgetBar";
+import NoticeboardAdminContent from "./NoticeboardAdminContent";
+import RoomSwitch from "./RoomSwitch";
 
 export interface NoticeboardAdmin {
   setCurrentPage: any;
 }
-//
-// export interface NoticeboardWidgetMapItem {
-//   id?: string;
-//   teacherAuthID: string;
-//   teacherEmail: string;
-//   roomID: string;
-//   type: string;
-//   placement: string;
-//   title: string;
-//   description: string;
-//   content?: { text: string; image: string };
-//   quotes?: Quote[];
-//   active: boolean;
-// }
 
 export type ViewEditMode = {
-  mode: 'view' | 'edit' | 'save' | 'create' | 'delete' | 'savenew' | '';
+  mode: "view" | "edit" | "save" | "create" | "delete" | "savenew" | "";
   widgetID: string;
 };
 
 const initialNewWidgetData = {
-  teacherAuthID: '',
-  teacherEmail: '',
-  roomID: '',
-  type: 'default',
-  placement: 'sidebar',
-  title: '',
-  description: '',
-  content: {text: '', image: ''},
+  teacherAuthID: "",
+  teacherEmail: "",
+  roomID: "",
+  type: "default",
+  placement: "sidebar",
+  title: "",
+  description: "",
+  content: { text: "", image: "" },
   quotes: [{}],
   links: [{}],
-  active: true
+  active: true,
 };
 
-const NoticeboardAdmin = (props: NoticeboardAdmin) => {
-  const {theme} = useContext(GlobalContext);
-  const {setCurrentPage} = props;
-  const {state, dispatch, userLanguage, clientKey} = useContext(GlobalContext);
-  const {noticeboardDict} = useDictionary(clientKey);
+const NoticeboardAdmin = () => {
+  const { state, dispatch, userLanguage } = useGlobalContext();
+  const { noticeboardDict } = useDictionary();
   //
-  const [activeRoom, setActiveRoom] = useState<string>('');
-  const [activeRoomName, setActiveRoomName] = useState<string>('');
+  const [activeRoom, setActiveRoom] = useState<string>("");
+  const [activeRoomName, setActiveRoomName] = useState<string>("");
   //
   const [loading, setLoading] = useState<boolean>(false);
   //
   const [widgetData, setWidgetData] = useState<NoticeboardWidgetMapItem[]>([]);
-  const [newWidgetData, setNewWidgetData] = useState<NoticeboardWidgetMapItem | any>({
-    teacherAuthID: '',
-    teacherEmail: '',
-    roomID: '',
-    type: 'default',
-    placement: 'sidebar',
-    title: '',
-    description: '',
-    content: {text: '', image: ''},
+  const [newWidgetData, setNewWidgetData] = useState<
+    NoticeboardWidgetMapItem | any
+  >({
+    teacherAuthID: "",
+    teacherEmail: "",
+    roomID: "",
+    type: "default",
+    placement: "sidebar",
+    title: "",
+    description: "",
+    content: { text: "", image: "" },
     quotes: [],
     links: [],
-    active: true
+    active: true,
   });
 
   // For switching sections & knowing which field to edit
-  const [subSection, setSubSection] = useState<string>('Sidebar Widgets');
+  const [subSection, setSubSection] = useState<string>("Sidebar Widgets");
   const [widgetTypeCount, setWidgetTypeCount] = useState<{
     sidebar: number;
     topbar: number;
   }>({
     sidebar: 0,
-    topbar: 0
+    topbar: 0,
   });
 
   // For editing specific poems/stories
   const [viewEditMode, setViewEditMode] = useState<ViewEditMode>({
-    mode: '',
-    widgetID: ''
+    mode: "",
+    widgetID: "",
   });
 
   useEffect(() => {
-    dispatch({type: 'UPDATE_CURRENTPAGE', payload: {data: 'noticeboard'}});
+    dispatch({ type: "UPDATE_CURRENTPAGE", payload: { data: "noticeboard" } });
   }, []);
 
   //  TOP Function to load widgets
@@ -113,7 +99,7 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
       //   },
       // });
     } catch (e) {
-      console.error('listNoticeboardWidgetsFetch: -> ', e);
+      console.error("listNoticeboardWidgetsFetch: -> ", e);
     } finally {
       setLoading(false);
     }
@@ -121,23 +107,23 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
 
   const countWidgetTypes = (widgetArray: any[]) => {
     if (widgetArray) {
-      console.log('widgetArray - ', widgetArray);
+      console.log("widgetArray - ", widgetArray);
       return widgetArray.reduce(
-        (acc: {sidebar: number; topbar: number}, widgetObj: any) => {
-          if (widgetObj.placement === 'sidebar') {
-            return {...acc, sidebar: acc.sidebar + 1};
-          } else if (widgetObj.placement === 'topbar') {
-            return {...acc, topbar: acc.topbar + 1};
+        (acc: { sidebar: number; topbar: number }, widgetObj: any) => {
+          if (widgetObj.placement === "sidebar") {
+            return { ...acc, sidebar: acc.sidebar + 1 };
+          } else if (widgetObj.placement === "topbar") {
+            return { ...acc, topbar: acc.topbar + 1 };
           } else {
             return acc;
           }
         },
-        {sidebar: 0, topbar: 0}
+        { sidebar: 0, topbar: 0 }
       );
     } else {
       return {
         sidebar: 0,
-        topbar: 0
+        topbar: 0,
       };
     }
   };
@@ -149,7 +135,7 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
   }, [widgetData]);
 
   useEffect(() => {
-    setViewEditMode({mode: '', widgetID: ''});
+    setViewEditMode({ mode: "", widgetID: "" });
     setNewWidgetData(initialNewWidgetData);
 
     const initializeWidgetData = async () => {
@@ -157,7 +143,7 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
         await listNoticeboardWidgets();
       }
     };
-    if (activeRoom !== '' && loading === false) {
+    if (activeRoom !== "" && loading === false) {
       initializeWidgetData();
     }
   }, [activeRoom]);
@@ -173,52 +159,66 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
    * */
   const handleEditUpdateQuotes = (e: React.ChangeEvent) => {
     const target = e.target as any;
-    const {id, value} = target;
-    const basekey = e.target.getAttribute('data-basekey');
-    const nestkey1 = e.target.getAttribute('data-nestkey1');
-    const nestkey2 = e.target.getAttribute('data-nestkey2');
+    const { value } = target;
+    const basekey = e.target.getAttribute("data-basekey");
+    const nestkey1 = e.target.getAttribute("data-nestkey1");
+    const nestkey2 = e.target.getAttribute("data-nestkey2");
 
     switch (viewEditMode.mode) {
-      case 'edit':
-      case 'create': // final step to saving author!
-        const updatedNewWidgetData = {
-          ...newWidgetData,
-          [basekey]: newWidgetData[basekey].map((nestedObj: any, idx: number) => {
-            if (idx === parseInt(nestkey2)) {
-              return {...nestedObj, [nestkey1]: value};
-            } else {
-              return nestedObj;
-            }
-          })
-        };
-        setNewWidgetData(updatedNewWidgetData);
-        break;
+      case "edit":
+      case "create": // final step to saving author!
+        if (basekey && nestkey1 && nestkey2) {
+          const updatedNewWidgetData = {
+            ...newWidgetData,
+            [basekey]: newWidgetData[basekey].map(
+              (nestedObj: any, idx: number) => {
+                if (idx === parseInt(nestkey2)) {
+                  return { ...nestedObj, [nestkey1]: value };
+                } else {
+                  return nestedObj;
+                }
+              }
+            ),
+          };
+          setNewWidgetData(updatedNewWidgetData);
+          break;
+        }
+
       default:
-        console.log('handleEditUpdateQuotes - ', 'nothing to update...');
+        console.log("handleEditUpdateQuotes - ", "nothing to update...");
     }
   };
 
   const handleEditUpdateDefault = (e: React.ChangeEvent) => {
     const target = e.target as any;
-    const {id, value} = target;
-    const dataVal = e.target.getAttribute('data-value');
-    const basekey = e.target.getAttribute('data-basekey');
-    const nestkey1 = e.target.getAttribute('data-nestkey1');
-    const nestkey2 = e.target.getAttribute('data-nestkey2');
+    const { value } = target;
+    const dataVal = e.target.getAttribute("data-value");
+    const basekey = e.target.getAttribute("data-basekey");
+    const nestkey1 = e.target.getAttribute("data-nestkey1");
+    // const nestkey2 = e.target.getAttribute("data-nestkey2");
 
-    const usableValue = typeof value !== 'undefined' ? value : dataVal;
+    const usableValue = typeof value !== "undefined" ? value : dataVal;
 
     switch (viewEditMode.mode) {
-      case 'edit':
+      case "edit":
         if (basekey && nestkey1) {
-          setNewWidgetData({...newWidgetData, [basekey]: {[nestkey1]: usableValue}});
+          setNewWidgetData({
+            ...newWidgetData,
+            [basekey]: { [nestkey1]: usableValue },
+          });
         } else {
-          setNewWidgetData({...newWidgetData, [basekey]: usableValue});
+          basekey &&
+            setNewWidgetData({ ...newWidgetData, [basekey]: usableValue });
         }
         break;
-      case 'create':
-        const updatedNewWidgetData = {...newWidgetData, [basekey]: usableValue};
-        setNewWidgetData(updatedNewWidgetData);
+      case "create":
+        if (basekey) {
+          const updatedNewWidgetData = {
+            ...newWidgetData,
+            [basekey]: usableValue,
+          };
+          setNewWidgetData(updatedNewWidgetData);
+        }
         break;
     }
   };
@@ -233,26 +233,29 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
    *         = nestkey2 => second nester property
    * */
   const handleEditUpdateWYSIWYG = (
-    id: string,
+    _: string,
     value: string,
     basekey: string,
     nestkey1: string,
     nestkey2: string
   ) => {
     switch (viewEditMode.mode) {
-      case 'create':
-      case 'edit':
-        if (basekey !== '' && basekey !== undefined) {
-          if (nestkey1 !== '' && nestkey1 !== undefined) {
-            if (nestkey2 !== '' && nestkey2 !== undefined) {
+      case "create":
+      case "edit":
+        if (basekey !== "" && basekey !== undefined) {
+          if (nestkey1 !== "" && nestkey1 !== undefined) {
+            if (nestkey2 !== "" && nestkey2 !== undefined) {
               const updatedNewWidgetData = {
                 ...newWidgetData,
                 [basekey]: {
                   // @ts-ignore
                   ...newWidgetData[basekey],
                   // @ts-ignore
-                  [nestkey1]: {...newWidgetData[basekey][nestkey1], [nestkey2]: value}
-                }
+                  [nestkey1]: {
+                    ...newWidgetData[basekey][nestkey1],
+                    [nestkey2]: value,
+                  },
+                },
               };
               setNewWidgetData(updatedNewWidgetData);
             } else {
@@ -260,90 +263,65 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
               const updatedNewWidgetData = {
                 ...newWidgetData,
                 // @ts-ignore
-                [basekey]: {...newWidgetData[basekey], [nestkey1]: value}
+                [basekey]: { ...newWidgetData[basekey], [nestkey1]: value },
               };
               setNewWidgetData(updatedNewWidgetData);
             }
           } else {
-            const updatedNewWidgetData = {...newWidgetData, [basekey]: value};
+            const updatedNewWidgetData = { ...newWidgetData, [basekey]: value };
             setNewWidgetData(updatedNewWidgetData);
           }
         } else {
           console.error(
-            'create err0r -> ',
-            ' no basekey provided for update function...'
+            "create err0r -> ",
+            " no basekey provided for update function..."
           );
         }
         break;
       default:
-        console.log('handleWYSIWYGudpate ->', 'does not work');
+        console.log("handleWYSIWYGudpate ->", "does not work");
     }
   };
 
-  const handleEditToggle = (editMode: ViewEditMode['mode'], widgetID: string) => {
-    setViewEditMode({mode: editMode, widgetID: widgetID});
+  const handleEditToggle = (
+    editMode: ViewEditMode["mode"],
+    widgetID: string
+  ) => {
+    setViewEditMode({ mode: editMode, widgetID: widgetID });
   };
 
-  const handleActivation = (id: string) => {
-    const updatedWidgetData = {...newWidgetData, active: !newWidgetData.active};
+  const handleActivation = (_: string) => {
+    const updatedWidgetData = {
+      ...newWidgetData,
+      active: !newWidgetData.active,
+    };
     setNewWidgetData(updatedWidgetData);
   };
 
   // Function group to handle section-switching
   const handleTabClick = (e: React.MouseEvent) => {
-    const {id} = e.target as HTMLElement;
+    const { id } = e.target as HTMLElement;
 
     if (id !== subSection) {
-      if (id !== 'subSectionTabs') {
+      if (id !== "subSectionTabs") {
         setSubSection(id);
       }
     }
   };
 
   const subSectionKey: any = {
-    'Top Widgets': 'topbar',
-    'Sidebar Widgets': 'sidebar'
+    "Top Widgets": "topbar",
+    "Sidebar Widgets": "sidebar",
   };
 
   const filterWidgetContentBySubsection = widgetData.filter(
     (widgetObj: NoticeboardWidgetMapItem) => {
       if (widgetObj.placement === subSectionKey[subSection]) return widgetObj;
+      return "";
     }
   );
 
-  // TODO: move this function to utils and improve functionality
-  const appendHttp = (inputUrl: string) => {
-    const splitUrl = inputUrl.split('://');
-    if (splitUrl.length > 1) {
-      return `https://${splitUrl[1]}`;
-    } else if (splitUrl.length === 1) {
-      return `https://${splitUrl[0]}`;
-    } else {
-      return `https://`;
-    }
-  };
-
-  const linkArrayMap = (inputArray: any[]) => {
-    return inputArray.map((elem: any) => {
-      return {...elem, url: appendHttp(elem.url)};
-    });
-  };
-
   const noticeboardUpdate = async () => {
-    const input = {
-      id: newWidgetData.id,
-      active: newWidgetData.active,
-      placement: newWidgetData.placement,
-      quotes: newWidgetData.quotes,
-      links:
-        newWidgetData.type !== 'file' && newWidgetData.type !== 'call'
-          ? newWidgetData.links
-          : linkArrayMap(newWidgetData.links),
-      content: newWidgetData.content,
-      description: newWidgetData.description,
-      title: newWidgetData.title,
-      type: newWidgetData.type
-    };
     try {
       // const noticeboardWidgetUpdate: any = await API.graphql(
       //   graphqlOperation(mutations.updateNoticeboardWidget, {
@@ -351,23 +329,13 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
       //   })
       // );
     } catch (e) {
-      console.error('noticeboardWidgetUpdate: widget: ', e);
+      console.error("noticeboardWidgetUpdate: widget: ", e);
     } finally {
-      setViewEditMode({mode: '', widgetID: ''});
+      setViewEditMode({ mode: "", widgetID: "" });
     }
   };
 
   const noticeboardCreate = async () => {
-    const input = {
-      ...newWidgetData,
-      links:
-        newWidgetData.type !== 'file' && newWidgetData.type !== 'call'
-          ? newWidgetData.links
-          : linkArrayMap(newWidgetData.links),
-      teacherAuthID: state.user.authId,
-      teacherEmail: state.user.email,
-      roomID: activeRoom
-    };
     try {
       // const noticeboardWidgetCreate: any = await API.graphql(
       //   graphqlOperation(mutations.createNoticeboardWidget, {
@@ -375,20 +343,13 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
       //   })
       // );
     } catch (e) {
-      console.error('noticeboardWidgetCreate: widget: ', e);
+      console.error("noticeboardWidgetCreate: widget: ", e);
     } finally {
-      setViewEditMode({mode: '', widgetID: ''});
+      setViewEditMode({ mode: "", widgetID: "" });
     }
   };
 
   const noticeboardDelete = async () => {
-    const getWidgetObj = widgetData.find(
-      (widgetObj: any) => widgetObj.id === viewEditMode.widgetID
-    );
-    const input = {
-      id: getWidgetObj.id
-    };
-
     try {
       // const noticeboardWidgetDelete: any = await API.graphql(
       //   graphqlOperation(mutations.deleteNoticeboardWidget, {
@@ -396,24 +357,24 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
       //   })
       // );
     } catch (e) {
-      console.error('error deleting widget, -> ', e);
+      console.error("error deleting widget, -> ", e);
     } finally {
-      setViewEditMode({mode: '', widgetID: ''});
+      setViewEditMode({ mode: "", widgetID: "" });
     }
   };
 
   // UseEffect for monitoring save/create new changes and calling functions
   useEffect(() => {
     const manageSaveAndCreate = async () => {
-      if (viewEditMode.mode === 'save') {
+      if (viewEditMode.mode === "save") {
         await noticeboardUpdate();
         await listNoticeboardWidgets();
       }
-      if (viewEditMode.mode === 'savenew') {
+      if (viewEditMode.mode === "savenew") {
         await noticeboardCreate();
         await listNoticeboardWidgets();
       }
-      if (viewEditMode.mode === 'delete') {
+      if (viewEditMode.mode === "delete") {
         await noticeboardDelete();
         await listNoticeboardWidgets();
       }
@@ -451,7 +412,7 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
       */}
         <SubSectionTabs
           subSection={subSection}
-          subSectionList={['Top Widgets', 'Sidebar Widgets']}
+          subSectionList={["Top Widgets", "Sidebar Widgets"]}
           handleTabClick={handleTabClick}
           widgetTypeCount={widgetTypeCount}
         />

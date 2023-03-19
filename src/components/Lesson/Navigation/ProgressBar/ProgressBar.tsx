@@ -1,11 +1,12 @@
-import {GlobalContext} from 'contexts/GlobalContext';
+import {UniversalLessonPage} from '@interfaces/UniversalLessonInterfaces';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import useLessonControls from 'customHooks/lessonControls';
 import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
-import {getLocalStorageData} from 'utilities/localStorage';
-import React, {useContext, useEffect} from 'react';
+
+import React, {useEffect} from 'react';
 import {AiOutlineHome} from 'react-icons/ai';
 import {useRouteMatch} from 'react-router';
-import {UniversalLessonPage} from 'interfaces/UniversalLessonInterfaces';
+import {getLocalStorageData} from 'utilities/localStorage';
 import StageIcon from './StageIcon';
 
 interface IProgressBarProps {
@@ -20,24 +21,22 @@ interface IProgressBarProps {
   canContinue?: boolean;
 }
 
-const Disabled = ({text}: {text: string}) => {
-  return (
-    <div className="absolute inset-0 flex items-center justify-center bg-gray-800 bg-opacity-70 disabled z-50">
-      <p className="text-center font-bold text-sm">text</p>
-    </div>
-  );
-};
+const Disabled = () => (
+  <div className="absolute inset-0 flex items-center justify-center bg-gray-800 bg-opacity-70 disabled z-50">
+    <p className="text-center font-bold text-sm">text</p>
+  </div>
+);
 
 const ProgressBar = ({
   handleHome,
   handleRequiredNotification,
-  pages,
+  pages = [],
   currentPage,
   updatePageInLocalStorage,
   validateRequired,
   canContinue
 }: IProgressBarProps) => {
-  const gContext = useContext(GlobalContext);
+  const gContext = useGlobalContext();
   const lessonState = gContext.lessonState;
 
   const user = gContext.state.user;
@@ -54,9 +53,9 @@ const ProgressBar = ({
    ************************************************/
 
   const nextRequiredIdx = pages
-    ? pages.reduce((nextIdx: number, _: any, currIdx: number) => {
+    ? pages.reduce((nextIdx: number, currIdx: number) => {
         if (nextIdx === null) {
-          if (validateRequired(currIdx)) {
+          if (validateRequired?.(currIdx)) {
             return nextIdx;
           } else {
             return currIdx;
@@ -75,6 +74,7 @@ const ProgressBar = ({
         </li>
       );
     }
+    return <div className="w-auto hidden" />;
   };
 
   /**
@@ -117,13 +117,9 @@ const ProgressBar = ({
     <nav
       className="h-12 flex bg-gray-600 bg-opacity-20 border-0 border-gray-100 border-opacity-20 rounded-lg"
       aria-label="Breadcrumb">
-      {isTeacherPresenting && !isOnDemand && (
-        <Disabled text={'Disabled when teacher is presenting!'} />
-      )}
-      {isClosed && isClosedLocalStorage && (
-        <Disabled text={'Disabled when lesson/survey is closed'} />
-      )}
-      <ol className="max-w-screen-xl w-full mx-auto px-4 flex space-x-4  items-center justify-center sm:px-6 lg:px-8">
+      {isTeacherPresenting && !isOnDemand && <Disabled />}
+      {isClosed && isClosedLocalStorage && <Disabled />}
+      <ol className="max-w-screen-xl mb-0 w-full mx-auto px-4 flex space-x-4  items-center justify-center sm:px-6 lg:px-8">
         {/* 1 */}
         {pages &&
           pages.map((page: UniversalLessonPage, key: number) => {
@@ -131,11 +127,12 @@ const ProgressBar = ({
               (breakpoint === 'xs' || breakpoint === 'sm') &&
               key !== lessonState.currentPage;
             return (
+              // @ts-ignore
               <StageIcon
                 key={`${page.id}_progressIcon`}
                 pageNr={key}
                 updatePageInLocalStorage={updatePageInLocalStorage}
-                id={page.id}
+                id={page?.id || ''}
                 enabled={page.disabled !== true || isOnDemand}
                 open={page.open !== false || isOnDemand}
                 active={key === currentPage}
@@ -159,15 +156,7 @@ const ProgressBar = ({
         {breakpoint !== 'xs' && breakpoint !== 'sm' && (
           <li className="flex w-auto">
             <div onClick={handleHome} className="flex items-center w-auto group">
-              <svg
-                className="flex-shrink-0 w-6 h-full text-gray-200 group-hover:text-gray-300 transition-all duration-150 "
-                viewBox="0 0 24 44"
-                preserveAspectRatio="none"
-                fill="currentColor"
-                xmlns="http://www.w3.org/2000/svg"
-                aria-hidden="true">
-                <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
-              </svg>
+              <span className="text-gray-500">/</span>
               <a
                 // href="#"
                 className="flex flex-row text-red-500 cursor-pointer transform hover:scale-110 transition-transform duration-150   ml-4">

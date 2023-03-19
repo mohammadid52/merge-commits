@@ -33,7 +33,7 @@ const Comment = ({
           <div className="flex-shrink-0 mr-3 w-auto">
             <img
               className="mt-2 rounded-full w-8 h-8 sm:w-10 sm:h-10"
-              src={getImageFromS3Static(chat?.person?.image)}
+              src={getImageFromS3Static(chat?.person?.image || '')}
               alt=""
             />
           </div>
@@ -66,7 +66,7 @@ const Comment = ({
                     <dl className="grid grid-cols-1  gap-y-3">
                       <div className="col-span-1">
                         <dt
-                          onClick={() => onEdit(chat?.id, chat?.msg)}
+                          onClick={() => onEdit(chat?.id || '', chat?.msg || '')}
                           className={`cursor-pointer text-gray-800 hover:text-gray-900`}>
                           Edit
                         </dt>
@@ -74,7 +74,7 @@ const Comment = ({
                       <div className="col-span-1">
                         <dt
                           onClick={() => {
-                            onChatDelete(chat?.id);
+                            onChatDelete(chat?.id || '');
                             setShowMenu(false);
                           }}
                           className={`cursor-pointer text-red-500 hover:text-red-600`}>
@@ -134,7 +134,7 @@ const Comments = ({
           <Comment
             email={email}
             authId={authId}
-            key={idx}
+            key={chat.id}
             isLast={orderedList.length - 1 === idx}
             onChatDelete={onChatDelete}
             onEdit={onEdit}

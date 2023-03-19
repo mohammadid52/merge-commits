@@ -1,4 +1,4 @@
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import {API, graphqlOperation} from 'aws-amplify';
 import Buttons from '@components/Atoms/Buttons';
 import {logError, uploadImageToS3} from '@graphql/functions';
 import {XLSX_TO_CSV_URL} from 'assets';
@@ -10,7 +10,13 @@ import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UICo
 import Table from '@components/Molecules/Table';
 import useAuth from '@customHooks/useAuth';
 import {Transition} from '@headlessui/react';
-import {focusOn, getExtension, withZoiqFilter} from '@utilities/functions';
+import {
+  focusOn,
+  getExtension,
+  insertExtraDataForClassroom,
+  removeDuplicates,
+  withZoiqFilter
+} from '@utilities/functions';
 import {getImageFromS3} from '@utilities/services';
 import {
   ClassroomType,
@@ -31,7 +37,7 @@ import React, {useEffect, useRef, useState} from 'react';
 import ClickAwayListener from 'react-click-away-listener';
 import {RiErrorWarningLine} from 'react-icons/ri';
 import {v4 as uuidv4} from 'uuid';
-import {insertExtraDataForClassroom, removeDuplicates} from './Csv';
+
 interface ICsvProps {
   institutionId?: string;
 }
@@ -92,24 +98,24 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
   const [newUniversalSurveyData, setNewUniversalSurveyData] = useState<string[]>([]);
   const [demographicsData, setDemographicsData] = useState<any[]>([]);
   const [newDemographicsData, setNewDemographicsData] = useState<string[]>([]);
-  const [selectedSurvey, setSelectedSurvey] = useState(null);
+  const [selectedSurvey, setSelectedSurvey] = useState<any | null>(null);
   const [classRoomLoading, setClassRoomLoading] = useState(false);
   const [unitsLoading, setUnitsLoading] = useState(false);
-  const [instClassRooms, setInstClassRooms] = useState([]);
-  const [classRoomsList, setClassRoomsList] = useState([]);
-  const [units, setUnits] = useState([]);
+  const [instClassRooms, setInstClassRooms] = useState<any[]>([]);
+  const [classRoomsList, setClassRoomsList] = useState<any[]>([]);
+  const [units, setUnits] = useState<any[]>([]);
   const [isMapping, setIsMapping] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<any | null>(null);
   const [showModal, setShowModal] = useState(INITIAL_MODAL_STATE);
 
-  const [selectedClassRoom, setSelectedClassRoom] = useState(null);
-  const [selectedCurriculum, setSelectedCurriculum] = useState(null);
+  const [selectedClassRoom, setSelectedClassRoom] = useState<any | null>(null);
+  const [selectedCurriculum, setSelectedCurriculum] = useState<any | null>(null);
 
-  const [selectedUnit, setSelectedUnit] = useState(null);
-  const [activeUnits, setActiveUnits] = useState([]);
+  const [selectedUnit, setSelectedUnit] = useState<any | null>(null);
+  const [activeUnits, setActiveUnits] = useState<any[]>([]);
   const [uploadingCSV, setUploadingCSV] = useState(false);
 
-  const [surveys, setSurveys] = useState([]);
+  const [surveys, setSurveys] = useState<any[]>([]);
   const [surveysLoading, setSurveysLoading] = useState(false);
 
   const [checkingCsvFile, setCheckingCsvFile] = useState(false);
@@ -119,18 +125,18 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
   const {authId, isTeacher, isFellow, email, firstName, lastName} = useAuth();
 
   const fileReader = new FileReader();
-  const fileInputRef = useRef<HTMLInputElement>();
-  const csvInputRef = useRef<HTMLInputElement>();
+
+  const csvInputRef = useRef<HTMLInputElement | null>(null);
 
   const reasonDropdown = [
     {
       id: 1,
-      name: 'Paper Survey',
+      label: 'Paper Survey',
       value: 'paper-survey'
     },
     {
       id: 2,
-      name: 'User Update Survey',
+      label: 'User Update Survey',
       value: 'user-update'
     }
   ];
@@ -292,6 +298,8 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
           } else {
             return false;
           }
+
+          return null;
         });
       });
 
@@ -304,7 +312,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
     surveyQuestionOptions: any,
     parsed: any,
     index: number,
-    keyName: string
+    _: string
   ) => {
     const getUniversalSurveyStudent: any = await API.graphql(
       graphqlOperation(queries.getUniversalSurveyStudentData, {
@@ -343,6 +351,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
               return (item.input = [value]);
             }
           }
+          return null;
         });
 
         input = {
@@ -364,7 +373,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
     surveyQuestionOptions: any,
     parsed: any,
     index: number,
-    keyName: string
+    _: string
   ) => {
     let input: any = {
       lessonID: '',
@@ -405,7 +414,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
     });
   };
 
-  const ddIDAndDemographicData = async (value: string, parsed: any, index2: number) => {
+  const ddIDAndDemographicData = async (value: string, parsed: any, _: number) => {
     const getDemographicsData: any = await API.graphql(
       graphqlOperation(queries.getQuestionData, {
         id: value
@@ -430,6 +439,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
               item.response = [value];
               return true;
             }
+            return false;
           }
         );
 
@@ -449,7 +459,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
     value: string,
     parsed: any,
     index: number,
-    index2: number
+    _: number
   ) => {
     let input: any = {
       authId: '',
@@ -541,7 +551,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
                 </div>
               ),
 
-              saveAction: null,
+              saveAction: () => {},
               saveLabel: '',
               closeLabel: ''
             });
@@ -572,7 +582,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
                 </div>
               ),
 
-              saveAction: null,
+              saveAction: () => {},
               saveLabel: '',
               closeLabel: ''
             });
@@ -952,9 +962,11 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
 
         return fileUrl as string;
       }
+      return null;
     } catch (error) {
       console.error(error);
       logError(error, {authId, email}, 'UploadCSV @uploadCsvToS3');
+      return null;
     }
   };
 
@@ -1014,31 +1026,35 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
       const csvUrl = await uploadCsvToS3();
 
       // step 2 - create upload log record and use csv url there
-      await createUploadLog(csvUrl);
+      if (csvUrl) {
+        await createUploadLog(csvUrl);
 
-      // step 3 - delete previous temporary records for both tables
-      await deletePrevTempDataUploadSurveyData();
-      await deletePrevTempDataDempographics();
+        // step 3 - delete previous temporary records for both tables
+        await deletePrevTempDataUploadSurveyData();
+        await deletePrevTempDataDempographics();
 
-      // step 4 - upload everything to table
-      await handleSurveyExistingUpload();
-      await handleNewSurveyUniversalUpload();
-      await handleDemographicsExistingUpload();
-      await handleDemographicsNewUpload();
+        // step 4 - upload everything to table
+        await handleSurveyExistingUpload();
+        await handleNewSurveyUniversalUpload();
+        await handleDemographicsExistingUpload();
+        await handleDemographicsNewUpload();
 
-      setSelectedReason({
-        id: 0,
-        name: '',
-        value: ''
-      });
+        setSelectedReason({
+          id: 0,
+          name: '',
+          value: ''
+        });
 
-      csvInputRef.current.value = '';
-      setFile(null);
+        if (csvInputRef.current && csvInputRef?.current?.value !== null) {
+          csvInputRef.current.value = '';
+        }
+        setFile(null);
 
-      setSuccess(true);
-      setTimeout(() => {
-        setSuccess(false);
-      }, 4500);
+        setSuccess(true);
+        setTimeout(() => {
+          setSuccess(false);
+        }, 4500);
+      }
     } catch (error) {
       logError(error, {authId, email}, 'UploadCSV @handleSubmit');
       console.error('🚀 ~ file: UploadCSV.tsx ~ line 38 ~ handleSubmit ~ error', error);
@@ -1072,8 +1088,13 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
         .map((syl: any) => {
           let unitData = syl.unit;
           if (Boolean(unitData)) {
-            return {id: unitData.id, name: unitData.name, value: unitData.name};
+            return {
+              id: unitData.id,
+              name: unitData.name,
+              value: unitData.name
+            };
           }
+          return null;
         })
         .filter(Boolean);
       // console.log('units', units)
@@ -1093,7 +1114,9 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
       ?.filter((_c: {activeSyllabus: any}) => Boolean(_c?.activeSyllabus))
       .map((_c: {activeSyllabus: string | null}) => {
         if (_c?.activeSyllabus) return {unitId: {eq: _c.activeSyllabus}};
-      });
+        return null;
+      })
+      .filter(Boolean);
 
     try {
       let curriculumUnits: any = await API.graphql(
@@ -1109,6 +1132,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
             let unitData = syl.unit;
             return {id: unitData.id, name: unitData.name};
           }
+          return null;
         })
         .filter(Boolean);
 
@@ -1133,7 +1157,10 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
         classrooms = await API.graphql(
           graphqlOperation(customQueries.listRoomsDashboard, {
             filter: withZoiqFilter(
-              {teacherAuthID: {eq: authId}, type: {eq: ClassroomType.TRADITIONAL}},
+              {
+                teacherAuthID: {eq: authId},
+                type: {eq: ClassroomType.TRADITIONAL}
+              },
               zoiqFilter
             )
           })
@@ -1198,6 +1225,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
               ...insertExtraDataForClassroom(cr)
             };
           }
+          return null;
         })
         .filter(Boolean);
 
@@ -1366,24 +1394,24 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
 
   return (
     <>
-      {showModal.show && (
-        <Modal
-          showHeader
-          title={showModal.title}
-          closeAction={clearModal}
-          saveAction={showModal.saveAction}
-          closeOnBackdrop
-          saveElement={showModal?.saveElement}
-          closeLabel={showModal.closeLabel}
-          saveLabel={showModal?.saveLabel}
-          showFooter={Boolean(showModal.closeLabel)}>
-          {showModal.element}
-        </Modal>
-      )}
+      <Modal
+        open={showModal.show}
+        showHeader
+        title={showModal.title}
+        closeAction={clearModal}
+        saveAction={showModal.saveAction}
+        closeOnBackdrop
+        saveElement={showModal?.saveElement}
+        closeLabel={showModal.closeLabel}
+        saveLabel={showModal?.saveLabel}
+        showFooter={Boolean(showModal.closeLabel)}>
+        {showModal.element}
+      </Modal>
+
       <div className="flex flex-col overflow-h-scroll w-full h-full px-8 py-4">
         <div className="mx-auto w-full">
           <div className="flex flex-row my-0 w-full py-0 justify-start">
-            <div className="">
+            <div className="w-full">
               <SectionTitleV3
                 textWidth="lg:w-1/3 2xl:w-1/4"
                 withButton={
@@ -1397,9 +1425,9 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
                         width="xl:w-64"
                         setHoveringItem={setHoveringItem}
                         list={instClassRooms}
-                        onChange={(value, name, id) => {
+                        onChange={(value, option: any) => {
                           setHoveringItem({});
-                          onClassRoomSelect(id, name, value);
+                          onClassRoomSelect(option.id, value, value);
                           focusOn('upload-analytics-unit');
                         }}
                       />
@@ -1474,8 +1502,8 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
                       list={units}
                       width="xl:w-64"
                       disabled={!selectedCurriculum}
-                      onChange={(value, name, id) => {
-                        onUnitSelect(id, name, value);
+                      onChange={(value, option: any) => {
+                        onUnitSelect(option.id, value, value);
                         focusOn('analytics-survey');
                       }}
                     />
@@ -1490,7 +1518,9 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
                       selectedItem={selectedSurvey ? selectedSurvey.name : ''}
                       placeholder="select survey"
                       list={surveys}
-                      onChange={(value, name, id) => onChangeSurvey(id, name, value)}
+                      onChange={(value, option: any) =>
+                        onChangeSurvey(option.id, value, value)
+                      }
                     />
                   </div>
                 }
@@ -1512,14 +1542,14 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
 
           <Selector
             additionalClass="w-auto"
-            btnClass={!file && 'cursor-not-allowed'}
+            btnClass={!file ? 'cursor-not-allowed' : ''}
             disabled={!file}
             dropdownWidth="w-96"
             btnId="reason-button"
             selectedItem={selectedReason ? selectedReason.name : ''}
             placeholder={CsvDict[userLanguage]['SELECT_REASON']}
             list={reasonDropdown}
-            onChange={(value, name, id) => onReasonSelected(id, name, value)}
+            onChange={(value, option: any) => onReasonSelected(option.id, value, value)}
           />
         </div>
         <AnimatedContainer show={checkingCsvFile} animationType="translateY">

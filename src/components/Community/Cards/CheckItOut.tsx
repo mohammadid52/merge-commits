@@ -6,21 +6,24 @@ import Media from 'components/Community/Components/Media';
 import {COMMUNITY_UPLOAD_KEY, IFile} from 'components/Community/constants.community';
 import {REGEX} from 'components/Lesson/UniversalLessonBuilder/UI/common/constants';
 import {ICheckItOutInput, ICommunityCardProps} from 'interfaces/Community.interfaces';
+import isEmpty from 'lodash/isEmpty';
+import {useEffect, useState} from 'react';
 import AnimatedContainer from 'uiComponents/Tabs/AnimatedContainer';
 import {getImageFromS3Static} from 'utilities/services';
-import isEmpty from 'lodash/isEmpty';
-import React, {useEffect, useState} from 'react';
 
 const CheckItOut = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardProps) => {
   const [file, setFile] = useState<IFile>();
   const [overlayText, setOverlayText] = useState('');
-  const [unsavedChanges, setUnsavedChanges] = useState(false);
+  const [_, setUnsavedChanges] = useState(false);
 
   const [error, setError] = useState('');
 
-  const [fields, setFields] = useState<{summary: string; summaryHtml: string}>({
-    summary: editMode && !isEmpty(cardDetails) ? cardDetails?.summary : '',
-    summaryHtml: editMode && !isEmpty(cardDetails) ? cardDetails?.summaryHtml : ''
+  const [fields, setFields] = useState<{
+    summary: string;
+    summaryHtml: string;
+  }>({
+    summary: editMode && !isEmpty(cardDetails) ? cardDetails?.summary || '' : '',
+    summaryHtml: editMode && !isEmpty(cardDetails) ? cardDetails?.summaryHtml || '' : ''
   });
 
   const onEditorStateChange = (
@@ -58,7 +61,7 @@ const CheckItOut = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardP
       if (youtubeVideoLink) {
         checkItOutDetails = {
           ...checkItOutDetails,
-          cardImageLink: null,
+          cardImageLink: '',
           additionalLinks: [youtubeVideoLink]
         };
       }
@@ -108,7 +111,7 @@ const CheckItOut = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardP
     return isValid;
   };
 
-  const [tempData, setTempData] = useState(null);
+  const [tempData, setTempData] = useState<any>(null);
 
   useEffect(() => {
     if (editMode && !isEmpty(cardDetails)) {
@@ -116,11 +119,11 @@ const CheckItOut = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardP
         image: cardDetails.cardImageLink
       });
 
-      if (cardDetails?.additionalLinks?.length > 0) {
+      if (cardDetails?.additionalLinks && cardDetails?.additionalLinks?.length > 0) {
         setYoutubeVideoLink(cardDetails.additionalLinks[0]);
       }
 
-      setOverlayText(cardDetails?.cardName);
+      cardDetails?.cardName && setOverlayText(cardDetails?.cardName);
     }
   }, [editMode, cardDetails]);
 
@@ -138,6 +141,7 @@ const CheckItOut = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardP
     <div className="">
       {tempData && tempData?.image ? (
         <div>
+          {/*  @ts-ignore */}
           <Media
             initialImage={getImageFromS3Static(
               COMMUNITY_UPLOAD_KEY +
@@ -149,11 +153,12 @@ const CheckItOut = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardP
           />
         </div>
       ) : (
+        // @ts-ignore
         <Media
           initialImage={
             !isEmpty(file) && file?._status === 'success'
               ? getImageFromS3Static(COMMUNITY_UPLOAD_KEY + file?.fileKey)
-              : null
+              : undefined
           }
           {...mediaProps}
         />
@@ -197,7 +202,7 @@ const CheckItOut = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardP
         {error && <p className="mx-4 text-red-500 text-xs">{error}</p>}
       </AnimatedContainer>
       <div className="flex mt-8 justify-center px-6 pb-4">
-        <div className="flex justify-end">
+        <div className="flex justify-end gap-4">
           <Buttons
             btnClass="py-1 px-4 text-xs mr-2"
             label={'Cancel'}

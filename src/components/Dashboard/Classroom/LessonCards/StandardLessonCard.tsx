@@ -1,13 +1,14 @@
-import React, {useContext, useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 
 import useAuth from '@customHooks/useAuth';
-import {GlobalContext} from 'contexts/GlobalContext';
-import {LessonCardProps} from '../Classroom';
+import {useGlobalContext} from 'contexts/GlobalContext';
+
 import BottomBar from './StandardLessonCard/BottomBar';
 import MainSummary from './StandardLessonCard/MainSummary';
 import ProgressBar from './StandardLessonCard/ProgressBar';
 import Rating from './StandardLessonCard/Rating';
 import SideImage from './StandardLessonCard/SideImage';
+import {LessonCardProps} from '@interfaces/ClassroomInterface';
 
 const StandardLessonCard = (props: LessonCardProps) => {
   const {
@@ -26,7 +27,7 @@ const StandardLessonCard = (props: LessonCardProps) => {
     preview = false
   } = props;
 
-  const {theme, lessonDispatch} = useContext(GlobalContext);
+  const {theme, lessonDispatch} = useGlobalContext();
   const [existsOrNot, setexistsOrNot] = useState<boolean>(false);
 
   const [isFetched, setIsFetched] = useState(false);
@@ -41,13 +42,20 @@ const StandardLessonCard = (props: LessonCardProps) => {
 
   const checkValueOrNull = async () => {
     try {
-      const value = await getLessonRating(lessonProps.lesson.id, user.email, user.authId);
+      const value = await getLessonRating?.(
+        lessonProps.lesson.id,
+        user.email,
+        user.authId
+      );
 
       if (typeof value === 'undefined') setexistsOrNot(true);
 
       if (value) {
         setPersonDataObj(value);
-        lessonDispatch({type: 'SET_CURRENT_PAGE', payload: value.lessonProgress});
+        lessonDispatch({
+          type: 'SET_CURRENT_PAGE',
+          payload: value.lessonProgress
+        });
       }
       return;
     } catch (error) {
@@ -66,7 +74,7 @@ const StandardLessonCard = (props: LessonCardProps) => {
   return (
     <div
       key={keyProps}
-      className={`relative overflow-hidden bg-white theme-card-shadow rounded-xl flex lesson-card  mb-8 ${theme.elem.textDark} `}>
+      className={`relative overflow-hidden bg-white theme-card-shadow rounded-lg flex lesson-card  mb-8 ${theme.elem.textDark} `}>
       {/**
        *  LEFT SECTION IMAGE
        */}
@@ -74,7 +82,7 @@ const StandardLessonCard = (props: LessonCardProps) => {
       {/**
        *  RIGHT SECTION
        */}
-      <div className={`w-7.5/10 lesson-card-summary flex flex-col rounded-b`}>
+      <div className={`w-7.5/10 lesson-card-summary flex flex-col rounded-b-lg`}>
         <MainSummary
           searchTerm={searchTerm}
           lessonProps={{...lessonProps, isTeacher, accessible}}

@@ -7,10 +7,9 @@ import {classNames} from 'components/Lesson/UniversalLessonBuilder/UI/FormElemen
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import LessonLoading from 'lesson/Loading/ComponentLoading';
-import React, {Fragment, useState} from 'react';
+import {Fragment, useState} from 'react';
 import {FiAlertCircle} from 'react-icons/fi';
 import {IoLockClosed} from 'react-icons/io5';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {requestResetPassword} from 'utilities/urls';
 import {UserInfo} from './User';
 import UserRole from './UserRole';
@@ -146,17 +145,12 @@ const UserInformation = ({
                       'whitespace-nowrap justify-center flex py-4 px-1 border-b-2 font-medium text-sm ml-2'
                     )}>
                     {UserInformationDict[userLanguage]['private']}
-                    <IconContext.Provider
-                      value={{
-                        size: '0.8rem',
-                        className: classNames(
-                          'group-hover:text-gray-500',
-                          'ml-2 h-5 w-5'
-                        ),
-                        color: getColor(tab === 'private').color
-                      }}>
-                      <IoLockClosed />
-                    </IconContext.Provider>
+
+                    <IoLockClosed
+                      size={'0.8rem'}
+                      color={getColor(tab === 'private').color}
+                      className="group-hover:text-gray-500 ml-2 h-5 w-5"
+                    />
                   </a>
                 </>
               )}
@@ -201,9 +195,9 @@ const UserInformation = ({
                       <span
                         className="text-xs"
                         title={`Status changed to inactive on ${statusDate(
-                          user.inactiveStatusDate
+                          user?.inactiveStatusDate || ''
                         )}`}>
-                        ({statusDate(user.inactiveStatusDate)})
+                        ({statusDate(user?.inactiveStatusDate || '')})
                       </span>
                     )}
                   </dd>
@@ -243,6 +237,8 @@ const UserInformation = ({
                         ? UserInformationDict[userLanguage]['RESETTING_PASSWORD']
                         : UserInformationDict[userLanguage]['RESET_PASSWORD']
                     }
+                    variant="dashed"
+                    size="small"
                     onClick={resetPassword}
                     disabled={loading}
                   />
@@ -265,8 +261,8 @@ const UserInformation = ({
                   </div>
                   <div className="px-4 py-5 sm:px-6">
                     <dl className="grid grid-cols-1 gap-x-4 gap-y-4 sm:grid-cols-2">
-                      {checkpoint.questions?.items.map((item: any, index: number) => (
-                        <div key={index} className="sm:col-span-1 p-2">
+                      {checkpoint.questions?.items.map((item: any) => (
+                        <div key={item.question.id} className="sm:col-span-1 p-2">
                           <dt className="text-sm leading-5 font-medium text-gray-500">
                             {item.question.question}
                           </dt>
@@ -293,24 +289,27 @@ const UserInformation = ({
             ))}
           </Fragment>
         )}
-        {resetPasswordServerResponse.show && (
-          <Modal showHeader={false} showFooter={false} closeAction={onAlertClose}>
-            <div className="py-8 px-16">
-              <div className="mx-auto flex items-center justify-center rounded-full">
-                <FiAlertCircle className="w-8 h-8" />
-              </div>
-              <div className="mt-4">{resetPasswordServerResponse.message}</div>
-              <div className="flex justify-center mt-4">
-                <Buttons
-                  btnClass={'abc'}
-                  label={'Ok'}
-                  labelClass={'leading-6'}
-                  onClick={onAlertClose}
-                />
-              </div>
+
+        <Modal
+          open={resetPasswordServerResponse.show}
+          showHeader={false}
+          showFooter={false}
+          closeAction={onAlertClose}>
+          <div className="py-8 px-16">
+            <div className="mx-auto flex items-center justify-center rounded-full">
+              <FiAlertCircle className="w-8 h-8" />
             </div>
-          </Modal>
-        )}
+            <div className="mt-4">{resetPasswordServerResponse.message}</div>
+            <div className="flex justify-center mt-4">
+              <Buttons
+                btnClass={'abc'}
+                label={'Ok'}
+                labelClass={'leading-6'}
+                onClick={onAlertClose}
+              />
+            </div>
+          </div>
+        </Modal>
       </div>
     );
   }

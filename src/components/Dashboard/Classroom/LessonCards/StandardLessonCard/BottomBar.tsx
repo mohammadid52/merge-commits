@@ -1,7 +1,8 @@
+import {LessonCardProps} from '@interfaces/ClassroomInterface';
 import React from 'react';
 import {AiOutlineClockCircle, AiOutlineUser} from 'react-icons/ai';
 import {MinutesToHHMM} from 'utilities/time';
-import {LessonCardProps} from '../../Classroom';
+
 import Start from '../../Start';
 
 const BottomBar = (props: LessonCardProps) => {
@@ -20,13 +21,13 @@ const BottomBar = (props: LessonCardProps) => {
 
   const startButtonProps = {
     preview: preview,
-    roomID: roomID,
-    isTeacher: isTeacher,
+    roomID: roomID || '',
+    isTeacher: Boolean(isTeacher),
     lessonKey: lessonProps ? lessonProps.lessonID : null,
     isActive: activeRoomInfo?.activeLessons?.includes(lessonProps?.lessonID),
     open: lessonProps && lessonProps?.status?.toLowerCase() === 'active' ? true : false,
-    isCompleted: isCompleted,
-    accessible: accessible,
+    isCompleted: Boolean(isCompleted),
+    accessible: Boolean(accessible),
     type: lessonProps.lesson.type,
     activeRoomInfo: activeRoomInfo,
     lessonProps: lessonProps?.lesson,
@@ -38,6 +39,7 @@ const BottomBar = (props: LessonCardProps) => {
   return (
     <div>
       <div
+        style={{borderTop: '1px solid rgba(237, 242, 247,1)'}}
         className={`bg-transparent relative border-t-0 border-gray-200 flex justify-between text-base p-2 px-3 ${
           lessonType === 'survey' ? 'rounded-b' : 'rounded-br'
         }`}>
@@ -58,16 +60,6 @@ const BottomBar = (props: LessonCardProps) => {
             <AiOutlineUser className="w-4 h-4 sm:w-6 sm:h-6" />
           </div>
 
-          {/* {isTeacher && (
-            <p className="overflow-ellipsis overflow-hidden text-base text-left">
-              Status:
-              {accessible ? (
-                <span className="ml-2 text-base font-semibold text-green-400">Open</span>
-              ) : (
-                <span className="ml-2 text-base font-semibold text-red-600">Closed</span>
-              )}
-            </p>
-          )} */}
           {/*
            * SHOW TEACHER NAME
            */}

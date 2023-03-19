@@ -2,7 +2,7 @@ import {useGlobalContext} from 'contexts/GlobalContext';
 import useLessonControls from 'customHooks/lessonControls';
 import useGraphqlMutation from 'customHooks/useGraphqlMutation';
 import ModalPopUp from 'molecules/ModalPopUp';
-import React, {useState} from 'react';
+import {useState} from 'react';
 import {AiOutlineCloseCircle} from 'react-icons/ai';
 import {useHistory, useRouteMatch} from 'react-router';
 import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
@@ -11,7 +11,7 @@ const CloseLesson = ({}) => {
   const {isLoading} = useGraphqlMutation('updateRoom');
   const getRoomData = getLocalStorageData('room_info');
   const history = useHistory();
-  const {lessonDispatch, controlState} = useGlobalContext();
+  const {lessonDispatch} = useGlobalContext();
 
   const {handleRoomUpdate} = useLessonControls();
 
@@ -46,9 +46,6 @@ const CloseLesson = ({}) => {
       show: true
     }));
   };
-  const studentList = controlState?.roster?.filter(
-    (_s: {person: {onDemand: any}}) => !_s?.person?.onDemand
-  );
 
   const handleMarkAsCompleteClick = async () => {
     // UPDATE ROOM MUTATION
@@ -87,21 +84,6 @@ const CloseLesson = ({}) => {
         activeLessons: [lessonId],
         displayData: displayData
       });
-      studentList &&
-        studentList.length > 0 &&
-        studentList.forEach((student: any) => {
-          const {id} = student;
-          // lessonDispatch({
-          //   type: 'SET_ROOM_SUBSCRIPTION_DATA',
-          //   payload: {
-          //     id: getRoomData.id,
-          //     studentViewing: '',
-          //     displayData: [{isTeacher: false, studentAuthID: '', lessonPageID: ''}]
-          //   }
-          // });
-
-          // give signal to all students that lesson is closed. This will trigger the student to move to the next lesson
-        });
     } catch (e) {
       console.error('handleMarkAsCompleteClick() - ', e);
     } finally {
@@ -123,20 +105,19 @@ const CloseLesson = ({}) => {
         <AiOutlineCloseCircle size="1.5rem" />
       </div>
 
-      {warnModal.show && (
-        <ModalPopUp
-          smallText={MODAL_SUBTEXT}
-          closeAction={onCloseModal}
-          cancelAction={onCloseModal}
-          noButtonAction={noButtonAction}
-          noButton="No, I just want to exit classroom"
-          saveAction={handleMarkAsCompleteClick}
-          // saveAction={() => {}}
-          saveLabel={isLoading ? 'Processing...' : 'Yes'}
-          cancelLabel="Cancel"
-          message={warnModal.message}
-        />
-      )}
+      <ModalPopUp
+        open={warnModal.show}
+        smallText={MODAL_SUBTEXT}
+        closeAction={onCloseModal}
+        cancelAction={onCloseModal}
+        noButtonAction={noButtonAction}
+        noButton="No, I just want to exit classroom"
+        saveAction={handleMarkAsCompleteClick}
+        // saveAction={() => {}}
+        saveLabel={isLoading ? 'Processing...' : 'Yes'}
+        cancelLabel="Cancel"
+        message={warnModal.message}
+      />
     </div>
   );
 };

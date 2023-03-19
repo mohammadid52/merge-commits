@@ -1,19 +1,16 @@
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import React, {useEffect, useState} from 'react';
+import {API, graphqlOperation} from 'aws-amplify';
+import {useEffect, useState} from 'react';
 import {
   AiOutlineArrowDown,
   AiOutlineArrowUp,
   AiOutlineUsergroupAdd
 } from 'react-icons/ai';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {useHistory} from 'react-router-dom';
 
-import {getAsset} from 'assets';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
 import * as queries from 'graphql/queries';
 
-// import LessonLoading from '../../../Lesson/Loading/ComponentLoading';
 import Filters from '@components/Atoms/Filters';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import UserLookupAction from '@components/MicroComponents/UserLookupAction';
@@ -23,6 +20,7 @@ import Table from '@components/Molecules/Table';
 import useDictionary from '@customHooks/dictionary';
 import usePagination from '@customHooks/usePagination';
 import useSearch from '@customHooks/useSearch';
+import {withZoiqFilter} from '@utilities/functions';
 import {PersonStatus} from 'API';
 import BreadCrums from 'atoms/BreadCrums';
 import Buttons from 'atoms/Buttons';
@@ -34,7 +32,6 @@ import {createFilterToFetchSpecificItemsOnly, getUserRoleString} from 'utilities
 import UserLocation from './UserLocation';
 import UserRole from './UserRole';
 import UserStatus from './UserStatus';
-import {withZoiqFilter} from '@utilities/functions';
 
 export const sortByName = (data: any[]) => {
   return data.sort((a: any, b: any) => {
@@ -57,15 +54,8 @@ export const addName = (data: any[]) => {
 };
 
 const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
-  const {
-    state,
-    theme,
-    dispatch,
-    userLanguage,
-    zoiqFilter,
-    clientKey
-  } = useGlobalContext();
-  const themeColor = getAsset(clientKey, 'themeClassName');
+  const {state, theme, userLanguage, zoiqFilter} = useGlobalContext();
+
   const history = useHistory();
 
   const [loading, setLoading] = useState<boolean>(false);
@@ -79,7 +69,7 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
   });
 
   // Below changes are for fetching entire list on client side.
-  const [totalUserList, setTotalUserList] = useState([]);
+  const [totalUserList, setTotalUserList] = useState<any[]>([]);
   const [totalUserNum, setTotalUserNum] = useState(0);
 
   const {
@@ -95,18 +85,22 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
   // ...End.
 
   const breadCrumsList = [
-    {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
+    {
+      title: BreadcrumsTitles[userLanguage]['HOME'],
+      href: '/dashboard',
+      last: false
+    },
     {
       title: BreadcrumsTitles[userLanguage]['PEOPLE'],
-      url: '/dashboard/manage-users',
+      href: '/dashboard/manage-users',
       last: true
     }
   ];
 
   const sortByList = [
-    {id: 1, name: 'Name', value: 'lastName'},
-    {id: 2, name: 'Role', value: 'role'},
-    {id: 4, name: 'Status', value: 'status'}
+    {id: 1, label: 'Name', value: 'lastName'},
+    {id: 2, label: 'Role', value: 'role'},
+    {id: 4, label: 'Status', value: 'status'}
   ];
 
   const handleLink = () => {
@@ -137,11 +131,11 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
     }
   };
 
-  const setSortingValue = (str: string, name: string) => {
+  const setSortingValue = (value: string) => {
     setSortingType({
       ...sortingType,
-      value: str,
-      name: name
+      value: value,
+      name: value
     });
   };
 
@@ -262,7 +256,7 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
 
           const response = await dashboardDataFetch;
           let arrayOfResponseObjects = response?.data?.listRooms?.items;
-          arrayOfResponseObjects = arrayOfResponseObjects.map((item: any) => {
+          arrayOfResponseObjects = arrayOfResponseObjects.map(() => {
             return {class: {rooms: {items: arrayOfResponseObjects}}};
           });
 
@@ -331,7 +325,7 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
     }
   };
 
-  const [classList, setClassList] = useState([]);
+  const [classList, setClassList] = useState<any[]>([]);
 
   const fetchStudentList = async () => {
     setLoading(true);
@@ -367,7 +361,10 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
         classes.push(item.room.class);
         item?.room?.class?.students?.items.forEach((student: any) => {
           if (student?.student?.role === 'ST') {
-            students2.push({...student.student, classId: item.room.classID});
+            students2.push({
+              ...student.student,
+              classId: item.room.classID
+            });
           }
         });
       });
@@ -438,7 +435,7 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
       return {
         id: idx,
         value: item.id,
-        name: item.name
+        label: item.name
       };
     });
   };
@@ -467,16 +464,16 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
     }
   };
 
-  const setSelectedClassValue = (str: string, name: string) => {
-    if (selectedClass === null || selectedClass?.value !== str) {
+  const setSelectedClassValue = (name: string) => {
+    if (selectedClass === null || selectedClass?.value !== name) {
       setSelectedClass({
         ...selectedClass,
-        value: str,
+        value: name,
         name: name
       });
 
       removeSearchAction();
-      fetchClassStudents(str).then((resp: any) => {});
+      fetchClassStudents(name).then(() => {});
     }
   };
 
@@ -496,7 +493,7 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
 
   const [filters, setFilters] = useState<any>();
 
-  const [filteredList, setFilteredList] = useState([]);
+  const [filteredList, setFilteredList] = useState<any[]>([]);
 
   const finalList = searchInput.isActive ? filteredList : currentList;
 
@@ -534,12 +531,11 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
       'no',
       dict['name'],
       dict['flow'],
-
       dict['role'],
       dict['status'],
       dict['location'],
       state.user.role !== 'ST' && state.user.role !== 'BLD' && dict['action']
-    ],
+    ] as string[],
     dataList,
     config: {
       dark: false,
@@ -570,7 +566,10 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
         },
         maxHeight: 'max-h-none',
         pattern: 'striped',
-        patternConfig: {firstColor: 'bg-gray-100', secondColor: 'bg-gray-200'}
+        patternConfig: {
+          firstColor: 'bg-gray-100',
+          secondColor: 'bg-gray-200'
+        }
       }
     }
   };
@@ -664,10 +663,11 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
                   <button
                     className={`w-28 bg-gray-100 mr-4 p-3 border-gray-400  border-0 rounded border-l-none rounded-l-none ${theme.outlineNone} `}
                     onClick={toggleSortDimention}>
-                    <IconContext.Provider
-                      value={{size: '1.5rem', color: theme.iconColor[themeColor]}}>
-                      {sortingType.asc ? <AiOutlineArrowUp /> : <AiOutlineArrowDown />}
-                    </IconContext.Provider>
+                    {sortingType.asc ? (
+                      <AiOutlineArrowUp className="theme-text" size="1.5rem" />
+                    ) : (
+                      <AiOutlineArrowDown className="theme-text" size="1.5rem" />
+                    )}
                   </button>
                 </>
               )}

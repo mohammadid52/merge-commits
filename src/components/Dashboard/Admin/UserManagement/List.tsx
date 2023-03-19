@@ -5,9 +5,9 @@ import {PersonStatus, UserPageState} from 'API';
 import Buttons from 'atoms/Buttons';
 import Modal from 'atoms/Modal';
 import axios from 'axios';
-import {GlobalContext} from 'contexts/GlobalContext';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import moment from 'moment';
-import React, {useContext, useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {FiAlertCircle} from 'react-icons/fi';
 import {useHistory, useRouteMatch} from 'react-router-dom';
 import {getImageFromS3} from 'utilities/services';
@@ -22,16 +22,6 @@ interface ListProps {
   isStudentRoster?: boolean;
   idx?: number;
 }
-
-type LocationInfoType = {
-  idx: number;
-  authId: string;
-  showLocationInfo: boolean;
-
-  pageState: UserPageState;
-  email: string;
-  setShowLocationInfo: React.Dispatch<React.SetStateAction<boolean>>;
-};
 
 export const formatPageName = (pageState: UserPageState) => {
   switch (pageState) {
@@ -57,7 +47,7 @@ export const formatPageName = (pageState: UserPageState) => {
 };
 
 const List = (props: ListProps) => {
-  const {item, idx, searchTerm, isStudentRoster} = props;
+  const {item, idx = 0, searchTerm, isStudentRoster} = props;
 
   const match = useRouteMatch();
   const history = useHistory();
@@ -67,7 +57,7 @@ const List = (props: ListProps) => {
     show: false,
     message: ''
   });
-  const {state} = useContext(GlobalContext);
+  const {state} = useGlobalContext();
 
   const handleLink = (id: string) => {
     const {user} = state;
@@ -234,24 +224,27 @@ const List = (props: ListProps) => {
           </div>
         ) : null}
       </div>
-      {resetPasswordServerResponse.show && (
-        <Modal showHeader={false} showFooter={false} closeAction={onAlertClose}>
-          <div className="py-8 px-16">
-            <div className="mx-auto flex items-center justify-center rounded-full">
-              <FiAlertCircle className="w-8 h-8" />
-            </div>
-            <div className="mt-4">{resetPasswordServerResponse.message}</div>
-            <div className="flex justify-center mt-4">
-              <Buttons
-                btnClass={'abc'}
-                label={'Ok'}
-                labelClass={'leading-6'}
-                onClick={onAlertClose}
-              />
-            </div>
+
+      <Modal
+        open={resetPasswordServerResponse.show}
+        showHeader={false}
+        showFooter={false}
+        closeAction={onAlertClose}>
+        <div className="py-8 px-16">
+          <div className="mx-auto flex items-center justify-center rounded-full">
+            <FiAlertCircle className="w-8 h-8" />
           </div>
-        </Modal>
-      )}
+          <div className="mt-4">{resetPasswordServerResponse.message}</div>
+          <div className="flex justify-center mt-4">
+            <Buttons
+              btnClass={'abc'}
+              label={'Ok'}
+              labelClass={'leading-6'}
+              onClick={onAlertClose}
+            />
+          </div>
+        </div>
+      </Modal>
     </>
   );
 };

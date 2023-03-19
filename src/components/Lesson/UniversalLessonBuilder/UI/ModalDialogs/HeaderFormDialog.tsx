@@ -1,25 +1,25 @@
-import Buttons from 'atoms/Buttons';
-import FormInput from 'atoms/Form/FormInput';
-import Selector from 'atoms/Form/Selector';
-import {
-  Tabs3,
-  useTabs
-} from 'components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/Tabs';
-import {GlobalContext} from 'contexts/GlobalContext';
-import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
-import RichTextEditor from 'atoms/RichTextEditor';
 import {EditQuestionModalDict} from '@dictionary/dictionary.iconoclast';
 import {Switch} from '@headlessui/react';
-import {IContentTypeComponentProps} from 'interfaces/UniversalLessonBuilderInterfaces';
-import AnimatedContainer from 'uiComponents/Tabs/AnimatedContainer';
 import {HeaderBlock} from '@UlbBlocks/HeaderBlock';
 import ColorPicker from '@UlbUI/ColorPicker/ColorPicker';
 import {classNames} from '@UlbUI/FormElements/TextInput';
 import DummyContent from '@UlbUI/Preview/DummyContent';
 import PreviewLayout from '@UlbUI/Preview/Layout/PreviewLayout';
+import Buttons from 'atoms/Buttons';
+import FormInput from 'atoms/Form/FormInput';
+import Selector from 'atoms/Form/Selector';
+import RichTextEditor from 'atoms/RichTextEditor';
+import {
+  Tabs3,
+  useTabs
+} from 'components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/Tabs';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
+import {IContentTypeComponentProps} from 'interfaces/UniversalLessonBuilderInterfaces';
+import AnimatedContainer from 'uiComponents/Tabs/AnimatedContainer';
 import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
 // import Tabs, {useTabs} from 'uiComponents/Tabs/Tabs';
-import React, {useContext, useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {v4 as uuidv4} from 'uuid';
 
 interface IHeaderModalComponentProps extends IContentTypeComponentProps {
@@ -82,13 +82,13 @@ interface IInput {
 const HeaderModalComponent = ({
   closeAction,
   inputObj,
-  classString,
+  classString = '',
   setUnsavedChanges,
   askBeforeClose,
   createNewBlockULBHandler,
   updateBlockContentULBHandler
 }: IHeaderModalComponentProps) => {
-  const {userLanguage} = useContext(GlobalContext);
+  const {userLanguage} = useGlobalContext();
   const {blockConfig} = useULBContext();
 
   const [errors, setErrors] = useState({animation: '', title: ''});
@@ -231,7 +231,10 @@ const HeaderModalComponent = ({
           'header',
           [
             {id: uuidv4().toString(), value},
-            {id: uuidv4().toString(), value: inputFields.instructionsHtml || ''}
+            {
+              id: uuidv4().toString(),
+              value: inputFields.instructionsHtml || ''
+            }
           ],
           blockConfig.position,
           classValue
@@ -246,7 +249,10 @@ const HeaderModalComponent = ({
 
           [
             {id: uuidv4().toString(), value},
-            {id: uuidv4().toString(), value: inputFields.instructionsHtml || ''}
+            {
+              id: uuidv4().toString(),
+              value: inputFields.instructionsHtml || ''
+            }
           ],
           blockConfig.position,
 
@@ -266,11 +272,11 @@ const HeaderModalComponent = ({
   };
 
   const fontSizeList = [
-    {id: 1, name: 'smallest'},
-    {id: 2, name: 'small'},
-    {id: 3, name: 'medium'},
-    {id: 4, name: 'large'},
-    {id: 5, name: 'largest'}
+    {id: 1, label: 'smallest', value: 'smallest'},
+    {id: 2, label: 'small', value: 'small'},
+    {id: 3, label: 'medium', value: 'medium'},
+    {id: 4, label: 'large', value: 'large'},
+    {id: 5, label: 'largest', value: 'largest'}
   ];
 
   const [colorPickerActive, setColorPickerActive] = useState<boolean>(false);
@@ -297,7 +303,11 @@ const HeaderModalComponent = ({
 
   const onEditorStateChange = (html: string, text: string) => {
     setUnsavedChanges(true);
-    setInputFields({...inputFields, instructionsText: text, instructionsHtml: html});
+    setInputFields({
+      ...inputFields,
+      instructionsText: text,
+      instructionsHtml: html
+    });
   };
 
   const {curTab, setCurTab, helpers} = useTabs();
@@ -327,7 +337,7 @@ const HeaderModalComponent = ({
               <div className="col-span-1">
                 <Selector
                   label={'Select font size'}
-                  onChange={(c: any, name: string) =>
+                  onChange={(name: string) =>
                     setSelectedValues({...selectedValues, size: name})
                   }
                   list={fontSizeList}
@@ -355,7 +365,10 @@ const HeaderModalComponent = ({
                     isMainPage
                     noneLabel="No Border"
                     onNoneClick={() => {
-                      setSelectedValues({...selectedValues, color: 'No Border'});
+                      setSelectedValues({
+                        ...selectedValues,
+                        color: 'No Border'
+                      });
                       setColorPickerActive(false);
                     }}
                     classString={classString}
@@ -368,7 +381,7 @@ const HeaderModalComponent = ({
             <div className="col-span-1 my-4 flex items-center w-auto">
               <Toggle
                 error={errors.animation}
-                checked={inputFields.animated}
+                checked={Boolean(inputFields.animated)}
                 text="Animated Title"
                 // disabled={NO_BORDER_SELECTED}
                 onClick={onAnimationToggle}
@@ -376,7 +389,7 @@ const HeaderModalComponent = ({
             </div>
             <div className="col-span-1 my-4 flex items-center w-auto">
               <Toggle
-                checked={inputFields.instructions}
+                checked={Boolean(inputFields.instructions)}
                 text="Instructions"
                 // disabled={NO_BORDER_SELECTED}
                 onClick={() => onToggle('instructions')}
@@ -386,22 +399,24 @@ const HeaderModalComponent = ({
               <div className="col-span-2 max-w-256">
                 <RichTextEditor
                   withStyles
-                  initialValue={inputFields.instructionsText}
+                  initialValue={inputFields?.instructionsText || ''}
                   onChange={(htmlContent, plainText) =>
                     onEditorStateChange(htmlContent, plainText)
                   }
                 />
               </div>
             )}
-            <div className="flex mt-8 justify-center px-6 pb-4">
-              <div className="flex justify-end">
+            <div className="flex mt-8 justify-end px-6 pb-4">
+              <div className="flex justify-end gap-4">
                 <Buttons
                   btnClass="py-1 px-4 text-xs mr-2"
                   label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
                   onClick={askBeforeClose}
+                  size="middle"
                   transparent
                 />
                 <Buttons
+                  size="middle"
                   btnClass="py-1 px-8 text-xs ml-2"
                   label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
                   onClick={onHeaderCreate}

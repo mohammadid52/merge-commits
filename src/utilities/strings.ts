@@ -32,7 +32,7 @@ export const formatPattern = (
     }, {});
   const outputTime = outputPattern
     .split(separator)
-    .map((val: string, i: number) => originalTime[val]);
+    .map((val: string) => originalTime[val]);
 
   return outputTime.join(separator);
 };
@@ -147,7 +147,7 @@ export const getInitialsFromString = (str: string) => {
   }
 };
 
-export const stringToHslColor = (str: string) => {
+export const stringToHslColor = (str: string = '') => {
   let hash = 0;
   let i;
   for (i = 0; i < str.length; i++) {
@@ -256,7 +256,7 @@ export const getClientKey = () => {
   if (hostname.indexOf('demo') >= 0) return 'demo';
   if (hostname.indexOf('iconoclast') >= 0) return 'iconoclast';
   if (hostname.indexOf('curate') >= 0) return 'curate';
-  else return 'demo';
+  else return 'iconoclast';
 };
 
 /**
@@ -283,12 +283,15 @@ export const convertArrayIntoObj = (answerArray: any[]) => {
   }, {});
 };
 
-export const getLanguageString = (language: string) => {
+export const getLanguageString = (language: string): 'English' | 'Spanish' => {
   switch (language) {
     case 'EN':
       return 'English';
     case 'ES':
       return 'Spanish';
+
+    default:
+      return 'English';
   }
 };
 
@@ -315,7 +318,7 @@ export const getTypeString = (type: string) => {
   }
 };
 
-export const getLessonType = (type: string) => {
+export const getLessonType = (type: string): string => {
   switch (type) {
     case 'lesson':
       return 'Lesson';
@@ -323,10 +326,12 @@ export const getLessonType = (type: string) => {
       return 'Survey';
     case 'assessment':
       return 'Assessment';
+    default:
+      return 'Lesson';
   }
 };
 
-export const getUserRoleString = (role: string) => {
+export const getUserRoleString = (role: string): string => {
   switch (role) {
     case 'SUP':
       return 'Super Admin';
@@ -336,15 +341,16 @@ export const getUserRoleString = (role: string) => {
       return 'Builder';
     case 'FLW':
       return 'Fellow';
-    case 'CRD':
-      return 'Coordinator';
+
     case 'TR':
       return 'Teacher';
     case 'ST':
       return 'Student';
+    default:
+      return 'Student';
   }
 };
-export const getReverseUserRoleString = (role: string) => {
+export const getReverseUserRoleString = (role: string): string => {
   switch (role) {
     case 'Super Admin':
       return 'SUP';
@@ -354,11 +360,11 @@ export const getReverseUserRoleString = (role: string) => {
       return 'BLD';
     case 'Fellow':
       return 'FLW';
-    case 'Coordinator':
-      return 'CRD';
     case 'Teacher':
       return 'TR';
     case 'Student':
+      return 'ST';
+    default:
       return 'ST';
   }
 };
@@ -408,4 +414,25 @@ export const replaceAll = (content: string, replaceObj: any) => {
     }
   }
   return content;
+};
+
+// regex match double spaces and replace with single space
+const removeDoubleSpaces = (str: string) => {
+  if (!str) return '';
+  return str.replace(/\s{2,}/g, ' ');
+};
+
+// regex match double quotations and replace with single quotations
+const removeDoubleQuotes = (str: string) => {
+  if (!str) return '';
+  return str.replace(/\"/g, "'");
+};
+
+const pipeFn =
+  (...fns: any[]) =>
+  (arg: any) =>
+    fns.reduce((acc, fn) => fn(acc), arg);
+
+export const cleanString = (str: string) => {
+  return pipeFn(removeDoubleSpaces, removeDoubleQuotes)(str);
 };

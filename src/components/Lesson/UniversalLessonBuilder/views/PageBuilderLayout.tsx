@@ -1,42 +1,45 @@
-import {classNames} from '@UlbUI/FormElements/TextInput';
+import {Button, Drawer, Space} from 'antd';
 import React from 'react';
 
 const PageBuilderLayout = ({
   children,
   open,
-
-  style,
-  className = '',
-  overflowHidden = false,
-  dark = true,
-  rounded = 'rounded-lg'
+  setOpen,
+  width = 400,
+  title
 }: {
+  title: React.ReactNode;
   children: React.ReactNode;
   open: boolean;
   style?: any;
-
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   className?: string;
   overflowHidden?: boolean;
   rounded?: string;
-
+  width?: number | string;
   dark?: boolean;
 }) => {
-  return (
-    <div
-      style={{
-        zIndex: 9990,
+  const onClose = () => {
+    setOpen(false);
+  };
 
-        ...style
-      }}
-      id="scrollingDiv"
-      className={classNames(
-        rounded,
-        overflowHidden ? '' : `overflow-y-scroll ${dark ? 'dark-scroll' : ''}`,
-        open ? 'translate-x-0 ' : 'translate-x-full hidden',
-        'transform max-w-80 min-w-80 md:hidden lg:block lg:max-w-92 lg:min-w-92 2xl:max-w-112 2xl:min-w-112    transition-all duration-300 absolute right-0 inset-y-0 break-normal  overlfow-y-hidden bg-gray-100 dark:bg-gray-800 w-96 border-l-0 border-gray-200 dark:border-gray-700 shadow-lg'
-      )}>
+  return (
+    <Drawer
+      title={title}
+      width={width}
+      onClose={onClose}
+      open={open}
+      bodyStyle={{paddingBottom: 80}}
+      extra={
+        <Space>
+          <Button onClick={onClose}>Cancel</Button>
+          <Button onClick={onClose} type="primary">
+            Submit
+          </Button>
+        </Space>
+      }>
       {children}
-    </div>
+    </Drawer>
   );
 };
 

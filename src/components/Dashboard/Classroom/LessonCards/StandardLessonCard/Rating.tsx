@@ -17,25 +17,27 @@ const StarRating = ({
   const [hover, setHover] = useState<any>();
 
   useEffect(() => {
-    getLessonRating(lessonProps.lesson.id, user.email, user.authId).then((value: any) => {
-      if (value) {
-        setRating(value.ratingValue);
+    getLessonRating?.(lessonProps.lesson.id, user.email, user.authId).then(
+      (value: any) => {
+        if (value) {
+          setRating(value.ratingValue);
+        }
       }
-    });
+    );
   }, []);
 
   useEffect(() => {
-    handleLessonMutationRating(lessonProps.lesson.id, rating);
+    handleLessonMutationRating?.(lessonProps.lesson.id, rating);
   }, [rating]);
   return (
     <div className="flex justify-end px-4 gap-1">
       <span className="w-auto mr-2 font-light text-gray-500">Rate Lesson</span>
-      {[...Array(5)].map((star, index) => {
+      {[...Array(5)].map((_, index) => {
         index += 1;
         return (
           <button
             type="button"
-            key={index}
+            key={_}
             className={index <= (hover || rating) ? 'rating on' : 'rating off'}
             onClick={() => setRating(index)}
             onMouseEnter={() => setHover(index)}

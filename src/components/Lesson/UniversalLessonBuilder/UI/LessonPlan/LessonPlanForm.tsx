@@ -1,17 +1,16 @@
-import React, {useState, useContext} from 'react';
-import {useHistory, useRouteMatch} from 'react-router';
-import FormInput from 'atoms/Form/FormInput';
 import Buttons from 'atoms/Buttons';
-import TextArea from 'atoms/Form/TextArea';
+import FormInput from 'atoms/Form/FormInput';
 import Selector from 'atoms/Form/Selector';
-import * as customMutations from 'customGraphql/customMutations';
-import {graphqlOperation, API} from 'aws-amplify';
-import {GlobalContext} from 'contexts/GlobalContext';
-import useDictionary from 'customHooks/dictionary';
-import {useQuery} from 'customHooks/urlParam';
-import {v4 as uuidV4} from 'uuid';
+import TextArea from 'atoms/Form/TextArea';
+import {API, graphqlOperation} from 'aws-amplify';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
+import * as customMutations from 'customGraphql/customMutations';
+import useDictionary from 'customHooks/dictionary';
+import React, {useState} from 'react';
+import {useHistory, useRouteMatch} from 'react-router';
 import {estimatedTimeList} from 'utilities/staticData';
+import {v4 as uuidV4} from 'uuid';
 
 interface ILessonInputs {
   id: string;
@@ -23,8 +22,8 @@ interface ILessonInputs {
 
 const LessonPlanForm = () => {
   const history = useHistory();
-  const {clientKey, userLanguage} = useContext(GlobalContext);
-  const {BUTTONS, LessonBuilderDict} = useDictionary(clientKey);
+  const {userLanguage} = useGlobalContext();
+  const {BUTTONS, LessonBuilderDict} = useDictionary();
   const {universalLessonDetails, setActiveTab} = useULBContext();
   const [inputObj, setInputObj] = useState<ILessonInputs>({
     id: '',
@@ -35,7 +34,7 @@ const LessonPlanForm = () => {
   });
   const [errors, setErrors] = useState<any>({});
   const [loading, setLoading] = useState<boolean>(false);
-  const params = useQuery(location.search);
+
   // const lessonId = params.get('lessonId');
   const route: any = useRouteMatch();
 
@@ -113,7 +112,7 @@ const LessonPlanForm = () => {
     return isValid;
   };
 
-  const onSelectOption = (_: any, name: string) => {
+  const onSelectOption = (name: string) => {
     setInputObj((prevInputs: ILessonInputs) => ({
       ...prevInputs,
       estTime: name
@@ -149,23 +148,6 @@ const LessonPlanForm = () => {
                 />
               </div>
               <div className="p-2">
-                {/* <label
-                htmlFor={'estTime'}
-                className="block text-xs font-semibold leading-5 text-gray-700">
-                {LessonBuilderDict[userLanguage]['LESSON_PLAN_FORM'].ESTIMATED_TIME}{' '}
-              </label> */}
-                {/* <InputMask
-                className={`mt-1 block w-full sm:text-sm sm:leading-5 focus:outline-none focus:ring-2 focus:ring-${
-                  themeColor === 'iconoclastIndigo' ? 'indigo' : 'blue'
-                }-600 focus:border-transparent border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm ${
-                  theme.outlineNone
-                }`}
-                mask={'99:99'}
-                placeholder="hh:mm"
-                name="fullCourseTime"
-                value={fullCourseTime}
-                onChange={this.handleChange}
-              /> */}
                 <Selector
                   label={
                     LessonBuilderDict[userLanguage]['LESSON_PLAN_FORM'].ESTIMATED_TIME

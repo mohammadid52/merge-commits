@@ -1,8 +1,8 @@
 import SearchInput from '@components/Atoms/Form/SearchInput';
 import Highlighted from '@components/Atoms/Highlighted';
-import Empty from '@components/Atoms/Text/Empty';
 import useAuth from '@customHooks/useAuth';
 import useSearch from '@customHooks/useSearch';
+import {Empty} from 'antd';
 import Buttons from 'atoms/Buttons';
 import ContentCard from 'atoms/ContentCard';
 import ImageAlternate from 'atoms/ImageAlternative';
@@ -11,7 +11,7 @@ import SectionTitleV3 from 'atoms/SectionTitleV3';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import {orderBy} from 'lodash';
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {useHistory} from 'react-router-dom';
 
 const StudentsTiles = (props: {
@@ -22,20 +22,15 @@ const StudentsTiles = (props: {
 }) => {
   const {studentsList, title, isTeacher = false, loading = false} = props;
 
-  const {clientKey, userLanguage} = useGlobalContext();
-  const {StudentDict} = useDictionary(clientKey);
+  const {userLanguage} = useGlobalContext();
+  const {StudentDict} = useDictionary();
 
   const {user} = useAuth();
 
   const [viewMore, setViewMore] = useState(false);
   const history = useHistory();
 
-  // const [searchInput, setSearchInput] = useState({
-  //   value: '',
-  //   isActive: false
-  // });
-
-  const [list, setList] = useState([]);
+  const [list, setList] = useState<any[]>([]);
 
   useEffect(() => {
     if (studentsList && studentsList.length > 0) {
@@ -62,7 +57,7 @@ const StudentsTiles = (props: {
     setSearchInput
   } = useSearch([...list], ['name']);
 
-  const [filteredList, setFilteredList] = useState([...list]);
+  const [filteredList, setFilteredList] = useState<any[]>([...list]);
 
   const searchStudents = () => {
     const searched = searchAndFilter(searchInput.value, false);
@@ -71,7 +66,7 @@ const StudentsTiles = (props: {
       setViewMore(false);
       setFilteredList(searched);
     } else {
-      removeSearchAction(null, false);
+      removeSearchAction(() => {}, false);
     }
   };
 
@@ -124,13 +119,7 @@ const StudentsTiles = (props: {
       <ContentCard hasBackground={false}>
         <div className="py-12 px-4 text-center sm:px-6 lg:px-8">
           <div className="space-y-8 sm:space-y-12">
-            {loading ? (
-              <div className="py-20 text-center mx-auto flex justify-center items-center w-full h-48">
-                <div className="w-5/10">
-                  <Loader color="rgba(107, 114, 128, 1)" />
-                </div>
-              </div>
-            ) : finalList?.length ? (
+            {finalList?.length ? (
               <ul className="grid grid-cols-2 justify-center gap-x-4 gap-y-8 sm:grid-cols-4 md:gap-x-6 lg:max-w-5xl lg:gap-x-8 lg:gap-y-12 xl:grid-cols-6">
                 {finalList &&
                   finalList.length > 0 &&
@@ -188,8 +177,12 @@ const StudentsTiles = (props: {
                     }
                   )}
               </ul>
+            ) : loading ? (
+              <div className="min-h-56 flex items-center justify-center ">
+                <Loader className="w-auto text-gray-400" withText="Loading students..." />
+              </div>
             ) : (
-              <Empty>{StudentDict[userLanguage].NO_STUDENT}</Empty>
+              <Empty description={StudentDict[userLanguage].NO_STUDENT} />
             )}
           </div>
         </div>

@@ -1,4 +1,4 @@
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import {API, graphqlOperation} from 'aws-amplify';
 import useAuth from '@customHooks/useAuth';
 import {TeachingStyle} from 'API';
 import Buttons from 'atoms/Buttons';
@@ -121,7 +121,7 @@ const Start: React.FC<StartProps> = ({
     }
   };
 
-  const recordAttendance = async (lessonObj: any) => {
+  const recordAttendance = async (_: any) => {
     try {
       setLoading(true);
       const syllabusData = state.roomData.syllabus.find(
@@ -184,7 +184,7 @@ const Start: React.FC<StartProps> = ({
           if (!attendanceRecorded) {
             await recordAttendance(lessonProps);
           }
-          // await getLessonCurrentPage(lessonKey, user.email, user.authId);
+
           const url = `/lesson/${lessonKey}/${lessonProgress}`;
           history.push(url);
         } catch (error) {
@@ -373,6 +373,7 @@ const Start: React.FC<StartProps> = ({
   return (
     <div data-cy="survey-button">
       <Buttons
+        size="middle"
         title={showNotebookBtn ? `See your notebook` : updateBtnText()}
         type="submit"
         onClick={!preview ? handleLink : noop}
@@ -395,16 +396,16 @@ const Start: React.FC<StartProps> = ({
           (isActive && isTeacher && isLesson)
         }
       />
-      {warnModal.show && (
-        <ModalPopUp
-          closeAction={onCloseModal}
-          cancelAction={discardChanges}
-          saveAction={handleMarkAsCompleteClick}
-          saveLabel={isLoading ? 'Processing...' : 'Yes'}
-          cancelLabel="No"
-          message={warnModal.message}
-        />
-      )}
+
+      <ModalPopUp
+        open={warnModal.show}
+        closeAction={onCloseModal}
+        cancelAction={discardChanges}
+        saveAction={handleMarkAsCompleteClick}
+        saveLabel={isLoading ? 'Processing...' : 'Yes'}
+        cancelLabel="No"
+        message={warnModal.message}
+      />
     </div>
   );
 };

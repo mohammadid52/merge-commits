@@ -1,5 +1,4 @@
-import React from 'react';
-import {Status} from '../../UserManagement/UserStatus';
+import {Tag} from 'antd';
 
 interface LocationBadgeProps {
   onDemand: boolean;
@@ -7,15 +6,11 @@ interface LocationBadgeProps {
   style?: any;
 }
 
-const LocationBadge = ({onDemand, customText, style}: LocationBadgeProps) => {
+const LocationBadge = ({onDemand, customText}: LocationBadgeProps) => {
   return (
-    <Status
-      style={style}
-      className={
-        onDemand ? 'bg-yellow-200 text-yellow-600' : 'bg-blue-200 text-blue-600'
-      }>
+    <Tag color={onDemand ? 'yellow' : 'blue'}>
       {customText ? customText : onDemand ? 'Self Paced' : 'Classroom'}
-    </Status>
+    </Tag>
   );
 };
 

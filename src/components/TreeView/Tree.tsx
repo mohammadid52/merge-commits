@@ -1,8 +1,8 @@
-import React, {useCallback, useMemo} from 'react';
-import {FaTasks} from 'react-icons/fa';
-import {Directory} from './Directory';
-import {Item} from './Item';
-import {useContextMenu} from 'contexts/TreeContext';
+import { useContextMenu } from "contexts/TreeContext";
+import React, { useCallback } from "react";
+import { FaTasks } from "react-icons/fa";
+import { Directory } from "./Directory";
+import { Item } from "./Item";
 
 export const Tree = ({
   activeSectionId,
@@ -10,26 +10,30 @@ export const Tree = ({
   hoverClassName,
   onItemClick,
   root,
-  textClassName
+  textClassName,
 }: React.PropsWithChildren<{
   activeSectionId?: string;
   headingPrefix?: string;
   hoverClassName?: string;
-  onItemClick?: (section: {id: string; title: string; redirectionUrl: string}) => void;
+  onItemClick?: (section: {
+    id: string;
+    title: string;
+    redirectionUrl: string;
+  }) => void;
   root: any;
   textClassName?: string;
 }>): JSX.Element => {
-  const {setShow, setPosition}: any = useContextMenu();
-  const color_gen = useMemo(() => Math.floor(Math.random() * 16777215).toString(16), []);
+  const { setShow, setPosition }: any = useContextMenu();
+
   const onContextMenu = useCallback(
     (event: React.MouseEvent<HTMLLIElement, MouseEvent>): void => {
       event.stopPropagation();
       event.preventDefault();
-      const {currentTarget} = event;
+      const { currentTarget } = event;
       setShow(true);
       setPosition({
         x: currentTarget.offsetTop,
-        y: currentTarget.offsetLeft + 40
+        y: currentTarget.offsetLeft + 40,
       });
     },
     [setShow, setPosition]
@@ -45,7 +49,7 @@ export const Tree = ({
       onItemClick({
         id: section.id,
         title: section.title,
-        redirectionUrl: section.redirectionUrl
+        redirectionUrl: section.redirectionUrl,
       });
     }
   };
@@ -54,15 +58,18 @@ export const Tree = ({
     <ul
       // style={{borderLeftColor: `#${color_gen}`, borderLeftWidth: 2}}
       className={`p-2 pt-0 ml-2 mb-0 mt-0 pb-0 menu bg-default text-content-700 text-white ${
-        textClassName || 'text-white'
-      }`}>
+        textClassName || "text-white"
+      }`}
+    >
       {root.children &&
         root.children.map((item: any, index: number) => {
-          if (item.type !== 'pages')
+          if (item.type !== "pages")
             return (
               <Directory
                 activeSectionId={activeSectionId}
-                headingPrefix={[headingPrefix, index + 1].filter(Boolean).join('.')}
+                headingPrefix={[headingPrefix, index + 1]
+                  .filter(Boolean)
+                  .join(".")}
                 hoverClassName={hoverClassName}
                 key={item.title}
                 item={item}
@@ -77,8 +84,9 @@ export const Tree = ({
             <Item
               key={item.title}
               onClick={(e) => onItemClicked(e, item)}
-              onContextMenu={onContextMenu}>
-              <span className="hover:bg-gray-400 transition block pl-0 p-2 truncate flex">
+              onContextMenu={onContextMenu}
+            >
+              <span className="hover:bg-gray-400 transition  pl-0 p-2 truncate flex">
                 <span className="w-6 h-6 mx-1 inline-flex items-center">
                   <FaTasks />
                 </span>

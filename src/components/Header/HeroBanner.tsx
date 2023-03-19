@@ -21,10 +21,10 @@ const HeroBanner = (props: HeroBannerProps) => {
       </div>
       <div className="relative h-full flex items-center justify-center flex-col max-w-7xl">
         <div
-          className={`z-0 flex flex-col align-center self-auto items-center justify-center h-40 2xl:h-60 font-extrabold tracking-tight text-center text-white text-4xl 2xl:text-7xl ${
+          className={`z-0 flex flex-col align-center self-auto items-center justify-center h-40 2xl:h-60 tracking-tight text-center text-white text-3xl 2xl:text-4xl ${
             transition ? 'fade__animation' : ''
           }`}>
-          <h1 className="uppercase tracking-wide">{title}</h1>
+          <h1 className="uppercase tracking-wide font-semibold opacity-90">{title}</h1>
         </div>
       </div>
     </div>

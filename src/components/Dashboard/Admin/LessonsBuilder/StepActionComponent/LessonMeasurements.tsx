@@ -1,27 +1,24 @@
-import React, {useContext, useEffect, useState} from 'react';
 import {API, graphqlOperation} from 'aws-amplify';
+import {useEffect, useState} from 'react';
 
-import {IconContext} from 'react-icons/lib/cjs';
 import {FaTrash} from 'react-icons/fa';
 
-import {GeneralInformationDict} from 'dictionary/dictionary.curate';
-import useDictionary from 'customHooks/dictionary';
-import {GlobalContext} from 'contexts/GlobalContext';
-import * as customQueries from 'customGraphql/customQueries';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import * as customMutations from 'customGraphql/customMutations';
+import useDictionary from 'customHooks/dictionary';
+import {GeneralInformationDict} from 'dictionary/dictionary.curate';
 
-import Selector from 'atoms/Form/Selector';
 import Buttons from 'atoms/Buttons';
+import Selector from 'atoms/Form/Selector';
 import Loader from 'atoms/Loader';
 import ModalPopUp from 'molecules/ModalPopUp';
 
 const LessonMeasurements = ({lessonId}: any) => {
-  const {clientKey, userLanguage} = useContext(GlobalContext);
-  const {AddNewLessonFormDict} = useDictionary(clientKey);
+  const {userLanguage} = useGlobalContext();
+  const {AddNewLessonFormDict} = useDictionary();
 
-  const [measurementList, setMeasurementList] = useState([]);
-  const [measurementOptions, setMeasurementOptions] = useState([]);
-  const [lessonMeasurements, setLessonMeasurements] = useState([]);
+  const [measurementOptions, setMeasurementOptions] = useState<any[]>([]);
+  const [lessonMeasurements, setLessonMeasurements] = useState<any[]>([]);
   const [selectedMeasurement, setSelectedMeasurement] = useState({
     id: '',
     name: '',
@@ -37,14 +34,10 @@ const LessonMeasurements = ({lessonId}: any) => {
     serverError: '',
     addSuccess: ''
   });
-  const [loading, setLoading] = useState(false);
+  const [loading] = useState(false);
   const [saving, setSaving] = useState(false);
 
-  useEffect(() => {
-    setLoading(true);
-    fetchMeasurementList();
-    fetchRubricsList();
-  }, []);
+  const measurementList: any[] = [];
 
   useEffect(() => {
     if (measurementList.length && lessonMeasurements.length) {
@@ -57,61 +50,6 @@ const LessonMeasurements = ({lessonId}: any) => {
       setMeasurementOptions(temp);
     }
   }, [measurementList, lessonMeasurements]);
-
-  const fetchRubricsList = async () => {
-    try {
-      // const [results, topics]: any = await Promise.all([
-      //   await API.graphql(
-      //     graphqlOperation(customQueries.listLessonRubricss, {
-      //       filter: {
-      //         lessonID: {eq: lessonId},
-      //       },
-      //     })
-      //   ),
-      //   await API.graphql(graphqlOperation(customQueries.listTopics)),
-      // ]);
-      // const topicsList = topics.data?.listTopics?.items;
-      // const lessonRubrics = results.data?.listLessonRubricss?.items?.map((item: any) => {
-      //   return {
-      //     id: item.id,
-      //     rubricID: item.rubricID,
-      //     measurement: item?.rubric?.name,
-      //     topic:
-      //       topicsList.find((topic: any) => topic.id === item.rubric.topicID)?.name || '',
-      //     curriculumId: item?.rubric?.curriculumID,
-      //   };
-      // });
-      // setLessonMeasurements([...lessonRubrics]);
-      //setLoading(false);
-    } catch {
-      setMessages({
-        measurementError: '',
-        serverError: GeneralInformationDict[userLanguage]['MESSAGES']['FETCHERR'],
-        addSuccess: ''
-      });
-      setLoading(false);
-    }
-  };
-
-  const fetchMeasurementList = async () => {
-    try {
-      // let list: any = await API.graphql(graphqlOperation(customQueries.listRubrics));
-      // list = list.data.listRubrics?.items || [];
-      // const measuList = list.sort((a: any, b: any) =>
-      //   a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1
-      // );
-      // const filteredList = measuList.map((item: any) => {
-      //   return {
-      //     id: item.id,
-      //     name: item.name,
-      //     value: item.name,
-      //   };
-      // });
-      // setMeasurementList(filteredList);
-    } catch {
-      console.log('Error while fetching lesson data');
-    }
-  };
 
   const addNewMeasurement = async () => {
     try {
@@ -178,46 +116,13 @@ const LessonMeasurements = ({lessonId}: any) => {
       });
     }
   };
-  const saveMeasurements = async (lessonId: string, rubricsId: string) => {
-    try {
-      const input = {
-        lessonID: lessonId,
-        rubricID: rubricsId
-      };
-      await API.graphql(
-        graphqlOperation(customMutations.createLessonRubrics, {input: input})
-      );
-      setMessages({
-        measurementError: '',
-        serverError: '',
-        addSuccess:
-          AddNewLessonFormDict[userLanguage]['MESSAGES']['MEASUREMENTADDSUCCESS']
-      });
-    } catch {
-      setMessages({
-        measurementError: '',
-        serverError: AddNewLessonFormDict[userLanguage]['ADDERR'],
-        addSuccess: ''
-      });
-    }
-  };
 
-  const handleSelectMeasurement = (val: string, name: string, id: string) => {
-    setSelectedMeasurement({id, name, value: val});
+  const handleSelectMeasurement = (val: string, option: any) => {
+    setSelectedMeasurement({id: option.id, name: val, value: val});
   };
-
-  // const handleSave = () => {
-  //   setSaving(true);
-  //   Promise.all(
-  //     lessonMeasurements.map(async (item: any) => saveMeasurements(lessonId, item.id))
-  //   ).then((res) => setSaving(false));
-  // };
 
   return (
     <div className="p-6 border-gray-400 my-4">
-      {/* <p className="text-m font-medium leading-5 text-gray-700 my-2 text-center">
-        {AddNewLessonFormDict[userLanguage]['MEASUREMENTLESSON']}
-      </p> */}
       {loading ? (
         <div className="py-20 text-center mx-auto flex justify-center items-center w-full h-48">
           <div className="w-5/10">
@@ -295,10 +200,7 @@ const LessonMeasurements = ({lessonId}: any) => {
                         <div
                           className="w-6 h-6 cursor-pointer"
                           onClick={() => toggleModal(item.id)}>
-                          <IconContext.Provider
-                            value={{size: '1rem', className: 'text-red-700'}}>
-                            <FaTrash />
-                          </IconContext.Provider>
+                          <FaTrash className="text-red-700" size={'1rem'} />
                         </div>
                       </div>
                     </div>
@@ -313,18 +215,6 @@ const LessonMeasurements = ({lessonId}: any) => {
               </div>
             )}
           </div>
-          {/* <div className="flex mb-8 mt-4 justify-center">
-            <Buttons
-              btnClass="py-3 px-10"
-              label={
-                saving
-                  ? AddNewLessonFormDict[userLanguage]['SAVING']
-                  : AddNewLessonFormDict[userLanguage]['SAVE']
-              }
-              onClick={handleSave}
-              disabled={saving || !lessonMeasurements?.length}
-            />
-          </div> */}
         </>
       )}
       {(messages.serverError || messages.addSuccess) && (
@@ -334,15 +224,15 @@ const LessonMeasurements = ({lessonId}: any) => {
           </p>
         </div>
       )}
-      {showDeleteModal.state && (
-        <ModalPopUp
-          deleteModal
-          deleteLabel="Remove"
-          closeAction={toggleModal}
-          saveAction={deleteMeasurement}
-          message={showDeleteModal.message}
-        />
-      )}
+
+      <ModalPopUp
+        open={showDeleteModal.state}
+        deleteModal
+        deleteLabel="Remove"
+        closeAction={toggleModal}
+        saveAction={deleteMeasurement}
+        message={showDeleteModal.message}
+      />
     </div>
   );
 };

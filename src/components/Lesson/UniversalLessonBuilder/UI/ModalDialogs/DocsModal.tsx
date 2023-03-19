@@ -17,20 +17,19 @@ interface IDocsDialogProps extends IContentTypeComponentProps {
 const DocsModal = (props: IDocsDialogProps) => {
   const {
     closeAction,
-    inputObj,
+
     createNewBlockULBHandler,
     updateBlockContentULBHandler,
-    askBeforeClose,
-    setUnsavedChanges
+    askBeforeClose
   } = props;
 
-  const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
+  const [isEditingMode] = useState<boolean>(false);
 
-  const customRef = useRef(null);
+  const customRef = useRef<any>(null);
 
-  const {clientKey, userLanguage} = useGlobalContext();
+  const {userLanguage} = useGlobalContext();
 
-  const {EditQuestionModalDict} = useDictionary(clientKey);
+  const {EditQuestionModalDict} = useDictionary();
 
   const addToDB = async (list: any) => {
     closeAction();
@@ -45,12 +44,12 @@ const DocsModal = (props: IDocsDialogProps) => {
 
   const onDocsCreate = async () => {
     const _files = [
-      {
+      file && {
         id: file.id,
-        label: removeExtension(file.fileName) || removeExtension(file.file.name),
+        label: removeExtension(file?.fileName || file?.file?.name || '') || '',
         value: file.fileKey
       }
-    ];
+    ].filter(Boolean);
 
     if (isEditingMode) {
       const updatedList: any = updateBlockContentULBHandler(
@@ -77,8 +76,8 @@ const DocsModal = (props: IDocsDialogProps) => {
     }
   };
 
-  const [file, setFile] = useState<IFile>();
-  const [error, setError] = useState('');
+  const [file, setFile] = useState<IFile | null>(null);
+  const [_, setError] = useState('');
 
   return (
     <div>
@@ -90,16 +89,18 @@ const DocsModal = (props: IDocsDialogProps) => {
         setError={setError}
         customRef={customRef}
       />
-      <div className="flex mt-8 justify-center px-6 pb-4">
-        <div className="flex justify-end">
+      <div className="flex mt-8 justify-end px-6 pb-4">
+        <div className="flex justify-end gap-4">
           <Buttons
             btnClass="py-1 px-4 text-xs mr-2"
+            size="middle"
             label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
             onClick={askBeforeClose}
             transparent
           />
           <Buttons
             btnClass="py-1 px-8 text-xs ml-2"
+            size="middle"
             label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
             onClick={onDocsCreate}
           />

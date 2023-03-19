@@ -1,28 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 
-/*const quotes = [
-  {
-    quote: 'The principles of restorative justice ask us to look at who has a stake in a given offense and to regard these people with full consideration of their humanity.',
-    source: 'Aremisia Solstice',
-  },
-  {
-    quote: 'I think it is healing behavior, to look at something so broken and see the possibility and wholeness in it.',
-    source: 'adrienne maree brown ',
-  },
-  {
-    quote: 'First forget inspiration. Habit is more dependable. Habit will sustain you whether youre inspired or not. Habit will help you finish and polish your stories. Inspiration wont. Habit is persistence in practice.',
-    source: 'Octavia Butler',
-  },
-
-  {
-    quote: 'The denunciation of injustice implies the rejection of the use of Christianity to legitimize the established order',
-    source: 'Gustavo Gutierrez ',
-  },
-];*/
-
-export const QuoteWidget = (props: { quotes: any[]; classProp?: string; card?: boolean; placement: string }) => {
-  const { quotes, classProp, card, placement } = props;
-  const [widgetQuote, setWidgetQuote] = useState<{ text: string; author: string }>();
+export const QuoteWidget = (props: {
+  quotes: any[];
+  classProp?: string;
+  card?: boolean;
+  placement: string;
+}) => {
+  const {quotes, placement} = props;
+  const [widgetQuote, setWidgetQuote] = useState<{
+    text: string;
+    author: string;
+  }>();
   const [twClass, setTWClass] = useState<string>('opacity-100');
 
   useEffect(() => {
@@ -32,13 +20,13 @@ export const QuoteWidget = (props: { quotes: any[]; classProp?: string; card?: b
   useEffect(() => {
     let quoteTimer = setInterval(() => {
       const randomNumber = Math.floor(Math.random() * quotes.length);
-      const opaczero = setTimeout(() => {
+      setTimeout(() => {
         setTWClass('opacity-0');
       }, 0);
-      const setQuote = setTimeout(() => {
+      setTimeout(() => {
         setWidgetQuote(quotes[randomNumber]);
       }, 1000);
-      const opachunnit = setTimeout(() => {
+      setTimeout(() => {
         setTWClass('opacity-100');
       }, 1200);
     }, 6000);
@@ -51,7 +39,10 @@ export const QuoteWidget = (props: { quotes: any[]; classProp?: string; card?: b
         <span className={`text-gray-400 w-full font-semibold text-sm`}>Other</span>
       </div>
       <div
-        style={{ minHeight: 90, minWidth: placement === 'topbar' ? 300 : null }}
+        style={{
+          minHeight: 90,
+          minWidth: placement === 'topbar' ? 300 : 'unset'
+        }}
         className={`text-sm text-center italic p-3 bg-white shadow rounded-lg flex items-center justify-center`}>
         {widgetQuote && (
           <div className={`${twClass} transition duration-1000 ease-in-out`}>

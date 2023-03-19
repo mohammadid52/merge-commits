@@ -1,13 +1,14 @@
-import React, {useContext} from 'react';
-import {GlobalContext} from 'contexts/GlobalContext';
-import {Widget as NoticeboardWidgetMapItem} from 'interfaces/ClassroomComponentsInterfaces';
-import useDictionary from 'customHooks/dictionary';
+import { useGlobalContext } from "contexts/GlobalContext";
+import useDictionary from "customHooks/dictionary";
+import { Widget as NoticeboardWidgetMapItem } from "interfaces/ClassroomComponentsInterfaces";
 
 // Standard widget card view
-export const ViewModeView = (props: {widgetObj: NoticeboardWidgetMapItem}) => {
-  const {widgetObj} = props;
-  const {theme, clientKey, userLanguage} = useContext(GlobalContext);
-  const {noticeboardDict} = useDictionary(clientKey);
+export const ViewModeView = (props: {
+  widgetObj: NoticeboardWidgetMapItem;
+}) => {
+  const { widgetObj } = props;
+  const { theme, userLanguage } = useGlobalContext();
+  const { noticeboardDict } = useDictionary();
   return (
     <>
       {/**

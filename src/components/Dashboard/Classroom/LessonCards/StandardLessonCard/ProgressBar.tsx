@@ -41,8 +41,6 @@ const ProgressBar = ({personDataObj, _isCompleted}: ProgressBarProps) => {
     generateLessonProgress();
   }, [personDataObj]);
 
-  // if (!shouldShowProgress) return null;
-
   const infoWhenNinetyNine = '';
 
   return (

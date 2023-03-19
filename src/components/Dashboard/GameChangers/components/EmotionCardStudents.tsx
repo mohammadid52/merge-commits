@@ -5,10 +5,10 @@ import {useGlobalContext} from 'contexts/GlobalContext';
 import useInGC from 'customHooks/checkIfGameChanges';
 import useAuth from 'customHooks/useAuth';
 import useGraphqlQuery from 'customHooks/useGraphqlQuery';
-import React, {useEffect, useState} from 'react';
+import React, {lazy, useEffect, useState} from 'react';
 import {useHistory, useRouteMatch} from 'react-router';
 import {useGameChangers} from '../context/GameChangersContext';
-import BubbleVersion from './BubbleVersion';
+const BubbleVersion = lazy(() => import('./BubbleVersion'));
 
 const EmotionCard = ({inLesson}: {inLesson: boolean}) => {
   // For Mobile
@@ -22,15 +22,9 @@ const EmotionCard = ({inLesson}: {inLesson: boolean}) => {
     setSecondaryEmotion,
     setSelectedEmotions
   } = useGameChangers();
-  const [changesSaved, setChangesSaved] = useState(false);
+  const [changesSaved] = useState(false);
 
-  const checkChanges = (changes: boolean) => {
-    // if (!changes) {
-    //   window.addEventListener('beforeunload', beforeunload);
-    // } else {
-    //   window.removeEventListener('beforeunload', beforeunload);
-    // }
-  };
+  const checkChanges = (_: boolean) => {};
   const inGC = useInGC();
   const history = useHistory();
 
@@ -46,9 +40,6 @@ const EmotionCard = ({inLesson}: {inLesson: boolean}) => {
     }
   };
 
-  const beforeunload = (event: BeforeUnloadEvent) =>
-    (event.returnValue = 'Please save the changes');
-
   useEffect(() => {
     checkChanges(changesSaved);
   }, [changesSaved]);
@@ -60,10 +51,11 @@ const EmotionCard = ({inLesson}: {inLesson: boolean}) => {
 
   const lessonId = router.params.lessonID || '999';
 
-  const {data = [], isLoading: listLoading, isSuccess} = useGraphqlQuery<
-    ListFeelingsArchivesQueryVariables,
-    FeelingsArchive[]
-  >(
+  const {
+    data = [],
+    isLoading: listLoading,
+    isSuccess
+  } = useGraphqlQuery<ListFeelingsArchivesQueryVariables, FeelingsArchive[]>(
     'listFeelingsArchives',
     {
       filter: {

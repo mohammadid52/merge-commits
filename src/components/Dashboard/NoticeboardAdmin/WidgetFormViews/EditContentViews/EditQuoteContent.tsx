@@ -1,17 +1,15 @@
-import React, {useContext} from 'react';
-import {AiOutlineDelete} from 'react-icons/all';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
-import {GlobalContext} from 'contexts/GlobalContext';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import {Quote} from 'interfaces/ClassroomComponentsInterfaces';
+import {AiOutlineDelete} from 'react-icons/all';
 import {NoticeboardFormProps} from '../../NoticeboardAdminContent';
 import AddRemoveButton from '../addRemoveButton';
 
 // Standard widget card view
 export const EditQuoteContent = (props: NoticeboardFormProps) => {
   const {widgetObj, setNewWidgetData, handleEditUpdateQuotes} = props;
-  const {theme, userLanguage, clientKey} = useContext(GlobalContext);
-  const {anthologyDict, noticeboardDict} = useDictionary(clientKey);
+  const {theme, userLanguage} = useGlobalContext();
+  const {anthologyDict, noticeboardDict} = useDictionary();
 
   const quoteItem = {text: '', author: ''};
   const callItem = {text: '', url: ''};
@@ -26,7 +24,7 @@ export const EditQuoteContent = (props: NoticeboardFormProps) => {
     label2: string;
     label3: string;
   } => {
-    switch (widgetObj.type) {
+    switch (widgetObj?.type) {
       case 'quote':
         return {
           key: `quotes`,
@@ -58,27 +56,36 @@ export const EditQuoteContent = (props: NoticeboardFormProps) => {
           label3: 'File Link'
         };
       default:
-        return null;
+        return {
+          key: `links`,
+          key2: `text`,
+          key3: `url`,
+          expander: fileItem,
+          label: 'Label',
+          label2: 'File Link',
+          label3: 'File Link'
+        };
     }
   };
 
   const increaseQuoteCount = () => {
     // if (viewEditMode.mode === 'create') {
     if (true) {
-      // @ts-ignore
-      setNewWidgetData({
+      setNewWidgetData?.({
         ...widgetObj,
-        [switchKey().key]: [...widgetObj[switchKey().key], switchKey().expander]
+        [switchKey().key]: [...widgetObj?.[switchKey().key], switchKey().expander]
       });
     }
   };
 
   const decreaseQuoteCount = (idx: number) => {
     if (true) {
-      const filtered = widgetObj[switchKey().key].filter((linkObj: any, idx1: number) => {
-        if (idx1 !== idx) return linkObj;
-      });
-      setNewWidgetData({
+      const filtered = widgetObj?.[switchKey().key].filter(
+        (linkObj: any, idx1: number) => {
+          if (idx1 !== idx) return linkObj;
+        }
+      );
+      setNewWidgetData?.({
         ...widgetObj,
         [switchKey().key]: filtered
       });
@@ -124,9 +131,7 @@ export const EditQuoteContent = (props: NoticeboardFormProps) => {
                 <div
                   className={`mt-4 cursor-pointer`}
                   onClick={() => decreaseQuoteCount(idx)}>
-                  <IconContext.Provider value={{className: 'w-auto pointer-events-none'}}>
-                    <AiOutlineDelete size={24} />
-                  </IconContext.Provider>
+                  <AiOutlineDelete className="w-auto pointer-events-none" size={24} />
                 </div>
               </div>
 

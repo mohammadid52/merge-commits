@@ -1,7 +1,7 @@
-import React, {useState} from 'react';
-import * as mutations from 'graphql/mutations';
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import {ITabViewProps} from '../TabView';
+import React, { useState } from "react";
+import * as mutations from "graphql/mutations";
+import { API, graphqlOperation } from "aws-amplify";
+import { ITabViewProps } from "../TabView";
 
 interface IToggleProps extends ITabViewProps {
   toggled?: boolean;
@@ -12,29 +12,29 @@ interface IToggleProps extends ITabViewProps {
 const Toggle = ({
   toggled,
   label,
-  allUniversalJournalData,
+
   currentContentObj,
-  addToJournalUpdateQueue
+  addToJournalUpdateQueue,
 }: IToggleProps) => {
   const [updating, setUpdating] = useState<boolean>(false);
   const updateJournalShare = async () => {
-    addToJournalUpdateQueue(currentContentObj);
+    addToJournalUpdateQueue?.(currentContentObj);
 
     setUpdating(true);
     try {
-      const updateJournalData: any = await API.graphql(
+      await API.graphql(
         graphqlOperation(mutations.updateUniversalJournalData, {
           input: {
-            id: currentContentObj.id,
-            shared: currentContentObj.hasOwnProperty('shared')
+            id: currentContentObj?.id,
+            shared: currentContentObj?.hasOwnProperty("shared")
               ? // @ts-ignore
                 !currentContentObj?.shared
-              : true
-          }
+              : true,
+          },
         })
       );
     } catch (e) {
-      console.error('error updating sharing - ', e);
+      console.error("error updating sharing - ", e);
     } finally {
       //
     }
@@ -51,17 +51,19 @@ const Toggle = ({
         onClick={!updating ? () => handleToggler() : () => {}}
         type="button"
         className={`${
-          toggled ? 'bg-green-600' : 'bg-gray-200'
+          toggled ? "bg-green-600" : "bg-gray-200"
         } relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}
         role="switch"
         aria-checked="false"
-        aria-labelledby="annual-billing-label">
+        aria-labelledby="annual-billing-label"
+      >
         {/* <!-- Enabled: "translate-x-5", Not Enabled: "translate-x-0" --> */}
         <span
           aria-hidden="true"
           className={`${
-            toggled ? 'translate-x-5' : 'translate-x-0'
-          } pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 transition ease-in-out duration-200`}></span>
+            toggled ? "translate-x-5" : "translate-x-0"
+          } pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 transition ease-in-out duration-200`}
+        ></span>
       </button>
 
       {label && (

@@ -16,7 +16,7 @@ interface EditingBlockProps {
   options?: any;
 }
 
-const EditingBlock = ({options, inputID, value}: EditingBlockProps) => {
+const EditingBlock = ({options, inputID = '', value}: EditingBlockProps) => {
   const {lessonState} = useGlobalContext();
   const initialState = () => EditorState.createEmpty();
   const [editorState, setEditorState] = useState(initialState);
@@ -33,7 +33,7 @@ const EditingBlock = ({options, inputID, value}: EditingBlockProps) => {
 
   const {setDataValue, getDataValue} = useStudentDataValue();
 
-  const onChangeCallback = (html: string, text: string) => {
+  const onChangeCallback = (html: string, _: string) => {
     setDataValue(inputID, [html]);
   };
 
@@ -53,8 +53,8 @@ const EditingBlock = ({options, inputID, value}: EditingBlockProps) => {
   const isStudentViewing = !isStudent && viewingStudent !== '';
 
   return (
-    <div className="relative flex flex-col justify-between items-center ">
-      <div className="relative">
+    <div className="relative flex flex-col justify-between items-center w-full ">
+      <div className="relative w-full">
         {options ? (
           <WritingBlock
             id={inputID}

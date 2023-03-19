@@ -1,23 +1,25 @@
-import FormInput from 'atoms/Form/FormInput';
+import useAuth from '@customHooks/useAuth';
+import {Dialog, Transition} from '@headlessui/react';
+import {XIcon} from '@heroicons/react/outline';
+import {CheckCircleIcon} from '@heroicons/react/solid';
+import {Drawer, Empty} from 'antd';
+import {UniversalLesson} from 'API';
 import Info from 'atoms/Alerts/Info';
 import Buttons from 'atoms/Buttons';
+import FormInput from 'atoms/Form/FormInput';
 import Tooltip from 'atoms/Tooltip';
+import {API, graphqlOperation} from 'aws-amplify';
 import {Tree} from 'components/Lesson/UniversalLessonBuilder/UI/UIComponents/TreeView/Tree';
-import {GlobalContext} from 'contexts/GlobalContext';
 import {useOverlayContext} from 'contexts/OverlayContext';
 import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
 import * as customMutations from 'customGraphql/customMutations';
 import * as customQueries from 'customGraphql/customQueries';
-import {Dialog, Transition} from '@headlessui/react';
-import {XIcon} from '@heroicons/react/outline';
-import {CheckCircleIcon} from '@heroicons/react/solid';
-import {UniversalLessonPage} from 'interfaces/UniversalLessonInterfaces';
-import {wait} from 'utilities/functions';
-import {API, graphqlOperation} from 'aws-amplify';
+
 import map from 'lodash/map';
-import React, {Fragment, useContext, useState} from 'react';
+import React, {Fragment, useState} from 'react';
 import {FiBook} from 'react-icons/fi';
 import {useHistory} from 'react-router';
+import {wait} from 'utilities/functions';
 
 const Slideover = ({
   open,
@@ -88,11 +90,7 @@ const CopyCloneSlideOver = ({
 }) => {
   const history = useHistory();
 
-  const {
-    state: {
-      user: {isSuperAdmin}
-    }
-  } = useContext(GlobalContext);
+  const {isSuperAdmin} = useAuth();
   const {setShowDataForCopyClone, showDataForCopyClone} = useOverlayContext();
   const {
     universalLessonDetails,
@@ -168,7 +166,7 @@ const CopyCloneSlideOver = ({
    * @param data Whole lesson
    * This function creates a separate data strutcture for tree view component only.
    */
-  const prepareTreeViewData = (data: UniversalLessonPage[]) => {
+  const prepareTreeViewData = (data: UniversalLesson[]) => {
     const dataForTreeView = {
       title: 'root',
       children: map(data, (lesson) => ({
@@ -178,9 +176,9 @@ const CopyCloneSlideOver = ({
         children:
           lesson.lessonPlan && lesson.lessonPlan.length > 0
             ? map(lesson.lessonPlan, (page) => ({
-                title: page.title || page.label,
+                title: page?.title || page?.label,
                 type: 'page',
-                id: page.id,
+                id: page?.id,
                 lessonId: lesson.id,
                 children: []
               }))
@@ -239,25 +237,33 @@ const CopyCloneSlideOver = ({
   };
 
   return (
-    <Slideover open={showDataForCopyClone} setOpen={setShowDataForCopyClone}>
+    <Drawer
+      title={'Select Page to copy / clone'}
+      width={400}
+      onClose={() => setShowDataForCopyClone(false)}
+      open={showDataForCopyClone}
+      bodyStyle={{paddingBottom: 80}}>
       <div className="flex flex-col items-center space-y-2 mb-2">
-        <Info text="Lessons are case sensitive" className="my-2 mb-4" />
+        <Info text="Lessons are case sensitive" className="my-2 mb-4 w-full" />
         {searchStatus === 'success' && status === 'none' && (
-          <Info text="Click on a page to select for copy / clone" className="my-2 mb-4" />
+          <Info
+            text="Click on a page to select for copy / clone"
+            className="w-full my-2 mb-4"
+          />
         )}
-        <div className="flex items-center space-x-2">
-          <div className="">
-            <FormInput
-              value={searchQuery}
-              onKeyDown={(e) => {
-                if (e.keyCode === 13) {
-                  loadLessonsOnSearch();
-                }
-              }}
-              onChange={onSearchChange}
-              placeHolder="Search lessons"
-            />
-          </div>
+        <div className="flex items-center w-full  space-x-2">
+          <FormInput
+            value={searchQuery}
+            onKeyDown={(e) => {
+              if (e.keyCode === 13) {
+                loadLessonsOnSearch();
+              }
+            }}
+            className="w-full"
+            onChange={onSearchChange}
+            placeHolder="Search lessons"
+          />
+
           <Buttons onClick={loadLessonsOnSearch} label="Search" />
         </div>
       </div>
@@ -282,17 +288,14 @@ const CopyCloneSlideOver = ({
         ) : searchStatus === 'error' ? (
           <div>Oops! Something went wrong.</div>
         ) : searchStatus === 'no_results' ? (
-          <div className="w-auto flex items-center flex-col justify-center">
-            <img
-              src={'https://image.flaticon.com/icons/png/512/5319/5319100.png'}
-              alt="no results found"
-              className="h-32 w-32 mb-4 text-gray-400"
-            />
-            <p className="w-auto text-center block text-gray-500 text-base">
-              Oops! No results found matching '{searchQuery}'.
-              <br /> Please check spellings or try another one.
-            </p>
-          </div>
+          <Empty
+            description={
+              <>
+                Oops! No results found matching '{searchQuery}'.
+                <br /> Please check spellings or try another one.
+              </>
+            }
+          />
         ) : (
           <div className="self-start">
             <Transition
@@ -387,7 +390,7 @@ const CopyCloneSlideOver = ({
           </div>
         )}
       </div>
-    </Slideover>
+    </Drawer>
   );
 };
 

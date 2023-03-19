@@ -1,25 +1,23 @@
 import React, {Fragment, useEffect, useState} from 'react';
-// import { API, graphqlOperation } from 'aws-amplify';
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import moment from 'moment';
-import {IoLockClosed} from 'react-icons/io5';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
-import {useHistory} from 'react-router-dom';
-import {useGlobalContext} from 'contexts/GlobalContext';
-import * as customMutations from 'customGraphql/customMutations';
-import useDictionary from 'customHooks/dictionary';
-import {convertArrayIntoObj, getUserRoleString} from 'utilities/strings';
+import CheckBox from '@components/Atoms/Form/CheckBox';
+import ModalPopUp from '@components/Molecules/ModalPopUp';
+import {PersonStatus} from 'API';
 import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
 import MultipleSelector from 'atoms/Form/MultipleSelector';
 import Selector from 'atoms/Form/Selector';
 import TextArea from 'atoms/Form/TextArea';
+import {API, graphqlOperation} from 'aws-amplify';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import * as customMutations from 'customGraphql/customMutations';
+import useDictionary from 'customHooks/dictionary';
+import moment from 'moment';
+import {IoLockClosed} from 'react-icons/io5';
+import {useHistory} from 'react-router-dom';
+import {convertArrayIntoObj, getUserRoleString} from 'utilities/strings';
 import LessonLoading from '../../../Lesson/Loading/ComponentLoading';
 import DropdownForm from './DropdownForm';
 import {UserInfo} from './User';
-import {PersonStatus} from 'API';
-import ModalPopUp from '@components/Molecules/ModalPopUp';
-import CheckBox from '@components/Atoms/Form/CheckBox';
 
 function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(' ');
@@ -59,7 +57,7 @@ const UserEdit = (props: UserInfoProps) => {
   const [superEdit, setSuperEdit] = useState<boolean>(false);
   const [updating, setUpdating] = useState<boolean>(false);
   const [editUser, setEditUser] = useState(user);
-  const {state, checkIfAdmin, userLanguage, clientKey} = useGlobalContext();
+  const {state, checkIfAdmin, userLanguage} = useGlobalContext();
   const [inactiveDate, setInactiveDate] = useState(
     new Date().getMonth() > 9
       ? new Date().getMonth() +
@@ -76,9 +74,7 @@ const UserEdit = (props: UserInfoProps) => {
           new Date().getFullYear()
   );
   const isSuperAdmin = state.user.role === 'SUP';
-  const {UserEditDict, BUTTONS: ButtonDict, UserInformationDict} = useDictionary(
-    clientKey
-  );
+  const {UserEditDict, BUTTONS: ButtonDict, UserInformationDict} = useDictionary();
   const [checkpointData, setCheckpointData] = useState<any>({});
 
   const superEditSwitch = (role: string) => {
@@ -109,7 +105,7 @@ const UserEdit = (props: UserInfoProps) => {
       id: editUser.id,
       authId: editUser.authId,
       firstName: editUser.firstName,
-      grade: editUser.grade,
+
       image: editUser.image,
       language: editUser.language,
       lastName: editUser.lastName,
@@ -118,23 +114,19 @@ const UserEdit = (props: UserInfoProps) => {
         inactiveStatusDate: moment(inactiveDate).format('YYYY-MM-DD')
       }),
       role: editUser.role,
-      ...((editUser.status === 'INACTIVE' || editUser.status === 'SUSPENDED') && {
+      ...(editUser.status === 'INACTIVE' && {
         statusReason: editUser.statusReason
       }),
       status: editUser.status,
-      phone: editUser.phone,
-      birthdate: editUser.birthdate,
+
       email: editUser.email,
       onDemand: editUser.onDemand,
       isZoiq: editUser.isZoiq
     };
 
     try {
-      const update: any = await API.graphql(
-        graphqlOperation(customMutations.updatePerson, {input: input})
-      );
+      await API.graphql(graphqlOperation(customMutations.updatePerson, {input: input}));
       setUpdating(false);
-      // setStatus('loading');
 
       if (shouldNavigate) {
         history.push(
@@ -192,8 +184,10 @@ const UserEdit = (props: UserInfoProps) => {
       // Ends here
 
       // if wants to quick revert - change {input:modifiedResponseObj} value to {input:responseObj}
-      const questionData = await API.graphql(
-        graphqlOperation(customMutations.updateQuestionData, {input: modifiedResponseObj})
+      await API.graphql(
+        graphqlOperation(customMutations.updateQuestionData, {
+          input: modifiedResponseObj
+        })
       );
       console.log('Question data updated');
     } catch (err) {
@@ -215,8 +209,10 @@ const UserEdit = (props: UserInfoProps) => {
 
   const createQuestionData = async (responseObj: any) => {
     try {
-      const questionData = await API.graphql(
-        graphqlOperation(customMutations.createQuestionData, {input: responseObj})
+      await API.graphql(
+        graphqlOperation(customMutations.createQuestionData, {
+          input: responseObj
+        })
       );
       console.log('Question data updated');
     } catch (err) {
@@ -253,13 +249,13 @@ const UserEdit = (props: UserInfoProps) => {
       questions: checkpointData ? getQuestionArray(checkpointData[itemID]) : []
     }));
     if (questionData?.length === 0) {
-      let checkpoints = Promise.all(
+      Promise.all(
         allCheckpoints.map(async (item: any) =>
           savePersonCheckpointData(item.checkpointId, item.questions)
         )
       );
     } else {
-      let checkpoints = Promise.all(
+      Promise.all(
         allCheckpoints.map(async (item: any) => {
           const currentItem: any = questionData?.find(
             (question: any) => question.checkpointID === item.checkpointId
@@ -282,13 +278,12 @@ const UserEdit = (props: UserInfoProps) => {
     setUpdating(true);
     await saveAllCheckpointData();
     await updatePerson();
-    await getUserById(editUser.id);
-    onSuccessCallback && onSuccessCallback();
+    getUserById(editUser.id);
+    onSuccessCallback?.();
   }
 
   const onSubmit = () => {
     setPerson();
-    // e.preventDefault();
   };
 
   const onChange = (e: any) => {
@@ -322,9 +317,7 @@ const UserEdit = (props: UserInfoProps) => {
   };
 
   const onMultipleSelection = (
-    id: string,
-    name: string,
-    value: string,
+    option: any[],
     checkpointID: string,
     questionID: string
   ) => {
@@ -342,19 +335,12 @@ const UserEdit = (props: UserInfoProps) => {
           }
         });
       }
-      const selectedOption: any = selectedQuestion?.find((item: any) => item.id === id);
-      let updatedList;
-      if (selectedOption) {
-        const newList = selectedQuestion.filter((item: any) => item.id !== id);
-        updatedList = [...newList];
-      } else {
-        updatedList = [...selectedQuestion, {id, name, value}];
-      }
+
       setCheckpointData({
         ...checkpointData,
         [checkpointID]: {
           ...checkpointData[checkpointID],
-          [questionID]: [...updatedList]
+          [questionID]: [...option]
         }
       });
     } else {
@@ -362,22 +348,16 @@ const UserEdit = (props: UserInfoProps) => {
         ...checkpointData,
         [checkpointID]: {
           ...checkpointData[checkpointID],
-          [questionID]: [
-            {
-              id,
-              name,
-              value
-            }
-          ]
+          [questionID]: [...option]
         }
       });
     }
   };
 
   const onSingleSelect = (
-    value: string,
+    _: string,
     name: string,
-    id: string,
+    __: string,
     checkpointID: string,
     questionID: string
   ) => {
@@ -390,11 +370,11 @@ const UserEdit = (props: UserInfoProps) => {
     });
   };
 
-  const handleChangeStatus = (item: {name: string; code: PersonStatus}) => {
+  const handleChangeStatus = (item: {name: string; code: string}) => {
     setEditUser(() => {
       return {
         ...editUser,
-        status: item.code
+        status: item.code as PersonStatus
       };
     });
     closeModal();
@@ -410,7 +390,7 @@ const UserEdit = (props: UserInfoProps) => {
     setWarnModal({show: false, message: '', onSaveAction: () => {}});
   };
 
-  const beforeStatusChange = (item: {name: string; code: PersonStatus}) => {
+  const beforeStatusChange = (item: {name: string; code: string}) => {
     if (item.name === PersonStatus.INACTIVE) {
       setWarnModal({
         show: true,
@@ -446,10 +426,7 @@ const UserEdit = (props: UserInfoProps) => {
       code: 'ACTIVE',
       name: 'ACTIVE'
     },
-    {
-      code: 'SUSPENDED',
-      name: 'SUSPENDED'
-    },
+
     {
       code: 'INACTIVE',
       name: 'INACTIVE'
@@ -481,10 +458,7 @@ const UserEdit = (props: UserInfoProps) => {
       code: 'FLW',
       name: 'Fellow'
     },
-    {
-      code: 'CRD',
-      name: 'Coordinator'
-    },
+
     {
       code: 'TR',
       name: 'Teacher'
@@ -632,20 +606,18 @@ const UserEdit = (props: UserInfoProps) => {
                       : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-200'
                   } whitespace-nowrap flex justify-center cursor-pointer py-4 px-1 border-b-2 font-medium text-sm`}>
                   {UserInformationDict[userLanguage]['private']}
-                  <IconContext.Provider
-                    value={{
-                      size: '0.8rem',
-                      className: `
+
+                  <IoLockClosed
+                    className={`
                       ${
                         tab === 'private'
                           ? 'text-indigo-500'
                           : 'text-gray-400 group-hover:text-gray-500'
                       }
                       ml-2 h-5 w-5
-                    `
-                    }}>
-                    <IoLockClosed />
-                  </IconContext.Provider>
+                    `}
+                    size="0.8rem"
+                  />
                 </a>
               </nav>
             </div>
@@ -690,6 +662,7 @@ const UserEdit = (props: UserInfoProps) => {
                     <DropdownForm
                       value=""
                       style={false}
+                      // @ts-ignore
                       handleChange={beforeStatusChange}
                       userInfo={editUser.status}
                       label={UserEditDict[userLanguage]['status']}
@@ -698,26 +671,12 @@ const UserEdit = (props: UserInfoProps) => {
                       items={Status}
                     />
                   </div>
-                  {/* 
-                  {user.inactiveStatusDate && (
-                    <div className="sm:col-span-3">
-                      <Selector
-                        selectedItem={statusDate(user.inactiveStatusDate)}
-                        onChange={() => {}}
-                        arrowHidden={true}
-                        placeholder={'Status'}
-                        label={'Status Date'}
-                        labelTextClass={'text-sm text-justify'}
-                        btnClass={'cursor-not-allowed'}
-                        additionalClass={`w-auto md:w-52 lg:w-48 cursor-not-allowed`}
-                      />
-                    </div>
-                  )} */}
 
                   <div className="sm:col-span-3 p-2">
                     <DropdownForm
                       value=""
                       style={false}
+                      // @ts-ignore
                       handleChange={handleChangeRole}
                       userInfo={getUserRoleString(editUser.role)}
                       label={UserEditDict[userLanguage]['role']}
@@ -734,6 +693,7 @@ const UserEdit = (props: UserInfoProps) => {
                         dataCy="ondemand"
                         value=""
                         style={false}
+                        // @ts-ignore
                         handleChange={handleChangeOnDemand}
                         userInfo={editUser?.onDemand ? 'Yes' : 'No'}
                         label={UserEditDict[userLanguage]['ondemand']}
@@ -743,8 +703,7 @@ const UserEdit = (props: UserInfoProps) => {
                       />
                     </div>
                   )}
-                  {(editUser.status === 'SUSPENDED' ||
-                    editUser.status === 'INACTIVE') && (
+                  {editUser.status === 'INACTIVE' && (
                     <>
                       <div className="sm:col-span-3 p-2">
                         <FormInput
@@ -773,7 +732,7 @@ const UserEdit = (props: UserInfoProps) => {
                       dataCy="isZoiq"
                       label={'ZOIQ'}
                       className="group:hover:bg-gray-500"
-                      value={editUser.isZoiq}
+                      value={Boolean(editUser.isZoiq)}
                       onChange={(e) =>
                         setEditUser({...editUser, isZoiq: e.target.checked})
                       }
@@ -922,11 +881,11 @@ const UserEdit = (props: UserInfoProps) => {
                                           list={convertToSelectorList(
                                             item?.question?.options
                                           )}
-                                          onChange={(value, name, id) =>
+                                          onChange={(value, option: any) =>
                                             onSingleSelect(
                                               value,
-                                              name,
-                                              id,
+                                              value,
+                                              option.id,
                                               checkpoint.id,
                                               item.question.id
                                             )
@@ -981,11 +940,9 @@ const UserEdit = (props: UserInfoProps) => {
                                               : []
                                           }
                                           placeholder=""
-                                          onChange={(id, name, value) =>
+                                          onChange={(_, option: any[]) =>
                                             onMultipleSelection(
-                                              id,
-                                              name,
-                                              value,
+                                              option,
                                               checkpoint.id,
                                               item.question.id
                                             )
@@ -1023,7 +980,7 @@ const UserEdit = (props: UserInfoProps) => {
               btnClass="py-2 w-2.5/10 px-4 text-xs ml-2"
               label={
                 updating
-                  ? ButtonDict['SAVING']
+                  ? ButtonDict[userLanguage]['SAVING']
                   : UserEditDict[userLanguage]['button']['save']
               }
               onClick={onSubmit}
@@ -1031,14 +988,14 @@ const UserEdit = (props: UserInfoProps) => {
           </div>
         </form>
       </div>
-      {warnModal.show && (
-        <ModalPopUp
-          closeAction={closeModal}
-          saveAction={warnModal.onSaveAction}
-          saveLabel="Yes"
-          message={warnModal.message}
-        />
-      )}
+
+      <ModalPopUp
+        open={warnModal.show}
+        closeAction={closeModal}
+        saveAction={warnModal.onSaveAction}
+        saveLabel="Yes"
+        message={warnModal.message}
+      />
     </>
   );
 };

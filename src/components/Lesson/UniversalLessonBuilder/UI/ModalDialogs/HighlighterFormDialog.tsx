@@ -1,9 +1,9 @@
-import React, {useContext, useEffect, useState} from 'react';
-import {EditQuestionModalDict} from 'dictionary/dictionary.iconoclast';
 import Buttons from 'atoms/Buttons';
-import {GlobalContext} from 'contexts/GlobalContext';
-import {IContentTypeComponentProps} from 'interfaces/UniversalLessonBuilderInterfaces';
 import RichTextEditor from 'atoms/RichTextEditor';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import {EditQuestionModalDict} from 'dictionary/dictionary.iconoclast';
+import {IContentTypeComponentProps} from 'interfaces/UniversalLessonBuilderInterfaces';
+import {useEffect, useState} from 'react';
 import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
 import {v4 as uuidv4} from 'uuid';
 interface IHighlighterFormDialogProps extends IContentTypeComponentProps {
@@ -19,7 +19,7 @@ const HighlighterFormDialog = ({
   askBeforeClose,
   setUnsavedChanges
 }: IHighlighterFormDialogProps) => {
-  const {userLanguage} = useContext(GlobalContext);
+  const {userLanguage} = useGlobalContext();
   const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
 
   //////////////////////////
@@ -77,7 +77,7 @@ const HighlighterFormDialog = ({
     setUnsavedChanges(false);
   };
 
-  const setEditorContent = (html: string, text: string) => {
+  const setEditorContent = (html: string, _: string) => {
     setInputFieldValue(html);
   };
 
@@ -97,19 +97,21 @@ const HighlighterFormDialog = ({
         </div>
       </div>
 
-      <div className="flex mt-8 justify-center px-6 pb-4">
-        <div className="flex justify-end">
+      <div className="flex mt-8 justify-end px-6 pb-4">
+        <div className="flex justify-end gap-4">
           <Buttons
             btnClass="py-1 px-4 text-xs mr-2"
             label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
             onClick={askBeforeClose}
             transparent
+            size="middle"
           />
 
           <Buttons
             btnClass="py-1 px-8 text-xs ml-2"
             label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
             onClick={onHighlighterBlockCreate}
+            size="middle"
           />
         </div>
       </div>

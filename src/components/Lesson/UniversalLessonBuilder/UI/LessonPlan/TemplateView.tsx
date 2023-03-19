@@ -1,25 +1,14 @@
-import React, {useContext} from 'react';
-import {useHistory, useRouteMatch} from 'react-router';
+import Buttons from "atoms/Buttons";
 
-import Buttons from 'atoms/Buttons';
+import { useGlobalContext } from "contexts/GlobalContext";
+import useDictionary from "customHooks/dictionary";
+import PageTile from "../common/PageTile";
 
-import {GlobalContext} from 'contexts/GlobalContext';
-import useDictionary from 'customHooks/dictionary';
-import {getAsset} from 'assets';
-import {useQuery} from 'customHooks/urlParam';
-import PageTile from '../common/PageTile';
+const TemplateView = ({}: any) => {
+  const { userLanguage } = useGlobalContext();
 
-const TemplateView = ({universalLessonDetails}: any) => {
-  const history = useHistory();
-  const {theme, clientKey, userLanguage} = useContext(GlobalContext);
-  const themeColor = getAsset(clientKey, 'themeClassName');
-  const {LessonBuilderDict} = useDictionary(clientKey);
-  const params = useQuery(location.search);
-  // const lessonId = params.get('lessonId');
-  const route: any = useRouteMatch();
+  const { LessonBuilderDict } = useDictionary();
 
-  const lessonId = route.params.lessonId;
-  const pages = universalLessonDetails?.lessonPlan;
   return (
     <div className="w-full m-auto">
       <div className="overflow-hidden mb-4">
@@ -37,7 +26,9 @@ const TemplateView = ({universalLessonDetails}: any) => {
         </div>
         <div className="px-4">
           <div className={`w-full bg-gray-200 rounded py-2`}>
-            <p className={`px-2 text-left block text-xs font-medium text-gray-700`}>
+            <p
+              className={`px-2 text-left block text-xs font-medium text-gray-700`}
+            >
               Style 1
             </p>
             <div className="mt-2 p-4 py-2 grid grid-cols-3 bg-gray-200">
@@ -46,7 +37,9 @@ const TemplateView = ({universalLessonDetails}: any) => {
               <PageTile whClass={`w-20 h-28`} marginClass={`mx-auto`} />
             </div>
 
-            <p className={`px-2 text-left block text-xs font-medium text-gray-700`}>
+            <p
+              className={`px-2 text-left block text-xs font-medium text-gray-700`}
+            >
               Style 2
             </p>
             <div className="mt-2 p-4 py-2 grid grid-cols-3 bg-gray-200">
@@ -59,7 +52,7 @@ const TemplateView = ({universalLessonDetails}: any) => {
             <div className="flex justify-end">
               <Buttons
                 btnClass="py-1 px-8 text-xs ml-2"
-                label={LessonBuilderDict[userLanguage]['BUTTON']['SAVE']}
+                label={LessonBuilderDict[userLanguage]["BUTTON"]["SAVE"]}
                 type="submit"
                 // onClick={handleSubmit}
               />

@@ -1,17 +1,17 @@
-import React, {Fragment, useEffect, useState, useContext} from 'react';
+import {API, graphqlOperation} from 'aws-amplify';
+import {Fragment, useEffect, useState} from 'react';
+import {DragDropContext, Draggable, Droppable} from 'react-beautiful-dnd';
 import {useHistory} from 'react-router';
-import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
-import API, {graphqlOperation} from '@aws-amplify/api';
 
-import PageWrapper from 'atoms/PageWrapper';
-import Buttons from 'atoms/Buttons';
-import Tooltip from 'atoms/Tooltip';
-import AddButton from 'atoms/Buttons/AddButton';
-import {reorder} from 'utilities/strings';
-import * as customMutations from 'customGraphql/customMutations';
 import {getAsset} from 'assets';
-import {GlobalContext} from 'contexts/GlobalContext';
+import Buttons from 'atoms/Buttons';
+import AddButton from 'atoms/Buttons/AddButton';
+import PageWrapper from 'atoms/PageWrapper';
+import Tooltip from 'atoms/Tooltip';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import * as customMutations from 'customGraphql/customMutations';
 import useDictionary from 'customHooks/dictionary';
+import {reorder} from 'utilities/strings';
 
 interface SyllabusListProps {
   curricularId?: string;
@@ -25,9 +25,9 @@ const SyllabusList = (props: SyllabusListProps) => {
   const history = useHistory();
 
   const {curricularId, institutionId, loading, syllabusList, syllabusSequence} = props;
-  const {clientKey, theme, userLanguage} = useContext(GlobalContext);
+  const {clientKey, theme, userLanguage} = useGlobalContext();
   const themeColor = getAsset(clientKey, 'themeClassName');
-  const SyllabusDict = useDictionary(clientKey).SYLLABUS;
+  const SyllabusDict = useDictionary().SYLLABUS;
   const [list, setList] = useState<any>(syllabusList);
 
   const createNewSyllabus = async () => {
@@ -118,20 +118,19 @@ const SyllabusList = (props: SyllabusListProps) => {
                       {/* Drag and drop listing */}
                       <DragDropContext onDragEnd={onDragEnd}>
                         <Droppable droppableId="droppable">
-                          {(provided, snapshot) => (
+                          {(provided) => (
                             <div {...provided.droppableProps} ref={provided.innerRef}>
                               {list.map((item: any, index: number) => (
                                 <Draggable
                                   key={item.id}
                                   draggableId={item.id}
                                   index={index}>
-                                  {(provided, snapshot) => (
+                                  {(provided) => (
                                     <div
                                       ref={provided.innerRef}
                                       {...provided.draggableProps}
                                       {...provided.dragHandleProps}>
                                       <div
-                                        key={index}
                                         className="flex justify-between w-full px-8 py-4 whitespace-nowrap border-b-0 border-gray-200 cursor-pointer"
                                         onClick={() => editCurrentSyllabus(item.id)}>
                                         <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4">

@@ -1,41 +1,40 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import Placeholder from '@components/Atoms/Placeholder';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import ErrorBoundary from '@components/Error/ErrorBoundary';
+import {useGlobalContext} from '@contexts/GlobalContext';
 import useAuth from '@customHooks/useAuth';
-import {UserPageState} from 'API';
+import {Language, PersonStatus, Role, UserPageState} from 'API';
 import {getAsset} from 'assets';
 import BreadcrumbsWithBanner from 'atoms/BreadcrumbsWithBanner';
 import Buttons from 'atoms/Buttons';
 import Loader from 'atoms/Loader';
-import {GlobalContext} from 'contexts/GlobalContext';
 import * as customMutations from 'customGraphql/customMutations';
 import * as customQueries from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import {updatePageState, uploadImageToS3} from 'graphql/functions';
 import DroppableMedia from 'molecules/DroppableMedia';
-import React, {Fragment, useContext, useEffect, useState} from 'react';
+import React, {Fragment, lazy, useEffect, useState} from 'react';
 import {FaEdit, FaPlus} from 'react-icons/fa';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {Route, Switch, useHistory, useRouteMatch} from 'react-router-dom';
 import {getImageFromS3} from 'utilities/services';
 import {getUniqItems} from 'utilities/strings';
 import LessonLoading from '../../Lesson/Loading/ComponentLoading';
-import AboutMe from './AboutMe';
-import ChangePasscode from './ChangePasscode';
-import ChangePassword from './ChangePassword';
-import ProfileCropModal from './ProfileCropModal';
-import ProfileEdit from './ProfileEdit';
-import ProfileInfo from './ProfileInfo';
-import ProfileVault from './ProfileVault';
+
+const AboutMe = lazy(() => import('dashboard/Profile/AboutMe'));
+const ChangePasscode = lazy(() => import('dashboard/Profile/ChangePasscode'));
+const ChangePassword = lazy(() => import('dashboard/Profile/ChangePassword'));
+const ProfileCropModal = lazy(() => import('dashboard/Profile/ProfileCropModal'));
+const ProfileEdit = lazy(() => import('dashboard/Profile/ProfileEdit'));
+const ProfileInfo = lazy(() => import('dashboard/Profile/ProfileInfo'));
 
 export interface UserInfo {
   authId: string;
   courses?: string;
   createdAt: string;
   email: string;
-  externalId?: string;
+
   firstName: string;
-  grade?: string;
   id: string;
   image?: string;
   institution?: string;
@@ -44,40 +43,29 @@ export interface UserInfo {
   preferredName?: string;
   role: string;
   status: string;
-  phone: string;
+
   updatedAt: string;
-  birthdate?: string;
 }
 
-interface ProfilePageProps {
-  updateAuthState?: Function;
-}
-
-const Profile = (props: ProfilePageProps) => {
-  const {updateAuthState} = props;
+const Profile = () => {
   const [person, setPerson] = useState<UserInfo>({
     id: '',
     authId: '',
-    courses: '',
     createdAt: '',
     email: '',
-    externalId: '',
     firstName: '',
-    grade: null,
-    image: null,
-    institution: null,
-    language: '',
+
+    image: '',
+    language: Language.EN,
     lastName: '',
-    preferredName: null,
-    role: '',
-    status: '',
-    phone: '',
-    updatedAt: '',
-    birthdate: null
+    preferredName: '',
+    role: Role.ST,
+    status: PersonStatus.ACTIVE,
+    updatedAt: ''
   });
 
-  const {state, theme, userLanguage, clientKey, dispatch} = useContext(GlobalContext);
-  const {dashboardProfileDict, BreadcrumsTitles} = useDictionary(clientKey);
+  const {state, theme, userLanguage, clientKey, dispatch} = useGlobalContext();
+  const {dashboardProfileDict, BreadcrumsTitles} = useDictionary();
   const match = useRouteMatch();
   const history = useHistory();
   const pathName = location.pathname.replace(/\/$/, '');
@@ -85,22 +73,26 @@ const Profile = (props: ProfilePageProps) => {
   const [status, setStatus] = useState('');
   const [showCropper, setShowCropper] = useState(false);
   const [imageLoading, setImageLoading] = useState(false);
-  const [upImage, setUpImage] = useState(null);
+  const [upImage, setUpImage] = useState<any | null>(null);
 
   const [imageUrl, setImageUrl] = useState('');
-  const [stdCheckpoints, setStdCheckpoints] = useState([]);
-  const [questionData, setQuestionData] = useState([]);
+  const [stdCheckpoints, setStdCheckpoints] = useState<any[]>([]);
+  const [questionData, setQuestionData] = useState<any[]>([]);
 
   const breadCrumsList = [
-    {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
+    {
+      title: BreadcrumsTitles[userLanguage]['HOME'],
+      href: '/dashboard',
+      last: false
+    },
     {
       title: BreadcrumsTitles[userLanguage]['PROFILE'],
-      url: '/dashboard/profile',
+      href: '/dashboard/profile',
       last: true
     }
   ];
 
-  const {authId, email, isStudent} = useAuth();
+  const {authId, email, isStudent, setUser} = useAuth();
   useEffect(() => {
     if (isStudent) {
       updatePageState(
@@ -112,8 +104,11 @@ const Profile = (props: ProfilePageProps) => {
         },
         () => {
           dispatch({
-            type: 'SET_USER',
-            payload: {...state.user, pageState: UserPageState.DASHBOARD}
+            type: 'UPDATE_PAGE_STATE',
+            payload: {
+              lastPageStateUpdate: new Date().toISOString(),
+              pageState: UserPageState.DASHBOARD
+            }
           });
         }
       );
@@ -138,20 +133,8 @@ const Profile = (props: ProfilePageProps) => {
     setPerson({...person, image: ID});
     updateImageParam(ID);
     toggleCropper();
-    dispatch({
-      type: 'SET_USER',
-      payload: {
-        id: state.user.id,
-        firstName: state.user.firstName,
-        lastName: state.user.lastName,
-        language: state.user.language,
-        onBoardSurvey: state.user.onBoardSurvey ? state.user.onBoardSurvey : false,
-        role: state.user.role,
-        image: ID,
-        onDemand: state.user?.onDemand,
-        lastEmotionSubmission: state.user?.lastEmotionSubmission
-      }
-    });
+    setUser(state.user);
+
     setImageLoading(false);
   };
 
@@ -163,14 +146,13 @@ const Profile = (props: ProfilePageProps) => {
       id: person.id,
       image: imageKey,
       authId: person.authId,
-      grade: person.grade,
+
       language: person.language,
       lastName: person.lastName,
       preferredName: person.preferredName,
       role: person.role,
       status: person.status,
-      phone: person.phone,
-      birthdate: person.birthdate,
+
       email: person.email,
       firstName: person.firstName
     };
@@ -266,17 +248,12 @@ const Profile = (props: ProfilePageProps) => {
 
       const uniqCheckpoints: any = getUniqItems(sCheckpoints, 'id');
 
-      // console.log('uniqCheckpoints - ', uniqCheckpoints);
-
       const sortedCheckpointQ = uniqCheckpoints.map((checkpointObj: any) => {
         return {
           ...checkpointObj,
           questions: {
             items: checkpointObj.questionSeq
               ? checkpointObj.questionSeq.map((idStr: string) => {
-                  let found = checkpointObj.questions.items.find(
-                    (questionItem: any) => questionItem.question.id === idStr
-                  );
                   return checkpointObj.questions.items.find(
                     (questionItem: any) => questionItem.question.id === idStr
                   );
@@ -285,7 +262,6 @@ const Profile = (props: ProfilePageProps) => {
           }
         };
       });
-      // console.log('sorted ', sortedCheckpointQ);
 
       const uniqCheckpointIDs: any = sortedCheckpointQ.map((item: any) => item?.id);
       const personalInfo: any = {...userData};
@@ -317,7 +293,7 @@ const Profile = (props: ProfilePageProps) => {
 
   const profileBanner1 = getAsset(clientKey, 'dashboardBanner1');
 
-  const mediaRef = React.useRef(null);
+  const mediaRef = React.useRef<any>(null);
 
   if (status !== 'done') {
     return <LessonLoading />;
@@ -335,7 +311,8 @@ const Profile = (props: ProfilePageProps) => {
           <div className="flex justify-between flex-col md:flex-row mt-5">
             <SectionTitleV3
               withButton={
-                currentPath !== 'edit' && currentPath !== 'password' ? (
+                currentPath !== 'edit' &&
+                currentPath !== 'password' && (
                   <div className="w-auto">
                     <Buttons
                       dataCy="edit-profile-button"
@@ -344,7 +321,7 @@ const Profile = (props: ProfilePageProps) => {
                       Icon={FaEdit}
                     />
                   </div>
-                ) : null
+                )
               }
               title={dashboardProfileDict[userLanguage]['TITLE']}
               subtitle={dashboardProfileDict[userLanguage]['SUBTITLE']}
@@ -356,44 +333,33 @@ const Profile = (props: ProfilePageProps) => {
               <div className="w-auto p-2 md:p-4 flex flex-col text-center items-center px-8">
                 <div className="relative">
                   {person.image ? (
-                    <button className="group hover:opacity-80 focus:outline-none focus:opacity-95">
+                    <div className="group hover:opacity-80 focus:outline-none focus:opacity-95">
                       {!imageLoading ? (
                         <Fragment>
-                          <label className="cursor-pointer">
-                            <DroppableMedia
-                              setImage={(img: any, file: any) => {
-                                setUpImage(img);
-                                setFileObj(file);
-                              }}
-                              toggleCropper={toggleCropper}
-                              mediaRef={mediaRef}>
-                              {imageUrl ? (
-                                <img
-                                  data-cy="profile-image"
-                                  className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full  border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light mx-auto`}
-                                  src={imageUrl}
-                                />
-                              ) : (
-                                <div
-                                  className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full  border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light mx-auto`}
-                                />
-                              )}
-                            </DroppableMedia>
-                          </label>
+                          <DroppableMedia
+                            setImage={(img: any, file: any) => {
+                              setUpImage(img);
+                              setFileObj(file);
+                            }}
+                            toggleCropper={toggleCropper}
+                            mediaRef={mediaRef}>
+                            <Placeholder
+                              size="w-20 h-20 md:w-40 md:h-40"
+                              image={imageUrl}
+                            />
+                          </DroppableMedia>
                         </Fragment>
                       ) : (
                         <div className="w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full  border-0 border-gray-400 shadow-elem-lightI">
                           <Loader />
                         </div>
                       )}
-                    </button>
+                    </div>
                   ) : (
                     <label
                       className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full  border-0 border-gray-400 shadow-elem-light mx-auto`}>
                       {!imageLoading ? (
-                        <IconContext.Provider value={{size: '3rem', color: '#4a5568'}}>
-                          <FaPlus />
-                        </IconContext.Provider>
+                        <FaPlus color="#4a5568" size={'3rem'} />
                       ) : (
                         <Loader />
                       )}
@@ -417,7 +383,6 @@ const Profile = (props: ProfilePageProps) => {
                   {`${person.preferredName ? person.preferredName : person.firstName} ${
                     person.lastName
                   }`}
-                  <p className="text-md md:text-lg">{person.institution}</p>
                 </div>
               </div>
 
@@ -457,19 +422,12 @@ const Profile = (props: ProfilePageProps) => {
                       </ErrorBoundary>
                     )}
                   />
-                  <Route
-                    path={`${match.url}/vault`}
-                    render={() => (
-                      <ErrorBoundary componentName="ProfileVault">
-                        <ProfileVault />
-                      </ErrorBoundary>
-                    )}
-                  />
+
                   <Route
                     path={`${match.url}/password`}
                     render={() => (
                       <ErrorBoundary componentName="ChangePassword">
-                        <ChangePassword updateAuthState={updateAuthState} />
+                        <ChangePassword />
                       </ErrorBoundary>
                     )}
                   />
@@ -482,13 +440,13 @@ const Profile = (props: ProfilePageProps) => {
                     )}
                   />
                 </Switch>
-                {showCropper && (
-                  <ProfileCropModal
-                    upImg={upImage}
-                    saveCroppedImage={(img: string) => saveCroppedImage(img)}
-                    closeAction={toggleCropper}
-                  />
-                )}
+
+                <ProfileCropModal
+                  open={showCropper}
+                  upImg={upImage || ''}
+                  saveCroppedImage={(img: string) => saveCroppedImage(img)}
+                  closeAction={toggleCropper}
+                />
               </div>
             </div>
           </div>

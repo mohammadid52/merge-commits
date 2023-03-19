@@ -1,7 +1,6 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import React, {Fragment, useContext, useEffect, useState} from 'react';
+import {Fragment, useEffect, useState} from 'react';
 import {IoArrowUndoCircleOutline, IoClose} from 'react-icons/io5';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {useHistory, useParams} from 'react-router';
 
 import * as customMutations from 'customGraphql/customMutations';
@@ -9,27 +8,24 @@ import * as customQueries from 'customGraphql/customQueries';
 import {getTypeString} from 'utilities/strings';
 
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
-import {getAsset} from 'assets';
 import BreadCrums from 'atoms/BreadCrums';
 import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
 import MultipleSelector from 'atoms/Form/MultipleSelector';
 import Selector from 'atoms/Form/Selector';
 import PageWrapper from 'atoms/PageWrapper';
-import {GlobalContext} from 'contexts/GlobalContext';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import AddQuestion from './QuestionComponents/AddQuestion';
 import SelectPreviousQuestion from './QuestionComponents/SelectPreviousQuestion';
+import {languageList, scopeList} from '@utilities/staticData';
 
-interface EditProfileCheckpointProps {}
-
-const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
-  const {} = props;
+const EditProfileCheckpoint = () => {
   const history = useHistory();
   const urlParams: any = useParams();
-  const {theme, clientKey, userLanguage} = useContext(GlobalContext);
-  const themeColor = getAsset(clientKey, 'themeClassName');
-  const {EditProfileCheckpointDict, BreadcrumsTitles} = useDictionary(clientKey);
+  const {userLanguage} = useGlobalContext();
+
+  const {EditProfileCheckpointDict, BreadcrumsTitles} = useDictionary();
   const curricularId = urlParams.curricularId;
   const institutionId = urlParams.institutionId;
   const checkpointId = urlParams.id;
@@ -42,13 +38,19 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
   };
   const [checkpointData, setCheckpointData] = useState(initialData);
 
-  const [designersList, setDesignersList] = useState([]);
-  const [selectedDesigners, setSelectedDesigner] = useState([]);
-  const [checkpQuestions, setCheckpQuestions] = useState([]);
-  const [qSequence, setQSequence] = useState([]);
-  const [previouslySelectedId, setPreviouslySelectedId] = useState([]);
-  const [checkpQuestionId, setCheckpQuestionId] = useState([]);
-  const [questionOptions, setQuestionOptions] = useState({quesId: '', options: []});
+  const [designersList, setDesignersList] = useState<any[]>([]);
+  const [selectedDesigners, setSelectedDesigner] = useState<any[]>([]);
+  const [checkpQuestions, setCheckpQuestions] = useState<any[]>([]);
+  const [qSequence, setQSequence] = useState<any[]>([]);
+  const [previouslySelectedId, setPreviouslySelectedId] = useState<any[]>([]);
+  const [checkpQuestionId, setCheckpQuestionId] = useState<any[]>([]);
+  const [questionOptions, setQuestionOptions] = useState<{
+    quesId: string;
+    options: any[];
+  }>({
+    quesId: '',
+    options: []
+  });
   const [currentState, setCurrentState] = useState('checkpoint');
   const [loading, setLoading] = useState(false);
   const [validation, setValidation] = useState({
@@ -59,22 +61,21 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
   });
 
   const breadCrumsList = [
-    {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
+    {
+      title: BreadcrumsTitles[userLanguage]['HOME'],
+      href: '/dashboard',
+      last: false
+    },
     {
       title: BreadcrumsTitles[userLanguage]['CURRICULUMBUILDER'],
-      url: `/dashboard/manage-institutions/${institutionId}/curricular?id=${curricularId}`,
+      href: `/dashboard/manage-institutions/${institutionId}/curricular?id=${curricularId}`,
       last: false
     },
     {
       title: BreadcrumsTitles[userLanguage]['AddChekpoint'],
-      url: `/dashboard/curricular/${curricularId}/checkpoint/addNew`,
+      href: `/dashboard/curricular/${curricularId}/checkpoint/addNew`,
       last: true
     }
-  ];
-
-  const languageList = [
-    {id: 1, name: 'English', value: 'EN'},
-    {id: 2, name: 'Spanish', value: 'ES'}
   ];
 
   const onInputChange = (e: any) => {
@@ -91,27 +92,18 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
     }
   };
 
-  const selectLanguage = (value: string, name: string, id: string) => {
+  const selectLanguage = (value: string, option: any) => {
     setCheckpointData({
       ...checkpointData,
       language: {
-        id,
-        name,
+        id: option.id,
+        name: option.label,
         value
       }
     });
   };
-
-  const selectDesigner = (id: string, name: string, value: string) => {
-    let updatedList;
-    const currentDesigners = selectedDesigners;
-    const selectedItem = currentDesigners.find((item) => item.id === id);
-    if (!selectedItem) {
-      updatedList = [...currentDesigners, {id, name, value}];
-    } else {
-      updatedList = currentDesigners.filter((item) => item.id !== id);
-    }
-    setSelectedDesigner(updatedList);
+  const selectDesigner = (_: string[], option: any[]) => {
+    setSelectedDesigner(option);
   };
 
   const showOptions = (quesId: string, options: any[]) => {
@@ -142,12 +134,6 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
     setQSequence(newSequence);
   }, [checkpQuestions]);
 
-  const getSequence = async () => {};
-
-  const createSequence = async () => {};
-
-  const updateSequence = async () => {};
-
   // Add new checkpoint to the curricular
   const addCheckpointQuestions = async (
     quesId: string,
@@ -160,8 +146,10 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
         questionID: quesId,
         required: required ? required : false
       };
-      const questions: any = await API.graphql(
-        graphqlOperation(customMutations.createCheckpointQuestions, {input: input})
+      await API.graphql(
+        graphqlOperation(customMutations.createCheckpointQuestions, {
+          input: input
+        })
       );
     } catch {
       setValidation({
@@ -176,14 +164,17 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
   // Removed question from checkpoint
   const removeCheckpointQuestion = async (quesId: string, cb?: Function) => {
     const deletedQuestions: any = [...checkpQuestionId];
-    const deletedQuesID = deletedQuestions.find((item: any) => item.questionID === quesId)
-      ?.id;
+    const deletedQuesID = deletedQuestions.find(
+      (item: any) => item.questionID === quesId
+    )?.id;
     try {
       const input = {
         id: deletedQuesID
       };
-      const result: any = await API.graphql(
-        graphqlOperation(customMutations.deleteCheckpointQuestions, {input: input})
+      await API.graphql(
+        graphqlOperation(customMutations.deleteCheckpointQuestions, {
+          input: input
+        })
       );
       if (cb) cb();
     } catch {
@@ -213,7 +204,7 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
     }
     if (checkpQuestions?.length <= 0) {
       isValid = false;
-      msgs.message = EditProfileCheckpointDict[userLanguage]['messages']['onequestion'];
+      msgs.message = EditProfileCheckpointDict[userLanguage]['messages'].onequetion;
     } else {
       msgs.message = '';
     }
@@ -251,14 +242,14 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
 
         if (newCheckpoint) {
           if (newQuestions.length > 0) {
-            let newAddedQuestions = await Promise.all(
+            await Promise.all(
               newQuestions.map(async (item: any) =>
                 addCheckpointQuestions(item.id, newCheckpoint.id, item.required)
               )
             );
           }
           if (deletedQuestions.length > 0) {
-            let removedQuestions = await Promise.all(
+            await Promise.all(
               deletedQuestions.map(async (quesId: any) =>
                 removeCheckpointQuestion(quesId)
               )
@@ -360,11 +351,6 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
     fetchCheckpointDetails();
   }, []);
 
-  const scopeList = [
-    {id: 0, name: 'public'},
-    {id: 1, name: 'private'}
-  ];
-
   const handleRemoveQuestionFromCheckpoint = (questionID: string) => {
     removeCheckpointQuestion(questionID, fetchCheckpointDetails);
   };
@@ -465,7 +451,7 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
                       selectedItem={checkpointData.scope || 'public'}
                       placeholder="Update scope"
                       list={scopeList}
-                      onChange={(c, name) =>
+                      onChange={(name) =>
                         setCheckpointData({...checkpointData, scope: name})
                       }
                     />
@@ -557,24 +543,16 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
                                   <div className="flex w-2/10 px-8 py-3 text-left text-s leading-4 items-center whitespace-normal">
                                     {item.type ? getTypeString(item.type) : '--'}
                                   </div>
-                                  {/* <div className="flex w-1.5/10 px-6 py-3 text-s leading-4 items-center justify-center">
-                                      <span className="cursor-pointer">
-                                        <CheckBox value={item.required ? true : false} onChange={() => console.log(item.id)} name='isRequired' />
-                                      </span>
-                                    </div> */}
+
                                   <div className="flex w-1.5/10 px-6 py-1 text-s leading-4 items-center justify-center">
-                                    <IconContext.Provider
-                                      value={{
-                                        size: '1.5rem',
-                                        color: theme.iconColor[themeColor]
-                                      }}>
-                                      <IoClose
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                          handleRemoveQuestionFromCheckpoint(item.id);
-                                        }}
-                                      />
-                                    </IconContext.Provider>
+                                    <IoClose
+                                      className="theme-text"
+                                      size="1.5rem"
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleRemoveQuestionFromCheckpoint(item.id);
+                                      }}
+                                    />
                                   </div>
                                 </div>
                                 {questionOptions.quesId === item.id && (

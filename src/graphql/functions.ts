@@ -1,18 +1,16 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import {Storage} from '@aws-amplify/storage';
 import {formatPageName} from '@components/Dashboard/Admin/UserManagement/List';
+import {allowedAuthIds} from '@contexts/GlobalContext';
 import {setPageTitle, withZoiqFilter} from '@utilities/functions';
+import {setLocalStorageData} from '@utilities/localStorage';
 import {CreateDicitionaryInput, CreateErrorLogInput, UserPageState} from 'API';
+import {Auth, Storage} from 'aws-amplify';
+import * as customMutations from 'customGraphql/customMutations';
+import * as customQueries from 'customGraphql/customQueries';
 import * as mutations from 'graphql/mutations';
 import * as queries from 'graphql/queries';
-import * as customQueries from 'customGraphql/customQueries';
-import * as customMutations from 'customGraphql/customMutations';
-import {setLocalStorageData} from '@utilities/localStorage';
 import {isEmpty} from 'lodash';
 import {v4 as uuidV4} from 'uuid';
-
-import {Auth} from 'aws-amplify';
-import {allowedAuthIds} from 'state/GlobalState';
 
 interface S3UploadOptions {
   onSuccess?: (result: Object) => void;
@@ -44,7 +42,7 @@ export const uploadImageToS3 = async (
     const result = await Storage.put(key, file, {
       contentType: type,
       acl: 'public-read',
-      ContentEncoding: 'base64',
+      contentEncoding: 'base64',
       progressCallback: ({loaded, total}: any) => {
         const progress = (loaded * 100) / total;
         options?.progressCallback?.({progress, loaded, total});
@@ -59,7 +57,7 @@ export const uploadImageToS3 = async (
     if (options?.auth) {
       logError(
         error,
-        {authId: options.auth.authId, email: options.auth.email},
+        {authId: options?.auth?.authId, email: options?.auth?.email},
         'uploadImageToS3'
       );
     }
@@ -70,6 +68,8 @@ export const uploadImageToS3 = async (
       // otherwise throw the error to console
       console.error(error);
     }
+
+    return '';
   }
 };
 
@@ -132,9 +132,7 @@ export const logError = async (
       pageUrl: location.href,
       componentName: componentName
     };
-    const res = await API.graphql(
-      graphqlOperation(customMutations.createErrorLog, {input})
-    );
+    await API.graphql(graphqlOperation(customMutations.createErrorLog, {input}));
   } catch (error) {
     console.error(
       'error logging error.. this is kind of ironic -> ',
@@ -159,9 +157,7 @@ export const addNewDictionary = async (formData: CreateDicitionaryInput) => {
       translation: isEmpty(formData.translation) ? [] : formData.translation
     };
 
-    const res: any = await API.graphql(
-      graphqlOperation(mutations.createDicitionary, {input})
-    );
+    await API.graphql(graphqlOperation(mutations.createDicitionary, {input}));
   } catch (error) {
     console.error(error);
     logError(
@@ -227,7 +223,7 @@ export const listInstitutions = async (authId: string, email: string) => {
     institutions = institutions.map((inst: any) => {
       return {
         id: inst.id,
-        name: inst.name,
+        label: inst.name,
         value: inst.name
       };
     });
@@ -248,7 +244,7 @@ export const getInstitutionList = async (authId: string, email: string) => {
     const sortedList = list.data.listInstitutions?.items.sort((a: any, b: any) =>
       a.name?.toLowerCase() > b.name?.toLowerCase() ? 1 : -1
     );
-    const InstituteList = sortedList.map((item: any, i: any) => ({
+    const InstituteList = sortedList.map((item: any) => ({
       id: item.id,
       name: `${item.name ? item.name : ''}`,
       value: `${item.name ? item.name : ''}`
@@ -305,8 +301,7 @@ export async function updateLoginTime(id: string, authId: string, email: string)
 export async function signIn(
   username: string,
   password: string,
-  cookies: {setCookie: any; removeCookie: any},
-  rememberMe?: boolean
+  cookies: {setCookie: any; removeCookie: any}
 ) {
   const user = await Auth.signIn(username, password);
 
@@ -318,3 +313,106 @@ export async function signIn(
   sessionStorage.setItem('accessToken', user.signInUserSession.accessToken.jwtToken);
   return user;
 }
+
+export const checkUniqCurricularName = async (instId: string, name: string) => {
+  try {
+    const list: any = await API.graphql(
+      graphqlOperation(queries.listCurricula, {
+        filter: {
+          institutionID: {eq: instId},
+          name: {eq: name}
+        }
+      })
+    );
+    return list.data.listCurricula.items.length === 0 ? true : false;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+};
+
+const getDashboardData = async (authId: string, email: string) => {
+  try {
+    const dashboardDataFetch: any = await API.graphql(
+      graphqlOperation(customQueries.getDashboardData, {
+        authId: authId,
+        email: email
+      })
+    );
+
+    // @ts-ignore
+    let arrayOfResponseObjects =
+      (await dashboardDataFetch?.data?.getPerson?.classes?.items) || [];
+
+    if (arrayOfResponseObjects && arrayOfResponseObjects.length) {
+      arrayOfResponseObjects = arrayOfResponseObjects.filter(
+        (item: any) => item.class !== null
+      );
+    }
+
+    return arrayOfResponseObjects;
+  } catch (error) {
+    logError(error, {authId: authId, email: email}, 'Dashboard @getDashboardData');
+
+    console.error('getDashbaordData -> ', error);
+  }
+};
+
+const getDashboardDataForTeachers = async (authId: string, email: string) => {
+  try {
+    const dashboardDataFetch: any = await API.graphql(
+      graphqlOperation(customQueries.getDashboardDataForTeachers, {
+        filter: {teacherAuthID: {eq: authId}}
+      })
+    );
+    const assignedRoomsAsCoTeacher: any = await API.graphql(
+      graphqlOperation(customQueries.getDashboardDataForCoTeachers, {
+        filter: {teacherAuthID: {eq: authId}}
+      })
+    );
+    const response = await dashboardDataFetch;
+    let arrayOfResponseObjects = [
+      ...response?.data?.listRooms?.items,
+      ...assignedRoomsAsCoTeacher?.data?.listRoomCoTeachers?.items?.map((item: any) => ({
+        ...item,
+        ...item.room,
+        teacher: item.room?.teacher
+      }))
+    ];
+    arrayOfResponseObjects = arrayOfResponseObjects.map(() => {
+      return {class: {rooms: {items: arrayOfResponseObjects}}};
+    });
+
+    return arrayOfResponseObjects;
+  } catch (error) {
+    logError(
+      error,
+      {authId: authId, email: email},
+      'Dashboard @getDashboardDataForTeachers'
+    );
+    console.error('getDashboardDataForTeachers -> ', error);
+    return [];
+  }
+};
+
+export const dashboardFunctions = {getDashboardData, getDashboardDataForTeachers};
+
+export const handleLessonMutationRating = async (
+  id: string,
+  lessonID: string,
+  ratingValue: string
+) => {
+  try {
+    await API.graphql(
+      graphqlOperation(mutations.updatePersonLessonsData, {
+        input: {
+          id,
+          lessonID: lessonID,
+          ratings: ratingValue
+        }
+      })
+    );
+  } catch (error) {
+    console.error(error);
+  }
+};

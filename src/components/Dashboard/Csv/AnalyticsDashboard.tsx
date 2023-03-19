@@ -1,22 +1,18 @@
-import Loader from 'atoms/Loader';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import * as queries from 'graphql/queries';
-import React, {useContext, useEffect, useState} from 'react';
-import {GlobalContext} from 'contexts/GlobalContext';
+import Loader from 'atoms/Loader';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import * as mutations from 'graphql/mutations';
+import * as queries from 'graphql/queries';
+import React, {useEffect, useState} from 'react';
 import DateAndTime from '../DateAndTime/DateAndTime';
 
-interface ICsvProps {
-  institutionId?: string;
-}
-
-const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
-  const {clientKey, userLanguage} = useContext(GlobalContext);
-  const {CsvDict} = useDictionary(clientKey);
+const AnalyticsDashboard = () => {
+  const {userLanguage} = useGlobalContext();
+  const {CsvDict} = useDictionary();
   const [loading, setLoading] = useState<boolean>(false);
-  const [surveyQues, setSurveyQues] = useState([]);
+  const [surveyQues, setSurveyQues] = useState<any[]>([]);
   const [surveyData, setSurveyData] = useState<any[]>([]);
   const [AllStudents, setAllStudents] = useState<any[]>([]);
   const [success, setSuccess] = useState<boolean>(false);
@@ -35,7 +31,10 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
     return str.replace(/\"/g, "'");
   };
 
-  const pipeFn = (...fns: any[]) => (arg: any) => fns.reduce((acc, fn) => fn(acc), arg);
+  const pipeFn =
+    (...fns: any[]) =>
+    (arg: any) =>
+      fns.reduce((acc, fn) => fn(acc), arg);
 
   const cleanString = (str: string) => {
     return pipeFn(removeDoubleSpaces, removeDoubleQuotes)(str);
@@ -146,7 +145,7 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
   const getAllData = async () => {
     setLoading(true);
     const surveyList = await getAllSurvey();
-    const studentsDetails = await listAllStudents(`ST`, undefined, []);
+    const studentsDetails = await listAllStudents(`ST`, null, []);
     setAllStudents(studentsDetails);
 
     let returnedData = surveyList.map(async (survey: any) => {
@@ -194,7 +193,7 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
 
   const listAllStudents = async (
     peopleType: string,
-    nextToken: string,
+    nextToken: string | null,
     outArray: any[]
   ): Promise<any> => {
     let combined: any[];
@@ -263,7 +262,7 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
   const getAllStudentsSurveyQuestionsResponse = async (
     lessonId: string,
     nextToken?: string,
-    outArray?: any[]
+    outArray = []
   ) => {
     let universalSurveyStudentData: any = await API.graphql(
       graphqlOperation(queries.listUniversalSurveyStudentData, {
@@ -286,8 +285,6 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
      */
     let combined: any = [...studentsAnswersSurveyQuestionsData, ...outArray];
 
-    // console.log('combined - - - -', combined);
-
     if (theNextToken) {
       combined = await getAllStudentsSurveyQuestionsResponse(
         lessonId,
@@ -304,8 +301,7 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
     try {
       let students = AllStudents;
       let qids: any = [];
-      let takenSurvey = 0;
-      let notTakenSurvey = 0;
+
       let surveyDates: any = [];
       // creating an array of question Ids and creating a object to store all question options.
       let surveyQuestionOptions: any = {};
@@ -335,10 +331,7 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
           if (answerArray.studentID === stu.authId) {
             hasTakenSurvey = true;
             universalSurveyStudentID = answerArray.id;
-            console.log(
-              '🚀 ~ file: Csv.tsx ~ line 826 ~ surveyData.map ~ universalSurveyStudentID',
-              universalSurveyStudentID
-            );
+
             answerArray.surveyData.map((singleAnswer: any) => {
               if (qids.indexOf(singleAnswer.domID) >= 0) {
                 surveyAnswerDates.push(answerArray.updatedAt);
@@ -386,12 +379,6 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
           (a: any, b: any) => new Date(b) - new Date(a)
         );
 
-        if (hasTakenSurvey) {
-          takenSurvey++;
-        } else {
-          notTakenSurvey++;
-        }
-
         return {
           ...stu,
           universalSurveyStudentID: universalSurveyStudentID
@@ -421,16 +408,21 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
       };
     } catch (err) {
       console.log('error', err);
+      return {
+        SurveyHeaders: [],
+        SurveyData: []
+      };
     }
   };
 
   const filterData = async () => {
     const {SurveyHeaders, SurveyData} = await getCSVData();
-    let filteredData = SurveyData.filter((csvD): any => {
+    let filteredData = SurveyData.filter((csvD: {[x: string]: string}): any => {
       return SurveyHeaders.find(({key}: any) => {
         if (csvD[key] === '') {
           return true;
         }
+        return false;
       });
     });
     let input: any[] = [];
@@ -449,7 +441,8 @@ const AnalyticsDashboard = ({institutionId}: ICsvProps) => {
                 QuestionResponse: csvD[header.key]
               };
             }
-          }).filter((elem: any) => elem !== undefined)
+            return {};
+          }).filter(Boolean)
         }
       ];
     });

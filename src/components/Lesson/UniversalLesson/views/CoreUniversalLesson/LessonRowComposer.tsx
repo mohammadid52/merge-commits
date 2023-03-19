@@ -1,4 +1,3 @@
-import PageTimer from '@components/Lesson/Components/PageTimer';
 import {getLocalStorageData, setLocalStorageData} from '@utilities/localStorage';
 import {TeachingStyle} from 'API';
 import AllEmotions from 'components/Lesson/AllEmotions';
@@ -78,9 +77,10 @@ const LessonRowComposer = () => {
     return removeDownloadablesFromlist;
   }, [activePageData]);
 
-  const removeDownloadablesFromlist = useMemo(() => getRemovedDownloadablesFromlist(), [
-    activePageData
-  ]);
+  const removeDownloadablesFromlist = useMemo(
+    () => getRemovedDownloadablesFromlist(),
+    [activePageData]
+  );
 
   useEffect(() => {
     const parentContainer = document.querySelector('html');
@@ -101,9 +101,6 @@ const LessonRowComposer = () => {
   const PAGES = lessonState?.lessonData?.lessonPlan || [];
 
   const isLastPage = PAGES?.length - 1 === lessonState.currentPage;
-
-  const estTime = Number(PAGES[lessonState.currentPage]?.estTime || 1); // unit of time here is minutes
-  const estTimeInSeconds = estTime * 60;
 
   useEffect(() => {
     if (PAGES) {
@@ -235,7 +232,7 @@ const LessonRowComposer = () => {
       )}
 
       {user.role === 'ST' && <TranslationModule />}
-      {isStudent && <PageTimer startTime={estTimeInSeconds} />}
+      {/* {isStudent && <PageTimer startTime={estTimeInSeconds} />} */}
     </div>
   );
 };

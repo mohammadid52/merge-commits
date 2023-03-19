@@ -1,7 +1,6 @@
-import React, {useContext, useEffect} from 'react';
-import {GlobalContext} from 'contexts/GlobalContext';
-import useDictionary from 'customHooks/dictionary';
+import {useGlobalContext} from '@contexts/GlobalContext';
 import SubSectionTab from 'atoms/SubSectionTab';
+import React from 'react';
 
 interface SubSectionTabs {
   isTeacher?: boolean;
@@ -13,14 +12,9 @@ interface SubSectionTabs {
 }
 
 const SubSectionTabs = (props: SubSectionTabs) => {
-  const {
-    subSection,
-    subSectionList,
-    handleTabClick,
-    widgetTypeCount,
-    translations
-  } = props;
-  const {theme} = useContext(GlobalContext);
+  const {subSection, subSectionList, handleTabClick, widgetTypeCount, translations} =
+    props;
+  const {theme} = useGlobalContext();
 
   const getLabel = (inputLabel: string, translationIndex: number) => {
     if (inputLabel.includes('Widgets')) {
@@ -30,7 +24,7 @@ const SubSectionTabs = (props: SubSectionTabs) => {
         return 'Sidebar Widgets';
       }
     } else {
-      return translations[translationIndex];
+      return translations?.[translationIndex] || 'Topbar Widgets';
     }
   };
 
@@ -40,7 +34,7 @@ const SubSectionTabs = (props: SubSectionTabs) => {
         {subSectionList &&
           subSectionList.map((listItem: string, index: number) => (
             <SubSectionTab
-              key={`subSectionTab_${index}`}
+              key={`subSectionTab_${listItem}`}
               id={listItem}
               selectedCondition={subSection === listItem}
               label={getLabel(listItem, index)}

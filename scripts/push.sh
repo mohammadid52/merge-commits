@@ -23,6 +23,11 @@ case $branch in
           cp ./src/config/aws-exports.ia.js ./src/aws-exports.js
           commit
         ;;
+    "antd-init")
+          echo ${PURPLE}"Changing environment to Iconoclast production because you are in new-dev branch"${NONE}
+          cp ./src/config/aws-exports.ia.js ./src/aws-exports.js
+          commit
+        ;;
     "master")
           echo ${PURPLE}"Changing environment to Iconoclast production because you are in master branch"${NONE}
           cp ./src/config/aws-exports.ia.js ./src/aws-exports.js

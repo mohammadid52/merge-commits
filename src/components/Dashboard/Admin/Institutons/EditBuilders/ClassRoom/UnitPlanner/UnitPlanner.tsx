@@ -1,24 +1,24 @@
-import React, {useEffect, useState} from 'react';
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import moment, {Moment} from 'moment';
+import React, { useEffect, useState } from "react";
+import { API, graphqlOperation } from "aws-amplify";
+import moment, { Moment } from "moment";
 
-import * as customQueries from 'customGraphql/customQueries';
+import * as customQueries from "customGraphql/customQueries";
 
-import Buttons from 'atoms/Buttons';
+import Buttons from "atoms/Buttons";
 // import DatePickerInput from 'atoms/Form/DatePickerInput';
-import Loader from 'atoms/Loader';
-import {IImpactLog} from '../ClassRoomHolidays';
+import Loader from "atoms/Loader";
+import { IImpactLog } from "../ClassRoomHolidays";
 
-const frequencyMapping: {[key: string]: {unit: any; step: number}} = {
-  Weekly: {unit: 'week', step: 1},
-  Monthly: {unit: 'month', step: 1},
-  Trimestral: {unit: 'month', step: 4},
-  Quarterly: {unit: 'month', step: 3},
-  Semestral: {unit: 'month', step: 6},
-  'M/W/F': {unit: 'day', step: 1},
-  'Tu/Th': {unit: 'day', step: 1},
-  'One Time': {unit: 'day', step: 1},
-  Daily: {unit: 'day', step: 1}
+const frequencyMapping: { [key: string]: { unit: any; step: number } } = {
+  Weekly: { unit: "week", step: 1 },
+  Monthly: { unit: "month", step: 1 },
+  Trimestral: { unit: "month", step: 4 },
+  Quarterly: { unit: "month", step: 3 },
+  Semestral: { unit: "month", step: 6 },
+  "M/W/F": { unit: "day", step: 1 },
+  "Tu/Th": { unit: "day", step: 1 },
+  "One Time": { unit: "day", step: 1 },
+  Daily: { unit: "day", step: 1 },
 };
 
 interface IUnitPlannerProps {
@@ -38,10 +38,10 @@ const UnitPlanner = ({
   saveRoomDetails,
   saving,
   setLogsChanged,
-  isDetailsComplete
+  isDetailsComplete,
 }: IUnitPlannerProps) => {
   const [loading, setLoading] = useState(roomData.curricular?.id);
-  const [syllabusList, setSyllabusList] = useState([]);
+  const [syllabusList, setSyllabusList] = useState<any[]>([]);
 
   useEffect(() => {
     if (roomData.curricular?.id) {
@@ -54,7 +54,7 @@ const UnitPlanner = ({
       setLoading(true);
       const list: any = await API.graphql(
         graphqlOperation(customQueries.getClassroomSyllabus, {
-          id: roomData.curricular?.id
+          id: roomData.curricular?.id,
         })
       );
       const result: any = list.data?.getCurriculum;
@@ -69,10 +69,10 @@ const UnitPlanner = ({
               items: item.unit.lessons?.items
                 .map((t: any) => {
                   let index = result?.universalLessonsSeq?.indexOf(t.id);
-                  return {...t, index};
+                  return { ...t, index };
                 })
-                .sort((a: any, b: any) => (a.index > b.index ? 1 : -1))
-            }
+                .sort((a: any, b: any) => (a.index > b.index ? 1 : -1)),
+            },
           }))
           .sort((a: any, b: any) => (a.index > b.index ? 1 : -1)) || []
       );
@@ -100,10 +100,10 @@ const UnitPlanner = ({
     duration: number,
     scheduleDates: Date[]
   ) => {
-    if (frequency === 'M/W/F' && ![1, 3, 5].includes(moment(date).day())) {
+    if (frequency === "M/W/F" && ![1, 3, 5].includes(moment(date).day())) {
       date = moment(new Date(moment(date).add(2, frequency).toDate()));
     }
-    if (frequency === 'Tu/Th' && ![2, 4].includes(moment(date).day())) {
+    if (frequency === "Tu/Th" && ![2, 4].includes(moment(date).day())) {
       date = moment(new Date(moment(date).add(2, frequency).toDate()));
     }
     let iteration: number = 1,
@@ -119,11 +119,11 @@ const UnitPlanner = ({
 
       if (
         !isOccupied &&
-        (roomData.frequency !== 'M/W/F' ||
-          (roomData.frequency === 'M/W/F' &&
+        (roomData.frequency !== "M/W/F" ||
+          (roomData.frequency === "M/W/F" &&
             [1, 3, 5].includes(moment(date).add(i, frequency).day()))) &&
-        (roomData.frequency !== 'Tu/Th' ||
-          (roomData.frequency === 'Tu/Th' &&
+        (roomData.frequency !== "Tu/Th" ||
+          (roomData.frequency === "Tu/Th" &&
             [2, 4].includes(moment(date).add(i, frequency).day())))
       ) {
         if (iteration === 1) {
@@ -136,14 +136,14 @@ const UnitPlanner = ({
       }
       i += step;
     }
-    return {startDate, estEndDate: estEndDate || startDate};
+    return { startDate, estEndDate: estEndDate || startDate };
   };
 
   const calculateSchedule = () => {
     let count: number = 0,
       lastOccupiedDate: any = roomData.startDate,
       scheduleDates = lessonImpactLogs
-        .filter((log: any) => log.adjustment === 'Push')
+        .filter((log: any) => log.adjustment === "Push")
         .map((log: any) => log.impactDate);
 
     setSyllabusList((prevSyllabusList: any) =>
@@ -157,20 +157,21 @@ const UnitPlanner = ({
             .map((item: any) => {
               if (count !== 0 && 1 - count < item.lesson.duration) {
                 lastOccupiedDate = moment(lastOccupiedDate).add(
-                  frequencyMapping[roomData.frequency || 'One Time'].step,
-                  frequencyMapping[roomData.frequency || 'One Time'].unit
+                  frequencyMapping[roomData.frequency || "One Time"].step,
+                  frequencyMapping[roomData.frequency || "One Time"].unit
                 );
                 count = 0;
               }
               count += item.lesson.duration;
 
-              const {startDate, estEndDate}: any = calculateAvailableStartDate(
-                moment(lastOccupiedDate),
-                frequencyMapping[roomData.frequency || 'One Time'].unit,
-                frequencyMapping[roomData.frequency || 'One Time'].step,
-                item.lesson.duration,
-                scheduleDates
-              );
+              const { startDate, estEndDate }: any =
+                calculateAvailableStartDate(
+                  moment(lastOccupiedDate),
+                  frequencyMapping[roomData.frequency || "One Time"].unit,
+                  frequencyMapping[roomData.frequency || "One Time"].step,
+                  item.lesson.duration,
+                  scheduleDates
+                );
 
               item.startDate = startDate;
               item.estEndDate = estEndDate;
@@ -207,15 +208,15 @@ const UnitPlanner = ({
                 : item.estEndDate;
               count = count >= 1 ? 0 : count;
               return item;
-            })
-        }
+            }),
+        },
       }))
     );
     // saveRoomDetails();
     setLogsChanged(false);
   };
 
-  const validateAllRequiredFields = (ifAllGood: () => void) => {};
+  const validateAllRequiredFields = (_: () => void) => {};
 
   return (
     <div className="py-8">
@@ -239,20 +240,23 @@ const UnitPlanner = ({
         ) : syllabusList.length ? (
           <>
             {syllabusList.map((syllabus: any, index: number) => (
-              <div className="border-0 border-gray-400 rounded-md my-2" key={syllabus.id}>
+              <div
+                className="border-0 border-gray-400 rounded-md my-2"
+                key={syllabus.id}
+              >
                 <div className="mb-4 bg-gray-200 flex justify-between">
                   <div className="px-4 py-2">
                     <div className="text-lg">{syllabus.name}</div>
                   </div>
                   <div className="px-4 py-2 w-88">
                     <div className="text-lg">
-                      Start Date:{' '}
+                      Start Date:{" "}
                       {syllabus.lessons.items?.length &&
                       syllabus.lessons.items[0].startDate
                         ? new Date(
                             syllabus.lessons.items[0].startDate
                           ).toLocaleDateString()
-                        : '-'}
+                        : "-"}
                     </div>
                   </div>
                   {/* <div className="inline-flex">
@@ -293,7 +297,8 @@ const UnitPlanner = ({
                         return (
                           <div
                             key={`${idx}`}
-                            className={`flex justify-between bg-white w-full`}>
+                            className={`flex justify-between bg-white w-full`}
+                          >
                             <div className="w-4/10 flex px-4 py-3 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
                               {item.lesson?.title}
                             </div>
@@ -303,25 +308,29 @@ const UnitPlanner = ({
                             <div className="w-2/10 flex px-4 py-3 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
                               {item.startDate
                                 ? new Date(item.startDate).toLocaleDateString()
-                                : '-'}
+                                : "-"}
                             </div>
                             <div className="w-2/10 flex px-4 py-3 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
                               {item.estEndDate ? (
                                 <>
-                                  {new Date(item.estEndDate).toLocaleDateString()}
+                                  {new Date(
+                                    item.estEndDate
+                                  ).toLocaleDateString()}
                                   {index === syllabusList.length - 1 &&
                                   idx === syllabus.lessons.items.length - 1 &&
                                   moment(item.estEndDate).isBefore(
                                     moment(roomData.endDate)
                                   )
-                                    ? '*'
-                                    : ''}
+                                    ? "*"
+                                    : ""}
                                 </>
                               ) : (
-                                '-'
+                                "-"
                               )}
                             </div>
-                            <div className="w-2/10 flex px-4 py-3 text-gray-500">-</div>
+                            <div className="w-2/10 flex px-4 py-3 text-gray-500">
+                              -
+                            </div>
                           </div>
                         );
                       })
@@ -341,14 +350,14 @@ const UnitPlanner = ({
       <div className="flex my-8 justify-end w-full mr-2 2xl:mr-0">
         <Buttons
           btnClass="py-3 px-12 text-sm mr-4"
-          label={'Cancel'}
+          label={"Cancel"}
           // onClick={history.goBack}
           transparent
         />
         <Buttons
           disabled={saving || !logsChanged}
           btnClass="py-3 px-12 text-sm ml-4"
-          label={'Run calculations and save'}
+          label={"Run calculations and save"}
           onClick={() => {
             validateAllRequiredFields(() => {
               calculateSchedule();

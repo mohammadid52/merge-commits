@@ -1,11 +1,10 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import React, {Fragment, useContext, useEffect, useState} from 'react';
+import {Fragment, useEffect, useState} from 'react';
 import {IoArrowUndoCircleOutline, IoOptionsOutline} from 'react-icons/io5';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {useHistory, useParams} from 'react-router';
 
 import {getAsset} from 'assets';
-import {GlobalContext} from 'contexts/GlobalContext';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import * as customMutations from 'customGraphql/customMutations';
 import * as customQueries from 'customGraphql/customQueries';
 import {getTypeString} from 'utilities/strings';
@@ -22,19 +21,17 @@ import {goBackBreadCrumb} from 'utilities/functions';
 import {v4 as uuidv4} from 'uuid';
 import AddQuestion from './QuestionComponents/AddQuestion';
 import SelectPreviousQuestion from './QuestionComponents/SelectPreviousQuestion';
+import {languageList, scopeList} from '@utilities/staticData';
 
-interface AddProfileCheckpointProps {}
-
-const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
-  const {} = props;
+const AddProfileCheckpoint = () => {
   const history = useHistory();
   const urlParams: any = useParams();
   const {courseId} = urlParams;
   const institutionId = urlParams.institutionId;
 
-  const {theme, clientKey, userLanguage} = useContext(GlobalContext);
+  const {theme, clientKey, userLanguage} = useGlobalContext();
   const themeColor = getAsset(clientKey, 'themeClassName');
-  const {AddProfileCheckpointDict, BreadcrumsTitles} = useDictionary(clientKey);
+  const {AddProfileCheckpointDict, BreadcrumsTitles} = useDictionary();
 
   const initialData = {
     title: '',
@@ -43,10 +40,16 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
     language: {id: '1', name: 'English', value: 'EN'}
   };
   const [checkpointData, setCheckpointData] = useState(initialData);
-  const [designersList, setDesignersList] = useState([]);
-  const [selectedDesigners, setSelectedDesigner] = useState([]);
-  const [checkpQuestions, setCheckpQuestions] = useState([]);
-  const [questionOptions, setQuestionOptions] = useState({quesId: '', options: []});
+  const [designersList, setDesignersList] = useState<any | []>([]);
+  const [selectedDesigners, setSelectedDesigner] = useState<any | []>([]);
+  const [checkpQuestions, setCheckpQuestions] = useState<any | []>([]);
+  const [questionOptions, setQuestionOptions] = useState<{
+    quesId: string;
+    options: any[];
+  }>({
+    quesId: '',
+    options: []
+  });
   const [currentState, setCurrentState] = useState('checkpoint');
   const [loading, setLoading] = useState(false);
   const [validation, setValidation] = useState({
@@ -57,37 +60,31 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
   });
 
   const breadCrumsList = [
-    {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
+    {
+      title: BreadcrumsTitles[userLanguage]['HOME'],
+      href: '/dashboard',
+      last: false
+    },
     {
       title: BreadcrumsTitles[userLanguage]['INSTITUTION_MANAGEMENT'],
-      url: '/dashboard/manage-institutions',
+      href: '/dashboard/manage-institutions',
       last: false
     },
     {
       title: BreadcrumsTitles[userLanguage]['INSTITUTION_INFO'],
-      url: `/dashboard/manage-institutions/institution/${institutionId}/staff`,
+      href: `/dashboard/manage-institutions/institution/${institutionId}/staff`,
       last: false
     },
     {
       title: BreadcrumsTitles[userLanguage]['CURRICULUMBUILDER'],
-      url: `/dashboard/manage-institutions/${institutionId}/curricular?id=${courseId}`,
+      href: `/dashboard/manage-institutions/${institutionId}/curricular?id=${courseId}`,
       last: false
     },
     {
       title: BreadcrumsTitles[userLanguage]['AddCheckpint'],
-      url: `/dashboard/manage-institutions/curricular/${courseId}/checkpoint/addNew`,
+      href: `/dashboard/manage-institutions/curricular/${courseId}/checkpoint/addNew`,
       last: true
     }
-  ];
-
-  const languageList = [
-    {id: 1, name: 'English', value: 'EN'},
-    {id: 2, name: 'Spanish', value: 'ES'}
-  ];
-
-  const scopeList = [
-    {id: 0, name: 'public'},
-    {id: 1, name: 'private'}
   ];
 
   const onInputChange = (e: any) => {
@@ -104,27 +101,19 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
     }
   };
 
-  const selectLanguage = (value: string, name: string, id: string) => {
+  const selectLanguage = (value: string, option: any) => {
     setCheckpointData({
       ...checkpointData,
       language: {
-        id,
-        name,
+        id: option.id,
+        name: option.label,
         value
       }
     });
   };
 
-  const selectDesigner = (id: string, name: string, value: string) => {
-    let updatedList;
-    const currentDesigners = selectedDesigners;
-    const selectedItem = currentDesigners.find((item) => item.id === id);
-    if (!selectedItem) {
-      updatedList = [...currentDesigners, {id, name, value}];
-    } else {
-      updatedList = currentDesigners.filter((item) => item.id !== id);
-    }
-    setSelectedDesigner(updatedList);
+  const selectDesigner = (_: string[], option: any[]) => {
+    setSelectedDesigner(option);
   };
 
   const showOptions = (quesId: string, options: any[]) => {
@@ -139,19 +128,17 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
     setCurrentState('checkpoint');
   };
 
-  const addCheckpointQuestions = async (
-    quesId: string,
-    checkpointID: string,
-    required: boolean
-  ) => {
+  const addCheckpointQuestions = async (quesId: string, checkpointID: string) => {
     try {
       const input = {
         checkpointID: checkpointID,
         questionID: quesId,
         required: false
       };
-      const questions: any = await API.graphql(
-        graphqlOperation(customMutations.createCheckpointQuestions, {input: input})
+      await API.graphql(
+        graphqlOperation(customMutations.createCheckpointQuestions, {
+          input: input
+        })
       );
     } catch {
       setValidation({
@@ -219,9 +206,9 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
             })
           );
 
-          let questions = Promise.all(
+          Promise.all(
             checkpQuestions.map(async (item: any) =>
-              addCheckpointQuestions(item.id, newCheckpoint.id, item.required)
+              addCheckpointQuestions(item.id, newCheckpoint.id)
             )
           );
           history.goBack();
@@ -371,7 +358,7 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
                         AddProfileCheckpointDict[userLanguage]['typePlaceholder']
                       }
                       list={scopeList}
-                      onChange={(c, name) =>
+                      onChange={(name) =>
                         setCheckpointData({
                           ...checkpointData,
                           scope: name
@@ -475,13 +462,10 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
                                         onClick={() =>
                                           showOptions(item.id, item.options)
                                         }>
-                                        <IconContext.Provider
-                                          value={{
-                                            size: '1.5rem',
-                                            color: theme.iconColor[themeColor]
-                                          }}>
-                                          <IoOptionsOutline />
-                                        </IconContext.Provider>
+                                        <IoOptionsOutline
+                                          size="1.5rem"
+                                          className="theme-text"
+                                        />
                                       </div>
                                     )}
                                   </div>

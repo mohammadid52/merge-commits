@@ -25,13 +25,18 @@ import {
 const UploadLessonPlanModal = ({
   onClose,
   lessonId,
+  open,
   lessonPlanAttachment
 }: {
   lessonId: string;
   onClose: () => void;
   lessonPlanAttachment?: any;
+  open: boolean;
 }) => {
-  const [input, setInput] = useState({imageData: null, previewUrl: ''});
+  const [input, setInput] = useState<{
+    imageData: File | null;
+    previewUrl: string;
+  }>({imageData: null, previewUrl: ''});
 
   const updateFileUrl = (previewUrl: string, imageData: File | null) => {
     setIsUpdated(true);
@@ -49,14 +54,15 @@ const UploadLessonPlanModal = ({
     }
   }, [lessonPlanAttachment]);
 
-  const [uploadProgress, setUploadProgress] = useState<string | number>(0);
+  const uploadProgress = 0;
 
-  const {mutate, isLoading: uploading, isSuccess} = useGraphqlMutation(
-    'updateUniversalLesson',
-    {
-      custom: true
-    }
-  );
+  const {
+    mutate,
+
+    isSuccess
+  } = useGraphqlMutation('updateUniversalLesson', {
+    custom: true
+  });
 
   const getFile = (fileUrl: any) =>
     isEditingMode
@@ -70,28 +76,29 @@ const UploadLessonPlanModal = ({
 
     try {
       let temp = input?.imageData?.name.split('.');
-      const extension = temp.pop();
-      const fileName = `${Date.now()}_${temp
-        .join(' ')
-        .replace(new RegExp(/[ +!@#$%^&*().]/g), '_')}.${extension}`;
+      if (temp) {
+        const extension = temp.pop();
+        const fileName = `${Date.now()}_${temp
+          .join(' ')
+          .replace(new RegExp(/[ +!@#$%^&*().]/g), '_')}.${extension}`;
 
-      const key = `ULB/${lessonId}/lesson_plan_${fileName}`;
-      await uploadImageToS3(input?.imageData, key, input.imageData.type);
+        const key = `ULB/${lessonId}/lesson_plan_${fileName}`;
+        input.imageData &&
+          (await uploadImageToS3(input?.imageData, key, input.imageData.type));
 
-      mutate({
-        input: {
-          id: lessonId,
-          lessonPlanAttachment: key
-        }
-      });
+        mutate({
+          input: {
+            id: lessonId,
+            lessonPlanAttachment: key
+          }
+        });
+      }
     } catch (error) {
       console.error(error);
     } finally {
       setIsLoading(false);
     }
   };
-
-  const [error, setError] = useState('');
 
   const value = '';
 
@@ -116,6 +123,7 @@ const UploadLessonPlanModal = ({
 
   return (
     <Modal
+      open={open}
       title={'Upload Lesson Plan'}
       showHeaderBorder
       closeAction={onClose}
@@ -169,12 +177,11 @@ const UploadLessonPlanModal = ({
           acceptedFilesFormat={'.pdf, .docx'}
           updateFileUrl={updateFileUrl}
           fileUrl={value}
-          error={error}
           isEditingMode={isEditingMode}
           showPreview={true}
         />
 
-        {isLoading && uploadProgress !== 'done' && (
+        {isLoading && (
           <ProgressBar
             status={uploadProgress < 99 ? `Uploading file` : 'Upload Done'}
             progress={uploadProgress}
@@ -243,19 +250,19 @@ const LessonDetails = ({
     }
   }, [refName, inputRef]);
 
-  const {clientKey, userLanguage} = useGlobalContext();
+  const {userLanguage} = useGlobalContext();
 
-  const {AddNewLessonFormDict, UserEditDict} = useDictionary(clientKey);
+  const {AddNewLessonFormDict, UserEditDict} = useDictionary();
 
   return (
     <div className="px-3">
-      {showUploadModal && (
-        <UploadLessonPlanModal
-          lessonPlanAttachment={lessonPlanAttachment}
-          lessonId={lessonId}
-          onClose={onClose}
-        />
-      )}
+      <UploadLessonPlanModal
+        lessonPlanAttachment={lessonPlanAttachment}
+        lessonId={lessonId}
+        onClose={onClose}
+        open={showUploadModal}
+      />
+
       <div className="grid grid-cols-2 gap-4 gap-y-8">
         <div className="col-span-2">
           <FormInput
@@ -263,10 +270,10 @@ const LessonDetails = ({
             label={AddNewLessonFormDict[userLanguage]['NAME']}
             inputRef={inputRef}
             id="name"
+            error={validation.name}
             onChange={onInputChange}
             name="name"
           />
-          {validation.name && <p className="text-red-600 text-sm">{validation.name}</p>}
         </div>
 
         <div className="">
@@ -274,12 +281,12 @@ const LessonDetails = ({
             disabled={lessonId !== ''}
             isRequired
             label={AddNewLessonFormDict[userLanguage]['SELECTTYPE']}
-            selectedItem={type.name}
+            selectedItem={type.label}
+            error={validation.type}
             placeholder={AddNewLessonFormDict[userLanguage]['TYPE']}
             list={lessonTypeList}
-            onChange={(val, name, id) => onSelectOption(val, name, id, 'type')}
+            onChange={(val, option: any) => onSelectOption(val, val, option.id, 'type')}
           />
-          {validation.type && <p className="text-red-600 text-sm">{validation.type}</p>}
         </div>
         <div className="">
           <Selector
@@ -302,12 +309,12 @@ const LessonDetails = ({
         </div>
         <div className="">
           <MultipleSelector
-            // disabled={lessonId !== ''}
             isRequired
             label={AddNewLessonFormDict[userLanguage]['SELECTLANG']}
-            selectedItems={languages}
             placeholder={AddNewLessonFormDict[userLanguage]['LANGUAGE']}
             list={languageList}
+            width="100%"
+            selectedItems={languages}
             onChange={selectLanguage}
           />
         </div>
@@ -316,13 +323,14 @@ const LessonDetails = ({
           <MultipleSelector
             label={AddNewLessonFormDict[userLanguage]['SELECTDESIGNER']}
             selectedItems={selectedDesigners}
+            width="100%"
             placeholder={AddNewLessonFormDict[userLanguage]['DESIGNER']}
             list={designersList}
             onChange={selectDesigner}
             noOptionMessage={
-              designerListLoading
-                ? AddNewLessonFormDict[userLanguage]['MESSAGES']['LOADING']
-                : AddNewLessonFormDict[userLanguage]['MESSAGES']['NODESIGNEROPTION']
+              AddNewLessonFormDict[userLanguage]['MESSAGES'][
+                designerListLoading ? 'LOADING' : 'NODESIGNEROPTION'
+              ]
             }
           />
         </div>

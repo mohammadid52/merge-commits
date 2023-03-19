@@ -1,6 +1,6 @@
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import {API, graphqlOperation} from 'aws-amplify';
 import axios from 'axios';
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {IoArrowUndoCircleOutline} from 'react-icons/io5';
 import {useHistory} from 'react-router-dom';
 
@@ -19,6 +19,7 @@ import useGraphqlMutation from '@customHooks/useGraphqlMutation';
 import {withZoiqFilter} from '@utilities/functions';
 import {statusList} from '@utilities/staticData';
 import {getReverseUserRoleString, getUserRoleString} from '@utilities/strings';
+import {Checkbox} from 'antd';
 import {
   CreateClassStudentInput,
   CreatePersonInput,
@@ -28,8 +29,6 @@ import {
   PersonStatus,
   Role
 } from 'API';
-import CheckBox from 'atoms/Form/CheckBox';
-import Label from 'atoms/Form/Label';
 import * as customQueries from 'customGraphql/customQueries';
 import {useFormik} from 'formik';
 import {UserRegisterSchema} from 'Schema';
@@ -60,11 +59,15 @@ const Registration = ({
   const {classId} = classData || {};
   const history = useHistory();
 
-  const [instClasses, setInstClasses] = useState([]);
+  const [instClasses, setInstClasses] = useState<any[]>([]);
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const [message, setMessage] = useState<{show: boolean; type: string; message: string}>({
+  const [message, setMessage] = useState<{
+    show: boolean;
+    type: string;
+    message: string;
+  }>({
     show: false,
     type: '',
     message: ''
@@ -78,37 +81,40 @@ const Registration = ({
 
   const Roles = [
     state.user.role === Role.SUP && {
-      name: Role.SUP,
+      label: Role.SUP,
       id: 1,
       value: rolesDict['sup']
     },
     (state.user.role === Role.SUP || state.user.role === Role.ADM) && {
-      name: Role.ADM,
+      label: Role.ADM,
       id: 2,
       value: rolesDict['adm']
     },
-    {name: Role.BLD, id: 3, value: rolesDict['bld']},
-    {name: Role.FLW, id: 4, value: rolesDict['flw']},
-    {name: Role.CRD, id: 5, value: rolesDict['crd']},
-    {name: Role.TR, id: 6, value: rolesDict['tr']},
+    {label: Role.BLD, id: 3, value: rolesDict['bld']},
+    {label: Role.FLW, id: 4, value: rolesDict['flw']},
+    {label: Role.TR, id: 6, value: rolesDict['tr']},
     (!isInModalPopup || (isInModalPopup && classId)) &&
       state.user.role !== Role.BLD && {
-        name: Role.ST,
+        label: Role.ST,
         id: 7,
         value: rolesDict['st']
       }
   ].filter(Boolean);
 
   const breadCrumsList = [
-    {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
+    {
+      title: BreadcrumsTitles[userLanguage]['HOME'],
+      href: '/dashboard',
+      last: false
+    },
     {
       title: BreadcrumsTitles[userLanguage]['PeopleManagment'],
-      url: '/dashboard/manage-users',
+      href: '/dashboard/manage-users',
       last: false
     },
     {
       title: BreadcrumsTitles[userLanguage]['AddNewUser'],
-      url: `/dashboard/registration`,
+      href: `/dashboard/registration`,
       last: true
     }
   ];
@@ -153,14 +159,10 @@ const Registration = ({
     let userData: CreatePersonInput = {
       authId: authId,
       status: values.status.toLocaleUpperCase() as PersonStatus,
-      role: role as Role,
+      role: role,
       email,
       firstName: values.firstName,
       lastName: values.lastName,
-      phone: '',
-      birthdate: '1960-01-01',
-      externalId: '',
-      grade: '',
       language: Language.EN,
       onDemand: role === Role.ST ? values.isSelfPaced : false,
       addedby: state.user.authId,
@@ -168,7 +170,9 @@ const Registration = ({
     };
 
     try {
-      const person = await createPersonMutation.mutate({input: userData});
+      const person: any = await createPersonMutation.mutate({
+        input: userData
+      });
 
       if (role !== Role.ST) {
         const input: CreateStaffInput = {
@@ -184,23 +188,17 @@ const Registration = ({
         if (values.class.id) {
           // add the student in the class
           // need to get the user id from new person object
-          const input: CreateClassStudentInput = {
-            classID: values.class.id,
-            studentID: person.id,
-            studentAuthID: authId,
-            studentEmail: email,
-            status: status.toUpperCase()
-          };
 
-          createClassStudentMutation.mutate({input});
-          // if (newUserInputs.group?.id) {
-          //   const input: CreateClassroomGroupStudentsInput = {
-          //     classRoomGroupID: newUserInputs.group.id,
-          //     studentEmail: email,
-          //     studentAuthId: authId
-          //   };
-          //   createClassroomGroupStudentsMutation.mutate({input});
-          // }
+          if (person) {
+            const input: CreateClassStudentInput = {
+              classID: values.class.id,
+              studentID: person?.id,
+              studentAuthID: authId,
+              studentEmail: email,
+              status: status.toUpperCase()
+            };
+            createClassStudentMutation.mutate({input});
+          }
         }
       }
 
@@ -228,10 +226,7 @@ const Registration = ({
       const er = error.response.data;
       console.error('error signing up:', error);
 
-      if (
-        er.code === 'UsernameExistsException' ||
-        er.code === 'UsernameExistsException'
-      ) {
+      if (er.code === 'UsernameExistsException') {
         setFieldError('email', messageDict['existemail']);
       } else {
         setMessage({show: true, type: 'error', message: er.message});
@@ -243,10 +238,10 @@ const Registration = ({
   }
 
   useEffect(() => {
-    listAllRooms(undefined, []);
+    listAllRooms([]);
   }, []);
 
-  const listAllRooms = async (nextToken: string, outArray: any[]): Promise<any> => {
+  const listAllRooms = async (outArray: any[], nextToken = null): Promise<any> => {
     let combined;
     try {
       const result: any = await API.graphql(
@@ -261,9 +256,11 @@ const Registration = ({
       combined = [...outArray, ...returnedData];
 
       if (NextToken) {
-        combined = await listAllRooms(NextToken, combined);
+        combined = await listAllRooms(combined, NextToken);
       }
-      setInstClasses(combined.map((d: any) => ({...d, value: d.classID, roomId: d.id})));
+      setInstClasses(
+        combined.map((d: any) => ({...d, label: d?.name, value: d.classID, roomId: d.id}))
+      );
 
       return combined;
     } catch (error) {
@@ -287,6 +284,7 @@ const Registration = ({
   } = useFormik({
     initialValues: initialValues,
     validateOnBlur: false,
+    validateOnChange: false,
 
     validationSchema: UserRegisterSchema,
     onSubmit: async () => {
@@ -295,7 +293,7 @@ const Registration = ({
   });
 
   return (
-    <div className={`w-full h-full p-4`}>
+    <div className={`px-4`}>
       {isInInstitute ? (
         !isInModalPopup && (
           <SectionTitleV3 title={RegistrationDict[userLanguage]['title']} />
@@ -335,7 +333,7 @@ const Registration = ({
               className={`h-full w-full ${
                 !isInInstitute ? 'bg-white shadow-5' : ''
               } mt-4 sm:rounded-lg`}>
-              <form>
+              <div>
                 <div className={`h-full ${isInInstitute ? '' : 'px-4 sm:px-6'} pt-2`}>
                   <div className="grid grid-cols-1 gap-y-4 gap-x-4 sm:grid-cols-6">
                     <div className="sm:col-span-3 p-2">
@@ -382,16 +380,13 @@ const Registration = ({
                       <div className="sm:col-span-3 p-2">
                         <Selector
                           placeholder="Select role"
-                          onChange={(c: any, name: any) =>
+                          onChange={(name: any) =>
                             setFieldValue('role', getReverseUserRoleString(name))
                           }
                           label={RegistrationDict[userLanguage]['role']}
                           error={errors.role}
                           dropdownWidth="w-56"
-                          list={Roles.map((d) => ({
-                            ...d,
-                            name: getUserRoleString(d.name)
-                          }))}
+                          list={Roles}
                           selectedItem={getUserRoleString(values.role)}
                         />
                       </div>
@@ -399,14 +394,11 @@ const Registration = ({
 
                     {checkIfAdmin() && (
                       <div className="sm:col-span-6">
-                        <CheckBox
-                          dataCy="isZoiq"
-                          label={'ZOIQ'}
-                          className="group:hover:bg-gray-500"
-                          value={values.isZoiq}
-                          onChange={(e) => setFieldValue('isZoiq', e.target.checked)}
-                          name="isZoiq"
-                        />
+                        <Checkbox
+                          checked={values.isZoiq}
+                          onChange={(e) => setFieldValue('isZoiq', e.target.checked)}>
+                          ZOIQ
+                        </Checkbox>
                       </div>
                     )}
 
@@ -419,11 +411,11 @@ const Registration = ({
                               selectedItem={values.class.name}
                               list={instClasses}
                               placeholder={'Select a class'}
-                              onChange={(c: any, name: any, id: string) =>
+                              onChange={(value: any, option: any) =>
                                 setFieldValue('class', {
-                                  id: c,
-                                  name: name,
-                                  roomId: id
+                                  id: value,
+                                  name: value,
+                                  roomId: option.id
                                 })
                               }
                             />
@@ -439,34 +431,26 @@ const Registration = ({
                               placeholder={
                                 RegistrationDict[userLanguage]['statusPlaceholder']
                               }
-                              onChange={(c: any, name: any) =>
-                                setFieldValue('status', name)
-                              }
+                              onChange={(name: any) => setFieldValue('status', name)}
                               labelTextClass="text-m"
                             />
                           </div>
                         </div>
 
                         <div className="sm:col-span-3 p-2">
-                          <div>
-                            <Label label={RegistrationDict[userLanguage]['paceLabel']} />
-                            <CheckBox
-                              dataCy="self-paced"
-                              label={RegistrationDict[userLanguage]['paceCheckBox']}
-                              className="group:hover:bg-gray-500"
-                              value={values.isSelfPaced}
-                              onChange={(e) =>
-                                setFieldValue('isSelfPaced', e.target.checked)
-                              }
-                              name="self-paced"
-                            />
-                          </div>
+                          <Checkbox
+                            checked={values.isSelfPaced}
+                            onChange={(e) =>
+                              setFieldValue('isSelfPaced', e.target.checked)
+                            }>
+                            {RegistrationDict[userLanguage]['paceLabel']}
+                          </Checkbox>
                         </div>
                       </>
                     )}
                   </div>
                 </div>
-              </form>
+              </div>
             </div>
 
             <div className="w-full md:h-full flex justify-center items-center">

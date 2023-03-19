@@ -1,18 +1,18 @@
-import React, {useContext} from 'react';
-import {GlobalContext} from 'contexts/GlobalContext';
-import {useHistory} from 'react-router';
-import {BsArrowLeft} from 'react-icons/bs';
 import useDictionary from '@customHooks/dictionary';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import React from 'react';
+import {BsArrowLeft} from 'react-icons/bs';
+import {useHistory} from 'react-router';
 
 interface SectionTitleProps {
-  title: string | Element;
-  subtitle?: string;
+  title: React.ReactNode;
+  subtitle?: string | null;
   fontSize?: string;
   fontStyle?: string;
   extraClass?: string;
   spacing?: string;
   extraContainerClass?: string;
-  withButton?: React.ReactElement;
+  withButton?: React.ReactElement | boolean;
   borderBottom?: boolean;
   shadowOff?: boolean;
   backButton?: boolean;
@@ -35,12 +35,13 @@ const SectionTitleV3: React.FC<SectionTitleProps> = (sectProps: SectionTitleProp
     backButton,
     textWidth = 'w-auto'
   } = sectProps;
-  const {userLanguage} = useContext(GlobalContext);
+  const {userLanguage} = useGlobalContext();
   const history = useHistory();
   const {CommonlyUsedDict} = useDictionary();
 
   return (
     <div
+      style={{borderBottom: `1px solid rgba(237, 242, 247,1)`}}
       className={`${
         withButton
           ? 'flex items-start xl:items-center gap-4 flex-col xl:flex-row  justify-between '
@@ -51,7 +52,7 @@ const SectionTitleV3: React.FC<SectionTitleProps> = (sectProps: SectionTitleProp
               shadowOff ? '' : 'customShadow'
             } rounded-t-xl ${bgColor} mb-0`
           : ''
-      } ${extraContainerClass} `}>
+      } ${extraContainerClass} w-full`}>
       <div className={`${textWidth}`}>
         {title && (
           <h2 className={`text-lg 2xl:text-${fontSize} font-${fontStyle} ${extraClass}`}>

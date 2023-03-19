@@ -17,16 +17,10 @@ const ShowingCount = ({
     <div className="w-auto flex items-center justify-end">
       <p className="text-sm w-auto text-gray-700">
         Showing
-        <span className="font-medium ml-1">
-          {currentPage === 0 ? currentPage + 1 : pageCount * currentPage + 1}
-        </span>
+        <span className="font-medium ml-1">{pageCount * (currentPage - 1) + 1}</span>
         <span className="ml-1">to</span>
         <span className="font-medium ml-1">
-          {lastPage
-            ? totalResults
-            : currentPage === 0
-            ? pageCount * 1
-            : pageCount * currentPage + pageCount}
+          {lastPage ? totalResults : pageCount * (currentPage - 1) + pageCount}
         </span>
         <span className="ml-1">of</span>
         <span className="font-medium ml-1">{totalResults}</span>

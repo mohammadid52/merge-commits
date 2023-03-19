@@ -1,17 +1,17 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
-import {remove} from 'lodash';
-import {nanoid} from 'nanoid';
-import {FaTrashAlt} from 'react-icons/fa';
-import {GlobalContext} from 'contexts/GlobalContext';
+import AddButton from '@components/Atoms/Buttons/AddButton';
+import HStack from '@components/Atoms/HStack';
+import Buttons from 'atoms/Buttons';
+import FormInput from 'atoms/Form/FormInput';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import {EditQuestionModalDict} from 'dictionary/dictionary.iconoclast';
 import {IContentTypeComponentProps} from 'interfaces/UniversalLessonBuilderInterfaces';
 import {PartContentSub} from 'interfaces/UniversalLessonInterfaces';
+import {remove} from 'lodash';
+import {nanoid} from 'nanoid';
+import {FaTrashAlt} from 'react-icons/fa';
 import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
-import Buttons from 'atoms/Buttons';
-import FormInput from 'atoms/Form/FormInput';
-import AddButton from '@components/Atoms/Buttons/AddButton';
-import HStack from '@components/Atoms/HStack';
 
 interface KeywordModalDialog extends IContentTypeComponentProps {
   inputObj?: any;
@@ -39,7 +39,7 @@ const KeywordModalDialog = ({
   setUnsavedChanges,
   updateBlockContentULBHandler
 }: KeywordModalDialog) => {
-  const {userLanguage} = useContext(GlobalContext);
+  const {userLanguage} = useGlobalContext();
   const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
 
   //////////////////////////
@@ -90,19 +90,12 @@ const KeywordModalDialog = ({
     setInputFieldsArray(longerInputFieldsArray);
   };
 
-  const handleDeleteKeyword = (keywordIdx: number) => {
-    const shorterInputFieldsArray: PartContentSub[] = inputFieldsArray.filter(
-      (inputObj: PartContentSub, idx: number) => idx !== keywordIdx
-    );
-    setInputFieldsArray(shorterInputFieldsArray);
-  };
-
   //////////////////////////
   //  FOR NORMAL INPUT    //
   //////////////////////////
   const onChange = (e: React.FormEvent, idx: number) => {
     setUnsavedChanges(true);
-    const {id, value, name} = e.target as HTMLFormElement;
+    const {value, name} = e.target as HTMLFormElement;
     handleUpdateInputFields(value, name, idx);
   };
 
@@ -152,7 +145,7 @@ const KeywordModalDialog = ({
                   </label>
                   {idx !== 0 ? (
                     <span
-                      onClick={() => removeItemFromList(inputObj.id)}
+                      onClick={() => removeItemFromList(inputObj.id || '')}
                       className="w-auto text-center transition-all duration-200  text-xs font-semibold text-red-400  cursor-pointer hover:text-red-600
                     mb-2
                   ">
@@ -193,16 +186,18 @@ const KeywordModalDialog = ({
             transparent
           />
         </div>
-        <HStack>
+        <HStack className="gap-4 justify-end items-center flex">
           <Buttons
             label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
             onClick={askBeforeClose}
             transparent
+            size="middle"
           />
 
           <Buttons
             label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
             onClick={onKeywordCreate}
+            size="middle"
           />
         </HStack>
       </HStack>

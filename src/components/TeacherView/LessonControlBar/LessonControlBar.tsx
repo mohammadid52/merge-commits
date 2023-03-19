@@ -1,7 +1,8 @@
-import React, {useContext, useState} from 'react';
+import {UniversalLessonPage} from '@interfaces/UniversalLessonInterfaces';
+import {useGlobalContext} from 'contexts/GlobalContext';
+
+import React, {useState} from 'react';
 import {BiBook} from 'react-icons/bi';
-import {GlobalContext} from 'contexts/GlobalContext';
-import {UniversalLessonPage} from 'interfaces/UniversalLessonInterfaces';
 import StageButton from './StageButton';
 
 interface LessonControlBarProps {
@@ -13,7 +14,7 @@ const LessonControlBar: React.FC<LessonControlBarProps> = ({
   handlePageChange
 }: LessonControlBarProps) => {
   // ~~~~~~~~~~ CONTEXT SPLITTING ~~~~~~~~~~ //
-  const gContext = useContext(GlobalContext);
+  const gContext = useGlobalContext();
   const lessonState = gContext.lessonState;
   const PAGES = lessonState.lessonData.lessonPlan;
 
@@ -59,12 +60,12 @@ const LessonControlBar: React.FC<LessonControlBarProps> = ({
             PAGES.map((page: UniversalLessonPage, key: number) => (
               <StageButton
                 iconID={key}
-                key={key}
-                open={page.open}
+                key={page.id}
+                open={Boolean(page.open)}
                 disabled={!page.enabled}
-                active={page.active}
+                active={Boolean(page.active)}
                 label={page.label}
-                menuOpen={menuOpen === page.stage}
+                menuOpen={menuOpen === page?.stage}
                 handleOpenMenu={handleOpenMenu}
                 handlePageChange={handlePageChange}
                 id={page.id}

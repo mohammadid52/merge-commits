@@ -1,8 +1,8 @@
 import FormInput from 'atoms/Form/FormInput';
-import {GlobalContext} from 'contexts/GlobalContext';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import DroppableMedia from 'molecules/DroppableMedia';
-import React, {useContext} from 'react';
+import React from 'react';
 import {IoCamera} from 'react-icons/io5';
 import {getLocalStorageData} from 'utilities/localStorage';
 import {v4 as uuidv4} from 'uuid';
@@ -42,8 +42,8 @@ const LessonCard = ({
   lessonType,
   cardCaption = ''
 }: ILessonCard) => {
-  const {clientKey, userLanguage} = useContext(GlobalContext);
-  const {AddNewLessonFormDict} = useDictionary(clientKey);
+  const {userLanguage} = useGlobalContext();
+  const {AddNewLessonFormDict} = useDictionary();
   const getRoomData = getLocalStorageData('room_info');
 
   const tabs = [
@@ -62,7 +62,7 @@ const LessonCard = ({
     }
   };
 
-  const imageRef = React.useRef(null);
+  const imageRef = React.useRef<any>(null);
   const handleImage = () => imageRef?.current?.click();
 
   const {curTab, setCurTab, helpers} = useTabs(tabs);
@@ -81,7 +81,7 @@ const LessonCard = ({
           {onSetupTab && (
             <>
               <div
-                className={`relative bg-white shadow items-center rounded-lg flex flex-col md:flex-row mb-8 p-4`}>
+                className={`relative w-full bg-white shadow items-center rounded-lg flex flex-col md:flex-row mb-8 p-4`}>
                 {/**
                  *  LEFT SECTION IMAGE
                  */}
@@ -115,24 +115,20 @@ const LessonCard = ({
                  *  RIGHT SECTION
                  */}
                 <div
-                  className={`w-full md:w-8/12 lg:w-7.5/10 ml-4 flex flex-col rounded-b`}>
+                  className={`w-full md:w-8/12 gap-4 lg:w-7.5/10 ml-4 flex flex-col rounded-b`}>
                   <div className="">
                     <FormInput
                       isRequired
                       dataCy="lesson-image-caption"
                       value={imageCaption}
                       id="imageCaption"
+                      error={validation.imageCaption}
                       label={AddNewLessonFormDict[userLanguage]['IMAGE_CAPTION']}
                       onChange={onInputChange}
                       name="imageCaption"
                       maxLength={25}
+                      showCharacterUsage
                     />
-                    {validation.imageCaption && (
-                      <p className="text-red-600 text-sm">{validation.imageCaption}</p>
-                    )}
-                    <div className="text-right text-gray-400">
-                      {imageCaption.length} of 25
-                    </div>
                   </div>
 
                   <div className="">
@@ -162,7 +158,7 @@ const LessonCard = ({
           className="flex items-center w-auto justify-start"
           show={onPreviewTab}>
           {onPreviewTab && (
-            <div className="py-5">
+            <div className="py-5 w-full">
               <StandardLessonCard
                 lessonType={lessonType}
                 getImageFromS3={false}

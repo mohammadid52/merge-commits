@@ -1,22 +1,20 @@
-import API, {graphqlOperation} from '@aws-amplify/api';
 import BreadCrums from 'atoms/BreadCrums';
 import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
 import TextArea from 'atoms/Form/TextArea';
 import PageWrapper from 'atoms/PageWrapper';
-import React, {useContext, useEffect, useState} from 'react';
+import {API, graphqlOperation} from 'aws-amplify';
+import {useEffect, useState} from 'react';
 import {IoArrowUndoCircleOutline} from 'react-icons/io5';
 import {useHistory, useParams} from 'react-router';
 
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
-import {GlobalContext} from 'contexts/GlobalContext';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import * as mutations from 'graphql/mutations';
 import * as queries from 'graphql/queries';
-interface EditLearningObjectiveProps {}
 
-const EditLearningObjective = (props: EditLearningObjectiveProps) => {
-  const {} = props;
+const EditLearningObjective = () => {
   const urlParams: any = useParams();
   const curricularId = urlParams.curricularId;
   const institutionId = urlParams.institutionId;
@@ -31,19 +29,23 @@ const EditLearningObjective = (props: EditLearningObjectiveProps) => {
     curriculumID: curricularId
   });
   const [validation, setValidation] = useState({isValid: true, msg: ''});
-  const {theme, clientKey, userLanguage} = useContext(GlobalContext);
-  const {EditLearningObjectiveDict, BreadcrumsTitles} = useDictionary(clientKey);
+  const {userLanguage} = useGlobalContext();
+  const {EditLearningObjectiveDict, BreadcrumsTitles} = useDictionary();
 
   const breadCrumsList = [
-    {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
+    {
+      title: BreadcrumsTitles[userLanguage]['HOME'],
+      href: '/dashboard',
+      last: false
+    },
     {
       title: BreadcrumsTitles[userLanguage]['CURRICULUMBUILDER'],
-      url: `/dashboard/manage-institutions/${institutionId}/curricular?id=${curricularId}`,
+      href: `/dashboard/manage-institutions/${institutionId}/curricular?id=${curricularId}`,
       last: false
     },
     {
       title: BreadcrumsTitles[userLanguage]['EditLearningObj'],
-      url: `/dashboard/manage-institutions/curricular/${curricularId}/learning-objective/edit/${learningId}`,
+      href: `/dashboard/manage-institutions/curricular/${curricularId}/learning-objective/edit/${learningId}`,
       last: true
     }
   ];
@@ -90,7 +92,11 @@ const EditLearningObjective = (props: EditLearningObjectiveProps) => {
     );
     item = item.data.getLearningObjective;
     if (item.curriculumID === curricularId) {
-      setLearning({...learning, name: item.name, description: item.description});
+      setLearning({
+        ...learning,
+        name: item.name,
+        description: item.description
+      });
       setLoading(false);
     } else {
       console.error('wrong cr');

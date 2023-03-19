@@ -1,14 +1,14 @@
-import React, {useEffect, useState, useContext} from 'react';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import {useEffect, useState} from 'react';
 import {useHistory} from 'react-router-dom';
 
 import Buttons from 'atoms/Buttons';
 import Selector from 'atoms/Form/Selector';
 import Loader from 'atoms/Loader';
 
-import * as customQueries from 'customGraphql/customQueries';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import * as customMutations from 'customGraphql/customMutations';
-import {GlobalContext} from 'contexts/GlobalContext';
+import * as customQueries from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import {statusList} from 'utilities/staticData';
 
@@ -23,11 +23,11 @@ interface UnitLookupProps {
 }
 
 const UnitLookup = (props: UnitLookupProps) => {
-  const {lessonName, lessonId, institution, lessonType, lessonPlans} = props;
+  const {lessonId, institution, lessonType, lessonPlans} = props;
 
-  const {clientKey, theme, userLanguage} = useContext(GlobalContext);
+  const {clientKey, theme, userLanguage} = useGlobalContext();
   const themeColor = getAsset(clientKey, 'themeClassName');
-  const {BUTTONS, UnitLookupDict} = useDictionary(clientKey);
+  const {UnitLookupDict} = useDictionary();
   const history = useHistory();
 
   const initialData: any = {
@@ -37,9 +37,9 @@ const UnitLookup = (props: UnitLookupProps) => {
 
   const [formState, setFormState] = useState<any>(initialData);
 
-  const [curriculaList, setCurriclaList] = useState([]);
-  const [unitsList, setUnitsList] = useState([]);
-  const [selectedUnitsList, setSelectedUnitsList] = useState([]);
+  const [curriculaList, setCurriclaList] = useState<any[]>([]);
+  const [unitsList, setUnitsList] = useState<any[]>([]);
+  const [selectedUnitsList, setSelectedUnitsList] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [editState, setEditState] = useState<{id: string; action?: string}>({
@@ -75,12 +75,7 @@ const UnitLookup = (props: UnitLookupProps) => {
     updatedList.find((item) => item.id === uniqId).status = status;
     setSelectedUnitsList(updatedList);
   };
-  const onStatusChange = async (
-    val: string,
-    name: string,
-    id: string,
-    uniqId: string
-  ) => {
+  const onStatusChange = async (val: string, _: string, __: string, uniqId: string) => {
     try {
       setEditState({...editState, action: 'updating...'});
       const input = {
@@ -119,9 +114,7 @@ const UnitLookup = (props: UnitLookupProps) => {
       const input = {
         syllabusID: formState.unit.id,
         lessonID: lessonId,
-        displayData: {
-          breakdownComponent: lessonType
-        },
+
         lessonPlan: lessonComponentPlan?.length > 0 ? lessonComponentPlan : [],
         status: 'Active'
       };
@@ -231,7 +224,7 @@ const UnitLookup = (props: UnitLookupProps) => {
         setCurriclaList([...filteredList]);
         setLoading(false);
       })
-      .catch((err) => {
+      .catch(() => {
         setMessage({
           ...message,
           isError: true,
@@ -283,7 +276,9 @@ const UnitLookup = (props: UnitLookupProps) => {
               selectedItem={curriculum.name}
               list={curriculaList}
               placeholder="Select Curriculumn"
-              onChange={(val, name, id) => onSelectorChange(val, name, id, 'curriculum')}
+              onChange={(val, option: any) =>
+                onSelectorChange(val, val, option.id, 'curriculum')
+              }
             />
           </div>
           <div className="col-span-2 flex items-center">
@@ -291,7 +286,9 @@ const UnitLookup = (props: UnitLookupProps) => {
               selectedItem={unit.name}
               list={unitsList}
               placeholder="Select Unit"
-              onChange={(val, name, id) => onSelectorChange(val, name, id, 'unit')}
+              onChange={(val, option: any) =>
+                onSelectorChange(val, val, option.id, 'unit')
+              }
               noOptionMessage={
                 curriculum.name ? 'No Results' : 'Please select curricular first'
               }
@@ -337,7 +334,7 @@ const UnitLookup = (props: UnitLookupProps) => {
             ) : selectedUnitsList.length ? (
               selectedUnitsList?.map((item: any, index: number) => (
                 <div
-                  key={index}
+                  key={item.curricularId}
                   className="flex justify-between items-center w-full px-8 py-4 whitespace-nowrap border-b-0 border-gray-200 cursor-pointer">
                   <div className="flex w-.5/10 items-center px-8 py-3 text-left text-s leading-4">
                     {index + 1}.
@@ -369,8 +366,8 @@ const UnitLookup = (props: UnitLookupProps) => {
                           selectedItem={item.status}
                           placeholder="Select Status"
                           list={statusList}
-                          onChange={(val, name, id) =>
-                            onStatusChange(val, name, id, item.id)
+                          onChange={(val, option: any) =>
+                            onStatusChange(val, val, option.id, item.id)
                           }
                         />
                       </div>

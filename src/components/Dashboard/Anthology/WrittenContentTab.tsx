@@ -1,21 +1,18 @@
-import filter from 'lodash/filter';
-import map from 'lodash/map';
-import React, {Suspense} from 'react';
-import {IconContext} from 'react-icons';
-import {FaSpinner} from 'react-icons/fa';
-import {getAsset} from 'assets';
-import {useGlobalContext} from 'contexts/GlobalContext';
-import useDictionary from 'customHooks/dictionary';
-import {UniversalJournalData} from 'interfaces/UniversalLessonInterfaces';
-import {dateFromServer} from 'utilities/time';
 import Buttons from 'atoms/Buttons';
 import ContentCard from 'atoms/ContentCard';
 import FormInput from 'atoms/Form/FormInput';
 import RichTextEditor from 'atoms/RichTextEditor';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import {UniversalJournalData} from 'interfaces/UniversalLessonInterfaces';
+import {isEmpty} from 'lodash';
+import filter from 'lodash/filter';
+import map from 'lodash/map';
+import React, {Suspense} from 'react';
+import {dateFromServer} from 'utilities/time';
 import EmptyViewWrapper from './EmptyViewWrapper';
 import {ITabViewProps} from './TabView';
 import SingleNote from './WrittenContentTab/SingleNote';
-import {isEmpty} from 'lodash';
 
 const WrittenContentTab = (props: ITabViewProps) => {
   const {
@@ -30,27 +27,26 @@ const WrittenContentTab = (props: ITabViewProps) => {
     content,
     allStudentData,
     setAllStudentData,
-    classNotebook,
+
     allUniversalJournalData,
     setAllUniversalJournalData,
     allUniversalClassData,
     setAllUniversalClassData
   } = props;
 
-  const {theme, userLanguage, clientKey} = useGlobalContext();
-  const {anthologyDict} = useDictionary(clientKey);
-  const themeColor = getAsset(clientKey, 'themeClassName');
+  const {theme, userLanguage} = useGlobalContext();
+  const {anthologyDict} = useDictionary();
 
   const handleInputFieldUpdate = (e: any, domID?: string) => {
     const {value} = e.target;
-    updateJournalContent(value, 'header', undefined, domID);
+    updateJournalContent?.(value, 'header', undefined, domID);
   };
 
   // ##################################################################### //
   // ############################### VIEWS ############################### //
   // ##################################################################### //
   const viewModeView = (contentObj: UniversalJournalData) => {
-    const notesExist = contentObj?.entryData[0]?.domID.includes('notes_form');
+    const notesExist = contentObj?.entryData?.[0]?.domID.includes('notes_form');
 
     const filtered = filter(
       contentObj?.entryData,
@@ -92,8 +88,8 @@ const WrittenContentTab = (props: ITabViewProps) => {
           </p>
         </div>
         <>
-          {viewEditMode.mode === 'create' &&
-            viewEditMode.dataID === createTemplate.syllabusLessonID && (
+          {viewEditMode?.mode === 'create' &&
+            viewEditMode?.dataID === createTemplate.syllabusLessonID && (
               <div
                 style={{height: '0.05rem'}}
                 className={'mx-auto px-8 border-t-0 my-2 border-gray-200'}
@@ -101,10 +97,10 @@ const WrittenContentTab = (props: ITabViewProps) => {
             )}
           <div className="border-gray-200">
             <h4 className={`mb-2 w-auto font-medium ${theme.lessonCard.title}`}>
-              {organized.header?.input
-                ? organized.header.input === '[]'
+              {organized?.header?.input
+                ? organized?.header.input === '[]'
                   ? 'No title...'
-                  : organized.header.input
+                  : organized?.header.input
                 : `No title`}
             </h4>
             <div className={`overflow-ellipsis overflow-hidden ellipsis`}>
@@ -129,10 +125,10 @@ const WrittenContentTab = (props: ITabViewProps) => {
                 <div
                   className="font-normal"
                   dangerouslySetInnerHTML={{
-                    __html: organized.content?.input
-                      ? organized.content.input === '[]'
+                    __html: organized?.content?.input
+                      ? organized?.content.input === '[]'
                         ? 'No content...'
-                        : organized.content.input
+                        : organized?.content.input
                       : 'No content...'
                   }}
                 />
@@ -180,13 +176,13 @@ const WrittenContentTab = (props: ITabViewProps) => {
          */}
         <div className={`pb-2 mb-2`}>
           <FormInput
-            id={organized.header.domID}
+            id={organized?.header.domID}
             // label={`Title`}
             onChange={handleInputFieldUpdate}
-            value={organized.header.input}
+            value={organized?.header.input}
             placeHolder={
-              organized.header?.input
-                ? organized.header.input
+              organized?.header?.input
+                ? organized?.header.input
                 : `What are you thinking about today?`
             }
           />
@@ -198,8 +194,8 @@ const WrittenContentTab = (props: ITabViewProps) => {
           <RichTextEditor
             minHeight={200}
             placeholder="Write more about what you are thinking about here..."
-            initialValue={organized.content.input}
-            onChange={(htmlContent) => updateJournalContent(htmlContent, 'content')}
+            initialValue={organized?.content.input}
+            onChange={(htmlContent) => updateJournalContent?.(htmlContent, 'content')}
           />
         </div>
       </>
@@ -207,7 +203,7 @@ const WrittenContentTab = (props: ITabViewProps) => {
   };
 
   const editModeView = (contentObj: UniversalJournalData) => {
-    const notesExist = contentObj?.entryData[0]?.domID?.includes('notes_form');
+    const notesExist = contentObj?.entryData?.[0]?.domID?.includes('notes_form');
 
     const filtered = filter(
       contentObj?.entryData,
@@ -244,24 +240,24 @@ const WrittenContentTab = (props: ITabViewProps) => {
         <div className={`mb-2`}>
           {notesExist ? (
             <FormInput
-              id={contentObj?.entryData[0]?.domID}
+              id={contentObj?.entryData?.[0]?.domID}
               label={`Title`}
               onChange={handleInputFieldUpdate}
-              value={contentObj?.entryData[0]?.input}
+              value={contentObj?.entryData?.[0]?.input}
               placeHolder={
-                contentObj?.entryData[0]?.input
-                  ? contentObj?.entryData[0]?.input
+                contentObj?.entryData?.[0]?.input
+                  ? contentObj?.entryData?.[0]?.input
                   : `Please add title...`
               }
             />
           ) : (
             <FormInput
-              id={organized.header.domID}
+              id={organized?.header.domID}
               label={`Title`}
-              onChange={(e) => handleInputFieldUpdate(e, organized.header.domID)}
-              value={organized.header.input}
+              onChange={(e) => handleInputFieldUpdate(e, organized?.header.domID)}
+              value={organized?.header.input}
               placeHolder={
-                organized.header.input ? organized.header.input : `Please add title...`
+                organized?.header.input ? organized?.header.input : `Please add title...`
               }
             />
           )}
@@ -275,15 +271,15 @@ const WrittenContentTab = (props: ITabViewProps) => {
                   key={idx}
                   initialValue={note.input}
                   onChange={(htmlContent) =>
-                    updateJournalContent(htmlContent, 'content', idx + 1)
+                    updateJournalContent?.(htmlContent, 'content', idx + 1)
                   }
                 />
               ))}
             </div>
           ) : (
             <RichTextEditor
-              initialValue={organized.content.input}
-              onChange={(htmlContent) => updateJournalContent(htmlContent, 'content')}
+              initialValue={organized?.content.input}
+              onChange={(htmlContent) => updateJournalContent?.(htmlContent, 'content')}
             />
           )}
         </div>
@@ -293,31 +289,31 @@ const WrittenContentTab = (props: ITabViewProps) => {
 
   return (
     <>
-      {viewEditMode.mode === 'create' &&
-        viewEditMode.dataID === createTemplate.id &&
+      {viewEditMode?.mode === 'create' &&
+        viewEditMode?.dataID === createTemplate.id &&
         subSection === 'Journal' && (
           <ContentCard hasBackground={false}>
             <div
               id={`anthology_${subSection}_create`}
               className={`flex flex-col px-6 p-4`}>
-              {viewEditMode && viewEditMode.mode === 'create'
+              {viewEditMode && viewEditMode?.mode === 'create'
                 ? createModeView(createTemplate)
                 : null}
               <div
-                className={`flex ${viewEditMode.mode === 'create' ? 'pt-2 mt-2' : ''}`}>
-                {viewEditMode.mode === 'create' &&
-                viewEditMode.dataID === createTemplate.id ? (
+                className={`flex ${viewEditMode?.mode === 'create' ? 'pt-2 mt-2' : ''}`}>
+                {viewEditMode?.mode === 'create' &&
+                viewEditMode?.dataID === createTemplate.id ? (
                   <Buttons
-                    onClick={() => handleEditToggle('', '', 0, '')}
+                    onClick={() => handleEditToggle?.('', '', 0, '')}
                     label={anthologyDict[userLanguage].ACTIONS.CANCEL}
                     transparent
                     btnClass="mr-2"
                   />
                 ) : null}
-                {viewEditMode.mode === 'create' &&
-                viewEditMode.dataID === createTemplate.id ? (
+                {viewEditMode?.mode === 'create' &&
+                viewEditMode?.dataID === createTemplate.id ? (
                   <Buttons
-                    onClick={() => handleEditToggle('savenew', '')}
+                    onClick={() => handleEditToggle?.('savenew', '')}
                     label={anthologyDict[userLanguage].ACTIONS.SAVE}
                   />
                 ) : null}
@@ -325,23 +321,13 @@ const WrittenContentTab = (props: ITabViewProps) => {
             </div>
           </ContentCard>
         )}
-      {content?.length > 0 ? (
+      {content && content?.length > 0 ? (
         content?.map((contentObj: any, idx: number) => {
           return (
             <EmptyViewWrapper
-              key={`emptyview_${idx}`}
+              key={`emptyview_${contentObj.id}`}
               wrapperClass={`h-auto pb-4 overflow-hidden bg-white rounded-b-lg shadow mb-4`}
-              timedRevealInt={idx + 1}
-              fallbackContents={
-                <IconContext.Provider
-                  value={{
-                    size: '1.2rem',
-                    style: {},
-                    className: `relative mr-4 animate-spin ${theme.textColor[themeColor]}`
-                  }}>
-                  <FaSpinner />
-                </IconContext.Provider>
-              }>
+              timedRevealInt={idx + 1}>
               <Suspense fallback={<p>note error</p>}>
                 <SingleNote
                   idx={idx}
@@ -354,7 +340,7 @@ const WrittenContentTab = (props: ITabViewProps) => {
                   handleEditToggle={handleEditToggle}
                   contentLen={content.length}
                   contentObj={
-                    currentContentObj.id === contentObj.id
+                    currentContentObj?.id === contentObj.id
                       ? currentContentObj
                       : contentObj
                   }

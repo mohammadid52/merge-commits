@@ -21,17 +21,16 @@ const useUnsavedChanges = (closeAction: () => void) => {
 
   const UnsavedModal = ({message}: {message?: string}) => {
     return (
-      warnModal && (
-        <ModalPopUp
-          saveLabel="Yes"
-          saveAction={discardChanges}
-          saveTooltip="I want to discard changes"
-          cancelLabel="Cancel"
-          closeAction={() => setWarnModal(false)}
-          cancelTooltip="Keep writing"
-          message={message || 'You have unsaved changes. Do you want to exit?'}
-        />
-      )
+      <ModalPopUp
+        open={warnModal}
+        saveLabel="Yes"
+        saveAction={discardChanges}
+        saveTooltip="I want to discard changes"
+        cancelLabel="Cancel"
+        closeAction={() => setWarnModal(false)}
+        cancelTooltip="Keep writing"
+        message={message || 'You have unsaved changes. Do you want to exit?'}
+      />
     );
   };
 

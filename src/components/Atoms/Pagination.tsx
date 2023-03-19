@@ -1,11 +1,6 @@
-import React, {useState, useEffect, useContext} from 'react';
-import {IconContext} from 'react-icons';
-import {FaAngleRight, FaAngleLeft} from 'react-icons/fa';
-import {GlobalContext} from 'contexts/GlobalContext';
-import {getAsset} from 'assets';
+import React, {useEffect, useState} from 'react';
 import {RiArrowLeftSLine, RiArrowRightSLine} from 'react-icons/ri';
 import Buttons from './Buttons';
-import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 
 interface PaginationProps {
   currentPage: number;
@@ -81,7 +76,7 @@ const PageCount = (pageCountProps: {
   setPrev: () => void;
 }) => {
   const {currentPage, lastPage, firstPage, setNext, setPrev} = pageCountProps;
-  const [showNumbers, setShowNumbers] = useState([]);
+  const [showNumbers, setShowNumbers] = useState<any[]>([]);
 
   useEffect(() => {
     if (currentPage !== 1 && currentPage !== 0) {
@@ -97,13 +92,13 @@ const PageCount = (pageCountProps: {
 
   return (
     <>
-      {showNumbers.map((i, index) => (
+      {showNumbers.map((i) => (
         <PageNo
           page={i}
           setPrev={setPrev}
           setNext={setNext}
           currentPage={currentPage}
-          key={index}
+          key={i}
         />
       ))}
     </>
@@ -133,10 +128,10 @@ const Dots = () => (
 );
 
 const Pagination: React.FC<PaginationProps> = (pageProps: PaginationProps) => {
-  const {currentPage, lastPage, firstPage, setNext, setPrev, totalPages = 10} = pageProps;
+  const {currentPage, lastPage, firstPage, setNext, setPrev} = pageProps;
 
   return (
-    <div className="flex gap-x-4 w-1/3 flex-wrap items-center justify-start lg:justify-center">
+    <div className="flex gap-x-4  flex-wrap items-center w-full lg:w-1/3 justify-center">
       <PageArrows onClick={setPrev} active={currentPage !== 1} isBack={true} />
       {currentPage !== 1 && <Dots />}
       <PageCount

@@ -1,20 +1,15 @@
-// import Amplify from 'aws-amplify';
-import {Amplify} from '@aws-amplify/core';
-import React, {useEffect} from 'react';
-import 'react-datepicker/dist/react-datepicker.css';
-import ReactDOM from 'react-dom';
-import 'react-image-crop/lib/ReactCrop.scss';
+import {Amplify, Auth} from 'aws-amplify';
+// @ts-ignore
 import awsconfig from 'aws-exports';
-import App from 'components/App';
-import 'index.html';
+import {lazy} from 'react';
+const App = lazy(() => import('components/App'));
+import {createRoot} from 'react-dom/client';
 import 'style/style.css';
 import 'style/style.scss';
 
-require('dotenv').config();
+Amplify.configure(awsconfig);
 
-// Amplify.configure(awsconfig);
-// test
-Amplify.configure({
+Auth.configure({
   aws_appsync_region: awsconfig.aws_appsync_region,
   aws_appsync_graphqlEndpoint: awsconfig.aws_appsync_graphqlEndpoint,
   aws_appsync_authenticationType: awsconfig.aws_appsync_authenticationType,
@@ -35,14 +30,6 @@ Amplify.configure({
   }
 });
 
-const Page: React.FC = () => {
-  useEffect(() => {
-    // console.log('createUserUrl = ', createUserUrl);
-    // console.log('requestResetPassword = ', requestResetPassword);
-    // console.log('tableCleanupUrl = ', tableCleanupUrl);
-    // console.log('Auth.configure()', Auth.configure());
-  }, []);
-  return <App />;
-};
+const root = createRoot(document.getElementById('app')!);
 
-ReactDOM.render(<Page />, document.getElementById('app'));
+root.render(<App />);

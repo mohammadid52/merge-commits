@@ -1,32 +1,29 @@
 // ~~~~~~~~~~~~~~ EMOJI FORM ~~~~~~~~~~~~~ //
-import {GlobalContext} from 'contexts/GlobalContext';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import useInLessonCheck from 'customHooks/checkIfInLesson';
 import useStudentDataValue from 'customHooks/studentDataValue';
 import EmojiPicker from 'emoji-picker-react';
 import {IFormBlockProps} from 'interfaces/UniversalLessonInterfaces';
 import noop from 'lodash/noop';
-import React, {useContext, useState} from 'react';
+import {useState} from 'react';
 import ClickAwayListener from 'react-click-away-listener';
 import {FormLabel} from '../FormBlock';
 
 const EmojiInput = ({
-  id,
-  inputID,
-  label,
+  inputID = '',
+  label = '',
   value,
 
-  numbered,
-  index,
+  numbered = false,
+  index = '',
   isStudent,
 
-  required
+  required = false
 }: IFormBlockProps) => {
-  const gContext = useContext(GlobalContext);
+  const gContext = useGlobalContext();
   const gState = gContext.state;
-  const {
-    user,
-    lessonPage: {theme: lessonPageTheme = 'dark', themeTextColor = ''} = {}
-  } = gState;
+  const {lessonPage: {theme: lessonPageTheme = 'dark', themeTextColor = ''} = {}} =
+    gState;
 
   const {getDataValue, setDataValue} = useStudentDataValue();
 
@@ -93,12 +90,7 @@ const EmojiInput = ({
             <div
               onClick={(e) => e.stopPropagation()}
               className="picker-wrapper absolute top-1 right-2 w-auto z-100">
-              <EmojiPicker
-                groupVisibility={{
-                  recently_used: false
-                }}
-                onEmojiClick={(e: any, emoji: any) => onEmojiSelect(emoji)}
-              />
+              <EmojiPicker onEmojiClick={(emoji: any) => onEmojiSelect(emoji)} />
             </div>
           </ClickAwayListener>
         )}

@@ -1,24 +1,22 @@
+import CustomRichTextEditor from '@components/Lesson/UniversalLessonBlockComponents/Blocks/HighlighterBlock/CustomRichTextEditor';
+import {useGlobalContext} from '@contexts/GlobalContext';
+import {CreateGameChangerInput, CreateGameChangerLogInput, GameChangerLog} from 'API';
+import {getAsset} from 'assets';
 import Buttons from 'atoms/Buttons';
-import RichTextEditor from 'atoms/RichTextEditor';
 import {GRATITUDE} from 'components/Lesson/UniversalLessonBuilder/UI/common/constants';
 import AnimatedContainer from 'components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import useAuth from 'customHooks/useAuth';
 import useGraphqlMutation from 'customHooks/useGraphqlMutation';
-import {awsFormatDate, dateString} from 'utilities/time';
-import {CreateGameChangerInput, CreateGameChangerLogInput, GameChangerLog} from 'API';
-import gsap from 'gsap';
 import {nanoid} from 'nanoid';
-import React, {useEffect, useState} from 'react';
+import {useState} from 'react';
+import {awsFormatDate, dateString} from 'utilities/time';
 import {useGameChangers} from '../context/GameChangersContext';
-import {getAsset} from 'assets';
-import {useGlobalContext} from '@contexts/GlobalContext';
-import CustomRichTextEditor from '@components/Lesson/UniversalLessonBlockComponents/Blocks/HighlighterBlock/CustomRichTextEditor';
 
 const Gratitude = () => {
   const {email, authId} = useAuth();
   const {clientKey} = useGlobalContext();
 
-  const [error, setError] = useState('');
+  const [_, setError] = useState('');
 
   const {setIsCompleted, isCompleted} = useGameChangers();
   const [fields, setFields] = useState({
@@ -71,18 +69,6 @@ const Gratitude = () => {
     });
   };
 
-  // useEffect(() => {
-  //   gsap.fromTo(
-  //     '#journal-editor',
-  //     {
-  //       delay: 1,
-  //       height: 0,
-  //       duration: 2,
-  //       opacity: 0
-  //     },
-  //     {height: 'auto', opacity: 1, delay: 1}
-  //   );
-  // }, []);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const features: string[] = ['colorPicker', 'inline'];
 

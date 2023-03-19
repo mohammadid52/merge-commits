@@ -90,7 +90,7 @@ const CoreUniversalLesson = ({
     <div
       className={`${
         !isInLesson ? 'h-full overflow-hidden overflow-y-scroll' : ''
-      } bg-dark-gray relative sm:max-w-132 max-w-80 xs:max-w-96  md:max-w-200 2xl:max-w-256 mx-auto`}>
+      }  relative sm:max-w-132 max-w-80 xs:max-w-96  md:max-w-200 2xl:max-w-256 mx-auto`}>
       <div className={`w-full flex flex-row mx-auto`}>
         <LessonPageWrapper>
           <ErrorBoundary
@@ -107,15 +107,15 @@ const CoreUniversalLesson = ({
                   <Buttons
                     label="Go Back"
                     title={getPageName('prev')}
+                    size="middle"
                     Icon={AiOutlineArrowLeft}
                     iconBeforeLabel
                     onClick={() => handleForward(false)}
-                    transparent
                   />
                   {userAtEnd() && isStudent ? (
                     <SaveQuit
                       invokeRequiredField={invokeRequiredField}
-                      canContinue={canContinue}
+                      canContinue={Boolean(canContinue)}
                       roomID={getRoomData?.id}
                     />
                   ) : null}
@@ -124,10 +124,10 @@ const CoreUniversalLesson = ({
               {!userAtEnd() && (
                 <Buttons
                   label="Next page"
+                  size="middle"
                   title={getPageName('next')}
                   onClick={handleForward}
                   Icon={AiOutlineArrowRight}
-                  transparent
                 />
               )}
             </div>

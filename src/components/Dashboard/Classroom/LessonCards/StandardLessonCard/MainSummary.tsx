@@ -1,10 +1,9 @@
 import Highlighted from '@components/Atoms/Highlighted';
-import {GlobalContext} from 'contexts/GlobalContext';
-import React, {useContext} from 'react';
-import {LessonCardProps} from '../../Classroom';
+import {LessonCardProps} from '@interfaces/ClassroomInterface';
+import {useGlobalContext} from 'contexts/GlobalContext';
 
 const MainSummary = (props: LessonCardProps) => {
-  const {theme} = useContext(GlobalContext);
+  const {theme} = useGlobalContext();
   const {lessonProps, searchTerm} = props;
 
   return (
@@ -29,7 +28,7 @@ const MainSummary = (props: LessonCardProps) => {
       </h1>
       <div className="descriptive">
         <p
-          className="text-md mt-1 text-gray-500 text-left"
+          className="text-md mt-1 tracking-wide text-gray-500 text-left"
           dangerouslySetInnerHTML={{
             __html:
               lessonProps.lesson && lessonProps.lesson?.summary

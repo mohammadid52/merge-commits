@@ -1,8 +1,8 @@
+import {renderButtonText} from '@components/Atoms/UnderlinedTabs';
+import {getAsset} from 'assets';
 import Tooltip from 'atoms/Tooltip';
 import {useGlobalContext} from 'contexts/GlobalContext';
-import {getAsset} from 'assets';
 import React from 'react';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
 
 export interface ITabElementProps {
   id?: string;
@@ -30,31 +30,16 @@ const UnderlinedTabs = (props: TabsProps) => {
   const themeColor = getAsset(clientKey, 'themeClassName');
 
   const changeActiveTab = (tab: number) => {
-    handleTabSelect(tab, tabs[tab].id);
+    handleTabSelect?.(tab, tabs[tab]?.id || '');
   };
 
-  const renderButtonText = (tab: any) => {
-    return (
-      <div id={tab.id} className="flex items-center w-auto">
-        {tab.icon && (
-          <span className="w-8 h-8 flex items-center mr-4">
-            <IconContext.Provider
-              value={{size: '1.5rem', color: theme.iconColor[themeColor]}}>
-              {tab.icon}
-            </IconContext.Provider>
-          </span>
-        )}
-        <span>{tab.title}</span>
-      </div>
-    );
-  };
   return (
     <div className="flex flex-wrap flex-col w-full h-full">
       <div className="flex flex-nowrap overflow-hidden sm:overflow-x-auto flex-row mr-2 bg-white">
-        {tabs.map((tab, key) => (
-          <div key={key} className="relative">
+        {tabs.map((tab) => (
+          <div key={tab.id} className="relative">
             <button
-              onClick={(e) => {
+              onClick={(_) => {
                 changeActiveTab(tab.index);
               }}
               id={tab.id}
@@ -84,11 +69,8 @@ const UnderlinedTabs = (props: TabsProps) => {
               ) : (
                 <>
                   {tab.icon && (
-                    <span className="w-8 h-8 flex items-center mr-4">
-                      <IconContext.Provider
-                        value={{size: '1.5rem', color: theme.iconColor[themeColor]}}>
-                        {tab.icon}
-                      </IconContext.Provider>
+                    <span className="w-8 h-8 flex items-center mr-4 theme-text">
+                      {tab.icon}
                     </span>
                   )}
                   {tab.title}

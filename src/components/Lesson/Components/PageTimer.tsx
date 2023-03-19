@@ -1,6 +1,6 @@
 import {useGlobalContext} from '@contexts/GlobalContext';
-import gsap from 'gsap';
-import React, {useEffect, useState} from 'react';
+import {getLocalStorageData, setLocalStorageData} from '@utilities/localStorage';
+import {useEffect, useState} from 'react';
 
 const PageTimer = ({startTime}: {startTime: any}) => {
   // * Logic of the timer
@@ -18,7 +18,7 @@ const PageTimer = ({startTime}: {startTime: any}) => {
   const {lessonState, lessonDispatch} = useGlobalContext();
   const {currentPage} = lessonState;
 
-  const existingTimer = lessonState?.pageTimers?.find(
+  const existingTimer = lessonState.pageTimers?.find(
     (t: any) => t?.currentPage === currentPage
   )?.remainingTime;
 
@@ -39,16 +39,16 @@ const PageTimer = ({startTime}: {startTime: any}) => {
   useEffect(() => {
     setTimeRemaining(startFromThisTime);
     updateTimerToLessonState(startFromThisTime);
-    animateTimer();
+    // animateTimer();
   }, [currentPage]);
 
-  const animateTimer = () => {
-    gsap.from('.page_timer', {
-      x: 100,
-      opacity: 0,
-      duration: 0.5
-    });
-  };
+  // const animateTimer = () => {
+  //   gsap.from('.page_timer', {
+  //     x: 100,
+  //     opacity: 0,
+  //     duration: 0.5
+  //   });
+  // };
 
   useEffect(() => {
     if (timeRemaining === 0) return;
@@ -78,10 +78,11 @@ const PageTimer = ({startTime}: {startTime: any}) => {
     } else if (percent <= 10) {
       return 'bg-red-600';
     }
+    return 'bg-yellow-600';
   };
 
   return (
-    <div className="page_timer fixed top-10 w-auto right-2 xl:right-8">
+    <div className="page_timer absolute right-[150px] z-100  w-auto ">
       <div
         className={`${getBackgroundColor()} transition-all px-2 py-1 rounded-full text-xs`}>
         {timeRemaining === 0 ? (

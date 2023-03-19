@@ -1,22 +1,22 @@
-import React, {useContext, useEffect, useState} from 'react';
-import {GlobalContext} from 'contexts/GlobalContext';
-import useDictionary from 'customHooks/dictionary';
-import {IContentTypeComponentProps} from 'interfaces/UniversalLessonBuilderInterfaces';
-import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
 import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
-import {FORM_TYPES} from '../common/constants';
-import {v4 as uuidv4} from 'uuid';
 import Selector from 'atoms/Form/Selector';
-import ColorPicker from '../ColorPicker/ColorPicker';
-import {useTabs, Tabs3} from '../UIComponents/Tabs/Tabs';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
+import {IContentTypeComponentProps} from 'interfaces/UniversalLessonBuilderInterfaces';
+import {find, map, omit} from 'lodash';
+import React, {useEffect, useState} from 'react';
+import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
+import {v4 as uuidv4} from 'uuid';
 import ReviewSliderBlock, {
   extractValuesFromClassString
 } from '../../../UniversalLessonBlockComponents/Blocks/ReviewSliderBlock';
-import {find, map, omit} from 'lodash';
-import AnimatedContainer from '../UIComponents/Tabs/AnimatedContainer';
-import PreviewLayout from '../Preview/Layout/PreviewLayout';
+import ColorPicker from '../ColorPicker/ColorPicker';
+import {FORM_TYPES} from '../common/constants';
 import DummyContent from '../Preview/DummyContent';
+import PreviewLayout from '../Preview/Layout/PreviewLayout';
+import AnimatedContainer from '../UIComponents/Tabs/AnimatedContainer';
+import {Tabs3, useTabs} from '../UIComponents/Tabs/Tabs';
 
 interface ReviewProps extends IContentTypeComponentProps {
   inputObj?: any;
@@ -24,11 +24,11 @@ interface ReviewProps extends IContentTypeComponentProps {
 }
 
 const roundedCornerList = [
-  {id: 0, name: 'None', value: 'rounded-none'},
-  {id: 1, name: 'Small', value: 'rounded-sm'},
-  {id: 2, name: 'Medium', value: 'rounded'},
-  {id: 3, name: 'Large', value: 'rounded-lg'},
-  {id: 4, name: 'Extra large', value: 'rounded-xl'}
+  {id: 0, label: 'None', value: 'rounded-none'},
+  {id: 1, label: 'Small', value: 'rounded-sm'},
+  {id: 2, label: 'Medium', value: 'rounded'},
+  {id: 3, label: 'Large', value: 'rounded-lg'},
+  {id: 4, label: 'Extra large', value: 'rounded-xl'}
 ];
 
 // remove value from property from list
@@ -43,8 +43,8 @@ const ReviewSliderModal = ({
   setUnsavedChanges,
   classString
 }: ReviewProps) => {
-  const {userLanguage, clientKey} = useContext(GlobalContext);
-  const {EditQuestionModalDict} = useDictionary(clientKey);
+  const {userLanguage} = useGlobalContext();
+  const {EditQuestionModalDict} = useDictionary();
   const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
 
   useEffect(() => {
@@ -52,9 +52,19 @@ const ReviewSliderModal = ({
       setIsEditingMode(true);
       const values = extractValuesFromClassString(inputObj[0].class);
 
-      const {min, max, bgColor, fgColor, cardBgColor, rounded} = values;
-      const roundedParsedValue = find(roundedCornerList, (item) => item.value === rounded)
-        .name;
+      const {
+        min = 1,
+        max = 5,
+        bgColor = '',
+        fgColor = '',
+        cardBgColor = '',
+        rounded = ''
+      } = values || {};
+
+      const roundedParsedValue =
+        find(roundedCornerList, (item) => item?.value === rounded)?.label ||
+        roundedCornerList[3].label;
+
       setReviewFields({
         ...reviewFields,
         label: inputObj[0].label,
@@ -77,7 +87,7 @@ const ReviewSliderModal = ({
     bgColor: 'gray-700',
     fgColor: 'gray-800',
     cardBgColor: 'gray-700',
-    cardCorners: roundedCornerList[3].name
+    cardCorners: roundedCornerList[3].label
   });
 
   const [errors, setErrors] = useState({label: ''});
@@ -114,7 +124,7 @@ const ReviewSliderModal = ({
 
   const getClassValue = (): string => {
     const rounded =
-      find(roundedCornerList, (item) => item.name === reviewFields.cardCorners)?.value ||
+      find(roundedCornerList, (item) => item.label === reviewFields.cardCorners)?.value ||
       'rounded-lg';
     return `${reviewFields.range} || ${reviewFields.bgColor} || ${reviewFields.fgColor} || ${reviewFields.cardBgColor} || ${rounded}`;
   };
@@ -169,8 +179,8 @@ const ReviewSliderModal = ({
   const getColorDensity = (value: string | number) => `${(Number(value) * 10) / 100}%`;
 
   const tabs = [
-    {name: 'Component Details', current: true},
-    {name: 'Preview', current: false}
+    {name: 'Component Details', value: 'Component Details', current: true},
+    {name: 'Preview', value: 'Preview', current: false}
   ];
 
   const {curTab, setCurTab, helpers, goTo} = useTabs();
@@ -211,10 +221,10 @@ const ReviewSliderModal = ({
               <Selector
                 placeholder="Select range"
                 selectedItem={reviewFields.range}
-                onChange={(_, name) => setReviewFields({...reviewFields, range: name})}
+                onChange={(name) => setReviewFields({...reviewFields, range: name})}
                 list={[
-                  {id: 0, name: '1-5'},
-                  {id: 1, name: '1-10'}
+                  {id: 0, value: '1-5', label: '1-5'},
+                  {id: 1, value: '1-10', label: '1-10'}
                 ]}
               />
             </div>
@@ -317,9 +327,7 @@ const ReviewSliderModal = ({
               <Selector
                 placeholder="Select corners"
                 selectedItem={reviewFields.cardCorners}
-                onChange={(_, name) =>
-                  setReviewFields({...reviewFields, cardCorners: name})
-                }
+                onChange={(name) => setReviewFields({...reviewFields, cardCorners: name})}
                 list={roundedCornerListSelector}
               />
             </div>
@@ -341,7 +349,10 @@ const ReviewSliderModal = ({
               label={reviewFields.label}
               value={reviewFields.previewValue}
               onChange={(e) =>
-                setReviewFields({...reviewFields, previewValue: [e.target.value]})
+                setReviewFields({
+                  ...reviewFields,
+                  previewValue: [e.target.value]
+                })
               }
             />
             <DummyContent />
@@ -359,18 +370,20 @@ const ReviewSliderModal = ({
         ) : (
           <div className="w-auto" />
         )}
-        <div className="flex items-center w-auto">
+        <div className="flex items-center justify-end w-auto gap-4">
           <Buttons
             btnClass="py-1 px-4 text-xs mr-2"
             label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
             onClick={askBeforeClose}
             transparent
+            size="middle"
           />
 
           <Buttons
             btnClass="py-1 px-8 text-xs ml-2"
             label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
             onClick={onReviewSliderCreate}
+            size="middle"
           />
         </div>
       </div>

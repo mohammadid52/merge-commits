@@ -1,8 +1,7 @@
-import {GlobalContext} from 'contexts/GlobalContext';
+import {getAsset} from 'assets';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
 import {RowWrapperProps} from 'interfaces/UniversalLessonBuilderInterfaces';
-import {getAsset} from 'assets';
-import React, {useContext} from 'react';
 
 export const BuilderRowWrapper = (props: RowWrapperProps) => {
   const {mode, dataIdAttribute, contentID, children} = props;
@@ -14,7 +13,7 @@ export const BuilderRowWrapper = (props: RowWrapperProps) => {
   const {
     clientKey,
     state: {lessonPage: {theme = 'dark'} = {}}
-  } = useContext(GlobalContext);
+  } = useGlobalContext();
 
   const themeColor = getAsset(clientKey, 'themeClassName');
 
@@ -40,7 +39,7 @@ export const BuilderRowWrapper = (props: RowWrapperProps) => {
       id={contentID}
       data-id={dataIdAttribute}
       className={`relative transition-all`}
-      style={{margin: `${32}px 0px`}}>
+      style={!previewMode ? {margin: `${32}px 0px`} : {}}>
       <div
         className={` builderWrapper transition-all duration-200 ${
           mode === 'building' && !previewMode ? customBorder : viewModeClass

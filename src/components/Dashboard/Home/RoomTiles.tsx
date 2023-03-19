@@ -1,9 +1,8 @@
-import SearchInput from '@components/Atoms/Form/SearchInput';
 import Highlighted from '@components/Atoms/Highlighted';
 import Loader from '@components/Atoms/Loader';
-import Empty from '@components/Atoms/Text/Empty';
 import useAuth from '@customHooks/useAuth';
 import useSearch from '@customHooks/useSearch';
+import {Empty} from 'antd';
 import {fallbackUrls} from 'assets';
 import Buttons from 'atoms/Buttons';
 import ContentCard from 'atoms/ContentCard';
@@ -13,7 +12,8 @@ import {ModifiedListProps} from 'components/Dashboard/Home/Home';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import {orderBy} from 'lodash';
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
+import {DashboardProps} from '../Dashboard';
 
 const limitDesc = (str: string, len: number = 250): string => {
   if (str) {
@@ -31,16 +31,16 @@ const SingleRoomCard = ({
   item,
   handleRoomSelection,
   idx,
-  isTeacher,
+
   searchTerm
 }: {
   item: any;
   isTeacher: boolean;
   searchTerm?: string;
   idx: number;
-  handleRoomSelection: any;
+  handleRoomSelection: DashboardProps['handleRoomSelection'];
 }) => {
-  const {teacherProfileImg, bannerImage, teacher, curricula, roomIndex} = item;
+  const {teacherProfileImg, bannerImage, teacher, curricula} = item;
   const {name, summary, type} = curricula?.items[0]?.curriculum;
   const roomId = item?.id;
   const roomName = item?.name;
@@ -48,14 +48,7 @@ const SingleRoomCard = ({
 
   return (
     <div
-      onClick={() =>
-        handleRoomSelection(
-          roomId,
-          roomName,
-          roomIndex,
-          !isTeacher ? 'classroom' : 'lesson-planner'
-        )
-      }
+      onClick={() => handleRoomSelection?.(roomId)}
       key={`homepage__classrooms-${idx}`}
       data-cy={`homepage__classrooms-${idx}`}
       className="flex customShadow  transition-all room_card flex-col cursor-pointer rounded-lg overflow-hidden ">
@@ -111,19 +104,18 @@ const SingleRoomCard = ({
 };
 
 const RoomTiles = (props: {
-  isTeacher?: boolean;
-  handleRoomSelection: Function;
+  handleRoomSelection?: DashboardProps['handleRoomSelection'];
   roomsLoading?: boolean;
   classList: ModifiedListProps[];
 }) => {
-  const {classList: classes, roomsLoading, isTeacher, handleRoomSelection} = props;
+  const {classList: classes, roomsLoading, handleRoomSelection} = props;
 
   const {userLanguage} = useGlobalContext();
   const {DashboardDict} = useDictionary();
 
   const [showMore, setShowMore] = useState(false);
 
-  const [classList, setClassList] = useState([]);
+  const [classList, setClassList] = useState<any[]>([]);
 
   const animateOnShowMore = () => {
     if (showMore) {
@@ -133,7 +125,7 @@ const RoomTiles = (props: {
     }
   };
 
-  const {user} = useAuth();
+  const {user, isTeacher} = useAuth();
 
   const isInactive = user?.status === 'INACTIVE';
 
@@ -148,9 +140,7 @@ const RoomTiles = (props: {
 
   const {
     searchInput,
-    setSearch,
-    removeSearchAction,
-    searchAndFilter,
+
     checkSearchQueryFromUrl,
     filterBySearchQuery
   } = useSearch([...classList], ['curriculumName']);
@@ -167,19 +157,7 @@ const RoomTiles = (props: {
     }
   }, [roomsLoading]);
 
-  const searchClass = () => {
-    const searched = searchAndFilter(searchInput.value, false);
-
-    if (Boolean(searched)) {
-      setFilteredList(searched);
-    } else {
-      removeSearchAction();
-    }
-  };
-
   let finalList = searchInput.isActive ? filteredList : classList;
-
-  const {isStudent} = useAuth();
 
   return (
     <>
@@ -219,10 +197,10 @@ const RoomTiles = (props: {
           <div className="relative">
             <div className="relative max-w-7xl mx-auto  px-6 mt-4">
               {finalList.length > 3 && (
-                <h6 className="w-auto text-gray-600">
+                <h4 className="w-auto text-gray-600">
                   Showing {showMore || searchInput.isActive ? finalList.length : 3} out of{' '}
                   {finalList.length}
-                </h6>
+                </h4>
               )}
               <div
                 data-cy="classroom-list"
@@ -236,7 +214,7 @@ const RoomTiles = (props: {
                         idx={idx}
                         searchTerm={searchInput.value}
                         key={idx}
-                        isTeacher={isTeacher}
+                        isTeacher={Boolean(isTeacher)}
                         handleRoomSelection={handleRoomSelection}
                       />
                     );
@@ -245,7 +223,7 @@ const RoomTiles = (props: {
             </div>
           </div>
         ) : (
-          <Empty>No classrooms found</Empty>
+          <Empty description={'No classrooms found'} />
         )}
       </ContentCard>
     </>

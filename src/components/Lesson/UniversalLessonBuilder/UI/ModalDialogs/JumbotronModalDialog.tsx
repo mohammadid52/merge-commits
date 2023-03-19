@@ -1,23 +1,22 @@
-import Buttons from 'atoms/Buttons';
-import ULBFileUploader from 'atoms/Form/FileUploader';
-import FormInput from 'atoms/Form/FormInput';
-import Selector from 'atoms/Form/Selector';
-import Loader from 'atoms/Loader';
-import {Storage} from '@aws-amplify/storage';
-import {GlobalContext} from 'contexts/GlobalContext';
 import {
   EditQuestionModalDict,
   UniversalBuilderDict
 } from '@dictionary/dictionary.iconoclast';
 import {Switch} from '@headlessui/react';
+import Buttons from 'atoms/Buttons';
+import ULBFileUploader from 'atoms/Form/FileUploader';
+import FormInput from 'atoms/Form/FormInput';
+import Selector from 'atoms/Form/Selector';
+import {Storage} from 'aws-amplify';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import {IContentTypeComponentProps} from 'interfaces/UniversalLessonBuilderInterfaces';
 import {PartContentSub} from 'interfaces/UniversalLessonInterfaces';
+import React, {useEffect, useState} from 'react';
 import AnimatedContainer from 'uiComponents/Tabs/AnimatedContainer';
 import {Tabs3, useTabs} from 'uiComponents/Tabs/Tabs';
 import {getImageFromS3Static} from 'utilities/services';
 import {blur, tinting} from 'utilities/staticData';
 import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
-import React, {useContext, useEffect, useState} from 'react';
 import CustomizedQuoteBlock from '../../../UniversalLessonBlockComponents/Blocks/JumbotronBlock/CustomizeQuoteBlock';
 import ColorPicker from '../ColorPicker/ColorPicker';
 import {classNames} from '../FormElements/TextInput';
@@ -108,14 +107,14 @@ const initialInputFieldsState: PartContentSub[] = [
 const JumbotronModalDialog = ({
   closeAction,
   inputObj,
-  imageInput,
-  classString,
+
+  classString = '',
   createNewBlockULBHandler,
   askBeforeClose,
   setUnsavedChanges,
   updateBlockContentULBHandler
 }: IJumbotronModalComponentProps) => {
-  const {userLanguage} = useContext(GlobalContext);
+  const {userLanguage} = useGlobalContext();
 
   const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
   const [isAnimationOn, setIsAnimationOn] = useState(false);
@@ -152,7 +151,7 @@ const JumbotronModalDialog = ({
         setSelectedStyles({
           tinting: getReversedTint(tint),
           bgColor: bgColor,
-          blur: generateReverseBlur(blurClass)
+          blur: generateReverseBlur(blurClass) || 'Low'
         });
         setIsAnimationOn(isAnimationEnabled);
       }
@@ -175,7 +174,7 @@ const JumbotronModalDialog = ({
     }
   }, [imageInputs]);
 
-  const imageRef = React.useRef();
+  const imageRef = React.useRef<any>(null);
 
   const onAnimationToggle = () => {
     if (imageRef && imageRef?.current) {
@@ -218,7 +217,11 @@ const JumbotronModalDialog = ({
   const updateFileUrl = (previewUrl: string, imageData: File | null) => {
     setUnsavedChanges(true);
 
-    setImageInputs((prevValues) => ({...prevValues, url: previewUrl, imageData}));
+    setImageInputs((prevValues) => ({
+      ...prevValues,
+      url: previewUrl,
+      imageData
+    }));
     setErrors((prevValues) => ({...prevValues, url: ''}));
   };
   const addToDB = async (list: any) => {
@@ -238,7 +241,7 @@ const JumbotronModalDialog = ({
       '',
       'jumbotron',
       inputFieldsArray,
-      null,
+      undefined,
       generateClassString
     );
 
@@ -290,6 +293,9 @@ const JumbotronModalDialog = ({
 
       case 'High':
         return 'backdrop-blur-lg';
+
+      default:
+        return 'backdrop-blur-md';
     }
   };
   const generateReverseBlur = (level: string) => {
@@ -301,6 +307,8 @@ const JumbotronModalDialog = ({
 
       case 'backdrop-blur-lg':
         return 'High';
+      default:
+        return 'Medium';
     }
   };
 
@@ -337,7 +345,7 @@ const JumbotronModalDialog = ({
           '',
           'jumbotron',
           updatedData,
-          null,
+          undefined,
           generateClassString
         );
         await addToDB(updatedList);
@@ -347,7 +355,7 @@ const JumbotronModalDialog = ({
           '',
           'jumbotron',
           updatedData,
-          null,
+          undefined,
           generateClassString
         );
         await addToDB(updatedList);
@@ -389,7 +397,7 @@ const JumbotronModalDialog = ({
       Storage.put(`ULB/content_image_${id}`, file, {
         contentType: type,
         acl: 'public-read',
-        ContentEncoding: 'base64',
+        contentEncoding: 'base64',
         progressCallback: ({loaded, total}: any) => {
           const progress = (loaded * 100) / total;
           setUploadProgress(progress.toFixed(0));
@@ -412,7 +420,7 @@ const JumbotronModalDialog = ({
     });
   };
 
-  const {caption = '', url = '', width = '', height = ''} = imageInputs;
+  const {url = ''} = imageInputs;
 
   //////////////////////////
   //  FOR NORMAL INPUT    //
@@ -523,7 +531,7 @@ const JumbotronModalDialog = ({
                 <div className="">
                   <Selector
                     placeholder="Tinting"
-                    onChange={(c: any, name: string) =>
+                    onChange={(name: string) =>
                       setSelectedStyles({...selectedStyles, tinting: name})
                     }
                     label={'Select Background Opacity'}
@@ -559,7 +567,7 @@ const JumbotronModalDialog = ({
                   <Selector
                     label={'Select Blur'}
                     placeholder="Blur"
-                    onChange={(c: any, name: string) =>
+                    onChange={(name: string) =>
                       setSelectedStyles({...selectedStyles, blur: name})
                     }
                     selectedItem={selectedStyles.blur}
@@ -609,23 +617,20 @@ const JumbotronModalDialog = ({
           <div className="w-auto" />
         )}
 
-        <div className="flex items-center w-auto">
+        <div className="flex items-center justify-end w-auto gap-4">
           <Buttons
             btnClass="py-1 px-4 text-xs mr-2"
             label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
             onClick={askBeforeClose}
             transparent
+            size="middle"
           />
 
           <Buttons
             btnClass="py-1 px-8 text-xs ml-2"
-            label={
-              !loading ? (
-                EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']
-              ) : (
-                <Loader />
-              )
-            }
+            label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
+            loading={loading}
+            size="middle"
             onClick={onJumbotronCreate}
             disabled={loading}
           />

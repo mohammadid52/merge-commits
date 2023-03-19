@@ -2,7 +2,7 @@ import {PersonStatus, Role, UserPageState} from 'API';
 import {Auth} from 'aws-amplify';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import {useCookies} from 'react-cookie';
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import {API, graphqlOperation} from 'aws-amplify';
 import * as customMutations from 'customGraphql/customMutations';
 import {removeLocalStorageData} from '@utilities/localStorage';
 
@@ -12,6 +12,7 @@ export type User = {
 
   role: Role;
   email: string;
+  preferredName?: string;
   firstName: string;
   lastName: string;
   location: any[];
@@ -24,7 +25,8 @@ export type User = {
   lastLoggedOut: string;
   pageState: UserPageState;
   lastEmotionSubmission: string;
-  language: string;
+  lastPageStateUpdate?: string;
+  language: 'EN' | 'ES';
 };
 
 const useAuth = (): {
@@ -43,8 +45,9 @@ const useAuth = (): {
   image: string;
   instId: string;
   user: User;
-  onDemand?: boolean;
+  onDemand: boolean;
   pageState: UserPageState;
+
   setUser: (user: any) => void;
   authenticate: () => void;
   signOut: () => void;
@@ -56,17 +59,8 @@ const useAuth = (): {
   const {updateAuthState} = context;
   const dispatch = context.dispatch;
 
-  const {
-    authId,
-    pageState,
-    role,
-    email,
-    firstName,
-    lastName,
-    language,
-    image,
-    onDemand
-  } = user;
+  const {authId, pageState, role, email, firstName, lastName, language, image, onDemand} =
+    user;
 
   const isStudent = role === 'ST';
   const isTeacher = role === 'TR';
@@ -135,7 +129,7 @@ const useAuth = (): {
     authenticate,
     signOut,
     removeAuthToken,
-    isTeacher,
+    isTeacher: isTeacher || isFellow,
     isBuilder,
     isAdmin,
     isFellow,
@@ -150,7 +144,7 @@ const useAuth = (): {
     isSuperAdmin,
     user,
 
-    onDemand
+    onDemand: Boolean(onDemand)
   };
 };
 

@@ -1,12 +1,9 @@
+import {DIVIDER, EMOTIONS, FORM_TYPES, TABLE} from '@UlbUI/common/constants';
+import {classNames} from '@UlbUI/FormElements/TextInput';
 import Buttons from 'atoms/Buttons';
 import {cardsList} from 'components/Dashboard/GameChangers/__contstants';
 import {useOverlayContext} from 'contexts/OverlayContext';
 import {usePageBuilderContext} from 'contexts/PageBuilderContext';
-import AnimatedContainer from 'uiComponents/Tabs/AnimatedContainer';
-import Tabs, {useTabs} from 'uiComponents/Tabs/Tabs';
-import {DIVIDER, EMOTIONS, FORM_TYPES, TABLE} from '@UlbUI/common/constants';
-import {classNames} from '@UlbUI/FormElements/TextInput';
-import gsap from 'gsap';
 import {isEmpty} from 'lodash';
 import React, {useEffect} from 'react';
 import {
@@ -27,6 +24,8 @@ import {HiOutlineArrowRight, HiOutlineExternalLink} from 'react-icons/hi';
 import {IoDocumentAttachOutline, IoDocumentTextOutline} from 'react-icons/io5';
 import {MdTitle} from 'react-icons/md';
 import {VscSymbolKeyword, VscSymbolParameter} from 'react-icons/vsc';
+import AnimatedContainer from 'uiComponents/Tabs/AnimatedContainer';
+import Tabs, {useTabs} from 'uiComponents/Tabs/Tabs';
 
 interface AddContentDialog {
   setCurrentHelpStep?: React.Dispatch<React.SetStateAction<number>>;
@@ -36,9 +35,9 @@ interface AddContentDialog {
 }
 
 const AddContentDialog = ({
-  onItemClick,
+  onItemClick = () => {},
   isSurvey = false,
-  setCurrentHelpStep
+  setCurrentHelpStep = () => {}
 }: AddContentDialog) => {
   const tabs = [
     {name: 'Text Content', current: true},
@@ -52,7 +51,7 @@ const AddContentDialog = ({
     setShowingPin,
     activeContentItem,
     setActiveContentItem,
-    showingPin,
+
     setSelectedType,
     emotionComponentExists,
     actionMode
@@ -109,15 +108,15 @@ const AddContentDialog = ({
       icon: AiOutlineMinus,
       iconForeground: 'text-purple-700',
       iconBackground: 'bg-purple-100'
-    },
-    !isSurvey && {
-      name: 'Table',
-      subtitle: 'Add table',
-      type: TABLE,
-      icon: AiOutlineBorderlessTable,
-      iconForeground: 'text-purple-700',
-      iconBackground: 'bg-purple-100'
     }
+    // !isSurvey && {
+    //   name: 'Table',
+    //   subtitle: 'Add table',
+    //   type: TABLE,
+    //   icon: AiOutlineBorderlessTable,
+    //   iconForeground: 'text-purple-700',
+    //   iconBackground: 'bg-purple-100'
+    // }
   ].filter(Boolean);
 
   const mediaContent = [
@@ -270,7 +269,7 @@ const AddContentDialog = ({
     e.stopPropagation();
     if (!addContentModal.show) {
       onItemClick(activeContentItem.type, true);
-      setCurrentHelpStep(null);
+      setCurrentHelpStep(0);
     }
   };
 
@@ -306,7 +305,7 @@ const AddContentDialog = ({
           addContentModal.show ? 'pointer-events-none cursor-not-allowed' : ''
         } ${
           isDisabled ? 'opacity-60 pointer-events-none' : 'pointer-events-auto'
-        } form-button rounded-lg border-0 border-gray-300 dark:border-gray-700 dark:bg-gray-800 bg-white p-4 2xl:py-5 shadow-sm flex items-center space-x-3 hover:${
+        } form-button rounded-lg border-0 border-gray-300  bg-dark-blue p-4 2xl:py-5 shadow-sm flex items-center space-x-3 hover:${
           content.iconBackground
         }  transition-all focus-within:ring-2`}>
         <>
@@ -323,10 +322,10 @@ const AddContentDialog = ({
               <div className="flex-1 min-w-0 flex items-center justify-between">
                 <div className="focus:outline-none cursor-pointer">
                   <span className="absolute inset-0" aria-hidden="true" />
-                  <p className="text-xs 2xl:text-sm font-medium text-gray-900 dark:text-white">
+                  <p className="text-xs mb-0 2xl:text-sm font-medium text-white">
                     {content.name}
                   </p>
-                  <p className="text-xs 2xl:text-sm text-gray-500 truncate">
+                  <p className="text-xs mb-0 2xl:text-sm text-gray-500 truncate">
                     {content.subtitle}
                   </p>
                 </div>
@@ -342,22 +341,18 @@ const AddContentDialog = ({
         </>
         <>
           {onOptions && (
-            <div className="px-2 dark:text-gray-500 flex  flex-col gap-2">
+            <div className="px-2 dark:text-gray-500 flex  w-full flex-col gap-2">
               <Buttons
                 onClick={onCustomPositionClick}
-                overrideClass
-                transparent
-                btnClass={`${
-                  showingPin ? 'iconoclast:border-main border-0 curate:border-main' : ''
-                } ${btnClass}`}
+                variant="primary"
+                size="middle"
                 label="Custom position"
               />
 
               <Buttons
-                overrideClass
                 onClick={onBottomClick}
-                btnClass={btnClass}
                 transparent
+                size="middle"
                 label="Add to Botom"
               />
             </div>
@@ -437,7 +432,7 @@ const AddContentDialog = ({
       <AnimatedContainer show={!isEmpty(activeContentItem)} animationType="translateY">
         {!isEmpty(activeContentItem) && (
           <>
-            <h4 className="dark:text-white m-4 text-base font-medium capitalize">
+            <h4 className="text-white m-4 text-base font-medium capitalize">
               {activeContentItem.name} Component
             </h4>
             <div className="grid grid-cols-1 gap-4  sm:grid-cols-1  px-2 my-4">

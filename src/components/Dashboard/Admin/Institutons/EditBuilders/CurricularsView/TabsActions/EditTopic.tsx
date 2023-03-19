@@ -1,24 +1,21 @@
-import API, {graphqlOperation} from '@aws-amplify/api';
 import BreadCrums from 'atoms/BreadCrums';
 import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
 import TextArea from 'atoms/Form/TextArea';
 import PageWrapper from 'atoms/PageWrapper';
-import React, {useContext, useEffect, useState} from 'react';
+import {API, graphqlOperation} from 'aws-amplify';
+import {useEffect, useState} from 'react';
 import {IoArrowUndoCircleOutline} from 'react-icons/io5';
 import {useHistory, useParams} from 'react-router';
 
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
-import {GlobalContext} from 'contexts/GlobalContext';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import * as customMutations from 'customGraphql/customMutations';
 import * as customQueries from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import * as queries from 'graphql/queries';
 
-interface EditTopicProps {}
-
-const EditTopic = (props: EditTopicProps) => {
-  const {} = props;
+const EditTopic = () => {
   const urlParams: any = useParams();
   const curricularId = urlParams.curricularId;
   const topicId = urlParams.id;
@@ -36,22 +33,26 @@ const EditTopic = (props: EditTopicProps) => {
     curriculumID: curricularId,
     learning: {id: '', name: '', value: ''}
   });
-  const [learnings, setLearnings] = useState([]);
+  const [_, setLearnings] = useState<any[]>([]);
   const [validation, setValidation] = useState({name: '', learning: ''});
-  const {clientKey, theme, userLanguage} = useContext(GlobalContext);
-  const {EditTopicDict, BreadcrumsTitles} = useDictionary(clientKey);
+  const {userLanguage} = useGlobalContext();
+  const {EditTopicDict, BreadcrumsTitles} = useDictionary();
 
   const breadCrumsList = [
-    {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
+    {
+      title: BreadcrumsTitles[userLanguage]['HOME'],
+      href: '/dashboard',
+      last: false
+    },
     {
       title: topic?.learning?.value,
-      url: `/dashboard/manage-institutions/:instituteID/curricular?id=${curricularId}`,
+      href: `/dashboard/manage-institutions/:instituteID/curricular?id=${curricularId}`,
       last: false,
       goBack: true
     },
     {
       title: BreadcrumsTitles[userLanguage]['EditTopic'],
-      url: `/dashboard/curricular/${curricularId}/topic/edit/${topicId}`,
+      href: `/dashboard/curricular/${curricularId}/topic/edit/${topicId}`,
       last: true
     }
   ];
@@ -112,13 +113,6 @@ const EditTopic = (props: EditTopicProps) => {
         console.error('Could not update topic');
       }
     }
-  };
-
-  const selectLearning = (val: string, name: string, id: string) => {
-    if (validation.learning) {
-      setValidation({...validation, learning: ''});
-    }
-    setTopic({...topic, learning: {...topic.learning, id, name, value: val}});
   };
 
   const fetchTopic = async () => {

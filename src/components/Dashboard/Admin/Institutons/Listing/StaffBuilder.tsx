@@ -1,11 +1,11 @@
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import React, {useEffect, useState} from 'react';
-import {useHistory, useRouteMatch} from 'react-router';
+import {API, graphqlOperation} from 'aws-amplify';
+import {useEffect, useState} from 'react';
+import {useHistory} from 'react-router';
 
 import Buttons from 'atoms/Buttons';
 import Selector from 'atoms/Form/Selector';
 import SelectorWithAvatar from 'atoms/Form/SelectorWithAvatar';
-import {reorder} from 'utilities/strings';
+import {getUserRoleString, reorder} from 'utilities/strings';
 
 import {getImageFromS3} from 'utilities/services';
 import {statusList} from 'utilities/staticData';
@@ -27,18 +27,18 @@ import AddButton from 'atoms/Buttons/AddButton';
 import Modal from 'atoms/Modal';
 
 import Filters, {SortType} from '@components/Atoms/Filters';
-import PageWrapper from '@components/Atoms/PageWrapper';
 import CommonActionsBtns from '@components/MicroComponents/CommonActionsBtns';
 import StaffBuilderName from '@components/MicroComponents/StaffBuilderName';
 import UserLookupLocation from '@components/MicroComponents/UserLookupLocation';
 import useAuth from '@customHooks/useAuth';
 import usePagination from '@customHooks/usePagination';
 import {logError} from '@graphql/functions';
+import {withZoiqFilter} from '@utilities/functions';
 import Registration from 'components/Dashboard/Admin/UserManagement/Registration';
 import {map} from 'lodash';
 import {sortByName} from '../../UserManagement/UserLookup';
 import {Status} from '../../UserManagement/UserStatus';
-import {withZoiqFilter} from '@utilities/functions';
+import {Tag} from 'antd';
 
 interface StaffBuilderProps {
   instituteId: String;
@@ -57,44 +57,33 @@ const StaffBuilder = (props: StaffBuilderProps) => {
 
   const user = gContext.state.user;
 
+  const {isSuperAdmin} = useAuth();
+
   // ~~~~~~~~~~~~~~~~ OTHER ~~~~~~~~~~~~~~~~ //
 
   const history = useHistory();
-  const match = useRouteMatch();
+
   const {BUTTONS, RegistrationDict, staffBuilderDict} = useDictionary();
   const dictionary = staffBuilderDict[userLanguage];
 
   // ~~~~~~~~~~~~~~~~ STATE ~~~~~~~~~~~~~~~~ //
   const [showSuperAdmin, setShowSuperAdmin] = useState(false);
   const [showRegistrationForm, setShowRegistrationForm] = useState(false);
-  const [availableUsers, setAvailableUsers] = useState([]);
+  const [availableUsers, setAvailableUsers] = useState<any[]>([]);
   const [showAddSection, setShowAddSection] = useState(false);
-  const [newMember, setNewMember] = useState({id: '', name: '', value: '', avatar: ''});
-  const [activeStaffList, setActiveStaffList] = useState([]);
+  const [newMember, setNewMember] = useState({
+    id: '',
+    name: '',
+    value: '',
+    avatar: ''
+  });
+  const [activeStaffList, setActiveStaffList] = useState<any[]>([]);
   const [dataLoading, setDataLoading] = useState(true);
   const [statusEdit, setStatusEdit] = useState('');
   const [updateStatus, setUpdateStatus] = useState(false);
 
   const onChange = (str: string, name: string, id: string, avatar: string) => {
     setNewMember({id, name, value: str, avatar});
-  };
-
-  const getStaffRole = (role: string) => {
-    switch (role) {
-      case 'CRD':
-        return 'Coordinator';
-      case 'TR':
-        return 'Teacher';
-      case 'FLW':
-        return 'Fellow';
-      case 'BLD':
-        return 'Builder';
-      case 'ADM':
-        return 'Admin';
-
-      case 'SUP':
-        return 'Super Admin';
-    }
   };
 
   const onDragEnd = async (result: any) => {
@@ -128,7 +117,9 @@ const StaffBuilder = (props: StaffBuilderProps) => {
         ? {role: {eq: role}}
         : user.role === 'SUP'
         ? {role: {eq: 'SUP'}}
-        : {and: [{role: {ne: 'ADM'}}, {role: {ne: 'SUP'}}, {role: {ne: 'ST'}}]};
+        : {
+            and: [{role: {ne: 'ADM'}}, {role: {ne: 'SUP'}}, {role: {ne: 'ST'}}]
+          };
 
       const list: any = await API.graphql(
         graphqlOperation(customQueries.fetchPersons, {
@@ -140,7 +131,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
       const sortedList = data.sort((a: any, b: any) =>
         a.firstName?.toLowerCase() > b.firstName?.toLowerCase() ? 1 : -1
       );
-      const personsList = sortedList.map((item: any, i: any) => ({
+      const personsList = sortedList.map((item: any) => ({
         id: item.id,
         name: `${item.firstName || ''} ${item.lastName || ''}`,
         value: `${item.firstName || ''} ${item.lastName || ''}`,
@@ -180,7 +171,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
   const getStaff = async () => {
     try {
       // get service providers of the institute and create a list and fetch the staff
-      const {serviceProviders: {items} = {}, instituteId} = props;
+      const {instituteId} = props;
       const institutions =
         user.role === 'SUP'
           ? user.associateInstitute.length
@@ -303,11 +294,11 @@ const StaffBuilder = (props: StaffBuilderProps) => {
   };
 
   const gotoProfilePage = (profileId: string) => {
-    let part1 = user.isSuperAdmin
+    let part1 = isSuperAdmin
       ? '/dashboard/manage-institutions'
       : `/dashboard/manage-institutions/institution/${instituteId}`;
     let part2 = `/manage-users/${profileId}/staff`;
-    // console.log(`${part1}${part2}`);
+
     history.push(`${part1}${part2}`);
   };
 
@@ -387,7 +378,9 @@ const StaffBuilder = (props: StaffBuilderProps) => {
       });
       setActiveStaffList(updatedStaff);
       await API.graphql(
-        graphqlOperation(customMutations.updateStaff, {input: {id: staffId, status}})
+        graphqlOperation(customMutations.updateStaff, {
+          input: {id: staffId, status}
+        })
       );
       await API.graphql(
         graphqlOperation(customMutations.updatePerson, {
@@ -403,13 +396,15 @@ const StaffBuilder = (props: StaffBuilderProps) => {
     if (role === 'SUP') {
       setShowRegistrationForm(true);
     } else {
-      let users = await getPersonsList(role);
-      const staffMembersIds = activeStaffList.map((item: any) => item.userId);
-      let availableUsersList = users.filter(
-        (item: any) => staffMembersIds.indexOf(item.id) < 0
-      );
-      setAvailableUsers(availableUsersList);
-      setShowAddSection(true);
+      if (role) {
+        let users = await getPersonsList(role);
+        const staffMembersIds = activeStaffList.map((item: any) => item.userId);
+        let availableUsersList = users.filter(
+          (item: any) => staffMembersIds.indexOf(item.id) < 0
+        );
+        setAvailableUsers(availableUsersList);
+        setShowAddSection(true);
+      }
     }
   };
 
@@ -426,7 +421,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
   } = useSearch([...activeStaffList], ['name', 'email'], 'name');
 
   const [totalNum, setTotalNum] = useState(0);
-  const [totalList, setTotalList] = useState([]);
+  const [__, setTotalList] = useState<any[]>([]);
 
   const {
     currentList,
@@ -476,9 +471,9 @@ const StaffBuilder = (props: StaffBuilderProps) => {
     ),
 
     role: (
-      <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-sm font-medium bg-gray-200 text-gray-600 w-auto">
-        {item.staffMember.role ? getStaffRole(item.staffMember.role) : ''}
-      </span>
+      <Tag color="default">
+        {item.staffMember.role ? getUserRoleString(item.staffMember.role) : ''}
+      </Tag>
     ),
     loginStatus: <UserLookupLocation isStaff show item={item.staffMember} idx={index} />,
     status:
@@ -489,7 +484,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
             placeholder="Select Status"
             dropdownWidth="w-48"
             list={statusList}
-            onChange={(val, name, id) =>
+            onChange={(val) =>
               onStaffStatusChange(
                 val,
                 item.id,
@@ -560,7 +555,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
     }
   };
 
-  const [filters, setFilters] = useState<SortType>();
+  const [filters, setFilters] = useState<SortType | null>(null);
 
   const updateFilter = (filterName: SortType) => {
     if (filterName === filters) {
@@ -602,7 +597,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
                   />
                   <AddButton
                     label={'Staff member'}
-                    onClick={() => showAddStaffSection(!user.isSuperAdmin ? 'SUP' : '')}
+                    onClick={() => showAddStaffSection(!isSuperAdmin ? 'SUP' : '')}
                   />
                 </div>
               ) : (
@@ -654,21 +649,20 @@ const StaffBuilder = (props: StaffBuilderProps) => {
 
         <Table {...tableConfig} />
 
-        {showRegistrationForm && (
-          <Modal
-            showHeader={true}
-            title={RegistrationDict[userLanguage]['title']}
-            showHeaderBorder={true}
-            showFooter={false}
-            closeAction={() => setShowRegistrationForm(false)}>
-            <Registration
-              isInInstitute
-              isInModalPopup
-              postMutation={postMutation}
-              instId={instituteId}
-            />
-          </Modal>
-        )}
+        <Modal
+          open={showRegistrationForm}
+          showHeader={true}
+          title={RegistrationDict[userLanguage]['title']}
+          showHeaderBorder={true}
+          showFooter={false}
+          closeAction={() => setShowRegistrationForm(false)}>
+          <Registration
+            isInInstitute
+            isInModalPopup
+            postMutation={postMutation}
+            instId={instituteId}
+          />
+        </Modal>
       </div>
     </div>
   );

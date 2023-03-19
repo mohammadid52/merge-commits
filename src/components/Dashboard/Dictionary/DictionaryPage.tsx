@@ -3,7 +3,6 @@ import PageWrapper from '@components/Atoms/PageWrapper';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import CommonActionsBtns from '@components/MicroComponents/CommonActionsBtns';
 import Table from '@components/Molecules/Table';
-import {useGlobalContext} from '@contexts/GlobalContext';
 import useAuth from '@customHooks/useAuth';
 import useGraphqlMutation from '@customHooks/useGraphqlMutation';
 import useGraphqlQuery from '@customHooks/useGraphqlQuery';
@@ -11,14 +10,16 @@ import {logError} from '@graphql/functions';
 import {setLocalStorageData} from '@utilities/localStorage';
 import {Dicitionary, ListDicitionariesQueryVariables} from 'API';
 import {orderBy, truncate} from 'lodash';
-import React, {useState} from 'react';
+import {useState} from 'react';
 import DictionaryMutationModal from './DictionaryMutationModal';
 
 const DictionaryPage = () => {
-  const {data, setData, isLoading, refetch} = useGraphqlQuery<
-    ListDicitionariesQueryVariables,
-    Dicitionary[]
-  >(
+  const {
+    data,
+    setData = () => {},
+    isLoading,
+    refetch
+  } = useGraphqlQuery<ListDicitionariesQueryVariables, Dicitionary[]>(
     'listDicitionaries',
     {limit: 150},
     {
@@ -50,9 +51,9 @@ const DictionaryPage = () => {
 
   const {authId, email} = useAuth();
 
-  const onDelete = (dictId: string) => {
+  const onDelete = async (dictId: string) => {
     try {
-      deleteDicitionary.mutate({input: {id: dictId}});
+      await deleteDicitionary.mutate({input: {id: dictId}});
     } catch (error) {
       logError(error, {authId, email}, 'DictionaryPage @onDelete');
       console.error(error);
@@ -63,18 +64,18 @@ const DictionaryPage = () => {
     no: idx + 1,
     englishPhrase: <div className="">{dict.englishPhrase}</div>,
     englishDefinition: (
-      <div className="">{truncate(dict.englishDefinition, {length: 200})}</div>
+      <div className="">{truncate(dict.englishDefinition || '', {length: 200})}</div>
     ),
 
     languageTranslation: (
       <div className="">
         <ol>
-          {dict.translation.length === 0 ? (
+          {dict?.translation?.length === 0 ? (
             <li>N/A</li>
           ) : (
-            dict.translation.map((translation) => {
+            dict?.translation?.map((translation) => {
               return (
-                <li key={translation.id}>
+                <li key={translation?.id}>
                   <div className="font-medium text-gray-600">
                     In {translation?.translateLanguage || '--'}:
                   </div>
@@ -89,12 +90,12 @@ const DictionaryPage = () => {
     languageDefinition: (
       <div className="">
         <ol>
-          {dict.translation.length === 0 ? (
+          {dict?.translation?.length === 0 ? (
             <li>N/A</li>
           ) : (
-            dict.translation.map((translation) => {
+            dict?.translation?.map((translation) => {
               return (
-                <li key={translation.id}>
+                <li key={translation?.id}>
                   <div className="font-medium text-gray-600">
                     In {translation?.translateLanguage || '--'}:
                   </div>
@@ -172,13 +173,12 @@ const DictionaryPage = () => {
 
         <Table {...tableConfig} />
 
-        {showModal && (
-          <DictionaryMutationModal
-            onSuccessMutation={onSuccessMutation}
-            dictionary={editDictionary}
-            closeAction={closeAction}
-          />
-        )}
+        <DictionaryMutationModal
+          open={showModal}
+          onSuccessMutation={onSuccessMutation}
+          dictionary={editDictionary}
+          closeAction={closeAction}
+        />
       </PageWrapper>
     </div>
   );

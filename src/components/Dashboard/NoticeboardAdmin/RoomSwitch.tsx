@@ -1,22 +1,28 @@
-import React, {useContext} from 'react';
-import {GlobalContext} from 'contexts/GlobalContext';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import useLoadRooms from 'customHooks/loadRooms';
+import React from 'react';
 import {DashboardProps} from '../Dashboard';
-import {Room} from '../Menu/SideRoomSelector';
+
+interface Room {
+  id: string;
+  classID: string;
+  teacherAuthID: string;
+  name: string;
+}
 
 const RoomSwitch = (props: DashboardProps) => {
   const {loading, activeRoom, setActiveRoom, setActiveRoomName} = props;
-  const {theme, clientKey, userLanguage} = useContext(GlobalContext);
-  const {noticeboardDict} = useDictionary(clientKey);
+  const {theme, userLanguage} = useGlobalContext();
+  const {noticeboardDict} = useDictionary();
   const rooms = useLoadRooms();
 
   const handleRoomSelection = (e: React.MouseEvent) => {
     const t = e.target as HTMLElement;
     const name = t.getAttribute('data-name');
     if (activeRoom !== t.id && loading === false) {
-      setActiveRoom(t.id);
-      setActiveRoomName(name);
+      setActiveRoom?.(t.id);
+      name && setActiveRoomName?.(name);
     }
   };
 

@@ -1,26 +1,52 @@
-import {v4 as uuidv4} from 'uuid';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import React, {Fragment, useCallback, useContext, useEffect, useState} from 'react';
-import {DragDropContext, Draggable, Droppable} from 'react-beautiful-dnd';
-import {IconContext} from 'react-icons';
-import {IoMdAddCircleOutline, IoMdRemoveCircleOutline} from 'react-icons/io';
+import {languageList} from '@utilities/staticData';
 import {getAsset} from 'assets';
-import {GlobalContext} from 'contexts/GlobalContext';
-import useDictionary from 'customHooks/dictionary';
-import {IContentTypeComponentProps} from 'interfaces/UniversalLessonBuilderInterfaces';
-import {getTypeString, getLanguageString} from 'utilities/strings';
 import Buttons from 'atoms/Buttons';
 import CheckBox from 'atoms/Form/CheckBox';
 import FormInput from 'atoms/Form/FormInput';
+import SearchInput from 'atoms/Form/SearchInput';
 import Selector from 'atoms/Form/Selector';
+import Loader from 'atoms/Loader';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
 import * as mutations from 'graphql/mutations';
 import * as queries from 'graphql/queries';
+import {IContentTypeComponentProps} from 'interfaces/UniversalLessonBuilderInterfaces';
 import {isObject, map} from 'lodash';
-import SearchInput from 'atoms/Form/SearchInput';
-import Loader from 'atoms/Loader';
-import RemoveInput from '../common/RemoveInput';
-import {FORM_TYPES} from '../common/constants';
+import {Fragment, useCallback, useEffect, useState} from 'react';
+import {DragDropContext, Draggable, Droppable} from 'react-beautiful-dnd';
+import {getLanguageString, getTypeString} from 'utilities/strings';
 import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
+import {v4 as uuidv4} from 'uuid';
+import {FORM_TYPES} from '../common/constants';
+
+type Step = 'QuestionLookup' | 'CreateNewQuestion' | 'ExistingQuestionList';
+const typeList: any = [
+  {id: '1', name: 'Text', value: 'text'},
+  {id: '2', name: 'Input', value: 'input'},
+  {id: '3', name: 'Select Many', value: 'selectMany'},
+  {id: '4', name: 'Select One', value: 'selectOne'},
+  {id: '5', name: 'Date Picker', value: 'datePicker'},
+  {id: '6', name: 'Emoji', value: 'emoji'},
+  {id: '7', name: 'Attachments', value: 'attachments'},
+  {id: '8', name: 'Link', value: 'link'}
+];
+
+const initialState = {
+  question: '',
+  notes: '',
+  label: '',
+  type: {id: '', name: '', value: ''},
+  language: {id: '1', name: 'English', value: 'EN'},
+  isRequired: false,
+
+  options: [
+    {label: '1', text: ''},
+    {label: '2', text: ''}
+  ],
+  otherOpt: false,
+  noneOfAbove: false
+};
 
 interface InitialState {
   question: string;
@@ -29,7 +55,7 @@ interface InitialState {
   isRequired: boolean;
   type: InputValue;
   language: InputValue;
-  options: {label: string; text: string}[] | null;
+  options: {label: string; text: string}[];
   otherOpt: boolean;
   noneOfAbove: boolean;
 }
@@ -52,9 +78,9 @@ const CreateQuestion = ({
   checkpQuestions,
   changeStep
 }: any) => {
-  const {clientKey, userLanguage, theme} = useContext(GlobalContext);
+  const {clientKey, userLanguage} = useGlobalContext();
   const themeColor = getAsset(clientKey, 'themeClassName');
-  const {AddNewQuestionDict} = useDictionary(clientKey);
+  const {AddNewQuestionDict} = useDictionary();
 
   const [loading, setLoading] = useState(false);
 
@@ -117,7 +143,7 @@ const CreateQuestion = ({
   const addQuestionsToDB = async () => {
     setLoading(true);
     try {
-      const questions = Promise.all(
+      Promise.all(
         checkpQuestions.map(async (item: any) => {
           const input = {
             label: item.label,
@@ -126,9 +152,7 @@ const CreateQuestion = ({
             language: item.language.value,
             options: filteredOptions(item.options)
           };
-          const question: any = await API.graphql(
-            graphqlOperation(mutations.createQuestion, {input})
-          );
+          await API.graphql(graphqlOperation(mutations.createQuestion, {input}));
         })
       );
       setValidation({
@@ -153,37 +177,6 @@ const CreateQuestion = ({
     }
   };
 
-  const typeList: any = [
-    {id: '1', name: 'Text', value: 'text'},
-    {id: '2', name: 'Input', value: 'input'},
-    {id: '3', name: 'Select Many', value: 'selectMany'},
-    {id: '4', name: 'Select One', value: 'selectOne'},
-    {id: '5', name: 'Date Picker', value: 'datePicker'},
-    {id: '6', name: 'Emoji', value: 'emoji'},
-    {id: '7', name: 'Attachments', value: 'attachments'},
-    {id: '8', name: 'Link', value: 'link'}
-  ];
-
-  const languageList = [
-    {id: 1, name: 'English', value: 'EN'},
-    {id: 2, name: 'Spanish', value: 'ES'}
-  ];
-
-  const initialState = {
-    question: '',
-    notes: '',
-    label: '',
-    type: {id: '', name: '', value: ''},
-    language: {id: '1', name: 'English', value: 'EN'},
-    isRequired: false,
-
-    options: [
-      {label: '1', text: ''},
-      {label: '2', text: ''}
-    ],
-    otherOpt: false,
-    noneOfAbove: false
-  };
   const [questionData, setQuestionData] = useState<InitialState>(initialState);
   const {
     question,
@@ -238,7 +231,7 @@ const CreateQuestion = ({
   };
 
   const optionInputChange = (index: number, e: any) => {
-    const currentOptions = [...questionData.options];
+    const currentOptions: any = [...questionData.options] || [];
     currentOptions[index].text = e.target.value;
     setQuestionData({
       ...questionData,
@@ -247,10 +240,10 @@ const CreateQuestion = ({
   };
   const onOptionAdd = (index: number) => {
     // adding new option field after selected options index.
-    const currentOptions = [...questionData.options];
+    const currentOptions: any = [...questionData.options] || [];
     const newItem = {label: (index + 2).toString(), text: ''};
     currentOptions.splice(index + 1, 0, newItem);
-    let updatedOptions = currentOptions.map((item, i) => {
+    let updatedOptions = currentOptions.map((item: any, i: number) => {
       if (i > index + 1) {
         item.label = (i + 1).toString();
         return item;
@@ -265,7 +258,7 @@ const CreateQuestion = ({
   };
   const onOptionRemove = (index: number) => {
     // Removing option field from specific index
-    if (questionData.options.length > 1) {
+    if (questionData?.options?.length > 1) {
       const currentOptions = [...questionData.options];
       currentOptions.splice(index, 1);
       let updatedOptions = currentOptions.map((item, i) => {
@@ -325,7 +318,7 @@ const CreateQuestion = ({
               selectedItem={type.name}
               placeholder="Type"
               list={typeList}
-              onChange={(val, name, id) => onSelectOption(val, name, id, 'type')}
+              onChange={(val, option: any) => onSelectOption(val, val, option.id, 'type')}
             />
             {validation.type && <p className="text-red-600 text-sm">{validation.type}</p>}
           </div>
@@ -337,7 +330,9 @@ const CreateQuestion = ({
               selectedItem={language.name}
               placeholder={AddNewQuestionDict[userLanguage]['LANGUAGE']}
               list={languageList}
-              onChange={(val, name, id) => onSelectOption(val, name, id, 'language')}
+              onChange={(val, option: any) =>
+                onSelectOption(val, val, option.id, 'language')
+              }
             />
           </div>
         </div>
@@ -422,7 +417,7 @@ const CreateQuestion = ({
               <p className={`text-red-600`}>{message.msg}</p>
             </div>
           )}
-          <div className="flex justify-center mt-6">
+          <div className="flex justify-center mt-6 gap-4">
             <Buttons
               btnClass="py-1 px-4 text-xs mr-2"
               label={AddNewQuestionDict[userLanguage]['BUTTON']['CANCEL']}
@@ -452,20 +447,20 @@ const ExistingQuestionList = ({
   changeStep,
   setCheckpQuestions
 }: any) => {
-  const [selectedQuestionIds, setSelectedQuestionIds] = useState([]);
-  const [questionsList, setQuestionsList] = useState([]);
-  const [allQuestionsList, setAllQuestionsList] = useState([]);
+  const [selectedQuestionIds, setSelectedQuestionIds] = useState<string[]>([]);
+  const [questionsList, setQuestionsList] = useState<any[]>([]);
+  const [allQuestionsList, setAllQuestionsList] = useState<any[]>([]);
 
   const [searchInput, setSearchInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
-  const {clientKey, userLanguage} = useContext(GlobalContext);
+  const {userLanguage} = useGlobalContext();
 
-  const {QuestionLookupDict} = useDictionary(clientKey);
+  const {QuestionLookupDict} = useDictionary();
 
   const selectItem = (questId: string) => {
     const selectedItem = selectedQuestionIds.find((id) => id === questId);
-    let updatedList;
+    let updatedList = [];
     if (!selectedItem) {
       updatedList = [...selectedQuestionIds, questId];
     } else {
@@ -479,7 +474,7 @@ const ExistingQuestionList = ({
     const currentQuesList = [...allQuestionsList];
     const newList = currentQuesList.filter((item) => {
       // Search on question for match.
-      return item.question?.toLowerCase().includes(searchInput.toLowerCase());
+      return item?.question?.toLowerCase().includes(searchInput.toLowerCase());
     });
     setQuestionsList(newList);
   };
@@ -624,7 +619,7 @@ const ExistingQuestionList = ({
           </Fragment>
         </div>
         <div className="flex mt-8 justify-center px-6 pb-4">
-          <div className="flex justify-center my-6">
+          <div className="flex justify-center my-6 gap-4">
             <Buttons
               btnClass="py-1 px-4 text-xs mr-2"
               label={QuestionLookupDict[userLanguage]['BUTTON']['CANCEL']}
@@ -677,7 +672,7 @@ const QuestionLookup = ({
   askBeforeClose
 }: {
   checkpQuestions: InitialState[];
-  changeStep: (step: string) => void;
+  changeStep: (step: Step) => void;
   closeAction: () => void;
   askBeforeClose: () => void;
   isEditingMode?: boolean;
@@ -685,9 +680,9 @@ const QuestionLookup = ({
   createNewBlockULBHandler: any;
   setCheckpQuestions: any;
 }) => {
-  const {clientKey, userLanguage} = useContext(GlobalContext);
+  const {userLanguage} = useGlobalContext();
 
-  const {AddNewCheckPointDict, EditQuestionModalDict} = useDictionary(clientKey);
+  const {AddNewCheckPointDict, EditQuestionModalDict} = useDictionary();
 
   const uniqKey = 'questionID'; // this is temporary key to filter this questions from other questions
 
@@ -866,15 +861,11 @@ const CheckpointFormDialog = ({
   setUnsavedChanges,
   askBeforeClose
 }: IHeaderModalComponentProps) => {
-  const [checkpQuestions, setCheckpQuestions] = useState([]);
+  const [checkpQuestions, setCheckpQuestions] = useState<any[]>([]);
 
-  const [activeStep, setActiveStep] = useState<
-    'QuestionLookup' | 'CreateNewQuestion' | 'ExistingQuestionList'
-  >('QuestionLookup');
+  const [activeStep, setActiveStep] = useState<Step>('QuestionLookup');
 
-  const changeStep = (
-    step: 'QuestionLookup' | 'CreateNewQuestion' | 'ExistingQuestionList'
-  ) => {
+  const changeStep = (step: Step) => {
     setActiveStep(step);
   };
 

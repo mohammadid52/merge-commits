@@ -1,22 +1,51 @@
-import React, {useState, useEffect, Fragment, useContext} from 'react';
-import {IoMdAddCircleOutline, IoMdRemoveCircleOutline} from 'react-icons/io';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
+import {Fragment, useEffect, useState} from 'react';
+import {IoMdAddCircleOutline, IoMdRemoveCircleOutline} from 'react-icons/io';
 
+import Buttons from 'atoms/Buttons';
 import CheckBox from 'atoms/Form/CheckBox';
 import FormInput from 'atoms/Form/FormInput';
 import Selector from 'atoms/Form/Selector';
-import Buttons from 'atoms/Buttons';
 
-import * as mutations from 'graphql/mutations';
-import {GlobalContext} from 'contexts/GlobalContext';
-import {getAsset} from 'assets';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
+import * as mutations from 'graphql/mutations';
+import {languageList} from '@utilities/staticData';
 
 interface AddQuestionProps {
   goBackToPreviousStep: () => void;
   addNewQuestion: (obj: any) => void;
 }
+
+const typeList: any = [
+  {id: '1', label: 'Text', value: 'text'},
+  {id: '2', label: 'Input', value: 'input'},
+  {id: '3', label: 'Select Many', value: 'selectMany'},
+  {id: '4', label: 'Select One', value: 'selectOne'},
+  {id: '5', label: 'Date Picker', value: 'datePicker'},
+  {id: '6', label: 'Emoji', value: 'emoji'},
+  {id: '7', label: 'Attachments', value: 'attachments'},
+  {id: '8', label: 'Link', value: 'link'}
+];
+
+const selectOneOptions = [
+  {
+    label: '1',
+    text: 'Very Difficult'
+  },
+  {
+    label: '2',
+    text: 'Difficult'
+  },
+  {
+    label: '3',
+    text: 'Easy'
+  },
+  {
+    label: '4',
+    text: 'Very Easy'
+  }
+];
 
 interface InitialState {
   question: string;
@@ -32,22 +61,22 @@ interface InitialState {
 
 interface InputValue {
   id: string;
-  name: string;
+  label: string;
   value: string;
 }
 
 const AddQuestion = (props: AddQuestionProps) => {
   const {goBackToPreviousStep, addNewQuestion} = props;
-  const {theme, clientKey, userLanguage} = useContext(GlobalContext);
-  const themeColor = getAsset(clientKey, 'themeClassName');
-  const {addQuestionDict, BreadcrumsTitles} = useDictionary(clientKey);
+  const {userLanguage} = useGlobalContext();
+
+  const {addQuestionDict} = useDictionary();
 
   const initialState = {
     question: '',
     notes: '',
     label: '',
-    type: {id: '', name: '', value: ''},
-    language: {id: '1', name: 'English', value: 'EN'},
+    type: {id: '', label: '', value: ''},
+    language: {id: '1', label: 'English', value: 'EN'},
     isRequired: false,
     options: [
       {label: '1', text: ''},
@@ -57,8 +86,8 @@ const AddQuestion = (props: AddQuestionProps) => {
     noneOfAbove: false
   };
   const [questionData, setQuestionData] = useState<InitialState>(initialState);
-  // const [selectedDesigners, setSelectedDesigners] = useState([]);
-  const [loading, setLoading] = useState(false);
+  // const [selectedDesigners, setSelectedDesigners] = useState<any[]>([]);
+
   const [validation, setValidation] = useState({
     question: '',
     label: '',
@@ -67,40 +96,6 @@ const AddQuestion = (props: AddQuestionProps) => {
     message: '',
     isError: true
   });
-  const typeList: any = [
-    {id: '1', name: 'Text', value: 'text'},
-    {id: '2', name: 'Input', value: 'input'},
-    {id: '3', name: 'Select Many', value: 'selectMany'},
-    {id: '4', name: 'Select One', value: 'selectOne'},
-    {id: '5', name: 'Date Picker', value: 'datePicker'},
-    {id: '6', name: 'Emoji', value: 'emoji'},
-    {id: '7', name: 'Attachments', value: 'attachments'},
-    {id: '8', name: 'Link', value: 'link'}
-  ];
-
-  const languageList = [
-    {id: 1, name: 'English', value: 'EN'},
-    {id: 2, name: 'Spanish', value: 'ES'}
-  ];
-
-  const selectOneOptions = [
-    {
-      label: '1',
-      text: 'Very Difficult'
-    },
-    {
-      label: '2',
-      text: 'Difficult'
-    },
-    {
-      label: '3',
-      text: 'Easy'
-    },
-    {
-      label: '4',
-      text: 'Very Easy'
-    }
-  ];
 
   const onInputChange = (e: any) => {
     setQuestionData({
@@ -115,6 +110,7 @@ const AddQuestion = (props: AddQuestionProps) => {
     });
   };
   const optionInputChange = (index: number, e: any) => {
+    // @ts-ignore
     const currentOptions = [...questionData.options];
     currentOptions[index].text = e.target.value;
     setQuestionData({
@@ -124,17 +120,20 @@ const AddQuestion = (props: AddQuestionProps) => {
   };
   const onOptionAdd = (index: number) => {
     // adding new option field after selected options index.
+    // @ts-ignore
     const currentOptions = [...questionData.options];
     const newItem = {label: (index + 2).toString(), text: ''};
     currentOptions.splice(index + 1, 0, newItem);
-    let updatedOptions = currentOptions.map((item, i) => {
-      if (i > index + 1) {
-        item.label = (i + 1).toString();
-        return item;
-      } else {
-        return item;
-      }
-    });
+    let updatedOptions = currentOptions
+      .map((item, i) => {
+        if (i > index + 1) {
+          item.label = (i + 1).toString();
+          return item;
+        } else {
+          return null;
+        }
+      })
+      .filter(Boolean);
     setQuestionData({
       ...questionData,
       options: updatedOptions
@@ -142,17 +141,20 @@ const AddQuestion = (props: AddQuestionProps) => {
   };
   const onOptionRemove = (index: number) => {
     // Removing option field from specific index
-    if (questionData.options.length > 1) {
+    // @ts-ignore
+    if (questionData?.options?.length > 1) {
       const currentOptions = [...questionData.options];
       currentOptions.splice(index, 1);
-      let updatedOptions = currentOptions.map((item, i) => {
-        if (i >= index) {
-          item.label = (i + 1).toString();
-          return item;
-        } else {
-          return item;
-        }
-      });
+      let updatedOptions = currentOptions
+        .map((item, i) => {
+          if (i >= index) {
+            item.label = (i + 1).toString();
+            return item;
+          } else {
+            return null;
+          }
+        })
+        .filter(Boolean);
       setQuestionData({
         ...questionData,
         options: updatedOptions
@@ -209,7 +211,6 @@ const AddQuestion = (props: AddQuestionProps) => {
     const isValid = validateForm();
     if (isValid) {
       try {
-        setLoading(true);
         const questOptions = questionData.options;
         const input = {
           label: questionData.label,
@@ -217,7 +218,7 @@ const AddQuestion = (props: AddQuestionProps) => {
           question: questionData.question,
           // designers: selectedDesigners.map(item => item.id),
           language: questionData.language.value,
-          options: filteredOptions(questionData.options)
+          options: questOptions ? filteredOptions(questOptions) : []
         };
         const results: any = await API.graphql(
           graphqlOperation(mutations.createQuestion, {input: input})
@@ -236,7 +237,6 @@ const AddQuestion = (props: AddQuestionProps) => {
           addNewQuestion(newQuestion);
           goBackToPreviousStep();
         }
-        setLoading(false);
       } catch {
         setValidation({
           question: '',
@@ -246,7 +246,6 @@ const AddQuestion = (props: AddQuestionProps) => {
           message: addQuestionDict[userLanguage]['messages']['unabletosave'],
           isError: true
         });
-        setLoading(false);
       }
     }
   };
@@ -314,22 +313,25 @@ const AddQuestion = (props: AddQuestionProps) => {
                 <span className="text-red-500">*</span>
               </label>
               <Selector
-                selectedItem={type.name}
+                selectedItem={type.label}
                 placeholder={addQuestionDict[userLanguage]['selectpl']}
                 list={typeList}
-                onChange={(val, name, id) => onSelectOption(val, name, id, 'type')}
+                onChange={(val, option: any) =>
+                  onSelectOption(val, val, option.id, 'type')
+                }
               />
-              {/* {validation.type && <p className="text-red-600 text-sm">{validation.type}</p>} */}
             </div>
             <div>
               <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
                 {addQuestionDict[userLanguage]['selectlang']}
               </label>
               <Selector
-                selectedItem={language.name}
+                selectedItem={language.label}
                 placeholder={addQuestionDict[userLanguage]['selectlanpl']}
                 list={languageList}
-                onChange={(val, name, id) => onSelectOption(val, name, id, 'language')}
+                onChange={(val, option: any) =>
+                  onSelectOption(val, val, option.id, 'language')
+                }
               />
             </div>
           </div>
@@ -344,7 +346,7 @@ const AddQuestion = (props: AddQuestionProps) => {
                 {/* Options input fields */}
                 {options?.length &&
                   options.map((item, index) => (
-                    <div className="flex w-9/10 mx-auto mt-4">
+                    <div key={item.text} className="flex w-9/10 mx-auto mt-4">
                       <div className="w-8/10">
                         <FormInput
                           value={item.text}
@@ -357,18 +359,12 @@ const AddQuestion = (props: AddQuestionProps) => {
                         <span
                           className="w-auto cursor-pointer"
                           onClick={() => onOptionAdd(index)}>
-                          <IconContext.Provider
-                            value={{size: '2rem', color: theme.iconColor[themeColor]}}>
-                            <IoMdAddCircleOutline />
-                          </IconContext.Provider>
+                          <IoMdAddCircleOutline className="theme-text" size="2rem" />
                         </span>
                         <span
                           className="w-auto cursor-pointer"
                           onClick={() => onOptionRemove(index)}>
-                          <IconContext.Provider
-                            value={{size: '2rem', color: theme.iconColor[themeColor]}}>
-                            <IoMdRemoveCircleOutline />
-                          </IconContext.Provider>
+                          <IoMdRemoveCircleOutline className="theme-text" size="2rem" />
                         </span>
                       </div>
                     </div>

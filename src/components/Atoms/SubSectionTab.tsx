@@ -1,16 +1,15 @@
-import React, {useContext} from 'react';
-import {GlobalContext} from 'contexts/GlobalContext';
+import {useGlobalContext} from 'contexts/GlobalContext';
 
-interface SubSectionTab {
+interface SubSectionTabInterface {
   id: string;
   selectedCondition: boolean;
   label: string;
   counter?: number;
 }
 
-const SubSectionTab = (props: SubSectionTab) => {
+const SubSectionTab = (props: SubSectionTabInterface) => {
   const {id, selectedCondition, label, counter} = props;
-  const {theme} = useContext(GlobalContext);
+  const {theme} = useGlobalContext();
   return (
     <div className={`w-auto flex flex-row`}>
       <h2

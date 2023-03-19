@@ -1,56 +1,18 @@
-import useAuth from 'customHooks/useAuth';
-import useGraphqlMutation from 'customHooks/useGraphqlMutation';
-import {awsFormatDate, dateString} from 'utilities/time';
-import {CreateGameChangerLogInput, GameChangerLog} from 'API';
-import {nanoid} from 'nanoid';
-import React, {useEffect, useState} from 'react';
-import Button from './Button';
-import Buttons from '@components/Atoms/Buttons';
-import {SingingBowlSvg} from '../svg';
+import Buttons from "@components/Atoms/Buttons";
+import { CreateGameChangerLogInput, GameChangerLog } from "API";
+import useAuth from "customHooks/useAuth";
+import useGraphqlMutation from "customHooks/useGraphqlMutation";
+import { nanoid } from "nanoid";
+import { useEffect, useState } from "react";
+import { awsFormatDate, dateString } from "utilities/time";
+import { SingingBowlSvg } from "../svg";
 
-const BowlSvg = ({animate}: {animate: boolean}) => {
-  const colorList = [
-    '#FAFAD2',
-    '##EEE8AA',
-    '#F0E68C',
-    '#DAA520',
-    '#FFD700',
-    '#FFA500',
-    '#FF8C00',
-    '#CD853F',
-    '#D2691E',
-    '#8B4513'
-  ];
-
-  const [color, setColor] = useState(null);
-
-  useEffect(() => {
-    let interval: any = null;
-    if (animate) {
-      let idx = 0;
-      interval = setInterval(() => {
-        if (colorList.length - 1 >= idx) {
-          setColor(colorList[idx]);
-          idx = idx + 1;
-        } else {
-          idx = 0;
-        }
-      }, 1000);
-    } else {
-      clearInterval(interval);
-      setColor(colorList[0]);
-    }
-
-    return () => {
-      clearInterval(interval);
-    };
-  }, [animate]);
-
+const BowlSvg = ({}: {}) => {
   return <SingingBowlSvg />;
 };
 
 const SingingBowl = () => {
-  const audioControl = document.getElementById('singing-meditation');
+  const audioControl = document.getElementById("singing-meditation");
   const [isPlaying, setIsPlaying] = useState(false);
 
   useEffect(() => {
@@ -68,10 +30,10 @@ const SingingBowl = () => {
   }, [isPlaying]);
 
   const mutationLog = useGraphqlMutation<
-    {input: CreateGameChangerLogInput},
+    { input: CreateGameChangerLogInput },
     GameChangerLog
-  >('createGameChangerLog');
-  const {email, authId} = useAuth();
+  >("createGameChangerLog");
+  const { email, authId } = useAuth();
 
   const start = () => {
     const gameChangerID = nanoid(24);
@@ -83,8 +45,8 @@ const SingingBowl = () => {
           gameChangerID,
           personAuthID: authId,
           personEmail: email,
-          startTime: awsFormatDate(dateString('-', 'WORLD'))
-        }
+          startTime: awsFormatDate(dateString("-", "WORLD")),
+        },
       });
     }
   };
@@ -97,12 +59,12 @@ const SingingBowl = () => {
           type="audio/mp3"
         />
       </audio>
-      <BowlSvg animate={isPlaying} />
+      <BowlSvg />
 
       <Buttons
         btnClass="w-full"
         onClick={start}
-        label={isPlaying ? 'Stop Meditation' : 'Start Meditation'}
+        label={isPlaying ? "Stop Meditation" : "Start Meditation"}
       />
     </div>
   );

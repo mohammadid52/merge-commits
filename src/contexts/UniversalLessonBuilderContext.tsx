@@ -1,17 +1,24 @@
-import {GlobalContext} from 'contexts/GlobalContext';
-import {UniversalLesson} from 'interfaces/UniversalLessonInterfaces';
+import useAuth from '@customHooks/useAuth';
+import {UniversalLesson} from 'API';
+
 import findIndex from 'lodash/findIndex';
 import update from 'lodash/update';
-import React, {createContext, useContext, useState} from 'react';
+import {createContext, useContext, useState} from 'react';
 import {useHistory} from 'react-router';
-export const UniversalLessonBuilderContext = createContext(null);
 
-const initialUniversalLessonData: UniversalLesson = {
+export const UniversalLessonBuilderContext = createContext<any>(null);
+
+type _UniversalLesson = Omit<UniversalLesson, '__typename'>;
+
+const initialUniversalLessonData: _UniversalLesson = {
   id: '',
   summary: '',
+  type: '',
+  title: '',
+  institutionID: '',
   designers: [''],
-  teachers: [''],
-  categories: [''],
+  // teachers: [''],
+  // categories: [''],
   lessonPlan: []
 };
 
@@ -39,14 +46,9 @@ const INITIAL_STATE: FieldsInterface = {
 };
 
 export const UniversalLessonBuilderProvider = ({children}: any) => {
-  const {
-    state: {
-      user: {isSuperAdmin, language = 'EN'}
-    }
-  } = useContext(GlobalContext);
-  const [newBlockSeqId, setNewBlockSeqId] = useState(null);
+  const [newBlockSeqId, setNewBlockSeqId] = useState<any | null>(null);
 
-  const [universalLessonDetails, setUniversalLessonDetails] = useState<UniversalLesson>(
+  const [universalLessonDetails, setUniversalLessonDetails] = useState<_UniversalLesson>(
     initialUniversalLessonData
   );
 
@@ -57,14 +59,13 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
   // Getters
 
   const getCurrentPage = (id: string) =>
-    universalLessonDetails.lessonPlan.find((page: any) => page.id === id);
+    universalLessonDetails?.lessonPlan?.find((page: any) => page.id === id);
 
   const updateMovableList = (
     items: any,
     section: string = 'pageContent',
     pageId?: string,
-    pageContentId?: string,
-    partContentId?: string
+    pageContentId?: string
   ) => {
     switch (section) {
       case 'page':
@@ -76,7 +77,7 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
           (item: any) => item.id === pageId
         );
         const pageContentIdx = findIndex(
-          universalLessonDetails.lessonPlan[pageIdx].pageContent,
+          universalLessonDetails?.lessonPlan?.[pageIdx]?.pageContent,
           (item: any) => item.id === pageContentId
         );
 
@@ -93,7 +94,7 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
     setUniversalLessonDetails((prevDetails) => ({
       ...prevDetails,
       lessonPlan: [
-        ...prevDetails.lessonPlan,
+        ...(prevDetails?.lessonPlan || []),
         {
           enabled: true,
           open: true,
@@ -144,6 +145,7 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
   });
 
   const history = useHistory();
+  const {isSuperAdmin} = useAuth();
 
   /**
    *

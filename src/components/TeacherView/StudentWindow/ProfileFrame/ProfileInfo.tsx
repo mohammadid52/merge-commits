@@ -1,12 +1,9 @@
-import React, {useContext} from 'react';
-
 import LocationBadge from '@components/Dashboard/Admin/Institutons/EditBuilders/LocationBadge';
+import useNewDictionary from '@customHooks/useNewDictionary';
 import Buttons from 'atoms/Buttons';
 import Modal from 'atoms/Modal';
 import Status from 'atoms/Status';
 import UserRole from 'components/Dashboard/Admin/UserManagement/UserRole';
-import {GlobalContext} from 'contexts/GlobalContext';
-import useDictionary from 'customHooks/dictionary';
 import {FiAlertCircle} from 'react-icons/fi';
 
 interface IProfileFrameInfo {
@@ -33,10 +30,10 @@ const ProfileFrameInfo = ({
   room
 }: IProfileFrameInfo) => {
   // ~~~~~~~~~~~~~~~ CONTEXT ~~~~~~~~~~~~~~~ //
-  const {userLanguage} = useContext(GlobalContext);
+
   // ~~~~~~~~~~~~~~ DICTIONARY ~~~~~~~~~~~~~ //
 
-  const {UserInformationDict} = useDictionary();
+  const {UserInformationDict} = useNewDictionary();
 
   return (
     <div className="m-auto p-2 bg-white shadow-5 rounded z-50">
@@ -46,7 +43,7 @@ const ProfileFrameInfo = ({
         <dl className="grid grid-cols-1 gap-x-4 gap-y-4 sm:grid-cols-2">
           <div className="sm:col-span-1 p-2">
             <dt className="text-sm leading-5 font-regular text-gray-600">
-              {UserInformationDict[userLanguage]['fullname']}
+              {UserInformationDict['fullname']}
             </dt>
             <dd className="mt-2 text-base leading-5 text-gray-900">{`${
               user && user.firstName
@@ -54,7 +51,7 @@ const ProfileFrameInfo = ({
           </div>
           <div className="sm:col-span-1 p-2">
             <dt className="text-sm leading-5 font-regular text-gray-600">
-              {UserInformationDict[userLanguage]['nickname']}
+              {UserInformationDict['nickname']}
             </dt>
             <dd className="mt-2 text-base leading-5 text-gray-900">
               {`${user && user.preferredName ? user && user.preferredName : 'not set'}`}
@@ -62,7 +59,7 @@ const ProfileFrameInfo = ({
           </div>
           <div className="sm:col-span-1 p-2">
             <dt className="text-sm leading-5 font-regular text-gray-600">
-              {UserInformationDict[userLanguage]['role']}
+              {UserInformationDict['role']}
             </dt>
             <dd className="mt-2 text-base leading-5 text-gray-900">
               <UserRole role={user && user.role} />
@@ -70,7 +67,7 @@ const ProfileFrameInfo = ({
           </div>
           <div className="sm:col-span-1 p-2">
             <dt className="text-sm leading-5 font-regular text-gray-600">
-              {UserInformationDict[userLanguage]['status']}
+              {UserInformationDict['status']}
             </dt>
             <dd className="mt-2 text-base leading-5 text-gray-900">
               <Status status={user && user.status} />
@@ -78,7 +75,7 @@ const ProfileFrameInfo = ({
           </div>
           <div className="sm:col-span-1 p-2">
             <dt className="text-sm leading-5 font-regular text-gray-600">
-              {UserInformationDict[userLanguage]['email']}
+              {UserInformationDict['email']}
             </dt>
             <dd className="mt-2 text-base leading-5 text-gray-900">{`${
               user && user.email
@@ -87,14 +84,14 @@ const ProfileFrameInfo = ({
 
           <div className="sm:col-span-1 p-2">
             <dt className="text-sm leading-5 font-regular text-gray-600">
-              {UserInformationDict[userLanguage]['account']}
+              {UserInformationDict['account']}
             </dt>
             <dd className="mt-2 text-base leading-5 text-gray-900">{created()}</dd>
           </div>
           {/*----ON DEMAND TOGGLE----*/}
           <div className="sm:col-span-1 p-2">
             <dt className="text-sm leading-5 font-regular text-gray-600">
-              {UserInformationDict[userLanguage]['location']}
+              {UserInformationDict['location']}
             </dt>
             <dd>
               <LocationBadge onDemand={user?.onDemand} />
@@ -102,7 +99,7 @@ const ProfileFrameInfo = ({
           </div>
           <div className="sm:col-span-1 p-2">
             <dt className="text-sm leading-5 font-regular text-gray-600">
-              {UserInformationDict[userLanguage]['CLASSROOM_LOCATION']}
+              {UserInformationDict['CLASSROOM_LOCATION']}
             </dt>
             <dd className="mt-2 text-base leading-5 text-gray-900">
               {room && room?.name ? `In ${room.name}` : `Not in classroom`}
@@ -112,8 +109,8 @@ const ProfileFrameInfo = ({
             <Buttons
               label={
                 loading
-                  ? UserInformationDict[userLanguage]['RESETTING_PASSWORD']
-                  : UserInformationDict[userLanguage]['RESET_PASSWORD']
+                  ? UserInformationDict['RESETTING_PASSWORD']
+                  : UserInformationDict['RESET_PASSWORD']
               }
               onClick={resetPassword}
               disabled={loading}
@@ -122,24 +119,26 @@ const ProfileFrameInfo = ({
         </dl>
       </div>
 
-      {resetPasswordServerResponse.show && (
-        <Modal showHeader={false} showFooter={false} closeAction={onAlertClose}>
-          <div className="py-8 px-16">
-            <div className="mx-auto flex items-center justify-center rounded-full">
-              <FiAlertCircle className="w-8 h-8" />
-            </div>
-            <div className="mt-4">{resetPasswordServerResponse.message}</div>
-            <div className="flex justify-center mt-4">
-              <Buttons
-                btnClass={'abc'}
-                label={'Ok'}
-                labelClass={'leading-6'}
-                onClick={onAlertClose}
-              />
-            </div>
+      <Modal
+        open={resetPasswordServerResponse.show}
+        showHeader={false}
+        showFooter={false}
+        closeAction={onAlertClose}>
+        <div className="py-8 px-16">
+          <div className="mx-auto flex items-center justify-center rounded-full">
+            <FiAlertCircle className="w-8 h-8" />
           </div>
-        </Modal>
-      )}
+          <div className="mt-4">{resetPasswordServerResponse.message}</div>
+          <div className="flex justify-center mt-4">
+            <Buttons
+              btnClass={'abc'}
+              label={'Ok'}
+              labelClass={'leading-6'}
+              onClick={onAlertClose}
+            />
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 };

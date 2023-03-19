@@ -1,5 +1,5 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import React, {useContext, useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {useHistory, useLocation, useParams, useRouteMatch} from 'react-router-dom';
 
 import * as customQueries from 'customGraphql/customQueries';
@@ -7,9 +7,8 @@ import {useQuery} from 'customHooks/urlParam';
 
 import {getLocalStorageData} from '@utilities/localStorage';
 import StepComponent, {IStepElementInterface} from 'atoms/StepComponent';
-import {GlobalContext} from 'contexts/GlobalContext';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
-import {LessonEditDict} from 'dictionary/dictionary.iconoclast';
 import * as queries from 'graphql/queries';
 import ModalPopUp from 'molecules/ModalPopUp';
 import {BsArrowLeft} from 'react-icons/bs';
@@ -32,13 +31,13 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
   const params = useQuery(location.search);
   const step = params.get('step');
 
-  const {clientKey, state, userLanguage} = useContext(GlobalContext);
+  const {state, userLanguage} = useGlobalContext();
   const isSuperAdmin: boolean = state.user.role === 'SUP';
   const [activeStep, setActiveStep] = useState('overview');
   const [roomData, setRoomData] = useState<any>({});
 
-  const [curricularList, setCurricularList] = useState([]);
-  const [prevName, setPrevName] = useState('');
+  const [curricularList, setCurricularList] = useState<any[]>([]);
+  const [_, setPrevName] = useState('');
   const [selectedCurrID, setSelectedCurrID] = useState('');
   const [messages, setMessages] = useState({
     show: false,
@@ -46,7 +45,7 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
     isError: false
   });
 
-  const {CommonlyUsedDict, RoomEDITdict} = useDictionary(clientKey);
+  const {CommonlyUsedDict, LessonEditDict, RoomEDITdict} = useDictionary();
 
   const [warnModal, setWarnModal] = useState({
     show: false,
@@ -104,37 +103,6 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
           message: RoomEDITdict[userLanguage]['messages']['addstaffirst'],
           isError: true
         });
-      } else {
-        const sortedList = listStaffs.sort((a: any, b: any) =>
-          a.staffMember?.firstName?.toLowerCase() >
-          b.staffMember?.firstName?.toLowerCase()
-            ? 1
-            : -1
-        );
-        const filterByRole = sortedList.filter(
-          (teacher: any) =>
-            teacher.staffMember?.role === 'TR' || teacher.staffMember?.role === 'FLW'
-        );
-        const staffList = filterByRole.map((item: any) => ({
-          id: item.staffMember?.id,
-          name: `${item.staffMember?.firstName || ''} ${
-            item.staffMember?.lastName || ''
-          }`,
-          value: `${item.staffMember?.firstName || ''} ${
-            item.staffMember?.lastName || ''
-          }`,
-          email: item.staffMember?.email ? item.staffMember?.email : '',
-          authId: item.staffMember?.authId ? item.staffMember?.authId : '',
-          image: item.staffMember?.image
-        }));
-
-        // Removed duplicates from staff list.
-        const uniqIDs: string[] = [];
-        const filteredArray = staffList.filter((member: {id: string}) => {
-          const duplicate = uniqIDs.includes(member.id);
-          uniqIDs.push(member.id);
-          return !duplicate;
-        });
       }
     } catch {
       setMessages({
@@ -155,7 +123,7 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
       const sortedList = list.data.listCurricula?.items.sort((a: any, b: any) =>
         a.name?.toLowerCase() > b.name?.toLowerCase() ? 1 : -1
       );
-      const curricularList = sortedList.map((item: any, i: any) => ({
+      const curricularList = sortedList.map((item: any) => ({
         id: item.id,
         name: `${item.name ? item.name : ''}`,
         value: `${item.name ? item.name : ''}`
@@ -310,22 +278,19 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
       title: RoomEDITdict[userLanguage].CLASS_STUDENT_TAB_HEADING,
       description: RoomEDITdict[userLanguage].CLASS_STUDENT_TAB_DESCRIPTION,
       stepValue: 'students',
-      disabled: !roomId,
-      tooltipText: RoomEDITdict[userLanguage].TAB_DISABLED_TOOLTIP_TEXT
+      disabled: !roomId
     },
     {
       title: RoomEDITdict[userLanguage].CLASS_UNIT_PLANNER_TAB_HEADING,
       description: RoomEDITdict[userLanguage].CLASS_UNIT_PLANNER_TAB_DESCRIPTION,
       stepValue: 'unit-planner',
-      disabled: !roomId,
-      tooltipText: RoomEDITdict[userLanguage].TAB_DISABLED_TOOLTIP_TEXT
+      disabled: !roomId
     },
     {
       title: RoomEDITdict[userLanguage].CLASS_DYNAMICS_TAB_HEADING,
       description: RoomEDITdict[userLanguage].CLASS_DYNAMICS_TAB_DESCRIPTION,
       stepValue: 'class-dynamics',
-      disabled: !roomId,
-      tooltipText: RoomEDITdict[userLanguage].TAB_DISABLED_TOOLTIP_TEXT
+      disabled: !roomId
     }
   ];
 
@@ -339,33 +304,13 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
         return <CourseSchedule roomData={roomData} />;
       case 'class-dynamics':
         return <CourseDynamics roomData={roomData} />;
+      default:
+        return <ClassRoomForm instId={instId} />;
     }
   };
 
   return (
     <div className="">
-      {/* Section Header */}
-      {/* <BreadCrums
-        unsavedChanges={unsavedChanges}
-        toggleModal={toggleModal}
-        items={breadCrumsList}
-      /> */}
-      {/* <div className="flex justify-between">
-        <SectionTitle
-          title={RoomEDITdict[userLanguage]['TITLE']}
-          subtitle={RoomEDITdict[userLanguage]['SUBTITLE']}
-        />
-        {params.get('from') ? (
-          <div className="flex justify-end py-4 mb-4 w-5/10">
-            <Buttons
-              label="Go Back"
-              btnClass="mr-4"
-              onClick={goBack}
-              Icon={IoArrowUndoCircleOutline}
-            />
-          </div>
-        ) : null}
-      </div> */}
       <div className="px-8 py-4">
         <h3 className="text-lg leading-6 font-medium text-gray-900 w-auto capitalize">
           {roomId ? RoomEDITdict[userLanguage]['TITLE'] : 'Add Classroom'}
@@ -390,7 +335,6 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
       <div className="">
         <div className="w-full m-auto">
           <StepComponent
-            dataCy="classroom-builder"
             steps={steps}
             activeStep={activeStep}
             handleTabSwitch={handleTabSwitch}
@@ -404,18 +348,18 @@ const ClassRoomBuilder = (props: ClassRoomBuilderProps) => {
         {messages.show ? (
           <div className="py-2 m-auto text-center">
             <p className={`${messages.isError ? 'text-red-600' : 'text-green-600'}`}>
-              {messages.message && messages.message}
+              {messages?.message ? messages.message : ''}
             </p>
           </div>
         ) : null}
-        {warnModal.show && (
-          <ModalPopUp
-            closeAction={toggleModal}
-            saveAction={onModalSave}
-            saveLabel="Yes"
-            message={warnModal.message}
-          />
-        )}
+
+        <ModalPopUp
+          open={warnModal.show}
+          closeAction={toggleModal}
+          saveAction={onModalSave}
+          saveLabel="Yes"
+          message={warnModal.message}
+        />
       </div>
     </div>
   );

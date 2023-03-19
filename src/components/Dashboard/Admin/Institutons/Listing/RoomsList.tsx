@@ -1,5 +1,5 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import React, {useContext, useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {useHistory, useRouteMatch} from 'react-router';
 
 import Filters, {SortType} from '@components/Atoms/Filters';
@@ -9,18 +9,18 @@ import Table from '@components/Molecules/Table';
 import useAuth from '@customHooks/useAuth';
 import usePagination from '@customHooks/usePagination';
 import useSearch from '@customHooks/useSearch';
+import {withZoiqFilter} from '@utilities/functions';
 import {getLocalStorageData} from '@utilities/localStorage';
 import {ModelRoomFilterInput} from 'API';
 import AddButton from 'atoms/Buttons/AddButton';
 import SearchInput from 'atoms/Form/SearchInput';
 import Selector from 'atoms/Form/Selector';
-import {GlobalContext} from 'contexts/GlobalContext';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import * as queries from 'graphql/queries';
-import {map, orderBy} from 'lodash';
+import {map, orderBy, uniqBy} from 'lodash';
 import {Status} from '../../UserManagement/UserStatus';
-import {withZoiqFilter} from '@utilities/functions';
 
 interface RoomListProps {
   instId: string;
@@ -30,24 +30,23 @@ interface RoomListProps {
 const RoomsList = (props: RoomListProps) => {
   const {instId} = props;
   const {
-    clientKey,
     state: {
-      user: {isSuperAdmin, isAdmin, isBuilder, associateInstitute}
+      user: {associateInstitute}
     },
     zoiqFilter,
 
     userLanguage
-  } = useContext(GlobalContext);
+  } = useGlobalContext();
 
   const history = useHistory();
-  const {InstitueRomms} = useDictionary(clientKey);
+  const {InstitueRomms} = useDictionary();
 
-  const [roomList, setRoomList] = useState([]);
+  const [roomList, setRoomList] = useState<any[]>([]);
   const [totalNum, setTotalNum] = useState(0);
 
   const [loading, setLoading] = useState(true);
 
-  const [institutionList, setInstitutionList] = useState<any>([]);
+  const [institutionList, setInstitutionList] = useState<any[]>([]);
   const [selectedInstitution, setSelectedInstitution] = useState<any>({});
 
   const [messages, setMessages] = useState({
@@ -81,18 +80,26 @@ const RoomsList = (props: RoomListProps) => {
           filter: withZoiqFilter({})
         })
       );
+
+      const institutions = list?.data?.listInstitutions?.items;
+
       setInstitutionList(
-        list.data?.listInstitutions?.items?.sort((a: any, b: any) =>
-          a.name?.toLowerCase() > b.name?.toLowerCase() ? 1 : -1
-        )
+        uniqBy(institutions, 'name').map((d: any) => ({
+          id: d.id,
+          label: d.name,
+          value: d.name
+        }))
       );
+
       setLoading(false);
     } catch (error) {
+      console.error(error);
+
       setLoading(false);
     }
   };
 
-  const {authId, isFellow, isTeacher} = useAuth();
+  const {authId, isFellow, isTeacher, role, isSuperAdmin, isAdmin, isBuilder} = useAuth();
 
   const fetchRoomList = async () => {
     try {
@@ -182,10 +189,10 @@ const RoomsList = (props: RoomListProps) => {
       fetchInstitutions();
       fetchRoomList();
     }
-  }, [isSuperAdmin]);
+  }, [role]);
 
-  const instituteChange = (_: string, name: string, value: string) => {
-    setSelectedInstitution({name, id: value});
+  const instituteChange = (value: string) => {
+    setSelectedInstitution({value});
     updateRoomList(value);
     setFilters(null);
   };
@@ -244,18 +251,13 @@ const RoomsList = (props: RoomListProps) => {
     }
   };
 
-  const [filters, setFilters] = useState<SortType>();
+  const [filters, setFilters] = useState<SortType | null>(null);
 
   const finalList = orderBy(
     searchInput.isActive ? filteredList : currentList,
     ['name', 'institutionName'],
     ['asc']
   );
-
-  const onInstitutionSelectionRemove = () => {
-    setSelectedInstitution({});
-    removeSearchAction();
-  };
 
   const updateFilter = (filterName: SortType) => {
     if (filterName === filters) {
@@ -347,14 +349,17 @@ const RoomsList = (props: RoomListProps) => {
         },
         maxHeight: '--',
         pattern: 'striped',
-        patternConfig: {firstColor: 'bg-gray-100', secondColor: 'bg-gray-200'}
+        patternConfig: {
+          firstColor: 'bg-gray-100',
+          secondColor: 'bg-gray-200'
+        }
       }
     }
   };
 
   return (
-    <div className="flex m-auto justify-center p-4 pt-0 pl-md-12">
-      <div className="">
+    <div className="flex m-auto justify-center p-4 pt-0">
+      <div className="w-full">
         <div className="flex flex-col lg:flex-row justify-start lg:justify-between items-center">
           <SectionTitleV3
             title={InstitueRomms[userLanguage]['TITLE']}
@@ -364,20 +369,15 @@ const RoomsList = (props: RoomListProps) => {
             borderBottom
             shadowOff
             withButton={
-              <div className={`w-auto flex gap-x-4 justify-end items-center flex-wrap`}>
+              <div className={`w-auto flex gap-x-4 justify-end items-center`}>
                 {(isSuperAdmin || isAdmin || isBuilder) && (
                   <Selector
-                    dataCy="classroom-institution"
+                    width={300}
+                    showSearch
                     placeholder={InstitueRomms[userLanguage]['SELECT_INSTITUTION']}
                     list={institutionList}
-                    selectedItem={selectedInstitution?.name}
+                    selectedItem={selectedInstitution?.label}
                     onChange={instituteChange}
-                    arrowHidden={true}
-                    additionalClass={`w-60 ${
-                      isSuperAdmin || isAdmin || isBuilder ? 'mr-4' : ''
-                    }`}
-                    isClearable
-                    onClear={onInstitutionSelectionRemove}
                   />
                 )}
                 <SearchInput
@@ -390,21 +390,8 @@ const RoomsList = (props: RoomListProps) => {
                   closeAction={() => {
                     removeSearchAction();
                   }}
-                  // style={`mr-4 w-auto md:w-40 lg:w-48 mb-8`}
                 />
-                {/* <Selector
-                placeholder={InstitueRomms[userLanguage]['SELECT_STAFF']}
-                list={staffList}
-                selectedItem={selectedStaff?.name}
-                onChange={handleStaffChange}
-                arrowHidden={true}
-                additionalClass={`w-auto md:w-52 lg:w-48 ${
-                  isSuperAdmin || isAdmin || isBuilder ? 'mr-4' : ''
-                }`}
-                isClearable
-                onClear={onStaffSelectionRemove}
-              /> */}
-                {/* </div> */}
+
                 {(!isSuperAdmin || !isAdmin || !isBuilder) && (
                   <AddButton
                     label={InstitueRomms[userLanguage]['BUTTON']['ADD']}

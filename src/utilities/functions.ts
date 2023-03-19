@@ -1,7 +1,9 @@
+import {RoomStatus} from 'API';
 import {getAsset} from 'assets';
 import {isEmpty} from 'lodash';
 import {allowedAuthIds} from 'state/GlobalState';
 import {getLocalStorageData, setLocalStorageData} from './localStorage';
+import {getImageFromS3Static} from './services';
 import {getClientKey} from './strings';
 
 export const goBackBreadCrumb = (list: any[], history: any) => {
@@ -15,12 +17,12 @@ export const goBackBreadCrumb = (list: any[], history: any) => {
 };
 
 export const doResize = (textbox: any) => {
-  var maxrows = 50;
-  var txt = textbox.value;
-  var cols = textbox.cols;
+  const maxrows = 50;
+  const txt = textbox.value;
+  const cols = textbox.cols;
 
-  var arraytxt: any = txt.split('\n');
-  var rows = arraytxt.length;
+  const arraytxt: any = txt.split('\n');
+  let rows = arraytxt.length;
 
   for (let i = 0; i < arraytxt.length; i++)
     // @ts-ignore
@@ -42,9 +44,12 @@ export const capitalizeFirstLetter = (str: string = '') => {
 };
 
 export const removeExtension = (filename: string) => {
-  const lastDotPosition = filename.lastIndexOf('.');
-  if (lastDotPosition === -1) return filename;
-  else return filename.substr(0, lastDotPosition);
+  if (filename.length > 0) {
+    const lastDotPosition = filename.lastIndexOf('.');
+    if (lastDotPosition === -1) return filename;
+    else return filename.substr(0, lastDotPosition);
+  }
+  return '';
 };
 
 export const ellipsis = (text: string, len: number): string => {
@@ -75,12 +80,6 @@ export const getJSON = async (url: string): Promise<string> => {
   }
 };
 
-export const paginationPage = (lang: string, page: number, total: number) => {
-  if (lang === 'EN') return `Showing Page ${page + 1} of ${total} pages`;
-  if (lang === 'ES') return `Mostrando página ${page + 1} de ${total} páginas`;
-  return '';
-};
-
 export const setPageTitle = (title: string) => {
   if (title) {
     document.title = `${title} | `.concat(getAsset(getClientKey(), 'appTitle'));
@@ -109,23 +108,27 @@ const zoiqFilterFallback = (authId: string) =>
   allowedAuthIds.includes(authId) ? [] : [{isZoiq: {ne: true}}];
 
 export const withZoiqFilter = (generalFilter: any, _zoiqFilter?: any) => {
-  let zoiqFilter =
-    _zoiqFilter && _zoiqFilter.length > 0
-      ? _zoiqFilter
-      : zoiqFilterFallback && zoiqFilterFallback.length > 0
-      ? zoiqFilterFallback
-      : [];
+  try {
+    let zoiqFilter =
+      _zoiqFilter && _zoiqFilter?.length > 0
+        ? _zoiqFilter
+        : zoiqFilterFallback && zoiqFilterFallback.length > 0
+        ? zoiqFilterFallback
+        : [];
 
-  let filter: any = {};
-  filter =
-    zoiqFilter.length > 0
-      ? {
-          ...generalFilter,
-          or: [generalFilter?.or, generalFilter?.and, ...zoiqFilter].filter(Boolean)
-        }
-      : generalFilter;
+    let filter: any = {};
+    filter =
+      zoiqFilter?.length > 0
+        ? {
+            ...generalFilter,
+            or: [generalFilter?.or, generalFilter?.and, ...zoiqFilter].filter(Boolean)
+          }
+        : generalFilter;
 
-  return filter;
+    return filter;
+  } catch (error) {
+    return generalFilter;
+  }
 };
 
 export const getSignInError = (error: any, onlyEmail: any) => {
@@ -204,4 +207,96 @@ export const setCredCookies = (
   } else {
     cookies.removeCookie('cred');
   }
+};
+
+export const reorderSyllabus = (syllabusArray: any[], sequenceArray: any[]) => {
+  const filteredSyllabusArray = syllabusArray.filter((d) => d.unit !== null);
+
+  let getSyllabusInSequence =
+    sequenceArray && sequenceArray.length > 0
+      ? sequenceArray?.reduce((acc: any[], syllabusID: string) => {
+          return [
+            ...acc,
+            filteredSyllabusArray.find((syllabus: any) => syllabus.unitId === syllabusID)
+          ];
+        }, [])
+      : filteredSyllabusArray;
+
+  let mapSyllabusToSequence =
+    sequenceArray && sequenceArray.length > 0
+      ? getSyllabusInSequence
+          ?.map((syllabus: any) => {
+            return {
+              ...syllabus,
+              ...syllabus.unit,
+              lessons: {
+                ...syllabus?.unit?.lessons,
+                items:
+                  syllabus?.unit.lessons?.items?.length > 0
+                    ? syllabus?.unit.lessons.items
+                        .map((t: any) => {
+                          let index = syllabus?.universalLessonsSeq?.indexOf(t.id);
+                          return {...t, index};
+                        })
+                        .sort((a: any, b: any) => (a.index > b.index ? 1 : -1))
+                    : []
+              }
+            };
+          })
+          .map(({unit, ...rest}: any) => rest)
+      : getSyllabusInSequence;
+
+  return mapSyllabusToSequence;
+};
+
+export const getTodayDate = () => {
+  let today: any = new Date();
+  let dd = String(today.getDate()).padStart(2, '0');
+  let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+  let yyyy = today.getFullYear();
+  today = mm + '-' + dd + '-' + yyyy;
+  return today;
+};
+
+export const insertExtraDataForClassroom = (cr: any) => {
+  const teacherImage = getImageFromS3Static(cr?.teacher?.image);
+  return {
+    institutionName: cr?.institution?.name || '',
+    teacher: {
+      name: `${cr?.teacher?.firstName} ${cr?.teacher?.lastName}`,
+      image: teacherImage
+    },
+    courseName: cr?.curricula?.items[0]?.curriculum?.name || '',
+    status: cr?.status || RoomStatus.ACTIVE,
+    activeSyllabus: cr?.activeSyllabus
+  };
+};
+
+export const removeDuplicates = (array: any[]) => {
+  let ids: any[] = [];
+
+  let result: any[] = [];
+  array.forEach((item) => {
+    if (!ids.includes(item?.id)) {
+      result.push(item);
+      ids.push(item.id);
+    }
+  });
+  return result;
+};
+
+export const getSeparatedHeaders = (arr: any[]) => {
+  let reg = /[,.]/gi;
+
+  if (arr && arr.length > 0) {
+    let result = arr.map((i) => {
+      return {
+        ...i,
+        label: i.label.replaceAll(reg, '')
+      };
+    });
+
+    return result;
+  }
+  return arr;
 };

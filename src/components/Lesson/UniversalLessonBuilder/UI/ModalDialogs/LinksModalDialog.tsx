@@ -1,15 +1,15 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
-import FormInput from 'atoms/Form/FormInput';
-import {EditQuestionModalDict} from 'dictionary/dictionary.iconoclast';
 import Buttons from 'atoms/Buttons';
-import {GlobalContext} from 'contexts/GlobalContext';
+import FormInput from 'atoms/Form/FormInput';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import {EditQuestionModalDict} from 'dictionary/dictionary.iconoclast';
 import {IContentTypeComponentProps} from 'interfaces/UniversalLessonBuilderInterfaces';
 import {PartContentSub} from 'interfaces/UniversalLessonInterfaces';
-import {nanoid} from 'nanoid';
-import RemoveInput from '../common/RemoveInput';
 import {remove} from 'lodash';
+import {nanoid} from 'nanoid';
 import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
+import RemoveInput from '../common/RemoveInput';
 
 interface Links extends IContentTypeComponentProps {
   inputObj?: any;
@@ -46,7 +46,7 @@ const LinksModalDialog = ({
   askBeforeClose,
   setUnsavedChanges
 }: Links) => {
-  const {userLanguage} = useContext(GlobalContext);
+  const {userLanguage} = useGlobalContext();
   const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
 
   //////////////////////////
@@ -86,13 +86,6 @@ const LinksModalDialog = ({
     setInputFieldsArray(longerInputFieldsArray);
   };
 
-  const handleDeleteLink = (keywordIdx: number) => {
-    const shorterInputFieldsArray: PartContentSub[] = inputFieldsArray.filter(
-      (inputObj: PartContentSub, idx: number) => idx !== keywordIdx
-    );
-    setInputFieldsArray(shorterInputFieldsArray);
-  };
-
   const removeItemFromList = (id: string) => {
     remove(inputFieldsArray, (n) => n.id === id);
     setInputFieldsArray([...inputFieldsArray]);
@@ -101,10 +94,10 @@ const LinksModalDialog = ({
   //////////////////////////
   //  FOR NORMAL INPUT    //
   //////////////////////////
-  const [inputErrorArray, setInputErrorArray] = useState<boolean[]>([]);
+  const [_, setInputErrorArray] = useState<boolean[]>([]);
   const onChange = (e: React.FormEvent, idx: number) => {
     setUnsavedChanges(true);
-    const {id, value, name} = e.target as HTMLFormElement;
+    const {value, name} = e.target as HTMLFormElement;
     // validateUrl(value, idx);
     handleUpdateInputFields(value, name, idx);
   };
@@ -123,8 +116,8 @@ const LinksModalDialog = ({
     await updateLessonPageToDB(input);
   };
   const onLinkCreate = async () => {
-    const validLinkArray = inputFieldsArray.map((field: PartContentSub, idx: number) =>
-      validateUrl(field.value)
+    const validLinkArray = inputFieldsArray.map((field: PartContentSub) =>
+      validateUrl(field?.value || '')
     );
     if (!validLinkArray.includes(true)) {
       if (isEditingMode) {
@@ -183,7 +176,7 @@ const LinksModalDialog = ({
                     label="Enter url"
                     isRequired
                     error={
-                      !validateUrl(inputFieldsArray[idx]?.value)
+                      !validateUrl(inputFieldsArray?.[idx]?.value || '')
                         ? ''
                         : // <p className={`text-red-400 text-xs`}>
                           'Please enter a valid link'
@@ -195,7 +188,7 @@ const LinksModalDialog = ({
 
                 <RemoveInput
                   idx={idx}
-                  inputId={inputObj.id}
+                  inputId={inputObj?.id || ''}
                   removeItemFromList={removeItemFromList}
                 />
               </div>
@@ -212,7 +205,7 @@ const LinksModalDialog = ({
             + Add Field
           </button>
         </div>
-        <div className="flex items-center w-auto">
+        <div className="flex items-center w-auto gap-4">
           <Buttons
             btnClass="py-1 px-4 text-xs mr-2"
             label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}

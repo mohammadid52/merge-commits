@@ -36,13 +36,12 @@ const LessonSurveyAppWrapper = ({
     state: {user}
   } = useGlobalContext();
 
-  const [showRequiredNotification, setShowRequiredNotification] = useState<boolean>(
-    false
-  );
+  const [showRequiredNotification, setShowRequiredNotification] =
+    useState<boolean>(false);
   const [overlay, setOverlay] = useState<string>('');
   const [isAtEnd, setisAtEnd] = useState<boolean>(false);
 
-  const topLessonRef = useRef();
+  const topLessonRef = useRef<any>(null);
   const history = useHistory();
   const match = useRouteMatch();
 
@@ -75,7 +74,7 @@ const LessonSurveyAppWrapper = ({
   return (
     <div
       id={type === 'survey' ? 'survey-app-container' : 'lesson-app-container'}
-      className={`${theme.bg} w-full h-full flex flex-col items-start dark-scroll overflow-y-auto`}
+      className={`bg-dark-blue w-full h-full flex flex-col items-start dark-scroll overflow-y-auto`}
       ref={topLessonRef}>
       <div
         className={`opacity-${
@@ -91,7 +90,7 @@ const LessonSurveyAppWrapper = ({
         <h6 className="text-xs text-shadow text-gray-500">{NAME}</h6>
       </div>
 
-      <div className="fixed " style={{zIndex: 5000}}>
+      <div className="fixed w-full" style={{zIndex: 5000}}>
         <LessonHeaderBar
           lessonDataLoaded={lessonDataLoaded}
           overlay={overlay}
@@ -106,12 +105,12 @@ const LessonSurveyAppWrapper = ({
           setisAtEnd={setisAtEnd}
           validateRequired={validateRequired}
           handleRequiredNotification={() => {
-            invokeRequiredField();
+            invokeRequiredField?.();
             handleRequiredNotification();
           }}
         />
       </div>
-      <div className={`top-2 lg:top-6 relative lesson-body-container`}>
+      <div className={`top-2 lg:top-6 relative lesson-body-container w-full`}>
         {!lessonDataLoaded ? (
           <div className="mt-4 mb-8 lesson-page-container">
             <LessonPageLoader />
@@ -127,7 +126,7 @@ const LessonSurveyAppWrapper = ({
               <CoreUniversalLesson
                 validateRequired={validateRequired}
                 invokeRequiredField={() => {
-                  invokeRequiredField();
+                  invokeRequiredField?.();
                   handleRequiredNotification();
                 }}
                 canContinue={canContinue}
@@ -136,13 +135,7 @@ const LessonSurveyAppWrapper = ({
           </ErrorBoundary>
         )}
 
-        {lessonDataLoaded && (
-          <Foot
-            isAtEnd={isAtEnd}
-            setisAtEnd={setisAtEnd}
-            handleRequiredNotification={handleRequiredNotification}
-          />
-        )}
+        {lessonDataLoaded && <Foot />}
       </div>
     </div>
   );

@@ -1,13 +1,13 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import React, {useContext, useEffect, useState} from 'react';
-import {BsArrowLeft} from 'react-icons/bs';
-import {Switch, useHistory, useParams, useRouteMatch} from 'react-router';
-import {GlobalContext} from 'contexts/GlobalContext';
+import Loader from 'atoms/Loader';
+import StepComponent, {IStepElementInterface} from 'atoms/StepComponent';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import {useQuery} from 'customHooks/urlParam';
-import Loader from 'atoms/Loader';
-import StepComponent, {IStepElementInterface} from 'atoms/StepComponent';
+import {useEffect, useState} from 'react';
+import {BsArrowLeft} from 'react-icons/bs';
+import {useHistory, useParams, useRouteMatch} from 'react-router';
 import CheckpointList from '../../TabsListing/CheckpointList';
 import CourseFormComponent from './CourseFormComponent';
 import LearningObjective from './LearningObjective';
@@ -33,14 +33,14 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
   const params = useQuery(location.search);
   const step = params.get('step');
 
-  const {clientKey, state, userLanguage} = useContext(GlobalContext);
-  const {CommonlyUsedDict, CourseBuilderDict} = useDictionary(clientKey);
+  const {state, userLanguage} = useGlobalContext();
+  const {CommonlyUsedDict, CourseBuilderDict} = useDictionary();
   const isSuperAdmin: any = state.user.role === 'SUP';
   const [activeStep, setActiveStep] = useState('overview');
   const [fetchingDetails, setFetchingDetails] = useState(false);
-  const [savedSyllabusList, setSavedSyllabusList] = useState([]);
-  const [syllabusIds, setSyllabusIds] = useState([]);
-  const [messages, setMessages] = useState<IUIMessages>({
+  const [savedSyllabusList, setSavedSyllabusList] = useState<any[]>([]);
+  const [syllabusIds, setSyllabusIds] = useState<any[]>([]);
+  const [_, setMessages] = useState<IUIMessages>({
     show: false,
     message: '',
     isError: false,
@@ -114,7 +114,8 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
       } catch {
         setMessages({
           show: true,
-          message: CourseBuilderDict[userLanguage]['MESSAGES']['FETCH_COURSE_ERR'],
+          message:
+            CourseBuilderDict[userLanguage]['MESSAGES']['ERROR']['FETCH_COURSE_ERR'],
           isError: true
         });
         setFetchingDetails(false);
@@ -141,32 +142,25 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
     {
       title: 'General Information',
       description: 'Capture core details of your Unit',
-      stepValue: 'overview',
-      isComplete: true
+      stepValue: 'overview'
     },
     {
       title: 'Unit manager',
       description: 'Assign units to course',
       stepValue: 'unit_manager',
-      disabled: !Boolean(courseId),
-      isComplete: false,
-      tooltipText: 'Add overview details in step 1 to continue'
+      disabled: !Boolean(courseId)
     },
     {
       title: 'Learning Objectives',
       description: '',
       stepValue: 'learning_objectives',
-      disabled: !Boolean(courseId),
-      isComplete: false,
-      tooltipText: 'Add overview details in step 1 to continue'
+      disabled: !Boolean(courseId)
     },
     {
       title: 'Demographics & information(Optional)',
       description: '',
       stepValue: 'demographics',
-      disabled: !Boolean(courseId),
-      isComplete: false,
-      tooltipText: 'Add overview details in step 1 to continue'
+      disabled: !Boolean(courseId)
     }
   ];
   const currentStepComp = (currentStep: string) => {
@@ -207,17 +201,13 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
             institutionId={instId}
           />
         );
+      default:
+        return null;
     }
   };
 
   return (
     <div className="w-full h-full">
-      {/* Section Header */}
-      {/* <BreadCrums
-        items={breadCrumsList}
-        // unsavedChanges={unsavedChanges}
-        // toggleModal={toggleUnSaveModal}
-      /> */}
       <div className="px-8 py-4">
         <h3 className="text-lg leading-6 font-medium text-gray-900 w-auto capitalize">
           {courseData?.name}
@@ -236,18 +226,8 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
           </span>
           <div className="text-sm">{CommonlyUsedDict[userLanguage]['BACK_TO_LIST']}</div>
         </div>
-        {/* <div className="flex justify-end py-4 mb-4 w-5/10">
-          <Buttons
-            label="Go back"
-            btnClass="mr-4"
-            onClick={() => null}
-            Icon={IoArrowUndoCircleOutline}
-          />
-        </div> */}
       </div>
 
-      {/* Body */}
-      {/* <PageWrapper> */}
       <div className="w-full m-auto">
         <StepComponent
           steps={steps}
@@ -270,7 +250,6 @@ const CourseBuilder = ({instId}: ICourseBuilderProps) => {
           )}
         </div>
       </div>
-      <Switch></Switch>
     </div>
   );
 };

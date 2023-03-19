@@ -30,13 +30,6 @@ export interface UniversalLessonPlanStage {
   displayMode: string;
 }
 
-//  USED FOR LINKING UNIVERSAL-LESSON-PAGE TO UNIVERSAL-LESSON
-interface UniversalLessonPages {
-  universalLessonID: string;
-  universalLessonPageID: string;
-}
-
-//
 export interface UniversalLessonPage {
   id: string;
   enabled?: boolean;
@@ -64,8 +57,8 @@ export interface PartContent {
   id: string;
   type: string;
   value: PartContentSub[];
-  label?: string; // its not correct. There is no property like label in API.ts
-  class?: string;
+
+  class: string;
   [key: string]: any;
 }
 

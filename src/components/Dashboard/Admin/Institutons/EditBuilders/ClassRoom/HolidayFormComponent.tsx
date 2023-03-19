@@ -1,26 +1,26 @@
-import React, {useContext, useEffect, useState} from 'react';
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import React, {useEffect, useState} from 'react';
 
+import Buttons from 'atoms/Buttons';
 import DatePickerInput from 'atoms/Form/DatePickerInput';
 import FormInput from 'atoms/Form/FormInput';
 import Selector from 'atoms/Form/Selector';
-import Buttons from 'atoms/Buttons';
-import {GlobalContext} from 'contexts/GlobalContext';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 
 import * as mutation from 'graphql/mutations';
 import {awsFormatDate, dateString} from 'utilities/time';
 
 const durationOptions = [
-  {id: 1, name: '.25'},
-  {id: 2, name: '.5'},
-  {id: 3, name: '.75'},
-  {id: 4, name: '1'}
+  {id: 1, label: '.25', value: '.25'},
+  {id: 2, label: '.5', value: '.5'},
+  {id: 3, label: '.75', value: '.75'},
+  {id: 4, label: '1', value: '1'}
 ];
 
 const adjustmentOptions = [
-  {id: 1, name: 'Push'},
-  {id: 2, name: 'Compact'}
+  {id: 1, label: 'Push', value: 'Push'},
+  {id: 2, label: 'Compact', value: 'Compact'}
 ];
 
 interface IImpactLog {
@@ -50,8 +50,8 @@ const HolidayFormComponent = ({
   postMutation,
   roomId
 }: IHolidayFormComponentProps) => {
-  const {clientKey, userLanguage} = useContext(GlobalContext);
-  const {BUTTONS} = useDictionary(clientKey);
+  const {userLanguage} = useGlobalContext();
+  const {BUTTONS} = useDictionary();
 
   const [loading, setLoading] = useState<boolean>(false);
   const [formValues, setFormValues] = useState<IImpactLog>({
@@ -71,9 +71,8 @@ const HolidayFormComponent = ({
   useEffect(() => {
     if (activeIndex !== null) {
       if (lessonImpactLogs[activeIndex]) {
-        const {impactDate, reasonComment, lessonImpact, adjustment} = lessonImpactLogs[
-          activeIndex
-        ];
+        const {impactDate, reasonComment, lessonImpact, adjustment} =
+          lessonImpactLogs[activeIndex];
         setFormValues({
           impactDate: impactDate ? new Date(impactDate) : null,
           reasonComment,
@@ -130,7 +129,9 @@ const HolidayFormComponent = ({
       try {
         setLoading(true);
         const payload = {
-          impactDate: awsFormatDate(dateString('-', 'WORLD', formValues.impactDate)),
+          impactDate: awsFormatDate(
+            dateString('-', 'WORLD', formValues?.impactDate || new Date())
+          ),
           reasonComment: formValues.reasonComment,
           lessonImpact: Number(formValues.lessonImpact),
           adjustment: formValues.adjustment
@@ -186,9 +187,7 @@ const HolidayFormComponent = ({
           <div className="grid grid-cols-2">
             <div className="px-3 py-4">
               <Selector
-                onChange={(_: string, name: string) =>
-                  handleSelection(name, 'lessonImpact')
-                }
+                onChange={(name: string) => handleSelection(name, 'lessonImpact')}
                 selectedItem={formValues.lessonImpact}
                 list={durationOptions}
                 label={'Time Impact'}
@@ -197,9 +196,7 @@ const HolidayFormComponent = ({
             </div>
             <div className="px-3 py-4">
               <Selector
-                onChange={(_: string, name: string) =>
-                  handleSelection(name, 'adjustment')
-                }
+                onChange={(name: string) => handleSelection(name, 'adjustment')}
                 selectedItem={formValues.adjustment}
                 list={adjustmentOptions}
                 label={'Adjustment'}

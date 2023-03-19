@@ -1,21 +1,21 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useState} from 'react';
 
+import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
-import {GlobalContext} from 'contexts/GlobalContext';
 
-import RichTextEditor from 'atoms/RichTextEditor';
+import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
 import Selector from 'atoms/Form/Selector';
-import Buttons from 'atoms/Buttons';
-import {graphqlOperation, API} from 'aws-amplify';
+import RichTextEditor from 'atoms/RichTextEditor';
+import {API, graphqlOperation} from 'aws-amplify';
 import * as customMutations from 'customGraphql/customMutations';
 
 const periodOptions = [
-  {id: 1, name: '1'},
-  {id: 2, name: '2'},
-  {id: 3, name: '3'},
-  {id: 4, name: '4'},
-  {id: 5, name: '5'}
+  {id: 1, label: '1', value: '1'},
+  {id: 2, label: '2', value: '2'},
+  {id: 3, label: '3', value: '3'},
+  {id: 4, label: '4', value: '4'},
+  {id: 5, label: '5', value: '5'}
 ];
 
 interface FormDataInterface {
@@ -34,8 +34,8 @@ interface LessonSummaryFormInterface {
 const LessonSummaryForm = (props: LessonSummaryFormInterface) => {
   const {formData, setFormData, lessonId} = props;
 
-  const {clientKey, userLanguage} = useContext(GlobalContext);
-  const {AddNewLessonFormDict, LessonBuilderDict} = useDictionary(clientKey);
+  const {userLanguage} = useGlobalContext();
+  const {AddNewLessonFormDict, LessonBuilderDict} = useDictionary();
 
   const [loading, setLoading] = useState(false);
 
@@ -49,9 +49,7 @@ const LessonSummaryForm = (props: LessonSummaryFormInterface) => {
         notes: formData.notes,
         duration: Number(formData.duration)
       };
-      const res: any = await API.graphql(
-        graphqlOperation(customMutations.updateUniversalLesson, {input})
-      );
+      await API.graphql(graphqlOperation(customMutations.updateUniversalLesson, {input}));
     } catch (error) {
       console.error(error.message);
       console.log('error saving data');
@@ -68,25 +66,16 @@ const LessonSummaryForm = (props: LessonSummaryFormInterface) => {
       ...prevFormData,
       [name]: value
     }));
-    // setValidation((prevValidation) => ({
-    //   ...prevValidation,
-    //   [name]: '',
-    // }));
   };
 
-  const onSelectOption = (_: any, name: string) => {
+  const onSelectOption = (name: string) => {
     setFormData((prevFormData) => ({
       ...prevFormData,
       duration: name
     }));
   };
 
-  const onEditorStateChange = (
-    html: string,
-    text: string,
-    fieldHtml: string,
-    field: string
-  ) => {
+  const onEditorStateChange = (_: string, text: string, __: string, field: string) => {
     setFormData({
       ...formData,
       // [fieldHtml]: html,

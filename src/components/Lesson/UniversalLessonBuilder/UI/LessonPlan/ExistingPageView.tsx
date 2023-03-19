@@ -1,38 +1,34 @@
-import React, {useState, useContext, useEffect} from 'react';
-import {useHistory, useRouteMatch} from 'react-router';
-import {FaCopy} from 'react-icons/fa';
+import { useEffect, useState } from "react";
+import { useHistory, useRouteMatch } from "react-router";
 
-import Buttons from 'atoms/Buttons';
-import Tooltip from 'atoms/Tooltip';
+import Buttons from "atoms/Buttons";
 
-import {GlobalContext} from 'contexts/GlobalContext';
-import useDictionary from 'customHooks/dictionary';
-import {useQuery} from 'customHooks/urlParam';
-import PageTile from '../common/PageTile';
-import * as customMutations from 'customGraphql/customMutations';
-import * as customQueries from 'customGraphql/customQueries';
-import {graphqlOperation, API} from 'aws-amplify';
-import {ILessonPlan} from './LessonPlan';
-import {v4 as uuidV4} from 'uuid';
-import {UniversalLessonPage, UniversalLesson} from 'interfaces/UniversalLessonInterfaces';
-import {HiOutlineArrowRight} from 'react-icons/hi';
-import {MdTitle} from 'react-icons/md';
-import {ImFileEmpty} from 'react-icons/im';
-import {debounce} from 'lodash';
+import useAuth from "@customHooks/useAuth";
+import { API, graphqlOperation } from "aws-amplify";
+import { useGlobalContext } from "contexts/GlobalContext";
+import * as customMutations from "customGraphql/customMutations";
+import * as customQueries from "customGraphql/customQueries";
+import useDictionary from "customHooks/dictionary";
+import {
+  UniversalLesson,
+  UniversalLessonPage,
+} from "interfaces/UniversalLessonInterfaces";
+import { ImFileEmpty } from "react-icons/im";
+import { v4 as uuidV4 } from "uuid";
+import { ILessonPlan } from "./LessonPlan";
 
-const ExistingPageView = ({addNewPageHandler, universalLessonDetails}: ILessonPlan) => {
+const ExistingPageView = ({
+  addNewPageHandler,
+  universalLessonDetails,
+}: ILessonPlan) => {
   const history = useHistory();
-  const {
-    clientKey,
-    state: {
-      user: {isSuperAdmin}
-    },
-    userLanguage
-  } = useContext(GlobalContext);
+  const { userLanguage } = useGlobalContext();
 
-  const {LessonBuilderDict} = useDictionary(clientKey);
-  const [copiedPageId, setCopiedPageId] = useState<string>('');
-  const params = useQuery(location.search);
+  const { LessonBuilderDict } = useDictionary();
+  const [copiedPageId, setCopiedPageId] = useState<string>("");
+
+  const { isSuperAdmin } = useAuth();
+
   // const lessonId = params.get('lessonId');
   const route: any = useRouteMatch();
 
@@ -51,7 +47,7 @@ const ExistingPageView = ({addNewPageHandler, universalLessonDetails}: ILessonPl
         graphqlOperation(customQueries.listUniversalLessons)
       );
       if (!fetchAllList) {
-        throw new Error('fail!');
+        throw new Error("fail!");
       } else {
         const data = fetchAllList?.data?.listUniversalLessons.items;
 
@@ -77,19 +73,19 @@ const ExistingPageView = ({addNewPageHandler, universalLessonDetails}: ILessonPl
           ...pages,
           {
             id: uuidV4().toString(),
-            title: currentPage.title,
-            label: currentPage.label,
-            description: currentPage.description,
-            pageContent: currentPage.pageContent || []
-          }
-        ]
+            title: currentPage?.title,
+            label: currentPage?.label,
+            description: currentPage?.description,
+            pageContent: currentPage?.pageContent || [],
+          },
+        ],
       };
-      const result = await API.graphql(
-        graphqlOperation(customMutations.updateUniversalLesson, {input})
+      await API.graphql(
+        graphqlOperation(customMutations.updateUniversalLesson, { input })
       );
     } catch (error) {
       console.error(error.message);
-      console.log('Error adding existing_page');
+      console.log("Error adding existing_page");
     }
   };
 
@@ -101,19 +97,22 @@ const ExistingPageView = ({addNewPageHandler, universalLessonDetails}: ILessonPl
       id,
       pageContent:
         copiedPageId.length > 0
-          ? currentPage.pageContent.map((part: any, partIndex: number) => ({
+          ? currentPage?.pageContent?.map((part: any, partIndex: number) => ({
               ...part,
               id: `${id}_part_${partIndex}`,
-              partContent: part.partContent.map((content: any, contentIndex: number) => ({
-                ...content,
-                id: `${id}_part_${partIndex}_${content.type}_${
-                  part.partContent.filter(
-                    (c: any, i: number) => c.type === content.type && i < contentIndex
-                  ).length
-                }`
-              }))
+              partContent: part.partContent.map(
+                (content: any, contentIndex: number) => ({
+                  ...content,
+                  id: `${id}_part_${partIndex}_${content.type}_${
+                    part.partContent.filter(
+                      (c: any, i: number) =>
+                        c.type === content.type && i < contentIndex
+                    ).length
+                  }`,
+                })
+              ),
             }))
-          : []
+          : [],
     });
     // add to database
     addExistingPageToDB();
@@ -128,30 +127,30 @@ const ExistingPageView = ({addNewPageHandler, universalLessonDetails}: ILessonPl
   };
 
   function classNames(...classes: any[]) {
-    return classes.filter(Boolean).join(' ');
+    return classes.filter(Boolean).join(" ");
   }
-  const Content = ({pages}: {pages: UniversalLessonPage[]}) => {
+  const Content = ({ pages }: { pages: UniversalLessonPage[] }) => {
     const colorList = [
       {
-        iconForeground: 'text-teal-700',
-        iconBackground: 'bg-teal-100'
+        iconForeground: "text-teal-700",
+        iconBackground: "bg-teal-100",
       },
       {
-        iconForeground: 'text-red-700',
-        iconBackground: 'bg-red-100'
+        iconForeground: "text-red-700",
+        iconBackground: "bg-red-100",
       },
       {
-        iconForeground: 'text-yellow-700',
-        iconBackground: 'bg-yellow-100'
+        iconForeground: "text-yellow-700",
+        iconBackground: "bg-yellow-100",
       },
       {
-        iconForeground: 'text-blue-700',
-        iconBackground: 'bg-blue-100'
+        iconForeground: "text-blue-700",
+        iconBackground: "bg-blue-100",
       },
       {
-        iconForeground: 'text-pink-700',
-        iconBackground: 'bg-pink-100'
-      }
+        iconForeground: "text-pink-700",
+        iconBackground: "bg-pink-100",
+      },
     ];
 
     return (
@@ -170,21 +169,25 @@ const ExistingPageView = ({addNewPageHandler, universalLessonDetails}: ILessonPl
               <div
                 onClick={() => {}}
                 key={content.id}
-                className={`relative form-button rounded-lg border border-gray-300 bg-white px-6 py-5 shadow-sm flex items-center space-x-3 hover:${pallete.iconBackground} transition-all focus-within:ring-2`}>
+                className={`relative form-button rounded-lg border border-gray-300 bg-white px-6 py-5 shadow-sm flex items-center space-x-3 hover:${pallete.iconBackground} transition-all focus-within:ring-2`}
+              >
                 <span
                   className={classNames(
                     pallete.iconBackground,
                     pallete.iconForeground,
-                    'rounded-lg inline-flex p-3 w-auto'
-                  )}>
+                    "rounded-lg inline-flex p-3 w-auto"
+                  )}
+                >
                   <ImFileEmpty className="h-6 w-6" aria-hidden="true" />
                 </span>
                 <div className="flex-1 min-w-0 flex items-center justify-between">
                   <a href="#" className="focus:outline-none">
                     <span className="absolute inset-0" aria-hidden="true" />
-                    <p className="text-sm font-medium text-gray-900">{content.title}</p>
+                    <p className="text-sm font-medium text-gray-900">
+                      {content.title}
+                    </p>
                     <p className="text-sm text-gray-500 truncate">
-                      {content?.description || '--'}
+                      {content?.description || "--"}
                     </p>
                   </a>
                 </div>
@@ -197,11 +200,12 @@ const ExistingPageView = ({addNewPageHandler, universalLessonDetails}: ILessonPl
                     }}
                     type="button"
                     className={`inline-flex items-center px-3 py-2 border-0 border-${
-                      pallete.iconBackground.split('-')[1]
+                      pallete.iconBackground.split("-")[1]
                     }-300 shadow-sm text-sm leading-4 font-medium rounded-md ${
                       pallete.iconForeground
-                    } bg-white transition-all duration-300 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}>
-                    {copiedPageId === content.id ? 'Copied' : 'Copy'}
+                    } bg-white transition-all duration-300 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}
+                  >
+                    {copiedPageId === content.id ? "Copied" : "Copy"}
                   </button>
                 </div>
               </div>
@@ -228,7 +232,9 @@ const ExistingPageView = ({addNewPageHandler, universalLessonDetails}: ILessonPl
         </div>
         <div className="px-4">
           <div className={`w-full bg-gray-200 rounded py-2`}>
-            <p className={`px-2 text-left block text-xs font-medium text-gray-700`}>
+            <p
+              className={`px-2 text-left block text-xs font-medium text-gray-700`}
+            >
               This lesson
             </p>
             <Content pages={pages} />
@@ -287,7 +293,9 @@ const ExistingPageView = ({addNewPageHandler, universalLessonDetails}: ILessonPl
 
             {otherPages && otherPages.length > 0 && (
               <>
-                <p className={`px-2 text-left block text-xs font-medium text-gray-700`}>
+                <p
+                  className={`px-2 text-left block text-xs font-medium text-gray-700`}
+                >
                   Other lessons
                 </p>
                 <Content pages={otherPages} />
@@ -299,7 +307,7 @@ const ExistingPageView = ({addNewPageHandler, universalLessonDetails}: ILessonPl
               <Buttons
                 btnClass="py-1 px-8 text-xs ml-2"
                 disabled={copiedPageId.length === 0}
-                label={LessonBuilderDict[userLanguage]['BUTTON']['SAVE']}
+                label={LessonBuilderDict[userLanguage]["BUTTON"]["SAVE"]}
                 type="submit"
                 onClick={addExistingPage}
               />

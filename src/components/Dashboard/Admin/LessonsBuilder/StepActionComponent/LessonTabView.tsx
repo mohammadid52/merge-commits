@@ -2,19 +2,18 @@ import BreadCrums from 'atoms/BreadCrums';
 import Buttons from 'atoms/Buttons';
 import Loader from 'atoms/Loader';
 import {API, graphqlOperation} from 'aws-amplify';
-import {GlobalContext} from 'contexts/GlobalContext';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
 import * as customQueries from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import {useQuery} from 'customHooks/urlParam';
-import React, {useContext, useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {FaChartLine, FaEdit, FaQuestionCircle, FaUnity} from 'react-icons/fa';
 import {IoArrowUndoCircleOutline, IoCardSharp} from 'react-icons/io5';
 import {useHistory, useParams, useRouteMatch} from 'react-router-dom';
 import {languageList} from 'utilities/staticData';
-// import Tooltip from 'atoms/Tooltip';
+
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
-import {getDictionaries} from '@graphql/functions';
 import UnderlinedTabs, {ITabElementProps} from 'atoms/UnderlinedTabs';
 import LessonMeasurements from './LessonMeasurements';
 import LessonPlansList from './LessonPlansList';
@@ -28,36 +27,34 @@ interface ILessonTabViewProps {
 const LessonTabView = ({designersList}: ILessonTabViewProps) => {
   const match = useRouteMatch();
   const history = useHistory();
-  const {
-    setUniversalLessonDetails,
-    universalLessonDetails,
-    activeTab,
-    setActiveTab
-  } = useULBContext();
+  const {setUniversalLessonDetails, universalLessonDetails, activeTab, setActiveTab} =
+    useULBContext();
 
   const [loading, setLoading] = useState<boolean>(false);
   const [lessonData, setLessonData] = useState<any>();
-  const [selectedDesigners, setSelectedDesigners] = useState([]);
+  const [selectedDesigners, setSelectedDesigners] = useState<any[]>([]);
 
-  const {clientKey, userLanguage, scanLessonAndFindComplicatedWord} = useContext(
-    GlobalContext
-  );
-  const {BreadcrumsTitles, LessonBuilderDict, LessonEditDict} = useDictionary(clientKey);
+  const {userLanguage, scanLessonAndFindComplicatedWord} = useGlobalContext();
+  const {BreadcrumsTitles, LessonBuilderDict, LessonEditDict} = useDictionary();
 
   const params = useQuery(location.search);
   const {lessonId}: any = useParams();
   const tab = params.get('tab');
 
   const breadCrumsList = [
-    {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
+    {
+      title: BreadcrumsTitles[userLanguage]['HOME'],
+      href: '/dashboard',
+      last: false
+    },
     {
       title: BreadcrumsTitles[userLanguage]['LESSONS'],
-      url: '/dashboard/lesson-builder',
+      href: '/dashboard/lesson-builder',
       last: false
     },
     {
       title: BreadcrumsTitles[userLanguage]['LESSONPLANBUILDER'],
-      url: `${match.url}?${lessonId ? `lessonId=${lessonId}}` : ``}`,
+      href: `${match.url}?${lessonId ? `lessonId=${lessonId}}` : ``}`,
       last: true
     }
   ];
@@ -71,13 +68,11 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
       );
       const savedData = result.data.getUniversalLesson;
 
-      const dictionaries = await getDictionaries();
-
-      const updatedLessonPlan = scanLessonAndFindComplicatedWord(
-        savedData.lessonPlan,
-        dictionaries
-      );
-      setUniversalLessonDetails({...savedData, lessonPlan: updatedLessonPlan});
+      const updatedLessonPlan = scanLessonAndFindComplicatedWord(savedData.lessonPlan);
+      setUniversalLessonDetails({
+        ...savedData,
+        lessonPlan: updatedLessonPlan
+      });
       setLessonData(savedData);
 
       const designers = designersList.filter((item: any) =>
@@ -121,8 +116,13 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
     history.push(`${match.url}?lessonId=${lessonId}&tab=${tab}`);
   };
 
-  const {institution = {}, language = [], objectives = [], purpose = '', title = ''} =
-    lessonData || {};
+  const {
+    institution = {},
+    language = [],
+    objectives = [],
+    purpose = '',
+    title = ''
+  } = lessonData || {};
 
   const currentTabComp = (activeTab: string) => {
     switch (activeTab) {
@@ -164,6 +164,15 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
               </Tooltip>
             </div> */}
           </div>
+        );
+
+      default:
+        return (
+          <LessonSummaryForm
+            lessonId={lessonId}
+            setFormData={setLessonData}
+            formData={lessonData}
+          />
         );
     }
   };

@@ -1,8 +1,9 @@
 import ErrorBoundary from '@components/Error/ErrorBoundary';
+import {Empty} from 'antd';
 import {isEmpty} from 'lodash';
 import camelCase from 'lodash/camelCase';
 import map from 'lodash/map';
-import React, {forwardRef} from 'react';
+import {forwardRef} from 'react';
 import {DragDropContext, Draggable, Droppable} from 'react-beautiful-dnd';
 import '../../style/_table.scss';
 import ListBottomBar, {ListBottomBar as IListBottomBar} from './ListBottomBar';
@@ -49,6 +50,7 @@ interface IDroppableList {
   dataList: IDataListItem[];
   customWidth?: {[key: string]: any};
   headers: string[];
+  // @ts-ignore
   droppableConfig: IConfig['dataList']['droppable'];
 }
 
@@ -178,7 +180,7 @@ const ListItem = forwardRef<any, IListItem>(
           let lowerHeader = camelCase(header.toLowerCase());
 
           let _item = item[lowerHeader];
-          const _customWidth = customWidth[lowerHeader];
+          const _customWidth = customWidth?.[lowerHeader];
           const onClick = item['onClick'];
 
           const className = `${
@@ -225,10 +227,10 @@ const Table = ({
   config = {dark: false, dataList: {customWidth: {}, pattern: 'striped'}}
 }: {
   config?: IConfig;
-  headers: string[];
+  headers: (string | false)[];
   dataList: IDataListItem[];
 }) => {
-  const _headers = headers.filter(Boolean);
+  const _headers = headers.filter(Boolean) as string[];
 
   const dataListConfig = config.dataList || {};
   const droppableConfig = dataListConfig.droppable;
@@ -252,7 +254,7 @@ const Table = ({
             <div
               className={`overflow-x-auto 2xl:overflow-hidden border-0 ${
                 config?.dark ? 'border-gray-700' : 'border-gray-200'
-              } sm:rounded-lg`}>
+              } `}>
               <table className="min-w-full divide-y-0 divide-gray-700">
                 <thead className={`${config?.headers?.bgColor || 'theme-bg'} `}>
                   <tr className="flex justify-between">
@@ -286,7 +288,7 @@ const Table = ({
                     dataListConfig?.maxHeight || 'max-h-88 '
                   } overflow-y-auto   ${config.dark ? 'dark-scroll' : ''} `}>
                   {dataListConfig.loading ? (
-                    [0, 1, 2, 3].map((item: any, idx: number) => (
+                    [0, 1, 2, 3].map((item: any) => (
                       <LoadingItem
                         idx={item}
                         key={item}
@@ -296,9 +298,9 @@ const Table = ({
                       />
                     ))
                   ) : dataList.length === 0 ? (
-                    <p className="text-center text-base w-full h-24 text-gray-500 flex items-center justify-center">
-                      {dataListConfig.emptyText}
-                    </p>
+                    <div className="my-4">
+                      <Empty description={dataListConfig.emptyText} />
+                    </div>
                   ) : goodForDroppable ? (
                     <DroppableList
                       droppableConfig={droppableConfig}
@@ -323,7 +325,10 @@ const Table = ({
               </table>
             </div>
 
-            {showPagination && <ListBottomBar {...paginationConfig?.allAsProps} />}
+            {showPagination && (
+              // @ts-ignore
+              <ListBottomBar {...paginationConfig?.allAsProps} />
+            )}
           </div>
         </div>
       </div>

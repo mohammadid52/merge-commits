@@ -1,33 +1,29 @@
-import API, {graphqlOperation} from '@aws-amplify/api';
 import BreadCrums from 'atoms/BreadCrums';
 import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
 import TextArea from 'atoms/Form/TextArea';
 import PageWrapper from 'atoms/PageWrapper';
-import React, {useContext, useEffect, useState} from 'react';
+import {API, graphqlOperation} from 'aws-amplify';
+import {useEffect, useState} from 'react';
 import {IoArrowUndoCircleOutline} from 'react-icons/io5';
 import {useHistory, useParams} from 'react-router';
 
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
-import {GlobalContext} from 'contexts/GlobalContext';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import * as customMutations from 'customGraphql/customMutations';
 import * as customQueries from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
-import * as queries from 'graphql/queries';
 
-interface EditMeasurementProps {}
-
-const EditMeasurement = (props: EditMeasurementProps) => {
-  const {} = props;
+const EditMeasurement = () => {
   const urlParams: any = useParams();
   const curricularId = urlParams.curricularId;
   const measurementId = urlParams.id;
   const history = useHistory();
   const [loading, setLoading] = useState(false);
   const [validation, setValidation] = useState({name: '', topic: ''});
-  const [topics, setTopics] = useState([]);
-  const {theme, clientKey, userLanguage} = useContext(GlobalContext);
-  const {EditMeasurementDict, BreadcrumsTitles} = useDictionary(clientKey);
+
+  const {userLanguage} = useGlobalContext();
+  const {EditMeasurementDict, BreadcrumsTitles} = useDictionary();
   const [measurement, setMeasurement] = useState({
     id: measurementId,
     name: '',
@@ -37,16 +33,20 @@ const EditMeasurement = (props: EditMeasurementProps) => {
   });
 
   const breadCrumsList = [
-    {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
+    {
+      title: BreadcrumsTitles[userLanguage]['HOME'],
+      href: '/dashboard',
+      last: false
+    },
     {
       title: measurement.topic.value,
-      url: `/dashboard/manage-institutions/:instituteID/curricular?id=${curricularId}`,
+      href: `/dashboard/manage-institutions/:instituteID/curricular?id=${curricularId}`,
       last: false,
       goBack: true
     },
     {
       title: BreadcrumsTitles[userLanguage]['EditMeasurement'],
-      url: `/dashboard/curricular/${curricularId}/measurement/edit/${measurementId}'}`,
+      href: `/dashboard/curricular/${curricularId}/measurement/edit/${measurementId}'}`,
       last: true
     }
   ];
@@ -61,28 +61,6 @@ const EditMeasurement = (props: EditMeasurementProps) => {
     }
   };
 
-  const selectTopic = (val: string, name: string, id: string) => {
-    if (validation.topic) {
-      setValidation({...validation, topic: ''});
-    }
-    setMeasurement({...measurement, topic: {...measurement.topic, id, name, value: val}});
-  };
-
-  const fetchTopics = async () => {
-    let list: any = await API.graphql(
-      graphqlOperation(queries.listTopics, {
-        filter: {curriculumID: {eq: curricularId}}
-      })
-    );
-    list = list.data.listTopics?.items || [];
-    list = list.map((item: any) => ({
-      id: item.id,
-      name: item.name,
-      value: item.name
-    }));
-    setTopics(list);
-  };
-
   const fetchMeasurement = async () => {
     setLoading(true);
     let item: any = await API.graphql(
@@ -93,7 +71,11 @@ const EditMeasurement = (props: EditMeasurementProps) => {
       setMeasurement({
         ...measurement,
         name: item.name,
-        topic: {id: item.topic.id, name: item.topic.name, value: item.topic.name},
+        topic: {
+          id: item.topic.id,
+          name: item.topic.name,
+          value: item.topic.name
+        },
         criteria: item.criteria
       });
       setLoading(false);
@@ -108,7 +90,7 @@ const EditMeasurement = (props: EditMeasurementProps) => {
     const msgs = validation;
     if (!measurement.name.length) {
       isValid = false;
-      msgs.name = EditMeasurementDict[userLanguage]['messages']['namerequired'];
+      msgs.name = EditMeasurementDict[userLanguage]['messages']['namerequierd'];
     } else {
       msgs.name = '';
     }
@@ -145,7 +127,6 @@ const EditMeasurement = (props: EditMeasurementProps) => {
   };
 
   useEffect(() => {
-    fetchTopics();
     fetchMeasurement();
   }, []);
 

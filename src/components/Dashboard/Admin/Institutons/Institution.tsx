@@ -1,16 +1,17 @@
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import ErrorBoundary from '@components/Error/ErrorBoundary';
 import useAuth from '@customHooks/useAuth';
 import {logError} from '@graphql/functions';
+import {InstInfo} from '@interfaces/InstitutionInterface';
 import {getAsset} from 'assets';
 import BreadcrumbsWithBanner from 'atoms/BreadcrumbsWithBanner';
 import PageWrapper from 'atoms/PageWrapper';
-import {GlobalContext} from 'contexts/GlobalContext';
+import {API, graphqlOperation} from 'aws-amplify';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
 import queryString from 'query-string';
-import React, {useContext, useEffect, useState} from 'react';
-import {Route, Switch, useLocation, useParams, useRouteMatch} from 'react-router-dom';
-import InstitutionInfo from './InstitutionInfo';
+import {lazy, useEffect, useState} from 'react';
+import {Route, Switch, useLocation, useRouteMatch} from 'react-router-dom';
+const InstitutionInfo = lazy(() => import('dashboard/Admin/Institutons/InstitutionInfo'));
 
 interface InstitutionProps {
   tabProps?: any;
@@ -37,7 +38,12 @@ export interface InstitutionInfo {
   classes?: {items: {name?: string; id: string}[]};
   curricula?: {items: {name?: string; id: string}[]};
   serviceProviders?: {
-    items: {id: string; providerID: string; status: string; providerInstitution?: any}[];
+    items: {
+      id: string;
+      providerID: string;
+      status: string;
+      providerInstitution?: any;
+    }[];
   };
 }
 
@@ -46,10 +52,23 @@ export interface InstitutionInfo {
  * Responsible for fetching institution data and populating the component
  * with data from the API
  */
+
+interface IInstitution extends InstInfo {
+  institutionTypeId: string;
+  institutionType?: string | null;
+  contact: any;
+  createdAt?: string;
+  updatedAt?: string;
+  isZoiq?: boolean;
+}
+
 const Institution = (props: InstitutionProps) => {
-  const {institutionId}: any = useParams();
+  // const {institutionId}: any = useParams();
+
+  const {instId: institutionId} = useAuth();
+
   const [fetchingDetails, setFetchingDetails] = useState(false);
-  const [institutionData, setInstitutionData] = useState({
+  const [institutionData, setInstitutionData] = useState<IInstitution>({
     id: institutionId,
     name: '',
     institutionTypeId: '',
@@ -60,7 +79,7 @@ const Institution = (props: InstitutionProps) => {
     zip: '',
     contact: {name: '', email: '', phone: ''},
     website: '',
-    type: null,
+    type: '',
     image: '',
     createdAt: '',
     updatedAt: '',
@@ -79,7 +98,7 @@ const Institution = (props: InstitutionProps) => {
   const location = useLocation();
 
   const urlQueryParams = queryString.parse(location.search);
-  const {clientKey} = useContext(GlobalContext);
+  const {clientKey} = useGlobalContext();
 
   const bannerImage = getAsset(clientKey, 'dashboardBanner1');
 
@@ -106,7 +125,9 @@ const Institution = (props: InstitutionProps) => {
            * DO NOT change the ' institutionId ' unless you also change the url
            * in ' InstitutionRow.tsx '
            */
-          graphqlOperation(customQueries.GetInstitutionDetails, {id: institutionId})
+          graphqlOperation(customQueries.GetInstitutionDetails, {
+            id: institutionId
+          })
         );
         if (!fetchInstitutionData) {
           throw new Error('getInstitutionData() fetch : fail!');
@@ -130,12 +151,15 @@ const Institution = (props: InstitutionProps) => {
 
   useEffect(() => {
     const {tab} = urlQueryParams;
-    props.tabProps.setTabsData({...props.tabProps.tabsData, inst: tab || 'staff'});
+    props.tabProps.setTabsData({
+      ...props.tabProps.tabsData,
+      inst: tab || 'staff'
+    });
   }, [urlQueryParams.tab]);
 
   const updateServiceProviders = (item: any) => {
     const instData = institutionData;
-    instData.serviceProviders.items.push(item);
+    instData?.serviceProviders?.items.push(item);
     setInstitutionData(instData);
   };
 

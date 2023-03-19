@@ -1,13 +1,17 @@
-import React, {useState, useContext, useEffect, Fragment} from 'react';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
+import React, {Fragment, useState} from 'react';
+import {DragDropContext, Draggable, Droppable} from 'react-beautiful-dnd';
 import {IoCaretDownCircleOutline, IoCaretUpCircleOutline} from 'react-icons/io5';
-import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
 
-import {GlobalContext} from 'contexts/GlobalContext';
+import {useGlobalContext} from '@contexts/GlobalContext';
 import {getAsset} from 'assets';
 
 interface DragableAccordionProps {
-  titleList: {id: string; title: string; subtitle?: string; content: React.ReactNode}[];
+  titleList: {
+    id: string;
+    title: string;
+    subtitle?: string;
+    content: React.ReactNode;
+  }[];
   showSequence?: boolean;
   showEdit?: boolean;
   onItemEdit?: (id: string) => void;
@@ -15,9 +19,9 @@ interface DragableAccordionProps {
 }
 
 const DragableAccordion = (props: DragableAccordionProps) => {
-  const {theme, clientKey} = useContext(GlobalContext);
+  const {theme, clientKey} = useGlobalContext();
   const themeColor = getAsset(clientKey, 'themeClassName');
-  const {titleList, showSequence, showEdit, onItemEdit, onDragEnd} = props;
+  const {titleList, showEdit, onItemEdit, onDragEnd} = props;
   const [selectedItem, setSelectedItem] = useState('');
 
   const changeView = (step: string) => {
@@ -29,14 +33,14 @@ const DragableAccordion = (props: DragableAccordionProps) => {
   };
 
   const onItemDrag = (result: any) => {
-    onDragEnd(result);
+    onDragEnd?.(result);
   };
 
   return (
     <div className="bg-white mx-auto  border-0 border-gray-200 rounded-xl">
       <DragDropContext onDragEnd={onItemDrag}>
         <Droppable droppableId="droppable">
-          {(provided, snapshot) => (
+          {(provided) => (
             <div {...provided.droppableProps} ref={provided.innerRef}>
               <ul className="rounded-xl">
                 {titleList.map(
@@ -56,7 +60,7 @@ const DragableAccordion = (props: DragableAccordionProps) => {
                           selectedItem === item.id ? 'rounded-lg' : ''
                         }`}>
                         <Draggable key={item.id} draggableId={item.id} index={index}>
-                          {(provided, snapshot) => (
+                          {(provided) => (
                             <div
                               ref={provided.innerRef}
                               {...provided.draggableProps}
@@ -98,7 +102,7 @@ const DragableAccordion = (props: DragableAccordionProps) => {
                                   {showEdit && (
                                     <div
                                       className={`w-auto text-xs md:text-base mx-16 cursor-pointer ${theme.textColor[themeColor]} `}>
-                                      <span onClick={() => onItemEdit(item.id)}>
+                                      <span onClick={() => onItemEdit?.(item.id)}>
                                         Edit
                                       </span>
                                     </div>
@@ -106,17 +110,17 @@ const DragableAccordion = (props: DragableAccordionProps) => {
                                   <span
                                     className="w-8 h-8 flex items-center cursor-pointer"
                                     onClick={() => changeView(item.id)}>
-                                    <IconContext.Provider
-                                      value={{
-                                        size: '2rem',
-                                        color: theme.iconColor[themeColor]
-                                      }}>
-                                      {selectedItem === item.id ? (
-                                        <IoCaretUpCircleOutline />
-                                      ) : (
-                                        <IoCaretDownCircleOutline />
-                                      )}
-                                    </IconContext.Provider>
+                                    {selectedItem === item.id ? (
+                                      <IoCaretUpCircleOutline
+                                        className="theme-text"
+                                        size={'2rem'}
+                                      />
+                                    ) : (
+                                      <IoCaretDownCircleOutline
+                                        className="theme-text"
+                                        size={'2rem'}
+                                      />
+                                    )}
                                   </span>
                                 </div>
                               </div>

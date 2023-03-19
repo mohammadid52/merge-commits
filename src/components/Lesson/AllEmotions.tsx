@@ -172,7 +172,7 @@ const emotionData = {
   }
 };
 
-const AllEmotions = (): React.ReactElement => {
+const AllEmotions = () => {
   const {authId, isStudent} = useAuth();
 
   const router: any = useRouteMatch();
@@ -200,7 +200,7 @@ const AllEmotions = (): React.ReactElement => {
   const pageColumn = {
     id: nanoid(24),
     value: 'Page',
-    options: data.map((em: any) => {
+    options: data.map((em) => {
       const pageId: number = 0;
       // Number(em.sentimentType) >= 0 ? Number(em.sentimentType) : null;
 
@@ -208,7 +208,7 @@ const AllEmotions = (): React.ReactElement => {
         pageId !== null
           ? !em?.lesson || isStudent
             ? PAGES[pageId].title
-            : em?.lesson?.lessonPlan[pageId]?.label
+            : em?.lesson?.lessonPlan?.[pageId]?.label
           : 'unknown';
       return {
         id: nanoid(24),
@@ -221,29 +221,33 @@ const AllEmotions = (): React.ReactElement => {
 
   function addEmojiToName(names: string[]) {
     return names.map((name, idx) =>
-      _keys.map((n) => {
-        // @ts-ignore
-        if (emotionData[n].list.includes(name)) {
+      _keys
+        .map((n) => {
           // @ts-ignore
-          return `${emotionData[n].emoji}${name}${idx !== names.length - 1 ? ', ' : ''}`;
-        }
-      })
+          if (emotionData[n].list.includes(name)) {
+            // @ts-ignore
+            return `${emotionData[n].emoji}${name}${
+              idx !== names.length - 1 ? ', ' : ''
+            }`;
+          }
+          return null;
+        })
+        .filter(Boolean)
     );
   }
 
   const nameColumn = {
     id: nanoid(24),
     value: 'Emotion Name',
-    options: data
-      .map((em: any) => {
-        if (em) {
-          return {
-            id: nanoid(24),
-            text: em?.sentimentName?.length > 0 ? addEmojiToName(em?.sentimentName) : ''
-          };
-        }
-      })
-      .filter(Boolean)
+    options: data.map((em) => {
+      return {
+        id: nanoid(24),
+        text:
+          em?.sentimentName && em?.sentimentName?.length > 0
+            ? addEmojiToName(em.sentimentName)
+            : ''
+      };
+    })
   };
 
   const timeColumn = {
@@ -260,7 +264,7 @@ const AllEmotions = (): React.ReactElement => {
 
   return data && data.length > 0 ? (
     <div
-      className={`w-full py-2 px-4  ${themeTextColor} mt-2 rounded-xl bg-component-dark border-0 border-gray-700  ${themePlaceholderColor}`}>
+      className={`w-full py-2 px-4  ${themeTextColor} mt-2 rounded-xl dark-blue border-0 border-gray-700  ${themePlaceholderColor}`}>
       {isLoading ? (
         <div className="flex items-center justify-center h-32">
           <Loader color="#fff" />
@@ -273,7 +277,7 @@ const AllEmotions = (): React.ReactElement => {
       )}
     </div>
   ) : (
-    <div />
+    <div className="hidden w-auto" />
   );
 };
 

@@ -1,10 +1,8 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import React, {Fragment, useContext, useEffect, useState} from 'react';
-import {IconContext} from 'react-icons';
+import {Fragment, useEffect, useState} from 'react';
 import {HiPencil} from 'react-icons/hi';
 import {IoIosAdd} from 'react-icons/io';
 import {IoAdd} from 'react-icons/io5';
-// import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
 
 import {stringToHslColor} from 'utilities/strings';
 
@@ -14,8 +12,7 @@ import Modal from 'atoms/Modal';
 import PageWrapper from 'atoms/PageWrapper';
 import ModalPopUp from 'molecules/ModalPopUp';
 
-import {getAsset} from 'assets';
-import {GlobalContext} from 'contexts/GlobalContext';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
 import * as mutations from 'graphql/mutations';
@@ -51,8 +48,8 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
   const [deleting, setDeleting] = useState(false);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedObjectiveData, setSelectedObjectiveData] = useState<any>({});
-  const [learnings, setLearnings] = useState([]);
-  const [learningIds, setLearningIds] = useState([]);
+  const [learnings, setLearnings] = useState<any[]>([]);
+  const [learningIds, setLearningIds] = useState<any[]>([]);
   const [openMeasurementModal, setOpenMeasurementModal] = useState(false);
   const [selectedRubricData, setSelectedRubricData] = useState<any>({});
   const [openTopicModal, setTopicModal] = useState(false);
@@ -63,28 +60,18 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
     id: '',
     message: "Are you sure? This can't be undone."
   });
-  const {clientKey, userLanguage, theme} = useContext(GlobalContext);
-  const themeColor = getAsset(clientKey, 'themeClassName');
-  const {
-    AddMeasurementDict,
-    AddTopicDict,
-    LEARINGOBJECTIVEDICT,
-    TOPICLISTDICT
-  } = useDictionary(clientKey);
+  const {userLanguage, theme} = useGlobalContext();
+
+  const {AddMeasurementDict, AddTopicDict, LEARINGOBJECTIVEDICT, TOPICLISTDICT} =
+    useDictionary();
 
   const createLearningObjective = () => {
     setIsFormOpen(true);
     setSelectedObjectiveData({});
-    // history.push(
-    //   `/dashboard/manage-institutions/${institutionId}/curricular/${curricularId}/learning-objective/add`
-    // );
   };
   const editLearningObj = (learningData: any) => {
     setIsFormOpen(true);
     setSelectedObjectiveData(learningData);
-    // history.push(
-    //   `/dashboard/manage-institutions/${institutionId}/curricular/${curricularId}/learning-objective/edit/${learningId}`
-    // );
   };
 
   const handleCancel = () => {
@@ -142,12 +129,7 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
 
     if (listLength && !sequenceLength) {
       let learningsID = list.map((item: {id: string}) => item.id);
-      let seqItem: any = await API.graphql(
-        graphqlOperation(mutations.createCSequences, {
-          input: {id: `l_${curricularId}`, sequence: learningsID}
-        })
-      );
-      seqItem = seqItem.data.createCSequences;
+
       setLearningIds(learningsID);
     }
     setLoading(false);
@@ -162,17 +144,11 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
     setSelectedTopicData({
       learningObjectiveID
     });
-    // history.push(
-    //   `/dashboard/manage-institutions/curricular/${curricularId}/topic/add?lid=${learningId}`
-    // );
   };
 
   const editCurrentTopic = (topicData: any) => {
     setTopicModal(true);
     setSelectedTopicData(topicData);
-    // history.push(
-    //   `/dashboard/manage-institutions/curricular/${curricularId}/topic/edit/${id}`
-    // );
   };
 
   const onTopicModalClose = () => {
@@ -186,9 +162,6 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
       topicId,
       objectiveId
     });
-    // history.push(
-    //   `/dashboard/manage-institutions/curricular/${curricularId}/measurement/add?tid=${topicID}`
-    // );
   };
 
   const editCurrentMeasurement = (rubricData: any, objectiveId: string) => {
@@ -198,9 +171,6 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
       topicId: rubricData.topicID,
       objectiveId
     });
-    // history.push(
-    //   `/dashboard/manage-institutions/curricular/${curricularId}/measurement/edit/${id}`
-    // );
   };
 
   const onMeasurementClose = () => {
@@ -556,12 +526,7 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
                                             createNewMeasurement(topic.id, learning.id)
                                           }>
                                           <span className="w-auto flex items-center mr-1">
-                                            <IconContext.Provider
-                                              value={{
-                                                color: theme.iconColor[themeColor]
-                                              }}>
-                                              <IoAdd className="w-4 h-4" />
-                                            </IconContext.Provider>
+                                            <IoAdd className="theme-text" />
                                           </span>
                                           Add new measurement
                                         </div>
@@ -574,13 +539,7 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
                                             createNewMeasurement(topic.id, learning.id)
                                           }>
                                           <span className="w-6 h-6 flex items-center mr-4">
-                                            <IconContext.Provider
-                                              value={{
-                                                size: '1.5rem',
-                                                color: 'darkgray'
-                                              }}>
-                                              <IoAdd />
-                                            </IconContext.Provider>
+                                            <IoAdd className="theme-text" />
                                           </span>
                                           Add measurement
                                         </div>
@@ -627,7 +586,6 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
                     // )}
                     // </Draggable>
                   ))}
-                  {/* {provided.placeholder} */}
                 </div>
                 {/* )} */}
                 {/* </Droppable>
@@ -662,47 +620,47 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
             </div>
           )}
         </PageWrapper>
-        {warnModal.show && (
-          <ModalPopUp
-            closeAction={onCancel}
-            saveAction={onSaveAction}
-            saveLabel="Yes"
-            cancelLabel="No"
-            loading={deleting}
-            message={warnModal.message}
+
+        <ModalPopUp
+          open={warnModal.show}
+          closeAction={onCancel}
+          saveAction={onSaveAction}
+          saveLabel="Yes"
+          cancelLabel="No"
+          loading={deleting}
+          message={warnModal.message}
+        />
+
+        <Modal
+          open={openMeasurementModal}
+          showHeader={true}
+          title={AddMeasurementDict[userLanguage]['title']}
+          showHeaderBorder={true}
+          showFooter={false}
+          closeAction={onMeasurementClose}>
+          <AddMeasurement
+            curricularId={curricularId}
+            onCancel={onMeasurementClose}
+            postMutation={postMeasurementChange}
+            rubricData={selectedRubricData}
+            topicId={selectedRubricData.topicId}
           />
-        )}
-        {openMeasurementModal && (
-          <Modal
-            showHeader={true}
-            title={AddMeasurementDict[userLanguage]['title']}
-            showHeaderBorder={true}
-            showFooter={false}
-            closeAction={onMeasurementClose}>
-            <AddMeasurement
-              curricularId={curricularId}
-              onCancel={onMeasurementClose}
-              postMutation={postMeasurementChange}
-              rubricData={selectedRubricData}
-              topicId={selectedRubricData.topicId}
-            />
-          </Modal>
-        )}
-        {openTopicModal && (
-          <Modal
-            showHeader={true}
-            title={AddTopicDict[userLanguage]['heading']}
-            showHeaderBorder={true}
-            showFooter={false}
-            closeAction={onTopicModalClose}>
-            <AddTopic
-              curricularId={curricularId}
-              onCancel={onTopicModalClose}
-              postMutation={postTopicChange}
-              topicData={selectedTopicData}
-            />
-          </Modal>
-        )}
+        </Modal>
+
+        <Modal
+          open={openTopicModal}
+          showHeader={true}
+          title={AddTopicDict[userLanguage]['heading']}
+          showHeaderBorder={true}
+          showFooter={false}
+          closeAction={onTopicModalClose}>
+          <AddTopic
+            curricularId={curricularId}
+            onCancel={onTopicModalClose}
+            postMutation={postTopicChange}
+            topicData={selectedTopicData}
+          />
+        </Modal>
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
-import {GlobalContext} from '@contexts/GlobalContext';
-import {logError} from '@graphql/functions';
-import React from 'react';
+import { GlobalContext } from "@contexts/GlobalContext";
+import { logError } from "@graphql/functions";
+import React from "react";
 
 /**
  * Basis for this error boundary shamelessly
@@ -16,6 +16,7 @@ interface PropsInterface {
   authId?: string;
   email?: string;
   componentName: string;
+  children?: React.ReactNode;
 }
 
 class ErrorBoundary extends React.Component<PropsInterface> {
@@ -23,51 +24,56 @@ class ErrorBoundary extends React.Component<PropsInterface> {
 
   public state = {
     hasError: false,
-    error: '',
-    info: ''
+    error: "",
+    info: "",
   };
 
   constructor(props: PropsInterface) {
     super(props);
     this.state = {
       hasError: false,
-      error: '',
-      info: ''
+      error: "",
+      info: "",
     };
   }
 
   public static getDerivedStateFromError() {
-    return {hasError: true};
+    return { hasError: true };
   }
 
   public componentDidCatch(error: Error, info: React.ErrorInfo) {
     this.setState({
       hasError: true,
       error: error,
-      info: info
+      info: info,
     });
   }
 
   public componentDidUpdate() {
-    const {authId, email} = this.context.state?.user;
+    let context: any = this?.context || { state: {} };
+    if (context && context?.state) {
+      const { authId, email } = context?.state?.user;
 
-    if (this.state.hasError) {
-      logError(
-        this.state.error.toString(),
-        {authId: authId, email: email},
-        this.props.componentName,
-        this.state.info
-      );
+      if (this.state.hasError) {
+        logError(
+          this.state.error.toString(),
+          { authId: authId, email: email },
+          this.props.componentName,
+          this.state.info
+        );
+      }
     }
   }
 
   public render() {
     if (this.state.hasError) {
       return (
-        this.props.fallback || <h1>Something went wrong - {this.props.componentName}</h1>
+        this.props.fallback || (
+          <h1>Something went wrong - {this.props.componentName}</h1>
+        )
       );
     } else {
-      return this.props.children || null;
+      return this?.props?.children || null;
     }
   }
 }

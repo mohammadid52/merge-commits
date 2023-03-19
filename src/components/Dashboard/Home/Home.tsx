@@ -1,11 +1,11 @@
 import ErrorBoundary from '@components/Error/ErrorBoundary';
+import useAuth from '@customHooks/useAuth';
 import {PersonStatus} from 'API';
 import {getAsset} from 'assets';
 import SectionTitleV3 from 'atoms/SectionTitleV3';
-import {GlobalContext} from 'contexts/GlobalContext';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
-import isEmpty from 'lodash/isEmpty';
-import React, {useContext, useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {setLocalStorageData} from 'utilities/localStorage';
 import {getImageFromS3} from 'utilities/services';
 import HeroBanner from '../../Header/HeroBanner';
@@ -20,7 +20,12 @@ export interface ModifiedListProps {
   name: any;
   teacherProfileImg: string;
   bannerImage: string;
-  teacher: {email: string; firstName: string; lastName: string; image: string};
+  teacher: {
+    email: string;
+    firstName: string;
+    lastName: string;
+    image: string;
+  };
   curricula: {
     items: {
       curriculum: {
@@ -35,27 +40,50 @@ export interface ModifiedListProps {
 }
 
 const Home = (props: ClassroomControlProps) => {
-  const {homeData, classList, handleRoomSelection, isTeacher, roomsLoading} = props;
+  const {roomsLoading, homeData = [], handleRoomSelection = () => {}} = props;
 
-  const {state, dispatch, userLanguage, clientKey} = useContext(GlobalContext);
+  const [classList, setClassList] = useState<any[]>([]);
+
+  const {user, isStudent} = useAuth();
+
+  const getRooms = () => {
+    let rooms = homeData.map(
+      (dataObj: {class: {name: any; room: any; students: any}}) => ({
+        name: dataObj?.class?.name,
+        room: dataObj?.class?.room,
+        students: dataObj?.class?.students
+      })
+    );
+
+    setClassList(rooms);
+  };
+
+  useEffect(() => {
+    if (homeData && classList.length === 0) {
+      getRooms();
+    }
+  }, [homeData]);
+
+  const {state, dispatch, userLanguage, clientKey} = useGlobalContext();
   const dashboardBanner1 = getAsset(clientKey, 'dashboardBanner1');
 
   const {DashboardDict} = useDictionary();
 
-  const user = !isEmpty(state)
-    ? {firstName: state.user.firstName, preferredName: state.user.firstName}
-    : null;
+  const {currentPage, activeRoom} = state;
 
   useEffect(() => {
-    if (state.user.role === 'ST') {
-      if (state.currentPage !== 'home') {
+    if (isStudent) {
+      if (currentPage !== 'home') {
         // dispatch({ type: 'UPDATE_CURRENTPAGE', payload: { data: 'home' } });
       }
-      if (state.activeRoom && state.activeRoom.length > 0) {
-        dispatch({type: 'UPDATE_ACTIVEROOM', payload: {roomID: '', syllabusID: ''}});
+      if (activeRoom && activeRoom.length > 0) {
+        dispatch({
+          type: 'UPDATE_ACTIVEROOM',
+          payload: {roomID: '', syllabusID: '', name: ''}
+        });
       }
     }
-  }, [state.user.role]);
+  }, [isStudent]);
 
   const [teacherList, setTeacherList] = useState<any[]>();
   const [coTeachersList, setCoTeachersList] = useState<any[]>();
@@ -115,25 +143,28 @@ const Home = (props: ClassroomControlProps) => {
   };
 
   const teacherListWithImages =
-    getTeacherList.length > 0 &&
-    Promise.all(
-      getTeacherList.map(async (teacherObj: any, idx: number) => {
-        return {
-          ...teacherObj,
-          image: await (teacherObj.image ? getImageURL(teacherObj.image) : null)
-        };
-      })
-    );
+    getTeacherList.length > 0
+      ? Promise.all(
+          getTeacherList.map(async (teacherObj: any) => {
+            return {
+              ...teacherObj,
+              image: await (teacherObj.image ? getImageURL(teacherObj.image) : null)
+            };
+          })
+        )
+      : [];
+
   const coTeacherListWithImages =
-    getCoTeacherList().length > 0 &&
-    Promise.all(
-      getCoTeacherList().map(async (teacherObj: any, idx: number) => {
-        return {
-          ...teacherObj,
-          image: await (teacherObj.image ? getImageURL(teacherObj.image) : null)
-        };
-      })
-    );
+    getCoTeacherList().length > 0
+      ? Promise.all(
+          getCoTeacherList().map(async (teacherObj: any) => {
+            return {
+              ...teacherObj,
+              image: await (teacherObj.image ? getImageURL(teacherObj.image) : null)
+            };
+          })
+        )
+      : [];
 
   const getStudentsList =
     homeData && homeData.length > 0
@@ -156,7 +187,7 @@ const Home = (props: ClassroomControlProps) => {
       : [];
 
   const studentsListWithImages = Promise.all(
-    getStudentsList.map(async (studentObj: any, idx: number) => {
+    getStudentsList.map(async (studentObj: any) => {
       return {
         ...studentObj,
         student: {
@@ -229,7 +260,7 @@ const Home = (props: ClassroomControlProps) => {
   return (
     <ErrorBoundary componentName="Home">
       {homeData ? (
-        <>
+        <div>
           <div>
             <HeroBanner imgUrl={dashboardBanner1} title={'Dashboard'} />
           </div>
@@ -240,12 +271,7 @@ const Home = (props: ClassroomControlProps) => {
               <span className="font-semibold">
                 {user.preferredName ? user.preferredName : user.firstName}
               </span>
-              .{' '}
-              {
-                DashboardDict[userLanguage][
-                  isTeacher ? 'GREETINGS_TEACHER' : 'GREETINGS_STUDENT'
-                ]
-              }
+              . {DashboardDict[userLanguage]['GREETINGS_STUDENT']}
             </HeaderTextBar>
           )}
 
@@ -255,9 +281,7 @@ const Home = (props: ClassroomControlProps) => {
               <RoomTiles
                 roomsLoading={roomsLoading}
                 handleRoomSelection={handleRoomSelection}
-                classList={
-                  state.user.status !== PersonStatus.INACTIVE ? getClassList() : []
-                }
+                classList={user.status !== PersonStatus.INACTIVE ? getClassList() : []}
               />
             </ErrorBoundary>
 
@@ -274,7 +298,8 @@ const Home = (props: ClassroomControlProps) => {
                     borderBottom
                   />
                   <TeacherRows
-                    coTeachersList={coTeachersList}
+                    loading={Boolean(roomsLoading)}
+                    coTeachersList={coTeachersList || []}
                     teachersList={teacherList}
                   />
                 </div>
@@ -284,17 +309,14 @@ const Home = (props: ClassroomControlProps) => {
             <ErrorBoundary componentName="StudentTiles">
               <div className="my-6">
                 <StudentsTiles
-                  title={
-                    DashboardDict[userLanguage][
-                      isTeacher ? 'YOUR_STUDENTS' : 'YOUR_CLASSMATES'
-                    ]
-                  }
+                  title={DashboardDict[userLanguage]['YOUR_CLASSMATES']}
                   studentsList={studentsList}
+                  loading={Boolean(roomsLoading)}
                 />
               </div>
             </ErrorBoundary>
           </div>
-        </>
+        </div>
       ) : null}
     </ErrorBoundary>
   );

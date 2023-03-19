@@ -1,11 +1,11 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
-import {GlobalContext} from 'contexts/GlobalContext';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import * as mutations from 'graphql/mutations';
 import * as queries from 'graphql/queries';
-import React, {useContext, useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 
 interface AddLearningObjectiveProps {
   curricularId: string;
@@ -21,9 +21,9 @@ const AddLearningObjective = (props: AddLearningObjectiveProps) => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [validation, setValidation] = useState({isValid: true, msg: ''});
-  const [learningsIds, setLearningsIds] = useState([]);
-  const {clientKey, userLanguage, theme} = useContext(GlobalContext);
-  const {ADDLEARINGOBJDICT} = useDictionary(clientKey);
+  const [learningsIds, setLearningsIds] = useState<any[]>([]);
+  const {userLanguage} = useGlobalContext();
+  const {ADDLEARINGOBJDICT} = useDictionary();
 
   useEffect(() => {
     if (learningObjectiveData?.id) {
@@ -43,7 +43,10 @@ const AddLearningObjective = (props: AddLearningObjectiveProps) => {
 
   const saveLearningObjectiveDetails = async () => {
     if (!name.length) {
-      setValidation({isValid: false, msg: ADDLEARINGOBJDICT[userLanguage]['VALIDATION']});
+      setValidation({
+        isValid: false,
+        msg: ADDLEARINGOBJDICT[userLanguage]['VALIDATION']
+      });
       return;
     }
     setValidation({isValid: true, msg: ''});
@@ -79,7 +82,10 @@ const AddLearningObjective = (props: AddLearningObjectiveProps) => {
       } else {
         let seqItem: any = await API.graphql(
           graphqlOperation(mutations.updateCSequences, {
-            input: {id: `l_${curricularId}`, sequence: [...learningsIds, addedItem.id]}
+            input: {
+              id: `l_${curricularId}`,
+              sequence: [...learningsIds, addedItem.id]
+            }
           })
         );
         seqItem = seqItem.data.updateCSequences;
@@ -91,11 +97,6 @@ const AddLearningObjective = (props: AddLearningObjectiveProps) => {
         setLoading(false);
       }
     }
-    // if (addedItem) {
-    //   history.goBack();
-    // } else {
-    //   console.log('Could not add learning objective');
-    // }
   };
 
   const fetchLOSequence = async () => {

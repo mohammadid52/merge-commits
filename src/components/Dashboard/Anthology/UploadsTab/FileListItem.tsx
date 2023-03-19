@@ -1,6 +1,4 @@
-import {UPLOAD_KEYS} from 'components/Lesson/constants';
 import React, {useCallback, useEffect, useState} from 'react';
-import {IconContext} from 'react-icons';
 import {AiOutlineFile} from 'react-icons/ai';
 import {getImageFromS3} from 'utilities/services';
 
@@ -69,10 +67,7 @@ const FileListItem = ({
             {isImage(fileName) ? (
               <img className="w-auto h-full object-cover" src={imageUrl} alt={fileName} />
             ) : (
-              <IconContext.Provider
-                value={{size: '32px', color: 'gray-400', className: 'p-2'}}>
-                <AiOutlineFile />
-              </IconContext.Provider>
+              <AiOutlineFile className="text-gray-400 p-2" size={'32px'} />
             )}
           </span>
         </div>
@@ -106,7 +101,7 @@ const FileListItem = ({
             <>
               <a
                 onClick={() => handleToggleDelete(fileKey)}
-                className="bg-indigo-100 cursor-pointer inline-flex items-center shadow-sm px-2.5 py-0.5 border border-gray-300 text-sm leading-5 font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50">
+                className=" cursor-pointer inline-flex items-center shadow-sm px-2.5 py-0.5 border border-gray-300 text-sm leading-5 font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50">
                 Delete
               </a>
               <a

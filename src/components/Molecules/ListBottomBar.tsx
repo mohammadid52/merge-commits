@@ -1,5 +1,5 @@
 import PageCountSelector from '@components/Atoms/PageCountSelector';
-import Pagination from '@components/Atoms/Pagination';
+import {Pagination} from 'antd';
 import React from 'react';
 
 export interface ListBottomBar {
@@ -7,6 +7,7 @@ export interface ListBottomBar {
   currentPage: number;
   totalPages: number;
   goNextPage: () => void;
+  setCurrentPage: (current: number) => void;
   goPrevPage: () => void;
   resetPagination: () => void;
   firstPage: boolean;
@@ -18,34 +19,28 @@ export interface ListBottomBar {
 const ListBottomBar = ({
   totalResults,
   currentPage,
-  goNextPage,
-  goPrevPage,
-  firstPage,
-  resetPagination,
-  lastPage,
+
   pageCount,
-  setPageCount
+  setPageCount,
+  setCurrentPage
 }: ListBottomBar) => {
   return (
-    <div className="flex justify-center  bg-white my-4">
-      <div className="flex justify-between items-center  flex-col lg:flex-row">
-        <div className="w-1/3"></div>
-        <Pagination
-          currentPage={currentPage + 1}
-          setNext={goNextPage}
-          setPrev={goPrevPage}
-          firstPage={firstPage}
-          lastPage={lastPage}
-        />
-        <PageCountSelector
-          totalResults={totalResults}
-          pageSize={pageCount}
-          setPageSize={(c: number) => {
-            resetPagination();
-            setPageCount(c);
-          }}
-        />
-      </div>
+    <div className="flex justify-center bg-white my-4">
+      <Pagination
+        total={totalResults}
+        onChange={setCurrentPage}
+        showTotal={(total, range) => `${range[0]}-${range[1]} of ${total} items`}
+        pageSize={pageCount}
+        current={currentPage}
+        responsive
+      />
+      <PageCountSelector
+        totalResults={totalResults}
+        pageSize={pageCount}
+        setPageSize={(c: number) => {
+          setPageCount(c);
+        }}
+      />
     </div>
   );
 };

@@ -1,13 +1,11 @@
-import {map, remove, update} from 'lodash';
-import React, {useContext} from 'react';
-import {BiCheckbox, BiCheckboxChecked} from 'react-icons/bi';
-import {GlobalContext} from 'contexts/GlobalContext';
-import {EditQuestionModalDict} from 'dictionary/dictionary.iconoclast';
 import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import {EditQuestionModalDict} from 'dictionary/dictionary.iconoclast';
+import {map, remove, update} from 'lodash';
+import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
 import {v4 as uuidv4} from 'uuid';
 import {FORM_TYPES} from '../common/constants';
-import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
 
 import {Switch} from '@headlessui/react';
 
@@ -58,10 +56,15 @@ const TextInput = ({
   askBeforeClose,
   createNewContent
 }: any) => {
-  const {userLanguage} = useContext(GlobalContext);
+  const {userLanguage} = useGlobalContext();
 
   const addOneInputField = () => {
-    const newItem = {id: uuidv4(), textArea: false, title: '', placeholder: ''};
+    const newItem = {
+      id: uuidv4(),
+      textArea: false,
+      title: '',
+      placeholder: ''
+    };
     setList([...list, newItem]);
   };
 
@@ -208,15 +211,17 @@ const TextInput = ({
             {numbered ? 'Numbered' : 'Unnumbered'}
           </button>
         </div>
-        <div className="flex items-center w-auto">
+        <div className="flex items-center justify-end w-auto gap-4">
           <Buttons
             btnClass="py-1 px-4 text-xs mr-2"
+            size="middle"
             label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
             onClick={askBeforeClose}
             transparent
           />
           <Buttons
             btnClass="py-1 px-8 text-xs ml-2"
+            size="middle"
             label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
             onClick={onFormCreate}
           />

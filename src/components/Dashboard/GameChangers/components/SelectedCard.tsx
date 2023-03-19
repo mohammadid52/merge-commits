@@ -1,14 +1,32 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import AnimatedFlower from 'components/Dashboard/GameChangers/components/AnimatedFlower';
-import AnimatedMind from 'components/Dashboard/GameChangers/components/AnimatedMind';
-import AnimatedSquare from 'components/Dashboard/GameChangers/components/AnimatedSquare';
-import EmotionCardStudents from 'components/Dashboard/GameChangers/components/EmotionCardStudents';
-import EmotionCardTeachers from 'components/Dashboard/GameChangers/components/EmotionCardTeachers';
-import FocusIcon from 'components/Dashboard/GameChangers/components/FocusIcon';
-import NextButton from 'components/Dashboard/GameChangers/components/NextButton';
-import ThinkAboutItCard from 'components/Dashboard/GameChangers/components/ThinkAboutIt';
-import {useGameChangers} from 'components/Dashboard/GameChangers/context/GameChangersContext';
-import {cardsList, successSound} from 'components/Dashboard/GameChangers/__contstants';
+import ErrorBoundary from '@components/Error/ErrorBoundary';
+import {CreateGameChangerLogInput} from 'API';
+import {lazy, useEffect, useState} from 'react';
+
+const AnimatedFlower = lazy(
+  () => import('dashboard/GameChangers/components/AnimatedFlower')
+);
+const AnimatedMind = lazy(() => import('dashboard/GameChangers/components/AnimatedMind'));
+const AnimatedSquare = lazy(
+  () => import('dashboard/GameChangers/components/AnimatedSquare')
+);
+const EmotionCardStudents = lazy(
+  () => import('dashboard/GameChangers/components/EmotionCardStudents')
+);
+const EmotionCardTeachers = lazy(
+  () => import('dashboard/GameChangers/components/EmotionCardTeachers')
+);
+const FocusIcon = lazy(() => import('dashboard/GameChangers/components/FocusIcon'));
+const NextButton = lazy(() => import('dashboard/GameChangers/components/NextButton'));
+const SingingBowl = lazy(() => import('dashboard/GameChangers/components/SingingBowl'));
+const Gratitude = lazy(() => import('dashboard/GameChangers/components/Gratitude'));
+const ThinkAboutItCard = lazy(
+  () => import('dashboard/GameChangers/components/ThinkAboutIt')
+);
+const SelectedEmotionsContainer = lazy(
+  () => import('dashboard/GameChangers/components/SelectedEmotionsContainer')
+);
+
 import {
   EMOTIONS,
   GRATITUDE,
@@ -18,19 +36,15 @@ import {
 import AnimatedContainer from 'components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import useAuth from 'customHooks/useAuth';
 import useGraphqlMutation from 'customHooks/useGraphqlMutation';
-import {CreateGameChangerLogInput} from 'API';
+import {useGameChangers} from 'dashboard/GameChangers/context/GameChangersContext';
+import {cardsList, successSound} from 'dashboard/GameChangers/__contstants';
 import gsap from 'gsap';
 import {Linear} from 'gsap/all';
 import map from 'lodash/map';
 import times from 'lodash/times';
 import moment from 'moment';
 import {nanoid} from 'nanoid';
-import React, {useEffect, useState} from 'react';
 import Flickity from 'react-flickity-component';
-import Gratitude from './Gratitude';
-import SelectedEmotionsContainer from './SelectedEmotionsContainer';
-import SingingBowl from './SingingBowl';
-import ErrorBoundary from '@components/Error/ErrorBoundary';
 
 // Constants
 
@@ -40,7 +54,7 @@ const SelectedCard = ({
   inLesson = false
 }: {
   card?: {id: number; title: string; desc: string; type: string};
-  onClick: (id: number) => void;
+  onClick: (id: number | null, autoClick?: boolean) => void;
   inLesson?: boolean;
 }) => {
   const exerciseType = card?.type;
@@ -53,7 +67,7 @@ const SelectedCard = ({
     setIsCompleted,
     isPlayingMusic,
     setIsPlayingMusic,
-    selectedCard,
+    selectedCard = 0,
     countSelected,
     setCountSelected,
     selectedEmotions
@@ -161,6 +175,7 @@ const SelectedCard = ({
         clearInterval(interval);
       };
     }
+    return () => {};
   }, [isActive, currentIteration, exerciseType]);
 
   const selected = cardsList[selectedCard];
@@ -173,19 +188,21 @@ const SelectedCard = ({
     const elem = $('.carousel-cell.is-selected h1').text();
     setCountSelected(Number(elem));
 
-    const payload: CreateGameChangerLogInput = {
-      id: nanoid(24),
-      gameChangerID: card.id.toString(),
-      personAuthID: authId,
-      personEmail: email,
-      startTime: moment().format('YYYY-MM-DD'),
-      endTime: moment().format('YYYY-MM-DD')
-    };
-    mutate({input: payload});
-    if (!isLoading && !isError) {
-      setTimeout(() => {
-        onStart();
-      }, 2500);
+    if (card) {
+      const payload: CreateGameChangerLogInput = {
+        id: nanoid(24),
+        gameChangerID: card.id.toString(),
+        personAuthID: authId,
+        personEmail: email,
+        startTime: moment().format('YYYY-MM-DD'),
+        endTime: moment().format('YYYY-MM-DD')
+      };
+      mutate({input: payload});
+      if (!isLoading && !isError) {
+        setTimeout(() => {
+          onStart();
+        }, 2500);
+      }
     }
   };
 
@@ -294,7 +311,7 @@ const SelectedCard = ({
                   <AnimatedSquare
                     onStart={onStart}
                     isActive={isActive}
-                    exerciseType={exerciseType}
+                    exerciseType={exerciseType || 'square'}
                     onComplete={onComplete}
                   />
 
@@ -328,7 +345,7 @@ const SelectedCard = ({
                 <>
                   {selected.type === 'square' ? (
                     <FocusIcon isActive={isActive} />
-                  ) : card.type === THINK_ABOUT_IT ? (
+                  ) : card && card.type === THINK_ABOUT_IT ? (
                     <AnimatedMind />
                   ) : (
                     <AnimatedFlower />

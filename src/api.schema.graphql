@@ -15,10 +15,8 @@ enum TeachingStyle {
 
 enum PersonStatus {
   ACTIVE
-  SUSPENDED
   INACTIVE
   TRAINING
-  HOLD
 }
 
 enum UserPageState {
@@ -37,7 +35,6 @@ enum Role {
   ADM
   BLD
   FLW
-  CRD
   TR
   ST
 }
@@ -59,6 +56,136 @@ enum UpdateType {
   SURVEY_DATA_UPDATE
 }
 
+# Types
+
+type QuestionResults {
+  QuestionId: ID!
+  QuestionLabel: String!
+  QuestionResponse: String!
+}
+
+type StudentSharing {
+  isTeacher: Boolean
+  studentAuthID: String
+  lessonPageID: String
+}
+
+type ImpactLogEntry {
+  impactDate: AWSDate
+  reasonComment: String
+  lessonImpact: Float
+  adjustment: String
+}
+
+type CompleteLesson {
+  lessonID: String
+  time: AWSDateTime
+}
+
+type Option {
+  text: String!
+  label: String
+  icon: String
+  color: String
+}
+
+type AnthologyContent {
+  type: String
+  subType: String
+  title: String
+  subTitle: String
+  description: String
+  content: String
+  classID: ID
+  feedbacks: [String]
+  edited: Boolean
+}
+
+type Attachment {
+  type: String
+  url: String
+  filename: String
+  size: Int
+}
+
+type UniversalLessonPlan {
+  id: String
+  title: String
+  label: String
+  description: String
+  class: String
+  active: Boolean
+  disabled: Boolean
+  displayMode: String
+  open: Boolean
+  estTime: String
+  pageContent: [UniversalpageContent]
+  activityType: String
+  interactionType: [String]
+  tags: [String]
+  videoLink: String
+  notes: String
+}
+
+type UniversalpageContent {
+  id: String
+  tags: [String]
+  partType: String
+  class: String
+  partContent: [UniversalPartContent]
+  showIfAsync: Boolean
+}
+
+type UniversalPartContent {
+  id: String
+  type: String
+  class: String
+  value: [UniversalContent]
+  isRequired: Boolean
+}
+
+type UniversalContent {
+  id: String
+  type: String
+  label: String
+  value: String
+  options: [UniversalContentOptions]
+  caption: String
+  height: String
+  width: String
+  class: String
+  isRequired: Boolean
+}
+
+type UniversalContentOptions {
+  id: String
+  label: String
+  text: String
+}
+
+type ComponentSummary {
+  id: ID
+  disabled: Boolean!
+  open: Boolean!
+  active: Boolean!
+  stage: String!
+  type: String!
+  displayMode: String
+}
+
+type File {
+  fileName: String!
+  fileKey: String!
+  fileSize: Int
+}
+
+type Translation {
+  id: String
+  translateLanguage: String!
+  languageTranslation: String!
+  languageDefinition: String
+}
+
 #Person - App users table.
 type Person @model @auth(rules: [{allow: public}]) {
   id: ID! @index(name: "byUserId", queryField: "userById")
@@ -70,16 +197,9 @@ type Person @model @auth(rules: [{allow: public}]) {
   firstName: String!
   preferredName: String
   lastName: String!
-  externalId: String
-  grade: String
-  onBoardSurvey: Boolean
-  offBoardSurvey: Boolean
-  phone: String
-  birthdate: AWSDate
   inactiveStatusDate: AWSDate
   image: String
   language: Language!
-  filters: [String]
   lastLoggedIn: AWSDateTime
   lastLoggedOut: AWSDateTime
   onDemand: Boolean
@@ -211,18 +331,6 @@ type ArchiveSurveyDataSQL @model @auth(rules: [{allow: public}]) {
   updatedAt: AWSDateTime
 }
 
-type QuestionResults {
-  QuestionId: ID!
-  QuestionLabel: String!
-  QuestionResponse: String!
-}
-
-type StudentSharing {
-  isTeacher: Boolean
-  studentAuthID: String
-  lessonPageID: String
-}
-
 type ClassroomGroupStudents @model @auth(rules: [{allow: public}]) {
   id: ID!
   classRoomGroupID: ID! @index(name: "studentsByCRgroup")
@@ -246,28 +354,6 @@ type ClassroomGroups @model @auth(rules: [{allow: public}]) {
   groupLocation: String
   classroomGroupsStudents: [ClassroomGroupStudents]
     @hasMany(indexName: "studentsByCRgroup", fields: ["id"])
-}
-
-type ImpactLogEntry {
-  impactDate: AWSDate
-  reasonComment: String
-  lessonImpact: Float
-  adjustment: String
-}
-
-type partnerGroups {
-  partners: [String]
-  advisors: [String]
-}
-
-type proficiencyGroups {
-  groupName: String
-  groupIDs: [String]
-}
-
-type CompleteLesson {
-  lessonID: String
-  time: AWSDateTime
 }
 
 type RoomCoTeachers @model @auth(rules: [{allow: public}]) {
@@ -306,12 +392,6 @@ type ClassStudent @model @auth(rules: [{allow: public}]) {
   student: Person @belongsTo(fields: ["studentEmail", "studentAuthID"])
 }
 
-type SignedOffStep {
-  authID: String!
-  date: String
-  step: String!
-}
-
 type Curriculum @model @auth(rules: [{allow: public}]) {
   id: ID! @primaryKey
   institutionID: ID! @index(name: "curriculumByInstitution")
@@ -331,7 +411,6 @@ type Curriculum @model @auth(rules: [{allow: public}]) {
   syllabiHistory: [String]
   signedOff: Boolean
   status: RoomStatus @default(value: "ACTIVE")
-  signedOffSteps: [SignedOffStep]
 }
 
 type Topic @model @auth(rules: [{allow: public}]) {
@@ -376,33 +455,6 @@ type RoomCurriculum @model @auth(rules: [{allow: public}]) {
   curriculum: Curriculum @hasOne(fields: ["curriculumID"])
 }
 
-type AdditionalInputs {
-  name: String
-  input: String
-}
-
-type ComponentSummary {
-  id: ID
-  disabled: Boolean!
-  open: Boolean!
-  active: Boolean!
-  stage: String!
-  type: String!
-  displayMode: String
-}
-
-type StudentInfo {
-  id: String
-  firstName: String
-  preferredName: String
-  lastName: String
-}
-
-type DisplayData {
-  breakdownComponent: String
-  studentInfo: StudentInfo
-}
-
 type Checkpoint @model @auth(rules: [{allow: public}]) {
   id: ID!
   label: String!
@@ -440,13 +492,6 @@ type CheckpointQuestions @model(queries: null) @auth(rules: [{allow: public}]) {
   question: Question @hasOne(fields: ["questionID"])
 }
 
-type Option {
-  text: String!
-  label: String
-  icon: String
-  color: String
-}
-
 type Question @model @auth(rules: [{allow: public}]) {
   id: ID!
   label: String!
@@ -477,48 +522,6 @@ type QuestionResponse {
   otherResponse: String
 }
 
-type RoomMsgs @model @auth(rules: [{allow: public}]) {
-  id: ID!
-  roomID: ID!
-    @index(name: "byRoomID", sortKeyFields: ["createdAt"], queryField: "messagesByRoomID")
-  senderAuthID: String!
-  senderEmail: String!
-  body: String!
-  createdAt: AWSDateTime
-  sender: Person @hasOne(fields: ["senderEmail", "senderAuthID"])
-}
-
-type StudentData @model(subscriptions: null) @auth(rules: [{allow: public}]) {
-  id: ID!
-  lessonProgress: String!
-  currentLocation: String
-  status: String!
-  saveType: String
-  syllabusLessonID: ID!
-    @primaryKey(sortKeyFields: ["studentID"])
-    @index(name: "bySyllabusLesson", sortKeyFields: ["studentID"])
-  studentID: String!
-  studentAuthID: String!
-  student: Person! @hasOne(fields: ["studentID", "studentAuthID"])
-  doFirstData: [QuestionDataStudentData]!
-    @hasMany(indexName: "byStudentData", fields: ["id"])
-  checkpointData: [QuestionDataStudentData]!
-    @hasMany(indexName: "byStudentData", fields: ["id"])
-  anthologyContent: [AnthologyContent]
-}
-
-type AnthologyContent {
-  type: String
-  subType: String
-  title: String
-  subTitle: String
-  description: String
-  content: String
-  classID: ID
-  feedbacks: [String]
-  edited: Boolean
-}
-
 type AnthologyComment @model @auth(rules: [{allow: public}]) {
   id: ID!
   text: String
@@ -530,13 +533,6 @@ type AnthologyComment @model @auth(rules: [{allow: public}]) {
   createdAt: AWSDateTime
   updatedAt: AWSDateTime
   entryID: ID!
-}
-
-type Attachment {
-  type: String
-  url: String
-  filename: String
-  size: Int
 }
 
 type QuestionData @model @auth(rules: [{allow: public}]) {
@@ -560,15 +556,6 @@ type QuestionDataStudentData @model(queries: null) @auth(rules: [{allow: public}
   questionData: QuestionData @hasOne(fields: ["questionDataID"])
 }
 
-type Theme {
-  type: String
-  name: String!
-  summary: [String!]!
-  summaryLabel: String!
-  connection: String
-  images: [String!]!
-}
-
 type PersonLocation @model @auth(rules: [{allow: public}]) {
   id: ID!
   personAuthID: String!
@@ -582,11 +569,6 @@ type PersonLocation @model @auth(rules: [{allow: public}]) {
   person: Person @hasOne(fields: ["personEmail", "personAuthID"])
   room: Room @hasOne(fields: ["roomID"])
   lesson: UniversalLesson @hasOne(fields: ["lessonID"])
-}
-
-type Links {
-  text: String
-  url: String
 }
 
 type Attendance @model @auth(rules: [{allow: public}]) {
@@ -646,61 +628,6 @@ type UniversalLesson @model @auth(rules: [{allow: public}]) {
   isUsed: Boolean
   createdAt: AWSDateTime
   updatedAt: AWSDateTime
-}
-
-type UniversalLessonPlan {
-  id: String
-  title: String
-  label: String
-  description: String
-  class: String
-  active: Boolean
-  disabled: Boolean
-  displayMode: String
-  open: Boolean
-  estTime: String
-  pageContent: [UniversalpageContent]
-  activityType: String
-  interactionType: [String]
-  tags: [String]
-  videoLink: String
-  notes: String
-}
-
-type UniversalpageContent {
-  id: String
-  tags: [String]
-  partType: String
-  class: String
-  partContent: [UniversalPartContent]
-  showIfAsync: Boolean
-}
-
-type UniversalPartContent {
-  id: String
-  type: String
-  class: String
-  value: [UniversalContent]
-  isRequired: Boolean
-}
-
-type UniversalContent {
-  id: String
-  type: String
-  label: String
-  value: String
-  options: [UniversalContentOptions]
-  caption: String
-  height: String
-  width: String
-  class: String
-  isRequired: Boolean
-}
-
-type UniversalContentOptions {
-  id: String
-  label: String
-  text: String
 }
 
 type UniversalLessonStudentData @model @auth(rules: [{allow: public}]) {
@@ -905,7 +832,6 @@ type curriculumUnits @model @auth(rules: [{allow: public}]) {
   curriculumId: ID! @index(name: "unitsbyCurriculum", sortKeyFields: ["unitId"])
 }
 
-# Need to add universalStudentData field
 type UniversalSyllabusLesson @model @auth(rules: [{allow: public}]) {
   id: ID!
   syllabusID: ID! @index(name: "UniversalLessonsBySyllabus", sortKeyFields: ["lessonID"])
@@ -917,29 +843,10 @@ type UniversalSyllabusLesson @model @auth(rules: [{allow: public}]) {
   roster: [String!]
   viewing: String
   lesson: UniversalLesson @hasOne(fields: ["lessonID"])
-  displayData: DisplayData
   lessonPlan: [ComponentSummary!]
   startDate: AWSDate
   endDate: AWSDate
   feedback: [UniversalLessonFeedback] @hasMany(fields: ["id"])
-}
-
-type UniversalLessonFeedback @model @auth(rules: [{allow: public}]) {
-  id: ID!
-  syllabusLessonID: ID!
-  liked: String
-  comment: String
-  syllabusLesson: UniversalSyllabusLesson @hasOne(fields: ["syllabusLessonID"])
-}
-
-type StudentConnections @model @auth(rules: [{allow: public}]) {
-  fromEmail: String!
-  fromAuthID: String!
-  toEmail: String!
-  toAuthID: String!
-  remarks: String
-  fromStudent: Person @hasOne(fields: ["fromEmail", "fromAuthID"])
-  toStudent: Person @hasOne(fields: ["toEmail", "toAuthID"])
 }
 
 type PersonSentiments @model @auth(rules: [{allow: public}]) {
@@ -954,38 +861,6 @@ type PersonSentiments @model @auth(rules: [{allow: public}]) {
 
 type Sentiments @model @auth(rules: [{allow: public}]) {
   id: ID!
-  sentimentName: String!
-  sentimentType: String!
-}
-
-type SentimentTracker @model @auth(rules: [{allow: public}]) {
-  personAuthID: String! @primaryKey(sortKeyFields: ["date"])
-  personEmail: String!
-  person: Person @hasOne(fields: ["personEmail", "personAuthID"])
-  sentimentId: ID!
-  sentiment: Sentiments @hasOne(fields: ["sentimentId"])
-  classRoomID: ID!
-  classRoom: Room @hasOne(fields: ["classRoomID"])
-  syllabusLessonID: ID!
-  syllabusLesson: UniversalSyllabusLesson @hasOne(fields: ["syllabusLessonID"])
-  date: AWSDate!
-  time: AWSTime!
-  sentimentName: String!
-  sentimentType: String!
-}
-
-type FeelingTracker @model @auth(rules: [{allow: public}]) {
-  id: ID!
-  personAuthID: String! @primaryKey(sortKeyFields: ["date"])
-  personEmail: String!
-  person: Person @hasOne(fields: ["personEmail", "personAuthID"])
-  sentimentId: ID!
-  sentiment: Sentiments @hasOne(fields: ["sentimentId"])
-  classRoomID: ID!
-  classRoom: Room @hasOne(fields: ["classRoomID"])
-  lessonID: ID!
-  date: AWSDate!
-  time: AWSTime!
   sentimentName: String!
   sentimentType: String!
 }
@@ -1020,12 +895,6 @@ type PersonFiles @model @auth(rules: [{allow: public}]) {
   roomID: String
   files: [File]
   lessonPageID: ID
-}
-
-type File {
-  fileName: String!
-  fileKey: String!
-  fileSize: Int
 }
 
 type Community @model @auth(rules: [{allow: public}]) {
@@ -1112,42 +981,6 @@ type Subscription {
   onChangeRoom(id: ID!): Room @aws_subscribe(mutations: ["updateRoom"])
 }
 
-input CreateClassStudentInput {
-  id: ID
-  classID: ID!
-  studentID: ID!
-  studentEmail: String!
-  studentAuthID: String!
-  status: String
-  group: String
-}
-
-input CreateLessonRubricsInput {
-  id: ID
-  lessonID: ID!
-  rubricID: ID!
-}
-
-input DeleteLessonRubricsInput {
-  id: ID!
-}
-
-type Mutation {
-  batchAddClassStudent(classStudents: [CreateClassStudentInput]): [ClassStudent]
-}
-
-type CypressTesting @model @auth(rules: [{allow: public}]) {
-  id: ID! @primaryKey
-  testID: String!
-  testName: String!
-  testType: String!
-  testSteps: String!
-  testData: String!
-  testExpResults: String!
-  edgeCases: String
-  lastUpdate: AWSDate
-}
-
 type ErrorLog @model @auth(rules: [{allow: public}]) {
   id: ID! @primaryKey
   pageUrl: String
@@ -1161,13 +994,6 @@ type ErrorLog @model @auth(rules: [{allow: public}]) {
   status: ErrorStatus @default(value: "PENDING")
 }
 
-type Translation {
-  id: String
-  translateLanguage: String!
-  languageTranslation: String!
-  languageDefinition: String
-}
-
 type Dicitionary @model @auth(rules: [{allow: public}]) {
   id: ID! @primaryKey
   authID: String! # to know which user added/updated dictionary
@@ -1178,4 +1004,3 @@ type Dicitionary @model @auth(rules: [{allow: public}]) {
   englishDefinition: String # optional too.
   translation: [Translation]
 }
-# asdfasdfsd14

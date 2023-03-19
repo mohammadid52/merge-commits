@@ -1,3 +1,4 @@
+import {Divider} from 'antd';
 import {GameChangerProvider} from 'components/Dashboard/GameChangers/context/GameChangersContext';
 import ErrorBoundary from 'components/Error/ErrorBoundary';
 import ActivityBlock from 'components/Lesson/UniversalLessonBlockComponents/Blocks/Activities/ActivityBlock';
@@ -29,7 +30,13 @@ import TableBlock from './Blocks/TableBlock';
 import {VideoBlock} from './Blocks/VideoBlock';
 
 const Spacer = (props: any) => {
-  return <div style={{margin: `${props.value[0].value || 32}px 0px`}} />;
+  return (
+    <Divider
+      style={{margin: `${props.value[0].value || 32}px 0px`}}
+      className="bg-gray-600"
+      dashed
+    />
+  );
 };
 
 const composePartContent = (
@@ -45,12 +52,14 @@ const composePartContent = (
   notesData?: any,
   isStudent: boolean = true
 ): JSX.Element => {
+  const _mode = mode || 'lesson';
+
   const commonBlockProps = {
     classString,
     id,
     type,
     value,
-    mode
+    mode: _mode
   };
 
   if (type.includes('jumbotron')) {
@@ -62,7 +71,7 @@ const composePartContent = (
   } else if (type.includes('keyword')) {
     return (
       <ErrorBoundary componentName="KeywordBlock">
-        <KeywordBlock id={id} type={type} value={value} mode={mode} />
+        <KeywordBlock id={id} type={type} value={value} mode={_mode} />
       </ErrorBoundary>
     );
   } else if (type.includes(SPACER)) {
@@ -142,13 +151,15 @@ const composePartContent = (
         <DividerBlock value={value[0]?.value} />
       </ErrorBoundary>
     );
-  } else if (type === TABLE) {
-    return (
-      <ErrorBoundary componentName="TableBlock">
-        <TableBlock classString={classString} value={value} />
-      </ErrorBoundary>
-    );
-  } else if (type === FORM_TYPES.DOWNLOAD) {
+  }
+  //  else if (type === TABLE) {
+  //   return (
+  //     <ErrorBoundary componentName="TableBlock">
+  //       <TableBlock classString={classString} value={value} />
+  //     </ErrorBoundary>
+  //   );
+  // }
+  else if (type === FORM_TYPES.DOWNLOAD) {
     return (
       <ErrorBoundary componentName="DownloadBlock">
         <DownloadBlock value={value} />
@@ -195,7 +206,7 @@ const composePartContent = (
     );
   } else {
     console.log('Unidentified component type: => ', type);
-    return <StringifyBlock key={inputKey} id={id} anyObj={value} mode={mode} />;
+    return <StringifyBlock key={inputKey} id={id} anyObj={value} mode={_mode} />;
   }
 };
 

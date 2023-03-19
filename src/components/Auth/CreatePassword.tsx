@@ -24,7 +24,7 @@ const CreatePassword = ({
 }) => {
   const [isToggled, setIsToggled] = useState<boolean>(false);
   const {updateAuthState} = useGlobalContext();
-  const [cookies, setCookie, removeCookie] = useCookies();
+  const [_, setCookie, removeCookie] = useCookies();
 
   const toggleLoading = (state: boolean) => {
     setIsToggled(state);
@@ -44,7 +44,10 @@ const CreatePassword = ({
       try {
         await Auth.completeNewPassword(newUser, password);
 
-        const user: any = await signIn(email, password, {setCookie, removeCookie});
+        const user: any = await signIn(email, password, {
+          setCookie,
+          removeCookie
+        });
 
         if (user) {
           setIsLoginSuccess(true);
@@ -79,6 +82,7 @@ const CreatePassword = ({
   return (
     <form onSubmit={handleSubmit} className="">
       <FormInput
+        name="password"
         dataCy="password"
         Icon={AiOutlineLock}
         className="mb-4"
@@ -90,7 +94,7 @@ const CreatePassword = ({
         id="password"
       />
 
-      <div className="relative flex flex-col justify-center items-center">
+      <div className="relative flex mt-2 flex-col justify-center items-center">
         <Buttons
           dataCy="set-password"
           disabled={isToggled}

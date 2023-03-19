@@ -1,13 +1,14 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import {UniversalLesson} from 'interfaces/UniversalLessonInterfaces';
+import {UniversalLesson} from 'API';
 import {getAsset} from 'assets';
 import Buttons from 'atoms/Buttons';
 import Modal from 'atoms/Modal';
-import {GlobalContext} from 'contexts/GlobalContext';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import * as mutations from 'graphql/mutations';
+
 import {map} from 'lodash';
-import React, {useContext, useState} from 'react';
+import React, {useState} from 'react';
 import {useHistory, useRouteMatch} from 'react-router';
 import {wait} from 'utilities/functions';
 import {v4 as uuidv4} from 'uuid';
@@ -17,20 +18,21 @@ interface Props {
   setShowCloneModal?: React.Dispatch<
     React.SetStateAction<{show: boolean; lessonId: string}>
   >;
+  open: boolean;
 }
 
-const CloneLesson = ({setShowCloneModal, getCloneLessonDetails}: Props) => {
+const CloneLesson = ({setShowCloneModal, open, getCloneLessonDetails}: Props) => {
   const onCloneModalClose = () => {
-    setShowCloneModal({show: false, lessonId: ''});
+    setShowCloneModal?.({show: false, lessonId: ''});
   };
-  const {clientKey, userLanguage} = useContext(GlobalContext);
+  const {userLanguage} = useGlobalContext();
 
   const history = useHistory();
   const match = useRouteMatch();
 
-  const {EditQuestionModalDict, LessonsListDict} = useDictionary(clientKey);
+  const {EditQuestionModalDict, LessonsListDict} = useDictionary();
 
-  const cloneLesson: UniversalLesson = getCloneLessonDetails();
+  const cloneLesson: UniversalLesson | undefined = getCloneLessonDetails?.();
 
   const getCloneData = () => {
     /**
@@ -48,24 +50,24 @@ const CloneLesson = ({setShowCloneModal, getCloneLessonDetails}: Props) => {
         id: uuidv4(),
         title: 'TBD',
         pageContent:
-          page.pageContent && page.pageContent.length > 0
-            ? map(page.pageContent, (pgContent) => ({
+          page?.pageContent && page?.pageContent.length > 0
+            ? map(page?.pageContent, (pgContent) => ({
                 ...pgContent,
 
                 id: uuidv4(),
                 partContent:
-                  pgContent.partContent && pgContent.partContent.length > 0
-                    ? map(pgContent.partContent, (ptContent) => ({
+                  pgContent?.partContent && pgContent?.partContent.length > 0
+                    ? map(pgContent?.partContent, (ptContent) => ({
                         ...ptContent,
                         id: uuidv4(),
                         value:
-                          ptContent.value && ptContent.value.length > 0
-                            ? map(ptContent.value, (ptValue) => ({
+                          ptContent?.value && ptContent?.value.length > 0
+                            ? map(ptContent?.value, (ptValue) => ({
                                 ...ptValue,
                                 id: uuidv4(),
                                 options:
-                                  ptValue.options && ptValue.options.length > 0
-                                    ? map(ptValue.options, (opt) => ({
+                                  ptValue?.options && ptValue?.options.length > 0
+                                    ? map(ptValue?.options, (opt) => ({
                                         ...opt,
                                         id: uuidv4()
                                       }))
@@ -138,6 +140,7 @@ const CloneLesson = ({setShowCloneModal, getCloneLessonDetails}: Props) => {
 
   return (
     <Modal
+      open={open}
       title={
         cloningStatus !== 'success'
           ? 'Please confirm you want to clone this lesson'
@@ -180,7 +183,10 @@ const CloneLesson = ({setShowCloneModal, getCloneLessonDetails}: Props) => {
               </div>
               <p className="text-gray-400 italic mt-2 text-xs font-medium sm:px-6">
                 Found {cloneLesson?.lessonPlan?.length}{' '}
-                {cloneLesson?.lessonPlan?.length > 1 ? 'pages' : 'page'} with this lesson
+                {cloneLesson?.lessonPlan && cloneLesson?.lessonPlan?.length > 1
+                  ? 'pages'
+                  : 'page'}{' '}
+                with this lesson
               </p>
             </dl>
           </div>
@@ -218,9 +224,8 @@ const CloneLesson = ({setShowCloneModal, getCloneLessonDetails}: Props) => {
 
         {!failed && !success && (
           <div className="flex mt-8 justify-center px-6 pb-4">
-            <div className="flex justify-end">
+            <div className="flex justify-end gap-4">
               <Buttons
-                btnClass="py-1 px-4 text-xs mr-2"
                 label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
                 onClick={onCloneModalClose}
                 transparent
@@ -228,7 +233,6 @@ const CloneLesson = ({setShowCloneModal, getCloneLessonDetails}: Props) => {
               />
               <Buttons
                 disabled={cloning}
-                btnClass="py-1 px-8 text-xs ml-2"
                 label={LessonsListDict[userLanguage]['BUTTON']['START_CLONING']}
                 onClick={startClone}
               />

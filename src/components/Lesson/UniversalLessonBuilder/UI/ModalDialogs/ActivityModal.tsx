@@ -3,10 +3,10 @@ import FormInput from 'atoms/Form/FormInput';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import {IContentTypeComponentProps} from 'interfaces/UniversalLessonBuilderInterfaces';
-import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
 import {snakeCase} from 'lodash';
 import {nanoid} from 'nanoid';
-import React, {useState} from 'react';
+import {useState} from 'react';
+import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
 import {
   EMOTIONS,
   GAME_CHANGERS,
@@ -37,8 +37,8 @@ const ActivityModal = ({
     await updateLessonPageToDB(input);
   };
 
-  const {clientKey, userLanguage} = useGlobalContext();
-  const {EditQuestionModalDict} = useDictionary(clientKey);
+  const {userLanguage} = useGlobalContext();
+  const {EditQuestionModalDict} = useDictionary();
 
   const getLabel = () => {
     switch (type) {
@@ -101,18 +101,20 @@ const ActivityModal = ({
         </div>
       )}
 
-      <div className="flex mt-8 justify-center px-6 pb-4">
-        <div className="flex justify-end">
+      <div className="flex mt-8 justify-end px-6 pb-4">
+        <div className="flex justify-end gap-4">
           <Buttons
             btnClass="py-1 px-4 text-xs mr-2"
             label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
             onClick={askBeforeClose}
+            size="middle"
             transparent
           />
           <Buttons
             btnClass="py-1 px-8 text-xs ml-2"
             label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
             onClick={onActivityCreate}
+            size="middle"
           />
         </div>
       </div>

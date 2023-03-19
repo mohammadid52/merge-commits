@@ -1,14 +1,13 @@
 import {getAsset} from 'assets';
-import {GlobalContext} from 'contexts/GlobalContext';
-import {LessonHeaderBarProps} from 'interfaces/LessonComponentsInterfaces';
-import React, {useContext, useEffect, useState} from 'react';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import {useEffect, useState} from 'react';
 import {useHistory} from 'react-router-dom';
 import {getLocalStorageData} from 'utilities/localStorage';
 import {useOutsideAlerter} from '../../General/hooks/outsideAlerter';
 import PositiveAlert from '../../General/Popup';
 
-const Foot = ({}: LessonHeaderBarProps) => {
-  const {lessonState, clientKey} = useContext(GlobalContext);
+const Foot = () => {
+  const {lessonState, clientKey} = useGlobalContext();
   const history = useHistory();
 
   // ##################################################################### //
@@ -20,7 +19,7 @@ const Foot = ({}: LessonHeaderBarProps) => {
   // ##################################################################### //
 
   const getRoomData = getLocalStorageData('room_info');
-  const [waiting, setWaiting] = useState<boolean>(null);
+  const [waiting, setWaiting] = useState<boolean>(false);
   const [safeToLeave, setSafeToLeave] = useState<any>(null);
 
   const handleManualSave = () => {
@@ -39,7 +38,7 @@ const Foot = ({}: LessonHeaderBarProps) => {
         setWaiting(false);
         setSafeToLeave(true);
       } else {
-        setWaiting(null);
+        setWaiting(false);
         setSafeToLeave(null);
       }
     }
@@ -61,11 +60,10 @@ const Foot = ({}: LessonHeaderBarProps) => {
 
   return (
     <>
-      <div className="mt-auto mb-0 bg-darker-gray flex-row justify-center items-center">
+      <div className="mt-auto mb-0 bg-dark-blue flex-row justify-center items-center">
         <div className={`${visible ? 'absolute z-100' : 'hidden'}`} onClick={handlePopup}>
           <PositiveAlert
             alert={visible}
-            setAlert={setVisible}
             header="Are you sure you want to leave the Lesson?"
             button1="Go to the dashboard"
             button2="Cancel"
@@ -78,7 +76,7 @@ const Foot = ({}: LessonHeaderBarProps) => {
         </div>
 
         <div
-          className={`w-full lg:w-256 h-auto mx-auto bg-darker-gray py-8 flex flex-row justify-center items-start text-center`}>
+          className={`w-full lg:w-256 h-auto mx-auto  py-8 flex flex-row justify-center items-start text-center`}>
           {/* BACK BUTTON */}
 
           <div className="w-3.3/10 flex justify-center items-center">

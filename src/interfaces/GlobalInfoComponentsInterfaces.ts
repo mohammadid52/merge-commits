@@ -1,10 +1,11 @@
 export interface NotificationListItem {
   check: boolean;
-  notification:{
+  notification: {
     label?: string;
-    message?: string;
+    message?: string | null;
     type?: string;
     cta?: string;
   };
   action?: () => any;
+  cancel?: () => any;
 }

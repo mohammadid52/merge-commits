@@ -1,14 +1,12 @@
 import StudentName from '@components/MicroComponents/StudentName';
 import {getAsset} from 'assets';
-import {GlobalContext} from 'contexts/GlobalContext';
-import React, {useContext, useRef, useState} from 'react';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import React, {useRef, useState} from 'react';
 import {IoIosAdd} from 'react-icons/io';
-import {getInitialsFromString, initials, stringToHslColor} from 'utilities/strings';
-import Placeholder from '../Placeholder';
 import Label from './Label';
 
-interface selectorProps {
-  list?: {id: number; name: string; avatar?: string}[];
+interface SelectorProps {
+  list?: {id: number; name: string; value?: string; avatar?: string}[];
   selectedItem?: {value?: string; id?: string};
   btnClass?: string;
   arrowHidden?: boolean;
@@ -28,7 +26,7 @@ interface selectorProps {
   width?: string;
 }
 
-const SearchSelectorWithAvatar = (props: selectorProps) => {
+const SearchSelectorWithAvatar = (props: SelectorProps) => {
   const {
     list,
     label,
@@ -39,7 +37,7 @@ const SearchSelectorWithAvatar = (props: selectorProps) => {
     placeholder,
     onChange,
     isRequired = false,
-    imageFromS3 = true,
+
     fetchStudentList,
     clearFilteredStudents,
     searchStatus,
@@ -51,12 +49,12 @@ const SearchSelectorWithAvatar = (props: selectorProps) => {
   } = props;
 
   const countdownTimer = 200;
-  const [countdownEnabled, setCountdownEnabled] = useState(undefined);
-  const [searchTerm, setSearchTerm] = useState<string>(undefined);
+  const [countdownEnabled, setCountdownEnabled] = useState<null | NodeJS.Timeout>(null);
+  const [searchTerm, setSearchTerm] = useState<string>('');
 
   const [showList, setShowList] = useState(false);
-  const currentRef: any = useRef(null);
-  const {theme, clientKey} = useContext(GlobalContext);
+  const currentRef: any = useRef<any>(null);
+  const {theme, clientKey} = useGlobalContext();
   const themeColor = getAsset(clientKey, 'themeClassName');
 
   const updateSelectedItem = (str: string, name: string, id: string, avatar: string) => {
@@ -93,20 +91,22 @@ const SearchSelectorWithAvatar = (props: selectorProps) => {
     }
 
     if (value.length > 0) {
-      if (!searchStatus) searchCallback(true);
+      if (!searchStatus) searchCallback?.(true);
     } else {
-      if (searchStatus) searchCallback(false);
+      if (searchStatus) searchCallback?.(false);
     }
 
     if (value.length < 2) {
-      clearFilteredStudents();
+      clearFilteredStudents?.();
     } else {
-      setCountdownEnabled(
-        setTimeout(() => {
-          fetchStudentList(searchTerm);
-          clearTimeout(countdownEnabled);
-        }, countdownTimer)
-      );
+      const timer = setTimeout(() => {
+        fetchStudentList?.(searchTerm);
+        countdownEnabled && clearTimeout(countdownEnabled);
+      }, countdownTimer);
+
+      if (Boolean(timer)) {
+        setCountdownEnabled(timer);
+      }
     }
   };
 
@@ -194,23 +194,19 @@ const SearchSelectorWithAvatar = (props: selectorProps) => {
                     </span>
                   </li>
                 )}
-                {list.length ? (
-                  list.map(
-                    (
-                      item: {name: string; id: any; value: string; avatar?: string},
-                      key: number
-                    ) => (
-                      <li className="">
+                {list?.length ? (
+                  list?.map(
+                    (item: {name: string; id: any; value?: string; avatar?: string}) => (
+                      <li key={item.id} className="">
                         <StudentName
                           onHover
-                          key={key}
                           item={{student: item}}
                           onClick={() =>
                             updateSelectedItem(
-                              item.value,
+                              item?.value || '',
                               item.name,
                               item.id,
-                              item.avatar
+                              item?.avatar || ''
                             )
                           }
                         />
@@ -219,7 +215,7 @@ const SearchSelectorWithAvatar = (props: selectorProps) => {
                   )
                 ) : (
                   <li className="flex justify-center relative py-2 px-4">
-                    <span className="font-normal"> No Results</span>
+                    <span className="font-normal">No Results</span>
                   </li>
                 )}
               </>

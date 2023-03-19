@@ -1,5 +1,6 @@
 import SearchInput from '@components/Atoms/Form/SearchInput';
 import useSearch from '@customHooks/useSearch';
+import {LessonProps} from '@interfaces/ClassroomInterface';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
@@ -7,7 +8,7 @@ import {isNumber} from 'lodash';
 import React, {Fragment, useEffect, useState} from 'react';
 import {getLocalStorageData} from 'utilities/localStorage';
 import {Empty} from '../Admin/LessonsBuilder/StepActionComponent/LearningEvidence/CourseMeasurementsCard';
-import {LessonProps} from './Classroom';
+
 import ClassroomLoader from './ClassroomLoader';
 import StandardLessonCard from './LessonCards/StandardLessonCard';
 
@@ -80,7 +81,7 @@ const Today: React.FC<LessonProps> = ({
       const temp: any = [];
       const groupedData = groupBy(finalList, 'session');
 
-      for (const [key, value] of Object.entries(groupedData)) {
+      for (const [_, value] of Object.entries(groupedData)) {
         const associatedLessons: any = value;
         if (breakpoint === 'sm') {
           if (associatedLessons[0].lesson.type === 'survey') {
@@ -105,8 +106,8 @@ const Today: React.FC<LessonProps> = ({
       {lessonLoading ? (
         Array(3)
           .fill(' ')
-          .map((_: any, index: number) => (
-            <Fragment key={index}>
+          .map((_: any) => (
+            <Fragment key={_}>
               <ClassroomLoader />
             </Fragment>
           ))
@@ -123,8 +124,8 @@ const Today: React.FC<LessonProps> = ({
               closeAction={removeSearchAction}
             />
           </div>
-          {lessonsBySession.map((session: any, index: number) => (
-            <Fragment key={index}>
+          {lessonsBySession.map((session: any) => (
+            <Fragment key={session.sessionHeading}>
               {isNumber(session.sessionHeading) && (
                 <div className="relative mb-2">
                   <div className="absolute inset-0 flex items-center" aria-hidden="true">

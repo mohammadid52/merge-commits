@@ -1,14 +1,14 @@
-import React, {useState, useRef, useContext, useCallback} from 'react';
-import ReactCrop from 'react-image-crop';
-import Modal from 'atoms/Modal';
-import {GlobalContext} from 'contexts/GlobalContext';
-import useDictionary from 'customHooks/dictionary';
+import {useGlobalContext} from '@contexts/GlobalContext';
 import Buttons from 'atoms/Buttons';
+import Modal from 'atoms/Modal';
+import useDictionary from 'customHooks/dictionary';
+import React, {useCallback, useRef, useState} from 'react';
+import ReactCrop from 'react-image-crop';
 import DummyContent from '../../Lesson/UniversalLessonBuilder/UI/Preview/DummyContent';
 import AnimatedContainer from '../../Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 
 interface ProfileCropModalProps {
-  upImg?: string;
+  upImg: string;
   saveCroppedImage: (img: any) => void;
   closeAction: () => void;
   handleImage?: () => void;
@@ -16,30 +16,32 @@ interface ProfileCropModalProps {
   customCropProps?: {[key: string]: any};
   locked?: boolean;
   cardLayout?: boolean;
+  open: boolean;
 }
 
 const ProfileCropModal: React.FC<ProfileCropModalProps> = (
   props: ProfileCropModalProps
 ) => {
   const {
-    upImg,
+    upImg = '',
     customCropProps,
     locked = false,
     imageClassName,
     cardLayout = false,
     saveCroppedImage,
-    closeAction
+    closeAction,
+    open
   } = props;
   const initial = customCropProps
     ? {...customCropProps}
     : {unit: '%', x: 0, y: 0, width: 100, aspect: 1};
   const [crop, setCrop] = useState<any>(initial);
-  const [completedCrop, setCompletedCrop] = useState(null);
-  const {userLanguage, clientKey} = useContext(GlobalContext);
-  const {BUTTONS} = useDictionary(clientKey);
-  const imgRef = useRef(null);
+  const [completedCrop, setCompletedCrop] = useState<any | null>(null);
+  const {userLanguage} = useGlobalContext();
+  const {BUTTONS} = useDictionary();
+  const imgRef = useRef<any>(null);
 
-  const onLoad = useCallback((img) => {
+  const onLoad = useCallback((img: any) => {
     imgRef.current = img;
   }, []);
 
@@ -71,7 +73,7 @@ const ProfileCropModal: React.FC<ProfileCropModalProps> = (
       finalCrop.height
     );
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       canvas.toBlob((file: any) => {
         file.name = 'fileName';
         resolve(file);
@@ -83,6 +85,7 @@ const ProfileCropModal: React.FC<ProfileCropModalProps> = (
 
   return (
     <Modal
+      open={open}
       showHeader={true}
       showHeaderBorder={false}
       title={'Preview image'}
@@ -136,6 +139,7 @@ const ProfileCropModal: React.FC<ProfileCropModalProps> = (
         <AnimatedContainer show={showCropper}>
           {showCropper && (
             <ReactCrop
+              // @ts-ignore
               src={upImg}
               onImageLoaded={onLoad}
               crop={crop}

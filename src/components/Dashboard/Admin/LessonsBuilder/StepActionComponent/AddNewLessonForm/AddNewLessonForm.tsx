@@ -1,13 +1,14 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {uploadImageToS3} from '@graphql/functions';
+import {Card} from 'antd';
 import {RoomStatus} from 'API';
 import Buttons from 'atoms/Buttons';
 import RichTextEditor from 'atoms/RichTextEditor';
-import {GlobalContext} from 'contexts/GlobalContext';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import * as customMutations from 'customGraphql/customMutations';
 import useDictionary from 'customHooks/dictionary';
 import * as mutations from 'graphql/mutations';
-import React, {useContext, useState} from 'react';
+import React, {useState} from 'react';
 import ProfileCropModal from '../../../../Profile/ProfileCropModal';
 import {InitialData, InputValueObject} from '../../LessonBuilder';
 import LessonCard from './LessonCard';
@@ -17,10 +18,12 @@ import MaterialsCard from './MaterialsCard';
 interface AddNewLessonFormProps {
   formData: InitialData;
   designerListLoading: boolean;
+
   designersList: InputValueObject[];
   selectedDesigners: InputValueObject[];
   changeLessonType: (type: string) => void;
   setFormData: React.Dispatch<React.SetStateAction<InitialData>>;
+
   setSelectedDesigners: (designer: InputValueObject[]) => void;
   postLessonCreation: (lessonId: string, action?: string) => void;
   allMeasurement: {id: number; name: string; value: string; topic?: string}[];
@@ -30,32 +33,6 @@ interface AddNewLessonFormProps {
   fetchStaffByInstitution: (institutionID: string) => void;
   lessonPlanAttachment?: any;
 }
-
-const Card = ({
-  cardTitle,
-  className = '',
-  children,
-  rightSide
-}: {
-  cardTitle: string;
-  className?: string;
-  children: React.ReactNode;
-  rightSide?: React.ReactNode;
-}) => {
-  return (
-    <div
-      className={`${className} w-auto min-h-56 min-w-56 customShadow p-4 bg-white rounded-lg my-2 lg:my-0`}>
-      <div className="px-3 mb-2 flex items-center justify-between">
-        <h4 className="half-border relative  w-auto  text-lg font-medium tracking-wide ">
-          {cardTitle}
-        </h4>
-        {rightSide}
-      </div>
-
-      {children}
-    </div>
-  );
-};
 
 const AddNewLessonForm = (props: AddNewLessonFormProps) => {
   const {
@@ -74,9 +51,9 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
     lessonPlanAttachment
   } = props;
 
-  const {clientKey, userLanguage} = useContext(GlobalContext);
+  const {userLanguage} = useGlobalContext();
 
-  const {AddNewLessonFormDict} = useDictionary(clientKey);
+  const {AddNewLessonFormDict} = useDictionary();
 
   const [validation, setValidation] = useState({
     name: '',
@@ -90,7 +67,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
     isError: true
   });
   const [showCropper, setShowCropper] = useState(false);
-  const [imageData, setImageData] = useState(null);
+  const [imageData, setImageData] = useState<any>(null);
 
   const onInputChange = (e: any) => {
     const {name, value} = e.target;
@@ -125,34 +102,22 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
     }
   };
 
-  const onSelectTargetAudience = (val: string, name: string, id: string) => {
+  const onSelectTargetAudience = (name: string) => {
     setFormData((prevData: InitialData) => ({
       ...prevData,
       targetAudience: name
     }));
   };
 
+  const lessonPlan = formData.lessonPlan || [];
+
   const totalEstTime =
     Math.ceil(
-      formData.lessonPlan.reduce(
-        (total: number, obj: any) => Number(obj.estTime) + total,
-        0
-      ) / 5
+      lessonPlan.reduce((total: number, obj: any) => Number(obj.estTime) + total, 0) / 5
     ) * 5;
 
-  const selectLanguage = (id: string, name: string, value: string) => {
-    let updatedList;
-    const currentLanguages = formData.languages;
-    const selectedItem = currentLanguages.find((item) => item.id === id);
-    if (!selectedItem) {
-      updatedList = [...currentLanguages, {id, name, value}];
-    } else {
-      updatedList = currentLanguages.filter((item) => item.id !== id);
-    }
-    setFormData({
-      ...formData,
-      languages: updatedList
-    });
+  const selectLanguage = (_: string[], option: any) => {
+    setFormData({...formData, languages: option});
     setValidation({
       ...validation,
       languages: ''
@@ -160,16 +125,8 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
     setUnsavedChanges(true);
   };
 
-  const selectDesigner = (id: string, name: string, value: string) => {
-    let updatedList;
-    const currentDesigners = selectedDesigners;
-    const selectedItem = currentDesigners.find((item) => item.id === id);
-    if (!selectedItem) {
-      updatedList = [...currentDesigners, {id, name, value}];
-    } else {
-      updatedList = currentDesigners.filter((item) => item.id !== id);
-    }
-    setSelectedDesigners(updatedList);
+  const selectDesigner = (_: string[], option: any[]) => {
+    setSelectedDesigners(option);
   };
 
   const setEditorContent = (
@@ -200,11 +157,11 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
       ...formData,
       imagePreviewUrl: imageUrl
     });
-    // setImagePreviewUrl(imageUrl);
+
     toggleCropper();
   };
 
-  const onDurationSelect = (_: any, name: string) => {
+  const onDurationSelect = (name: string) => {
     setFormData({
       ...formData,
       duration: name
@@ -318,7 +275,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
             id: lessonId,
             type: formData.type.value,
             title: formData.name,
-            institutionID: formData.institution.id,
+            institutionID: formData?.institution?.id || '',
             purpose: formData.purposeHtml,
             objectives: [formData.objectiveHtml],
             language: formData.languages.map((item) => item.value),
@@ -333,7 +290,9 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
             targetAudience: formData.targetAudience || null
           };
           const results: any = await API.graphql(
-            graphqlOperation(customMutations.updateUniversalLesson, {input: input})
+            graphqlOperation(customMutations.updateUniversalLesson, {
+              input: input
+            })
           );
           const lessonsData = results?.data?.updateUniversalLesson;
           setCreatingLessons(false);
@@ -374,12 +333,11 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
     name,
     type,
     duration = '1',
-    languages,
+    languages = [],
     purposeHtml,
     status = RoomStatus.ACTIVE,
     objectiveHtml,
     notesHtml,
-    institution,
     imageCaption,
     imagePreviewUrl = '',
     studentSummary = '',
@@ -403,12 +361,13 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
       <div className="">
         <div className="h-9/10 lg:grid lg:grid-cols-2 gap-6 p-4">
           <Card
-            cardTitle={'Lesson Details'}
-            rightSide={
+            title={'Lesson Details'}
+            extra={
               <Buttons
                 btnClass="py-3 px-10"
                 label={`${lessonPlanAttachment ? '' : 'Upload'} lesson plan`}
-                // onClick={saveFormData}
+                size="small"
+                variant="default"
                 onClick={() => setShowUploadModal(true)}
               />
             }>
@@ -436,7 +395,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
               validation={validation}
             />
           </Card>
-          <Card cardTitle="Lesson Objectives">
+          <Card title="Lesson Objectives">
             <div className="max-h-96 px-4 py-6">
               <RichTextEditor
                 maxHeight={'max-h-96'}
@@ -448,17 +407,17 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
               />
             </div>
           </Card>
-          <Card cardTitle="Materials">
+          <Card title="Materials">
             <MaterialsCard
               purposeHtml={purposeHtml}
               studentMaterials={formData.studentMaterials}
               setEditorContent={setEditorContent}
             />
           </Card>
-          <Card cardTitle="Reminder & Notes">
+          <Card title="Reminder & Notes">
             <div className="max-h-96 px-4 py-6">
               <RichTextEditor
-                initialValue={notesHtml}
+                initialValue={notesHtml || ''}
                 onChange={(htmlContent, plainText) =>
                   setEditorContent(htmlContent, plainText, 'notesHtml', 'notes')
                 }
@@ -466,22 +425,20 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
               />
             </div>
           </Card>
-          <Card cardTitle="Lesson Card" className="col-span-2">
-            <div className="p-4">
-              <LessonCard
-                cardCaption={formData.imageCaption}
-                studentSummary={studentSummary}
-                onInputChange={onInputChange}
-                imageCaption={imageCaption}
-                setImage={setImageData}
-                validation={validation}
-                setFileObj={setFileObj}
-                imagePreviewUrl={imagePreviewUrl}
-                totalEstTime={totalEstTime}
-                toggleCropper={toggleCropper}
-                lessonType={formData.type.value}
-              />
-            </div>
+          <Card title="Lesson Card" className="col-span-2">
+            <LessonCard
+              cardCaption={formData?.imageCaption || ''}
+              studentSummary={studentSummary}
+              onInputChange={onInputChange}
+              imageCaption={imageCaption || ''}
+              setImage={setImageData}
+              validation={validation}
+              setFileObj={setFileObj}
+              imagePreviewUrl={imagePreviewUrl}
+              totalEstTime={totalEstTime}
+              toggleCropper={toggleCropper}
+              lessonType={formData.type.value}
+            />
           </Card>
         </div>
         {validation.message && (
@@ -506,17 +463,17 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
         </div>
       </div>
       {/* Image cropper */}
-      {showCropper && (
-        <ProfileCropModal
-          upImg={imageData}
-          cardLayout
-          customCropProps={{x: 25, y: 25, width: 384, height: 180}}
-          locked={false}
-          imageClassName={`w-full h-48 md:h-auto sm:w-2.5/10 } rounded-tl rounded-bl shadow`}
-          saveCroppedImage={(img: string) => saveCroppedImage(img)}
-          closeAction={toggleCropper}
-        />
-      )}
+
+      <ProfileCropModal
+        upImg={imageData}
+        open={showCropper}
+        cardLayout
+        customCropProps={{x: 25, y: 25, width: 384, height: 180}}
+        locked={false}
+        imageClassName={`w-full h-48 md:h-auto sm:w-2.5/10 } rounded-tl rounded-bl shadow`}
+        saveCroppedImage={(img: string) => saveCroppedImage(img)}
+        closeAction={toggleCropper}
+      />
     </div>
   );
 };

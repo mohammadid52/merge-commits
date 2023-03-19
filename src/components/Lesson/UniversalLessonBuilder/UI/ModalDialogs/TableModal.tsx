@@ -1,29 +1,32 @@
-import {filter, map, omit, remove, update} from 'lodash';
-import React, {useContext, useEffect, useState} from 'react';
-import {v4 as uuidv4} from 'uuid';
-import {GlobalContext} from 'contexts/GlobalContext';
-import useDictionary from 'customHooks/dictionary';
-import {IContentTypeComponentProps} from 'interfaces/UniversalLessonBuilderInterfaces';
-import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
-import Buttons from 'atoms/Buttons';
-import FormInput from 'atoms/Form/FormInput';
-import ColorPicker from '../ColorPicker/ColorPicker';
-import {TABLE} from '../common/constants';
-import Toggle from '../Toggle';
-import AnimatedContainer from '../UIComponents/Tabs/AnimatedContainer';
-import {Tabs3, useTabs} from '../UIComponents/Tabs/Tabs';
-import {HiOutlineTrash} from 'react-icons/hi';
-import {getMaxWordLenOfHeader} from '@components/Lesson/UniversalLessonBlockComponents/Blocks/TableBlock';
+import { getMaxWordLenOfHeader } from "@components/Lesson/UniversalLessonBlockComponents/Blocks/TableBlock";
+import Buttons from "atoms/Buttons";
+import FormInput from "atoms/Form/FormInput";
+import { useGlobalContext } from "contexts/GlobalContext";
+import useDictionary from "customHooks/dictionary";
+import { IContentTypeComponentProps } from "interfaces/UniversalLessonBuilderInterfaces";
+import { filter, map, omit, remove, update } from "lodash";
+import { useEffect, useState } from "react";
+import { HiOutlineTrash } from "react-icons/hi";
+import { updateLessonPageToDB } from "utilities/updateLessonPageToDB";
+import { v4 as uuidv4 } from "uuid";
+import ColorPicker from "../ColorPicker/ColorPicker";
+import { TABLE } from "../common/constants";
+import Toggle from "../Toggle";
+import AnimatedContainer from "../UIComponents/Tabs/AnimatedContainer";
+import { Tabs3, useTabs } from "../UIComponents/Tabs/Tabs";
 
-const onDark = (colIndex: number) => (colIndex % 2 !== 0 ? 'bg-gray-700' : 'bg-gray-800');
-const onLight = (colIndex: number) => (colIndex % 2 !== 0 ? 'bg-white' : 'bg-gray-100');
+const onDark = (colIndex: number) =>
+  colIndex % 2 !== 0 ? "bg-gray-700" : "bg-gray-800";
+const onLight = (colIndex: number) =>
+  colIndex % 2 !== 0 ? "bg-white" : "bg-gray-100";
 
 interface TableProps extends IContentTypeComponentProps {
   inputObj?: any;
   selectedPageID?: string;
   classString?: string;
 }
-const getColorDensity = (value: string | number) => `${(Number(value) * 10) / 100}%`;
+const getColorDensity = (value: string | number) =>
+  `${(Number(value) * 10) / 100}%`;
 
 const TableModal = (props: TableProps) => {
   const {
@@ -33,10 +36,10 @@ const TableModal = (props: TableProps) => {
     updateBlockContentULBHandler,
     askBeforeClose,
     setUnsavedChanges,
-    classString = 'green-400 || white || light'
+    classString = "green-400 || white || light",
   } = props;
-  const {userLanguage, clientKey} = useContext(GlobalContext);
-  const {EditQuestionModalDict} = useDictionary(clientKey);
+  const { userLanguage } = useGlobalContext();
+  const { EditQuestionModalDict } = useDictionary();
 
   // set all values to local state
   useEffect(() => {
@@ -45,14 +48,19 @@ const TableModal = (props: TableProps) => {
 
       const modifyRowList = map(inputObj, (row: any) => ({
         ...row,
-        col: row.options
+        col: row.options,
       }));
 
-      const tableBg = classString.split(' || ')[0];
-      const tableText = classString.split(' || ')[1];
-      const theme = classString.split(' || ')[2] || 'light';
+      const tableBg = classString.split(" || ")[0];
+      const tableText = classString.split(" || ")[1];
+      const theme = classString.split(" || ")[2] || "light";
 
-      setColors({...colors, tableHeader: tableBg, tableText, dark: theme === 'dark'});
+      setColors({
+        ...colors,
+        tableHeader: tableBg,
+        tableText,
+        dark: theme === "dark",
+      });
 
       setRowList([...modifyRowList]);
     }
@@ -63,40 +71,44 @@ const TableModal = (props: TableProps) => {
   const listTitle = [
     {
       id: uuidv4().toString(),
-      value: '',
-      col: [{id: uuidv4().toString(), text: ''}]
+      value: "",
+      col: [{ id: uuidv4().toString(), text: "" }],
     },
     {
       id: uuidv4().toString(),
-      value: '',
-      col: [{id: uuidv4().toString(), text: ''}]
+      value: "",
+      col: [{ id: uuidv4().toString(), text: "" }],
     },
     {
       id: uuidv4().toString(),
-      value: '',
-      col: [{id: uuidv4().toString(), text: ''}]
+      value: "",
+      col: [{ id: uuidv4().toString(), text: "" }],
     },
-    {id: uuidv4().toString(), value: '', col: [{id: uuidv4().toString(), text: ''}]}
+    {
+      id: uuidv4().toString(),
+      value: "",
+      col: [{ id: uuidv4().toString(), text: "" }],
+    },
   ];
 
   const onRowChange = (e: any, rowIndex: number) => {
     setUnsavedChanges(true);
-    const {value} = e.target;
-    update(rowList[rowIndex], 'value', () => value);
+    const { value } = e.target;
+    update(rowList[rowIndex], "value", () => value);
     setRowList([...rowList]);
   };
 
   const onColChange = (e: any, rowIndex: number, colIndex: number) => {
     setUnsavedChanges(true);
-    const {value} = e.target;
-    update(rowList[rowIndex].col[colIndex], 'text', () => value);
+    const { value } = e.target;
+    update(rowList[rowIndex].col[colIndex], "text", () => value);
     setRowList([...rowList]);
   };
 
   const getCols = (len: number) => {
     let empty = [];
     for (let i = 0; i < len; i++) {
-      const item = {id: uuidv4().toString(), text: ''};
+      const item = { id: uuidv4().toString(), text: "" };
       empty.push(item);
     }
     return empty;
@@ -107,8 +119,8 @@ const TableModal = (props: TableProps) => {
 
     rowList.push({
       id: uuidv4().toString(),
-      value: '',
-      col: getCols(rowList[0].col.length)
+      value: "",
+      col: getCols(rowList[0].col.length),
     });
 
     setRowList([...rowList]);
@@ -117,7 +129,7 @@ const TableModal = (props: TableProps) => {
   const addCol = () => {
     let copy = [...rowList];
     for (const row of copy) {
-      const newCol = {id: uuidv4().toString(), text: ''};
+      const newCol = { id: uuidv4().toString(), text: "" };
       row.col.push(newCol);
     }
 
@@ -137,7 +149,7 @@ const TableModal = (props: TableProps) => {
     let copy = [...rowList];
     for (const row of copy) {
       const lastColValue = row.col[colIndex].text;
-      row.col.push({id: uuidv4().toString(), text: lastColValue});
+      row.col.push({ id: uuidv4().toString(), text: lastColValue });
     }
     setRowList([...copy]);
   };
@@ -154,12 +166,14 @@ const TableModal = (props: TableProps) => {
   // All states here
   const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
   const [rowList, setRowList] = useState(listTitle);
-  const [colorPickerActiveBG, setColorPickerActiveBG] = useState<boolean>(false);
-  const [colorPickerActiveText, setColorPickerActiveText] = useState<boolean>(false);
+  const [colorPickerActiveBG, setColorPickerActiveBG] =
+    useState<boolean>(false);
+  const [colorPickerActiveText, setColorPickerActiveText] =
+    useState<boolean>(false);
   const [colors, setColors] = useState({
-    tableHeader: 'green-500',
-    tableText: 'white',
-    dark: false
+    tableHeader: "green-500",
+    tableText: "white",
+    dark: false,
   });
   // Filter blank row headers for preview
   const filteredList = filter(rowList, (row: any) => row.value.length > 0);
@@ -170,26 +184,26 @@ const TableModal = (props: TableProps) => {
 
     const input = {
       id: list.id,
-      lessonPlan: [...list.lessonPlan]
+      lessonPlan: [...list.lessonPlan],
     };
     await updateLessonPageToDB(input);
   };
   const dynamicClass = `${colors.tableHeader} || ${colors.tableText} || ${
-    colors.dark ? 'dark' : 'light'
+    colors.dark ? "dark" : "light"
   }`;
 
   const onSubmit = async () => {
     const finalArray = map(rowList, (row: any) => ({
       ...row,
-      options: [...row.col]
+      options: [...row.col],
     }));
 
-    const removeCol = map(finalArray, (row: any) => omit(row, ['col']));
+    const removeCol = map(finalArray, (row: any) => omit(row, ["col"]));
 
     if (isEditingMode) {
       const updatedList = updateBlockContentULBHandler(
-        '',
-        '',
+        "",
+        "",
         TABLE,
         removeCol,
         0,
@@ -198,8 +212,8 @@ const TableModal = (props: TableProps) => {
       await addToDB(updatedList);
     } else {
       const updatedList = createNewBlockULBHandler(
-        '',
-        '',
+        "",
+        "",
         TABLE,
         removeCol,
         0,
@@ -213,17 +227,17 @@ const TableModal = (props: TableProps) => {
   const handleColorPickerSelect = (pickedColor: string, type: string) => {
     setColors({
       ...colors,
-      [type === 'bg' ? 'tableHeader' : 'tableText']: pickedColor
+      [type === "bg" ? "tableHeader" : "tableText"]: pickedColor,
     });
   };
 
-  const tableBg = dynamicClass.split(' || ')[0];
-  const tableText = dynamicClass.split(' || ')[1];
+  const tableBg = dynamicClass.split(" || ")[0];
+  const tableText = dynamicClass.split(" || ")[1];
 
   const genThemeClass = (colIndex: number) =>
     colors.dark ? onDark(colIndex) : onLight(colIndex);
 
-  const {curTab, setCurTab, helpers} = useTabs();
+  const { curTab, setCurTab, helpers } = useTabs();
   const [onSetupTab, onPreviewTab] = helpers;
 
   const getLastLen = () => {
@@ -238,9 +252,10 @@ const TableModal = (props: TableProps) => {
       <Tabs3 curTab={curTab} setCurTab={setCurTab} />
       <AnimatedContainer show={onSetupTab}>
         {onSetupTab && (
-          <div style={{maxWidth: '94rem'}}>
+          <div style={{ maxWidth: "94rem" }}>
             <div
-              className={`grid gap-4 table-container gap-y-6 grid-cols-${rowList.length}`}>
+              className={`grid gap-4 table-container gap-y-6 grid-cols-${rowList.length}`}
+            >
               {map(rowList, (rowItem, rowIndex) => {
                 return (
                   <div className="flex item-center flex-col">
@@ -251,7 +266,7 @@ const TableModal = (props: TableProps) => {
                       onClick={() => deleteCol(rowItem.id)}
                       size="small"
                       Icon={rowList.length >= 7 ? HiOutlineTrash : undefined}
-                      label={rowList.length >= 7 ? '' : 'Delete this column'}
+                      label={rowList.length >= 7 ? "" : "Delete this column"}
                     />
 
                     <FormInput
@@ -309,24 +324,31 @@ const TableModal = (props: TableProps) => {
 
               <hr />
 
-              <h3 className="mt-4 text-base text-black font-medium">Customize Table</h3>
+              <h3 className="mt-4 text-base text-black font-medium">
+                Customize Table
+              </h3>
               <div className="grid gap-x-4 grid-cols-3">
                 <div className="col-span-1 relative h-full">
                   <label
-                    htmlFor={'bgColor'}
-                    className="mb-2 block text-xs font-semibold leading-5 text-gray-700">
+                    htmlFor={"bgColor"}
+                    className="mb-2 block text-xs font-semibold leading-5 text-gray-700"
+                  >
                     Select table header background color
                   </label>
                   <button
                     onClick={() => setColorPickerActiveBG(!colorPickerActiveBG)}
-                    className={`border-0 border-gray-300 rounded shadow-xs flex items-center justify-start  h-10 px-3`}>
-                    <span className={'text-gray-700 w-auto text-sm mr-2 capitalize'}>
-                      {colors.tableHeader?.split('-')[0]}{' '}
-                      {getColorDensity(colors.tableHeader?.split('-')[1])}
+                    className={`border-0 border-gray-300 rounded shadow-xs flex items-center justify-start  h-10 px-3`}
+                  >
+                    <span
+                      className={"text-gray-700 w-auto text-sm mr-2 capitalize"}
+                    >
+                      {colors.tableHeader?.split("-")[0]}{" "}
+                      {getColorDensity(colors.tableHeader?.split("-")[1])}
                     </span>
 
                     <span
-                      className={`h-4 block w-4 bg-${colors.tableHeader} rounded-full border-3 border-gray-400`}></span>
+                      className={`h-4 block w-4 bg-${colors.tableHeader} rounded-full border-3 border-gray-400`}
+                    ></span>
                   </button>
                   {colorPickerActiveBG && (
                     <ColorPicker
@@ -334,31 +356,38 @@ const TableModal = (props: TableProps) => {
                       classString={classString}
                       callbackColor={(pickedColor) => {
                         setColorPickerActiveBG(false);
-                        handleColorPickerSelect(pickedColor, 'bg');
+                        handleColorPickerSelect(pickedColor, "bg");
                       }}
-                      styleString={{top: '100%'}}
+                      styleString={{ top: "100%" }}
                     />
                   )}
                 </div>
                 <div className="col-span-1 relative h-full">
                   <label
-                    htmlFor={'bgColor'}
-                    className="mb-2 block text-xs font-semibold leading-5 text-gray-700">
+                    htmlFor={"bgColor"}
+                    className="mb-2 block text-xs font-semibold leading-5 text-gray-700"
+                  >
                     Select table header text color
                   </label>
                   <button
-                    onClick={() => setColorPickerActiveText(!colorPickerActiveText)}
-                    className={`border-0 border-gray-300 rounded shadow-xs flex items-center justify-start  h-10 px-3`}>
-                    <span className={'text-gray-700 w-auto text-sm mr-2 capitalize'}>
-                      {colors.tableText === 'white'
-                        ? 'white'
-                        : colors.tableText?.split('-')[0]}{' '}
-                      {colors.tableText !== 'white' &&
-                        getColorDensity(colors.tableText?.split('-')[1])}
+                    onClick={() =>
+                      setColorPickerActiveText(!colorPickerActiveText)
+                    }
+                    className={`border-0 border-gray-300 rounded shadow-xs flex items-center justify-start  h-10 px-3`}
+                  >
+                    <span
+                      className={"text-gray-700 w-auto text-sm mr-2 capitalize"}
+                    >
+                      {colors.tableText === "white"
+                        ? "white"
+                        : colors.tableText?.split("-")[0]}{" "}
+                      {colors.tableText !== "white" &&
+                        getColorDensity(colors.tableText?.split("-")[1])}
                     </span>
 
                     <span
-                      className={`h-4 block w-4 bg-${colors.tableText} rounded-full border-3 border-gray-400`}></span>
+                      className={`h-4 block w-4 bg-${colors.tableText} rounded-full border-3 border-gray-400`}
+                    ></span>
                   </button>
                   {colorPickerActiveText && (
                     <ColorPicker
@@ -366,26 +395,30 @@ const TableModal = (props: TableProps) => {
                       classString={classString}
                       callbackColor={(pickedColor) => {
                         setColorPickerActiveText(false);
-                        handleColorPickerSelect(pickedColor, 'text');
+                        handleColorPickerSelect(pickedColor, "text");
                       }}
-                      styleString={{top: '100%'}}
+                      styleString={{ top: "100%" }}
                     />
                   )}
                 </div>
                 <div className="col-span-1 relative h-full">
                   <label
-                    htmlFor={'bgColor'}
-                    className="mb-2 block text-xs font-semibold leading-5 text-gray-700">
+                    htmlFor={"bgColor"}
+                    className="mb-2 block text-xs font-semibold leading-5 text-gray-700"
+                  >
                     Select table content theme
                   </label>
                   <div
-                    className={`mt-1 flex items-center justify-between w-full sm:text-sm sm:leading-5 focus:outline-none focus:border-transparent border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm`}>
+                    className={`mt-1 flex items-center justify-between w-full sm:text-sm sm:leading-5 focus:outline-none focus:border-transparent border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm`}
+                  >
                     <span className="w-auto">
-                      Theme: ({colors.dark ? 'dark' : 'light'})
+                      Theme: ({colors.dark ? "dark" : "light"})
                     </span>
                     <Toggle
                       enabled={colors.dark}
-                      setEnabled={() => setColors({...colors, dark: !colors.dark})}
+                      setEnabled={() =>
+                        setColors({ ...colors, dark: !colors.dark })
+                      }
                     />
                   </div>
                 </div>
@@ -396,13 +429,15 @@ const TableModal = (props: TableProps) => {
               <div className="flex items-center w-auto">
                 <Buttons
                   btnClass="py-1 px-4 text-xs mr-2"
-                  label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
+                  label={
+                    EditQuestionModalDict[userLanguage]["BUTTON"]["CANCEL"]
+                  }
                   onClick={askBeforeClose}
                   transparent
                 />
                 <Buttons
                   btnClass="py-1 px-8 text-xs ml-2"
-                  label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
+                  label={EditQuestionModalDict[userLanguage]["BUTTON"]["SAVE"]}
                   onClick={() => onSubmit()}
                 />
               </div>
@@ -413,18 +448,22 @@ const TableModal = (props: TableProps) => {
       <AnimatedContainer show={onPreviewTab}>
         {onPreviewTab &&
           (filteredList.length > 0 ? (
-            <div style={{maxWidth: '94rem'}}>
+            <div style={{ maxWidth: "94rem" }}>
               <div
-                className={`grid  overflow-hidden  shadow-lg rounded-lg  grid-cols-${filteredList.length}`}>
+                className={`grid  overflow-hidden  shadow-lg rounded-lg  grid-cols-${filteredList.length}`}
+              >
                 {map(filteredList, (rowItem) => {
                   return (
                     <div key={rowItem.id}>
                       <h4
                         style={{
                           minHeight:
-                            getMaxWordLenOfHeader(rowList) >= 20 ? '5rem' : 'unset'
+                            getMaxWordLenOfHeader(rowList) >= 20
+                              ? "5rem"
+                              : "unset",
                         }}
-                        className={`bg-${tableBg} text-${tableText} uppercase border-b-0 border-${tableBg} px-6 py-3 text-left text-xs font-medium  tracking-wider`}>
+                        className={`bg-${tableBg} text-${tableText} uppercase border-b-0 border-${tableBg} px-6 py-3 text-left text-xs font-medium  tracking-wider`}
+                      >
                         {rowItem.value}
                       </h4>
                       {map(rowItem.col, (colItem, colIndex: number) => {
@@ -434,9 +473,10 @@ const TableModal = (props: TableProps) => {
                             className={`px-6 py-4 ${genThemeClass(
                               colIndex
                             )} whitespace-nowrap text-sm ${
-                              colors.dark ? 'text-white' : 'text-gray-600'
-                            }`}>
-                            {colItem.text || '--'}
+                              colors.dark ? "text-white" : "text-gray-600"
+                            }`}
+                          >
+                            {colItem.text || "--"}
                           </div>
                         );
                       })}

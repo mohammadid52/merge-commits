@@ -1,16 +1,27 @@
 import {User} from '@customHooks/useAuth';
-import {Dicitionary, PersonStatus, Role, UserPageState} from 'API';
+import {Widget} from '@interfaces/ClassroomComponentsInterfaces';
+import {Dicitionary, PersonStatus, Role, TeachingStyle, UserPageState} from 'API';
 
 export interface GlobalStateType {
   sidebar: {
     upcomingLessons: any[];
   };
   roomData: {
+    id: string;
+    name: string;
+    teachingStyle?: TeachingStyle;
     curriculum: any;
     rooms: any[];
     syllabus: any[];
-    activeSyllabus: string;
+    activeSyllabus: {
+      id: string;
+      name: string;
+
+      [key: string]: any;
+    };
+    completedLessons?: any[];
     lessons: any[];
+    widgets: Widget[];
   };
   currentPage: string;
   activeRoom: string;
@@ -39,10 +50,17 @@ export const globalState: GlobalStateType = {
     upcomingLessons: []
   },
   roomData: {
+    id: '',
+    name: '',
+    teachingStyle: undefined,
+    widgets: [],
     curriculum: {},
     rooms: [],
     syllabus: [],
-    activeSyllabus: '',
+    activeSyllabus: {
+      id: '',
+      name: ''
+    },
     lessons: []
   },
   dictionaries: [],
@@ -52,6 +70,7 @@ export const globalState: GlobalStateType = {
   status: '',
   error: '',
   isAuthenticated: false,
+
   lessonPage: {
     theme: 'dark',
     themeTextColor: 'text-white',
@@ -64,9 +83,10 @@ export const globalState: GlobalStateType = {
     email: '',
     firstName: '',
     lastName: '',
-    language: '',
+    language: 'EN',
     role: Role.ST,
     image: '',
+    preferredName: '',
     location: [],
     lastLoggedIn: '',
     lastLoggedOut: '',
@@ -74,7 +94,8 @@ export const globalState: GlobalStateType = {
     associateInstitute: [],
     pageState: UserPageState.NOT_LOGGED_IN,
     removedFrom: [],
-    status: PersonStatus.INACTIVE
+    status: PersonStatus.INACTIVE,
+    lastPageStateUpdate: new Date().toISOString()
   },
 
   temp: {},
@@ -85,6 +106,8 @@ export const globalState: GlobalStateType = {
 };
 
 export const standardTheme = {
+  iconoclast: '#667eea',
+  curate: '#0081cb',
   bg: 'bg-dark-gray',
   underline: 'border-b border-white border-opacity-10 pb-1 mb-1',
   gradient: {
@@ -110,8 +133,7 @@ export const standardTheme = {
   dashboard: {
     sectionTitle: 'w-auto text-black pb-2 font-medium mt-4 mb-1 text-left',
     bg: 'bg-darker-gray',
-    card:
-      'p-2 relative bg-white rounded  border-0 border-dark-gray border-opacity-10 h-auto flex',
+    card: 'p-2 relative bg-white rounded  border-0 border-dark-gray border-opacity-10 h-auto flex',
     cardNoBG: 'relative h-auto p-2 flex'
   },
   lessonCard: {

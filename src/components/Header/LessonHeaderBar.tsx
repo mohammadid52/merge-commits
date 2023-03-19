@@ -6,14 +6,12 @@ import Modal from 'atoms/Modal';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
 import {LessonHeaderBarProps} from 'interfaces/LessonComponentsInterfaces';
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import ReactPlayer from 'react-player';
 import {useHistory, useRouteMatch} from 'react-router-dom';
 import {getLocalStorageData, removeLocalStorageData} from 'utilities/localStorage';
 import PositiveAlert from '../General/Popup';
 import LessonTopMenu from '../Lesson/Navigation/LessonTopMenu';
-import SideMenu from '../Lesson/Navigation/SideMenu';
-import VideoWidget from '../Lesson/Navigation/Widgets/VideoWidget';
 
 const LessonHeaderBar = ({
   overlay,
@@ -41,7 +39,7 @@ const LessonHeaderBar = ({
   const match = useRouteMatch();
 
   // don't remove this line or we are screwed
-  const initializeTimer = useStudentTimer();
+  useStudentTimer();
   const isLesson = lessonState?.lessonData.type === 'lesson';
 
   // ##################################################################### //
@@ -55,7 +53,7 @@ const LessonHeaderBar = ({
   // To track user clicks on home button or click next on last page
 
   const goToClassRoom = async () => {
-    setPersonLessonData(null);
+    setPersonLessonData?.(null);
 
     history.push(`/dashboard/classroom/${getRoomData.id}`);
     removeLocalStorageData('survey_redirect');
@@ -70,7 +68,7 @@ const LessonHeaderBar = ({
 
   const handleNotebookSave = () => {
     console.log('handleNotebookSave');
-    createJournalData();
+    createJournalData?.();
 
     if (isLesson) {
       console.log('\x1b[33m Saving notebook... \x1b[0m');
@@ -79,22 +77,22 @@ const LessonHeaderBar = ({
         saveJournalData?.current();
       }
     }
-    const id = personLessonData.id;
+    const id = personLessonData?.id || '';
 
     console.log(`\x1b[33m Updating lesson completion... \x1b[0m`);
 
-    updatePersonLessonsDataMutation
-      .mutate({input: {id, isCompleted: true}})
-      .then(() => {
-        setPersonLessonData(null);
-        goToClassRoom();
-        console.log('Successfully completed ' + lessonState?.lessonData?.type);
-      })
-      .catch((err) => {
-        console.error('Error updating current lesson/survey complete status', err);
-      });
-
-    lessonDispatch({type: 'RESET_TIMER_FOR_PAGE'});
+    if (id) {
+      updatePersonLessonsDataMutation
+        .mutate({input: {id, isCompleted: true}})
+        .then(() => {
+          setPersonLessonData?.(null);
+          goToClassRoom();
+          console.log('Successfully completed ' + lessonState?.lessonData?.type);
+        })
+        .catch((err) => {
+          console.error('Error updating current lesson/survey complete status', err);
+        });
+    }
   };
 
   useEffect(() => {
@@ -124,7 +122,10 @@ const LessonHeaderBar = ({
   // ~~~~~~~ LEAVE VERIFICATION POPUP ~~~~~~ //
 
   const setLeaveModalVisible = (updatedState: boolean) => {
-    lessonDispatch({type: 'SET_LEAVE_MODAL_VISIBLE_STATE', payload: updatedState});
+    lessonDispatch({
+      type: 'SET_LEAVE_MODAL_VISIBLE_STATE',
+      payload: updatedState
+    });
   };
 
   const leaveModalVisible = Boolean(lessonState?.misc?.leaveModalVisible);
@@ -143,7 +144,7 @@ const LessonHeaderBar = ({
   };
 
   // ~~~~ POPUP IF A VIDEO IS AVAILABLE ~~~~ //
-  const handleVideoLinkPopup = (url?: string) => {
+  const handleVideoLinkPopup = (_?: string) => {
     if (videoLinkModalVisible) {
       // setVideoLink('');
       setVideoLinkModalVisible(false);
@@ -153,14 +154,11 @@ const LessonHeaderBar = ({
     }
   };
 
-  const getPageLabel = (locationIndex: string) => {
+  const getPageLabel = (locationIndex: number) => {
     if (lessonState.lessonData && lessonState.lessonData?.lessonPlan) {
-      if (locationIndex === '') {
-        return 'n/a';
-      } else {
-        return lessonState.lessonData.lessonPlan[parseInt(locationIndex)]?.label;
-      }
+      return lessonState?.lessonData?.lessonPlan?.[locationIndex]?.label;
     }
+    return 'n/a';
   };
 
   const thisPageVideoLink = lessonState.lessonData.lessonPlan
@@ -199,6 +197,7 @@ const LessonHeaderBar = ({
     if (pageID && pageArray) {
       return pageArray.findIndex((pageObj: any) => pageObj.id === pageID);
     }
+    return null;
   };
 
   // ~~~~~~~~ TEACHER IS PRESENTING ~~~~~~~~ //
@@ -228,7 +227,7 @@ const LessonHeaderBar = ({
       handleBack();
     } else {
       if (!userAtEnd()) {
-        if (isAtEnd) setisAtEnd(false);
+        if (isAtEnd) setisAtEnd?.(false);
         if (canContinue) {
           history.push(`${match.url}/${lessonState.currentPage + 1}`);
           lessonDispatch({
@@ -236,13 +235,13 @@ const LessonHeaderBar = ({
             payload: lessonState.currentPage + 1
           });
         } else {
-          handleRequiredNotification();
+          handleRequiredNotification?.();
         }
       } else if (userAtEnd()) {
-        if (validateRequired(lessonState.currentPage)) {
+        if (validateRequired?.(lessonState.currentPage)) {
           handleLeavePopup();
         } else {
-          handleRequiredNotification();
+          handleRequiredNotification?.();
         }
       }
     }
@@ -253,14 +252,14 @@ const LessonHeaderBar = ({
       handleLeavePopup();
     } else {
       if (userAtEnd()) {
-        if (isAtEnd) setisAtEnd(false);
+        if (isAtEnd) setisAtEnd?.(false);
         history.push(`${match.url}/${lessonState.currentPage - 1}`);
         lessonDispatch({
           type: 'SET_CURRENT_PAGE',
           payload: lessonState.currentPage - 1
         });
       } else if (!userAtEnd() && lessonState.currentPage > 0) {
-        if (isAtEnd) setisAtEnd(false);
+        if (isAtEnd) setisAtEnd?.(false);
         history.push(`${match.url}/${lessonState.currentPage - 1}`);
         lessonDispatch({
           type: 'SET_CURRENT_PAGE',
@@ -293,7 +292,6 @@ const LessonHeaderBar = ({
           <PositiveAlert
             closeAction={() => setLeaveModalVisible(false)}
             alert={leaveModalVisible}
-            setAlert={setLeaveModalVisible}
             button1Color={
               'border-sea-green hover:bg-sea-green text-sea-green white-text-on-hover border-2'
             }
@@ -325,24 +323,17 @@ const LessonHeaderBar = ({
         </div>
 
         {/* VIDEO POPUP */}
-        {!leaveModalVisible && videoLink && (
-          <div className={`${videoLinkModalVisible ? 'absolute z-100' : 'hidden'}`}>
-            <Modal
-              title={`Video for "${getPageLabel(lessonState.currentPage)}"`}
-              showHeader={true}
-              showHeaderBorder={false}
-              showFooter={false}
-              scrollHidden={true}
-              closeAction={handleVideoLinkPopup}>
-              <ReactPlayer
-                url={videoLink}
-                controls={true}
-                pip={true}
-                stopOnUnmount={false}
-              />
-            </Modal>
-          </div>
-        )}
+
+        <Modal
+          open={Boolean(!leaveModalVisible && videoLink)}
+          title={`Video for "${getPageLabel(lessonState?.currentPage || 0)}"`}
+          showHeader={true}
+          showHeaderBorder={false}
+          showFooter={false}
+          scrollHidden={true}
+          closeAction={handleVideoLinkPopup}>
+          <ReactPlayer url={videoLink} controls={true} pip={true} stopOnUnmount={false} />
+        </Modal>
 
         <LessonTopMenu
           overlay={overlay}
@@ -367,7 +358,7 @@ const LessonHeaderBar = ({
          *
          */}
 
-        {breakpoint !== 'xs' && breakpoint !== 'sm' ? (
+        {/* {breakpoint !== 'xs' && breakpoint !== 'sm' ? (
           <VideoWidget
             videoLink={videoLink}
             videoLinkModalVisible={videoLinkModalVisible}
@@ -376,7 +367,6 @@ const LessonHeaderBar = ({
         ) : (
           <SideMenu
             isOpen={overlay === 'sidemenu'}
-            overlay={overlay}
             setOverlay={setOverlay}
             videoLink={videoLink}
             videoLinkModalVisible={videoLinkModalVisible}
@@ -390,7 +380,7 @@ const LessonHeaderBar = ({
             handleBack={handleBack}
             handleForward={handleForward}
           />
-        )}
+        )} */}
       </div>
     </ErrorBoundary>
   );

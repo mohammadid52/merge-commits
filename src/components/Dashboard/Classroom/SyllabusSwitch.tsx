@@ -4,16 +4,15 @@ import React from 'react';
 import {FaBook} from 'react-icons/fa';
 import {useHistory} from 'react-router';
 import {DashboardProps} from '../Dashboard';
-import {Syllabus} from './Classroom';
 
 import Buttons from 'atoms/Buttons';
-// import ProgressBar from './ProgressBar';
+import {Syllabus} from '@interfaces/ClassroomInterface';
 
 const SyllabusSwitch = ({
   classRoomActiveSyllabus,
   curriculumName,
   activeRoom,
-  currentPage,
+
   syllabusLoading,
   handleSyllabusActivation,
   institutionId,
@@ -38,14 +37,8 @@ const SyllabusSwitch = ({
         <div className={`grid grid-cols-1 md:grid-cols-2 gap-2`}>
           {state.roomData.syllabus.map((syllabus: Syllabus, i: number) => {
             const isActive = classRoomActiveSyllabus === syllabus.id;
-            // const progressPercentage = completedLessons;
+
             return (
-              // <Tooltip
-              //   key={`testSyllabus_${i}`}
-              //   placement={i % 2 === 0 ? 'left' : 'right'}
-              //   text={
-              //     isActive ? 'Currently Active' : 'Click on select to activate this unit'
-              //   }>
               <div
                 id={`testSyllabus_${i}`}
                 className={`${
@@ -70,8 +63,8 @@ const SyllabusSwitch = ({
                     <Buttons
                       greenBtn={isActive}
                       loading={syllabusActivating}
-                      btnClass="ml-2"
-                      onClick={() => handleSyllabusActivation(syllabus.id)}
+                      className="ml-2"
+                      onClick={() => handleSyllabusActivation?.(syllabus.id)}
                       label={'Select'}
                     />
                   )}

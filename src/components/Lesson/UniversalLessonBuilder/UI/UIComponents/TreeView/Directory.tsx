@@ -1,11 +1,11 @@
-import React, {useCallback, useState} from 'react';
-import {Transition} from '@headlessui/react';
-import {FaBook, FaGraduationCap, FaBookOpen} from 'react-icons/fa';
+import { Transition } from "@headlessui/react";
+import React, { useState } from "react";
+import { FaBook, FaBookOpen, FaGraduationCap } from "react-icons/fa";
 
-import {Item} from './Item';
-import {Tree} from './Tree';
-import {RiPagesLine} from 'react-icons/ri';
-import Buttons from 'atoms/Buttons';
+import Buttons from "atoms/Buttons";
+import { RiPagesLine } from "react-icons/ri";
+import { Item } from "./Item";
+import { Tree } from "./Tree";
 
 export const Directory = ({
   item,
@@ -14,7 +14,7 @@ export const Directory = ({
   dark = false,
   customClick = false,
   onClick = () => {},
-  selPageId
+  selPageId,
 }: React.PropsWithChildren<{
   item: any;
   onContextMenu: (event: React.MouseEvent<HTMLLIElement, MouseEvent>) => void;
@@ -37,7 +37,7 @@ export const Directory = ({
   const _toggle = (e: any) => {
     e.stopPropagation();
     console.log(item.type);
-    if (item.type !== 'page') {
+    if (item.type !== "page") {
       setToggle((prevValue) => !prevValue);
       if (setShow) {
         setShow(false);
@@ -49,15 +49,16 @@ export const Directory = ({
     <Item onClick={_toggle} onContextMenu={onContextMenu}>
       <span
         className={`${
-          dark ? 'text-gray-900' : ''
-        } hover:bg-gray-200 rounded-md transition-all p-3 truncate flex items-center justify-between`}>
+          dark ? "text-gray-900" : ""
+        } hover:bg-gray-200 rounded-md transition-all p-3 truncate flex items-center justify-between`}
+      >
         <div className="flex items-center">
           <span className="w-6 h-6 mx-1 inline-flex items-center">
-            {item.type === 'course' ? (
+            {item.type === "course" ? (
               <FaGraduationCap />
-            ) : item.type === 'lesson' ? (
+            ) : item.type === "lesson" ? (
               <FaBook />
-            ) : item.type === 'page' ? (
+            ) : item.type === "page" ? (
               <RiPagesLine />
             ) : (
               <FaBookOpen />
@@ -66,8 +67,11 @@ export const Directory = ({
           <span>{item.title}</span>
         </div>
 
-        {item.type === 'page' ? (
-          <Buttons label="Select this" onClick={(e) => onItemClicked(e, item)} />
+        {item.type === "page" ? (
+          <Buttons
+            label="Select this"
+            onClick={(e) => onItemClicked(e, item)}
+          />
         ) : (
           <div className="w-auto" />
         )}
@@ -79,7 +83,8 @@ export const Directory = ({
         enterTo="opacity-100"
         leave="transition-opacity duration-150"
         leaveFrom="opacity-100"
-        leaveTo="opacity-0">
+        leaveTo="opacity-0"
+      >
         <Tree
           customClick={customClick}
           selPageId={selPageId}

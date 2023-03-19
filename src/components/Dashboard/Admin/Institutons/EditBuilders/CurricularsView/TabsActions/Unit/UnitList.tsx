@@ -1,23 +1,25 @@
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import AddButton from 'atoms/Buttons/AddButton';
-import {GlobalContext} from 'contexts/GlobalContext';
+import {API, graphqlOperation} from 'aws-amplify';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import * as mutations from 'graphql/mutations';
-import React, {useContext, useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {useHistory, useRouteMatch} from 'react-router';
 
-import Buttons from '@components/Atoms/Buttons';
-import Filters, {SortType} from '@components/Atoms/Filters';
-import Modal from '@components/Atoms/Modal';
-import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
-import Tooltip from '@components/Atoms/Tooltip';
-import {Status} from '@components/Dashboard/Admin/UserManagement/UserStatus';
-import CommonActionsBtns from '@components/MicroComponents/CommonActionsBtns';
-import UnitName from '@components/MicroComponents/UnitName';
-import Table from '@components/Molecules/Table';
-import usePagination from '@customHooks/usePagination';
-import useSearch from '@customHooks/useSearch';
-import {BUTTONS, InstitueRomms} from '@dictionary/dictionary.iconoclast';
+import Buttons from 'components/Atoms/Buttons';
+import Filters, {SortType} from 'components/Atoms/Filters';
+import Modal from 'components/Atoms/Modal';
+import SectionTitleV3 from 'components/Atoms/SectionTitleV3';
+import Tooltip from 'components/Atoms/Tooltip';
+import {Status} from 'components/Dashboard/Admin/UserManagement/UserStatus';
+import CommonActionsBtns from 'components/MicroComponents/CommonActionsBtns';
+import UnitName from 'components/MicroComponents/UnitName';
+import Table from 'components/Molecules/Table';
+import useAuth from 'customHooks/useAuth';
+import usePagination from 'customHooks/usePagination';
+import useSearch from 'customHooks/useSearch';
+import {BUTTONS, InstitueRomms} from 'dictionary/dictionary.iconoclast';
+import {withZoiqFilter} from 'utilities/functions';
 import {RoomStatus} from 'API';
 import SearchInput from 'atoms/Form/SearchInput';
 import Selector from 'atoms/Form/Selector';
@@ -26,7 +28,6 @@ import * as customQueries from 'customGraphql/customQueries';
 import {isEmpty, map, orderBy} from 'lodash';
 import ModalPopUp from 'molecules/ModalPopUp';
 import UnitFormComponent from './UnitFormComponent';
-import {withZoiqFilter} from '@utilities/functions';
 
 export const UnitList = ({
   instId,
@@ -40,13 +41,9 @@ export const UnitList = ({
 }: any) => {
   const history = useHistory();
   const match = useRouteMatch();
-  const {
-    state: {
-      user: {isSuperAdmin, authId, email}
-    },
+  const {userLanguage} = useGlobalContext();
 
-    userLanguage
-  } = useContext(GlobalContext);
+  const {isSuperAdmin} = useAuth();
 
   const {CommonlyUsedDict, UnitLookupDict} = useDictionary();
   // ~~~~~~~~~~~~~~ UNIT LIST ~~~~~~~~~~~~~~ //
@@ -280,20 +277,13 @@ export const UnitList = ({
     }
   };
 
-  const instituteChange = (_: string, name: string, value: string) => {
-    setSelectedInstitution({name, id: value});
+  const instituteChange = (value: string, option: any) => {
+    setSelectedInstitution({name: value, id: option.id});
     updateRoomList(value);
   };
 
   const onInstitutionSelectionRemove = () => {
     setSelectedInstitution({});
-    // onSearch(searchInput, '');
-  };
-
-  const redirectToInstitution = (institutionId: string) => {
-    history.push(
-      `/dashboard/manage-institutions/institution/${institutionId}/edit?back=${match.url}`
-    );
   };
 
   const redirectToLesson = (institutionId: string, lessonId: string) => {
@@ -346,7 +336,7 @@ export const UnitList = ({
     ['asc']
   );
 
-  const [filters, setFilters] = useState<SortType>();
+  const [filters, setFilters] = useState<SortType | null>(null);
 
   const updateFilter = (filterName: SortType) => {
     if (filterName === filters) {
@@ -392,15 +382,15 @@ export const UnitList = ({
       const input = {
         syllabusID: unitId,
         lessonID: lessonId,
-        displayData: {
-          breakdownComponent: lessonType
-        },
+
         lessonPlan: lessonComponentPlan?.length > 0 ? lessonComponentPlan : [],
         status: 'ACTIVE'
       };
       setSaving(true);
       const result: any = await API.graphql(
-        graphqlOperation(customMutations.createUniversalSyllabusLesson, {input: input})
+        graphqlOperation(customMutations.createUniversalSyllabusLesson, {
+          input: input
+        })
       );
       const newLesson = result.data?.createUniversalSyllabusLesson;
       if (newLesson?.id) {
@@ -505,6 +495,7 @@ export const UnitList = ({
                     </Tooltip>
                   );
                 }
+                return <div key="dfdmf" className="hidden w-auto" />;
               }
             )}
           </ol>
@@ -525,7 +516,7 @@ export const UnitList = ({
 
   const tableConfig = {
     headers: [
-      UnitLookupDict[userLanguage]['NO'],
+      UnitLookupDict[userLanguage].NO,
       UnitLookupDict[userLanguage]['NAME'],
       isSuperAdmin && UnitLookupDict[userLanguage]['INSTITUTION_NAME'],
       UnitLookupDict[userLanguage]['LESSONS'],
@@ -555,11 +546,14 @@ export const UnitList = ({
           no: 'w-12',
           unitName: 'w-96',
           lessonPlan: 'w-96',
-          action: 'w0'
+          action: 'w-auto'
         },
         maxHeight: 'max-h-196',
         pattern: 'striped',
-        patternConfig: {firstColor: 'bg-gray-100', secondColor: 'bg-gray-200'}
+        patternConfig: {
+          firstColor: 'bg-gray-100',
+          secondColor: 'bg-gray-200'
+        }
       }
     }
   };
@@ -570,7 +564,7 @@ export const UnitList = ({
 
   return (
     <div className="pt-0 flex m-auto justify-center h-full p-4">
-      <div className="flex flex-col">
+      <div className="flex flex-col w-full">
         <SectionTitleV3
           title={'Unit List'}
           fontSize="xl"
@@ -599,7 +593,9 @@ export const UnitList = ({
                     selectedItem={unitInput.name}
                     list={units}
                     placeholder="Select Unit"
-                    onChange={(val, name, id) => setUnitInput({name, id})}
+                    onChange={(name: string, option: any) =>
+                      setUnitInput({name, id: option.id})
+                    }
                   />
                   <Buttons
                     label={BUTTONS[userLanguage]['ADD']}
@@ -659,38 +655,37 @@ export const UnitList = ({
 
         <Table {...tableConfig} />
 
-        {addModalShow && (
-          <Modal
-            showHeader
-            showFooter={false}
-            showHeaderBorder
-            title={'Add Lesson to Syllabus'}
-            closeOnBackdrop
-            closeAction={onAddModalClose}>
-            <div
-              className="min-w-180 lg:min-w-256"
-              style={{
-                height: 'calc(100vh - 150px)'
-              }}>
-              <UnitFormComponent
-                isInModal={true}
-                instId={instId}
-                postAddSyllabus={postAddSyllabus}
-                onCancel={() => setAddModalShow(false)}
-              />
-            </div>
-          </Modal>
-        )}
-        {deleteModal.show && (
-          <ModalPopUp
-            closeAction={handleToggleDelete}
-            saveAction={deleting ? () => {} : deleteModal.action}
-            saveLabel={deleting ? 'DELETING...' : 'CONFIRM'}
-            cancelLabel="CANCEL"
-            loading={deleting}
-            message={deleteModal.message}
-          />
-        )}
+        <Modal
+          open={addModalShow}
+          showHeader
+          showFooter={false}
+          showHeaderBorder
+          title={'Add Lesson to Syllabus'}
+          closeOnBackdrop
+          closeAction={onAddModalClose}>
+          <div
+            className="min-w-180 lg:min-w-256"
+            style={{
+              height: 'calc(100vh - 150px)'
+            }}>
+            <UnitFormComponent
+              isInModal={true}
+              instId={instId}
+              postAddSyllabus={postAddSyllabus}
+              onCancel={() => setAddModalShow(false)}
+            />
+          </div>
+        </Modal>
+
+        <ModalPopUp
+          open={deleteModal.show}
+          closeAction={handleToggleDelete}
+          saveAction={deleting ? () => {} : deleteModal.action}
+          saveLabel={deleting ? 'DELETING...' : 'CONFIRM'}
+          cancelLabel="CANCEL"
+          loading={deleting}
+          message={deleteModal.message}
+        />
       </div>
     </div>
   );

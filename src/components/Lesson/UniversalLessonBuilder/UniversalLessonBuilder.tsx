@@ -1,24 +1,28 @@
-import {GlobalContext} from 'contexts/GlobalContext';
+import {MenuFoldOutlined, MenuUnfoldOutlined} from '@ant-design/icons';
+import {useOverlayContext} from '@contexts/OverlayContext';
+import {Layout, Tooltip} from 'antd';
+import {Content, Header} from 'antd/es/layout/layout';
+import Sider from 'antd/es/layout/Sider';
+import {API, graphqlOperation} from 'aws-amplify';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import {usePageBuilderContext} from 'contexts/PageBuilderContext';
 import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
 import * as customQueries from 'customGraphql/customQueries';
 import {useQuery} from 'customHooks/urlParam';
 import {LessonPlansProps} from 'interfaces/LessonInterfaces';
 import {ULBSelectionProps} from 'interfaces/UniversalLessonBuilderInterfaces';
-import {
-  PagePart,
-  PartContent,
-  UniversalLessonPage
-} from 'interfaces/UniversalLessonInterfaces';
+import {PartContent, UniversalLessonPage} from 'interfaces/UniversalLessonInterfaces';
 import {replaceTailwindClass} from 'lesson/UniversalLessonBuilder/crudFunctions/replaceInString';
 import BuilderWrapper from 'lesson/UniversalLessonBuilder/views/BuilderWrapper';
-import {API, graphqlOperation} from 'aws-amplify';
 import {isEmpty} from 'lodash';
 import update from 'lodash/update';
 import {nanoid} from 'nanoid';
-import React, {useContext, useEffect, useState} from 'react';
-import {useHistory, useParams} from 'react-router';
-import {getDictionaries} from '@graphql/functions';
+import React, {useEffect, useState} from 'react';
+import {useParams} from 'react-router';
+import LessonPlanNavigation from './UI/LessonPlanNavigation';
+import NewLessonPlanSO from './UI/SlideOvers/NewLessonPlanSO';
+import PageBuilderSlideOver from './UI/SlideOvers/PageBuilderSlideOver';
+import Toolbar from './UI/UIComponents/Toolbar';
 interface UniversalLessonBuilderProps extends ULBSelectionProps {
   designersList?: {id: string; name: string; value: string}[];
   lessonID?: string;
@@ -34,7 +38,9 @@ interface UniversalLessonBuilderProps extends ULBSelectionProps {
 const initialUniversalLessonPagePartContent: PartContent = {
   id: '',
   type: '',
-  value: []
+  value: [],
+  label: '',
+  class: ''
 };
 
 /*******************************************
@@ -44,9 +50,8 @@ const UniversalLessonBuilder = ({instId}: UniversalLessonBuilderProps) => {
   const params = useQuery(location.search);
   const {lessonId}: any = useParams();
   const pageId = params.get('pageId');
-  const {state, dispatch, scanLessonAndFindComplicatedWord, lessonState} = useContext(
-    GlobalContext
-  );
+  const {state, dispatch, scanLessonAndFindComplicatedWord, lessonState} =
+    useGlobalContext();
 
   const {selectedComponent, actionMode} = usePageBuilderContext();
 
@@ -62,7 +67,10 @@ const UniversalLessonBuilder = ({instId}: UniversalLessonBuilderProps) => {
   //  INITIALIZE CURRENT PAGE LOCATION
   useEffect(() => {
     if (state.user.role === 'TR' || state.user.role === 'FLW') {
-      dispatch({type: 'UPDATE_CURRENTPAGE', payload: {data: 'universal-lesson-builder'}});
+      dispatch({
+        type: 'UPDATE_CURRENTPAGE',
+        payload: {data: 'universal-lesson-builder'}
+      });
     }
   }, [state.user.role]);
 
@@ -85,13 +93,12 @@ const UniversalLessonBuilder = ({instId}: UniversalLessonBuilderProps) => {
         })
       );
       const savedData = result.data.getUniversalLesson;
-      const dictionaries = await getDictionaries();
 
-      const updatedLessonPlan = scanLessonAndFindComplicatedWord(
-        savedData.lessonPlan,
-        dictionaries
-      );
-      setUniversalLessonDetails({...savedData, lessonPlan: updatedLessonPlan});
+      const updatedLessonPlan = scanLessonAndFindComplicatedWord(savedData.lessonPlan);
+      setUniversalLessonDetails({
+        ...savedData,
+        lessonPlan: updatedLessonPlan
+      });
       setSelectedPageID(pageId);
     } catch {
       setUniversalLessonDetails((prev: any) => ({...prev}));
@@ -125,8 +132,8 @@ const UniversalLessonBuilder = ({instId}: UniversalLessonBuilderProps) => {
     inputObj: any,
     operation: 'create' | 'update' | 'delete',
     idToTarget: string,
-    propertyToTarget?: string,
-    replacementValue?: string
+    propertyToTarget = '',
+    replacementValue = ''
   ) => {
     const reduced = Object.keys(inputObj).reduce((acc: any, inputObjKey: string) => {
       if (
@@ -137,7 +144,7 @@ const UniversalLessonBuilder = ({instId}: UniversalLessonBuilderProps) => {
         return {
           ...acc,
           [`${inputObjKey}`]: inputObj[inputObjKey].reduce(
-            (acc2: any, targetArrayObj: UniversalLessonPage | PagePart | PartContent) => {
+            (acc2: any, targetArrayObj: any) => {
               if (targetArrayObj.id === idToTarget) {
                 switch (operation) {
                   case 'delete':
@@ -229,19 +236,19 @@ const UniversalLessonBuilder = ({instId}: UniversalLessonBuilderProps) => {
   };
 
   const updateBlockContentULBHandler = (
-    targetID: string,
-    propertyToTarget: string,
+    _1: string,
+    _2: string,
     contentType: string,
     inputObj: any,
-    addBlockAtPosition: number,
+    _3?: number,
     classString?: string,
-    customPageContentId?: string,
+    _4?: string,
     pageContentIdx?: number,
     partContentIdx?: number
   ) => {
     const lessonPlan: UniversalLessonPage[] = universalLessonDetails.lessonPlan;
 
-    const pageContent = lessonPlan[lessonState.currentPage].pageContent;
+    const pageContent = lessonPlan?.[lessonState.currentPage]?.pageContent || [];
 
     let idxData = {
       pageContentIdx:
@@ -254,12 +261,15 @@ const UniversalLessonBuilder = ({instId}: UniversalLessonBuilderProps) => {
           : partContentIdx
     };
 
-    if (idxData.pageContentIdx !== undefined && idxData.pageContentIdx !== undefined) {
-      const partContent = pageContent[idxData.pageContentIdx].partContent;
+    if (idxData?.pageContentIdx !== undefined) {
+      const partContent = pageContent?.[idxData.pageContentIdx]?.partContent || [];
 
+      // @ts-ignore
       partContent[idxData.partContentIdx] = {
+        // @ts-ignore
         ...partContent[idxData.partContentIdx],
-        class: classString || partContent[idxData.partContentIdx].class,
+        // @ts-ignore
+        class: classString || partContent?.[idxData.partContentIdx]?.class || '',
         type: contentType,
         value: inputObj
       };
@@ -267,6 +277,7 @@ const UniversalLessonBuilder = ({instId}: UniversalLessonBuilderProps) => {
       const updatedPage = update(
         universalLessonDetails,
         `lessonPlan[${lessonState.currentPage}].pageContent[${idxData.pageContentIdx}].partContent`,
+        // @ts-ignore
         () => [...partContent]
       );
 
@@ -278,11 +289,11 @@ const UniversalLessonBuilder = ({instId}: UniversalLessonBuilderProps) => {
   };
 
   const createNewBlockULBHandler = (
-    targetID: string,
-    propertyToTarget: string,
+    _1: string,
+    _2: string,
     contentType: string,
     inputObj: any,
-    addBlockAtPosition: number,
+    _3?: number,
     classString?: string,
     customPageContentId?: string
   ) => {
@@ -290,13 +301,14 @@ const UniversalLessonBuilder = ({instId}: UniversalLessonBuilderProps) => {
 
     const lessonPlan: UniversalLessonPage[] = universalLessonDetails.lessonPlan;
 
-    const pageContent = lessonPlan[lessonState.currentPage].pageContent;
+    const pageContent: any = lessonPlan?.[lessonState.currentPage]?.pageContent || [];
 
     if (
       (!isEmpty(selectedComponent) && selectedComponent !== null) ||
       actionMode === 'replace'
     ) {
-      const partContent = pageContent[selectedComponent.pageContentIdx].partContent;
+      const partContent: any =
+        pageContent?.[selectedComponent.pageContentIdx]?.partContent || [];
 
       const bufferPos = actionMode === 'replace' ? 0 : 1;
       const deleteCount = actionMode === 'replace' ? 1 : 0;
@@ -348,6 +360,22 @@ const UniversalLessonBuilder = ({instId}: UniversalLessonBuilderProps) => {
     }
   };
 
+  const [builderMenuCollapsed, setBuilderMenuCollapsed] = useState(false);
+
+  const {
+    setNewLessonPlanShow,
+    fetchingLessonDetails,
+    setLessonPlanFields,
+    setEditMode,
+    previewMode,
+    pushUserToThisId,
+
+    getCurrentPage,
+    newLessonPlanShow
+  } = useULBContext();
+
+  const {showLessonEditOverlay} = useOverlayContext();
+
   return (
     /**
      *
@@ -359,20 +387,71 @@ const UniversalLessonBuilder = ({instId}: UniversalLessonBuilderProps) => {
      *    5. builder body
      *
      */
-    <div
-      id={`universalLessonBuilderContainer`}
-      className="h-full bg-dark-gray flex overflow-hidden">
-      <div className="w-full overflow-hidden h-full bg-gray-200">
-        {/* Section Header */}
-        {/* <BreadCrums items={breadCrumsList} /> */}
 
-        {/* Body */}
-        <div className="w-full h-full m-auto">
-          <div
-            id={`universalLessonBuilder`}
-            className="h-full flex bg-white shadow-5 sm:rounded-lg overflow-x-hidden overflow-y-hidden mb-4">
-            {/*{currentStepComp(universalBuilderStep)}*/}
+    <>
+      <NewLessonPlanSO
+        instId={instId}
+        pageDetails={selectedPageID ? getCurrentPage(selectedPageID) : {}} // don't send unwanted page details if not editing
+        open={newLessonPlanShow}
+        setOpen={setNewLessonPlanShow}
+      />
 
+      <Layout>
+        <Sider
+          trigger={null}
+          width={300}
+          collapsedWidth={0}
+          className={`p-4 ${builderMenuCollapsed ? '!bg-white' : 'unset'}`}
+          collapsible
+          collapsed={builderMenuCollapsed}>
+          <PageBuilderSlideOver
+            deleteFromULBHandler={deleteULBHandler}
+            setEditMode={setEditMode}
+            setNewLessonPlanShow={setNewLessonPlanShow}
+            open={showLessonEditOverlay}
+            // handleEditBlockContent={handleEditBlockContent}
+            // handleModalPopToggle={handleModalPopToggle}
+          />
+        </Sider>
+        <Layout className="site-layout">
+          <Header
+            className="flex items-center justify-between"
+            style={{padding: 0, background: 'white'}}>
+            <div className="flex">
+              <Tooltip
+                placement="right"
+                title={builderMenuCollapsed ? 'Show builder' : 'Hide builder'}>
+                {React.createElement(
+                  builderMenuCollapsed ? MenuUnfoldOutlined : MenuFoldOutlined,
+                  {
+                    className: 'ml-4',
+                    onClick: () => setBuilderMenuCollapsed(!builderMenuCollapsed)
+                  }
+                )}
+              </Tooltip>
+
+              <LessonPlanNavigation
+                selectedPageID={selectedPageID}
+                setSelectedPageID={setSelectedPageID}
+                universalLessonDetails={universalLessonDetails}
+              />
+            </div>
+
+            <Toolbar
+              newLessonPlanShow={newLessonPlanShow}
+              setFields={setLessonPlanFields}
+              setEditMode={setEditMode}
+              deleteLesson={() => {}}
+              setNewLessonPlanShow={setNewLessonPlanShow}
+            />
+          </Header>
+          <Content
+            style={{
+              margin: '24px 16px',
+              padding: 24,
+              minHeight: 280
+            }}
+            className="bg-dark-blue overflow-x-hidden overflow-y-auto max-h-screen">
             <BuilderWrapper
               mode={`building`}
               instId={instId}
@@ -389,10 +468,10 @@ const UniversalLessonBuilder = ({instId}: UniversalLessonBuilderProps) => {
                 initialUniversalLessonPagePartContent
               }
             />
-          </div>
-        </div>
-      </div>
-    </div>
+          </Content>
+        </Layout>
+      </Layout>
+    </>
   );
 };
 

@@ -1,14 +1,11 @@
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import Spinner from '@components/Atoms/Spinner';
+import {API, graphqlOperation} from 'aws-amplify';
 import * as queries from 'graphql/queries';
-import React, {useCallback, useEffect, useState} from 'react';
-import {IconContext} from 'react-icons';
-import {FaSpinner} from 'react-icons/fa';
+import {useCallback, useEffect, useState} from 'react';
 import EmptyViewWrapper from './EmptyViewWrapper';
 import {ITabParentProps} from './TabView';
 import SingleUpload from './UploadsTab/UploadCard';
 import ContentLessonWrapper from './Wrapper/ContentLessonWrapper';
-
-const LIMIT = 100;
 
 export interface IUploadCardProps extends ITabParentProps {
   personAuthID?: string;
@@ -32,7 +29,7 @@ const UploadsTab = ({
   personAuthID,
   personEmail,
   sectionRoomID,
-  themeColor,
+
   mainSection,
   subSection,
   onCancel
@@ -83,7 +80,6 @@ const UploadsTab = ({
     } catch (e) {
       console.error('error listing personLessonFilesa - ', e);
       setLoaded(true);
-    } finally {
     }
   }, [personAuthID, sectionRoomID]);
 
@@ -118,10 +114,6 @@ const UploadsTab = ({
 
   const filterFilesListByLessonID = (lessonID: string, allFiles: any[]) => {
     const output = allFiles.reduce((acc: any[], file: any) => {
-      // console.log('lessonID - ', lessonID);
-      // console.log('file.lessonID - ', file.lessonID);
-      // console.log('ile.lessonID === lessonID - ', file.lessonID === lessonID);
-
       if (file.lessonID === lessonID) {
         return [...acc, file];
       } else {
@@ -176,37 +168,18 @@ const UploadsTab = ({
       <EmptyViewWrapper
         wrapperClass={`h-auto pb-4 overflow-hidden bg-white rounded-b-lg shadow mb-4`}
         revealContents={loaded}
-        fallbackContents={
-          <IconContext.Provider
-            value={{
-              size: '1.2rem',
-              style: {},
-              className: `relative mr-4 animate-spin ${themeColor}`
-            }}>
-            <FaSpinner />
-          </IconContext.Provider>
-        }>
+        fallbackContents={<Spinner />}>
         {filteredLessonIds && filteredLessonIds.length > 0 ? (
           filteredLessonIds.map((idString: string) => (
-            <ContentLessonWrapper lessonID={idString}>
+            <ContentLessonWrapper key={idString} lessonID={idString}>
               {filterFilesListByLessonID(idString, allPersonLessonFiles).length > 0 &&
                 filterFilesListByLessonID(idString, allPersonLessonFiles).map(
                   (lessonFileObj: any, idx: number) => {
                     return (
                       <EmptyViewWrapper
-                        key={`lessonfilecard_${idx}`}
+                        key={`lessonfilecard_${lessonFileObj.id}`}
                         wrapperClass={`h-auto pb-4 overflow-hidden bg-white rounded-b-lg shadow mb-4`}
-                        timedRevealInt={idx + 1}
-                        fallbackContents={
-                          <IconContext.Provider
-                            value={{
-                              size: '1.2rem',
-                              style: {},
-                              className: `relative mr-4 animate-spin ${themeColor}`
-                            }}>
-                            <FaSpinner />
-                          </IconContext.Provider>
-                        }>
+                        timedRevealInt={idx + 1}>
                         <SingleUpload
                           idx={idx}
                           mainSection={mainSection}

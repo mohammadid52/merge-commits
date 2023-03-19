@@ -9,13 +9,13 @@ import {
   TranslationInput,
   UpdateDicitionaryInput
 } from 'API';
-import {isArray, isEmpty, update} from 'lodash';
-import React, {useEffect, useState} from 'react';
+import {isEmpty, update} from 'lodash';
+import {useEffect, useState} from 'react';
 
 import {v4 as uuidV4} from 'uuid';
 
 interface FormType {
-  translation?: TranslationInput[];
+  translation?: TranslationInput[] | any[];
   englishPhrase: CreateDicitionaryInput['englishPhrase'];
   englishDefinition: CreateDicitionaryInput['englishDefinition'];
   englishAudio: CreateDicitionaryInput['englishAudio'];
@@ -38,10 +38,12 @@ const INITIAL_DATA = {
 const DictionaryMutationModal = ({
   closeAction,
   dictionary,
-  onSuccessMutation
+  onSuccessMutation,
+  open
 }: {
-  dictionary?: Dicitionary;
+  dictionary?: Dicitionary | null;
   closeAction: () => void;
+  open: boolean;
   onSuccessMutation?: () => void;
 }) => {
   const {authId, email} = useAuth();
@@ -55,7 +57,7 @@ const DictionaryMutationModal = ({
         englishPhrase: dictionary.englishPhrase,
         englishDefinition: dictionary.englishDefinition,
         englishAudio: dictionary.englishAudio,
-        translation: dictionary.translation
+        translation: dictionary?.translation || []
       });
     } else {
       setFormData(INITIAL_DATA);
@@ -70,15 +72,17 @@ const DictionaryMutationModal = ({
 
   const updateDictionary = async () => {
     try {
-      const input: UpdateDicitionaryInput = {
-        id: dictionary.id,
-        englishPhrase: formData.englishPhrase,
-        englishDefinition: formData.englishDefinition,
-        englishAudio: formData.englishAudio,
-        translation: formData.translation
-      };
+      if (dictionary) {
+        const input: UpdateDicitionaryInput = {
+          id: dictionary.id,
+          englishPhrase: formData.englishPhrase,
+          englishDefinition: formData.englishDefinition,
+          englishAudio: formData.englishAudio,
+          translation: formData.translation
+        };
 
-      _updateDictionary.mutate({input: input});
+        _updateDictionary.mutate({input: input});
+      }
     } catch (error) {
       console.error(error);
       logError(error, {authId, email}, 'DictionaryPage @addNewDictionary');
@@ -92,28 +96,8 @@ const DictionaryMutationModal = ({
     setFormData({...formData, [name]: value});
   };
 
-  const langs = [{id: 1, name: 'Spanish'}];
-  const filteredLangs = langs.filter((l) =>
-    isEmpty(formData?.translation?.find((d) => d.translateLanguage === l.name))
-  );
-
-  const onLangAdd = (name: string) => {
-    const existing = !isArray(formData.translation) ? [] : [...formData.translation];
-
-    const newTranslationObj = {
-      id: uuidV4(),
-      translateLanguage: name,
-      languageTranslation: '',
-      languageDefinition: ''
-    };
-
-    const updatedTranslationList = [...existing, newTranslationObj];
-
-    setFormData({...formData, translation: updatedTranslationList});
-  };
-
   const translationChange = (idx: number, name: string, value: string) => {
-    update(formData.translation[idx], name, () => value);
+    update(formData?.translation?.[idx], name, () => value);
     setFormData({...formData});
   };
 
@@ -125,6 +109,7 @@ const DictionaryMutationModal = ({
 
   return (
     <Modal
+      open={open}
       saveAction={isEdit ? updateDictionary : _addNewDictionary}
       closeAction={() => {
         setFormData(INITIAL_DATA);
@@ -152,7 +137,7 @@ const DictionaryMutationModal = ({
           <div className="mb-4">
             <FormInput
               name="englishDefinition"
-              value={formData.englishDefinition}
+              value={formData?.englishDefinition || ''}
               onChange={onChange}
               textarea
               label="English Definition"
@@ -164,11 +149,8 @@ const DictionaryMutationModal = ({
         <hr />
 
         {formData?.translation?.map((translation, idx) => {
-          const {
-            translateLanguage,
-            languageDefinition,
-            languageTranslation
-          } = translation;
+          const {translateLanguage, languageDefinition, languageTranslation} =
+            translation;
 
           return (
             <div

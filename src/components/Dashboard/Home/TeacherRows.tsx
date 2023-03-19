@@ -1,5 +1,6 @@
-import Empty from '@components/Atoms/Text/Empty';
+import Loader from '@components/Atoms/Loader';
 import useAuth from '@customHooks/useAuth';
+import {Empty} from 'antd';
 import {PersonStatus, RoomStatus} from 'API';
 import ContentCard from 'atoms/ContentCard';
 import ImageAlternate from 'atoms/ImageAlternative';
@@ -7,7 +8,7 @@ import {filter, map, orderBy} from 'lodash';
 import React from 'react';
 import {useHistory} from 'react-router';
 
-interface Teacher {
+export interface Teacher {
   firstName: string;
   lastName: string;
   phone: string;
@@ -18,8 +19,12 @@ interface Teacher {
   image: string | null;
 }
 
-const TeacherRows = (props: {coTeachersList: Teacher[]; teachersList: Teacher[]}) => {
-  const {coTeachersList = [], teachersList = []} = props;
+const TeacherRows = (props: {
+  loading: boolean;
+  coTeachersList: Teacher[];
+  teachersList: Teacher[];
+}) => {
+  const {coTeachersList = [], loading, teachersList = []} = props;
 
   const allTeachers = [...teachersList, ...coTeachersList];
 
@@ -98,7 +103,7 @@ const TeacherRows = (props: {coTeachersList: Teacher[]; teachersList: Teacher[]}
             {attachedClasses.map((teacher, idx: number) => {
               return (
                 <li
-                  key={`home__teacher-${idx}`}
+                  key={teacher?.authId}
                   style={
                     teacher.status === PersonStatus.INACTIVE
                       ? {borderLeftWidth: '2px', borderLeftColor: 'red'}
@@ -184,8 +189,12 @@ const TeacherRows = (props: {coTeachersList: Teacher[]; teachersList: Teacher[]}
               );
             })}
           </ul>
+        ) : loading ? (
+          <div className="min-h-56 flex items-center justify-center ">
+            <Loader className="w-auto text-gray-400" withText="Loading teachers..." />
+          </div>
         ) : (
-          <Empty>No teachers found</Empty>
+          <Empty description={'No teachers found'} />
         )}
       </div>
     </ContentCard>

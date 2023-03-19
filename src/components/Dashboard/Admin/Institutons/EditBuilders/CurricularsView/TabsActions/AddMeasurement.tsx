@@ -1,11 +1,10 @@
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
-import TextArea from 'atoms/Form/TextArea';
-import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import {GlobalContext} from 'contexts/GlobalContext';
+import {useGlobalContext} from 'contexts/GlobalContext';
 import * as customMutations from 'customGraphql/customMutations';
 import useDictionary from 'customHooks/dictionary';
-import React, {useContext, useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 
 interface AddMeasurementProps {
   curricularId: string;
@@ -24,9 +23,9 @@ const AddMeasurement = (props: AddMeasurementProps) => {
 
   const [validation, setValidation] = useState({name: '', topic: ''});
 
-  const {clientKey, userLanguage} = useContext(GlobalContext);
+  const {userLanguage} = useGlobalContext();
 
-  const {AddMeasurementDict} = useDictionary(clientKey);
+  const {AddMeasurementDict} = useDictionary();
 
   useEffect(() => {
     if (rubricData?.id) {
@@ -44,15 +43,6 @@ const AddMeasurement = (props: AddMeasurementProps) => {
     if (e.target.name === 'criteria') setCriteria(value);
   };
 
-  // const fetchMeasurementSequence = async (topicId: string) => {
-  //   let item: any = await API.graphql(graphqlOperation(queries.getCSequences,
-  //     { id: `m_${topicId}` }))
-  //   item = item?.data.getCSequences?.sequence || []
-  //   if (item) {
-  //     setMeasurementIds(item)
-  //   }
-  // }
-
   const validateForm = () => {
     let isValid = true;
     const msgs = validation;
@@ -62,12 +52,7 @@ const AddMeasurement = (props: AddMeasurementProps) => {
     } else {
       msgs.name = '';
     }
-    // if (!topic.id) {
-    //   isValid = false;
-    //   msgs.topic = AddMeasurementDict[userLanguage]['messages']['topicrequired'];
-    // } else {
-    //   msgs.topic = ''
-    // }
+
     setValidation({...msgs});
     return isValid;
   };

@@ -1,6 +1,4 @@
-import React from 'react';
 import {AiFillPlusCircle} from 'react-icons/all';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {NoticeboardFormProps} from '../NoticeboardAdminContent';
 
 const AddRemoveButton = (props: NoticeboardFormProps) => {
@@ -11,10 +9,11 @@ const AddRemoveButton = (props: NoticeboardFormProps) => {
         <p className={`w-auto mr-2 cursor-pointer font-semibold text-blueberry`}>
           {label}
         </p>
-        <IconContext.Provider
-          value={{className: 'w-auto text-blueberry pointer-events-none '}}>
-          <AiFillPlusCircle size={24} />
-        </IconContext.Provider>
+
+        <AiFillPlusCircle
+          className="w-auto text-blueberry pointer-events-none "
+          size={24}
+        />
       </div>
     </div>
   );

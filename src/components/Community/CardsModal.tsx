@@ -51,14 +51,14 @@ const Item = ({
   setNavState
 }: {
   content: any;
-  setNavState: React.Dispatch<React.SetStateAction<NavStateTypes>>;
+  setNavState?: React.Dispatch<React.SetStateAction<NavStateTypes>>;
 }) => {
   const pathname = window.location.pathname;
   const isCommunity = pathname.includes('community');
   return (
     <div
       data-cy={content.type}
-      onClick={() => setNavState(content.type)}
+      onClick={() => setNavState?.(content.type)}
       className={`relative  form-button rounded-lg border-0 border-gray-300  bg-white px-6 py-5 shadow-sm flex items-center space-x-3 hover:${content.iconBackground}  transition-all focus-within:ring-2`}>
       <>
         <span
@@ -78,7 +78,7 @@ const Item = ({
               } text-sm font-medium text-gray-900 `}>
               {content.name}
             </p>
-            <p className="text-sm text-gray-500  truncate">{content.subtitle}</p>
+            <p className="text-sm text-gray-500">{content.subtitle}</p>
           </div>
         </div>
 
@@ -100,7 +100,7 @@ const CardsModal = ({
   navState,
   setNavState,
   editMode = false,
-  cardDetails = null
+  cardDetails
 }: {
   showCardsModal: boolean;
 
@@ -128,7 +128,7 @@ const CardsModal = ({
 
   const onCancel = (): void => {
     setShowCardsModal(false);
-    setNavState('init');
+    setNavState?.('init');
   };
   const {isStudent} = useAuth();
 
@@ -145,80 +145,85 @@ const CardsModal = ({
   return (
     <ErrorBoundary componentName="CardsModal">
       <div style={{zIndex: 99999}}>
-        {showCardsModal && (
-          <Modal
-            showHeader
-            closeAction={onCancel}
-            showFooter={false}
-            title={getModalHeader(navState)}>
-            <div className="">
-              {/* Showing all items in this block */}
-              <AnimatedContainer show={onInit} animationType="translateY">
-                {onInit && (
-                  <div
-                    className={`grid grid-cols-1 ${
-                      cardList.length > 1 ? 'sm:grid-cols-2' : ''
-                    } gap-4   px-2 my-4`}>
-                    {cardList.map((content, idx) => (
-                      <Item setNavState={setNavState} key={idx} content={content} />
-                    ))}
-                  </div>
-                )}
-              </AnimatedContainer>
-              {/*  up --- Showing all items in this block --- up */}
+        <Modal
+          open={showCardsModal}
+          showHeader
+          closeAction={onCancel}
+          showFooter={false}
+          title={getModalHeader(navState || 'init')}>
+          <div className="">
+            {/* Showing all items in this block */}
+            <AnimatedContainer show={onInit} animationType="translateY">
+              {onInit && (
+                <div
+                  className={`grid grid-cols-1 ${
+                    cardList.length > 1 ? 'sm:grid-cols-2' : ''
+                  } gap-4   px-2 my-4`}>
+                  {cardList.map((content) => (
+                    <Item
+                      setNavState={setNavState}
+                      key={content.name}
+                      content={content}
+                    />
+                  ))}
+                </div>
+              )}
+            </AnimatedContainer>
+            {/*  up --- Showing all items in this block --- up */}
 
-              <AnimatedContainer show={onSpotlight} animationType="translateY">
-                {onSpotlight && (
-                  <div className="">
-                    <Spotlight
-                      onSubmit={(input: ISpotlightInput, cb) =>
-                        functions.onSpotlightSubmit(input, cb)
-                      }
-                      instId={instId}
-                      {...commonProps}
-                    />
-                  </div>
-                )}
-              </AnimatedContainer>
-              <AnimatedContainer show={onAnnouncement} animationType="translateY">
-                {onAnnouncement && (
-                  <div className="">
-                    <Announcements
-                      onSubmit={(input: IAnnouncementInput, cb) =>
-                        functions.onAnnouncementSubmit(input, cb)
-                      }
-                      {...commonProps}
-                    />
-                  </div>
-                )}
-              </AnimatedContainer>
-              <AnimatedContainer show={onEvent} animationType="translateY">
-                {onEvent && (
-                  <div className="">
-                    <Event
-                      onSubmit={(input: IEventInput, cb) =>
-                        functions.onEventSubmit(input, cb)
-                      }
-                      {...commonProps}
-                    />
-                  </div>
-                )}
-              </AnimatedContainer>
-              <AnimatedContainer show={onCheckItOut} animationType="translateY">
-                {onCheckItOut && (
-                  <div className="">
-                    <CheckItOut
-                      onSubmit={(input: IEventInput, cb) =>
-                        functions.onCheckItOutSubmit(input, cb)
-                      }
-                      {...commonProps}
-                    />
-                  </div>
-                )}
-              </AnimatedContainer>
-            </div>
-          </Modal>
-        )}
+            <AnimatedContainer show={onSpotlight} animationType="translateY">
+              {onSpotlight && (
+                <div className="">
+                  <Spotlight
+                    onSubmit={(input: ISpotlightInput, cb) =>
+                      functions.onSpotlightSubmit?.(input, cb)
+                    }
+                    instId={instId}
+                    {...commonProps}
+                  />
+                </div>
+              )}
+            </AnimatedContainer>
+            <AnimatedContainer show={onAnnouncement} animationType="translateY">
+              {onAnnouncement && (
+                <div className="">
+                  <Announcements
+                    onSubmit={(input: IAnnouncementInput, cb) =>
+                      functions.onAnnouncementSubmit?.(input, cb)
+                    }
+                    {...commonProps}
+                  />
+                </div>
+              )}
+            </AnimatedContainer>
+            <AnimatedContainer show={onEvent} animationType="translateY">
+              {onEvent && (
+                <div className="">
+                  <Event
+                    // @ts-ignore
+                    onSubmit={(input: IEventInput, cb) =>
+                      functions.onEventSubmit?.(input, cb)
+                    }
+                    {...commonProps}
+                  />
+                </div>
+              )}
+            </AnimatedContainer>
+            <AnimatedContainer show={onCheckItOut} animationType="translateY">
+              {onCheckItOut && (
+                <div className="">
+                  <CheckItOut
+                    // @ts-ignore
+                    onSubmit={(input: IEventInput, cb) =>
+                      functions.onCheckItOutSubmit?.(input, cb)
+                    }
+                    {...commonProps}
+                  />
+                </div>
+              )}
+            </AnimatedContainer>
+          </div>
+        </Modal>
       </div>
     </ErrorBoundary>
   );

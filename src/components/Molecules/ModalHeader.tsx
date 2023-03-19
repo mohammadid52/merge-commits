@@ -28,7 +28,7 @@ const ModalHeader = (headerProps: {
 }) => {
   const {
     title,
-    onClick,
+    onClick = () => {},
     modalCloseId,
 
     customTitle,
@@ -39,7 +39,7 @@ const ModalHeader = (headerProps: {
     <div className={`theme-bg flex items-center text-white rounded-t-xl px-4 py-2`}>
       <div className="flex items-center">
         {title ? (
-          <h3 className="text-lg text-center tracking-wider font-medium uppercase text-white">
+          <h3 className="text-lg mb-0 text-center tracking-wider font-medium uppercase text-white">
             {title}
           </h3>
         ) : customTitle ? (

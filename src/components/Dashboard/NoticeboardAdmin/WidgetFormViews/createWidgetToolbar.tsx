@@ -1,15 +1,13 @@
-import React, {useContext} from 'react';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import useDictionary from 'customHooks/dictionary';
 import {AiOutlineFileZip, AiOutlinePhone} from 'react-icons/ai';
 import {GoTextSize} from 'react-icons/go';
 import {GrBlockQuote} from 'react-icons/gr';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
-import {GlobalContext} from 'contexts/GlobalContext';
-import useDictionary from 'customHooks/dictionary';
 import {NoticeboardFormProps} from '../NoticeboardAdminContent';
 
 const CreateWidgetToolbar = (props: NoticeboardFormProps) => {
-  const {theme, clientKey, userLanguage} = useContext(GlobalContext);
-  const {noticeboardDict} = useDictionary(clientKey);
+  const {theme, userLanguage} = useGlobalContext();
+  const {noticeboardDict} = useDictionary();
   const {widgetObj, handleEditUpdateWYSIWYG} = props;
 
   const statusOptions = [
@@ -57,16 +55,21 @@ const CreateWidgetToolbar = (props: NoticeboardFormProps) => {
     }
   ];
 
+  const iconProps = {
+    size: '1.5rem',
+    color: 'darkgrey'
+  };
+
   const switchIcon = (type: string) => {
     switch (type) {
       case 'call':
-        return <AiOutlinePhone />;
+        return <AiOutlinePhone {...iconProps} />;
       case 'quote':
-        return <GrBlockQuote />;
+        return <GrBlockQuote {...iconProps} />;
       case 'default':
-        return <GoTextSize />;
+        return <GoTextSize {...iconProps} />;
       case 'file':
-        return <AiOutlineFileZip />;
+        return <AiOutlineFileZip {...iconProps} />;
       default:
         return null;
     }
@@ -89,12 +92,12 @@ const CreateWidgetToolbar = (props: NoticeboardFormProps) => {
                 className={`
               ${selectorClass}
               ${
-                widgetObj.active === option.value && option.value === true
+                widgetObj?.active === option.value && option.value === true
                   ? 'text-white font-semibold bg-sea-green'
                   : ''
               }
               ${
-                widgetObj.active === option.value && option.value === false
+                widgetObj?.active === option.value && option.value === false
                   ? 'text-white font-semibold bg-ketchup'
                   : ''
               }
@@ -120,7 +123,7 @@ const CreateWidgetToolbar = (props: NoticeboardFormProps) => {
                 className={`
               ${selectorClass}
               ${
-                widgetObj.placement === option.location
+                widgetObj?.placement === option.location
                   ? 'text-white font-semibold bg-blueberry'
                   : ''
               }
@@ -156,7 +159,7 @@ const CreateWidgetToolbar = (props: NoticeboardFormProps) => {
                 cursor-pointer
                 ${selectorClass}
                 ${
-                  widgetObj.type === option.type
+                  widgetObj?.type === option.type
                     ? 'text-white font-semibold bg-blueberry'
                     : ''
                 }
@@ -167,11 +170,7 @@ const CreateWidgetToolbar = (props: NoticeboardFormProps) => {
                 }>
                 <p className={`underline`}>
                   {option.label}
-                  <span>
-                    <IconContext.Provider value={{size: '1.5rem', color: 'darkgrey'}}>
-                      {switchIcon(option.type)}
-                    </IconContext.Provider>
-                  </span>
+                  <span>{switchIcon(option.type)}</span>
                 </p>
                 <p className={`pt-2 text-xs text-gray-400`}>{option.description}</p>
               </div>

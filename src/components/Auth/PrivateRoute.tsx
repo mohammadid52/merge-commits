@@ -1,5 +1,5 @@
 import React from 'react';
-import {Route, Redirect} from 'react-router-dom';
+import {Route} from 'react-router-dom';
 
 interface PrivateRouteProps {
   path: string;
@@ -7,7 +7,7 @@ interface PrivateRouteProps {
 }
 
 const PrivateRoute = ({children, path}: PrivateRouteProps) => {
-  return <Route path={path} render={({location}) => children} />;
+  return <Route path={path} render={() => children} />;
 };
 
 export default PrivateRoute;
