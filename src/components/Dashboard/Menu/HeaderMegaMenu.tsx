@@ -74,7 +74,7 @@ const HeaderMegaMenu = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   href={`${baseUrl}/course-builder`}>
-                  {TABS['ADD_NEW_COURSE']}
+                  + {TABS['ADD_NEW_COURSE']}
                 </a>
               ),
               key: 'new-course-add'
@@ -94,7 +94,7 @@ const HeaderMegaMenu = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   href={`${baseUrl}/units/add`}>
-                  {TABS['ADD_NEW_UNIT']}
+                  + {TABS['ADD_NEW_UNIT']}
                 </a>
               ),
               key: 'new-unit-add'
@@ -114,7 +114,7 @@ const HeaderMegaMenu = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   href={`${baseUrl}/lessons/add`}>
-                  {TABS['ADD_NEW_LESSON']}
+                  + {TABS['ADD_NEW_LESSON']}
                 </a>
               ),
               key: 'new-lesson-add'
@@ -153,7 +153,7 @@ const HeaderMegaMenu = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   href={`${baseUrl}/room-creation`}>
-                  {TABS['ADD_NEW_ROOM']}
+                  + {TABS['ADD_NEW_ROOM']}
                 </a>
               ),
               key: 'new-room-add'

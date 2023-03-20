@@ -2,9 +2,11 @@ import DropDownMenu from '@components/Dashboard/DropDownMenu/DropDownMenu';
 import HeaderMegaMenu from '@components/Dashboard/Menu/HeaderMegaMenu';
 import {useGlobalContext} from '@contexts/GlobalContext';
 import {getClientKey} from '@utilities/strings';
+import {theme} from 'antd';
 import {getAsset} from 'assets';
 import React from 'react';
 import {useHistory} from 'react-router';
+const {useToken} = theme;
 
 const Navbar = () => {
   const history = useHistory();
@@ -19,8 +21,17 @@ const Navbar = () => {
   // check if url contains game-changers
   const isGameChangers = window.location.href.includes('game-changers');
 
+  const {token} = useToken();
+
+  const contentStyle = {
+    backgroundColor: token.colorBgElevated,
+    boxShadow: token.boxShadowSecondary,
+    borderBottom: isGameChangers ? 'none' : '1px solid',
+    borderColor: token.colorBorderSecondary
+  };
+
   return (
-    <div id="top-menu" className={`w-full ${isGameChangers ? 'bg-black' : 'bg-white'}`}>
+    <div id="top-menu" style={contentStyle} className={`w-full `}>
       <div className="flex px-8 justify-between items-center">
         <div className="w-auto mr-5">
           <img

@@ -613,8 +613,8 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
             <div
               className={
                 isStudentRoster
-                  ? 'flex justify-end mb-4 items-center w-auto'
-                  : 'flex justify-end mb-4 w-auto'
+                  ? 'flex justify-end mb-4 gap-4 items-center w-auto'
+                  : 'flex justify-end mb-4 gap-4 w-auto'
               }>
               {isStudentRoster && (
                 <div className="w-auto relative flex mr-2 min-w-64">
@@ -649,28 +649,7 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
                 closeAction={_removeSearchAction}
                 style={`mr-4 ${isInInstitute ? 'w-auto' : 'w-full'}`}
               />
-              {!isInInstitute && (
-                <>
-                  <Selector
-                    placeholder={UserLookupDict[userLanguage]['sortby']}
-                    list={sortByList}
-                    selectedItem={sortingType.name}
-                    onChange={setSortingValue}
-                    disabled={loading}
-                    btnClass="rounded-r-none  border-r-none "
-                    arrowHidden={true}
-                  />
-                  <button
-                    className={`w-28 bg-gray-100 mr-4 p-3 border-gray-400  border-0 rounded border-l-none rounded-l-none ${theme.outlineNone} `}
-                    onClick={toggleSortDimention}>
-                    {sortingType.asc ? (
-                      <AiOutlineArrowUp className="theme-text" size="1.5rem" />
-                    ) : (
-                      <AiOutlineArrowDown className="theme-text" size="1.5rem" />
-                    )}
-                  </button>
-                </>
-              )}
+
               {state.user.role !== 'SUP' && (
                 <Buttons
                   label={UserLookupDict[userLanguage]['button']['add']}

@@ -97,7 +97,9 @@ const TableComponent = ({
           onChange: paginationConfig?.allAsProps.setCurrentPage,
           showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
           responsive: true,
-          showSizeChanger: true
+          showSizeChanger: true,
+          onShowSizeChange: (_, pageSize) =>
+            paginationConfig?.allAsProps.setPageCount(pageSize)
         }
       : undefined,
     dataSource: dataSource,

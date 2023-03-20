@@ -13,7 +13,7 @@ const UserRole = ({role}: RoleProps) => {
     <Tag
       color={
         role === 'ST'
-          ? 'yellow'
+          ? 'purple'
           : role === 'ADM'
           ? 'magenta'
           : role === 'TR' || role === 'FLW'
