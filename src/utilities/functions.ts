@@ -22,7 +22,7 @@ export const doResize = (textbox: any) => {
   const cols = textbox.cols;
 
   const arraytxt: any = txt.split('\n');
-  const rows = arraytxt.length;
+  let rows = arraytxt.length;
 
   for (let i = 0; i < arraytxt.length; i++)
     // @ts-ignore
