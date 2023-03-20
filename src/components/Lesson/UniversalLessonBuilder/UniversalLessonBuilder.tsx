@@ -1,5 +1,7 @@
 import {MenuFoldOutlined, MenuUnfoldOutlined} from '@ant-design/icons';
+import ModalPopUp from '@components/Molecules/ModalPopUp';
 import {useOverlayContext} from '@contexts/OverlayContext';
+import useDictionary from '@customHooks/dictionary';
 import {Layout, Tooltip} from 'antd';
 import {Content, Header} from 'antd/es/layout/layout';
 import Sider from 'antd/es/layout/Sider';
@@ -63,6 +65,8 @@ const UniversalLessonBuilder = ({instId}: UniversalLessonBuilderProps) => {
     setFetchingLessonDetails,
     setSelectedPageID
   } = useULBContext();
+
+  const {LessonBuilderDict, userLanguage} = useDictionary();
 
   //  INITIALIZE CURRENT PAGE LOCATION
   useEffect(() => {
@@ -374,6 +378,8 @@ const UniversalLessonBuilder = ({instId}: UniversalLessonBuilderProps) => {
 
   const {showLessonEditOverlay} = useOverlayContext();
 
+  const [deleteModal, setDeleteModal] = useState(false);
+
   return (
     /**
      *
@@ -392,6 +398,14 @@ const UniversalLessonBuilder = ({instId}: UniversalLessonBuilderProps) => {
         pageDetails={selectedPageID ? getCurrentPage(selectedPageID) : {}} // don't send unwanted page details if not editing
         open={newLessonPlanShow}
         setOpen={setNewLessonPlanShow}
+      />
+
+      <ModalPopUp
+        message={'Are you sure you want to delete this lesson page?'}
+        open={deleteModal}
+        closeAction={() => setDeleteModal(false)}
+        saveLabel={LessonBuilderDict[userLanguage]['BUTTON']['DELETE']}
+        saveAction={() => deleteLessonPlan(activePageData.id)}
       />
 
       <Layout>
@@ -439,7 +453,7 @@ const UniversalLessonBuilder = ({instId}: UniversalLessonBuilderProps) => {
               newLessonPlanShow={newLessonPlanShow}
               setFields={setLessonPlanFields}
               setEditMode={setEditMode}
-              deleteLesson={() => {}}
+              deleteLesson={() => setDeleteModal(true)}
               setNewLessonPlanShow={setNewLessonPlanShow}
             />
           </Header>
