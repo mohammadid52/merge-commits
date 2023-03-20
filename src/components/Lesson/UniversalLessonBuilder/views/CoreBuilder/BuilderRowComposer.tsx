@@ -187,7 +187,7 @@ const BuilderRowComposer = (props: RowComposerProps) => {
         ]
       ) : (
         <div className="flex flex-col items-center justify-center w-auto">
-          <h1 className={`w-full theme-text my-2 text-center`}>
+          <h1 className={`w-full text-white my-2 mb-4 text-center`}>
             {navState !== 'addContent'
               ? 'No content added yet. Click on the button to add content.'
               : 'Now select a component type'}

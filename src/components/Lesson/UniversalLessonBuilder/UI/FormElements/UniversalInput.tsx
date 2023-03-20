@@ -1,3 +1,4 @@
+import {Checkbox} from 'antd';
 import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
 import ToggleForModal from 'components/Lesson/UniversalLessonBuilder/UI/common/ToggleForModals';
@@ -154,25 +155,20 @@ const UniversalInput = (props: any) => {
                     <div className="flex items-center mt-4 gap-x-4">
                       {selectedForm === INPUT && (
                         <>
-                          <div className="sm:text-sm sm:leading-5 focus:outline-none focus:border-transparent border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm w-auto">
-                            <div className="flex items-center text-xs w-auto">
-                              Sentence
-                              <ToggleForModal
-                                checked={input.textArea}
-                                onClick={() => changeCheckboxValue(idx, input.textArea)}
-                              />
-                              Paragraph
-                            </div>
-                          </div>
+                          <ToggleForModal
+                            label="One line answer"
+                            checked={input.textArea}
+                            onClick={() => changeCheckboxValue(idx, input.textArea)}
+                          />
                         </>
                       )}
                       {!hideBtns && (
                         <div className="flex items-center text-xs w-auto sm:leading-5 focus:outline-none focus:border-transparent border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm">
-                          Make this required
-                          <ToggleForModal
+                          <Checkbox
                             checked={input.required}
-                            onClick={() => makeRequired(idx, input.required)}
-                          />
+                            onClick={() => makeRequired(idx, input.required)}>
+                            Make this required
+                          </Checkbox>
                         </div>
                       )}
                     </div>
@@ -187,26 +183,19 @@ const UniversalInput = (props: any) => {
                   <div className="flex items-center mt-4 gap-x-4">
                     {selectedForm === INPUT && (
                       <>
-                        <div className="flex items-center w-auto sm:text-sm sm:leading-5 focus:outline-none focus:border-transparent border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm ">
-                          <div className="flex items-center text-xs w-auto">
-                            Sentence
-                            <ToggleForModal
-                              checked={input.textArea}
-                              onClick={() => changeCheckboxValue(idx, input.textArea)}
-                            />
-                            Paragraph
-                          </div>
-                        </div>
+                        <ToggleForModal
+                          label="One line answer"
+                          checked={input.textArea}
+                          onClick={() => changeCheckboxValue(idx, input.textArea)}
+                        />
                       </>
                     )}
                     {!hideBtns && (
-                      <div className="flex items-center text-xs w-auto sm:leading-5 focus:outline-none focus:border-transparent border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm">
+                      <Checkbox
+                        checked={input.required}
+                        onClick={() => makeRequired(idx, input.required)}>
                         Make this required
-                        <ToggleForModal
-                          checked={input.required}
-                          onClick={() => makeRequired(idx, input.required)}
-                        />
-                      </div>
+                      </Checkbox>
                     )}
                   </div>
                 )}
@@ -220,22 +209,12 @@ const UniversalInput = (props: any) => {
       </div>
       <div className="flex mt-8 justify-between px-6 pb-4">
         {!hideBtns ? (
-          <div className="flex items-center w-auto">
-            <button
-              onClick={addOneInputField}
-              className="w-auto mr-4 border-2 focus:text-white focus:border-indigo-600 focus:bg-indigo-400 border-gray-300 p-2 px-4 text-tiny hover:border-gray-500 rounded-md text-dark transition-all duration-300 ">
-              + Add Field
-            </button>
-            <button
-              onClick={() => setNumbered(!numbered)}
-              className={`${
-                numbered
-                  ? 'border-indigo-500 text-white bg-indigo-400'
-                  : 'border-gray-300 text-dark'
-              } w-auto p-2 px-4 focus:border-indigo-600 text-tiny border-2 hover:border-gray-500 rounded-md  transition-all duration-300 mr-4`}>
-              {numbered ? 'Numbered' : 'Unnumbered'}
-            </button>
-          </div>
+          <Buttons
+            label={'+ Add Field'}
+            onClick={addOneInputField}
+            size="small"
+            variant="dashed"
+          />
         ) : (
           <div className="w-auto" />
         )}

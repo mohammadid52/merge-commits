@@ -530,6 +530,7 @@ const NewLessonPlanSO = ({
             <Button onClick={onTopRightButtonClick}>Cancel</Button>
             <Buttons
               size="middle"
+              onClick={(e) => onSaveClick(e)}
               label={
                 loading
                   ? BUTTONS[userLanguage][editMode ? 'SAVING' : 'CREATING']

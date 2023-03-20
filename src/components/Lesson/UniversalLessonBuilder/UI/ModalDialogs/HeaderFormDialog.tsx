@@ -1,8 +1,7 @@
 import {EditQuestionModalDict} from '@dictionary/dictionary.iconoclast';
-import {Switch} from '@headlessui/react';
+
 import {HeaderBlock} from '@UlbBlocks/HeaderBlock';
 import ColorPicker from '@UlbUI/ColorPicker/ColorPicker';
-import {classNames} from '@UlbUI/FormElements/TextInput';
 import DummyContent from '@UlbUI/Preview/DummyContent';
 import PreviewLayout from '@UlbUI/Preview/Layout/PreviewLayout';
 import Buttons from 'atoms/Buttons';
@@ -19,6 +18,7 @@ import {IContentTypeComponentProps} from 'interfaces/UniversalLessonBuilderInter
 import AnimatedContainer from 'uiComponents/Tabs/AnimatedContainer';
 import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
 // import Tabs, {useTabs} from 'uiComponents/Tabs/Tabs';
+import {Form, Switch} from 'antd';
 import {useEffect, useState} from 'react';
 import {v4 as uuidv4} from 'uuid';
 
@@ -29,47 +29,6 @@ interface IHeaderModalComponentProps extends IContentTypeComponentProps {
   setUnsavedChanges: any;
   askBeforeClose: () => void;
 }
-
-const Toggle = ({
-  checked,
-  onClick,
-  text,
-  disabled,
-  error
-}: {
-  text?: string;
-  error?: string;
-  checked: boolean;
-  onClick: any;
-  disabled?: boolean;
-}) => {
-  return (
-    <Switch.Group as="div" className="flex items-center">
-      <Switch.Label as="span" className="mr-3 w-auto">
-        <span className="text-sm font-medium text-gray-900">{text}</span>
-      </Switch.Label>
-      <Switch
-        disabled={disabled}
-        checked={checked}
-        onChange={onClick}
-        className={classNames(
-          checked ? 'theme-bg' : 'bg-gray-200',
-          'relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
-        )}>
-        <span
-          aria-hidden="true"
-          className={classNames(
-            checked ? 'translate-x-5' : 'translate-x-0',
-            'pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 transition ease-in-out duration-200'
-          )}
-        />
-      </Switch>
-      <Switch.Label as="span" className="ml-3 w-auto">
-        <span className="text-sm font-medium text-red-500">{error}</span>
-      </Switch.Label>
-    </Switch.Group>
-  );
-};
 
 interface IInput {
   title: string;
@@ -379,21 +338,21 @@ const HeaderModalComponent = ({
               </div>
             </div>
             <div className="col-span-1 my-4 flex items-center w-auto">
-              <Toggle
-                error={errors.animation}
-                checked={Boolean(inputFields.animated)}
-                text="Animated Title"
-                // disabled={NO_BORDER_SELECTED}
-                onClick={onAnimationToggle}
-              />
+              <Form.Item label="Animated title" valuePropName="checked">
+                <Switch
+                  checked={Boolean(inputFields.animated)}
+                  disabled={NO_BORDER_SELECTED}
+                  onClick={onAnimationToggle}
+                />
+              </Form.Item>
             </div>
             <div className="col-span-1 my-4 flex items-center w-auto">
-              <Toggle
-                checked={Boolean(inputFields.instructions)}
-                text="Instructions"
-                // disabled={NO_BORDER_SELECTED}
-                onClick={() => onToggle('instructions')}
-              />
+              <Form.Item label="Instructions" valuePropName="checked">
+                <Switch
+                  checked={Boolean(inputFields.instructions)}
+                  onClick={() => onToggle('instructions')}
+                />
+              </Form.Item>
             </div>
             {inputFields.instructions && (
               <div className="col-span-2 max-w-256">
