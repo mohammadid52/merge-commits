@@ -65,8 +65,6 @@ const ProfileInfo = (props: UserInfoProps) => {
       <div className="w-full md:px-4 pt-4">
         <div className="">
           <Descriptions
-            bordered
-            size="middle"
             extra={
               <div className="flex gap-4 items-center justify-center">
                 <Buttons

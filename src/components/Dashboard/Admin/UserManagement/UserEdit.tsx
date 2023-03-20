@@ -370,11 +370,11 @@ const UserEdit = (props: UserInfoProps) => {
     });
   };
 
-  const handleChangeStatus = (item: {name: string; code: string}) => {
+  const handleChangeStatus = (value: string) => {
     setEditUser(() => {
       return {
         ...editUser,
-        status: item.code as PersonStatus
+        status: value as PersonStatus
       };
     });
     closeModal();
@@ -390,24 +390,24 @@ const UserEdit = (props: UserInfoProps) => {
     setWarnModal({show: false, message: '', onSaveAction: () => {}});
   };
 
-  const beforeStatusChange = (item: {name: string; code: string}) => {
-    if (item.name === PersonStatus.INACTIVE) {
+  const beforeStatusChange = (value: string) => {
+    if (value === PersonStatus.INACTIVE) {
       setWarnModal({
         show: true,
         message:
           'By setting this student to inactive, students will no longer see any courses when they log in (they will continue to have access to their notebooks). Do you wish to continue?',
-        onSaveAction: () => handleChangeStatus(item)
+        onSaveAction: () => handleChangeStatus(value)
       });
     } else {
-      handleChangeStatus(item);
+      handleChangeStatus(value);
     }
   };
 
-  const handleChangeRole = (item: {name: string; code: string}) => {
+  const handleChangeRole = (value: string) => {
     setEditUser(() => {
       return {
         ...editUser,
-        role: item.code
+        role: value
       };
     });
   };
@@ -423,17 +423,17 @@ const UserEdit = (props: UserInfoProps) => {
 
   const Status = [
     {
-      code: 'ACTIVE',
-      name: 'ACTIVE'
+      label: 'ACTIVE',
+      value: 'ACTIVE'
     },
 
     {
-      code: 'INACTIVE',
-      name: 'INACTIVE'
+      label: 'INACTIVE',
+      value: 'INACTIVE'
     },
     {
-      code: 'TRAINING',
-      name: 'TRAINING'
+      label: 'TRAINING',
+      value: 'TRAINING'
     }
     // {
     //   code: 'HOLD',
@@ -443,25 +443,25 @@ const UserEdit = (props: UserInfoProps) => {
 
   const Role = [
     state.user.role === 'SUP' && {
-      code: 'SUP',
-      name: 'Super Admin'
+      label: 'SUP',
+      value: 'Super Admin'
     },
     {
-      code: 'ADM',
-      name: 'Admin'
+      label: 'ADM',
+      value: 'Admin'
     },
     {
-      code: 'BLD',
-      name: 'Builder'
+      label: 'BLD',
+      value: 'Builder'
     },
     {
-      code: 'FLW',
-      name: 'Fellow'
+      label: 'FLW',
+      value: 'Fellow'
     },
 
     {
-      code: 'TR',
-      name: 'Teacher'
+      label: 'TR',
+      value: 'Teacher'
     }
   ].filter(Boolean);
 
@@ -659,31 +659,22 @@ const UserEdit = (props: UserInfoProps) => {
                   </div>
 
                   <div className="sm:col-span-3 p-2">
-                    <DropdownForm
-                      value=""
-                      style={false}
-                      // @ts-ignore
-                      handleChange={beforeStatusChange}
-                      userInfo={editUser.status}
+                    <Selector
+                      selectedItem={editUser.status}
+                      placeholder={UserEditDict[userLanguage]['status']}
+                      list={Status}
+                      onChange={beforeStatusChange}
                       label={UserEditDict[userLanguage]['status']}
-                      id="status"
-                      isRequired
-                      items={Status}
                     />
                   </div>
 
                   <div className="sm:col-span-3 p-2">
-                    <DropdownForm
-                      value=""
-                      style={false}
-                      // @ts-ignore
-                      handleChange={handleChangeRole}
-                      userInfo={getUserRoleString(editUser.role)}
+                    <Selector
+                      selectedItem={getUserRoleString(editUser.role)}
+                      placeholder={UserEditDict[userLanguage]['role']}
+                      list={Role as any[]}
+                      onChange={handleChangeRole}
                       label={UserEditDict[userLanguage]['role']}
-                      listClassName="h-28"
-                      id="role"
-                      isRequired
-                      items={Role}
                     />
                   </div>
 
@@ -964,7 +955,7 @@ const UserEdit = (props: UserInfoProps) => {
             </div>
           </div>
 
-          <div className="px-4 pt-4 w-full flex justify-end">
+          <div className="px-4 pt-4 w-full gap-4 flex justify-end">
             <Buttons
               btnClass="py-2 w-2.5/10 px-4 text-xs mr-2"
               label={UserEditDict[userLanguage]['button']['cancel']}
