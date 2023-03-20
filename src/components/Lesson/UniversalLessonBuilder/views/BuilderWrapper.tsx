@@ -1,4 +1,3 @@
-import AddContentDialog from '@UlbModals/AddContentDialog';
 import CheckpointFormDialog from '@UlbModals/CheckpointFormDialog';
 import DividerModal from '@UlbModals/DividerModal';
 import DownloadModal from '@UlbModals/DownloadModal';
@@ -9,7 +8,6 @@ import JumbotronFormDialog from '@UlbModals/JumbotronModalDialog';
 import KeywordModalDialog from '@UlbModals/KeywordModalDialog';
 import LinestarterModalDialog from '@UlbModals/LinestarterModalDialog';
 import LinksModalDialog from '@UlbModals/LinksModalDialog';
-import NewPageDialog from '@UlbModals/NewPageDialog';
 import NotesModalDialog from '@UlbModals/NotesModalDialog';
 import ParaModalComponent from '@UlbModals/ParaFormDialog';
 import ReviewSliderModal from '@UlbModals/ReviewSliderModal';
@@ -102,14 +100,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
   // UI elements show/hide
   const [hierarchyVisible, setHierarchyVisible] = useState<boolean>(false);
 
-  const {
-    currentModalDialog,
-    setCurrentModalDialog,
-    addContentModal,
-    setAddContentModal,
-    modalPopVisible,
-    setModalPopVisible
-  } = useOverlayContext();
+  const {addContentModal, setAddContentModal} = useOverlayContext();
 
   useEffect(() => {
     if (isNewPage === 'true') {
@@ -131,11 +122,6 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     }
   };
 
-  const hideAllModals = () => {
-    setModalPopVisible(false);
-    setAddContentModal({type: '', show: false});
-    setCurrentModalDialog('');
-  };
   const {
     setSelectedComponent,
     selectedComponent,
@@ -429,27 +415,6 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
             <h3>Invalid type:{type} Please check it again</h3>
           </div>
         );
-    }
-  };
-
-  /**
-   *
-   * @param dialogLabel string
-   * @returns modal title name for parent level modals
-   */
-  const getTitleByType = (dialogLabel: string) => {
-    switch (dialogLabel) {
-      case dialogLabelList.ADD_CONTENT:
-        return 'Add Content';
-      case dialogLabelList.NEW_PAGE:
-        return 'Add New Page';
-      case dialogLabelList.VIEW_PAGES:
-        return 'Lesson Pages';
-      case dialogLabelList.USE_TEMPLATE:
-        return 'Use Template';
-
-      default:
-        return 'Title';
     }
   };
 

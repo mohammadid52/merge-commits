@@ -334,8 +334,8 @@ const ImageFormComponent = ({
                 <Label dark={false} label="Styles" />
                 <div className="mt-1 flex items-center text-xs w-auto sm:leading-5 focus:outline-none focus:border-transparent border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm ">
                   <div className="flex items-center text-xs w-auto sm:leading-5py-2 px-3 ">
-                    Corners rounded
                     <ToggleForModal
+                      label="Corners rounded"
                       checked={selectedStyles.isRounded}
                       onClick={() => {
                         if (!value) {

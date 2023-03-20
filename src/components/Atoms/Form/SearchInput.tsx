@@ -22,7 +22,7 @@ const SearchInput: React.FC<SearchProps> = (searchProps: SearchProps) => {
     onChange,
     liveSearch = false,
     onKeyDown,
-    width = 200,
+    width = 350,
     disabled
   } = searchProps;
 

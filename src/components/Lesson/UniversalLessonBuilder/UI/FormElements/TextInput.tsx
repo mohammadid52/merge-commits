@@ -7,41 +7,10 @@ import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
 import {v4 as uuidv4} from 'uuid';
 import {FORM_TYPES} from '../common/constants';
 
-import {Switch} from '@headlessui/react';
+import {Checkbox, Form, Switch} from 'antd';
 
-/**
- * @param classes multipple classes separeted bt comma
- * @returns multiple classes into a single class
- * */
-export const classNames = (...classes: any[]) => classes.filter(Boolean).join(' ');
-
-const Toggle = ({checked, onClick}: {checked: boolean; onClick: any}) => {
-  return (
-    <Switch
-      checked={checked}
-      onChange={onClick}
-      className="mx-3 flex-shrink-0 group relative rounded-full inline-flex items-center justify-center h-5 w-10 cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-      <span className="sr-only">Text response type</span>
-      <span
-        aria-hidden="true"
-        className="pointer-events-none absolute bg-white w-full h-full rounded-md"
-      />
-      <span
-        aria-hidden="true"
-        className={classNames(
-          checked ? 'bg-indigo-600' : 'bg-gray-200',
-          'pointer-events-none absolute h-4 w-9 mx-auto rounded-full transition-colors ease-in-out duration-200'
-        )}
-      />
-      <span
-        aria-hidden="true"
-        className={classNames(
-          checked ? 'translate-x-5' : 'translate-x-0',
-          'pointer-events-none absolute left-0 inline-block h-5 w-5 border border-gray-200 rounded-full bg-white shadow transform ring-0 transition-transform ease-in-out duration-200'
-        )}
-      />
-    </Switch>
-  );
+export const classNames = (...classes: any[]) => {
+  return classes.filter(Boolean).join(' ');
 };
 
 const TextInput = ({
@@ -150,14 +119,12 @@ const TextInput = ({
                 </div>
                 {idx !== 0 ? (
                   <div className="flex my-2 items-center justify-end w-auto">
-                    <div className="flex items-center mt-4 text-xs">
-                      Sentence
-                      <Toggle
-                        checked={input.textArea}
+                    <Form.Item label="One line answer" valuePropName="checked">
+                      <Switch
+                        checked={!Boolean(input.textArea)}
                         onClick={() => changeCheckboxValue(idx, input.textArea)}
                       />
-                      Paragraph
-                    </div>
+                    </Form.Item>
 
                     <button
                       onClick={() => removeItemFromList(input.id)}
@@ -166,24 +133,22 @@ const TextInput = ({
                     </button>
                   </div>
                 ) : (
-                  <div className="flex items-center mt-4 text-xs">
-                    Sentence
-                    <Toggle
-                      checked={input.textArea}
+                  <Form.Item label="long answer" valuePropName="checked">
+                    <Switch
+                      checked={Boolean(input.textArea)}
                       onClick={() => changeCheckboxValue(idx, input.textArea)}
                     />
-                    Paragraph
-                  </div>
+                  </Form.Item>
                 )}
                 <div className="flex items-center text-xs w-auto">
-                  Make this required
-                  <Toggle
+                  <Checkbox
                     checked={input.required}
                     onClick={() => {
                       update(list[idx], `required`, () => !input.required);
                       setList([...list]);
-                    }}
-                  />
+                    }}>
+                    Make this required
+                  </Checkbox>
                 </div>
               </div>
 
@@ -194,23 +159,14 @@ const TextInput = ({
           );
         })}
       </div>
+      <Buttons
+        label={'+ Add Field'}
+        onClick={addOneInputField}
+        size="small"
+        variant="dashed"
+      />
+
       <div className="flex mt-8 justify-between px-6 pb-4">
-        <div className="flex items-center w-auto">
-          <button
-            onClick={addOneInputField}
-            className="w-auto mr-4 border-2 focus:text-white focus:border-indigo-600 focus:bg-indigo-400 border-gray-300 p-2 px-4 text-tiny hover:border-gray-500 rounded-md text-dark transition-all duration-300 ">
-            + Add Field
-          </button>
-          <button
-            onClick={() => setNumbered(!numbered)}
-            className={`${
-              numbered
-                ? 'border-indigo-500 text-white bg-indigo-400'
-                : 'border-gray-300 text-dark'
-            } w-auto p-2 px-4 focus:border-indigo-600 text-tiny border-2 hover:border-gray-500 rounded-md  transition-all duration-300 mr-4`}>
-            {numbered ? 'Numbered' : 'Unnumbered'}
-          </button>
-        </div>
         <div className="flex items-center justify-end w-auto gap-4">
           <Buttons
             btnClass="py-1 px-4 text-xs mr-2"

@@ -10,24 +10,28 @@ import Buttons from 'components/Atoms/Buttons';
 import Filters, {SortType} from 'components/Atoms/Filters';
 import Modal from 'components/Atoms/Modal';
 import SectionTitleV3 from 'components/Atoms/SectionTitleV3';
-import Tooltip from 'components/Atoms/Tooltip';
+
+import {Descriptions, List, Tooltip} from 'antd';
+import {RoomStatus} from 'API';
+import SearchInput from 'atoms/Form/SearchInput';
+import Selector from 'atoms/Form/Selector';
 import {Status} from 'components/Dashboard/Admin/UserManagement/UserStatus';
 import CommonActionsBtns from 'components/MicroComponents/CommonActionsBtns';
 import UnitName from 'components/MicroComponents/UnitName';
 import Table from 'components/Molecules/Table';
+import * as customMutations from 'customGraphql/customMutations';
+import * as customQueries from 'customGraphql/customQueries';
 import useAuth from 'customHooks/useAuth';
 import usePagination from 'customHooks/usePagination';
 import useSearch from 'customHooks/useSearch';
 import {BUTTONS, InstitueRomms} from 'dictionary/dictionary.iconoclast';
-import {withZoiqFilter} from 'utilities/functions';
-import {RoomStatus} from 'API';
-import SearchInput from 'atoms/Form/SearchInput';
-import Selector from 'atoms/Form/Selector';
-import * as customMutations from 'customGraphql/customMutations';
-import * as customQueries from 'customGraphql/customQueries';
-import {isEmpty, map, orderBy} from 'lodash';
+import {isEmpty, map, orderBy, truncate} from 'lodash';
 import ModalPopUp from 'molecules/ModalPopUp';
+import {withZoiqFilter} from 'utilities/functions';
 import UnitFormComponent from './UnitFormComponent';
+import {DataValue} from '@components/Dashboard/Csv/Csv';
+import moment from 'moment';
+import AttachedCourses from './AttachedCourses';
 
 export const UnitList = ({
   instId,
@@ -447,58 +451,65 @@ export const UnitList = ({
     setAddModalShow(false);
   };
 
-  const [hoveringItem, setHoveringItem] = useState<{name?: string}>({});
-
-  const currentSelectedItem =
-    hoveringItem &&
-    hoveringItem?.name &&
-    allUnits?.find((_c: any) => _c.name === hoveringItem?.name);
+  const currentSelectedItem = (name: string) =>
+    allUnits?.find((_c: any) => _c.name === name);
 
   const dataList = map(finalList, (item: any, index: number) => ({
     no: getIndex(index),
     instituteName: isSuperAdmin && item.institution.name,
     status: <Status status={item.status} useDefault />,
+    content: (
+      <>
+        <Descriptions title="Unit Details">
+          <Descriptions.Item label="Status">
+            {<Status status={currentSelectedItem(item.name).status} useDefault />}
+          </Descriptions.Item>
+          <Descriptions.Item label="Created date">
+            {moment(item.createdAt).format('ll')}
+          </Descriptions.Item>
+          <Descriptions.Item label="Last update">
+            {moment(item.updatedAt).format('ll')}
+          </Descriptions.Item>
+          <Descriptions.Item label="Description">
+            {currentSelectedItem(item.name)?.description || 'n/a'}
+          </Descriptions.Item>
+          <Descriptions.Item label="Attached courses">
+            <AttachedCourses curricular={curricular} unitId={item.id} />
+          </Descriptions.Item>
+        </Descriptions>
+      </>
+    ),
     unitName: (
-      <UnitName
-        currentSelectedItem={currentSelectedItem}
-        hoveringItem={hoveringItem}
-        searchTerm={searchInput.value}
-        editCurrentUnit={handleView}
-        isLast={finalList.length - 5 <= index}
-        curricular={curricular}
-        setHoveringItem={setHoveringItem}
-        isSuperAdmin={isSuperAdmin}
-        item={item}
-      />
+      <UnitName searchTerm={searchInput.value} editCurrentUnit={handleView} item={item} />
     ),
 
     lessonPlan: (
       <div>
         {item.lessons?.items?.length > 0 ? (
-          <ol className="list-decimal">
+          <List size="small">
             {item.lessons?.items?.map(
               (lesson: {id: string; lesson: {id: string; title: string}}) => {
                 if (lesson) {
                   return (
                     <Tooltip
-                      text={`Go to ${lesson.lesson.title}`}
+                      title={`Go to ${lesson.lesson.title}`}
                       placement="left"
                       key={lesson.id}>
-                      <li
-                        className="mb-2 cursor-pointer hover:underline hover:theme-text:400"
+                      <List.Item
+                        className="cursor-pointer hover:underline hover:theme-text:400"
                         key={lesson.lesson.id}
                         onClick={() =>
                           redirectToLesson(item.institution.id, lesson.lesson.id)
                         }>
                         {lesson.lesson.title}
-                      </li>
+                      </List.Item>
                     </Tooltip>
                   );
                 }
                 return <div key="dfdmf" className="hidden w-auto" />;
               }
             )}
-          </ol>
+          </List>
         ) : (
           <p className="">No lesson plan</p>
         )}
@@ -530,6 +541,7 @@ export const UnitList = ({
       isFirstIndex: true,
       headers: {textColor: 'text-white'},
       dataList: {
+        expandable: true,
         loading,
         pagination: {
           showPagination:

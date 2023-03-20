@@ -1826,3 +1826,21 @@ $translation-fab-width: 50px;
 .dark-blue {
   background-color: $lesson-form-block-bg;
 }
+
+.community-media .ant-image {
+  width: 100%;
+}
+
+.universal-table th {
+  font-weight: 500 !important;
+  color: #eee !important;
+}
+
+.iconoclast .universal-table th,
+.iconoclast .universal-table thead .ant-table-row-expand-icon-cell {
+  background-color: $iconoclast !important;
+}
+.curate .universal-table th,
+.curate .universal-table thead .ant-table-row-expand-icon-cell {
+  background-color: $curate !important;
+}

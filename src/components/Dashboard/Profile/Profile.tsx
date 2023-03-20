@@ -1,4 +1,5 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import PageWrapper from '@components/Atoms/PageWrapper';
 import Placeholder from '@components/Atoms/Placeholder';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import ErrorBoundary from '@components/Error/ErrorBoundary';
@@ -299,159 +300,161 @@ const Profile = () => {
     return <LessonLoading />;
   } else {
     return (
-      <div className="relative">
-        <BreadcrumbsWithBanner
-          items={breadCrumsList}
-          bannerImage={profileBanner1}
-          title={'Profile'}
-        />
+      <ErrorBoundary componentName="Profile">
+        <div className="relative">
+          <BreadcrumbsWithBanner
+            items={breadCrumsList}
+            bannerImage={profileBanner1}
+            title={'Profile'}
+          />
+          <PageWrapper>
+            <div className={`p-4 pt-0`}>
+              {/* <BreadCrums items={breadCrumsList} /> */}
 
-        <div className={`main_container p-0 mx-auto max-w-256 px-5`}>
-          {/* <BreadCrums items={breadCrumsList} /> */}
-          <div className="flex justify-between flex-col md:flex-row mt-5">
-            <SectionTitleV3
-              withButton={
-                currentPath !== 'edit' &&
-                currentPath !== 'password' && (
-                  <div className="w-auto">
-                    <Buttons
-                      dataCy="edit-profile-button"
-                      label="Edit"
-                      onClick={() => history.push(`${match.url}/edit`)}
-                      Icon={FaEdit}
-                    />
-                  </div>
-                )
-              }
-              title={dashboardProfileDict[userLanguage]['TITLE']}
-              subtitle={dashboardProfileDict[userLanguage]['SUBTITLE']}
-            />
-          </div>
-          <div
-            className={`w-full m-auto max-w-256 p-2 md:p-4 white_back mb-2 md:mb-8 ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow}`}>
-            <div className="h-9/10 flex flex-col lg:flex-row">
-              <div className="w-auto p-2 md:p-4 flex flex-col text-center items-center px-8">
-                <div className="relative">
-                  {person.image ? (
-                    <div className="group hover:opacity-80 focus:outline-none focus:opacity-95">
-                      {!imageLoading ? (
-                        <Fragment>
+              <SectionTitleV3
+                withButton={
+                  currentPath !== 'edit' &&
+                  currentPath !== 'password' && (
+                    <div className="w-auto">
+                      <Buttons
+                        dataCy="edit-profile-button"
+                        label="Edit"
+                        onClick={() => history.push(`${match.url}/edit`)}
+                        Icon={FaEdit}
+                      />
+                    </div>
+                  )
+                }
+                title={dashboardProfileDict[userLanguage]['TITLE']}
+                subtitle={dashboardProfileDict[userLanguage]['SUBTITLE']}
+              />
+
+              <div className={``}>
+                <div className="h-9/10 flex flex-col lg:flex-row">
+                  <div className="w-auto p-2 md:p-4 flex flex-col text-center items-center px-8">
+                    <div className="relative">
+                      {person.image ? (
+                        <div className="group hover:opacity-80 focus:outline-none focus:opacity-95">
+                          {!imageLoading ? (
+                            <Fragment>
+                              <DroppableMedia
+                                setImage={(img: any, file: any) => {
+                                  setUpImage(img);
+                                  setFileObj(file);
+                                }}
+                                toggleCropper={toggleCropper}
+                                mediaRef={mediaRef}>
+                                <Placeholder
+                                  size="w-20 h-20 md:w-40 md:h-40"
+                                  image={imageUrl}
+                                />
+                              </DroppableMedia>
+                            </Fragment>
+                          ) : (
+                            <div className="w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full  border-0 border-gray-400 shadow-elem-lightI">
+                              <Loader />
+                            </div>
+                          )}
+                        </div>
+                      ) : (
+                        <label
+                          className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full  border-0 border-gray-400 shadow-elem-light mx-auto`}>
+                          {!imageLoading ? (
+                            <FaPlus color="#4a5568" size={'3rem'} />
+                          ) : (
+                            <Loader />
+                          )}
                           <DroppableMedia
+                            mediaRef={mediaRef}
                             setImage={(img: any, file: any) => {
                               setUpImage(img);
                               setFileObj(file);
                             }}
-                            toggleCropper={toggleCropper}
-                            mediaRef={mediaRef}>
-                            <Placeholder
-                              size="w-20 h-20 md:w-40 md:h-40"
-                              image={imageUrl}
-                            />
+                            toggleCropper={toggleCropper}>
+                            <div />
                           </DroppableMedia>
-                        </Fragment>
-                      ) : (
-                        <div className="w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full  border-0 border-gray-400 shadow-elem-lightI">
-                          <Loader />
-                        </div>
+                        </label>
                       )}
                     </div>
-                  ) : (
-                    <label
-                      className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full  border-0 border-gray-400 shadow-elem-light mx-auto`}>
-                      {!imageLoading ? (
-                        <FaPlus color="#4a5568" size={'3rem'} />
-                      ) : (
-                        <Loader />
-                      )}
-                      <DroppableMedia
-                        mediaRef={mediaRef}
-                        setImage={(img: any, file: any) => {
-                          setUpImage(img);
-                          setFileObj(file);
-                        }}
-                        toggleCropper={toggleCropper}>
-                        <div />
-                      </DroppableMedia>
-                    </label>
-                  )}
-                </div>
-                <p className="text-gray-600 my-2">
-                  {dashboardProfileDict[userLanguage]['PROFILE_INSTRUCTON']}{' '}
-                </p>
-                <div
-                  className={`text-sm md:text-xl font-bold text-gray-900 mt-2 md:mt-4 w-52`}>
-                  {`${person.preferredName ? person.preferredName : person.firstName} ${
-                    person.lastName
-                  }`}
-                </div>
-              </div>
+                    <p className="text-gray-600 my-2">
+                      {dashboardProfileDict[userLanguage]['PROFILE_INSTRUCTON']}{' '}
+                    </p>
+                    <div
+                      className={`text-sm md:text-xl font-bold text-gray-900 mt-2 md:mt-4 w-52`}>
+                      {`${
+                        person.preferredName ? person.preferredName : person.firstName
+                      } ${person.lastName}`}
+                    </div>
+                  </div>
 
-              <div className="relative w-full">
-                {/* TODO : Need to convert this into tabs instead of buttons. 
+                  <div className="relative w-full">
+                    {/* TODO : Need to convert this into tabs instead of buttons. 
                     Currently we have only single tab so hiding this.
                 */}
 
-                <Switch>
-                  <Route
-                    exact
-                    path={`${match.url}/`}
-                    render={() => (
-                      <ErrorBoundary componentName="ProfileInfo">
-                        <ProfileInfo
-                          user={person}
-                          status={status}
-                          stdCheckpoints={stdCheckpoints}
-                          questionData={questionData}
-                        />
-                      </ErrorBoundary>
-                    )}
-                  />
-                  <Route path={`${match.url}/about`} render={() => <AboutMe />} />
-                  <Route
-                    path={`${match.url}/edit`}
-                    render={() => (
-                      <ErrorBoundary componentName="ProfileEdit">
-                        <ProfileEdit
-                          user={person}
-                          status={status}
-                          setStatus={setStatus}
-                          getUser={getUser}
-                          stdCheckpoints={stdCheckpoints}
-                          questionData={questionData}
-                        />
-                      </ErrorBoundary>
-                    )}
-                  />
+                    <Switch>
+                      <Route
+                        exact
+                        path={`${match.url}/`}
+                        render={() => (
+                          <ErrorBoundary componentName="ProfileInfo">
+                            <ProfileInfo
+                              user={person}
+                              status={status}
+                              stdCheckpoints={stdCheckpoints}
+                              questionData={questionData}
+                            />
+                          </ErrorBoundary>
+                        )}
+                      />
+                      <Route path={`${match.url}/about`} render={() => <AboutMe />} />
+                      <Route
+                        path={`${match.url}/edit`}
+                        render={() => (
+                          <ErrorBoundary componentName="ProfileEdit">
+                            <ProfileEdit
+                              user={person}
+                              status={status}
+                              setStatus={setStatus}
+                              getUser={getUser}
+                              stdCheckpoints={stdCheckpoints}
+                              questionData={questionData}
+                            />
+                          </ErrorBoundary>
+                        )}
+                      />
 
-                  <Route
-                    path={`${match.url}/password`}
-                    render={() => (
-                      <ErrorBoundary componentName="ChangePassword">
-                        <ChangePassword />
-                      </ErrorBoundary>
-                    )}
-                  />
-                  <Route
-                    path={`${match.url}/passcode`}
-                    render={() => (
-                      <ErrorBoundary componentName="ChangePassword">
-                        <ChangePasscode />
-                      </ErrorBoundary>
-                    )}
-                  />
-                </Switch>
+                      <Route
+                        path={`${match.url}/password`}
+                        render={() => (
+                          <ErrorBoundary componentName="ChangePassword">
+                            <ChangePassword />
+                          </ErrorBoundary>
+                        )}
+                      />
+                      <Route
+                        path={`${match.url}/passcode`}
+                        render={() => (
+                          <ErrorBoundary componentName="ChangePassword">
+                            <ChangePasscode />
+                          </ErrorBoundary>
+                        )}
+                      />
+                    </Switch>
 
-                <ProfileCropModal
-                  open={showCropper}
-                  upImg={upImage || ''}
-                  saveCroppedImage={(img: string) => saveCroppedImage(img)}
-                  closeAction={toggleCropper}
-                />
+                    <ProfileCropModal
+                      open={showCropper}
+                      upImg={upImage || ''}
+                      saveCroppedImage={(img: string) => saveCroppedImage(img)}
+                      closeAction={toggleCropper}
+                    />
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
+          </PageWrapper>
         </div>
-      </div>
+      </ErrorBoundary>
     );
   }
 };

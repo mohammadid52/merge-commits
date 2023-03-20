@@ -25,6 +25,8 @@ import {isEmpty, map, orderBy} from 'lodash';
 import {useEffect, useState} from 'react';
 import {useHistory, useRouteMatch} from 'react-router';
 import {Status} from '../../UserManagement/UserStatus';
+import {Descriptions} from 'antd';
+import moment from 'moment';
 
 interface CurriculumListProps {
   curricular?: {items: ICurricular[]};
@@ -36,6 +38,8 @@ interface CurriculumListProps {
 interface ICurricular {
   name?: string;
   status?: string;
+  summary?: string;
+  description?: string;
   id: string;
   institutionID: string;
   institution?: {name?: string; id: string};
@@ -312,11 +316,6 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
     }
   };
 
-  const [hoveringItem, setHoveringItem] = useState<{
-    name?: string;
-    id?: string;
-  }>({});
-
   const checkIfRemovable = (curriculumObj: any) => {
     if (
       curriculumObj.syllabi?.length > 0 ||
@@ -329,24 +328,34 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
     }
   };
 
-  const currentSelectedItem =
-    hoveringItem &&
-    hoveringItem?.name &&
-    hoveringItem?.id &&
-    courseList?.find((_c: any) => _c.id === hoveringItem?.id);
+  const currentSelectedItem = (id: string) => courseList?.find((_c: any) => _c.id === id);
 
   const dataList = map(finalList, (item: any, index: number) => ({
     no: index + 1,
     // onClick: () => editCurrentCurricular(item.id),
+    content: (
+      <Descriptions title="Course Details">
+        <Descriptions.Item label="Status">
+          <Status status={currentSelectedItem(item.id)?.status} useDefault />
+        </Descriptions.Item>
+        <Descriptions.Item label="Created date">
+          {moment(item.createdAt).format('ll')}
+        </Descriptions.Item>
+        <Descriptions.Item label="Last update">
+          {moment(item.updatedAt).format('ll')}
+        </Descriptions.Item>
+        <Descriptions.Item span={2} label="Summary">
+          {currentSelectedItem(item.id)?.summary || 'n/a'}
+        </Descriptions.Item>
+        <Descriptions.Item span={2} label="Description">
+          {currentSelectedItem(item.id)?.description || 'n/a'}
+        </Descriptions.Item>
+      </Descriptions>
+    ),
     courseName: (
       <CourseName
-        item={item}
-        setHoveringItem={setHoveringItem}
-        hoveringItem={hoveringItem}
-        isLast={finalList.length - 1 === index}
         searchTerm={searchInput.value}
-        currentSelectedItem={currentSelectedItem}
-        isSuperAdmin={isSuperAdmin}
+        item={item}
         editCurrentCurricular={editCurrentCurricular}
       />
     ),
@@ -388,11 +397,13 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
     dataList,
     config: {
       dark: false,
+
       isLastAction: true,
       isFirstIndex: true,
       headers: {textColor: 'text-white'},
       dataList: {
         loading,
+        expandable: true,
         pagination: {
           showPagination: !searchInput.isActive && totalNum > 0 && isEmpty(filters),
           config: {

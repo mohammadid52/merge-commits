@@ -227,7 +227,7 @@ const BreadcrumsTitles: BreadcrumbsTitlesInterface = {
 const dashboardProfileDict: DashboardProfileDictInterface = {
   EN: {
     PROFILE: 'Profile',
-    TITLE: 'USER PROFILE',
+    TITLE: 'User Profile',
     PROFILE_INSTRUCTON: 'Click the circle above to update profile picture.',
     SUBTITLE: 'This contains your profile information.',
     PERSONAL_INFO: {
@@ -302,7 +302,7 @@ const dashboardProfileDict: DashboardProfileDictInterface = {
   },
   ES: {
     PROFILE: 'Perfil',
-    TITLE: 'PERFIL DE USUARIO',
+    TITLE: 'Perfil de Usuario',
     PROFILE_INSTRUCTON:
       'Haga clic en el círculo de arriba para actualizar la foto de perfil.',
     SUBTITLE: 'Esto contiene tu información de perfil.',

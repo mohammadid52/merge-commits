@@ -144,7 +144,14 @@ const BuilderRowComposer = (props: RowComposerProps) => {
                                       content.type === 'divider'
                                     ? ''
                                     : content.class
-                                } space-y-4 mt-4 `}
+                                } ${
+                                  (content.type.includes('form') &&
+                                    content.type !== 'notes-form') ||
+                                  content.type.includes(FORM_TYPES.POEM) ||
+                                  content.type.includes(FORM_TYPES.WRITING_EXERCISE)
+                                    ? ''
+                                    : 'space-y-4'
+                                } mt-4 `}
                                 id={`${content.type === 'notes-form' ? '' : content.id}`}>
                                 {composePartContent(
                                   content.id,
@@ -180,7 +187,7 @@ const BuilderRowComposer = (props: RowComposerProps) => {
         ]
       ) : (
         <div className="flex flex-col items-center justify-center w-auto">
-          <h1 className={`w-full theme-text my-2 text-center`}>
+          <h1 className={`w-full text-white my-2 mb-4 text-center`}>
             {navState !== 'addContent'
               ? 'No content added yet. Click on the button to add content.'
               : 'Now select a component type'}

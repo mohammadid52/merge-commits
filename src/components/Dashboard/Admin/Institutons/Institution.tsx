@@ -177,7 +177,7 @@ const Institution = (props: InstitutionProps) => {
         institutionId={institutionId}
         forInstitution
       />
-      <div className="px-2 py-8 md:px-4 lg:p-8">
+      <div className="">
         <PageWrapper>
           <Switch>
             <Route

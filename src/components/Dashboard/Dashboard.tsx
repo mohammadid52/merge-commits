@@ -1,17 +1,12 @@
+import Navbar from '@components/Molecules/Navbar';
 import useAuth from '@customHooks/useAuth';
 import {updatePageState} from '@graphql/functions';
 import {UserPageState} from 'API';
-import {getAsset} from 'assets';
-import DropDownMenu from 'components/Dashboard/DropDownMenu/DropDownMenu';
 import 'components/Dashboard/GameChangers/styles/Flickity.scss';
 import 'components/Dashboard/GameChangers/styles/GameChanger.scss';
-import HeaderMegaMenu from 'components/Dashboard/Menu/HeaderMegaMenu';
 import EmojiFeedback from 'components/General/EmojiFeedback';
-import Noticebar from 'components/Noticebar/Noticebar';
 import {useGlobalContext} from 'contexts/GlobalContext';
-import useNotifications from 'customHooks/notifications';
 import React, {useEffect, useState} from 'react';
-import {useHistory} from 'react-router-dom';
 import DashboardRouter from 'router/DashboardRouter';
 import {setLocalStorageData} from 'utilities/localStorage';
 
@@ -63,13 +58,9 @@ export interface ClassroomControlProps extends DashboardProps {
 const Dashboard = () => {
   const {
     state: {currentPage},
-    clientKey,
+
     dispatch
   } = useGlobalContext();
-
-  const history = useHistory();
-
-  const {notifications} = useNotifications('global');
 
   const [isPageUpdatedOnPersonTable, setIsPageUpdatedOnPersonTable] = useState(false);
 
@@ -122,30 +113,9 @@ const Dashboard = () => {
   // ######################## NAVIGATION AND STATE ####################### //
   // ##################################################################### //
 
-  const handleLink = () => {
-    history.push('/dashboard/home');
-    dispatch({type: 'UPDATE_CURRENTPAGE', payload: {data: 'homepage'}});
-  };
-
-  // check if url contains game-changers
-  const isGameChangers = window.location.href.includes('game-changers');
-
   return (
     <>
-      <div id="top-menu" className={`w-full ${isGameChangers ? 'bg-black' : 'bg-white'}`}>
-        <div className="flex px-8 justify-between items-center">
-          <div className="w-auto mr-5">
-            <img
-              onClick={handleLink}
-              className="h-12 w-auto cursor-pointer"
-              src={getAsset(clientKey, 'loading_logo')}
-              alt="Workflow"
-            />
-          </div>
-          <HeaderMegaMenu />
-          <DropDownMenu />
-        </div>
-      </div>
+      <Navbar />
       <div className="relative h-screen flex overflow-hidden container_background ">
         {isStudent && <EmojiFeedback />}
         {/* <ResizablePanels> */}
@@ -156,12 +126,8 @@ const Dashboard = () => {
               ? 'overflow-hidden'
               : 'overflow-y-auto'
           }`}>
-          {/*<FloatingSideMenu />*/}
-          {!isGameChangers && <Noticebar notifications={notifications} />}
-
           <DashboardRouter />
         </div>
-        {/* </ResizablePanels> */}
       </div>
     </>
   );
