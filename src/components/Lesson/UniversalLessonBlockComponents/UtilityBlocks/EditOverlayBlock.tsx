@@ -39,7 +39,7 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
     handleEditBlockContent
   } = props;
 
-  const {previewMode, universalLessonDetails} = useULBContext();
+  const {universalLessonDetails} = useULBContext();
   const {
     showingPin,
     setSelectedComponent,
@@ -184,12 +184,11 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
         relative  
         ${section === 'partContent' ? 'h-full' : 'h-auto'} 
         flex items-center rowWrapper
-        ${isComponent && !previewMode ? '  pb-1' : ''}
+        ${isComponent ? '  pb-1' : ''}
         `}>
           {!deleteMode &&
             isComponent &&
             showingPin &&
-            !previewMode &&
             !(actionMode === 'edit' && contentType === SPACER) && (
               <div
                 id="editControlsWrapper"
@@ -213,7 +212,6 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
             )}
           {deleteMode &&
             isComponent &&
-            !previewMode &&
             showingPin &&
             !(actionMode === 'edit' && contentType === SPACER) && (
               <div
@@ -246,8 +244,7 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
                 </button>
               </div>
             )}
-          {!previewMode &&
-            showingBlockPin &&
+          {showingBlockPin &&
             !isComponent &&
             !(actionMode === 'edit' && contentType === SPACER) && (
               <div

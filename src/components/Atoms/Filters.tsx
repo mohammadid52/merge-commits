@@ -36,7 +36,10 @@ const Filters = ({
   return (
     <ErrorBoundary componentName="Filters">
       <div className="flex items-center justify-between">
-        <Radio.Group onChange={handleModeChange} value={mode} style={{marginBottom: 8}}>
+        <Radio.Group
+          onChange={handleModeChange}
+          value={mode}
+          style={{marginTop: 8, marginBottom: 8}}>
           {filter.map((filterName) => (
             <Radio.Button key={filterName} value={filterName}>
               {filterName}

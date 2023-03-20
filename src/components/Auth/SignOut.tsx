@@ -12,6 +12,7 @@ const SignOutButton = () => {
         Icon={FiLogOut}
         label="Sign Out"
         size="small"
+        className="w-full"
         onClick={signOut}
         variant="default"
       />

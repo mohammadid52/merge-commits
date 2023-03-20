@@ -6,13 +6,11 @@ import DocsBlock from 'components/Lesson/UniversalLessonBlockComponents/Blocks/D
 import NotesBlock from 'components/Lesson/UniversalLessonBlockComponents/Blocks/Notes/NotesBlock';
 import NotesContainer from 'components/Lesson/UniversalLessonBlockComponents/Blocks/Notes/NotesFab';
 import map from 'lodash/map';
-import React from 'react';
 import {
   DIVIDER,
   FORM_TYPES,
   GAME_CHANGERS,
-  SPACER,
-  TABLE
+  SPACER
 } from '../UniversalLessonBuilder/UI/common/constants';
 import CustomVideoBlock from './Blocks/CustomVideoBlock';
 import DividerBlock from './Blocks/DividerBlock';
@@ -25,8 +23,6 @@ import {JumbotronBlock} from './Blocks/JumbotronBlock';
 import KeywordBlock from './Blocks/KeywordBlock';
 import LinksBlock from './Blocks/LinksBlock';
 import {ParagraphBlock} from './Blocks/ParagraphBlock';
-import {StringifyBlock} from './Blocks/StringifyBlock';
-import TableBlock from './Blocks/TableBlock';
 import {VideoBlock} from './Blocks/VideoBlock';
 
 const Spacer = (props: any) => {
@@ -205,8 +201,7 @@ const composePartContent = (
       </GameChangerProvider>
     );
   } else {
-    console.log('Unidentified component type: => ', type);
-    return <StringifyBlock key={inputKey} id={id} anyObj={value} mode={_mode} />;
+    return <div className="hidden"></div>;
   }
 };
 

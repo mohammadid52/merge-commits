@@ -241,7 +241,7 @@ const InstitutionsHome: React.FC = () => {
           <ErrorBoundary componentName="InstitutionProfile">
             <div className="">
               <BreadcrumbsWithBanner forInstitution bannerImage={bannerImage} />
-              <div className="px-2 py-8 md:px-4 lg:p-8">
+              <div className="">
                 {/* <PageWrapper> */}
                 <PageWrapper>
                   <NavBarRouter institute={institute} />

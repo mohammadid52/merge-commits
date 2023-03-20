@@ -144,7 +144,14 @@ const BuilderRowComposer = (props: RowComposerProps) => {
                                       content.type === 'divider'
                                     ? ''
                                     : content.class
-                                } space-y-4 mt-4 `}
+                                } ${
+                                  (content.type.includes('form') &&
+                                    content.type !== 'notes-form') ||
+                                  content.type.includes(FORM_TYPES.POEM) ||
+                                  content.type.includes(FORM_TYPES.WRITING_EXERCISE)
+                                    ? ''
+                                    : 'space-y-4'
+                                } mt-4 `}
                                 id={`${content.type === 'notes-form' ? '' : content.id}`}>
                                 {composePartContent(
                                   content.id,

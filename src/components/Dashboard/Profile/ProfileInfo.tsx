@@ -1,8 +1,9 @@
 import {Fragment} from 'react';
-import {RiLock2Fill} from 'react-icons/ri';
-import {NavLink, useRouteMatch} from 'react-router-dom';
+import {useHistory, useRouteMatch} from 'react-router-dom';
 
-import Tooltip from 'atoms/Tooltip';
+import {LockOutlined} from '@ant-design/icons';
+import Buttons from '@components/Atoms/Buttons';
+import {Descriptions} from 'antd';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import {getUserRoleString} from 'utilities/strings';
@@ -14,38 +15,6 @@ interface UserInfoProps {
   stdCheckpoints: any[];
   questionData: any[];
 }
-
-const PasswordPasscode = ({isPassword = false}: {isPassword?: boolean}) => {
-  const {userLanguage} = useGlobalContext();
-  const {dashboardProfileDict} = useDictionary();
-  const match = useRouteMatch();
-
-  const PersonalInfoDict = dashboardProfileDict[userLanguage]['PERSONAL_INFO'];
-  return (
-    <div className="sm:col-span-1 p-2">
-      <dt className="text-sm leading-5 flex items-center justify-start font-medium text-gray-500">
-        <NavLink
-          className="flex items-center justify-center w-auto"
-          to={`${match.url}/${isPassword ? 'password' : 'passcode'}`}>
-          <Tooltip text={`edit ${isPassword ? 'password' : 'passcode'}`}>
-            <div className="flex items-center justify-center">
-              <p className="w-auto mr-2">
-                {PersonalInfoDict[isPassword ? 'PASSWORD' : 'PASSCODE']}
-              </p>
-
-              <RiLock2Fill
-                className="w-auto"
-                size={'1rem'}
-                color="rgba(160, 174, 192, 1)"
-              />
-            </div>
-          </Tooltip>
-        </NavLink>
-      </dt>
-      <dd className="mt-1 text-sm leading-5 text-gray-900">*******</dd>
-    </div>
-  );
-};
 
 const ProfileInfo = (props: UserInfoProps) => {
   const {user, status, stdCheckpoints, questionData} = props;
@@ -85,6 +54,8 @@ const ProfileInfo = (props: UserInfoProps) => {
     }
   };
 
+  const history = useHistory();
+  const match = useRouteMatch();
   if (status !== 'done') {
     return <LessonLoading />;
   }
@@ -92,70 +63,54 @@ const ProfileInfo = (props: UserInfoProps) => {
   {
     return (
       <div className="w-full md:px-4 pt-4">
-        <div className="bg-white shadow-5 overflow-hidden sm:rounded-lg mb-4">
-          <div className="border-b-0 border-gray-200 sm:px-6">
-            <h3 className="px-0 pr-0 pl-2 py-2 md:pl-0 md:py-5 text-lg leading-6 font-medium text-gray-900 uppercase">
-              {PersonalInfoDict['TITLE']}{' '}
-            </h3>
-          </div>
-          <div className="px-4 py-5 sm:px-6">
-            <dl className="grid grid-cols-2 grid-rows-2 gap-x-1 sm:gap-x-2 gap-y-4 sm:grid-cols-3">
-              <div className="sm:col-span-1 p-2">
-                <dt className="text-sm leading-5 font-medium text-gray-500">
-                  {PersonalInfoDict['FIRST_NAME']}
-                </dt>
-                <dd className="mt-1 text-sm leading-5 text-gray-900">{`${user.firstName}`}</dd>
+        <div className="">
+          <Descriptions
+            bordered
+            size="middle"
+            extra={
+              <div className="flex gap-4 items-center justify-center">
+                <Buttons
+                  tooltip="Change your password"
+                  Icon={LockOutlined}
+                  label={PersonalInfoDict['PASSWORD']}
+                  size="small"
+                  variant="dashed"
+                  onClick={() => {
+                    history.push(`${match.url}/password`);
+                  }}
+                />
+                <Buttons
+                  tooltip="Change your journal passcode"
+                  onClick={() => {
+                    history.push(`${match.url}/passcode`);
+                  }}
+                  Icon={LockOutlined}
+                  label={PersonalInfoDict['PASSCODE']}
+                  size="small"
+                  variant="dashed"
+                />
               </div>
-              <div className="sm:col-span-1 p-2">
-                <dt className="text-sm leading-5 font-medium text-gray-500">
-                  {PersonalInfoDict['LAST_NAME']}
-                </dt>
-                <dd className="mt-1 text-sm leading-5 text-gray-900">{`${user.lastName}`}</dd>
-              </div>
-              <div className="sm:col-span-1 p-2">
-                <dt className="text-sm leading-5 font-medium text-gray-500">
-                  {PersonalInfoDict['NICKNAME']}
-                </dt>
-                <dd className="mt-1 text-sm leading-5 text-gray-900">
-                  {`${user.preferredName ? user.preferredName : '--'}`}
-                </dd>
-              </div>
-              <div className="sm:col-span-1 p-2">
-                <dt className="text-sm leading-5 font-medium text-gray-500">
-                  {PersonalInfoDict['NICKNAME']}
-                </dt>
-                <dd className="mt-1 text-sm leading-5 text-gray-900">
-                  {`${user.preferredName ? user.preferredName : '--'}`}
-                </dd>
-              </div>
-
-              <div className="sm:col-span-1 p-2">
-                <dt className="text-sm leading-5 font-medium text-gray-500">
-                  {PersonalInfoDict['LANGUAGE']}
-                </dt>
-                <dd className="mt-1 text-sm leading-5 text-gray-900">{language()}</dd>
-              </div>
-              <div className="col-span-2 p-2">
-                <dt className="text-sm leading-5 font-medium text-gray-500">
-                  {PersonalInfoDict['EMAIL']}
-                </dt>
-                <dd className="mt-1 text-sm leading-5 text-gray-900">{`${user.email}`}</dd>
-              </div>
-
-              <div className="sm:col-span-1 p-2">
-                <dt className="text-sm leading-5 font-medium text-gray-500">
-                  {PersonalInfoDict['ROLE']}
-                </dt>
-                <dd className="mt-1 text-sm leading-5 text-gray-900">
-                  {`${user.role ? getUserRoleString(user.role) : '--'}`}
-                </dd>
-              </div>
-              {/* PASSWORD */}
-              <PasswordPasscode isPassword />
-              <PasswordPasscode />
-              {/* PASSCODE */}
-            </dl>
-          </div>
+            }
+            title={PersonalInfoDict['TITLE']}>
+            <Descriptions.Item label={PersonalInfoDict['FIRST_NAME']}>
+              {user.firstName}
+            </Descriptions.Item>
+            <Descriptions.Item label={PersonalInfoDict['LAST_NAME']}>
+              {user.lastName}
+            </Descriptions.Item>
+            <Descriptions.Item label={PersonalInfoDict['NICKNAME']}>
+              {user?.preferredName || ''}
+            </Descriptions.Item>
+            <Descriptions.Item label={PersonalInfoDict['LANGUAGE']}>
+              {language()}
+            </Descriptions.Item>
+            <Descriptions.Item label={PersonalInfoDict['ROLE']}>
+              {getUserRoleString(user.role)}
+            </Descriptions.Item>
+            <Descriptions.Item span={2} label={PersonalInfoDict['EMAIL']}>
+              {user.email}
+            </Descriptions.Item>
+          </Descriptions>
         </div>
 
         {stdCheckpoints?.length > 0 ? (

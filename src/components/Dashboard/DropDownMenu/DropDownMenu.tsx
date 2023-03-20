@@ -5,9 +5,15 @@ import {useGlobalContext} from '@contexts/GlobalContext';
 import useDictionary from '@customHooks/dictionary';
 import useAuth from '@customHooks/useAuth';
 import {getImageFromS3Static} from '@utilities/services';
-import {List, Popover} from 'antd';
+import {Divider, Dropdown, Space, theme} from 'antd';
+import {ItemType} from 'rc-menu/lib/interface';
 import React from 'react';
 import UserRole from '../Admin/UserManagement/UserRole';
+const {useToken} = theme;
+
+const getLink = (href: string, label: string) => {
+  return <a href={href}>{label}</a>;
+};
 
 const DropDownMenu = () => {
   const {firstName, isStudent, lastName, image, role} = useAuth();
@@ -17,57 +23,73 @@ const DropDownMenu = () => {
 
   const data = [
     {
-      name: TABS['EDIT_PROFILE'],
+      label: getLink('/dashboard/profile', TABS['EDIT_PROFILE']),
+      key: TABS['EDIT_PROFILE'],
       href: '/dashboard/profile'
     },
     !isStudent && {
-      name: TABS['DICTIONARY'],
+      label: getLink('/dashboard/dictionary', TABS['DICTIONARY']),
+      key: TABS['DICTIONARY'],
       href: '/dashboard/dictionary'
     },
 
     checkIfAdmin() && {
-      name: TABS['TEST_CASES'],
-      href: '/dashboard/test-cases'
-    },
-    checkIfAdmin() && {
-      name: TABS['ERRORS'],
-      href: '/dashboard/errors'
-    },
-    checkIfAdmin() && {
-      name: TABS['UPLOAD_LOGS'],
-      href: '/dashboard/upload-logs'
+      label: 'Admin links',
+      children: [
+        checkIfAdmin() && {
+          label: getLink('/dashboard/test-cases', TABS['TEST_CASES']),
+          key: TABS['TEST_CASES'],
+          href: '/dashboard/test-cases'
+        },
+        checkIfAdmin() && {
+          label: getLink('/dashboard/errors', TABS['ERRORS']),
+          key: TABS['ERRORS'],
+          href: '/dashboard/errors'
+        },
+        checkIfAdmin() && {
+          label: getLink('/dashboard/upload-logs', TABS['UPLOAD_LOGS']),
+          key: TABS['UPLOAD_LOGS'],
+          href: '/dashboard/upload-logs'
+        }
+      ]
     }
   ].filter(Boolean);
 
-  const content = (
-    <List
-      footer={<SignOutButton />}
-      bordered
-      dataSource={data as any[]}
-      renderItem={(item) => (
-        <List.Item>
-          <a style={{color: 'inherit'}} href={item.href}>
-            {item.name}
-          </a>
-        </List.Item>
-      )}
-    />
-  );
+  const {token} = useToken();
+
+  const contentStyle = {
+    backgroundColor: token.colorBgElevated,
+    borderRadius: token.borderRadiusLG,
+    boxShadow: token.boxShadowSecondary
+  };
+
+  const menuStyle = {
+    boxShadow: 'none'
+  };
 
   return (
-    <Popover
-      content={content}
-      trigger="click"
-      placement="bottomRight"
-      title={
-        <span className="flex">
-          {[firstName, lastName].join(' ')}
+    <Dropdown
+      trigger={['click']}
+      dropdownRender={(menu) => (
+        <div style={contentStyle}>
+          <Space style={{padding: 16}}>
+            {[firstName, lastName].join(' ')}
 
-          <div className="w-auto ml-2">
-            <UserRole role={role} />
-          </div>
-        </span>
-      }>
+            <div className="w-auto ml-2">
+              <UserRole role={role} />
+            </div>
+          </Space>
+          <Divider style={{margin: 0}} />
+          {React.cloneElement(menu as React.ReactElement, {style: menuStyle})}
+          <Divider style={{margin: 0}} />
+
+          <Space style={{padding: '8px 16px'}}>
+            <SignOutButton />
+          </Space>
+        </div>
+      )}
+      placement="bottomLeft"
+      menu={{items: data as ItemType[]}}>
       <Buttons
         variant="link"
         insideElement={
@@ -85,7 +107,38 @@ const DropDownMenu = () => {
           </div>
         }
       />
-    </Popover>
+    </Dropdown>
+    // <Popover
+    //   content={content}
+    //   trigger="click"
+    //   placement="bottomRight"
+    //   title={
+    // <span className="flex">
+    //   {[firstName, lastName].join(' ')}
+
+    //   <div className="w-auto ml-2">
+    //     <UserRole role={role} />
+    //   </div>
+    // </span>
+    //   }>
+    // <Buttons
+    //   variant="link"
+    //   insideElement={
+    //     <div className="w-6 h-6">
+    //       {image ? (
+    //         <img
+    //           className="inline-block rounded-full border-0 theme-border w-6 h-6"
+    //           // style={{width: 48, height: 48}}
+    //           src={getImageFromS3Static(image)}
+    //           alt=""
+    //         />
+    //       ) : (
+    //         <Placeholder firstName={firstName} lastName={lastName} size="h-6 w-6" />
+    //       )}
+    //     </div>
+    //   }
+    // />
+    // </Popover>
   );
   // if (firstName && lastName) {
   //   return (

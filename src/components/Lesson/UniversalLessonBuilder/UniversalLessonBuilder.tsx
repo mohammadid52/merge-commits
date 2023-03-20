@@ -364,11 +364,9 @@ const UniversalLessonBuilder = ({instId}: UniversalLessonBuilderProps) => {
 
   const {
     setNewLessonPlanShow,
-    fetchingLessonDetails,
+
     setLessonPlanFields,
     setEditMode,
-    previewMode,
-    pushUserToThisId,
 
     getCurrentPage,
     newLessonPlanShow
