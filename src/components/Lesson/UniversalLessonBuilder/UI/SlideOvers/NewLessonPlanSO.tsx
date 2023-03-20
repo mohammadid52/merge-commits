@@ -105,73 +105,6 @@ const VideoUploadComponent = ({
   );
 };
 
-const InputTag = ({
-  tags = [],
-  setTags
-}: {
-  tags: string[];
-  // setTags: React.Dispatch<React.SetStateAction<string[]>>;
-  setTags: any;
-}) => {
-  const removeTag = (i: any) => {
-    const newTags = [...tags];
-    newTags.splice(i, 1);
-    setTags(newTags);
-  };
-
-  let tagInput: any = React.useRef<any>(null).current;
-
-  const inputKeyDown = (e: any) => {
-    const val = e.target.value;
-    if (e.key === 'Enter' && val) {
-      if (tags.find((tag) => tag.toLowerCase() === val.toLowerCase())) {
-        return;
-      }
-      setTags([...tags, val]);
-      tagInput.value = null;
-    } else if (e.key === 'Backspace' && !val) {
-      removeTag(tags.length - 1);
-    }
-  };
-
-  return (
-    <div className="bg-white dark:bg-gray-800 rounded-md flex-wrap">
-      <ul className="inline-flex flex-wrap m-0 p-1 w-full" style={{maxWidth: '36rem'}}>
-        {tags.map((tag, i) => (
-          <li
-            className={
-              'items-center bg-indigo-600 rounded-md text-white font-light list-none mb-1.5 mr-1.5 py-1.5 px-2.5 w-auto'
-            }
-            key={tag}>
-            {tag}
-            <button
-              className={
-                'items-center appearance-none bg-gray-700 border-none text-white rounded-full cursor-pointer inline-flex text-xs h-4 justify-center ml-2 p-0 transform rotate-45 w-4'
-              }
-              type="button"
-              onClick={() => {
-                removeTag(i);
-              }}>
-              +
-            </button>
-          </li>
-        ))}
-        <li className="bg-transparent flex-grow-1 p-0">
-          <input
-            className={`block dark:text-white w-full dark:bg-gray-800 shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 dark:border-gray-700 border-gray-300 rounded-md`}
-            type="text"
-            placeholder="Add tags here..."
-            onKeyDown={inputKeyDown}
-            ref={(c) => {
-              tagInput = c;
-            }}
-          />
-        </li>
-      </ul>
-    </div>
-  );
-};
-
 interface ITag {
   label: string;
   value: string;
@@ -500,7 +433,6 @@ const NewLessonPlanSO = ({
   };
 
   const {
-    tags = [],
     label,
     title,
     instructions,
@@ -770,25 +702,6 @@ const NewLessonPlanSO = ({
                 />
               </div>
             </Block>
-            {/* Tags */}
-
-            {/* <Block>
-              <Label className="mb-1" label={'Tags'} />
-
-              <div className="sm:col-span-4">
-                <Select
-                  mode="tags"
-                  size="large"
-                  style={{width: '100%'}}
-                  placeholder="Add tags here..."
-                  onChange={(_, options: any) => {
-                    setFields({...fields, tags: [...options]});
-                  }}
-                  value={fields.tags}
-                  options={fields.tags}
-                />
-              </div>
-            </Block> */}
           </Container>
         </div>
       </Drawer>

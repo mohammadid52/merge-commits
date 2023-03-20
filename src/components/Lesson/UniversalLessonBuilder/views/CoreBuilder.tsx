@@ -1,12 +1,10 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import useAuth from '@customHooks/useAuth';
 import CopyCloneSlideOver from 'components/Lesson/UniversalLessonBuilder/UI/SlideOvers/CopyCloneSlideOver';
 import PageLoader from 'components/Lesson/UniversalLessonBuilder/views/CoreBuilder/PageLoader';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import {useOverlayContext} from 'contexts/OverlayContext';
 import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
 import * as customQueries from 'customGraphql/customQueries';
-import useDictionary from 'customHooks/dictionary';
 import {useQuery} from 'customHooks/urlParam';
 import {ULBSelectionProps} from 'interfaces/UniversalLessonBuilderInterfaces';
 import {
@@ -15,11 +13,8 @@ import {
   UniversalLessonPage
 } from 'interfaces/UniversalLessonInterfaces';
 import BuilderRowComposer from 'lesson/UniversalLessonBuilder/views/CoreBuilder/BuilderRowComposer';
-import {find, findIndex, findLastIndex, isEmpty, map, remove} from 'lodash';
-import ModalPopUp from 'molecules/ModalPopUp';
-import {useEffect, useState} from 'react';
-import {useHistory} from 'react-router';
-import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
+import {find, findIndex, isEmpty, map} from 'lodash';
+import {useEffect} from 'react';
 import {v4 as uuidv4} from 'uuid';
 
 interface CoreBuilderProps extends ULBSelectionProps {
@@ -44,8 +39,6 @@ interface CoreBuilderProps extends ULBSelectionProps {
 }
 
 export const CoreBuilder = (props: CoreBuilderProps) => {
-  const history = useHistory();
-
   const {
     mode,
 
@@ -53,7 +46,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
     deleteFromULBHandler,
     updateFromULBHandler,
     universalLessonDetails,
-    lessonId,
+
     selectedPageID,
     setSelectedPageID,
     targetID,
@@ -65,11 +58,9 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
     setSelectedPartContentID,
     handleEditBlockContent,
     handleModalPopToggle,
-    handleTagModalOpen,
-    activePageData
+    handleTagModalOpen
   } = props;
   const {
-    setUniversalLessonDetails,
     setNewLessonPlanShow,
     fetchingLessonDetails,
 
@@ -79,8 +70,6 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
 
     newLessonPlanShow
   } = useULBContext();
-
-  const {userLanguage} = useGlobalContext();
 
   const {lessonDispatch} = useGlobalContext();
   const params = useQuery(location.search);
@@ -129,60 +118,6 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
       setEditMode(false);
     }
   }, [pageId]);
-
-  const {LessonBuilderDict} = useDictionary();
-  const {isSuperAdmin} = useAuth();
-
-  const goToLessonPlan = () => {
-    history.push(
-      isSuperAdmin
-        ? `/dashboard/manage-institutions/lessons/${lessonId}?step=activities`
-        : `/dashboard/manage-institutions/institution/${universalLessonDetails.institutionID}/lessons/${lessonId}?step=activities`
-    );
-  };
-
-  const [confirmationConfig, setConfirmationConfig] = useState<{
-    show: boolean;
-    message: string;
-    saveAction?: () => void;
-  }>({
-    show: false,
-    message: ''
-  });
-
-  const closeAction = () => {
-    setConfirmationConfig({
-      message: '',
-      show: false
-    });
-  };
-
-  const {message = '', show = false} = confirmationConfig;
-
-  /**
-   * @param id - pageId - string
-   * @void this function will delete the current lesson
-   */
-  const deleteLessonPlan = async (id: string) => {
-    remove(universalLessonDetails.lessonPlan, (item: any) => item.id === id);
-    setUniversalLessonDetails({...universalLessonDetails});
-    const input = {
-      id: lessonId,
-      lessonPlan: [...universalLessonDetails.lessonPlan]
-    };
-    closeAction();
-    await updateLessonPageToDB(input);
-    const lastIndex = findLastIndex(universalLessonDetails.lessonPlan);
-    if (lastIndex > -1) {
-      const pageID: string =
-        universalLessonDetails.lessonPlan[universalLessonDetails.lessonPlan.length - 1]
-          .id;
-      setSelectedPageID?.(pageID);
-      pushUserToThisId(universalLessonDetails.id, pageID);
-    } else {
-      goToLessonPlan();
-    }
-  };
 
   /**
    * This is very important thing to implement.
@@ -329,52 +264,8 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
     return replaceAllExistingIds;
   };
 
-  const pathname = window.location.pathname;
-
   return (
     <div className="relative">
-      <ModalPopUp
-        open={Boolean(show && activePageData)}
-        message={message}
-        closeAction={closeAction}
-        saveLabel={LessonBuilderDict[userLanguage]['BUTTON']['DELETE']}
-        saveAction={() => deleteLessonPlan(activePageData.id)}
-      />
-
-      {/* <PageBuilderLayout
-        title="New Lesson Plan"
-        setOpen={setNewLessonPlanShow}
-        open={newLessonPlanShow && pathname.includes('page-builder')}>
-        {pathname.includes('page-builder') && (
-          <div className="p-4 2xl:p-8">
-            <NewLessonPlanSO
-              instId={instId}
-              pageDetails={selectedPageID ? getCurrentPage(selectedPageID) : {}} // don't send unwanted page details if not editing
-              open={newLessonPlanShow}
-              setOpen={setNewLessonPlanShow}
-            />
-          </div>
-        )}
-      </PageBuilderLayout> */}
-      {/* <PageBuilderLayout
-        setOpen={setNewLessonPlanShow}
-        className="overflow-hidden"
-        title="Page builder"
-        overflowHidden
-        open={showLessonEditOverlay}>
-        {showLessonEditOverlay && (
-          <div className="p-6 2xl:p-8">
-            <PageBuilderSlideOver
-              deleteFromULBHandler={deleteFromULBHandler}
-              setEditMode={setEditMode}
-              setNewLessonPlanShow={setNewLessonPlanShow}
-              open={showLessonEditOverlay}
-              handleEditBlockContent={handleEditBlockContent}
-              handleModalPopToggle={handleModalPopToggle}
-            />
-          </div>
-        )}
-      </PageBuilderLayout> */}
       <CopyCloneSlideOver getCopyData={getCopyData} getCloneData={getCloneData} />
 
       <div
@@ -383,22 +274,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
         className={``}>
         {/* <LessonSlideover /> */}
 
-        <div
-          // className={`2xl:col-start-2 ${
-          //   showLessonEditOverlay || newLessonPlanShow
-          //     ? '-ml-48 2xl:-ml-60 '
-          //     : ''
-          className={`text-white max-w-[890px] mx-auto`}>
-          {/* {!fetchingLessonDetails && (
-            <Toolbar
-              newLessonPlanShow={newLessonPlanShow}
-              setFields={setLessonPlanFields}
-              setEditMode={setEditMode}
-              deleteLesson={onDeleteButtonClick}
-              setNewLessonPlanShow={setNewLessonPlanShow}
-            />
-          )} */}
-
+        <div className={`text-white max-w-[890px] mx-auto`}>
           {fetchingLessonDetails ? (
             <PageLoader len={5} />
           ) : (

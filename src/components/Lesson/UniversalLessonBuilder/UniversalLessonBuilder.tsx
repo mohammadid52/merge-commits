@@ -2,6 +2,8 @@ import {MenuFoldOutlined, MenuUnfoldOutlined} from '@ant-design/icons';
 import ModalPopUp from '@components/Molecules/ModalPopUp';
 import {useOverlayContext} from '@contexts/OverlayContext';
 import useDictionary from '@customHooks/dictionary';
+import useAuth from '@customHooks/useAuth';
+import {updateLessonPageToDB} from '@utilities/updateLessonPageToDB';
 import {Layout, Tooltip} from 'antd';
 import {Content, Header} from 'antd/es/layout/layout';
 import Sider from 'antd/es/layout/Sider';
@@ -16,11 +18,11 @@ import {ULBSelectionProps} from 'interfaces/UniversalLessonBuilderInterfaces';
 import {PartContent, UniversalLessonPage} from 'interfaces/UniversalLessonInterfaces';
 import {replaceTailwindClass} from 'lesson/UniversalLessonBuilder/crudFunctions/replaceInString';
 import BuilderWrapper from 'lesson/UniversalLessonBuilder/views/BuilderWrapper';
-import {isEmpty} from 'lodash';
+import {findLastIndex, isEmpty, remove} from 'lodash';
 import update from 'lodash/update';
 import {nanoid} from 'nanoid';
 import React, {useEffect, useState} from 'react';
-import {useParams} from 'react-router';
+import {useHistory, useParams} from 'react-router';
 import LessonPlanNavigation from './UI/LessonPlanNavigation';
 import NewLessonPlanSO from './UI/SlideOvers/NewLessonPlanSO';
 import PageBuilderSlideOver from './UI/SlideOvers/PageBuilderSlideOver';
@@ -63,7 +65,8 @@ const UniversalLessonBuilder = ({instId}: UniversalLessonBuilderProps) => {
     setUniversalLessonDetails,
     selectedPageID,
     setFetchingLessonDetails,
-    setSelectedPageID
+    setSelectedPageID,
+    pushUserToThisId
   } = useULBContext();
 
   const {LessonBuilderDict, userLanguage} = useDictionary();
@@ -380,6 +383,45 @@ const UniversalLessonBuilder = ({instId}: UniversalLessonBuilderProps) => {
 
   const [deleteModal, setDeleteModal] = useState(false);
 
+  const history = useHistory();
+  const {isSuperAdmin} = useAuth();
+  const goToLessonPlan = () => {
+    history.push(
+      isSuperAdmin
+        ? `/dashboard/manage-institutions/lessons/${lessonId}?step=activities`
+        : `/dashboard/manage-institutions/institution/${universalLessonDetails.institutionID}/lessons/${lessonId}?step=activities`
+    );
+  };
+
+  const closeDeleteModal = () => setDeleteModal(false);
+
+  /**
+   * @param id - pageId - string
+   * @void this function will delete the current lesson
+   */
+  const deleteLessonPlan = async (id: string) => {
+    remove(universalLessonDetails.lessonPlan, (item: any) => item.id === id);
+    setUniversalLessonDetails({...universalLessonDetails});
+    const input = {
+      id: lessonId,
+      lessonPlan: [...universalLessonDetails.lessonPlan]
+    };
+    closeDeleteModal();
+    await updateLessonPageToDB(input);
+    const lastIndex = findLastIndex(universalLessonDetails.lessonPlan);
+    if (lastIndex > -1) {
+      const pageID: string =
+        universalLessonDetails.lessonPlan[universalLessonDetails.lessonPlan.length - 1]
+          .id;
+      setSelectedPageID?.(pageID);
+      pushUserToThisId(universalLessonDetails.id, pageID);
+    } else {
+      goToLessonPlan();
+    }
+  };
+
+  const activePageData = selectedPageID ? getCurrentPage(selectedPageID) : {};
+
   return (
     /**
      *
@@ -403,7 +445,7 @@ const UniversalLessonBuilder = ({instId}: UniversalLessonBuilderProps) => {
       <ModalPopUp
         message={'Are you sure you want to delete this lesson page?'}
         open={deleteModal}
-        closeAction={() => setDeleteModal(false)}
+        closeAction={closeDeleteModal}
         saveLabel={LessonBuilderDict[userLanguage]['BUTTON']['DELETE']}
         saveAction={() => deleteLessonPlan(activePageData.id)}
       />
