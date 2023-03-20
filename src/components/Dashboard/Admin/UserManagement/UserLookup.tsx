@@ -72,6 +72,9 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
   const [totalUserList, setTotalUserList] = useState<any[]>([]);
   const [totalUserNum, setTotalUserNum] = useState(0);
 
+  console.log(totalUserList.find((d) => d.email === 's1763815@online.houstonisd.org'));
+  console.log(totalUserList);
+
   const {
     currentList,
     setCurrentList,
@@ -228,7 +231,7 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
   const fetchAllPerson = async (filter?: any) => {
     let resp: any = await API.graphql(
       graphqlOperation(queries.listPeople, {
-        limit: 500,
+        limit: 1000,
 
         filter: withZoiqFilter(filter, zoiqFilter)
       })
