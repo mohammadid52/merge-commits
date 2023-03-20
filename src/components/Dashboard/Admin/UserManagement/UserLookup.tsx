@@ -1,10 +1,6 @@
 import {API, graphqlOperation} from 'aws-amplify';
 import {useEffect, useState} from 'react';
-import {
-  AiOutlineArrowDown,
-  AiOutlineArrowUp,
-  AiOutlineUsergroupAdd
-} from 'react-icons/ai';
+import {AiOutlineUsergroupAdd} from 'react-icons/ai';
 import {useHistory} from 'react-router-dom';
 
 import {useGlobalContext} from 'contexts/GlobalContext';
@@ -54,7 +50,7 @@ export const addName = (data: any[]) => {
 };
 
 const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
-  const {state, theme, userLanguage, zoiqFilter} = useGlobalContext();
+  const {state, userLanguage, zoiqFilter} = useGlobalContext();
 
   const history = useHistory();
 
@@ -62,7 +58,7 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
 
   const {UserLookupDict, BreadcrumsTitles} = useDictionary();
 
-  const [sortingType, setSortingType] = useState({
+  const [sortingType] = useState({
     value: '',
     name: '',
     asc: true
@@ -71,9 +67,6 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
   // Below changes are for fetching entire list on client side.
   const [totalUserList, setTotalUserList] = useState<any[]>([]);
   const [totalUserNum, setTotalUserNum] = useState(0);
-
-  console.log(totalUserList.find((d) => d.email === 's1763815@online.houstonisd.org'));
-  console.log(totalUserList);
 
   const {
     currentList,
@@ -98,12 +91,6 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
       href: '/dashboard/manage-users',
       last: true
     }
-  ];
-
-  const sortByList = [
-    {id: 1, label: 'Name', value: 'lastName'},
-    {id: 2, label: 'Role', value: 'role'},
-    {id: 4, label: 'Status', value: 'status'}
   ];
 
   const handleLink = () => {
@@ -132,21 +119,6 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
     } else {
       _removeSearchAction();
     }
-  };
-
-  const setSortingValue = (value: string) => {
-    setSortingType({
-      ...sortingType,
-      value: value,
-      name: value
-    });
-  };
-
-  const toggleSortDimention = () => {
-    setSortingType({
-      ...sortingType,
-      asc: !sortingType.asc
-    });
   };
 
   const _removeSearchAction = () => {

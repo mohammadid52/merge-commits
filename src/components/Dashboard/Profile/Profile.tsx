@@ -65,7 +65,7 @@ const Profile = () => {
     updatedAt: ''
   });
 
-  const {state, theme, userLanguage, clientKey, dispatch} = useGlobalContext();
+  const {state, userLanguage, clientKey, dispatch} = useGlobalContext();
   const {dashboardProfileDict, BreadcrumsTitles} = useDictionary();
   const match = useRouteMatch();
   const history = useHistory();

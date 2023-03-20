@@ -2,9 +2,8 @@ import {useGlobalContext} from '@contexts/GlobalContext';
 import Buttons from 'atoms/Buttons';
 import Modal from 'atoms/Modal';
 import useDictionary from 'customHooks/dictionary';
-import React, {useCallback, useRef, useState} from 'react';
+import React, {useRef, useState} from 'react';
 import ReactCrop from 'react-image-crop';
-import DummyContent from '../../Lesson/UniversalLessonBuilder/UI/Preview/DummyContent';
 import AnimatedContainer from '../../Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 
 interface ProfileCropModalProps {
@@ -27,7 +26,7 @@ const ProfileCropModal: React.FC<ProfileCropModalProps> = (
     customCropProps,
     locked = false,
     imageClassName,
-    cardLayout = false,
+
     saveCroppedImage,
     closeAction,
     open
@@ -40,10 +39,6 @@ const ProfileCropModal: React.FC<ProfileCropModalProps> = (
   const {userLanguage} = useGlobalContext();
   const {BUTTONS} = useDictionary();
   const imgRef = useRef<any>(null);
-
-  const onLoad = useCallback((img: any) => {
-    imgRef.current = img;
-  }, []);
 
   const saveCroped = async () => {
     const image = imgRef.current;
@@ -81,7 +76,7 @@ const ProfileCropModal: React.FC<ProfileCropModalProps> = (
     });
   };
 
-  const [showCropper, setShowCropper] = useState(false);
+  const [showCropper] = useState(false);
 
   return (
     <Modal
@@ -94,77 +89,40 @@ const ProfileCropModal: React.FC<ProfileCropModalProps> = (
       <div className="mx-auto mb-5  max-w-256 w-140  overflow-hidden">
         <AnimatedContainer show={!showCropper}>
           {!showCropper && (
-            <div className="flex flex-col p-2 w-auto">
-              {cardLayout ? (
-                <div
-                  className={`relative bg-white shadow items-center rounded-lg flex flex-col md:flex-row mb-8 `}>
-                  {/**
-                   *  LEFT SECTION IMAGE
-                   */}
-
-                  <div
-                    className={`w-full md:h-56 h-48   rounded-tl rounded-bl shadow`}
-                    style={{
-                      /* stylelint-disable */
-                      backgroundImage: `linear-gradient(to top, rgba(0, 0, 0, 0.52), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)),url(${upImg})`,
-                      backgroundSize: 'cover',
-                      backgroundPosition: 'center'
-                    }}></div>
-
-                  {/**
-                   *  RIGHT SECTION
-                   */}
-                  <div className={`w-full md:w-7.5/10 ml-4 flex flex-col rounded-b`}>
-                    <DummyContent />
-                  </div>
-                </div>
-              ) : (
-                <div className="flex items-center gap-x-6 w-auto">
-                  <img
-                    src={upImg}
-                    className={
-                      imageClassName ||
-                      'profile w-20 h-20 md:w-40 md:h-40 rounded-full  border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light mx-auto'
-                    }
-                  />
-                  {/* <DummyContent /> */}
-                </div>
-              )}
-              {/* <div>
-                <DummyContent />
-              </div> */}
+            <div className="flex items-center gap-x-6 w-auto">
+              <img
+                src={upImg}
+                className={
+                  imageClassName ||
+                  'profile w-20 h-20 md:w-40 md:h-40 rounded-full  border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light mx-auto'
+                }
+              />
             </div>
           )}
         </AnimatedContainer>
         <AnimatedContainer show={showCropper}>
           {showCropper && (
             <ReactCrop
-              // @ts-ignore
-              src={upImg}
-              onImageLoaded={onLoad}
-              crop={crop}
               locked={locked}
-              // imageStyle={{ width: 'auto', margin: 'auto', height: '25rem' }}        // style for the image tag in cropper
-              onChange={(c: any) => setCrop(c)}
-              onComplete={(c: any) => setCompletedCrop(c)}
-            />
+              crop={crop}
+              onChange={(c) => setCrop(c)}
+              onComplete={(c: any) => setCompletedCrop(c)}>
+              <img src={upImg} />
+            </ReactCrop>
           )}
         </AnimatedContainer>
       </div>
       <div className="flex gap-x-4 items-center justify-end my-4">
         <Buttons
-          label={showCropper ? 'Cancel crop' : 'Crop image'}
-          onClick={() => {
-            if (showCropper) {
-              setCrop(initial);
-            }
-            setShowCropper(!showCropper);
-          }}
+          label={'Cancel'}
+          onClick={closeAction}
+          size="middle"
           btnClass=""
           transparent
         />
 
         <Buttons
+          size="middle"
           dataCy="save-profile-image"
           label={showCropper ? 'Save cropped image' : BUTTONS[userLanguage].SAVE}
           onClick={showCropper ? saveCroped : () => saveCroppedImage(undefined)}
