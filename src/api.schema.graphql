@@ -548,14 +548,6 @@ type QuestionData @model @auth(rules: [{allow: public}]) {
   responseObject: [QuestionResponse]
 }
 
-type QuestionDataStudentData @model(queries: null) @auth(rules: [{allow: public}]) {
-  id: ID!
-  studentDataID: ID! @index(name: "byStudentData", sortKeyFields: ["questionDataID"])
-  studentData: StudentData
-  questionDataID: ID!
-  questionData: QuestionData @hasOne(fields: ["questionDataID"])
-}
-
 type PersonLocation @model @auth(rules: [{allow: public}]) {
   id: ID!
   personAuthID: String!
@@ -846,7 +838,6 @@ type UniversalSyllabusLesson @model @auth(rules: [{allow: public}]) {
   lessonPlan: [ComponentSummary!]
   startDate: AWSDate
   endDate: AWSDate
-  feedback: [UniversalLessonFeedback] @hasMany(fields: ["id"])
 }
 
 type PersonSentiments @model @auth(rules: [{allow: public}]) {
@@ -968,8 +959,7 @@ type Subscription {
     lessonID: ID!
     roomID: ID!
   ): PersonLocation @aws_subscribe(mutations: ["deletePersonLocation"])
-  onChangeStudentData(syllabusLessonID: ID!): StudentData
-    @aws_subscribe(mutations: ["createStudentData", "updateStudentData"])
+
   onChangeUniversalLessonStudentData(
     syllabusLessonID: ID!
     lessonID: ID!
