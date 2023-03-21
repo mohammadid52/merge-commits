@@ -159,14 +159,7 @@ const RosterRow: React.FC<RosterRowProps> = ({
   // ##################################################################### //
 
   const disabledShareButton = (
-    <Buttons
-      size="small"
-      btnClass="mx-2"
-      iconSize="w-4 h-6"
-      transparent
-      Icon={MdOutlineScreenShare}
-      disabled
-    />
+    <Buttons size="small" transparent Icon={MdOutlineScreenShare} disabled />
   );
 
   const active = false;
@@ -176,11 +169,8 @@ const RosterRow: React.FC<RosterRowProps> = ({
       studentIsShared() ? (
         <Buttons
           size="small"
-          btnClass="text-white outline-none   mx-2"
           Icon={MdOutlineStopScreenShare}
           greenBtn
-          iconSize="w-4 h-6"
-          title="Unshare screen"
           onClick={() => {
             // terminateSound.play();
             unshareScreen();
@@ -195,9 +185,6 @@ const RosterRow: React.FC<RosterRowProps> = ({
 
       <Buttons
         size="small"
-        btnClass="text-white outline-none  mx-2"
-        iconSize="w-4 h-6"
-        title="share screen"
         transparent={!studentIsViewed()}
         Icon={MdOutlineScreenShare}
         onClick={shareScreen}
@@ -308,7 +295,6 @@ const RosterRow: React.FC<RosterRowProps> = ({
 
           <div className={`${hot ? 'w-2.5/10' : 'w-3/10'} flex items-center`}>
             <Buttons
-              iconSize="w-4 h-6"
               disabled={!hot}
               variant={
                 studentIsShared()
@@ -320,7 +306,7 @@ const RosterRow: React.FC<RosterRowProps> = ({
               transparent={!hot}
               greenBtn={studentIsViewed() && !studentIsShared()}
               onClick={handleRowSelection}
-              title={
+              tooltip={
                 studentIsViewed()
                   ? 'Cancel viewing student screen'
                   : 'View student screen'

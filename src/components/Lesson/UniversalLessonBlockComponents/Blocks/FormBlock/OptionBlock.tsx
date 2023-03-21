@@ -32,30 +32,6 @@ const SelectMany = ({
       defaultValue={['Apple']}
       onChange={onChange}
     />
-
-    // <div className={classString}>
-    //   {value.map((item: any) => {
-    //     const {label, text, id} = item;
-
-    //     return (
-    //       <div className={`flex my-2 w-auto justify-center items-center mr-8 `}>
-    //         <input
-    //           id={id}
-    //           data-key={id}
-    //           data-value={label}
-    //           type="checkbox"
-    //           className={`w-5 h-5 flex-shrink-0 mx-4 transition-all cursor-pointer border-0 ${themePlaceholderColor} ${
-    //             getCheckValue(id) ? 'theme-bg border-white' : 'bg-white border-black '
-    //           }`}
-    //           onChange={onChange}
-    //           checked={getCheckValue(id)}
-    //         />
-
-    //         <span className={`ml-2 ${theme.elem.text} ${themeTextColor}`}>{text}</span>
-    //       </div>
-    //     );
-    //   })}
-    // </div>
   );
 };
 
@@ -63,7 +39,6 @@ const SelectOne = ({
   onChange,
   getCheckValue,
 
-  classString,
   value
 }: {
   onChange: (e: any) => void;
@@ -90,51 +65,6 @@ const SelectOne = ({
         );
       })}
     </Radio.Group>
-    // <div className={classString}>
-    //   {value.map((item: any) => {
-    //     const {label, text, id} = item;
-    //     return (
-    //       <div key={id} className={`w-auto flex justify-center items-center mr-8 my-2`}>
-    //         <input
-    //           id={id}
-    //           data-key={id}
-    //           data-value={label}
-    //           type="radio"
-    //           className={`w-5 h-5 flex-shrink-0 mx-4 transition-all rounded-full cursor-pointer border-0 ${themePlaceholderColor} ${
-    //             getCheckValue(id) ? 'theme-bg border-white' : 'bg-white border-black '
-    //           }`}
-    //           onChange={(e) => {
-    //             if (e.target.id.includes('other')) {
-    //               setOtherOptSel(true);
-    //             } else {
-    //               setOther('');
-    //               setOtherOptSel(false);
-    //             }
-    //             onChange(e);
-    //           }}
-    //           checked={getCheckValue(id)}
-    //         />
-
-    //         <span className={`w-auto`}>{text}</span>
-    //       </div>
-    //     );
-    //   })}
-
-    //   {otherOptSel && (
-    //     <div key={`question_}`} className={`w-auto ml-4  my-4`}>
-    //       <input
-    //         id={'sdsd'}
-    //         className={`${themePlaceholderColor} ${themeTextColor} ${
-    //           lessonPageTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'
-    //         } w-full rounded-xl`}
-    //         type="text"
-    //         name={'Other'}
-    //         value={other}
-    //         onChange={(e) => setOther(e.target.value)}
-    //       />
-    //     </div>
-    //   )}
-    // </div>
   );
 };
 
@@ -146,11 +76,10 @@ const OptionBlock = (props: IOptionProps) => {
   const {
     id = '',
     required = false,
-    numbered = false,
+
     label,
 
     classString = '',
-    index = '',
 
     type,
     options,

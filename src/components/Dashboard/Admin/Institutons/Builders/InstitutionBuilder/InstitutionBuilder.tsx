@@ -234,12 +234,7 @@ const InstitutionBuilder = ({
       </div> */}
       {!isEditPage && (
         <div className="flex justify-end py-4 mb-4 w-full">
-          <Buttons
-            label="Go back"
-            btnClass="mr-4"
-            onClick={() => null}
-            Icon={IoArrowUndoCircleOutline}
-          />
+          <Buttons label="Go back" onClick={() => null} Icon={IoArrowUndoCircleOutline} />
         </div>
       )}
       <div className="px-4">

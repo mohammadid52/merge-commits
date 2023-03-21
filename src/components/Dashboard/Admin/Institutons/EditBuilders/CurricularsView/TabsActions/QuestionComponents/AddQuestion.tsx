@@ -403,13 +403,11 @@ const AddQuestion = (props: AddQuestionProps) => {
           <div className="flex justify-center mt-16 w-5/10 mx-auto">
             <Buttons
               label={addQuestionDict[userLanguage]['Button']['cancel']}
-              btnClass="px-8 py-3 mr-4"
               onClick={goBackToPreviousStep}
               transparent
             />
             <Buttons
               label={addQuestionDict[userLanguage]['Button']['save']}
-              btnClass="px-10 py-3 ml-4"
               onClick={saveNewQuestion}
             />
           </div>

@@ -90,11 +90,9 @@ const StudentsTiles = (props: {
             {isTeacher && (
               <div className="w-auto">
                 <SearchInput
-                  dataCy="student-loookup-search"
                   value={searchInput.value}
                   onChange={setSearch}
                   onKeyDown={searchStudents}
-                  isActive={searchInput.isActive}
                   closeAction={removeSearchAction}
                 />
               </div>

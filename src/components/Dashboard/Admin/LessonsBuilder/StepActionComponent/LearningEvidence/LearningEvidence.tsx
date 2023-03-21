@@ -388,11 +388,8 @@ const LearningEvidence = ({
               Boolean(learnings?.length) && (
                 <Buttons
                   disabled={loading}
-                  btnClass=""
                   label={LEARINGOBJECTIVEDICT[userLanguage]['BUTTON']['ADD']}
-                  labelClass={'leading-6'}
                   Icon={IoIosAdd}
-                  iconBeforeLabel
                   onClick={createLearningObjective}
                 />
               )

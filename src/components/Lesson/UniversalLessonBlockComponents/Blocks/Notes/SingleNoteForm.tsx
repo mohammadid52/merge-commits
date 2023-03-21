@@ -74,7 +74,6 @@ const SingleNote = ({
             </label>
             <Selector
               width="w-56"
-              dropdownWidth="w-56"
               placeholder="Select size"
               selectedItem={
                 singleNoteData.size !== 'undefined' ? singleNoteData.size : 'large'

@@ -30,7 +30,7 @@ const UniversalInput = (props: any) => {
     list,
     setList,
     isEditingMode,
-    setNumbered,
+
     updateContent,
     askBeforeClose,
     setUnsavedChanges,
@@ -220,14 +220,12 @@ const UniversalInput = (props: any) => {
         )}
         <div className="flex items-center justify-end w-auto gap-4">
           <Buttons
-            btnClass="py-1 px-4 text-xs mr-2"
             size="middle"
             label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
             onClick={askBeforeClose}
             transparent
           />
           <Buttons
-            btnClass="py-1 px-8 text-xs ml-2"
             size="middle"
             label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
             onClick={onFormCreate}

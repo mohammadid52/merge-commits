@@ -222,19 +222,13 @@ const LinestarterModalDialog = ({
           })}
         </div>
         <div className="col-span-2 mt-1 mb-4 flex items-center justify-between">
-          <Buttons
-            btnClass="py-1 px-4 text-xs mr-2 self-end"
-            label={'+ Add field'}
-            onClick={handleAddNewLinestarter}
-            transparent
-          />
+          <Buttons label={'+ Add field'} onClick={handleAddNewLinestarter} transparent />
         </div>
       </div>
 
       <div className="flex mt-4 justify-end px-6 pb-4">
         <div className="flex items-center w-auto gap-4">
           <Buttons
-            btnClass="py-1 px-4 text-xs mr-2"
             label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
             onClick={askBeforeClose}
             transparent
@@ -242,7 +236,6 @@ const LinestarterModalDialog = ({
           />
 
           <Buttons
-            btnClass="py-1 px-8 text-xs ml-2"
             label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
             onClick={onLineCreate}
             size="middle"

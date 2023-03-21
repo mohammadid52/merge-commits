@@ -115,10 +115,8 @@ const Today: React.FC<LessonProps> = ({
         <>
           <div className="w-full flex items-center justify-end mb-4 text-base">
             <SearchInput
-              dataCy="classroom-search-input"
               value={searchInput.value}
               onChange={setSearch}
-              isActive={searchInput.isActive}
               disabled={lessonLoading}
               onKeyDown={searchLesson}
               closeAction={removeSearchAction}

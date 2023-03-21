@@ -609,7 +609,6 @@ const JumbotronModalDialog = ({
       <div className="flex mt-8 justify-between items-center px-6 pb-4">
         {onPreviewTab && previewAvailable ? (
           <Buttons
-            btnClass="py-1 px-8 text-xs"
             label={'Reset to default'}
             onClick={() => setSelectedStyles(initialStyles)}
           />
@@ -619,7 +618,6 @@ const JumbotronModalDialog = ({
 
         <div className="flex items-center justify-end w-auto gap-4">
           <Buttons
-            btnClass="py-1 px-4 text-xs mr-2"
             label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
             onClick={askBeforeClose}
             transparent
@@ -627,7 +625,6 @@ const JumbotronModalDialog = ({
           />
 
           <Buttons
-            btnClass="py-1 px-8 text-xs ml-2"
             label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
             loading={loading}
             size="middle"

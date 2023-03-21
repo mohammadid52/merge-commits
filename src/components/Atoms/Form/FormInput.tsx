@@ -7,17 +7,14 @@ import React from 'react';
 import {BiErrorCircle} from 'react-icons/bi';
 
 interface FormInputProps {
-  dataCy?: string;
   label?: string;
   isRequired?: boolean;
   value?: string;
   onChange?: (e: any) => void;
-  onKeyDown?: (e?: any) => void;
   id?: string;
   name?: string;
   placeHolder?: string;
   disabled?: boolean;
-  dark?: boolean;
   type?: string;
   error?: string;
   textarea?: boolean;
@@ -27,13 +24,8 @@ interface FormInputProps {
   max?: number;
   maxLength?: number;
   showCharacterUsage?: boolean;
-  updateHeight?: boolean;
-  resize?: boolean;
-  inputRef?: any;
-  maxWidth?: string;
-  wrapperClass?: string;
-  autoComplete?: string;
   className?: string;
+  dataCy?: string;
   tooltip?: string;
   Icon?: any;
   suffix?: React.ReactNode;
@@ -50,7 +42,6 @@ const FormInput: React.FC<FormInputProps> = ({
   id,
   name,
   placeHolder,
-
   type = 'text',
   error = '',
   textarea = false,
@@ -59,10 +50,8 @@ const FormInput: React.FC<FormInputProps> = ({
   maxLength = 99999,
   showCharacterUsage = false,
   suffix,
-  dark = false,
   min,
   tooltip,
-
   Icon
 }: FormInputProps) => {
   const inputProps: any = {
@@ -85,9 +74,7 @@ const FormInput: React.FC<FormInputProps> = ({
 
   return (
     <div className={className}>
-      {label && (
-        <Label disabled={disabled} dark={dark} label={label} isRequired={isRequired} />
-      )}
+      {label && <Label disabled={disabled} label={label} isRequired={isRequired} />}
       <Tooltip title={tooltip}>
         {textarea ? (
           <TextArea rows={rows} {...inputProps} />

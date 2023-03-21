@@ -31,7 +31,7 @@ const LessonSurveyAppWrapper = ({
 }: LessonSurveyAppWrapper) => {
   const {
     lessonState,
-    theme,
+
     lessonDispatch,
     state: {user}
   } = useGlobalContext();

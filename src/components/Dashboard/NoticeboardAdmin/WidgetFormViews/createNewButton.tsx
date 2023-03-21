@@ -27,7 +27,6 @@ const CreateNewButton = (props: NoticeboardFormProps) => {
           label={anthologyDict[userLanguage].ACTIONS.CANCEL}
           type={`button`}
           Icon={AiOutlineStop}
-          btnClass={`mr-4`}
         />
       ) : (
         <div

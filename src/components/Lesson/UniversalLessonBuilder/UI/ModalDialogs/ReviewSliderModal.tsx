@@ -362,17 +362,12 @@ const ReviewSliderModal = ({
 
       <div className="flex mt-4 justify-between px-6 pl-0 pb-4">
         {onSetupTab ? (
-          <Buttons
-            btnClass="py-1 px-4 text-xs mr-2"
-            label={'See the preview'}
-            onClick={() => setCurTab(toPreviewTab)}
-          />
+          <Buttons label={'See the preview'} onClick={() => setCurTab(toPreviewTab)} />
         ) : (
           <div className="w-auto" />
         )}
         <div className="flex items-center justify-end w-auto gap-4">
           <Buttons
-            btnClass="py-1 px-4 text-xs mr-2"
             label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
             onClick={askBeforeClose}
             transparent
@@ -380,7 +375,6 @@ const ReviewSliderModal = ({
           />
 
           <Buttons
-            btnClass="py-1 px-8 text-xs ml-2"
             label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
             onClick={onReviewSliderCreate}
             size="middle"

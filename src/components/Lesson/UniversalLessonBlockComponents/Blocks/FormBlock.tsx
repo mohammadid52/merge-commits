@@ -1,6 +1,5 @@
 import ErrorBoundary from '@components/Error/ErrorBoundary';
 import DatePicker from '@UlbBlocks/FormBlock/DatePicker';
-import TextAreaBlock from '@UlbBlocks/FormBlock/TextAreaBlock';
 import TextBlock from '@UlbBlocks/FormBlock/TextBlock';
 import NotesBlock from '@UlbBlocks/Notes/NotesBlock';
 import {getLocalStorageData} from '@utilities/localStorage';

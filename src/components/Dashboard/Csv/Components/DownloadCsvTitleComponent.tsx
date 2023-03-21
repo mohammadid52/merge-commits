@@ -317,7 +317,6 @@ const DownloadCsvTitleComponent = ({
                     dataCy="analytics-classroom"
                     width={250}
                     disabled={!selectedInst?.id}
-                    setHoveringItem={setHoveringItem}
                     loading={classRoomLoading}
                     selectedItem={selectedClassRoom ? selectedClassRoom.label : ''}
                     placeholder="select classroom"
@@ -412,7 +411,6 @@ const DownloadCsvTitleComponent = ({
 
                 <Selector
                   dataCy="analytics-survey"
-                  direction="left"
                   width={250}
                   showSearch
                   loading={surveysLoading}

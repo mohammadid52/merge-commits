@@ -106,10 +106,9 @@ const CoreUniversalLesson = ({
                 <>
                   <Buttons
                     label="Go Back"
-                    title={getPageName('prev')}
+                    tooltip={getPageName('prev')}
                     size="middle"
                     Icon={AiOutlineArrowLeft}
-                    iconBeforeLabel
                     onClick={() => handleForward(false)}
                   />
                   {userAtEnd() && isStudent ? (
@@ -125,7 +124,7 @@ const CoreUniversalLesson = ({
                 <Buttons
                   label="Next page"
                   size="middle"
-                  title={getPageName('next')}
+                  tooltip={getPageName('next')}
                   onClick={handleForward}
                   Icon={AiOutlineArrowRight}
                 />

@@ -141,7 +141,6 @@ const LessonSummaryForm = (props: LessonSummaryFormInterface) => {
         </div>
         <div className="flex mb-8 mt-4 justify-center">
           <Buttons
-            btnClass="py-3 px-10"
             label={
               false
                 ? AddNewLessonFormDict[userLanguage]['SAVING']

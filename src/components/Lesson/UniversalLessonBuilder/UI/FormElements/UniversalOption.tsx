@@ -1,7 +1,7 @@
 import {isEmpty} from 'lodash';
 
 import {useGlobalContext} from '@contexts/GlobalContext';
-import {Switch} from '@headlessui/react';
+import {Checkbox} from 'antd';
 import {getAsset} from 'assets';
 import Buttons from 'atoms/Buttons';
 import FormInput from 'atoms/Form/FormInput';
@@ -13,10 +13,9 @@ import {optionResponses} from 'utilities/staticData';
 import {updateLessonPageToDB} from 'utilities/updateLessonPageToDB';
 import {v4 as uuidv4} from 'uuid';
 import {FORM_TYPES, SELECT_MANY, SELECT_ONE} from '../common/constants';
+import ToggleForModal from '../common/ToggleForModals';
 import AnimatedContainer from '../UIComponents/Tabs/AnimatedContainer';
 import {Tabs3, useTabs} from '../UIComponents/Tabs/Tabs';
-import {Checkbox} from 'antd';
-import ToggleForModal from '../common/ToggleForModals';
 
 const InputContainer = ({
   shouldShowActions,
@@ -228,7 +227,7 @@ const UniversalOption = ({
   numbered,
   closeAction,
   isEditingMode,
-  setNumbered,
+
   selectedForm,
   list,
   setList,
@@ -586,14 +585,12 @@ const UniversalOption = ({
               </div>
               <div className="flex items-center justify-end w-auto gap-4">
                 <Buttons
-                  btnClass="py-1 px-4 text-xs mr-2"
                   size="middle"
                   label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
                   onClick={askBeforeClose}
                   transparent
                 />
                 <Buttons
-                  btnClass="py-1 px-8 text-xs ml-2"
                   size="middle"
                   label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
                   onClick={onRadioCreate}

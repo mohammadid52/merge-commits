@@ -25,13 +25,12 @@ import useAuth from 'customHooks/useAuth';
 import usePagination from 'customHooks/usePagination';
 import useSearch from 'customHooks/useSearch';
 import {BUTTONS, InstitueRomms} from 'dictionary/dictionary.iconoclast';
-import {isEmpty, map, orderBy, truncate} from 'lodash';
+import {isEmpty, map, orderBy} from 'lodash';
 import ModalPopUp from 'molecules/ModalPopUp';
-import {withZoiqFilter} from 'utilities/functions';
-import UnitFormComponent from './UnitFormComponent';
-import {DataValue} from '@components/Dashboard/Csv/Csv';
 import moment from 'moment';
+import {withZoiqFilter} from 'utilities/functions';
 import AttachedCourses from './AttachedCourses';
+import UnitFormComponent from './UnitFormComponent';
 
 export const UnitList = ({
   instId,
@@ -284,10 +283,6 @@ export const UnitList = ({
   const instituteChange = (value: string, option: any) => {
     setSelectedInstitution({name: value, id: option.id});
     updateRoomList(value);
-  };
-
-  const onInstitutionSelectionRemove = () => {
-    setSelectedInstitution({});
   };
 
   const redirectToLesson = (institutionId: string, lessonId: string) => {
@@ -592,10 +587,6 @@ export const UnitList = ({
                   list={institutionList}
                   selectedItem={selectedInstitution?.name}
                   onChange={instituteChange}
-                  arrowHidden={true}
-                  additionalClass={'w-auto lg:w-48'}
-                  isClearable
-                  onClear={onInstitutionSelectionRemove}
                 />
               )}
 
@@ -622,10 +613,8 @@ export const UnitList = ({
               ) : null}
               {!showAddSection && (
                 <SearchInput
-                  dataCy="unit-search-input"
                   value={searchInput.value}
                   onChange={setSearch}
-                  isActive={searchInput.isActive}
                   disabled={loading}
                   onKeyDown={searchRoom}
                   closeAction={removeSearchAction}

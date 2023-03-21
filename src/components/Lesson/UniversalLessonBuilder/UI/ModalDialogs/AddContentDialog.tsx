@@ -1,4 +1,4 @@
-import {DIVIDER, EMOTIONS, FORM_TYPES, TABLE} from '@UlbUI/common/constants';
+import {DIVIDER, EMOTIONS, FORM_TYPES} from '@UlbUI/common/constants';
 import {classNames} from '@UlbUI/FormElements/TextInput';
 import Buttons from 'atoms/Buttons';
 import {cardsList} from 'components/Dashboard/GameChangers/__contstants';
@@ -8,7 +8,6 @@ import {isEmpty} from 'lodash';
 import React, {useEffect} from 'react';
 import {
   AiFillCloseCircle,
-  AiOutlineBorderlessTable,
   AiOutlineFileImage,
   AiOutlineHighlight,
   AiOutlineLink,
@@ -249,7 +248,6 @@ const AddContentDialog = ({
 
   const {curTab, setCurTab, helpers} = useTabs(tabs);
   const [onTextTab, onMediaTab, onUIContentTab, onGameChangersTab] = helpers;
-  const btnClass = `font-semibold hover:text-gray-600 transition-all text-xs px-4 py-2 rounded-xl flex items-center justify-center w-auto`;
 
   const onCustomPositionClick = (e: any) => {
     e.stopPropagation();
@@ -360,9 +358,7 @@ const AddContentDialog = ({
           {onReplace && (
             <div className="px-2 dark:text-gray-500 flex  flex-col gap-2">
               <Buttons
-                overrideClass
                 onClick={handleReplace}
-                btnClass={btnClass}
                 transparent
                 label="Replace with selected component"
               />

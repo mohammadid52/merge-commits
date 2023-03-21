@@ -9,23 +9,15 @@ interface ButtonProps {
   transparent?: boolean;
   redBtn?: boolean;
   Icon?: any;
-  btnClass?: string;
-  overrideClass?: boolean;
-  labelClass?: string;
-  iconBeforeLabel?: boolean;
   disabled?: boolean;
   greenBtn?: boolean;
-  customStyles?: object;
   loading?: boolean;
-  loadingText?: string;
   insideElement?: React.ReactNode;
-  title?: string;
-  dataCy?: string;
   size?: SizeType;
-  iconSize?: string;
   variant?: 'link' | 'text' | 'default' | 'primary' | 'ghost' | 'dashed';
   className?: string;
   tooltip?: string;
+  dataCy?: string;
 }
 
 const Buttons: React.FC<ButtonProps> = (btnProps: ButtonProps): React.ReactElement => {
@@ -35,17 +27,12 @@ const Buttons: React.FC<ButtonProps> = (btnProps: ButtonProps): React.ReactEleme
     tooltip,
     redBtn,
     variant = 'primary',
-
     transparent,
     type = 'button',
     onClick,
-
     disabled,
-
     loading = false,
-
     insideElement = null,
-
     size = 'large',
     className
   } = btnProps;

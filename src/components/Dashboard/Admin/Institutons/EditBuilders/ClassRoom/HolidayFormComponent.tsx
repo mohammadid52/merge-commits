@@ -213,13 +213,11 @@ const HolidayFormComponent = ({
       </div>
       <div className="flex my-8 justify-center">
         <Buttons
-          btnClass="py-3 px-10 mr-4"
           label={BUTTONS[userLanguage]['CANCEL']}
           onClick={handleCancel}
           transparent
         />
         <Buttons
-          btnClass="py-3 px-10 ml-4"
           label={BUTTONS[userLanguage]['SAVE']}
           onClick={handleSubmit}
           disabled={loading}

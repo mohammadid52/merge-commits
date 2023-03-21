@@ -200,7 +200,6 @@ const LoginInner = ({
       className="h-auto flex-grow flex flex-col justify-center">
       <div className="gap-2 flex flex-col">
         <FormInput
-          dataCy="email"
           Icon={AiOutlineUser}
           label="Email"
           onChange={(e) => {
@@ -208,7 +207,6 @@ const LoginInner = ({
             handleChange(e);
           }}
           error={errors.email}
-          wrapperClass="mb-4"
           placeHolder="Enter your email"
           type="email"
           value={email}
@@ -217,7 +215,6 @@ const LoginInner = ({
         />
 
         <FormInput
-          dataCy="password"
           error={errors.password}
           label="Password"
           onChange={handleChange}
@@ -239,7 +236,6 @@ const LoginInner = ({
       <div className="relative flex flex-col justify-center items-center">
         <Buttons
           disabled={isToggled}
-          dataCy="login-button"
           type="submit"
           loading={isToggled}
           label={'Login'}

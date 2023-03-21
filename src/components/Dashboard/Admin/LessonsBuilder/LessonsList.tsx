@@ -219,11 +219,6 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
     onSearch(searchInput.value, value);
   };
 
-  const onInstitutionSelectionRemove = () => {
-    setSelectedInstitution({});
-    onSearch(searchInput.value, '');
-  };
-
   const fetchSortedList = () => {
     const newLessonsList = [...lessonsData].sort((a, b) =>
       a[sortingType.value]?.toLowerCase() > b[sortingType.value]?.toLowerCase() &&
@@ -494,10 +489,6 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
                       list={institutionList}
                       selectedItem={selectedInstitution?.name}
                       onChange={instituteChange}
-                      arrowHidden={true}
-                      additionalClass={'w-auto lg:w-48'}
-                      isClearable
-                      onClear={onInstitutionSelectionRemove}
                     />
                   )}
                   {!isInInstitution && (
@@ -507,8 +498,6 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
                         list={sortByList}
                         selectedItem={sortingType.name}
                         onChange={setSortingValue}
-                        btnClass="rounded-r-none  border-r-none "
-                        arrowHidden={true}
                       />
                       <button
                         className={`w-28 bg-gray-100 mr-4 p-3 border-gray-400  border-0 rounded border-l-none rounded-l-none ${theme.outlineNone} `}
@@ -522,10 +511,8 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
                     </>
                   )}
                   <SearchInput
-                    dataCy="unit-search-input"
                     value={searchInput.value}
                     onChange={setSearch}
-                    isActive={searchInput.isActive}
                     disabled={status !== 'done'}
                     onKeyDown={searchLesson}
                     closeAction={removeSearchAction}
@@ -540,7 +527,6 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
                   {params.get('from') ? (
                     <Buttons
                       label="Go back"
-                      btnClass="mr-4"
                       onClick={() => history.goBack()}
                       Icon={IoArrowUndoCircleOutline}
                     />

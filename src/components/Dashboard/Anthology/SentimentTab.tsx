@@ -127,7 +127,6 @@ const EditBackstory = ({
           <Buttons
             dataCy="backstory-button"
             disabled={saving}
-            btnClass="py-1 px-8 text-xs ml-2"
             label={
               !saving ? (
                 EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']

@@ -64,7 +64,6 @@ const TitleBar = ({
           width={250}
           selectedItem={selectedFilterType.name}
           list={filterList}
-          additionalClass="md:w-56"
           placeholder={'All '}
           onChange={changeFilter}
         />

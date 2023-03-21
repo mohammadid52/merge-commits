@@ -1,6 +1,6 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {formatPageName} from '@components/Dashboard/Admin/UserManagement/List';
-import {allowedAuthIds} from '@contexts/GlobalContext';
+
 import {setPageTitle, withZoiqFilter} from '@utilities/functions';
 import {setLocalStorageData} from '@utilities/localStorage';
 import {CreateDicitionaryInput, CreateErrorLogInput, UserPageState} from 'API';
@@ -10,6 +10,7 @@ import * as customQueries from 'customGraphql/customQueries';
 import * as mutations from 'graphql/mutations';
 import * as queries from 'graphql/queries';
 import {isEmpty} from 'lodash';
+import {allowedAuthIds} from 'state/GlobalState';
 import {v4 as uuidV4} from 'uuid';
 
 interface S3UploadOptions {

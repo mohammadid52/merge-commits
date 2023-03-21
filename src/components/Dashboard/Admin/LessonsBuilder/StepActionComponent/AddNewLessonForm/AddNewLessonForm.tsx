@@ -364,7 +364,6 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
             title={'Lesson Details'}
             extra={
               <Buttons
-                btnClass="py-3 px-10"
                 label={`${lessonPlanAttachment ? '' : 'Upload'} lesson plan`}
                 size="small"
                 variant="default"
@@ -450,7 +449,6 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
         )}
         <div className="flex mb-8 mt-4 justify-center">
           <Buttons
-            btnClass="py-3 px-10"
             label={
               creatingLessons
                 ? AddNewLessonFormDict[userLanguage]['SAVING']

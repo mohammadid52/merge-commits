@@ -289,14 +289,10 @@ const UnitLookup = (props: UnitLookupProps) => {
               onChange={(val, option: any) =>
                 onSelectorChange(val, val, option.id, 'unit')
               }
-              noOptionMessage={
-                curriculum.name ? 'No Results' : 'Please select curricular first'
-              }
             />
           </div>
           <div className="col-span-1 flex items-end">
             <Buttons
-              btnClass="py-3 px-6"
               label="Add Unit"
               onClick={addLessonToSyllabusLesson}
               disabled={saving || !formState.unit.id ? true : false}

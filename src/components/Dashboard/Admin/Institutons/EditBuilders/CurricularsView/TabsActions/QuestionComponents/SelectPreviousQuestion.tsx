@@ -112,7 +112,6 @@ const SelectPreviousQuestion = (props: SelectPreviousQuestionProps) => {
               onChange={(val: string) => setSearchInput(val)}
               onKeyDown={searchFromList}
               closeAction={removeSearchAction}
-              style="w-2/4"
             />
           </div>
           <div>
@@ -186,13 +185,11 @@ const SelectPreviousQuestion = (props: SelectPreviousQuestionProps) => {
           <div className="flex mt-8 justify-center px-6 pb-4">
             <div className="flex justify-center my-6">
               <Buttons
-                btnClass="py-1 px-4 text-xs mr-2"
                 label={SelectPreviousQuestionDict[userLanguage]['button']['cancel']}
                 onClick={goBackToPreviousStep}
                 transparent
               />
               <Buttons
-                btnClass="py-1 px-8 text-xs ml-2"
                 label={SelectPreviousQuestionDict[userLanguage]['button']['save']}
                 onClick={onQuestionSave}
               />

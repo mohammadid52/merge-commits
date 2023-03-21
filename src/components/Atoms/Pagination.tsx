@@ -113,9 +113,7 @@ const PageArrows: React.FC<PageArrowsProps> = (pageProps: PageArrowsProps) => {
       Icon={isBack ? RiArrowLeftSLine : RiArrowRightSLine}
       transparent
       size="small"
-      btnClass="mt-4"
       onClick={onClick}
-      iconSize="w-4 h-6"
       disabled={!active}
     />
   );

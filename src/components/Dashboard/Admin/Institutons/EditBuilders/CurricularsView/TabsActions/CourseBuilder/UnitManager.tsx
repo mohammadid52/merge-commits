@@ -407,7 +407,6 @@ const UnitManager = ({
               list={allSyllabusList}
               placeholder={CourseBuilderDict[userLanguage]['SELECT_UNIT']}
               onChange={handleSelectSyllabus}
-              additionalClass="w-auto "
               width="w-96"
               disabled={isInactive}
             />

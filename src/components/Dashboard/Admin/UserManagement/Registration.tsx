@@ -308,7 +308,6 @@ const Registration = ({
                 <div className="flex justify-end items-center">
                   <Buttons
                     label="Go Back"
-                    btnClass="mr-4"
                     onClick={history.goBack}
                     Icon={IoArrowUndoCircleOutline}
                   />
@@ -385,7 +384,6 @@ const Registration = ({
                           }
                           label={RegistrationDict[userLanguage]['role']}
                           error={errors.role}
-                          dropdownWidth="w-56"
                           list={Roles}
                           selectedItem={getUserRoleString(values.role)}
                         />
@@ -432,7 +430,6 @@ const Registration = ({
                                 RegistrationDict[userLanguage]['statusPlaceholder']
                               }
                               onChange={(name: any) => setFieldValue('status', name)}
-                              labelTextClass="text-m"
                             />
                           </div>
                         </div>
@@ -473,7 +470,6 @@ const Registration = ({
 
         <div className={`${isInModalPopup ? '' : ' w-1.5/10'} ml-auto`}>
           <Buttons
-            btnClass=" w-full"
             loading={isLoading}
             disabled={isLoading}
             label={RegistrationDict[userLanguage]['button']['submit']}

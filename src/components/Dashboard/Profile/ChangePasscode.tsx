@@ -182,13 +182,6 @@ const ChangePasscode = ({fromWhere, handleForgotPasscode}: ChangePasscodeProps) 
     });
   };
 
-  const handleEnter = (e: any) => {
-    if (e.key === 'Enter') {
-      setLoading(true);
-      AuthenticateLoginPassword();
-    }
-  };
-
   const handleSubmit = () => {
     setLoading(true);
     validation();
@@ -231,7 +224,6 @@ const ChangePasscode = ({fromWhere, handleForgotPasscode}: ChangePasscodeProps) 
                   className={`w-full`}
                   value={input.oldPassword}
                   onChange={handleChange}
-                  onKeyDown={handleEnter}
                 />
               </div>
             </div>
@@ -270,7 +262,7 @@ const ChangePasscode = ({fromWhere, handleForgotPasscode}: ChangePasscodeProps) 
         ) : null}
       </div>
 
-      <div className="pt-4 w-full gap-4 flex justify-center flex-col-reverse md:flex-row gap-2">
+      <div className="pt-4 w-full  flex justify-center flex-col-reverse md:flex-row gap-2">
         <Buttons
           label={dashboardProfileDict[userLanguage]['CHANGE_PASSCODE']['CANCEL']}
           onClick={

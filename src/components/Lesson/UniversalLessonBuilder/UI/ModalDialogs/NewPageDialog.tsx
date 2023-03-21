@@ -1,14 +1,14 @@
-import Buttons from "atoms/Buttons";
-import FormInput from "atoms/Form/FormInput";
-import Tooltip from "atoms/Tooltip";
-import { useGlobalContext } from "contexts/GlobalContext";
-import { useULBContext } from "contexts/UniversalLessonBuilderContext";
-import { EditQuestionModalDict } from "dictionary/dictionary.iconoclast";
-import { UniversalLesson } from "interfaces/UniversalLessonInterfaces";
-import React, { useState } from "react";
-import { FaCopy } from "react-icons/fa";
-import { VscNewFile } from "react-icons/vsc";
-import PageTile from "../common/PageTile";
+import Buttons from 'atoms/Buttons';
+import FormInput from 'atoms/Form/FormInput';
+import Tooltip from 'atoms/Tooltip';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import {useULBContext} from 'contexts/UniversalLessonBuilderContext';
+import {EditQuestionModalDict} from 'dictionary/dictionary.iconoclast';
+import {UniversalLesson} from 'interfaces/UniversalLessonInterfaces';
+import React, {useState} from 'react';
+import {FaCopy} from 'react-icons/fa';
+import {VscNewFile} from 'react-icons/vsc';
+import PageTile from '../common/PageTile';
 interface ILessonInputs {
   id: string;
   label: string;
@@ -21,33 +21,30 @@ interface INewPageDialog {
   closeAction: () => void;
 }
 
-const NewPageDialog = ({
-  universalLessonDetails,
-  closeAction,
-}: INewPageDialog) => {
-  const { addNewPageHandler, setSelectedPageID } = useULBContext();
-  const { userLanguage } = useGlobalContext();
+const NewPageDialog = ({universalLessonDetails, closeAction}: INewPageDialog) => {
+  const {addNewPageHandler, setSelectedPageID} = useULBContext();
+  const {userLanguage} = useGlobalContext();
   const [focussed, setFocussed] = useState<
-    "new_page" | "existing_page" | "template" | ""
-  >("");
+    'new_page' | 'existing_page' | 'template' | ''
+  >('');
   const pages = universalLessonDetails?.lessonPlan || [];
 
   const [inputObj, setInputObj] = useState<ILessonInputs>({
-    id: "",
-    label: "",
-    title: "",
-    description: "",
+    id: '',
+    label: '',
+    title: '',
+    description: ''
   });
   const [errors, setErrors] = useState<any>({});
   const [copiedPageIndex, setCopiedPageIndex] = useState<number>(-1);
 
   const handleToggleFocussed = (
-    sectionTag: "new_page" | "existing_page" | "template" | ""
+    sectionTag: 'new_page' | 'existing_page' | 'template' | ''
   ) => {
     if (focussed !== sectionTag) {
       setFocussed(sectionTag);
     } else {
-      setFocussed("");
+      setFocussed('');
     }
   };
 
@@ -56,11 +53,11 @@ const NewPageDialog = ({
     const value: string = (event.target as HTMLInputElement).value;
     setInputObj((prevInputs: ILessonInputs) => ({
       ...prevInputs,
-      [name]: value,
+      [name]: value
     }));
     setErrors((errors: any) => ({
       ...errors,
-      [name]: "",
+      [name]: ''
     }));
   };
 
@@ -69,7 +66,7 @@ const NewPageDialog = ({
     if (isValid) {
       addNewPageHandler({
         ...inputObj,
-        pageContent: [],
+        pageContent: []
       });
 
       // if (selectedLessonID) {
@@ -89,54 +86,49 @@ const NewPageDialog = ({
       id,
       pageContent:
         copiedPageIndex > -1
-          ? pages[copiedPageIndex]?.pageContent?.map(
-              (part: any, partIndex: number) => ({
-                ...part,
-                id: `${id}_part_${partIndex}`,
-                partContent: part.partContent.map(
-                  (content: any, contentIndex: number) => ({
-                    ...content,
-                    id: `${id}_part_${partIndex}_${content.type}_${
-                      part.partContent.filter(
-                        (c: any, i: number) =>
-                          c.type === content.type && i < contentIndex
-                      ).length
-                    }`,
-                  })
-                ),
-              })
-            )
-          : [],
+          ? pages[copiedPageIndex]?.pageContent?.map((part: any, partIndex: number) => ({
+              ...part,
+              id: `${id}_part_${partIndex}`,
+              partContent: part.partContent.map((content: any, contentIndex: number) => ({
+                ...content,
+                id: `${id}_part_${partIndex}_${content.type}_${
+                  part.partContent.filter(
+                    (c: any, i: number) => c.type === content.type && i < contentIndex
+                  ).length
+                }`
+              }))
+            }))
+          : []
     });
     closeAction();
   };
 
   const validateForm = () => {
-    const { id = "", label = "", title = "", description = "" } = inputObj;
+    const {id = '', label = '', title = '', description = ''} = inputObj;
     let isValid = true,
       formErrors: any = {};
     if (!id) {
       isValid = false;
-      formErrors.id = "Id is required";
+      formErrors.id = 'Id is required';
     } else if (pages.findIndex((page: any) => page.id === id) > -1) {
       isValid = false;
-      formErrors.id = "This id is already associated with different page";
+      formErrors.id = 'This id is already associated with different page';
     } else {
       isValid = true;
-      formErrors.id = "";
+      formErrors.id = '';
     }
 
     if (!label) {
       isValid = false;
-      formErrors.label = "Label is required";
+      formErrors.label = 'Label is required';
     }
     if (!title) {
       isValid = false;
-      formErrors.title = "Title is required";
+      formErrors.title = 'Title is required';
     }
     if (!description) {
       isValid = false;
-      formErrors.description = "Description is required";
+      formErrors.description = 'Description is required';
     }
     setErrors(formErrors);
     return isValid;
@@ -153,15 +145,14 @@ const NewPageDialog = ({
         <div
           className={`
         ${
-          focussed === ""
-            ? ""
-            : focussed === "new_page"
-            ? "w-full h-full m-4 "
-            : "w-0 overflow-hidden opacity-0"
+          focussed === ''
+            ? ''
+            : focussed === 'new_page'
+            ? 'w-full h-full m-4 '
+            : 'w-0 overflow-hidden opacity-0'
         }
         transition-all duration-400 ease-in-out m-2 
-        flex flex-col`}
-        >
+        flex flex-col`}>
           <div className="relative flex items-center">
             <h2 className="w-full bg-white text-lg font-semibold text-gray-900 truncate">
               Create New Page
@@ -220,9 +211,9 @@ const NewPageDialog = ({
             <div className="p-2">
               <FormInput
                 value={inputObj.id}
-                label={"Id"}
+                label={'Id'}
                 onChange={onInputChange}
-                name={"id"}
+                name={'id'}
                 isRequired={true}
                 error={errors.id}
               />
@@ -230,30 +221,30 @@ const NewPageDialog = ({
 
             <div className="p-2">
               <FormInput
-                label={"Label"}
+                label={'Label'}
                 value={inputObj.label}
                 onChange={onInputChange}
-                name={"label"}
+                name={'label'}
                 isRequired={true}
                 error={errors.label}
               />
             </div>
             <div className="p-2">
               <FormInput
-                label={"Title"}
+                label={'Title'}
                 value={inputObj.title}
                 onChange={onInputChange}
-                name={"title"}
+                name={'title'}
                 isRequired={true}
                 error={errors.title}
               />
             </div>
             <div className="p-2">
               <FormInput
-                label={"Description"}
+                label={'Description'}
                 value={inputObj.description}
                 onChange={onInputChange}
-                name={"description"}
+                name={'description'}
                 isRequired={true}
                 error={errors.description}
               />
@@ -262,8 +253,7 @@ const NewPageDialog = ({
           <div className="flex mt-4 justify-center px-6 pb-4">
             <div className="flex justify-end">
               <Buttons
-                btnClass="py-1 px-8 text-xs ml-2"
-                label={EditQuestionModalDict[userLanguage]["BUTTON"]["SAVE"]}
+                label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
                 type="submit"
                 onClick={handleSubmit}
               />
@@ -275,59 +265,46 @@ const NewPageDialog = ({
         <div
           className={`
         ${
-          focussed === ""
-            ? " m-2"
-            : focussed === "existing_page"
-            ? "w-full"
-            : "w-0 overflow-hidden opacity-0 m-0"
+          focussed === ''
+            ? ' m-2'
+            : focussed === 'existing_page'
+            ? 'w-full'
+            : 'w-0 overflow-hidden opacity-0 m-0'
         }
         transition-all duration-400 ease-in-out
-      `}
-        >
+      `}>
           <div className="relative flex items-center justify-between mb-2">
             <h2 className="w-auto bg-white text-lg font-semibold  text-gray-900 truncate">
               Use Existing Page
             </h2>
             <Buttons
-              onClick={() => handleToggleFocussed("existing_page")}
+              onClick={() => handleToggleFocussed('existing_page')}
               Icon={VscNewFile}
-              label={`${focussed === "existing_page" ? "Less" : "More"}`}
-              overrideClass={true}
-              btnClass="flex items-center justify-center w-auto mx-2 px-4 py-0 font-bold uppercase text-xs text-white bg-indigo-400 rounded-lg hover:bg-indigo-500 transition-all"
+              label={`${focussed === 'existing_page' ? 'Less' : 'More'}`}
             />
           </div>
 
           <div className={`w-full bg-gray-200 rounded py-2`}>
-            <p
-              className={`px-2 text-left block text-xs font-medium text-gray-700`}
-            >
+            <p className={`px-2 text-left block text-xs font-medium text-gray-700`}>
               This lesson
             </p>
             <div className={`mt-2 p-4 py-2 grid grid-cols-3 bg-gray-200`}>
               {pages && pages.length
                 ? pages
-                    .slice(0, focussed === "existing_page" ? pages.length : 3)
+                    .slice(0, focussed === 'existing_page' ? pages.length : 3)
                     .map((page: any, index: number) => (
                       <div key={page.id} className="flex flex-col">
-                        <PageTile
-                          whClass={`w-20 h-28 mt-1`}
-                          marginClass={`mx-auto`}
-                        />
+                        <PageTile whClass={`w-20 h-28 mt-1`} marginClass={`mx-auto`} />
                         <div className="flex mx-auto flex-col text-gray-400">
-                          <div className="text-md text-center">
-                            {page.label}
-                          </div>
+                          <div className="text-md text-center">{page.label}</div>
                           {index === copiedPageIndex ? (
                             <div className="text-center">Copied</div>
                           ) : (
                             <div className="cursor-pointer">
                               <Tooltip
                                 placement="top"
-                                text={`Click here to copy the content of this page`}
-                              >
-                                <FaCopy
-                                  onClick={() => onCopyPageContent(index)}
-                                />
+                                text={`Click here to copy the content of this page`}>
+                                <FaCopy onClick={() => onCopyPageContent(index)} />
                               </Tooltip>
                             </div>
                           )}
@@ -336,15 +313,11 @@ const NewPageDialog = ({
                     ))
                 : null}
             </div>
-            <p
-              className={`px-2 text-left block text-xs font-medium text-gray-700`}
-            >
+            <p className={`px-2 text-left block text-xs font-medium text-gray-700`}>
               Other lessons
             </p>
             <div className="mt-2 p-4 py-2 grid grid-cols-1 bg-gray-200">
-              <div
-                className={`w-auto h-32 flex items-center bg-white shadow rounded`}
-              >
+              <div className={`w-auto h-32 flex items-center bg-white shadow rounded`}>
                 <div className="text-center text-gray-400">Coming Soon</div>
               </div>
             </div>
@@ -352,9 +325,8 @@ const NewPageDialog = ({
           <div className="flex mt-4 justify-center px-6 pb-4">
             <div className="flex justify-end">
               <Buttons
-                btnClass="py-1 px-8 text-xs ml-2"
                 disabled={copiedPageIndex < 0}
-                label={EditQuestionModalDict[userLanguage]["BUTTON"]["SAVE"]}
+                label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
                 type="submit"
                 onClick={addExistingPage}
               />
@@ -366,32 +338,27 @@ const NewPageDialog = ({
         <div
           className={`
         ${
-          focussed === ""
-            ? ""
-            : focussed === "template"
-            ? "w-full"
-            : "w-0 overflow-hidden opacity-0 m-0"
+          focussed === ''
+            ? ''
+            : focussed === 'template'
+            ? 'w-full'
+            : 'w-0 overflow-hidden opacity-0 m-0'
         }
         transition-all duration-400 ease-in-out m-2
-      `}
-        >
+      `}>
           <div className="relative flex items-center justify-between mb-2">
             <h2 className="w-auto bg-white text-lg font-semibold  text-gray-900 truncate">
               Page From Template
             </h2>
             <Buttons
-              onClick={() => handleToggleFocussed("template")}
+              onClick={() => handleToggleFocussed('template')}
               Icon={VscNewFile}
-              label={`${focussed === "template" ? "Less" : "More"}`}
-              overrideClass={true}
-              btnClass="flex items-center justify-center w-auto mx-2 px-4 py-0 font-bold uppercase text-xs text-white bg-indigo-400 rounded-lg hover:bg-indigo-500 transition-all"
+              label={`${focussed === 'template' ? 'Less' : 'More'}`}
             />
           </div>
 
           <div className={`w-full bg-gray-200 rounded py-2`}>
-            <p
-              className={`px-2 text-left block text-xs font-medium text-gray-700`}
-            >
+            <p className={`px-2 text-left block text-xs font-medium text-gray-700`}>
               Style 1
             </p>
             <div className="mt-2 p-4 py-2 grid grid-cols-3 bg-gray-200">
@@ -400,9 +367,7 @@ const NewPageDialog = ({
               <PageTile whClass={`w-20 h-28`} marginClass={`mx-auto`} />
             </div>
 
-            <p
-              className={`px-2 text-left block text-xs font-medium text-gray-700`}
-            >
+            <p className={`px-2 text-left block text-xs font-medium text-gray-700`}>
               Style 2
             </p>
             <div className="mt-2 p-4 py-2 grid grid-cols-3 bg-gray-200">
@@ -414,8 +379,7 @@ const NewPageDialog = ({
           <div className="flex mt-4 justify-center px-6 pb-4">
             <div className="flex justify-end">
               <Buttons
-                btnClass="py-1 px-8 text-xs ml-2"
-                label={EditQuestionModalDict[userLanguage]["BUTTON"]["SAVE"]}
+                label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
                 type="submit"
                 onClick={handleSubmit}
               />
@@ -426,13 +390,13 @@ const NewPageDialog = ({
       {/* <div className="flex mt-4 justify-center px-6 pb-4">
         <div className="flex justify-end">
           <Buttons
-            btnClass="py-1 px-4 text-xs mr-2"
+            
             label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
             onClick={closeAction}
             transparent
           />
           <Buttons
-            btnClass="py-1 px-8 text-xs ml-2"
+            
             label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
             type="submit"
             onClick={handleSubmit}

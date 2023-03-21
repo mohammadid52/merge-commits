@@ -419,13 +419,11 @@ const CreateQuestion = ({
           )}
           <div className="flex justify-center mt-6 gap-4">
             <Buttons
-              btnClass="py-1 px-4 text-xs mr-2"
               label={AddNewQuestionDict[userLanguage]['BUTTON']['CANCEL']}
               onClick={() => changeStep('QuestionLookup')}
               transparent
             />
             <Buttons
-              btnClass="py-1 px-8 text-xs ml-2"
               onClick={onQuestionSave}
               label={
                 loading
@@ -537,7 +535,6 @@ const ExistingQuestionList = ({
             onChange={(val: string) => setSearchInput(val)}
             onKeyDown={searchFromList}
             closeAction={removeSearchAction}
-            style="w-2/4"
           />
         </div>
         <div className="max-w-256">
@@ -621,13 +618,11 @@ const ExistingQuestionList = ({
         <div className="flex mt-8 justify-center px-6 pb-4">
           <div className="flex justify-center my-6 gap-4">
             <Buttons
-              btnClass="py-1 px-4 text-xs mr-2"
               label={QuestionLookupDict[userLanguage]['BUTTON']['CANCEL']}
               onClick={() => changeStep('QuestionLookup')}
               transparent
             />
             <Buttons
-              btnClass="py-1 px-8 text-xs ml-2"
               label={QuestionLookupDict[userLanguage]['BUTTON']['SAVE']}
               onClick={onQuestionSave}
             />
@@ -823,12 +818,10 @@ const QuestionLookup = ({
 
       <div className="flex w-full mx-auto py-4 justify-center ">
         <Buttons
-          btnClass="mr-4"
           onClick={() => changeStep('ExistingQuestionList')}
           label={AddNewCheckPointDict[userLanguage]['BUTTON']['ADDEXIST']}
         />
         <Buttons
-          btnClass="ml-4"
           onClick={() => changeStep('CreateNewQuestion')}
           label={AddNewCheckPointDict[userLanguage]['BUTTON']['CREATE']}
         />
@@ -837,13 +830,11 @@ const QuestionLookup = ({
       <div className="flex mt-8 justify-center px-6 pb-4">
         <div className="flex justify-end">
           <Buttons
-            btnClass="py-1 px-4 text-xs mr-2"
             label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
             onClick={askBeforeClose}
             transparent
           />
           <Buttons
-            btnClass="py-1 px-8 text-xs ml-2"
             label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
             onClick={addToULBObject}
           />

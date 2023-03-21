@@ -384,7 +384,6 @@ const RoomsList = (props: RoomListProps) => {
                   dataCy="classroom-search-input"
                   value={searchInput.value}
                   onChange={setSearch}
-                  isActive={searchInput.isActive}
                   disabled={loading}
                   onKeyDown={searchRoom}
                   closeAction={() => {
