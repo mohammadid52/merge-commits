@@ -90,19 +90,6 @@ export const randomNumber = (min: number, max: number): number => {
   return Math.random() * (max - min) + min;
 };
 
-export const getJSON = async (url: string): Promise<string> => {
-  const doestThisJsonExistsInLocalStorage = getLocalStorageData(url);
-  if (!isEmpty(doestThisJsonExistsInLocalStorage)) {
-    return doestThisJsonExistsInLocalStorage;
-  } else {
-    const response = await fetch(url);
-    const json = await response.json();
-
-    setLocalStorageData(url, json);
-    return json;
-  }
-};
-
 export const setPageTitle = (title: string) => {
   if (title) {
     document.title = `${title} | `.concat(getAsset(getClientKey(), 'appTitle'));

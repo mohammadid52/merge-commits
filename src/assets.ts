@@ -110,10 +110,6 @@ export const fallbackUrls = {
   room: 'https://selready.s3.us-east-2.amazonaws.com/card_texture.jpg'
 };
 
-export const ANIMATIONS = {
-  loading: 'https://iconoclaststorage143306-dev.s3.amazonaws.com/animation/education.json'
-};
-
 export const XLSX_TO_CSV_URL = 'https://cloudconvert.com/xlsx-to-csv';
 
 const general: any = {

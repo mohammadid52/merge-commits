@@ -15,7 +15,7 @@ const BottomBar = (props: LessonCardProps) => {
     lessonProps,
     syllabusProps,
     accessible,
-    lessonType,
+
     lessonProgress = 0,
     isCompleted
   } = props;
