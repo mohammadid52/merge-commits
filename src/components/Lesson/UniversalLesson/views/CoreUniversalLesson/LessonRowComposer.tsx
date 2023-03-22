@@ -1,6 +1,6 @@
 import {getLocalStorageData, setLocalStorageData} from '@utilities/localStorage';
 import {TeachingStyle} from 'API';
-import AllEmotions from 'components/Lesson/AllEmotions';
+// import AllEmotions from 'components/Lesson/AllEmotions';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import {
   PagePart,
@@ -100,7 +100,7 @@ const LessonRowComposer = () => {
   const lessonState = gContext.lessonState;
   const PAGES = lessonState?.lessonData?.lessonPlan || [];
 
-  const isLastPage = PAGES?.length - 1 === lessonState.currentPage;
+  // const isLastPage = PAGES?.length - 1 === lessonState.currentPage;
 
   useEffect(() => {
     if (PAGES) {
@@ -209,7 +209,7 @@ const LessonRowComposer = () => {
           </div>
         ))}
 
-      {isLastPage && <AllEmotions />}
+      {/* {isLastPage && <AllEmotions />} */}
 
       {isStudent && (
         <>

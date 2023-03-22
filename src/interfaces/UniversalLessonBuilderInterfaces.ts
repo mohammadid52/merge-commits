@@ -1,9 +1,5 @@
 import {PagePart, UniversalLesson} from './UniversalLessonInterfaces';
 
-export interface ULBDialogComponent {
-  inputJSX?: JSX.Element;
-}
-
 export interface ULBSelectionProps {
   universalLessonDetails?: UniversalLesson;
   deleteFromULBHandler?: (targetID: string) => UniversalLesson;

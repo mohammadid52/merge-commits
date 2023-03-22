@@ -1,3 +1,4 @@
+import {Modal} from 'antd';
 import {UniversalLessonStudentData as UniversalLessonStudentDataFromAPI} from 'API';
 import {API, graphqlOperation} from 'aws-amplify';
 import {useGlobalContext} from 'contexts/GlobalContext';
@@ -12,7 +13,7 @@ import {useParams} from 'react-router';
 import {useHistory, useRouteMatch} from 'react-router-dom';
 import {getLocalStorageData, setLocalStorageData} from 'utilities/localStorage';
 import ErrorBoundary from '../Error/ErrorBoundary';
-import PositiveAlert from '../General/Popup';
+// import PositiveAlert from '../General/Popup';
 import ComponentLoading from '../Lesson/Loading/ComponentLoading';
 import CoreUniversalLesson from '../Lesson/UniversalLesson/views/CoreUniversalLesson';
 import ClassRoster from './ClassRoster';
@@ -23,7 +24,7 @@ import LessonFrame from './StudentWindow/LessonFrame';
 import LessonInfoFrame from './StudentWindow/LessonInfoFrame';
 import ProfileFrame from './StudentWindow/ProfileFrame';
 
-export const checkIfLessonIsCompleted = (roomData: any, lessonID: string) => {
+const checkIfLessonIsCompleted = (roomData: any, lessonID: string) => {
   return (
     roomData?.completedLessons?.findIndex(
       (item: {lessonID?: string | null; time?: string | null}) =>
@@ -537,7 +538,7 @@ const LessonControl = () => {
         <div
           className={`${leavePopup ? 'absolute z-100 h-full' : 'hidden'}`}
           onClick={handleLeavePopup}>
-          <PositiveAlert
+          {/* <PositiveAlert
             identifier={''}
             alert={leavePopup}
             header="Are you sure you want to leave the Teacher View?"
@@ -548,13 +549,13 @@ const LessonControl = () => {
             handleButton2={() => handleLeavePopup}
             theme="light"
             fill="screen"
-          />
+          /> */}
         </div>
         {/* HANDLE GO  HOME */}
         <div
           className={`${homePopup ? 'absolute z-100 h-full' : 'hidden'}`}
           onClick={handleHomePopup}>
-          <PositiveAlert
+          {/* <PositiveAlert
             identifier={''}
             alert={homePopup}
             header="Are you sure you want to leave the Teacher View?"
@@ -565,11 +566,12 @@ const LessonControl = () => {
             handleButton2={() => handleHomePopup}
             theme="light"
             fill="screen"
-          />
+          /> */}
         </div>
         {/* USER HAS LEFT NOTIFICATION */}
+
         <div className={`${userHasLeftPopup ? 'absolute z-100 h-full' : 'hidden'}`}>
-          <PositiveAlert
+          {/* <PositiveAlert
             identifier={''}
             alert={userHasLeftPopup}
             header="The student you were viewing has left the room."
@@ -578,7 +580,7 @@ const LessonControl = () => {
             handleButton1={handleUserHasLeftPopup}
             theme="light"
             fill="screen"
-          />
+          /> */}
         </div>
 
         <div className={`relative w-full h-full flex flex-col lg:flex-row rounded-lg`}>

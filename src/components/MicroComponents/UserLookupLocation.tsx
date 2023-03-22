@@ -21,7 +21,7 @@ type LocationInfoType = {
   setShowLocationInfo: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export const LocationInfo = ({
+const LocationInfo = ({
   idx,
   authId,
   createdAt,

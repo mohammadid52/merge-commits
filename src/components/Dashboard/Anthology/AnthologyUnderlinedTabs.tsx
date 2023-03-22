@@ -4,7 +4,7 @@ import Tooltip from 'atoms/Tooltip';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import React from 'react';
 
-export interface ITabElementProps {
+interface ITabElementProps {
   id?: string;
   index: number;
   content: React.ReactNode;

@@ -5,13 +5,13 @@
  */
 
 //--------------SOON DEPRECATED INTERFACES--------------//
-export interface Quote {
+interface Quote {
   [key: string]: any;
   text: string;
   author?: string;
 }
 
-export interface Link {
+interface Link {
   [key: string]: any;
   text?: string;
   url?: string;

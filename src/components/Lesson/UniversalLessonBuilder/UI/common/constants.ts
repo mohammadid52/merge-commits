@@ -20,7 +20,7 @@ export const FORM_TYPES = {
   REVIEW_SLIDER: 'review-slider-input',
   HIGHLIGHTER: 'highlighter-input',
   WRITING_EXERCISE: 'writing-exercise-input',
-  DOCS: 'docs',
+  DOCS: 'docs'
 };
 export const DIVIDER = 'divider';
 export const INPUT = 'Input';
@@ -30,7 +30,6 @@ export const LINK = 'Link';
 export const INPUT_WITH_EMOJI = 'Emoji';
 export const ATTACHMENTS = 'Attachments';
 export const DATE_PICKER = 'Date Picker';
-export const TABLE = 'table';
 export const PARAGRAPH = 'paragraph';
 export const SPACER = 'spacer';
 export const SQUARE = 'square';
@@ -42,5 +41,6 @@ export const SINGING_BOWL = 'singing_bowl';
 export const GAME_CHANGERS = 'game_changers';
 
 export const REGEX = {
-  Youtube: /^(?:https?:\/\/)?(?:m\.|www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/,
+  Youtube:
+    /^(?:https?:\/\/)?(?:m\.|www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/
 };

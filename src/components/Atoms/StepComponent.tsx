@@ -9,7 +9,7 @@ interface IStepElementInterface {
   stepValue: string;
 }
 
-export interface IStepComponentInterface {
+interface IStepComponentInterface {
   steps: IStepElementInterface[];
   activeStep: string;
   handleTabSwitch: (step: string) => void;
