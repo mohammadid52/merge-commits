@@ -16,8 +16,8 @@ commit (){
 
 final (){
       git pull
-      git push origin ${branch}
       npm run find-deadcode && tsc
+      git push origin ${branch}
 }
 
 
