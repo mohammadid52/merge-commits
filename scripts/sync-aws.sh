@@ -79,12 +79,13 @@ switch_profiles(){
 
 }
 
-AWS_ACCESS_ID="AKIATUBLJ2Q4CBLGFBPU"
-AWS_SECRET_ACCESS_KEY="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"
-
-
 if [ "$AWS_ACCESS_ID" = ""  ] || [ "$AWS_SECRET_ACCESS_KEY" = "" ] ; then
     echo ${RED}"<---Aws config is missing--->"${NONE}
+    echo "you need add access key and secret access key to your environment variables"
+    echo "if you're on windows. try this:- "
+    echo "set AWS_ACCESS_ID=your_access_key"
+    echo "set AWS_SECRET_ACCESS_KEY=your_secret_access_key"
+    echo "and rerun the script from start"
     exit 0
 
 else 
@@ -122,7 +123,7 @@ else
 
     
 
-    check_api_key_exists
+    # check_api_key_exists
     
 
     echo ${GREEN}"<---Successfully pulled... now copying content from api.schema.graphql to schema.graphql--->"${NONE}

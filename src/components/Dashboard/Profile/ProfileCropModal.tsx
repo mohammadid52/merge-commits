@@ -1,10 +1,7 @@
-import {useGlobalContext} from '@contexts/GlobalContext';
-import Buttons from 'atoms/Buttons';
 import Modal from 'atoms/Modal';
-import useDictionary from 'customHooks/dictionary';
-import React, {useRef, useState} from 'react';
-import ReactCrop from 'react-image-crop';
-import AnimatedContainer from '../../Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
+import React, {useState} from 'react';
+import ReactCrop, {Crop, PixelCrop} from 'react-image-crop';
+import 'react-image-crop/src/ReactCrop.scss';
 
 interface ProfileCropModalProps {
   upImg: string;
@@ -21,62 +18,35 @@ interface ProfileCropModalProps {
 const ProfileCropModal: React.FC<ProfileCropModalProps> = (
   props: ProfileCropModalProps
 ) => {
-  const {
-    upImg = '',
-    customCropProps,
-    locked = false,
-    imageClassName,
+  const {closeAction, upImg, saveCroppedImage, open} = props;
 
-    saveCroppedImage,
-    closeAction,
-    open
-  } = props;
-  const initial = customCropProps
-    ? {...customCropProps}
-    : {unit: '%', x: 0, y: 0, width: 100, aspect: 1};
-  const [crop, setCrop] = useState<any>(initial);
-  const [completedCrop, setCompletedCrop] = useState<any | null>(null);
-  const {userLanguage} = useGlobalContext();
-  const {BUTTONS} = useDictionary();
-  const imgRef = useRef<any>(null);
+  const [crop, setCrop] = useState<Crop>();
 
-  const saveCroped = async () => {
-    const image = imgRef.current;
-    if (image) {
-      const croppedImg = await getCroppedImg(image, completedCrop);
-      saveCroppedImage(croppedImg);
-    }
-  };
-
-  const getCroppedImg = (image: any, finalCrop: any) => {
+  const handleCropComplete = (croppedArea: Crop, croppedAreaPixels: PixelCrop) => {
     const canvas = document.createElement('canvas');
-    const scaleX = image.naturalWidth / image.width;
-    const scaleY = image.naturalHeight / image.height;
-    canvas.width = finalCrop.width;
-    canvas.height = finalCrop.height;
-    const ctx: any = canvas.getContext('2d');
-
-    ctx.drawImage(
-      image,
-      finalCrop.x * scaleX,
-      finalCrop.y * scaleY,
-      finalCrop.width * scaleX,
-      finalCrop.height * scaleY,
-      0,
-      0,
-      finalCrop.width,
-      finalCrop.height
-    );
-
-    return new Promise((resolve) => {
-      canvas.toBlob((file: any) => {
-        file.name = 'fileName';
-        resolve(file);
-      }, 'image/jpeg');
-    });
+    const image = new Image();
+    image.src = upImg;
+    image.onload = () => {
+      const scaleX = image.naturalWidth / image.width;
+      const scaleY = image.naturalHeight / image.height;
+      canvas.width = croppedAreaPixels.width * scaleX;
+      canvas.height = croppedAreaPixels.height * scaleY;
+      const ctx = canvas.getContext('2d');
+      ctx?.drawImage(
+        image,
+        croppedAreaPixels.x * scaleX,
+        croppedAreaPixels.y * scaleY,
+        croppedAreaPixels.width * scaleX,
+        croppedAreaPixels.height * scaleY,
+        0,
+        0,
+        croppedAreaPixels.width * scaleX,
+        croppedAreaPixels.height * scaleY
+      );
+      const croppedImageUrl = canvas.toDataURL('image/png');
+      saveCroppedImage(croppedImageUrl);
+    };
   };
-
-  const [showCropper] = useState(false);
 
   return (
     <Modal
@@ -86,41 +56,15 @@ const ProfileCropModal: React.FC<ProfileCropModalProps> = (
       title={'Preview image'}
       showFooter={false}
       closeAction={closeAction}>
-      <div className="mx-auto mb-5  max-w-256 w-140  overflow-hidden">
-        <AnimatedContainer show={!showCropper}>
-          {!showCropper && (
-            <div className="flex items-center gap-x-6 w-auto">
-              <img
-                src={upImg}
-                className={
-                  imageClassName ||
-                  'profile w-20 h-20 md:w-40 md:h-40 rounded-full  border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light mx-auto'
-                }
-              />
-            </div>
-          )}
-        </AnimatedContainer>
-        <AnimatedContainer show={showCropper}>
-          {showCropper && (
-            <ReactCrop
-              locked={locked}
-              crop={crop}
-              onChange={(c) => setCrop(c)}
-              onComplete={(c: any) => setCompletedCrop(c)}>
-              <img src={upImg} />
-            </ReactCrop>
-          )}
-        </AnimatedContainer>
-      </div>
-      <div className="flex gap-x-4 items-center justify-end my-4">
-        <Buttons label={'Cancel'} onClick={closeAction} size="middle" transparent />
+      <div className="">
+        <ReactCrop
+          crop={crop}
+          onChange={(newCrop) => setCrop(newCrop)}
+          // onComplete={handleCropComplete}
 
-        <Buttons
-          size="middle"
-          dataCy="save-profile-image"
-          label={showCropper ? 'Save cropped image' : BUTTONS[userLanguage].SAVE}
-          onClick={showCropper ? saveCroped : () => saveCroppedImage(undefined)}
-        />
+          circularCrop>
+          <img src={upImg} alt="" />
+        </ReactCrop>
       </div>
     </Modal>
   );
