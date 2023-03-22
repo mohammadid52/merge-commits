@@ -2,7 +2,6 @@ import {RoomStatus, UserPageState} from 'API';
 import {getAsset} from 'assets';
 import {isEmpty} from 'lodash';
 import {allowedAuthIds} from 'state/GlobalState';
-import {getLocalStorageData, setLocalStorageData} from './localStorage';
 import {getImageFromS3Static} from './services';
 import {getClientKey} from './strings';
 
