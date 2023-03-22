@@ -187,7 +187,7 @@ type Translation {
 }
 
 #Person - App users table.
-type Person @model @auth(rules: [{allow: public}]) {
+type Person @model @auth(rules: [{allow: private}]) {
   id: ID! @index(name: "byUserId", queryField: "userById")
   authId: String!
   status: PersonStatus!
@@ -218,7 +218,7 @@ type Person @model @auth(rules: [{allow: public}]) {
   isZoiq: Boolean
 }
 
-type PersonLessonsData @model @auth(rules: [{allow: public}]) {
+type PersonLessonsData @model @auth(rules: [{allow: private}]) {
   id: ID! @primaryKey
   studentAuthID: String! @index(name: "byStudentAuthID")
   studentEmail: String!
@@ -232,7 +232,7 @@ type PersonLessonsData @model @auth(rules: [{allow: public}]) {
   room: Room @hasOne(fields: ["roomId"])
 }
 
-type Institution @model @auth(rules: [{allow: public}]) {
+type Institution @model @auth(rules: [{allow: private}]) {
   id: ID! @primaryKey
   name: String!
   type: String!
@@ -258,7 +258,7 @@ type Institution @model @auth(rules: [{allow: public}]) {
   setupComplete: Boolean
 }
 
-type ServiceProvider @model(queries: null) @auth(rules: [{allow: public}]) {
+type ServiceProvider @model(queries: null) @auth(rules: [{allow: private}]) {
   id: ID!
   partnerID: ID! @index(name: "providersByPartner", sortKeyFields: ["providerID"])
   providerID: ID!
@@ -266,7 +266,7 @@ type ServiceProvider @model(queries: null) @auth(rules: [{allow: public}]) {
   providerInstitution: Institution @hasOne(fields: ["providerID"])
 }
 
-type Staff @model @auth(rules: [{allow: public}]) {
+type Staff @model @auth(rules: [{allow: private}]) {
   id: ID!
   institutionID: ID! @index(name: "staffByInstitution", sortKeyFields: ["staffEmail"])
   staffAuthID: String!
@@ -277,7 +277,7 @@ type Staff @model @auth(rules: [{allow: public}]) {
   institution: Institution @belongsTo(fields: ["institutionID"])
 }
 
-type Room @model @auth(rules: [{allow: public}]) {
+type Room @model @auth(rules: [{allow: private}]) {
   id: ID!
   institutionID: ID! @index(name: "roomByInstitution")
   classID: ID
@@ -321,7 +321,7 @@ type Room @model @auth(rules: [{allow: public}]) {
   teachingStyle: TeachingStyle @default(value: "PERFORMER")
 }
 
-type ArchiveSurveyDataSQL @model @auth(rules: [{allow: public}]) {
+type ArchiveSurveyDataSQL @model @auth(rules: [{allow: private}]) {
   id: ID!
   AuthId: String!
   Email: String! @primaryKey(sortKeyFields: ["AuthId"])
@@ -331,7 +331,7 @@ type ArchiveSurveyDataSQL @model @auth(rules: [{allow: public}]) {
   updatedAt: AWSDateTime
 }
 
-type ClassroomGroupStudents @model @auth(rules: [{allow: public}]) {
+type ClassroomGroupStudents @model @auth(rules: [{allow: private}]) {
   id: ID!
   classRoomGroupID: ID! @index(name: "studentsByCRgroup")
   classRoomGroup: ClassroomGroups @belongsTo(fields: ["classRoomGroupID"])
@@ -342,7 +342,7 @@ type ClassroomGroupStudents @model @auth(rules: [{allow: public}]) {
   studentNote: String
 }
 
-type ClassroomGroups @model @auth(rules: [{allow: public}]) {
+type ClassroomGroups @model @auth(rules: [{allow: private}]) {
   id: ID!
   classRoomID: ID! @index(name: "groupsByClassroom")
   classRoom: Room @belongsTo(fields: ["classRoomID"])
@@ -356,7 +356,7 @@ type ClassroomGroups @model @auth(rules: [{allow: public}]) {
     @hasMany(indexName: "studentsByCRgroup", fields: ["id"])
 }
 
-type RoomCoTeachers @model @auth(rules: [{allow: public}]) {
+type RoomCoTeachers @model @auth(rules: [{allow: private}]) {
   id: ID!
   roomID: ID! @index(name: "byRoom", sortKeyFields: ["teacherID"])
   teacherID: ID!
@@ -369,7 +369,7 @@ type RoomCoTeachers @model @auth(rules: [{allow: public}]) {
   teachingStyle: TeachingStyle @default(value: "PERFORMER")
 }
 
-type Class @model @auth(rules: [{allow: public}]) {
+type Class @model @auth(rules: [{allow: private}]) {
   id: ID!
   institutionID: ID! @index(name: "classByInstitution")
   type: String
@@ -380,7 +380,7 @@ type Class @model @auth(rules: [{allow: public}]) {
   students: [ClassStudent]! @hasMany(indexName: "byClass", fields: ["id"])
 }
 
-type ClassStudent @model @auth(rules: [{allow: public}]) {
+type ClassStudent @model @auth(rules: [{allow: private}]) {
   id: ID!
   classID: ID! @index(name: "byClass", sortKeyFields: ["studentID"])
   studentID: ID!
@@ -392,7 +392,7 @@ type ClassStudent @model @auth(rules: [{allow: public}]) {
   student: Person @belongsTo(fields: ["studentEmail", "studentAuthID"])
 }
 
-type Curriculum @model @auth(rules: [{allow: public}]) {
+type Curriculum @model @auth(rules: [{allow: private}]) {
   id: ID! @primaryKey
   institutionID: ID! @index(name: "curriculumByInstitution")
   name: String!
@@ -413,7 +413,7 @@ type Curriculum @model @auth(rules: [{allow: public}]) {
   status: RoomStatus @default(value: "ACTIVE")
 }
 
-type Topic @model @auth(rules: [{allow: public}]) {
+type Topic @model @auth(rules: [{allow: private}]) {
   id: ID! @primaryKey
   curriculumID: ID! @index(name: "topicByCurriculum")
   learningObjectiveID: ID!
@@ -427,19 +427,19 @@ type Topic @model @auth(rules: [{allow: public}]) {
   basic: String
 }
 
-type CSequences @model @auth(rules: [{allow: public}]) {
+type CSequences @model @auth(rules: [{allow: private}]) {
   id: ID! @primaryKey
   sequence: [String]
 }
 
-type LearningObjective @model @auth(rules: [{allow: public}]) {
+type LearningObjective @model @auth(rules: [{allow: private}]) {
   id: ID! @primaryKey
   name: String!
   description: String
   curriculumID: ID!
 }
 
-type Rubric @model @auth(rules: [{allow: public}]) {
+type Rubric @model @auth(rules: [{allow: private}]) {
   id: ID! @primaryKey
   name: String
   criteria: String
@@ -448,14 +448,14 @@ type Rubric @model @auth(rules: [{allow: public}]) {
   curriculumID: ID!
 }
 
-type RoomCurriculum @model @auth(rules: [{allow: public}]) {
+type RoomCurriculum @model @auth(rules: [{allow: private}]) {
   id: ID!
   roomID: ID! @index(name: "curriculumByRoom")
   curriculumID: ID!
   curriculum: Curriculum @hasOne(fields: ["curriculumID"])
 }
 
-type Checkpoint @model @auth(rules: [{allow: public}]) {
+type Checkpoint @model @auth(rules: [{allow: private}]) {
   id: ID!
   label: String!
   title: String
@@ -474,7 +474,7 @@ type Checkpoint @model @auth(rules: [{allow: public}]) {
   questionSeq: [String]
 }
 
-type commonCheckpoint @model(queries: null) @auth(rules: [{allow: public}]) {
+type commonCheckpoint @model(queries: null) @auth(rules: [{allow: private}]) {
   id: ID!
   type: String!
   typeID: ID! @index(name: "byType", sortKeyFields: ["checkpointID"])
@@ -483,7 +483,7 @@ type commonCheckpoint @model(queries: null) @auth(rules: [{allow: public}]) {
   checkpoint: Checkpoint @hasOne(fields: ["checkpointID"])
 }
 
-type CheckpointQuestions @model(queries: null) @auth(rules: [{allow: public}]) {
+type CheckpointQuestions @model(queries: null) @auth(rules: [{allow: private}]) {
   id: ID!
   checkpointID: ID! @index(name: "byCheckpoint", sortKeyFields: ["questionID"])
   questionID: ID! @index(name: "byQuestion", sortKeyFields: ["checkpointID"])
@@ -492,7 +492,7 @@ type CheckpointQuestions @model(queries: null) @auth(rules: [{allow: public}]) {
   question: Question @hasOne(fields: ["questionID"])
 }
 
-type Question @model @auth(rules: [{allow: public}]) {
+type Question @model @auth(rules: [{allow: private}]) {
   id: ID!
   label: String!
   type: String!
@@ -505,12 +505,12 @@ type Question @model @auth(rules: [{allow: public}]) {
   published: Boolean
 }
 
-type QuestionSource @model @auth(rules: [{allow: public}]) {
+type QuestionSource @model @auth(rules: [{allow: private}]) {
   id: ID!
   name: String!
 }
 
-type QuestionType @model @auth(rules: [{allow: public}]) {
+type QuestionType @model @auth(rules: [{allow: private}]) {
   id: ID!
   name: String!
 }
@@ -522,7 +522,7 @@ type QuestionResponse {
   otherResponse: String
 }
 
-type AnthologyComment @model @auth(rules: [{allow: public}]) {
+type AnthologyComment @model @auth(rules: [{allow: private}]) {
   id: ID!
   text: String
   email: String!
@@ -535,7 +535,7 @@ type AnthologyComment @model @auth(rules: [{allow: public}]) {
   entryID: ID!
 }
 
-type QuestionData @model @auth(rules: [{allow: public}]) {
+type QuestionData @model @auth(rules: [{allow: private}]) {
   id: ID!
   syllabusLessonID: ID!
   checkpointID: ID!
@@ -548,15 +548,7 @@ type QuestionData @model @auth(rules: [{allow: public}]) {
   responseObject: [QuestionResponse]
 }
 
-type QuestionDataStudentData @model(queries: null) @auth(rules: [{allow: public}]) {
-  id: ID!
-  studentDataID: ID! @index(name: "byStudentData", sortKeyFields: ["questionDataID"])
-  studentData: StudentData
-  questionDataID: ID!
-  questionData: QuestionData @hasOne(fields: ["questionDataID"])
-}
-
-type PersonLocation @model @auth(rules: [{allow: public}]) {
+type PersonLocation @model @auth(rules: [{allow: private}]) {
   id: ID!
   personAuthID: String!
   personEmail: String! @primaryKey(sortKeyFields: ["personAuthID"])
@@ -571,7 +563,7 @@ type PersonLocation @model @auth(rules: [{allow: public}]) {
   lesson: UniversalLesson @hasOne(fields: ["lessonID"])
 }
 
-type Attendance @model @auth(rules: [{allow: public}]) {
+type Attendance @model @auth(rules: [{allow: private}]) {
   id: ID!
   studentID: ID!
     @index(name: "byStudent", sortKeyFields: ["date"], queryField: "attendanceByStudent")
@@ -590,7 +582,7 @@ type Attendance @model @auth(rules: [{allow: public}]) {
 
 # Universal lesson tables ----------------------------------------------
 
-type UniversalLesson @model @auth(rules: [{allow: public}]) {
+type UniversalLesson @model @auth(rules: [{allow: private}]) {
   id: ID! @primaryKey
   type: String!
   label: String
@@ -630,7 +622,7 @@ type UniversalLesson @model @auth(rules: [{allow: public}]) {
   updatedAt: AWSDateTime
 }
 
-type UniversalLessonStudentData @model @auth(rules: [{allow: public}]) {
+type UniversalLessonStudentData @model @auth(rules: [{allow: private}]) {
   id: ID! @primaryKey
   syllabusLessonID: ID!
     @index(name: "bySyllabusLessonAndStudent", sortKeyFields: ["studentID"])
@@ -649,7 +641,7 @@ type UniversalLessonStudentData @model @auth(rules: [{allow: public}]) {
   date: AWSDateTime
 }
 
-type UniversalLessonWritingExcercises @model @auth(rules: [{allow: public}]) {
+type UniversalLessonWritingExcercises @model @auth(rules: [{allow: private}]) {
   id: ID! @primaryKey
   syllabusLessonID: ID!
     @index(name: "bySyllabusLessonAndStudent", sortKeyFields: ["studentID"])
@@ -669,7 +661,7 @@ type UniversalLessonWritingExcercises @model @auth(rules: [{allow: public}]) {
   exerciseData: [ExerciseData]
 }
 
-type UniversalArchiveData @model @auth(rules: [{allow: public}]) {
+type UniversalArchiveData @model @auth(rules: [{allow: private}]) {
   id: ID! @primaryKey
   syllabusLessonID: ID!
     @index(name: "bySyllabusLessonAndStudent", sortKeyFields: ["studentID"])
@@ -687,7 +679,7 @@ type UniversalArchiveData @model @auth(rules: [{allow: public}]) {
   surveyData: [PartInput]
 }
 
-type UniversalSurveyStudentData @model @auth(rules: [{allow: public}]) {
+type UniversalSurveyStudentData @model @auth(rules: [{allow: private}]) {
   id: ID! @primaryKey
   syllabusLessonID: ID!
     @index(name: "bySyllabusLessonAndStudent", sortKeyFields: ["studentID"])
@@ -703,7 +695,7 @@ type UniversalSurveyStudentData @model @auth(rules: [{allow: public}]) {
   updatedAt: AWSDateTime
 }
 
-type TemporaryUniversalUploadSurveyData @model @auth(rules: [{allow: public}]) {
+type TemporaryUniversalUploadSurveyData @model @auth(rules: [{allow: private}]) {
   id: ID! @primaryKey
   updatedUserId: ID!
   universalSurveyId: ID
@@ -712,7 +704,7 @@ type TemporaryUniversalUploadSurveyData @model @auth(rules: [{allow: public}]) {
   surveyData: [PartInput]
 }
 
-type TemporaryDemographicsUploadData @model @auth(rules: [{allow: public}]) {
+type TemporaryDemographicsUploadData @model @auth(rules: [{allow: private}]) {
   id: ID! @primaryKey
   updatedUserId: ID!
   questionDataID: ID
@@ -720,7 +712,7 @@ type TemporaryDemographicsUploadData @model @auth(rules: [{allow: public}]) {
   responseObject: [QuestionResponse]
 }
 
-type UploadLogs @model @auth(rules: [{allow: public}]) {
+type UploadLogs @model @auth(rules: [{allow: private}]) {
   id: ID! @primaryKey
   TemporaryUniversalUploadSurveyDataID: ID
   TemporaryUniversalUploadSurveyData: TemporaryUniversalUploadSurveyData
@@ -759,7 +751,7 @@ type ExerciseData {
   shared: Boolean
 }
 
-type UniversalJournalData @model @auth(rules: [{allow: public}]) {
+type UniversalJournalData @model @auth(rules: [{allow: private}]) {
   id: ID! @primaryKey
   studentID: ID!
   studentAuthID: ID!
@@ -801,7 +793,7 @@ type InputComment {
   comment: String
 }
 
-type UniversalSyllabus @model @auth(rules: [{allow: public}]) {
+type UniversalSyllabus @model @auth(rules: [{allow: private}]) {
   id: ID! @primaryKey
   name: String!
   type: String
@@ -825,14 +817,14 @@ type UniversalSyllabus @model @auth(rules: [{allow: public}]) {
   lessonHistory: [String]
 }
 
-type curriculumUnits @model @auth(rules: [{allow: public}]) {
+type curriculumUnits @model @auth(rules: [{allow: private}]) {
   id: ID!
   unitId: ID!
   unit: UniversalSyllabus @hasOne(fields: ["unitId"])
   curriculumId: ID! @index(name: "unitsbyCurriculum", sortKeyFields: ["unitId"])
 }
 
-type UniversalSyllabusLesson @model @auth(rules: [{allow: public}]) {
+type UniversalSyllabusLesson @model @auth(rules: [{allow: private}]) {
   id: ID!
   syllabusID: ID! @index(name: "UniversalLessonsBySyllabus", sortKeyFields: ["lessonID"])
   lessonID: ID!
@@ -846,10 +838,9 @@ type UniversalSyllabusLesson @model @auth(rules: [{allow: public}]) {
   lessonPlan: [ComponentSummary!]
   startDate: AWSDate
   endDate: AWSDate
-  feedback: [UniversalLessonFeedback] @hasMany(fields: ["id"])
 }
 
-type PersonSentiments @model @auth(rules: [{allow: public}]) {
+type PersonSentiments @model @auth(rules: [{allow: private}]) {
   personAuthID: String! @primaryKey(sortKeyFields: ["date"])
   personEmail: String!
   person: Person @hasOne(fields: ["personEmail", "personAuthID"])
@@ -859,13 +850,13 @@ type PersonSentiments @model @auth(rules: [{allow: public}]) {
   backstory: String
 }
 
-type Sentiments @model @auth(rules: [{allow: public}]) {
+type Sentiments @model @auth(rules: [{allow: private}]) {
   id: ID!
   sentimentName: String!
   sentimentType: String!
 }
 
-type FeelingsArchive @model @auth(rules: [{allow: public}]) {
+type FeelingsArchive @model @auth(rules: [{allow: private}]) {
   id: ID! @primaryKey
   personAuthID: String!
   personEmail: String!
@@ -882,7 +873,7 @@ type FeelingsArchive @model @auth(rules: [{allow: public}]) {
   comments: String
 }
 
-type PersonFiles @model @auth(rules: [{allow: public}]) {
+type PersonFiles @model @auth(rules: [{allow: private}]) {
   id: ID! @primaryKey
   personAuthID: String!
   personEmail: String!
@@ -897,7 +888,7 @@ type PersonFiles @model @auth(rules: [{allow: public}]) {
   lessonPageID: ID
 }
 
-type Community @model @auth(rules: [{allow: public}]) {
+type Community @model @auth(rules: [{allow: private}]) {
   id: ID! @primaryKey
   institutionID: ID!
   institution: Institution @hasOne(fields: ["institutionID"])
@@ -922,7 +913,7 @@ type Community @model @auth(rules: [{allow: public}]) {
   chatCount: Int
 }
 
-type GameChanger @model @auth(rules: [{allow: public}]) {
+type GameChanger @model @auth(rules: [{allow: private}]) {
   id: ID! @primaryKey
   gameChangerName: String
   title: String
@@ -932,7 +923,7 @@ type GameChanger @model @auth(rules: [{allow: public}]) {
   likes: [String]
 }
 
-type GameChangerLog @model @auth(rules: [{allow: public}]) {
+type GameChangerLog @model @auth(rules: [{allow: private}]) {
   id: ID! @primaryKey
   gameChangerID: ID!
   gameChanger: GameChanger @hasOne(fields: ["gameChangerID"])
@@ -943,7 +934,7 @@ type GameChangerLog @model @auth(rules: [{allow: public}]) {
   endTime: AWSDate
 }
 
-type CommunityChat @model @auth(rules: [{allow: public}]) {
+type CommunityChat @model @auth(rules: [{allow: private}]) {
   id: ID!
   communityId: ID! @index(name: "chatByCommunity")
   personAuthID: String!
@@ -968,8 +959,7 @@ type Subscription {
     lessonID: ID!
     roomID: ID!
   ): PersonLocation @aws_subscribe(mutations: ["deletePersonLocation"])
-  onChangeStudentData(syllabusLessonID: ID!): StudentData
-    @aws_subscribe(mutations: ["createStudentData", "updateStudentData"])
+
   onChangeUniversalLessonStudentData(
     syllabusLessonID: ID!
     lessonID: ID!
@@ -981,7 +971,7 @@ type Subscription {
   onChangeRoom(id: ID!): Room @aws_subscribe(mutations: ["updateRoom"])
 }
 
-type ErrorLog @model @auth(rules: [{allow: public}]) {
+type ErrorLog @model @auth(rules: [{allow: private}]) {
   id: ID! @primaryKey
   pageUrl: String
   componentName: String
@@ -994,7 +984,7 @@ type ErrorLog @model @auth(rules: [{allow: public}]) {
   status: ErrorStatus @default(value: "PENDING")
 }
 
-type Dicitionary @model @auth(rules: [{allow: public}]) {
+type Dicitionary @model @auth(rules: [{allow: private}]) {
   id: ID! @primaryKey
   authID: String! # to know which user added/updated dictionary
   email: String!
@@ -1003,4 +993,18 @@ type Dicitionary @model @auth(rules: [{allow: public}]) {
   englishAudio: String # this will be url (optional)
   englishDefinition: String # optional too.
   translation: [Translation]
+}
+
+input CreateClassStudentInput {
+  id: ID
+  classID: ID!
+  studentID: ID!
+  studentEmail: String!
+  studentAuthID: String!
+  status: String
+  group: String
+}
+
+type Mutation {
+  batchAddClassStudent(classStudents: [CreateClassStudentInput]): [ClassStudent]
 }
