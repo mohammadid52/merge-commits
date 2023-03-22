@@ -319,7 +319,7 @@ const DownloadCsvTitleComponent = ({
                     disabled={!selectedInst?.id}
                     loading={classRoomLoading}
                     selectedItem={selectedClassRoom ? selectedClassRoom.label : ''}
-                    placeholder="select classroom"
+                    placeholder="Select Classroom"
                     list={instClassRooms}
                     onChange={(value, option: any) => {
                       setHoveringItem({});
@@ -402,7 +402,7 @@ const DownloadCsvTitleComponent = ({
                   loading={unitsLoading}
                   showSearch
                   selectedItem={selectedUnit ? selectedUnit.label : ''}
-                  placeholder="select unit"
+                  placeholder="Select Unit"
                   width={250}
                   list={units}
                   disabled={!selectedCurriculum}
@@ -416,7 +416,7 @@ const DownloadCsvTitleComponent = ({
                   loading={surveysLoading}
                   disabled={!selectedUnit}
                   selectedItem={selectedSurvey ? selectedSurvey.label : ''}
-                  placeholder="select survey"
+                  placeholder="Select Survey"
                   list={surveys}
                   onChange={(value, option: any) =>
                     onSurveySelect(option.id, value, value)

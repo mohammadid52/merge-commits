@@ -18,21 +18,7 @@ commit (){
 
 # run switch case
 case $branch in
-    "new-dev")
-          echo ${PURPLE}"Changing environment to Iconoclast production because you are in new-dev branch"${NONE}
-          cp ./src/config/aws-exports.ia.js ./src/aws-exports.js
-          commit
-        ;;
-    "antd-init")
-          echo ${PURPLE}"Changing environment to Iconoclast production because you are in new-dev branch"${NONE}
-          cp ./src/config/aws-exports.ia.js ./src/aws-exports.js
-          commit
-        ;;
-    "master")
-          echo ${PURPLE}"Changing environment to Iconoclast production because you are in master branch"${NONE}
-          cp ./src/config/aws-exports.ia.js ./src/aws-exports.js
-          commit
-        ;;
+
     "master-curate")
           echo ${PURPLE}"Changing environment to Project Curate production because you are in master-curate branch"${NONE}
           cp ./src/config/aws-exports.pc.js ./src/aws-exports.js
@@ -40,7 +26,7 @@ case $branch in
         ;;
     *)
           echo ${PURPLE}"Changing environment to Development"${NONE}
-          cp ./src/config/aws-exports.uatenv.js ./src/aws-exports.js
+          cp ./src/config/aws-exports.ia.js ./src/aws-exports.js
           commit
           
 esac

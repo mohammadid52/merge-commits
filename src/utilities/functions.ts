@@ -131,6 +131,7 @@ const zoiqFilterFallback = (authId: string) =>
   allowedAuthIds.includes(authId) ? [] : [{isZoiq: {ne: true}}];
 
 export const withZoiqFilter = (generalFilter: any, _zoiqFilter?: any) => {
+  if (isEmpty(_zoiqFilter) || isEmpty(_zoiqFilter[0])) return generalFilter;
   try {
     let zoiqFilter =
       _zoiqFilter && _zoiqFilter?.length > 0

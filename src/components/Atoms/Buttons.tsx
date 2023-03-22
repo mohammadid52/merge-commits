@@ -32,6 +32,7 @@ const Buttons: React.FC<ButtonProps> = (btnProps: ButtonProps): React.ReactEleme
     onClick,
     disabled,
     loading = false,
+    greenBtn,
     insideElement = null,
     size = 'large',
     className
@@ -42,7 +43,9 @@ const Buttons: React.FC<ButtonProps> = (btnProps: ButtonProps): React.ReactEleme
       <Button
         loading={loading}
         danger={redBtn}
-        className={`${className} flex items-center justify-center`}
+        className={`${className} ${
+          greenBtn ? 'green-btn' : ''
+        } flex items-center justify-center`}
         htmlType={type}
         size={size}
         // style={{borderRadius: 999}}

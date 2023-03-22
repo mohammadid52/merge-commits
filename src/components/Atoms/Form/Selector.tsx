@@ -65,7 +65,7 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
       {label && <Label dark={false} label={label} isRequired={isRequired} />}
       <Select
         placeholder={placeholder}
-        value={selectedItem}
+        value={selectedItem || undefined}
         status={error.length === 0 ? '' : 'error'}
         style={{width, borderRadius: 99}}
         disabled={loading || disabled}
