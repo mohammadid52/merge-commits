@@ -1,4 +1,5 @@
 import {getJSON} from '@utilities/functions';
+import {Spin} from 'antd';
 import {ANIMATIONS} from 'assets';
 import Lottie from 'lottie-react';
 import React, {useEffect, useState} from 'react';
@@ -34,32 +35,7 @@ const Loader: React.FC<LoadingProps> = (loadingProps: LoadingProps) => {
     withText = false
   } = loadingProps;
 
-  return withText ? (
-    <div
-      className={`flex ${className} ${
-        animation ? 'flex-col' : ''
-      } items-center mr-2 w-auto`}>
-      {animation ? (
-        <Animation />
-      ) : (
-        <div className={`animate-spin w-auto mr-2`}>
-          <VscLoading size={size} className={className} color={color} />
-        </div>
-      )}
-      {withText}
-    </div>
-  ) : (
-    <div
-      className={`flex ${className} ${animation ? 'flex-col' : ''} items-center w-auto`}>
-      {animation ? (
-        <Animation />
-      ) : (
-        <div className={`animate-spin ${className}`}>
-          <VscLoading size={size} className={className} color={color} />
-        </div>
-      )}
-    </div>
-  );
+  return <Spin tip={withText}></Spin>;
 };
 
 export default Loader;

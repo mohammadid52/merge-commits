@@ -8,7 +8,7 @@ const SideImage = (props: LessonCardProps) => {
 
   return (
     <div
-      className={`h-auto lesson-card-image bg-center  w-2.5/10 ${theme.dashboard.bg} rounded-tl rounded-bl shadow relative`}
+      className={`relative rounded-lg bg-contain bg-gray-100 min-w-[14rem] h-56 w-56`}
       style={{
         /* stylelint-disable */
         backgroundImage: `linear-gradient(to top, rgba(0, 0, 0, 0.52), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)),url(${
@@ -17,8 +17,7 @@ const SideImage = (props: LessonCardProps) => {
               ? getImageFromS3Static(lessonProps.lesson?.cardImage)
               : lessonProps.lesson?.cardImage
             : null
-        })`,
-        backgroundSize: 'cover'
+        })`
       }}>
       {lessonProps?.lesson?.cardCaption && (
         <div className="">

@@ -28,7 +28,7 @@ const MainSummary = (props: LessonCardProps) => {
       </h1>
       <div className="descriptive">
         <p
-          className="text-md mt-1 tracking-wide text-gray-500 text-left"
+          className="mt-1  text-gray-500 text-left leading-5"
           dangerouslySetInnerHTML={{
             __html:
               lessonProps.lesson && lessonProps.lesson?.summary

@@ -39,6 +39,7 @@ import {map} from 'lodash';
 import {sortByName} from '../../UserManagement/UserLookup';
 import {Status} from '../../UserManagement/UserStatus';
 import {Tag} from 'antd';
+import moment from 'moment';
 
 interface StaffBuilderProps {
   instituteId: String;
@@ -476,6 +477,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
       </Tag>
     ),
     loginStatus: <UserLookupLocation isStaff show item={item.staffMember} idx={index} />,
+    addedDate: moment(item.staffMember?.createdAt).format('ll'),
     status:
       statusEdit === item.id ? (
         <div className="">
@@ -519,6 +521,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
       dictionary['ROLE'],
       dictionary['STATUS'],
       'Login Status',
+      'Added date',
       dictionary['ACTION']
     ],
     dataList,

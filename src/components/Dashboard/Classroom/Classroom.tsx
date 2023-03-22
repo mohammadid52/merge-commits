@@ -1,8 +1,10 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import {Warning} from '@components/Atoms/Alerts/Info';
+import PageWrapper from '@components/Atoms/PageWrapper';
 import {handleLessonMutationRating, logError, updatePageState} from '@graphql/functions';
 import {reorderSyllabus, setPageTitle, withZoiqFilter} from '@utilities/functions';
 import {removeLocalStorageData, setLocalStorageData} from '@utilities/localStorage';
+import {Divider} from 'antd';
 import {TeachingStyle, UserPageState} from 'API';
 import {getAsset} from 'assets';
 import BreadCrums from 'atoms/BreadCrums';
@@ -14,18 +16,18 @@ import useAuth from 'customHooks/useAuth';
 import * as mutations from 'graphql/mutations';
 import gsap from 'gsap';
 import isEmpty from 'lodash/isEmpty';
+import moment from 'moment';
 import React, {Fragment, useEffect, useState} from 'react';
 import {useRouteMatch} from 'react-router';
 import {Empty} from '../Admin/LessonsBuilder/StepActionComponent/LearningEvidence/CourseMeasurementsCard';
 import {DashboardProps} from '../Dashboard';
 import DashboardContainer from '../DashboardContainer';
-import DateAndTime from '../DateAndTime/DateAndTime';
 import ClassroomLoader from './ClassroomLoader';
 
+import ClassroomsList from './ClassroomsList';
 import FloatingAction from './FloatingActionForTeacherAndStudents';
 import FloatingActionTranslation from './FloatingActionTranslation';
 import SyllabusSwitch from './SyllabusSwitch';
-import Today from './TodayLesson';
 
 const range = (from: number, to: number, step: number = 1) => {
   let i = from;
@@ -56,7 +58,7 @@ const Classroom: React.FC<ClassroomProps> = (props: ClassroomProps) => {
 
   const teachingStyle = Boolean(roomData) ? roomData.teachingStyle : '--';
 
-  const {authId, email, isTeacher, role, pageState, isStudent, onDemand} = useAuth();
+  const {authId, email, isTeacher, role, pageState, isStudent} = useAuth();
   const match: any = useRouteMatch();
   const bannerImg = getAsset(clientKey, 'dashboardBanner1');
   const {classRoomDict, BreadcrumsTitles} = useDictionary();
@@ -609,17 +611,15 @@ const Classroom: React.FC<ClassroomProps> = (props: ClassroomProps) => {
         clientKey={clientKey}
         bannerImg={bannerImg}
         bannerTitle={`${classRoomDict[userLanguage]['TITLE']}`}>
-        <div className="relative px-5 2xl:px-0 lg:mx-auto lg:max-w-256 md:max-w-none">
-          <div className="flex flex-row my-0 w-full py-0 mb-4 justify-between items-center">
-            <BreadCrums items={breadCrumsList} />
+        <div className="flex px-2 pt-8 md:px-4 lg:px-8 mb-[-1rem] justify-between items-center">
+          <BreadCrums items={breadCrumsList} />
 
-            <div>
-              <span
-                className={`mr-0 float-right text-sm md:text-base text-gray-600 text-right`}>
-                <DateAndTime />
-              </span>
-            </div>
-          </div>
+          <span
+            className={`mr-0 float-right text-sm md:text-base text-gray-500 text-right`}>
+            {moment(new Date()).format('lll')}
+          </span>
+        </div>
+        <PageWrapper>
           <div>
             {isTeacher && teachingStyle === TeachingStyle.PERFORMER && (
               <Warning message={'This classroom has Performer mode activated'} />
@@ -628,7 +628,8 @@ const Classroom: React.FC<ClassroomProps> = (props: ClassroomProps) => {
               <>
                 <SectionTitleV3
                   fontSize="2xl"
-                  fontStyle="bold"
+                  borderBottom={false}
+                  fontStyle="medium"
                   title={`${
                     Boolean(state.roomData?.syllabus?.length)
                       ? `${classRoomDict[userLanguage]['STEP']} 1:`
@@ -654,63 +655,33 @@ const Classroom: React.FC<ClassroomProps> = (props: ClassroomProps) => {
                     />
                   </div>
                 </div>
+
+                <Divider />
               </>
             )}
 
             <>
-              <SectionTitleV3
-                fontSize="2xl"
-                fontStyle="bold"
-                title={`${isTeacher ? `${classRoomDict[userLanguage]['STEP']} 2:` : ''} ${
-                  classRoomDict[userLanguage]['LESSON_TITLE']
-                } for ${state.roomData?.activeSyllabus?.name || 'loading'}`}
-                subtitle={
-                  isTeacher
-                    ? classRoomDict[userLanguage]['LESSON_SUB_TITLE']
-                    : onDemand
-                    ? classRoomDict[userLanguage]['LESSON_SUB_TITLE_ASYNC']
-                    : 'To enter classroom, select open lesson for this week'
-                }
-              />
-
-              <div className={`bg-opacity-10`}>
-                <div className={`pb-4 text-xl m-auto`}>
-                  {!Boolean(activeRoomInfo) ? (
-                    Array(3)
-                      .fill(' ')
-                      .map((_: any) => (
-                        <Fragment key={_}>
-                          <ClassroomLoader />
-                        </Fragment>
-                      ))
-                  ) : Boolean(activeRoomInfo?.activeSyllabus) ? (
-                    <Today
-                      activeRoom={state.activeRoom}
-                      activeRoomInfo={activeRoomInfo}
-                      isTeacher={isTeacher}
-                      lessonLoading={
-                        loadingRoomInfo ||
-                        lessonLoading ||
-                        settingLessons ||
-                        syllabusLoading
-                      }
-                      lessons={withTitle}
-                      syllabus={syllabusData}
-                      handleLessonMutationRating={_handleLessonMutationRating}
-                      getLessonRating={
-                        listPersonData && listPersonData.length > 0
-                          ? getLessonRating
-                          : () => {}
-                      }
-                    />
-                  ) : (
-                    <Empty text="No active unit for this room" />
-                  )}
-                </div>
+              <div className={`pb-4 text-xl m-auto`}>
+                <ClassroomsList
+                  activeRoom={state.activeRoom}
+                  activeRoomInfo={activeRoomInfo}
+                  isTeacher={isTeacher}
+                  lessonLoading={
+                    loadingRoomInfo || lessonLoading || settingLessons || syllabusLoading
+                  }
+                  lessons={withTitle}
+                  syllabus={syllabusData}
+                  handleLessonMutationRating={_handleLessonMutationRating}
+                  getLessonRating={
+                    listPersonData && listPersonData.length > 0
+                      ? getLessonRating
+                      : () => {}
+                  }
+                />
               </div>
             </>
           </div>
-        </div>
+        </PageWrapper>
 
         {homeData && homeData.length > 0 && activeRoomInfo && (
           <div className="fixed floating-wrapper-outer w-auto sm:right-2">

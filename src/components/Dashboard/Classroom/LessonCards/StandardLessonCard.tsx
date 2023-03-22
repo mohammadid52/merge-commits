@@ -9,6 +9,7 @@ import ProgressBar from './StandardLessonCard/ProgressBar';
 import Rating from './StandardLessonCard/Rating';
 import SideImage from './StandardLessonCard/SideImage';
 import {LessonCardProps} from '@interfaces/ClassroomInterface';
+import {Card} from 'antd';
 
 const StandardLessonCard = (props: LessonCardProps) => {
   const {
@@ -72,36 +73,8 @@ const StandardLessonCard = (props: LessonCardProps) => {
     ) > -1 || personDataObj?.isCompleted;
 
   return (
-    <div
-      key={keyProps}
-      className={`relative overflow-hidden bg-white theme-card-shadow rounded-lg flex lesson-card  mb-8 ${theme.elem.textDark} `}>
-      {/**
-       *  LEFT SECTION IMAGE
-       */}
-      <SideImage getImageFromS3={getImageFromS3} lessonProps={lessonProps} />
-      {/**
-       *  RIGHT SECTION
-       */}
-      <div className={`w-7.5/10 lesson-card-summary flex flex-col rounded-b-lg`}>
-        <MainSummary
-          searchTerm={searchTerm}
-          lessonProps={{...lessonProps, isTeacher, accessible}}
-        />
-        {isStudent && (
-          <ProgressBar _isCompleted={_isCompleted} personDataObj={personDataObj} />
-        )}
-        {lessonProps.lesson.type !== 'survey' &&
-        !existsOrNot &&
-        personDataObj?.isCompleted ? (
-          <Rating
-            user={user}
-            getLessonRating={getLessonRating}
-            lessonProps={lessonProps}
-            handleLessonMutationRating={handleLessonMutationRating}
-          />
-        ) : (
-          <></>
-        )}
+    <Card
+      actions={[
         <BottomBar
           isTeacher={isTeacher}
           activeRoomInfo={activeRoomInfo}
@@ -114,8 +87,39 @@ const StandardLessonCard = (props: LessonCardProps) => {
           syllabusProps={syllabusProps}
           lessonType={lessonProps.lesson.type}
         />
+      ]}
+      key={keyProps}>
+      <div className="w-full flex items-center">
+        {/**
+         *  LEFT SECTION IMAGE
+         */}
+        <SideImage getImageFromS3={getImageFromS3} lessonProps={lessonProps} />
+        {/**
+         *  RIGHT SECTION
+         */}
+        <div className={`w-full lesson-card-summary flex flex-col rounded-b-lg`}>
+          <MainSummary
+            searchTerm={searchTerm}
+            lessonProps={{...lessonProps, isTeacher, accessible}}
+          />
+          {isStudent && (
+            <ProgressBar _isCompleted={_isCompleted} personDataObj={personDataObj} />
+          )}
+          {lessonProps.lesson.type !== 'survey' &&
+          !existsOrNot &&
+          personDataObj?.isCompleted ? (
+            <Rating
+              user={user}
+              getLessonRating={getLessonRating}
+              lessonProps={lessonProps}
+              handleLessonMutationRating={handleLessonMutationRating}
+            />
+          ) : (
+            <></>
+          )}
+        </div>
       </div>
-    </div>
+    </Card>
   );
 };
 

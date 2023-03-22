@@ -234,13 +234,7 @@ const LoginInner = ({
       </div>
 
       <div className="relative flex flex-col justify-center items-center">
-        <Buttons
-          disabled={isToggled}
-          type="submit"
-          loading={isToggled}
-          label={'Login'}
-          className="w-full"
-        />
+        <Buttons type="submit" loading={isToggled} label={'Login'} className="w-full" />
         <Buttons
           disabled={isToggled}
           size="small"

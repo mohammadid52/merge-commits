@@ -1,12 +1,14 @@
 import Loader from '@components/Atoms/Loader';
+import PageWrapper from '@components/Atoms/PageWrapper';
+import Placeholder from '@components/Atoms/Placeholder';
+import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import useAuth from '@customHooks/useAuth';
-import {Empty} from 'antd';
+import {Card, Empty, List} from 'antd';
 import {PersonStatus, RoomStatus} from 'API';
-import ContentCard from 'atoms/ContentCard';
-import ImageAlternate from 'atoms/ImageAlternative';
 import {filter, map, orderBy} from 'lodash';
-import React from 'react';
 import {useHistory} from 'react-router';
+
+const {Meta} = Card;
 
 export interface Teacher {
   firstName: string;
@@ -23,8 +25,9 @@ const TeacherRows = (props: {
   loading: boolean;
   coTeachersList: Teacher[];
   teachersList: Teacher[];
+  title: string;
 }) => {
-  const {coTeachersList = [], loading, teachersList = []} = props;
+  const {coTeachersList = [], title, loading, teachersList = []} = props;
 
   const allTeachers = [...teachersList, ...coTeachersList];
 
@@ -96,8 +99,83 @@ const TeacherRows = (props: {
   }).filter(Boolean);
 
   return (
-    <ContentCard hasBackground={false}>
-      <div className="overflow-hidden">
+    <PageWrapper>
+      <SectionTitleV3
+        title={title}
+        fontSize="xl"
+        fontStyle="semibold"
+        shadowOff
+        extraContainerClass="px-4"
+        borderBottom
+      />
+      {loading ? (
+        <div className="min-h-56 flex items-center justify-center ">
+          <Loader className="w-auto text-gray-400" withText="Loading teachers..." />
+        </div>
+      ) : attachedClasses && attachedClasses.length > 0 ? (
+        <List>
+          {attachedClasses.map((teacher, idx: number) => {
+            return (
+              <List.Item
+                style={
+                  teacher.status === PersonStatus.INACTIVE
+                    ? {borderLeft: '2px solid red'}
+                    : {}
+                }
+                key={teacher?.authId}>
+                <a
+                  className="w-full flex items-center justify-between"
+                  href={
+                    isStudent
+                      ? '#'
+                      : `/dashboard/manage-institutions/institution/${instId}/manage-users/${teacher.id}/staff`
+                  }>
+                  <Meta
+                    className="flex"
+                    avatar={
+                      <Placeholder
+                        size="h-12 w-12 mx-4"
+                        firstName={teacher?.firstName}
+                        lastName={teacher?.lastName}
+                      />
+                    }
+                    title={teacher?.firstName + ' ' + teacher?.lastName}
+                    description={<p className="text-gray-600">{teacher.email}</p>}
+                  />
+                  {!isStudent && teacher?.classes?.length > 0 && (
+                    <div className="w-1/3">
+                      <h4 className="theme-text ">Classrooms: </h4>
+                      <ul
+                        className={`w-auto gap-y-2 ${
+                          teacher?.classes?.length > 1 ? 'list-disc' : ''
+                        }`}>
+                        {teacher?.classes?.map((d: any) => (
+                          <>
+                            <li
+                              key={d.name}
+                              onClick={(e) => {
+                                e.preventDefault();
+                                history.push(
+                                  `/dashboard/manage-institutions/institution/${instId}/room-edit/${d.roomId}`
+                                );
+                              }}
+                              className="text-gray-600 cursor-pointer  transition-all hover:underline hover:theme-text:500 rounded-md px-2">
+                              {d.name}
+                            </li>
+                          </>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </a>
+              </List.Item>
+            );
+          })}
+        </List>
+      ) : (
+        <Empty description={'No teachers found'} />
+      )}
+      {/* <div className="overflow-hidden">
         {attachedClasses && attachedClasses.length > 0 ? (
           <ul className="grid grid-cols-1 ">
             {attachedClasses.map((teacher, idx: number) => {
@@ -196,8 +274,8 @@ const TeacherRows = (props: {
         ) : (
           <Empty description={'No teachers found'} />
         )}
-      </div>
-    </ContentCard>
+      </div> */}
+    </PageWrapper>
   );
 };
 

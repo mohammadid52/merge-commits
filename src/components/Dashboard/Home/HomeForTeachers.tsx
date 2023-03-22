@@ -252,7 +252,7 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
           {/* Header */}
           {user && (
             <HeaderTextBar>
-              <p className={`text-sm 2xl:text-base text-center font-normal`}>
+              <p className={`text-sm mb-0 2xl:text-base text-center font-normal`}>
                 Welcome,{' '}
                 <span className="font-semibold">
                   {user.preferredName ? user.preferredName : user.firstName}
@@ -268,7 +268,7 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
               </div> */}
             </HeaderTextBar>
           )}
-          <div className="px-5">
+          <div className="">
             {/* Classroom Section */}
 
             <RoomTiles
@@ -280,16 +280,9 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
             {/* Teachers Section */}
 
             <div className="my-6">
-              <SectionTitleV3
-                title={`Your Team`}
-                fontSize="lg"
-                fontStyle="semibold"
-                extraContainerClass="lg:max-w-192 px-6 md:max-w-none 2xl:max-w-256"
-                borderBottom
-                extraClass="leading-6 text-gray-900"
-              />
               <TeacherRows
                 loading={Boolean(roomsLoading)}
+                title={`Your Students`}
                 coTeachersList={coTeachersList}
                 teachersList={teacherList}
               />

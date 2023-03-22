@@ -1,105 +1,84 @@
 import Highlighted from '@components/Atoms/Highlighted';
-import Loader from '@components/Atoms/Loader';
+import PageWrapper from '@components/Atoms/PageWrapper';
+import Placeholder from '@components/Atoms/Placeholder';
 import useAuth from '@customHooks/useAuth';
 import useSearch from '@customHooks/useSearch';
-import {Empty} from 'antd';
+import {Card, Divider, Empty, Tag} from 'antd';
 import {fallbackUrls} from 'assets';
 import Buttons from 'atoms/Buttons';
-import ContentCard from 'atoms/ContentCard';
-import ImageAlternate from 'atoms/ImageAlternative';
 import SectionTitleV3 from 'atoms/SectionTitleV3';
 import {ModifiedListProps} from 'components/Dashboard/Home/Home';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import {orderBy} from 'lodash';
 import {useEffect, useState} from 'react';
+import {GrFormNextLink} from 'react-icons/gr';
 import {DashboardProps} from '../Dashboard';
 
-const limitDesc = (str: string, len: number = 250): string => {
-  if (str) {
-    if (str.length <= len) {
-      return str;
-    } else {
-      return `${str.substring(0, len)}...`;
-    }
-  } else {
-    return 'no summary';
-  }
-};
+const {Meta} = Card;
 
 const SingleRoomCard = ({
   item,
   handleRoomSelection,
-  idx,
 
-  searchTerm
+  searchTerm,
+  loading
 }: {
   item: any;
   isTeacher: boolean;
+  loading?: boolean;
   searchTerm?: string;
   idx: number;
   handleRoomSelection: DashboardProps['handleRoomSelection'];
 }) => {
-  const {teacherProfileImg, bannerImage, teacher, curricula} = item;
-  const {name, summary, type} = curricula?.items[0]?.curriculum;
+  const {teacherProfileImg, bannerImage, teacher, curricula} = item || {};
+  const {name, summary, type} = curricula?.items[0]?.curriculum || {};
+
   const roomId = item?.id;
   const roomName = item?.name;
-  const {firstName, lastName, preferredName} = teacher;
+  const {firstName, lastName, preferredName} = teacher || {};
 
   return (
-    <div
-      onClick={() => handleRoomSelection?.(roomId)}
-      key={`homepage__classrooms-${idx}`}
-      data-cy={`homepage__classrooms-${idx}`}
-      className="flex customShadow  transition-all room_card flex-col cursor-pointer rounded-lg overflow-hidden ">
-      <div className="flex-shrink-0 bg-gray-500">
+    <Card loading={loading}>
+      <div className="flex">
         <img
-          className="room-image h-56 w-full object-cover hover:scale-105 transform transition-transform duration-300"
+          className="room-image h-48 w-48 min-w-[7rem] mr-4 rounded-lg bg-gray-100  object-cover"
           src={bannerImage || fallbackUrls.room}
           alt={`${roomName || ''} banner image`}
         />
-      </div>
-      <div className="flex-1 bg-white room_card-body p-6 flex flex-col justify-between">
-        <div className="flex-1">
-          <p className="room-type  text-xs tracking-wide uppercase font-medium text-gray-500">
+        <div className="flex flex-col items-start w-full">
+          <h3 className="">
+            <Highlighted text={name} highlight={searchTerm} />
+          </h3>
+          <p className="mb-0 text-gray-600">{summary || 'No Description'}</p>
+          <Tag className="mt-2" color={'orange'}>
             {type}
-          </p>
-          <div data-cy="classroom-cards" className="block mt-2">
-            <h4 className="text-base room-name tracking-wider font-medium 2xl:text-lg theme-text">
-              <Highlighted text={name} highlight={searchTerm} />
-            </h4>
-            <p className="mt-2 room-summary text-xs 2xl:text-sm text-gray-600">
-              {limitDesc(summary, 50)}
-            </p>
-          </div>
-        </div>
-        <div className="mt-6 flex items-center">
-          <div className="flex-shrink-0 w-auto">
-            <span className="sr-only">
-              {(preferredName || firstName) + ' ' + lastName}
-            </span>
-            {teacherProfileImg ? (
-              <img className="h-8 w-8 rounded-full" src={teacherProfileImg} alt="" />
-            ) : (
-              <ImageAlternate
-                user={{firstName, lastName}}
-                styleClass="h-8 w-8 rounded-full"
-              />
-            )}
-          </div>
-          <div className="ml-3 w-auto">
-            <p className="text-xs room-teacher-name 2xl:text-sm font-medium text-gray-900">
-              {(preferredName || firstName) + ' ' + lastName}
-            </p>
-            <p
-              title={roomName}
-              className="overflow-hidden room-desc pr-2 overflow-ellipsis space-x-1 text-xs 2xl:text-sm text-gray-500">
-              {limitDesc(roomName, 30)}
-            </p>
+          </Tag>
+          <Divider />
+          <div className="mt-4 flex items-center justify-between w-full">
+            <Meta
+              avatar={
+                <Placeholder
+                  size="h-8 w-8"
+                  image={teacherProfileImg}
+                  firstName={firstName}
+                  lastName={lastName}
+                />
+              }
+              description={roomName}
+              title={`${preferredName || firstName} ${lastName}`}
+            />
+            <Buttons
+              Icon={GrFormNextLink}
+              onClick={() => handleRoomSelection?.(roomId)}
+              size="middle"
+              variant="dashed"
+              label={'Open classroom'}
+            />
           </div>
         </div>
       </div>
-    </div>
+    </Card>
   );
 };
 
@@ -159,30 +138,32 @@ const RoomTiles = (props: {
 
   let finalList = searchInput.isActive ? filteredList : classList;
 
+  const initShowCount = 4;
+
   return (
     <>
-      <SectionTitleV3
-        extraContainerClass="lg:max-w-192 md:max-w-none 2xl:max-w-256 my-8 px-6"
-        title={DashboardDict[userLanguage]['YOUR_CLASSROOMS']}
-        withButton={
-          classList &&
-          classList.length > 3 && (
-            <div className="flex w-auto gap-x-4 justify-end">
-              <Buttons
-                label={!showMore ? 'Show All' : 'Show Few'}
-                onClick={animateOnShowMore}
-                disabled={searchInput.isActive}
-                type="button"
-              />
-            </div>
-          )
-        }
-        fontSize="xl"
-        fontStyle="semibold"
-        extraClass="leading-6 text-gray-900"
-        borderBottom
-      />
-      <ContentCard hasBackground={false}>
+      <PageWrapper>
+        <SectionTitleV3
+          shadowOff
+          title={DashboardDict[userLanguage]['YOUR_CLASSROOMS']}
+          withButton={
+            classList &&
+            classList.length > 3 && (
+              <div className="flex w-auto gap-x-4 justify-end">
+                <Buttons
+                  label={!showMore ? 'Show All' : 'Show Few'}
+                  onClick={animateOnShowMore}
+                  disabled={searchInput.isActive}
+                  type="button"
+                />
+              </div>
+            )
+          }
+          extraContainerClass="  px-4"
+          fontSize="xl"
+          fontStyle="semibold"
+          borderBottom
+        />
         {!isTeacher && isInactive ? (
           <p className="text-gray-500 text-sm text-center py-8 px-4">
             Your account is inactive. If you think this status is incorrect contact our
@@ -190,23 +171,30 @@ const RoomTiles = (props: {
             available
           </p>
         ) : roomsLoading ? (
-          <div className="min-h-56 flex items-center justify-center ">
-            <Loader className="w-auto text-gray-400" withText="Loading classrooms..." />
+          <div className="grid grid-cols-1 sm:grid-cols-2  py-6  gap-5">
+            {Array.from({length: 4}).map((_d) => (
+              // @ts-ignore
+              <SingleRoomCard item={{}} loading={true} />
+            ))}
           </div>
         ) : finalList.length > 0 ? (
           <div className="relative">
-            <div className="relative max-w-7xl mx-auto  px-6 mt-4">
-              {finalList.length > 3 && (
+            <div className="relative max-w-7xl mx-auto  px-4 mt-4">
+              {finalList.length > initShowCount && (
                 <h4 className="w-auto text-gray-600">
-                  Showing {showMore || searchInput.isActive ? finalList.length : 3} out of{' '}
-                  {finalList.length}
+                  Showing{' '}
+                  {showMore || searchInput.isActive ? finalList.length : initShowCount}{' '}
+                  out of {finalList.length}
                 </h4>
               )}
               <div
                 data-cy="classroom-list"
-                className={`mt-0 max-w-lg mx-auto pt-6 pb-6 grid gap-5 lg:grid-cols-3 md:grid-cols-2`}>
+                className={`mt-0 max-w-lg mx-auto py-6 grid gap-5 lg:grid-cols-2 md:grid-cols-2`}>
                 {finalList
-                  .slice(0, showMore || searchInput.isActive ? finalList.length : 3)
+                  .slice(
+                    0,
+                    showMore || searchInput.isActive ? finalList.length : initShowCount
+                  )
                   .map((item, idx: number) => {
                     return (
                       <SingleRoomCard
@@ -225,7 +213,7 @@ const RoomTiles = (props: {
         ) : (
           <Empty description={'No classrooms found'} />
         )}
-      </ContentCard>
+      </PageWrapper>
     </>
   );
 };

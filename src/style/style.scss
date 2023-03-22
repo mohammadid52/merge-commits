@@ -1844,3 +1844,12 @@ $translation-fab-width: 50px;
 .curate .universal-table thead .ant-table-row-expand-icon-cell {
   background-color: $curate !important;
 }
+
+.ant-card-meta-detail .ant-card-meta-title {
+  font-weight: 500 !important;
+  margin-bottom: 0 !important;
+}
+
+.ant-card-meta-title {
+  color: rgba(0, 0, 0, 0.88) !important;
+}

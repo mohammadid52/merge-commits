@@ -288,16 +288,9 @@ const Home = (props: ClassroomControlProps) => {
             <ErrorBoundary componentName="TeacherRows">
               {/* Teachers Section */}
               {teacherList && teacherList.length > 0 && (
-                <div className="my-8">
-                  <SectionTitleV3
-                    title={DashboardDict[userLanguage]['YOUR_TEACHERS']}
-                    extraClass="leading-6 text-gray-900"
-                    fontSize="xl"
-                    fontStyle="semibold"
-                    extraContainerClass="lg:max-w-192 md:max-w-none 2xl:max-w-256 px-6"
-                    borderBottom
-                  />
+                <div className="my-6">
                   <TeacherRows
+                    title={DashboardDict[userLanguage]['YOUR_TEACHERS']}
                     loading={Boolean(roomsLoading)}
                     coTeachersList={coTeachersList || []}
                     teachersList={teacherList}
