@@ -1,7 +1,7 @@
-import {API, graphqlOperation} from 'aws-amplify';
 import Buttons from '@components/Atoms/Buttons';
 import {logError, uploadImageToS3} from '@graphql/functions';
 import {XLSX_TO_CSV_URL} from 'assets';
+import {API, graphqlOperation} from 'aws-amplify';
 
 import UploadButton from '@components/Atoms/Form/UploadButton';
 import Modal from '@components/Atoms/Modal';
@@ -9,7 +9,6 @@ import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import Table from '@components/Molecules/Table';
 import useAuth from '@customHooks/useAuth';
-import {Transition} from '@headlessui/react';
 import {
   focusOn,
   getExtension,
@@ -34,28 +33,12 @@ import * as queries from 'graphql/queries';
 import {isEmpty, uniqBy} from 'lodash';
 import Papa from 'papaparse';
 import React, {useEffect, useRef, useState} from 'react';
-import ClickAwayListener from 'react-click-away-listener';
 import {RiErrorWarningLine} from 'react-icons/ri';
 import {v4 as uuidv4} from 'uuid';
 
 interface ICsvProps {
   institutionId?: string;
 }
-
-const DataValue = ({
-  title,
-  content
-}: {
-  title: string;
-  content: string | React.ReactNode;
-}) => {
-  return (
-    <div className="w-auto flex mb-2 flex-col items-start justify-start">
-      <p className="text-sm text-gray-500">{title}</p>
-      <div className="text-dark-gray font-medium text-left w-auto text-sm">{content}</div>
-    </div>
-  );
-};
 
 type IModal = {
   show: boolean;
@@ -112,7 +95,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
   const [selectedCurriculum, setSelectedCurriculum] = useState<any | null>(null);
 
   const [selectedUnit, setSelectedUnit] = useState<any | null>(null);
-  const [activeUnits, setActiveUnits] = useState<any[]>([]);
+  const [__, setActiveUnits] = useState<any[]>([]);
   const [uploadingCSV, setUploadingCSV] = useState(false);
 
   const [surveys, setSurveys] = useState<any[]>([]);
@@ -1322,16 +1305,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
     setSelectedSurvey(null);
   };
 
-  const [hoveringItem, setHoveringItem] = useState<{name?: string}>({});
-
-  const currentSelectedClassroomData =
-    hoveringItem &&
-    hoveringItem?.name &&
-    classRoomsList?.find((_c) => _c.name === hoveringItem?.name);
-
-  const currentActiveUnit =
-    currentSelectedClassroomData &&
-    activeUnits.find((_d) => _d?.id === currentSelectedClassroomData?.activeSyllabus);
+  const [_, setHoveringItem] = useState<{name?: string}>({});
 
   const getMappedValues = (input: any) => {
     if (input) {

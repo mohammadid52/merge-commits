@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {FaBook, FaGraduationCap, FaBookOpen} from 'react-icons/fa';
 import {BsCircleFill, BsFillCaretDownFill, BsFillCaretRightFill} from 'react-icons/bs';
 import {Transition} from '@headlessui/react';
@@ -15,7 +15,7 @@ export const Directory = ({
   onContextMenu,
   onItemClick,
   setShow,
-  textClassName,
+  textClassName
 }: React.PropsWithChildren<{
   activeSectionId?: string;
   headingPrefix?: string;
@@ -46,14 +46,14 @@ export const Directory = ({
         onItemClicked(e, {
           id: item.id,
           title: item.title,
-          redirectionUrl: item.redirectionUrl,
+          redirectionUrl: item.redirectionUrl
         })
       }
       onContextMenu={onContextMenu}>
       <span
         className={`hover:${hoverClassName || 'bg-gray-400'} ${
           activeSectionId === item.id ? hoverClassName || 'bg-gray-400' : ''
-        } transition block pl-0 px-2 py-1 flex`}>
+        } transition  pl-0 px-2 py-1 flex`}>
         <span className="w-6 h-6 mx-1 inline-flex justify-center items-center">
           {item.type === 'list' ? (
             <BsCircleFill className="w-2 h-2" />
