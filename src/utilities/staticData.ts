@@ -1,40 +1,6 @@
 import {TeachingStyle} from 'API';
 import {v4 as uuidv4} from 'uuid';
 
-export const emojiList = [
-  {
-    emoji: '😠',
-    link: 'angry',
-    id: uuidv4(),
-    label: 'Awful'
-  },
-  {
-    emoji: '😞',
-    link: 'sad',
-    id: uuidv4(),
-    label: 'Bad'
-  },
-  {
-    emoji: '😐',
-    link: 'neutral',
-    id: uuidv4(),
-    label: 'Okay'
-  },
-
-  {
-    emoji: '🙂',
-    link: 'happy',
-    id: uuidv4(),
-    label: 'Good'
-  },
-  {
-    emoji: '🤩',
-    link: 'excited',
-    id: uuidv4(),
-    label: 'Great'
-  }
-];
-
 export const languageList = [
   {label: 'English', value: 'EN'},
   {label: 'Spanish', value: 'ES'}
@@ -71,11 +37,6 @@ export const blur: any = [
   {id: '1', label: 'Low'},
   {id: '2', label: 'Medium'},
   {id: '3', label: 'High'}
-];
-export const scrim: any = [
-  {id: '1', label: 'Bottom'},
-  {id: '2', label: 'Center'},
-  {id: '3', label: 'Top'}
 ];
 
 /**
@@ -473,12 +434,6 @@ export const statesList = [
     label: 'Wyoming',
     value: 'Wyoming'
   }
-];
-
-export const groupOptions: any = [
-  {id: 1, label: 'Blue'},
-  {id: 2, label: 'Black'},
-  {id: 3, label: 'Red'}
 ];
 
 export const frequencyOptions: any = [

@@ -8,18 +8,7 @@ import Buttons from 'atoms/Buttons';
 // import DatePickerInput from 'atoms/Form/DatePickerInput';
 import Loader from 'atoms/Loader';
 import {IImpactLog} from '../ClassRoomHolidays';
-
-const frequencyMapping: {[key: string]: {unit: any; step: number}} = {
-  Weekly: {unit: 'week', step: 1},
-  Monthly: {unit: 'month', step: 1},
-  Trimestral: {unit: 'month', step: 4},
-  Quarterly: {unit: 'month', step: 3},
-  Semestral: {unit: 'month', step: 6},
-  'M/W/F': {unit: 'day', step: 1},
-  'Tu/Th': {unit: 'day', step: 1},
-  'One Time': {unit: 'day', step: 1},
-  Daily: {unit: 'day', step: 1}
-};
+import {frequencyMapping} from '@utilities/staticData';
 
 interface IUnitPlannerProps {
   isDetailsComplete: boolean;

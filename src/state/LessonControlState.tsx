@@ -1,4 +1,4 @@
-export type studentObject = {
+type studentObject = {
   personAuthID: string;
   id: string;
   lessonProgress: string;

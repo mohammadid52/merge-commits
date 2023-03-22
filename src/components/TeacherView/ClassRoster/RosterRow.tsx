@@ -4,7 +4,6 @@ import LocationBadge from '@components/Dashboard/Admin/Institutons/EditBuilders/
 import {API, graphqlOperation} from 'aws-amplify';
 import * as customSubscriptions from 'customGraphql/customSubscriptions';
 
-import {formatPageName} from '@components/Dashboard/Admin/UserManagement/List';
 import {UserPageState} from 'API';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import React, {useEffect, useState} from 'react';
@@ -12,6 +11,7 @@ import {MdOutlineScreenShare, MdOutlineStopScreenShare} from 'react-icons/md';
 import {VscScreenFull} from 'react-icons/vsc';
 import DotMenu from './RosterRow/DotMenu';
 import {IRosterSectionProps} from './RosterSection';
+import {formatPageName} from '@utilities/functions';
 
 interface RosterRowProps extends IRosterSectionProps {
   number: number;

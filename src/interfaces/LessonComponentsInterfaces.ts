@@ -1,8 +1,8 @@
-import { PersonLessonsData } from "API";
-import { UniversalLessonPage } from "interfaces/UniversalLessonInterfaces";
-import React, { SetStateAction } from "react";
+import {PersonLessonsData} from 'API';
+import {UniversalLessonPage} from 'interfaces/UniversalLessonInterfaces';
+import React, {SetStateAction} from 'react';
 
-export interface LessonComponentsInterface {
+interface LessonComponentsInterface {
   isTeacher?: boolean;
   checkpointsItems?: any[];
   pageList?: any[];

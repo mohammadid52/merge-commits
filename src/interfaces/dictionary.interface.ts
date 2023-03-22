@@ -542,29 +542,6 @@ export interface LessonPlannerDictInterface {
   ES: LessonPlannerDictCommon;
 }
 
-interface PreviewFormDictCommon {
-  FETCHING: string;
-  PURPOSE: string;
-  OBJECTIVE: string;
-  CHECKPOINT: string;
-  NOCHECKPOINT: string;
-  MESSAGES: {
-    UPDATESUCCESS: string;
-    UPDATEERR: string;
-    CONNECTERR: string;
-    FETCHERR: string;
-  };
-  PREVIEW_DETAILS: {
-    WARN_MESSAGE: string;
-    TITLE: string;
-  };
-}
-
-export interface PreviewFormDictInterface {
-  EN: PreviewFormDictCommon;
-  ES: PreviewFormDictCommon;
-}
-
 interface InstitutionDictCommon {
   TITLE: string;
   SUBTITLE: string;

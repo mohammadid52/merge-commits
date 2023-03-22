@@ -6,7 +6,7 @@ import update from 'lodash/update';
 import {createContext, useContext, useState} from 'react';
 import {useHistory} from 'react-router';
 
-export const UniversalLessonBuilderContext = createContext<any>(null);
+const UniversalLessonBuilderContext = createContext<any>(null);
 
 type _UniversalLesson = Omit<UniversalLesson, '__typename'>;
 

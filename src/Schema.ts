@@ -43,9 +43,6 @@ export const CreatePasswordSchema = Yup.object().shape({
     .minNumbers(1, 'password must contain at least 1 number')
     .minSymbols(1, 'password must contain at least 1 special character')
 });
-export const ConfirmCodeSchema = Yup.object().shape({
-  password: LoginSchema.fields.password
-});
 
 export const ForgotSchema = Yup.object().shape({
   email: LoginSchema.fields.email

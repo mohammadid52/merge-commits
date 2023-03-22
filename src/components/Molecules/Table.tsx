@@ -2,7 +2,7 @@ import ErrorBoundary from '@components/Error/ErrorBoundary';
 import {Table, TableProps} from 'antd';
 import camelCase from 'lodash/camelCase';
 import '../../style/_table.scss';
-import {ListBottomBar as IListBottomBar} from './ListBottomBar';
+import {ListBottomBar as IListBottomBar} from '@customHooks/usePagination';
 
 interface IDataListItem {
   [key: string]: any;

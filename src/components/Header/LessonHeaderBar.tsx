@@ -347,38 +347,6 @@ const LessonHeaderBar = ({
           canContinue={canContinue}
           handleForward={handleForward}
         />
-
-        {/**
-         *
-         *
-         * SIDE MENU UNDER PROGRESS BAR HIDDEN UNTIL FURTHER NOTICE
-         *
-         *
-         */}
-
-        {/* {breakpoint !== 'xs' && breakpoint !== 'sm' ? (
-          <VideoWidget
-            videoLink={videoLink}
-            videoLinkModalVisible={videoLinkModalVisible}
-            handleVideoLinkPopup={handleVideoLinkPopup}
-          />
-        ) : (
-          <SideMenu
-            isOpen={overlay === 'sidemenu'}
-            setOverlay={setOverlay}
-            videoLink={videoLink}
-            videoLinkModalVisible={videoLinkModalVisible}
-            handleVideoLinkPopup={handleVideoLinkPopup}
-            handlePopup={handleLeavePopup}
-            isAtEnd={isAtEnd}
-            setisAtEnd={setisAtEnd}
-            handleRequiredNotification={handleRequiredNotification}
-            pages={PAGES}
-            canContinue={canContinue}
-            handleBack={handleBack}
-            handleForward={handleForward}
-          />
-        )} */}
       </div>
     </ErrorBoundary>
   );

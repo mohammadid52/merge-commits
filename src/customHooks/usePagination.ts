@@ -1,5 +1,18 @@
-import {ListBottomBar} from '@components/Molecules/ListBottomBar';
 import {useEffect, useState} from 'react';
+
+export interface ListBottomBar {
+  totalResults: number;
+  currentPage: number;
+  totalPages: number;
+  goNextPage: () => void;
+  setCurrentPage: (current: number) => void;
+  goPrevPage: () => void;
+  resetPagination: () => void;
+  firstPage: boolean;
+  lastPage: boolean;
+  pageCount: number;
+  setPageCount: React.Dispatch<React.SetStateAction<number>>;
+}
 
 const usePagination = (data: any[], totalResults: number) => {
   const [currentPage, setCurrentPage] = useState(1);

@@ -23,11 +23,11 @@ import UnitPlanner from './UnitPlanner/UnitPlanner';
 
 import Modal from 'atoms/Modal';
 
-export interface ICourseScheduleProps {
+interface ICourseScheduleProps {
   roomData: any;
 }
 
-export interface ICourseScheduleFields {
+interface ICourseScheduleFields {
   startDate: Date | null;
   endDate: Date | null;
   startTime: string;

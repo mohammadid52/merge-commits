@@ -1,10 +1,33 @@
-import {RoomStatus} from 'API';
+import {RoomStatus, UserPageState} from 'API';
 import {getAsset} from 'assets';
 import {isEmpty} from 'lodash';
 import {allowedAuthIds} from 'state/GlobalState';
 import {getLocalStorageData, setLocalStorageData} from './localStorage';
 import {getImageFromS3Static} from './services';
 import {getClientKey} from './strings';
+
+export const formatPageName = (pageState: UserPageState) => {
+  switch (pageState) {
+    case UserPageState.GAME_CHANGERS:
+      return 'Game Changers';
+    case UserPageState.NOT_LOGGED_IN:
+      return 'Logged Out';
+    case UserPageState.LOGGED_IN:
+      return 'Logged In';
+    case UserPageState.CLASS:
+      return 'Classroom';
+    case UserPageState.LESSON:
+      return 'Lesson';
+    case UserPageState.DASHBOARD:
+      return 'Dashboard';
+    case UserPageState.COMMUNITY:
+      return 'Community';
+    case UserPageState.NOTEBOOK:
+      return 'Notebook';
+    default:
+      return pageState;
+  }
+};
 
 export const goBackBreadCrumb = (list: any[], history: any) => {
   const lastSecondIdx = list.length - 2;

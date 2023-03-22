@@ -1,5 +1,5 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
-import {formatPageName} from '@components/Dashboard/Admin/UserManagement/List';
+import {formatPageName} from 'utilities/functions';
 
 import {setPageTitle, withZoiqFilter} from '@utilities/functions';
 import {setLocalStorageData} from '@utilities/localStorage';

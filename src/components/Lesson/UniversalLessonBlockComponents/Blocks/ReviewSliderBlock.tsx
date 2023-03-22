@@ -14,7 +14,7 @@ interface ReviewSliderBlockProps extends FormControlProps {
  * @param splitBy specify the pattern by which you want to split the element
  * @returns splitted values
  */
-export const getFirstLastValue = (el: string, splitBy: string) => el.split(splitBy);
+const getFirstLastValue = (el: string, splitBy: string) => el.split(splitBy);
 
 /**
  * @return extracted values from classString like min-max, background color and foreground color.

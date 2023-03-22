@@ -6,7 +6,7 @@
 // ~~~~~~~~~~~~~~~ DEMOSITE ~~~~~~~~~~~~~~ //
 // ~~~~~~~~~~~~~~~~ UATENV ~~~~~~~~~~~~~~~ //
 
-export const getCorrectUrl = (clientKey: string) => {
+const getCorrectUrl = (clientKey: string) => {
   switch (clientKey) {
     case 'iconoclast':
       return {
@@ -66,7 +66,7 @@ export const getCorrectUrl = (clientKey: string) => {
 // @ts-ignore
 import * as awsconfig2 from '../aws-exports';
 
-export const getBackendKey = (input: any) => {
+const getBackendKey = (input: any) => {
   if (input) {
     //@ts-ignore
     let configJson = input['default'];

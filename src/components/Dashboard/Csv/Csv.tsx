@@ -3,7 +3,7 @@ import Modal from '@components/Atoms/Modal';
 import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
 import Table from '@components/Molecules/Table';
 import {logError} from '@graphql/functions';
-import {getFormatedDate} from '@utilities/utils';
+import {getFormatedDate} from '@utilities/time';
 import {Divider} from 'antd';
 import SectionTitleV3 from 'atoms/SectionTitleV3';
 import * as customQueries from 'customGraphql/customQueries';
