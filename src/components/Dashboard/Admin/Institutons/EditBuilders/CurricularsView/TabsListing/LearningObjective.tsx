@@ -404,24 +404,14 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
               {Boolean(learnings?.length) && (
                 <div className="flex justify-end w-fulll px-6 pb-4 m-auto">
                   <Buttons
-                    btnClass=""
                     label={LEARINGOBJECTIVEDICT[userLanguage]['BUTTON']['ADD']}
-                    labelClass={'leading-6'}
                     Icon={IoIosAdd}
-                    iconBeforeLabel
                     onClick={createLearningObjective}
                   />
                 </div>
               )}
               <div className="py-4">
                 <div className="grid px-2 lg:px-6 gap-5 grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 lg:max-w-none">
-                  {/* <DragDropContext onDragEnd={onDragEnd}>
-                    <Droppable droppableId="droppable" direction="horizontal">
-                      {(provided, snapshot) => (
-                        <div
-                          {...provided.droppableProps}
-                          ref={provided.innerRef}
-                          className="grid px-6 gap-5 lg:grid-cols-3 lg:max-w-none"> */}
                   {isFormOpen && (
                     <div className="flex shadow flex-col overflow-hidden white_back">
                       <AddLearningObjective
@@ -550,8 +540,9 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
                                         onClick={() =>
                                           createNewMeasurement(topic.id, learning.id)
                                         }
-                                        title={AddMeasurementDict[userLanguage]['title']}
-                                        iconBeforeLabel
+                                        tooltip={
+                                          AddMeasurementDict[userLanguage]['title']
+                                        }
                                         Icon={IoIosAdd}
                                       />
                                     )}
@@ -564,7 +555,6 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
                                 size="small"
                                 onClick={() => createNewTopic(learning.id)}
                                 label={TOPICLISTDICT[userLanguage]['ADD']}
-                                iconBeforeLabel
                                 Icon={IoIosAdd}
                               />
                             )}
@@ -576,7 +566,6 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
                             size="small"
                             onClick={() => createNewTopic(learning.id)}
                             label={TOPICLISTDICT[userLanguage]['ADD']}
-                            iconBeforeLabel
                             Icon={IoIosAdd}
                           />
                         </div>
@@ -602,7 +591,6 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
                 <Fragment>
                   <div className="flex justify-center mt-8">
                     <Buttons
-                      btnClass="mx-4"
                       label={LEARINGOBJECTIVEDICT[userLanguage]['BUTTON']['ADD']}
                       onClick={createLearningObjective}
                     />

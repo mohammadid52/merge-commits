@@ -576,7 +576,6 @@ const NewLessonPlanSO = ({
                 label="Activity name"
                 isRequired
                 onChange={onFieldChange}
-                dark={shouldBeDark}
                 id="title"
                 error={errors?.title}
               />
@@ -587,7 +586,6 @@ const NewLessonPlanSO = ({
                 showCharacterUsage
                 label="Activity label"
                 maxLength={12}
-                dark={shouldBeDark}
                 isRequired
                 placeHolder="eg. Let's learn what is javascript"
                 value={label}
@@ -604,7 +602,6 @@ const NewLessonPlanSO = ({
                 label="Add video instructions"
                 disabled={isUploadedFromPC}
                 onChange={onVideoLinkChange}
-                dark={shouldBeDark}
                 id="videoLink"
                 error={errors?.videoLink}
               />

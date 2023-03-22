@@ -172,12 +172,6 @@ const ChangePassword = () => {
     });
   };
 
-  const handleEnter = (e: any) => {
-    if (e.key === 'Enter') {
-      change();
-    }
-  };
-
   const handleSubmit = () => {
     validation();
   };
@@ -226,7 +220,6 @@ const ChangePassword = () => {
                   name="password"
                   value={input.oldPassword}
                   onChange={handleChange}
-                  onKeyDown={handleEnter}
                 />
               </div>
             </div>
@@ -325,14 +318,12 @@ const ChangePassword = () => {
 
       <div className="px-4 pt-4 w-full gap-4 flex justify-center">
         <Buttons
-          btnClass="py-2 w-auto md:w-2.5/10 px-4 text-xs mr-2"
           label={dictionary['CHANGE_PASSWORD']['CANCEL']}
           onClick={() => history.goBack()}
           transparent
         />
         <Buttons
           dataCy="change-password-save-button"
-          btnClass="py-2 w-auto px-4 text-xs ml-2"
           label={dictionary['CHANGE_PASSWORD']['SAVE']}
           onClick={handleSubmit}
         />

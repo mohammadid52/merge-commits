@@ -28,7 +28,6 @@ const DownloadCsvButtons = ({
         disabled={!isCSVDownloadReady && lessonPDFData.length === 0}
         Icon={BsDownload}
         size="small"
-        btnClass="px-6"
         insideElement={
           <PDFDownloadLink
             className={`${
@@ -47,7 +46,6 @@ const DownloadCsvButtons = ({
         disabled={!isCSVDownloadReady}
         Icon={BsDownload}
         size="small"
-        btnClass="px-6"
         insideElement={
           <CSVLink
             data={CSVData}

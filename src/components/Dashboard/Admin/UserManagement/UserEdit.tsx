@@ -957,7 +957,6 @@ const UserEdit = (props: UserInfoProps) => {
 
           <div className="px-4 pt-4 w-full gap-4 flex justify-end">
             <Buttons
-              btnClass="py-2 w-2.5/10 px-4 text-xs mr-2"
               label={UserEditDict[userLanguage]['button']['cancel']}
               onClick={() => {
                 setIsEditMode && setIsEditMode(false);
@@ -968,7 +967,6 @@ const UserEdit = (props: UserInfoProps) => {
             <Buttons
               dataCy="edit-user-save-button"
               disabled={updating}
-              btnClass="py-2 w-2.5/10 px-4 text-xs ml-2"
               label={
                 updating
                   ? ButtonDict[userLanguage]['SAVING']

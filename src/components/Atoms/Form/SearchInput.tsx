@@ -3,14 +3,12 @@ import React, {useEffect} from 'react';
 
 interface SearchProps {
   value?: string;
+  dataCy?: string;
   onChange?: (str: string) => void;
   onKeyDown?: () => void;
   closeAction?: () => void;
-  style?: string;
   liveSearch?: boolean;
   disabled?: boolean;
-  dataCy?: string;
-  isActive?: boolean;
   width?: number;
 }
 

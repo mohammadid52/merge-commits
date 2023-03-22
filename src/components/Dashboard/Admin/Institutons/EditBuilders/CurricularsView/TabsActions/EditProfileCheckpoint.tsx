@@ -368,7 +368,6 @@ const EditProfileCheckpoint = () => {
         <div className="flex justify-end py-4 mb-4 w-5/10">
           <Buttons
             label="Go Back"
-            btnClass="mr-4"
             onClick={history.goBack}
             Icon={IoArrowUndoCircleOutline}
           />
@@ -482,12 +481,10 @@ const EditProfileCheckpoint = () => {
                       </p>
                       <div className="flex w-full mx-auto p-8 justify-center ">
                         <Buttons
-                          btnClass="mr-4"
                           onClick={() => setCurrentState('questionsList')}
                           label={EditProfileCheckpointDict[userLanguage]['addexist']}
                         />
                         <Buttons
-                          btnClass="ml-4"
                           onClick={() => setCurrentState('addQuestion')}
                           label={EditProfileCheckpointDict[userLanguage]['addnew']}
                         />
@@ -581,12 +578,10 @@ const EditProfileCheckpoint = () => {
                       </div>
                       <div className="flex w-full mx-auto p-8 justify-center ">
                         <Buttons
-                          btnClass="mr-4"
                           onClick={() => setCurrentState('questionsList')}
                           label={EditProfileCheckpointDict[userLanguage]['addexist']}
                         />
                         <Buttons
-                          btnClass="ml-4"
                           onClick={() => setCurrentState('addQuestion')}
                           label={EditProfileCheckpointDict[userLanguage]['addnew']}
                         />
@@ -605,14 +600,8 @@ const EditProfileCheckpoint = () => {
               </div>
             )}
             <div className="flex my-8 justify-center">
+              <Buttons label="Cancel" onClick={history.goBack} transparent />
               <Buttons
-                btnClass="py-3 px-10 mr-4"
-                label="Cancel"
-                onClick={history.goBack}
-                transparent
-              />
-              <Buttons
-                btnClass="py-3 px-10 ml-4"
                 label={
                   loading
                     ? EditProfileCheckpointDict[userLanguage]['saving']

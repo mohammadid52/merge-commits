@@ -554,7 +554,6 @@ const AttachmentBlock = ({
           <div className="flex mt-8 justify-center px-6 pb-4">
             <div className="flex justify-end">
               <Buttons
-                btnClass="py-1 px-4 text-xs mr-2"
                 label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
                 onClick={resetAll}
                 disabled={uploading}
@@ -562,7 +561,6 @@ const AttachmentBlock = ({
               />
               <Buttons
                 disabled={uploading}
-                btnClass="py-1 px-8 text-xs ml-2"
                 label={uploading ? 'Uploading' : 'Upload'}
                 onClick={onUploadAllFiles}
               />

@@ -1,11 +1,11 @@
-import { GraphQLAPI as API, graphqlOperation } from "@aws-amplify/api-graphql";
-import Buttons from "atoms/Buttons";
-import FormInput from "atoms/Form/FormInput";
-import { useGlobalContext } from "contexts/GlobalContext";
-import * as customMutations from "customGraphql/customMutations";
-import useDictionary from "customHooks/dictionary";
-import * as queries from "graphql/queries";
-import { useEffect, useState } from "react";
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import Buttons from 'atoms/Buttons';
+import FormInput from 'atoms/Form/FormInput';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import * as customMutations from 'customGraphql/customMutations';
+import useDictionary from 'customHooks/dictionary';
+import * as queries from 'graphql/queries';
+import {useEffect, useState} from 'react';
 interface AddTopicProps {
   curricularId: string;
   onCancel?: () => void;
@@ -14,23 +14,23 @@ interface AddTopicProps {
 }
 
 const AddTopic = (props: AddTopicProps) => {
-  const { curricularId, onCancel, postMutation, topicData } = props;
+  const {curricularId, onCancel, postMutation, topicData} = props;
 
-  const { userLanguage } = useGlobalContext();
-  const { AddTopicDict } = useDictionary();
+  const {userLanguage} = useGlobalContext();
+  const {AddTopicDict} = useDictionary();
 
   const [loading, setLoading] = useState(false);
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [learning] = useState({ id: "", name: "", value: "" });
-  const [validation, setValidation] = useState({ name: "", learning: "" });
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
+  const [learning] = useState({id: '', name: '', value: ''});
+  const [validation, setValidation] = useState({name: '', learning: ''});
 
   const [_, setTopicIds] = useState<any[]>([]);
   const [evalution, setEvalution] = useState({
-    distinguished: "",
-    excelled: "",
-    adequite: "",
-    basic: "",
+    distinguished: '',
+    excelled: '',
+    adequite: '',
+    basic: ''
   });
 
   useEffect(() => {
@@ -41,22 +41,21 @@ const AddTopic = (props: AddTopicProps) => {
         distinguished: topicData.distinguished,
         excelled: topicData.excelled,
         adequite: topicData.adequite,
-        basic: topicData.basic,
+        basic: topicData.basic
       });
     }
   }, [topicData?.id]);
 
   const onInputChange = (e: any) => {
-    if (e.target.name === "name") {
+    if (e.target.name === 'name') {
       const value = e.target.value;
       setName(value);
-      if (value.length && validation.name)
-        setValidation({ ...validation, name: "" });
-    } else if (e.target.name === "description") setDescription(e.target.value);
+      if (value.length && validation.name) setValidation({...validation, name: ''});
+    } else if (e.target.name === 'description') setDescription(e.target.value);
     else {
       setEvalution({
         ...evalution,
-        [e.target.name]: e.target.value,
+        [e.target.name]: e.target.value
       });
     }
   };
@@ -66,12 +65,12 @@ const AddTopic = (props: AddTopicProps) => {
     const msgs = validation;
     if (!name.length) {
       isValid = false;
-      msgs.name = AddTopicDict[userLanguage]["messages"]["namerequired"];
+      msgs.name = AddTopicDict[userLanguage]['messages']['namerequired'];
     } else {
-      msgs.name = "";
+      msgs.name = '';
     }
 
-    setValidation({ ...msgs });
+    setValidation({...msgs});
     return isValid;
   };
 
@@ -87,12 +86,12 @@ const AddTopic = (props: AddTopicProps) => {
         adequite,
         basic,
         curriculumID: curricularId,
-        learningObjectiveID: topicData.learningObjectiveID,
+        learningObjectiveID: topicData.learningObjectiveID
       };
       if (topicData?.id) {
         const item: any = await API.graphql(
           graphqlOperation(customMutations.updateTopic, {
-            input: { ...input, id: topicData.id },
+            input: {...input, id: topicData.id}
           })
         );
         const updatedItem = item.data.updateTopic;
@@ -103,7 +102,7 @@ const AddTopic = (props: AddTopicProps) => {
         }
       } else {
         const item: any = await API.graphql(
-          graphqlOperation(customMutations.createTopic, { input })
+          graphqlOperation(customMutations.createTopic, {input})
         );
         const addedItem = item.data.createTopic;
         if (addedItem) {
@@ -113,12 +112,12 @@ const AddTopic = (props: AddTopicProps) => {
         }
       }
     }
-    console.error("Could not add topic");
+    console.error('Could not add topic');
   };
 
   const fetchTopicsSequence = async (leraningID: string) => {
     let seq: any = await API.graphql(
-      graphqlOperation(queries.getCSequences, { id: `t_${leraningID}` })
+      graphqlOperation(queries.getCSequences, {id: `t_${leraningID}`})
     );
     seq = seq?.data?.getCSequences?.sequence || [];
     setTopicIds(seq);
@@ -130,7 +129,7 @@ const AddTopic = (props: AddTopicProps) => {
     }
   }, [learning.id]);
 
-  const { distinguished, excelled, adequite, basic } = evalution;
+  const {distinguished, excelled, adequite, basic} = evalution;
 
   return (
     <div className="lg:min-w-132">
@@ -142,14 +141,12 @@ const AddTopic = (props: AddTopicProps) => {
               id="name"
               onChange={onInputChange}
               name="name"
-              label={AddTopicDict[userLanguage]["topicname"]}
+              label={AddTopicDict[userLanguage]['topicname']}
               isRequired
               maxLength={30}
               showCharacterUsage
             />
-            {validation.name && (
-              <p className="text-red-600">{validation.name}</p>
-            )}
+            {validation.name && <p className="text-red-600">{validation.name}</p>}
           </div>
 
           <div className="px-3 py-4">
@@ -160,7 +157,7 @@ const AddTopic = (props: AddTopicProps) => {
               value={description}
               onChange={onInputChange}
               name="description"
-              label={AddTopicDict[userLanguage]["description"]}
+              label={AddTopicDict[userLanguage]['description']}
             />
           </div>
 
@@ -212,14 +209,12 @@ const AddTopic = (props: AddTopicProps) => {
       </div>
       <div className="flex my-8 justify-center">
         <Buttons
-          btnClass="py-3 px-10 mr-4"
-          label={AddTopicDict[userLanguage]["button"]["cancel"]}
+          label={AddTopicDict[userLanguage]['button']['cancel']}
           onClick={onCancel}
           transparent
         />
         <Buttons
-          btnClass="py-3 px-10 ml-4"
-          label={AddTopicDict[userLanguage]["button"]["save"]}
+          label={AddTopicDict[userLanguage]['button']['save']}
           onClick={saveTopicDetails}
           disabled={loading}
         />

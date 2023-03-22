@@ -1,26 +1,26 @@
-import { GraphQLAPI as API, graphqlOperation } from "@aws-amplify/api-graphql";
-import { EditQuestionModalDict } from "@dictionary/dictionary.iconoclast";
-import { Transition } from "@headlessui/react";
-import { getAsset } from "assets";
-import Buttons from "atoms/Buttons";
-import { Storage } from "aws-amplify";
-import { useGlobalContext } from "contexts/GlobalContext";
-import * as mutations from "graphql/mutations";
-import { findIndex, map, noop, reject, remove, update } from "lodash";
-import { nanoid } from "nanoid";
-import React, { useCallback, useRef, useState } from "react";
-import ClickAwayListener from "react-click-away-listener";
-import { useDropzone } from "react-dropzone";
-import { removeExtension } from "utilities/functions";
-import { getImageFromS3Static } from "utilities/services";
-import { UPLOAD_KEYS } from "../../../Lesson/constants";
+import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
+import {EditQuestionModalDict} from '@dictionary/dictionary.iconoclast';
+import {Transition} from '@headlessui/react';
+import {getAsset} from 'assets';
+import Buttons from 'atoms/Buttons';
+import {Storage} from 'aws-amplify';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import * as mutations from 'graphql/mutations';
+import {findIndex, map, noop, reject, remove, update} from 'lodash';
+import {nanoid} from 'nanoid';
+import React, {useCallback, useRef, useState} from 'react';
+import ClickAwayListener from 'react-click-away-listener';
+import {useDropzone} from 'react-dropzone';
+import {removeExtension} from 'utilities/functions';
+import {getImageFromS3Static} from 'utilities/services';
+import {UPLOAD_KEYS} from '../../../Lesson/constants';
 
 // ##################################################################### //
 // ############################ POPUP MODAL ############################ //
 // ##################################################################### //
 
 interface IFile {
-  _status: "progress" | "failed" | "success" | "other";
+  _status: 'progress' | 'failed' | 'success' | 'other';
   progress: number | string | null;
   file: File;
   id?: string;
@@ -46,20 +46,20 @@ const File = ({
   file,
   updateFilename,
   id,
-  UPLOAD_KEY,
+  UPLOAD_KEY
 }: IFileComponent) => {
   const genStatus = () => {
     switch (_status) {
-      case "progress":
-        return "Uploading...";
-      case "success":
-        return "Completed";
-      case "failed":
-        return "Failed";
-      case "other":
-        return "";
+      case 'progress':
+        return 'Uploading...';
+      case 'success':
+        return 'Completed';
+      case 'failed':
+        return 'Failed';
+      case 'other':
+        return '';
       default:
-        return "Failed";
+        return 'Failed';
     }
   };
 
@@ -82,28 +82,28 @@ const File = ({
 
   const onImageClick = (e: any) => {
     e.stopPropagation();
-    window.open(imageUrl, "_blank");
+    window.open(imageUrl, '_blank');
   };
 
   const genColor = () => {
     switch (_status) {
-      case "progress":
-        return "blue";
-      case "success":
-        return "green";
-      case "failed":
-        return "red";
-      case "other":
-        return "gray";
+      case 'progress':
+        return 'blue';
+      case 'success':
+        return 'green';
+      case 'failed':
+        return 'red';
+      case 'other':
+        return 'gray';
       default:
-        return "red";
+        return 'red';
     }
   };
 
   const Btn = ({
     label,
     onClick,
-    color = "green",
+    color = 'green'
   }: {
     label: string;
     color?: string;
@@ -111,15 +111,12 @@ const File = ({
   }) => (
     <span
       onClick={onClick}
-      className={`inline-flex w-auto border-2 items-center px-2 py-0.5 rounded text-xs font-medium border-${color}-200 ml-2 hover:border-${color}-300 cursor-pointer transition-all text-${color}-800`}
-    >
+      className={`inline-flex w-auto border-2 items-center px-2 py-0.5 rounded text-xs font-medium border-${color}-200 ml-2 hover:border-${color}-300 cursor-pointer transition-all text-${color}-800`}>
       {label}
     </span>
   );
 
-  const [_fileName, setFileName] = useState(
-    removeExtension(fileName || "") || ""
-  );
+  const [_fileName, setFileName] = useState(removeExtension(fileName || '') || '');
   const [editingFilename, setEditingFilename] = useState(false);
 
   const onFileNameSave = () => {
@@ -129,80 +126,72 @@ const File = ({
 
   return (
     <div
-      className={` px-6 py-4 border-2 border-${genColor()}-200 bg-${genColor()}-100 rounded-lg`}
-    >
+      className={` px-6 py-4 border-2 border-${genColor()}-200 bg-${genColor()}-100 rounded-lg`}>
       <div className="flex items-center justify-between">
         <div className="w-auto flex flex-col items-start">
           <div className="text-blue-800 flex items-center font-semibold text-sm w-auto tracking-wide">
             <p className="w-auto">
-              {_status === "success" || _status === "other"
+              {_status === 'success' || _status === 'other'
                 ? !fileName
                   ? file.name
                   : fileName
                 : genStatus()}
-            </p>{" "}
-            {(_status === "success" || _status === "other") &&
-              !editingFilename && (
-                <Btn
-                  onClick={() => setEditingFilename(true)}
-                  label={_fileName ? "Change file label" : "Add file label"}
+            </p>{' '}
+            {(_status === 'success' || _status === 'other') && !editingFilename && (
+              <Btn
+                onClick={() => setEditingFilename(true)}
+                label={_fileName ? 'Change file label' : 'Add file label'}
+              />
+            )}
+            {(_status === 'success' || _status === 'other') && editingFilename && (
+              <div className="ml-2 w-auto flex items-center space-x-2">
+                <input
+                  className={`w-auto px-2 py-0.5 border-2 bg-transparent text-${
+                    _status === 'other' ? 'gray' : 'green'
+                  }-800 border-${
+                    _status === 'other' ? 'gray' : 'green'
+                  }-200 focus:border-${
+                    _status === 'other' ? 'gray' : 'green'
+                  }-300 rounded`}
+                  value={_fileName}
+                  onChange={(e) => setFileName(e.target.value)}
+                  placeholder={'file name'}
                 />
-              )}
-            {(_status === "success" || _status === "other") &&
-              editingFilename && (
-                <div className="ml-2 w-auto flex items-center space-x-2">
-                  <input
-                    className={`w-auto px-2 py-0.5 border-2 bg-transparent text-${
-                      _status === "other" ? "gray" : "green"
-                    }-800 border-${
-                      _status === "other" ? "gray" : "green"
-                    }-200 focus:border-${
-                      _status === "other" ? "gray" : "green"
-                    }-300 rounded`}
-                    value={_fileName}
-                    onChange={(e) => setFileName(e.target.value)}
-                    placeholder={"file name"}
-                  />
-                  <Btn onClick={onFileNameSave} label={"save"} />
-                  <Btn
-                    color="red"
-                    onClick={() => {
-                      fileName && setFileName(fileName);
-                      setEditingFilename(false);
-                    }}
-                    label={"Cancel"}
-                  />
-                </div>
-              )}
+                <Btn onClick={onFileNameSave} label={'save'} />
+                <Btn
+                  color="red"
+                  onClick={() => {
+                    fileName && setFileName(fileName);
+                    setEditingFilename(false);
+                  }}
+                  label={'Cancel'}
+                />
+              </div>
+            )}
           </div>
-          {_status === "progress" && progress && (
+          {_status === 'progress' && progress && (
             <span
-              className={`text-${genColor()}-400 font-medium text-xs w-auto tracking-normal`}
-            >
+              className={`text-${genColor()}-400 font-medium text-xs w-auto tracking-normal`}>
               {progress}%
             </span>
           )}
         </div>
-        {(_status === "success" || _status === "other") && (
+        {(_status === 'success' || _status === 'other') && (
           <div className="flex items-center gap-x-6 w-auto">
             <ClickAwayListener onClickAway={() => setShowMenu(false)}>
               <div
                 onClick={() => setShowMenu(!showMenu)}
-                className={`relative ${btnClass("gray")}`}
-              >
+                className={`relative ${btnClass('gray')}`}>
                 <div className="iconoclast:text-400 curate:text-400 hover:iconoclast:text-600 hover:curate:text-600 cursor-pointer font-medium">
                   Preview
                 </div>
                 <Transition
-                  style={{ bottom: "1.5rem" }}
+                  style={{bottom: '1.5rem'}}
                   className="w-auto bg-white cursor-pointer select-none rounded-xl customShadow absolute right-1 border-0 border-gray-200 min-h-32 min-w-140 p-4"
-                  show={showMenu}
-                >
+                  show={showMenu}>
                   <dl className="grid grid-cols-1 gap-x-4 gap-y-4">
                     <div className="sm:col-span-1">
-                      <dt className="text-sm font-medium text-gray-500">
-                        File preview
-                      </dt>
+                      <dt className="text-sm font-medium text-gray-500">File preview</dt>
                       <img
                         onClick={onImageClick}
                         src={imageUrl}
@@ -211,17 +200,13 @@ const File = ({
                       />
                     </div>
                     <div className="sm:col-span-1">
-                      <dt className="text-sm font-medium text-gray-500">
-                        File name
-                      </dt>
+                      <dt className="text-sm font-medium text-gray-500">File name</dt>
                       <dd className="mt-1 text-sm break-all text-gray-700 font-medium">
                         {removeExtension(_fileName)}
                       </dd>
                     </div>
                     <div className="sm:col-span-1">
-                      <dt className="text-sm font-medium text-gray-500">
-                        Size
-                      </dt>
+                      <dt className="text-sm font-medium text-gray-500">Size</dt>
                       <dd className="mt-1 flex items-center justify-between  text-sm text-gray-700 font-medium">
                         <p className="w-auto">{getSizeInBytes(file?.size)}</p>
                       </dd>
@@ -235,12 +220,11 @@ const File = ({
       </div>
 
       <div className="transition-all duration-300">
-        {_status === "progress" && progress && (
+        {_status === 'progress' && progress && (
           <div className="overflow-hidden w-auto h-1 mt-2 text-xs flex rounded bg-transparent">
             <div
-              style={{ width: `${progress}%` }}
-              className="shadow-none bg-gradient-to-r from-blue-300 to-blue-500 flex transition-all duration-500 rounded-r-full flex-col text-center whitespace-nowrap text-white justify-center"
-            ></div>
+              style={{width: `${progress}%`}}
+              className="shadow-none bg-gradient-to-r from-blue-300 to-blue-500 flex transition-all duration-500 rounded-r-full flex-col text-center whitespace-nowrap text-white justify-center"></div>
           </div>
         )}
       </div>
@@ -271,27 +255,27 @@ const UploadAttachment = ({
   lessonID,
   syllabusLessonID,
 
-  toggleDialog,
+  toggleDialog
 }: IUploadAttachmentProps) => {
   const gContext = useGlobalContext();
 
   const user = gContext.state.user;
   const userLanguage = gContext.userLanguage;
 
-  const isStudent = user.role === "ST";
+  const isStudent = user.role === 'ST';
   const inputOther = useRef<any>(null);
 
   const openFilesExplorer = () => inputOther.current.click();
   // For Attachments - 31
 
-  const fileIcon = getAsset("general", "file");
+  const fileIcon = getAsset('general', 'file');
 
   const deletImageFromS3 = (key: string) => {
     // Remove image from bucket
     return new Promise((resolve, reject) => {
       Storage.remove(key)
         .then((result) => {
-          console.log("deleted: ", key);
+          console.log('deleted: ', key);
           resolve(result);
         })
         .catch((err) => {
@@ -302,13 +286,13 @@ const UploadAttachment = ({
     });
   };
 
-  const updateProgress = (file: IFile, progress: IFile["progress"]) => {
+  const updateProgress = (file: IFile, progress: IFile['progress']) => {
     const idx = getId(file);
     update(filesUploading[idx], `progress`, () => progress);
     setFilesUploading([...filesUploading]);
   };
 
-  const updateStatus = (file: IFile, _status: IFile["_status"]) => {
+  const updateStatus = (file: IFile, _status: IFile['_status']) => {
     const idx = getId(file);
     update(filesUploading[idx], `_status`, () => _status);
     setFilesUploading([...filesUploading]);
@@ -330,40 +314,37 @@ const UploadAttachment = ({
     return new Promise((resolve, reject) => {
       Storage.put(`${UPLOAD_KEY}${id}`, file, {
         contentType: type,
-        acl: "public-read",
-        contentEncoding: "base64",
-        progressCallback: ({ loaded, total }: any) => {
+        acl: 'public-read',
+        contentEncoding: 'base64',
+        progressCallback: ({loaded, total}: any) => {
           const progress = (loaded * 100) / total;
 
-          updateStatus(currentFile, "progress");
+          updateStatus(currentFile, 'progress');
 
           updateProgress(currentFile, progress.toFixed(0));
-        },
+        }
       })
         .then((result) => {
-          updateStatus(currentFile, "success");
+          updateStatus(currentFile, 'success');
           updateProgress(currentFile, null);
 
-          console.log("File successfully uploaded to s3", result);
+          console.log('File successfully uploaded to s3', result);
 
           resolve(true);
         })
         .catch((err) => {
-          updateStatus(currentFile, "failed");
+          updateStatus(currentFile, 'failed');
           updateProgress(currentFile, null);
 
-          console.log("Error in uploading file to s3", err);
+          console.log('Error in uploading file to s3', err);
           reject(err);
         });
     });
   };
 
-  const UPLOAD_KEY = UPLOAD_KEYS.getStudentDataUploadKey(
-    user.id,
-    lessonID || ""
-  );
+  const UPLOAD_KEY = UPLOAD_KEYS.getStudentDataUploadKey(user.id, lessonID || '');
 
-  const { authId, email } = user;
+  const {authId, email} = user;
 
   const [uploading, setUploading] = useState(false);
 
@@ -389,21 +370,19 @@ const UploadAttachment = ({
           ...map(filesUploading, (file: any) => ({
             fileName: file.fileName,
             fileKey: file.fileKey,
-            fileSize: getSizeInBytesInt(file.file?.size),
-          })),
+            fileSize: getSizeInBytesInt(file.file?.size)
+          }))
         ],
         lessonPageID: lessonPageID,
         lessonID: lessonID,
-        syllabusLessonID: syllabusLessonID,
+        syllabusLessonID: syllabusLessonID
       };
 
-      await API.graphql(
-        graphqlOperation(mutations.updatePersonFiles, { input: payload })
-      );
+      await API.graphql(graphqlOperation(mutations.updatePersonFiles, {input: payload}));
       personFilesID && updateLoadedFilesList?.(personFilesID, payload.files);
       resetAll();
     } catch (error) {
-      console.error("@uploadFileDataToTable: ", error.message);
+      console.error('@uploadFileDataToTable: ', error.message);
     } finally {
       // setUploading(false);
     }
@@ -417,11 +396,11 @@ const UploadAttachment = ({
       const fakeInitProgress = Math.floor(Math.random() * 10) + 1;
 
       const initState: IFile = {
-        _status: "progress",
+        _status: 'progress',
         progress: fakeInitProgress.toString(),
         file,
         fileName: file.name,
-        id,
+        id
       };
       filesUploading.push(initState);
 
@@ -433,25 +412,24 @@ const UploadAttachment = ({
     if (filesUploading.length > 0) {
       const notUploadedFiles = reject(
         filesUploading,
-        (f) => f._status === "success" || f._status === "other"
+        (f) => f._status === 'success' || f._status === 'other'
       );
 
       for (const file of notUploadedFiles) {
-        let temp = file.file.name.split(".");
+        let temp = file.file.name.split('.');
         const extension = temp.pop();
         const fileName = `${Date.now()}_${temp
-          .join(" ")
-          .replace(new RegExp(/[ +!@#$%^&*().]/g), "_")}.${extension}`;
+          .join(' ')
+          .replace(new RegExp(/[ +!@#$%^&*().]/g), '_')}.${extension}`;
         updateImgId(file, fileName);
         await uploadImageToS3(file.file, fileName, file.file.type, file);
       }
     }
   };
 
-  const getId = (file: IFile) =>
-    findIndex(filesUploading, (f) => f.id === file.id);
+  const getId = (file: IFile) => findIndex(filesUploading, (f) => f.id === file.id);
 
-  const updateImgId = (file: IFile, fileKey: IFile["fileKey"]) => {
+  const updateImgId = (file: IFile, fileKey: IFile['fileKey']) => {
     const idx = getId(file);
     update(filesUploading[idx], `fileKey`, () => fileKey);
     setFilesUploading([...filesUploading]);
@@ -465,8 +443,8 @@ const UploadAttachment = ({
     [filesUploading]
   );
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop: uploadFile,
+  const {getRootProps, getInputProps, isDragActive} = useDropzone({
+    onDrop: uploadFile
   });
 
   const handleFileSelection = async (e: any) => {
@@ -490,15 +468,12 @@ const UploadAttachment = ({
   return (
     <>
       <div className="w-full h-full border-t-0 border-gray-200">
-        <h4 className="text-lg text-gray-600 font-medium">
-          Upload Additional Files
-        </h4>
+        <h4 className="text-lg text-gray-600 font-medium">Upload Additional Files</h4>
         <div
           {...getRootProps()}
           className={`border-${
-            isDragActive ? "blue" : "gray"
-          }-400 border-2 transition-all duration-300 flex items-center flex-col justify-center border-dashed rounded-xl h-56`}
-        >
+            isDragActive ? 'blue' : 'gray'
+          }-400 border-2 transition-all duration-300 flex items-center flex-col justify-center border-dashed rounded-xl h-56`}>
           <input
             {...getInputProps()}
             ref={inputOther}
@@ -513,11 +488,10 @@ const UploadAttachment = ({
             </p>
           ) : (
             <p className="text-blue-800 text-center font-semibold w-auto tracking-normal">
-              Drag 'n' drop your files here, or{" "}
+              Drag 'n' drop your files here, or{' '}
               <span
                 onClick={true ? openFilesExplorer : noop}
-                className="text-blue-500 cursor-pointer"
-              >
+                className="text-blue-500 cursor-pointer">
                 browse
               </span>
             </p>
@@ -531,8 +505,7 @@ const UploadAttachment = ({
           leave="transition-opacity duration-500"
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
-          className="mt-4 flex flex-col  gap-y-6"
-        >
+          className="mt-4 flex flex-col  gap-y-6">
           {map(filesUploading, (file: IFile) => (
             <File
               fileKey={file.fileKey}
@@ -550,16 +523,14 @@ const UploadAttachment = ({
         <div className="flex mt-8 justify-center px-6 pb-4">
           <div className="flex justify-end">
             <Buttons
-              btnClass="py-1 px-4 text-xs mr-2"
-              label={EditQuestionModalDict[userLanguage]["BUTTON"]["CANCEL"]}
+              label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
               onClick={resetAll}
               disabled={uploading}
               transparent
             />
             <Buttons
               disabled={uploading || filesUploading.length === 0}
-              btnClass="py-1 px-8 text-xs ml-2"
-              label={uploading ? "Uploading..." : "Save"}
+              label={uploading ? 'Uploading...' : 'Save'}
               onClick={onUploadAllFiles}
             />
           </div>

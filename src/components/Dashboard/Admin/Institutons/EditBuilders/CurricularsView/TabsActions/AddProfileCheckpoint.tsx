@@ -273,7 +273,6 @@ const AddProfileCheckpoint = () => {
         <div className="flex justify-end py-4 mb-4 w-5/10">
           <Buttons
             label="Go Back"
-            btnClass="mr-4"
             onClick={() => goBackBreadCrumb(breadCrumsList, history)}
             Icon={IoArrowUndoCircleOutline}
           />
@@ -394,14 +393,12 @@ const AddProfileCheckpoint = () => {
                       </p>
                       <div className="flex w-full mx-auto p-8 justify-center ">
                         <Buttons
-                          btnClass="mr-4"
                           onClick={() => setCurrentState('questionsList')}
                           label={
                             AddProfileCheckpointDict[userLanguage]['button']['existing']
                           }
                         />
                         <Buttons
-                          btnClass="ml-4"
                           onClick={() => setCurrentState('addQuestion')}
                           label={AddProfileCheckpointDict[userLanguage]['button']['newq']}
                         />
@@ -500,14 +497,12 @@ const AddProfileCheckpoint = () => {
                       </div>
                       <div className="flex w-full mx-auto p-8 justify-center ">
                         <Buttons
-                          btnClass="mr-4"
                           onClick={() => setCurrentState('questionsList')}
                           label={
                             AddProfileCheckpointDict[userLanguage]['button']['existing']
                           }
                         />
                         <Buttons
-                          btnClass="ml-4"
                           onClick={() => setCurrentState('addQuestion')}
                           label={AddProfileCheckpointDict[userLanguage]['button']['newq']}
                         />
@@ -527,13 +522,11 @@ const AddProfileCheckpoint = () => {
             )}
             <div className="flex my-8 justify-center">
               <Buttons
-                btnClass="py-3 px-10 mr-4"
                 label={AddProfileCheckpointDict[userLanguage]['button']['cancel']}
                 onClick={history.goBack}
                 transparent
               />
               <Buttons
-                btnClass="py-3 px-10 ml-4"
                 label={
                   loading
                     ? AddProfileCheckpointDict[userLanguage]['button']['saving']

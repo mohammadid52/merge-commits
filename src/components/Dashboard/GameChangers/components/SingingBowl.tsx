@@ -1,18 +1,18 @@
-import Buttons from "@components/Atoms/Buttons";
-import { CreateGameChangerLogInput, GameChangerLog } from "API";
-import useAuth from "customHooks/useAuth";
-import useGraphqlMutation from "customHooks/useGraphqlMutation";
-import { nanoid } from "nanoid";
-import { useEffect, useState } from "react";
-import { awsFormatDate, dateString } from "utilities/time";
-import { SingingBowlSvg } from "../svg";
+import Buttons from '@components/Atoms/Buttons';
+import {CreateGameChangerLogInput, GameChangerLog} from 'API';
+import useAuth from 'customHooks/useAuth';
+import useGraphqlMutation from 'customHooks/useGraphqlMutation';
+import {nanoid} from 'nanoid';
+import {useEffect, useState} from 'react';
+import {awsFormatDate, dateString} from 'utilities/time';
+import {SingingBowlSvg} from '../svg';
 
 const BowlSvg = ({}: {}) => {
   return <SingingBowlSvg />;
 };
 
 const SingingBowl = () => {
-  const audioControl = document.getElementById("singing-meditation");
+  const audioControl = document.getElementById('singing-meditation');
   const [isPlaying, setIsPlaying] = useState(false);
 
   useEffect(() => {
@@ -30,10 +30,10 @@ const SingingBowl = () => {
   }, [isPlaying]);
 
   const mutationLog = useGraphqlMutation<
-    { input: CreateGameChangerLogInput },
+    {input: CreateGameChangerLogInput},
     GameChangerLog
-  >("createGameChangerLog");
-  const { email, authId } = useAuth();
+  >('createGameChangerLog');
+  const {email, authId} = useAuth();
 
   const start = () => {
     const gameChangerID = nanoid(24);
@@ -45,8 +45,8 @@ const SingingBowl = () => {
           gameChangerID,
           personAuthID: authId,
           personEmail: email,
-          startTime: awsFormatDate(dateString("-", "WORLD")),
-        },
+          startTime: awsFormatDate(dateString('-', 'WORLD'))
+        }
       });
     }
   };
@@ -62,9 +62,8 @@ const SingingBowl = () => {
       <BowlSvg />
 
       <Buttons
-        btnClass="w-full"
         onClick={start}
-        label={isPlaying ? "Stop Meditation" : "Start Meditation"}
+        label={isPlaying ? 'Stop Meditation' : 'Start Meditation'}
       />
     </div>
   );

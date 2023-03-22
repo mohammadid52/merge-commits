@@ -134,12 +134,10 @@ const CheckpointList = (props: CheckpointListProps) => {
                 </div>
                 <div className="flex justify-center w-9/10 m-auto">
                   <Buttons
-                    btnClass="mr-3"
                     label={CHECKPOINTSDICT[userLanguage]['BUTTON']['ADDEXISTING']}
                     onClick={addExistingCheckpoint}
                   />
                   <Buttons
-                    btnClass="ml-3"
                     label={CHECKPOINTSDICT[userLanguage]['BUTTON']['ADDNEW']}
                     onClick={createNewCheckpoint}
                   />

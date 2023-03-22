@@ -301,12 +301,7 @@ const UserInformation = ({
             </div>
             <div className="mt-4">{resetPasswordServerResponse.message}</div>
             <div className="flex justify-center mt-4">
-              <Buttons
-                btnClass={'abc'}
-                label={'Ok'}
-                labelClass={'leading-6'}
-                onClick={onAlertClose}
-              />
+              <Buttons label={'Ok'} onClick={onAlertClose} />
             </div>
           </div>
         </Modal>

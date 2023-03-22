@@ -157,7 +157,7 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
             {/* <div className="flex mb-8 mt-4 justify-center">
               <Tooltip placement="top" text={LessonBuilderDict[userLanguage]['MESSAGES']['PUBLISH_DISABLED_INFO']}>
                 <Buttons
-                  btnClass="py-3 px-10"
+                  
                   label={BUTTONS[userLanguage]['PUBLISH']}
                   disabled={true}
                 />
@@ -219,11 +219,10 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
         <div className="flex justify-end py-4 mb-4 w-5/10">
           <Buttons
             label="Go back"
-            btnClass="mr-4"
             onClick={history.goBack}
             Icon={IoArrowUndoCircleOutline}
           />
-          <Buttons btnClass="mr-4 px-6" label="Edit" onClick={handleEdit} Icon={FaEdit} />
+          <Buttons label="Edit" onClick={handleEdit} Icon={FaEdit} />
         </div>
       </div>
       <div className="flex px-4 flex-col">

@@ -1,10 +1,9 @@
 import {useGlobalContext} from '@contexts/GlobalContext';
-import {getLocalStorageData, setLocalStorageData} from '@utilities/localStorage';
 import {useEffect, useState} from 'react';
 
 const PageTimer = ({startTime}: {startTime: any}) => {
   // * Logic of the timer
-  // first get the current page from state
+  // first get the current page from states
   // then get the current timer of the page from local storage
   // set that to the current local timer
   // then get the estimated time from lesson page state

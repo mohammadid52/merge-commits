@@ -278,7 +278,6 @@ const UnitFormComponent = ({
                 onChange={(name: RoomStatus) => {
                   beforeStatusChange(name);
                 }}
-                dropdownWidth="w-56"
                 selectedItem={status || UserEditDict[userLanguage]['status']}
               />
             </div>

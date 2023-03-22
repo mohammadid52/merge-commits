@@ -167,7 +167,6 @@ const CheckItOut = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardP
       <div className="px-3 py-4">
         <div>
           <FormInput
-            dataCy="checkItOut-overlay-input"
             label="Step 2: Add overlay text"
             placeHolder="Overlay text"
             onChange={(e) => {
@@ -203,19 +202,8 @@ const CheckItOut = ({onCancel, onSubmit, editMode, cardDetails}: ICommunityCardP
       </AnimatedContainer>
       <div className="flex mt-8 justify-center px-6 pb-4">
         <div className="flex justify-end gap-4">
-          <Buttons
-            btnClass="py-1 px-4 text-xs mr-2"
-            label={'Cancel'}
-            onClick={onCancel}
-            transparent
-          />
-          <Buttons
-            dataCy="save-checkItOut-button"
-            loading={isLoading}
-            btnClass="py-1 px-8 text-xs ml-2"
-            label={'Save'}
-            onClick={_onSubmit}
-          />
+          <Buttons label={'Cancel'} onClick={onCancel} transparent />
+          <Buttons loading={isLoading} label={'Save'} onClick={_onSubmit} />
         </div>
       </div>
     </div>

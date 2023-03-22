@@ -51,7 +51,7 @@ const UploadLogsPage = () => {
             size="small"
             Icon={BiCloudDownload}
             transparent
-            title="Download Csv"
+            tooltip="Download Csv"
             label={'Download Csv'}
             disabled={!uploadLog.urlLink}
           />

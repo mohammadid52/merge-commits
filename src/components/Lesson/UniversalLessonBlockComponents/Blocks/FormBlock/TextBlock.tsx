@@ -1,5 +1,4 @@
 import FormInput from '@components/Atoms/Form/FormInput';
-import {useGlobalContext} from 'contexts/GlobalContext';
 import useInLessonCheck from 'customHooks/checkIfInLesson';
 import useStudentDataValue from 'customHooks/studentDataValue';
 import {IFormBlockProps} from 'interfaces/UniversalLessonInterfaces';
@@ -14,21 +13,15 @@ const TextBlock = (props: TextBlockProps) => {
   const {
     id,
     required = false,
-    numbered = false,
+
     label = '',
     mode,
     isStudent,
-    index = '',
+
     value = '',
     inputID,
     textarea
   } = props;
-
-  const {
-    state: {lessonPage: {theme: lessonPageTheme = 'dark', themeTextColor = ''} = {}}
-  } = useGlobalContext();
-  const themePlaceholderColor =
-    lessonPageTheme === 'light' ? 'placeholder-gray-800' : 'text-gray-400';
 
   const isInLesson = useInLessonCheck();
 

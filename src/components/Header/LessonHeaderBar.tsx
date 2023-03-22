@@ -4,7 +4,6 @@ import useGraphqlMutation from '@customHooks/useGraphqlMutation';
 import {UniversalLessonStudentData, UpdatePersonLessonsDataInput} from 'API';
 import Modal from 'atoms/Modal';
 import {useGlobalContext} from 'contexts/GlobalContext';
-import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
 import {LessonHeaderBarProps} from 'interfaces/LessonComponentsInterfaces';
 import {useEffect, useState} from 'react';
 import ReactPlayer from 'react-player';
@@ -270,7 +269,6 @@ const LessonHeaderBar = ({
   };
 
   // ~~~~~~~~~~~ RESPONSIVE CHECK ~~~~~~~~~~ //
-  const {breakpoint} = useTailwindBreakpoint();
 
   // ##################################################################### //
   // ############################### OUTPUT ############################## //

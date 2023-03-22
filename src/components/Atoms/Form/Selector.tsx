@@ -13,38 +13,29 @@ type Item = {
 interface SelectorProps {
   list?: Item[];
   selectedItem?: string;
-  btnClass?: string;
-  additionalClass?: string;
-  arrowHidden?: boolean;
+
   placeholder: string;
   placement?: 'bottomLeft' | 'bottomRight' | 'topLeft' | 'topRight' | undefined;
   onChange: (value: string, option: Item) => void;
   disabled?: boolean;
   disableSort?: boolean;
   isRequired?: boolean;
-  style?: any;
+
   loading?: boolean;
   size?: SizeType;
   label?: string;
-  labelTextClass?: string;
-  noOptionMessage?: string;
+
   width?: number | string;
+  dataCy?: string;
   error?: string;
-  btnId?: string;
-  isClearable?: boolean;
-  onClear?: () => void;
-  setHoveringItem?: React.Dispatch<React.SetStateAction<{}>>;
-  setSelectedItem?: React.Dispatch<React.SetStateAction<{}>>;
+
   dropdownRender?:
     | ((
         menu: React.ReactElement<any, string | React.JSXElementConstructor<any>>
       ) => React.ReactElement<any, string | React.JSXElementConstructor<any>>)
     | undefined;
-  dataCy?: string;
-  dropdownWidth?: string;
+
   showSearch?: boolean;
-  noSpace?: boolean;
-  direction?: 'left' | 'right' | 'topleft' | 'topright';
 }
 
 const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {

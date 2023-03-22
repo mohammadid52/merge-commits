@@ -594,14 +594,11 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
               {isStudentRoster && (
                 <div className="w-auto relative flex mr-2 min-w-64">
                   <Selector
-                    isClearable
                     placeholder={'Select a class'}
                     list={getClassListForSelector()}
                     selectedItem={selectedClass?.name}
-                    setSelectedItem={setSelectedClass}
                     onChange={setSelectedClassValue}
                     disabled={loading}
-                    arrowHidden={true}
                   />
 
                   {selectedClass !== null && (
@@ -616,20 +613,17 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
               )}
 
               <SearchInput
-                dataCy="user-loookup-search"
                 value={searchInput.value}
                 onChange={setSearch}
                 disabled={loading}
                 onKeyDown={searchUserFromList}
                 closeAction={_removeSearchAction}
-                style={`mr-4 ${isInInstitute ? 'w-auto' : 'w-full'}`}
               />
 
               {state.user.role !== 'SUP' && (
                 <Buttons
                   label={UserLookupDict[userLanguage]['button']['add']}
                   onClick={handleLink}
-                  btnClass={isInInstitute ? '' : 'mr-4 w-full'}
                   Icon={AiOutlineUsergroupAdd}
                 />
               )}

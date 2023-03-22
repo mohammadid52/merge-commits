@@ -107,7 +107,6 @@ const DividerModal = (props: Divider) => {
       <div className="flex mt-4 justify-end px-6 pl-0 pb-4">
         <div className="flex items-center w-auto gap-4">
           <Buttons
-            btnClass="py-1 px-4 text-xs mr-2"
             label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
             onClick={askBeforeClose}
             transparent
@@ -115,7 +114,6 @@ const DividerModal = (props: Divider) => {
           />
 
           <Buttons
-            btnClass="py-1 px-8 text-xs ml-2"
             label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
             onClick={onDividerCreate}
             size="middle"

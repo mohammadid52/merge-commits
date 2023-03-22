@@ -207,14 +207,12 @@ const LinksModalDialog = ({
         </div>
         <div className="flex items-center w-auto gap-4">
           <Buttons
-            btnClass="py-1 px-4 text-xs mr-2"
             label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
             onClick={askBeforeClose}
             transparent
           />
 
           <Buttons
-            btnClass="py-1 px-8 text-xs ml-2"
             label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
             onClick={onLinkCreate}
           />

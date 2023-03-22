@@ -1,8 +1,8 @@
-import { StudentPageInput } from "@interfaces/UniversalLessonInterfaces";
-import Buttons from "atoms/Buttons";
-import { useGlobalContext } from "contexts/GlobalContext";
-import React, { useEffect, useState } from "react";
-import { BiSave } from "react-icons/bi";
+import {StudentPageInput} from '@interfaces/UniversalLessonInterfaces';
+import Buttons from 'atoms/Buttons';
+import {useGlobalContext} from 'contexts/GlobalContext';
+import React, {useEffect, useState} from 'react';
+import {BiSave} from 'react-icons/bi';
 
 interface SaveQuitProps {
   id?: string;
@@ -16,8 +16,8 @@ interface SaveQuitProps {
   invokeRequiredField?: () => any;
 }
 
-const SaveQuit = ({ invokeRequiredField }: SaveQuitProps) => {
-  const { lessonState, lessonDispatch } = useGlobalContext();
+const SaveQuit = ({invokeRequiredField}: SaveQuitProps) => {
+  const {lessonState, lessonDispatch} = useGlobalContext();
 
   // ##################################################################### //
   // ################## LOGIC FOR RETURNING TO CLASSROOM ################# //
@@ -43,7 +43,7 @@ const SaveQuit = ({ invokeRequiredField }: SaveQuitProps) => {
       if (thisPageData && thisPageData.length > 0) {
         // @ts-ignore
         const areAnyEmpty = thisPageData.filter((input: StudentPageInput) => {
-          if (thisPageRequired.includes(input.domID) && input.input[0] === "") {
+          if (thisPageRequired.includes(input.domID) && input.input[0] === '') {
             return input;
           }
           return null;
@@ -81,8 +81,8 @@ const SaveQuit = ({ invokeRequiredField }: SaveQuitProps) => {
 
   const setLeaveModalVisible = (updatedState: boolean) => {
     lessonDispatch({
-      type: "SET_LEAVE_MODAL_VISIBLE_STATE",
-      payload: updatedState,
+      type: 'SET_LEAVE_MODAL_VISIBLE_STATE',
+      payload: updatedState
     });
   };
 
@@ -100,21 +100,19 @@ const SaveQuit = ({ invokeRequiredField }: SaveQuitProps) => {
 
   return (
     <>
-      <div className={"w-auto"}>
+      <div className={'w-auto'}>
         <Buttons
           dataCy="save-lesson"
           // disabled={!canContinue}
           label={
             waiting
-              ? "Saving your data..."
-              : lessonState.lessonData.type === "survey"
-              ? "Survey Completed"
-              : "Lesson Completed"
+              ? 'Saving your data...'
+              : lessonState.lessonData.type === 'survey'
+              ? 'Survey Completed'
+              : 'Lesson Completed'
           }
           Icon={BiSave}
-          btnClass="w-full"
-          onClick={handleManualSave}
-        ></Buttons>
+          onClick={handleManualSave}></Buttons>
       </div>
     </>
   );

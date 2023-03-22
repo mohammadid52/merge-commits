@@ -158,10 +158,6 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
     }
   };
 
-  const onInstitutionSelectionRemove = () => {
-    setSelectedInstitution({});
-  };
-
   const fetchInstitutions = async () => {
     try {
       setLoading(true);
@@ -452,17 +448,12 @@ const CurriculumList = ({updateCurricularList, instId}: CurriculumListProps) => 
                   list={institutionList}
                   selectedItem={selectedInstitution?.name}
                   onChange={instituteChange}
-                  arrowHidden={true}
-                  additionalClass={'w-auto lg:w-48'}
-                  isClearable
-                  onClear={onInstitutionSelectionRemove}
                 />
               )}
               <SearchInput
                 dataCy="curriculum-search-input"
                 value={searchInput.value}
                 onChange={setSearch}
-                isActive={searchInput.isActive}
                 disabled={loading}
                 onKeyDown={searchRoom}
                 closeAction={removeSearchAction}

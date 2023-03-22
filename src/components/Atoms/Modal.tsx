@@ -1,7 +1,5 @@
 import {Modal as AntdModal} from 'antd';
-import {useGlobalContext} from 'contexts/GlobalContext';
 import React from 'react';
-import Buttons from './Buttons';
 // @ts-ignore
 
 interface ModalProps {
@@ -31,81 +29,17 @@ interface ModalProps {
   open: boolean;
 }
 
-const ModalBody = (bodyProps: {
-  children: React.ReactNode;
-  hidePadding?: boolean;
-  closeOnBackdrop?: boolean;
-  scrollHidden?: boolean;
-  className?: string;
-}) => {
-  const {children, closeOnBackdrop, className = 'modal-body', hidePadding} = bodyProps;
-
-  return (
-    <div
-      className={`relative ${
-        hidePadding ? 'p-0' : `${closeOnBackdrop ? 'p-2' : 'p-4'}`
-      } flex-auto overflow-hidden ${className}`}>
-      {' '}
-      {/* // flex-auto changed to flex-1 overflow-hidden */}
-      {children}
-    </div>
-  );
-};
-
-const ModalFooter = (footerProps: {
-  onSave?: () => void;
-  onClose?: () => void;
-  closeLabel?: string;
-  saveLabel?: string;
-  saveElement?: React.ReactNode;
-}) => {
-  const {
-    onSave,
-    onClose,
-    saveElement,
-    saveLabel = 'Save changes',
-    closeLabel = 'Close'
-  } = footerProps;
-  const {theme} = useGlobalContext();
-
-  return (
-    <div className={`${theme.modals.footer}`}>
-      <Buttons label={closeLabel} title={closeLabel} onClick={onClose} transparent />
-      <Buttons
-        label={saveElement !== undefined && saveElement !== null ? null : saveLabel}
-        insideElement={saveElement}
-        title={saveLabel}
-        onClick={onSave}
-      />
-    </div>
-  );
-};
-
 const Modal: React.FC<ModalProps> = (modalProps: ModalProps) => {
   const {
-    showHeader,
-    modalCloseId,
     title,
-    showHeaderBorder,
-    showFooter,
+
     children,
-    intenseOpacity = false,
+
     closeAction,
-    saveAction,
-    closeOnBackdrop = false,
-    titleButton,
-    hidePadding = false,
+
     open,
-    scrollHidden = false,
-    outerCloseBtn = false,
-    customTitle,
-    position,
-    width,
-    maxWidth,
-    className,
-    closeLabel,
-    saveLabel,
-    saveElement
+
+    customTitle
   } = modalProps;
 
   return (
@@ -116,81 +50,6 @@ const Modal: React.FC<ModalProps> = (modalProps: ModalProps) => {
       footer={null}>
       {children}
     </AntdModal>
-
-    // <>
-    //   <div
-    //     style={{ zIndex: 9999 }}
-    //     className={`${
-    //       intenseOpacity ? "dark-backdrop" : "backdrop fade-in"
-    //     } fixed inset-0 bg-black`}
-    //   ></div>
-    //   <div
-    //     style={{ zIndex: 10000 }}
-    //     onClick={() => closeOnBackdrop && closeAction?.()}
-    //     className={`${
-    //       position ? position : "fixed"
-    //     } modal transition-all duration-500 show justify-center items-center flex overflow-x-hidden overflow-y-auto inset-0 outline-none focus:outline-none`}
-    //   >
-    //     <div
-    //       onClick={(e) => {
-    //         if (closeOnBackdrop) {
-    //           e.stopPropagation();
-    //         }
-    //       }}
-    //       className={`${width ? width : "w-auto"} ${
-    //         maxWidth ? maxWidth : "max-w-lg"
-    //       } relative my-4 mx-auto sm:max-w-140 max-w-80  max-h-9/10 md:max-w-172 lg:max-w-256`}
-    //     >
-    //       {outerCloseBtn && (
-    //         <div
-    //           style={{ top: "-2rem", right: "-2rem" }}
-    //           className="w-auto absolute"
-    //         >
-    //           <button
-    //             data-cy={modalCloseId}
-    //             className={`ml-auto w-auto ${theme.outlineNone}`}
-    //             onClick={closeAction}
-    //           >
-    //             <span className="w-8 h-8 ml-4 flex cursor-pointer  items-center justify-center rounded transition-all duration-150">
-    //               <IoClose className="text-white" />
-    //             </span>
-    //           </button>
-    //         </div>
-    //       )}
-    //       <div
-    //         className={`bg-gray-200  relative flex flex-col border-white border-4 rounded-xl customShadow  w-auto`}
-    //       >
-    //         {showHeader && (
-    //           <ModalHeader
-    //             titleButton={titleButton}
-    //             customTitle={customTitle}
-    //             modalCloseId={modalCloseId}
-    //             title={title}
-    //             onClick={closeAction}
-    //             showBorder={showHeaderBorder}
-    //           />
-    //         )}
-    //         <ModalBody
-    //           className={className}
-    //           scrollHidden={scrollHidden}
-    //           hidePadding={hidePadding}
-    //           closeOnBackdrop={closeOnBackdrop}
-    //         >
-    //           {children}
-    //         </ModalBody>
-    //         {showFooter && (
-    // <ModalFooter
-    //   closeLabel={closeLabel}
-    //   saveElement={saveElement}
-    //   saveLabel={saveLabel}
-    //   onSave={saveAction}
-    //   onClose={closeAction}
-    // />
-    //         )}
-    //       </div>
-    //     </div>
-    //   </div>
-    // </>
   );
 };
 

@@ -81,7 +81,6 @@ const SyllabusSwitch = ({
           <div className="flex justify-center">
             <Buttons
               label="Go to Curriculum"
-              btnClass="mr-4 mt-4"
               onClick={() =>
                 history.push(
                   `/dashboard/manage-institutions/institution?id=${institutionId}&tab=curricular`

@@ -497,13 +497,11 @@ const FeedbacksUploads = ({
               <div className="mt-8 px-6 pb-4">
                 <div className="flex justify-center items-center">
                   <Buttons
-                    btnClass="py-1 px-4 text-xs mr-2"
                     label={AddQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
                     onClick={closeEditModal}
                     transparent
                   />
                   <Buttons
-                    btnClass="py-1 px-8 text-xs ml-2"
                     label={AddQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
                     onClick={() => editComment(editModal.id)}
                   />

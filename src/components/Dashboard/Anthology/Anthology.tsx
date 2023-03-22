@@ -864,7 +864,6 @@ const Anthology = ({
                   <Buttons
                     dataCy="notebook-passcode-submit"
                     label={'Submit'}
-                    btnClass="w-full mt-2"
                     onClick={handlePrivateSectionAccess}
                   />
                   <p

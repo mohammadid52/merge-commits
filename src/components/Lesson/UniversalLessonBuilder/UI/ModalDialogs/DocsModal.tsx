@@ -92,14 +92,12 @@ const DocsModal = (props: IDocsDialogProps) => {
       <div className="flex mt-8 justify-end px-6 pb-4">
         <div className="flex justify-end gap-4">
           <Buttons
-            btnClass="py-1 px-4 text-xs mr-2"
             size="middle"
             label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
             onClick={askBeforeClose}
             transparent
           />
           <Buttons
-            btnClass="py-1 px-8 text-xs ml-2"
             size="middle"
             label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
             onClick={onDocsCreate}

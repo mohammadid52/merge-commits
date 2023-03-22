@@ -186,7 +186,6 @@ const Attendance = ({id, goToClassroom, selectedRoomId, role}: IAttendanceProps)
         <div className="flex justify-center w-full">
           <Buttons
             label={loading ? 'loading' : 'Load more'}
-            btnClass="text-center my-2"
             disabled={loading}
             onClick={onLoadMore}
           />

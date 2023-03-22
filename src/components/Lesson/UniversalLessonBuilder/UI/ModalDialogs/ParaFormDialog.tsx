@@ -99,14 +99,12 @@ const ParaModalComponent = ({
         <div className="flex justify-end gap-4">
           <Buttons
             size="middle"
-            btnClass="py-1 px-4 text-xs mr-2"
             label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
             onClick={askBeforeClose}
             transparent
           />
           <Buttons
             size="middle"
-            btnClass="py-1 px-8 text-xs ml-2"
             label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
             onClick={onParaCreate}
           />

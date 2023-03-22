@@ -113,20 +113,13 @@ const ProfileCropModal: React.FC<ProfileCropModalProps> = (
         </AnimatedContainer>
       </div>
       <div className="flex gap-x-4 items-center justify-end my-4">
-        <Buttons
-          label={'Cancel'}
-          onClick={closeAction}
-          size="middle"
-          btnClass=""
-          transparent
-        />
+        <Buttons label={'Cancel'} onClick={closeAction} size="middle" transparent />
 
         <Buttons
           size="middle"
           dataCy="save-profile-image"
           label={showCropper ? 'Save cropped image' : BUTTONS[userLanguage].SAVE}
           onClick={showCropper ? saveCroped : () => saveCroppedImage(undefined)}
-          btnClass=""
         />
       </div>
     </Modal>

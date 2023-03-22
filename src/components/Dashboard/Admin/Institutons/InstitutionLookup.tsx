@@ -288,7 +288,6 @@ const InstitutionLookup: React.FC = () => {
                     onChange={setSearch}
                     onKeyDown={searchUserFromList}
                     closeAction={removeSearchAction}
-                    style="mr-4 w-auto"
                   />
 
                   {state.user.role === 'SUP' && (

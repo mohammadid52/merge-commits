@@ -124,13 +124,11 @@ const AddMeasurement = (props: AddMeasurementProps) => {
       </div>
       <div className="flex my-8 justify-center">
         <Buttons
-          btnClass="py-3 px-10 mr-4"
           label={AddMeasurementDict[userLanguage]['button']['cancel']}
           onClick={onCancel}
           transparent
         />
         <Buttons
-          btnClass="py-3 px-10 ml-4"
           label={AddMeasurementDict[userLanguage]['button']['save']}
           onClick={saveMeasurementDetails}
           disabled={loading}

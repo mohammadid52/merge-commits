@@ -482,7 +482,6 @@ const StaffBuilder = (props: StaffBuilderProps) => {
           <Selector
             selectedItem={item?.status?.toUpperCase()}
             placeholder="Select Status"
-            dropdownWidth="w-48"
             list={statusList}
             onChange={(val) =>
               onStaffStatusChange(
@@ -592,7 +591,6 @@ const StaffBuilder = (props: StaffBuilderProps) => {
                     onChange={setSearch}
                     disabled={dataLoading}
                     onKeyDown={searchStaff}
-                    isActive={searchInput.isActive}
                     closeAction={removeSearchAction}
                   />
                   <AddButton
@@ -602,7 +600,6 @@ const StaffBuilder = (props: StaffBuilderProps) => {
                 </div>
               ) : (
                 <Buttons
-                  btnClass="ml-4 py-1"
                   label={BUTTONS[userLanguage]['CANCEL']}
                   onClick={() => setShowAddSection(false)}
                 />
@@ -621,11 +618,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
                     }
                     onChange={onChange}
                   />
-                  <Buttons
-                    btnClass="ml-4 py-1"
-                    label={dictionary['ADD_BUTTON']}
-                    onClick={addStaffMember}
-                  />
+                  <Buttons label={dictionary['ADD_BUTTON']} onClick={addStaffMember} />
                 </div>
               ) : null}
             </div>

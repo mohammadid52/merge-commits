@@ -449,15 +449,9 @@ const EditCurricular = (props: EditCurricularProps) => {
         </div>
       ) : null}
       <div className="flex my-4 justify-center">
-        <Buttons
-          btnClass="py-3 px-12 text-sm mr-4"
-          label="Cancel"
-          onClick={closeAction}
-          transparent
-        />
+        <Buttons label="Cancel" onClick={closeAction} transparent />
         <Buttons
           disabled={saving ? true : false}
-          btnClass="py-3 px-12 text-sm ml-4"
           label={
             saving ? 'Saving...' : EditCurriculardict[userLanguage]['BUTTON']['SAVE']
           }

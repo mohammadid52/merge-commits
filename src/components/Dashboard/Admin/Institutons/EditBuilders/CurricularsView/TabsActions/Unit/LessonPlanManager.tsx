@@ -456,7 +456,6 @@ const LessonPlanManager = ({
               list={dropdownLessonsList}
               placeholder={SyllabusDict[userLanguage]['SELECT_LESSON']}
               onChange={selectLesson}
-              additionalClass="w-auto "
               width="w-96"
             />
 

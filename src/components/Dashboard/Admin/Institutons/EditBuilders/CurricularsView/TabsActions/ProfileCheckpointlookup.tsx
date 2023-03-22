@@ -145,7 +145,7 @@ const ProfileCheckpointlookup = () => {
         <div className="flex justify-end py-4 mb-4 w-5/10">
           <Buttons
             label="Go Back"
-            btnClass="mr-4"
+            
             onClick={() => goBackBreadCrumb(breadCrumsList, history)}
             Icon={IoArrowUndoCircleOutline}
           />
@@ -190,7 +190,6 @@ const ProfileCheckpointlookup = () => {
           onChange={(val: string) => setSearchInput(val)}
           onKeyDown={searchFromList}
           closeAction={removeSearchAction}
-          style="w-2/4"
         />
       </div>
       <div className="px-8">
@@ -302,14 +301,12 @@ const ProfileCheckpointlookup = () => {
       <div className="flex mt-8 justify-center px-8 pb-4">
         <div className="flex justify-center my-6">
           <Buttons
-            btnClass="py-1 px-4 text-xs mr-2"
             label={ProfileCheckpointlookupDict[userLanguage]['button']['cancel']}
             onClick={history.goBack}
             transparent
           />
           {allCheckpointList.length > 0 && (
             <Buttons
-              btnClass="py-1 px-8 text-xs ml-2"
               label={
                 loading
                   ? ProfileCheckpointlookupDict[userLanguage]['button']['saving']

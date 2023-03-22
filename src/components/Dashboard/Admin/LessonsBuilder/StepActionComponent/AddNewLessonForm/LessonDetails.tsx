@@ -192,14 +192,12 @@ const UploadLessonPlanModal = ({
           <div className="flex mt-8 justify-center px-6 pb-4">
             <div className="flex justify-end">
               <Buttons
-                btnClass="py-1 px-4 text-xs mr-2"
                 disabled={isLoading}
                 onClick={onClose}
                 label={'Cancel'}
                 transparent
               />
               <Buttons
-                btnClass="py-1 px-8 text-xs ml-2"
                 label={isLoading ? 'Uploading' : 'Upload'}
                 type="submit"
                 onClick={onUpload}
@@ -268,7 +266,6 @@ const LessonDetails = ({
           <FormInput
             value={name}
             label={AddNewLessonFormDict[userLanguage]['NAME']}
-            inputRef={inputRef}
             id="name"
             error={validation.name}
             onChange={onInputChange}
@@ -339,9 +336,7 @@ const LessonDetails = ({
             label={UserEditDict[userLanguage]['status']}
             placeholder={UserEditDict[userLanguage]['status']}
             list={RoomStatusList}
-            noSpace
             onChange={updateStatus}
-            dropdownWidth="w-56"
             selectedItem={status || UserEditDict[userLanguage]['status']}
           />
         </div>

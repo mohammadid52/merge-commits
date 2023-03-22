@@ -135,7 +135,6 @@ const AddLearningObjective = (props: AddLearningObjectiveProps) => {
 
           <div className="px-3">
             <FormInput
-              resize={false}
               textarea
               id="description"
               value={description}
@@ -148,14 +147,8 @@ const AddLearningObjective = (props: AddLearningObjectiveProps) => {
         </div>
       </div>
       <div className="flex my-4 justify-end">
+        <Buttons label={'Cancel'} onClick={handleCancel} transparent />
         <Buttons
-          btnClass="py-3 px-2 2xl:px-10 mr-2"
-          label={'Cancel'}
-          onClick={handleCancel}
-          transparent
-        />
-        <Buttons
-          btnClass="py-3 px-2 2xl:px-10 px-10"
           label={ADDLEARINGOBJDICT[userLanguage]['SAVE']}
           onClick={saveLearningObjectiveDetails}
           disabled={loading}

@@ -1423,7 +1423,6 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
                         selectedItem={selectedClassRoom ? selectedClassRoom.name : ''}
                         placeholder="select classroom"
                         width="xl:w-64"
-                        setHoveringItem={setHoveringItem}
                         list={instClassRooms}
                         onChange={(value, option: any) => {
                           setHoveringItem({});
@@ -1498,7 +1497,6 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
                       loading={unitsLoading}
                       selectedItem={selectedUnit ? selectedUnit.name : ''}
                       placeholder="select unit"
-                      btnId="upload-analytics-unit"
                       list={units}
                       width="xl:w-64"
                       disabled={!selectedCurriculum}
@@ -1510,10 +1508,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
 
                     <Selector
                       dataCy="analytics-survey"
-                      btnId="analytics-survey"
                       loading={surveysLoading}
-                      width="xl:w-64"
-                      direction="left"
                       disabled={!selectedUnit}
                       selectedItem={selectedSurvey ? selectedSurvey.name : ''}
                       placeholder="select survey"
@@ -1541,11 +1536,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
           />
 
           <Selector
-            additionalClass="w-auto"
-            btnClass={!file ? 'cursor-not-allowed' : ''}
             disabled={!file}
-            dropdownWidth="w-96"
-            btnId="reason-button"
             selectedItem={selectedReason ? selectedReason.name : ''}
             placeholder={CsvDict[userLanguage]['SELECT_REASON']}
             list={reasonDropdown}

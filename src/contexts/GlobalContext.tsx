@@ -15,11 +15,6 @@ import {lessonControlState, LessonControlStateType} from 'state/LessonControlSta
 import {lessonState as lessonStateObject, LessonStateType} from 'state/LessonState';
 import {getClientKey} from 'utilities/strings';
 
-export const allowedAuthIds = [
-  '6c4dd66f-77d5-4aba-bf5a-46566f8a836d',
-  '22241431-5b44-434a-bba1-6dcb40e7c7fa'
-];
-
 type ClientKey = 'iconoclast' | 'curate' | 'demo';
 type AuthState = 'loggedIn' | 'notLoggedIn' | 'loading';
 

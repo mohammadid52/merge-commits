@@ -253,7 +253,6 @@ const TabView = ({
               {subSection === 'Journal' && tab === 1 && (
                 <Buttons
                   Icon={FaEdit}
-                  btnClass="mb-2 px-8"
                   label={anthologyDict[userLanguage].ACTIONS.CREATE}
                   onClick={() => handleEditToggle?.('create', '')}
                   type="button"

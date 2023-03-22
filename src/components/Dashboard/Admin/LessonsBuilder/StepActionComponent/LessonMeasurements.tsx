@@ -146,7 +146,6 @@ const LessonMeasurements = ({lessonId}: any) => {
               </div>
               <div className="ml-4 w-auto">
                 <Buttons
-                  btnClass="ml-4 py-1"
                   label="Add"
                   onClick={addNewMeasurement}
                   disabled={saving || !measurementOptions.length}

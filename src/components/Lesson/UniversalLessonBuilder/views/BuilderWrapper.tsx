@@ -522,7 +522,6 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
             ))}
           </div>
           <Buttons
-            btnClass="mt-4"
             label={`${optionsCollapse ? 'Show all options' : 'Collapse all options'} `}
             onClick={() => setOptionsCollapse(!optionsCollapse)}
           />

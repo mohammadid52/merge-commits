@@ -206,7 +206,6 @@ const LessonActivities = ({
             </div>
             <div className="flex justify-center my-4">
               <Buttons
-                btnClass="mx-4"
                 label={LessonBuilderDict[userLanguage]['BUTTON']['ADD_PLAN']}
                 onClick={addNewLessonPlan}
               />
@@ -238,7 +237,6 @@ const LessonActivities = ({
 
               <span className="w-auto inline-flex items-center">
                 <Buttons
-                  btnClass="mx-4"
                   disabled={true}
                   label={
                     LessonBuilderDict[userLanguage]['LESSON_HOMEWORK_ACTIVITY_TABLE'][
@@ -280,7 +278,6 @@ const LessonActivities = ({
             </div>
             <div className="flex justify-center my-4">
               <Buttons
-                btnClass="mx-4"
                 label={LessonBuilderDict[userLanguage]['BUTTON']['ADD_PLAN']}
                 onClick={addNewLessonPlan}
               />

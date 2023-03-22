@@ -995,7 +995,6 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
                   placeholder={RoomEDITdict[userLanguage]['CURRICULUM_PLACEHOLDER']}
                   label={RoomEDITdict[userLanguage]['CURRICULUM_LABEL']}
                   disabled={loadingCurricular || status === RoomStatus.INACTIVE}
-                  labelTextClass={'text-xs'}
                   list={curricularList}
                   isRequired
                   onChange={selectCurriculum}
@@ -1013,7 +1012,6 @@ const ClassRoomForm = ({instId}: ClassRoomFormProps) => {
                   width={'100%'}
                   placeholder={RoomEDITdict[userLanguage]['ACTIVE_UNIT_PLACEHOLDER']}
                   label={RoomEDITdict[userLanguage]['ACTIVE_UNIT_LABEL']}
-                  labelTextClass={'text-xs'}
                   list={units}
                   loading={unitsLoading}
                   onChange={(value, option: any) =>

@@ -38,7 +38,6 @@ const PageCountSelector: React.FC<CountProps> = (countProps: CountProps) => {
           setPageSize(Number(val));
         }}
         disableSort
-        dropdownWidth="w-48"
         selectedItem={selectedItem}
         list={_list}
         placeholder="pages"

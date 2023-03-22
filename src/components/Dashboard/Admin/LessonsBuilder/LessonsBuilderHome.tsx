@@ -6,7 +6,7 @@ import * as customQueries from 'customGraphql/customQueries';
 import * as queries from 'graphql/queries';
 import {useEffect, useState} from 'react';
 import {Route, Switch, useRouteMatch} from 'react-router-dom';
-import LessonPlan from '../../../Lesson/UniversalLessonBuilder/UI/LessonPlan/LessonPlan';
+
 import UniversalLessonBuilder from '../../../Lesson/UniversalLessonBuilder/UniversalLessonBuilder';
 import LessonBuilder from './LessonBuilder';
 import LessonsList from './LessonsList';
@@ -126,7 +126,7 @@ const LessonsBuilderHome = ({instId = ''}: ILessonBuilderHomeProps) => {
               </ErrorBoundary>
             )}
           />
-          <Route
+          {/* <Route
             exact
             path={`${match.url}/lesson/add/lesson-plan`}
             render={() => (
@@ -134,7 +134,7 @@ const LessonsBuilderHome = ({instId = ''}: ILessonBuilderHomeProps) => {
                 <LessonPlan />
               </ErrorBoundary>
             )}
-          />
+          /> */}
           <Route
             path={`${match.url}/:lessonId/page-builder`}
             render={() => (

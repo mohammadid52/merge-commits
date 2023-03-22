@@ -83,7 +83,6 @@ const CreatePassword = ({
     <form onSubmit={handleSubmit} className="">
       <FormInput
         name="password"
-        dataCy="password"
         Icon={AiOutlineLock}
         className="mb-4"
         placeHolder="Enter new password"
@@ -96,10 +95,8 @@ const CreatePassword = ({
 
       <div className="relative flex mt-2 flex-col justify-center items-center">
         <Buttons
-          dataCy="set-password"
           disabled={isToggled}
           type="submit"
-          btnClass="w-full py-3"
           loading={isToggled}
           label={isToggled ? 'Loading' : 'Set Password'}
         />

@@ -374,7 +374,7 @@ const Start: React.FC<StartProps> = ({
     <div data-cy="survey-button">
       <Buttons
         size="middle"
-        title={showNotebookBtn ? `See your notebook` : updateBtnText()}
+        tooltip={showNotebookBtn ? `See your notebook` : updateBtnText()}
         type="submit"
         onClick={!preview ? handleLink : noop}
         label={
@@ -387,9 +387,6 @@ const Start: React.FC<StartProps> = ({
           (isCompleted && type === 'survey') ||
           (isCompleted && isTeacher)
         }
-        btnClass={` h-full w-full text-xs focus:outline-none ${
-          !open || (isCompleted && type === 'survey') ? 'opacity-80' : 'opacity-100'
-        }`}
         greenBtn={
           showNotebookBtn ||
           (isCompleted && isTeacher) ||

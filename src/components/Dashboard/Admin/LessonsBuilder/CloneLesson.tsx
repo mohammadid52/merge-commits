@@ -200,14 +200,8 @@ const CloneLesson = ({setShowCloneModal, open, getCloneLessonDetails}: Props) =>
 
         {success && (
           <div className="flex items-center justify-center ">
+            <Buttons label={'Back to lessons'} onClick={onCloneModalClose} transparent />
             <Buttons
-              btnClass="py-1 px-4 text-xs mr-2"
-              label={'Back to lessons'}
-              onClick={onCloneModalClose}
-              transparent
-            />
-            <Buttons
-              btnClass="py-1 px-8 text-xs ml-2"
               label={'Update new cloned lesson details'}
               onClick={onRedirectToNewLesson}
             />

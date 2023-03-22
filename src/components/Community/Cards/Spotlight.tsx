@@ -389,14 +389,8 @@ const Spotlight = ({
 
       <div className="flex mt-8 justify-center px-6 pb-4">
         <div className="flex justify-end gap-4">
+          <Buttons label={'Cancel'} onClick={onCancel} transparent />
           <Buttons
-            btnClass="py-1 px-4 text-xs mr-2"
-            label={'Cancel'}
-            onClick={onCancel}
-            transparent
-          />
-          <Buttons
-            btnClass="py-1 px-8 text-xs ml-2"
             dataCy="save-spotlight-button"
             label={'Save'}
             loading={isLoading}

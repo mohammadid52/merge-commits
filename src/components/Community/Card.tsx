@@ -81,12 +81,7 @@ const EditChatModal = ({
         />
       </div>
       <div className="flex mt-8 justify-end">
-        <Buttons
-          btnClass="py-1 px-8 text-xs ml-2"
-          disabled={disableSaveBtn}
-          label={'Save'}
-          onClick={onEditedChatSave}
-        />
+        <Buttons disabled={disableSaveBtn} label={'Save'} onClick={onEditedChatSave} />
       </div>
     </Modal>
   );
