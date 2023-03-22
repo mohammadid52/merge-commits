@@ -5,7 +5,7 @@ import {useHistory, useRouteMatch} from 'react-router';
 import Filters, {SortType} from '@components/Atoms/Filters';
 import Highlighted from '@components/Atoms/Highlighted';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
-import Table from '@components/Molecules/Table';
+import Table, {ITableProps} from '@components/Molecules/Table';
 import useAuth from '@customHooks/useAuth';
 import usePagination from '@customHooks/usePagination';
 import useSearch from '@customHooks/useSearch';
@@ -315,7 +315,7 @@ const RoomsList = (props: RoomListProps) => {
     status: <Status useDefault status={item.status} />
   }));
 
-  const tableConfig = {
+  const tableConfig: ITableProps = {
     headers: [
       InstitueRomms[userLanguage]['NO'],
       InstitueRomms[userLanguage]['CLASSROOMS_NAME'],
@@ -327,31 +327,14 @@ const RoomsList = (props: RoomListProps) => {
     ],
     dataList,
     config: {
-      dark: false,
-
-      headers: {textColor: 'text-white'},
       dataList: {
         loading,
-        emptyText:
-          searchInput.isActive && !searchInput.typing
-            ? 'no data'
-            : searchInput.isActive && searchInput.typing
-            ? `Hit enter to search for ${searchInput.value}`
-            : '',
+
         pagination: {
           showPagination: true,
           config: {
             allAsProps
           }
-        },
-        customWidth: {
-          no: 'w-12'
-        },
-        maxHeight: '--',
-        pattern: 'striped',
-        patternConfig: {
-          firstColor: 'bg-gray-100',
-          secondColor: 'bg-gray-200'
         }
       }
     }

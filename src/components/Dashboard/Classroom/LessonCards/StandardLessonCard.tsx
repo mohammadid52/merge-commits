@@ -28,7 +28,7 @@ const StandardLessonCard = (props: LessonCardProps) => {
     preview = false
   } = props;
 
-  const {theme, lessonDispatch} = useGlobalContext();
+  const {lessonDispatch} = useGlobalContext();
   const [existsOrNot, setexistsOrNot] = useState<boolean>(false);
 
   const [isFetched, setIsFetched] = useState(false);

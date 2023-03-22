@@ -17,12 +17,10 @@ import * as mutations from 'graphql/mutations';
 import gsap from 'gsap';
 import isEmpty from 'lodash/isEmpty';
 import moment from 'moment';
-import React, {Fragment, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useRouteMatch} from 'react-router';
-import {Empty} from '../Admin/LessonsBuilder/StepActionComponent/LearningEvidence/CourseMeasurementsCard';
 import {DashboardProps} from '../Dashboard';
 import DashboardContainer from '../DashboardContainer';
-import ClassroomLoader from './ClassroomLoader';
 
 import ClassroomsList from './ClassroomsList';
 import FloatingAction from './FloatingActionForTeacherAndStudents';
@@ -620,7 +618,7 @@ const Classroom: React.FC<ClassroomProps> = (props: ClassroomProps) => {
           </span>
         </div>
         <PageWrapper>
-          <div>
+          <div className="px-4">
             {isTeacher && teachingStyle === TeachingStyle.PERFORMER && (
               <Warning message={'This classroom has Performer mode activated'} />
             )}
@@ -641,44 +639,37 @@ const Classroom: React.FC<ClassroomProps> = (props: ClassroomProps) => {
                   }`}
                   subtitle={classRoomDict[userLanguage]['UNIT_SUB_TITLE']}
                 />
-                <div className={`bg-opacity-10`}>
-                  <div className={`pb-4 m-auto px-0`}>
-                    <SyllabusSwitch
-                      activeRoom={state.activeRoom}
-                      syllabusActivating={syllabusActivating}
-                      classRoomActiveSyllabus={activeRoomInfo?.activeSyllabus}
-                      completedLessons={activeRoomInfo?.completedLessons}
-                      curriculumName={state.roomData?.curriculum?.name}
-                      handleSyllabusActivation={handleSyllabusActivation}
-                      institutionId={activeRoomInfo?.institutionID}
-                      syllabusLoading={syllabusLoading}
-                    />
-                  </div>
-                </div>
+
+                <SyllabusSwitch
+                  activeRoom={state.activeRoom}
+                  syllabusActivating={syllabusActivating}
+                  classRoomActiveSyllabus={activeRoomInfo?.activeSyllabus}
+                  completedLessons={activeRoomInfo?.completedLessons}
+                  curriculumName={state.roomData?.curriculum?.name}
+                  handleSyllabusActivation={handleSyllabusActivation}
+                  institutionId={activeRoomInfo?.institutionID}
+                  syllabusLoading={syllabusLoading}
+                />
 
                 <Divider />
               </>
             )}
 
             <>
-              <div className={`pb-4 text-xl m-auto`}>
-                <ClassroomsList
-                  activeRoom={state.activeRoom}
-                  activeRoomInfo={activeRoomInfo}
-                  isTeacher={isTeacher}
-                  lessonLoading={
-                    loadingRoomInfo || lessonLoading || settingLessons || syllabusLoading
-                  }
-                  lessons={withTitle}
-                  syllabus={syllabusData}
-                  handleLessonMutationRating={_handleLessonMutationRating}
-                  getLessonRating={
-                    listPersonData && listPersonData.length > 0
-                      ? getLessonRating
-                      : () => {}
-                  }
-                />
-              </div>
+              <ClassroomsList
+                activeRoom={state.activeRoom}
+                activeRoomInfo={activeRoomInfo}
+                isTeacher={isTeacher}
+                lessonLoading={
+                  loadingRoomInfo || lessonLoading || settingLessons || syllabusLoading
+                }
+                lessons={withTitle}
+                syllabus={syllabusData}
+                handleLessonMutationRating={_handleLessonMutationRating}
+                getLessonRating={
+                  listPersonData && listPersonData.length > 0 ? getLessonRating : () => {}
+                }
+              />
             </>
           </div>
         </PageWrapper>

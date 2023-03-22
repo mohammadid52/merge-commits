@@ -1,6 +1,5 @@
 import AddButton from '@components/Atoms/Buttons/AddButton';
-import CommonActionsBtns from '@components/MicroComponents/CommonActionsBtns';
-import Table from '@components/Molecules/Table';
+import Table, {ITableProps} from '@components/Molecules/Table';
 import useAuth from '@customHooks/useAuth';
 import {UniversalLessonPage} from '@interfaces/UniversalLessonInterfaces';
 
@@ -46,7 +45,7 @@ const LessonActivities = ({
     setPreviewMode,
     setUniversalLessonDetails,
     setEditMode,
-    updateMovableList,
+
     setLessonPlanFields
   } = useULBContext();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -83,15 +82,6 @@ const LessonActivities = ({
     );
   };
 
-  const handleOnDragEnd = (result: any) => {
-    if (!result.destination) return;
-    const items = Array.from(pages);
-
-    const [reorderedItem] = items.splice(result.source.index, 1);
-    items.splice(result.destination.index, 0, reorderedItem);
-    updateMovableList(items, 'page');
-  };
-
   const toggleDeleteModal = (show: boolean, id?: string) => {
     setShowDeleteModal(show);
     setIdToBeRemoved(id || '');
@@ -124,51 +114,31 @@ const LessonActivities = ({
     ) : (
       '-'
     ),
-    estimatedTime: page.estTime ? `${page.estTime} min` : '',
-    actions: (
-      <CommonActionsBtns
-        button1Label="View"
-        button1Action={() => lessonPagePreview(page.id)}
-        button2Action={() => toggleDeleteModal(true, page.id)}
-      />
-    )
+    estimatedTime: page.estTime ? `${page.estTime} min` : ''
+    // actions: (
+    //   <CommonActionsBtns
+
+    //     button2Action={() => toggleDeleteModal(true, page.id)}
+    //   />
+    // )
   }));
 
   const dict = LessonBuilderDict[userLanguage]['LESSON_CLASSROOM_ACTIVITY_TABLE'];
 
-  const tableConfig = {
+  const tableConfig: ITableProps = {
     headers: [
       dict['ACTIVITY_LABEL'],
       dict['ACTIVITY_NAME'],
       isSuperAdmin && dict['INTERACTION_TYPE'],
       dict['INSTRUCTION'],
-      dict['ESTIMATED_TIME'],
+      dict['ESTIMATED_TIME']
 
-      dict['ACTION']
+      // dict['ACTION']
     ],
     dataList,
     config: {
-      dark: false,
-      isLastAction: true,
-      headers: {textColor: 'text-white'},
       dataList: {
-        emptyText: "You don't have any classroom activity yet.",
-        loading,
-        droppable: {
-          isDroppable: true,
-          onDragEnd: handleOnDragEnd,
-          droppableId: 'partContent'
-        },
-        customWidth: {
-          activityName: 'w-72',
-          activityLabel: 'w-40'
-        },
-        maxHeight: 'max-h-196',
-        pattern: 'striped',
-        patternConfig: {
-          firstColor: 'bg-gray-100',
-          secondColor: 'bg-gray-200'
-        }
+        loading
       }
     }
   };

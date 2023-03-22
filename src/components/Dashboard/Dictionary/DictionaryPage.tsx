@@ -2,7 +2,7 @@ import AddButton from '@components/Atoms/Buttons/AddButton';
 import PageWrapper from '@components/Atoms/PageWrapper';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import CommonActionsBtns from '@components/MicroComponents/CommonActionsBtns';
-import Table from '@components/Molecules/Table';
+import Table, {ITableProps} from '@components/Molecules/Table';
 import useAuth from '@customHooks/useAuth';
 import useGraphqlMutation from '@customHooks/useGraphqlMutation';
 import useGraphqlQuery from '@customHooks/useGraphqlQuery';
@@ -120,7 +120,7 @@ const DictionaryPage = () => {
     )
   }));
 
-  const tableConfig = {
+  const tableConfig: ITableProps = {
     headers: [
       'No',
       'English Phrase',
@@ -132,14 +132,7 @@ const DictionaryPage = () => {
     dataList,
     config: {
       dataList: {
-        loading: isLoading,
-        isFirstIndex: true,
-        emptyText: 'No dictionaries found',
-        customWidth: {
-          no: 'w-12',
-          actions: 'w-28'
-        },
-        maxHeight: 'max-h-196'
+        loading: isLoading
       }
     }
   };

@@ -6,56 +6,32 @@ import {ListBottomBar as IListBottomBar} from '@customHooks/usePagination';
 
 interface IDataListItem {
   [key: string]: any;
+  onClick: () => void;
 }
 
 interface IConfig {
-  isLastAction?: boolean;
-  isFirstIndex?: boolean;
-  dark?: boolean;
-  headers?: {textColor?: string; bgColor?: string};
   dataList?: {
     loading?: boolean;
-    emptyText?: string;
-    customWidth?: {[key: string]: any};
-    maxHeight?: string;
-    textColor?: string;
-
     expandable?: boolean;
-
-    droppable?: {
-      isDroppable: boolean;
-      onDragEnd: (result: any) => void;
-      droppableId: string;
-    };
-    searchInput?: {
-      value: string;
-      isActive: boolean;
-      typing: boolean;
-    };
     pagination?: {
       showPagination: boolean;
       config: {
         allAsProps: IListBottomBar;
       };
     };
-    bgColor?: string;
-    pattern?: string;
-    patternConfig?: {firstColor?: string; secondColor?: string};
   };
 }
 
-const TableComponent = ({
-  dataList,
-  headers,
-  config = {dark: false, dataList: {customWidth: {}, pattern: 'striped'}}
-}: {
+export interface ITableProps {
   config?: IConfig;
   headers: (string | false)[];
   dataList: IDataListItem[];
-}) => {
+}
+
+const TableComponent = ({dataList, headers, config = {}}: ITableProps) => {
   const _headers = headers.filter(Boolean) as string[];
 
-  const dataListConfig = config.dataList || {};
+  const dataListConfig = config?.dataList;
 
   const paginationConfig = dataListConfig?.pagination?.config;
 
@@ -86,8 +62,14 @@ const TableComponent = ({
           rowExpandable: (record: any) => Boolean(record?.content)
         }
       : undefined,
+    onRow: (data: any) => ({
+      onClick: () => {
+        data?.onClick?.();
+      }
+    }),
     className: 'universal-table mt-2',
     loading: config.dataList?.loading,
+
     pagination: showPagination
       ? {
           position: ['bottomCenter'],

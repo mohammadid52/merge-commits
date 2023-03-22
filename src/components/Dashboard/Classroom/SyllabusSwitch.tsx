@@ -1,13 +1,11 @@
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
-import React, {useState} from 'react';
-import {FaBook} from 'react-icons/fa';
 import {useHistory} from 'react-router';
 import {DashboardProps} from '../Dashboard';
 
-import Buttons from 'atoms/Buttons';
 import {Syllabus} from '@interfaces/ClassroomInterface';
 import {Empty, Radio, Tooltip} from 'antd';
+import Buttons from 'atoms/Buttons';
 
 const SyllabusSwitch = ({
   classRoomActiveSyllabus,

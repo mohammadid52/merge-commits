@@ -9,7 +9,7 @@ import * as customQueries from 'customGraphql/customQueries';
 
 import Buttons from 'atoms/Buttons';
 
-import Table from '@components/Molecules/Table';
+import Table, {ITableProps} from '@components/Molecules/Table';
 import {map} from 'lodash';
 import 'react-datepicker/dist/react-datepicker.css';
 
@@ -61,6 +61,7 @@ const Attendance = ({id, goToClassroom, selectedRoomId, role}: IAttendanceProps)
 
   const dataList = map(attendanceList, (item, idx) => ({
     no: idx + 1,
+    onClick: () => {},
     classname: item.roomName,
     curriculum: item.curriculumName,
     lesson: item.lessonName,
@@ -69,28 +70,12 @@ const Attendance = ({id, goToClassroom, selectedRoomId, role}: IAttendanceProps)
     time: moment(item?.time, 'HH:mm:ss').format('hh:mm A')
   }));
 
-  const tableConfig = {
+  const tableConfig: ITableProps = {
     headers: ['No', 'ClassName', 'Curriculum', 'Lesson', 'Type', 'Date', 'Time'],
     dataList,
     config: {
-      dark: false,
-      isFirstIndex: true,
-      headers: {textColor: 'text-white'},
       dataList: {
-        loading,
-        emptyText: 'No records found',
-        customWidth: {
-          no: 'w-12',
-          classname: 'w-76',
-          curriculum: 'w-72',
-          lesson: 'w-72'
-        },
-        maxHeight: 'max-h-196',
-        pattern: 'striped',
-        patternConfig: {
-          firstColor: 'bg-gray-100',
-          secondColor: 'bg-gray-200'
-        }
+        loading
       }
     }
   };

@@ -174,6 +174,7 @@ export const FormBlock = ({
       id,
       numbered,
       mode,
+      key: id,
       type,
       index,
       label,
@@ -202,6 +203,7 @@ export const FormBlock = ({
             id={id}
             inputID={inputID}
             label={label}
+            key={id}
             required={required}
             numbered={numbered}
             index={index}
@@ -214,6 +216,7 @@ export const FormBlock = ({
         return (
           <LinkInput
             numbered={numbered}
+            key={id}
             index={index}
             id={id}
             required={required}
@@ -234,6 +237,7 @@ export const FormBlock = ({
       case FORM_TYPES.REVIEW_SLIDER:
         return (
           <ReviewSliderBlock
+            key={id}
             inputID={inputID}
             id={id}
             disabled={mode === 'building'}
@@ -248,6 +252,7 @@ export const FormBlock = ({
       case `${FORM_TYPES.WRITING_EXERCISE}-content`:
         return (
           <div
+            key={id}
             className={`border-0 border-gray-700 ${
               type === FORM_TYPES.WRITING_EXERCISE
                 ? 'border-b-none rounded-b-none'
@@ -271,7 +276,7 @@ export const FormBlock = ({
       case FORM_TYPES.POEM:
       case `${FORM_TYPES.POEM}-content`:
         return (
-          <div className={`mt-4  rounded-2xl`}>
+          <div key={id} className={`mt-4  rounded-2xl`}>
             <WritingExerciseBlock
               title={false}
               value={isInLesson ? getValue?.(inputID || '') : value}
@@ -301,7 +306,7 @@ export const FormBlock = ({
       value: v.value
     }));
 
-    return <NotesBlock grid={{cols: 4, rows: 3}} value={modifiyValues} />;
+    return <NotesBlock key={id} grid={{cols: 4, rows: 3}} value={modifiyValues} />;
   }
 
   return (
@@ -310,7 +315,7 @@ export const FormBlock = ({
         value.length > 0 &&
         value.map((v: any, i: number) => {
           return (
-            <ErrorBoundary componentName="FormBlock-composeInput">
+            <ErrorBoundary key={v.id} componentName="FormBlock-composeInput">
               <React.Fragment key={`formBlock_${i}`}>
                 {composeInput(
                   v.id,

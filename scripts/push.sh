@@ -14,6 +14,12 @@ commit (){
 
 }
 
+final (){
+      git pull
+      git push origin ${branch}
+      npm run find-deadcode && tsc
+}
+
 
 
 # run switch case
@@ -35,11 +41,9 @@ esac
 if [ "$run_test" = "y" ] || [ "$run_test" = "Y" ]; then
   echo "Running cypress test..."
   npm run cypress:run-everything
-  git pull
-  git push origin ${branch}
+  final
 
 else 
     echo "Skipping cypress test..."
-    git pull
-    git push origin ${branch}
+    final
     fi

@@ -16,9 +16,8 @@ import {RoomStatus} from 'API';
 import SearchInput from 'atoms/Form/SearchInput';
 import Selector from 'atoms/Form/Selector';
 import {Status} from 'components/Dashboard/Admin/UserManagement/UserStatus';
-import CommonActionsBtns from 'components/MicroComponents/CommonActionsBtns';
 import UnitName from 'components/MicroComponents/UnitName';
-import Table from 'components/Molecules/Table';
+import Table, {ITableProps} from 'components/Molecules/Table';
 import * as customMutations from 'customGraphql/customMutations';
 import * as customQueries from 'customGraphql/customQueries';
 import useAuth from 'customHooks/useAuth';
@@ -48,7 +47,7 @@ export const UnitList = ({
 
   const {isSuperAdmin} = useAuth();
 
-  const {CommonlyUsedDict, UnitLookupDict} = useDictionary();
+  const {UnitLookupDict} = useDictionary();
   // ~~~~~~~~~~~~~~ UNIT LIST ~~~~~~~~~~~~~~ //
   const [loading, setLoading] = useState(true);
   const [institutionList, setInstitutionList] = useState<any>([]);
@@ -202,18 +201,6 @@ export const UnitList = ({
     message: '',
     action: () => {}
   });
-
-  const checkIfRemovable = (unitObj: any) => {
-    if (
-      unitObj.lessons?.items?.length > 0 ||
-      (unitObj.lessonHistory && unitObj.lessonHistory?.length > 0) ||
-      unitObj?.isUsed
-    ) {
-      return false;
-    } else {
-      return true;
-    }
-  };
 
   const handleToggleDelete = (targetString?: string, itemObj?: any) => {
     if (!deleteModal.show) {
@@ -451,6 +438,7 @@ export const UnitList = ({
 
   const dataList = map(finalList, (item: any, index: number) => ({
     no: getIndex(index),
+    onClick: () => handleView(item.id),
     instituteName: isSuperAdmin && item.institution.name,
     status: <Status status={item.status} useDefault />,
     content: (
@@ -483,7 +471,10 @@ export const UnitList = ({
         {item.lessons?.items?.length > 0 ? (
           <List size="small">
             {item.lessons?.items?.map(
-              (lesson: {id: string; lesson: {id: string; title: string}}) => {
+              (
+                lesson: {id: string; lesson: {id: string; title: string}},
+                index: number
+              ) => {
                 if (lesson) {
                   return (
                     <Tooltip
@@ -496,7 +487,7 @@ export const UnitList = ({
                         onClick={() =>
                           redirectToLesson(item.institution.id, lesson.lesson.id)
                         }>
-                        {lesson.lesson.title}
+                        {index + 1}. {lesson.lesson.title}
                       </List.Item>
                     </Tooltip>
                   );
@@ -509,32 +500,28 @@ export const UnitList = ({
           <p className="">No lesson plan</p>
         )}
       </div>
-    ),
-    action: (
-      <CommonActionsBtns
-        button1Label="View"
-        isDeletable={checkIfRemovable(item)}
-        button1Action={() => handleView(item.id)}
-        button2Action={() => handleToggleDelete(item.name, item)}
-      />
     )
+    // action: (
+    //   <CommonActionsBtns
+    //     button1Label="View"
+    //     isDeletable={checkIfRemovable(item)}
+    //     button1Action={() => handleView(item.id)}
+    //     button2Action={() => handleToggleDelete(item.name, item)}
+    //   />
+    // )
   }));
 
-  const tableConfig = {
+  const tableConfig: ITableProps = {
     headers: [
       UnitLookupDict[userLanguage].NO,
       UnitLookupDict[userLanguage]['NAME'],
       isSuperAdmin && UnitLookupDict[userLanguage]['INSTITUTION_NAME'],
       UnitLookupDict[userLanguage]['LESSONS'],
-      InstitueRomms[userLanguage]['STATUS'],
-      UnitLookupDict[userLanguage]['ACTION']
+      InstitueRomms[userLanguage]['STATUS']
+      // UnitLookupDict[userLanguage]['ACTION']
     ],
     dataList,
     config: {
-      dark: false,
-
-      isFirstIndex: true,
-      headers: {textColor: 'text-white'},
       dataList: {
         expandable: true,
         loading,
@@ -544,22 +531,6 @@ export const UnitList = ({
           config: {
             allAsProps
           }
-        },
-        emptyText:
-          searchInput.isActive || selectedInstitution?.id
-            ? CommonlyUsedDict[userLanguage]['NO_SEARCH_RESULT']
-            : UnitLookupDict[userLanguage]['INFO'],
-        customWidth: {
-          no: 'w-12',
-          unitName: 'w-96',
-          lessonPlan: 'w-96',
-          action: 'w-auto'
-        },
-        maxHeight: 'max-h-196',
-        pattern: 'striped',
-        patternConfig: {
-          firstColor: 'bg-gray-100',
-          secondColor: 'bg-gray-200'
         }
       }
     }

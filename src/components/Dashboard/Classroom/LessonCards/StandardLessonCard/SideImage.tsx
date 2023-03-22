@@ -1,14 +1,12 @@
 import {LessonCardProps} from '@interfaces/ClassroomInterface';
-import {useGlobalContext} from 'contexts/GlobalContext';
 import {getImageFromS3Static} from 'utilities/services';
 
 const SideImage = (props: LessonCardProps) => {
   const {lessonProps, getImageFromS3 = true} = props;
-  const {theme} = useGlobalContext();
 
   return (
     <div
-      className={`relative rounded-lg bg-contain bg-gray-100 min-w-[14rem] h-56 w-56`}
+      className={`relative rounded-lg bg-contain bg-gray-100 min-w-[8rem] h-32 w-32`}
       style={{
         /* stylelint-disable */
         backgroundImage: `linear-gradient(to top, rgba(0, 0, 0, 0.52), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)),url(${

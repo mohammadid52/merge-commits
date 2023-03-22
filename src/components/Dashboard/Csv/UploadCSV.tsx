@@ -7,7 +7,7 @@ import UploadButton from '@components/Atoms/Form/UploadButton';
 import Modal from '@components/Atoms/Modal';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
-import Table from '@components/Molecules/Table';
+import Table, {ITableProps} from '@components/Molecules/Table';
 import useAuth from '@customHooks/useAuth';
 import {
   focusOn,
@@ -1341,6 +1341,7 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
 
   const dataList = getMappedValues(parsedObj).map((listItem, idx) => ({
     no: idx + 1,
+    onClick: () => {},
     id: listItem['AuthId'],
     name: `${listItem['First Name']} ${listItem['Last Name']}`,
 
@@ -1348,22 +1349,12 @@ const UploadCsv = ({institutionId}: ICsvProps) => {
     takenSurvey: listItem['UniversalSurveyStudentID'] === 'Not-taken-yet' ? 'No' : 'Yes'
   }));
 
-  const tableConfig = {
+  const tableConfig: ITableProps = {
     headers: ['No', 'Id', 'Name', 'Email', 'Taken Survey'],
     dataList,
     config: {
-      isFirstIndex: true,
       dataList: {
-        loading: isEmpty(parsedObj),
-
-        emptyText: 'no data found',
-        customWidth: {
-          id: 'w-72',
-          takenSurvey: 'w-48',
-
-          email: 'w-72 break-all'
-        },
-        maxHeight: 'max-h-196'
+        loading: isEmpty(parsedObj)
       }
     }
   };

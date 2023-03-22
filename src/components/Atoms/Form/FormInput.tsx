@@ -58,7 +58,7 @@ const FormInput: React.FC<FormInputProps> = ({
     disabled,
     type,
     onChange,
-    value,
+    value: value || undefined,
     name,
     id,
     maxLength,

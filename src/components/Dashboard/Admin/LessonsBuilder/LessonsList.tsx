@@ -5,7 +5,7 @@ import Highlighted from '@components/Atoms/Highlighted';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import ErrorBoundary from '@components/Error/ErrorBoundary';
 import CommonActionsBtns from '@components/MicroComponents/CommonActionsBtns';
-import Table from '@components/Molecules/Table';
+import Table, {ITableProps} from '@components/Molecules/Table';
 import {useGlobalContext} from '@contexts/GlobalContext';
 import useAuth from '@customHooks/useAuth';
 import usePagination from '@customHooks/usePagination';
@@ -45,8 +45,7 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
 
   const {theme, state, userLanguage} = useGlobalContext();
 
-  const {BreadcrumsTitles, CommonlyUsedDict, InstitueRomms, LessonsListDict} =
-    useDictionary();
+  const {BreadcrumsTitles, InstitueRomms, LessonsListDict} = useDictionary();
 
   const [status, setStatus] = useState('');
   const [lessonsData, setLessonsData] = useState<any[]>([]);
@@ -418,7 +417,7 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
     )
   }));
 
-  const tableConfig = {
+  const tableConfig: ITableProps = {
     headers: [
       LessonsListDict[userLanguage]['NO'],
       LessonsListDict[userLanguage]['LESSONTITLE'],
@@ -426,34 +425,18 @@ const LessonsList = ({isInInstitution, instId}: LessonListProps) => {
       LessonsListDict[userLanguage]['TYPE'],
       LessonsListDict[userLanguage]['TARGET_AUDIENCE'],
       InstitueRomms[userLanguage]['STATUS'],
-      'Last Edit Date',
-      LessonsListDict[userLanguage]['ACTION']
+      'Last Edit Date'
     ],
     dataList,
     config: {
-      isLastAction: true,
-      isFirstIndex: true,
-      headers: {textColor: 'text-white'},
       dataList: {
         loading: status !== 'done',
         pagination: {
           showPagination: true,
           config: {
-            allAsProps,
-            totalNum: totalLessonNum
+            allAsProps
           }
-        },
-        emptyText:
-          searchInput?.value || selectedInstitution?.id
-            ? CommonlyUsedDict[userLanguage]['NO_SEARCH_RESULT']
-            : LessonsListDict[userLanguage]['NORESULT'],
-        customWidth: {
-          no: 'w-12',
-          lessonTitle: 'w-72',
-          lessonPlan: 'w-96',
-          actions: '-'
-        },
-        maxHeight: 'max-h-196'
+        }
       }
     }
   };

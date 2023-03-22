@@ -80,20 +80,6 @@ const UserLookupAction = ({item}: {item: any}) => {
         showFooter={false}
         closeAction={onAlertClose}>
         <Result title={resetPasswordServerResponse.message} />
-        {/* <div className="py-8 px-16">
-          <div className="mx-auto flex items-center justify-center rounded-full">
-            <FiAlertCircle className="w-8 h-8" />
-          </div>
-          <div className="mt-4">{resetPasswordServerResponse.message}</div>
-          <div className="flex justify-center mt-4">
-            <Buttons
-              btnClass={'abc'}
-              label={'Ok'}
-              labelClass={'leading-6'}
-              onClick={onAlertClose}
-            />
-          </div>
-        </div> */}
       </Modal>
     </div>
   );

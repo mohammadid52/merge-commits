@@ -9,10 +9,9 @@ import Buttons from '@components/Atoms/Buttons';
 import Filters, {SortType} from '@components/Atoms/Filters';
 import Selector from '@components/Atoms/Form/Selector';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
-import CommonActionsBtns from '@components/MicroComponents/CommonActionsBtns';
 import StudentName from '@components/MicroComponents/StudentName';
 import UserLookupLocation from '@components/MicroComponents/UserLookupLocation';
-import Table from '@components/Molecules/Table';
+import Table, {ITableProps} from '@components/Molecules/Table';
 import {useNotifications} from '@contexts/NotificationContext';
 import useSearch from '@customHooks/useSearch';
 import {getLocalStorageData} from '@utilities/localStorage';
@@ -70,11 +69,11 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
 
   const [studentProfileID, setStudentProfileID] = useState('');
   const [newMember, setNewMember] = useState(defaultNewMember);
-  const [_, setStudentIdToEdit] = useState<string>('');
+
   const [_2, setGroups] = useState<any[]>([]);
   const [_3, setSaving] = useState<boolean>(false);
 
-  const [deleting, setDeleting] = useState(false);
+  const [deleting] = useState(false);
   const [loading, setLoading] = useState(true);
   const [_4, setAdding] = useState(false);
 
@@ -350,48 +349,48 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
     }
   };
 
-  const onDelete = (id: any) => {
-    const onDrop = async () => {
-      setDeleting(true);
-      await API.graphql(
-        graphqlOperation(customMutations.deleteClassStudent, {
-          input: {id}
-        })
-      );
-      const deletedStudentData = classStudents.find((item) => item.id === id);
-      setAllStudents((prevStudent) => [
-        ...prevStudent,
-        {
-          id: deletedStudentData.id,
-          name: `${deletedStudentData.student?.firstName || ''} ${
-            deletedStudentData.student?.lastName || ''
-          }`,
-          value: `${deletedStudentData.student?.firstName || ''} ${
-            deletedStudentData.student?.lastName || ''
-          }`,
-          avatar: deletedStudentData.student?.image
-            ? getImageFromS3(deletedStudentData.student?.image)
-            : '',
-          status: deletedStudentData.status || 'Inactive',
-          email: deletedStudentData.student?.email || '',
-          authId: deletedStudentData.studentAuthID || ''
-        }
-      ]);
-      setClassStudents((prevStudents) => prevStudents.filter((item) => item.id !== id));
-      closeDeleteModal();
-      setDeleting(false);
-      setNotification({
-        title: `Student removed from classroom - ${deletedStudentData.student?.email}`,
-        type: 'success',
-        show: true
-      });
-    };
-    setWarnModal2({
-      show: true,
-      message: `Are you sure you want to remove this student from class?`,
-      action: onDrop
-    });
-  };
+  // const onDelete = (id: any) => {
+  //   const onDrop = async () => {
+  //     setDeleting(true);
+  //     await API.graphql(
+  //       graphqlOperation(customMutations.deleteClassStudent, {
+  //         input: {id}
+  //       })
+  //     );
+  //     const deletedStudentData = classStudents.find((item) => item.id === id);
+  //     setAllStudents((prevStudent) => [
+  //       ...prevStudent,
+  //       {
+  //         id: deletedStudentData.id,
+  //         name: `${deletedStudentData.student?.firstName || ''} ${
+  //           deletedStudentData.student?.lastName || ''
+  //         }`,
+  //         value: `${deletedStudentData.student?.firstName || ''} ${
+  //           deletedStudentData.student?.lastName || ''
+  //         }`,
+  //         avatar: deletedStudentData.student?.image
+  //           ? getImageFromS3(deletedStudentData.student?.image)
+  //           : '',
+  //         status: deletedStudentData.status || 'Inactive',
+  //         email: deletedStudentData.student?.email || '',
+  //         authId: deletedStudentData.studentAuthID || ''
+  //       }
+  //     ]);
+  //     setClassStudents((prevStudents) => prevStudents.filter((item) => item.id !== id));
+  //     closeDeleteModal();
+  //     setDeleting(false);
+  //     setNotification({
+  //       title: `Student removed from classroom - ${deletedStudentData.student?.email}`,
+  //       type: 'success',
+  //       show: true
+  //     });
+  //   };
+  //   setWarnModal2({
+  //     show: true,
+  //     message: `Are you sure you want to remove this student from class?`,
+  //     action: onDrop
+  //   });
+  // };
 
   useEffect(() => {
     if (withbackupClassId) {
@@ -505,67 +504,44 @@ const EditClass = ({instId, classId, roomData, toggleUpdateState}: EditClassProp
 
   const dataList = map(sortByName(addName(finalList)), (item: any, index: number) => ({
     no: index + 1,
-    participantName: (
-      <StudentName
-        item={item}
-        user={user}
-        onClick={() => {
-          user.role !== 'BLD' && setStudentProfileID(item.student.id);
-          user.role !== 'BLD' && setUserModalFormOpen(true);
-        }}
-      />
-    ),
+    onClick: () => {
+      user.role !== 'BLD' && setStudentProfileID(item.student.id);
+      user.role !== 'BLD' && setUserModalFormOpen(true);
+    },
+    participantName: <StudentName item={item} user={user} />,
 
     status: <Status useDefault status={item?.student?.status} />,
     location: <UserLookupLocation item={item} idx={index} />,
     type: <LocationBadge onDemand={item?.student?.onDemand} />,
-    dateAdded: item.createAt ? new Date(item.createAt).toLocaleDateString() : '--',
-    actions: (
-      <CommonActionsBtns
-        button1Action={() => {
-          user.role !== 'BLD' && setStudentProfileID(item.student.id);
-          user.role !== 'BLD' && setUserModalFormOpen(true);
-          user.role !== 'BLD' && setStudentIdToEdit(item.id);
-        }}
-        button2Action={() => onDelete(item.id)}
-      />
-    )
+    dateAdded: item.createAt ? new Date(item.createAt).toLocaleDateString() : '--'
+    // actions: (
+    //   <CommonActionsBtns
+    //     button1Action={() => {
+    //       user.role !== 'BLD' && setStudentProfileID(item.student.id);
+    //       user.role !== 'BLD' && setUserModalFormOpen(true);
+    //       user.role !== 'BLD' && setStudentIdToEdit(item.id);
+    //     }}
+    //     button2Action={() => onDelete(item.id)}
+    //   />
+    // )
   }));
 
   const dict = dictionary.TABLE;
 
-  const tableConfig = {
+  const tableConfig: ITableProps = {
     headers: [
       dict['SNO'],
       dict['NAME'],
       dict['TYPE'],
       dict['STATUS'],
       dict['LOCATION'],
-      dict['DATE'],
-      dict['ACTIONS']
+      dict['DATE']
+      // dict['ACTIONS']
     ],
     dataList,
     config: {
-      dark: false,
-      isFirstIndex: true,
-      headers: {textColor: 'text-white'},
       dataList: {
-        loading: classStudentsLoading || loading,
-        emptyText: dictionary.NOSTUDENT,
-        customWidth: {
-          no: 'w-12',
-          participantName: 'w-96',
-          status: 'w-40',
-          type: 'w-40',
-          location: 'w-40',
-          actions: 'w0'
-        },
-        maxHeight: 'max-h-196',
-        pattern: 'striped',
-        patternConfig: {
-          firstColor: 'bg-gray-100',
-          secondColor: 'bg-gray-200'
-        }
+        loading: classStudentsLoading || loading
       }
     }
   };

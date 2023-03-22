@@ -1,10 +1,8 @@
-import {API, graphqlOperation} from 'aws-amplify';
 import AddButton from '@components/Atoms/Buttons/AddButton';
 import PageWrapper from '@components/Atoms/PageWrapper';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
-import CommonActionsBtns from '@components/MicroComponents/CommonActionsBtns';
 import InstituteName from '@components/MicroComponents/InstituteName';
-import Table from '@components/Molecules/Table';
+import Table, {ITableProps} from '@components/Molecules/Table';
 import usePagination from '@customHooks/usePagination';
 import {logError} from '@graphql/functions';
 import {XIcon} from '@heroicons/react/outline';
@@ -13,6 +11,7 @@ import {formatPhoneNumber, getHostNameFromUrl} from '@utilities/strings';
 import {getAsset} from 'assets';
 import BreadcrumbsWithBanner from 'atoms/BreadcrumbsWithBanner';
 import SearchInput from 'atoms/Form/SearchInput';
+import {API, graphqlOperation} from 'aws-amplify';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
 import useDictionary from 'customHooks/dictionary';
@@ -224,43 +223,35 @@ const InstitutionLookup: React.FC = () => {
     name: instituteObject.name,
     type: instituteObject.type || '--',
     website: instituteObject.website ? getHostNameFromUrl(instituteObject.website) : '--',
-    contactNo: instituteObject.phone ? formatPhoneNumber(instituteObject.phone) : '--',
-    actions: (
-      <CommonActionsBtns
-        button1Label="Edit"
-        button1Action={() => handleInstitutionView(instituteObject.id)}
-      />
-    )
+    contactNo: instituteObject.phone ? formatPhoneNumber(instituteObject.phone) : '--'
+    // actions: (
+    //   <CommonActionsBtns
+    //     button1Label="Edit"
+    //     button1Action={() => hand∏leInstitutionView(instituteObject.id)}
+    //   />
+    // )
   }));
 
-  const tableConfig = {
+  const tableConfig: ITableProps = {
     headers: [
       'No',
       dictionary['NAME'],
       dictionary['TYPE'],
       dictionary['WEBSITE'],
-      dictionary['CONTACT'],
-      dictionary['ACTION']
+      dictionary['CONTACT']
+      // dictionary['ACTION']
     ],
     dataList,
     config: {
-      isFirstIndex: true,
-      isLastAction: true,
-
       dataList: {
         loading: status !== 'done',
-        emptyText: dictionary['NORESULT'],
+
         pagination: {
           showPagination: !searchInput.isActive && totalNum > 0,
           config: {
             allAsProps
           }
-        },
-        customWidth: {
-          instituteName: 'w-72 -ml-8',
-          no: 'w-20'
-        },
-        maxHeight: 'max-h-196'
+        }
       }
     }
   };

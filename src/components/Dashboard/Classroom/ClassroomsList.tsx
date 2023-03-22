@@ -142,7 +142,7 @@ const ClassroomsList: React.FC<LessonProps> = ({
             }
           />
 
-          <div className="grid grid-cols-1 gap-5">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
             {lessonsBySession.map((session: any) => (
               <Fragment key={session.sessionHeading}>
                 {isNumber(session.sessionHeading) && (

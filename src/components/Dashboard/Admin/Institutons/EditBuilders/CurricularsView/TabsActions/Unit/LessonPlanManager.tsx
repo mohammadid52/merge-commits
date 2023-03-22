@@ -10,8 +10,7 @@ import * as customQueries from 'customGraphql/customQueries';
 import * as mutations from 'graphql/mutations';
 
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
-import CommonActionsBtns from '@components/MicroComponents/CommonActionsBtns';
-import Table from '@components/Molecules/Table';
+import Table, {ITableProps} from '@components/Molecules/Table';
 import useAuth from '@customHooks/useAuth';
 import {logError} from '@graphql/functions';
 import {RoomStatus} from 'API';
@@ -19,7 +18,7 @@ import AddButton from 'atoms/Buttons/AddButton';
 import Selector from 'atoms/Form/Selector';
 import {map} from 'lodash';
 import ModalPopUp from 'molecules/ModalPopUp';
-import {getLessonType, reorder} from 'utilities/strings';
+import {getLessonType} from 'utilities/strings';
 
 interface UIMessages {
   show: boolean;
@@ -270,28 +269,6 @@ const LessonPlanManager = ({
     );
   };
 
-  const onDragEnd = async (result: any) => {
-    if (result.source.index !== result.destination.index) {
-      const list: any = reorder(
-        lessonsIds,
-        result.source.index,
-        result.destination.index
-      );
-
-      setLessonsIds(list);
-      let lessonsList = selectedLessonsList
-        .map((t: any) => {
-          let index = list.indexOf(t.id);
-          return {...t, index};
-        })
-        .sort((a: any, b: any) => (a.index > b.index ? 1 : -1));
-
-      setSelectedLessonsList(lessonsList);
-      updateLessonSequence(list);
-      // Graphql mutation to update syllabus lesson seq
-    }
-  };
-
   // ~~~~ CHECK IF LESSON CAN BE DELETED ~~~ //
 
   /***********************************************
@@ -303,18 +280,6 @@ const LessonPlanManager = ({
     message: '',
     action: () => {}
   });
-
-  const checkIfRemovable = (lessonObj: any, unitObj: any) => {
-    if (
-      unitObj?.lessonHistory &&
-      unitObj?.lessonHistory?.length > 0 &&
-      unitObj?.lessonHistory.includes(lessonObj.id)
-    ) {
-      return false;
-    } else {
-      return true;
-    }
-  };
 
   const handleToggleDelete = (targetString?: string, id?: any) => {
     if (!deleteModal.show) {
@@ -371,13 +336,8 @@ const LessonPlanManager = ({
     return {
       no: idx + 1,
       id: item.id,
-      lessonName: (
-        <div
-          className="cursor-pointer"
-          onClick={() => gotoLessonBuilder(lessonObj.id, lessonObj.type)}>
-          {lessonObj.title || '--'}
-        </div>
-      ),
+      onClick: () => gotoLessonBuilder(lessonObj.id, lessonObj.type),
+      lessonName: <div className="cursor-pointer">{lessonObj.title || '--'}</div>,
       type: lessonObj.type || '--',
       measurements:
         lessonObj?.measurements?.length > 0
@@ -386,54 +346,24 @@ const LessonPlanManager = ({
                 ? rubric?.rubric?.name + '.'
                 : rubric?.rubric?.name + ', '
             )
-          : '-',
-      actions: (
-        <CommonActionsBtns
-          button1Label="View"
-          isDeletable={checkIfRemovable(lessonObj, syllabusDetails)}
-          button1Action={() => gotoLessonBuilder(lessonObj.id, lessonObj.type)}
-          button2Action={() => handleToggleDelete(lessonObj.title, item.id)}
-        />
-      )
+          : '-'
+      // actions: (
+      //   <CommonActionsBtns
+      //     button1Label="View"
+      //     isDeletable={checkIfRemovable(lessonObj, syllabusDetails)}
+      //     button1Action={() => gotoLessonBuilder(lessonObj.id, lessonObj.type)}
+      //     button2Action={() => handleToggleDelete(lessonObj.title, item.id)}
+      //   />
+      // )
     };
   });
 
-  const tableConfig = {
-    headers: [
-      dict['NUMBER'],
-      dict['LESSON_NAME'],
-      dict['TYPE'],
-      dict['MEASUREMENTS'],
-      dict['ACTION']
-    ],
+  const tableConfig: ITableProps = {
+    headers: [dict['NUMBER'], dict['LESSON_NAME'], dict['TYPE'], dict['MEASUREMENTS']],
     dataList,
     config: {
-      dark: false,
-
-      isFirstIndex: true,
-      headers: {textColor: 'text-white'},
       dataList: {
-        emptyText: `No lesson found - current unit status is ${
-          syllabusDetails?.status?.toLowerCase() || RoomStatus.ACTIVE.toLocaleLowerCase()
-        }`,
-        loading,
-        droppable: {
-          isDroppable: true,
-          droppableId: 'lessonPlanManagerList',
-          onDragEnd
-        },
-        customWidth: {
-          no: 'w-12',
-
-          lessonName: 'w-96',
-          actions: 'w0'
-        },
-        maxHeight: 'max-h-196',
-        pattern: 'striped',
-        patternConfig: {
-          firstColor: 'bg-gray-100',
-          secondColor: 'bg-gray-200'
-        }
+        loading
       }
     }
   };

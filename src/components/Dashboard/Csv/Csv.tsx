@@ -1,7 +1,7 @@
 import {GraphQLAPI as API, graphqlOperation} from '@aws-amplify/api-graphql';
 import Modal from '@components/Atoms/Modal';
 import AnimatedContainer from '@components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/AnimatedContainer';
-import Table from '@components/Molecules/Table';
+import Table, {ITableProps} from '@components/Molecules/Table';
 import {logError} from '@graphql/functions';
 import {getFormatedDate} from '@utilities/time';
 import {Divider} from 'antd';
@@ -390,6 +390,7 @@ const Csv = () => {
 
   const dataList = CSVData.map((listItem, idx) => ({
     no: idx + 1,
+    onClick: () => {},
     id: listItem.id,
     name: `${listItem.firstName} ${listItem.lastName}`,
 
@@ -398,22 +399,12 @@ const Csv = () => {
     completedDate: getFormatedDate(listItem?.last)
   }));
 
-  const tableConfig = {
+  const tableConfig: ITableProps = {
     headers: ['No', 'Id', 'Name', 'Email', 'Completed Date', 'Taken Survey'],
     dataList,
     config: {
-      isFirstIndex: true,
       dataList: {
-        loading: !isCSVDownloadReady || !isCSVReady,
-
-        emptyText: 'no data found',
-        customWidth: {
-          id: 'w-72',
-          takenSurvey: 'w-48',
-          completedDate: 'w-48',
-          email: 'w-72 break-all'
-        },
-        maxHeight: 'max-h-196'
+        loading: !isCSVDownloadReady || !isCSVReady
       }
     }
   };

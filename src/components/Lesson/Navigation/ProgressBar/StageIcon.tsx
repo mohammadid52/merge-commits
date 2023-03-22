@@ -112,6 +112,7 @@ const StageIcon = ({
         <a
           data-cy={last ? 'last-button-on-progress-bar' : ''}
           className={`
+          hover:bg-gray-700 px-1.5 py-0.5 rounded-md transition-all
           ${clickedLesson}
           ${
             !enabled || !open ? 'line-through text-gray-500 hover:underline' : null

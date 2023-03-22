@@ -1,53 +1,22 @@
 import Highlighted from '@components/Atoms/Highlighted';
 import Placeholder from '@components/Atoms/Placeholder';
-import {useGlobalContext} from '@contexts/GlobalContext';
 import {getImageFromS3} from '@utilities/services';
-import React, {useEffect, useState} from 'react';
-import {useRouteMatch, useHistory} from 'react-router';
 
 const UserLookupName = ({
   item,
-  isStudentRoster,
+
   searchTerm
 }: {
   searchTerm: string;
   item: any;
-  isStudentRoster: boolean;
 }) => {
-  const {state} = useGlobalContext();
-
-  const match = useRouteMatch();
-  const history = useHistory();
-
-  const [imageUrl, setImageUrl] = useState('');
-
-  useEffect(() => {
-    async function getUrl() {
-      const imageUrl: any = await getImageFromS3(item.image);
-      setImageUrl(imageUrl);
-    }
-    getUrl();
-  }, [item.image]);
-
-  const handleLink = (id: string) => {
-    const {user} = state;
-
-    if (isStudentRoster) {
-      history.push(
-        `/dashboard/manage-institutions/institution/${user.associateInstitute[0].institution.id}/manage-users/${id}?from=dashboard`
-      );
-    } else {
-      const url = match.url.endsWith('/') ? match.url : match.url + '/';
-      history.push(`${url}${id}`);
-    }
-  };
-
   return (
-    <div className="" onClick={() => handleLink(item.id)}>
+    <div className="">
       <div className="flex items-center">
         <div className="flex-shrink-0 h-10 w-10">
           <Placeholder
-            image={item.image ? imageUrl : null}
+            // @ts-ignore
+            image={item.image ? getImageFromS3(item.image) : null}
             lastName={item.lastName}
             firstName={item.firstName}
             size="h-8 w-8"
@@ -56,8 +25,7 @@ const UserLookupName = ({
         <div className="ml-2">
           <div
             data-cy={`${item.id}`}
-            className="hover:text-gray-600 cursor-pointer text-sm leading-5 font-medium text-gray-900"
-            onClick={() => handleLink(item.id)}>
+            className="hover:text-gray-600 cursor-pointer text-sm leading-5 font-medium text-gray-900">
             <Highlighted
               text={item.name.split(' ').join('').length > 0 ? item.name : '--'}
               highlight={searchTerm}

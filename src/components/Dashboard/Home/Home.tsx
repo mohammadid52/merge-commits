@@ -2,7 +2,6 @@ import ErrorBoundary from '@components/Error/ErrorBoundary';
 import useAuth from '@customHooks/useAuth';
 import {PersonStatus} from 'API';
 import {getAsset} from 'assets';
-import SectionTitleV3 from 'atoms/SectionTitleV3';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useDictionary from 'customHooks/dictionary';
 import {useEffect, useState} from 'react';

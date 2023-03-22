@@ -45,7 +45,10 @@ const Placeholder = ({
   if (image) {
     return (
       <div className={`${size} rounded-full flex justify-center items-center`}>
-        <img src={image} className="rounded-full w-full  customShadow bg-gray-500" />
+        <img
+          src={image}
+          className="rounded-full w-full h-full  customShadow bg-gray-500"
+        />
       </div>
     );
   } else {

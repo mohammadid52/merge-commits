@@ -4,7 +4,7 @@ import AddButton from '@components/Atoms/Buttons/AddButton';
 import Placeholder from '@components/Atoms/Placeholder';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import ErrorBoundary from '@components/Error/ErrorBoundary';
-import Table from '@components/Molecules/Table';
+import Table, {ITableProps} from '@components/Molecules/Table';
 import {uploadImageToS3} from '@graphql/functions';
 import {PersonStatus, Role} from 'API';
 import Loader from 'atoms/Loader';
@@ -94,12 +94,9 @@ const AssociatedClasses = ({list, handleClassRoomClick}: any) => {
     return {
       no: idx + 1,
       institution: room?.class?.institution?.name,
+      onClick: () => handleClassRoomClick(room.id),
       classroom: (
-        <div
-          onClick={() => handleClassRoomClick(room.id)}
-          className="hover:underline cursor-pointer hover:theme-text">
-          {room.name}
-        </div>
+        <div className="hover:underline cursor-pointer hover:theme-text">{room.name}</div>
       ),
 
       teacher: teacher
@@ -112,23 +109,9 @@ const AssociatedClasses = ({list, handleClassRoomClick}: any) => {
         : 'Not Available'
     };
   });
-  const tableConfig = {
+  const tableConfig: ITableProps = {
     headers: ['No', 'Institution', 'Classroom', 'Teacher', 'Curriculum'],
-    dataList,
-    config: {
-      isLastAction: true,
-      isFirstIndex: true,
-
-      dataList: {
-        emptyText: 'No associated coursework and attendance',
-        customWidth: {
-          no: 'w-12',
-          classroom: 'w-72',
-          curriculum: 'w-72'
-        },
-        maxHeight: 'max-h-196'
-      }
-    }
+    dataList
   };
 
   return <Table {...tableConfig} />;

@@ -1,7 +1,7 @@
 import Buttons from '@components/Atoms/Buttons';
 import PageWrapper from '@components/Atoms/PageWrapper';
 import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
-import Table from '@components/Molecules/Table';
+import Table, {ITableProps} from '@components/Molecules/Table';
 import {useGlobalContext} from '@contexts/GlobalContext';
 import useGraphqlQuery from '@customHooks/useGraphqlQuery';
 import {ListUploadLogsQueryVariables, UploadLogs} from 'API';
@@ -35,6 +35,7 @@ const UploadLogsPage = () => {
   const dataList = data.map((uploadLog, index) => {
     return {
       no: index + 1,
+      onClick: () => {},
       uploadDate: moment(uploadLog.Date).format('ll'),
       uploadedBy: (
         <>
@@ -62,7 +63,7 @@ const UploadLogsPage = () => {
     };
   });
 
-  const tableConfig = {
+  const tableConfig: ITableProps = {
     headers: [
       'No',
       'Upload date',
@@ -76,15 +77,8 @@ const UploadLogsPage = () => {
     ],
     dataList,
     config: {
-      isFirstIndex: true,
       dataList: {
-        loading: isLoading && !isFetched,
-        emptyText: 'no upload logs found',
-        customWidth: {
-          uploadDate: 'w-56',
-          surveyLink: 'w-96'
-        },
-        maxHeight: 'max-h-196'
+        loading: isLoading && !isFetched
       }
     }
   };

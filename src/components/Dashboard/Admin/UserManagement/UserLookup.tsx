@@ -1,7 +1,7 @@
 import {API, graphqlOperation} from 'aws-amplify';
 import {useEffect, useState} from 'react';
 import {AiOutlineUsergroupAdd} from 'react-icons/ai';
-import {useHistory} from 'react-router-dom';
+import {useHistory, useRouteMatch} from 'react-router-dom';
 
 import {useGlobalContext} from 'contexts/GlobalContext';
 import * as customQueries from 'customGraphql/customQueries';
@@ -12,7 +12,7 @@ import SectionTitleV3 from '@components/Atoms/SectionTitleV3';
 import UserLookupAction from '@components/MicroComponents/UserLookupAction';
 import UserLookupLocation from '@components/MicroComponents/UserLookupLocation';
 import UserLookupName from '@components/MicroComponents/UserLookupName';
-import Table from '@components/Molecules/Table';
+import Table, {ITableProps} from '@components/Molecules/Table';
 import useDictionary from '@customHooks/dictionary';
 import usePagination from '@customHooks/usePagination';
 import useSearch from '@customHooks/useSearch';
@@ -474,15 +474,25 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
 
   const dict = UserLookupDict[userLanguage];
 
+  const match = useRouteMatch();
+
+  const handleUserLink = (id: string) => {
+    const {user} = state;
+
+    if (isStudentRoster) {
+      history.push(
+        `/dashboard/manage-institutions/institution/${user.associateInstitute[0].institution.id}/manage-users/${id}?from=dashboard`
+      );
+    } else {
+      const url = match.url.endsWith('/') ? match.url : match.url + '/';
+      history.push(`${url}${id}`);
+    }
+  };
+
   const dataList = map(finalList, (item, idx) => ({
     no: getIndex(idx),
-    name: (
-      <UserLookupName
-        searchTerm={searchInput.value}
-        isStudentRoster={isStudentRoster}
-        item={item}
-      />
-    ),
+    onClick: () => handleUserLink(item.id),
+    name: <UserLookupName searchTerm={searchInput.value} item={item} />,
     flow: <UserLocation role={item.role} onDemand={item?.onDemand} />,
     role: <UserRole role={item.role ? item.role : '--'} />,
     status: (
@@ -501,7 +511,7 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
     )
   }));
 
-  const tableConfig = {
+  const tableConfig: ITableProps = {
     headers: [
       'no',
       dict['name'],
@@ -513,37 +523,14 @@ const UserLookup = ({isInInstitute, instituteId, isStudentRoster}: any) => {
     ] as string[],
     dataList,
     config: {
-      dark: false,
-      isFirstIndex: true,
-      headers: {textColor: 'text-white'},
       dataList: {
         loading,
-        emptyText:
-          searchInput.isActive && !searchInput.typing
-            ? 'no data'
-            : searchInput.isActive && searchInput.typing
-            ? `Hit enter to search for ${searchInput.value}`
-            : UserLookupDict[userLanguage]['noresult'],
+
         pagination: {
           showPagination: !searchInput.isActive && selectedClass === null,
           config: {
             allAsProps
           }
-        },
-        customWidth: {
-          no: 'w-12',
-          name: 'w-5/10 2xl:w-3/10 break-all',
-          status: 'w-36',
-          flow: 'w-48 2xl:w-36',
-          role: 'w-36',
-          location: 'w-72',
-          actions: 'w-aut'
-        },
-        maxHeight: 'max-h-none',
-        pattern: 'striped',
-        patternConfig: {
-          firstColor: 'bg-gray-100',
-          secondColor: 'bg-gray-200'
         }
       }
     }

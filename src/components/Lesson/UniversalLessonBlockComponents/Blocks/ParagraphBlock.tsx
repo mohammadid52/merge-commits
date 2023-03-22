@@ -1,6 +1,6 @@
-import { useGlobalContext } from "contexts/GlobalContext";
-import { RowWrapperProps } from "interfaces/UniversalLessonBuilderInterfaces";
-import React from "react";
+import {useGlobalContext} from 'contexts/GlobalContext';
+import {RowWrapperProps} from 'interfaces/UniversalLessonBuilderInterfaces';
+import React from 'react';
 
 interface ParagraphBlockProps extends RowWrapperProps {
   id?: string;
@@ -10,20 +10,19 @@ interface ParagraphBlockProps extends RowWrapperProps {
 }
 
 export const ParagraphBlock = (props: ParagraphBlockProps) => {
-  const { id, value } = props;
+  const {id, value} = props;
   const {
-    state: { lessonPage: { themeTextColor = "" } = {} },
+    state: {lessonPage: {themeTextColor = ''} = {}}
   } = useGlobalContext();
 
-  const Paragraph = ({ inputID, inputValue }: any) => {
+  const Paragraph = ({inputID, inputValue}: any) => {
     return (
       <div className="flex w-auto items-center paragraph-block">
         <p
           key={inputID}
           id={inputID}
-          dangerouslySetInnerHTML={{ __html: inputValue?.value || "<p></p>" }}
-          className={`whitespace-pre-wrap remove-draft-styles  ${themeTextColor}`}
-        ></p>
+          dangerouslySetInnerHTML={{__html: inputValue?.value || '<p></p>'}}
+          className={`whitespace-pre-wrap leading-5 remove-draft-styles  ${themeTextColor}`}></p>
       </div>
     );
   };

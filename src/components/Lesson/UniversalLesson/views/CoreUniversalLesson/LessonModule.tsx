@@ -6,7 +6,7 @@ import {
   useTabs
 } from 'components/Lesson/UniversalLessonBuilder/UI/UIComponents/Tabs/Tabs';
 import map from 'lodash/map';
-import Table from 'molecules/Table';
+import Table, {ITableProps} from 'molecules/Table';
 import ThemeModal from 'molecules/ThemeModal';
 import {lazy, useState} from 'react';
 
@@ -72,28 +72,14 @@ const LessonModule = ({currentLesson}: {currentLesson: UniversalLesson}) => {
 
   const dataList = map(currentLesson?.lessonPlan, (lesson) => ({
     name: lesson?.label,
+    onClick: () => {},
     time: `${lesson?.estTime} min`,
     instructions: lesson?.description || '--'
   }));
 
-  const lessonPlanTableConfig = {
+  const lessonPlanTableConfig: ITableProps = {
     headers: ['Name', 'Time', 'Instructions'],
-    dataList,
-    config: {
-      dark: currentLesson?.darkMode || true,
-      dataList: {
-        pattern: 'striped',
-        customWidth: {
-          name: 'w-40',
-          time: 'w-40',
-          instructions: 'w-full'
-        },
-        patternConfig: {
-          firstColor: 'bg-gray-800',
-          secondColor: 'bg-gray-700'
-        }
-      }
-    }
+    dataList
   };
 
   return (

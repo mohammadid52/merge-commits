@@ -101,7 +101,7 @@ const CoreUniversalLesson = ({
             <div
               className={`${
                 userAtFirst() ? 'justify-end' : 'justify-between'
-              } flex items-center  gap-x-4`}>
+              } flex items-center mt-4  gap-x-4`}>
               {!userAtFirst() && (
                 <>
                   <Buttons

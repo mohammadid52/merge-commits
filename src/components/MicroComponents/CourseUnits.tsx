@@ -5,9 +5,9 @@ const CourseUnits = ({item, redirectToUnit, courseName, courseId}: any) => {
   const units = item.universalSyllabus?.items.filter((d: any) => d.unit !== null);
 
   return (
-    <List className="list-decimal">
+    <List>
       {units?.length > 0 ? (
-        units?.map((unit: any) => (
+        units?.map((unit: any, index: number) => (
           <Tooltip key={unit.unit.id} placement="left" title={`Go to ${unit.unit.name}`}>
             <List.Item
               className=" cursor-pointer hover:underline hover:theme-text:400"
@@ -15,7 +15,7 @@ const CourseUnits = ({item, redirectToUnit, courseName, courseId}: any) => {
               onClick={() =>
                 redirectToUnit(item.institution.id, unit.unit.id, courseId, courseName)
               }>
-              {unit.unit.name}
+              {index + 1}. {unit.unit.name}
             </List.Item>
           </Tooltip>
         ))
