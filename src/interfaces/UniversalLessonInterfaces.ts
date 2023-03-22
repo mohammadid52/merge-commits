@@ -22,14 +22,6 @@ export interface UniversalLesson {
   darkMode?: boolean;
 }
 
-interface UniversalLessonPlanStage {
-  enabled: boolean;
-  open: boolean;
-  active: boolean;
-  label: string;
-  displayMode: string;
-}
-
 export interface UniversalLessonPage {
   id: string;
   enabled?: boolean;

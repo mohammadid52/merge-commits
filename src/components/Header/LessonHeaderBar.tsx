@@ -1,6 +1,8 @@
+import Buttons from '@components/Atoms/Buttons';
 import ErrorBoundary from '@components/Error/ErrorBoundary';
 import useStudentTimer from '@customHooks/timer';
 import useGraphqlMutation from '@customHooks/useGraphqlMutation';
+import {Result} from 'antd';
 import {UniversalLessonStudentData, UpdatePersonLessonsDataInput} from 'API';
 import Modal from 'atoms/Modal';
 import {useGlobalContext} from 'contexts/GlobalContext';
@@ -9,7 +11,6 @@ import {useEffect, useState} from 'react';
 import ReactPlayer from 'react-player';
 import {useHistory, useRouteMatch} from 'react-router-dom';
 import {getLocalStorageData, removeLocalStorageData} from 'utilities/localStorage';
-import PositiveAlert from '../General/Popup';
 import LessonTopMenu from '../Lesson/Navigation/LessonTopMenu';
 
 const LessonHeaderBar = ({
@@ -286,7 +287,41 @@ const LessonHeaderBar = ({
         h-.7/10 text-gray-200 shadow-2xl  
         ${theme.toolbar.bg} `}>
         {/* LEAVE POPUP */}
-        <div className={`${leaveModalVisible ? 'absolute z-100' : 'hidden'}`}>
+
+        <Modal open={leaveModalVisible}>
+          <Result
+            status="warning"
+            title={
+              isLesson
+                ? `Congratulations, you have completed the lesson ${lessonState.lessonData.title}, Did you want to keep your writing excercies in the classroom or move them to your notebook`
+                : !isLesson
+                ? `Thank you for completing ${lessonState.lessonData.title}`
+                : 'This will take you out of the lesson.  Did you want to continue?'
+            }
+            extra={[
+              <Buttons
+                onClick={handleNotebookSave}
+                label={
+                  isLesson
+                    ? 'I completed this lesson. \n Move my work to my notebook.'
+                    : !isLesson
+                    ? 'I am happy with my responses and want to close the survey'
+                    : 'Saving your data...'
+                }
+              />,
+              <Buttons
+                onClick={isLesson ? goToClassRoom : () => setLeaveModalVisible(false)}
+                label={
+                  isLesson
+                    ? 'Leave in classroom'
+                    : 'I am going to keep working on my responses'
+                }
+              />
+            ]}
+          />
+        </Modal>
+
+        {/* <div className={`${leaveModalVisible ? 'absolute z-100' : 'hidden'}`}>
           <PositiveAlert
             closeAction={() => setLeaveModalVisible(false)}
             alert={leaveModalVisible}
@@ -318,7 +353,7 @@ const LessonHeaderBar = ({
             theme="dark"
             fill="screen"
           />
-        </div>
+        </div> */}
 
         {/* VIDEO POPUP */}
 

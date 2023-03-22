@@ -3,10 +3,10 @@ import React from 'react';
 // @ts-ignore
 
 interface ModalProps {
-  showHeader: boolean;
+  showHeader?: boolean;
   title?: string;
   showHeaderBorder?: boolean;
-  showFooter: boolean;
+  showFooter?: boolean;
   children: React.ReactNode;
   saveAction?: () => void;
   closeAction?: () => void;

@@ -1,7 +1,7 @@
 import {Steps} from 'antd';
 import React from 'react';
 
-interface IStepElementInterface {
+export interface IStepElementInterface {
   description?: string;
   disabled?: boolean;
   subTitle?: string;
