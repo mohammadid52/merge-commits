@@ -110,7 +110,6 @@ const RoomTiles = (props: {
   refetchHomeData: () => any[];
 }) => {
   const {classList: classes, refetchHomeData, roomsLoading, handleRoomSelection} = props;
-  console.log('🚀 ~ file: RoomTiles.tsx:113 ~ classes:', classes);
 
   const {userLanguage} = useGlobalContext();
   const {DashboardDict} = useDictionary();
@@ -138,7 +137,8 @@ const RoomTiles = (props: {
   //   }
   // }, [classes]);
 
-  let finalList = classList;
+  let finalList = classList || classes || [];
+  console.log('🚀 ~ file: RoomTiles.tsx:142 ~ finalList:', finalList);
 
   const [fetchAgain, setFetchAgain] = useState(false);
 
