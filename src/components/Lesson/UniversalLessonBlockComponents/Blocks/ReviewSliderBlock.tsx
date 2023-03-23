@@ -34,7 +34,7 @@ const ReviewSliderBlock = (props: ReviewSliderBlockProps) => {
   const {
     value = 1,
     disabled,
-    id,
+
     onChange,
     inputID,
 

@@ -12,7 +12,7 @@ interface KeywordBlockProps extends RowWrapperProps {
 
 const KeywordBlock = (props: KeywordBlockProps) => {
   const {
-    state: {lessonPage: {theme: lessonPageTheme = '', themeTextColor = ''} = {}}
+    state: {lessonPage: {themeTextColor = ''} = {}}
   } = useGlobalContext();
   const {id, value} = props;
 

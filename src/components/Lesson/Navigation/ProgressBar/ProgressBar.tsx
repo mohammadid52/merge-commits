@@ -1,16 +1,12 @@
-import Buttons from '@components/Atoms/Buttons';
 import {useQuery} from '@customHooks/urlParam';
 import {UniversalLessonPage} from '@interfaces/UniversalLessonInterfaces';
 import {Breadcrumb} from 'antd';
 import {useGlobalContext} from 'contexts/GlobalContext';
 import useLessonControls from 'customHooks/lessonControls';
-import useTailwindBreakpoint from 'customHooks/tailwindBreakpoint';
 
 import React, {useEffect} from 'react';
-import {AiOutlineHome} from 'react-icons/ai';
 import {useHistory, useRouteMatch} from 'react-router';
 import {getLocalStorageData} from 'utilities/localStorage';
-import StageIcon from './StageIcon';
 
 interface IProgressBarProps {
   handleHome?: () => void;
@@ -23,12 +19,6 @@ interface IProgressBarProps {
   requiredInputs?: any[];
   canContinue?: boolean;
 }
-
-const Disabled = () => (
-  <div className="absolute inset-0 flex items-center justify-center bg-gray-800 bg-opacity-70 disabled z-50">
-    <p className="text-center font-bold text-sm">text</p>
-  </div>
-);
 
 const ProgressBar = ({
   handleHome,
@@ -70,24 +60,12 @@ const ProgressBar = ({
       }, null)
     : null;
 
-  const miniPageCounter = (pageIdx: number, pageArray: any[]) => {
-    if (typeof pageIdx === 'number' && Array.isArray(pageArray)) {
-      return (
-        <li className="w-auto text-sm font-medium">
-          {pageIdx + 1}/{pageArray.length}
-        </li>
-      );
-    }
-    return <div className="w-auto hidden" />;
-  };
-
   /**
    * Explanation
    *
    * state.currentPage = number of current page from 0 - total nr of pages
    */
   // ~~~~~~~~~~~ RESPONSIVE CHECK ~~~~~~~~~~ //
-  const {breakpoint} = useTailwindBreakpoint();
 
   // ~~~~~~~~~~~~ SHARING CHECK ~~~~~~~~~~~~ //
   const isOnDemand = user.onDemand;
@@ -126,7 +104,7 @@ const ProgressBar = ({
   const items = pages?.map((page: UniversalLessonPage, key: number) => ({
     title: page.label,
     url: `/lesson/${lessonId}/${key}`,
-    disabled: !isNotClickable(key, page),
+    disabled: isTeacherPresenting || !isNotClickable(key, page),
     index: key
   }));
 
